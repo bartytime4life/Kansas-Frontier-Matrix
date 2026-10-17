@@ -12,14 +12,14 @@ import { cutawayLocatorPlacement } from "./cutaway-locator";
 const AquiferView = lazy(() => import("./aquifer-volume-view"));
 const ResourceView = lazy(() => import("./underground-resources"));
 const ThreeView = lazy(() => import("./subsurface-three"));
-export type SubsurfaceInspection = { record: Borehole; interval?: DepthInterval };
+export type SubsurfaceInspection = { record: Borehole; interval?: DepthInterval; tileId?: string };
 type Props = {
   basemap?: string; onBasemap?: (key: "standard"|"imagery"|"kansas-aerial"|"topo") => void; onLayers?: () => void;
   map: MapLibreMap | null; initialContext: SubsurfaceContext | null; year: number; redacted: boolean; onPresent?: () => void;
   onTerrain: () => void; onFlatMap: () => void; readElevation: (point: Position) => number | null;
   isDrawing: () => boolean; onDraw: () => void; readTransect: () => Position[];
   onContext: (context: SubsurfaceContext) => void; onInspect: (inspection: SubsurfaceInspection) => void;
-  onClose: () => void; onSave: () => void; onReport: () => void;
+  onClose: () => void; onSave: () => void; onReport: () => void; onAsk?: () => void;
 };
 type WorkerResult = { id: number; prepared?: boolean; bounds?: AreaBounds; manifest?: SubsurfaceManifest; columns?: SectionRecord[]; total?: number; partial?: boolean; coverage?: string; failures?: string[]; error?: string; matches?: [string, string, Position, string][] };
 const EMPTY_ROUTE: Position[] = [];
@@ -282,8 +282,8 @@ export default function UndergroundPanel(props: Props) {
     return () => controller.abort();
   }, [display, surveys.length]);
   const inspect = useCallback((record: Borehole, interval?: DepthInterval) => {
-    setSelectedId(record.id); setPickedInterval(interval ? {recordId:record.id,index:record.intervals.indexOf(interval)} : null); if (interval && display !== "3d") setDepth(Math.max(range[0], Math.min(range[1], meters((interval.top + interval.bottom) / 2, record.depthUnit)))); onInspect({ record, interval });
-  }, [onInspect, range, display]);
+    setSelectedId(record.id); setPickedInterval(interval ? {recordId:record.id,index:record.intervals.indexOf(interval)} : null); if (interval && display !== "3d") setDepth(Math.max(range[0], Math.min(range[1], meters((interval.top + interval.bottom) / 2, record.depthUnit)))); onInspect({ record, interval, tileId: manifest?.tiles?.find(tile => record.coordinates[0] >= tile.bounds[0] && record.coordinates[0] < tile.bounds[2] && record.coordinates[1] >= tile.bounds[1] && record.coordinates[1] < tile.bounds[3])?.id });
+  }, [onInspect, range, display, manifest]);
   const inspectHere = () => { const c = map?.getCenter(); if (c && inKansas([c.lng, c.lat])) { setAnchor([c.lng, c.lat]); setPinned(true); } };
   const changedVersions = initialContext?.sourceVersions.some(old => manifest?.sources.some(current => current.id === old.id && current.sha256 !== old.sha256));
   const missing = initialContext?.recordIds.filter(id => !loading && !columns.some(c => c.record.id === id)) ?? [];
@@ -358,6 +358,7 @@ export default function UndergroundPanel(props: Props) {
         <span className={s.cutawayEyebrow}>SOURCE DETAIL</span>
         <label>Source record <select aria-label="Source record to slice" value={selected?.id ?? ""} disabled={!columns.length || loading} onChange={e => chooseRecord(e.target.value)}>{!columns.length && <option value="">No loaded records</option>}{columns.map(c => <option key={c.record.id} value={c.record.id}>{c.record.name}{c.record.kind === "core" ? " · inventory envelope" : ""}</option>)}</select></label>
         <button type="button" disabled={!sliceFit || loading} onClick={openSlice}>Open selected log <span aria-hidden="true">↗</span></button>
+        {props.onAsk && <button type="button" disabled={!selected || loading || redacted} onClick={() => { if(selected) { inspect(selected); props.onAsk?.(); } }}>Ask AI about selected sample</button>}
         <p>{loading ? "Loading eligible source records…" : sliceFit ? `${selected?.name} · ${selected?.kind === "core" ? "inventory envelope only" : "recorded log"}. Open and drag the depth slider to look inside.` : selected ? "This record has no valid interval within 0–12,000 m. Choose another loaded record." : "Show an area in the selector to load its source records."}</p>
       </div></details>} /></Suspense></div>
       {(display === "section" || display === "3d") && loadedColumns.length > 0 && recordNavigation}
@@ -412,12 +413,12 @@ function SoilView({ anchor }: { anchor: Position }) {
   return <div><p role="status">{state}</p><p className={s.limit}>SSURGO soil-map components are alternatives within a mapped area. They do not identify the exact soil beneath the crosshair.</p>{data && <><p>Retrieved {data.retrievedAt} · {data.partial ? "Partial: 100-horizon limit reached" : `${data.rows.length} horizons returned`} · depths in centimetres below soil surface.</p>{components.map(id => { const rows = data.rows.filter(r => String(r[3]) === id); return <details key={id}><summary>{rows[0][4]} · {rows[0][5]}% of map unit · {rows[0][2]}</summary><ul>{rows.map((r, index) => <li key={index}>{r[8]}: {r[9] ?? "unknown"}–{r[10] ?? "unknown"} cm · sand {r[11] ?? "unknown"}%, silt {r[12] ?? "unknown"}%, clay {r[13] ?? "unknown"}%</li>)}</ul></details>; })}</>}<a href="https://sdmdataaccess.nrcs.usda.gov/" target="_blank" rel="noreferrer">USDA Soil Data Access ↗</a><p className={s.muted}>Live soil responses are not yet captured in the section export; the export includes KGS columns and their source editions only.</p></div>;
 }
 
-export function SubsurfaceInspector({ inspection, onCenter, onSave, onReport }: { inspection: SubsurfaceInspection; onCenter: () => void; onSave: () => void; onReport: () => void }) {
+export function SubsurfaceInspector({ inspection, onCenter, onSave, onReport, onAsk }: { inspection: SubsurfaceInspection; onCenter: () => void; onSave: () => void; onReport: () => void; onAsk?: () => void }) {
   const { record: r, interval } = inspection; const issues = intervalIssues(r.intervals);
   return <div className={s.inspector}><span className={s.badge}>External source context · not admitted evidence</span><h3 tabIndex={-1} data-subsurface-inspector>{r.name}</h3><p>{r.kind === "core" ? "A core inventory envelope documents an archived range; it does not prove complete recovery." : "The original driller's descriptions document this record; standardized codes are KGS interpretations."}</p>
     <dl><dt>Source</dt><dd>{r.sourceId}</dd><dt>Record time</dt><dd>{r.sourceTime || "Not supplied"}</dd><dt>Depth</dt><dd>{r.depthUnit} · {r.depthReference}; no verified trajectory or elevation registration</dd><dt>Location</dt><dd>{r.locationMethod} · {r.coordinateReference}</dd><dt>Intervals</dt><dd>{r.intervals.length}; {issues.gaps.length} internal gaps; {issues.overlaps.length} overlaps retained</dd></dl>
     {interval && <section className={s.selected}><strong>{interval.top}–{interval.bottom} {r.depthUnit}</strong><p>Original: {interval.description}</p>{interval.interpreted && <p>KGS interpreted codes: {interval.interpreted}</p>}<p>Unknown gaps remain unknown; no rock geometry is inferred between observations.</p></section>}
-    <div className={s.actions}><button type="button" onClick={onCenter}>Center</button><a href={sourceLink(r.sourceUrl) ?? undefined} target="_blank" rel="noreferrer">Open source ↗</a>{r.photosUrl && <a href={sourceLink(r.photosUrl) ?? undefined} target="_blank" rel="noreferrer">Original core photographs ↗</a>}<button type="button" onClick={onSave}>Save investigation</button><button type="button" onClick={onReport}>Create report</button></div>
+    <div className={s.actions}>{onAsk && <button type="button" onClick={onAsk}>Ask AI about this {interval ? "interval" : "sample"}</button>}<button type="button" onClick={onCenter}>Center</button><a href={sourceLink(r.sourceUrl) ?? undefined} target="_blank" rel="noreferrer">Open source ↗</a>{r.photosUrl && <a href={sourceLink(r.photosUrl) ?? undefined} target="_blank" rel="noreferrer">Original core photographs ↗</a>}<button type="button" onClick={onSave}>Save investigation</button><button type="button" onClick={onReport}>Create report</button></div>
     <details><summary>All source intervals</summary><ul>{r.intervals.map((i, index) => <li key={index}><strong>{i.top}–{i.bottom} {r.depthUnit}</strong>: {i.description}{i.interpreted && <><br />KGS interpretation: {i.interpreted}</>}</li>)}</ul></details><p>{SUBSURFACE_LIMIT}</p>
   </div>;
 }

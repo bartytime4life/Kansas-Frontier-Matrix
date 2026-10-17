@@ -41,6 +41,7 @@ import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
 import AssistantWorkspace from "./assistant/workspace";
+import {sampleAssistantSelection, type AssistantFocus} from "./assistant-context";
 import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel-loader";
 import { persistableSubsurface, validSubsurfaceContext, type SubsurfaceContext } from "./subsurface-model";
 import researchStyles from "./research.module.css";
@@ -1954,6 +1955,25 @@ export default function Home() {
       ? "Globe"
       : "2D";
   const mapRepresentationLabel = `${primaryRepresentationLabel}${structures3DEnabled ? ` · Structures 3D ${structures3DState === "READY" ? "ready" : structures3DState.toLowerCase()}` : ""}`;
+  const assistantFocus = useMemo<AssistantFocus>(() => {
+    const privateView = locationCameraRedacted || locationDerivedViewRef.current || Boolean(subsurfaceInspection && subsurfacePrivate);
+    const base = {version: 1 as const, frame: temporalQuery.frame, view: primaryRepresentationLabel, layers: activeLayers.slice(0,14).map(layer => layer.id)};
+    if (privateView) return {context: {...base, layers: [], selection: null}, title: "Private context withheld", detail: "Location-derived selections stay in this browser."};
+    if (subsurfaceInspection) {
+      const {record, interval} = subsurfaceInspection;
+      const selection = sampleAssistantSelection(subsurfaceInspection);
+      return {context: {...base, selection}, title: selection ? record.name : "Sample context unavailable", detail: selection ? `${interval ? `${interval.top}–${interval.bottom} ${record.depthUnit} · ${interval.description.slice(0,160)}` : `${record.id} · ${record.intervals.length} source intervals`} · source context, not admitted evidence` : "Select this sample again in Underground to bind its source tile."};
+    }
+    if (selected && !selectedTimeMismatch) {
+      const p=selected.properties;
+      if (["RESTRICTED_ACCESS","DENIED_BY_POLICY","GENERALIZED_GEOMETRY"].includes(p.evidenceState)) return {context: {...base, layers: [], selection: null}, title: "Protected context withheld", detail: "This selection is not sent to AI."};
+      const clean=(value: string, limit: number)=>String(value || "Not supplied").replace(/[\x00-\x1f\x7f]/g," ").slice(0,limit);
+      const selection=selected.kind === "registry" ? {kind: "registry" as const, layerId: selected.layerId, featureId: selected.featureId} : {kind: "display" as const, title: clean(p.title,160), source: clean(p.sourceOrganization,100), description: clean(p.summary,300), time: clean(p.temporalScope,100)};
+      return {context: {...base, selection}, title: p.title, detail: `${p.sourceOrganization} · ${p.temporalScope} · display context; evidence remains separately governed`};
+    }
+    return {context: {...base, selection: null}, title: selectedTimeMismatch ? "Selection outside active time" : "Current map view", detail: selectedTimeMismatch ? "The incompatible selection is withheld. Choose its supported time to ask about it." : "Select a feature or Underground sample to ask about its details."};
+  }, [activeLayers, locationCameraRedacted, primaryRepresentationLabel, selected, selectedTimeMismatch, subsurfaceInspection, subsurfacePrivate, temporalQuery.frame]);
+
   const temporalComparison = useMemo(
     () => buildTemporalComparison(activeLayers, compareTimeA, compareTimeB),
     [activeLayers, compareTimeA, compareTimeB],
@@ -3670,7 +3690,7 @@ export default function Home() {
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("kfm-chat") === "1") {
-      const timer = window.setTimeout(() => { setPcAccountRequest(value => value + 1); openQwenCompanion(null); }, 0);
+      const timer = window.setTimeout(() => { openQwenCompanion(null); }, 0);
       return () => window.clearTimeout(timer);
     }
   }, [openQwenCompanion]);
@@ -8588,7 +8608,7 @@ export default function Home() {
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong>Kansas Frontier Matrix</strong><small>Spatial evidence explorer</small></span>
-          <button type="button" className="steward-login-button" onClick={event => { setPcAccountRequest(value => value + 1); openQwenCompanion(event.currentTarget); }} aria-controls="qwen-map-panel">{pcAccount ? "Account" : "Log in"}</button>
+          <button type="button" className="steward-login-button" onClick={event => { setPcAccountRequest(value => value + 1); openQwenCompanion(event.currentTarget); }} aria-controls="qwen-map-panel">{pcAccount ? "Account" : "Administrator"}</button>
         </div>
         <div className="global-search">
           <label>
@@ -9885,7 +9905,7 @@ export default function Home() {
             onTerrain={() => activateMapRepresentation("terrain")} onFlatMap={() => activateMapRepresentation("2d")} readElevation={point => mapRef.current && terrainState === "READY" ? unexaggeratedTerrainElevation(mapRef.current, point) : null}
             isDrawing={() => Boolean(measureModeRef.current)} onDraw={() => toggleMeasure("distance")}
             readTransect={() => measurementGeometryModeRef.current === "distance" && !measureModeRef.current ? measureCoordinatesRef.current.map(p => [...p] as [number, number]) : []}
-            onContext={setSubsurfaceContext}
+            onContext={setSubsurfaceContext} onAsk={() => openQwenCompanion()}
             onInspect={inspection => { returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null; setSubsurfaceInspection(inspection); setResearchOpen(false); setRightOpen(true); window.requestAnimationFrame(() => rightPanelRef.current?.querySelector<HTMLElement>("[data-subsurface-inspector]")?.focus()); }}
             onClose={() => { setUndergroundOpen(false); window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true })); }} onSave={saveCurrentWorkspace}
             onReport={() => openPrimaryWorkspace("reports", true, null, null, subsurfaceContext)} />}
@@ -9905,9 +9925,9 @@ export default function Home() {
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
               <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
               <span><small>LAYERS</small><strong>{selectedMapLayerCount}</strong></span>
-              <span><small>SELECTION</small><strong>{selected ? "1" : "0"}</strong></span>
+              <span><small>SELECTION</small><strong>{assistantFocus.context.selection ? "1" : "0"}</strong></span>
             </div>
-            <AssistantWorkspace accountRequest={pcAccountRequest} onAccount={setPcAccount} place={selected ? String(selected.properties.title ?? "") : ""} />
+            <AssistantWorkspace accountRequest={pcAccountRequest} onAccount={setPcAccount} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} />
           </section>
 
         <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
@@ -9915,7 +9935,7 @@ export default function Home() {
           <div className="panel-heading drawer-heading">
             <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{subsurfaceInspection ? subsurfaceInspection.record.name : researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>
           </div>
-          {subsurfaceInspection ? <SubsurfaceInspector inspection={subsurfaceInspection}
+          {subsurfaceInspection ? <SubsurfaceInspector inspection={subsurfaceInspection} onAsk={() => openQwenCompanion()}
             onCenter={() => mapRef.current?.easeTo({ center: subsurfaceInspection.record.coordinates, zoom: 13, duration: motionDuration(400) })}
             onSave={saveCurrentWorkspace} onReport={() => openPrimaryWorkspace("reports", true, null, null, subsurfaceContext)} /> : researchOpen && researchContext ? <div className="drawer-scroll">
             {selected && <button className="map-catalog-launch" type="button" onClick={() => { setResearchOpen(false); window.requestAnimationFrame(() => rightPanelRef.current?.querySelector<HTMLElement>("[data-selection-summary]")?.focus()); }}>Back to selected record</button>}
@@ -9936,6 +9956,7 @@ export default function Home() {
                 <div><dt>Evidence status</dt><dd>{selected.kind === "basemap" ? "External context only · no KFM EvidenceBundle" : selected.properties.evidenceState}</dd></div></dl>
               <details><summary>What this supports and its limits</summary><p>{selected.kind === "basemap" ? "Inspection of a provider’s mapped record and reported attributes." : selected.properties.summary}</p><p>{selected.properties.generalizationNote} {selected.properties.uncertainty}</p></details>
               <div className={researchStyles.actions}>
+                <button type="button" onClick={() => openQwenCompanion()}>Ask AI about this record</button>
                 <button type="button" onClick={() => { activateDrawerView("evidence"); window.requestAnimationFrame(() => document.getElementById("drawer-tab-evidence")?.focus()); }}>Inspect</button>
                 {selectedResearchRecord && <button type="button" onClick={() => centerResearchRecord(selectedResearchRecord)}>Center</button>}
                 {researchSourceUrl(selectedOfficialConnection?.source.sourceUrl ?? selected.properties.citation) && <a href={researchSourceUrl(selectedOfficialConnection?.source.sourceUrl ?? selected.properties.citation)!} target="_blank" rel="noreferrer">Open source ↗</a>}
