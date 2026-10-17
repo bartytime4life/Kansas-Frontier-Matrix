@@ -167,7 +167,7 @@ async function controlsModule() {
     .replace('"react"', JSON.stringify(hooks)).replace('"./scene-effects"', JSON.stringify(effectsUrl)).replace('"./scene-studio"', JSON.stringify(studioUrl));
   return import(toUrl(transpile(source).replace('"react/jsx-runtime"', JSON.stringify(pathToFileURL(require.resolve("react/jsx-runtime")).href))));
 }
-const descendants = (node) => !node || typeof node !== "object" ? [] : [node, ...[node.props?.children].flat(Infinity).flatMap(descendants)];
+const descendants = (node) => !node || typeof node !== "object" ? [] : typeof node.type === "function" ? descendants(node.type(node.props)) : [node, ...[node.props?.children].flat(Infinity).flatMap(descendants)];
 
 test("real controls dispatch recipe, light and camera changes; repeated panels have unique labels", async () => {
   const { SceneEffectsControls } = await controlsModule();

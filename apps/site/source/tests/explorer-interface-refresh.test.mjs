@@ -74,7 +74,7 @@ test("quick start routes only to existing controls and tolerates blocked storage
   assert.match(page, /else if \(action === "time"\) \{ setPrimaryWorkspace\("map"\); setTimelineOpen\(true\); \}/);
   assert.match(page, /else if \(action === "qwen"\) openQwenCompanion\(null\)/);
   assert.match(page, /onMore=\{\(\) => setHelpOpen\(true\)\}/, "reconnects the existing map guide");
-  assert.match(page, /aria-pressed=\{undergroundOpen\} onClick=\{toggleUnderground\}/);
+  assert.match(page, /aria-pressed=\{undergroundOpen\} data-active=\{undergroundOpen\} onClick=\{toggleUnderground\}/);
 });
 
 test("theme loads last, keeps tested geometry in globals and honours reduced motion", async () => {
