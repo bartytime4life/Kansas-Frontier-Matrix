@@ -17,7 +17,11 @@
     "test:browser-geometry": "node scripts/verify-explorer-geometry.mjs",
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre",
     "prepare:lightning": "node scripts/prepare-lightning-reader.mjs",
-    "build:qwen-knowledge": "node scripts/build-qwen-knowledge-pack.mjs"
+    "build:qwen-knowledge": "node scripts/build-qwen-knowledge-pack.mjs",
+    "eval:qwen-local": "node scripts/qwen-local-eval.mjs",
+    "eval:qwen-gate": "node scripts/qwen-question-gate-corpus.mjs",
+    "validate:subsurface-public": "node scripts/validate-subsurface-public.mjs",
+    "prestart": "npm run validate:subsurface-public && node scripts/validate-subsurface-public.mjs dist/client"
   },
   "dependencies": {
     "@mapbox/vector-tile": "2.0.4",

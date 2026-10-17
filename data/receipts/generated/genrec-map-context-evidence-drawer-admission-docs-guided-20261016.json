@@ -1,0 +1,170 @@
+{
+  "receipt_id": "genrec-map-context-admission-docs-guided-20261016-abde71053f4a",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md",
+    "docs/domains/agriculture/sublanes/README.md",
+    "docs/domains/habitat/sublanes/README.md",
+    "docs/quality/explorer-reviewed-integration.md",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md",
+    "docs/runbooks/QUARANTINE_HANDLING.md",
+    "tests/qa/test_gap_scan.py",
+    "tools/qa/README.md",
+    "tools/qa/gap_scan.py",
+    "tools/qa/gap_scan_baseline.json",
+    ".github/workflows/map-context-evidence-drawer-admission.yml"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md": "sha256:ba99227ac4269fc26f642b5595b83c91ed12679b0804436fae7dbf5f1eb37e43",
+    "docs/domains/agriculture/sublanes/README.md": "sha256:0dc7d292be5a091e9bc056ff6098f6b4ca16cdbb9ed0cee1e5c8aed29d326406",
+    "docs/domains/habitat/sublanes/README.md": "sha256:bf1c513a3d8519a0f2ecfdae827ac8d10002dc5e036ace354278633e4e00e3ee",
+    "docs/quality/explorer-reviewed-integration.md": "sha256:2cf805238733d1508f8df0529881863926db45e7e2065affaa7009c240de165c",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "sha256:a037bb9b2ebf854698510556a5957ac149bd45909042d83f86acb08314a25bc6",
+    "docs/runbooks/QUARANTINE_HANDLING.md": "sha256:72c22750f4b2ca50fb4d69690550c53badec073d83d8afbb11a5594211f31b8c",
+    "tests/qa/test_gap_scan.py": "sha256:43d2c7c3ca7791473221d1f25f36951492ce43b569343fdc4e94503677e777e9",
+    "tools/qa/README.md": "sha256:aa11fa634396c3fa5a8b7d2dfa5d4653e0768aab9024d3e898a2fbe06c563124",
+    "tools/qa/gap_scan.py": "sha256:3eddb444bb1b7cad03b2b317b26cd9595ae28a8d68aff15a2863ea7398673c6e",
+    "tools/qa/gap_scan_baseline.json": "sha256:2eda9732a0fdd3f0b44a1e6035bbe8a55f2a578ee796380c951e828fd2397c6b",
+    ".github/workflows/map-context-evidence-drawer-admission.yml": "sha256:134c0b064b85491112a7a99696d313b81cad36fdc42709ff4846d4ebf59a35ab"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact model revision is not exposed by this runtime"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "git",
+      "repository validators",
+      "pytest"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md@05b132b66b23b6dea21557943e4e73776bfeab9e",
+      "docs/doctrine/directory-rules.md@05b132b66b23b6dea21557943e4e73776bfeab9e",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@05b132b66b23b6dea21557943e4e73776bfeab9e",
+      "CONTRIBUTING.md@05b132b66b23b6dea21557943e4e73776bfeab9e",
+      ".github/PULL_REQUEST_TEMPLATE.md@05b132b66b23b6dea21557943e4e73776bfeab9e"
+    ],
+    "evidence_refs": [
+      "git:05b132b66b23b6dea21557943e4e73776bfeab9e",
+      "git:a6eb16e6816d4a99411d32a11c0907c74ba4b8a6",
+      "git:abde71053f4a9c2c1b2916095246872d1f3d7592"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md": "PROPOSED",
+    "docs/domains/agriculture/sublanes/README.md": "PROPOSED",
+    "docs/domains/habitat/sublanes/README.md": "PROPOSED",
+    "docs/quality/explorer-reviewed-integration.md": "PROPOSED",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "PROPOSED",
+    "docs/runbooks/QUARANTINE_HANDLING.md": "PROPOSED",
+    "tests/qa/test_gap_scan.py": "CONFIRMED",
+    "tools/qa/README.md": "CONFIRMED",
+    "tools/qa/gap_scan.py": "CONFIRMED",
+    "tools/qa/gap_scan_baseline.json": "CONFIRMED",
+    ".github/workflows/map-context-evidence-drawer-admission.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "metadata-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"metadata\", \"counts\": {\"documents\": 7, \"fail_findings\": 0, \"info_findings\": 0, \"invalid_metadata_blocks\": 0, \"metadata_blocks\": 7, \"missing_metadata_blocks\": 0, \"registered_documents\": 0, \"registry_add_candidates\": 0, \"registry_conflicts\": 0, \"valid_metadata_blocks\": 7, \"warn_findings\": 6}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_META_BLOCK_WARN\"}; advisory warnings are retained, not warning-free acceptance."
+    },
+    {
+      "gate": "links-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"links\", \"counts\": null, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_LINK_CHECK_PASS\"}; advisory warnings are retained, not warning-free acceptance."
+    },
+    {
+      "gate": "graph-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"graph\", \"counts\": {\"changed_documents\": 0, \"documents\": 7, \"documents_with_doc_id\": 7, \"edges\": 2, \"external_targets_unverified\": 25, \"fail_findings\": 0, \"info_findings\": 0, \"orphan_documents\": 5, \"outside_scope_markdown_targets\": 244, \"reachable_documents\": 2, \"registered_markdown_documents\": 0, \"unreachable_documents\": 5, \"warn_findings\": 10}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_GRAPH_WARN\"}; advisory warnings are retained, not warning-free acceptance."
+    },
+    {
+      "gate": "freshness-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"freshness\", \"counts\": {\"current_findings\": 8, \"documents\": 7, \"documents_with_metadata\": 7, \"documents_without_metadata\": 0, \"fail_findings\": 0, \"findings\": 8, \"historical_findings\": 0, \"info_findings\": 0, \"warn_findings\": 8, \"warnings_as_errors\": 0}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_STALE_SCAN_WARN\"}; advisory warnings are retained, not warning-free acceptance."
+    },
+    {
+      "gate": "gap-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"gap\", \"counts\": {\"BROKEN_LOCAL_LINK\": 0, \"MARKDOWN_PLACEHOLDER\": 7, \"STRUCTURED_PARSE_ERROR\": 0, \"TEST_PACKAGE_SHADOW\": 0, \"UNRATCHETED_PLACEHOLDER\": 9}, \"exit\": 0, \"failures\": [], \"outcome\": null}; advisory warnings are retained, not warning-free acceptance."
+    },
+    {
+      "gate": "topology-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"topology\", \"counts\": {\"baselined_warning\": 93, \"fail_invariant\": 0, \"fail_new_drift\": 0, \"finding\": 93}, \"exit\": 0, \"failures\": [], \"outcome\": \"PASS\"}; advisory warnings are retained, not warning-free acceptance."
+    },
+    {
+      "gate": "scaffolds-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"scaffolds\", \"counts\": null, \"exit\": 0, \"failures\": [], \"outcome\": null}; advisory warnings are retained, not warning-free acceptance."
+    },
+    {
+      "gate": "gap-scan-focused-regressions",
+      "outcome": "PASS",
+      "reason": "21 passed. Five new rejection cases failed before the guard; unchanged baseline bytes, successful tightening, idempotent rewrite, missing baseline and invalid JSON preservation verified."
+    },
+    {
+      "gate": "baseline-python-contracts-pipelines-domains-qa",
+      "outcome": "PASS",
+      "reason": "Before edits at 05b132b66b23b6dea21557943e4e73776bfeab9e: 1904 passed, 1 skipped, 873 subtests passed; Python 3.11 with python-test.lock and python-geo.lock and repository package source paths."
+    },
+    {
+      "gate": "baseline-api-ci-runtime-release-local-data",
+      "outcome": "PASS",
+      "reason": "Before edits at 05b132b66b23b6dea21557943e4e73776bfeab9e: 751 passed, 4 skipped, 592 subtests passed. Adds geoparquet-pyarrow-25.lock; the earlier missing-PyArrow collection attempt is an environment limitation, not a passing run."
+    },
+    {
+      "gate": "hosted-ci-independent-review-runtime-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Not performed at emission. Draft delivery, exact-head hosted CI, independent review, browser acceptance, source admission, release and deployment remain separate."
+    },
+    {
+      "gate": "map-admission-workflow-successor",
+      "outcome": "PASS",
+      "reason": "10 strict package tests and all 8 finite-outcome case replays pass. The earlier PR head failed because the workflow checked a historical receipt against current document bytes. The workflow now targets this successor receipt; permissions, fixtures and assertions are unchanged."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-placement",
+      "validated": true,
+      "evidence_ref": "git:05b132b66b23b6dea21557943e4e73776bfeab9e:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "exact-content-local-validation",
+      "validated": true,
+      "evidence_ref": "git:a6eb16e6816d4a99411d32a11c0907c74ba4b8a6"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-16T22:37:36.445644Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": 5212,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor to genrec-docs-guided-repair-20261016, which is retained unchanged. Adds the one-line map-admission workflow receipt handoff to the same ten substantive artifacts. No policy, permission, test assertion or validation scope is weakened. Both earlier and successor receipts remain pending human review. The successor excludes itself and earlier receipt files to avoid circular hashes. Content and workflow are pinned at abde71053f4a9c2c1b2916095246872d1f3d7592. Remaining corpus/scaffold/runtime/review limitations from the previous receipt remain. This is authoring provenance, not approval, release, deployment or publication authority."
+}

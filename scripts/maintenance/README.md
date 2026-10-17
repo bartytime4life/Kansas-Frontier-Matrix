@@ -1,16 +1,22 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/scripts-maintenance-readme
 title: scripts/maintenance/ — Governed Maintenance and Doctrine-Preflight Lane
-type: readme; directory-readme; maintenance-script-index; graduation-guardrail
-version: v0.3
+type: readme
+subtype: directory-readme; maintenance-script-index; graduation-guardrail
+version: v0.4
 status: draft; canonical-script-sublane; promotion-sensitive; mixed-maturity; graduation-review-required; NEEDS VERIFICATION
 policy_label: public
 owners: OWNER_TBD — Maintenance tooling steward · Doctrine steward · Registry steward · Validation steward · Policy steward · Release steward · Docs steward
-updated: 2026-07-15
+created: 2026-02-28
+updated: 2026-10-15
 current_path: scripts/maintenance/README.md
+owning_root: scripts/
+responsibility: "Index bounded maintenance CLIs, explicit holds and graduation boundaries without granting release authority."
 truth_posture: CONFIRMED current README and prior blob, scripts-root graduation rule, required-artifact checker, preflight orchestrator, test wrapper, promotion-gate caller, and output-path conflict at the pinned snapshot / UNKNOWN exhaustive callers, accepted receipt authority, production use, and current pass state / NEEDS VERIFICATION ownership, graduation, output-home migration, mutation rollback, and substantive published-alias audit
 base_commit: 799ebba5934358b9dd2098779575ef52495e197d
 prior_blob: e9872db30569bec7222274c0828abe9b35e39685
+notes:
+  - "The created date records the earliest current-path Git addition, bfdc5e7972169dc0d3d732913c9048493e7a11d4 (2026-02-28), not the authorship date of later expanded prose."
 related:
   - ../README.md
   - ../../tools/README.md
@@ -56,7 +62,7 @@ related:
 | Strict shell wrapper | **CONFIRMED present** | Provides a fail-closed invocation profile. |
 | Test-suite wrapper | **CONFIRMED executable** | Runs source validators, normalized-only shadow checks, readiness checks, and bounded policy/source tests. |
 | Promotion workflow caller | **CONFIRMED** | Promotion prerequisite invokes the checker directly. |
-| Published-alias audit | **PLACEHOLDER / NEEDS VERIFICATION** | No substantive implementation is established here. |
+| Published-alias audit | **UNIMPLEMENTED / EXPLICIT HOLD** | Direct invocation exits 3 with a fixed stderr message; it audits no aliases, reads no input and grants no authority. |
 | Output receipt home | **CONFLICTED** | Orchestrator defaults to `receipts/doctrine_artifacts/`; a governed lane is documented under `data/receipts/validation/doctrine_artifact_check/`. |
 | Current pass state and production use | **UNKNOWN** | Source inspection does not prove successful current execution or deployment. |
 | Long-term placement | **NEEDS VERIFICATION** | Repeated, trust-adjacent behavior requires command-by-command graduation review. |
@@ -106,7 +112,7 @@ The inventory is bounded to checked repository evidence.
 | `run_doctrine_artifact_preflight.py` | Multi-command orchestration and summary-schema validation | Trust-adjacent graduation candidate |
 | `enforce_doctrine_preflight_gates.sh` | Strict wrapper | Promotion-sensitive |
 | `run_doctrine_artifact_test_suite.sh` | Validator and pytest bundle | Substantive; directly inspected |
-| `audit_published_aliases.py` | Intended published-alias audit | Placeholder / no authority |
+| `audit_published_aliases.py` | Intended published-alias audit | Explicit exit-3 HOLD; import is inert; no audit implementation or authority |
 
 Presence does not prove correctness, ownership, safe defaults, exhaustive tests, stable CLI compatibility, accepted output homes, release readiness, or production use.
 

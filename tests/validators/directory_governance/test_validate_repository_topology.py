@@ -10,7 +10,7 @@ import tempfile
 import unittest
 import base64
 import zlib
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 from unittest import mock
 from contextlib import redirect_stdout
@@ -789,7 +789,9 @@ class RepositoryTopologyTests(unittest.TestCase):
             )
 
         extended_data = dict(current_data)
-        extended_data["expires_on"] = "2027-01-01"
+        extended_data["expires_on"] = (
+            date.fromisoformat(str(current_data["expires_on"])) + timedelta(days=1)
+        ).isoformat()
         with self.assertRaisesRegex(module.TopologyError, "extends expiry"):
             module.validate_baseline_transition(
                 extended_data,
@@ -867,6 +869,42 @@ class RepositoryTopologyTests(unittest.TestCase):
         # After the recovery lands the trusted baseline already holds the batch, so
         # the ordinary shrink-only rules apply unchanged.
         module.validate_baseline_transition(data, current, data, current, pinned)
+
+    def test_one_time_renewal_admits_only_its_exact_expiry(self) -> None:
+        entries = module.load_baseline(BASELINE_PATH)
+        data = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+
+        def dated(expires_on: str) -> dict[str, object]:
+            return {**data, "expires_on": expires_on}
+
+        renewed = dated(module.RENEWAL_TO_EXPIRES_ON)
+        trusted = dated(module.RENEWAL_FROM_EXPIRES_ON)
+        module.validate_baseline_transition(renewed, entries, trusted, entries)
+
+        # Shrinking during the renewal stays allowed; adding a waiver does not.
+        shrunk = dict(entries)
+        del shrunk[min(shrunk)]
+        module.validate_baseline_transition(renewed, shrunk, trusted, entries)
+        added = module._finding("KFM-TOPO-003", "new-root-file.txt", "ROOT_FILE_NOT_ALLOWED")
+        with self.assertRaisesRegex(module.TopologyError, "adds waiver"):
+            module.validate_baseline_transition(
+                renewed, {**entries, added.fingerprint: _entry(added)}, trusted, entries
+            )
+
+        for current_expiry, trusted_expiry in (
+            ("2027-05-11", module.RENEWAL_FROM_EXPIRES_ON),
+            ("2027-05-09", "2026-11-09"),
+            ("2027-11-10", module.RENEWAL_TO_EXPIRES_ON),
+        ):
+            with self.subTest(current=current_expiry, trusted=trusted_expiry):
+                with self.assertRaisesRegex(module.TopologyError, "extends expiry"):
+                    module.validate_baseline_transition(
+                        dated(current_expiry), entries, dated(trusted_expiry), entries
+                    )
+
+        # After the renewal lands the trusted expiry is already the renewed date, so the
+        # ordinary no-extension rule applies unchanged.
+        module.validate_baseline_transition(renewed, entries, renewed, entries)
 
     def test_artifact_fingerprints_bind_to_indexed_content(self) -> None:
         paths = ("artifacts/release/example/release_manifest.json",)

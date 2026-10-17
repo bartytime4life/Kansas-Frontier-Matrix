@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid-sensitivity>
+doc_id: kfm://doc/doctrine/sensitivity
 title: Sensitivity
 type: standard
 version: v1.0
@@ -9,39 +9,26 @@ created: 2026-05-26
 updated: 2026-05-26
 policy_label: public
 related:
-  - docs/doctrine/ai-build-operating-contract.md
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/policy-aware.md
-  - docs/doctrine/evidence-first.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/derived-stays-derived.md
-  - docs/doctrine/corrections-are-first-class.md
-  - docs/doctrine/retention.md
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/map-first.md
-  - docs/doctrine/trust-posture.md
-  - docs/standards/SENSITIVITY_RUBRIC.md
-  - docs/standards/REDACTION_DETERMINISM.md
-  - docs/standards/DP_BUDGETS.md
-  - docs/standards/CONSENT_TOKENS.md
-  - docs/policy/living_persons_geoprivacy.md
-  - docs/runbooks/RB-SENSITIVITY-REVIEW.md
-  - docs/runbooks/RB-REDACTION-AUDIT.md
-  - schemas/contracts/v1/sensitivity_assessment.schema.json
-  - schemas/contracts/v1/redaction_profile.schema.json
-  - schemas/contracts/v1/redaction_receipt.schema.json
-  - schemas/contracts/v1/generalization_transform.schema.json
-  - schemas/contracts/v1/k_anonymity_decision.schema.json
-  - schemas/contracts/v1/dp_budget_record.schema.json
-  - schemas/contracts/v1/consent_token.schema.json
-  - schemas/contracts/v1/consent_revocation.schema.json
-  - control_plane/sensitivity_register.yaml
-  - policy/sensitivity/
-  - policy/redaction/profiles.yaml
-  - policy/consent/
-  - tests/sensitivity/
-  - tests/redaction/
+  - "docs/doctrine/ai-build-operating-contract.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/doctrine/policy-aware.md"
+  - "docs/doctrine/evidence-first.md"
+  - "docs/doctrine/lifecycle-law.md"
+  - "docs/doctrine/derived-stays-derived.md"
+  - "docs/doctrine/corrections-first-class.md"
+  - "docs/doctrine/retention.md"
+  - "docs/doctrine/authority-ladder.md"
+  - "docs/doctrine/ai-as-assistant.md"
+  - "docs/doctrine/map-first.md"
+  - "docs/doctrine/truth-posture.md"
+  - "docs/standards/SENSITIVITY_RUBRIC.md"
+  - "docs/standards/REDACTION_DETERMINISM.md"
+  - "docs/standards/DP_BUDGETS.md"
+  - "docs/standards/CONSENT_TOKENS.md"
+  - "docs/policy/living_persons_geoprivacy.md"
+  - "policy/sensitivity/"
+  - "policy/redaction/profiles.yaml"
+  - "policy/consent/"
 tags: [kfm, doctrine, sensitivity, redaction, geoprivacy, k-anonymity, consent, governance]
 notes:
   - Codifies sensitivity as a normative KFM doctrine.
@@ -51,6 +38,30 @@ notes:
   - Operationalizes contract §23 publication-rights-and-sensitivity and §23.2 sensitive-domain decision matrix.
   - Closes Pass 10 C6-01 open question on rubric extensibility (one rubric + per-domain rules).
   - All concrete file paths, schema paths, runbook paths, default parameter values, and CI job names are PROPOSED until verified against the live repository.
+previous_placeholder_doc_id: "kfm://doc/<TODO-uuid-sensitivity>"
+owning_root: docs/
+responsibility: "Human-readable Sensitivity guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/runbooks/RB-SENSITIVITY-REVIEW.md"
+  - "docs/runbooks/RB-REDACTION-AUDIT.md"
+  - "schemas/contracts/v1/sensitivity_assessment.schema.json"
+  - "schemas/contracts/v1/redaction_profile.schema.json"
+  - "schemas/contracts/v1/redaction_receipt.schema.json"
+  - "schemas/contracts/v1/generalization_transform.schema.json"
+  - "schemas/contracts/v1/k_anonymity_decision.schema.json"
+  - "schemas/contracts/v1/dp_budget_record.schema.json"
+  - "schemas/contracts/v1/consent_token.schema.json"
+  - "schemas/contracts/v1/consent_revocation.schema.json"
+  - "control_plane/sensitivity_register.yaml"
+  - "tests/sensitivity/"
+  - "tests/redaction/"
+related_path_corrections:
+  - "docs/doctrine/corrections-are-first-class.md -> docs/doctrine/corrections-first-class.md"
+  - "docs/doctrine/trust-posture.md -> docs/doctrine/truth-posture.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # Sensitivity
@@ -141,7 +152,7 @@ The terms below are preserved verbatim from project doctrine and MUST NOT be par
 | **Embargo** | A time-bounded suppression with `embargo_until` field; if `now < embargo_until`, the policy gate denies regardless of other approvals. Per Pass 10 C6-08. |
 | **Fail-closed posture** | The default behavior when sensitivity, consent, rights, or revocation status cannot be resolved: deny. `[CONFIRMED doctrine.]` |
 
-Lifecycle stage names (`RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`), finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`), evidence objects (`EvidenceRef`, `EvidenceBundle`), retention classes (`R0`–`R5`), and release objects (`ReleaseManifest`, `ProofPack`, `CorrectionNotice`, `RollbackPlan`, `TombstoneReceipt`, `ErasureReceipt`) carry the meanings defined in [`lifecycle-law.md`](./lifecycle-law.md), [`evidence-first.md`](./evidence-first.md), [`policy-aware.md`](./policy-aware.md), [`corrections-are-first-class.md`](./corrections-are-first-class.md), and [`retention.md`](./retention.md).
+Lifecycle stage names (`RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, `TRIPLET`, `PUBLISHED`), finite outcomes (`ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, `NARROWED`, `BOUNDED`, `SOURCE_STALE`), evidence objects (`EvidenceRef`, `EvidenceBundle`), retention classes (`R0`–`R5`), and release objects (`ReleaseManifest`, `ProofPack`, `CorrectionNotice`, `RollbackPlan`, `TombstoneReceipt`, `ErasureReceipt`) carry the meanings defined in [`lifecycle-law.md`](./lifecycle-law.md), [`evidence-first.md`](./evidence-first.md), [`policy-aware.md`](./policy-aware.md), [`corrections-first-class.md`](./corrections-first-class.md), and [`retention.md`](./retention.md).
 
 [⬆ Back to top](#sensitivity)
 
@@ -609,7 +620,7 @@ Six months later, KDWP downgrades the species from threatened to delisted. This 
 
 - New `SensitivityAssessment`: `sensitivity_rank=S2` (watchlist; recovery monitoring).
 - New default profile: `kfm:redact:none` (no transform required at S2 default).
-- Old H3-cell layer is superseded with a `CorrectionNotice` per [`corrections-are-first-class.md`](./corrections-are-first-class.md).
+- Old H3-cell layer is superseded with a `CorrectionNotice` per [`corrections-first-class.md`](./corrections-first-class.md).
 - New exact-geometry public layer issued under the new release manifest.
 - Old H3-cell derivative tombstoned (cache invalidated per [`retention.md`](./retention.md) §9) and retained as `LINEAGE`.
 
@@ -714,7 +725,7 @@ AI MAY draft (extract candidate sensitivities from source metadata, propose a ra
 <details>
 <summary><b>What if a public user appeals a NARROWED outcome ("show me the exact location")?</b></summary>
 
-The path forward is the [`corrections-are-first-class.md`](./corrections-are-first-class.md) intake — a correction request citing the affected claim id. A domain steward reviews; if the underlying `SensitivityAssessment` was over-restrictive, the correction triggers a new release. There is no "ask an admin nicely" route and no override field on the public surface for sensitive geometry.
+The path forward is the [`corrections-first-class.md`](./corrections-first-class.md) intake — a correction request citing the affected claim id. A domain steward reviews; if the underlying `SensitivityAssessment` was over-restrictive, the correction triggers a new release. There is no "ask an admin nicely" route and no override field on the public surface for sensitive geometry.
 
 </details>
 
@@ -884,19 +895,19 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/evidence-first.md`](./evidence-first.md) — `EvidenceBundle` carries `sensitivity_rank`; bundle hash includes rank. `[CONFIRMED sibling.]`
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`; the lifecycle stage that owns each artifact informs the sensitivity gate position. `[CONFIRMED sibling.]`
 - [`docs/doctrine/derived-stays-derived.md`](./derived-stays-derived.md) — D-2 (rebuildable) anchors profile-determinism reproducibility; D-3 (subordinate) backs the client-side-simplification anti-pattern. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — Re-classification triggers route through correction lifecycle; rank or profile change emits `CorrectionNotice`. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-first-class.md`](./corrections-first-class.md) — Re-classification triggers route through correction lifecycle; rank or profile change emits `CorrectionNotice`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/retention.md`](./retention.md) — `RedactionReceipt`, `KAnonymityDecision`, `DPBudgetRecord` are R1; tombstoning a profile-versioned derivative on profile-version change. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — `LINEAGE` truth-label parallels old-profile-version derivative retention. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — AI cannot emit `SensitivityAssessment` decisions; AI may draft, named domain steward decides. `[CONFIRMED sibling.]`
 - [`docs/doctrine/map-first.md`](./map-first.md) — Trust badges surface sensitivity state; sensitive-exact-geometry denied at layer admission. `[CONFIRMED sibling.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) — `CONFLICTED` authoring label for cases where two sensitivity rows could apply. `[NEEDS VERIFICATION — exact filename.]`
+- [`docs/doctrine/truth-posture.md`](./truth-posture.md) — `CONFLICTED` authoring label for cases where two sensitivity rows could apply. `[NEEDS VERIFICATION — exact filename.]`
 - [`docs/standards/SENSITIVITY_RUBRIC.md`](../standards/SENSITIVITY_RUBRIC.md) — Canonical rubric document (Pass 10 C6-01 names). `[TODO — confirm path.]`
 - [`docs/standards/REDACTION_DETERMINISM.md`](../standards/REDACTION_DETERMINISM.md) — Seed concatenation rules (Pass 10 C6-03 names). `[TODO — confirm path.]`
 - [`docs/standards/DP_BUDGETS.md`](../standards/DP_BUDGETS.md) — DP epsilon defaults per dataset (Pass 10 C6-05 names). `[TODO — confirm path.]`
 - [`docs/standards/CONSENT_TOKENS.md`](../standards/CONSENT_TOKENS.md) — Consent token canonical normalization (Pass 10 C6-07 names). `[TODO — confirm path.]`
 - [`docs/policy/living_persons_geoprivacy.md`](../policy/living_persons_geoprivacy.md) — k-anonymity rule for living-people overlays (Pass 10 C6-06 names). `[TODO — confirm path.]`
-- [`docs/runbooks/RB-SENSITIVITY-REVIEW.md`](../runbooks/RB-SENSITIVITY-REVIEW.md) — Day-2 sensitivity-review routine (new doc proposed by this doctrine). `[TODO — runbook not yet authored.]`
-- [`docs/runbooks/RB-REDACTION-AUDIT.md`](../runbooks/RB-REDACTION-AUDIT.md) — Day-2 redaction-audit routine (new doc proposed by this doctrine). `[TODO — runbook not yet authored.]`
+- `docs/runbooks/RB-SENSITIVITY-REVIEW.md` (PROPOSED; target unavailable) — Day-2 sensitivity-review routine (new doc proposed by this doctrine). `[TODO — runbook not yet authored.]`
+- `docs/runbooks/RB-REDACTION-AUDIT.md` (PROPOSED; target unavailable) — Day-2 redaction-audit routine (new doc proposed by this doctrine). `[TODO — runbook not yet authored.]`
 - `schemas/contracts/v1/sensitivity_assessment.schema.json` — `SensitivityAssessment` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/redaction_profile.schema.json` — `RedactionProfile` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/redaction_receipt.schema.json` — `RedactionReceipt` schema. `[PROPOSED path.]`

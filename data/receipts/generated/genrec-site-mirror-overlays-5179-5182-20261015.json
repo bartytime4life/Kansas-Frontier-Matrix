@@ -1,0 +1,90 @@
+{
+  "receipt_id": "genrec-site-mirror-overlays-5179-5182-20261015",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "data/receipts/generated/site-v268-repository-overlays-20261015.json",
+    "tools/qa/site_mirror.py"
+  ],
+  "artifact_hashes": {
+    "data/receipts/generated/site-v268-repository-overlays-20261015.json": "sha256:7604586e924fcecd4f051da0e94a4b465792f73201ff18dd64a607310e2aad9a",
+    "tools/qa/site_mirror.py": "sha256:3e081a1ca6ab21edcbfbf71ba3c5a2bb88d2fdc12a01a554b32b25af59476b2b"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:docs/runbooks/water-pilot.md@32c2472468f8144b9c4d8374fa523ad94c2719e6",
+      "repo:data/receipts/generated/site-v268-tidy-map-controls-20261014.json@32c2472468f8144b9c4d8374fa523ad94c2719e6",
+      "repo:tools/qa/site_mirror.py@32c2472468f8144b9c4d8374fa523ad94c2719e6",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5179",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5182"
+    ]
+  },
+  "truth_labels": {
+    "data/receipts/generated/site-v268-repository-overlays-20261015.json": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Predecessor mirror receipt preserved",
+      "outcome": "PASS",
+      "reason": "site-v268-tidy-map-controls-20261014.json is unchanged; the successor names it in predecessor_receipt."
+    },
+    {
+      "gate": "Runbook procedure",
+      "outcome": "PASS",
+      "reason": "Follows docs/runbooks/water-pilot.md 'Changing a mirrored Site file': 12 identical paths become inherited_repository_overlay, page.tsx keeps its overlay state, 3 new files are repository_only_overlay, each with a difference note naming its pull request; counts and inventory_sha256 recomputed; repository_reconciled_base advanced; reconciliation.overlap names #5179 and #5182; review unchanged."
+    },
+    {
+      "gate": "Content parity",
+      "outcome": "PASS",
+      "reason": "site_mirror.py --check PASS (870 files, 23 repository overlays); --diagnose RECORDED_BYTES_MATCH. This is content parity only: no upstream equivalence, hosted equivalence, deployment, or review acceptance is claimed."
+    },
+    {
+      "gate": "Workflow and guardrails",
+      "outcome": "PASS",
+      "reason": "water-pilot workflow tests 338 passed and fixture regeneration PASS; tests/qa and tests/validators/directory_governance 323 passed; make repository-guardrails, repository-governance-parity, gap-scan, scaffold-inventory exit 0; validate_all.py --profile full PASS."
+    },
+    {
+      "gate": "Overlay review",
+      "outcome": "SKIPPED",
+      "reason": "source_and_overlay_review remains PENDING. Whether #5179 and #5182 also exist in the upstream Site source is not established here; the owner decides whether to accept these as governed overlays or reconcile them upstream."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "runbook:water-pilot#changing-a-mirrored-site-file",
+      "evidence_ref": "repo:docs/runbooks/water-pilot.md@32c2472468f8144b9c4d8374fa523ad94c2719e6",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-15T16:29:09Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+  },
+  "notes": "Records repository bytes of 16 apps/site/source/ files changed by #5179 and #5182 as overlays against Site candidate 358280aee889e2e2cf832bd598155ca21653c8de. No file under apps/site/source/ is changed by this work."
+}

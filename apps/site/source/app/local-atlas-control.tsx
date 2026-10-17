@@ -5,16 +5,18 @@ import { INTAKE_DESK_ORIGIN } from "./intake-desk-client";
 import { AtlasRequestGate, atlasErrorMessage, atlasRequest, atlasSession, parseAtlasCatalog, parseAtlasCoverage, parseAtlasFrames, parseAtlasGroups, parseAtlasPreview,
   type AtlasCatalog, type AtlasCoverage, type AtlasFrames, type AtlasGroup, type AtlasItem, type AtlasPreview, type AtlasRaster } from "./local-atlas-client";
 import { atlasCollectionLabel, atlasInspectorLabel, atlasMobilePadding } from "./local-atlas-presentation";
+import { PreparedCollectionControl, type PreparedCompactReview } from "./prepared-collection-control";
 import { ATLAS_COLORS, atlasPointsOnly, atlasScale, attachAtlasPreview } from "./local-atlas-map";
 
-type Props = { map: AtlasMap | null; styleReady: boolean; flatMap: boolean; suspended: boolean; compact: boolean; collapsed: boolean; onViewMap: () => void; onExpand: () => void; reducedMotion: boolean; onFlatMap: () => void; onArchive: () => void };
+type Props = { map: AtlasMap | null; styleReady: boolean; flatMap: boolean; suspended: boolean; compact: boolean; collapsed: boolean; onViewMap: () => void; onExpand: () => void; reducedMotion: boolean; onFlatMap: () => void; onArchive: () => void; onPrivateView: () => void };
 const number = (n: number) => n.toLocaleString(undefined, { maximumFractionDigits: 3 });
 const textValue = (v: unknown): string => v === null || v === undefined ? "No value" : typeof v === "number" ? number(v) : typeof v === "object" ? JSON.stringify(v).slice(0, 400) : String(v).slice(0, 400);
 const featureName = (p: GeoJSON.GeoJsonProperties, i: number) => String(p?.name ?? p?.NAME ?? p?.county_name ?? p?.title ?? p?.id ?? `Feature ${i + 1}`);
 const bytes = (n: number) => n >= 1e9 ? `${(n / 1e9).toFixed(1)} GB` : n >= 1e6 ? `${(n / 1e6).toFixed(1)} MB` : `${Math.ceil(n / 1000)} KB`;
 
-export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact, collapsed, onViewMap, onExpand, reducedMotion, onFlatMap, onArchive }: Props) {
-  const [section, setSection] = useState<"climate" | "files" | "coverage">("climate");
+export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact, collapsed, onViewMap, onExpand, reducedMotion, onFlatMap, onArchive, onPrivateView }: Props) {
+  const [preparedReview, setPreparedReview] = useState<PreparedCompactReview | null>(null);
+  const [section, setSection] = useState<"prepared" | "climate" | "files" | "coverage">("prepared");
   const [connection, setConnection] = useState<"connecting" | "connected" | "offline">("connecting");
   const [connectionKey, setConnectionKey] = useState(0), [token, setToken] = useState("");
   const [groups, setGroups] = useState<AtlasGroup[]>([]), [groupId, setGroupId] = useState("");
@@ -29,11 +31,15 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
   const [field, setField] = useState<string | null>(null), [density, setDensity] = useState(false), [opacity, setOpacity] = useState(.8);
   const [mapState, setMapState] = useState(""), [inspected, setInspected] = useState<Record<string, unknown> | null>(null), [inspectQuery, setInspectQuery] = useState("");
   const controlRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (collapsed) controlRef.current?.closest(".map-utility-scroll")?.scrollTo({ top: 0, behavior: "instant" });
+  }, [collapsed]);
   const gate = useRef(new AtlasRequestGate());
   const overlay = useRef<ReturnType<typeof attachAtlasPreview> | null>(null);
   const clear = useCallback(() => { gate.current.clear(); overlay.current?.dispose(); overlay.current = null; setPreview(null); setInspected(null); setBusy(false); setPlaying(false); setMapState(""); }, []);
   useEffect(() => () => { gate.current.clear(); overlay.current?.dispose(); }, []);
   useEffect(() => {
+    if (section === "prepared") return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Invalidate the prior external session before beginning its replacement handshake.
     const abort = new AbortController(); setConnection("connecting"); setToken(""); setFrames(null); setFrameId(""); setError("");
     atlasRequest("/api/status", abort.signal, atlasSession).then(async session => {
@@ -46,7 +52,7 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
       } catch (e) { if (!abort.signal.aborted) setError(atlasErrorMessage(e)); }
     }).catch(e => { if (!abort.signal.aborted) { setConnection("offline"); setError(atlasErrorMessage(e)); } });
     return () => abort.abort();
-  }, [connectionKey]);
+  }, [connectionKey, section]);
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- A changed request scope must retire stale provider frames before the next response.
     setFrames(null); setFrameId(""); setCompareId(""); setListingBusy(false);
@@ -58,7 +64,7 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
     return () => abort.abort();
   }, [token, groupId, year, frameOffset, section]);
   useEffect(() => {
-    if (!token || section === "climate") return;
+    if (!token || section === "climate" || section === "prepared") return;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronize loading and retire the external catalog for this new request scope.
     const abort = new AbortController(); setListingBusy(true); setCatalog(null); setCoverage(null); setError("");
     const params = new URLSearchParams({ text: query, family, offset: String(offset), limit: section === "coverage" ? "100" : "50" });
@@ -133,7 +139,19 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
     }));
   };
   return <section ref={controlRef} className="local-atlas map-utility-section" data-collapsed={collapsed || undefined} aria-label="Local Atlas">
-    {collapsed && <div className="local-atlas-peek" aria-label="Local preview on map">
+    {collapsed && section === "prepared" && <div className="local-atlas-peek" aria-label="Prepared preview on map">
+      <div className="local-atlas-peek-title"><strong>{preparedReview?.title ?? "Prepared collection review"}</strong><span>{preparedReview?.detail ?? "Show controls to choose a prepared folder"}</span></div>
+      {preparedReview?.range && <div className="local-atlas-peek-range">{preparedReview.range}</div>}
+      {preparedReview?.hasPreview && <>
+        <small role="status">{preparedReview.status}</small>
+        {preparedReview.selected && <strong className="local-atlas-peek-selection">{preparedReview.selected}</strong>}
+        <div className="local-atlas-peek-actions"><button type="button" disabled={!preparedReview.canFit} onClick={preparedReview.fit}>Fit review</button><button type="button" onClick={preparedReview.toggle}>{preparedReview.visible ? "Hide review" : "Show review"}</button><button type="button" onClick={preparedReview.inspect}>{preparedReview.selected ? "Inspect details" : "Inspect features"}</button><button type="button" onClick={preparedReview.clearMap}>Clear map</button></div>
+      </>}
+      {preparedReview?.busy && <button type="button" onClick={preparedReview.cancel}>Cancel verification</button>}
+      {preparedReview?.error && <p role="alert">{preparedReview.error}</p>}
+      <small>Private device review · not admitted · unreleased</small>
+    </div>}
+    {collapsed && section !== "prepared" && <div className="local-atlas-peek" aria-label="Local preview on map">
       <div className="local-atlas-peek-title"><strong>{preview?.title ?? (busy ? "Preparing local preview…" : "Local Atlas · map view")}</strong><span>{preview ? `${preview.units || "Units not supplied"} · ${preview.time.label}` : "Show controls to choose local data"}</span></div>
       {preview && <>
         <div className="local-atlas-peek-range">{raster?.paletteType === "categorical" ? "Source class palette · legend in controls" : density ? "Relative point density" : scale ? `${number(scale.min)} to ${number(scale.max)} ${preview.units ?? ""}${previewDifference ? " · B − A" : ""}` : "Uniform features · no numerical scale"}</div>
@@ -147,10 +165,11 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
       {error && <p role="alert">{error}</p>}
     </div>}
     <div id="local-atlas-controls" className="local-atlas-body" hidden={collapsed} inert={collapsed}>
-    <div className="local-atlas-connection" data-state={connection}><span className="local-atlas-dot" aria-hidden="true" /><div><strong>Data on this PC</strong><small>{connection === "connected" ? "Intake Desk connected · originals stay local" : connection === "connecting" ? "Connecting to the local Intake Desk…" : "Local Intake Desk unavailable"}</small></div><button type="button" disabled={connection === "connecting"} onClick={() => { clear(); setItem(null); setCatalog(null); setCoverage(null); setGroups([]); setGroupId(""); setConnectionKey(v => v + 1); }}>{connection === "connected" ? "Refresh catalog" : connection === "connecting" ? "Connecting…" : "Reconnect"}</button></div>
-    {connection === "offline" && <div className="local-atlas-message"><p>Start the Intake Desk on this computer, then reconnect. Your local files are not uploaded to the Site.</p><a href={INTAKE_DESK_ORIGIN} target="_blank" rel="noreferrer">Open Intake Desk ↗</a></div>}
-    <nav className="local-atlas-sections" aria-label="Local Atlas views">{(["climate", "files", "coverage"] as const).map(id => <button key={id} type="button" aria-pressed={section === id} onClick={() => changeSection(id)}>{id === "climate" ? "Climate" : id === "files" ? "Local files" : "Coverage"}</button>)}</nav>
+    {section !== "prepared" && <><div className="local-atlas-connection" data-state={connection}><span className="local-atlas-dot" aria-hidden="true" /><div><strong>Data on this PC</strong><small>{connection === "connected" ? "Intake Desk connected · originals stay local" : connection === "connecting" ? "Connecting to the local Intake Desk…" : "Local Intake Desk unavailable"}</small></div><button type="button" disabled={connection === "connecting"} onClick={() => { clear(); setItem(null); setCatalog(null); setCoverage(null); setGroups([]); setGroupId(""); setConnectionKey(v => v + 1); }}>{connection === "connected" ? "Refresh catalog" : connection === "connecting" ? "Connecting…" : "Reconnect"}</button></div>
+    {connection === "offline" && <div className="local-atlas-message"><p>Start the Intake Desk on this computer, then reconnect. Your local files are not uploaded to the Site.</p><a href={INTAKE_DESK_ORIGIN} target="_blank" rel="noreferrer">Open Intake Desk ↗</a></div>}</>}
+    <nav className="local-atlas-sections" aria-label="Local Atlas views">{(["prepared", "climate", "files", "coverage"] as const).map(id => <button key={id} type="button" aria-pressed={section === id} onClick={() => changeSection(id)}>{id === "prepared" ? "Prepared review" : id === "climate" ? "Climate" : id === "files" ? "Local files" : "Coverage"}</button>)}</nav>
     {suspended && <p className="local-atlas-message" role="status">Finish measuring or close Underground to show a local map preview.</p>}
+    {section === "prepared" && <PreparedCollectionControl map={map} styleReady={styleReady} flatMap={flatMap} suspended={suspended} compact={compact} onViewMap={onViewMap} onExpand={onExpand} onCompactReview={setPreparedReview} reducedMotion={reducedMotion} onFlatMap={onFlatMap} onPrivateView={onPrivateView} />}
     {section === "climate" && <>
       <div className="local-atlas-intro"><span>PRISM · COUNTY / GRID</span><h3>See a climate period</h3><p>Explore county means or the source raster. Compare matching periods with B minus A.</p></div>
       <label>Climate collection<select value={groupId} disabled={!groups.length} onChange={e => { clear(); setGroupId(e.target.value); setFrameOffset(0); setComparing(false); }}><option value="" disabled>{connection === "connected" && !groups.length ? "No processed PRISM frames" : "Choose a collection"}</option>{groups.map(g => <option key={g.id} value={g.id}>{atlasCollectionLabel(g)} · {g.series}</option>)}</select></label>
@@ -166,7 +185,7 @@ export function LocalAtlasControl({ map, styleReady, flatMap, suspended, compact
       <button type="button" className="local-atlas-play" aria-pressed={playing} disabled={(!playing && (frameIndex <= 0 || !preview || busy)) || suspended || year.length > 0 && year.length !== 4} onClick={() => setPlaying(v => !v)}>{playing ? "Pause playback" : "Play toward newer frames"}</button>
       <p className="local-atlas-note">County values are gridded cell-center means. Daily periods end at 12:00 UTC. Local source time is independent of the main map timeline.</p>
     </>}
-    {section !== "climate" && <>
+    {section !== "climate" && section !== "prepared" && <>
       <div className="local-atlas-intro"><span>{section === "coverage" ? "CATALOG · SPATIAL INDEX" : "FILES · SPATIAL PREVIEWS"}</span><h3>{section === "coverage" ? "Where files have bounds" : "Bring a local file onto the map"}</h3><p>{section === "coverage" ? "File bounds, not measured coverage. Only the current page is drawn." : "Preview supported geometry, coordinate tables, or raster bands. Every indexed format remains searchable."}</p></div>
       <form className="local-atlas-search" onSubmit={e => { e.preventDefault(); clear(); setQuery(draftQuery.trim()); setOffset(0); setItem(null); }}><label><span className="sr-only">Search local data files</span><input type="search" value={draftQuery} maxLength={180} placeholder="Find a file, county, or source…" onChange={e => setDraftQuery(e.target.value)} /></label><button type="submit">Search</button></form>
       <label>File family<select value={family} onChange={e => { clear(); setFamily(e.target.value); setOffset(0); setItem(null); }}><option value="">All formats</option>{["vector", "table", "raster", "archive", "array", "document", "image", "unknown"].map(f => <option key={f}>{f}</option>)}</select></label>

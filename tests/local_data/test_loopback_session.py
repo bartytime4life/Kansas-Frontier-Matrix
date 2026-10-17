@@ -44,7 +44,7 @@ class SessionBoundaryTests(unittest.TestCase):
                                        lock=threading.RLock(), health=Mock(return_value={"sessionToken": self.token}),
                                        start=Mock(return_value={"queued": True}),
                                        library=SimpleNamespace(snapshot=Mock(return_value={"state": "idle"})))
-        self.desk = SimpleNamespace(token=self.token, status=Mock(return_value={"job": {"state": "idle"}}),
+        self.desk = SimpleNamespace(token=self.token, read_only=False, status=Mock(return_value={"job": {"state": "idle"}}),
                                     start=Mock(return_value={"state": "running"}))
         self.cache = SimpleNamespace(token=self.token, status=Mock(return_value={"sessionToken": self.token}),
                                      get=Mock(return_value=(b"tile", "image/png", "hit")), start=Mock())

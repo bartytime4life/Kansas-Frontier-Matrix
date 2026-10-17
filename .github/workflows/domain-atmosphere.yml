@@ -359,6 +359,7 @@ jobs:
           python -m pytest -q \
             tests/domains/atmosphere/test_ghcnd_daily_candidate.py \
             tests/tools/test_ghcnd_daily_pilot.py \
+            tests/tools/test_ghcnd_archive_review.py \
             tests/tools/test_weather_release.py \
             tests/tools/test_weather_serving.py \
             tests/tools/test_weather_hosted.py

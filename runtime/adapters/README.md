@@ -62,7 +62,7 @@ surface.
 | Is the long-term alias disposition decided? | **NEEDS VERIFICATION** | Repository references still exist, and no accepted decision authorizes retirement or deletion. |
 
 The current adapter lane contains a bounded deterministic
-[`MockAdapter.py`](../model_adapters/MockAdapter.py) and a placeholder
+[`MockAdapter.py`](../model_adapters/MockAdapter.py) and a held, fail-closed
 [`OllamaAdapter.py`](../model_adapters/OllamaAdapter.py). Their detailed and
 current maturity belongs in the
 [model-adapter README](../model_adapters/README.md), not in this compatibility

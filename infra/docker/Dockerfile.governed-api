@@ -1,7 +1,7 @@
 # Security-review placeholder for governed-api.
 # This image intentionally contains no application payload, secrets, lifecycle data,
 # receipts, proofs, release material, or published artifacts.
-FROM python:3.11.15-slim-trixie@sha256:90744cff8f32887f075c47d747a173ff333e9e98801667af93c357fa9f5e28ff
+FROM python:3.14.8-slim-trixie@sha256:a2b82f3c48559aa0a8446d9af49826b6e2b2016f4cd2afabfe6013ec53729170
 
 # The pinned Debian base carries fixed CVEs in six bounded package families.
 # Upgrade only those families and fail closed if any remains below Debian's fix.
@@ -52,6 +52,8 @@ RUN set -eux; \
 
 COPY governed-api-requirements.lock /tmp/governed-api-requirements.lock
 
+# Installers are build inputs only. ensurepip also carries a bundled pip wheel;
+# remove both bootstrap surfaces from this application-free final image.
 RUN set -eux; \
     python -m pip install \
         --disable-pip-version-check \
@@ -60,6 +62,8 @@ RUN set -eux; \
         --upgrade \
         --require-hashes \
         --requirement /tmp/governed-api-requirements.lock; \
+    python -m pip uninstall --yes pip; \
+    python -c 'import importlib.util, pathlib, shutil, sysconfig; from importlib.metadata import version; shutil.rmtree(pathlib.Path(sysconfig.get_path("stdlib")) / "ensurepip"); assert all(importlib.util.find_spec(name) is None for name in ("pip", "ensurepip")); assert version("setuptools") == "82.0.1"; assert version("wheel") == "0.46.3"; assert version("packaging") == "26.3"'; \
     rm /tmp/governed-api-requirements.lock; \
     groupadd --gid 10001 kfm; \
     useradd \

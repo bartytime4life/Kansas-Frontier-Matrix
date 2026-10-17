@@ -13,7 +13,9 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import ts from "typescript";
 import {
+  QWEN_KNOWLEDGE_CROSS_DOMAIN_IDEAS,
   QWEN_KNOWLEDGE_DOMAIN_IDEAS,
+  QWEN_KNOWLEDGE_DOMAIN_TERMS,
   QWEN_KNOWLEDGE_GLOSSARY,
   QWEN_KNOWLEDGE_PRINCIPLES,
   QWEN_KNOWLEDGE_PROJECT_IDEAS,
@@ -46,7 +48,11 @@ export async function buildQwenKnowledgePack() {
   const { EXTERNAL_CONTEXT_SOURCES } = await import(await moduleUrl(path.join(sourceRoot, "app", "external-context-sources.ts")));
   const domains = [...new Set(OFFICIAL_CONTEXT_SOURCES.map((source) => source.domain))];
   const unknownIdeaDomains = Object.keys(QWEN_KNOWLEDGE_DOMAIN_IDEAS).filter((domain) => !domains.includes(domain));
-  if (unknownIdeaDomains.length) throw new Error(`Curated ideas name unknown domains: ${unknownIdeaDomains.join(", ")}`);
+  const unknownCrossDomains = QWEN_KNOWLEDGE_CROSS_DOMAIN_IDEAS.flatMap((entry) => entry.domains)
+    .filter((domain) => !domains.includes(domain));
+  const unknownTermDomains = Object.keys(QWEN_KNOWLEDGE_DOMAIN_TERMS).filter((domain) => !domains.includes(domain));
+  const unknown = [...new Set([...unknownIdeaDomains, ...unknownCrossDomains, ...unknownTermDomains])];
+  if (unknown.length) throw new Error(`Curated ideas name unknown domains: ${unknown.join(", ")}`);
   return {
     version: QWEN_KNOWLEDGE_PACK_VERSION,
     generatedBy: "scripts/build-qwen-knowledge-pack.mjs",
@@ -61,7 +67,9 @@ export async function buildQwenKnowledgePack() {
       name: domain,
       sourceIds: OFFICIAL_CONTEXT_SOURCES.filter((source) => source.domain === domain).map((source) => source.id),
       ideas: QWEN_KNOWLEDGE_DOMAIN_IDEAS[domain] ?? [],
+      terms: QWEN_KNOWLEDGE_DOMAIN_TERMS[domain] ?? {},
     })),
+    crossDomainIdeas: QWEN_KNOWLEDGE_CROSS_DOMAIN_IDEAS,
     projectIdeas: QWEN_KNOWLEDGE_PROJECT_IDEAS,
     officialSources: OFFICIAL_CONTEXT_SOURCES.map((source) => ({
       id: source.id,

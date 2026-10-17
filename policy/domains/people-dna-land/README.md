@@ -6,7 +6,7 @@ version: v0.2
 status: draft; repository-grounded; mixed-maturity; T4-baseline-projection; direct-proposed-rego-scaffolds; two-synthetic-fixture-profiles; evaluator-unbound; fail-closed-public-edge; non-release; non-publication
 owners: "@bartytime4life — verified CODEOWNERS review route; People, genealogy, DNA/genomic, consent, privacy, land/title, source, rights, sensitivity, evidence, policy, contract/schema, validation, runtime, release, security, and documentation stewardship assignments NEEDS VERIFICATION"
 created: 2026-05-08
-updated: 2026-08-31
+updated: 2026-10-15
 supersedes: unversioned greenfield scaffold
 policy_label: restricted-review; policy; people-dna-land; living-person; genealogy; dna-genomic; consent-revocation; land-title-sensitive; person-parcel-join; T4-baseline; source-role-aware; rights-aware; sensitivity-aware; evidence-bound; cite-or-abstain; reconstruction-resistant; release-gated; correction-aware; rollback-aware; no-public-authority
 current_path: policy/domains/people-dna-land/README.md
@@ -19,7 +19,7 @@ responsibility: >-
   genomic truth, consent validity, land title, ownership, parcel boundaries, evidence closure,
   policy activation, release, or publication.
 truth_posture: >-
-  CONFIRMED direct lane inventory of this README, seven proposed Rego scaffolds, six empty
+  CONFIRMED direct lane inventory of this README, six proposed Rego scaffolds, six empty
   compatibility or sublane directories, and one non-empty consent subdirectory; CONFIRMED two
   bounded synthetic consent fixture profiles with 26 deterministic no-network tests, two
   substantive validators, and a domain workflow whose proof and release jobs remain explicit
@@ -99,6 +99,7 @@ notes:
   - "The proposed domain-lane projection records a T4 baseline; that projection cannot authorize access, disclosure, downgrade, release, or publication."
   - "No real living-person data, DNA/genomic material, consent credential, person-parcel join, or title assertion belongs in this public README."
   - "No source, policy bundle, evaluator, proof, release, deployment, or publication is activated by this README."
+  - "2026-10-15: the owner kept policy/sensitivity/living_person_redaction.rego and retired this lane's byte-identical copy. The evidence blobs above stay pinned to the earlier snapshot; the inventory, counts, and conflict list reflect six direct Rego files."
 -->
 
 <a id="top"></a>
@@ -193,7 +194,7 @@ The Directory Rules document retains proposal-era control text because ADR-0029 
 | Is this the canonical domain-policy segment? | **CONFIRMED placement.** `policy/` owns admissibility; `people-dna-land` is the registered domain segment. |
 | Is the lane registered? | **CONFIRMED presence / PROPOSED projection.** The machine register records `lane_id: people-dna-land`, `code_alias: people_dna_land`, and a T4 baseline but declares itself `machine_projection_only`. |
 | Is `policy/domains/people/` an accepted alias? | **NO evidence.** It is marker-only, has no README, remains absent from the machine register, and has no accepted mapping. The current parent inventory records the same residual-marker posture. |
-| Are operative direct rules present? | **NO.** Seven Rego files are proposed scaffolds containing defaults only; five default `deny` to false and two default `allow` to false. |
+| Are operative direct rules present? | **NO.** Six Rego files are proposed scaffolds containing defaults only; four default `deny` to false and two default `allow` to false. |
 | Are any People–DNA–Land profiles executable? | **YES, bounded.** Two synthetic consent fixture profiles have substantive validators and 26 deterministic tests. They do not execute the direct Rego files. |
 | Is the direct Rego set normalized? | **NO.** Result names, truth polarity, package namespaces, entrypoints, and responsibility split conflict. |
 | Is an accepted bundle or evaluator bound? | **UNKNOWN / not observed.** No accepted bundle manifest, selector, native Rego harness, runtime consumer, or decision-receipt binding was established by the reviewed evidence. |
@@ -409,7 +410,7 @@ The physical inventory below is confirmed at the pinned base. Status follows fil
 | [`deny_unpublished.rego`](./deny_unpublished.rego) | Proposed stub; `package kfm.people_dna_land_deny_unpublished`; `default deny := false`; example commented out | Does not deny unpublished material as written. |
 | [`dna_restricted.rego`](./dna_restricted.rego) | Proposed stub; `package kfm.dna_restricted`; `default deny := false`; example commented out | Does not restrict DNA as written. |
 | [`living_person.rego`](./living_person.rego) | Proposed generated-package scaffold; `default allow := false`; no rule | Fail-closed-shaped allow default, but no accepted entrypoint or evaluator. |
-| [`living_person_redaction.rego`](./living_person_redaction.rego) | Proposed stub; `package kfm.living_person_redaction`; `default deny := false`; example commented out | Does not redact or deny as written. |
+| `living_person_redaction.rego` | **Retired 2026-10-15.** Byte-identical duplicate of [`policy/sensitivity/living_person_redaction.rego`](../../sensitivity/living_person_redaction.rego), which the owner kept as the single home | No domain-local copy remains; the retained sensitivity file is still a non-operative stub. |
 | [`consent/dna_consent_revocation.rego`](./consent/dna_consent_revocation.rego) | Proposed generated-package scaffold; `default allow := false`; no rule | No consent or revocation execution; no accepted evaluator. |
 | `consent/` | One Rego scaffold | Non-empty proposed sublane; not an active consent system. |
 | `dna/` | Empty tracked directory tree | Placement placeholder only. |
@@ -421,9 +422,9 @@ The physical inventory below is confirmed at the pinned base. Status follows fil
 
 ### Direct-lane conflicts that must remain visible
 
-1. **Default-result conflict.** Five modules expose `deny` with a false default, while two expose `allow` with a false default. Those cannot be treated as one decision surface without an accepted composition rule.
-2. **Filename-versus-behavior conflict.** Names such as `deny_unpublished`, `dna_restricted`, `living_person_redaction`, and `dna_consent_revocation` describe intended topics, not current enforcement.
-3. **Package conflict.** Five root stubs use short `kfm.*` packages; two scaffolds use `kfm.generated.policy.domains.people_dna_land.*`.
+1. **Default-result conflict.** Four modules expose `deny` with a false default, while two expose `allow` with a false default. Those cannot be treated as one decision surface without an accepted composition rule.
+2. **Filename-versus-behavior conflict.** Names such as `deny_unpublished`, `dna_restricted`, and `dna_consent_revocation` describe intended topics, not current enforcement.
+3. **Package conflict.** Four root stubs use short `kfm.*` packages; two scaffolds use `kfm.generated.policy.domains.people_dna_land.*`.
 4. **Responsibility overlap.** Domain-local consent and living-person files overlap shared consent and sensitivity lanes without an accepted precedence or bundle contract.
 5. **Sublane naming conflict.** Hyphenated, underscored, singular, and plural variants coexist (`land-ownership`, `land_rights`, `living_persons`, `people`) with no accepted migration record.
 6. **Alias remains unresolved.** The registered lane is `people-dna-land` with code alias `people_dna_land`; the parent-level marker-only `people/` sibling is unregistered and cannot be silently mapped here. Its README is absent, matching the current parent inventory, but the residual markers still require governed classification or retirement.
@@ -773,7 +774,7 @@ The revocation assessment checks the exact closed dependency set `READ`, `ANSWER
 
 The following do not prove active domain policy:
 
-- the seven direct Rego files;
+- the six direct Rego files;
 - an empty subdirectory;
 - a Python validator passing synthetic fixtures;
 - a workflow guardrail job passing;

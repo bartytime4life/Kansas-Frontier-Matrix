@@ -575,6 +575,7 @@ jobs:
           set -euo pipefail
           python -m unittest tests.runtime_proof.test_mock_adapter_finite_outcomes --verbose
           python -m unittest tests.runtime_proof.test_envelope_finite_outcomes --verbose
+          python -m unittest tests.runtime_proof.test_ollama_adapter_hold --verbose
 
           python - <<'PY'
           import ast

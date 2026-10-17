@@ -53,6 +53,7 @@ runtime-proof workflow.
 |---|---:|---|
 | [`test_envelope_finite_outcomes.py`](./test_envelope_finite_outcomes.py) | 6 | Standard-library checks for the closed four-outcome `RuntimeResponseEnvelope` shape, compatibility aliasing, valid and invalid fixtures, precision findings, and canonical validator wiring. |
 | [`test_mock_adapter_finite_outcomes.py`](./test_mock_adapter_finite_outcomes.py) | 7 | Deterministic fixture-backed `MockAdapter` selection, copy isolation, complete outcome configuration, bounded lookup failures, and a source-level no-I/O import guard. |
+| [`test_ollama_adapter_hold.py`](./test_ollama_adapter_hold.py) | 4 | The held `OllamaAdapter` seam: inert import, construction always raises the named `OLLAMA_ADAPTER_NOT_ADMITTED` hold, no `respond` surface, and a source-level no-I/O import guard. It proves the hold only, not a provider binding. |
 | [`domains/soil/soil_moisture/test_runtime_mapper.py`](./domains/soil/soil_moisture/test_runtime_mapper.py) | 7 | Schema-valid, deterministic fixture-only mapping to `ABSTAIN`, `DENY`, or `ERROR`, plus safe report generation. The profile intentionally never returns `ANSWER`. |
 | [`domains/soil/soil_moisture/runtime_mapper.py`](./domains/soil/soil_moisture/runtime_mapper.py) | — | Test-only mapper using the repository envelope candidate builder and soil-moisture validator. |
 | [`domains/soil/soil_moisture/emit_runtime_proof_report.py`](./domains/soil/soil_moisture/emit_runtime_proof_report.py) | — | Emits deterministic reviewer-only JSON containing expected outcomes and closed outward envelopes. |
@@ -65,12 +66,13 @@ structure and are not test modules.
 
 ## Run the tests
 
-Run the two dependency-free shared modules from the repository root:
+Run the three dependency-free shared modules from the repository root:
 
 ```bash
 python -m unittest \
   tests.runtime_proof.test_mock_adapter_finite_outcomes \
   tests.runtime_proof.test_envelope_finite_outcomes \
+  tests.runtime_proof.test_ollama_adapter_hold \
   --verbose
 ```
 

@@ -17,7 +17,7 @@ truth_posture: >
   canonical deterministic mock lane, canonical Ollama provider-specific lane, canonical runtime
   envelope handoff lane, canonical runtime service-configuration handoff lane, mock-first loopback
   .env.example, schema-paired draft/PROPOSED DecisionEnvelope, RuntimeResponseEnvelope, and
-  AIReceipt families, one-line OllamaAdapter placeholder, and runtime-policy greenfield stub /
+  AIReceipt families, held fail-closed OllamaAdapter seam (updated 2026-10-16), and runtime-policy greenfield stub /
   PROPOSED local runtime profile, activation record, dependency and health declaration, finite
   failure mapping, validation matrix, receipt/replay posture, and migration checklist /
   UNKNOWN executable local harness, runtime loader, local service manager, accepted request
@@ -225,7 +225,7 @@ At `main@6c71c48e88b34d76d00b43ab39d0a3a1b99328c7`:
 | `runtime/envelopes/` | **CONFIRMED canonical handoff lane** | Runtime envelope documentation and contract/schema drift are visible. |
 | `runtime/service_configs/` | **CONFIRMED canonical handoff lane; README-only** | Runtime binding/configuration handoff is documented; a loader or active service is not proven. |
 | `.env.example` | **CONFIRMED public example** | Uses `KFM_MODEL_RUNTIME=mock`, loopback governed API binding, and loopback Ollama host. |
-| `runtime/model_adapters/OllamaAdapter.py` | **CONFIRMED placeholder through adjacent evidence** | One-line presence does not prove executable adapter behavior. |
+| `runtime/model_adapters/OllamaAdapter.py` | **CONFIRMED held seam** (2026-10-16) | Construction raises `OllamaAdapterHold`; no executable adapter behavior exists. |
 | Runtime envelope contracts and schemas | **CONFIRMED present; draft/PROPOSED** | Finite object families exist; acceptance and runtime emission are not established. |
 | Runtime validators and fixture/schema harness | **CONFIRMED adjacent surfaces** | Presence does not prove local-runtime integration or current test success. |
 | `policy/runtime/README.md` | **CONFIRMED greenfield stub** | Runtime policy implementation is not established. |

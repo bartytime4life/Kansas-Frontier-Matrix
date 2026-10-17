@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 import subprocess
 
@@ -130,6 +131,61 @@ def test_evaluate_invariants_fail_and_census_ratchets() -> None:
     assert TOOL.evaluate(_summary(MARKDOWN_PLACEHOLDER=5), baseline)[0] == 1
     status, messages = TOOL.evaluate(_summary(BROKEN_LOCAL_LINK=3), baseline)
     assert status == 0 and any("--write-baseline" in m for m in messages)
+
+
+@pytest.mark.parametrize("kind", TOOL.INVARIANT_KINDS + TOOL.CENSUS_KINDS)
+def test_write_baseline_rejects_regressions_without_changing_bytes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, kind: str
+) -> None:
+    baseline = tmp_path / "baseline.json"
+    original = ('{"schema_version": "kfm.gap-scan/v1", "census": '
+                '{"BROKEN_LOCAL_LINK": 0, "UNRATCHETED_PLACEHOLDER": 0, '
+                '"MARKDOWN_PLACEHOLDER": 0}}\n')
+    baseline.write_text(original, encoding="utf-8")
+    monkeypatch.setattr(TOOL, "BASELINE", baseline)
+    monkeypatch.setattr(TOOL, "ROOT", tmp_path)
+    monkeypatch.setattr(TOOL, "scan", lambda: [{"kind": kind, "path": "x", "detail": "x"}])
+
+    assert TOOL.main(["--write-baseline"]) == 1
+    assert baseline.read_text(encoding="utf-8") == original
+
+
+def test_write_baseline_tightens_only_resolved_counts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    baseline = tmp_path / "baseline.json"
+    baseline.write_text(json.dumps({"schema_version": TOOL.SCHEMA_VERSION, "census": {
+        "BROKEN_LOCAL_LINK": 2, "UNRATCHETED_PLACEHOLDER": 1, "MARKDOWN_PLACEHOLDER": 3,
+    }}), encoding="utf-8")
+    monkeypatch.setattr(TOOL, "BASELINE", baseline)
+    monkeypatch.setattr(TOOL, "ROOT", tmp_path)
+    monkeypatch.setattr(TOOL, "scan", lambda: [
+        {"kind": "MARKDOWN_PLACEHOLDER", "path": "docs/stub.md", "detail": ""},
+    ])
+
+    assert TOOL.main(["--write-baseline"]) == 0
+    assert json.loads(baseline.read_text(encoding="utf-8"))["census"] == {
+        "BROKEN_LOCAL_LINK": 0, "UNRATCHETED_PLACEHOLDER": 0, "MARKDOWN_PLACEHOLDER": 1,
+    }
+    assert TOOL.main(["--write-baseline"]) == 0
+
+
+@pytest.mark.parametrize("existing", [None, "not json\n"])
+def test_write_baseline_does_not_replace_missing_or_unreadable_baseline(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, existing: str | None
+) -> None:
+    baseline = tmp_path / "baseline.json"
+    if existing is not None:
+        baseline.write_text(existing, encoding="utf-8")
+    monkeypatch.setattr(TOOL, "BASELINE", baseline)
+    monkeypatch.setattr(TOOL, "scan", lambda: [])
+
+    with pytest.raises((FileNotFoundError, json.JSONDecodeError)):
+        TOOL.main(["--write-baseline"])
+    if existing is None:
+        assert not baseline.exists()
+    else:
+        assert baseline.read_text(encoding="utf-8") == existing
 
 
 def test_repository_passes_its_own_check() -> None:

@@ -319,7 +319,7 @@ async function installedModelState(fetcher, ollamaUrl, model, deadlineSignal) {
 const INTERPRETATION_SYSTEM_PROMPT = [
   "You are the local Qwen companion for Kansas Frontier Matrix (KFM), an evidence-first map of Kansas land, water, weather, hazards, infrastructure, and history.",
   "Explain the current map view using only the supplied map context and the KFM knowledge metadata.",
-  "The knowledge metadata describes sources, vocabulary, and exploration ideas; it is not evidence about any place, time, or condition.",
+  "The knowledge metadata describes sources, vocabulary, and exploration ideas; it is not evidence about any place, time, or condition. Use its glossary and domain terms for exact meanings.",
   "Your reply is shown as interpretation under an ABSTAIN outcome. It can never become evidence, a citation, a review decision, or a release.",
   "Respect each source's boundary text: say what a source cannot show when that limits the answer. Treat missing data as a gap, never as zero or an all-clear.",
   "Never write a kfm: identifier, coordinates, grid references, or street-level locations. Never give safety, emergency, legal, medical, or excavation guidance.",
@@ -348,7 +348,7 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
       "- observations: up to 5 facts that appear in the map context JSON (layer or source titles, states, counts, frame or retrieval times).",
       "- inferences: up to 4 cautious readings, each phrased as possible rather than certain.",
       "- gaps: up to 4 items KFM would need (a released EvidenceBundle, a source, a review, a fresher frame) before this could become an evidence-backed answer.",
-      "- followUps: up to 3 short questions the user could ask next in this map, preferring the domain ideas when they fit.",
+      "- followUps: up to 3 short questions the user could ask next in this map, preferring the domain and cross-domain ideas when they fit.",
       "Use empty lists rather than inventing content.",
     ].join("\n"),
   ].join("\n\n");
@@ -358,16 +358,401 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
  * Questions that would turn interpretation into guidance or precision are
  * not sent to the model at all. The deterministic ABSTAIN explains why.
  */
+// "Safe to show / publish / at its declared precision" asks about release status (PUBLIC_SAFE), not personal safety.
+const NOT_RELEASE_STATUS = "(?! (?:to|for) (?:(?:public|external|general|wider|open|outside|online) )?(?:show\\w*|display\\w*|publish\\w*|releas\\w+|shar\\w+|map\\w*|render\\w*|expos\\w+)\\b| at (?:(?:its|their|the|this|that) )?(?:declared |stated |published )?(?:precision|resolution|scale|zoom)\\b)";
+// Address metadata (fields, formats, address-point layers) is not a request for an address.
+// Address metadata (fields, formats, address-point layers) and web, API or email addresses are not
+// requests for a street address.
+// The web target must be the addressed thing itself and so end the phrase or be followed by a
+// preposition; "the website owner", "the API developer" or "the dataset publisher" is a person or body.
+// The name holds no preposition, determiner, relative clause or person ("the owner of the website",
+// "the developer for the API"). "Of" or "for" inside a capitalised proper name ("the University of
+// Kansas website") is removed before this check by joinProperNames; lower-case "of"/"for" is not.
+const WEB_TARGET_PERSON = "(?:owners?|developers?|publishers?|authors?|maintainers?|operators?|creators?|managers?|administrators?|admins?|webmasters?|contacts?|staff|employees?|directors?|founders?|registrants?|people|persons?|users?|team|company|companies|presidents?|chairs?|chairm[ae]n|deans?|ceos?|officers?|secretar(?:y|ies)|governors?|mayors?|commissioners?|contractors?|vendors?|agents?|representatives?|members?|partners?|sponsors?|clients?|customers?|heads?|chiefs?|leads?|editors?|curators?|coordinators?|supervisors?|employers?|residents?|tenants?|landlords?)";
+const WEB_TARGET = `(?:(?:the|this|that|its|their) )?(?:(?!(?:of|for|to|from|by|at|on|in|with|the|a|an|this|that|its|their|his|her|whose|who|which|${WEB_TARGET_PERSON})\\b)\\w+ ){0,6}(?:website|web ?site|web ?page|page|url|link|api|service|endpoint|server|portal|feed|source|dataset|layer|catalog|repository)s?(?=$| (?:for|of|on|in|to|that|which|used|where|hosting|serving|with|from|at)\\b)`;
+const NOT_ADDRESS_METADATA = `(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b| (?:of|for) ${WEB_TARGET}\\b)`;
+// Distress ("I'm in my car and trapped by flood water", "my uncle is hurt") is an emergency in other
+// words. Injury states (trapped, stranded, drowning, injured, hurt, bleeding) describe a living being,
+// so any first-person or possessed subject counts. "Stuck", "lost" and "missing" also describe things
+// ("my filter is stuck", "my dataset is missing"), so with those a possessed subject must name a
+// person or animal. Only adverbs and a short place phrase ("in a burning building and") may stand
+// between subject and state, and the word before the state may not be a verb that takes it as an
+// adjective ("I am mapping lost trails", "researching injured workers"). A state that goes on to modify
+// a noun ("we are missing a layer", "missing towns") is not distress; any other continuation
+// ("trapped beside the creek", "stranded because of flooding", "hurt but conscious") still is.
+const DISTRESS_PERSON = "(?:sons?|daughters?|child|children|kids?|bab(?:y|ies)|toddlers?|wife|husband|partner|spouse|friends?|"
+  + "family|dad|father|mom|mum|mother|parents?|brothers?|sisters?|siblings?|uncles?|aunts?|cousins?|nephews?|nieces?|"
+  + "grand(?:ma|pa|mother|father|parents?|sons?|daughters?|kids?|children)|neighbou?rs?|roommates?|coworkers?|co workers?|"
+  + "colleagues?|classmates?|students?|teachers?|boss|employees?|workers?|crew|team|group|party|guests?|relatives?|"
+  + "boyfriend|girlfriend|fianc[eé]e?|dogs?|cats?|horses?|cattle|cows?|pets?|animals?)";
+const DISTRESS_FIRST_PERSON = "(?:i am|i m|im|we are|we re|someone is|somebody is|(?:an?|the) (?:child|kid|person|man|woman|hiker|driver|swimmer|camper) is)";
+const DISTRESS_ANY_SUBJECT = `(?:${DISTRESS_FIRST_PERSON}|(?:my|our) (?:\\w+ )?\\w+ (?:is|are))`;
+const DISTRESS_PERSON_SUBJECT = `(?:${DISTRESS_FIRST_PERSON}|(?:my|our) (?:\\w+ )?${DISTRESS_PERSON} (?:is|are))`;
+const DISTRESS_ADVERBS = "(?:(?:currently|now|still|right now|being|getting|badly|seriously|completely|totally|really) )*";
+const DISTRESS_PLACE = "(?:(?:in|on|at|near|by|under|inside|outside|behind|beside|along) (?:\\w+ ){1,5}?(?:and )?)?";
+const DISTRESS_MIDDLE = `${DISTRESS_ADVERBS}${DISTRESS_PLACE}${DISTRESS_ADVERBS}(?<!\\b(?!being\\b|getting\\b)\\w+ing )`;
+const DISTRESS_NOT_MODIFIER = "(?! (?:a|an|the|this|that|these|those|some|any|my|our|data|information|records?|layers?|values?|fields?|files?|towns?|trails?|sites?|species|workers?|people|persons?|animals?|birds?|roads?|places?|links?|pages?|years?)\\b)";
+const DISTRESS = `\\b(?:${DISTRESS_ANY_SUBJECT} ${DISTRESS_MIDDLE}(?:trapped|stranded|drowning|injured|hurt|bleeding)`
+  + `|${DISTRESS_PERSON_SUBJECT} ${DISTRESS_MIDDLE}(?:stuck(?! (?:on|with) (?:how|what|which|why|this|the|that)\\b)|lost|missing))\\b${DISTRESS_NOT_MODIFIER}`;
+// Evacuation guidance for now ("should we evacuate?", "is an evacuation order in effect now?") is an
+// emergency; the evacuation-zone layer and past evacuations ("were residents evacuated during the 2022
+// wildfire?") are not.
+const EVACUATION = /\bevacuat\w*/;
+const PRESENT_ADVICE = /\b(?:should|must|need|ought|can|could|will|shall|do) (?:i|we|you|they|people|residents)\b|\b(?:now|today|tonight|tomorrow|currently|right away)\b|\b(?:is|are) there (?:an? )?(?:\w+ )?evacuat/;
+// "What do we do?" is an emergency only beside a hazard and away from the interface: "the river is
+// rising, what do we do?" but not "our county filter won't clear; what should we do?".
+const WHAT_TO_DO = /\bwhat (?:do|should|can) (?:i|we) do\b/;
+const HAZARD_CUE = /\b(?:flood\w*|water|river|creek|stream|storm|tornado|fire|smoke|wildfire|ice|roof|road|trapped|stranded|swept|hurt|injured|bleeding|drown\w*)\b/;
+const INTERFACE_CUE = /\b(?:filter|layer|layers|map|legend|button|setting|settings|panel|download|upload|dataset|data|query|search|page|app|tab|slider|menu|screen)\b/;
+// "Marked safe", "considered safe": a status label on a layer or record, not a safety question.
+const NOT_STATUS_LABEL = "(?<!(?:public|marked|considered|labeled|labelled|flagged|rated|classed|classified|tagged|deemed) )";
+const NOT_AGGREGATE_TAIL = "(?!(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)\\b)";
+const SENSITIVE_SITE = "(?:bat caves?|village sites?|burials?|graves?|gravesites?|(?<!blue )mounds?(?! (?:city|valley|ridge|township|creek)\\b)|archaeological sites?|nests?|nesting sites?|leks?|dens?|den sites?|roosts?|roosting sites?|hibernacul\\w*)";
 const SENSITIVE_QUESTION = new RegExp([
-  "\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}(?:safe|dangerous)\\b",
-  "\\b(?:safety|evacuat\\w*|emergency|shelter|rescue)\\b",
+  `\\b(?:is it|is this|is that|are they|how) (?:\\w+ ){0,3}${NOT_STATUS_LABEL}(?:safe|dangerous)\\b${NOT_RELEASE_STATUS}`,
+  // "Would that be dangerous?", "could it be risky this weekend?"
+  `\\b(?:would|will|could|might) (?:\\w+ ){0,3}be (?:\\w+ )?${NOT_STATUS_LABEL}(?:safe|unsafe|dangerous|hazardous|risky)\\b${NOT_RELEASE_STATUS}`,
+  // "Can I still drive my pickup across it?", "should we camp on the sandbar?": the same advice as
+  // drinking or swimming, for other ways of entering the water or the weather.
+  // "Could you walk me through the layer" is a request for help, not a plan to walk anywhere.
+  "\\b(?:can|could|should|may) (?:i|we|people|(?:my|our|the) \\w+) (?:\\w+ ){0,2}(?:drive|cross|ford|walk(?! (?:me|us) through\\b)|hike|camp|kayak|canoe|boat|float|paddle|tube|wade)\\b",
+  // PUBLIC_SAFE and "marked safe" are release labels, not safety questions.
+  `\\b(?:is|are|how) (?:\\w+ ){0,5}${NOT_STATUS_LABEL}(?:safe|unsafe|dangerous|hazardous)\\b${NOT_RELEASE_STATUS}`,
+  // "Okay to drink", "would drinking this water be safe", "is swimming here fine".
+  `\\b(?:okay|ok|fine|alright|good) (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|eat\\w*)\\b|\\b(?:drinking|swimming|wading|eating) (?:\\w+ ){0,4}(?:be |is |are )?(?:safe|okay|ok|fine|alright|dangerous|harmful)\\b${NOT_RELEASE_STATUS}`,
+  "\\bsafe (?:to|for) (?:drink\\w*|swim\\w*|wad\\w+|fish\\w*|eat\\w*|cross\\w*|walk\\w*|hik\\w+|camp\\w*|hunt\\w*|boat\\w*|kayak\\w*|canoe\\w*|live|kids|children|people|pets|dogs|humans|consumption)\\b",
+  "\\b(?:can|could|should|may) (?:i|we|you|people|kids|children|cattle|cows|horses|livestock|dogs|pets|animals|(?:my|our|your|the|a|an) (?:\\w+ )?(?:child|children|kids?|dogs?|pets?|cattle|cows?|horses?|livestock|family|son|daughter|baby|babies|toddlers?|students?|scouts?|campers?|swimmers?)) (?:\\w+ ){0,2}(?:drink|swim|wade|eat|camp)\\b",
+  // "Emergency spillway" and "emergency management" name things on the map, not an emergency.
+  "\\b(?:safety|emergency(?! (?:spillways?|management|managers?|operations|services|planning|planners?|plans?|broadcast)\\b)|shelter|rescue|911)\\b",
+  // An emergency told in the third person: "his truck got swept off the road", "someone just fell
+  // through the ice", "my dad still isn't back". The subject is a person or something of theirs;
+  // "which bridges got swept away in 1993" is history.
+  "\\b(?:i|we|he|she|they|someone|somebody|(?:my|our|his|her|their) \\w+)(?: \\w+){0,2} (?:got|gets|getting|been|being|just got|was just|were just|just) (?:swept|washed|carried) (?:away|off|downstream|into)\\b|\\bjust (?:fell|went|slipped) (?:through|into|under)\\b",
+  "\\b(?:still (?:isn t|is not|isnt|hasn t|has not|hasnt|not) (?:come |came )?(?:back|home|returned)|(?:hasn t|has not|hasnt|haven t|have not) (?:come|came) (?:back|home)|never came (?:back|home))\\b",
+
+  DISTRESS,
   "\\b(?:excavat\\w*|dig|digging|loot\\w*|metal detect\\w*|artifact hunting|trespass\\w*)\\b",
   "\\b(?:drinkable|potable|medical|diagnos\\w*|legal advice|lawsuit)\\b",
-  "\\b(?:coordinates?|gps|lat long|latitude|longitude|exact (?:location|spot|address|site))\\b",
+  // Care and symptoms: "got bit by a rattlesnake, how far is the hospital", "cramps and diarrhea".
+  "\\b(?:hospital|clinic|doctor|ambulance|poison control|bitten|bit by|snakebite|snake bite|overdose|symptoms?|diarrh\\w*|cramps|vomit\\w*|nause\\w*|fever|rash|giardia|asthma|hypotherm\\w*|frostbite|heat stroke|concussion)\\b",
+  // Caves that hold bats are roosts and hibernacula: "which gypsum caves have bats hibernating in
+  // them?" ("why are bats hibernating in winter?" names no cave).
+  "\\bcaves?\\b(?: \\w+){0,5} (?:have|has|with|hold|holds|where|shelter|shelters) (?:\\w+ ){0,2}bats?\\b|\\bbats?\\b(?: \\w+){0,3} (?:in|inside) (?:\\w+ ){0,3}caves?\\b",
+  // Sheltering: "the basement or the culvert, which is better to ride it out".
+  "\\b(?:ride (?:it|this|the storm) out|take cover|where (?:should|do|can) (?:i|we) (?:go|hide|take shelter))\\b",
+  "\\bexact (?:location|spot|address|site)\\b",
+  // Street addresses. (Coordinate and ZIP terms are checked below; PLSS section-scale references are
+  // allowed, as the knowledge pack describes, while sensitive sites and personal places stay gated.)
+  // Street, mailing, home and physical addresses are never web addresses.
+  "\\b(?:street|mailing|home|physical|exact|residential|postal) address(?:es)?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)",
+  // A person's address ("the owner's address for the website", "whose address") is never a web address.
+  "\\b(?:whose|their|his|her|\\w+ s) address(?:es)?\\b(?! (?:fields?|columns?|attributes?|metadata|formats?|schemas?|layers?|data|points?|ranges?|standards?)\\b)",
+  // "What house number is …", "which street number has the well": a request for a street address.
+  // A house number, a street name (not "4 or more lane", "30 minute drive") and a street suffix.
+  "\\b\\d{1,6}(?: [nsew]{1,2})? (?:(?!(?:or|and|to|more|less|than|of|the|a|an|in|on|at|for|with|by|per|from|minutes?|hours?|miles?|mi|km|feet|foot|ft|yards?|lanes?)\\b)\\w+ ){1,3}(?:st|street|ave|avenue|blvd|boulevard|dr|drive|ln|lane|ct|court|rd|road|pl|place|ter|terrace|pkwy|parkway|cir|circle|trl|trail)\\b",
+  "\\b(?:ks|kansas) \\d{5}\\b",
+  // Exact or personal locations in other words: where exactly, precisely, near me, my house, where I live.
+  "\\b(?:where exactly|exactly where|where precisely|precisely where|pinpoint\\w*)\\b",
+  // "Where the village site actually is", and asking to undo the generalisation that hides it.
+  "\\bwhere (?:\\w+ ){0,5}(?:actually|really|truly) (?:is|are|sits?|lies?|was|were)\\b",
+  "\\b(?:real|actual|exact|true|raw|unblurred|ungeneralized|ungeneralised|un generalized|un generalised) (?:points?|locations?|positions?|coordinates?|outlines?|boundar(?:y|ies)|sites?)\\b",
+  "\\b(?:turn off|switch off|disable|remove|undo|bypass|skip|get around|without) (?:the )?(?:fuzz\\w*|generali[sz]\\w*|blur\\w*|coarsen\\w*|masking|redaction)\\b",
+  "\\bwhere\\b(?: \\w+){1,6} (?:exactly|precisely)\\b",
+  "\\bprecise (?:locations?|spots?|sites?|positions?|places?|address(?:es)?)\\b",
+  "\\b(?:nearest|closest)\\b(?: \\w+){0,4} (?:(?:to|from) )?(?:my|our|me|us)\\b",
+  "\\b(?:near|nearby|close to|around|next to) (?:me|us)\\b",
+  // "My parents' house", "our neighbor's farm": a possessor between "my" and the place.
+  "\\b(?:my|our) (?:current )?(?:(?:\\w+ s|\\w+s) ){0,2}(?:house|home|address|property|yard|farm|land|lot|parcel|location|position|whereabouts|basement|neighborhood|neighbourhood|street|block|place|apartment|well|field|pasture|ranch|acreage|driveway)\\b",
+  "\\bwhere (?:i|we) (?:am|are|m|re|live|stay|work)\\b",
+  "\\bwhere (?:my|our) (?:\\w+ ){1,2}(?:live|lives|stay|stays|work|works)\\b",
+  "\\bwho (?:owns|lives|rents)\\b(?: \\w+){0,5} (?:parcels?|land|property|house|home|farm|lot|field|well|tract|ranch|acreage|building)\\b",
+  // "Who owns the quarter section with the windmill", "who lives in the stone house now": a person
+  // behind a place, unless it is the data's owner or licence.
+  "\\bwho (?:owns|lives (?:in|on|at|there)|rents|leases|farms)\\b(?!(?: \\w+){0,3} (?:data|dataset|datasets|layer|layers|copyright|licen[cs]e|rights|records)\\b)",
+  // Culturally or ecologically sensitive sites are never located more precisely than the map shows.
+  `\\b(?:where|locate|located|locations?|nearest|closest|near|nearby|close to|next to|adjacent to|around)\\b(?: \\w+){0,6} ${SENSITIVE_SITE}\\b${NOT_AGGREGATE_TAIL}`,
+  `\\b${SENSITIVE_SITE}\\b(?: \\w+){0,6} (?:located|locations?|nearest|closest|near|nearby|close to|next to|adjacent to|around)\\b`,
+  "\\bwhere\\b(?: \\w+){0,4} (?:lek|nest|den|roost)s?\\b",
+].join("|"));
+// "What is the address", "the address of …": a street address unless the thing addressed is a web
+// target. These two are tested after joinProperNames, so "the University of Kansas website" is one name.
+const ADDRESS_QUESTION = new RegExp([
+  `\\b(?:what|which|its|the|an?) address(?:es)?\\b${NOT_ADDRESS_METADATA}`,
+  `(?<!(?:web|email|e mail|ip|internet|url|api|website|server) )\\baddress (?:of|for)\\b(?! ${WEB_TARGET}\\b)`,
 ].join("|"));
 
-export function isSensitiveQwenQuestion(question) {
-  return SENSITIVE_QUESTION.test(normalizeScopeText(question));
+// Any other mention of a sensitive site abstains, whatever the verb (show, list, plot, point out …),
+// unless the whole request has one of a few recognised shapes: a count or county-level summary, a
+// "why" or "how is it generalized" policy question, a definition, a question about map symbols, or a
+// question about the layer, dataset or source itself. A matching word elsewhere is not enough.
+const SENSITIVE_SITE_MENTION = new RegExp(`\\b${SENSITIVE_SITE}\\b`);
+const SITE_COMMAND = /^(?:please )?(?:(?:can|could|would|will) you (?:please )?|i (?:want|d like|would like) (?:to (?:see|view|know) )?|let me (?:see|view|know) )?(?:show|plot|map|list|display|highlight|mark|point|identify|find|give|tell|guide|take|draw|label|zoom|navigate|direct|locate|pin|pinpoint|reveal|get|fetch|return|output|print)\b/;
+const SITE_COMMAND_SOURCE = SITE_COMMAND.source.slice(1);
+// A policy question asks why something is withheld, generalized or protected, not "why is the mound at
+// Smith Ranch" or "why not list …".
+const WHY_POLICY = /^why (?:are|is|were|was|do|does|did|must|should|would) (?:\w+ ){0,5}(?:withh[eo]ld|redact\w*|generali[sz]\w*|protect\w*|hidden|restricted|sensitive|coarsened|rounded|removed|excluded|omitted|blurred|aggregated|private|confidential|kept|stale|missing|unavailable|delayed|limited|labell?ed|marked|treated|handled|show|shown|appear|appears|drawn|displayed|rendered|look)\b/;
+const AGGREGATE_NOUN = "(?:numbers?|counts?|totals?|summary|summaries|share|percent\\w*|density|trends?)";
+// A count that also asks for the sites themselves ("how many … can you list", "… please list them")
+// is an enumeration, not a summary.
+const ENUMERATION_TAIL = /\b(?:can|could|would|will) you (?:\w+ )?(?:list|show|name|map|plot|identify|tell|give)\b|\b(?:please|then|now) (?:list|show|name|map|plot|identify|tell|give)\b|\b(?:list|name|enumerate|identify) (?:them|those|these|each|all|every)\b|\bwhich ones\b|\bwhere\b|\b(?:names?|named|identit\w*|locations?|each one|one by one|individually|itemi[sz]\w*)\b|\bbroken down by (?:name|site|location)\b/;
+const SITE_AGGREGATE_SHAPES = [
+  /^(?:roughly |about |approximately |around |so )?how many\b/,
+  /^(?:which|what) (?:county|counties|region|regions|decade|year|state|part of (?:the )?state) (?:has|have|had) the (?:most|fewest|least|highest|lowest|largest|smallest)\b/,
+  new RegExp(`^(?:what|which) (?:is|are|was|were) the ${AGGREGATE_NOUN} of\\b`),
+  new RegExp(`^${SITE_COMMAND_SOURCE} (?:me )?(?:the )?${AGGREGATE_NOUN} (?:of|by|per)\\b`),
+  new RegExp(`\\b${SENSITIVE_SITE}\\b(?: \\w+){0,2} (?:by|per) (?:county|counties|state|region|year|decade)$`),
+];
+// Definitions may carry ordinary modifiers ("what is a prairie-chicken lek", "what are burial mounds"),
+// but not inventory words ("the known nests", "all archaeological sites") or proper nouns.
+const DEFINITION_MODIFIERS = "(?:(?!(?:the|all|any|these|those|known|mapped|recorded|documented|surveyed|monitored|protected|withheld|local|nearby|our|your|their|its)\\b)\\w+ ){0,3}";
+const SITE_DEFINITION = new RegExp(`^(?:what is|what are|what s|whats) (?:an? )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE}(?: (?:my|our) (?:\\w+ ){0,2}(?:teacher|professor|instructor|textbook|class) (?:keeps saying|said|says|mentioned|uses)(?: it| this| that)?)?$|^what (?:does|do) (?:the )?(?:word |term )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE} mean$|^define (?:an? )?${DEFINITION_MODIFIERS}${SENSITIVE_SITE}$`);
+const SITE_ALLOWED_SHAPES = [
+  // Policy and map presentation.
+  // "Why not list …" and "why don't you show …" are commands, not policy questions.
+  WHY_POLICY,
+  new RegExp(`^(?:how|why) (?:are|is|were|was|do|does) (?:\\w+ ){0,4}${SENSITIVE_SITE}\\b(?: \\w+){0,3} (?:generali[sz]\\w*|withh[eo]ld|redact\\w*|protect\\w*|symboli[sz]\\w*|shown|displayed|represented|handled|treated|coarsened)\\b`),
+  /^what (?:symbols?|colou?rs?|icons?|styles?|legend)\b/,
+];
+// A question about the layer, dataset or source itself, unless it asks which sites it contains.
+const SITE_METADATA_QUESTION = /^(?:is|are|was|were|when|how (?:fresh|current|old|recent|often)|what|which|who|compare)\b.*\b(?:layers?|datasets?|data|sources?|surveys?|records?|licen[cs]\w*|provenance|metadata|agenc\w+)\b/;
+const SITE_ENUMERATION = new RegExp(`^(?:what|which) (?:(?:are|is|were|was) )?(?:the |all |any )?(?:\\w+ )?${SENSITIVE_SITE}\\b`);
+
+const SENSITIVE_SITE_LOCATING = SITE_ENUMERATION;
+
+// "Which records contain the burial sites?", "which source lists the nests?": enumeration behind a
+// metadata noun.
+const SITE_CONTAINMENT = new RegExp(`\\b(?:contain\\w*|list\\w*|includ\\w*|has|have|show\\w*|maps?|marks?|locat\\w*|names?)\\b(?: \\w+){0,3} ${SENSITIVE_SITE}\\b`);
+
+function sensitiveSiteMentionAllowed(text, { properNoun = false } = {}) {
+  if (SITE_AGGREGATE_SHAPES.some((shape) => shape.test(text))) return !ENUMERATION_TAIL.test(text);
+  if (!properNoun && SITE_DEFINITION.test(text)) return true;
+  if (SITE_ALLOWED_SHAPES.some((shape) => shape.test(text))) return true;
+  return SITE_METADATA_QUESTION.test(text) && !SITE_ENUMERATION.test(text) && !SITE_CONTAINMENT.test(text);
+}
+
+// Coordinate and ZIP terms ask for a precise value unless the clause is about the term itself
+// ("what does UTM mean", "which UTM zone", "why are coordinates withheld").
+const PRECISE_TERM_WORDS = "(?:coordinates?|gps(?: coordinates?)?|lat(?:itude)? long(?:itude)?|latitude|longitude|lat lon\\w*|lat lng|latlon\\w*|latlng|utm(?: coordinates?)?|eastings?|northings?|zip(?: ?codes?)?|postal codes?)";
+const PRECISE_TERM = /\b(?:coordinates?|gps|lat long|latitude|longitude|lat lon\w*|lat lng|latlon\w*|latlng|utm|eastings?|northings?|zip(?: ?codes?)?|postal codes?)\b(?! (?:files?|archives?|downloads?)\b)/;
+const PRECISE_TERM_ABOUT_SHAPES = [
+  new RegExp(`^(?:what s|whats) (?:an? )?${PRECISE_TERM_WORDS}$`),
+  // "Why would a map use UTM instead of plain lat/long?"
+  /^why (?:would|do|does|is|are|did) (?:\w+ ){0,4}(?:use|uses|used|prefer|prefers|choose|chooses)\b/,
+  // "Could you explain the difference between UTM and latitude/longitude", "explain what a ZIP code is".
+  new RegExp(`^(?:(?:could|can|would) you (?:please )?)?(?:explain|describe) (?:to me |to students )?(?:the difference between (?:an? )?${PRECISE_TERM_WORDS}|what (?:an? )?${PRECISE_TERM_WORDS} (?:is|are|means?)$)`),
+  // A direct definition ("what are coordinates", "what is a ZIP code"), not "what are the coordinates".
+  new RegExp(`^what (?:is|are) (?:an? )?${PRECISE_TERM_WORDS}$`),
+  // A definition, not a value request that merely ends in "… what it means".
+  /^what (?:does|do) (?:the )?(?:\w+ ){0,5}(?:mean|stand for)$|^what is the meaning of\b/,
+  /^(?:which|what) (?:\w+ ){0,2}(?:zones?|projections?|datums?|systems?|formats?|precision|accuracy)\b/,
+  /^how (?:precise|accurate|rounded|generali[sz]ed|coarse)\b/,
+  // "What is the difference between latitude and longitude": two terms compared, no value asked for.
+  new RegExp(`^what (?:is|s) the difference between (?:an? )?${PRECISE_TERM_WORDS}(?: and (?:an? )?${PRECISE_TERM_WORDS})?$`),
+  new RegExp(`^define (?:an? )?${PRECISE_TERM_WORDS}$|^explain what (?:an? )?${PRECISE_TERM_WORDS} (?:is|are|means?)$`),
+  WHY_POLICY,
+];
+
+// Each clause is checked on its own, so a harmless trailing clause ("… and why is the map
+// generalized?") cannot excuse a precise or locating request in another. A clause that only
+// continues the first ("what do latitude | and longitude mean") is judged with the whole question,
+// but only when no later clause starts a question of its own ("… and which ranch has them").
+const CLAUSE_BREAK = /[?;:!.,()\u2013\u2014]+|\b(?:and|but|then|also|plus)\b/i;
+const NEW_QUESTION = new RegExp(`^(?:what|which|where|how|when|who|whose|why|is|are|was|were|can|could|would|will|do|does|did)\\b|${SITE_COMMAND.source}`);
+const LOCATING_CLAUSE = new RegExp(`^where\\b|${SITE_COMMAND.source}|\\b(?:near|nearby|nearest|closest|located|locations?)\\b`);
+const POLICY_CLAUSE = /^(?:how|why) (?:are|is|were|was|do|does) (?:\w+ ){0,4}(?:generali[sz]\w*|withh[eo]ld|redact\w*|protect\w*|symboli[sz]\w*|shown|displayed|represented|handled|treated|coarsened)\b/;
+const preciseAbout = (text) => PRECISE_TERM_ABOUT_SHAPES.some((shape) => shape.test(text));
+
+function siteClauseBlocked(clause, index, wholeAllowed, options) {
+  const newQuestion = index > 0 && NEW_QUESTION.test(clause);
+  if (SENSITIVE_SITE_MENTION.test(clause)) {
+    if (sensitiveSiteMentionAllowed(clause, options)) return false;
+    return !wholeAllowed || newQuestion || LOCATING_CLAUSE.test(clause) || SENSITIVE_SITE_LOCATING.test(clause);
+  }
+  if (LOCATING_CLAUSE.test(clause) || ENUMERATION_TAIL.test(clause)) return true;
+  // A later question about sites already named must itself be a summary, policy or metadata question.
+  return newQuestion && !sensitiveSiteMentionAllowed(clause, options) && !POLICY_CLAUSE.test(clause)
+    && !SITE_METADATA_QUESTION.test(clause);
+}
+
+// A clause that continues a question about a term ("what does ZIP Code Tabulation Area mean? … how it
+// differs from a real ZIP code", "the difference between UTM and latitude/longitude") shares that
+// question's footing, unless it asks for something ("… I need the UTM of the well").
+const PRECISE_REQUEST = /\b(?:need|want|give|send|tell|show|list|export|provide|share|get (?:me|us|the|a|an|its|their)|find|locate|look up)\b|\b(?:of|for) (?:the|this|that|my|our|each|every|a|an)\b/;
+
+function preciseBlocked(clauses, wholeAbout) {
+  let questionAbout = false;
+  return clauses.some((clause, index) => {
+    const startsQuestion = index === 0 || NEW_QUESTION.test(clause);
+    const about = preciseAbout(clause);
+    if (startsQuestion) questionAbout = about;
+    if (!PRECISE_TERM.test(clause)) return false;
+    if (SITE_COMMAND.test(clause)) return true;
+    if (about || (!startsQuestion && questionAbout && !PRECISE_REQUEST.test(clause))) return false;
+    return !wholeAbout || (index > 0 && NEW_QUESTION.test(clause));
+  });
+}
+
+// A capitalised word after the first names a place ("Ellis County nests", "Cheyenne Bottoms roost")
+// unless it is a question word, a site noun or an ordinary modifier, so title case ("What Is A
+// Prairie-Chicken Lek?") is not mistaken for a place name.
+const COMMON_CAPITALISED = new Set(("what which is are a an the of does do define mean means meaning "
+  + "burial burials grave graves mound mounds archaeological site sites nest nests nesting lek leks den dens roost "
+  + "roosts roosting hibernaculum hibernacula prairie chicken chickens lesser greater sage grouse bird birds eagle "
+  + "bald golden heron herons bat bats raptor raptors hawk owl crane cranes native ancient historic indian").split(" "));
+
+function hasProperNoun(question) {
+  if (typeof question !== "string") return false;
+  const words = question.match(/[A-Za-z]+/g) ?? [];
+  return words.slice(1).some((word) => /^[A-Z]/.test(word) && !COMMON_CAPITALISED.has(word.toLowerCase()));
+}
+
+// Any mention of drinking, swimming or wading is advice unless the activity itself is part of a
+// metadata phrase ("the drinking water layer", "swimming beach records") or a definition, and the
+// question asks for no judgement, gives no command and is not about the asker.
+const WATER_ACTIVITY = /\b(?:drink\w*|swim\w*|wad(?:e|es|ing))\b/;
+const WATER_ACTIVITY_ADVICE = /\b(?:can|could|should|would|may|might|will|allowed|permitted|legal|recommend\w*|advis\w*|avoid\w*|need|needs|ought|whether|i|we|me|us|my|our|meets?|met|compl(?:y|ies|iant|iance)|exceeds?|violat\w*|pass(?:es)?|fails?|contaminat\w*|tested|potable)\b|\b(?:okay|ok|safe|fine|alright|dangerous|harmful|risky)\b(?! (?:to|for) (?:show|display|publish|release|share|map)\b)/;
+const WATER_ACTIVITY_METADATA_ALL = /\b(?:drinking|swimming|wading)(?: (?:water|beach|beaches|area|areas|hole|holes|site|sites))? (?:layers?|datasets?|data|sources?|records?|metadata|standards?|regulations?|rules?|surveys?|programs?|systems?|quality|beaches?)\b|^what (?:does|do) (?:the )?(?:term |word )?(?:drink\w*|swim\w*|wad\w+)(?: \w+)? mean\b/g;
+// "Drink from this source", "swim in this source": an instruction, not a metadata question.
+const WATER_ACTIVITY_IMPERATIVE = /^(?:please )?(?:drink|swim|wade|bathe)\b/;
+
+// House numbers are street-level precision. Field and definition questions ("which house number
+// fields", "what is a house number") and coverage questions about a layer or dataset ("how many house
+// numbers are in the address-point layer") pass; "what is the house number for the well" does not.
+const HOUSE_NUMBER = /\b(?:house|street|building|mailbox|lot) numbers?\b/;
+const HOUSE_NUMBER_ALLOWED = [
+  /\b(?:house|street|building|mailbox|lot) numbers? (?:fields?|columns?|attributes?|metadata|formats?|schemas?|data|standards?|means?)\b/,
+  /^what (?:is|are) (?:an? )?(?:house|street|building|mailbox|lot) numbers?$/,
+];
+const HOUSE_NUMBER_COVERAGE = /^(?:how many|what (?:percent\w*|share|proportion|fraction)|(?:does|do|is|are) (?:the |this |that )?(?:\w+ ){0,3}(?:layers?|datasets?|data|points?|records?|sources?) (?:includ\w*|contain\w*|have|has|list\w*|carr\w*))\b/;
+// "...in the address layer, and does it include street numbers": a later clause may refer back to a
+// layer or dataset an earlier clause named.
+const HOUSE_NUMBER_COVERAGE_REFERENCE = /^(?:does|do|is|are) (?:it|they|this|that|these|those) (?:includ\w*|contain\w*|have|has|list\w*|carr\w*)\b/;
+const HOUSE_NUMBER_METADATA = /\b(?:layers?|datasets?|data|points?|records?|sources?)\b/;
+
+function houseNumberAllowed(text, metadataNamed = false) {
+  if (HOUSE_NUMBER_ALLOWED.some((shape) => shape.test(text))) return true;
+  if (SITE_COMMAND.test(text)) return false;
+  return (HOUSE_NUMBER_COVERAGE.test(text) && HOUSE_NUMBER_METADATA.test(text))
+    || (metadataNamed && HOUSE_NUMBER_COVERAGE_REFERENCE.test(text));
+}
+
+// Each clause is judged: a field question does not excuse a second request ("which house number fields
+// are present, and what is the house number for the selected well").
+function houseNumberClauseBlocked(clause, index, wholeAllowed, clauses) {
+  const metadataNamed = index > 0 && HOUSE_NUMBER_METADATA.test(clauses.slice(0, index).join(" "));
+  if (!HOUSE_NUMBER.test(clause) || houseNumberAllowed(clause, metadataNamed)) return false;
+  return !wholeAllowed || (index > 0 && NEW_QUESTION.test(clause));
+}
+
+// "The University of Kansas website": "of" or "for" between capitalised words belongs to a proper name.
+// "Address Of" in a title-cased question is not part of a name.
+const PROPER_NAME_LINK = /\b(?!Address(?:es)?\b)([A-Z][\w'-]*) (?:[Oo]f|[Ff]or|OF|FOR) (?=[A-Z])(?!(?:The|A|An|This|That|Its|Their|His|Her)\b)/g;
+const joinProperNames = (question) => typeof question === "string" ? question.replace(PROPER_NAME_LINK, "$1 ") : question;
+
+// Allowlist. A keyword list of sensitive phrasings does not generalise: on fresh, independently
+// written questions it missed 40% of sensitive ones. So the model interprets only questions that are
+// recognisably about the map or its data, and everything else abstains. A question qualifies when,
+// after common framing is set aside ("reporter here", "I teach 8th grade", "I was wondering
+// whether"), it names the map, its data or a mapped subject, or asks a definition, history,
+// comparison or explanation; and when any first-person wording left over is about the map itself
+// ("my dataset is missing", "how do I export the chart"), not about the asker's place, people or
+// circumstances ("our backyard garden", "my brother went hunting", "can my labs go in the lake").
+const INTERPRETATION_FRAMING = [
+  /^(?:hi|hello|hey|yo|ok|okay|so|sorry if this is the wrong place)\b/g,
+  /\b(?:i m|i am|im) (?:an? )?(?:\w+ ){0,3}(?:teacher|student|researcher|reporter|journalist|historian|planner|realtor|birder|angler|parent|farmer|rancher|retiree|librarian|scientist|consultant|writer|geologist|hydrologist|ecologist|archaeologist|engineer|surveyor|volunteer)\b(?: here)?/g,
+  /^(?:\w+ ){0,2}(?:reporter|realtor|birder|angler|teacher|historian|planner|student|parent|rancher|farmer)(?: here| question)?\b/g,
+  /\bi teach (?:\w+ ){0,4}(?:science|history|geography|class|grade|students)\b/g,
+  /\b(?:i was wondering|i m wondering|i wonder|i m curious|just curious|i m interested in|i d like to know|i want to know|i just want to know|i see|i noticed|i read)\b(?: whether| if| about| how| that| why)?/g,
+  /\b(?:i m )?not asking (?:you )?(?:for|to|about)\b(?: \w+){0,8}/g,
+  /\b(?:general question only|general question|quick question|two quick ones|two things|cool layer|great map|nice map)\b/g,
+  /\b(?:i m|i am|im|we re|we are) (?:writing|working on|doing|researching|preparing|drafting) (?:a|an|my|our|the) (?:\w+ )?(?:thesis|paper|report|dissertation|article|story|book|project|chapter|lesson|plan)\b(?: (?:on|about) (?:\w+ ){0,6}\w+)?/g,
+  /\b(?:like i m five|like im five|eli5)\b/g,
+  /\b(?:lol|pls|plz|please|thanks|thank you|jk|thx)\b/g,
+  // "Tell me about", "show us", "help me understand": the asker as the audience, not the subject.
+  /\b(tell|show|give|help|explain to|walk|teach|remind) (?:me|us)\b/g,
+  // School and research framing: "my kids are doing a science fair project on tornadoes", "my bio
+  // teacher keeps saying it".
+  /\b(?:my|our) (?:\w+ ){0,2}(?:kids?|children|son|daughter|students?|class) (?:is|are) (?:doing|working on|writing) (?:a |an |their |his |her )?(?:\w+ ){0,3}(?:project|report|paper|assignment|homework)(?: (?:on|about) \w+)?/g,
+  /\b(?:my|our) (?:\w+ ){0,2}(?:teacher|professor|instructor|textbook|class) (?:keeps saying|said|says|mentioned|uses|asked)(?: (?:it|this|that))?/g,
+];
+// Mapped subjects and the map's own data and interface.
+const MAP_DATA = /\b(?:layers?|datasets?|data|metadata|sources?|records?|maps?|legend|symbols?|icons?|markers?|fields?|attributes?|licen[cs]e|citation|cite|download\w*|export\w*|csv|png|url|website|web address|api|endpoints?|portal|feeds?|agency|agencies|explorer|panel|slider|filter|chart|hydrograph|graph|resolution|projection|coordinate (?:reference )?system|crs|generali[sz]\w*|blurred|grid|surveys?|statewide|boundar(?:y|ies)|tracks?|time series|updated?|refreshed|gauges?|readings?|database|tables?|columns?|values?|units?|labels?|status|view|selection|precision|search|results?|township|range|plss|mapping|mapped|research\w*|study|studying|project|thesis|paper|report|plan|class|classroom|lesson|homework|features?|selected|visible|context|evidence\w*|points?)\b|\bt\d{1,3}[ns]\b|\br\d{1,3}[ew]\b/;
+const MAPPED_SUBJECT = /\b(?:geolog\w*|soils?|aquifers?|groundwater|hydrolog\w*|streamflow|climate|weather|precipitation|rainfall|drought|ecolog\w*|species|habitats?|prairies?|wildlife|tornado(?:es)?|flood\w*|wildfires?|earthquakes?|hazards?|land cover|crops?|agricultur\w*|bedrock|watersheds?|basins?|ogallala|flint hills|high plains|history|historic\w*|archaeolog\w*|settlement\w*|trails?|railroads?|counties|county|kansas|fema|algae|nitrate\w*|wells?|bridges?|highways?|interstates?|towns?|cities|city|communities)\b/;
+const QUESTION_SHAPE = /^(?:what is|what are|what s|whats|what was|what were|define|explain|describe|tell me about|compare|summari[sz]e|give an overview|overview of|when (?:was|were|did|is|are|does|do))\b|\b(?:what (?:does|do) (?:\w+ ){0,5}mean|meaning of|difference between|how many|how often|how much|number of|in total|rank|average|typical|trend\w*|what (?:percent\w*|share|proportion|fraction)|how far is (?:\w+ ){1,4}from|\b1[6-9]\d\d\b|\b20\d\d\b)|^(?:why|how) (?:do|does|did|has|have|is|are|was|were|can|could|would)\b/;
+const FIRST_PERSON = /\b(?:i|i m|im|i ve|ive|i d|me|my|mine|we|we re|we ve|us|our|ours|myself|ourselves)\b/;
+// What first-person wording about the map may not mention: the asker's place, people, animals or
+// circumstances.
+const PERSONAL_ANCHOR = new RegExp(`\\b(?:house|home|farm|land|property|yard|backyard|garden|store|shop|business|place|lot|pasture|ranch|acreage|basement|street|block|neighbou?rhood|apartment|location|position|whereabouts|car|truck|vehicle|road|creek|river|lake|pond|standing|hurt|stranded|trapped|sick|injured|${DISTRESS_PERSON.slice(3, -1)})\\b`);
+
+// A place word that names a layer or a measured quantity ("the river layer", "lake levels", "road
+// data") is part of the map, not the asker's place.
+const MAPPED_PLACE_TERM = /\b(?:river|rivers|road|roads|lake|lakes|creek|creeks|pond|ponds|street|streets|land|farm|field|pasture|block) (?:layers?|levels?|data|dataset|gauges?|maps?|records?|network|lines?|polygons?|points?|features?|stations?|cover|use|names?)\b/g;
+
+function clauseAllowed(core) {
+  if (!MAP_DATA.test(core) && !MAPPED_SUBJECT.test(core) && !QUESTION_SHAPE.test(core)) return false;
+  return !FIRST_PERSON.test(core) || (MAP_DATA.test(core) && !PERSONAL_ANCHOR.test(core.replace(MAPPED_PLACE_TERM, " ")));
+}
+
+const stripFraming = (value) => INTERPRETATION_FRAMING.reduce((rest, framing) => rest.replace(framing, " "), value)
+  .replace(/\s+/g, " ").trim();
+
+// A follow-up sentence that only refers back ("How do I reset it?", "Are they rounded to the
+// section?") shares the footing of the sentence before it, unless it shows an intent to go somewhere
+// or do something there ("Would love to go see it", "Planning a spelunking weekend") or names the
+// asker's place or people. A first-person follow-up is accepted only after a sentence about the map's
+// own data or interface.
+const VISIT_INTENT = /\b(?:go|going|went|visit\w*|see it|see them|get there|get to|stop at|stop by|drive|walk|hike|hiking|photograph\w*|camp\w*|swim\w*|fish\w*|hunt\w*|dig\w*|collect\w*|spelunk\w*|explore|trip|weekend|tonight|tomorrow|this afternoon|planning|plan to|heading|love to|want to see)\b/;
+
+// Every sentence of the question must be about the map: "cool layer! … which bend of Big Creek is the
+// village on? Would love to go see it" is not interpreted because of its last sentence. A short aside
+// of up to three words without first-person wording ("two quick ones") is set aside.
+function interpretationAllowed(question, text) {
+  if (!stripFraming(text)) return false;
+  const sentences = typeof question === "string" ? question.split(/[.?!;:]+/).map(normalizeScopeText).filter(Boolean) : [text];
+  let previous = null;
+  return sentences.every((sentence) => {
+    const core = stripFraming(sentence);
+    if (!core) return true;
+    if (clauseAllowed(core)) {
+      previous = core;
+      return true;
+    }
+    if (core.split(" ").length <= 3 && !FIRST_PERSON.test(core) && !VISIT_INTENT.test(core)) return true;
+    return previous !== null && !VISIT_INTENT.test(core) && !PERSONAL_ANCHOR.test(core)
+      && (!FIRST_PERSON.test(core) || MAP_DATA.test(previous));
+  });
+}
+
+// Chat filler carries no meaning and would otherwise break anchored shapes ("define hibernaculum pls").
+const CHAT_FILLER = /\b(?:lol|lmao|pls|plz|jk|thx|tysm|ty)\b/gi;
+
+export function isSensitiveQwenQuestion(rawQuestion) {
+  const question = typeof rawQuestion === "string" ? rawQuestion.replace(CHAT_FILLER, " ") : rawQuestion;
+  const text = normalizeScopeText(question);
+  if (!interpretationAllowed(question, text)) return true;
+  if (SENSITIVE_QUESTION.test(text) || ADDRESS_QUESTION.test(normalizeScopeText(joinProperNames(question)))) return true;
+  if (EVACUATION.test(text) && PRESENT_ADVICE.test(text)) return true;
+  if (WHAT_TO_DO.test(text) && HAZARD_CUE.test(text) && !INTERFACE_CUE.test(text)) return true;
+  // Each activity mention must sit inside a metadata phrase; one legitimate phrase ("swimming beach
+  // records") does not excuse another mention ("ask visitors to drink this water").
+  if (WATER_ACTIVITY.test(text) && (WATER_ACTIVITY_ADVICE.test(text) || SITE_COMMAND.test(text)
+    || WATER_ACTIVITY_IMPERATIVE.test(text) || WATER_ACTIVITY.test(text.replace(WATER_ACTIVITY_METADATA_ALL, " ")))) return true;
+  const clauses = typeof question === "string"
+    ? question.split(CLAUSE_BREAK).map(normalizeScopeText).filter(Boolean)
+    : [];
+  const judgedTogether = clauses.slice(1).every((clause) => !NEW_QUESTION.test(clause));
+  if (HOUSE_NUMBER.test(text)) {
+    const wholeAllowed = judgedTogether && houseNumberAllowed(text);
+    if (clauses.some((clause, index) => houseNumberClauseBlocked(clause, index, wholeAllowed, clauses))) return true;
+  }
+  if (SENSITIVE_SITE_MENTION.test(text)) {
+    // A capitalised word after the first ("What are Ellis County nests?") names a place, not a kind.
+    const options = { properNoun: hasProperNoun(question) };
+    const wholeAllowed = judgedTogether && sensitiveSiteMentionAllowed(text, options);
+    if (clauses.some((clause, index) => siteClauseBlocked(clause, index, wholeAllowed, options))) return true;
+  }
+  const wholeAbout = judgedTogether && !SITE_COMMAND.test(text) && preciseAbout(text);
+  return preciseBlocked(clauses, wholeAbout);
 }
 
 const sha256 = (value) => `sha256:${createHash("sha256").update(value).digest("hex")}`;

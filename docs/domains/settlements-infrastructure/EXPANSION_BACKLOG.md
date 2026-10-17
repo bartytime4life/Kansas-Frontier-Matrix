@@ -8,24 +8,30 @@ owners: <Settlements/Infrastructure domain steward — TODO>, <Docs steward — 
 created: 2026-05-19
 updated: 2026-06-08
 policy_label: public
-related: [
-  ai-build-operating-contract.md,
-  docs/domains/settlements-infrastructure/README.md,
-  docs/doctrine/directory-rules.md,
-  docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf,
-  docs/encyclopedia/README.md,
-  docs/registers/VERIFICATION_BACKLOG.md,
-  docs/registers/DRIFT_REGISTER.md,
-  policy/sensitivity/infrastructure/
-]
+related:
+  - "docs/doctrine/ai-build-operating-contract.md"
+  - "docs/domains/settlements-infrastructure/README.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf"
+  - "docs/encyclopedia/README.md"
+  - "docs/registers/VERIFICATION_BACKLOG.md"
+  - "docs/registers/DRIFT_REGISTER.md"
+  - "policy/sensitivity/infrastructure/"
 tags: [kfm, settlements, infrastructure, backlog, expansion, governance, sensitivity, critical-infrastructure]
-notes: [
-  "CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md authority.",
-  "PROPOSED placement per Directory Rules v1.3 6.1 (docs/domains/settlements-infrastructure/) and Step 3 (domain-as-segment).",
-  "No mounted repo verified this session; all implementation-shaped claims default to PROPOSED until repo evidence resolves them.",
-  "Critical-infrastructure sensitivity posture is inherited from DOM-SETTLE I, ENCY 11, Atlas 20.5, and Atlas 24.5 and is non-negotiable across every backlog item below.",
-  "CONFLICTED: contract path. Atlas 24.13 / ENCY 7.1 crosswalk uses contracts/settlement/; Directory Rules 6.1 domain-segment pattern implies contracts/domains/settlements-infrastructure/. Surfaced as ADR-Q-SET-D. This edition aligns primary paths to the crosswalk and flags the divergence."
-]
+notes:
+  - "CONTRACT_VERSION pinned to 3.0.0 per ai-build-operating-contract.md authority."
+  - "PROPOSED placement per Directory Rules v1.3 6.1 (docs/domains/settlements-infrastructure/) and Step 3 (domain-as-segment)."
+  - "No mounted repo verified this session; all implementation-shaped claims default to PROPOSED until repo evidence resolves them."
+  - "Critical-infrastructure sensitivity posture is inherited from DOM-SETTLE I, ENCY 11, Atlas 20.5, and Atlas 24.5 and is non-negotiable across every backlog item below."
+  - "CONFLICTED: contract path. Atlas 24.13 / ENCY 7.1 crosswalk uses contracts/settlement/; Directory Rules 6.1 domain-segment pattern implies contracts/domains/settlements-infrastructure/. Surfaced as ADR-Q-SET-D. This edition aligns primary paths to the crosswalk and flags the divergence."
+owning_root: docs/
+responsibility: "Human-readable Settlements & Infrastructure — Expansion Backlog guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+related_path_corrections:
+  - "ai-build-operating-contract.md -> docs/doctrine/ai-build-operating-contract.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # Settlements & Infrastructure — Expansion Backlog
@@ -671,6 +677,6 @@ CONFIRMED from Atlas §24.5 (Master Sensitivity / Rights Tier Reference) and the
 
 ---
 
-**Related docs:** [Operating contract](../../../ai-build-operating-contract.md) · [Atlas Ch. 14 / §20.5 / §24.5 / §24.13 (PROPOSED link)](../../atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf) · [Encyclopedia §7.1 / §11 (PROPOSED link)](../../encyclopedia/README.md) · [Directory Rules v1.3](../../doctrine/directory-rules.md) · [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Drift Register](../../registers/DRIFT_REGISTER.md)
+**Related docs:** [Operating contract](../../doctrine/ai-build-operating-contract.md) · [Atlas Ch. 14 / §20.5 / §24.5 / §24.13 (PROPOSED link)](../../atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf) · [Encyclopedia §7.1 / §11 (PROPOSED link)](../../encyclopedia/README.md) · [Directory Rules v1.3](../../doctrine/directory-rules.md) · [Verification Backlog](../../registers/VERIFICATION_BACKLOG.md) · [Drift Register](../../registers/DRIFT_REGISTER.md)
 
 **Last updated:** 2026-06-08  ·  `CONTRACT_VERSION = "3.0.0"`  ·  [⬆ back to top](#contents)

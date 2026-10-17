@@ -8,17 +8,34 @@ owners: TODO Roads/Rail/Trade domain steward + Docs steward + Release authority
 created: 2026-05-19
 updated: 2026-06-07
 policy_label: public
-related: [docs/domains/roads-rail-trade/README.md, docs/domains/roads-rail-trade/OBJECT_FAMILIES.md, docs/domains/roads-rail-trade/PIPELINE.md, docs/domains/roads-rail-trade/PRESERVATION_MATRIX.md, docs/doctrine/directory-rules.md, docs/standards/PROV.md, docs/standards/PMTILES.md, release/README.md, schemas/contracts/v1/release/release_manifest.schema.json, ai-build-operating-contract.md]
+related:
+  - "docs/domains/roads-rail-trade/README.md"
+  - "docs/domains/roads-rail-trade/OBJECT_FAMILIES.md"
+  - "docs/domains/roads-rail-trade/PIPELINE.md"
+  - "docs/domains/roads-rail-trade/PRESERVATION_MATRIX.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/standards/PROV.md"
+  - "docs/standards/PMTILES.md"
+  - "release/README.md"
+  - "schemas/contracts/v1/release/release_manifest.schema.json"
+  - "docs/doctrine/ai-build-operating-contract.md"
 tags: [kfm, roads-rail-trade, release, governance, publication, rollback, correction]
-notes: [
-  "CONTRACT_VERSION = 3.0.0 pinned for this doctrine-adjacent doc.",
-  "All per-domain repo-state claims are PROPOSED or NEEDS VERIFICATION; no mounted repo was inspected. The release/ ROOT LAYOUT itself is CONFIRMED doctrine (Directory Rules §9.2 / repo guiding doc §7).",
-  "CORRECTION v1->v1.1: schema/contract homes are schemas/contracts/v1/transport/ and contracts/transport/ per Atlas Ch.24.13 row 13 + ENCY §7.11 - NOT domains/roads-rail-trade/. The transport/ slug applies to schemas+contracts; roads-rail-trade applies to docs/policy/tests/fixtures/data/pipelines/release. Documented divergence tracked as OQ-RRT-01 / Open Question #11.",
-  "RouteUncertaintyProfile softened to anchored UncertaintySurface (doctrine-synthesis §16); reinstatement note retained in Open Question #5.",
-  "release_state enum conflict (UPPERCASE schema form vs STAC-profile lowercase) is surfaced in §3 and Open Question #1.",
-  "Register entries in §10 are illustrative TEMPLATE form. Suffix -template marks every row to prevent confusion with real releases.",
-  "Sensitivity posture for Indigenous trade and mobility corridors defaults to steward review and generalized public geometry per Atlas §13.I."
-]
+notes:
+  - "CONTRACT_VERSION = 3.0.0 pinned for this doctrine-adjacent doc."
+  - "All per-domain repo-state claims are PROPOSED or NEEDS VERIFICATION; no mounted repo was inspected. The release/ ROOT LAYOUT itself is CONFIRMED doctrine (Directory Rules §9.2 / repo guiding doc §7)."
+  - "CORRECTION v1->v1.1: schema/contract homes are schemas/contracts/v1/transport/ and contracts/transport/ per Atlas Ch.24.13 row 13 + ENCY §7.11 - NOT domains/roads-rail-trade/. The transport/ slug applies to schemas+contracts; roads-rail-trade applies to docs/policy/tests/fixtures/data/pipelines/release. Documented divergence tracked as OQ-RRT-01 / Open Question #11."
+  - "RouteUncertaintyProfile softened to anchored UncertaintySurface (doctrine-synthesis §16); reinstatement note retained in Open Question #5."
+  - "release_state enum conflict (UPPERCASE schema form vs STAC-profile lowercase) is surfaced in §3 and Open Question #1."
+  - "Register entries in §10 are illustrative TEMPLATE form. Suffix -template marks every row to prevent confusion with real releases."
+  - "Sensitivity posture for Indigenous trade and mobility corridors defaults to steward review and generalized public geometry per Atlas §13.I."
+owning_root: docs/
+responsibility: "Human-readable Roads, Rail, and Trade Routes Domain — Release Index guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+related_path_corrections:
+  - "ai-build-operating-contract.md -> docs/doctrine/ai-build-operating-contract.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # Roads, Rail, and Trade Routes domain — Release Index
@@ -555,7 +572,7 @@ Each item below is **checkable** but **not yet checked** strongly enough in this
 - [`../../runbooks/`](../../runbooks/) — Operational runbooks (Roads/Rail/Trade runbook not yet authored)
 - [`../../registers/VERIFICATION_BACKLOG.md`](../../registers/VERIFICATION_BACKLOG.md) — Verification backlog register *(NEEDS VERIFICATION)*
 - [`../../registers/DRIFT_REGISTER.md`](../../registers/DRIFT_REGISTER.md) — Drift register *(NEEDS VERIFICATION)*
-- [`../../../ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — Operating contract, `CONTRACT_VERSION = "3.0.0"`
+- [`../../doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — Operating contract, `CONTRACT_VERSION = "3.0.0"`
 - Atlas: `Kansas_Frontier_Matrix_-_Domains_v1_1___Pass_23_32_Consolidated_Atlas` Chapter 13 (Roads, Rail, and Trade Routes) — *(CONFIRMED doctrinal source)*
 - `release/README.md` — Release root README *(CONFIRMED layout per Directory Rules §9.2; per-domain presence NEEDS VERIFICATION)*
 - `schemas/contracts/v1/release/release_manifest.schema.json` — `ReleaseManifest` schema *(PROPOSED; NEEDS VERIFICATION; see Open Question #8)*

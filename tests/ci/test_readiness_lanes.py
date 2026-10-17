@@ -28,6 +28,25 @@ def test_registry_has_two_bounded_implementations_and_two_named_holds() -> None:
     }
 
 
+def test_readiness_doc_posture_table_matches_registry() -> None:
+    doc = (ROOT / "docs" / "readiness-lanes.md").read_text(encoding="utf-8")
+    rows = {}
+    for line in doc.splitlines():
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) == 3 and cells[0].startswith("`") and cells[0].endswith("`"):
+            rows[cells[0].strip("`")] = (cells[1], cells[2])
+
+    lanes = TOOL.load_registry()["lanes"]
+    assert tuple(rows) == tuple(lane["id"] for lane in lanes)
+    for lane in lanes:
+        status, detail = rows[lane["id"]]
+        assert status == lane["status"], lane["id"]
+        if lane["status"] == "HOLD":
+            assert detail == lane["hold_reason"], lane["id"]
+        else:
+            assert all(path in detail for path in lane["command"] if "/" in path), lane["id"]
+
+
 @pytest.mark.parametrize("lane_id", ["fixtures", "catalog"])
 def test_unimplemented_lanes_fail_closed_with_named_hold(lane_id: str) -> None:
     lane = TOOL.lane_by_id(TOOL.load_registry(), lane_id)

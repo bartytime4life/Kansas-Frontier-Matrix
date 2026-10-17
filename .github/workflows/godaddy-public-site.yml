@@ -1,0 +1,211 @@
+# Public front door for kansasfrontiermatrix.com on GoDaddy web hosting.
+#
+# Every pull request runs this workflow so `build` can be a required check; the
+# `changes` job skips `build` (reported as passing) when a pull request touches
+# none of the site paths below. Affected pull requests and main pushes build
+# apps/public-site/ into a static bundle, run its fail-closed bundle checks, and
+# upload the bundle for review.
+# Deployment runs only on main pushes or a manual dispatch of main, only when the
+# repository variable GODADDY_DEPLOY_ENABLED is "true", and only through the
+# godaddy-production environment that holds the hosting secrets. The page
+# restates repository facts at the built commit; a green run or a deploy grants
+# no source admission, data release, or publication authority.
+# Setup and rollback: docs/runbooks/godaddy-hosting.md.
+name: godaddy-public-site
+
+"on":
+  # No paths filter: a required check must report on every pull request.
+  # Keep the `changes` job's site paths in sync with the push filter below.
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/godaddy-public-site.yml"
+      - "apps/public-site/**"
+      - "infra/godaddy/**"
+      - "docs/runbooks/godaddy-hosting.md"
+      - "docs/brand/readme/**"
+      - "apps/site/source/app/site-features.ts"
+      - "apps/site/source/public/favicon.svg"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "List remote changes without uploading"
+        type: boolean
+        default: false
+      delete_remote:
+        description: "Remove remote files that are not in the bundle (cPanel-owned paths are kept)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      site: ${{ steps.scope.outputs.site }}
+    steps:
+      - name: Decide whether the public site is affected
+        id: scope
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          CHANGED_FILES: ${{ github.event.pull_request.changed_files }}
+        run: |
+          set -euo pipefail
+          # Pushes and dispatches are already scoped; build them unconditionally.
+          site=true
+          # The files API lists at most 3000 files; larger pull requests build.
+          if [ "$GITHUB_EVENT_NAME" = pull_request ] && [ "${CHANGED_FILES:-0}" -le 3000 ]; then
+            files="$(gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files" \
+              --jq '.[] | .filename, (.previous_filename // empty)')"
+            site=false
+            while IFS= read -r path; do
+              case "$path" in
+                .github/workflows/godaddy-public-site.yml | apps/public-site/* | infra/godaddy/* | \
+                docs/runbooks/godaddy-hosting.md | docs/brand/readme/* | \
+                apps/site/source/app/site-features.ts | apps/site/source/public/favicon.svg)
+                  site=true
+                  break
+                  ;;
+              esac
+            done <<< "$files"
+          fi
+          echo "site=$site" >> "$GITHUB_OUTPUT"
+          echo "Public site affected: $site" >> "$GITHUB_STEP_SUMMARY"
+
+  build:
+    needs: changes
+    if: ${{ needs.changes.outputs.site == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    concurrency:
+      group: godaddy-public-site-build-${{ github.event.pull_request.number || github.ref }}
+      cancel-in-progress: true
+    env:
+      KFM_SITE_ORIGIN: ${{ vars.KFM_SITE_ORIGIN }}
+      KFM_EXPLORER_URL: ${{ vars.KFM_EXPLORER_URL }}
+    steps:
+      - name: Check out tested revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          ref: ${{ github.sha }}
+
+      - name: Set up Node 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+
+      - name: Build static bundle
+        run: node --experimental-strip-types --no-warnings apps/public-site/build.mjs
+
+      - name: Check bundle
+        run: node apps/public-site/check.mjs
+
+      - name: Install local Apache test runtime
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq apache2-bin
+
+      - name: Test deployment and hosting boundaries without credentials
+        run: node --experimental-strip-types --no-warnings --test apps/public-site/tests/security.test.mjs
+
+      - name: Upload bundle for review
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: public-site-${{ github.sha }}
+          path: apps/public-site/dist/
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: error
+
+  deploy:
+    needs: build
+    # Only reviewed main reaches the hosting credentials: a dispatch from any
+    # other branch or tag never runs this job. The godaddy-production
+    # environment must also restrict deployments to main (see the runbook).
+    if: ${{ vars.GODADDY_DEPLOY_ENABLED == 'true' && github.ref == 'refs/heads/main' && github.ref_protected == true && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    concurrency:
+      group: godaddy-public-site-deploy
+      cancel-in-progress: false
+    environment:
+      name: godaddy-production
+      url: ${{ vars.KFM_SITE_ORIGIN || 'https://kansasfrontiermatrix.com' }}
+    env:
+      KFM_SITE_ORIGIN: ${{ vars.KFM_SITE_ORIGIN }}
+      KFM_EXPLORER_URL: ${{ vars.KFM_EXPLORER_URL }}
+    steps:
+      - name: Check out deployed revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+          ref: ${{ github.sha }}
+
+      - name: Set up Node 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+
+      - name: Build and check bundle
+        run: |
+          node --experimental-strip-types --no-warnings apps/public-site/build.mjs
+          node apps/public-site/check.mjs
+
+      - name: Install lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      - name: Mirror bundle to GoDaddy hosting
+        env:
+          GODADDY_HOST: ${{ secrets.GODADDY_HOST }}
+          GODADDY_USER: ${{ secrets.GODADDY_USER }}
+          GODADDY_SSH_KEY: ${{ secrets.GODADDY_SSH_KEY }}
+          GODADDY_PASSWORD: ${{ secrets.GODADDY_PASSWORD }}
+          GODADDY_KNOWN_HOSTS: ${{ secrets.GODADDY_KNOWN_HOSTS }}
+          GODADDY_PROTOCOL: ${{ vars.GODADDY_PROTOCOL }}
+          GODADDY_PORT: ${{ vars.GODADDY_PORT }}
+          GODADDY_REMOTE_DIR: ${{ vars.GODADDY_REMOTE_DIR }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          INPUT_DELETE_REMOTE: ${{ inputs.delete_remote }}
+          VAR_DELETE: ${{ vars.GODADDY_DELETE }}
+        run: |
+          export DRY_RUN="${INPUT_DRY_RUN:-false}"
+          if [ "${INPUT_DELETE_REMOTE:-}" = "true" ] || [ "${VAR_DELETE:-}" = "true" ]; then
+            export GODADDY_DELETE=true
+          fi
+          bash infra/godaddy/deploy.sh
+
+      - name: Verify the live site serves this commit
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          origin="${KFM_SITE_ORIGIN:-https://kansasfrontiermatrix.com}"
+          for attempt in 1 2 3 4 5 6; do
+            # Parse with jq, not an interpreter: piping a download into node reads as download-then-run.
+            live="$(curl -fsS --max-time 20 "$origin/kfm-site.json" | jq -r '.commit // empty' 2>/dev/null || true)"
+            if [ "$live" = "$GITHUB_SHA" ]; then
+              echo "Live site at $origin serves $GITHUB_SHA."
+              exit 0
+            fi
+            echo "Attempt $attempt: live commit '${live:-none}', expected $GITHUB_SHA; retrying."
+            sleep 10
+          done
+          echo "Live site did not report $GITHUB_SHA. Check DNS (docs/runbooks/godaddy-hosting.md) and the remote directory." >&2
+          exit 1
+
+      - name: Record deploy scope
+        if: always()
+        run: |
+          {
+            echo "## godaddy-public-site"
+            echo
+            echo "Static front door built from \`$GITHUB_SHA\` and mirrored to GoDaddy hosting."
+            echo "It restates repository facts; it is not a KFM data release or publication decision."
+          } >> "$GITHUB_STEP_SUMMARY"

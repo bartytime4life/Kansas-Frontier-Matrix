@@ -1,0 +1,64 @@
+# Kansas Frontier Matrix public front door on GoDaddy (cPanel / Apache) hosting.
+# Rendered into dist/.htaccess by apps/public-site/build.mjs. Do not edit the
+# deployed copy by hand; change this template and redeploy.
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddDefaultCharset utf-8
+AddType image/svg+xml .svg
+AddType application/json .json
+AddType text/plain .txt
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Certificate issuance and domain validation (cPanel AutoSSL) pass through.
+  RewriteRule ^\.well-known/(acme-challenge|pki-validation)/ - [L]
+
+  # Every other host name that reaches this document root (www, cPanel
+  # aliases, preview names) goes straight to https://<canonical host>.
+  RewriteCond %{HTTP_HOST} !^{{CANONICAL_HOST}}$ [NC]
+  RewriteRule ^ https://{{CANONICAL_HOST_PLAIN}}%{REQUEST_URI} [R=301,L]
+
+  # Direct cPanel Apache hosting: only the server's TLS state is trusted.
+  # A client-supplied forwarding header must not bypass HTTPS redirection.
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://{{CANONICAL_HOST_PLAIN}}%{REQUEST_URI} [R=301,L]
+
+  # Short link to the Explorer (owner-private preview until it is released).
+  RewriteRule ^explorer/?$ {{EXPLORER_URL}} [R=302,L]
+
+  # Never serve dotfiles other than .well-known/.
+  RewriteRule (^|/)\.(?!well-known/) - [F]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "DENY"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+  Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; upgrade-insecure-requests"
+
+  # The artwork carries its own inline styles and animation when opened directly.
+  <FilesMatch "\.svg$">
+    Header always set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; img-src data:; frame-ancestors 'self'"
+  </FilesMatch>
+
+  <FilesMatch "\.(html|json|xml|txt)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  # Stable paths, including the unversioned social preview, are mutable.
+  # Revalidate even when callers omit the page's content-hash query.
+  <FilesMatch "\.(svg|png|css|ico)$">
+    Header set Cache-Control "public, no-cache"
+  </FilesMatch>
+  <FilesMatch "^(features|kfm-site)\.json$">
+    Header set Access-Control-Allow-Origin "*"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain application/json application/xml image/svg+xml
+</IfModule>

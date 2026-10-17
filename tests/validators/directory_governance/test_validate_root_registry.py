@@ -121,7 +121,7 @@ class RootRegistryValidatorTests(unittest.TestCase):
             for entry in register["roots"]:
                 if entry["status"] != "RETIRED":
                     (projected / entry["path"]).mkdir(parents=True, exist_ok=True)
-            for cache in (".hypothesis", ".pytest_cache", ".mypy_cache"):
+            for cache in (".hypothesis", ".pytest_cache", ".mypy_cache", "node_modules", ".turbo"):
                 (projected / cache).mkdir()
             result = validate_register(REGISTER_PATH, repo_root=projected)
         self.assertTrue(result.ok, result.findings)

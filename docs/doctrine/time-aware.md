@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid-TBD>
+doc_id: kfm://doc/doctrine/time-aware
 title: Time-Awareness Doctrine
 type: standard
 version: v1.1
@@ -9,39 +9,19 @@ created: 2026-05-12
 updated: 2026-05-26
 policy_label: public
 related:
-  - docs/doctrine/ai-build-operating-contract.md
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/evidence-first.md
-  - docs/doctrine/derived-stays-derived.md
-  - docs/doctrine/corrections-are-first-class.md
-  - docs/doctrine/policy-aware.md
-  - docs/doctrine/retention.md
-  - docs/doctrine/sensitivity.md
-  - docs/doctrine/authority-ladder.md
-  - docs/doctrine/ai-as-assistant.md
-  - docs/doctrine/map-first.md
-  - docs/doctrine/trust-posture.md
-  - docs/standards/EDTF_PROFILE.md
-  - docs/standards/OWL_TIME_PROFILE.md
-  - docs/standards/CIDOC_CRM_TIME.md
-  - docs/standards/STAC_TEMPORAL.md
-  - docs/standards/ALLEN_RELATIONS.md
-  - docs/standards/PROV_O_TIME.md
-  - docs/policy/calendar_handling.md
-  - docs/policy/timezone_handling.md
-  - docs/runbooks/RB-TEMPORAL-RECONCILIATION.md
-  - schemas/contracts/v1/temporal_scope.schema.json
-  - schemas/contracts/v1/edtf_value.schema.json
-  - schemas/contracts/v1/time_uncertainty.schema.json
-  - schemas/contracts/v1/calendar_flag.schema.json
-  - schemas/contracts/v1/allen_relation.schema.json
-  - schemas/contracts/v1/coalescing_receipt.schema.json
-  - control_plane/time_uncertainty_vocabulary.yaml
-  - control_plane/calendar_vocabulary.yaml
-  - control_plane/naive_reason_vocabulary.yaml
-  - policy/temporal/
-  - tests/temporal/
+  - "docs/doctrine/ai-build-operating-contract.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/doctrine/lifecycle-law.md"
+  - "docs/doctrine/evidence-first.md"
+  - "docs/doctrine/derived-stays-derived.md"
+  - "docs/doctrine/corrections-first-class.md"
+  - "docs/doctrine/policy-aware.md"
+  - "docs/doctrine/retention.md"
+  - "docs/doctrine/sensitivity.md"
+  - "docs/doctrine/authority-ladder.md"
+  - "docs/doctrine/ai-as-assistant.md"
+  - "docs/doctrine/map-first.md"
+  - "docs/doctrine/truth-posture.md"
 tags: [kfm, doctrine, time, temporal, edtf, owl-time, allen, prov-o, bitemporal, calendar]
 notes:
   - Draft doctrine v1.1. Pinned to ai-build-operating-contract.md CONTRACT_VERSION = "3.0.0".
@@ -49,6 +29,37 @@ notes:
   - Distinguishes time-awareness (temporal modeling of WHAT happened WHEN) from freshness (whether a release is still current per policy-aware §10 / retention §5).
   - Internal field names on EvidenceBundle, EvidenceRef, and event nodes are PROPOSED at the schema level; the responsibilities are doctrinal.
   - Standards references (EDTF, OWL-Time, CIDOC-CRM E52, STAC, Allen, PROV-O) are CONFIRMED. Subset-of-EDTF accepted patterns are PROPOSED operational subset.
+previous_placeholder_doc_id: "kfm://doc/<uuid-TBD>"
+owning_root: docs/
+responsibility: "Human-readable Time-Awareness Doctrine guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/standards/EDTF_PROFILE.md"
+  - "docs/standards/OWL_TIME_PROFILE.md"
+  - "docs/standards/CIDOC_CRM_TIME.md"
+  - "docs/standards/STAC_TEMPORAL.md"
+  - "docs/standards/ALLEN_RELATIONS.md"
+  - "docs/standards/PROV_O_TIME.md"
+  - "docs/policy/calendar_handling.md"
+  - "docs/policy/timezone_handling.md"
+  - "docs/runbooks/RB-TEMPORAL-RECONCILIATION.md"
+  - "schemas/contracts/v1/temporal_scope.schema.json"
+  - "schemas/contracts/v1/edtf_value.schema.json"
+  - "schemas/contracts/v1/time_uncertainty.schema.json"
+  - "schemas/contracts/v1/calendar_flag.schema.json"
+  - "schemas/contracts/v1/allen_relation.schema.json"
+  - "schemas/contracts/v1/coalescing_receipt.schema.json"
+  - "control_plane/time_uncertainty_vocabulary.yaml"
+  - "control_plane/calendar_vocabulary.yaml"
+  - "control_plane/naive_reason_vocabulary.yaml"
+  - "policy/temporal/"
+  - "tests/temporal/"
+related_path_corrections:
+  - "docs/doctrine/corrections-are-first-class.md -> docs/doctrine/corrections-first-class.md"
+  - "docs/doctrine/trust-posture.md -> docs/doctrine/truth-posture.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # Time-Awareness Doctrine
@@ -366,7 +377,7 @@ KFM is bitemporal:
 | `prov:atTime` | Point-in-time qualifier on derivations. |
 
 > [!IMPORTANT]
-> A correction to a valid-time value is a **new transaction-time event**, not a rewrite. KFM never silently overwrites historical assertions; superseding requires a `prov:invalidatedAtTime` on the prior assertion and a fresh `prov:generatedAtTime` on the new one. The full correction lifecycle is governed by [`corrections-are-first-class.md`](./corrections-are-first-class.md); the time-doctrine commitment is that **both timestamps survive** in the audit chain, never one overwriting the other. This interlocks with [`retention.md`](./retention.md) §3 append-only default.
+> A correction to a valid-time value is a **new transaction-time event**, not a rewrite. KFM never silently overwrites historical assertions; superseding requires a `prov:invalidatedAtTime` on the prior assertion and a fresh `prov:generatedAtTime` on the new one. The full correction lifecycle is governed by [`corrections-first-class.md`](./corrections-first-class.md); the time-doctrine commitment is that **both timestamps survive** in the audit chain, never one overwriting the other. This interlocks with [`retention.md`](./retention.md) §3 append-only default.
 
 ### 11.1 Temporal canonicalization and coalescing
 
@@ -504,7 +515,7 @@ In 2026-09, a researcher locates a previously unknown USGS bulletin with hourly-
 - **New bundle `eb-flood-1903-source-d`** emitted with `observed_time: 1903-06-02T18:00:00` and `valid_time: 1903-06-02T17:00:00/1903-06-02T19:00:00` (peak interval). `transaction_time: 2026-09-15T10:14:00-05:00`.
 - **`prov:invalidatedAtTime`** on the prior reconciled `observed_time` value at `2026-09-15T10:14:05-05:00`.
 - **`prov:generatedAtTime`** on the new reconciled value at `2026-09-15T10:14:05-05:00`.
-- **A `CorrectionNotice`** per [`corrections-are-first-class.md`](./corrections-are-first-class.md) records the change; the public surface shows the refined peak; the older `observed_time` interval is retained as `LINEAGE` per [`authority-ladder.md`](./authority-ladder.md).
+- **A `CorrectionNotice`** per [`corrections-first-class.md`](./corrections-first-class.md) records the change; the public surface shows the refined peak; the older `observed_time` interval is retained as `LINEAGE` per [`authority-ladder.md`](./authority-ladder.md).
 - **A `CoalescingReceipt`** per §11.1 documents that the older `1903-05-31/1903-06-04` event-frame is retained (still the bounding interval) while the peak instant `1903-06-02T18:00:00` is added as a narrower observation.
 
 </details>
@@ -680,23 +691,23 @@ This document is done enough to enter the repository when:
 - [`docs/doctrine/lifecycle-law.md`](./lifecycle-law.md) — `RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED`; the five-stage pipeline this doctrine's §5 elaborates with time-handling rules. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](./evidence-first.md) — `EvidenceBundle` and `EvidenceRef` are the primary time-bearing objects in §6.2. `[CONFIRMED sibling.]`
 - [`docs/doctrine/derived-stays-derived.md`](./derived-stays-derived.md) — Carriers (tile renders, dashboards, AI summaries) inherit temporal scope from their canonical sources; D-2 (rebuildable) anchors temporal-derivation reproducibility. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](./corrections-are-first-class.md) — Bitemporal correction (§11) routes through correction lifecycle; `prov:invalidatedAtTime` on prior + `prov:generatedAtTime` on new. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-first-class.md`](./corrections-first-class.md) — Bitemporal correction (§11) routes through correction lifecycle; `prov:invalidatedAtTime` on prior + `prov:generatedAtTime` on new. `[CONFIRMED sibling.]`
 - [`docs/doctrine/policy-aware.md`](./policy-aware.md) — Public-API temporal queries resolve through `RuntimeResponseEnvelope`; `BOUNDED` for uncertain temporal answers; freshness (§10) is a separate concern from time-awareness (see [§14](#14-time-awareness-vs-freshness)). `[CONFIRMED sibling.]`
 - [`docs/doctrine/retention.md`](./retention.md) — Append-only default (§3) underlies the "new transaction-time event, not a rewrite" rule in §11; receipt families (`CoalescingReceipt`) follow retention class R1. `[CONFIRMED sibling.]`
 - [`docs/doctrine/sensitivity.md`](./sensitivity.md) — Death dates of living-person records route through Privacy reviewer (S4 living-person row); date redactions emit `RedactionReceipt`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](./authority-ladder.md) — `LINEAGE` truth-label retains superseded `observed_time` values per §11 worked example. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](./ai-as-assistant.md) — AI cannot emit canonical date assertions; AI may draft date inferences from prose, a domain steward decides; `AIReceipt` + `GENERATED_RECEIPT.json` required. `[CONFIRMED sibling.]`
 - [`docs/doctrine/map-first.md`](./map-first.md) — §7.1 names six time kinds at the public map UI surface; §6.1 of this doctrine names the underlying seven dimensions (six + transaction time). See [OQ-TA-07](#17-open-questions-register). `[CONFIRMED sibling.]`
-- [`docs/doctrine/trust-posture.md`](./trust-posture.md) — `BOUNDED`, `LINEAGE`, `CONFLICTED` authoring/runtime labels relevant to temporal uncertainty and superseded values. `[NEEDS VERIFICATION — exact filename.]`
-- [`docs/standards/EDTF_PROFILE.md`](../standards/EDTF_PROFILE.md) — KFM's accepted EDTF subset + parser choice. `[TODO — companion standards doc proposed by this doctrine.]`
-- [`docs/standards/OWL_TIME_PROFILE.md`](../standards/OWL_TIME_PROFILE.md) — OWL-Time emission profile. `[TODO.]`
-- [`docs/standards/CIDOC_CRM_TIME.md`](../standards/CIDOC_CRM_TIME.md) — CIDOC E52 Time-Span usage. `[TODO.]`
-- [`docs/standards/STAC_TEMPORAL.md`](../standards/STAC_TEMPORAL.md) — STAC `datetime` / `start_datetime` / `end_datetime` conventions. `[TODO.]`
-- [`docs/standards/ALLEN_RELATIONS.md`](../standards/ALLEN_RELATIONS.md) — Allen relation emission rules. `[TODO.]`
-- [`docs/standards/PROV_O_TIME.md`](../standards/PROV_O_TIME.md) — PROV-O property usage for transaction time. `[TODO.]`
-- [`docs/policy/calendar_handling.md`](../policy/calendar_handling.md) — Calendar conversion and display rules. `[TODO.]`
-- [`docs/policy/timezone_handling.md`](../policy/timezone_handling.md) — Timezone tagging and `naive_reason` rules. `[TODO.]`
-- [`docs/runbooks/RB-TEMPORAL-RECONCILIATION.md`](../runbooks/RB-TEMPORAL-RECONCILIATION.md) — Day-2 routine for reconciling multi-source temporal claims. `[TODO — new runbook proposed by this doctrine.]`
+- [`docs/doctrine/truth-posture.md`](./truth-posture.md) — `BOUNDED`, `LINEAGE`, `CONFLICTED` authoring/runtime labels relevant to temporal uncertainty and superseded values. `[NEEDS VERIFICATION — exact filename.]`
+- `docs/standards/EDTF_PROFILE.md` (PROPOSED; target unavailable) — KFM's accepted EDTF subset + parser choice. `[TODO — companion standards doc proposed by this doctrine.]`
+- `docs/standards/OWL_TIME_PROFILE.md` (PROPOSED; target unavailable) — OWL-Time emission profile. `[TODO.]`
+- `docs/standards/CIDOC_CRM_TIME.md` (PROPOSED; target unavailable) — CIDOC E52 Time-Span usage. `[TODO.]`
+- `docs/standards/STAC_TEMPORAL.md` (PROPOSED; target unavailable) — STAC `datetime` / `start_datetime` / `end_datetime` conventions. `[TODO.]`
+- `docs/standards/ALLEN_RELATIONS.md` (PROPOSED; target unavailable) — Allen relation emission rules. `[TODO.]`
+- `docs/standards/PROV_O_TIME.md` (PROPOSED; target unavailable) — PROV-O property usage for transaction time. `[TODO.]`
+- `docs/policy/calendar_handling.md` (PROPOSED; target unavailable) — Calendar conversion and display rules. `[TODO.]`
+- `docs/policy/timezone_handling.md` (PROPOSED; target unavailable) — Timezone tagging and `naive_reason` rules. `[TODO.]`
+- `docs/runbooks/RB-TEMPORAL-RECONCILIATION.md` (PROPOSED; target unavailable) — Day-2 routine for reconciling multi-source temporal claims. `[TODO — new runbook proposed by this doctrine.]`
 - `schemas/contracts/v1/temporal_scope.schema.json` — `TemporalScope` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/edtf_value.schema.json` — `EDTFValue` schema. `[PROPOSED path.]`
 - `schemas/contracts/v1/time_uncertainty.schema.json` — `TimeUncertainty` schema. `[PROPOSED path.]`

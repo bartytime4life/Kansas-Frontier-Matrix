@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-cairnwake-action-point-reference-check-currentness-20261014",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/action-point-reference-check.yml",
+    "contracts/validation/action_point_reference_check.md",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md",
+    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json",
+    "schemas/contracts/v1/validation/action_point_reference_check.schema.json",
+    "tests/validators/test_validate_action_point_reference_check.py",
+    "tools/generators/action_point_reference_check/build_action_point_reference_check.py",
+    "tools/validators/validate_action_point_reference_check.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/action-point-reference-check.yml": "sha256:6cda5999ab262700847c3bd79d5644276c1b984c610db444b328182d6a8e8c4a",
+    "contracts/validation/action_point_reference_check.md": "sha256:84358dd99016cc0ae3949f54e47e312faf3d2c72f2c826b36506539d504d76f7",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md": "sha256:9d6750874c8b6b59da74004a043e1b09cdafc6d4bc362a3001061ace57d84b8e",
+    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json": "sha256:d78638bcae29d53a94ed100d1391ec7fe40f54b0bc922bb75a505e3412509642",
+    "schemas/contracts/v1/validation/action_point_reference_check.schema.json": "sha256:5614f5830b7c01c8f13deb4394ee081224fae461b65c774dcae10c904aaa388b",
+    "tests/validators/test_validate_action_point_reference_check.py": "sha256:6627460970f8d682269b668b33cdf88084d23c15820659cfc783150fc73454bb",
+    "tools/generators/action_point_reference_check/build_action_point_reference_check.py": "sha256:f2ffc72ac7e5f262cc83344c0475fa9f8e73ab7b2de2c6784e62a8ac98f85103",
+    "tools/validators/validate_action_point_reference_check.py": "sha256:0e88068d1ad334d5cfbe343a7d99240ea7e1aa16c2dfbb9f0b2463d8afa973b8"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5",
+    "version": "2026-10-14"
+  },
+  "prompt_or_contract": "sha256:aad284a5463b7d8c1ff0e8e1c9cc80ae28249e900fbca3748d93df4bb125adab",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:aad284a5463b7d8c1ff0e8e1c9cc80ae28249e900fbca3748d93df4bb125adab"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-cairnwake-action-point-reference-check-20260825.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:.github/workflows/action-point-reference-check.yml@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:contracts/validation/action_point_reference_check.md@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:fixtures/contracts/v1/validation/action_point_reference_check/cases.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:schemas/contracts/v1/validation/action_point_reference_check.schema.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:tests/validators/test_validate_action_point_reference_check.py@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:tools/generators/action_point_reference_check/build_action_point_reference_check.py@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "repo:tools/validators/validate_action_point_reference_check.py@4fd54e4e695eebd2e2a31f0b309813a352989b16"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/action-point-reference-check.yml": "PROPOSED",
+    "contracts/validation/action_point_reference_check.md": "PROPOSED",
+    "docs/intake/exploratory/cairnwake-action-point-reference-check-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/validation/action_point_reference_check/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/validation/action_point_reference_check.schema.json": "PROPOSED",
+    "tests/validators/test_validate_action_point_reference_check.py": "CONFIRMED",
+    "tools/generators/action_point_reference_check/build_action_point_reference_check.py": "PROPOSED",
+    "tools/validators/validate_action_point_reference_check.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-receipt-preserved",
+      "outcome": "PASS",
+      "reason": "genrec-cairnwake-action-point-reference-check-20260825 is left byte-for-byte unchanged as append-only process memory; this successor does not edit or replace it."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "All 8 artifact paths are bound to their current bytes on main@4fd54e4e69; 8 differ from the original receipt because they were edited after it was written."
+    },
+    {
+      "gate": "authoring-claim",
+      "outcome": "SKIPPED",
+      "reason": "This is a currentness re-observation of existing artifacts. It makes no claim to have authored or changed them."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "receipt:genrec-cairnwake-action-point-reference-check-20260825",
+      "evidence_ref": "repo:data/receipts/generated/genrec-cairnwake-action-point-reference-check-20260825.json@4fd54e4e695eebd2e2a31f0b309813a352989b16",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-14T07:10:00Z",
+  "emitter": "Claude Code (Claude Opus 5.5)",
+  "links": {
+    "pr_number": 5160,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Currentness successor to genrec-cairnwake-action-point-reference-check-20260825. The original receipt no longer matched any single commit on main: 8 of its artifacts were edited after it was written. Its live-tree replay in .github/workflows/action-point-reference-check.yml now validates this successor instead. The original stays unedited, per docs/doctrine/retention.md section 3 (receipts are written once and never mutated)."
+}

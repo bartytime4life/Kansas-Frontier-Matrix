@@ -1,8 +1,8 @@
 {
   "census": {
-    "BROKEN_LOCAL_LINK": 138,
-    "MARKDOWN_PLACEHOLDER": 94,
-    "UNRATCHETED_PLACEHOLDER": 9
+    "BROKEN_LOCAL_LINK": 0,
+    "MARKDOWN_PLACEHOLDER": 7,
+    "UNRATCHETED_PLACEHOLDER": 8
   },
   "schema_version": "kfm.gap-scan/v1"
 }

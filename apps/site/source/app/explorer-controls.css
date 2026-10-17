@@ -1,4 +1,21 @@
 /* A compact cartographic workbench: keep the catalog and measured map allocation in sync. */
+.map-starters { order: -1; padding: 12px 14px; border-bottom: 1px solid #465568; background: #101b29; }
+.map-starters h2 { margin: 0 0 8px; font-size: 17px; color: #f1d992; }
+.map-starters p { margin: 8px 0; font-size: 12px; line-height: 1.5; color: #c2cfdd; }
+.map-starters-choice { display: grid; gap: 6px; font-size: 13px; color: #eef2f6; }
+.map-starters select { min-height: 44px; width: 100%; min-width: 0; padding: 8px; border: 1px solid #657990; border-radius: 5px; background: #1d2b3b; color: #eef2f6; font: inherit; }
+.map-starters-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.map-starters button { min-height: 44px; flex: 1 1 110px; padding: 8px; border: 1px solid #657990; border-radius: 5px; background: #273b4b; color: #eef2f6; font: inherit; font-size: 12px; }
+.map-starters button:first-child { background: #dfc487; color: #12202e; border-color: #dfc487; font-weight: 700; }
+.map-starters button:disabled { opacity: .55; cursor: not-allowed; }
+.map-starters summary { min-height: 44px; align-content: center; cursor: pointer; color: #b7e3e2; font-size: 13px; }
+.map-starters ul { margin: 8px 0; padding-left: 18px; }
+.map-starters li { margin-bottom: 10px; font-size: 12px; overflow-wrap: anywhere; }
+.map-starters li span,.map-starters li small { display: block; margin-top: 3px; color: #c2cfdd; line-height: 1.5; }
+.map-starters-remember { display: flex; gap: 8px; align-items: center; min-height: 44px; font-size: 12px; line-height: 1.5; color: #eef2f6; cursor: pointer; }
+.map-starters-remember input { flex: none; width: 18px; height: 18px; }
+.map-starters :is(button,select,input,summary):focus-visible { outline: 3px solid #9de4e0; outline-offset: 3px; }
+.map-starters [role="status"]:empty { display: none; }
 .explorer-shell[data-inspector] { --left: 356px; }
 .explorer-shell[data-inspector] > .layer-panel[data-panel-mode="layers"],
 .explorer-shell[data-inspector] > .layer-panel[data-panel-mode="live"] { background: #15202e; color: #e5eaf0; }
@@ -65,7 +82,7 @@
 .layer-panel :is(button,input,select,summary,a):focus-visible,
 .explorer-controls-navigation :is(button,summary):focus-visible { outline: 2px solid #f1d992; outline-offset: 2px; }
 .explorer-controls-navigation { flex: none; border-bottom: 1px solid #344151; }
-.explorer-controls-navigation .map-utility-tabs { grid-template-columns: repeat(3,minmax(0,1fr)); display: grid; padding: 0 14px 10px; border: 0; gap: 5px; }
+.explorer-controls-navigation .map-utility-tabs { grid-template-columns: repeat(2,minmax(0,1fr)); display: grid; padding: 0 14px 10px; border: 0; gap: 5px; }
 .explorer-controls-navigation .map-utility-tabs button { min-height: 44px; padding: 8px 4px; border-radius: 6px; color: #b9c9d8; }
 .explorer-controls-navigation .map-utility-tabs button[aria-pressed="true"] { color: #f1d992; background: #39382f; border-color: #8c794d; }
 .explorer-advanced-navigation { position: relative; margin: 0 14px 8px; }
@@ -127,3 +144,32 @@
   .layer-panel[data-panel-mode="layers"] .official-context-row input[type="range"] { min-height: 44px; }
   .layer-panel[data-panel-mode="layers"] .official-context-row .official-context-actions :is(button, a) { display: inline-flex; align-items: center; min-height: 44px; }
 }
+
+/* Shared subject navigation is a catalogue projection, independent of map owners. */
+.topic-select { display: block; min-width: 0; }
+.topic-select select { min-height: 44px; width: 100%; padding: 8px; color: #e6edf5; background: #1d2b3b; border: 1px solid #465568; border-radius: 6px; font: inherit; font-size: 12px; }
+.layer-topic-index { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 0 14px; }
+.layer-topic-index a, .layer-topic-index button { min-height: 44px; display: inline-flex; align-items: center; color: #a3d8df; font-size: 12px; }
+.layer-topic-index button { border: 0; background: transparent; cursor: pointer; }
+.topic-guide { margin: 0 14px 12px; padding: 12px; border: 1px solid #344151; border-radius: 9px; background: #192735; }
+.atlas-view-library .topic-guide { margin: 0; }
+.topic-guide header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.topic-guide h3 { margin: 8px 0; color: #e6edf5; font-size: 15px; }
+.topic-guide p { color: #b9c8d7; font-size: 12px; line-height: 1.5; margin: 8px 0; }
+.topic-guide header small { color: #dbbd7b; }
+.topic-guide ul { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0; padding: 0; list-style: none; }
+.topic-guide li { padding: 4px 6px; border-radius: 4px; background: #263b4e; color: #cbdce9; font-size: 11px; }
+.topic-guide summary { min-height: 44px; padding: 12px 0; cursor: pointer; color: #d8bf88; font-size: 12px; }
+.topic-guide nav { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.topic-guide a, .topic-guide button { color: #a3d8df; font-size: 12px; min-height: 44px; display: inline-flex; align-items: center; }
+.topic-guide button { border: 0; background: transparent; padding: 0; cursor: pointer; text-align: left; }
+.topic-select select:focus-visible, .topic-guide :focus-visible, .layer-topic-index :focus-visible { outline: 2px solid #e5c887; outline-offset: 3px; }
+
+/* Map navigation stays attached to the live canvas; secondary actions open inline. */
+.map-navigation-more { position: relative; }
+.map-navigation-more > summary { display: grid; place-items: center; width: 44px; min-height: 44px; list-style: none; cursor: pointer; color: var(--ink); font-size: 22px; }
+.map-navigation-more > summary::-webkit-details-marker { display: none; }
+.map-navigation-more > summary:focus-visible { outline: 2px solid var(--gold); outline-offset: -3px; }
+.map-navigation-menu { position: absolute; left: calc(100% + 8px); bottom: 0; z-index: 8; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); width: min(300px, calc(100vw - 80px)); padding: 6px; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 12px 30px #0006; }
+.map-tool-group .map-navigation-menu > button { width: auto; min-height: 44px; padding: 8px; text-align: left; font-size: 12px; }
+.map-tool-group .map-navigation-menu > button:disabled { opacity: .45; }

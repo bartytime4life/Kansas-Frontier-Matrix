@@ -2,10 +2,14 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
+import { isAbsolute, join } from "node:path";
 const require = createRequire(import.meta.url), ts = require("typescript");
 const compile = text => ts.transpileModule(text, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
 const url = text => "data:text/javascript;base64," + Buffer.from(compile(text)).toString("base64");
 const read = path => readFile(new URL(path, import.meta.url), "utf8");
+const repositoryRoot = process.env.KFM_WEATHER_REPOSITORY_ROOT;
+if (repositoryRoot && !isAbsolute(repositoryRoot)) throw new Error("KFM_WEATHER_REPOSITORY_ROOT must be absolute");
+const readRepository = path => repositoryRoot ? readFile(join(repositoryRoot, path), "utf8") : read(`../../../../${path}`);
 const waterUrl = url(await read("../app/governed-water.ts"));
 const weatherUrl = url((await read("../app/governed-weather.ts")).replace('"./governed-water"', JSON.stringify(waterUrl)));
 const soil = await import(url((await read("../app/governed-soil.ts")).replace('"./governed-water"', JSON.stringify(waterUrl)).replace('"./governed-weather"', JSON.stringify(weatherUrl))));
@@ -72,13 +76,13 @@ test("tampered artifacts, other families and wrong windows are rejected", async 
 });
 
 test("the Site and Python soil license lists, offsets and stations agree", async () => {
-  const policy = await read("../../../../packages/policy-runtime/src/policy_runtime/core.py");
+  const policy = await readRepository("packages/policy-runtime/src/policy_runtime/core.py");
   const block = /SOIL_SELF_RELEASE_LICENSES = frozenset\(\{\s*"([^"]+)",\s*\}\)/.exec(policy);
   assert.ok(block); assert.deepEqual([...soil.SOIL_SELF_RELEASE_LICENSES], [block[1]]);
-  const projection = await read("../../../../packages/release/src/release/soil_projection.py");
+  const projection = await readRepository("packages/release/src/release/soil_projection.py");
   const offsets = /STANDARD_OFFSET_HOURS = (\{[^}]+\})/.exec(projection);
   assert.ok(offsets); assert.deepEqual(soil.SOIL_STANDARD_OFFSET_HOURS, JSON.parse(offsets[1]));
-  const connector = await read("../../../../connectors/noaa/src/noaa/uscrn_daily.py");
+  const connector = await readRepository("connectors/noaa/src/noaa/uscrn_daily.py");
   assert.deepEqual([...connector.matchAll(/"(\d{5})": "KS_/g)].map(m => m[1]), [...soil.SOIL_STATIONS]);
 });
 

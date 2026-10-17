@@ -9,16 +9,23 @@ created: 2026-05-20
 updated: 2026-05-20
 policy_label: public
 related:
-  - docs/sources/catalog/blm/README.md
-  - docs/sources/catalog/README.md
-  - docs/sources/catalog/blm/IDENTITY.md
-  - docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md
-  - docs/sources/catalog/_examples/stac-item-example.json
-  - docs/doctrine/directory-rules.md
+  - "docs/sources/catalog/blm/README.md"
+  - "docs/sources/catalog/README.md"
+  - "docs/sources/catalog/_examples/stac-item-example.json"
+  - "docs/doctrine/directory-rules.md"
 tags: [kfm, docs, sources, catalog, blm, glo, plss, cadastral, historical]
 notes:
   - "PROPOSED product-page scaffold; sibling-link presence verified in Claude Code session."
   - "PROPOSED content sourced from Pass 23/32 atlas (KFM-P2-IDEA-0016, KFM-P2-PROG-0011) and Pass 10 (C4-01); descriptor fields intentionally not restated here."
+owning_root: docs/
+responsibility: "Human-readable BLM GLO Field Notes guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/sources/catalog/blm/IDENTITY.md"
+  - "docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -82,8 +89,8 @@ See [`data/registry/sources/`](../../../../data/registry/sources/) for the autho
 |---|---|---|---|
 | `SourceDescriptor` | [`data/registry/sources/`](../../../../data/registry/sources/) | Identity, role, rights, cadence, sensitivity | **No** — pointer only |
 | Family overview & sibling links | [`./README.md`](./README.md) | Family-level orientation for `blm` | **No** — see family README |
-| Collection identity rules | [`./IDENTITY.md`](./IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
-| Rights & sensitivity mapping | [`./RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering and release class | **No** — see map |
+| Collection identity rules | [`../IDENTITY.md`](../IDENTITY.md) | `kfm-<org>-<product>` pattern, namespace | **No** — see IDENTITY |
+| Rights & sensitivity mapping | [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) | Tiering and release class | **No** — see map |
 | Contract shape | `schemas/contracts/v1/source/` | JSON-schema for the descriptor object | **No** — per ADR-0001 |
 
 [Back to top](#top)
@@ -133,7 +140,7 @@ PROPOSED. The catalog projection set this product participates in. Lanes follow 
 
 ## Collection identity
 
-- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](./IDENTITY.md) for the canonical rule.
+- PROPOSED Collection id pattern: `kfm-<org>-<product>` — see [`IDENTITY.md`](../IDENTITY.md) for the canonical rule.
 - PROPOSED namespace: `kfm:` — *see [OPEN-DSC-03](#open-questions); Pass-10 C4-01 records the `kfm:` vs `ks-kfm:` choice as an unresolved namespace question.*
 - Asset roles (cover, page-image, vector-extract, ocr-text, entity-extract, etc.): NEEDS VERIFICATION — confirm against `schemas/contracts/v1/source/`.
 
@@ -191,7 +198,7 @@ NEEDS VERIFICATION — confirm CRS choice (`EPSG:5070` is doctrine for PLSS-over
 
 ## Rights and sensitivity
 
-NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
+NEEDS VERIFICATION — see [`policy/sensitivity/`](../../../../policy/sensitivity/) and [`RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md). **Do not restate policy here.**
 
 > [!WARNING]
 > PROPOSED (KFM-P2-PROG-0011, tensions): some plats and field notes contain **incidental handwritten personal information** (names of settlers, claimants, neighbors); the PII-redaction step must be reliable **before public release**. Additionally, some recorded sites (mounds, structures, dwellings) carry **archaeological sensitivity** under CARE / FAIR governance and must not be published at point precision — generalization or denial applies (cross-reference: KFM-P29-PROG-0019 archaeology redaction validator; ML-061-158/159 sensitive-geometry rules).
@@ -299,8 +306,8 @@ Pass-10 references:
 ## Related docs
 
 - [`docs/sources/catalog/blm/README.md`](./README.md) — `blm` family landing page.
-- [`docs/sources/catalog/blm/IDENTITY.md`](./IDENTITY.md) — Collection-id and namespace rules for the family.
-- [`docs/sources/catalog/blm/RIGHTS-AND-SENSITIVITY-MAP.md`](./RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `blm`.
+- [`docs/sources/catalog/IDENTITY.md`](../IDENTITY.md) — Collection-id and namespace rules for the family.
+- [`docs/sources/catalog/RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) — Rights / sensitivity tiering for `blm`.
 - [`docs/sources/catalog/README.md`](../../README.md) — Catalog of source families.
 - [`docs/sources/catalog/_examples/stac-item-example.json`](../_examples/stac-item-example.json) — Illustrative STAC + `kfm:provenance` shape.
 - [`docs/doctrine/directory-rules.md`](../../../../docs/doctrine/directory-rules.md) — Placement authority.

@@ -1,0 +1,83 @@
+{
+  "receipt_id": "genrec-explorer-a11y-contrast-landmark-20261015",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/history.module.css",
+    "apps/site/source/app/public-map-browser.tsx"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/history.module.css": "sha256:7f03367aaf2f257d544aa7ab398ef498558115057c0e2d91fa7340a048475d44",
+    "apps/site/source/app/public-map-browser.tsx": "sha256:3f39e8c78f59bd9706417ffaeef75a0ebe045579a2e073330d4aa8a512c1213f"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e377cfc5ea3b6970f9a6e4b4e3ba09ca1e37c31f",
+      "repo:docs/doctrine/ai-build-operating-contract.md@e377cfc5ea3b6970f9a6e4b4e3ba09ca1e37c31f",
+      "repo:docs/runbooks/water-pilot.md@e377cfc5ea3b6970f9a6e4b4e3ba09ca1e37c31f",
+      "repo:data/receipts/generated/site-v268-repository-overlays-20261015.json@e377cfc5ea3b6970f9a6e4b4e3ba09ca1e37c31f"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/history.module.css": "CONFIRMED",
+    "apps/site/source/app/public-map-browser.tsx": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Explorer type-check, lint and tests",
+      "outcome": "PASS",
+      "reason": "tsc exits 0; lint reports 0 errors; npm test 1362 passed, 0 failed."
+    },
+    {
+      "gate": "Accessibility (axe-core WCAG 2.1 AA, Chromium)",
+      "outcome": "PASS",
+      "reason": "0 violations on /downloads and /history/prentis-1909 in light and dark at 1280 and 375 px. Before: history reader small text measured 4.21:1 on #eee9db (now 4.91:1), and the selected-map aside was a complementary landmark nested in another landmark."
+    },
+    {
+      "gate": "Explorer mirror parity (water-conformance)",
+      "outcome": "FAIL",
+      "reason": "site_mirror.py --diagnose reports exactly these two paths as drifted identical entries. docs/runbooks/water-pilot.md requires the active mirror receipt to record them in the same PR; that update awaits owner authorization and is not in this commit."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e377cfc5ea3b6970f9a6e4b4e3ba09ca1e37c31f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-15T18:37:03Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "History reader small text darkened from #60735f to #56685a to meet 4.5:1. Public map browser detail panel changed from aside to section so it is no longer a complementary landmark nested inside another landmark; no CSS or test selects the aside element. The active Site mirror receipt is not modified here."
+}

@@ -11,7 +11,8 @@ test("mobile map keeps one header row with named menus and reachable map actions
   ]);
 
   assert.match(page, /<nav className="map-chrome-dock" aria-label="Map view and controls">/);
-  assert.match(page, /<div className="map-dock-representations" role="group" aria-label="Map representation">/);
+  assert.doesNotMatch(page, /<div className="map-dock-representations"/);
+  assert.match(page, /<div className="map-dock-menu-representations" role="group" aria-label="Map representation"/);
   assert.match(page, /<nav className="map-mobile-actions" aria-label="Mobile map actions">/);
   for (const label of ["Map layers", "Places", "Sources", "Time", "Style"]) assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
   assert.match(page, /onClick=\{openMapSettings\}>Style<\/button>/);

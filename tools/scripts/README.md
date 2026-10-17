@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-scripts-readme
 title: tools/scripts README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-maintainers
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-10-15
 policy_label: repository-facing; script-adapters
 owning_root: tools/
 responsibility: bounded script-style entrypoint and adapter lane for durable tools workflows
@@ -57,7 +57,8 @@ The durable KFM question for this lane is:
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/scripts/README.md` | **CONFIRMED** | This README replaces the previous empty file. |
-| Script adapter executables | **PROPOSED / NEEDS VERIFICATION** | No script name is claimed here. |
+| `aggregate.py` | **UNIMPLEMENTED / EXPLICIT HOLD** | Direct invocation exits 3 with a fixed stderr message for every argument; importing it is inert. It reads no input and produces no aggregate or artifact. |
+| Other script adapter executables | **PROPOSED / NEEDS VERIFICATION** | No other script name is claimed here. |
 | `tools/` root authority | **CONFIRMED in repo evidence** | Parent README defines `tools/` as durable repo-wide executable support. |
 | Relationship to top-level `scripts/` | **NEEDS VERIFICATION** | Parent guidance says one-off operational helpers belong in top-level `scripts/`, not `tools/`. |
 

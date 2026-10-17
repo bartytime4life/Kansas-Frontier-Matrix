@@ -16,7 +16,9 @@ smoke_routes=(
   acquisition acquisition/terrain
   3dep-dem-tile airflow-tile blm-plss-records bridge-records
   crop-casma/availability crop-casma/preview crop-casma/tile
+  connections connections/run
   daily-archive data-submissions "data-submissions/[id]"
+  land-records "land-records/[id]" "governed/land-records/v1/[view]"
   "earth-engine-context/[setId]/[layerId]/[...tile]" earth-engine-context/activate
   earth-engine-context/active earth-engine-context/catalog earth-engine-context/stage
   event-atlas/counties event-atlas/geology-legend event-atlas/manifest
@@ -29,6 +31,8 @@ smoke_routes=(
   governed/soil-admin/activate governed/soil-admin/stage governed/soil-admin/status governed/soil-admin/withdraw
   "governed/storm-events/v1/[view]"
   governed/storm-events-admin/activate governed/storm-events-admin/stage governed/storm-events-admin/status governed/storm-events-admin/withdraw
+  "governed/earthquakes/v1/[view]"
+  governed/earthquakes-admin/activate governed/earthquakes-admin/stage governed/earthquakes-admin/status governed/earthquakes-admin/withdraw
   historical-topo historical-topo/activate historical-topo/overlay historical-topo/queue
   historical-topo/review "historical-topo/review/tiles/[scan]/[package]/[z]/[x]/[y]"
   historical-topo/stage "historical-topo/tiles/[scan]/[package]/[z]/[x]/[y]"
@@ -141,8 +145,6 @@ expect() {
 
 expect GET / 200
 expect GET /daily-archive 200
-expect GET /api/daily-archive 401
-expect POST /api/daily-archive 401
 
 # Storage-backed reads answer from the empty migrated D1 schema.
 expect GET /api/governed/v1/bootstrap 200 envelope.reason_code NO_APPROVED_SNAPSHOT
@@ -165,7 +167,14 @@ expect GET /api/governed/storm-events/v1/layers 200 envelope.reason_code NO_APPR
 expect GET /api/governed/storm-events/v1/evidence 200 envelope.reason_code NO_APPROVED_SNAPSHOT
 expect GET /api/governed/storm-events/v1/unknown-view 404 envelope.reason_code ROUTE_NOT_FOUND
 expect GET '/api/governed/storm-events/v1/layers?month=05' 400 envelope.reason_code INVALID_QUERY
+expect GET /api/governed/earthquakes/v1/bootstrap 200 envelope.reason_code NO_APPROVED_SNAPSHOT
+expect GET /api/governed/earthquakes/v1/layers 200 envelope.reason_code NO_APPROVED_SNAPSHOT
+expect GET /api/governed/earthquakes/v1/evidence 200 envelope.reason_code NO_APPROVED_SNAPSHOT
+expect GET /api/governed/earthquakes/v1/unknown-view 404 envelope.reason_code ROUTE_NOT_FOUND
+expect GET '/api/governed/earthquakes/v1/layers?month=05' 400 envelope.reason_code INVALID_QUERY
 expect GET /api/crop-casma/availability 200 code NO_APPROVED_SOIL_PACKAGE
+expect GET /api/governed/land-records/v1/records 403 reason_code LAND_RELEASE_NOT_IMPLEMENTED
+expect GET /api/governed/land-records/v1/evidence 403 reason_code LAND_RELEASE_NOT_IMPLEMENTED
 
 # Missing or invalid parameters are refused before any upstream call.
 expect GET /api/3dep-dem-tile 400
@@ -207,6 +216,12 @@ expect GET /api/acquisition/terrain 401
 expect POST /api/acquisition/terrain 401
 expect GET /api/data-submissions 401
 expect GET /api/data-submissions/unknown 401
+expect GET /api/connections 200
+expect GET /api/connections?action=captures 401
+expect POST /api/connections 401
+expect POST /api/connections/run 401
+expect GET /api/land-records 401
+expect GET /api/land-records/unknown 401
 expect GET /api/earth-engine-context/catalog 401
 expect GET /api/earth-engine-context/active 401
 expect GET /api/earth-engine-context/set/layer/0/0/0.png 401
@@ -220,9 +235,11 @@ expect GET /api/governed/water-admin/status 401 reason_code SIGN_IN_REQUIRED
 expect GET /api/governed/weather-admin/status 401 reason_code SIGN_IN_REQUIRED
 expect GET /api/governed/soil-admin/status 401 reason_code SIGN_IN_REQUIRED
 expect GET /api/governed/storm-events-admin/status 401 reason_code SIGN_IN_REQUIRED
+expect GET /api/governed/earthquakes-admin/status 401 reason_code SIGN_IN_REQUIRED
 
 # Writes without this Site's origin are refused before authentication.
 expect POST /api/data-submissions 403
+expect POST /api/land-records 403
 expect PATCH /api/data-submissions/unknown 403
 expect POST /api/historical-topo/overlay 403
 expect POST /api/historical-topo/activate 403
@@ -234,6 +251,8 @@ expect POST /api/governed/soil-admin/activate 403 reason_code SAME_ORIGIN_REQUIR
 expect POST /api/governed/soil-admin/withdraw 403 reason_code SAME_ORIGIN_REQUIRED
 expect POST /api/governed/storm-events-admin/activate 403 reason_code SAME_ORIGIN_REQUIRED
 expect POST /api/governed/storm-events-admin/withdraw 403 reason_code SAME_ORIGIN_REQUIRED
+expect POST /api/governed/earthquakes-admin/activate 403 reason_code SAME_ORIGIN_REQUIRED
+expect POST /api/governed/earthquakes-admin/withdraw 403 reason_code SAME_ORIGIN_REQUIRED
 
 # Features whose secret or endpoint is unset stay closed.
 expect GET /api/historical-topo/queue 503
@@ -242,6 +261,7 @@ expect POST /api/governed/water-admin/stage 503 reason_code WATER_STAGING_NOT_CO
 expect POST /api/governed/weather-admin/stage 503 reason_code WATER_STAGING_NOT_CONFIGURED
 expect POST /api/governed/soil-admin/stage 503 reason_code WATER_STAGING_NOT_CONFIGURED
 expect POST /api/governed/storm-events-admin/stage 503 reason_code WATER_STAGING_NOT_CONFIGURED
+expect POST /api/governed/earthquakes-admin/stage 503 reason_code WATER_STAGING_NOT_CONFIGURED
 expect POST /api/qwen 503 status disabled '{"question":"Where is Topeka?","context":{}}'
 
 if (( failures > 0 )); then

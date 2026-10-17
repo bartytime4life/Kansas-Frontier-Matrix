@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/domains/agriculture/policy
 title: Agriculture · Policy
 type: readme
 subtype: domain-aspect-index
@@ -13,26 +13,34 @@ created: 2026-05-26
 updated: 2026-05-26
 policy_label: public
 related:
-  - docs/doctrine/ai-build-operating-contract.md
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/policy-aware.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/evidence-first.md
-  - docs/doctrine/authority-ladder.md
-  - docs/domains/agriculture/README.md
-  - docs/domains/agriculture/architecture/README.md
-  - policy/domains/agriculture/
-  - policy/sensitivity/agriculture/
-  - policy/release/agriculture/
-  - schemas/contracts/v1/domains/agriculture/
-  - contracts/domains/agriculture/
+  - "docs/doctrine/ai-build-operating-contract.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/doctrine/trust-membrane.md"
+  - "docs/doctrine/policy-aware.md"
+  - "docs/doctrine/lifecycle-law.md"
+  - "docs/doctrine/evidence-first.md"
+  - "docs/doctrine/authority-ladder.md"
+  - "docs/domains/agriculture/README.md"
+  - "policy/domains/agriculture/"
+  - "policy/sensitivity/agriculture/"
+  - "schemas/contracts/v1/domains/agriculture/"
+  - "contracts/domains/agriculture/"
 tags: [kfm, docs-index, domain, agriculture, policy, sensitivity, aggregation-receipt, fail-closed]
 notes:
   - Docs **explain** policy for the agriculture domain; canonical machine policy artifacts live under `policy/` per Directory Rules §6.5.
   - Aspect pattern `docs/domains/<domain>/<aspect>/README.md` follows the sibling `docs/domains/flora/architecture/README.md` work and is PROPOSED — open question OQ-AG-POL-01.
   - Pinned to `CONTRACT_VERSION = "3.0.0"` per `ai-build-operating-contract.md` §0 / §37.
   - All concrete paths under `policy/`, `schemas/`, `contracts/`, `data/`, `tests/`, and `.github/workflows/` are PROPOSED until verified against the live repository.
+previous_placeholder_doc_id: "kfm://doc/<TODO-uuid>"
+owning_root: docs/
+responsibility: "Human-readable Agriculture · Policy guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/domains/agriculture/architecture/README.md"
+  - "policy/release/agriculture/"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # Agriculture · Policy
@@ -317,8 +325,8 @@ The artifacts below are the **machine-readable** policy surface for agriculture.
 |---|---|---|
 | [`policy/domains/agriculture/`](../../../../policy/domains/agriculture/) | Agriculture-specific allow/deny/restrict/abstain rules at each gate. | PROPOSED |
 | [`policy/sensitivity/agriculture/`](../../../../policy/sensitivity/agriculture/) | Sensitivity tag registry for agriculture objects (private-operator, person-parcel, field-level-aggregate-derived, regulatory-source). | PROPOSED |
-| [`policy/release/agriculture/`](../../../../policy/release/agriculture/) | Release-lane policy (which agriculture units may publish on which surface). | PROPOSED |
-| [`policy/sensitivity/people/`](../../../../policy/sensitivity/people/) | Cross-referenced from agriculture for any join that touches operators or owners. | PROPOSED |
+| `policy/release/agriculture/` (PROPOSED; target unavailable) | Release-lane policy (which agriculture units may publish on which surface). | PROPOSED |
+| `policy/sensitivity/people/` (PROPOSED; target unavailable) | Cross-referenced from agriculture for any join that touches operators or owners. | PROPOSED |
 | `data/registry/sources/agriculture/` | `SourceDescriptor` instances for every admitted agriculture source family (NASS, SSURGO, FSA, USDA, sensor, modeled). | PROPOSED |
 | `schemas/contracts/v1/domains/agriculture/` | Machine schemas for agriculture object families and their receipts (incl. `AggregationReceipt`). | PROPOSED |
 | `contracts/domains/agriculture/` | Object-meaning contracts (semantic Markdown for Crop Observation, Field Candidate, Yield Observation, etc.). | PROPOSED |
@@ -433,7 +441,7 @@ A repository implementation of the agriculture policy lane conforms to this READ
 | **OQ-AG-POL-03** | Should the `AggregationReceipt` schema live at `schemas/contracts/v1/receipts/aggregation_receipt.schema.json` or `schemas/contracts/v1/domains/agriculture/aggregation_receipt.schema.json`? Cross-domain receipt class home is itself ADR-class per `KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas` §24.12 ADR-S-03. | Architecture steward | ADR-S-03 resolution. |
 | **OQ-AG-POL-04** | What is the canonical bin granularity for `AggregationReceipt` in agriculture (county-year? state-year? HUC8-quarter? ZIP code? other)? | Agriculture domain steward + Policy steward | Per-source review during source admission. |
 | **OQ-AG-POL-05** | Which agriculture source families require a steward-review gate at admission vs which clear by automated checks? (NASS routine vs FSA sensitive vs operator-supplied very sensitive.) | Source steward + Sensitivity reviewer | Per-source `SourceActivationDecision`. |
-| **OQ-AG-POL-06** | How does the `AggregationReceipt` interact with stale-state propagation when an underlying source family is corrected upstream? | Architecture steward + Correction reviewer | Reconcile with [`corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md). |
+| **OQ-AG-POL-06** | How does the `AggregationReceipt` interact with stale-state propagation when an underlying source family is corrected upstream? | Architecture steward + Correction reviewer | Reconcile with [`corrections-first-class.md`](../../../doctrine/corrections-first-class.md). |
 | **OQ-AG-POL-07** | Should drought / pest stress indicator surfaces carry a doctrine-level "NOT AN ALERT" caveat in their `LayerManifest`, or is the doctrine-wide alert-authority anti-pattern sufficient? | Docs steward + AI surface steward | Surface decision; light ADR if doctrine surfacing is required. |
 
 [⬆ Back to top](#agriculture--policy)
@@ -446,7 +454,7 @@ A repository implementation of the agriculture policy lane conforms to this READ
 Because agriculture's policy concerns are denser than most lanes — it sits at the intersection of regulatory data, modeled products, private operator records, person-parcel joins, and aggregate-vs-field truth. A reviewer who knows the doctrine-wide rules still benefits from an agriculture-specific orientation.
 
 **Is the `AggregationReceipt` agriculture-only?**
-No. The `AggregationReceipt` object is corpus-wide (see [`kfm_unified_doctrine_synthesis.md`](../../../../kfm_unified_doctrine_synthesis.md) glossary). It just happens to be **load-bearing** for agriculture because most ag public products are aggregates.
+No. The `AggregationReceipt` object is corpus-wide (see `kfm_unified_doctrine_synthesis.md` (PROPOSED; target unavailable) glossary). It just happens to be **load-bearing** for agriculture because most ag public products are aggregates.
 
 **What's the difference between a field candidate and a field-level NASS claim?**
 A **field candidate** is an unreleased identifier KFM holds in `WORK` for cross-lane joins and stays internal unless a clear public-safe transform applies. A **field-level NASS claim** is a public-facing assertion at field resolution derived from a source whose authority is aggregate; this is denied by default. The two are different objects with different policy postures.
@@ -484,22 +492,22 @@ Treat regulated-crop categories as a sensitivity dimension — file under `polic
 - [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](../../../doctrine/evidence-first.md) — cite-or-abstain. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](../../../doctrine/authority-ladder.md) — source authority hierarchy. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-first-class.md`](../../../doctrine/corrections-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
 - [`docs/doctrine/ai-as-assistant.md`](../../../doctrine/ai-as-assistant.md) — AI containment and finite outcomes. `[CONFIRMED sibling.]`
 - [`docs/doctrine/map-first.md`](../../../doctrine/map-first.md) — Evidence Drawer and trust badges. `[CONFIRMED sibling.]`
 
 **Domain orientation (agriculture)**
 
 - [`docs/domains/agriculture/README.md`](../README.md) — agriculture domain index. `[PROPOSED.]`
-- [`docs/domains/agriculture/architecture/README.md`](../architecture/README.md) — agriculture architecture aspect. `[PROPOSED.]`
-- [`docs/domains/agriculture/sources/README.md`](../sources/README.md) — agriculture source ledger orientation. `[PROPOSED.]`
+- `docs/domains/agriculture/architecture/README.md` (PROPOSED; target unavailable) — agriculture architecture aspect. `[PROPOSED.]`
+- `docs/domains/agriculture/sources/README.md` (PROPOSED; target unavailable) — agriculture source ledger orientation. `[PROPOSED.]`
 
 **Canonical policy artifacts**
 
 - [`policy/domains/agriculture/`](../../../../policy/domains/agriculture/) — agriculture-specific policy rules. `[PROPOSED.]`
 - [`policy/sensitivity/agriculture/`](../../../../policy/sensitivity/agriculture/) — sensitivity tags. `[PROPOSED.]`
-- [`policy/release/agriculture/`](../../../../policy/release/agriculture/) — release-lane rules. `[PROPOSED.]`
-- [`policy/sensitivity/people/`](../../../../policy/sensitivity/people/) — cross-referenced for person-parcel joins. `[PROPOSED.]`
+- `policy/release/agriculture/` (PROPOSED; target unavailable) — release-lane rules. `[PROPOSED.]`
+- `policy/sensitivity/people/` (PROPOSED; target unavailable) — cross-referenced for person-parcel joins. `[PROPOSED.]`
 
 **Schemas and contracts**
 
@@ -586,7 +594,7 @@ Treat regulated-crop categories as a sensitivity dimension — file under `polic
 
 ### Related docs (compact)
 
-[`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) · [`directory-rules.md`](../../../doctrine/directory-rules.md) · [`trust-membrane.md`](../../../doctrine/trust-membrane.md) · [`policy-aware.md`](../../../doctrine/policy-aware.md) · [`lifecycle-law.md`](../../../doctrine/lifecycle-law.md) · [`evidence-first.md`](../../../doctrine/evidence-first.md) · [`authority-ladder.md`](../../../doctrine/authority-ladder.md) · [`corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md)
+[`ai-build-operating-contract.md`](../../../doctrine/ai-build-operating-contract.md) · [`directory-rules.md`](../../../doctrine/directory-rules.md) · [`trust-membrane.md`](../../../doctrine/trust-membrane.md) · [`policy-aware.md`](../../../doctrine/policy-aware.md) · [`lifecycle-law.md`](../../../doctrine/lifecycle-law.md) · [`evidence-first.md`](../../../doctrine/evidence-first.md) · [`authority-ladder.md`](../../../doctrine/authority-ladder.md) · [`corrections-first-class.md`](../../../doctrine/corrections-first-class.md)
 
 **Last updated:** 2026-05-26 · **Version:** v0.1 (draft) · **Status:** awaiting review · **Pinned to:** `CONTRACT_VERSION = "3.0.0"`
 

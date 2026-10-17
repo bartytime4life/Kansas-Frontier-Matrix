@@ -1,3 +1,5 @@
+> **Subsurface containment candidate — 2026-10-13:** Exact WWC5/core tiles and the statewide locator are removed from source delivery. Underground reports a publication hold; private candidate preparation requires explicit external review storage. Separate survey, aquifer and soil features remain. [Containment, checks and retained-copy limits](docs/subsurface-data.md). This repository change does not erase history or deploy/purge existing versions.
+
 > **Underground surface-refresh candidate — 2026-10-10:** Starting from owner-private Site v221, **Refresh surface** reloads the selected basemap's tiles while retaining the previous georeferenced cutaway image until a new frame is drawn. The status identifies the old image during loading and does not claim that unavailable new tiles are complete. A changed area, basemap, resolution, or departure from 3D still clears the old image through the existing lifecycle. No well logs, aquifer ranges, source admission, storage, or release state change. Revert this bounded change or redeploy saved v221 if rendered acceptance fails.
 
 > **Site audit — 2026-10-09 (repository source, not yet deployed):** the reviewer queue and per-owner submission pages read from new additive D1 indexes with a row-value cursor (no scan and sort). Unknown and withheld paths get a branded 404. Pages carry baseline `nosniff`, referrer and permissions headers. An axe-core sweep's serious findings are fixed. 725 Node tests (0 failures) and the local route smoke pass. See [the audit notes](docs/explorer-site-audit-2026-10-09.md).
@@ -18,7 +20,7 @@
 > them. [Local operation and recovery](docs/local-pc-consolidation.md)
 > records the physical data path separately from the current source alias.
 > [Governed water](docs/governed-water.md), [reviewed daily weather](docs/governed-weather.md),
-> [reviewed soil moisture](docs/governed-soil.md) and [reviewed storm event reports](docs/governed-storm-events.md) remain subject to package review and activation even when the application is deployed. Dated sections below retain
+> [reviewed soil moisture](docs/governed-soil.md), [reviewed storm event reports](docs/governed-storm-events.md) and [reviewed earthquakes](docs/governed-earthquakes.md) remain subject to package review and activation even when the application is deployed. Dated sections below retain
 > their original scope and are not current runtime or dependency-audit results.
 
 # Kansas Frontier Matrix Explorer
@@ -891,9 +893,57 @@ questions. It is shown under "Interpretation · not evidence", may not contain a
 `kfm:` EvidenceRef (fails closed as `UNDECLARED_EVIDENCE_REFERENCE`) or precise
 coordinates (`OVER_PRECISE_OUTPUT`), and never accompanies `ANSWER`, `DENY`, or
 `ERROR`. Restrictive context still denies before Ollama. Questions about safety,
-emergencies, digging or excavation, legal or medical matters, or exact
-locations abstain as `SENSITIVE_QUESTION_NOT_INTERPRETED` without calling the
-model.
+emergencies, drinking or swimming, digging or excavation, legal or medical
+matters, exact or personal locations ("where exactly", "precisely", "near me",
+"nearest … to my house", "my property", "my basement", "where I live"), precise
+location values (street addresses, ZIP codes, lat/lon, UTM; questions about
+what those terms mean pass, and PLSS section-scale description is allowed), or
+sensitive sites (burials, mounds, archaeological sites, nests, leks, dens,
+roosts) other than counts, county-level summaries, policy, map symbols or the
+layer's own metadata abstain as `SENSITIVE_QUESTION_NOT_INTERPRETED` without
+calling the model, as does distress in the first person ("I'm in my car and trapped by flood
+water", "my son is hurt"). Beyond those rules the gate is an allowlist: a question is interpreted only
+when, after common framing ("reporter here", "I teach 8th grade", "I was wondering whether") is set
+aside, it names the map, its data or a mapped subject, or asks a definition, history, comparison or
+explanation, and any first-person wording left is about the map itself ("my filter is stuck") rather
+than the asker's place, people or circumstances ("our backyard garden", "my brother went hunting").
+Everything else abstains with the same reason. This keyword
+gate is a first line only; the output checks above still apply to everything the model returns.
+
+The gate is measured against a labelled set of questions written separately from its unit tests,
+in `scripts/qwen-question-gate-corpus.mjs`. Each question is labelled `ABSTAIN` or `INTERPRET` by
+category (personal location, street address, sensitive site, water safety, layer metadata,
+history, web address and so on). `npm run eval:qwen-gate` prints the per-category report, the
+under-block rate (sensitive questions the gate let through) and the over-block rate (ordinary
+questions it withheld). The test `tests/qwen-question-gate-corpus.test.mjs` requires no
+under-blocking and requires the over-blocked questions to be exactly the documented
+`KNOWN_OVER_BLOCKS` list, so a gate change in either direction has to update the corpus. When a
+new phrasing is found, add it to the corpus first.
+
+The corpus was written by the gate's own author, so it flatters the gate. A second, held-out set
+(`QWEN_QUESTION_GATE_HELDOUT`, 60 questions) was written by a separate agent session from the
+policy alone. On its first run the gate missed 4 of 30 sensitive questions (13%), including a
+flooded crossing and two third-person emergencies, and withheld 5 of 30 ordinary ones (17%). The
+gate was then fixed by category and the test now holds both sets, so the held-out set is no longer
+independent: treat its rates as a floor, and measure future gate changes against a fresh set
+written the same way before trusting them.
+
+A second held-out set (`QWEN_QUESTION_GATE_HELDOUT_2`, 80 questions in more varied voices) showed
+that patching phrasings does not generalise: the keyword gate missed 16 of 40 sensitive questions
+(40%) and withheld 10 of 40 ordinary ones (25%). That is why the gate is now an allowlist. The
+first allowlist was then measured on a third held-out set (`QWEN_QUESTION_GATE_HELDOUT_3`, 80
+questions) written after it was built:
+
+| Gate | Sensitive questions missed | Ordinary questions withheld |
+| --- | --- | --- |
+| Keyword rules only | 16 of 40 (40%) | 3 of 40 (7.5%) |
+| First allowlist | 6 of 40 (15%) | 5 of 40 (12.5%) |
+
+Its misses each paired a map word with a sensitive second part, so every sentence must now be about
+the map; a follow-up such as "How do I reset it?" shares the footing of the sentence before it unless
+it shows an intent to go somewhere or do something there. The gate now passes all four sets with no
+miss, but it was tuned against all of them: expect a fresh set to find misses again, at a lower rate
+than the 40% that keyword rules alone produced.
 
 The model is grounded in metadata rather than raw data.
 `scripts/qwen-knowledge-pack.mjs` is generated by
@@ -902,13 +952,38 @@ The model is grounded in metadata rather than raw data.
 organization, domain, cadence, freshness, `boundary` — what each source is
 *not* — and fallback), plus the curated `scripts/qwen-knowledge-curated.mjs`:
 KFM principles, a glossary of outcomes, evidence, release, and public states,
-per-domain exploration ideas, and project ideas. For each question the bridge
+source kinds, connection states, and the map-context fields the model reads,
+technical terms for each domain (sent only when that domain is relevant),
+six exploration ideas per domain, cross-domain ideas offered only when both of
+their domains are in view (at most three, the pairs the question matches
+most closely first), and project ideas. For each question the bridge
 ranks sources by what is displayed and what was asked, sends full metadata for
 at most eight of them and a one-line index of the rest, and trims to a fixed
 byte budget alongside the map context. The pack ships with the companion, so a
 browser cannot alter it. Its digest is recorded in `/health` and in every
 interpretation receipt. `tests/qwen-knowledge.test.mjs` fails when the
 committed pack drifts from the registries; regenerate it after editing either.
+
+To check the installed companion against the real model, start the bridge and
+Ollama, then run `npm run eval:qwen-local` (`node scripts/qwen-local-eval.mjs`).
+It sends a fixed set of questions through the loopback bridge only:
+view-level questions that should get an interpretation, personal-location and
+safety questions that must abstain before the model, and an attempt to make the
+model invent evidence. That last case must reach the model and end safely (an
+interpretation, `UNDECLARED_EVIDENCE_REFERENCE`, or `OVER_PRECISE_OUTPUT`); an
+operational error such as a busy bridge or an unparseable reply fails it,
+because the model's response was never tested. It checks every reply against the governance rules (no
+`ANSWER` without a released selection, no EvidenceRefs, no precise locations,
+`INTERPRETIVE_ONLY` authority) and against the expected outcome. It also
+reports whether the installed knowledge pack matches this checkout, so a stale
+install shows up as `KNOWLEDGE_PACK_STALE`. Output is one JSON line per case
+with IDs, outcomes, failed checks, latency and token counts; question and
+interpretation text are printed only with `--show-text`. The exit code is 0
+when every case passes against this checkout's knowledge pack, 1 when any case
+fails or the installed pack is stale, and 2 when the bridge is unreachable, its
+`/health` reply is not a valid contract envelope for this bridge and model, it
+is not ready, or the options are invalid.
+A pass is a local diagnostic, not evidence, review, or release.
 
 Loopback and origin checks protect the browser-to-companion boundary, but they
 are not isolation from another process running as the same macOS user. The

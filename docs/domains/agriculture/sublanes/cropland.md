@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<TODO-uuid>
+doc_id: kfm://doc/domains/agriculture/sublanes/cropland
 title: Agriculture · Sublane · Cropland
 type: standard
 subtype: domain-topical-sublane-profile
@@ -14,21 +14,21 @@ created: 2026-05-26
 updated: 2026-05-26
 policy_label: public
 related:
-  - docs/doctrine/ai-build-operating-contract.md
-  - docs/doctrine/directory-rules.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/policy-aware.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/evidence-first.md
-  - docs/domains/agriculture/README.md
-  - docs/domains/agriculture/sublanes/README.md
-  - docs/domains/agriculture/policy/README.md
-  - docs/domains/agriculture/runbooks/README.md
-  - docs/runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md
-  - policy/sensitivity/agriculture/
-  - policy/domains/agriculture/
-  - schemas/contracts/v1/domains/agriculture/
-  - data/registry/sources/agriculture/
+  - "docs/doctrine/ai-build-operating-contract.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/doctrine/trust-membrane.md"
+  - "docs/doctrine/policy-aware.md"
+  - "docs/doctrine/lifecycle-law.md"
+  - "docs/doctrine/evidence-first.md"
+  - "docs/domains/agriculture/README.md"
+  - "docs/domains/agriculture/sublanes/README.md"
+  - "docs/domains/agriculture/policy/README.md"
+  - "docs/domains/agriculture/runbooks/README.md"
+  - "docs/runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md"
+  - "policy/sensitivity/agriculture/"
+  - "policy/domains/agriculture/"
+  - "schemas/contracts/v1/domains/agriculture/"
+  - "data/registry/sources/agriculture/"
 tags: [kfm, domain, agriculture, sublane, topical, cropland, cdl, landcover, nass, ssurgo, aggregate, fail-closed]
 notes:
   - This document profiles the **cropland** topical sublane of the agriculture domain. It composes against the five-axis sublane framework in `docs/domains/agriculture/sublanes/README.md` (PROPOSED term — see OQ-AG-SUB-01).
@@ -36,6 +36,13 @@ notes:
   - USDA Cropland Data Layer (CDL) is CONFIRMED admitted per atlas card KFM-P2-IDEA-0028; NASS Crop Progress with ICDL version watcher per atlas card KFM-P25-PROG-0005.
   - Pinned to `CONTRACT_VERSION = "3.0.0"` per `ai-build-operating-contract.md` §0 / §37.
   - All concrete paths are PROPOSED until verified against the live repository.
+previous_placeholder_doc_id: "kfm://doc/<TODO-uuid>"
+owning_root: docs/
+responsibility: "Human-readable Agriculture · Sublane · Cropland guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # Agriculture · Sublane · Cropland
@@ -505,7 +512,7 @@ At `docs/runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md` (PROPOSED), indexed fro
 - [`docs/doctrine/policy-aware.md`](../../../doctrine/policy-aware.md) — finite policy outcomes. `[CONFIRMED sibling.]`
 - [`docs/doctrine/lifecycle-law.md`](../../../doctrine/lifecycle-law.md) — `RAW → … → PUBLISHED`. `[CONFIRMED sibling.]`
 - [`docs/doctrine/evidence-first.md`](../../../doctrine/evidence-first.md) — cite-or-abstain. `[CONFIRMED sibling.]`
-- [`docs/doctrine/corrections-are-first-class.md`](../../../doctrine/corrections-are-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
+- [`docs/doctrine/corrections-first-class.md`](../../../doctrine/corrections-first-class.md) — `CorrectionNotice` workflow. `[CONFIRMED sibling.]`
 - [`docs/doctrine/authority-ladder.md`](../../../doctrine/authority-ladder.md) — source authority hierarchy. `[CONFIRMED sibling.]`
 
 **Agriculture domain orientation**
@@ -514,7 +521,7 @@ At `docs/runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md` (PROPOSED), indexed fro
 - [`docs/domains/agriculture/sublanes/README.md`](./README.md) — sublane framework (parent of this doc). `[PROPOSED sibling.]`
 - [`docs/domains/agriculture/policy/README.md`](../policy/README.md) — agriculture policy aspect. `[PROPOSED sibling.]`
 - [`docs/domains/agriculture/runbooks/README.md`](../runbooks/README.md) — agriculture runbooks aspect. `[PROPOSED sibling.]`
-- [`docs/domains/agriculture/architecture/README.md`](../architecture/README.md) — agriculture architecture aspect. `[PROPOSED.]`
+- `docs/domains/agriculture/architecture/README.md` (PROPOSED; target unavailable) — agriculture architecture aspect. `[PROPOSED.]`
 
 **Sibling topical sublane profiles (PROPOSED)**
 
@@ -532,8 +539,8 @@ At `docs/runbooks/agriculture/SOURCE_REFRESH_RUNBOOK.md` (PROPOSED), indexed fro
 **Canonical artifacts (PROPOSED paths)**
 
 - [`policy/sensitivity/agriculture/`](../../../../policy/sensitivity/agriculture/) — sensitivity sublanes (incl. cropland-relevant rows).
-- [`policy/domains/agriculture/cross_lane/`](../../../../policy/domains/agriculture/cross_lane/) — cross-lane edges.
-- [`policy/release/agriculture/`](../../../../policy/release/agriculture/) — release-tier sublanes.
+- `policy/domains/agriculture/cross_lane/` (PROPOSED; target unavailable) — cross-lane edges.
+- `policy/release/agriculture/` (PROPOSED; target unavailable) — release-tier sublanes.
 - [`data/registry/sources/agriculture/`](../../../../data/registry/sources/agriculture/) — `SourceDescriptor` for each admitted cropland source (CDL, NASS, SSURGO, NLCD, LANDFIRE, GAP, PLANTS, vegetation-index sources).
 - [`schemas/contracts/v1/domains/agriculture/`](../../../../schemas/contracts/v1/domains/agriculture/) — cropland-relevant object family schemas.
 - [`contracts/domains/agriculture/`](../../../../contracts/domains/agriculture/) — cropland-relevant object family meaning.

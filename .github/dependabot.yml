@@ -1,6 +1,6 @@
 # Kansas Frontier Matrix Dependabot configuration
-# Version: v1.5
-# Updated: 2026-10-11
+# Version: v1.7
+# Updated: 2026-10-14
 #
 # Authority boundary:
 # - Dependabot proposes dependency changes through pull requests.
@@ -42,6 +42,8 @@ updates:
       - "/packages/*"
       - "/packages/domains/*"
       - "/pipelines/*"
+      # Nested pipeline with its own requirements file; /pipelines/* stops one level down.
+      - "/pipelines/domains/soil/crop_casma_tiles"
       - "/connectors/*"
       - "/connectors/*/*"
     schedule:
@@ -105,6 +107,12 @@ updates:
       - "dependencies"
       - "javascript"
       - "needs-review"
+    # packages/maplibre stays on the exact maplibre-gl version the Site ships
+    # and the readiness classifier targets (6.9.0) until the #2906 probe
+    # packet runs. Move it by hand together with apps/site and
+    # tools/validators/maplibre/validate_v6_readiness.py.
+    ignore:
+      - dependency-name: "maplibre-gl"
     commit-message:
       prefix: "deps(node)"
       prefix-development: "deps(node-dev)"
@@ -149,6 +157,15 @@ updates:
       - "dependencies"
       - "ci"
       - "needs-review"
+    # A Python minor or major release changes the interpreter the image ships,
+    # not just its patch level, and release candidates were proposed this way
+    # (3.11 -> 3.14 -> 3.15.0rc3 within two days). Move those by hand after a
+    # compatibility review; patch updates within the current minor still flow.
+    ignore:
+      - dependency-name: "python"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
     commit-message:
       prefix: "deps(docker)"
       include: "scope"

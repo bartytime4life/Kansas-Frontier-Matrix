@@ -2,11 +2,11 @@
 doc_id: kfm://register/repository-gap-fill-goal-2026-10-02
 title: KFM Repository Gap-Fill Goal — 2026-10-02
 type: goal-and-procedure-ledger
-version: v1.1
+version: v1.3
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-16
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "State a measurable goal for closing repository gaps, record the gaps observed in a full-tree audit, define repeatable fill procedures, and point each gap at its existing machine projection or validator without creating source, policy, lifecycle, release, or publication authority."
@@ -38,6 +38,109 @@ notes:
 > This ledger is a review aid. It records what the audit saw and how to close it. It does not approve, admit, release, or publish anything.
 
 ---
+
+## Bounded repair checkpoint — 2026-10-16 (P-04 and readiness drift)
+
+This checkpoint starts from `main@adb86db668` after PR #5212 merged. It takes
+the two remaining gap items that need no steward decision. PR #5213 owns
+`G-ENV-02`, so this pass leaves it alone.
+
+| Finding | Evidence and repair | Remaining boundary |
+|---|---|---|
+| `G-SCAF-02`: `runtime/model_adapters/OllamaAdapter.py` was a one-line greenfield placeholder | It is now a held seam. Importing it is inert, and constructing `OllamaAdapter` raises `OllamaAdapterHold` with reason code `OLLAMA_ADAPTER_NOT_ADMITTED`. `tests/runtime_proof/test_ollama_adapter_hold.py` proves the hold and the absence of I/O imports, and `focus-mock-test.yml` runs it. The runtime lane READMEs were updated to match. `UNRATCHETED_PLACEHOLDER` tightened from 9 to 8. | No provider binding, model admission, response envelope or receipt exists. ADR-0008, ADR-0019 and the `docs/architecture/governed-ai/` pages still describe the earlier one-line file at their pinned evidence snapshots; their conclusion that no provider is implemented remains true. |
+| `docs/readiness-lanes.md` contradicted `control_plane/readiness/lanes.json` | The page said `proof-slice` was a HOLD and that workflows inspected the old Makefile markers. The registry, Makefile and `policy-test.yml` / `hydrology-proof-slice.yml` show `proof-slice` IMPLEMENTED and runner-wired. The page now carries a posture table, and `tests/ci/test_readiness_lanes.py` fails when a lane status or HOLD reason in it differs from the registry. | `fixtures` and `catalog` remain HOLD. A local `policy` run still holds on `OPA_BINARY_UNAVAILABLE` (`G-POL-01`). |
+
+Still open from `G-SCAF-02`, with reasons:
+
+- The three `release/*.rego` files wait on `OQ-GAP-04`. The two geology files duplicate the ratcheted `policy/domains/geology/release/` scaffolds.
+- The two fauna `valid/*.geojson` slots wait on steward-defined range schemas, which are still empty.
+- `infra/compose/docker-compose.yml` is the input to `infra-compose-smoke.yml`, and its placeholder Dockerfile build is what that workflow checks.
+- The two `artifacts/` placeholders are tracked lane examples that `artifacts/qa/lint/README.md`, `artifacts/build/env/README.md` and the topology baseline describe.
+
+Rollback: revert the repair commit. That restores the one-line adapter file,
+the prior readiness page, and the gap baseline of 9. Keep the authoring
+receipt as history.
+
+## Bounded repair checkpoint — 2026-10-16
+
+This checkpoint starts from `main@05b132b66b` after PRs #5194–#5197 merged.
+The earlier tables below retain their original snapshot dates and counts.
+Scope: the adopted Directory Rules and ADR-0029, contribution and installation
+guidance, this ledger, QA tooling, the remaining link findings, and selected
+Python contract, pipeline, domain, API, CI, runtime-proof, release and local-data
+tests. This is not an exhaustive review of every document or implementation.
+
+| Finding | Evidence and repair | Remaining boundary |
+|---|---|---|
+| Baseline update could accept regressions | Five new negative cases reproduced `--write-baseline` succeeding with a new parse error, test-package shadow, broken link, or either placeholder class. It now checks the existing baseline before writing and preserves its bytes on rejection. | Count-based QA remains a review aid; manual baseline edits require review. |
+| 17 dead inline Markdown links | The local census fell from 17 to 0. Unavailable proposed and retired paths are explicitly labeled; existing habitat draft guides are linked separately. | Missing proposals are not implemented by removing their dead hyperlinks. Historical application commands remain labeled historical. |
+| Placeholder allowance exceeded observed inventory | Markdown allowance tightened from 94 to 7; non-Markdown allowance remains 9. | Those 16 placeholders remain visible; this pass does not invent source, policy, or runtime behavior for them. |
+| Invalid metadata on touched documents | Two placeholder identities, missing responsibility fields, an unknown creation date, and missing relationship targets were repaired. The quarantine date records its first same-path Git addition at `026b5baa7c`, not an inferred original authoring date. | Draft status, unresolved owner assignments, pinned historical evidence and independent review remain separate. |
+
+Baseline validation under Python 3.11 with committed dependency locks passed
+1,904 tests plus 873 subtests (one skip) for schemas, contracts, pipelines,
+domains and QA; a separate API/CI/runtime-proof/release/local-data run passed
+751 tests plus 592 subtests (four skips). The release run requires the separate
+`geoparquet-pyarrow-25` lock; missing PyArrow under the smaller profile was an
+environment collection error, not a demonstrated code defect. These were
+baseline observations; the new baseline-update regressions and changed-document
+QA are validated separately in the authoring receipt.
+
+The scaffold census still contains 877 findings in 716 files. Its existing
+ratchet passes; this does not establish implemented capabilities or full
+repository correctness. Domain semantics, policy scaffolds, real source
+admission, independent stewardship, hosted behavior and release readiness need
+their own evidence and owning-root work. No source activation, model service,
+release, deployment or publication is performed by this repair.
+
+Placement: same-path documentation under `docs/`, repository QA code under
+`tools/`, executable regressions under `tests/`, and a new authoring receipt in
+the existing `data/receipts/generated/` family follow accepted ADR-0029 and
+Directory Rules §§7.2 and 10.1. Rollback is a focused revert of the repair and
+its reduced baseline together; retain the authoring receipt as history.
+
+## Full Python collection setup candidate — 2026-10-16
+
+**Base:** `main@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be`, including merged
+PR #5212. This follow-up addresses `G-ENV-02` and the collection portion of
+`DOD-08`; it does not claim full-suite execution or resolve `G-ENV-01`.
+
+Two fresh virtual environments reproduced the four documented collection
+errors after installing only `all-local-test` and `water-pilot`: three CLI
+modules lacked their CLI dependencies, and the PyArrow carrier module lacked
+PyArrow. CPython 3.12 collected 8,889 cases with those four errors, including
+the new setup regressions. The composed setup collected **8,909 tests with
+zero errors** in a separate fresh CPython 3.12 environment under the existing
+Python startup network guard and `PROJ_NETWORK=OFF`. This is an import and
+collection check, not a claim that 8,909 tests passed.
+
+The new `tools/ci/install_full_local_test.py` validates all committed inputs
+before the first install, delegates to the five existing fixed profiles and
+the separate CLI installer, stops on failure, then runs `pip check`.
+`--plan` validates inputs and prints commands without installing. Installation
+requires a virtual environment, Linux x86_64 and CPython 3.12: the experiment's
+PyArrow lock admits only its `cp312` wheel. An initial 3.11 install correctly
+stopped on that hash mismatch; no lock or experimental producer identity was
+broadened. Smaller component profiles retain their own supported runtimes.
+
+Local validation passed 57 installer tests plus 48 subtests. The larger CI,
+CLI, PyArrow-carrier and local-data slice passed 639 tests plus 481 subtests,
+with one explicit skip and one native NumPy/NetCDF compatibility warning.
+That warning remains visible and this checkpoint does not establish broad
+native-library ABI compatibility. The dependency workflow now runs a fresh
+3.12 install and guarded full-suite collection on relevant changes, while
+retaining the smaller-profile 3.11/3.12 checks. Hosted execution is separately
+verified at the PR head; no hosted result is claimed by this paragraph.
+
+Placement follows accepted ADR-0029 and Directory Rules §§7.2 and 10.1:
+dependency orchestration under `tools/ci/`, executable regressions under
+`tests/ci/`, workflow composition under `.github/workflows/`, human setup and
+gap guidance under existing `docs/` paths, and add-only authoring provenance
+under `data/receipts/generated/`. No new authority root is created. Rollback
+removes the helper, tests and collection job together and reverts their
+documentation; preserve authoring receipts as history. Installed packages are
+confined to the selected disposable environment; setup has no automatic
+rollback of a partially installed environment.
 
 ## 1. Definition of done
 
@@ -227,5 +330,6 @@ Revert the commit that adds this ledger. That restores `tests/pipelines/__init__
 |---|---|---|
 | v1.0 | 2026-10-02 | First audit snapshot, five fixes, gap scan, and procedures P-01 to P-07. |
 | v1.1 | 2026-10-02 | `G-DOC-04a`: three source-catalog documents repaired; the remaining five `G-DOC-04` documents stay held behind doctrine decisions. Revert that commit to restore their prior bytes, the 339 gap-scan baseline, and the 115-warning topology baseline. |
+| v1.3 | 2026-10-16 | P-04 checkpoint: `OllamaAdapter.py` became a tested fail-closed hold (non-Markdown placeholder allowance 9 → 8), and `docs/readiness-lanes.md` was aligned with the lane registry under a parity test. |
 
 [Back to top](#top)

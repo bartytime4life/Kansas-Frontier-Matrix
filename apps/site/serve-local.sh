@@ -33,10 +33,10 @@ elif [[ "$schema_count" != 2 ]]; then
   exit 1
 fi
 
-# Later journal entries back the governed water, weather, soil and storm events,
+# Later journal entries back the governed water, weather, soil, storm events and earthquakes,
 # Kansas knowledge and crop CASMA routes. They are additive, so reapply them on every launch; refuse any
 # entry whose statements are not all CREATE ... IF NOT EXISTS.
-# The already-published archive migration stays immutable; a hash-bound local
+# Published archive and connection migrations stay immutable; a hash-bound local
 # replay adds only IF NOT EXISTS so fresh and repeated local starts are safe.
 migration_workspace="$(mktemp -d)"
 trap 'rm -rf "$migration_workspace"' EXIT
@@ -63,11 +63,15 @@ if (unlisted.length || missing.length || misnumbered.length) {
 for (const { idx, tag } of [...journal.entries].sort((a, b) => a.idx - b.idx)) {
   if (idx === 0) continue;
   let file = `drizzle/${tag}.sql`;
-  if (tag === "0005_daily_archive") {
+  const replayHashes = {
+    "0005_daily_archive": "669ca0011a044c77479ea842c1fabd040f344a4d49826949a43fbd882f34801c",
+    "0010_api_connections": "b020a360d8764b28dc2459a897bf43ff0311931166c66717e0bdd51337e8f8b8",
+  };
+  if (Object.hasOwn(replayHashes, tag)) {
     const original = fs.readFileSync(file, "utf8");
-    const expected = "669ca0011a044c77479ea842c1fabd040f344a4d49826949a43fbd882f34801c";
+    const expected = replayHashes[tag];
     if (require("crypto").createHash("sha256").update(original).digest("hex") !== expected) {
-      throw new Error("Published daily archive migration changed; review before local replay.");
+      throw new Error(`Published migration ${tag} changed; review before local replay.`);
     }
     file = require("path").join(process.argv[1], `${tag}.sql`);
     fs.writeFileSync(file, original.replace(/CREATE (TABLE|INDEX) /g, "CREATE $1 IF NOT EXISTS "), { flag: "wx", mode: 0o600 });
@@ -92,6 +96,8 @@ trap - EXIT
 host="${SITE_HOST:-127.0.0.1}"
 port="${SITE_PORT:-4173}"
 
+node scripts/validate-subsurface-public.mjs dist/client
+
 # Prefer the Site's direct Miniflare launcher. Wrangler's development proxy can
 # answer 500 to the request after one whose body the Worker never read. The
 # direct launcher binds only to loopback, requires Node 22.x, refuses .dev.vars
@@ -115,5 +121,12 @@ if [[ -z "$fallback" ]]; then
 fi
 
 printf 'Starting wrangler dev (%s); its proxy can return a stray 500 after a rejected request.\n' "$fallback" >&2
+# Only the direct runtime binds the private daily-archive access file. Keep its
+# tokens out of argv and out of Wrangler's .dev.vars/.env loading, and say so
+# rather than leave the browser and capture runner with unexplained 401s.
+archive_access="${HOME:-}/.config/kfm/daily-archive-access"
+if [[ -n "${HOME:-}" && ( -e "$archive_access" || -L "$archive_access" ) ]]; then
+  printf 'wrangler dev does not load %s; archive requests return 401 unless KFM_ARCHIVE_LOCAL_OWNER_TOKEN and KFM_ARCHIVE_WORKER_TOKEN are configured for Wrangler separately. The direct runtime (loopback host, Node 22.x, no .env or .dev.vars files) uses the access file.\n' "$archive_access" >&2
+fi
 exec "$wrangler" dev --config "$config" --local \
   --persist-to "$local_state" --ip "$host" --port "$port"

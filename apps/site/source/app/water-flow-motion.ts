@@ -17,8 +17,9 @@ export const FLOWLINE_LIMITATION = "USGS 3DHP flowlines that carry the provider'
 export const FLOWLINE_CELL_DEGREES = 0.25;
 /** Grid cells covering Kansas (south-west corners). */
 export const FLOWLINE_EXTENT = Object.freeze({ west: -102.25, south: 36.75, east: -94.5, north: 40.25 });
-/** Flowlines are fetched and drawn only at and above this zoom. */
-export const FLOW_MIN_ZOOM = 10;
+/** Overview, regional and local detail are preloaded before their opacity ramps. */
+export const FLOW_MIN_ZOOM = 4;
+export const FLOW_DETAIL_MIN_ZOOM = 8.5;
 export const MAX_FLOW_CELLS = 9;
 /** Gauge readings fade out this far along their reach. */
 export const GAUGE_REACH_WINDOW_M = 2500;
@@ -33,10 +34,13 @@ export type FlowReach = Readonly<{
   levelpath: number | null;
   name: string | null;
   featureType: number;
+  /** Provider classification only; absent/invalid order never becomes a major river. */
+  streamOrder?: number | null;
   coordinates: readonly Coordinate[];
 }>;
 export type FlowlineCellPayload = Readonly<{
-  format: "kfm-3dhp-flowlines-v1";
+  format: "kfm-3dhp-flowlines-v1" | "kfm-3dhp-flowlines-v2";
+  requestKey?: string;
   cell: readonly [number, number];
   state: "ready" | "empty";
   truncated: boolean;
@@ -61,12 +65,62 @@ export function parseFlowlineCell(raw: string | null): [number, number] | null {
 
 export const flowlineCellKey = (cell: readonly [number, number]): string => `${cell[0].toFixed(2)},${cell[1].toFixed(2)}`;
 
+export type FlowRequest = Readonly<{ key: string; cell: readonly [number, number]; east: number; north: number; minimumOrder: number; offset: number }>;
+
+/** Fixed grids, fixed filters, no caller-supplied SQL or arbitrary bounding box. */
+export function parseFlowRequest(key: string | null): FlowRequest | null {
+  if (!key) return null;
+  const match = /^(overview|regional):(.+)$/.exec(key);
+  const cell = parseFlowlineCell(match ? match[2] : key);
+  if (!cell) return null;
+  const tier = match?.[1];
+  const step = tier === "overview" ? 2 : tier === "regional" ? 1 : FLOWLINE_CELL_DEGREES;
+  if (tier && ((cell[0] - FLOWLINE_EXTENT.west) % step || (cell[1] - FLOWLINE_EXTENT.south) % step)) return null;
+  return { key: tier ? `${tier}:${flowlineCellKey(cell)}` : flowlineCellKey(cell), cell,
+    east: Math.min(cell[0] + step, FLOWLINE_EXTENT.east), north: Math.min(cell[1] + step, FLOWLINE_EXTENT.north),
+    minimumOrder: tier === "overview" ? 5 : tier === "regional" ? 3 : 0,
+    offset: tier === "overview" ? 0.001 : tier === "regional" ? 0.0005 : 0.0002 };
+}
+
+/** A cartographic choice using USGS order, never a claim about discharge/width. */
+export const flowReachMinZoom = (order: number | null | undefined): number =>
+  typeof order === "number" && Number.isInteger(order) && order >= 5 ? 4 : typeof order === "number" && Number.isInteger(order) && order >= 3 ? 7 : 9;
+export function flowZoomOpacity(zoom: number, minimum: number): number {
+  const t = Math.max(0, Math.min(1, zoom - minimum));
+  return t * t * (3 - 2 * t);
+}
+
+/** Overview covers the full Kansas envelope, rather than nine tiny centre cells. */
+export function flowRequestsForView(bounds: Readonly<{ west: number; south: number; east: number; north: number }>, center: Coordinate, zoom: number): string[] {
+  if (!Number.isFinite(zoom) || zoom < FLOW_MIN_ZOOM || !center.every(Number.isFinite)
+    || !Object.values(bounds).every(Number.isFinite) || bounds.east <= bounds.west || bounds.north <= bounds.south
+    || bounds.east <= FLOWLINE_EXTENT.west || bounds.west >= FLOWLINE_EXTENT.east
+    || bounds.north <= FLOWLINE_EXTENT.south || bounds.south >= FLOWLINE_EXTENT.north) return [];
+  const keys: string[] = [];
+  // At most eight overview cells. Keep these as a continuous backing network.
+  for (let west = FLOWLINE_EXTENT.west; west < FLOWLINE_EXTENT.east; west += 2)
+    for (let south = FLOWLINE_EXTENT.south; south < FLOWLINE_EXTENT.north; south += 2)
+      keys.push(`overview:${flowlineCellKey([west, south])}`);
+  if (zoom >= 6.5) {
+    const regional: FlowRequest[] = [];
+    for (let west = FLOWLINE_EXTENT.west; west < FLOWLINE_EXTENT.east; west += 1)
+      for (let south = FLOWLINE_EXTENT.south; south < FLOWLINE_EXTENT.north; south += 1) {
+        const request = parseFlowRequest(`regional:${flowlineCellKey([west, south])}`)!;
+        if (request.east > bounds.west && west < bounds.east && request.north > bounds.south && south < bounds.north) regional.push(request);
+      }
+    regional.sort((a, b) => Math.hypot(a.cell[0] + 0.5 - center[0], a.cell[1] + 0.5 - center[1]) - Math.hypot(b.cell[0] + 0.5 - center[0], b.cell[1] + 0.5 - center[1]));
+    keys.push(...regional.slice(0, 9).map(request => request.key));
+  }
+  keys.push(...flowCellsForView(bounds, center, zoom).map(flowlineCellKey));
+  return keys;
+}
+
 /** Cells near the view centre, nearest first. Nothing below the minimum zoom. */
 export function flowCellsForView(
   bounds: Readonly<{ west: number; south: number; east: number; north: number }>,
   center: Coordinate, zoom: number,
 ): [number, number][] {
-  if (!(zoom >= FLOW_MIN_ZOOM) || !center.every(Number.isFinite)) return [];
+  if (!(zoom >= FLOW_DETAIL_MIN_ZOOM) || !center.every(Number.isFinite)) return [];
   // Tilted views reach the horizon; keep to the foreground around the centre.
   const west = Math.max(bounds.west, center[0] - 0.4, FLOWLINE_EXTENT.west);
   const east = Math.min(bounds.east, center[0] + 0.4, FLOWLINE_EXTENT.east);
@@ -93,8 +147,10 @@ const sequenceOrNull = (value: unknown) => value === null || (typeof value === "
 export function parseFlowlinePayload(value: unknown): FlowlineCellPayload {
   if (!value || typeof value !== "object") throw new Error("Flowline cell is invalid.");
   const payload = value as Partial<FlowlineCellPayload>;
-  if (payload.format !== "kfm-3dhp-flowlines-v1" || !Array.isArray(payload.cell) || payload.cell.length !== 2
+  const request = payload.format === "kfm-3dhp-flowlines-v2" && typeof payload.requestKey === "string" ? parseFlowRequest(payload.requestKey) : null;
+  if (!(payload.format === "kfm-3dhp-flowlines-v1" || (request && payload.requestKey === request.key)) || !Array.isArray(payload.cell) || payload.cell.length !== 2
     || !parseFlowlineCell(flowlineCellKey(payload.cell as [number, number]))
+    || (request && flowlineCellKey(request.cell) !== flowlineCellKey(payload.cell as [number, number]))
     || !["ready", "empty"].includes(String(payload.state)) || typeof payload.truncated !== "boolean"
     || !Array.isArray(payload.reaches) || payload.reaches.length > 400 || (payload.state === "ready") !== (payload.reaches.length > 0)
     || payload.source !== FLOWLINE_SERVICE || typeof payload.retrievedAt !== "string" || !Number.isFinite(Date.parse(payload.retrievedAt))
@@ -105,6 +161,8 @@ export function parseFlowlinePayload(value: unknown): FlowlineCellPayload {
       || !sequenceOrNull(reach.sequence) || !sequenceOrNull(reach.downstream) || !sequenceOrNull(reach.levelpath)
       || !(reach.name === null || (typeof reach.name === "string" && reach.name.length <= 160))
       || ![1, 4, 5, 6].includes(reach.featureType)
+      || !(reach.streamOrder === undefined || reach.streamOrder === null || (Number.isInteger(reach.streamOrder) && reach.streamOrder >= 1 && reach.streamOrder <= 20))
+      || (request && request.minimumOrder > 0 && !(typeof reach.streamOrder === "number" && reach.streamOrder >= request.minimumOrder))
       || !Array.isArray(reach.coordinates) || reach.coordinates.length < 2 || reach.coordinates.length > 10000
       || !reach.coordinates.every((point: unknown) => Array.isArray(point) && point.length === 2
         && finiteInRange(point[0], -102.2, -94.4) && finiteInRange(point[1], 36.8, 40.2))) throw new Error("Flowline cell contains an invalid reach.");
@@ -161,8 +219,8 @@ export function distanceMeters(a: Coordinate, b: Coordinate): number {
 export const mercatorX = (lng: number): number => (180 + lng) / 360;
 export const mercatorY = (lat: number): number => (180 - (180 / Math.PI) * Math.log(Math.tan(Math.PI / 4 + (lat * RADIANS) / 2))) / 360;
 
-/** Per segment: A (x, y, z), B (x, y, z), distance at A and B, intensity, motion, tint, phase. */
-export const FLOW_SEGMENT_FLOATS = 12;
+/** Per segment: A (x, y, z), B (x, y, z), distance at A and B, intensity, motion, tint, phase, minimum display zoom. */
+export const FLOW_SEGMENT_FLOATS = 13;
 export const MAX_FLOW_SEGMENTS = 60000;
 
 export type FlowGeometry = Readonly<{
@@ -214,9 +272,21 @@ export const gaugeFalloff = (distanceM: number): number => {
 export function buildFlowGeometry(reaches: readonly FlowReach[], gauges: readonly GaugeCue[]): FlowGeometry {
   const unique = [...new Map(reaches.map((reach) => [reach.id, reach])).values()];
   const snapped = new Map<number, { alongM: number; cue: GaugeCue }[]>();
+  // Overview adds distant reaches. Reject distant bounding boxes once per
+  // gauge before the exact, unchanged segment snap. 80 km/degree is a
+  // conservative lower bound for both axes throughout this Kansas envelope.
+  const boxes = gauges.length ? unique.map(reach => reach.coordinates.reduce((box, [lng, lat]) => ({
+    west: Math.min(box.west, lng), east: Math.max(box.east, lng), south: Math.min(box.south, lat), north: Math.max(box.north, lat),
+  }), { west: Infinity, east: -Infinity, south: Infinity, north: -Infinity })) : [];
+  const margin = GAUGE_SNAP_M / 80_000;
   for (const cue of gauges) {
-    const hit = snapGauge(unique, cue.coordinate);
-    if (hit) snapped.set(hit.reach, [...(snapped.get(hit.reach) ?? []), { alongM: hit.alongM, cue }]);
+    const candidates = boxes.flatMap((box, index) => cue.coordinate[0] >= box.west - margin && cue.coordinate[0] <= box.east + margin
+      && cue.coordinate[1] >= box.south - margin && cue.coordinate[1] <= box.north + margin ? [index] : []);
+    const hit = snapGauge(candidates.map(index => unique[index]), cue.coordinate);
+    if (hit) {
+      const index = candidates[hit.reach];
+      snapped.set(index, [...(snapped.get(index) ?? []), { alongM: hit.alongM, cue }]);
+    }
   }
   const total = Math.min(MAX_FLOW_SEGMENTS, unique.reduce((sum, reach) => sum + reach.coordinates.length - 1, 0));
   const segments = new Float32Array(total * FLOW_SEGMENT_FLOATS);
@@ -249,7 +319,7 @@ export function buildFlowGeometry(reaches: readonly FlowReach[], gauges: readonl
         }
       }
       const offset = count * FLOW_SEGMENT_FLOATS;
-      segments.set([mercatorX(a[0]), mercatorY(a[1]), 0, mercatorX(lng), mercatorY(lat), 0, along, along + length, intensity, moving, FLOW_TINT_INDEX[tint], phase], offset);
+      segments.set([mercatorX(a[0]), mercatorY(a[1]), 0, mercatorX(lng), mercatorY(lat), 0, along, along + length, intensity, moving, FLOW_TINT_INDEX[tint], phase, flowReachMinZoom(reach.streamOrder)], offset);
       vertices[previousVertex].slots.push(offset + 2);
       vertices[vertex].slots.push(offset + 5);
       along += length;

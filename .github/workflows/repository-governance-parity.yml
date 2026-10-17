@@ -88,8 +88,20 @@ jobs:
 
       - name: Run deterministic MRTS-04 parity profile
         env:
-          KFM_TRUSTED_BASE_REF: ${{ github.event.pull_request.base.sha || 'HEAD^' }}
-        run: make repository-governance-parity
+          KFM_PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$KFM_PR_BASE_SHA" ]]; then
+            parity_base="$KFM_PR_BASE_SHA"
+          else
+            parity_base="$(git rev-parse --verify 'HEAD^')"
+          fi
+          if [[ ! "$parity_base" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Governance parity requires an immutable base commit SHA."
+            exit 1
+          fi
+          export KFM_TRUSTED_BASE_REF="$parity_base"
+          make repository-governance-parity
 
       - name: Record non-authority and inherited-hold boundary
         if: always()

@@ -28,7 +28,7 @@ test("flowline cells sit on the 0.25° Kansas grid", () => {
 
 test("the view asks for nearby cells only at river zoom, nearest first and capped", () => {
   const bounds = { west: -98.2, south: 37.6, east: -96.8, north: 38.4 };
-  assert.deepEqual(flow.flowCellsForView(bounds, [-97.5, 38], 9.5), [], "too far out");
+  assert.deepEqual(flow.flowCellsForView(bounds, [-97.5, 38], 8.49), [], "too far out");
   const cells = flow.flowCellsForView(bounds, [-97.5, 38], 11);
   assert.ok(cells.length > 0 && cells.length <= flow.MAX_FLOW_CELLS);
   const first = cells[0];
@@ -148,7 +148,7 @@ test("the flow layer has a globe shader path, bounded widths and palettes for ev
     for (const channel of [...palette.base, ...palette.streak, ...palette.tints.flat()]) assert.ok(channel >= 0 && channel <= 1);
   }
   assert.equal(layerModule.flowHalfWidth(10), 1.6);
-  assert.ok(layerModule.flowHalfWidth(20) <= 6 && layerModule.flowHalfWidth(5) >= 1.4);
+  assert.ok(layerModule.flowHalfWidth(20) <= 6 && layerModule.flowHalfWidth(5) >= 0.8);
   near(layerModule.metersPerPixel(0, 0), 2 * Math.PI * 6378137 / 512, 1e-6, "metres per pixel at the equator, zoom 0");
   const layer = layerModule.createWaterFlowLayer({ id: "w", clock: () => null, palette: () => layerModule.WATER_FLOW_PALETTES.night });
   assert.equal(layer.type, "custom");
@@ -187,4 +187,115 @@ test("nearest-first terrain queue preserves exact order while calculating each d
   }
   const median = values => values.sort((a,b) => a-b)[3];
   t.diagnostic(JSON.stringify({scenario: "synthetic-60000-vertex-order", runs: 7, beforeMedianMs: median(times.before), afterMedianMs: median(times.after), beforeDistanceCalls: beforeCalls / 8, afterDistanceCalls: vertices.length, exactOrder: true}));
+});
+
+
+test("fixed overview grids cover Kansas and source order drives bounded zoom detail", () => {
+  const bounds = flow.FLOWLINE_EXTENT;
+  const overview = flow.flowRequestsForView(bounds, [-98.4, 38.5], 5);
+  assert.equal(overview.length, 8);
+  const area = overview.map(flow.parseFlowRequest).reduce((sum, cell) => sum + (cell.east - cell.cell[0]) * (cell.north - cell.cell[1]), 0);
+  near(area, (bounds.east-bounds.west)*(bounds.north-bounds.south), 1e-10, "full envelope, no centre-only coverage");
+  for (const key of overview) assert.equal(flow.parseFlowRequest(key).minimumOrder, 5);
+  for (const zoom of [7, 8, 9, 10, 15]) assert.ok(flow.flowRequestsForView(bounds, [-98.4, 38.5], zoom).length <= 26);
+  assert.ok(flow.flowRequestsForView(bounds, [-98.4, 38.5], 7).some(key => key.startsWith("regional:")));
+  for (const bad of ["overview:-97.25,38.00", "regional:-97.00,38.00", "overview:-104.25,36.75", "overview:0,0", "overview:-98.25,38.75&where=1=1"]) assert.equal(flow.parseFlowRequest(bad), null);
+  assert.equal(flow.flowReachMinZoom(null), 9);
+  assert.equal(flow.flowReachMinZoom(5), 4);
+  assert.equal(flow.flowReachMinZoom(3), 7);
+  for (const minimum of [4,7,9]) {
+    assert.equal(flow.flowZoomOpacity(minimum, minimum), 0);
+    assert.equal(flow.flowZoomOpacity(minimum + .5, minimum), .5);
+    assert.equal(flow.flowZoomOpacity(minimum + 1, minimum), 1);
+    let prior = 0;
+    for (let zoom = minimum; zoom < minimum+1; zoom += .01) {
+      const opacity = flow.flowZoomOpacity(zoom, minimum);
+      assert.ok(opacity >= prior && opacity - prior < .016);
+      prior = opacity;
+    }
+  }
+});
+
+test("overview route enforces order and direction independently of provider filtering", async () => {
+  const original = globalThis.fetch;
+  let seen;
+  globalThis.fetch = async url => {
+    seen = new URL(url);
+    return Response.json({ features: [
+      reach("MAJOR", [[-98,38],[-97.99,38]], {streamorder:5}),
+      reach("SMALL", [[-98,38],[-97.99,38]], {streamorder:2}),
+      reach("UNKNOWN", [[-98,38],[-97.99,38]]),
+      reach("REVERSE", [[-98,38],[-97.99,38]], {streamorder:5,flowdirection:0}),
+    ] });
+  };
+  try {
+    const response = await GET(request("?cell=overview:-98.25,38.75"));
+    assert.equal(response.status,200);
+    assert.equal(seen.searchParams.get("geometry"), "-98.25,38.75,-96.25,40.25");
+    assert.equal(seen.searchParams.get("maxAllowableOffset"), "0.001");
+    assert.match(seen.searchParams.get("where"), /streamorder>=5/);
+    assert.match(seen.searchParams.get("outFields"), /streamorder/);
+    const payload = flow.parseFlowlinePayload(await response.json());
+    assert.deepEqual(payload.reaches.map(r=>r.id), ["MAJOR"]);
+    assert.equal(payload.reaches[0].streamOrder,5);
+    assert.throws(()=>flow.parseFlowlinePayload({...payload,requestKey:"regional:-98.25,37.75"}));
+    assert.throws(()=>flow.parseFlowlinePayload({...payload,reaches:[{...payload.reaches[0],streamOrder:null}]}));
+  } finally {globalThis.fetch=original;}
+});
+
+test("source order is encoded per reach without changing direction or inventing connectors", () => {
+  const base = {sequence:null,downstream:null,levelpath:null,name:null,featureType:1};
+  const reaches = [5,3,null].map((streamOrder,i)=>({...base,id:`LOD${i}`,streamOrder,coordinates:[[-98+i*.1,38],[-97.99+i*.1,38]]}));
+  const geometry=flow.buildFlowGeometry(reaches,[]);
+  assert.equal(geometry.count,3);
+  assert.deepEqual([0,1,2].map(i=>geometry.segments[i*flow.FLOW_SEGMENT_FLOATS+12]), [4,7,9]);
+  for(let i=0;i<3;i++) {
+    const segment=geometry.segments.subarray(i*flow.FLOW_SEGMENT_FLOATS,(i+1)*flow.FLOW_SEGMENT_FLOATS);
+    assert.ok(segment[3]>segment[0], "provider eastward order is preserved");
+    assert.equal(segment[6],0, "no invented connection across reaches");
+    assert.ok(segment[7]>0);
+  }
+});
+
+
+test("fractional zoom and reduced motion update uniforms without re-uploading flat geometry", async () => {
+  const renderer = await import(await compile("app/water-flow-layer.ts"));
+  let uploads=0, draws=0;
+  const uniforms={};
+  const gl=new Proxy({drawingBufferWidth:1440,drawingBufferHeight:900},{get(target,name){
+    if(name in target)return target[name];
+    if(name==="bufferData")return ()=>{uploads++;};
+    if(name==="getUniformLocation")return (_p,name)=>name;
+    if(name==="uniform1f")return (name,value)=>{uniforms[name]=value;};
+    if(name==="getShaderParameter"||name==="getProgramParameter")return ()=>true;
+    if(name==="getAttribLocation")return ()=>0;
+    if(name==="drawArraysInstanced")return ()=>{draws++;};
+    return ()=>({});
+  }});
+  let zoom=5;
+  const map={getZoom:()=>zoom,getCenter:()=>({lng:-98,lat:38}),getTerrain:()=>null,on(){},off(){},triggerRepaint(){}};
+  const layer=renderer.createWaterFlowLayer({id:"test",clock:()=>null,palette:()=>renderer.WATER_FLOW_PALETTES.clear});
+  layer.onAdd(map,gl);
+  layer.setGeometry(flow.buildFlowGeometry([{id:"A",sequence:null,downstream:null,levelpath:null,name:null,featureType:1,streamOrder:5,coordinates:[[-98,38],[-97.99,38]]}],[]));
+  const afterCornerUpload=uploads;
+  for(let i=0;i<60;i++){zoom=5+i*.02;layer.render(gl,{modelViewProjectionMatrix:new Float32Array(16)});}
+  assert.equal(uploads-afterCornerUpload,1,"one instance upload across 60 zoom frames");
+  assert.equal(draws,60);
+  near(uniforms.u_zoom,6.18,1e-10,"current fractional zoom");
+  assert.equal(uniforms.u_time,0,"reduced-motion clock remains still");
+  assert.equal(layer.segmentCount,1);
+  layer.onRemove(map,gl);
+});
+
+test("statewide gauge snapping skips distant geometry while retaining the exact nearest-reach rule", t=>{
+  const reaches=Array.from({length:200},(_,i)=>({id:`B${i}`,sequence:null,downstream:null,levelpath:null,name:null,featureType:1,streamOrder:5,coordinates:Array.from({length:11},(_,j)=>[-101+i*.03+j*.00001,38])}));
+  const cues=Array.from({length:10},(_,i)=>flow.gaugeCue({value:100,readingState:"measured"},reaches[i*15].coordinates[4]));
+  const original=Math.sin;
+  let calls=0;
+  t.mock.method(Math,"sin",value=>{calls++;return original(value);});
+  flow.buildFlowGeometry(reaches,[]);const constructionCalls=calls;calls=0;
+  const geometry=flow.buildFlowGeometry(reaches,cues);
+  assert.equal(geometry.gauged,10);
+  assert.ok(calls-constructionCalls<1000,"exact snaps visit nearby segments, not every segment for every gauge");
+  for(let i=0;i<cues.length;i++)assert.equal(flow.snapGauge(reaches,cues[i].coordinate).reach,i*15);
 });

@@ -1,0 +1,1625 @@
+{
+  "status": "REVIEW_ONLY",
+  "authority": "BROWSER_OBSERVATIONS_ONLY",
+  "source": {
+    "site_version": 252,
+    "site_commit": "190d16acb2f866cb9c2eb108dbd204ca30465269",
+    "site_deployment": "appgdep_6acc55fe0bb08191b36cbde3d61c1986",
+    "repository_base": "3ec5f0d9640a88117ff45ae31d3347609b165e67"
+  },
+  "started_at": "2026-10-12T16:50:41.291Z",
+  "ended_at": "2026-10-12T17:03:05.872Z",
+  "scope": "Installed local and owner-private hosted Underground interaction; ordinary browser and existing Battery saver mode; no hardware throttling",
+  "observations": [
+    {
+      "label": "local time 2019",
+      "at": "2026-10-12T16:52:21.603Z",
+      "canvases": 5,
+      "focus": "Time & sources",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "2019"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 1292,
+        "width": 615
+      }
+    },
+    {
+      "label": "local time 1976",
+      "at": "2026-10-12T16:52:21.856Z",
+      "canvases": 5,
+      "focus": "Time & sources",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "1976"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "1 plotted columns \u00b7 1 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 1/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 1292,
+        "width": 615
+      }
+    },
+    {
+      "label": "local time 2000",
+      "at": "2026-10-12T16:52:22.095Z",
+      "canvases": 5,
+      "focus": "Time & sources",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "2000"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "11 plotted columns \u00b7 17 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 17/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 1292,
+        "width": 615
+      }
+    },
+    {
+      "label": "local time All loaded records",
+      "at": "2026-10-12T16:52:22.389Z",
+      "canvases": 5,
+      "focus": "Time & sources",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 1292,
+        "width": 615
+      }
+    },
+    {
+      "label": "hosted time 2019",
+      "at": "2026-10-12T16:52:22.649Z",
+      "canvases": 5,
+      "focus": "Selected-area surface and cutaway",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "2019"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "hosted time 1976",
+      "at": "2026-10-12T16:52:22.876Z",
+      "canvases": 5,
+      "focus": "Selected-area surface and cutaway",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "1976"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "1 plotted columns \u00b7 1 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 1/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "hosted time 2000",
+      "at": "2026-10-12T16:52:23.105Z",
+      "canvases": 5,
+      "focus": "Selected-area surface and cutaway",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "2000"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "11 plotted columns \u00b7 17 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 17/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "hosted time All loaded records",
+      "at": "2026-10-12T16:52:23.349Z",
+      "canvases": 5,
+      "focus": "Selected-area surface and cutaway",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    },
+    {
+      "label": "local responsive override",
+      "at": "2026-10-12T16:52:34.162Z",
+      "canvases": 5,
+      "focus": "Time & sources",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 1292,
+        "width": 615
+      }
+    },
+    {
+      "label": "hosted responsive override",
+      "at": "2026-10-12T16:52:34.169Z",
+      "canvases": 5,
+      "focus": "Selected-area surface and cutaway",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted playback progression",
+      "at": "2026-10-12T16:53:32.879Z",
+      "canvases": 5,
+      "focus": "Pause",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "2012"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "22 plotted columns \u00b7 32 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 3437 pixels \u00b7 map zoom 14.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 32/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted playback finished",
+      "at": "2026-10-12T16:53:57.159Z",
+      "finalYear": "2019",
+      "playing": false
+    },
+    {
+      "label": "narrow local high detail",
+      "at": "2026-10-12T16:54:30.490Z",
+      "canvases": 5,
+      "focus": "Reset view",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted closed cleanup",
+      "at": "2026-10-12T16:54:30.608Z",
+      "canvases": 3,
+      "focus": "Map",
+      "overflow": false,
+      "selects": [],
+      "status": [
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "narrow local closed cleanup",
+      "at": "2026-10-12T16:54:45.217Z",
+      "canvases": 3,
+      "focus": "Map",
+      "overflow": false,
+      "selects": [],
+      "status": [],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted Battery saver reentry",
+      "at": "2026-10-12T16:55:27.506Z",
+      "canvases": 3,
+      "focus": "Close Underground",
+      "overflow": false,
+      "selects": [],
+      "status": [
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "narrow local reentry",
+      "at": "2026-10-12T16:55:27.623Z",
+      "canvases": 3,
+      "focus": "Close Underground",
+      "overflow": false,
+      "selects": [],
+      "status": [
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted opacity zero",
+      "at": "2026-10-12T16:56:37.653Z",
+      "canvases": 5,
+      "focus": "Basemap opacity",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted flat-map alternate",
+      "at": "2026-10-12T16:56:38.761Z",
+      "canvases": 4,
+      "focus": "Surface map",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "original local flat-map alternate",
+      "at": "2026-10-12T16:56:53.054Z",
+      "canvases": 4,
+      "focus": "Surface map",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 1292,
+        "width": 615
+      }
+    },
+    {
+      "label": "original local cutaway restored",
+      "at": "2026-10-12T16:56:53.410Z",
+      "canvases": 5,
+      "focus": "3D cutaway",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 1292,
+        "width": 615
+      }
+    },
+    {
+      "label": "narrow local maximum keyboard",
+      "at": "2026-10-12T16:57:08.929Z",
+      "canvases": 5,
+      "focus": "Reset view",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 4022 pixels \u00b7 map zoom 14.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local selector zoom in request",
+      "at": "2026-10-12T16:57:21.738Z",
+      "canvases": 5,
+      "focus": "Zoom selector map and selected area in",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 4022 pixels \u00b7 map zoom 14.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local rapid selector zoom out request",
+      "at": "2026-10-12T16:57:22.034Z",
+      "canvases": 5,
+      "focus": "Zoom selector map and selected area out",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 4022 pixels \u00b7 map zoom 14.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted selector zoom in request",
+      "at": "2026-10-12T16:57:22.326Z",
+      "canvases": 5,
+      "focus": "Zoom selector map and selected area in",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local selector latest result",
+      "at": "2026-10-12T16:57:47.772Z",
+      "canvases": 5,
+      "focus": "Zoom selector map and selected area out",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 4047 pixels \u00b7 map zoom 14.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted selector latest result",
+      "at": "2026-10-12T16:57:47.778Z",
+      "canvases": 5,
+      "focus": "Zoom selector map and selected area in",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records19781979198119821992199619972000200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024",
+        "27 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2023 pixels \u00b7 map zoom 14.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local repeat 1 closed",
+      "at": "2026-10-12T16:58:08.857Z",
+      "canvases": 3,
+      "focus": "Map",
+      "overflow": false,
+      "selects": [],
+      "status": [],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local repeat 1 entry focus",
+      "at": "2026-10-12T16:58:09.253Z",
+      "canvases": 3,
+      "focus": "Close Underground",
+      "overflow": false,
+      "selects": [],
+      "status": [
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local repeat 1 restored",
+      "at": "2026-10-12T16:58:10.762Z",
+      "canvases": 5,
+      "focus": "Selected-area surface and cutaway",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local repeat 2 closed",
+      "at": "2026-10-12T16:58:10.848Z",
+      "canvases": 3,
+      "focus": "Map",
+      "overflow": false,
+      "selects": [],
+      "status": [],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local repeat 2 entry focus",
+      "at": "2026-10-12T16:58:11.239Z",
+      "canvases": 3,
+      "focus": "Close Underground",
+      "overflow": false,
+      "selects": [],
+      "status": [
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local repeat 2 restored",
+      "at": "2026-10-12T16:58:12.694Z",
+      "canvases": 5,
+      "focus": "Selected-area surface and cutaway",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted repeat 1 closed",
+      "at": "2026-10-12T16:58:12.821Z",
+      "canvases": 3,
+      "focus": "Map",
+      "overflow": false,
+      "selects": [],
+      "status": [
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted repeat 1 entry focus",
+      "at": "2026-10-12T16:58:16.204Z",
+      "canvases": 3,
+      "focus": "Close Underground",
+      "overflow": false,
+      "selects": [],
+      "status": [
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted repeat 1 restored after automation deadline",
+      "at": "2026-10-12T16:58:38.726Z",
+      "canvases": 5,
+      "focus": "Selected-area surface and cutaway",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted repeat 2 closed",
+      "at": "2026-10-12T16:58:38.878Z",
+      "canvases": 3,
+      "focus": "Map",
+      "overflow": false,
+      "selects": [],
+      "status": [
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted repeat 2 entry focus",
+      "at": "2026-10-12T16:58:42.275Z",
+      "canvases": 3,
+      "focus": "Close Underground",
+      "overflow": false,
+      "selects": [],
+      "status": [
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted Battery saver maximum complete",
+      "at": "2026-10-12T16:59:52.720Z",
+      "canvases": 5,
+      "focus": "Cutaway surface resolution",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 4022 pixels \u00b7 map zoom 14.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local paused playback",
+      "at": "2026-10-12T17:00:22.398Z",
+      "canvases": 5,
+      "focus": "Play",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "2018"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 49 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 49/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local pause remained stable",
+      "at": "2026-10-12T17:00:40.217Z",
+      "canvases": 5,
+      "focus": "Play",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "2018"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 49 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 49/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "hosted maximum late checkpoint",
+      "at": "2026-10-12T17:00:40.223Z",
+      "canvases": 5,
+      "focus": "Reset view",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "Maximum \u00b7 4096 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 4096 \u00d7 4022 pixels \u00b7 map zoom 14.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local Escape from canvas",
+      "at": "2026-10-12T17:00:52.584Z",
+      "canvases": 5,
+      "focus": "3D cutaway of independent well logs and aquifer source ranges below a flat locator map. Drag to orbit or choose Move to pan; arrows pan, modified arrows rotate, and buttons provide alternatives. Zoom stays centered on your inspection target; Reset view recovers the full slice.",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "2018"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 49 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 49/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "local paused playback restored all records",
+      "at": "2026-10-12T17:02:08.534Z",
+      "canvases": 5,
+      "focus": "Skip to the mapKFMKansas Frontier MatrixSpatial evidence explorerSearch current places, layers, feat",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 844,
+        "width": 390
+      }
+    },
+    {
+      "label": "original local final restored",
+      "at": "2026-10-12T17:03:05.834Z",
+      "canvases": 5,
+      "focus": "Time & sources",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 1718 pixels \u00b7 map zoom 13.4. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. ",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions."
+      ],
+      "viewport": {
+        "height": 1292,
+        "width": 615
+      }
+    },
+    {
+      "label": "local desktop after viewport reset",
+      "at": "2026-10-12T17:03:05.840Z",
+      "canvases": 5,
+      "focus": "Skip to the mapKFMKansas Frontier MatrixSpatial evidence explorerSearch current places, layers, feat",
+      "overflow": false,
+      "selects": [
+        {
+          "label": "Cutaway basemap",
+          "value": "Detailed streets & buildings \u00b7 vector"
+        },
+        {
+          "label": "Cutaway surface resolution",
+          "value": "High \u00b7 2048 px"
+        },
+        {
+          "label": "Through All loaded records197619781979198119821985198719921996199720002005200620072008200920122013201420182019",
+          "value": "All loaded records"
+        },
+        {
+          "label": "Playback step 1.5 seconds3 seconds5 seconds",
+          "value": "1.5 seconds"
+        },
+        {
+          "label": "Cutaway vertical scale",
+          "value": "25\u00d7"
+        }
+      ],
+      "status": [
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "28 plotted columns \u00b7 50 records at this time \u00b7 partial coverage",
+        "Surface detail ready \u00b7 2048 \u00d7 2011 pixels \u00b7 map zoom 13.6. Provider resolution and dates still apply. Crisp cells are the default; no detail is invented beyond the provider resolution.",
+        "3D space + record availability. 50/50 loaded records pass this filter; 0 are undated. Aquifer ranges stay fixed to 2022\u20132024. This does not reconstruct past geology.",
+        "1 aquifer overlap regions \u00b7 2022\u20132024 \u00b7 1 unbounded/missing classes withheld",
+        "Source-backed display context, separate from included evidence. Columns use each record's own depth reference; gaps are unknown. No continuous seams, verified trajectories, or common elevation datum are supplied. Surface-map time does not reconstruct historical underground conditions. "
+      ],
+      "viewport": {
+        "height": 720,
+        "width": 1280
+      }
+    }
+  ],
+  "console_observations": {
+    "local": [],
+    "narrowLocal": [],
+    "hosted": []
+  },
+  "limitations": [
+    "Browser locator and CDP deadlines were inspected separately; visible completed state recovered through accessible controls. They are not application performance measurements.",
+    "UI record counts are observations, not an independent audit of all provider records.",
+    "No physical-device, live reduced-motion emulation, GPU or heap profiling, multi-hour soak, fully cold-network or hosted rollback execution.",
+    "No complete hosted equivalence, human acceptance, source admission or data release authority."
+  ],
+  "app_source_changes": false,
+  "republished": false,
+  "source_data_changes": false,
+  "settings_restored": {
+    "hosted_quality": "detail",
+    "original_local_detail": 2048,
+    "original_local_opacity": 65,
+    "original_local_selected_sample": "WWC5 465949"
+  },
+  "screenshots": [
+    "kfm-v252-local-maximum-browser.jpg",
+    "kfm-v252-hosted-browser-maximum.jpg",
+    "kfm-v252-local-browser-final.jpg"
+  ],
+  "alignment_verification": {
+    "primary_repo_head": "3ec5f0d9640a88117ff45ae31d3347609b165e67",
+    "remote_main": "3ec5f0d9640a88117ff45ae31d3347609b165e67",
+    "primary_clean": true,
+    "source_head": "190d16acb2f866cb9c2eb108dbd204ca30465269",
+    "local_head": "190d16acb2f866cb9c2eb108dbd204ca30465269",
+    "source_count": 984,
+    "source_mismatches": [],
+    "build_count": 428,
+    "build_mismatches": [],
+    "source_clean": true,
+    "local_clean": true,
+    "http_about": 200,
+    "served_aquifer_asset_matches": true,
+    "anonymous_archive": 401,
+    "main_ci": {
+      "success": 104,
+      "skipped": 2
+    }
+  },
+  "screenshot_digests": {
+    "kfm-v252-local-maximum-browser.jpg": "0c175b80c1519d02cf04cac73d93ac1ec819becfc48ce43a5f16d83fb339a688",
+    "kfm-v252-hosted-browser-maximum.jpg": "da466ae1557e29ea49816dfb506dd4b0076a7e90ca010fe72a0c3a39a24a5410",
+    "kfm-v252-local-browser-final.jpg": "0f7952e990528827981a39a56474e1ab8bad016899b1c4cfa67033ddcc430b01"
+  },
+  "documentation_checks": {
+    "metadata_changed_range": "WARN_ONLY",
+    "metadata_new_failures": 0,
+    "metadata_inherited_warnings": 7,
+    "topology": "PASS",
+    "topology_new_drift": 0,
+    "topology_invariants": 0,
+    "topology_inherited_warnings": 93,
+    "mirror": "CONTENT_PARITY_ONLY",
+    "json_readback": "PASS",
+    "whitespace": "PASS"
+  }
+}

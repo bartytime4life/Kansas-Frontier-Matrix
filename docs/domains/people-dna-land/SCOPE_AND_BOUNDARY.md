@@ -11,14 +11,13 @@ updated: 2026-06-07
 policy_label: public-doctrine
 contract_version: "3.0.0"
 related:
-  - docs/domains/people-dna-land/README.md                     # authored prior session (v1.1)
-  - docs/domains/people-dna-land/PEOPLE_DOMAIN_MODEL.md         # authored prior session (v0.1)
-  - docs/domains/people-dna-land/PEOPLE_PRESERVATION_MATRIX.md  # authored prior session (v0.2)
-  - docs/domains/people-dna-land/RELEASE_INDEX.md               # authored prior session (v1.1)
-  - docs/domains/people-dna-land/MISSING_OR_PLANNED_FILES.md    # authored prior session (v0.2)
-  - docs/doctrine/directory-rules.md
-  - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf         # PROPOSED per ADR-S-02
-  - ai-build-operating-contract.md
+  - "docs/domains/people-dna-land/README.md"
+  - "docs/domains/people-dna-land/PEOPLE_DOMAIN_MODEL.md"
+  - "docs/domains/people-dna-land/RELEASE_INDEX.md"
+  - "docs/domains/people-dna-land/MISSING_OR_PLANNED_FILES.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf"
+  - "docs/doctrine/ai-build-operating-contract.md"
 extends:
   - KFM Domains Culmination Atlas v1.1 — Ch. 16 §B (scope/ownership/non-ownership), §F (cross-lane relations); Ch. 17 §B (Frontier Matrix reciprocal non-ownership); Ch. 24.4.13–24.4.16 (cross-lane edge tables); Ch. 24.14 (object family × domain matrix)
   - Domain-Driven Design Reference (Eric Evans, 2015) — Bounded Context, Context Map, Domain Vision Statement
@@ -31,6 +30,23 @@ notes:
   - "Ownership and non-ownership lists, and all four People-owned cross-lane edges, are CONFIRMED doctrine (Atlas Ch. 16 §B/§F, Ch. 24.4.14). The reciprocal non-ownership view is CONFIRMED from Atlas Ch. 17 §B."
   - "OPEN CONFLICT carried session-wide: segment 'people' (Atlas Ch. 24.13) vs 'people-dna-land' (Directory Rules §6.1/§12). Tracked as OQ-PDL-SEG-01."
   - "No mounted repo inspected; all paths PROPOSED."
+owning_root: docs/
+responsibility: "Human-readable SCOPE_AND_BOUNDARY — People, Genealogy, DNA, Land Ownership guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+proposed_related:
+  - "docs/domains/people-dna-land/PEOPLE_PRESERVATION_MATRIX.md"
+related_reference_annotations:
+  - "docs/domains/people-dna-land/README.md                     # authored prior session (v1.1)"
+  - "docs/domains/people-dna-land/PEOPLE_DOMAIN_MODEL.md         # authored prior session (v0.1)"
+  - "docs/domains/people-dna-land/PEOPLE_PRESERVATION_MATRIX.md  # authored prior session (v0.2)"
+  - "docs/domains/people-dna-land/RELEASE_INDEX.md               # authored prior session (v1.1)"
+  - "docs/domains/people-dna-land/MISSING_OR_PLANNED_FILES.md    # authored prior session (v0.2)"
+  - "docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf         # PROPOSED per ADR-S-02"
+related_path_corrections:
+  - "ai-build-operating-contract.md -> docs/doctrine/ai-build-operating-contract.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 # SCOPE_AND_BOUNDARY — People, Genealogy, DNA, Land Ownership
@@ -258,7 +274,7 @@ This boundary statement is one of several People/DNA/Land doctrine surfaces. To 
 | Concern | Lives in |
 |---|---|
 | Identity rules, aggregates, DDD entity/value-object lens, domain invariants | [`PEOPLE_DOMAIN_MODEL.md`](PEOPLE_DOMAIN_MODEL.md) |
-| Retention, tombstone vs. erasure, consent lifecycle preservation | [`PEOPLE_PRESERVATION_MATRIX.md`](PEOPLE_PRESERVATION_MATRIX.md) |
+| Retention, tombstone vs. erasure, consent lifecycle preservation | [`./PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) |
 | What may be published, gates, release-index entry shape, rollback | [`RELEASE_INDEX.md`](RELEASE_INDEX.md) |
 | File inventory across responsibility roots; the segment-naming conflict | [`MISSING_OR_PLANNED_FILES.md`](MISSING_OR_PLANNED_FILES.md) |
 | Domain landing, source families, validators, separation of duties | [`README.md`](README.md) |
@@ -321,7 +337,7 @@ This document is done enough to enter the repository when:
 
 - [`README.md`](README.md) — domain landing *(authored prior session, v1.1)*
 - [`PEOPLE_DOMAIN_MODEL.md`](PEOPLE_DOMAIN_MODEL.md) — identity, aggregates, invariants *(v0.1)*
-- [`PEOPLE_PRESERVATION_MATRIX.md`](PEOPLE_PRESERVATION_MATRIX.md) — retention, tombstone, erasure *(v0.2)*
+- [`./PRESERVATION_MATRIX.md`](./PRESERVATION_MATRIX.md) — retention, tombstone, erasure *(v0.2)*
 - [`RELEASE_INDEX.md`](RELEASE_INDEX.md) — release gates and decisions *(v1.1)*
 - [`MISSING_OR_PLANNED_FILES.md`](MISSING_OR_PLANNED_FILES.md) — file inventory; OQ-PDL-SEG-01 source *(v0.2)*
 - `docs/doctrine/directory-rules.md` — §7 trust membrane, §12 Domain Placement Law

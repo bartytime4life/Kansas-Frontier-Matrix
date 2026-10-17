@@ -34,6 +34,7 @@ notes:
   - "This file remains authored Markdown at its canonical same-path location; it is not generated or mirrored."
   - "Source-defined counts are static source inventory, not a pytest collection report or current pass result."
   - "2026-10-03 (after the pinned snapshot): test_doctrine_artifact_required.py gains two OPA-backed deny tests and test_rego_compile_census.py adds three compile tests; the doctrine table and the Rego compile census section reflect them, while the header counts stay pinned to the snapshot."
+  - "2026-10-15: the owner kept policy/sensitivity/living_person_redaction.rego and retired the byte-identical policy/domains/people-dna-land/ copy; test_rego_compile_census.py now tolerates no compile error and has two tests."
 [/KFM_META_BLOCK_V2] -->
 
 # `tests/policy/` — Policy and Doctrine Boundary Tests
@@ -142,7 +143,7 @@ authoritative, rights-cleared, reviewed, adopted, or publishable.
 
 | Module | Tests | Primary implementation under test |
 |---|---:|---|
-| [`test_rego_compile_census.py`](test_rego_compile_census.py) | 3 | `opa check` over every tracked `.rego` file at once. The only tolerated error is the disclosed duplicate `living_person_redaction.rego` pair (CONFLICTED / HOLD in [`living_persons_geoprivacy.md`](../../docs/policy/living_persons_geoprivacy.md)); each copy must still compile alone. |
+| [`test_rego_compile_census.py`](test_rego_compile_census.py) | 2 | `opa check` over every tracked `.rego` file at once, with no tolerated errors; also asserts `living_person_redaction.rego` has its single home under `policy/sensitivity/` after the 2026-10-15 owner decision retired the `policy/domains/people-dna-land/` duplicate. |
 
 These tests and the OPA-backed doctrine tests skip with `OPA_BINARY_UNAVAILABLE` when
 no `opa` is on `PATH` and `OPA_BIN` is unset. CI does not install OPA for this lane

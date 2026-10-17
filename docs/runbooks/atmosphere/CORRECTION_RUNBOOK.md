@@ -7,7 +7,7 @@ status: draft; repository-grounded; documentation-only
 owners:
   - "@bartytime4life — verified GitHub review route"
   - "NEEDS VERIFICATION — Atmosphere steward, correction reviewer, release authority, and independent reviewer assignments"
-created: "UNKNOWN — the prior scaffold carried no creation date"
+created: 2026-05-19
 updated: 2026-08-23
 policy_label: public
 current_path: docs/runbooks/atmosphere/CORRECTION_RUNBOOK.md
@@ -24,27 +24,27 @@ evidence_snapshot:
   correction_schema_status: PROPOSED_PLACEHOLDER
   correction_validator_scope: BOUNDED_SCHEMA_AND_JSON_SAFETY_ONLY
 related:
-  - docs/runbooks/README.md
-  - docs/domains/atmosphere/README.md
-  - docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md
-  - docs/doctrine/directory-rules.md
-  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
-  - docs/doctrine/lifecycle-law.md
-  - docs/doctrine/trust-membrane.md
-  - docs/doctrine/corrections-are-first-class.md
-  - docs/architecture/publication/CORRECTION.md
-  - contracts/correction/correction_notice.md
-  - schemas/contracts/v1/correction/correction_notice.schema.json
-  - schemas/contracts/v1/domains/atmosphere/correction_notice.schema.json
-  - fixtures/correction/correction_notice/
-  - tools/validators/correction/validate_correction_notice.py
-  - tools/validators/correction/validate_correction_impact_assessment.py
-  - tools/validators/correction/validate_correction_propagation_plan.py
-  - tests/domains/atmosphere/
-  - apps/workers/src/correction_worker/
-  - apps/review-console/src/features/correction/
-  - policy/rights/correction/
-  - release/
+  - "docs/runbooks/README.md"
+  - "docs/domains/atmosphere/README.md"
+  - "docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md"
+  - "docs/doctrine/directory-rules.md"
+  - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  - "docs/doctrine/lifecycle-law.md"
+  - "docs/doctrine/trust-membrane.md"
+  - "docs/doctrine/corrections-first-class.md"
+  - "docs/architecture/publication/CORRECTION.md"
+  - "contracts/correction/correction_notice.md"
+  - "schemas/contracts/v1/correction/correction_notice.schema.json"
+  - "schemas/contracts/v1/domains/atmosphere/correction_notice.schema.json"
+  - "fixtures/correction/correction_notice/"
+  - "tools/validators/correction/validate_correction_notice.py"
+  - "tools/validators/correction/validate_correction_impact_assessment.py"
+  - "tools/validators/correction/validate_correction_propagation_plan.py"
+  - "tests/domains/atmosphere/"
+  - "apps/workers/src/correction_worker/"
+  - "apps/review-console/src/features/correction/"
+  - "policy/rights/correction/"
+  - "release/"
 tags: [kfm, runbook, atmosphere, air, correction, supersession, withdrawal, rollback, evidence, release]
 notes:
   - "Replaces the short PROPOSED scaffold at the same tracked path."
@@ -52,6 +52,12 @@ notes:
   - "The generic CorrectionNotice validator is executable, but it enforces only the current placeholder schema and bounded JSON-input safety."
   - "The Atmosphere-specific CorrectionNotice schema is also a placeholder and points to a domain contract, fixture lane, and validator that were not present at the evidence snapshot."
   - "Singular and plural release correction lanes coexist; this runbook does not resolve their canonical relationship."
+created_basis: "Tracked path introduced by bb6cbad6b0edfddf470bfa8880ae351501c0b22a on 2026-05-19; not the authorship date of the expanded runbook."
+related_path_corrections:
+  - "docs/doctrine/corrections-are-first-class.md -> docs/doctrine/corrections-first-class.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -989,7 +995,7 @@ Reverting this Markdown file does not reverse any release, deployment, promotion
 - [`ADR-0029`](../../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — accepted Directory Rules adoption decision.
 - [`docs/doctrine/lifecycle-law.md`](../../doctrine/lifecycle-law.md) — lifecycle and publication-transition doctrine.
 - [`docs/doctrine/trust-membrane.md`](../../doctrine/trust-membrane.md) — public trust boundary and finite outcomes.
-- [`docs/doctrine/corrections-are-first-class.md`](../../doctrine/corrections-are-first-class.md) — correction doctrine lineage; verify proposed examples against current implementation.
+- [`docs/doctrine/corrections-first-class.md`](../../doctrine/corrections-first-class.md) — correction doctrine lineage; verify proposed examples against current implementation.
 - [`docs/architecture/publication/CORRECTION.md`](../../architecture/publication/CORRECTION.md) — publication correction architecture; older proposed paths must not override current bytes.
 
 ### Correction semantics and bounded proof

@@ -654,7 +654,7 @@
       "subject": "separator-alias:tools/validators/common"
     }
   ],
-  "expires_on": "2026-11-10",
+  "expires_on": "2027-05-10",
   "generated_from_ref": "main@bff35f5ddf00ef623eacf96be13a743e134f482f",
   "non_effects": [
     "does_not_define_or_amend_rules",

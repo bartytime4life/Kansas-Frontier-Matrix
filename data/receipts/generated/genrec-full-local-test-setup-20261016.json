@@ -1,0 +1,197 @@
+{
+  "receipt_id": "genrec-full-local-test-setup-20261016-ba8bfbc09436",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/python-dependency-lock.yml",
+    "docs/installation.md",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md",
+    "tests/ci/test_install_full_local_test.py",
+    "tools/ci/README.md",
+    "tools/ci/install_full_local_test.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/python-dependency-lock.yml": "sha256:b6020e84f16dfa89e215b5fcee5b63b1adbb90025ce36e74447a151e1298f21b",
+    "docs/installation.md": "sha256:d96c7b21c75e712326c34e03780ef84998a7fdd4bec874fbb225e3b8a884dd20",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "sha256:f582e240d15f7b7750124682c11c04e477b2a6c458bd0d7c6f37f824ccb309f5",
+    "tests/ci/test_install_full_local_test.py": "sha256:e59b54d20b859cc09b0b3d76b83b4f86c03e793f5ee0644905d3a78b4adaf8d2",
+    "tools/ci/README.md": "sha256:c7dd766ab190c49b6567374177cc712435ddf999f232bb77a50c548bc037c7e1",
+    "tools/ci/install_full_local_test.py": "sha256:1000f9d52e7567dc2166657d5d74ca3f209b8fdfad5a524d2096856abdf6c915"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact model revision is not exposed by this runtime"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "git",
+      "locked dependency installers",
+      "pytest",
+      "repository validators"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f",
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790"
+    ],
+    "attached_docs": [
+      "docs/doctrine/directory-rules.md@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be",
+      "CONTRIBUTING.md@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be",
+      ".github/PULL_REQUEST_TEMPLATE.md@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be",
+      "docs/doctrine/ai-build-operating-contract.md@adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be"
+    ],
+    "evidence_refs": [
+      "git:adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be",
+      "git:ba8bfbc09436ae35c306cf644cdbc8c98d9e67e7",
+      "git:adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be:tools/ci/geoparquet-pyarrow-25.lock",
+      "git:adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be:tools/experiments/geoparquet/generate_pyarrow_25_carriers.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/python-dependency-lock.yml": "CONFIRMED",
+    "docs/installation.md": "PROPOSED",
+    "docs/registers/repository-gap-fill-goal-2026-10-02.md": "PROPOSED",
+    "tests/ci/test_install_full_local_test.py": "CONFIRMED",
+    "tools/ci/README.md": "CONFIRMED",
+    "tools/ci/install_full_local_test.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "metadata-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"metadata\", \"counts\": {\"documents\": 3, \"fail_findings\": 0, \"info_findings\": 0, \"invalid_metadata_blocks\": 0, \"metadata_blocks\": 3, \"missing_metadata_blocks\": 0, \"registered_documents\": 0, \"registry_add_candidates\": 0, \"registry_conflicts\": 0, \"valid_metadata_blocks\": 3, \"warn_findings\": 0}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_META_BLOCK_PASS\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "links-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"links\", \"counts\": null, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_LINK_CHECK_PASS\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "graph-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"graph\", \"counts\": {\"changed_documents\": 0, \"documents\": 3, \"documents_with_doc_id\": 3, \"edges\": 2, \"external_targets_unverified\": 2, \"fail_findings\": 0, \"info_findings\": 0, \"orphan_documents\": 1, \"outside_scope_markdown_targets\": 35, \"reachable_documents\": 2, \"registered_markdown_documents\": 0, \"unreachable_documents\": 1, \"warn_findings\": 2}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_GRAPH_WARN\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "freshness-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"freshness\", \"counts\": {\"current_findings\": 0, \"documents\": 3, \"documents_with_metadata\": 3, \"documents_without_metadata\": 0, \"fail_findings\": 0, \"findings\": 0, \"historical_findings\": 0, \"info_findings\": 0, \"warn_findings\": 0, \"warnings_as_errors\": 0}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_STALE_SCAN_PASS\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "gap-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"gap\", \"counts\": {\"BROKEN_LOCAL_LINK\": 0, \"MARKDOWN_PLACEHOLDER\": 7, \"STRUCTURED_PARSE_ERROR\": 0, \"TEST_PACKAGE_SHADOW\": 0, \"UNRATCHETED_PLACEHOLDER\": 9}, \"exit\": 0, \"failures\": [], \"outcome\": null}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "topology-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"topology\", \"counts\": {\"baselined_warning\": 93, \"fail_invariant\": 0, \"fail_new_drift\": 0, \"finding\": 93}, \"exit\": 0, \"failures\": [], \"outcome\": \"PASS\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "scaffolds-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"scaffolds\", \"counts\": null, \"exit\": 0, \"failures\": [], \"outcome\": null}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "metadata-scoped-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"metadata-scoped\", \"counts\": {\"documents\": 3, \"fail_findings\": 0, \"info_findings\": 0, \"invalid_metadata_blocks\": 0, \"metadata_blocks\": 3, \"missing_metadata_blocks\": 0, \"registered_documents\": 0, \"registry_add_candidates\": 0, \"registry_conflicts\": 0, \"valid_metadata_blocks\": 3, \"warn_findings\": 0}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_META_BLOCK_PASS\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "graph-scoped-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"graph-scoped\", \"counts\": {\"changed_documents\": 0, \"documents\": 3, \"documents_with_doc_id\": 3, \"edges\": 2, \"external_targets_unverified\": 2, \"fail_findings\": 0, \"info_findings\": 0, \"orphan_documents\": 1, \"outside_scope_markdown_targets\": 35, \"reachable_documents\": 2, \"registered_markdown_documents\": 0, \"unreachable_documents\": 1, \"warn_findings\": 2}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_GRAPH_WARN\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "metadata-workflow-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"metadata-workflow\", \"counts\": {\"documents\": 1863, \"fail_findings\": 0, \"info_findings\": 0, \"invalid_metadata_blocks\": 500, \"metadata_blocks\": 1625, \"missing_metadata_blocks\": 233, \"registered_documents\": 0, \"registry_add_candidates\": 2, \"registry_conflicts\": 0, \"valid_metadata_blocks\": 1130, \"warn_findings\": 1592}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_META_BLOCK_WARN\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "graph-workflow-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"graph-workflow\", \"counts\": {\"changed_documents\": 2, \"documents\": 1863, \"documents_with_doc_id\": 1626, \"edges\": 26880, \"external_targets_unverified\": 7966, \"fail_findings\": 0, \"info_findings\": 0, \"orphan_documents\": 431, \"outside_scope_markdown_targets\": 46508, \"reachable_documents\": 1315, \"registered_markdown_documents\": 0, \"unreachable_documents\": 548, \"warn_findings\": 1000}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_GRAPH_WARN\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "links-workflow-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"links-workflow\", \"counts\": null, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_LINK_CHECK_PASS\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "freshness-workflow-no-blocking-findings",
+      "outcome": "PASS",
+      "reason": "{\"check\": \"freshness-workflow\", \"counts\": {\"current_findings\": 0, \"documents\": 1863, \"documents_with_metadata\": 1621, \"documents_without_metadata\": 242, \"fail_findings\": 0, \"findings\": 17, \"historical_findings\": 17, \"info_findings\": 0, \"warn_findings\": 17, \"warnings_as_errors\": 0}, \"exit\": 0, \"failures\": [], \"outcome\": \"DOC_STALE_SCAN_WARN\"}; warning-free or full-corpus completion is not claimed."
+    },
+    {
+      "gate": "installer-tests-python-311-and-312",
+      "outcome": "PASS",
+      "reason": "57 passed and 48 subtests passed on each interpreter. Tests cover fixed plan/delegation, no install during planning, virtualenv/platform/interpreter restrictions, full preflight before the first install, stop on failure, no arbitrary dependency arguments and pip consistency checking."
+    },
+    {
+      "gate": "fresh-cpython-312-locked-install-and-collection",
+      "outcome": "PASS",
+      "reason": "Fresh Linux x86_64 CPython 3.12.3 virtualenv: complete helper exit 0, pip check passed, 8909 tests collected with zero errors. Collection used KFM_NO_NETWORK=1, PROJ_NETWORK=OFF and the existing Python startup network guard. Collection is not test execution."
+    },
+    {
+      "gate": "same-interpreter-defect-reproduction",
+      "outcome": "PASS",
+      "reason": "Separate fresh CPython 3.12 virtualenv with only all-local-test and water-pilot: 8889 tests collected, exit 2 with the same four missing-CLI/PyArrow collection errors. A separate CPython 3.11 baseline also reproduced the four errors."
+    },
+    {
+      "gate": "changed-area-test-execution",
+      "outcome": "PASS",
+      "reason": "639 passed, 1 skipped, 481 subtests passed. One NumPy/NetCDF binary compatibility RuntimeWarning remains visible; broad native ABI acceptance is not claimed."
+    },
+    {
+      "gate": "workflow-security-and-historical-migration-replay",
+      "outcome": "PASS",
+      "reason": "496 workflows: no invariant or new drift. verify-workflows passed with the workflow-defined immutable KFM_MIGRATION_HEAD and exact-current KFM_CURRENT_HEAD. A preliminary call without those required context variables failed configuration and is not a product defect."
+    },
+    {
+      "gate": "unsupported-full-bundle-python-311",
+      "outcome": "PASS",
+      "reason": "Initial strict pip install correctly rejected the experimental cp312-only PyArrow lock under Python 3.11. The final helper rejects unsupported runtime before installs. No requirement, hash or experimental producer identity was widened."
+    },
+    {
+      "gate": "hosted-ci-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending at emission. Full-suite execution, browser/native acceptance, review, source admission, release and deployment remain separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-placement",
+      "validated": true,
+      "evidence_ref": "git:adb86db668dfb9ee969f8a6ccd9e7f9a4b9982be:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "exact-content-local-validation",
+      "validated": true,
+      "evidence_ref": "git:ba8bfbc09436ae35c306cf644cdbc8c98d9e67e7"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-16T22:53:11.319912Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixed dependency setup and collection candidate, not full repository test success or runtime acceptance. Same-path docs/workflow changes and new helper/tests remain in existing responsibility roots. No dependency lock, package version, policy, source admission, release, deployment or publication changes. Every install remains delegated to the existing fixed installers; all inputs are checked before the first step. Local setup used disposable virtual environments and preserved the primary checkout. Full bundle is explicitly Linux x86_64 CPython 3.12, while smaller profiles retain their support. Remaining metadata/scaffold debt, topology warnings and the native NumPy/NetCDF warning remain visible. Rollback reverts helper, tests, workflow and documentation together, retaining this add-only receipt. Binds content ba8bfbc09436ae35c306cf644cdbc8c98d9e67e7 and excludes itself to avoid circular integrity."
+}

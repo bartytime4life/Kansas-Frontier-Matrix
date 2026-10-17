@@ -6,6 +6,9 @@ import { explorerHistoryParams, restoreArchiveViewDays, saveExplorerHistoryView 
 import { LayerJsonReads } from "./layer-json-reads";
 import { layerHitStack } from "./layer-hit-stack";
 import { createMapHoverSampler } from "./map-hover-sampler";
+import { FrameCheck } from "./frame-check";
+import { MapStartersControl } from "./map-starters-control";
+import { contextSelectionChanges, preferredContextIds, readContextPreference, starterPlan, type StarterAccessMap } from "./map-starters";
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
@@ -16,6 +19,7 @@ import { GovernedWaterControl } from "./governed-water-control";
 import { GovernedWeatherControl } from "./governed-weather-control";
 import { GovernedSoilControl } from "./governed-soil-control";
 import { GovernedStormEventsControl } from "./governed-storm-events-control";
+import { GovernedEarthquakesControl } from "./governed-earthquakes-control";
 import { LivingWatersControl } from "./living-waters-control";
 import { LIVING_WATERS_SOURCE } from "./living-waters-fixture";
 import { resizeMapAfterLayout } from "./cutaway-locator";
@@ -250,7 +254,8 @@ import { createTerrainDrawing } from "./terrain-drawing-runtime";
 import { TERRAIN_DRAWING_INITIAL_STATUS, type TerrainDrawingConfig, type TerrainDrawingMode, type TerrainDrawingStatus, type TerrainSurfaceMode, type TerrainSurfaceProbe } from "./terrain-drawing";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import { ExplorerControlsNavigation } from "./explorer-controls-navigation";
-import { imageryTopics, layerEntryMatches, selectedCatalogCount, type LayerCatalogEntry, type LayerBrowseView } from "./layer-workspaces";
+import { officialSourceTopics, specialtyLayerTopics, registryLayerTopics, atlasViewTopics, featureTopics, functionTopics, topicDefinition, topicSearchText, restoreTopic, imageryTopics, layerEntryMatches, selectedCatalogCount, type LayerCatalogEntry, type LayerBrowseView } from "./layer-workspaces";
+import { TopicSelect, TopicGuide } from "./topic-navigation";
 import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
 import {
   applyOfficialContextState,
@@ -640,7 +645,7 @@ const drawerViewLabels: Record<DrawerView, string> = {
 };
 const mapUtilityLabels: Record<MapUtilityView, string> = {
   report: "Report",
-  navigate: "Explore",
+  navigate: "Appearance",
   inspect: "Inspect",
   scene: "Appearance",
   history: "Kansas historic maps",
@@ -655,8 +660,8 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
 const mapUtilityDescriptions: Record<MapUtilityView, string> = {
   report: "Build a report from the current map, time, layers, and selection.",
   inspect: "Find a feature and inspect its evidence context.",
-  navigate: "Move the map by camera, coordinates, or location.",
-  scene: "Adjust the current terrain and 3D view.",
+  navigate: "Adjust the map appearance. Legacy navigation links open this panel.",
+  scene: "Choose a surface or underground view, then adjust its appearance.",
   history: "Find dated USGS sheet editions near this map view.",
   connections: "Check the sources behind the current map.",
   import: "Preview a local KML or GeoJSON file in this browser.",
@@ -744,7 +749,7 @@ const QWEN_ABSTAIN_GUIDANCE: Record<string, string> = {
   CONTEXT_ONLY_INTERPRETATION: "No KFM record is selected, so there is no evidence-backed answer for this view.",
   EVIDENCE_NOT_SUPPORTIVE: "The selected record is not released, reviewed and linked to a public layer, so it cannot support an answer.",
   QUESTION_OUTSIDE_SELECTION_SCOPE: "The question goes beyond what the selected released record states.",
-  SENSITIVE_QUESTION_NOT_INTERPRETED: "Questions about safety, digging, emergencies, legal or medical matters, or exact locations are not interpreted by the local model. Use the official source directly.",
+  SENSITIVE_QUESTION_NOT_INTERPRETED: "The local model interprets only questions about the map: its layers, sources, data, definitions and history. It does not interpret questions about safety, emergencies, digging, legal or medical matters, addresses, or exact or personal locations, or the locations of sensitive sites. Use the official source directly, and in an emergency call 911.",
   OVER_PRECISE_OUTPUT: "The model's reply contained precise location detail, so it was withheld.",
   CITATION_REQUIRED: "The model did not cite the selected record's exact EvidenceRef, so no answer was shown.",
   MODEL_ABSTAINED: "The model judged that the selected record does not answer the question.",
@@ -1317,6 +1322,7 @@ export default function Home() {
   const [visibility, setVisibility] = useState<Record<string, boolean>>(defaultVisibility);
   const [opacity, setOpacity] = useState<Record<string, number>>(defaultOpacity);
   const [officialVisibility, setOfficialVisibility] = useState<Record<OfficialContextId, boolean>>(defaultOfficialVisibility);
+  const [layerPreferencesReady, setLayerPreferencesReady] = useState(false);
   const [buildYearCurrent, setBuildYearCurrent] = useState(true);
   const [officialOpacity, setOfficialOpacity] = useState<Record<OfficialContextId, number>>(defaultOfficialOpacity);
   const [officialReadPhases, setOfficialReadPhases] = useState<Partial<Record<OfficialContextId, "queued" | "fetching">>>({});
@@ -1452,6 +1458,8 @@ export default function Home() {
       return false;
     }
   }, []);
+  const [frameCheckEnabled, setFrameCheckEnabled] = useState(false);
+  useEffect(() => { setFrameCheckEnabled(new URLSearchParams(window.location.search).get("frameCheck") === "1"); }, []);
   const [styleReady, setStyleReady] = useState(false);
   const [renderQuality, setRenderQuality] = useState<RenderQuality>("auto");
   const [renderEfficient, setRenderEfficient] = useState(false);
@@ -1461,7 +1469,9 @@ export default function Home() {
     let disposed = false;
     const apply = () => {
       const budget = browserRenderBudget(renderQuality);
-      runMapMutation("Rendering-quality update", () => map.setPixelRatio(budget.pixelRatio));
+      // setPixelRatio always calls resize, even when its value is unchanged.
+      if (map.getPixelRatio() !== budget.pixelRatio)
+        runMapMutation("Rendering-quality update", () => map.setPixelRatio(budget.pixelRatio));
       void loadMapLibre().then(gl => { if (!disposed) runMapMutation("Image-request budget update", () => gl.setMaxParallelImageRequests(budget.imageRequests)); }).catch((error: unknown) => {
         if (!disposed) runMapMutation("MapLibre runtime update", () => { throw error; });
       });
@@ -1516,6 +1526,7 @@ export default function Home() {
   const [layerQuery, setLayerQuery] = useState("");
   const [pendingCatalogTarget, setPendingCatalogTarget] = useState<string | null>(null);
   const [atlasViewQuery, setAtlasViewQuery] = useState("");
+  const [atlasTopic, setAtlasTopic] = useState<LayerWorkspace>("all");
   const [layerDomain, setLayerDomain] = useState<(typeof layerDomains)[number]>("ALL");
   const [globalQuery, setGlobalQuery] = useState("");
   const [expandedLayers, setExpandedLayers] = useState<Set<string>>(new Set());
@@ -1545,7 +1556,7 @@ export default function Home() {
   const composerRef = useRef<HTMLElement>(null);
   const mapGuideRef = useRef<HTMLElement>(null);
   const composerTriggerRef = useRef<HTMLButtonElement>(null);
-  const [mapUtilityView, setMapUtilityView] = useState<MapUtilityView>("navigate");
+  const [mapUtilityView, setMapUtilityView] = useState<MapUtilityView>("scene");
   const [mapFeatureQuery, setMapFeatureQuery] = useState("");
   const [mapFeatureLayer, setMapFeatureLayer] = useState("ALL");
   const [connectionQuery, setConnectionQuery] = useState("");
@@ -1577,6 +1588,8 @@ export default function Home() {
   const [activeFunctionId, setActiveFunctionId] = useState("export");
   const [functionQuery, setFunctionQuery] = useState("");
   const [featureQuery, setFeatureQuery] = useState("");
+  const [featureTopic, setFeatureTopic] = useState<LayerWorkspace>("all");
+  const [functionTopic, setFunctionTopic] = useState<LayerWorkspace>("all");
   const [featureArea, setFeatureArea] = useState<FeatureArea | "ALL">("ALL");
   const [featureMaturity, setFeatureMaturity] = useState<FeatureMaturity | "ALL">("ALL");
   const [repositoryQuery, setRepositoryQuery] = useState("");
@@ -1613,6 +1626,7 @@ export default function Home() {
   const [reviewedWeatherSelected, setReviewedWeatherSelected] = useState(false);
   const [reviewedSoilSelected, setReviewedSoilSelected] = useState(false);
   const [reviewedStormEventsSelected, setReviewedStormEventsSelected] = useState(false);
+  const [reviewedEarthquakesSelected, setReviewedEarthquakesSelected] = useState(false);
   const [soilMapState, setSoilMapState] = useState<SoilMapState>(DEFAULT_SOIL_MAP_STATE);
   const changeSoilMapState = useCallback((next: Partial<SoilMapState>) => setSoilMapState(current => ({ ...current, ...next })), []);
   const [soilMoistureContext, setSoilMoistureContext] = useState<SoilMoistureEngineContext | null>(null);
@@ -1842,16 +1856,17 @@ export default function Home() {
   const visibleOfficialCount = visibleExternalContextCount(visibleOfficialSources.length, soilMapState.visible);
   const selectedEarthEngineCount = Object.values(earthEngineDisplay.visible).filter(Boolean).length;
   const catalogEntries: LayerCatalogEntry[] = [
-    ...OFFICIAL_CONTEXT_SOURCES.map(source => ({ id: source.id, title: source.title, keywords: `${source.shortTitle} ${source.organization} ${source.domain}`, selected: officialVisibility[source.id], topics: LAYER_WORKSPACES.filter(([topic]) => topic !== "all" && filterOfficialSources([source], topic, "").length > 0).map(([topic]) => topic) })),
-    { id: "daylight", title: "Daylight & twilight", keywords: "sun solar geometry calculated light", topics: ["terrain", "disaster"], selected: daylightEnabled },
-    { id: "soil", title: "Soil moisture", keywords: "NASA SMAP modeled surface root water", topics: ["water", "land"], selected: soilMapState.visible },
-    { id: "crop", title: "Soil moisture 1 km hybrid", keywords: "USDA NASS Crop-CASMA direct provider preview reviewed numeric cells", topics: ["water", "land"], selected: cropSelected },
-    { id: "reviewed-water", title: "Reviewed water stations", keywords: "USGS governed snapshot evidence", topics: ["water"], selected: reviewedWaterSelected },
-    { id: "reviewed-weather", title: "Reviewed daily weather", keywords: "NOAA GHCN-Daily precipitation temperature governed snapshot evidence", topics: ["disaster"], selected: reviewedWeatherSelected },
-    { id: "reviewed-soil", title: "Reviewed soil moisture", keywords: "NOAA USCRN reference station soil temperature depth governed snapshot evidence", topics: ["land"], selected: reviewedSoilSelected },
-    { id: "reviewed-storm-events", title: "Reviewed storm event reports", keywords: "NOAA NCEI Storm Events hail wind tornado flood historical reports governed snapshot evidence", topics: ["disaster"], selected: reviewedStormEventsSelected },
+    ...OFFICIAL_CONTEXT_SOURCES.map(source => ({ id: source.id, title: source.title, keywords: `${source.shortTitle} ${source.organization} ${source.domain}`, selected: officialVisibility[source.id], topics: officialSourceTopics(source.id) })),
+    { id: "daylight", title: "Daylight & twilight", keywords: "sun solar geometry calculated light", topics: specialtyLayerTopics("daylight"), selected: daylightEnabled },
+    { id: "soil", title: "Soil moisture", keywords: "NASA SMAP modeled surface root water", topics: specialtyLayerTopics("soil"), selected: soilMapState.visible },
+    { id: "crop", title: "Soil moisture 1 km hybrid", keywords: "USDA NASS Crop-CASMA direct provider preview reviewed numeric cells", topics: specialtyLayerTopics("crop"), selected: cropSelected },
+    { id: "reviewed-water", title: "Reviewed water stations", keywords: "USGS governed snapshot evidence", topics: specialtyLayerTopics("reviewed-water"), selected: reviewedWaterSelected },
+    { id: "reviewed-weather", title: "Reviewed daily weather", keywords: "NOAA GHCN-Daily precipitation temperature governed snapshot evidence", topics: specialtyLayerTopics("reviewed-weather"), selected: reviewedWeatherSelected },
+    { id: "reviewed-soil", title: "Reviewed soil moisture", keywords: "NOAA USCRN reference station soil temperature depth governed snapshot evidence", topics: specialtyLayerTopics("reviewed-soil"), selected: reviewedSoilSelected },
+    { id: "reviewed-storm-events", title: "Reviewed storm event reports", keywords: "NOAA NCEI Storm Events hail wind tornado flood historical reports governed snapshot evidence", topics: specialtyLayerTopics("reviewed-storm-events"), selected: reviewedStormEventsSelected },
+    { id: "reviewed-earthquakes", title: "Reviewed earthquakes", keywords: "USGS ComCat ANSS earthquake epicenter magnitude seismicity catalog governed snapshot evidence", topics: specialtyLayerTopics("reviewed-earthquakes"), selected: reviewedEarthquakesSelected },
     ...EARTH_ENGINE_CONTEXT_LAYERS.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.source} ${layer.attribution}`, topics: imageryTopics(layer.id), selected: Boolean(earthEngineDisplay.visible[layer.id]), imagery: true })),
-    ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: ["places"] as const, selected: Boolean(visibility[layer.id]) })),
+    ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: registryLayerTopics(layer.domain), selected: Boolean(visibility[layer.id]) })),
   ];
   const selectedMapLayerCount = selectedCatalogCount(catalogEntries);
   const matchingCatalogEntries = catalogEntries.filter(entry => layerEntryMatches(entry, layerCatalogView, officialWorkspace, officialSourceQuery));
@@ -2046,15 +2061,10 @@ export default function Home() {
     ? SOURCE_CANDIDATES.find((candidate) => candidate.layerId === selected.layerId)
     : undefined, [selected]);
   const filteredAtlasViews = useMemo(() => {
-    const query = atlasViewQuery.trim().toLowerCase();
-    if (!query) return LIVING_ATLAS_VIEWS;
-    return LIVING_ATLAS_VIEWS.filter((view) => (
-      [view.title, view.question, view.scope, view.time, view.sourcePosture, view.report, ...view.domains]
-        .join(" ")
-        .toLowerCase()
-        .includes(query)
-    ));
-  }, [atlasViewQuery]);
+    const terms = atlasViewQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    return LIVING_ATLAS_VIEWS.filter(view => (atlasTopic === "all" || atlasViewTopics(view.id).includes(atlasTopic))
+      && terms.every(term => [view.title, view.question, view.scope, view.time, view.sourcePosture, view.report, ...view.domains, topicSearchText(atlasViewTopics(view.id))].join(" ").toLowerCase().includes(term)));
+  }, [atlasViewQuery, atlasTopic]);
   const activeViewProfileId = useMemo(() => MAP_VIEW_PROFILES.find((profile) => (
     profile.year === year
     && profile.basemap === basemap
@@ -2201,6 +2211,17 @@ export default function Home() {
     return [source.id, { selected: officialVisibility[source.id], held, state: officialStates[source.id],
       canDisplay: styleReady && !held && view.zoom >= sourceMinimumZoom(source) && officialOpacity[source.id] > 0 }];
   })) as Record<OfficialContextId, CatalogStatus>, [effectiveOfficialVisibility, officialOpacity, officialStates, officialVisibility, projection, styleReady, view.zoom]);
+  const starterAccess = useMemo<StarterAccessMap>(() => {
+    const requested = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => [source.id, true])) as Record<OfficialContextId, boolean>;
+    const eligible = officialContextVisibilityForFrame(requested, temporalQuery.frame, buildYearCurrent);
+    return Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => {
+      const needsFlatMap = projection === "globe" && (source.kind === "OPERATIONAL_WMS" || source.kind === "HISTORICAL_RASTER");
+      return [source.id, { held: !eligible[source.id] || needsFlatMap, unavailable: officialStates[source.id] === "error",
+        guidance: !eligible[source.id] ? "Held at this map time; use the timeline to choose a supported time"
+          : needsFlatMap ? "Held in Globe; choose the flat map to use this source"
+          : view.zoom < sourceMinimumZoom(source) ? `Appears at zoom ${sourceMinimumZoom(source)}+` : undefined }];
+    }));
+  }, [buildYearCurrent, officialStates, projection, temporalQuery.frame, view.zoom]);
   const filteredOfficialContextConnections = useMemo(() => {
     const query = connectionQuery.trim().toLowerCase();
     return officialContextConnections.filter((connection) => {
@@ -2516,18 +2537,19 @@ export default function Home() {
   ) as Record<SourceAdmissionState, number>, []);
   const filteredFunctions = useMemo(() => {
     const query = functionQuery.trim().toLowerCase();
-    return functionsForGroup(functionGroup).filter((record) => !query || `${record.title} ${record.summary} ${record.interface} ${record.boundary} ${record.authority} ${record.maturity} ${record.inventory} ${record.sourceLabel}`.toLowerCase().includes(query));
-  }, [functionGroup, functionQuery]);
-  const activeFunction = FUNCTION_REGISTRY.find((record) => record.id === activeFunctionId && record.group === functionGroup) ?? filteredFunctions[0] ?? functionsForGroup(functionGroup)[0];
+    return functionsForGroup(functionGroup).filter((record) => (functionTopic === "all" || functionTopics(record.id).includes(functionTopic)) && (!query || `${record.title} ${record.summary} ${record.interface} ${record.boundary} ${record.authority} ${record.maturity} ${record.inventory} ${record.sourceLabel} ${topicSearchText(functionTopics(record.id))}`.toLowerCase().includes(query)));
+  }, [functionGroup, functionQuery, functionTopic]);
+  const activeFunction = filteredFunctions.find((record) => record.id === activeFunctionId) ?? filteredFunctions[0];
   const functionCounts = useMemo(() => Object.fromEntries(["ACTIVE", "BOUNDED", "DOCUMENTED", "GATED"].map((state) => [state, FUNCTION_REGISTRY.filter((record) => record.state === state).length])), []);
   const filteredFeatures = useMemo(() => {
     const query = featureQuery.trim().toLowerCase();
     return FEATURE_CATALOG.filter((feature) => {
+      if (featureTopic !== "all" && !featureTopics(feature.id).includes(featureTopic)) return false;
       if (featureArea !== "ALL" && feature.area !== featureArea) return false;
       if (featureMaturity !== "ALL" && feature.maturity !== featureMaturity) return false;
-      return !query || `${feature.name} ${feature.area} ${feature.maturity} ${feature.summary} ${feature.path} ${feature.keywords.join(" ")}`.toLowerCase().includes(query);
+      return !query || `${feature.name} ${feature.area} ${feature.maturity} ${feature.summary} ${feature.path} ${feature.keywords.join(" ")} ${topicSearchText(featureTopics(feature.id))}`.toLowerCase().includes(query);
     });
-  }, [featureArea, featureMaturity, featureQuery]);
+  }, [featureArea, featureMaturity, featureQuery, featureTopic]);
   const featureMaturityCounts = useMemo(() => Object.fromEntries(
     (["VERIFIED_SLICE", "FIXTURE_FIRST", "DOCUMENTED", "HOLD"] as const)
       .map((maturity) => [maturity, FEATURE_CATALOG.filter((feature) => feature.maturity === maturity).length]),
@@ -2693,6 +2715,8 @@ export default function Home() {
     if (streamflowSelectedStationId) params.set("hydroStation", streamflowSelectedStationId);
     if (streamflowArchiveDay) params.set("hydroDay", streamflowArchiveDay);
     if (officialVisibility["usgs-streamflow"] || officialVisibility["nws-radar"] || officialVisibility["noaa-lightning-density"]) params.set("live", liveInstrument);
+    if (officialWorkspace !== "all") params.set("topic", officialWorkspace);
+    if (layerCatalogView !== "official") params.set("layerView", layerCatalogView === "local" ? "imagery" : "selected");
     params.set("t", String(year));
     params.set("tm", temporalMode);
     params.set("tstep", temporalStepRule);
@@ -2729,7 +2753,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, officialWorkspace, layerCatalogView, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -3684,6 +3708,19 @@ export default function Home() {
     }
   }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshSelectedStreamflow, runtimeOfficialVisibility]);
 
+  const applyStarterContext = (ids: readonly OfficialContextId[], title: string) => {
+    // Revalidate at the owning state boundary. No camera, time, opacity, release or specialist-owner writes.
+    const plan = starterPlan(ids, OFFICIAL_CONTEXT_SOURCES, starterAccess);
+    if (ids.length && !plan.selected.length) { announce("Starter sources are held or unavailable; current layers remain selected"); return; }
+    const changes = contextSelectionChanges(plan.selected, OFFICIAL_CONTEXT_SOURCES, officialVisibilityRef.current);
+    changes.forEach(change => setOfficialContextVisible(change.id, change.visible));
+    setOfficialSourceQuery("");
+    setOfficialWorkspace("all");
+    setOfficialCatalogFilter("all");
+    setLayerCatalogView("selected");
+    announce(`${title}; ${plan.selected.length} public context layers selected. Camera and source dates retained.`);
+  };
+
   const retryOfficialLayer = (id: OfficialContextId) => {
     const source = OFFICIAL_CONTEXT_BY_ID[id];
     if (id === "nws-forecast-wind") { setWindArrowReloadToken(value => value + 1); return; }
@@ -4291,7 +4328,7 @@ export default function Home() {
     mapUtilityReturnRef.current = returnElement ?? null;
     setScenePanelOpen(false);
     setLocalAtlasPeek(false);
-    setMapUtilityView(nextView);
+    setMapUtilityView(nextView === "navigate" ? "scene" : nextView);
     setMapUtilityOpen(true);
     setMapUtilityFocusRequest((request) => request + 1);
     setCurrentWorkspace("explore");
@@ -4638,7 +4675,7 @@ export default function Home() {
     mapEvidenceFilterRef.current = snapshot.evidenceFilter ?? "ALL";
     setCompareTimeA(snapshot.comparison?.timeA ?? snapshot.committedTime.start);
     setCompareTimeB(snapshot.comparison?.timeB ?? sceneFrame);
-    setMapUtilityView(snapshot.representation === "Compare" ? "compare" : "navigate");
+    setMapUtilityView(snapshot.representation === "Compare" ? "compare" : "scene");
     setMapUtilityOpen(snapshot.representation === "Compare");
     setPrimaryWorkspace("map");
     if (mapRef.current) applyProjectionNavigationLimits(mapRef.current, snapshot.projection);
@@ -4695,6 +4732,11 @@ export default function Home() {
 
   const restoreExplorerFromUrl = useCallback(() => {
       const params = explorerHistoryParams(window.location.search, window.history.state);
+      const restoredTopic = restoreTopic(params.get("topic"));
+      setOfficialWorkspace(restoredTopic);
+      setLayerCatalogView(params.get("layerView") === "imagery" ? "local" : params.get("layerView") === "selected" ? "selected" : "official");
+      if (restoredTopic !== "all") { setLeftPanelMode("layers"); setLeftOpen(true); }
+
       const restoredSolar = restoreDaylightView(params.get("sunDay"), params.get("sunAt"), params.get("sun") === "on", currentKansasCalendarDay(), params.get("sunThrough"));
       daylightDayRef.current = restoredSolar.day;
       daylightThroughDayRef.current = restoredSolar.throughDay;
@@ -4763,8 +4805,9 @@ export default function Home() {
       opacityRef.current = nextOpacity;
       setOpacity(nextOpacity);
       const knownOfficialIds = new Set<OfficialContextId>(OFFICIAL_CONTEXT_SOURCES.map((source) => source.id));
-      const restoredOfficialIds = params.get("ctx")?.split(",").filter((id): id is OfficialContextId => knownOfficialIds.has(id as OfficialContextId)) ?? [];
-      const nextOfficialVisibility = params.has("ctx")
+      const preferredIds = preferredContextIds(params, readContextPreference(OFFICIAL_CONTEXT_SOURCES));
+      const restoredOfficialIds = preferredIds?.filter((id): id is OfficialContextId => knownOfficialIds.has(id as OfficialContextId)) ?? [];
+      const nextOfficialVisibility = preferredIds !== null
         ? Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, restoredOfficialIds.includes(source.id)])) as Record<OfficialContextId, boolean>
         : defaultOfficialVisibility;
       officialVisibilityRef.current = nextOfficialVisibility;
@@ -4896,7 +4939,7 @@ export default function Home() {
       const restoredMapUtilityView = params.get("maptab");
       const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
         ? "compare"
-        : restoredMapUtilityView === "localAtlas" || restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+        : restoredMapUtilityView === "localAtlas" || restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "scene";
       setMapUtilityView(nextMapUtilityView);
       const restoredComparisonTimes = params.get("times")?.split(",").map(Number) ?? [];
       if (restoredComparisonTimes.length === 2 && restoredComparisonTimes.every((value) => TIME_STEPS.includes(value as (typeof TIME_STEPS)[number]))) {
@@ -4969,6 +5012,7 @@ export default function Home() {
         setRightOpen(false);
       }
       explorerRestoredRef.current = true;
+      setLayerPreferencesReady(true);
   }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow]);
 
   useEffect(() => {
@@ -4988,6 +5032,7 @@ export default function Home() {
   useEffect(() => {
     let disposed = false;
     let resizeObserver: ResizeObserver | null = null;
+    let mapResizeFrame: number | undefined;
     let cancelHoverSample = () => {};
     const rasterRetryTimers = new Map<OfficialContextId, number>();
     const rasterRetryCounts = new Map<OfficialContextId, number>();
@@ -5018,6 +5063,9 @@ export default function Home() {
           bearing: initialView.bearing,
           pitch: initialView.pitch,
           pixelRatio: renderBudget.pixelRatio,
+          // The Explorer owns a frame-coalesced container observer below.
+          // Avoid MapLibre's second observer doing the same canvas/camera work.
+          trackResize: false,
           maxTileCacheSize: renderBudget.tileCache,
           maxPitch: scenePresetRef.current === "elevation-3d" ? 72 : 60,
           renderWorldCopies: false,
@@ -5071,7 +5119,9 @@ export default function Home() {
         if (typeof ResizeObserver !== "undefined") {
           resizeObserver = new ResizeObserver((entries) => {
             if (disposed || !entries.some((entry) => entry.contentRect.width > 0 && entry.contentRect.height > 0)) return;
-            window.requestAnimationFrame(() => {
+            if (mapResizeFrame !== undefined) return;
+            mapResizeFrame = window.requestAnimationFrame(() => {
+              mapResizeFrame = undefined;
               if (!disposed) runMapMutation("Map container resize", () => map.resize());
             });
           });
@@ -5757,6 +5807,7 @@ export default function Home() {
       hoverDrawerTimerRef.current = null;
       hoverCandidateIdRef.current = null;
       cancelHoverSample();
+      if (mapResizeFrame !== undefined) window.cancelAnimationFrame(mapResizeFrame);
       resizeObserver?.disconnect();
       styleDocumentLoadedRef.current = false;
       styleGenerationReadyRef.current = false;
@@ -6704,7 +6755,8 @@ export default function Home() {
       return;
     }
     const refresh = () => {
-      if (!document.hidden && !streamflowRequestRef.current && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
+      // Restoration starts the selected query; do not race it with defaults.
+      if (explorerRestoredRef.current && !document.hidden && !streamflowRequestRef.current && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
     };
     refresh();
     const timer = window.setInterval(refresh, 300_000);
@@ -7897,7 +7949,7 @@ export default function Home() {
     const savedComparison = snapshot.temporalComparison;
     setCompareTimeA(savedComparison && TIME_STEPS.includes(savedComparison.timeA as (typeof TIME_STEPS)[number]) ? savedComparison.timeA : 1910);
     setCompareTimeB(savedComparison && TIME_STEPS.includes(savedComparison.timeB as (typeof TIME_STEPS)[number]) ? savedComparison.timeB : OFFICIAL_CONTEXT_PRESENT_FRAME);
-    setMapUtilityView(nextSavedSweepMode === "comparison" ? "compare" : "navigate");
+    setMapUtilityView(nextSavedSweepMode === "comparison" ? "compare" : "scene");
     setMapUtilityOpen(nextSavedSweepMode === "comparison");
     setReportTitle(snapshot.report?.title || "Kansas map data report");
     setReportScope(snapshot.report?.scope === "SELECTION" || snapshot.report?.scope === "VISIBLE_LAYERS" || (snapshot.report?.scope === "ANALYSIS_AREA" && nextAnalysisArea) ? snapshot.report.scope : "VIEWPORT");
@@ -8268,6 +8320,14 @@ export default function Home() {
     if (map) {
       map.doubleClickZoom.disable();
       if (map.isStyleLoaded()) updateMeasurementSource(map, buildMeasurementData([], mode));
+    }
+  };
+
+  const beginMapMeasurement = (mode: Exclude<MeasureMode, null>) => {
+    toggleMeasure(mode);
+    if (isCompact) {
+      dismissMapUtilityWithoutFocus();
+      window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true }));
     }
   };
 
@@ -8880,15 +8940,10 @@ export default function Home() {
         </div>
           <nav className="map-chrome-dock" aria-label="Map view and controls">
           <span className="map-dock-context sr-only" title={`Current area: ${selectedLabel} · ${temporalScopeLabel}`}><strong>{selectedLabel}</strong><small>{temporalScopeLabel}{buildYearCurrent ? "" : " · build out of date"}</small></span>
-            <div className="map-dock-representations" role="group" aria-label="Map representation">
-              {mapRepresentationControls()}
-            </div>
             <div className="map-dock-actions" role="group" aria-label="Quick map controls">
               <button className="map-dock-action" type="button" aria-pressed={timelineOpen} onClick={toggleTimelinePanel}><strong>Time</strong><b>{formatTimelineStep(year)}</b></button>
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title="Open map layers"><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
-              <label className="map-dock-basemap map-dock-wide-only"><span>Basemap</span><select value={basemap} onChange={(event) => { setPrimaryWorkspace("map"); setBasemap(event.target.value as BasemapKey); }} aria-label="Choose basemap style">{(Object.keys(BASEMAPS) as BasemapKey[]).map((key) => <option key={key} value={key}>{BASEMAPS[key].title}</option>)}</select></label>
-              <button className="map-dock-action map-dock-wide-only" type="button" onClick={(event) => openMapUtility("navigate", event.currentTarget)}><span aria-hidden="true">⌖</span><strong>Controls</strong></button>
               <button className="map-dock-action map-dock-wide-only" type="button" aria-pressed={mapUtilityOpen && mapUtilityView === "localAtlas"} onClick={(event) => openMapUtility("localAtlas", event.currentTarget)}><strong>Local Atlas</strong><b>PC</b></button>
               <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
                 <summary aria-label="Map views and controls">Map <span aria-hidden="true">⌄</span></summary>
@@ -8902,8 +8957,8 @@ export default function Home() {
                     <button type="button" aria-pressed={leftOpen && leftPanelMode === "places"} onClick={(event) => { closeHeaderOverflow(event.currentTarget, false); openAtlasPanel("places", event.currentTarget); }}>Places · {savedWorkspaces.length}</button>
                   </div>
                   <button type="button" aria-label="Local Atlas: climate, local files, and data coverage" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("localAtlas", summary); }}><strong>Local Atlas</strong><small>Climate, local files, and data coverage on this PC</small></button>
-                  <button className="map-dock-compact-only" type="button" aria-label="Style and basemap" onClick={(event) => { event.currentTarget.closest("details")?.removeAttribute("open"); openMapSettings(); }}><strong>Style &amp; basemap</strong><small>Rendering quality, terrain, and background</small></button>
-                  <button className="map-dock-compact-only" type="button" aria-label="Map controls: coordinates, camera, and navigation" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("navigate", summary); }}><strong>Map controls</strong><small>Coordinates, camera, and navigation</small></button>
+                  <button type="button" aria-label="Map appearance and underground" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("scene", summary); }}><strong>Appearance</strong><small>Basemap, terrain, globe &amp; underground</small></button>
+                  <button type="button" aria-label="Map measurements and coordinates" onClick={(event) => { const summary = event.currentTarget.closest("details")?.querySelector<HTMLElement>("summary"); event.currentTarget.closest("details")?.removeAttribute("open"); openMapUtility("measure", summary); }}><strong>Measure</strong><small>Draw, coordinates &amp; analysis area</small></button>
                 </div>
               </details>
             </div>
@@ -9104,10 +9159,11 @@ export default function Home() {
                 </nav>
                 <label><span className="sr-only">Search functions and interface boundaries</span><i aria-hidden="true">⌕</i><input type="search" value={functionQuery} onChange={(event) => setFunctionQuery(event.target.value)} placeholder="Search function, interface, gate, or maturity" /></label>
               </div>
+              <TopicSelect label="Function topic" value={functionTopic} onChange={setFunctionTopic} />
               <div className="function-workbench">
                 <div className="function-selector" aria-label="Available function records">
                   {filteredFunctions.map((record) => <button key={record.id} type="button" data-active={record.id === activeFunction?.id} data-state={record.state} aria-pressed={record.id === activeFunction?.id} onClick={() => setActiveFunctionId(record.id)}><span>{record.state}</span><strong>{record.title}</strong><small>{record.inventory} · {record.interface}</small></button>)}
-                  {filteredFunctions.length === 0 && <p>No function matches this search.</p>}
+                  {filteredFunctions.length === 0 && <p>No function matches this topic and search. Choose another topic or clear the search.</p>}
                 </div>
                 {activeFunction && <article className="function-detail" data-state={activeFunction.state}>
                   <header><span>{activeFunction.group.replaceAll("_", " ")}</span><strong>{activeFunction.state}</strong></header>
@@ -9206,15 +9262,16 @@ export default function Home() {
                   {(["VERIFIED_SLICE", "FIXTURE_FIRST", "DOCUMENTED", "HOLD"] as const).map((maturity) => <article key={maturity} data-state={maturity}><span>{featureMaturityLabel(maturity)}</span><strong>{featureMaturityCounts[maturity]}</strong></article>)}
                 </div>
                 <div className="feature-catalog-controls">
+                  <TopicSelect label="Repository feature topic" value={featureTopic} onChange={setFeatureTopic} />
                   <label><span className="sr-only">Search the repository feature catalog</span><i aria-hidden="true">⌕</i><input type="search" value={featureQuery} onChange={(event) => setFeatureQuery(event.target.value)} placeholder="Search feature, area, maturity, or source path" /></label>
                   <label><span className="sr-only">Filter repository features by area</span><select value={featureArea} onChange={(event) => setFeatureArea(event.target.value as FeatureArea | "ALL")}><option value="ALL">All areas</option>{FEATURE_AREAS.map((area) => <option key={area} value={area}>{area}</option>)}</select></label>
                   <label><span className="sr-only">Filter repository features by maturity</span><select value={featureMaturity} onChange={(event) => setFeatureMaturity(event.target.value as FeatureMaturity | "ALL")}><option value="ALL">All maturity states</option><option value="VERIFIED_SLICE">Verified slice</option><option value="FIXTURE_FIRST">Fixture first</option><option value="DOCUMENTED">Documented</option><option value="HOLD">Hold</option></select></label>
                   <span>{filteredFeatures.length} of {FEATURE_CATALOG.length}</span>
                 </div>
                 <div className="feature-radar-grid">
-                  {filteredFeatures.map((feature) => <article key={feature.id} data-state={feature.maturity}><span>{featureMaturityLabel(feature.maturity)}</span><small>{feature.area}</small><strong>{feature.name}</strong><p>{feature.summary}</p><a href={`https://github.com/${REPOSITORY_SNAPSHOT.repository}/tree/${REPOSITORY_SNAPSHOT.commit}/${feature.path}`} target="_blank" rel="noreferrer">Open source ↗</a></article>)}
+                  {filteredFeatures.map((feature) => <article key={feature.id} data-state={feature.maturity}><span>{featureMaturityLabel(feature.maturity)}</span><small>{feature.area} · {featureTopics(feature.id).map(topic => topicDefinition(topic)?.title).join(" · ")}</small><strong>{feature.name}</strong><p>{feature.summary}</p><a href={`https://github.com/${REPOSITORY_SNAPSHOT.repository}/tree/${REPOSITORY_SNAPSHOT.commit}/${feature.path}`} target="_blank" rel="noreferrer">Open source ↗</a></article>)}
                 </div>
-                {filteredFeatures.length === 0 && <div className="repository-empty"><strong>No matching feature families</strong><p>Clear the search or choose another area or maturity state.</p></div>}
+                {filteredFeatures.length === 0 && <div className="repository-empty"><strong>No matching feature families</strong><p>Clear the search or choose another topic, area or maturity state.</p></div>}
               </section>
             </section>}
 
@@ -9249,7 +9306,7 @@ export default function Home() {
                     <h4>{source.title}</h4><p className="source-organization">{source.organization} · {source.cadence} · official portal checked <time dateTime={source.checkedAt}>{source.checkedAt}</time></p>
                     <dl><div><dt>Source role</dt><dd>{source.sourceRole}</dd></div><div><dt>Candidate value</dt><dd>{source.value}</dd></div><div><dt>Cannot prove</dt><dd>{source.cannotProve}</dd></div><div><dt>Next gate</dt><dd>{source.nextGate}</dd></div></dl>
                     <div className="source-modes">{source.dataModes.map((mode) => <span key={mode}>{mode}</span>)}</div>
-                    <footer><a href={source.sourceUrl} target="_blank" rel="noreferrer">Open official source ↗</a>{source.discoveryPath && <Link href={source.discoveryPath}>Explore datasets & recipes</Link>}<button type="button" onClick={() => copySourceIntakeDraft(source)}>Copy bounded intake draft</button>{source.layerId && source.featureId && <button type="button" onClick={() => { setRepositoryOpen(false); selectStoredFeature(source.layerId!, source.featureId!); }}>Inspect local analogue</button>}</footer>
+                    <footer><a href={source.sourceUrl} target="_blank" rel="noreferrer">Open official source ↗</a>{source.discoveryPath && <Link href={source.discoveryPath}>{source.discoveryLabel ?? "Explore datasets & recipes"}</Link>}<button type="button" onClick={() => copySourceIntakeDraft(source)}>Copy bounded intake draft</button>{source.layerId && source.featureId && <button type="button" onClick={() => { setRepositoryOpen(false); selectStoredFeature(source.layerId!, source.featureId!); }}>Inspect local analogue</button>}</footer>
                   </article>)}
                 </div>
                 {filteredSourceCandidates.length === 0 && <div className="repository-empty"><strong>No matching source records</strong><p>Clear the search or choose another domain or admission state.</p></div>}
@@ -9288,18 +9345,20 @@ export default function Home() {
           <section className="atlas-view-library" hidden={leftPanelMode !== "views"} aria-labelledby="atlas-view-library-title">
             <div className="atlas-library-heading"><div><span className="panel-kicker">DEFAULT INVESTIGATIONS</span><h2 id="atlas-view-library-title">Choose a starting question</h2></div><small>{filteredAtlasViews.length} of {LIVING_ATLAS_VIEWS.length}</small></div>
             <label className="atlas-search-control"><span aria-hidden="true">⌕</span><span className="sr-only">Search Living Atlas views</span><input type="search" value={atlasViewQuery} onChange={(event) => setAtlasViewQuery(event.target.value)} placeholder="Search questions, domains, or time" /></label>
+            <TopicSelect label="Investigation topic" value={atlasTopic} onChange={setAtlasTopic} />
+            <TopicGuide value={atlasTopic} onTool={(view, element) => openMapUtility(view, element)} />
             <div className="atlas-view-list">
               {filteredAtlasViews.map((atlasView) => <article className="atlas-view-card" key={atlasView.id} data-status={atlasView.status} data-active={atlasView.profileId === activeViewProfileId}>
                 <header><span>{livingAtlasStatusLabel(atlasView.status)}</span><small>{atlasView.display}</small></header>
                 <h3>{atlasView.title}</h3>
                 <p className="atlas-view-question">{atlasView.question}</p>
                 <dl><div><dt>Scope</dt><dd>{atlasView.scope}</dd></div><div><dt>Time</dt><dd>{atlasView.time}</dd></div><div><dt>Source posture</dt><dd>{atlasView.sourcePosture}</dd></div></dl>
-                <div className="atlas-view-domains" aria-label={`${atlasView.title} domains`}>{atlasView.domains.map((domain) => <span key={domain}>{domain}</span>)}</div>
+                <div className="atlas-view-domains" aria-label={`${atlasView.title} domains`}>{atlasViewTopics(atlasView.id).map(topic => <span key={topic}>{topicDefinition(topic)?.title}</span>)}</div>
                 <p className="atlas-view-note">{atlasView.note}</p>
                 <footer><span>{atlasView.report}</span><button type="button" onClick={() => applyLivingAtlasView(atlasView)}>Open on map</button></footer>
                 {atlasView.syntheticProof && <LivingWatersControl mapRef={mapRef} styleReady={styleReady} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} onInspect={() => { setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true); }} />}
               </article>)}
-              {filteredAtlasViews.length === 0 && <div className="catalog-empty"><strong>No matching investigations</strong><p>Try a place, domain, time, or question.</p></div>}
+              {filteredAtlasViews.length === 0 && <div className="catalog-empty"><strong>No matching investigations</strong><p>Try another topic, place, time, or question. Related tools remain available in the topic guide.</p><button type="button" onClick={() => { setAtlasTopic("all"); setAtlasViewQuery(""); }}>Reset investigation filters</button></div>}
             </div>
             <aside className="panel-boundary-note"><strong>Named view ≠ admitted data</strong><p>These views use provider-backed context. Open each source card to check its status, time, and limits.</p></aside>
           </section>
@@ -9340,7 +9399,13 @@ export default function Home() {
           </div>
 
           <div className="layer-catalog-body" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
-          <div className="layer-browse-context"><label><span className="sr-only">Layer topic</span><select aria-label="Layer topic" value={officialWorkspace} onChange={event => { setOfficialWorkspace(event.target.value as LayerWorkspace); setOfficialCatalogFilter("all"); }}>{LAYER_WORKSPACES.map(([id, title]) => <option key={id} value={id}>{title}</option>)}</select></label><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
+          <MapStartersControl sources={OFFICIAL_CONTEXT_SOURCES} access={starterAccess} visibility={officialVisibility} selectionReady={layerPreferencesReady}
+            sourceStatus={id => officialVisibility[id] ? catalogDisplayStatus(officialCatalogStatuses[id])
+              : officialStates[id] === "idle" ? "Available to request · response not checked" : `Not selected · ${officialStates[id]}`}
+            onApply={applyStarterContext} />
+          <div className="layer-browse-context"><TopicSelect label="Layer topic" value={officialWorkspace} onChange={topic => { setOfficialWorkspace(topic); setOfficialCatalogFilter("all"); }} /><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
+          <div className="layer-topic-index"><Link href="/topics">Explore subjects &amp; coverage ↗</Link>{officialWorkspace !== "all" && <button type="button" onClick={() => setOfficialWorkspace("all")}>Clear topic</button>}</div>
+          <TopicGuide value={officialWorkspace} onTool={(view, element) => openMapUtility(view, element)} />
           {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
           {matchingCatalogEntries.length === 0 && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
 
@@ -9490,6 +9555,7 @@ export default function Home() {
             <div hidden={!shownCatalogIds.has("reviewed-weather")}><GovernedWeatherControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWeatherSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-soil")}><GovernedSoilControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedSoilSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-storm-events")}><GovernedStormEventsControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedStormEventsSelected} /></div>
+            <div hidden={!shownCatalogIds.has("reviewed-earthquakes")}><GovernedEarthquakesControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedEarthquakesSelected} /></div>
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
             <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
             {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}
@@ -9530,7 +9596,7 @@ export default function Home() {
               <button type="button" onClick={() => setLeftPanelMode("places")}>Places</button>
               <Link href="/observatory">Event Observatory</Link>
               <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("history"); }}>Kansas historic maps</button>
-              <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("navigate"); }}>Map controls</button>
+              <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("scene"); }}>Map controls</button>
             </nav>
           </details>
         </aside>
@@ -9544,7 +9610,7 @@ export default function Home() {
             <div className="source-quality-actions"><Link href="/earth-engine">Earth Engine datasets & recipes</Link><Link href="/data">Propose data for KFM</Link><Link href="/stewards">Steward review desk</Link></div>
             <button type="button" onClick={refreshVisibleOfficialContext} disabled={!buildYearCurrent || officialRefreshPlan.count === 0 || officialLoadingCount > 0}>{!buildYearCurrent ? "Rebuild required for current sources" : officialRefreshPlan.reason === "historical" ? `Current sources held until ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : officialLoadingCount > 0 ? "Refreshing selected sources…" : officialRefreshPlan.count === 0 ? "Select a current source to refresh" : `Refresh ${officialRefreshPlan.count} selected source${officialRefreshPlan.count === 1 ? "" : "s"}`}</button>
             {OFFICIAL_CONTEXT_SOURCES.map((source) => <SourceQualityRow key={source.id} source={source} state={officialStates[source.id]} payload={officialPayloads[source.id as OfficialContextFeedId]} error={officialErrors[source.id]} selected={officialVisibility[source.id]} held={officialVisibility[source.id] && !effectiveOfficialVisibility[source.id]} viewZoom={view.zoom} archiveDay={officialArchiveDays[source.id as OfficialContextFeedId]} observedAt={source.id === "noaa-lightning-density" ? lightningFrame : null} checkedAt={source.id === "noaa-lightning-density" ? lightningManifest?.retrievedAt : null} onToggle={(selected) => setOfficialContextVisible(source.id, selected)} onRetry={() => retryOfficialLayer(source.id)} />)}
-            <Link href="/observatory/sources">Historical coverage & sources ↗</Link>
+            <Link href="/connections">API connections &amp; verified replay ↗</Link><Link href="/observatory/sources">Historical coverage & sources ↗</Link>
           {sourceStatusOpen && scenePreset === "elevation-3d" && <aside className="terrain-scene-passport" data-state={terrainState.toLowerCase()} aria-label="Terrain scene passport">
             <header>
               <div><span>TERRAIN SCENE PASSPORT</span><strong>DEM relief</strong></div>
@@ -9688,6 +9754,7 @@ export default function Home() {
             <span><strong>Ask Qwen</strong><small>About this map view</small></span>
             <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
           </button>
+          {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
@@ -9714,6 +9781,17 @@ export default function Home() {
               <button type="button" onClick={() => mapRef.current?.zoomIn({ duration: motionDuration(250) })} aria-label="Zoom in"><span className="map-tool-glyph" aria-hidden="true">＋</span></button>
               <button type="button" onClick={() => mapRef.current?.zoomOut({ duration: motionDuration(250) })} aria-label="Zoom out"><span className="map-tool-glyph" aria-hidden="true">−</span></button>
               <button type="button" onClick={fitKansasView} aria-label="Reset view to Kansas"><span className="map-tool-glyph" aria-hidden="true">KS</span></button>
+              <details className="map-navigation-more" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
+                <summary aria-label="More map navigation" title="Navigation &amp; view history">⋯</summary>
+                <div className="map-navigation-menu" role="group" aria-label="Map navigation actions">
+                  <button type="button" onClick={() => travelCameraHistory(-1)} disabled={cameraHistoryIndex === 0}>Previous view</button>
+                  <button type="button" onClick={() => travelCameraHistory(1)} disabled={cameraHistoryIndex >= cameraHistoryLength - 1}>Next view</button>
+                  <button type="button" onClick={() => mapRef.current?.resetNorthPitch({ duration: motionDuration(450) })}>Reset north</button>
+                  <button type="button" onClick={toggleFullscreen}>Fullscreen</button>
+                  <button type="button" onClick={locateUser}>Use my location</button>
+                  <button type="button" onClick={() => void copyMapCenter()} disabled={locationCameraRedacted}>Copy center</button>
+                </div>
+              </details>
             </div>
           </nav>
 
@@ -9737,7 +9815,7 @@ export default function Home() {
             </header>
             <ExplorerControlsNavigation value={mapUtilityView} onChange={viewId => { setMapUtilityView(viewId); if (viewId === "report") setReportGeneratedAt(new Date().toISOString()); if (viewId === "export") setExportGeneratedAt(new Date().toISOString()); }} />
             <div className="map-utility-scroll">
-              {mapUtilityOpen && mapUtilityView === "localAtlas" && <LocalAtlasControl map={mapRef.current} styleReady={styleReady} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} suspended={Boolean(measureMode) || undergroundOpen} compact={isCompact} collapsed={isCompact && localAtlasPeek} onViewMap={showLocalAtlasMap} onExpand={restoreLocalAtlasControls} reducedMotion={reducedMotion} onFlatMap={() => activateMapRepresentation("2d")} onArchive={() => setMapUtilityView("compare")} />}
+              {mapUtilityOpen && mapUtilityView === "localAtlas" && <LocalAtlasControl map={mapRef.current} styleReady={styleReady} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} suspended={Boolean(measureMode) || undergroundOpen} compact={isCompact} collapsed={isCompact && localAtlasPeek} onViewMap={showLocalAtlasMap} onExpand={restoreLocalAtlasControls} reducedMotion={reducedMotion} onFlatMap={() => activateMapRepresentation("2d")} onArchive={() => setMapUtilityView("compare")} onPrivateView={() => { locationDerivedViewRef.current = true; setLocationCameraRedacted(true); }} />}
               {mapUtilityView === "report" && <section id="map-utility-view-report" role="region" aria-labelledby="map-utility-title" className="map-utility-section report-builder-section">
                 <div className="map-utility-section-heading"><span>CUSTOM REPORT</span><h3>Build from the map you are using</h3><p>Filters apply immediately. The report uses current Explorer records and keeps evidence states, source roles, attribution, uncertainty, and time visible.</p></div>
 
@@ -9798,52 +9876,7 @@ export default function Home() {
                 </div>
               </section>}
 
-              {mapUtilityView === "navigate" && <section id="map-utility-view-navigate" role="region" aria-labelledby="map-utility-title" className="map-utility-section">
-                <div className="map-utility-section-heading"><span>EXPLORE KANSAS</span><h3>Find your next view</h3><p>Move around the map, return to a place, or try a different perspective.</p></div>
-                <div className="map-utility-actions map-navigation-actions">
-                  <button type="button" onClick={() => travelCameraHistory(-1)} disabled={cameraHistoryIndex === 0}>Previous view</button>
-                  <button type="button" onClick={() => travelCameraHistory(1)} disabled={cameraHistoryIndex >= cameraHistoryLength - 1}>Next view</button>
-                  <button type="button" onClick={() => mapRef.current?.zoomIn({ duration: motionDuration(250) })}>Zoom in</button>
-                  <button type="button" onClick={() => mapRef.current?.zoomOut({ duration: motionDuration(250) })}>Zoom out</button>
-                  <button type="button" onClick={() => mapRef.current?.resetNorthPitch({ duration: motionDuration(450) })}>Reset north</button>
-                  <button type="button" onClick={fitKansasView}>Fit Kansas</button>
-                  <button type="button" onClick={toggleFullscreen}>Fullscreen</button>
-                  <button type="button" onClick={locateUser}>Use my location</button>
-                  <button type="button" onClick={() => void copyMapCenter()} disabled={locationCameraRedacted}>Copy center</button>
-                </div>
-                <details className="explorer-secondary"><summary>Coordinates, gestures &amp; analysis area</summary><div className="explorer-secondary-body">
-                <dl className="map-camera-facts">
-                  <div><dt>Center</dt><dd>{locationCameraRedacted ? "Private camera · redacted" : `${formatCoordinate(view.center[1], "N", "S")} · ${formatCoordinate(view.center[0], "E", "W")}`}</dd></div>
-                  <div><dt>Zoom</dt><dd>{view.zoom.toFixed(2)}</dd></div>
-                  <div><dt>Bearing / pitch</dt><dd>{Math.round(view.bearing)}° / {Math.round(view.pitch)}°</dd></div>
-                  <div><dt>Projection</dt><dd>{projection}</dd></div>
-                </dl>
-                <section className="analysis-area-card" data-active={Boolean(analysisArea)} aria-labelledby="analysis-area-title">
-                  <header><div><span>MAPLIBRE VIEWPORT ANALYSIS</span><h4 id="analysis-area-title">Area of interest</h4></div><strong>{analysisArea ? "LOCKED" : "NOT SET"}</strong></header>
-                  {analysisArea
-                    ? <><dl><div><dt>West / east</dt><dd>{analysisArea.west.toFixed(4)}° / {analysisArea.east.toFixed(4)}°</dd></div><div><dt>South / north</dt><dd>{analysisArea.south.toFixed(4)}° / {analysisArea.north.toFixed(4)}°</dd></div><div><dt>Compatible records</dt><dd>{analysisAreaRecordCount}</dd></div><div><dt>Report scope</dt><dd>{reportScope === "ANALYSIS_AREA" ? "ACTIVE" : "AVAILABLE"}</dd></div></dl><div><button type="button" onClick={captureAnalysisArea}>Update from viewport</button><button type="button" onClick={fitAnalysisArea}>Fit area</button><button type="button" onClick={() => { setReportScope("ANALYSIS_AREA"); setReportGeneratedAt(new Date().toISOString()); openMapUtility("report"); }}>Build area report</button><button type="button" onClick={clearAnalysisArea}>Clear</button></div></>
-                    : <><p>Lock the current viewport as a stable rectangular analysis area. You can pan elsewhere while reports continue using the locked extent.</p><button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}>Lock current viewport</button></>}
-                  <footer>Released KFM domain registry is empty · viewport geometry is context, not evidence</footer>
-                </section>
-                <div className="map-control-group box-drag-control"><header><strong>Shift-drag action</strong><span>MapLibre box selection</span></header><div className="map-segmented-control"><button type="button" aria-pressed={boxDragMode === "zoom"} onClick={() => { boxDragModeRef.current = "zoom"; setBoxDragMode("zoom"); announce("Shift-drag now zooms to the drawn box"); }}>Zoom to box</button><button type="button" aria-pressed={boxDragMode === "report-area"} onClick={() => { boxDragModeRef.current = "report-area"; setBoxDragMode("report-area"); announce("Shift-drag now locks a browser-local report area"); }}>Capture report area</button></div><p className="map-control-note">Hold Shift and drag on the map. Capture mode converts the box to the locked report scope; it does not select evidence or edit source data.</p></div>
-                <form className="map-coordinate-form" onSubmit={goToCoordinates}>
-                  <header><strong>Go to coordinates</strong><span>Supported Kansas context extent</span></header>
-                  <div>
-                    <label><span>Latitude</span><input type="number" inputMode="decimal" min={SUPPORTED_CONTEXT_BOUNDS.south} max={SUPPORTED_CONTEXT_BOUNDS.north} step="0.00001" value={coordinateLatitude} onChange={(event) => { setCoordinateLatitude(event.target.value); setCoordinateError(""); }} aria-invalid={Boolean(coordinateError)} /></label>
-                    <label><span>Longitude</span><input type="number" inputMode="decimal" min={SUPPORTED_CONTEXT_BOUNDS.west} max={SUPPORTED_CONTEXT_BOUNDS.east} step="0.00001" value={coordinateLongitude} onChange={(event) => { setCoordinateLongitude(event.target.value); setCoordinateError(""); }} aria-invalid={Boolean(coordinateError)} /></label>
-                    <button type="submit">Go to point</button>
-                  </div>
-                  {coordinateError ? <p role="alert">{coordinateError}</p> : <small>Manual coordinates become ordinary shareable camera state. Browser location remains separately redacted.</small>}
-                </form>
-                <div className="map-orientation-controls">
-                  <label><span><strong>Bearing</strong><output>{Math.round(view.bearing)}°</output></span><input type="range" min="-180" max="180" step="1" value={Math.round(view.bearing)} onChange={(event) => mapRef.current?.easeTo({ bearing: Number(event.target.value), duration: 0 })} /></label>
-                  <label><span><strong>Pitch</strong><output>{Math.round(view.pitch)}°</output></span><input type="range" min="0" max="60" step="1" value={Math.round(view.pitch)} onChange={(event) => mapRef.current?.easeTo({ pitch: Number(event.target.value), duration: 0 })} /></label>
-                </div>
-                <div className="map-control-group"><header><strong>Gesture mode</strong><span>One unified map control system</span></header><div className="map-segmented-control"><button type="button" aria-pressed={gestureMode === "cooperative"} onClick={() => setMapGestureMode("cooperative")}>Cooperative</button><button type="button" aria-pressed={gestureMode === "direct"} onClick={() => setMapGestureMode("direct")}>Direct</button></div><p className="map-control-note">Cooperative mode requires a modifier key for wheel zoom and two fingers for touch pan, reducing accidental page trapping. Direct mode gives the map immediate gesture control.</p></div>
-                <aside className="map-utility-boundary" data-tone="privacy"><strong>Location privacy</strong><p>Browser location is used only to move the local camera. While that camera remains location-derived, shared URLs use generalized Kansas defaults plus a redaction marker, receipts and exports use withheld markers, and diagnostics omit coordinates. Fit Kansas clears the private camera.</p></aside>
-                <aside className="map-utility-boundary"><strong>Keyboard alternative</strong><p>Use Inspect for a searchable feature list, Layer Catalog for visibility and opacity, and these controls for camera actions without relying on pointer gestures.</p></aside>
-                </div></details>
-              </section>}
+
 
               {mapUtilityView === "history" && <HistoricalTopoControl map={mapRef.current} styleReady={styleReady} locationPrivate={locationCameraRedacted} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} />}
 
@@ -9901,6 +9934,7 @@ export default function Home() {
                     ["terrain", "Terrain 3D", terrainState === "READY" ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "Loading DEM"],
                     ["globe", "Globe", "Globe projection"],
                   ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
+                  <button type="button" aria-label="Underground recorded layers" aria-pressed={undergroundOpen} onClick={() => { toggleUnderground(); setUndergroundFocusRequest((request) => request + 1); }}><span>↓</span><strong>Underground</strong><small>Recorded logs, cores &amp; aquifers</small></button>
                 </section>
 
                 <SceneEffectsControls readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
@@ -10093,11 +10127,43 @@ export default function Home() {
 
               {mapUtilityView === "measure" && <section id="map-utility-view-measure" role="region" aria-labelledby="map-utility-title" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>MEASURE</span><h3>Browser-local screen measurement</h3><p>Choose a geometry, then click the map to add points. Undo resumes a completed measurement for explicit editing.</p></div>
-                <div className="map-control-group"><header><strong>Draw and measure</strong><span>{measureMode ? "ADDING POINTS" : measurementGeometryMode ? "COMPLETE / PAUSED" : analysisArea ? "RECTANGLE AOI SET" : "IDLE"}</span></header><div className="map-choice-grid map-draw-grid"><button type="button" aria-label="Point" aria-pressed={measurementGeometryMode === "point"} onClick={() => toggleMeasure("point")}><strong>Point</strong><small>One browser-local marker</small></button><button type="button" aria-label="Line" aria-pressed={measurementGeometryMode === "distance"} onClick={() => toggleMeasure("distance")}><strong>Line</strong><small>Distance approximation</small></button><button type="button" aria-label="Polygon" aria-pressed={measurementGeometryMode === "area"} onClick={() => toggleMeasure("area")}><strong>Polygon</strong><small>Area approximation</small></button><button type="button" aria-label="Rectangle" aria-pressed={Boolean(analysisArea)} onClick={captureAnalysisArea} disabled={locationCameraRedacted}><strong>Rectangle</strong><small>Capture current viewport AOI</small></button></div><p className="map-control-note">Point, line, and polygon geometry stays in this browser. Rectangle captures the current viewport or use Shift-drag in report-area mode for a custom box. None is admitted evidence.</p></div>
+                <div className="map-control-group"><header><strong>Draw and measure</strong><span>{measureMode ? "ADDING POINTS" : measurementGeometryMode ? "COMPLETE / PAUSED" : analysisArea ? "RECTANGLE AOI SET" : "IDLE"}</span></header><div className="map-choice-grid map-draw-grid"><button type="button" aria-label="Point" aria-pressed={measurementGeometryMode === "point"} onClick={() => beginMapMeasurement("point")}><strong>Point</strong><small>One browser-local marker</small></button><button type="button" aria-label="Line" aria-pressed={measurementGeometryMode === "distance"} onClick={() => beginMapMeasurement("distance")}><strong>Line</strong><small>Distance approximation</small></button><button type="button" aria-label="Polygon" aria-pressed={measurementGeometryMode === "area"} onClick={() => beginMapMeasurement("area")}><strong>Polygon</strong><small>Area approximation</small></button><button type="button" aria-label="Rectangle" aria-pressed={Boolean(analysisArea)} onClick={captureAnalysisArea} disabled={locationCameraRedacted}><strong>Rectangle</strong><small>Capture current viewport AOI</small></button></div><p className="map-control-note">Point, line, and polygon geometry stays in this browser. Rectangle captures the current viewport or use Shift-drag in report-area mode for a custom box. None is admitted evidence.</p></div>
                 <div className="map-control-group"><header><strong>Units</strong><span>Also updates the MapLibre scale bar</span></header><div className="map-segmented-control"><button type="button" aria-pressed={measureUnit === "imperial"} onClick={() => changeMeasureUnit("imperial")}>Miles / sq mi</button><button type="button" aria-pressed={measureUnit === "metric"} onClick={() => changeMeasureUnit("metric")}>Kilometers / km²</button></div></div>
                 <article className="map-measure-status" aria-live="polite"><span>{measurementGeometryMode?.toUpperCase() ?? "NO MEASUREMENT"}</span><strong>{measurement}</strong><small>{measureMode ? "Click the map to add points." : measurementGeometryMode ? "Finished geometry remains on the map until cleared." : "Select distance or area to begin."}</small></article>
                 <div className="map-utility-actions"><button type="button" onClick={undoMeasurementPoint} disabled={!measurementGeometryMode}>Undo point</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement} disabled={!measurementGeometryMode}>Clear</button></div>
                 <aside className="map-utility-boundary" data-tone="warning"><strong>Screen measurement — not survey, cadastral, legal, or evidence.</strong><p>Results are approximate, browser-local, and excluded from context receipts and public-safe exports.</p></aside>
+                <details className="explorer-secondary"><summary>Coordinates, gestures &amp; analysis area</summary><div className="explorer-secondary-body">
+                <dl className="map-camera-facts">
+                  <div><dt>Center</dt><dd>{locationCameraRedacted ? "Private camera · redacted" : `${formatCoordinate(view.center[1], "N", "S")} · ${formatCoordinate(view.center[0], "E", "W")}`}</dd></div>
+                  <div><dt>Zoom</dt><dd>{view.zoom.toFixed(2)}</dd></div>
+                  <div><dt>Bearing / pitch</dt><dd>{Math.round(view.bearing)}° / {Math.round(view.pitch)}°</dd></div>
+                  <div><dt>Projection</dt><dd>{projection}</dd></div>
+                </dl>
+                <section className="analysis-area-card" data-active={Boolean(analysisArea)} aria-labelledby="analysis-area-title">
+                  <header><div><span>MAPLIBRE VIEWPORT ANALYSIS</span><h4 id="analysis-area-title">Area of interest</h4></div><strong>{analysisArea ? "LOCKED" : "NOT SET"}</strong></header>
+                  {analysisArea
+                    ? <><dl><div><dt>West / east</dt><dd>{analysisArea.west.toFixed(4)}° / {analysisArea.east.toFixed(4)}°</dd></div><div><dt>South / north</dt><dd>{analysisArea.south.toFixed(4)}° / {analysisArea.north.toFixed(4)}°</dd></div><div><dt>Compatible records</dt><dd>{analysisAreaRecordCount}</dd></div><div><dt>Report scope</dt><dd>{reportScope === "ANALYSIS_AREA" ? "ACTIVE" : "AVAILABLE"}</dd></div></dl><div><button type="button" onClick={captureAnalysisArea}>Update from viewport</button><button type="button" onClick={fitAnalysisArea}>Fit area</button><button type="button" onClick={() => { setReportScope("ANALYSIS_AREA"); setReportGeneratedAt(new Date().toISOString()); openMapUtility("report"); }}>Build area report</button><button type="button" onClick={clearAnalysisArea}>Clear</button></div></>
+                    : <><p>Lock the current viewport as a stable rectangular analysis area. You can pan elsewhere while reports continue using the locked extent.</p><button type="button" onClick={captureAnalysisArea} disabled={locationCameraRedacted}>Lock current viewport</button></>}
+                  <footer>Released KFM domain registry is empty · viewport geometry is context, not evidence</footer>
+                </section>
+                <div className="map-control-group box-drag-control"><header><strong>Shift-drag action</strong><span>MapLibre box selection</span></header><div className="map-segmented-control"><button type="button" aria-pressed={boxDragMode === "zoom"} onClick={() => { boxDragModeRef.current = "zoom"; setBoxDragMode("zoom"); announce("Shift-drag now zooms to the drawn box"); }}>Zoom to box</button><button type="button" aria-pressed={boxDragMode === "report-area"} onClick={() => { boxDragModeRef.current = "report-area"; setBoxDragMode("report-area"); announce("Shift-drag now locks a browser-local report area"); }}>Capture report area</button></div><p className="map-control-note">Hold Shift and drag on the map. Capture mode converts the box to the locked report scope; it does not select evidence or edit source data.</p></div>
+                <form className="map-coordinate-form" onSubmit={goToCoordinates}>
+                  <header><strong>Go to coordinates</strong><span>Supported Kansas context extent</span></header>
+                  <div>
+                    <label><span>Latitude</span><input type="number" inputMode="decimal" min={SUPPORTED_CONTEXT_BOUNDS.south} max={SUPPORTED_CONTEXT_BOUNDS.north} step="0.00001" value={coordinateLatitude} onChange={(event) => { setCoordinateLatitude(event.target.value); setCoordinateError(""); }} aria-invalid={Boolean(coordinateError)} /></label>
+                    <label><span>Longitude</span><input type="number" inputMode="decimal" min={SUPPORTED_CONTEXT_BOUNDS.west} max={SUPPORTED_CONTEXT_BOUNDS.east} step="0.00001" value={coordinateLongitude} onChange={(event) => { setCoordinateLongitude(event.target.value); setCoordinateError(""); }} aria-invalid={Boolean(coordinateError)} /></label>
+                    <button type="submit">Go to point</button>
+                  </div>
+                  {coordinateError ? <p role="alert">{coordinateError}</p> : <small>Manual coordinates become ordinary shareable camera state. Browser location remains separately redacted.</small>}
+                </form>
+                <div className="map-orientation-controls">
+                  <label><span><strong>Bearing</strong><output>{Math.round(view.bearing)}°</output></span><input type="range" min="-180" max="180" step="1" value={Math.round(view.bearing)} onChange={(event) => mapRef.current?.easeTo({ bearing: Number(event.target.value), duration: 0 })} /></label>
+                  <label><span><strong>Pitch</strong><output>{Math.round(view.pitch)}°</output></span><input type="range" min="0" max="60" step="1" value={Math.round(view.pitch)} onChange={(event) => mapRef.current?.easeTo({ pitch: Number(event.target.value), duration: 0 })} /></label>
+                </div>
+                <div className="map-control-group"><header><strong>Gesture mode</strong><span>One unified map control system</span></header><div className="map-segmented-control"><button type="button" aria-pressed={gestureMode === "cooperative"} onClick={() => setMapGestureMode("cooperative")}>Cooperative</button><button type="button" aria-pressed={gestureMode === "direct"} onClick={() => setMapGestureMode("direct")}>Direct</button></div><p className="map-control-note">Cooperative mode requires a modifier key for wheel zoom and two fingers for touch pan, reducing accidental page trapping. Direct mode gives the map immediate gesture control.</p></div>
+                <aside className="map-utility-boundary" data-tone="privacy"><strong>Location privacy</strong><p>Browser location is used only to move the local camera. While that camera remains location-derived, shared URLs use generalized Kansas defaults plus a redaction marker, receipts and exports use withheld markers, and diagnostics omit coordinates. Fit Kansas clears the private camera.</p></aside>
+                <aside className="map-utility-boundary"><strong>Keyboard alternative</strong><p>Use Inspect for a searchable feature list, Layer Catalog for visibility and opacity, and these controls for camera actions without relying on pointer gestures.</p></aside>
+                </div></details>
               </section>}
 
               {mapUtilityView === "export" && <section id="map-utility-view-export" role="region" aria-labelledby="map-utility-title" className="map-utility-section export-review-section">

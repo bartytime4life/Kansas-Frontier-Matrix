@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import json
+import os
 import socket
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -101,3 +103,60 @@ def test_cli_machine_json_and_failure_status(source: Path, capsys) -> None:
     (source / "pyproject.toml").unlink()
     assert doctor.main(["--repo-root", str(source)]) == 1
     assert json.loads(capsys.readouterr().out)["outcome"] == "FAIL"
+
+
+def test_water_runtime_rejects_repository_namespace_directories(source: Path, tmp_path: Path) -> None:
+    for name in ("catalog", "release"):
+        (tmp_path / name).mkdir()
+    env = {**os.environ, "PYTHONPATH": str(tmp_path)}
+    env.pop("KFM_RELEASE_STORE", None)
+    result = subprocess.run(
+        [sys.executable, "-S", str(Path(doctor.__file__).resolve()),
+         "--repo-root", str(source), "--water-runtime"],
+        cwd=tmp_path, env=env, capture_output=True, text=True, check=False,
+    )
+    assert result.returncode == 1, result.stderr
+    report = json.loads(result.stdout)
+    checks = {item["name"]: item for item in report["water_runtime"]["dependencies"]}
+    assert checks["catalog"]["status"] == "FAIL"
+    assert checks["release"]["status"] == "FAIL"
+    assert checks["catalog"]["module"] == "catalog.core"
+    assert checks["release"]["module"] == "release.local_store"
+    assert report["water_runtime"]["dependency_compatibility"] == "NOT_CHECKED"
+    assert report["water_runtime"]["release_store"] == "NOT_CONFIGURED"
+
+
+def test_module_discovery_does_not_execute_package_or_module(tmp_path: Path, monkeypatch) -> None:
+    package = tmp_path / "doctor_probe_fixture"
+    package.mkdir()
+    (package / "__init__.py").write_text("raise AssertionError('package executed')\n")
+    (package / "runtime.py").write_text("raise AssertionError('module executed')\n")
+    monkeypatch.syspath_prepend(str(tmp_path))
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("unexpected side effect")
+
+    monkeypatch.setattr(socket, "socket", forbidden)
+    monkeypatch.setattr(subprocess, "Popen", forbidden)
+    monkeypatch.setattr(Path, "write_text", forbidden)
+    monkeypatch.setattr(Path, "write_bytes", forbidden)
+    assert doctor.module_present("doctor_probe_fixture.runtime") is True
+    assert doctor.module_present("doctor_probe_fixture.missing") is False
+    assert doctor.module_present("doctor_probe_fixture.runtime.child") is False
+    assert "doctor_probe_fixture" not in sys.modules
+    assert "doctor_probe_fixture.runtime" not in sys.modules
+
+
+def test_namespace_cannot_substitute_for_implementation_module(tmp_path: Path, monkeypatch) -> None:
+    (tmp_path / "doctor_namespace_fixture" / "runtime").mkdir(parents=True)
+    monkeypatch.syspath_prepend(str(tmp_path))
+    assert doctor.module_present("doctor_namespace_fixture.runtime") is False
+
+
+@pytest.mark.parametrize("error", [ImportError, KeyError, OSError, ValueError])
+def test_module_discovery_fails_closed_on_lookup_error(monkeypatch, error) -> None:
+    def unavailable(*args, **kwargs):
+        raise error("unavailable")
+
+    monkeypatch.setattr(doctor, "find_spec", unavailable)
+    assert doctor.module_present("doctor_probe_fixture.runtime") is False

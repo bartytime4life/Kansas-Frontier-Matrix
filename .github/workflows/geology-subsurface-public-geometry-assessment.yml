@@ -3,6 +3,18 @@ name: geology-subsurface-public-geometry-assessment
 "on":
   pull_request:
     paths:
+      - "apps/site/source/public/**"
+      - "apps/site/source/scripts/prepare-subsurface.py"
+      - "apps/site/source/scripts/validate-subsurface-public.mjs"
+      - "apps/site/source/scripts/build-verified.sh"
+      - "apps/site/source/vite.config.ts"
+      - "apps/site/source/package.json"
+      - "apps/site/source/scripts/serve-local-worker.mjs"
+      - "apps/site/serve-local.sh"
+      - "apps/site/source/app/underground-panel.tsx"
+      - "apps/site/source/app/subsurface-worker.ts"
+      - "apps/site/source/tests/subsurface-assets.test.mjs"
+      - "apps/site/source/tests/subsurface-worker.test.mjs"
       - ".github/workflows/geology-subsurface-public-geometry-assessment.yml"
       - "contracts/domains/geology/subsurface_public_geometry_assessment.md"
       - "schemas/contracts/v1/domains/geology/subsurface_public_geometry_assessment.schema.json"
@@ -15,6 +27,18 @@ name: geology-subsurface-public-geometry-assessment
   push:
     branches: [main]
     paths:
+      - "apps/site/source/public/**"
+      - "apps/site/source/scripts/prepare-subsurface.py"
+      - "apps/site/source/scripts/validate-subsurface-public.mjs"
+      - "apps/site/source/scripts/build-verified.sh"
+      - "apps/site/source/vite.config.ts"
+      - "apps/site/source/package.json"
+      - "apps/site/source/scripts/serve-local-worker.mjs"
+      - "apps/site/serve-local.sh"
+      - "apps/site/source/app/underground-panel.tsx"
+      - "apps/site/source/app/subsurface-worker.ts"
+      - "apps/site/source/tests/subsurface-assets.test.mjs"
+      - "apps/site/source/tests/subsurface-worker.test.mjs"
       - ".github/workflows/geology-subsurface-public-geometry-assessment.yml"
       - "contracts/domains/geology/subsurface_public_geometry_assessment.md"
       - "schemas/contracts/v1/domains/geology/subsurface_public_geometry_assessment.schema.json"
@@ -51,6 +75,11 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
+      - name: Set up Site asset-check Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -65,10 +94,13 @@ jobs:
           python -m py_compile tools/validators/validate_geology_subsurface_public_geometry_assessment.py tests/validators/domains/geology/test_validate_geology_subsurface_public_geometry_assessment.py
           python -m unittest tests.validators.domains.geology.test_validate_geology_subsurface_public_geometry_assessment --verbose
           python tools/validators/validate_geology_subsurface_public_geometry_assessment.py --fixtures
-      - name: Validate generated authoring receipt
+          python tools/validators/validate_geology_subsurface_public_geometry_assessment.py --site-public
+          cd apps/site/source
+          node --test tests/subsurface-assets.test.mjs
+      - name: Replay immutable original authoring receipt (not current containment)
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-geology-subsurface-public-geometry-assessment-20260814.json --repo-root .
+          python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-geology-subsurface-public-geometry-assessment-20260814.json --repo-root . --artifact-git-ref c52ceb2dcc028dd35da266f2c7702ca6fa108e44
       - name: Record authority boundary
         if: always()
         run: |
@@ -76,6 +108,6 @@ jobs:
             echo "### GeologySubsurfacePublicGeometryAssessmentCandidate"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: synthetic declaration coherence for BoreholeReference and WellLogReference internal/public geometry separation, transform closure, rights/sensitivity state, datum/depth posture, and anti-collapse assertions."
-            echo "- Boundary: no coordinates, protected payloads, source contact or activation, transform execution, policy decision, authenticated review, lifecycle mutation, release, deployment, publication, or public-use authority."
+            echo "- Scope: synthetic declaration coherence plus current Site static subsurface containment and generator storage denial."
+            echo "- Boundary: real static JSON/gzip is inspected without exposing payloads; no source contact or activation, transform execution, policy decision, authenticated review, release, deployment, publication, or public-use authority."
           } >> "$GITHUB_STEP_SUMMARY"

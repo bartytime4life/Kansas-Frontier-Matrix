@@ -83,6 +83,31 @@ prepare a replacement bound to the active package (`prepare ...
 --rollback-target sha256:ACTIVE`), then `decide`, `stage` and `activate
 --expected-active sha256:ACTIVE`.
 
+## Hosted release on the Site
+
+The Site's earthquake routes accept only earthquake packages and decisions, and
+use the Site's existing owner list and staging token (`KFM_WATER_WORKER_TOKEN`);
+no new Site setting is needed. Apply the additive D1 migration
+`apps/site/source/drizzle/0009_governed_earthquakes.sql` with the Site version
+that carries the earthquake routes.
+
+```bash
+export KFM_WATER_WORKER_TOKEN=...          # the Site's staging token
+# Capture the year's twelve ComCat months, package, decide and stage on the Site.
+# The rollback target is read from the Site first, so a replacement binds to what is active.
+.venv/bin/python tools/release/earthquake_release.py cycle --root $ROOT --year 2025 --owner @bartytime4life \
+  --site-url https://YOUR-SITE
+```
+
+`cycle` never activates. It prints the decision path and the release page URL.
+Open `/governed/earthquakes-release`, paste the decision file and press
+**Activate package**. **Withdraw active package** stops the layer at once.
+`stage-hosted --package-id` uploads an already prepared package instead, after
+the same capture and reproducibility checks as `decide`. Run `cycle` again
+before the decision expires (default 7 days); the release page warns two days
+ahead. Running it again also picks up ComCat's revisions, which continue for
+weeks to months after an earthquake.
+
 ## Validation
 
 All offline: `tests/domains/hazards/test_earthquake_candidate.py` (capture and
@@ -90,4 +115,8 @@ candidate), `tests/tools/test_earthquake_pilot.py` (private store),
 `tests/tools/test_earthquake_release.py` (package, month bundles, gate,
 decision, capture binding and family isolation) and
 `tests/tools/test_earthquake_serving.py` (stage, activate and loopback
-`/v1/earthquakes/*`). The domain-hazards CI lane runs them.
+`/v1/earthquakes/*`), `tests/tools/test_earthquake_hosted.py` (hosted staging
+and `cycle`), and the Site's `tests/governed-earthquakes*.test.mjs` (parser,
+gate, Python parity, D1/R2 admin, read route and map control). The
+domain-hazards CI lane runs the Python suites and checks the Site fixtures with
+`tools/fixtures/earthquake_site_fixtures.py`.

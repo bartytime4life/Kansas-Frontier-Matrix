@@ -1,5 +1,5 @@
 // Hosted release steps for the water family (ADR-0044) and, through ReleaseFamily, the weather
-// (ADR-0045), soil (ADR-0046) and storm events (ADR-0047) families. Staging stores a validated package and never activates it; activation needs a
+// (ADR-0045), soil (ADR-0046), storm events (ADR-0047) and earthquake (ADR-0049) families. Staging stores a validated package and never activates it; activation needs a
 // decision that passes the same serving gate as reads. Families never share a table or object prefix.
 import { parseWaterJson, parseWaterPackage, projectWater, object, WATER_PACKAGE_LIMIT } from "./governed-water";
 
@@ -15,7 +15,7 @@ type Projected = { envelope: { outcome: string; reason_code: unknown } };
 type FamilyPackage = { manifest: { package_id: string; rollback_target: string | null } };
 /** One released layer family: its own D1 tables, R2 prefix, package parser and serving projection. */
 export type ReleaseFamily = {
-  name: "water" | "weather" | "soil" | "storm-events"; packages: string; active: string; events: string; prefix: string; limit: number;
+  name: "water" | "weather" | "soil" | "storm-events" | "earthquakes"; packages: string; active: string; events: string; prefix: string; limit: number;
   parse(text: string): Promise<FamilyPackage>;
   project(pkg: FamilyPackage, decision: Record<string, unknown>, view: string, now: string): Promise<Projected>;
 };

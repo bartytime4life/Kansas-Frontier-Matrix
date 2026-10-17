@@ -10,19 +10,19 @@ updated: 2026-06-05
 policy_label: public
 contract_version: "3.0.0"   # pinned per ai-build-operating-contract.md
 related:
-  - docs/domains/habitat/README.md
-  - docs/domains/habitat/SENSITIVITY.md
-  - docs/domains/habitat/SENSITIVITY_AND_GEOPRIVACY.md
-  - docs/domains/habitat/REASON_CODES.md
-  - docs/domains/habitat/PRESERVATION_MATRIX.md
-  - docs/doctrine/policy-aware.md
-  - docs/doctrine/directory-rules.md
-  - policy/README.md
-  - policy/sensitivity/
-  - policy/sensitivity/fauna/
-  - policy/domains/habitat/
-  - schemas/contracts/v1/policy/policy_decision.schema.json
-  - ai-build-operating-contract.md
+  - "docs/domains/habitat/README.md"
+  - "docs/domains/habitat/SENSITIVITY.md"
+  - "docs/domains/habitat/SENSITIVITY_AND_GEOPRIVACY.md"
+  - "docs/domains/habitat/REASON_CODES.md"
+  - "docs/domains/habitat/PRESERVATION_MATRIX.md"
+  - "docs/doctrine/policy-aware.md"
+  - "docs/doctrine/directory-rules.md"
+  - "policy/README.md"
+  - "policy/sensitivity/"
+  - "policy/sensitivity/fauna/"
+  - "policy/domains/habitat/"
+  - "schemas/contracts/v1/policy/policy_decision.schema.json"
+  - "docs/doctrine/ai-build-operating-contract.md"
 tags: [kfm, domain:habitat, sensitivity, policy, index, navigation, deny-by-default, governance]
 notes:
   - "INDEX ONLY. This is a docs-side navigation surface that POINTS INTO policy/. It does NOT contain, restate, or own any allow/deny/restrict/abstain rule. Enforceable rules live under policy/ (Directory Rules §6.5)."
@@ -31,6 +31,14 @@ notes:
   - "policy/ singular is canonical per ADR-0003 (PROPOSED); legacy policies/ is mirror/deprecated."
   - "All policy/ paths are PROPOSED until mounted-repo verification; the policy/ subtree shape is CONFIRMED by Directory Rules §6.5."
   - "CONTRACT_VERSION = \"3.0.0\""
+owning_root: docs/
+responsibility: "Human-readable Habitat Domain — Sensitivity Policy Index guidance in its existing documentation lane; machine policy, source admission and release decisions remain with their owning roots."
+truth_posture: cite-or-abstain
+related_path_corrections:
+  - "ai-build-operating-contract.md -> docs/doctrine/ai-build-operating-contract.md"
+metadata_navigation_checked: 2026-10-15
+metadata_navigation_base: c2f3b6869a3e19ada9dc8a0935e5677c156bdce4
+metadata_navigation_scope: "Structural metadata and local navigation only. Original narrative updated date and owner placeholders are retained; no substantive review, doctrine adoption, source admission or release approval is asserted. proposed_related retains unavailable reference proposals and does not declare graph edges. Replacement identities repair invalid placeholders only; previous values are retained and no registry entry, alias or published identity is reassigned."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -337,7 +345,7 @@ This document is done enough to enter the repository when:
 - `policy/sensitivity/fauna/` — inherited sensitive-occurrence rules *(CONFIRMED home for Fauna; PROPOSED Habitat binding)*.
 - `policy/domains/habitat/` — Habitat-owned policy, if any *(PROPOSED — OQ-HAB-SP-01)*.
 - `schemas/contracts/v1/policy/policy_decision.schema.json` — `PolicyDecision` record schema *(CONFIRMED home / PROPOSED presence)*.
-- [`ai-build-operating-contract.md`](../../../ai-build-operating-contract.md) — §23 sensitive-domain matrix; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
+- [`ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md) — §23 sensitive-domain matrix; canonical operating contract (`CONTRACT_VERSION = "3.0.0"`).
 
 ---
 

@@ -134,6 +134,7 @@ export async function serve(args = process.argv.slice(2)) {
   const server = path.join(siteRoot, "dist/server");
   const client = path.join(siteRoot, "dist/client");
   for (const directory of [client, settings.state, path.join(settings.state, "v3/d1"), path.join(settings.state, "v3/r2")]) checkedPath(directory, true);
+  if (validateSubsurfacePublic(client).length) fail("SUBSURFACE_PUBLICATION_HELD");
   // Do not silently ignore developer secrets that Wrangler dev would load.
   assertNoLocalSecretFiles(siteRoot);
   const configPath = path.join(server, "wrangler.json");
