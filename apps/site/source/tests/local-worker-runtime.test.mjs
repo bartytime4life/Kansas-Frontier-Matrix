@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import { chmodSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { request as httpRequest } from "node:http";
 import { createServer } from "node:net";
 import { fileURLToPath } from "node:url";
@@ -45,6 +45,23 @@ function withDirectory(fn) {
   const directory = mkdtempSync(path.join(realpathSync(tmpdir()), "kfm-runtime-test-"));
   try { fn(directory); } finally { rmSync(directory, { recursive: true, force: true }); }
 }
+
+test("launcher runs static containment before opening runtime or reading private configuration", () => withDirectory((directory) => {
+  const scripts = path.join(directory, "scripts");
+  const assets = path.join(directory, "dist/client/data/subsurface");
+  const state = path.join(directory, "state");
+  for (const folder of [scripts, assets, path.join(state, "v3/d1"), path.join(state, "v3/r2")]) mkdirSync(folder, { recursive: true });
+  for (const name of ["serve-local-worker.mjs", "archive-access.mjs", "validate-subsurface-public.mjs"]) {
+    copyFileSync(new URL(`../scripts/${name}`, import.meta.url), path.join(scripts, name));
+  }
+  // A synthetic forbidden carrier; no source records or operator stores are copied.
+  writeFileSync(path.join(assets, "unreviewed.json"), "{}");
+  const result = spawnSync(process.execPath, [path.join(scripts, "serve-local-worker.mjs"), "--state", state], { encoding: "utf8", timeout: 5000 });
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 1);
+  assert.equal(result.stdout, "");
+  assert.deepEqual(JSON.parse(result.stderr), { event: "local_runtime_failed", reason: "SUBSURFACE_PUBLICATION_HELD" });
+}));
 
 test("direct runtime refuses dotenv and dev-vars configuration without reading secrets", () => withDirectory((directory) => {
   writeFileSync(path.join(directory, "environment-notes.md"), "ordinary documentation");
