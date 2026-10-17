@@ -2,7 +2,7 @@
 import {randomBytes,createHash} from 'node:crypto';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
-import {getHostedAiModel,HOSTED_MODEL,hasRepeatedPhrase} from './hosted-ai.mjs';
+import {getHostedAiModel,HOSTED_MODEL,hasRepeatedPhrase,PUBLIC_AI_JOB_MS} from './hosted-ai.mjs';
 import {validAssistantContext} from './assistant-context.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Vary':'Cookie','Cross-Origin-Resource-Policy':'same-origin'};
 const reply=(body,status=200,extra={})=>Response.json(body,{status,headers:{...headers,...extra}});
@@ -76,7 +76,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      const output=discussion?.text;
      if(!text(output,4096)||hasRepeatedPhrase(output)||/https?:\/\/|www\.|\bkfm:/i.test(output)||localQwenAnswerHasOverPreciseLocation(output))job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
      else{
-      job.result={...envelope('ABSTAIN','UNVERIFIED_AI_DISCUSSION'),interpretation:output,contextLimited:Boolean(discussion.contextTrimmed),outputLimited:Boolean(discussion.outputLimited)};
+      job.result={...envelope('ABSTAIN','UNVERIFIED_AI_DISCUSSION'),interpretation:output,followUpQuestion:'Would you like a deeper explanation, a practical example, or help exploring the relevant map layers?',contextLimited:Boolean(discussion.contextTrimmed),outputLimited:Boolean(discussion.outputLimited)};
       if(session)session.history=[...(session.history??[]).filter(item=>item.contextKey===job.contextKey),{question:job.question,reply:output,contextKey:job.contextKey,at:clock()}].slice(-2);
      }
     }
@@ -110,7 +110,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
     if(session.requests.length>=10)throw new Error('USER_RATE_LIMIT');
     if([...jobs.values()].some(j=>j.owner===digest(guest)&&['preparing','queued','running'].includes(j.state)))throw new Error('USER_BUSY');
     if([...jobs.values()].filter(j=>['preparing','queued','running'].includes(j.state)).length>=3)throw new Error('QUEUE_FULL');
-    const now=clock(),job={id:token(),owner:digest(guest),question:value.question,query,mode,style,depth,state:'preparing',created:now,deadline:now+90000,packet:null,result:null};
+    const now=clock(),job={id:token(),owner:digest(guest),question:value.question,query,mode,style,depth,state:'preparing',created:now,deadline:now+(mode==='explore'?PUBLIC_AI_JOB_MS:90000),packet:null,result:null};
     jobs.set(job.id,job);requests.push(now);session.requests.push(now);
     try{
      const questionScope=value.question+' '+(value.context?JSON.stringify(value.context):'');
@@ -120,13 +120,19 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
       try{
        job.context=await Promise.race([resolveContext(value.context),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('CONTEXT_UNAVAILABLE')),5000);})]);
        if(!job.context||!text(job.context.prompt,2400)||!text(job.context.label,240)||!text(job.context.boundary,240))throw new Error('CONTEXT_UNAVAILABLE');
+       if(job.context.sourceSummary!==undefined&&(!text(job.context.sourceSummary,4096)||isSensitiveQwenQuestion(job.context.sourceSummary)||localQwenAnswerHasOverPreciseLocation(job.context.sourceSummary)))throw new Error('CONTEXT_UNAVAILABLE');
        if(isSensitiveQwenQuestion(job.context.prompt)||localQwenAnswerHasOverPreciseLocation(job.context.prompt))throw new Error('POLICY_WITHHELD');
       }finally{clearTimeout(timer);}
      }
      job.contextKey=job.context?digest({selector:value.context,sourceKey:job.context.key,prompt:job.context.prompt}):'no-context';
      const evidence=sensitive||mode==='explore'?null:await packet(query);
      if(job.state!=='preparing'||clock()>=job.deadline){job.state='expired';return reply({id:job.id},202,extra);}
-     if(!sensitive&&mode==='explore'){job.state='queued';void drain();}
+     if(!sensitive&&mode==='explore'&&value.context?.selection?.kind==='subsurface'){
+      // Only the server resolver may supply the summary. Client fields and
+      // model prose cannot establish source facts or dates.
+      job.state='completed';job.result=job.context?.sourceSummary?{...envelope('ABSTAIN','SOURCE_CONTEXT_ONLY'),sourceSummary:job.context.sourceSummary,followUpQuestion:'Would you like to inspect the original source intervals or compare nearby wells and aquifer ranges?'}:envelope('ABSTAIN','CONTEXT_UNAVAILABLE');job.question='';job.query=null;
+     }
+     else if(!sensitive&&mode==='explore'){job.state='queued';void drain();}
      else if(!evidence){job.state='completed';job.result=envelope(sensitive?'DENY':'ABSTAIN',sensitive?'POLICY_WITHHELD':'NO_RELEASED_EVIDENCE');job.question='';job.query=null;}
      else{
       job.packet=evidence;job.evidenceDigest=digest(evidence);

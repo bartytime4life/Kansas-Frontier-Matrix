@@ -33,7 +33,7 @@ jobs:
           tests/pc-ai.test.mjs tests/pc-ai-http.test.mjs
       - name: Hosted AI route and evidence discovery boundaries
         run: >-
-          node --test tests/assistant-status.test.mjs tests/public-ai.test.mjs
+          node --test tests/assistant-status.test.mjs tests/assistant-context.test.mjs tests/public-ai.test.mjs
           tests/hosted-ai.test.mjs tests/hosted-ai-acceptance.test.mjs
           tests/pc-ai-login-admission.test.mjs tests/public-ai-http.test.mjs
       - name: Zoom detail, source bounds and shared effects controls

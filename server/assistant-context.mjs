@@ -29,7 +29,7 @@ export function createAssistantContextResolver({catalog=()=>null,publicRoot=reso
  };
  return async context=>{
   if(!validAssistantContext(context))fail('INVALID_CONTEXT');
-  const frame='Map year '+context.frame+'; view '+context.view+'. ';
+  const frame='Map display year '+context.frame+' (not a collection or drilling date); view '+context.view+'. ';
   const s=context.selection;
   if(!s)return {key:JSON.stringify(context),prompt:frame+'No record selected. Visible layer IDs: '+context.layers.join(', '),label:'Map view',boundary:'Display context only'};
   if(s.kind==='display')return {key:JSON.stringify(context),prompt:frame+'Unverified browser display snapshot: '+JSON.stringify(s),label:s.title,boundary:'Unverified display snapshot; no released evidence'};
@@ -61,6 +61,18 @@ export function createAssistantContextResolver({catalog=()=>null,publicRoot=reso
   if(!source)fail('CONTEXT_UNAVAILABLE');
   const detail=interval?{top:interval.top,bottom:interval.bottom,unit:r.depthUnit,description:String(interval.description).slice(0,500),interpreted:String(interval.interpreted??'').slice(0,120)}:{totalDepth:r.totalDepth,unit:r.depthUnit,intervalCount:r.intervals.length};
   const prompt=frame+'Public KGS source context, NOT admitted evidence. Record '+r.id+'; '+source.title+'; record time '+r.sourceTime+'; archive edition '+source.sourceTime+'. '+JSON.stringify(detail)+'. '+(r.kind==='core'?'Core inventory range does not prove recovery or continuous rock.':'Original logged description; interpreted codes are interpretations. Unknown gaps remain unknown; no continuous geology.');
-  return {key:JSON.stringify(context)+':'+tile.sha256,prompt,label:r.id,boundary:'KGS public source context; not admitted evidence'};
+  // A small generative model is not qualified to turn inventory dates/ranges
+  // into claims about collection, recovery or surrounding geology. Return a
+  // deterministic source summary instead of generating a factual explanation.
+  const depth=value=>Number.isFinite(value)&&value>=0?String(value):'not supplied';
+  const description=value=>typeof value==='string'?value.replace(/[\x00-\x1f\x7f]/g,' ').slice(0,500):'not supplied';
+  const sourceSummary=[
+   'Source: '+description(source.title)+'. Record: '+r.id+'.',
+   'Map display year: '+context.frame+'. Source record time: '+description(r.sourceTime)+'. Archive edition: '+description(source.sourceTime)+'. These dates do not establish a collection or drilling date.',
+   interval?'Selected recorded interval: '+depth(interval.top)+'–'+depth(interval.bottom)+' '+r.depthUnit+'. Original source description: '+description(interval.description)+'.'+(interval.interpreted?' KGS interpretation: '+description(interval.interpreted)+'.':''):'Recorded '+(r.kind==='core'?'inventory':'log')+' depth: '+depth(r.totalDepth)+' '+r.depthUnit+'. Source intervals: '+r.intervals.length+'.',
+   r.kind==='core'?'Collection/drilling date and recovery are not established by this inventory context. An archived range does not prove continuous rock or surrounding geology.':'A log describes its recorded location. Unknown gaps and surrounding geology remain unknown.',
+   'Source context only, not admitted evidence. Unsupported questions are withheld; this summary does not establish engineering suitability, resource extent or permissions.'
+  ].join(' ');
+  return {key:JSON.stringify(context)+':'+tile.sha256,prompt,sourceSummary,label:r.id,boundary:'KGS public source context; not admitted evidence'};
  };
 }
