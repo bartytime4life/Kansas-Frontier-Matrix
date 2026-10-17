@@ -199,3 +199,19 @@ test('a follow-up adding new detail about the same subject remains available',as
  const next=await f.request('jobs',{...question,question:'Give a practical example.'},first.cookie);
  assert.equal((await f.settle(next.body.id,first.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
 });
+
+test('a full copied prior reply cannot evade withholding by appending new text',async()=>{
+ // Replay the actual 500a0993 Preview text. These are observed model failures,
+ // not accepted source assertions or a live inference qualification.
+ const prior='The display context, which includes the page about KFM and a map of its location on Google Maps, does not provide information about when it was last updated or accessed. The interface guide indicates that KFM is an untrusted data source with no record of access history. Therefore, we cannot determine the date of creation for this specific display.';
+ const appended='As for the core inventory date 2026-09-11, it only provides information about the time at which the core collection took place, but does not indicate how long it lasted. It also does not establish when the core was collected.';
+ const seen=[],outputs=[prior,prior+'\n\n'+appended,'A narrower synthetic discussion with different details.'];
+ const f=fixture(async(q,options)=>{seen.push(options);return {text:outputs.shift()};});
+ const first=await f.request('jobs',question);await f.settle(first.body.id,first.cookie);
+ const second=await f.request('jobs',{...question,question:'That did not answer the date question.'},first.cookie);
+ const result=(await f.settle(second.body.id,first.cookie)).body.result;
+ assert.equal(result.reasonCode,'MODEL_FOLLOWUP_REPEATED');assert.equal(result.outcome,'ABSTAIN');
+ assert.equal(result.interpretation,null);assert.equal(result.answer,null);assert.deepEqual(result.evidenceRefs,[]);
+ const third=await f.request('jobs',question,first.cookie);await f.settle(third.body.id,first.cookie);
+ assert.equal(seen[2].history.length,1);assert.equal(seen[2].history[0].reply,prior);
+});
