@@ -6,7 +6,6 @@ import { createRequire } from "node:module";
 import { homedir, tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { validateSubsurfacePublic } from "./validate-subsurface-public.mjs";
 import { readArchiveAccess } from "./archive-access.mjs";
 
 const siteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");

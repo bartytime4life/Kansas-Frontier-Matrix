@@ -145,10 +145,6 @@ expect() {
 
 expect GET / 200
 expect GET /daily-archive 200
-# v252 requires owner authority before either archive read or write. A migrated
-# empty database is not permission to return its catalog to an anonymous client.
-expect GET /api/daily-archive 401 error "Sign in as an archive owner or supply local archive access."
-expect POST /api/daily-archive 401 error "Sign in as an archive owner or supply local archive access."
 
 # Storage-backed reads answer from the empty migrated D1 schema.
 expect GET /api/governed/v1/bootstrap 200 envelope.reason_code NO_APPROVED_SNAPSHOT

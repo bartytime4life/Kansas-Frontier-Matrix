@@ -1,0 +1,145 @@
+{
+  "receipt_id": "archive-authorization-v252-20261011",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/smoke-local.sh",
+    "apps/site/source/app/api/daily-archive/route.ts",
+    "apps/site/source/app/daily-archive-auth.ts",
+    "apps/site/source/app/daily-archive/workspace.tsx",
+    "apps/site/source/docs/daily-archive.md",
+    "apps/site/source/scripts/archive-access.mjs",
+    "apps/site/source/scripts/capture-daily-archive.mjs",
+    "apps/site/source/scripts/serve-local-worker.mjs",
+    "apps/site/source/tests/archive-access.test.mjs",
+    "apps/site/source/tests/daily-archive-auth.test.mjs",
+    "apps/site/source/tests/daily-archive.test.mjs",
+    "apps/site/source/tests/local-worker-runtime.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/smoke-local.sh": "sha256:0373906179e22dfe4c7677f5415e5dfc840e90fa650a55dc4953ba05e3351b3f",
+    "apps/site/source/app/api/daily-archive/route.ts": "sha256:8b6f1789dc6d2a4459721c812abaccaffa02eadf1af1b44af1f44eb2aa84980c",
+    "apps/site/source/app/daily-archive-auth.ts": "sha256:326092e2bf3e0e90a373f29b5ccbbe7409c43e1bf2ebfa45a6f3eec04f8cf145",
+    "apps/site/source/app/daily-archive/workspace.tsx": "sha256:e0eceff8f07819077679929addbc8772596c7c1e75bbd805fd80682edde4bf14",
+    "apps/site/source/docs/daily-archive.md": "sha256:727a8cb387a3bc2d4a9adc60f48a5e1200dc1c63e17e137c84aeaa66ebb0119c",
+    "apps/site/source/scripts/archive-access.mjs": "sha256:b2ddceb74fea9adb7ada0ad762daea216e7df851c266054a79b58329391bcc53",
+    "apps/site/source/scripts/capture-daily-archive.mjs": "sha256:baf99fba722df2518c561a245582b68881ac0e77a4b10199e0736c7d384104fe",
+    "apps/site/source/scripts/serve-local-worker.mjs": "sha256:e491b0eede767c5d38df366581a05b3ad873ae8589f381eab8c4ea55f2a8346e",
+    "apps/site/source/tests/archive-access.test.mjs": "sha256:8f69c9fefa9cfaa36d89595ddc0be9809e3905f00d07241ff5b59a403def4055",
+    "apps/site/source/tests/daily-archive-auth.test.mjs": "sha256:4babafec4b05448a6822e06557fb5c41b2edce53c152f4de2ed880ba25742b60",
+    "apps/site/source/tests/daily-archive.test.mjs": "sha256:446d702c950ec65b71ba6bfd9c3165fd726262f1c751913d454cb46459328357",
+    "apps/site/source/tests/local-worker-runtime.test.mjs": "sha256:7fd0644a6260bb97ff12ebf5e8b473060c46544f29df49cefc0f69db232bdf02"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "session-version-unreported"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "repository inspection",
+      "focused execution",
+      "read-only independent review",
+      "GitHub connector"
+    ],
+    "base_revision": "d11758864b3296c6eecfd5836a8aabe0e1ea0c7b"
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github:d11758864b3296c6eecfd5836a8aabe0e1ea0c7b",
+      "sites:appgprj_6aa0b1c41bc08191bfd86003920f1631:version252",
+      "sites-source:190d16acb2f866cb9c2eb108dbd204ca30465269",
+      "deployment:appgdep_6acc55fe0bb08191b36cbde3d61c1986"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/smoke-local.sh": "PROPOSED",
+    "apps/site/source/app/api/daily-archive/route.ts": "PROPOSED",
+    "apps/site/source/app/daily-archive-auth.ts": "PROPOSED",
+    "apps/site/source/app/daily-archive/workspace.tsx": "PROPOSED",
+    "apps/site/source/docs/daily-archive.md": "PROPOSED",
+    "apps/site/source/scripts/archive-access.mjs": "PROPOSED",
+    "apps/site/source/scripts/capture-daily-archive.mjs": "PROPOSED",
+    "apps/site/source/scripts/serve-local-worker.mjs": "PROPOSED",
+    "apps/site/source/tests/archive-access.test.mjs": "PROPOSED",
+    "apps/site/source/tests/daily-archive-auth.test.mjs": "PROPOSED",
+    "apps/site/source/tests/daily-archive.test.mjs": "PROPOSED",
+    "apps/site/source/tests/local-worker-runtime.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Site production build",
+      "outcome": "PASS",
+      "reason": "Same lockfile dependencies, disposable repository copy; macOS timeout adapter only."
+    },
+    {
+      "gate": "TypeScript noEmit",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Site ESLint",
+      "outcome": "PASS",
+      "reason": "0 errors, 66 existing warnings outside changed paths."
+    },
+    {
+      "gate": "Site Node suite",
+      "outcome": "PASS",
+      "reason": "1168 passed, 0 failed, 3 platform/operator skips."
+    },
+    {
+      "gate": "Built local archive HTTP and held-byte storage regression tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Version252 deployment and credential scope",
+      "outcome": "PASS",
+      "reason": "Environment revision6; owner-private; worker/service access denied owner operations; sanitized status200."
+    },
+    {
+      "gate": "Approved live capture and historical readback",
+      "outcome": "PASS",
+      "reason": "9 captures stored/readback verified; 3 partial source coverage; 21 earlier receipts unchanged."
+    },
+    {
+      "gate": "Independent read-only candidate review",
+      "outcome": "PASS",
+      "reason": "No concrete source-backed bypass or regression found."
+    },
+    {
+      "gate": "Linux shell smoke/startup checks",
+      "outcome": "SKIPPED",
+      "reason": "2 startup cases passed; 1 readiness case requires /usr/bin/setsid, unavailable on macOS. Exact-head Ubuntu CI remains pending."
+    },
+    {
+      "gate": "Human review and merge",
+      "outcome": "SKIPPED",
+      "reason": "Draft only; approval and merge not authorized."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "same-site-source",
+      "validated": true,
+      "evidence_ref": "Sites source 190d16acb2f866cb9c2eb108dbd204ca30465269; changed implementation/docs/tests are byte-identical to deployed source."
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-12T03:54:24Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded port of the already deployed same-Site archive patch. No prompts, tokens, restricted payloads, private review notes, or location records are included. Existing storage, migration history, providers and unrelated source changes remain intact. Receipt is provenance, not authority or approval. Site version252 evidence applies to hosted source; current-main mirror source was separately tested. Repository-scan finding remains New; opening a draft does not imply merge or closure."
+}
