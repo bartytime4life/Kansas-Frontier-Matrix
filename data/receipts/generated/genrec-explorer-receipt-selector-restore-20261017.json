@@ -1,0 +1,91 @@
+{
+  "receipt_id": "explorer-receipt-selector-restore-20261017",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/qa/site_mirror.py",
+    "apps/site/verification-runtime-mirror-20261017.md"
+  ],
+  "artifact_hashes": {
+    "tools/qa/site_mirror.py": "sha256:7d27db66692baaa2b7eaae5afab6fc8c9499caf163a8d3f6433801c81e5b48a9",
+    "apps/site/verification-runtime-mirror-20261017.md": "sha256:98912d00e7e1066248cb73f0c2708121f524d892f35ecaf1c014ba5c9d14b574"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Runtime snapshot not exposed"
+  },
+  "prompt_or_contract": "sha256:d1ae488a98a78b40a8a0688b720b098f0aa12ce0df186800978d1fdab63fb4d1",
+  "parameters": {
+    "tools_enabled": [
+      "local filesystem",
+      "isolated Python 3.12 tests",
+      "GitHub CLI"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@1f92e4ff2340cca4115a2d20ffbf3233aaf2694b",
+      "PR #5222 head 02db0d2792620171384a633f53a11217ff00d32f",
+      "PR #5223 head 17d198550f1bd9e2b63f9325fc9073ce18533dcf",
+      "data/receipts/generated/site-v268-current-main-runtime-reconciliation-20261017.json"
+    ],
+    "evidence_hashes": [
+      "sha256:a60596f57eb0fb26e14fddd6d2041f2d448e2dd3bdc74ab7ce9b83df90ff4abc"
+    ],
+    "attached_docs": [
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    ]
+  },
+  "truth_labels": {
+    "tools/qa/site_mirror.py": "PROPOSED",
+    "apps/site/verification-runtime-mirror-20261017.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "water conformance",
+      "outcome": "PASS",
+      "reason": "339 tests passed using hash-locked dependencies in an isolated Python 3.12 environment."
+    },
+    {
+      "gate": "synthetic fixture regeneration",
+      "outcome": "PASS",
+      "reason": "Eight isolated outputs; reviewed fixtures not overwritten."
+    },
+    {
+      "gate": "recorded mirror parity",
+      "outcome": "PASS",
+      "reason": "874 paths; 258 withheld paths absent; review remains pending and hosted equivalence false."
+    },
+    {
+      "gate": "staged repository topology",
+      "outcome": "PASS",
+      "reason": "Contract, 92 topology tests, 29 correction-register tests and diagnostics passed; zero invariants/new drift and 93 unchanged baseline warnings."
+    },
+    {
+      "gate": "exact-head and merged-main CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending publication; final PR/run identities are authoritative."
+    },
+    {
+      "gate": "deployment and data activation",
+      "outcome": "SKIPPED",
+      "reason": "Neither is part of this repository selector repair."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "merged-result",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/1f92e4ff2340cca4115a2d20ffbf3233aaf2694b"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-17T15:33:39.573001+00:00",
+  "emitter": "Codex /root",
+  "notes": "One-line selector restoration. Both predecessor receipts, containment/provenance regressions, source digests, withholding, review gates and topology baseline are unchanged. User authorized merge conditional on final checks; this receipt does not itself record approval or publication authority."
+}
