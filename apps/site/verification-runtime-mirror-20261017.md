@@ -74,3 +74,73 @@ this repository repair. Other working copies and private stores are preserved.
 The launcher and adjacent regression remain in `apps/site/source`; repository parity selection remains in `tools/qa`, with its tests in `tests/qa`. The dated manifest and generated provenance receipt remain under `data/receipts/generated`. This record follows the existing `apps/site/verification-*.md` lane. Directory Rules v2 and accepted ADR-0029 retain these established ownership boundaries.
 
 Restore the previous receipt selector to roll back reconciliation; it will correctly report the current repository drift again. Revert the launcher/test change only with a replacement forward fix because the missing import prevents startup. Neither rollback requires a deployment or data migration. Review, merge, source activation and deployment remain separate actions.
+
+
+## Forward lineage correction after both PRs merged — October 17, 2026
+
+CONFIRMED against `main@12bfe5e9da7b46e06379c574d6db194d940e40ff`:
+#5222 merged at `da5bc7b0ae14a9383efec17f9c9dfb0e9c4039eb`; #5223's
+final head was `17d198550f1bd9e2b63f9325fc9073ce18533dcf` and merged at
+`1f92e4ff2340cca4115a2d20ffbf3233aaf2694b`. #5225 and #5226 restored the
+receipt selector. No original candidate remains open to consolidate or retire.
+The earlier comparison in this record describes a historical head, not the final
+#5222 implementation. The GitHub review threads were resolved by the owner;
+resolution does not itself prove that the provenance discrepancy was corrected.
+
+The selected current-main receipt still named the a11y receipt as its predecessor.
+Its actual parent had already selected the local-port receipt from #5222. Comparing
+those inventories shows exactly one changed mirror path:
+`tests/local-worker-runtime.test.mjs`. The other 24 paths in #5223's historical
+reconciliation were already recorded by #5222, and the launcher import was already
+restored. #5222's automated review examined `164f8d1`, not final head `02db0d2`;
+#5223's automated reviews examined final head `17d1985`. Neither original PR has a
+submitted GitHub approval in this readback. This report supplies no retroactive
+merge authorization.
+
+The [successor receipt](../../data/receipts/generated/site-v268-consolidated-runtime-lineage-20261017.json)
+preserves the base-selected runtime receipt as its immediate predecessor, bound by
+SHA-256. Its explicit historical correction also binds the local-port receipt and
+records the true #5223 delta. All historical receipts and generated receipts remain
+byte-for-byte intact. Twenty-four per-path provenance notes are restored from
+#5222; the successor's own application delta is empty. Its full manifest repeats
+the established format because the parity checker consumes a complete inventory,
+not a patch. This preserves compatibility without a second receipt mechanism.
+
+All 874 mirror paths and hashes, 46 overlays, source identities, canonical mappings,
+258 withheld paths, review restrictions and safety regressions remain unchanged.
+Content parity is `CONTENT_PARITY_ONLY`; source/overlay review is pending, human
+acceptance is false and hosted equivalence is false. This correction changes no
+application, source, storage, publication or activation state.
+
+Local verification for this successor: 40 mirror regressions passed; the filtered Node test
+could not load because this clean checkout lacks generated
+`dist/server/wrangler.json`. A direct containment probe was also blocked by the
+local sandbox (`spawnSync EPERM`) before its child process ran. Neither attempt
+is claimed as passing. Exact-head Linux CI must run the existing containment
+regression and full runtime smoke. The new regression distinguishes the actual
+parent's one-path delta from the preserved historical 25-path comparison and checks
+both predecessor hashes. Exact-head hosted water, Explorer and validator results
+belong in the follow-up PR's checks and description; they are not inherited from
+prior heads. No full local Explorer build or full repository test run is claimed.
+
+Placement uses Directory Rules v2, adopted by ADR-0029: §10.1 keeps repository QA
+under `tools/`; §11.2–11.3 keeps durable provenance in `data/receipts/`; §9.1 keeps
+human guidance in its established lane. The supplied Directory Rules PDF §4 and
+§5 likewise route by responsibility. This existing application verification record
+stays in the established `apps/site/verification-*.md` lane. ADR-0048 continues to
+resolve the single selected mirror manifest. No roots or authority homes change.
+
+Rollback this forward correction as one commit to restore the base-selected
+`site-v268-current-main-runtime-reconciliation-20261017.json`. That retains the
+same runtime bytes and safety regression while restoring the historical provenance
+discrepancy. The earlier local-port/a11y receipts are historical evidence nodes,
+not this correction's immediate rollback target. Human review, owner merge
+authorization, Site publication and source activation remain separate and pending.
+
+
+The broader local water command completed with 338 passed and two failed. Both
+failures stop at loopback socket creation with `PermissionError: Operation not
+permitted` in this sandbox. Initial collection attempts also lacked checkout-local
+package imports; the completed run used the existing `packages/*/src` directories
+and governed API source explicitly. No passing full local water run is claimed;
+the exact-head Linux workflow must resolve these environmental limitations.

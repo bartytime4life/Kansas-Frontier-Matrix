@@ -8,10 +8,6 @@ import json
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-# Bind exactly one receipt: tests and the ADR-0048 topology exemption read this
-# line. On a merge conflict keep the successor matching the merged Site bytes
-# (`--diagnose` RECORDED_BYTES_MATCH); deleting it broke main after #5088 and #5223.
-RECEIPT =ROOT / "data/receipts/generated/site-v268-current-main-runtime-reconciliation-20261017.json"
 DESTINATION = ROOT / "apps/site/source"
 
 
