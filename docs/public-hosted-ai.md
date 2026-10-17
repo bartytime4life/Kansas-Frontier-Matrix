@@ -248,3 +248,17 @@ logged or returned by this diagnostic. The existing model, resource limits,
 private files and no-automatic-retry behavior are unchanged. This diagnostic
 is not proof that a hosted model has recovered; preview inference must pass
 before publication.
+
+### Continuation is conditional, not guaranteed completion
+
+Final preview testing found that the 360M model could repeat an earlier reply
+and reach its resource limit again instead of completing it. Larger budgets
+therefore do not establish complete answers. An explicit continuation whose
+four-word phrases mostly repeat its previous reply (at least 75%, with both
+replies at least 24 words) is withheld with `MODEL_CONTINUATION_REPEATED` and a
+narrower-question/source-record suggestion. It is not appended as useful history
+and does not offer another automatic continuation. New detail sharing ordinary
+subject words remains eligible. This heuristic does not prove answer quality,
+completion or accuracy. Model replacement or runtime changes require separate
+qualification; this patch changes neither. Publication remains held pending the
+actual acceptance outcome and the unchanged dependency-audit disposition.
