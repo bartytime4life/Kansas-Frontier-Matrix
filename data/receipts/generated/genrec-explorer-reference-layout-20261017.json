@@ -1,0 +1,109 @@
+{
+  "receipt_id": "genrec-explorer-reference-layout-20261017",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/inspection-panel.css",
+    "apps/site/source/app/page.tsx",
+    "apps/site/verification-reference-layout-20261017.md",
+    "data/receipts/generated/site-v268-explorer-reference-layout-20261017.json",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/inspection-panel.css": "sha256:dda5fed46f0efdd28c3f880fc78c54254778ae6152f5248ca2259f2d89c4c9ea",
+    "apps/site/source/app/page.tsx": "sha256:c9f458aa45a4e749b2f91b952eab0e4ccc9dbd6aac1f66a1ec28ff746858b03a",
+    "apps/site/verification-reference-layout-20261017.md": "sha256:4de34033321afbf98bce20a0e2b3000897e7bdc0abd488cf778cb1161a39e201",
+    "data/receipts/generated/site-v268-explorer-reference-layout-20261017.json": "sha256:1399b86c46f3f89e585774db1fc3a72d4bdc0fa7a232d90ec4ff2b38ac9602d3",
+    "tests/qa/test_site_mirror.py": "sha256:ab6450d29f04e271c5f9b39aad141149fbab299498e45fe0cb3a9cd9204b0243",
+    "tools/qa/site_mirror.py": "sha256:2362c5c7634281a9fb307dbbb5961e31185076580fba9304fe999a37b26f24eb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Runtime snapshot not exposed"
+  },
+  "prompt_or_contract": "sha256:85252fd3533872328c529ae24f419a807233fbcecd4d17573290d493817516ee",
+  "parameters": {
+    "tools_enabled": [
+      "local filesystem",
+      "local regression tests",
+      "GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@e0f43304894eecd663bf3c1b9a231b8ac3e02124",
+      "apps/site/verification-reference-layout-20261017.md",
+      "data/receipts/generated/site-v268-runtime-lineage-attribution-20261017.json"
+    ],
+    "attached_docs": [
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/inspection-panel.css": "CONFIRMED",
+    "apps/site/source/app/page.tsx": "CONFIRMED",
+    "apps/site/verification-reference-layout-20261017.md": "CONFIRMED",
+    "data/receipts/generated/site-v268-explorer-reference-layout-20261017.json": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local production build and static containment",
+      "outcome": "PASS",
+      "reason": "Fresh isolated checkout build completed with containment preserved."
+    },
+    {
+      "gate": "TypeScript",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit exited zero."
+    },
+    {
+      "gate": "targeted layout and interaction tests",
+      "outcome": "PASS",
+      "reason": "63 passed; zero failed or skipped."
+    },
+    {
+      "gate": "mirror regression tests",
+      "outcome": "PASS",
+      "reason": "42 passed, including all historical attribution checks and the two-file layout delta and private-boundary regression."
+    },
+    {
+      "gate": "recorded content parity",
+      "outcome": "PASS",
+      "reason": "874 files, 47 overlays, 258 withheld paths absent; CONTENT_PARITY_ONLY."
+    },
+    {
+      "gate": "visual and interaction verification",
+      "outcome": "PASS",
+      "reason": "Verified local preview with identical application bytes at desktop, compact and phone widths; see dated record."
+    },
+    {
+      "gate": "exact-head hosted CI and human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft publication. Hosted CI and human acceptance remain separate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "layout-verification",
+      "validated": true,
+      "evidence_ref": "apps/site/verification-reference-layout-20261017.md"
+    },
+    {
+      "id": "placement-authority",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-17T16:11:35.159242+00:00",
+  "emitter": "Codex /root",
+  "notes": "Repository-only verified layout follow-up. No deployment, data mutation, source admission, hosted-equivalence or human approval claim."
+}
