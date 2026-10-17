@@ -2,11 +2,11 @@
 doc_id: kfm://doc/focus-modes-state-index
 title: Kansas State-Scale Focus Composition Planning Index
 type: index; focus-mode; geographic-state; composition-scope; compatibility-lane
-version: v1.0
+version: v1.1
 status: draft; repository-grounded; proposed-identity; no-geographic-lane; validation-hold; non-release; non-publication
 owner: "@bartytime4life via CODEOWNERS; state-scope, Focus Mode, domain-profile, sensitivity, evidence, review, release, correction, and rollback authority NEEDS VERIFICATION"
 created: 2026-05-24
-updated: 2026-08-22
+updated: 2026-10-17
 policy_label: public; documentation; focus-mode; geographic-state; composition-scope; cite-or-abstain; fail-closed; compatibility; non-publication
 owning_root: docs/
 responsibility: >-
@@ -94,6 +94,7 @@ related:
 tags: [kfm, focus-mode, state-scale, kansas-state, composition-scope, index, domain-profile, evidence, sensitivity, validation-hold, compatibility, non-publication]
 notes:
   - "v1.0 replaces stale planned-lane and validator-parseable claims with a pinned current-repository inventory."
+  - "v1.1 narrowly refreshes only the validator-registry count against main@2578192eccc3de36c0f92aee0e1f1e6d66ca93bd (registry blob fc3770c28eb99ccfac4fc9eb1a10400fb5e23650): 29 entries, still with no Focus index validator. Every other count remains pinned to the v1.0 snapshot."
   - "The proposed identity kansas-state is retained as ADR-0028 design lineage; this file does not register it or create a geographic lane."
   - "The prior seven source-seed families, eight sensitivity signals, and 13-domain coverage ideas are retained only as PROPOSED or LINEAGE planning context."
   - "The current Focus index validator is county-only and is not registered in the validator orchestrator; it does not parse this file."
@@ -207,7 +208,7 @@ The snapshot below is pinned to
 | Direct geographic state lanes under `docs/focus-mode/state/` | **0** | Direct tree contains no `kansas-state/` directory. |
 | State build-plan templates | **1** | Template presence is design lineage, not an active lane. |
 | State-aware Focus index validators | **0** | Current validator excludes `state`. |
-| Focus index entries in validator registry | **0** | Complete registry contains 20 validators and no Focus index validator. |
+| Focus index entries in validator registry | **0** | Complete registry contains 29 validators (refreshed at `main@2578192ecc`) and no Focus index validator. |
 | Candidate domain IDs in current machine projection | **13** | Projection is `PROPOSED` and `machine_projection_only`. |
 | State coverage dispositions backed by a profile ref/digest | **0 verified** | No accepted profile or state payload was inspected. |
 | State payload schemas at the prior asserted `focus_mode` path | **0** | Exact `schemas/contracts/v1/focus_mode/` path is absent. |
@@ -223,7 +224,7 @@ The snapshot below is pinned to
 | Current singular Focus tree | `docs/focus-mode/` exists and is documented as a compatibility lane. | Repository fact, not final canonical placement. |
 | Current state tree | Geographic planning and system-state doctrine coexist. | Mixed authority; no single state machine or geographic lane may be inferred. |
 | Current validator | County-specific parser and lane checker. | Does not parse this file or validate `state`. |
-| Validator registry | Real deterministic orchestrator registry with 20 entries. | No Focus index validator is registered. |
+| Validator registry | Real deterministic orchestrator registry with 29 entries (refreshed at `main@2578192ecc`). | No Focus index validator is registered. |
 | Domain-lane register | Thirteen proposed domain entries; machine projection only. | Candidate profile basis, not accepted domain-profile authority. |
 | FocusModePayload contract | Proposed, county-oriented semantic contract with stale path assertions. | Does not establish a state payload or machine schema. |
 | This file | Human planning inventory. | No scope, policy, lifecycle, release, or publication authority. |
@@ -514,8 +515,8 @@ validator. Its source establishes that it:
 - does not enumerate `state`;
 - does not parse `STATE_INDEX.md`.
 
-The complete validator registry contains 20 entries and no Focus index
-validator. Aggregate validator execution therefore does not currently admit or
+The complete validator registry contains 29 entries (refreshed at
+`main@2578192ecc`) and no Focus index validator. Aggregate validator execution therefore does not currently admit or
 validate this state row.
 
 ### Current state-template conflict
