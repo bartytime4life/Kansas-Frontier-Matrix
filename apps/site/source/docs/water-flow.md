@@ -1,5 +1,9 @@
 # Flowing water — zoom-adaptive repository candidate
 
+The dated evidence below belongs to the source implementation. For the
+2026-10-17 local comparison and current-main reconciliation, see
+[the local port record](explorer-local-port-20261017.md).
+
 A scene effect that animates rivers and streams in the direction the provider
 says they flow, draped on the terrain in Terrain 3D and drawn flat on 2D,
 tilted and globe maps. Where a USGS stream gauge has a current reading, the
