@@ -2,10 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {componentHarness,findNode,settle} from './component-harness.mjs';
 
-async function workspace(fetch){
+async function workspace(fetch,props={}){
  const polls=[];
- const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:{}}},{fetch,Response,queueMicrotask,setInterval:fn=>{polls.push(fn);return polls.length;},clearInterval:()=>{}});
- const render=()=>{const tree=h.render(h.exports.default,{});h.commit();return tree;};
+ const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:{}}},{fetch,Response,TextEncoder,FormData:class {get(){return null;}},queueMicrotask,setInterval:fn=>{polls.push(fn);return polls.length;},clearInterval:()=>{}});
+ const render=(next=props)=>{const tree=h.render(h.exports.default,next);h.commit();return tree;};
  render();await settle();
  return {h,polls,render};
 }
@@ -74,4 +74,35 @@ test('evidence search fails closed when its capability is missing or the runtime
    tree=render();assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Search').props.disabled,true);
   }finally{h.dispose();}
  }
+});
+
+
+test('selection context is visible without sign-in and changing samples preserves the draft',async()=>{
+ const focus={context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'subsurface',tileId:'tile-160-255',recordId:'core-one',intervalIndex:1}},title:'Synthetic sample one',detail:'10–40 ft · synthetic shale · source context'};
+ const {h,render}=await workspace(async url=>url.includes('/api/pc-ai/')?Response.json({configured:false,account:null}):ready(),{focus});
+ try{
+  let tree=render();assert.match(text(tree),/Synthetic sample one/);assert.match(text(tree),/No login needed/);
+  assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Log in'),undefined);
+  message(tree).props.onChange({target:{value:'Explain this interval.'}});
+  tree=render({focus:{...focus,title:'Synthetic sample two',detail:'20–30 ft · synthetic sand'}});
+  assert.match(text(tree),/Synthetic sample two/);assert.equal(message(tree).props.value,'Explain this interval.');
+  assert.equal(send(tree).props.disabled,false);
+  assert.equal(findNode(tree,node=>node.type==='section'&&node.props['aria-label']==='Account controls'),undefined);
+ }finally{h.dispose();}
+});
+
+test('a submitted question carries the current selected interval without account credentials',async()=>{
+ const focus={context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'subsurface',tileId:'tile-160-255',recordId:'core-one',intervalIndex:1}},title:'Synthetic sample one',detail:'Synthetic shale'};let sent;
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.includes('/api/pc-ai/'))return Response.json({configured:false,account:null});
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST'){sent=JSON.parse(options.body);return Response.json({id:'synthetic-job'});}
+  return Response.json({id:'synthetic-job',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'Synthetic only'}});
+ },{focus});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain this selected interval.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  assert.deepEqual(JSON.parse(JSON.stringify(sent.context)),focus.context);assert.equal(sent.question,'Explain this selected interval.');
+  assert.equal(Object.hasOwn(sent,'password'),false);assert.equal(Object.hasOwn(sent,'role'),false);
+ }finally{h.dispose();}
 });

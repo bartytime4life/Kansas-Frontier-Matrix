@@ -26,7 +26,7 @@ export class HostedAiModel{
   this.worker.once('error',()=>this.stop('MODEL_UNAVAILABLE'));this.worker.once('exit',()=>this.stop('MODEL_UNAVAILABLE'));
  }
  select(question,facts,signal){return this.call('select',{question,facts},signal);}
- discuss(question,{style='plain',depth='brief',history=[]}={},signal){return this.call('discuss',{question,style,depth,history},signal);}
+ discuss(question,{style='plain',depth='brief',history=[],context=''}={},signal){return this.call('discuss',{question,style,depth,history,context},signal);}
  call(kind,payload,signal){
   if(!this.ready||this.stopped)return Promise.reject(error('MODEL_UNAVAILABLE'));
   if(this.pending)return Promise.reject(error('MODEL_BUSY'));

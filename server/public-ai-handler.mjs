@@ -3,6 +3,7 @@ import {randomBytes,createHash} from 'node:crypto';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
 import {getHostedAiModel,HOSTED_MODEL,hasRepeatedPhrase} from './hosted-ai.mjs';
+import {validAssistantContext} from './assistant-context.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Vary':'Cookie','Cross-Origin-Resource-Policy':'same-origin'};
 const reply=(body,status=200,extra={})=>Response.json(body,{status,headers:{...headers,...extra}});
 const envelope=(outcome,reasonCode)=>({outcome,reasonCode,answer:null,evidenceRefs:[],interpretation:null});
@@ -19,14 +20,14 @@ async function body(request){
   const value=JSON.parse(Buffer.concat(chunks).toString());if(!value||typeof value!=='object'||Array.isArray(value))throw new Error('INVALID_REQUEST');return value;
  }finally{clearTimeout(timer);await reader.cancel().catch(()=>{});reader.releaseLock();}
 }
-export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.now}){
+export function createPublicAiHandler({origin,resolveEvidence,resolveContext=async()=>{throw new Error('CONTEXT_UNAVAILABLE');},model,clock=Date.now}){
  const sessions=new Map(),jobs=new Map();let requests=[],draining=false;
  const cookie=request=>(request.headers.get('cookie')??'').split(';').map(x=>x.trim()).find(x=>x.startsWith('__Host-kfm_ai_guest='))?.slice(20)??'';
  const cleanup=()=>{
   const now=clock();requests=requests.filter(t=>t>now-3600000);
   for(const [key,value]of sessions){if(value.created<=now-3600000)sessions.delete(key);else value.history=(value.history??[]).filter(item=>item.at>now-900000);}
   for(const [key,job]of jobs){
-   if(job.deadline<=now&&['preparing','queued','running'].includes(job.state)){job.abort?.abort();job.state='expired';job.packet=null;job.result=null;job.question='';job.query=null;}
+   if(job.deadline<=now&&['preparing','queued','running'].includes(job.state)){job.abort?.abort();job.state='expired';job.packet=null;job.result=null;job.question='';job.query=null;job.context=null;}
    if(job.created<=now-900000){job.abort?.abort();jobs.delete(key);}
   }
  };
@@ -70,13 +71,13 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
    try{
     if(job.mode==='explore'){
      const session=sessions.get(job.owner);
-     const discussion=await model.discuss(job.question,{style:job.style,depth:job.depth,history:(session?.history??[]).map(({question,reply})=>({question,reply}))},job.abort.signal);
+     const discussion=await model.discuss(job.question,{style:job.style,depth:job.depth,context:job.context?.prompt??'',history:(session?.history??[]).filter(item=>item.contextKey===job.contextKey).map(({question,reply})=>({question,reply}))},job.abort.signal);
      if(job.state!=='running'||job.abort.signal.aborted)continue;
      const output=discussion?.text;
      if(!text(output,4096)||hasRepeatedPhrase(output)||/https?:\/\/|www\.|\bkfm:/i.test(output)||localQwenAnswerHasOverPreciseLocation(output))job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
      else{
       job.result={...envelope('ABSTAIN','UNVERIFIED_AI_DISCUSSION'),interpretation:output,contextLimited:Boolean(discussion.contextTrimmed),outputLimited:Boolean(discussion.outputLimited)};
-      if(session)session.history=[...(session.history??[]),{question:job.question,reply:output,at:clock()}].slice(-2);
+      if(session)session.history=[...(session.history??[]).filter(item=>item.contextKey===job.contextKey),{question:job.question,reply:output,contextKey:job.contextKey,at:clock()}].slice(-2);
      }
     }
    }catch(error){if(job.state==='running')job.result=envelope(error.code==='MODEL_CONTEXT_LIMIT'?'ABSTAIN':'ERROR',error.code==='MODEL_CONTEXT_LIMIT'?'MODEL_CONTEXT_LIMIT':'MODEL_UNAVAILABLE');}
@@ -93,7 +94,8 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
   try{
    if(path==='jobs'&&request.method==='POST'){
     const value=await body(request);
-    if(Object.keys(value).some(k=>!['question','term','place','start','end','mode','style','depth'].includes(k))||!text(value.question,4096)||!text(value.term,120))throw new Error('INVALID_REQUEST');
+    if(Object.keys(value).some(k=>!['question','term','place','start','end','mode','style','depth','context'].includes(k))||!text(value.question,4096)||!text(value.term,120))throw new Error('INVALID_REQUEST');
+    if(value.context!==undefined&&!validAssistantContext(value.context))throw new Error('INVALID_REQUEST');
     const mode=value.mode??'evidence',style=value.style??'plain',depth=value.depth??'brief';
     if(!['explore','evidence'].includes(mode)||!['plain','technical'].includes(style)||!['brief','expanded'].includes(depth))throw new Error('INVALID_REQUEST');
     const query={term:value.term,place:value.place??'',start:value.start??'',end:value.end??''};
@@ -111,7 +113,17 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
     const now=clock(),job={id:token(),owner:digest(guest),question:value.question,query,mode,style,depth,state:'preparing',created:now,deadline:now+90000,packet:null,result:null};
     jobs.set(job.id,job);requests.push(now);session.requests.push(now);
     try{
-     const sensitive=isSensitiveQwenQuestion(value.question)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(value.question);
+     const questionScope=value.question+' '+(value.context?JSON.stringify(value.context):'');
+     const sensitive=isSensitiveQwenQuestion(questionScope)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(questionScope);
+     if(!sensitive&&value.context){
+      let timer;
+      try{
+       job.context=await Promise.race([resolveContext(value.context),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('CONTEXT_UNAVAILABLE')),5000);})]);
+       if(!job.context||!text(job.context.prompt,2400)||!text(job.context.label,240)||!text(job.context.boundary,240))throw new Error('CONTEXT_UNAVAILABLE');
+       if(isSensitiveQwenQuestion(job.context.prompt)||localQwenAnswerHasOverPreciseLocation(job.context.prompt))throw new Error('POLICY_WITHHELD');
+      }finally{clearTimeout(timer);}
+     }
+     job.contextKey=job.context?digest({selector:value.context,sourceKey:job.context.key,prompt:job.context.prompt}):'no-context';
      const evidence=sensitive||mode==='explore'?null:await packet(query);
      if(job.state!=='preparing'||clock()>=job.deadline){job.state='expired';return reply({id:job.id},202,extra);}
      if(!sensitive&&mode==='explore'){job.state='queued';void drain();}
@@ -121,7 +133,7 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
       // Return the opaque job promptly; do not queue discovery behind inference.
       void completeEvidence(job);
      }
-    }catch{job.state='completed';job.result=envelope('ABSTAIN','EVIDENCE_WITHHELD');job.question='';job.packet=null;job.query=null;}
+    }catch(error){if(job.state!=='preparing')return reply({id:job.id},202,extra);const code=['CONTEXT_UNAVAILABLE','CONTEXT_TIME_MISMATCH','POLICY_WITHHELD'].includes(error.message)?error.message:'EVIDENCE_WITHHELD';job.state='completed';job.result=envelope(code==='POLICY_WITHHELD'?'DENY':'ABSTAIN',code);job.question='';job.packet=null;job.query=null;job.context=null;}
     return reply({id:job.id},202,extra);
    }
    const match=/^jobs\/([A-Za-z0-9_-]{43})(\/cancel)?$/.exec(path);
@@ -130,13 +142,13 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
     const job=jobs.get(match[1]);if(!job||job.owner!==digest(guest))return reply({reasonCode:'JOB_NOT_FOUND'},404);
     if(match[2]&&request.method==='POST'){
      const value=await body(request);if(Object.keys(value).length)throw new Error('INVALID_REQUEST');
-     const cancelled=['preparing','queued','running'].includes(job.state);if(cancelled){job.state='cancelled';job.abort?.abort();job.packet=null;job.result=null;}
+     const cancelled=['preparing','queued','running'].includes(job.state);if(cancelled){job.state='cancelled';job.abort?.abort();job.packet=null;job.result=null;job.context=null;job.question='';job.query=null;}
      return reply({cancelled});
     }
     if(!match[2]&&request.method==='GET'){
      let result=job.result;
      if(result?.outcome==='ANSWER'||result?.citations?.length){try{if(!await fresh(job))result=envelope('ABSTAIN','RELEASE_CHANGED');}catch{result=envelope('ABSTAIN','RELEASE_CHANGED');}}
-     return reply({id:job.id,state:job.state,mode:job.mode,deadline:job.deadline,result});
+     return reply({id:job.id,state:job.state,mode:job.mode,deadline:job.deadline,result,context:job.context?{label:job.context.label,boundary:job.context.boundary}:null});
     }
    }
    return reply({reasonCode:'ROUTE_NOT_FOUND'},404);
@@ -147,10 +159,10 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
  };
 }
 let runtime;
-export function publicAiRuntime(resolveEvidence){
+export function publicAiRuntime(resolveEvidence,resolveContext){
  const origin=process.env.KFM_HOSTED_AI_ORIGIN;
  const valid=process.env.KFM_HOSTED_AI==='1'&&['https://kansasfrontiermatrix.com','https://q9r9beo47t.preview.c38.airoapp.ai'].includes(origin);
  if(!valid)return async request=>reply({configured:false,online:false,ready:false,evidenceSearchAvailable:false,requiresLogin:false,reasonCode:'HOSTED_AI_NOT_CONFIGURED'},new URL(request.url).pathname==='/api/ai/status'?200:503);
- if(!runtime)runtime=createPublicAiHandler({origin,resolveEvidence:query=>resolveEvidence(query,origin),model:getHostedAiModel()});
+ if(!runtime)runtime=createPublicAiHandler({origin,resolveEvidence:query=>resolveEvidence(query,origin),resolveContext,model:getHostedAiModel()});
  return runtime;
 }
