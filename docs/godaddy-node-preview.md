@@ -1,5 +1,25 @@
 # GoDaddy Node preview candidate
 
+## Private-workspace holding page · 2026-10-17
+
+Public browser acceptance found `/stewards` redirecting to the unimplemented
+`/signin-with-chatgpt` address and showing a 404. The standalone identity adapter
+intentionally returns no Sites identity; hosted AI administrator accounts do
+not grant private Site access. Anonymous `/data` and `/stewards` now reuse the
+existing explanatory notice instead of sending visitors through that dead
+sign-in path. Local-address wording and the existing separate private Site
+link are retained. The host header chooses wording only. Identity, assignment,
+store availability and API authorization remain authoritative and unchanged.
+
+The built-handler regression failed on the unchanged base with a 307 redirect,
+then passed with the holding page. It checks both hosted pages, retained local
+wording and 401 denial for forged staff headers on submission/water/weather
+administrator APIs. This is a UI repair, not a provisioned sign-in adapter,
+storage connection or private-workspace activation. Existing `app/`, `tests/`
+and `docs/` own the change under Directory Rules and accepted ADR-0029; no new
+root or data authority is created. Rollback is application reversion and
+redeployment, preserving all settings, model files, accounts and private stores.
+
 ## Browser asset staging — 2026-10-17
 
 The final preview initially returned404 for the advertised browser hydration
