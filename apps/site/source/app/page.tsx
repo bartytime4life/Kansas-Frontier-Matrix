@@ -4727,7 +4727,7 @@ export default function Home() {
   }, [announce, clearSelectionState]);
 
   useEffect(() => {
-    const media = window.matchMedia("(max-width: 1100px)");
+    const media = window.matchMedia("(max-width: 960px)");
     const update = () => {
       setIsCompact(media.matches);
       if (media.matches && !compactRef.current) {
@@ -5021,7 +5021,7 @@ export default function Home() {
         setPendingFocusAction(null);
         selectedRef.current = null;
         setSelected(null);
-        setRightOpen(false);
+        setRightOpen(!compactRef.current && !restoringGlobe && !restoredMapUtilityOpen && params.get("drawer") !== "closed");
       }
       explorerRestoredRef.current = true;
       setLayerPreferencesReady(true);

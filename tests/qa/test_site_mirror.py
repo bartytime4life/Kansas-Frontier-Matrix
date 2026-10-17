@@ -113,8 +113,8 @@ def test_historical_consolidation_preserves_its_recorded_lineage_comparison() ->
     assert previous_path.name in receipt["rollback"]["mirror"]
 
 
-def test_selected_attribution_successor_names_the_commit_that_changes_the_test() -> None:
-    receipt = json.loads(TOOL.RECEIPT.read_text())
+def test_historical_attribution_successor_names_the_commit_that_changes_the_test() -> None:
+    receipt = json.loads((ROOT / "data/receipts/generated/site-v268-runtime-lineage-attribution-20261017.json").read_text())
     previous_path = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert previous_path.name == "site-v268-consolidated-runtime-lineage-20261017.json"
     assert hashlib.sha256(previous_path.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
@@ -589,3 +589,36 @@ def test_withheld_private_geometry_cannot_be_reintroduced_as_parity(
         result = TOOL.check()
         assert result["outcome"] == "PASS"
         assert result["withheld_files"] == 1
+
+
+def test_selected_layout_receipt_preserves_unrelated_bytes_and_private_boundaries() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    previous = json.loads(predecessor.read_text())
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
+    assert set(receipt["comparison"]) == set(previous["comparison"])
+    changed = {path for path in receipt["comparison"]
+               if receipt["comparison"][path] != previous["comparison"][path]}
+    assert changed == {"app/page.tsx", "app/inspection-panel.css"}
+    declared = {entry["path"]: entry for entry in receipt["repository_reconciliation"]["changes"]}
+    assert set(declared) == changed
+    for path in changed:
+        entry = receipt["comparison"][path]
+        assert entry["site_sha256"] == previous["comparison"][path]["site_sha256"]
+        assert entry["state"] == "inherited_repository_overlay"
+        assert declared[path]["previous_receipt_sha256"] == previous["comparison"][path]["mirror_sha256"]
+        assert declared[path]["repository_base_sha256"] == declared[path]["previous_receipt_sha256"]
+        assert declared[path]["mirror_sha256"] == entry["mirror_sha256"]
+        assert TOOL.sha((TOOL.DESTINATION / path).read_bytes()) == expected[path]
+    for key in ("site_candidate_commit", "site_project_id", "site_version_id", "site_audience",
+                "authoritative_site_source_paths", "canonical_document_mappings", "canonical_tool_mappings",
+                "overlay", "review", "repository_safety_changes", "historical_lineage_correction"):
+        assert receipt[key] == previous[key], key
+    assert receipt["review"]["human_acceptance"] is False
+    assert receipt["review"]["hosted_equivalence"] is False
+    assert receipt["review"]["source_and_overlay_review"] == "PENDING"
+    assert receipt["counts"]["repository_withheld"] == 258
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    inventory = {path: entry["mirror_sha256"] for path, entry in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert predecessor.name in receipt["rollback"]["mirror"]
