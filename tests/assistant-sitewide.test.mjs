@@ -41,6 +41,7 @@ test('surface, filter and comparison fields are closed and interface guides reso
  for(const surface of ASSISTANT_SURFACES){
   const result=await createAssistantContextResolver()({...base,surface:surface.id});
   assert.match(result.boundary,/guide.*display context/);assert.ok(result.prompt.includes(surface.guide));
+  assert.match(result.prompt,/Map display year 2026 \(not a collection or drilling date\); view Page/);
  }
  for(const extra of [{surface:'stewards'},{filters:{evidence:'ALL',temporalMode:'snapshot',privateNotes:'NO'}},{comparison:{frameA:2026,frameB:Infinity}},{selection:{kind:'knowledge',recordId:'../../private'}}])assert.equal(validAssistantContext({...base,...extra}),false);
  const scoped=await createAssistantContextResolver({layers:ids=>ids.map(id=>'Resolved '+id)})({...base,view:'2D',surface:'map',layers:['one'],filters:{evidence:'ALL',temporalMode:'comparison'},comparison:{frameA:1910,frameB:2026}});

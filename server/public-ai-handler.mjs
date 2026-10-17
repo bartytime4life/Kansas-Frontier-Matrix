@@ -94,7 +94,10 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      if(job.state!=='running'||job.abort.signal.aborted)continue;
      const output=discussion?.text;
      if(!text(output,4096)||hasRepeatedPhrase(output)||/https?:\/\/|www\.|\bkfm:/i.test(output)||localQwenAnswerHasOverPreciseLocation(output))job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
-     else if(job.question==='Continue your previous reply from where it stopped. Finish the explanation without repeating it.'&&repeatsPriorReply(output,history.at(-1)?.reply))job.result={...envelope('ABSTAIN','MODEL_CONTINUATION_REPEATED'),followUpQuestion:'Would you like to ask a narrower question or inspect the original source records?'};
+     else if(repeatsPriorReply(output,history.at(-1)?.reply)){
+      const continuation=job.question==='Continue your previous reply from where it stopped. Finish the explanation without repeating it.';
+      job.result={...envelope('ABSTAIN',continuation?'MODEL_CONTINUATION_REPEATED':'MODEL_FOLLOWUP_REPEATED'),followUpQuestion:continuation?'Would you like to ask a narrower question or inspect the original source records?':'The model repeated the earlier reply. Would you like to ask a narrower question or inspect the original source records?'};
+     }
      else{
       job.result={...envelope('ABSTAIN','UNVERIFIED_AI_DISCUSSION'),interpretation:output,followUpQuestion:'Would you like a deeper explanation, a practical example, or help exploring the relevant map layers?',contextLimited:Boolean(discussion.contextTrimmed),outputLimited:Boolean(discussion.outputLimited)};
       if(session)session.history=[...(session.history??[]).filter(item=>item.contextKey===job.contextKey),{question:job.question,reply:output,contextKey:job.contextKey,at:clock()}].slice(-2);

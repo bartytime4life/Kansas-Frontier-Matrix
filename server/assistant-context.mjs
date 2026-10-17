@@ -36,7 +36,8 @@ export function createAssistantContextResolver({catalog=()=>null,knowledge=()=>n
  return async context=>{
   if(!validAssistantContext(context))fail('INVALID_CONTEXT');
   const surface=assistantSurface(context.surface??'map');
-  const frame=(surface?.id==='map'||['reports','stories'].includes(surface?.id??'')?'Map display year '+context.frame+' (not a collection or drilling date); view '+context.view+'. ':'Page '+surface?.title+'. ')
+  const frame=(surface?.id==='map'||['reports','stories'].includes(surface?.id??'')?'':'Page '+surface?.title+'. ')
+   +'Map display year '+context.frame+' (not a collection or drilling date); view '+context.view+'. '
    +(context.filters?'Display filters '+JSON.stringify(context.filters)+'. ':'')
    +(context.comparison?'Comparison frames '+context.comparison.frameA+' and '+context.comparison.frameB+'; matching observations are not established. ':'');
   const layerNames=layers(context.layers).slice(0,8).join(', ');

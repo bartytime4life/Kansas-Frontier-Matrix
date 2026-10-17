@@ -190,3 +190,17 @@ test('a withheld repeated continuation explains the limit and leaves no enabled 
   assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply'&&node.props.disabled===false),undefined);
  }finally{h.dispose();}
 });
+
+test('a repeated ordinary follow-up explains withholding and offers no duplicate draft or continuation',async()=>{
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST')return Response.json({id:'repeated-followup'});
+  return Response.json({id:'repeated-followup',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'MODEL_FOLLOWUP_REPEATED',answer:null,interpretation:null}});
+ });
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'That did not answer my date question.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});tree=render();await settle();tree=render();
+  assert.match(text(tree),/instead of answering the follow-up/);assert.match(text(tree),/duplicate was withheld/);
+  for(const label of ['Continue reply','Copy draft outline'])assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children===label),undefined);
+ }finally{h.dispose();}
+});

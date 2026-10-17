@@ -1,5 +1,45 @@
 # Public AI workflow continuation · 2026-10-17
 
+## Page time and repeated follow-up repair · 2026-10-17
+
+GoDaddy Preview at `1e5c783f5b62ade5fdbb4159682922968663a7ca`
+completed an About-page date question and an ordinary follow-up, but returned
+near-identical governance boilerplate instead of the requested explanation.
+The page assistant displayed a map year, while the server omitted it from
+unselected public-page prompts. Those prompts now retain the selected display
+year and view, explicitly separate from collection/drilling dates, beside the
+existing page guide. Browser-provided dates remain display context, not source
+observations or evidence. No question text is parsed into source facts.
+
+The existing phrase-overlap check now applies to ordinary same-context
+follow-ups as well as the explicit Continue command. It withholds a reply when
+both replies have at least 24 words and at least 75% of the current four-word
+phrases occur in the immediately preceding reply. `MODEL_FOLLOWUP_REPEATED`
+returns ABSTAIN, no interpretation/answer/EvidenceRefs and no duplicate history;
+the existing continuation code remains compatible. New details and short
+replies are outside this repetition check. Deliberate requests to repeat a long
+reply can also be withheld; the visitor can read the earlier turn. This is a
+repetition heuristic, not a correctness or relevance classifier.
+
+Both regressions fail on the unchanged merged base: missing page time and an
+ordinary repeated reply incorrectly emitted as UNVERIFIED_AI_DISCUSSION. The
+replay fixture uses the two actual observed texts with a fake model; it does
+not prove improved live generation. Keep production acceptance held pending
+new exact-head hosted tests. The first generic answer can still be unhelpful;
+this patch does not qualify the 360M model, replace its private files, change
+budgets, admit sources, enable publication or require another service/PC.
+
+Local verification: 78 direct/in-process checks plus two production built
+Fetch-handler checks passed, with zero failed/skipped; production build,
+TypeScript and changed-file ESLint passed. The existing local TCP-listener
+restriction remains, so real-HTTP/startup acceptance is delegated to exact-head
+CI and the existing GoDaddy Preview. No new-head CI, deployment, improved live
+answer or production acceptance is claimed by these local results.
+
+Existing `server/`, `tests/` and `docs/` retain their responsibilities under the
+previously inspected Directory Rules / ADR-0029 basis. Rollback is code revert
+and redeployment, preserving configuration, model files and private stores.
+
 ## Evidence and scope
 
 CONFIRMED: PR [#5230](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5230)

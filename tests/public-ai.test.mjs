@@ -167,3 +167,35 @@ test('a repeated continuation is withheld without adding duplicate history or of
  const third=await f.request('jobs',{...question,question:'Explain one specific symbol.'},first.cookie);await f.settle(third.body.id,first.cookie);
  assert.equal(seen[2].history.length,1);assert.equal(seen[2].history[0].reply,prior);
 });
+
+test('ordinary follow-ups with repeated hosted boilerplate are withheld and do not pollute history',async()=>{
+ // Replay the two real Preview replies; the fake model proves handler behavior,
+ // not the quality or speed of a new inference on the hosted model.
+ const prior="KFM separates display context, evidence, policy and release. Maps and generated text help interpretation; they do not create authority. The user's map displays are unknown to the system.";
+ const repeated="KFM separates display context, evidence and policy. Maps and generated text help interpretation; they do not create authority. The user's map displays are unknown to the system.";
+ const seen=[],outputs=[prior,repeated,'A narrower synthetic explanation adds different details about the display controls.',prior];
+ const f=fixture(async(q,options)=>{seen.push(options);return {text:outputs.shift()};});
+ const first=await f.request('jobs',{...question,question:'Explain map display year versus source observation date.'});
+ await f.settle(first.body.id,first.cookie);
+ const next=await f.request('jobs',{...question,question:'That did not answer the question. Does a map display year establish a core collection date?'},first.cookie);
+ const result=(await f.settle(next.body.id,first.cookie)).body.result;
+ assert.equal(result.reasonCode,'MODEL_FOLLOWUP_REPEATED');assert.equal(result.outcome,'ABSTAIN');
+ assert.equal(result.interpretation,null);assert.equal(result.answer,null);assert.deepEqual(result.evidenceRefs,[]);
+ assert.equal(result.outputLimited,undefined);assert.match(result.followUpQuestion,/repeated the earlier reply/);
+ const third=await f.request('jobs',{...question,question:'Explain one specific time control.'},first.cookie);await f.settle(third.body.id,first.cookie);
+ assert.equal(seen[2].history.length,1);assert.equal(seen[2].history[0].reply,prior);
+ const other=await f.request('jobs',question);
+ assert.equal((await f.settle(other.body.id,other.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+ assert.equal(seen[3].history.length,0);
+});
+
+test('a follow-up adding new detail about the same subject remains available',async()=>{
+ const outputs=[
+  'A map legend explains the symbols and colors that appear on a map. Read its units and source date before comparing two displays. Missing coverage is unknown and does not prove that a feature is absent.',
+  'For a practical comparison, first choose matching dates. Next examine the provider notes and the numeric interval boundaries. A display animation should retain gaps rather than suggesting an observation where none exists.'
+ ];
+ const f=fixture(async()=>({text:outputs.shift()}));
+ const first=await f.request('jobs',question);await f.settle(first.body.id,first.cookie);
+ const next=await f.request('jobs',{...question,question:'Give a practical example.'},first.cookie);
+ assert.equal((await f.settle(next.body.id,first.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+});
