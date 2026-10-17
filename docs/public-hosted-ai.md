@@ -1,5 +1,20 @@
 # Public hosted AI: discussion and released evidence
 
+GoDaddy Preview startup follow-up (2026-10-17): the dashboard was running
+`npm run dev`, which launched Vite on port 5173 and failed with EACCES. The
+standalone Node composition now makes that command build and start the same
+production server as Publish, using the existing validated `PORT` handling.
+Local hot-reload development remains available through `npm run dev:local`.
+This also makes Preview run the same explicit AI startup switches as Publish.
+The core delivery workflow checks the actual preview command on an assigned
+port and verifies that the hosted AI route and guest interface are present.
+No model, inference limit, domain, database or credential change is involved.
+Local verification passed: production build, TypeScript, 43 focused AI tests,
+15 real HTTP checks against `PORT=5184 npm run dev`, and the two built AI/account
+HTTP suites. An initial cross-session HTTP attempt could not reach the local
+listener; the same-session startup-and-test replay passed. Actual GoDaddy
+activation and public browser acceptance remain to be verified for this follow-up.
+
 Status: SmolLM2-360M q4 passes the four-task CI screen and actual GoDaddy v2
 conversation acceptance at 8096f439c85cfc3ceda997031e14734a61554a43. All four
 hosted replies completed without an output limit or memory-guard trip.

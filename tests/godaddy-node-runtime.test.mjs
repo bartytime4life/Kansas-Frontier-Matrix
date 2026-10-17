@@ -16,6 +16,17 @@ test("anonymous map is public", async () => {
   assert.equal(response.status, 200);
   assert.match(await response.text(), /Kansas Frontier Matrix/);
 });
+test("hosted AI endpoint is present without requiring the owner's PC", async () => {
+  const response = await fetch(origin + "/api/ai/status");
+  assert.equal(response.status, 200);
+  const status = await response.json();
+  assert.equal(status.requiresLogin, false);
+  assert.equal(status.configured, false);
+  const home = await (await fetch(origin)).text();
+  assert.match(home, /HOSTED AI/);
+  assert.match(home, /No account is needed for chat/);
+  assert.doesNotMatch(home, /OLLAMA · YOUR PC|PC offline/);
+});
 test("public crawler files are served with their text and XML media types", async () => {
   for (const [path, mediaType, expected] of [
     ["/robots.txt", "text/plain", "Sitemap: https://kansasfrontiermatrix.com/sitemap.xml"],

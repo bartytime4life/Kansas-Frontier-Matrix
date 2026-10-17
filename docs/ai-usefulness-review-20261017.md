@@ -101,6 +101,17 @@ Full production build, target Node 22 replay, changed-UI browser acceptance,
 hosted resource measurements and independent review are NOT_RUN. The public
 UI inspection describes the existing site, not this implementation's rendering.
 
+Follow-up after the owner requested AI on the web app independently of the PC:
+the live GoDaddy dashboard identified an older public revision and a private
+Preview failing to bind Vite's default port 5173. The standalone `dev` command
+now builds and runs the production server on its assigned `PORT`; local HMR is
+retained under `dev:local`. Production build and TypeScript now pass locally,
+as do the 43 focused AI tests, 15 HTTP checks against the real preview command,
+and both built AI/account HTTP suites. This supersedes the local build hold
+above only; hosted activation, target-runtime replay and independent acceptance
+are still separate checks. The existing draft PR is
+[5215](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5215).
+
 Recommended next acceptance packet: ten answerable release-backed questions,
 five missing/stale/withdrawn-evidence cases, five map/time/selection changes,
 five ordinary follow-ups and five sensitivity/injection cases. Expected sources

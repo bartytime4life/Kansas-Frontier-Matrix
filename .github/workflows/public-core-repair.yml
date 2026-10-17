@@ -31,6 +31,11 @@ jobs:
           tests/subsurface-worker.test.mjs tests/cutaway-model.test.mjs
           tests/area-underlay.test.mjs tests/subsurface-slice.test.mjs
           tests/pc-ai.test.mjs tests/pc-ai-http.test.mjs
+      - name: Hosted AI route and evidence discovery boundaries
+        run: >-
+          node --test tests/assistant-status.test.mjs tests/public-ai.test.mjs
+          tests/hosted-ai.test.mjs tests/hosted-ai-acceptance.test.mjs
+          tests/pc-ai-login-admission.test.mjs tests/public-ai-http.test.mjs
       - name: Zoom detail, source bounds and shared effects controls
         run: >-
           node --test tests/water-flow-motion.test.mjs tests/water-flow-sync.test.mjs
@@ -48,3 +53,16 @@ jobs:
             sleep 1
           done
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/godaddy-node-runtime.test.mjs
+      - name: GoDaddy preview command uses the assigned production port
+        shell: bash
+        run: |
+          set -euo pipefail
+          PORT=5183 npm run dev > "$RUNNER_TEMP/node-preview.log" 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 120); do
+            if curl --fail --silent http://127.0.0.1:5183/api/ai/status > /dev/null; then break; fi
+            if ! kill -0 "$preview_pid" 2>/dev/null; then cat "$RUNNER_TEMP/node-preview.log"; exit 1; fi
+            sleep 1
+          done
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5183 node --test --test-name-pattern='anonymous map|hosted AI endpoint' tests/godaddy-node-runtime.test.mjs
