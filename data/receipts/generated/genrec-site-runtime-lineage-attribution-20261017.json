@@ -1,0 +1,90 @@
+{
+  "receipt_id": "genrec-site-runtime-lineage-attribution-20261017",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/verification-runtime-mirror-20261017.md",
+    "data/receipts/generated/site-v268-runtime-lineage-attribution-20261017.json",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/verification-runtime-mirror-20261017.md": "sha256:b127c5e757a872e96049ee8c7d4fefde2b6f5b6e769db3a4955cd22ab61469ed",
+    "data/receipts/generated/site-v268-runtime-lineage-attribution-20261017.json": "sha256:9dba2c17cee0525a250b53e173752038e0f26c5337a58688fa9e958cea876f89",
+    "tests/qa/test_site_mirror.py": "sha256:d71ef2852a7b337de32b39a21ee382968c89451a63ede9aafa46fa2b00dff5c0",
+    "tools/qa/site_mirror.py": "sha256:c586594084986737307c6a58f42ecfc77be4a32be4e10a1d4cca3e4bbc45985d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Runtime snapshot not exposed"
+  },
+  "prompt_or_contract": "sha256:85252fd3533872328c529ae24f419a807233fbcecd4d17573290d493817516ee",
+  "parameters": {
+    "tools_enabled": [
+      "local filesystem",
+      "local regression tests",
+      "GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@edefb1361bbf2a7cac36b81352dd024c8c139ea0",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5227",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/0aaedbe41941e3867d591159b6a3fa90a90553ac",
+      "data/receipts/generated/site-v268-consolidated-runtime-lineage-20261017.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5228"
+    ],
+    "attached_docs": [
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/verification-runtime-mirror-20261017.md": "CONFIRMED",
+    "data/receipts/generated/site-v268-runtime-lineage-attribution-20261017.json": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "mirror and attribution regressions",
+      "outcome": "PASS",
+      "reason": "41 passed under Python 3.12; verified actual source-change commit and both merge parents from Git before authoring."
+    },
+    {
+      "gate": "recorded content parity",
+      "outcome": "PASS",
+      "reason": "874 files, 46 overlays, 258 withheld paths absent; no runtime or source-state change."
+    },
+    {
+      "gate": "full local water and Explorer runs",
+      "outcome": "SKIPPED",
+      "reason": "Unchanged application bytes. Previous local sandbox blocks sockets/child processes; new exact-head Linux CI is required and previous-head results are not inherited."
+    },
+    {
+      "gate": "new exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending follow-up publication; final PR checks are authoritative."
+    },
+    {
+      "gate": "human review, merge, deployment and activation",
+      "outcome": "SKIPPED",
+      "reason": "Separate transitions; no authority inferred."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "test-change-commit",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/0aaedbe41941e3867d591159b6a3fa90a90553ac"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-17T16:03:24.079816+00:00",
+  "emitter": "Codex /root",
+  "notes": "Correct one inherited commit attribution identified after owner merged PR #5227. All existing receipts preserved byte-for-byte; no runtime, data, deployment or activation change. Consolidates the useful selector-preservation comment from overlapping PR #5228 without its branch-state or settings claims."
+}

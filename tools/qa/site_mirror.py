@@ -8,7 +8,10 @@ import json
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-RECEIPT = ROOT / "data/receipts/generated/site-v268-consolidated-runtime-lineage-20261017.json"
+# Keep exactly one RECEIPT binding: mirror checks and ADR-0048 topology read it.
+# Resolve conflicts to the successor matching the merged bytes; never delete it.
+# Content parity does not approve overlays, activation, or publication.
+RECEIPT = ROOT / "data/receipts/generated/site-v268-runtime-lineage-attribution-20261017.json"
 DESTINATION = ROOT / "apps/site/source"
 
 

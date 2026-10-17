@@ -144,3 +144,41 @@ permitted` in this sandbox. Initial collection attempts also lacked checkout-loc
 package imports; the completed run used the existing `packages/*/src` directories
 and governed API source explicitly. No passing full local water run is claimed;
 the exact-head Linux workflow must resolve these environmental limitations.
+
+
+## Verified containment-test commit attribution — October 17, 2026
+
+PR #5227 was marked ready and merged by the owner during this task, at
+`edefb1361bbf2a7cac36b81352dd024c8c139ea0`. Its exact head `295d0255` passed
+110 checks with four explicitly skipped; Linux water had 340 passes, Explorer
+had 1,374 passes and the backend smoke passed 110 checks across 79 routes.
+An automated COMMENTED review correctly identified a remaining provenance error:
+the corrected test delta inherited `2578192e` as its last-change commit. Direct
+Git comparison confirms that commit does not change the test. The change is in
+`0aaedbe41941e3867d591159b6a3fa90a90553ac`, whose parent is `e30566dfa2`.
+The later merged head `17d1985` has parents `0aaedbe` and `da5bc7b0`; the latter
+is the integration base containing #5222, not the first parent.
+
+The [attribution successor](../../data/receipts/generated/site-v268-runtime-lineage-attribution-20261017.json)
+preserves the #5227 receipt byte-for-byte as its immediate predecessor and fixes
+only this attribution in the effective historical correction. It records both
+before/after test digests and the two merge parents. The existing lineage and
+withholding regressions remain, with an additional assertion rejecting the known
+wrong commit. All 874 mirror bytes/states, 258 withheld exclusions, review state,
+source identity and runtime behavior remain unchanged. This task did not merge
+or deploy #5227; its owner-account transitions are recorded separately.
+
+Rollback this successor as one change to restore the immediate #5227 receipt;
+the incorrect attribution returns, with no runtime or data change. Human review,
+owner merge authorization and publication remain separate. New exact-head CI
+belongs to the follow-up PR; #5227 results above are historical only.
+
+
+The concurrent comment-only PR #5228 also touches the selector line. Its useful
+explanation is consolidated beside the one current binding: retain exactly one
+binding during conflicts and keep content parity separate from acceptance or
+publication. The selected attribution successor remains unchanged. #5228 can be
+closed as redundant after this consolidated head passes validation; retain its
+branch and discussion history. No branch-protection setting is changed. The
+legacy branch-protection response alone does not describe the active ruleset:
+the observed ruleset also requires build and three CodeQL contexts.
