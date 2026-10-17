@@ -20,8 +20,9 @@ SPEC.loader.exec_module(TOOL)
 DEFAULT_RECEIPT_RELATIVE = TOOL.RECEIPT.relative_to(ROOT)
 
 
-def test_current_receipt_preserves_source_identity_withheld_inventory_and_pending_review() -> None:
-    receipt = json.loads((ROOT / DEFAULT_RECEIPT_RELATIVE).read_text())
+def test_historical_runtime_receipt_preserves_its_recorded_comparison() -> None:
+    # Its earlier comparison basis is preserved history, not actual merge ancestry.
+    receipt = json.loads((ROOT / "data/receipts/generated/site-v268-current-main-runtime-reconciliation-20261017.json").read_text())
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     previous = json.loads(predecessor.read_text())
     assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
@@ -50,6 +51,66 @@ def test_current_receipt_preserves_source_identity_withheld_inventory_and_pendin
         assert current["state"] != "identical"
     inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
     assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+
+def _mirror_projection(receipt: dict) -> dict:
+    return {name: tuple(entry.get(key) for key in ("mirror_sha256", "site_sha256", "state"))
+            for name, entry in receipt["comparison"].items()}
+
+
+def test_selected_successor_records_actual_lineage_without_fresh_application_changes() -> None:
+    receipt = json.loads(TOOL.RECEIPT.read_text())
+    directory = ROOT / "data/receipts/generated"
+    previous_path = directory / receipt["predecessor_receipt"]
+    previous = json.loads(previous_path.read_text())
+    assert previous_path.name == "site-v268-current-main-runtime-reconciliation-20261017.json"
+    assert hashlib.sha256(previous_path.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
+    assert _mirror_projection(receipt) == _mirror_projection(previous)
+    assert receipt["inventory_sha256"] == previous["inventory_sha256"]
+    assert receipt["counts"] == previous["counts"]
+    assert len(receipt["comparison"]) == 874
+    for key in ("site_candidate_commit", "site_project_id", "site_version_id", "site_audience",
+                "authoritative_site_source_paths", "canonical_document_mappings", "canonical_tool_mappings",
+                "overlay", "review", "repository_safety_changes"):
+        assert receipt[key] == previous[key], key
+    assert receipt["counts"]["repository_withheld"] == 258
+    assert receipt["status"] == "REVIEW_ONLY"
+    assert receipt["review"]["human_acceptance"] is False
+    assert receipt["review"]["hosted_equivalence"] is False
+    assert receipt["review"]["source_and_overlay_review"] == "PENDING"
+    assert receipt["repository_reconciliation"]["changes"] == []
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+
+    correction = receipt["historical_lineage_correction"]
+    assert correction["affected_receipt"] == previous_path.name
+    assert correction["affected_receipt_sha256"] == receipt["predecessor_receipt_sha256"]
+    assert correction["actual_parent_commit"] == "da5bc7b0ae14a9383efec17f9c9dfb0e9c4039eb"
+    parent_path = directory / correction["parent_selected_receipt"]
+    parent = json.loads(parent_path.read_text())
+    assert parent_path.name == "site-v268-explorer-local-port-overlay-20261017.json"
+    assert hashlib.sha256(parent_path.read_bytes()).hexdigest() == correction["parent_selected_receipt_sha256"]
+    parent_projection = _mirror_projection(parent)
+    previous_projection = _mirror_projection(previous)
+    actual_delta = {name for name in parent_projection.keys() | previous_projection.keys()
+                    if parent_projection.get(name) != previous_projection.get(name)}
+    declared = correction["corrected_changes"]
+    assert actual_delta == {entry["path"] for entry in declared} == {"tests/local-worker-runtime.test.mjs"}
+    assert len(declared) == 1
+    entry = declared[0]
+    assert entry["previous_receipt_sha256"] == parent["comparison"][entry["path"]]["mirror_sha256"]
+    assert entry["repository_base_sha256"] == entry["previous_receipt_sha256"]
+    assert entry["mirror_sha256"] == receipt["comparison"][entry["path"]]["mirror_sha256"]
+    assert correction["corrected_restored_recorded_paths"] == []
+    inherited = set(correction["already_reconciled_paths"])
+    assert len(inherited) == 24
+    assert inherited == {entry["path"] for entry in previous["repository_reconciliation"]["changes"]} - actual_delta
+    for name in inherited:
+        assert parent_projection[name] == previous_projection[name]
+    for name in correction["restored_provenance_notes"]:
+        assert receipt["comparison"][name]["difference"] == parent["comparison"][name]["difference"]
+    # Neither selecting an old receipt nor copying its rollback advice is a correction.
+    assert previous_path.name in receipt["rollback"]["mirror"]
 
 
 def _git(root: Path, *args: str) -> str:
