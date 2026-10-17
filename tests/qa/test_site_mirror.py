@@ -59,8 +59,8 @@ def _mirror_projection(receipt: dict) -> dict:
             for name, entry in receipt["comparison"].items()}
 
 
-def test_selected_successor_records_actual_lineage_without_fresh_application_changes() -> None:
-    receipt = json.loads(TOOL.RECEIPT.read_text())
+def test_historical_consolidation_preserves_its_recorded_lineage_comparison() -> None:
+    receipt = json.loads((ROOT / "data/receipts/generated/site-v268-consolidated-runtime-lineage-20261017.json").read_text())
     directory = ROOT / "data/receipts/generated"
     previous_path = directory / receipt["predecessor_receipt"]
     previous = json.loads(previous_path.read_text())
@@ -110,6 +110,39 @@ def test_selected_successor_records_actual_lineage_without_fresh_application_cha
     for name in correction["restored_provenance_notes"]:
         assert receipt["comparison"][name]["difference"] == parent["comparison"][name]["difference"]
     # Neither selecting an old receipt nor copying its rollback advice is a correction.
+    assert previous_path.name in receipt["rollback"]["mirror"]
+
+
+def test_selected_attribution_successor_names_the_commit_that_changes_the_test() -> None:
+    receipt = json.loads(TOOL.RECEIPT.read_text())
+    previous_path = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert previous_path.name == "site-v268-consolidated-runtime-lineage-20261017.json"
+    assert hashlib.sha256(previous_path.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
+    previous = json.loads(previous_path.read_text())
+    for key in ("comparison", "inventory_sha256", "counts", "overlay", "review",
+                "site_candidate_commit", "site_project_id", "site_version_id", "site_audience",
+                "authoritative_site_source_paths", "canonical_document_mappings", "canonical_tool_mappings"):
+        assert receipt[key] == previous[key], key
+    assert receipt["status"] == previous["status"] == "REVIEW_ONLY"
+    assert receipt["repository_reconciliation"]["changes"] == []
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    correction = receipt["historical_lineage_correction"]
+    attribution = correction["attribution_correction"]
+    expected = "0aaedbe41941e3867d591159b6a3fa90a90553ac"
+    assert attribution["verified_change_commit"] == expected
+    assert attribution["change_commit_parent"] == "e30566dfa299fd3e540da239a5c9ec018b2fd4cc"
+    assert attribution["merged_head_parents"] == [expected, correction["actual_parent_commit"]]
+    assert attribution["affected_receipt"] == previous_path.name
+    assert attribution["affected_receipt_sha256"] == receipt["predecessor_receipt_sha256"]
+    changed = correction["corrected_changes"]
+    assert len(changed) == 1
+    assert changed[0]["path"] == attribution["path"] == "tests/local-worker-runtime.test.mjs"
+    assert changed[0]["last_repository_change_commit"] == expected
+    assert previous["historical_lineage_correction"]["corrected_changes"][0]["last_repository_change_commit"] == attribution["previously_recorded_commit"]
+    assert attribution["before_sha256"] == changed[0]["previous_receipt_sha256"]
+    assert attribution["after_sha256"] == receipt["comparison"][attribution["path"]]["mirror_sha256"]
+    assert attribution["before_sha256"] != attribution["after_sha256"]
+    assert attribution["evidence_ref"].endswith("/commit/" + expected)
     assert previous_path.name in receipt["rollback"]["mirror"]
 
 
