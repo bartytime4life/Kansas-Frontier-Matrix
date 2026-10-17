@@ -1986,13 +1986,14 @@
       "state": "identical"
     },
     "app/explorer-controls-navigation.tsx": {
-      "mirror_sha256": "1f38575b86feda51d39b338b2bdd326a6e29d97bd3dc80766fa6a55711ca4a24",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "09c3159aefc148b96e97b5bd8438a7715ab1440cb922132d6c8c4b7b34f2777c",
       "site_sha256": "1f38575b86feda51d39b338b2bdd326a6e29d97bd3dc80766fa6a55711ca4a24",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "app/explorer-controls.css": {
-      "difference": "Repository bytes changed in #5179 (610d6e1a0f, purpose-based map starters). Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "9e87cbcbdeced1c325331a07b648649e5f65d076ada0ffce0435aa5febd481a7",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "2116238cb8dcbe187b70bbc9b6404a0599f4f1cef911e5ab43e87d80652072b9",
       "site_sha256": "7dd3b7925d06ac4cbcc7211433a97ffb373ddc1a16619d3236c8990d3ccf660c",
       "state": "inherited_repository_overlay"
     },
@@ -2010,6 +2011,11 @@
       "mirror_sha256": "d0caa05e1499c4a68a01e2b0e3693775e10db7ce653c0fb84d75cbaaa8b14795",
       "site_sha256": "d0caa05e1499c4a68a01e2b0e3693775e10db7ce653c0fb84d75cbaaa8b14795",
       "state": "identical"
+    },
+    "app/explorer-menu-dismissal.ts": {
+      "difference": "Repository-only file added in #5220 (0597487585, GoDaddy layout controls port); not present in Site source 358280aee889e2e2cf832bd598155ca21653c8de. Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "3f17c9c025ee61205938100eb9391f1594f31d1505397c2cba1189fbd545949c",
+      "state": "repository_only_overlay"
     },
     "app/explorer-theme.css": {
       "mirror_sha256": "924dbef9253627fe9284a43bf5c94466d96cec39557fc85aea2a793e86b0af19",
@@ -2067,8 +2073,8 @@
       "state": "identical"
     },
     "app/globals.css": {
-      "difference": "Repository bytes from #5218 (012536c15a, Explorer mobile Data sheet and topic-link coverage), merged while the mirror check could not run; recorded with this successor receipt. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "014f53f540897beab5e577eecd6af7728597a951781904798543699b55b862d3",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "a0e0c9921f96a109913face29b44b889303816e48684f16d12b6e4fab135f5eb",
       "site_sha256": "7b16ffbe6884755f9827df2d6b4f48fb90703ec8dc360d8184dd2752c1c96637",
       "state": "inherited_repository_overlay"
     },
@@ -2319,9 +2325,10 @@
       "state": "identical"
     },
     "app/inspection-panel.tsx": {
-      "mirror_sha256": "16314fd24cde232f8545d74b41335a1b0d3b8ca4cafde57ae74a8b04f906d670",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "ecad47f7ae7a6978f69d7df77b0beb6306e3697b1689bde60c2a87965c3ee46d",
       "site_sha256": "16314fd24cde232f8545d74b41335a1b0d3b8ca4cafde57ae74a8b04f906d670",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "app/intake-desk-client.ts": {
       "mirror_sha256": "4c2e3e80f3f92e45e0762af2e73f47b9620687516becf356feda0c45db554fb3",
@@ -2639,9 +2646,10 @@
       "state": "repository_only_overlay"
     },
     "app/map-toolbar.tsx": {
-      "mirror_sha256": "3103bbfd09180a050904752688f33fcd57b5dbc5d8507987cc9129d9ee4567e4",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "4403f85cd8933f23bcbe2a35abe594f8a4af0bef8abd517b9081a4ec1046d48f",
       "site_sha256": "3103bbfd09180a050904752688f33fcd57b5dbc5d8507987cc9129d9ee4567e4",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "app/maplibre-seam.css": {
       "mirror_sha256": "06142bf2dc02e9f1fb93de47c8f5df4335ec8342c90cb962549ac15b94cbdd02",
@@ -2729,8 +2737,8 @@
       "state": "identical"
     },
     "app/page.tsx": {
-      "difference": "Repository bytes changed in #5179 (610d6e1a0f, purpose-based map starters). Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "b2b73442699af7570fe32b0958de78329f76285376a84fe7915f3bb948a8ea61",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "2cb961ab19c8d09b657dcfbe42652d68736e2daa43f7fa62ee70f5d5c2001d36",
       "site_sha256": "2833eb08843b9fce2ee6bf8ca2903a55f9a3580afd460cf35321642972f27610",
       "state": "inherited_repository_overlay"
     },
@@ -2881,14 +2889,16 @@
       "state": "identical"
     },
     "app/scene-effects-controls.tsx": {
-      "mirror_sha256": "8749c0249275612711cfcec7a43cdaf78d3c01c6290e3eb92f94e93101d5205c",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "7a9340ff0652f40ce902914fba957bb1ac08d249f95d79da93a8c11c172e61d3",
       "site_sha256": "8749c0249275612711cfcec7a43cdaf78d3c01c6290e3eb92f94e93101d5205c",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "app/scene-effects.css": {
-      "mirror_sha256": "a93e11dce684d91e2b6d612763b79fcfb5a0740348a4b5bc03f22e385c439ff2",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "6f8a483285846d91c26c6c9d29cdc7a6585f25be8693ae54b8136fe295056e3f",
       "site_sha256": "a93e11dce684d91e2b6d612763b79fcfb5a0740348a4b5bc03f22e385c439ff2",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "app/scene-effects.ts": {
       "difference": "Repository bytes changed in #5182 (b196b919bc, zoom-adaptive water flow). Recorded bytes only; no Site deployment implied.",
@@ -4135,9 +4145,10 @@
       "state": "identical"
     },
     "tests/component-harness.mjs": {
-      "mirror_sha256": "4c507730d0c6dcb5f53b049184fe4bd96227ab2de47a1e2f207fbbddc58eda1e",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "337b5317185a724a1e157f03967c4f912a9b900cb33e9dea895f684580b30ed6",
       "site_sha256": "4c507730d0c6dcb5f53b049184fe4bd96227ab2de47a1e2f207fbbddc58eda1e",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/crop-casma-control.test.mjs": {
       "mirror_sha256": "b5a311c8252ac15eb93cb13141f15761b2e5fdc96aecf61f9a872d69409c8c97",
@@ -4300,14 +4311,20 @@
       "state": "identical"
     },
     "tests/explorer-interface-refresh.test.mjs": {
-      "mirror_sha256": "66f3b52a3f838cadaae439cbfe603c65ac7eac1c2c6e20e9d419177c66c9235d",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "f4d8d54f2011025ff5cca171068863ef3088604e850a062aeaa75218c2173292",
       "site_sha256": "66f3b52a3f838cadaae439cbfe603c65ac7eac1c2c6e20e9d419177c66c9235d",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/explorer-layer-history.test.mjs": {
       "mirror_sha256": "204e6234f641964819e217f4824cfba31d818902b50b8ac2ff04cbeb25dcdceb",
       "site_sha256": "204e6234f641964819e217f4824cfba31d818902b50b8ac2ff04cbeb25dcdceb",
       "state": "identical"
+    },
+    "tests/explorer-menu-dismissal.test.mjs": {
+      "difference": "Repository-only file added in #5220 (0597487585, GoDaddy layout controls port); not present in Site source 358280aee889e2e2cf832bd598155ca21653c8de. Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "a4c2db1457b4d1fc36191e3c420cef82c7f527d9b141cb02bcd18cad9ff5c303",
+      "state": "repository_only_overlay"
     },
     "tests/explorer-site-audit.test.mjs": {
       "mirror_sha256": "e5edcd0042759e140dcc8d7cbf3bb94614c04339d99edf81c0af5a3687e201b9",
@@ -4530,9 +4547,15 @@
       "state": "identical"
     },
     "tests/globe-context.test.mjs": {
-      "mirror_sha256": "471b55803595c79102ed9cf05be1f1cc719ec7d08d8a072b5d64cd0ecbbe78f1",
+      "difference": "Repository bytes changed in #5221 (c9dd133fa7, Explorer regression assertions aligned with verified layout). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "ed98c4acd6fc16b20f09d327c45e9e73181a98b0152f91227173cb064bc7cbe5",
       "site_sha256": "471b55803595c79102ed9cf05be1f1cc719ec7d08d8a072b5d64cd0ecbbe78f1",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
+    },
+    "tests/godaddy-layout-port.test.mjs": {
+      "difference": "Repository-only file added in #5220 (0597487585, GoDaddy layout controls port); not present in Site source 358280aee889e2e2cf832bd598155ca21653c8de. Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "282525bab673d47ae308deed79c62a16be6724edf55757d0f4b8f5ee9009d2b7",
+      "state": "repository_only_overlay"
     },
     "tests/governed-earthquakes-admin.test.mjs": {
       "mirror_sha256": "3000b803839a8db6f96d42823a8d3355b8a9703c43a01ab482a6089d4e4c07f2",
@@ -4680,9 +4703,10 @@
       "state": "identical"
     },
     "tests/inspection-panel.test.mjs": {
-      "mirror_sha256": "ef937950d49f6d0a209f81122ee1018f0375c3b264a39fe85780a6309ac8cb8f",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "b1d2e2efe0c9247513f8bd4003a9e472f24ff3dbbad85e95ddeaaf7d18fad7f0",
       "site_sha256": "ef937950d49f6d0a209f81122ee1018f0375c3b264a39fe85780a6309ac8cb8f",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/intake-desk.test.mjs": {
       "mirror_sha256": "52a351ccc751d492778ba704d223ceebc3416d1ea4940c1e693a55d338d2af51",
@@ -4725,9 +4749,10 @@
       "state": "identical"
     },
     "tests/layer-explorer.test.mjs": {
-      "mirror_sha256": "01de6edbd70d3ed3acf79937815253ff307196cfd777c974f972d6dcd59bd190",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "fe68fb55fb51c83689816f1b6d27ccbc2d4cab0d2d719a77f85e0273d4239472",
       "site_sha256": "01de6edbd70d3ed3acf79937815253ff307196cfd777c974f972d6dcd59bd190",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/layer-lifecycle.test.mjs": {
       "mirror_sha256": "aaf39d224a8aeb7a6f87c867c045551608dcae852c3c7cdcec1505609930bf60",
@@ -4945,9 +4970,10 @@
       "state": "identical"
     },
     "tests/rendered-html.test.mjs": {
-      "mirror_sha256": "fe9ed736f8ea8d1c6c309805d750967d2112591f2276c81fc955eae84691eba7",
+      "difference": "Repository bytes changed in #5221 (c9dd133fa7, Explorer regression assertions aligned with verified layout). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "0fcc42c8620528f412cb672891ad923abf651f30e72a1a523876339a5996b779",
       "site_sha256": "fe9ed736f8ea8d1c6c309805d750967d2112591f2276c81fc955eae84691eba7",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/repository-status.test.mjs": {
       "mirror_sha256": "3f447c3d18bab75c8e429bc838e3c8f1d094f2d0d978a5dfeb3c91791b56782c",
@@ -5010,15 +5036,16 @@
       "state": "identical"
     },
     "tests/scene-studio.test.mjs": {
-      "difference": "Repository bytes changed in #5182 (b196b919bc, zoom-adaptive water flow). Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "97ae41d237849781fe3199b071d5f2743a10ce0290fff921a8c822b8da82f5e9",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "af9ad95b9cc52921e37e0ae67f75d60eaeea3d0f328892d8b8e89a79cf1de0f7",
       "site_sha256": "889a9ae339b5277d8ce68cdf1049c9a64d5ae6121e513f0c417392280d646965",
       "state": "inherited_repository_overlay"
     },
     "tests/scene-surface-integration.test.mjs": {
-      "mirror_sha256": "d883f84bebf22175230b2a45abb3857c15aa36ca579b73868931c8fc02847f23",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "b1aa0d42a55a41abaec40b46f7b5efc800200664131f3c660d0e9cfa75418eeb",
       "site_sha256": "d883f84bebf22175230b2a45abb3857c15aa36ca579b73868931c8fc02847f23",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/science-events.test.mjs": {
       "mirror_sha256": "96cab3bcbd4b81a9a9e071874210d020e05ab46070c2c347df57d2d21e151b74",
@@ -5239,14 +5266,16 @@
       "state": "identical"
     },
     "tests/workspace-help-navigation.test.mjs": {
-      "mirror_sha256": "8f4f591a59dd63599e95a6154220a501ed940882acdd5c57a1e01f18fb5bd847",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "265d7c78407554396008f774920568e660bb2c76ee438caeab96eee185931fb1",
       "site_sha256": "8f4f591a59dd63599e95a6154220a501ed940882acdd5c57a1e01f18fb5bd847",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tests/workspace-map-navigation.test.mjs": {
-      "mirror_sha256": "2b19438484be31e7d2491fb829b03b61c0d508666890daac7fd82efbac1d80ca",
+      "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "18f84acbb7c361ae2a084f83728415934453e4829da8b0f757246b4d3a6a54ad",
       "site_sha256": "2b19438484be31e7d2491fb829b03b61c0d508666890daac7fd82efbac1d80ca",
-      "state": "identical"
+      "state": "inherited_repository_overlay"
     },
     "tsconfig.json": {
       "mirror_sha256": "92e711c5df978fb7b6ea86b5bb4b5ca999c2b8b5460bfc6d882631e46aed027b",
@@ -5277,10 +5306,10 @@
   "counts": {
     "canonical_document_mappings": 2,
     "canonical_tool_mappings": 2,
-    "identical": 843,
-    "inherited_repository_overlay": 21,
+    "identical": 829,
+    "inherited_repository_overlay": 35,
     "missing": 0,
-    "repository_only_overlay": 6,
+    "repository_only_overlay": 9,
     "repository_safety_overlay": 1,
     "repository_withheld": 258,
     "source_paths": 867,
@@ -5288,7 +5317,7 @@
   },
   "destination": "apps/site/source",
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "90b9188e3835953eea8f6b3581d6f5c117a750fbc8f50fdee2c5db9ff1cae2a9",
+  "inventory_sha256": "3ad42646395a8db2f55299ec594ef55728450e7af380b2636c4e46776558a44f",
   "overlay": {
     "scope": "The 258 hashes identify historical v261 carriers now absent from both current source trees. The retained deny list is containment history, not current Site bytes or approval.",
     "withheld_paths": [
@@ -7434,10 +7463,66 @@
     "overlap": {
       "changed_paths": [
         {
+          "path": "app/explorer-controls-navigation.tsx",
+          "previous_mirror_sha256": "1f38575b86feda51d39b338b2bdd326a6e29d97bd3dc80766fa6a55711ca4a24",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "app/explorer-controls.css",
+          "previous_mirror_sha256": "9e87cbcbdeced1c325331a07b648649e5f65d076ada0ffce0435aa5febd481a7",
+          "previous_state": "inherited_repository_overlay",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "app/explorer-menu-dismissal.ts",
+          "previous_mirror_sha256": null,
+          "previous_state": null,
+          "pull_request": "#5220",
+          "state": "repository_only_overlay"
+        },
+        {
           "path": "app/globals.css",
           "previous_mirror_sha256": "7b16ffbe6884755f9827df2d6b4f48fb90703ec8dc360d8184dd2752c1c96637",
           "previous_state": "identical",
-          "pull_request": "#5218",
+          "pull_request": "#5218, #5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "app/inspection-panel.tsx",
+          "previous_mirror_sha256": "16314fd24cde232f8545d74b41335a1b0d3b8ca4cafde57ae74a8b04f906d670",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "app/map-toolbar.tsx",
+          "previous_mirror_sha256": "3103bbfd09180a050904752688f33fcd57b5dbc5d8507987cc9129d9ee4567e4",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "app/page.tsx",
+          "previous_mirror_sha256": "b2b73442699af7570fe32b0958de78329f76285376a84fe7915f3bb948a8ea61",
+          "previous_state": "inherited_repository_overlay",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "app/scene-effects-controls.tsx",
+          "previous_mirror_sha256": "8749c0249275612711cfcec7a43cdaf78d3c01c6290e3eb92f94e93101d5205c",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "app/scene-effects.css",
+          "previous_mirror_sha256": "a93e11dce684d91e2b6d612763b79fcfb5a0740348a4b5bc03f22e385c439ff2",
+          "previous_state": "identical",
+          "pull_request": "#5220",
           "state": "inherited_repository_overlay"
         },
         {
@@ -7455,24 +7540,110 @@
           "state": "inherited_repository_overlay"
         },
         {
+          "path": "tests/component-harness.mjs",
+          "previous_mirror_sha256": "4c507730d0c6dcb5f53b049184fe4bd96227ab2de47a1e2f207fbbddc58eda1e",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "tests/explorer-interface-refresh.test.mjs",
+          "previous_mirror_sha256": "66f3b52a3f838cadaae439cbfe603c65ac7eac1c2c6e20e9d419177c66c9235d",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "tests/explorer-menu-dismissal.test.mjs",
+          "previous_mirror_sha256": null,
+          "previous_state": null,
+          "pull_request": "#5220",
+          "state": "repository_only_overlay"
+        },
+        {
+          "path": "tests/globe-context.test.mjs",
+          "previous_mirror_sha256": "471b55803595c79102ed9cf05be1f1cc719ec7d08d8a072b5d64cd0ecbbe78f1",
+          "previous_state": "identical",
+          "pull_request": "#5221",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "tests/godaddy-layout-port.test.mjs",
+          "previous_mirror_sha256": null,
+          "previous_state": null,
+          "pull_request": "#5220",
+          "state": "repository_only_overlay"
+        },
+        {
+          "path": "tests/inspection-panel.test.mjs",
+          "previous_mirror_sha256": "ef937950d49f6d0a209f81122ee1018f0375c3b264a39fe85780a6309ac8cb8f",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "tests/layer-explorer.test.mjs",
+          "previous_mirror_sha256": "01de6edbd70d3ed3acf79937815253ff307196cfd777c974f972d6dcd59bd190",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "tests/rendered-html.test.mjs",
+          "previous_mirror_sha256": "fe9ed736f8ea8d1c6c309805d750967d2112591f2276c81fc955eae84691eba7",
+          "previous_state": "identical",
+          "pull_request": "#5221",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "tests/scene-studio.test.mjs",
+          "previous_mirror_sha256": "97ae41d237849781fe3199b071d5f2743a10ce0290fff921a8c822b8da82f5e9",
+          "previous_state": "inherited_repository_overlay",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "tests/scene-surface-integration.test.mjs",
+          "previous_mirror_sha256": "d883f84bebf22175230b2a45abb3857c15aa36ca579b73868931c8fc02847f23",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
           "path": "tests/topic-organization.test.mjs",
           "previous_mirror_sha256": "7253b86b98d107d198310ba0b0fb6fa568f40b365994094b23ea5eacdacd4b8a",
           "previous_state": "identical",
           "pull_request": "#5218",
           "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "tests/workspace-help-navigation.test.mjs",
+          "previous_mirror_sha256": "8f4f591a59dd63599e95a6154220a501ed940882acdd5c57a1e01f18fb5bd847",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
+        },
+        {
+          "path": "tests/workspace-map-navigation.test.mjs",
+          "previous_mirror_sha256": "2b19438484be31e7d2491fb829b03b61c0d508666890daac7fd82efbac1d80ca",
+          "previous_state": "identical",
+          "pull_request": "#5220",
+          "state": "inherited_repository_overlay"
         }
       ],
-      "note": "#5218 edited apps/site/source/ while tools/qa/site_mirror.py could not run (its RECEIPT binding was dropped by the #5088 merge and restored by #5219). This successor records #5218's bytes as overlays against the same Site candidate; the predecessor receipt is unchanged. The #5088 merge also dropped scripts/serve-local-worker.mjs's validateSubsurfacePublic import; that file is restored to its recorded identical bytes rather than recorded as an overlay.",
+      "note": "#5218 edited apps/site/source/ while tools/qa/site_mirror.py could not run (its RECEIPT binding was dropped by the #5088 merge and restored by #5219). This successor records the bytes of #5218 and of #5220/#5221 (merged while this receipt was in review) as overlays against the same Site candidate; the predecessor receipt is unchanged. The #5088 merge also dropped scripts/serve-local-worker.mjs's validateSubsurfacePublic import; that file is restored to its recorded identical bytes rather than recorded as an overlay.",
       "pull_requests": [
         "#5088",
         "#5218",
-        "#5219"
+        "#5219",
+        "#5220",
+        "#5221"
       ]
     }
   },
-  "recorded_at": "2026-10-17T05:17:17.028055+00:00",
+  "recorded_at": "2026-10-17T05:30:12.700108+00:00",
   "repository_base": "5ff78dacc4f035e92959625155994979a2640c17",
-  "repository_reconciled_base": "2b22ed1115ebfdac98d497b1db95129453b4a2a1",
+  "repository_reconciled_base": "e30566dfa299fd3e540da239a5c9ec018b2fd4cc",
   "repository_safety_changes": [
     {
       "after_sha256": "cfe0539d2890eafe088614b08cc2dd6d7b75149c0dc24c0f6673632d0072c4a1",

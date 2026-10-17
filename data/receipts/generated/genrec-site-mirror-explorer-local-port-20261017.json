@@ -8,7 +8,7 @@
   ],
   "artifact_hashes": {
     "apps/site/source/scripts/serve-local-worker.mjs": "sha256:6f7eb010d52e8909d92fff75e574f5e5726ec56ba592420525c10e6d040163cd",
-    "data/receipts/generated/site-v268-explorer-local-port-overlay-20261017.json": "sha256:8db3f9d827c6f7d69cfd1933d78fdb72c8026a705c80e0e99589a180233e6f96",
+    "data/receipts/generated/site-v268-explorer-local-port-overlay-20261017.json": "sha256:2382fbe7d7420a5d39c931c33b6390d6c211212b142aeba114acbea308ea52cd",
     "tools/qa/site_mirror.py": "sha256:6ef781cc7a45a81903b59366add40d988e46426dd4a73fa6377b90fc7992cc78"
   },
   "model_identity": {
@@ -30,7 +30,9 @@
       "repo:apps/site/source/scripts/serve-local-worker.mjs@eff57a91471dc37911e1c83b89692d4f34dacf4a",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5088",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5218",
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5219"
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5219",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5220",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5221"
     ]
   },
   "truth_labels": {
@@ -47,7 +49,7 @@
     {
       "gate": "Runbook procedure",
       "outcome": "PASS",
-      "reason": "docs/runbooks/water-pilot.md: app/globals.css and tests/topic-organization.test.mjs move from identical to inherited_repository_overlay, docs/water-flow.md keeps inherited_repository_overlay with new bytes, docs/explorer-local-port-20261017.md is added as repository_only_overlay; upstream site_sha256 kept; counts (identical 843, inherited_repository_overlay 21, repository_only_overlay 6) and inventory_sha256 recomputed; repository_reconciled_base advanced; reconciliation.overlap names #5088, #5218 and #5219; review unchanged."
+      "reason": "docs/runbooks/water-pilot.md: #5218 moves app/globals.css and tests/topic-organization.test.mjs from identical to inherited_repository_overlay, keeps docs/water-flow.md as inherited_repository_overlay with new bytes and adds docs/explorer-local-port-20261017.md as repository_only_overlay; #5220/#5221 (merged while this receipt was in review) record 18 changed paths as inherited_repository_overlay and 3 added paths as repository_only_overlay; upstream site_sha256 kept; counts (identical 829, inherited_repository_overlay 35, repository_only_overlay 9) and inventory_sha256 recomputed; repository_reconciled_base advanced to e30566dfa2; reconciliation.overlap names #5088, #5218, #5219, #5220 and #5221; review unchanged."
     },
     {
       "gate": "Merge-dropped import restored",
