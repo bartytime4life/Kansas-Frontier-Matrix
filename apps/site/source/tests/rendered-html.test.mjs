@@ -1170,13 +1170,14 @@ test("keeps the global header and map controls in one responsive toolbar", async
     readFile(new URL("../app/map-toolbar.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.equal((page.match(/<header className="topbar">/g) ?? []).length, 1);
+  const headers = [...page.matchAll(/<header\b[^>]*\bclassName="topbar"[^>]*>/g)];
+  assert.equal(headers.length, 1);
   assert.equal((page.match(/<nav className="map-chrome-dock" aria-label="Map view and controls">/g) ?? []).length, 1);
   assert.doesNotMatch(page, /className="top-context"/);
   assert.doesNotMatch(page, /className="mission-band map-command-bar"/);
   assert.doesNotMatch(page, /<nav className="map-view-mode-strip"/);
   assert.doesNotMatch(page, /<nav className="map-control-strip"/);
-  const headerStart = page.indexOf('<header className="topbar">');
+  const headerStart = headers[0].index;
   const headerEnd = page.indexOf('      </header>', headerStart);
   const mapControls = page.indexOf('<nav className="map-chrome-dock"');
   assert.ok(mapControls > headerStart && mapControls < headerEnd, "map controls must share the global header");

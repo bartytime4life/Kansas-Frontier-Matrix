@@ -57,7 +57,8 @@ test("globe viewpoints remain distinct while Earth Engine opens installed map la
     assert.equal(preset.pitch, 0); assert.equal(preset.bearing, 0);
   }
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  assert.match(page, /onClick={\(\) => { setUndergroundOpen\(false\); activateMapRepresentation\("globe"\); }}/);
+  assert.match(page, /onClick={\(\) => chooseMapMenuRepresentation\("globe"\)}/);
+  assert.match(page, /const chooseMapMenuRepresentation = \(mode: "2d" \| "terrain" \| "globe"\) => \{\s*setUndergroundOpen\(false\);\s*if \(mapUtilityView === "compare"\) setMapUtilityOpen\(false\);\s*activateMapRepresentation\(mode\);/);
   assert.match(page, /const openEarthEngineLayers = useCallback/);
   assert.match(page, /setPendingCatalogTarget\("earth-engine-context-controls"\)/);
   assert.doesNotMatch(page, /<EarthEngineGlobe/);
