@@ -232,3 +232,19 @@ field is additive and the UI fails closed against an older server without it.
 No migration or persistent-data rewrite is required. The prioritized remaining
 work is in [the AI usefulness review](ai-usefulness-review-20261017.md).
 
+
+### 2026-10-17: source summaries during model outages
+
+Selected Underground sample summaries resolve the original public source on the
+server and remain available when inference is offline. The UI labels this path
+“Source summary available” and does not imply the model is ready. General
+Explore discussion still requires a ready model; configured-origin, source,
+policy, integrity, ownership and correction checks remain unchanged.
+
+Model startup/termination writes fixed allowlisted codes to operator logs so
+load, memory, identity and module failures can be distinguished. Public status
+still exposes only readiness; no prompts, error messages, paths or stacks are
+logged or returned by this diagnostic. The existing model, resource limits,
+private files and no-automatic-retry behavior are unchanged. This diagnostic
+is not proof that a hosted model has recovered; preview inference must pass
+before publication.

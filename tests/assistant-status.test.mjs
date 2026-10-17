@@ -155,3 +155,21 @@ test('the visitor question supplies search terms and status retry never resubmit
   assert.equal(posts,1);assert.equal(reads,2);assert.equal(message(tree).props.value,'Keep the next draft.');assert.match(text(tree),/Synthetic only/);
  }finally{h.dispose();}
 });
+
+test('a selected sample can resolve a source summary while inference is offline, without enabling ordinary discussion',async()=>{
+ const focus={context:{version:1,frame:2026,view:'Underground',layers:[],selection:{kind:'subsurface',recordId:'synthetic-core'}},title:'Synthetic core',detail:'Original source'};
+ let payload;
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return Response.json({configured:true,online:false,ready:false,evidenceSearchAvailable:true,requiresLogin:false});
+  if(options.method==='POST'){payload=JSON.parse(options.body);return Response.json({id:'source-job'});}
+  return Response.json({id:'source-job',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'SOURCE_CONTEXT_ONLY',answer:null,interpretation:null,sourceSummary:'Synthetic recorded interval; collection date unknown.',followUpQuestion:'Would you like to inspect its original intervals?'}});
+ },{focus},{mode:'explore',depth:'expanded'});
+ try{
+  let tree=render();assert.equal(text(status(tree)),'Source summary available');assert.match(text(tree),/do not require the AI model/);
+  message(tree).props.onChange({target:{value:'Explain this source.'}});tree=render();assert.equal(send(tree).props.disabled,false);
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  tree=render();await settle();tree=render();assert.deepEqual(payload.context,focus.context);assert.match(text(tree),/Source summary · not admitted evidence/);assert.match(text(tree),/collection date unknown/);
+  tree=render({focus:{...focus,context:{...focus.context,selection:null}}});message(tree).props.onChange({target:{value:'General discussion.'}});tree=render({focus:{...focus,context:{...focus.context,selection:null}}});
+  assert.equal(text(status(tree)),'AI unavailable');assert.equal(send(tree).props.disabled,true);
+ }finally{h.dispose();}
+});
