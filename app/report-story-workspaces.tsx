@@ -13,6 +13,8 @@ import {
 } from "./workspace-model";
 
 import SnapshotMap from "./snapshot-map";
+import AssistantPanel from "./assistant-panel";
+import {snapshotAssistantFocus} from "./assistant-context";
 import { readDraft, REPORT_STORAGE_KEY, STORY_STORAGE_KEY } from "./workspace-storage";
 import { FIRE_REPORT_SOURCES, type FireReportContext } from "./fire-report-analysis";
 import { subsurfaceMarkdown, sectionSvg, intervalCsv, type SubsurfaceContext } from "./subsurface-model";
@@ -158,6 +160,8 @@ export default function ReportStoryWorkspaces({
   onApplyScene,
   getCurrentSnapshot,
 }: ReportStoryWorkspacesProps) {
+  const [assistantOpen,setAssistantOpen] = useState(false);
+  const assistantFocus = useMemo(()=>snapshotAssistantFocus(snapshot,mode),[snapshot,mode]);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [storageState, setStorageState] = useState<"saved" | "saving" | "unavailable">("saving");
   const [report, setReport] = useState<ReportDraft>(() =>
@@ -170,14 +174,14 @@ export default function ReportStoryWorkspaces({
   const [storyPlayIndex, setStoryPlayIndex] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
 
+  useEffect(() => { headingRef.current?.focus(); }, [mode]);
   useEffect(() => {
-    headingRef.current?.focus();
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onReturnToMap();
+      if (event.key === "Escape" && !assistantOpen) onReturnToMap();
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [mode, onReturnToMap]);
+  }, [mode, onReturnToMap, assistantOpen]);
 
   useEffect(() => {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -319,6 +323,7 @@ export default function ReportStoryWorkspaces({
 
   return (
     <section className="primary-workspace-surface" data-workspace={mode} aria-labelledby="primary-workspace-title">
+      {assistantOpen&&<AssistantPanel focus={assistantFocus} onClose={()=>setAssistantOpen(false)}/>}
       <header className="primary-workspace-header">
         <div>
           <span>KANSAS FRONTIER MATRIX · DEVICE-LOCAL WORKSPACE</span>
@@ -326,6 +331,7 @@ export default function ReportStoryWorkspaces({
           <p>{mode === "reports" ? report.fireContext ? "Build a source-linked fire brief from the selected record. Add article findings only after checking the article yourself." : "Write from the exact inherited map state and keep evidence limits beside every claim." : "Compose ordered map scenes without turning camera motion into evidence."}</p>
         </div>
         <nav aria-label="Report and story workspaces">
+          <button type="button" aria-haspopup="dialog" aria-expanded={assistantOpen} onClick={()=>setAssistantOpen(true)}>Ask AI about this {mode === "reports" ? "report context" : "story context"}</button>
           <button type="button" aria-current={mode === "reports" ? "page" : undefined} onClick={() => onModeChange("reports")}>Reports</button>
           <button type="button" aria-current={mode === "stories" ? "page" : undefined} onClick={() => onModeChange("stories")}>Stories</button>
           <button className="return-map" type="button" onClick={onReturnToMap}>Return to map</button>

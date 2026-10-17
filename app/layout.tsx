@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PUBLIC_SITE_ORIGIN } from "./crawler-discovery";
 import { PersistentSelectMenus } from "./persistent-select-menus";
+import SiteAssistant from "./site-assistant";
 import "./globals.css";
 import "./map-layers.css";
 import "./explorer-theme.css";
@@ -47,7 +48,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="shortcut icon" href="/favicon.ico" />
       </head>
-      <body className="antialiased">{children}<PersistentSelectMenus /></body>
+      <body className="antialiased">{children}<PersistentSelectMenus /><SiteAssistant /></body>
     </html>
   );
 }

@@ -58,7 +58,7 @@ test('selected samples return server source facts without model inventions and r
  };
  const ask=async(ctx,cookie)=>{
   const created=await request('jobs',{question:'Explain this selected interval.',term:'core',mode:'explore',context:ctx},cookie);cookie??=created.cookie;
-  for(let i=0;i<30;i++){const next=await request('jobs/'+created.body.id,null,cookie);if(next.body.state==='completed')return {...next,cookie};await new Promise(resolve=>setImmediate(resolve));}throw Error('did not settle');
+  const deadline=Date.now()+2500;while(Date.now()<deadline){const next=await request('jobs/'+created.body.id,null,cookie);if(next.body.state==='completed')return {...next,cookie};await new Promise(resolve=>setTimeout(resolve,5));}throw Error('did not settle');
  };
  try{
   const first=await ask(context);assert.equal(first.body.result.reasonCode,'SOURCE_CONTEXT_ONLY');assert.equal(first.body.result.answer,null);assert.equal(first.body.result.interpretation,null);assert.deepEqual(first.body.result.evidenceRefs,[]);assert.match(first.body.result.sourceSummary,/Synthetic shale/);assert.equal(first.body.context.label,'synthetic-core-1');
@@ -68,6 +68,8 @@ test('selected samples return server source facts without model inventions and r
   const changed=await ask({...context,selection:{...context.selection,intervalIndex:0}},first.cookie);assert.match(changed.body.result.sourceSummary,/Synthetic sand/);assert.doesNotMatch(changed.body.result.sourceSummary,/Synthetic shale/);
   assert.equal((await request('jobs/'+changed.body.id)).status,401);
   const missing=await ask({...context,selection:{...context.selection,recordId:'absent'}},first.cookie);assert.equal(missing.body.result.reasonCode,'CONTEXT_UNAVAILABLE');assert.equal(seen.length,0);
+  await writeFile(join(f.directory,'tile-160-255.json.gz'),'changed');
+  const withdrawn=await request('jobs/'+first.body.id,null,first.cookie);assert.equal(withdrawn.body.result.reasonCode,'RELEASE_CHANGED');assert.equal(withdrawn.body.context,null);assert.equal(withdrawn.body.result.sourceSummary,undefined);
  }finally{await f.close();}
 });
 

@@ -1961,7 +1961,7 @@ export default function Home() {
   const mapRepresentationLabel = `${primaryRepresentationLabel}${structures3DEnabled ? ` · Structures 3D ${structures3DState === "READY" ? "ready" : structures3DState.toLowerCase()}` : ""}`;
   const assistantFocus = useMemo<AssistantFocus>(() => {
     const privateView = locationCameraRedacted || locationDerivedViewRef.current || Boolean(subsurfaceInspection && subsurfacePrivate);
-    const base = {version: 1 as const, frame: temporalQuery.frame, view: primaryRepresentationLabel, layers: activeLayers.slice(0,14).map(layer => layer.id)};
+    const base = {version: 1 as const, frame: temporalQuery.frame, view: primaryRepresentationLabel, surface: 'map', filters: {evidence: mapEvidenceFilter, temporalMode}, ...(temporalMode === 'comparison' ? {comparison: {frameA: compareTimeA, frameB: compareTimeB}} : {}), layers: [...activeLayers.map(layer => layer.id),...visibleOfficialSources.map(source => source.id)].slice(0,14)};
     if (privateView) return {context: {...base, layers: [], selection: null}, title: "Private context withheld", detail: "Location-derived selections stay in this browser."};
     if (subsurfaceInspection) {
       const {record, interval} = subsurfaceInspection;
@@ -1976,7 +1976,7 @@ export default function Home() {
       return {context: {...base, selection}, title: p.title, detail: `${p.sourceOrganization} · ${p.temporalScope} · display context; evidence remains separately governed`};
     }
     return {context: {...base, selection: null}, title: selectedTimeMismatch ? "Selection outside active time" : "Current map view", detail: selectedTimeMismatch ? "The incompatible selection is withheld. Choose its supported time to ask about it." : "Select a feature or Underground sample to ask about its details."};
-  }, [activeLayers, locationCameraRedacted, primaryRepresentationLabel, selected, selectedTimeMismatch, subsurfaceInspection, subsurfacePrivate, temporalQuery.frame]);
+  }, [activeLayers, visibleOfficialSources, mapEvidenceFilter, temporalMode, compareTimeA, compareTimeB, locationCameraRedacted, primaryRepresentationLabel, selected, selectedTimeMismatch, subsurfaceInspection, subsurfacePrivate, temporalQuery.frame]);
 
   const temporalComparison = useMemo(
     () => buildTemporalComparison(activeLayers, compareTimeA, compareTimeB),
@@ -9971,7 +9971,7 @@ export default function Home() {
               <span><small>LAYERS</small><strong>{selectedMapLayerCount}</strong></span>
               <span><small>SELECTION</small><strong>{assistantFocus.context.selection ? "1" : "0"}</strong></span>
             </div>
-            <AssistantWorkspace accountRequest={pcAccountRequest} onAccount={setPcAccount} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} />
+            <AssistantWorkspace active={qwenOpen} accountRequest={pcAccountRequest} onAccount={setPcAccount} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} />
           </section>
 
         <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
