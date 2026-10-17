@@ -172,3 +172,13 @@ Rollback this successor as one change to restore the immediate #5227 receipt;
 the incorrect attribution returns, with no runtime or data change. Human review,
 owner merge authorization and publication remain separate. New exact-head CI
 belongs to the follow-up PR; #5227 results above are historical only.
+
+
+The concurrent comment-only PR #5228 also touches the selector line. Its useful
+explanation is consolidated beside the one current binding: retain exactly one
+binding during conflicts and keep content parity separate from acceptance or
+publication. The selected attribution successor remains unchanged. #5228 can be
+closed as redundant after this consolidated head passes validation; retain its
+branch and discussion history. No branch-protection setting is changed. The
+legacy branch-protection response alone does not describe the active ruleset:
+the observed ruleset also requires build and three CodeQL contexts.

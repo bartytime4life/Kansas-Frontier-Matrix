@@ -8,10 +8,10 @@
     "tools/qa/site_mirror.py"
   ],
   "artifact_hashes": {
-    "apps/site/verification-runtime-mirror-20261017.md": "sha256:74c3bda5fed577bad31df10d0baff9bbf9782b487653cb1892ba6f2533718158",
+    "apps/site/verification-runtime-mirror-20261017.md": "sha256:b127c5e757a872e96049ee8c7d4fefde2b6f5b6e769db3a4955cd22ab61469ed",
     "data/receipts/generated/site-v268-runtime-lineage-attribution-20261017.json": "sha256:9dba2c17cee0525a250b53e173752038e0f26c5337a58688fa9e958cea876f89",
     "tests/qa/test_site_mirror.py": "sha256:d71ef2852a7b337de32b39a21ee382968c89451a63ede9aafa46fa2b00dff5c0",
-    "tools/qa/site_mirror.py": "sha256:1dc411285cd4bd9d44b0befe09d8b0eb5331fc2bf9478445b291d053d98b9319"
+    "tools/qa/site_mirror.py": "sha256:c586594084986737307c6a58f42ecfc77be4a32be4e10a1d4cca3e4bbc45985d"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -31,7 +31,8 @@
       "main@edefb1361bbf2a7cac36b81352dd024c8c139ea0",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5227",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/0aaedbe41941e3867d591159b6a3fa90a90553ac",
-      "data/receipts/generated/site-v268-consolidated-runtime-lineage-20261017.json"
+      "data/receipts/generated/site-v268-consolidated-runtime-lineage-20261017.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5228"
     ],
     "attached_docs": [
       "docs/doctrine/directory-rules.md",
@@ -85,5 +86,5 @@
   },
   "created_at": "2026-10-17T16:03:24.079816+00:00",
   "emitter": "Codex /root",
-  "notes": "Correct one inherited commit attribution identified after owner merged PR #5227. All existing receipts preserved byte-for-byte; no runtime, data, deployment or activation change."
+  "notes": "Correct one inherited commit attribution identified after owner merged PR #5227. All existing receipts preserved byte-for-byte; no runtime, data, deployment or activation change. Consolidates the useful selector-preservation comment from overlapping PR #5228 without its branch-state or settings claims."
 }
