@@ -25,8 +25,8 @@ discussion jobs expire at 270 seconds. Cancellation, one inference at a time,
 2 GiB sampled RSS containment, 512-token input context, 3 pending jobs,
 30 process-wide requests/hour, 10 guest requests/hour and 15-minute retention
 remain. These are bounded capacity increases, not a guarantee of complete or
-correct model answers. A limited reply offers Continue reply only while its
-selection context is unchanged. Completed discussions and source summaries
+correct model answers. Only the latest limited reply offers an enabled Continue reply while its
+selection context is unchanged. Older reply controls remain disabled. Completed discussions and source summaries
 include a safe next-step question without inventing additional facts or tools.
 
 This is a separate runtime composition of Explorer v259, source
