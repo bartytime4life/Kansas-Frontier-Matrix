@@ -155,3 +155,15 @@ test('a release changed during model-free preparation never exposes its old link
  const result=(await f.settle(created.body.id,created.cookie)).body.result;
  assert.equal(result.reasonCode,'RELEASE_CHANGED');assert.equal(result.citations,undefined);assert.equal(f.calls(),0);
 });
+
+test('a repeated continuation is withheld without adding duplicate history or offering an endless continuation loop',async()=>{
+ const prior='A map legend explains the symbols and colors that appear on a map. Read its units and source date before comparing two displays. Missing coverage is unknown and does not prove that a feature is absent.';
+ const seen=[];let count=0;
+ const f=fixture(async(q,options)=>{seen.push(options);return {text:++count<3?prior:'A new, narrower synthetic explanation.',outputLimited:true};});
+ const first=await f.request('jobs',question);await f.settle(first.body.id,first.cookie);
+ const next=await f.request('jobs',{...question,question:'Continue your previous reply from where it stopped. Finish the explanation without repeating it.'},first.cookie);
+ const result=(await f.settle(next.body.id,first.cookie)).body.result;
+ assert.equal(result.reasonCode,'MODEL_CONTINUATION_REPEATED');assert.equal(result.outcome,'ABSTAIN');assert.equal(result.interpretation,null);assert.equal(result.answer,null);assert.deepEqual(result.evidenceRefs,[]);assert.equal(result.outputLimited,undefined);assert.match(result.followUpQuestion,/narrower question.*original source records\?/);
+ const third=await f.request('jobs',{...question,question:'Explain one specific symbol.'},first.cookie);await f.settle(third.body.id,first.cookie);
+ assert.equal(seen[2].history.length,1);assert.equal(seen[2].history[0].reply,prior);
+});
