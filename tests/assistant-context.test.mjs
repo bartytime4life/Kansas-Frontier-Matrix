@@ -52,7 +52,7 @@ test('catalog denials and time mismatch are not converted to ordinary discussion
 });
 test('selected samples return server source facts without model inventions and retain job ownership',async()=>{
  const f=await fixture(),seen=[],origin='https://kansasfrontiermatrix.com';
- const handler=createPublicAiHandler({origin,resolveEvidence:async()=>null,resolveContext:f.resolve,model:{ready:true,online:true,discuss:async(question,options)=>{seen.push(options);return {text:'This core was collected in 2026 and has been stored for one year.'};}}});
+ const handler=createPublicAiHandler({origin,resolveEvidence:async()=>null,resolveContext:f.resolve,model:{ready:false,online:false,discuss:async(question,options)=>{seen.push(options);return {text:'This core was collected in 2026 and has been stored for one year.'};}}});
  const request=async(path,value,cookie)=>{
   const response=await handler(new Request(origin+'/api/ai/'+path,{method:value?'POST':'GET',headers:{...(value?{'content-type':'application/json',origin}:{}),...(cookie?{cookie}:{})},body:value?JSON.stringify(value):undefined}));return {body:await response.json(),cookie:response.headers.get('set-cookie')?.split(';')[0],status:response.status};
  };
