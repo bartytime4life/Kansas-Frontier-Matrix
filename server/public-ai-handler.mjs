@@ -2,7 +2,7 @@
 import {randomBytes,createHash} from 'node:crypto';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
-import {getHostedAiModel,HOSTED_MODEL,hasRepeatedPhrase,PUBLIC_AI_JOB_MS} from './hosted-ai.mjs';
+import {getHostedAiModel,HOSTED_MODEL,hasRepeatedPhrase,repeatsPriorReply,PUBLIC_AI_JOB_MS} from './hosted-ai.mjs';
 import {validAssistantContext} from './assistant-context.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Vary':'Cookie','Cross-Origin-Resource-Policy':'same-origin'};
 const reply=(body,status=200,extra={})=>Response.json(body,{status,headers:{...headers,...extra}});
@@ -87,10 +87,12 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      if(!await freshContext(job)){job.result=envelope('ABSTAIN','RELEASE_CHANGED');job.context=null;continue;}
      if(job.state!=='running'||job.abort.signal.aborted)continue;
      const session=sessions.get(job.owner);
-     const discussion=await model.discuss(job.question,{style:job.style,depth:job.depth,context:job.context?.prompt??'',history:(session?.history??[]).filter(item=>item.contextKey===job.contextKey).map(({question,reply})=>({question,reply}))},job.abort.signal);
+     const history=(session?.history??[]).filter(item=>item.contextKey===job.contextKey).map(({question,reply})=>({question,reply}));
+     const discussion=await model.discuss(job.question,{style:job.style,depth:job.depth,context:job.context?.prompt??'',history},job.abort.signal);
      if(job.state!=='running'||job.abort.signal.aborted)continue;
      const output=discussion?.text;
      if(!text(output,4096)||hasRepeatedPhrase(output)||/https?:\/\/|www\.|\bkfm:/i.test(output)||localQwenAnswerHasOverPreciseLocation(output))job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
+     else if(job.question==='Continue your previous reply from where it stopped. Finish the explanation without repeating it.'&&repeatsPriorReply(output,history.at(-1)?.reply))job.result={...envelope('ABSTAIN','MODEL_CONTINUATION_REPEATED'),followUpQuestion:'Would you like to ask a narrower question or inspect the original source records?'};
      else{
       job.result={...envelope('ABSTAIN','UNVERIFIED_AI_DISCUSSION'),interpretation:output,followUpQuestion:'Would you like a deeper explanation, a practical example, or help exploring the relevant map layers?',contextLimited:Boolean(discussion.contextTrimmed),outputLimited:Boolean(discussion.outputLimited)};
       if(session)session.history=[...(session.history??[]).filter(item=>item.contextKey===job.contextKey),{question:job.question,reply:output,contextKey:job.contextKey,at:clock()}].slice(-2);
