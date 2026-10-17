@@ -28,21 +28,28 @@ test('guest readiness does not wait for the separate account request',async()=>{
  }finally{h.dispose();}
 });
 
-test('a limited reply offers continuation only while its source context is unchanged',async()=>{
+test('a limited reply offers continuation only for the latest turn with unchanged source context',async()=>{
+ let sequence=0;
  const focus={context:{version:1,frame:2026,view:'2D',layers:[],selection:null},title:'Map view',detail:'Display context'};
  const {h,render}=await workspace(async(url,options)=>{
   if(url.includes('/api/pc-ai/'))return Response.json({configured:false,account:null});
   if(url.endsWith('/status'))return ready();
-  if(options.method==='POST')return Response.json({id:'synthetic-job'});
-  return Response.json({id:'synthetic-job',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',answer:null,interpretation:'Synthetic partial reply.',outputLimited:true,followUpQuestion:'Would you like a practical example?'}});
+  if(options.method==='POST')return Response.json({id:'synthetic-job-'+(++sequence)});
+  return Response.json({id:url.split('/').at(-1),state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',answer:null,interpretation:'Synthetic partial reply.',outputLimited:true,followUpQuestion:'Would you like a practical example?'}});
  },{focus});
  try{
   let tree=render();message(tree).props.onChange({target:{value:'Explain map context.'}});tree=render();
   await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
   tree=render();await settle();tree=render();const next=findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply');assert.equal(next.props.disabled,false);next.props.onClick();
   tree=render();assert.match(message(tree).props.value,/Finish the explanation/);assert.match(text(tree),/Would you like a practical example\?/);
+  message(tree).props.onChange({target:{value:'Explain a second topic.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  tree=render();await settle();tree=render();
+  assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply').props.disabled,true);
+  assert.ok(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply'&&node.props.disabled===false));
   tree=render({focus:{...focus,context:{...focus.context,frame:2025}}});
   assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply').props.disabled,true);
+  assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply'&&node.props.disabled===false),undefined);
  }finally{h.dispose();}
 });
 
