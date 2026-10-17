@@ -1,8 +1,9 @@
 import {publicAiRuntime} from '../../../../server/public-ai-handler.mjs';
-import {pcResearchEvidence} from '../../../pc-ai-evidence';
+import {pcResearchEvidence,pcRecordContext} from '../../../pc-ai-evidence';
 import {createAssistantContextResolver} from '../../../../server/assistant-context.mjs';
 import {LAYER_REGISTRY} from '../../../explorer-data';
-const resolveContext=createAssistantContextResolver({catalog:({layerId,featureId}:{layerId:string;featureId:string})=>{
+import {OFFICIAL_CONTEXT_SOURCES} from '../../../live-context';
+const resolveContext=createAssistantContextResolver({knowledge:pcRecordContext,layers:(ids:string[])=>ids.flatMap(id=>{const layer=LAYER_REGISTRY.find(layer=>layer.id===id);if(layer?.publicStatus==='RESTRICTED')throw new Error('POLICY_WITHHELD');const title=layer?.title??OFFICIAL_CONTEXT_SOURCES.find(source=>source.id===id)?.shortTitle;return title?[title]:[];}),catalog:({layerId,featureId}:{layerId:string;featureId:string})=>{
  const layer=LAYER_REGISTRY.find(layer=>layer.id===layerId);
  const feature=layer?.data.features.find(feature=>feature.properties.fid===featureId);
  if(!layer||!feature)return null;

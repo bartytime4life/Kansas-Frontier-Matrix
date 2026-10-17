@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import * as surfaces from '../app/assistant-surfaces.mjs';
 import {componentHarness,findNode,settle} from './component-harness.mjs';
 
-async function workspace(fetch,props={}){
+async function workspace(fetch,props={},fields={},extra={}){
  const polls=[];
- const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:{}}},{fetch,Response,TextEncoder,FormData:class {get(){return null;}},queueMicrotask,setInterval:fn=>{polls.push(fn);return polls.length;},clearInterval:()=>{}});
+ const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:{}},'../assistant-surfaces.mjs':surfaces},{fetch,Response,TextEncoder,FormData:class {get(name){return fields[name]??null;}},queueMicrotask,setInterval:fn=>{polls.push(fn);return polls.length;},clearInterval:()=>{},...extra});
  const render=(next=props)=>{const tree=h.render(h.exports.default,next);h.commit();return tree;};
  render();await settle();
  return {h,polls,render};
@@ -104,5 +105,26 @@ test('a submitted question carries the current selected interval without account
   await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
   assert.deepEqual(JSON.parse(JSON.stringify(sent.context)),focus.context);assert.equal(sent.question,'Explain this selected interval.');
   assert.equal(Object.hasOwn(sent,'password'),false);assert.equal(Object.hasOwn(sent,'role'),false);
+ }finally{h.dispose();}
+});
+
+test('the visitor question supplies search terms and status retry never resubmits an accepted job',async()=>{
+ const focus={title:'Selected source title',detail:'Synthetic only',context:{version:1,frame:2026,view:'Page',surface:'knowledge-record',layers:[],selection:{kind:'knowledge',recordId:'synthetic-one'}}};
+ let posts=0,reads=0,sent;
+ const {h,render}=await workspace(async(url,options)=>{
+  assert.equal(url.includes('/api/pc-ai/'),false);
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST'){posts++;sent=JSON.parse(options.body);return Response.json({id:'synthetic-job'});}
+  reads++;if(reads===1)throw Error('interrupted');
+  return Response.json({id:'synthetic-job',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'Synthetic only'}});
+ },{focus});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'What limits this observation?'}});tree=render();
+  await findNode(tree,n=>n.type==='form'&&n.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  tree=render();await settle();tree=render();
+  assert.equal(sent.term,'What limits this observation?');assert.equal(posts,1);assert.equal(message(tree).props.value,'');
+  message(tree).props.onChange({target:{value:'Keep the next draft.'}});tree=render();
+  findNode(tree,n=>n.type==='button'&&n.props.children==='Retry status').props.onClick();tree=render();await settle();tree=render();
+  assert.equal(posts,1);assert.equal(reads,2);assert.equal(message(tree).props.value,'Keep the next draft.');assert.match(text(tree),/Synthetic only/);
  }finally{h.dispose();}
 });
