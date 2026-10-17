@@ -69,6 +69,9 @@ export function repeatsPriorReply(value,prior){
  const words=text=>(text??'').toLowerCase().match(/[\p{L}\p{N}]+/gu)??[];
  const current=words(value),previous=words(prior);
  if(current.length<24||previous.length<24)return false;
+ // A complete leading replay is still repetition when appended text dilutes
+ // the phrase-overlap percentage. Partial shared introductions remain allowed.
+ if(previous.every((word,index)=>current[index]===word))return true;
  const phrases=new Set();for(let i=0;i+3<previous.length;i++)phrases.add(previous.slice(i,i+4).join(' '));
  let matches=0;for(let i=0;i+3<current.length;i++)if(phrases.has(current.slice(i,i+4).join(' ')))matches++;
  return matches/(current.length-3)>=0.75;
