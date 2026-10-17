@@ -101,6 +101,28 @@ test('external source recheck resolves source fingerprints even without a KFM re
  assert.ok(reads>before);assert.equal(changed.body.result.reasonCode,'RELEASE_CHANGED');assert.equal(changed.body.result.interpretation,null);assert.equal(changed.body.context,null);
 });
 
+test('catalog selections without links are rechecked before inference and on result reads',async()=>{
+ const selected={...input,context:{...input.context,surface:'map',view:'2D',selection:{kind:'registry',layerId:'synthetic-layer',featureId:'synthetic-feature'}}};
+ let record={title:'Synthetic catalogue record',year:2026,prompt:'Original synthetic context.'};
+ const resolver=createAssistantContextResolver({catalog:()=>record});
+ const f=runtime(resolver),created=await f.request('jobs',selected);
+ const done=await f.settleJob(created.body.id,created.cookie);
+ assert.equal(done.body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+ assert.deepEqual(done.body.context.references,[]);assert.equal(f.calls(),1);
+ record={...record,prompt:'Corrected synthetic context.'};
+ const changed=await f.request('jobs/'+created.body.id,null,created.cookie);
+ assert.equal(changed.body.result.reasonCode,'RELEASE_CHANGED');
+ assert.equal(changed.body.result.interpretation,null);assert.equal(changed.body.context,null);
+ record={...record,prompt:'Original synthetic context.'};
+ assert.equal((await f.request('jobs/'+created.body.id,null,created.cookie)).body.result.reasonCode,'RELEASE_CHANGED');
+
+ let reads=0;
+ const beforeInference=runtime(async selector=>{if(++reads>1)record={...record,denied:true};return resolver(selector);});
+ const blocked=await beforeInference.request('jobs',selected);
+ assert.equal((await beforeInference.settleJob(blocked.body.id,blocked.cookie)).body.result.reasonCode,'RELEASE_CHANGED');
+ assert.equal(beforeInference.calls(),0);
+});
+
 test('admission returns a job before source resolution; cancellation suppresses a late context without inference',async()=>{
  let release;const f=runtime(()=>new Promise(resolve=>{release=resolve;}));
  const created=await f.request('jobs',input);assert.equal(created.status,202);assert.equal(typeof release,'function');assert.equal((await f.request('jobs/'+created.body.id,null,created.cookie)).body.state,'preparing');
