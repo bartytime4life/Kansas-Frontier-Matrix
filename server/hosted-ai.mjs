@@ -63,3 +63,14 @@ export function hasRepeatedPhrase(value){
  return false;
 }
 
+// A continuation that mostly copies its preceding reply is not new progress.
+// Compare phrases, not shared subject words; short answers are excluded.
+export function repeatsPriorReply(value,prior){
+ const words=text=>(text??'').toLowerCase().match(/[\p{L}\p{N}]+/gu)??[];
+ const current=words(value),previous=words(prior);
+ if(current.length<24||previous.length<24)return false;
+ const phrases=new Set();for(let i=0;i+3<previous.length;i++)phrases.add(previous.slice(i,i+4).join(' '));
+ let matches=0;for(let i=0;i+3<current.length;i++)if(phrases.has(current.slice(i,i+4).join(' ')))matches++;
+ return matches/(current.length-3)>=0.75;
+}
+

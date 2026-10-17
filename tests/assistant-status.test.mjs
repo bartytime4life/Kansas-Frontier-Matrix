@@ -173,3 +173,20 @@ test('a selected sample can resolve a source summary while inference is offline,
   assert.equal(text(status(tree)),'AI unavailable');assert.equal(send(tree).props.disabled,true);
  }finally{h.dispose();}
 });
+
+test('a withheld repeated continuation explains the limit and leaves no enabled continuation button',async()=>{
+ let sequence=0;
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST')return Response.json({id:'turn-'+(++sequence)});
+  return Response.json({id:url.split('/').at(-1),state:'completed',deadline:0,result:sequence===1?{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',answer:null,interpretation:'Synthetic limited explanation.',outputLimited:true}:{outcome:'ABSTAIN',reasonCode:'MODEL_CONTINUATION_REPEATED',answer:null,interpretation:null,followUpQuestion:'Would you like to ask a narrower question?'}});
+ });
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain the display.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});tree=render();await settle();tree=render();
+  findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply').props.onClick();tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});tree=render();await settle();tree=render();
+  assert.match(text(tree),/duplicate was withheld/);assert.match(text(tree),/Ask a narrower question/);
+  assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply'&&node.props.disabled===false),undefined);
+ }finally{h.dispose();}
+});
