@@ -1,5 +1,38 @@
 # Public AI workflow continuation · 2026-10-17
 
+## Full-prefix repetition repair · 2026-10-17
+
+Actual GoDaddy Preview at merged #5243 revision
+`500a09935951b5bec7965174236c6aac33c3e933` returned unsupported Google Maps
+and access-history details for a date question. Its ordinary follow-up copied
+the entire preceding reply, then appended unsupported and contradictory core
+date claims. The new text diluted the existing 75% phrase-overlap threshold.
+Both outputs remain failed answer-quality evidence, not source facts.
+
+The repetition check now also withholds a full leading copy of the immediately
+preceding reply, normalized to case-insensitive Unicode words. The existing
+24-word minimum and phrase-overlap fallback remain. A partial shared opening
+with new detail remains allowed; intentional full repetition may be withheld
+because the prior turn remains readable. The existing handler/UI already return
+ABSTAIN and explain withholding without storing duplicate history or exposing
+duplicate draft/continuation actions. No new response contract is needed.
+
+Local validation passed 79 direct/in-process checks and two production built
+Fetch-handler checks, with zero failed/skipped; production build, TypeScript,
+changed-file ESLint and whitespace checks passed. Real HTTP and assigned-port
+startup require exact-head CI because local TCP listeners remain restricted.
+No new-head CI, deployment or live rejection outcome is claimed here.
+
+The actual two observed outputs are replayed with a fake model through the
+public handler. The regression fails on the unchanged merged source, then
+passes with the repair. This qualifies the rejection behavior only. The first
+unsupported answer and factual claims in otherwise novel output remain beyond
+this heuristic. Production acceptance is still held; no model/file/settings,
+private store, source admission, paid service or PC dependency is changed.
+
+Existing `server/`, `tests/` and `docs/` own this bounded repair. Rollback is
+application reversion and redeployment, with no migration or store reset.
+
 ## Page time and repeated follow-up repair · 2026-10-17
 
 GoDaddy Preview at `1e5c783f5b62ade5fdbb4159682922968663a7ca`
