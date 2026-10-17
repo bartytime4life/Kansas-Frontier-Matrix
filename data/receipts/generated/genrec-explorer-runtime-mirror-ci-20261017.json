@@ -1,0 +1,120 @@
+{
+  "receipt_id": "explorer-runtime-mirror-ci-repair-20261017",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/scripts/serve-local-worker.mjs",
+    "apps/site/source/tests/local-worker-runtime.test.mjs",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py",
+    "apps/site/verification-runtime-mirror-20261017.md",
+    "data/receipts/generated/site-v268-current-main-runtime-reconciliation-20261017.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/scripts/serve-local-worker.mjs": "sha256:6f7eb010d52e8909d92fff75e574f5e5726ec56ba592420525c10e6d040163cd",
+    "apps/site/source/tests/local-worker-runtime.test.mjs": "sha256:4f6bd36e41fcdf5018f77722bc1ed9d92357cb27b899f69f841658e5fe9ce0be",
+    "tests/qa/test_site_mirror.py": "sha256:692d4ac7514b38122ec4688dc52ff38a27f93ac00febd1528798ac3bf69d64a7",
+    "tools/qa/site_mirror.py": "sha256:7d27db66692baaa2b7eaae5afab6fc8c9499caf163a8d3f6433801c81e5b48a9",
+    "apps/site/verification-runtime-mirror-20261017.md": "sha256:4155f8cd3a10e6bd1825721c6f8cea646d08a99be507d162e78864796e88cae1",
+    "data/receipts/generated/site-v268-current-main-runtime-reconciliation-20261017.json": "sha256:a60596f57eb0fb26e14fddd6d2041f2d448e2dd3bdc74ab7ce9b83df90ff4abc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Runtime snapshot not exposed"
+  },
+  "prompt_or_contract": "sha256:1365ea8a1a7d2bf041e9b9becd278be0c529f362bccc58820c2f6ae61acf3fbd",
+  "parameters": {
+    "tools_enabled": [
+      "local filesystem",
+      "local test runtime",
+      "GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@e30566dfa299fd3e540da239a5c9ec018b2fd4cc",
+      "data/receipts/generated/site-v268-explorer-a11y-overlay-20261015.json",
+      "apps/site/verification-runtime-mirror-20261017.md"
+    ],
+    "evidence_hashes": [
+      "sha256:3c2be2c063ec3109d6ec3ceaefd0189bce07222eba0328386400bf11a157df2e"
+    ],
+    "attached_docs": [
+      "apps/site/source/AGENTS.md",
+      "apps/site/source/docs/SITE_PRESERVATION.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/scripts/serve-local-worker.mjs": "PROPOSED",
+    "apps/site/source/tests/local-worker-runtime.test.mjs": "PROPOSED",
+    "tests/qa/test_site_mirror.py": "PROPOSED",
+    "tools/qa/site_mirror.py": "PROPOSED",
+    "apps/site/verification-runtime-mirror-20261017.md": "CONFIRMED",
+    "data/receipts/generated/site-v268-current-main-runtime-reconciliation-20261017.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "runtime regression",
+      "outcome": "PASS",
+      "reason": "Original runtime test reproduced STARTUP_FAILED before repair; all 10 runtime tests pass after import restoration."
+    },
+    {
+      "gate": "production build and static containment",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "full local Explorer suite",
+      "outcome": "PASS",
+      "reason": "1372 passed, zero failed, two Linux-only /proc tests skipped on macOS."
+    },
+    {
+      "gate": "TypeScript and focused lint",
+      "outcome": "PASS",
+      "reason": "No errors or focused warnings; whole-Site lint has 77 existing warnings."
+    },
+    {
+      "gate": "mirror parity and negative regressions",
+      "outcome": "PASS",
+      "reason": "874 files match; 258 withheld paths absent; all 39 tests pass. Review remains pending, hosted equivalence false."
+    },
+    {
+      "gate": "water and smoke-preflight combined local tests",
+      "outcome": "FAIL",
+      "reason": "344 passed, one Linux-specific readiness harness cannot find /usr/bin/setsid on macOS; all water-conformance tests pass. Exact-head Linux CI must verify smoke."
+    },
+    {
+      "gate": "synthetic fixture regeneration",
+      "outcome": "PASS",
+      "reason": "Eight outputs generated in isolated temporary storage; reviewed fixtures untouched."
+    },
+    {
+      "gate": "exact-head CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending initial draft publication; final PR checks and description are authoritative."
+    },
+    {
+      "gate": "deployment",
+      "outcome": "SKIPPED",
+      "reason": "User prohibited deployment of either site."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "runtime-before-repair",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39005752061/job/117317768099"
+    },
+    {
+      "id": "mirror-before-repair",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39005752055/job/117317768007"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-17T05:33:04.997233+00:00",
+  "emitter": "Codex /root",
+  "notes": "Restore an existing safety validator import and reconcile recorded main-branch bytes. Validator logic, withheld assets, source identity, private data, archive authorization and hosted sites are unchanged. All current authored artifacts are hash-bound; no approval or deployment authority is claimed."
+}

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 import os
 import subprocess
@@ -17,6 +18,38 @@ assert SPEC and SPEC.loader
 TOOL = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(TOOL)
 DEFAULT_RECEIPT_RELATIVE = TOOL.RECEIPT.relative_to(ROOT)
+
+
+def test_current_receipt_preserves_source_identity_withheld_inventory_and_pending_review() -> None:
+    receipt = json.loads((ROOT / DEFAULT_RECEIPT_RELATIVE).read_text())
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    previous = json.loads(predecessor.read_text())
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
+    for key in ("site_candidate_commit", "site_project_id", "site_version_id", "site_audience",
+                "authoritative_site_source_paths", "canonical_document_mappings", "canonical_tool_mappings", "overlay", "review"):
+        assert receipt[key] == previous[key], key
+    assert receipt["review"]["source_and_overlay_review"] == "PENDING"
+    assert receipt["review"]["human_acceptance"] is False
+    assert receipt["review"]["hosted_equivalence"] is False
+    assert receipt["review"]["blocking_checks"] == ["repository_review", "human_acceptance"]
+    assert receipt["status"] == "REVIEW_ONLY"
+    changed = receipt["repository_reconciliation"]["changes"]
+    assert {entry["path"] for entry in changed if entry["proposed_in_this_change"]} == {
+        "tests/local-worker-runtime.test.mjs",
+    }
+    restored = receipt["repository_reconciliation"]["restored_recorded_paths"]
+    assert [entry["path"] for entry in restored] == ["scripts/serve-local-worker.mjs"]
+    assert receipt["comparison"][restored[0]["path"]] == previous["comparison"][restored[0]["path"]]
+    assert restored[0]["restored_sha256"] == previous["comparison"][restored[0]["path"]]["mirror_sha256"]
+    for entry in changed:
+        before = previous["comparison"].get(entry["path"])
+        current = receipt["comparison"][entry["path"]]
+        assert entry["previous_receipt_sha256"] == (before["mirror_sha256"] if before else None)
+        assert current["site_sha256"] == (before["site_sha256"] if before else None)
+        assert current["mirror_sha256"] == entry["mirror_sha256"]
+        assert current["state"] != "identical"
+    inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
 def _git(root: Path, *args: str) -> str:
