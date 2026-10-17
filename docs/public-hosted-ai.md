@@ -175,3 +175,39 @@ weights remain available if the owner chooses that model as a fallback.
 No database migration, subscription change or public activation is performed
 by qualification.
 
+## Evidence search independent of generation — 2026-10-17
+
+The follow-up based on `e3c8175884c844fbd917155b24424de69dddb507` separates
+deterministic evidence discovery from the discussion worker. Previously a
+model that was unavailable stopped evidence results, and a running discussion
+held another guest's evidence search in the inference queue even though that
+search never called the model.
+
+The configured status response now includes `evidenceSearchAvailable: true`.
+This means the bounded search route is available, not that a release or matching
+records exist. Disabled runtime status explicitly returns false. The UI enables
+Find evidence only with that explicit capability and keeps discussion dependent
+on model readiness. A draft survives switching modes. Search links still carry
+`ABSTAIN / EVIDENCE_MODEL_UNQUALIFIED`; they are discovery results, not a
+model-selected factual answer.
+
+Search retains the same shared admission limits, guest ownership, deadlines,
+sensitivity check, packet validation and release rechecks before return and on
+every later read. It returns a job without awaiting the second release read,
+does not wait for the discussion worker, and never restores a cancelled or
+expired result. There is no new data binding, evidence admission, model download,
+model execution, resource-limit change or hosted activation in this change.
+
+Validation: 43 focused local tests passed across assistant status, public chat,
+model lifecycle, synthetic acceptance logic and PC account/worker boundaries on
+Node 24.19.0. The final UI-copy adjustment was followed by 18 passing affected
+tests. The two new availability/queue regressions failed before the fix. These
+use synthetic evidence and mocked model calls; they do not qualify actual model
+quality or prove hosted records. Full production build, Node 22 hosted replay,
+changed-UI browser acceptance and independent review remain NOT_RUN.
+
+Rollback: revert this follow-up's code and documentation together. The status
+field is additive and the UI fails closed against an older server without it.
+No migration or persistent-data rewrite is required. The prioritized remaining
+work is in [the AI usefulness review](ai-usefulness-review-20261017.md).
+
