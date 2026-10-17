@@ -53,10 +53,11 @@ function effectVisit(node){
 effectVisit(ast);
 test('guide Layers and Time enter committed destinations after dismissal, even when the panel was retained',()=>{
   for(const action of ['layers','time'])for(const retained of [false,true]){
-    const frames=[],focus=[],state={open:true,time:retained},target={focus:()=>focus.push(action)};
+    const frames=[],focus=[],state={open:true,time:retained,status:true,starter:false},target={focus:()=>focus.push(action)};
     const leftPanelRef={current:retained?{}:null},timelineRef={current:retained?{}:null};
     const route=evaluate(callbacks.get('runExplorerGuideAction'),{
       openAtlasPanel:()=>{state.layers=true;},setPrimaryWorkspace:()=>{},setTimelineOpen:v=>state.time=v,
+      setSourceStatusOpen:v=>state.status=v,setStarterPanelOpen:v=>state.starter=v,
       primaryWorkspace:'map',undergroundOpen:false,toggleUnderground:()=>{},openQwenCompanion:()=>{},
       window:{requestAnimationFrame:fn=>frames.push(fn)},leftPanelRef,timelineRef,
       visibleFocusableElements:panel=>{assert.equal(panel,action==='layers'?leftPanelRef.current:timelineRef.current);return [target];},
@@ -71,6 +72,7 @@ test('guide Layers and Time enter committed destinations after dismissal, even w
     leftPanelRef.current={};timelineRef.current={};frames[0]();
     assert.deepEqual(focus,['guide-trigger',action]);
     assert.equal(action==='layers'?state.layers:state.time,true);
+    if(action==='layers'){assert.equal(state.status,false);assert.equal(state.starter,true);}
   }
 });
 test('detailed map help takes focus after mount and returns it on close without stealing outside focus',()=>{

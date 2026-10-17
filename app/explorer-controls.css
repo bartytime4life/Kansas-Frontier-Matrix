@@ -127,3 +127,29 @@
   .layer-panel[data-panel-mode="layers"] .official-context-row input[type="range"] { min-height: 44px; }
   .layer-panel[data-panel-mode="layers"] .official-context-row .official-context-actions :is(button, a) { display: inline-flex; align-items: center; min-height: 44px; }
 }
+
+/* Task-based starters; public source identity and eligibility stay with existing owners. */
+.map-starters { padding: 12px 14px; border-bottom: 1px solid #465568; background: #101b29; }
+.map-starters h2 { margin: 0 0 8px; font-size: 17px; color: #f1d992; }
+.map-starters p { margin: 8px 0; font-size: 12px; line-height: 1.5; color: #c2cfdd; }
+.map-starters-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.map-starters button { min-height: 44px; flex: 1 1 110px; padding: 8px; border: 1px solid #657990; border-radius: 5px; background: #273b4b; color: #eef2f6; font: inherit; font-size: 12px; }
+.map-starters-actions button:first-child { background: #dfc487; color: #12202e; border-color: #dfc487; font-weight: 700; }
+.map-starters button:disabled { opacity: .55; cursor: not-allowed; }
+.map-starters summary { min-height: 44px; align-content: center; cursor: pointer; color: #b7e3e2; font-size: 13px; }
+.map-starters ul { margin: 8px 0; padding-left: 18px; }
+.map-starters li { margin-bottom: 10px; font-size: 12px; overflow-wrap: anywhere; }
+.map-starters li span,.map-starters li small { display: block; margin-top: 3px; color: #c2cfdd; line-height: 1.5; }
+.map-starters-remember { display: flex; gap: 8px; align-items: center; min-height: 44px; font-size: 12px; line-height: 1.5; color: #eef2f6; cursor: pointer; }
+.map-starters-remember input { flex: none; width: 18px; height: 18px; }
+.map-starters :is(button,select,input,summary):focus-visible { outline: 3px solid #9de4e0; outline-offset: 3px; }
+.map-starters [role="status"]:empty { display: none; }
+/* Purpose selection shares the existing catalog scroll area and source owners. */
+.starter-panel-body .map-starters { margin: 0; border: 0; border-radius: 0; }
+.map-starters-options { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; }
+.map-starters-options button { min-height: 44px; text-align: left; padding: 8px 10px; }
+.map-starters-options button[aria-pressed="true"] { border-color: var(--gold,#dfc076); background: #3a3526; color: #fff1c9; }
+.map-starters-recovery { padding: 10px; border-left: 2px solid var(--gold,#dfc076); }
+.map-starters-browse { min-height: 44px; width: 100%; }
+.layer-panel .layer-source-switch { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.layer-panel .layer-source-switch > button:last-child { grid-column: 1 / -1; }
