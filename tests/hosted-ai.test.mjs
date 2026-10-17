@@ -32,3 +32,10 @@ test('operator diagnostics retain fixed startup codes without exposing worker se
  w.emit('error',Object.assign(new Error('secret path or stack'),{code:'ENOENT'}));
  await assert.rejects(model.loaded,/MODEL_UNAVAILABLE/);assert.equal(w.terminated,true);
 });
+test('successful qualification cleanup does not report an outage',async()=>{
+ const w=worker(),codes=[],model=new HostedAiModel({workerFactory:()=>w,memoryUsage:()=>({rss:10}),diagnostic:code=>codes.push(code)});
+ w.emit('message',{type:'ready'});await model.loaded;
+ model.stop();w.emit('exit',0);
+ assert.deepEqual(codes,[]);assert.equal(model.ready,false);assert.equal(w.terminated,true);
+ await assert.rejects(model.discuss('after cleanup'),/MODEL_UNAVAILABLE/);
+});

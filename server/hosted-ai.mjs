@@ -43,12 +43,13 @@ export class HostedAiModel{
    this.worker.postMessage({type:kind,id,...payload,cancel});
   });
  }
- stop(reason='MODEL_UNAVAILABLE',detail){
+ stop(reason,detail){
+  const intentional=reason===undefined;reason??='MODEL_UNAVAILABLE';
   if(this.stopped)return;this.stopped=true;this.ready=false;this.online=false;this.reason=reason;
   clearTimeout(this.loadTimer);clearInterval(this.monitor);this.rejectReady(error(reason));
   if(this.pending){const p=this.pending;this.pending=null;p.cleanup();p.reject(error(reason));}
   // Operator logs receive fixed codes only, never messages, paths, prompts or stacks.
-  try{this.diagnostic((diagnosticCodes.has(reason)?reason:'MODEL_UNAVAILABLE')+(diagnosticCodes.has(detail)?':'+detail:''));}catch{}
+  if(!intentional)try{this.diagnostic((diagnosticCodes.has(reason)?reason:'MODEL_UNAVAILABLE')+(diagnosticCodes.has(detail)?':'+detail:''));}catch{}
   void this.worker.terminate();
  }
 }
