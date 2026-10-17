@@ -42,11 +42,30 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
   return value.evidence.length?{releaseId:value.releaseId,evidence:value.evidence,truncated:Boolean(value.truncated)}:null;
  };
  const fresh=async job=>{const value=await packet(job.query);return Boolean(value&&digest(value)===job.evidenceDigest);};
+ const evidenceResult=async job=>{
+  if(!await fresh(job))return envelope('ABSTAIN','RELEASE_CHANGED');
+  // Deterministic discovery does not require inference or factual selection.
+  // Keep the answer withheld and expose only the rechecked reader's links.
+  return {...envelope('ABSTAIN','EVIDENCE_MODEL_UNQUALIFIED'),citations:job.packet.evidence.slice(0,4).map(fact=>({evidenceRef:fact.evidenceRef,title:fact.title,url:fact.url})),truncated:job.packet.truncated||job.packet.evidence.length>4};
+ };
+ const completeEvidence=async job=>{
+  job.state='running';
+  try{
+   const result=await evidenceResult(job);
+   if(job.state==='running'&&clock()<job.deadline){job.state='completed';job.result=result;}
+   else if(job.state==='running'){job.state='expired';job.result=null;}
+  }catch{
+   if(job.state==='running'){
+    job.state=clock()<job.deadline?'completed':'expired';
+    job.result=job.state==='completed'?envelope('ABSTAIN','EVIDENCE_WITHHELD'):null;
+   }
+  }finally{job.question='';if(!job.result?.citations?.length){job.packet=null;job.query=null;}}
+ };
  const drain=async()=>{
   if(draining)return;draining=true;
   try{while(true){
    cleanup();const job=[...jobs.values()].find(j=>j.state==='queued');if(!job)break;
-   if(!model.ready){job.state='completed';job.result=envelope('ERROR','MODEL_UNAVAILABLE');job.packet=null;continue;}
+   if(!model.ready){job.state='completed';job.result=envelope('ERROR','MODEL_UNAVAILABLE');job.packet=null;job.question='';job.query=null;continue;}
    job.state='running';job.abort=new AbortController();const timer=setTimeout(()=>job.abort.abort(),Math.max(1,job.deadline-clock()));timer.unref?.();
    try{
     if(job.mode==='explore'){
@@ -59,11 +78,6 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
       job.result={...envelope('ABSTAIN','UNVERIFIED_AI_DISCUSSION'),interpretation:output,contextLimited:Boolean(discussion.contextTrimmed),outputLimited:Boolean(discussion.outputLimited)};
       if(session)session.history=[...(session.history??[]),{question:job.question,reply:output,at:clock()}].slice(-2);
      }
-    }else if(!await fresh(job))job.result=envelope('ABSTAIN','RELEASE_CHANGED');
-    else{
-     // The small model failed semantic selection qualification. Show only the
-     // released reader's references; do not turn any model choice into an answer.
-     job.result={...envelope('ABSTAIN','EVIDENCE_MODEL_UNQUALIFIED'),citations:job.packet.evidence.slice(0,4).map(fact=>({evidenceRef:fact.evidenceRef,title:fact.title,url:fact.url})),truncated:job.packet.truncated||job.packet.evidence.length>4};
     }
    }catch(error){if(job.state==='running')job.result=envelope(error.code==='MODEL_CONTEXT_LIMIT'?'ABSTAIN':'ERROR',error.code==='MODEL_CONTEXT_LIMIT'?'MODEL_CONTEXT_LIMIT':'MODEL_UNAVAILABLE');}
    finally{clearTimeout(timer);if(job.state==='running'){job.state=job.abort.signal.aborted?'expired':'completed';if(job.state==='expired')job.result=null;}job.abort=null;job.question='';if(!job.result?.citations?.length){job.packet=null;job.query=null;}}
@@ -74,7 +88,7 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
   if(!['GET','POST'].includes(request.method))return reply({reasonCode:'METHOD_DENIED'},405);
   if(new URL(request.url).origin!==origin)return reply({reasonCode:'AI_ORIGIN_HOLD'},503);
   if(request.method==='POST'&&(request.headers.get('origin')!==origin||request.headers.get('sec-fetch-site')==='cross-site'))return reply({reasonCode:'ORIGIN_DENIED'},403);
-  if(path==='status'&&request.method==='GET')return reply({configured:true,online:model.online,ready:model.ready,requiresLogin:false,provider:'hosted-smollm2',model:HOSTED_MODEL});
+  if(path==='status'&&request.method==='GET')return reply({configured:true,online:model.online,ready:model.ready,evidenceSearchAvailable:true,requiresLogin:false,provider:'hosted-smollm2',model:HOSTED_MODEL});
   let guest=cookie(request),session=sessions.get(digest(guest)),extra={};
   try{
    if(path==='jobs'&&request.method==='POST'){
@@ -102,8 +116,12 @@ export function createPublicAiHandler({origin,resolveEvidence,model,clock=Date.n
      if(job.state!=='preparing'||clock()>=job.deadline){job.state='expired';return reply({id:job.id},202,extra);}
      if(!sensitive&&mode==='explore'){job.state='queued';void drain();}
      else if(!evidence){job.state='completed';job.result=envelope(sensitive?'DENY':'ABSTAIN',sensitive?'POLICY_WITHHELD':'NO_RELEASED_EVIDENCE');job.question='';job.query=null;}
-     else{job.packet=evidence;job.evidenceDigest=digest(evidence);job.state='queued';void drain();}
-    }catch{job.state='completed';job.result=envelope('ABSTAIN','EVIDENCE_WITHHELD');}
+     else{
+      job.packet=evidence;job.evidenceDigest=digest(evidence);
+      // Return the opaque job promptly; do not queue discovery behind inference.
+      void completeEvidence(job);
+     }
+    }catch{job.state='completed';job.result=envelope('ABSTAIN','EVIDENCE_WITHHELD');job.question='';job.packet=null;job.query=null;}
     return reply({id:job.id},202,extra);
    }
    const match=/^jobs\/([A-Za-z0-9_-]{43})(\/cancel)?$/.exec(path);
@@ -132,7 +150,7 @@ let runtime;
 export function publicAiRuntime(resolveEvidence){
  const origin=process.env.KFM_HOSTED_AI_ORIGIN;
  const valid=process.env.KFM_HOSTED_AI==='1'&&['https://kansasfrontiermatrix.com','https://q9r9beo47t.preview.c38.airoapp.ai'].includes(origin);
- if(!valid)return async request=>reply({configured:false,online:false,ready:false,requiresLogin:false,reasonCode:'HOSTED_AI_NOT_CONFIGURED'},new URL(request.url).pathname==='/api/ai/status'?200:503);
+ if(!valid)return async request=>reply({configured:false,online:false,ready:false,evidenceSearchAvailable:false,requiresLogin:false,reasonCode:'HOSTED_AI_NOT_CONFIGURED'},new URL(request.url).pathname==='/api/ai/status'?200:503);
  if(!runtime)runtime=createPublicAiHandler({origin,resolveEvidence:query=>resolveEvidence(query,origin),model:getHostedAiModel()});
  return runtime;
 }

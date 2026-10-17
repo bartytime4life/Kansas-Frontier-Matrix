@@ -9,7 +9,7 @@ async function workspace(fetch){
  render();await settle();
  return {h,polls,render};
 }
-const ready=()=>Response.json({configured:true,online:true,ready:true,requiresLogin:false});
+const ready=()=>Response.json({configured:true,online:true,ready:true,evidenceSearchAvailable:true,requiresLogin:false});
 const text=node=>[node?.props?.children].flat(Infinity).map(value=>typeof value==='string'?value:typeof value==='object'?text(value):'').join(' ');
 const status=tree=>findNode(tree,node=>node.props?.role==='status');
 const send=tree=>findNode(tree,node=>node.type==='button'&&node.props.children==='Send');
@@ -46,4 +46,32 @@ test('origin holds show an owner setup message without exposing raw server error
   const tree=render();assert.match(text(alert(tree)),/site owner/);
   assert.doesNotMatch(text(tree),/AI_ORIGIN_HOLD/);assert.equal(send(tree).props.disabled,true);
  }finally{h.dispose();}
+});
+
+test('evidence mode stays usable when the model is offline and switching modes preserves the draft',async()=>{
+ const {h,render}=await workspace(async url=>url.includes('/api/pc-ai/')?Response.json({configured:false,account:null}):Response.json({configured:true,online:false,ready:false,evidenceSearchAvailable:true,requiresLogin:false}));
+ try{
+  let tree=render();assert.equal(text(status(tree)),'AI unavailable');
+  assert.match(text(tree),/Choose Find evidence/);
+  message(tree).props.onChange({target:{value:'Find river records.'}});
+  tree=render();assert.equal(send(tree).props.disabled,true);
+  findNode(tree,node=>node.type==='select'&&node.props.name==='mode').props.onChange({target:{value:'evidence'}});
+  tree=render();assert.equal(text(status(tree)),'Evidence search available');
+  assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Search').props.disabled,false);
+  assert.equal(message(tree).props.value,'Find river records.');
+  assert.match(text(tree),/Released records · no model required/);
+  findNode(tree,node=>node.type==='select'&&node.props.name==='mode').props.onChange({target:{value:'explore'}});
+  tree=render();assert.equal(send(tree).props.disabled,true);assert.equal(message(tree).props.value,'Find river records.');
+ }finally{h.dispose();}
+});
+
+test('evidence search fails closed when its capability is missing or the runtime is disabled',async()=>{
+ for(const chatStatus of [{configured:true,online:true,ready:true},{configured:false,online:false,ready:false,evidenceSearchAvailable:true}]){
+  const {h,render}=await workspace(async url=>url.includes('/api/pc-ai/')?Response.json({configured:false,account:null}):Response.json(chatStatus));
+  try{
+   let tree=render();message(tree).props.onChange({target:{value:'Find river records.'}});
+   findNode(tree,node=>node.type==='select'&&node.props.name==='mode').props.onChange({target:{value:'evidence'}});
+   tree=render();assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Search').props.disabled,true);
+  }finally{h.dispose();}
+ }
 });

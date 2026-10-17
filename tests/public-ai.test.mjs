@@ -4,9 +4,9 @@ import {createPublicAiHandler,publicAiRuntime} from '../server/public-ai-handler
 const origin='https://kansasfrontiermatrix.com';
 const evidence={releaseId:'sha256:'+'a'.repeat(64),evidence:[{evidenceRef:'kfm:synthetic:blue',text:'Synthetic test: the sample marker is blue.',status:'documented',title:'Synthetic test only',url:origin+'/knowledge/record?id=synthetic'}],truncated:false};
 const question={question:'What color is the sample marker?',term:'marker',place:'',start:'',end:'',mode:'explore'};
-function fixture(work=async()=>({text:'A synthetic discussion idea.',contextTrimmed:false,outputLimited:false})){
+function fixture(work=async()=>({text:'A synthetic discussion idea.',contextTrimmed:false,outputLimited:false}),ready=true,resolveEvidence=async value=>value){
  let current=structuredClone(evidence),now=1700000000000,calls=0;
- const handler=createPublicAiHandler({origin,clock:()=>now,resolveEvidence:async()=>current,model:{ready:true,online:true,discuss:async(...args)=>{calls++;return work(...args);},select:async()=>{throw Error('Evidence selection must remain disabled');}}});
+ const handler=createPublicAiHandler({origin,clock:()=>now,resolveEvidence:async()=>resolveEvidence(current),model:{ready,online:ready,discuss:async(...args)=>{calls++;return work(...args);},select:async()=>{throw Error('Evidence selection must remain disabled');}}});
  const request=async(path,body,cookie,requestOrigin=origin)=>{
   const response=await handler(new Request(origin+'/api/ai/'+path,{method:body===undefined?'GET':'POST',headers:{...(body===undefined?{}:{'Content-Type':'application/json',Origin:requestOrigin}),...(cookie?{Cookie:cookie}:{})},body:body===undefined?undefined:JSON.stringify(body)}));
   return{response,body:await response.json(),cookie:response.headers.get('set-cookie')?.split(';')[0]};
@@ -74,4 +74,74 @@ test('disabled runtime has no model or private account-store effects',async()=>{
  const old=process.env.KFM_HOSTED_AI;delete process.env.KFM_HOSTED_AI;
  try{const handle=publicAiRuntime(()=>{throw Error('must not resolve');});assert.equal((await(await handle(new Request(origin+'/api/ai/status'))).json()).configured,false);assert.equal((await handle(new Request(origin+'/api/ai/jobs',{method:'POST'}))).status,503);}
  finally{if(old!==undefined)process.env.KFM_HOSTED_AI=old;}
+});
+
+test('released evidence remains inspectable with an unavailable model and is withdrawn on release change',async()=>{
+ const f=fixture(undefined,false);
+ const status=await f.request('status');
+ assert.equal(status.body.ready,false);
+ const search=await f.request('jobs',{...question,mode:'evidence'});
+ const found=await f.settle(search.body.id,search.cookie);
+ assert.equal(found.body.result.reasonCode,'EVIDENCE_MODEL_UNQUALIFIED');
+ assert.equal(found.body.result.answer,null);
+ assert.equal(found.body.result.interpretation,null);
+ assert.deepEqual(found.body.result.evidenceRefs,[]);
+ assert.equal(found.body.result.citations.length,1);
+ assert.equal(f.calls(),0);
+ assert.equal(status.body.evidenceSearchAvailable,true);
+ f.setEvidence(null);
+ assert.equal((await f.request('jobs/'+search.body.id,undefined,search.cookie)).body.result.reasonCode,'RELEASE_CHANGED');
+ const discussion=await f.request('jobs',question,search.cookie);
+ assert.equal((await f.settle(discussion.body.id,search.cookie)).body.result.reasonCode,'MODEL_UNAVAILABLE');
+ assert.equal(f.calls(),0);
+});
+
+test('evidence lookup does not wait behind another guest discussion',async()=>{
+ let begin,release;const started=new Promise(resolve=>{begin=resolve;});
+ const f=fixture(async()=>{begin();return new Promise(resolve=>{release=resolve;});});
+ const chat=await f.request('jobs',question);await started;
+ try{
+  const search=await f.request('jobs',{...question,mode:'evidence'});
+  const found=await f.settle(search.body.id,search.cookie);
+  assert.equal(found.body.result.citations.length,1);
+  assert.equal((await f.request('jobs/'+chat.body.id,undefined,chat.cookie)).body.state,'running');
+  assert.equal(f.calls(),1);
+ }finally{release({text:'A synthetic discussion idea.'});await f.settle(chat.body.id,chat.cookie);}
+});
+
+test('unavailable-model evidence search keeps sensitive, missing and malformed evidence fail-closed',async()=>{
+ const f=fixture(undefined,false);
+ const denied=await f.request('jobs',{...question,mode:'evidence',question:'Give exact GPS coordinates of an archaeological site'});
+ assert.equal((await f.settle(denied.body.id,denied.cookie)).body.result.outcome,'DENY');
+ f.setEvidence(null);
+ const missing=await f.request('jobs',{...question,mode:'evidence'},denied.cookie);
+ assert.equal((await f.settle(missing.body.id,denied.cookie)).body.result.reasonCode,'NO_RELEASED_EVIDENCE');
+ f.setEvidence({...evidence,evidence:[{...evidence.evidence[0],url:'https://attacker.test/knowledge/record?id=synthetic'}]});
+ const malformed=await f.request('jobs',{...question,mode:'evidence'},denied.cookie);
+ const withheld=(await f.settle(malformed.body.id,denied.cookie)).body.result;
+ assert.equal(withheld.reasonCode,'EVIDENCE_WITHHELD');
+ assert.equal(withheld.answer,null);assert.equal(withheld.citations,undefined);assert.equal(f.calls(),0);
+});
+
+test('pending evidence rechecks return a job promptly and cannot restore cancelled or expired results',async()=>{
+ for(const terminal of ['cancelled','expired']){
+  let reads=0,release;
+  const f=fixture(undefined,false,async value=>++reads===2?new Promise(resolve=>{release=()=>resolve(value);}):value);
+  const created=await f.request('jobs',{...question,mode:'evidence'});
+  assert.equal(created.response.status,202);assert.equal(typeof release,'function');
+  assert.equal((await f.request('jobs/'+created.body.id,undefined,created.cookie)).body.state,'running');
+  if(terminal==='cancelled')assert.equal((await f.request('jobs/'+created.body.id+'/cancel',{},created.cookie)).body.cancelled,true);
+  else f.advance(90001);
+  release();await new Promise(resolve=>setImmediate(resolve));
+  const ended=await f.request('jobs/'+created.body.id,undefined,created.cookie);
+  assert.equal(ended.body.state,terminal);assert.equal(ended.body.result,null);assert.equal(f.calls(),0);
+ }
+});
+
+test('a release changed during model-free preparation never exposes its old links',async()=>{
+ let reads=0;
+ const f=fixture(undefined,false,async value=>++reads===1?value:{...value,releaseId:'sha256:'+'b'.repeat(64)});
+ const created=await f.request('jobs',{...question,mode:'evidence'});
+ const result=(await f.settle(created.body.id,created.cookie)).body.result;
+ assert.equal(result.reasonCode,'RELEASE_CHANGED');assert.equal(result.citations,undefined);assert.equal(f.calls(),0);
 });

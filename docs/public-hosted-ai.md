@@ -1,5 +1,20 @@
 # Public hosted AI: discussion and released evidence
 
+GoDaddy Preview startup follow-up (2026-10-17): the dashboard was running
+`npm run dev`, which launched Vite on port 5173 and failed with EACCES. The
+standalone Node composition now makes that command build and start the same
+production server as Publish, using the existing validated `PORT` handling.
+Local hot-reload development remains available through `npm run dev:local`.
+This also makes Preview run the same explicit AI startup switches as Publish.
+The core delivery workflow checks the actual preview command on an assigned
+port and verifies that the hosted AI route and guest interface are present.
+No model, inference limit, domain, database or credential change is involved.
+Local verification passed: production build, TypeScript, 43 focused AI tests,
+15 real HTTP checks against `PORT=5184 npm run dev`, and the two built AI/account
+HTTP suites. An initial cross-session HTTP attempt could not reach the local
+listener; the same-session startup-and-test replay passed. Actual GoDaddy
+activation and public browser acceptance remain to be verified for this follow-up.
+
 Status: SmolLM2-360M q4 passes the four-task CI screen and actual GoDaddy v2
 conversation acceptance at 8096f439c85cfc3ceda997031e14734a61554a43. All four
 hosted replies completed without an output limit or memory-guard trip.
@@ -174,4 +189,40 @@ Earlier source e648e51e1dda3731c5f8d77cd1518507979b51c1 and the prior 135M
 weights remain available if the owner chooses that model as a fallback.
 No database migration, subscription change or public activation is performed
 by qualification.
+
+## Evidence search independent of generation — 2026-10-17
+
+The follow-up based on `e3c8175884c844fbd917155b24424de69dddb507` separates
+deterministic evidence discovery from the discussion worker. Previously a
+model that was unavailable stopped evidence results, and a running discussion
+held another guest's evidence search in the inference queue even though that
+search never called the model.
+
+The configured status response now includes `evidenceSearchAvailable: true`.
+This means the bounded search route is available, not that a release or matching
+records exist. Disabled runtime status explicitly returns false. The UI enables
+Find evidence only with that explicit capability and keeps discussion dependent
+on model readiness. A draft survives switching modes. Search links still carry
+`ABSTAIN / EVIDENCE_MODEL_UNQUALIFIED`; they are discovery results, not a
+model-selected factual answer.
+
+Search retains the same shared admission limits, guest ownership, deadlines,
+sensitivity check, packet validation and release rechecks before return and on
+every later read. It returns a job without awaiting the second release read,
+does not wait for the discussion worker, and never restores a cancelled or
+expired result. There is no new data binding, evidence admission, model download,
+model execution, resource-limit change or hosted activation in this change.
+
+Validation: 43 focused local tests passed across assistant status, public chat,
+model lifecycle, synthetic acceptance logic and PC account/worker boundaries on
+Node 24.19.0. The final UI-copy adjustment was followed by 18 passing affected
+tests. The two new availability/queue regressions failed before the fix. These
+use synthetic evidence and mocked model calls; they do not qualify actual model
+quality or prove hosted records. Full production build, Node 22 hosted replay,
+changed-UI browser acceptance and independent review remain NOT_RUN.
+
+Rollback: revert this follow-up's code and documentation together. The status
+field is additive and the UI fails closed against an older server without it.
+No migration or persistent-data rewrite is required. The prioritized remaining
+work is in [the AI usefulness review](ai-usefulness-review-20261017.md).
 
