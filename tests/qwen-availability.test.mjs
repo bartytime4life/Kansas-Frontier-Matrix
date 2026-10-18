@@ -4,6 +4,7 @@ import test from "node:test";
 import ts from "typescript";
 import {
   QWEN_LOCAL_HEALTH_TIMEOUT_MS,
+  QWEN_LOCAL_MODEL,
   localQwenAskEnvelope,
   localQwenHealthEnvelope,
 } from "../scripts/qwen-local-contract.mjs";
@@ -43,7 +44,7 @@ test("finite local failure states remain non-answering", () => {
   for (const [state, label] of [
     ["bridge-unavailable", "LOCAL BRIDGE UNREACHABLE"],
     ["ollama-unavailable", "OLLAMA NOT RUNNING"],
-    ["model-missing", "QWEN3:8B NOT INSTALLED"],
+    ["model-missing", QWEN_LOCAL_MODEL.toUpperCase()+" NOT INSTALLED"],
     ["denied", "LOCAL REQUEST DENIED"],
     ["busy", "LOCAL QWEN BUSY"],
     ["timeout", "LOCAL QWEN TIMED OUT"],
