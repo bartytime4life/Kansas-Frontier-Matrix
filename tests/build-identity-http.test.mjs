@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { startProdServer } from 'vinext/server/prod-server';
 import { applicationIdentity, verifyHostedIdentity } from '../scripts/build-identity.mjs';
 
@@ -22,7 +23,12 @@ test('built public identity matches current inputs and About exposes usable proj
   }
   assert.ok(about.includes(actual.sourceDigest));
   assert.ok(about.includes('href="/api/build"'));
-  assert.ok(about.includes('docs/runbooks/godaddy-hosting.md'));
+  const sourceRef = actual.sourceCommit ?? 'a0-godaddy-navigation-pacing';
+  assert.ok(about.includes(`/blob/${sourceRef}/docs/godaddy-node-preview.md`));
+  await readFile('docs/godaddy-node-preview.md', 'utf8');
+  assert.ok(about.includes('/blob/main/docs/doctrine/directory-rules.md'));
+  assert.ok(about.includes('/blob/main/CONTRIBUTING.md'));
+  assert.ok(!about.includes('rel="canonical" href="http://127.0.0.1'));
   assert.ok(about.includes('Historical repository and Sites snapshots'));
   assert.ok(!about.includes('Canonical host:'));
   assert.ok(!about.includes('no inference endpoint is configured by default'));

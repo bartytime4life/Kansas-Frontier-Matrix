@@ -5,11 +5,17 @@ import { REPOSITORY_SNAPSHOT } from "../repository-updates";
 import { SITE_IDENTITY } from "../site-identity";
 import buildIdentity from "../build-info.generated.json";
 
-export const metadata: Metadata = {
-  title: "About · Kansas Frontier Matrix Explorer",
-  description: "Use the Kansas Frontier Matrix map, layers, time controls, free reports, assistant, and source documentation.",
-  alternates: { canonical: `${PUBLIC_SITE_ORIGIN}/about` },
-};
+export function generateMetadata(): Metadata {
+  // Local-only runs have no public canonical. Use only the documented public
+  // deployment origin; request hosts and arbitrary environment URLs are not authority.
+  const publicOrigin = process.env.KFM_PUBLIC_ORIGIN === "https://kansasfrontiermatrix.com"
+    ? process.env.KFM_PUBLIC_ORIGIN : null;
+  return {
+    title: "About · Kansas Frontier Matrix Explorer",
+    description: "Use the Kansas Frontier Matrix map, layers, time controls, free reports, assistant, and source documentation.",
+    ...(publicOrigin ? { alternates: { canonical: `${publicOrigin}/about` } } : {}),
+  };
+}
 
 const evidenceStates = [
   ["ANSWER", "A released record needs a matching evidence reference for its bounded claim. No KFM domain records are currently released in this Site."],
@@ -45,6 +51,7 @@ const referenceSources = [
 export default function AboutPage() {
   const repositoryUrl = "https://github.com/bartytime4life/Kansas-Frontier-Matrix";
   const sourceUrl = buildIdentity.sourceCommit ? `${repositoryUrl}/tree/${buildIdentity.sourceCommit}` : repositoryUrl;
+  const sourceRef = buildIdentity.sourceCommit ?? "a0-godaddy-navigation-pacing";
   return <div className="about-page">
     <a className="skip-link" href="#about-main">Skip to the guide</a>
     <nav className="about-nav" aria-label="About page navigation">
@@ -113,7 +120,7 @@ export default function AboutPage() {
         <div className="about-section-heading"><span>PROJECT CONTEXT</span><h2>Repository evidence and site behavior remain distinguishable.</h2></div>
         <p>This local Node.js composition is available at <a href={PUBLIC_SITE_ORIGIN}>{PUBLIC_SITE_ORIGIN}</a>. Its local model, accounts and native API capsule retain their separate boundaries. Its standalone source history and the repository&apos;s preserved Sites mirror are maintained separately. For project or correction questions, email <a href="mailto:Andy.barta.pro@gmail.com">Andy.barta.pro@gmail.com</a>.</p>
         <div className="about-boundary">
-          <article><h3>Code + documentation</h3><ul><li><a href={sourceUrl}>{buildIdentity.sourceCommit ? "Source at this build commit" : "Project repository (deployment commit unavailable)"}</a></li><li><a href={`${repositoryUrl}/blob/main/docs/runbooks/godaddy-hosting.md`}>Hosting, verification + rollback guide</a></li><li><a href={`${repositoryUrl}/blob/main/docs/doctrine/directory-rules.md`}>Directory governance</a></li><li><a href={`${repositoryUrl}/blob/main/CONTRIBUTING.md`}>Contributing + validation</a></li><li><a href="/api/build">Application build details</a></li></ul><p className="about-build-note">Application input digest: <code>{buildIdentity.sourceDigest}</code>. This identifies source inputs; live data, settings, rendered acceptance, and release checks remain separate.</p></article>
+          <article><h3>Code + documentation</h3><ul><li><a href={sourceUrl}>{buildIdentity.sourceCommit ? "Source at this build commit" : "Project repository (deployment commit unavailable)"}</a></li><li><a href={`${repositoryUrl}/blob/${sourceRef}/docs/godaddy-node-preview.md`}>Application hosting, verification + rollback guide</a></li><li><a href={`${repositoryUrl}/blob/main/docs/doctrine/directory-rules.md`}>Directory governance (current main)</a></li><li><a href={`${repositoryUrl}/blob/main/CONTRIBUTING.md`}>Contributing + validation (current main)</a></li><li><a href="/api/build">Application build details</a></li></ul><p className="about-build-note">Application input digest: <code>{buildIdentity.sourceDigest}</code>. This identifies source inputs; live data, settings, rendered acceptance, and release checks remain separate.</p></article>
           <article><h3>Local runtime + access</h3><ul><li>Node.js 22 with MapLibre GL JS 6.9.0 and same-origin worker assets</li><li>Local map, attributed provider context, and free report exports</li><li>Source downloads retain provider times, attribution, and coverage limits</li><li>Private acquisition, account, and review operations retain their authorization checks</li><li>Terrain and basemaps are display context; they do not establish source evidence</li></ul></article>
         </div>
         <details className="about-history"><summary>Historical repository and Sites snapshots</summary><p>{REPOSITORY_SNAPSHOT.repository} was inspected at main@{REPOSITORY_SNAPSHOT.shortCommit} on {REPOSITORY_SNAPSHOT.inspectedAt}. This dated snapshot is not the deployed application version.</p><p>Preserved Sites identity: {SITE_IDENTITY.provider} · {SITE_IDENTITY.slug}. Historical host: {SITE_IDENTITY.canonicalUrl}. Its recorded domain check ({SITE_IDENTITY.checkedAt}) and manifest state are historical context, not current public routing or availability.</p></details>

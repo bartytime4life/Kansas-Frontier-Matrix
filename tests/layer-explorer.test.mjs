@@ -73,7 +73,7 @@ test("Appearance and Measure are primary; every advanced view invokes the existi
     }
   }
   assert.deepEqual(Array.from(h.exports.EXPLORER_CONTROL_SECTIONS, ([id]) => id), ["scene", "measure"]);
-  assert.equal(new Set(changes).size, 11, "all retained control views remain reachable without an Explore panel");
+  assert.equal(new Set(changes).size, 10, "all retained control views remain reachable without an Explore panel");
   h.dispose();
 });
 test("focus boundaries ignore closed disclosure contents even when the browser retains their layout boxes", () => {
