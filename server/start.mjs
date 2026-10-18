@@ -12,7 +12,7 @@ const { server } = await startProdServer({ port, host: "0.0.0.0", outDir: resolv
 installPublicDelivery(server);
 
 // Opt-in private qualification only; ordinary web startup loads no AI runtime.
-if (process.env.KFM_EMBEDDED_AI_PROBE === "1") {
+if (process.env.KFM_EMBEDDED_AI_PROBE === "1" && process.env.KFM_HOSTED_AI !== "1") {
   const { startEmbeddedAiProbe } = await import("./embedded-ai-probe.mjs");
   void startEmbeddedAiProbe();
 }

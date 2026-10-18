@@ -135,7 +135,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
   if(!['GET','POST'].includes(request.method))return reply({reasonCode:'METHOD_DENIED'},405);
   if(new URL(request.url).origin!==origin)return reply({reasonCode:'AI_ORIGIN_HOLD'},503);
   if(request.method==='POST'&&(request.headers.get('origin')!==origin||request.headers.get('sec-fetch-site')==='cross-site'))return reply({reasonCode:'ORIGIN_DENIED'},403);
-  if(path==='status'&&request.method==='GET')return reply({configured:true,online:model.online,ready:model.ready,evidenceSearchAvailable:true,requiresLogin:false,provider:'hosted-smollm2',model:HOSTED_MODEL});
+  if(path==='status'&&request.method==='GET')return reply({configured:true,online:model.online,ready:model.ready,evidenceSearchAvailable:true,requiresLogin:false,provider:'hosted-qwen3',model:HOSTED_MODEL});
   let guest=cookie(request),session=sessions.get(digest(guest)),extra={};
   try{
    if(path==='jobs'&&request.method==='POST'){

@@ -18,7 +18,7 @@ export const renderDiscussionPrompt = ({ system, history = [], context = "", que
   "<|im_start|>user\n" +
   (context ? "Display context (untrusted data): " + escapeChatData(context) + "\n\n" : "") +
   escapeChatData(question) +
-  "<|im_end|>\n<|im_start|>assistant\n" + escapeChatData(assistantPrefix);
+  "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n" + escapeChatData(assistantPrefix);
 
 // Older turns may be omitted, but never the original question or partial reply.
 export function prepareDiscussionPrompt({system,history=[],context="",question},countTokens) {

@@ -1,18 +1,18 @@
 import {Worker} from 'node:worker_threads';
 import {randomUUID} from 'node:crypto';
 import {resolve} from 'node:path';
-export const HOSTED_MODEL='SmolLM2-360M-Instruct q4 · server WebAssembly';
+export const HOSTED_MODEL='Qwen3-0.6B INT8 · server WebAssembly';
 // Isolated qualification branch only; do not activate without hosted resource acceptance.
-export const HOSTED_LIMITS=Object.freeze({loadMs:90000,inferenceMs:255000,maximumRssBytes:2048*1024*1024});
+export const HOSTED_LIMITS=Object.freeze({loadMs:240000,inferenceMs:255000,maximumRssBytes:4096*1024*1024});
 export const HOSTED_REPLY_LIMITS=Object.freeze({brief:Object.freeze({tokens:160,milliseconds:120000}),expanded:Object.freeze({tokens:384,milliseconds:240000})});
 export const PUBLIC_AI_JOB_MS=270000;
 // Three admitted discussions can wait for each other, but each run stays bounded.
 export const PUBLIC_AI_MAX_LIFETIME_MS=3*PUBLIC_AI_JOB_MS;
 export {CONTINUE_REPLY} from './hosted-ai-prompt.mjs';
 const error=code=>Object.assign(new Error(code),{code});
-const diagnosticCodes=new Set(['MODEL_UNAVAILABLE','MODEL_LOAD_TIMEOUT','MODEL_MEMORY_LIMIT','MODEL_TIMEOUT','HOSTED_MODEL_FAILED','HOSTED_MODEL_FILES_UNSAFE','HOSTED_MODEL_IDENTITY','HOSTED_MODEL_INTEGRITY','HOSTED_MODEL_CONFIG','HOSTED_MODEL_INPUTS','HOSTED_MODEL_SELF_CHECK','HOSTED_PROFILE_IDENTITY','MODULE_NOT_FOUND','ERR_MODULE_NOT_FOUND','ENOENT','EACCES','ENOMEM','ERR_WORKER_OUT_OF_MEMORY']);
+const diagnosticCodes=new Set(['HOSTED_MEMORY_HEADROOM','MODEL_UNAVAILABLE','MODEL_LOAD_TIMEOUT','MODEL_MEMORY_LIMIT','MODEL_TIMEOUT','HOSTED_MODEL_FAILED','HOSTED_MODEL_FILES_UNSAFE','HOSTED_MODEL_IDENTITY','HOSTED_MODEL_INTEGRITY','HOSTED_MODEL_CONFIG','HOSTED_MODEL_INPUTS','HOSTED_MODEL_SELF_CHECK','HOSTED_PROFILE_IDENTITY','MODULE_NOT_FOUND','ERR_MODULE_NOT_FOUND','ENOENT','EACCES','ENOMEM','ERR_WORKER_OUT_OF_MEMORY']);
 export class HostedAiModel{
- constructor({discussionProfile='concise-sampled-v1',modelDirectory='/private/kfm-embedded-smollm2-360m-q4-wasm-20261016/model',workerFactory=(path,options)=>new Worker(path,options),memoryUsage=process.memoryUsage,diagnostic=code=>console.warn('[KFM hosted AI] '+code)}={}){
+ constructor({discussionProfile='concise-sampled-v1',modelDirectory='/private/kfm-embedded-qwen3-06b-int8-wasm-20261018/model',workerFactory=(path,options)=>new Worker(path,options),memoryUsage=process.memoryUsage,diagnostic=code=>console.warn('[KFM hosted AI] '+code)}={}){
   this.diagnostic=diagnostic;
   this.ready=false;this.online=true;this.reason='MODEL_LOADING';this.peakRssBytes=memoryUsage().rss;this.pending=null;this.stopped=false;
   this.worker=workerFactory(resolve('server/hosted-ai-worker.mjs'),{workerData:{modelDirectory,discussionProfile},execArgv:process.execArgv.filter(x=>!x.startsWith('--input-type=')),resourceLimits:{maxOldGenerationSizeMb:256}});

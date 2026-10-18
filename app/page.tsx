@@ -9983,7 +9983,7 @@ export default function Home() {
           <section hidden={!qwenOpen} inert={!qwenOpen} aria-hidden={!qwenOpen} ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
             <InspectionPanelSwitch active="qwen" onEvidence={openEvidencePanel} onQwen={() => {}} onClose={() => closeQwenCompanion()} />
             <header className="qwen-panel-heading">
-              <div><span className="qwen-eyebrow">HOSTED AI · SMOLLM2</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
+              <div><span className="qwen-eyebrow">HOSTED AI · QWEN3</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
             </header>
             <div className="qwen-context-strip" aria-label="Map context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>

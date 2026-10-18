@@ -24,7 +24,7 @@ test('guest inference uses one worker and propagates cancellation without accept
  assert.equal(w.terminated,true);
 });
 test('worker failure and sampled memory excess hold the model without retry',async()=>{
- const w=worker(),model=new HostedAiModel({workerFactory:()=>w,memoryUsage:()=>({rss:3_000_000_000})});
+ const w=worker(),model=new HostedAiModel({workerFactory:()=>w,memoryUsage:()=>({rss:5_000_000_000})});
  await Promise.all([assert.rejects(model.loaded,/MODEL_MEMORY_LIMIT/),new Promise(resolve=>setTimeout(resolve,120))]);assert.equal(model.ready,false);assert.equal(w.terminated,true);
  await assert.rejects(model.select('question',['fact']),/MODEL_UNAVAILABLE/);
 });
