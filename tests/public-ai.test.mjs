@@ -1,12 +1,38 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createPublicAiHandler,publicAiRuntime} from '../server/public-ai-handler.mjs';
+import {CONTINUE_REPLY} from '../server/hosted-ai.mjs';
 const origin='https://kansasfrontiermatrix.com';
 const evidence={releaseId:'sha256:'+'a'.repeat(64),evidence:[{evidenceRef:'kfm:synthetic:blue',text:'Synthetic test: the sample marker is blue.',status:'documented',title:'Synthetic test only',url:origin+'/knowledge/record?id=synthetic'}],truncated:false};
 const question={question:'What color is the sample marker?',term:'marker',place:'',start:'',end:'',mode:'explore'};
-function fixture(work=async()=>({text:'A synthetic discussion idea.',contextTrimmed:false,outputLimited:false}),ready=true,resolveEvidence=async value=>value){
+
+test('waiting discussions keep a full run budget and drain FIFO without duplicate inference',async()=>{
+ const release=[],started=[];
+ const f=fixture(async(q)=>{started.push(q);return new Promise(resolve=>release.push(resolve));});
+ const first=await f.request('jobs',{...question,question:'First synthetic question.'});
+ const second=await f.request('jobs',{...question,question:'Second synthetic question.'});
+ const third=await f.request('jobs',{...question,question:'Third synthetic question.'});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.deepEqual(started,['First synthetic question.']);
+ const overflow=await f.request('jobs',question);assert.equal(overflow.body.reasonCode,'QUEUE_FULL');
+ f.advance(260000);release.shift()({text:'The first synthetic reply is complete.'});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.deepEqual(started,['First synthetic question.','Second synthetic question.']);
+ const running=await f.request('jobs/'+second.body.id,undefined,second.cookie);
+ assert.equal(running.body.state,'running');
+ assert.equal(running.body.deadline,1700000000000+260000+270000);
+ f.advance(260000);release.shift()({text:'The second synthetic reply is complete.'});
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.deepEqual(started,['First synthetic question.','Second synthetic question.','Third synthetic question.']);
+ release.shift()({text:'The third synthetic reply is complete.'});
+ assert.equal((await f.settle(third.body.id,third.cookie)).body.state,'completed');
+ assert.equal(f.calls(),3);
+ assert.equal(first.body.deadline,1700000000000+270000);
+ assert.equal(second.body.deadline,1700000000000+810000);
+});
+function fixture(work=async()=>({text:'A synthetic discussion idea.',contextTrimmed:false,outputLimited:false}),ready=true,resolveEvidence=async value=>value,resolveContext){
  let current=structuredClone(evidence),now=1700000000000,calls=0;
- const handler=createPublicAiHandler({origin,clock:()=>now,resolveEvidence:async()=>resolveEvidence(current),model:{ready,online:ready,discuss:async(...args)=>{calls++;return work(...args);},select:async()=>{throw Error('Evidence selection must remain disabled');}}});
+ const handler=createPublicAiHandler({origin,clock:()=>now,resolveEvidence:async()=>resolveEvidence(current),resolveContext,model:{ready,online:ready,discuss:async(...args)=>{calls++;return work(...args);},select:async()=>{throw Error('Evidence selection must remain disabled');}}});
  const request=async(path,body,cookie,requestOrigin=origin)=>{
   const response=await handler(new Request(origin+'/api/ai/'+path,{method:body===undefined?'GET':'POST',headers:{...(body===undefined?{}:{'Content-Type':'application/json',Origin:requestOrigin}),...(cookie?{Cookie:cookie}:{})},body:body===undefined?undefined:JSON.stringify(body)}));
   return{response,body:await response.json(),cookie:response.headers.get('set-cookie')?.split(';')[0]};
@@ -217,4 +243,64 @@ test('a full copied prior reply cannot evade withholding by appending new text',
  assert.equal(result.interpretation,null);assert.equal(result.answer,null);assert.deepEqual(result.evidenceRefs,[]);
  const third=await f.request('jobs',question,first.cookie);await f.settle(third.body.id,first.cookie);
  assert.equal(seen[2].history.length,1);assert.equal(seen[2].history[0].reply,prior);
+});
+
+test('resumed fragments keep one original question and cumulative answer through multiple continuations',async()=>{
+ const seen=[],outputs=[{text:'A hypothetical key labels sym',outputLimited:true},{text:'bols and ',outputLimited:true},{text:'their units.',outputLimited:false},{text:'A separate hypothetical example.'}];
+ const f=fixture(async(q,options)=>{seen.push(options);return outputs.shift();});
+ const first=await f.request('jobs',question);await f.settle(first.body.id,first.cookie);
+ for(let index=0;index<2;index++){
+  const next=await f.request('jobs',{...question,question:CONTINUE_REPLY},first.cookie);
+  const result=(await f.settle(next.body.id,first.cookie)).body.result;
+  assert.equal(result.reasonCode,'UNVERIFIED_AI_DISCUSSION');assert.equal(result.answer,null);assert.deepEqual(result.evidenceRefs,[]);
+ }
+ const follow=await f.request('jobs',{...question,question:'Give an example.'},first.cookie);await f.settle(follow.body.id,first.cookie);
+ assert.equal(seen[2].history.length,1);assert.equal(seen[2].history[0].question,question.question);
+ assert.equal(seen[2].history[0].reply,'A hypothetical key labels symbols and ');
+ assert.equal(seen[3].history.length,1);assert.equal(seen[3].history[0].reply,'A hypothetical key labels symbols and their units.');
+});
+
+test('continuation without this guest\'s latest limited answer does not run inference',async()=>{
+ const f=fixture();
+ const missing=await f.request('jobs',{...question,question:CONTINUE_REPLY});
+ assert.equal((await f.settle(missing.body.id,missing.cookie)).body.result.reasonCode,'MODEL_CONTINUATION_UNAVAILABLE');assert.equal(f.calls(),0);
+ const first=await f.request('jobs',question);await f.settle(first.body.id,first.cookie);
+ const complete=await f.request('jobs',{...question,question:CONTINUE_REPLY},first.cookie);
+ assert.equal((await f.settle(complete.body.id,first.cookie)).body.result.reasonCode,'MODEL_CONTINUATION_UNAVAILABLE');assert.equal(f.calls(),1);
+ const limited=fixture(async()=>({text:'An unfinished synthetic statement',outputLimited:true}));
+ const own=await limited.request('jobs',question);await limited.settle(own.body.id,own.cookie);
+ const other=await limited.request('jobs',{...question,question:CONTINUE_REPLY});
+ assert.equal((await limited.settle(other.body.id,other.cookie)).body.result.reasonCode,'MODEL_CONTINUATION_UNAVAILABLE');assert.equal(limited.calls(),1);
+ limited.advance(900001);
+ const expired=await limited.request('jobs',{...question,question:CONTINUE_REPLY},own.cookie);
+ assert.equal((await limited.settle(expired.body.id,own.cookie)).body.result.reasonCode,'MODEL_CONTINUATION_UNAVAILABLE');assert.equal(limited.calls(),1);
+});
+
+test('joined continuation is rechecked for an unsafe URL spanning the fragment boundary',async()=>{
+ const seen=[],outputs=[{text:'For an original source, try h',outputLimited:true},{text:'ttps://attacker.test',outputLimited:false},{text:'A separate safe hypothetical idea.'}];
+ const f=fixture(async(q,options)=>{seen.push(options);return outputs.shift();});
+ const first=await f.request('jobs',question);await f.settle(first.body.id,first.cookie);
+ const next=await f.request('jobs',{...question,question:CONTINUE_REPLY},first.cookie);
+ const result=(await f.settle(next.body.id,first.cookie)).body.result;
+ assert.equal(result.reasonCode,'MODEL_OUTPUT_UNQUALIFIED');assert.equal(result.interpretation,null);
+ const third=await f.request('jobs',question,first.cookie);await f.settle(third.body.id,first.cookie);
+ assert.equal(seen[2].history.length,1);assert.equal(seen[2].history[0].reply,'For an original source, try h');
+});
+
+test('changed display context cannot resume an answer from the old context',async()=>{
+ const context={version:1,frame:2026,view:'map',layers:[],selection:null};
+ const f=fixture(async()=>({text:'An unfinished synthetic statement',outputLimited:true}),true,undefined,async c=>({key:JSON.stringify(c),prompt:'Synthetic frame '+c.frame,label:'Map',boundary:'Synthetic display only'}));
+ const first=await f.request('jobs',{...question,context});await f.settle(first.body.id,first.cookie);
+ const next=await f.request('jobs',{...question,context:{...context,frame:2025},question:CONTINUE_REPLY},first.cookie);
+ assert.equal((await f.settle(next.body.id,first.cookie)).body.result.reasonCode,'MODEL_CONTINUATION_UNAVAILABLE');assert.equal(f.calls(),1);
+});
+
+test('cumulative history retains its UTF-8 byte bound and never commits an oversized continuation',async()=>{
+ const seen=[],outputs=[{text:'α'.repeat(1100),outputLimited:true},{text:'β'.repeat(1100),outputLimited:true},{text:'A short synthetic idea.'}];
+ const f=fixture(async(q,options)=>{seen.push(options);return outputs.shift();});
+ const first=await f.request('jobs',question);await f.settle(first.body.id,first.cookie);
+ const next=await f.request('jobs',{...question,question:CONTINUE_REPLY},first.cookie);
+ assert.equal((await f.settle(next.body.id,first.cookie)).body.result.reasonCode,'MODEL_CONTEXT_LIMIT');
+ const third=await f.request('jobs',question,first.cookie);await f.settle(third.body.id,first.cookie);
+ assert.equal(seen[2].history.length,1);assert.equal(Buffer.byteLength(seen[2].history[0].reply),2200);
 });

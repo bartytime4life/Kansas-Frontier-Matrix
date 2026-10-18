@@ -102,8 +102,10 @@ Guest capability expires after one hour. Questions, replies and context expire
 after fifteen minutes; cleanup runs every thirty seconds. No visitor prompts,
 answers, cookies or credentials are logged. Questions/output are at most 4,096
 bytes; request body is at most 8 KiB with a five-second read deadline.
-Evidence lookup is eight seconds. Evidence jobs expire after ninety seconds;
-discussion jobs expire after 270 seconds.
+Evidence lookup is eight seconds. Evidence jobs expire after ninety seconds.
+Discussion jobs have a bounded 810-second admission lifetime including queue
+wait; once started, each run has at most 270 seconds. The three-job capacity,
+single inference worker, generation watchdog and 15-minute retention stay fixed.
 
 Model load is at most ninety seconds; inference has a 255-second parent
 watchdog. Brief replies allow 160 tokens and 120 seconds; More detail replies
