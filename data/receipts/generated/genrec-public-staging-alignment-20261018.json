@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-public-staging-alignment-20261018",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-staging.yml",
+    ".gitignore",
+    "app/about/page.tsx",
+    "app/api/build/route.ts",
+    "app/globals.css",
+    "app/page.tsx",
+    "app/public-route-policy.ts",
+    "docs/public-staging-alignment-20261018.md",
+    "package.json",
+    "scripts/build-identity.mjs",
+    "tests/build-identity.test.mjs",
+    "tests/public-staging-build.test.mjs"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-staging.yml": "sha256:2cbc011d1147cf72f388db6f3f1f2136e1175f91cd8f31e1e5b226f647a0f56c",
+    ".gitignore": "sha256:a738ea655848e1b5462489ed07c35c0ff7706d27baa2fa2b23a0b24857608533",
+    "app/about/page.tsx": "sha256:741a072bd2d1796585a6b0719b12c3c2d0f0c97d8486d8a83ea68aa2a92bdb4e",
+    "app/api/build/route.ts": "sha256:9bc2bbf7a89e0044b168ab1565065767e098c711084c4ced78df8adbcc9d1e57",
+    "app/globals.css": "sha256:c0f396a6650f5440bf3e2ec035ba3cec62a2ce05b3c98e8be105cbd4ac5c2668",
+    "app/page.tsx": "sha256:54dd21553b1506a77323f213f143a41489d81403e9766d122cd32de0c380d06f",
+    "app/public-route-policy.ts": "sha256:fdae26e75d54f62a11a18dac7ed09449db7afa8f9effa9dc06b66c6a8d7db2c1",
+    "docs/public-staging-alignment-20261018.md": "sha256:17738927b978992dc4835b047d1fb477c322b68f6b7557e27249f165dfa490ca",
+    "package.json": "sha256:e9970d215ed228b7a4ab1d88f546cc52a817a2dd0ca75166a4da68ed9b73898e",
+    "scripts/build-identity.mjs": "sha256:42bbff9b582fad7d5cd4d63927853eaf21d4ae95bf1960d0f4bb3dab7eac6a82",
+    "tests/build-identity.test.mjs": "sha256:95248c80c248eab1b0cd29923e88b0b527375c80e29696657e1ff5faaa1322d0",
+    "tests/public-staging-build.test.mjs": "sha256:14a6e35de0cf42372bf3ac832773091326010cbbcf0267aec49ab192854b5874"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Sites",
+      "container",
+      "Browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5245",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5246",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5249",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5251",
+      "sites-project://appgprj_6acd1aafe0d88191a4306ea2ab44ed91",
+      "GitHub main@cefd19e66857f8bf98b4d6995174c14801deb629",
+      "Sites v7 source@8fd126d2f0acc3a7ae99a66c4a37bb258c7840bd"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-staging.yml": "CONFIRMED",
+    ".gitignore": "CONFIRMED",
+    "app/about/page.tsx": "CONFIRMED",
+    "app/api/build/route.ts": "CONFIRMED",
+    "app/globals.css": "CONFIRMED",
+    "app/page.tsx": "CONFIRMED",
+    "app/public-route-policy.ts": "CONFIRMED",
+    "docs/public-staging-alignment-20261018.md": "CONFIRMED",
+    "package.json": "CONFIRMED",
+    "scripts/build-identity.mjs": "CONFIRMED",
+    "tests/build-identity.test.mjs": "CONFIRMED",
+    "tests/public-staging-build.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "build-types-lint",
+      "outcome": "PASS",
+      "reason": "Production Worker build, TypeScript and focused lint passed."
+    },
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "82 focused/adjacent tests and one separately executed compiled Worker case passed."
+    },
+    {
+      "gate": "browser-guide",
+      "outcome": "PASS",
+      "reason": "Desktop and 390 CSS-pixel frame, jump links, source wrapping and keyboard main skip verified."
+    },
+    {
+      "gate": "rendered-WebGL",
+      "outcome": "SKIPPED",
+      "reason": "Cloud browser lacks WebGL2. Fallback, Layers and withheld water evidence inspected."
+    },
+    {
+      "gate": "full-suite-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "No full-suite or independent human review claim."
+    },
+    {
+      "gate": "data-GoDaddy-publication",
+      "outcome": "SKIPPED",
+      "reason": "No data activation or GoDaddy operation; existing holds preserved."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "upstream-0",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5245"
+    },
+    {
+      "id": "upstream-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5246"
+    },
+    {
+      "id": "upstream-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5249"
+    },
+    {
+      "id": "upstream-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5251"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-18T15:27:10.365829Z",
+  "emitter": "OpenAI Codex Public Staging alignment",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cefd19e66857f8bf98b4d6995174c14801deb629/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Exact v7 source recorded as an isolated GitHub review baseline; candidate does not replace the private mirror or Node production source. User authorized compatible restricted same-Site updates; any later native Site publication is separate evidence recorded in the PR. No audience, binding, source-data, model, DNS or GoDaddy deployment changes. Receipt is process memory, not approval."
+}

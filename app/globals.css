@@ -4683,3 +4683,21 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
   .map-chrome-dock, .top-actions { min-width: 0; }
   .map-dock-menu-panel { max-height: calc(100dvh - var(--topbar) - env(safe-area-inset-bottom, 0px) - 18px); }
 }
+
+/* Public guide: portable navigation from production #5245, with staging limits. */
+.about-section-links { display: flex; flex-wrap: wrap; gap: 12px 20px; margin: 20px 0; }
+.about-section-links a, .about-boundary a, .about-capability-grid a { color: var(--water); text-underline-offset: 3px; }
+.about-section[id] { scroll-margin-top: 110px; }
+.about-build-note { color: var(--muted); font-size: 12px; line-height: 1.65; overflow-wrap: anywhere; }
+.about-build-note code, .about-boundary code { font-size: 11px; overflow-wrap: anywhere; }
+.about-section-links a:focus-visible, .about-boundary a:focus-visible, .about-capability-grid a:focus-visible, .about-nav a:focus-visible, .about-reference-list a:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+.about-nav { flex-wrap: wrap; padding-block: 12px; }
+.about-nav .brand-lockup { flex: 1 1 240px; }
+.about-boundary > article { min-width: 0; }
+@media (max-width: 500px) {
+  .about-nav { gap: 10px; }
+  .about-nav .brand-lockup { flex-basis: 100%; }
+  .about-nav > a { flex: 1; text-align: center; }
+  .about-section[id] { scroll-margin-top: 150px; }
+  .about-reference-list article { flex-wrap: wrap; }
+}

@@ -46,3 +46,6 @@ __pycache__/
 # Temporary merge/reconciliation artifacts
 *.rej
 *.orig
+
+# Generated bounded application identity
+/app/build-info.generated.json
