@@ -1,0 +1,93 @@
+{
+  "receipt_id": "genrec-geojson-digest-overflow-and-coverage-20261018",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/hashing/src/hashing/geojson.py",
+    "tests/validators/test_validate_spec_hash_geojson.py"
+  ],
+  "artifact_hashes": {
+    "packages/hashing/src/hashing/geojson.py": "sha256:3cfa19552af879971c092ceb22eff44c2204df17a3ac38ac12dca6d2ab81781b",
+    "tests/validators/test_validate_spec_hash_geojson.py": "sha256:9cc2654f55390558a00b8439b145d2fcd5a40e4e0920292186726dcd0addfb8f"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e42f539762c13c4ed1d95c79b74cb1d5b3341c79",
+      "repo:packages/hashing/src/hashing/geojson.py@e42f539762c13c4ed1d95c79b74cb1d5b3341c79",
+      "repo:tests/validators/test_validate_spec_hash_geojson.py@e42f539762c13c4ed1d95c79b74cb1d5b3341c79",
+      "repo:data/receipts/generated/genrec-geojson-feature-digests-20260806.json@e42f539762c13c4ed1d95c79b74cb1d5b3341c79"
+    ]
+  },
+  "truth_labels": {
+    "packages/hashing/src/hashing/geojson.py": "CONFIRMED",
+    "tests/validators/test_validate_spec_hash_geojson.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-receipt-preserved",
+      "outcome": "PASS",
+      "reason": "genrec-geojson-feature-digests-20260806.json and the CI-validated genrec-geojson-feature-digests-ci-repair-20260807.json are unchanged; the latter still validates against current bytes because it pins only spec-hash.yml and GEOJSON_FEATURE_DIGESTS.md, neither of which changes."
+    },
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "Before the fix, a Feature whose coordinate is a 401-digit integer crashed `spec_hash.py geojson-feature` with an uncaught OverflowError traceback. After the fix it reports GEOJSON_DIGEST_INPUT_INVALID with exit code 2 and empty stderr. Both new assertions fail without the fix."
+    },
+    {
+      "gate": "Digest stability",
+      "outcome": "PASS",
+      "reason": "The existing golden geometry and record vectors are unchanged; the fix only converts an exception that previously escaped."
+    },
+    {
+      "gate": "Spec-hash workflow tests and coverage",
+      "outcome": "PASS",
+      "reason": "unittest discover test_validate_spec_hash*.py: 21 tests OK (8 new); validate_spec_hash.py --fixtures PASS. Branch coverage of geojson.py rises from 65% to 100%. A mutation check of seven safeguards killed five; the two survivors (negative-zero branch, boolean check) are equivalent because the integer path and Decimal parsing reach the same result."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same 2 pre-existing findings in these files before and after. make repository-guardrails PASS. 536 tests across tests/packages, the spec-hash suites and people-dna-land pass."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e42f539762c13c4ed1d95c79b74cb1d5b3341c79"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-18T23:11:09Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Integer coordinates past the float range now raise GeoJSONDigestError instead of OverflowError. New tests cover parameter validation, non-finite and non-numeric coordinates, half-even quantization and negative-zero folding, all six geometry types plus GeometryCollection, malformed geometries and the nesting limit, the coordinate budget, the Feature envelope, null properties and the report shape. Digest outputs for valid input are unchanged."
+}
