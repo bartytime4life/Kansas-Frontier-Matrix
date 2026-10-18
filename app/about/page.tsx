@@ -3,10 +3,11 @@ import { PUBLIC_SITE_ORIGIN } from "../crawler-discovery";
 import Link from "next/link";
 import { REPOSITORY_SNAPSHOT } from "../repository-updates";
 import { SITE_IDENTITY } from "../site-identity";
+import buildIdentity from "../build-info.generated.json";
 
 export const metadata: Metadata = {
   title: "About · Kansas Frontier Matrix Explorer",
-  description: "How to use the Kansas Frontier Matrix map, vector basemap context, Qwen companion, evidence states, and source boundaries.",
+  description: "Use the Kansas Frontier Matrix map, layers, time controls, free reports, assistant, and source documentation.",
   alternates: { canonical: `${PUBLIC_SITE_ORIGIN}/about` },
 };
 
@@ -42,7 +43,10 @@ const referenceSources = [
 ] as const;
 
 export default function AboutPage() {
+  const repositoryUrl = "https://github.com/bartytime4life/Kansas-Frontier-Matrix";
+  const sourceUrl = buildIdentity.sourceCommit ? `${repositoryUrl}/tree/${buildIdentity.sourceCommit}` : repositoryUrl;
   return <div className="about-page">
+    <a className="skip-link" href="#about-main">Skip to the guide</a>
     <nav className="about-nav" aria-label="About page navigation">
       <div className="brand-lockup">
         <span className="mark" aria-hidden="true">KFM</span>
@@ -52,13 +56,15 @@ export default function AboutPage() {
       <Link href="/privacy">Privacy + contact</Link>
     </nav>
 
-    <main className="about-content">
+    <main className="about-content" id="about-main" tabIndex={-1}>
       <header className="about-hero">
-        <div><span>ABOUT THE EXPLORER</span><h1>A map-first Living Atlas for seeing Kansas in context.</h1><p>The Explorer opens on a real MapLibre Kansas vector map with time, layers, and place context. Start with a view, then bring in evidence, reports, and Qwen interpretation only when they help answer the question.</p></div>
-        <aside><strong>Current data posture</strong><p>The map presents attributed provider-backed layers such as Census counties, USGS water sources, and NOAA context. These sources have separate clocks and availability. No KFM domain layer has been admitted for this Site.</p></aside>
+        <div><span>ABOUT THE EXPLORER</span><h1>A map-first Living Atlas for seeing Kansas in context.</h1><p>The Explorer opens on a real MapLibre Kansas vector map with time, layers, and place context. Start with a view, inspect its sources, and carry their dates and limitations into free report exports.</p></div>
+        <aside><strong>Current data posture</strong><p>The map presents attributed provider-backed layers such as Census counties, USGS water sources, and NOAA context. These sources have separate clocks and availability. Source admission and package release are separate; displayed provider context does not imply a released KFM package.</p></aside>
       </header>
 
-      <section className="about-section">
+      <nav className="about-section-links" aria-label="Guide sections"><a href="#workflow">Map workflow</a><a href="#capabilities">Features + limits</a><a href="#project">Code + documentation</a><a href="#sources">Official sources</a></nav>
+
+      <section className="about-section" id="workflow">
         <div className="about-section-heading"><span>PRIMARY WORKFLOW</span><h2>Start with a question, finish with a report.</h2></div>
         <div className="about-workflow-grid">
           <article><span>01</span><h3>Frame the map</h3><p>Search a place or feature, move the camera, choose a time, and show only the layers relevant to the question.</p></article>
@@ -68,13 +74,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="about-section">
+      <section className="about-section" id="capabilities">
         <div className="about-section-heading"><span>MAP CAPABILITIES</span><h2>The main interface is built for action, not presentation.</h2></div>
         <div className="about-capability-grid">
           <article><h3>Real map + context</h3><p>The default view is an attributed Kansas vector basemap with counties, places, roads, rail, water, and labels. Satellite imagery, terrain, and provider-backed source layers are optional display context. No synthetic KFM domain overlays are offered.</p></article>
           <article><h3>Views + layers + time</h3><p>Start from a named source-backed view, then control source visibility, opacity, order, provider time, and basemap treatment.</p></article>
           <article><h3>Search + inspect</h3><p>Search source layers and places, then inspect mapped features with their provider and time information.</p></article>
-          <article><h3>Qwen map companion</h3><p>Ask Qwen about the active place, time, visible sources, or selected map feature. The bridge receives bounded context and is not an evidence authority.</p></article>
+          <article><h3>Chat with KFM</h3><p>Open Chat with KFM from the map. Availability depends on the hosted service status; responses can be incomplete or withheld. Chat is interpretive and cannot establish source facts or release data. Invited PC-assisted workflows retain their separate sign-in and connection requirements.</p></article>
           <article><h3>Spatial analysis + motion</h3><p>Shift-drag a report area, move through camera history, and inspect provider-backed water, smoke, and terrain context. Map presentation does not establish evidence.</p></article>
           <article><h3>Places, stories + reports</h3><p>Save map states as device-local investigation stops and produce reports that retain attribution and limitations.</p></article>
         </div>
@@ -103,14 +109,14 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="about-section">
+      <section className="about-section" id="project">
         <div className="about-section-heading"><span>PROJECT CONTEXT</span><h2>Repository evidence and site behavior remain distinguishable.</h2></div>
-        <p>This public GoDaddy-hosted composition is available at <a href={PUBLIC_SITE_ORIGIN}>{PUBLIC_SITE_ORIGIN}</a>. The Sites identity below is a preserved historical reference for a separate deployment. For project or correction questions, email <a href="mailto:Andy.barta.pro@gmail.com">Andy.barta.pro@gmail.com</a>.</p>
+        <p>This public GoDaddy Node.js application is available at <a href={PUBLIC_SITE_ORIGIN}>{PUBLIC_SITE_ORIGIN}</a>. Its standalone source history and the repository&apos;s preserved Sites mirror are maintained separately. For project or correction questions, email <a href="mailto:Andy.barta.pro@gmail.com">Andy.barta.pro@gmail.com</a>.</p>
         <div className="about-boundary">
-          <article><h3>Repository checkpoint</h3><ul><li>{REPOSITORY_SNAPSHOT.repository}</li><li>Inspected main@{REPOSITORY_SNAPSHOT.shortCommit}</li><li>{REPOSITORY_SNAPSHOT.inspectedAt}</li><li>Architecture, functions, feature maturity, and transition records are read-only context in this Site.</li></ul></article>
-          <article><h3>Site-local runtime</h3><ul><li>MapLibre GL JS 6.9.0 with same-origin worker assets</li><li>OpenFreeMap / OpenMapTiles / OpenStreetMap vector context plus optional attributed raster basemaps; not evidence</li><li>Separately labeled provider-backed source layers; no synthetic KFM domain registry</li><li>Optional Mapzen or USGS 3DEP DEM terrain display; source elevation remains external and non-authoritative</li><li>Optional Qwen/Ollama bridge; no inference endpoint is configured by default</li><li>No release, deployment, promotion, or publication authority</li></ul></article>
-          <article><h3>Sites identity + domain</h3><ul><li>{SITE_IDENTITY.provider} · {SITE_IDENTITY.slug}</li><li>Canonical host: <a href={SITE_IDENTITY.canonicalUrl} target="_blank" rel="noreferrer">{SITE_IDENTITY.canonicalUrl.replace("https://", "")}</a></li><li>{SITE_IDENTITY.customDomainStatus.replaceAll("_", " ")} as checked {SITE_IDENTITY.checkedAt}</li><li>GitHub child manifest status: {SITE_IDENTITY.repositoryManifestStatus.replaceAll("_", " ")} · {SITE_IDENTITY.repositoryManifestProjectId}. Source histories remain separate.</li></ul></article>
+          <article><h3>Code + documentation</h3><ul><li><a href={sourceUrl}>{buildIdentity.sourceCommit ? "Source at this build commit" : "Project repository (deployment commit unavailable)"}</a></li><li><a href={`${repositoryUrl}/blob/main/docs/runbooks/godaddy-hosting.md`}>Hosting, verification + rollback guide</a></li><li><a href={`${repositoryUrl}/blob/main/docs/doctrine/directory-rules.md`}>Directory governance</a></li><li><a href={`${repositoryUrl}/blob/main/CONTRIBUTING.md`}>Contributing + validation</a></li><li><a href="/api/build">Application build details</a></li></ul><p className="about-build-note">Application input digest: <code>{buildIdentity.sourceDigest}</code>. This identifies source inputs; live data, settings, rendered acceptance, and release checks remain separate.</p></article>
+          <article><h3>Hosted runtime + access</h3><ul><li>Node.js 22 with MapLibre GL JS 6.9.0 and same-origin worker assets</li><li>Public map, attributed provider context, and free report exports</li><li>Source downloads retain provider times, attribution, and coverage limits</li><li>Private acquisition, account, and review operations retain their authorization checks</li><li>Terrain and basemaps are display context; they do not establish source evidence</li></ul></article>
         </div>
+        <details className="about-history"><summary>Historical repository and Sites snapshots</summary><p>{REPOSITORY_SNAPSHOT.repository} was inspected at main@{REPOSITORY_SNAPSHOT.shortCommit} on {REPOSITORY_SNAPSHOT.inspectedAt}. This dated snapshot is not the deployed application version.</p><p>Preserved Sites identity: {SITE_IDENTITY.provider} · {SITE_IDENTITY.slug}. Historical host: {SITE_IDENTITY.canonicalUrl}. Its recorded domain check ({SITE_IDENTITY.checkedAt}) and manifest state are historical context, not current public routing or availability.</p></details>
       </section>
 
       <section className="about-section" id="implementation">
@@ -123,7 +129,7 @@ export default function AboutPage() {
       <section className="about-section" id="sources">
         <div className="about-section-heading"><span>RESEARCH + REFERENCES</span><h2>Primary sources that shape the next implementation slices.</h2><p>These references identify authoritative datasets or renderer capabilities. Listing a source does not admit it into KFM; rights, version, coverage, transformation, sensitivity, quality, and EvidenceBundle closure remain mandatory.</p></div>
         <div className="about-reference-list">
-          {referenceSources.map(([title, href, note]) => <article key={href}><div><h3>{title}</h3><p>{note}</p></div><a href={href} target="_blank" rel="noreferrer">Open official source <span aria-hidden="true">↗</span></a></article>)}
+          {referenceSources.map(([title, href, note]) => <article key={href}><div><h3>{title}</h3><p>{note}</p></div><a href={href} target="_blank" rel="noreferrer" aria-label={`Open official source: ${title}`}>Open official source <span aria-hidden="true">↗</span></a></article>)}
         </div>
       </section>
 

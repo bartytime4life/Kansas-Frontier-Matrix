@@ -1449,7 +1449,7 @@ export default function Home() {
   const composerRef = useRef<HTMLElement>(null);
   const mapGuideRef = useRef<HTMLElement>(null);
   const composerTriggerRef = useRef<HTMLButtonElement>(null);
-  const [mapUtilityView, setMapUtilityView] = useState<MapUtilityView>("navigate");
+  const [mapUtilityView, setMapUtilityView] = useState<MapUtilityView>("scene");
   const [mapFeatureQuery, setMapFeatureQuery] = useState("");
   const [mapFeatureLayer, setMapFeatureLayer] = useState("ALL");
   const [connectionQuery, setConnectionQuery] = useState("");
@@ -4051,7 +4051,7 @@ export default function Home() {
     setPrimaryWorkspace("map");
     mapUtilityReturnRef.current = returnElement ?? null;
     setScenePanelOpen(false);
-    setMapUtilityView(nextView);
+    setMapUtilityView(nextView === "navigate" ? "scene" : nextView);
     setMapUtilityOpen(true);
     setMapUtilityFocusRequest((request) => request + 1);
     setCurrentWorkspace("explore");
@@ -9702,7 +9702,8 @@ export default function Home() {
                     ["2d", "2D map", "Mercator · terrain off"],
                     ["terrain", "Terrain 3D", terrainState === "READY" ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "Loading DEM"],
                     ["globe", "Globe", "Globe projection"],
-                  ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
+                  ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={!undergroundOpen && (id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d")} onClick={() => chooseMapMenuRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
+                  <button type="button" aria-label="Underground recorded layers" aria-pressed={undergroundOpen} onClick={() => { toggleUnderground(); setUndergroundFocusRequest((request) => request + 1); }}><span>↓</span><strong>Underground</strong><small>Recorded logs, cores &amp; aquifers</small></button>
                 </section>
 
                 <SceneEffectsControls readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} />
