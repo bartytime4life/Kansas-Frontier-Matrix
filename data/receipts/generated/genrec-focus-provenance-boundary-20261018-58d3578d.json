@@ -1,0 +1,95 @@
+{
+  "receipt_id": "genrec-focus-provenance-boundary-20261018-58d3578d",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/tests/focus-mode-provenance.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/tests/focus-mode-provenance.test.mjs": "sha256:58d3578d33c9a5479ba807f46397d08c3d1997c8a63dff1a687ff1aa4267277f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:578c113ab00f7dc4465a241e214a4c92b3efa99597648a96f9c8258dcfb51760",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:596aa13d810afdaccf9a84c33d3e437a17cffd759567dc1d3486c7b115718174"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5c927571f770834aa3e80c34dc27b0ecbcabc1ce/apps/site/source/app/focus-mode.ts",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5c927571f770834aa3e80c34dc27b0ecbcabc1ce/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5c927571f770834aa3e80c34dc27b0ecbcabc1ce/data/receipts/generated/README.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/tests/focus-mode-provenance.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "node-syntax",
+      "outcome": "PASS",
+      "reason": "node --check parsed the new test file successfully."
+    },
+    {
+      "gate": "focused-focus-mode-test",
+      "outcome": "SKIPPED",
+      "reason": "The local scratch environment does not contain the repository-pinned TypeScript dependency; the test is included in the existing package test glob for hosted validation."
+    },
+    {
+      "gate": "artifact-map-and-sha256-binding",
+      "outcome": "PASS",
+      "reason": "Artifact paths, hash-map keys and truth-label keys match; the full SHA-256 was recomputed from the proposed test bytes."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending. Draft PR creation and generated receipt are not independent approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Focus Mode finite resolver at pinned main",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5c927571f770834aa3e80c34dc27b0ecbcabc1ce/apps/site/source/app/focus-mode.ts"
+    },
+    {
+      "id": "CONTRIBUTING.md AI-assisted contributions",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5c927571f770834aa3e80c34dc27b0ecbcabc1ce/CONTRIBUTING.md"
+    },
+    {
+      "id": "Generated receipt lane README",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5c927571f770834aa3e80c34dc27b0ecbcabc1ce/data/receipts/generated/README.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-18T01:39:22Z",
+  "emitter": "OpenAI Codex KFM provenance-boundary contribution",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Draft-PR provenance for a test-only change based on main@5c927571f770834aa3e80c34dc27b0ecbcabc1ce. The test exercises the existing deterministic Focus Mode resolver with instruction-like source text and verifies that stale, policy-denied, and time-mismatched postures retain ABSTAIN or DENY outcomes. It introduces no source admission, policy rule, evidence, release, deployment, publication, or permission change. Rollback is to close the unmerged PR or revert the test and receipt together after a separately authorized merge."
+}
+
