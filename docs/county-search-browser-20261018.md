@@ -61,6 +61,14 @@ cases); browser-entrypoint syntax passes. Local listener creation failed with
 with `Operation not permitted`. No local candidate browser pass is claimed.
 Exact-head CI is recorded separately in the PR after execution.
 
+The initial CI attempt at `3a65ba5` reached Chrome 155 and the hydrated app,
+then exposed harness errors: a wait returned a DOM element through CDP value
+serialization, and typing raced the first-visit guide's autofocus. The follow-up
+converts wait predicates to booleans, dismisses the normal guide with native
+mouse input, and gives the completed-search scenario its own loaded inventory.
+Those failures do not establish application regressions. The original
+generation receipt is retained; the follow-up receipt binds the revised bytes.
+
 **CONFIRMED, unpinned preview only:** a refreshed existing preview first showed
 the older no-match wording while the Census response was pending. After the
 real response arrived, Ellsworth was discoverable. Changing to `water` briefly

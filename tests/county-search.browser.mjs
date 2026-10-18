@@ -117,7 +117,7 @@ async function pageSession(browser, width, height) {
     const deadline = Date.now() + timeout; let last;
     while (Date.now() < deadline) {
       if (errors.length) throw new Error(errors.join('\n'));
-      last = await evaluate(expression);
+      last = await evaluate(`Boolean(${expression})`);
       if (last) return last;
       await pause(50);
     }
@@ -148,6 +148,14 @@ async function pageSession(browser, width, height) {
     const deadline = Date.now() + 30000;
     while (!held.length && Date.now() < deadline) { if (errors.length) throw new Error(errors.join('\n')); await pause(50); }
     assert.ok(held.length, 'hydrated application started its county request');
+    // New disposable profiles see the normal first-visit guide. Close it with
+    // native mouse input before typing, so its autofocus cannot steal keys.
+    const close = await evaluate(`(() => {const b=document.querySelector('.explorer-guide-close'); if(!b)return null;const r=b.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+    if (close) {
+      await call('Input.dispatchMouseEvent', {type:'mousePressed',button:'left',clickCount:1,...close});
+      await call('Input.dispatchMouseEvent', {type:'mouseReleased',button:'left',clickCount:1,...close});
+      await wait(`!document.querySelector('.explorer-guide')`, 'first-visit guide closed');
+    }
     // A real key must reach React before acceptance begins; no private hooks.
     await fill('hydration probe');
     await wait(`document.querySelector('#global-search-results [role=status]')`, 'search hydration');
@@ -194,6 +202,9 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       t.diagnostic(JSON.stringify({ width, scenario: 'rapid-query', frames }));
     });
     await t.test('completed miss, clear, whitespace, escaping and keyboard county investigation', async () => {
+      await p.open();
+      await p.release(payload('ready', features));
+      await p.wait(`document.querySelector('.global-search input')?.getAttribute('aria-busy') === 'false'`, 'ready inventory before completed-search cases');
       await p.fill('zzzzzz no county');
       await p.wait(`document.querySelector('#global-search-results [role=status]')?.textContent.startsWith('No matches for')`, 'settled completed miss');
       await p.fill('<img src=x onerror=alert(1)>');

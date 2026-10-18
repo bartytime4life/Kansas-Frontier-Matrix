@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-county-browser-20261018-r2",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/county-search.browser.mjs",
+    ".github/workflows/public-core-repair.yml",
+    "docs/county-search-browser-20261018.md"
+  ],
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact runtime build identifier unavailable"
+  },
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Chrome",
+      "local shell"
+    ],
+    "contract_basis": "Owner request: realistic county search browser acceptance, asynchronous regression coverage and reviewable result."
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b7392994224f22720fbc5b6fafa99350ce6785ab",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5264",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/3a65ba507adc2aa45fdd1fb348d50dd61e6221b0",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39174857289"
+    ],
+    "evidence_hashes": []
+  },
+  "validation_gates": [
+    {
+      "gate": "source-regressions",
+      "outcome": "PASS",
+      "reason": "Direct execution: four county and eight search-readiness tests passed against pinned implementation bytes."
+    },
+    {
+      "gate": "browser-entrypoint-syntax",
+      "outcome": "PASS",
+      "reason": "node --check tests/county-search.browser.mjs passed."
+    },
+    {
+      "gate": "local-browser-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Local listener EPERM; isolated Chrome startup failed Crashpad setsockopt Operation not permitted. Browser scenarios did not run locally; exact-head CI is reported separately."
+    },
+    {
+      "gate": "prior-head-ci",
+      "outcome": "FAIL",
+      "reason": "Run 39174857289 reached Chrome 155 and built app; test harness DOM-object serialization and first-visit autofocus prevented acceptance. Revised harness pending new exact-head CI."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; no independent approval or publication authority implied."
+    }
+  ],
+  "policy_decisions": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "emitter": "OpenAI Codex county browser acceptance 20261018",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/907cc58c72844bf56923b63c970b83a202fa5e75/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Test-only integration against existing loopback Node candidate; synthetic fixtures remain in test process. App, AI, evidence restrictions, stores, source registry, deployment configuration and original Sites unchanged. Existing CI gains one explicit browser invocation; events, permissions, dependencies and hosting remain unchanged. Source and browser limitations are recorded in the behavior note. Close draft or revert bounded change through review; no data migration. Historical receipts preserved. Follow-up preserves genrec-county-browser-20261018 and corrects boolean wait serialization, first-visit guide dismissal with native input, and independent setup for the completed-search scenario. This is harness repair, no application defect claim.",
+  "artifact_hashes": {
+    "tests/county-search.browser.mjs": "sha256:f7bbf66a5fe909f11c9aaf82b12404df69aa6b0f539ba28a52f9601175ad970b",
+    ".github/workflows/public-core-repair.yml": "sha256:f50ff0471810c6e23e6290a251f0fc264fab12fd9f5afa6d755625f3e775ef48",
+    "docs/county-search-browser-20261018.md": "sha256:b171d37fd9b553c1d8eb22dbc380534635db216e2d1ffa99af0955801daf1129"
+  },
+  "truth_labels": {
+    "tests/county-search.browser.mjs": "NEEDS VERIFICATION",
+    ".github/workflows/public-core-repair.yml": "CONFIRMED",
+    "docs/county-search-browser-20261018.md": "CONFIRMED"
+  },
+  "prompt_or_contract": "sha256:b171d37fd9b553c1d8eb22dbc380534635db216e2d1ffa99af0955801daf1129",
+  "citations": [
+    {
+      "id": "Pinned authority 1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b7392994224f22720fbc5b6fafa99350ce6785ab"
+    },
+    {
+      "id": "Pinned authority 2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5264"
+    },
+    {
+      "id": "Pinned authority 3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "created_at": "2026-10-18T23:09:23.700Z"
+}
