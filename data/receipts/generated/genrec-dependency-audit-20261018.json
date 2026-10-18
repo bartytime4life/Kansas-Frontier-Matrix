@@ -1,0 +1,79 @@
+{
+  "receipt_id": "genrec-dependency-audit-20261018",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dependency-audit-20261018.md",
+    "docs/dependency-audit-20261018.json",
+    "docs/repository-live-alignment.md"
+  ],
+  "artifact_hashes": {
+    "docs/dependency-audit-20261018.md": "sha256:20eeaa53c9fa08939d618488a054484c02b63d4a87134e40bdb2a52bc1b4967b",
+    "docs/dependency-audit-20261018.json": "sha256:49689c934fcb06beaf7f597ed40fc858ebf9fd286841c18fe799be3580248412",
+    "docs/repository-live-alignment.md": "sha256:999d67d4b736ad26a4ad18a17efb255f6d681520ac6ad06896319a58c3b4058e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:c23e76ef0c8460be639a0fa76e1b9e6da203e18ba9dad5879138b7f0f8e985b8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "placement_basis": "Existing docs and data/receipts/generated responsibilities; Directory Rules v2 / ADR-0029; no new schema or authority."
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:package-lock.json@1d02be5083c9ddd207e0ddcea97f0f3017334365",
+      "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5245"
+    ]
+  },
+  "truth_labels": {
+    "docs/dependency-audit-20261018.md": "CONFIRMED",
+    "docs/dependency-audit-20261018.json": "CONFIRMED",
+    "docs/repository-live-alignment.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact dependency paths and raw audit",
+      "outcome": "PASS",
+      "reason": "Lock and installed tree identify two chains, eight package entries, nine installation locations and one root advisory."
+    },
+    {
+      "gate": "Dependency security remediation",
+      "outcome": "FAIL",
+      "reason": "Braces 3.0.3 remains affected; no compatible complete published fix established. No dependency or lock change, no waiver."
+    },
+    {
+      "gate": "Production build, types, focused and actual HTTP checks",
+      "outcome": "PASS",
+      "reason": "Node 22.13.1 build and types pass; 42 focused and 15 HTTP tests pass; source digest matches unchanged baseline."
+    },
+    {
+      "gate": "Hosted acceptance and GoDaddy publication",
+      "outcome": "SKIPPED",
+      "reason": "Outside investigation; all existing acceptance/publication holds preserved."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "upstream-advisory",
+      "validated": true,
+      "evidence_ref": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-18T03:49:26Z",
+  "emitter": "Codex production-review dependency investigation",
+  "links": {
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/0be787703daa842bbc2d33e9d941b1c09794cd87/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "CONFIRMED labels identify authored evidence and bounded observations, not verified remote exploitability, remediation, human review, risk acceptance or deployment. Application/package/lock/vendor/source identity/private stores unchanged."
+}
