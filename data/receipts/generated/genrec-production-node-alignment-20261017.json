@@ -1,0 +1,131 @@
+{
+  "receipt_id": "genrec-production-node-alignment-20261017",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-core-repair.yml",
+    ".gitignore",
+    "README.md",
+    "app/about/page.tsx",
+    "app/api/build/route.ts",
+    "app/globals.css",
+    "docs/godaddy-node-preview.md",
+    "docs/repository-live-alignment.md",
+    "godaddy-source.json",
+    "package.json",
+    "scripts/build-identity.mjs",
+    "scripts/stage-public-client-assets.mjs",
+    "tests/build-identity-http.test.mjs",
+    "tests/build-identity.test.mjs",
+    "tests/public-client-assets.test.mjs"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-core-repair.yml": "sha256:993446efd2b2601d23250967e90f864b2cda2047ecca043065d51634d7304442",
+    ".gitignore": "sha256:157fea48af533080023b424d56a523d448c4da1b07d44e818dec6ea2a57ffeb9",
+    "README.md": "sha256:39bd9f6411ddc7e15f9fd01c38e3377e87eeb520b7f0cf893a923afed4fe38cf",
+    "app/about/page.tsx": "sha256:c9179f6c73e9d1f02e5e12294beb9960f8ee68aa8aea33385e3665b21634b6ad",
+    "app/api/build/route.ts": "sha256:25df685e4f38a5d6cd9cdaa3d9466943bdf6b04a6e0013756ed5d8310fc2425d",
+    "app/globals.css": "sha256:6347d76468452f583561c093ded0d1cb9abd2cf268dbbc42bab5c119f7d9ef0d",
+    "docs/godaddy-node-preview.md": "sha256:b5dcec4e657e817e523067d739ceb9b52754f8bf6e4c98043e461dd38abcc093",
+    "docs/repository-live-alignment.md": "sha256:fc1804f68b804779e0a10b3b72537798f32ad01553cc0585e7c12dbf57923d6a",
+    "godaddy-source.json": "sha256:476a18efd3822f80f120bde63119b506272801a82d6d92c767cc97efa02be512",
+    "package.json": "sha256:66965b7aa11ed11ebae1b095bb2e27b0bdbdedda192e5c624e3b0e69e39227aa",
+    "scripts/build-identity.mjs": "sha256:ff8dc9f52e5da1b8435fab45a2288bd68673fee669657f3bb1ee90d298eb98ce",
+    "scripts/stage-public-client-assets.mjs": "sha256:ab56cc04615a7ad6c16f50d2eec3729b0726196cce206f6c02fd93e6b8b583f6",
+    "tests/build-identity-http.test.mjs": "sha256:0881888b9f210719e7ba0c2f08d0900f5b8a26128d8e936de58d31d3f536bc1a",
+    "tests/build-identity.test.mjs": "sha256:1a54fed3df1a64dbeb73309ebaa072424bacc7b73342266b3f5b13f364a2f219",
+    "tests/public-client-assets.test.mjs": "sha256:1d4fe0661df5e0da6354569e9a7b3f131d5d878457a735f86ad74e47c71f8684"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "placement_basis": "Existing repository responsibility roots under Directory Rules v2, adopted by ADR-0029; data/receipts/generated is the established generated-work receipt home in this same repository."
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4b3cc837e9c131e5eb214427e0a55646fc76e52a",
+      "https://host.godaddy.com/nodejs/projects/q9r9beo47t",
+      "https://kansasfrontiermatrix.com/",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0be787703daa842bbc2d33e9d941b1c09794cd87"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-core-repair.yml": "CONFIRMED",
+    ".gitignore": "CONFIRMED",
+    "README.md": "CONFIRMED",
+    "app/about/page.tsx": "CONFIRMED",
+    "app/api/build/route.ts": "CONFIRMED",
+    "app/globals.css": "CONFIRMED",
+    "docs/godaddy-node-preview.md": "CONFIRMED",
+    "docs/repository-live-alignment.md": "CONFIRMED",
+    "godaddy-source.json": "CONFIRMED",
+    "package.json": "CONFIRMED",
+    "scripts/build-identity.mjs": "CONFIRMED",
+    "scripts/stage-public-client-assets.mjs": "CONFIRMED",
+    "tests/build-identity-http.test.mjs": "CONFIRMED",
+    "tests/build-identity.test.mjs": "CONFIRMED",
+    "tests/public-client-assets.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build, TypeScript and changed-file ESLint",
+      "outcome": "PASS",
+      "reason": "Build and checks passed on code at 2cdf48a1f0f6f534c17ba53490ec3224c588d382. Receipt-only successor does not change application inputs."
+    },
+    {
+      "gate": "Focused component, identity, asset and HTTP checks",
+      "outcome": "PASS",
+      "reason": "39 focused checks plus 15 actual Node HTTP checks passed; public input digest matched sha256:4d57cc63b876327eb2841fe2f383d2d8ebf6896ecbcedf50153baa20af0cea8e."
+    },
+    {
+      "gate": "Bounded rendered browser smoke",
+      "outcome": "PASS",
+      "reason": "Desktop guide, keyboard skip, 390 CSS-pixel guide without horizontal overflow, map ready, committed year 2020 then Present, six simultaneous selected layers then five restored. Report exports visible; Publish disabled."
+    },
+    {
+      "gate": "Actual report download completion",
+      "outcome": "SKIPPED",
+      "reason": "Download-event observation timed out after clicking Export report JSON; download completion not established at receipt creation."
+    },
+    {
+      "gate": "Dependency audit",
+      "outcome": "FAIL",
+      "reason": "Inherited unpatched Braces advisory GHSA-vfj7-8cjw-p6xm remains: eight high affected-package entries, zero critical. Dependency lock unchanged; exploitability and security acceptance not established."
+    },
+    {
+      "gate": "Live publication and browser acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Production candidate excludes newer held AI changes. Existing owner publication hold is preserved; no exception assumed."
+    },
+    {
+      "gate": "Exact-head hosted CI and full test suite",
+      "outcome": "SKIPPED",
+      "reason": "CI pending at receipt creation; full suite not run for this bounded change."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-source-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4b3cc837e9c131e5eb214427e0a55646fc76e52a"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-18T01:13:13.714103Z",
+  "emitter": "Codex repository and live Node alignment session",
+  "links": {
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/0be787703daa842bbc2d33e9d941b1c09794cd87/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "CONFIRMED labels bind authored bytes and bounded checks only. Human review remains pending. No merge, source admission, data activation, deployment or publication is claimed. Existing publication hold is preserved. No prompt text, secrets, private stores or raw tool logs are included."
+}
