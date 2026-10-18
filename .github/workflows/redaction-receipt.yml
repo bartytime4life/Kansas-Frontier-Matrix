@@ -41,6 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -52,6 +53,8 @@ jobs:
           python -m py_compile tools/validators/receipts/validate_redaction_receipt.py tests/validators/test_validate_redaction_receipt.py
           python -m unittest tests.validators.test_validate_redaction_receipt -v
           python tools/validators/receipts/validate_redaction_receipt.py --fixtures
-      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-redaction-receipt-v1-20260809.json --repo-root .
+      # Each immutable receipt is checked against the bytes it was issued for.
+      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-redaction-receipt-v1-20260809.json --repo-root . --artifact-git-ref f8162518295dc18b7f2524ea61b44b8d698b4ec2
+      - run: python tools/validators/validate_generated_receipt.py data/receipts/generated/genrec-redaction-receipt-v1-input-hardening-20261018.json --repo-root .
       - if: always()
         run: echo "Fixture-only receipt-shape validation; no restricted input access, policy execution, release, or publication." >> "$GITHUB_STEP_SUMMARY"

@@ -90,7 +90,8 @@ def _read(path: Path) -> tuple[dict[str, Any] | None, tuple[Finding, ...]]:
         return None, (Finding("REDACTION_JSON_DUPLICATE_KEY", "/"),)
     except NonFiniteNumberError:
         return None, (Finding("REDACTION_JSON_NONFINITE_NUMBER", "/"),)
-    except (OSError, UnicodeError, json.JSONDecodeError, RecursionError):
+    # ValueError also covers integer literals past Python's digit limit.
+    except (OSError, UnicodeError, ValueError, RecursionError):
         return None, (Finding("REDACTION_JSON_INVALID", "/"),)
     if not isinstance(value, dict):
         return None, (Finding("REDACTION_ROOT_NOT_OBJECT", "/"),)
