@@ -561,7 +561,7 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /id="map-utility-panel"/);
   const controlNavigation = await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8");
   assert.match(source, /<ExplorerControlsNavigation value=\{mapUtilityView\}/);
-  for (const [key, title] of [["navigate", "Explore"], ["scene", "Appearance"], ["measure", "Measure"], ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"], ["export", "Export"], ["import", "Import a file"], ["connections", "Sources"], ["history", "Historic maps"], ["diagnostics", "Diagnostics"]]) {
+  for (const [key, title] of [["scene", "Appearance"], ["measure", "Measure"], ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"], ["export", "Export"], ["import", "Import a file"], ["connections", "Sources"], ["history", "Historic maps"], ["diagnostics", "Diagnostics"]]) {
     assert.ok(controlNavigation.includes(`["${key}", "${title}"]`), `Missing named control route: ${title}`);
   }
   assert.match(controlNavigation, /<summary>Advanced tools/);

@@ -623,7 +623,7 @@ const drawerViewLabels: Record<DrawerView, string> = {
 };
 const mapUtilityLabels: Record<MapUtilityView, string> = {
   report: "Report",
-  navigate: "Explore",
+  navigate: "Appearance",
   inspect: "Inspect",
   scene: "Appearance",
   history: "Kansas historic maps",
@@ -637,7 +637,7 @@ const mapUtilityLabels: Record<MapUtilityView, string> = {
 const mapUtilityDescriptions: Record<MapUtilityView, string> = {
   report: "Build a report from the current map, time, layers, and selection.",
   inspect: "Find a feature and inspect its evidence context.",
-  navigate: "Move the map by camera, coordinates, or location.",
+  navigate: "Adjust the map appearance. Legacy navigation links open this panel.",
   scene: "Adjust the current terrain and 3D view.",
   history: "Find dated USGS sheet editions near this map view.",
   connections: "Check the sources behind the current map.",
@@ -4384,7 +4384,7 @@ export default function Home() {
     mapEvidenceFilterRef.current = snapshot.evidenceFilter ?? "ALL";
     setCompareTimeA(snapshot.comparison?.timeA ?? snapshot.committedTime.start);
     setCompareTimeB(snapshot.comparison?.timeB ?? sceneFrame);
-    setMapUtilityView(snapshot.representation === "Compare" ? "compare" : "navigate");
+    setMapUtilityView(snapshot.representation === "Compare" ? "compare" : "scene");
     setMapUtilityOpen(snapshot.representation === "Compare");
     setPrimaryWorkspace("map");
     if (mapRef.current) applyProjectionNavigationLimits(mapRef.current, snapshot.projection);
@@ -4646,7 +4646,7 @@ export default function Home() {
       if (restoredSourceStatus) { setLeftPanelMode("layers"); setLeftOpen(true); setSourceStatusOpen(true); }
       const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
         ? "compare"
-        : restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "navigate";
+        : restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "scene";
       setMapUtilityView(nextMapUtilityView);
       const restoredComparisonTimes = params.get("times")?.split(",").map(Number) ?? [];
       if (restoredComparisonTimes.length === 2 && restoredComparisonTimes.every((value) => TIME_STEPS.includes(value as (typeof TIME_STEPS)[number]))) {
@@ -7683,7 +7683,7 @@ export default function Home() {
     const savedComparison = snapshot.temporalComparison;
     setCompareTimeA(savedComparison && TIME_STEPS.includes(savedComparison.timeA as (typeof TIME_STEPS)[number]) ? savedComparison.timeA : 1910);
     setCompareTimeB(savedComparison && TIME_STEPS.includes(savedComparison.timeB as (typeof TIME_STEPS)[number]) ? savedComparison.timeB : OFFICIAL_CONTEXT_PRESENT_FRAME);
-    setMapUtilityView(nextSavedSweepMode === "comparison" ? "compare" : "navigate");
+    setMapUtilityView(nextSavedSweepMode === "comparison" ? "compare" : "scene");
     setMapUtilityOpen(nextSavedSweepMode === "comparison");
     setReportTitle(snapshot.report?.title || "Kansas map data report");
     setReportScope(snapshot.report?.scope === "SELECTION" || snapshot.report?.scope === "VISIBLE_LAYERS" || (snapshot.report?.scope === "ANALYSIS_AREA" && nextAnalysisArea) ? snapshot.report.scope : "VIEWPORT");
