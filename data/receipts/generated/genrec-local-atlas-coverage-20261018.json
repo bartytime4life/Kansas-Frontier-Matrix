@@ -1,0 +1,90 @@
+{
+  "receipt_id": "genrec-local-atlas-coverage-20261018",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/local_data/test_atlas.py"
+  ],
+  "artifact_hashes": {
+    "tests/local_data/test_atlas.py": "sha256:6b4e4926f4ba217792643fc4e2c13e368475b104b05c1eb72fadf3c57744889c"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/445ee26f929bc10c07a841d73152615fbac147ee",
+      "repo:tools/local_data/atlas.py@445ee26f929bc10c07a841d73152615fbac147ee",
+      "repo:tools/local_data/atlas_worker.py@445ee26f929bc10c07a841d73152615fbac147ee",
+      "repo:tools/local_data/intake_service.py@445ee26f929bc10c07a841d73152615fbac147ee"
+    ]
+  },
+  "truth_labels": {
+    "tests/local_data/test_atlas.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-data-check",
+      "outcome": "PASS",
+      "reason": "make local-data-check (the local-data-store workflow step): 425 passed. tests/local_data/test_atlas.py: 23 tests (10 before, 13 new), synthetic data only. Shared store setup lives in a non-TestCase mixin so the original 10 tests are not collected twice."
+    },
+    {
+      "gate": "Coverage",
+      "outcome": "PASS",
+      "reason": "tools/local_data/atlas.py branch coverage 53% to 84%. atlas_worker.py rises from 12% to 20% in-process; its raster and vector readers need rasterio and pyshp, which the test environment does not install."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of five safeguards was disabled in turn and the suite failed every time: LIKE wildcard escaping, single-flight preview, source-change detection around the worker, worker environment allowlist and the PRISM difference group check."
+    },
+    {
+      "gate": "Worker runtime probe (not committed)",
+      "outcome": "PASS",
+      "reason": "With rasterio 1.4.4, pyshp 3.1.6 and numpy 2.4.6 in a scratch environment, the real worker handled synthetic inputs correctly: continuous, no-data, flat, paletted, UTM-reprojected and single-member zipped GeoTIFFs; outside-Kansas, CRS-less, bad-band and two-member archives refused with codes; plain and zipped shapefiles read with dates and nulls. No defect found."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same 2 pre-existing findings in this file before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/445ee26f929bc10c07a841d73152615fbac147ee"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-18T23:30:03Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Test-only. Covers the worker's path and archive guards and its coded error output, catalog filtering, literal LIKE escaping, bbox and paging clamps, single-flight preview, GeoJSON CRS and shape checks, worker timeout, failure, source-change and environment allowlist, and PRISM groups, frames, county choropleth, B-minus-A differences and refusals against a synthetic catalog. No runtime code changes."
+}
