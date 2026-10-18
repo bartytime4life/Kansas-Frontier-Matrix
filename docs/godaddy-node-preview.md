@@ -1,3 +1,9 @@
+> **Current operation — 2026-10-17:** follow
+> [repository/live alignment](repository-live-alignment.md) for the verified
+> public commit, connected branch, Node build, identity check and rollback.
+> This document retains dated migration and repair notes; its earlier branch
+> names and preview-pending statements are historical observations.
+
 # GoDaddy Node preview candidate
 
 This is a separate runtime composition of Explorer v259, source

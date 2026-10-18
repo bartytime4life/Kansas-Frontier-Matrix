@@ -1,3 +1,9 @@
+> **GoDaddy Node operation — 2026-10-17:** this standalone application targets
+> [kansasfrontiermatrix.com](https://kansasfrontiermatrix.com/) on GoDaddy app
+> `q9r9beo47t`, Node.js 22. See [source identity, validation and rollback](docs/repository-live-alignment.md)
+> before building or publishing. The dated Sites checkpoints below preserve a
+> separate lineage; they are not the current public application version.
+
 > **Underground surface-refresh candidate — 2026-10-10:** Starting from owner-private Site v221, **Refresh surface** reloads the selected basemap's tiles while retaining the previous georeferenced cutaway image until a new frame is drawn. The status identifies the old image during loading and does not claim that unavailable new tiles are complete. A changed area, basemap, resolution, or departure from 3D still clears the old image through the existing lifecycle. No well logs, aquifer ranges, source admission, storage, or release state change. Revert this bounded change or redeploy saved v221 if rendered acceptance fails.
 
 > **Site audit — 2026-10-09 (repository source, not yet deployed):** the reviewer queue and per-owner submission pages read from new additive D1 indexes with a row-value cursor (no scan and sort). Unknown and withheld paths get a branded 404. Pages carry baseline `nosniff`, referrer and permissions headers. An axe-core sweep's serious findings are fixed. 725 Node tests (0 failures) and the local route smoke pass. See [the audit notes](docs/explorer-site-audit-2026-10-09.md).

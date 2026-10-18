@@ -42,3 +42,4 @@ next-env.d.ts
 __pycache__/
 
 /public/vendor/h5wasm/
+/app/build-info.generated.json

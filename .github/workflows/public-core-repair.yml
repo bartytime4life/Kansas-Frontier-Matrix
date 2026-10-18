@@ -20,6 +20,8 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npx tsc --noEmit
+      - name: Application identity, resource links and immutable browser assets
+        run: node --test tests/build-identity.test.mjs tests/build-identity-http.test.mjs tests/public-client-assets.test.mjs
       - name: Map menus, mobile controls and keyboard navigation
         run: >-
           node --test tests/explorer-menu-dismissal.test.mjs

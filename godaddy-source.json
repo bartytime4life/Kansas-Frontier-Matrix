@@ -1,9 +1,14 @@
 {
   "application": "Kansas Frontier Matrix Explorer",
-  "composition": "godaddy-node-preview",
+  "composition": "godaddy-node",
   "source_site_version": 259,
   "source_commit": "441c3e29581ffb0293d8e643e5c37eed50319032",
   "target_app": "q9r9beo47t",
-  "verification": "local build, type check, production HTTP tests and browser smoke passed; hosted preview pending",
-  "release_status": "preview candidate; staff identity, storage migration and paid reports not configured"
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "canonical_origin": "https://kansasfrontiermatrix.com",
+  "runtime": "Node.js 22",
+  "source_commit_role": "Historical Explorer v259 migration baseline; not the current deployment commit",
+  "deployment_identity": "Verify the provider's Published commit and /api/build on the target origin",
+  "reports": "Free exports; preserve draft labels, source limits and privacy redaction",
+  "release_status": "Application deployment does not admit or release data; private stores and source activation retain their existing controls"
 }
