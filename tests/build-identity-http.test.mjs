@@ -1,12 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { startProdServer } from 'vinext/server/prod-server';
-import { installPublicDelivery } from '../server/browser-headers.mjs';
 import { applicationIdentity, verifyHostedIdentity } from '../scripts/build-identity.mjs';
 
 test('built public identity matches current inputs and About exposes usable project resources', async t => {
   const {server, port} = await startProdServer({port:0, host:'127.0.0.1', outDir:'dist'});
-  installPublicDelivery(server);
   t.after(() => new Promise(resolve => { server.closeAllConnections(); server.close(resolve); }));
   const origin = `http://127.0.0.1:${port}`;
   const response = await fetch(origin + '/api/build');
