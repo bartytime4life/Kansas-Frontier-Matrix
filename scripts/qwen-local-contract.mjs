@@ -1,6 +1,6 @@
 /** Non-secret, local-only contract shared by the Qwen bridge and its tests. */
 export const QWEN_LOCAL_CONTRACT_VERSION = "kfm-qwen-local-v2";
-export const QWEN_LOCAL_BRIDGE_VERSION = "2.1.1";
+export const QWEN_LOCAL_BRIDGE_VERSION = "2.1.0";
 export const QWEN_LOCAL_MODE = "local-only";
 export const QWEN_LOCAL_MODEL = "qwen3.6:35b";
 export const QWEN_LOCAL_MODEL_DIGEST = "sha256:07d35212591fc27746f0a317c975a6d68754fb38e9053d82e25f06057af28522";
