@@ -6,6 +6,11 @@ its exact identity, memory bounds and LIMITED quality screen. The SmolLM2
 model, cache and qualification statements below are historical checkpoints,
 not current Qwen acceptance. Public publication remains ON HOLD.
 
+The subsequent [reply/dependency candidate](hosted-qwen-quality-20261018.md)
+adds bounded 2,048-token chunked input, 768-token expanded replies and a local
+Braces mitigation. Its general answer-quality screen remains LIMITED; the
+earlier limits and qualification records below are historical checkpoints.
+
 GoDaddy Preview startup follow-up (2026-10-17): the dashboard was running
 `npm run dev`, which launched Vite on port 5173 and failed with EACCES. The
 standalone Node composition now makes that command build and start the same
