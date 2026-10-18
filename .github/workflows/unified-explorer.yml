@@ -24,6 +24,8 @@ jobs:
         run: >-
           node --test --import ./tests/cloudflare-register.mjs
           tests/earth-engine-downloads.test.mjs tests/local-composed.test.mjs
+          tests/build-identity.test.mjs tests/build-identity-http.test.mjs
+          tests/county-search.test.mjs tests/explorer-menu-dismissal.test.mjs tests/focus-mode-provenance.test.mjs
           tests/pc-ai.test.mjs tests/pc-storage-probe.test.mjs
           tests/node-compressed-assets.test.mjs tests/map-controls-tidy.test.mjs
           tests/prepared-mobile-controls.test.mjs tests/scene-landscape-integration.test.mjs

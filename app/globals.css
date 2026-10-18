@@ -4699,3 +4699,12 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .event-science-support span { margin-top: 4px; }
 .event-science-empty { padding: 18px; border: 1px solid #627675; border-radius: 8px; }
 .event-science-empty button { min-height: 44px; }
+
+.about-section-links { display: flex; flex-wrap: wrap; gap: 12px 20px; margin: 20px 0; }
+.about-section-links a, .about-boundary a { color: var(--water); text-underline-offset: 3px; }
+.about-section[id] { scroll-margin-top: 90px; }
+.about-build-note, .about-history { color: var(--muted); font-size: 12px; line-height: 1.65; overflow-wrap: anywhere; }
+.about-build-note code { font-size: 11px; }
+.about-history { margin-top: 16px; }
+.about-history summary { cursor: pointer; }
+.about-section-links a:focus-visible, .about-boundary a:focus-visible, .about-history summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }

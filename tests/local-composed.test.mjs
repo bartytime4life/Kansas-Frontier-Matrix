@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {nativeApiPath,acceptedLocalRequest,apiOnlyEntry} from '../scripts/serve-local-composed.mjs';
 test('composed entry preserves Node account operations and routes legacy data to the native boundary',()=>{
- for(const p of ['/api/pc-ai/status','/api/owner/sign-in','/api/ingestion/status','/','/assistant','/data/subsurface/manifest.json'])assert.equal(nativeApiPath(p),false,p);
+ for(const p of ['/api/build','/api/pc-ai/status','/api/owner/sign-in','/api/ingestion/status','/','/assistant','/data/subsurface/manifest.json'])assert.equal(nativeApiPath(p),false,p);
  for(const p of ['/api/live-context','/api/earth-engine-context/active','/api/governed/v1/layers','/api/daily-archive','/api/land-records'])assert.equal(nativeApiPath(p),true,p);
 });
 test('local routing cannot inject owner identity or accept an alternate origin',()=>{

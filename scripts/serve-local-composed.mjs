@@ -10,7 +10,7 @@ import { startProdServer, nodeToWebRequest, sendWebResponse } from 'vinext/serve
 
 export function nativeApiPath(pathname) {
   // Only this reviewed stateless display adapter moves to the current Node build.
-  if (pathname === '/api/hydrology/flowlines') return false;
+  if(pathname==='/api/hydrology/flowlines' || pathname==='/api/build') return false;
   return pathname.startsWith('/api/') && !/^\/api\/(?:pc-ai|owner|ingestion|source-operations|source-pipeline|pc-storage-probe|reports|capture-worker)(?:\/|$)/.test(pathname);
 }
 export function acceptedLocalRequest(request, origin) {
