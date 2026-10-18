@@ -156,6 +156,46 @@ test('the visitor question supplies search terms and status retry never resubmit
  }finally{h.dispose();}
 });
 
+test('read pressure honors Retry-After and retries the accepted job without losing the next draft',async()=>{
+ let posts=0,reads=0;const timers=[];
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST'){posts++;return Response.json({id:'synthetic-job'});}
+  if(++reads===1)return Response.json({reasonCode:'AI_READ_RATE_LIMIT'},{status:429,headers:{'Retry-After':'60'}});
+  return Response.json({id:'synthetic-job',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'SOURCE_CONTEXT_ONLY',sourceSummary:'Synthetic source summary only.'}});
+ },{}, {},{setTimeout:(fn,ms)=>{timers.push({fn,ms});return timers.length;},clearTimeout:()=>{}});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain this record.'}});tree=render();
+  await findNode(tree,n=>n.type==='form'&&n.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  tree=render();await settle();tree=render();assert.match(text(alert(tree)),/source checks are busy.*accepted question is retained/);
+  assert.equal(timers.at(-1).ms,60000);assert.equal(posts,1);
+  message(tree).props.onChange({target:{value:'Keep this next draft.'}});tree=render();
+  await timers.at(-1).fn();await settle();tree=render();
+  assert.equal(posts,1);assert.equal(reads,2);assert.equal(message(tree).props.value,'Keep this next draft.');assert.match(text(tree),/Synthetic source summary only/);
+ }finally{h.dispose();}
+});
+
+test('successful cancellation remains usable when follow-up result reads are throttled',async()=>{
+ let reads=0,posts=0,cancels=0;
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel')){cancels++;return Response.json({cancelled:true});}
+  if(options.method==='POST'){posts++;return Response.json({id:'synthetic-job'});}
+  if(++reads>2)return Response.json({reasonCode:'AI_READ_RATE_LIMIT'},{status:429,headers:{'Retry-After':'60'}});
+  return Response.json({id:'synthetic-job',state:'running',deadline:Date.now()+60000,result:null});
+ });
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain this record.'}});tree=render();
+  await findNode(tree,n=>n.type==='form'&&n.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  tree=render();await settle();tree=render();
+  message(tree).props.onChange({target:{value:'Keep my next draft.'}});tree=render();const beforeCancel=reads;
+  await findNode(tree,n=>n.type==='button'&&n.props.children==='Cancel').props.onClick();tree=render();
+  assert.equal(cancels,1);assert.equal(posts,1);assert.equal(reads,beforeCancel,'successful cancellation must not depend on another read');
+  assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Cancel'),undefined);
+  assert.equal(send(tree).props.disabled,false);assert.equal(message(tree).props.value,'Keep my next draft.');
+ }finally{h.dispose();}
+});
+
 test('a selected sample can resolve a source summary while inference is offline, without enabling ordinary discussion',async()=>{
  const focus={context:{version:1,frame:2026,view:'Underground',layers:[],selection:{kind:'subsurface',recordId:'synthetic-core'}},title:'Synthetic core',detail:'Original source'};
  let payload;

@@ -81,16 +81,18 @@ test('withdrawal between resolution and inference withholds the result without c
  assert.equal(done.body.result.reasonCode,'RELEASE_CHANGED');assert.equal(done.body.context,null);assert.equal(f.calls(),0);
 });
 
-test('concurrent result reads cannot resurrect interpretation after another read withdraws its release',async()=>{
+test('concurrent reads share a withdrawal check and later reads cannot resurrect interpretation',async()=>{
  const pending=[];let race=false;
  const f=runtime(async()=>race?new Promise(resolve=>pending.push(resolve)):released());
  const created=await f.request('jobs',input);await f.settleJob(created.body.id,created.cookie);
  race=true;
  const first=f.request('jobs/'+created.body.id,null,created.cookie),second=f.request('jobs/'+created.body.id,null,created.cookie);
- await settle();assert.equal(pending.length,2);
+ await settle();assert.equal(pending.length,1);
  pending[0](null);assert.equal((await first).body.result.reasonCode,'RELEASE_CHANGED');
- pending[1](released());const late=await second;
+ const late=await second;
  assert.equal(late.body.result.reasonCode,'RELEASE_CHANGED');assert.equal(late.body.result.interpretation,null);assert.equal(late.body.context,null);
+ race=false;const later=await f.request('jobs/'+created.body.id,null,created.cookie);
+ assert.equal(later.body.result.reasonCode,'RELEASE_CHANGED');assert.equal(later.body.context,null);
 });
 
 test('external source recheck resolves source fingerprints even without a KFM release ID',async()=>{

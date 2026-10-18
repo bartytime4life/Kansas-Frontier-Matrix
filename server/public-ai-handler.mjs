@@ -4,6 +4,7 @@ import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contr
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
 import {getHostedAiModel,HOSTED_MODEL,hasRepeatedPhrase,repeatsPriorReply,PUBLIC_AI_JOB_MS} from './hosted-ai.mjs';
 import {validAssistantContext} from './assistant-context.mjs';
+import {createAiReadBuffer,isAiReadPressure} from './ai-read-buffer.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Vary':'Cookie','Cross-Origin-Resource-Policy':'same-origin'};
 const reply=(body,status=200,extra={})=>Response.json(body,{status,headers:{...headers,...extra}});
 const envelope=(outcome,reasonCode)=>({outcome,reasonCode,answer:null,evidenceRefs:[],interpretation:null});
@@ -22,6 +23,7 @@ async function body(request){
 }
 export function createPublicAiHandler({origin,resolveEvidence,resolveContext=async()=>{throw new Error('CONTEXT_UNAVAILABLE');},model,clock=Date.now}){
  const sessions=new Map(),jobs=new Map();let requests=[],draining=false;
+ const reads=createAiReadBuffer({clock});
  const cookie=request=>(request.headers.get('cookie')??'').split(';').map(x=>x.trim()).find(x=>x.startsWith('__Host-kfm_ai_guest='))?.slice(20)??'';
  const cleanup=()=>{
   const now=clock();requests=requests.filter(t=>t>now-3600000);
@@ -34,7 +36,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
  const cleanupTimer=setInterval(cleanup,30000);cleanupTimer.unref?.();
  const packet=async query=>{
   let timer;const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('EVIDENCE_WITHHELD')),8000);});
-  let value;try{value=await Promise.race([resolveEvidence(query),timeout]);}finally{clearTimeout(timer);}
+  let value;try{value=await Promise.race([reads.run(()=>resolveEvidence(query)),timeout]);}finally{clearTimeout(timer);}
   if(!value||!Array.isArray(value.evidence)||value.evidence.length>40||!/^sha256:[a-f0-9]{64}$/.test(value.releaseId??'')||Buffer.byteLength(JSON.stringify(value))>24000)return null;
   for(const fact of value.evidence){
    if(!fact||Object.keys(fact).some(k=>!['evidenceRef','text','status','title','url'].includes(k))||!text(fact.evidenceRef,240)||!text(fact.text,800)||!text(fact.title,200)||fact.status!=='documented')throw new Error('EVIDENCE_WITHHELD');
@@ -45,7 +47,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
  const contextFingerprint=value=>digest({key:value.key,prompt:value.prompt,sourceSummary:value.sourceSummary,releaseId:value.releaseId,references:value.references});
  const readContext=async selector=>{
   let timer;try{
-   const value=await Promise.race([resolveContext(selector),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('CONTEXT_UNAVAILABLE')),5000);})]);
+   const value=await Promise.race([reads.run(()=>resolveContext(selector)),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('CONTEXT_UNAVAILABLE')),5000);})]);
    if(!value||!text(value.prompt,2400)||!text(value.label,240)||!text(value.boundary,240))throw new Error('CONTEXT_UNAVAILABLE');
    if(value.sourceSummary!==undefined&&(!text(value.sourceSummary,4096)||isSensitiveQwenQuestion(value.sourceSummary)||localQwenAnswerHasOverPreciseLocation(value.sourceSummary)))throw new Error('CONTEXT_UNAVAILABLE');
    if(value.references!==undefined&&(!Array.isArray(value.references)||value.references.length>4||value.references.some(ref=>{
@@ -57,8 +59,23 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
  };
  // A resolved catalog record can change or be denied without having a link or
  // release ID. Recheck every resolved context, not just citation-bearing ones.
- const freshContext=async job=>{if(!job.context)return true;try{return contextFingerprint(await readContext(job.contextSelector))===job.contextFingerprint;}catch{return false;}};
+ const freshContext=async job=>{if(!job.context)return true;try{return contextFingerprint(await readContext(job.contextSelector))===job.contextFingerprint;}catch(error){if(isAiReadPressure(error))throw error;return false;}};
  const fresh=async job=>{const value=await packet(job.query);return Boolean(value&&digest(value)===job.evidenceDigest);};
+ const recheckResult=job=>{
+  // Share only overlapping checks, never reuse a previously successful snapshot.
+  if(!job.recheck)job.recheck=Promise.resolve().then(async()=>{
+   const result=job.result;if(!result)return;
+   const checks=await Promise.allSettled([result.outcome==='ANSWER'||result.citations?.length?fresh(job):true,freshContext(job)]);
+   // A known withdrawal wins even if another source check is temporarily busy.
+   const failed=checks.some(check=>check.status==='fulfilled'?!check.value:!isAiReadPressure(check.reason));
+   if(!failed){
+    const pressure=checks.find(check=>check.status==='rejected');if(pressure)throw pressure.reason;
+    return;
+   }
+   job.result=envelope('ABSTAIN','RELEASE_CHANGED');job.context=null;
+  }).finally(()=>{job.recheck=null;});
+  return job.recheck;
+ };
  const evidenceResult=async job=>{
   if(!await fresh(job))return envelope('ABSTAIN','RELEASE_CHANGED');
   // Deterministic discovery does not require inference or factual selection.
@@ -71,10 +88,10 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
    const result=await evidenceResult(job);
    if(job.state==='running'&&clock()<job.deadline){job.state='completed';job.result=result;}
    else if(job.state==='running'){job.state='expired';job.result=null;}
-  }catch{
+  }catch(error){
    if(job.state==='running'){
     job.state=clock()<job.deadline?'completed':'expired';
-    job.result=job.state==='completed'?envelope('ABSTAIN','EVIDENCE_WITHHELD'):null;
+    job.result=job.state==='completed'?envelope(isAiReadPressure(error)?'ERROR':'ABSTAIN',isAiReadPressure(error)?'AI_READ_BUSY':'EVIDENCE_WITHHELD'):null;
    }
   }finally{job.question='';if(!job.result?.citations?.length){job.packet=null;job.query=null;}}
  };
@@ -103,7 +120,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
       if(session)session.history=[...(session.history??[]).filter(item=>item.contextKey===job.contextKey),{question:job.question,reply:output,contextKey:job.contextKey,at:clock()}].slice(-2);
      }
     }
-   }catch(error){if(job.state==='running')job.result=envelope(error.code==='MODEL_CONTEXT_LIMIT'?'ABSTAIN':'ERROR',error.code==='MODEL_CONTEXT_LIMIT'?'MODEL_CONTEXT_LIMIT':'MODEL_UNAVAILABLE');}
+   }catch(error){if(job.state==='running')job.result=envelope(error.code==='MODEL_CONTEXT_LIMIT'?'ABSTAIN':'ERROR',isAiReadPressure(error)?'AI_READ_BUSY':error.code==='MODEL_CONTEXT_LIMIT'?'MODEL_CONTEXT_LIMIT':'MODEL_UNAVAILABLE');}
    finally{clearTimeout(timer);if(job.state==='running'){job.state=job.abort.signal.aborted?'expired':'completed';if(job.state==='expired')job.result=null;}job.abort=null;job.question='';if(!job.result?.citations?.length){job.packet=null;job.query=null;}}
   }}finally{draining=false;}
  };
@@ -139,7 +156,9 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      const questionScope=value.question+' '+value.term+' '+query.place+' '+(value.context?JSON.stringify(value.context):'');
      const sensitive=isSensitiveQwenQuestion(questionScope)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(questionScope);
      if(!sensitive&&value.context){
-      job.context=await readContext(value.context);
+      const context=await readContext(value.context);
+      if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.context=null;job.question='';job.query=null;return;}
+      job.context=context;
       if(value.context.selection&&(isSensitiveQwenQuestion(job.context.prompt)||localQwenAnswerHasOverPreciseLocation(job.context.prompt)))throw new Error('POLICY_WITHHELD');
       job.contextSelector=value.context;job.contextFingerprint=contextFingerprint(job.context);
      }
@@ -157,7 +176,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
       // Return the opaque job promptly; do not queue discovery behind inference.
       void completeEvidence(job);
      }
-    }catch(error){if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.context=null;job.question='';job.query=null;return;}const code=['CONTEXT_UNAVAILABLE','CONTEXT_TIME_MISMATCH','POLICY_WITHHELD'].includes(error.message)?error.message:'EVIDENCE_WITHHELD';job.state='completed';job.result=envelope(code==='POLICY_WITHHELD'?'DENY':'ABSTAIN',code);job.question='';job.packet=null;job.query=null;job.context=null;}};
+    }catch(error){if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.context=null;job.question='';job.query=null;return;}const code=isAiReadPressure(error)?'AI_READ_BUSY':['CONTEXT_UNAVAILABLE','CONTEXT_TIME_MISMATCH','POLICY_WITHHELD'].includes(error.message)?error.message:'EVIDENCE_WITHHELD';job.state='completed';job.result=envelope(code==='POLICY_WITHHELD'?'DENY':code==='AI_READ_BUSY'?'ERROR':'ABSTAIN',code);job.question='';job.packet=null;job.query=null;job.context=null;}};
     void prepare();
     return reply({id:job.id},202,extra);
    }
@@ -171,16 +190,20 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      return reply({cancelled});
     }
     if(!match[2]&&request.method==='GET'){
-     let result=job.result;
-     if(result){try{const checks=await Promise.all([result.outcome==='ANSWER'||result.citations?.length?fresh(job):true,freshContext(job)]);if(checks.some(ok=>!ok)){result=envelope('ABSTAIN','RELEASE_CHANGED');job.result=result;job.context=null;}}catch{result=envelope('ABSTAIN','RELEASE_CHANGED');job.result=result;job.context=null;}}
-     // Another read may have withdrawn the result while these checks awaited.
-     // The job's current result is authoritative; withholding never reverses.
-     result=job.result;
-     return reply({id:job.id,state:job.state,mode:job.mode,deadline:job.deadline,result,context:job.context?{label:job.context.label,boundary:job.context.boundary,references:job.context.references??[]}:null});
+     const release=reads.admit(session);
+     try{
+      if(job.result)await recheckResult(job);
+      cleanup();
+      if(!sessions.has(job.owner))return reply({reasonCode:'SESSION_REQUIRED'},401);
+      if(jobs.get(job.id)!==job)return reply({reasonCode:'JOB_NOT_FOUND'},404);
+      // Use current state after awaiting: cancellation/withdrawal never reverses.
+      return reply({id:job.id,state:job.state,mode:job.mode,deadline:job.deadline,result:job.result,context:job.context?{label:job.context.label,boundary:job.context.boundary,references:job.context.references??[]}:null});
+     }finally{release();}
     }
    }
    return reply({reasonCode:'ROUTE_NOT_FOUND'},404);
   }catch(error){
+   if(isAiReadPressure(error))return reply({reasonCode:error.message},429,{'Retry-After':String(error.retryAfter)});
    const code=['INVALID_REQUEST','BODY_TIMEOUT','REQUEST_TOO_LARGE','GLOBAL_RATE_LIMIT','USER_RATE_LIMIT','USER_BUSY','QUEUE_FULL'].includes(error.message)?error.message:'AI_UNAVAILABLE';
    return reply({reasonCode:code},['GLOBAL_RATE_LIMIT','USER_RATE_LIMIT','QUEUE_FULL'].includes(code)?429:code==='AI_UNAVAILABLE'?503:400,extra);
   }
