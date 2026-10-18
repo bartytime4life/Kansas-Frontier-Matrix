@@ -16,6 +16,8 @@ test('built public identity matches current inputs and About exposes usable proj
   const actual = await response.json();
   assert.deepEqual(Object.keys(actual).sort(), ['application', 'commitState', 'profile', 'scope', 'sourceCommit', 'sourceDigest', 'sourceFileCount'].sort());
   const expected = await applicationIdentity();
+  assert.equal(actual.sourceCommit, expected.sourceCommit);
+  assert.equal(actual.commitState, expected.commitState);
   assert.equal((await verifyHostedIdentity(expected, origin)).outcome, 'APPLICATION_INPUTS_MATCH');
   const about = await (await fetch(origin + '/about')).text();
   for (const id of ['about-main', 'workflow', 'capabilities', 'project', 'sources']) {
