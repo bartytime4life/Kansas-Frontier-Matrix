@@ -89,6 +89,8 @@ notes:
 
 ## Authored synchronization checkpoint
 
+The [2026-10-18 runtime reconciliation](runtime-reconciliation-20261018.md) records the owner-requested local, GoDaddy preview, active GPT staging and repository comparison. It is review-only observation, with publication held and no new generated writer.
+
 The [v213 reconciliation report](kfm-reconciliation-20261010.md) records the next authored checkpoint: preserved local features, exact source parity, validation, recovery and pending review.
 
 The [KFM synchronization report for 2026-10-09](kfm-synchronization-20261009.md)

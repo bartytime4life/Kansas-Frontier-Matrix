@@ -1,0 +1,145 @@
+{
+  "record_type": "authored_runtime_reconciliation_observation",
+  "status": "REVIEW_ONLY",
+  "authority": "OBSERVATIONS_ONLY",
+  "observed_date": "2026-10-18",
+  "publication": "ON_HOLD",
+  "merge_authorized": false,
+  "source_admission": false,
+  "data_activation": false,
+  "hosted_equivalence": false,
+  "human_acceptance": false,
+  "main": "326452d14ed52438cc98fd51966d6c894e16bac8",
+  "main_checks": {
+    "success": 107,
+    "skipped": 3,
+    "failure": 0,
+    "unfinished": 0
+  },
+  "local": {
+    "base": "5b6e6dbaf9e6afb659649554dfe593371c715ca9",
+    "head": "d6b14ec8964eae31d25cc0f099457b9e2248443a",
+    "pr": 5258,
+    "installed": true,
+    "url": "http://127.0.0.1:4173/",
+    "application_input_sha256": "88f69bd3caaff528dfcc5f3928e5d23221d7909ce20a8baa3bbf7b485c73b748",
+    "tracked_paths_verified": 1207,
+    "current_build_paths": 421,
+    "retained_client_assets": 330,
+    "preserved_state_files": 18469,
+    "preserved_state_bytes": 920409107,
+    "qwen_model": "qwen3.6:35b",
+    "qwen_digest": "07d35212591fc27746f0a317c975a6d68754fb38e9053d82e25f06057af28522"
+  },
+  "godaddy": {
+    "app": "q9r9beo47t",
+    "base": "d347a26304a878135255891a90b39659be5f888e",
+    "preview": "c139713f59a8475e6154a4fb293977bbc86283b9",
+    "preview_branch": "a0-reconciliation-preview-20261018",
+    "previous_branch": "a0-hosted-ai-web-20261017",
+    "published": "4b3cc837e9c131e5eb214427e0a55646fc76e52a",
+    "pr": 5257,
+    "preview_status": "Healthy; infra and site OK",
+    "application_input_sha256": "a909b0c2cb80cca91c9486a24f81fa41fdc2976eb229ba8da61af144418a196f",
+    "published_changed": false
+  },
+  "gpt_staging": {
+    "project": "appgprj_6acd1aafe0d88191a4306ea2ab44ed91",
+    "version": 8,
+    "source": "084b730ca6e4e3f67af1da0426a275e7889c4603",
+    "deployment": "appgdep_6ad4e5bd8d388191b3f0b8ba5ddab25c",
+    "environment_revision": 2,
+    "owners": 1,
+    "editors": 0,
+    "external_visitors": false,
+    "source_changed": false,
+    "released_sources_in_browser": 0,
+    "disabled_source_controls": 56
+  },
+  "security": {
+    "local_scan": "8cf5b688-298b-4d7a-9c9d-44272a4146c0",
+    "local_scan_head": "dc64daa6c7ea7c4345206bd2c8106cfb294b082e",
+    "local_successor_scope": "Two test files; application source unchanged; separately inspected",
+    "hosted_scan": "aab92227-b5f2-4cbd-b362-64b0abdf4cc4",
+    "hosted_scan_head": "c139713f59a8475e6154a4fb293977bbc86283b9",
+    "new_reportable_changed_area_findings": 0,
+    "comprehensive_scan": false,
+    "dependency_hold": "Eight high affected-package entries from unchanged unpatched GHSA-vfj7-8cjw-p6xm; no public request path established"
+  },
+  "browser": {
+    "local_high_plains": {
+      "records": 50,
+      "columns": 28,
+      "aquifer_overlaps": 2,
+      "surface_high": "2048x1333",
+      "surface_maximum": "4096x2667",
+      "through_2000_records": 17,
+      "through_2000_columns": 11
+    },
+    "local_core": {
+      "kid": "1001251474",
+      "records": 1,
+      "columns": 1,
+      "aquifer_overlaps": 1,
+      "surface": "2048x1333"
+    },
+    "preview_high_plains": {
+      "records": 50,
+      "columns": 28,
+      "aquifer_overlaps": 2,
+      "surface_high": "2048x1329",
+      "surface_maximum": "4096x2658"
+    },
+    "directed_reaches_local_and_preview": 3175,
+    "incomplete_coverage_disclosed": true,
+    "animation_is_velocity": false,
+    "local_qwen_bounded_interpretation_completed": true,
+    "preview_cancellation_confirmed": true,
+    "preview_390px_document_overflow": false,
+    "warnings": "Local OpenFreeMap missing glyph range; renderer local fallback. Browser observer deadlines are separate from product timing.",
+    "preview_core": {
+      "kid": "1001251474",
+      "records": 1,
+      "columns": 1,
+      "aquifer_overlaps": 1,
+      "surface": "2048x1329"
+    },
+    "fresh_preview_captured_warnings_errors": 0
+  },
+  "private_manifests": {
+    "local": {
+      "head": "d6b14ec8964eae31d25cc0f099457b9e2248443a",
+      "count": 1207,
+      "sha256": "507ffe2873518464ffcec90bcb07d8310835324b3fbbdfd6a21eb9379bf9e149",
+      "scope": "Sorted tracked path, content SHA256 and size inventory; full private manifest retained in task workspace"
+    },
+    "hosted": {
+      "head": "c139713f59a8475e6154a4fb293977bbc86283b9",
+      "count": 1118,
+      "sha256": "ad75e521ace73891ea9015671524a9f13b5c2f7a43cdb193ec99a5436785a752",
+      "scope": "Sorted tracked path, content SHA256 and size inventory; full private manifest retained in task workspace"
+    },
+    "main": {
+      "head": "326452d14ed52438cc98fd51966d6c894e16bac8",
+      "count": 14816,
+      "sha256": "98191f4d7ebc0c115ccbbe20f615fbeb789d3bff9c9ac8d96d0e526957f47253",
+      "scope": "Sorted tracked path, content SHA256 and size inventory; full private manifest retained in task workspace"
+    },
+    "staging": {
+      "head": "084b730ca6e4e3f67af1da0426a275e7889c4603",
+      "count": 903,
+      "sha256": "550796f3526018514d3539b435952f13c3942e97c4a7af2643287711faf2e0a4",
+      "scope": "Sorted tracked path, content SHA256 and size inventory; full private manifest retained in task workspace"
+    }
+  },
+  "rollback": "Preserve newer work first. Restore paired source and prepared build, retain immutable client assets and all stores. GoDaddy preview rollback to prior branch requires preview update only. No public publish or store rollback.",
+  "concurrent_owner_merges": {
+    "actor": "bartytime4life",
+    "local_pr": 5258,
+    "local_merge": "1cb2997302813e892fe51edb86bf3a75a6d33ff1",
+    "hosted_pr": 5257,
+    "hosted_merge": "115c3d246bb861a939a1d1f56f891d04bbb057c3",
+    "local_and_hosted_merge_trees_match_reviewed_heads": true,
+    "agent_merged": false
+  }
+}
