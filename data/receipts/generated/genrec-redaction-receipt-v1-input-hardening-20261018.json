@@ -1,0 +1,91 @@
+{
+  "receipt_id": "genrec-redaction-receipt-v1-input-hardening-20261018",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/redaction-receipt.yml",
+    "tests/validators/test_validate_redaction_receipt.py",
+    "tools/validators/receipts/validate_redaction_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/redaction-receipt.yml": "sha256:350f9d178441d83e75d917c7017c1da607b70b94f57f55201112c9e100c8f8b9",
+    "tests/validators/test_validate_redaction_receipt.py": "sha256:ec760b445fb66052b0336a55e9e13d699401562a5163a23f6f570757cfccdb7f",
+    "tools/validators/receipts/validate_redaction_receipt.py": "sha256:f4fb6032e3d30164979c8edc351c0796db38208c76a3e22bf827149bd86ebabf"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/907cc58c72844bf56923b63c970b83a202fa5e75",
+      "repo:data/receipts/generated/genrec-redaction-receipt-v1-20260809.json@907cc58c72844bf56923b63c970b83a202fa5e75",
+      "repo:tools/validators/receipts/validate_redaction_receipt.py@907cc58c72844bf56923b63c970b83a202fa5e75",
+      "repo:.github/workflows/receipt-proof-pairing-assessment.yml@907cc58c72844bf56923b63c970b83a202fa5e75"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/redaction-receipt.yml": "CONFIRMED",
+    "tests/validators/test_validate_redaction_receipt.py": "CONFIRMED",
+    "tools/validators/receipts/validate_redaction_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-receipt-preserved",
+      "outcome": "PASS",
+      "reason": "genrec-redaction-receipt-v1-20260809.json is unchanged and replays VALID at its creating commit f8162518295dc18b7f2524ea61b44b8d698b4ec2; the workflow now checks it there, as receipt-proof-pairing-assessment.yml does for its receipt."
+    },
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "Before the fix, an input holding a 5,000-digit integer crashed the CLI with an unhandled ValueError and exit code 1, which this tool reserves for DENY. After the fix it reports ERROR / REDACTION_JSON_INVALID with exit code 2. The new test fails without the fix."
+    },
+    {
+      "gate": "Validator tests and coverage",
+      "outcome": "PASS",
+      "reason": "py_compile, python -m unittest tests.validators.test_validate_redaction_receipt (13 tests, 6 new) and --fixtures all pass. Branch coverage of the validator rises from 73% to 91% in-process; the remaining lines are the --fixtures runner exercised through its subprocess test and the __main__ guard."
+    },
+    {
+      "gate": "Workflow security scan",
+      "outcome": "PASS",
+      "reason": "validate_workflow_security.py: 496 workflows, 0 invariant, 0 new drift; its 28 tests pass."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/907cc58c72844bf56923b63c970b83a202fa5e75"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-18T23:00:40Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-redaction-receipt-v1-20260809, which stays unchanged. The validator's generic JSON error handler now catches ValueError, so oversized integer literals yield a structured ERROR instead of a traceback. New tests cover every input-reading failure, CLI exit codes and argument conflicts, the public-release evidence, release-candidate and rollback requirements, withheld-content tier and public flags, and schema finding truncation. The workflow fetches full history so the original receipt is replayed at its creating commit and this receipt is checked against current bytes."
+}
