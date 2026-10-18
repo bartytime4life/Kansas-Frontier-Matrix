@@ -101,16 +101,26 @@ test('autoscroll decision: new questions always scroll; status and result change
 });
 
 test('the effect scrolls the scroll region through the decision helper and tracks the reader position',()=>{
- assert.match(source,/<div ref=\{bodyRef\} className=\{styles\.body\} onScroll=\{\(\)=>\{nearBottomRef\.current=conversationEnd\(\)<=80;\}\}>/);
+ assert.match(source,/<div ref=\{bodyRef\} className=\{styles\.body\} onScroll=\{\(\)=>\{if\(programmaticScrollRef\.current\)\{programmaticScrollRef\.current=false;return;\}nearBottomRef\.current=conversationEnd\(\)<=80;\}\}>/);
  const start=source.indexOf(' useEffect(()=>{\n  const latest=turns[turns.length-1]');assert.ok(start>=0,'autoscroll effect exists');
  const effect=source.slice(start,source.indexOf('},[turns]);',start)+11);
  assert.match(effect,/shouldAutoscroll\(previous,next,nearBottomRef\.current\)/);assert.match(effect,/body\.scrollTo\(/);assert.match(effect,/\},\[turns\]\);$/);
  assert.doesNotMatch(effect,/logRef\.current\?\.scrollTo/);
 });
 
-test('a new alert scrolls the region to its top; success notices do not move the reader',()=>{
-  assert.match(source,/useEffect\(\(\)=>\{if\(error\|\|chatFailure\)bodyRef\.current\?\.scrollTo\(\{top:0,behavior:'auto'\}\);\},\[error,chatFailure\]\);/);
-  assert.doesNotMatch(source,/\[error,chatFailure,exportNotice\]|\[exportNotice\]\);/);
+test('only an error from the visitor\'s own action scrolls to it, without being mistaken for the reader leaving the end',async()=>{
+  const {h}=await renderChat();
+  let revealsAlert;
+  try{revealsAlert=h.exports.revealsAlert;}finally{h.dispose();}
+  const background='Connection interrupted. Your accepted question is retained; checking again.';
+  assert.equal(revealsAlert('',background),false,'no error');
+  assert.equal(revealsAlert(background,background),false,'a background status-poll message stays in place');
+  assert.equal(revealsAlert('Cancellation could not be confirmed.',background),true,'a failed visitor action is revealed');
+  assert.equal(revealsAlert('Cancellation could not be confirmed.',''),true);
+  assert.match(source,/useEffect\(\(\)=>\{const body=bodyRef\.current;if\(!body\|\|body\.scrollTop===0\|\|!revealsAlert\(error,backgroundErrorRef\.current\)\)return;programmaticScrollRef\.current=true;body\.scrollTo\(\{top:0,behavior:'auto'\}\);\},\[error\]\);/,'reveal only on error, never on the background chatFailure refresh');
+  assert.match(source,/backgroundErrorRef\.current=message;setError\(message\)/,'status polling records its message as background');
+  assert.match(source,/onScroll=\{\(\)=>\{if\(programmaticScrollRef\.current\)\{programmaticScrollRef\.current=false;return;\}nearBottomRef\.current=conversationEnd\(\)<=80;\}\}/,'the reveal scroll keeps the reader position for a later reply');
+  assert.doesNotMatch(source,/\[error,chatFailure\]\)|\[exportNotice\]\)/);
   const notices=source.slice(source.indexOf('const notices=<>'),source.indexOf('</>;',source.indexOf('const notices=<>')));
   assert.ok(notices.indexOf("role='alert'")<notices.indexOf('chatStatus?.configured'),'alerts come before the standing model notice');
 });

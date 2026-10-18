@@ -24,10 +24,12 @@ type TurnSnapshot={id:string;state:string;hasResult:boolean}|null;
 // New questions always scroll into view. Status or result changes on the latest turn scroll only a visitor who was
 // already reading the end of the conversation; polls, rechecks and exports that change nothing visible never scroll.
 export function shouldAutoscroll(previous:TurnSnapshot,next:TurnSnapshot,nearBottom:boolean){if(!next)return false;if(!previous||previous.id!==next.id)return true;if(previous.state===next.state&&previous.hasResult===next.hasResult)return false;return nearBottom;}
+// Only an error from the visitor's own action is brought into view; background status-poll messages stay where they are.
+export function revealsAlert(error:string,backgroundMessage:string){return Boolean(error)&&error!==backgroundMessage;}
 function searchTerm(question:string){let term='';for(const char of question.trim()){if(new TextEncoder().encode(term+char).length>120)break;term+=char;}return term;}
 export default function AssistantWorkspace({accountRequest=0,onAccount,place='',focus,active=true}:Props){
  const [mode,setMode]=useState('explore'),[chatStatus,setChatStatus]=useState<ChatStatus|null>(null),[chatFailure,setChatFailure]=useState(''),[status,setStatus]=useState<Status|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(false),[job,setJob]=useState<Job|null>(null),[turns,setTurns]=useState<Turn[]>([]),[accountOpen,setAccountOpen]=useState(false),[activate,setActivate]=useState(false),[invitation,setInvitation]=useState(''),[question,setQuestion]=useState(''),[jobRetry,setJobRetry]=useState(0),[exportNotice,setExportNotice]=useState('');
- const loginRef=useRef<HTMLInputElement>(null),logRef=useRef<HTMLDivElement>(null),bodyRef=useRef<HTMLDivElement>(null),nearBottomRef=useRef(true),lastTurnRef=useRef<TurnSnapshot>(null),actorRef=useRef<string|null>(null);
+ const loginRef=useRef<HTMLInputElement>(null),logRef=useRef<HTMLDivElement>(null),bodyRef=useRef<HTMLDivElement>(null),nearBottomRef=useRef(true),lastTurnRef=useRef<TurnSnapshot>(null),backgroundErrorRef=useRef(''),programmaticScrollRef=useRef(false),actorRef=useRef<string|null>(null);
  const exportController=useRef<AbortController|null>(null);
  useEffect(()=>()=>{exportController.current?.abort();},[active]);
  const refresh=useCallback(async(signal?:AbortSignal)=>{
@@ -47,13 +49,14 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
   const body=bodyRef.current;if(!body||!shouldAutoscroll(previous,next,nearBottomRef.current))return;
   body.scrollTo({top:body.scrollTop+conversationEnd(),behavior:'auto'});nearBottomRef.current=true;
  },[turns]);
- // Alerts lead the scroll region (before standing notices); bring a new one into view. Success notices and screen-reader announcements are unaffected.
- useEffect(()=>{if(error||chatFailure)bodyRef.current?.scrollTo({top:0,behavior:'auto'});},[error,chatFailure]);
+ // Alerts lead the scroll region (before standing notices). An error from the visitor's own action is brought into view; that
+ // programmatic scroll does not count as the reader leaving the conversation end. Background alerts and success notices never scroll.
+ useEffect(()=>{const body=bodyRef.current;if(!body||body.scrollTop===0||!revealsAlert(error,backgroundErrorRef.current))return;programmaticScrollRef.current=true;body.scrollTo({top:0,behavior:'auto'});},[error]);
  const id=job?.id,state=job?.state;
  useEffect(()=>{
   if(!id||!['preparing','queued','running'].includes(state??''))return;
   const controller=new AbortController();let timer:ReturnType<typeof setTimeout>,failures=0;
-  const poll=async()=>{try{const next:Job=await chatApi('jobs/'+id,undefined,controller.signal);if(!controller.signal.aborted){failures=0;setJob(current=>current?.id===id?next:current);setTurns(items=>items.map(item=>item.job.id===next.id?{...item,job:next}:item));setError('');if(running(next))timer=setTimeout(poll,2000);}}catch(reason){if(!controller.signal.aborted){const failure=reason as Error&{retryAfterMs?:number},pressure=['AI_READ_BUSY','AI_READ_RATE_LIMIT'].includes(failure.message);failures++;setError(failures>=5?'Status is unavailable. Your accepted question is retained. Retry status to check it; a new question will not be submitted.':pressure?'AI source checks are busy. Your accepted question is retained; checking again shortly.':'Connection interrupted. Your accepted question is retained; checking again.');if(failures<5)timer=setTimeout(poll,failure.retryAfterMs??4000);}}};
+  const poll=async()=>{try{const next:Job=await chatApi('jobs/'+id,undefined,controller.signal);if(!controller.signal.aborted){failures=0;setJob(current=>current?.id===id?next:current);setTurns(items=>items.map(item=>item.job.id===next.id?{...item,job:next}:item));setError('');if(running(next))timer=setTimeout(poll,2000);}}catch(reason){if(!controller.signal.aborted){const failure=reason as Error&{retryAfterMs?:number},pressure=['AI_READ_BUSY','AI_READ_RATE_LIMIT'].includes(failure.message);failures++;const message=failures>=5?'Status is unavailable. Your accepted question is retained. Retry status to check it; a new question will not be submitted.':pressure?'AI source checks are busy. Your accepted question is retained; checking again shortly.':'Connection interrupted. Your accepted question is retained; checking again.';backgroundErrorRef.current=message;setError(message);if(failures<5)timer=setTimeout(poll,failure.retryAfterMs??4000);}}};
   void poll();return()=>{controller.abort();clearTimeout(timer);};
  },[id,state,jobRetry]);
  const signIn=async(event:React.FormEvent<HTMLFormElement>)=>{event.preventDefault();const form=event.currentTarget,values=new FormData(form);setBusy(true);setError('');try{await api('sign-in',{username:values.get('username'),password:values.get('password')});form.reset();setAccountOpen(false);await refresh();}catch(reason){setError(guidance[(reason as Error).message]??'Sign-in could not complete.');}finally{setBusy(false);}};
@@ -113,7 +116,7 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
   </section>}
   {accountOpen&&<button type='button' onClick={()=>setAccountOpen(false)}>Back to public chat</button>}
   {!accountOpen&&<>
-  <div ref={bodyRef} className={styles.body} onScroll={()=>{nearBottomRef.current=conversationEnd()<=80;}}>
+  <div ref={bodyRef} className={styles.body} onScroll={()=>{if(programmaticScrollRef.current){programmaticScrollRef.current=false;return;}nearBottomRef.current=conversationEnd()<=80;}}>
   {notices}
   {focus&&<section className={styles.context} aria-label='AI question context' aria-live='polite'><strong>{focus.title}</strong><p>{focus.detail}</p><small>Sent with each question · map display year {focus.context.frame}, not a collection date</small></section>}
   {surface&&<details className={styles.guide}><summary>Help with {surface.title.toLowerCase()}</summary><p>{surface.guide}</p><small>Interface guide · no model required</small>{!['reports','stories'].includes(surface.id)&&<> · <a href={surface.path}>Open this workspace</a></>}</details>}
