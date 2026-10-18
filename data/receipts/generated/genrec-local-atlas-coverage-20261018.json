@@ -5,7 +5,7 @@
     "tests/local_data/test_atlas.py"
   ],
   "artifact_hashes": {
-    "tests/local_data/test_atlas.py": "sha256:2f27255f0a688654e24289239dd275227a257a257d2ff6909b2b0db148e7e2d7"
+    "tests/local_data/test_atlas.py": "sha256:6b4e4926f4ba217792643fc4e2c13e368475b104b05c1eb72fadf3c57744889c"
   },
   "model_identity": {
     "provider": "Anthropic",
@@ -33,7 +33,7 @@
     {
       "gate": "local-data-check",
       "outcome": "PASS",
-      "reason": "make local-data-check (the local-data-store workflow step): 435 passed. tests/local_data/test_atlas.py: 33 tests (10 before, 23 new), synthetic data only."
+      "reason": "make local-data-check (the local-data-store workflow step): 425 passed. tests/local_data/test_atlas.py: 23 tests (10 before, 13 new), synthetic data only. Shared store setup lives in a non-TestCase mixin so the original 10 tests are not collected twice."
     },
     {
       "gate": "Coverage",

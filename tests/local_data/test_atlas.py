@@ -16,7 +16,9 @@ from tools.local_data import atlas, atlas_worker, intake, intake_service
 from tools.local_data.manage import init_store
 
 
-class AtlasTests(unittest.TestCase):
+class AtlasStoreMixin:
+    """One analyzed CSV in a fresh store; not a TestCase, so its users don't inherit each other's tests."""
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name) / "store"
@@ -32,6 +34,8 @@ class AtlasTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
+
+class AtlasTests(AtlasStoreMixin, unittest.TestCase):
     def test_private_review_preview_does_not_grant_authority_or_invent_units(self):
         value = self.model.preview({"kind": "file", "id": self.item["id"]})
         self.assertEqual(value["displayedCount"], 2)
@@ -167,7 +171,7 @@ class AtlasWorkerBoundaryTests(unittest.TestCase):
         self.assertEqual({"error": "ATLAS_SPATIAL_READER_FAILED"}, self.run_worker({"path": str(self.file)}))
 
 
-class AtlasCatalogAndPreviewTests(AtlasTests):
+class AtlasCatalogAndPreviewTests(AtlasStoreMixin, unittest.TestCase):
     def test_catalog_filters_escape_like_wildcards_and_clamp_paging(self):
         (self.raw / "notes_100%.pdf").write_bytes(b"%PDF-1.4\n")
         intake.analyze(self.root)
