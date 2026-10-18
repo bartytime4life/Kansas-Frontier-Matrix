@@ -4,15 +4,15 @@ title: apps/public-site — static public front door
 type: README
 subtype: boundary-compact
 version: v1
-status: repository-ready; first live deploy not yet verified
+status: retained static alternative; not the active public Explorer
 owners: ["@bartytime4life"]
 created: 2026-10-12
-updated: 2026-10-12
+updated: 2026-10-17
 policy_label: public
 current_path: apps/public-site/README.md
 owning_root: apps/
-responsibility: Build and check the static front door for kansasfrontiermatrix.com from repository facts and illustrative artwork
-truth_posture: CONFIRMED page facts are read from the repository at the build commit; artwork is illustrative; deployment and hosting state are UNKNOWN until the deploy workflow's live readback passes
+responsibility: Retain and check the earlier static-front-door alternative from repository facts and illustrative artwork
+truth_posture: CONFIRMED retained static builder; artwork is illustrative; this alternative does not establish the active Node deployment
 related:
   - ../../docs/runbooks/godaddy-hosting.md
   - ../../infra/godaddy/README.md
@@ -23,7 +23,7 @@ related:
 
 # `apps/public-site/`
 
-The static public front door for **kansasfrontiermatrix.com**, served from GoDaddy web hosting. The KFM Explorer itself stays in [`apps/site/`](../site/README.md) and on ChatGPT Sites; this page introduces the project and links to it.
+This static front-door implementation records an earlier hosting plan. The active public Explorer uses a separate GoDaddy Node composition; follow the [Node runbook](../../docs/runbooks/godaddy-node-hosting.md). This directory and its cPanel workflow are retained as an alternative and must not replace that running app.
 
 | | |
 |---|---|

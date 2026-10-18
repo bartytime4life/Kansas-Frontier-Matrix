@@ -1,17 +1,17 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbooks/godaddy-hosting
-title: Connect kansasfrontiermatrix.com to GoDaddy web hosting
+title: KFM GoDaddy hosting entry point and historical cPanel plan
 type: runbook
-version: v1
-status: repository-ready; hosting account, secrets, DNS cutover and first live deploy not yet verified
+version: v2
+status: current Node operation documented; historical cPanel plan retained
 owners: ["@bartytime4life"]
 created: 2026-10-12
-updated: 2026-10-12
+updated: 2026-10-17
 policy_label: public
 current_path: docs/runbooks/godaddy-hosting.md
 owning_root: docs/
-responsibility: Operator steps to serve the static public front door from GoDaddy cPanel hosting, move the Explorer to a subdomain, deploy from GitHub Actions, verify and roll back
-truth_posture: DNS state recorded 2026-10-12 by public lookup; GoDaddy account settings, cPanel host name, document root and SSH availability are UNKNOWN until the owner reads them from the GoDaddy dashboard
+responsibility: Route operators to the active Node application and retain the earlier cPanel plan as historical context
+truth_posture: CONFIRMED Node dashboard and live map checked 2026-10-17; cPanel topology and DNS table below are historical and must not be applied to the active app
 related:
   - ../../apps/public-site/README.md
   - ../../infra/godaddy/README.md
@@ -19,7 +19,28 @@ related:
   - ../../apps/site/README.md
 [/KFM_META_BLOCK_V2] -->
 
-# Connect kansasfrontiermatrix.com to GoDaddy web hosting
+<a id="connect-kansasfrontiermatrixcom-to-godaddy-web-hosting"></a>
+
+# KFM GoDaddy hosting
+
+Use the [Node application runbook](godaddy-node-hosting.md) for the active
+Explorer at [kansasfrontiermatrix.com](https://kansasfrontiermatrix.com/).
+Open [GoDaddy app q9r9beo47t](https://host.godaddy.com/nodejs/projects/q9r9beo47t)
+and distinguish its Published commit, Preview commit and connected source branch.
+The 2026-10-17 provider readback identifies a standalone Node.js 22 composition,
+not the monorepo root or static front-door deployment. Review, publication holds,
+data admission and rollback remain separate controls.
+
+<details>
+<summary>Historical cPanel/static-front-door plan from 2026-10-12 — do not apply to the active Node app</summary>
+
+The following instructions, DNS values and runtime claims record an earlier
+hosting proposal. They are preserved for lineage and compatibility with existing
+links. They are not current setup or rollback instructions for the live Explorer.
+Use the Node runbook above; do not change DNS, enable this alternative workflow,
+or replace the running Node application based on this historical plan.
+
+## Historical plan: connect kansasfrontiermatrix.com to GoDaddy web hosting
 
 > **Scope update — 2026-10-14:** The owner selected the existing GoDaddy Node.js
 > app `q9r9beo47t` to host the full Explorer. Its dashboard shows the published
@@ -233,3 +254,5 @@ Also confirm that `/explorer` redirects to the Explorer, that a missing page sho
   configuration before use.
 - Mutable CSS, artwork, favicon, and social-preview paths require cache
   revalidation; pages also retain their content-hash asset queries.
+
+</details>

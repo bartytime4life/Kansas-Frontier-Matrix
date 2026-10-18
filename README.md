@@ -6,7 +6,7 @@ version: v3.4.0
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-10-08
+updated: 2026-10-17
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -34,7 +34,7 @@ notes:
   - "All imagery under docs/brand/readme/ is illustrative artwork, not screenshots, map products, or data displays. Animations are slow, decorative-only, and stop under prefers-reduced-motion."
   - "The current standalone Site mirror, saved version, source parity and validation are pinned by apps/site/README.md and its linked delivery receipts. Private D1/R2 records remain excluded."
   - "The repository maturity table under Current posture remains a historical snapshot bounded to main@6c5be18cf8448654be95a6db688d98546cd5276e and the runs named in each row."
-  - "The public Explorer address is linked as a project entry point; the Site currently retains an owner-only audience, and hosted availability and version state remain separately verifiable runtime claims."
+  - "The public Explorer is a separate GoDaddy Node composition; apps/site/source retains its preserved Sites lineage. Public and private source histories, validation and publication remain separately verifiable."
   - "The Science Pack section is an explicitly proposed north-star profile; it does not claim installation, source admission, model validity, release, deployment, or publication."
 [/KFM_META_BLOCK_V2] -->
 
@@ -69,14 +69,14 @@ notes:
   <a href="docs/runbooks/github-data-baseline.md">Download curated source data</a> ·
   <a href="#things-to-try">Things to try</a> ·
   <a href="https://kansasfrontiermatrix.com">Website</a> ·
-  <a href="https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site">Explorer (private preview)</a> ·
+  <a href="docs/runbooks/godaddy-node-hosting.md">Live Explorer source + hosting</a> ·
   <a href="apps/site/README.md">Explorer source</a> ·
   <a href="#faq">FAQ</a> ·
   <a href="CONTRIBUTING.md">Contribute</a>
 </p>
 
 > [!NOTE]
-> **KFM is an active build, and this page says so plainly.** The Explorer is real, runs locally, and connects to real public providers today — but it is currently an owner-only preview, its live layers are labelled *external context*, and nothing on the map is yet a released KFM dataset. See [Build status at a glance](#build-status-at-a-glance) for exactly what works now and what is still ahead. Every picture on this page is an **illustration**, not a screenshot.
+> **KFM is an active build, and this page says so plainly.** The public Explorer runs as a separate GoDaddy Node application and connects to attributed external providers. The preserved Sites mirror and local application have separate histories and checks. A displayed source is not a released KFM dataset. See [Build status at a glance](#build-status-at-a-glance) for exactly what works now and what is still ahead. Every picture on this page is an **illustration**, not a screenshot.
 
 <p align="center">
   <img src="docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
@@ -359,7 +359,7 @@ A quick, honest read of where things stand at `main@7d79ce10`. Each row links to
 | ✅ | **Live public-provider context** | USGS, NOAA, NWS, NASA, Census, KGS, GBIF and others render as attributed `EXTERNAL_CONTEXT_ONLY` layers with visible failure, partial and empty states. |
 | ✅ | **Local PC data store** | [`tools/local_data/`](tools/local_data/README.md) provides `doctor`, `init`, `plan`, `sync` and `verify` for a private, offline, quarantine-first store outside the checkout. |
 | ✅ | **Contracts, schemas, policy and validators** | Bounded slices with positive and negative fixtures, fail-closed tests and a repository topology ratchet. See [`make validate`](#validation). |
-| 🟡 | **Hosted Explorer** | Deployed privately with an owner-only audience. Public access, full accessibility, device/WebGL and long-session acceptance remain open. |
+| 🟡 | **Hosted Explorer** | The [public GoDaddy Node composition](docs/runbooks/godaddy-node-hosting.md) was browser-checked on 2026-10-17. Its published source, preview and preserved Sites mirror are distinct. Broader accessibility, device/WebGL and long-session acceptance remain open. |
 | 🟡 | **Source admission** | Connector lanes and the `connectors-core` package exist; end-to-end admission of a first governed layer is the next planned pilot ([source gap register](apps/site/source/docs/KFM_SOURCE_GAP_REGISTER.md)). |
 | 🟡 | **Evidence resolution** | Contracts, finite outcomes and resolver fixtures exist; end-to-end `EvidenceBundle` resolution against released data is not yet established. |
 | 🔭 | **Released KFM datasets and Science Pack** | Not yet. Releases, publication and the cross-domain [Science Pack](#a-finished-kfm-with-a-science-pack) are the north star. |
@@ -502,7 +502,7 @@ Please use [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) for community expectations
 <details>
 <summary><b>Can I use the Explorer right now?</b></summary>
 
-The hosted Explorer is an owner-only private preview. Anyone can run the same application locally from [`apps/site/`](apps/site/README.md) — see [Try it yourself](#try-it-yourself). Live provider data is fetched at runtime; private review records and uploads are never bundled.
+The [public GoDaddy Explorer](https://kansasfrontiermatrix.com/) uses a separate standalone Node source history. Its [hosting runbook](docs/runbooks/godaddy-node-hosting.md) identifies the verified deployment and local validation process. The preserved Sites mirror under [`apps/site/`](apps/site/README.md) has its own instructions and checks — see [Try it yourself](#try-it-yourself). Private review records and uploads are never bundled.
 </details>
 
 <details>
