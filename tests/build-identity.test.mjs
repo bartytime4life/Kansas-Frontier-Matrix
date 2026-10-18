@@ -1,10 +1,36 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, rm, symlink } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, writeFile, rm, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { applicationIdentity, verifyHostedIdentity } from '../scripts/build-identity.mjs';
+
+test('the normal hot-reload command creates identity before Vite on a fresh source tree', async t => {
+  const root = await fixture(t);
+  const pkg = JSON.parse(await readFile('package.json', 'utf8'));
+  const command = pkg.scripts['dev:local'] ? 'dev:local' : 'dev';
+  await writeFile(join(root, 'package.json'), JSON.stringify({ type: 'module', scripts: pkg.scripts }));
+  await mkdir(join(root, 'scripts'));
+  await writeFile(join(root, 'scripts/build-identity.mjs'), await readFile('scripts/build-identity.mjs'));
+  // Asset preparation is independent of the prerequisite being exercised here.
+  for (const name of ['prepare-maplibre-assets.mjs', 'prepare-lightning-reader.mjs']) {
+    await writeFile(join(root, 'scripts', name), '');
+  }
+  await mkdir(join(root, 'node_modules/.bin'), { recursive: true });
+  await writeFile(join(root, 'node_modules/.bin/vite'), `#!/usr/bin/env node
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+const identity = JSON.parse(fs.readFileSync('app/build-info.generated.json', 'utf8'));
+assert.match(identity.sourceDigest, /^sha256:[a-f0-9]{64}$/);
+assert.ok(identity.sourceFileCount > 0);
+console.log('STARTED_WITH_IDENTITY');
+`, { mode: 0o755 });
+  const output = execFileSync('npm', ['run', command, '--', '--help'], {
+    cwd: root, encoding: 'utf8', timeout: 20000, stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  assert.match(output, /STARTED_WITH_IDENTITY/);
+});
 
 async function fixture(t) {
   const root = await mkdtemp(join(tmpdir(), 'kfm-build-identity-'));
