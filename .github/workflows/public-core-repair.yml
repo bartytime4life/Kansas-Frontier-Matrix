@@ -21,7 +21,7 @@ jobs:
       - run: npm run build
       - run: npx tsc --noEmit
       - name: Immutable hosted browser assets
-        run: node --test tests/public-client-assets.test.mjs
+        run: node --test tests/build-identity.test.mjs tests/build-identity-http.test.mjs tests/public-client-assets.test.mjs
       - name: Map menus, mobile controls and keyboard navigation
         run: >-
           node --test tests/explorer-menu-dismissal.test.mjs
