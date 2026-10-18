@@ -1,4 +1,6 @@
 "use client";
+import { IS_PUBLIC_COPY } from "./public-profile";
+
 import { useCallback, useState } from "react";
 
 type InspectionPanel = "evidence" | "qwen" | null;
@@ -25,7 +27,7 @@ export function InspectionPanelSwitch({ active, onEvidence, onQwen, onClose }: {
 }) {
   return <nav className="inspection-panel-switch" aria-label="Map inspection views">
     <button type="button" aria-pressed={active === "evidence"} onClick={onEvidence}>Evidence</button>
-    <button type="button" aria-pressed={active === "qwen"} onClick={onQwen}>Chat with KFM</button>
+    {!IS_PUBLIC_COPY && <button type="button" aria-pressed={active === "qwen"} onClick={onQwen}>Chat with KFM</button>}
     <button className="inspection-close" type="button" onClick={onClose} aria-label={active === "qwen" ? "Close Qwen companion" : "Close Evidence Drawer"} title="Return to map">×</button>
   </nav>;
 }

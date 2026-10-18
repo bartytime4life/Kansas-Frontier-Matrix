@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { IS_PUBLIC_COPY } from "./public-profile";
 
 /**
  * First-visit quick start for the Explorer. It only routes to controls that
@@ -30,12 +31,19 @@ export function writeExplorerGuideDismissed(dismissed: boolean): void {
   }
 }
 
-const STEPS: ReadonlyArray<{ action: ExplorerGuideAction; glyph: string; title: string; body: string }> = [
+const PRIVATE_STEPS: ReadonlyArray<{ action: ExplorerGuideAction; glyph: string; title: string; body: string }> = [
   { action: "layers", glyph: "≡", title: "Turn on layers", body: "Gauges, radar, geology, roads and more — each with its own source and clock." },
   { action: "time", glyph: "◷", title: "Travel through time", body: "Sweep the atlas year from 1800 to today, or step through dated archives." },
   { action: "underground", glyph: "⛏", title: "Look underground", body: "Frame an area and orbit recorded well and core columns in 3D." },
   { action: "qwen", glyph: "Q", title: "Ask about this view", body: "Get a bounded explanation of what is on screen — never a substitute for evidence." },
 ];
+
+const PUBLIC_STEPS: typeof PRIVATE_STEPS = [
+ { action: "layers", glyph: "≡", title: "Check available layers", body: "Use released observations and their sources; held layers explain what is missing." },
+ { action: "time", glyph: "◷", title: "Explore source dates", body: "Data keeps its actual dates. Atlas time does not reconstruct unobserved history." },
+ { action: "underground", glyph: "⛏", title: "Inspect original logs", body: "Approved recorded intervals become available after publication review; unavailable records stay withheld." },
+];
+const STEPS = IS_PUBLIC_COPY ? PUBLIC_STEPS : PRIVATE_STEPS;
 
 export function ExplorerGuide({ open, onClose, onAction, onMore }: Readonly<{
   open: boolean;
@@ -69,7 +77,7 @@ export function ExplorerGuide({ open, onClose, onAction, onMore }: Readonly<{
       <header className="explorer-guide-header">
         <p className="explorer-guide-kicker">Quick start</p>
         <h2 id="explorer-guide-title">Explore Kansas through place, time and evidence</h2>
-        <p id="explorer-guide-summary">Every layer shows its source, its clock and its limits. Pick a starting point — you can reopen this guide from the <b>?</b> button.</p>
+        <p id="explorer-guide-summary">Data tools require approved releases; use Data to check availability. Map and terrain are display context. Pick a starting point — reopen this guide from the <b>?</b> button.</p>
         <button className="explorer-guide-close" type="button" aria-label="Close quick start" onClick={() => onClose(remember())}>×</button>
       </header>
       <ol className="explorer-guide-steps">

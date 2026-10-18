@@ -6,8 +6,12 @@ const moduleUrl = source => `data:text/javascript;base64,${Buffer.from(source).t
 const compile = async file => ts.transpileModule(await readFile(`app/${file}`, 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
 const modelUrl = moduleUrl(await compile('public-map-catalog.ts'));
 const model = await import(modelUrl);
+const sessionUrl = moduleUrl(await compile('local-companion-session.ts'));
 const boundedUrl = moduleUrl(await compile('bounded-json.ts'));
-const client = await import(moduleUrl((await compile('public-map-client.ts')).replace('"./bounded-json"', JSON.stringify(boundedUrl)).replace('"./public-map-catalog"', JSON.stringify(modelUrl))));
+// TEST-ONLY private transport regression profile; the public network denial is
+// tested with the real immutable profile in public-profile.test.mjs.
+const profileUrl = moduleUrl('export const IS_PUBLIC_COPY = false;');
+const client = await import(moduleUrl((await compile('public-map-client.ts')).replace('"./public-profile"', JSON.stringify(profileUrl)).replace('"./local-companion-session"', JSON.stringify(sessionUrl)).replace('"./bounded-json"', JSON.stringify(boundedUrl)).replace('"./public-map-catalog"', JSON.stringify(modelUrl))));
 const seed = JSON.parse(await readFile('app/public-map-catalog.json', 'utf8'));
 const all = { text: '', publisher: 'all', county: 'all', year: 'all', format: 'all' };
 const catalog = overrides => ({ schema: 'kfm-public-map-catalog/v1', generatedAt: '2026-10-08T18:00:00Z', coverage: [{ sourceId: 'test', title: 'Synthetic catalog', state: 'complete', recordCount: 1, expectedCount: 1, reason: '', checkedAt: null }], records: [{ id: 'test-map', sourceId: 'test', publisher: 'USGS', title: 'Synthetic Kansas map', counties: ['Allen'], mapYear: 1930, digitalYear: 2020, scale: '1:24,000', scaleUnit: 'denominator', metadataUrl: 'https://pubs.usgs.gov/test/', rights: { status: 'unknown', text: 'Synthetic fixture only.', url: null }, description: 'A test record.', geometryRole: 'catalog extent, not workings', bbox: [-96,37,-95,38], point: null, assets: [{ id: 'test-pdf', title: 'Synthetic PDF', format: 'PDF', url: 'https://pubs.usgs.gov/test/map.pdf', expectedBytes: 100, kind: 'download', availability: 'verified', checkedAt: null }] }], ...overrides });

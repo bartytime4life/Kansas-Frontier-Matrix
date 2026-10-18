@@ -1,4 +1,6 @@
 "use client";
+import { IS_PUBLIC_COPY } from "./public-profile";
+
 
 import { useCallback, useEffect, useState } from "react";
 import { EARTH_ENGINE_CATALOG_MAX_BYTES, earthEngineSetYear, parseEarthEngineCatalog, type EarthEngineContextManifest } from "./earth-engine-context";
@@ -7,11 +9,12 @@ import { browserJsonRequest } from "./browser-json-request";
 export function useEarthEngineContext() {
   const [manifest, setManifest] = useState<EarthEngineContextManifest | null>(null);
   const [manifests, setManifests] = useState<EarthEngineContextManifest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(!IS_PUBLIC_COPY);
+  const [error, setError] = useState<string | null>(IS_PUBLIC_COPY ? "Private imagery is not included in this public copy." : null);
   const [generation, setGeneration] = useState(0);
   const reload = useCallback(() => { setLoading(true); setGeneration((value) => value + 1); }, []);
   useEffect(() => {
+    if (IS_PUBLIC_COPY) return;
     const abort = new AbortController();
     void browserJsonRequest("/api/earth-engine-context/catalog", { signal: abort.signal, maxBytes: EARTH_ENGINE_CATALOG_MAX_BYTES, timeoutMs: 30_000 })
       .then(({ response, body: payload }) => {

@@ -58,7 +58,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /<nav[^>]+aria-label="Layer views"/);
   for (const label of ["Browse", "On map", "Imagery"]) assert.ok(html.includes(label), `Missing layer view: ${label}`);
   assert.match(html, /<select[^>]+aria-label="Layer topic"/);
-  for (const label of ["Water", "Terrain", "Weather &amp; hazards", "Places &amp; boundaries", "Land &amp; soil", "Roads &amp; rail", "Groundwater"]) assert.ok(html.includes(`>${label}</option>`), `Missing discoverable topic: ${label}`);
+  for (const label of ["Engineering &amp; infrastructure", "Science &amp; observations", "Weather &amp; climate", "History &amp; cultural context", "Land ownership &amp; purpose", "People &amp; communities", "Water &amp; watersheds", "Aquifers &amp; groundwater", "Ecology &amp; land cover"]) assert.ok(html.includes(`>${label}</option>`), `Missing discoverable topic: ${label}`);
   for (const label of ["Full archive → latest", "KDOT Kansas Bridges · historic designation", "KDOT Kansas Bridges · recorded closed", "KDOT Kansas historical roads · 1918", "BLM Kansas oil and gas leases · authorized", "BLM Kansas oil and gas leases · closed", "KDOT Kansas roads and highways", "KDOT Kansas active railroads", "KDOT Kansas abandoned railroads", "FEMA Kansas mapped flood hazard zones"]) assert.ok(html.includes(label), `Missing discoverable layer control: ${label}`);
   assert.doesNotMatch(html, /Hydrology context<|Watershed &amp; storage context<|demonstration · selected/i);
   assert.match(html, /Repository briefing/i);
@@ -349,7 +349,7 @@ test("uses the existing social card with canonical registered-origin metadata", 
   const socialCard = await readFile(new URL("../public/og-guided.png", import.meta.url));
 
   assert.doesNotMatch(layout, /x-forwarded-host/);
-  assert.match(layout, /new URL\(PUBLIC_SITE_ORIGIN\)/);
+  assert.match(layout, /SITE_IDENTITY\.canonicalUrl/);
   assert.match(layout, /new URL\("\/og-guided\.png", metadataBase\)/);
   assert.match(layout, /real MapLibre Kansas vector context/);
   assert.ok(socialCard.byteLength > 100_000);
@@ -402,7 +402,7 @@ test("adds device-local Places trails and faster layer isolation controls", asyn
   assert.doesNotMatch(page, /MAP WORKBENCH|Map Workbench|map-tool-group-workbench|secondary-tools|More map tools/);
   assert.match(page, /<ExplorerControlsNavigation value=\{mapUtilityView\}/);
   assert.match(await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8"), /Advanced tools/);
-  assert.doesNotMatch(await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8"), /\["localAtlas", "Local atlas"\]/);
+  assert.match(await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8"), /\["localAtlas", "Local atlas"\]/);
   assert.match(page, /onClick=\{clearSelection\} disabled=\{!selected\}>Clear selection/);
   assert.match(page, /mapUtilityView === "import"/);
   assert.match(page, /onClick=\{openMapSettings\}>Style/);
@@ -561,7 +561,7 @@ test("keeps the MapLibre Workbench complete, bounded, and responsive", async () 
   assert.match(source, /id="map-utility-panel"/);
   const controlNavigation = await readFile(new URL("../app/explorer-controls-navigation.tsx", import.meta.url), "utf8");
   assert.match(source, /<ExplorerControlsNavigation value=\{mapUtilityView\}/);
-  for (const [key, title] of [["navigate", "Explore"], ["scene", "Appearance"], ["measure", "Measure"], ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"], ["export", "Export"], ["import", "Import a file"], ["connections", "Sources"], ["history", "Historic maps"], ["diagnostics", "Diagnostics"]]) {
+  for (const [key, title] of [["scene", "Appearance"], ["measure", "Measure"], ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"], ["export", "Export"], ["import", "Import a file"], ["connections", "Sources"], ["history", "Historic maps"], ["diagnostics", "Diagnostics"]]) {
     assert.ok(controlNavigation.includes(`["${key}", "${title}"]`), `Missing named control route: ${title}`);
   }
   assert.match(controlNavigation, /<summary>Advanced tools/);
@@ -1170,13 +1170,14 @@ test("keeps the global header and map controls in one responsive toolbar", async
     readFile(new URL("../app/map-toolbar.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.equal((page.match(/<header className="topbar">/g) ?? []).length, 1);
+  const headers = [...page.matchAll(/<header\b[^>]*\bclassName="topbar"[^>]*>/g)];
+  assert.equal(headers.length, 1);
   assert.equal((page.match(/<nav className="map-chrome-dock" aria-label="Map view and controls">/g) ?? []).length, 1);
   assert.doesNotMatch(page, /className="top-context"/);
   assert.doesNotMatch(page, /className="mission-band map-command-bar"/);
   assert.doesNotMatch(page, /<nav className="map-view-mode-strip"/);
   assert.doesNotMatch(page, /<nav className="map-control-strip"/);
-  const headerStart = page.indexOf('<header className="topbar">');
+  const headerStart = headers[0].index;
   const headerEnd = page.indexOf('      </header>', headerStart);
   const mapControls = page.indexOf('<nav className="map-chrome-dock"');
   assert.ok(mapControls > headerStart && mapControls < headerEnd, "map controls must share the global header");
@@ -1188,20 +1189,22 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.match(page, /openPrimaryWorkspace\("stories"\); closeHeaderOverflow\(event\.currentTarget\)/);
   assert.match(page, /closeHeaderOverflow\(event\.currentTarget\); void shareView\(\)/);
   assert.match(page, /className="map-dock-context sr-only"[^>]*><strong>\{selectedLabel\}<\/strong><small>\{temporalScopeLabel\}/);
-  assert.match(page, /className="map-dock-menu-representations" role="group" aria-label="Map representation"/);
   assert.doesNotMatch(page, /className="map-dock-representations"/);
+  assert.match(page, /className="map-dock-menu-representations" role="group" aria-label="Map representation"/);
+  assert.match(page, /aria-label="Underground recorded layers"/);
   assert.match(page, /aria-label="Underground Logs & sections" title="Underground Logs & sections"[\s\S]*?<b>Underground<\/b><span className="sr-only">Logs &amp; sections<\/span>/);
   for (const label of ["Underground", "2D", "Terrain 3D", "Globe", "Compare", "Time", "Layers", "Places"]) {
     assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
   }
-  for (const label of ["Style &amp; basemap", "Map controls", "Kansas historic maps", "Source status", "Live controls", "Today’s baseline"]) {
+  for (const label of ["Appearance", "Measure", "Map controls", "Kansas historic maps", "Source status", "Live controls", "Today’s baseline"]) {
     assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
   }
-  assert.match(toolbar, /aria-label="Source recovery and original files"/);
+  assert.match(toolbar, />Contribute data(?:\s|<)/);
   assert.match(page, /className="layer-panel-explore"[\s\S]*?openMapUtility\("history"\); }}>Kansas historic maps<\/button>/);
   assert.match(page, /className="timeline-primary-actions"><Link href="\/daily-archive">Daily archive ↗<\/Link>/);
   assert.doesNotMatch(page, /className="map-dock-basemap map-dock-wide-only"/);
-  assert.doesNotMatch(page, /className="map-dock-action map-dock-wide-only"/);
+  assert.doesNotMatch(page, /<strong>Controls<\/strong>/);
+  assert.match(page, /aria-label="More map navigation"/);
   assert.match(page, /QUICK_LIVE_CONTEXT_IDS\.map/);
   assert.match(page, /mapUtilityView === "scene"[\s\S]*?<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
   assert.doesNotMatch(page, /className="qwen-header-action"/);
@@ -1223,7 +1226,7 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.match(css, /\.map-chrome-dock\s*\{[^}]*height:\s*44px/s);
   assert.match(css, /\.map-dock-representations > button,[\s\S]*?min-height:\s*44px/);
   assert.match(css, /\.qwen-panel\s*\{[^}]*top:\s*calc\(var\(--map-overlay-top\) \+ 8px\)/s);
-  assert.match(css, /@media \(min-width: 1800px\) \{[\s\S]*?\.map-dock-map-menu \{ display: block; \}/);
+  assert.match(css, /@media \(min-width: 1800px\) \{[\s\S]*?\.map-dock-basemap\.map-dock-wide-only \{ display: flex; \}[\s\S]*?\.map-dock-action\.map-dock-wide-only \{ display: inline-flex; \}[\s\S]*?\.map-dock-map-menu \{ display: block; \}/);
   assert.match(page, /className="map-dock-menu-representations"[\s\S]*?\{mapRepresentationControls\(\)\}/);
   assert.match(page, /className="map-dock-menu-quick" role="group" aria-label="Quick map controls"/);
   assert.match(css, /\.header-overflow-workspaces \{ display: grid;/);
@@ -1311,7 +1314,7 @@ test("keeps layer controls direct and source clocks in progressive detail", asyn
   assert.match(page, /className="visibility-switch"/);
   assert.match(page, /className="official-context-options"/);
   assert.match(page, /className="layer-task-links"/);
-  assert.match(page, /aria-label="Layer topic"/);
+  assert.match(page, /<TopicSelect label="Layer topic"/);
   assert.match(page, /openMapUtility\("scene", event.currentTarget\)/);
   const openMapSettings = page.slice(page.indexOf("const openMapSettings = useCallback"), page.indexOf("const openEarthEngineLayers = useCallback"));
   assert.doesNotMatch(openMapSettings, /setLayerCatalogView\("local"\)/);

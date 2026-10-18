@@ -157,12 +157,12 @@ test("real lighting updates replace curtain uniforms in place, including sun syn
   assert.equal(h.map.getLayoutProperty(), "none", "Battery saver remains authoritative");
 });
 
-async function controlsModule(forceOpen = false) {
+async function controlsModule() {
   const drawingUrl = toUrl(transpile(await read("app/terrain-drawing.ts")));
   const surfaceUrl = toUrl(transpile((await read("app/terrain-surface.ts")).replace('"./terrain-drawing"', JSON.stringify(drawingUrl))));
   // Element-tree tests execute the real component callbacks; only React's
   // render lifecycle hook is replaced to avoid bringing a DOM into Node tests.
-  const hooks = toUrl(("let next = 0; export const useId = () => `studio-${++next}`; export const useState = () => [false, () => {}]; export const useEffect = () => {}; export const useRef = () => ({current:null});").replace("[false,", "[" + forceOpen + ","));
+  const hooks = toUrl("let next = 0; export const useId = () => `studio-${++next}`; export const useState = () => [false, () => {}]; export const useEffect = () => {}; export const useRef = () => ({current:null});");
   const source = (await read("app/scene-effects-controls.tsx")).replace('"./terrain-surface"', JSON.stringify(surfaceUrl))
     .replace('"react"', JSON.stringify(hooks)).replace('"./scene-effects"', JSON.stringify(effectsUrl)).replace('"./scene-studio"', JSON.stringify(studioUrl));
   return import(toUrl(transpile(source).replace('"react/jsx-runtime"', JSON.stringify(pathToFileURL(require.resolve("react/jsx-runtime")).href))));
@@ -296,19 +296,23 @@ test("actual shared-link and saved-view restoration retain the full terrain scal
 });
 
 
-test("toolbar effects exposes water immediately, reuses exact settings and retains advanced studio controls", async () => {
- const {ScenePanel}=await controlsModule(true), changes=[];
- const settings={...effects.DEFAULT_SCENE_EFFECTS,waterFlow:false,stars:true};
- const props={settings,light:null,efficient:false,reducedMotion:false,flyoverActive:false,view:"2d",presentation:{atmosphere:"clear",azimuth:210},camera:{pitch:0,bearing:0,fieldOfView:36},cameraReady:true,
- onRecipe(){},onLight(){},onCamera(){},onChange:v=>changes.push(v),onFlyover(){},onRepresentation(){},toolbar:true,
- rendering:{type:"select",props:{"aria-label":"Rendering quality",children:[]}}};
- const nodes=descendants(ScenePanel(props));
- assert.ok(nodes.some(n=>n.props?.["aria-label"]==="Effects & rendering" && n.type==="button"));
- const dialog=nodes.find(n=>n.props?.role==="dialog");assert.equal(dialog.props["aria-label"],"Effects & rendering");
- assert.equal(nodes.filter(n=>n.props?.role==="switch")[0].props["aria-label"],"Flowing water");
- const water=nodes.find(n=>n.props?.["aria-label"]==="Flowing water");water.props.onChange();
- assert.deepEqual(changes,[{...settings,waterFlow:true}]);
- assert.ok(nodes.some(n=>n.props?.["aria-label"]==="Rendering quality"));
- assert.equal(nodes.filter(n=>n.props?.["aria-label"]==="Flowing water").length,1,"no duplicated effect switches in advanced studio");
- assert.ok(nodes.some(n=>n.props?.["aria-label"]==="Scene light direction"));
+test("flow switch keeps keyboard semantics, live coverage and reduced-motion/Battery-saver explanations", async () => {
+  const {SceneEffectsControls}=await controlsModule();
+  const textOf=node=>Array.isArray(node)?node.map(textOf).join(""):typeof node==="string"||typeof node==="number"?String(node):node&&typeof node==="object"?textOf(node.props?.children):"";
+  for(const efficient of [false,true]) {
+    const changes=[];
+    const settings={...effects.DEFAULT_SCENE_EFFECTS,waterFlow:true};
+    const tree=SceneEffectsControls({settings,light:null,efficient,reducedMotion:true,flyoverActive:false,view:"2d",presentation:{atmosphere:"clear",azimuth:225},camera:{pitch:0,bearing:0,fieldOfView:44},cameraReady:true,onRecipe(){},onLight(){},onCamera(){},onChange:value=>changes.push(value),onFlyover(){},readings:{waterFlow:"21 reaches · statewide order 5+ overview · some areas incomplete"}});
+    const label=descendants(tree).find(node=>node.type==="label"&&descendants(node).some(child=>child.props?.["aria-label"]==="Flowing water"));
+    const nodes=descendants(label);
+    const input=nodes.find(node=>node.type==="input");
+    assert.equal(input.props.role,"switch");
+    assert.equal(input.props.checked,true);
+    const descriptionIds=input.props["aria-describedby"].split(" ");
+    assert.equal(descriptionIds.length,2);
+    for(const id of descriptionIds)assert.ok(nodes.some(node=>node.props.id===id));
+    assert.equal(nodes.find(node=>node.type==="small").props["aria-live"],"polite");
+    assert.match(textOf(label),efficient?/Paused while Battery saver is on/:/statewide order 5\+ overview.*motion paused/);
+    input.props.onChange();assert.equal(changes[0].waterFlow,false,"native checkbox callback toggles the effect");
+  }
 });

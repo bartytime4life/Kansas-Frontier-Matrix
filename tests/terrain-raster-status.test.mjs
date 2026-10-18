@@ -47,8 +47,8 @@ test("a successful wide-view tile cannot make a disjoint failed viewport partial
   assert.equal(tracker.status(id, closeEast, 11, true), "ready", "the successful retry replaces that tile's failure");
   tracker.markFailed(id, { z: 11, x: 476, y: 785 });
   assert.equal(tracker.status(id, closeEast, 11, true), "partial", "a different current-view failure establishes partial coverage");
-  tracker.reset(id); // an explicit retry discards the former tile results
-  assert.equal(tracker.status(id, closeEast, 11, true), "loading", "retrying cannot inherit old success or failure");
+  tracker.reset(id); // hide then re-enable or explicit retry
+  assert.equal(tracker.status(id, closeEast, 11, true), "loading", "reselecting or retrying cannot inherit old success or failure");
 });
 
 test("a failed fine child at the same Rice location cannot taint a returned wide view", () => {
@@ -74,104 +74,4 @@ test("the latest result for one terrain tile replaces its prior result", () => {
   assert.equal(tracker.status(id, rice, 9, true), "ready", "a successful retry clears the same tile's failure");
   tracker.markFailed(id, tile);
   assert.equal(tracker.status(id, rice, 9, true), "error", "a later failure clears the same tile's old success");
-});
-
-test("coverage belongs to the exact renderer source and resets on replacement or style removal", () => {
-  const tracker = new TerrainRasterViewTracker(), id = "usgs-3dep-hillshade";
-  const bounds = { west: -99, east: -97, south: 38, north: 40 }, sourceA = {}, sourceB = {};
-  tracker.bindSource(id, sourceA);
-  tracker.markLoaded(id, { z: 11, x: 464, y: 784 });
-  tracker.markFailed(id, { z: 11, x: 465, y: 784 });
-  tracker.bindSource(id, sourceA);
-  assert.equal(tracker.status(id, bounds, 10.5, true), "partial", "visibility cannot erase same-source coverage or failures");
-  tracker.bindSource(id, sourceB);
-  assert.equal(tracker.status(id, bounds, 10.5, true), "loading", "a replacement source must earn its own coverage");
-  tracker.markLoaded(id, { z: 11, x: 464, y: 784 });
-  tracker.reset(id);
-  tracker.bindSource(id, sourceB);
-  assert.equal(tracker.status(id, bounds, 10.5, true), "loading", "explicit retry stays empty even with the same source");
-  tracker.markLoaded(id, { z: 11, x: 464, y: 784 });
-  tracker.bindSource(id, undefined);
-  assert.equal(tracker.status(id, bounds, 10.5, true), "loading");
-  tracker.bindSource(id, sourceA);
-  tracker.markLoaded(id, { z: 11, x: 464, y: 784 });
-  tracker.resetAll();
-  tracker.bindSource(id, sourceA);
-  assert.equal(tracker.status(id, bounds, 10.5, true), "loading", "style reset cannot resurrect earlier coverage");
-});
-
-const pageSource = await readFile(process.env.KFM_TERRAIN_TOGGLE_PAGE ?? "app/page.tsx", "utf8");
-const pageAst = ts.createSourceFile("page.tsx", pageSource, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
-let toggleCallback, sourceDataCallback;
-function findCallbacks(node) {
-  if (ts.isVariableDeclaration(node) && node.name.getText(pageAst) === "setOfficialContextVisible") toggleCallback = node.initializer.arguments[0].getText(pageAst);
-  if (ts.isCallExpression(node) && node.expression.getText(pageAst) === "map.on" && node.arguments[0]?.text === "sourcedata" && ts.isArrowFunction(node.arguments[1]) && node.arguments[1].getText(pageAst).includes("terrainRasterViewRef")) sourceDataCallback = node.arguments[1].getText(pageAst);
-  ts.forEachChild(node, findCallbacks);
-}
-findCallbacks(pageAst);
-function executeCallback(callback, scope) {
-  assert.ok(callback, "execute the actual page callback, not a mirrored implementation");
-  const compiled = ts.transpileModule(`return ${callback};`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
-  return new Function(...Object.keys(scope), compiled)(...Object.values(scope));
-}
-function toggleHarness(id = "usgs-3dep-hillshade") {
-  const tracker = new TerrainRasterViewTracker(), source = { id, kind: "OPERATIONAL_WMS", sourceId: `external-${id}` };
-  const h = { tracker, source, renderer: {}, settled: true, zoom: 10.5, bounds: { west: -99, east: -97, south: 38, north: 40 }, states: {}, errors: {}, applies: 0 };
-  const map = { isStyleLoaded: () => true, getSource: () => h.renderer, isSourceLoaded: () => h.settled, getZoom: () => h.zoom,
-    getBounds: () => ({ getWest: () => h.bounds.west, getEast: () => h.bounds.east, getSouth: () => h.bounds.south, getNorth: () => h.bounds.north }) };
-  h.scope = { terrainRasterViewRef: { current: tracker }, officialRasterFailuresRef: { current: new Set() }, OFFICIAL_CONTEXT_BY_ID: { [id]: source },
-    officialVisibilityRef: { current: { [id]: true } }, setOfficialVisibility: () => {}, officialOpacityRef: { current: { [id]: 0.46 } }, officialPayloadsRef: { current: {} },
-    mapRef: { current: map }, temporalQueryRef: { current: { frame: 2026 } }, OFFICIAL_CONTEXT_PRESENT_FRAME: 2026, noaaRadarReadyRef: { current: false }, noaaRadarFrameTimeRef: { current: null },
-    setOfficialStates: update => { h.states = update(h.states); }, setOfficialErrors: update => { h.errors = update(h.errors); },
-    runtimeOfficialVisibility: visibility => visibility, applyOfficialContextState: () => { h.applies += 1; },
-    map, TERRAIN_SOURCE_ID: "display-dem", OFFICIAL_CONTEXT_BY_SOURCE_ID: { [source.sourceId]: source }, rasterRetryTimers: new Map(), LAYER_REGISTRY: [],
-    terrainRasterBounds: () => h.bounds };
-  tracker.bindSource(id, h.renderer);
-  h.toggle = executeCallback(toggleCallback, h.scope);
-  h.sourceData = executeCallback(sourceDataCallback, h.scope);
-  return h;
-}
-
-test("warm hide/show restores coverage immediately without a new tile event or request", () => {
-  for (const id of ["usgs-3dep-hillshade", "usgs-3dep-slope"]) {
-    const h = toggleHarness(id);
-    h.tracker.markLoaded(id, { z: 11, x: 464, y: 784 });
-    for (let repeat = 0; repeat < 8; repeat += 1) { h.toggle(id, false); h.toggle(id, true); }
-    assert.equal(h.states[id], "ready");
-    assert.equal(h.scope.officialVisibilityRef.current[id], true);
-    assert.equal(h.scope.officialOpacityRef.current[id], 0.46);
-    assert.equal(h.applies, 16, "only existing visibility application runs; no refresh API is supplied");
-  }
-});
-
-test("warm toggles keep current partial failures and never attest a disjoint, coarse or unsettled view", () => {
-  const id = "usgs-3dep-hillshade", h = toggleHarness(id);
-  h.tracker.markLoaded(id, { z: 11, x: 464, y: 784 });
-  h.tracker.markFailed(id, { z: 11, x: 465, y: 784 });
-  h.scope.officialRasterFailuresRef.current.add(id); h.errors[id] = "known partial failure";
-  h.toggle(id, false); h.toggle(id, true);
-  assert.equal(h.states[id], "partial"); assert.equal(h.errors[id], "known partial failure");
-  h.bounds = { west: -96, east: -95, south: 38, north: 40 };
-  h.toggle(id, true); assert.equal(h.states[id], "loading", "other locations cannot inherit cached coverage");
-  h.bounds = { west: -99, east: -97, south: 38, north: 40 }; h.zoom = 14;
-  h.toggle(id, true); assert.equal(h.states[id], "loading", "coarse parents cannot attest a close zoom");
-  h.zoom = 10.5; h.tracker.reset(id); h.tracker.markLoaded(id, { z: 11, x: 464, y: 784 }); h.settled = false;
-  h.toggle(id, true); assert.equal(h.states[id], "loading", "loaded coverage still requires a settled source");
-});
-
-test("a replacement or absent source cannot inherit the previous renderer's tile results", () => {
-  const id = "usgs-3dep-hillshade", h = toggleHarness(id);
-  h.tracker.markLoaded(id, { z: 11, x: 464, y: 784 });
-  h.renderer = {};
-  h.toggle(id, true); assert.equal(h.states[id], "loading");
-  h.tracker.markLoaded(id, { z: 11, x: 464, y: 784 }); h.renderer = undefined;
-  h.toggle(id, true); assert.equal(h.states[id], "loading");
-});
-
-test("tile completion while hidden is usable when that same source is shown again", () => {
-  const id = "usgs-3dep-hillshade", h = toggleHarness(id);
-  h.toggle(id, false);
-  h.sourceData({ sourceId: h.source.sourceId, isSourceLoaded: true, tile: { state: "loaded" }, coord: { canonical: { z: 11, x: 464, y: 784 } } });
-  h.toggle(id, true);
-  assert.equal(h.states[id], "ready", "showing cached tiles need not emit a second completion event");
 });

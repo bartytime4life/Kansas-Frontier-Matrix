@@ -1,3 +1,4 @@
+import { publicFixtureAuthority } from "./public-release-test-authority.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -89,9 +90,11 @@ test("withdrawal is compare-and-swap and stops the weather package only", async 
 });
 
 // The read adapter, with its Cloudflare bindings swapped for the stand-in store.
+const publicAuthorityUrl = await publicFixtureAuthority([{ family: "weather", raw: weather, decision }], waterUrl);
 const server = (await read("../app/governed-weather-server.ts"))
   .replace('import { env } from "cloudflare:workers";', "const env = new Proxy({}, { get: (_, key) => globalThis.__weatherStorage.env[key] });")
   .replace('import { getRawDb } from "../db";', "const getRawDb = () => globalThis.__weatherStorage.db;")
+  .replace('"./public-release-server"', JSON.stringify(publicAuthorityUrl)).replace('"./public-release"', JSON.stringify(publicAuthorityUrl))
   .replace('"./governed-water"', JSON.stringify(waterUrl)).replace('"./governed-weather"', JSON.stringify(weatherUrl));
 globalThis.__weatherStorage = { env: {}, db: null };
 const { governedWeatherRead } = await import(moduleUrl(server));
@@ -136,36 +139,4 @@ test("storage failures withhold data without leaking detail", async () => {
   assert.doesNotMatch(JSON.stringify(failed.body), /private upstream/);
   globalThis.__weatherStorage = { env: { BUCKET: { get: async () => ({ size: 10, text: async () => water.slice(0, 10) }) } }, db: s.db };
   assert.equal((await request("layers")).status, 503);
-});
-
-test("empty, staged and unapproved weather remain closed while existing water stays intact", async () => {
-  const s = await store();
-  globalThis.__weatherStorage = { env: { BUCKET: s.bucket }, db: s.db };
-  const existing = await waterAdmin.stageWaterPackage(s, water, "synthetic-owner", NOW);
-  s.sqlite.prepare("INSERT INTO water_active VALUES (1, ?, '{}', NULL, 17)").run(existing.package_id);
-  const waterRows = () => ["water_packages", "water_active", "water_activation_events"].map(table => s.sqlite.prepare(`SELECT * FROM ${table}`).all());
-  const before = waterRows(), waterObject = s.objects.get(waterAdmin.waterObjectKey(existing.package_id));
-  const held = async reason => {
-    for (const view of ["bootstrap", "layers", "evidence"]) {
-      const result = await request(view);
-      assert.equal(result.status, 200);
-      assert.equal(result.body.envelope.outcome, "ABSTAIN");
-      assert.equal(result.body.envelope.reason_code, reason);
-      assert.equal(result.body.data, undefined);
-      assert.deepEqual(result.body.envelope.evidence_refs, []);
-    }
-  };
-  await held("NO_APPROVED_SNAPSHOT");
-  await admin.stageWeatherPackage(s, weather, "synthetic-owner", NOW);
-  await held("NO_APPROVED_SNAPSHOT");
-  const denied = { ...decision, decision: "DENIED" };
-  await rejects(admin.activateWeatherPackage(s, { package_id: decision.package_id, expected_active: null, decision: denied }, NOW), "RELEASE_NOT_APPROVED");
-  assert.equal(count(s, "weather_active") + count(s, "weather_activation_events"), 0);
-  await held("NO_APPROVED_SNAPSHOT");
-  // Simulate unapproved stored metadata without going through an owner action.
-  // Reads must re-evaluate policy rather than trust the presence of a pointer.
-  s.sqlite.prepare("INSERT INTO weather_active VALUES (1, ?, ?, NULL, 1)").run(decision.package_id, JSON.stringify(denied));
-  await held("RELEASE_NOT_APPROVED");
-  assert.deepEqual(waterRows(), before);
-  assert.equal(s.objects.get(waterAdmin.waterObjectKey(existing.package_id)), waterObject);
 });

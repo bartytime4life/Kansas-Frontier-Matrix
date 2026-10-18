@@ -3,9 +3,13 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import ts from "typescript";
+import { PRIVATE_PROFILE_URL_TEST_ONLY } from "./private-profile-test-only.mjs";
 const modules = new Map();
 async function moduleUrl(file) {
   file = path.resolve(file); if (modules.has(file)) return modules.get(file);
+  // TEST-ONLY: retain the private renderer's opacity/request regressions; this
+  // cannot turn on public overlays in the immutable application profile.
+  if (file === path.resolve("app/public-profile.ts")) return PRIVATE_PROFILE_URL_TEST_ONLY;
   let js = ts.transpileModule(await readFile(file, "utf8"), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
   for (const match of [...js.matchAll(/from ["'](\.[^"']+)["']/g)]) js = js.replace(match[0], `from ${JSON.stringify(await moduleUrl(path.resolve(path.dirname(file), match[1]) + ".ts"))}`);
   const url = `data:text/javascript;base64,${Buffer.from(js).toString("base64")}`; modules.set(file, url); return url;

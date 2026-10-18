@@ -5,6 +5,7 @@ import vm from 'node:vm';
 import ts from 'typescript';
 import * as Three from 'three';
 import {componentHarness,findNode,settle} from './component-harness.mjs';
+import {PRIVATE_PROFILE_TEST_ONLY} from './private-profile-test-only.mjs';
 const compile=source=>ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
 async function module(name,imports={}){const exports={};vm.runInNewContext(compile(await readFile(`app/${name}.ts`,'utf8')),{exports,URL,require:name=>{assert.ok(name in imports,name);return imports[name];}});return exports;}
 const materials=await module('subsurface-materials');
@@ -46,7 +47,7 @@ test('core inventory remains an envelope and original interval identity survives
 
 async function panelHarness(initialContext=null,{failWorker=false,failPrepare=false,map=null,skipArea=false}={}){
   const messages=[],inspections=[],contexts=[],timers=new Map(),frames=new Map(),focusCalls=[];let timerSerial=0,frameSerial=0;const worker={postMessage:message=>{if(failPrepare&&message.kind==='prepare')throw new Error('failed');messages.push(message);},terminate(){this.terminated=true;}};
-  const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':locatorPlacement},{
+  const h=await componentHarness('app/underground-panel.tsx',{'./public-profile':PRIVATE_PROFILE_TEST_ONLY,'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':locatorPlacement},{
     matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),document:{hidden:false,addEventListener(){},removeEventListener(){}},window:{addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:fn=>{const id=++frameSerial;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id),queueMicrotask,performance,
     fetch:async()=>({ok:true,json:async()=>({version:1,surveys:[]})}),setTimeout:(callback,delay)=>{const id=++timerSerial;timers.set(id,{callback,delay});return id;},clearTimeout:id=>timers.delete(id),
   });
@@ -58,6 +59,21 @@ async function panelHarness(initialContext=null,{failWorker=false,failPrepare=fa
   const viewer=()=>findNode(tree,node=>node.props?.onSlice);
   return{h,render,load,aquifer,viewer,inspections,contexts,focusCalls,messages,worker,flushTimers,pendingDelays:()=>[...timers.values()].map(timer=>timer.delay),flushFrames(){for(const [id,fn] of [...frames]){frames.delete(id);fn();}},props,get tree(){return tree;}};
 }
+test('selected original-record inspector shows reported depth and conflicts while retaining the logged endpoint', async () => {
+  const conflict={...record,depthUnit:'ft',totalDepth:150,intervals:[{top:140,bottom:160,description:'Synthetic TEST-ONLY original interval'}]};
+  const original=JSON.stringify(conflict),p=await panelHarness();p.load([conflict]);
+  p.aquifer().props.onInspect(conflict,conflict.intervals[0]);p.render();
+  assert.equal(p.inspections.at(-1).record,conflict);assert.equal(p.inspections.at(-1).interval,conflict.intervals[0]);
+  let centered=0,saved=0,reported=0;
+  const props={inspection:p.inspections.at(-1),onCenter:()=>centered++,onSave:()=>saved++,onReport:()=>reported++};
+  let tree=p.h.render(p.h.exports.SubsurfaceInspector,props);
+  assert.match(text(tree),/Reported total depth 150 ft/);assert.match(text(tree),/Deepest logged interval 160 ft/);assert.match(text(tree),/Source depth discrepancy/);assert.match(text(tree),/140\s*–\s*160\s*ft/);
+  button(tree,'Center').props.onClick();button(tree,'Save investigation').props.onClick();button(tree,'Create report').props.onClick();same([centered,saved,reported],[1,1,1]);
+  assert.equal(slices.fitRecordedSlice(conflict,0).range[1],model.meters(160,'ft'),'source geometry is not clipped to the reported 150 ft');
+  tree=p.h.render(p.h.exports.SubsurfaceInspector,{...props,inspection:{record:{...conflict,totalDepth:160},interval:conflict.intervals[0]}});
+  assert.doesNotMatch(text(tree),/Source depth discrepancy/);assert.match(text(tree),/Reported total depth 160 ft/);
+  assert.equal(JSON.stringify(conflict),original);p.h.dispose();
+});
 test('fresh cutaway fits Kansas after locator placement and tool round trips keep the moved map',async()=>{
   const fitted=[],mapEvents={isEnabled:()=>true,disable(){},enable(){}},style={setProperty(){},removeProperty(){}};
   const stage={style,scrollLeft:0,scrollTop:0,getBoundingClientRect:()=>({left:0,top:0}),addEventListener(){},removeEventListener(){}};
@@ -233,16 +249,4 @@ test('failed preparation dispatch releases the worker and keeps records withheld
  const p=await panelHarness(null,{skipArea:true,failPrepare:true});await settle();p.render();
  assert.equal(p.worker.terminated,true);assert.equal(p.worker.onmessage,null);assert.equal(p.messages.length,0);
  assert.equal(p.aquifer().props.records.length,0);assert.match(text(p.tree),/Background data loading is unavailable/);p.h.dispose();
-});
-
-test('area core/source controls stay usable with no records and historical years require an explicit present action',async()=>{
- const p=await panelHarness();p.load([]);p.props.year=1833;let present=0;p.props.onPresent=()=>present++;p.render();
- let tools=p.aquifer().props.recordTools,select=findNode(tools,n=>n.props?.['aria-label']==='Recorded sample sources');
- assert.equal(select.props.value,'both');select.props.onChange({target:{value:'core'}});p.render();p.flushTimers();
- assert.deepEqual([...p.messages.at(-1).sources],['kgs-core']);assert.equal(p.messages.at(-1).year,1833,'source selection never overrides time eligibility');
- tools=p.aquifer().props.recordTools;button(tools,'Use present map year').props.onClick();assert.equal(present,1);
- const input=findNode(tools,n=>n.props?.['aria-label']==='Find a recorded sample');input.props.onChange({target:{value:'123'}});p.load([]);tools=p.aquifer().props.recordTools;
- findNode(tools,n=>n.type==='form').props.onSubmit({preventDefault(){}});assert.equal(p.messages.at(-1).kind,'search');
- const point=[-100.6,38.4];p.worker.onmessage({data:{id:p.messages.at(-1).id,matches:[['core-123','',point,'one']]}});p.render();tools=p.aquifer().props.recordTools;
- findNode(tools,n=>n.type==='button'&&text(n).includes('core-123')).props.onClick();p.render();assert.deepEqual([...p.aquifer().props.recordTarget.point],point);assert.equal(p.contexts.at(-1).recordCutoff,null);assert.equal(p.props.year,1833);p.h.dispose();
 });

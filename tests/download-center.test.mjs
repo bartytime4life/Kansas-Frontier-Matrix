@@ -1,3 +1,4 @@
+import { PRIVATE_PROFILE_URL_TEST_ONLY } from './private-profile-test-only.mjs';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
@@ -5,8 +6,9 @@ import ts from 'typescript';
 import { componentHarness, findNode, settle } from './component-harness.mjs';
 const compile = async path => ts.transpileModule(await readFile(path, 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
 const url = value => `data:text/javascript;base64,${Buffer.from(value).toString('base64')}`;
+const sessionUrl = url(await compile('app/local-companion-session.ts'));
 const bounded = url(await compile('app/bounded-json.ts'));
-const client = await import(url((await compile('app/local-download-client.ts')).replace('"./bounded-json"', JSON.stringify(bounded))));
+const client = await import(url((await compile('app/local-download-client.ts')).replace('"./public-profile"', JSON.stringify(PRIVATE_PROFILE_URL_TEST_ONLY)).replace('"./local-companion-session"', JSON.stringify(sessionUrl)).replace('"./bounded-json"', JSON.stringify(bounded))));
 const activity = await import(url(await compile('app/download-activity.ts')));
 const polling = await import(url(await compile('app/download-polling.ts')));
 const status = () => ({ schema: 'kfm-ee-download-control/v1', configured: false, project: null, authentication: 'idle', destination: '/local/captures', sessionToken: 'a'.repeat(43), active: null, jobs: [] });

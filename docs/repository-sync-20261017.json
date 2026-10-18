@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-17",
+  "site_project_id": "appgprj_6acd1aafe0d88191a4306ea2ab44ed91",
+  "previous_version": 6,
+  "previous_site_source": "3149017bf3711c219f947a8e874d37c9d8a49987",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "repository_commit": "5c927571f770834aa3e80c34dc27b0ecbcabc1ce",
+  "previous_repository_commit": "05b132b66b23b6dea21557943e4e73776bfeab9e",
+  "reconciled_upstream_paths": [
+    "app/explorer-controls-navigation.tsx",
+    "app/explorer-controls.css",
+    "app/explorer-menu-dismissal.ts",
+    "app/globals.css",
+    "app/inspection-panel.css",
+    "app/inspection-panel.tsx",
+    "app/map-toolbar.tsx",
+    "app/page.tsx",
+    "app/scene-effects-controls.tsx",
+    "app/scene-effects.css",
+    "docs/explorer-local-port-20261017.md",
+    "docs/water-flow.md",
+    "tests/component-harness.mjs",
+    "tests/explorer-interface-refresh.test.mjs",
+    "tests/explorer-menu-dismissal.test.mjs",
+    "tests/globe-context.test.mjs",
+    "tests/godaddy-layout-port.test.mjs",
+    "tests/inspection-panel.test.mjs",
+    "tests/layer-explorer.test.mjs",
+    "tests/rendered-html.test.mjs",
+    "tests/scene-studio.test.mjs",
+    "tests/scene-surface-integration.test.mjs",
+    "tests/topic-organization.test.mjs",
+    "tests/workspace-help-navigation.test.mjs",
+    "tests/workspace-map-navigation.test.mjs"
+  ],
+  "preserved": [
+    "same Site identity and owner-only audience",
+    "DB and BUCKET bindings",
+    "public profile, release gates and route deny policy",
+    "private assets remain excluded",
+    "existing topics, almanacs, report/story draft and data-missingness semantics"
+  ],
+  "hosted_ai": {
+    "source_reference_compared": "34fb6018ea9668ae81e64aa94b3948d4351147e8",
+    "ui_verified": "https://kansasfrontiermatrix.com/?kfm-chat=1",
+    "integration": "Fixed external link opens existing hosted chat; no staging context, location or draft text is transferred.",
+    "limitations": "Node inference and hosted administrator services are not ported to Workers. Hosted model quality is not qualified by this sync."
+  },
+  "changes": [
+    "Effects moved into header with shared controlled state",
+    "Explore/Appearance/Measure navigation restored",
+    "single active map-mode state and reliable menu dismissal",
+    "source status and recovery inside Layers with selected/all filter",
+    "responsive evidence layout and mobile Data sheet fix",
+    "fixed hosted-chat handoff with noreferrer",
+    "development-only supervised preview origin; production origin policy unchanged"
+  ],
+  "validation": {
+    "public_acceptance_suite": {
+      "tests": 288,
+      "pass": 288,
+      "fail": 0
+    },
+    "scoped_suite": {
+      "tests": 144,
+      "pass": 144,
+      "fail": 0,
+      "note": "Includes public tests also present in the acceptance suite; counts must not be added."
+    },
+    "typecheck": "PASS",
+    "production_build": "PASS",
+    "public_asset_inventory": "PASS",
+    "legacy_rendered_suite": {
+      "baseline_pass": 22,
+      "baseline_fail": 11,
+      "candidate_pass": 22,
+      "candidate_fail": 11,
+      "note": "Same failures reproduced from exact unchanged v6 source and independent build. Private-source, fixed historical metadata and removed-asset expectations are inherited; no full-suite green claim."
+    },
+    "browser": [
+      "Map menu opens",
+      "Map controls opens Explore",
+      "separate Appearance and Measure tabs",
+      "hosted chat destination verified",
+      "WebGL2 unavailable in cloud browser; 3D visual acceptance unverified"
+    ],
+    "built_worker": "PASS: intended Site host renders 200 and includes hosted-chat link; internal preview and untrusted production origins return 403; private PC-AI route returns 404."
+  },
+  "rollback": "Saved Site v6; application-only rollback retains existing stores. No database, dataset, DNS or GoDaddy deployment change."
+}

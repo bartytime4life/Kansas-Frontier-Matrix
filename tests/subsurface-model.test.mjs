@@ -34,6 +34,16 @@ test('gaps and overlaps remain explicit and records never become seams', () => {
   assert.deepEqual(m.intervalIssues([{top:5,bottom:20},{top:15,bottom:30},{top:40,bottom:50}]),{gaps:[[0,5],[30,40]],overlaps:[[15,20]]});
   assert.equal(m.validBorehole(record({intervals:[{top:0,bottom:30,description:'a'},{top:20,bottom:40,description:'b'}]})),true);
 });
+test('reported depth conflicts are disclosed without invalidating or rewriting original intervals', () => {
+  const conflict = record({ totalDepth: 150, intervals: [{ top: 140, bottom: 160, description: 'Synthetic TEST-ONLY source discrepancy' }] });
+  const original = JSON.stringify(conflict);
+  assert.equal(m.validBorehole(conflict), true);
+  assert.deepEqual(m.boreholeDepthQuality(conflict), { reportedTotalDepth: 150, deepestInterval: 160, exceedsReportedTotal: true });
+  assert.equal(m.nearbyColumns([conflict], [-95,39])[0].record, conflict);
+  assert.equal(JSON.stringify(conflict), original);
+  for (const totalDepth of [160, 200, null]) assert.equal(m.boreholeDepthQuality({ ...conflict, totalDepth }).exceedsReportedTotal, false);
+  assert.deepEqual(m.boreholeDepthQuality({ totalDepth: null, intervals: [] }), { reportedTotalDepth: null, deepestInterval: null, exceedsReportedTotal: false });
+});
 test('great-circle offsets clamp to endpoints and tolerate zero-length segments', () => {
   const route=[[-96,39],[-95,39]];
   const center=m.sectionOffset([-95.5,39],route);

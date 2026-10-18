@@ -1,4 +1,6 @@
 "use client";
+import { IS_PUBLIC_COPY, PUBLIC_RELEASE_RECHECK_MS, publicFamilyAvailable } from "./public-profile";
+
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Map as MapLibreMap } from "./maplibre-seam";
 import { startAquiferVolumeWorker } from "./subsurface-workers";
@@ -23,7 +25,7 @@ function prepareSceneModules() {
   return sceneModules ??= Promise.all([import("three"), import("three/addons/controls/OrbitControls.js")]).catch(error => { sceneModules=null; throw error; });
 }
 
-export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=true,map,records,onFlatMap,onInspect,onLocatorSlot,sliceEntry,resourcePanel,onArea,recordsLoading,recordStatus,partial,recordNavigation,onResetRecords,recordTools,recordTarget}:{basemap?:string;onBasemap?:(key:"standard"|"imagery"|"kansas-aerial"|"topo")=>void;onLayers?:()=>void;active?:boolean;map:MapLibreMap|null;records:Borehole[];onFlatMap:()=>void;onLocate:(point:[number,number],retainView?:boolean)=>void;onInspect:(record:Borehole,interval?:DepthInterval)=>void;locator:{anchor:[number,number];pinned:boolean};onLocatorSlot:(slot:HTMLDivElement|null)=>void;sliceEntry?:ReactNode;resourcePanel?:ReactNode;onArea:(bounds:VolumeBounds|null)=>void;recordsLoading:boolean;recordStatus:string;partial:boolean;recordNavigation:ReactNode;recordsAvailable:number;onResetRecords:()=>void;recordTools?:ReactNode;recordTarget?:{id:number;point:[number,number]}|null}){
+export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=true,map,records,onFlatMap,onInspect,onLocatorSlot,sliceEntry,resourcePanel,onArea,recordsLoading,recordStatus,partial,recordNavigation,recordsAvailable,onResetRecords}:{basemap?:string;onBasemap?:(key:"standard"|"imagery"|"kansas-aerial"|"topo")=>void;onLayers?:()=>void;active?:boolean;map:MapLibreMap|null;records:Borehole[];onFlatMap:()=>void;onLocate:(point:[number,number],retainView?:boolean)=>void;onInspect:(record:Borehole,interval?:DepthInterval)=>void;locator:{anchor:[number,number];pinned:boolean};onLocatorSlot:(slot:HTMLDivElement|null)=>void;sliceEntry?:ReactNode;resourcePanel?:ReactNode;onArea:(bounds:VolumeBounds|null)=>void;recordsLoading:boolean;recordStatus:string;partial:boolean;recordNavigation:ReactNode;recordsAvailable:number;onResetRecords:()=>void}){
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null),[status,setStatus]=useState("Preparing the current locator area…"),[retry,setRetry]=useState(0);
   const [surfaceStatus,setSurfaceStatus]=useState(""),[previewChanged,setPreviewChanged]=useState(false);
   const [surfaceMode,setSurfaceMode]=useState(false);
@@ -32,7 +34,6 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const [detailPixels,setDetailPixels]=useState(2048),[detailRetry,setDetailRetry]=useState(0);
   const detailRenderer=useRef<ReturnType<typeof startCutawaySurfaceDetail>|null>(null),detailFrame=useRef<SurfaceDetailFrame|null>(null);
   const [frame,setFrame]=useState<VolumeBounds|null>(null);
-  const handledRecordTarget=useRef<typeof recordTarget>(null);
   const modelFocus=useRef<HTMLElement|null>(null),focusAfterApply=useRef(false);
   const [navigation,setNavigation]=useState<"orbit"|"pan">("orbit");
   const areaSession=useRef<{prepare:()=>void}|null>(null),onAreaRef=useRef(onArea);
@@ -49,6 +50,20 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const cameraMemory=useRef<{area:string;pose:CameraPose;awaitingRecords:boolean;awaitingAquifer:boolean;interacted:boolean}|null>(null);
   // Prepare code only after Underground opens; no WebGL context or source query yet.
   useEffect(()=>{if(active&&!surfaceMode)void prepareSceneModules().catch(()=>{});},[active,surfaceMode]);
+  useEffect(()=>{
+    if(!IS_PUBLIC_COPY||!active)return;
+    let cancelled=false;
+    const recheck=async()=>{
+      if(document.hidden)return;
+      const lease=snapshotRef.current?.publicLease;
+      const allowed=Boolean(lease&&lease.expiresAt>Date.now()&&await publicFamilyAvailable("groundwater",AbortSignal.timeout(10000),lease.packageId));
+      if(cancelled)return;
+      if(!allowed){setSnapshot(previous=>previous?{...previous,volume:{...previous.volume,envelopes:[]},aquiferState:"unavailable"}:null);setStatus("Aquifer ranges withheld: no approved public release is active.");}
+    };
+    void recheck();const timer=setInterval(()=>void recheck(),PUBLIC_RELEASE_RECHECK_MS);
+    const resume=()=>void recheck();document.addEventListener("visibilitychange",resume);
+    return()=>{cancelled=true;clearInterval(timer);document.removeEventListener("visibilitychange",resume);};
+  },[active,snapshot?.publicLease?.packageId]);
   const volume=snapshot?.volume;
   const surfaceArea=volume?.bounds.join(",");
   const aquiferLoading=snapshot?.aquiferState==="loading";
@@ -355,13 +370,6 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
     }catch{setStatus("The selector map is not ready to zoom. Retry when it appears.");}
   };
   const example=()=>{if(!map)return;map.jumpTo({center:[-100.5,38.5],zoom:11,pitch:0,bearing:0});showArea();};
-  useEffect(() => {
-    if (!active || !map || !recordTarget || handledRecordTarget.current === recordTarget) return;
-    handledRecordTarget.current=recordTarget;
-    map.jumpTo({center:recordTarget.point,zoom:13,pitch:0,bearing:0});
-    focusAfterApply.current=true;
-    areaSession.current?.prepare();
-  }, [active, map, recordTarget]);
   const frameReady=frame&&validVolumeBounds(frame),hasScene=Boolean(snapshot);
   return <section className={`${s.cutawayExplorer} ${s.areaExplorer}`} data-ready={hasScene} aria-label="4D area underlay from source records">
     <div className={s.cutawayWorkspace}>
@@ -371,7 +379,6 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
         <div className={s.cutawayLocatorActions}><button type="button" disabled={!map} onClick={frame&&!frameReady?zoomLocal:showArea}>{frame&&!frameReady?"Zoom in & explore":hasScene&&previewChanged?"Show new area":"Show this area"} <span aria-hidden="true">↗</span></button><button type="button" aria-label="Zoom selector map and selected area in" title="Zoom the map and update the selected cutaway" onClick={()=>zoomSelectedArea("in")}>+</button><button type="button" aria-label="Zoom selector map and selected area out" title="Zoom the map and update the selected cutaway" onClick={()=>zoomSelectedArea("out")}>−</button></div>
         <p className={s.areaFrameState}>{previewChanged&&snapshot?"Map preview changed. The cutaway still shows your selected area.":frame&&!frameReady?"This view is too broad for a local cutaway. Zoom in & explore keeps the map center and frames a smaller area.":hasScene?"Use the map +/− to zoom and update the selected area; pan, then Show for a new location.":"Pan to a place in Kansas, then show its recorded columns."}</p>
         <div className={s.areaProgress} role="status"><p>{status}</p>{snapshot&&<p>{recordsLoading?"Loading well and core records…":`${drawn?.recordCount??0} plotted columns · ${records.length} records at this time${partial?" · partial coverage":""}`}</p>}</div>
-        {recordTools}
         {resourcePanel}
         <button type="button" className={s.areaExample} onClick={example}>Try High Plains example</button>
         <details className={s.areaLocationTools}><summary>Map movement</summary><div className={s.actions}>{[["←",-70,0],["↑",0,-70],["↓",0,70],["→",70,0]].map(([label,x,y])=><button type="button" key={String(label)} aria-label={`Pan selector ${label}`} onClick={()=>map?.panBy([Number(x),Number(y)],{duration:0})}>{label}</button>)}</div><button type="button" onClick={onFlatMap}>Reset to 2D</button></details>
@@ -382,7 +389,7 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
         <div className={s.areaModelHeading}><h3>{surfaceMode?"Surface map":"3D cutaway"}</h3><span>{surfaceMode?"Explore details within the selected slice":"Independent records · unknown ground stays empty"}</span></div>
         <div className={s.surfaceViewSwitch} aria-label="Selected-area view"><button type="button" aria-pressed={surfaceMode} onClick={()=>setSurfaceMode(true)}>Surface map</button><button type="button" aria-pressed={!surfaceMode} onClick={()=>setSurfaceMode(false)}>3D cutaway</button></div>
         <div className={s.surfaceDetailControls} aria-label="Basemap and surface detail">
-          {onBasemap&&<label>Basemap <select aria-label="Cutaway basemap" value={basemap} onChange={event=>onBasemap(event.target.value as "standard"|"imagery"|"kansas-aerial"|"topo")}><option value="standard">Detailed streets &amp; buildings · vector</option><option value="kansas-aerial">Kansas aerial · 2024 · 1 foot</option><option value="imagery">Aerial &amp; satellite imagery · Esri</option><option value="topo">USGS topographic map</option>{!["standard","imagery","kansas-aerial","topo"].includes(basemap??"")&&<option value={basemap}>Current basemap</option>}</select></label>}
+          {onBasemap&&<label>Basemap <select aria-label="Cutaway basemap" value={basemap} onChange={event=>onBasemap(event.target.value as "standard"|"imagery"|"kansas-aerial"|"topo")}><option value="standard">Detailed streets &amp; buildings · vector</option>{!IS_PUBLIC_COPY && <><option value="kansas-aerial">Kansas aerial · 2024 · 1 foot</option><option value="imagery">Aerial &amp; satellite imagery · Esri</option><option value="topo">USGS topographic map</option></>}{!["standard","imagery","kansas-aerial","topo"].includes(basemap??"")&&<option value={basemap}>Current basemap</option>}</select></label>}
           {onLayers&&<button type="button" onClick={onLayers}>Choose map layers</button>}
           <label>3D surface detail <select aria-label="Cutaway surface resolution" value={detailPixels} onChange={event=>setDetailPixels(Number(event.target.value))}><option value={2048}>High · 2048 px</option><option value={4096}>Maximum · 4096 px</option></select></label>
           <button type="button" onClick={()=>{if(!detailRenderer.current?.refresh())setDetailRetry(v=>v+1);}}>Refresh surface</button>
@@ -405,8 +412,8 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
           <div className={s.cutawaySceneLabel}><span>{navigation==="pan"?"Drag to move":"Drag to orbit"} · scroll to zoom · select a source</span></div>
           <div className={s.cutawayStamp}>{scale}× DEPTH <span>·</span> {detailShown?"HIGH-DETAIL MAP":snapshot?.image?"SELECTED-AREA MAP":"FLAT REFERENCE PLANE · MAP IMAGE UNAVAILABLE"}</div>
         </div>}
-        {!recordsLoading&&!drawn?.recordCount&&<div className={s.areaEmptyRecords} role="status"><strong>{records.length ? "Loaded records have no valid intervals inside the displayed depth range." : "No source columns are displayed."}</strong><p>{recordStatus}</p><button type="button" onClick={onResetRecords}>Reset record filters</button><button type="button" onClick={example}>Try High Plains example</button></div>}
-        {recordNavigation}{recordsLoading&&<p className={s.areaLoading} role="status">Loading dated records for time navigation…</p>}
+        {!recordsLoading&&!drawn?.recordCount&&<div className={s.areaEmptyRecords} role="status"><strong>No recorded intervals at this time.</strong><p>{recordStatus}</p><button type="button" onClick={onResetRecords}>Reset record filters</button><button type="button" onClick={example}>Try High Plains example</button></div>}
+        {recordsAvailable>0?recordNavigation:recordsLoading?<p className={s.areaLoading} role="status">Loading dated records for time navigation…</p>:null}
         </div>
         </>}
       </section>

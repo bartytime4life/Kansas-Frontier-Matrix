@@ -1,8 +1,7 @@
-import { FLOW_COORDINATE_EXTENT } from "./water-flow-motion";
 import type { DownstreamPath } from "./water-flow-context";
 
 export type Coordinate = readonly [number, number];
-export type WaterReach = DownstreamPath & { sequence: number | null; upstream?: number | null; downstream: number | null; levelpath: number | null; name: string | null; featureType?: number; streamOrder?: number | null };
+export type WaterReach = DownstreamPath & { sequence: number | null; upstream?: number | null; downstream: number | null; levelpath: number | null; name: string | null; featureType?: number };
 export type TerrainSample = { distanceM: number; coordinate: Coordinate; elevationM: number | null; datum: string | null; resolutionM: number | null };
 export type WaterPathAnalysis = {
   upstreamM?: number; downstreamM?: number; upstreamStop?: string; downstreamStop?: string;
@@ -20,7 +19,7 @@ export function waterDistance(a: Coordinate, b: Coordinate) {
 export function waterPathLength(points: readonly Coordinate[]) {
   return points.slice(1).reduce((sum, p, i) => sum + waterDistance(points[i], p), 0);
 }
-const validCoordinate = (p: unknown): p is Coordinate => Array.isArray(p) && p.length === 2 && p.every(v => typeof v === "number" && Number.isFinite(v)) && p[0] >= FLOW_COORDINATE_EXTENT.west && p[0] <= FLOW_COORDINATE_EXTENT.east && p[1] >= FLOW_COORDINATE_EXTENT.south && p[1] <= FLOW_COORDINATE_EXTENT.north;
+const validCoordinate = (p: unknown): p is Coordinate => Array.isArray(p) && p.length === 2 && p.every(v => typeof v === "number" && Number.isFinite(v)) && p[0] >= -102.2 && p[0] <= -94.4 && p[1] >= 36.8 && p[1] <= 40.2;
 const sequence = (v: unknown) => typeof v === "number" && Number.isSafeInteger(v) && v > 0 ? v : null;
 
 export function parseWaterReaches(raw: unknown): WaterReach[] {
@@ -36,7 +35,7 @@ export function parseWaterReaches(raw: unknown): WaterReach[] {
     if (g.coordinates.length < 2 || g.coordinates.length > 10000 || !g.coordinates.every(validCoordinate)) return [];
     vertices += g.coordinates.length; if (vertices > 80000) throw new Error("USGS flowline geometry limit exceeded.");
     ids.add(p.id3dhp);
-    return [{ ...(p.streamorder === undefined ? {} : { streamOrder: typeof p.streamorder === "number" && Number.isInteger(p.streamorder) && p.streamorder >= 1 && p.streamorder <= 20 ? p.streamorder : null }), id: p.id3dhp, coordinates: g.coordinates as Coordinate[], featureType: p.featuretype as number, sequence: sequence(p.hydrosequence), upstream: sequence(p.uphydrosequence), downstream: sequence(p.dnhydrosequence), levelpath: sequence(p.levelpath), name: typeof p.gnisidlabel === "string" ? p.gnisidlabel.slice(0, 160) : null }];
+    return [{ id: p.id3dhp, coordinates: g.coordinates as Coordinate[], featureType: p.featuretype as number, sequence: sequence(p.hydrosequence), upstream: sequence(p.uphydrosequence), downstream: sequence(p.dnhydrosequence), levelpath: sequence(p.levelpath), name: typeof p.gnisidlabel === "string" ? p.gnisidlabel.slice(0, 160) : null }];
   });
 }
 

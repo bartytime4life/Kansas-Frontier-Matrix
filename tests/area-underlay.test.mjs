@@ -6,6 +6,7 @@ import ts from 'typescript';
 import * as Three from 'three';
 import clipping from 'polygon-clipping';
 import {componentHarness,findNode,settle} from './component-harness.mjs';
+import {PRIVATE_PROFILE_TEST_ONLY} from './private-profile-test-only.mjs';
 const compile=source=>ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;
 async function module(name,imports={}){const exports={};vm.runInNewContext(compile(await readFile(`app/${name}.ts`,'utf8')),{exports,require:name=>{assert.ok(name in imports,name);return imports[name];}});return exports;}
 const materials=await module('subsurface-materials'),model=await module('subsurface-model',{'./subsurface-materials':materials});
@@ -40,6 +41,7 @@ async function harness({reduced=true,map=locator(),actualSession=false,failWorke
  },Raycaster:class extends Three.Raycaster{intersectObjects(owners){return rayHits.filter(h=>owners.includes(h.object));}}};
  class OrbitControls{constructor(camera){this.camera=camera;this.target=new Three.Vector3();this.mouseButtons={};this.touches={};controls.push(this);}update(){this.camera.lookAt(this.target);}addEventListener(){}removeEventListener(){}listenToKeyEvents(){}dispose(){}}
  const h=await componentHarness('app/aquifer-volume-view.tsx',{
+  './public-profile':PRIVATE_PROFILE_TEST_ONLY,
   './selected-surface-map':{default:()=>null},'./cutaway-surface-detail':fakeDetail?{...surfaceDetail,startCutawaySurfaceDetail:options=>{const session={...options,update(){},updateCapture(){return false;},refresh(){this.refreshes=(this.refreshes??0)+1;options.onStatus('Refreshing surface tiles… Previous surface remains visible until a replacement is drawn.');return true;},dispose(){this.disposed=true;}};detailSessions.push(session);return session;}}:surfaceDetail,'./subsurface-workers':{startAquiferVolumeWorker:()=>{if(failWorker)throw new Error('worker unavailable');return worker;}},'./aquifer-volume':volumeModel,'./subsurface-materials':materials,'./cutaway-model':cutaway,'./cutaway-camera':camera,'./aquifer-layers':{KGS_ATLAS_URL:'https://example.test/'},'./subsurface.module.css':{default:style},'./aquifer-volume-mesh':{aquiferGeometries:()=>[]},'./aquifer-view-session':{locatorBounds:viewSession.locatorBounds,startAquiferView:options=>{session=options;if(actualSession)return viewSession.startAquiferView({...options,timers:{set:(cb,delay)=>{const id=++timerId;tasks.set(id,{cb,delay});return id},clear:id=>tasks.delete(id)}});return Object.assign(()=>{},{prepare:()=>prepares++});}},get three(){moduleLoads.push('three');return T;},get 'three/addons/controls/OrbitControls.js'(){moduleLoads.push('controls');return {OrbitControls};}
  },{devicePixelRatio:1,performance,queueMicrotask,matchMedia:()=>({matches:reduced,addEventListener(){},removeEventListener(){}}),document:{hidden:false,createElement:()=>({getContext:()=>({fillRect(){},fillText(){}})}),addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:callback=>{const id=++frameId;frames.set(id,callback);return id},cancelAnimationFrame:id=>frames.delete(id)});
  let props={map,records:[record,later],onFlatMap,onLocate(){},onInspect:(...args)=>inspections.push(args),locator:{anchor:record.coordinates,pinned:false},onLocatorSlot(){},sliceEntry:{type:'details',props:{children:'Inspect an individual log'}},onArea,recordsAvailable:2,onResetRecords(){},recordsLoading:false,recordStatus:'2 loaded records in selected area',partial:false,recordNavigation:{type:'nav',props:{'aria-label':'Record time navigation',children:'Record time'}}},tree;
@@ -62,7 +64,7 @@ test('actual area controls retain renderer and camera, while record-time members
  findNode(h.tree,n=>n.props?.['aria-label']==='Basemap opacity').props.onChange({target:{value:'50'}});await h.render();assert.equal(h.renderers.length,1);assert.deepEqual(camera.position,pose);
  let column;h.renders.at(-1).scene.traverse(n=>{if(n.userData?.interval===record.intervals[0])column=n;});assert.ok(column);h.setHits([{object:column}]);h.events.get('pointerdown')({clientX:10,clientY:10,pointerId:1,isPrimary:true,button:0});h.events.get('pointerup')({clientX:10,clientY:10,pointerId:1,isPrimary:true,button:0});await h.render();assert.equal(h.inspections.at(-1)[0],record);assert.match(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);
  await h.render({records:[record]});assert.equal(h.renderers.length,2);assert.equal(h.renderers[0].disposed,true);assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.deepEqual(h.controls.at(-1).target,target);assert.match(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);
- await h.render({records:[]});await h.render();assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.deepEqual(h.controls.at(-1).target,target);assert.doesNotMatch(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);assert.match(text(h.tree),/No source columns are displayed/);
+ await h.render({records:[]});await h.render();assert.deepEqual(h.renders.at(-1).camera.position,pose);assert.deepEqual(h.controls.at(-1).target,target);assert.doesNotMatch(text(findNode(h.tree,n=>n.props?.className==='cutawayReadout')),/sand/);assert.match(text(h.tree),/No recorded intervals at this time/);
  h.h.dispose();assert.ok(h.renderers.every(r=>r.disposed&&r.contextReleased));assert.equal(h.events.size,0);
 });
 
@@ -125,9 +127,9 @@ test('a style-read exception preserves the apply intent and continues on map loa
  const map=locator(),h=await harness({map,actualSession:true});map.getPitch=()=>{throw new Error('style changing')};assert.doesNotThrow(()=>button(h.tree,'Show this area ↗').props.onClick());assert.equal(h.requests.length,0);await h.render();assert.match(text(h.tree),/Waiting for the map style/);
  map.getPitch=()=>0;map.emit('load');h.flush(80);await h.render();assert.equal(h.requests.length,1);assert.equal(h.renderers.length,1);h.h.dispose();
 });
-test('settled absence uses compact recovery without an empty camera and retains record-filter recovery',async()=>{
+test('settled absence of both logs and aquifer uses compact recovery without empty camera or time chrome',async()=>{
  const h=await harness({actualSession:true});await h.render({records:[],recordsAvailable:0});button(h.tree,'Show this area ↗').props.onClick();h.worker.onerror();await h.render();
- assert.equal(findNode(h.tree,n=>n.props?.className==='cutawayCanvas'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Area 3D navigation'),undefined);assert.ok(findNode(h.tree,n=>n.props?.['aria-label']==='Record time navigation'));assert.ok(button(h.tree,'Reset record filters'));assert.match(text(h.tree),/No source columns are displayed/);h.h.dispose();
+ assert.equal(findNode(h.tree,n=>n.props?.className==='cutawayCanvas'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Area 3D navigation'),undefined);assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Record time navigation'),undefined);assert.ok(button(h.tree,'Reset record filters'));assert.match(text(h.tree),/No recorded intervals at this time/);h.h.dispose();
 });
 
 
@@ -265,15 +267,4 @@ test('opening the cutaway prepares scene code once without allocating a renderer
  h.session.onSnapshot({volume,image:null});await h.render();assert.equal(h.renderers.length,1);
  assert.deepEqual(h.moduleLoads,['three','controls'],'the committed scene uses the already prepared modules');
  assert.match(text(h.tree),/2 plotted columns/);h.h.dispose();
-});
-
-test('empty records retain source/time controls, and a found core commits its exact selector area',async()=>{
- const areas=[],map=locator(),h=await harness({map,actualSession:true,onArea:b=>areas.push(b)});
- await h.render({records:[],recordsAvailable:0,recordTools:{type:'nav',props:{'aria-label':'Sample sources',children:'Cores only'}}});
- button(h.tree,'Show this area ↗').props.onClick();await h.render();
- assert.ok(findNode(h.tree,n=>n.props?.['aria-label']==='Record time navigation'),'zero eligible records must not hide recovery controls');
- assert.ok(findNode(h.tree,n=>n.props?.['aria-label']==='Sample sources'));assert.match(text(h.tree),/No source columns are displayed/);
- const target={id:1,point:[-100.61469,38.425786]};await h.render({recordTarget:target});h.flush(80);await h.render();
- assert.deepEqual([map.getCenter().lng,map.getCenter().lat],target.point);assert.equal(map.getZoom(),13);assert.deepEqual([...areas.at(-1)],map.extent);assert.equal(h.requests.length,2);
- await h.render({recordTarget:target});assert.equal(h.requests.length,2,'rerender must not reacquire the area');h.h.dispose();
 });

@@ -1,9 +1,0 @@
-{
-  "application": "Kansas Frontier Matrix Explorer",
-  "composition": "godaddy-node-preview",
-  "source_site_version": 259,
-  "source_commit": "441c3e29581ffb0293d8e643e5c37eed50319032",
-  "target_app": "q9r9beo47t",
-  "verification": "local build, type check, production HTTP tests and browser smoke passed; hosted preview pending",
-  "release_status": "preview candidate; staff identity, storage migration and paid reports not configured"
-}

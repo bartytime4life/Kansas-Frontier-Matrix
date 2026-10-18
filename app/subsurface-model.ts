@@ -12,11 +12,12 @@ export type Borehole = {
 export type DisplaySource = { id: string; title: string; url: string; retrievedAt: string; sourceTime: string; limitation: string; sha256: string };
 export type SubsurfaceManifest = {
   version: 1; capturedAt: string; sources: DisplaySource[];
-  tiles: { id: string; bounds: [number, number, number, number]; url: string; count: number; sha256: string; decodedSha256?: string }[];
+  tiles: { id: string; bounds: [number, number, number, number]; url: string; count: number; sha256: string }[];
   totals: Record<string, number>; counties: { name: string; coordinates: Position; count: number }[];
-  locator?: { url: string; sha256: string; decodedSha256?: string };
+  locator?: { url: string; sha256: string };
 };
 export type SubsurfaceContext = {
+  publicRelease?: { packageId: string; expiresAt: number };
   version: 1; capturedAt: string; anchor: Position; pinned: boolean; transect: Position[];
   depthRange: [number, number]; display: "section" | "3d" | "aquifer" | "surveys" | "soil";
   exaggeration: number; selectedSources: string[]; sourceVersions: DisplaySource[];
@@ -61,7 +62,7 @@ export function validGeophysicalSurvey(v: unknown): v is GeophysicalSurvey {
 }
 const strings = (v: unknown, count: number, length: number) => Array.isArray(v) && v.length <= count && v.every(s => str(s, length));
 export function validSubsurfaceContext(v: unknown): v is SubsurfaceContext {
-  return obj(v) && v.version === 1 && str(v.capturedAt) && Number.isFinite(Date.parse(v.capturedAt)) && validPosition(v.anchor) && inKansas(v.anchor)
+  return obj(v) && (v.publicRelease === undefined || obj(v.publicRelease) && str(v.publicRelease.packageId, 71) && /^sha256:[a-f0-9]{64}$/.test(v.publicRelease.packageId) && num(v.publicRelease.expiresAt)) && v.version === 1 && str(v.capturedAt) && Number.isFinite(Date.parse(v.capturedAt)) && validPosition(v.anchor) && inKansas(v.anchor)
     && typeof v.pinned === "boolean" && Array.isArray(v.transect) && v.transect.length <= 100 && v.transect.every(p => validPosition(p) && inKansas(p))
     && Array.isArray(v.depthRange) && v.depthRange.length === 2 && v.depthRange.every(num) && v.depthRange[0] >= 0 && v.depthRange[1] > v.depthRange[0] && v.depthRange[1] <= 12000
     && ["section", "3d", "aquifer", "surveys", "soil"].includes(String(v.display)) && num(v.exaggeration) && v.exaggeration >= 1 && v.exaggeration <= 100
@@ -128,17 +129,6 @@ export function areaColumns(records: Borehole[], bounds: AreaBounds): SectionRec
     .sort((a,b)=>a.distanceMeters-b.distanceMeters||a.record.id.localeCompare(b.record.id,"en")||a.record.sourceId.localeCompare(b.record.sourceId,"en"));
 }
 
-/** Keep both selected record kinds represented inside the existing display budget.
- * The input stays ranked by proximity; no source record or interval is changed. */
-export function displayColumns(ranked: SectionRecord[], limit = 50): SectionRecord[] {
-  if (ranked.length <= limit) return ranked.slice();
-  const kinds = ["well", "core"] as const;
-  const selected = new Set<SectionRecord>();
-  for (const kind of kinds) for (const row of ranked.filter(row => row.record.kind === kind).slice(0, Math.floor(limit / kinds.length))) selected.add(row);
-  for (const row of ranked) { if (selected.size >= limit) break; selected.add(row); }
-  return ranked.filter(row => selected.has(row));
-}
-
 export function intervalIssues(intervals: DepthInterval[]): { gaps: [number, number][]; overlaps: [number, number][] } {
   const result = { gaps: [] as [number, number][], overlaps: [] as [number, number][] }; let end = 0;
   for (const i of [...intervals].sort((a, b) => a.top - b.top || a.bottom - b.bottom)) {
@@ -147,6 +137,16 @@ export function intervalIssues(intervals: DepthInterval[]): { gaps: [number, num
     end = Math.max(end, i.bottom);
   }
   return result;
+}
+
+/** Source-quality disclosure in the record's original units; never clips logs. */
+export function boreholeDepthQuality(record: Pick<Borehole, "totalDepth" | "intervals">): {
+  reportedTotalDepth: number | null; deepestInterval: number | null; exceedsReportedTotal: boolean;
+} {
+  const ends = record.intervals.map(interval => interval.bottom).filter(Number.isFinite);
+  const deepestInterval = ends.length ? Math.max(...ends) : null;
+  const reportedTotalDepth = record.totalDepth;
+  return { reportedTotalDepth, deepestInterval, exceedsReportedTotal: reportedTotalDepth !== null && deepestInterval !== null && deepestInterval > reportedTotalDepth };
 }
 export function intervalColor(i: DepthInterval): string {
   // Visual encoding of the supplied description only; these colors do not infer geology between wells.

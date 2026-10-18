@@ -1,12 +1,14 @@
+import { PRIVATE_PROFILE_URL_TEST_ONLY } from './private-profile-test-only.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
 import ts from 'typescript';
 const url = value => `data:text/javascript;base64,${Buffer.from(value).toString('base64')}`;
 const compile = async path => ts.transpileModule(await readFile(path, 'utf8'), {compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
+const sessionUrl = url(await compile('app/local-companion-session.ts'));
 const bounded = url(await compile('app/bounded-json.ts'));
-const intake = url((await compile('app/intake-desk-client.ts')).replace('"./bounded-json"', JSON.stringify(bounded)));
-const client = await import(url((await compile('app/local-atlas-client.ts')).replace('"./bounded-json"', JSON.stringify(bounded)).replace('"./intake-desk-client"', JSON.stringify(intake))));
+const intake = url((await compile('app/intake-desk-client.ts')).replace('"./public-profile"', JSON.stringify(PRIVATE_PROFILE_URL_TEST_ONLY)).replace('"./local-companion-session"', JSON.stringify(sessionUrl)).replace('"./bounded-json"', JSON.stringify(bounded)));
+const client = await import(url((await compile('app/local-atlas-client.ts')).replace('"./public-profile"', JSON.stringify(PRIVATE_PROFILE_URL_TEST_ONLY)).replace('"./local-companion-session"', JSON.stringify(sessionUrl)).replace('"./bounded-json"', JSON.stringify(bounded)).replace('"./intake-desk-client"', JSON.stringify(intake))));
 const renderer = await import(url(await compile('app/local-atlas-map.ts')));
 const feature = (value, name='A') => ({type:'Feature',properties:{name,value},geometry:{type:'Polygon',coordinates:[[[-100,38],[-99,38],[-99,39],[-100,38]]]}});
 const preview = (patch={}) => ({schema:'kfm-local-atlas-preview/v1',id:'fixture',kind:'vector',title:'Synthetic fixture',source:{role:'test only',attribution:'fixture',sourceUrl:null,sha256:null},time:{kind:'test',label:'test',start:null,end:null,processedAt:null},units:'mm',bounds:[-100,38,-99,39],limitations:[],displayedCount:3,totalCount:3,truncated:false,authority:{admission:false,evidence:false,release:false},numericFields:['value'],valueField:'value',data:{type:'FeatureCollection',features:[feature(-2),feature(4,'B'),feature(null,'C')]},...patch});

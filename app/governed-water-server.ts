@@ -1,3 +1,5 @@
+import { publicFamilyAuthorization } from "./public-release-server";
+import { PublicReleaseError } from "./public-release";
 import { env } from "cloudflare:workers";
 import { getRawDb } from "../db";
 import { parseWaterPackage, projectWater, waterNegative, object, parseWaterJson, WATER_PACKAGE_LIMIT } from "./governed-water";
@@ -25,11 +27,12 @@ export async function governedWaterRead(request: Request, view: string) {
           if (new TextEncoder().encode(text).length !== stored.size) throw new Error("PACKAGE_SIZE_MISMATCH");
           const pkg = await parseWaterPackage(text);
           if (pkg.manifest.package_id !== active.package_id) throw new Error("ACTIVE_BINDING_MISMATCH");
+        await publicFamilyAuthorization("water", active.package_id, text, object(parseWaterJson(active.decision_json)), request);
           result = await projectWater(pkg, object(parseWaterJson(active.decision_json)), view, new Date().toISOString(), url.searchParams.get("station_id"));
         }
       }
     }
-  } catch { status = 503; result = await waterNegative("RELEASE_STORE_UNAVAILABLE", now, "ERROR"); }
+  } catch (error) { status = error instanceof PublicReleaseError ? 200 : 503; result = await waterNegative(error instanceof PublicReleaseError ? "NO_APPROVED_SNAPSHOT" : "RELEASE_STORE_UNAVAILABLE", now, error instanceof PublicReleaseError ? "ABSTAIN" : "ERROR"); }
   // Never log identity headers, query text, source content, or model inputs.
   console.info(JSON.stringify({ event: "governed_read", component: "site-water", build: "kfm-water-v1", correlation_id: correlation, source_id: "usgs-nwis", outcome: result.envelope.outcome, reason_code: result.envelope.reason_code, duration_ms: Date.now() - start }));
   return Response.json(result, { status, headers: { ...WATER_HEADERS, "X-KFM-Correlation-ID": correlation } });

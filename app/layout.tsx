@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PUBLIC_SITE_ORIGIN } from "./crawler-discovery";
+import { SITE_IDENTITY } from "./site-identity";
 import { PersistentSelectMenus } from "./persistent-select-menus";
 import "./globals.css";
 import "./map-layers.css";
@@ -8,28 +8,14 @@ import "./local-atlas.css";
 import "./scene-effects.css";
 
 export async function generateMetadata(): Promise<Metadata> {
-  // This separate GoDaddy composition uses its verified public domain. Keep the
-  // preserved Sites identity snapshot unchanged; never derive identity from Host.
-  const metadataBase = new URL(PUBLIC_SITE_ORIGIN);
-  const socialImage = new URL("/og-guided.png", metadataBase).toString();
-
+  // Canonical metadata is deployment identity, never caller-controlled routing input.
+  const metadataBase = new URL(SITE_IDENTITY.canonicalUrl);
   return {
-    title: "Kansas Frontier Matrix Explorer",
-    description: "Explore Kansas through a MapLibre vector-map-first Living Atlas, then use bounded evidence, time, reports, and Qwen context when needed.",
+    title: "Kansas Frontier Matrix — Public Preview",
+    description: "Explore Kansas maps, source dates, terrain and recorded-log tools. Public data delivery remains release-gated.",
     metadataBase,
-    openGraph: {
-      title: "Kansas Frontier Matrix Explorer",
-      description: "Start on a real MapLibre Kansas vector context, inspect place and time context, and ask Qwen about bounded map context.",
-      type: "website",
-      url: PUBLIC_SITE_ORIGIN,
-      images: [{ url: socialImage, width: 1731, height: 909, alt: "Kansas Frontier Matrix map and source context" }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Kansas Frontier Matrix Explorer",
-      description: "Start on a real MapLibre Kansas vector context, inspect place and time context, and ask Qwen about bounded map context.",
-      images: [socialImage],
-    },
+    robots: { index: false, follow: false },
+    openGraph: { title: "Kansas Frontier Matrix — Public Preview", description: "A separate KFM public edition under review.", type: "website" },
   };
 }
 

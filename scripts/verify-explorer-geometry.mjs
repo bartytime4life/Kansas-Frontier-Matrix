@@ -150,10 +150,10 @@ const activateWorkspace = async (name, label = name) => {
   await activateMatching(".header-overflow-workspaces", "button", name, label);
 };
 const activateMode = async (width, name, label = name) => {
-  const container = width >= 1200 ? ".map-dock-representations" : ".map-dock-menu-representations";
-  if (width < 1200) await openMenu(".map-dock-map-menu", "Map views and controls");
+  const container = ".map-dock-menu-representations";
+  await openMenu(".map-dock-map-menu", "Map views and controls");
   await activateMatching(container, "button", name, label);
-  if (width < 1200) assert.equal(await evaluate(`document.querySelector(".map-dock-map-menu")?.open`), false, `${label} must close the Map menu`);
+  assert.equal(await evaluate(`document.querySelector(".map-dock-map-menu")?.open`), false, `${label} must close the Map menu`);
 };
 const activateStatus = async () => {
   await openMenu(".header-overflow-menu", "More site actions");
@@ -291,7 +291,7 @@ for (const width of [1920, 1800, 1799, 1440, 1200, 1199, 1024, 768, 760, 390]) {
       directBasemap: visible(document.querySelector(".map-dock-basemap")),
       directControls: visible(document.querySelector(".map-dock-action.map-dock-wide-only")),
       mapOverflow: visible(document.querySelector(".map-dock-map-menu > summary")),
-      controlsInOverflow: [...document.querySelectorAll(".map-dock-map-menu button")].some((button) => visible(button) && button.textContent.includes("Map controls")),
+      controlsInOverflow: [...document.querySelectorAll(".map-dock-map-menu button")].some((button) => visible(button) && button.textContent.includes("Appearance")),
       mobileBrand: visible(document.querySelector(".brand-lockup .mark")),
       qwenClearsMobileDock: !launcher || !mobileDock || launcher.bottom <= mobileDock.top - 4,
     };
@@ -314,14 +314,14 @@ for (const width of [1920, 1800, 1799, 1440, 1200, 1199, 1024, 768, 760, 390]) {
     `${width}px map controls escaped the single header row`);
   assertNear(geometry.stage.top, geometry.header.bottom, `${width}px map starts directly below the header`);
   assert.equal(geometry.headerFocusOrder[0], "Search places, layers, official data…");
-  assert.equal(geometry.directModes, width >= 1200, `${width}px representation placement`);
+  assert.equal(geometry.directModes, false, `${width}px representation placement`);
   assert.equal(geometry.directQuickControls, width > 760, `${width}px quick control placement`);
-  assert.equal(geometry.menuModes, width < 1200, `${width}px menu representations`);
+  assert.equal(geometry.menuModes, true, `${width}px menu representations`);
   assert.equal(geometry.menuQuickControls, width <= 760, `${width}px menu quick controls`);
-  assert.equal(geometry.directBasemap, width >= 1800, `${width}px direct basemap`);
+  assert.equal(geometry.directBasemap, false, `${width}px direct basemap`);
   assert.equal(geometry.directControls, width >= 1800, `${width}px direct controls`);
-  assert.equal(geometry.mapOverflow, width < 1800, `${width}px Map menu`);
-  assert.equal(geometry.controlsInOverflow, width < 1800, `${width}px controls in Map menu`);
+  assert.equal(geometry.mapOverflow, true, `${width}px Map menu`);
+  assert.equal(geometry.controlsInOverflow, true, `${width}px controls in Map menu`);
   if (width === 390) {
     assert.equal(geometry.mobileBrand, true);
     assert.equal(geometry.qwenClearsMobileDock, true);
@@ -347,9 +347,7 @@ for (const width of [1920, 1800, 1799, 1440, 1200, 1199, 1024, 768, 760, 390]) {
     const effectsElement = document.querySelector(".map-effects");
     const panelElement = document.querySelector('section[aria-label="Underground workspace"]');
     const launcherElement = document.querySelector(".qwen-map-launch");
-    const triggerElement = document.querySelector(innerWidth >= 1200
-      ? '.map-dock-representations button[aria-label="Underground Logs & sections"]'
-      : ".map-dock-map-menu > summary");
+    const triggerElement = document.querySelector(".map-dock-map-menu > summary");
     const closeElement = document.querySelector('button[aria-label="Close Underground"]');
     const rect = (element) => {
       if (!(element instanceof Element)) return null;
@@ -426,7 +424,7 @@ for (const width of [1920, 1800, 1799, 1440, 1200, 1199, 1024, 768, 760, 390]) {
   assert.ok(underground.launcher.top >= underground.canvas.top - 1 && underground.launcher.bottom <= underground.panel.top - 12,
     `${width}px Qwen launcher is not reachable in the exposed locator map`);
   for (const [selector, label] of [
-    [width >= 1200 ? '.map-dock-representations button[aria-label="Underground Logs & sections"]' : ".map-dock-map-menu > summary", "Underground mode access"],
+    [".map-dock-map-menu > summary", "Underground mode access"],
     ['[aria-label="Underground 2D locator"] button:nth-of-type(1)', "Use map center"],
     ['[aria-label="Underground 2D locator"] button:nth-of-type(2)', "Find selection"],
     ['[aria-label="Underground 2D locator"] button:nth-of-type(3)', "Reset to 2D"],
@@ -475,36 +473,34 @@ await activateWorkspace("Map", "Map workspace");
 await waitFor(`!document.querySelector(".primary-workspace-surface")`);
 covered("Map / Reports / Stories", 1920);
 
-await activateSelector('.map-dock-representations button[aria-label="Underground Logs & sections"]', "Underground");
+await activateMode(1920, "Underground");
 await waitFor(`Boolean(document.querySelector('section[aria-label="Underground workspace"]'))`);
 await activateSelector('button[aria-label="Close Underground"]', "Close Underground");
 await waitFor(`!document.querySelector('section[aria-label="Underground workspace"]')`);
-await activateMatching(".map-dock-representations", "button", "2D", "2D Map");
-await waitFor(`document.querySelector('.map-dock-representations button:nth-of-type(2)')?.getAttribute('aria-pressed') === 'true'`);
-await activateMatching(".map-dock-representations", "button", "Terrain 3D", "Terrain 3D");
-await waitFor(`[...document.querySelectorAll('.map-dock-representations button')].some((button) => button.querySelector('b')?.textContent === 'Terrain 3D' && button.getAttribute('aria-pressed') === 'true')`);
-await activateMatching(".map-dock-representations", "button", "Globe", "Globe");
-await waitFor(`[...document.querySelectorAll('.map-dock-representations button')].some((button) => button.querySelector('b')?.textContent === 'Globe' && button.getAttribute('aria-pressed') === 'true')`);
-await activateMatching(".map-dock-representations", "button", "Compare", "Compare A/B");
+await activateMode(1920, "2D", "2D Map");
+await waitFor(`document.querySelector('.map-dock-menu-representations button:nth-of-type(2)')?.getAttribute('aria-pressed') === 'true'`);
+await activateMode(1920, "Terrain 3D", "Terrain 3D");
+await waitFor(`[...document.querySelectorAll('.map-dock-menu-representations button')].some((button) => button.querySelector('b')?.textContent === 'Terrain 3D' && button.getAttribute('aria-pressed') === 'true')`);
+await activateMode(1920, "Globe", "Globe");
+await waitFor(`[...document.querySelectorAll('.map-dock-menu-representations button')].some((button) => button.querySelector('b')?.textContent === 'Globe' && button.getAttribute('aria-pressed') === 'true')`);
+await activateMode(1920, "Compare", "Compare A/B");
 await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-open') === 'true' && document.querySelector('.map-utility-panel')?.getAttribute('data-view') === 'compare'`);
 await pressKey("Escape");
 covered("Underground / 2D / Terrain / Globe / Compare", 1920);
 
 await reloadAt(1920);
-const desktopBasemapBefore = await evaluate(`document.querySelector('.map-dock-basemap select')?.value`);
-await focusSelector('.map-dock-basemap select[aria-label="Choose basemap style"]', "Basemap");
+await openMenu(".map-dock-map-menu", "Map views and controls");
+await activateMatching(".map-dock-map-menu", "button", "Appearance", "Map Appearance");
+await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-open') === 'true' && document.querySelector('.map-utility-panel')?.getAttribute('data-view') === 'scene'`);
+const desktopBasemapBefore = await evaluate(`document.querySelector('select[aria-label="Appearance basemap"]')?.value`);
+await focusSelector('select[aria-label="Appearance basemap"]', "Basemap");
 await pressLetter("m");
 await pause(100);
-assert.notEqual(await evaluate(`document.querySelector('.map-dock-basemap select')?.value`), desktopBasemapBefore, "Basemap did not respond to the keyboard");
-covered("Basemap", 1920);
-
-await activateSelector(".map-dock-action.map-dock-wide-only", "Map controls");
-await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-open') === 'true'
-  && document.querySelector('.map-utility-panel')?.getAttribute('data-view') === 'navigate'
-  && document.querySelector('.map-utility-panel')?.contains(document.activeElement)`);
-await assertMinimumTarget('.map-utility-panel button[aria-label^="Close "]', "Map controls close");
+assert.notEqual(await evaluate(`document.querySelector('select[aria-label="Appearance basemap"]')?.value`), desktopBasemapBefore, "Basemap did not respond to the keyboard");
+await assertMinimumTarget('button[aria-label="Underground recorded layers"]', "Appearance Underground");
+await assertMinimumTarget('.map-utility-panel button[aria-label^="Close "]', "Appearance close");
 await pressKey("Escape");
-covered("Map controls direct", 1920);
+covered("Map Appearance / basemap / Underground", 1920);
 
 await reloadAt(1920);
 await activateMatching(".map-dock-actions", "button", "Time", "Time");
@@ -602,8 +598,9 @@ await waitFor(`!document.querySelector(".primary-workspace-surface")`);
 covered("Overflow Map / Reports / Stories", 1024);
 
 await activateSelector(".map-dock-map-menu > summary", "Map dock overflow", "Space");
-await activateMatching(".map-dock-map-menu", "button", "Style & basemap", "Style & basemap");
-await waitFor(`Boolean(document.querySelector('#map-settings[open]') && document.activeElement === document.querySelector('#map-settings > summary'))`);
+await activateMatching(".map-dock-map-menu", "button", "Appearance", "Appearance");
+await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-view') === 'scene' && document.querySelector('.map-utility-panel')?.contains(document.activeElement)`);
+await activateSelector('#map-settings > summary', 'Terrain tools, sources and rendering');
 const renderQualityBefore = await evaluate(`document.querySelector('select[aria-label="Map rendering quality"]')?.value`);
 await focusSelector('select[aria-label="Map rendering quality"]', "Rendering quality");
 await assertMinimumTarget('select[aria-label="Map rendering quality"]', "Rendering quality");
@@ -614,13 +611,18 @@ covered("Style & basemap / Rendering quality", 1024);
 
 await reloadAt(1024);
 await activateSelector(".map-dock-map-menu > summary", "Map dock overflow", "Space");
-await activateMatching(".map-dock-map-menu", "button", "Map controls", "Overflow Map controls");
+await activateMatching(".map-dock-map-menu", "button", "Appearance", "Overflow Appearance");
 await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-open') === 'true'
-  && document.querySelector('.map-utility-panel')?.getAttribute('data-view') === 'navigate'
+  && document.querySelector('.map-utility-panel')?.getAttribute('data-view') === 'scene'
   && document.querySelector('.map-utility-panel')?.contains(document.activeElement)`);
-for (const section of ["Inspect", "Scene", "Measure", "Report", "Export"]) {
+for (const [section, key] of [["Appearance", "scene"], ["Measure", "measure"]]) {
   await activateMatching(".map-utility-tabs", "button", section, `${section} map control section`);
-  await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-view') === ${JSON.stringify(section.toLowerCase())}`);
+  await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-view') === ${JSON.stringify(key)}`);
+}
+for (const [section, key] of [["Inspect records", "inspect"], ["Reports", "report"], ["Export", "export"]]) {
+  await openMenu(".explorer-advanced-navigation", "Advanced tools");
+  await activateMatching(".explorer-advanced-navigation", "button", section, section);
+  await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-view') === ${JSON.stringify(key)}`);
 }
 await activateMatching(".map-utility-tabs", "button", "Measure", "Measure map control section");
 for (const mode of ["Point", "Line", "Polygon"]) {
@@ -727,7 +729,8 @@ covered("Mobile Time", 390);
 
 await reloadAt(390);
 await activateMatching(".map-mobile-actions", "button", "Style", "Mobile Style");
-await waitFor(`Boolean(document.querySelector('#map-settings[open]') && document.activeElement === document.querySelector('#map-settings > summary'))`);
+await waitFor(`document.querySelector('.map-utility-panel')?.getAttribute('data-view') === 'scene' && document.querySelector('.map-utility-panel')?.contains(document.activeElement)`);
+await activateSelector('#map-settings > summary', 'Terrain tools, sources and rendering');
 await pressKey("Escape");
 await waitFor(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden') === 'true'`);
 covered("Mobile Style", 390);

@@ -11,16 +11,14 @@ test("mobile map keeps one header row with named menus and reachable map actions
   ]);
 
   assert.match(page, /<nav className="map-chrome-dock" aria-label="Map view and controls">/);
+  assert.doesNotMatch(page, /<div className="map-dock-representations"/);
   assert.match(page, /<div className="map-dock-menu-representations" role="group" aria-label="Map representation"/);
-  assert.doesNotMatch(page, /className="map-dock-representations"/);
   assert.match(page, /<nav className="map-mobile-actions" aria-label="Mobile map actions">/);
   for (const label of ["Map layers", "Places", "Sources", "Time", "Style"]) assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
   assert.match(page, /onClick=\{openMapSettings\}>Style<\/button>/);
   assert.match(page, /const openMapSettings = useCallback\(\(\) => \{\s*openMapUtility\("scene"\)/);
   assert.match(page, /<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
-  assert.match(toolbar, /aria-label="Source recovery and original files"/);
-  assert.match(page, /<LayerSourceNotices issues=\{sourceIssues\}/);
-  assert.doesNotMatch(page, /<DataNotices|<LocalAtlasControl|<LocalMapArchiveLoader/);
+  assert.match(toolbar, /aria-label="Open data and download notices"/);
   assert.match(css, /safe-area-inset-bottom/);
   assert.match(css, /:root \{[\s\S]*?--global-header-height:\s*54px;[\s\S]*?--mobile-header-height:\s*54px;[\s\S]*?--topbar:\s*var\(--global-header-height\);/);
   assert.match(css, /@media \(min-width: 761px\) and \(max-width: 1100px\) \{[\s\S]*?\.mobile-primary-tabs \{ display: none; \}/);

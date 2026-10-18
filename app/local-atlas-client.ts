@@ -1,3 +1,5 @@
+import { IS_PUBLIC_COPY } from "./public-profile";
+import { companionSession } from "./local-companion-session";
 import { readBoundedJson } from "./bounded-json";
 import { INTAKE_DESK_ORIGIN } from "./intake-desk-client";
 
@@ -88,8 +90,9 @@ export function parseAtlasCoverage(v: unknown): AtlasCoverage | null {
 
 export async function atlasRequest<T>(path: string, signal: AbortSignal, parse: (v: unknown) => T | null, body?: unknown, token?: string): Promise<T> {
   const combined = AbortSignal.any([signal, AbortSignal.timeout(body ? 30_000 : 15_000)]);
-  const response = await fetch(`${INTAKE_DESK_ORIGIN}${path}`, { signal: combined, credentials: "omit", cache: "no-store", redirect: "error",
-    ...(body ? { method: "POST", headers: { "Content-Type": "application/json", "X-KFM-Session": token ?? "" }, body: JSON.stringify(body) } : {}) });
+  if (IS_PUBLIC_COPY) throw new Error("Operator services are unavailable in this public copy.");
+  const response = await fetch(`${INTAKE_DESK_ORIGIN}${path}`, { signal: combined, credentials: "omit", cache: "no-store", redirect: "error", headers: { "X-KFM-Session": companionSession("intake") },
+    ...(body ? { method: "POST", headers: { "Content-Type": "application/json", "X-KFM-Session": token ?? companionSession("intake") }, body: JSON.stringify(body) } : {}) });
   const value = await readBoundedJson(response, 12 * 1024 * 1024, combined);
   combined.throwIfAborted();
   if (!response.ok) throw new Error(object(value) && string(value.error) ? value.error : "The local companion could not prepare this view.");

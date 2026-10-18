@@ -1,4 +1,5 @@
 "use client";
+import { IS_PUBLIC_COPY, PUBLIC_RELEASE_RECHECK_MS, publicFamilyAvailable } from "./public-profile";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -15,7 +16,7 @@ import {
 import SnapshotMap from "./snapshot-map";
 import { readDraft, REPORT_STORAGE_KEY, STORY_STORAGE_KEY } from "./workspace-storage";
 import { FIRE_REPORT_SOURCES, type FireReportContext } from "./fire-report-analysis";
-import { subsurfaceMarkdown, sectionSvg, intervalCsv, type SubsurfaceContext } from "./subsurface-model";
+import { subsurfaceMarkdown, sectionSvg, type SubsurfaceContext } from "./subsurface-model";
 import { researchMarkdown, type ResearchContext } from "./research-context";
 
 type WorkspaceMode = "reports" | "stories";
@@ -303,7 +304,29 @@ export default function ReportStoryWorkspaces({
     setStoryPlayIndex((index) => Math.min(index, scenes.length - 1));
   };
 
-  const exportReport = (format: "markdown" | "json") => {
+  const [publicReportReady, setPublicReportReady] = useState(!IS_PUBLIC_COPY);
+  const [publicExportMessage, setPublicExportMessage] = useState("");
+  useEffect(() => {
+    if (!IS_PUBLIC_COPY) return;
+    let cancelled = false;
+    const recheck = async () => {
+      const lease = report.subsurfaceContext?.publicRelease;
+      const allowed = Boolean(lease && lease.expiresAt > Date.now() && await publicFamilyAvailable("subsurface", AbortSignal.timeout(10000), lease.packageId));
+      if (!cancelled) setPublicReportReady(allowed);
+    };
+    void recheck();
+    const remaining = (report.subsurfaceContext?.publicRelease?.expiresAt ?? 0) - Date.now();
+    const expiry = remaining > 0 ? setTimeout(() => setPublicReportReady(false), Math.min(remaining, 2147483647)) : null;
+    const timer = setInterval(() => { if (!document.hidden) void recheck(); }, PUBLIC_RELEASE_RECHECK_MS);
+    const resume = () => { if (!document.hidden) void recheck(); };
+    document.addEventListener("visibilitychange", resume);
+    return () => { cancelled = true; clearInterval(timer); if (expiry !== null) clearTimeout(expiry); document.removeEventListener("visibilitychange", resume); };
+  }, [report.subsurfaceContext]);
+  const exportReport = async (format: "markdown" | "json") => {
+    const captured = report.subsurfaceContext;
+    if (IS_PUBLIC_COPY && captured && (!captured.publicRelease || !(await publicFamilyAvailable("subsurface", AbortSignal.timeout(10000), captured.publicRelease.packageId)))) {
+      setPublicReportReady(false); setPublicExportMessage("Export withheld: this captured public release is no longer active."); return;
+    }
     const stem = safeFileName(report.title, "kansas-map-investigation");
     if (format === "json") {
       downloadText(`${stem}.json`, JSON.stringify({ ...report, authority: "DRAFT_NOT_PUBLISHED" }, null, 2), "application/json");
@@ -319,6 +342,7 @@ export default function ReportStoryWorkspaces({
 
   return (
     <section className="primary-workspace-surface" data-workspace={mode} aria-labelledby="primary-workspace-title">
+      <p role="status">{publicExportMessage}</p>
       <header className="primary-workspace-header">
         <div>
           <span>KANSAS FRONTIER MATRIX · DEVICE-LOCAL WORKSPACE</span>
@@ -354,11 +378,11 @@ export default function ReportStoryWorkspaces({
 
         <main className="report-paper" aria-label="Editable report draft">
           <div className="paper-rule"><span>KFM FIELD NOTE</span><strong>DRAFT</strong></div>
-          {report.subsurfaceContext && <section className="fire-report-source-card" aria-label="Captured underground context">
+          {report.subsurfaceContext && publicReportReady && <section className="fire-report-source-card" aria-label="Captured underground context">
             <strong>Underground · dated source snapshot</strong><p>Captured {report.subsurfaceContext.capturedAt}. Provider context remains separate from included evidence.</p>
             <img alt="Captured recorded-depth columns, with source gaps retained" style={{ width: "100%" }} src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(sectionSvg(report.subsurfaceContext) ?? "")}`} />
-            <button type="button" onClick={() => downloadText("kfm-underground-intervals.csv", intervalCsv(report.subsurfaceContext!) ?? "", "text/csv")}>Export captured intervals</button>
-            <button type="button" onClick={() => downloadText("kfm-underground-section.svg", sectionSvg(report.subsurfaceContext!) ?? "", "image/svg+xml")}>Export captured section image</button>
+            <button type="button" onClick={() => void exportReport("json")}>Export captured report with release check</button>
+            
             <details><summary>Captured sources and limitations</summary><pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{subsurfaceMarkdown(report.subsurfaceContext)}</pre></details>
           </section>}
           {report.researchContext && <section className="fire-report-source-card" aria-label="Captured place dossier">
@@ -398,9 +422,9 @@ export default function ReportStoryWorkspaces({
             </article>)}{snapshotEvidence.length === 0 && <p className="empty-workspace-state">No claim-bearing evidence reference matches this map snapshot. The draft may record the gap, but it cannot publish a fallback claim.</p>}</div>
           </section>
           <div className="workspace-export-actions">
-            <p role="status">Free exports · your draft stays on this device.</p>
             <button type="button" onClick={() => exportReport("markdown")}>Export Markdown</button>
-            <button type="button" onClick={() => exportReport("json")}>Export report JSON</button>
+            <button type="button" onClick={() => exportReport("json")}>Export JSON</button>
+            <button type="button" onClick={() => window.print()}>Print clean view</button>
             <button type="button" disabled title="Publication requires evidence, policy, review, and release gates">Publish unavailable</button>
           </div>
         </aside>

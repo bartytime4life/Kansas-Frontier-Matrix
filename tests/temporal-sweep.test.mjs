@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
+import { PRIVATE_PROFILE_URL_TEST_ONLY } from "./private-profile-test-only.mjs";
 
 const buildClockSource = await readFile(new URL("../app/build-clock.ts", import.meta.url), "utf8");
 const buildClockJavascript = ts.transpileModule(buildClockSource, {
@@ -13,7 +14,9 @@ const withBuildClock = (source) => source.replace('from "./build-clock";', `from
 
 const compileModuleUrl = async (name, transform = (source) => source) => {
   const source = await readFile(new URL(`../app/${name}.ts`, import.meta.url), "utf8");
-  const output = ts.transpileModule(withBuildClock(transform(source)), {
+  // TEST-ONLY: preserve private provider frame/projection regressions; the real
+  // immutable public profile is tested separately for overlay denial.
+  const output = ts.transpileModule(withBuildClock(transform(source)).replace('from "./public-profile";', `from "${PRIVATE_PROFILE_URL_TEST_ONLY}";`), {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
     fileName: `${name}.ts`,
   }).outputText;

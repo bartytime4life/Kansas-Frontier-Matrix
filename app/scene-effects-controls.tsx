@@ -206,12 +206,17 @@ function SceneEffectSwitches({settings, efficient, reducedMotion, cameraReady, v
   </div>;
 }
 
-type PanelProps = ControlsProps & Readonly<{ onRepresentation: (mode: SceneView) => void; onOpenChange?: (open: boolean) => void; toolbar?: boolean; rendering?: ReactNode }>;
+type PanelProps = ControlsProps & Readonly<{ onRepresentation: (mode: SceneView) => void; onOpenChange?: (open: boolean) => void; toolbar?: boolean; rendering?: ReactNode; open?: boolean }>;
 
 /** Floating Scene button on the map, available in every view. */
 export function ScenePanel(props: PanelProps) {
   const id = useId();
-  const [open, setOpen] = useState(false);
+  const [localOpen, setLocalOpen] = useState(false);
+  const open = props.open ?? localOpen;
+  const setOpen = (next: boolean) => {
+    if (props.open === undefined) setLocalOpen(next);
+    else props.onOpenChange?.(next);
+  };
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const onOpenChange = props.onOpenChange;
@@ -231,7 +236,7 @@ export function ScenePanel(props: PanelProps) {
     const node = root.current;
     node?.addEventListener("keydown", escape);
     return () => { document.removeEventListener("pointerdown", outside); node?.removeEventListener("keydown", escape); };
-  }, [open, props.surface?.mode, props.surface?.probeEnabled]);
+  }, [open, props.open, props.onOpenChange, props.surface?.mode, props.surface?.probeEnabled]);
   const recipe = matchingSceneRecipe({ ...props.presentation, settings: props.settings });
   const label = props.settings.sunSync ? "Following the sun" : recipe ? SCENE_RECIPES[recipe].label : "Custom";
   return <div className={props.toolbar ? "scene-panel scene-panel-toolbar" : "scene-panel"} ref={root} data-open={open || undefined}

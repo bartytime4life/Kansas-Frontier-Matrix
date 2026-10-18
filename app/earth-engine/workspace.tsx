@@ -89,7 +89,7 @@ export default function EarthEngineWorkspace() {
   return <main className={styles.page}>
     <header className={styles.header}>
       <Link href="/" className={styles.brand}>KFM <span>Kansas Frontier Matrix</span></Link>
-      <nav aria-label="Earth Engine navigation"><Link href="/">Explorer map</Link><Link href="/earth-engine" aria-current="page">Earth Engine</Link><Link href="/?layers=sources">Source status in Layers</Link><Link href="/acquisition">Receipts</Link><Link href="/data">Contribute data</Link></nav>
+      <nav aria-label="Earth Engine navigation"><Link href="/">Explorer map</Link><Link href="/earth-engine" aria-current="page">Earth Engine</Link><Link href="/downloads">Library &amp; downloads</Link><Link href="/acquisition">Receipts</Link><Link href="/data">Contribute data</Link></nav>
     </header>
     <section className={styles.intro} aria-labelledby="earth-engine-title">
       <div><p className={styles.eyebrow}>KANSAS / SOURCE DISCOVERY</p><h1 id="earth-engine-title">Earth Engine datasets & recipes</h1><p>Find a dataset, compare its limits, and prepare a Kansas analysis for review.</p></div>

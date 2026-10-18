@@ -1,3 +1,4 @@
+import { publicDecisionForActivation } from "../../../../public-release-server";
 import { activateWeatherPackage } from "../../../../governed-weather-admin";
 import { WaterAdminError } from "../../../../governed-water-admin";
 import { readBoundedText, waterAdminFailure, waterAdminHeaders, waterAdminStore, waterOwner, waterSameOrigin } from "../../../../governed-water-admin-server";
@@ -12,6 +13,10 @@ export async function POST(request: Request) {
     if (!request.headers.get("content-type")?.startsWith("application/json")) throw new WaterAdminError("JSON_REQUIRED", 415);
     let body: unknown;
     try { body = parseWaterJson(await readBoundedText(request, 16 * 1024)); } catch (error) { if (error instanceof WaterAdminError) throw error; throw new WaterAdminError("ACTIVATION_REQUEST_INVALID", 400); }
+    if (!body || typeof body !== "object" || Array.isArray(body)) throw new WaterAdminError("ACTIVATION_REQUEST_INVALID", 400);
+    const publicRequest = body as Record<string, unknown>;
+    if (Object.keys(publicRequest).some(key => !["package_id", "expected_active", "rollback"].includes(key)) || typeof publicRequest.package_id !== "string") throw new WaterAdminError("PUBLIC_ACTIVATION_INVALID", 400);
+    body = { ...publicRequest, decision: await publicDecisionForActivation("weather", publicRequest.package_id, request) };
     return Response.json(await activateWeatherPackage(waterAdminStore(), body, new Date().toISOString()), { headers: waterAdminHeaders });
   } catch (error) { return waterAdminFailure(error); }
 }

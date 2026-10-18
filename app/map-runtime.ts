@@ -1,3 +1,4 @@
+import { IS_PUBLIC_COPY } from "./public-profile";
 import type { Feature, FeatureCollection, Geometry, Position } from "geojson";
 import type {
   FilterSpecification,
@@ -25,7 +26,7 @@ const esriImageryContext = externalContextSource("esri-world-imagery");
 const openStreetMapContext = externalContextSource("openstreetmap-standard");
 const usgsTopoContext = externalContextSource("usgs-national-map-topo");
 
-export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: StyleSpecification | string }> = {
+const PRIVATE_BASEMAPS: Record<BasemapKey, { title: string; note: string; style: StyleSpecification | string }> = {
   standard: {
     title: "Standard vector context",
     note: "OpenFreeMap · OpenMapTiles · OpenStreetMap · display context · not evidence",
@@ -160,6 +161,12 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
     },
   },
 };
+// All callers, including restored camera recipes and copied cutaway styles, use this boundary.
+export const BASEMAPS: typeof PRIVATE_BASEMAPS = IS_PUBLIC_COPY ? {
+  ...PRIVATE_BASEMAPS, imagery: PRIVATE_BASEMAPS.standard, "kansas-aerial": PRIVATE_BASEMAPS.standard,
+  streets: PRIVATE_BASEMAPS.standard, topo: PRIVATE_BASEMAPS.standard,
+} : PRIVATE_BASEMAPS;
+
 
 const emptyCollection = (): FeatureCollection => ({ type: "FeatureCollection", features: [] });
 

@@ -8,10 +8,10 @@ type Locator = {
 };
 type WorkerPort = {
   postMessage(value: {id: number; bounds: VolumeBounds}): void;
-  onmessage: ((event: MessageEvent<{id: number; volume?: AquiferVolume; error?: string}>) => void) | null;
+  onmessage: ((event: MessageEvent<{id: number; volume?: AquiferVolume; error?: string; publicLease?: {packageId:string;expiresAt:number}}>) => void) | null;
   onerror: ((event: ErrorEvent) => unknown) | null;
 };
-export type AquiferViewSnapshot<Image> = {volume: AquiferVolume; image: Image | null; aquiferState?: "loading" | "ready" | "unavailable"};
+export type AquiferViewSnapshot<Image> = {publicLease?: {packageId:string;expiresAt:number};volume: AquiferVolume; image: Image | null; aquiferState?: "loading" | "ready" | "unavailable"};
 export function locatorBounds(map: Pick<Locator,"getBounds">): VolumeBounds {
   const b=map.getBounds();return [b.getWest(),b.getSouth(),b.getEast(),b.getNorth()];
 }
@@ -28,10 +28,10 @@ export function startAquiferView<Image>(options: {
   const {map,worker,sampleSurface,onSnapshot,onStatus,onSurfaceStatus}=options;
   const timers=options.timers??{set:(callback:()=>void,delay:number)=>globalThis.setTimeout(callback,delay),clear:(handle:unknown)=>globalThis.clearTimeout(handle as ReturnType<typeof setTimeout>)};
   let serial=0,disposed=false,awaitingLocator=false,requested=false,timeout:unknown,geometryTimeout:unknown,debounce:unknown,capture:(()=>void)|null=null;
-  let pending:{id:number;bounds:VolumeBounds;volume:AquiferVolume|null;image:Image|null;aquiferState:"loading"|"ready"|"unavailable"}|null=null;
+  let pending:{publicLease?: {packageId:string;expiresAt:number};id:number;bounds:VolumeBounds;volume:AquiferVolume|null;image:Image|null;aquiferState:"loading"|"ready"|"unavailable"}|null=null;
   const clearCapture=()=>{if(capture)map.off("render",capture);capture=null;timers.clear(timeout);};
-  const publish=()=>{if(pending?.volume)onSnapshot({volume:pending.volume,image:pending.image,aquiferState:pending.aquiferState});};
-  const unavailable=(message:string)=>{timers.clear(geometryTimeout);if(pending){pending.aquiferState="unavailable";publish();}onStatus(`${message} Independent recorded columns remain available; retry the area to retry aquifer ranges.`);};
+  const publish=()=>{if(pending?.volume)onSnapshot({volume:pending.volume,image:pending.image,aquiferState:pending.aquiferState,...(pending.publicLease?{publicLease:pending.publicLease}:{})});};
+  const unavailable=(message:string)=>{timers.clear(geometryTimeout);if(pending){pending.aquiferState="unavailable";if(pending.volume)pending.volume={...pending.volume,envelopes:[]};publish();}onStatus(`${message} Independent recorded columns remain available; retry the area to retry aquifer ranges.`);};
   const prepare=()=>{
     if(disposed)return;
     requested=true;awaitingLocator=true;
@@ -80,7 +80,7 @@ export function startAquiferView<Image>(options: {
       timers.clear(geometryTimeout);
       if(data.volume){
         if(!validVolumeBounds(data.volume.bounds)||!sameBounds(data.volume.bounds,pending.bounds)){unavailable("Aquifer response did not match the selected area; ranges withheld.");return;}
-        pending.volume=data.volume;pending.aquiferState="ready";publish();
+        pending.volume=data.volume;pending.publicLease=data.publicLease;pending.aquiferState="ready";publish();
         onStatus(`${data.volume.envelopes.length} aquifer overlap regions · 2022–2024${data.volume.heldClasses?` · ${data.volume.heldClasses} unbounded/missing classes withheld`:""}${data.volume.truncated?" · partial geometry":""}`);
       }else unavailable(data.error??"Aquifer ranges unavailable.");
     };

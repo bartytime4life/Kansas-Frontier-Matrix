@@ -17,8 +17,8 @@
 > version is saved and deployed; a local build or GitHub merge does not publish
 > them. [Local operation and recovery](docs/local-pc-consolidation.md)
 > records the physical data path separately from the current source alias.
-> [Governed water](docs/governed-water.md) remains subject to package review and
-> activation even when the application is deployed. Dated sections below retain
+> [Governed water](docs/governed-water.md), [reviewed daily weather](docs/governed-weather.md),
+> [reviewed soil moisture](docs/governed-soil.md), [reviewed storm event reports](docs/governed-storm-events.md) and [reviewed earthquakes](docs/governed-earthquakes.md) remain subject to package review and activation even when the application is deployed. Dated sections below retain
 > their original scope and are not current runtime or dependency-audit results.
 
 # Kansas Frontier Matrix Explorer
@@ -902,7 +902,10 @@ The model is grounded in metadata rather than raw data.
 organization, domain, cadence, freshness, `boundary` — what each source is
 *not* — and fallback), plus the curated `scripts/qwen-knowledge-curated.mjs`:
 KFM principles, a glossary of outcomes, evidence, release, and public states,
-per-domain exploration ideas, and project ideas. For each question the bridge
+source kinds, connection states, and the map-context fields the model reads,
+technical terms for each domain (sent only when that domain is relevant),
+six exploration ideas per domain, cross-domain ideas offered only when both of
+their domains are in view, and project ideas. For each question the bridge
 ranks sources by what is displayed and what was asked, sends full metadata for
 at most eight of them and a one-line index of the rest, and trims to a fixed
 byte budget alongside the map context. The pack ships with the companion, so a

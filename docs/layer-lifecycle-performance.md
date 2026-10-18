@@ -1,55 +1,5 @@
 # Layer lifecycle and performance — October 11, 2026
 
-## Cached terrain-raster toggles — October 13, 2026
-
-The GoDaddy composition at `d9b456a87b0b0bf1482d121f2f808748c4b569dc`
-preserved opacity across repeated toggles, but its hillshade status stayed at
-Loading after hiding and showing already cached tiles. Visibility reset the
-tile-status tracker even though MapLibre retained the same raster source and
-did not need to emit another tile completion.
-
-Ordinary hillshade/slope visibility changes now keep the exact renderer's tile
-results and immediately evaluate them against the current bounds, zoom and
-source readiness. Partial failures remain disclosed. Completion while hidden
-can establish a cached tile for that same source; it does not display a hidden
-layer or acquire new data. Replacing/removing the renderer source, changing the
-basemap, or explicitly retrying invalidates the previous coverage. A settled
-source alone still cannot establish coverage, and cached tiles from a disjoint
-viewport or coarse zoom cannot attest the current view.
-
-Actual callback regressions cover repeated warm toggles, hidden completion,
-partial coverage, bounds/zoom changes, unsettled sources and renderer
-replacement. This is a display-status repair in existing `app/`, `tests/` and
-`docs/` responsibility roots under Directory Rules v2 and accepted ADR-0029.
-Provider requests, cache budgets, payloads, dates, opacity, water rendering,
-free reports, publication policy and the private Sites project are unchanged.
-Reverting this patch restores prior status handling without changing stored
-data. Hosted acceptance and owner approval of this new revision remain separate
-from local regression/build verification.
-
-Changed-area validation passed: production build, TypeScript, 53 scoped
-callback/lifecycle/navigation/water tests, two report-privacy tests and six
-local production-server HTTP checks. ESLint has zero errors and the same 42
-warning messages as the exact base; these inherited warnings are not a clean
-lint claim. The old page fails three new callback regressions.
-
-In the candidate browser, eight warm 2D hide/show cycles immediately restored
-Displayed with 46% opacity; four Terrain 3D cycles retained Displayed with
-partial response. Actual free JSON/HTML exports worked and retained evidence
-limitations; JSON also retained the terrain context. An isolated 2D
-interrupted-pan sample reached 59.9 FPS,
-p95 17.6 ms, max 19.2 ms and zero intervals over 25 ms, with ten selected layers,
-2,311 flowing reaches and unchanged data signature. This measures one RTX 5080
-workload at zoom 10.5, not every device or provider condition.
-
-Terrain 3D pacing remains variable: candidate samples were 49.4–58.4 FPS and a
-later unchanged-live-revision control was 43.3 FPS under the current conditions.
-Earlier live samples were 59.1–59.5 FPS. These are separate live provider
-snapshots and are not a controlled before/after claim or proof of sustained
-3D 60 FPS. All samples, including slower and competing-tab runs, are retained
-in the delivery receipt. This status repair does not modify water/terrain
-rendering or claim to resolve that performance limit.
-
 ## Authority and scope
 
 Started from the same-Site source of owner-private Explorer v232,

@@ -3,9 +3,11 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
 import { componentHarness, findNode } from "./component-harness.mjs";
+import { PRIVATE_PROFILE_TEST_ONLY } from "./private-profile-test-only.mjs";
+const publicProfile = await import(`data:text/javascript;base64,${Buffer.from(ts.transpileModule(await readFile(new URL("../app/public-profile.ts", import.meta.url), "utf8"), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText).toString("base64")}`);
 
 test("one inspection slot handles selection, delayed hover and dismissal without closing another view", async () => {
-  const harness = await componentHarness(new URL("../app/inspection-panel.tsx", import.meta.url), {});
+  const harness = await componentHarness(new URL("../app/inspection-panel.tsx", import.meta.url), { "./public-profile": PRIVATE_PROFILE_TEST_ONLY });
   const render = () => harness.render(harness.exports.useInspectionPanel);
   let panel = render();
   assert.equal(panel.inspectionPanel, null);
@@ -26,7 +28,7 @@ test("one inspection slot handles selection, delayed hover and dismissal without
 });
 
 test("inspection switches expose the active view and invoke their actual callbacks", async () => {
-  const h = await componentHarness(new URL("../app/inspection-panel.tsx", import.meta.url), {});
+  const h = await componentHarness(new URL("../app/inspection-panel.tsx", import.meta.url), { "./public-profile": PRIVATE_PROFILE_TEST_ONLY });
   for (const active of ["evidence", "qwen"]) {
     const calls = [];
     const tree = h.render(h.exports.InspectionPanelSwitch, { active, onEvidence: () => calls.push("evidence"), onQwen: () => calls.push("qwen"), onClose: () => calls.push("close") });
@@ -41,13 +43,25 @@ test("inspection switches expose the active view and invoke their actual callbac
   }
 });
 
+test("the real public profile retains evidence and close callbacks while withholding Qwen", async () => {
+  const h = await componentHarness(new URL("../app/inspection-panel.tsx", import.meta.url), { "./public-profile": publicProfile });
+  const calls = [];
+  const tree = h.render(h.exports.InspectionPanelSwitch, { active: "evidence", onEvidence: () => calls.push("evidence"), onQwen: () => calls.push("qwen"), onClose: () => calls.push("close") });
+  assert.equal(findNode(tree, node => node.type === "button" && node.props.children === "Chat with KFM"), undefined);
+  const evidence = findNode(tree, node => node.type === "button" && node.props.children === "Evidence");
+  assert.equal(evidence.props["aria-pressed"], true); evidence.props.onClick();
+  findNode(tree, node => node.props?.className === "inspection-close").props.onClick();
+  assert.deepEqual(calls, ["evidence", "close"]);
+  h.dispose();
+});
+
 test("the actual delayed map hover uses non-interrupting preview arbitration", async () => {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const tree = ts.createSourceFile("page.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   let show;
   const visit = n => { if (ts.isVariableDeclaration(n) && n.name.getText(tree) === "showHoverInDrawer") show = n.initializer; ts.forEachChild(n, visit); };
   visit(tree); assert.ok(show);
-  const h = await componentHarness(new URL("../app/inspection-panel.tsx", import.meta.url), {});
+  const h = await componentHarness(new URL("../app/inspection-panel.tsx", import.meta.url), { "./public-profile": PRIVATE_PROFILE_TEST_ONLY });
   const render = () => h.render(h.exports.useInspectionPanel);
   const timers = [];
   const context = { surfaceInspectionOpenRef: { current: false }, hoverCandidateIdRef: { current: null }, hoverDrawerTimerRef: { current: null }, compactRef: { current: false }, rightPanelRef: { current: { dataset: { open: "false" } } }, window: { setTimeout(fn) { timers.push(fn); return timers.length; }, clearTimeout() {} }, previewEvidence: render().previewEvidence, setHoverActive() {}, setHoverSummary() {} };

@@ -5,7 +5,7 @@ import { readBoundedJson } from "./bounded-json";
 import { approvalRemainingMs } from "./governed-water";
 import type { WeatherResponse } from "./governed-weather";
 import { waterBrowserLabel, waterBrowserStateForResponse, type WaterBrowserState } from "./governed-water-availability";
-import { latestWeatherDay, weatherEvidenceMatchesSelection, weatherExportMatchesSelection, weatherValueText } from "./governed-weather-availability";
+import { latestWeatherDay, weatherDayAt, weatherStationDays, weatherEvidenceMatchesSelection, weatherExportMatchesSelection, weatherValueText } from "./governed-weather-availability";
 
 const SOURCE = "kfm-reviewed-weather", LAYER = "kfm-reviewed-weather-points", ROUTE = "/api/governed/weather/v1";
 const reasonText: Record<string, string> = { NO_APPROVED_SNAPSHOT: "No reviewed weather snapshot is active.", RELEASE_STORE_UNAVAILABLE: "Reviewed weather storage is unavailable.", REVIEW_REQUIRED: "This weather package is waiting for review.", RIGHTS_OR_SENSITIVITY_HOLD: "Rights or sensitivity review is still required.", CORRECTION_HOLD: "This snapshot has been corrected or withdrawn.", RELEASE_TIME_INVALID: "The release approval has expired or is not yet valid." };
@@ -17,12 +17,13 @@ export function GovernedWeatherControl({ mapRef, styleReady, onSelectionChange }
   const [visible, setVisible] = useState(false), [selected, setSelected] = useState("USW00003928"), [render, setRender] = useState("Hidden");
   const [evidenceRecord, setEvidenceRecord] = useState<{ stationId: string; packageId: unknown; value: WeatherResponse } | null>(null);
   const [exportStatus, setExportStatus] = useState("");
+  const [selectedDay, setSelectedDay] = useState("");
   const controller = useRef<AbortController | null>(null);
   const selectedRef = useRef(selected);
   const selectionGeneration = useRef(0);
   const chooseStation = useCallback((id: string) => {
     if (selectedRef.current !== id) selectionGeneration.current += 1;
-    selectedRef.current = id; setSelected(id); setExportStatus("");
+    selectedRef.current = id; setSelected(id); setSelectedDay(""); setExportStatus("");
   }, []);
   const refresh = useCallback(async () => {
     controller.current?.abort(); const abort = new AbortController(); controller.current = abort; setLoading(true); setResponse(null); setEvidenceRecord(null); setStatus("Checking current release…"); setBrowserState("checking"); setRender("Waiting for map frame");
@@ -55,7 +56,10 @@ export function GovernedWeatherControl({ mapRef, styleReady, onSelectionChange }
   const shownRender = !visible || !data ? "Hidden" : !styleReady ? "Not ready" : render;
   const freshness = (data?.freshness_at_capture ?? {}) as Record<string, string>;
   useEffect(() => { onSelectionChange?.(visible); }, [visible, onSelectionChange]);
-  const latest = latestWeatherDay(data?.observations, selected);
+  const stationDays = weatherStationDays(data?.observations, selected);
+  const date = stationDays.includes(selectedDay) ? selectedDay : stationDays.at(-1) ?? "";
+  const latest = date ? weatherDayAt(data?.observations, selected, date) : latestWeatherDay(data?.observations, selected);
+  const dayIndex = stationDays.indexOf(date);
   useEffect(() => {
     const map = mapRef.current; if (!map || !styleReady) return;
     const remove = () => { try { if (map.getLayer(LAYER)) map.removeLayer(LAYER); if (map.getSource(SOURCE)) map.removeSource(SOURCE); } catch { /* Map teardown already removed its sources. */ } };
@@ -105,6 +109,7 @@ export function GovernedWeatherControl({ mapRef, styleReady, onSelectionChange }
     <p role="status">{shownStatus}</p><small>Acquisition: {data ? "Preserved capture" : "Not established"} · Browser: {waterBrowserLabel(shownBrowserState)} · Map: {shownRender} · Evidence: {evidence ? "Resolved and released" : "Withheld"}</small>
     {data && <>
       <label>Station<select value={selected} onChange={e => chooseStation(e.target.value)}>{data.stations?.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
+      <nav aria-label="Reviewed weather observation days"><button type="button" disabled={dayIndex <= 0} onClick={() => setSelectedDay(stationDays[dayIndex - 1])}>Previous day</button><label>Station-local observation day<select aria-label="Reviewed weather observation day" value={date} disabled={!stationDays.length} onChange={event => setSelectedDay(event.target.value)}>{stationDays.map(day => <option key={day} value={day}>{day}</option>)}</select></label><button type="button" disabled={dayIndex < 0 || dayIndex >= stationDays.length - 1} onClick={() => setSelectedDay(stationDays[dayIndex + 1])}>Next day</button></nav>
       <p>Coverage: {String(data.coverage)} · Freshness: {String(response?.envelope.freshness)} · Station: {freshnessText[freshness[selected]] ?? "Unknown"} · Correction: {String(data.correction_state)}</p>
       {latest && <><p><strong>{latest.date}</strong> (station-local day) · Preliminary provider data</p>
         <dl><dt>Precipitation</dt><dd>{weatherValueText(latest.values.PRCP)}</dd><dt>High</dt><dd>{weatherValueText(latest.values.TMAX)}</dd><dt>Low</dt><dd>{weatherValueText(latest.values.TMIN)}</dd></dl></>}

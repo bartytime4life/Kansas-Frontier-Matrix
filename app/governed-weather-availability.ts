@@ -59,3 +59,13 @@ export function weatherValueText(row: WeatherObservation | undefined): string {
   if (row.trace) return "Trace";
   return `${row.value} ${row.unit === "degC" ? "°C" : row.unit}`;
 }
+
+/** Only exact days actually present in the reviewed station package are selectable. */
+export function weatherStationDays(rows: WeatherObservation[] | undefined, stationId: string): string[] {
+  return [...new Set((rows ?? []).filter(row => row?.station_id === stationId && /^\d{4}-\d{2}-\d{2}$/.test(row.observation_date)).map(row => row.observation_date))].sort();
+}
+export function weatherDayAt(rows: WeatherObservation[] | undefined, stationId: string, date: string): WeatherDay | null {
+  const day = (rows ?? []).filter(row => row?.station_id === stationId && row.observation_date === date);
+  return day.length ? { date, withheld: day.filter(row => row.withheld).length,
+    values: Object.fromEntries(ELEMENTS.map(element => [element, day.find(row => row.element === element)])) } : null;
+}

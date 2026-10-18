@@ -1,5 +1,4 @@
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as MapLibreMap } from "./maplibre-seam";
-import { createSettledMapCommit } from "./map-performance";
 import { FLOW_SEGMENT_FLOATS, type FlowGeometry } from "./water-flow-motion";
 
 /**
@@ -32,7 +31,7 @@ export const WATER_FLOW_PALETTES: Readonly<Record<"night" | "dusk" | "clear", Wa
 /** Ribbon half-width in CSS pixels by zoom. */
 export function flowHalfWidth(zoom: number): number {
   if (!Number.isFinite(zoom)) return 1.6;
-  return zoom < 8 ? 2.1 : zoom < 10 ? 1.8 : Math.max(1.6, Math.min(6, 1.6 + (zoom - 10) * 0.6));
+  return Math.max(0.8, Math.min(4, 0.8 + Math.max(0, zoom - 6) * 0.2));
 }
 
 /** Display motion, in CSS pixels per second and between streaks; not water velocity. */
@@ -63,6 +62,7 @@ const SHARED_MAIN = `
   v_along = mix(i_dist.x, i_dist.y, a_corner.x) + cap * u_m_per_px;
   v_side = a_corner.y;
   v_cue = i_cue;
+  v_visibility = smoothstep(i_min_zoom, i_min_zoom + 1.0, u_zoom);
 }`;
 
 const SHARED_DECLARATIONS = `
@@ -70,14 +70,17 @@ uniform vec2 u_viewport;
 uniform float u_half_width;
 uniform float u_lift;
 uniform float u_m_per_px;
+uniform float u_zoom;
 in vec2 a_corner;
 in vec3 i_a;
 in vec3 i_b;
 in vec2 i_dist;
 in vec4 i_cue;
+in float i_min_zoom;
 out float v_along;
 out float v_side;
-out vec4 v_cue;`;
+out vec4 v_cue;
+out float v_visibility;`;
 
 const MERCATOR_VERTEX_SHADER = `#version 300 es
 uniform mat4 u_matrix;
@@ -106,6 +109,7 @@ uniform float u_opacity;
 in float v_along;
 in float v_side;
 in vec4 v_cue;
+in float v_visibility;
 out vec4 fragColor;
 void main() {
   float side = clamp(v_side, -1.0, 1.0);
@@ -141,10 +145,10 @@ void main() {
   float alpha = body * u_opacity * clamp(0.5 + 0.35 * measured + 0.3 * streak * crown * flowing, 0.0, 1.0);
   float haloAlpha = halo * 0.55 * u_opacity;
   vec3 haloColor = tint * haloAlpha;
-  fragColor = vec4(min(color, vec3(1.0)) * alpha + haloColor * (1.0 - alpha), alpha + haloAlpha * (1.0 - alpha));
+  fragColor = vec4(min(color, vec3(1.0)) * alpha + haloColor * (1.0 - alpha), alpha + haloAlpha * (1.0 - alpha)) * v_visibility;
 }`;
 
-const UNIFORMS = ["u_matrix", "u_world_size", "u_viewport", "u_half_width", "u_lift", "u_m_per_px", "u_time", "u_speed_px", "u_spacing_px", "u_base", "u_streak", "u_tints", "u_opacity",
+const UNIFORMS = ["u_matrix", "u_world_size", "u_viewport", "u_half_width", "u_lift", "u_m_per_px", "u_time", "u_speed_px", "u_spacing_px", "u_base", "u_streak", "u_tints", "u_opacity", "u_zoom",
   "u_projection_matrix", "u_projection_fallback_matrix", "u_projection_tile_mercator_coords", "u_projection_clipping_plane", "u_projection_transition"];
 
 export type WaterFlowLayerOptions = Readonly<{
@@ -183,15 +187,13 @@ export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowL
   let terrainWasOn = false;
 
   const queueTerrainSamples = () => {
-    if (!geometry || !map || !map.getTerrain()) { sampleQueue = []; sampleCursor = 0; return; }
+    if (!geometry || !map) { sampleQueue = []; return; }
     const center = map.getCenter();
     // Nearest vertices first, so the foreground settles onto the terrain first.
     sampleQueue = orderedFlowVertices(geometry.vertices, center);
     sampleCursor = 0;
   };
-  const settledTerrainSamples = createSettledMapCommit(queueTerrainSamples, () => Boolean(map?.isMoving()));
-  const markDirty = () => settledTerrainSamples.schedule();
-  const cancelCameraSamples = () => settledTerrainSamples.cancel();
+  const markDirty = () => queueTerrainSamples();
   const markDirtyForTerrain = (event: { sourceId?: string }) => {
     if (map && event.sourceId && event.sourceId === map.getTerrain()?.source) queueTerrainSamples();
   };
@@ -244,7 +246,7 @@ export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowL
     if (corner >= 0) { context.enableVertexAttribArray(corner); context.vertexAttribPointer(corner, 2, context.FLOAT, false, 0, 0); }
     context.bindBuffer(context.ARRAY_BUFFER, instanceBuffer);
     const stride = FLOW_SEGMENT_FLOATS * 4;
-    for (const [name, size, offset] of [["i_a", 3, 0], ["i_b", 3, 3], ["i_dist", 2, 6], ["i_cue", 4, 8]] as const) {
+    for (const [name, size, offset] of [["i_a", 3, 0], ["i_b", 3, 3], ["i_dist", 2, 6], ["i_cue", 4, 8], ["i_min_zoom", 1, 12]] as const) {
       const location = context.getAttribLocation(program, name);
       if (location < 0) continue;
       context.enableVertexAttribArray(location);
@@ -276,14 +278,11 @@ export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowL
       instanceBuffer = context.createBuffer();
       programs.set("mercator", link(context, MERCATOR_VERTEX_SHADER));
       nextMap.on("moveend", markDirty);
-      nextMap.on("movestart", cancelCameraSamples);
       nextMap.on("terrain", markDirty);
       nextMap.on("sourcedata", markDirtyForTerrain);
     },
     onRemove(oldMap, context) {
       oldMap.off("moveend", markDirty);
-      oldMap.off("movestart", cancelCameraSamples);
-      settledTerrainSamples.cancel();
       oldMap.off("terrain", markDirty);
       oldMap.off("sourcedata", markDirtyForTerrain);
       for (const program of programs.values()) { context.deleteVertexArray(program.vao); context.deleteProgram(program.program); }
@@ -330,6 +329,7 @@ export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowL
       const palette = options.palette();
       context.uniform2f(uniforms.u_viewport, context.drawingBufferWidth, context.drawingBufferHeight);
       context.uniform1f(uniforms.u_half_width, flowHalfWidth(zoom) * pixelRatio);
+      context.uniform1f(uniforms.u_zoom, zoom);
       // A few metres above the ground keeps the ribbon out of the terrain surface.
       context.uniform1f(uniforms.u_lift, exaggeration > 0 ? 4 * exaggeration : 0);
       context.uniform1f(uniforms.u_m_per_px, metersPerPixel(center.lat, zoom) / pixelRatio);

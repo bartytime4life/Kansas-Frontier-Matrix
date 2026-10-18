@@ -1,3 +1,4 @@
+import { publicFixtureAuthority } from "./public-release-test-authority.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -121,6 +122,7 @@ test("withdrawal stops the active package and is logged once", async () => {
 });
 
 // Routes run against the real admin module with the auth/storage boundary stubbed.
+const publicAuthorityUrl = await publicFixtureAuthority([{ family: "water", raw: await fixture("admitted-snapshot"), decision: JSON.parse(await fixture("owner-decision")) }], waterUrl);
 const serverStub = moduleUrl(`
   import { WaterAdminError } from ${JSON.stringify(adminUrl)};
   export const waterAdminHeaders = { "Cache-Control": "private, no-store" };
@@ -132,6 +134,7 @@ const serverStub = moduleUrl(`
   export const waterAdminFailure = (error) => Response.json({ outcome: "ERROR", reason_code: error instanceof WaterAdminError ? error.message : "WATER_ADMIN_UNAVAILABLE" }, { status: error.status ?? 503 });
 `, "governed-water-admin-server.ts");
 const route = async (name) => import(moduleUrl((await read(`../app/api/governed/water-admin/${name}/route.ts`))
+  .replaceAll('"../../../../public-release-server"', JSON.stringify(publicAuthorityUrl))
   .replaceAll('"../../../../governed-water-admin-server"', JSON.stringify(serverStub))
   .replaceAll('"../../../../governed-water-admin"', JSON.stringify(adminUrl))
   .replaceAll('"../../../../governed-water"', JSON.stringify(waterUrl)), name));
@@ -145,10 +148,12 @@ test("routes require the staging token, the owner and the Site origin", async ()
 
   assert.equal((await stage.POST(post("stage", text, {}))).status, 403);
   assert.equal((await stage.POST(post("stage", text, { Authorization: "Bearer staging-secret" }))).status, 200);
-  const body = JSON.stringify({ package_id: owner.package_id, decision: owner, expected_active: null });
+  const body = JSON.stringify({ package_id: owner.package_id, expected_active: null });
   assert.equal((await activate.POST(post("activate", body, { Origin: "https://elsewhere.test" }))).status, 403);
   assert.equal((await activate.POST(post("activate", body, { Origin: "https://site.test" }))).status, 403);
   globalThis.__waterAdmin.owner = true;
+  const posted = JSON.stringify({ package_id: owner.package_id, expected_active: null, decision: owner });
+  assert.equal((await activate.POST(post("activate", posted, { Origin: "https://site.test" }))).status, 400);
   const response = await activate.POST(post("activate", body, { Origin: "https://site.test" }));
   // The route stamps the real clock; the fixture decision expired on 2026-10-01, so the gate refuses it.
   assert.deepEqual([response.status, (await response.json()).reason_code], [409, "RELEASE_TIME_INVALID"]);
@@ -167,7 +172,7 @@ test("status answers the owner or the staging token, and nobody else", async () 
   assert.equal((await get({ Authorization: "Bearer wrong" })).status, 403);
   globalThis.__waterAdmin.owner = false;
   const byToken = await get({ Authorization: "Bearer staging-secret" });
-  assert.deepEqual([byToken.status, await byToken.json()], [200, { active_package_id: owner.package_id, previous_package_id: null, revision: 1, decision_expires_at: owner.expires_at }]);
+  assert.deepEqual([byToken.status, await byToken.json()], [200, { active_package_id: owner.package_id, previous_package_id: null, revision: 1, decision_expires_at: owner.expires_at, authorized_packages: [], release_hold: "PUBLIC_RELEASE_EXPIRED" }]);
   globalThis.__waterAdmin.owner = true;
   assert.equal((await (await get({})).json()).active_package_id, owner.package_id);
 });

@@ -1,3 +1,4 @@
+import { PRIVATE_PROFILE_URL_TEST_ONLY } from './private-profile-test-only.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
@@ -33,7 +34,8 @@ test('save persists the exact selected value, refreshes status, and survives a r
 });
 test('legacy jobs remain visible after a budget reduction while new selections respect the saved budget',async()=>{
  const bounded=url(await compile('app/bounded-json.ts'));const catalogUrl=url(await compile('app/public-map-catalog.ts'));
- const client=await import(url((await compile('app/public-map-client.ts')).replace('"./bounded-json"',JSON.stringify(bounded)).replace('"./public-map-catalog"',JSON.stringify(catalogUrl))));
+ const sessionUrl=url(await compile('app/local-companion-session.ts'));
+ const client=await import(url((await compile('app/public-map-client.ts')).replace('"./public-profile"', JSON.stringify(PRIVATE_PROFILE_URL_TEST_ONLY)).replace('"./local-companion-session"',JSON.stringify(sessionUrl)).replace('"./bounded-json"',JSON.stringify(bounded)).replace('"./public-map-catalog"',JSON.stringify(catalogUrl))));
  const job={id:'a'.repeat(32),assetId:'file',title:'Previously selected',state:'cancelled',bytes:5,expectedBytes:null,maxBytes:1e12,sha256:null,destination:'/local',reason:null,mapReady:false,createdAt:'2026-10-09T00:00:00Z',updatedAt:'2026-10-09T00:00:00Z'};
  assert.ok(client.parsePublicMapStatus({schema:'kfm-public-map-download-control/v1',sessionToken:'a'.repeat(43),active:null,limitBytes:250e9,jobs:[job],refresh:{state:'idle'}}));
  const catalog=await import(catalogUrl);assert.equal(catalog.publicMapSelectedLimit('600000',{expectedBytes:null},250e9),null);assert.ok(catalog.publicMapSelectedLimit('600000',{expectedBytes:null},1e12));

@@ -1,3 +1,4 @@
+import { IS_PUBLIC_COPY, publicContextSourceAllowed } from "./public-profile";
 import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-layers";
 import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
 import type { FeatureCollection } from "geojson";
@@ -779,10 +780,10 @@ export const officialContextVisibilityForFrame = (
   buildYearCurrent = true,
 ): Record<OfficialContextId, boolean> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [
   source.id,
-  visibility[source.id] === true && (source.id === "nasa-lightning-climatology" || buildYearCurrent && OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].supportedFrames.includes(frame)),
+  publicContextSourceAllowed(source.id) && visibility[source.id] === true && (source.id === "nasa-lightning-climatology" || buildYearCurrent && OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].supportedFrames.includes(frame)),
 ])) as Record<OfficialContextId, boolean>;
 
-export const defaultOfficialContextVisibility = (): Record<OfficialContextId, boolean> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source.defaultVisibility])) as Record<OfficialContextId, boolean>;
+export const defaultOfficialContextVisibility = (): Record<OfficialContextId, boolean> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, publicContextSourceAllowed(source.id) && source.defaultVisibility])) as Record<OfficialContextId, boolean>;
 export const defaultOfficialContextOpacity = (): Record<OfficialContextId, number> => Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map((source) => [source.id, source.defaultOpacity])) as Record<OfficialContextId, number>;
 
 const EMPTY_CONTEXT: FeatureCollection = { type: "FeatureCollection", features: [] };
@@ -826,6 +827,8 @@ export const applyOfficialContextState = (
   opacity: Record<OfficialContextId, number>,
   payloads: Partial<Record<OfficialContextFeedId, OfficialContextPayload>>,
 ) => {
+  // Public provider overlays remain held until a delivery manifest explicitly approves them.
+  if (IS_PUBLIC_COPY) return;
   const county = OFFICIAL_CONTEXT_BY_ID["census-counties"];
   ensureGeoJsonSource(map, county, payloads["census-counties"]?.data ?? emptyCollection());
   ensureLayer(map, { id: county.layerIds[0], type: "fill", source: county.sourceId, paint: { "fill-color": county.color, "fill-opacity": 0.05 } });

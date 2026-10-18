@@ -5,8 +5,10 @@ import path from 'node:path';
 import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
 import ts from 'typescript';
 import {componentHarness,findNode,settle} from './component-harness.mjs';
+import {PRIVATE_PROFILE_TEST_ONLY} from './private-profile-test-only.mjs';
 const compile=async file=>ts.transpileModule(await readFile(new URL('../app/'+file,import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const url=s=>`data:text/javascript;base64,${Buffer.from(s).toString('base64')}`;
+const publicProfile=await import(url(await compile('public-profile.ts')));
 const sub=url((await compile('subsurface-model.ts')).replace('import { atRecordYear } from "./subsurface-materials";','const atRecordYear=()=>true;'));
 const modelURL=url((await compile('underground-resources-model.ts')).replace('"./subsurface-model"',JSON.stringify(sub)));
 const model=await import(modelURL);
@@ -49,11 +51,25 @@ test('the real Worker runtime reads resource records and refuses provider redire
 });
 test('switching area discards delayed resource response before displaying markers or details',async()=>{
  const requests=[];
- const h=await componentHarness('app/underground-resources.tsx',{'./underground-resources-model':model,'./bounded-json':{readBoundedJson:r=>r.json()},'./subsurface.module.css':{default:new Proxy({},{get:(_,k)=>k})}}, {URLSearchParams,fetch:(u,o)=>new Promise(resolve=>requests.push({u,o,resolve}))});
+ const h=await componentHarness('app/underground-resources.tsx',{'./public-profile':PRIVATE_PROFILE_TEST_ONLY,'./underground-resources-model':model,'./bounded-json':{readBoundedJson:r=>r.json()},'./subsurface.module.css':{default:new Proxy({},{get:(_,k)=>k})}}, {URLSearchParams,fetch:(u,o)=>new Promise(resolve=>requests.push({u,o,resolve}))});
  let props={map:null,bounds,revision:1,active:true,redacted:false,water:[],onInspect(){}};
  let tree=h.render(h.exports.default,props);h.commit();findNode(tree,n=>n.type==='details').props.onToggle({currentTarget:{open:true}});h.render(h.exports.default,props);h.commit();
  props={...props,bounds:[-99.2,38.7,-99,39],revision:2};h.render(h.exports.default,props);h.commit();assert.equal(requests[0].o.signal.aborted,true);
  requests[0].resolve(Response.json({rows:[{id:'old',name:'STALE',details:[],coordinates:[-99.5,38.8]}],partial:false,rejected:0,retrievedAt:'2026-10-07'}));await settle();
  tree=h.render(h.exports.default,props);assert.doesNotMatch(JSON.stringify(tree),/STALE/);
  requests[1].resolve(Response.json({rows:[],partial:false,rejected:0,retrievedAt:'2026-10-07'}));await settle();h.dispose();
+});
+
+test('public resource controls report the delivery hold and make no oil/gas/mineral requests',async()=>{
+ let requests=0;
+ const h=await componentHarness('app/underground-resources.tsx',{'./public-profile':publicProfile,'./underground-resources-model':model,'./bounded-json':{readBoundedJson:r=>r.json()},'./subsurface.module.css':{default:new Proxy({},{get:(_,k)=>k})}}, {URLSearchParams,fetch:async()=>{requests++;throw new Error('Unexpected provider request');}});
+ const props={map:null,bounds,revision:1,active:true,redacted:false,water:[],onInspect(){}};
+ const draw=()=>{const tree=h.render(h.exports.default,props);h.commit();return tree;};
+ let tree=draw();findNode(tree,n=>n.type==='details').props.onToggle({currentTarget:{open:true}});tree=draw();
+ for(const kind of ['oilgas','minerals']){
+  findNode(tree,n=>n.props?.['aria-label']==='Underground resource type').props.onChange({target:{value:kind}});tree=draw();await settle();tree=draw();
+  assert.match(JSON.stringify(findNode(tree,n=>n.props?.role==='status')),/held pending approved public delivery/);
+  assert.doesNotMatch(JSON.stringify(tree),/Loading source locations/);
+ }
+ assert.equal(requests,0);h.dispose();
 });

@@ -1,3 +1,4 @@
+import { PRIVATE_PROFILE_URL_TEST_ONLY } from './private-profile-test-only.mjs';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFile } from 'node:fs/promises';
@@ -9,8 +10,9 @@ const modelUrl = url(await compile('app/public-map-catalog.ts'));
 const model = await import(modelUrl);
 const activity = await import(url(await compile('app/download-activity.ts')));
 const polling = await import(url(await compile('app/download-polling.ts')));
+const sessionUrl = url(await compile('app/local-companion-session.ts'));
 const bounded = url(await compile('app/bounded-json.ts'));
-const client = await import(url((await compile('app/public-map-client.ts')).replace('"./public-map-catalog"', JSON.stringify(modelUrl)).replace('"./bounded-json"', JSON.stringify(bounded))));
+const client = await import(url((await compile('app/public-map-client.ts')).replace('"./public-profile"', JSON.stringify(PRIVATE_PROFILE_URL_TEST_ONLY)).replace('"./public-map-catalog"', JSON.stringify(modelUrl)).replace('"./local-companion-session"', JSON.stringify(sessionUrl)).replace('"./bounded-json"', JSON.stringify(bounded))));
 const seed = JSON.parse(await readFile('app/public-map-catalog.json', 'utf8'));
 const asset = seed.records.flatMap(r => r.assets).find(a => a.id === 'kgs-m118-pdf');
 const deferred = () => { let resolve, reject; const promise = new Promise((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; };

@@ -1,3 +1,4 @@
+import { publicAuthorizationStatus } from "../../../../public-release-server";
 import { waterAdminStatus } from "../../../../governed-water-admin";
 import { waterAdminFailure, waterAdminHeaders, waterAdminStore, waterOwner, waterWorker } from "../../../../governed-water-admin-server";
 export const dynamic = "force-dynamic";
@@ -9,6 +10,6 @@ export async function GET(request: Request) {
   try {
     if (request.headers.has("authorization")) waterWorker(request);
     else await waterOwner();
-    return Response.json(await waterAdminStatus(waterAdminStore()), { headers: waterAdminHeaders });
+    return Response.json({ ...await waterAdminStatus(waterAdminStore()), ...await publicAuthorizationStatus("water") }, { headers: waterAdminHeaders });
   } catch (error) { return waterAdminFailure(error); }
 }

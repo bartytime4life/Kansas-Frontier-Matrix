@@ -26,6 +26,7 @@ export type SourceCandidate = Readonly<{
   layerId?: string;
   featureId?: string;
   discoveryPath?: string;
+  discoveryLabel?: string;
 }>;
 
 export type SourceAdmissionState = "candidate" | "context-only" | "admitted" | "held" | "quarantined" | "denied";
@@ -45,6 +46,8 @@ export const SOURCE_ADMISSION_BY_ID: Readonly<Record<string, SourceAdmissionStat
   "SRC-CAND-USGS-HYDRO": "candidate",
   "SRC-CAND-FEMA-NFHL": "context-only",
   "SRC-CAND-NOAA": "held",
+  "SRC-CAND-FARMERS-ALMANAC": "held",
+  "SRC-CAND-OLD-FARMERS-ALMANAC": "held",
   "SRC-CAND-CDL": "held",
   "SRC-CAND-SSURGO": "held",
   "SRC-CAND-KGS": "candidate",
@@ -191,6 +194,9 @@ export const CORPUS_SOURCES: readonly CorpusSource[] = Object.freeze([
 ]);
 
 export const SOURCE_CANDIDATES: readonly SourceCandidate[] = Object.freeze([
+  Object.freeze({ id: "SRC-CAND-FARMERS-ALMANAC", title: "Farmers’ Almanac · outlooks, calendars and lore", organization: "Almanac Publishing Co.", domain: "Weather / Agriculture / Astronomy", cadence: "Publisher editions and rolling pages · manually checked", sourceRole: "Commercial publisher outlook and traditional reference · not observations", dataModes: ["Source references", "Permitted credited weather image"], value: "The Almanac library connects public reference pages and one provenance-bound winter map under the publisher’s sharing permission.", cannotProve: "The publisher outlook is not observed weather, emergency guidance, calibrated skill or a local Kansas forecast. Lunar planting guidance is not evidence of crop suitability.", nextGate: "Modern calendars and bulk content remain held until source-specific reuse permission, a supported access method, validation and KFM admission/release review. No automatic acquisition is enabled.", sourceUrl: "https://www.farmersalmanac.com/", checkedAt: "2026-10-14", discoveryPath: "/almanacs?publisher=farmers-almanac", discoveryLabel: "Open almanac library" }),
+  Object.freeze({ id: "SRC-CAND-OLD-FARMERS-ALMANAC", title: "The Old Farmer’s Almanac · modern references and historical lineage", organization: "Yankee Publishing Inc. / separately identified Library of Congress historical source", domain: "Weather / Agriculture / Astronomy", cadence: "Publisher editions and rolling pages · manually checked", sourceRole: "Commercial publisher reference; separately scoped historical title-page carrier", dataModes: ["Source references", "Public-domain archive image"], value: "The Almanac library links modern weather, Wichita planting/frost and Moon resources, and displays a rights-bound 1861 title page from the Library of Congress.", cannotProve: "A title page is not a complete issue, current weather or Kansas planting guidance. Modern publisher tables, forecasts and images have not been copied or admitted.", nextGate: "Publisher terms restrict copying and automated collection. Require written source-specific permission before modern content ingestion, then validate exact editions, dates, location scope, rights and release. The archive image has its own independent rights basis.", sourceUrl: "https://www.almanac.com/", checkedAt: "2026-10-14", discoveryPath: "/almanacs?publisher=old-farmers-almanac", discoveryLabel: "Open almanac library" }),
+
   ...EARTH_ENGINE_DATASETS.map((dataset) => Object.freeze({
     id: dataset.id, title: `${dataset.title} · Earth Engine`, organization: dataset.provider,
     domain: dataset.topic, cadence: dataset.cadence, sourceRole: "Catalog discovery · not connected or admitted",

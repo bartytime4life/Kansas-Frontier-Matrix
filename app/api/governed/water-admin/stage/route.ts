@@ -1,3 +1,4 @@
+import { publicStageAuthorization } from "../../../../public-release-server";
 import { stageWaterPackage, WaterAdminError } from "../../../../governed-water-admin";
 import { readBoundedText, waterAdminFailure, waterAdminHeaders, waterAdminStore, waterWorker } from "../../../../governed-water-admin-server";
 import { WATER_PACKAGE_LIMIT } from "../../../../governed-water";
@@ -9,6 +10,7 @@ export async function POST(request: Request) {
     waterWorker(request);
     if (!request.headers.get("content-type")?.startsWith("application/json")) throw new WaterAdminError("JSON_REQUIRED", 415);
     const text = await readBoundedText(request, WATER_PACKAGE_LIMIT);
+    await publicStageAuthorization("water", text, request);
     const result = await stageWaterPackage(waterAdminStore(), text, "staging-token", new Date().toISOString());
     return Response.json(result, { headers: waterAdminHeaders });
   } catch (error) { return waterAdminFailure(error); }

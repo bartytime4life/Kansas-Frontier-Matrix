@@ -1,11 +1,11 @@
 import type { FeatureCollection } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap } from "./maplibre-seam";
-import { createSettledMapCommit, uploadedGeoJSON } from "./map-performance";
+import { uploadedGeoJSON } from "./map-performance";
 import { effectiveSceneLight, sceneEffectsFor, type SceneLightPreset } from "./scene-effects";
 import { createWaterFlowLayer, WATER_FLOW_PALETTES, type WaterFlowLayer } from "./water-flow-layer";
 import {
-  buildFlowGeometry, flowCellSelectionForView, flowDetailForZoom, flowRequestKey, parseFlowRequestKey, FLOW_PROFILES, FLOW_MIN_ZOOM, gaugeCue, parseFlowlinePayload,
-  type FlowDetail, type FlowlineCellPayload, type FlowReach, type GaugeCue,
+  buildFlowGeometry, flowRequestsForView, flowlineCellKey, FLOW_MIN_ZOOM, gaugeCue, parseFlowlinePayload, parseFlowRequest,
+  type FlowlineCellPayload, type FlowReach, type GaugeCue,
 } from "./water-flow-motion";
 
 /**
@@ -16,6 +16,7 @@ import {
 
 export const WATER_FLOW_LAYER_ID = "scene-water-flow";
 const CACHE_LIMIT = 36;
+export const MAX_FLOW_REQUESTS_IN_FLIGHT = 9;
 const RETRY_AFTER_MS = 60_000;
 
 export type WaterFlowStatus = Readonly<{
@@ -27,8 +28,7 @@ export type WaterFlowStatus = Readonly<{
   truncatedCells: number;
   availableReaches: number;
   drawingLimited: boolean;
-  detail?: FlowDetail;
-  viewLimited?: boolean;
+  level?: "overview" | "regional" | "local";
 }>;
 const OFF: WaterFlowStatus = Object.freeze({ state: "off", reaches: 0, gaugedReaches: 0, cells: 0, failedCells: 0, truncatedCells: 0, availableReaches: 0, drawingLimited: false });
 
@@ -36,8 +36,6 @@ type CellState = { state: "loading"; controller: AbortController } | { state: "r
 type FlowState = {
   cache: Map<string, CellState>;
   wanted: string[];
-  detail: FlowDetail;
-  viewLimited: boolean;
   preset: SceneLightPreset;
   efficient: boolean;
   gaugeSourceId: string;
@@ -51,19 +49,15 @@ type FlowState = {
 const states = new WeakMap<object, FlowState>();
 const listeners = new Set<(status: WaterFlowStatus) => void>();
 
-const fetchDefault = async (key: string, signal: AbortSignal): Promise<FlowlineCellPayload> => {
-  const request = parseFlowRequestKey(key);
-  if (!request) throw new Error("Invalid flowline request.");
-  const suffix = request.detail === "local" ? "" : "&detail=" + request.detail;
-  const response = await fetch("/api/hydrology/flowlines?cell=" + encodeURIComponent(request.cell.map(v => v.toFixed(2)).join(",")) + suffix, { signal, headers: { Accept: "application/json" } });
+let fetchCell = async (key: string, signal: AbortSignal): Promise<FlowlineCellPayload> => {
+  const response = await fetch(`/api/hydrology/flowlines?cell=${encodeURIComponent(key)}`, { signal, headers: { Accept: "application/json" } });
   if (!response.ok) throw new Error("Flowline cell unavailable.");
   const payload = parseFlowlinePayload(await response.json());
-  if (flowRequestKey(payload.cell, payload.detail ?? "local") !== key) throw new Error("Flowline response identity mismatch.");
+  if ((payload.requestKey ?? flowlineCellKey(payload.cell)) !== parseFlowRequest(key)?.key) throw new Error("Flowline response does not match the requested grid.");
   return payload;
 };
-let fetchCell = fetchDefault;
-/** Test seam: replaces how cells are fetched; omission restores production transport. */
-export const setWaterFlowFetcher = (fetcher: typeof fetchCell = fetchDefault): void => { fetchCell = fetcher; };
+/** Test seam: replaces how cells are fetched. */
+export const setWaterFlowFetcher = (fetcher: typeof fetchCell): void => { fetchCell = fetcher; };
 
 /** The Scene panel follows the most recently updated map. */
 export const subscribeWaterFlowStatus = (listener: (status: WaterFlowStatus) => void): (() => void) => {
@@ -113,24 +107,28 @@ const rebuild = (map: MapLibreMap, state: FlowState) => {
     return;
   }
   const ready = state.wanted.flatMap((key) => { const cell = state.cache.get(key); return cell?.state === "ready" ? [cell.payload] : []; });
-  const cues = state.detail === "local" ? gaugeCues(map, state) : [];
-  const key = JSON.stringify([state.detail, ready.map((payload) => flowRequestKey(payload.cell, payload.detail ?? "local")), cues]);
+  const cues = gaugeCues(map, state);
+  const key = JSON.stringify([ready.map((payload) => payload.requestKey ?? flowlineCellKey(payload.cell)), cues]);
   let metrics = state.status;
   if (key !== state.geometryKey) {
     state.geometryKey = key;
-    const reaches: FlowReach[] = ready.flatMap((payload) => payload.reaches);
+    // One instance per provider id across grids. Fine geometry wins; high order
+    // reaches get the segment budget first, never ranked by hydrosequence.
+    const reaches: FlowReach[] = [...new Map(ready.flatMap(payload => payload.reaches).map(reach => [reach.id, reach])).values()]
+      .sort((a, b) => (b.streamOrder ?? 0) - (a.streamOrder ?? 0));
     const geometry = buildFlowGeometry(reaches, cues);
     layer.setGeometry(geometry.count ? geometry : null);
     metrics = { ...state.status, reaches: geometry.reaches, gaugedReaches: geometry.gauged,
       availableReaches: geometry.availableReaches, drawingLimited: geometry.truncated };
   }
   const failed = state.wanted.filter((cellKey) => state.cache.get(cellKey)?.state === "failed").length;
-  const loading = state.wanted.filter((cellKey) => state.cache.get(cellKey)?.state === "loading").length;
+  const loading = state.wanted.filter((cellKey) => !state.cache.has(cellKey) || state.cache.get(cellKey)?.state === "loading").length;
   setStatus(state, {
-    state: loading ? "loading" : failed === state.wanted.length && failed > 0 ? "unavailable" : failed || state.viewLimited || metrics.drawingLimited || ready.some((payload) => payload.truncated) ? "partial" : "ready",
+    state: loading ? "loading" : failed === state.wanted.length && failed > 0 ? "unavailable" : failed || metrics.drawingLimited || ready.some((payload) => payload.truncated) ? "partial" : "ready",
     reaches: metrics.reaches, gaugedReaches: metrics.gaugedReaches,
     cells: ready.length, failedCells: failed, truncatedCells: ready.filter((payload) => payload.truncated).length,
-    availableReaches: metrics.availableReaches, drawingLimited: metrics.drawingLimited, detail: state.detail, viewLimited: state.viewLimited,
+    availableReaches: metrics.availableReaches, drawingLimited: metrics.drawingLimited,
+    level: map.getZoom() < 7 ? "overview" : map.getZoom() < 9 ? "regional" : "local",
   });
 };
 
@@ -160,18 +158,16 @@ const requestCells = (map: MapLibreMap, state: FlowState) => {
   const bounds = map.getBounds();
   const center = map.getCenter();
   const visible = waterFlowShouldShow(sceneEffectsFor(map).waterFlow, state.efficient, map.getZoom());
-  const selection = visible
-    ? flowCellSelectionForView({ west: bounds.getWest(), south: bounds.getSouth(), east: bounds.getEast(), north: bounds.getNorth() }, [center.lng, center.lat], map.getZoom())
-    : { cells: [], limited: false };
-  state.detail = flowDetailForZoom(map.getZoom());
-  state.viewLimited = selection.limited;
-  const wanted = selection.cells.map(cell => flowRequestKey(cell, state.detail));
+  const wanted = visible
+    ? flowRequestsForView({ west: bounds.getWest(), south: bounds.getSouth(), east: bounds.getEast(), north: bounds.getNorth() }, [center.lng, center.lat], map.getZoom())
+    : [];
   state.wanted = wanted;
   // Cancel requests the view no longer needs.
   for (const [key, cell] of state.cache) {
     if (cell.state === "loading" && !wanted.includes(key)) { cell.controller.abort(); state.cache.delete(key); }
   }
   const now = Date.now();
+  let inFlight = [...state.cache.values()].filter(cell => cell.state === "loading").length;
   for (const key of wanted) {
     const cell = state.cache.get(key);
     if (cell && (cell.state !== "failed" || now - cell.at < RETRY_AFTER_MS)) {
@@ -179,20 +175,26 @@ const requestCells = (map: MapLibreMap, state: FlowState) => {
       state.cache.delete(key); state.cache.set(key, cell);
       continue;
     }
+    if (inFlight >= MAX_FLOW_REQUESTS_IN_FLIGHT) continue;
     const controller = new AbortController();
     const request = { state: "loading" as const, controller };
     state.cache.set(key, request);
+    inFlight += 1;
     void fetchCell(key, controller.signal).then(
       (payload) => {
         // Abort is advisory: a resolved old request must not replace a new one
         // for the same cell after a rapid pan or off/on toggle.
         if (!controller.signal.aborted && state.cache.get(key) === request) {
-          state.cache.set(key, { state: "ready", payload }); scheduleRebuild(map, state);
+          state.cache.set(key, { state: "ready", payload });
+          scheduleRebuild(map, state);
+          queueMicrotask(() => { if (states.get(map) === state) requestCells(map, state); });
         }
       },
       () => {
         if (!controller.signal.aborted && state.cache.get(key) === request) {
-          state.cache.set(key, { state: "failed", at: Date.now() }); scheduleRebuild(map, state);
+          state.cache.set(key, { state: "failed", at: Date.now() });
+          scheduleRebuild(map, state);
+          queueMicrotask(() => { if (states.get(map) === state) requestCells(map, state); });
         }
       },
     );
@@ -202,7 +204,9 @@ const requestCells = (map: MapLibreMap, state: FlowState) => {
     if (!oldest) break;
     state.cache.delete(oldest);
   }
-  rebuild(map, state);
+  scheduleRebuild(map, state);
+  if (!wanted.length) rebuild(map, state);
+  else if (state.status.state === "off" || state.status.state === "zoom") setStatus(state, { ...OFF, state: "loading" });
 };
 
 export type WaterFlowSyncOptions = Readonly<{
@@ -226,7 +230,7 @@ export function syncWaterFlow(map: MapLibreMap, options: WaterFlowSyncOptions): 
     return true;
   }
   if (!state) {
-    state = { cache: new Map(), wanted: [], detail: "local", viewLimited: false, preset: options.light, efficient: options.efficient, gaugeSourceId: options.gaugeSourceId, gaugeLayerId: options.gaugeLayerId, geometryKey: "", status: OFF, listening: false, rebuildFrame: 0, layer: null };
+    state = { cache: new Map(), wanted: [], preset: options.light, efficient: options.efficient, gaugeSourceId: options.gaugeSourceId, gaugeLayerId: options.gaugeLayerId, geometryKey: "", status: OFF, listening: false, rebuildFrame: 0, layer: null };
     states.set(map, state);
   }
   const current = state;
@@ -236,24 +240,17 @@ export function syncWaterFlow(map: MapLibreMap, options: WaterFlowSyncOptions): 
   current.gaugeLayerId = options.gaugeLayerId;
   if (!current.listening) {
     current.listening = true;
-    const settledMove = createSettledMapCommit(() => {
-      if (states.get(map) !== current || !sceneEffectsFor(map).waterFlow) return;
-      try { requestCells(map, current); syncWaterFlowVisibility(map, current.efficient); } catch { /* decorative */ }
-    }, () => map.isMoving());
-    const move = () => settledMove.schedule();
-    const start = () => settledMove.cancel();
+    const move = () => { try { requestCells(map, current); syncWaterFlowVisibility(map, current.efficient); } catch { /* decorative */ } };
     const source = (event: { sourceId?: string }) => {
       if (event.sourceId === current.gaugeSourceId) scheduleRebuild(map, current);
     };
     const remove = () => {
       states.delete(map);
-      settledMove.cancel();
       clearPendingWork(current);
       current.layer = null;
-      map.off("moveend", move); map.off("movestart", start); map.off("sourcedata", source); map.off("remove", remove);
+      map.off("moveend", move); map.off("sourcedata", source); map.off("remove", remove);
     };
     map.on("moveend", move);
-    map.on("movestart", start);
     map.on("sourcedata", source);
     map.on("remove", remove);
   }
@@ -287,16 +284,16 @@ export function waterFlowReading(status: WaterFlowStatus): string | null {
   switch (status.state) {
     case "off": return null;
     case "zoom": return `Zoom to ${FLOW_MIN_ZOOM} or closer to see rivers flow`;
-    case "loading": return (status.detail ? FLOW_PROFILES[status.detail].label + " · " : "") + "Loading USGS 3DHP river directions…" + (status.reaches ? " · " + status.reaches.toLocaleString("en-US") + " reaches already visible" : "");
-    case "unavailable": return (status.detail ? FLOW_PROFILES[status.detail].label + " · " : "") + "USGS 3DHP river directions are unavailable right now";
+    case "loading": return "Loading USGS 3DHP river directions…";
+    case "unavailable": return "USGS 3DHP river directions are unavailable right now";
     default: {
-      const tier = status.detail ? FLOW_PROFILES[status.detail].label + " · " : "";
       const reaches = `${status.reaches.toLocaleString("en-US")} reach${status.reaches === 1 ? "" : "es"} with a USGS flow direction`;
       const gauged = status.gaugedReaches ? ` · ${status.gaugedReaches} lit by a gauge reading` : "";
       const partial = status.drawingLimited
         ? ` · drawing limit: ${status.availableReaches.toLocaleString("en-US")} loaded reaches; some geometry omitted`
         : status.state === "partial" ? " · some areas incomplete" : "";
-      return status.reaches ? tier + `${reaches}${gauged}${partial}` : `No mapped flow direction in view${partial}`;
+      const selection = status.level ? ` · ${status.level === "overview" ? "statewide order 5+ overview" : status.level === "regional" ? "order 3+ regional selection" : "local detail with overview"}` : "";
+      return status.reaches ? `${reaches}${gauged}${partial}${selection}` : `No mapped flow direction in view${partial}${selection}`;
     }
   }
 }

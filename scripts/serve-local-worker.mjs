@@ -6,6 +6,7 @@ import { createRequire } from "node:module";
 import { homedir, tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateSubsurfacePublic } from "./validate-subsurface-public.mjs";
 import { readArchiveAccess } from "./archive-access.mjs";
 
 const siteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -63,7 +64,7 @@ export function assertNoLocalSecretFiles(root) {
 }
 
 export function validateConfiguration(config, hosting) {
-  if (hosting.project_id !== "appgprj_6aa0b1c41bc08191bfd86003920f1631") fail("WRONG_SITE_PROJECT");
+  if (hosting.project_id !== "appgprj_6acd1aafe0d88191a4306ea2ab44ed91") fail("WRONG_SITE_PROJECT");
   if (config.name !== "kansas-frontier-matrix-explorer" || config.main !== "index.js" || config.no_bundle !== true) fail("UNSUPPORTED_BUILD");
   if (!equal(config.rules, [{ type: "ESModule", globs: ["**/*.js", "**/*.mjs"] }])) fail("UNSUPPORTED_MODULE_RULES");
   if (!equal(config.assets, { directory: "../client" })) fail("UNSUPPORTED_ASSETS");
@@ -134,6 +135,7 @@ export async function serve(args = process.argv.slice(2)) {
   const server = path.join(siteRoot, "dist/server");
   const client = path.join(siteRoot, "dist/client");
   for (const directory of [client, settings.state, path.join(settings.state, "v3/d1"), path.join(settings.state, "v3/r2")]) checkedPath(directory, true);
+  if (validateSubsurfacePublic(client).length) fail("SUBSURFACE_PUBLICATION_HELD");
   // Do not silently ignore developer secrets that Wrangler dev would load.
   assertNoLocalSecretFiles(siteRoot);
   const configPath = path.join(server, "wrangler.json");
@@ -149,13 +151,7 @@ export async function serve(args = process.argv.slice(2)) {
   const { Miniflare, convertV4MiniflareOptions, Log, LogLevel } = runtimeRequire("miniflare");
   const translated = unstable_getMiniflareWorkerOptions(configPath);
   const worker = prepareWorker(translated, server, client, modules, settings.localReviewedImagery, settings.port);
-  const usgsKey = readUsgsApiKey();
-  if (usgsKey) worker.bindings.USGS_WATER_API_KEY = usgsKey;
-  const archiveAccess = readArchiveAccess();
-  if (archiveAccess) {
-    worker.bindings.KFM_ARCHIVE_LOCAL_OWNER_TOKEN = archiveAccess.ownerToken;
-    worker.bindings.KFM_ARCHIVE_WORKER_TOKEN = archiveAccess.workerToken;
-  }
+  // Public-copy preview never imports owner credentials or private local stores.
   const temporary = mkdtempSync(path.join(tmpdir(), "kfm-local-worker-"));
   let runtime;
   let stopping;

@@ -6,19 +6,26 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "archive:migration": "node scripts/migrate-hosted-ingestion.mjs",
-    "install:ci": "npm ci",
+    "install:ci": "bash scripts/install-ci.sh",
     "prepare:maplibre": "node scripts/prepare-maplibre-assets.mjs",
-    "dev": "npm run build && npm start",
-    "dev:local": "npm run prepare:maplibre && npm run prepare:lightning && WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
-    "prebuild": "npm run prepare:maplibre && npm run prepare:lightning",
-    "build": "vinext build",
-    "start": "node server/start.mjs",
+    "predev": "npm run prepare:maplibre && npm run prepare:lightning",
+    "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
+    "prebuild": "npm run verify:public-assets && npm run prepare:maplibre && npm run prepare:lightning",
+    "build": "bash scripts/build-verified.sh",
+    "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build && node --test tests/*.test.mjs",
     "test:browser-geometry": "node scripts/verify-explorer-geometry.mjs",
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre",
     "prepare:lightning": "node scripts/prepare-lightning-reader.mjs",
-    "build:qwen-knowledge": "node scripts/build-qwen-knowledge-pack.mjs"
+    "build:qwen-knowledge": "node scripts/build-qwen-knowledge-pack.mjs",
+    "verify:public-assets": "node scripts/verify-public-assets.mjs",
+    "postbuild": "node scripts/finalize-public-assets.mjs && node scripts/verify-public-assets.mjs dist/client",
+    "test:legacy": "node --test tests/*.test.mjs",
+    "test:public": "node --test tests/public*.test.mjs tests/governed-water.test.mjs tests/governed-water-availability.test.mjs tests/governed-water-integrity.test.mjs tests/governed-water-export-selection.test.mjs tests/governed-weather-control.test.mjs tests/governed-earthquakes-control.test.mjs tests/governed-soil-control.test.mjs tests/governed-storm-events-control.test.mjs tests/subsurface-model.test.mjs tests/subsurface-worker.test.mjs tests/subsurface-slice.test.mjs tests/area-underlay.test.mjs tests/map-composition.test.mjs tests/map-startup.test.mjs tests/terrain-performance.test.mjs tests/terrain-relief-style.test.mjs tests/terrain-raster-status.test.mjs tests/cinematic-scene-effects.test.mjs tests/cutaway-camera.test.mjs tests/governed-water-admin.test.mjs tests/governed-water-storage.test.mjs tests/governed-weather-admin.test.mjs tests/governed-soil-admin.test.mjs tests/governed-storm-events-admin.test.mjs tests/governed-earthquakes-admin.test.mjs tests/inspection-panel.test.mjs tests/temporal-sweep.test.mjs tests/underground-resources.test.mjs tests/workspace-map-navigation.test.mjs",
+    "eval:qwen-local": "node scripts/qwen-local-eval.mjs",
+    "eval:qwen-gate": "node scripts/qwen-question-gate-corpus.mjs",
+    "validate:subsurface-public": "node scripts/validate-subsurface-public.mjs",
+    "prestart": "npm run validate:subsurface-public && node scripts/validate-subsurface-public.mjs dist/client"
   },
   "dependencies": {
     "@mapbox/vector-tile": "2.0.4",
@@ -31,7 +38,10 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "sunrise-sunset-js": "3.3.1",
-    "three": "0.186.1",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "1.54.2",
     "@tailwindcss/postcss": "4.2.1",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
@@ -44,12 +54,9 @@
     "react-server-dom-webpack": "19.2.8",
     "tailwindcss": "4.2.1",
     "typescript": "5.9.3",
-    "vinext": "file:vendor/vinext-0.0.50-kfm.2.tgz",
+    "vinext": "file:vendor/vinext-0.0.50-kfm.1.tgz",
     "vite": "8.2.2",
-    "mysql2": "3.24.6",
-    "@huggingface/transformers": "4.3.1",
-    "@huggingface/tokenizers": "0.2.0",
-    "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0"
+    "wrangler": "4.127.1"
   },
   "type": "module",
   "displayName": "Kansas Frontier Matrix",
@@ -66,6 +73,5 @@
     "@esbuild-kit/core-utils": {
       "esbuild": "0.25.12"
     }
-  },
-  "main": "server/start.mjs"
+  }
 }

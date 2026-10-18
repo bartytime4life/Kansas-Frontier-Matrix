@@ -1,4 +1,6 @@
 "use client";
+import { IS_PUBLIC_COPY } from "./public-profile";
+
 import { useEffect, useMemo, useState } from "react";
 import type { GeoJSONSource, Map as MapLibreMap, MapMouseEvent } from "./maplibre-seam";
 import type { AreaBounds, Borehole } from "./subsurface-model";
@@ -14,7 +16,7 @@ export default function UndergroundResources({map,bounds,revision,active,redacte
   const rows=useMemo(()=>current?.rows??[],[current]);
   const selectedRow=rows.find(r=>r.id===selected);
   useEffect(()=>{
-    if(!enabled||kind==="water"||!bounds)return;
+    if(!enabled||kind==="water"||!bounds||IS_PUBLIC_COPY)return;
     const controller=new AbortController();
     (async()=>{try{
       const response=await fetch(`/api/subsurface/resources?${new URLSearchParams({kind,bounds:bounds.join(",")})}`,{signal:controller.signal});
@@ -43,7 +45,7 @@ export default function UndergroundResources({map,bounds,revision,active,redacte
     {!bounds?<p>Show an area to find its resource locations.</p>:redacted?<p>Location details are hidden in this view.</p>:<>
       <label>Resource <select aria-label="Underground resource type" value={kind} onChange={e=>{setKind(e.target.value as ResourceKind|"water");setSelected("");}}><option value="oilgas">Oil &amp; gas wells</option><option value="minerals">Mines &amp; minerals</option><option value="water">Water well logs</option></select></label>
       {kind==="water"?<><p>{water.length} loaded well logs at the selected record time. Open a record for its water-use, depth and interval descriptions.</p><div className={s.resourceList}>{water.map(r=><button type="button" key={r.id} onClick={()=>onInspect(r)}>{r.name}</button>)}</div></>:<>
-        {!current&&failure?.key!==key?<p role="status">Loading source locations…</p>:failure?.key===key&&!current?<p role="status">{failure.message} <button type="button" onClick={()=>setRetry(v=>v+1)}>Retry</button></p>:<p role="status">{rows.length} locations{current?.partial?" · first 200, zoom in for more detail":""}{current?.rejected?` · ${current.rejected} invalid or duplicate records withheld`:""}. {rows.length===0?"No records returned for this area; absence is not proof that no resource exists.":"Select a point or record."}</p>}
+        {IS_PUBLIC_COPY?<p role="status">Oil, gas, and mineral lookups are held pending approved public delivery.</p>:!current&&failure?.key!==key?<p role="status">Loading source locations…</p>:failure?.key===key&&!current?<p role="status">{failure.message} <button type="button" onClick={()=>setRetry(v=>v+1)}>Retry</button></p>:<p role="status">{rows.length} locations{current?.partial?" · first 200, zoom in for more detail":""}{current?.rejected?` · ${current.rejected} invalid or duplicate records withheld`:""}. {rows.length===0?"No records returned for this area; absence is not proof that no resource exists.":"Select a point or record."}</p>}
         <div className={s.resourceList}>{rows.map(r=><button type="button" key={r.id} aria-pressed={r.id===selected} onClick={()=>setSelected(r.id)}><strong>{r.name}</strong><small>{r.material} · recorded {r.status}</small></button>)}</div>
         {selectedRow&&<div className={s.resourceDetail}><strong>{selectedRow.name}</strong><p>{selectedRow.coordinates[1].toFixed(5)}° N, {Math.abs(selectedRow.coordinates[0]).toFixed(5)}° W · source position</p><dl>{selectedRow.details.map(([k,v])=><div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl></div>}
         <p className={s.muted}>{source?.limitation} These locations do not change with the well-log time slider.</p><a href={source?.link} target="_blank" rel="noreferrer">KGS source &amp; methods ↗</a>{current&&<small> Retrieved {new Date(current.retrievedAt).toLocaleDateString()}</small>}

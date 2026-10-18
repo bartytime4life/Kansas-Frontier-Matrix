@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
 import { componentHarness, findNode, settle } from "./component-harness.mjs";
+import { PRIVATE_PROFILE_TEST_ONLY } from "./private-profile-test-only.mjs";
 const compile = source => ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
 const pure = async file => import(`data:text/javascript;base64,${Buffer.from(compile(await readFile(`app/${file}`, "utf8"))).toString("base64")}`);
 const catalog = await pure("layer-workspaces.ts");
@@ -11,7 +12,7 @@ const ast = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.ES2022, true, 
 const declarations = new Map();
 function walk(node) { if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) declarations.set(node.name.text, node.initializer.getText(ast)); ts.forEachChild(node, walk); }
 walk(ast);
-const project = new Function("bindings", compile(`function project(bindings: any) { const { OFFICIAL_CONTEXT_SOURCES, LAYER_WORKSPACES, filterOfficialSources, officialVisibility, daylightEnabled, soilMapState, cropSelected, reviewedWaterSelected, reviewedWeatherSelected, EARTH_ENGINE_CONTEXT_LAYERS, imageryTopics, earthEngineDisplay, LAYER_REGISTRY, visibility, selectedCatalogCount, layerEntryMatches, layerCatalogView, officialWorkspace, officialSourceQuery } = bindings;
+const project = new Function("bindings", compile(`function project(bindings: any) { const { OFFICIAL_CONTEXT_SOURCES, LAYER_WORKSPACES, filterOfficialSources, officialSourceTopics, specialtyLayerTopics, registryLayerTopics, officialVisibility, daylightEnabled, soilMapState, cropSelected, reviewedWaterSelected, reviewedWeatherSelected, reviewedSoilSelected, reviewedStormEventsSelected, reviewedEarthquakesSelected, EARTH_ENGINE_CONTEXT_LAYERS, imageryTopics, earthEngineDisplay, LAYER_REGISTRY, visibility, selectedCatalogCount, layerEntryMatches, layerCatalogView, officialWorkspace, officialSourceQuery } = bindings;
 const catalogEntries = ${declarations.get("catalogEntries")};
 const selectedMapLayerCount = ${declarations.get("selectedMapLayerCount")};
 const matchingCatalogEntries = ${declarations.get("matchingCatalogEntries")};
@@ -20,21 +21,21 @@ return { catalogEntries, selectedMapLayerCount, matchingCatalogEntries }; }`) + 
 test("actual page catalog includes every selected family; all tab/topic/search projections preserve state", () => {
   const state = {
     ...catalog, OFFICIAL_CONTEXT_SOURCES: [{ id: "usgs-streamflow", title: "River streamflow", shortTitle: "River Pulse", organization: "USGS", domain: "Living waters", defaultVisibility: true }, { id: "nws-radar", title: "Weather radar", shortTitle: "Radar", organization: "NOAA", domain: "Weather & hazards", defaultVisibility: false }],
-    officialVisibility: { "usgs-streamflow": true, "nws-radar": true }, daylightEnabled: true, soilMapState: { visible: true, day: "2026-09-28", opacity: .67 }, cropSelected: true, reviewedWaterSelected: true, reviewedWeatherSelected: true,
+    officialVisibility: { "usgs-streamflow": true, "nws-radar": true }, daylightEnabled: true, soilMapState: { visible: true, day: "2026-09-28", opacity: .67 }, cropSelected: true, reviewedWaterSelected: true, reviewedWeatherSelected: true, reviewedSoilSelected: true, reviewedStormEventsSelected: true, reviewedEarthquakesSelected: true,
     EARTH_ENGINE_CONTEXT_LAYERS: [{ id: "ee-cdl", title: "crop classes", source: "USDA", attribution: "NASS" }], earthEngineDisplay: { visible: { "ee-cdl": true }, years: { "ee-cdl": 1999 } },
     LAYER_REGISTRY: [{ id: "registry", title: "Historical places", domain: "History", description: "Dated anchors" }], visibility: { registry: true },
     layerCatalogView: "selected", officialWorkspace: "all", officialSourceQuery: "",
   };
   const before = JSON.stringify(state), result = project(state);
-  assert.equal(result.selectedMapLayerCount, 9, "includes held crop/water/weather, daylight, soil, selected uninstalled imagery, official and registry");
+  assert.equal(result.selectedMapLayerCount, 12, "includes held crop/water/weather/reviewed soil/storm events/earthquakes, daylight, soil, selected uninstalled imagery, official and registry");
   assert.equal(result.matchingCatalogEntries.length, result.selectedMapLayerCount);
-  for (const [query, topic, expected] of [["USGS river", "water", ["usgs-streamflow"]], ["moisture", "water", ["soil", "crop"]], ["solar", "terrain", ["daylight"]], ["GHCN", "disaster", ["reviewed-weather"]], ["nass", "land", ["crop", "ee-cdl"]], ["not present", "all", []]]) {
+  for (const [query, topic, expected] of [["USGS river", "water", ["usgs-streamflow"]], ["moisture", "water", ["soil", "crop", "reviewed-soil"]], ["solar", "terrain", ["daylight"]], ["nass", "land", ["crop", "ee-cdl"]], ["USCRN", "agriculture", ["reviewed-soil"]], ["NCEI", "history", ["reviewed-storm-events"]], ["ComCat", "geology", ["reviewed-earthquakes"]], ["GHCN", "weather", ["reviewed-weather"]], ["not present", "all", []]]) {
     const filtered = project({ ...state, officialWorkspace: topic, officialSourceQuery: query });
     assert.deepEqual(filtered.matchingCatalogEntries.map(entry => entry.id), expected);
-    assert.equal(filtered.selectedMapLayerCount, 9, "count remains total selection, independent of search");
+    assert.equal(filtered.selectedMapLayerCount, 12, "count remains total selection, independent of search");
   }
   assert.deepEqual(project({ ...state, layerCatalogView: "local" }).matchingCatalogEntries.map(entry => entry.id), ["ee-cdl"]);
-  assert.equal(project({ ...state, layerCatalogView: "official" }).matchingCatalogEntries.length, 8);
+  assert.equal(project({ ...state, layerCatalogView: "official" }).matchingCatalogEntries.length, 11);
   assert.equal(JSON.stringify(state), before, "filter projections cannot mutate any owner selection, date or opacity");
 });
 
@@ -43,7 +44,7 @@ test("specialty owners are mounted once in persistent hidden wrappers; official 
   function visit(node, ancestors = []) {
     if (ts.isJsxSelfClosingElement(node)) {
       const name = node.tagName.getText(ast);
-      if (["GovernedWaterControl", "GovernedWeatherControl", "SoilMoistureControl", "CropCasmaControl", "EarthEngineDisplayControls"].includes(name)) {
+      if (["GovernedWaterControl", "GovernedWeatherControl", "GovernedSoilControl", "GovernedStormEventsControl", "GovernedEarthquakesControl", "SoilMoistureControl", "CropCasmaControl", "EarthEngineDisplayControls"].includes(name)) {
         owners.set(name, (owners.get(name) ?? 0) + 1);
         assert.ok(!ancestors.some(parent => ts.isConditionalExpression(parent) || ts.isBinaryExpression(parent) && parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken), `${name} must not unmount with catalog filters`);
         assert.ok(ancestors.some(parent => ts.isJsxElement(parent) && parent.openingElement.attributes.properties.some(prop => prop.name?.getText(ast) === "hidden")), `${name} uses a persistent hidden ancestor`);
@@ -52,13 +53,13 @@ test("specialty owners are mounted once in persistent hidden wrappers; official 
     ts.forEachChild(node, child => visit(child, [...ancestors, node]));
   }
   visit(ast);
-  assert.equal(owners.size, 5); assert.ok([...owners.values()].every(count => count === 1));
+  assert.equal(owners.size, 8); assert.ok([...owners.values()].every(count => count === 1));
   assert.match(page, /filterOfficialSources\(OFFICIAL_CONTEXT_SOURCES, "all", ""\)\.map\(\(source\)/);
   assert.match(page, /hidden=\{!listedOfficialSources\.some\(item => item\.id === source\.id\)\}/);
 });
 
 test("Explore, Appearance and Measure are primary; every advanced view invokes the existing route key", async () => {
-  const h = await componentHarness("app/explorer-controls-navigation.tsx", {}), changes = [];
+  const h = await componentHarness("app/explorer-controls-navigation.tsx", { "./public-profile": PRIVATE_PROFILE_TEST_ONLY }), changes = [];
   for (const [id, title] of [...h.exports.EXPLORER_CONTROL_SECTIONS, ...h.exports.ADVANCED_CONTROL_SECTIONS]) {
     const tree = h.render(h.exports.ExplorerControlsNavigation, { value: id, onChange: next => changes.push(next) });
     const button = findNode(tree, node => node.type === "button" && node.props.children === title);
@@ -73,7 +74,7 @@ test("Explore, Appearance and Measure are primary; every advanced view invokes t
     }
   }
   assert.deepEqual(Array.from(h.exports.EXPLORER_CONTROL_SECTIONS, ([id]) => id), ["navigate", "scene", "measure"]);
-  assert.equal(new Set(changes).size, 12, "all existing control views remain reachable");
+  assert.equal(new Set(changes).size, 12, "all retained control views and Explore remain reachable");
   h.dispose();
 });
 test("focus boundaries ignore closed disclosure contents even when the browser retains their layout boxes", () => {

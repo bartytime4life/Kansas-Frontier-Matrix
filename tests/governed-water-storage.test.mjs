@@ -1,3 +1,4 @@
+import { publicFixtureAuthority } from "./public-release-test-authority.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
@@ -5,12 +6,14 @@ import ts from "typescript";
 const compile = text => ts.transpileModule(text, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
 const moduleUrl = text => 'data:text/javascript;base64,' + Buffer.from(compile(text)).toString('base64');
 const waterUrl = moduleUrl(await readFile(new URL('../app/governed-water.ts', import.meta.url), 'utf8'));
+const snapshot = await readFile(new URL('./fixtures/governed-water/snapshot.json', import.meta.url), 'utf8');
+const decision = JSON.parse(await readFile(new URL('./fixtures/governed-water/decision.json', import.meta.url), 'utf8'));
+const publicAuthorityUrl = await publicFixtureAuthority([{family:"water",raw:snapshot,decision}],waterUrl);
 const server = (await readFile(new URL('../app/governed-water-server.ts', import.meta.url), 'utf8'))
  .replace('import { env } from "cloudflare:workers";', 'const env = globalThis.__waterStorage.env;')
  .replace('import { getRawDb } from "../db";', 'const getRawDb = () => globalThis.__waterStorage.db;')
+ .replace('"./public-release-server"', JSON.stringify(publicAuthorityUrl)).replace('"./public-release"', JSON.stringify(publicAuthorityUrl))
  .replace('"./governed-water"', JSON.stringify(waterUrl));
-const snapshot = await readFile(new URL('./fixtures/governed-water/snapshot.json', import.meta.url), 'utf8');
-const decision = JSON.parse(await readFile(new URL('./fixtures/governed-water/decision.json', import.meta.url), 'utf8'));
 const row = {package_id:decision.package_id,decision_json:JSON.stringify(decision),state:'STAGED'};
 const env = {BUCKET:{get:async()=>({size:Buffer.byteLength(snapshot),text:async()=>snapshot})}};
 globalThis.__waterStorage={env,db:{prepare:()=>({first:async()=>row})}};
