@@ -41,7 +41,7 @@
     {
       "gate": "Tests and coverage",
       "outcome": "PASS",
-      "reason": "tests/validators/test_validate_temporal_view_state.py: 19 tests (10 before, 9 new), validate_temporal_view_state.py --fixtures PASS, and the 37 temporal governance tests pass. Branch coverage of temporal/core.py rises from 71% to 97%."
+      "reason": "tests/validators/test_validate_temporal_view_state.py: 19 tests (11 before, 8 new), validate_temporal_view_state.py --fixtures PASS, and the 37 temporal governance tests pass. Branch coverage of temporal/core.py rises from 71% to 97%."
     },
     {
       "gate": "Mutation check",
