@@ -112,7 +112,10 @@ def _validated_exclusions(values: Iterable[str]) -> tuple[str, ...]:
 def _quantize_coordinate(value: object, precision: int) -> int | float:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise GeoJSONDigestError("GeoJSON positions must contain only JSON numbers")
-    numeric = float(value)
+    try:
+        numeric = float(value)
+    except OverflowError as exc:  # an integer literal past the float range
+        raise GeoJSONDigestError("GeoJSON coordinates must be finite") from exc
     if not math.isfinite(numeric):
         raise GeoJSONDigestError("GeoJSON coordinates must be finite")
 
