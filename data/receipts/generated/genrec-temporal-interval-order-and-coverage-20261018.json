@@ -1,0 +1,88 @@
+{
+  "receipt_id": "genrec-temporal-interval-order-and-coverage-20261018",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/temporal/src/temporal/core.py",
+    "tests/validators/test_validate_temporal_view_state.py"
+  ],
+  "artifact_hashes": {
+    "packages/temporal/src/temporal/core.py": "sha256:1a7c21ce37e799cfd8854b406785b0051a223151be5ec00ed4f116fc27f8eec6",
+    "tests/validators/test_validate_temporal_view_state.py": "sha256:0d39d21b2adfa051a2478519b2b0e63eaeee94f4853a07854f5793049c361ec3"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9e42c3b82e32e675bb173228a2e7bd26c369b81d",
+      "repo:packages/temporal/src/temporal/core.py@9e42c3b82e32e675bb173228a2e7bd26c369b81d",
+      "repo:tests/validators/test_validate_temporal_view_state.py@9e42c3b82e32e675bb173228a2e7bd26c369b81d",
+      "repo:fixtures/contracts/v1/common/temporal_view_state/valid/valid_snapshot.json@9e42c3b82e32e675bb173228a2e7bd26c369b81d"
+    ]
+  },
+  "truth_labels": {
+    "packages/temporal/src/temporal/core.py": "CONFIRMED",
+    "tests/validators/test_validate_temporal_view_state.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "On main, a WINDOW from 2024-01-01T00:00:00Z to 2024-01-01T00:00:00.5Z returned ERROR / REVERSED_INTERVAL because the normalized strings were also compared and 'Z' sorts after '.'. After the fix the parsed instants decide and it is SUPPORTED; a truly reversed window is still refused. The new test fails on the original code."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/validators/test_validate_temporal_view_state.py: 19 tests (10 before, 9 new), validate_temporal_view_state.py --fixtures PASS, and the 37 temporal governance tests pass. Branch coverage of temporal/core.py rises from 71% to 97%."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of six safeguards was disabled in turn and the suite failed every time: instant ordering, the withheld-evidence leak check, the frame query-id guard, the pinned-reference requirement, the stale fail_frame guard and the original string-ordering defect."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same 11 pre-existing findings in these files before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/9e42c3b82e32e675bb173228a2e7bd26c369b81d"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-18T23:49:08Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "REVERSED_INTERVAL for instant windows is now decided by the parsed UTC instants; the string comparison remains only as a fallback when parsing fails. Known limitation left unchanged: instants with 7 to 9 fractional digits are accepted and truncated to microseconds by Python datetime; representing sub-microsecond time needs a separate design decision."
+}
