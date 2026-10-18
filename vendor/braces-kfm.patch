@@ -1,0 +1,202 @@
+--- a/lib/compile.js
++++ b/lib/compile.js
+@@ -1,10 +1,13 @@
+ 'use strict';
++
++const checkDepth = require('./depth-limit');
+ 
+ const fill = require('fill-range');
+ const utils = require('./utils');
+ 
+ const compile = (ast, options = {}) => {
+-  const walk = (node, parent = {}) => {
++  const walk = (node, parent = {}, depth = 0) => {
++    checkDepth(depth, node);
+     const invalidBlock = utils.isInvalidBrace(parent);
+     const invalidNode = node.invalid === true && options.escapeInvalid === true;
+     const invalid = invalidBlock === true || invalidNode === true;
+@@ -47,7 +50,7 @@
+ 
+     if (node.nodes) {
+       for (const child of node.nodes) {
+-        output += walk(child, node);
++        output += walk(child, node, depth + 1);
+       }
+     }
+ 
+--- /dev/null
++++ b/lib/depth-limit.js
+@@ -0,0 +1,11 @@
++'use strict';
++
++// KFM mitigation for GHSA-vfj7-8cjw-p6xm; fixed, not caller-configurable.
++module.exports = (depth, node) => {
++  if (depth > 128) {
++    throw new RangeError('braces nesting exceeds fixed depth limit (128)');
++  }
++  if (node && node.value !== undefined && typeof node.value !== 'string') {
++    throw new TypeError('braces AST values must be strings');
++  }
++};
+--- a/lib/expand.js
++++ b/lib/expand.js
+@@ -1,10 +1,13 @@
+ 'use strict';
++
++const checkDepth = require('./depth-limit');
+ 
+ const fill = require('fill-range');
+ const stringify = require('./stringify');
+ const utils = require('./utils');
+ 
+-const append = (queue = '', stash = '', enclose = false) => {
++const append = (queue = '', stash = '', enclose = false, depth = 0) => {
++  checkDepth(depth);
+   const result = [];
+ 
+   queue = [].concat(queue);
+@@ -18,12 +21,12 @@
+   for (const item of queue) {
+     if (Array.isArray(item)) {
+       for (const value of item) {
+-        result.push(append(value, stash, enclose));
++        result.push(append(value, stash, enclose, depth + 1));
+       }
+     } else {
+       for (let ele of stash) {
+         if (enclose === true && typeof ele === 'string') ele = `{${ele}}`;
+-        result.push(Array.isArray(ele) ? append(item, ele, enclose) : item + ele);
++        result.push(Array.isArray(ele) ? append(item, ele, enclose, depth + 1) : item + ele);
+       }
+     }
+   }
+@@ -33,13 +36,16 @@
+ const expand = (ast, options = {}) => {
+   const rangeLimit = options.rangeLimit === undefined ? 1000 : options.rangeLimit;
+ 
+-  const walk = (node, parent = {}) => {
++  const walk = (node, parent = {}, depth = 0) => {
++    checkDepth(depth, node);
+     node.queue = [];
+ 
+     let p = parent;
+     let q = parent.queue;
++    let parentHops = 0;
+ 
+     while (p.type !== 'brace' && p.type !== 'root' && p.parent) {
++      checkDepth(++parentHops);
+       p = p.parent;
+       q = p.queue;
+     }
+@@ -74,14 +80,17 @@
+     const enclose = utils.encloseBrace(node);
+     let queue = node.queue;
+     let block = node;
++    let blockHops = 0;
+ 
+     while (block.type !== 'brace' && block.type !== 'root' && block.parent) {
++      checkDepth(++blockHops);
+       block = block.parent;
+       queue = block.queue;
+     }
+ 
+     for (let i = 0; i < node.nodes.length; i++) {
+       const child = node.nodes[i];
++      checkDepth(depth + 1, child);
+ 
+       if (child.type === 'comma' && node.type === 'brace') {
+         if (i === 1) queue.push('');
+@@ -100,7 +109,7 @@
+       }
+ 
+       if (child.nodes) {
+-        walk(child, node);
++        walk(child, node, depth + 1);
+       }
+     }
+ 
+--- a/lib/parse.js
++++ b/lib/parse.js
+@@ -1,4 +1,6 @@
+ 'use strict';
++
++const checkDepth = require('./depth-limit');
+ 
+ const stringify = require('./stringify');
+ 
+@@ -143,6 +145,7 @@
+      */
+ 
+     if (value === CHAR_LEFT_PARENTHESES) {
++      checkDepth(stack.length + 1);
+       block = push({ type: 'paren', nodes: [] });
+       stack.push(block);
+       push({ type: 'text', value });
+@@ -195,6 +198,7 @@
+      */
+ 
+     if (value === CHAR_LEFT_CURLY_BRACE) {
++      checkDepth(stack.length + 1);
+       depth++;
+ 
+       const dollar = prev.value && prev.value.slice(-1) === '$' || block.dollar === true;
+--- a/lib/stringify.js
++++ b/lib/stringify.js
+@@ -1,9 +1,12 @@
+ 'use strict';
++
++const checkDepth = require('./depth-limit');
+ 
+ const utils = require('./utils');
+ 
+ module.exports = (ast, options = {}) => {
+-  const stringify = (node, parent = {}) => {
++  const stringify = (node, parent = {}, depth = 0) => {
++    checkDepth(depth, node);
+     const invalidBlock = options.escapeInvalid && utils.isInvalidBrace(parent);
+     const invalidNode = node.invalid === true && options.escapeInvalid === true;
+     let output = '';
+@@ -21,7 +24,7 @@
+ 
+     if (node.nodes) {
+       for (const child of node.nodes) {
+-        output += stringify(child);
++        output += stringify(child, {}, depth + 1);
+       }
+     }
+     return output;
+--- a/lib/utils.js
++++ b/lib/utils.js
+@@ -1,4 +1,6 @@
+ 'use strict';
++
++const checkDepth = require('./depth-limit');
+ 
+ exports.isInteger = num => {
+   if (typeof num === 'number') {
+@@ -101,12 +103,13 @@
+ exports.flatten = (...args) => {
+   const result = [];
+ 
+-  const flat = arr => {
++  const flat = (arr, depth = 0) => {
++    checkDepth(depth);
+     for (let i = 0; i < arr.length; i++) {
+       const ele = arr[i];
+ 
+       if (Array.isArray(ele)) {
+-        flat(ele);
++        flat(ele, depth + 1);
+         continue;
+       }
+ 
+--- a/package.json
++++ b/package.json
+@@ -73,5 +73,6 @@
+     "plugins": [
+       "gulp-format-md"
+     ]
+-  }
++  },
++  "kfmPatch": "depth-limit-128-v1"
+ }

@@ -38,7 +38,7 @@ test('a two-sentence greeting and a follow-up without the kite remain unqualifie
 test('the private receipt reader refuses symbolic links before reading contents',async()=>{
  const root=await mkdtemp(join(tmpdir(),'kfm-chat-receipt-'));
  try{
-  const directory=join(root,'kfm-hosted-qwen3-06b-int8-chat-20261018-v1-concise-sampled-v1');
+  const directory=join(root,'kfm-hosted-qwen3-06b-int8-chat-20261018-v2-context-aware-v2');
   await mkdir(directory,{mode:0o700});
   const target=join(root,'synthetic-only.json');await writeFile(target,'{}',{mode:0o600});
   await symlink(target,join(directory,'receipt-11111111-1111-1111-1111-111111111111.json'));
