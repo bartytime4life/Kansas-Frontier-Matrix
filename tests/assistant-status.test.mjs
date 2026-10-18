@@ -265,8 +265,12 @@ test('copy rechecks the existing job, uses its submitted selection after focus c
  try{
   let tree=await submitExportQuestion(render);const initialReads=reads;
   tree=render({focus:{...exportFocus,context:{...exportFocus.context,frame:2025,selection:{...exportFocus.context.selection,intervalIndex:0}}}});
-  findNode(tree,node=>node.type==='button'&&node.props.children==='Copy investigation').props.onClick();await settle();tree=render();
-  assert.equal(reads,initialReads+1);assert.equal(posts,1);assert.match(copied,/10–40 ft/);assert.match(copied,/Map display year: 2026/);assert.match(copied,/intervalIndex.*1/);assert.doesNotMatch(copied,/Map display year: 2025/);assert.match(text(tree),/Sources rechecked; draft only/);
+  findNode(tree,node=>node.type==='button'&&node.props.children==='Copy investigation').props.onClick();
+  for(let attempt=0;attempt<20;attempt++){
+   await new Promise(resolve=>setImmediate(resolve));tree=render();
+   if(/Investigation copied\./.test(text(tree)))break;
+  }
+  assert.equal(reads,initialReads+1);assert.equal(posts,1);assert.match(copied,/10–40 ft/);assert.match(copied,/Map display year: 2026/);assert.match(copied,/intervalIndex.*1/);assert.doesNotMatch(copied,/Map display year: 2025/);assert.match(text(tree),/Investigation copied\. Sources rechecked; draft only, not published\./);
  }finally{h.dispose();}
 });
 test('withdrawal at export replaces cached source text and produces a withheld draft; failed rechecks copy nothing',async()=>{

@@ -33,11 +33,11 @@
     "docs/images/kfm-before-place-search-20261018.jpg": "sha256:e729e28ee2cade3459eeb87cda3370bd47f9cea3f48b7ad8d47f0689c04b7106",
     "docs/images/kfm-before-start-20261018.jpg": "sha256:5bc67fa240f991fe60607ab995b15b3c1df272615654706ba55794147c1d720c",
     "docs/images/kfm-model-time-question-20261018.jpg": "sha256:f1e2516c6c3ca291fc2764f55038fd90f7b69a65fffcaf8225c55f66e47b4a20",
-    "docs/investigation-handoff-20261018.md": "sha256:ea6d693a3e1b01d1ad2770707d69ef44e524cae576bb484d55e8f7b7fdf70135",
+    "docs/investigation-handoff-20261018.md": "sha256:268cfa6f214ba78dfa4f3f7eaaaf93f5f665fbc717ce33bcf47d80a6066258d5",
     "server/public-ai-handler.mjs": "sha256:25b39d942283e6bddc54674067ae4c98e86ec3d7ea2d666de310278c6a8aec71",
     "tests/assistant-context.test.mjs": "sha256:fa56e9a98ee2dc1ff791470fb192956b9d175a395b6467a6d547048a0c49a357",
     "tests/assistant-investigation.test.mjs": "sha256:77f82d99addbbccdadce33114c5afa102f3efa21f8ceb00d659a89564911cad5",
-    "tests/assistant-status.test.mjs": "sha256:132efcdea81086ac003092d366b6c787138baa5540b723fa1df80e5acb49a200",
+    "tests/assistant-status.test.mjs": "sha256:8d7ee8e149d07c35a3dc6a9ef67d6531a7b974b34e5e3fb7fc6cc06c47cff997",
     "tests/county-search.test.mjs": "sha256:230c7d8391d566da0bc7c4e6763ac6d0f9fd0723ffc6fe1d25808feb4abf86da",
     "tests/public-ai.test.mjs": "sha256:7ff39a7968a4fec9b0efbebc8b56d99ba686c63de7236c611dc8d1cac1b840e7"
   },
@@ -46,7 +46,7 @@
     "model": "Codex",
     "version": "UNKNOWN; exact runtime identifier unavailable"
   },
-  "prompt_or_contract": "sha256:ea6d693a3e1b01d1ad2770707d69ef44e524cae576bb484d55e8f7b7fdf70135",
+  "prompt_or_contract": "sha256:268cfa6f214ba78dfa4f3f7eaaaf93f5f665fbc717ce33bcf47d80a6066258d5",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -70,7 +70,7 @@
     ],
     "attached_docs": [
       "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
-      "KFM Explorer — Living Atlas Interface, Default Views and Animation Design — v0.1(1).pdf"
+      "KFM Explorer \u2014 Living Atlas Interface, Default Views and Animation Design \u2014 v0.1(1).pdf"
     ],
     "evidence_refs": [
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/663eedb7845f1a8cd2f4ffeca884c5130c62ac6e/AGENTS.md",
@@ -127,7 +127,7 @@
     {
       "gate": "exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Pending PR creation and actual head run; no inherited checks represented as current."
+      "reason": "Initial head 7c9faed2d6d5ea533c7082d7e6850bc48c849acc failed one new asynchronous copy assertion after build/types passed. Bounded completion wait correction passes the 90-test CI group locally. Follow-up head CI pending; no inherited checks represented as current."
     },
     {
       "gate": "independent-human-review",
@@ -162,9 +162,9 @@
   "created_at": "2026-10-18T07:04:07.983919+00:00",
   "emitter": "OpenAI Codex bounded KFM investigation contribution",
   "links": {
-    "pr_number": null,
+    "pr_number": 5251,
     "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/cefd19e66857f8bf98b4d6995174c14801deb629/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "Application-only authoring on 663eedb7845f1a8cd2f4ffeca884c5130c62ac6e. This receipt binds local implementation and public-baseline captures, not production deployment, source admission, factual-model qualification or independent approval. Browser after-images and full release-backed visitor acceptance remain open. Current-source and query-source release IDs remain separate. Rollback closes/reverts this bounded change without model, DB, source or audience operations."
+  "notes": "Application-only authoring on 663eedb7845f1a8cd2f4ffeca884c5130c62ac6e. This receipt binds local implementation and public-baseline captures, not production deployment, source admission, factual-model qualification or independent approval. Browser after-images and full release-backed visitor acceptance remain open. Current-source and query-source release IDs remain separate. Rollback closes/reverts this bounded change without model, DB, source or audience operations. Initial PR CI exposed an author-introduced asynchronous copy-test completion race, corrected with a bounded event-loop wait without weakening source/scope/request-count checks."
 }

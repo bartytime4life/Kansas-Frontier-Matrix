@@ -111,7 +111,7 @@ checks remain with the existing server. No store or schema migration is needed.
 | Real shipped KGS source | PASS | Local HTTP: `tile-163-257` / `wwc5-1000`, interval 0; source date 1984-07-11, archive edition 2026-09-11, recorded 0–40 ft description. Not an admitted release; no surrounding-geology or county-membership inference. |
 | Missing/time/policy behavior | PASS | Missing record, pre-record map frame and sensitive question remain withheld. Zero model invocations in this source/export replay. |
 | Whitespace | PASS | `git diff --check`. |
-| Exact-head CI | Pending at authoring | Record the actual PR-head run separately; local results are not hosted checks. |
+| Exact-head CI | Initial run failed one new asynchronous copy assertion; follow-up pending | [Run 39106530529](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39106530529) at `7c9faed2d6d5ea533c7082d7e6850bc48c849acc`: build/types and prior groups passed; AI group 89/90. The corrected group passes 90/90 locally. Current-head hosted results remain separate. |
 | Candidate browser/mobile/WebGL/download | NOT VERIFIED | Managed preview starts this composition on port 3000 instead of its required 4173; no passing after-image or rendered download is fabricated. |
 | Independent review, live deployment and publication | Not performed | Draft only; existing holds remain. |
 
@@ -120,6 +120,12 @@ second evidence resolver had already entered immediately after receiving a
 202 response. The identical test failed on unchanged base `663eedb`. Its
 bounded wait now observes the actual pending operation before checking
 cancellation/expiry. The assertion and finite-result behavior are retained.
+
+The first PR CI run also exposed a new copy-test timing error: clipboard data
+was ready before its asynchronous success notice. The test now waits a bounded
+20 event-loop turns for the completion notice and still checks the copied source,
+original selection, unchanged POST count and exactly one rechecking GET. This
+is an author-introduced test failure, separate from the inherited resolver test.
 
 The relevant resource bound is unchanged: county search adds no provider request;
 each explicit save adds one source-rechecking GET, no POST and no inference.
