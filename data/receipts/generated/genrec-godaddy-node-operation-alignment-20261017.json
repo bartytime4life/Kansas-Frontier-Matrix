@@ -1,0 +1,97 @@
+{
+  "receipt_id": "genrec-godaddy-node-operation-alignment-20261017",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md",
+    "apps/public-site/README.md",
+    "apps/site/README.md",
+    "docs/runbooks/README.md",
+    "docs/runbooks/godaddy-hosting.md",
+    "docs/runbooks/godaddy-node-hosting.md",
+    "infra/godaddy/README.md"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:825dc6846e6a8e91f3051dd577168fbfed29e39ec56d0f85145d57c1d81b0683",
+    "apps/public-site/README.md": "sha256:82f558eb0857b9b582b4fb18dd40ace2cab96d1e993b0b5a50089d95cd8bf210",
+    "apps/site/README.md": "sha256:837b804d265764d528896f88a807011fff983c61ac01807ef3ab1f80f66f6aa5",
+    "docs/runbooks/README.md": "sha256:cf729ef1603afdfce72350d7d048c1e8cfb97a5c780cb9cbc60abaa58480cc8e",
+    "docs/runbooks/godaddy-hosting.md": "sha256:705cd8ebf853ffef6ac0dbfe7590310fc29454a1db01fda609e150b5a3448f27",
+    "docs/runbooks/godaddy-node-hosting.md": "sha256:91cf0221aacb493021a7c75d6beca4b27a9fd69504d34cf1f4de7d6b9feb2c70",
+    "infra/godaddy/README.md": "sha256:fe5d1a99424c418b709a85bf29dc0e8c3a581adefd05361a2f2fc96e0fa8477d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "placement_basis": "Existing repository responsibility roots under Directory Rules v2, adopted by ADR-0029; data/receipts/generated is the established generated-work receipt home in this same repository."
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/0be787703daa842bbc2d33e9d941b1c09794cd87",
+      "https://host.godaddy.com/nodejs/projects/q9r9beo47t",
+      "https://kansasfrontiermatrix.com/",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@0be787703daa842bbc2d33e9d941b1c09794cd87"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "CONFIRMED",
+    "apps/public-site/README.md": "CONFIRMED",
+    "apps/site/README.md": "CONFIRMED",
+    "docs/runbooks/README.md": "CONFIRMED",
+    "docs/runbooks/godaddy-hosting.md": "CONFIRMED",
+    "docs/runbooks/godaddy-node-hosting.md": "CONFIRMED",
+    "infra/godaddy/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Changed Markdown local link and fragment validation",
+      "outcome": "PASS",
+      "reason": "All seven changed Markdown files passed local link/fragment validation."
+    },
+    {
+      "gate": "Gap scan",
+      "outcome": "PASS",
+      "reason": "Zero broken local links, structured parse errors and test-package shadows; inherited placeholder counts unchanged."
+    },
+    {
+      "gate": "Changed documentation metadata ratchet",
+      "outcome": "PASS",
+      "reason": "DOC_META_BLOCK_WARN, exit 0; inherited registry/parser findings remain warnings; no registry mutation or human acceptance."
+    },
+    {
+      "gate": "Exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Merge and publication",
+      "outcome": "SKIPPED",
+      "reason": "Owner review and publication authority remain pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-source-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/0be787703daa842bbc2d33e9d941b1c09794cd87"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-18T01:13:13.712183Z",
+  "emitter": "Codex repository and live Node alignment session",
+  "links": {
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/0be787703daa842bbc2d33e9d941b1c09794cd87/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "CONFIRMED labels bind authored bytes and bounded checks only. Human review remains pending. No merge, source admission, data activation, deployment or publication is claimed. Existing publication hold is preserved. No prompt text, secrets, private stores or raw tool logs are included."
+}
