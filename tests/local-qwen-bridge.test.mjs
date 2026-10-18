@@ -206,6 +206,8 @@ async function assertAskEnvelope(response, outcome, reasonCode, message, extras 
   return payload;
 }
 
+const completedOllamaResponse = (value) => Response.json({ model: LOCAL_QWEN_MODEL, done: true, done_reason: "stop", ...value });
+
 const readyOllamaResponse = (url) => {
   if (url.endsWith("/api/version")) return Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION });
   if (url.endsWith("/api/tags")) {
@@ -327,7 +329,7 @@ const localFetch = (base, path, options = {}) => fetch(`${base}${path}`, {
   headers: { origin: SITE_ORIGIN, ...(options.headers ?? {}) },
 });
 
-test("health exposes only finite local-only states for the pinned qwen3:8b model", async () => {
+test("health exposes only finite local-only states for the pinned Qwen model", async () => {
   for (const [upstream, expectedStatus, expectedReason, expectedHttp] of [
     [async (url) => url.endsWith("/api/version")
       ? Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION })
@@ -435,7 +437,7 @@ test("context-only questions reach Ollama with knowledge metadata and stay ABSTA
   const logged = [];
   await withBridge(async (url, options) => {
     calls.push({ url, options });
-    return readyOllamaResponse(url) ?? Response.json({
+    return readyOllamaResponse(url) ?? completedOllamaResponse({
       message: { content: interpretationContent() },
       prompt_eval_count: 2048,
       eval_count: 96,
@@ -781,7 +783,7 @@ test("interpretations cannot carry EvidenceRefs, precise locations, or malformed
     [JSON.stringify({ ...JSON.parse(interpretationContent()), extra: "field" }), 502, "ERROR", "INVALID_MODEL_RESPONSE"],
     [modelContent("UNSUPPORTED", "Wrong schema."), 502, "ERROR", "INVALID_MODEL_RESPONSE"],
   ]) {
-    await withBridge(withReadyOllama(async () => Response.json({ message: { content } })), async (base) => {
+    await withBridge(withReadyOllama(async () => completedOllamaResponse({ message: { content } })), async (base) => {
       const response = await localFetch(base, "/ask", {
         method: "POST", headers: { "content-type": "application/json" },
         body: JSON.stringify({ question: "What is visible?", context }),
@@ -793,7 +795,7 @@ test("interpretations cannot carry EvidenceRefs, precise locations, or malformed
     });
   }
   // Grammar decoding may overrun list caps; the bridge trims instead of failing.
-  await withBridge(withReadyOllama(async () => Response.json({ message: { content: interpretationContent({
+  await withBridge(withReadyOllama(async () => completedOllamaResponse({ message: { content: interpretationContent({
     followUps: ["One?", "Two?", "Three?", "Four?", "Five?"],
   }) } })), async (base) => {
     const response = await localFetch(base, "/ask", {
@@ -811,7 +813,7 @@ test("supported answers must cite the exact declared EvidenceRef", async () => {
   const calls = [];
   await withBridge(async (url, options) => {
     calls.push({ url, options });
-    return readyOllamaResponse(url) ?? Response.json({ message: { content: modelContent(
+    return readyOllamaResponse(url) ?? completedOllamaResponse({ message: { content: modelContent(
       "SUPPORTED",
       `The bounded selection is supported by ${reference}.`,
       [reference],
@@ -853,7 +855,7 @@ test("supported answers must cite the exact declared EvidenceRef", async () => {
   assert.equal(calls[2].options.redirect, "error");
   assert.equal(calls.every((call) => call.options.signal instanceof AbortSignal), true);
 
-  await withBridge(withReadyOllama(async () => Response.json({ message: { content: modelContent(
+  await withBridge(withReadyOllama(async () => completedOllamaResponse({ message: { content: modelContent(
       "SUPPORTED",
       "The model omitted the required reference.",
     ) } })), async (base) => {
@@ -868,7 +870,7 @@ test("supported answers must cite the exact declared EvidenceRef", async () => {
 test("a model cannot replace the deterministic supported-selection answer with an invented claim", async () => {
   const reference = "kfm:evidence:synthetic:atmo-2026";
   const supported = selectionContext("ANSWER", reference);
-  await withBridge(withReadyOllama(async () => Response.json({ message: { content: modelContent(
+  await withBridge(withReadyOllama(async () => completedOllamaResponse({ message: { content: modelContent(
       "SUPPORTED",
       `The selected feature is a secret depot according to ${reference}.`,
       [reference],
@@ -891,7 +893,7 @@ test("a positive model response cannot bridge a missing release-linked visible l
   const formats = [];
   await withBridge(withReadyOllama(async (_url, options) => {
     formats.push(JSON.parse(options.body).format);
-    return Response.json({ message: { content: interpretationContent() } });
+    return completedOllamaResponse({ message: { content: interpretationContent() } });
   }), async (base) => {
     const response = await localFetch(base, "/ask", {
       method: "POST", headers: { "content-type": "application/json" },
@@ -915,7 +917,7 @@ test("a cited model echo cannot turn an unrelated question into an ANSWER", asyn
   // Even a model that echoes the allowed reference only produces an interpretation, which may not cite.
   await withBridge(withReadyOllama(async (_url, options) => {
     formats.push(JSON.parse(options.body).format);
-    return Response.json({ message: { content: interpretationContent() } });
+    return completedOllamaResponse({ message: { content: interpretationContent() } });
   }), async (base) => {
     for (const [label, question, candidate, reasonCode] of [
       ["unrelated weather", "What is today's statewide weather forecast?", supported, "QUESTION_OUTSIDE_SELECTION_SCOPE"],
@@ -935,7 +937,7 @@ test("a cited model echo cannot turn an unrelated question into an ANSWER", asyn
     }
   });
   assert.deepEqual(formats, [QWEN_LOCAL_INTERPRETATION_SCHEMA, QWEN_LOCAL_INTERPRETATION_SCHEMA]);
-  await withBridge(withReadyOllama(async () => Response.json({ message: { content: interpretationContent({
+  await withBridge(withReadyOllama(async () => completedOllamaResponse({ message: { content: interpretationContent({
     summary: `Supported by ${reference}.`,
   }) } })), async (base) => {
     const response = await localFetch(base, "/ask", {
@@ -949,7 +951,7 @@ test("a cited model echo cannot turn an unrelated question into an ANSWER", asyn
 
 test("undeclared model references fail closed and are not returned", async () => {
   const supported = selectionContext("ANSWER", "kfm:evidence:synthetic:future-release-2026");
-  await withBridge(withReadyOllama(async () => Response.json({ message: { content: modelContent(
+  await withBridge(withReadyOllama(async () => completedOllamaResponse({ message: { content: modelContent(
       "SUPPORTED",
       "Invented support kfm:evidence:not-allowed",
       ["kfm:evidence:not-allowed"],
@@ -991,7 +993,7 @@ test("all restrictive prompt carriers deny before any Ollama chat call", async (
   await withBridge(async (url) => {
     ollamaCalls++;
     if (url.endsWith("/api/chat")) chatCalls++;
-    return readyOllamaResponse(url) ?? Response.json({ message: { content: modelContent("UNSUPPORTED", "Must not run.") } });
+    return readyOllamaResponse(url) ?? completedOllamaResponse({ message: { content: modelContent("UNSUPPORTED", "Must not run.") } });
   }, async (base) => {
     for (const scenario of [...restrictiveSelectionCases(), ...restrictivePromptCarrierCases()]) {
       const response = await localFetch(base, "/ask", {
@@ -1056,7 +1058,7 @@ test("upstream failures, oversized replies and concurrent requests stay finite",
     assert.doesNotMatch(text, /PRIVATE_UPSTREAM_DETAIL/);
   });
 
-  await withBridge(withReadyOllama(async () => Response.json({
+  await withBridge(withReadyOllama(async () => completedOllamaResponse({
     message: { content: modelContent("UNSUPPORTED", "x".repeat(65 * 1024)) },
   })), async (base) => {
     const response = await localFetch(base, "/ask", {
@@ -1075,7 +1077,7 @@ test("upstream failures, oversized replies and concurrent requests stay finite",
     const second = await localFetch(base, "/ask", { method: "POST", headers: { "content-type": "application/json" }, body });
     assert.equal(second.status, 429);
     assert.equal((await second.json()).reasonCode, "BRIDGE_BUSY");
-    release(Response.json({ message: { content: modelContent("UNSUPPORTED", "Context only.") } }));
+    release(completedOllamaResponse({ message: { content: modelContent("UNSUPPORTED", "Context only.") } }));
     assert.equal((await first).status, 200);
   });
 });
@@ -1099,7 +1101,7 @@ test("a streaming non-2xx inference response is canceled before the finite error
 });
 
 test("the one-request lock is acquired before a streamed request body finishes", async () => {
-  await withBridge(withReadyOllama(async () => Response.json({
+  await withBridge(withReadyOllama(async () => completedOllamaResponse({
     message: { content: interpretationContent() },
   })), async (base) => {
     const encoded = new TextEncoder().encode(JSON.stringify({ question: "x", context }));
@@ -1164,7 +1166,7 @@ test("request body and request deadline timers are finite", async () => {
 });
 
 test("declared oversized bodies are drained before the bridge lock is released", async () => {
-  await withBridge(withReadyOllama(async () => Response.json({ message: { content: interpretationContent() } })), async (base) => {
+  await withBridge(withReadyOllama(async () => completedOllamaResponse({ message: { content: interpretationContent() } })), async (base) => {
     const oversized = await localFetch(base, "/ask", {
       method: "POST", headers: { "content-type": "application/json" },
       body: "x".repeat(QWEN_LOCAL_MAX_REQUEST_BYTES + 1),
@@ -1210,7 +1212,7 @@ test("unsupported prose and over-precise model output are never returned fluentl
     [modelContent("SUPPORTED", "The selection is at 38.12345, -98.54321 and is supported by kfm:evidence:synthetic:atmo-2026.", ["kfm:evidence:synthetic:atmo-2026"]), "OVER_PRECISE_OUTPUT"],
   ]) {
     const safeContext = selectionContext("ANSWER", "kfm:evidence:synthetic:atmo-2026");
-    await withBridge(withReadyOllama(async () => Response.json({ message: { content: modelResponse } })), async (base) => {
+    await withBridge(withReadyOllama(async () => completedOllamaResponse({ message: { content: modelResponse } })), async (base) => {
       const response = await localFetch(base, "/ask", {
         method: "POST", headers: { "content-type": "application/json" },
         body: JSON.stringify({ question: "What does the selected feature support?", context: safeContext }),
@@ -1246,7 +1248,7 @@ test("deterministic projected answers are postvalidated for precision and undecl
       ...selectionContext("ANSWER", reference),
       selection: { ...selectionContext("ANSWER", reference).selection, summary },
     };
-    await withBridge(withReadyOllama(async () => Response.json({ message: { content: modelContent(
+    await withBridge(withReadyOllama(async () => completedOllamaResponse({ message: { content: modelContent(
       "SUPPORTED",
       `The selected feature is supported by ${reference}.`,
       [reference],
@@ -1271,7 +1273,7 @@ test("plain text and extended model replies fail the structured response contrac
     "A plain unstructured answer.",
     JSON.stringify({ disposition: "UNSUPPORTED", answer: "No support.", evidenceRefs: [], extra: true }),
   ]) {
-    await withBridge(withReadyOllama(async () => Response.json({ message: { content } })), async (base) => {
+    await withBridge(withReadyOllama(async () => completedOllamaResponse({ message: { content } })), async (base) => {
       const response = await localFetch(base, "/ask", {
         method: "POST", headers: { "content-type": "application/json" },
         body: JSON.stringify({ question: "What does the selected feature support?", context: supported }),
@@ -1291,7 +1293,7 @@ test("ask re-verifies the installed digest and never invokes a changed model", a
       return Response.json({ models: [{ name: LOCAL_QWEN_MODEL, digest: "sha256:" + "f".repeat(64) }] });
     }
     chatCalls++;
-    return Response.json({ message: { content: "must not be returned" } });
+    return completedOllamaResponse({ message: { content: "must not be returned" } });
   }, async (base) => {
     const response = await localFetch(base, "/ask", {
       method: "POST", headers: { "content-type": "application/json" },
@@ -1339,4 +1341,28 @@ test("bridge configuration cannot widen model, endpoint or origins", () => {
   assert.throws(() => createLocalQwenBridge({ model: "qwen3:latest" }), /pinned loopback endpoint and model/);
   assert.throws(() => createLocalQwenBridge({ ollamaUrl: "https://model.test" }), /pinned loopback endpoint and model/);
   assert.throws(() => createLocalQwenBridge({ allowedOrigins: [SITE_ORIGIN, "https://other.test"] }), /origin allowlist is fixed/);
+});
+
+
+test("valid-looking local JSON is withheld when Ollama did not complete the pinned model", async () => {
+  for (const flags of [
+    { model: LOCAL_QWEN_MODEL, done: false, done_reason: "stop" },
+    { model: LOCAL_QWEN_MODEL, done: true, done_reason: "length" },
+    { model: "different-model", done: true, done_reason: "stop" },
+    {},
+  ]) {
+    await withBridge(withReadyOllama(async () => Response.json({
+      message: { content: interpretationContent() }, ...flags,
+    })), async (base) => {
+      const response = await localFetch(base, "/ask", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ question: "Explain this synthetic view.", context }),
+      });
+      const payload = await response.json();
+      assert.equal(response.status, 502);
+      assert.equal(payload.reasonCode, "INVALID_MODEL_RESPONSE");
+      assert.equal(payload.interpretation, null);
+      assert.equal(payload.answer, null);
+    });
+  }
 });

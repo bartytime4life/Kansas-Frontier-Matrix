@@ -780,6 +780,9 @@ async function chatWithOllama(fetcher, ollamaUrl, model, signal, { messages, for
     throw new Error("OLLAMA_ERROR");
   }
   const payload = await boundedJson(upstream, QWEN_LOCAL_MAX_REPLY_BYTES, signal);
+  if (payload?.model !== model || payload.done !== true || payload.done_reason !== "stop") {
+    throw new LocalQwenRequestError("INVALID_MODEL_RESPONSE");
+  }
   const raw = payload?.message?.content;
   let decoded = null;
   try { decoded = typeof raw === "string" ? JSON.parse(raw) : null; } catch { decoded = null; }
@@ -1048,7 +1051,9 @@ export function createLocalQwenBridge({
         evidenceRefs: [requiredReference],
       });
     } catch (error) {
-      if (requestDeadline.aborted
+      if (error instanceof LocalQwenRequestError && error.code === "INVALID_MODEL_RESPONSE") {
+        reply(allowedOrigin, 502, "ERROR", "INVALID_MODEL_RESPONSE");
+      } else if (requestDeadline.aborted
         || (error instanceof LocalQwenRequestError && error.code === "REQUEST_TIMEOUT")
         || error?.name === "TimeoutError" || error?.name === "AbortError") {
         reply(allowedOrigin, 504, "ERROR", "REQUEST_TIMEOUT");

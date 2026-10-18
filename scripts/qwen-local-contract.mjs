@@ -1,12 +1,12 @@
 /** Non-secret, local-only contract shared by the Qwen bridge and its tests. */
 export const QWEN_LOCAL_CONTRACT_VERSION = "kfm-qwen-local-v2";
-export const QWEN_LOCAL_BRIDGE_VERSION = "2.0.0";
+export const QWEN_LOCAL_BRIDGE_VERSION = "2.1.0";
 export const QWEN_LOCAL_MODE = "local-only";
-export const QWEN_LOCAL_MODEL = "qwen3:8b";
-export const QWEN_LOCAL_MODEL_DIGEST = "sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41";
+export const QWEN_LOCAL_MODEL = "qwen3.6:35b";
+export const QWEN_LOCAL_MODEL_DIGEST = "sha256:07d35212591fc27746f0a317c975a6d68754fb38e9053d82e25f06057af28522";
 export const QWEN_LOCAL_MODEL_FORMAT = "GGUF";
 export const QWEN_LOCAL_MODEL_QUANTIZATION = "Q4_K_M";
-export const QWEN_LOCAL_MODEL_PARAMETERS = "8.2B";
+export const QWEN_LOCAL_MODEL_PARAMETERS = "36.0B";
 // Ollama.app updates itself, so an exact runtime pin breaks the companion on
 // the next update. The tested release is a floor; the model digest stays exact.
 export const QWEN_LOCAL_OLLAMA_MIN_VERSION = "0.35.1";
