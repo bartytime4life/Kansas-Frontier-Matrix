@@ -1,3 +1,10 @@
+> **Public website boundary — 2026-10-17:** the live
+> [GoDaddy Explorer](https://kansasfrontiermatrix.com/) is a separate standalone
+> Node composition in the same GitHub repository. The [Node runbook](../../docs/runbooks/godaddy-node-hosting.md)
+> pins the observed public source, preview and verification process. This
+> directory preserves the original Sites mirror and its review history; its
+> historical Site checkpoints do not establish the public Node version.
+
 <p align="center">
   <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../../docs/brand/readme/kfm-explorer-walkthrough-dark.svg" /><img src="../../docs/brand/readme/kfm-explorer-walkthrough.svg" alt="Animated illustration of the KFM Explorer: map, area, layers, time, inspect, evidence, report and share." width="100%" /></picture></a>
 </p>
