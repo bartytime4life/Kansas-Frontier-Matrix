@@ -197,7 +197,14 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
       if(!sessions.has(job.owner))return reply({reasonCode:'SESSION_REQUIRED'},401);
       if(jobs.get(job.id)!==job)return reply({reasonCode:'JOB_NOT_FOUND'},404);
       // Use current state after awaiting: cancellation/withdrawal never reverses.
-      return reply({id:job.id,state:job.state,mode:job.mode,deadline:job.deadline,result:job.result,context:job.context?{label:job.context.label,boundary:job.context.boundary,references:job.context.references??[]}:null});
+      const reusable=job.result&&job.result.outcome==='ABSTAIN'&&job.result.reasonCode!=='RELEASE_CHANGED';
+      const contextReleaseId=reusable?job.context?.releaseId??null:null,evidenceReleaseId=reusable?job.packet?.releaseId??null:null;
+      return reply({id:job.id,state:job.state,mode:job.mode,deadline:job.deadline,result:job.result,
+       checkedAt:new Date(clock()).toISOString(),
+       sourceRevision:reusable&&(job.context?.key||job.packet)?'sha256:'+digest({context:job.context?job.contextFingerprint:null,evidence:job.packet?job.evidenceDigest:null}):null,
+       releaseId:contextReleaseId&&evidenceReleaseId&&contextReleaseId!==evidenceReleaseId?null:contextReleaseId??evidenceReleaseId,
+       contextReleaseId,evidenceReleaseId,
+       context:job.context?{label:job.context.label,boundary:job.context.boundary,references:job.context.references??[]}:null});
      }finally{release();}
     }
    }

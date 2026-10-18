@@ -1,11 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as surfaces from '../app/assistant-surfaces.mjs';
+import ts from 'typescript';
+import {readFile} from 'node:fs/promises';
 import {componentHarness,findNode,settle} from './component-harness.mjs';
+const investigation=await import('data:text/javascript;base64,'+Buffer.from(ts.transpileModule(await readFile(new URL('../app/assistant-investigation.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText).toString('base64'));
 
 async function workspace(fetch,props={},fields={},extra={}){
  const polls=[];
- const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:{}},'../assistant-surfaces.mjs':surfaces},{fetch,Response,TextEncoder,FormData:class {get(name){return fields[name]??null;}},queueMicrotask,setInterval:fn=>{polls.push(fn);return polls.length;},clearInterval:()=>{},...extra});
+ const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:{}},'../assistant-surfaces.mjs':surfaces,'../assistant-investigation':investigation},{fetch,Response,TextEncoder,FormData:class {get(name){return fields[name]??null;}},queueMicrotask,setInterval:fn=>{polls.push(fn);return polls.length;},clearInterval:()=>{},...extra});
  const render=(next=props)=>{const tree=h.render(h.exports.default,next);h.commit();return tree;};
  render();await settle();
  return {h,polls,render};
@@ -242,5 +245,59 @@ test('a repeated ordinary follow-up explains withholding and offers no duplicate
   await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});tree=render();await settle();tree=render();
   assert.match(text(tree),/instead of answering the follow-up/);assert.match(text(tree),/duplicate was withheld/);
   for(const label of ['Continue reply','Copy draft outline'])assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children===label),undefined);
+ }finally{h.dispose();}
+});
+
+const exportFocus={title:'Synthetic selected interval',detail:'Original source context',context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'subsurface',tileId:'tile-160-255',recordId:'synthetic-one',intervalIndex:1}}};
+const exportJob=()=>({id:'synthetic-export',state:'completed',deadline:0,checkedAt:'2026-10-18T06:00:00Z',sourceRevision:'sha256:'+'a'.repeat(64),releaseId:null,result:{outcome:'ABSTAIN',reasonCode:'SOURCE_CONTEXT_ONLY',answer:null,interpretation:null,sourceSummary:'Synthetic interval: 10–40 ft. Not admitted evidence.'},context:{label:'synthetic-one',boundary:'KGS source context, not admitted evidence',references:[{label:'KGS original',url:'https://www.kgs.ku.edu/',role:'SOURCE_CONTEXT'}]}});
+async function submitExportQuestion(render){
+ let tree=render();message(tree).props.onChange({target:{value:'Explain the selected interval.'}});tree=render();
+ await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+ render();await settle();return render();
+}
+test('copy rechecks the existing job, uses its submitted selection after focus changes, and omits unrelated history',async()=>{
+ let reads=0,posts=0,copied='';
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST'){posts++;return Response.json({id:'synthetic-export'});}
+  reads++;return Response.json(exportJob());
+ },{focus:exportFocus},{},{navigator:{clipboard:{writeText:async value=>{copied=value;}}}});
+ try{
+  let tree=await submitExportQuestion(render);const initialReads=reads;
+  tree=render({focus:{...exportFocus,context:{...exportFocus.context,frame:2025,selection:{...exportFocus.context.selection,intervalIndex:0}}}});
+  findNode(tree,node=>node.type==='button'&&node.props.children==='Copy investigation').props.onClick();await settle();tree=render();
+  assert.equal(reads,initialReads+1);assert.equal(posts,1);assert.match(copied,/10–40 ft/);assert.match(copied,/Map display year: 2026/);assert.match(copied,/intervalIndex.*1/);assert.doesNotMatch(copied,/Map display year: 2025/);assert.match(text(tree),/Sources rechecked; draft only/);
+ }finally{h.dispose();}
+});
+test('withdrawal at export replaces cached source text and produces a withheld draft; failed rechecks copy nothing',async()=>{
+ for(const failure of ['withdrawn','offline']){
+  let exporting=false,copied='';
+  const {h,render}=await workspace(async(url,options)=>{
+   if(url.endsWith('/status'))return ready();
+   if(options.method==='POST')return Response.json({id:'synthetic-export'});
+   if(exporting&&failure==='offline')return Response.json({reasonCode:'AI_READ_BUSY'},{status:429,headers:{'Retry-After':'2'}});
+   return Response.json(exporting?{...exportJob(),context:null,sourceRevision:null,result:{outcome:'ABSTAIN',reasonCode:'RELEASE_CHANGED',answer:null,interpretation:null}}:exportJob());
+  },{focus:exportFocus},{},{navigator:{clipboard:{writeText:async value=>{copied=value;}}}});
+  try{
+   let tree=await submitExportQuestion(render);exporting=true;
+   findNode(tree,node=>node.type==='button'&&node.props.children==='Copy investigation').props.onClick();await settle();tree=render();
+   if(failure==='withdrawn'){assert.match(copied,/RELEASE_CHANGED/);assert.doesNotMatch(copied,/10–40 ft/);assert.doesNotMatch(text(tree),/Synthetic interval: 10–40 ft/);}
+   else{assert.equal(copied,'');assert.match(text(alert(tree)),/Sources must be rechecked first/);assert.match(text(tree),/Explain the selected interval/);}
+  }finally{h.dispose();}
+ }
+});
+test('JSON download contains only the checked investigation and never resubmits or invokes inference',async()=>{
+ const urls=[],anchors=[];let posts=0;
+ class DownloadUrl extends URL{static createObjectURL(blob){urls.push(blob);return 'blob:synthetic';}static revokeObjectURL(){}}
+ const document={body:{append(){}},createElement(){const anchor={click(){anchors.push(this);},remove(){}};return anchor;}};
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST'){posts++;return Response.json({id:'synthetic-export'});}
+  return Response.json(exportJob());
+ },{focus:exportFocus},{},{URL:DownloadUrl,Blob,document});
+ try{
+  const tree=await submitExportQuestion(render);findNode(tree,node=>node.type==='button'&&node.props.children==='Download investigation JSON').props.onClick();await settle();
+  assert.equal(posts,1);assert.equal(anchors[0].download,'kfm-investigation-draft.json');
+  const draft=JSON.parse(await urls[0].text());assert.equal(draft.status,'DRAFT');assert.equal(draft.scope.selection.intervalIndex,1);assert.equal(draft.result.answer,null);assert.match(draft.result.sourceSummary,/10–40 ft/);
  }finally{h.dispose();}
 });

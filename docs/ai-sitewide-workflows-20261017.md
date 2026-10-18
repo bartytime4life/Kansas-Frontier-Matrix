@@ -1,5 +1,19 @@
 # Public AI workflow continuation · 2026-10-17
 
+## Investigation handoff candidate · 2026-10-18
+
+The existing selected-source workflow now has source-rechecked copy, Markdown
+and JSON investigation actions. These preserve the submitted scope and source
+dates while keeping source context, generated discussion, release identities
+and withholding outcomes distinct. A changed source removes old content from
+the saved draft; a failed recheck saves nothing. Loaded Census counties are
+also discoverable from the existing global search without changing map time.
+These are local implementation results, not a deployed or fully release-backed
+investigation. See [the bounded review record](investigation-handoff-20261018.md)
+for the public screenshots, model-quality failure, validation, remaining browser
+and release gates, placement and rollback. Historical checkpoints below retain
+their original date and scope.
+
 ## Full-prefix repetition repair · 2026-10-17
 
 Actual GoDaddy Preview at merged #5243 revision

@@ -4,3 +4,4 @@
 .context{margin:10px 16px 0;padding:10px 12px;border:1px solid #506676;border-radius:8px;overflow-wrap:anywhere;flex-shrink:0}.context p{margin:6px 0;font-size:12px;line-height:1.45}.context small{color:#b4c9d0}.prompts{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px}.prompts button{font-size:11px;padding:6px 8px}
 
 .guide{margin:8px 16px;font-size:12px;flex-shrink:0}.guide p{line-height:1.5}.replyActions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.replyActions button{font-size:12px;padding:6px 8px}
+.replyActions button{min-height:44px}.replyActions small{flex-basis:100%;letter-spacing:normal}

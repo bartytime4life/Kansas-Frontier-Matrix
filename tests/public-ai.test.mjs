@@ -138,6 +138,9 @@ test('pending evidence rechecks return a job promptly and cannot restore cancell
   let reads=0,release;
   const f=fixture(undefined,false,async value=>++reads===2?new Promise(resolve=>{release=()=>resolve(value);}):value);
   const created=await f.request('jobs',{...question,mode:'evidence'});
+  // The bounded read buffer schedules preparation asynchronously. Observe the
+  // actual second resolver entry before cancelling/expiring its pending work.
+  for(let attempt=0;attempt<20&&typeof release!=='function';attempt++)await new Promise(resolve=>setImmediate(resolve));
   assert.equal(created.response.status,202);assert.equal(typeof release,'function');
   assert.equal((await f.request('jobs/'+created.body.id,undefined,created.cookie)).body.state,'running');
   if(terminal==='cancelled')assert.equal((await f.request('jobs/'+created.body.id+'/cancel',{},created.cookie)).body.cancelled,true);
