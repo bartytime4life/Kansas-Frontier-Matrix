@@ -108,6 +108,13 @@ test('the effect scrolls the scroll region through the decision helper and track
  assert.doesNotMatch(effect,/logRef\.current\?\.scrollTo/);
 });
 
+test('a new alert scrolls the region to its top; success notices do not move the reader',()=>{
+  assert.match(source,/useEffect\(\(\)=>\{if\(error\|\|chatFailure\)bodyRef\.current\?\.scrollTo\(\{top:0,behavior:'auto'\}\);\},\[error,chatFailure\]\);/);
+  assert.doesNotMatch(source,/\[error,chatFailure,exportNotice\]|\[exportNotice\]\);/);
+  const notices=source.slice(source.indexOf('const notices=<>'),source.indexOf('</>;',source.indexOf('const notices=<>')));
+  assert.ok(notices.indexOf("role='alert'")<notices.indexOf('chatStatus?.configured'),'alerts come before the standing model notice');
+});
+
 test('status notices and alerts render inside the scroll region, not above the pinned bar',async()=>{
  const inBody=(tree,predicate)=>{const body=findNode(tree,node=>node.props?.className==='body'),outside=children(tree).filter(node=>node.props?.className!=='body'&&node.type!=='form');return Boolean(findNode(body,predicate))&&!outside.some(node=>findNode(node,predicate));};
  const loading=await renderChat(async()=>Response.json({configured:true,online:false,ready:false,evidenceSearchAvailable:true,requiresLogin:false}));

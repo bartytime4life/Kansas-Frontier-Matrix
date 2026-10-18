@@ -47,6 +47,8 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
   const body=bodyRef.current;if(!body||!shouldAutoscroll(previous,next,nearBottomRef.current))return;
   body.scrollTo({top:body.scrollTop+conversationEnd(),behavior:'auto'});nearBottomRef.current=true;
  },[turns]);
+ // Alerts lead the scroll region (before standing notices); bring a new one into view. Success notices and screen-reader announcements are unaffected.
+ useEffect(()=>{if(error||chatFailure)bodyRef.current?.scrollTo({top:0,behavior:'auto'});},[error,chatFailure]);
  const id=job?.id,state=job?.state;
  useEffect(()=>{
   if(!id||!['preparing','queued','running'].includes(state??''))return;
@@ -97,9 +99,9 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
  const canSubmit=Boolean(chatStatus?.configured&&(mode==='evidence'?chatStatus.evidenceSearchAvailable===true:sourceContext||chatStatus.ready));
  const statusText=!chatStatus?(chatFailure?'AI connection unavailable':'Checking hosted AI'):!chatStatus.configured?'Awaiting owner setup':mode==='evidence'?(chatStatus.evidenceSearchAvailable?'Evidence search available':'Evidence search unavailable'):sourceContext?'Source summary available':!chatStatus.online?'AI unavailable':!chatStatus.ready?'Loading model…':'Qwen3 0.6B ready';
  const notices=<>
-   {chatStatus?.configured&&!chatStatus.ready&&(sourceContext||chatStatus.evidenceSearchAvailable)&&<p className={styles.notice}>{sourceContext?'Selected sample summaries use the original source and do not require the AI model. General discussion is unavailable.':'AI discussion is unavailable. Choose Find evidence to search released records without waiting for the model. Records may still be unavailable.'}</p>}
    {chatFailure&&<p role='alert' className={styles.notice}>{chatFailure}</p>}
    {error&&<p role='alert' className={styles.notice}>{error}</p>}
+   {chatStatus?.configured&&!chatStatus.ready&&(sourceContext||chatStatus.evidenceSearchAvailable)&&<p className={styles.notice}>{sourceContext?'Selected sample summaries use the original source and do not require the AI model. General discussion is unavailable.':'AI discussion is unavailable. Choose Find evidence to search released records without waiting for the model. Records may still be unavailable.'}</p>}
    {exportNotice&&<p role='status' className={styles.notice}>{exportNotice}</p>}
  </>;
  return <div className={styles.chat}>
