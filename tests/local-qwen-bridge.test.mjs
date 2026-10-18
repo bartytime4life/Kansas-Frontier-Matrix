@@ -484,6 +484,38 @@ test("context-only questions reach Ollama with knowledge metadata and stay ABSTA
   assert.doesNotMatch(JSON.stringify(logged), /river gauges|statewide USGS River Pulse/);
 });
 
+test("unchanged map and knowledge stay ahead of the changing question for prefix reuse", async () => {
+  const sent = [];
+  const questions = ["Explain the river gauges in this view.", "In this view, explain the river gauges."];
+  await withBridge(withReadyOllama(async (_url, options) => {
+    sent.push(JSON.parse(options.body));
+    return completedOllamaResponse({ message: { content: interpretationContent() } });
+  }), async (base) => {
+    for (const question of questions) {
+      const response = await localFetch(base, "/ask", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ question, context }),
+      });
+      assert.equal(response.status, 200);
+      await assertAskEnvelope(response, "ABSTAIN", "CONTEXT_ONLY_INTERPRETATION", undefined, {
+        interpretation: JSON.parse(interpretationContent()),
+      });
+    }
+  });
+  const prefixes = sent.map((request, index) => {
+    const content = request.messages[1].content;
+    const suffix = `User question: ${questions[index]}`;
+    assert.ok(content.endsWith(suffix), "the varying question follows all retained context");
+    const prefix = content.slice(0, -suffix.length);
+    assert.ok(prefix.includes(JSON.stringify(context)), "full current map context is retained");
+    assert.match(prefix, /METADATA_NOT_EVIDENCE/);
+    assert.match(prefix, /Discharge is not comparable across differently sized basins/);
+    assert.match(prefix, /Use empty lists rather than inventing content/);
+    return prefix;
+  });
+  assert.equal(prefixes[0], prefixes[1], "equivalent questions retain an identical reusable prefix");
+});
+
 test("sensitive questions abstain before any Ollama call", async () => {
   let calls = 0;
   await withBridge(async () => { calls++; throw new Error("must not call"); }, async (base) => {

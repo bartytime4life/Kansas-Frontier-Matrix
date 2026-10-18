@@ -337,11 +337,6 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
     "Context contract: kfm-qwen-map-context-v1",
     "Prompt profile: context-interpretation-v1",
     `Why there is no evidence-backed answer: ${INTERPRETATION_REASONS[reasonCode]}`,
-    `User question: ${question}`,
-    "KFM knowledge metadata (METADATA_NOT_EVIDENCE, JSON):",
-    JSON.stringify(knowledge),
-    "Map context and redacted connection health (JSON):",
-    JSON.stringify(context),
     [
       "Return only the requested JSON object:",
       "- summary: 2 to 4 plain sentences that answer as far as the context and metadata allow, naming the source limits that matter.",
@@ -351,6 +346,13 @@ function interpretationPromptFor(question, context, knowledge, reasonCode) {
       "- followUps: up to 3 short questions the user could ask next in this map, preferring the domain and cross-domain ideas when they fit.",
       "Use empty lists rather than inventing content.",
     ].join("\n"),
+    // Keep unchanged instructions/metadata ahead of the varying question so
+    // Ollama may reuse its prefix cache. Retain the full selected payload.
+    "KFM knowledge metadata (METADATA_NOT_EVIDENCE, JSON):",
+    JSON.stringify(knowledge),
+    "Map context and redacted connection health (JSON):",
+    JSON.stringify(context),
+    `User question: ${question}`,
   ].join("\n\n");
 }
 

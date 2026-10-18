@@ -17,7 +17,7 @@ const interpretation = (overrides = {}) => JSON.stringify({
 const stubOllama = (content) => async (url) => {
   if (url.endsWith("/api/version")) return Response.json({ version: QWEN_LOCAL_OLLAMA_MIN_VERSION });
   if (url.endsWith("/api/tags")) return Response.json({ models: [{ name: LOCAL_QWEN_MODEL, digest: LOCAL_QWEN_MODEL_DIGEST }] });
-  return Response.json({ message: { content }, prompt_eval_count: 3000, eval_count: 120 });
+  return Response.json({ model: LOCAL_QWEN_MODEL, done: true, done_reason: "stop", message: { content }, prompt_eval_count: 3000, eval_count: 120 });
 };
 
 async function withBridge(fetcher, exercise) {
