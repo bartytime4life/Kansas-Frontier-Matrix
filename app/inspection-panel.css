@@ -57,4 +57,15 @@
   .explorer-shell[data-inspector] > .qwen-panel { z-index: 70; }
   .explorer-shell[data-inspector] > .qwen-modal-backdrop { display: block; position: absolute; inset: 0; z-index: 69; background: rgba(0, 0, 0, .16); }
   .explorer-shell[data-inspector] > .qwen-panel .qwen-messages { max-height: none; }
+  /* The sheet already names "Chat with KFM" in its switch; keep the heading as the dialog's accessible name only. */
+  .explorer-shell[data-inspector] > .qwen-panel .qwen-panel-heading {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+    overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap;
+  }
+  /* One row of map context so the pinned question bar keeps its height on phones. */
+  .explorer-shell[data-inspector] > .qwen-panel .qwen-context-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .explorer-shell[data-inspector] > .qwen-panel .qwen-context-strip span { border-bottom: 0; border-right: 1px solid var(--line); padding: 6px 8px; }
+  .explorer-shell[data-inspector] > .qwen-panel .qwen-context-strip span:last-child { border-right: 0; }
+  .explorer-shell[data-inspector] > .qwen-panel .qwen-context-strip small { font-size: 9px; white-space: nowrap; }
+  .explorer-shell[data-inspector] > .qwen-panel .qwen-context-strip strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
