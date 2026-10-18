@@ -1,7 +1,7 @@
 /** Public-copy routing is deny by default; storage authorization remains per-reader. */
 export type PublicRouteDecision = { allowed: boolean; reason: string };
 
-const pages = new Set(["/", "/about", "/topics", "/almanacs", "/observatory", "/observatory/sources", "/favicon.ico"]);
+const pages = new Set(["/", "/about", "/topics", "/almanacs", "/observatory", "/observatory/sources", "/favicon.ico", "/api/build"]);
 const families = "(?:water|weather|soil|storm-events|earthquakes)";
 const reads = new RegExp(`^/api/governed/(?:v1|${families}/v1)/(?:bootstrap|layers|evidence)$`);
 const administrativeFamilies = "(?:water|weather|soil|storm-events|earthquakes|subsurface|groundwater|archive)";

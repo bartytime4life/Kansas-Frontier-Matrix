@@ -8,9 +8,9 @@
   "scripts": {
     "install:ci": "bash scripts/install-ci.sh",
     "prepare:maplibre": "node scripts/prepare-maplibre-assets.mjs",
-    "predev": "npm run prepare:maplibre && npm run prepare:lightning",
+    "predev": "npm run prepare:identity && npm run prepare:maplibre && npm run prepare:lightning",
     "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
-    "prebuild": "npm run verify:public-assets && npm run prepare:maplibre && npm run prepare:lightning",
+    "prebuild": "npm run prepare:identity && npm run verify:public-assets && npm run prepare:maplibre && npm run prepare:lightning",
     "build": "bash scripts/build-verified.sh",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build && node --test tests/*.test.mjs",
@@ -25,7 +25,8 @@
     "eval:qwen-local": "node scripts/qwen-local-eval.mjs",
     "eval:qwen-gate": "node scripts/qwen-question-gate-corpus.mjs",
     "validate:subsurface-public": "node scripts/validate-subsurface-public.mjs",
-    "prestart": "npm run validate:subsurface-public && node scripts/validate-subsurface-public.mjs dist/client"
+    "prestart": "npm run validate:subsurface-public && node scripts/validate-subsurface-public.mjs dist/client",
+    "prepare:identity": "node scripts/build-identity.mjs"
   },
   "dependencies": {
     "@mapbox/vector-tile": "2.0.4",
