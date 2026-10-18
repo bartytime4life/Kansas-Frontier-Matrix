@@ -60,6 +60,7 @@ jobs:
             sleep 1
           done
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/godaddy-node-runtime.test.mjs
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/county-search.browser.mjs
       - name: GoDaddy preview command uses the assigned production port
         shell: bash
         run: |
