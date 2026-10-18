@@ -1,4 +1,6 @@
 "use client";
+import { installExplorerMenuDismissal } from "./explorer-menu-dismissal";
+import { countySearchGeometry, countySearchResults, type CountySearchItem } from "./county-search";
 import { isolateModalBackground, modalReturnTarget } from "./modal-background";
 import { decodeStreamflowTransport } from "./streamflow-transport";
 import { browserJsonRequest } from "./browser-json-request";
@@ -469,7 +471,7 @@ type OfficialSourceSearchItem = Readonly<{
   subtitle: string;
   officialContextId: OfficialContextId;
 }>;
-type GlobalSearchItem = SearchItem | OfficialSourceSearchItem;
+type GlobalSearchItem = SearchItem | OfficialSourceSearchItem | CountySearchItem;
 
 type SelectedContext = {
   kind: "registry" | "basemap";
@@ -2510,8 +2512,9 @@ export default function Home() {
     const sourceResults: GlobalSearchItem[] = OFFICIAL_CONTEXT_SOURCES
       .filter((source) => `${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${source.endpointLabel}`.toLowerCase().includes(query))
       .map((source) => ({ id: `source:${source.id}`, kind: "source", title: source.shortTitle, subtitle: `${source.organization} · ${source.domain}`, officialContextId: source.id }));
-    return [...sourceResults, ...mapResults].slice(0, 7);
-  }, [debouncedGlobalQuery]);
+    const counties = countySearchResults(officialPayloads["census-counties"], officialStates["census-counties"], query);
+    return [...counties, ...sourceResults, ...mapResults].slice(0, 7);
+  }, [debouncedGlobalQuery, officialPayloads, officialStates]);
   const filteredRepositoryUpdates = useMemo(() => {
     const query = repositoryQuery.trim().toLowerCase();
     return REPOSITORY_UPDATES.filter((update) => {
@@ -6989,8 +6992,25 @@ export default function Home() {
 
   const chooseSearchResult = (item: GlobalSearchItem) => {
     setPrimaryWorkspace("map");
-    if (primaryWorkspace !== "map" && item.kind !== "source") window.setTimeout(() => mapContainerRef.current?.focus(), 0);
+    if (primaryWorkspace !== "map" && item.kind !== "source" && item.kind !== "county") window.setTimeout(() => mapContainerRef.current?.focus(), 0);
     setGlobalQuery("");
+    if (item.kind === "county") {
+      // Resolve again from the current successful payload; a stale search row
+      // cannot reopen a failed/removed baseline or silently change map time.
+      const payload = officialPayloads["census-counties"];
+      const current = countySearchResults(payload, officialStates["census-counties"], item.title).find(row => row.id === item.id);
+      const feature = current && payload?.data.features.find(row => row.properties?.featureId === current.featureId);
+      const geometry = feature && countySearchGeometry(feature);
+      if (!feature || !geometry) { announce("The county source is no longer available. Reopen Map layers to retry it."); return; }
+      const source = OFFICIAL_CONTEXT_SOURCES.find(row => row.id === "census-counties");
+      const context = buildBasemapContext({ ...feature, source: source?.sourceId }, ...geometry.focus);
+      if (!context) return;
+      setOfficialContextVisible("census-counties", true);
+      openSelection(context, globalSearchInputRef.current);
+      mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
+      announce(`Opened ${current!.title} from the Census reference baseline. Map time is unchanged; source context is not KFM evidence.`);
+      return;
+    }
     if (item.kind === "source") {
       sourceSearchFocusPendingRef.current = true;
       openAtlasPanel("layers");
@@ -8938,6 +8958,11 @@ export default function Home() {
     if (mapUtilityView === "compare") setMapUtilityOpen(false);
     activateMapRepresentation(mode);
   };
+  const explorerHeaderRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (explorerHeaderRef.current) return installExplorerMenuDismissal(explorerHeaderRef.current);
+  }, []);
+
   const mapRepresentationControls = () => <>
               <button type="button" data-map-panel="underground" aria-label="Underground Logs & sections" title="Underground Logs & sections" aria-pressed={undergroundOpen} data-active={undergroundOpen} onClick={toggleUnderground}><b>Underground</b><span className="sr-only">Logs &amp; sections</span></button>
               <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => chooseMapMenuRepresentation("2d")}><b>2D</b><span>Map</span></button>
@@ -8952,7 +8977,7 @@ export default function Home() {
   return (
     <div className="site-root">
       <a className="skip-link" href="#map-canvas" onClick={returnToPrimaryMap}>Skip to the map</a>
-      <header className="topbar">
+      <header ref={explorerHeaderRef} className="topbar">
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong>Kansas Frontier Matrix</strong><small>Spatial evidence explorer</small></span>
@@ -8977,7 +9002,7 @@ export default function Home() {
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "layers"} title={sourceIssues.length ? `${sourceIssues.length} selected sources need attention · open Layers → Source status` : "Open map layers"} data-attention={sourceIssues.length > 0}><span aria-hidden="true">≡</span><strong>Layers</strong><b>{selectedMapLayerCount}</b></button>
         {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel toolbar rendering={<><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /><label className="effects-ambient"><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={event => setDynamicEffects(event.target.checked)} /> Ambient motion{reducedMotion ? " · reduced motion" : ""}</label></>} onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunClock, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
-              <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" data-explorer-menu="map" onBlur={(event) => { if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
+              <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" data-explorer-menu="map" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
                 <summary aria-label="Map views and controls">Map <small className="map-dock-current-view">{undergroundOpen ? "Underground" : mapUtilityOpen && mapUtilityView === "compare" ? "Compare A/B" : mapRepresentationLabel}</small><span aria-hidden="true">⌄</span></summary>
                 <div className="map-dock-menu-panel">
                   <div className="map-dock-menu-representations" role="group" aria-label="Map representation" onClick={(event) => { const button = (event.target as HTMLElement).closest("button"); if (button) closeHeaderOverflow(event.currentTarget, !button.hasAttribute("data-map-panel")); }}>
@@ -8996,7 +9021,7 @@ export default function Home() {
           </nav>
         <div className="top-actions">
           <button className="guide-trigger" type="button" aria-label="Open the quick start guide" title="Quick start guide" aria-expanded={guideOpen && primaryWorkspace === "map"} onClick={toggleExplorerGuide}>?</button>
-          <details className="header-overflow-menu" name="map-dock-menu" data-explorer-menu="more" onBlur={(event) => { if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false; }} onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
+          <details className="header-overflow-menu" name="map-dock-menu" data-explorer-menu="more" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
             <summary aria-label="More site actions" title="More site actions">More <span aria-hidden="true">⌄</span></summary>
             <div className="header-overflow-panel">
               <div className="header-overflow-workspaces" role="group" aria-label="Primary Explorer actions">
@@ -9970,7 +9995,7 @@ export default function Home() {
                     ["2d", "2D map", "Mercator · terrain off"],
                     ["terrain", "Terrain 3D", terrainState === "READY" ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "Loading DEM"],
                     ["globe", "Globe", "Globe projection"],
-                  ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => activateMapRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
+                  ] as const).map(([id, title, detail]) => <button key={id} type="button" aria-pressed={!undergroundOpen && (id === "terrain" ? scenePreset === "elevation-3d" : id === "globe" ? projection === "globe" : projection === "mercator" && scenePreset !== "elevation-3d")} onClick={() => chooseMapMenuRepresentation(id)}><span>{id === "terrain" ? "3D" : id === "globe" ? "◎" : "2D"}</span><strong>{title}</strong><small>{detail}</small></button>)}
                   <button type="button" aria-label="Underground recorded layers" aria-pressed={undergroundOpen} onClick={() => { toggleUnderground(); setUndergroundFocusRequest((request) => request + 1); }}><span>↓</span><strong>Underground</strong><small>Recorded logs, cores &amp; aquifers</small></button>
                 </section>
 

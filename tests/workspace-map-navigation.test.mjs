@@ -138,27 +138,22 @@ test('opening source details from a layer keeps the outer Layers return target',
   assert.equal(h.scope.sourceStatusReturnRef.current,inner);
 });
 
-test('touch focus transfer keeps header commands reachable; keyboard focus exit still dismisses',()=>{
-  const handlers=[];
+test('header focus dismissal uses the shared pointer-safe listener',()=>{
+  // The shared regression suite executes null-focus taps, outside focus, Escape
+  // and cleanup. Keep the integration free of the superseded blur handler.
+  assert.match(ast.text, /installExplorerMenuDismissal\(explorerHeaderRef.current\)/);
+  let menus=0;
   function inspect(node){
     if(ts.isJsxOpeningElement(node)&&node.tagName.getText(ast)==='details'){
       const attributes=node.attributes.properties;
-      const menu=attributes.find(a=>a.name?.getText(ast)==='className')?.initializer?.text;
-      if(menu==='map-dock-menu map-dock-map-menu'||menu==='header-overflow-menu') handlers.push(attributes.find(a=>a.name?.getText(ast)==='onBlur').initializer.expression.getText(ast));
+      const cls=attributes.find(a=>a.name?.getText(ast)==='className')?.initializer?.text;
+      if(cls==='map-dock-menu map-dock-map-menu'||cls==='header-overflow-menu'){
+        menus++;assert.equal(attributes.some(a=>a.name?.getText(ast)==='onBlur'),false);
+      }
     }
     ts.forEachChild(node,inspect);
   }
-  inspect(ast);assert.equal(handlers.length,2,'exercise both actual header handlers');
-  class FocusNode {}
-  for(const handler of handlers){
-    const code=ts.transpileModule(`return ${handler};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-    const blur=new Function('Node',code)(FocusNode), inside=new FocusNode(), outside=new FocusNode();
-    const menu={open:true,contains:target=>target===inside};
-    blur({currentTarget:menu,relatedTarget:null});
-    assert.equal(menu.open,true,'null focus between pointer-down and click must not hide the command');
-    blur({currentTarget:menu,relatedTarget:inside});assert.equal(menu.open,true);
-    blur({currentTarget:menu,relatedTarget:outside});assert.equal(menu.open,false,'Tab to another control closes the menu');
-  }
+  inspect(ast);assert.equal(menus,2);
 });
 
 test('outside pointer dismissal preserves an inside tap, closes the other menu and cleans up',()=>{

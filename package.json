@@ -11,7 +11,7 @@
     "prepare:maplibre": "node scripts/prepare-maplibre-assets.mjs",
     "predev": "npm run prepare:maplibre && npm run prepare:lightning",
     "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vite",
-    "prebuild": "npm run prepare:maplibre && npm run prepare:lightning",
+    "prebuild": "npm run prepare:maplibre && npm run prepare:lightning && node scripts/build-identity.mjs",
     "build": "vinext build",
     "start": "node server/start.mjs",
     "test": "npm run build && node --test tests/*.test.mjs",
