@@ -26,6 +26,6 @@ test('built public identity matches current inputs and About exposes usable proj
   assert.ok(about.includes('Historical repository and Sites snapshots'));
   assert.ok(!about.includes('Canonical host:'));
   assert.ok(!about.includes('no inference endpoint is configured by default'));
-  assert.ok(about.includes('responses can be incomplete or withheld'));
+  assert.match(about, /responses can be incomplete or withheld/i);
 });
 
