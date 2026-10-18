@@ -33,7 +33,7 @@
     {
       "gate": "Land-records test file",
       "outcome": "PASS",
-      "reason": "88 passed (73 before, 15 new parametrized cases) with synthetic data only; no network, no real records."
+      "reason": "88 passed (65 before, 23 new including parametrized cases) with synthetic data only; no network, no real records."
     },
     {
       "gate": "Runtime coverage",
