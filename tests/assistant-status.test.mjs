@@ -23,7 +23,7 @@ const alert=tree=>findNode(tree,node=>node.props?.role==='alert');
 test('guest readiness does not wait for the separate account request',async()=>{
  const {h,render}=await workspace(url=>url.includes('/api/pc-ai/')?new Promise(()=>{}):Promise.resolve(ready()));
  try{
-  let tree=render();assert.equal(text(status(tree)),'Qwen3 ready');
+  let tree=render();assert.equal(text(status(tree)),'Qwen3 0.6B ready');
   assert.equal(findNode(tree,node=>node.type==='select'&&node.props.name==='depth').props.defaultValue,'expanded');
   message(tree).props.onChange({target:{value:'Suggest a fictional story.'}});
   tree=render();assert.equal(send(tree).props.disabled,false);
@@ -65,7 +65,7 @@ test('failed status becomes a visible error, keeps the draft, and recovers on re
   message(tree).props.onChange({target:{value:'Keep this draft.'}});
   tree=render();assert.equal(send(tree).props.disabled,true);assert.equal(message(tree).props.value,'Keep this draft.');
   connected=true;polls[0]();await settle();tree=render();
-  assert.equal(text(status(tree)),'Qwen3 ready');assert.equal(alert(tree),undefined);
+  assert.equal(text(status(tree)),'Qwen3 0.6B ready');assert.equal(alert(tree),undefined);
   assert.equal(message(tree).props.value,'Keep this draft.');assert.equal(send(tree).props.disabled,false);
  }finally{h.dispose();}
 });

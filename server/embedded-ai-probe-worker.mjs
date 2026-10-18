@@ -74,7 +74,7 @@ try {
     const answer = tokenizer.decode(generated, { skip_special_tokens: true });
     if (typeof answer !== 'string' || answer.length > 256 || !/\bblue\b/i.test(answer) || /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(answer)) fail('SYNTHETIC_RESPONSE_UNQUALIFIED');
     parentPort.postMessage({ type: 'result', result: { status: 'SYNTHETIC_INFERENCE_PASS',
-      model: { id: manifest.id, revision: manifest.revision, license: manifest.license, dtype: 'q4' },
+      model: { id: manifest.id, revision: manifest.revision, license: manifest.license, dtype: 'int8' },
       runtime: 'onnxruntime-web@1.31.0-dev.20260914-8d85527a0 / @huggingface/tokenizers@0.2.0 / wasm single-threaded',
       syntheticAnswer: answer, downloadMs, loadMs, inferenceMs: Math.round(performance.now() - inferenceBegan),
       inferenceRssBytes: process.memoryUsage().rss, modelFilesVerified: true,

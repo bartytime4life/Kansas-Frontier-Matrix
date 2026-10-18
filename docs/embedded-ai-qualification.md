@@ -1,5 +1,10 @@
 # Embedded server-side SmolLM2 qualification
 
+Historical record: current candidate execution uses Qwen3-0.6B INT8. See
+[Hosted Qwen preview candidate](hosted-qwen-preview-20261018.md) for its
+current identity and limits. None of the earlier model results below qualify
+Qwen or authorize public publication; that remains ON HOLD.
+
 Status: **PROPOSED app integration; native GoDaddy failure CONFIRMED; WASM qualification pending**.
 
 The owner authorized a free, non-trial alternative to Ollama on October 16, 2026.

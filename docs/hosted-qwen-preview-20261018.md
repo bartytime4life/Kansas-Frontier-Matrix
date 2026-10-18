@@ -49,7 +49,8 @@ models. Neither production stores nor installed PC services are migrated.
 ## Local verification and limits
 
 Build and TypeScript pass. The focused checks pass: 62 assertions across seven
-AI/assistant test files plus the built HTTP route test. The HTTP test verifies
+AI/assistant test files, six probe checks and one built HTTP route check (69
+total). The HTTP test verifies
 origin denial and 404 responses for private Qwen weights, old model weights and
 the AI account database. Changed-area lint has zero errors and 40 existing
 warnings in the retained application files. These results are distinct from
