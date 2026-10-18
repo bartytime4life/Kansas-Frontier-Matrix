@@ -37,7 +37,7 @@ jobs:
         run: >-
           node --test tests/assistant-status.test.mjs tests/assistant-context.test.mjs
           tests/assistant-sitewide.test.mjs tests/assistant-built-routes.test.mjs tests/public-ai.test.mjs
-          tests/county-search.test.mjs tests/assistant-investigation.test.mjs
+          tests/county-search.test.mjs tests/global-search-status.test.mjs tests/assistant-investigation.test.mjs
           tests/ai-read-buffer.test.mjs tests/ai-read-admission.test.mjs
           tests/hosted-ai.test.mjs tests/hosted-ai-prompt.test.mjs tests/hosted-ai-generation.test.mjs tests/hosted-ai-acceptance.test.mjs
           tests/braces-depth.test.mjs

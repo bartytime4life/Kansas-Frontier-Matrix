@@ -74,6 +74,37 @@ redaction applies omits the entire dossier and its automatic place-name title.
 A new explicit dossier can replace the old context after the map is reset.
 No backend API or database schema changes are introduced.
 
+## Global search readiness — hosted follow-up, 2026-10-18
+
+Global search reports the state of the current query and available county
+coverage. Editing a query hides results belonging to its previous debounced
+value and announces that search is updating. Idle county data is described as
+not ready without claiming a request is active. Loading data is described as
+loading; unavailable, empty and partial county responses are described as
+limited county coverage. Valid current-query matches from other search
+categories remain usable while county data loads or is unavailable.
+
+A complete no-match message is shown only for a settled query with complete
+county search coverage. It describes the currently searchable inventory, not
+the absence of a real place or evidence in Kansas. Partial or unavailable
+county coverage must not be presented as a complete search. County records
+retain their Census source-context label and do not become admitted evidence.
+
+Feedback uses a noninteractive polite status row in the existing dropdown.
+The search input is busy only while query debounce or a county request is pending.
+Idle, empty, unavailable and partial county states are not busy. Clearing
+the query or closing the dropdown removes its feedback. This change reuses
+existing responses and adds no source request, gazetteer, admission, release,
+or persistent state.
+
+Application behavior and regression coverage belong in the existing
+`app/county-search.ts`, `app/page.tsx` and `tests/` families. The existing hosted
+CI job includes the readiness regression file alongside county-search tests. This dated
+hosted-source note does not refresh the historical Site identities, validation,
+publication or rollback claims elsewhere in this document. Current validation
+and final-head review are recorded with this follow-up's draft PR; reverting
+the bounded follow-up restores the previous search behavior.
+
 ## Placement, provenance and compatibility
 
 This is a standalone Site UI change: application modules stay under `app/`,

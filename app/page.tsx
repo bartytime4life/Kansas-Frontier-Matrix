@@ -1,6 +1,6 @@
 "use client";
 import { installExplorerMenuDismissal } from "./explorer-menu-dismissal";
-import { countySearchGeometry, countySearchResults, type CountySearchItem } from "./county-search";
+import { countySearchGeometry, countySearchResults, globalSearchStatus, type CountySearchItem } from "./county-search";
 import { isolateModalBackground, modalReturnTarget } from "./modal-background";
 import { decodeStreamflowTransport } from "./streamflow-transport";
 import { browserJsonRequest } from "./browser-json-request";
@@ -2305,14 +2305,15 @@ export default function Home() {
     .filter(source => shownCatalogIds.has(source.id) && catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id]));
   const searchResults = useMemo<GlobalSearchItem[]>(() => {
     const query = debouncedGlobalQuery.trim().toLowerCase();
-    if (!query) return [];
+    if (!query || query !== globalQuery.trim().toLowerCase()) return [];
     const mapResults: GlobalSearchItem[] = SEARCH_INDEX.filter((item) => `${item.title} ${item.subtitle}`.toLowerCase().includes(query));
     const sourceResults: GlobalSearchItem[] = OFFICIAL_CONTEXT_SOURCES
       .filter((source) => `${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${source.endpointLabel}`.toLowerCase().includes(query))
       .map((source) => ({ id: `source:${source.id}`, kind: "source", title: source.shortTitle, subtitle: `${source.organization} · ${source.domain}`, officialContextId: source.id }));
     const counties = countySearchResults(officialPayloads["census-counties"], officialStates["census-counties"], query);
     return [...counties, ...sourceResults, ...mapResults].slice(0, 7);
-  }, [debouncedGlobalQuery, officialPayloads, officialStates]);
+  }, [debouncedGlobalQuery, globalQuery, officialPayloads, officialStates]);
+  const searchStatus = globalSearchStatus(globalQuery, debouncedGlobalQuery, officialStates["census-counties"], searchResults.length);
   const filteredRepositoryUpdates = useMemo(() => {
     const query = repositoryQuery.trim().toLowerCase();
     return REPOSITORY_UPDATES.filter((update) => {
@@ -8666,12 +8667,12 @@ export default function Home() {
           <label>
             <span className="sr-only">Search current places, layers, features, and official data sources</span>
             <span aria-hidden="true">⌕</span>
-            <input ref={globalSearchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, official data…" aria-describedby="global-search-help" title="Search · shortcut /" />
+            <input ref={globalSearchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, official data…" aria-describedby="global-search-help" aria-busy={searchStatus.busy} title="Search · shortcut /" />
           </label>
           <span id="global-search-help" className="sr-only">Search results appear as keyboard-focusable buttons.</span>
-          {globalQuery && <div className="search-results" id="global-search-results" aria-label="Search results">
+          {globalQuery.trim() && <div className="search-results" id="global-search-results" aria-label="Search results">
             {searchResults.map((item) => <button type="button" key={item.id} onClick={() => chooseSearchResult(item)}><span>{item.kind}</span><strong>{item.title}</strong><small>{item.subtitle}</small></button>)}
-            {searchResults.length === 0 && <p>No current place, layer, feature, or official source matches.</p>}
+            <p className={searchStatus.message ? undefined : "sr-only"} role="status" aria-live="polite" aria-atomic="true">{searchStatus.message}</p>
           </div>}
         </div>
           <span className="sr-only" role="status">{sourceIssues.length ? `${sourceIssues.length} selected sources need attention. Open Layers, then Source status for recovery.` : ""}</span>
