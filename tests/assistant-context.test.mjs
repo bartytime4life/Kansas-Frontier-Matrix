@@ -62,14 +62,16 @@ test('selected samples return server source facts without model inventions and r
  };
  try{
   const first=await ask(context);assert.equal(first.body.result.reasonCode,'SOURCE_CONTEXT_ONLY');assert.equal(first.body.result.answer,null);assert.equal(first.body.result.interpretation,null);assert.deepEqual(first.body.result.evidenceRefs,[]);assert.match(first.body.result.sourceSummary,/Synthetic shale/);assert.equal(first.body.context.label,'synthetic-core-1');
+  assert.match(first.body.sourceRevision,/^sha256:[a-f0-9]{64}$/);assert.equal(first.body.releaseId,null);assert.ok(Number.isFinite(Date.parse(first.body.checkedAt)));
   assert.doesNotMatch(JSON.stringify(first.body.result),/collected in 2026|stored for one year/);
   assert.match(first.body.result.followUpQuestion,/original source intervals.*aquifer ranges\?/);
   await ask(context,first.cookie);
-  const changed=await ask({...context,selection:{...context.selection,intervalIndex:0}},first.cookie);assert.match(changed.body.result.sourceSummary,/Synthetic sand/);assert.doesNotMatch(changed.body.result.sourceSummary,/Synthetic shale/);
+  const changed=await ask({...context,selection:{...context.selection,intervalIndex:0}},first.cookie);assert.match(changed.body.result.sourceSummary,/Synthetic sand/);assert.doesNotMatch(changed.body.result.sourceSummary,/Synthetic shale/);assert.notEqual(changed.body.sourceRevision,first.body.sourceRevision);
   assert.equal((await request('jobs/'+changed.body.id)).status,401);
   const missing=await ask({...context,selection:{...context.selection,recordId:'absent'}},first.cookie);assert.equal(missing.body.result.reasonCode,'CONTEXT_UNAVAILABLE');assert.equal(seen.length,0);
   await writeFile(join(f.directory,'tile-160-255.json.gz'),'changed');
   const withdrawn=await request('jobs/'+first.body.id,null,first.cookie);assert.equal(withdrawn.body.result.reasonCode,'RELEASE_CHANGED');assert.equal(withdrawn.body.context,null);assert.equal(withdrawn.body.result.sourceSummary,undefined);
+  assert.equal(withdrawn.body.sourceRevision,null);assert.equal(withdrawn.body.releaseId,null);
  }finally{await f.close();}
 });
 

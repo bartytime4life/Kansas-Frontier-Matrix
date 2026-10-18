@@ -1,5 +1,6 @@
 "use client";
 import { installExplorerMenuDismissal } from "./explorer-menu-dismissal";
+import { countySearchGeometry, countySearchResults, type CountySearchItem } from "./county-search";
 import { isolateModalBackground, modalReturnTarget } from "./modal-background";
 import { decodeStreamflowTransport } from "./streamflow-transport";
 import { browserJsonRequest } from "./browser-json-request";
@@ -447,7 +448,7 @@ type OfficialSourceSearchItem = Readonly<{
   subtitle: string;
   officialContextId: OfficialContextId;
 }>;
-type GlobalSearchItem = SearchItem | OfficialSourceSearchItem;
+type GlobalSearchItem = SearchItem | OfficialSourceSearchItem | CountySearchItem;
 
 type SelectedContext = {
   kind: "registry" | "basemap";
@@ -2309,8 +2310,9 @@ export default function Home() {
     const sourceResults: GlobalSearchItem[] = OFFICIAL_CONTEXT_SOURCES
       .filter((source) => `${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${source.endpointLabel}`.toLowerCase().includes(query))
       .map((source) => ({ id: `source:${source.id}`, kind: "source", title: source.shortTitle, subtitle: `${source.organization} · ${source.domain}`, officialContextId: source.id }));
-    return [...sourceResults, ...mapResults].slice(0, 7);
-  }, [debouncedGlobalQuery]);
+    const counties = countySearchResults(officialPayloads["census-counties"], officialStates["census-counties"], query);
+    return [...counties, ...sourceResults, ...mapResults].slice(0, 7);
+  }, [debouncedGlobalQuery, officialPayloads, officialStates]);
   const filteredRepositoryUpdates = useMemo(() => {
     const query = repositoryQuery.trim().toLowerCase();
     return REPOSITORY_UPDATES.filter((update) => {
@@ -6677,8 +6679,25 @@ export default function Home() {
 
   const chooseSearchResult = (item: GlobalSearchItem) => {
     setPrimaryWorkspace("map");
-    if (primaryWorkspace !== "map" && item.kind !== "source") window.setTimeout(() => mapContainerRef.current?.focus(), 0);
+    if (primaryWorkspace !== "map" && item.kind !== "source" && item.kind !== "county") window.setTimeout(() => mapContainerRef.current?.focus(), 0);
     setGlobalQuery("");
+    if (item.kind === "county") {
+      // Resolve again from the current successful payload; a stale search row
+      // cannot reopen a failed/removed baseline or silently change map time.
+      const payload = officialPayloads["census-counties"];
+      const current = countySearchResults(payload, officialStates["census-counties"], item.title).find(row => row.id === item.id);
+      const feature = current && payload?.data.features.find(row => row.properties?.featureId === current.featureId);
+      const geometry = feature && countySearchGeometry(feature);
+      if (!feature || !geometry) { announce("The county source is no longer available. Reopen Map layers to retry it."); return; }
+      const source = OFFICIAL_CONTEXT_SOURCES.find(row => row.id === "census-counties");
+      const context = buildBasemapContext({ ...feature, source: source?.sourceId }, ...geometry.focus);
+      if (!context) return;
+      setOfficialContextVisible("census-counties", true);
+      openSelection(context, globalSearchInputRef.current);
+      mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
+      announce(`Opened ${current!.title} from the Census reference baseline. Map time is unchanged; source context is not KFM evidence.`);
+      return;
+    }
     if (item.kind === "source") {
       sourceSearchFocusPendingRef.current = true;
       openAtlasPanel("layers");
