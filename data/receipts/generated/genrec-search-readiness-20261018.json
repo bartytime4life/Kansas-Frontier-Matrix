@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-search-readiness-20261018",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-core-repair.yml",
+    "app/county-search.ts",
+    "app/page.tsx",
+    "tests/global-search-status.test.mjs",
+    "docs/map-research-tools.md"
+  ],
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact runtime build identifier unavailable"
+  },
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Sites",
+      "Google Drive",
+      "Notion",
+      "Chrome",
+      "local shell"
+    ],
+    "contract_basis": "docs/map-research-tools.md; dated global-search readiness behavior and validation boundary"
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Explorer — Living Atlas Interface, Default Views and Animation Design — v0.1(1).pdf",
+      "Google Earth Patterns for a Working Kansas Frontier Matrix Explorer.pdf"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d18a606e24cc4faf2e31817157e8e26b82e61eac/AGENTS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d18a606e24cc4faf2e31817157e8e26b82e61eac/app/county-search.ts",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d18a606e24cc4faf2e31817157e8e26b82e61eac/app/page.tsx",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/907cc58c72844bf56923b63c970b83a202fa5e75/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/907cc58c72844bf56923b63c970b83a202fa5e75/docs/doctrine/directory-rules.md"
+    ],
+    "evidence_hashes": [
+      "sha256:86bc9171fe931800cd292913ec60b9346b70373480f0a8aeeccfc296e0d2b664",
+      "sha256:c6427465c536935878f5071f1f129dde54163ee53db479226e67ef5842ffac75"
+    ]
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-node-tests",
+      "outcome": "PASS",
+      "reason": "Four existing county-search tests and eight new readiness/memo/actual-JSX/escaping tests passed on final implementation bytes."
+    },
+    {
+      "gate": "production-build-and-typescript",
+      "outcome": "PASS",
+      "reason": "npm run build and TypeScript --noEmit --incremental false passed after final source changes. Initial prebuild typecheck lacked the generated build-info file; production prebuild generated it and the final check passed."
+    },
+    {
+      "gate": "changed-area-lint",
+      "outcome": "PASS",
+      "reason": "Helper/test lint passed with no warnings. Page lint has zero errors and exactly the same 40 inherited diagnostics as unchanged base; not a clean full-lint claim."
+    },
+    {
+      "gate": "ci-regression-selection",
+      "outcome": "PASS",
+      "reason": "Inspected the existing hosted workflow: the new global-search-status regression file is selected beside county-search. Events, permissions and the remaining command are unchanged. This is test wiring, not a completed CI run."
+    },
+    {
+      "gate": "candidate-browser-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Environment rejected loopback listen127.0.0.1:4317 with EPERM. No QA server started; transient synthetic fixture harness never served. Browser/mobile/WebGL acceptance remains unverified."
+    },
+    {
+      "gate": "exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Not yet published at receipt authoring; exact-head CI must be observed separately."
+    },
+    {
+      "gate": "independent-final-head-agent-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending final commit at receipt authoring; later review must identify exact SHA in the PR. Earlier working-tree checks are not final-head approval."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; agent review and draft preparation do not authorize merge or release."
+    }
+  ],
+  "policy_decisions": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "emitter": "OpenAI Codex KFM-20261018-investigation-01",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/907cc58c72844bf56923b63c970b83a202fa5e75/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Bounded hosted-source follow-up based on a0-hosted-ai-web-20261017@d18a606e24cc4faf2e31817157e8e26b82e61eac. Source status and current-query feedback only; no endpoint, refresh, dependency, data admission, evidence promotion, release, audience, hosting or deployment changes. Source context remains source context. Initial live warmed preview showed an Ellsworth County result; no candidate live acceptance or deployed-source identity is established. User prompt text and private data are not included. Historical receipts remain unchanged. Rollback closes the unmerged PR or reverts this bounded source/tests/docs/receipt change after any separately authorized merge. The existing hosted workflow selects the new regression test; no workflow events, permissions, deployment, or protection settings changed. The receipt was finalized with this test-wiring correction before remote publication.",
+  "artifact_hashes": {
+    ".github/workflows/public-core-repair.yml": "sha256:62aab363b7e5f7eb487245ecd29b00e82e6e5809c2cdd1ba8f6b92e49e877e95",
+    "app/county-search.ts": "sha256:86bc9171fe931800cd292913ec60b9346b70373480f0a8aeeccfc296e0d2b664",
+    "app/page.tsx": "sha256:c6427465c536935878f5071f1f129dde54163ee53db479226e67ef5842ffac75",
+    "tests/global-search-status.test.mjs": "sha256:8c0ee36ef239feb5bb86631db8aa4bcb2e81ef824092a48604a04389aba4ab85",
+    "docs/map-research-tools.md": "sha256:49af3ee57b0a1926a19c7dd9c0e40b8ab41b9e2da7afd9b0822e36e296c7effd"
+  },
+  "truth_labels": {
+    ".github/workflows/public-core-repair.yml": "CONFIRMED",
+    "app/county-search.ts": "CONFIRMED",
+    "app/page.tsx": "CONFIRMED",
+    "tests/global-search-status.test.mjs": "CONFIRMED",
+    "docs/map-research-tools.md": "CONFIRMED"
+  },
+  "prompt_or_contract": "sha256:49af3ee57b0a1926a19c7dd9c0e40b8ab41b9e2da7afd9b0822e36e296c7effd",
+  "citations": [
+    {
+      "id": "Pinned source authority 1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d18a606e24cc4faf2e31817157e8e26b82e61eac/AGENTS.md"
+    },
+    {
+      "id": "Pinned source authority 2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d18a606e24cc4faf2e31817157e8e26b82e61eac/app/county-search.ts"
+    },
+    {
+      "id": "Pinned source authority 3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/d18a606e24cc4faf2e31817157e8e26b82e61eac/app/page.tsx"
+    },
+    {
+      "id": "Pinned source authority 4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/907cc58c72844bf56923b63c970b83a202fa5e75/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "Pinned source authority 5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/907cc58c72844bf56923b63c970b83a202fa5e75/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "created_at": "2026-10-18T21:30:15.355532+00:00"
+}

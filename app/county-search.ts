@@ -9,6 +9,34 @@ export type CountySearchItem = Readonly<{
   featureId: string;
 }>;
 
+// The county feed is asynchronous; an absent county row is not a completed
+// global no-match while that feed or the current query is still unsettled.
+export function globalSearchStatus(
+  query: string,
+  settledQuery: string,
+  countyState: OfficialContextState,
+  resultCount: number,
+): Readonly<{ message: string; busy: boolean }> {
+  const term = query.trim();
+  if (!term) return { message: "", busy: false };
+  if (term.toLocaleLowerCase("en-US") !== settledQuery.trim().toLocaleLowerCase("en-US")) {
+    return { message: "Updating search…", busy: true };
+  }
+  if (countyState === "idle") return { message: "County search is not ready. Available layers, features, and official sources can still be searched.", busy: false };
+  if (countyState === "loading") return { message: "Loading county matches…", busy: true };
+  if (countyState === "empty") return { message: "No counties are available to search.", busy: false };
+  if (countyState === "partial") return { message: "County search has limited coverage.", busy: false };
+  if (countyState === "ready") return {
+    message: resultCount ? "" : `No matches for “${term}”. Try a county, layer, feature, or official source name.`, busy: false,
+  };
+  // Errors and unexpected runtime states cannot establish complete coverage.
+  return {
+    message: resultCount ? "County search is unavailable. Showing available matches."
+      : "County search is unavailable. You can still search available layers, features, and official sources.",
+    busy: false,
+  };
+}
+
 // Search only the county baseline already returned by the bounded adapter.
 // This is a display index, not a gazetteer, source registry or evidence release.
 export function countySearchResults(
