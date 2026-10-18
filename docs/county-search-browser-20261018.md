@@ -68,6 +68,11 @@ converts wait predicates to booleans, dismisses the normal guide with native
 mouse input, and gives the completed-search scenario its own loaded inventory.
 Those failures do not establish application regressions. The original
 generation receipt is retained; the follow-up receipt binds the revised bytes.
+The second run passed actual rapid-query/pending-feed and outage cases before
+timing out at keyboard county activation. The subsequent harness uses the
+complete native Enter key/character sequence already used by the existing
+geometry verifier, and emits focused search/selection diagnostics instead of
+dumping unrelated page text. Its outcome must be established by its own run.
 
 **CONFIRMED, unpinned preview only:** a refreshed existing preview first showed
 the older no-match wording while the Census response was pending. After the

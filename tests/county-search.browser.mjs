@@ -121,10 +121,11 @@ async function pageSession(browser, width, height) {
       if (last) return last;
       await pause(50);
     }
-    throw new Error(`${label}: ${JSON.stringify(last)}; ${await evaluate('document.body.innerText.slice(0,3000)')}`);
+    throw new Error(`${label}: ${JSON.stringify(last)}; ${await evaluate(`JSON.stringify({query:document.querySelector('.global-search input')?.value,status:document.querySelector('#global-search-results')?.innerText,active:document.activeElement?.outerHTML.slice(0,500),drawer:document.querySelector('.evidence-drawer')?.dataset.open,title:document.querySelector('.evidence-drawer h2')?.textContent})`)}`);
   };
   const key = async (key, code, windowsVirtualKeyCode, modifiers = 0) => {
-    await call('Input.dispatchKeyEvent', { type: 'keyDown', key, code, windowsVirtualKeyCode, modifiers });
+    await call('Input.dispatchKeyEvent', { type: 'rawKeyDown', key, code, windowsVirtualKeyCode, modifiers });
+    if (key === 'Enter') await call('Input.dispatchKeyEvent', { type: 'char', key, code, windowsVirtualKeyCode, text: '\r', unmodifiedText: '\r' });
     await call('Input.dispatchKeyEvent', { type: 'keyUp', key, code, windowsVirtualKeyCode, modifiers });
   };
   const fill = async value => {
