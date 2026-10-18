@@ -6,6 +6,9 @@ export const HOSTED_MODEL='SmolLM2-360M-Instruct q4 · server WebAssembly';
 export const HOSTED_LIMITS=Object.freeze({loadMs:90000,inferenceMs:255000,maximumRssBytes:2048*1024*1024});
 export const HOSTED_REPLY_LIMITS=Object.freeze({brief:Object.freeze({tokens:160,milliseconds:120000}),expanded:Object.freeze({tokens:384,milliseconds:240000})});
 export const PUBLIC_AI_JOB_MS=270000;
+// Three admitted discussions can wait for each other, but each run stays bounded.
+export const PUBLIC_AI_MAX_LIFETIME_MS=3*PUBLIC_AI_JOB_MS;
+export {CONTINUE_REPLY} from './hosted-ai-prompt.mjs';
 const error=code=>Object.assign(new Error(code),{code});
 const diagnosticCodes=new Set(['MODEL_UNAVAILABLE','MODEL_LOAD_TIMEOUT','MODEL_MEMORY_LIMIT','MODEL_TIMEOUT','HOSTED_MODEL_FAILED','HOSTED_MODEL_FILES_UNSAFE','HOSTED_MODEL_IDENTITY','HOSTED_MODEL_INTEGRITY','HOSTED_MODEL_CONFIG','HOSTED_MODEL_INPUTS','HOSTED_MODEL_SELF_CHECK','HOSTED_PROFILE_IDENTITY','MODULE_NOT_FOUND','ERR_MODULE_NOT_FOUND','ENOENT','EACCES','ENOMEM','ERR_WORKER_OUT_OF_MEMORY']);
 export class HostedAiModel{
@@ -24,7 +27,7 @@ export class HostedAiModel{
     const pending=this.pending;this.pending=null;pending.cleanup();
     if(pending.signal?.aborted)pending.reject(error('MODEL_CANCELLED'));
     else if(message.error)pending.reject(error(['MODEL_CONTEXT_LIMIT','MODEL_CANCELLED'].includes(message.error)?message.error:'MODEL_UNAVAILABLE'));
-    else pending.resolve(pending.kind==='discuss'?{text:message.discussion,contextTrimmed:Boolean(message.contextTrimmed),outputLimited:Boolean(message.outputLimited)}:message.selection);
+    else pending.resolve(pending.kind==='discuss'?{text:message.discussion,contextTrimmed:Boolean(message.contextTrimmed),outputLimited:message.finishReason?message.finishReason!=='stop':Boolean(message.outputLimited)}:message.selection);
    }
   });
   this.worker.once('error',failure=>this.stop('MODEL_UNAVAILABLE',failure?.code));this.worker.once('exit',()=>this.stop('MODEL_UNAVAILABLE'));

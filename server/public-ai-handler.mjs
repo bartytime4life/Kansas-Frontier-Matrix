@@ -2,7 +2,7 @@
 import {randomBytes,createHash} from 'node:crypto';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
-import {getHostedAiModel,HOSTED_MODEL,hasRepeatedPhrase,repeatsPriorReply,PUBLIC_AI_JOB_MS} from './hosted-ai.mjs';
+import {getHostedAiModel,HOSTED_MODEL,hasRepeatedPhrase,repeatsPriorReply,PUBLIC_AI_JOB_MS,PUBLIC_AI_MAX_LIFETIME_MS,CONTINUE_REPLY} from './hosted-ai.mjs';
 import {validAssistantContext} from './assistant-context.mjs';
 import {createAiReadBuffer,isAiReadPressure} from './ai-read-buffer.mjs';
 const headers={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Vary':'Cookie','Cross-Origin-Resource-Policy':'same-origin'};
@@ -100,24 +100,30 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
   try{while(true){
    cleanup();const job=[...jobs.values()].find(j=>j.state==='queued');if(!job)break;
    if(!model.ready){job.state='completed';job.result=envelope('ERROR','MODEL_UNAVAILABLE');job.packet=null;job.question='';job.query=null;continue;}
-   job.state='running';job.abort=new AbortController();const timer=setTimeout(()=>job.abort.abort(),Math.max(1,job.deadline-clock()));timer.unref?.();
+   job.state='running';job.deadline=Math.min(job.created+PUBLIC_AI_MAX_LIFETIME_MS,clock()+PUBLIC_AI_JOB_MS);job.abort=new AbortController();const timer=setTimeout(()=>job.abort.abort(),Math.max(1,job.deadline-clock()));timer.unref?.();
    try{
     if(job.mode==='explore'){
      if(!await freshContext(job)){job.result=envelope('ABSTAIN','RELEASE_CHANGED');job.context=null;continue;}
      if(job.state!=='running'||job.abort.signal.aborted)continue;
      const session=sessions.get(job.owner);
-     const history=(session?.history??[]).filter(item=>item.contextKey===job.contextKey).map(({question,reply})=>({question,reply}));
+     const turns=(session?.history??[]).filter(item=>item.contextKey===job.contextKey),previous=turns.at(-1),continuing=job.question===CONTINUE_REPLY;
+     if(continuing&&!previous?.outputLimited){job.result=envelope('ABSTAIN','MODEL_CONTINUATION_UNAVAILABLE');continue;}
+     const history=turns.map(({question,reply})=>({question,reply}));
      const discussion=await model.discuss(job.question,{style:job.style,depth:job.depth,context:job.context?.prompt??'',history},job.abort.signal);
      if(job.state!=='running'||job.abort.signal.aborted)continue;
      const output=discussion?.text;
      if(!text(output,4096)||hasRepeatedPhrase(output)||/https?:\/\/|www\.|\bkfm:/i.test(output)||localQwenAnswerHasOverPreciseLocation(output))job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
      else if(repeatsPriorReply(output,history.at(-1)?.reply)){
-      const continuation=job.question==='Continue your previous reply from where it stopped. Finish the explanation without repeating it.';
+      const continuation=job.question===CONTINUE_REPLY;
       job.result={...envelope('ABSTAIN',continuation?'MODEL_CONTINUATION_REPEATED':'MODEL_FOLLOWUP_REPEATED'),followUpQuestion:continuation?'Would you like to ask a narrower question or inspect the original source records?':'The model repeated the earlier reply. Would you like to ask a narrower question or inspect the original source records?'};
      }
      else{
+      // A URL, precise location or repetition may cross fragment boundaries.
+      const joined=continuing?previous.reply+output:output;
+      if(!text(joined,4096)){job.result=envelope('ABSTAIN','MODEL_CONTEXT_LIMIT');continue;}
+      if(hasRepeatedPhrase(joined)||/https?:\/\/|www\.|\bkfm:/i.test(joined)||localQwenAnswerHasOverPreciseLocation(joined)){job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');continue;}
       job.result={...envelope('ABSTAIN','UNVERIFIED_AI_DISCUSSION'),interpretation:output,followUpQuestion:'Would you like a deeper explanation, a practical example, or help exploring the relevant map layers?',contextLimited:Boolean(discussion.contextTrimmed),outputLimited:Boolean(discussion.outputLimited)};
-      if(session)session.history=[...(session.history??[]).filter(item=>item.contextKey===job.contextKey),{question:job.question,reply:output,contextKey:job.contextKey,at:clock()}].slice(-2);
+      if(session)session.history=[...(continuing?turns.slice(0,-1):turns),{question:continuing?previous.question:job.question,reply:joined,outputLimited:Boolean(discussion.outputLimited),contextKey:job.contextKey,at:clock()}].slice(-2);
      }
     }
    }catch(error){if(job.state==='running')job.result=envelope(error.code==='MODEL_CONTEXT_LIMIT'?'ABSTAIN':'ERROR',isAiReadPressure(error)?'AI_READ_BUSY':error.code==='MODEL_CONTEXT_LIMIT'?'MODEL_CONTEXT_LIMIT':'MODEL_UNAVAILABLE');}
@@ -169,7 +175,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
       // Only the server-resolved, rechecked source can supply this summary.
       job.state='completed';job.result=job.context?.sourceSummary?{...envelope('ABSTAIN','SOURCE_CONTEXT_ONLY'),sourceSummary:job.context.sourceSummary,followUpQuestion:'Would you like to inspect the original source intervals or compare nearby wells and aquifer ranges?'}:envelope('ABSTAIN','CONTEXT_UNAVAILABLE');job.question='';job.query=null;
      }
-     else if(!sensitive&&mode==='explore'){job.state='queued';void drain();}
+     else if(!sensitive&&mode==='explore'){job.state='queued';job.deadline=job.created+PUBLIC_AI_MAX_LIFETIME_MS;void drain();}
      else if(!evidence){job.state='completed';job.result=envelope(sensitive?'DENY':'ABSTAIN',sensitive?'POLICY_WITHHELD':'NO_RELEASED_EVIDENCE');job.question='';job.query=null;}
      else{
       job.packet=evidence;job.evidenceDigest=digest(evidence);
@@ -178,7 +184,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      }
     }catch(error){if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.context=null;job.question='';job.query=null;return;}const code=isAiReadPressure(error)?'AI_READ_BUSY':['CONTEXT_UNAVAILABLE','CONTEXT_TIME_MISMATCH','POLICY_WITHHELD'].includes(error.message)?error.message:'EVIDENCE_WITHHELD';job.state='completed';job.result=envelope(code==='POLICY_WITHHELD'?'DENY':code==='AI_READ_BUSY'?'ERROR':'ABSTAIN',code);job.question='';job.packet=null;job.query=null;job.context=null;}};
     void prepare();
-    return reply({id:job.id},202,extra);
+    return reply({id:job.id,deadline:job.deadline},202,extra);
    }
    const match=/^jobs\/([A-Za-z0-9_-]{43})(\/cancel)?$/.exec(path);
    if(match){

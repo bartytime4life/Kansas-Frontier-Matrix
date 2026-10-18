@@ -3,6 +3,15 @@ import assert from 'node:assert/strict';
 import {EventEmitter} from 'node:events';
 import {HostedAiModel} from '../server/hosted-ai.mjs';
 function worker(){const w=new EventEmitter();w.terminate=async()=>{w.terminated=true;};w.postMessage=message=>{w.sent=message;};return w;}
+test('a token-limited worker result remains partial even when decoded text re-tokenizes shorter',async()=>{
+ const w=worker(),model=new HostedAiModel({workerFactory:()=>w,memoryUsage:()=>({rss:10})});
+ try{
+  w.emit('message',{type:'ready'});await model.loaded;
+  const result=model.discuss('synthetic');
+  w.emit('message',{type:'result',id:w.sent.id,discussion:'A short decoded prefix.',finishReason:'token_limit',outputLimited:false});
+  assert.equal((await result).outputLimited,true);
+ }finally{model.stop();}
+});
 test('guest inference uses one worker and propagates cancellation without accepting a late answer',async()=>{
  const w=worker(),model=new HostedAiModel({workerFactory:()=>w,memoryUsage:()=>({rss:10})});
  try{
