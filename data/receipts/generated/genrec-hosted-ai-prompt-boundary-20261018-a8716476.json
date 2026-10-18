@@ -1,0 +1,106 @@
+{
+  "receipt_id": "genrec-hosted-ai-prompt-boundary-20261018-a8716476",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "server/hosted-ai-worker.mjs",
+    "server/hosted-ai-prompt.mjs",
+    "tests/hosted-ai-prompt.test.mjs"
+  ],
+  "artifact_hashes": {
+    "server/hosted-ai-worker.mjs": "sha256:a8716476244c2a0324f7ac5c2ff1fef693fee609d3d7d1d2c1bef0eb60e96c6a",
+    "server/hosted-ai-prompt.mjs": "sha256:6d73ae6574447e563a02c0bfc12e449e3bcf981c0934832a8ebdc1d2b035db59",
+    "tests/hosted-ai-prompt.test.mjs": "sha256:0c9f4980612d384238dc35bac32fc3e59811aac5425db77b4b503646e8055e59"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:578c113ab00f7dc4465a241e214a4c92b3efa99597648a96f9c8258dcfb51760",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:6357fcff346e94f8d5fda61e2632a716b1d838a453923a9a50fb721dc083917a"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/34fb6018ea9668ae81e64aa94b3948d4351147e8/server/hosted-ai-worker.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/34fb6018ea9668ae81e64aa94b3948d4351147e8/server/public-ai-handler.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/34fb6018ea9668ae81e64aa94b3948d4351147e8/CONTRIBUTING.md"
+    ]
+  },
+  "truth_labels": {
+    "server/hosted-ai-worker.mjs": "CONFIRMED",
+    "server/hosted-ai-prompt.mjs": "CONFIRMED",
+    "tests/hosted-ai-prompt.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-node-test",
+      "outcome": "PASS",
+      "reason": "node --test work/hosted/tests/hosted-ai-prompt.test.mjs passed 2 of 2 tests."
+    },
+    {
+      "gate": "worker-and-test-syntax",
+      "outcome": "PASS",
+      "reason": "node --check parsed the modified worker and the new test file successfully."
+    },
+    {
+      "gate": "full-hosted-ai-suite",
+      "outcome": "SKIPPED",
+      "reason": "The scratch workspace does not contain the deployment branch dependency closure or private hosted model files; no full build, model self-check, or browser run is claimed."
+    },
+    {
+      "gate": "artifact-map-and-sha256-bindings",
+      "outcome": "PASS",
+      "reason": "Artifact paths, hash-map keys and truth-label keys match; full SHA-256 hashes were recomputed from all three proposed artifacts."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending. Draft PR creation and generated receipt are not independent approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Hosted worker prompt boundary at pinned deployment head",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/34fb6018ea9668ae81e64aa94b3948d4351147e8/server/hosted-ai-worker.mjs"
+    },
+    {
+      "id": "Public assistant finite-result handler at pinned deployment head",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/34fb6018ea9668ae81e64aa94b3948d4351147e8/server/public-ai-handler.mjs"
+    },
+    {
+      "id": "CONTRIBUTING.md AI-assisted contributions",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/34fb6018ea9668ae81e64aa94b3948d4351147e8/CONTRIBUTING.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-18T01:39:22Z",
+  "emitter": "OpenAI Codex KFM provenance-boundary contribution",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Draft-PR provenance for a prompt-framing refactor based on a0-hosted-ai-web-20261017@34fb6018ea9668ae81e64aa94b3948d4351147e8. The change preserves the existing wire format while isolating its serializer and proving that chat-control tokens in display context, questions, and history are escaped and cannot create a second system frame. The public handler still emits discussion only as ABSTAIN / UNVERIFIED_AI_DISCUSSION with no factual answer, evidence authority, tools, permissions, source admission, release, deployment, or publication action. Rollback is to close the unmerged PR or revert the three artifacts and receipt together after a separately authorized merge."
+}
+
