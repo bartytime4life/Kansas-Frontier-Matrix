@@ -6,6 +6,7 @@ import {createHash} from 'node:crypto';
 import {join,resolve,dirname} from 'node:path';
 import {HOSTED_REPLY_LIMITS} from './hosted-ai.mjs';
 import {prepareDiscussionPrompt} from './hosted-ai-prompt.mjs';
+import {ensureHostedModel} from './hosted-ai-artifacts.mjs';
 const fail=code=>{throw Object.assign(new Error(code),{code});};
 const safe=error=>/^[A-Z][A-Z0-9_]{0,63}$/.test(error?.code??'')?error.code:'HOSTED_MODEL_FAILED';
 async function privatePath(path,directory=false){
@@ -23,7 +24,7 @@ async function generate(prompt,maximum,cancel,sample=false,milliseconds=60000){
  const owned=new Set(),past={};
  const tensor=(type,data,dims)=>{const t=new ort.Tensor(type,data,dims);owned.add(t);return t;};
  const i64=values=>tensor('int64',BigInt64Array.from(values.map(BigInt)),[1,values.length]);
- for(const name of session.inputNames.filter(name=>name.startsWith('past_key_values.')))past[name]=tensor('float32',new Float32Array(0),[1,5,0,64]);
+ for(const name of session.inputNames.filter(name=>name.startsWith('past_key_values.')))past[name]=tensor('float32',new Float32Array(0),[1,8,0,128]);
  let current=ids,pastLength=0;const generated=[];
  let seed=createHash('sha256').update(prompt).digest().readUInt32LE(0);const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
  try{
@@ -33,42 +34,44 @@ async function generate(prompt,maximum,cancel,sample=false,milliseconds=60000){
    const feeds={...past,input_ids:i64(current),attention_mask:i64(Array(pastLength+current.length).fill(1)),position_ids:i64(current.map((_,i)=>pastLength+i))};
    const outputs=await session.run(feeds);for(const t of Object.values(outputs))owned.add(t);
    if(Atomics.load(cancel,0))fail('MODEL_CANCELLED');
-   const logits=outputs.logits;if(!logits||logits.type!=='float32'||logits.dims.at(-1)!==49152)fail('HOSTED_MODEL_LOGITS');
-   const offset=logits.data.length-49152;let next=0;
+   const logits=outputs.logits;if(!logits||logits.type!=='float32'||logits.dims.at(-1)!==151936)fail('HOSTED_MODEL_LOGITS');
+   const offset=logits.data.length-151936;let next=0;
    if(sample){
-    const seen=new Set(generated);
-    for(const id of seen)logits.data[offset+id]=logits.data[offset+id]>=0?logits.data[offset+id]/1.15:logits.data[offset+id]*1.15;
-    if(generated.length>=2)for(let i=0;i+2<generated.length;i++)if(generated[i]===generated.at(-2)&&generated[i+1]===generated.at(-1))logits.data[offset+generated[i+2]]=-Infinity;
     const candidates=[];
-    for(let id=0;id<49152;id++){
-     const score=logits.data[offset+id];if(!Number.isFinite(score)||candidates.length===40&&score<=candidates.at(-1).score)continue;
-     candidates.push({id,score});candidates.sort((a,b)=>b.score-a.score);if(candidates.length>40)candidates.pop();
+    for(let id=0;id<151936;id++){
+     const score=logits.data[offset+id];if(!Number.isFinite(score)||candidates.length===20&&score<=candidates.at(-1).score)continue;
+     candidates.push({id,score});candidates.sort((a,b)=>b.score-a.score);if(candidates.length>20)candidates.pop();
     }
     if(!candidates.length)fail('HOSTED_MODEL_LOGITS');
-    const weights=candidates.map(item=>Math.exp((item.score-candidates[0].score)/(discussionProfile==='baseline'?0.7:0.2)));let choice=random()*weights.reduce((a,b)=>a+b,0);next=candidates.at(-1).id;
+    const weights=candidates.map(item=>Math.exp((item.score-candidates[0].score)/0.7));const total=weights.reduce((a,b)=>a+b,0);let kept=0;for(let i=0;i<weights.length;i++){if(kept>=total*0.8)weights[i]=0;else kept+=weights[i];}let choice=random()*kept;next=candidates[weights.findLastIndex(x=>x>0)].id;
     for(let i=0;i<candidates.length;i++){choice-=weights[i];if(choice<=0){next=candidates[i].id;break;}}
-   }else for(let i=1;i<49152;i++)if(logits.data[offset+i]>logits.data[offset+next])next=i;
+   }else for(let i=1;i<151936;i++)if(logits.data[offset+i]>logits.data[offset+next])next=i;
    if(!Number.isFinite(logits.data[offset+next]))fail('HOSTED_MODEL_LOGITS');
    const retained=new Set();
    for(const name of Object.keys(past)){const value=outputs[name.replace('past_key_values.','present.')];if(!value)fail('HOSTED_MODEL_CACHE');past[name]=value;retained.add(value);}
    for(const t of owned)if(!retained.has(t)){t.dispose();owned.delete(t);}
-   if(next===2){finishReason='stop';break;}
+   if(next===151645){finishReason='stop';break;}
    generated.push(next);pastLength+=current.length;current=[next];
   }
   return {text:tokenizer.decode(generated,{skip_special_tokens:true}),finishReason};
  }finally{for(const t of owned)t.dispose();}
 }
-const chat=(system,user)=>'<|im_start|>system\n'+system+'<|im_end|>\n<|im_start|>user\n'+user+'<|im_end|>\n<|im_start|>assistant\n';
+const chat=(system,user)=>'<|im_start|>system\n'+system+'<|im_end|>\n<|im_start|>user\n'+user+'<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n';
 try{
  if(!profiles.has(discussionProfile))fail('HOSTED_PROFILE_IDENTITY');
  const directory=resolve(workerData.modelDirectory);
+ // Keep room for the web app; unknown host limits never mean unlimited memory.
+ const available=process.availableMemory?.();
+ const constrained=process.constrainedMemory?.();
+ if((available>0&&available<3*1024**3)||(constrained>0&&constrained<4.5*1024**3))fail('HOSTED_MEMORY_HEADROOM');
+ await ensureHostedModel(directory);
  await privatePath(dirname(directory),true);await privatePath(directory,true);await privatePath(join(directory,'onnx'),true);
  const manifest=JSON.parse(await readFile(new URL('./embedded-ai-model.json',import.meta.url),'utf8'));
- if(manifest.id!=='HuggingFaceTB/SmolLM2-360M-Instruct'||manifest.revision!=='a10cc1512eabd3dde888204e902eca88bddb4951')fail('HOSTED_MODEL_IDENTITY');
- const allowed=new Set(['README.md','config.json','generation_config.json','onnx/model_q4.onnx','special_tokens_map.json','tokenizer.json','tokenizer_config.json']);
+ if(manifest.id!=='onnx-community/Qwen3-0.6B-ONNX'||manifest.revision!=='58ca03a5e7b354b480b1a82b34bde8dc7b854cc0')fail('HOSTED_MODEL_IDENTITY');
+ const allowed=new Set(['README.md','config.json','generation_config.json','onnx/model_int8.onnx','tokenizer.json','tokenizer_config.json']);
  if(manifest.files.length!==allowed.size||new Set(manifest.files.map(x=>x.path)).size!==allowed.size)fail('HOSTED_MODEL_IDENTITY');
  for(const file of manifest.files){
-  if(!allowed.has(file.path)||!/^[a-f0-9]{64}$/.test(file.sha256)||!Number.isSafeInteger(file.size)||file.size<=0||file.size>400000000)fail('HOSTED_MODEL_IDENTITY');
+  if(!allowed.has(file.path)||!/^[a-f0-9]{64}$/.test(file.sha256)||!Number.isSafeInteger(file.size)||file.size<=0||file.size>650000000)fail('HOSTED_MODEL_IDENTITY');
   const path=join(directory,file.path),info=await privatePath(path);if(info.size!==file.size)fail('HOSTED_MODEL_INTEGRITY');
   const hash=createHash('sha256');for await(const chunk of createReadStream(path))hash.update(chunk);
   if(hash.digest('hex')!==file.sha256)fail('HOSTED_MODEL_INTEGRITY');
@@ -76,9 +79,9 @@ try{
  ort=await import('onnxruntime-web');const {Tokenizer}=await import('@huggingface/tokenizers');
  ort.env.wasm.numThreads=1;ort.env.wasm.proxy=false;
  const config=JSON.parse(await readFile(join(directory,'config.json'),'utf8'));
- if(config.hidden_size!==960||config.num_attention_heads!==15||config.num_key_value_heads!==5||config.num_hidden_layers!==32||config.eos_token_id!==2)fail('HOSTED_MODEL_CONFIG');
- session=await ort.InferenceSession.create(join(directory,'onnx/model_q4.onnx'),{executionProviders:['wasm'],executionMode:'sequential',graphOptimizationLevel:'disabled',enableCpuMemArena:false,enableMemPattern:false,extra:{session:{disable_prepacking:'1'}}});
- const expected=['input_ids','attention_mask','position_ids'];for(let l=0;l<32;l++)for(const kind of ['key','value'])expected.push('past_key_values.'+l+'.'+kind);
+ if(config.hidden_size!==1024||config.num_attention_heads!==16||config.num_key_value_heads!==8||config.num_hidden_layers!==28||config.eos_token_id!==151645)fail('HOSTED_MODEL_CONFIG');
+ session=await ort.InferenceSession.create(await readFile(join(directory,'onnx/model_int8.onnx')),{executionProviders:['wasm'],executionMode:'sequential',graphOptimizationLevel:'disabled',enableCpuMemArena:false,enableMemPattern:false,extra:{session:{disable_prepacking:'1'}}});
+ const expected=['input_ids','attention_mask','position_ids'];for(let l=0;l<28;l++)for(const kind of ['key','value'])expected.push('past_key_values.'+l+'.'+kind);
  if(session.inputNames.length!==expected.length||expected.some(name=>!session.inputNames.includes(name)))fail('HOSTED_MODEL_INPUTS');
  for(const meta of session.inputMetadata)if(!meta.isTensor||meta.type!==(meta.name.startsWith('past_key_values.')?'float32':'int64'))fail('HOSTED_MODEL_INPUTS');
  tokenizer=new Tokenizer(JSON.parse(await readFile(join(directory,'tokenizer.json'),'utf8')),JSON.parse(await readFile(join(directory,'tokenizer_config.json'),'utf8')));

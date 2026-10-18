@@ -1,5 +1,11 @@
 # Public hosted AI: discussion and released evidence
 
+Current candidate (2026-10-18): the active model implementation is Qwen3-0.6B
+INT8. See [Hosted Qwen preview candidate](hosted-qwen-preview-20261018.md) for
+its exact identity, memory bounds and LIMITED quality screen. The SmolLM2
+model, cache and qualification statements below are historical checkpoints,
+not current Qwen acceptance. Public publication remains ON HOLD.
+
 GoDaddy Preview startup follow-up (2026-10-17): the dashboard was running
 `npm run dev`, which launched Vite on port 5173 and failed with EACCES. The
 standalone Node composition now makes that command build and start the same
