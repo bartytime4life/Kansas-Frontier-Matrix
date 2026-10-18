@@ -183,13 +183,18 @@ def test_store_and_input_symlinks_refused(tmp_path):
     with pytest.raises(ValueError): initialize(store)
 
 
-def request(app, path, *, query="", auth=None, host="127.0.0.1:5271", origin=None, method="GET"):
+def raw_request(app, path, *, query="", auth=None, host="127.0.0.1:5271", origin=None, method="GET"):
     env = {"PATH_INFO": path, "QUERY_STRING": query, "REQUEST_METHOD": method, "HTTP_HOST": host}
     if auth: env["HTTP_AUTHORIZATION"] = auth
     if origin: env["HTTP_ORIGIN"] = origin
     result = []
     body = b"".join(app(env, lambda status, headers: result.append((status, dict(headers)))))
-    return result[0][0], json.loads(body), result[0][1]
+    return result[0][0], body, result[0][1]
+
+
+def request(app, path, **options):
+    status_code, body, headers = raw_request(app, path, **options)
+    return status_code, json.loads(body), headers
 
 
 def test_runtime_auth_public_denial_and_dns_rebinding(tmp_path):
@@ -210,6 +215,114 @@ def test_runtime_auth_public_denial_and_dns_rebinding(tmp_path):
 def test_runtime_queries_fail_closed(tmp_path, query):
     import_csv(tmp_path, [ROW]); app = load_runtime().application(tmp_path, "x" * 43, 5271)
     assert request(app, "/review/v1/records", query=query, auth="Bearer " + "x" * 43)[0].startswith("400")
+
+
+@pytest.mark.parametrize("token", ["", "x" * 39, None, b"x" * 43])
+def test_runtime_refuses_weak_review_token(tmp_path, token):
+    with pytest.raises(ValueError, match="STRONG_REVIEW_TOKEN_REQUIRED"):
+        load_runtime().application(tmp_path, token, 5271)
+
+
+@pytest.mark.parametrize("method", ["POST", "PUT", "PATCH", "DELETE", "HEAD"])
+def test_runtime_is_read_only(tmp_path, method):
+    import_csv(tmp_path, [ROW]); token = "x" * 43; app = load_runtime().application(tmp_path, token, 5271)
+    before = status(tmp_path)
+    status_code, data, _ = request(app, "/review/v1/records", auth="Bearer " + token, method=method)
+    assert status_code.startswith("405") and data["reason_code"] == "READ_ONLY_RUNTIME"
+    assert status(tmp_path) == before
+
+
+@pytest.mark.parametrize("path,query", [
+    # 128 decoded characters pass the per-value cap; 1,159 encoded bytes exceed the query budget.
+    ("/review/v1/records", "county=" + "%E2%82%AC" * 128),
+    ("/review/v1/records", "source=unknown-source"),
+    ("/review/v1/records", "kind=sale"),
+    ("/review/v1/status", "verbose=1"),
+    ("/review/v1/evidence", ""),
+    ("/review/v1/evidence", "digest=a&extra=b"),
+    ("/review/v1/unknown", ""),
+])
+def test_runtime_query_budget_and_routes_fail_closed(tmp_path, path, query):
+    import_csv(tmp_path, [ROW]); token = "x" * 43; app = load_runtime().application(tmp_path, token, 5271)
+    status_code, data, _ = request(app, path, query=query, auth="Bearer " + token)
+    assert status_code.startswith("400") and data == {"outcome": "ABSTAIN", "reason_code": "INVALID_QUERY"}
+
+
+def test_runtime_public_routes_expose_no_records(tmp_path):
+    import_csv(tmp_path, [ROW]); app = load_runtime().application(tmp_path, "x" * 43, 5271)
+    status_code, data, _ = request(app, "/healthz")
+    assert status_code.startswith("200") and data["public_records"] == 0 and data["scope"] == "OWNER_REVIEW_ONLY"
+    status_code, data, _ = request(app, "/v1/land/other")
+    assert status_code.startswith("404") and data["reason_code"] == "ROUTE_NOT_FOUND"
+    for path, media in (("/review", "text/html"), ("/review.js", "text/javascript"), ("/review.css", "text/css")):
+        status_code, body, headers = raw_request(app, path)
+        assert status_code.startswith("200") and headers["Content-Type"].startswith(media) and body
+        assert "default-src 'none'" in headers["Content-Security-Policy"] and headers["Cache-Control"] == "private, no-store"
+        assert b"SYNTHETIC GRANTOR" not in body
+
+
+def test_runtime_status_and_evidence_require_review_key(tmp_path):
+    import_csv(tmp_path, [ROW]); token = "x" * 43; app = load_runtime().application(tmp_path, token, 5271)
+    for path in ("/review/v1/status", "/review/v1/evidence"):
+        assert request(app, path, auth="Bearer " + "y" * 43)[0].startswith("401")
+    status_code, data, _ = request(app, "/review/v1/status", auth="Bearer " + token)
+    assert status_code.startswith("200") and data == status(tmp_path)
+    record = request(app, "/review/v1/records", auth="Bearer " + token)[1]["records"][0]
+    status_code, data, _ = request(app, "/review/v1/evidence", query="digest=" + record["record_digest"], auth="Bearer " + token)
+    assert status_code.startswith("200") and data["scope"] == "OWNER_REVIEW_ONLY"
+    assert data["bundles"] == evidence_for(tmp_path, record["record_digest"]) and data["bundles"]
+
+
+def test_runtime_store_failure_is_opaque(tmp_path, monkeypatch, caplog):
+    import_csv(tmp_path, [ROW]); token = "x" * 43; runtime = load_runtime(); app = runtime.application(tmp_path, token, 5271)
+    secret = f"SYNTHETIC GRANTOR at {tmp_path}/private"
+    def failing_store(*args, **kwargs):
+        raise RuntimeError(secret)
+    monkeypatch.setattr(runtime, "list_records", failing_store)
+    with caplog.at_level("ERROR", logger="kfm.land-runtime"):
+        status_code, body, _ = raw_request(app, "/review/v1/records", auth="Bearer " + token)
+    assert status_code.startswith("503")
+    assert json.loads(body) == {"outcome": "ABSTAIN", "reason_code": "STORE_UNAVAILABLE"}
+    assert secret.encode() not in body and secret not in caplog.text
+    assert "LAND_STORE_UNAVAILABLE RuntimeError" in caplog.text
+
+
+class FakeServer:
+    def __init__(self, calls, host, port, app, handler_class):
+        calls.append((host, port, handler_class)); self.app = app
+    def __enter__(self): return self
+    def __exit__(self, *exc): return False
+    def serve_forever(self): pass
+
+
+def test_runtime_main_binds_loopback_with_private_key(tmp_path, monkeypatch, capsys):
+    import_csv(tmp_path, [ROW]); runtime = load_runtime(); calls = []
+    monkeypatch.setattr(runtime, "make_server", lambda *a, **k: FakeServer(calls, *a, **k))
+    monkeypatch.setattr(sys, "argv", ["server.py", "--root", str(tmp_path), "--port", "5271"])
+    runtime.main()
+    key = tmp_path / ".review-token"
+    assert key.stat().st_mode & 0o777 == 0o600 and len(key.read_text()) >= 40
+    assert calls == [("127.0.0.1", 5271, runtime.PrivateLog)]
+    assert key.read_text() not in capsys.readouterr().out
+    key.chmod(0o644)
+    with pytest.raises(ValueError, match="TOKEN_FILE_MUST_BE_PRIVATE"):
+        runtime.main()
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("port", ["80", "70000"])
+def test_runtime_main_refuses_privileged_or_invalid_port(tmp_path, monkeypatch, port):
+    runtime = load_runtime()
+    monkeypatch.setattr(sys, "argv", ["server.py", "--root", str(tmp_path), "--port", port])
+    with pytest.raises(SystemExit):
+        runtime.main()
+    assert not (tmp_path / ".review-token").exists()
+
+
+def test_runtime_request_log_is_silent(capsys):
+    handler = object.__new__(load_runtime().PrivateLog)
+    handler.log_message("%s", "/review/v1/records?county=SYNTHETIC")
+    assert capsys.readouterr() == ("", "")
 
 
 def test_changed_mapped_csv_header_is_not_guessed():

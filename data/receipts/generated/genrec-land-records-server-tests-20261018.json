@@ -1,0 +1,85 @@
+{
+  "receipt_id": "genrec-land-records-server-tests-20261018",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/people-dna-land/test_land_records.py"
+  ],
+  "artifact_hashes": {
+    "tests/domains/people-dna-land/test_land_records.py": "sha256:614996daabd5c79b1c6cab61754a55ae7aacb89f3ef6858272bdf3b742ba238c"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/907cc58c72844bf56923b63c970b83a202fa5e75",
+      "repo:apps/land-records/server.py@907cc58c72844bf56923b63c970b83a202fa5e75",
+      "repo:tests/domains/people-dna-land/test_land_records.py@907cc58c72844bf56923b63c970b83a202fa5e75",
+      "repo:.github/workflows/land-records.yml@907cc58c72844bf56923b63c970b83a202fa5e75"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/people-dna-land/test_land_records.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Land-records test file",
+      "outcome": "PASS",
+      "reason": "88 passed (73 before, 15 new parametrized cases) with synthetic data only; no network, no real records."
+    },
+    {
+      "gate": "Runtime coverage",
+      "outcome": "PASS",
+      "reason": "apps/land-records/server.py branch coverage 66% to 99%; only the __main__ guard is unexecuted. The server itself is unchanged."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of five safeguards was disabled in turn and the suite failed every time: the GET-only method check, the 40-character review-key minimum, exception-name-only error logging, the private token-file mode check and the 1,024-byte query budget."
+    },
+    {
+      "gate": "Repository guardrails and lint",
+      "outcome": "PASS",
+      "reason": "make repository-guardrails exit 0. ruff reports the same 7 pre-existing findings in this file before and after the change; none added."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/907cc58c72844bf56923b63c970b83a202fa5e75"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-18T22:51:02Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Adds tests for the private land-record review runtime's untested request and startup paths: weak review-key refusal, read-only method denial, query budget and filter/route validation, public routes exposing no records with CSP and no-store headers, review-key enforcement on status and evidence, opaque 503 store failure, loopback binding with a 0600 review key, refusal of a world-readable key file or privileged port, and silent request logging. Test-only; no runtime, data or policy change."
+}
