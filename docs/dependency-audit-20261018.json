@@ -1,0 +1,1307 @@
+{
+  "observed_at_utc": "2026-10-18T03:49:26Z",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "branch": "codex/published-kfm-4b3cc-20261017",
+  "revision": "1d02be5083c9ddd207e0ddcea97f0f3017334365",
+  "scope": "Unresolved dependency investigation; no application/package/lock/vendor change or publication",
+  "input_hashes": {
+    "package.json": "sha256:66965b7aa11ed11ebae1b095bb2e27b0bdbdedda192e5c624e3b0e69e39227aa",
+    "package-lock.json": "sha256:28e266075a8fb04d87ef07ad932fa27410390bec0a761fc00d093f71b92ccbba",
+    "vendor/vinext-0.0.50-kfm.2.tgz": "sha256:276f257130d285d8478403148737ae27f69fd5ee1ea86fdc8ce777cebe768b15"
+  },
+  "audit_full": {
+    "auditReportVersion": 2,
+    "vulnerabilities": {
+      "@next/eslint-plugin-next": {
+        "name": "@next/eslint-plugin-next",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "fast-glob"
+        ],
+        "effects": [
+          "eslint-config-next"
+        ],
+        "range": ">=14.3.0-canary.0",
+        "nodes": [
+          "node_modules/@next/eslint-plugin-next"
+        ],
+        "fixAvailable": {
+          "name": "eslint-config-next",
+          "version": "14.2.35",
+          "isSemVerMajor": true
+        }
+      },
+      "braces": {
+        "name": "braces",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          {
+            "source": 1240992,
+            "name": "braces",
+            "dependency": "braces",
+            "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+            "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+            "severity": "high",
+            "cwe": [
+              "CWE-674"
+            ],
+            "cvss": {
+              "score": 7.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+            },
+            "range": "<=3.0.3"
+          }
+        ],
+        "effects": [
+          "micromatch"
+        ],
+        "range": "*",
+        "nodes": [
+          "node_modules/braces"
+        ],
+        "fixAvailable": false
+      },
+      "eslint-config-next": {
+        "name": "eslint-config-next",
+        "severity": "high",
+        "isDirect": true,
+        "via": [
+          "@next/eslint-plugin-next"
+        ],
+        "effects": [],
+        "range": ">=14.3.0-canary.0",
+        "nodes": [
+          "node_modules/eslint-config-next"
+        ],
+        "fixAvailable": {
+          "name": "eslint-config-next",
+          "version": "14.2.35",
+          "isSemVerMajor": true
+        }
+      },
+      "fast-glob": {
+        "name": "fast-glob",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "micromatch"
+        ],
+        "effects": [
+          "@next/eslint-plugin-next",
+          "vite-plugin-dynamic-import"
+        ],
+        "range": "*",
+        "nodes": [
+          "node_modules/fast-glob",
+          "node_modules/vite-plugin-dynamic-import/node_modules/fast-glob"
+        ],
+        "fixAvailable": false
+      },
+      "micromatch": {
+        "name": "micromatch",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "braces"
+        ],
+        "effects": [
+          "fast-glob"
+        ],
+        "range": ">=0.2.0",
+        "nodes": [
+          "node_modules/micromatch"
+        ],
+        "fixAvailable": false
+      },
+      "vinext": {
+        "name": "vinext",
+        "severity": "high",
+        "isDirect": true,
+        "via": [
+          "vite-plugin-commonjs"
+        ],
+        "effects": [],
+        "range": ">=0.0.16",
+        "nodes": [
+          "node_modules/vinext"
+        ],
+        "fixAvailable": false
+      },
+      "vite-plugin-commonjs": {
+        "name": "vite-plugin-commonjs",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "vite-plugin-dynamic-import"
+        ],
+        "effects": [
+          "vinext"
+        ],
+        "range": "0.5.0 - 0.5.2 || >=0.7.0",
+        "nodes": [
+          "node_modules/vite-plugin-commonjs"
+        ],
+        "fixAvailable": false
+      },
+      "vite-plugin-dynamic-import": {
+        "name": "vite-plugin-dynamic-import",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "fast-glob"
+        ],
+        "effects": [
+          "vite-plugin-commonjs"
+        ],
+        "range": ">=0.2.0",
+        "nodes": [
+          "node_modules/vite-plugin-dynamic-import"
+        ],
+        "fixAvailable": false
+      }
+    },
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 8,
+        "critical": 0,
+        "total": 8
+      },
+      "dependencies": {
+        "prod": 462,
+        "dev": 0,
+        "optional": 141,
+        "peer": 74,
+        "peerOptional": 0,
+        "total": 649
+      }
+    }
+  },
+  "audit_omit_dev": {
+    "auditReportVersion": 2,
+    "vulnerabilities": {
+      "@next/eslint-plugin-next": {
+        "name": "@next/eslint-plugin-next",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "fast-glob"
+        ],
+        "effects": [
+          "eslint-config-next"
+        ],
+        "range": ">=14.3.0-canary.0",
+        "nodes": [
+          "node_modules/@next/eslint-plugin-next"
+        ],
+        "fixAvailable": {
+          "name": "eslint-config-next",
+          "version": "14.2.35",
+          "isSemVerMajor": true
+        }
+      },
+      "braces": {
+        "name": "braces",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          {
+            "source": 1240992,
+            "name": "braces",
+            "dependency": "braces",
+            "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+            "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+            "severity": "high",
+            "cwe": [
+              "CWE-674"
+            ],
+            "cvss": {
+              "score": 7.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+            },
+            "range": "<=3.0.3"
+          }
+        ],
+        "effects": [
+          "micromatch"
+        ],
+        "range": "*",
+        "nodes": [
+          "node_modules/braces"
+        ],
+        "fixAvailable": false
+      },
+      "eslint-config-next": {
+        "name": "eslint-config-next",
+        "severity": "high",
+        "isDirect": true,
+        "via": [
+          "@next/eslint-plugin-next"
+        ],
+        "effects": [],
+        "range": ">=14.3.0-canary.0",
+        "nodes": [
+          "node_modules/eslint-config-next"
+        ],
+        "fixAvailable": {
+          "name": "eslint-config-next",
+          "version": "14.2.35",
+          "isSemVerMajor": true
+        }
+      },
+      "fast-glob": {
+        "name": "fast-glob",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "micromatch"
+        ],
+        "effects": [
+          "@next/eslint-plugin-next",
+          "vite-plugin-dynamic-import"
+        ],
+        "range": "*",
+        "nodes": [
+          "node_modules/fast-glob",
+          "node_modules/vite-plugin-dynamic-import/node_modules/fast-glob"
+        ],
+        "fixAvailable": false
+      },
+      "micromatch": {
+        "name": "micromatch",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "braces"
+        ],
+        "effects": [
+          "fast-glob"
+        ],
+        "range": ">=0.2.0",
+        "nodes": [
+          "node_modules/micromatch"
+        ],
+        "fixAvailable": false
+      },
+      "vinext": {
+        "name": "vinext",
+        "severity": "high",
+        "isDirect": true,
+        "via": [
+          "vite-plugin-commonjs"
+        ],
+        "effects": [],
+        "range": ">=0.0.16",
+        "nodes": [
+          "node_modules/vinext"
+        ],
+        "fixAvailable": false
+      },
+      "vite-plugin-commonjs": {
+        "name": "vite-plugin-commonjs",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "vite-plugin-dynamic-import"
+        ],
+        "effects": [
+          "vinext"
+        ],
+        "range": "0.5.0 - 0.5.2 || >=0.7.0",
+        "nodes": [
+          "node_modules/vite-plugin-commonjs"
+        ],
+        "fixAvailable": false
+      },
+      "vite-plugin-dynamic-import": {
+        "name": "vite-plugin-dynamic-import",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          "fast-glob"
+        ],
+        "effects": [
+          "vite-plugin-commonjs"
+        ],
+        "range": ">=0.2.0",
+        "nodes": [
+          "node_modules/vite-plugin-dynamic-import"
+        ],
+        "fixAvailable": false
+      }
+    },
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 8,
+        "critical": 0,
+        "total": 8
+      },
+      "dependencies": {
+        "prod": 462,
+        "dev": 0,
+        "optional": 141,
+        "peer": 74,
+        "peerOptional": 0,
+        "total": 649
+      }
+    }
+  },
+  "installed_tree": {
+    "version": "0.1.0",
+    "name": "kansas-frontier-matrix-explorer",
+    "dependencies": {
+      "eslint-config-next": {
+        "version": "16.3.8",
+        "resolved": "https://registry.npmjs.org/eslint-config-next/-/eslint-config-next-16.3.8.tgz",
+        "overridden": false,
+        "dependencies": {
+          "@next/eslint-plugin-next": {
+            "version": "16.3.8",
+            "resolved": "https://registry.npmjs.org/@next/eslint-plugin-next/-/eslint-plugin-next-16.3.8.tgz",
+            "overridden": false,
+            "dependencies": {
+              "fast-glob": {
+                "version": "3.3.1",
+                "resolved": "https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.1.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "micromatch": {
+                    "version": "4.0.8",
+                    "resolved": "https://registry.npmjs.org/micromatch/-/micromatch-4.0.8.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "braces": {
+                        "version": "3.0.3",
+                        "resolved": "https://registry.npmjs.org/braces/-/braces-3.0.3.tgz",
+                        "overridden": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "vinext": {
+        "version": "0.0.50-kfm.2",
+        "resolved": "file:vendor/vinext-0.0.50-kfm.2.tgz",
+        "overridden": false,
+        "dependencies": {
+          "vite-plugin-commonjs": {
+            "version": "0.10.4",
+            "resolved": "https://registry.npmjs.org/vite-plugin-commonjs/-/vite-plugin-commonjs-0.10.4.tgz",
+            "overridden": false,
+            "dependencies": {
+              "vite-plugin-dynamic-import": {
+                "version": "1.6.0",
+                "resolved": "https://registry.npmjs.org/vite-plugin-dynamic-import/-/vite-plugin-dynamic-import-1.6.0.tgz",
+                "overridden": false,
+                "dependencies": {
+                  "fast-glob": {
+                    "version": "3.3.3",
+                    "resolved": "https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.3.tgz",
+                    "overridden": false,
+                    "dependencies": {
+                      "micromatch": {
+                        "version": "4.0.8"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "registry_observations": {
+    "braces": {
+      "version": "3.0.3",
+      "dist-tags": {
+        "latest": "3.0.3"
+      }
+    },
+    "vinext_latest": {
+      "version": "1.2.1",
+      "dependencies": {
+        "ipaddr.js": "^2.1.0",
+        "@vercel/og": "1.0.3",
+        "web-vitals": "^4.2.4",
+        "@unpic/react": "^1.0.2",
+        "magic-string": "^0.30.21",
+        "@vinext/types": "^1.0.1",
+        "vite-plugin-commonjs": "^0.10.4"
+      },
+      "peerDependencies": {
+        "vite": "^8.0.0",
+        "react": "^19.3.1",
+        "react-dom": "^19.3.1",
+        "@mdx-js/rollup": "^3.0.0",
+        "@vitejs/plugin-rsc": "^0.5.37",
+        "@vitejs/plugin-react": "^5.1.4 || ^6.0.0",
+        "react-server-dom-webpack": "^19.3.1"
+      }
+    },
+    "eslint_config_next_latest": {
+      "version": "16.4.2",
+      "dependencies": {
+        "globals": "16.4.0",
+        "typescript-eslint": "^8.56.0",
+        "eslint-plugin-react": "^7.37.0",
+        "eslint-plugin-import": "^2.32.0",
+        "eslint-plugin-jsx-a11y": "^6.10.0",
+        "@next/eslint-plugin-next": "16.4.2",
+        "eslint-plugin-react-hooks": "^7.1.0",
+        "eslint-import-resolver-node": "^0.3.6",
+        "eslint-import-resolver-typescript": "^3.5.2"
+      },
+      "peerDependencies": {
+        "eslint": ">=9.0.0",
+        "typescript": ">=3.3.1"
+      }
+    },
+    "next_eslint_plugin_latest": {
+      "version": "16.4.2",
+      "dependencies": {
+        "fast-glob": "3.3.1",
+        "@eslint-community/eslint-utils": "4.9.1"
+      }
+    },
+    "suggested_eslint_config_next_14_2_35": {
+      "peerDependencies": {
+        "eslint": "^7.23.0 || ^8.0.0",
+        "typescript": ">=3.3.1"
+      },
+      "dependencies": {
+        "eslint-plugin-react": "^7.33.2",
+        "eslint-plugin-import": "^2.28.1",
+        "eslint-plugin-jsx-a11y": "^6.7.1",
+        "@rushstack/eslint-patch": "^1.3.3",
+        "@next/eslint-plugin-next": "14.2.35",
+        "@typescript-eslint/parser": "^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0",
+        "eslint-plugin-react-hooks": "^4.5.0 || 5.0.0-canary-7118f5dd7-20230705",
+        "eslint-import-resolver-node": "^0.3.6",
+        "@typescript-eslint/eslint-plugin": "^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0",
+        "eslint-import-resolver-typescript": "^3.5.2"
+      }
+    },
+    "other_view_results": {
+      "micromatch": {
+        "version": "4.0.8",
+        "dependencies": {
+          "braces": "^3.0.3",
+          "picomatch": "^2.3.1"
+        }
+      },
+      "fast-glob": {
+        "version": "3.3.3",
+        "affected_dependency": "micromatch ^4.0.8"
+      },
+      "vite-plugin-dynamic-import": {
+        "version": "1.6.0",
+        "affected_dependency": "fast-glob ^3.3.2"
+      },
+      "vite-plugin-commonjs": {
+        "version": "0.10.4",
+        "affected_dependency": "vite-plugin-dynamic-import ^1.6.0"
+      }
+    }
+  },
+  "local_reproduction": {
+    "node": "v22.13.1",
+    "method": "Local synchronous calls; exceptions caught; no HTTP exploit or uncaught service crash.",
+    "results": [
+      {
+        "name": "braces.compile",
+        "kind": "ordinary",
+        "length": 21,
+        "outcome": "RETURNED",
+        "resultCount": 1
+      },
+      {
+        "name": "braces.compile",
+        "kind": "nested-braces",
+        "length": 9003,
+        "outcome": "RangeError",
+        "message": "Maximum call stack size exceeded"
+      },
+      {
+        "name": "braces.compile",
+        "kind": "nested-parentheses",
+        "length": 9001,
+        "outcome": "RangeError",
+        "message": "Maximum call stack size exceeded"
+      },
+      {
+        "name": "braces.expand",
+        "kind": "ordinary",
+        "length": 21,
+        "outcome": "RETURNED",
+        "resultCount": 2
+      },
+      {
+        "name": "braces.expand",
+        "kind": "nested-braces",
+        "length": 9003,
+        "outcome": "RangeError",
+        "message": "Maximum call stack size exceeded"
+      },
+      {
+        "name": "braces.expand",
+        "kind": "nested-parentheses",
+        "length": 9001,
+        "outcome": "RETURNED",
+        "resultCount": 1
+      },
+      {
+        "name": "fast-glob@3.3.1.generateTasks",
+        "kind": "ordinary",
+        "length": 21,
+        "outcome": "RETURNED",
+        "resultCount": 1
+      },
+      {
+        "name": "fast-glob@3.3.1.generateTasks",
+        "kind": "nested-braces",
+        "length": 9003,
+        "outcome": "RangeError",
+        "message": "Maximum call stack size exceeded"
+      },
+      {
+        "name": "fast-glob@3.3.1.generateTasks",
+        "kind": "nested-parentheses",
+        "length": 9001,
+        "outcome": "RETURNED",
+        "resultCount": 1
+      },
+      {
+        "name": "fast-glob@3.3.3.generateTasks",
+        "kind": "ordinary",
+        "length": 21,
+        "outcome": "RETURNED",
+        "resultCount": 1
+      },
+      {
+        "name": "fast-glob@3.3.3.generateTasks",
+        "kind": "nested-braces",
+        "length": 9003,
+        "outcome": "RangeError",
+        "message": "Maximum call stack size exceeded"
+      },
+      {
+        "name": "fast-glob@3.3.3.generateTasks",
+        "kind": "nested-parentheses",
+        "length": 9001,
+        "outcome": "RETURNED",
+        "resultCount": 1
+      }
+    ]
+  },
+  "local_reproduction_script": "const fs = require('node:fs');\nconst { createRequire } = require('node:module');\nconst rootRequire = createRequire(process.cwd() + '/package.json');\nconst nestedRequire = createRequire(rootRequire.resolve('vite-plugin-dynamic-import'));\nconst braces = rootRequire('braces');\nconst cases = [\n  ['braces.compile', (s) => braces(s)],\n  ['braces.expand', (s) => braces.expand(s)],\n  ['fast-glob@3.3.1.generateTasks', (s) => rootRequire('fast-glob').generateTasks(s)],\n  ['fast-glob@3.3.3.generateTasks', (s) => nestedRequire('fast-glob').generateTasks(s)],\n];\nconst results = [];\nfor (const [name, fn] of cases) {\n  for (const [kind, pattern] of [\n    ['ordinary', 'app/{page,layout}.tsx'],\n    ['nested-braces', '{'.repeat(4500) + 'a,b' + '}'.repeat(4500)],\n    ['nested-parentheses', '('.repeat(4500) + 'a' + ')'.repeat(4500)],\n  ]) {\n    try {\n      const value = fn(pattern);\n      results.push({ name, kind, length: pattern.length, outcome: 'RETURNED', resultCount: value.length });\n    } catch (error) {\n      results.push({ name, kind, length: pattern.length, outcome: error.name, message: error.message });\n    }\n  }\n}\nconst result = { node: process.version, method: 'Local synchronous calls; exceptions caught; no HTTP exploit or uncaught service crash.', results };\nfs.writeFileSync(__dirname + '/reproduction.json', JSON.stringify(result, null, 2) + '\\n');\nconsole.log(JSON.stringify(result, null, 2));\n",
+  "runtime": {
+    "method": "ESM load hook plus CommonJS Module._load instrumentation during isolated loopback startup and 15 HTTP checks; not exhaustive reachability proof.",
+    "uniqueModuleFiles": 90,
+    "affectedPackagesObserved": {
+      "braces": [],
+      "micromatch": [],
+      "fast-glob": [],
+      "eslint-config-next": [],
+      "@next/eslint-plugin-next": [],
+      "vinext": [
+        "vinext/dist/build/prerender.js",
+        "vinext/dist/build/report.js",
+        "vinext/dist/build/server-manifest.js",
+        "vinext/dist/config/config-matchers.js",
+        "vinext/dist/routing/file-matcher.js",
+        "vinext/dist/routing/utils.js",
+        "vinext/dist/server/app-mounted-slots-header.js",
+        "vinext/dist/server/app-rsc-render-mode.js",
+        "vinext/dist/server/headers.js",
+        "vinext/dist/server/http-error-responses.js",
+        "vinext/dist/server/image-optimization.js",
+        "vinext/dist/server/instrumentation.js",
+        "vinext/dist/server/isr-cache.js",
+        "vinext/dist/server/middleware-request-headers.js",
+        "vinext/dist/server/normalize-path.js",
+        "vinext/dist/server/prod-server.js",
+        "vinext/dist/server/request-pipeline.js",
+        "vinext/dist/server/seed-cache.js",
+        "vinext/dist/server/socket-error-backstop.js",
+        "vinext/dist/server/static-file-cache.js",
+        "vinext/dist/shims/cache.js",
+        "vinext/dist/shims/headers.js",
+        "vinext/dist/shims/internal/als-registry.js",
+        "vinext/dist/shims/internal/cookie-serialize.js",
+        "vinext/dist/shims/internal/make-hanging-promise.js",
+        "vinext/dist/shims/internal/parse-cookie-header.js",
+        "vinext/dist/shims/internal/work-unit-async-storage.js",
+        "vinext/dist/shims/request-context.js",
+        "vinext/dist/shims/unified-request-context.js",
+        "vinext/dist/utils/base-path.js",
+        "vinext/dist/utils/cache-control-metadata.js",
+        "vinext/dist/utils/encode-cache-tag.js",
+        "vinext/dist/utils/hash.js",
+        "vinext/dist/utils/lazy-chunks.js",
+        "vinext/dist/utils/manifest-paths.js",
+        "vinext/dist/utils/safe-json-file.js"
+      ],
+      "vite-plugin-commonjs": [],
+      "vite-plugin-dynamic-import": []
+    }
+  },
+  "runtime_instrumentation": {
+    "esm_load_hook": "import { appendFileSync } from 'node:fs';\nexport async function load(url, context, nextLoad) {\n  const result = await nextLoad(url, context);\n  if (url.startsWith('file:')) appendFileSync(process.env.KFM_DEP_TRACE, JSON.stringify({kind:'esm',url}) + '\\n');\n  return result;\n}\n",
+    "cjs_preload": "const Module = require('node:module');\nconst fs = require('node:fs');\nconst original = Module._load;\nModule._load = function (request, parent, isMain) {\n  const result = original.apply(this, arguments);\n  const filename = Module._resolveFilename(request, parent, isMain);\n  if (typeof filename === 'string' && filename.startsWith('/')) fs.appendFileSync(process.env.KFM_DEP_TRACE, JSON.stringify({kind:'cjs',url:filename}) + '\\n');\n  return result;\n};\n",
+    "scope": "Started server and 15 existing HTTP checks in the same isolated execution; /api/build readiness waited; server terminated afterwards."
+  },
+  "bundle_text_scan": {
+    "method": "Text scan for package paths/imports and brace expansion helper names; not an exhaustive semantic bundle proof.",
+    "files": 97,
+    "bytes": 18844036,
+    "matchedFiles": []
+  },
+  "validation": {
+    "install": {
+      "node": "24.19.0",
+      "npm": "11.9.0",
+      "command": "npm ci --no-audit --no-fund",
+      "exit_code": 0,
+      "packages_added": 528
+    },
+    "checks_node": "22.13.1",
+    "production_build": {
+      "exit_code": 0,
+      "staged_assets": 58
+    },
+    "typescript": {
+      "exit_code": 0
+    },
+    "focused_tests": {
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0
+    },
+    "node_http_tests": {
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0
+    },
+    "identity": {
+      "outcome": "APPLICATION_INPUTS_MATCH",
+      "origin": "http://127.0.0.1:5190",
+      "expectedDigest": "sha256:4d57cc63b876327eb2841fe2f383d2d8ebf6896ecbcedf50153baa20af0cea8e",
+      "observedDigest": "sha256:4d57cc63b876327eb2841fe2f383d2d8ebf6896ecbcedf50153baa20af0cea8e",
+      "scope": "Application source inputs only; excludes build bytes, live data, settings, models, and release authority."
+    },
+    "preliminary_http_attempts": "Two cross-execution runs failed to connect. Final same-execution readiness/HTTP/identity checks passed; no application source change made.",
+    "not_performed": [
+      "Full test suite",
+      "Broad lint",
+      "Actual browser rendering",
+      "Hosted/provider acceptance",
+      "Public exploit attempt",
+      "Model operation",
+      "GoDaddy publication"
+    ]
+  },
+  "triage": {
+    "schema_version": "triage-finding/v0",
+    "repository": {
+      "path": ".",
+      "revision": "1d02be5083c9ddd207e0ddcea97f0f3017334365"
+    },
+    "findings": [
+      {
+        "triage_item_id": "triage-001",
+        "input_id": "npm-audit:@next/eslint-plugin-next",
+        "source_type": "advisory",
+        "title": "@next/eslint-plugin-next affected through GHSA-vfj7-8cjw-p6xm",
+        "normalized_input": {
+          "vulnerable_component": "@next/eslint-plugin-next",
+          "claimed_source": "Deeply nested pattern supplied to Braces; public KFM input path unknown",
+          "claimed_sink": "Recursive AST compile/expand stack exhaustion",
+          "claimed_control": "No effective nesting-depth guard in installed Braces",
+          "affected_version_or_path": "node_modules/@next/eslint-plugin-next",
+          "preconditions": [
+            "Attacker influences a pattern reaching affected compilation or expansion",
+            "Uncaught exception is required for process termination"
+          ],
+          "impact": "Availability; no KFM remote exploitation demonstrated",
+          "references": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ]
+        },
+        "verdict": "needs_review",
+        "confidence": "high",
+        "affected_locations": [
+          {
+            "label": "dependency callsite",
+            "path": "node_modules/@next/eslint-plugin-next/dist/utils/get-root-dirs.js",
+            "lines": "14-29",
+            "detail": "Lint rootDir setting to fast-glob"
+          }
+        ],
+        "reachable_path": [
+          "eslint.config.mjs",
+          "eslint-config-next",
+          "@next/eslint-plugin-next",
+          "fast-glob@3.3.1",
+          "micromatch@4.0.8",
+          "braces@3.0.3"
+        ],
+        "boundary_assessment": {
+          "product_surface": "Build/lint tooling installed in hosted application; public runtime reachability unknown",
+          "source_trust": "trusted_developer_config",
+          "boundary_crossed": null,
+          "policy_basis": "Root AGENTS.md, package.json, server/start.mjs, eslint.config.mjs and hosting docs; no standalone SECURITY.md"
+        },
+        "exploitability_stack_rank": {
+          "rank_queue": "needs_review",
+          "rank": 7,
+          "rationale": "Root component and nearest build-path consumers precede transitive and optional lint-configuration consumers; not an assertion of remote exploitability.",
+          "drivers": [
+            "Installed component confirmed",
+            "Build source/configuration pattern provenance",
+            "No HTTP-controlled path established",
+            "Runtime trace did not load the affected tooling chain"
+          ]
+        },
+        "evidence": [
+          "Captured audit and lock/installed tree agree",
+          "Local caught library and fast-glob calls reproduce the root brace-depth exception"
+        ],
+        "counterevidence": [
+          "Production entry uses the distinct Vinext production-server export",
+          "Current lint config does not set Next rootDir",
+          "Bounded runtime/bundle observations found no affected parser path"
+        ],
+        "proof_gaps": [
+          "No end-to-end lower-trust source/configuration to process-termination demonstration",
+          "No exhaustive public-request, optional-mode or semantic bundle proof"
+        ],
+        "recommended_next_step": "Track upstream compatible patch and re-evaluate before dependency change or publication",
+        "fix_finding_handoff": null
+      },
+      {
+        "triage_item_id": "triage-002",
+        "input_id": "npm-audit:braces",
+        "source_type": "advisory",
+        "title": "braces affected through GHSA-vfj7-8cjw-p6xm",
+        "normalized_input": {
+          "vulnerable_component": "braces",
+          "claimed_source": "Deeply nested pattern supplied to Braces; public KFM input path unknown",
+          "claimed_sink": "Recursive AST compile/expand stack exhaustion",
+          "claimed_control": "No effective nesting-depth guard in installed Braces",
+          "affected_version_or_path": "node_modules/braces",
+          "preconditions": [
+            "Attacker influences a pattern reaching affected compilation or expansion",
+            "Uncaught exception is required for process termination"
+          ],
+          "impact": "Availability; no KFM remote exploitation demonstrated",
+          "references": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ]
+        },
+        "verdict": "needs_review",
+        "confidence": "high",
+        "affected_locations": [
+          {
+            "label": "dependency callsite",
+            "path": "node_modules/braces/lib/compile.js",
+            "lines": "49-53",
+            "detail": "Recursive AST walk; expand.js has another recursive path"
+          }
+        ],
+        "reachable_path": [
+          "vite.config.ts",
+          "vinext build entry",
+          "vite-plugin-commonjs",
+          "vite-plugin-dynamic-import",
+          "fast-glob@3.3.3",
+          "micromatch@4.0.8",
+          "braces@3.0.3"
+        ],
+        "boundary_assessment": {
+          "product_surface": "Build/lint tooling installed in hosted application; public runtime reachability unknown",
+          "source_trust": "trusted_developer_config",
+          "boundary_crossed": null,
+          "policy_basis": "Root AGENTS.md, package.json, server/start.mjs, eslint.config.mjs and hosting docs; no standalone SECURITY.md"
+        },
+        "exploitability_stack_rank": {
+          "rank_queue": "needs_review",
+          "rank": 1,
+          "rationale": "Root component and nearest build-path consumers precede transitive and optional lint-configuration consumers; not an assertion of remote exploitability.",
+          "drivers": [
+            "Installed component confirmed",
+            "Build source/configuration pattern provenance",
+            "No HTTP-controlled path established",
+            "Runtime trace did not load the affected tooling chain"
+          ]
+        },
+        "evidence": [
+          "Captured audit and lock/installed tree agree",
+          "Local caught library and fast-glob calls reproduce the root brace-depth exception"
+        ],
+        "counterevidence": [
+          "Production entry uses the distinct Vinext production-server export",
+          "Current lint config does not set Next rootDir",
+          "Bounded runtime/bundle observations found no affected parser path"
+        ],
+        "proof_gaps": [
+          "No end-to-end lower-trust source/configuration to process-termination demonstration",
+          "No exhaustive public-request, optional-mode or semantic bundle proof"
+        ],
+        "recommended_next_step": "Track upstream compatible patch and re-evaluate before dependency change or publication",
+        "fix_finding_handoff": null
+      },
+      {
+        "triage_item_id": "triage-003",
+        "input_id": "npm-audit:eslint-config-next",
+        "source_type": "advisory",
+        "title": "eslint-config-next affected through GHSA-vfj7-8cjw-p6xm",
+        "normalized_input": {
+          "vulnerable_component": "eslint-config-next",
+          "claimed_source": "Deeply nested pattern supplied to Braces; public KFM input path unknown",
+          "claimed_sink": "Recursive AST compile/expand stack exhaustion",
+          "claimed_control": "No effective nesting-depth guard in installed Braces",
+          "affected_version_or_path": "node_modules/eslint-config-next",
+          "preconditions": [
+            "Attacker influences a pattern reaching affected compilation or expansion",
+            "Uncaught exception is required for process termination"
+          ],
+          "impact": "Availability; no KFM remote exploitation demonstrated",
+          "references": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ]
+        },
+        "verdict": "needs_review",
+        "confidence": "high",
+        "affected_locations": [
+          {
+            "label": "dependency callsite",
+            "path": "eslint.config.mjs",
+            "lines": "1-7",
+            "detail": "Imports the affected Next lint plugin transitively"
+          }
+        ],
+        "reachable_path": [
+          "eslint.config.mjs",
+          "eslint-config-next",
+          "@next/eslint-plugin-next",
+          "fast-glob@3.3.1",
+          "micromatch@4.0.8",
+          "braces@3.0.3"
+        ],
+        "boundary_assessment": {
+          "product_surface": "Build/lint tooling installed in hosted application; public runtime reachability unknown",
+          "source_trust": "trusted_developer_config",
+          "boundary_crossed": null,
+          "policy_basis": "Root AGENTS.md, package.json, server/start.mjs, eslint.config.mjs and hosting docs; no standalone SECURITY.md"
+        },
+        "exploitability_stack_rank": {
+          "rank_queue": "needs_review",
+          "rank": 8,
+          "rationale": "Root component and nearest build-path consumers precede transitive and optional lint-configuration consumers; not an assertion of remote exploitability.",
+          "drivers": [
+            "Installed component confirmed",
+            "Build source/configuration pattern provenance",
+            "No HTTP-controlled path established",
+            "Runtime trace did not load the affected tooling chain"
+          ]
+        },
+        "evidence": [
+          "Captured audit and lock/installed tree agree",
+          "Local caught library and fast-glob calls reproduce the root brace-depth exception"
+        ],
+        "counterevidence": [
+          "Production entry uses the distinct Vinext production-server export",
+          "Current lint config does not set Next rootDir",
+          "Bounded runtime/bundle observations found no affected parser path"
+        ],
+        "proof_gaps": [
+          "No end-to-end lower-trust source/configuration to process-termination demonstration",
+          "No exhaustive public-request, optional-mode or semantic bundle proof"
+        ],
+        "recommended_next_step": "Track upstream compatible patch and re-evaluate before dependency change or publication",
+        "fix_finding_handoff": null
+      },
+      {
+        "triage_item_id": "triage-004",
+        "input_id": "npm-audit:fast-glob",
+        "source_type": "advisory",
+        "title": "fast-glob affected through GHSA-vfj7-8cjw-p6xm",
+        "normalized_input": {
+          "vulnerable_component": "fast-glob",
+          "claimed_source": "Deeply nested pattern supplied to Braces; public KFM input path unknown",
+          "claimed_sink": "Recursive AST compile/expand stack exhaustion",
+          "claimed_control": "No effective nesting-depth guard in installed Braces",
+          "affected_version_or_path": "node_modules/fast-glob, node_modules/vite-plugin-dynamic-import/node_modules/fast-glob",
+          "preconditions": [
+            "Attacker influences a pattern reaching affected compilation or expansion",
+            "Uncaught exception is required for process termination"
+          ],
+          "impact": "Availability; no KFM remote exploitation demonstrated",
+          "references": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ]
+        },
+        "verdict": "needs_review",
+        "confidence": "high",
+        "affected_locations": [
+          {
+            "label": "dependency callsite",
+            "path": "node_modules/fast-glob/out/utils/pattern.js",
+            "lines": "130-148",
+            "detail": "Brace expansion through micromatch; nested 3.3.3 has the same boundary"
+          }
+        ],
+        "reachable_path": [
+          "vite.config.ts",
+          "vinext build entry",
+          "vite-plugin-commonjs",
+          "vite-plugin-dynamic-import",
+          "fast-glob@3.3.3",
+          "micromatch@4.0.8",
+          "braces@3.0.3"
+        ],
+        "boundary_assessment": {
+          "product_surface": "Build/lint tooling installed in hosted application; public runtime reachability unknown",
+          "source_trust": "trusted_developer_config",
+          "boundary_crossed": null,
+          "policy_basis": "Root AGENTS.md, package.json, server/start.mjs, eslint.config.mjs and hosting docs; no standalone SECURITY.md"
+        },
+        "exploitability_stack_rank": {
+          "rank_queue": "needs_review",
+          "rank": 3,
+          "rationale": "Root component and nearest build-path consumers precede transitive and optional lint-configuration consumers; not an assertion of remote exploitability.",
+          "drivers": [
+            "Installed component confirmed",
+            "Build source/configuration pattern provenance",
+            "No HTTP-controlled path established",
+            "Runtime trace did not load the affected tooling chain"
+          ]
+        },
+        "evidence": [
+          "Captured audit and lock/installed tree agree",
+          "Local caught library and fast-glob calls reproduce the root brace-depth exception"
+        ],
+        "counterevidence": [
+          "Production entry uses the distinct Vinext production-server export",
+          "Current lint config does not set Next rootDir",
+          "Bounded runtime/bundle observations found no affected parser path"
+        ],
+        "proof_gaps": [
+          "No end-to-end lower-trust source/configuration to process-termination demonstration",
+          "No exhaustive public-request, optional-mode or semantic bundle proof"
+        ],
+        "recommended_next_step": "Track upstream compatible patch and re-evaluate before dependency change or publication",
+        "fix_finding_handoff": null
+      },
+      {
+        "triage_item_id": "triage-005",
+        "input_id": "npm-audit:micromatch",
+        "source_type": "advisory",
+        "title": "micromatch affected through GHSA-vfj7-8cjw-p6xm",
+        "normalized_input": {
+          "vulnerable_component": "micromatch",
+          "claimed_source": "Deeply nested pattern supplied to Braces; public KFM input path unknown",
+          "claimed_sink": "Recursive AST compile/expand stack exhaustion",
+          "claimed_control": "No effective nesting-depth guard in installed Braces",
+          "affected_version_or_path": "node_modules/micromatch",
+          "preconditions": [
+            "Attacker influences a pattern reaching affected compilation or expansion",
+            "Uncaught exception is required for process termination"
+          ],
+          "impact": "Availability; no KFM remote exploitation demonstrated",
+          "references": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ]
+        },
+        "verdict": "needs_review",
+        "confidence": "high",
+        "affected_locations": [
+          {
+            "label": "dependency callsite",
+            "path": "node_modules/micromatch/index.js",
+            "lines": "451-465",
+            "detail": "Dispatch to Braces"
+          }
+        ],
+        "reachable_path": [
+          "vite.config.ts",
+          "vinext build entry",
+          "vite-plugin-commonjs",
+          "vite-plugin-dynamic-import",
+          "fast-glob@3.3.3",
+          "micromatch@4.0.8",
+          "braces@3.0.3"
+        ],
+        "boundary_assessment": {
+          "product_surface": "Build/lint tooling installed in hosted application; public runtime reachability unknown",
+          "source_trust": "trusted_developer_config",
+          "boundary_crossed": null,
+          "policy_basis": "Root AGENTS.md, package.json, server/start.mjs, eslint.config.mjs and hosting docs; no standalone SECURITY.md"
+        },
+        "exploitability_stack_rank": {
+          "rank_queue": "needs_review",
+          "rank": 2,
+          "rationale": "Root component and nearest build-path consumers precede transitive and optional lint-configuration consumers; not an assertion of remote exploitability.",
+          "drivers": [
+            "Installed component confirmed",
+            "Build source/configuration pattern provenance",
+            "No HTTP-controlled path established",
+            "Runtime trace did not load the affected tooling chain"
+          ]
+        },
+        "evidence": [
+          "Captured audit and lock/installed tree agree",
+          "Local caught library and fast-glob calls reproduce the root brace-depth exception"
+        ],
+        "counterevidence": [
+          "Production entry uses the distinct Vinext production-server export",
+          "Current lint config does not set Next rootDir",
+          "Bounded runtime/bundle observations found no affected parser path"
+        ],
+        "proof_gaps": [
+          "No end-to-end lower-trust source/configuration to process-termination demonstration",
+          "No exhaustive public-request, optional-mode or semantic bundle proof"
+        ],
+        "recommended_next_step": "Track upstream compatible patch and re-evaluate before dependency change or publication",
+        "fix_finding_handoff": null
+      },
+      {
+        "triage_item_id": "triage-006",
+        "input_id": "npm-audit:vinext",
+        "source_type": "advisory",
+        "title": "vinext affected through GHSA-vfj7-8cjw-p6xm",
+        "normalized_input": {
+          "vulnerable_component": "vinext",
+          "claimed_source": "Deeply nested pattern supplied to Braces; public KFM input path unknown",
+          "claimed_sink": "Recursive AST compile/expand stack exhaustion",
+          "claimed_control": "No effective nesting-depth guard in installed Braces",
+          "affected_version_or_path": "node_modules/vinext",
+          "preconditions": [
+            "Attacker influences a pattern reaching affected compilation or expansion",
+            "Uncaught exception is required for process termination"
+          ],
+          "impact": "Availability; no KFM remote exploitation demonstrated",
+          "references": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ]
+        },
+        "verdict": "needs_review",
+        "confidence": "high",
+        "affected_locations": [
+          {
+            "label": "dependency callsite",
+            "path": "node_modules/vinext/dist/index.js",
+            "lines": "59,384",
+            "detail": "Enables affected CommonJS build plugin; runtime uses a different export"
+          }
+        ],
+        "reachable_path": [
+          "vite.config.ts",
+          "vinext build entry",
+          "vite-plugin-commonjs",
+          "vite-plugin-dynamic-import",
+          "fast-glob@3.3.3",
+          "micromatch@4.0.8",
+          "braces@3.0.3"
+        ],
+        "boundary_assessment": {
+          "product_surface": "Build/lint tooling installed in hosted application; public runtime reachability unknown",
+          "source_trust": "trusted_developer_config",
+          "boundary_crossed": null,
+          "policy_basis": "Root AGENTS.md, package.json, server/start.mjs, eslint.config.mjs and hosting docs; no standalone SECURITY.md"
+        },
+        "exploitability_stack_rank": {
+          "rank_queue": "needs_review",
+          "rank": 6,
+          "rationale": "Root component and nearest build-path consumers precede transitive and optional lint-configuration consumers; not an assertion of remote exploitability.",
+          "drivers": [
+            "Installed component confirmed",
+            "Build source/configuration pattern provenance",
+            "No HTTP-controlled path established",
+            "Runtime trace did not load the affected tooling chain"
+          ]
+        },
+        "evidence": [
+          "Captured audit and lock/installed tree agree",
+          "Local caught library and fast-glob calls reproduce the root brace-depth exception"
+        ],
+        "counterevidence": [
+          "Production entry uses the distinct Vinext production-server export",
+          "Current lint config does not set Next rootDir",
+          "Bounded runtime/bundle observations found no affected parser path"
+        ],
+        "proof_gaps": [
+          "No end-to-end lower-trust source/configuration to process-termination demonstration",
+          "No exhaustive public-request, optional-mode or semantic bundle proof"
+        ],
+        "recommended_next_step": "Track upstream compatible patch and re-evaluate before dependency change or publication",
+        "fix_finding_handoff": null
+      },
+      {
+        "triage_item_id": "triage-007",
+        "input_id": "npm-audit:vite-plugin-commonjs",
+        "source_type": "advisory",
+        "title": "vite-plugin-commonjs affected through GHSA-vfj7-8cjw-p6xm",
+        "normalized_input": {
+          "vulnerable_component": "vite-plugin-commonjs",
+          "claimed_source": "Deeply nested pattern supplied to Braces; public KFM input path unknown",
+          "claimed_sink": "Recursive AST compile/expand stack exhaustion",
+          "claimed_control": "No effective nesting-depth guard in installed Braces",
+          "affected_version_or_path": "node_modules/vite-plugin-commonjs",
+          "preconditions": [
+            "Attacker influences a pattern reaching affected compilation or expansion",
+            "Uncaught exception is required for process termination"
+          ],
+          "impact": "Availability; no KFM remote exploitation demonstrated",
+          "references": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ]
+        },
+        "verdict": "needs_review",
+        "confidence": "high",
+        "affected_locations": [
+          {
+            "label": "dependency callsite",
+            "path": "node_modules/vite-plugin-commonjs/dist/index.js",
+            "lines": "276-286",
+            "detail": "Parsed dynamic require to globFiles"
+          }
+        ],
+        "reachable_path": [
+          "vite.config.ts",
+          "vinext build entry",
+          "vite-plugin-commonjs",
+          "vite-plugin-dynamic-import",
+          "fast-glob@3.3.3",
+          "micromatch@4.0.8",
+          "braces@3.0.3"
+        ],
+        "boundary_assessment": {
+          "product_surface": "Build/lint tooling installed in hosted application; public runtime reachability unknown",
+          "source_trust": "trusted_developer_config",
+          "boundary_crossed": null,
+          "policy_basis": "Root AGENTS.md, package.json, server/start.mjs, eslint.config.mjs and hosting docs; no standalone SECURITY.md"
+        },
+        "exploitability_stack_rank": {
+          "rank_queue": "needs_review",
+          "rank": 5,
+          "rationale": "Root component and nearest build-path consumers precede transitive and optional lint-configuration consumers; not an assertion of remote exploitability.",
+          "drivers": [
+            "Installed component confirmed",
+            "Build source/configuration pattern provenance",
+            "No HTTP-controlled path established",
+            "Runtime trace did not load the affected tooling chain"
+          ]
+        },
+        "evidence": [
+          "Captured audit and lock/installed tree agree",
+          "Local caught library and fast-glob calls reproduce the root brace-depth exception"
+        ],
+        "counterevidence": [
+          "Production entry uses the distinct Vinext production-server export",
+          "Current lint config does not set Next rootDir",
+          "Bounded runtime/bundle observations found no affected parser path"
+        ],
+        "proof_gaps": [
+          "No end-to-end lower-trust source/configuration to process-termination demonstration",
+          "No exhaustive public-request, optional-mode or semantic bundle proof"
+        ],
+        "recommended_next_step": "Track upstream compatible patch and re-evaluate before dependency change or publication",
+        "fix_finding_handoff": null
+      },
+      {
+        "triage_item_id": "triage-008",
+        "input_id": "npm-audit:vite-plugin-dynamic-import",
+        "source_type": "advisory",
+        "title": "vite-plugin-dynamic-import affected through GHSA-vfj7-8cjw-p6xm",
+        "normalized_input": {
+          "vulnerable_component": "vite-plugin-dynamic-import",
+          "claimed_source": "Deeply nested pattern supplied to Braces; public KFM input path unknown",
+          "claimed_sink": "Recursive AST compile/expand stack exhaustion",
+          "claimed_control": "No effective nesting-depth guard in installed Braces",
+          "affected_version_or_path": "node_modules/vite-plugin-dynamic-import",
+          "preconditions": [
+            "Attacker influences a pattern reaching affected compilation or expansion",
+            "Uncaught exception is required for process termination"
+          ],
+          "impact": "Availability; no KFM remote exploitation demonstrated",
+          "references": [
+            "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm"
+          ]
+        },
+        "verdict": "needs_review",
+        "confidence": "high",
+        "affected_locations": [
+          {
+            "label": "dependency callsite",
+            "path": "node_modules/vite-plugin-dynamic-import/dist/index.mjs",
+            "lines": "460-516",
+            "detail": "Build-derived fileGlobs to fastGlob.sync"
+          }
+        ],
+        "reachable_path": [
+          "vite.config.ts",
+          "vinext build entry",
+          "vite-plugin-commonjs",
+          "vite-plugin-dynamic-import",
+          "fast-glob@3.3.3",
+          "micromatch@4.0.8",
+          "braces@3.0.3"
+        ],
+        "boundary_assessment": {
+          "product_surface": "Build/lint tooling installed in hosted application; public runtime reachability unknown",
+          "source_trust": "trusted_developer_config",
+          "boundary_crossed": null,
+          "policy_basis": "Root AGENTS.md, package.json, server/start.mjs, eslint.config.mjs and hosting docs; no standalone SECURITY.md"
+        },
+        "exploitability_stack_rank": {
+          "rank_queue": "needs_review",
+          "rank": 4,
+          "rationale": "Root component and nearest build-path consumers precede transitive and optional lint-configuration consumers; not an assertion of remote exploitability.",
+          "drivers": [
+            "Installed component confirmed",
+            "Build source/configuration pattern provenance",
+            "No HTTP-controlled path established",
+            "Runtime trace did not load the affected tooling chain"
+          ]
+        },
+        "evidence": [
+          "Captured audit and lock/installed tree agree",
+          "Local caught library and fast-glob calls reproduce the root brace-depth exception"
+        ],
+        "counterevidence": [
+          "Production entry uses the distinct Vinext production-server export",
+          "Current lint config does not set Next rootDir",
+          "Bounded runtime/bundle observations found no affected parser path"
+        ],
+        "proof_gaps": [
+          "No end-to-end lower-trust source/configuration to process-termination demonstration",
+          "No exhaustive public-request, optional-mode or semantic bundle proof"
+        ],
+        "recommended_next_step": "Track upstream compatible patch and re-evaluate before dependency change or publication",
+        "fix_finding_handoff": null
+      }
+    ]
+  },
+  "sources": [
+    "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+    "https://github.com/micromatch/braces/issues/70",
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5245",
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39085765215"
+  ],
+  "security_acceptance": false,
+  "publication_authorized_by_this_record": false
+}

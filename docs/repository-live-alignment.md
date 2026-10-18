@@ -93,6 +93,13 @@ clear it or assume an exception. The published baseline also retains known AI
 quality limitations and an unremediated Braces advisory; no security acceptance
 or model-quality repair is claimed here.
 
+The [2026-10-18 dependency investigation](dependency-audit-20261018.md) traces
+all eight HIGH affected-package entries to one Braces advisory across lint and
+Vinext build tooling. All are production-installed; public-request exploitability
+was not established. No compatible patched release was available at inspection,
+so the package/lock remain unchanged and the dependency/publication hold remains.
+This evidence update grants no audit exception or publication authority.
+
 After authorized preview/publication, re-read the provider's actual source
 commit, check `/api/build`, modules, desktop/mobile navigation, layers/time,
 free report exports, and denial of private operations. Preserve external-source
