@@ -37,6 +37,7 @@ jobs:
         run: >-
           node --test tests/assistant-status.test.mjs tests/assistant-context.test.mjs
           tests/assistant-sitewide.test.mjs tests/assistant-built-routes.test.mjs tests/public-ai.test.mjs
+          tests/ai-read-buffer.test.mjs tests/ai-read-admission.test.mjs
           tests/hosted-ai.test.mjs tests/hosted-ai-acceptance.test.mjs
           tests/pc-ai-login-admission.test.mjs tests/public-ai-http.test.mjs
       - name: Zoom detail, source bounds and shared effects controls

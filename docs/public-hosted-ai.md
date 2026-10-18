@@ -78,6 +78,26 @@ one per guest. Limits remain ten guest and thirty whole-process submissions per
 hour, including cookie resets. These counters are process-local; scaling to
 multiple replicas requires shared admission control and renewed qualification.
 
+Source and evidence reads use a separate process-local buffer: two actual
+resolver operations may run and eight may wait for at most one second. A caller
+timeout does not release an actual operation's slot before it settles. At most
+two result reads per guest and ten per process may remain pending, including
+waiters sharing one check. Result polling is limited to sixty reads per guest
+and three hundred per process per rolling minute; cookie resets cannot reset
+the shared budget. Status and cancellation remain accessible during pressure.
+Excess reads return HTTP429 with `AI_READ_BUSY` or `AI_READ_RATE_LIMIT` and
+`Retry-After`; they return no unchecked answer or context. The client retains
+the accepted job and draft, honors bounded retry delays, and never resubmits a
+question to retry its status. Temporary read pressure is not source withdrawal.
+
+Overlapping reads of one job share one fresh check. A later read always checks
+again: no successful-result TTL bypasses source changes, and verified withdrawal
+remains irreversible. These controls include preparation, pre-inference checks
+and result reads, without changing source geometry, native values or detail.
+They bound work within one process, not the number of replicas or all HTTP
+traffic; hung resolvers retain their two slots and fail closed until settlement.
+They do not qualify model accuracy or grant publication authority.
+
 Guest capability expires after one hour. Questions, replies and context expire
 after fifteen minutes; cleanup runs every thirty seconds. No visitor prompts,
 answers, cookies or credentials are logged. Questions/output are at most 4,096
