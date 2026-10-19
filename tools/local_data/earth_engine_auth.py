@@ -131,7 +131,7 @@ class SignIn:
             if len(query) > 8192: raise ValueError("INVALID_OAUTH_RESPONSE")
             args = parse_qs(query)
             state = args.get("state", [])
-            if not self.pending or len(state) != 1 or not secrets.compare_digest(state[0], self.pending["state"]): raise ValueError("INVALID_OAUTH_STATE")
+            if not self.pending or len(state) != 1 or not secrets.compare_digest(state[0].encode("utf-8"), self.pending["state"].encode("utf-8")): raise ValueError("INVALID_OAUTH_STATE")
             pending = self.pending; self.pending = None
             if "error" in args: self.phase = "declined"; return None
             code = args.get("code", [])

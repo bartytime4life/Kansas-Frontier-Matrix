@@ -1,5 +1,5 @@
 import { topoRequestKey } from "../../../historical-topo-overlay";
-import { topoActive, topoBucket, topoBytes, topoCatalogSheet, topoFailure, topoJson, topoPrivateHeaders, topoSameOrigin, topoScanId, topoUser, TopoOverlayError } from "../../../historical-topo-overlay-server";
+import { topoActive, topoBucket, topoBytes, topoCatalogSheet, topoFailure, topoPrivateHeaders, topoRequestJson, topoSameOrigin, topoScanId, topoUser, TopoOverlayError } from "../../../historical-topo-overlay-server";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
@@ -26,8 +26,8 @@ export async function POST(request: Request) {
     if (!request.headers.get("content-type")?.startsWith("application/json") || Number(request.headers.get("content-length") ?? 0) > 256) throw new TopoOverlayError("Invalid sheet request.");
     const raw = await request.arrayBuffer();
     if (raw.byteLength > 256) throw new TopoOverlayError("Invalid sheet request.");
-    const body = topoJson(raw) as { id?: unknown };
-    if (!body || !Number.isInteger(body.id)) throw new TopoOverlayError("Invalid sheet request.");
+    const body = topoRequestJson(raw, "Invalid sheet request.");
+    if (!Number.isInteger(body.id)) throw new TopoOverlayError("Invalid sheet request.");
     const sheet = await topoCatalogSheet(body.id as number);
     const active = await topoActive(sheet.scanId);
     if (active) return Response.json({ state: "ready", scanId: sheet.scanId }, { headers: topoPrivateHeaders });

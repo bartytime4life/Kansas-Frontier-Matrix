@@ -1,0 +1,154 @@
+{
+  "receipt_id": "genrec-repo-debug-sweep-fixes-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/land-records/server.py",
+    "apps/site/source/app/api/daily-archive/route.ts",
+    "apps/site/source/app/api/historical-topo/activate/route.ts",
+    "apps/site/source/app/api/historical-topo/overlay/route.ts",
+    "apps/site/source/app/bounded-json.ts",
+    "apps/site/source/app/daily-archive-store.ts",
+    "apps/site/source/app/historical-topo-overlay-server.ts",
+    "apps/site/source/app/lightning-server.ts",
+    "apps/site/source/tests/bounded-json.test.mjs",
+    "apps/site/source/tests/daily-archive.test.mjs",
+    "apps/site/source/tests/historical-topo-routes.test.mjs",
+    "packages/release/src/release/local_admin.py",
+    "packages/release/src/release/local_store.py",
+    "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt",
+    "tests/domains/people-dna-land/test_land_records.py",
+    "tests/local_data/test_earth_engine_downloads.py",
+    "tests/packages/release/test_water_snapshot.py",
+    "tools/local_data/earth_engine_auth.py",
+    "tools/validators/governance/validate_atlas_card_delta_assessment.py"
+  ],
+  "artifact_hashes": {
+    "apps/land-records/server.py": "sha256:0c2707865a0bbc841cc7a3cc2037aadac1baeee008c6334b9eea5b7b03be33d3",
+    "apps/site/source/app/api/daily-archive/route.ts": "sha256:b5930d75f581214b958f3ea69ee83a984b3287ddb8676b8e305648bbf32993cc",
+    "apps/site/source/app/api/historical-topo/activate/route.ts": "sha256:c3390276bf56f2aebcc597ae95710ee7a9f05c4420588f61753bb7c4d6cf63d7",
+    "apps/site/source/app/api/historical-topo/overlay/route.ts": "sha256:68ec7a1c39230398dd442a7ae92fb0d1e5b74e820c48cfce29c076ec7b6ef120",
+    "apps/site/source/app/bounded-json.ts": "sha256:c9839f4448c74e33b15fffb4ad90dfac7c0dc452fec49aaabeeed21db068d9ed",
+    "apps/site/source/app/daily-archive-store.ts": "sha256:db8040bc119e2f3ad580ef23e1fda645c99ecf1fc581399382ed5146807c26bd",
+    "apps/site/source/app/historical-topo-overlay-server.ts": "sha256:7e8bb2f9f5455b286294abf7d3d9c0648cb7225616d78491fdecdffba654f23b",
+    "apps/site/source/app/lightning-server.ts": "sha256:5ea5d95dca12a6ac96bc728526975f17078b426eb5c3990c9755e6c4ab77cbc4",
+    "apps/site/source/tests/bounded-json.test.mjs": "sha256:b7398703822c47a6dc04875e5b032ebaad55e1eaa2a5fe16af49b4d22d23cff4",
+    "apps/site/source/tests/daily-archive.test.mjs": "sha256:2338c831ded502f8867f277da15388c8e550fd9984b30a1d5b4d0f517d5adfdd",
+    "apps/site/source/tests/historical-topo-routes.test.mjs": "sha256:06e9fff218d11009f7b3892f9ba74105978e92008a7a88a35c4403b39e4165aa",
+    "packages/release/src/release/local_admin.py": "sha256:c595d871d06428d95e245ebafcadbd4e8699afe729df7e80ae77ca774eaca97f",
+    "packages/release/src/release/local_store.py": "sha256:566cc19b1cfbaf2f6a9187e149acd2393054ec342d61a6c51bef55298e2795e7",
+    "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt": "sha256:476bd8b2a4f0c6878bbd943d339f04ce383ebe244dd60269c3187a1865171c82",
+    "tests/domains/people-dna-land/test_land_records.py": "sha256:d61c511ef8e2608b30d5f6082076d218921c615e7c235d60348075ce449d197a",
+    "tests/local_data/test_earth_engine_downloads.py": "sha256:fa2eb24c0948b4af29557b25c269ef50afbbaacd999c8cc56b660c46c2dac2da",
+    "tests/packages/release/test_water_snapshot.py": "sha256:ad48ce45e255d28b82a6c2aeea0c4cb466021d387e7e20ee773f6fc1c9a7957a",
+    "tools/local_data/earth_engine_auth.py": "sha256:0154b08ed482a1c5b2d41866e5eb2dd42c22bc92adaa9bcd9225eba5b3c05fe4",
+    "tools/validators/governance/validate_atlas_card_delta_assessment.py": "sha256:0612a99742127d5f80024304f9126a1b2f533c63b0999fc0ff4fc7f51ccf340d"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:apps/land-records/server.py@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:apps/site/source/app/api/daily-archive/route.ts@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:apps/site/source/app/api/historical-topo/activate/route.ts@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:apps/site/source/app/api/historical-topo/overlay/route.ts@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:apps/site/source/app/bounded-json.ts@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:apps/site/source/app/daily-archive-store.ts@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:apps/site/source/app/historical-topo-overlay-server.ts@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:apps/site/source/app/lightning-server.ts@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:apps/site/source/tests/daily-archive.test.mjs@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:apps/site/source/tests/historical-topo-routes.test.mjs@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:packages/release/src/release/local_admin.py@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:packages/release/src/release/local_store.py@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:tests/domains/people-dna-land/test_land_records.py@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:tests/local_data/test_earth_engine_downloads.py@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:tests/packages/release/test_water_snapshot.py@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:tools/local_data/earth_engine_auth.py@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:tools/validators/governance/validate_atlas_card_delta_assessment.py@8a9945146e329f594ffa3070f46976aafeafe123"
+    ]
+  },
+  "truth_labels": {
+    "apps/land-records/server.py": "CONFIRMED",
+    "apps/site/source/app/api/daily-archive/route.ts": "CONFIRMED",
+    "apps/site/source/app/api/historical-topo/activate/route.ts": "CONFIRMED",
+    "apps/site/source/app/api/historical-topo/overlay/route.ts": "CONFIRMED",
+    "apps/site/source/app/bounded-json.ts": "CONFIRMED",
+    "apps/site/source/app/daily-archive-store.ts": "CONFIRMED",
+    "apps/site/source/app/historical-topo-overlay-server.ts": "CONFIRMED",
+    "apps/site/source/app/lightning-server.ts": "CONFIRMED",
+    "apps/site/source/tests/bounded-json.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/daily-archive.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/historical-topo-routes.test.mjs": "CONFIRMED",
+    "packages/release/src/release/local_admin.py": "CONFIRMED",
+    "packages/release/src/release/local_store.py": "CONFIRMED",
+    "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt": "CONFIRMED",
+    "tests/domains/people-dna-land/test_land_records.py": "CONFIRMED",
+    "tests/local_data/test_earth_engine_downloads.py": "CONFIRMED",
+    "tests/packages/release/test_water_snapshot.py": "CONFIRMED",
+    "tools/local_data/earth_engine_auth.py": "CONFIRMED",
+    "tools/validators/governance/validate_atlas_card_delta_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "Each fixed defect was reproduced on the base commit and each new or extended test fails there: land-records returned 400 instead of 401 for a non-ASCII Authorization header and served JSON error bodies with the asset's text/html or text/javascript type; the Earth Engine OAuth callback raised an uncaught TypeError for a non-ASCII state; the release store left every SQLite connection unclosed (4 ResourceWarnings on Python 3.13 for one initialize and three reads); malformed or null JSON to the historical-topo overlay/activate and daily-archive POST routes returned 503 storage errors instead of 400; lightning PNG and USGS topo catalog reads buffered a chunked body without Content-Length before checking the limit; API-connection reservation rows appeared as daily-archive catalog entries and widened its day span. requirements-tiles.txt had lost its pyproj and rasterio pins in merge 519a773f75, so the declared environment could not import prepare.py."
+    },
+    {
+      "gate": "Repository test suites",
+      "outcome": "PASS",
+      "reason": "Full pytest collection in the official CPython 3.12 full-local-test environment: 9,313 passed with full git history; the only errors are whole-suite collection artifacts (eight connector files sharing the test_fetch_admit.py basename, and the tiles test that needs its own environment), all of which pass as CI runs them. 1,037 tests in the changed areas rerun after the final edits. The crop_casma_tiles tests pass in a fresh venv built only from requirements-tiles.txt. Site: lint (0 errors, the same 77 pre-existing warnings), tsc --noEmit, build, 1,378/1,378 node tests and the 110-check local smoke pass."
+    },
+    {
+      "gate": "Repository guardrails",
+      "outcome": "PASS",
+      "reason": "With the changes staged: make gap-scan, scaffold-inventory, repository-topology, repository-governance-parity, workflow-security, validator-registry-check, governed-api-verify, deny-test and boundary-guards all exit 0. make policy passes with the CI-pinned OPA 1.19.0."
+    },
+    {
+      "gate": "DAST scan",
+      "outcome": "SKIPPED",
+      "reason": "HawkScan could not run: no StackHawk API key or hawk CLI in the session environment."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8a9945146e329f594ffa3070f46976aafeafe123"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T07:37:11Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Repository-wide debugging sweep fixes. Runtime behavior changes are limited to status codes and media types on error paths, closing SQLite connections, streamed byte limits on two upstream reads, and excluding API-connection rows from the daily-archive catalog listing (storage accounting still includes them). Also restores two dropped pins in an isolated pipeline requirements file and clears a stray executable bit on a validator without a shebang. No data, policy, schema, release or publication change. The Site edits are in the monorepo mirror under apps/site/source; the standalone Site source needs the same edits for deployment."
+}

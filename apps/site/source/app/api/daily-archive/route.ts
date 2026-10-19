@@ -59,7 +59,9 @@ export async function POST(request: NextRequest) {
     const reader = request.body?.getReader(); let text = ""; let size = 0; const decoder = new TextDecoder();
     if (!reader) throw new ArchiveError("Input required.");
     for (;;) { const {done,value} = await reader.read(); if(done) break; size += value.length; if(size > 4096) { await reader.cancel(); throw new ArchiveError("Input too large.",413); } text += decoder.decode(value,{stream:true}); } text += decoder.decode();
-    const body = JSON.parse(text);
+    let body;
+    try { body = JSON.parse(text); } catch { throw new ArchiveError("Invalid JSON input."); }
+    if (!body || typeof body !== "object" || Array.isArray(body)) throw new ArchiveError("Invalid JSON input.");
     if (action === "review") return Response.json(await reviewArchive(db, body.id, body.state, body.note), { headers: archiveHeaders });
     if (action === "settings") {
       if (!Number.isSafeInteger(body.budget) || body.budget < 16777216 || body.budget > 1_000_000_000_000 || typeof body.paused !== "boolean") throw new ArchiveError("Choose a storage budget between 16,777,216 bytes and 1 TB and a pause setting.");

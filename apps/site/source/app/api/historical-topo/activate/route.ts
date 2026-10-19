@@ -1,5 +1,5 @@
 import { parseTopoOverlayManifest, topoActiveKey, topoManifestKey, topoOverlayPrefix, topoRequestKey, topoTileKey, type TopoActivePointer } from "../../../historical-topo-overlay";
-import { topoActive, topoBucket, topoBytes, topoDigest, topoFailure, topoJson, topoOwner, topoSameOrigin, topoScanId, TopoOverlayError } from "../../../historical-topo-overlay-server";
+import { topoActive, topoBucket, topoBytes, topoDigest, topoFailure, topoJson, topoOwner, topoRequestJson, topoSameOrigin, topoScanId, TopoOverlayError } from "../../../historical-topo-overlay-server";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     if (!request.headers.get("content-type")?.startsWith("application/json") || Number(request.headers.get("content-length") ?? 0) > 2048) throw new TopoOverlayError("Invalid review record.");
     const raw = await request.arrayBuffer();
     if (raw.byteLength > 2048) throw new TopoOverlayError("Invalid review record.");
-    const body = topoJson(raw) as { scanId?: unknown; packageId?: unknown; manifestSha256?: unknown; note?: unknown; rollback?: unknown };
+    const body = topoRequestJson(raw, "Invalid review record.");
     const scanId = topoScanId(String(body.scanId ?? ""));
     const packageId = body.packageId;
     const hash = body.manifestSha256;
