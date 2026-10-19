@@ -42,35 +42,42 @@ code. Unknown errors become OTHER_ERROR. Raw messages, stacks, addresses,
 response headers and response bodies are never logged. The existing five-second
 check, identity validation, body/header limits and no-redirect behavior remain.
 
-A passive observer watches only the first GET/HEAD of exactly `/` or `/api/build`
-for at most 60 seconds after startup. It logs REQUEST_RECEIVED followed by a
-fixed response outcome and status, or a bounded no-request/timeout/close result.
-It removes every diagnostic listener on completion and does not keep the
-process alive. The marked local startup request is excluded from this delivery
-observation; that marker grants no authority and cannot alter application
-responses. This is not an access log or a public endpoint.
+The initial preview candidate also had a one-minute observer of the first public
+root/build read. It confirmed a preview Node response, but automated review
+correctly noted that such a read cannot be attributed to a particular browser
+request without correlation. That observer is removed from the final candidate;
+it is not used to claim any visitor's request succeeded.
 
-NO_PUBLIC_REQUEST_OBSERVED means no matching unmarked root/build read was
-observed during that startup window. It does not prove no request ever reached
-the application, and it says nothing about other routes or requests after the
-window. A finished Node response does not prove the CDN delivered it to a
-visitor. Hosted readback must be compared with a contemporaneous browser test.
+## Hosted finding and controlled routing test
+
+The preview diagnostic reports EACCES for its loopback HTTP read on port 20010
+while the externally loaded build route returns the expected application input
+digest. Thus the earlier UNREACHABLE result is not proof that this hosted server
+is down, and does not diagnose the custom domain. Access denial is reported as
+observed; its underlying enforcement mechanism is not inferred.
+
+In a controlled test, the replacement's domain attachment was removed through
+GoDaddy's reversible UI while leaving DNS unchanged. Once detachment completed,
+`https://urdng3v1vk.c38.airoapp.ai/` served the Explorer instead of Service
+Unavailable, without an application deployment. This implicates domain routing
+in the published failure. Fresh domain reconnection and complete live recovery
+remain unverified at this source checkpoint. No claim is made about the precise
+provider-side defect or that the custom hostname is repaired.
 
 ## Validation and scope
 
-Ten focused real-HTTP diagnostic checks pass, covering valid identity, redirects,
+Seven focused real-HTTP diagnostic checks pass, covering valid identity, redirects,
 invalid/oversized/stalled responses, a non-listening server, refused/reset
-connections, private/query request exclusion, observer expiry/cleanup, stalled
-or closed delivery, and unknown-parser-error redaction. Build, TypeScript and
+connections, and unknown-parser-error redaction. Build, TypeScript and
 changed-file ESLint pass. A separate real startup process with production
 configuration passes apex/provider root and build checks, the www redirect,
-and successful startup/delivery-report assertions. Exact-commit CI and hosted
+and a successful startup-report assertion. Exact-commit CI and hosted
 preview/published readback remain pending at this source checkpoint.
 
 The change stays in existing server, tests, docs and generated-receipt homes.
 It changes no route, browser feature, login, authorization, model, DNS, secret,
 subscription, database, private storage, original Site audience or source.
-Reverting the source commit removes the diagnostic extension without migrating
+Reverting this PR removes the diagnostic extension without migrating
 stored state. Historical incident receipts remain unchanged.
 
 References:

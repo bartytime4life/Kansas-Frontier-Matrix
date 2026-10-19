@@ -33,7 +33,7 @@ export function probeNodeStartup(server, { timeoutMs = 5000 } = {}) {
       request = get({
         hostname: address.family === 'IPv6' ? '::1' : '127.0.0.1',
         port: address.port, path: '/api/build', agent: false, maxHeaderSize: 16384,
-        headers: { Accept: 'application/json', 'X-KFM-Startup-Probe': '1' },
+        headers: { Accept: 'application/json' },
       }, response => {
         transportStage = 'RESPONSE_RECEIVED';
         const httpStatus = response.statusCode;
@@ -77,45 +77,4 @@ export async function reportNodeStartup(server, write = console.info) {
   const result = await probeNodeStartup(server);
   write('KFM_NODE_STARTUP ' + JSON.stringify(result));
   return result;
-}
-
-// Observe only the first existing public root/build read for at most one minute.
-// This adds no endpoint and grants no authority. It logs fixed route categories
-// and an HTTP status, never URLs, query text, headers, bodies or client identity.
-export function reportPublicDelivery(server, { timeoutMs = 60000, write = console.info } = {}) {
-  return new Promise(resolve => {
-    const base = { profile: 'kfm.node-delivery/v1' };
-    let settled = false, route = null, trackedResponse;
-    const finish = (outcome, httpStatus = null) => {
-      if (settled) return;
-      settled = true;
-      clearTimeout(timer);
-      server.removeListener('request', onRequest);
-      server.removeListener('close', onServerClose);
-      trackedResponse?.removeListener('finish', onFinished);
-      trackedResponse?.removeListener('close', onResponseClose);
-      const result = { ...base, outcome, route, httpStatus };
-      write('KFM_NODE_DELIVERY ' + JSON.stringify(result));
-      resolve(result);
-    };
-    const onFinished = () => finish('RESPONSE_FINISHED', trackedResponse.statusCode);
-    const onResponseClose = () => finish('RESPONSE_CLOSED', trackedResponse.headersSent ? trackedResponse.statusCode : null);
-    const onServerClose = () => finish('SERVER_CLOSED');
-    const onRequest = (request, response) => {
-      if (route || !['GET', 'HEAD'].includes(request.method) ||
-          !['/', '/api/build'].includes(request.url) ||
-          request.headers['x-kfm-startup-probe'] === '1') return;
-      route = request.url === '/' ? 'ROOT' : 'BUILD';
-      trackedResponse = response;
-      server.removeListener('request', onRequest);
-      response.once('finish', onFinished);
-      response.once('close', onResponseClose);
-      write('KFM_NODE_DELIVERY ' + JSON.stringify({ ...base, outcome: 'REQUEST_RECEIVED', route, httpStatus: null }));
-    };
-    const timer = setTimeout(() => finish(route ? 'RESPONSE_TIMEOUT' : 'NO_PUBLIC_REQUEST_OBSERVED'), timeoutMs);
-    timer.unref?.();
-    if (!server.listening) { finish('NOT_LISTENING'); return; }
-    server.prependListener('request', onRequest);
-    server.once('close', onServerClose);
-  });
 }
