@@ -140,6 +140,15 @@ the operator log records `MODEL_UNAVAILABLE:MODEL_PROCESS_KILLED`. Previously
 the model shared the web server's process, so a host out-of-memory kill took
 the whole site down and GoDaddy answered 503 until restart.
 
+Published observation (2026-10-19, app `urdng3v1vk`, Web Hosting Plus Launch):
+the OS killed Qwen3-0.6B during load and the Publish log recorded
+`[KFM hosted AI] MODEL_UNAVAILABLE:MODEL_PROCESS_KILLED`. The Explorer kept
+serving. `KFM_HOSTED_AI=0` is now set on the Publish secrets and live
+`/api/ai/status` reports `HOSTED_AI_NOT_CONFIGURED`. Preview keeps
+`KFM_HOSTED_AI` on and loads the model; that does not establish Published
+capacity. `KFM_NODE_STARTUP … outcome UNREACHABLE errorCode EACCES` is GoDaddy's
+loopback sandbox, not a failed start; the healthy Preview logs it too.
+
 KFM_HOSTED_AI_RESOURCE_PROBE=1 prints one owner-only startup record with Node's
 constrainedMemory(), availableMemory() and process RSS. It allocates no test
 buffers, reads no secrets or files, loads no model and adds no public route.
@@ -223,7 +232,9 @@ This procedure applies to these known non-secret flags, not account credentials.
    browser before public activation.
 
 KFM_HOSTED_AI_ORIGIN must be exactly https://kansasfrontiermatrix.com or the
-existing private preview origin https://q9r9beo47t.preview.c38.airoapp.ai.
+private preview origin https://urdng3v1vk.preview.c38.airoapp.ai. The earlier
+preview origin https://q9r9beo47t.preview.c38.airoapp.ai belongs to a deleted
+app and returns 404.
 VINEXT_TRUSTED_HOSTS must be that exact hostname without scheme/path.
 Do not wildcard hosts, weaken the origin guard, or copy Publish account secrets
 into Preview. GoDaddy's owner protection for Preview remains in place; KFM chat
