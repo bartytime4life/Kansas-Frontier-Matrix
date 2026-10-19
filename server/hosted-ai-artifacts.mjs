@@ -27,13 +27,21 @@ async function privateDirectory(path) {
   await chmod(path, 0o700);
 }
 
-export async function installModel(directory, manifest) {
-  if (manifest.id !== 'onnx-community/Qwen3-0.6B-ONNX' || manifest.revision !== '58ca03a5e7b354b480b1a82b34bde8dc7b854cc0' || manifest.license !== 'apache-2.0') fail('MODEL_MANIFEST_INVALID');
-  const allowed = new Set(['README.md', 'config.json', 'generation_config.json', 'onnx/model_int8.onnx', 'tokenizer.json', 'tokenizer_config.json']);
-  if (!Array.isArray(manifest.files) || manifest.files.length !== allowed.size || new Set(manifest.files.map(x => x.path)).size !== allowed.size) fail('MODEL_MANIFEST_INVALID');
+// The derived model (scripts/derive-hosted-qwen.py) keeps weights in external data
+// and evaluates the tied output layer in vocabulary slices to bound memory.
+export const HOSTED_MODEL_SOURCE = Object.freeze({ id: 'bartytime4life/kfm-qwen3-0.6b-int8-sliced-onnx', revision: '0000000000000000000000000000000000000000' });
+export const HOSTED_MODEL_FILES = Object.freeze(['README.md', 'config.json', 'generation_config.json', 'onnx/model_int8.onnx', 'onnx/model_int8.onnx_data', 'tokenizer.json', 'tokenizer_config.json']);
+export function checkHostedManifest(manifest, code = 'MODEL_MANIFEST_INVALID') {
+  if (manifest?.id !== HOSTED_MODEL_SOURCE.id || manifest.revision !== HOSTED_MODEL_SOURCE.revision || manifest.license !== 'apache-2.0') fail(code);
+  const allowed = new Set(HOSTED_MODEL_FILES);
+  if (!Array.isArray(manifest.files) || manifest.files.length !== allowed.size || new Set(manifest.files.map(x => x?.path)).size !== allowed.size) fail(code);
   for (const entry of manifest.files) {
-    if (!allowed.has(entry.path) || !Number.isSafeInteger(entry.size) || entry.size <= 0 || entry.size > 650000000 || !/^[a-f0-9]{64}$/.test(entry.sha256)) fail('MODEL_MANIFEST_INVALID');
+    if (!allowed.has(entry.path) || !Number.isSafeInteger(entry.size) || entry.size <= 0 || entry.size > 800000000 || !/^[a-f0-9]{64}$/.test(entry.sha256)) fail(code);
   }
+}
+
+export async function installModel(directory, manifest) {
+  checkHostedManifest(manifest);
   const modelDirectory = join(directory, 'model');
   await privateDirectory(modelDirectory); await privateDirectory(join(modelDirectory, 'onnx'));
   const files = [];

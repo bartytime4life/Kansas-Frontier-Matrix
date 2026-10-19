@@ -4,8 +4,10 @@ import {randomUUID} from 'node:crypto';
 import {resolve} from 'node:path';
 export const HOSTED_MODEL='Qwen3-0.6B INT8 · server WebAssembly';
 // Isolated qualification branch only; do not activate without hosted resource acceptance.
-export const HOSTED_LIMITS=Object.freeze({loadMs:240000,inferenceMs:255000,maximumRssBytes:4096*1024*1024});
-export const HOSTED_REPLY_LIMITS=Object.freeze({brief:Object.freeze({tokens:160,milliseconds:120000}),expanded:Object.freeze({tokens:768,milliseconds:240000})});
+export const HOSTED_LIMITS=Object.freeze({loadMs:240000,inferenceMs:255000,maximumRssBytes:2560*1024*1024});
+// A new directory: the earlier single-file model cache is retained, never overwritten.
+export const HOSTED_MODEL_DIRECTORY='/private/kfm-embedded-qwen3-06b-int8-sliced-wasm-20261019/model';
+export const HOSTED_REPLY_LIMITS=Object.freeze({brief:Object.freeze({tokens:160,milliseconds:120000}),expanded:Object.freeze({tokens:256,milliseconds:240000})});
 export const PUBLIC_AI_JOB_MS=270000;
 // Three admitted discussions can wait for each other, but each run stays bounded.
 export const PUBLIC_AI_MAX_LIFETIME_MS=3*PUBLIC_AI_JOB_MS;
@@ -19,7 +21,7 @@ const CHILD_ENV=['PATH','HOME','TMPDIR','LANG','NODE_ENV','HTTPS_PROXY','HTTP_PR
 export function forkModelProcess(path,{workerData,execArgv=[],env=process.env}={}){
  const childEnv=Object.fromEntries(CHILD_ENV.filter(key=>env[key]!==undefined).map(key=>[key,env[key]]));
  childEnv.KFM_HOSTED_AI_WORKER_DATA=JSON.stringify(workerData??{});
- const child=fork(path,[],{env:childEnv,execArgv:[...execArgv,'--max-old-space-size=256'],stdio:['ignore','inherit','inherit','ipc']});
+ const child=fork(path,[],{env:childEnv,execArgv:[...execArgv,'--max-old-space-size=256','--expose-gc'],stdio:['ignore','inherit','inherit','ipc']});
  child.postMessage=message=>{if(child.connected)child.send(message,failure=>{if(failure)child.kill('SIGKILL');});};
  child.terminate=async()=>{if(child.exitCode===null&&child.signalCode===null)child.kill('SIGKILL');};
  return child;
@@ -30,7 +32,7 @@ export function processRssBytes(pid){
 }
 const diagnosticCodes=new Set(['HOSTED_MEMORY_HEADROOM','MODEL_UNAVAILABLE','MODEL_LOAD_TIMEOUT','MODEL_MEMORY_LIMIT','MODEL_TIMEOUT','HOSTED_MODEL_FAILED','HOSTED_MODEL_FILES_UNSAFE','HOSTED_MODEL_IDENTITY','HOSTED_MODEL_INTEGRITY','HOSTED_MODEL_CONFIG','HOSTED_MODEL_INPUTS','HOSTED_MODEL_SELF_CHECK','HOSTED_PROFILE_IDENTITY','MODULE_NOT_FOUND','ERR_MODULE_NOT_FOUND','ENOENT','EACCES','ENOMEM','ERR_WORKER_OUT_OF_MEMORY','MODEL_PROCESS_KILLED']);
 export class HostedAiModel{
- constructor({discussionProfile='context-aware-v2',modelDirectory='/private/kfm-embedded-qwen3-06b-int8-wasm-20261018/model',workerFactory=forkModelProcess,memoryUsage,diagnostic=code=>console.warn('[KFM hosted AI] '+code)}={}){
+ constructor({discussionProfile='context-aware-v2',modelDirectory=HOSTED_MODEL_DIRECTORY,workerFactory=forkModelProcess,memoryUsage,diagnostic=code=>console.warn('[KFM hosted AI] '+code)}={}){
   this.diagnostic=diagnostic;
   this.ready=false;this.online=true;this.reason='MODEL_LOADING';this.pending=null;this.stopped=false;
   this.worker=workerFactory(resolve('server/hosted-ai-worker.mjs'),{workerData:{modelDirectory,discussionProfile},execArgv:process.execArgv.filter(x=>!x.startsWith('--input-type='))});

@@ -32,6 +32,7 @@ export async function generateHosted({session,tokenizer,ort},prompt,maximum,canc
    // Prompt chunks only warm the cache. Sample once all prompt tokens are seen.
    if(pendingInput.length){
     for(const t of owned)if(!retained.has(t)){t.dispose();owned.delete(t);}
+    globalThis.gc?.();
     continue;
    }
    const offset=logits.data.length-151936;let next=0;
@@ -47,6 +48,8 @@ export async function generateHosted({session,tokenizer,ort},prompt,maximum,canc
    }else for(let i=1;i<151936;i++)if(logits.data[offset+i]>logits.data[offset+next])next=i;
    if(!Number.isFinite(logits.data[offset+next]))fail('HOSTED_MODEL_LOGITS');
    for(const t of owned)if(!retained.has(t)){t.dispose();owned.delete(t);}
+   // Each step's key/value copies are large; collect them now rather than letting them pile up.
+   globalThis.gc?.();
    if(next===151645){finishReason='stop';break;}
    generated.push(next);seen.add(next);pendingInput=[next];
   }

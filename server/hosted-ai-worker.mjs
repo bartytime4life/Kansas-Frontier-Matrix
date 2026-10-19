@@ -4,10 +4,10 @@ import {readFile,lstat,writeFile} from 'node:fs/promises';
 import {createReadStream} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {join,resolve,dirname} from 'node:path';
-import {HOSTED_REPLY_LIMITS} from './hosted-ai.mjs';
+import {HOSTED_REPLY_LIMITS,HOSTED_LIMITS} from './hosted-ai.mjs';
 import {prepareDiscussionPrompt,discussionSystem} from './hosted-ai-prompt.mjs';
 import {generateHosted} from './hosted-ai-generation.mjs';
-import {ensureHostedModel} from './hosted-ai-artifacts.mjs';
+import {ensureHostedModel,checkHostedManifest} from './hosted-ai-artifacts.mjs';
 const fail=code=>{throw Object.assign(new Error(code),{code});};
 // A forked child talks over IPC; a worker thread (qualification tests) keeps parentPort.
 const parentPort=threadPort??{postMessage:message=>{if(process.connected)process.send(message);},on:(event,handler)=>process.on(event,handler)};
@@ -38,15 +38,12 @@ try{
  // Keep room for the web app; unknown host limits never mean unlimited memory.
  const available=process.availableMemory?.();
  const constrained=process.constrainedMemory?.();
- if((available>0&&available<3*1024**3)||(constrained>0&&constrained<4.5*1024**3))fail('HOSTED_MEMORY_HEADROOM');
+ if((available>0&&available<HOSTED_LIMITS.maximumRssBytes)||(constrained>0&&constrained<HOSTED_LIMITS.maximumRssBytes+1024**3))fail('HOSTED_MEMORY_HEADROOM');
  await ensureHostedModel(directory);
  await privatePath(dirname(directory),true);await privatePath(directory,true);await privatePath(join(directory,'onnx'),true);
  const manifest=JSON.parse(await readFile(new URL('./embedded-ai-model.json',import.meta.url),'utf8'));
- if(manifest.id!=='onnx-community/Qwen3-0.6B-ONNX'||manifest.revision!=='58ca03a5e7b354b480b1a82b34bde8dc7b854cc0')fail('HOSTED_MODEL_IDENTITY');
- const allowed=new Set(['README.md','config.json','generation_config.json','onnx/model_int8.onnx','tokenizer.json','tokenizer_config.json']);
- if(manifest.files.length!==allowed.size||new Set(manifest.files.map(x=>x.path)).size!==allowed.size)fail('HOSTED_MODEL_IDENTITY');
+ checkHostedManifest(manifest,'HOSTED_MODEL_IDENTITY');
  for(const file of manifest.files){
-  if(!allowed.has(file.path)||!/^[a-f0-9]{64}$/.test(file.sha256)||!Number.isSafeInteger(file.size)||file.size<=0||file.size>650000000)fail('HOSTED_MODEL_IDENTITY');
   const path=join(directory,file.path),info=await privatePath(path);if(info.size!==file.size)fail('HOSTED_MODEL_INTEGRITY');
   const hash=createHash('sha256');for await(const chunk of createReadStream(path))hash.update(chunk);
   if(hash.digest('hex')!==file.sha256)fail('HOSTED_MODEL_INTEGRITY');
@@ -55,7 +52,10 @@ try{
  ort.env.wasm.numThreads=1;ort.env.wasm.proxy=false;
  const config=JSON.parse(await readFile(join(directory,'config.json'),'utf8'));
  if(config.hidden_size!==1024||config.num_attention_heads!==16||config.num_key_value_heads!==8||config.num_hidden_layers!==28||config.eos_token_id!==151645)fail('HOSTED_MODEL_CONFIG');
- session=await ort.InferenceSession.create(await readFile(join(directory,'onnx/model_int8.onnx')),{executionProviders:['wasm'],executionMode:'sequential',graphOptimizationLevel:'disabled',enableCpuMemArena:false,enableMemPattern:false,extra:{session:{disable_prepacking:'1'}}});
+ // onnxruntime-web copies the weights into WASM memory; drop the file buffer once it has them.
+ let externalData=[{path:'model_int8.onnx_data',data:await readFile(join(directory,'onnx/model_int8.onnx_data'))}];
+ session=await ort.InferenceSession.create(await readFile(join(directory,'onnx/model_int8.onnx')),{externalData,executionProviders:['wasm'],executionMode:'sequential',graphOptimizationLevel:'disabled',enableCpuMemArena:false,enableMemPattern:false,extra:{session:{disable_prepacking:'1'}}});
+ externalData=null;globalThis.gc?.();
  const expected=['input_ids','attention_mask','position_ids'];for(let l=0;l<28;l++)for(const kind of ['key','value'])expected.push('past_key_values.'+l+'.'+kind);
  if(session.inputNames.length!==expected.length||expected.some(name=>!session.inputNames.includes(name)))fail('HOSTED_MODEL_INPUTS');
  for(const meta of session.inputMetadata)if(!meta.isTensor||meta.type!==(meta.name.startsWith('past_key_values.')?'float32':'int64'))fail('HOSTED_MODEL_INPUTS');
