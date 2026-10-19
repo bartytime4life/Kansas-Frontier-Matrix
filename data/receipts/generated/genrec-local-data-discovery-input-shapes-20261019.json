@@ -7,9 +7,9 @@
     "tests/local_data/test_acquisition.py"
   ],
   "artifact_hashes": {
-    "tools/local_data/discover_water.py": "sha256:fec245b69115072ba16fbb0130fc08dba5d648af4f03c29cc092a473a9c7cafc",
+    "tools/local_data/discover_water.py": "sha256:2ef82f49592a410919d925ff6651173850106a6f7e2dc3bb174eb7c5c2b91a9b",
     "tools/local_data/discover_3dep.py": "sha256:ead521ea41bad09bb374b8c30aac407309b178a736a10579eeab8eb2ce5f6279",
-    "tests/local_data/test_acquisition.py": "sha256:021e788ec6c02a480e078f6d157a76b9ff9e0105e7c039beef0d70426ffb0a71"
+    "tests/local_data/test_acquisition.py": "sha256:e49b4c05832c1ae4db3dec4ffd4dedc8bc2bb183b97eca36d61fbe54a527cb85"
   },
   "model_identity": {
     "provider": "Anthropic",
@@ -27,7 +27,8 @@
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8a9945146e329f594ffa3070f46976aafeafe123",
       "repo:tools/local_data/discover_water.py@8a9945146e329f594ffa3070f46976aafeafe123",
       "repo:tools/local_data/discover_3dep.py@8a9945146e329f594ffa3070f46976aafeafe123",
-      "repo:tests/local_data/test_acquisition.py@8a9945146e329f594ffa3070f46976aafeafe123"
+      "repo:tests/local_data/test_acquisition.py@8a9945146e329f594ffa3070f46976aafeafe123",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5306#discussion_r4311003147"
     ]
   },
   "truth_labels": {
@@ -39,7 +40,7 @@
     {
       "gate": "Defect reproduction",
       "outcome": "PASS",
-      "reason": "On main, discover_water.py raised AttributeError (not caught by the CLI) for a JSON array page, a non-list links value or a non-object link, and both discoverers raised RecursionError for deeply nested JSON, so the CLI printed a traceback instead of its ERROR line. Both accepted 1e400 as infinity, which then failed canonical serialization after the metadata objects were already written to the candidate directory. Water pages are now shape-checked (object, feature objects with object properties and a string monitoring_location_id, list of link objects, string next href) and both parsers reject non-finite floats and map RecursionError to ValueError. main() now passes transport=fetch explicitly so the CLI is testable offline."
+      "reason": "On main, discover_water.py raised AttributeError (not caught by the CLI) for a JSON array page, a non-list links value or a non-object link, and both discoverers raised RecursionError for deeply nested JSON, so the CLI printed a traceback instead of its ERROR line. Both accepted 1e400 as infinity, which then failed canonical serialization after the metadata objects were already written to the candidate directory. Water pages are now shape-checked (object, feature objects with object properties and a string monitoring_location_id, list of link objects, string next href) and both parsers reject non-finite floats and map RecursionError to ValueError. main() now passes transport=fetch explicitly so the CLI is testable offline. A page that omits the optional links member is still treated as the final page (review finding on #5306)."
     },
     {
       "gate": "Tests",

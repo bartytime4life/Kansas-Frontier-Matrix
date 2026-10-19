@@ -285,6 +285,9 @@ class DiscoveryTests(unittest.TestCase):
         result, _ = w.discover(transport=lambda _: canonical(page))
         self.assertTrue(result["complete_for_query"])
         self.assertFalse(result["records"][0]["gaps_verified"])
+        del page["links"]
+        result, _ = w.discover(transport=lambda _: canonical(page))
+        self.assertTrue(result["complete_for_query"])
         page["links"] = [{"rel": "next", "href": "https://evil.test/"}]
         with self.assertRaisesRegex(ValueError, "URL_DENIED"):
             w.discover(transport=lambda _: canonical(page))
