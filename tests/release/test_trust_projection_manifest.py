@@ -134,6 +134,21 @@ def test_instants_outside_the_utc_range_are_findings_not_crashes(tmp_path: Path)
     assert codes(tmp_path, late) == {"TIME_SLICE_INTERVAL_INVALID"}
 
 
+def test_sub_microsecond_instants_stay_distinct(tmp_path: Path) -> None:
+    # datetime keeps only microseconds; RFC 3339 allows more digits, and these instants must not compare equal.
+    active = rebound(PACKET, lambda v: v.update(evaluated_at="2026-04-13T12:00:00.0000001+00:00",
+                                               revoked_at="2026-04-13T12:00:00.0000009+00:00"))
+    assert codes(tmp_path, active) == set()
+    revoked = rebound(PACKET, lambda v: v.update(evaluated_at="2026-04-13T12:00:00.0000009+00:00",
+                                                revoked_at="2026-04-13T12:00:00.0000001+00:00"))
+    assert codes(tmp_path, revoked) == {"REVIEW_PACKET_STATUS_MISMATCH"}
+    reversed_slice = rebound("time_slice_manifest.json", lambda v: v["valid_time"].update(
+        start="2026-04-13T12:00:00.0000009Z", end="2026-04-13T12:00:00.0000001Z"))
+    assert codes(tmp_path, reversed_slice) == {"TIME_SLICE_INTERVAL_INVALID"}
+    # The fraction is exact across offsets too: .5 at 07:00-05:00 equals .5000 at 12:00Z.
+    assert MODULE._time("2026-04-13T07:00:00.5-05:00") == MODULE._time("2026-04-13T12:00:00.5000Z")
+
+
 def test_time_slice_rules(tmp_path: Path) -> None:
     name = "time_slice_manifest.json"
     # Intervals compare instants: 14T04:00+05:00 is 13T23:00Z (inside), 13T20:00-05:00 is 14T01:00Z (after the end).

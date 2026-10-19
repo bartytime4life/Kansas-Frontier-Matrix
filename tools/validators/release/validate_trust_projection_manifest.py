@@ -7,8 +7,10 @@ import copy
 import hashlib
 import json
 import math
+import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -18,6 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = REPO_ROOT / "schemas/contracts/v1/release/trust_projection_manifest.schema.json"
 FIXTURES = REPO_ROOT / "fixtures/contracts/v1/release/trust_projection_manifest"
 MAX_BYTES = 2 * 1024 * 1024
+FRACTION = re.compile(r"\.(\d+)")
 
 
 class DuplicateKeyError(ValueError):
@@ -105,18 +108,24 @@ def canonical_hash(value: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(encoded).hexdigest()
 
 
-def _time(value: Any) -> datetime | None:
-    """An RFC 3339 instant in UTC; any offset and a lowercase "t" or "z" are valid date-time forms."""
+def _time(value: Any) -> tuple[datetime, Decimal] | None:
+    """An RFC 3339 instant as (whole UTC seconds, exact fraction); any offset and a lowercase "t" or "z" are valid.
+
+    The fraction is kept apart because datetime truncates to microseconds, which would make distinct instants equal.
+    """
     if not isinstance(value, str):
         return None
+    text = value.upper()
+    match = FRACTION.search(text)
+    fraction = Decimal("0." + match.group(1)) if match else Decimal(0)
     try:
-        parsed = datetime.fromisoformat(value.upper())
+        parsed = datetime.fromisoformat(FRACTION.sub("", text, count=1))
     except ValueError:
         return None
     if parsed.tzinfo is None:
         return None
     try:
-        return parsed.astimezone(timezone.utc)
+        return parsed.astimezone(timezone.utc), fraction
     except OverflowError:  # e.g. 0001-01-01T00:00:00+00:01 lies before the earliest representable UTC instant
         return None
 
