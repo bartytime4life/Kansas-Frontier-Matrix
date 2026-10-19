@@ -109,5 +109,66 @@ class SiteMigrationPreflightTests(unittest.TestCase):
         self.assertIn("is not additive", result.stderr)
 
 
+class SiteLocalLaunchBoundaryTests(unittest.TestCase):
+    def launch(self, *, host="127.0.0.1", port="4173", version=None, secret_file=None):
+        with tempfile.TemporaryDirectory(prefix="kfm-launch-test-") as directory:
+            root = Path(directory)
+            source = root / "source"
+            scripts = source / "scripts"
+            scripts.mkdir(parents=True)
+            shutil.copy2(ROOT / "apps/site/serve-local.sh", root / "serve-local.sh")
+            for name in ("serve-local-worker.mjs", "archive-access.mjs", "validate-subsurface-public.mjs"):
+                shutil.copy2(ROOT / "apps/site/source/scripts" / name, scripts / name)
+            if secret_file:
+                (source / secret_file).write_text("PRIVATE_TEST_VALUE=synthetic-only")
+            # No real Worker, database, private access file, or dependency tree.
+            # Any Wrangler call (including migrations) is a preflight failure.
+            wrangler = source / "node_modules/.bin/wrangler"
+            wrangler.parent.mkdir(parents=True)
+            wrangler.write_text('#!/bin/sh\nprintf called > "$LAUNCH_TEST_MARKER"\nprintf \'[{"results":[{"count":2}]}]\\n\'\nexit 89\n')
+            wrangler.chmod(0o700)
+            config = source / "dist/server/wrangler.json"
+            config.parent.mkdir(parents=True)
+            config.write_text("{}")
+            binary = root / "bin"
+            binary.mkdir()
+            preload = root / "version.cjs"
+            preload.write_text('Object.defineProperty(process.versions, "node", { value: process.env.LAUNCH_TEST_VERSION });')
+            node = binary / "node"
+            node.write_text('#!/bin/sh\nexec "$LAUNCH_TEST_NODE" --require "$LAUNCH_TEST_PRELOAD" "$@"\n')
+            node.chmod(0o700)
+            marker = root / "wrangler-called"
+            env = {**os.environ, "SITE_HOST": host, "SITE_PORT": port,
+                   "SITE_STATE_DIR": str(root / "state"), "LAUNCH_TEST_MARKER": str(marker)}
+            if version:
+                env.update(PATH=f"{binary}:{os.environ['PATH']}", LAUNCH_TEST_NODE=shutil.which("node"),
+                           LAUNCH_TEST_PRELOAD=str(preload), LAUNCH_TEST_VERSION=version)
+            result = subprocess.run(["bash", str(root / "serve-local.sh")], cwd=root,
+                                    env=env, text=True, capture_output=True, timeout=10)
+            return result, marker.exists(), (root / "state").exists()
+
+    def test_former_fallbacks_refuse_before_storage_or_runtime(self):
+        cases = [(dict(host=host), "SITE_HOST") for host in ("0.0.0.0", "localhost", "::1", "127.0.0.1.example")]
+        cases += [(dict(port=port), "INVALID") for port in ("80", "0", "65536", "04173", "4173/other")]
+        cases += [(dict(version=version), "REQUIRES_NODE_22_13_OR_LATER") for version in ("20.19.0", "22.12.0")]
+        cases += [(dict(secret_file=name), "LOCAL_SECRET_CONFIGURATION_REQUIRES_REVIEW")
+                  for name in (".env", ".env.local", ".env.production", ".dev.vars", ".dev.vars.local")]
+        for options, reason in cases:
+            with self.subTest(**options):
+                result, called, state_created = self.launch(**options)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(reason, result.stderr)
+                self.assertFalse(called, "refused configuration reached Wrangler")
+                self.assertFalse(state_created, "refused configuration changed storage")
+
+    def test_supported_ports_and_runtime_versions_reach_existing_migration_path(self):
+        for options in ({}, dict(port="4175"), dict(port="65535"), dict(version="24.0.0")):
+            with self.subTest(**options):
+                result, called, state_created = self.launch(**options)
+                self.assertEqual(result.returncode, 89, result.stderr)
+                self.assertTrue(called)
+                self.assertTrue(state_created)
+
+
 if __name__ == "__main__":
     unittest.main()

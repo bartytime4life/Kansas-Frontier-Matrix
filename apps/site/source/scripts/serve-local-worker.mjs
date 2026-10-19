@@ -15,6 +15,11 @@ const fail = (code) => { throw new Error(code); };
 const equal = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 const populated = (value) => value && (typeof value !== "object" || Object.values(value).some(populated));
 
+export function assertNodeVersion(version = process.versions.node) {
+  const [major, minor] = version.split(".").map(Number);
+  if (major < 22 || (major === 22 && minor < 13)) fail("REQUIRES_NODE_22_13_OR_LATER");
+}
+
 export function readUsgsApiKey(file = path.join(homedir(), ".config/kfm/usgs-water-api-key")) {
   let descriptor;
   try { descriptor = openSync(file, constants.O_RDONLY | constants.O_NOFOLLOW); }
@@ -130,8 +135,7 @@ export function prepareWorker(translated, server, client, modules, localReviewed
 
 export async function serve(args = process.argv.slice(2)) {
   const settings = parseArguments(args);
-  const [major, minor] = process.versions.node.split(".").map(Number);
-  if (major < 22 || (major === 22 && minor < 13)) fail("REQUIRES_NODE_22_13_OR_LATER");
+  assertNodeVersion();
   const server = path.join(siteRoot, "dist/server");
   const client = path.join(siteRoot, "dist/client");
   for (const directory of [client, settings.state, path.join(settings.state, "v3/d1"), path.join(settings.state, "v3/r2")]) checkedPath(directory, true);

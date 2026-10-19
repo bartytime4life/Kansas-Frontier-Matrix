@@ -228,8 +228,8 @@ under the ignored `source/.wrangler/` directory across builds. It refuses to
 start if a later migration is not purely `CREATE ... IF NOT EXISTS`, or if
 the `drizzle/*.sql` files and `drizzle/meta/_journal.json` disagree (an
 unlisted file, a listed file that is missing, or entries out of sequence). It binds
-to `127.0.0.1:4173` by default; set `SITE_HOST` or `SITE_PORT` to change the
-listening address or port. The Site source has its own npm lockfile and is
+to `127.0.0.1:4173` by default; set `SITE_PORT` to another port from 1024 through
+65535. `SITE_HOST` must remain `127.0.0.1`. The Site source has its own npm lockfile and is
 deliberately outside the repository's root pnpm workspace. Run its npm commands
 from `apps/site/source/`.
 
@@ -256,13 +256,17 @@ After applying migrations, `serve-local.sh` serves through the Site's direct
 Miniflare launcher, `source/scripts/serve-local-worker.mjs`. Wrangler's
 development proxy can return an intermittent 500 for the request after one
 whose body the Worker never read; see `source/docs/local-pc-consolidation.md`.
-The direct launcher binds only to loopback, requires Node 22.x and refuses
-`.dev.vars`. When `SITE_HOST` is not `127.0.0.1`, `SITE_PORT` is below 1024,
-Node is not 22.x or a `.dev.vars` or `.env` file is present (Wrangler loads
-local secrets from either), the launcher falls back to
-`wrangler dev` and prints why. Both runtimes read the same local D1/R2 state.
-The smoke check sends bodies only to routes that read them, so it also passes
-under that fallback.
+The direct launcher binds only to `127.0.0.1`, requires Node 22.13 or newer,
+and refuses `.env`, `.env.*`, `.dev.vars` and `.dev.vars.*` files. Unsupported
+hosts, ports, Node versions or local secret files stop the launcher before
+local storage setup or migrations. It never falls back to raw `wrangler dev`,
+which lacks the direct runtime's rejection of caller-supplied hosted identity
+headers. Move local secret files outside this Site checkout before launching;
+the direct runtime retains its existing private archive and USGS access-file
+support and local D1/R2 state paths. Local privileged operations cannot sign in
+by supplying hosted identity headers. These guarantees cover `serve-local.sh`
+and the direct runtime; the separate Vite `npm run dev` workflow is outside
+this built-launcher boundary.
 
 ### Local audit scope — 2026-10-05
 
@@ -306,7 +310,7 @@ documentation. Neither operation changes hosted versions or releases.
 
 | Setting or binding | Current use |
 | --- | --- |
-| `SITE_HOST`, `SITE_PORT` | Read by `serve-local.sh`; default `127.0.0.1:4173`. A non-loopback host or a port below 1024 selects the `wrangler dev` fallback. |
+| `SITE_HOST`, `SITE_PORT` | Read by `serve-local.sh`; default `127.0.0.1:4173`. Only host `127.0.0.1` and ports 1024–65535 are accepted; unsupported settings stop before local storage setup. |
 | `SITE_STATE_DIR` | Optional local D1/R2 state directory for `serve-local.sh`; default `source/.wrangler/local-state`. `smoke-local.sh` sets it to a temporary directory that it removes afterwards. |
 | `DB`, `BUCKET` | Names declared in `source/.openai/hosting.json`; local Vite/Worker configuration supplies simulated D1/R2 bindings. |
 | `KFM_STEWARD_EMAILS`, optional `KFM_STEWARD_USER_IDS` | Private server-side allowlists for hosted steward review. Do not commit values. |

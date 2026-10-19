@@ -7,6 +7,7 @@ import { spawn, spawnSync } from "node:child_process";
 import { request as httpRequest } from "node:http";
 import { createServer } from "node:net";
 import { fileURLToPath } from "node:url";
+import { Miniflare, convertV4MiniflareOptions } from "miniflare";
 import { readUsgsApiKey, assertNoLocalSecretFiles, checkedPath, collectModules, localEntry, parseArguments, prepareWorker, validateConfiguration } from "../scripts/serve-local-worker.mjs";
 
 const config = JSON.parse(readFileSync(new URL("../dist/server/wrangler.json", import.meta.url)));
@@ -132,11 +133,56 @@ test("local entry rejects forged edge identity and a rebound Host before invokin
   assert.equal(entryModule.default.scheduled(), "preserved");
   for (const request of [
     new Request("http://attacker.example:4173/api/governed/v1/knowledge"),
+    new Request("http://127.0.0.1:4175/"),
     new Request("http://127.0.0.1:4173/", { headers: { "OAI-Authenticated-User-Email": "owner@example.com" } }),
     new Request("http://127.0.0.1:4173/", { headers: { "oai-authenticated-user-id": "owner" } }),
+    new Request("http://127.0.0.1:4173/", { headers: { "OaI-AuThEnTiCaTeD-Unknown": "value" } }),
+    new Request("http://127.0.0.1:4173/", { headers: [["oai-authenticated-user-email", "other@example.com"], ["OAI-Authenticated-User-Email", "owner@example.com"]] }),
   ]) assert.equal((await entryModule.default.fetch(request)).status, 403);
   const response = await entryModule.default.fetch(new Request("http://127.0.0.1:4173/api/historical-topo/activate", { method: "POST", body: "bounded control" }));
   assert.deepEqual(await response.json(), { method: "POST", body: "bounded control" });
+});
+
+test("protected built entry rejects forged identities across configured owner and steward routes", async () => {
+  const root = path.resolve("dist/server");
+  const entry = { type: "ESModule", path: path.join(root, "__kfm_local_entry.mjs"), contents: localEntry(4173) };
+  const modules = [entry, ...collectModules(root)];
+  const mf = new Miniflare(convertV4MiniflareOptions({
+    modules, modulesRoot: root, compatibilityDate: "2026-08-28", compatibilityFlags: ["nodejs_compat"],
+    bindings: {
+      KFM_STEWARD_EMAILS: "owner@example.test", KFM_STEWARD_USER_IDS: "owner-id",
+      KFM_WATER_OWNER_EMAILS: "owner@example.test", KFM_WATER_OWNER_IDS: "owner-id",
+      KFM_EARTH_ENGINE_OWNER_EMAILS: "owner@example.test", KFM_EARTH_ENGINE_OWNER_IDS: "owner-id",
+    },
+  }));
+  try {
+    const origin = "http://127.0.0.1:4173";
+    for (const [route, method] of [
+      ["/api/data-submissions?scope=review", "GET"],
+      ["/api/data-submissions/11111111-1111-4111-8111-111111111111?download=1", "GET"],
+      ["/api/data-submissions/11111111-1111-4111-8111-111111111111", "PATCH"],
+      ["/api/governed/water-admin/status", "GET"],
+      ["/api/governed/water-admin/activate", "POST"],
+      ["/api/governed/water-admin/withdraw", "POST"],
+      ["/api/earth-engine-context/catalog", "GET"],
+      ["/api/earth-engine-context/stage", "PUT"],
+      ["/api/earth-engine-context/activate", "POST"],
+    ]) {
+      for (const identity of [
+        { "OAI-Authenticated-User-Email": "owner@example.test" },
+        { "oai-authenticated-user-email": "other@example.test", "oai-authenticated-user-id": "owner-id" },
+      ]) {
+        const response = await mf.dispatchFetch(origin + route, {
+          method, headers: { ...identity, Origin: origin, "Content-Type": "application/json" },
+          ...(method === "GET" ? {} : { body: "{}" }),
+        });
+        assert.equal(response.status, 403, `${method} ${route}`);
+        assert.equal(response.headers.get("cache-control"), "no-store");
+        assert.equal(await response.text(), "Local request authority rejected.");
+      }
+    }
+    assert.equal((await mf.dispatchFetch(origin + "/api/earth-engine-context/catalog")).status, 401);
+  } finally { await mf.dispose(); }
 });
 
 test("built local runtime survives abandoned denials and rejects forged authority over HTTP", { timeout: 30000 }, async () => {
