@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -8,6 +9,12 @@ FIXTURES = ROOT / "fixtures/contracts/v1/policy/policy_reviewer_role_vocabulary/
 
 ALLOWED_SCOPES = {"domain", "evidence", "policy", "release", "security_privacy"}
 AUTHORITY_FLAGS = {"assigns_people", "records_approval", "policy_authorized", "promotion_authorized", "release_authorized", "publication_authorized"}
+# The workflow runs only this validator, so it also enforces the schema's shape: no extra keys anywhere
+# (a role must not carry authority or a named person), the fixed identity and inactive status, and code form.
+IDENTITY = {"object_type": "PolicyReviewerRoleVocabulary", "vocabulary_id": "policy-reviewer-role-vocabulary:v1",
+            "version": "v1", "status": "PROPOSED_INACTIVE"}
+ROLE_KEYS = {"code", "review_scopes", "description"}
+CODE = re.compile(r"[A-Z][A-Z0-9_]{2,95}")
 
 
 def validate(record):
@@ -17,28 +24,35 @@ def validate(record):
     governance = record.get("governance")
     if not isinstance(roles, list) or not roles or not isinstance(governance, dict):
         return "DENY"
+    if set(record) != set(IDENTITY) | {"roles", "governance"} or any(record[k] != v for k, v in IDENTITY.items()):
+        return "DENY"
     codes = []
-    aliases = set()
+    aliases = []
     for role in roles:
-        if not isinstance(role, dict):
+        # "aliases" is the contract's optional synonym list; overlapping aliases fail validation.
+        if not isinstance(role, dict) or not ROLE_KEYS <= set(role) <= ROLE_KEYS | {"aliases"}:
             return "DENY"
-        code = role.get("code")
-        scopes = role.get("review_scopes")
-        if not isinstance(code, str) or not code or not isinstance(scopes, list) or not scopes:
+        code, scopes, description = role["code"], role["review_scopes"], role["description"]
+        if not isinstance(code, str) or not CODE.fullmatch(code) or not isinstance(description, str) or not 1 <= len(description) <= 240:
+            return "DENY"
+        if not isinstance(scopes, list) or not scopes or not all(isinstance(scope, str) for scope in scopes):
             return "DENY"
         if scopes != sorted(set(scopes)) or any(scope not in ALLOWED_SCOPES for scope in scopes):
             return "DENY"
+        role_aliases = role.get("aliases", [])
+        # Aliases are alternate role identifiers, so they take the same uppercase snake-case form as codes.
+        if not isinstance(role_aliases, list) or not all(isinstance(alias, str) and CODE.fullmatch(alias) for alias in role_aliases):
+            return "DENY"
         codes.append(code)
-        for alias in role.get("aliases", []):
-            if alias in aliases or alias in codes:
-                return "DENY"
-            aliases.add(alias)
+        aliases.extend(role_aliases)
     if codes != sorted(codes) or len(codes) != len(set(codes)):
+        return "DENY"
+    # Checked after every code is known, so an alias cannot shadow a role defined later in the list.
+    if len(aliases) != len(set(aliases)) or set(aliases) & set(codes):
         return "DENY"
     if set(governance) != AUTHORITY_FLAGS or any(governance[k] is not False for k in AUTHORITY_FLAGS):
         return "DENY"
     return "PASS"
-
 
 def main():
     import argparse
