@@ -4,11 +4,13 @@ import { useEffect, useRef } from "react";
 import { ATLAS_MISSION_GROUPS, atlasMissionAvailability } from "./map-starters";
 
 /**
- * First-visit chooser over existing controls and question drafts. It never
+ * Startup chooser over existing controls and question drafts. It never
  * sends a model request, activates data, or changes evidence state. The only
  * optional storage remains the device-local dismissal flag.
  */
-export const EXPLORER_GUIDE_STORAGE_KEY = "kfm.explorer.guide.dismissed.v1";
+// The v1 checkbox was preselected, so closing that guide did not establish an
+// explicit opt-out. Leave it intact and require an explicit v2 preference.
+export const EXPLORER_GUIDE_STORAGE_KEY = "kfm.explorer.guide.dismissed.v2";
 
 export type ExplorerGuideAction = "layers" | "time" | "underground" | "qwen";
 
@@ -125,7 +127,7 @@ export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onCh
       <footer className="explorer-guide-footer">
         <p>Use Find for places and layers, Evidence for released records, and Ask for discussion. Inspect a map selection in its <b>Evidence Drawer</b>. Reopen this chooser with <b>?</b>.{onMore && <> <button className="explorer-guide-link" type="button" onClick={() => { onClose(remember()); onMore(); }}>More about the map</button></>}</p>
         <div>
-          <label><input ref={rememberRef} type="checkbox" defaultChecked /> Don&apos;t show on start</label>
+          <label><input ref={rememberRef} type="checkbox" defaultChecked={readExplorerGuideDismissed()} /> Don&apos;t show on start</label>
           <button className="explorer-guide-primary" type="button" onClick={() => onClose(remember())}>Explore freely</button>
         </div>
       </footer>

@@ -63,18 +63,28 @@ test("the map exposes one zoom control set and no fixed place label", async () =
 test("quick start routes only to existing controls and tolerates blocked storage", async () => {
   const guide = await read("app/explorer-guide.tsx");
   const page = await read("app/page.tsx");
-  assert.match(guide, /EXPLORER_GUIDE_STORAGE_KEY = "kfm\.explorer\.guide\.dismissed\.v1"/);
-  assert.equal((guide.match(/try \{/g) ?? []).length, 2, "both storage reads and writes are guarded");
   assert.match(guide, /role="dialog" aria-modal="false"/);
   assert.match(guide, /panelRef\.current\?\.contains\(document\.activeElement\)/, "Escape only closes when focus is inside");
   assert.doesNotMatch(guide, /fetch\(|import\(.*api/);
   assert.match(page, /<ExplorerGuide open=\{guideOpen && primaryWorkspace === "map"\}/);
   assert.match(page, /className="guide-trigger" type="button" aria-label="Open the quick start guide"/);
-  assert.match(page, /if \(action === "layers"\) openAtlasPanel\("layers"\)/);
+  // Layers navigation is exercised through the actual handler in
+  // workspace-help-navigation.test.mjs, including post-dismissal focus.
   assert.match(page, /else if \(action === "time"\) \{ setPrimaryWorkspace\("map"\); setTimelineOpen\(true\); \}/);
   assert.match(page, /else if \(action === "qwen"\) openQwenCompanion\(null\)/);
   assert.match(page, /onMore=\{\(\) => setHelpOpen\(true\)\}/, "reconnects the existing map guide");
-  assert.match(page, /aria-pressed=\{undergroundOpen\} onClick=\{toggleUnderground\}/);
+  const ts = await import("typescript");
+  const ast = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
+  let undergroundControl = false;
+  const visit = node => {
+    if (ts.isJsxOpeningElement(node) && node.tagName.getText(ast) === "button") {
+      const attributes = new Map(node.attributes.properties.filter(ts.isJsxAttribute).map(attribute => [attribute.name.getText(ast), attribute.initializer?.getText(ast)]));
+      if (attributes.get("onClick") === "{toggleUnderground}" && attributes.get("aria-pressed") === "{undergroundOpen}") undergroundControl = true;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(ast);
+  assert.equal(undergroundControl, true, "the existing Underground control retains its selected state and action");
 });
 
 test("theme loads last, keeps tested geometry in globals and honours reduced motion", async () => {

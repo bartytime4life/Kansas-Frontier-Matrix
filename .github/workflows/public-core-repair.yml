@@ -27,6 +27,11 @@ jobs:
           node --test tests/explorer-menu-dismissal.test.mjs
           tests/mobile-compatibility.test.mjs tests/workspace-map-navigation.test.mjs
           tests/workspace-help-navigation.test.mjs
+      - name: Recovered startup, topics and public source recovery
+        run: >-
+          node --test tests/explorer-interface-refresh.test.mjs
+          tests/topic-organization.test.mjs tests/source-read-recovery.test.mjs
+          tests/river-startup-restoration.test.mjs tests/river-network-budget.test.mjs
       - name: Core delivery, filtering, geometry and account boundaries
         run: >-
           node --test tests/node-compressed-assets.test.mjs

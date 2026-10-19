@@ -235,7 +235,8 @@ import { createTerrainDrawing } from "./terrain-drawing-runtime";
 import { TERRAIN_DRAWING_INITIAL_STATUS, type TerrainDrawingConfig, type TerrainDrawingMode, type TerrainDrawingStatus, type TerrainSurfaceMode, type TerrainSurfaceProbe } from "./terrain-drawing";
 import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import { ExplorerControlsNavigation } from "./explorer-controls-navigation";
-import { imageryTopics, layerEntryMatches, selectedCatalogCount, type LayerCatalogEntry, type LayerBrowseView } from "./layer-workspaces";
+import { officialSourceTopics, specialtyLayerTopics, registryLayerTopics, atlasViewTopics, featureTopics, functionTopics, topicDefinition, topicSearchText, restoreTopic, serializeTopicSelection, imageryTopics, layerEntryMatches, selectedCatalogCount, type LayerCatalogEntry, type LayerBrowseView } from "./layer-workspaces";
+import { TopicSelect, TopicGuide } from "./topic-navigation";
 import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
 import {
   applyOfficialContextState,
@@ -1416,6 +1417,7 @@ export default function Home() {
   const [layerQuery, setLayerQuery] = useState("");
   const [pendingCatalogTarget, setPendingCatalogTarget] = useState<string | null>(null);
   const [atlasViewQuery, setAtlasViewQuery] = useState("");
+  const [atlasTopic, setAtlasTopic] = useState<LayerWorkspace>("all");
   const [layerDomain, setLayerDomain] = useState<(typeof layerDomains)[number]>("ALL");
   const [globalQuery, setGlobalQuery] = useState("");
   const [expandedLayers, setExpandedLayers] = useState<Set<string>>(new Set());
@@ -1475,6 +1477,8 @@ export default function Home() {
   const [activeFunctionId, setActiveFunctionId] = useState("export");
   const [functionQuery, setFunctionQuery] = useState("");
   const [featureQuery, setFeatureQuery] = useState("");
+  const [featureTopic, setFeatureTopic] = useState<LayerWorkspace>("all");
+  const [functionTopic, setFunctionTopic] = useState<LayerWorkspace>("all");
   const [featureArea, setFeatureArea] = useState<FeatureArea | "ALL">("ALL");
   const [featureMaturity, setFeatureMaturity] = useState<FeatureMaturity | "ALL">("ALL");
   const [repositoryQuery, setRepositoryQuery] = useState("");
@@ -1727,14 +1731,14 @@ export default function Home() {
   const visibleOfficialCount = visibleExternalContextCount(visibleOfficialSources.length, soilMapState.visible);
   const selectedEarthEngineCount = Object.values(earthEngineDisplay.visible).filter(Boolean).length;
   const catalogEntries: LayerCatalogEntry[] = [
-    ...OFFICIAL_CONTEXT_SOURCES.map(source => ({ id: source.id, title: source.title, keywords: `${source.shortTitle} ${source.organization} ${source.domain}`, selected: officialVisibility[source.id], topics: LAYER_WORKSPACES.filter(([topic]) => topic !== "all" && filterOfficialSources([source], topic, "").length > 0).map(([topic]) => topic) })),
-    { id: "daylight", title: "Daylight & twilight", keywords: "sun solar geometry calculated light", topics: ["terrain", "disaster"], selected: daylightEnabled },
-    { id: "soil", title: "Soil moisture", keywords: "NASA SMAP modeled surface root water", topics: ["water", "land"], selected: soilMapState.visible },
-    { id: "crop", title: "Soil moisture 1 km hybrid", keywords: "USDA NASS Crop-CASMA direct provider preview reviewed numeric cells", topics: ["water", "land"], selected: cropSelected },
-    { id: "reviewed-water", title: "Reviewed water stations", keywords: "USGS governed snapshot evidence", topics: ["water"], selected: reviewedWaterSelected },
-    { id: "reviewed-weather", title: "Reviewed daily weather", keywords: "NOAA GHCN-Daily precipitation temperature governed snapshot evidence", topics: ["disaster"], selected: reviewedWeatherSelected },
+    ...OFFICIAL_CONTEXT_SOURCES.map(source => ({ id: source.id, title: source.title, keywords: `${source.shortTitle} ${source.organization} ${source.domain}`, selected: officialVisibility[source.id], topics: officialSourceTopics(source.id) })),
+    { id: "daylight", title: "Daylight & twilight", keywords: "sun solar geometry calculated light", topics: specialtyLayerTopics("daylight"), selected: daylightEnabled },
+    { id: "soil", title: "Soil moisture", keywords: "NASA SMAP modeled surface root water", topics: specialtyLayerTopics("soil"), selected: soilMapState.visible },
+    { id: "crop", title: "Soil moisture 1 km hybrid", keywords: "USDA NASS Crop-CASMA direct provider preview reviewed numeric cells", topics: specialtyLayerTopics("crop"), selected: cropSelected },
+    { id: "reviewed-water", title: "Reviewed water stations", keywords: "USGS governed snapshot evidence", topics: specialtyLayerTopics("reviewed-water"), selected: reviewedWaterSelected },
+    { id: "reviewed-weather", title: "Reviewed daily weather", keywords: "NOAA GHCN-Daily precipitation temperature governed snapshot evidence", topics: specialtyLayerTopics("reviewed-weather"), selected: reviewedWeatherSelected },
     ...EARTH_ENGINE_CONTEXT_LAYERS.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.source} ${layer.attribution}`, topics: imageryTopics(layer.id), selected: Boolean(earthEngineDisplay.visible[layer.id]), imagery: true })),
-    ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: ["places"] as const, selected: Boolean(visibility[layer.id]) })),
+    ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: registryLayerTopics(layer.domain), selected: Boolean(visibility[layer.id]) })),
   ];
   const selectedMapLayerCount = selectedCatalogCount(catalogEntries);
   const matchingCatalogEntries = catalogEntries.filter(entry => layerEntryMatches(entry, layerCatalogView, officialWorkspace, officialSourceQuery));
@@ -1929,15 +1933,10 @@ export default function Home() {
     ? SOURCE_CANDIDATES.find((candidate) => candidate.layerId === selected.layerId)
     : undefined, [selected]);
   const filteredAtlasViews = useMemo(() => {
-    const query = atlasViewQuery.trim().toLowerCase();
-    if (!query) return LIVING_ATLAS_VIEWS;
-    return LIVING_ATLAS_VIEWS.filter((view) => (
-      [view.title, view.question, view.scope, view.time, view.sourcePosture, view.report, ...view.domains]
-        .join(" ")
-        .toLowerCase()
-        .includes(query)
-    ));
-  }, [atlasViewQuery]);
+    const terms = atlasViewQuery.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    return LIVING_ATLAS_VIEWS.filter(view => (atlasTopic === "all" || atlasViewTopics(view.id).includes(atlasTopic))
+      && terms.every(term => [view.title, view.question, view.scope, view.time, view.sourcePosture, view.report, ...view.domains, topicSearchText(atlasViewTopics(view.id))].join(" ").toLowerCase().includes(term)));
+  }, [atlasViewQuery, atlasTopic]);
   const activeViewProfileId = useMemo(() => MAP_VIEW_PROFILES.find((profile) => (
     profile.year === year
     && profile.basemap === basemap
@@ -2323,18 +2322,19 @@ export default function Home() {
   ) as Record<SourceAdmissionState, number>, []);
   const filteredFunctions = useMemo(() => {
     const query = functionQuery.trim().toLowerCase();
-    return functionsForGroup(functionGroup).filter((record) => !query || `${record.title} ${record.summary} ${record.interface} ${record.boundary} ${record.authority} ${record.maturity} ${record.inventory} ${record.sourceLabel}`.toLowerCase().includes(query));
-  }, [functionGroup, functionQuery]);
+    return functionsForGroup(functionGroup).filter((record) => (functionTopic === "all" || functionTopics(record.id).includes(functionTopic)) && (!query || `${record.title} ${record.summary} ${record.interface} ${record.boundary} ${record.authority} ${record.maturity} ${record.inventory} ${record.sourceLabel} ${topicSearchText(functionTopics(record.id))}`.toLowerCase().includes(query)));
+  }, [functionGroup, functionQuery, functionTopic]);
   const activeFunction = FUNCTION_REGISTRY.find((record) => record.id === activeFunctionId && record.group === functionGroup) ?? filteredFunctions[0] ?? functionsForGroup(functionGroup)[0];
   const functionCounts = useMemo(() => Object.fromEntries(["ACTIVE", "BOUNDED", "DOCUMENTED", "GATED"].map((state) => [state, FUNCTION_REGISTRY.filter((record) => record.state === state).length])), []);
   const filteredFeatures = useMemo(() => {
     const query = featureQuery.trim().toLowerCase();
     return FEATURE_CATALOG.filter((feature) => {
+      if (featureTopic !== "all" && !featureTopics(feature.id).includes(featureTopic)) return false;
       if (featureArea !== "ALL" && feature.area !== featureArea) return false;
       if (featureMaturity !== "ALL" && feature.maturity !== featureMaturity) return false;
-      return !query || `${feature.name} ${feature.area} ${feature.maturity} ${feature.summary} ${feature.path} ${feature.keywords.join(" ")}`.toLowerCase().includes(query);
+      return !query || `${feature.name} ${feature.area} ${feature.maturity} ${feature.summary} ${feature.path} ${feature.keywords.join(" ")} ${topicSearchText(featureTopics(feature.id))}`.toLowerCase().includes(query);
     });
-  }, [featureArea, featureMaturity, featureQuery]);
+  }, [featureArea, featureMaturity, featureQuery, featureTopic]);
   const featureMaturityCounts = useMemo(() => Object.fromEntries(
     (["VERIFIED_SLICE", "FIXTURE_FIRST", "DOCUMENTED", "HOLD"] as const)
       .map((maturity) => [maturity, FEATURE_CATALOG.filter((feature) => feature.maturity === maturity).length]),
@@ -2471,6 +2471,7 @@ export default function Home() {
 
   const buildExplorerParams = useCallback(() => {
     const params = new URLSearchParams();
+    serializeTopicSelection(params, officialWorkspace, layerCatalogView);
     const redactLocationCamera = locationCameraRedacted || locationDerivedViewRef.current;
     const serializedView = redactLocationCamera ? KANSAS_VIEW : view;
     params.set("c", `${serializedView.center[0].toFixed(5)},${serializedView.center[1].toFixed(5)}`);
@@ -2537,7 +2538,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [officialWorkspace, layerCatalogView, soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -3007,7 +3008,12 @@ export default function Home() {
     setOfficialErrors((current) => ({ ...current, "usgs-streamflow": undefined }));
     try {
       const { response, body: candidate } = await browserJsonRequest(path, {
-        signal: controller.signal, maxBytes: 64 * 1024 * 1024, timeoutMs: 60_000, headers: { Accept: "application/json" },
+        // The network adapter can spend 60 seconds acquiring data. Leave time
+        // for its bounded response, and wait out a concurrent tab's acquisition.
+        signal: controller.signal, maxBytes: 64 * 1024 * 1024,
+        timeoutMs: !archiveDay && requestedRange === "24h" ? 75_000 : 60_000,
+        recovery: !archiveDay && requestedRange === "24h" ? "river-network" : undefined,
+        headers: { Accept: "application/json" },
       });
       if (!response.ok) {
         const message = candidate && typeof candidate === "object" && ("error" in candidate || "message" in candidate)
@@ -3620,8 +3626,13 @@ export default function Home() {
     };
     const timer = window.setInterval(refresh, 300_000);
     const visible = () => { if (!document.hidden) refresh(); };
+    const online = () => {
+      if (buildYearCurrentRef.current && !document.hidden && officialVisibilityRef.current["census-counties"]
+        && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME) void refreshOfficialContext("census-counties");
+    };
     document.addEventListener("visibilitychange", visible);
-    return () => { clearInterval(timer); document.removeEventListener("visibilitychange", visible); };
+    window.addEventListener("online", online);
+    return () => { clearInterval(timer); document.removeEventListener("visibilitychange", visible); window.removeEventListener("online", online); };
   }, [refreshOfficialContext]);
 
   useEffect(() => {
@@ -4452,6 +4463,10 @@ export default function Home() {
   const restoreExplorerFromUrl = useCallback(() => {
       const params = explorerHistoryParams(window.location.search, window.history.state);
       setStarterPanelOpen(!params.has("layerView") && !params.has("topic"));
+      const restoredTopic = restoreTopic(params.get("topic"));
+      setOfficialWorkspace(restoredTopic);
+      setLayerCatalogView(params.get("layerView") === "imagery" ? "local" : params.get("layerView") === "selected" ? "selected" : "official");
+      if (restoredTopic !== "all") { setLeftPanelMode("layers"); setLeftOpen(true); }
       const restoredSolar = restoreDaylightView(params.get("sunDay"), params.get("sunAt"), params.get("sun") === "on", currentKansasCalendarDay(), params.get("sunThrough"));
       daylightDayRef.current = restoredSolar.day;
       daylightThroughDayRef.current = restoredSolar.throughDay;
@@ -6477,14 +6492,24 @@ export default function Home() {
   useEffect(() => {
     if (!streamflowSelectedAtPresent) {
       setStreamflowPlaying(false);
+      // A hidden or historical layer must not keep retrying current requests.
+      streamflowRequestRef.current?.abort();
+      streamflowRequestRef.current = null;
       return;
     }
     const refresh = () => {
-      if (!document.hidden && !streamflowRequestRef.current && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
+      // URL/history restoration owns any initial station or archived day.
+      if (explorerRestoredRef.current && !document.hidden && !streamflowRequestRef.current && !streamflowArchiveDayRef.current) void refreshStreamflow(streamflowRange, streamflowSelectedStationId, true);
     };
     refresh();
     const timer = window.setInterval(refresh, 300_000);
-    return () => window.clearInterval(timer);
+    document.addEventListener("visibilitychange", refresh);
+    window.addEventListener("online", refresh);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", refresh);
+      window.removeEventListener("online", refresh);
+    };
   }, [refreshStreamflow, streamflowRange, streamflowSelectedAtPresent, streamflowSelectedStationId]);
 
   useEffect(() => {
@@ -8072,6 +8097,14 @@ export default function Home() {
     }
   };
 
+  const beginMapMeasurement = (mode: Exclude<MeasureMode, null>) => {
+    toggleMeasure(mode);
+    if (isCompact) {
+      dismissMapUtilityWithoutFocus();
+      window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true }));
+    }
+  };
+
   const undoMeasurementPoint = () => {
     const mode = measurementGeometryModeRef.current;
     if (!mode || measureCoordinatesRef.current.length === 0) {
@@ -8902,6 +8935,7 @@ export default function Home() {
                   {(["PUBLIC_INTERFACE", "OPERATIONAL_HANDOFF"] as FunctionGroup[]).map((group) => <button key={group} type="button" aria-pressed={functionGroup === group} onClick={() => { setFunctionGroup(group); setFunctionQuery(""); setActiveFunctionId(functionsForGroup(group)[0].id); }}>{group === "PUBLIC_INTERFACE" ? "Public interfaces" : "Operational handoffs"}<b>{functionsForGroup(group).length}</b></button>)}
                 </nav>
                 <label><span className="sr-only">Search functions and interface boundaries</span><i aria-hidden="true">⌕</i><input type="search" value={functionQuery} onChange={(event) => setFunctionQuery(event.target.value)} placeholder="Search function, interface, gate, or maturity" /></label>
+              <TopicSelect label="Function topic" value={functionTopic} onChange={setFunctionTopic} />
               </div>
               <div className="function-workbench">
                 <div className="function-selector" aria-label="Available function records">
@@ -9006,12 +9040,13 @@ export default function Home() {
                 </div>
                 <div className="feature-catalog-controls">
                   <label><span className="sr-only">Search the repository feature catalog</span><i aria-hidden="true">⌕</i><input type="search" value={featureQuery} onChange={(event) => setFeatureQuery(event.target.value)} placeholder="Search feature, area, maturity, or source path" /></label>
+                  <TopicSelect label="Repository feature topic" value={featureTopic} onChange={setFeatureTopic} />
                   <label><span className="sr-only">Filter repository features by area</span><select value={featureArea} onChange={(event) => setFeatureArea(event.target.value as FeatureArea | "ALL")}><option value="ALL">All areas</option>{FEATURE_AREAS.map((area) => <option key={area} value={area}>{area}</option>)}</select></label>
                   <label><span className="sr-only">Filter repository features by maturity</span><select value={featureMaturity} onChange={(event) => setFeatureMaturity(event.target.value as FeatureMaturity | "ALL")}><option value="ALL">All maturity states</option><option value="VERIFIED_SLICE">Verified slice</option><option value="FIXTURE_FIRST">Fixture first</option><option value="DOCUMENTED">Documented</option><option value="HOLD">Hold</option></select></label>
                   <span>{filteredFeatures.length} of {FEATURE_CATALOG.length}</span>
                 </div>
                 <div className="feature-radar-grid">
-                  {filteredFeatures.map((feature) => <article key={feature.id} data-state={feature.maturity}><span>{featureMaturityLabel(feature.maturity)}</span><small>{feature.area}</small><strong>{feature.name}</strong><p>{feature.summary}</p><a href={`https://github.com/${REPOSITORY_SNAPSHOT.repository}/tree/${REPOSITORY_SNAPSHOT.commit}/${feature.path}`} target="_blank" rel="noreferrer">Open source ↗</a></article>)}
+                  {filteredFeatures.map((feature) => <article key={feature.id} data-state={feature.maturity}><span>{featureMaturityLabel(feature.maturity)}</span><small>{feature.area} · {featureTopics(feature.id).map(topic => topicDefinition(topic)?.title).join(" · ")}</small><strong>{feature.name}</strong><p>{feature.summary}</p><a href={`https://github.com/${REPOSITORY_SNAPSHOT.repository}/tree/${REPOSITORY_SNAPSHOT.commit}/${feature.path}`} target="_blank" rel="noreferrer">Open source ↗</a></article>)}
                 </div>
                 {filteredFeatures.length === 0 && <div className="repository-empty"><strong>No matching feature families</strong><p>Clear the search or choose another area or maturity state.</p></div>}
               </section>
@@ -9087,13 +9122,15 @@ export default function Home() {
           <section className="atlas-view-library" hidden={leftPanelMode !== "views"} aria-labelledby="atlas-view-library-title">
             <div className="atlas-library-heading"><div><span className="panel-kicker">DEFAULT INVESTIGATIONS</span><h2 id="atlas-view-library-title">Choose a starting question</h2></div><small>{filteredAtlasViews.length} of {LIVING_ATLAS_VIEWS.length}</small></div>
             <label className="atlas-search-control"><span aria-hidden="true">⌕</span><span className="sr-only">Search Living Atlas views</span><input type="search" value={atlasViewQuery} onChange={(event) => setAtlasViewQuery(event.target.value)} placeholder="Search questions, domains, or time" /></label>
+            <TopicSelect label="Investigation topic" value={atlasTopic} onChange={setAtlasTopic} />
+            <TopicGuide value={atlasTopic} onTool={(view, element) => openMapUtility(view, element)} />
             <div className="atlas-view-list">
               {filteredAtlasViews.map((atlasView) => <article className="atlas-view-card" key={atlasView.id} data-status={atlasView.status} data-active={atlasView.profileId === activeViewProfileId}>
                 <header><span>{livingAtlasStatusLabel(atlasView.status)}</span><small>{atlasView.display}</small></header>
                 <h3>{atlasView.title}</h3>
                 <p className="atlas-view-question">{atlasView.question}</p>
                 <dl><div><dt>Scope</dt><dd>{atlasView.scope}</dd></div><div><dt>Time</dt><dd>{atlasView.time}</dd></div><div><dt>Source posture</dt><dd>{atlasView.sourcePosture}</dd></div></dl>
-                <div className="atlas-view-domains" aria-label={`${atlasView.title} domains`}>{atlasView.domains.map((domain) => <span key={domain}>{domain}</span>)}</div>
+                <div className="atlas-view-domains" aria-label={`${atlasView.title} domains`}>{atlasViewTopics(atlasView.id).map(topic => <span key={topic}>{topicDefinition(topic)?.title}</span>)}</div>
                 <p className="atlas-view-note">{atlasView.note}</p>
                 <footer><span>{atlasView.report}</span><button type="button" onClick={() => applyLivingAtlasView(atlasView)}>Open on map</button></footer>
                 {atlasView.syntheticProof && <LivingWatersControl mapRef={mapRef} styleReady={styleReady} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} onInspect={() => { setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true); }} />}
@@ -9204,7 +9241,9 @@ export default function Home() {
               onBrowse={() => { setStarterPanelOpen(false); setLayerCatalogView("selected"); window.requestAnimationFrame(() => leftPanelRef.current?.querySelector<HTMLButtonElement>('[data-layer-view="selected"]')?.focus()); }} />
           </div>
           <div className="layer-catalog-body" hidden={starterPanelOpen || sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
-          <div className="layer-browse-context"><label><span className="sr-only">Layer topic</span><select aria-label="Layer topic" value={officialWorkspace} onChange={event => { setOfficialWorkspace(event.target.value as LayerWorkspace); setOfficialCatalogFilter("all"); }}>{LAYER_WORKSPACES.map(([id, title]) => <option key={id} value={id}>{title}</option>)}</select></label><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
+          <div className="layer-browse-context"><TopicSelect label="Layer topic" value={officialWorkspace} onChange={topic => { setOfficialWorkspace(topic); setOfficialCatalogFilter("all"); }} /><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
+          <div className="layer-topic-index"><Link href="/topics">Explore subjects &amp; coverage ↗</Link>{officialWorkspace !== "all" && <button type="button" onClick={() => setOfficialWorkspace("all")}>Clear topic</button>}</div>
+          <TopicGuide value={officialWorkspace} onTool={(view, element) => openMapUtility(view, element)} />
           {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
           {matchingCatalogEntries.length === 0 && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
 
@@ -9903,7 +9942,7 @@ export default function Home() {
 
               {mapUtilityView === "measure" && <section id="map-utility-view-measure" role="region" aria-labelledby="map-utility-title" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>MEASURE</span><h3>Browser-local screen measurement</h3><p>Choose a geometry, then click the map to add points. Undo resumes a completed measurement for explicit editing.</p></div>
-                <div className="map-control-group"><header><strong>Draw and measure</strong><span>{measureMode ? "ADDING POINTS" : measurementGeometryMode ? "COMPLETE / PAUSED" : analysisArea ? "RECTANGLE AOI SET" : "IDLE"}</span></header><div className="map-choice-grid map-draw-grid"><button type="button" aria-label="Point" aria-pressed={measurementGeometryMode === "point"} onClick={() => toggleMeasure("point")}><strong>Point</strong><small>One browser-local marker</small></button><button type="button" aria-label="Line" aria-pressed={measurementGeometryMode === "distance"} onClick={() => toggleMeasure("distance")}><strong>Line</strong><small>Distance approximation</small></button><button type="button" aria-label="Polygon" aria-pressed={measurementGeometryMode === "area"} onClick={() => toggleMeasure("area")}><strong>Polygon</strong><small>Area approximation</small></button><button type="button" aria-label="Rectangle" aria-pressed={Boolean(analysisArea)} onClick={captureAnalysisArea} disabled={locationCameraRedacted}><strong>Rectangle</strong><small>Capture current viewport AOI</small></button></div><p className="map-control-note">Point, line, and polygon geometry stays in this browser. Rectangle captures the current viewport or use Shift-drag in report-area mode for a custom box. None is admitted evidence.</p></div>
+                <div className="map-control-group"><header><strong>Draw and measure</strong><span>{measureMode ? "ADDING POINTS" : measurementGeometryMode ? "COMPLETE / PAUSED" : analysisArea ? "RECTANGLE AOI SET" : "IDLE"}</span></header><div className="map-choice-grid map-draw-grid"><button type="button" aria-label="Point" aria-pressed={measurementGeometryMode === "point"} onClick={() => beginMapMeasurement("point")}><strong>Point</strong><small>One browser-local marker</small></button><button type="button" aria-label="Line" aria-pressed={measurementGeometryMode === "distance"} onClick={() => beginMapMeasurement("distance")}><strong>Line</strong><small>Distance approximation</small></button><button type="button" aria-label="Polygon" aria-pressed={measurementGeometryMode === "area"} onClick={() => beginMapMeasurement("area")}><strong>Polygon</strong><small>Area approximation</small></button><button type="button" aria-label="Rectangle" aria-pressed={Boolean(analysisArea)} onClick={captureAnalysisArea} disabled={locationCameraRedacted}><strong>Rectangle</strong><small>Capture current viewport AOI</small></button></div><p className="map-control-note">Point, line, and polygon geometry stays in this browser. Rectangle captures the current viewport or use Shift-drag in report-area mode for a custom box. None is admitted evidence.</p></div>
                 <div className="map-control-group"><header><strong>Units</strong><span>Also updates the MapLibre scale bar</span></header><div className="map-segmented-control"><button type="button" aria-pressed={measureUnit === "imperial"} onClick={() => changeMeasureUnit("imperial")}>Miles / sq mi</button><button type="button" aria-pressed={measureUnit === "metric"} onClick={() => changeMeasureUnit("metric")}>Kilometers / km²</button></div></div>
                 <article className="map-measure-status" aria-live="polite"><span>{measurementGeometryMode?.toUpperCase() ?? "NO MEASUREMENT"}</span><strong>{measurement}</strong><small>{measureMode ? "Click the map to add points." : measurementGeometryMode ? "Finished geometry remains on the map until cleared." : "Select distance or area to begin."}</small></article>
                 <div className="map-utility-actions"><button type="button" onClick={undoMeasurementPoint} disabled={!measurementGeometryMode}>Undo point</button><button type="button" onClick={finishMeasurement} disabled={!measureMode}>Finish</button><button type="button" onClick={clearMeasurement} disabled={!measurementGeometryMode}>Clear</button></div>

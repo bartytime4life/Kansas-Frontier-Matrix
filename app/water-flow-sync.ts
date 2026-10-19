@@ -16,6 +16,8 @@ import {
 
 export const WATER_FLOW_LAYER_ID = "scene-water-flow";
 const CACHE_LIMIT = 36;
+/** Bound simultaneous provider reads; additional selected cells wait in the same view. */
+export const MAX_FLOW_REQUESTS_IN_FLIGHT = 9;
 const RETRY_AFTER_MS = 60_000;
 
 export type WaterFlowStatus = Readonly<{
@@ -125,7 +127,7 @@ const rebuild = (map: MapLibreMap, state: FlowState) => {
       availableReaches: geometry.availableReaches, drawingLimited: geometry.truncated };
   }
   const failed = state.wanted.filter((cellKey) => state.cache.get(cellKey)?.state === "failed").length;
-  const loading = state.wanted.filter((cellKey) => state.cache.get(cellKey)?.state === "loading").length;
+  const loading = state.wanted.filter((cellKey) => !state.cache.has(cellKey) || state.cache.get(cellKey)?.state === "loading").length;
   setStatus(state, {
     state: loading ? "loading" : failed === state.wanted.length && failed > 0 ? "unavailable" : failed || state.viewLimited || metrics.drawingLimited || ready.some((payload) => payload.truncated) ? "partial" : "ready",
     reaches: metrics.reaches, gaugedReaches: metrics.gaugedReaches,
@@ -156,6 +158,49 @@ const clearPendingWork = (state: FlowState) => {
   setStatus(state, OFF);
 };
 
+/** Refill the selected view without rereading camera bounds or bypassing settled-camera selection. */
+const fetchPendingCells = (map: MapLibreMap, state: FlowState) => {
+  if (states.get(map) !== state || map.isMoving()
+    || !waterFlowShouldShow(sceneEffectsFor(map).waterFlow, state.efficient, map.getZoom())) return;
+  const now = Date.now();
+  let inFlight = [...state.cache.values()].filter(cell => cell.state === "loading").length;
+  for (const key of state.wanted) {
+    const cell = state.cache.get(key);
+    if (cell && (cell.state !== "failed" || now - cell.at < RETRY_AFTER_MS)) {
+      // Refresh recency for the cache order.
+      state.cache.delete(key); state.cache.set(key, cell);
+      continue;
+    }
+    if (inFlight >= MAX_FLOW_REQUESTS_IN_FLIGHT) continue;
+    const controller = new AbortController();
+    const request = { state: "loading" as const, controller };
+    state.cache.set(key, request);
+    inFlight += 1;
+    void fetchCell(key, controller.signal).then(
+      (payload) => {
+        // Abort is advisory: a resolved old request must not replace a new one
+        // for the same cell after a rapid pan or off/on toggle.
+        if (!controller.signal.aborted && state.cache.get(key) === request) {
+          state.cache.set(key, { state: "ready", payload }); scheduleRebuild(map, state);
+          queueMicrotask(() => fetchPendingCells(map, state));
+        }
+      },
+      () => {
+        if (!controller.signal.aborted && state.cache.get(key) === request) {
+          state.cache.set(key, { state: "failed", at: Date.now() }); scheduleRebuild(map, state);
+          queueMicrotask(() => fetchPendingCells(map, state));
+        }
+      },
+    );
+  }
+  // Refills can add cells after the settled-camera pass has already returned.
+  while (state.cache.size > CACHE_LIMIT) {
+    const oldest = [...state.cache.keys()].find((key) => !state.wanted.includes(key));
+    if (!oldest) break;
+    state.cache.delete(oldest);
+  }
+};
+
 const requestCells = (map: MapLibreMap, state: FlowState) => {
   const bounds = map.getBounds();
   const center = map.getCenter();
@@ -171,37 +216,7 @@ const requestCells = (map: MapLibreMap, state: FlowState) => {
   for (const [key, cell] of state.cache) {
     if (cell.state === "loading" && !wanted.includes(key)) { cell.controller.abort(); state.cache.delete(key); }
   }
-  const now = Date.now();
-  for (const key of wanted) {
-    const cell = state.cache.get(key);
-    if (cell && (cell.state !== "failed" || now - cell.at < RETRY_AFTER_MS)) {
-      // Refresh recency for the cache order.
-      state.cache.delete(key); state.cache.set(key, cell);
-      continue;
-    }
-    const controller = new AbortController();
-    const request = { state: "loading" as const, controller };
-    state.cache.set(key, request);
-    void fetchCell(key, controller.signal).then(
-      (payload) => {
-        // Abort is advisory: a resolved old request must not replace a new one
-        // for the same cell after a rapid pan or off/on toggle.
-        if (!controller.signal.aborted && state.cache.get(key) === request) {
-          state.cache.set(key, { state: "ready", payload }); scheduleRebuild(map, state);
-        }
-      },
-      () => {
-        if (!controller.signal.aborted && state.cache.get(key) === request) {
-          state.cache.set(key, { state: "failed", at: Date.now() }); scheduleRebuild(map, state);
-        }
-      },
-    );
-  }
-  while (state.cache.size > CACHE_LIMIT) {
-    const oldest = [...state.cache.keys()].find((key) => !wanted.includes(key));
-    if (!oldest) break;
-    state.cache.delete(oldest);
-  }
+  fetchPendingCells(map, state);
   rebuild(map, state);
 };
 
