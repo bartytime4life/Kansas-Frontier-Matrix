@@ -2,7 +2,7 @@
 doc_id: kfm://doc/production-startup-audit-20261019
 title: GoDaddy source, production startup and composer timing repair
 type: verification-record
-version: v3
+version: v4
 status: source repair; hosted diagnosis and publication pending
 owners: ["@bartytime4life"]
 created: 2026-10-19
@@ -176,6 +176,22 @@ and 20 conditional skips**, including the repeated-build import boundary.
 The exact cause of the observed browser failure is not inferred solely from its
 timeout. The unchanged browser test must pass on the follow-up immutable head
 before browser qualification.
+
+GitHub run `39206904899` then verified exact follow-up head
+`6f554d80ce04619d50f661b69bff1d9dc8394bc6`: production build and TypeScript
+passed; the full suite passed 1,497 tests with 18 conditional skips and no
+failures. All 18 real production HTTP checks, all 15 unchanged hydrated county
+browser checks across desktop and both mobile sizes, the startup-report
+assertions, and both assigned-port preview checks passed. This qualifies that
+candidate's browser behavior, not the live GoDaddy gateway.
+
+During that run, separate navigation PR #5301 merged as
+`33d4f335cd97911f758ed25cad39dff65e873304`. The integration preserves its welcome
+and URL/history restoration changes and its additional hydrated browser suite.
+Independent read-only overlap review found separate page hunks and no concrete
+behavior conflict. The combined immutable head must pass both browser suites
+before deployment qualification. Historical receipts remain unchanged; a new
+integration receipt records the combined artifact bytes.
 
 Hosted diagnostic readback and public browser/3D acceptance remain pending.
 No inference/model qualification
