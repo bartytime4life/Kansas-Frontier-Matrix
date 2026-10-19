@@ -38,34 +38,3 @@ export async function readBoundedText(message: Request | Response, maxBytes: num
 export async function readBoundedJson(message: Request | Response, maxBytes: number, signal?: AbortSignal): Promise<unknown> {
   return JSON.parse(await readBoundedText(message, maxBytes, signal)) as unknown;
 }
-
-/** Read a binary body under a hard byte limit, even when Content-Length is absent or understated. */
-export async function readBoundedBytes(message: Request | Response, maxBytes: number): Promise<Uint8Array> {
-  const declared = Number(message.headers.get("content-length"));
-  if (Number.isFinite(declared) && declared > maxBytes) {
-    void message.body?.cancel().catch(() => undefined);
-    throw new JsonLimitError("Byte limit exceeded.");
-  }
-  if (!message.body) return new Uint8Array();
-  const reader = message.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let size = 0;
-  try {
-    while (true) {
-      const chunk = await reader.read();
-      if (chunk.done) break;
-      size += chunk.value.byteLength;
-      if (size > maxBytes) throw new JsonLimitError("Byte limit exceeded.");
-      chunks.push(chunk.value);
-    }
-  } catch (error) {
-    void reader.cancel().catch(() => undefined);
-    throw error;
-  } finally {
-    reader.releaseLock();
-  }
-  const bytes = new Uint8Array(size);
-  let offset = 0;
-  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
-  return bytes;
-}

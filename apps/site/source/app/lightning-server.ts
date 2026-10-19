@@ -1,4 +1,4 @@
-import { JsonLimitError, readBoundedBytes, readBoundedText } from "./bounded-json";
+import { readBoundedText } from "./bounded-json";
 import { NOAA_LIGHTNING_CAPABILITIES_URL, parseLightningCapabilities, type LightningManifest } from "./lightning-data";
 
 const CAPABILITIES_LIMIT = 512 * 1024;
@@ -27,7 +27,9 @@ export async function getLightningManifest(): Promise<LightningManifest> {
 export async function fetchLightningPng(url: string): Promise<Uint8Array> {
   const response = await fetch(url, { cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(15_000), headers: { Accept: "image/png", "User-Agent": NOAA_USER_AGENT } });
   if (!response.ok || !/image\/png/i.test(response.headers.get("content-type") ?? "")) throw new Error(`NOAA lightning image HTTP ${response.status}, content-type ${response.headers.get("content-type") ?? "missing"}.`);
-  const bytes = await readBoundedBytes(response, 1024 * 1024).catch((error: unknown) => { throw error instanceof JsonLimitError ? new Error("NOAA lightning image exceeds the limit.") : error; });
+  const announced = Number(response.headers.get("content-length"));
+  if (announced > 1024 * 1024) throw new Error("NOAA lightning image exceeds the limit.");
+  const bytes = new Uint8Array(await response.arrayBuffer());
   if (bytes.length < 64 || bytes.length > 1024 * 1024 || ![137, 80, 78, 71, 13, 10, 26, 10].every((byte, index) => bytes[index] === byte)) throw new Error("NOAA lightning response is not a bounded PNG.");
   return bytes;
 }

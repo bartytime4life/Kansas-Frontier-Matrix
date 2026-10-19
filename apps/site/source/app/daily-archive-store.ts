@@ -17,10 +17,9 @@ export async function archiveStorage(db: ArchiveDb) {
 export async function archiveCatalog(db: ArchiveDb, day: string) {
   if (!archiveDay(day)) throw new ArchiveError("Choose an exact UTC calendar day.");
   const [entries, days, span, storage] = await Promise.all([
-    db.prepare(`SELECT ${fields} FROM daily_archive_captures c WHERE day=? AND feed NOT LIKE 'api:%' ORDER BY feed, attempt DESC`).bind(day).all<ArchiveEntry>(),
+    db.prepare(`SELECT ${fields} FROM daily_archive_captures c WHERE day=? ORDER BY feed, attempt DESC`).bind(day).all<ArchiveEntry>(),
     db.prepare("SELECT day, COUNT(*) AS captures FROM daily_archive_captures WHERE status IN ('ready','empty','partial') GROUP BY day ORDER BY day DESC LIMIT 366").all<{ day: string; captures: number }>(),
-    // API-connection captures share this table for storage accounting only; they are not daily-archive entries.
-    db.prepare("SELECT MIN(day) AS earliestDay, MAX(day) AS latestDay FROM daily_archive_captures WHERE feed NOT LIKE 'api:%'").first<{ earliestDay: string | null; latestDay: string | null }>(),
+    db.prepare("SELECT MIN(day) AS earliestDay, MAX(day) AS latestDay FROM daily_archive_captures").first<{ earliestDay: string | null; latestDay: string | null }>(),
     archiveStorage(db),
   ]);
   return { day, entries: entries.results, days: days.results, feeds: DAILY_FEEDS, storage, ...span };

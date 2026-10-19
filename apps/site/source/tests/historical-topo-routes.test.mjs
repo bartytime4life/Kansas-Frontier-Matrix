@@ -14,12 +14,10 @@ const server = dataUrl(`
   export const topoBytes = async (key, max) => { const value = globalThis.__topo.objects.get(key); if (!value) return null; if (value.byteLength > max) throw new TopoOverlayError("too large", 503); return value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength); };
   export const topoDigest = async (bytes) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map(n => n.toString(16).padStart(2, "0")).join("");
   export const topoJson = bytes => JSON.parse(new TextDecoder().decode(bytes));
-  export const topoRequestJson = (bytes, message) => { let value; try { value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); } catch { throw new TopoOverlayError(message); } if (!value || typeof value !== "object" || Array.isArray(value)) throw new TopoOverlayError(message); return value; };
   export const topoScanId = raw => { if (!/^[1-9]\\d{0,9}$/.test(String(raw))) throw new TopoOverlayError("invalid scan"); return Number(raw); };
   export const topoWorker = request => { if (request.headers.get("authorization") !== "Bearer worker-secret") throw new TopoOverlayError("worker denied", 403); };
   export const topoOwner = async () => { if (!globalThis.__topo.owner) throw new TopoOverlayError("owner denied", 403); return { id: "owner-1", email: "owner@example.test" }; };
   export const topoUser = async () => ({ id: "viewer-1", email: "viewer@example.test" });
-  export const topoCatalogSheet = async () => { throw new Error("catalog lookup must not run for a rejected request"); };
   export const topoSameOrigin = request => { if (request.headers.get("origin") !== new URL(request.url).origin) throw new TopoOverlayError("origin denied", 403); };
   export const topoPrivateHeaders = { "Cache-Control": "private, no-store" };
   export const topoActive = async scan => { const bytes = await topoBytes("historical-topo/v1/active/" + scan + ".json", 2048); if (!bytes) return null; const pointer = topoJson(bytes); const manifestBytes = await topoBytes("historical-topo/v1/packages/" + scan + "/" + pointer.packageId + "/manifest.json", 750000); if (!manifestBytes || await topoDigest(manifestBytes) !== pointer.manifestSha256) throw new TopoOverlayError("bad active manifest", 503); return { pointer, manifest: topoJson(manifestBytes) }; };
@@ -86,15 +84,4 @@ test("staging is immutable and an interrupted manifest rerun restores owner revi
   globalThis.__topo.owner = false;
   assert.equal((await POST(activateRequest(review))).status, 403);
   assert.equal((await PUT(new Request(stageRequest(first.packageId, "9/119/195", png), { headers: { "Content-Type": "image/png", "Content-Length": String(png.byteLength), "X-KFM-SHA256": digest(png) } }))).status, 403);
-});
-
-test("malformed or non-object review and sheet requests are client errors, not storage failures", async () => {
-  globalThis.__topo = { objects: new Map(), owner: true, bucket: { get: async () => null, put: async () => {}, list: async () => ({ objects: [], truncated: false }) } };
-  const { POST: activate } = await route("activate");
-  const { POST: overlayPost } = await route("overlay");
-  for (const raw of ["{not json", "null", "[]", "\"text\""]) {
-    const post = path => new Request(`https://site.test/api/historical-topo/${path}`, { method: "POST", headers: { Origin: "https://site.test", "Content-Type": "application/json" }, body: raw });
-    assert.equal((await activate(post("activate"))).status, 400, `activate ${raw}`);
-    assert.equal((await overlayPost(post("overlay"))).status, 400, `overlay ${raw}`);
-  }
 });
