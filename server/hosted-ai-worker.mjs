@@ -1,13 +1,11 @@
 // Private model process (forked by server/hosted-ai.mjs). The one model manifest remains server/embedded-ai-model.json.
 import {parentPort as threadPort,workerData as threadData} from 'node:worker_threads';
-import {readFile,lstat,writeFile} from 'node:fs/promises';
-import {createReadStream} from 'node:fs';
-import {createHash} from 'node:crypto';
-import {join,resolve,dirname} from 'node:path';
+import {readFile,writeFile} from 'node:fs/promises';
+import {join,resolve} from 'node:path';
 import {HOSTED_REPLY_LIMITS,HOSTED_LIMITS} from './hosted-ai.mjs';
 import {prepareDiscussionPrompt,discussionSystem} from './hosted-ai-prompt.mjs';
 import {generateHosted} from './hosted-ai-generation.mjs';
-import {ensureHostedModel,checkHostedManifest} from './hosted-ai-artifacts.mjs';
+import {verifyInstalledModel} from './hosted-ai-artifacts.mjs';
 const fail=code=>{throw Object.assign(new Error(code),{code});};
 // A forked child talks over IPC; a worker thread (qualification tests) keeps parentPort.
 const parentPort=threadPort??{postMessage:message=>{if(process.connected)process.send(message);},on:(event,handler)=>process.on(event,handler)};
@@ -21,11 +19,6 @@ if(!threadPort){
 const cancels=new Map();
 parentPort.on('message',message=>{if(message?.type==='cancel'&&typeof message.id==='string')Atomics.store(cancels.get(message.id)??new Int32Array(1),0,1);});
 const safe=error=>/^[A-Z][A-Z0-9_]{0,63}$/.test(error?.code??'')?error.code:'HOSTED_MODEL_FAILED';
-async function privatePath(path,directory=false){
- const info=await lstat(path);
- if(info.isSymbolicLink()||info.uid!==process.getuid()||(info.mode&0o077)||(directory?!info.isDirectory():!info.isFile()||info.nlink!==1))fail('HOSTED_MODEL_FILES_UNSAFE');
- return info;
-}
 const discussionProfile=workerData.discussionProfile??'context-aware-v2';
 const profiles=new Set(['context-aware-v2','baseline','concise-sampled-v1','concise-greedy-v1']);
 let session,tokenizer,ort;
@@ -39,15 +32,7 @@ try{
  const available=process.availableMemory?.();
  const constrained=process.constrainedMemory?.();
  if((available>0&&available<HOSTED_LIMITS.maximumRssBytes)||(constrained>0&&constrained<HOSTED_LIMITS.maximumRssBytes+1024**3))fail('HOSTED_MEMORY_HEADROOM');
- await ensureHostedModel(directory);
- await privatePath(dirname(directory),true);await privatePath(directory,true);await privatePath(join(directory,'onnx'),true);
- const manifest=JSON.parse(await readFile(new URL('./embedded-ai-model.json',import.meta.url),'utf8'));
- checkHostedManifest(manifest,'HOSTED_MODEL_IDENTITY');
- for(const file of manifest.files){
-  const path=join(directory,file.path),info=await privatePath(path);if(info.size!==file.size)fail('HOSTED_MODEL_INTEGRITY');
-  const hash=createHash('sha256');for await(const chunk of createReadStream(path))hash.update(chunk);
-  if(hash.digest('hex')!==file.sha256)fail('HOSTED_MODEL_INTEGRITY');
- }
+ await verifyInstalledModel(directory,JSON.parse(await readFile(new URL('./embedded-ai-model.json',import.meta.url),'utf8')));
  ort=await import('onnxruntime-web');const {Tokenizer}=await import('@huggingface/tokenizers');
  ort.env.wasm.numThreads=1;ort.env.wasm.proxy=false;
  const config=JSON.parse(await readFile(join(directory,'config.json'),'utf8'));

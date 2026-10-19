@@ -30,7 +30,7 @@ export function forkModelProcess(path,{workerData,execArgv=[],env=process.env}={
 export function processRssBytes(pid){
  try{const kb=Number(readFileSync('/proc/'+pid+'/status','utf8').match(/^VmRSS:\s+(\d+)\s+kB/m)?.[1]);return kb>0?kb*1024:null;}catch{return null;}
 }
-const diagnosticCodes=new Set(['HOSTED_MEMORY_HEADROOM','MODEL_UNAVAILABLE','MODEL_LOAD_TIMEOUT','MODEL_MEMORY_LIMIT','MODEL_TIMEOUT','HOSTED_MODEL_FAILED','HOSTED_MODEL_FILES_UNSAFE','HOSTED_MODEL_IDENTITY','HOSTED_MODEL_INTEGRITY','HOSTED_MODEL_CONFIG','HOSTED_MODEL_INPUTS','HOSTED_MODEL_SELF_CHECK','HOSTED_PROFILE_IDENTITY','MODULE_NOT_FOUND','ERR_MODULE_NOT_FOUND','ENOENT','EACCES','ENOMEM','ERR_WORKER_OUT_OF_MEMORY','MODEL_PROCESS_KILLED']);
+const diagnosticCodes=new Set(['HOSTED_MEMORY_HEADROOM','MODEL_UNAVAILABLE','MODEL_LOAD_TIMEOUT','MODEL_MEMORY_LIMIT','MODEL_TIMEOUT','HOSTED_MODEL_FAILED','HOSTED_MODEL_FILES_UNSAFE','HOSTED_MODEL_NOT_INSTALLED','HOSTED_MODEL_IDENTITY','HOSTED_MODEL_INTEGRITY','HOSTED_MODEL_CONFIG','HOSTED_MODEL_INPUTS','HOSTED_MODEL_SELF_CHECK','HOSTED_PROFILE_IDENTITY','MODULE_NOT_FOUND','ERR_MODULE_NOT_FOUND','ENOENT','EACCES','ENOMEM','ERR_WORKER_OUT_OF_MEMORY','MODEL_PROCESS_KILLED']);
 export class HostedAiModel{
  constructor({discussionProfile='context-aware-v2',modelDirectory=HOSTED_MODEL_DIRECTORY,workerFactory=forkModelProcess,memoryUsage,diagnostic=code=>console.warn('[KFM hosted AI] '+code)}={}){
   this.diagnostic=diagnostic;
