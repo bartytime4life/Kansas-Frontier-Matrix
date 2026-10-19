@@ -1,0 +1,117 @@
+{
+  "receipt_id": "genrec-site-upload-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/api/data-submissions/route.ts",
+    "apps/site/source/app/api/land-records/route.ts",
+    "apps/site/source/app/data-intake-server.ts",
+    "apps/site/source/docs/SUBMISSION_UPLOAD_QUOTA.md",
+    "apps/site/source/drizzle/0011_submission_uploads.sql",
+    "apps/site/source/drizzle/meta/_journal.json",
+    "apps/site/source/tests/helpers/land-fixture.mjs",
+    "apps/site/source/tests/land-records.test.mjs",
+    "apps/site/source/tests/submission-quota.test.mjs",
+    "tests/qa/test_site_smoke.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/api/data-submissions/route.ts": "sha256:6b77501518d38cdb5013fede89385f969353859d2f10df04ecffe1547721a371",
+    "apps/site/source/app/api/land-records/route.ts": "sha256:1ee1f26703db1a9582b466c928d1b5e57fb1ff574e7b8e428aa677b5fb3cba38",
+    "apps/site/source/app/data-intake-server.ts": "sha256:65d5f58c947ecd4ef5237fdcbe51aa863687c335bb96f04f0a61364bc92163a9",
+    "apps/site/source/docs/SUBMISSION_UPLOAD_QUOTA.md": "sha256:a9ffc3bcaf6279bb9b10452d334b81c5d5e42119e28c15f755842b0a85d590fd",
+    "apps/site/source/drizzle/0011_submission_uploads.sql": "sha256:f040dd7bd87559b50fccb1a7a2c90deaaa2676e26a905319abb8d6a77c24bd36",
+    "apps/site/source/drizzle/meta/_journal.json": "sha256:7a4257d669148a8f5af469fa1d676a1a723da42975b4e1c18c53d7826fb591d6",
+    "apps/site/source/tests/helpers/land-fixture.mjs": "sha256:e79fe9ef914971dbc509c00dc0339d289a7744023d1cf5573ff8f4122e375ee6",
+    "apps/site/source/tests/land-records.test.mjs": "sha256:12750d5a942e1bacda44a78e35170fcd83fd190e03ccf57edfdd0a547a6d3fb5",
+    "apps/site/source/tests/submission-quota.test.mjs": "sha256:846465d3e86b03f2ab139c41c3d4e20d89fdb79c6683543656e6b1c2c63cb029",
+    "tests/qa/test_site_smoke.py": "sha256:997bce928e61c455eb142fa99728751a347745786197f32b6d331d7d636281cb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "exact-runtime-version-not-exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@f59722ce0b2dff60038dc93065bac6840636f67b",
+      "apps/site/source/AGENTS.md",
+      "SECURITY.md",
+      "CONTRIBUTING.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/api/data-submissions/route.ts": "PROPOSED",
+    "apps/site/source/app/api/land-records/route.ts": "PROPOSED",
+    "apps/site/source/app/data-intake-server.ts": "PROPOSED",
+    "apps/site/source/docs/SUBMISSION_UPLOAD_QUOTA.md": "PROPOSED",
+    "apps/site/source/drizzle/0011_submission_uploads.sql": "PROPOSED",
+    "apps/site/source/drizzle/meta/_journal.json": "PROPOSED",
+    "apps/site/source/tests/helpers/land-fixture.mjs": "PROPOSED",
+    "apps/site/source/tests/land-records.test.mjs": "PROPOSED",
+    "apps/site/source/tests/submission-quota.test.mjs": "PROPOSED",
+    "tests/qa/test_site_smoke.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Site typecheck and production build",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Site lint",
+      "outcome": "PASS",
+      "reason": "Zero errors; 77 warnings on unchanged files. Focused changed-file lint has no warnings."
+    },
+    {
+      "gate": "Site node tests",
+      "outcome": "PASS",
+      "reason": "1387 passed, zero failures or skips, in disposable storage with repository context."
+    },
+    {
+      "gate": "Local startup tests",
+      "outcome": "PASS",
+      "reason": "8 passed."
+    },
+    {
+      "gate": "Local backend smoke",
+      "outcome": "PASS",
+      "reason": "110 checks passed across 79 routes; 9 provider-only routes excluded."
+    },
+    {
+      "gate": "Hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch publication; exact-head hosted checks not yet available."
+    },
+    {
+      "gate": "Live migration and deployment",
+      "outcome": "SKIPPED",
+      "reason": "Not requested."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "submission-upload-implementation",
+      "validated": true,
+      "evidence_ref": "apps/site/source/app/data-intake-server.ts"
+    },
+    {
+      "id": "directory-governance",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T17:44:00Z",
+  "emitter": "OpenAI Codex",
+  "notes": "Bounded local implementation and validation record. Apply additive migration 0011 before enabling the updated source and retire old workers. Human review, merge, live deployment and source admission remain separate. Receipt excludes private reports, prompts, secrets and test logs."
+}
