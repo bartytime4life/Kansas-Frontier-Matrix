@@ -98,10 +98,22 @@ jobs:
             data/receipts/generated/genrec-source-probe-envelope-open-profile-data-20261019.json \
             --repo-root . \
             --artifact-git-ref 5ac72ba44a5008f3257593bf460353bf590ea489
-          # The latest successor receipt binds the current bytes.
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-source-probe-envelope-receipt-binding-20261019.json \
+            --repo-root . \
+            --artifact-git-ref 8c4b8da938798f00bdf503f9819530df7a8a64e0
+          # The latest successor receipt binds the current bytes.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-source-probe-envelope-receipt-coverage-20261019.json \
             --repo-root .
+          # The path filter starts this job for any of these receipts, so each one must be validated above.
+          for receipt in data/receipts/generated/genrec-source-and-trust-projection-profiles-*.json \
+                         data/receipts/generated/genrec-source-probe-envelope-*.json; do
+            if ! grep -qF "$receipt" .github/workflows/source-and-trust-projection-profiles.yml; then
+              echo "::error::$receipt is not validated by this workflow"
+              exit 1
+            fi
+          done
 
       - name: Record trust boundary
         if: always()
