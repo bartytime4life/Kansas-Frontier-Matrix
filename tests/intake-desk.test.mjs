@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import ts from 'typescript';
+import { componentHarness } from './component-harness.mjs';
 
 const compile = async path => ts.transpileModule(await readFile(path, 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
 const url = value => `data:text/javascript;base64,${Buffer.from(value).toString('base64')}`;
@@ -47,11 +48,21 @@ test('intake desk is a fixed loopback origin and the client sends no credentials
   } finally { globalThis.fetch = original; }
 });
 
-test('the library view mounts the read-only intake summary and the feature is registered', async () => {
+test('preserved operator summary stays read-only while hosted download routes redirect to source status', async t => {
   const workspace = await readFile('app/downloads/workspace.tsx', 'utf8');
   assert.match(workspace, /<div id="download-library"[^>]*><IntakeDeskSummary \/>/);
   const summary = await readFile('app/intake-desk-summary.tsx', 'utf8');
   assert.doesNotMatch(summary, /method:\s*"POST"|X-KFM-Session/);
-  const features = await readFile('app/site-features.ts', 'utf8');
-  assert.match(features, /id: "local-intake-desk"/);
+  const features = await import(url(await compile('app/site-features.ts')));
+  assert.equal(features.SITE_FEATURES.some(feature => feature.id === 'local-intake-desk'), false,
+    'the hosted feature catalog must not advertise a visitor-PC intake service');
+  for (const file of ['app/downloads/page.tsx', 'app/earth-engine-downloads/setup/page.tsx']) {
+    const redirects = [], redirected = new Error('redirected');
+    const h = await componentHarness(file, {
+      'next/navigation': { redirect: target => { redirects.push(target); throw redirected; } },
+    }, { fetch: () => assert.fail('A hosted compatibility route must not contact the local operator') });
+    t.after(() => h.dispose());
+    assert.throws(() => h.render(h.exports.default, {}), error => error === redirected);
+    assert.deepEqual(redirects, ['/?layers=sources'], file);
+  }
 });

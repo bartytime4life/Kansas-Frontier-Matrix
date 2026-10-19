@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
-import { Miniflare, convertV4MiniflareOptions } from "miniflare";
+import { requireSourceFiles, workerPrerequisite } from "./platform-prerequisites.mjs";
+requireSourceFiles(["drizzle"]);
+const worker = workerPrerequisite({ builtApplication: true });
 
-test("private intake persists bytes and audit history, scopes reads, and serializes competing reviews", async () => {
+test("private intake persists bytes and audit history, scopes reads, and serializes competing reviews", { skip: worker.skip }, async () => {
+  const { Miniflare, convertV4MiniflareOptions } = worker.load();
   const root = path.resolve("dist/server");
   const files = readdirSync(root, { recursive: true }).filter((p) => p.endsWith(".js"));
   const modules = ["index.js", ...files.filter((p) => p !== "index.js")].map((p) => ({ type: "ESModule", path: path.join(root, p) }));

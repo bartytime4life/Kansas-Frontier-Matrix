@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import "./cloudflare-register.mjs";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import typescriptCompiler from "typescript";
@@ -13,24 +12,13 @@ const buildClockUrl = `data:text/javascript;base64,${Buffer.from(buildClockJavas
 const withBuildClock = (source) => source.replace('from "./build-clock";', `from "${buildClockUrl}";`);
 
 test("renders the map-first Kansas explorer shell", async () => {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+  const handlerUrl = new URL("../dist/server/index.js", import.meta.url);
+  handlerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
+  const { default: handler } = await import(handlerUrl.href);
 
-  const response = await worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html", "x-forwarded-host": "untrusted.example", "x-forwarded-proto": "http" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
+  const response = await handler(new Request("http://localhost/", {
+    headers: { accept: "text/html", "x-forwarded-host": "untrusted.example", "x-forwarded-proto": "http" },
+  }));
 
   assert.equal(response.status, 200);
   assert.match(
@@ -38,7 +26,7 @@ test("renders the map-first Kansas explorer shell", async () => {
     /^text\/html\b/i,
   );
   const html = await response.text();
-  assert.match(html, /https:\/\/kansas-frontier-matrix-explorer\.blackbart-55\.chatgpt\.site\/og-guided\.png/);
+  assert.match(html, /https:\/\/kansasfrontiermatrix\.com\/og-guided\.png/);
   assert.doesNotMatch(html, /untrusted\.example/);
   // Icons stay on this deployment; only social-card images use the canonical host.
   assert.match(html, /<link rel="icon" href="\/favicon\.svg" type="image\/svg\+xml"\/>/);
@@ -58,7 +46,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /<nav[^>]+aria-label="Layer views"/);
   for (const label of ["Browse", "On map", "Imagery"]) assert.ok(html.includes(label), `Missing layer view: ${label}`);
   assert.match(html, /<select[^>]+aria-label="Layer topic"/);
-  for (const label of ["Water", "Terrain", "Weather &amp; hazards", "Places &amp; boundaries", "Land &amp; soil", "Roads &amp; rail", "Groundwater"]) assert.ok(html.includes(`>${label}</option>`), `Missing discoverable topic: ${label}`);
+  for (const label of ["Water &amp; watersheds", "Terrain &amp; elevation", "Weather &amp; climate", "Hazards &amp; disasters", "Places &amp; boundaries", "Agriculture &amp; soils", "Transportation &amp; movement", "Aquifers &amp; groundwater"]) assert.ok(html.includes(`>${label}</option>`), `Missing discoverable topic: ${label}`);
   for (const label of ["Full archive → latest", "KDOT Kansas Bridges · historic designation", "KDOT Kansas Bridges · recorded closed", "KDOT Kansas historical roads · 1918", "BLM Kansas oil and gas leases · authorized", "BLM Kansas oil and gas leases · closed", "KDOT Kansas roads and highways", "KDOT Kansas active railroads", "KDOT Kansas abandoned railroads", "FEMA Kansas mapped flood hazard zones"]) assert.ok(html.includes(label), `Missing discoverable layer control: ${label}`);
   assert.doesNotMatch(html, /Hydrology context<|Watershed &amp; storage context<|demonstration · selected/i);
   assert.match(html, /Repository briefing/i);
@@ -83,8 +71,8 @@ test("centers the primary workflow on map-scoped custom reports", async () => {
   assert.match(source, /Build from the map you are using/);
   assert.match(source, /Map extent/);
   assert.match(source, /Visible layers/);
-  assert.match(source, /Report \.html/);
-  assert.match(source, /Data \.json/);
+  assert.match(source, /onClick=\{\(\) => downloadCustomReport\("html"\)\}>Download report \.html/);
+  assert.match(source, /onClick=\{\(\) => downloadCustomReport\("json"\)\}>Report data \.json/);
   assert.match(source, /setReportLayerIds\(activeLayers\.map/);
   assert.match(source, /const \[leftOpen, setLeftOpen\] = useState\(false\)/);
   assert.match(source, /const \[leftPanelMode, setLeftPanelMode\] = useState<LeftPanelMode>\("layers"\)/);
@@ -121,7 +109,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(runtime, /setLight/);
   assert.match(runtime, /lngLatToTile/);
   assert.match(page, /aria-label="Verified map representations"/);
-  assert.match(page, /onClick=\{\(\) => activateMapRepresentation\(id\)\}/);
+  assert.match(page, /onClick=\{\(\) => chooseMapMenuRepresentation\("terrain"\)\}/);
   assert.match(page, /<summary>Terrain tools, sources &amp; rendering<\/summary>/);
   assert.match(page, /aria-label="Renderer capability status"/);
   assert.match(page, /HMS smoke · Shake stations · hazard overlays/);
@@ -867,9 +855,9 @@ test("adds bounded exact-time streamflow, NOAA hydrology roles, and a gap-aware 
 });
 
 test("the built hydrology adapters reject invalid query shapes before any upstream request", async () => {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `hydrology-invalid-${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+  const handlerUrl = new URL("../dist/server/index.js", import.meta.url);
+  handlerUrl.searchParams.set("test", `hydrology-invalid-${process.pid}-${Date.now()}`);
+  const { default: handler } = await import(handlerUrl.href);
   const originalFetch = globalThis.fetch;
   let upstreamCalls = 0;
   try {
@@ -878,22 +866,14 @@ test("the built hydrology adapters reject invalid query shapes before any upstre
       throw new Error("Invalid hydrology queries must not reach an upstream service.");
     };
 
-    const usgsResponse = await worker.fetch(
-      new Request("http://localhost/api/hydrology/streamflow?mode=network&range=1y&url=https://example.invalid"),
-      {},
-      { waitUntil() {}, passThroughOnException() {} },
-    );
+    const usgsResponse = await handler(new Request("http://localhost/api/hydrology/streamflow?mode=network&range=1y&url=https://example.invalid"));
     assert.equal(usgsResponse.status, 400);
     const usgsError = await usgsResponse.json();
     assert.equal(usgsError.code, "USGS_STREAMFLOW_INVALID_QUERY");
     assert.equal(usgsError.interpolation, false);
     assert.equal(usgsError.evidenceRole, "EXTERNAL_CONTEXT_ONLY");
 
-    const noaaResponse = await worker.fetch(
-      new Request("http://localhost/api/hydrology/noaa?mode=gauge&lid=bad&url=https://example.invalid"),
-      {},
-      { waitUntil() {}, passThroughOnException() {} },
-    );
+    const noaaResponse = await handler(new Request("http://localhost/api/hydrology/noaa?mode=gauge&lid=bad&url=https://example.invalid"));
     assert.equal(noaaResponse.status, 400);
     const noaaError = await noaaResponse.json();
     assert.equal(noaaError.error.code, "INVALID_LID");
@@ -980,18 +960,18 @@ test("checks current GitHub main through one fixed read-only backend route", asy
 });
 
 test("the built official-context adapter rejects unknown feeds without network access", async () => {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `official-${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
-  const response = await worker.fetch(new Request("http://localhost/api/live-context?feed=arbitrary"), {}, { waitUntil() {}, passThroughOnException() {} });
+  const handlerUrl = new URL("../dist/server/index.js", import.meta.url);
+  handlerUrl.searchParams.set("test", `official-${process.pid}-${Date.now()}`);
+  const { default: handler } = await import(handlerUrl.href);
+  const response = await handler(new Request("http://localhost/api/live-context?feed=arbitrary"));
   assert.equal(response.status, 400);
   assert.match(await response.text(), /fixed allowlist/i);
 });
 
 test("the built NOAA radar adapter returns explicit observations and fails closed", async () => {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `radar-${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+  const handlerUrl = new URL("../dist/server/index.js", import.meta.url);
+  handlerUrl.searchParams.set("test", `radar-${process.pid}-${Date.now()}`);
+  const { default: handler } = await import(handlerUrl.href);
   const originalFetch = globalThis.fetch;
   const upstreamCalls = [];
   const capabilitiesUrl = "https://nowcoast.noaa.gov/geoserver/weather_radar/wms?service=WMS&version=1.3.0&request=GetCapabilities";
@@ -1003,7 +983,7 @@ test("the built NOAA radar adapter returns explicit observations and fails close
       upstreamCalls.push(String(input));
       return new Response(xml, { headers: { "content-type": "application/xml" } });
     };
-    const readyResponse = await worker.fetch(new Request("http://localhost/api/noaa-radar/frames?url=https://example.invalid/untimed"), {}, { waitUntil() {}, passThroughOnException() {} });
+    const readyResponse = await handler(new Request("http://localhost/api/noaa-radar/frames?url=https://example.invalid/untimed"));
     assert.equal(readyResponse.status, 200);
     const manifest = await readyResponse.json();
     assert.deepEqual(manifest.frames, expectedFrames);
@@ -1012,7 +992,7 @@ test("the built NOAA radar adapter returns explicit observations and fails close
     assert.deepEqual(upstreamCalls, [capabilitiesUrl]);
 
     globalThis.fetch = async () => new Response("Unavailable", { status: 503, headers: { "content-type": "text/plain" } });
-    const errorResponse = await worker.fetch(new Request("http://localhost/api/noaa-radar/frames?case=upstream-error"), {}, { waitUntil() {}, passThroughOnException() {} });
+    const errorResponse = await handler(new Request("http://localhost/api/noaa-radar/frames?case=upstream-error"));
     assert.equal(errorResponse.status, 502);
     assert.equal(errorResponse.headers.get("cache-control"), "no-store");
     const error = await errorResponse.json();
@@ -1026,9 +1006,9 @@ test("the built NOAA radar adapter returns explicit observations and fails close
 });
 
 test("the built official-context adapter joins dated Census population and bounds USGS earthquakes", async () => {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `official-data-${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+  const handlerUrl = new URL("../dist/server/index.js", import.meta.url);
+  handlerUrl.searchParams.set("test", `official-data-${process.pid}-${Date.now()}`);
+  const { default: handler } = await import(handlerUrl.href);
   const originalFetch = globalThis.fetch;
   const upstreamCalls = [];
   globalThis.fetch = async (input) => {
@@ -1051,7 +1031,7 @@ test("the built official-context adapter joins dated Census population and bound
     throw new Error(`Unexpected upstream request: ${url}`);
   };
   try {
-    const countyResponse = await worker.fetch(new Request("http://localhost/api/live-context?feed=census-counties"), {}, { waitUntil() {}, passThroughOnException() {} });
+    const countyResponse = await handler(new Request("http://localhost/api/live-context?feed=census-counties"));
     assert.equal(countyResponse.status, 200);
     const countyPayload = await countyResponse.json();
     assert.equal(countyPayload.state, "ready");
@@ -1061,7 +1041,7 @@ test("the built official-context adapter joins dated Census population and bound
     assert.equal(countyPayload.data.features[0].properties.housingUnits, 2400);
     assert.equal(upstreamCalls.some((url) => new URL(url).hostname === "api.census.gov"), false);
 
-    const earthquakeResponse = await worker.fetch(new Request("http://localhost/api/live-context?feed=usgs-earthquakes"), {}, { waitUntil() {}, passThroughOnException() {} });
+    const earthquakeResponse = await handler(new Request("http://localhost/api/live-context?feed=usgs-earthquakes"));
     assert.equal(earthquakeResponse.status, 200);
     const earthquakePayload = await earthquakeResponse.json();
     assert.equal(earthquakePayload.featureCount, 1);
@@ -1170,17 +1150,18 @@ test("keeps the global header and map controls in one responsive toolbar", async
     readFile(new URL("../app/map-toolbar.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.equal((page.match(/<header className="topbar">/g) ?? []).length, 1);
+  assert.equal((page.match(/<header\b[^>]*className="topbar">/g) ?? []).length, 1);
   assert.equal((page.match(/<nav className="map-chrome-dock" aria-label="Map view and controls">/g) ?? []).length, 1);
   assert.doesNotMatch(page, /className="top-context"/);
   assert.doesNotMatch(page, /className="mission-band map-command-bar"/);
   assert.doesNotMatch(page, /<nav className="map-view-mode-strip"/);
   assert.doesNotMatch(page, /<nav className="map-control-strip"/);
-  const headerStart = page.indexOf('<header className="topbar">');
+  const headerStart = page.search(/<header\b[^>]*className="topbar">/);
   const headerEnd = page.indexOf('      </header>', headerStart);
   const mapControls = page.indexOf('<nav className="map-chrome-dock"');
   assert.ok(mapControls > headerStart && mapControls < headerEnd, "map controls must share the global header");
-  assert.ok(page.indexOf('<div className="global-search">') < mapControls, "search must precede map actions in focus order");
+  const composerEntry = page.indexOf('className="atlas-scope-control"');
+  assert.ok(composerEntry > headerStart && composerEntry < mapControls, "Find and ask must precede map actions in focus order");
   assert.doesNotMatch(page, /className="mobile-primary-tabs"|className="header-workflows"/);
   assert.match(page, /className="header-overflow-panel"[\s\S]*className="header-overflow-workspaces"[\s\S]*>Map<\/button>[\s\S]*>Reports<\/button>[\s\S]*>Stories<\/button>[\s\S]*className="share-action"[\s\S]*>Share current view<\/button>[\s\S]*className="about-action" href="\/about">About<\/Link>/);
   assert.match(page, /const closeHeaderOverflow = useCallback[\s\S]*summary\?\.focus\(\{ preventScroll: true \}\)/);
@@ -1207,14 +1188,10 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.doesNotMatch(page, /className="qwen-header-action"/);
   assert.match(page, /className="qwen-map-launch"/);
   assert.doesNotMatch(page, /["'`]\/api\/qwen/);
-  assert.match(page, /fetch\(`\$\{LOCAL_QWEN_BRIDGE\}\/ask`/);
   assert.match(page, /else if \(qwenOpen\) closeQwenCompanion\(\);/);
-  assert.match(page, />Setup<\/button>/);
-  assert.match(page, />Retry<\/button>/);
-  assert.match(page, /LOCAL ONLY · NO HOSTED FALLBACK/);
-  assert.match(page, /fetch\(`\$\{LOCAL_QWEN_BRIDGE\}\/health`[\s\S]*?responseReceived = true;[\s\S]*?qwenStateFromTransportFailure\(controller\.signal\.aborted, responseReceived\)/);
-  assert.match(page, /responseReceived = true;[\s\S]*qwenStateFromTransportFailure\(timedOut, responseReceived\)/);
-  assert.match(page, /returned a malformed or oversized response, so it was withheld/);
+  assert.match(page, /id="qwen-map-panel"[^>]*role="dialog"/);
+  assert.match(page, /<AssistantWorkspace\b/);
+  assert.doesNotMatch(page, /LOCAL_QWEN_BRIDGE|LOCAL ONLY · NO HOSTED FALLBACK/);
   assert.match(css, /--global-header-height:\s*54px/);
   assert.match(css, /--mobile-header-height:\s*54px/);
   assert.match(css, /--topbar:\s*var\(--global-header-height\)/);
@@ -1311,7 +1288,7 @@ test("keeps layer controls direct and source clocks in progressive detail", asyn
   assert.match(page, /className="visibility-switch"/);
   assert.match(page, /className="official-context-options"/);
   assert.match(page, /className="layer-task-links"/);
-  assert.match(page, /aria-label="Layer topic"/);
+  assert.match(page, /<TopicSelect label="Layer topic"/);
   assert.match(page, /openMapUtility\("scene", event.currentTarget\)/);
   const openMapSettings = page.slice(page.indexOf("const openMapSettings = useCallback"), page.indexOf("const openEarthEngineLayers = useCallback"));
   assert.doesNotMatch(openMapSettings, /setLayerCatalogView\("local"\)/);
@@ -1351,7 +1328,7 @@ test("carries governed map context into creation workflows and checked source po
   assert.match(workspaceModel, /Trust in the map/);
   assert.match(workspaceModel, /Protected detail fails closed/);
   assert.match(workspaces, /Export Markdown/);
-  assert.match(workspaces, /Export JSON/);
+  assert.match(workspaces, /onClick=\{\(\) => exportReport\("json"\)\}>Export report JSON/);
   assert.match(workspaces, /DRAFT · NOT PUBLISHED/);
   assert.match(workspaces, /localStorage/);
   assert.match(css, /\.map-context-card/);

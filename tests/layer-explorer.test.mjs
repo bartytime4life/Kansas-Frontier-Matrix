@@ -11,7 +11,7 @@ const ast = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.ES2022, true, 
 const declarations = new Map();
 function walk(node) { if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) declarations.set(node.name.text, node.initializer.getText(ast)); ts.forEachChild(node, walk); }
 walk(ast);
-const project = new Function("bindings", compile(`function project(bindings: any) { const { OFFICIAL_CONTEXT_SOURCES, LAYER_WORKSPACES, filterOfficialSources, officialVisibility, daylightEnabled, soilMapState, cropSelected, reviewedWaterSelected, reviewedWeatherSelected, EARTH_ENGINE_CONTEXT_LAYERS, imageryTopics, earthEngineDisplay, LAYER_REGISTRY, visibility, selectedCatalogCount, layerEntryMatches, layerCatalogView, officialWorkspace, officialSourceQuery } = bindings;
+const project = new Function("bindings", compile(`function project(bindings: any) { const { OFFICIAL_CONTEXT_SOURCES, officialSourceTopics, specialtyLayerTopics, registryLayerTopics, officialVisibility, daylightEnabled, soilMapState, cropSelected, reviewedWaterSelected, reviewedWeatherSelected, EARTH_ENGINE_CONTEXT_LAYERS, imageryTopics, earthEngineDisplay, LAYER_REGISTRY, visibility, selectedCatalogCount, layerEntryMatches, layerCatalogView, officialWorkspace, officialSourceQuery } = bindings;
 const catalogEntries = ${declarations.get("catalogEntries")};
 const selectedMapLayerCount = ${declarations.get("selectedMapLayerCount")};
 const matchingCatalogEntries = ${declarations.get("matchingCatalogEntries")};

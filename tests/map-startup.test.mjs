@@ -55,7 +55,7 @@ test("initial style/load sequence installs layers once and still waits for readi
   assert.deepEqual(h.finalizations, ["mercator", "resize"]);
   assert.equal(h.runtime.length, 1);
   assert.equal(h.runtime[0].kind, "loading", "installation is not tile readiness or evidence admission");
-  assert.match(h.runtime[0].message, /verifying local sources and interactions/);
+  assert.match(h.runtime[0].message, /verifying catalog layers and interactions/);
 });
 
 test("initial load can install a missing style or retry an unsuccessful synchronization", () => {

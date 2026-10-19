@@ -1,0 +1,184 @@
+{
+  "receipt_id": "genrec-production-startup-audit-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-core-repair.yml",
+    "docs/production-startup-audit-20261019.md",
+    "package.json",
+    "scripts/build-identity.mjs",
+    "server/start.mjs",
+    "server/startup-probe.mjs",
+    "tests/build-identity.test.mjs",
+    "tests/daily-archive.test.mjs",
+    "tests/earth-engine-context-worker.test.mjs",
+    "tests/earth-engine-downloads.test.mjs",
+    "tests/earth-engine-rendered.test.mjs",
+    "tests/event-atlas.test.mjs",
+    "tests/explorer-site-audit.test.mjs",
+    "tests/globe-context.test.mjs",
+    "tests/godaddy-node-runtime.test.mjs",
+    "tests/governed-weather.test.mjs",
+    "tests/intake-desk.test.mjs",
+    "tests/intake-worker.test.mjs",
+    "tests/layer-explorer.test.mjs",
+    "tests/living-waters-fixture.test.mjs",
+    "tests/local-atlas.test.mjs",
+    "tests/local-worker-runtime.test.mjs",
+    "tests/map-startup.test.mjs",
+    "tests/node-startup-probe.test.mjs",
+    "tests/platform-prerequisites.mjs",
+    "tests/rendered-html.test.mjs",
+    "tests/security-upstream.test.mjs",
+    "tests/underground-resources.test.mjs"
+  ],
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact runtime build identifier unavailable"
+  },
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "local shell",
+      "independent agent review"
+    ],
+    "contract_basis": "Owner-requested repository repair for the GoDaddy Node application."
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/0ad31b2c993e6d6973b678192f689650ab66e8da",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/dd81892ee5ad5fcd0d09f5bbc88562226405e7b7"
+    ],
+    "evidence_hashes": []
+  },
+  "validation_gates": [
+    {
+      "gate": "complete-node-suite",
+      "outcome": "PASS",
+      "reason": "Node 22.23.3: 1512 tests; 1492 pass, 0 fail, 20 explicit prerequisite/environment skips. All 17 SQLite migration checks execute."
+    },
+    {
+      "gate": "build-types-lint",
+      "outcome": "PASS",
+      "reason": "Production build, TypeScript and changed-file ESLint pass; two existing lint warnings. Whitespace check passes."
+    },
+    {
+      "gate": "production-http",
+      "outcome": "PASS",
+      "reason": "18 checks pass against separate Node 22.23.3 production process on port 20011; startup reports LOOPBACK_BUILD_READY."
+    },
+    {
+      "gate": "source-parity",
+      "outcome": "PASS",
+      "reason": "Immutable dd81892 full source exactly reproduces hosted preview digest 57541ff2d06c1c67eff1eecdbfac7434074681bf909d74bfed73507595415540 and 782 inputs. Earlier mismatch was nine locally sparse-excluded migrations."
+    },
+    {
+      "gate": "independent-code-review",
+      "outcome": "PASS",
+      "reason": "Final review found no blocking issue; missing application inputs cannot become optional platform skips."
+    },
+    {
+      "gate": "local-browser-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Attempt failed before application checks because google-chrome is unavailable; existing pipe harness emitted EPIPE. No browser pass claimed."
+    },
+    {
+      "gate": "hosted-ci-and-published-runtime",
+      "outcome": "SKIPPED",
+      "reason": "Exact final-head CI and hosted diagnostic readback pending. Live 503 root cause remains unknown."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending. Automated review and test results do not constitute approval."
+    }
+  ],
+  "policy_decisions": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "emitter": "OpenAI Codex GoDaddy production startup repair 20261019",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Source identity and bounded local startup diagnostics plus standalone Node test compatibility. Existing schema, authorization, private stores, domain settings and model runtime are preserved. Final full-checkout results supersede the earlier sparse-checkout run; migrations are committed and now tested. This receipt hashes the 28 changed source/test/config/documentation artifacts and excludes itself to avoid a self-reference. No claim that source changes repair or explain the hosted 503. Revert the bounded changes for rollback; do not reset private stores.",
+  "artifact_hashes": {
+    ".github/workflows/public-core-repair.yml": "sha256:7ea0308efc72ee97365a18bafae79cf003f3ce7582daad815b4da8808333c20b",
+    "docs/production-startup-audit-20261019.md": "sha256:1e80184019283b6e05fee08224bafac53d7a9f1e2514139495fc87402fc895f0",
+    "package.json": "sha256:806bdbd5b856a1c7a3d21ca7cfdf9c2f41a66489c152df704dea56c64655ef51",
+    "scripts/build-identity.mjs": "sha256:6352f61a572b618de6e8042dc67636ccff4f5d8128719e9755dae1de05e407a0",
+    "server/start.mjs": "sha256:4d80a4060639f212ab041dd541611cc6d737c9613c63692cb804703b94ce62c9",
+    "server/startup-probe.mjs": "sha256:147ee40187083e43f673de8e4a5610835c5fc32f4c086e480055be918071fdfc",
+    "tests/build-identity.test.mjs": "sha256:3810eec2dcea39e71bfe2d0e0fc637f15e413319698d1400513402dca1e1cfea",
+    "tests/daily-archive.test.mjs": "sha256:a1a172c0b7cc6a4397444258af5aa7c0b169ce43fe359388e2e1a08d75e7d9a2",
+    "tests/earth-engine-context-worker.test.mjs": "sha256:f4fd993a1b9f0f33d87c149d00f9af2d9b3b93d0000ed8816dd27ded7fe08a19",
+    "tests/earth-engine-downloads.test.mjs": "sha256:2941b4b603d6ab53b4d2bc3093aeff037e980fb75c9cb06dc67db8ae835bd775",
+    "tests/earth-engine-rendered.test.mjs": "sha256:e77f6e64bf2d27cbb5bbc9fd7b6929aaba1ae09fce20b5598459fd169563c766",
+    "tests/event-atlas.test.mjs": "sha256:6f44b58c11a2478a14ed47f9dd5300307b03268f9aa9373856bcbb4f15a53f36",
+    "tests/explorer-site-audit.test.mjs": "sha256:67c3257ba3af5456b16b82b04f96d6fd41f32af8e1ab56171f5aea550a7d1280",
+    "tests/globe-context.test.mjs": "sha256:886ad30605fa51f6baa2e2641e16868dd3153b632ec590a229b68d94872f2096",
+    "tests/godaddy-node-runtime.test.mjs": "sha256:d27befa8df49c26bf5588e720407847834733683088c0ff596a3d1bc5da9b7ab",
+    "tests/governed-weather.test.mjs": "sha256:6d0443d2a90d41fa829900965d8cdb8e1a2e86a66d8819a2855e3af5366aff38",
+    "tests/intake-desk.test.mjs": "sha256:c2038681140b1a5e7254721c524188addaaddb64b8eb3faa211ba4ec0b505c34",
+    "tests/intake-worker.test.mjs": "sha256:2dfda2e6b65c4ebc7495d2b2ff337134b3aa1eaec42c0dd6aa9ab247dfa46822",
+    "tests/layer-explorer.test.mjs": "sha256:86dad41077b06beb0efa36ce29875db7d634e5c6b29209b80b441bd254a89a9c",
+    "tests/living-waters-fixture.test.mjs": "sha256:274b6014a05a4ad8db6e55a452929bcf51d1f799fe610ec09056fdf9b028a2ae",
+    "tests/local-atlas.test.mjs": "sha256:0cf989758409b1ae9f5f58d3893917ef1da13bc48e24c5d1f0ee538810a1d403",
+    "tests/local-worker-runtime.test.mjs": "sha256:b81a17268d74aad0564c94654e0c2d803b7332c0fbfaf8ad94515827857286cb",
+    "tests/map-startup.test.mjs": "sha256:9f4fd567cff75874fbe319245e087a4038cf12d340a354d7baf4d31c6d113485",
+    "tests/node-startup-probe.test.mjs": "sha256:77dd2f100c14f11c2de28c45e78d7444671d98732dd6c45be27decb62992d940",
+    "tests/platform-prerequisites.mjs": "sha256:48f8b75a0260edc62fff8cc4522535f1c2493eb8beb90877ba0ad50c190fcbbb",
+    "tests/rendered-html.test.mjs": "sha256:c8fe22226c76600d0ebf207cbf312d3fb652d81ffdf0085ad33540deec4732de",
+    "tests/security-upstream.test.mjs": "sha256:42202c362a2c5dc9b870e8cda01b89f1145d4626addba7ba31c0c5a230bcb42f",
+    "tests/underground-resources.test.mjs": "sha256:f1adc6e6b83176b862d4ff7f62b5ad7ef6814876373f0395c125c66137a97f4f"
+  },
+  "truth_labels": {
+    ".github/workflows/public-core-repair.yml": "CONFIRMED",
+    "docs/production-startup-audit-20261019.md": "CONFIRMED",
+    "package.json": "CONFIRMED",
+    "scripts/build-identity.mjs": "CONFIRMED",
+    "server/start.mjs": "CONFIRMED",
+    "server/startup-probe.mjs": "CONFIRMED",
+    "tests/build-identity.test.mjs": "CONFIRMED",
+    "tests/daily-archive.test.mjs": "CONFIRMED",
+    "tests/earth-engine-context-worker.test.mjs": "CONFIRMED",
+    "tests/earth-engine-downloads.test.mjs": "CONFIRMED",
+    "tests/earth-engine-rendered.test.mjs": "CONFIRMED",
+    "tests/event-atlas.test.mjs": "CONFIRMED",
+    "tests/explorer-site-audit.test.mjs": "CONFIRMED",
+    "tests/globe-context.test.mjs": "CONFIRMED",
+    "tests/godaddy-node-runtime.test.mjs": "CONFIRMED",
+    "tests/governed-weather.test.mjs": "CONFIRMED",
+    "tests/intake-desk.test.mjs": "CONFIRMED",
+    "tests/intake-worker.test.mjs": "CONFIRMED",
+    "tests/layer-explorer.test.mjs": "CONFIRMED",
+    "tests/living-waters-fixture.test.mjs": "CONFIRMED",
+    "tests/local-atlas.test.mjs": "CONFIRMED",
+    "tests/local-worker-runtime.test.mjs": "CONFIRMED",
+    "tests/map-startup.test.mjs": "CONFIRMED",
+    "tests/node-startup-probe.test.mjs": "CONFIRMED",
+    "tests/platform-prerequisites.mjs": "CONFIRMED",
+    "tests/rendered-html.test.mjs": "CONFIRMED",
+    "tests/security-upstream.test.mjs": "CONFIRMED",
+    "tests/underground-resources.test.mjs": "CONFIRMED"
+  },
+  "prompt_or_contract": "sha256:1e80184019283b6e05fee08224bafac53d7a9f1e2514139495fc87402fc895f0",
+  "citations": [
+    {
+      "id": "Application baseline",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/0ad31b2c993e6d6973b678192f689650ab66e8da"
+    }
+  ],
+  "created_at": "2026-10-19T05:31:58.911473+00:00"
+}

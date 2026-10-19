@@ -3,7 +3,8 @@ import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
-import { Miniflare, convertV4MiniflareOptions } from "miniflare";
+import { workerPrerequisite } from "./platform-prerequisites.mjs";
+const worker = workerPrerequisite({ builtApplication: true });
 import ts from "typescript";
 
 const hash = (value) => createHash("sha256").update(value).digest("hex");
@@ -22,7 +23,8 @@ test("annual snapshots respect the map year while mixed-date terrain remains ava
   assert.equal(schema.earthEngineLayerAttribution("ee-sentinel2", 2019).includes("2019"), true);
 });
 
-test("owner tile serving requires exact hashed manifest membership and fails closed", async () => {
+test("owner tile serving requires exact hashed manifest membership and fails closed", { skip: worker.skip }, async () => {
+  const { Miniflare, convertV4MiniflareOptions } = worker.load();
   const root = path.resolve("dist/server");
   const files = readdirSync(root, { recursive: true }).filter((p) => p.endsWith(".js"));
   const modules = ["index.js", ...files.filter((p) => p !== "index.js")].map((p) => ({ type: "ESModule", path: path.join(root, p) }));

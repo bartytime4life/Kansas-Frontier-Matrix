@@ -3,7 +3,6 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import vm from "node:vm";
 import ts from "typescript";
-import "./cloudflare-register.mjs";
 
 const proof = JSON.parse(await readFile(new URL("../app/living-waters-proof.json", import.meta.url), "utf8"));
 const compile = source => ts.transpileModule(source, { compilerOptions: {
@@ -170,11 +169,9 @@ test("control correction, projection changes, style readiness and close release 
   h.click("Close proof"); assert.equal(h.sources.size + h.layers.size + h.listeners.size, 0);
 });
 
-test("production Site catalog discovers the opt-in proof without rendering observations by default", async () => {
-  const { default: worker } = await import("../dist/server/index.js");
-  const response = await worker.fetch(new Request("http://localhost/", { headers: { accept: "text/html" } }),
-    { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
-    { waitUntil() {}, passThroughOnException() {} });
+test("production Node catalog discovers the opt-in proof without rendering observations by default", async () => {
+  const { default: handler } = await import("../dist/server/index.js");
+  const response = await handler(new Request("http://localhost/", { headers: { accept: "text/html" } }));
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Living Waters · SYNTHETIC PROOF/);

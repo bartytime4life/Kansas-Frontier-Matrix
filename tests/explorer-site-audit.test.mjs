@@ -24,12 +24,14 @@ test("submission list indexes are additive and journaled", async () => {
   journal.entries.forEach((entry, position) => assert.equal(entry.idx, position));
 });
 
-test("submission keyset pages in index order without gaps or repeats", { skip: !sqlite && "node:sqlite unavailable" }, async () => {
+test("submission route retains the stable keyset predicate and ordering", async () => {
   const route = await read("app/api/data-submissions/route.ts");
   assert.match(route, /"\(created_at, id\) < \(\?, \?\)"/, "row-value keyset predicate");
   assert.match(route, /\[createdAt, id\]/);
   assert.match(route, /ORDER BY created_at DESC, id DESC LIMIT 31/);
+});
 
+test("submission keyset pages in index order without gaps or repeats", { skip: !sqlite && "node:sqlite unavailable" }, async () => {
   const db = await migratedDatabase();
   const insert = db.prepare("INSERT INTO data_submissions (id, owner_key, owner_name, title, source_id, source_url, description, license, sensitivity, start_date, end_date, file_name, file_bytes, file_sha256, object_key, status, version, created_at, updated_at) VALUES (?, ?, 'n', 't', 's', 'https://example.test/', 'd', 'l', 'public', '2020-01-01', '2020-01-02', 'f.csv', 1, 'h', ?, 'submitted', 1, ?, ?)");
   const ids = [];
@@ -87,8 +89,17 @@ test("audit fixes keep landmarks, roles and in-text links valid", async () => {
   for (const source of [page, about]) assert.doesNotMatch(source, /className="brand-lockup" aria-label=/, "no aria-label on a role-less div");
   assert.match(page, /<div className="timeline-frame-status" role="status" aria-live="polite" aria-atomic="true">/);
   assert.doesNotMatch(page, /<header role="status"/);
-  assert.match(page, /<section ref=\{qwenPanelRef\} id="qwen-map-panel" className="qwen-panel" role="dialog"/);
-  assert.match(page, /className="qwen-messages" aria-live="polite" aria-label="Qwen conversation" role="log" tabIndex=\{0\}/);
+  const chatPanel = page.match(/<section\b[^>]*id="qwen-map-panel"[^>]*>/)?.[0];
+  assert.ok(chatPanel, "the map chat has a section landmark");
+  for (const attribute of ['role="dialog"', 'aria-labelledby="qwen-panel-title"', 'hidden={!qwenOpen}', 'inert={!qwenOpen}', 'aria-hidden={!qwenOpen}']) assert.ok(chatPanel.includes(attribute), attribute);
+  assert.match(page, /<h2 id="qwen-panel-title">Chat with KFM<\/h2>/);
+  assert.match(page.slice(page.indexOf(chatPanel), page.indexOf("</section>", page.indexOf(chatPanel))), /<AssistantWorkspace active=\{qwenOpen\}/);
+  // The transcript now belongs to the shared hosted assistant; its interactive
+  // rendering is also covered by chat-composer-reach.test.mjs.
+  const assistant = await read("app/assistant/workspace.tsx");
+  const conversation = assistant.match(/<div\b[^>]*role='log'[^>]*>/)?.[0];
+  assert.ok(conversation, "the hosted conversation retains log semantics");
+  for (const attribute of ["aria-live='polite'", "aria-label='KFM chat conversation'", "tabIndex={0}"]) assert.ok(conversation.includes(attribute), attribute);
   assert.match(await read("app/globals.css"), /\.timeline-detail > section > :is\(header, \.timeline-frame-status\) \{/);
   assert.match(await read("app/observatory/sources/page.tsx"), /return <main className="event-research">/);
 

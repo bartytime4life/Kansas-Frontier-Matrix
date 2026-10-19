@@ -9,8 +9,10 @@ import { createServer } from "node:net";
 import { fileURLToPath } from "node:url";
 import { readUsgsApiKey, assertNoLocalSecretFiles, checkedPath, collectModules, localEntry, parseArguments, prepareWorker, validateConfiguration } from "../scripts/serve-local-worker.mjs";
 
-const config = JSON.parse(readFileSync(new URL("../dist/server/wrangler.json", import.meta.url)));
+import { workerConfigurationPrerequisite, workerPrerequisite } from "./platform-prerequisites.mjs";
 const hosting = JSON.parse(readFileSync(new URL("../.openai/hosting.json", import.meta.url)));
+const configSkip = workerConfigurationPrerequisite();
+const worker = workerPrerequisite({ viaWrangler: true, builtApplication: true });
 
 test("local launcher requires explicit existing storage and constrains the imagery exception", () => {
   assert.throws(() => parseArguments([]), /EXISTING_STATE_REQUIRED/);
@@ -23,7 +25,8 @@ test("local launcher requires explicit existing storage and constrains the image
   assert.equal(parseArguments(["--state", "/tmp/state", "--local-reviewed-imagery"]).port, 4173);
 });
 
-test("built Site configuration is recognized without changing its storage identities", () => {
+test("built Site configuration is recognized without changing its storage identities", { skip: configSkip }, () => {
+  const config = JSON.parse(readFileSync(new URL("../dist/server/wrangler.json", import.meta.url)));
   const before = JSON.stringify(config);
   validateConfiguration(config, hosting);
   assert.equal(JSON.stringify(config), before);
@@ -122,7 +125,7 @@ test("local entry rejects forged edge identity and a rebound Host before invokin
   assert.deepEqual(await response.json(), { method: "POST", body: "bounded control" });
 });
 
-test("built local runtime survives abandoned denials and rejects forged authority over HTTP", { timeout: 30000 }, async () => {
+test("built local runtime survives abandoned denials and rejects forged authority over HTTP", { timeout: 30000, skip: worker.skip }, async () => {
   const directory = mkdtempSync(path.join(realpathSync(tmpdir()), "kfm-runtime-http-"));
   // Explicitly empty, disposable test stores; never the operator's data.
   mkdirSync(path.join(directory, "v3/d1"), { recursive: true });
