@@ -1,3 +1,4 @@
+import {hostedAiOriginAllowed} from '../server/hosted-ai-origins.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createPublicAiHandler,publicAiRuntime} from '../server/public-ai-handler.mjs';
@@ -303,4 +304,77 @@ test('cumulative history retains its UTF-8 byte bound and never commits an overs
  assert.equal((await f.settle(next.body.id,first.cookie)).body.result.reasonCode,'MODEL_CONTEXT_LIMIT');
  const third=await f.request('jobs',question,first.cookie);await f.settle(third.body.id,first.cookie);
  assert.equal(seen[2].history.length,1);assert.equal(Buffer.byteLength(seen[2].history[0].reply),2200);
+});
+
+test('new investigation IDs isolate same-source history while matching IDs retain compatible continuation',async()=>{
+ const firstId='a8a70351-bcc2-4f14-8a84-352f8bcd3a1c',nextId='9c480f14-3486-40bc-b7ac-0a37884862dd';
+ const context={version:1,frame:2026,view:'map',layers:[],selection:null};
+ const seen=[],outputs=[{text:'A hypothetical explanation starts ',outputLimited:true},{text:'with a readable map legend.'},{text:'An independent synthetic investigation considers time labels.'},{text:'A separate synthetic example examines numeric units.'}];
+ const f=fixture(async(q,options)=>{seen.push(options);return outputs.shift();},true,undefined,async()=>({key:'synthetic-source',prompt:'Synthetic map display context',label:'Map',boundary:'Synthetic display only'}));
+ const first=await f.request('jobs',{...question,context,investigationId:firstId});
+ assert.equal(first.response.status,202);await f.settle(first.body.id,first.cookie);
+ // UUID letter casing denotes the same ephemeral partition, not a fresh scope.
+ const continued=await f.request('jobs',{...question,context,investigationId:firstId.toUpperCase(),question:CONTINUE_REPLY},first.cookie);
+ assert.equal((await f.settle(continued.body.id,first.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+ assert.equal(seen[1].history.length,1);assert.equal(seen[1].history[0].reply,'A hypothetical explanation starts ');
+ const unavailable=await f.request('jobs',{...question,context,investigationId:nextId,question:CONTINUE_REPLY},first.cookie);
+ assert.equal((await f.settle(unavailable.body.id,first.cookie)).body.result.reasonCode,'MODEL_CONTINUATION_UNAVAILABLE');assert.equal(f.calls(),2);
+ const next=await f.request('jobs',{...question,context,investigationId:nextId},first.cookie);
+ const nextResult=await f.settle(next.body.id,first.cookie);assert.equal(nextResult.body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');assert.deepEqual(seen[2].history,[]);
+ const follow=await f.request('jobs',{...question,context,investigationId:nextId,question:'Give one practical example.'},first.cookie);
+ assert.equal((await f.settle(follow.body.id,first.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');assert.equal(seen[3].history.length,1);
+ for(const value of [first.body,nextResult.body,...seen]){assert.equal(JSON.stringify(value).includes(firstId),false);assert.equal(JSON.stringify(value).includes(nextId),false);}
+});
+
+test('an investigation ID cannot bypass server-source fingerprints or guest ownership',async()=>{
+ const investigationId='a8a70351-bcc2-4f14-8a84-352f8bcd3a1c';
+ const context={version:1,frame:2026,view:'map',layers:[],selection:null};
+ let edition=1;const seen=[];
+ const f=fixture(async(q,options)=>{seen.push(options);return{text:'Synthetic observation interpretation '+seen.length+'.'};},true,undefined,async()=>({key:'synthetic-source:'+edition,prompt:'Synthetic source edition '+edition,label:'Map',boundary:'Synthetic display only'}));
+ const first=await f.request('jobs',{...question,context,investigationId});await f.settle(first.body.id,first.cookie);
+ edition=2;
+ const changed=await f.request('jobs',{...question,context,investigationId},first.cookie);await f.settle(changed.body.id,first.cookie);
+ assert.deepEqual(seen[1].history,[]);
+ const other=await f.request('jobs',{...question,context,investigationId});await f.settle(other.body.id,other.cookie);
+ assert.deepEqual(seen[2].history,[]);
+ assert.equal((await f.request('jobs/'+first.body.id,undefined,other.cookie)).response.status,404);
+ assert.equal((await f.request('jobs/'+first.body.id+'/cancel',{},other.cookie)).response.status,404);
+ assert.equal((await f.request('jobs/'+first.body.id,undefined,first.cookie)).body.result.reasonCode,'RELEASE_CHANGED');
+});
+
+test('unscoped legacy callers preserve follow-ups without inheriting a named investigation',async()=>{
+ const seen=[],outputs=['A named synthetic investigation discusses legends.','An unnamed synthetic investigation examines units.','A further synthetic explanation considers source dates.'];
+ const f=fixture(async(q,options)=>{seen.push(options);return{text:outputs.shift()};});
+ const named=await f.request('jobs',{...question,investigationId:'a8a70351-bcc2-4f14-8a84-352f8bcd3a1c'});await f.settle(named.body.id,named.cookie);
+ const legacy=await f.request('jobs',question,named.cookie);assert.equal((await f.settle(legacy.body.id,named.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');assert.deepEqual(seen[1].history,[]);
+ const follow=await f.request('jobs',{...question,question:'Explain one source date.'},named.cookie);assert.equal((await f.settle(follow.body.id,named.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+ assert.equal(seen[2].history.length,1);assert.equal(seen[2].history[0].reply,'An unnamed synthetic investigation examines units.');
+});
+
+test('invalid investigation IDs fail before session admission or inference',async()=>{
+ const f=fixture();
+ for(const investigationId of [null,'','a8a70351-bcc2-4f14-8a84-352f8bcd3a1','a8a70351-bcc2-4f14-8a84-352f8bcd3a1cx','a8a70351-bcc2-1f14-8a84-352f8bcd3a1c','a8a70351-bcc2-4f14-7a84-352f8bcd3a1c','a8a70351-bcc2-4f14-8a84-352f8bcd3a1g',' a8a70351-bcc2-4f14-8a84-352f8bcd3a1c',[],{},42,true]){
+  const result=await f.request('jobs',{...question,investigationId});assert.equal(result.response.status,400);assert.equal(result.body.reasonCode,'INVALID_REQUEST');assert.equal(result.cookie,undefined);
+ }
+ assert.equal(f.calls(),0);
+ const valid=await f.request('jobs',{...question,investigationId:'a8a70351-bcc2-4f14-8a84-352f8bcd3a1c'});
+ assert.equal(valid.response.status,202);assert.equal((await f.settle(valid.body.id,valid.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+});
+
+test('rotating investigation IDs cannot reset guest or process request budgets',async()=>{
+ const f=fixture();f.setEvidence(null);let cookie;
+ const investigationId=index=>'a8a70351-bcc2-4f14-8a84-'+index.toString(16).padStart(12,'0');
+ for(let index=0;index<10;index++){
+  const created=await f.request('jobs',{...question,mode:'evidence',investigationId:investigationId(index)},cookie);cookie??=created.cookie;
+  assert.equal(created.response.status,202);await f.settle(created.body.id,cookie);
+ }
+ assert.equal((await f.request('jobs',{...question,mode:'evidence',investigationId:investigationId(10)},cookie)).body.reasonCode,'USER_RATE_LIMIT');
+ for(let index=10;index<30;index++)assert.equal((await f.request('jobs',{...question,mode:'evidence',investigationId:investigationId(index)})).response.status,202);
+ assert.equal((await f.request('jobs',{...question,mode:'evidence',investigationId:investigationId(30)})).body.reasonCode,'GLOBAL_RATE_LIMIT');assert.equal(f.calls(),0);
+});
+
+
+test('replacement preview origin is authorized exactly without granting other preview apps access',()=>{
+ for(const origin of ['https://kansasfrontiermatrix.com','https://q9r9beo47t.preview.c38.airoapp.ai','https://urdng3v1vk.preview.c38.airoapp.ai'])assert.equal(hostedAiOriginAllowed(origin),true);
+ for(const origin of ['https://other.preview.c38.airoapp.ai','https://urdng3v1vk.preview.c38.airoapp.ai.evil.test','https://urdng3v1vk.preview.c38.airoapp.ai/','http://urdng3v1vk.preview.c38.airoapp.ai','https://user@urdng3v1vk.preview.c38.airoapp.ai',undefined])assert.equal(hostedAiOriginAllowed(origin),false);
 });

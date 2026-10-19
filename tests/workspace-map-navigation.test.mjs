@@ -19,6 +19,62 @@ function execute(name, scope) {
   const code = ts.transpileModule(`return ${callbacks.get(name)};`, {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
   return new Function(...Object.keys(scope), code)(...Object.values(scope));
 }
+
+test('opening Find or a suggested question gives one focus owner to the composer',()=>{
+  for(const isCompact of [false,true]) for(const intent of ['find','explore']) {
+    const timers=[],frames=[],focused=[],changes=[],trigger={kind:'trigger'},input={value:'Retained draft',focus:()=>focused.push('composer')};
+    const scope={
+      isCompact,HTMLElement:class {},document:{activeElement:trigger},qwenReturnRef:{current:null},
+      globalSearchInputRef:{current:input},qwenPanelRef:{current:{querySelector:()=>({focus:()=>focused.push('close')})}},
+      setQwenOpen:value=>changes.push(['open',value]),setHelpOpen:()=>{},dismissMapUtilityWithoutFocus:()=>{},
+      setLeftOpen:()=>{},setRightOpen:()=>{},setTimelineOpen:()=>{},setPrimaryWorkspace:value=>changes.push(['workspace',value]),
+      setAssistantDraftRequest:update=>changes.push(['draft',update({id:4,value:'Old request'})]),
+      window:{setTimeout:fn=>timers.push(fn),requestAnimationFrame:fn=>frames.push(fn)},
+    };
+    scope.openQwenCompanion=execute('openQwenCompanion',scope);
+    execute('openAtlasComposer',scope)(intent,intent==='explore'?'Explain this county':undefined);
+    assert.deepEqual(focused,[],'focus is deferred until the opening render commits');
+    // Both scheduling queues are drained: a later close-button callback must
+    // never steal focus after the composer has accepted a visitor's first key.
+    frames.forEach(fn=>fn());timers.forEach(fn=>fn());
+    assert.deepEqual(focused,['composer']);
+    assert.ok(changes.some(([name,value])=>name==='open'&&value===true));
+    assert.deepEqual(changes.find(([name])=>name==='draft')[1],{id:5,value:intent==='find'?'Retained draft':'Explain this county',intent});
+    focused.length=0;timers.length=0;frames.length=0;
+    scope.openQwenCompanion(trigger);timers.forEach(fn=>fn());
+    assert.deepEqual(focused,['close'],'other chat launchers retain their close-control focus destination');
+    assert.equal(scope.qwenReturnRef.current,trigger,'the caller remains the return-focus target');
+  }
+});
+
+test('phone drawing controls reveal the map and defer its focus without changing desktop panels',()=>{
+  const actions=new Map();
+  function collect(node){
+    if(ts.isJsxOpeningElement(node)&&node.tagName.getText(ast)==='button'){
+      const attrs=node.attributes.properties;
+      const label=attrs.find(a=>a.name?.getText(ast)==='aria-label')?.initializer?.text;
+      if(['Point','Line','Polygon'].includes(label)) actions.set(label,attrs.find(a=>a.name?.getText(ast)==='onClick').initializer.expression.getText(ast));
+    }
+    ts.forEachChild(node,collect);
+  }
+  collect(ast);
+  for(const isCompact of [false,true])for(const [label,mode] of [['Point','point'],['Line','distance'],['Polygon','area']]){
+    const calls=[],frames=[];
+    const beginMapMeasurement=execute('beginMapMeasurement',{
+      isCompact,toggleMeasure:value=>calls.push(['measure',value]),
+      dismissMapUtilityWithoutFocus:()=>calls.push(['dismiss']),
+      window:{requestAnimationFrame:fn=>frames.push(fn)},
+      mapContainerRef:{current:{focus:options=>calls.push(['focus',options])}},
+    });
+    assert.ok(actions.has(label));
+    const code=ts.transpileModule(`return ${actions.get(label)};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+    new Function('beginMapMeasurement',code)(beginMapMeasurement)();
+    assert.deepEqual(calls,isCompact?[['measure',mode],['dismiss']]:[['measure',mode]]);
+    assert.equal(frames.length,isCompact?1:0);
+    frames.forEach(fn=>fn());
+    if(isCompact)assert.deepEqual(calls.at(-1),['focus',{preventScroll:true}]);
+  }
+});
 function harness(workspace = 'reports') {
   const state = {primary:workspace, timeline:true, left:true, utility:false, draft:{title:'Preserved owner draft'}, snapshot:{id:'existing-snapshot'}};
   const timers = [], focus = [], calls = [];

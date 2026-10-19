@@ -451,8 +451,6 @@ await reloadAt(1920);
 await activateSelector(".data-notices-trigger", "Data & downloads");
 await waitFor(`Boolean(document.querySelector("#data-notices-panel"))`);
 await assertMinimumTarget(".data-notices-panel header button", "Data panel close");
-await assertMinimumTarget('.data-notices-panel footer a[href="/data"]', "Contribute data");
-await interceptLinkActivation('.data-notices-panel a[href="/data"]', "Contribute data");
 await pressKey("Escape");
 await waitFor(`!document.querySelector("#data-notices-panel")`);
 assert.equal(await evaluate(`document.activeElement === document.querySelector(".data-notices-trigger")`), true);

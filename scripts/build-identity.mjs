@@ -10,9 +10,19 @@ const roots = ['app', 'server', 'scripts', 'public', 'vendor', 'worker', 'db', '
 const files = ['package.json', 'package-lock.json', 'godaddy-source.json', 'next.config.ts', 'vite.config.ts', 'tsconfig.json', 'postcss.config.mjs'];
 const excluded = new Set(['app/build-info.generated.json', 'public/assets', 'public/maplibre', 'public/vendor/h5wasm']);
 export const BUILD_PROFILE = 'kfm.godaddy-application-inputs/v1';
+export const BUILD_APPLICATION = 'urdng3v1vk';
+
+function isApplicationFile(path) {
+  const parts = path.split('/');
+  return (files.includes(path) || roots.some(root => path.startsWith(root + '/'))) &&
+    !parts.some(part => part.startsWith('.')) &&
+    !parts.slice(0, -1).includes('__pycache__') &&
+    ![...excluded].some(entry => path === entry || path.startsWith(entry + '/'));
+}
 
 export async function applicationIdentity(root = process.cwd()) {
   const entries = [];
+  const blobHashes = new Map();
   async function visit(path, optional = false) {
     if (excluded.has(path)) return;
     let stat;
@@ -20,11 +30,17 @@ export async function applicationIdentity(root = process.cwd()) {
     catch (error) { if (optional && error.code === 'ENOENT') return; throw error; }
     if (stat.isSymbolicLink()) throw new Error('SOURCE_SYMLINK_HELD');
     if (stat.isDirectory()) {
+      // Python bytecode caches are generated outputs, even under source roots.
+      if (path.split('/').at(-1) === '__pycache__') return;
       for (const name of (await readdir(resolve(root, path))).sort()) {
         if (!name.startsWith('.')) await visit(`${path}/${name}`);
       }
     } else if (stat.isFile()) {
-      entries.push([path, createHash('sha256').update(await readFile(resolve(root, path))).digest('hex')]);
+      const bytes = await readFile(resolve(root, path));
+      entries.push([path, createHash('sha256').update(bytes).digest('hex')]);
+      // Hash the same observed bytes as a Git blob; status/index flags and
+      // clean filters must not substitute different bytes for this comparison.
+      blobHashes.set(path, createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex'));
     } else throw new Error('SOURCE_FILE_TYPE_HELD');
   }
   for (const path of files) await visit(path);
@@ -38,10 +54,23 @@ export async function applicationIdentity(root = process.cwd()) {
     if (resolve(execFileSync('git', ['rev-parse', '--show-toplevel'], options).trim()) !== resolve(root)) throw new Error('NOT_THIS_CHECKOUT');
     const commit = execFileSync('git', ['rev-parse', 'HEAD'], options).trim();
     const status = execFileSync('git', ['status', '--porcelain', '--untracked-files=normal'], options).trim();
-    if (/^[a-f0-9]{40}$/.test(commit) && status === '') { sourceCommit = commit; commitState = 'CLEAN_CHECKOUT'; }
-    else commitState = 'WORKTREE_MODIFIED';
+    if (/^[a-f0-9]{40}$/.test(commit) && status === '') {
+      // One immutable tree read verifies paths and bytes against the commit,
+      // including edits/deletions hidden by assume-unchanged or skip-worktree.
+      const committed = new Map();
+      const tree = execFileSync('git', ['ls-tree', '-r', '-z', '--full-tree', commit], options);
+      for (const record of tree.split('\0').filter(Boolean)) {
+        const separator = record.indexOf('\t');
+        const [mode, type, hash] = record.slice(0, separator).split(' ');
+        const path = record.slice(separator + 1);
+        if (isApplicationFile(path)) committed.set(path, type === 'blob' && /^100(?:644|755)$/.test(mode) ? hash : null);
+      }
+      if (entries.some(([path]) => !committed.has(path))) commitState = 'UNTRACKED_APPLICATION_INPUTS';
+      else if ([...committed].some(([path, hash]) => !hash || blobHashes.get(path) !== hash)) commitState = 'WORKTREE_MODIFIED';
+      else { sourceCommit = commit; commitState = 'CLEAN_CHECKOUT'; }
+    } else commitState = 'WORKTREE_MODIFIED';
   } catch { /* Archive builds still have an independently comparable digest. */ }
-  return { profile: BUILD_PROFILE, application: 'q9r9beo47t', sourceDigest,
+  return { profile: BUILD_PROFILE, application: BUILD_APPLICATION, sourceDigest,
     sourceFileCount: entries.length, sourceCommit, commitState,
     scope: 'Application source inputs only; excludes build bytes, live data, settings, models, and release authority.' };
 }

@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-atlas-request-isolation-20261018",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/assistant/workspace.tsx",
+    "tests/assistant-status.test.mjs",
+    "docs/atlas-studio-blueprint-20261018.md"
+  ],
+  "artifact_hashes": {
+    "app/assistant/workspace.tsx": "sha256:ef270e29ce4f0b1035a0a211580a933fa4f7b2790eee18faed93e2924422feac",
+    "tests/assistant-status.test.mjs": "sha256:895b226708954db4d71d0a4d3e1a577514ad89dd5cd2deac8624440e22329eb2",
+    "docs/atlas-studio-blueprint-20261018.md": "sha256:9045ae68fc5c0ec6c548cb9cfe00d498c65679f1f6b235b2beca9764de0d5e4d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:9045ae68fc5c0ec6c548cb9cfe00d498c65679f1f6b235b2beca9764de0d5e4d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Sites",
+      "Google Drive",
+      "Notion",
+      "Chrome",
+      "local shell"
+    ],
+    "contract_basis": "docs/atlas-studio-blueprint-20261018.md; A0 request ownership, bounded campaign and validation boundaries"
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/508db6073f3602e461c7b9bd33ced648417c37d8/AGENTS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/508db6073f3602e461c7b9bd33ced648417c37d8/app/assistant/workspace.tsx",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/508db6073f3602e461c7b9bd33ced648417c37d8/tests/assistant-status.test.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/doctrine/directory-rules.md"
+    ],
+    "evidence_hashes": [
+      "sha256:a3483f1e269ca872e5f9a85746d08e5fb9b918562bd469e0af7697be54c3764f"
+    ]
+  },
+  "truth_labels": {
+    "app/assistant/workspace.tsx": "CONFIRMED",
+    "tests/assistant-status.test.mjs": "CONFIRMED",
+    "docs/atlas-studio-blueprint-20261018.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-component-suites",
+      "outcome": "PASS",
+      "reason": "52/52 controlled cases pass on final corrected source: 27 assistant status, 11 sitewide, 6 investigation and 8 composer. No rendered browser or real inference claim."
+    },
+    {
+      "gate": "baseline-and-draft-preservation-reproduction",
+      "outcome": "PASS",
+      "reason": "Original pinned baseline status suite passed 17/17; three initial lifecycle regressions failed unchanged source. Separate new-draft regression failed the pre-correction A0 snapshot (25 pass/1 fail), then passed with verbatim-submitted-draft functional clearing. That dedicated draft regression was not separately run on original pinned source."
+    },
+    {
+      "gate": "compatible-completed-continuation",
+      "outcome": "PASS",
+      "reason": "Non-author matched harness: original baseline preserved completed compatible Continue across pure hide/reopen; first A0 repair disabled it. New 27th regression failed before correction and passes with semantic-only completed generation changes. Live pending close and actual A-to-B-to-A invalidation remain covered."
+    },
+    {
+      "gate": "production-build-and-typescript",
+      "outcome": "PASS",
+      "reason": "npm run build and TypeScript --noEmit --incremental false pass after both final draft-preservation and hide/reopen corrections. Earlier pre-correction checks are not substituted. Existing Vinext static-classification notice retained."
+    },
+    {
+      "gate": "changed-source-test-lint",
+      "outcome": "PASS",
+      "reason": "Focused source/test ESLint zero errors and warnings; no full-repository lint claim."
+    },
+    {
+      "gate": "independent-agent-source-check",
+      "outcome": "PASS",
+      "reason": "Non-author reviewer reran final status suite 27/27, found no source blockers, reproduced then rechecked both draft-loss and pure-hide/reopen continuation findings, and measured matched late-admission request counts on final workspace blob d3f6599e5c84850fd2d8fc5a0963d70b567ae5df. Final committed SHA review remains separate."
+    },
+    {
+      "gate": "controlled-request-count-comparison",
+      "outcome": "PASS",
+      "reason": "Rerun on final source: baseline508 status1/POST1/resultGET1/cancel0 with obsolete content and draft loss; candidate status1/POST1/resultGET0/cancel1 with suppression and retained draft; other requests0 on both. This is deterministic stubbed request accounting, not browser latency, production performance or host capacity."
+    },
+    {
+      "gate": "whitespace-and-blueprint-links",
+      "outcome": "PASS",
+      "reason": "git diff --check passes and four relative blueprint document links resolve."
+    },
+    {
+      "gate": "candidate-browser-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "This session loopback listener probe127.0.0.1:0 returned EPERM. No local candidate browser/mobile/WebGL/virtual-keyboard acceptance or network workaround is claimed. Live preview observations are baseline only."
+    },
+    {
+      "gate": "visual-selection",
+      "outcome": "SKIPPED",
+      "reason": "Three illustrative concepts were presented. User selection is pending. No campaign UI redesign, generated map/text content, corpus admission or time-sweep implementation is included in A0."
+    },
+    {
+      "gate": "exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Candidate is not published at receipt authoring; observe exact-head CI separately."
+    },
+    {
+      "gate": "independent-final-head-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending final commit at receipt authoring; later review must identify exact local and remote SHA/tree coverage."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; agent review, generation and draft PR preparation do not grant merge or release authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Pinned authority 1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/508db6073f3602e461c7b9bd33ced648417c37d8/AGENTS.md"
+    },
+    {
+      "id": "Pinned authority 2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/508db6073f3602e461c7b9bd33ced648417c37d8/app/assistant/workspace.tsx"
+    },
+    {
+      "id": "Pinned authority 3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/508db6073f3602e461c7b9bd33ced648417c37d8/tests/assistant-status.test.mjs"
+    },
+    {
+      "id": "Pinned authority 4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "Pinned authority 5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T00:30:05.316063+00:00",
+  "emitter": "OpenAI Codex KFM-20261018-ATLAS-01",
+  "override_record": null,
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "A0 lifecycle-only implementation on hosted a0-hosted-ai-web-20261017@508db6073f3602e461c7b9bd33ced648417c37d8. Every request has monotonic scope-generation ownership; Stop, scope/actor/activity changes and unmount supersede late admission/polls. Late observable job IDs receive best-effort cancellation; unavailable IDs or cancellation transport failures cannot establish server cancellation, and existing server deadlines remain the resource bound. Draft retention, source recheck/export ownership and continuation generation are covered. Three visual concepts and full campaign blueprint remain PROPOSED; selection and later milestones are held. Exact served deployment revision remains UNKNOWN. GoDaddy connector capability is domain-only; no hosting readback exists. Existing server, API, schemas, models, stores, resource caps, sources, rights, sensitivity and release boundaries are unchanged. Existing CI already selects the modified status suite. No original Sites/mirror replacement, paid service, data admission, merge, ready transition, deploy, publication, DNS, audience or protection change. User prompt text/private data are excluded; historical receipts remain intact. Rollback reverts this bounded source/tests/docs/receipt change through review. Pure panel hide/reopen preserves completed compatible continuation; live pending close remains superseded. The initial introduced continuation regression was resolved and independently rechecked before this final receipt."
+}

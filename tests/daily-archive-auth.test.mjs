@@ -6,7 +6,6 @@ const compile=source=>`data:text/javascript;base64,${Buffer.from(ts.transpileMod
 const state=globalThis.__archiveAuthTest={env:{},user:null,calls:0};
 const token="o".repeat(43),workerToken="w".repeat(43);
 const envUrl=compile('export const env=globalThis.__archiveAuthTest.env;');
-const userUrl=compile('export async function getChatGPTUser(){return globalThis.__archiveAuthTest.user;}');
 const nextUrl=compile('export class NextRequest extends Request {get nextUrl(){return new URL(this.url)}}');
 const storeUrl=compile(`export class ArchiveError extends Error {constructor(message,status=400){super(message);this.status=status}}
 export const archiveHeaders={"Cache-Control":"private, no-store"};
@@ -17,7 +16,7 @@ export const reviewArchive=async()=>{globalThis.__archiveAuthTest.calls++;return
 const dbUrl=compile('export function getRawDb(){globalThis.__archiveAuthTest.calls++;return {prepare:()=>({bind(){return this},all:async()=>({results:[]}),run:async()=>{globalThis.__archiveAuthTest.calls++}})}}');
 const modelUrl=compile('export const archiveFeed=value=>value==="usgs-earthquakes";');
 const liveUrl=compile('export async function GET(){globalThis.__archiveAuthTest.calls++;return Response.json({})}');
-const authSource=(await readFile(new URL("../app/daily-archive-auth.ts",import.meta.url),"utf8")).replace('"cloudflare:workers"',JSON.stringify(envUrl)).replace('"./chatgpt-auth"',JSON.stringify(userUrl)).replace('"./daily-archive-store"',JSON.stringify(storeUrl));
+const authSource=(await readFile(new URL("../app/daily-archive-auth.ts",import.meta.url),"utf8")).replace('"cloudflare:workers"',JSON.stringify(envUrl)).replace('"./daily-archive-store"',JSON.stringify(storeUrl));
 const authUrl=compile(authSource);
 let source=await readFile(new URL("../app/api/daily-archive/route.ts",import.meta.url),"utf8");
 for(const [name,url] of Object.entries({"cloudflare:workers":envUrl,"next/server":nextUrl,"../../../db":dbUrl,"../../daily-archive":modelUrl,"../../daily-archive-store":storeUrl,"../live-context/route":liveUrl,"../../daily-archive-auth":authUrl}))source=source.replace(JSON.stringify(name),JSON.stringify(url));
@@ -31,15 +30,6 @@ test("anonymous catalog, payload, held download and every public-marker write ar
  for(const query of ["","?day=2026-10-11","?id=capture","?id=capture&action=download","?action=status"])await denied(request(query),401);
  for(const action of ["capture&feed=usgs-earthquakes","review","settings"])await denied(request(`?action=${action}`,"POST",{"X-KFM-Archive-Writer":"daily-v1"}),401);
  await denied(request("?id=capture&action=download","GET",{Authorization:`Bearer ${workerToken}`}),401);
-});
-test("authenticated hosted owner allowlist fails closed and preserves owner reads and writes",async()=>{
- reset();state.user={id:"owner-id",email:"Owner@Example.com"};await denied(request(),503);
- state.env.KFM_ARCHIVE_OWNER_IDS="other";await denied(request(),403);
- state.env.KFM_ARCHIVE_OWNER_EMAILS="owner@example.com";
- assert.equal((await route.GET(request())).status,200);
- assert.equal((await route.GET(request("?id=capture&action=download"))).status,200);
- for(const [action,body] of [["review",{id:"capture",state:"reviewed",note:"checked"}],["settings",{budget:16777216,paused:true}]])assert.equal((await route.POST(request(`?action=${action}`,"POST",{"X-KFM-Archive-Writer":"daily-v1","Content-Type":"application/json"},body))).status,200);
- await denied(request("?action=capture&feed=usgs-earthquakes","POST",{"X-KFM-Archive-Writer":"daily-v1",Origin:"https://evil.test"}),403);
 });
 test("capture credential can only capture and read bounded receipts without private review data",async()=>{
  reset();state.env.KFM_ARCHIVE_WORKER_TOKEN=workerToken;const headers={Authorization:`Bearer ${workerToken}`,"X-KFM-Archive-Writer":"daily-v1"};

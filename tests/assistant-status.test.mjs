@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
 import * as surfaces from '../app/assistant-surfaces.mjs';
 import ts from 'typescript';
 import {readFile} from 'node:fs/promises';
@@ -8,7 +9,7 @@ const investigation=await import('data:text/javascript;base64,'+Buffer.from(ts.t
 
 async function workspace(fetch,props={},fields={},extra={}){
  const polls=[];
- const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:{}},'../assistant-surfaces.mjs':surfaces,'../assistant-investigation':investigation},{fetch,Response,TextEncoder,FormData:class {get(name){return fields[name]??null;}},queueMicrotask,setInterval:fn=>{polls.push(fn);return polls.length;},clearInterval:()=>{},...extra});
+ const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:{}},'../assistant-surfaces.mjs':surfaces,'../assistant-investigation':investigation},{fetch,Response,TextEncoder,crypto:{randomUUID},FormData:class {get(name){return fields[name]??null;}},queueMicrotask,setInterval:fn=>{polls.push(fn);return polls.length;},clearInterval:()=>{},...extra});
  const render=(next=props)=>{const tree=h.render(h.exports.default,next);h.commit();return tree;};
  render();await settle();
  return {h,polls,render};
@@ -19,11 +20,148 @@ const status=tree=>findNode(tree,node=>node.props?.role==='status');
 const send=tree=>findNode(tree,node=>node.type==='button'&&node.props.children==='Send');
 const message=tree=>findNode(tree,node=>node.type==='textarea');
 const alert=tree=>findNode(tree,node=>node.props?.role==='alert');
+const lifecycleFocus=(record='one')=>({title:'Synthetic '+record,detail:'Synthetic source context',context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'knowledge',recordId:record}}});
+const deferred=()=>{let resolve,reject;const promise=new Promise((done,fail)=>{resolve=done;reject=fail;});return {promise,resolve,reject};};
 
-test('guest readiness does not wait for the separate account request',async()=>{
- const {h,render}=await workspace(url=>url.includes('/api/pc-ai/')?new Promise(()=>{}):Promise.resolve(ready()));
+test('place discovery does not start the AI model and returning to Find stops readiness checks',async()=>{
+ const requests=[],discovery={query:'',items:[],status:'Ready',busy:false,onQuery(){},onChoose(){}};
+ const {h,polls,render}=await workspace(async url=>{requests.push(url);return ready();},{discovery});
  try{
-  let tree=render();assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+  let tree=render();assert.equal(text(status(tree)),'Places & layers · no AI required');assert.equal(requests.length,0);
+  findNode(tree,node=>node.type==='button'&&node.props.children==='Ask').props.onClick();render();await settle();
+  tree=render();assert.deepEqual(requests,['/api/ai/status']);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+  findNode(tree,node=>node.type==='button'&&node.props.children==='Find').props.onClick();render();await settle();
+  await polls[0]();assert.equal(requests.length,1,'a stale timer cannot restart AI after returning to Find');
+ }finally{h.dispose();}
+});
+
+test('slow model readiness checks never overlap even when several polling ticks pass',async()=>{
+ const first=deferred();let requests=0;
+ const {h,polls,render}=await workspace(async()=>++requests===1?first.promise:ready());
+ try{
+  assert.equal(requests,1);await polls[0]();await polls[0]();assert.equal(requests,1);
+  first.resolve(ready());await settle();assert.equal(text(status(render())),'Qwen3 0.6B ready');
+  await polls[0]();assert.equal(requests,2,'the next completed cycle can refresh readiness');
+ }finally{first.resolve(ready());h.dispose();}
+});
+
+test('cold model startup is described as starting while the map and evidence remain available',async()=>{
+ const {h,render}=await workspace(async()=>Response.json({configured:true,online:true,ready:false,evidenceSearchAvailable:true}));
+ try{
+  const tree=render();assert.equal(text(status(tree)),'Loading model…');
+  assert.match(text(tree),/model is starting/i);assert.doesNotMatch(text(tree),/AI discussion is unavailable/);
+ }finally{h.dispose();}
+});
+
+test('non-JSON AI failures expose only bounded HTTP diagnostics and preserve the question draft',async()=>{
+ const {h,render}=await workspace(async()=>new Response('<html>PRIVATE_INTERNAL_ERROR_BODY</html>',{status:503,headers:{'Content-Type':'text/html'}}));
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Keep this unsent question.'}});tree=render();
+  assert.equal(alert(tree).props['data-ai-error'],'AI_RESPONSE_INVALID');assert.equal(alert(tree).props['data-http-status'],503);
+  assert.doesNotMatch(text(tree),/PRIVATE_INTERNAL_ERROR_BODY|<html>/);assert.equal(message(tree).props.value,'Keep this unsent question.');
+  assert.equal(send(tree).props.disabled,true);
+ }finally{h.dispose();}
+});
+
+test('readiness diagnostics never disclose arbitrary exception text and clear after recovery',async()=>{
+ let connected=false;
+ const {h,polls,render}=await workspace(async()=>{if(!connected)throw new Error('PRIVATE_ERROR_WITH_INTERNAL_URL');return ready();});
+ try{
+  let tree=render();assert.equal(alert(tree).props['data-ai-error'],'AI_CONNECTION_UNAVAILABLE');assert.equal(alert(tree).props['data-http-status'],undefined);
+  assert.doesNotMatch(text(tree),/PRIVATE_ERROR_WITH_INTERNAL_URL/);
+  connected=true;await polls[0]();tree=render();assert.equal(alert(tree),undefined);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+ }finally{h.dispose();}
+});
+
+test('entering Find aborts a pending readiness read and its late completion stays obsolete',async()=>{
+ const first=deferred(),signals=[],discovery={query:'',items:[],status:'Ready',busy:false,onQuery(){},onChoose(){}};
+ const {h,polls,render}=await workspace(async(_url,options)=>{signals.push(options.signal);return signals.length===1?first.promise:ready();},{discovery});
+ try{
+  findNode(render(),node=>node.type==='button'&&node.props.children==='Ask').props.onClick();render();await settle();assert.equal(signals.length,1);
+  findNode(render(),node=>node.type==='button'&&node.props.children==='Find').props.onClick();render();assert.equal(signals[0].aborted,true);
+  first.resolve(Response.json({reasonCode:'AI_ORIGIN_HOLD'},{status:503}));await settle();await polls[0]();assert.equal(signals.length,1);
+  findNode(render(),node=>node.type==='button'&&node.props.children==='Ask').props.onClick();render();await settle();
+  const tree=render();assert.equal(signals.length,2);assert.equal(alert(tree),undefined);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+ }finally{first.resolve(ready());h.dispose();}
+});
+
+test('A to B to A cannot resurrect a late accepted question and its opaque job is cancelled',async()=>{
+ const admission=deferred(),cancelled=[],focus=lifecycleFocus();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel')){cancelled.push(url);return Response.json({cancelled:true});}
+  if(options.method==='POST')return admission.promise;
+  return Response.json({id:'late-admission',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'OBSOLETE_REPLY'}});
+ },{focus});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Preserve this question draft.'}});tree=render();
+  const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  render({focus:lifecycleFocus('two')});await settle();render({focus});await settle();
+  admission.resolve(Response.json({id:'late-admission'}));await submitted;tree=render();await settle();tree=render();
+  assert.deepEqual(cancelled,['/api/ai/jobs/late-admission/cancel']);
+  assert.doesNotMatch(text(tree),/OBSOLETE_REPLY/);
+  assert.equal(message(tree).props.value,'Preserve this question draft.');
+ }finally{h.dispose();}
+});
+
+test('accepting a question never erases a newer draft typed while admission was pending',async()=>{
+ const admission=deferred();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel'))return Response.json({cancelled:true});
+  if(options.method==='POST')return admission.promise;
+  return Response.json({id:'draft-preserving',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'NO_RELEASED_EVIDENCE'}});
+ });
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'First submitted question.'}});tree=render();
+  const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  tree=render();message(tree).props.onChange({target:{value:'Keep this next unsent draft.'}});render();
+  admission.resolve(Response.json({id:'draft-preserving'}));await submitted;tree=render();assert.equal(message(tree).props.value,'Keep this next unsent draft.');
+ }finally{h.dispose();}
+});
+
+test('a result read already in flight cannot revive a request after A to B to A',async()=>{
+ const response=deferred(),focus=lifecycleFocus();let reads=0,cancellations=0;
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel')){cancellations++;return Response.json({cancelled:true});}
+  if(options.method==='POST')return Response.json({id:'old-read'});
+  reads++;return response.promise;
+ },{focus});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain the original selection.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  render();await settle();assert.equal(reads,1);
+  render({focus:lifecycleFocus('two')});await settle();render({focus});await settle();
+  response.resolve(Response.json({id:'old-read',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'OBSOLETE_POLL_REPLY'}}));
+  await settle();tree=render();
+  assert.equal(cancellations,1);assert.doesNotMatch(text(tree),/OBSOLETE_POLL_REPLY/);
+ }finally{h.dispose();}
+});
+
+test('Stop remains available during admission and cancellation is claimed only after acknowledgement',async()=>{
+ const admission=deferred(),cancellation=deferred();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel'))return cancellation.promise;
+  if(options.method==='POST')return admission.promise;
+  throw new Error('A stopped question must not begin polling');
+ },{focus:lifecycleFocus()});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Stop this pending request.'}});tree=render();
+  const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  tree=render();const stop=findNode(tree,node=>node.type==='button'&&node.props.children==='Stop');assert.ok(stop);assert.equal(stop.props.disabled,false);stop.props.onClick();
+  tree=render();assert.match(text(tree),/not yet confirmed/i);assert.doesNotMatch(text(tree),/Question cancelled\./);
+  admission.resolve(Response.json({id:'stop-before-accept'}));await settle();tree=render();assert.doesNotMatch(text(tree),/Question cancelled\./);
+  cancellation.resolve(Response.json({cancelled:true}));await submitted;await settle();tree=render();assert.match(text(tree),/cancellation confirmed/i);
+ }finally{h.dispose();}
+});
+
+test('public chat never requests an account service or renders login controls',async()=>{
+ const requests=[];
+ const {h,polls,render}=await workspace(async url=>{requests.push(url);return ready();});
+ try{
+  await polls[0]();let tree=render();assert.ok(requests.length>=2);assert.ok(requests.every(url=>url==='/api/ai/status'));assert.doesNotMatch(text(tree),/sign in|sign out|administrator|invitation|password/i);assert.equal(findNode(tree,node=>node.type==='input'&&node.props.type==='password'),undefined);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
   assert.equal(findNode(tree,node=>node.type==='select'&&node.props.name==='depth').props.defaultValue,'expanded');
   message(tree).props.onChange({target:{value:'Suggest a fictional story.'}});
   tree=render();assert.equal(send(tree).props.disabled,false);
@@ -53,6 +191,24 @@ test('a limited reply offers continuation only for the latest turn with unchange
   tree=render({focus:{...focus,context:{...focus.context,frame:2025}}});
   assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply').props.disabled,true);
   assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply'&&node.props.disabled===false),undefined);
+   tree=render({focus});assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply'&&node.props.disabled===false),undefined,'returning to the same serialized context does not revive an earlier generation');
+ }finally{h.dispose();}
+});
+
+test('hiding and reopening unchanged chat preserves completed compatible follow-ups',async()=>{
+ const focus=lifecycleFocus();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST')return Response.json({id:'compatible-completed'});
+  return Response.json({id:'compatible-completed',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'Synthetic limited reply.',outputLimited:true}});
+ },{focus});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain this selected source.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});render();await settle();tree=render();
+  const continuation=tree=>findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply');
+  assert.equal(continuation(tree).props.disabled,false);
+  render({focus,active:false});tree=render({focus,active:true});assert.equal(continuation(tree).props.disabled,false);
+  render({focus:lifecycleFocus('other')});tree=render({focus});assert.equal(continuation(tree).props.disabled,true,'a real context A to B to A still invalidates the older follow-up');
  }finally{h.dispose();}
 });
 
@@ -85,12 +241,12 @@ test('evidence mode stays usable when the model is offline and switching modes p
   assert.match(text(tree),/Choose Find evidence/);
   message(tree).props.onChange({target:{value:'Find river records.'}});
   tree=render();assert.equal(send(tree).props.disabled,true);
-  findNode(tree,node=>node.type==='select'&&node.props.name==='mode').props.onChange({target:{value:'evidence'}});
+  findNode(tree,node=>node.type==='button'&&node.props.children==='Evidence').props.onClick();
   tree=render();assert.equal(text(status(tree)),'Evidence search available');
   assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Search').props.disabled,false);
   assert.equal(message(tree).props.value,'Find river records.');
   assert.match(text(tree),/Released records · no model required/);
-  findNode(tree,node=>node.type==='select'&&node.props.name==='mode').props.onChange({target:{value:'explore'}});
+  findNode(tree,node=>node.type==='button'&&node.props.children==='Ask').props.onClick();
   tree=render();assert.equal(send(tree).props.disabled,true);assert.equal(message(tree).props.value,'Find river records.');
  }finally{h.dispose();}
 });
@@ -100,7 +256,7 @@ test('evidence search fails closed when its capability is missing or the runtime
   const {h,render}=await workspace(async url=>url.includes('/api/pc-ai/')?Response.json({configured:false,account:null}):Response.json(chatStatus));
   try{
    let tree=render();message(tree).props.onChange({target:{value:'Find river records.'}});
-   findNode(tree,node=>node.type==='select'&&node.props.name==='mode').props.onChange({target:{value:'evidence'}});
+   findNode(tree,node=>node.type==='button'&&node.props.children==='Evidence').props.onClick();
    tree=render();assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Search').props.disabled,true);
   }finally{h.dispose();}
  }
@@ -111,7 +267,7 @@ test('selection context is visible without sign-in and changing samples preserve
  const focus={context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'subsurface',tileId:'tile-160-255',recordId:'core-one',intervalIndex:1}},title:'Synthetic sample one',detail:'10–40 ft · synthetic shale · source context'};
  const {h,render}=await workspace(async url=>url.includes('/api/pc-ai/')?Response.json({configured:false,account:null}):ready(),{focus});
  try{
-  let tree=render();assert.match(text(tree),/Synthetic sample one/);assert.match(text(tree),/No login needed/);
+  let tree=render();assert.match(text(tree),/Synthetic sample one/);assert.doesNotMatch(text(tree),/No login needed|No account is needed for chat/);
   assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Log in'),undefined);
   message(tree).props.onChange({target:{value:'Explain this interval.'}});
   tree=render({focus:{...focus,title:'Synthetic sample two',detail:'20–30 ft · synthetic sand'}});
@@ -192,9 +348,9 @@ test('successful cancellation remains usable when follow-up result reads are thr
   await findNode(tree,n=>n.type==='form'&&n.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
   tree=render();await settle();tree=render();
   message(tree).props.onChange({target:{value:'Keep my next draft.'}});tree=render();const beforeCancel=reads;
-  await findNode(tree,n=>n.type==='button'&&n.props.children==='Cancel').props.onClick();tree=render();
+  await findNode(tree,n=>n.type==='button'&&n.props.children==='Stop').props.onClick();tree=render();
   assert.equal(cancels,1);assert.equal(posts,1);assert.equal(reads,beforeCancel,'successful cancellation must not depend on another read');
-  assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Cancel'),undefined);
+  assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Stop'),undefined);
   assert.equal(send(tree).props.disabled,false);assert.equal(message(tree).props.value,'Keep my next draft.');
  }finally{h.dispose();}
 });
@@ -304,4 +460,201 @@ test('JSON download contains only the checked investigation and never resubmits 
   assert.equal(posts,1);assert.equal(anchors[0].download,'kfm-investigation-draft.json');
   const draft=JSON.parse(await urls[0].text());assert.equal(draft.status,'DRAFT');assert.equal(draft.scope.selection.intervalIndex,1);assert.equal(draft.result.answer,null);assert.match(draft.result.sourceSummary,/10–40 ft/);
  }finally{h.dispose();}
+});
+
+test('obsolete export and recheck completions cannot unlock a newer admission or publish a stale copy',async()=>{
+ for(const action of ['Copy investigation','Recheck sources']){
+  const oldRead=deferred(),admission=deferred();let reads=0,posts=0,copied='';
+  const {h,render}=await workspace(async(url,options)=>{
+   if(url.endsWith('/status'))return ready();
+   if(url.endsWith('/cancel'))return Response.json({cancelled:true});
+   if(options.method==='POST'){posts++;return posts===1?Response.json({id:'synthetic-export'}):admission.promise;}
+   reads++;return reads===1?Response.json(exportJob()):oldRead.promise;
+  },{focus:exportFocus},{},{navigator:{clipboard:{writeText:async value=>{copied=value;}}}});
+  try{
+   let tree=await submitExportQuestion(render);const operation=findNode(tree,node=>node.type==='button'&&node.props.children===action).props.onClick();
+   tree=render({focus:lifecycleFocus('new-source')});await settle();tree=render({focus:lifecycleFocus('new-source')});
+   message(tree).props.onChange({target:{value:'Keep the new request busy.'}});tree=render({focus:lifecycleFocus('new-source')});
+   const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+   assert.equal(posts,2,'scope change releases the obsolete read without waiting for a signal-ignoring transport');
+   oldRead.resolve(Response.json(exportJob()));await operation;await settle();tree=render({focus:lifecycleFocus('new-source')});
+   assert.equal(copied,'');assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Copy investigation').props.disabled,true,'obsolete finally must preserve newer busy ownership');
+   h.dispose();admission.resolve(Response.json({id:'new-admission'}));await submitted;
+  }finally{h.dispose();}
+ }
+});
+
+test('closing the active panel aborts old polls and late failures cannot add alerts or schedule retries',async()=>{
+ const oldRead=deferred(),scheduled=[],focus=lifecycleFocus();let signal,cancels=0;
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel')){cancels++;return Response.json({cancelled:true});}
+  if(options.method==='POST')return Response.json({id:'closing-job'});
+  signal=options.signal;return oldRead.promise;
+ },{focus},{},{setTimeout:(callback,delay)=>{scheduled.push(delay);return scheduled.length;},clearTimeout:()=>{}});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain this source.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});render();await settle();
+  render({focus,active:false});assert.equal(signal.aborted,true);await settle();
+  oldRead.reject(new Error('OBSOLETE_NETWORK_FAILURE'));await settle();tree=render({focus,active:false});
+  assert.equal(cancels,1);assert.equal(alert(tree),undefined);assert.deepEqual(scheduled,[]);
+ }finally{h.dispose();}
+});
+
+test('unmounting before admission still cancels a late observable ID without restoring the question',async()=>{
+ const admission=deferred(),cancelled=[];
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel')){cancelled.push(url);return Response.json({cancelled:true});}
+  if(options.method==='POST')return admission.promise;
+  throw new Error('Unmounted admission must not be polled');
+ });
+ let tree=render();message(tree).props.onChange({target:{value:'Explain this before unmount.'}});tree=render();
+ const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+ h.dispose();admission.resolve(Response.json({id:'unmounted-admission'}));await submitted;assert.deepEqual(cancelled,['/api/ai/jobs/unmounted-admission/cancel']);
+});
+
+test('failed cancellation reports uncertainty while suppressing the old response',async()=>{
+ const oldRead=deferred();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel'))throw new Error('Synthetic unreachable cancellation');
+  if(options.method==='POST')return Response.json({id:'uncertain-cancel'});
+  return oldRead.promise;
+ });
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain the old source.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});tree=render();await settle();
+  await findNode(tree,node=>node.type==='button'&&node.props.children==='Stop').props.onClick();
+  oldRead.resolve(Response.json({id:'uncertain-cancel',state:'completed',result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'OBSOLETE_CANCEL_REPLY'}}));await settle();tree=render();
+  assert.match(text(tree),/cancellation could not be confirmed/i);assert.doesNotMatch(text(tree),/OBSOLETE_CANCEL_REPLY|cancellation confirmed\./i);
+ }finally{h.dispose();}
+});
+
+test('the same composer discovers explicit county and city results while hosted inference is unavailable',async()=>{
+ const queries=[],choices=[];let jobs=0;
+ const discovery={query:'Ellsworth',items:[{id:'county:synthetic-ellsworth',kind:'county',title:'Ellsworth County',subtitle:'Synthetic county source context'},{id:'city:synthetic-ellsworth',kind:'city',title:'Ellsworth city',subtitle:'Synthetic city source context'}],status:'County search has limited coverage.',busy:false,onQuery:query=>queries.push(query),onChoose:id=>choices.push(id)};
+ const {h,render}=await workspace(async(url,options)=>{if(options.method==='POST')jobs++;return Response.json({configured:false,online:false,ready:false,evidenceSearchAvailable:false,requiresLogin:false});},{discovery});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Ellsworth'}});tree=render();await settle();tree=render();
+  assert.equal(findNode(tree,node=>node.type==='button'&&node.props.type!=='button'&&node.props.children==='Find').props.disabled,false);
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  assert.equal(jobs,0);assert.deepEqual(choices,[]);assert.ok(queries.includes('Ellsworth'));assert.match(text(tree),/Ellsworth County/);assert.match(text(tree),/Ellsworth city/);assert.match(text(tree),/limited coverage/);
+  findNode(tree,node=>node.type==='button'&&text(node).includes('Ellsworth County')).props.onClick();tree=render();assert.deepEqual(choices,['county:synthetic-ellsworth']);assert.equal(message(tree).props.value,'');
+ }finally{h.dispose();}
+});
+
+test('a newer composer query cannot display or activate a preceding discovery snapshot',async()=>{
+ const choices=[],queries=[];
+ const discovery={query:'Old county',items:[{id:'county:old',kind:'county',title:'Old county',subtitle:'Synthetic earlier result'}],status:'',busy:false,onQuery:value=>queries.push(value),onChoose:id=>choices.push(id)};
+ const {h,render}=await workspace(async()=>ready(),{discovery});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'New county'}});tree=render();
+  assert.equal(findNode(tree,node=>node.type==='button'&&text(node).includes('Old county')),undefined);assert.match(text(tree),/Updating search…/);assert.equal(message(tree).props['aria-busy'],true);assert.deepEqual(choices,[]);assert.ok(queries.includes('New county'));
+ }finally{h.dispose();}
+});
+
+test('Enter submits once while Shift, modifiers and composition keep the multiline draft',async()=>{
+ const {h,render}=await workspace(async()=>ready());
+ try{
+  const field=message(render());let submissions=0,prevented=0;
+  const event=extra=>({key:'Enter',shiftKey:false,ctrlKey:false,altKey:false,metaKey:false,nativeEvent:{isComposing:false,keyCode:13},preventDefault(){prevented++;},currentTarget:{form:{requestSubmit(){submissions++;}}},...extra});
+  field.props.onKeyDown(event({}));assert.equal(submissions,1);assert.equal(prevented,1);
+  for(const modifier of ['shiftKey','ctrlKey','altKey','metaKey'])field.props.onKeyDown(event({[modifier]:true}));
+  field.props.onKeyDown(event({nativeEvent:{isComposing:true,keyCode:13}}));field.props.onKeyDown(event({nativeEvent:{isComposing:false,keyCode:229}}));
+  field.props.onCompositionStart();field.props.onKeyDown(event({}));field.props.onCompositionEnd();
+  assert.equal(submissions,1);assert.equal(prevented,1);field.props.onKeyDown(event({}));assert.equal(submissions,2);
+ }finally{h.dispose();}
+});
+
+test('New investigation clears only tab history and starts a distinct server-history partition with the same map scope',async()=>{
+ let sequence=0;const requests=[],focus=lifecycleFocus();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel'))return Response.json({cancelled:true});
+  if(options.method==='POST'){requests.push(JSON.parse(options.body));return Response.json({id:'conversation-'+requests.length});}
+  return Response.json({id:url.split('/').at(-1),state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'NO_RELEASED_EVIDENCE'}});
+ },{focus},{},{crypto:{randomUUID:()=>`00000000-0000-4000-8000-${String(++sequence).padStart(12,'0')}`}});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Earlier investigation question.'}});tree=render();await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});render();await settle();tree=render();
+  findNode(tree,node=>node.type==='button'&&node.props.children==='New investigation').props.onClick();tree=render();assert.doesNotMatch(text(tree),/Earlier investigation question/);assert.match(text(tree),/held in this tab only/);assert.match(text(tree),/existing expiry/);
+  message(tree).props.onChange({target:{value:'New investigation question.'}});tree=render();await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  assert.equal(requests.length,2);assert.notEqual(requests[0].investigationId,requests[1].investigationId);assert.match(requests[0].investigationId,/^[a-f0-9-]{36}$/);assert.deepEqual(requests[0].context,requests[1].context);
+ }finally{h.dispose();}
+});
+
+test('a browser without UUID support cannot promise a fresh server conversation',async()=>{
+ const {h,render}=await workspace(async()=>ready(),{}, {},{crypto:undefined});
+ try{const tree=render(),reset=findNode(tree,node=>node.type==='button'&&node.props.children==='New investigation');assert.equal(reset.props.disabled,true);assert.match(reset.props.title,/requires a supported secure browser/);assert.equal(send(tree).props.disabled,true);assert.match(text(tree),/secure investigation session is unavailable/);}finally{h.dispose();}
+});
+
+test('server history partitions rotate on material A to B to A changes, preserving same-context follow-ups and hide/reopen',async()=>{
+ let sequence=0;const requests=[],focus=lifecycleFocus();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel'))return Response.json({cancelled:true});
+  if(options.method==='POST'){requests.push(JSON.parse(options.body));return Response.json({id:'partition-'+requests.length});}
+  return Response.json({id:url.split('/').at(-1),state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'NO_RELEASED_EVIDENCE'}});
+ },{focus},{},{crypto:{randomUUID:()=>`00000000-0000-4000-8000-${String(++sequence).padStart(12,'0')}`}});
+ const submit=async current=>{let tree=render({focus:current});message(tree).props.onChange({target:{value:'Explain this scoped question.'}});tree=render({focus:current});await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});render({focus:current});await settle();render({focus:current});};
+ try{
+  await submit(focus);await submit(focus);render({focus,active:false});render({focus,active:true});await submit(focus);
+  assert.equal(requests[0].investigationId,requests[1].investigationId);assert.equal(requests[0].investigationId,requests[2].investigationId);
+  await submit(lifecycleFocus('other'));await submit(focus);
+  assert.notEqual(requests[0].investigationId,requests[3].investigationId);assert.notEqual(requests[0].investigationId,requests[4].investigationId);assert.notEqual(requests[3].investigationId,requests[4].investigationId);
+ }finally{h.dispose();}
+});
+
+test('mission drafts use the same composer without autosend and ordinary rerenders preserve edits',async()=>{
+ const queries=[];let jobs=0;const discovery={query:'',items:[],status:'County search is not ready.',busy:false,onQuery:value=>queries.push(value),onChoose(){}};
+ const {h,render}=await workspace(async(url,options)=>{if(options.method==='POST')jobs++;return ready();},{discovery,draftRequest:{id:1,value:'Ellsworth',intent:'find'}});
+ try{
+  let tree=render();await settle();tree=render();assert.equal(message(tree).props.value,'Ellsworth');assert.equal(jobs,0);
+  message(tree).props.onChange({target:{value:'My edited search'}});tree=render({discovery,draftRequest:{id:1,value:'Ellsworth',intent:'find'}});assert.equal(message(tree).props.value,'My edited search');
+  tree=render({discovery,draftRequest:{id:2,value:'What is the source limitation?',intent:'explore'}});await settle();tree=render({discovery,draftRequest:{id:2,value:'What is the source limitation?',intent:'explore'}});assert.equal(message(tree).props.value,'What is the source limitation?');assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Ask').props['aria-pressed'],true);assert.equal(jobs,0);assert.ok(queries.includes(''));
+ }finally{h.dispose();}
+});
+
+test('Inspect rechecks the clicked turn then uses its submitted context rather than a newer selection',async()=>{
+ const inspected=[];let withdrawn=false;
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST')return Response.json({id:'synthetic-export'});
+  return Response.json(withdrawn?{...exportJob(),context:null,result:{outcome:'ABSTAIN',reasonCode:'RELEASE_CHANGED'}}:exportJob());
+ },{focus:exportFocus,onInspectSources:context=>{inspected.push(context);return true;}});
+ try{
+  await submitExportQuestion(render);const nextProps={focus:lifecycleFocus('different'),onInspectSources:context=>{inspected.push(context);return true;}};let tree=render(nextProps);
+  const inspect=()=>findNode(tree,node=>node.type==='button'&&node.props.children==='Inspect source in Evidence');await inspect().props.onClick({currentTarget:{id:'invoking-inspect-button'}});await settle();tree=render(nextProps);
+  assert.deepEqual(JSON.parse(JSON.stringify(inspected)),[exportFocus.context]);withdrawn=true;await inspect().props.onClick({currentTarget:{id:'invoking-inspect-button'}});await settle();tree=render(nextProps);assert.equal(inspected.length,1);assert.match(text(tree),/could not be rechecked/);
+ }finally{h.dispose();}
+});
+
+test('Jump to latest is offered after upward scrolling and moves only on explicit activation',async()=>{
+ const {h,render}=await workspace(async(url,options)=>url.endsWith('/status')?ready():options.method==='POST'?Response.json({id:'scroll-turn'}):Response.json({id:'scroll-turn',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'NO_RELEASED_EVIDENCE'}}));
+ try{
+  let tree=render(),scrolls=0;const body=findNode(tree,node=>typeof node.props?.onScroll==='function');body.props.ref.current={scrollTop:100,scrollTo(){scrolls++;},getBoundingClientRect:()=>({bottom:400})};const log=findNode(tree,node=>node.props?.role==='log');log.props.ref.current={getBoundingClientRect:()=>({bottom:900})};
+  message(tree).props.onChange({target:{value:'Create a visible thread.'}});tree=render();await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});render();await settle();tree=render();
+  const before=scrolls;findNode(tree,node=>typeof node.props?.onScroll==='function').props.onScroll();tree=render();assert.equal(scrolls,before);const jump=findNode(tree,node=>node.type==='button'&&node.props.children==='Jump to latest');assert.ok(jump);jump.props.onClick();tree=render();assert.equal(scrolls,before+1);assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Jump to latest'),undefined);
+ }finally{h.dispose();}
+});
+
+test('Stop and pending-panel hide isolate unseen completed server history even when cancellation is too late',async()=>{
+ for(const action of ['stop','hide']){
+  const oldRead=deferred(),requests=[];const focus=lifecycleFocus();
+  const {h,render}=await workspace(async(url,options)=>{
+   if(url.endsWith('/status'))return ready();
+   if(url.endsWith('/cancel'))return Response.json({cancelled:false});
+   if(options.method==='POST'){requests.push(JSON.parse(options.body));return Response.json({id:'hidden-history-'+requests.length});}
+   if(url.endsWith('hidden-history-1'))return oldRead.promise;
+   return Response.json({id:'hidden-history-2',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'NO_RELEASED_EVIDENCE'}});
+  },{focus});
+  try{
+   let tree=render();message(tree).props.onChange({target:{value:'An earlier question with an unseen completed answer.'}});tree=render();await findNode(tree,n=>n.type==='form'&&n.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});render();await settle();tree=render();
+   if(action==='stop')await findNode(tree,n=>n.type==='button'&&n.props.children==='Stop').props.onClick();
+   else {render({focus,active:false});await settle();render({focus,active:true});}
+   await settle();tree=render();message(tree).props.onChange({target:{value:'A separate question after superseding that work.'}});tree=render();await findNode(tree,n=>n.type==='form'&&n.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+   assert.equal(requests.length,2);assert.notEqual(requests[0].investigationId,requests[1].investigationId,action+' must not inherit a hidden completion');
+   oldRead.resolve(Response.json({id:'hidden-history-1',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'UNSEEN_COMPLETION'}}));await settle();tree=render();assert.doesNotMatch(text(tree),/UNSEEN_COMPLETION/);
+  }finally{h.dispose();}
+ }
 });

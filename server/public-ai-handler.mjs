@@ -1,4 +1,5 @@
-// Public chat owns only short-lived anonymous jobs; account/admin APIs stay separate.
+import {hostedAiOriginAllowed} from './hosted-ai-origins.mjs';
+// Public chat owns only short-lived anonymous jobs; it has no user accounts.
 import {randomBytes,createHash} from 'node:crypto';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
@@ -11,6 +12,7 @@ const envelope=(outcome,reasonCode)=>({outcome,reasonCode,answer:null,evidenceRe
 const token=()=>randomBytes(32).toString('base64url');
 const digest=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const text=(x,max)=>typeof x==='string'&&x.length>0&&Buffer.byteLength(x)<=max&&!/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(x);
+const investigationId=x=>typeof x==='string'&&x.length===36&&/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(x);
 const date=x=>x===''||/^\d{4}-\d{2}-\d{2}$/.test(x)&&Number.isFinite(Date.parse(x+'T00:00:00Z'))&&new Date(x+'T00:00:00Z').toISOString().slice(0,10)===x;
 async function body(request){
  if(!/^application\/json(?:;|$)/i.test(request.headers.get('content-type')??''))throw new Error('INVALID_REQUEST');
@@ -140,7 +142,8 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
   try{
    if(path==='jobs'&&request.method==='POST'){
     const value=await body(request);
-    if(Object.keys(value).some(k=>!['question','term','place','start','end','mode','style','depth','context'].includes(k))||!text(value.question,4096)||!text(value.term,120))throw new Error('INVALID_REQUEST');
+    if(Object.keys(value).some(k=>!['question','term','place','start','end','mode','style','depth','context','investigationId'].includes(k))||!text(value.question,4096)||!text(value.term,120))throw new Error('INVALID_REQUEST');
+    if(value.investigationId!==undefined&&!investigationId(value.investigationId))throw new Error('INVALID_REQUEST');
     if(value.context!==undefined&&!validAssistantContext(value.context))throw new Error('INVALID_REQUEST');
     const mode=value.mode??'evidence',style=value.style??'plain',depth=value.depth??'brief';
     if(!['explore','evidence'].includes(mode)||!['plain','technical'].includes(style)||!['brief','expanded'].includes(depth))throw new Error('INVALID_REQUEST');
@@ -168,7 +171,10 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
       if(value.context.selection&&(isSensitiveQwenQuestion(job.context.prompt)||localQwenAnswerHasOverPreciseLocation(job.context.prompt)))throw new Error('POLICY_WITHHELD');
       job.contextSelector=value.context;job.contextFingerprint=contextFingerprint(job.context);
      }
-     job.contextKey=job.context?digest({selector:value.context,source:job.contextFingerprint}):'no-context';
+     const contextKey=job.context?digest({selector:value.context,source:job.contextFingerprint}):'no-context';
+     // An untrusted, ephemeral partition hint only. Guest ownership, source
+     // rechecks and budgets stay authoritative; omitted IDs retain legacy history.
+     job.contextKey=value.investigationId===undefined?contextKey:digest({investigationId:value.investigationId.toLowerCase(),context:contextKey});
      const evidence=sensitive||mode==='explore'?null:await packet(query);
      if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.context=null;job.question='';job.query=null;return;}
      if(!sensitive&&mode==='explore'&&value.context?.selection?.kind==='subsurface'){
@@ -225,7 +231,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
 let runtime;
 export function publicAiRuntime(resolveEvidence,resolveContext){
  const origin=process.env.KFM_HOSTED_AI_ORIGIN;
- const valid=process.env.KFM_HOSTED_AI==='1'&&['https://kansasfrontiermatrix.com','https://q9r9beo47t.preview.c38.airoapp.ai'].includes(origin);
+ const valid=process.env.KFM_HOSTED_AI==='1'&&hostedAiOriginAllowed(origin);
  if(!valid)return async request=>reply({configured:false,online:false,ready:false,evidenceSearchAvailable:false,requiresLogin:false,reasonCode:'HOSTED_AI_NOT_CONFIGURED'},new URL(request.url).pathname==='/api/ai/status'?200:503);
  if(!runtime)runtime=createPublicAiHandler({origin,resolveEvidence:query=>resolveEvidence(query,origin),resolveContext,model:getHostedAiModel()});
  return runtime;

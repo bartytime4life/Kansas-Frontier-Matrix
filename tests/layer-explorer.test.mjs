@@ -11,7 +11,7 @@ const ast = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.ES2022, true, 
 const declarations = new Map();
 function walk(node) { if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) declarations.set(node.name.text, node.initializer.getText(ast)); ts.forEachChild(node, walk); }
 walk(ast);
-const project = new Function("bindings", compile(`function project(bindings: any) { const { OFFICIAL_CONTEXT_SOURCES, LAYER_WORKSPACES, filterOfficialSources, officialVisibility, daylightEnabled, soilMapState, cropSelected, reviewedWaterSelected, reviewedWeatherSelected, EARTH_ENGINE_CONTEXT_LAYERS, imageryTopics, earthEngineDisplay, LAYER_REGISTRY, visibility, selectedCatalogCount, layerEntryMatches, layerCatalogView, officialWorkspace, officialSourceQuery } = bindings;
+const project = new Function("bindings", compile(`function project(bindings: any) { const { OFFICIAL_CONTEXT_SOURCES, officialSourceTopics, specialtyLayerTopics, registryLayerTopics, officialVisibility, daylightEnabled, soilMapState, cropSelected, reviewedWaterSelected, reviewedWeatherSelected, EARTH_ENGINE_CONTEXT_LAYERS, imageryTopics, earthEngineDisplay, LAYER_REGISTRY, visibility, selectedCatalogCount, layerEntryMatches, layerCatalogView, officialWorkspace, officialSourceQuery } = bindings;
 const catalogEntries = ${declarations.get("catalogEntries")};
 const selectedMapLayerCount = ${declarations.get("selectedMapLayerCount")};
 const matchingCatalogEntries = ${declarations.get("matchingCatalogEntries")};
@@ -39,25 +39,29 @@ test("actual page catalog includes every selected family; all tab/topic/search p
 });
 
 test("specialty owners are mounted once in persistent hidden wrappers; official playback rows use unfiltered inventory", () => {
-  const owners = new Map();
+  const owners = new Map(); let localImageryGate = 0;
   function visit(node, ancestors = []) {
     if (ts.isJsxSelfClosingElement(node)) {
       const name = node.tagName.getText(ast);
       if (["GovernedWaterControl", "GovernedWeatherControl", "SoilMoistureControl", "CropCasmaControl", "EarthEngineDisplayControls"].includes(name)) {
         owners.set(name, (owners.get(name) ?? 0) + 1);
-        assert.ok(!ancestors.some(parent => ts.isConditionalExpression(parent) || ts.isBinaryExpression(parent) && parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken), `${name} must not unmount with catalog filters`);
+        assert.ok(!ancestors.some(parent => {
+          if (name === "EarthEngineDisplayControls" && ts.isBinaryExpression(parent) && parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken && parent.left.getText(ast) === "earthEngineContext.enabled") { localImageryGate++; return false; }
+          return ts.isConditionalExpression(parent) || ts.isBinaryExpression(parent) && parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken;
+        }), `${name} must not unmount with catalog filters`);
         assert.ok(ancestors.some(parent => ts.isJsxElement(parent) && parent.openingElement.attributes.properties.some(prop => prop.name?.getText(ast) === "hidden")), `${name} uses a persistent hidden ancestor`);
       }
     }
     ts.forEachChild(node, child => visit(child, [...ancestors, node]));
   }
   visit(ast);
+  assert.equal(localImageryGate, 1, "private imagery is mounted only with the exact local capability gate");
   assert.equal(owners.size, 5); assert.ok([...owners.values()].every(count => count === 1));
   assert.match(page, /filterOfficialSources\(OFFICIAL_CONTEXT_SOURCES, "all", ""\)\.map\(\(source\)/);
   assert.match(page, /hidden=\{!listedOfficialSources\.some\(item => item\.id === source\.id\)\}/);
 });
 
-test("Explore, Appearance and Measure are primary; every advanced view invokes the existing route key", async () => {
+test("Appearance and Measure are primary; every advanced view invokes the existing route key", async () => {
   const h = await componentHarness("app/explorer-controls-navigation.tsx", {}), changes = [];
   for (const [id, title] of [...h.exports.EXPLORER_CONTROL_SECTIONS, ...h.exports.ADVANCED_CONTROL_SECTIONS]) {
     const tree = h.render(h.exports.ExplorerControlsNavigation, { value: id, onChange: next => changes.push(next) });
@@ -72,9 +76,19 @@ test("Explore, Appearance and Measure are primary; every advanced view invokes t
       assert.equal(focusedSummary, true, "closing the disclosure returns keyboard focus to a visible control");
     }
   }
-  assert.deepEqual(Array.from(h.exports.EXPLORER_CONTROL_SECTIONS, ([id]) => id), ["navigate", "scene", "measure"]);
-  assert.equal(new Set(changes).size, 12, "all existing control views remain reachable");
+  assert.deepEqual(Array.from(h.exports.EXPLORER_CONTROL_SECTIONS, ([id]) => id), ["scene", "measure"]);
+  assert.equal(new Set(changes).size, 10, "all current control views remain reachable");
   h.dispose();
+});
+test("shared URLs normalize legacy and unknown tools to Appearance without losing current routes", () => {
+  const restore = new Function("restoredMapUtilityView", "nextTemporalMode",
+    compile(`return ${declarations.get("nextMapUtilityView")};`));
+  for (const key of ["navigate", "localAtlas", "unknown", "", null]) assert.equal(restore(key, "snapshot"), "scene");
+  for (const key of ["scene", "measure", "inspect", "compare", "report", "export", "import", "connections", "history", "diagnostics"]) {
+    assert.equal(restore(key, "snapshot"), key);
+    assert.equal(restore(key, "comparison"), "compare");
+  }
+  assert.equal(restore("navigate", "comparison"), "compare");
 });
 test("focus boundaries ignore closed disclosure contents even when the browser retains their layout boxes", () => {
   class Details {

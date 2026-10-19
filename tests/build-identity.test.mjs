@@ -1,10 +1,36 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, rm, symlink } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, writeFile, rm, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { applicationIdentity, verifyHostedIdentity } from '../scripts/build-identity.mjs';
+
+test('the normal hot-reload command creates identity before Vite on a fresh source tree', async t => {
+  const root = await fixture(t);
+  const pkg = JSON.parse(await readFile('package.json', 'utf8'));
+  const command = pkg.scripts['dev:local'] ? 'dev:local' : 'dev';
+  await writeFile(join(root, 'package.json'), JSON.stringify({ type: 'module', scripts: pkg.scripts }));
+  await mkdir(join(root, 'scripts'));
+  await writeFile(join(root, 'scripts/build-identity.mjs'), await readFile('scripts/build-identity.mjs'));
+  // Asset preparation is independent of the prerequisite being exercised here.
+  for (const name of ['prepare-maplibre-assets.mjs', 'prepare-lightning-reader.mjs']) {
+    await writeFile(join(root, 'scripts', name), '');
+  }
+  await mkdir(join(root, 'node_modules/.bin'), { recursive: true });
+  await writeFile(join(root, 'node_modules/.bin/vite'), `#!/usr/bin/env node
+const fs = require('node:fs');
+const assert = require('node:assert/strict');
+const identity = JSON.parse(fs.readFileSync('app/build-info.generated.json', 'utf8'));
+assert.match(identity.sourceDigest, /^sha256:[a-f0-9]{64}$/);
+assert.ok(identity.sourceFileCount > 0);
+console.log('STARTED_WITH_IDENTITY');
+`, { mode: 0o755 });
+  const output = execFileSync('npm', ['run', command, '--', '--help'], {
+    cwd: root, encoding: 'utf8', timeout: 20000, stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  assert.match(output, /STARTED_WITH_IDENTITY/);
+});
 
 async function fixture(t) {
   const root = await mkdtemp(join(tmpdir(), 'kfm-build-identity-'));
@@ -48,6 +74,63 @@ test('a dirty checkout cannot advertise its parent commit as the source of its c
   const dirty = await applicationIdentity(root);
   assert.equal(dirty.sourceCommit, null); assert.equal(dirty.commitState, 'WORKTREE_MODIFIED');
   assert.notEqual(dirty.sourceDigest, clean.sourceDigest);
+});
+
+test('ignored runtime inputs cannot claim the clean Git commit as their source', async t => {
+  const root = await fixture(t);
+  const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+  await writeFile(join(root, '.gitignore'), 'app/leftover-runtime.mjs\n');
+  git(['init']); git(['add', '.']);
+  git(['-c', 'user.name=KFM Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture']);
+  const before = await applicationIdentity(root);
+  assert.equal(before.commitState, 'CLEAN_CHECKOUT');
+  await writeFile(join(root, 'app/leftover-runtime.mjs'), 'export const staleRuntime = true;');
+  assert.equal(git(['status', '--porcelain']).trim(), '', 'Git deliberately ignores the leftover input');
+  const after = await applicationIdentity(root);
+  assert.notEqual(after.sourceDigest, before.sourceDigest);
+  assert.equal(after.sourceCommit, null);
+  assert.equal(after.commitState, 'UNTRACKED_APPLICATION_INPUTS');
+});
+
+for (const flag of ['--assume-unchanged', '--skip-worktree']) {
+  test(`tracked bytes hidden by ${flag} cannot claim the original commit`, async t => {
+    const root = await fixture(t);
+    const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+    git(['init']); git(['add', '.']);
+    git(['-c', 'user.name=KFM Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture']);
+    const before = await applicationIdentity(root);
+    git(['update-index', flag, 'app/page.tsx']);
+    assert.equal((await applicationIdentity(root)).sourceCommit, before.sourceCommit);
+    await writeFile(join(root, 'app/page.tsx'), 'changed bytes hidden from Git status');
+    assert.equal(git(['status', '--porcelain']).trim(), '', 'the index flag hides the modified file');
+    const after = await applicationIdentity(root);
+    assert.notEqual(after.sourceDigest, before.sourceDigest);
+    assert.equal(after.sourceCommit, null);
+    assert.equal(after.commitState, 'WORKTREE_MODIFIED');
+    await writeFile(join(root, 'app/page.tsx'), 'map');
+    assert.equal((await applicationIdentity(root)).sourceCommit, before.sourceCommit);
+    await rm(join(root, 'app/page.tsx'));
+    const missing = await applicationIdentity(root);
+    assert.equal(missing.sourceCommit, null);
+    assert.equal(missing.commitState, 'WORKTREE_MODIFIED');
+  });
+}
+
+test('generated Python cache directories do not alter application identity or commit binding', async t => {
+  const root = await fixture(t);
+  const git = args => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+  await writeFile(join(root, '.gitignore'), '__pycache__/\n');
+  await mkdir(join(root, 'scripts'));
+  await writeFile(join(root, 'scripts/basemap-cache.py'), 'print("application source")\n');
+  git(['init']); git(['add', '.']);
+  git(['-c', 'user.name=KFM Test', '-c', 'user.email=test@example.invalid', 'commit', '-m', 'fixture']);
+  const before = await applicationIdentity(root);
+  for (const path of ['scripts/__pycache__', 'app/nested/__pycache__']) {
+    await mkdir(join(root, path), { recursive: true });
+    await writeFile(join(root, path, 'generated.cpython-312.pyc'), 'machine-specific generated bytes');
+  }
+  assert.equal(git(['status', '--porcelain']).trim(), '');
+  assert.deepEqual(await applicationIdentity(root), before);
 });
 
 test('hosted comparison requires actual matching application bytes and validates the response', async t => {

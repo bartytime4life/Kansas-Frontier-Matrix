@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {readFile} from 'node:fs/promises';
 import path from 'node:path';
-import {Miniflare,convertV4MiniflareOptions} from 'miniflare';
+import {workerPrerequisite} from './platform-prerequisites.mjs';
+const worker = workerPrerequisite();
 import ts from 'typescript';
 import {componentHarness,findNode,settle} from './component-harness.mjs';
 const compile=async file=>ts.transpileModule(await readFile(new URL('../app/'+file,import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
@@ -30,7 +31,8 @@ test('source failures and excessive response bytes remain unavailable',async()=>
  const old=globalThis.fetch;
  try{for(const body of ['x'.repeat(1_000_001),JSON.stringify({error:'provider error'})]){globalThis.fetch=async()=>new Response(body);assert.equal((await GET(new Request(`https://kfm.test/api?kind=minerals&bounds=${bounds}`))).status,502);}}finally{globalThis.fetch=old;}
 });
-test('the real Worker runtime reads resource records and refuses provider redirects',async()=>{
+test('the real Worker runtime reads resource records and refuses provider redirects',{skip:worker.skip},async()=>{
+ const {Miniflare,convertV4MiniflareOptions} = worker.load();
  const root=path.resolve('tests/resource-worker');let redirect=false;const calls=[];
  const contents={
   'index.mjs':'import {GET} from "./route.mjs";export default {fetch:GET};',

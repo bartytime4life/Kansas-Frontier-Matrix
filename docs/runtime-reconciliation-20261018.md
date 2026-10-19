@@ -25,3 +25,15 @@ Rollback: use the pre-change source and prepared-build snapshot together, retain
 immutable client assets for open tabs, and restore only the affected Explorer service.
 Do not copy stores, model contracts or credentials between runtimes. Review tests,
 CI and browser evidence independently; these source changes do not clear publication.
+
+## Development and navigation follow-up
+
+The hot-reload `npm run dev:local` command generates the ignored application
+identity before Vite starts, including on a clean checkout. Production `dev`,
+build, start, deployment and storage configuration retain their existing behavior.
+
+Legacy shared URLs with `mapui=open&maptab=navigate`, missing or unknown tool keys,
+and restored non-comparison snapshots resolve to Appearance (`scene`). Current
+tool keys and comparison precedence remain intact. The primary control contract
+is Appearance and Measure, with eight advanced tools; the removed Explore tab is
+not advertised by navigation tests.

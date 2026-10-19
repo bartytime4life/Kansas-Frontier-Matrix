@@ -1,0 +1,98 @@
+{
+  "receipt_id": "genrec-login-cleanup-review-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/api/source-pipeline/control/route.ts",
+    "app/download-library.tsx",
+    "app/earth-engine-context-client.ts",
+    "app/earth-engine/workspace.tsx",
+    "app/globals.css",
+    "app/historical-topo-control.tsx",
+    "app/page.tsx",
+    "docs/login-cleanup-review-20261019.md",
+    "server/ingestion-config.mjs",
+    "tests/hosted-ingestion.test.mjs",
+    "tests/login-cleanup-review.test.mjs",
+    "tests/login-removal-http.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/api/source-pipeline/control/route.ts": "sha256:4983c7120ba73b1baedd598fdb0253c48dea476dffdca649ea0c5d12aefc4583",
+    "app/download-library.tsx": "sha256:42f24757706d167466c54b99fefc8afd8c4c29fdf52bdc10c94d04569fe26606",
+    "app/earth-engine-context-client.ts": "sha256:e71576d0807d1b3ca27f7ef54c61811b8218f8c26582437d0691d28d901b0441",
+    "app/earth-engine/workspace.tsx": "sha256:e2b94e39b8ab31ea14baa935429cd3f6aa300c43763bfb0df10f7877bf11e454",
+    "app/globals.css": "sha256:06fd2cb92d99c0e0434c59f67e0b6451e71bef4c638daa5a57abf52cd7a9d7de",
+    "app/historical-topo-control.tsx": "sha256:380a60d5e72064959b2da13fabbcd35dce4d21b6dda92bf5b66bf8aecb188809",
+    "app/page.tsx": "sha256:224f2ed190d99674c0c38915bb5cf7a0b914bc0b2a97c0315aa1b94e280c845a",
+    "docs/login-cleanup-review-20261019.md": "sha256:1f550770c7c35ff63bcfec70987e96af9a0460f9110d1308ddf9f0606896b5b7",
+    "server/ingestion-config.mjs": "sha256:a40aa2349e3853b7eae3748024543ece7b8e6e4317941ecca8df17c70972b636",
+    "tests/hosted-ingestion.test.mjs": "sha256:e4a094a38c5e9d4a50509abc0df6e7c4c378f1f28e8972cd15464e27e40c0820",
+    "tests/login-cleanup-review.test.mjs": "sha256:2f08cca714f7fe4a93e25d60bab82c2433192fcf5c22071c9b9394cd190eebe1",
+    "tests/login-removal-http.test.mjs": "sha256:ec6df36019678a9f87ada8c9c24cb5b31f4f5c3a1ed940457cd672843e44513c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": null
+  },
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "local shell",
+      "GoDaddy browser"
+    ],
+    "contract_basis": "Owner-requested login/dead-connection removal; address PR5308 automated review without exposing private records."
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5308#discussion_r4311087927",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5308#discussion_r4311087932"
+    ],
+    "evidence_hashes": []
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-behavior-and-production-http",
+      "outcome": "PASS",
+      "reason": "40 checks, plus the final origin-hook rerun 5/5 after lint-directed hook cleanup."
+    },
+    {
+      "gate": "local-build-types-lint",
+      "outcome": "PASS",
+      "reason": "Production build and TypeScript pass; changed-area lint 0 errors and 41 inherited warnings. Subsequent CSS-only removal is covered by exact-commit CI."
+    },
+    {
+      "gate": "complete-exact-commit-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending publication of this candidate; final PR records CI outcome."
+    },
+    {
+      "gate": "hosted-follow-up-source",
+      "outcome": "SKIPPED",
+      "reason": "Prior cleanup is published. This follow-up is not yet deployed; domain dashboard connected but cloud HTTPS still unverified."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; automated review findings addressed with tests, no independent cloud security scan claimed."
+    }
+  ],
+  "policy_decisions": [
+    "Public catalog metadata and source recipes remain; private imagery/raster data is not exposed.",
+    "Existing capture machine capability controls only fixed pause/resume actions and all readiness gates; no scheduler or capture enabled.",
+    "No copied PC-account secrets, SQL migration, persisted-data reset, purchase or support message."
+  ],
+  "truth_labels": [
+    "IMPLEMENTED",
+    "LOCAL_VALIDATED",
+    "HOSTED_FOLLOW_UP_PENDING",
+    "HUMAN_REVIEW_PENDING"
+  ],
+  "prompt_or_contract": "Remove login and unnecessary unavailable connections; preserve private data and finish replacement deployment.",
+  "citations": [],
+  "created_at": "2026-10-19T07:17:21.197637+00:00"
+}

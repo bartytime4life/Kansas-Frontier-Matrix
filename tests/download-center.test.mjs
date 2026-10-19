@@ -187,7 +187,7 @@ test('job progress counts files, shows the byte cap separately, and keeps unknow
 
 test('library view pages stored collections and keeps unknown totals separate from map approval', async () => {
   let state = { status: status(), library: snapshot(), connection: 'connected', libraryError: null, announcement: '', actionNotice: '', lastChecked: '2026-10-08T12:00:00Z', refreshLibrary() {}, refreshingLibrary: false };
-  const reviewed = { manifests: [], loading: false, error: null, reload() {} };
+  const reviewed = { enabled: true, manifests: [], loading: false, error: null, reload() {} };
   const h = await componentHarness('app/download-library.tsx', {
     'next/link': { default: 'a' }, './earth-engine-context': { earthEngineSetYear: () => 2024 },
     './earth-engine-data': { EARTH_ENGINE_DATASETS: [] }, './local-download-client': client,
@@ -196,6 +196,7 @@ test('library view pages stored collections and keeps unknown totals separate fr
   const render = () => { const tree = h.render(h.exports.default, { downloads: state, reviewed }); h.commit(); return tree; };
   let tree = render(); const list = () => findNode(tree, node => node.type === 'ul' && node.props['aria-label'] === 'Stored collections');
   assert.equal(nodes(list(), node => node.type === 'li').length, 10); assert.match(JSON.stringify(tree), /No approved display periods/);
+  reviewed.enabled = false; tree = render(); assert.doesNotMatch(JSON.stringify(tree), /Ready on the map|No approved display periods|Recheck periods/); assert.equal(nodes(list(), node => node.type === 'li').length, 10); reviewed.enabled = true;
   const pages = findNode(tree, node => node.props?.['aria-label'] === 'Collection pages'); findNode(pages, node => node.type === 'button' && node.props.children === 'Next').props.onClick(); tree = render(); assert.match(JSON.stringify(list()), /Source 11/);
   findNode(tree, node => node.type === 'input' && node.props['aria-label'] === 'Find a collection').props.onChange({ target: { value: 'Source 40' } }); tree = render(); assert.equal(nodes(list(), node => node.type === 'li').length, 1); assert.match(JSON.stringify(list()), /Source 40/);
   state = { ...state, library: library() }; tree = render(); assert.match(JSON.stringify(tree), /Unknown/); assert.match(JSON.stringify(tree), /first scan finishes/); const progress = findNode(tree, node => node.type === 'progress'); assert.equal(progress.props.value, undefined);

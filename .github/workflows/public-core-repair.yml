@@ -13,46 +13,21 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: '22.13.1'
+          node-version: '22.23.3'
           cache: npm
       - run: npm ci
       - run: npm run build
       - run: npx tsc --noEmit
-      - name: Immutable hosted browser assets
-        run: node --test tests/build-identity.test.mjs tests/build-identity-http.test.mjs tests/public-client-assets.test.mjs
-      - name: Map menus, mobile controls and keyboard navigation
-        run: >-
-          node --test tests/explorer-menu-dismissal.test.mjs
-          tests/mobile-compatibility.test.mjs tests/workspace-map-navigation.test.mjs
-          tests/workspace-help-navigation.test.mjs
-      - name: Core delivery, filtering, geometry and account boundaries
-        run: >-
-          node --test tests/node-compressed-assets.test.mjs
-          tests/subsurface-worker.test.mjs tests/cutaway-model.test.mjs
-          tests/area-underlay.test.mjs tests/subsurface-slice.test.mjs
-          tests/pc-ai.test.mjs tests/pc-ai-http.test.mjs
-      - name: Hosted AI route and evidence discovery boundaries
-        run: >-
-          node --test tests/assistant-status.test.mjs tests/assistant-context.test.mjs
-          tests/assistant-sitewide.test.mjs tests/assistant-built-routes.test.mjs tests/public-ai.test.mjs
-          tests/county-search.test.mjs tests/assistant-investigation.test.mjs
-          tests/ai-read-buffer.test.mjs tests/ai-read-admission.test.mjs
-          tests/hosted-ai.test.mjs tests/hosted-ai-prompt.test.mjs tests/hosted-ai-generation.test.mjs tests/hosted-ai-acceptance.test.mjs
-          tests/braces-depth.test.mjs
-          tests/hosted-ai-artifacts.test.mjs tests/hosted-ai-resources.test.mjs
-          tests/pc-ai-login-admission.test.mjs tests/public-ai-http.test.mjs
-      - name: Zoom detail, source bounds and shared effects controls
-        run: >-
-          node --test tests/water-flow-motion.test.mjs tests/water-flow-sync.test.mjs
-          tests/water-path-analysis.test.mjs tests/water-flow-context.test.mjs tests/water-direction-route.test.mjs tests/scene-studio.test.mjs
-          tests/scene-surface-integration.test.mjs tests/cinematic-scene-effects.test.mjs
+      - name: Complete standalone Node suite
+        run: node --test --test-concurrency=4 tests/*.test.mjs
       - name: Actual Node HTTP boundary
         shell: bash
         run: |
           set -euo pipefail
-          PORT=5182 node server/start.mjs > "$RUNNER_TEMP/node-runtime.log" 2>&1 &
+          NODE_ENV=production PORT=5182 node server/start.mjs > "$RUNNER_TEMP/node-runtime.log" 2>&1 &
           site_pid=$!
           trap 'kill "$site_pid" 2>/dev/null || true' EXIT
           for attempt in $(seq 1 30); do
@@ -60,6 +35,19 @@ jobs:
             sleep 1
           done
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/godaddy-node-runtime.test.mjs
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/county-search.browser.mjs
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/explorer-startup.browser.mjs
+          node --input-type=module - "$RUNNER_TEMP/node-runtime.log" <<'NODE'
+          import { readFileSync } from 'node:fs';
+          import assert from 'node:assert/strict';
+          const line = readFileSync(process.argv[2], 'utf8').split('\n').find(line => line.startsWith('KFM_NODE_STARTUP '));
+          assert.ok(line, 'the real startup process must report its HTTP check');
+          const report = JSON.parse(line.slice('KFM_NODE_STARTUP '.length));
+          assert.equal(report.production, true);
+          assert.equal(report.listenPort, 5182);
+          assert.equal(report.outcome, 'LOOPBACK_BUILD_READY');
+          assert.equal(report.httpStatus, 200);
+          NODE
       - name: GoDaddy preview command uses the assigned production port
         shell: bash
         run: |

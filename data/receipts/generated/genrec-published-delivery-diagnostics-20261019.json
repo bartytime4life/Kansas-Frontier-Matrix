@@ -1,0 +1,75 @@
+{
+  "receipt_id": "genrec-published-delivery-diagnostics-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "server/startup-probe.mjs",
+    "tests/node-startup-probe.test.mjs",
+    "docs/published-delivery-diagnostics-20261019.md"
+  ],
+  "artifact_hashes": {
+    "server/startup-probe.mjs": "sha256:af77dd6efaefdcec78da199026f62533e325ed301a64971127de6477aaad96fd",
+    "tests/node-startup-probe.test.mjs": "sha256:16c87d9a9bbe8fa86467b124f978f2d146274b3a461260ace8f5dadcbc822e91",
+    "docs/published-delivery-diagnostics-20261019.md": "sha256:8ea6ffbcea12658226a25761de02b7c350280d7e7258f15771b92d3e095f47f6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": null
+  },
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "local shell",
+      "browser"
+    ],
+    "contract_basis": "Owner-authorized investigation of the remaining published origin/gateway failure."
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://developer.godaddy.com/en/docs/api-users/hosting/app-requirements"
+    ],
+    "evidence_hashes": []
+  },
+  "validation_gates": [
+    {
+      "gate": "bounded-diagnostics-real-http",
+      "outcome": "PASS",
+      "reason": "7 checks including real refusal/reset and unknown parser-error redaction; the uncorrelated delivery observer is removed."
+    },
+    {
+      "gate": "build-types-changed-lint",
+      "outcome": "PASS",
+      "reason": "Build, TypeScript and changed-file ESLint complete successfully."
+    },
+    {
+      "gate": "production-configuration-http",
+      "outcome": "PASS",
+      "reason": "Separate Node 22.23.3 process at assigned port 20011 with production AI/origin/trusted-host flags serves apex/provider roots and identity, fixed www redirect and successful startup report. No model inference."
+    },
+    {
+      "gate": "exact-commit-ci-and-hosted-readback",
+      "outcome": "SKIPPED",
+      "reason": "Pending at source checkpoint; live ServiceUnavailable recovery is not established."
+    }
+  ],
+  "policy_decisions": [
+    "No routing, access-control or model changes.",
+    "Only fixed public route categories and allowlisted transport/status metadata are logged; no request contents, identities, response contents or secrets.",
+    "Removed the uncorrelated first-public-request observer after automated review; no request access log is added.",
+    "Original Sites source/audience and persisted data remain unchanged."
+  ],
+  "truth_labels": [
+    "LOCAL_VALIDATED",
+    "EXACT_COMMIT_CI_PENDING",
+    "DOMAIN_ROUTING_IMPLICATED",
+    "CUSTOM_DOMAIN_RECOVERY_UNVERIFIED"
+  ],
+  "prompt_or_contract": "Figure out the remaining GoDaddy published failure after the domain handoff repair.",
+  "citations": [],
+  "created_at": "2026-10-19T07:54:07.207570+00:00"
+}

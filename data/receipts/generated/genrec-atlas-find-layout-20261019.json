@@ -1,0 +1,172 @@
+{
+  "receipt_id": "genrec-atlas-find-layout-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/assistant/workspace.module.css",
+    "app/assistant/workspace.tsx",
+    "docs/atlas-studio-blueprint-20261018.md",
+    "tests/chat-composer-reach.test.mjs",
+    "tests/county-search.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "app/assistant/workspace.module.css": "sha256:daacfd3cce78cd811e3a8bc45d126e01d70d7af2a4af08ea980f636705808443",
+    "app/assistant/workspace.tsx": "sha256:1df90527276fafbbb77751da39536fde15b8ea2ebe01747dd3c3f5853eaea19e",
+    "docs/atlas-studio-blueprint-20261018.md": "sha256:df47fefe72c09ca1b4e78c976e7595f22de7e0679c71c55386e1e5825d379c2d",
+    "tests/chat-composer-reach.test.mjs": "sha256:cdc45e0872b0c1d1cb7413f0a1477c720d003e2b6dbacf8cc77976e175841cff",
+    "tests/county-search.browser.mjs": "sha256:12861a0e4a93e16ec9c26a5338292f7c97009b19d4684242eb66bd332cd523e1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:df47fefe72c09ca1b4e78c976e7595f22de7e0679c71c55386e1e5825d379c2d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "local shell",
+      "real delegated reviewer"
+    ],
+    "contract_basis": "docs/atlas-studio-blueprint-20261018.md; bounded dedicated Find layout repair after owner merge of A1"
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/AGENTS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/app/assistant/workspace.tsx",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/app/assistant/workspace.module.css",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/tests/county-search.browser.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39184700140",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/tools/validators/validate_generated_receipt.py"
+    ],
+    "evidence_hashes": []
+  },
+  "truth_labels": {
+    "app/assistant/workspace.module.css": "NEEDS VERIFICATION",
+    "app/assistant/workspace.tsx": "CONFIRMED",
+    "docs/atlas-studio-blueprint-20261018.md": "PROPOSED",
+    "tests/chat-composer-reach.test.mjs": "CONFIRMED",
+    "tests/county-search.browser.mjs": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "real-browser-regression",
+      "outcome": "FAIL",
+      "reason": "Prior head683626c8965e252d498b6107d108dfbe249756cc in CI39184700140 failed actual county-result visibility at1366x768,390x844,375x667. Sourcegroups and16NodeHTTP checks passed; each viewport failed one explicitselection childcase because results rendered after full chat/welcome. This receipt does not claim that prior check passing."
+    },
+    {
+      "gate": "focused-regression-suites",
+      "outcome": "PASS",
+      "reason": "Fresh150/150 controlled cases across14suites, including9composer cases. New longthread regression verifies separate Find region and retained conversation/draft/280px reader position. Actual browser viewport assertions retained and strengthened for row inside body/composer viewport."
+    },
+    {
+      "gate": "build-types-lint",
+      "outcome": "PASS",
+      "reason": "Fresh npm run build, TypeScript --noEmit --incremental false, changed workspace/composer/browser ESLint and browser-script syntax pass. Runtime digest5f2b56d30f0e59781df953fa2a8a78daa4d9643b243d3336c376c19e72cca8ca,777inputs."
+    },
+    {
+      "gate": "independent-source-review",
+      "outcome": "PASS",
+      "reason": "Non-author independently reran103 cases across status37/composer9/discovery7/global9/starters12/publicAI29, reviewed dedicated scroll ownership and unchanged source/data boundaries; no source blocker. Final committed SHA is recorded in PR."
+    },
+    {
+      "gate": "compiled-asset-comparison",
+      "outcome": "PASS",
+      "reason": "49 manifest-selectedassets; vs original A0 base raw1929439\u21921961893,gzip9/mtime0 593860\u2192601617(+7757,+1.31%). Against directly preceding owner-mergedA1, incremental667raw/167gzipbytes. Same package/lock/buildconfig. Compiled inventory only, not initialtransfer,phoneFPS or latency."
+    },
+    {
+      "gate": "whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --check passes."
+    },
+    {
+      "gate": "new-candidate-browser",
+      "outcome": "SKIPPED",
+      "reason": "Local loopbacklistener prohibited. Newhead hydrated CI must establish actual correctedgeometry. Real virtualkeyboard,assistivetech,renderedcontrast and liveproviders remain unverified."
+    },
+    {
+      "gate": "independent-final-head",
+      "outcome": "SKIPPED",
+      "reason": "Pendingcommit at receipt authoring; later exactlocal/remotehead/tree review is reported in PR."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending. Owner independently merged previousPR; no agent merge,release,deployment or publication authority. This is a newreviewable repair."
+    },
+    {
+      "gate": "broader-historical-suites",
+      "outcome": "SKIPPED",
+      "reason": "Untouched non-CI explorer-site-audit3/4 and rendered-html24/33 have matched base/candidate failingcases; documented and deferred. No full-suitegreen claim."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Inspected source 1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/AGENTS.md"
+    },
+    {
+      "id": "Inspected source 2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/app/assistant/workspace.tsx"
+    },
+    {
+      "id": "Inspected source 3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/app/assistant/workspace.module.css"
+    },
+    {
+      "id": "Inspected source 4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/tests/county-search.browser.mjs"
+    },
+    {
+      "id": "Inspected source 5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39184700140"
+    },
+    {
+      "id": "Inspected source 6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "Inspected source 7",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "Inspected source 8",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "Inspected source 9",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/tools/validators/validate_generated_receipt.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T01:28:42.281645+00:00",
+  "emitter": "OpenAI Codex KFM-20261018-ATLAS-01",
+  "override_record": null,
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Task KFM-20261018-ATLAS-01. Follow-up to owner-merged#5279, currentbase 421a3e82fc94fb100bd27d72df03f45796c81dfd tree18ba351b7731512c302895f620a932221f530e18. Dedicated Find scrollregion prevents welcome/history/prompts burying searchresults. Conversation stays mountedhidden and retains draft/readerposition; its autoscroll/revealeffects pause whileFind; Find resets only itsownscroll. Irrelevantansweroptions hiddeninFind; compacttoolbar grid. Existingactualbrowser assertions strengthened, notwaived. No retrieval,AIserver,map/time,stateauthority,dependency,permission,releaseorstoragechange. Newreceipt preservesmergedhistoricalreceipts. Beforepublishing refresh target, exactheadreview andactualCI. Unverified rendered/phone/liveinference acceptance explicit. Rollback reviewedrevert of boundedlayout/test/doc change, no migration. Generated concept geography is not used as data; no secrets/privatepromptpayload included."
+}

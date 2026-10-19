@@ -850,7 +850,9 @@ export async function GET(request: NextRequest) {
     const queryEnd = queryEndDate.toISOString();
     const queryStart = subtractRange(queryEndDate, query.range).toISOString();
     if (query.mode === "network" && networkInFlight) {
-      return errorResponse(429, "USGS_STREAMFLOW_NETWORK_BUSY", "A statewide network request is already running on this worker; retry after it completes.");
+      const response = errorResponse(429, "USGS_STREAMFLOW_NETWORK_BUSY", "A statewide network request is already running on this worker; retry after it completes.");
+      response.headers.set("Retry-After", "2");
+      return response;
     }
     let bundle;
     let compactBody: string | undefined;

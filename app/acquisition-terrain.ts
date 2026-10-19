@@ -21,20 +21,3 @@ export function parseAcquisitionTerrain(value: unknown) {
   };
 }
 export type AcquisitionTerrain = NonNullable<ReturnType<typeof parseAcquisitionTerrain>>;
-
-export function acquisitionTerrainRead(body: unknown): AcquisitionTerrain | null {
-  if (!body || typeof body !== "object" || Array.isArray(body) || !("discovery" in body)) throw new Error("Saved terrain response is invalid.");
-  if (body.discovery === null) return null;
-  const discovery = parseAcquisitionTerrain(body.discovery);
-  if (!discovery) throw new Error("Saved terrain metadata failed validation. It has not been loaded.");
-  return discovery;
-}
-
-export async function verifyAcquisitionTerrainSave(body: unknown, submitted: AcquisitionTerrain): Promise<void> {
-  if (!body || typeof body !== "object" || !("saved" in body) || body.saved !== true || !("sha256" in body)
-    || typeof body.sha256 !== "string" || !/^[a-f0-9]{64}$/.test(body.sha256)) throw new Error("Terrain save was not confirmed. Check saved status before retrying.");
-  const saved = acquisitionTerrainRead(body), expected = parseAcquisitionTerrain(submitted);
-  if (!saved || !expected || JSON.stringify(saved) !== JSON.stringify(expected)) throw new Error("Saved terrain identity differs from the submitted preview.");
-  const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(expected)))), byte => byte.toString(16).padStart(2, "0")).join("");
-  if (digest !== body.sha256) throw new Error("Saved terrain digest differs from the submitted preview.");
-}

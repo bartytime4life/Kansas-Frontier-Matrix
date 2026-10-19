@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import "./cloudflare-register.mjs";
 import { readFile } from "node:fs/promises";
 import { inflateSync } from "node:zlib";
 import test from "node:test";
@@ -191,14 +190,13 @@ test("admitted radar renders only exact TIME in Mercator with fixed dimensions",
   } finally {globalThis.fetch=previous;}
 });
 
-test("saved Worker serves the event mixer and navigable cited research without browser globals", async () => {
-  const {default:worker}=await import(new URL("../dist/server/index.js",import.meta.url));
-  const env={ASSETS:{fetch:async()=>new Response("not found",{status:404})}},ctx={waitUntil(){},passThroughOnException(){}};
-  const response=await worker.fetch(new Request("http://localhost/observatory"),env,ctx);assert.equal(response.status,200);
+test("production Node handler serves the event mixer and navigable cited research without browser globals", async () => {
+  const {default: handler}=await import(new URL("../dist/server/index.js",import.meta.url));
+  const response=await handler(new Request("http://localhost/observatory"));assert.equal(response.status,200);
   const html=await response.text();
   for(const label of ["Event Observatory","Layer an event","Show Radar reflectivity","Show Smoke footprint","Show Fauna occurrences","Resource-map symbols","Shared event clock"]) assert.match(html,new RegExp(label,"i"));
   assert.ok(!/checked=""[^>]*aria-label="Loop"/.test(html));
-  const sources=await worker.fetch(new Request("http://localhost/observatory/sources"),env,ctx);assert.equal(sources.status,200);const report=await sources.text();
+  const sources=await handler(new Request("http://localhost/observatory/sources"));assert.equal(sources.status,200);const report=await sources.text();
   assert.match(report,/Sources and references/);assert.match(report,/b44494c1cf0807ed28b606e8a41b255bebdf4ad7/);assert.match(report,/HRRR flow is therefore researched but not activated/);
 });
 

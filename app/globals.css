@@ -4179,17 +4179,6 @@ body { font-size: 14px; }
 .historical-topo-detail dd { margin: 0; color: var(--ink); font-size: 12px; font-weight: 750; }
 .historical-topo-actions { display: flex; flex-wrap: wrap; gap: 7px; }
 .historical-topo-detail p { margin: 0; color: var(--dim); font-size: 11px; line-height: 1.5; }
-.historical-topo-overlay-controls { display: grid; gap: 9px; padding: 11px; border: 1px solid var(--line-strong); border-radius: 9px; background: rgba(8,34,39,.75); }
-.historical-topo-overlay-controls strong { color: var(--ink); font-size: 14px; }
-.historical-topo-overlay-controls label { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; color: var(--ink); font-size: 14px; }
-.historical-topo-overlay-controls input[type="range"] { flex: 1; min-width: 110px; accent-color: var(--gold); }
-.historical-topo-overlay-controls input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--gold); }
-.historical-topo-overlay-controls output { min-width: 38px; text-align: right; font-variant-numeric: tabular-nums; }
-.historical-topo-overlay-controls button { min-height: 38px; border: 1px solid rgba(115,199,210,.45); border-radius: 8px; background: rgba(115,199,210,.11); color: var(--water); padding: 7px 11px; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
-.historical-topo-overlay-controls small { color: var(--dim); font-size: 12px; line-height: 1.45; }
-.historical-topo-review { display: grid; gap: 8px; padding-top: 10px; border-top: 1px solid var(--line); }
-.historical-topo-review label:has(textarea) { display: grid; align-items: stretch; }
-.historical-topo-review textarea { min-height: 72px; width: 100%; border: 1px solid var(--line-strong); border-radius: 8px; background: #0a2227; color: var(--ink); padding: 8px; font: inherit; resize: vertical; }
 .historical-topo-control .map-utility-boundary small { display: block; margin-top: 7px; color: var(--dim); }
 .historical-topo-control .map-utility-boundary a { color: var(--water); }
 .timeline-frame-picker { display: flex; align-items: center; gap: 5px; margin-left: 4px; color: var(--dim); font-size: 12px; font-weight: 800; }
@@ -4671,25 +4660,23 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .hosted-source-status li span { color: #bdcdd6; font-size: .8rem; }
 .hosted-source-status a { color: #e5c67a; display: inline-block; margin: .6rem; }
 .source-operations { max-width: 900px; margin: 0 auto; padding: clamp(1rem,4vw,3rem); color: #e1e9ed; }
-.source-operations > nav,.source-operation-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; }
+.source-operations > nav { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem; }
 .source-operations section { margin: 1.5rem 0; padding: 1rem; border: 1px solid #435969; border-radius: 12px; }
 .source-operations a { color: #e5c67a; }
 .source-operations p { line-height: 1.6; }
 .source-operations li { padding: 1rem 0; border-bottom: 1px solid #435969; }
 .source-operations li code { display: block; overflow-wrap: anywhere; margin: .5rem 0; }
 
-.steward-login-button{color:var(--text,#e8edf1);border:1px solid #506676;border-radius:6px;padding:8px 14px;text-decoration:none;white-space:nowrap}.steward-login-button:focus-visible{outline:3px solid #e3c883;outline-offset:3px}
 
-.qwen-panel[hidden]{display:none}.qwen-panel .qwen-panel-heading{flex-shrink:0}.qwen-panel .qwen-context-strip{flex-shrink:0}.steward-login-button{font:inherit;cursor:pointer;background:transparent}
+.qwen-panel[hidden]{display:none}.qwen-panel .qwen-panel-heading{flex-shrink:0}.qwen-panel .qwen-context-strip{flex-shrink:0}
 
 .qwen-panel .qwen-panel-heading{padding:10px 16px}.qwen-panel .qwen-panel-heading h2{font-size:18px;margin:4px 0 0}.qwen-panel .qwen-context-strip small{font-size:9px;white-space:nowrap}.qwen-panel .qwen-context-strip span{padding:6px 10px}
 
-/* Phone header must fit even when the account action follows the brand. */
+/* Keep the compact map header within the phone viewport. */
 @media (max-width: 500px) {
   .topbar { grid-template-columns: minmax(0, 1fr) auto auto; }
   .brand-lockup { overflow: hidden; }
   .brand-lockup .mark { flex: none; }
-  .brand-lockup .steward-login-button { min-height: 44px; padding-inline: 8px; font-size: 12px; }
   .map-chrome-dock, .top-actions { min-width: 0; }
   .map-dock-menu-panel { max-height: calc(100dvh - var(--topbar) - env(safe-area-inset-bottom, 0px) - 18px); }
 }

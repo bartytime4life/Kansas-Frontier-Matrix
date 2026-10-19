@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import "./cloudflare-register.mjs";
 import test from "node:test";
 import ts from "typescript";
 
@@ -41,28 +40,27 @@ test("NOAA hydrology refuses redirects and retains the Kansas network response",
 });
 
 test("malformed NASA fire dates cannot reach an upstream", async () => {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `gibs-security-${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+  const handlerUrl = new URL("../dist/server/index.js", import.meta.url);
+  handlerUrl.searchParams.set("test", `gibs-security-${process.pid}-${Date.now()}`);
+  const { default: handler } = await import(handlerUrl.href);
   const originalFetch = globalThis.fetch;
   let calls = 0;
   try {
     globalThis.fetch = async () => { calls++; throw new Error("Unexpected upstream request"); };
-    const response = await worker.fetch(new Request("http://localhost/api/live-context?feed=nasa-gibs-fire-points&day=2026-09-26%2F..%2Fprivate"), {}, { waitUntil() {}, passThroughOnException() {} });
+    const response = await handler(new Request("http://localhost/api/live-context?feed=nasa-gibs-fire-points&day=2026-09-26%2F..%2Fprivate"));
     assert.equal(response.status, 400);
     assert.equal(calls, 0);
   } finally { globalThis.fetch = originalFetch; }
 });
 
 test("current NASA fire points use only a labeled previous UTC day when new-day tiles are missing", async () => {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `gibs-day-boundary-${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+  const handlerUrl = new URL("../dist/server/index.js", import.meta.url);
+  handlerUrl.searchParams.set("test", `gibs-day-boundary-${process.pid}-${Date.now()}`);
+  const { default: handler } = await import(handlerUrl.href);
   const originalFetch = globalThis.fetch;
   const today = new Date().toISOString().slice(0, 10);
   const yesterday = new Date(Date.parse(`${today}T00:00:00Z`) - 86_400_000).toISOString().slice(0, 10);
   const calls = [];
-  const context = { waitUntil() {}, passThroughOnException() {} };
   try {
     globalThis.fetch = async (input) => {
       const url = String(input);
@@ -72,7 +70,7 @@ test("current NASA fire points use only a labeled previous UTC day when new-day 
       if (url.includes(`/default/${yesterday}/`)) return new Response(new Uint8Array([0]), { headers: { "Content-Type": "application/octet-stream" } });
       throw new Error(`Unexpected NASA day in ${url}`);
     };
-    const current = await worker.fetch(new Request("http://localhost/api/live-context?feed=nasa-gibs-fire-points"), {}, context);
+    const current = await handler(new Request("http://localhost/api/live-context?feed=nasa-gibs-fire-points"));
     assert.equal(current.status, 200);
     const payload = await current.json();
     assert.equal(payload.state, "partial");
@@ -83,7 +81,7 @@ test("current NASA fire points use only a labeled previous UTC day when new-day 
     assert.ok(calls.some((url) => url.includes(`/default/${yesterday}/`)));
 
     calls.length = 0;
-    const download = await worker.fetch(new Request("http://localhost/api/source-download?source=nasa-gibs-fire-points"), {}, context);
+    const download = await handler(new Request("http://localhost/api/source-download?source=nasa-gibs-fire-points"));
     assert.equal(download.status, 200);
     assert.equal(download.headers.get("content-disposition"), `attachment; filename="kfm-nasa-gibs-fire-points-${yesterday}.geojson"`);
     const geojson = await download.json();
@@ -92,7 +90,7 @@ test("current NASA fire points use only a labeled previous UTC day when new-day 
     assert.equal(geojson.features.length, 0);
 
     calls.length = 0;
-    const archivedDownload = await worker.fetch(new Request(`http://localhost/api/source-download?source=nasa-gibs-fire-points&day=${yesterday}`), {}, context);
+    const archivedDownload = await handler(new Request(`http://localhost/api/source-download?source=nasa-gibs-fire-points&day=${yesterday}`));
     assert.equal(archivedDownload.status, 200);
     assert.equal(archivedDownload.headers.get("content-disposition"), `attachment; filename="kfm-nasa-gibs-fire-points-${yesterday}.geojson"`);
     const archiveGeojson = await archivedDownload.json();
@@ -103,13 +101,13 @@ test("current NASA fire points use only a labeled previous UTC day when new-day 
 
     calls.length = 0;
     for (const query of [`source=census-counties&day=${yesterday}`, "source=nasa-gibs-fire-points&day=2026-02-30", `source=nasa-gibs-fire-points&day=${yesterday}&day=${today}`, "source=nasa-gibs-fire-points&day=9999-01-01"]) {
-      const rejected = await worker.fetch(new Request(`http://localhost/api/source-download?${query}`), {}, context);
+      const rejected = await handler(new Request(`http://localhost/api/source-download?${query}`));
       assert.equal(rejected.status, 400, query);
     }
     assert.deepEqual(calls, []);
 
     calls.length = 0;
-    const exact = await worker.fetch(new Request(`http://localhost/api/live-context?feed=nasa-gibs-fire-points&day=${today}`), {}, context);
+    const exact = await handler(new Request(`http://localhost/api/live-context?feed=nasa-gibs-fire-points&day=${today}`));
     assert.equal(exact.status, 502);
     assert.ok(calls.length > 0 && calls.every((url) => url.includes(`/default/${today}/`)));
   } finally { globalThis.fetch = originalFetch; }

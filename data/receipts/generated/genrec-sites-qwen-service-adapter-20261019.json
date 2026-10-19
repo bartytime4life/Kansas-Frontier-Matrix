@@ -1,0 +1,130 @@
+{
+  "receipt_id": "genrec-sites-qwen-service-adapter-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-core-repair.yml",
+    "app/api/sites-qwen/v1/[...path]/route.ts",
+    "docs/sites-qwen-service-adapter-20261019.md",
+    "server/sites-qwen-handler.mjs",
+    "tests/sites-qwen-handler.test.mjs"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-core-repair.yml": "sha256:86aed07eec61a548e721a7fd41915ec1f773103a32eea9acbdd479184738d287",
+    "app/api/sites-qwen/v1/[...path]/route.ts": "sha256:192896ce35dfaf17d5508e7e699d5bafa58bef5a8cae25c9b30e67652043d9fa",
+    "docs/sites-qwen-service-adapter-20261019.md": "sha256:8136d4f82fe5b91e351ec9dc9d64fd663727a251f3f2597371891b77a0f7a1fd",
+    "server/sites-qwen-handler.mjs": "sha256:4063b3877080628542338a91b06faba8a4d810caf8cbcbfd88aa7d0ff4b96c48",
+    "tests/sites-qwen-handler.test.mjs": "sha256:ef66df3b686d91a66d4b3948aed806d4d530e042249044c81db9bf22e0a53bd1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:a2d56a48ba32a4a8fac39f3e3ddbd1ef07b31c55ba8adaed2c9cd2233ee90216",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Sites",
+      "container",
+      "Browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "sites-project://appgprj_6acd1aafe0d88191a4306ea2ab44ed91",
+      "Sites v9@2d67acf487b4846fd1388ec959ae3b60f5cd7765",
+      "GitHub hosted@7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "GitHub main@14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-core-repair.yml": "CONFIRMED",
+    "app/api/sites-qwen/v1/[...path]/route.ts": "CONFIRMED",
+    "docs/sites-qwen-service-adapter-20261019.md": "CONFIRMED",
+    "server/sites-qwen-handler.mjs": "CONFIRMED",
+    "tests/sites-qwen-handler.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "scoped-checks",
+      "outcome": "PASS",
+      "reason": "45 focused cases pass, including four actual adapter cases. Node production build, TypeScript and focused lint pass."
+    },
+    {
+      "gate": "browser",
+      "outcome": "SKIPPED",
+      "reason": "Service adapter checked with synthetic unit responses; hosted browser/inference unrun."
+    },
+    {
+      "gate": "live-Qwen-connection",
+      "outcome": "SKIPPED",
+      "reason": "Existing preview API requires authorization (HTTP 401); service route and protected configuration require reviewed enablement."
+    },
+    {
+      "gate": "full-suite-independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "No full-suite or independent human acceptance claim; draft review."
+    },
+    {
+      "gate": "GoDaddy-publication",
+      "outcome": "SKIPPED",
+      "reason": "No GoDaddy deployment or public feature release."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "source-0",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5163"
+    },
+    {
+      "id": "source-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5254"
+    },
+    {
+      "id": "source-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5260"
+    },
+    {
+      "id": "source-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5279"
+    },
+    {
+      "id": "source-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5280"
+    },
+    {
+      "id": "source-5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5281"
+    },
+    {
+      "id": "source-6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5283"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-19T02:52:17.465712Z",
+  "emitter": "OpenAI Codex Qwen workspace adaptation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Default-off adapter source only. Reuses existing public Qwen handler and budgets, keeps guest cookies private, refuses private selectors/evidence/account routes and wrong models. No GoDaddy deployment, environment, account, cache, model or data change. Live inference and human review pending."
+}

@@ -23,9 +23,7 @@ export type SiteActionRecord = Readonly<{
 }>;
 
 export const SITE_ACTIONS = Object.freeze([
-  { id: "submit-source-data", label: "Upload / propose source data", category: "sources", mode: "AUTHENTICATED_WRITE", handlerPath: "app/api/data-submissions/route.ts:POST", connectorIds: [], inputs: ["file up to 10 MB", "authenticated contributor", "source, dates, reuse terms, sensitivity"], outcomes: ["durable private submission", "recoverable validation/storage error"], boundary: "R2 quarantine and D1 metadata only. Submission never publishes or changes a map layer." },
-  { id: "review-source-data", label: "Record steward review", category: "sources", mode: "AUTHENTICATED_WRITE", handlerPath: "app/api/data-submissions/[id]/route.ts:PATCH", connectorIds: [], inputs: ["assigned steward", "submission version", "decision and note"], outcomes: ["versioned review history", "unauthorized/conflict rejection"], boundary: "Server allowlist and optimistic concurrency; acceptance is a preparation candidate, not source admission or map publication." },
-  { id: "download-source-data", label: "Download source data", category: "sources", mode: "READ_ONLY_CONNECTOR", handlerPath: "app/api/source-download/route.ts:GET", connectorIds: [], inputs: ["allowlisted source id"], outcomes: ["dated provider data with provenance", "explicit upstream error"], boundary: "No arbitrary URL proxy. Uploaded files use a separate authenticated ownership/steward download route." },
+  { id: "download-source-data", label: "Download source data", category: "sources", mode: "READ_ONLY_CONNECTOR", handlerPath: "app/api/source-download/route.ts:GET", connectorIds: [], inputs: ["allowlisted source id"], outcomes: ["dated provider data with provenance", "explicit upstream error"], boundary: "No arbitrary URL proxy." },
   {
     id: "toggle-layer-visibility",
     label: "Show or hide a layer",

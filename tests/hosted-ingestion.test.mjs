@@ -1,19 +1,21 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
-import { ARCHIVE_LIMIT_BYTES, OWNER_GITHUB_ID, ingestionConfig } from "../server/ingestion-config.mjs";
+import { ARCHIVE_LIMIT_BYTES, ingestionConfig } from "../server/ingestion-config.mjs";
 import { CAPTURE_SOURCES, captureRequest, fetchCapture } from "../server/ingestion-sources.mjs";
 import { runIngestion } from "../server/ingestion-runner.mjs";
-import { authenticateOwner, openFlow, ownerCallback, sameOrigin, sealFlow, workerAuthorized } from "../server/owner-auth.mjs";
-const environment = { DB_HOST: "fixture.invalid", DB_NAME: "fixture", DB_USER: "fixture", DB_PASSWORD: "fixture-only", KFM_DB_TLS: "verified", KFM_DB_CA_PEM: "fixture-ca", KFM_PUBLIC_ORIGIN: "https://kansasfrontiermatrix.com", VINEXT_TRUSTED_HOSTS: "kansasfrontiermatrix.com", KFM_GITHUB_CLIENT_ID: "fixture-client", KFM_GITHUB_CLIENT_SECRET: "fixture-only", KFM_SESSION_KEY: randomBytes(32).toString("base64url"), KFM_INGEST_ENABLED: "true", KFM_RUNTIME_ROLE: "published", KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES: String(ARCHIVE_LIMIT_BYTES), KFM_CAPTURE_WORKER_TOKEN: randomBytes(32).toString("base64url") };
+import { workerAuthorized } from "../server/capture-worker-access.mjs";
+const environment = { DB_HOST: "fixture.invalid", DB_NAME: "fixture", DB_USER: "fixture", DB_PASSWORD: "fixture-only", KFM_DB_TLS: "verified", KFM_DB_CA_PEM: "fixture-ca", KFM_PUBLIC_ORIGIN: "https://kansasfrontiermatrix.com", VINEXT_TRUSTED_HOSTS: "kansasfrontiermatrix.com", KFM_INGEST_ENABLED: "true", KFM_RUNTIME_ROLE: "published", KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES: String(ARCHIVE_LIMIT_BYTES), KFM_CAPTURE_WORKER_TOKEN: randomBytes(32).toString("base64url") };
 const fixture = { type: "FeatureCollection", features: [{ type: "Feature", id: "unchanged-id", geometry: { type: "Point", coordinates: [-98,38,3.5] }, properties: { value: null, unit_of_measure: "ft3/s", approval_status: "Provisional", time: "2026-10-14T01:00:00Z" } }] };
 const reply = (value = fixture) => new Response(JSON.stringify(value), { headers: { "Content-Type": "application/geo+json; charset=utf-8" } });
 test("archive readiness is deny-by-default and requires the exact chosen capacity", () => {
   assert.equal(ingestionConfig({}).ready, false); assert.equal(ingestionConfig(environment).ready, true);
-  for (const key of ["DB_HOST","DB_PASSWORD","KFM_DB_CA_PEM","KFM_GITHUB_CLIENT_SECRET","KFM_INGEST_ENABLED","KFM_RUNTIME_ROLE","KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES"]) assert.equal(ingestionConfig({ ...environment, [key]: "" }).ready, false, key);
+  for (const key of ["DB_HOST","DB_PASSWORD","KFM_DB_CA_PEM","KFM_CAPTURE_WORKER_TOKEN","KFM_INGEST_ENABLED","KFM_RUNTIME_ROLE","KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES"]) assert.equal(ingestionConfig({ ...environment, [key]: "" }).ready, false, key);
   assert.equal(ingestionConfig({ ...environment, KFM_PUBLIC_ORIGIN: "https://q9r9beo47t.preview.c38.airoapp.ai" }).ready, false);
   assert.equal(ingestionConfig({ ...environment, DB_HOST: "10.0.0.1" }).ready, false);
   assert.equal(ingestionConfig({ ...environment, VINEXT_TRUSTED_HOSTS: "*" }).ready, false);
+  assert.equal(ingestionConfig({ ...environment, VINEXT_TRUSTED_HOSTS: "kansasfrontiermatrix.com,www.kansasfrontiermatrix.com" }).ready, true);
+  assert.equal(ingestionConfig({ ...environment, VINEXT_TRUSTED_HOSTS: "kansasfrontiermatrix.com,evil.example" }).ready, false);
   assert.equal(ingestionConfig({ ...environment, KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES: "80000000001" }).ready, false);
 });
 test("actual Node request conversion preserves approved proxy HTTPS and rejects forwarded-host poisoning",async()=>{
@@ -21,9 +23,9 @@ test("actual Node request conversion preserves approved proxy HTTPS and rejects 
   process.env.VINEXT_TRUSTED_HOSTS='kansasfrontiermatrix.com';
   try {
     const {nodeToWebRequest}=await import('vinext/server/prod-server');
-    const urls=['kansasfrontiermatrix.com','evil.example'].map(host=>nodeToWebRequest({method:'GET',url:'/api/owner/callback',headers:{host:'private-node.invalid','x-forwarded-host':host,'x-forwarded-proto':'https'}}).url);
-    assert.equal(urls[0],'https://kansasfrontiermatrix.com/api/owner/callback');
-    assert.equal(urls[1],'https://private-node.invalid/api/owner/callback');
+    const urls=['kansasfrontiermatrix.com','evil.example'].map(host=>nodeToWebRequest({method:'GET',url:'/api/source-pipeline/run',headers:{host:'private-node.invalid','x-forwarded-host':host,'x-forwarded-proto':'https'}}).url);
+    assert.equal(urls[0],'https://kansasfrontiermatrix.com/api/source-pipeline/run');
+    assert.equal(urls[1],'https://private-node.invalid/api/source-pipeline/run');
   } finally {if(previous===undefined)delete process.env.VINEXT_TRUSTED_HOSTS;else process.env.VINEXT_TRUSTED_HOSTS=previous;}
 });
 test("capture identity is stable within its bucket and rejects arbitrary sources or URLs", async () => {
@@ -68,28 +70,12 @@ test("runner closes the lease, respects duplicate holds and stops at the hard li
   const capped=await runIngestion({config:ingestionConfig(environment),store,fetcher:()=>assert.fail("no I/O beyond capacity")});
   assert.equal(capped.captured,0); assert.equal(capped.outcomes.length,1); assert.equal(failures[0][2],"ARCHIVE_LIMIT_REACHED"); assert.equal(released,2);
 });
-test("sealed OAuth state expires and rejects tampering",()=>{
-  const flow={state:randomBytes(32).toString("base64url"),verifier:randomBytes(32).toString("base64url"),expires:Date.now()+300000}; const sealed=sealFlow(flow,environment);
-  assert.deepEqual(openFlow(sealed,environment),flow); assert.equal(openFlow(sealed,environment,flow.expires+1),null); assert.equal(openFlow(sealed.slice(0,-1)+"!",environment),null);
-});
-function callbackRequest(flow,state=flow.state) {return new Request(`https://kansasfrontiermatrix.com/api/owner/callback?code=fixture-code&state=${encodeURIComponent(state)}`,{headers:{Cookie:`__Host-kfm-github-flow=${sealFlow(flow,environment)}`}})}
-test("OAuth callback requires matched state, empty scopes and verified immutable owner ID",async()=>{
-  const flow={state:randomBytes(32).toString("base64url"),verifier:randomBytes(32).toString("base64url"),expires:Date.now()+300000};
-  const store={session:()=>assert.fail("must not sign in")};
-  assert.equal((await ownerCallback(callbackRequest(flow,"x".repeat(43)),{environment,store,fetcher:()=>assert.fail("no exchange") })).status,403);
-  assert.equal((await ownerCallback(callbackRequest(flow,"é".repeat(43)),{environment,store,fetcher:()=>assert.fail("no exchange") })).status,403);
-  assert.equal((await ownerCallback(callbackRequest(flow),{environment,store,fetcher:async()=>Response.json({access_token:"fixture-token",token_type:"bearer",scope:"repo"})})).status,403);
-  let calls=0; const wrongOwner=async()=>++calls===1?Response.json({access_token:"fixture-token",token_type:"bearer",scope:""}):Response.json({id:123,login:"bartytime4life"});
-  assert.equal((await ownerCallback(callbackRequest(flow),{environment,store,fetcher:wrongOwner})).status,403);
-  let session=null; calls=0;
-  const signed=await ownerCallback(callbackRequest(flow),{environment,store:{session:async(token,expires)=>{session={token,expires}}},fetcher:async(url,init)=>{calls++;if(calls===1){assert.equal(new URLSearchParams(init.body).get("code_verifier"),flow.verifier);return Response.json({access_token:"fixture-token",token_type:"bearer",scope:""})} assert.equal(url,"https://api.github.com/user"); return Response.json({id:Number(OWNER_GITHUB_ID),login:"changed-login-is-not-authority"})}});
-  assert.equal(signed.status,303); assert.match(session.token,/^[A-Za-z0-9_-]{43}$/); assert.notEqual(session.token,"fixture-token"); assert.match(signed.headers.get("set-cookie"),/HttpOnly; Secure; SameSite=Lax/);
-});
-test("forged roles, cross-origin actions and worker attempts cannot gain owner authority",async()=>{
-  const config=ingestionConfig(environment);
-  assert.equal(await authenticateOwner(new Request("https://kansasfrontiermatrix.com/api/source-pipeline/captures",{headers:{"x-role":"admin","oai-authenticated-user-id":OWNER_GITHUB_ID}}),{config,store:{authenticate:()=>assert.fail("no opaque token")}}),false);
-  assert.equal(sameOrigin(new Request("https://kansasfrontiermatrix.com/api/source-pipeline/control",{headers:{Origin:"https://evil.example"}}),config),false);
-  assert.equal(workerAuthorized(new Request("https://kansasfrontiermatrix.com/api/source-pipeline/run",{headers:{Authorization:`Bearer ${environment.KFM_CAPTURE_WORKER_TOKEN}`}}),environment),true);
-  assert.equal(workerAuthorized(new Request("https://q9r9beo47t.preview.c38.airoapp.ai/api/source-pipeline/run",{headers:{Authorization:`Bearer ${environment.KFM_CAPTURE_WORKER_TOKEN}`}}),environment),false);
-  assert.equal(workerAuthorized(new Request("https://kansasfrontiermatrix.com/api/source-pipeline/run",{headers:{Authorization:"Bearer "+"é".repeat(43)}}),environment),false);
+test("capture worker capability rejects browser sessions, forged roles and cross-origin requests",()=>{
+  const request=(url="https://kansasfrontiermatrix.com/api/source-pipeline/run",headers={})=>new Request(url,{headers});
+  const token={Authorization:`Bearer ${environment.KFM_CAPTURE_WORKER_TOKEN}`};
+  assert.equal(workerAuthorized(request(undefined,token),environment),true);
+  assert.equal(workerAuthorized(request(undefined,{...token,Origin:"https://kansasfrontiermatrix.com"}),environment),true);
+  for(const headers of [{},{Cookie:"__Host-kfm-owner="+"x".repeat(43)}, {"x-role":"admin","oai-authenticated-user-id":"203533328"}, {Authorization:"Bearer "+"é".repeat(43)}, {...token,Origin:"https://evil.example"}, {...token,Origin:"null"}, {...token,"Sec-Fetch-Site":"cross-site"}]) assert.equal(workerAuthorized(request(undefined,headers),environment),false);
+  assert.equal(workerAuthorized(request("https://q9r9beo47t.preview.c38.airoapp.ai/api/source-pipeline/run",token),environment),false);
+  assert.equal(workerAuthorized(request(undefined,token),{...environment,KFM_CAPTURE_WORKER_TOKEN:""}),false);
 });

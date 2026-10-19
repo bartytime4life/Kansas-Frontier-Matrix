@@ -149,12 +149,12 @@ added, so reduced-motion behaviour is unchanged.
 | --- | --- |
 | `npx tsc --noEmit --incremental false` | PASS |
 | `npx eslint app/assistant/workspace.tsx` | PASS, 0 errors, 0 warnings |
-| `node --test tests/chat-composer-reach.test.mjs tests/assistant-*.test.mjs tests/pc-ai-http.test.mjs tests/mobile-compatibility.test.mjs` (after rebuild) | 49/49 PASS |
+| `node --test tests/chat-composer-reach.test.mjs tests/assistant-*.test.mjs tests/pc-ai-http.test.mjs tests/mobile-compatibility.test.mjs` (after rebuild, `8971f5a`) | 52/52 PASS (also run with `tests/underground-load-boundary.test.mjs`: pass) |
 | `npm run build` | PASS |
 | `git diff --check` | PASS |
-| Full `node --test tests/*.test.mjs`, clean build | 1,330 pass, 51 fail, 1 skipped of 1,382 |
+| Full `node --test tests/*.test.mjs`, clean build at `8971f5a` | 1,334 pass, 51 fail, 1 skipped of 1,386 |
 | Same suite on unchanged base `9aa26f1`, separate clean worktree | 1,326 pass, 51 fail, 1 skipped of 1,378 |
-| Failure diff (sorted test names) | **Identical 51 failures; none introduced.** The four added tests pass. Sampled inherited causes are `fetch failed` in built-route tests in this sandbox. |
+| Failure diff (sorted test names) | **Identical 51 failures; none introduced.** The added tests pass. Sampled inherited causes are `fetch failed` in built-route tests in this sandbox. |
 
 Failure attribution note: an earlier full run on a non-clean `dist/` failed
 `underground-load-boundary` because the asset-staging step intentionally retains
@@ -172,7 +172,37 @@ in the backlog below.
 
 ## Review
 
-Independent code review (correctness, accessibility, security): **in progress** at draft-PR creation; results will be added to this record and the PR. Performance baseline: completed by a separate reviewer (above). Product acceptance: Creative Lead, rendered checks above. No release authorization is requested or implied.
+Independent code review (correctness, accessibility, security), read-only, by an
+agent that authored none of this code. First pass on `ccafdf2`: no blockers, no
+security findings.
+
+| Finding | Resolution |
+| --- | --- |
+| F1 medium: notices sat outside the scroll region and could squeeze or clip the composer on phones. | Fixed in `60ca266` (notices lead the scroll region). |
+| F2 medium: autoscroll ran on every 2 s poll, pulling readers away from the context card or help. | Fixed in `60ca266`: `shouldAutoscroll` scrolls for a new question always, and for a status/result change only when the reader was near the end. Truth-table test. |
+| F3 low–medium: some trust copy moved behind closed options. | Fixed in `60ca266`: the pinned line names each mode's boundary ("unverified discussion", "not admitted evidence", "unsupported answers withheld"). |
+| F4 low: one-row context strip ellipsizes values on phones without a tooltip. | Accepted; backlogged (owner of `page.tsx`). Screen readers get the full text. |
+| Creative Lead follow-up: an alert inside the scroll region could be out of view. | `a556000`, then refined in `8971f5a` after recheck. |
+| Recheck R1 medium: scrolling to every alert meant a brief poll failure moved the reader to the top and the finished reply was not brought into view. | Fixed in `8971f5a`: only an error from the visitor's own action is revealed; status-poll messages and the background status alert stay in place; the reveal scroll does not count as the reader leaving the end. Helper test. |
+| Recheck R2 low: reader position goes stale when layout changes without a scroll event. | Accepted; at most a few extra scrolls per job. |
+| Recheck R3 low: a reply finishing while the region is unmounted is not scrolled to later. | Accepted; same as before this change. |
+
+Rendered checks of the fixes, 375×667, with the browser's `fetch` replaced in
+the page to simulate states the local server cannot produce (no model is
+configured). These are simulations, not hosted behaviour:
+
+- AI configured but not ready, plus a failed send (429): composer, Search and
+  the options row stay visible; the alert is revealed (scroll 629 → 0) above the
+  standing notice; the draft is kept.
+- A job whose first status poll fails and whose second completes: no jump on the
+  failure (scroll 765, log end in view); the reply comes into view on recovery
+  (scroll 900, log end in view).
+- A failed send after that reply: alert revealed (900 → 0), draft kept.
+
+Performance baseline: separate reviewer (above). Product acceptance: Creative
+Lead, rendered checks above. The R1 fix in `8971f5a` was authored by the Creative
+Lead and checked in the browser and by tests, not by a further independent
+recheck. No release authorization is requested or implied.
 
 ## Proposed backlog (not in this change)
 
