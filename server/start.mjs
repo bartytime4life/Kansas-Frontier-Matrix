@@ -1,7 +1,7 @@
 import { startProdServer } from "vinext/server/prod-server";
 import { resolve } from "node:path";
 import { installPublicDelivery } from "./browser-headers.mjs";
-import { reportNodeStartup } from "./startup-probe.mjs";
+import { reportNodeStartup, reportPublicDelivery } from "./startup-probe.mjs";
 
 const rawPort = process.env.PORT ?? "3000";
 if (!/^[0-9]+$/.test(rawPort)) throw new Error("PORT must be an integer");
@@ -13,6 +13,7 @@ const { server } = await startProdServer({ port, host: "0.0.0.0", outDir: resolv
 installPublicDelivery(server);
 // Binding a socket does not prove that the built application can answer HTTP.
 // A failed probe is diagnostic; it does not change authorization or hide errors.
+void reportPublicDelivery(server);
 void reportNodeStartup(server);
 
 // Opt-in private qualification only; ordinary web startup loads no AI runtime.
