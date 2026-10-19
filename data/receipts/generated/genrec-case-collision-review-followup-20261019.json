@@ -1,0 +1,79 @@
+{
+  "receipt_id": "genrec-case-collision-review-followup-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "control_plane/object_family_register.yaml",
+    "docs/architecture/identity-and-spec-hash.md",
+    "docs/registers/OBJECT_FAMILY.md",
+    "docs/standards/ARCHIVAL-STANDARDS.md"
+  ],
+  "artifact_hashes": {
+    "control_plane/object_family_register.yaml": "sha256:6e2cdb669e489fedc7e6478b22d1f429161cf1370bfc62935a2328949fd7e63b",
+    "docs/architecture/identity-and-spec-hash.md": "sha256:2a10bfb824f8a1c0816ff161a78892f82b7b19d813ba723f1a1436049b3e7684",
+    "docs/registers/OBJECT_FAMILY.md": "sha256:a8e729a451d50deafbe6f7d1ee0d903f594643d75a3cb9007b93908227e67fa5",
+    "docs/standards/ARCHIVAL-STANDARDS.md": "sha256:b0479df321737f0beb0464ca8e59015c71e8a8f4f58d3abacb798f99c716b3bb"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/18163f1f9e01f437b96aecdc58ceb39079018b1e",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5319#discussion_r4315415801",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5319#discussion_r4315415821",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5320#discussion_r4315648277"
+    ]
+  },
+  "truth_labels": {
+    "control_plane/object_family_register.yaml": "CONFIRMED",
+    "docs/architecture/identity-and-spec-hash.md": "CONFIRMED",
+    "docs/registers/OBJECT_FAMILY.md": "CONFIRMED",
+    "docs/standards/ARCHIVAL-STANDARDS.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Review findings",
+      "outcome": "PASS",
+      "reason": "Two Codex P2 findings on bartytime4life/Kansas-Frontier-Matrix#5319 were verified against the merged tree. The SourceDescriptor register entry still listed case_variant_contracts and a 'Case' alias note after the uppercase contract was deleted, and the ARCHIVAL-STANDARDS.md OAI-PMH identity row still said both case variants exist. A sweep found one more stale row, IDH-DRIFT-08 in identity-and-spec-hash.md. #5319 merged before the fix was pushed, so this is a follow-up. A later Codex finding on #5320 flagged the human projection docs/registers/OBJECT_FAMILY.md, which still listed the 'Case' alias; that row was updated the same way."
+    },
+    {
+      "gate": "Register and dependent checks",
+      "outcome": "PASS",
+      "reason": "Every CONFLICTED status is unchanged by owner decision; only the stale case reason code and note qualifier are removed. validate_object_family_register.py with its fixtures and 16 unit tests, make trust-spine-fixture-slice, the program-baseline validator, the contract-object-map lifecycle tests, and make repository-governance-parity pass."
+    },
+    {
+      "gate": "Docs and ratchets",
+      "outcome": "PASS",
+      "reason": "check_meta_blocks.py and check_document_graph.py report no FAIL findings on the changed range. make gap-scan, repository-topology, scaffold-inventory, and docs-critical-structure exit 0, and check-case-conflict passes."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/18163f1f9e01f437b96aecdc58ceb39079018b1e"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T15:09:39Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Follow-up to genrec-case-collision-pairs-removal-20261019, which is historical and left unchanged; its digests for these three files describe the bytes merged in #5319."
+}
