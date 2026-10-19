@@ -1,0 +1,178 @@
+{
+  "receipt_id": "genrec-atlas-phone-focus-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/atlas-studio.css",
+    "app/page.tsx",
+    "docs/atlas-studio-blueprint-20261018.md",
+    "tests/county-search.browser.mjs",
+    "tests/scene-surface-integration.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/atlas-studio.css": "sha256:76f8ef20e639d30bbbf92b05c06deccd35cef1c1756548a74dcce3280fc431f1",
+    "app/page.tsx": "sha256:202ea1b56535f45ae17ad3bc7b46c597d29c6e18cb65b21aca78adbd35059ac6",
+    "docs/atlas-studio-blueprint-20261018.md": "sha256:c3f24800325167c8292ddea663e5177de83c82f88bf5c921ba711d0a5ba0edf9",
+    "tests/county-search.browser.mjs": "sha256:1c4c3121ee5ef479dddef7c190f50a223c688507c79679c223fe71bb55a96a04",
+    "tests/scene-surface-integration.test.mjs": "sha256:ac0fbb0919779ddf4944240fe6e7e24447199d405bff412a554f3e9590ec79c7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:c3f24800325167c8292ddea663e5177de83c82f88bf5c921ba711d0a5ba0edf9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "local shell",
+      "real delegated reviewer"
+    ],
+    "contract_basis": "docs/atlas-studio-blueprint-20261018.md; bounded phone Escape and short-screen repair after owner merge of #5280"
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/AGENTS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/app/assistant/workspace.tsx",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/app/assistant/workspace.module.css",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/tests/county-search.browser.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39184700140",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/tools/validators/validate_generated_receipt.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39185662364"
+    ],
+    "evidence_hashes": []
+  },
+  "truth_labels": {
+    "app/atlas-studio.css": "NEEDS VERIFICATION",
+    "app/page.tsx": "CONFIRMED",
+    "docs/atlas-studio-blueprint-20261018.md": "PROPOSED",
+    "tests/county-search.browser.mjs": "NEEDS VERIFICATION",
+    "tests/scene-surface-integration.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "real-browser-regression",
+      "outcome": "FAIL",
+      "reason": "Prior runs 39184700140 and 39185662364 failed rendered acceptance. The latter head 00295aba728f9181e88053001884949c9d652789 passed desktop, source groups and 16 Node HTTP checks; 390x844 failed Escape focus, 375x667 clipped the first result. These are prior-head results, not a passing claim for the repair."
+    },
+    {
+      "gate": "focused-regression-suites",
+      "outcome": "PASS",
+      "reason": "Fresh 162/162 cases across 15 suites. Includes long-thread Find/conversation retention, actual compact Escape consumption and subsequent independent key behavior. Actual browser assertions remain strict; second phone Escape is now explicitly checked."
+    },
+    {
+      "gate": "build-types-lint",
+      "outcome": "PASS",
+      "reason": "Fresh npm run build; TypeScript --noEmit --incremental false; browser syntax; changed-source ESLint 0 errors/40 existing warning profile. Runtime digest a9d449511c30dd30a2944744ec935403d4ae823eca029560894330431ff74127, 777 inputs."
+    },
+    {
+      "gate": "independent-source-review",
+      "outcome": "PASS",
+      "reason": "Non-author independently ran 122/122 cases across nine suites, verified runtime source/digest and identified then rechecked the corrected browser visibility selector. No blocking source findings remain. Final committed SHA review is recorded separately in PR."
+    },
+    {
+      "gate": "compiled-asset-comparison",
+      "outcome": "PASS",
+      "reason": "49 manifest-selected assets; A0 raw 1929439 to 1962104, per-file gzip9/mtime0 593860 to 601648 (+7788,+1.31%). Compared with owner-merged A1: +878 raw/+198 gzip. Same build inputs/config basis. Compiled inventory is not actual transfer, phone FPS, latency or capacity."
+    },
+    {
+      "gate": "whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --check passes."
+    },
+    {
+      "gate": "new-candidate-browser",
+      "outcome": "SKIPPED",
+      "reason": "Local loopback listener prohibited. Updated head must be checked by actual hydrated CI; prior desktop pass does not establish this head. Physical virtual keyboard, assistive technology, rendered contrast and live providers remain unverified."
+    },
+    {
+      "gate": "independent-final-head",
+      "outcome": "SKIPPED",
+      "reason": "Pendingcommit at receipt authoring; later exactlocal/remotehead/tree review is reported in PR."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Owner independently marked #5280 ready; no agent readiness, merge, release, deployment or publication action. This receipt does not establish human approval of the later repair."
+    },
+    {
+      "gate": "broader-historical-suites",
+      "outcome": "SKIPPED",
+      "reason": "Untouched non-CI explorer-site-audit3/4 and rendered-html24/33 have matched base/candidate failingcases; documented and deferred. No full-suitegreen claim."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Inspected source 1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/AGENTS.md"
+    },
+    {
+      "id": "Inspected source 2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/app/assistant/workspace.tsx"
+    },
+    {
+      "id": "Inspected source 3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/app/assistant/workspace.module.css"
+    },
+    {
+      "id": "Inspected source 4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/421a3e82fc94fb100bd27d72df03f45796c81dfd/tests/county-search.browser.mjs"
+    },
+    {
+      "id": "Inspected source 5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39184700140"
+    },
+    {
+      "id": "Inspected source 6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "Inspected source 7",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "Inspected source 8",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "Inspected source 9",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/tools/validators/validate_generated_receipt.py"
+    },
+    {
+      "id": "Inspected follow-up browser failure",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39185662364"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T01:28:42.281645+00:00",
+  "emitter": "OpenAI Codex KFM-20261018-ATLAS-01",
+  "override_record": null,
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Task KFM-20261018-ATLAS-01. Follow-up to owner-merged #5280, exact base 08b0bf882511f0d1698d8838e34900819cc838e1 tree e58461e873344c09024bf8feb309fa89fbffdc97. Compact Escape belongs to one panel; a subsequent key closes Chat normally. Short phones use available workspace height, preserving status, Close, attribution and touch targets. Actual browser assertions strengthened, not waived. All three merged historical receipts preserved. No retrieval/server/data/dependency/permission/storage/release changes. New head CI and independent final-head review recorded separately. Rollback: reviewed revert of bounded UI/test/doc changes; no migration."
+}

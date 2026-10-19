@@ -6639,6 +6639,10 @@ export default function Home() {
     if (!returningToScene) items[0]?.focus({ preventScroll: true });
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        // This panel owns the transition; the same key must not close the
+        // conversation that evidence returns to as it bubbles to document.
+        event.preventDefault();
+        event.stopPropagation();
         if (mapUtilityOpen) closeMapUtility(); else if (rightOpen) closeRightPanel(); else if (leftOpen) closeLeftPanel(); else closeTimelinePanel();
         return;
       }
@@ -6662,7 +6666,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key !== "Escape" || repositoryOpen) return;
+      if (event.defaultPrevented || event.key !== "Escape" || repositoryOpen) return;
       // Header popovers own their Escape; keep the underlying Layers view open.
       if ((event.target as HTMLElement | null)?.closest?.(".map-dock-map-menu")) return;
       if (workspaceDetailsRef.current?.open) workspaceDetailsRef.current.open = false;

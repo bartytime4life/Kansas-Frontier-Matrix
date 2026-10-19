@@ -390,14 +390,14 @@ from the A1 checkout with Node 22.13.1 and existing locked dependencies.
 
 | Check | Actual result and boundary |
 | --- | --- |
-| Fourteen focused suites, each `node tests/<suite>.test.mjs` | **PASS 150/150:** assistant-status 37, chat-composer-reach 9, map-starters 12, atlas-discovery 7, global-search-status 9, public-ai 29, assistant-investigation 6, county-search 4, assistant-sitewide 11, inspection-panel 4, modal-background 3, workspace-map-navigation 9, workspace-help-navigation 8, mobile-compatibility 2. Controlled component/server/static checks, not a rendered phone claim. |
-| Independent reviewer subset | **PASS 103/103:** status, discovery, global search, starters, composer and public-ai suites on final application source. No remaining blocking source findings reported. |
+| Fifteen focused suites, each `node tests/<suite>.test.mjs` | **PASS 162/162:** assistant-status 37, chat-composer-reach 9, map-starters 12, atlas-discovery 7, global-search-status 9, public-ai 29, assistant-investigation 6, county-search 4, assistant-sitewide 11, inspection-panel 4, modal-background 3, workspace-map-navigation 9, workspace-help-navigation 8, mobile-compatibility 2, scene-surface-integration 12. Controlled component/server/static checks, not a rendered phone claim. |
+| Independent reviewer subset | **PASS 122/122** on the final runtime source: status 37, composer 9, discovery 7, global search 9, starters 12, public-ai 29, scene-surface 12, inspection-panel 4, modal-background 3. The reviewer caught an invalid browser-test visibility selector, corrected before CI. No blocking source findings remain; exact-head review is recorded separately in the PR. |
 | Stop/history reproduction | New 37th test fails before the fix (36 pass/1 fail), then passes after UUID rotation for Stop and pending-panel hide when cancellation returns `cancelled:false`. The non-author reproduced ID reuse independently. |
-| `npm run build` | **PASS**, final runtime digest `5f2b56d30f0e59781df953fa2a8a78daa4d9643b243d3336c376c19e72cca8ca`, 777 source inputs. Existing Vinext route-classification notice remains. |
+| `npm run build` | **PASS**, final runtime digest `a9d449511c30dd30a2944744ec935403d4ae823eca029560894330431ff74127`, 777 source inputs. Existing Vinext route-classification notice remains. |
 | `tsc --noEmit --incremental false` | **PASS** after final application build. |
 | Changed-source/test ESLint | **0 errors / 40 warnings**, versus 0/40 on matching base files. 39 warning identities unchanged; one prior missing-dependency warning becomes an unnecessary-dependency warning on the modified close callback. No clean-lint claim. |
 | `git diff --check` | **PASS**. |
-| Compiled asset inventory | Manifest-selected unique JS/CSS assets: 49 on both base/candidate. Raw 1,929,439 → 1,961,893 bytes; per-file gzip9/mtime0 593,860 → 601,617 (+7,757, +1.31%). Assistant JS gzip 12,210 → 14,340; assistant CSS 1,586 → 3,090; associated page CSS 6,549 → 7,959. The layout follow-up alone adds 667 raw / 167 gzip bytes over the owner-merged A1 tree. Package/lock/build-config hashes match. Unreferenced retained staged assets excluded. This is compiled inventory, not initial transfer, phone latency, FPS or host capacity. |
+| Compiled asset inventory | Manifest-selected unique JS/CSS assets: 49 on both base/candidate. Raw 1,929,439 → 1,962,104 bytes; per-file gzip9/mtime0 593,860 → 601,648 (+7,788, +1.31%). Assistant JS gzip 12,210 → 14,340; assistant CSS 1,586 → 3,090; associated page CSS 6,549 → 7,985. The layout follow-up alone adds 878 raw / 198 gzip bytes over the owner-merged A1 tree. Package/lock/build-config hashes match. Unreferenced retained staged assets excluded. This is compiled inventory, not initial transfer, phone latency, FPS or host capacity. |
 | Hydrated browser fixture | Adapted existing county-search CI fixture to open Find, use the composer, ArrowDown to an explicit result, and return focus after Evidence. **Not run locally**: loopback listener denied. CI must report its actual covered revision. |
 | Phone/keyboard/accessibility/performance | **NEEDS VERIFICATION:** real virtual keyboard, touch, rendered overflow/contrast, focus behavior with assistive technology, scrolling, WebGL, frame cost and network/latency. Structural CSS/DOM assertions do not satisfy these acceptance items. |
 
@@ -465,6 +465,28 @@ historical receipts remain unchanged. This repair changes the existing conversat
 presentation, its tests and this explanatory record; it does not activate a service,
 modify data, merge, deploy or authorize publication. Rendered acceptance must be
 re-established on the follow-up head.
+
+**Second rendered repair:** CI run `39185662364` at remote head
+`00295aba728f9181e88053001884949c9d652789` passed build, types, source groups,
+16 Node HTTP checks, and the full desktop county scenario. At 390×844, selection
+worked but Escape returned to the header instead of the composer. At 375×667,
+the first result extended below its actual scroll region (row bottom 480.09px,
+body bottom 457.86px). Neither phone result is reported as passing.
+
+The compact panel now consumes the Escape it owns; the document handler respects
+`defaultPrevented`, preventing the same key from closing a reopened chat. A short
+phone uses the available workspace height above the status bar, preserving source
+labels and touch targets. Actual handler regressions cover consumption and the
+next independent Escape; the browser scenario now checks Evidence → composer →
+header with separate keys. The original geometry assertion remains strict.
+Fresh local validation is 162/162 cases plus build and TypeScript. Corrected
+rendered results must be attached to the next exact head. The owner separately marked #5280 ready and merged it while this repair was
+being verified. These were not agent actions or evidence of deployment. The
+phone repair therefore uses task branch `codex/atlas-phone-focus-20261019` from
+exact target base `08b0bf882511f0d1698d8838e34900819cc838e1`, tree
+`e58461e873344c09024bf8feb309fa89fbffdc97`. The three merged receipts remain
+unchanged; the new receipt is
+`data/receipts/generated/genrec-atlas-phone-focus-20261019.json`.
 
 ### A1 limits, rollback and continuation
 
