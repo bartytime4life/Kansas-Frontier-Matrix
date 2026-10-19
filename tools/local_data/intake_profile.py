@@ -811,7 +811,11 @@ def profile_file(path: Path, *, display_path: str | None = None, declared: dict 
                     _profile_csv(handle, p, size, text[:16384])
                 else:
                     p.kind("document", "text", "text/plain")
-        except (ValueError, struct.error, IndexError, KeyError, OSError, sqlite3.Error, zipfile.BadZipFile, RuntimeError, EOFError, UnicodeError):
+        # A malformed input must stay one item's issue, never abort the whole intake run:
+        # e.g. a 400-digit JSON integer overflows float(), a GeoParquet "columns" list or
+        # non-object column breaks .get(), and a list "primary_column" is unhashable.
+        except (ValueError, struct.error, IndexError, KeyError, OSError, sqlite3.Error, zipfile.BadZipFile, RuntimeError, EOFError,
+                UnicodeError, TypeError, AttributeError, OverflowError):
             p.issues.add("format_reader_failed")
     if p.format["kind"] == "unknown":
         p.issues.add("format_unrecognized")

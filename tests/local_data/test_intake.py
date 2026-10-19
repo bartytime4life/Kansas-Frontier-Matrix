@@ -179,6 +179,51 @@ class ProfileTests(unittest.TestCase):
         p = self.profile("broken.tif", b"II*\0" + b"\xff" * 12)
         self.assertIn("format_reader_failed", p["issues"])
 
+    def test_geoparquet_and_geopackage_catalogue_extents(self):
+        p = self.profile("wells.parquet", geoparquet(b'{"primary_column":"geometry","columns":{"geometry":'
+                                                     b'{"geometry_types":["Point"],"bbox":[-100,37,-96,39]}}}'))
+        self.assertEqual((p["format"]["kind"], p["spatial"]["bbox_wgs84"], p["spatial"]["geometry_types"]),
+                         ("geoparquet", [-100.0, 37.0, -96.0, 39.0], {"Point": None}))
+        projected = self.profile("utm.parquet", geoparquet(b'{"primary_column":"g","columns":{"g":{"crs":{"id":'
+                                                           b'{"authority":"EPSG","code":26914}},"bbox":[500000,4100000,700000,4300000]}}}'))
+        self.assertEqual("EPSG:26914", projected["spatial"]["crs"])
+        self.assertEqual("parquet", self.profile("plain.parquet", geoparquet(b'{"other":1}'))["format"]["kind"])
+        path = self.dir / "layers.gpkg"
+        with sqlite3.connect(path) as conn:
+            conn.execute("CREATE TABLE gpkg_spatial_ref_sys (srs_id INTEGER, organization TEXT, organization_coordsys_id INTEGER)")
+            conn.execute("CREATE TABLE gpkg_contents (table_name TEXT, data_type TEXT, min_x REAL, min_y REAL, max_x REAL, max_y REAL, srs_id INTEGER)")
+            conn.execute("INSERT INTO gpkg_spatial_ref_sys VALUES (4326, 'EPSG', 4326), (32614, 'EPSG', 32614)")
+            conn.execute("INSERT INTO gpkg_contents VALUES ('wells', 'features', -100, 37, -98, 38, 4326), ('roads', 'features', -99, 37.5, -96, 39, 4326)")
+        conn.close()
+        gpkg = profile_file(path, display_path="layers.gpkg")
+        self.assertEqual(("geopackage", [-100.0, 37.0, -96.0, 39.0], 2),
+                         (gpkg["format"]["kind"], gpkg["spatial"]["bbox_wgs84"], len(gpkg["structure"]["layers"])))
+        with sqlite3.connect(path) as conn:
+            conn.execute("INSERT INTO gpkg_contents VALUES ('utm', 'features', 500000, 4100000, 700000, 4300000, 32614)")
+        conn.close()
+        self.assertIn("geopackage_mixed_crs", profile_file(path, display_path="layers.gpkg")["issues"])
+        plain = self.dir / "plain.sqlite"
+        with sqlite3.connect(plain) as conn:
+            conn.execute("CREATE TABLE t (x)")
+        conn.close()
+        self.assertEqual("sqlite", profile_file(plain, display_path="plain.sqlite")["format"]["kind"])
+
+    def test_malformed_readers_become_issues_not_exceptions(self):
+        huge = b"1" + b"0" * 400  # parses as an int, then overflows float()
+        cases = {
+            "huge.geojson": b'{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[' + huge + b',38]}}',
+            "columns_list.parquet": geoparquet(b'{"primary_column":"geometry","columns":[]}'),
+            "column_scalar.parquet": geoparquet(b'{"primary_column":"geometry","columns":{"geometry":5}}'),
+            "primary_list.parquet": geoparquet(b'{"primary_column":[],"columns":{"geometry":{}}}'),
+            "crs_id_list.parquet": geoparquet(b'{"primary_column":"geometry","columns":{"geometry":{"crs":{"id":[1]},"bbox":[-100,37,-96,39]}}}'),
+            "bbox_huge.parquet": geoparquet(b'{"primary_column":"geometry","columns":{"geometry":{"bbox":[' + huge + b',37,-96,39]}}}'),
+        }
+        for name, content in cases.items():
+            with self.subTest(name=name):
+                p = self.profile(name, content)
+                self.assertIn("format_reader_failed", p["issues"])
+                self.assertIsNone(p["spatial"]["bbox_wgs84"])
+
 
 def budget(**patch):
     value = {"schema": "kfm-github-storage-budget/v1", "github_limit_bytes": 100_000, "reserved_for_code_and_interface_bytes": 20_000,
@@ -202,6 +247,12 @@ def profile(**patch):
              "hints": {"domain": "hydrology", "review_flags": []}, "issues": [], "structure": {}, "temporal": {}}
     value.update(patch)
     return value
+
+
+def geoparquet(metadata: bytes) -> bytes:
+    """A minimal Parquet envelope whose footer carries GeoParquet key-value metadata."""
+    footer = b"\x15\x02" + metadata + b"\x00"
+    return b"PAR1" + b"\0" * 16 + footer + len(footer).to_bytes(4, "little") + b"PAR1"
 
 
 def tiers(decision):
@@ -336,6 +387,15 @@ class PipelineTests(unittest.TestCase):
         intake.analyze(self.root, budget=self.budget)
         self.assertNotIn("unknown.bin", self.items())
         self.assertIn("unknown.bin", self.items(include_missing=True), "history is retained")
+
+    def test_one_hostile_file_is_indexed_as_an_issue_and_the_run_completes(self):
+        hostile = b'{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[1' + b"0" * 400 + b',38]}}'
+        (self.root / "data/raw/kgs/hostile.geojson").write_bytes(hostile)
+        result = intake.analyze(self.root, budget=self.budget)
+        self.assertEqual((result["state"], result["discovered"], result["analyzed"]), ("complete", 4, 4))
+        found = self.items()
+        self.assertIn("format_reader_failed", intake.get_item(self.root, found["hostile.geojson"]["id"])["profile"]["issues"])
+        self.assertEqual(found["gauges.geojson"]["status"], "ready", "the files after it are still analysed")
 
     def test_spatial_and_attribute_queries(self):
         intake.analyze(self.root, inbox=self.inbox, budget=self.budget)
