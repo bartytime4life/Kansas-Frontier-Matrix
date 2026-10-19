@@ -1,0 +1,451 @@
+diff --git a/app/api/daily-archive/route.ts b/app/api/daily-archive/route.ts
+--- a/app/api/daily-archive/route.ts
++++ b/app/api/daily-archive/route.ts
+@@ -59,7 +59,9 @@
+     const reader = request.body?.getReader(); let text = ""; let size = 0; const decoder = new TextDecoder();
+     if (!reader) throw new ArchiveError("Input required.");
+     for (;;) { const {done,value} = await reader.read(); if(done) break; size += value.length; if(size > 4096) { await reader.cancel(); throw new ArchiveError("Input too large.",413); } text += decoder.decode(value,{stream:true}); } text += decoder.decode();
+-    const body = JSON.parse(text);
++    let body;
++    try { body = JSON.parse(text); } catch { throw new ArchiveError("Invalid JSON input."); }
++    if (!body || typeof body !== "object" || Array.isArray(body)) throw new ArchiveError("Invalid JSON input.");
+     if (action === "review") return Response.json(await reviewArchive(db, body.id, body.state, body.note), { headers: archiveHeaders });
+     if (action === "settings") {
+       if (!Number.isSafeInteger(body.budget) || body.budget < 16777216 || body.budget > 1_000_000_000_000 || typeof body.paused !== "boolean") throw new ArchiveError("Choose a storage budget between 16,777,216 bytes and 1 TB and a pause setting.");
+diff --git a/app/api/historical-topo/activate/route.ts b/app/api/historical-topo/activate/route.ts
+--- a/app/api/historical-topo/activate/route.ts
++++ b/app/api/historical-topo/activate/route.ts
+@@ -1,5 +1,5 @@
+ import { parseTopoOverlayManifest, topoActiveKey, topoManifestKey, topoOverlayPrefix, topoRequestKey, topoTileKey, type TopoActivePointer } from "../../../historical-topo-overlay";
+-import { topoActive, topoBucket, topoBytes, topoDigest, topoFailure, topoJson, topoOwner, topoSameOrigin, topoScanId, TopoOverlayError } from "../../../historical-topo-overlay-server";
++import { topoActive, topoBucket, topoBytes, topoDigest, topoFailure, topoJson, topoOwner, topoRequestJson, topoSameOrigin, topoScanId, TopoOverlayError } from "../../../historical-topo-overlay-server";
+ export const dynamic = "force-dynamic";
+ 
+ export async function POST(request: Request) {
+@@ -9,7 +9,7 @@
+     if (!request.headers.get("content-type")?.startsWith("application/json") || Number(request.headers.get("content-length") ?? 0) > 2048) throw new TopoOverlayError("Invalid review record.");
+     const raw = await request.arrayBuffer();
+     if (raw.byteLength > 2048) throw new TopoOverlayError("Invalid review record.");
+-    const body = topoJson(raw) as { scanId?: unknown; packageId?: unknown; manifestSha256?: unknown; note?: unknown; rollback?: unknown };
++    const body = topoRequestJson(raw, "Invalid review record.");
+     const scanId = topoScanId(String(body.scanId ?? ""));
+     const packageId = body.packageId;
+     const hash = body.manifestSha256;
+diff --git a/app/api/historical-topo/overlay/route.ts b/app/api/historical-topo/overlay/route.ts
+--- a/app/api/historical-topo/overlay/route.ts
++++ b/app/api/historical-topo/overlay/route.ts
+@@ -1,5 +1,5 @@
+ import { topoRequestKey } from "../../../historical-topo-overlay";
+-import { topoActive, topoBucket, topoBytes, topoCatalogSheet, topoFailure, topoJson, topoPrivateHeaders, topoSameOrigin, topoScanId, topoUser, TopoOverlayError } from "../../../historical-topo-overlay-server";
++import { topoActive, topoBucket, topoBytes, topoCatalogSheet, topoFailure, topoPrivateHeaders, topoRequestJson, topoSameOrigin, topoScanId, topoUser, TopoOverlayError } from "../../../historical-topo-overlay-server";
+ export const dynamic = "force-dynamic";
+ 
+ export async function GET(request: Request) {
+@@ -26,8 +26,8 @@
+     if (!request.headers.get("content-type")?.startsWith("application/json") || Number(request.headers.get("content-length") ?? 0) > 256) throw new TopoOverlayError("Invalid sheet request.");
+     const raw = await request.arrayBuffer();
+     if (raw.byteLength > 256) throw new TopoOverlayError("Invalid sheet request.");
+-    const body = topoJson(raw) as { id?: unknown };
+-    if (!body || !Number.isInteger(body.id)) throw new TopoOverlayError("Invalid sheet request.");
++    const body = topoRequestJson(raw, "Invalid sheet request.");
++    if (!Number.isInteger(body.id)) throw new TopoOverlayError("Invalid sheet request.");
+     const sheet = await topoCatalogSheet(body.id as number);
+     const active = await topoActive(sheet.scanId);
+     if (active) return Response.json({ state: "ready", scanId: sheet.scanId }, { headers: topoPrivateHeaders });
+diff --git a/app/bounded-json.ts b/app/bounded-json.ts
+--- a/app/bounded-json.ts
++++ b/app/bounded-json.ts
+@@ -38,3 +38,34 @@
+ export async function readBoundedJson(message: Request | Response, maxBytes: number, signal?: AbortSignal): Promise<unknown> {
+   return JSON.parse(await readBoundedText(message, maxBytes, signal)) as unknown;
+ }
++
++/** Read a binary body under a hard byte limit, even when Content-Length is absent or understated. */
++export async function readBoundedBytes(message: Request | Response, maxBytes: number): Promise<Uint8Array> {
++  const declared = Number(message.headers.get("content-length"));
++  if (Number.isFinite(declared) && declared > maxBytes) {
++    void message.body?.cancel().catch(() => undefined);
++    throw new JsonLimitError("Byte limit exceeded.");
++  }
++  if (!message.body) return new Uint8Array();
++  const reader = message.body.getReader();
++  const chunks: Uint8Array[] = [];
++  let size = 0;
++  try {
++    while (true) {
++      const chunk = await reader.read();
++      if (chunk.done) break;
++      size += chunk.value.byteLength;
++      if (size > maxBytes) throw new JsonLimitError("Byte limit exceeded.");
++      chunks.push(chunk.value);
++    }
++  } catch (error) {
++    void reader.cancel().catch(() => undefined);
++    throw error;
++  } finally {
++    reader.releaseLock();
++  }
++  const bytes = new Uint8Array(size);
++  let offset = 0;
++  for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
++  return bytes;
++}
+diff --git a/app/daily-archive-store.ts b/app/daily-archive-store.ts
+--- a/app/daily-archive-store.ts
++++ b/app/daily-archive-store.ts
+@@ -17,9 +17,10 @@
+ export async function archiveCatalog(db: ArchiveDb, day: string) {
+   if (!archiveDay(day)) throw new ArchiveError("Choose an exact UTC calendar day.");
+   const [entries, days, span, storage] = await Promise.all([
+-    db.prepare(`SELECT ${fields} FROM daily_archive_captures c WHERE day=? ORDER BY feed, attempt DESC`).bind(day).all<ArchiveEntry>(),
+-    db.prepare("SELECT day, COUNT(*) AS captures FROM daily_archive_captures WHERE status IN ('ready','empty','partial') GROUP BY day ORDER BY day DESC LIMIT 366").all<{ day: string; captures: number }>(),
+-    db.prepare("SELECT MIN(day) AS earliestDay, MAX(day) AS latestDay FROM daily_archive_captures").first<{ earliestDay: string | null; latestDay: string | null }>(),
++    db.prepare(`SELECT ${fields} FROM daily_archive_captures c WHERE day=? AND feed NOT LIKE 'api:%' ORDER BY feed, attempt DESC`).bind(day).all<ArchiveEntry>(),
++    db.prepare("SELECT day, COUNT(*) AS captures FROM daily_archive_captures WHERE feed NOT LIKE 'api:%' AND status IN ('ready','empty','partial') GROUP BY day ORDER BY day DESC LIMIT 366").all<{ day: string; captures: number }>(),
++    // API-connection captures share this table for storage accounting only; they are not daily-archive entries.
++    db.prepare("SELECT MIN(day) AS earliestDay, MAX(day) AS latestDay FROM daily_archive_captures WHERE feed NOT LIKE 'api:%'").first<{ earliestDay: string | null; latestDay: string | null }>(),
+     archiveStorage(db),
+   ]);
+   return { day, entries: entries.results, days: days.results, feeds: DAILY_FEEDS, storage, ...span };
+diff --git a/app/historical-topo-overlay-server.ts b/app/historical-topo-overlay-server.ts
+--- a/app/historical-topo-overlay-server.ts
++++ b/app/historical-topo-overlay-server.ts
+@@ -1,4 +1,5 @@
+ import { env } from "cloudflare:workers";
++import { readBoundedText } from "./bounded-json";
+ import { getChatGPTUser } from "./chatgpt-auth";
+ import { parseTopoCatalog, TOPO_CATALOG_URL, type TopoSheet } from "./historical-topo";
+ import { parseTopoActivePointer, parseTopoOverlayManifest, topoActiveKey, topoManifestKey, type TopoActivePointer, type TopoOverlayManifest } from "./historical-topo-overlay";
+@@ -56,6 +57,14 @@
+   try { return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); }
+   catch { throw new TopoOverlayError("Historical map metadata failed validation.", 503); }
+ }
++// Client request bodies: malformed or non-object JSON is the caller's error, not a storage failure.
++export function topoRequestJson(bytes: ArrayBuffer, message: string): Record<string, unknown> {
++  let value: unknown;
++  try { value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); }
++  catch { throw new TopoOverlayError(message); }
++  if (!value || typeof value !== "object" || Array.isArray(value)) throw new TopoOverlayError(message);
++  return value as Record<string, unknown>;
++}
+ export async function topoActive(scanId: number): Promise<{ pointer: TopoActivePointer; manifest: TopoOverlayManifest } | null> {
+   const bytes = await topoBytes(topoActiveKey(scanId), 2048);
+   if (!bytes) return null;
+@@ -75,10 +84,9 @@
+   const timeout = setTimeout(() => controller.abort(), 12_000);
+   try {
+     const response = await fetch(url, { cache: "no-store", redirect: "manual", signal: controller.signal, headers: { Accept: "application/json" } });
+-    if (!response.ok || response.redirected || !response.headers.get("content-type")?.includes("json") || Number(response.headers.get("content-length") ?? 0) > 512_000) throw new Error("USGS catalog unavailable.");
+-    const bytes = await response.arrayBuffer();
+-    if (bytes.byteLength > 512_000) throw new Error("USGS catalog response exceeded its limit.");
+-    const sheets = parseTopoCatalog(topoJson(bytes)).sheets;
++    if (!response.ok || response.redirected || !response.headers.get("content-type")?.includes("json")) throw new Error("USGS catalog unavailable.");
++    // Streamed under the limit: a chunked response without Content-Length must not be buffered whole.
++    const sheets = parseTopoCatalog(JSON.parse(await readBoundedText(response, 512_000, controller.signal))).sheets;
+     if (sheets.length !== 1 || sheets[0].id !== id) throw new TopoOverlayError("Kansas historical sheet not found.", 404);
+     return sheets[0];
+   } catch (error) {
+diff --git a/app/lightning-server.ts b/app/lightning-server.ts
+--- a/app/lightning-server.ts
++++ b/app/lightning-server.ts
+@@ -1,4 +1,4 @@
+-import { readBoundedText } from "./bounded-json";
++import { JsonLimitError, readBoundedBytes, readBoundedText } from "./bounded-json";
+ import { NOAA_LIGHTNING_CAPABILITIES_URL, parseLightningCapabilities, type LightningManifest } from "./lightning-data";
+ 
+ const CAPABILITIES_LIMIT = 512 * 1024;
+@@ -27,9 +27,7 @@
+ export async function fetchLightningPng(url: string): Promise<Uint8Array> {
+   const response = await fetch(url, { cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(15_000), headers: { Accept: "image/png", "User-Agent": NOAA_USER_AGENT } });
+   if (!response.ok || !/image\/png/i.test(response.headers.get("content-type") ?? "")) throw new Error(`NOAA lightning image HTTP ${response.status}, content-type ${response.headers.get("content-type") ?? "missing"}.`);
+-  const announced = Number(response.headers.get("content-length"));
+-  if (announced > 1024 * 1024) throw new Error("NOAA lightning image exceeds the limit.");
+-  const bytes = new Uint8Array(await response.arrayBuffer());
++  const bytes = await readBoundedBytes(response, 1024 * 1024).catch((error: unknown) => { throw error instanceof JsonLimitError ? new Error("NOAA lightning image exceeds the limit.") : error; });
+   if (bytes.length < 64 || bytes.length > 1024 * 1024 || ![137, 80, 78, 71, 13, 10, 26, 10].every((byte, index) => bytes[index] === byte)) throw new Error("NOAA lightning response is not a bounded PNG.");
+   return bytes;
+ }
+diff --git a/tests/bounded-json.test.mjs b/tests/bounded-json.test.mjs
+new file mode 100644
+--- /dev/null
++++ b/tests/bounded-json.test.mjs
+@@ -0,0 +1,39 @@
++import assert from "node:assert/strict";
++import { readFile } from "node:fs/promises";
++import test from "node:test";
++import ts from "typescript";
++
++const source = ts.transpileModule(await readFile(new URL("../app/bounded-json.ts", import.meta.url), "utf8"), {
++  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
++}).outputText;
++const { JsonLimitError, readBoundedBytes } = await import(`data:text/javascript;base64,${Buffer.from(source).toString("base64")}`);
++
++// A chunked body: no Content-Length header, so only the streamed byte count can enforce the limit.
++function chunked(chunks) {
++  let pulled = 0, cancelled = false;
++  const body = new ReadableStream({
++    pull(controller) { if (pulled < chunks.length) controller.enqueue(new Uint8Array(chunks[pulled++])); else controller.close(); },
++    cancel() { cancelled = true; },
++  });
++  return { response: new Response(body), pulled: () => pulled, cancelled: () => cancelled };
++}
++
++test("binary reads return exact bytes across chunks within the limit", async () => {
++  const { response } = chunked([[1, 2, 3], [4], [5, 6]]);
++  assert.deepEqual([...await readBoundedBytes(response, 6)], [1, 2, 3, 4, 5, 6]);
++  assert.equal((await readBoundedBytes(new Response(null), 6)).byteLength, 0);
++});
++
++test("a chunked body without Content-Length stops at the limit instead of buffering the rest", async () => {
++  const stream = chunked([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10]]);
++  await assert.rejects(readBoundedBytes(stream.response, 5), JsonLimitError);
++  assert.ok(stream.pulled() < 4, "the body is not read to its end");
++  assert.ok(stream.cancelled(), "the upstream body is cancelled");
++});
++
++test("a declared oversize body is refused before it is read", async () => {
++  const stream = chunked([[1, 2, 3]]);
++  const response = new Response(stream.response.body, { headers: { "Content-Length": "999" } });
++  await assert.rejects(readBoundedBytes(response, 5), JsonLimitError);
++  assert.equal(stream.pulled(), 0);
++});
+diff --git a/tests/daily-archive.test.mjs b/tests/daily-archive.test.mjs
+--- a/tests/daily-archive.test.mjs
++++ b/tests/daily-archive.test.mjs
+@@ -108,10 +108,20 @@
+  assert.equal((await route.GET(request(`?id=${capture.id}`,ownerToken))).status,409,"held bytes stay hidden from the map");
+  assert.equal((await route.POST(request("?action=review",workerToken,"POST",{id:capture.id,state:"reviewed",note:"unauthorized"}))).status,401);
+  assert.equal((await route.POST(request("?action=settings",workerToken,"POST",{budget:16777216,paused:true}))).status,401);
++ // Malformed or non-object owner input is a client error, not a storage outage.
++ for(const action of ["review","settings"])for(const raw of ["{not json","null","[]"])assert.equal((await route.POST(new NextRequest(`http://127.0.0.1:4173/api/daily-archive?action=${action}`,{method:"POST",headers:{Authorization:`Bearer ${ownerToken}`,"X-KFM-Archive-Writer":"daily-v1","Content-Type":"application/json"},body:raw}))).status,400,`${action} ${raw}`);
+  const status=await route.GET(request("?action=status",workerToken));assert.equal(status.status,200);assert.deepEqual((await status.json()).entries,[{id:capture.id,status:"ready"}]);
+  assert.equal((await store.readArchiveCapture(db,bucket,capture.id,true)).entry.review,"held");assert.equal((await store.archiveStorage(db)).paused,false);
+ });
+ 
++test("API-connection reservations share storage accounting but are not daily-archive entries",async()=>{
++ await reset();const capture=await store.captureArchive(db,bucket,feed,reply());
++ await db.prepare("INSERT INTO daily_archive_captures(id,day,feed,attempt,status,started_at,bytes) VALUES(?,?,?,1,'api-quarantined',?,?)").bind("api-row","2000-01-01","api:synthetic:api-row",new Date().toISOString(),4096).run();
++ await db.prepare("INSERT INTO daily_archive_captures(id,day,feed,attempt,status,started_at,bytes) VALUES(?,?,?,1,'api-running',?,?)").bind("api-today",capture.day,"api:synthetic:api-today",new Date().toISOString(),4096).run();
++ const catalog=await store.archiveCatalog(db,capture.day);
++ assert.deepEqual(catalog.entries.map(entry=>entry.id),[capture.id]);assert.equal(catalog.earliestDay,capture.day);assert.equal(catalog.latestDay,capture.day);
++ assert.ok((await store.archiveStorage(db)).used>=8192,"reservations still count against the shared budget");
++});
+ test("no capture for a missing day and no fabricated empty map payload",async()=>{
+  await reset();const catalog=await store.archiveCatalog(db,"2000-01-01");assert.deepEqual(catalog.entries,[]);assert.deepEqual(catalog.days,[]);
+  await assert.rejects(store.readArchiveCapture(db,bucket,crypto.randomUUID()),/No stored capture/);
+diff --git a/tests/historical-topo-routes.test.mjs b/tests/historical-topo-routes.test.mjs
+--- a/tests/historical-topo-routes.test.mjs
++++ b/tests/historical-topo-routes.test.mjs
+@@ -14,10 +14,12 @@
+   export const topoBytes = async (key, max) => { const value = globalThis.__topo.objects.get(key); if (!value) return null; if (value.byteLength > max) throw new TopoOverlayError("too large", 503); return value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength); };
+   export const topoDigest = async (bytes) => [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map(n => n.toString(16).padStart(2, "0")).join("");
+   export const topoJson = bytes => JSON.parse(new TextDecoder().decode(bytes));
++  export const topoRequestJson = (bytes, message) => { let value; try { value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); } catch { throw new TopoOverlayError(message); } if (!value || typeof value !== "object" || Array.isArray(value)) throw new TopoOverlayError(message); return value; };
+   export const topoScanId = raw => { if (!/^[1-9]\\d{0,9}$/.test(String(raw))) throw new TopoOverlayError("invalid scan"); return Number(raw); };
+   export const topoWorker = request => { if (request.headers.get("authorization") !== "Bearer worker-secret") throw new TopoOverlayError("worker denied", 403); };
+   export const topoOwner = async () => { if (!globalThis.__topo.owner) throw new TopoOverlayError("owner denied", 403); return { id: "owner-1", email: "owner@example.test" }; };
+   export const topoUser = async () => ({ id: "viewer-1", email: "viewer@example.test" });
++  export const topoCatalogSheet = async () => { throw new Error("catalog lookup must not run for a rejected request"); };
+   export const topoSameOrigin = request => { if (request.headers.get("origin") !== new URL(request.url).origin) throw new TopoOverlayError("origin denied", 403); };
+   export const topoPrivateHeaders = { "Cache-Control": "private, no-store" };
+   export const topoActive = async scan => { const bytes = await topoBytes("historical-topo/v1/active/" + scan + ".json", 2048); if (!bytes) return null; const pointer = topoJson(bytes); const manifestBytes = await topoBytes("historical-topo/v1/packages/" + scan + "/" + pointer.packageId + "/manifest.json", 750000); if (!manifestBytes || await topoDigest(manifestBytes) !== pointer.manifestSha256) throw new TopoOverlayError("bad active manifest", 503); return { pointer, manifest: topoJson(manifestBytes) }; };
+@@ -85,3 +87,14 @@
+   assert.equal((await POST(activateRequest(review))).status, 403);
+   assert.equal((await PUT(new Request(stageRequest(first.packageId, "9/119/195", png), { headers: { "Content-Type": "image/png", "Content-Length": String(png.byteLength), "X-KFM-SHA256": digest(png) } }))).status, 403);
+ });
++
++test("malformed or non-object review and sheet requests are client errors, not storage failures", async () => {
++  globalThis.__topo = { objects: new Map(), owner: true, bucket: { get: async () => null, put: async () => {}, list: async () => ({ objects: [], truncated: false }) } };
++  const { POST: activate } = await route("activate");
++  const { POST: overlayPost } = await route("overlay");
++  for (const raw of ["{not json", "null", "[]", "\"text\""]) {
++    const post = path => new Request(`https://site.test/api/historical-topo/${path}`, { method: "POST", headers: { Origin: "https://site.test", "Content-Type": "application/json" }, body: raw });
++    assert.equal((await activate(post("activate"))).status, 400, `activate ${raw}`);
++    assert.equal((await overlayPost(post("overlay"))).status, 400, `overlay ${raw}`);
++  }
++});
+diff --git a/tests/site-route-safeguards.test.mjs b/tests/site-route-safeguards.test.mjs
+new file mode 100644
+--- /dev/null
++++ b/tests/site-route-safeguards.test.mjs
+@@ -0,0 +1,180 @@
++import assert from "node:assert/strict";
++import { readFile } from "node:fs/promises";
++import { posix } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { after, afterEach, beforeEach, test } from "node:test";
++import ts from "typescript";
++
++// Compile real application modules; replace only platform/provider boundaries.
++// No listener, hosted credentials, private records or provider network is used.
++const data = source => `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`;
++const env = { KFM_HISTORICAL_OWNER_IDS: "synthetic-owner", KFM_ARCHIVE_OWNER_IDS: "synthetic-owner" };
++const objects = new Map();
++env.BUCKET = {
++  get: async key => { const value = objects.get(key); return value ? { size: value.byteLength, arrayBuffer: async () => value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength) } : null; },
++  put: async (key, value) => { objects.set(key, new Uint8Array(value)); },
++};
++const sqlite = new DatabaseSync(":memory:");
++sqlite.exec(await readFile(new URL("../drizzle/0005_daily_archive.sql", import.meta.url), "utf8"));
++const db = { prepare(sql) {
++  let bindings = [];
++  return { bind(...values) { bindings = values; return this; },
++    async all() { return { results: sqlite.prepare(sql).all(...bindings) }; },
++    async first() { return sqlite.prepare(sql).get(...bindings) ?? null; },
++    async run() { return { meta: { changes: sqlite.prepare(sql).run(...bindings).changes } }; },
++  };
++} };
++globalThis.__siteRouteSafeguards = { env, db, user: { id: "synthetic-owner", email: "owner@example.test" } };
++const overrides = {
++  "cloudflare:workers": data("export const env = globalThis.__siteRouteSafeguards.env;"),
++  "next/server": data("export class NextRequest extends Request { get nextUrl() { return new URL(this.url); } }"),
++  "db": data("export const getRawDb = () => globalThis.__siteRouteSafeguards.db;"),
++  "app/chatgpt-auth": data("export const getChatGPTUser = async () => globalThis.__siteRouteSafeguards.user;"),
++  "app/api/live-context/route": data("export const GET = async () => { throw new Error('Provider calls prohibited'); };"),
++};
++const modules = new Map();
++async function moduleUrl(name) {
++  if (overrides[name]) return overrides[name];
++  if (modules.has(name)) return modules.get(name);
++  let js = ts.transpileModule(await readFile(new URL(`../${name}.ts`, import.meta.url), "utf8"), {
++    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
++  }).outputText;
++  for (const match of [...js.matchAll(/from\s+"([^"]+)"/g)]) {
++    const specifier = match[1];
++    const dependency = specifier.startsWith(".") ? posix.normalize(posix.join(posix.dirname(name), specifier)) : specifier;
++    js = js.replace(JSON.stringify(specifier), JSON.stringify(await moduleUrl(dependency)));
++  }
++  const url = data(js); modules.set(name, url); return url;
++}
++const load = async name => import(await moduleUrl(name));
++const topo = await load("app/historical-topo-overlay-server");
++const overlay = await load("app/api/historical-topo/overlay/route");
++const activate = await load("app/api/historical-topo/activate/route");
++const lightning = await load("app/lightning-server");
++const preview = await load("app/api/lightning/preview/route");
++const archive = await load("app/api/daily-archive/route");
++const store = await load("app/daily-archive-store");
++const { NextRequest } = await import(overrides["next/server"]);
++const originalFetch = globalThis.fetch;
++beforeEach(() => {
++  objects.clear(); globalThis.__siteRouteSafeguards.user = { id: "synthetic-owner", email: "owner@example.test" };
++  globalThis.fetch = async () => { throw new Error("Unexpected upstream request"); };
++  for (const table of ["daily_archive_reviews", "daily_archive_captures", "daily_archive_settings"]) sqlite.exec(`DELETE FROM ${table}`);
++});
++afterEach(() => { globalThis.fetch = originalFetch; });
++after(() => { sqlite.close(); delete globalThis.__siteRouteSafeguards; });
++const post = (name, body) => new Request(`https://site.test/api/historical-topo/${name}`, {
++  method: "POST", headers: { Origin: "https://site.test", "Content-Type": "application/json" }, body,
++});
++const daily = (action, body) => new NextRequest(`https://site.test/api/daily-archive?action=${action}`, {
++  method: "POST", headers: { "X-KFM-Archive-Writer": "daily-v1", "Content-Type": "application/json" }, body,
++});
++function streamResponse(chunks, headers = {}) {
++  let index = 0, cancelled = false;
++  const body = new ReadableStream({ pull(controller) {
++    if (index < chunks.length) controller.enqueue(chunks[index++]); else controller.close();
++  }, cancel() { cancelled = true; } }, { highWaterMark: 0 });
++  return { response: new Response(body, { headers }), cancelled: () => cancelled, reads: () => index };
++}
++const png = new Uint8Array(64); png.set([137, 80, 78, 71, 13, 10, 26, 10]);
++const sheet = { features: [{ attributes: { OBJECTID: 4628, scan_id: 122705, primary_state: "KS", map_name: "Synthetic Topeka", date_on_map: 1889, map_scale: 125000 }, geometry: { rings: [[[-96,39],[-95,39],[-95,40],[-96,39]]] } }] };
++
++for (const raw of ["{", "null", "[]", "1", '"text"', new Uint8Array([0xff])]) {
++  test(`historical malformed input ${JSON.stringify(raw)} returns private 400 before upstream/storage`, async () => {
++    for (const [name, route] of [["overlay", overlay], ["activate", activate]]) {
++      const result = await route.POST(post(name, raw));
++      assert.equal(result.status, 400); assert.equal(result.headers.get("cache-control"), "private, no-store");
++    }
++    assert.equal(objects.size, 0);
++  });
++}
++test("stored corrupt metadata remains a 503 instead of a caller error", () => {
++  assert.throws(() => topo.topoJson(new TextEncoder().encode("{").buffer), error => error.status === 503);
++});
++test("historical normal sheet request queues exactly one private preparation", async () => {
++  globalThis.fetch = async () => Response.json(sheet);
++  const result = await overlay.POST(post("overlay", '{"id":4628}'));
++  assert.equal(result.status, 202); assert.equal((await result.json()).state, "preparing");
++  assert.deepEqual([...objects.keys()], ["historical-topo/v1/requests/122705.json"]);
++});
++for (const label of ["http", "network", "bad-json", "wrong-content-type"]) {
++  test(`historical upstream ${label} remains an unavailable 502 and creates no request`, async () => {
++    globalThis.fetch = async () => {
++      if (label === "network") throw new Error("synthetic offline");
++      if (label === "http") return new Response(null, { status: 503 });
++      if (label === "bad-json") return new Response("{", { headers: { "Content-Type": "application/json" } });
++      return new Response("html", { headers: { "Content-Type": "text/html" } });
++    };
++    assert.equal((await overlay.POST(post("overlay", '{"id":4628}'))).status, 502);
++    assert.equal(objects.size, 0);
++  });
++}
++test("a valid catalog without the requested sheet remains a 404", async () => {
++  globalThis.fetch = async () => Response.json({ features: [] });
++  assert.equal((await overlay.POST(post("overlay", '{"id":4628}'))).status, 404);
++});
++for (const length of [undefined, "1", "999999"]) {
++  test(`historical catalog enforces streamed limit with Content-Length ${length}`, async () => {
++    const upstream = streamResponse([new Uint8Array(256001), new Uint8Array(256001), new Uint8Array(8)], {
++      "Content-Type": "application/json", ...(length ? { "Content-Length": length } : {}),
++    });
++    globalThis.fetch = async () => upstream.response;
++    assert.equal((await overlay.POST(post("overlay", '{"id":4628}'))).status, 502);
++    assert.ok(upstream.cancelled()); assert.ok(upstream.reads() < 3); assert.equal(upstream.response.body.locked, false);
++  });
++}
++for (const length of [undefined, "1", "2000000"]) {
++  test(`lightning image enforces streamed limit with Content-Length ${length}`, async () => {
++    const upstream = streamResponse([new Uint8Array(600000), new Uint8Array(600000), png], {
++      "Content-Type": "image/png", ...(length ? { "Content-Length": length } : {}),
++    });
++    globalThis.fetch = async () => upstream.response;
++    await assert.rejects(lightning.fetchLightningPng("https://provider.example.test/image"), /exceeds the limit/);
++    assert.ok(upstream.cancelled()); assert.ok(upstream.reads() < 3); assert.equal(upstream.response.body.locked, false);
++  });
++}
++test("normal lightning PNG returns exact bytes; corrupt PNG and unavailable provider reject", async () => {
++  globalThis.fetch = async () => new Response(png, { headers: { "Content-Type": "image/png" } });
++  assert.deepEqual(await lightning.fetchLightningPng("https://provider.example.test/image"), png);
++  globalThis.fetch = async () => new Response(new Uint8Array(64), { headers: { "Content-Type": "image/png" } });
++  await assert.rejects(lightning.fetchLightningPng("https://provider.example.test/image"), /not a bounded PNG/);
++  globalThis.fetch = async () => new Response(null, { status: 503 });
++  await assert.rejects(lightning.fetchLightningPng("https://provider.example.test/image"), /HTTP 503/);
++});
++test("lightning preview returns an uncached unavailable 502, then serves a successful PNG", async () => {
++  const frame = "2026-10-19T12:00:00.000Z";
++  const xml = `<WMS_Capabilities><Layer><Name>ldn_lightning_strike_density</Name><Dimension name="time">${frame}</Dimension></Layer></WMS_Capabilities>`;
++  let unavailable = true;
++  globalThis.fetch = async url => String(url).includes("GetCapabilities") ? new Response(xml, { headers: { "Content-Type": "text/xml" } }) : unavailable ? new Response(null, { status: 503 }) : new Response(png, { headers: { "Content-Type": "image/png" } });
++  const request = () => new Request(`https://site.test/api/lightning/preview?time=${frame}&bbox=-100,35,-95,40`);
++  const failed = await preview.GET(request()); assert.equal(failed.status, 502); assert.equal(failed.headers.get("cache-control"), "no-store");
++  unavailable = false;
++  const ready = await preview.GET(request()); assert.equal(ready.status, 200); assert.deepEqual(new Uint8Array(await ready.arrayBuffer()), png);
++});
++test("archive malformed and non-object owner requests return 400 without writes", async () => {
++  for (const action of ["review", "settings"]) for (const raw of ["{", "null", "[]", "1", '"text"']) {
++    const result = await archive.POST(daily(action, raw));
++    assert.equal(result.status, 400); assert.equal(result.headers.get("cache-control"), "private, no-store");
++  }
++  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM daily_archive_settings").get().n, 0);
++  assert.equal(sqlite.prepare("SELECT COUNT(*) AS n FROM daily_archive_reviews").get().n, 0);
++});
++test("archive owner settings succeed, oversize input is 413, and unauthenticated requests stay denied", async () => {
++  const result = await archive.POST(daily("settings", '{"budget":16777216,"paused":true}'));
++  assert.equal(result.status, 200); assert.equal((await store.archiveStorage(db)).paused, true);
++  assert.equal((await archive.POST(daily("settings", " ".repeat(4097)))).status, 413);
++  globalThis.__siteRouteSafeguards.user = null;
++  assert.equal((await archive.POST(daily("settings", "{"))).status, 401);
++  assert.equal((await activate.POST(post("activate", "{"))).status, 401);
++});
++test("catalog excludes API captures from entries, days and span, but retains their storage charge", async () => {
++  const insert = sqlite.prepare("INSERT INTO daily_archive_captures(id,day,feed,attempt,status,started_at,bytes) VALUES(?,?,?,1,?,?,?)");
++  insert.run("daily", "2026-10-19", "usgs-earthquakes", "ready", "2026-10-19T12:00:00Z", 64);
++  insert.run("api-today", "2026-10-19", "api:synthetic", "api-running", "2026-10-19T12:00:00Z", 4096);
++  insert.run("api-old", "2000-01-01", "api:synthetic", "ready", "2000-01-01T00:00:00Z", 4096);
++  const catalog = await store.archiveCatalog(db, "2026-10-19");
++  assert.deepEqual(catalog.entries.map(entry => entry.id), ["daily"]);
++  assert.deepEqual(catalog.days.map(day => [day.day, day.captures]), [["2026-10-19", 1]]);
++  assert.equal(catalog.earliestDay, "2026-10-19"); assert.equal(catalog.latestDay, "2026-10-19");
++  assert.equal(catalog.storage.used, 8256); assert.deepEqual((await store.archiveCatalog(db, "2000-01-01")).entries, []);
++});
