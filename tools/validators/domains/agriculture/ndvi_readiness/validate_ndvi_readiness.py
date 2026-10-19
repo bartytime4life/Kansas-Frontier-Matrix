@@ -83,7 +83,7 @@ def _load_payload(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
         return None, [Finding("JSON_DUPLICATE_KEY", "/")]
     except NonFiniteNumberError:
         return None, [Finding("JSON_NONFINITE_NUMBER", "/")]
-    except json.JSONDecodeError:
+    except (ValueError, RecursionError):  # JSONDecodeError, excessive nesting, or an integer beyond the conversion limit
         return None, [Finding("JSON_INVALID", "/")]
     except OSError:
         return None, [Finding("INPUT_UNREADABLE", "/")]
