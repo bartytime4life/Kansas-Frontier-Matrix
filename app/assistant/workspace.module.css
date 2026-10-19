@@ -17,11 +17,12 @@
 .chat textarea { min-height: 64px; max-height: 180px; resize: vertical; line-height: 1.5; }
 .chat summary { min-height: 44px; box-sizing: border-box; padding: 11px 0; color: var(--chat-muted); cursor: pointer; }
 .chat small { overflow-wrap: anywhere; }
-.toolbar { display: flex; flex: none; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; min-height: 58px; padding: 12px 18px; border-bottom: 1px solid var(--chat-line); background: #102633; }
+.toolbar { display: grid; grid-template-columns: minmax(0,1fr) auto; flex: none; align-items: center; justify-content: space-between; gap: 8px 12px; min-height: 58px; padding: 12px 18px; border-bottom: 1px solid var(--chat-line); background: #102633; }
 .identity { display: grid; gap: 2px; min-width: 0; }
 .identity strong { font-size: 16px; font-weight: 650; letter-spacing: -.02em; }
 .eyebrow { color: var(--chat-teal); font-size: 11px; letter-spacing: .09em; }
 .status { max-width: 100%; color: #b1dec8; font-size: 12px; overflow-wrap: anywhere; }
+.body[hidden] { display: none; }
 .body { flex: 1 1 0%; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
 .context { margin: 14px 18px 0; border: 1px solid var(--chat-line); border-radius: 11px; padding: 0 12px; background: #102733; overflow-wrap: anywhere; }
 .context summary { color: var(--chat-ink); }
@@ -96,7 +97,7 @@
 .actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 9px; }
 .actions small { color: var(--chat-muted); font-size: 11px; }
 .actions button { flex: none; min-height: 44px; }
-.searchResults { display: grid; gap: 0; margin: 12px 0; border: 1px solid var(--chat-line); border-radius: 11px; padding: 0; overflow: hidden; background: #102632; list-style: none; }
+.searchResults { display: grid; gap: 0; margin: 12px 16px; border: 1px solid var(--chat-line); border-radius: 11px; padding: 0; overflow: hidden; background: #102632; list-style: none; }
 .chat .searchResult { display: block; min-width: 0; width: 100%; border: 0; border-bottom: 1px solid var(--chat-line); border-radius: 0; padding: 12px; background: transparent; text-align: left; }
 .searchResult:last-child { border-bottom: 0; }
 .chat .searchResult button { display: block; width: 100%; border: 0; border-radius: 0; padding: 12px; background: transparent; text-align: left; }

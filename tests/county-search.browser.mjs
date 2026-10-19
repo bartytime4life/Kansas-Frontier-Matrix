@@ -219,8 +219,10 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       await p.fill('Ellsworth');
       await p.wait(`document.querySelector('#global-search-results button strong')?.textContent === 'Ellsworth County'`, 'county available');
       assert.match((await p.snapshot()).rows[0].text, /2020.*source context, not KFM evidence/);
-      const layout = await p.evaluate(`(() => {const row=document.querySelector('#global-search-results button'), box=row.getBoundingClientRect();return {left:box.left,right:box.right,top:box.top,bottom:box.bottom,width:innerWidth,height:innerHeight,overflow:document.documentElement.scrollWidth>innerWidth+1};})()`);
+      const layout = await p.evaluate(`(() => {const row=document.querySelector('#global-search-results button'), box=row.getBoundingClientRect(), body=row.closest('[aria-label="Place and layer discovery"]'), bounds=body.getBoundingClientRect(), composer=document.querySelector('#qwen-map-panel textarea').getBoundingClientRect();return {left:box.left,right:box.right,top:box.top,bottom:box.bottom,width:innerWidth,height:innerHeight,overflow:document.documentElement.scrollWidth>innerWidth+1,body:{top:bounds.top,bottom:bounds.bottom,clientHeight:body.clientHeight,scrollHeight:body.scrollHeight,scrollTop:body.scrollTop},composer:{top:composer.top,bottom:composer.bottom}};})()`);
       assert.ok(layout.left >= 0 && layout.right <= width + 1 && layout.top >= 0 && layout.bottom <= height, JSON.stringify(layout));
+      assert.ok(layout.top >= layout.body.top && layout.bottom <= layout.body.bottom + 1, 'first result is visible inside its actual scroll region: '+JSON.stringify(layout));
+      assert.ok(layout.composer.top >= 0 && layout.composer.bottom <= height, 'composer stays in the viewport: '+JSON.stringify(layout));
       assert.equal(layout.overflow, false, 'no horizontal overflow');
       const beforeTime = await p.evaluate(`document.querySelector('.time-bar select')?.value ?? document.querySelector('select[aria-label="Preview year or earlier era"]')?.value`);
       assert.match(beforeTime ?? '', /^\d+$/, 'actual display time is observed before selection');
