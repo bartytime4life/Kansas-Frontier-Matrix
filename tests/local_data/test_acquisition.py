@@ -289,6 +289,91 @@ class DiscoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "URL_DENIED"):
             w.discover(transport=lambda _: canonical(page))
 
+    def test_water_malformed_pages_fail_closed_with_value_error(self):
+        def page(**changes):
+            value = {"type": "FeatureCollection", "features": [{"id": "s", "properties": {
+                "monitoring_location_id": "USGS-1"}, "geometry": None}], "links": []}
+            return canonical({**value, **changes})
+        cases = {
+            "array": (b"[]", "SHAPE"),
+            "links-string": (page(links="next"), "SHAPE"),
+            "links-number": (page(links=5), "SHAPE"),
+            "link-number": (page(links=[1]), "SHAPE"),
+            "feature-string": (page(features=["x"]), "SHAPE"),
+            "properties-missing": (page(features=[{"id": "s"}]), "SHAPE"),
+            "location-unhashable": (page(features=[{"id": "s", "properties": {"monitoring_location_id": [1]}}]), "SHAPE"),
+            "href-number": (page(links=[{"rel": "next", "href": 5}]), "SHAPE"),
+            "deep": (b"[" * 100_000 + b"]" * 100_000, "JSON_INVALID"),
+            "overflow": (page().replace(b'"geometry":null', b'"geometry":1e400'), "NONFINITE"),
+            "nan": (page().replace(b'"geometry":null', b'"geometry":NaN'), "NONFINITE"),
+        }
+        for name, (raw, reason) in cases.items():
+            with self.subTest(name), self.assertRaisesRegex(ValueError, reason):
+                w.discover(transport=lambda _, raw=raw: raw)
+
+    def test_water_pagination_is_bounded_and_unambiguous(self):
+        first = w.BASE + "?" + "f=json&bbox=" + w.BBOX + "&limit=1000"
+        def page(*hrefs):
+            return canonical({"type": "FeatureCollection", "features": [],
+                              "links": [{"rel": "next", "href": href} for href in hrefs]})
+        with self.assertRaisesRegex(ValueError, "AMBIGUOUS"):
+            w.discover(transport=lambda _: page(first + "&cursor=a", first + "&cursor=b"))
+        with self.assertRaisesRegex(ValueError, "CYCLE"):
+            w.discover(transport=lambda _: page(first))
+        result, _ = w.discover(max_pages=1, transport=lambda _: page(first + "&cursor=a"))
+        self.assertFalse(result["complete_for_query"])
+        self.assertTrue(result["next_page_available"])
+        for count in (0, 17, True):
+            with self.subTest(count), self.assertRaisesRegex(ValueError, "PAGE_COUNT"):
+                w.discover(max_pages=count, transport=lambda _: page())
+        with self.assertRaisesRegex(ValueError, "BYTE_LIMIT"):
+            w.discover(transport=lambda _: b" " * (w.PAGE_BYTES + 1))
+        for url in (first.replace("https", "http"), first + "&extra=1", first + "&cursor=a&cursor=b",
+                    first + "#x", first.replace("limit=1000", "limit=5"), first + "&&"):
+            with self.subTest(url), self.assertRaisesRegex(ValueError, "URL_DENIED"):
+                w.validate_url(url)
+
+    def test_3dep_malformed_metadata_fails_closed_with_value_error(self):
+        listing = b'<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><IsTruncated>false</IsTruncated><CommonPrefixes><Prefix>KS_T/</Prefix></CommonPrefixes></ListBucketResult>'
+        cases = {
+            "deep": (b"[" * 100_000 + b"]" * 100_000, "EPT_METADATA_INVALID"),
+            "array": (b"[1]", "EPT_METADATA_INVALID"),
+            "overflow": (b'{"dataType":"laszip","bounds":[1e400]}', "NONFINITE"),
+            "infinity": (b'{"dataType":"laszip","bounds":[Infinity]}', "NONFINITE"),
+        }
+        for name, (ept, reason) in cases.items():
+            with self.subTest(name), self.assertRaisesRegex(ValueError, reason):
+                d.discover(transport=lambda url, ept=ept: listing if "?" in url else ept)
+        for text, reason in ((listing.replace(b"<ListBucketResult", b"<!DOCTYPE x><ListBucketResult"), "ENTITY"),
+                             (listing.replace(b"</CommonPrefixes>", b"</CommonPrefixes>" * 1).replace(
+                                 b"<CommonPrefixes>", b"<CommonPrefixes><Prefix>KS_T/</Prefix></CommonPrefixes><CommonPrefixes>", 1), "DUPLICATE")):
+            with self.subTest(reason), self.assertRaisesRegex(ValueError, reason):
+                d.discover(transport=lambda _, text=text: text)
+        with self.assertRaisesRegex(ValueError, "PROJECT_LIMIT"):
+            d.discover(max_projects=0, transport=lambda _: listing)
+        with self.assertRaisesRegex(ValueError, "URL_DENIED"):
+            d.fetch("https://evil.test/")
+
+    def test_discovery_cli_writes_candidate_or_reports_bounded_error(self):
+        water = canonical({"type": "FeatureCollection", "features": [{"id": "s", "properties": {
+            "monitoring_location_id": "USGS-1"}, "geometry": None}], "links": []})
+        listing = b'<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><IsTruncated>false</IsTruncated><CommonPrefixes><Prefix>KS_T/</Prefix></CommonPrefixes></ListBucketResult>'
+        ept = b'{"dataType":"laszip","points":1}'
+        runs = ((w, lambda _: water, {"discovery.json"}), (d, lambda url: listing if "?" in url else ept,
+                                                             {"discovery.json", "inventory.json"}))
+        for module, fetch, names in runs:
+            with self.subTest(module.__name__), tempfile.TemporaryDirectory() as folder:
+                target = Path(folder) / "candidate"
+                with patch.object(module, "fetch", fetch), patch("sys.stdout", new_callable=io.StringIO) as out:
+                    self.assertEqual(module.main(["--output-directory", str(target)]), 0)
+                self.assertNotIn("ERROR", out.getvalue())
+                self.assertTrue(names <= {path.name for path in target.iterdir()})
+                with patch.object(module, "fetch", lambda _: b"[" * 100_000), \
+                        patch("sys.stdout", new_callable=io.StringIO) as out:
+                    self.assertEqual(module.main(["--output-directory", str(Path(folder) / "bad")]), 1)
+                self.assertIn('"outcome":"ERROR"', out.getvalue())
+                self.assertFalse((Path(folder) / "bad").exists())
+
     def test_catalog_queue_has_full_options_but_never_claims_download(self):
         result = q.queue(q.ROOT / "configs/examples/acquisition-candidates.json")
         self.assertEqual(len(result["jobs"]), 26)

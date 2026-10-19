@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import sys
 from urllib.parse import parse_qs, urlencode, urlsplit
@@ -23,6 +24,36 @@ BASE = "https://api.waterdata.usgs.gov/ogcapi/v1/collections/time-series-metadat
 BBOX = "-102.052,36.993,-94.588,40.003"
 PAGE_BYTES = 2 * 1024**2
 TOTAL_BYTES = 8 * 1024**2
+
+
+def _finite_float(text):
+    value = float(text)
+    if not math.isfinite(value):
+        raise ValueError("METADATA_NONFINITE")
+    return value
+
+
+def _reject_constant(_):
+    raise ValueError("METADATA_NONFINITE")
+
+
+def load_page(raw):
+    try:
+        value = json.loads(raw, object_pairs_hook=unique_object, parse_constant=_reject_constant,
+                           parse_float=_finite_float)
+    except RecursionError:
+        raise ValueError("METADATA_JSON_INVALID") from None
+    features = value.get("features") if isinstance(value, dict) else None
+    links = value.get("links", []) if isinstance(value, dict) else None
+    if (not isinstance(value, dict) or value.get("type") != "FeatureCollection"
+            or not isinstance(features, list) or len(features) > 1000
+            or any(not isinstance(f, dict) or not isinstance(f.get("properties"), dict)
+                   or not isinstance(f["properties"].get("monitoring_location_id"), str) for f in features)
+            or not isinstance(links, list)
+            or any(not isinstance(link, dict) or (link.get("rel") == "next" and not isinstance(link.get("href"), str))
+                   for link in links)):
+        raise ValueError("METADATA_SHAPE_INVALID")
+    return value
 
 
 def validate_url(url):
@@ -70,13 +101,8 @@ def discover(*, max_pages=4, transport=fetch):
         digest = hashlib.sha256(raw).hexdigest()
         objects[digest + ".metadata"] = raw
         requests.append({"source_url": url, "sha256": digest, "size_bytes": len(raw)})
-        def reject(_):
-            raise ValueError("METADATA_NONFINITE")
-        value = json.loads(raw, object_pairs_hook=unique_object, parse_constant=reject)
-        features = value.get("features")
-        if value.get("type") != "FeatureCollection" or not isinstance(features, list) or len(features) > 1000:
-            raise ValueError("METADATA_SHAPE_INVALID")
-        for feature in features:
+        value = load_page(raw)
+        for feature in value["features"]:
             p = feature["properties"]
             records.append({"time_series_id": feature["id"], "monitoring_location_id": p["monitoring_location_id"],
                             "parameter_code": p.get("parameter_code"), "parameter_name": p.get("parameter_name"),
@@ -86,7 +112,7 @@ def discover(*, max_pages=4, transport=fetch):
                             "data_gap_interval": p.get("data_gap_interval"),
                             "gaps_verified": False, "geometry": feature.get("geometry"),
                             "source_metadata_sha256": digest})
-        links = [link["href"] for link in value.get("links", []) if link.get("rel") == "next"]
+        links = [link["href"] for link in value["links"] if link.get("rel") == "next"]
         if len(links) > 1:
             raise ValueError("PAGINATION_AMBIGUOUS")
         url = links[0] if links else None
@@ -108,7 +134,7 @@ def main(argv=None):
     parser.add_argument("--max-pages", type=int, default=4)
     args = parser.parse_args(argv)
     try:
-        result, objects = discover(max_pages=args.max_pages)
+        result, objects = discover(max_pages=args.max_pages, transport=fetch)
         create_candidate(args.output_directory)
         for name, raw in objects.items():
             write_candidate(args.output_directory, name, raw)
