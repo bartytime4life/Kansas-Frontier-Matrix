@@ -4,6 +4,9 @@ import argparse, hashlib, json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[4]
 CASES=ROOT/"fixtures/domains/soil/soil_component/cases.json"
+# The workflow runs no schema check; the paired schema is closed and requires every property.
+SCHEMA=ROOT/"schemas/contracts/v1/domains/soil/soil_component.schema.json"
+SCHEMA_FIELDS=frozenset(json.loads(SCHEMA.read_text(encoding="utf-8"))["properties"])
 FALSE_EFFECTS={"component_persisted":False,"evidence_resolved":False,"policy_evaluated":False,"review_approved":False,"released":False,"published":False}
 def expected_identity(c):
     x=dict(c); x.pop("id",None); x.pop("spec_hash",None)
@@ -11,8 +14,9 @@ def expected_identity(c):
     return "sha256:"+h,"soil-component:"+h[:24]
 def _evaluate(c):
     findings=[]
+    if set(c)!=SCHEMA_FIELDS: findings.append("FIELD_SET_INVALID")
     if c.get("profile")!="kfm.domains.soil.soil-component.v1" or c.get("status")!="PROPOSED_INACTIVE": findings.append("PROFILE_INVALID")
-    if c.get("effects")!=FALSE_EFFECTS: findings.append("EFFECT_OVERCLAIM")
+    if c.get("effects")!=FALSE_EFFECTS or any(v is not False for v in c["effects"].values()): findings.append("EFFECT_OVERCLAIM")
     if c.get("public_use_allowed") is not False: findings.append("PUBLIC_USE_OVERCLAIM")
     if c.get("release_state")!="UNRELEASED" or c.get("release_ref") is not None: findings.append("RELEASE_OVERCLAIM")
     if c.get("support_type") not in {"authoritative_static_soil","gridded_derivative_soil"}: findings.append("SUPPORT_TYPE_INVALID")
@@ -25,7 +29,7 @@ def _evaluate(c):
     if c.get("spec_hash")!=h: findings.append("SPEC_HASH_MISMATCH")
     elif c.get("id")!=i: findings.append("ID_MISMATCH")
     findings=sorted(set(findings))
-    if any(x in findings for x in ("PROFILE_INVALID","SPEC_HASH_MISMATCH","ID_MISMATCH")): return "ERROR",findings
+    if any(x in findings for x in ("PROFILE_INVALID","SPEC_HASH_MISMATCH","ID_MISMATCH","FIELD_SET_INVALID")): return "ERROR",findings
     if findings: return "DENY",findings
     return "PASS",[]
 

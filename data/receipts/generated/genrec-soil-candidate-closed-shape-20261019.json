@@ -1,0 +1,122 @@
+{
+  "receipt_id": "genrec-soil-candidate-closed-shape-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/domains/soil/validate_soil_component.py",
+    "tools/validators/domains/soil/validate_soil_map_unit.py",
+    "tools/validators/domains/soil/validate_component_horizon_join.py",
+    "tools/validators/domains/soil/validate_domain_feature_identity.py",
+    "tools/validators/domains/soil/validate_domain_layer_descriptor.py",
+    "tools/validators/domains/soil/validate_domain_observation.py",
+    "tools/validators/domains/soil/validate_domain_validation_report.py",
+    "tests/validators/domains/soil/test_soil_candidate_closed_shape.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/domains/soil/validate_soil_component.py": "sha256:bf089399ac790575fe4356f98ac2e6536ca163e6e37e89c5f5e5e1d89d4ccdc2",
+    "tools/validators/domains/soil/validate_soil_map_unit.py": "sha256:d46b40cf184f580d4955cce172d2b484799286bbfde94396ae3427e0dd8ca28a",
+    "tools/validators/domains/soil/validate_component_horizon_join.py": "sha256:d61b90a114a61a067dd7a72b6b4863317f2e0c03d2800049c6b913870cebb4d9",
+    "tools/validators/domains/soil/validate_domain_feature_identity.py": "sha256:0121f14aef28d7f7611d31450fcdcb3a3a38d970aef03236ca23f23138e16e3b",
+    "tools/validators/domains/soil/validate_domain_layer_descriptor.py": "sha256:afa7db4c9b75a1f1fde1503c2a6fe1ad6be7e65d3bb2620ae7839d76b702cb58",
+    "tools/validators/domains/soil/validate_domain_observation.py": "sha256:9f4def4318e501714f49fc01735481d9430040169f1733c97c29b76597ec1e5d",
+    "tools/validators/domains/soil/validate_domain_validation_report.py": "sha256:bb441b82446c947176fd95554a7346c025b0f6faa7b7388ca6410925effe6c45",
+    "tests/validators/domains/soil/test_soil_candidate_closed_shape.py": "sha256:62155528858f89552e19cb27201831c319706b44c809bdc81159d6b10e024bc4"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:tools/validators/domains/soil/validate_soil_component.py@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:tools/validators/domains/soil/validate_soil_map_unit.py@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:tools/validators/domains/soil/validate_component_horizon_join.py@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:tools/validators/domains/soil/validate_domain_feature_identity.py@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:tools/validators/domains/soil/validate_domain_layer_descriptor.py@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:tools/validators/domains/soil/validate_domain_observation.py@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:tools/validators/domains/soil/validate_domain_validation_report.py@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:schemas/contracts/v1/domains/soil/soil_component.schema.json@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:schemas/contracts/v1/domains/soil/soil_map_unit.schema.json@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:schemas/contracts/v1/domains/soil/component_horizon_join.schema.json@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:schemas/contracts/v1/domains/soil/domain_layer_descriptor.schema.json@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:schemas/contracts/v1/domains/soil/domain_observation.schema.json@049d636111542a64efec6f486db2d9fc2990a78d",
+      "repo:schemas/contracts/v1/domains/soil/domain_validation_report.schema.json@049d636111542a64efec6f486db2d9fc2990a78d"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/domains/soil/validate_soil_component.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_soil_map_unit.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_component_horizon_join.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_domain_feature_identity.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_domain_layer_descriptor.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_domain_observation.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_domain_validation_report.py": "CONFIRMED",
+    "tests/validators/domains/soil/test_soil_candidate_closed_shape.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "A repository sweep found these seven soil candidate validators run by workflows that install no JSON Schema validator, while each paired schema is closed (additionalProperties false, every property required). On main each returned PASS for its own valid fixture with an injected release_authorized: true or approved_by field once spec_hash and id were recomputed over the new content, and for an effects flag of 0 or 0.0 because dict equality treats 0 as False. The new tests fail on the original validators (35 failures)."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/validators/domains/soil/test_soil_candidate_closed_shape.py adds 4 tests (49 subtests) across all seven validators: SCHEMA_FIELDS equals the closed schema's required fields, a re-bound control still passes, injected or missing fields give ERROR with FIELD_SET_INVALID, and effects of 0 or 0.0 give DENY with EFFECT_OVERCLAIM. The 160 tests under tests/validators/domains/soil pass, and all 45 validator and test commands in the ten consuming workflows pass, including every --fixtures run."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "In soil_component and domain_observation, removing the field-set check or the literal-false effects check failed the suite, as did classifying FIELD_SET_INVALID as DENY instead of ERROR in soil_component."
+    },
+    {
+      "gate": "Pinning",
+      "outcome": "PASS",
+      "reason": "No generated receipt pins these validators; the two receipts validated by the classification-release and conditions-source-role-readiness workflows pin none of the changed files."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the identical pre-existing findings in the seven validators before and after, and none in the new test module. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/049d636111542a64efec6f486db2d9fc2990a78d"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T03:14:40Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Each validator reads its allowed top-level fields from its own paired schema's properties with the standard library, so the gate and the schema cannot drift. FIELD_SET_INVALID is a structural ERROR, consistent with PROFILE_INVALID. All tracked fixtures keep their expected outcomes. The same dict-equality pattern exists in other validators that do run a JSON Schema first (jsonschema distinguishes false from 0 under const) and was left unchanged."
+}

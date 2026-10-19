@@ -4,6 +4,9 @@ import argparse, hashlib, json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[4]
 CASES=ROOT/'fixtures/domains/soil/domain_feature_identity/cases.json'
+# The workflow runs no schema check; the paired schema is closed and requires every property.
+SCHEMA=ROOT/'schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json'
+SCHEMA_FIELDS=frozenset(json.loads(SCHEMA.read_text(encoding='utf-8'))['properties'])
 PROFILE='kfm.domains.soil.domain-feature-identity.v1'
 FALSE_EFFECTS={'canonical_identity_created':False,'evidence_resolved':False,'policy_evaluated':False,'review_approved':False,'released':False,'published':False}
 SUPPORT_ROLES={
@@ -21,6 +24,7 @@ def canonical_hash(c):
  return hashlib.sha256(json.dumps(p,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode()).hexdigest()
 def _evaluate(c):
  f=[]
+ if set(c)!=SCHEMA_FIELDS:f.append('FIELD_SET_INVALID')
  if c.get('profile')!=PROFILE or c.get('status')!='PROPOSED_INACTIVE':f.append('PROFILE_MISMATCH')
  if c.get('domain')!='soil' or c.get('version')!='1.0.0':f.append('IDENTITY_PROFILE_MISMATCH')
  support=c.get('support_type');role=c.get('object_role')
@@ -36,7 +40,7 @@ def _evaluate(c):
  elif t.get('kind')=='NOT_APPLICABLE' and t.get('value') is not None:f.append('TEMPORAL_SCOPE_INVALID')
  elif t.get('kind')!='NOT_APPLICABLE' and not isinstance(t.get('value'),str):f.append('TEMPORAL_SCOPE_INVALID')
  if c.get('public_use_allowed') is not False:f.append('PUBLIC_USE_OVERCLAIM')
- if c.get('effects')!=FALSE_EFFECTS:f.append('EFFECT_OVERCLAIM')
+ if c.get('effects')!=FALSE_EFFECTS or any(v is not False for v in c['effects'].values()):f.append('EFFECT_OVERCLAIM')
  d=canonical_hash(c)
  if c.get('spec_hash')!=f'sha256:{d}':f.append('SPEC_HASH_MISMATCH')
  if c.get('id')!=f'soil-identity:{d[:24]}':f.append('ID_MISMATCH')

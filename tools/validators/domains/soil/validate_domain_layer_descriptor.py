@@ -8,6 +8,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[4]
 CASES = ROOT / "fixtures/domains/soil/domain_layer_descriptor/cases.json"
+# The workflow runs no schema check; the paired schema is closed and requires every property.
+SCHEMA = ROOT / "schemas/contracts/v1/domains/soil/domain_layer_descriptor.schema.json"
+SCHEMA_FIELDS = frozenset(json.loads(SCHEMA.read_text(encoding="utf-8"))["properties"])
 PROFILE = "kfm.domains.soil.domain-layer-descriptor.v1"
 FALSE_EFFECTS = {
     "catalog_written": False,
@@ -38,6 +41,8 @@ def canonical_hash(candidate: dict) -> str:
 
 def _evaluate(candidate: dict) -> tuple[str, list[str]]:
     findings: list[str] = []
+    if set(candidate) != SCHEMA_FIELDS:
+        findings.append("FIELD_SET_INVALID")
     if candidate.get("profile") != PROFILE or candidate.get("status") != "PROPOSED_INACTIVE":
         findings.append("PROFILE_MISMATCH")
     if candidate.get("domain") != "soil" or candidate.get("version") != "1.0.0":
@@ -54,7 +59,7 @@ def _evaluate(candidate: dict) -> tuple[str, list[str]]:
         findings.append("LIFECYCLE_OVERCLAIM")
     if candidate.get("public_use_allowed") is not False:
         findings.append("PUBLIC_USE_OVERCLAIM")
-    if candidate.get("effects") != FALSE_EFFECTS:
+    if candidate.get("effects") != FALSE_EFFECTS or any(v is not False for v in candidate["effects"].values()):
         findings.append("EFFECT_OVERCLAIM")
     for key in ("source_refs", "evidence_refs", "limitations"):
         values = candidate.get(key)
