@@ -1,10 +1,13 @@
 import importlib.util
 import io
 import json
+import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
 from datetime import datetime, timedelta, timezone
 from email.message import Message
 from pathlib import Path
+from unittest.mock import patch
 from urllib.error import URLError
 from urllib.request import BaseHandler, build_opener
 from urllib.response import addinfourl
@@ -115,6 +118,109 @@ class GitHubIssueInventoryReadRedirectTests(unittest.TestCase):
             mod.read_live("bartytime4life/Kansas-Frontier-Matrix", [1647], "synthetic-credential-not-secret", now, opener)
 
         self.assertEqual(len(requests), 1)
+
+
+class GitHubIssueInventoryReadInputTests(unittest.TestCase):
+    """Untrusted API or fixture JSON of the wrong shape must fail closed as an exception the CLI reports, never a traceback."""
+
+    def setUp(self):
+        self.fixture = json.loads(FIXTURE.read_text())
+        self.now = datetime.fromisoformat("2026-08-08T02:30:00+00:00")
+
+    def build(self, **overrides):
+        params = {"repository": "bartytime4life/Kansas-Frontier-Matrix", "repo_payload": self.fixture["repository"], "ref_payload": self.fixture["ref"],
+                  "issue_payloads": self.fixture["issues"], "headers": self.fixture["headers"], "requested_issue_ids": [1647, 1675], "retrieved_at": self.now}
+        params.update(overrides)
+        return mod.build_record(**params)
+
+    def issues_with(self, **change):
+        rows = json.loads(json.dumps(self.fixture["issues"]))
+        rows[0].update(change)
+        return rows
+
+    def test_malformed_payloads_fail_closed(self):
+        cases = {
+            "repository not an object": {"repo_payload": []},
+            "ref not an object": {"ref_payload": None},
+            "ref object not an object": {"ref_payload": {**self.fixture["ref"], "object": "sha"}},
+            "headers not an object": {"headers": []},
+            "issues not an array": {"issue_payloads": {"1647": self.fixture["issues"][0]}},
+            "issue not an object": {"issue_payloads": ["1647", self.fixture["issues"][1]]},
+            "state not a string": {"issue_payloads": self.issues_with(state=None)},
+            "updated_at not a string": {"issue_payloads": self.issues_with(updated_at=1)},
+            "number a string": {"issue_payloads": self.issues_with(number="1647")},
+            "repository id a boolean": {"repo_payload": {**self.fixture["repository"], "id": True}},
+            "rate limit not an integer": {"headers": {**self.fixture["headers"], "x-ratelimit-remaining": "many"}},
+        }
+        for name, overrides in cases.items():
+            with self.subTest(name), self.assertRaises((TypeError, ValueError)):
+                self.build(**overrides)
+
+    def test_boolean_issue_number_does_not_match_issue_one(self):
+        rows = json.loads(json.dumps(self.fixture["issues"][:1]))
+        rows[0]["number"] = True
+        with self.assertRaises(TypeError):
+            self.build(issue_payloads=rows, requested_issue_ids=[1])
+
+    def test_requested_ids_and_bindings(self):
+        for ids in ([1675, 1647], [1647, 1647], [], [0], [True]):
+            with self.subTest(ids=ids), self.assertRaises(ValueError):
+                self.build(requested_issue_ids=ids)
+        with self.assertRaises(ValueError):
+            self.build(repository="someone/else")
+        with self.assertRaises(ValueError):
+            self.build(issue_payloads=self.fixture["issues"][:1])
+        short_sha = {**self.fixture["ref"], "object": {"sha": "abc"}}
+        with self.assertRaises(ValueError):
+            self.build(ref_payload=short_sha)
+
+    def test_rate_limit_reset_and_staleness(self):
+        record = self.build(headers={**self.fixture["headers"], "x-ratelimit-reset": "1786156200"})
+        self.assertEqual(record["rate_limit_reset_at"], "2026-08-08T02:30:00Z")
+        self.assertEqual(mod.freshness(record, self.now + timedelta(seconds=300)), "FRESH")
+        self.assertEqual(mod.freshness(record, self.now + timedelta(seconds=301)), "STALE")
+
+    def test_timestamps_need_an_offset_and_accept_lowercase(self):
+        self.assertEqual(mod._parse("2026-08-08t02:30:00z"), self.now)
+        self.assertEqual(mod._parse("2026-08-07T21:30:00-05:00"), self.now)
+        for value in ("2026-08-08T02:30:00", "yesterday", None):
+            with self.subTest(value=value), self.assertRaises((TypeError, ValueError)):
+                mod._parse(value)
+
+    def run_cli(self, *argv, fixture=None):
+        err, out = io.StringIO(), io.StringIO()
+        args = ["--repository", "bartytime4life/Kansas-Frontier-Matrix", "--issue", "1647", "--issue", "1675", *argv]
+        if fixture is not None:
+            args += ["--fixture", str(fixture)]
+        with redirect_stdout(out), redirect_stderr(err):
+            code = mod.main(args)
+        return code, out.getvalue(), err.getvalue()
+
+    def test_cli_reports_errors_as_one_json_line(self):
+        code, out, _ = self.run_cli("--now", "2026-08-08T02:30:00Z", fixture=FIXTURE)
+        self.assertEqual((code, json.loads(out)["outcome"]), (0, "FRESH"))
+        with tempfile.TemporaryDirectory() as temp:
+            broken = Path(temp) / "fixture.json"
+            for content in ("[]", json.dumps({**self.fixture, "issues": ["x"]}), "{"):
+                broken.write_text(content)
+                with self.subTest(content=content[:20]):
+                    code, out, err = self.run_cli("--now", "2026-08-08T02:30:00Z", fixture=broken)
+                    self.assertEqual((code, out), (1, ""))
+                    self.assertEqual(json.loads(err)["outcome"], "ERROR")
+            for now in ("yesterday", "2026-08-08T02:30:00"):
+                with self.subTest(now=now):
+                    code, _, err = self.run_cli("--now", now, fixture=FIXTURE)
+                    self.assertEqual((code, json.loads(err)["outcome"]), (1, "ERROR"))
+            limited = Path(temp) / "limited.json"
+            limited.write_text(json.dumps({**self.fixture, "headers": {**self.fixture["headers"], "x-ratelimit-remaining": "0"}}))
+            code, out, _ = self.run_cli("--now", "2026-08-08T02:30:00Z", fixture=limited)
+            self.assertEqual((code, json.loads(out)["outcome"]), (2, "HOLD_RATE_LIMIT"))
+
+    def test_live_mode_without_a_token_holds(self):
+        with patch.dict("os.environ", {}, clear=True):
+            code, out, err = self.run_cli()
+        self.assertEqual((code, out), (2, ""))
+        self.assertEqual(json.loads(err), {"outcome": "HOLD_AUTH", "repository_mutation_allowed": False})
 
 
 if __name__ == "__main__":

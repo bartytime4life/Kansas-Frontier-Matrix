@@ -45,7 +45,20 @@ def _iso(dt):
 
 
 def _parse(value):
-    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    """An RFC 3339 instant with an explicit offset; lowercase "t" and "z" are valid forms."""
+    if not isinstance(value, str):
+        raise TypeError("timestamp must be a string")
+    parsed = datetime.fromisoformat(value.upper())
+    if parsed.tzinfo is None:
+        raise ValueError("timestamp must carry a UTC offset")
+    return parsed
+
+
+def _object(value, name):
+    # API and fixture payloads are untrusted JSON; a wrong shape is a TypeError the CLI reports, not a traceback.
+    if not isinstance(value, dict):
+        raise TypeError(f"{name} must be a JSON object")
+    return value
 
 
 def _digest(record):
@@ -57,17 +70,22 @@ def build_record(*, repository, repo_payload, ref_payload, issue_payloads, heade
     ids = sorted(set(requested_issue_ids))
     if ids != list(requested_issue_ids) or not ids or any(not isinstance(x, int) or isinstance(x, bool) or x < 1 for x in ids):
         raise ValueError("requested issue ids must be sorted unique positive integers")
-    if repo_payload.get("full_name") != repository or not isinstance(repo_payload.get("id"), int):
+    repo_payload, ref_payload, headers = _object(repo_payload, "repository"), _object(ref_payload, "ref"), _object(headers, "headers")
+    if repo_payload.get("full_name") != repository or type(repo_payload.get("id")) is not int:
         raise ValueError("repository binding mismatch")
     branch = repo_payload.get("default_branch")
     ref_name = ref_payload.get("ref")
-    sha = (ref_payload.get("object") or {}).get("sha")
+    sha = _object(ref_payload.get("object") or {}, "ref object").get("sha")
     if ref_name != f"refs/heads/{branch}" or not isinstance(sha, str) or len(sha) != 40:
         raise ValueError("default branch ref binding mismatch")
     rows = []
     for issue in issue_payloads:
+        issue = _object(issue, "issue")
         if "pull_request" in issue:
             raise ValueError("pull request returned through issue endpoint")
+        # type() rather than isinstance: a JSON true would otherwise match issue 1.
+        if type(issue.get("number")) is not int or not isinstance(issue.get("state"), str) or not isinstance(issue.get("updated_at"), str):
+            raise TypeError("issue number, state and updated_at must be an integer and strings")
         rows.append({"number": issue["number"], "state": issue["state"].upper(), "updated_at": issue["updated_at"]})
     rows.sort(key=lambda row: row["number"])
     if [row["number"] for row in rows] != ids:
@@ -138,10 +156,10 @@ def main(argv=None):
     p.add_argument("--now")
     args = p.parse_args(argv)
     issue_ids = sorted(set(args.issue))
-    now = _parse(args.now) if args.now else datetime.now(timezone.utc)
     try:
+        now = _parse(args.now) if args.now else datetime.now(timezone.utc)
         if args.fixture:
-            payload = json.loads(args.fixture.read_text())
+            payload = _object(json.loads(args.fixture.read_text()), "fixture")
             record = build_record(repository=args.repository, repo_payload=payload["repository"], ref_payload=payload["ref"], issue_payloads=payload["issues"], headers=payload.get("headers", {}), requested_issue_ids=issue_ids, retrieved_at=now)
         else:
             token = os.getenv("KFM_GITHUB_READ_TOKEN") or os.getenv("GITHUB_TOKEN")
@@ -151,7 +169,7 @@ def main(argv=None):
             record = read_live(args.repository, issue_ids, token, now)
         print(_canon(record))
         return 0 if record["outcome"] == "FRESH" else 2
-    except (HTTPError, URLError, OSError, ValueError, KeyError, json.JSONDecodeError) as exc:
+    except (HTTPError, URLError, OSError, ValueError, TypeError, KeyError, json.JSONDecodeError) as exc:
         print(_canon({"outcome": "ERROR", "error_class": type(exc).__name__, "repository_mutation_allowed": False}), file=sys.stderr)
         return 1
 
