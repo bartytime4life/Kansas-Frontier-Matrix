@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards-iiif
 title: IIIF — KFM Consumption and Historic-Overlay Boundary
-type: standard; interoperability-guidance
+type: standard
 version: v2.0-draft
 status: "draft; repository-grounded; upstream-currentness-refreshed; bounded-fixture-profile; canonical-path-integrated; independent-review-pending"
 owners:
@@ -18,7 +18,7 @@ responsibility: >
   required before source admission, runtime use, release, publication, or
   interoperability may be claimed.
 truth_posture: >
-  CONFIRMED repository paths and bytes, case-colliding lowercase sibling,
+  CONFIRMED repository paths and bytes, retired lowercase sibling (2026-08-22),
   fixture-only readiness profile, adjacent georeference profiles, focused tests
   and workflow, and LOC connector scaffold state / CONFIRMED official IIIF
   current-specification snapshot dated 2026-08-18 / PROPOSED live source,
@@ -44,19 +44,9 @@ evidence_snapshot:
 external_currentness_review:
   access_date: 2026-08-18
   issuer: IIIF Consortium
-  current_stable:
-    - "Image API 3.0.0"
-    - "Presentation API 3.0.0"
-    - "Authorization Flow API 2.0.0"
-    - "Change Discovery API 1.0.0"
-    - "Content Search API 2.0.0"
-    - "Content State API 1.0.0"
-  draft:
-    - "Presentation API 4.0.0 — release candidate"
-  approved_extensions:
-    - "navPlace"
-    - "Text Granularity"
-    - "Georeference"
+  current_stable: "Image API 3.0.0; Presentation API 3.0.0; Authorization Flow API 2.0.0; Change Discovery API 1.0.0; Content Search API 2.0.0; Content State API 1.0.0"
+  draft: "Presentation API 4.0.0 — release candidate"
+  approved_extensions: "navPlace; Text Granularity; Georeference"
 related:
   - ./README.md
   - ./STAC.md
@@ -77,12 +67,13 @@ related:
   - ../../contracts/map/georeference_transform_quality.md
   - ../../contracts/map/georeference_spatial_distribution.md
   - ../../connectors/loc/README.md
-tags: [kfm, standards, iiif, image-api, presentation-api, georeference, allmaps, historic-maps, rights, care, maplibre, evidence]
+tags: [kfm, standards, interoperability-guidance, iiif, image-api, presentation-api, georeference, allmaps, historic-maps, rights, care, maplibre, evidence]
 notes:
   - "Same-path documentation-only update; no contract, schema, policy, source, fixture, validator, workflow, dependency, runtime, release, or publication change."
   - "The merged readiness profile remains PROPOSED_INACTIVE and fixture-only."
   - "Owner authority selected docs/standards/IIIF.md as canonical; the lowercase sibling is retired on current main, while independent review and milestone closure remain pending."
   - "Presentation API 4.0 is now an upstream release candidate while the current readiness schema still names 4.0-preview."
+  - "2026-10-19: metadata block normalized to the bounded profile (single-token type, flattened currentness lists) and the section 9.2 path row updated to the single canonical page; content otherwise unchanged."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -520,7 +511,7 @@ They must not be marketed as a general IIIF validator or publication gate.
 
 | Axis | Current result |
 |---|---|
-| Path present | Yes—two case-colliding pages |
+| Path present | Yes—one canonical page (`IIIF.md`); the lowercase sibling was retired 2026-08-22 (§10) |
 | Upstream reviewed | Yes—2026-08-18 snapshot |
 | KFM profile adopted | No/unknown |
 | Fixture contract/schema | Yes |

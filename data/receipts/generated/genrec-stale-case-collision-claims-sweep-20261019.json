@@ -1,0 +1,73 @@
+{
+  "receipt_id": "genrec-stale-case-collision-claims-sweep-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/intake/exploratory/stac-cdl-pmtiles-profile-decision-packet.md",
+    "docs/standards/IIIF.md",
+    "packages/hashing/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/intake/exploratory/stac-cdl-pmtiles-profile-decision-packet.md": "sha256:37c6d9f20bb943770c642825f37b24a6ce3b24c1c65cf25d6f6ffa10768827fe",
+    "docs/standards/IIIF.md": "sha256:a7c1ddf82b43ca13c48e6991534c31baf6df1591e1421d36afda1aa77f508515",
+    "packages/hashing/README.md": "sha256:a203907e8106d571f286c97cadd3d13b6b7c86bb9a0e9212caab815bc366a2f0"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/7177ea6246d77e54f92e137428c8bc847401ad1b"
+    ]
+  },
+  "truth_labels": {
+    "docs/intake/exploratory/stac-cdl-pmtiles-profile-decision-packet.md": "CONFIRMED",
+    "docs/standards/IIIF.md": "CONFIRMED",
+    "packages/hashing/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Stale-claim sweep",
+      "outcome": "PASS",
+      "reason": "A repo-wide search for case-collision claims about the STAC, OAI-PMH, canonicalization, IIIF and SourceDescriptor pairs (all resolved; check-case-conflict passes) found three remaining current-state claims that were stale: the open decision STAC-CDL-PMT-DEC-01, the 'existing hold' line in packages/hashing/README.md, and the 'two case-colliding pages' maturity row in IIIF.md. Historical statements (pinned snapshots, past updates' non-effects, revision ledgers, historical receipts) were left unchanged."
+    },
+    {
+      "gate": "Docs metadata",
+      "outcome": "PASS",
+      "reason": "Editing IIIF.md brought its pre-existing metadata defects into scope: a compound type and nested lists under external_currentness_review. The type is now 'standard' with the qualifier in tags, the lists are flattened, and the truth posture no longer calls the lowercase sibling case-colliding. check_meta_blocks.py and check_document_graph.py report no FAIL findings on the changed range."
+    },
+    {
+      "gate": "Dependent checks",
+      "outcome": "PASS",
+      "reason": "The IIIF readiness and georeference tests (32 passed), the readiness fixtures, and the three receipts those workflows validate at current bytes (none lists IIIF.md as an artifact) all pass. check_links.py, check_stale_docs.py, make gap-scan, docs-critical-structure, scaffold-inventory and repository-topology exit 0."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/7177ea6246d77e54f92e137428c8bc847401ad1b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T16:50:07Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "docs/architecture TRUST_MEMBRANE.md and trust-membrane.md differ by underscore versus hyphen, not only by case; that naming overlap is outside this sweep."
+}
