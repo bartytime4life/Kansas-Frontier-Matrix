@@ -112,7 +112,7 @@ def discover(*, max_pages=4, transport=fetch):
                             "data_gap_interval": p.get("data_gap_interval"),
                             "gaps_verified": False, "geometry": feature.get("geometry"),
                             "source_metadata_sha256": digest})
-        links = [link["href"] for link in value["links"] if link.get("rel") == "next"]
+        links = [link["href"] for link in value.get("links", []) if link.get("rel") == "next"]
         if len(links) > 1:
             raise ValueError("PAGINATION_AMBIGUOUS")
         url = links[0] if links else None
