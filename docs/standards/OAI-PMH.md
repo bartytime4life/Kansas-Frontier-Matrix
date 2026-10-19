@@ -1,14 +1,14 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards/oai-pmh
 title: OAI-PMH — KFM Harvesting Guidance and Readiness Boundary
-type: standard; interoperability-reference; source-intake-boundary
-version: v2.0-draft
-status: draft; repository-grounded; upstream-currentness-refreshed; case-collision-hold; no-adoption; no-conformance-proof; no-source-activation; no-release; no-publication
+type: standard
+version: v2.1-draft
+status: draft; repository-grounded; upstream-currentness-refreshed; case-collision-resolved; no-adoption; no-conformance-proof; no-source-activation; no-release; no-publication
 owners:
   - "@bartytime4life — verified GitHub review route through CODEOWNERS"
   - "NEEDS VERIFICATION — source-intake, archives, metadata, rights, sensitivity, security, validation, and release stewards"
 created: 2026-05-14
-updated: 2026-08-18
+updated: 2026-10-19
 policy_label: public
 owning_root: docs/
 current_path: docs/standards/OAI-PMH.md
@@ -18,7 +18,7 @@ responsibility: >
   release, or public service can claim readiness or conformance.
 truth_posture: >
   CONFIRMED current target path and document identity, adopted Directory Rules placement,
-  repository-default CODEOWNERS route, uppercase/lowercase case collision, current
+  repository-default CODEOWNERS route, owner-directed case-collision resolution (2026-10-19), current
   SourceDescriptor contract/schema surfaces, Kansas Memory placeholder-connector boundary,
   absence of a verified dedicated OAI-PMH executable proof in the reviewed repository
   surfaces, and dated official OAI-PMH 2.0 protocol facts / PROPOSED KFM source profile,
@@ -50,7 +50,8 @@ related:
   - ./ARCHIVAL-STANDARDS.md
   - ./DUBLIN-CORE.md
   - ./OAI-PMH.md
-  - ./oai-pmh.md
+  - ./DEBOUNCE_WINDOWS.md
+  - ./CANONICALIZATION.md
   - ../doctrine/directory-rules.md
   - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../sources/catalog/kansas/kansas-memory.md
@@ -59,10 +60,10 @@ related:
   - ../../schemas/contracts/v1/sources/source_descriptor.schema.json
   - ../../connectors/kansas_memory/README.md
   - ../../.github/CODEOWNERS
-tags: [kfm, standards, oai-pmh, metadata-harvesting, archives, source-intake, xml, dublin-core, rights, sensitivity, validation, correction, rollback]
+tags: [kfm, standards, interoperability-reference, source-intake-boundary, oai-pmh, metadata-harvesting, archives, source-intake, xml, dublin-core, rights, sensitivity, validation, correction, rollback]
 notes:
   - "Same-path modernization of the uppercase target only."
-  - "The lowercase sibling remains a separate conflicting identity under STD-DRIFT-003; this revision does not rename, merge, delete, redirect, or select a canonical winner."
+  - "2026-10-19: owner-directed case-collision removal (STD-DRIFT-003). This uppercase path is canonical. Unique content of the former lowercase sibling docs/standards/oai-pmh.md (doc_id kfm://doc/standards-oai-pmh, v0.1) is carried as Appendix A, labelled PROPOSED and subordinate to sections 1-19; the lowercase file was deleted and inbound links repointed."
   - "The document records guidance, not an OAI-PMH SourceDescriptor extension, semantic contract, schema, policy, connector, validator, fixture, workflow, receipt, release, or public endpoint."
   - "No live source is contacted or activated, and no real OAI-PMH response or archival record is added."
   - "The prior proposal-era implementation, conformance, path, cadence, digest, token, and Kansas-provider claims are narrowed to current evidence."
@@ -79,8 +80,8 @@ notes:
 > [!IMPORTANT]
 > **Human-readable guidance only.** [`docs/standards/`](./README.md) owns standards and interoperability explanation. [`contracts/`](../../contracts/source/source_descriptor.md) owns semantic meaning, [`schemas/`](../../schemas/contracts/v1/source/source_descriptor.schema.json) owns machine shape, policy owns admissibility, executable code and tests own bounded behavior, and release objects own release state.
 
-> [!CAUTION]
-> **Case-collision HOLD.** Both `docs/standards/OAI-PMH.md` and `docs/standards/oai-pmh.md` exist with different document IDs and content. The standards README records this as `STD-DRIFT-003 — CONFLICTED / HOLD`. This revision changes only the uppercase target requested. It does not declare either file canonical or authorize a case-only migration.
+> [!NOTE]
+> **Case collision resolved (2026-10-19, owner-directed).** This uppercase path is the canonical OAI-PMH guide. The former lowercase sibling `oai-pmh.md` (v0.1) was deleted after its unique content was carried into [Appendix A](#appendix-a--carried-from-the-former-lowercase-oai-pmhmd). See [§5](#case-collision-hold) and `STD-DRIFT-003` in the [standards README](./README.md).
 
 > [!WARNING]
 > **No OAI-PMH implementation or conformance proof is established here.** The reviewed repository evidence did not establish a dedicated executable OAI-PMH parser, harvester, fixture family, validator, workflow, real harvest artifact, producer/consumer exchange, governed release, deployment, or public endpoint. The repository-present Kansas Memory lane is explicitly a `0.0.0` placeholder compatibility boundary whose access method remains unknown.
@@ -93,7 +94,7 @@ notes:
 | Surface | Current evidence | Bounded conclusion |
 |---|---|---|
 | Uppercase target | `docs/standards/OAI-PMH.md` exists with `doc_id: kfm://doc/standards/oai-pmh` | **CONFIRMED guidance path and identity** |
-| Lowercase sibling | `docs/standards/oai-pmh.md` exists with a different document ID | **CONFLICTED / HOLD** |
+| Former lowercase sibling | `docs/standards/oai-pmh.md` deleted 2026-10-19; unique content carried in Appendix A | **RESOLVED — owner-directed** |
 | Placement | Adopted Directory Rules place human-readable standards guidance in `docs/standards/` | **CONFIRMED same-path placement** |
 | GitHub review routing | Repository-default CODEOWNERS routes review to `@bartytime4life` | **CONFIRMED route; stewardship NEEDS VERIFICATION** |
 | SourceDescriptor | Semantic contract and singular/plural schema surfaces exist; the schema labels the object family `PROPOSED` and records a compatibility alias | **CONFIRMED repository surfaces; OAI-specific profile not adopted** |
@@ -103,7 +104,7 @@ notes:
 | Conformance | No KFM producer, consumer, release, or independent interoperability exercise was verified | **Documented guidance only** |
 | Release/publication | No release manifest, correction drill, rollback drill, deployment, or public service was verified for OAI-PMH-derived material | **No effect** |
 
-**Quick navigation:** [Purpose](#purpose--scope) · [Role](#why-oai-pmh-matters-to-kfm) · [Protocol](#protocol-101-the-six-verbs) · [Posture](#kfm-conformance-posture) · [Collision](#case-collision-hold) · [Source profile](#source-profile-contract) · [Lifecycle](#lifecycle-placement) · [Harvesting](#harvest-semantics) · [Metadata](#metadata-mapping) · [Rights](#rights-and-sensitivity) · [Security](#security-and-resource-limits) · [Outcomes](#protocol-errors-and-kfm-dispositions) · [Examples](#illustrative-requests) · [Validation](#validation) · [Maturity](#graduation-and-adoption-gates) · [Failures](#failure-modes) · [Backlog](#verification-backlog) · [Rollback](#non-effects-and-rollback) · [References](#references)
+**Quick navigation:** [Purpose](#purpose--scope) · [Role](#why-oai-pmh-matters-to-kfm) · [Protocol](#protocol-101-the-six-verbs) · [Posture](#kfm-conformance-posture) · [Collision](#case-collision-hold) · [Source profile](#source-profile-contract) · [Lifecycle](#lifecycle-placement) · [Harvesting](#harvest-semantics) · [Metadata](#metadata-mapping) · [Rights](#rights-and-sensitivity) · [Security](#security-and-resource-limits) · [Outcomes](#protocol-errors-and-kfm-dispositions) · [Examples](#illustrative-requests) · [Validation](#validation) · [Maturity](#graduation-and-adoption-gates) · [Failures](#failure-modes) · [Backlog](#verification-backlog) · [Rollback](#non-effects-and-rollback) · [References](#references) · [Carried content](#appendix-a--carried-from-the-former-lowercase-oai-pmhmd)
 
 ---
 
@@ -131,8 +132,7 @@ It does **not**:
 - identify any Kansas institution as a conforming OAI-PMH repository;
 - create an OAI-specific contract, schema, enum, policy, connector, fixture, validator, workflow, or data lane;
 - admit or activate a source;
-- authorize network access, harvesting, redistribution, release, deployment, or publication; or
-- resolve the uppercase/lowercase document collision.
+- authorize network access, harvesting, redistribution, release, deployment, or publication.
 
 [Back to top](#top)
 
@@ -257,35 +257,19 @@ Wording that remains unsupported:
 
 <a id="case-collision-hold"></a>
 
-## 5. Case-collision HOLD
+## 5. Case-collision resolution
 
-The repository contains both:
+Until 2026-10-19 the repository contained both `docs/standards/OAI-PMH.md` and `docs/standards/oai-pmh.md`, with different document IDs, titles, metadata, content, and implied posture. On case-insensitive filesystems (default macOS and Windows) one overwrote the other at checkout.
 
-```text
-docs/standards/OAI-PMH.md
-docs/standards/oai-pmh.md
-```
+Owner-directed disposition (2026-10-19):
 
-They have different document IDs, titles, metadata, content, and implied posture. This is not a harmless alias on every filesystem.
+1. **This uppercase path is canonical**, keeping `doc_id` `kfm://doc/standards/oai-pmh`.
+2. The lowercase file's unique content is carried in [Appendix A](#appendix-a--carried-from-the-former-lowercase-oai-pmhmd), labelled PROPOSED and subordinate to §§1–19.
+3. The lowercase file was **deleted**, not kept as a redirect; its `doc_id` `kfm://doc/standards-oai-pmh` is retired. Git history preserves it.
+4. Every in-repository link to the lowercase path was repointed here; historical receipts and evidence snapshots that name it were left unchanged.
+5. `pre-commit run check-case-conflict --all-files` guards against reintroduction.
 
-This update preserves the requested uppercase path and its existing document ID. It does not:
-
-- copy the lowercase document wholesale;
-- assert that the uppercase path is canonical;
-- add a redirect, tombstone, mirror, or generated relationship;
-- repair all inbound links;
-- change either file's consumers; or
-- perform a case-only rename.
-
-A later structural decision requires:
-
-1. identity and content comparison;
-2. complete inbound-link, fragment, generator, test, and consumer inventory;
-3. a single-write and compatibility strategy;
-4. case-insensitive checkout testing;
-5. Git-history and external-link preservation;
-6. documentation-graph and stale-reference closure; and
-7. a reviewed rollback path.
+**Rollback:** restore `docs/standards/oai-pmh.md` from the parent of the deleting commit and revert the link repoints together; restoring it alone reintroduces the case collision.
 
 [Back to top](#top)
 
@@ -857,7 +841,6 @@ Priority indicates dependency and trust significance, not authorization to imple
 
 | Priority | Item | Closure evidence |
 |---|---|---|
-| P0 | Resolve `OAI-PMH.md` / `oai-pmh.md` identity and writable-home conflict | Content/link/consumer inventory, decision authority, case-safe migration test, compatibility and rollback |
 | P0 | Determine whether KFM adopts an OAI-PMH role or profile at all | Accepted decision with actor, scope, bindings, non-goals, failure behavior, and currentness review |
 | P0 | Define source-admission, rights, sensitivity, and security requirements for any first candidate | Source packet, qualified reviews, allowlist, limits, negative fixtures, activation decision |
 | P1 | Reconcile SourceDescriptor singular/plural schema authority before an OAI extension | Accepted schema-home/alias disposition and consumer compatibility proof |
@@ -884,7 +867,6 @@ This document update does not:
 
 - adopt OAI-PMH or any KFM application profile;
 - establish KFM as a Service Provider or Data Provider;
-- resolve the uppercase/lowercase collision;
 - add or alter a contract, schema, policy, enum, source descriptor, connector, fixture, validator, test, workflow, dependency, receipt, proof, catalog record, release object, runtime, route, deployment, or public artifact;
 - activate a source or perform network access;
 - harvest, store, transform, map, release, or publish real records;
@@ -920,7 +902,6 @@ No source deactivation, data/schema migration, credential rotation, runtime rest
 - [`docs/standards/README.md`](./README.md) — standards-lane authority boundary and `STD-DRIFT-003`
 - [`docs/standards/ARCHIVAL-STANDARDS.md`](./ARCHIVAL-STANDARDS.md) — archival interoperability and preservation boundary
 - [`docs/standards/DUBLIN-CORE.md`](./DUBLIN-CORE.md) — Dublin Core guidance
-- [`docs/standards/oai-pmh.md`](./oai-pmh.md) — conflicting lowercase sibling; **HOLD**, not canonicalized here
 - [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) — adopted placement bytes through ADR-0029
 - [`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) — Directory Rules adoption decision
 - [`contracts/source/source_descriptor.md`](../../contracts/source/source_descriptor.md) — SourceDescriptor semantic guidance
@@ -936,5 +917,144 @@ No source deactivation, data/schema migration, credential rotation, runtime rest
 |---|---|---|
 | `v1` | 2026-05-14 | Initial proposal-era OAI-PMH guidance |
 | `v2.0-draft` | 2026-08-18 | Grounds the uppercase document in current repository evidence and official OAI-PMH sources; removes broken citation tokens and unsupported implementation/conformance/provider claims; corrects deletion, set, date-window, token, XML-security, mapping, rights, lifecycle, case-collision, validation, graduation, and rollback boundaries |
+| `v2.1-draft` | 2026-10-19 | Owner-directed case-collision resolution: this path canonical; former lowercase `oai-pmh.md` (v0.1) carried as Appendix A and deleted; §5 rewritten; collision backlog row closed |
+
+[Back to top](#top)
+
+---
+
+<a id="appendix-a--carried-from-the-former-lowercase-oai-pmhmd"></a>
+
+## Appendix A — Carried from the former lowercase `oai-pmh.md`
+
+**Source:** `docs/standards/oai-pmh.md`, v0.1, created and updated 2026-05-14, titled "OAI-PMH 2.0 — KFM Conformance and Harvest Posture", `doc_id` `kfm://doc/standards-oai-pmh`. It was merged here and deleted on 2026-10-19 by owner direction (`STD-DRIFT-003`), because the two paths overwrite each other on case-insensitive checkouts. Its full text remains in Git history.
+
+> [!WARNING]
+> **Proposal-era material, not current guidance.** Everything in this appendix is **PROPOSED** at most. Where it conflicts with §§1–19 (which were grounded in repository evidence on 2026-08-18), §§1–19 govern. It is kept so that no content is lost and its ideas stay reviewable. It adopts no field name, receipt shape, validator, cadence, or role.
+
+Content that §§1–19 already cover (protocol primer, six verbs, selective harvesting, deletion levels, `resumptionToken`, the `oai_dc` baseline, lifecycle diagram, sensitivity caution, and the basic error list) is not repeated here.
+
+### A.1 Actor role as the sibling framed it
+
+| KFM role | Sibling's status | Current status (§2, §1) |
+|---|---|---|
+| Service Provider (harvester of upstream archival metadata) | "CONFIRMED as ingest doctrine; PROPOSED as implementation" | Not asserted; no adoption decision exists |
+| Data Provider (re-exposing KFM-derived records, a "contribution-back" path, possibly via SNAC/EAC-CPF) | PROPOSED / future expansion | Not asserted |
+
+The sibling required any Data Provider activation to go through an ADR (Directory Rules §2.4), explicit rights review, and a policy decision. That requirement is consistent with §15.
+
+### A.2 Proposed `SourceDescriptor` field mapping
+
+The field names below were the sibling's proposal. They do **not** match the current SourceDescriptor schema; §6.2 lists the real fields that would need binding.
+
+| OAI-PMH concept | Proposed field | Sibling's note |
+|---|---|---|
+| `baseURL` | `access.endpoint_url` | Source identity URL alongside the institution name |
+| `repositoryName` | `source_name` | Human-readable label |
+| `protocolVersion` | `access.protocol` (`"OAI-PMH/2.0"`) | Pinned; mismatch ⇒ DENY admission |
+| `earliestDatestamp` | `temporal.earliest_available` | Bounds the first full harvest window |
+| `granularity` | `temporal.granularity` | Drives `from`/`until` formatting |
+| `deletedRecord` | `lifecycle.upstream_deletion_support` | `no` / `persistent` / `transient` |
+| `ListMetadataFormats` choice | `format_preference` (ordered list) | Request the richest supported format (e.g. `oai_ead`); fall back to `oai_dc` |
+| `ListSets` membership | `scope.set_filters` | Optional set narrowing for domain lanes |
+| `adminEmail` | `contacts.upstream_admin` | Incident reach-back; never published |
+| Rights / terms (outside OAI-PMH) | `rights.license_id`, `rights.attribution`, `rights.redistribution` | Rights are obtained out of band; absence ⇒ quarantine |
+
+### A.3 Proposed harvest `RunReceipt` profile
+
+The sibling proposed these fields for every harvest receipt. §6.3 and §11.4 leave capability-snapshot and receipt machine shape to the owning contract and schema; the `RunReceipt` schema under `schemas/contracts/v1/receipts/` governs shape.
+
+| Receipt field (proposed) | Source / computation |
+|---|---|
+| `source_id` | Stable KFM source identifier (illustrative: `oai-pmh:kshs-kansas-memory`) |
+| `endpoint_url` | `baseURL` resolved at fetch time |
+| `verb` | The OAI-PMH verb invoked |
+| `request_args` | Canonical key-sorted JSON of `metadataPrefix`, `from`, `until`, `set`, `identifier`, `resumptionToken` |
+| `request_args_spec_hash` | Hash of the JCS-canonicalized request args. The sibling allowed "BLAKE3 or SHA-256"; current KFM hashing is JCS + SHA-256 only ([`CANONICALIZATION.md`](./CANONICALIZATION.md)). |
+| `response_etag`, `response_last_modified` | HTTP headers, if present |
+| `responseDate` | From the OAI-PMH envelope |
+| `record_count` | Count of `<record>` elements; zero is legitimate |
+| `resumption_chain` | Ordered tokens with per-page hashes. **Conflicts with §8.3 / §11.4**, which forbid raw tokens in receipts; record a token digest instead. |
+| `deletion_observations` | Records seen with `header/@status="deleted"` |
+| `error_codes_observed` | OAI-PMH error codes returned on any page |
+| `raw_payload_digest` | Digest of the persisted raw XML |
+| `outcome` | `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` |
+| `signature` | DSSE signature over the canonicalized receipt |
+
+The sibling also proposed that a no-change harvest still emit a heartbeat receipt rather than skip silently, matching the debounce/coalesce ingestion pattern.
+
+### A.4 Conflicts between OAI-PMH defaults and KFM doctrine
+
+| # | OAI-PMH default | KFM doctrine | Sibling's proposed resolution |
+|---|---|---|---|
+| 1 | `oai_dc` is the only required format | Evidence model favors richer, source-faithful formats (EAD 2002, METS, native schemas) | Prefer richer formats; record `oai_dc`-only sources with reduced confidence and normalization caveats |
+| 2 | `deletedRecord=no` is legal | Full lineage and explicit revocation (tombstones) | Flag such sources; downstream consumers treat continued availability as provisional |
+| 3 | Date granularity may be day-only | Observed / valid / source / retrieval / release / correction times tracked precisely | Record day-only sources as such; capture retrieval time separately at full precision |
+| 4 | Rights / license carriage is not standardized | Explicit rights before admission | Resolve rights out of band; absence ⇒ quarantine |
+| 5 | `about` provenance uses `oai_provenance.xsd` | PROV-O / PAV inside `EvidenceBundle` JSON-LD | Translate during normalization; keep the original `about` payload in the raw artifact |
+| 6 | Identifier scheme is community-defined | Identity is computed (`spec_hash`), not assigned | OAI identifiers travel as referenced provenance, not KFM primary keys |
+| 7 | Harvester chooses its polling schedule | Debounce and coalesce deltas | Per-source-family debounce windows ([`DEBOUNCE_WINDOWS.md`](./DEBOUNCE_WINDOWS.md)) |
+
+### A.5 The `about` container
+
+- An `about` rights block is **upstream-claimed terms**: evidence the policy engine consumes, not a decision it accepts.
+- An `about` provenance block is preserved raw and translated during normalization; losses or expansions are recorded in the transform receipt.
+- Sensitivity classes (CARE, living persons, rare-species locations, archaeological coordinates, infrastructure detail, DNA/genomic data) are never trusted to arrive via OAI-PMH.
+
+### A.6 Kansas archive coverage (NEEDS VERIFICATION)
+
+The sibling recorded the corpus's Kansas archives stack — KSHS Kansas Memory, KHRI, KU Spencer, KSU Special Collections, WSU, county historical societies, LOC IIIF presentations, and SNAC/EAC-CPF — and that some publish stable APIs, some OAI-PMH, and some only PDFs/CSVs. No institution's OAI-PMH endpoint was verified.
+
+| Institution | OAI-PMH endpoint status |
+|---|---|
+| KSHS / Kansas Memory | NEEDS VERIFICATION (the connector is a `0.0.0` placeholder with unknown access method; see §17 P1) |
+| KHRI | NEEDS VERIFICATION; corpus characterizes it as PDF/CSV publication |
+| KU Spencer, KSU Special Collections, WSU Special Collections | NEEDS VERIFICATION; not enumerated in the corpus |
+| County historical societies | Unlikely to expose OAI-PMH; expect manual submission flows |
+| LOC IIIF presentations | Out of scope; IIIF v3 surface governed by [`IIIF.md`](./IIIF.md) |
+
+Do not infer from this table that any institution exposes OAI-PMH or that KFM harvests one.
+
+### A.7 Operational defaults the sibling proposed
+
+- **Cadence:** per source, not protocol-wide. Starting heuristic for archival sources: daily `ListIdentifiers` polling with weekly `ListRecords` reconciliation. §8.1 treats cadence and overlap as source-profile decisions.
+- **Errors:** every upstream error yields a quarantine record; capture the OAI error code, HTTP status, and any `Retry-After`.
+- **Idempotency:** `endpoint_url` + `verb` + canonical `request_args` + upstream `responseDate` should identify a unique harvest run.
+- **Compression:** request `gzip` via `Accept-Encoding` and record the negotiated encoding.
+- **Politeness:** bounded concurrency and exponential backoff on 5xx and `badResumptionToken`.
+- **Per-source policy home:** `policy/source/<source_id>.rego` (PROPOSED).
+
+### A.8 Validator names the sibling proposed
+
+Placement under `tools/validators/source/oai-pmh/` (PROPOSED; not present). §14 is the current validation matrix.
+
+| Validator | Checks |
+|---|---|
+| `oai_envelope_schema` | Response validates against `OAI-PMH.xsd` |
+| `oai_identify_completeness` | `Identify` carries `repositoryName`, `baseURL`, `protocolVersion=2.0`, `earliestDatestamp`, `deletedRecord`, `granularity`, `adminEmail` |
+| `oai_metadata_format_supported` | Requested `metadataPrefix` appears in `ListMetadataFormats` |
+| `oai_resumption_chain_integrity` | All pages share one canonical request key and chain hashes match |
+| `oai_deletion_observability_gate` | `deletedRecord=no` ⇒ provisional-availability caveat recorded |
+| `oai_rights_presence_gate` | `about` rights block or out-of-band rights entry exists; otherwise DENY |
+| `oai_sensitivity_classifier_runs` | Sensitivity rubric evaluated on the normalized record |
+| `oai_receipt_signed` | Receipt DSSE-signed before promotion from `data/raw/` to `data/processed/` |
+
+### A.9 Error-code dispositions that differ from §12
+
+| OAI error code | Sibling's mapping | §12 position |
+|---|---|---|
+| `cannotDisseminateFormat` | Fall back per `format_preference`; quarantine if no fallback | HOLD; do not substitute silently |
+| `idDoesNotExist` | Deletion-like signal only if `deletedRecord ∈ {persistent, transient}`; otherwise quarantine | Investigate before correction/withdrawal |
+| `noSetHierarchy` | Note in `SourceDescriptor.scope` | Record capability |
+
+### A.10 Open questions carried forward
+
+1. Whether KFM will activate a Data Provider role, and under what governance.
+2. Whether `oai_ead`, METS, MODS, or another archival format takes precedence over `oai_dc` per institution.
+3. Whether an OAI `about/provenance` block is a first-class `EvidenceRef` or only upstream provenance to be re-modeled in PROV-O.
+4. Default debounce windows per archival source family.
+5. Whether a dedicated OAI-PMH connector should exist; `connectors/oai-pmh/` does not (checked 2026-10-19).
+
+The sibling's open question on `docs/standards/` filename casing is settled for this file: the uppercase path is canonical.
 
 [Back to top](#top)

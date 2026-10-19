@@ -6,12 +6,11 @@ version: v0.3
 status: draft; PROPOSED; schema-paired; canonical-lowercase; source-admission; source-role-anti-collapse
 owners: OWNER_TBD — Source steward · Contracts steward · Schema steward · Policy steward · Catalog steward · Evidence steward · Release steward · Docs steward
 created: NEEDS VERIFICATION — file existed before v0.3 expansion
-updated: 2026-06-24
+updated: 2026-10-19
 policy_label: public; contracts; source; source-descriptor; source-admission; rights; sensitivity; cadence; access; citation; review; release; lifecycle; fail-closed
 tags: [kfm, contracts, source, source-descriptor, source-role, source-type, rights, sensitivity, cadence, access, citation, source-head, admissibility, review-state, release-state, lifecycle, registry]
 related:
   - ./README.md
-  - ./SOURCE_DESCRIPTOR.md
   - ./ingest_receipt.md
   - ./doctrine_artifact_descriptor.md
   - ../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
@@ -33,6 +32,7 @@ notes:
   - "Deprecated legacy aliases remain schema properties for migration only."
   - "SourceDescriptor records how source material may be treated; it does not make source claims true, authorize release by itself, or replace evidence, policy, review, validation, source registry records, or release artifacts."
   - "Rollback target for this expansion is previous blob SHA `737dc98d36a75d597b3533c87a6027e23f123e2d`."
+  - "2026-10-19: owner-directed case-collision removal. The legacy-case compatibility pointer contracts/source/SOURCE_DESCRIPTOR.md (doc_id kfm://doc/contracts-source-source-descriptor-legacy-case) was deleted because it collided with this file on case-insensitive filesystems; it carried no unique semantics, and all inbound references now point here."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -52,7 +52,7 @@ notes:
 
 **Status:** draft / PROPOSED  
 **Path:** `contracts/source/source_descriptor.md`  
-**Legacy-case pointer:** `contracts/source/SOURCE_DESCRIPTOR.md`  
+**Legacy-case pointer:** none — `contracts/source/SOURCE_DESCRIPTOR.md` was deleted 2026-10-19 (case-collision removal); use this path  
 **Paired schema currently inspected:** `schemas/contracts/v1/source/source_descriptor.schema.json`  
 **Schema-declared canonical path:** `schemas/contracts/v1/sources/source_descriptor.schema.json`  
 **Schema-declared legacy path:** `schemas/contracts/v1/source/source_descriptor.schema.json`  

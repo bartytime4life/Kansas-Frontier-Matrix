@@ -8,6 +8,9 @@ owners: <TODO: source steward + archives domain liaison>
 created: 2026-05-13
 updated: 2026-09-20
 policy_label: public
+owning_root: docs/
+responsibility: "Documentation for Kansas State Archives — Source-Family Brief; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-10-19 case-collision link repair; the document's claims were not re-reviewed.
 related:
   - docs/sources/catalog/kansas/README.md
   - docs/sources/catalog/kansas/kansas-memory.md
@@ -27,7 +30,7 @@ related:
   - docs/doctrine/authority-ladder.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/STAC_KFM_PROFILE.md
-  - docs/standards/oai-pmh.md
+  - docs/standards/OAI-PMH.md
   - docs/standards/IIIF.md
   - docs/standards/snac-eac-cpf.md
   - docs/registers/AUTHORITY_LADDER.md
@@ -40,35 +43,10 @@ related:
   - policy/rights/
 tags: [kfm, source-family, archives, kansas-first, kshs, kansas-memory, khri, c10-07, c7-10]
 notes:
-  - >-
-    v0.2 path and slug migration: this doc was at
-    `docs/sources/catalog/kansas_state_archives.md` (flat, snake_case) in v0.1
-    and has moved to `docs/sources/catalog/kansas/kansas-state-archives.md`
-    (nested under the `kansas/` family folder, kebab-case for consistency with
-    sibling product pages — `kansas-memory.md`, `ksgs.md`, `kdwp.md`,
-    `fhsu-sternberg.md`, `ku-nhm.md`, etc.). OQ #1 (path) and OQ #9 (slug) from
-    v0.1 are PARTIALLY RESOLVED by this reorganization.
-  - >-
-    Structural reframing (v0.2): this doc is the **KSHS-umbrella brief** that
-    explains shared institutional posture across KSHS-operated archival
-    surfaces. Sibling product pages — `kansas-memory.md` (v0.2 revised this
-    session), `khri.md` (PROPOSED), and a future `kshs-state-archives.md` for
-    the State Archives Division proper — cover individual surface-level
-    admission. Both layers are intended; the umbrella is not a substitute for
-    per-surface descriptors. Surfaced as OQ-KSA-13.
-  - >-
-    `connectors/kansas/` lane is CONFIRMED (at commit
-    `b6a27916bbb9e07cbf3752870c867476e1e094e7`) per Directory Rules v1.2 §7.3.
-    Per-surface connector adapters (`connectors/kansas/kansas-memory/`,
-    `connectors/kansas/khri/`, `connectors/kansas/kshs-state-archives/`) remain
-    PROPOSED.
-  - >-
-    Atlas card lineage CONFIRMED: `C10-07` Archives Stack; `C7-10` Kansas-First
-    Domain Authorities ("KSHS holds the canonical record for Kansas Historical
-    Quarterly indexes and Kansas Memory items"); `C7-06` SNAC + EAC-CPF;
-    `KFM-P18-PROG-0033` Kansas Memory source descriptor; `KFM-P17-PROG-0011`
-    Kansas historical provenance source object. Sibling product page
-    `kansas-memory.md` v0.2 grounds the per-surface detail.
+  - "v0.2 path and slug migration: this doc was at `docs/sources/catalog/kansas_state_archives.md` (flat, snake_case) in v0.1 and has moved to `docs/sources/catalog/kansas/kansas-state-archives.md` (nested under the `kansas/` family folder, kebab-case for consistency with sibling product pages — `kansas-memory.md`, `ksgs.md`, `kdwp.md`, `fhsu-sternberg.md`, `ku-nhm.md`, etc.). OQ #1 (path) and OQ #9 (slug) from v0.1 are PARTIALLY RESOLVED by this reorganization."
+  - "Structural reframing (v0.2): this doc is the **KSHS-umbrella brief** that explains shared institutional posture across KSHS-operated archival surfaces. Sibling product pages — `kansas-memory.md` (v0.2 revised this session), `khri.md` (PROPOSED), and a future `kshs-state-archives.md` for the State Archives Division proper — cover individual surface-level admission. Both layers are intended; the umbrella is not a substitute for per-surface descriptors. Surfaced as OQ-KSA-13."
+  - "`connectors/kansas/` lane is CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`) per Directory Rules v1.2 §7.3. Per-surface connector adapters (`connectors/kansas/kansas-memory/`, `connectors/kansas/khri/`, `connectors/kansas/kshs-state-archives/`) remain PROPOSED."
+  - "Atlas card lineage CONFIRMED: `C10-07` Archives Stack; `C7-10` Kansas-First Domain Authorities (\"KSHS holds the canonical record for Kansas Historical Quarterly indexes and Kansas Memory items\"); `C7-06` SNAC + EAC-CPF; `KFM-P18-PROG-0033` Kansas Memory source descriptor; `KFM-P17-PROG-0011` Kansas historical provenance source object. Sibling product page `kansas-memory.md` v0.2 grounds the per-surface detail."
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas State Archives — Source-Family Brief
@@ -545,7 +523,7 @@ A first-PR posture for this family follows the **Atmosphere lane pattern** (Unif
 - [`../../../domains/settlements-infrastructure/README.md`](../../../domains/settlements-infrastructure/README.md) — primary consumer of historic-place and gazetteer material
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus)
 - [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — KFM STAC namespace and provenance
-- [`../../../standards/oai-pmh.md`](../../../standards/oai-pmh.md) — OAI-PMH harvest standard (TODO: create if absent)
+- [`../../../standards/OAI-PMH.md`](../../../standards/OAI-PMH.md) — OAI-PMH harvest standard
 - [`../../../standards/IIIF.md`](../../../standards/IIIF.md) — canonical IIIF consumption and historic-overlay guidance
 - [`../../../standards/snac-eac-cpf.md`](../../../standards/snac-eac-cpf.md) — SNAC/EAC-CPF standard reference (TODO: create if absent)
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — KFM Authority Ladder register

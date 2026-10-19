@@ -8,9 +8,12 @@ owners: <hydrology-source-steward>   # PLACEHOLDER — confirm team/handle in CO
 created: 2026-05-18
 updated: 2026-06-07
 policy_label: public
+owning_root: docs/
+responsibility: "Documentation for Hydrology Source Registry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-10-19 case-collision link repair; the document's claims were not re-reviewed.
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/SOURCE_FAMILIES.md
   - docs/domains/hydrology/PUBLICATION_POSTURE.md
@@ -84,7 +87,7 @@ This file lives at `docs/domains/hydrology/SOURCE_REGISTRY.md` per Directory Rul
 docs/domains/hydrology/SOURCE_REGISTRY.md          ← this doc (explanation)
 data/registry/sources/hydrology/                   ← registry entries (CONFIRMED pattern, §9.1; leaf NEEDS VERIFICATION)
 schemas/contracts/v1/source/source-descriptor.json ← descriptor shape (PROPOSED home; ADR-0001 / §7.4)
-contracts/source/SOURCE_DESCRIPTOR.md              ← descriptor meaning (PROPOSED)
+contracts/source/source_descriptor.md              ← descriptor meaning (PROPOSED)
 policy/sensitivity/hydrology/                       ← sensitivity & rights policy (PROPOSED)
 connectors/usgs/  connectors/fema/  …               ← source-specific fetchers (CONFIRMED root §7.3; leaves PROPOSED)
 tests/domains/hydrology/sources/                    ← admission/role/rights tests (PROPOSED)
@@ -420,7 +423,7 @@ A first thin-slice fixture pair:
 - `docs/sources/` — cross-cutting source-descriptor standards and source families *(CONFIRMED root §6.x; specific files PROPOSED)*
 - `docs/standards/PROV.md` — provenance terms used by `EvidenceBundle` and `RunReceipt` *(naming variance OPEN-DR-01)*
 - `docs/runbooks/hydrology/SOURCE_REFRESH_RUNBOOK.md` — hydrology source-refresh runbook *(PROPOSED; mirrors the Fauna pattern; subfolder convention OPEN-DR-02)*
-- `contracts/source/SOURCE_DESCRIPTOR.md` — descriptor meaning *(PROPOSED)*
+- `contracts/source/source_descriptor.md` — descriptor meaning *(PROPOSED)*
 - `schemas/contracts/v1/source/source-descriptor.json` — descriptor shape *(PROPOSED home; ADR-0001)*
 - `policy/sensitivity/hydrology/` — hydrology sensitivity rules *(PROPOSED)*
 - `data/registry/sources/hydrology/` — actual registry entries *(CONFIRMED pattern; leaf NEEDS VERIFICATION)*

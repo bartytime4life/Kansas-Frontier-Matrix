@@ -16,7 +16,6 @@ related:
   - ../../doctrine/directory-rules.md
   - ../../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../standards/STAC.md
-  - ../../standards/stac.md
   - ../../standards/STAC_KFM_PROFILE.md
   - ../../../schemas/contracts/v1/stac/kfm-profile-v1.schema.json
   - ../../../contracts/data/stac_attestation_hook.md
@@ -67,7 +66,7 @@ packet.
 | Surface | Snapshot evidence | Decision impact |
 |---|---|---|
 | [`docs/standards/STAC.md`](../../standards/STAC.md) | Draft adoption reference; SHA-256 `96ce9f34306e1401b2afc18e3ea92afb7364a2b0977bf0dd7e266179cfd4ee17`; says `kfm:` versus `ks-kfm:` is open and points to a strict companion profile. | Cannot be silently treated as the sole accepted STAC authority. |
-| [`docs/standards/stac.md`](../../standards/stac.md) | Distinct draft conformance document; SHA-256 `5a34c9105b44072885c16b050e28fb5755539cab1061c4ba6b8d5edfd9d9873c`; calls itself canonical while retaining placeholder ownership and ADR-class questions. | Case-variant paths contain different bodies and overlapping authority claims. |
+| `docs/standards/stac.md` (deleted 2026-10-19; content merged into [`STAC.md` §§11–17](../../standards/STAC.md#11-profile-detail-carried-from-the-former-stacmd)) | Distinct draft conformance document; SHA-256 `5a34c9105b44072885c16b050e28fb5755539cab1061c4ba6b8d5edfd9d9873c`; calls itself canonical while retaining placeholder ownership and ADR-class questions. | Case-variant paths contain different bodies and overlapping authority claims. |
 | [`docs/standards/STAC_KFM_PROFILE.md`](../../standards/STAC_KFM_PROFILE.md) | Human strict-profile candidate referenced by both the standards corpus and validators. | A CDL or PMTiles profile must compose with or explicitly supersede this candidate; it must not fork it. |
 | [`schemas/contracts/v1/stac/kfm-profile-v1.schema.json`](../../../schemas/contracts/v1/stac/kfm-profile-v1.schema.json) | Machine profile shape with fixtures and validator coverage. | Existing schema identity and extension vocabulary must be reconciled before adding family specializations. |
 

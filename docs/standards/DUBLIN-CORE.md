@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards-dublin-core
 title: Dublin Core / DCMI Metadata Terms — KFM Mapping Boundary and Conformance Plan
-type: standard; vocabulary-guidance; interoperability-boundary
+type: standard
 version: v2.0-draft
 status: "draft; repository-grounded; upstream-currentness-refreshed; no-adoption; no-generic-profile; no-release; no-publication"
 owners:
@@ -46,9 +46,7 @@ external_currentness_review:
   access_date: 2026-08-18
   official_baseline: "DCMI Metadata Terms, DCMI Recommendation, current version dated 2020-01-20"
   namespace_policy: "Four approved DCMI namespaces; persistent term URIs"
-  iso_baselines:
-    - "ISO 15836-1:2017 — original fifteen-element set"
-    - "ISO 15836-2:2019 — broader DCMI properties and classes"
+  iso_baselines: "ISO 15836-1:2017 — original fifteen-element set; ISO 15836-2:2019 — broader DCMI properties and classes"
 related:
   - ./README.md
   - ./DCAT.md
@@ -58,7 +56,6 @@ related:
   - ./SCHEMA-ORG.md
   - ./ARCHIVAL-STANDARDS.md
   - ./OAI-PMH.md
-  - ./oai-pmh.md
   - ../doctrine/directory-rules.md
   - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../contracts/source/source_descriptor.md
@@ -70,7 +67,7 @@ related:
   - ../../schemas/contracts/v1/data/synthetic_release_catalog_closure_profile.schema.json
   - ../../packages/domains/flora/normalizers/dwc_occurrence.py
   - ../../.github/CODEOWNERS
-tags: [kfm, standards, metadata, dublin-core, dcmi, dcterms, dctypes, dcat, interoperability, evidence, conformance]
+tags: [kfm, standards, vocabulary-guidance, interoperability-boundary, metadata, dublin-core, dcmi, dcterms, dctypes, dcat, interoperability, evidence, conformance]
 notes:
   - "Same-path documentation modernization only; no contract, schema, policy, source, fixture, validator, workflow, runtime, release, or publication surface changes."
   - "The prior whole-page PROPOSED and no-repository posture is replaced with commit-pinned repository evidence and a separate upstream-currentness review."
@@ -781,7 +778,7 @@ Record the reason without exposing restricted details through a public error mes
 - [`CIDOC-CRM.md`](./CIDOC-CRM.md) — repository-grounded CIDOC CRM mapping boundary
 - [`SCHEMA-ORG.md`](./SCHEMA-ORG.md) — Schema.org guidance
 - [`ARCHIVAL-STANDARDS.md`](./ARCHIVAL-STANDARDS.md) — archival interoperability and preservation boundary
-- [`OAI-PMH.md`](./OAI-PMH.md), [`oai-pmh.md`](./oai-pmh.md) — case-colliding OAI-PMH guidance; identity and supersession remain unresolved
+- [`OAI-PMH.md`](./OAI-PMH.md) — OAI-PMH guidance; the former lowercase `oai-pmh.md` was merged into it and deleted on 2026-10-19
 - [`directory-rules.md`](../doctrine/directory-rules.md) and accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 - [`SourceDescriptor` contract](../../contracts/source/source_descriptor.md) and [schema](../../schemas/contracts/v1/source/source_descriptor.schema.json)
 - [`EvidenceBundle` schema](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json)

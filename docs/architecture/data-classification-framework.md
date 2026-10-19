@@ -295,7 +295,6 @@ Public outcomes use stable public-safe reason codes rather than exact sensitive 
 | Surface | Current result |
 |---|---|
 | Semantic contract | [`contracts/source/source_descriptor.md`](../../contracts/source/source_descriptor.md) |
-| Legacy-case pointer | [`contracts/source/SOURCE_DESCRIPTOR.md`](../../contracts/source/SOURCE_DESCRIPTOR.md) |
 | Paired schema | [`schemas/contracts/v1/source/source_descriptor.schema.json`](../../schemas/contracts/v1/source/source_descriptor.schema.json) |
 | Maturity | Draft / `PROPOSED`; registry, accepted policy, complete wiring, and runtime use remain **NEEDS VERIFICATION** |
 
@@ -397,7 +396,7 @@ Hosted metadata, link/document-graph, Markdown, and aggregate checks apply as se
 
 **Architecture/doctrine:** [`README`](README.md) · [`split`](contract-schema-policy-split.md) · [`tiers`](sensitivity-tiers.md) · [`Directory Rules`](../doctrine/directory-rules.md) · [`lifecycle`](../doctrine/lifecycle-law.md) · [`sensitivity`](../doctrine/sensitivity.md) · [`policy-aware`](../doctrine/policy-aware.md) · [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) · [`security classification`](../security/DATA_CLASSIFICATION.md) · [`rubric`](../standards/SENSITIVITY_RUBRIC.md)
 
-**Source:** [`contract`](../../contracts/source/source_descriptor.md) · [`legacy pointer`](../../contracts/source/SOURCE_DESCRIPTOR.md) · [`schema`](../../schemas/contracts/v1/source/source_descriptor.schema.json) · [`use request`](../../contracts/source/source_role_use_request.md) · [`validator note`](../../tools/validators/source_role/IMPLEMENTATION.md)
+**Source:** [`contract`](../../contracts/source/source_descriptor.md) · [`schema`](../../schemas/contracts/v1/source/source_descriptor.schema.json) · [`use request`](../../contracts/source/source_role_use_request.md) · [`validator note`](../../tools/validators/source_role/IMPLEMENTATION.md)
 
 **Sensitivity/release:** [`policy boundary`](../../policy/sensitivity/README.md) · [`validator lane`](../../tools/validators/sensitivity/README.md) · [`release`](../../release/README.md)
 

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/standards/canonicalization
 title: KFM Canonicalization Guidance — Current Implementation and Migration Boundary
 type: standard
-version: v1.2
+version: v1.3
 status: "draft; repository-grounded; non-authoritative"
 owners: ["@bartytime4life"]
 created: 2026-05-14
-updated: 2026-10-12
+updated: 2026-10-19
 policy_label: repository-facing
 owning_root: docs/
 current_path: docs/standards/CANONICALIZATION.md
@@ -21,11 +21,8 @@ evidence_snapshot_spec_hash_schema_blob: 80b496b01b8de8c0e8ba67bf020977e6b1f3c65
 evidence_snapshot_spec_hash_validator_blob: e83a8707548c35411d1fc61911f499ac7ca6d517
 evidence_snapshot_spec_hash_tests_blob: ce981cede288facfa449026e422acfe60a6e4d5d
 evidence_snapshot_spec_hash_workflow_blob: 1da612211bf0d2e0bf339561bc06f336111d614e
-supersedes:
-  - kfm://doc/standards/canonicalization-redirect
 related:
   - docs/standards/README.md
-  - docs/standards/canonicalization.md
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md
   - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
@@ -45,7 +42,7 @@ related:
 tags: [kfm, standards, canonicalization, rfc8785, jcs, rdfc, sha256, spec-hash, identity, migration, case-collision]
 notes:
   - "2026-10-12: merged unique content from docs/standards/canonicalization.md (which shared this doc_id) — owner-directed duplicate removal"
-  - "STD-DRIFT-001 disposition: this uppercase path is canonical; docs/standards/canonicalization.md is now a redirect stub with its own doc_id."
+  - "STD-DRIFT-001 disposition: this uppercase path is canonical. The lowercase redirect stub (doc_id kfm://doc/standards/canonicalization-redirect) was deleted 2026-10-19 by owner direction to remove the case-only path collision (CANON-Q11); inbound links point here."
   - "Doctrine-era content folded from the lowercase sibling (v1-draft, 2026-05-14) is labelled PROPOSED and does not override current executable behavior."
   - "Current executable behavior is RFC 8785 JCS plus SHA-256 with sha256:<64-lowercase-hex>."
   - "Proposed ADR-0013's jcs:sha256:<hex> target is not adopted or implemented by this change."
@@ -61,7 +58,7 @@ notes:
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![evidence](https://img.shields.io/badge/evidence-repository--grounded-success)
-![collision](https://img.shields.io/badge/case%20collision-merged%202026--10--12-lightgrey)
+![collision](https://img.shields.io/badge/case%20collision-resolved%202026--10--19-lightgrey)
 ![version](https://img.shields.io/badge/version-v1.2-informational)
 ![implementation](https://img.shields.io/badge/implementation-JCS%20%2B%20SHA--256-blue)
 ![wire grammar](https://img.shields.io/badge/wire%20grammar-sha256%3A%3Chex%3E-purple)
@@ -71,7 +68,7 @@ notes:
 > **Human-readable guidance only.** Contracts define meaning, schemas define shape, policy decides admissibility, code and tests establish bounded behavior, and governed release records decide release. This page owns none of those decisions.
 
 > [!NOTE]
-> **Case collision merged (2026-10-12, owner-directed).** This file is the canonical canonicalization guide. Unique content from the former lowercase sibling [`canonicalization.md`](./canonicalization.md) (v1-draft, 2026-05-14) was folded in here — mostly doctrine-era proposals, now labelled **PROPOSED** wherever they differ from current executable behavior (see [Appendix D](#appendix-d--merged-from-record)). The lowercase path remains only as a redirect stub with its own `doc_id` so existing links resolve. The `STD-DRIFT-001` row in [`docs/standards/README.md`](./README.md) awaits a matching index update.
+> **Case collision merged (2026-10-12, owner-directed).** This file is the canonical canonicalization guide. Unique content from the former lowercase sibling `canonicalization.md` (v1-draft, 2026-05-14) was folded in here — mostly doctrine-era proposals, now labelled **PROPOSED** wherever they differ from current executable behavior (see [Appendix D](#appendix-d--merged-from-record)). The lowercase path was kept briefly as a redirect stub and then deleted on 2026-10-19 (owner-directed) because the two paths overwrite each other on case-insensitive checkouts; all in-repository links point here. See `STD-DRIFT-001` in [`docs/standards/README.md`](./README.md).
 
 > [!WARNING]
 > **A matching digest is not truth.** It proves only equality under the same admitted value, hash domain, canonicalization profile, and algorithm. Source authority, evidence, rights, sensitivity, policy, review, promotion, release, publication, and fitness for use remain separate gates.
@@ -88,7 +85,7 @@ notes:
 | Validator | Finite `PASS`, `DENY`, `ERROR` | **CONFIRMED implemented** |
 | Dedicated workflow | No-network tests and fixture validation | **CONFIRMED checked in** |
 | Stewardship | Default repository review route exists | **NEEDS VERIFICATION** |
-| Case collision (`STD-DRIFT-001`) | Merged into this file; lowercase path is a redirect stub | **Owner-directed, 2026-10-12** |
+| Case collision (`STD-DRIFT-001`) | Merged into this file 2026-10-12; lowercase redirect stub deleted 2026-10-19 | **Owner-directed; resolved** |
 
 **Quick navigation:** [Purpose](#1-purpose) · [Authority](#2-scope-and-authority) · [Flow](#3-doctrinal-summary) · [Decision matrix](#4-decision-matrix--jcs-vs-urdna2015) · [JCS](#5-canonical-form-jcs-default) · [RDF](#6-rdf-canonical-form-urdna2015-reserved) · [`spec_hash`](#7-spec_hash-format-and-recording-rules) · [Hash domain](#8-field-inclusion-and-exclusion) · [Parity](#9-promotion-gates-and-parity-rule) · [Failures](#10-failure-modes-and-error-codes) · [Tests](#11-test-vectors-and-determinism-guarantees) · [Tooling](#12-tooling) · [Migration](#13-versioning-and-migration) · [Open work](#14-open-questions-and-unresolved-tensions) · [Related](#15-related-docs) · [Glossary](#appendix-c--glossary) · [Merge record](#appendix-d--merged-from-record)
 
@@ -149,7 +146,7 @@ Doctrine (the merged sibling, citing SRC-P10 C1-02) names the object families ex
 | Candidate grammar | ADR-0013 decision state |
 | Admissibility | `policy/` plus governed review |
 | Release | Evidence, proof, review, and `release/` authorities |
-| Case collision | Owner-directed merge, 2026-10-12: this file is canonical and the lowercase path is a redirect stub |
+| Case collision | Owner-directed merge, 2026-10-12: this file is canonical; the lowercase redirect stub was deleted 2026-10-19 |
 
 The same-path update remains under `docs/standards/`, the accepted human-readable standards lane. Reusable code stays under `packages/`; the operator wrapper under `tools/`; semantic meaning under `contracts/`; machine shape under `schemas/`; enforceability under fixtures and tests. No parallel authority home is created.
 
@@ -653,7 +650,7 @@ Short IDs would derive **only** from the digest; environment entropy must not pa
 | Change JCS implementation | Dependency review, golden replay, cross-implementation comparison, impact analysis |
 | Change object-family projection | Owning contract/profile, fixtures, validator, migration receipt, correction lineage |
 | Change SHA-256 | Security/architecture decision, dual-digest window, consumer migration |
-| Resolve case collision | **Done 2026-10-12 (owner-directed):** content merged here, lowercase path kept as a redirect stub; inbound-link repointing and index updates tracked separately (`CANON-Q11`) |
+| Resolve case collision | **Done 2026-10-12 (owner-directed):** content merged here, lowercase path kept as a redirect stub. **Stub deleted 2026-10-19 (owner-directed)**, closing `CANON-Q11` |
 
 ### 13.3 Migration sequence
 
@@ -679,7 +676,7 @@ These doctrine statements are consistent with §13.2–§13.3 and add detail:
 
 ### 13.5 Rollback
 
-This documentation update can be reverted together with the redirect stub at `docs/standards/canonicalization.md` (restore both files from the prior revision). It changes no contract, schema, code, dependency, fixture, validator, workflow, source, lifecycle state, release, deployment, or publication.
+The v1.2 merge and the v1.3 stub deletion are documentation-only. To revert, restore this file and `docs/standards/canonicalization.md` from the prior revision together, noting that restoring the lowercase file reintroduces the case-only path collision. It changes no contract, schema, code, dependency, fixture, validator, workflow, source, lifecycle state, release, deployment, or publication.
 
 For a future failed identity migration, prefer a reviewed forward fix or restore the documented compatibility window. Do not blindly restore incompatible writers.
 
@@ -701,7 +698,7 @@ For a future failed identity migration, prefer a reviewed forward fix or restore
 | `CANON-Q8` | Is the dedicated workflow required for every affected producer? | `NEEDS VERIFICATION` |
 | `CANON-Q9` | Who is the accountable canonicalization steward? | `NEEDS VERIFICATION` |
 | `CANON-Q10` | Which adjacent docs still contain stale grammar or implementation claims? | `NEEDS VERIFICATION` |
-| `CANON-Q11` | Should inbound links be repointed to this file and the redirect stub later retired? The two paths still differ only by case, so they collide on case-insensitive checkouts until the stub is removed or renamed. | `OPEN` |
+| `CANON-Q11` | Should inbound links be repointed to this file and the redirect stub later retired? The two paths differed only by case, so they collided on case-insensitive checkouts. | `RESOLVED 2026-10-19` — owner-directed: links repointed and the stub deleted. |
 | `CANON-Q12` | Where should per-family inclusion/exclusion sets live — schema `x-kfm-` extensions, `schemas/evidence/spec_normalization.md`, or `control_plane/object_family_register.yaml`? *(from merged sibling)* | `OPEN` |
 | `CANON-Q13` | Does JCS recomputation pass for every published evidence bundle, or are there latent drifts? *(from merged sibling; SRC-P10 §11.4)* | `UNKNOWN` |
 | `CANON-Q14` | One hashing CLI or several language ports? *(from merged sibling; SRC-P10 §11.3.)* A Python package (`kfm-hashing`) now exists; other ports are unresolved. | `OPEN` |
@@ -722,7 +719,6 @@ None authorizes a rename, grammar migration, source activation, or release. Open
 - [`docs/adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md`](../adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md) — proposed identity grammar.
 - [`docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — schema-home rule (proposed).
 - [`docs/architecture/identity-and-spec-hash.md`](../architecture/identity-and-spec-hash.md) — lineage with stale implementation claims requiring separate reconciliation.
-- [`docs/standards/canonicalization.md`](./canonicalization.md) — redirect stub for the former lowercase sibling, merged here 2026-10-12.
 
 ### Meaning, shape, implementation, and proof
 
@@ -856,6 +852,7 @@ External references:
 | `v1` | 2026-05-14 | Initial draft |
 | `v1.1` | 2026-08-18 | Repository-grounded same-path reconciliation; current JCS implementation and `sha256:` grammar; ADR/RDF/collision boundaries retained |
 | `v1.2` | 2026-10-12 | Owner-directed merge of `docs/standards/canonicalization.md` (shared `doc_id`): folded its selection criteria, intended placements/uses, candidate field checklist, proposed error taxonomy, T1–T8 test contract, tooling/short-ID proposals, migration requirements, open questions, worked example, and glossary, each labelled against current behavior; lowercase path made a redirect stub; meta block flattened |
+| `v1.3` | 2026-10-19 | Owner-directed deletion of the lowercase redirect stub `docs/standards/canonicalization.md` to remove the case-only path collision (`CANON-Q11` resolved); inbound links repointed |
 
 **Non-effects:** no ADR acceptance, contract/schema/policy/code/dependency/test/workflow change, source activation, lifecycle transition, release, deployment, or publication. The v1.2 collision disposition is limited to documentation.
 

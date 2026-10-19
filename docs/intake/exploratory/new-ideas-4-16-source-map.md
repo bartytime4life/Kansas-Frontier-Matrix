@@ -10,6 +10,7 @@ updated: 2026-07-29
 policy_label: public; intake; exploratory; cite-or-abstain
 owning_root: docs/
 responsibility: Preserve a reviewable map from the New Ideas 4-16-26 packet to current KFM repository evidence, reusable ideas, duplicate or unsafe transfers, unresolved gaps, and dependency-ordered next work without promoting packet prose into authority.
+truth_posture: NEEDS VERIFICATION — truth_posture was added during a 2026-10-19 case-collision link repair; the document's claims were not re-reviewed.
 source_evidence:
   captured_filename: New Ideas 4-16-26(1).pdf
   pdf_title: New Ideas 4-16-26
@@ -146,7 +147,7 @@ Disposition terms:
 | MapLibre time slider, epoch buckets, and worker messages | 90-93 | Explorer Web has detailed Time Banner, Story Player, Map Runtime, and governed-shell README contracts, but implementation and a shared TimeBucketManifest remain unproved. | `REPO_GAP / PARTIAL` | Define a manifest and synthetic map-runtime test that preserves valid/observed/source/release time distinctions and prevents worker output from bypassing governed adapters. |
 | Cesium time slicing | 94-96 | Current architecture is MapLibre-first/sole-renderer oriented; peer-renderer use remains decision-bound and package/runtime maturity is unresolved. | `CONFLICTED`; direct transfer `REJECTED_AS_WRITTEN` | Preserve only renderer-neutral time-availability semantics. Do not add Cesium, CZML, or 3D Tiles dependencies without an accepted renderer decision. |
 | PMTiles verification and keyless signing | 97-99 | PMTiles attestation standards, sidecar concepts, tools, validators, and a workflow already exist. A successful archive check or signature does not prove evidence, rights, policy, review, release, or remote-byte parity. | `CORROBORATIVE / PARTIAL` | Inventory the existing lane and close one negative-path or remote-readback gap; do not add a second release workflow. |
-| STAC interoperability profile and link graph | 99-103 | `docs/standards/stac.md` exists but remains draft with unresolved namespace/profile/schema questions. Catalog validators are partial. | `REPO_GAP / PARTIAL` | Separate record conformance, link-graph closure, API behavior, and live availability; begin with offline synthetic fixtures. |
+| STAC interoperability profile and link graph | 99-103 | `docs/standards/STAC.md` (which absorbed the former lowercase `stac.md` on 2026-10-19) exists but remains draft with unresolved namespace/profile/schema questions. Catalog validators are partial. | `REPO_GAP / PARTIAL` | Separate record conformance, link-graph closure, API behavior, and live availability; begin with offline synthetic fixtures. |
 | Historical post offices and Santa Fe Trail | 104-110 | Greenfield source descriptors for both families exist but still carry `TBD` authority, rights, cadence, access, and citation fields. Historical-route docs already require uncertainty and overprecision controls. | `REPO_GAP / PARTIAL` | Admit and verify sources first; then define uncertainty-preserving temporal/proximity candidate semantics. Do not infer historical causality from distance alone. |
 
 [Back to top](#top)

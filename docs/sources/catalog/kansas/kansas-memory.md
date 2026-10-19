@@ -8,6 +8,9 @@ owners: <Source Registry Steward — TODO assign>, <Archives Domain Lead — TOD
 created: 2026-05-13
 updated: 2026-09-20
 policy_label: public
+owning_root: docs/
+responsibility: "Documentation for Kansas Memory — Source Family; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-10-19 case-collision link repair; the document's claims were not re-reviewed.
 related:
   - ./README.md
   - ../README.md
@@ -23,7 +26,7 @@ related:
   - ../../../doctrine/truth-posture.md
   - ../../../doctrine/lifecycle-law.md
   - ../../../standards/snac-eac-cpf.md
-  - ../../../standards/oai-pmh.md
+  - ../../../standards/OAI-PMH.md
   - ../../../standards/IIIF.md
   - ../../../standards/SENSITIVITY_RUBRIC.md
   - ../../../domains/archaeology/README.md
@@ -37,28 +40,10 @@ related:
   - policy/rights/
 tags: [kfm, source-family, archives, kansas, kshs, c10-07, c7-10]
 notes:
-  - >-
-    v0.2 path migration: this doc was at `docs/sources/catalog/kansas_memory.md`
-    in v0.1 (flat path, underscore slug) and has moved to
-    `docs/sources/catalog/kansas/kansas-memory.md` in v0.2 (nested under the
-    `kansas/` family folder, hyphenated slug for consistency with sibling
-    product pages — `fhsu-sternberg.md`, `ku-nhm.md`, etc.). OQ-KM-01 from
-    v0.1 is partially resolved by this reorganization; the
-    `catalog/<family>/<product>` convention is the one adopted.
-  - >-
-    The kansas family README v0.2 lists this product page explicitly as one of
-    eight Kansas institutions; `connectors/kansas/` is CONFIRMED (at commit
-    `b6a27916bbb9e07cbf3752870c867476e1e094e7`) as one of the nine canonical
-    `directory-rules.md` v1.2 §7.3 connector families.
-  - >-
-    Kansas Memory's role as the canonical record for "Kansas Historical
-    Quarterly indexes and Kansas Memory items" is CONFIRMED per Pass-10
-    `C7-10`. Item-count, API surface, and rights terms remain on the
-    medium-priority verification backlog — the corpus itself flags item
-    counts as ambiguous-denominator.
-  - >-
-    Item-count, API surface, rights terms remain on the medium-priority
-    verification backlog.
+  - "v0.2 path migration: this doc was at `docs/sources/catalog/kansas_memory.md` in v0.1 (flat path, underscore slug) and has moved to `docs/sources/catalog/kansas/kansas-memory.md` in v0.2 (nested under the `kansas/` family folder, hyphenated slug for consistency with sibling product pages — `fhsu-sternberg.md`, `ku-nhm.md`, etc.). OQ-KM-01 from v0.1 is partially resolved by this reorganization; the `catalog/<family>/<product>` convention is the one adopted."
+  - "The kansas family README v0.2 lists this product page explicitly as one of eight Kansas institutions; `connectors/kansas/` is CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`) as one of the nine canonical `directory-rules.md` v1.2 §7.3 connector families."
+  - "Kansas Memory's role as the canonical record for \"Kansas Historical Quarterly indexes and Kansas Memory items\" is CONFIRMED per Pass-10 `C7-10`. Item-count, API surface, and rights terms remain on the medium-priority verification backlog — the corpus itself flags item counts as ambiguous-denominator."
+  - "Item-count, API surface, rights terms remain on the medium-priority verification backlog."
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Memory — Source Family
@@ -559,7 +544,7 @@ These mirror open questions from the `C10-07` record and the broader Pass-10 bac
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (v1.2 §6.1, §7.3, §11)
 - [`../../../doctrine/authority-ladder.md`](../../../doctrine/authority-ladder.md) — Kansas-first authority posture
 - [`../../../standards/snac-eac-cpf.md`](../../../standards/snac-eac-cpf.md) — SNAC/EAC-CPF standard reference — **TODO** if absent
-- [`../../../standards/oai-pmh.md`](../../../standards/oai-pmh.md) — OAI-PMH harvest standard reference — **TODO** if absent
+- [`../../../standards/OAI-PMH.md`](../../../standards/OAI-PMH.md) — OAI-PMH harvest standard reference
 - [`../../../standards/IIIF.md`](../../../standards/IIIF.md) — IIIF v3 reference
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus; not yet authored)
 - [`../../../domains/archaeology/README.md`](../../../domains/archaeology/README.md) — adjacent domain that consumes Kansas Memory references

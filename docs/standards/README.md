@@ -32,6 +32,7 @@ notes:
   - "The update distinguishes path presence, upstream-standard currentness, KFM adoption/profile state, implementation/validation state, and release/publication state."
   - "No child file, standard, profile, contract, schema, policy rule, source, validator, release object, runtime, or public surface is adopted, renamed, consolidated, retired, activated, or published by this README."
   - "Observed case collisions and overlapping profile families remain visible as drift and verification work; this change does not silently choose a winner."
+  - "2026-10-19: owner-directed case-collision removal. STAC.md, OAI-PMH.md, and CANONICALIZATION.md are canonical; the lowercase stac.md, oai-pmh.md, and canonicalization.md were merged into them and deleted (STD-DRIFT-001, -003, -004 resolved)."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -148,7 +149,7 @@ Directory Rules require this README to show only the directory it governs and it
 docs/standards/
 ├── README.md                          # lane boundary, inventory, evidence limits, and change protocol
 ├── ARCHIVAL-STANDARDS.md              # archival interoperability guidance
-├── CANONICALIZATION.md                # uppercase canonicalization guidance
+├── CANONICALIZATION.md                # canonicalization guidance (canonical; lowercase sibling merged 2026-10-12, deleted 2026-10-19)
 ├── CIDOC-CRM.md                       # cultural-heritage semantic-model guidance
 ├── COG.md                             # Cloud Optimized GeoTIFF guidance
 ├── CONSENT_TOKENS.md                  # consent-token and obligation guidance
@@ -166,7 +167,7 @@ docs/standards/
 ├── ISO-19115.md                       # ISO 19115 metadata guidance
 ├── MAP_TRUST_STATES.md                # trust-visible map-state vocabulary
 ├── MVT.md                             # Mapbox Vector Tile guidance
-├── OAI-PMH.md                         # uppercase OAI-PMH guidance
+├── OAI-PMH.md                         # OAI-PMH guidance (canonical; lowercase sibling merged 2026-10-19)
 ├── OGC-API-TILES.md                   # OGC API - Tiles guidance
 ├── OPENLINEAGE_FACETS.md              # OpenLineage facet guidance
 ├── PMTILES.md                         # root-level PMTiles guidance
@@ -183,19 +184,16 @@ docs/standards/
 ├── SMART_SYNC.md                      # synchronization and material-change guidance
 ├── STAC-DwC.md                        # STAC-Darwin Core mapping guidance
 ├── STAC-EO.md                         # STAC EO guidance
-├── STAC.md                            # uppercase STAC guidance
+├── STAC.md                            # STAC adoption reference + kfm-stac-profile-v1 detail (canonical; lowercase sibling merged 2026-10-19)
 ├── STAC_DWC_PROFILE.md                # KFM STAC-DwC profile guidance
 ├── STAC_KFM_PROFILE.md                # KFM STAC profile guidance
 ├── STAC_KFM_TRUST_EXTENSION.md        # KFM STAC trust-extension guidance
 ├── TELEMETRY_MINIMUMS.md              # telemetry-minimum guidance
 ├── WMTS.md                            # Web Map Tile Service guidance
-├── canonicalization.md                # redirect stub → CANONICALIZATION.md (merged 2026-10-12)
 ├── connector-rate-limits.md           # connector rate-limit guidance
 ├── iiif.md                            # lowercase IIIF guidance
-├── oai-pmh.md                         # lowercase OAI-PMH guidance
 ├── snac-eac-cpf.md                    # SNAC / EAC-CPF guidance
 ├── stac-dwc-hybrid.md                 # lowercase STAC-DwC hybrid guidance
-├── stac.md                            # lowercase STAC guidance
 ├── PROV/                              # nested provenance guidance; direct child details owned below
 └── pmtiles/                           # specialized PMTiles standards; direct child details owned below
 ```
@@ -245,11 +243,11 @@ The groups below are navigation aids, not adoption categories. A file can partic
 |---|---|---|
 | Catalog, metadata, and provenance | `STAC*`, `DCAT.md`, `PROV*`, `PROVENANCE.md`, `OPENLINEAGE_FACETS.md`, `DUBLIN-CORE.md`, `FGDC-CSDGM.md`, `ISO-19115.md`, `SCHEMA-ORG.md` | Paths confirmed; authority, currentness, overlap, and machine parity require file-specific review |
 | Geospatial carriers and delivery protocols | `COG.md`, `GEOPARQUET.md`, `MVT.md`, `PMTILES.md`, `pmtiles/`, `WMTS.md`, `OGC-API-TILES.md` | Paths confirmed; format support and release readiness are separate claims |
-| Archival and cultural interoperability | `ARCHIVAL-STANDARDS.md`, `CIDOC-CRM.md`, `IIIF.md`, `iiif.md`, `OAI-PMH.md`, `oai-pmh.md`, `snac-eac-cpf.md` | Paths confirmed; case collisions and source/version currentness remain unresolved |
+| Archival and cultural interoperability | `ARCHIVAL-STANDARDS.md`, `CIDOC-CRM.md`, `IIIF.md`, `iiif.md`, `OAI-PMH.md`, `snac-eac-cpf.md` | Paths confirmed; the OAI-PMH case collision is resolved (2026-10-19); the IIIF entry and source/version currentness remain unresolved |
 | Biodiversity and data-use profiles | `Darwin_Core.md`, `STAC-DwC.md`, `STAC_DWC_PROFILE.md`, `stac-dwc-hybrid.md`, `DUO_MAPPING.md`, `DUO_PROFILE.md` | Paths confirmed; profile relationship, rights posture, and adoption require review |
 | Trust, integrity, and publication support | `EVIDENCE_BUNDLE.md`, `MAP_TRUST_STATES.md`, `SIGNING.md`, `RUN_RECEIPT.md`, `RELEASE_MANIFEST.md`, `STAC_KFM_TRUST_EXTENSION.md` | Human guidance exists; canonical meaning, machine shape, policy, proof, and release authority remain elsewhere |
 | Sensitivity, privacy, and redaction | `CONSENT_TOKENS.md`, `DP_BUDGETS.md`, `REDACTION_DETERMINISM.md`, `REDACTION_PROFILES.md`, `SENSITIVITY_RUBRIC.md` | Fail-closed review required; documents do not authorize sensitive-data handling |
-| Operational conventions | `DEBOUNCE_WINDOWS.md`, `SMART_SYNC.md`, `TELEMETRY_MINIMUMS.md`, `connector-rate-limits.md`, `CANONICALIZATION.md` (`canonicalization.md` is a redirect stub) | Guidance exists; implementation and enforcement require exact-revision evidence |
+| Operational conventions | `DEBOUNCE_WINDOWS.md`, `SMART_SYNC.md`, `TELEMETRY_MINIMUMS.md`, `connector-rate-limits.md`, `CANONICALIZATION.md` | Guidance exists; implementation and enforcement require exact-revision evidence |
 
 ### What the inventory does not prove
 
@@ -537,10 +535,10 @@ This README records current evidence without deciding authority that belongs els
 
 | ID | CONFIRMED observation | Status | Required disposition |
 |---|---|---|---|
-| `STD-DRIFT-001` | Both `CANONICALIZATION.md` and `canonicalization.md` exist | `RESOLVED (identity) / HOLD (case collision)` | 2026-10-12, owner-directed: content merged into `CANONICALIZATION.md`, the lowercase path kept as a redirect stub, and inbound links repointed. Removing the case-only path collision remains `CANON-Q11`. |
+| `STD-DRIFT-001` | `CANONICALIZATION.md` and `canonicalization.md` coexisted | `RESOLVED` | 2026-10-12, owner-directed: content merged into `CANONICALIZATION.md` and the lowercase path kept as a redirect stub. 2026-10-19, owner-directed: the redirect stub was deleted, closing the case-only collision (`CANON-Q11`). |
 | `STD-DRIFT-002` | Both `IIIF.md` and `iiif.md` exist | `CONFLICTED / HOLD` | Reconcile case-only paths with cross-filesystem migration and compatibility evidence |
-| `STD-DRIFT-003` | Both `OAI-PMH.md` and `oai-pmh.md` exist | `CONFLICTED / HOLD` | Reconcile identity, content, links, and consumers |
-| `STD-DRIFT-004` | Both `STAC.md` and `stac.md` exist | `CONFLICTED / HOLD` | Determine reference/profile roles before any rename or consolidation |
+| `STD-DRIFT-003` | `OAI-PMH.md` and `oai-pmh.md` coexisted with different identities | `RESOLVED` | 2026-10-19, owner-directed: `OAI-PMH.md` is canonical; the lowercase file's unique content is carried in its Appendix A (PROPOSED); the lowercase file was deleted and inbound links repointed. |
+| `STD-DRIFT-004` | `STAC.md` and `stac.md` coexisted with different identities | `RESOLVED` | 2026-10-19, owner-directed: `STAC.md` is canonical; the lowercase file's `kfm-stac-profile-v1` content is merged as its §§11–17 with conflicts labelled; the lowercase file was deleted and inbound links repointed. |
 | `STD-DRIFT-005` | `PROV.md`, `PROV-O.md`, `PROVENANCE.md`, and `PROV/README.md` coexist | `CONFLICTED / NEEDS VERIFICATION` | Define each role, canonical relationship, supersession, and nested-lane need |
 | `STD-DRIFT-006` | `PROV/README.md` and `DUO_PROFILE.md` resolve to the same blob `a4283dac33ec9f2c182a8be0cb0d23a3e1ba13e0` at the snapshot | `CONFIRMED byte identity / HOLD` | Inspect semantic intent and history; do not infer which path is wrong or delete either |
 | `STD-DRIFT-007` | `STAC-DwC.md`, `STAC_DWC_PROFILE.md`, and `stac-dwc-hybrid.md` coexist | `CONFLICTED / NEEDS VERIFICATION` | Establish reference, profile, and hybrid roles or a governed consolidation plan |
