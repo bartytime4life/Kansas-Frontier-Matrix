@@ -6,7 +6,7 @@ version: NEEDS VERIFICATION
 status: implemented; repository-test-evidence; workflow-binding-partial
 owners: OWNER_TBD
 created: 2026-04-13
-updated: 2026-09-11
+updated: 2026-10-19
 policy_label: public-doc; tests; ci; no-network
 owning_root: tests/
 responsibility: Document the focused repository tests under tests/ci/ without treating passing tests as workflow, policy, release, deployment, or publication authority.
@@ -46,6 +46,23 @@ re-execute or re-audit the other modules summarized below.
 | [`test_root_python_distribution.py`](test_root_python_distribution.py) | [`pyproject.toml`](../../pyproject.toml) | Checks explicit metadata-only wheel selection, the three-file source-archive allowlist, no alternate root Hatch configuration, no root executable exports, and rejection of payload, hook, backend, or editable-path expansion. | Default checks parse TOML and inspect synthetic archives. With `KFM_RUN_ROOT_PYTHON_ARTIFACTS=1`, a separate test executes installed Hatchling and offline pip against temporary targets; missing build tools fail the requested gate. A default skip is not artifact evidence. |
 
 ## Run locally
+
+### Rollback rehearsal execution boundary
+
+```bash
+python -I -m pytest -q -p no:cacheprovider tests/ci/test_rollback_drill_integrity.py
+```
+
+[`test_rollback_drill_integrity.py`](test_rollback_drill_integrity.py) executes
+the committed [`rollback-drill`](../../.github/workflows/rollback-drill.yml)
+shell invocation, integrity gate, and pinned rehearsal bootstrap in disposable
+checkouts. It checks file and parent-directory identity, byte drift, import and
+bytecode isolation, fixture inventory, and the real twelve synthetic cases.
+The workflow runs this regression module after its complete inspection step.
+The focused tests omit unrelated validator and authority-inventory checks;
+passing them is not a hosted-run result or production rollback authority.
+Pinned inputs must retain regular, unredirected paths within the checkout;
+symlinked inputs fail before rehearsal code executes, even with identical bytes.
 
 ### Normalized-summary CI coverage
 
