@@ -1,0 +1,91 @@
+{
+  "receipt_id": "genrec-trace-temporal-closure-identity-binding-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/validate_trace_temporal_closure.py",
+    "tests/validators/test_validate_trace_temporal_closure.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/validate_trace_temporal_closure.py": "sha256:ce25c8c8b1ea399848105ab8134d86f03e98d960b2b210d1410e53fecb4bd9a5",
+    "tests/validators/test_validate_trace_temporal_closure.py": "sha256:e2c17429f69f8aae623d2fdcc4facb1d46103e405aac2b58c816f3ce8f54b3be"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8aac5443f94d27078f2789d01de74b15624e94d8",
+      "repo:tools/validators/validate_trace_temporal_closure.py@8aac5443f94d27078f2789d01de74b15624e94d8",
+      "repo:tests/validators/test_validate_trace_temporal_closure.py@8aac5443f94d27078f2789d01de74b15624e94d8",
+      "repo:fixtures/contracts/v1/data/trace_temporal_closure/cases.json@8aac5443f94d27078f2789d01de74b15624e94d8",
+      "repo:.github/workflows/briefing-implementation-campaign.yml@8aac5443f94d27078f2789d01de74b15624e94d8",
+      "repo:docs/architecture/briefing-implementation-campaign-20260806.md@8aac5443f94d27078f2789d01de74b15624e94d8",
+      "repo:data/receipts/generated/genrec-briefing-implementation-campaign-20260806.json@8aac5443f94d27078f2789d01de74b15624e94d8"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/validate_trace_temporal_closure.py": "CONFIRMED",
+    "tests/validators/test_validate_trace_temporal_closure.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "The validator runs no schema, so every value arrives straight from JSON. With run_id, receipt_ref or bundle_ref missing or empty in every place that must agree, each equality check compared None with None and passed, so a closure bound no run or receipt identity at all (fail-open). An empty or missing temporal_slice.materialization.artifacts list also passed, although the closure's stated purpose includes the materialized artifact bytes. A list or object run_id raised TypeError (unhashable) and the CLI printed a traceback. Identities must now be non-empty strings before they are compared, reusing RUN_ID_MISMATCH, RUN_RECEIPT_REF_MISMATCH and EVIDENCE_REF_MISMATCH, and an empty artifact set reports the new ARTIFACT_SET_EMPTY. Seven of the new tests fail or error on the original code."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/validators/test_validate_trace_temporal_closure.py: 14 tests (6 before, 8 new) covering absent and empty identities, unhashable run_ids, the empty artifact set, each reference and envelope rule, closure-id format and recomputation (receipt_ref is not a closure anchor; slice_id is), the CLI on fixtures and explicit files, every reader finding including JSON_COMPLEXITY_LIMIT and JSON_NONFINITE_NUMBER, and fixture replay failing on wrong polarity or an unreadable manifest. Branch coverage of the validator rises from 61% to 86%. The fixture replay still confirms 1 valid and 6 invalid cases with exact findings."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of twelve changes failed the suite: removing each identity requirement, the empty-string rule, the empty-artifact rule, the record-type, fixture-only and network checks, the provenance receipt and evidence-ref canonical checks, artifact-ref uniqueness and the closure-id format check."
+    },
+    {
+      "gate": "Workflow and guardrails",
+      "outcome": "PASS",
+      "reason": "briefing-implementation-campaign.yml runs as written: its four unittest suites, four self-test or fixture replays and its receipt step (genrec-maplibre-v6-4-readiness-current-binding-20260818 at its fixed ref, which pins neither file) pass. ruff reports the same findings before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8aac5443f94d27078f2789d01de74b15624e94d8"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T05:47:43Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "data/receipts/generated/genrec-briefing-implementation-campaign-20260806.json pins these files but no workflow validates it, so it is unchanged. docs/architecture/briefing-implementation-campaign-20260806.md records current_trace_closure_blob as of its base_commit; that dated record is unchanged. The validator still accepts unknown top-level fields: no schema defines this record's closed shape, and defining one is contract work outside this fix."
+}
