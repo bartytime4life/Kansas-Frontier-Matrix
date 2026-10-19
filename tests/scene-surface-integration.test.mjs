@@ -239,7 +239,11 @@ test("compact evidence autofocus waits for active surface inspection and preserv
       let prevented = false;
       listeners.get("keydown")({ key: "Tab", shiftKey: false, preventDefault() { prevented = true; } });
       assert.equal(prevented, true); assert.equal(focus.at(-1), "first", "drawer tab wrapping resumes after Scene closes");
-      listeners.get("keydown")({ key: "Escape" }); assert.deepEqual(closed, [true]);
+      let escapePrevented = false, escapeStopped = false;
+      listeners.get("keydown")({ key: "Escape", preventDefault() { escapePrevented = true; }, stopPropagation() { escapeStopped = true; } });
+      assert.deepEqual(closed, [true]);
+      assert.equal(escapePrevented, true, "the compact panel owns Escape");
+      assert.equal(escapeStopped, true, "the same Escape cannot close a reopened conversation");
       cleanup(); assert.equal(listeners.size, 0);
     }
   }
@@ -248,6 +252,16 @@ test("compact evidence autofocus waits for active surface inspection and preserv
   const opens = [];
   for (const open of [false, true, false]) evaluate(reporting.arguments[0], { open, onOpenChange: (value) => opens.push(value) }, controlsTree)();
   assert.deepEqual(opens, [false, true, false]);
+});
+
+test("global Escape honors a nested panel's transition and handles the next unclaimed key", () => {
+  const handler = nodesMatching(home.body, (node) => ts.isVariableDeclaration(node) && node.name.getText(pageTree) === "handleEscape")[0];
+  const closed = [];
+  const handle = evaluate(handler.initializer, { repositoryOpen: false, workspaceDetailsRef: { current: null }, sourceStatusOpen: false, qwenOpen: true, closeQwenCompanion: () => closed.push("chat") });
+  handle({ key: "Escape", defaultPrevented: true });
+  assert.deepEqual(closed, [], "an Escape consumed by Evidence leaves the reopened chat alone");
+  handle({ key: "Escape", defaultPrevented: false });
+  assert.deepEqual(closed, ["chat"], "a separate Escape retains normal chat close behavior");
 });
 
 test("both real drawer resize callbacks preserve the first tap at unchanged size and invalidate it on actual resizing", async () => {

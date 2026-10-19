@@ -100,3 +100,8 @@
  .atlas-studio .explorer-shell[data-inspector] > .qwen-panel.atlas-chat-dock { height: min(88%,760px); }
  .atlas-studio .atlas-scope-strip > span { min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 }
+/* Short phones use the available workspace height, retaining the status bar
+   and Close control rather than clipping source labels or shrinking targets. */
+@media(max-width:1100px) and (max-height:680px){
+ .atlas-studio .explorer-shell[data-inspector] > .qwen-panel.atlas-chat-dock { height: calc(100% - var(--status)); }
+}

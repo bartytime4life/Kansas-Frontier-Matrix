@@ -239,6 +239,10 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       if (width < 600) assert.equal(investigation.modal, 'true');
       await p.key('Escape', 'Escape', 27);
       await p.wait(`document.querySelector('.evidence-drawer')?.dataset.open === 'false' && document.activeElement === document.querySelector('#qwen-map-panel textarea')`, 'Escape returns search focus');
+      if (width < 600) {
+        await p.key('Escape', 'Escape', 27);
+        await p.wait(`document.querySelector('#qwen-map-panel')?.hidden === true && document.activeElement?.matches('.atlas-scope-control')`, 'a separate Escape closes Chat and returns to Find & ask');
+      }
       t.diagnostic(JSON.stringify({ width, scenario: 'investigation', layout, state: investigation.state, time: beforeTime }));
     });
     await t.test('failed county response explains coverage and preserves layer/source matches', async () => {
