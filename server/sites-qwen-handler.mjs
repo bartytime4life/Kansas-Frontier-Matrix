@@ -1,15 +1,15 @@
+import {hostedAiOriginAllowed} from './hosted-ai-origins.mjs';
 // Optional, default-off Sites adapter. Reuses the existing public Qwen runtime,
 // its model, source restrictions, sessions and global queue/rate budgets.
 import {createHmac,timingSafeEqual} from 'node:crypto';
 const SITE='appgprj_6acd1aafe0d88191a4306ea2ab44ed91';
-const ORIGINS=new Set(['https://kansasfrontiermatrix.com','https://q9r9beo47t.preview.c38.airoapp.ai']);
 const reply=(reasonCode,status=503)=>Response.json({reasonCode},{status,headers:{'Cache-Control':'private, no-store'}});
 export function createSitesQwenHandler({token,origin,handle,clock=Date.now}){
  const sessions=new Map();
  return async request=>{
   const expected=typeof token==='string'&&/^[A-Za-z0-9_-]{43,128}$/.test(token)?Buffer.from('Bearer '+token):null;
   const actual=Buffer.from(request.headers.get('authorization')??'');
-  if(!expected||!ORIGINS.has(origin)||actual.length!==expected.length||!timingSafeEqual(actual,expected)||request.headers.get('x-kfm-site')!==SITE)return reply('SITES_QWEN_UNAUTHORIZED',401);
+  if(!expected||!hostedAiOriginAllowed(origin)||actual.length!==expected.length||!timingSafeEqual(actual,expected)||request.headers.get('x-kfm-site')!==SITE)return reply('SITES_QWEN_UNAUTHORIZED',401);
   const actor=request.headers.get('x-kfm-site-actor')??'';
   if(!/^[a-f0-9]{64}$/.test(actor))return reply('INVALID_ACTOR',400);
   const url=new URL(request.url),path=url.pathname.replace(/^\/api\/sites-qwen\/v1\//,'');

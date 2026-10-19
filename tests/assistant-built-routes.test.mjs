@@ -18,23 +18,18 @@ test('built public AI fails closed without host configuration and public pages r
    const html=await response.text();assert.match(html,/Ask KFM/);assert.match(html,/About /);
   }
   const compatibility=await handler(new Request(origin+'/downloads'));assert.equal(compatibility.status,307);assert.equal(compatibility.headers.get('location'),origin+'/?layers=sources');
-  const map=await handler(new Request(origin+'/'));assert.equal(map.status,200);const mapHtml=await map.text();assert.match(mapHtml,/Chat with KFM/);assert.match(mapHtml,/steward-login-button[^>]*>[\s\S]*?Administrator/);
+  const map=await handler(new Request(origin+'/'));assert.equal(map.status,200);const mapHtml=await map.text();assert.match(mapHtml,/Chat with KFM/);assert.doesNotMatch(mapHtml,/steward-login-button|Administrator|type="password"/);
  }finally{if(previous===undefined)delete process.env.KFM_HOSTED_AI;else process.env.KFM_HOSTED_AI=previous;}
 });
 
-test('unconfigured private workspaces explain the hold and forged staff headers remain denied',async()=>{
+test('retired private pages are absent and forged staff headers grant no access',async()=>{
  const {default:handler}=await import('../dist/server/index.js');
  const origin='https://kansasfrontiermatrix.com';
- for(const path of ['/data','/stewards']){
-  const response=await handler(new Request(origin+path,{headers:{host:'kansasfrontiermatrix.com'}}));
-  assert.equal(response.status,200,path);assert.equal(response.headers.get('location'),null,path);
-  const html=await response.text();assert.match(html,/Private workspace unavailable on this host/);
-  assert.match(html,/Administrator sign-in on the map does not grant access/);
-  assert.match(html,/https:\/\/kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site/);
+ for(const path of ['/data','/stewards','/source-operations','/governed/water-release','/governed/weather-release','/daily-archive','/earth-engine-context/install','/api/data-submissions']){
+  const response=await handler(new Request(origin+path,{headers:{host:'kansasfrontiermatrix.com','x-role':'admin','oai-authenticated-user-id':'203533328'}}));
+  assert.equal(response.status,404,path);assert.equal(response.headers.get('location'),null,path);await response.text();
  }
- const local=await handler(new Request('http://127.0.0.1:4173/stewards',{headers:{host:'127.0.0.1:4173'}}));
- assert.equal(local.status,200);assert.match(await local.text(),/Sign in on the private Site/);
- for(const path of ['/api/data-submissions','/api/governed/water-admin/status','/api/governed/weather-admin/status']){
+ for(const path of ['/api/governed/water-admin/status','/api/governed/weather-admin/status']){
   const response=await handler(new Request(origin+path,{headers:{host:'kansasfrontiermatrix.com','x-role':'admin','oai-authenticated-user-id':'admin','oai-authenticated-user-email':'steward@example.test'}}));
   assert.equal(response.status,401,path);
  }

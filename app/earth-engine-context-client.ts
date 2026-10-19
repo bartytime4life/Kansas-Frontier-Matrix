@@ -15,7 +15,7 @@ export function useEarthEngineContext() {
     const abort = new AbortController();
     void browserJsonRequest("/api/earth-engine-context/catalog", { signal: abort.signal, maxBytes: EARTH_ENGINE_CATALOG_MAX_BYTES, timeoutMs: 30_000 })
       .then(({ response, body: payload }) => {
-        if (response.status === 401 || response.status === 403) throw new Error("Owner sign-in is required to load reviewed imagery. Local files alone do not establish an activated display set.");
+        if (response.status === 401 || response.status === 403) throw new Error("Private reviewed imagery is unavailable on this host. Local files alone do not establish an activated display set.");
         if (!response.ok) throw new Error("Reviewed snapshots are unavailable.");
         const checked = parseEarthEngineCatalog(payload);
         if (!checked) throw new Error("Display-set details or years are invalid.");

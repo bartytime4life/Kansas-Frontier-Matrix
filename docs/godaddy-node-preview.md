@@ -1,3 +1,12 @@
+# Current access: anonymous application
+
+The owner removed all application login on 2026-10-19. ChatGPT redirects, PC
+accounts/invitations/passwords, GitHub owner OAuth, session endpoints, and browser
+capture controls are removed. Public chat/map/export remain available. Retired private browser destinations
+and their navigation links are removed. `login-removal-20261019.md` supersedes the historical
+account/access descriptions below. No previous account or session cookie grants
+access. The original private Sites project is unchanged.
+
 # GoDaddy Node preview candidate
 
 ## Private-workspace holding page · 2026-10-17
@@ -228,17 +237,10 @@ missed historical observations are not fabricated. The archive stops at
 provider allocation, index/log/backup overhead and actual capacity need separate
 verification. No automatic deletion or retention purge is introduced.
 
-`server/owner-auth.mjs` binds only immutable GitHub user ID `203533328`, verified
-from the current authenticated connector on October 14. It uses empty-scope
-OAuth, encrypted five-minute state with PKCE, bounded provider responses and a
-four-hour opaque Secure/HttpOnly/SameSite session. Login replaces the single
-stored owner session; logout revokes it. GitHub bearer tokens are not persisted.
-Forged Sites headers and client role strings confer no access. Owner writes
-require exact Origin and session checks. The separate random capture-worker
-credential can trigger due sources only; it cannot read private captures,
-change controls, sign in, release or publish. Preview-origin requests cannot
-use it. Credentials must be entered directly in provider interfaces by the
-owner, outside source/chat/artifacts.
+`server/capture-worker-access.mjs` accepts only the existing narrow machine
+credential on the configured published origin. It can trigger due source capture;
+it cannot read private captures, change controls, activate releases or publish.
+There is no browser owner identity or session service.
 
 There is no web-process timer: preview/live share storage and previews can sleep.
 The narrow main-based scheduler change installs a fixed-origin GitHub Actions
@@ -250,14 +252,13 @@ acceptance. See the scheduler PR and its `docs/runbooks/godaddy-hosted-capture.m
 
 Hosting setup must supply DB_HOST/PORT/NAME/USER/PASSWORD, a verified database CA
 in KFM_DB_CA_PEM with KFM_DB_TLS=verified and a DNS DB_HOST matching its certificate
-(IP-only endpoints stay unavailable rather than skip identity verification), identity-only OAuth client ID/secret,
-random base64url KFM_SESSION_KEY and separate KFM_CAPTURE_WORKER_TOKEN. Set
+(IP-only endpoints stay unavailable rather than skip identity verification), a separate random base64url KFM_CAPTURE_WORKER_TOKEN (43–256 characters). Set
 KFM_PUBLIC_ORIGIN=https://kansasfrontiermatrix.com,
 VINEXT_TRUSTED_HOSTS=kansasfrontiermatrix.com (exact allowlist for the hosting TLS
 proxy; never a wildcard), KFM_RUNTIME_ROLE=published,
 KFM_INGEST_ENABLED=true and KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES=80000000000 only
 after capacity and configuration are confirmed. Shared secrets alone do not
-start any worker. Resume is an owner action; the SQL seed stays paused.
+start any worker. The SQL seed stays paused. Browser pause/resume controls are removed; no schedule or database state is changed by the login removal.
 
 Review `npm run archive:migration` output first. After the shared database is
 backed up and the exact schema digest approved, run the same script with

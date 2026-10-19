@@ -1,6 +1,5 @@
 import { env } from "cloudflare:workers";
 import { getRawDb } from "../db";
-import { getChatGPTUser } from "./chatgpt-auth";
 import { WaterAdminError, type WaterAdminBucket, type WaterAdminDb, type WaterAdminStore } from "./governed-water-admin";
 
 export const waterAdminHeaders = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "Vary": "Cookie" };
@@ -15,15 +14,9 @@ export function waterSameOrigin(request: Request) {
   if (request.headers.get("origin") !== new URL(request.url).origin || request.headers.get("sec-fetch-site") === "cross-site") throw new WaterAdminError("SAME_ORIGIN_REQUIRED", 403);
 }
 
-// Owner allowlist, configured in Sites runtime settings. Missing configuration keeps activation closed.
+// Browser release authority is absent from this public composition.
 export async function waterOwner() {
-  const user = await getChatGPTUser();
-  if (!user) throw new WaterAdminError("SIGN_IN_REQUIRED", 401);
-  const ids = String(env.KFM_WATER_OWNER_IDS ?? "").split(",").map((x) => x.trim()).filter(Boolean);
-  const emails = String(env.KFM_WATER_OWNER_EMAILS ?? "").split(",").map((x) => x.trim().toLowerCase()).filter(Boolean);
-  if (!ids.length && !emails.length) throw new WaterAdminError("WATER_RELEASE_NOT_CONFIGURED", 503);
-  if (!(user.id && ids.includes(user.id)) && !emails.includes(user.email.toLowerCase())) throw new WaterAdminError("OWNER_REQUIRED", 403);
-  return user;
+  throw new WaterAdminError("PRIVATE_OPERATION_UNAVAILABLE", 401);
 }
 
 // Staging token for the owner's local release tool. It can store packages but never activate them.

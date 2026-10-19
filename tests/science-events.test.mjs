@@ -45,12 +45,11 @@ test("two-point science probe returns a geodesic distance, bearing and honest ma
 });
 
 test("Observatory exposes the responsive Science Lab, real tools and archive notices", async () => {
-  const [workspace, css, toolbar, sources, intake] = await Promise.all([
+  const [workspace, css, toolbar, sources] = await Promise.all([
     readFile(new URL("../app/observatory/workspace.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/map-toolbar.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/observatory/sources/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/data-intake.ts", import.meta.url), "utf8"),
   ]);
   assert.match(workspace, /Science lab · \{SCIENCE_EVENTS\.length\}/);
   assert.match(workspace, /DISTANCE \/ BEARING/);
@@ -65,7 +64,7 @@ test("Observatory exposes the responsive Science Lab, real tools and archive not
   assert.match(toolbar, /Tornado, flood, snow & ice history/);
   assert.match(toolbar, /Historical map editions \/ shapefiles|Map editions \/ shapefiles/);
   assert.match(sources, /Science event visual grammar/);
-  assert.match(intake, /SCIENCE_EVENTS\.map/);
+  assert.doesNotMatch(workspace, /href=["\{`]\/?(?:data|stewards)(?:["?`])/);
 });
 
 

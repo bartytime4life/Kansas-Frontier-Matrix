@@ -89,7 +89,7 @@ export default function EarthEngineWorkspace() {
   return <main className={styles.page}>
     <header className={styles.header}>
       <Link href="/" className={styles.brand}>KFM <span>Kansas Frontier Matrix</span></Link>
-      <nav aria-label="Earth Engine navigation"><Link href="/">Explorer map</Link><Link href="/earth-engine" aria-current="page">Earth Engine</Link><Link href="/?layers=sources">Source status in Layers</Link><Link href="/acquisition">Receipts</Link><Link href="/data">Contribute data</Link></nav>
+      <nav aria-label="Earth Engine navigation"><Link href="/">Explorer map</Link><Link href="/earth-engine" aria-current="page">Earth Engine</Link><Link href="/?layers=sources">Source status in Layers</Link><Link href="/acquisition">Receipts</Link></nav>
     </header>
     <section className={styles.intro} aria-labelledby="earth-engine-title">
       <div><p className={styles.eyebrow}>KANSAS / SOURCE DISCOVERY</p><h1 id="earth-engine-title">Earth Engine datasets & recipes</h1><p>Find a dataset, compare its limits, and prepare a Kansas analysis for review.</p></div>
@@ -133,7 +133,7 @@ export default function EarthEngineWorkspace() {
         <p role="status" className={styles.notice}>{notice}</p>
         <details className={styles.instructions}><summary>How to run and review</summary><ol><li><a href={EARTH_ENGINE_ACCESS} target="_blank" rel="noreferrer">Register an Earth Engine project</a> with the access appropriate to your use.</li><li>Copy the script into the <a href="https://code.earthengine.google.com/" target="_blank" rel="noreferrer">Earth Engine Code Editor</a>. Review it, then run it there.</li><li>Inspect source IDs, coverage, quality flags and missing pixels. Keep the complete inputs and processing record before exporting any data.</li><li>Prepare source files and provenance for KFM review. Acceptance for preparation is separate from admission and release.</li></ol><p>These generated recipes have not been executed against Earth Engine. They do not automatically export files, publish layers, or write back to KFM.</p></details>
         <details className={styles.code}><summary>Inspect generated script</summary><pre tabIndex={0} aria-label="Generated Earth Engine JavaScript"><code>{recipe || "Choose a valid year to generate the recipe."}</code></pre></details>
-        <div className={styles.links}><a href={earthEngineUrl(selected)} target="_blank" rel="noreferrer">Official dataset & citation ↗</a><Link href={`/data?source=${selected.id}`}>Propose this source for review</Link></div>
+        <div className={styles.links}><a href={earthEngineUrl(selected)} target="_blank" rel="noreferrer">Official dataset & citation ↗</a></div>
       </aside>
     </div>
   </main>;

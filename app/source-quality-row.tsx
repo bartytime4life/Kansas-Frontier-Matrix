@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { OfficialContextPayload, OfficialContextSource, OfficialContextState } from "./live-context";
 import { TERRAIN_DISPLAY_MIN_ZOOM } from "./live-context";
 import { sourceMinimumZoom, sourceNeedsCloserView } from "./layer-workspaces";
@@ -17,7 +16,7 @@ export function SourceQualityRow({ source, state, payload, error, selected, held
     {payload?.upstreamUpdatedAt && <p className="source-quality-clock">Source time: {new Date(payload.upstreamUpdatedAt).toLocaleString()}</p>}
     {selected && error && <p className="source-quality-error">{error}</p>}
     {selected && (state === "error" || state === "partial") && onRetry && <button type="button" onClick={onRetry}>Retry layer</button>}
-    <div className="source-quality-actions"><a href={sourceDownloadHref(source.id, archiveDay)} target={download.href.startsWith("https:") ? "_blank" : undefined} rel="noreferrer">{download.label}{archiveDay ? ` · ${archiveDay} UTC` : ""} ↗</a><Link href={`/data?source=${source.id}`}>Upload / propose update</Link></div>
+    <div className="source-quality-actions"><a href={sourceDownloadHref(source.id, archiveDay)} target={download.href.startsWith("https:") ? "_blank" : undefined} rel="noreferrer">{download.label}{archiveDay ? ` · ${archiveDay} UTC` : ""} ↗</a></div>
     <details><summary>Source details & limitations</summary><p>{payload?.limitation || source.boundary}</p><p>{source.freshness}</p>{terrainOverlay && <p>Terrain image tiles are requested only at zoom {TERRAIN_DISPLAY_MIN_ZOOM} or closer. A connected map source at a wider view does not mean terrain imagery is displayed.</p>}{source.kind === "OPERATIONAL_WMS" && <p>Map service means the renderer has connected to the service. It does not verify every tile, acquisition date, or complete coverage.</p>}<a href={source.sourceUrl} target="_blank" rel="noreferrer">Provider & methodology ↗</a></details>
   </article>;
 }

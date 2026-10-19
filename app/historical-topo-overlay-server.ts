@@ -1,5 +1,4 @@
 import { env } from "cloudflare:workers";
-import { getChatGPTUser } from "./chatgpt-auth";
 import { parseTopoCatalog, TOPO_CATALOG_URL, type TopoSheet } from "./historical-topo";
 import { parseTopoActivePointer, parseTopoOverlayManifest, topoActiveKey, topoManifestKey, type TopoActivePointer, type TopoOverlayManifest } from "./historical-topo-overlay";
 
@@ -15,18 +14,11 @@ export function topoBucket(): TopoBucket {
 export function topoSameOrigin(request: Request) {
   if (request.headers.get("origin") !== new URL(request.url).origin || request.headers.get("sec-fetch-site") === "cross-site") throw new TopoOverlayError("Open this map on the Site.", 403);
 }
-export async function topoUser() {
-  const user = await getChatGPTUser();
-  if (!user) throw new TopoOverlayError("Sign in to request a historical map overlay.", 401);
-  return user;
+export async function topoUser(): Promise<{ id: string | null; displayName: string; email: string }> {
+  throw new TopoOverlayError("Private historical map preparation is unavailable in this application.", 401);
 }
-export async function topoOwner() {
-  const user = await topoUser();
-  const ids = String(env.KFM_HISTORICAL_OWNER_IDS ?? "").split(",").map((x) => x.trim()).filter(Boolean);
-  const emails = String(env.KFM_HISTORICAL_OWNER_EMAILS ?? "").split(",").map((x) => x.trim().toLowerCase()).filter(Boolean);
-  if (!ids.length && !emails.length) throw new TopoOverlayError("Historical map review is not configured.", 503);
-  if (!(user.id && ids.includes(user.id)) && !emails.includes(user.email.toLowerCase())) throw new TopoOverlayError("Historical map review is unavailable.", 403);
-  return user;
+export async function topoOwner(): Promise<{ id: string | null; displayName: string; email: string }> {
+  return topoUser();
 }
 export function topoWorker(request: Request) {
   const expected = String(env.KFM_HISTORICAL_WORKER_TOKEN ?? "");

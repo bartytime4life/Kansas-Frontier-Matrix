@@ -74,10 +74,12 @@ async function harness() {
   const server = await compile("earth-engine-context-server", {
     "./earth-engine-context": context, "./earth-engine-local-read": { localImageryReadAllowed: () => false },
     "cloudflare:workers": { env: { BUCKET: bucket, KFM_EARTH_ENGINE_OWNER_EMAILS: "owner@example.test" } },
-    "./chatgpt-auth": { getChatGPTUser: async () => ({ email: "owner@example.test" }) },
   });
-  const activate = await compile("api/earth-engine-context/activate/route", { "../../../earth-engine-context": context, "../../../earth-engine-context-server": server });
-  const stage = await compile("api/earth-engine-context/stage/route", { "../../../earth-engine-context": context, "../../../earth-engine-context-server": server });
+  // Exercise storage integrity behind a synthetic authority stub. The actual
+  // public Node routes remain denied and are covered by login-removal HTTP tests.
+  const authorizedStorage = { ...server, earthEngineOwner: async () => {} };
+  const activate = await compile("api/earth-engine-context/activate/route", { "../../../earth-engine-context": context, "../../../earth-engine-context-server": authorizedStorage });
+  const stage = await compile("api/earth-engine-context/stage/route", { "../../../earth-engine-context": context, "../../../earth-engine-context-server": authorizedStorage });
   function install(value) {
     const raw = bytes(value); objects.set(context.earthEngineManifestKey(value.setId), raw);
     const year = context.earthEngineSetYear(value);

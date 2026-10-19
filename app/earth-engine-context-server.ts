@@ -1,6 +1,5 @@
 import { localImageryReadAllowed } from "./earth-engine-local-read";
 import { env } from "cloudflare:workers";
-import { getChatGPTUser } from "./chatgpt-auth";
 import {
   EARTH_ENGINE_CONTEXT_ACTIVE_KEY,
   EARTH_ENGINE_CONTEXT_PREFIX,
@@ -28,12 +27,7 @@ export class EarthEngineContextError extends Error { constructor(message: string
 export const earthEnginePrivateHeaders = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "Vary": "Cookie" };
 
 export async function earthEngineOwner() {
-  const user = await getChatGPTUser();
-  if (!user) throw new EarthEngineContextError("Sign in to view Earth Engine context.", 401);
-  const ids = String(env.KFM_EARTH_ENGINE_OWNER_IDS ?? "").split(",").map((id) => id.trim()).filter(Boolean);
-  const emails = String(env.KFM_EARTH_ENGINE_OWNER_EMAILS ?? "").split(",").map((email) => email.trim().toLowerCase()).filter(Boolean);
-  if (!ids.length && !emails.length) throw new EarthEngineContextError("Earth Engine context is not configured.", 503);
-  if (!(user.id && ids.includes(user.id)) && !emails.includes(user.email.toLowerCase())) throw new EarthEngineContextError("Earth Engine context is unavailable.", 403);
+  throw new EarthEngineContextError("Private Earth Engine context is unavailable in this application.", 401);
 }
 
 /** Local reads still use the activated pointer and every existing digest check.

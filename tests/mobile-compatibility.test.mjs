@@ -3,11 +3,10 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 test("mobile map keeps one header row with named menus and reachable map actions", async () => {
-  const [page, css, toolbar, dataWorkspace] = await Promise.all([
+  const [page, css, toolbar] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/map-toolbar.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/data/workspace.module.css", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /<nav className="map-chrome-dock" aria-label="Map view and controls">/);
@@ -35,7 +34,6 @@ test("mobile map keeps one header row with named menus and reachable map actions
   assert.match(css, /\.data-notices-trigger \{ min-width: 44px !important; width: 44px;/);
   assert.match(css, /\.map-source-status \{[\s\S]*border-radius: 20px 20px 0 0/);
   assert.match(css, /\.event-workspace \.event-calendar-cell \{ min-height: 32px/);
-  assert.match(dataWorkspace, /\.page input,\.page select,\.page textarea\{min-height:48px;font-size:16px\}/);
 
   const finalToolSheetOverride = css.lastIndexOf(".map-utility-panel[data-view]");
   assert.ok(finalToolSheetOverride > css.lastIndexOf(".map-utility-panel { top: var(--map-overlay-top); right: 68px; }"));

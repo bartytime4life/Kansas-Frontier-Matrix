@@ -98,10 +98,9 @@ test("route denies held-byte disclosure and worker curation while retaining auth
  globalThis.__archiveRouteIntegration={env:{BUCKET:bucket,KFM_ARCHIVE_LOCAL_OWNER_TOKEN:ownerToken,KFM_ARCHIVE_WORKER_TOKEN:workerToken},db};
  const envUrl=compile('export const env=globalThis.__archiveRouteIntegration.env;');
  const dbUrl=compile('export const getRawDb=()=>globalThis.__archiveRouteIntegration.db;');
- const userUrl=compile('export async function getChatGPTUser(){return null}');
  const nextUrl=compile('export class NextRequest extends Request {get nextUrl(){return new URL(this.url)}}');
  const storeUrl=compile((await readFile(new URL("../app/daily-archive-store.ts",import.meta.url),"utf8")).replace('"./daily-archive"',JSON.stringify(modelUrl)));
- const authUrl=compile((await readFile(new URL("../app/daily-archive-auth.ts",import.meta.url),"utf8")).replace('"cloudflare:workers"',JSON.stringify(envUrl)).replace('"./chatgpt-auth"',JSON.stringify(userUrl)).replace('"./daily-archive-store"',JSON.stringify(storeUrl)));
+ const authUrl=compile((await readFile(new URL("../app/daily-archive-auth.ts",import.meta.url),"utf8")).replace('"cloudflare:workers"',JSON.stringify(envUrl)).replace('"./daily-archive-store"',JSON.stringify(storeUrl)));
  let source=await readFile(new URL("../app/api/daily-archive/route.ts",import.meta.url),"utf8");
  for(const [name,url] of Object.entries({"cloudflare:workers":envUrl,"next/server":nextUrl,"../../../db":dbUrl,"../../daily-archive":modelUrl,"../../daily-archive-store":storeUrl,"../../daily-archive-auth":authUrl,"../live-context/route":compile('export async function GET(){throw Error("No provider calls in this test")}')}))source=source.replace(JSON.stringify(name),JSON.stringify(url));
  const route=await import(compile(source));const {NextRequest}=await import(nextUrl);
@@ -138,19 +137,6 @@ test("hosted runner preserves service-access-only stdin through a distinct deriv
  assert.equal(result.outcome,"paused");assert.equal(calls,1);
 });
 
-test("archive screen server-renders safely before a day or capture is loaded",async()=>{
- let source=await readFile(new URL("../app/daily-archive/workspace.tsx",import.meta.url),"utf8");
- source=source.replace('import Link from "next/link";','const Link = "a";')
-   .replace('"react"',JSON.stringify(import.meta.resolve("react")))
-   .replace('"../daily-archive"',JSON.stringify(modelUrl))
-   .replace(/import \{ loadMapLibre[^;]+;/,'const loadMapLibre = () => Promise.reject(new Error("SSR cannot load map"));')
-   .replace('import styles from "./archive.module.css";','const styles = {};').replace('import { applyArchiveMapData } from "../daily-archive-map";','const applyArchiveMapData = () => {};');
- const js=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText.replaceAll('"react/jsx-runtime"',JSON.stringify(import.meta.resolve("react/jsx-runtime")));
- const {default:Screen}=await import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
- const {createElement}=await import("react");const {renderToStaticMarkup}=await import("react-dom/server");
- const html=renderToStaticMarkup(createElement(Screen));assert.match(html,/Daily archive/);assert.match(html,/No saved data/);assert.match(html,/Maximum archive bytes/);
-});
-
 test("daily scripts execute through the installed stable symlink",async()=>{
  const {mkdtemp,symlink,rm}=await import("node:fs/promises");const {tmpdir}=await import("node:os");const {spawnSync}=await import("node:child_process");const {fileURLToPath}=await import("node:url");
  const directory=await mkdtemp(`${tmpdir()}/kfm-daily-launcher-`);
@@ -167,14 +153,4 @@ test("runner verifies separate capture days when a run crosses midnight",async()
   return Response.json({day,storage:{paused:false},entries:records.filter(row=>row.day===day)});
  };
  const result=await captureDaily("http://127.0.0.1:4173",null,request,"w".repeat(43));assert.equal(result.outcome,"complete");assert.equal(result.results.length,9);assert.ok(requestedDays.includes("2026-10-09"));
-});
-
-
-test("map switching and clearing work while the previous GeoJSON update is still loading",async()=>{
- const {applyArchiveMapData}=await import(compile(await readFile(new URL("../app/daily-archive-map.ts",import.meta.url),"utf8")));
- const state={};const map={isStyleLoaded:()=>false,getSource:key=>({setData:data=>state[key]=data})};
- const first=fixture();applyArchiveMapData(map,first,first.data);assert.equal(state.capture,first.data);
- const next=fixture({data:{type:"FeatureCollection",features:[]},featureCount:0,state:"empty"});
- applyArchiveMapData(map,next,null);assert.equal(state.capture,next.data);assert.equal(state.counties.features.length,0);
- applyArchiveMapData(map,null,null);assert.equal(state.capture.features.length,0);
 });

@@ -1180,7 +1180,7 @@ test("keeps the global header and map controls in one responsive toolbar", async
   }
   assert.match(toolbar, /aria-label="Source recovery and original files"/);
   assert.match(page, /className="layer-panel-explore"[\s\S]*?openMapUtility\("history"\); }}>Kansas historic maps<\/button>/);
-  assert.match(page, /className="timeline-primary-actions"><Link href="\/daily-archive">Daily archive ↗<\/Link>/);
+  assert.match(page, /className="timeline-primary-actions"><Link href="\/observatory">Provider history ↗<\/Link>/);
   assert.doesNotMatch(page, /className="map-dock-basemap map-dock-wide-only"/);
   assert.doesNotMatch(page, /className="map-dock-action map-dock-wide-only"/);
   assert.match(page, /QUICK_LIVE_CONTEXT_IDS\.map/);

@@ -24,13 +24,6 @@ test("submission list indexes are additive and journaled", async () => {
   journal.entries.forEach((entry, position) => assert.equal(entry.idx, position));
 });
 
-test("submission route retains the stable keyset predicate and ordering", async () => {
-  const route = await read("app/api/data-submissions/route.ts");
-  assert.match(route, /"\(created_at, id\) < \(\?, \?\)"/, "row-value keyset predicate");
-  assert.match(route, /\[createdAt, id\]/);
-  assert.match(route, /ORDER BY created_at DESC, id DESC LIMIT 31/);
-});
-
 test("submission keyset pages in index order without gaps or repeats", { skip: !sqlite && "node:sqlite unavailable" }, async () => {
   const db = await migratedDatabase();
   const insert = db.prepare("INSERT INTO data_submissions (id, owner_key, owner_name, title, source_id, source_url, description, license, sensitivity, start_date, end_date, file_name, file_bytes, file_sha256, object_key, status, version, created_at, updated_at) VALUES (?, ?, 'n', 't', 's', 'https://example.test/', 'd', 'l', 'public', '2020-01-01', '2020-01-02', 'f.csv', 1, 'h', ?, 'submitted', 1, ?, ?)");
@@ -109,6 +102,5 @@ test("audit fixes keep landmarks, roles and in-text links valid", async () => {
   assert.equal((summary.match(/<dd className=\{s\.summaryNote\}>/g) ?? []).length, 2);
 
   assert.match(await read("app/acquisition/workspace.module.css"), /\.page :is\(p,li,dd,td\)>a\{text-decoration:underline\}/);
-  assert.match(await read("app/data/workspace.module.css"), /\.page :is\(p,li,dd,section\)>a:not\(\.download,\.brand\)\{text-decoration:underline\}/);
   assert.match(await read("app/downloads/workspace.module.css"), /\.page :is\(p,li,dd,td\)>a:not\(\.primaryLink\) \{ text-decoration:underline; \}/);
 });

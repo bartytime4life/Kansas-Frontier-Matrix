@@ -2,7 +2,8 @@
 
 The owner requested this separate GoDaddy Node hosting composition on
 2026-10-13 and explicitly excluded Airo. Its destination is GoDaddy app
-`q9r9beo47t`; source starts at Explorer v259 commit
+`urdng3v1vk`, selected by the owner as the replacement preview on 2026-10-19.
+The prior GoDaddy app `q9r9beo47t` remains a recovery reference. Source starts at Explorer v259 commit
 `441c3e29581ffb0293d8e643e5c37eed50319032`.
 On 2026-10-13 the owner canceled report pricing, checkout and payment setup
 and requested free reports/downloads. Keep report exports free and public;

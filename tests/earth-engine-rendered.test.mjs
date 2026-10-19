@@ -7,7 +7,7 @@ test("production Node handler serves discoverable Earth Engine workspace with ho
   assert.equal(response.status, 200);
   const html = await response.text();
   for (const label of ["Earth Engine datasets", "live Earth Engine disconnected", "Cropland Data Layer", "TerraClimate drought index", "Analysis year", "Download recipe", "Compare datasets"]) assert.ok(html.includes(label), label);
-  assert.match(html, /href="\/data\?source=ee-cdl"/);
+  assert.doesNotMatch(html, /href="\/data(?:[?"\/])/);
   assert.match(html, /Installed coverage cannot be confirmed until the display inventory loads/);
   const home = await handler(new Request("http://localhost/", { headers: { accept: "text/html" } }));
   assert.equal(home.status, 200);

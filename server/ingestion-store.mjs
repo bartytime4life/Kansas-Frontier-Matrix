@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from "node:crypto";
-import { ARCHIVE_LIMIT_BYTES, CHUNK_BYTES, INGEST_SCHEMA_VERSION, OWNER_GITHUB_ID, RECEIPT_ALLOWANCE, ingestionConfig } from "./ingestion-config.mjs";
+import { ARCHIVE_LIMIT_BYTES, CHUNK_BYTES, INGEST_SCHEMA_VERSION, RECEIPT_ALLOWANCE, ingestionConfig } from "./ingestion-config.mjs";
 let pool;
 export async function getIngestionStore() {
   const config = ingestionConfig();
@@ -118,14 +118,4 @@ export class MySqlIngestionStore {
     if (bytes.length !== Number(row.byte_length) || createHash("sha256").update(bytes).digest("hex") !== row.sha256) throw new Error("CAPTURE_INTEGRITY_FAILED");
     return { bytes, receipt: JSON.parse(row.receipt) };
   }
-  async session(token, expires) {
-    const hash = createHash("sha256").update(token).digest("hex");
-    await this.database.execute("INSERT INTO kfm_ingest_owner_session (owner_id,token_sha256,expires_at) VALUES (?,?,?) ON DUPLICATE KEY UPDATE token_sha256=VALUES(token_sha256),expires_at=VALUES(expires_at)", [OWNER_GITHUB_ID, hash, expires]);
-  }
-  async authenticate(token) {
-    if (!/^[A-Za-z0-9_-]{43}$/.test(token ?? "")) return false;
-    const [rows] = await this.database.execute("SELECT owner_id FROM kfm_ingest_owner_session WHERE owner_id=? AND token_sha256=? AND expires_at>?", [OWNER_GITHUB_ID, createHash("sha256").update(token).digest("hex"), Date.now()]);
-    return rows.length === 1;
-  }
-  async logout(token) { await this.database.execute("DELETE FROM kfm_ingest_owner_session WHERE owner_id=? AND token_sha256=?", [OWNER_GITHUB_ID, createHash("sha256").update(token).digest("hex")]); }
 }

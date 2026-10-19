@@ -1,3 +1,4 @@
+import {hostedAiOriginAllowed} from '../server/hosted-ai-origins.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createPublicAiHandler,publicAiRuntime} from '../server/public-ai-handler.mjs';
@@ -370,4 +371,10 @@ test('rotating investigation IDs cannot reset guest or process request budgets',
  assert.equal((await f.request('jobs',{...question,mode:'evidence',investigationId:investigationId(10)},cookie)).body.reasonCode,'USER_RATE_LIMIT');
  for(let index=10;index<30;index++)assert.equal((await f.request('jobs',{...question,mode:'evidence',investigationId:investigationId(index)})).response.status,202);
  assert.equal((await f.request('jobs',{...question,mode:'evidence',investigationId:investigationId(30)})).body.reasonCode,'GLOBAL_RATE_LIMIT');assert.equal(f.calls(),0);
+});
+
+
+test('replacement preview origin is authorized exactly without granting other preview apps access',()=>{
+ for(const origin of ['https://kansasfrontiermatrix.com','https://q9r9beo47t.preview.c38.airoapp.ai','https://urdng3v1vk.preview.c38.airoapp.ai'])assert.equal(hostedAiOriginAllowed(origin),true);
+ for(const origin of ['https://other.preview.c38.airoapp.ai','https://urdng3v1vk.preview.c38.airoapp.ai.evil.test','https://urdng3v1vk.preview.c38.airoapp.ai/','http://urdng3v1vk.preview.c38.airoapp.ai','https://user@urdng3v1vk.preview.c38.airoapp.ai',undefined])assert.equal(hostedAiOriginAllowed(origin),false);
 });

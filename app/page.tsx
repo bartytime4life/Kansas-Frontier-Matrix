@@ -1199,8 +1199,6 @@ export default function Home() {
   const sourceStatusPanelRef = useRef<HTMLElement>(null);
   const sourceStatusReturnRef = useRef<HTMLElement | null>(null);
   const qwenPanelRef = useRef<HTMLElement>(null);
-  const [pcAccount, setPcAccount] = useState<string|null>(null);
-  const [pcAccountRequest, setPcAccountRequest] = useState(0);
   const qwenReturnRef = useRef<HTMLElement | null>(null);
   const drawerTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const pendingViewRef = useRef<ViewState | null>(null);
@@ -8725,7 +8723,6 @@ export default function Home() {
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong className="atlas-title">Kansas Frontier Matrix</strong><small className="atlas-subtitle">Atlas Studio · Prairie Field Desk</small></span>
-          <button type="button" className="steward-login-button" onClick={event => { setPcAccountRequest(value => value + 1); openQwenCompanion(event.currentTarget); }} aria-controls="qwen-map-panel">{pcAccount ? "Account" : "Administrator"}</button>
         </div>
         <div className="atlas-scope-strip" aria-label="Current investigation">
           <button type="button" className="atlas-scope-control" onClick={() => openAtlasComposer("find")} aria-controls="qwen-map-panel" title="Find places, layers and sources · shortcut /">Find &amp; ask</button>
@@ -10054,7 +10051,7 @@ export default function Home() {
               <span><small>LAYERS</small><strong>{selectedMapLayerCount}</strong></span>
               <span><small>SELECTION</small><strong>{assistantFocus.context.selection ? "1" : "0"}</strong></span>
             </div>
-            <AssistantWorkspace active={qwenOpen} accountRequest={pcAccountRequest} onAccount={setPcAccount} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} inputRef={globalSearchInputRef} draftRequest={assistantDraftRequest}
+            <AssistantWorkspace active={qwenOpen} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} inputRef={globalSearchInputRef} draftRequest={assistantDraftRequest}
               discovery={{query:globalQuery, items:searchResults, status:searchStatus.message, busy:searchStatus.busy, onQuery:setGlobalQuery, onChoose:id => { const item=searchResults.find(row => row.id===id); if (item) chooseSearchResult(item); }}}
               onInspectSources={inspectAssistantSources} />
           </section>
@@ -10310,7 +10307,7 @@ export default function Home() {
               </div>
               <div className="timeline-era-jumps" aria-label="Preview named time ranges">{TIMELINE_JUMPS.map((jump) => <button key={jump.label} type="button" data-active={jump.year === previewYear} onClick={() => { setPreviewYear(jump.year); setPlaying(false); }}>{jump.label}<small>{formatTimelineStep(jump.year)}</small></button>)}</div>
               </details>
-              <div className="timeline-primary-actions"><Link href="/daily-archive">Daily archive ↗</Link><Link href="/observatory">Provider history ↗</Link><button type="button" onClick={() => openPrimaryWorkspace("stories", true)}>Capture frame for story</button></div>
+              <div className="timeline-primary-actions"><Link href="/observatory">Provider history ↗</Link><button type="button" onClick={() => openPrimaryWorkspace("stories", true)}>Capture frame for story</button></div>
             </section>
 
             <section className="timeline-frame-readout" aria-labelledby="timeline-frame-title">

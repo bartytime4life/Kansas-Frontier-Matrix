@@ -55,12 +55,13 @@ test('published host and forwarding headers serve both the map and build identit
   for (const headers of [
     { Host: 'kansasfrontiermatrix.com' },
     { Host: 'q9r9beo47t.c38.airoapp.ai' },
+    { Host: 'urdng3v1vk.preview.c38.airoapp.ai' },
     { Host: '127.0.0.1:20011', 'X-Forwarded-Host': 'kansasfrontiermatrix.com', 'X-Forwarded-Proto': 'https' },
   ]) {
     const home = await proxyRequest('/', headers);
     assert.equal(home.status, 200); assert.match(home.text, /Kansas Frontier Matrix/);
     const build = await proxyRequest('/api/build', headers);
-    assert.equal(build.status, 200); assert.equal(JSON.parse(build.text).application, 'q9r9beo47t');
+    assert.equal(build.status, 200); assert.equal(JSON.parse(build.text).application, 'urdng3v1vk');
   }
 });
 
@@ -127,7 +128,7 @@ test("public crawler files are served with their text and XML media types", asyn
   }
   const robots = await (await fetch(origin + "/robots.txt")).text();
   assert.match(robots, /^Disallow: \/api\//m);
-  assert.match(robots, /^Disallow: \/source-operations/m);
+  assert.doesNotMatch(robots, /^Disallow: \/source-operations/m);
 });
 test("public metadata identifies the GoDaddy domain without changing the Sites snapshot", async () => {
   const home = await (await fetch(origin)).text();
@@ -149,7 +150,7 @@ for (const path of [
       },
       redirect: "manual",
     });
-    assert.equal(response.status, 401);
+    assert.equal(response.status, path === "/api/data-submissions" ? 404 : 401);
   });
 }
 test("map assets are served by the Node production server", async () => {
@@ -179,9 +180,9 @@ test('hosted source status honestly reports the unconfigured archive without cre
   assert.equal(body.sources.length,3);
   assert.doesNotMatch(JSON.stringify(body),/DB_PASSWORD|SESSION_KEY|CLIENT_SECRET|Bearer/);
 });
-for (const [path,method] of [['/api/source-pipeline/captures','GET'],['/api/source-pipeline/run','POST'],['/api/source-pipeline/control?action=resume','POST']]) {
+for (const [path,method,status] of [['/api/source-pipeline/captures','GET',404],['/api/source-pipeline/run','POST',401],['/api/source-pipeline/control?action=resume','POST',404]]) {
   test('archive authority is denied to anonymous and forged staff requests: '+path,async()=>{
     const response=await fetch(origin+path,{method,headers:{'x-role':'admin','oai-authenticated-user-id':'203533328',Origin:'https://kansasfrontiermatrix.com'}});
-    assert.equal(response.status,401);
+    assert.equal(response.status,status);
   });
 }
