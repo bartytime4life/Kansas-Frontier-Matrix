@@ -151,7 +151,7 @@ Hashing sensitive bytes does not make the bytes safe to publish. Digest values c
 - ADR-0013 remains proposed; no `sha256:` to `jcs:sha256:` migration is authorized.
 - Complete producer/consumer inventory and cross-language parity remain `UNKNOWN`.
 - External package publication, deployed use, service health, and independent stewardship remain `UNKNOWN` or `NEEDS VERIFICATION`.
-- The separate canonicalization-document case collision remains governed by its existing hold and is not changed here.
+- The former canonicalization-document case collision is resolved: the lowercase `docs/standards/canonicalization.md` was merged into `docs/standards/CANONICALIZATION.md` (2026-10-12) and deleted (2026-10-19). This package is unaffected.
 - New hash families, RDF canonicalization, signatures, HMAC, encryption, password hashing, key management, Merkle profiles, or run-ID grammar require their own accepted scope and tests.
 
 ## Correction and rollback
