@@ -10,16 +10,23 @@ const source = await readFile(new URL('../app/county-search.ts', import.meta.url
 const county = await import('data:text/javascript;base64,' + Buffer.from(ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 }).outputText).toString('base64'));
+const discoveryModule = {exports:{}};
+vm.runInNewContext(ts.transpileModule(await readFile(new URL('../app/atlas-discovery.ts',import.meta.url),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,{module:discoveryModule,exports:discoveryModule.exports,require:()=>county});
 const page = await readFile(new URL('../app/page.tsx', import.meta.url), 'utf8');
 const tree = ts.createSourceFile('page.tsx', page, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-let resultsExpression, searchMarkup;
+let resultsExpression, searchMarkup, inputMarkup;
 function visit(node) {
   if (ts.isVariableDeclaration(node) && node.name.getText(tree) === 'searchResults') resultsExpression = node.initializer.getText(tree);
-  if (ts.isJsxElement(node) && node.openingElement.attributes.properties.some(attribute =>
-    ts.isJsxAttribute(attribute) && attribute.name.getText(tree) === 'className' && attribute.initializer?.getText(tree) === '"global-search"')) searchMarkup = node.getText(tree);
   ts.forEachChild(node, visit);
 }
 visit(tree);
+const workspace = ts.createSourceFile('workspace.tsx',await readFile(new URL('../app/assistant/workspace.tsx',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
+function visitWorkspace(node){
+ if(ts.isJsxElement(node)&&node.openingElement.attributes.properties.some(a=>ts.isJsxAttribute(a)&&a.name.getText(workspace)==='className'&&a.initializer?.getText(workspace)==='{styles.searchResults}')){let parent=node.parent;while(parent&&!ts.isJsxExpression(parent))parent=parent.parent;searchMarkup=parent.expression.getText(workspace);}
+ if(ts.isJsxSelfClosingElement(node)&&node.tagName.getText(workspace)==='textarea')inputMarkup=node.getText(workspace);
+ ts.forEachChild(node,visitWorkspace);
+}
+visitWorkspace(workspace);
 const feature = { type: 'Feature', properties: { name: 'Ellsworth', featureId: 'us-census-county-20053', vintage: '2020' } };
 const payload = { feed: 'census-counties', data: { features: [feature] } };
 const mapItem = { id: 'layer:water', kind: 'layer', title: 'Water observations', subtitle: 'Current layer catalog' };
@@ -31,15 +38,16 @@ function actualResults(query, settledQuery, state) {
   }).outputText, {
     useMemo: callback => callback(), globalQuery: query, debouncedGlobalQuery: settledQuery,
     SEARCH_INDEX: [mapItem], OFFICIAL_CONTEXT_SOURCES: [{ id: 'water', title: 'Water', shortTitle: 'Water', organization: 'Official provider', domain: 'Water', endpointLabel: 'Water records' }],
-    officialPayloads: { 'census-counties': payload }, officialStates: { 'census-counties': state }, ...county,
+    officialPayloads: { 'census-counties': payload }, officialStates: { 'census-counties': state }, ...county, ...discoveryModule.exports,
   });
 }
 
 function actualMarkup(query, settledQuery, state, results) {
   const searchStatus = county.globalSearchStatus(query, settledQuery, state, results.length);
-  const element = vm.runInNewContext(ts.transpileModule('(' + searchMarkup + ')', {
+  const discoveryCurrent = query.trim().toLowerCase() === settledQuery.trim().toLowerCase();
+  const element = vm.runInNewContext(ts.transpileModule('(<>{' + searchMarkup + '}' + inputMarkup + '</>)', {
     compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022 },
-  }).outputText, { React, searchStatus, searchResults: results, globalQuery: query, globalSearchInputRef: { current: null }, setGlobalQuery() {}, chooseSearchResult() {} });
+  }).outputText, { React, mode:'find', question:query, discovery:{query,items:results,status:searchStatus.message,busy:searchStatus.busy,onChoose(){}}, discoveryCurrent, discoveryBusy:searchStatus.busy, styles:{searchResults:'searchResults',searchResult:'searchResult'}, inputRef:{current:null},messageRef:{current:null},resultListRef:{current:null},setQuestion(){},composingRef:{current:false} });
   return renderToStaticMarkup(element);
 }
 
@@ -121,4 +129,15 @@ test('no-match query remains escaped text in the actual markup', () => {
   const html = actualMarkup('<img src=x onerror=alert(1)>', '<img src=x onerror=alert(1)>', 'ready', []);
   assert.match(html, /&lt;img src=x onerror=alert\(1\)&gt;/);
   assert.doesNotMatch(html, /<img|dangerouslySetInnerHTML/);
+});
+
+
+test('claim inspection cannot replace the current investigation with an earlier answer', () => {
+ let handler;
+ const find=node=>{if(ts.isVariableDeclaration(node)&&node.name.getText(tree)==='inspectAssistantSources')handler=node.initializer.getText(tree);ts.forEachChild(node,find);};find(tree);
+ const context={version:1,frame:2026,view:'2D',layers:['synthetic'],selection:{kind:'registry',featureId:'a',layerId:'synthetic'}};
+ let opened=0;const ref={current:null}, invoker={id:'citation'};
+ const inspect=vm.runInNewContext(ts.transpileModule('('+handler+')',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText,{assistantFocus:{context},selected:{featureId:'a'},subsurfaceInspection:null,assistantEvidenceReturnRef:ref,globalSearchInputRef:{current:null},setResearchOpen(){},openEvidencePanel(){opened++;}});
+ assert.equal(inspect({...context,frame:2020},invoker),false);assert.equal(opened,0);assert.equal(ref.current,null);
+ assert.equal(inspect(context,invoker),true);assert.equal(opened,1);assert.equal(ref.current,invoker);assert.equal(context.frame,2026);
 });

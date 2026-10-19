@@ -1,6 +1,7 @@
 "use client";
 import { installExplorerMenuDismissal } from "./explorer-menu-dismissal";
-import { countySearchGeometry, countySearchResults, globalSearchStatus, type CountySearchItem } from "./county-search";
+import { countySearchGeometry, countySearchResults, globalSearchStatus } from "./county-search";
+import { atlasDiscoveryResults, type GlobalSearchItem } from "./atlas-discovery";
 import { isolateModalBackground, modalReturnTarget } from "./modal-background";
 import { decodeStreamflowTransport } from "./streamflow-transport";
 import { browserJsonRequest } from "./browser-json-request";
@@ -27,6 +28,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { InspectionPanelSwitch, useInspectionPanel } from "./inspection-panel";
 import "./inspection-panel.css";
 import "./explorer-controls.css";
+import "./atlas-studio.css";
 import Link from "next/link";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
 import { isBridgeLayer } from "./kansas-bridge-records";
@@ -44,7 +46,7 @@ import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
 import AssistantWorkspace from "./assistant/workspace";
-import {sampleAssistantSelection, type AssistantFocus} from "./assistant-context";
+import {sampleAssistantSelection, type AssistantFocus, type AssistantContext} from "./assistant-context";
 import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel-loader";
 import { persistableSubsurface, validSubsurfaceContext, type SubsurfaceContext } from "./subsurface-model";
 import researchStyles from "./research.module.css";
@@ -89,7 +91,6 @@ import {
   type EvidenceState,
   type FeatureProperties,
   type LayerRecord,
-  type SearchItem,
 } from "./explorer-data";
 import {
   applyDynamicMapEffects,
@@ -441,14 +442,6 @@ type HoverSummary = Readonly<{
   subtitle: string;
   state: string;
 }>;
-type OfficialSourceSearchItem = Readonly<{
-  id: string;
-  kind: "source";
-  title: string;
-  subtitle: string;
-  officialContextId: OfficialContextId;
-}>;
-type GlobalSearchItem = SearchItem | OfficialSourceSearchItem | CountySearchItem;
 
 type SelectedContext = {
   kind: "registry" | "basemap";
@@ -1196,7 +1189,9 @@ export default function Home() {
   const repositoryButtonRef = useRef<HTMLButtonElement>(null);
   const repositoryPanelRef = useRef<HTMLElement>(null);
   const workspaceDetailsRef = useRef<HTMLDetailsElement>(null);
-  const globalSearchInputRef = useRef<HTMLInputElement>(null);
+  const globalSearchInputRef = useRef<HTMLTextAreaElement>(null);
+  const assistantEvidenceReturnRef = useRef<HTMLElement | null>(null);
+  const [assistantDraftRequest, setAssistantDraftRequest] = useState<{id:number;value:string;intent:"find"|"explore"|"evidence"}>();
   const mapUtilityPanelRef = useRef<HTMLElement>(null);
   const mapUtilityReturnRef = useRef<HTMLElement | null>(null);
   const sourceStatusPanelRef = useRef<HTMLElement>(null);
@@ -2303,16 +2298,7 @@ export default function Home() {
   }, [debouncedLayerQuery]);
   const listedOfficialSources = filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, officialWorkspace, "")
     .filter(source => shownCatalogIds.has(source.id) && catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id]));
-  const searchResults = useMemo<GlobalSearchItem[]>(() => {
-    const query = debouncedGlobalQuery.trim().toLowerCase();
-    if (!query || query !== globalQuery.trim().toLowerCase()) return [];
-    const mapResults: GlobalSearchItem[] = SEARCH_INDEX.filter((item) => `${item.title} ${item.subtitle}`.toLowerCase().includes(query));
-    const sourceResults: GlobalSearchItem[] = OFFICIAL_CONTEXT_SOURCES
-      .filter((source) => `${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${source.endpointLabel}`.toLowerCase().includes(query))
-      .map((source) => ({ id: `source:${source.id}`, kind: "source", title: source.shortTitle, subtitle: `${source.organization} · ${source.domain}`, officialContextId: source.id }));
-    const counties = countySearchResults(officialPayloads["census-counties"], officialStates["census-counties"], query);
-    return [...counties, ...sourceResults, ...mapResults].slice(0, 7);
-  }, [debouncedGlobalQuery, globalQuery, officialPayloads, officialStates]);
+  const searchResults = useMemo(() => atlasDiscoveryResults(globalQuery, debouncedGlobalQuery, SEARCH_INDEX, OFFICIAL_CONTEXT_SOURCES, officialPayloads["census-counties"], officialStates["census-counties"]), [debouncedGlobalQuery, globalQuery, officialPayloads, officialStates]);
   const searchStatus = globalSearchStatus(globalQuery, debouncedGlobalQuery, officialStates["census-counties"], searchResults.length);
   const filteredRepositoryUpdates = useMemo(() => {
     const query = repositoryQuery.trim().toLowerCase();
@@ -3719,6 +3705,13 @@ export default function Home() {
     }, 0);
   }, [dismissMapUtilityWithoutFocus, isCompact, setQwenOpen, setRightOpen]);
 
+  const openAtlasComposer = useCallback((intent: "find" | "explore", value?: string) => {
+    setPrimaryWorkspace("map");
+    openQwenCompanion();
+    setAssistantDraftRequest(current => ({id:(current?.id ?? 0)+1, value:value ?? globalSearchInputRef.current?.value ?? "", intent}));
+    window.requestAnimationFrame(() => globalSearchInputRef.current?.focus({preventScroll:true}));
+  }, [openQwenCompanion]);
+
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("kfm-chat") === "1") {
       const timer = window.setTimeout(() => { openQwenCompanion(null); }, 0);
@@ -3732,6 +3725,16 @@ export default function Home() {
     if (isCompact) { setLeftOpen(false); setTimelineOpen(false); }
     window.setTimeout(() => rightPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close Evidence Drawer"]')?.focus({ preventScroll: true }), 0);
   }, [dismissMapUtilityWithoutFocus, isCompact, setRightOpen]);
+
+  const inspectAssistantSources = (context: AssistantContext, returnElement?: HTMLElement) => {
+    // The rich inspector owns the active selection. Never replace that selection
+    // with a previous answer's scope; old answers retain their own source links.
+    if (JSON.stringify(context) !== JSON.stringify(assistantFocus.context) || (!selected && !subsurfaceInspection)) return false;
+    assistantEvidenceReturnRef.current = returnElement ?? globalSearchInputRef.current;
+    setResearchOpen(false);
+    openEvidencePanel();
+    return true;
+  };
 
   const closeQwenCompanion = useCallback((returnElement?: HTMLElement | null) => {
     const returnTarget = returnElement ?? qwenReturnRef.current;
@@ -3979,6 +3982,13 @@ export default function Home() {
   }, [helpOpen]);
 
   const closeRightPanel = useCallback(() => {
+    const assistantReturn = assistantEvidenceReturnRef.current;
+    assistantEvidenceReturnRef.current = null;
+    if (assistantReturn) {
+      setQwenOpen(true);
+      window.setTimeout(() => (assistantReturn.isConnected ? assistantReturn : globalSearchInputRef.current)?.focus({preventScroll:true}), 0);
+      return;
+    }
     setRightOpen(false);
     setCurrentWorkspace("explore");
     const returnTarget = returnFocusRef.current;
@@ -3987,7 +3997,7 @@ export default function Home() {
       const targetIsUsable = returnTarget?.isConnected && !returnTarget.closest("[inert]");
       (targetIsUsable ? returnTarget : mapContainerRef.current)?.focus();
     }, 0);
-  }, []);
+  }, [setQwenOpen, setRightOpen]);
 
   const closeLeftPanel = useCallback(() => {
     setLeftOpen(false);
@@ -4046,7 +4056,7 @@ export default function Home() {
       const targetIsUsable = returnTarget?.isConnected && !returnTarget.closest("[inert]");
       (targetIsUsable ? returnTarget : mapContainerRef.current)?.focus();
     }, 0);
-  }, []);
+  }, [setQwenOpen, setRightOpen]);
 
   const openMapUtility = useCallback((nextView: MapUtilityView, returnElement?: HTMLElement | null) => {
     setPrimaryWorkspace("map");
@@ -4131,7 +4141,7 @@ export default function Home() {
       const isEditing = target?.matches("input, textarea, select, [contenteditable='true']");
       if (event.key === "/" && !isEditing) {
         event.preventDefault();
-        globalSearchInputRef.current?.focus();
+        openAtlasComposer("find");
         return;
       }
       if (isEditing) return;
@@ -4150,7 +4160,7 @@ export default function Home() {
     };
     document.addEventListener("keydown", handleWorkspaceShortcut);
     return () => document.removeEventListener("keydown", handleWorkspaceShortcut);
-  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility, primaryWorkspace]);
+  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility, openAtlasComposer, primaryWorkspace]);
 
   const openLayerCatalogFromUtility = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -6694,6 +6704,7 @@ export default function Home() {
       const context = buildBasemapContext({ ...feature, source: source?.sourceId }, ...geometry.focus);
       if (!context) return;
       setOfficialContextVisible("census-counties", true);
+      assistantEvidenceReturnRef.current = globalSearchInputRef.current;
       openSelection(context, globalSearchInputRef.current);
       mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
       announce(`Opened ${current!.title} from the Census reference baseline. Map time is unchanged; source context is not KFM evidence.`);
@@ -8655,25 +8666,17 @@ export default function Home() {
   </>;
 
   return (
-    <div className="site-root">
+    <div className="site-root atlas-studio">
       <a className="skip-link" href="#map-canvas" onClick={returnToPrimaryMap}>Skip to the map</a>
       <header ref={explorerHeaderRef} className="topbar">
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
-          <span><strong>Kansas Frontier Matrix</strong><small>Spatial evidence explorer</small></span>
+          <span><strong className="atlas-title">Kansas Frontier Matrix</strong><small className="atlas-subtitle">Atlas Studio · Prairie Field Desk</small></span>
           <button type="button" className="steward-login-button" onClick={event => { setPcAccountRequest(value => value + 1); openQwenCompanion(event.currentTarget); }} aria-controls="qwen-map-panel">{pcAccount ? "Account" : "Administrator"}</button>
         </div>
-        <div className="global-search">
-          <label>
-            <span className="sr-only">Search current places, layers, features, and official data sources</span>
-            <span aria-hidden="true">⌕</span>
-            <input ref={globalSearchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, official data…" aria-describedby="global-search-help" aria-busy={searchStatus.busy} title="Search · shortcut /" />
-          </label>
-          <span id="global-search-help" className="sr-only">Search results appear as keyboard-focusable buttons.</span>
-          {globalQuery.trim() && <div className="search-results" id="global-search-results" aria-label="Search results">
-            {searchResults.map((item) => <button type="button" key={item.id} onClick={() => chooseSearchResult(item)}><span>{item.kind}</span><strong>{item.title}</strong><small>{item.subtitle}</small></button>)}
-            <p className={searchStatus.message ? undefined : "sr-only"} role="status" aria-live="polite" aria-atomic="true">{searchStatus.message}</p>
-          </div>}
+        <div className="atlas-scope-strip" aria-label="Current investigation">
+          <button type="button" className="atlas-scope-control" onClick={() => openAtlasComposer("find")} aria-controls="qwen-map-panel" title="Find places, layers and sources · shortcut /">Find &amp; ask</button>
+          <span><strong>{selectedLabel}</strong><br /><small>Map time {temporalScopeLabel} · {selectedMapLayerCount} layers</small></span>
         </div>
           <span className="sr-only" role="status">{sourceIssues.length ? `${sourceIssues.length} selected sources need attention. Open Layers, then Source status for recovery.` : ""}</span>
           <nav className="map-chrome-dock" aria-label="Map view and controls">
@@ -9487,7 +9490,7 @@ export default function Home() {
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
-          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
+          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onChoosePlace={() => openAtlasComposer("find")} onMission={question => openAtlasComposer("explore", question)} />
           <button className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Chat with KFM about this map view" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
             <span><strong>Chat with KFM</strong><small>About this map view</small></span>
@@ -9981,10 +9984,10 @@ export default function Home() {
 
 
           {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
-          <section hidden={!qwenOpen} inert={!qwenOpen} aria-hidden={!qwenOpen} ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
+          <section hidden={!qwenOpen} inert={!qwenOpen} aria-hidden={!qwenOpen} ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel atlas-chat-dock" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
             <InspectionPanelSwitch active="qwen" onEvidence={openEvidencePanel} onQwen={() => {}} onClose={() => closeQwenCompanion()} />
             <header className="qwen-panel-heading">
-              <div><span className="qwen-eyebrow">HOSTED AI · QWEN3 0.6B</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
+              <div><span className="qwen-eyebrow">YOUR INVESTIGATION</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
             </header>
             <div className="qwen-context-strip" aria-label="Map context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
@@ -9992,10 +9995,12 @@ export default function Home() {
               <span><small>LAYERS</small><strong>{selectedMapLayerCount}</strong></span>
               <span><small>SELECTION</small><strong>{assistantFocus.context.selection ? "1" : "0"}</strong></span>
             </div>
-            <AssistantWorkspace active={qwenOpen} accountRequest={pcAccountRequest} onAccount={setPcAccount} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} />
+            <AssistantWorkspace active={qwenOpen} accountRequest={pcAccountRequest} onAccount={setPcAccount} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} inputRef={globalSearchInputRef} draftRequest={assistantDraftRequest}
+              discovery={{query:globalQuery, items:searchResults, status:searchStatus.message, busy:searchStatus.busy, onQuery:setGlobalQuery, onChoose:id => { const item=searchResults.find(row => row.id===id); if (item) chooseSearchResult(item); }}}
+              onInspectSources={inspectAssistantSources} />
           </section>
 
-        <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
+        <aside ref={rightPanelRef} className="evidence-drawer atlas-evidence-tray" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
           <InspectionPanelSwitch active="evidence" onEvidence={() => {}} onQwen={() => openQwenCompanion()} onClose={closeRightPanel} />
           <div className="panel-heading drawer-heading">
             <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{subsurfaceInspection ? subsurfaceInspection.record.name : researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>

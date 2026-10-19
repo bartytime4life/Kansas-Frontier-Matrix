@@ -1,0 +1,219 @@
+{
+  "receipt_id": "genrec-atlas-prairie-workspace-20261018",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-core-repair.yml",
+    "app/assistant/workspace.module.css",
+    "app/assistant/workspace.tsx",
+    "app/atlas-discovery.ts",
+    "app/atlas-studio.css",
+    "app/explorer-guide.tsx",
+    "app/map-starters.ts",
+    "app/page.tsx",
+    "docs/atlas-studio-blueprint-20261018.md",
+    "server/public-ai-handler.mjs",
+    "tests/assistant-status.test.mjs",
+    "tests/atlas-discovery.test.mjs",
+    "tests/chat-composer-reach.test.mjs",
+    "tests/county-search.browser.mjs",
+    "tests/county-search.test.mjs",
+    "tests/global-search-status.test.mjs",
+    "tests/map-starters.test.mjs",
+    "tests/mobile-compatibility.test.mjs",
+    "tests/public-ai.test.mjs"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-core-repair.yml": "sha256:9ea80b80021f59e96c182f50125b61d35ed2dee50d6cce21f9864f95ec58168f",
+    "app/assistant/workspace.module.css": "sha256:b4dc5384e6891f6ae5cb3d1e231a978609a5f66534829d4c32899088b51aee86",
+    "app/assistant/workspace.tsx": "sha256:855f461280c5e035407fcad6c775f0d80cad802358b34880f0b54608a87c83a9",
+    "app/atlas-discovery.ts": "sha256:4e7ea11c9e243c81a98abe50b53d7450bdad990f9040f0955910ffd0ab9f7b00",
+    "app/atlas-studio.css": "sha256:a9f1e94764c8ef1f9c92a7b6f1e8cf74cf9b8c3a52a8870a3f6315e2306352dc",
+    "app/explorer-guide.tsx": "sha256:dca85f512757811a1d90a163d49c70dbfaa180aab7136116258bc0593d367c9e",
+    "app/map-starters.ts": "sha256:77de9a1036f99a6c9386ec4154ee3183849e290671ac5e8e36f1c0117f1b750e",
+    "app/page.tsx": "sha256:d845f05a8119f0fcd39809ea0dbffa432935ff25d1e404dcc3bf79a6e65f10c5",
+    "docs/atlas-studio-blueprint-20261018.md": "sha256:9aeeb84ad80228dd36e85234caa837d240ad0edee55c403b9885dfeaf41881ff",
+    "server/public-ai-handler.mjs": "sha256:6012c2322e1025462c77310a4a6c9f6c34d98582eb69d0a08e5b24466bc94e7e",
+    "tests/assistant-status.test.mjs": "sha256:5f77512eb0801f6029beda1270c2d68e5f2e34e201d91927c8eef447171b8e19",
+    "tests/atlas-discovery.test.mjs": "sha256:25ffd81ae6bce61f09aa56a8c50fce54c88bcea6a0b4a834d18e1b41007a94e4",
+    "tests/chat-composer-reach.test.mjs": "sha256:516f1181754399cf9aff40425ed0b49353293c5201c60a8150833b89db560699",
+    "tests/county-search.browser.mjs": "sha256:a4dccb816fd6a3115a2e4d2a5ee6cc5b144e4a1ae30e8aa21b0076eccf03a829",
+    "tests/county-search.test.mjs": "sha256:e3c6ba55b544265ebdb0d2e79caaf89e00e8afdfafb60a3c410ac4fe256bd01e",
+    "tests/global-search-status.test.mjs": "sha256:23fb08b0d7088d3eac3a0d99a60e7576598a4d3ec77653aaae836de3ed77e9b6",
+    "tests/map-starters.test.mjs": "sha256:b0c76bb801d560d0c557b475c2b77c0163b4e6f16aff3ab3ec45caf56695fba0",
+    "tests/mobile-compatibility.test.mjs": "sha256:a4d63461075ab4210dfc28ecc600f1765b08f1d3809a751f398f8e265626b6e5",
+    "tests/public-ai.test.mjs": "sha256:776590c2c88f2242b815a88c474b9bf474a87be7ad82d7ea3ba3d4c3af9b3dd8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; exact runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:9aeeb84ad80228dd36e85234caa837d240ad0edee55c403b9885dfeaf41881ff",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Chrome",
+      "local shell",
+      "real delegated agents"
+    ],
+    "contract_basis": "docs/atlas-studio-blueprint-20261018.md; selected concept 1 Prairie Field Desk, A1 bounded workspace and history isolation"
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f8a790d58761e416592d1597db7d870cc008eaf/AGENTS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f8a790d58761e416592d1597db7d870cc008eaf/app/page.tsx",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f8a790d58761e416592d1597db7d870cc008eaf/app/assistant/workspace.tsx",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f8a790d58761e416592d1597db7d870cc008eaf/server/public-ai-handler.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/tools/validators/validate_generated_receipt.py"
+    ],
+    "evidence_hashes": []
+  },
+  "truth_labels": {
+    ".github/workflows/public-core-repair.yml": "CONFIRMED",
+    "app/assistant/workspace.module.css": "NEEDS VERIFICATION",
+    "app/assistant/workspace.tsx": "CONFIRMED",
+    "app/atlas-discovery.ts": "CONFIRMED",
+    "app/atlas-studio.css": "NEEDS VERIFICATION",
+    "app/explorer-guide.tsx": "CONFIRMED",
+    "app/map-starters.ts": "CONFIRMED",
+    "app/page.tsx": "CONFIRMED",
+    "docs/atlas-studio-blueprint-20261018.md": "PROPOSED",
+    "server/public-ai-handler.mjs": "CONFIRMED",
+    "tests/assistant-status.test.mjs": "CONFIRMED",
+    "tests/atlas-discovery.test.mjs": "CONFIRMED",
+    "tests/chat-composer-reach.test.mjs": "CONFIRMED",
+    "tests/county-search.browser.mjs": "NEEDS VERIFICATION",
+    "tests/county-search.test.mjs": "CONFIRMED",
+    "tests/global-search-status.test.mjs": "CONFIRMED",
+    "tests/map-starters.test.mjs": "CONFIRMED",
+    "tests/mobile-compatibility.test.mjs": "CONFIRMED",
+    "tests/public-ai.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "visual-selection",
+      "outcome": "PASS",
+      "reason": "User selected concept 1 Prairie Field Desk. Generated concept geography/text remain illustrative and are not imported."
+    },
+    {
+      "gate": "focused-source-suites",
+      "outcome": "PASS",
+      "reason": "149/149 actual cases across fourteen named suites in blueprint; controlled component, server and static checks. Initial mistyped investigation suite filename was corrected to assistant-investigation.test.mjs, 6/6."
+    },
+    {
+      "gate": "stop-history-red-green",
+      "outcome": "PASS",
+      "reason": "New 37th UI regression failed before partition rotation (36/37), passed after (37/37) for Stop and pending hide with cancelled:false. Non-author independently reproduced prior ID reuse and rechecked repair."
+    },
+    {
+      "gate": "production-build-types",
+      "outcome": "PASS",
+      "reason": "npm run build and tsc --noEmit --incremental false pass on final application source. Runtime source digest a589fec1846921395afc23a5664b88f7c565e499674ce3a0ad6fffefaffa4a6a; 777 inputs. No real inference or deployment claim."
+    },
+    {
+      "gate": "changed-source-test-lint",
+      "outcome": "PASS",
+      "reason": "Zero errors, 40 warnings; matching base also 40. 39 warning identities unchanged; modified close callback missing-dependency warning became unnecessary-dependency warning. No clean-lint claim."
+    },
+    {
+      "gate": "independent-source-review",
+      "outcome": "PASS",
+      "reason": "Non-author Performance Reviewer reports no remaining blocking source findings and independently reruns 108 cases, browser fixture syntax and whitespace checks. Final committed SHA review is recorded separately after commit."
+    },
+    {
+      "gate": "compiled-assets",
+      "outcome": "PASS",
+      "reason": "Equivalent manifest-selected inventory:49 assets both; raw1929439 to1961226; per-file gzip9/mtime0 593860 to601450 bytes (+7590,+1.28%). Same package/lock/build configurations; retained unreferenced files excluded. No initial-transfer, browser latency, FPS or phone acceptance claim."
+    },
+    {
+      "gate": "whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --check passes."
+    },
+    {
+      "gate": "candidate-browser-phone",
+      "outcome": "SKIPPED",
+      "reason": "Loopback listener denied with EPERM. Hydrated county browser fixture adapted but not executed locally. Real phone keyboard, touch, rendered contrast/overflow, assistive-tech focus and runtime performance remain unsatisfied acceptance."
+    },
+    {
+      "gate": "exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Not published at receipt authoring; PR records actual later CI revision and result."
+    },
+    {
+      "gate": "independent-final-head-review",
+      "outcome": "SKIPPED",
+      "reason": "Awaiting commit at receipt authoring; PR records exact local/remote SHA and identical tree coverage."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending. Branch authoring and agent checks grant no merge/release/publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Pinned source 1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f8a790d58761e416592d1597db7d870cc008eaf/AGENTS.md"
+    },
+    {
+      "id": "Pinned source 2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f8a790d58761e416592d1597db7d870cc008eaf/app/page.tsx"
+    },
+    {
+      "id": "Pinned source 3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f8a790d58761e416592d1597db7d870cc008eaf/app/assistant/workspace.tsx"
+    },
+    {
+      "id": "Pinned source 4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5f8a790d58761e416592d1597db7d870cc008eaf/server/public-ai-handler.mjs"
+    },
+    {
+      "id": "Pinned source 5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "Pinned source 6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "Pinned source 7",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "Pinned source 8",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/tools/validators/validate_generated_receipt.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T01:07:23.708876+00:00",
+  "emitter": "OpenAI Codex KFM-20261018-ATLAS-01",
+  "override_record": null,
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "A1 workspace foundation for task KFM-20261018-ATLAS-01, base 5f8a790d58761e416592d1597db7d870cc008eaf. Explicit Find/Ask/Evidence in one composer; existing county/local-index/source projection, compact per-turn sources and active-context-only inspector, 22 labelled welcome discussion starters, optional validated UUIDv4 history partition within existing guest/context/source authority. New/context changes/Stop/pending hide rotate partitions; compatible completed hide/reopen and follow-ups remain. Existing queues, deadlines, release/source/permission checks, provider endpoints and data stores are preserved. No token streaming or automatic model map/tool contract. No new dependencies, corpus admission, services, account/audience changes, Sites replacement, model activation, merge, ready transition, deployment, DNS or publication. Browser/mobile final acceptance, durable conversation manager, simultaneous evidence/chat desktop composition, Time Sweep and corpus expansion remain explicit continuation. Exact deployed revision UNKNOWN. Historical receipts unchanged. Rollback by reviewed revert, preserving subsequent work; no migration. Root assumed integration/docs after agent capacity interruptions, reviewer remained non-author. Receipt proves artifact shape/integrity only, not human approval."
+}

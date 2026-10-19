@@ -54,6 +54,62 @@ test("six bounded starters use only actual public context, preserve source metad
   assert.equal(JSON.stringify(sources), before);
 });
 
+test("Atlas interests are question drafts over existing recipes, not new source coverage", () => {
+  const before = JSON.stringify(sources), missions = model.ATLAS_MISSION_GROUPS.flatMap(group => group.missions);
+  assert.equal(missions.length, 22);
+  assert.equal(new Set(missions.map(mission => mission.id)).size, missions.length);
+  for (const mission of missions) {
+    assert.ok(mission.question.length >= 30 && mission.question.length <= 500);
+    if (mission.starterId) {
+      assert.ok(model.MAP_STARTERS.some(starter => starter.id === mission.starterId));
+      assert.match(model.atlasMissionAvailability(mission), /review source availability/);
+    } else if (mission.kind === "demo") assert.match(model.atlasMissionAvailability(mission), /not operational evidence/);
+    else assert.match(model.atlasMissionAvailability(mission), /No bundled layer set/);
+    assert.equal("ids" in mission, false, "interests do not introduce provider IDs");
+  }
+  for (const id of ["farming", "science", "government", "education", "business", "weather", "fauna", "flora", "resources", "hunting", "history", "archaeology", "tribal", "roads", "rail", "aviation", "utilities", "projects", "entertainment", "news", "money", "demos"]) {
+    assert.ok(missions.some(mission => mission.id === id));
+  }
+  assert.match(missions.find(mission => mission.id === "hunting").question, /Do not infer hunting permission/);
+  assert.match(missions.find(mission => mission.id === "tribal").question, /sovereignty.*withhold uncertain sensitive details/);
+  assert.match(missions.find(mission => mission.id === "aviation").question, /rather than inventing live traffic/);
+  assert.equal(JSON.stringify(sources), before);
+});
+
+test("welcome place choice and topic drafts are deliberate, preserve dismissal, and never start requests", async () => {
+  const calls = [], listeners = new Map();
+  const h = await componentHarness("app/explorer-guide.tsx", { "./map-starters": model }, {
+    window: { addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name) },
+    document: { activeElement: null },
+  });
+  const props = { open: true, onClose: remember => calls.push(["close", remember]), onAction: action => calls.push(["action", action]),
+    onChoosePlace: () => calls.push(["place"]), onMission: (query, starterId) => calls.push(["draft", query, starterId]) };
+  const render = () => { const tree = h.render(h.exports.ExplorerGuide, props); h.commit(); return tree; };
+  let tree = render();
+  assert.equal(calls.length, 0, "opening the chooser has no request or layer side effects");
+  const place = findNode(tree, node => node.type === "button" && node.props.children === "Choose county or place");
+  assert.equal(place.props.type, "button");
+  assert.equal(place.props["data-guide-autofocus"], "");
+  findNode(tree, node => node.type === "input" && node.props.type === "checkbox").props.ref.current = { checked: true };
+  place.props.onClick();
+  assert.deepEqual(calls, [["place"], ["close", true]]);
+  calls.length = 0;
+  tree = render();
+  for (const mission of model.ATLAS_MISSION_GROUPS.flatMap(group => group.missions)) {
+    const button = findNode(tree, node => node.type === "button" && findNode(node, child => child.type === "strong" && child.props.children === mission.title));
+    assert.ok(button, `${mission.title} remains discoverable in the native disclosures`);
+    button.props.onClick();
+    assert.deepEqual(calls.splice(0), [["draft", mission.question, mission.starterId], ["close", true]]);
+  }
+  findNode(tree, node => node.type === "button" && node.props.children === "Explore freely").props.onClick();
+  assert.deepEqual(calls.splice(0), [["close", true]]);
+  props.onMission = undefined;
+  tree = render();
+  findNode(tree, node => node.type === "button" && findNode(node, child => child.type === "strong" && child.props.children === "Business")).props.onClick();
+  assert.deepEqual(calls, [["action", "qwen"], ["close", true]], "older hosts retain a functional route without invented callbacks");
+  h.dispose(); assert.equal(listeners.size, 0);
+});
+
 test("held, failed, unknown, proposed and private sources never become selectable", () => {
   const blocked = { ...available, "usgs-streamflow": { held: true, unavailable: false }, "usgs-earthquakes": { held: false, unavailable: true } };
   const restricted = { ...sources[0], id: "private-parcels", evidenceRole: "RESTRICTED" };
