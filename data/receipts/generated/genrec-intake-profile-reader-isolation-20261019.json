@@ -1,0 +1,89 @@
+{
+  "receipt_id": "genrec-intake-profile-reader-isolation-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/local_data/intake_profile.py",
+    "tests/local_data/test_intake.py"
+  ],
+  "artifact_hashes": {
+    "tools/local_data/intake_profile.py": "sha256:f6d9b432faf02419c9ab74230b1980cf303c9f27e01ad01020d687f01bcd5dd3",
+    "tests/local_data/test_intake.py": "sha256:57c19f2f56f59d828738a74b72f51879a4b544306888baf493e320e78a6349ea"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/b824f132c8337a7e3b0ff1eaa7031af6fe0221a7",
+      "repo:tools/local_data/intake_profile.py@b824f132c8337a7e3b0ff1eaa7031af6fe0221a7",
+      "repo:tests/local_data/test_intake.py@b824f132c8337a7e3b0ff1eaa7031af6fe0221a7",
+      "repo:tools/local_data/intake.py@b824f132c8337a7e3b0ff1eaa7031af6fe0221a7",
+      "repo:data/receipts/generated/genrec-raw-data-intake-20261009.json@b824f132c8337a7e3b0ff1eaa7031af6fe0221a7"
+    ]
+  },
+  "truth_labels": {
+    "tools/local_data/intake_profile.py": "CONFIRMED",
+    "tests/local_data/test_intake.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "On main, a GeoJSON coordinate written as a 401-digit integer raised OverflowError out of profile_file, GeoParquet metadata whose 'columns' is a list or holds a non-object column raised AttributeError, and a list-valued 'primary_column' raised TypeError. intake.analyze catches only ValueError and OSError, so one such file aborted the whole run and every later rerun. After the fix each becomes the item's format_reader_failed issue and the run completes. The new tests fail on the original code (6 subtests and the pipeline test)."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/local_data/test_intake.py: 38 tests (35 before, 3 new), and make local-data-check passes 428 tests. Branch coverage of intake_profile.py under tests/local_data rises from 69% to 78%, adding GeoParquet bbox and CRS, plain Parquet, GeoPackage layer extents, mixed-CRS GeoPackage and plain SQLite."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of five changes failed the suite: dropping OverflowError, AttributeError or TypeError from the reader exception list, removing the geopackage_mixed_crs issue and relabelling GeoParquet as plain Parquet. A structured probe of 15 malformed values across GeoJSON, STAC, TopoJSON, KML and GeoParquet fields found no other escaping exception."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same 13 pre-existing findings in these files before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/b824f132c8337a7e3b0ff1eaa7031af6fe0221a7"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T00:02:02Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-raw-data-intake-20261009 for intake_profile.py, which stays unchanged as the record of the original bytes. A malformed input now stays that item's issue: OverflowError, AttributeError and TypeError join the reader exceptions the profiler converts into format_reader_failed."
+}
