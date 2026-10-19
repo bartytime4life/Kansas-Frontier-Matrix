@@ -1,0 +1,91 @@
+{
+  "receipt_id": "genrec-historical-topo-worker-capture-lock-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/historical_topo_worker.py",
+    "tests/tools/test_historical_topo_worker.py"
+  ],
+  "artifact_hashes": {
+    "tools/historical_topo_worker.py": "sha256:6b2bce6d1fc225bf602a045b4384afd43dfc21f96f6d0ea18a28ab1ca29cb687",
+    "tests/tools/test_historical_topo_worker.py": "sha256:041e91488c40563f21f354389ed886f5dc3332346f0bfef66131129c9c91e1b0"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/b824f132c8337a7e3b0ff1eaa7031af6fe0221a7",
+      "repo:tools/historical_topo_worker.py@b824f132c8337a7e3b0ff1eaa7031af6fe0221a7",
+      "repo:tests/tools/test_historical_topo_worker.py@b824f132c8337a7e3b0ff1eaa7031af6fe0221a7",
+      "repo:connectors/usgs/topoview/fetch_sheet.py@b824f132c8337a7e3b0ff1eaa7031af6fe0221a7",
+      "repo:pipelines/normalize/geography/historical_topo_tiles.py@b824f132c8337a7e3b0ff1eaa7031af6fe0221a7",
+      "repo:apps/site/source/dist/server/index.js@b824f132c8337a7e3b0ff1eaa7031af6fe0221a7",
+      "repo:tools/local_data/intake.py@b824f132c8337a7e3b0ff1eaa7031af6fe0221a7"
+    ]
+  },
+  "truth_labels": {
+    "tools/historical_topo_worker.py": "CONFIRMED",
+    "tests/tools/test_historical_topo_worker.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "On main, a second worker run whose exclusive-create of {scan}.tif.part failed then deleted the first run's in-progress partial in its finally block, and a .part left by a killed worker made the next run fail with FileExistsError. A queue scanId of true, 0 or a negative number passed the worker's isinstance(int) check and wrote a request file into the RAW directory before the connector refused it; a non-object queue or item raised AttributeError. The new tests fail on the original code."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/tools/test_historical_topo_worker.py: 16 tests (2 before, 14 new) covering capture locking and recovery, staging requests, retry and confirmation, the queue byte limit, dry and full runs, identity and package checks, tile digests and the CLI. Branch coverage of historical_topo_worker.py rises from 31% to 98%. make local-data-check passes."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of nine changes failed the suite: removing the capture lock, the stale-partial cleanup, the bool exclusion, the scanId range or restoring the 10^10 upper bound, ConnectionError retry, the staged-result object check or the queue object check; retrying a 403; and re-running the transform for an existing package."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same 3 pre-existing findings in these files before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/b824f132c8337a7e3b0ff1eaa7031af6fe0221a7"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T00:14:04Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "capture_raw now holds an flock on the RAW directory (the pattern tools/local_data/intake.py uses), so only one worker captures at a time and the kernel releases the lock if a worker dies; while holding it, partials left by a killed worker are removed before capture. The queue scanId must be a non-bool integer from 1 to 9,999,999,999, the ten-digit limit of the Site's topoScanId (the connector allows one more, 10^10, which the Site would refuse at staging). Staging also retries ConnectionError, which is safe because the Site treats a re-PUT of identical bytes as alreadyPresent. The lock uses fcntl and is POSIX-only, like the existing intake writer lock."
+}
