@@ -4701,3 +4701,15 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
   .about-section[id] { scroll-margin-top: 150px; }
   .about-reference-list article { flex-wrap: wrap; }
 }
+
+.atlas-studio .atlas-welcome-topics > a { display: inline-flex; align-items: center; min-height: 44px; color: var(--atlas-studio-teal); }
+
+/* Event workbench discovery; preserve the existing panel's scroll owner. */
+.event-science-search { display: grid; gap: 6px; margin: 14px 0; font-size: 12px; }
+.event-science-search input { width: 100%; min-width: 0; min-height: 44px; padding: 10px; color: #ecf3ef; background: #172c2e; border: 1px solid #627675; border-radius: 6px; }
+.event-science-search input:focus-visible { outline: 2px solid #e6c77c; outline-offset: 2px; }
+.event-science-support { padding: 8px; border-left: 2px solid #80b8b0; background: #ffffff08; }
+.event-science-support strong, .event-science-support span { display: block; }
+.event-science-support span { margin-top: 4px; }
+.event-science-empty { padding: 18px; border: 1px solid #627675; border-radius: 8px; }
+.event-science-empty button { min-height: 44px; }

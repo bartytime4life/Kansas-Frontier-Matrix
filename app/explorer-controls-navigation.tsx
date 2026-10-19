@@ -2,7 +2,7 @@
 import { IS_PUBLIC_COPY } from "./public-profile";
 import type { MapUtilityView } from "./map-interface";
 export const EXPLORER_CONTROL_SECTIONS = [
-  ["navigate", "Explore"], ["scene", "Appearance"], ["measure", "Measure"],
+  ["scene", "Appearance"], ["measure", "Measure"],
 ] as const;
 export const ADVANCED_CONTROL_SECTIONS = [
   ["localAtlas", "Local atlas"], ["inspect", "Inspect records"], ["compare", "Compare"], ["report", "Reports"],
