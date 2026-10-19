@@ -6,12 +6,12 @@ version: v1
 status: repository-grounded; local-development-only
 owners: ["@bartytime4life"]
 created: 2026-09-27
-updated: 2026-10-16
+updated: 2026-10-19
 policy_label: public-documentation
 current_path: docs/installation.md
 owning_root: docs/
 responsibility: current local dependency installation and configuration paths
-truth_posture: CONFIRMED local command definitions at main@0bcdc2e784, GitHub Site manifest at main@788fdf4829c7, and Site launcher, smoke and make site-check behavior at main@a9fc3e7e; runtime results require separate execution evidence
+truth_posture: CONFIRMED local command definitions at main@0bcdc2e784, GitHub Site manifest at main@788fdf4829c7, and Site launcher, smoke and make site-check behavior at main@46afef9b01; runtime results require separate execution evidence
 related:
   - ../README.md
   - ../apps/site/README.md
@@ -155,7 +155,22 @@ npm run build
 ../serve-local.sh
 ```
 
-The launcher prints its URL and defaults to `127.0.0.1:4173`. It initializes an empty local D1 schema on first use, reapplies the additive `drizzle/` migrations on every launch, and retains local D1/R2 simulator state in ignored `.wrangler/local-state/` (set `SITE_STATE_DIR` to use another directory). It refuses to start if the migration files and `drizzle/meta/_journal.json` disagree. It then serves through the Site's direct Miniflare launcher. It falls back to `wrangler dev`, printing why, for a non-loopback `SITE_HOST`, a port below 1024, a Node version other than 22.x, or a `.dev.vars` or `.env` file in `apps/site/source/`. Set `SITE_PORT` if the port is occupied. Set `SITE_HOST` only for a deliberately reviewed listening address. `npm run dev` is a separate development command; the launcher above exercises the built local Worker. The source tree and local bindings contain no hosted private D1 rows, R2 uploads, or live provider snapshot.
+The launcher prints its URL and defaults to `127.0.0.1:4173`. It serves through
+the Site's protected direct Miniflare runtime and never falls back to raw
+`wrangler dev`. It accepts only `SITE_HOST=127.0.0.1`, ports 1024–65535 and
+Node 22.13 or newer. Unsupported settings or `.env`, `.env.*`, `.dev.vars` or
+`.dev.vars.*` files in `apps/site/source/` stop startup before local storage
+setup or migrations. Keep private configuration files outside this Site
+checkout. Set `SITE_PORT` to a supported unused port if the default is occupied.
+
+On first use, it initializes an empty local D1 schema, reapplies the additive
+`drizzle/` migrations on every launch, and retains local D1/R2 simulator state
+in ignored `.wrangler/local-state/` (set `SITE_STATE_DIR` to use another
+directory). It refuses to start if the migration files and
+`drizzle/meta/_journal.json` disagree. `npm run dev` is a separate development
+command; the launcher above exercises the built local Worker. The source tree
+and local bindings contain no hosted private D1 rows, R2 uploads, or live
+provider snapshot.
 
 To check the Site the same way the `explorer-site` workflow does, run `make site-check` from the repository root. It installs from the Site's lockfile, then runs lint, typecheck, the build with its node tests, and `apps/site/smoke-local.sh`, which checks every API route that can answer without a provider against a temporary local state. Neither the tests nor the smoke need provider network. See [Site setup](../apps/site/README.md) and the Site's [feature notes](../apps/site/source/README.md).
 

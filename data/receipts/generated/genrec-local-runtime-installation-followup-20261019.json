@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-local-runtime-installation-followup-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/installation.md"
+  ],
+  "artifact_hashes": {
+    "docs/installation.md": "sha256:2263b13cdd55f58e29d03d5bded7395df2ab37338d7f7765d99ffe459b638bd9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Session build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "CONTRIBUTING.md",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "apps/site/serve-local.sh",
+      "apps/site/source/scripts/serve-local-worker.mjs",
+      "apps/site/README.md"
+    ],
+    "evidence_hashes": [
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:f3017a0deb1f84361c3b8e4157522094bc66f792e8be62f4bc5de81ff124bea2",
+      "sha256:967721a420eef809a5f33d4dcd2259b08e0ac49ff4c55831ee52e2b0dd65ceb2",
+      "sha256:8ad12ba6f2e7b05a1f62ad056e5d51be962629e44c74572cf05ced908d50f290"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/46afef9b01da8bdccb69aee48b19933871c830bd",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5325"
+    ]
+  },
+  "truth_labels": {
+    "docs/installation.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Current source and final diff review",
+      "outcome": "PASS",
+      "reason": "Compared launcher eligibility, Node minimum, secret-file checks and sole protected serving dispatch at the pinned base; git diff --check passes."
+    },
+    {
+      "gate": "Markdown structure and repository links",
+      "outcome": "PASS",
+      "reason": "One H1, heading order, balanced fences and HTML, and final newline checked; repository link checker passes 1 document and 11 local targets."
+    },
+    {
+      "gate": "Documented launcher compatibility controls",
+      "outcome": "PASS",
+      "reason": "python3 tests/qa/test_site_smoke.py SiteLocalLaunchBoundaryTests passes both tests, including former fallback refusals and supported port/runtime controls."
+    },
+    {
+      "gate": "Full application suite and aggregate checks",
+      "outcome": "SKIPPED",
+      "reason": "This follow-up changes documentation and its provenance only. The full Site suite was verified separately at the unchanged base; no new full-suite result is claimed for this draft."
+    },
+    {
+      "gate": "Repository-wide pre-commit",
+      "outcome": "SKIPPED",
+      "reason": "pre-commit is unavailable; focused Markdown, link, diff and provenance checks cover this two-file documentation contribution."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "protected-launcher",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/46afef9b01da8bdccb69aee48b19933871c830bd/apps/site/serve-local.sh"
+    },
+    {
+      "id": "runtime-eligibility",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/46afef9b01da8bdccb69aee48b19933871c830bd/apps/site/source/scripts/serve-local-worker.mjs"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T20:00:42.890538Z",
+  "emitter": "Codex repository-authoring session",
+  "links": {
+    "pr_number": null
+  },
+  "notes": "Documentation follow-up to merged PR #5325; retains storage paths and the separate development-command boundary. Generation and local checks are provenance, not human approval or deployment authority. No private report details, prompts, secrets or operational data are retained."
+}
