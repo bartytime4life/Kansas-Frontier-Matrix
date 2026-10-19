@@ -1,6 +1,8 @@
 "use client";
 import { IS_PUBLIC_COPY, publicBasemap, publicContextSourceAllowed } from "./public-profile";
 
+import { globalSearchStatus } from "./county-search";
+import "./atlas-studio.css";
 import { installExplorerMenuDismissal } from "./explorer-menu-dismissal";
 import { isolateModalBackground, modalReturnTarget } from "./modal-background";
 import { decodeStreamflowTransport } from "./streamflow-transport";
@@ -665,7 +667,7 @@ const drawerViewLabels: Record<DrawerView, string> = {
 };
 const mapUtilityLabels: Record<MapUtilityView, string> = {
   report: "Report",
-  navigate: "Explore",
+  navigate: "Appearance",
   inspect: "Inspect",
   scene: "Appearance",
   history: "Kansas historic maps",
@@ -2534,13 +2536,14 @@ export default function Home() {
     .filter(source => shownCatalogIds.has(source.id) && catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id]));
   const searchResults = useMemo<GlobalSearchItem[]>(() => {
     const query = debouncedGlobalQuery.trim().toLowerCase();
-    if (!query) return [];
+    if (!query || query !== globalQuery.trim().toLowerCase()) return [];
     const mapResults: GlobalSearchItem[] = SEARCH_INDEX.filter((item) => `${item.title} ${item.subtitle}`.toLowerCase().includes(query));
     const sourceResults: GlobalSearchItem[] = OFFICIAL_CONTEXT_SOURCES
       .filter((source) => `${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${source.endpointLabel}`.toLowerCase().includes(query))
       .map((source) => ({ id: `source:${source.id}`, kind: "source", title: source.shortTitle, subtitle: `${source.organization} · ${source.domain}`, officialContextId: source.id }));
     return [...sourceResults, ...mapResults].slice(0, 7);
-  }, [debouncedGlobalQuery]);
+  }, [debouncedGlobalQuery, globalQuery]);
+  const searchStatus = globalSearchStatus(globalQuery, debouncedGlobalQuery, publicContextSourceAllowed("census-counties") ? officialStates["census-counties"] : "error", searchResults.length);
   const filteredRepositoryUpdates = useMemo(() => {
     const query = repositoryQuery.trim().toLowerCase();
     return REPOSITORY_UPDATES.filter((update) => {
@@ -4367,7 +4370,7 @@ export default function Home() {
     mapUtilityReturnRef.current = returnElement ?? null;
     setScenePanelOpen(false);
     setLocalAtlasPeek(false);
-    setMapUtilityView(nextView);
+    setMapUtilityView(nextView === "navigate" ? "scene" : nextView);
     setMapUtilityOpen(true);
     setMapUtilityFocusRequest((request) => request + 1);
     setCurrentWorkspace("explore");
@@ -4980,8 +4983,8 @@ export default function Home() {
       const restoredMapUtilityView = params.get("maptab");
       const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
         ? "compare"
-        : restoredMapUtilityView === "navigate" || restoredMapUtilityView === "localAtlas" || restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "scene";
-      setMapUtilityView(nextMapUtilityView);
+        : restoredMapUtilityView === "localAtlas" || restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "scene";
+      setMapUtilityView(IS_PUBLIC_COPY && ["localAtlas", "history", "import"].includes(nextMapUtilityView) ? "scene" : nextMapUtilityView);
       const restoredComparisonTimes = params.get("times")?.split(",").map(Number) ?? [];
       if (restoredComparisonTimes.length === 2 && restoredComparisonTimes.every((value) => TIME_STEPS.includes(value as (typeof TIME_STEPS)[number]))) {
         setCompareTimeA(restoredComparisonTimes[0]);
@@ -6981,7 +6984,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key !== "Escape" || repositoryOpen) return;
+      if (event.defaultPrevented || event.key !== "Escape" || repositoryOpen) return;
       if (workspaceDetailsRef.current?.open) workspaceDetailsRef.current.open = false;
       else if (sourceStatusOpen) closeSourceStatus();
       else if (qwenOpen) closeQwenCompanion();
@@ -8985,12 +8988,12 @@ export default function Home() {
   </>;
 
   return (
-    <div className="site-root" data-local-atlas-open={mapUtilityOpen && mapUtilityView === "localAtlas" || undefined}>
+    <div className="site-root atlas-studio" data-local-atlas-open={mapUtilityOpen && mapUtilityView === "localAtlas" || undefined}>
       <a className="skip-link" href="#map-canvas" onClick={returnToPrimaryMap}>Skip to the map</a>
       <header ref={explorerHeaderRef} className="topbar">
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
-          <span><strong>Kansas Frontier Matrix</strong><small>Spatial evidence explorer</small></span>
+          <span><strong className="atlas-title">Kansas Frontier Matrix</strong><small className="atlas-subtitle">Atlas Studio · Public Staging</small></span>
         </div>
         <div className="global-search">
           <label>
@@ -8999,9 +9002,9 @@ export default function Home() {
             <input ref={globalSearchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, official data…" aria-describedby="global-search-help" title="Search · shortcut /" />
           </label>
           <span id="global-search-help" className="sr-only">Search results appear as keyboard-focusable buttons.</span>
-          {globalQuery && <div className="search-results" id="global-search-results" aria-label="Search results">
+          {globalQuery && <div className="search-results" id="global-search-results" aria-label="Search results" aria-busy={searchStatus.busy}>
             {searchResults.map((item) => <button type="button" key={item.id} onClick={() => chooseSearchResult(item)}><span>{item.kind}</span><strong>{item.title}</strong><small>{item.subtitle}</small></button>)}
-            {searchResults.length === 0 && <p>No current place, layer, feature, or official source matches.</p>}
+            {searchStatus.message && <p role="status" aria-live="polite">{searchStatus.message}</p>}
           </div>}
         </div>
           <span className="sr-only" role="status">{sourceIssues.length ? `${sourceIssues.length} selected sources need attention. Open Layers, then Source status for recovery.` : ""}</span>
@@ -9823,7 +9826,7 @@ export default function Home() {
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
-          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
+          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onChoosePlace={() => { setPrimaryWorkspace("map"); window.requestAnimationFrame(() => globalSearchInputRef.current?.focus({ preventScroll: true })); }} />
           {IS_PUBLIC_COPY && <a className="qwen-map-launch hosted-chat-launch" href={SITE_IDENTITY.hostedAssistantUrl} target="_blank" rel="noopener noreferrer" aria-label="Chat with KFM on the live website (opens a new tab)"><span className="qwen-launch-mark" aria-hidden="true">KFM</span><span><strong>Chat with KFM</strong><small>Opens live website</small></span><b aria-hidden="true">↗</b></a>}
           <button hidden={IS_PUBLIC_COPY} className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Chat with KFM · local Qwen" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>

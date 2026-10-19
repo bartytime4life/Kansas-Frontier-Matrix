@@ -1,0 +1,140 @@
+{
+  "record_id": "public-staging-github-sync-20261019",
+  "contract_version": "3.0.0",
+  "site_project": "appgprj_6acd1aafe0d88191a4306ea2ab44ed91",
+  "baseline_source": "084b730ca6e4e3f67af1da0426a275e7889c4603",
+  "baseline_tree": "89315ea9754326d5aeade7443f99bcbb6ba3650b",
+  "hosted_reference": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+  "main_reference": "14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd",
+  "files": [
+    {
+      "path": "app/about/page.tsx",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/about/page.tsx",
+      "upstream_hash": "sha256:7dcdb4a64da49611017bbd321605182078b3f6821dd7b78dd2af5a2e5a27c89c",
+      "candidate_hash": "sha256:cd15ab9ba75299033db6142e6ce42588237bb38483a0111a7fb6a1250d263a34",
+      "relationship": "adapted"
+    },
+    {
+      "path": "app/atlas-studio.css",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/atlas-studio.css",
+      "upstream_hash": "sha256:76f8ef20e639d30bbbf92b05c06deccd35cef1c1756548a74dcce3280fc431f1",
+      "candidate_hash": "sha256:76f8ef20e639d30bbbf92b05c06deccd35cef1c1756548a74dcce3280fc431f1",
+      "relationship": "exact"
+    },
+    {
+      "path": "app/county-search.ts",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/county-search.ts",
+      "upstream_hash": "sha256:86bc9171fe931800cd292913ec60b9346b70373480f0a8aeeccfc296e0d2b664",
+      "candidate_hash": "sha256:86bc9171fe931800cd292913ec60b9346b70373480f0a8aeeccfc296e0d2b664",
+      "relationship": "exact"
+    },
+    {
+      "path": "app/explorer-controls-navigation.tsx",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/explorer-controls-navigation.tsx",
+      "upstream_hash": "sha256:645a1962e106ac463d4467b9181eadb70c25e9d8db87f2eb5ce80d0ada56b0c6",
+      "candidate_hash": "sha256:d9bac91b068e1a77ba310decfc88f1e77e05d37752b85aaf10fbf4f17ad45b22",
+      "relationship": "adapted"
+    },
+    {
+      "path": "app/explorer-guide.tsx",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/explorer-guide.tsx",
+      "upstream_hash": "sha256:dca85f512757811a1d90a163d49c70dbfaa180aab7136116258bc0593d367c9e",
+      "candidate_hash": "sha256:70c64b342a8e977caba650cb73adc6de1eafba42361b11d174b57ca3ddc9e5ed",
+      "relationship": "adapted"
+    },
+    {
+      "path": "app/globals.css",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/globals.css",
+      "upstream_hash": "sha256:4913bd35fb24726cac408e3bb7efbfdd591ef8f75ecc5152ef413330600e8b52",
+      "candidate_hash": "sha256:eacd9b4359cab8dc02c52a2a8c98f5c48fc5a9772b3ef29c7bb8e7bf90a09857",
+      "relationship": "adapted"
+    },
+    {
+      "path": "app/map-starters.ts",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/map-starters.ts",
+      "upstream_hash": "sha256:77de9a1036f99a6c9386ec4154ee3183849e290671ac5e8e36f1c0117f1b750e",
+      "candidate_hash": "sha256:77de9a1036f99a6c9386ec4154ee3183849e290671ac5e8e36f1c0117f1b750e",
+      "relationship": "exact"
+    },
+    {
+      "path": "app/observatory/workspace.tsx",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/observatory/workspace.tsx",
+      "upstream_hash": "sha256:aa9b9936e0e7de076544c88cf053f2f4be38c27c21939c620d506e1bd5031ef2",
+      "candidate_hash": "sha256:aa9b9936e0e7de076544c88cf053f2f4be38c27c21939c620d506e1bd5031ef2",
+      "relationship": "exact"
+    },
+    {
+      "path": "app/page.tsx",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/page.tsx",
+      "upstream_hash": "sha256:202ea1b56535f45ae17ad3bc7b46c597d29c6e18cb65b21aca78adbd35059ac6",
+      "candidate_hash": "sha256:6b1e52eec187054895f84107f934fabb36489666d97d389bf1d3ae8e788adfea",
+      "relationship": "adapted"
+    },
+    {
+      "path": "app/science-events.ts",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/science-events.ts",
+      "upstream_hash": "sha256:0bcc4e2d5e2227d248514891d246779458e14b525ff94277d6e10fc0ff14a9a5",
+      "candidate_hash": "sha256:0bcc4e2d5e2227d248514891d246779458e14b525ff94277d6e10fc0ff14a9a5",
+      "relationship": "exact"
+    },
+    {
+      "path": "app/water-flow-layer.ts",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "app/water-flow-layer.ts",
+      "upstream_hash": "sha256:daf75f5816fb9866a43951faf80293b56c7a3100c4c47169683cf6e51b829709",
+      "candidate_hash": "sha256:f9ba00efac9dc8827ec7792c33078049c0c08fffba4b7d6e781f1115a44d648f",
+      "relationship": "adapted"
+    },
+    {
+      "path": "tests/focus-mode-provenance.test.mjs",
+      "upstream_revision": "14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd",
+      "upstream_path": "apps/site/source/tests/focus-mode-provenance.test.mjs",
+      "upstream_hash": "sha256:58d3578d33c9a5479ba807f46397d08c3d1997c8a63dff1a687ff1aa4267277f",
+      "candidate_hash": "sha256:58d3578d33c9a5479ba807f46397d08c3d1997c8a63dff1a687ff1aa4267277f",
+      "relationship": "exact"
+    },
+    {
+      "path": "tests/public-staging-sync.test.mjs",
+      "upstream_revision": null,
+      "upstream_path": null,
+      "upstream_hash": null,
+      "candidate_hash": "sha256:86a8f45c6dc9a4c914c05f7feefb97af25532683e471ad0d579a1b65be8ce2e2",
+      "relationship": "staging-specific"
+    },
+    {
+      "path": "tests/science-events.test.mjs",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "tests/science-events.test.mjs",
+      "upstream_hash": "sha256:b1fc344f995460117e9792107e1e9c5513c44d8ea8e3773e16c9224cb3334fae",
+      "candidate_hash": "sha256:07736ef72596b4160c9622b1fd61b97fa898bef56009deb8e10c3011c332efd8",
+      "relationship": "adapted"
+    },
+    {
+      "path": "tests/water-flow-upload.test.mjs",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "tests/water-flow-upload.test.mjs",
+      "upstream_hash": "sha256:9935353ff6c7eeb4205011ce66757626eb85d7ce2b61016ea649498496b42f24",
+      "candidate_hash": "sha256:88cfdcb9a5422dd6f59083e2d8f823b80675dc813f0beee210818fccb36265b5",
+      "relationship": "adapted"
+    },
+    {
+      "path": "tests/workspace-map-navigation.test.mjs",
+      "upstream_revision": "7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "upstream_path": "tests/workspace-map-navigation.test.mjs",
+      "upstream_hash": "sha256:305e0187ee981aa123cf6e17e2068f137592ebdbb9ec6e16ae759b910318a712",
+      "candidate_hash": "sha256:79cd12c46e46179f4dc05017a10dc6ec69cc4aca5a53987b7201a4b078edd96f",
+      "relationship": "adapted"
+    }
+  ],
+  "notes": "File parity is bounded source evidence, not data or deployment approval. See public-staging-github-sync-20261019.md. All public release holds remain."
+}

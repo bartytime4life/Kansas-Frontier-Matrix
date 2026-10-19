@@ -1,0 +1,175 @@
+{
+  "receipt_id": "genrec-public-staging-github-sync-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-staging.yml",
+    "app/about/page.tsx",
+    "app/atlas-studio.css",
+    "app/county-search.ts",
+    "app/explorer-controls-navigation.tsx",
+    "app/explorer-guide.tsx",
+    "app/globals.css",
+    "app/map-starters.ts",
+    "app/observatory/workspace.tsx",
+    "app/page.tsx",
+    "app/science-events.ts",
+    "app/water-flow-layer.ts",
+    "docs/public-staging-github-sync-20261019.md",
+    "docs/repository-sync-20261019.json",
+    "tests/focus-mode-provenance.test.mjs",
+    "tests/public-staging-sync.test.mjs",
+    "tests/science-events.test.mjs",
+    "tests/water-flow-upload.test.mjs",
+    "tests/workspace-map-navigation.test.mjs"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-staging.yml": "sha256:55a3f9f3592d98df23070f550d3c8fc9240ed2b08c9845b5a388b3a32e683af2",
+    "app/about/page.tsx": "sha256:cd15ab9ba75299033db6142e6ce42588237bb38483a0111a7fb6a1250d263a34",
+    "app/atlas-studio.css": "sha256:76f8ef20e639d30bbbf92b05c06deccd35cef1c1756548a74dcce3280fc431f1",
+    "app/county-search.ts": "sha256:86bc9171fe931800cd292913ec60b9346b70373480f0a8aeeccfc296e0d2b664",
+    "app/explorer-controls-navigation.tsx": "sha256:d9bac91b068e1a77ba310decfc88f1e77e05d37752b85aaf10fbf4f17ad45b22",
+    "app/explorer-guide.tsx": "sha256:70c64b342a8e977caba650cb73adc6de1eafba42361b11d174b57ca3ddc9e5ed",
+    "app/globals.css": "sha256:eacd9b4359cab8dc02c52a2a8c98f5c48fc5a9772b3ef29c7bb8e7bf90a09857",
+    "app/map-starters.ts": "sha256:77de9a1036f99a6c9386ec4154ee3183849e290671ac5e8e36f1c0117f1b750e",
+    "app/observatory/workspace.tsx": "sha256:aa9b9936e0e7de076544c88cf053f2f4be38c27c21939c620d506e1bd5031ef2",
+    "app/page.tsx": "sha256:6b1e52eec187054895f84107f934fabb36489666d97d389bf1d3ae8e788adfea",
+    "app/science-events.ts": "sha256:0bcc4e2d5e2227d248514891d246779458e14b525ff94277d6e10fc0ff14a9a5",
+    "app/water-flow-layer.ts": "sha256:f9ba00efac9dc8827ec7792c33078049c0c08fffba4b7d6e781f1115a44d648f",
+    "docs/public-staging-github-sync-20261019.md": "sha256:65b04de32471afcbd8c22e80854935a0c7f5bfa3f1616f22cfa8ce83d5dd1630",
+    "docs/repository-sync-20261019.json": "sha256:533fb71213534ca1840b310c4ed559d62d808f8a07d2e24dbd117bb233c45237",
+    "tests/focus-mode-provenance.test.mjs": "sha256:58d3578d33c9a5479ba807f46397d08c3d1997c8a63dff1a687ff1aa4267277f",
+    "tests/public-staging-sync.test.mjs": "sha256:86a8f45c6dc9a4c914c05f7feefb97af25532683e471ad0d579a1b65be8ce2e2",
+    "tests/science-events.test.mjs": "sha256:07736ef72596b4160c9622b1fd61b97fa898bef56009deb8e10c3011c332efd8",
+    "tests/water-flow-upload.test.mjs": "sha256:88cfdcb9a5422dd6f59083e2d8f823b80675dc813f0beee210818fccb36265b5",
+    "tests/workspace-map-navigation.test.mjs": "sha256:79cd12c46e46179f4dc05017a10dc6ec69cc4aca5a53987b7201a4b078edd96f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:6264271a02a4f93b9d7d6ce781ec57dc730a651487139a37d0a8e686233336d4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Sites",
+      "container",
+      "Browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "sites-project://appgprj_6acd1aafe0d88191a4306ea2ab44ed91",
+      "Sites v8 source@084b730ca6e4e3f67af1da0426a275e7889c4603",
+      "GitHub main@14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd",
+      "GitHub hosted branch@7b02dc22369f97b68577f821dc9dc7021e91cde5"
+    ],
+    "evidence_hashes": [
+      "sha256:533fb71213534ca1840b310c4ed559d62d808f8a07d2e24dbd117bb233c45237"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-staging.yml": "CONFIRMED",
+    "app/about/page.tsx": "CONFIRMED",
+    "app/atlas-studio.css": "CONFIRMED",
+    "app/county-search.ts": "CONFIRMED",
+    "app/explorer-controls-navigation.tsx": "CONFIRMED",
+    "app/explorer-guide.tsx": "CONFIRMED",
+    "app/globals.css": "CONFIRMED",
+    "app/map-starters.ts": "CONFIRMED",
+    "app/observatory/workspace.tsx": "CONFIRMED",
+    "app/page.tsx": "CONFIRMED",
+    "app/science-events.ts": "CONFIRMED",
+    "app/water-flow-layer.ts": "CONFIRMED",
+    "docs/public-staging-github-sync-20261019.md": "CONFIRMED",
+    "docs/repository-sync-20261019.json": "CONFIRMED",
+    "tests/focus-mode-provenance.test.mjs": "CONFIRMED",
+    "tests/public-staging-sync.test.mjs": "CONFIRMED",
+    "tests/science-events.test.mjs": "CONFIRMED",
+    "tests/water-flow-upload.test.mjs": "CONFIRMED",
+    "tests/workspace-map-navigation.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "build-types-lint-assets",
+      "outcome": "PASS",
+      "reason": "Production Worker build, both asset scans, TypeScript, focused lint and diff whitespace passed."
+    },
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "118 CI unit cases plus one compiled Worker integration case passed."
+    },
+    {
+      "gate": "browser",
+      "outcome": "PASS",
+      "reason": "Desktop and 390x844 CSS frame; Find focus, Time navigation, search availability, guide scrolling and Map menu verified."
+    },
+    {
+      "gate": "rendered-WebGL",
+      "outcome": "SKIPPED",
+      "reason": "Browser lacks WebGL2. Interactive terrain/globe/Underground acceptance remains open."
+    },
+    {
+      "gate": "full-suite-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "No full-suite or independent human review claim; draft PR."
+    },
+    {
+      "gate": "data-GoDaddy-publication",
+      "outcome": "SKIPPED",
+      "reason": "No data activation or GoDaddy mutation; public holds retained."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "upstream-0",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5252"
+    },
+    {
+      "id": "upstream-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5257"
+    },
+    {
+      "id": "upstream-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5265"
+    },
+    {
+      "id": "upstream-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5279"
+    },
+    {
+      "id": "upstream-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5280"
+    },
+    {
+      "id": "upstream-5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5281"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-19T02:19:44.147167Z",
+  "emitter": "OpenAI Codex Public Staging GitHub sync",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Compatible frontend adapter on existing restricted Site and isolated review branch. Exact/adapted file hashes recorded separately. No audience, binding, private-data, release, AI model, DNS or GoDaddy changes. Native publication is separate evidence in PR body. Receipt is process memory, not approval."
+}
