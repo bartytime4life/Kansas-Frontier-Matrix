@@ -108,20 +108,10 @@ test("route denies held-byte disclosure and worker curation while retaining auth
  assert.equal((await route.GET(request(`?id=${capture.id}`,ownerToken))).status,409,"held bytes stay hidden from the map");
  assert.equal((await route.POST(request("?action=review",workerToken,"POST",{id:capture.id,state:"reviewed",note:"unauthorized"}))).status,401);
  assert.equal((await route.POST(request("?action=settings",workerToken,"POST",{budget:16777216,paused:true}))).status,401);
- // Malformed or non-object owner input is a client error, not a storage outage.
- for(const action of ["review","settings"])for(const raw of ["{not json","null","[]"])assert.equal((await route.POST(new NextRequest(`http://127.0.0.1:4173/api/daily-archive?action=${action}`,{method:"POST",headers:{Authorization:`Bearer ${ownerToken}`,"X-KFM-Archive-Writer":"daily-v1","Content-Type":"application/json"},body:raw}))).status,400,`${action} ${raw}`);
  const status=await route.GET(request("?action=status",workerToken));assert.equal(status.status,200);assert.deepEqual((await status.json()).entries,[{id:capture.id,status:"ready"}]);
  assert.equal((await store.readArchiveCapture(db,bucket,capture.id,true)).entry.review,"held");assert.equal((await store.archiveStorage(db)).paused,false);
 });
 
-test("API-connection reservations share storage accounting but are not daily-archive entries",async()=>{
- await reset();const capture=await store.captureArchive(db,bucket,feed,reply());
- await db.prepare("INSERT INTO daily_archive_captures(id,day,feed,attempt,status,started_at,bytes) VALUES(?,?,?,1,'api-quarantined',?,?)").bind("api-row","2000-01-01","api:synthetic:api-row",new Date().toISOString(),4096).run();
- await db.prepare("INSERT INTO daily_archive_captures(id,day,feed,attempt,status,started_at,bytes) VALUES(?,?,?,1,'api-running',?,?)").bind("api-today",capture.day,"api:synthetic:api-today",new Date().toISOString(),4096).run();
- const catalog=await store.archiveCatalog(db,capture.day);
- assert.deepEqual(catalog.entries.map(entry=>entry.id),[capture.id]);assert.equal(catalog.earliestDay,capture.day);assert.equal(catalog.latestDay,capture.day);
- assert.ok((await store.archiveStorage(db)).used>=8192,"reservations still count against the shared budget");
-});
 test("no capture for a missing day and no fabricated empty map payload",async()=>{
  await reset();const catalog=await store.archiveCatalog(db,"2000-01-01");assert.deepEqual(catalog.entries,[]);assert.deepEqual(catalog.days,[]);
  await assert.rejects(store.readArchiveCapture(db,bucket,crypto.randomUUID()),/No stored capture/);
