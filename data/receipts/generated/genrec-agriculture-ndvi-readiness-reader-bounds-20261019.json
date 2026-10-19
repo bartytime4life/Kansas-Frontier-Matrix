@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-agriculture-ndvi-readiness-reader-bounds-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/agriculture-ndvi-readiness.yml",
+    "tools/validators/domains/agriculture/ndvi_readiness/validate_ndvi_readiness.py",
+    "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/agriculture-ndvi-readiness.yml": "sha256:d02db61602584f974944bd89e6b3712ee7bb3bb5bafe5651a1bddb8fff89e3ae",
+    "tools/validators/domains/agriculture/ndvi_readiness/validate_ndvi_readiness.py": "sha256:6b25dd32466f390940311f77b89fac2cc6df6d69a371528aa02453ae5ee0f7e7",
+    "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py": "sha256:4728abbd18595f16723b72ae26a15f80fae019dc7eaadd4ab2626be14f162446"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/5ac72ba44a5008f3257593bf460353bf590ea489",
+      "repo:.github/workflows/agriculture-ndvi-readiness.yml@5ac72ba44a5008f3257593bf460353bf590ea489",
+      "repo:tools/validators/domains/agriculture/ndvi_readiness/validate_ndvi_readiness.py@5ac72ba44a5008f3257593bf460353bf590ea489",
+      "repo:tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py@5ac72ba44a5008f3257593bf460353bf590ea489",
+      "repo:schemas/contracts/v1/domains/agriculture/ndvi_readiness.schema.json@5ac72ba44a5008f3257593bf460353bf590ea489",
+      "repo:fixtures/domains/agriculture/ndvi_readiness/valid/emit_candidate.json@5ac72ba44a5008f3257593bf460353bf590ea489",
+      "repo:data/receipts/generated/genrec-agriculture-ndvi-readiness-20260806.json@5ac72ba44a5008f3257593bf460353bf590ea489"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/agriculture-ndvi-readiness.yml": "CONFIRMED",
+    "tools/validators/domains/agriculture/ndvi_readiness/validate_ndvi_readiness.py": "CONFIRMED",
+    "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "Deeply nested JSON (RecursionError) and an integer beyond Python's conversion limit (a plain ValueError, not JSONDecodeError) escaped _load_payload and the CLI printed a traceback instead of a finding. Both now report JSON_INVALID. An overflowing float such as 1e400 parses to infinity and is already refused by the bounded schema (SCHEMA_INVALID); a test pins that. One of the new tests fails on the original code."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py: 12 tests (6 before, 6 new) covering each threshold reason including a smoke overlap that the thresholds permit, primary-blocker rules, county and input canonical ordering, the level ladder at every boundary, every unreadable-input finding, and the CLI output and exit codes. Branch coverage of the validator rises from 61% to 94%. The governance semantic check stays unreached because the schema already fixes those fields as constants; it is kept as defence in depth."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of eleven changes failed the suite: the broadened JSON exception, each of the three threshold reasons, the county uniqueness and input ordering checks, both primary-blocker rules, the two level boundaries and the CLI exit code."
+    },
+    {
+      "gate": "Workflow receipt binding",
+      "outcome": "PASS",
+      "reason": "data/receipts/generated/genrec-agriculture-ndvi-readiness-20260806.json pins the validator, its test and the workflow, and the workflow checked it against the working tree, so this fix would turn that step red. The step now checks it at d0479dc293e2ab79fe94698e471d3cfe6b4017de, the commit (#4622) whose bytes it records, with fetch-depth: 0, and validates this successor receipt against the current bytes; the existing genrec-agriculture-ndvi-readiness-*.json path trigger covers it."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same findings before and after. make repository-guardrails PASS, including workflow security."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/5ac72ba44a5008f3257593bf460353bf590ea489"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T05:02:30Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "The prior receipt is unchanged. A later change to these files adds a successor receipt, pins this one to the commit that merges it, and validates the successor against the working tree."
+}

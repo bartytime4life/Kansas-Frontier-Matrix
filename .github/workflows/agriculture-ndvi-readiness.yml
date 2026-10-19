@@ -49,6 +49,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -72,6 +73,11 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-agriculture-ndvi-readiness-20260806.json \
+            --repo-root . \
+            --artifact-git-ref d0479dc293e2ab79fe94698e471d3cfe6b4017de
+          # The latest successor receipt binds the current bytes.
+          python tools/validators/validate_generated_receipt.py \
+            data/receipts/generated/genrec-agriculture-ndvi-readiness-reader-bounds-20261019.json \
             --repo-root .
 
       - name: Record trust boundary
