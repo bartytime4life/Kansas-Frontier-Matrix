@@ -85,10 +85,21 @@ This is a separate runtime composition of Explorer v259, source
 `441c3e29581ffb0293d8e643e5c37eed50319032`. It does not alter the
 preserved Sites deployment, its audience, storage, or source-data values.
 
-Verified destination: GoDaddy Node.js app `q9r9beo47t`, named
-Kansas-Frontier-Matrix, connected to
-`bartytime4life/Kansas-Frontier-Matrix`. The app is attached to the owner's
-Plus Launch plan and its deployed source branch is `a0-godaddy-node-preview`.
+Current destination (verified 2026-10-19): GoDaddy Node.js app `urdng3v1vk`,
+named Kansas-Frontier-Matrix, on the owner's Web Hosting Plus Launch plan
+([dashboard](https://host.godaddy.com/nodejs/projects/urdng3v1vk)). It deploys
+branch `a0-qwen-ui-readiness-20261019`, which was fast-forwarded to
+`a0-hosted-ai-web-20261017` at `70af1b5225` and Published that day; merging into
+`a0-hosted-ai-web-20261017` alone deploys nothing. Plus Launch kills the Qwen
+model during load, so `KFM_HOSTED_AI=0` is set on Publish and live chat reports
+`HOSTED_AI_NOT_CONFIGURED`; Preview keeps it on. The second app in the account,
+`github-import` (`4s11gvd19s`), is an unrelated site. The operator runbook is
+monorepo `docs/runbooks/godaddy-node-hosting.md`.
+
+Historical destination: GoDaddy Node.js app `q9r9beo47t`, which no longer exists
+(its preview host returns 404), connected to
+`bartytime4life/Kansas-Frontier-Matrix`. It was attached to the owner's
+Plus Launch plan and its deployed source branch was `a0-godaddy-node-preview`.
 The initial import used monorepo `main` and failed its npm/runtime build;
 this standalone root package repaired that composition. The prior deployed
 revision is `49ccc422e7ddbb36f5abe0e16c04649b7c7f313f`.
@@ -115,7 +126,7 @@ public-data and story downloads retain their existing free workflows.
 Production deployment and browser download acceptance require separate proof.
 
 GoDaddy's branch picker exposes only the first 100 alphabetical branches.
-The hosting connection uses `a0-godaddy-node-preview`. It originally matched
+The `q9r9beo47t` hosting connection used `a0-godaddy-node-preview`. It originally matched
 `codex/godaddy-node-preview`, but the latter subsequently received the earlier
 pricing-service PR. This free-export repair starts from the actual hosting
 branch, without that pricing service. Preserve both histories and do not
