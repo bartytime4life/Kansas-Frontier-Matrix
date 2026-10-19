@@ -42,7 +42,7 @@ test("renders the map-first Kansas explorer shell", async () => {
   assert.match(html, /NASA THERMAL CONTEXT · NOT KFM EVIDENCE/);
   assert.match(html, /Provider-default daily raster; its exact UTC image date is unresolved/);
   assert.match(html, /One checked UTC image day; each returned point keeps its own acquisition time/);
-  assert.match(html, /Installed Earth Engine snapshots are visual display context, not KFM evidence/);
+  assert.doesNotMatch(html, /id="earth-engine-context-controls"|Installed Earth Engine snapshots are visual display context, not KFM evidence/);
   assert.match(html, /<nav[^>]+aria-label="Layer views"/);
   for (const label of ["Browse", "On map", "Imagery"]) assert.ok(html.includes(label), `Missing layer view: ${label}`);
   assert.match(html, /<select[^>]+aria-label="Layer topic"/);
@@ -1284,7 +1284,7 @@ test("keeps layer controls direct and source clocks in progressive detail", asyn
   assert.match(page, /className="layer-map-time"/);
   assert.match(page, /Change time/);
   assert.match(page, /className="official-context-catalog"[^>]*hidden=\{layerCatalogView === "local"\}/);
-  assert.match(page, /className="local-layer-settings" hidden=\{layerCatalogView === "official"/);
+  assert.match(page, /className="local-layer-settings" hidden=\{!earthEngineContext\.enabled \|\| layerCatalogView === "official"/);
   assert.match(page, /className="visibility-switch"/);
   assert.match(page, /className="official-context-options"/);
   assert.match(page, /className="layer-task-links"/);

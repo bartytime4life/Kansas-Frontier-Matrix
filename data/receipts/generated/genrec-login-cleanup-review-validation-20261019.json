@@ -1,0 +1,65 @@
+{
+  "receipt_id": "genrec-login-cleanup-review-validation-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/download-center.test.mjs",
+    "tests/earth-engine-rendered.test.mjs",
+    "tests/godaddy-node-runtime.test.mjs",
+    "tests/layer-explorer.test.mjs",
+    "tests/rendered-html.test.mjs"
+  ],
+  "artifact_hashes": {
+    "tests/download-center.test.mjs": "sha256:e7cf0c781269732656ff5356464483c00a353594a13b7ae551ef0df71444929e",
+    "tests/earth-engine-rendered.test.mjs": "sha256:af774351f34f1f98d2e4d40adcf1ac6dffdfbe97deeab9f8dc48f41dac26dd0f",
+    "tests/godaddy-node-runtime.test.mjs": "sha256:d2e5995d75900bee01a481140437f7add177c7228421c4ac2a41f8def43b0727",
+    "tests/layer-explorer.test.mjs": "sha256:ee6a315415149759b6f3a34044bdd8c62d93dde5e24a326e9ddda39e388ff1c5",
+    "tests/rendered-html.test.mjs": "sha256:8e1bb5ae7fa694548266d9def11830ffff547b2ca850d971ba52aa209e20e002"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": null
+  },
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "local shell"
+    ],
+    "contract_basis": "Reconcile six stale contract assertions after intentional private-UI removal and machine route restoration."
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39215150837"
+    ],
+    "evidence_hashes": []
+  },
+  "validation_gates": [
+    {
+      "gate": "affected-contract-group",
+      "outcome": "PASS",
+      "reason": "73 production rendered-page, archive authorization, local library and persistent-owner checks pass. Local library fixture explicitly enables local imagery; hosted absence is separately asserted. Only the exact local capability may gate the imagery owner; catalog-filter remounts remain forbidden."
+    },
+    {
+      "gate": "complete-exact-commit-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending; this is a test-only correction with no application input changes."
+    }
+  ],
+  "policy_decisions": [
+    "401 remains the denied-authority result for the restored machine endpoint; no successful browser access is permitted.",
+    "Hosted SSR asserts absence of private imagery inventory and retains public source/recipe navigation.",
+    "No application behavior, secrets, DNS or stored data changed in this validation correction."
+  ],
+  "truth_labels": [
+    "LOCAL_VALIDATED",
+    "EXACT_COMMIT_CI_PENDING"
+  ],
+  "prompt_or_contract": "Finish validated owner-requested cleanup and publication.",
+  "citations": [],
+  "created_at": "2026-10-19T07:24:44.654143+00:00"
+}

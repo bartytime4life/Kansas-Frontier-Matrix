@@ -180,7 +180,7 @@ test('hosted source status honestly reports the unconfigured archive without cre
   assert.equal(body.sources.length,3);
   assert.doesNotMatch(JSON.stringify(body),/DB_PASSWORD|SESSION_KEY|CLIENT_SECRET|Bearer/);
 });
-for (const [path,method,status] of [['/api/source-pipeline/captures','GET',404],['/api/source-pipeline/run','POST',401],['/api/source-pipeline/control?action=resume','POST',404]]) {
+for (const [path,method,status] of [['/api/source-pipeline/captures','GET',404],['/api/source-pipeline/run','POST',401],['/api/source-pipeline/control?action=resume','POST',401]]) {
   test('archive authority is denied to anonymous and forged staff requests: '+path,async()=>{
     const response=await fetch(origin+path,{method,headers:{'x-role':'admin','oai-authenticated-user-id':'203533328',Origin:'https://kansasfrontiermatrix.com'}});
     assert.equal(response.status,status);

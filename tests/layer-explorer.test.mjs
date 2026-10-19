@@ -39,19 +39,23 @@ test("actual page catalog includes every selected family; all tab/topic/search p
 });
 
 test("specialty owners are mounted once in persistent hidden wrappers; official playback rows use unfiltered inventory", () => {
-  const owners = new Map();
+  const owners = new Map(); let localImageryGate = 0;
   function visit(node, ancestors = []) {
     if (ts.isJsxSelfClosingElement(node)) {
       const name = node.tagName.getText(ast);
       if (["GovernedWaterControl", "GovernedWeatherControl", "SoilMoistureControl", "CropCasmaControl", "EarthEngineDisplayControls"].includes(name)) {
         owners.set(name, (owners.get(name) ?? 0) + 1);
-        assert.ok(!ancestors.some(parent => ts.isConditionalExpression(parent) || ts.isBinaryExpression(parent) && parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken), `${name} must not unmount with catalog filters`);
+        assert.ok(!ancestors.some(parent => {
+          if (name === "EarthEngineDisplayControls" && ts.isBinaryExpression(parent) && parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken && parent.left.getText(ast) === "earthEngineContext.enabled") { localImageryGate++; return false; }
+          return ts.isConditionalExpression(parent) || ts.isBinaryExpression(parent) && parent.operatorToken.kind === ts.SyntaxKind.AmpersandAmpersandToken;
+        }), `${name} must not unmount with catalog filters`);
         assert.ok(ancestors.some(parent => ts.isJsxElement(parent) && parent.openingElement.attributes.properties.some(prop => prop.name?.getText(ast) === "hidden")), `${name} uses a persistent hidden ancestor`);
       }
     }
     ts.forEachChild(node, child => visit(child, [...ancestors, node]));
   }
   visit(ast);
+  assert.equal(localImageryGate, 1, "private imagery is mounted only with the exact local capability gate");
   assert.equal(owners.size, 5); assert.ok([...owners.values()].every(count => count === 1));
   assert.match(page, /filterOfficialSources\(OFFICIAL_CONTEXT_SOURCES, "all", ""\)\.map\(\(source\)/);
   assert.match(page, /hidden=\{!listedOfficialSources\.some\(item => item\.id === source\.id\)\}/);
