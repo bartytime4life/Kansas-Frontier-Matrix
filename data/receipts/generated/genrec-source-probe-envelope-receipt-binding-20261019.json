@@ -1,0 +1,76 @@
+{
+  "receipt_id": "genrec-source-probe-envelope-receipt-binding-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-and-trust-projection-profiles.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-and-trust-projection-profiles.yml": "sha256:9b1b8eb1ee826c46c6264f64a5e2fb15963f7473342b1a01a44e3796afadabce"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/5ac72ba44a5008f3257593bf460353bf590ea489",
+      "repo:.github/workflows/source-and-trust-projection-profiles.yml@5ac72ba44a5008f3257593bf460353bf590ea489",
+      "repo:data/receipts/generated/genrec-source-probe-envelope-open-profile-data-20261019.json@5ac72ba44a5008f3257593bf460353bf590ea489",
+      "repo:data/receipts/generated/genrec-source-and-trust-projection-profiles-20260807.json@5ac72ba44a5008f3257593bf460353bf590ea489",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5293#discussion_r4310434084"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-and-trust-projection-profiles.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "After #5293 pinned the 2026-08-07 receipt to its authored commit, the workflow validated no receipt against the current bytes, so a stale or malformed successor receipt would pass CI (review finding on #5293). The step now validates genrec-source-probe-envelope-open-profile-data-20261019 at 5ac72ba44a5008f3257593bf460353bf590ea489, the merge of #5293 where its three artifacts match, and validates this receipt against the working tree. The path triggers gain genrec-source-probe-envelope-*.json so successor receipts start the workflow. Appending a byte to a pinned artifact makes the working-tree check fail with ARTIFACT_DIGEST_MISMATCH."
+    },
+    {
+      "gate": "Workflow steps",
+      "outcome": "PASS",
+      "reason": "All three receipt invocations pass as written; both fixture replays and the focused tests (14) pass. make repository-guardrails PASS, including workflow security; tests/ci, the receipt-validator tests and the guardrail attribution tests pass."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/5ac72ba44a5008f3257593bf460353bf590ea489"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T04:55:46Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Earlier receipts are unchanged and each is validated at the commit where its bytes were recorded. A later change to the workflow, validator or test adds a successor receipt, pins this one to the commit that merges it, and validates the successor against the working tree."
+}
