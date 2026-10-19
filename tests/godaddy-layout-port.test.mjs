@@ -118,13 +118,11 @@ test("embedded dated downloads still save exact-day context locally through the 
   assert.deepEqual(saved, [["2026-10-15", payload]]); assert.deepEqual(dates, ["2026-10-15"]);
 });
 
-test("public hosted chat opens a fixed live destination without transferring staging context", async () => {
-  const identity = await import(`data:text/javascript;base64,${Buffer.from(ts.transpileModule(await read("app/site-identity.ts"), { compilerOptions: { module: ts.ModuleKind.ESNext } }).outputText).toString("base64")}`);
-  const link = nodes.find(n => ts.isJsxOpeningElement(n) && n.tagName.getText(page) === "a" && attr(n, "className")?.text === "qwen-map-launch hosted-chat-launch");
-  assert.ok(link);
-  const href = evaluate(attr(link, "href").expression, { SITE_IDENTITY: identity.SITE_IDENTITY });
-  assert.equal(href, "https://kansasfrontiermatrix.com/?kfm-chat=1");
-  assert.equal(attr(link, "target").text, "_blank");
-  assert.equal(attr(link, "rel").text, "noopener noreferrer");
-  assert.equal(attr(link, "onClick"), undefined, "opening chat never sends records, draft text or camera coordinates");
+test("public chat opens the embedded workspace instead of transferring context to another website", () => {
+  const launch = nodes.find(n => ts.isJsxOpeningElement(n) && n.tagName.getText(page) === "button" && attr(n, "className")?.text === "qwen-map-launch");
+  assert.ok(launch); assert.equal(attr(launch,"hidden"),undefined);
+  const calls=[];
+  const click=evaluate(attr(launch,"onClick").expression,{qwenOpen:false,openQwenCompanion:value=>calls.push(value),closeQwenCompanion:()=>{throw Error("wrong transition");}});
+  click({currentTarget:"launch"}); assert.deepEqual(calls,["launch"]);
+  assert.ok(!nodes.some(n=>ts.isJsxOpeningElement(n)&&attr(n,"className")?.text==="qwen-map-launch hosted-chat-launch"));
 });

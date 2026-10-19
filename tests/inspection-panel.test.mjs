@@ -43,15 +43,15 @@ test("inspection switches expose the active view and invoke their actual callbac
   }
 });
 
-test("the real public profile retains evidence and close callbacks while withholding Qwen", async () => {
+test("the real public profile exposes the governed embedded chat without granting AI readiness", async () => {
   const h = await componentHarness(new URL("../app/inspection-panel.tsx", import.meta.url), { "./public-profile": publicProfile });
   const calls = [];
   const tree = h.render(h.exports.InspectionPanelSwitch, { active: "evidence", onEvidence: () => calls.push("evidence"), onQwen: () => calls.push("qwen"), onClose: () => calls.push("close") });
-  assert.equal(findNode(tree, node => node.type === "button" && node.props.children === "Chat with KFM"), undefined);
+  findNode(tree, node => node.type === "button" && node.props.children === "Chat with KFM").props.onClick();
   const evidence = findNode(tree, node => node.type === "button" && node.props.children === "Evidence");
   assert.equal(evidence.props["aria-pressed"], true); evidence.props.onClick();
   findNode(tree, node => node.props?.className === "inspection-close").props.onClick();
-  assert.deepEqual(calls, ["evidence", "close"]);
+  assert.deepEqual(calls, ["qwen", "evidence", "close"]);
   h.dispose();
 });
 

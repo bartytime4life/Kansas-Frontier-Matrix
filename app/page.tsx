@@ -1,4 +1,6 @@
 "use client";
+import AssistantWorkspace from "./assistant/workspace";
+import type { AssistantFocus } from "./assistant-context";
 import { IS_PUBLIC_COPY, publicBasemap, publicContextSourceAllowed } from "./public-profile";
 
 import { globalSearchStatus } from "./county-search";
@@ -1327,7 +1329,10 @@ export default function Home() {
   const repositoryButtonRef = useRef<HTMLButtonElement>(null);
   const repositoryPanelRef = useRef<HTMLElement>(null);
   const workspaceDetailsRef = useRef<HTMLDetailsElement>(null);
-  const globalSearchInputRef = useRef<HTMLInputElement>(null);
+  const globalSearchInputRef = useRef<HTMLTextAreaElement>(null);
+  const [assistantDraftRequest, setAssistantDraftRequest] = useState<{id:number;value:string;intent:"find"|"explore"|"evidence"}>();
+  const [pcAccount, setPcAccount] = useState<string|null>(null);
+  const [pcAccountRequest, setPcAccountRequest] = useState(0);
   const mapUtilityPanelRef = useRef<HTMLElement>(null);
   const mapUtilityReturnRef = useRef<HTMLElement | null>(null);
   const sourceStatusPanelRef = useRef<HTMLElement>(null);
@@ -2373,6 +2378,12 @@ export default function Home() {
       .filter((row) => row.distanceMiles <= nearbyRadiusMiles)
       .sort((left, right) => left.distanceMiles - right.distanceMiles);
   }, [mapEvidenceFilter, nearbyRadiusMiles, nearbyVisibleLayersOnly, selected, selectedTimeMismatch, temporalQuery, visibility]);
+  const assistantFocus = useMemo<AssistantFocus>(() => ({
+    title: locationCameraRedacted || locationDerivedViewRef.current ? "Private context withheld" : "Current map view",
+    detail: "Only the map display year and view may accompany a question. Locations, record selections, private drafts and held data stay here.",
+    context:{version:1,frame:temporalQuery.frame,view:primaryRepresentationLabel,surface:"map",layers:[],selection:null},
+  }),[locationCameraRedacted,primaryRepresentationLabel,temporalQuery.frame]);
+
   const qwenContext = useMemo<QwenMapContext>(() => ({
     camera: {
       center: locationCameraRedacted || locationDerivedViewRef.current
@@ -3926,7 +3937,6 @@ export default function Home() {
   }, []);
 
   const openQwenCompanion = useCallback((returnElement?: HTMLElement | null) => {
-    if (IS_PUBLIC_COPY) return;
     qwenReturnRef.current = returnElement
       ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
     setQwenOpen(true);
@@ -3942,6 +3952,17 @@ export default function Home() {
       qwenPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close Qwen companion"]')?.focus({ preventScroll: true });
     }, 0);
   }, [dismissMapUtilityWithoutFocus, isCompact]);
+
+  const openAtlasComposer = useCallback((intent: "find" | "explore", value = "") => {
+    setPrimaryWorkspace("map"); openQwenCompanion();
+    setAssistantDraftRequest(current => ({id:(current?.id ?? 0)+1,value,intent}));
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => globalSearchInputRef.current?.focus({preventScroll:true})));
+  }, [openQwenCompanion]);
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("kfm-chat") === "1") {
+      const timer=window.setTimeout(() => openAtlasComposer("explore"),0);return()=>window.clearTimeout(timer);
+    }
+  }, [openAtlasComposer]);
 
   const openEvidencePanel = useCallback(() => {
     dismissMapUtilityWithoutFocus();
@@ -4466,7 +4487,7 @@ export default function Home() {
       const isEditing = target?.matches("input, textarea, select, [contenteditable='true']");
       if (event.key === "/" && !isEditing) {
         event.preventDefault();
-        globalSearchInputRef.current?.focus();
+        openAtlasComposer("find");
         return;
       }
       if (isEditing) return;
@@ -8991,21 +9012,14 @@ export default function Home() {
     <div className="site-root atlas-studio" data-local-atlas-open={mapUtilityOpen && mapUtilityView === "localAtlas" || undefined}>
       <a className="skip-link" href="#map-canvas" onClick={returnToPrimaryMap}>Skip to the map</a>
       <header ref={explorerHeaderRef} className="topbar">
+        <button type="button" className="staging-account-button" onClick={event=>{setPcAccountRequest(value=>value+1);openQwenCompanion(event.currentTarget);}} aria-controls="qwen-map-panel">{pcAccount?"Account":"Sign in / Account"}</button>
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong className="atlas-title">Kansas Frontier Matrix</strong><small className="atlas-subtitle">Atlas Studio · Public Staging</small></span>
         </div>
-        <div className="global-search">
-          <label>
-            <span className="sr-only">Search current places, layers, features, and official data sources</span>
-            <span aria-hidden="true">⌕</span>
-            <input ref={globalSearchInputRef} value={globalQuery} onChange={(event) => setGlobalQuery(event.target.value)} type="search" placeholder="Search places, layers, official data…" aria-describedby="global-search-help" title="Search · shortcut /" />
-          </label>
-          <span id="global-search-help" className="sr-only">Search results appear as keyboard-focusable buttons.</span>
-          {globalQuery && <div className="search-results" id="global-search-results" aria-label="Search results" aria-busy={searchStatus.busy}>
-            {searchResults.map((item) => <button type="button" key={item.id} onClick={() => chooseSearchResult(item)}><span>{item.kind}</span><strong>{item.title}</strong><small>{item.subtitle}</small></button>)}
-            {searchStatus.message && <p role="status" aria-live="polite">{searchStatus.message}</p>}
-          </div>}
+        <div className="atlas-scope-strip" aria-label="Current investigation">
+          <button type="button" className="atlas-scope-control" onClick={() => openAtlasComposer("find")} aria-controls="qwen-map-panel" title="Find places, layers and sources · shortcut /">Find &amp; ask</button>
+          <span><strong>{selectedLabel}</strong><br /><small>Map time {temporalScopeLabel} · {selectedMapLayerCount} layers</small></span>
         </div>
           <span className="sr-only" role="status">{sourceIssues.length ? `${sourceIssues.length} selected sources need attention. Open Layers, then Source status for recovery.` : ""}</span>
           <nav className="map-chrome-dock" aria-label="Map view and controls">
@@ -9826,9 +9840,8 @@ export default function Home() {
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
-          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onChoosePlace={() => { setPrimaryWorkspace("map"); window.requestAnimationFrame(() => globalSearchInputRef.current?.focus({ preventScroll: true })); }} />
-          {IS_PUBLIC_COPY && <a className="qwen-map-launch hosted-chat-launch" href={SITE_IDENTITY.hostedAssistantUrl} target="_blank" rel="noopener noreferrer" aria-label="Chat with KFM on the live website (opens a new tab)"><span className="qwen-launch-mark" aria-hidden="true">KFM</span><span><strong>Chat with KFM</strong><small>Opens live website</small></span><b aria-hidden="true">↗</b></a>}
-          <button hidden={IS_PUBLIC_COPY} className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Chat with KFM · local Qwen" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
+          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onChoosePlace={() => openAtlasComposer("find")} onMission={query=>openAtlasComposer("explore",query)} />
+          <button className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Find, ask Qwen and check evidence" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
             <span><strong>Chat with KFM</strong><small>About this map view</small></span>
             <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
@@ -10336,62 +10349,23 @@ export default function Home() {
         </section>
 
           {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
-          {!IS_PUBLIC_COPY && qwenOpen && <section ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
+          <section hidden={!qwenOpen} inert={!qwenOpen} aria-hidden={!qwenOpen} ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel atlas-chat-dock" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
             <InspectionPanelSwitch active="qwen" onEvidence={openEvidencePanel} onQwen={() => {}} onClose={() => closeQwenCompanion()} />
             <header className="qwen-panel-heading">
-              <div><span className="qwen-eyebrow">QWEN · LOCAL ONLY</span><h2 id="qwen-panel-title">Chat with KFM</h2><p>MapLibre supplies the bounded context. The pinned local model may interpret it, but never establishes evidence.</p></div>
+              <div><span className="qwen-eyebrow">YOUR INVESTIGATION</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
             </header>
-            <div className="qwen-context-strip" aria-label="Qwen context scope">
+            <div className="qwen-context-strip" aria-label="Map context scope">
               <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
               <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
-              <span><small>LAYERS SELECTED</small><strong>{selectedMapLayerCount}</strong></span>
-              <span><small>SELECTION</small><strong>{selected ? "1" : "0"}</strong></span>
+              <span><small>LAYERS</small><strong>{selectedMapLayerCount}</strong></span>
+              <span><small>SELECTION</small><strong>{assistantFocus.context.selection ? "1" : "0"}</strong></span>
             </div>
-            <section className="qwen-runtime-status" aria-label="Local Qwen runtime status">
-              <div role="status" aria-live="polite">
-                <strong data-bridge-state={qwenBridgeState}>{qwenStatusLabel(qwenBridgeState)}</strong>
-                <p>{qwenStateGuidance(qwenBridgeState)}</p>
-              </div>
-              <div className="qwen-runtime-actions">
-                <button type="button" aria-expanded={qwenSetupOpen} aria-controls="qwen-setup-guidance" onClick={() => setQwenSetupOpen((value) => !value)}>Setup</button>
-                <button type="button" onClick={() => setQwenHealthRetryToken((value) => value + 1)} disabled={qwenBridgeState === "checking" || qwenBusy}>Retry</button>
-              </div>
-              {qwenSetupOpen && <div id="qwen-setup-guidance" className="qwen-setup-guidance">
-                <strong>Owner-local setup on this Mac</strong>
-                <ol>
-                  <li>Open the official Ollama app.</li>
-                  <li>From the reviewed Site source, run <code>./scripts/install-local-qwen-macos.sh</code>.</li>
-                  <li>Allow Local Network access if the browser asks, then choose Retry.</li>
-                </ol>
-                <p>The installer verifies Ollama {QWEN_LOCAL_OLLAMA_MIN_VERSION} or newer, {QWEN_LOCAL_MODEL}, and the pinned model digest. It installs only the loopback companion and its KFM source-metadata pack; it does not enable hosted inference.</p>
-              </div>}
-            </section>
-            <div className="qwen-messages" aria-live="polite" aria-label="Qwen conversation" role="log" tabIndex={0}>
-              {qwenMessages.map((message, index) => <article key={`${message.role}-${index}`} data-role={message.role}><span>{message.role === "assistant" ? "QWEN" : "YOU"}</span><p>{message.content}</p>
-                {message.interpretation && <section className="qwen-interpretation" aria-label="Model interpretation, not evidence">
-                  <header>INTERPRETATION · NOT EVIDENCE</header>
-                  <p>{message.interpretation.summary}</p>
-                  {([["Seen in this view", message.interpretation.observations], ["Possible readings", message.interpretation.inferences], ["Needed before KFM could answer", message.interpretation.gaps]] as const)
-                    .filter(([, items]) => items.length > 0)
-                    .map(([heading, items]) => <div key={heading}><strong>{heading}</strong><ul>{items.map((item) => <li key={item}>{item}</li>)}</ul></div>)}
-                  {message.interpretation.followUps.length > 0 && <div className="qwen-follow-ups"><strong>Ask next</strong>{message.interpretation.followUps.map((prompt) => <button type="button" key={prompt} onClick={() => setQwenQuestion(prompt.slice(0, 1200))}>{prompt}</button>)}</div>}
-                  {message.requestId && <small>Receipt {message.requestId.slice(0, 8)}</small>}
-                </section>}
-              </article>)}
-              {qwenBusy && <article data-role="assistant" className="qwen-thinking"><span>QWEN</span><p>Reading the current map context…</p></article>}
-            </div>
-            <div className="qwen-quick-prompts" data-mode={qwenHasAnswerableSelection ? "selection" : "diagnostic"} aria-label={qwenHasAnswerableSelection ? "Selection-scoped Qwen questions" : "View questions answered as interpretation, not evidence"}>
-              <span className="qwen-quick-label">{qwenHasAnswerableSelection ? "RELEASED SELECTION" : "VIEW · INTERPRETATION, NOT EVIDENCE"}</span>
-              {qwenQuickPrompts.map((prompt) => <button type="button" key={prompt} onClick={() => setQwenQuestion(prompt)}>{prompt}</button>)}
-            </div>
-            <form className="qwen-form" onSubmit={(event) => { event.preventDefault(); void askQwen(); }}>
-              <label><span className="sr-only">Ask Qwen about the map</span><textarea value={qwenQuestion} onChange={(event) => setQwenQuestion(event.target.value)} placeholder="Ask about this place, time, or layer context…" rows={3} maxLength={1200} /></label>
-              <div><span>LOCAL ONLY · NO HOSTED FALLBACK</span><button type="submit" disabled={!qwenQuestion.trim() || qwenBusy || !shouldUseLocalQwen(qwenBridgeState)}>{qwenBusy ? "Thinking…" : "Ask Qwen"}</button></div>
-            </form>
-            <footer className="qwen-panel-footer"><p>Qwen is interpretive only. It cannot establish evidence, policy, release, or publication authority.</p><button type="button" onClick={() => void copyQwenPrompt()}>Copy grounded prompt</button></footer>
-          </section>}
+            <AssistantWorkspace active={qwenOpen} accountRequest={pcAccountRequest} onAccount={setPcAccount} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} inputRef={globalSearchInputRef} draftRequest={assistantDraftRequest}
+              discovery={{query:globalQuery, items:searchResults, status:searchStatus.message, busy:searchStatus.busy, onQuery:setGlobalQuery, onChoose:id => { const item=searchResults.find(row => row.id===id); if (item) chooseSearchResult(item); }}}
+ />
+          </section>
 
-        <aside ref={rightPanelRef} className="evidence-drawer" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
+        <aside ref={rightPanelRef} className="evidence-drawer atlas-evidence-tray" data-open={rightOpen} data-state={selected?.properties.evidenceState ?? "EMPTY"} aria-label="Evidence Drawer" aria-hidden={!rightOpen} inert={!rightOpen} aria-modal={isCompact && rightOpen && !surfaceInspectionOpen || undefined} role={isCompact && rightOpen ? "dialog" : undefined}>
           <InspectionPanelSwitch active="evidence" onEvidence={() => {}} onQwen={() => openQwenCompanion()} onClose={closeRightPanel} />
           <div className="panel-heading drawer-heading">
             <div><p className="panel-kicker">EVIDENCE DRAWER</p><h2>{subsurfaceInspection ? subsurfaceInspection.record.name : researchOpen && researchAnchor ? `Near ${researchAnchor.title}` : selected?.properties.title ?? (hoverSummary ? "Map hover preview" : "Select a map feature")}</h2></div>

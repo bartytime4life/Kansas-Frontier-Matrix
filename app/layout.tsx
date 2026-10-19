@@ -1,3 +1,4 @@
+import SiteAssistant from "./site-assistant";
 import type { Metadata } from "next";
 import { SITE_IDENTITY } from "./site-identity";
 import { PersistentSelectMenus } from "./persistent-select-menus";
@@ -33,7 +34,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="shortcut icon" href="/favicon.ico" />
       </head>
-      <body className="antialiased">{children}<PersistentSelectMenus /></body>
+      <body className="antialiased">{children}<PersistentSelectMenus /><SiteAssistant /></body>
     </html>
   );
 }
