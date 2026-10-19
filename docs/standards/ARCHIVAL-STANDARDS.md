@@ -226,7 +226,7 @@ This page does not:
 | [`docs/standards/README.md`](./README.md) | Repository-grounded lane boundary with 50 direct Markdown files and two direct child directories at its pinned inventory | The lane is real and mixed-maturity. Child presence does not establish adoption or conformance. |
 | Placement authority | ADR-0029 is accepted and adopts Directory Rules v2 | `docs/standards/` is the correct human-readable responsibility lane. |
 | Archival sibling pages | `snac-eac-cpf.md`, `OAI-PMH.md`, `IIIF.md`, `iiif.md`, `DUBLIN-CORE.md`, and `CIDOC-CRM.md` are present | Useful topic-specific guidance exists; its currentness, adoption, and role relationships require file-specific review. |
-| OAI-PMH identity | Both uppercase and lowercase files exist | `CONFLICTED / HOLD`; do not select, rename, merge, or delete from this umbrella page. |
+| OAI-PMH identity | `OAI-PMH.md` is canonical; the lowercase `oai-pmh.md` was merged into its Appendix A and deleted 2026-10-19 | `RESOLVED` (owner-directed; see `ARC-C02`). |
 | IIIF identity | Both uppercase and lowercase files exist | `CONFLICTED / HOLD`; case-only migration requires consumer and cross-filesystem evidence. |
 | Provenance family | `PROV-O.md`, `PROV.md`, `PROVENANCE.md`, and `PROV/README.md` coexist | Roles and writable authority are unresolved; do not collapse PREMIS, provenance, lineage events, and scholarly attribution into one file by prose. |
 | Canonicalization family | `CANONICALIZATION.md` is canonical; the lowercase `canonicalization.md` was merged 2026-10-12 and its redirect stub deleted 2026-10-19 | Identity, edit authority, and the case-only path collision are settled (`CANON-Q11` resolved). |

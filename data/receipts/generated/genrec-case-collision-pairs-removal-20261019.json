@@ -31,18 +31,18 @@
   "artifact_hashes": {
     ".github/workflows/stac-kfm-trust-profile.yml": "sha256:c19003c9aa61c2b7049cbbfbb519cbe5b613cdc3ff1a9808f738442ec598fd4c",
     "contracts/source/source_descriptor.md": "sha256:42df3bfe61b3345fb35f60e18512d68850943790a6fa7933b965093bad697621",
-    "control_plane/object_family_register.yaml": "sha256:c3c8460990fcc737f2f1e5f5025c350588f0428c7ddf45d9bfe9ca1450d72295",
+    "control_plane/object_family_register.yaml": "sha256:6e2cdb669e489fedc7e6478b22d1f429161cf1370bfc62935a2328949fd7e63b",
     "control_plane/repository_governance_parity.yaml": "sha256:bd88389599e964c6099d3434e55cc5d08c62d3089dffcb316db2da7c568f4b40",
     "data/registry/agriculture/README.md": "sha256:822ac786edd0670bea56ff35fb9c0948b10ad503566a7b63801e5542f56ef354",
     "docs/architecture/data-classification-framework.md": "sha256:8e224f85521833f46131f6a03f9fcf9f61ea5daa359cedcae8f0f4483470a89f",
-    "docs/architecture/identity-and-spec-hash.md": "sha256:41752dc7f0b64e9e07cb7f3b34e450f587e4304ee0419e3f64589f7395ff7080",
+    "docs/architecture/identity-and-spec-hash.md": "sha256:2a10bfb824f8a1c0816ff161a78892f82b7b19d813ba723f1a1436049b3e7684",
     "docs/domains/hydrology/SOURCE_REGISTRY.md": "sha256:8eb021cd20df12efadbb34f78a0ea328cf471f03ca372cfff6d5d97c60260e07",
     "docs/intake/exploratory/new-ideas-4-16-source-map.md": "sha256:b3b35107ff10756e15ad5232dbdcef98111fad23ffe5d6b4fe3843922a03c7e2",
     "docs/intake/exploratory/pass20-expansion-conformance-baseline.md": "sha256:0218eefc3d65a4d8c6405a2a58352264963d4008bce6915b1bd9bb53483bfb97",
     "docs/intake/exploratory/stac-cdl-pmtiles-profile-decision-packet.md": "sha256:c3b540a8e3531f8ddb9591165b7150c0ebe7c91ee72be91e31271335aba5575a",
     "docs/sources/catalog/kansas/kansas-memory.md": "sha256:8462dced5a9be6d0507bb9e198ba98ec50dbd4cb4e4767d78dedda6451b59b60",
     "docs/sources/catalog/kansas/kansas-state-archives.md": "sha256:a5db0dd99f3172c82e01869fff43a0d192ecef39296196863054ef2a222410d9",
-    "docs/standards/ARCHIVAL-STANDARDS.md": "sha256:5304c0b437a5c35031e1f5c8f16a05c4e77f8a58c46fd16da096ee40fa785f74",
+    "docs/standards/ARCHIVAL-STANDARDS.md": "sha256:b0479df321737f0beb0464ca8e59015c71e8a8f4f58d3abacb798f99c716b3bb",
     "docs/standards/CANONICALIZATION.md": "sha256:86b3425813656a89942559befa09322af2b2c8335e17ebfbcf0a79e1d3b4d794",
     "docs/standards/DUBLIN-CORE.md": "sha256:4c1baa644747b31ef8d16121919adfd74975d82fca43b5eae1a65e89b4e92eaf",
     "docs/standards/OAI-PMH.md": "sha256:85418475063c21931fce744bdf9666796c5324b6b98681fc9f07c09542909314",
@@ -165,5 +165,5 @@
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
-  "notes": "Deleted (owner-directed, content preserved in Git history and merged where unique): contracts/source/SOURCE_DESCRIPTOR.md, docs/standards/canonicalization.md, docs/standards/oai-pmh.md, docs/standards/stac.md. Retired doc_ids: kfm://doc/standards/stac, kfm://doc/standards-oai-pmh, kfm://doc/standards/canonicalization-redirect, kfm://doc/contracts-source-source-descriptor-legacy-case; no document registry lists them. STAC.md and OAI-PMH.md are labelled NEEDS VERIFICATION because merged proposal-era claims were checked only for repository path presence. object_family_register.yaml keeps the source_descriptor family's contracts surface status as CONFLICTED for steward review, although only one contract path now remains. Historical receipts and artifacts/qa evidence that name the deleted paths are left unchanged. The README's 52-entry inventory counts are pinned to their snapshot commit and are left unchanged. The IIIF entries in docs/standards/README.md predate this change and are out of scope."
+  "notes": "Deleted (owner-directed, content preserved in Git history and merged where unique): contracts/source/SOURCE_DESCRIPTOR.md, docs/standards/canonicalization.md, docs/standards/oai-pmh.md, docs/standards/stac.md. Retired doc_ids: kfm://doc/standards/stac, kfm://doc/standards-oai-pmh, kfm://doc/standards/canonicalization-redirect, kfm://doc/contracts-source-source-descriptor-legacy-case; no document registry lists them. STAC.md and OAI-PMH.md are labelled NEEDS VERIFICATION because merged proposal-era claims were checked only for repository path presence. object_family_register.yaml keeps every CONFLICTED status for the source_descriptor family by owner decision (2026-10-19); only the deleted contract path, the case_variant_contracts reason code and the 'Case' qualifier in its identity note were removed. Historical receipts and artifacts/qa evidence that name the deleted paths are left unchanged. The README's 52-entry inventory counts are pinned to their snapshot commit and are left unchanged. The IIIF entries in docs/standards/README.md predate this change and are out of scope."
 }

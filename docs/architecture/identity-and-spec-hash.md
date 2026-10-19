@@ -519,7 +519,7 @@ No new path, parallel identity store, registry, schema home, policy home, receip
 | IDH-DRIFT-05 | `packages/identity/` is a scaffold while identity prose is extensive. | Documentation must not imply exported APIs, consumers, or package maturity. |
 | IDH-DRIFT-06 | GeoJSON equality is structural under a declared profile, not topological or semantic equality. | Spatial consumers need separate normalization and equivalence contracts. |
 | IDH-DRIFT-07 | Python parity is tested; TypeScript, Go, Java, Rust, and other producer parity is unverified. | Cross-language publication should remain held until common vectors pass. |
-| IDH-DRIFT-08 | Uppercase and lowercase canonicalization documents coexist. | Link and document-identity migration remains on `HOLD`. |
+| IDH-DRIFT-08 | Uppercase and lowercase canonicalization documents coexisted. | `RESOLVED`: merged into `CANONICALIZATION.md` 2026-10-12; lowercase redirect stub deleted and links repointed 2026-10-19 (owner-directed). |
 | IDH-DRIFT-09 | `contracts/common/spec_hash.md` still describes the validator as a placeholder, while the validator is implemented. | Contract documentation status is stale and needs a separate same-path correction. |
 | IDH-DRIFT-10 | Checked-in workflow presence does not establish exact-head hosted success or production use. | Report workflow state separately from implementation and release maturity. |
 
