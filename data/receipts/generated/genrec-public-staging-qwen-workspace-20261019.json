@@ -1,0 +1,187 @@
+{
+  "receipt_id": "genrec-public-staging-qwen-workspace-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-staging.yml",
+    "app/about/page.tsx",
+    "app/assistant-context.ts",
+    "app/assistant-investigation.ts",
+    "app/assistant-panel.module.css",
+    "app/assistant-panel.tsx",
+    "app/assistant-surfaces.mjs",
+    "app/assistant/workspace.module.css",
+    "app/assistant/workspace.tsx",
+    "app/atlas-studio.css",
+    "app/explorer-guide.tsx",
+    "app/inspection-panel.tsx",
+    "app/layout.tsx",
+    "app/page.tsx",
+    "app/public-route-policy.ts",
+    "app/site-assistant.tsx",
+    "docs/public-staging-qwen-workspace-20261019.md",
+    "tests/godaddy-layout-port.test.mjs",
+    "tests/inspection-panel.test.mjs",
+    "tests/public-staging-build.test.mjs",
+    "tests/public-staging-sync.test.mjs",
+    "tests/staging-assistant.test.mjs",
+    "worker/index.ts",
+    "worker/staging-assistant.ts"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-staging.yml": "sha256:5ed8ef52ee4e061f803f0c757b16aceab6f0c84b772737d050d5c4b3fa5c0db6",
+    "app/about/page.tsx": "sha256:b9a71cc3743f87430c415132cdeafd557899bfbf256b900093158b03f909f484",
+    "app/assistant-context.ts": "sha256:a8723841aa5ea380489b866dd02d5e1499e7f81afe134172e7bdfea6c6111c61",
+    "app/assistant-investigation.ts": "sha256:2014fbde1cf4c9dd86cfae185914c33e7bee947c75de05533f75ffb4638071ec",
+    "app/assistant-panel.module.css": "sha256:de015f5d921d856d101ffd4c119a08ccecb97f2d733d69d2ae079e8f711c371a",
+    "app/assistant-panel.tsx": "sha256:f8f6aa5de176dbb8cd32726b5648540482e8d795ccb3213c0a9a30d1fa1897e4",
+    "app/assistant-surfaces.mjs": "sha256:4fa45efdd7bd1e7b9f4ae24a6173bcc19fac30827e64bb7a7c08df1d5f561419",
+    "app/assistant/workspace.module.css": "sha256:d122b8b8fa09aedf169067ae374447d8c595d7bab204812d9c9733e1437f60a5",
+    "app/assistant/workspace.tsx": "sha256:d4e3fb99501452298d47128c23a2f174bc57194b5aaef5578713e5a7d634a29f",
+    "app/atlas-studio.css": "sha256:e207ce827ed15160322ceddbadbc8c43e971285ea15297d9632866e4b3f8bb85",
+    "app/explorer-guide.tsx": "sha256:ef7d2308b7717363413101c27d28b7efaf21268cead0db9a185860baccef71f1",
+    "app/inspection-panel.tsx": "sha256:f09b153204c50c0110e89928c1b5df49bbabfcd4f0675f6b3f35b2025ca8d444",
+    "app/layout.tsx": "sha256:638396709012fd3f86b6d67078f20b9fcb7ab7b5d8c83c87776bbadf8aa1e8e4",
+    "app/page.tsx": "sha256:cfff776f4eb7b08adce01d856cc8098d042fdc7c3e9c918808729986176a7d0e",
+    "app/public-route-policy.ts": "sha256:d3d087b9b4a5fe4ac5cd384ac05d52ef2355c3538aac489fb9d697889bd72766",
+    "app/site-assistant.tsx": "sha256:3083c94695716854e79e5223a86809bf7760c725d62b29f664477b23cd79c169",
+    "docs/public-staging-qwen-workspace-20261019.md": "sha256:9e0251e23b5b9ccd694b6e5f8bed1ef8e106a08166c701f919612e57e76ab721",
+    "tests/godaddy-layout-port.test.mjs": "sha256:6ac1719ceaaa370fbdf1d454d855d2a3132376d700a7fffe8161eaaacdb4b4f6",
+    "tests/inspection-panel.test.mjs": "sha256:186c96292b776cf70c410bd24a9179e3bc1911a4eae0f7d8902e2e864f83a575",
+    "tests/public-staging-build.test.mjs": "sha256:9f98fcff931773b303e59e5ae9563dcd231ef984f51bcb1141dabf9a78aa78d5",
+    "tests/public-staging-sync.test.mjs": "sha256:eb255131d0dc49274edb392cc522ab45ba422c6483309e9996b4af65d6855ca9",
+    "tests/staging-assistant.test.mjs": "sha256:ed4b2dc41520f8385c770f3d4b8852418ed84f65d05dffa93ab4e4a5c40e63d7",
+    "worker/index.ts": "sha256:2a6ea249df3aecddc543160de85089daed356bb9201fe90fee19d1d7a6d2ef28",
+    "worker/staging-assistant.ts": "sha256:ef7af893cc72897cff756b1f08c50b52eb1ae3de864feb4f4c6672858b0f5c4e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:a2d56a48ba32a4a8fac39f3e3ddbd1ef07b31c55ba8adaed2c9cd2233ee90216",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Sites",
+      "container",
+      "Browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "sites-project://appgprj_6acd1aafe0d88191a4306ea2ab44ed91",
+      "Sites v9@2d67acf487b4846fd1388ec959ae3b60f5cd7765",
+      "GitHub hosted@7b02dc22369f97b68577f821dc9dc7021e91cde5",
+      "GitHub main@14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-staging.yml": "CONFIRMED",
+    "app/about/page.tsx": "CONFIRMED",
+    "app/assistant-context.ts": "CONFIRMED",
+    "app/assistant-investigation.ts": "CONFIRMED",
+    "app/assistant-panel.module.css": "CONFIRMED",
+    "app/assistant-panel.tsx": "CONFIRMED",
+    "app/assistant-surfaces.mjs": "CONFIRMED",
+    "app/assistant/workspace.module.css": "CONFIRMED",
+    "app/assistant/workspace.tsx": "CONFIRMED",
+    "app/atlas-studio.css": "CONFIRMED",
+    "app/explorer-guide.tsx": "CONFIRMED",
+    "app/inspection-panel.tsx": "CONFIRMED",
+    "app/layout.tsx": "CONFIRMED",
+    "app/page.tsx": "CONFIRMED",
+    "app/public-route-policy.ts": "CONFIRMED",
+    "app/site-assistant.tsx": "CONFIRMED",
+    "docs/public-staging-qwen-workspace-20261019.md": "CONFIRMED",
+    "tests/godaddy-layout-port.test.mjs": "CONFIRMED",
+    "tests/inspection-panel.test.mjs": "CONFIRMED",
+    "tests/public-staging-build.test.mjs": "CONFIRMED",
+    "tests/public-staging-sync.test.mjs": "CONFIRMED",
+    "tests/staging-assistant.test.mjs": "CONFIRMED",
+    "worker/index.ts": "CONFIRMED",
+    "worker/staging-assistant.ts": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "scoped-checks",
+      "outcome": "PASS",
+      "reason": "126 Staging cases (125 unit/component + one compiled Worker) pass; build, public asset scans, types and focused lint pass."
+    },
+    {
+      "gate": "browser",
+      "outcome": "PASS",
+      "reason": "Desktop and phone UI/navigation checked; no live inference or real sign-in claimed."
+    },
+    {
+      "gate": "live-Qwen-connection",
+      "outcome": "SKIPPED",
+      "reason": "Existing preview API requires authorization (HTTP 401); service route and protected configuration require reviewed enablement."
+    },
+    {
+      "gate": "full-suite-independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "No full-suite or independent human acceptance claim; draft review."
+    },
+    {
+      "gate": "GoDaddy-publication",
+      "outcome": "SKIPPED",
+      "reason": "No GoDaddy deployment or public feature release."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "source-0",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5163"
+    },
+    {
+      "id": "source-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5254"
+    },
+    {
+      "id": "source-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5260"
+    },
+    {
+      "id": "source-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5279"
+    },
+    {
+      "id": "source-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5280"
+    },
+    {
+      "id": "source-5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5281"
+    },
+    {
+      "id": "source-6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5283"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-19T02:52:17.458516Z",
+  "emitter": "OpenAI Codex Qwen workspace adaptation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Embedded upstream workspace with Sites account and optional authenticated Qwen adapter. Live Node preview returned 401; no Qwen secrets configured. No inference, Node account migration or GoDaddy deployment claimed. Owner-only access and all data holds remain. Companion Node gateway is separate source proposal."
+}

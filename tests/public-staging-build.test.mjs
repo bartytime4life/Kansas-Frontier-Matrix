@@ -35,7 +35,13 @@ test('built Staging serves its guide/identity/assets and preserves private and u
   }
   assert.ok(about.includes(actual.sourceDigest));
   assert.ok(about.includes('No observational or subsurface package is approved'));
-  assert.ok(about.includes('not transferred'));
+  assert.ok(about.includes('held records are not transferred'));
+  assert.ok(about.includes('GoDaddy Node 22'));
+  const account = await get('/api/staging/account');assert.equal(account.status,200);assert.equal((await account.json()).account,null);
+  const ai = await (await get('/api/ai/status')).json();assert.equal(ai.ready,false);assert.equal(ai.requiresLogin,true);
+  assert.equal((await runtime.dispatchFetch(origin+'/api/ai/jobs',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:'{}'})).status,401);
+  const signed = await runtime.dispatchFetch(origin+'/api/ai/status',{headers:{'oai-authenticated-user-id':'synthetic','oai-authenticated-user-email':'synthetic@example.test'}});
+  const status=await signed.json();assert.equal(status.reasonCode,'QWEN_CONNECTION_NOT_CONFIGURED');assert.equal(status.ready,false);
   assert.ok(about.includes('docs/runbooks/godaddy-node-hosting.md'));
   for (const path of ['/','/topics','/almanacs','/observatory/sources']) assert.equal((await get(path)).status, 200, path);
   for (const path of ['/api/qwen','/api/intake/status','/data/subsurface/manifest.json','/downloads','/api/build/private']) assert.equal((await get(path)).status, 404, path);

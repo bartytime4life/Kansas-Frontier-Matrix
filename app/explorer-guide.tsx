@@ -74,8 +74,7 @@ export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onCh
   if (!open) return null;
   const remember = () => Boolean(rememberRef.current?.checked);
   const chooseMission = (query: string, starterId?: string) => {
-    if (IS_PUBLIC_COPY) onAction(starterId === "historical-landscape" ? "time" : "layers");
-    else if (onMission) onMission(query, starterId);
+    if (onMission) onMission(query, starterId);
     else onAction(starterId ? "layers" : "qwen");
     onClose(remember());
   };
@@ -102,8 +101,8 @@ export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onCh
           <strong>Find places &amp; layers</strong><small>Search the available index without the AI model.</small>
         </button>
       </div>
-      <p className="atlas-welcome-boundary">{IS_PUBLIC_COPY ? "Layer and time actions open existing controls. They do not approve data or call an AI model. Chat with KFM opens the separate live website; no map selection or draft is transferred." : <>Question starters prepare unverified discussion drafts for you to review and send. They do not search the corpus, change layers or start an AI request. Use Find or Evidence in the composer to retrieve records. Existing context recipes remain in Layers with their source dates and limits.</>}</p>
-      {IS_PUBLIC_COPY ? <div className="atlas-welcome-topics"><a href="/topics">Explore all topics &amp; audiences →</a></div> : <details className="atlas-welcome-topics">
+      <p className="atlas-welcome-boundary">{IS_PUBLIC_COPY ? "Layer and time actions open existing controls. They do not approve data or call an AI model. Ask drafts open in this Site. Only a submitted question and bounded display context may go to the connected Qwen service; held records and private locations stay here." : <>Question starters prepare unverified discussion drafts for you to review and send. They do not search the corpus, change layers or start an AI request. Use Find or Evidence in the composer to retrieve records. Existing context recipes remain in Layers with their source dates and limits.</>}</p>
+      {<details className="atlas-welcome-topics">
         <summary>Explore all topics &amp; audiences</summary>
         <p>Choose a discussion prompt for your topic. These drafts do not promise indexed data; check Find or Evidence for actual coverage.</p>
         <div className="atlas-welcome-groups">

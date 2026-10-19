@@ -105,3 +105,19 @@
 @media(max-width:1100px) and (max-height:680px){
  .atlas-studio .explorer-shell[data-inspector] > .qwen-panel.atlas-chat-dock { height: calc(100% - var(--status)); }
 }
+
+/* Keep the platform Account entry reachable independently of the compact brand. */
+.atlas-studio .staging-account-button { grid-area: account; min-height:44px; padding:8px 12px; border:1px solid var(--atlas-studio-line); border-radius:10px; background:var(--atlas-studio-surface); color:var(--atlas-studio-ink); font:inherit; font-size:12px; }
+.atlas-studio .topbar { grid-template-areas:"brand search map actions account"; grid-template-columns:auto minmax(120px,1fr) auto auto auto; }
+.atlas-studio .qwen-panel.atlas-chat-dock { display:flex; flex-direction:column; }
+.atlas-studio .qwen-panel.atlas-chat-dock[hidden] { display:none; }
+.atlas-studio .qwen-panel.atlas-chat-dock > .qwen-panel-heading,.atlas-studio .qwen-panel.atlas-chat-dock > .qwen-context-strip,.atlas-studio .qwen-panel.atlas-chat-dock > .inspection-panel-switch { flex-shrink:0; }
+@media(max-width:760px) {
+ .atlas-studio .topbar { grid-template-areas:"brand map actions account" "search search search search"; grid-template-columns:auto minmax(0,1fr) auto auto; }
+ .atlas-studio .staging-account-button { max-width:110px; font-size:11px; }
+ .atlas-studio .atlas-scope-strip { flex-wrap:nowrap; }
+}
+.atlas-studio .qwen-context-strip { grid-template-columns:repeat(4,minmax(0,1fr)); }
+@media(max-width:1100px) {
+ .atlas-studio .qwen-panel.atlas-chat-dock:has([data-mode="find"]) > .qwen-context-strip { display:none; }
+}

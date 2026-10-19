@@ -9,19 +9,18 @@ const compile = source => ts.transpileModule(source,{compilerOptions:{module:ts.
 const starters={}; vm.runInNewContext(compile(await read('app/map-starters.ts')), {exports:starters});
 
 test('the GitHub welcome keeps Staging release limits and routes Find without an AI request', async () => {
-  let find=0,closed=0; const actions=[];
+  let find=0,closed=0; const actions=[],missions=[];
   const h=await componentHarness('app/explorer-guide.tsx',{'./map-starters':starters,'./public-profile':{IS_PUBLIC_COPY:true}});
-  const tree=h.render(h.exports.ExplorerGuide,{open:true,onChoosePlace:()=>find++,onClose:()=>closed++,onAction:value=>actions.push(value)});
+  const tree=h.render(h.exports.ExplorerGuide,{open:true,onChoosePlace:()=>find++,onClose:()=>closed++,onAction:value=>actions.push(value),onMission:value=>missions.push(value)});
   const text=JSON.stringify(tree);
   assert.match(text,/Prairie Field Desk/);
   assert.match(text,/unapproved data withheld/);
-  assert.match(text,/no map selection or draft is transferred/);
-  assert.ok(findNode(tree,n=>n.type==='a'&&n.props.href==='/topics'));
-  assert.equal(findNode(tree,n=>n.props?.className==='atlas-welcome-groups'),undefined,'no nonfunctional discussion prompt buttons');
+  assert.match(text,/held records and private locations stay here/);
+  assert.ok(findNode(tree,n=>n.props?.className==='atlas-welcome-groups'));
   findNode(tree,n=>n.type==='button'&&n.props.children==='Find a place or layer').props.onClick();
   assert.equal(find,1);assert.equal(closed,1);assert.deepEqual(actions,[]);
   findNode(tree,n=>n.type==='button'&&n.props.children?.[0]?.props?.children==='Investigate change').props.onClick();
-  assert.deepEqual(actions,['time']);
+  assert.deepEqual(actions,[]);assert.equal(missions.length,1);assert.match(missions[0],/investigate change/);
   h.dispose();
 });
 

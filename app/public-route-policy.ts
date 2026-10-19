@@ -16,6 +16,8 @@ export function publicRouteDecision(input: string, method = "GET"): PublicRouteD
   if (/%(?:2f|5c|2e|00)/i.test(path) || path.includes("\\") || path.includes("//")) return { allowed: false, reason: "INVALID_PUBLIC_PATH" };
   if (path.startsWith("/data/") || path.startsWith("/history/") || path.startsWith("/public/")) return { allowed: false, reason: "UNRELEASED_ASSET_PATH" };
   if (administration.test(path)) return { allowed: ["GET", "POST"].includes(method), reason: "OWNER_AUTHORIZATION_REQUIRED" };
+  if (path === "/api/staging/account" || path === "/api/ai/status" || /^\/api\/ai\/jobs\/[A-Za-z0-9_-]{1,128}$/.test(path)) return {allowed:method === "GET",reason:"SITE_IDENTITY_REQUIRED"};
+  if (path === "/api/ai/jobs" || /^\/api\/ai\/jobs\/[A-Za-z0-9_-]{1,128}\/cancel$/.test(path)) return {allowed:method === "POST",reason:"SITE_IDENTITY_AND_ORIGIN_REQUIRED"};
   if (!["GET", "HEAD"].includes(method)) return { allowed: false, reason: "PUBLIC_READ_ONLY" };
   if (pages.has(path) || releasePages.test(path) || reads.test(path)) return { allowed: true, reason: "RELEASE_GATE_REQUIRED" };
   if (path === "/api/governed/public/catalog" || /^\/api\/governed\/public\/assets\/(?:subsurface|groundwater|archive)\/[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/.test(path)) return { allowed: true, reason: "PUBLIC_DELIVERY_GATE_REQUIRED" };

@@ -5,8 +5,12 @@ import { IS_PUBLIC_COPY } from "../app/public-profile";
 import { publicApplicationOriginAllowed, publicRouteDecision, publicUnavailable } from "../app/public-route-policy";
 
 import { SITE_IDENTITY } from "../app/site-identity";
+import { createStagingAssistant } from "./staging-assistant";
+import { publicCatalogRead } from "../app/public-release-server";
 
 interface Env {
+  KFM_STAGING_QWEN_ORIGIN?: string;
+  KFM_STAGING_QWEN_TOKEN?: string;
   ASSETS: { fetch(request: Request): Promise<Response> };
   DB: unknown;
   IMAGES: {
@@ -41,6 +45,10 @@ const worker = {
         url.hostname = "kansasfrontiermatrix.com"; url.protocol = "https:";
         return Response.redirect(url.toString(), 308);
       }
+    }
+
+    if (url.pathname === "/api/staging/account" || url.pathname.startsWith("/api/ai/")) {
+      return createStagingAssistant({settings:env,catalog:publicCatalogRead})(request);
     }
 
     if (url.pathname === "/_vinext/image") {
