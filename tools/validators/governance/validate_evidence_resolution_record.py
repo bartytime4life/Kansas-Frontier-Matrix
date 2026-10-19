@@ -7,6 +7,13 @@ import json
 import sys
 from pathlib import Path
 
+from jsonschema import Draft202012Validator, FormatChecker
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/governance/evidence_resolution_record.schema.json"
+CASES_PATH = REPO_ROOT / "fixtures/contracts/v1/governance/evidence_resolution_record/cases.json"
+# The workflow runs no schema step, so the closed shape (no extra keys, required fields, types) is enforced here.
+SCHEMA = Draft202012Validator(json.loads(SCHEMA_PATH.read_text(encoding="utf-8")), format_checker=FormatChecker())
 PROFILE = "kfm.governance.evidence-resolution-record.v1"
 FALSE_EFFECTS = (
     "evidence_created",
@@ -38,6 +45,8 @@ def expected_record_id(record):
 
 def _derive(record):
     findings = []
+    if not SCHEMA.is_valid(record):
+        findings.append("SCHEMA_INVALID")
     if record.get("profile") != PROFILE:
         findings.append("PROFILE_INVALID")
 
@@ -144,7 +153,7 @@ def main():
     args = parser.parse_args()
 
     if args.cases:
-        document = load("fixtures/contracts/v1/governance/evidence_resolution_record/cases.json")
+        document = load(CASES_PATH)
         passed_all = True
         for case in document["cases"]:
             decision, findings = derive(case["candidate"])
@@ -158,7 +167,7 @@ def main():
     try:
         record = load(args.path)
         decision, findings = derive(record)
-    except (OSError, ValueError, json.JSONDecodeError) as exc:
+    except (OSError, ValueError, RecursionError) as exc:  # ValueError covers JSONDecodeError and UTF-8
         print(json.dumps({"decision": "ERROR", "findings": ["INPUT_ERROR"], "detail": str(exc)}))
         return 2
 
