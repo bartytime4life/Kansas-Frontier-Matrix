@@ -1,0 +1,64 @@
+{
+  "receipt_id": "genrec-standards-readme-iiif-rows-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/standards/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/standards/README.md": "sha256:e7695bada95d84e92da39d404f9dd0fb8510bd6d7930d1572411b68ca2a323c5"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/aca3165af957c340fecf394f28f5d10fe45c70b2",
+      "repo:docs/standards/IIIF.md#10-canonical-path-authority",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/42b3c2c1c167f9dcf2f1415d4bdc571cf5c2d9db"
+    ]
+  },
+  "truth_labels": {
+    "docs/standards/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Path evidence",
+      "outcome": "PASS",
+      "reason": "git ls-files tracks only docs/standards/IIIF.md; commit 42b3c2c1c1 (2026-08-22) deleted docs/standards/iiif.md, and IIIF.md section 10 records the owner decision (issue #3361) and integration (PR #3429). The README still listed iiif.md in its tree and archival family table and kept STD-DRIFT-002 on CONFLICTED / HOLD."
+    },
+    {
+      "gate": "Docs checks",
+      "outcome": "PASS",
+      "reason": "check_meta_blocks.py, check_document_graph.py, check_links.py and check_stale_docs.py report no FAIL findings on the changed range; make gap-scan and docs-critical-structure exit 0; check-case-conflict passes."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/aca3165af957c340fecf394f28f5d10fe45c70b2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T16:21:59Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "The README's 52-entry inventory figures stay pinned to their recorded snapshot commit and were not changed."
+}
