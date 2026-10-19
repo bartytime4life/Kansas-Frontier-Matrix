@@ -1,0 +1,92 @@
+{
+  "receipt_id": "genrec-evidence-resolution-record-closed-schema-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/governance/validate_evidence_resolution_record.py",
+    "tests/validators/governance/test_evidence_resolution_record.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/governance/validate_evidence_resolution_record.py": "sha256:dcc5991ce56dbaed6ffd7e1428a9ec55400d884cd4d9279488c289994136f109",
+    "tests/validators/governance/test_evidence_resolution_record.py": "sha256:1fb8dd1dc9c9e1535294129853e732c698a14ca96711f4a15b0de993d353cf77"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/a8915a5da7a3f8df366429f6412cc6ab1c612d11",
+      "repo:tools/validators/governance/validate_evidence_resolution_record.py@a8915a5da7a3f8df366429f6412cc6ab1c612d11",
+      "repo:tests/validators/governance/test_evidence_resolution_record.py@a8915a5da7a3f8df366429f6412cc6ab1c612d11",
+      "repo:schemas/contracts/v1/governance/evidence_resolution_record.schema.json@a8915a5da7a3f8df366429f6412cc6ab1c612d11",
+      "repo:contracts/governance/evidence_resolution_record.md@a8915a5da7a3f8df366429f6412cc6ab1c612d11",
+      "repo:fixtures/contracts/v1/governance/evidence_resolution_record/cases.json@a8915a5da7a3f8df366429f6412cc6ab1c612d11",
+      "repo:.github/workflows/evidence-resolution-record.yml@a8915a5da7a3f8df366429f6412cc6ab1c612d11",
+      "repo:pyproject.toml@a8915a5da7a3f8df366429f6412cc6ab1c612d11"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/governance/validate_evidence_resolution_record.py": "CONFIRMED",
+    "tests/validators/governance/test_evidence_resolution_record.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "evidence-resolution-record.yml runs only this validator and its tests, never the schema, so the validator is the only gate. It ignored the closed schema: a record with a recomputed record_id derived COMPLETE while carrying an extra effects.review_approved=true (an authority claim the contract classes as ERROR), an extra top-level or row field, a missing query_run_id, evaluated_at or reason_code, a non-date-time evaluated_at, a lowercase reason_code, a non-string bundle_id or integer refs. The CLI also printed a RecursionError traceback for deeply nested JSON, and --cases read its fixture relative to the working directory. The validator now validates the record against the paired schema (jsonschema and rfc3339-validator are core project dependencies, installed by the workflow) and reports SCHEMA_INVALID, catches RecursionError as INPUT_ERROR, and resolves the fixture from the repository root. Three of the new tests fail on the original code."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/validators/governance/test_evidence_resolution_record.py: 13 tests (7 before, 6 new) covering the closed-shape refusals, every semantic finding, the mixed-status outcome derivation (RESOLVED+DENIED is PARTIAL, UNRESOLVED+DENIED is UNRESOLVED), that every non-ERROR fixture satisfies the schema, and the CLI decisions and exit codes 0, 1 and 2 from any working directory. The test builds its own schema validator rather than trusting the module's. In-process branch coverage rises from 59% to 67%; the CLI paths run in subprocesses, which coverage does not measure. tests/validators/governance: 522 tests pass (516 before). All seven fixture cases keep their expected outcome and the semantic-only ERROR cases keep their exact findings."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of eleven changes failed the suite: removing the schema check or its format checker, the root-relative fixture path, the RecursionError handling, the coverage, row-ordering, DENIED, UNRESOLVED, digest-alphabet, record_id and profile checks."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same findings before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/a8915a5da7a3f8df366429f6412cc6ab1c612d11"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T04:15:35Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "The schema and contract are unchanged; the validator now enforces the shape they already declare. The record_id binds every field, so before this change an injected field could not be swapped after the fact, but a record could be minted with one. docs/intake/exploratory/evidence-resolution-record-source-map.md links these files without pinning bytes."
+}
