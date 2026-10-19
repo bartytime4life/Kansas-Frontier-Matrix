@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { createRequire } from "node:module";
+import { requireSourceFiles, workerPrerequisite } from "./platform-prerequisites.mjs";
 import { before, after, test } from "node:test";
 import ts from "typescript";
 import { captureDaily, hostedArchiveWorkerToken } from "../scripts/capture-daily-archive.mjs";
@@ -8,9 +8,12 @@ const compile=source=>`data:text/javascript;base64,${Buffer.from(ts.transpileMod
 const modelUrl=compile(await readFile(new URL("../app/daily-archive.ts",import.meta.url),"utf8"));
 const model=await import(modelUrl);
 const store=await import(compile((await readFile(new URL("../app/daily-archive-store.ts",import.meta.url),"utf8")).replace('"./daily-archive"',JSON.stringify(modelUrl))));
-const require=createRequire(import.meta.url);const runtimeRequire=createRequire(require.resolve("wrangler"));const {Miniflare,convertV4MiniflareOptions}=runtimeRequire("miniflare");
+requireSourceFiles(["drizzle/0005_daily_archive.sql"]);
+const worker = workerPrerequisite({ viaWrangler: true });
 let runtime,db,bucket;
 before(async()=>{
+ if (worker.skip) return;
+ const {Miniflare,convertV4MiniflareOptions} = worker.load();
  runtime=new Miniflare(convertV4MiniflareOptions({modules:true,script:"export default {fetch(){return new Response('test')}}",d1Databases:["DB"],r2Buckets:["BUCKET"]}));
  db=await runtime.getD1Database("DB");bucket=await runtime.getR2Bucket("BUCKET");
  const sql=await readFile(new URL("../drizzle/0005_daily_archive.sql",import.meta.url),"utf8");
@@ -29,7 +32,7 @@ test("UTC dates and coordinate validation reject malformed map data",()=>{
  assert.throws(()=>model.validateArchivePayload(fixture({state:"empty"}),feed));
 });
 
-test("durable capture, idempotency and exact stored-byte readback",async()=>{
+test("durable capture, idempotency and exact stored-byte readback",{skip:worker.skip},async()=>{
  await reset();const first=await store.captureArchive(db,bucket,feed,reply());
  assert.equal(first.status,"ready");const saved=await store.readArchiveCapture(db,bucket,first.id);
  assert.equal(saved.payload.data.features[0].properties.unit,"Mw");assert.equal(saved.entry.review,"pending");assert.equal(await store.archiveHash(saved.bytes),first.sha256);
@@ -39,14 +42,14 @@ test("durable capture, idempotency and exact stored-byte readback",async()=>{
  assert.equal((await store.archiveCatalog(db,new Date().toISOString().slice(0,10))).days.length,2);
 });
 
-test("concurrent writers acquire one lease before any provider access",async()=>{
+test("concurrent writers acquire one lease before any provider access",{skip:worker.skip},async()=>{
  await reset();let calls=0,release;const gate=new Promise(resolve=>release=resolve);
  const first=store.captureArchive(db,bucket,feed,async()=>{calls++;await gate;return Response.json(fixture());});
  while(!calls)await new Promise(resolve=>setTimeout(resolve,5));
  await assert.rejects(store.captureArchive(db,bucket,feed,reply()),/Another capture/);release();await first;assert.equal(calls,1);
 });
 
-test("failure remains visible, retry preserves previous attempts, and retries are bounded",async()=>{
+test("failure remains visible, retry preserves previous attempts, and retries are bounded",{skip:worker.skip},async()=>{
  await reset();await assert.rejects(store.captureArchive(db,bucket,feed,async()=>new Response("provider down",{status:503})),/UPSTREAM_HTTP_503/);
  for(let i=0;i<3;i++)await store.captureArchive(db,bucket,feed,reply({state:"partial"}));
  await assert.rejects(store.captureArchive(db,bucket,feed,reply()),/retry limit/);
@@ -54,7 +57,7 @@ test("failure remains visible, retry preserves previous attempts, and retries ar
  assert.equal(rows.length,4);assert.equal(rows[3].status,"failed");assert.equal(rows[3].bytes,0);
 });
 
-test("storage and pause stop new transfer without deleting history",async()=>{
+test("storage and pause stop new transfer without deleting history",{skip:worker.skip},async()=>{
  await reset();await db.prepare("INSERT INTO daily_archive_settings(id,budget,paused) VALUES(1,16777216,1)").run();
  let calls=0;const acquire=async()=>{calls++;return Response.json(fixture());};
  await assert.rejects(store.captureArchive(db,bucket,feed,acquire),/paused/);
@@ -62,26 +65,26 @@ test("storage and pause stop new transfer without deleting history",async()=>{
  await assert.rejects(store.captureArchive(db,bucket,"nws-alerts",acquire),/budget reached/);assert.equal(calls,1);
 });
 
-test("invalid or oversized capture cannot become an empty successful day",async()=>{
+test("invalid or oversized capture cannot become an empty successful day",{skip:worker.skip},async()=>{
  await reset();await assert.rejects(store.captureArchive(db,bucket,feed,reply({featureCount:9})),/INVALID_CAPTURE/);
  await assert.rejects(store.captureArchive(db,bucket,feed,async()=>new Response("{}",{headers:{"content-length":String(model.ARCHIVE_MAX_PAYLOAD+1)}})),/TOO_LARGE/);
  const rows=(await store.archiveCatalog(db,new Date().toISOString().slice(0,10))).entries;assert.ok(rows.every(row=>row.status==="failed"));
 });
 
-test("failed object write conservatively retains bytes and its recoverable object key",async()=>{
+test("failed object write conservatively retains bytes and its recoverable object key",{skip:worker.skip},async()=>{
  await reset();const failedBucket={...bucket,put:async()=>{throw Error("disk full");}};
  await assert.rejects(store.captureArchive(db,failedBucket,feed,reply()));
  const [entry]=(await store.archiveCatalog(db,new Date().toISOString().slice(0,10))).entries;assert.equal(entry.status,"failed");assert.ok(entry.bytes>0);assert.ok(entry.object_key);
 });
 
-test("crash recovery records the interrupted attempt and preserves its reservation",async()=>{
+test("crash recovery records the interrupted attempt and preserves its reservation",{skip:worker.skip},async()=>{
  await reset();const old=new Date(Date.now()-700000).toISOString();const day=old.slice(0,10);
  await db.prepare("INSERT INTO daily_archive_captures(id,day,feed,attempt,status,started_at,bytes) VALUES('interrupted',?,?,1,'running',?,16777216)").bind(day,feed,old).run();
  await db.prepare("INSERT INTO daily_archive_lock VALUES(1,'old',?)").bind(old).run();await store.captureArchive(db,bucket,"nws-alerts",reply({feed:"nws-alerts"}));
  const row=await db.prepare("SELECT * FROM daily_archive_captures WHERE id='interrupted'").first();assert.equal(row.status,"failed");assert.equal(row.bytes,16777216);
 });
 
-test("append-only review holds the exact capture, while checksum tampering fails closed",async()=>{
+test("append-only review holds the exact capture, while checksum tampering fails closed",{skip:worker.skip},async()=>{
  await reset();const result=await store.captureArchive(db,bucket,feed,reply());await store.reviewArchive(db,result.id,"held","Investigate coordinates");
  await assert.rejects(store.readArchiveCapture(db,bucket,result.id),/held/);assert.equal((await store.readArchiveCapture(db,bucket,result.id,true)).entry.review,"held");
  await store.reviewArchive(db,result.id,"reviewed","Source coordinates checked");const saved=await store.readArchiveCapture(db,bucket,result.id);assert.equal(saved.entry.review,"reviewed");
@@ -89,7 +92,7 @@ test("append-only review holds the exact capture, while checksum tampering fails
  await bucket.put(saved.entry.object_key,new Uint8Array(saved.entry.bytes));await assert.rejects(store.readArchiveCapture(db,bucket,result.id),/checksum/);
 });
 
-test("route denies held-byte disclosure and worker curation while retaining authenticated owner download",async()=>{
+test("route denies held-byte disclosure and worker curation while retaining authenticated owner download",{skip:worker.skip},async()=>{
  await reset();const capture=await store.captureArchive(db,bucket,feed,reply());await store.reviewArchive(db,capture.id,"held","Private review fixture");
  const ownerToken="o".repeat(43),workerToken="w".repeat(43);
  globalThis.__archiveRouteIntegration={env:{BUCKET:bucket,KFM_ARCHIVE_LOCAL_OWNER_TOKEN:ownerToken,KFM_ARCHIVE_WORKER_TOKEN:workerToken},db};
@@ -112,7 +115,7 @@ test("route denies held-byte disclosure and worker curation while retaining auth
  assert.equal((await store.readArchiveCapture(db,bucket,capture.id,true)).entry.review,"held");assert.equal((await store.archiveStorage(db)).paused,false);
 });
 
-test("no capture for a missing day and no fabricated empty map payload",async()=>{
+test("no capture for a missing day and no fabricated empty map payload",{skip:worker.skip},async()=>{
  await reset();const catalog=await store.archiveCatalog(db,"2000-01-01");assert.deepEqual(catalog.entries,[]);assert.deepEqual(catalog.days,[]);
  await assert.rejects(store.readArchiveCapture(db,bucket,crypto.randomUUID()),/No stored capture/);
 });

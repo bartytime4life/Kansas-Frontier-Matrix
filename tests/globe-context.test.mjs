@@ -57,7 +57,25 @@ test("globe viewpoints remain distinct while Earth Engine opens installed map la
     assert.equal(preset.pitch, 0); assert.equal(preset.bearing, 0);
   }
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  assert.match(page, /onClick={\(\) => { setUndergroundOpen\(false\); activateMapRepresentation\("globe"\); }}/);
+  const ast = ts.createSourceFile('page.tsx', page, ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
+  let choose, onClick;
+  function visit(node) {
+    if (ts.isVariableDeclaration(node) && node.name.getText(ast) === 'chooseMapMenuRepresentation') choose = node.initializer.getText(ast);
+    if (ts.isJsxElement(node) && node.openingElement.tagName.getText(ast) === 'button'
+      && node.children.some(child => ts.isJsxElement(child) && child.openingElement.tagName.getText(ast) === 'b' && child.children.some(text => ts.isJsxText(text) && text.text === 'Globe'))) {
+      onClick = node.openingElement.attributes.properties.find(attr => attr.name?.getText(ast) === 'onClick').initializer.expression.getText(ast);
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(ast); assert.ok(choose); assert.ok(onClick);
+  const javascript = text => ts.transpileModule(text, {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+  for (const mapUtilityView of ['compare', 'scene']) {
+    const calls = [];
+    const chooseMapMenuRepresentation = new Function('mapUtilityView', 'setUndergroundOpen', 'setMapUtilityOpen', 'activateMapRepresentation', javascript(`return ${choose};`))(
+      mapUtilityView, value => calls.push(['underground', value]), value => calls.push(['utility', value]), value => calls.push(['mode', value]));
+    new Function('chooseMapMenuRepresentation', javascript(`return ${onClick};`))(chooseMapMenuRepresentation)();
+    assert.deepEqual(calls, [['underground', false], ...(mapUtilityView === 'compare' ? [['utility', false]] : []), ['mode', 'globe']]);
+  }
   assert.match(page, /const openEarthEngineLayers = useCallback/);
   assert.match(page, /setPendingCatalogTarget\("earth-engine-context-controls"\)/);
   assert.doesNotMatch(page, /<EarthEngineGlobe/);

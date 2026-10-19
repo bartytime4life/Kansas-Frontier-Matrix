@@ -16,7 +16,7 @@
     "build": "vinext build",
     "postbuild": "node scripts/stage-public-client-assets.mjs",
     "start": "node server/start.mjs",
-    "test": "npm run build && node --test tests/*.test.mjs",
+    "test": "npm run build && node --test --test-concurrency=4 tests/*.test.mjs",
     "test:browser-geometry": "node scripts/verify-explorer-geometry.mjs",
     "lint": "bash scripts/sites-env.sh -- eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern public/maplibre",
     "prepare:lightning": "node scripts/prepare-lightning-reader.mjs",

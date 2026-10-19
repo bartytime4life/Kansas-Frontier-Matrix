@@ -58,19 +58,66 @@ test('raster is withheld on globe, pitch, or terrain and resumes only on a flat 
 test('a failed owned source clears the partial display without marking other sources failed',()=>{
  const h=harness(),c=h.start();h.listeners.get('error')({sourceId:'unrelated'});assert.equal(h.state(),'visible');h.listeners.get('error')({sourceId:'kfm-local-atlas-source'});assert.equal(h.state(),'unavailable');assert.equal(h.sources.size,0);assert.equal(h.layers.size,0);c.dispose();assert.equal(h.listeners.size,0);
 });
-test('the integrated utility mounts only while open and diverts its own feature clicks',async()=>{
- const page=await readFile('app/page.tsx','utf8');assert.match(page,/mapUtilityOpen && mapUtilityView === "localAtlas" && <LocalAtlasControl/);assert.match(page,/if \(localAtlasHit\(map, event.point, renderedHits\)\) return/);assert.match(page,/suspended=\{Boolean\(measureMode\) \|\| undergroundOpen\}/);
- const css=await readFile('app/local-atlas.css','utf8');assert.match(css,/prefers-reduced-motion/);assert.match(css,/focus-visible/);
+test('hosted map mounts source status without mounting or importing the local-PC atlas control', async () => {
+ const page=await readFile('app/page.tsx','utf8');
+ const ast=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);
+ const imports=[],mounts=[];
+ function visit(node,ancestors=[]){
+  if(ts.isImportDeclaration(node))imports.push(node.moduleSpecifier.text);
+  if(ts.isJsxSelfClosingElement(node))mounts.push({name:node.tagName.getText(ast),ancestors});
+  ts.forEachChild(node,child=>visit(child,[...ancestors,node]));
+ }
+ visit(ast);
+ assert.equal(imports.some(name=>name.startsWith('./local-atlas')),false);
+ assert.equal(mounts.some(node=>node.name==='LocalAtlasControl'),false);
+ const sourceStatus=mounts.filter(node=>node.name==='HostedSourceStatus');assert.equal(sourceStatus.length,1);
+ assert.ok(sourceStatus[0].ancestors.some(node=>ts.isBinaryExpression(node)&&node.operatorToken.kind===ts.SyntaxKind.AmpersandAmpersandToken
+  &&node.left.getText(ast)==='sourceStatusOpen && (leftPanelMode === "layers" || leftPanelMode === "live")'), 'hosted status is only mounted in its open Layers view');
 });
 
-test('actual global click callback yields local hits before official selection with one shared query', async () => {
+test('legacy local Atlas bookmarks reveal hosted source status without opening a PC utility', async () => {
  const page=await readFile('app/page.tsx','utf8');
- const click=page.slice(page.indexOf('        map.on("click", (event) => {'));
- const prefix=click.slice(click.indexOf('{')+1,click.indexOf('          const availableLayers'));
- const handler=new Function('map','event','undergroundOpenRef','measureModeRef','localAtlasHit',prefix+"return 'official';");
- let hits=0,queries=0;const map={queryRenderedFeatures:()=>{queries++;return [];}};const local=()=>{hits++;return true;};
- assert.equal(handler(map, {point:{x:1,y:2}}, {current:false},{current:null},local),undefined);assert.equal(hits,1);
- assert.equal(handler(map, {point:{x:1,y:2}}, {current:false},{current:null},()=>false),'official');assert.equal(queries,2);
+ const ast=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX),declarations=new Map();let reveal;
+ function visit(node){
+  if(ts.isVariableDeclaration(node)&&node.initializer)declarations.set(node.name.getText(ast),node.initializer.getText(ast));
+  if(ts.isIfStatement(node)&&node.expression.getText(ast)==='restoredSourceStatus')reveal=node.getText(ast);
+  ts.forEachChild(node,visit);
+ }
+ visit(ast);assert.ok(reveal);
+ const code=['restoredMapUtilityView','restoredSourceStatus','nextMapUtilityView','restoredMapUtilityOpen']
+  .map(name=>{assert.ok(declarations.has(name));return `const ${name} = ${declarations.get(name)};`;}).join('\n');
+ const javascript=ts.transpileModule(`${code}\n${reveal}\nreturn {view:nextMapUtilityView,open:restoredMapUtilityOpen};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+ for(const query of ['maptab=localAtlas&mapui=open','maptab=localAtlas','layers=sources','layers=sources&maptab=compare&mapui=open'])for(const mode of ['snapshot','comparison']){
+  const params=new URLSearchParams(query+'&ctx=census-counties&time=1909'),original=params.toString(),actions=[];
+  const result=new Function('params','nextTemporalMode','setLeftPanelMode','setLeftOpen','setSourceStatusOpen',javascript)(params,mode,
+   value=>actions.push(['mode',value]),value=>actions.push(['left',value]),value=>actions.push(['sources',value]));
+  assert.deepEqual(actions,[['mode','layers'],['left',true],['sources',true]]);
+  assert.equal(result.open,false);assert.notEqual(result.view,'localAtlas');assert.equal(params.toString(),original);
+ }
+});
+
+test('hosted global click selection filters hidden official layers and yields to Underground before querying', async () => {
+ const page=await readFile('app/page.tsx','utf8');
+ const ast=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);let callback;
+ function visit(node){
+  if(ts.isCallExpression(node)&&node.expression.getText(ast)==='map.on'&&node.arguments[0]?.getText(ast)==='"click"')callback=node.arguments[1];
+  ts.forEachChild(node,visit);
+ }
+ visit(ast);assert.ok(callback);
+ const statements=[];
+ for(const statement of callback.body.statements){
+  if(ts.isVariableStatement(statement)&&statement.declarationList.declarations.some(node=>node.name.getText(ast)==='availableLayers'))break;
+  statements.push(statement.getText(ast));
+ }
+ const javascript=ts.transpileModule(statements.join('\n')+'\nreturn renderedHits;',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+ const hidden={source:'hidden-source',layer:{id:'hidden'}},visible={source:'visible-source',layer:{id:'visible'}},registry={source:'registry',layer:{id:'registry'}},proof={source:'synthetic-proof',layer:{id:'proof'}};
+ let queries=0;
+ const scope={map:{queryRenderedFeatures:()=>{queries++;return [hidden,visible,registry,proof];}},event:{point:{x:1,y:2}},undergroundOpenRef:{current:false},measureModeRef:{current:null},
+  OFFICIAL_CONTEXT_BY_SOURCE_ID:{'hidden-source':{id:'hidden'},'visible-source':{id:'visible'}},officialOpacityRef:{current:{hidden:0,visible:.5}},
+  findLayerByRenderer:id=>id==='registry'?{id:'registry',defaultOpacity:1}:null,opacityRef:{current:{registry:0}}};
+ const handler=()=>new Function(...Object.keys(scope),javascript)(...Object.values(scope));
+ assert.deepEqual(handler(),[visible,proof]);assert.equal(queries,1);
+ scope.undergroundOpenRef.current=true;assert.equal(handler(),undefined);assert.equal(queries,1);
 });
 test('raster image bounds own only visible local clicks without claiming pixel values', () => {
  const h=harness(),p=preview({kind:'raster',data:{imageDataUrl:'data:image/png;base64,aGVsbG8=',coordinates:[[-100,39],[-99,39],[-99,38],[-100,38]]}}),c=h.start(p);
