@@ -5,10 +5,31 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[4]
 CASES=ROOT/"fixtures/domains/soil/component_horizon_join/cases.json"
-# The workflow runs no schema check; the paired schema is closed and requires every property.
+# The workflow runs no schema check; the paired schema is closed and requires every property, nested objects included.
 SCHEMA=ROOT/"schemas/contracts/v1/domains/soil/component_horizon_join.schema.json"
-SCHEMA_FIELDS=frozenset(json.loads(SCHEMA.read_text(encoding="utf-8"))["properties"])
+SCHEMA_DOC=json.loads(SCHEMA.read_text(encoding="utf-8"))
 FALSE_EFFECTS={"join_persisted":False,"evidence_resolved":False,"policy_evaluated":False,"review_approved":False,"released":False,"published":False}
+
+def closed_shape_violations(value, schema, path="$"):
+    """Paths that break the schema's closed objects or required fields, at every depth.
+
+    The paired schemas use only properties, required, additionalProperties and items.
+    """
+    found = []
+    properties = schema.get("properties")
+    if isinstance(value, dict) and isinstance(properties, dict):
+        if schema.get("additionalProperties") is False:
+            found += [f"{path}.{key}" for key in sorted(set(value) - set(properties))]
+        found += [f"{path}.{key}" for key in schema.get("required", []) if key not in value]
+        for key, subschema in properties.items():
+            if key in value:
+                found += closed_shape_violations(value[key], subschema, f"{path}.{key}")
+    items = schema.get("items")
+    if isinstance(value, list) and isinstance(items, dict):
+        for index, item in enumerate(value):
+            found += closed_shape_violations(item, items, f"{path}[{index}]")
+    return found
+
 
 def expected_identity(c):
     x=dict(c); x.pop("id",None); x.pop("spec_hash",None)
@@ -18,7 +39,7 @@ def expected_identity(c):
 
 def _evaluate(c):
     findings=[]
-    if set(c)!=SCHEMA_FIELDS: findings.append("FIELD_SET_INVALID")
+    if closed_shape_violations(c,SCHEMA_DOC): findings.append("FIELD_SET_INVALID")
     if c.get("profile")!="kfm.domains.soil.component-horizon-join.v1" or c.get("status")!="PROPOSED_INACTIVE": findings.append("PROFILE_INVALID")
     if c.get("effects")!=FALSE_EFFECTS or any(v is not False for v in c["effects"].values()): findings.append("EFFECT_OVERCLAIM")
     if c.get("public_use_allowed") is not False: findings.append("PUBLIC_USE_OVERCLAIM")
