@@ -15,6 +15,7 @@ import { contextSelectionChanges, preferredContextIds, readContextPreference, st
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
+import { hasExplorerDestination } from "./explorer-startup";
 import { basemapCacheRequest } from "./basemap-cache";
 import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
@@ -1466,9 +1467,8 @@ export default function Home() {
   const [coordinateError, setCoordinateError] = useState("");
   const [projection, setProjection] = useState<"mercator" | "globe">("mercator");
   const [helpOpen, setHelpOpen] = useState(false);
+  // Welcome is decided after hydration alongside URL/history restoration.
   const [guideOpen, setGuideOpen] = useState(false);
-  // First-visit quick start; device-local flag only, read after hydration.
-  useEffect(() => { const params = new URLSearchParams(window.location.search); if (!readExplorerGuideDismissed() && params.get("layers") !== "sources" && params.get("maptab") !== "localAtlas") setGuideOpen(true); }, []);
   const [repositoryOpen, setRepositoryOpen] = useState(false);
   const [currentWorkspace, setCurrentWorkspace] = useState<PublicWorkspaceId>("explore");
   const [repositoryView, setRepositoryView] = useState<RepositoryView>("updates");
@@ -4462,6 +4462,19 @@ export default function Home() {
 
   const restoreExplorerFromUrl = useCallback(() => {
       const params = explorerHistoryParams(window.location.search, window.history.state);
+      const hasDestination = hasExplorerDestination(params, new URLSearchParams(window.location.search));
+      if (!explorerRestoredRef.current) {
+        // Decide from the same incoming URL/saved view that owns restoration,
+        // before view serialization can add default camera parameters.
+        setGuideOpen(!hasDestination && !readExplorerGuideDismissed());
+      } else if (hasDestination) {
+        // Back/Forward can restore a destination while manual help is open.
+        // Do not strand keyboard focus in the removed guide or save an opt-out.
+        if (document.activeElement?.closest(".explorer-guide")) {
+          document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
+        }
+        setGuideOpen(false);
+      }
       setStarterPanelOpen(!params.has("layerView") && !params.has("topic"));
       const restoredTopic = restoreTopic(params.get("topic"));
       setOfficialWorkspace(restoredTopic);

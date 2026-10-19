@@ -36,6 +36,7 @@ jobs:
           done
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/godaddy-node-runtime.test.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/county-search.browser.mjs
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/explorer-startup.browser.mjs
           node --input-type=module - "$RUNNER_TEMP/node-runtime.log" <<'NODE'
           import { readFileSync } from 'node:fs';
           import assert from 'node:assert/strict';
