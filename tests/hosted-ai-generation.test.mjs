@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {generateHosted} from '../server/hosted-ai-generation.mjs';
+import {generateHosted,HOSTED_PREFILL_TOKENS} from '../server/hosted-ai-generation.mjs';
 import {HOSTED_CONTEXT_TOKENS} from '../server/hosted-ai-prompt.mjs';
 
 function fixture(length,run){
@@ -31,7 +31,7 @@ test('chunked prefill preserves every input, mask, position and cache before dec
 test('full bounded context uses small prefill allocations and refuses overflow before inference',async()=>{
  const f=fixture(HOSTED_CONTEXT_TOKENS);
  await generateHosted(f.runtime,'prompt',1,cancel());
- assert.equal(f.calls.length,32);assert.ok(f.calls.every(c=>c.ids.length===64));
+ assert.equal(f.calls.length,HOSTED_CONTEXT_TOKENS/HOSTED_PREFILL_TOKENS);assert.ok(f.calls.every(c=>c.ids.length===HOSTED_PREFILL_TOKENS));
  assert.ok(f.tensors.every(t=>t.disposed));
  const tooLong=fixture(HOSTED_CONTEXT_TOKENS+1);
  await assert.rejects(()=>generateHosted(tooLong.runtime,'prompt',1,cancel()),/MODEL_CONTEXT_LIMIT/);

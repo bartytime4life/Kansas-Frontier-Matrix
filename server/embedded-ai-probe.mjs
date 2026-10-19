@@ -44,12 +44,12 @@ export async function watchEmbeddedWorker(worker, { timeoutMs = EMBEDDED_PROBE_L
 }
 
 export async function qualifyEmbeddedAi({ root = '/private', workerFactory = path => new Worker(path, {
-  workerData: { directory: join(resolve(root), 'kfm-embedded-qwen3-06b-int8-wasm-20261018') },
+  workerData: { directory: join(resolve(root), 'kfm-embedded-qwen3-06b-int8-sliced-wasm-20261019') },
   // --input-type applies to stdin/eval entrypoints, never to a worker file.
   execArgv: process.execArgv.filter(flag => !flag.startsWith('--input-type=')),
   resourceLimits: { maxOldGenerationSizeMb: 256 },
 }) } = {}) {
-  const directory = join(resolve(root), 'kfm-embedded-qwen3-06b-int8-wasm-20261018');
+  const directory = join(resolve(root), 'kfm-embedded-qwen3-06b-int8-sliced-wasm-20261019');
   const rootInfo = await lstat(root);
   if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink()) throw failure('EMBEDDED_ROOT_UNSAFE');
   try { await mkdir(directory, { mode: 0o700 }); } catch (error) { if (error.code !== 'EEXIST') throw error; }
@@ -57,7 +57,7 @@ export async function qualifyEmbeddedAi({ root = '/private', workerFactory = pat
   if (!info.isDirectory() || info.isSymbolicLink() || info.uid !== process.getuid()) throw failure('EMBEDDED_DIRECTORY_UNSAFE');
   await chmod(directory, 0o700);
   if ((await readdir(directory)).length) throw failure('EMBEDDED_ALREADY_ATTEMPTED');
-  await writeFile(join(directory, '.attempt'), 'kfm.embedded-qwen3-06b-int8-wasm/20261018/v1\n', { flag: 'wx', mode: 0o600 });
+  await writeFile(join(directory, '.attempt'), 'kfm.embedded-qwen3-06b-int8-sliced-wasm/20261019/v1\n', { flag: 'wx', mode: 0o600 });
   const runId = randomUUID(), began = performance.now();
   const workerPath = resolve('server/embedded-ai-probe-worker.mjs');
   const sources = {};
@@ -67,7 +67,7 @@ export async function qualifyEmbeddedAi({ root = '/private', workerFactory = pat
   let result;
   try { result = await watchEmbeddedWorker(workerFactory(workerPath)); }
   catch (error) { result = { status: 'LIMITED', reason: reason(error) }; }
-  const receipt = { profile: 'kfm.embedded-qwen3-06b-int8-wasm/20261018/v1', runId, observedAt: new Date().toISOString(),
+  const receipt = { profile: 'kfm.embedded-qwen3-06b-int8-sliced-wasm/20261019/v1', runId, observedAt: new Date().toISOString(),
     node: process.versions.node, platform: process.platform, arch: process.arch,
     ...result, elapsedMs: Math.round(performance.now() - began), limits: EMBEDDED_PROBE_LIMITS, sources,
     scope: 'One fixed synthetic prompt in a Node worker thread. No KFM/user data, public endpoint, paid API, PC inference, daemon, subprocess, or extra listening port.',

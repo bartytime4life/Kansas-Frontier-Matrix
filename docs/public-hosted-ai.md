@@ -1,5 +1,10 @@
 # Public hosted AI: discussion and released evidence
 
+Memory fit (2026-10-19): the [memory-fit candidate](hosted-qwen-memory-fit-20261019.md)
+serves a derived Qwen3-0.6B INT8 model with a sliced output layer and external
+weights, and lowers input context to 1,024 tokens and expanded replies to 256 tokens.
+It supersedes the 2,048/768 limits described below.
+
 Current candidate (2026-10-18): the active model implementation is Qwen3-0.6B
 INT8. See [Hosted Qwen preview candidate](hosted-qwen-preview-20261018.md) for
 its exact identity, memory bounds and LIMITED quality screen. The SmolLM2

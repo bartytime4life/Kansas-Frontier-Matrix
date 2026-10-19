@@ -20,8 +20,9 @@ try {
   const modelDirectory = await installModel(workerData.directory, manifest);
   const downloadMs = Math.round(performance.now() - downloadBegan);
   stage('MODEL_LOAD'); const loadBegan = performance.now();
+  const externalData = [{ path: 'model_int8.onnx_data', data: await readFile(join(modelDirectory, 'onnx/model_int8.onnx_data')) }];
   const session = await ort.InferenceSession.create(await readFile(join(modelDirectory, 'onnx/model_int8.onnx')), {
-    executionProviders: ['wasm'], executionMode: 'sequential',
+    externalData, executionProviders: ['wasm'], executionMode: 'sequential',
     graphOptimizationLevel: 'disabled', enableCpuMemArena: false, enableMemPattern: false,
     extra: { session: { disable_prepacking: '1' } },
   });

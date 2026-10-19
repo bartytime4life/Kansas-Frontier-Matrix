@@ -1,4 +1,4 @@
-export const HOSTED_CONTEXT_TOKENS=2048;
+export const HOSTED_CONTEXT_TOKENS=1024;
 const escapeChatData = (value) => value.replaceAll("<|", "< |");
 export const CONTINUE_REPLY = "Continue your previous reply from where it stopped. Finish the explanation without repeating it.";
 
