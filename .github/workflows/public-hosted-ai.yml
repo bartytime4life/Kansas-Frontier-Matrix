@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: '22.23.3'
       - run: npm ci
-      - run: node --test tests/hosted-ai-resources.test.mjs tests/assistant-status.test.mjs tests/public-ai.test.mjs tests/hosted-ai.test.mjs tests/hosted-ai-acceptance.test.mjs tests/embedded-ai-probe.test.mjs tests/inspection-panel.test.mjs
+      - run: node --test tests/hosted-ai-resources.test.mjs tests/assistant-status.test.mjs tests/public-ai.test.mjs tests/hosted-ai.test.mjs tests/hosted-ai-acceptance.test.mjs tests/embedded-ai-probe.test.mjs tests/inspection-panel.test.mjs tests/home-inference.test.mjs
       - run: npm run build
       - run: npx tsc --noEmit
       - run: node --test tests/public-ai-http.test.mjs tests/login-removal-http.test.mjs

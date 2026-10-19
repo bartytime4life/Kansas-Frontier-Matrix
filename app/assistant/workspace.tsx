@@ -4,7 +4,9 @@ import styles from './workspace.module.css';
 import type {AssistantContext,AssistantFocus} from '../assistant-context';
 import {assistantSurface} from '../assistant-surfaces.mjs';
 import {buildInvestigationDraft,investigationMarkdown,type InvestigationJob} from '../assistant-investigation';
-type ChatStatus={configured:boolean;online:boolean;ready:boolean;evidenceSearchAvailable?:boolean;model?:string};
+type ChatStatus={configured:boolean;online:boolean;ready:boolean;evidenceSearchAvailable?:boolean;model?:string;modelLabel?:string};
+// The server names the selected model; the embedded Qwen build predates that field.
+const chatModelLabel=(status:ChatStatus|null)=>typeof status?.modelLabel==='string'&&/^[\w.:/-]{1,96}$/.test(status.modelLabel)?status.modelLabel:'Qwen3 0.6B';
 type ChatFailureDetails={code:string;httpStatus?:number};
 type Job=Omit<InvestigationJob,'result'>&{result:(NonNullable<InvestigationJob['result']>&{followUpQuestion?:string})|null};
 type Turn={question:string;job:Job;contextKey:string;generation:number};
@@ -176,7 +178,7 @@ export default function AssistantWorkspace({place='',focus,active=true,discovery
  const jumpToLatest=()=>{const body=bodyRef.current;if(body)body.scrollTo({top:body.scrollTop+conversationEnd(),behavior:'auto'});nearBottomRef.current=true;setAwayFromLatest(false);};
  const sourceContext=mode==='explore'&&focus?.context.selection?.kind==='subsurface';
  const canSubmit=mode==='find'?Boolean(discovery):Boolean(investigationId&&chatStatus?.configured&&(mode==='evidence'?chatStatus.evidenceSearchAvailable===true:sourceContext||chatStatus.ready));
- const statusText=mode==='find'?'Places & layers · no AI required':!chatStatus?(chatFailure?'AI connection unavailable':'Checking hosted AI'):!chatStatus.configured?'Awaiting owner setup':mode==='evidence'?(chatStatus.evidenceSearchAvailable?'Evidence search available':'Evidence search unavailable'):sourceContext?'Source summary available':!chatStatus.online?'AI unavailable':!chatStatus.ready?'Loading model…':'Qwen3 0.6B ready';
+ const statusText=mode==='find'?'Places & layers · no AI required':!chatStatus?(chatFailure?'AI connection unavailable':'Checking hosted AI'):!chatStatus.configured?'Awaiting owner setup':mode==='evidence'?(chatStatus.evidenceSearchAvailable?'Evidence search available':'Evidence search unavailable'):sourceContext?'Source summary available':!chatStatus.online?'AI unavailable':!chatStatus.ready?'Loading model…':chatModelLabel(chatStatus)+' ready';
  const notices=<>
    {!investigationId&&mode!=='find'&&<p role='alert' className={styles.notice}>A secure investigation session is unavailable in this browser. Place and layer discovery remains available.</p>}
    {chatFailure&&<p role='alert' data-ai-error={chatFailureDetails?.code} data-http-status={chatFailureDetails?.httpStatus} className={styles.notice}>{chatFailure}</p>}
@@ -245,7 +247,7 @@ export default function AssistantWorkspace({place='',focus,active=true,discovery
    </div></details>
 
    <label className={styles.composerField}><span className={styles.srOnly}>Message KFM</span><textarea ref={inputRef??messageRef} value={question} onChange={event=>setQuestion(event.target.value)} onCompositionStart={()=>{composingRef.current=true;}} onCompositionEnd={()=>{composingRef.current=false;}} onKeyDown={event=>{if(event.key==='ArrowDown'&&mode==='find'&&discoveryCurrent&&discovery?.items.length){event.preventDefault();resultListRef.current?.querySelector<HTMLButtonElement>('button')?.focus();return;}if(event.key==='Enter'&&!event.shiftKey&&!event.ctrlKey&&!event.altKey&&!event.metaKey&&!composingRef.current&&!event.nativeEvent.isComposing&&event.nativeEvent.keyCode!==229){event.preventDefault();event.currentTarget.form?.requestSubmit();}}} rows={2} maxLength={4096} placeholder={mode==='find'?'Find a county, city or layer…':'Message KFM…'} aria-describedby='kfm-composer-help' aria-busy={mode==='find'&&discoveryBusy}/></label>
-   <div className={styles.actions}><small id='kfm-composer-help'>{mode==='find'?'Local discovery · choose a result to inspect':mode==='evidence'?'Released records · no model required · unsupported answers withheld':sourceContext?'Source summary · no model required · not admitted evidence':'Qwen3 0.6B · unverified discussion'} · Enter sends · Shift+Enter adds a line</small>
+   <div className={styles.actions}><small id='kfm-composer-help'>{mode==='find'?'Local discovery · choose a result to inspect':mode==='evidence'?'Released records · no model required · unsupported answers withheld':sourceContext?'Source summary · no model required · not admitted evidence':chatModelLabel(chatStatus)+' · unverified discussion'} · Enter sends · Shift+Enter adds a line</small>
     {requestPhase!=='idle'?<>{running(job??undefined)&&<button type='button' disabled={busy} onClick={()=>setJobRetry(value=>value+1)}>Retry status</button>}<button type='button' className={styles.secondaryButton} disabled={requestPhase==='stopping'} onClick={()=>stopRequest()}>Stop</button></>:<button className={styles.sendButton} disabled={busy||!canSubmit||question.trim().length<(mode==='find'?1:2)}>{busy?'Sending…':mode==='find'?'Find':mode==='evidence'?'Search':'Send'}</button>}
    </div>
   </form>

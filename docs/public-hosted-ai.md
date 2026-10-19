@@ -37,6 +37,18 @@ hosted replies completed without an output limit or memory-guard trip.
 Guest browser checks must also be recorded with each activation.
 Public publication is a separate owner decision.
 
+## Provider selection — 2026-10-19
+
+`KFM_AI_PROVIDER` chooses exactly one generation provider per process. If it is
+unset or `hosted-qwen3`, the server runs the embedded model described below.
+`home-ollama` sends discussions to the owner's home inference gateway instead,
+and never starts the embedded model process. An unknown value or an invalid
+home configuration leaves chat `HOSTED_AI_NOT_CONFIGURED`; nothing falls back.
+Guest jobs, budgets, evidence and context rechecks, and output qualification
+are the same for both. `/api/ai/status` reports the selected `provider` and
+`model`; the home provider adds a short `modelLabel` for the chat header. See
+[home Ollama inference](home-ollama-inference.md) for activation, gates and rollback.
+
 ## Model and execution
 
 The single identity in server/embedded-ai-model.json is
