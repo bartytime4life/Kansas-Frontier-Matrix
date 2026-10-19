@@ -79,6 +79,13 @@ jobs:
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-agriculture-ndvi-readiness-reader-bounds-20261019.json \
             --repo-root .
+          # The path filter starts this job for any of these receipts, so each one must be validated above.
+          for receipt in data/receipts/generated/genrec-agriculture-ndvi-readiness-*.json; do
+            if ! grep -qF "$receipt" .github/workflows/agriculture-ndvi-readiness.yml; then
+              echo "::error::$receipt is not validated by this workflow"
+              exit 1
+            fi
+          done
 
       - name: Record trust boundary
         if: always()
