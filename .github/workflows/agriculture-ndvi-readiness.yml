@@ -71,17 +71,25 @@ jobs:
       - name: Verify generated authoring receipt integrity
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-agriculture-ndvi-readiness-20260806.json \
-            --repo-root . \
-            --artifact-git-ref d0479dc293e2ab79fe94698e471d3cfe6b4017de
-          # The latest successor receipt binds the current bytes.
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-agriculture-ndvi-readiness-reader-bounds-20261019.json \
-            --repo-root .
-          # The path filter starts this job for any of these receipts, so each one must be validated above.
+          # Every receipt for this workflow, with the commit whose bytes it records
+          # ("current" validates the working tree). A successor adds one line here.
+          receipts=(
+            "genrec-agriculture-ndvi-readiness-20260806.json d0479dc293e2ab79fe94698e471d3cfe6b4017de"
+            "genrec-agriculture-ndvi-readiness-reader-bounds-20261019.json current"
+          )
+          validated=" "
+          for entry in "${receipts[@]}"; do
+            read -r name ref <<< "$entry"
+            args=("data/receipts/generated/$name" --repo-root .)
+            if [ "$ref" != current ]; then
+              args+=(--artifact-git-ref "$ref")
+            fi
+            python tools/validators/validate_generated_receipt.py "${args[@]}"
+            validated+="$name "
+          done
+          # The path filter starts this job for any matching receipt, so each one must be in the list above.
           for receipt in data/receipts/generated/genrec-agriculture-ndvi-readiness-*.json; do
-            if ! grep -qF "$receipt" .github/workflows/agriculture-ndvi-readiness.yml; then
+            if [[ "$validated" != *" $(basename "$receipt") "* ]]; then
               echo "::error::$receipt is not validated by this workflow"
               exit 1
             fi

@@ -7,7 +7,7 @@
     "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/agriculture-ndvi-readiness.yml": "sha256:e76903e4167481379c5c28914861d547156e5f263c99657782a0d004f050abfe",
+    ".github/workflows/agriculture-ndvi-readiness.yml": "sha256:8d93443a4509c6abb3988dbb5d4dfccaf92c8bdeffcc5e4336e4d5a66db37648",
     "tools/validators/domains/agriculture/ndvi_readiness/validate_ndvi_readiness.py": "sha256:6b25dd32466f390940311f77b89fac2cc6df6d69a371528aa02453ae5ee0f7e7",
     "tests/validators/domains/agriculture/ndvi_readiness/test_validate_ndvi_readiness.py": "sha256:4728abbd18595f16723b72ae26a15f80fae019dc7eaadd4ab2626be14f162446"
   },
@@ -57,7 +57,7 @@
     {
       "gate": "Workflow receipt binding",
       "outcome": "PASS",
-      "reason": "data/receipts/generated/genrec-agriculture-ndvi-readiness-20260806.json pins the validator, its test and the workflow, and the workflow checked it against the working tree, so this fix would turn that step red. The step now checks it at d0479dc293e2ab79fe94698e471d3cfe6b4017de, the commit (#4622) whose bytes it records, with fetch-depth: 0, and validates this successor receipt against the current bytes; the existing genrec-agriculture-ndvi-readiness-*.json path trigger covers it. Because that trigger starts the job for any matching receipt, the step also fails when a matching receipt is not named in the workflow, so a later successor cannot pass unvalidated (review finding on #5294)."
+      "reason": "data/receipts/generated/genrec-agriculture-ndvi-readiness-20260806.json pins the validator, its test and the workflow, and the workflow checked it against the working tree, so this fix would turn that step red. The step now checks it at d0479dc293e2ab79fe94698e471d3cfe6b4017de, the commit (#4622) whose bytes it records, with fetch-depth: 0, and validates this successor receipt against the current bytes; the existing genrec-agriculture-ndvi-readiness-*.json path trigger covers it. Because that trigger starts the job for any matching receipt, the step validates every receipt from a single list of receipt and ref pairs and fails when a matching receipt is missing from that list, so a later successor cannot pass unvalidated and a mere textual mention of its path does not count (review findings on #5294 and #5295)."
     },
     {
       "gate": "Lint and guardrails",
