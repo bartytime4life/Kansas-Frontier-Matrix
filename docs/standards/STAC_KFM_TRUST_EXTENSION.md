@@ -17,7 +17,7 @@ owning_root: docs/
 responsibility: Define the proposed KFM-specific trust fields carried by STAC catalog projections without turning catalog records into evidence, proof, release approval, or publication authority.
 truth_posture: CONFIRMED repository placement, prior permissive scaffold, and corrective implementation packet; PROPOSED field realization and namespace; NEEDS VERIFICATION external STAC conformance and human review
 related:
-  - ./stac.md
+  - ./STAC.md
   - ./STAC_KFM_PROFILE.md
   - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../schemas/contracts/v1/stac/kfm-profile-v1.schema.json

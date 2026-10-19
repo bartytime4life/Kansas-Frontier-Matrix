@@ -1,0 +1,150 @@
+{
+  "receipt_id": "genrec-case-collision-pairs-removal-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/source/source_descriptor.md",
+    "control_plane/object_family_register.yaml",
+    "data/registry/agriculture/README.md",
+    "docs/architecture/data-classification-framework.md",
+    "docs/architecture/identity-and-spec-hash.md",
+    "docs/domains/hydrology/SOURCE_REGISTRY.md",
+    "docs/intake/exploratory/new-ideas-4-16-source-map.md",
+    "docs/intake/exploratory/pass20-expansion-conformance-baseline.md",
+    "docs/intake/exploratory/stac-cdl-pmtiles-profile-decision-packet.md",
+    "docs/sources/catalog/kansas/kansas-memory.md",
+    "docs/sources/catalog/kansas/kansas-state-archives.md",
+    "docs/standards/ARCHIVAL-STANDARDS.md",
+    "docs/standards/CANONICALIZATION.md",
+    "docs/standards/DUBLIN-CORE.md",
+    "docs/standards/OAI-PMH.md",
+    "docs/standards/README.md",
+    "docs/standards/STAC.md",
+    "docs/standards/STAC_KFM_TRUST_EXTENSION.md",
+    "tests/domains/hydrology/sources/README.md",
+    "tools/validators/directory_governance/repository_topology_baseline.json",
+    "tools/validators/source-descriptor/README.md",
+    "tools/validators/source_descriptor/README.md"
+  ],
+  "artifact_hashes": {
+    "contracts/source/source_descriptor.md": "sha256:42df3bfe61b3345fb35f60e18512d68850943790a6fa7933b965093bad697621",
+    "control_plane/object_family_register.yaml": "sha256:c3c8460990fcc737f2f1e5f5025c350588f0428c7ddf45d9bfe9ca1450d72295",
+    "data/registry/agriculture/README.md": "sha256:822ac786edd0670bea56ff35fb9c0948b10ad503566a7b63801e5542f56ef354",
+    "docs/architecture/data-classification-framework.md": "sha256:8e224f85521833f46131f6a03f9fcf9f61ea5daa359cedcae8f0f4483470a89f",
+    "docs/architecture/identity-and-spec-hash.md": "sha256:41752dc7f0b64e9e07cb7f3b34e450f587e4304ee0419e3f64589f7395ff7080",
+    "docs/domains/hydrology/SOURCE_REGISTRY.md": "sha256:03754f563bdcb3b6017d6cd190b45371f5c5b21100be1680381d46ec7488cb0d",
+    "docs/intake/exploratory/new-ideas-4-16-source-map.md": "sha256:a697163d53e1782fe55c0783a676b647002e6183c74153284deefb2eef19c163",
+    "docs/intake/exploratory/pass20-expansion-conformance-baseline.md": "sha256:0218eefc3d65a4d8c6405a2a58352264963d4008bce6915b1bd9bb53483bfb97",
+    "docs/intake/exploratory/stac-cdl-pmtiles-profile-decision-packet.md": "sha256:c3b540a8e3531f8ddb9591165b7150c0ebe7c91ee72be91e31271335aba5575a",
+    "docs/sources/catalog/kansas/kansas-memory.md": "sha256:7353f30893e182c0fac050cd33f8574504951d88a50d526c4f0ebc6234e410ce",
+    "docs/sources/catalog/kansas/kansas-state-archives.md": "sha256:6fe8c0176d9a3b6b4b7bcddab50468645e7f941161d51e202d06bd44af8cf76c",
+    "docs/standards/ARCHIVAL-STANDARDS.md": "sha256:5304c0b437a5c35031e1f5c8f16a05c4e77f8a58c46fd16da096ee40fa785f74",
+    "docs/standards/CANONICALIZATION.md": "sha256:ec3b67fd92dd2c8ef8727c90c2aac068267573958db6fa4d6ec0f70b904694a7",
+    "docs/standards/DUBLIN-CORE.md": "sha256:9e739405f7467db68a64be8ca43a19381f266f24a5aa8856ab8fbc7687b76a63",
+    "docs/standards/OAI-PMH.md": "sha256:f986963da146b2f3b13db26c1cfb06306fb8006ba6c2c687a518bf94d1667a25",
+    "docs/standards/README.md": "sha256:183496c7e66d812e2f271758972be038716800251181e97ab9e067a665933148",
+    "docs/standards/STAC.md": "sha256:93cf5c0d11f86ca0b9330b6283d4dbec219b15c013549bd0d61f0ec009831e25",
+    "docs/standards/STAC_KFM_TRUST_EXTENSION.md": "sha256:dc170750aae6c86a8bc85ceb2f075908e5a19b042ba563b11c78dbce1e26b2f0",
+    "tests/domains/hydrology/sources/README.md": "sha256:3f7abdba3b12dddc8db695d4568ae6b4cfe9044108ff1ca08f4678b68484300f",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:3427cbe06ebcb3d86d3ea08bae5d124b8d07f0231fec369e5ed250932e206b01",
+    "tools/validators/source-descriptor/README.md": "sha256:d27b476bed5c5c5a28fe3e6a9ed2e152317a7dc6835da8013a41a5a14c1726b6",
+    "tools/validators/source_descriptor/README.md": "sha256:7807c84821c4ade390d58358cb9664d73d4fcff182c64173f4b769b28dfec7bd"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/289aee7d8c7190adf4ad79ee2b66e866ad5cf335",
+      "repo:contracts/source/SOURCE_DESCRIPTOR.md@289aee7d8c7190adf4ad79ee2b66e866ad5cf335",
+      "repo:docs/standards/canonicalization.md@289aee7d8c7190adf4ad79ee2b66e866ad5cf335",
+      "repo:docs/standards/oai-pmh.md@289aee7d8c7190adf4ad79ee2b66e866ad5cf335",
+      "repo:docs/standards/stac.md@289aee7d8c7190adf4ad79ee2b66e866ad5cf335",
+      "repo:.pre-commit-config.yaml@289aee7d8c7190adf4ad79ee2b66e866ad5cf335"
+    ]
+  },
+  "truth_labels": {
+    "contracts/source/source_descriptor.md": "CONFIRMED",
+    "control_plane/object_family_register.yaml": "CONFIRMED",
+    "data/registry/agriculture/README.md": "CONFIRMED",
+    "docs/architecture/data-classification-framework.md": "CONFIRMED",
+    "docs/architecture/identity-and-spec-hash.md": "CONFIRMED",
+    "docs/domains/hydrology/SOURCE_REGISTRY.md": "CONFIRMED",
+    "docs/intake/exploratory/new-ideas-4-16-source-map.md": "CONFIRMED",
+    "docs/intake/exploratory/pass20-expansion-conformance-baseline.md": "CONFIRMED",
+    "docs/intake/exploratory/stac-cdl-pmtiles-profile-decision-packet.md": "CONFIRMED",
+    "docs/sources/catalog/kansas/kansas-memory.md": "CONFIRMED",
+    "docs/sources/catalog/kansas/kansas-state-archives.md": "CONFIRMED",
+    "docs/standards/ARCHIVAL-STANDARDS.md": "CONFIRMED",
+    "docs/standards/CANONICALIZATION.md": "CONFIRMED",
+    "docs/standards/DUBLIN-CORE.md": "CONFIRMED",
+    "docs/standards/OAI-PMH.md": "NEEDS VERIFICATION",
+    "docs/standards/README.md": "CONFIRMED",
+    "docs/standards/STAC.md": "NEEDS VERIFICATION",
+    "docs/standards/STAC_KFM_TRUST_EXTENSION.md": "CONFIRMED",
+    "tests/domains/hydrology/sources/README.md": "CONFIRMED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED",
+    "tools/validators/source-descriptor/README.md": "CONFIRMED",
+    "tools/validators/source_descriptor/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Owner disposition",
+      "outcome": "PASS",
+      "reason": "The repository owner confirmed in-session on 2026-10-19 that STAC.md, OAI-PMH.md, CANONICALIZATION.md, and contracts/source/source_descriptor.md are canonical and that the four non-canonical case variants are deleted outright, not renamed to redirects."
+    },
+    {
+      "gate": "Content merge",
+      "outcome": "PASS",
+      "reason": "stac.md's unique kfm-stac-profile-v1 content is merged into STAC.md sections 11-17 with an Appendix B section map. oai-pmh.md's unique proposal-era content is carried in OAI-PMH.md Appendix A, labelled PROPOSED and subordinate to its repository-grounded sections. canonicalization.md was already a redirect stub merged on 2026-10-12, and SOURCE_DESCRIPTOR.md was a compatibility pointer with no unique semantics. Conflicts between merged and existing text (spec_hash grammar, link rel names, required extensions, DwC key casing, receipt token handling) are labelled, not resolved."
+    },
+    {
+      "gate": "Inbound references",
+      "outcome": "PASS",
+      "reason": "Every tracked reference to the four deleted paths is repointed to the canonical file or reworded as history, outside historical receipts and the dated CI conformance evidence snapshot. object_family_register.yaml drops the deleted contract path, and validate_object_family_register.py and its 16 unit tests pass."
+    },
+    {
+      "gate": "check-case-conflict",
+      "outcome": "PASS",
+      "reason": "pre-commit run check-case-conflict --all-files passes; before this change it flagged four pairs."
+    },
+    {
+      "gate": "Ratchets",
+      "outcome": "PASS",
+      "reason": "make gap-scan, make repository-topology, make scaffold-inventory, and make docs-critical-structure all exit 0. The topology baseline shrinks from 93 to 89 entries: four KFM-TOPO-007 case-fold waivers are removed, and the KFM-TOPO-001 path-grammar:uppercase evidence shrinks by exactly contracts/source/SOURCE_DESCRIPTOR.md. The trusted-baseline transition against the base commit passes. gap-scan reports 0 broken link targets before and after."
+    },
+    {
+      "gate": "Other pre-commit hooks on changed files",
+      "outcome": "FAIL",
+      "reason": "trailing-whitespace fails on pre-existing Markdown hard line breaks (two trailing spaces) in four touched files. The hook's rewrite was reverted because it would change rendering, and pre-commit does not run in CI. The pre-existing missing final newline in CANONICALIZATION.md was fixed. All other hooks pass."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/289aee7d8c7190adf4ad79ee2b66e866ad5cf335"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T14:42:00Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Deleted (owner-directed, content preserved in Git history and merged where unique): contracts/source/SOURCE_DESCRIPTOR.md, docs/standards/canonicalization.md, docs/standards/oai-pmh.md, docs/standards/stac.md. Retired doc_ids: kfm://doc/standards/stac, kfm://doc/standards-oai-pmh, kfm://doc/standards/canonicalization-redirect, kfm://doc/contracts-source-source-descriptor-legacy-case; no document registry lists them. STAC.md and OAI-PMH.md are labelled NEEDS VERIFICATION because merged proposal-era claims were checked only for repository path presence. object_family_register.yaml keeps the source_descriptor family's contracts surface status as CONFLICTED for steward review, although only one contract path now remains. Historical receipts and artifacts/qa evidence that name the deleted paths are left unchanged. The README's 52-entry inventory counts are pinned to their snapshot commit and are left unchanged. The IIIF entries in docs/standards/README.md predate this change and are out of scope."
+}

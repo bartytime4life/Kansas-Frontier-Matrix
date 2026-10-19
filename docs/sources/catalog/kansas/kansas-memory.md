@@ -23,7 +23,7 @@ related:
   - ../../../doctrine/truth-posture.md
   - ../../../doctrine/lifecycle-law.md
   - ../../../standards/snac-eac-cpf.md
-  - ../../../standards/oai-pmh.md
+  - ../../../standards/OAI-PMH.md
   - ../../../standards/IIIF.md
   - ../../../standards/SENSITIVITY_RUBRIC.md
   - ../../../domains/archaeology/README.md
@@ -559,7 +559,7 @@ These mirror open questions from the `C10-07` record and the broader Pass-10 bac
 - [`../../../doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law (v1.2 §6.1, §7.3, §11)
 - [`../../../doctrine/authority-ladder.md`](../../../doctrine/authority-ladder.md) — Kansas-first authority posture
 - [`../../../standards/snac-eac-cpf.md`](../../../standards/snac-eac-cpf.md) — SNAC/EAC-CPF standard reference — **TODO** if absent
-- [`../../../standards/oai-pmh.md`](../../../standards/oai-pmh.md) — OAI-PMH harvest standard reference — **TODO** if absent
+- [`../../../standards/OAI-PMH.md`](../../../standards/OAI-PMH.md) — OAI-PMH harvest standard reference
 - [`../../../standards/IIIF.md`](../../../standards/IIIF.md) — IIIF v3 reference
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus; not yet authored)
 - [`../../../domains/archaeology/README.md`](../../../domains/archaeology/README.md) — adjacent domain that consumes Kansas Memory references

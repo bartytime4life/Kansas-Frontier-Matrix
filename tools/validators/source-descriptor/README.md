@@ -26,7 +26,6 @@ related:
   - ../../../docs/sources/RIGHTS_GUIDANCE.md
   - ../../../docs/sources/ADMISSION_PROCESS.md
   - ../../../contracts/source/source_descriptor.md
-  - ../../../contracts/source/SOURCE_DESCRIPTOR.md
   - ../../../schemas/contracts/v1/source/README.md
   - ../../../schemas/contracts/v1/source/source_descriptor.schema.json
   - ../../../schemas/contracts/v1/source/source-descriptor.schema.json

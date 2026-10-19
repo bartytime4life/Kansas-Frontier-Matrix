@@ -45,7 +45,7 @@ related:
   - ../../../docs/sources/SOURCE_DESCRIPTOR_STANDARD.md
   - ../../../docs/adr/ADR-0017-source-descriptor-admission-process.md
   - ../../../control_plane/source_authority_register.yaml
-  - ../../../contracts/source/SOURCE_DESCRIPTOR.md
+  - ../../../contracts/source/source_descriptor.md
   - ../../../schemas/contracts/v1/source/source_descriptor.schema.json
   - ../../../policy/domains/agriculture/
 tags:
@@ -324,7 +324,7 @@ Re-review this README when:
 | Receipts, proofs, and catalog | [Receipts](../../receipts/README.md) · [Proofs](../../proofs/README.md) · [Catalog](../../catalog/README.md) |
 | Agriculture source guidance | [Source registry](../../../docs/domains/agriculture/SOURCE_REGISTRY.md) · [Source families](../../../docs/domains/agriculture/SOURCES.md) |
 | Agriculture sensitivity and lifecycle | [Sensitivity](../../../docs/domains/agriculture/SENSITIVITY.md) · [Lifecycle](../../../docs/domains/agriculture/LIFECYCLE.md) |
-| SourceDescriptor meaning and shape | [Compatibility contract](../../../contracts/source/SOURCE_DESCRIPTOR.md) · [Detailed proposed schema](../../../schemas/contracts/v1/source/source_descriptor.schema.json) |
+| SourceDescriptor meaning and shape | [Semantic contract](../../../contracts/source/source_descriptor.md) · [Detailed proposed schema](../../../schemas/contracts/v1/source/source_descriptor.schema.json) |
 | Authority register | [`control_plane/source_authority_register.yaml`](../../../control_plane/source_authority_register.yaml) |
 
 ## ADRs

@@ -16,7 +16,7 @@ policy_label: public; architecture; identity; hashing; integrity; no-release-aut
 current_path: docs/architecture/identity-and-spec-hash.md
 owning_root: docs/
 responsibility: "Explain how current KFM content-digest, activity-identity, object-identity, receipt, validation, replay, and migration surfaces compose without transferring authority among contracts, schemas, policy, implementation, evidence, data, or release roots."
-truth_posture: "CONFIRMED current path, adopted placement authority, bounded JCS plus SHA-256 implementation, current sha256 grammar, schema, validator, fixtures, tests, workflow, GeoJSON structural profile, RunReceipt shape, and identity-package scaffold / PROPOSED ADR-0013 target grammar and run-id grammar / CONFLICTED wrapper, wire-format, case-collision, and documentation-status surfaces / UNKNOWN exhaustive consumers, cross-language parity, production use, runtime promotion parity, and public reliance / NEEDS VERIFICATION owners, ADR disposition, migration, exact-head hosted proof, and object-family hash-domain registry"
+truth_posture: "CONFIRMED current path, adopted placement authority, bounded JCS plus SHA-256 implementation, current sha256 grammar, schema, validator, fixtures, tests, workflow, GeoJSON structural profile, RunReceipt shape, and identity-package scaffold / PROPOSED ADR-0013 target grammar and run-id grammar / CONFLICTED wrapper, wire-format, and documentation-status surfaces / UNKNOWN exhaustive consumers, cross-language parity, production use, runtime promotion parity, and public reliance / NEEDS VERIFICATION owners, ADR disposition, migration, exact-head hosted proof, and object-family hash-domain registry"
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
@@ -473,7 +473,7 @@ The current repository has one verified canonicalization path in this slice: RFC
 
 Do not emit `urdna2015:`, `rdfc:`, or another RDF prefix until an accepted decision defines admitted datasets, canonical N-Quads, digest grammar, resource limits, W3C test vectors, cross-implementation parity, producer/consumer closure, migration, correction, and rollback.
 
-The repository also contains both uppercase and lowercase canonicalization documents with the same document identity. That case collision remains a separate `HOLD`; this page does not select, rename, merge, or retire either path.
+The former uppercase/lowercase canonicalization collision is resolved: the lowercase document was merged into `CANONICALIZATION.md` on 2026-10-12 and its redirect stub deleted on 2026-10-19 (both owner-directed).
 
 [Back to top](#top)
 
@@ -489,7 +489,7 @@ The repository also contains both uppercase and lowercase canonicalization docum
 |---|---|---|
 | Architecture explanation | `docs/architecture/identity-and-spec-hash.md` | This page; explanatory only. |
 | Candidate shared grammar | `docs/adr/ADR-0013-...md` | Proposed. |
-| Current canonicalization guidance | `docs/standards/CANONICALIZATION.md` | Repository-grounded draft; case collision held. |
+| Current canonicalization guidance | `docs/standards/CANONICALIZATION.md` | Repository-grounded draft; case collision resolved. |
 | Semantic hash meaning | `contracts/common/spec_hash.md` | Draft; validator-status prose is stale. |
 | Common machine shape | `schemas/contracts/v1/common/spec_hash.schema.json` | Proposed schema. |
 | RunReceipt machine shape | `schemas/contracts/v1/runtime/run_receipt.schema.json` | Proposed schema with substantive constraints. |
@@ -541,7 +541,7 @@ None of these tensions permits guessing. They define bounded next decisions and 
 | OQ-IDH-04 | `PROPOSED` | Create an object-family hash-domain registry only if existing contracts cannot carry profile, exclusions, normalization, and version cleanly. |
 | OQ-IDH-05 | `NEEDS VERIFICATION` | Establish cross-language RFC 8785 and digest vectors before non-Python producers are admitted. |
 | OQ-IDH-06 | `NEEDS VERIFICATION` | Define and implement a governed `run_id` generator, parser, retry/collision behavior, and migration path. |
-| OQ-IDH-07 | `PARTLY RESOLVED` | 2026-10-12: `canonicalization.md` was merged into `CANONICALIZATION.md` and kept as a redirect stub, so identity is settled and links resolve. The case-only path collision remains (`CANON-Q11` in `CANONICALIZATION.md`). |
+| OQ-IDH-07 | `RESOLVED` | 2026-10-12: `canonicalization.md` was merged into `CANONICALIZATION.md` and kept as a redirect stub, settling identity. 2026-10-19: the stub was deleted and links repointed, removing the case-only path collision (`CANON-Q11` in `CANONICALIZATION.md`). |
 | OQ-IDH-08 | `UNKNOWN` | Determine whether any real KFM object family needs RDF dataset identity and RDFC-1.0. |
 | OQ-IDH-09 | `NEEDS VERIFICATION` | Recheck exact-head `spec-hash` workflow and generated-receipt integrity when implementation surfaces change. |
 | OQ-IDH-10 | `NEEDS VERIFICATION` | Identify any production, runtime-promotion, catalog, or release consumer that treats digest match as a gate, and verify its fail-closed behavior. |
@@ -561,7 +561,7 @@ None of these tensions permits guessing. They define bounded next decisions and 
 | [`docs/doctrine/directory-rules.md`](../doctrine/directory-rules.md) | Placement authority adopted by ADR-0029. | Accepted bytes; implementation of all topology rules remains partial. |
 | [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) | Makes Directory Rules v2 effective. | Accepted. |
 | [`ADR-0013`](../adr/ADR-0013-spec_hash-and-run_id-identity-grammar.md) | Candidate content/activity grammar and migration decision. | Proposed; current grammar conflicted with target. |
-| [`docs/standards/CANONICALIZATION.md`](../standards/CANONICALIZATION.md) | Current implementation guidance and RDF migration boundary. | Draft; repository-grounded; case collision held. |
+| [`docs/standards/CANONICALIZATION.md`](../standards/CANONICALIZATION.md) | Current implementation guidance and RDF migration boundary. | Draft; repository-grounded; case collision resolved. |
 | [`docs/architecture/evidence-identity.md`](./evidence-identity.md) | EvidenceRef, EvidenceBundle, verification-history, resolver, and public-answer boundary. | Repository-grounded draft. |
 | [`contracts/common/spec_hash.md`](../../contracts/common/spec_hash.md) | Semantic meaning of the common value object. | Draft; validator-status prose stale. |
 | [`contracts/runtime/run_receipt.md`](../../contracts/runtime/run_receipt.md) | Semantic meaning of activity receipts. | Draft / mixed maturity. |

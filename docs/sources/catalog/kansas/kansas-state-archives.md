@@ -27,7 +27,7 @@ related:
   - docs/doctrine/authority-ladder.md
   - docs/standards/SENSITIVITY_RUBRIC.md
   - docs/standards/STAC_KFM_PROFILE.md
-  - docs/standards/oai-pmh.md
+  - docs/standards/OAI-PMH.md
   - docs/standards/IIIF.md
   - docs/standards/snac-eac-cpf.md
   - docs/registers/AUTHORITY_LADDER.md
@@ -545,7 +545,7 @@ A first-PR posture for this family follows the **Atmosphere lane pattern** (Unif
 - [`../../../domains/settlements-infrastructure/README.md`](../../../domains/settlements-infrastructure/README.md) — primary consumer of historic-place and gazetteer material
 - [`../../../standards/SENSITIVITY_RUBRIC.md`](../../../standards/SENSITIVITY_RUBRIC.md) — `C6-01` 0–5 rubric (PROPOSED in corpus)
 - [`../../../standards/STAC_KFM_PROFILE.md`](../../../standards/STAC_KFM_PROFILE.md) — KFM STAC namespace and provenance
-- [`../../../standards/oai-pmh.md`](../../../standards/oai-pmh.md) — OAI-PMH harvest standard (TODO: create if absent)
+- [`../../../standards/OAI-PMH.md`](../../../standards/OAI-PMH.md) — OAI-PMH harvest standard
 - [`../../../standards/IIIF.md`](../../../standards/IIIF.md) — canonical IIIF consumption and historic-overlay guidance
 - [`../../../standards/snac-eac-cpf.md`](../../../standards/snac-eac-cpf.md) — SNAC/EAC-CPF standard reference (TODO: create if absent)
 - [`../../../registers/AUTHORITY_LADDER.md`](../../../registers/AUTHORITY_LADDER.md) — KFM Authority Ladder register

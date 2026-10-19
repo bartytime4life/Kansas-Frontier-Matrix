@@ -58,7 +58,6 @@ related:
   - ./SCHEMA-ORG.md
   - ./ARCHIVAL-STANDARDS.md
   - ./OAI-PMH.md
-  - ./oai-pmh.md
   - ../doctrine/directory-rules.md
   - ../adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../contracts/source/source_descriptor.md
@@ -781,7 +780,7 @@ Record the reason without exposing restricted details through a public error mes
 - [`CIDOC-CRM.md`](./CIDOC-CRM.md) — repository-grounded CIDOC CRM mapping boundary
 - [`SCHEMA-ORG.md`](./SCHEMA-ORG.md) — Schema.org guidance
 - [`ARCHIVAL-STANDARDS.md`](./ARCHIVAL-STANDARDS.md) — archival interoperability and preservation boundary
-- [`OAI-PMH.md`](./OAI-PMH.md), [`oai-pmh.md`](./oai-pmh.md) — case-colliding OAI-PMH guidance; identity and supersession remain unresolved
+- [`OAI-PMH.md`](./OAI-PMH.md) — OAI-PMH guidance; the former lowercase `oai-pmh.md` was merged into it and deleted on 2026-10-19
 - [`directory-rules.md`](../doctrine/directory-rules.md) and accepted [`ADR-0029`](../adr/ADR-0029-adopt-directory-governance-standard-v2.md)
 - [`SourceDescriptor` contract](../../contracts/source/source_descriptor.md) and [schema](../../schemas/contracts/v1/source/source_descriptor.schema.json)
 - [`EvidenceBundle` schema](../../schemas/contracts/v1/evidence/evidence_bundle.schema.json)

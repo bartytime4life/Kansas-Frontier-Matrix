@@ -32,7 +32,7 @@ related:
   - ../../../../data/registry/sources/hydrology/
   - ../../../../data/registry/hydrology/sources/README.md
   - ../../../../schemas/contracts/v1/source/source-descriptor.json
-  - ../../../../contracts/source/SOURCE_DESCRIPTOR.md
+  - ../../../../contracts/source/source_descriptor.md
   - ../../../../contracts/domains/hydrology/
   - ../../../../schemas/contracts/v1/domains/hydrology/
   - ../../../../fixtures/domains/hydrology/sources/

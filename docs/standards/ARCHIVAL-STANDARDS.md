@@ -50,7 +50,6 @@ related:
   - ../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - ./snac-eac-cpf.md
   - ./OAI-PMH.md
-  - ./oai-pmh.md
   - ./IIIF.md
   - IIIF.md
   - ./DUBLIN-CORE.md
@@ -226,11 +225,11 @@ This page does not:
 | This file | Tracked at the requested path; prior edition was dated 2026-05-13 and made proposal-era conformance and implementation claims | Same-path modernization is warranted; the page remains explanatory only. |
 | [`docs/standards/README.md`](./README.md) | Repository-grounded lane boundary with 50 direct Markdown files and two direct child directories at its pinned inventory | The lane is real and mixed-maturity. Child presence does not establish adoption or conformance. |
 | Placement authority | ADR-0029 is accepted and adopts Directory Rules v2 | `docs/standards/` is the correct human-readable responsibility lane. |
-| Archival sibling pages | `snac-eac-cpf.md`, `OAI-PMH.md`, `oai-pmh.md`, `IIIF.md`, `iiif.md`, `DUBLIN-CORE.md`, and `CIDOC-CRM.md` are present | Useful topic-specific guidance exists; its currentness, adoption, and role relationships require file-specific review. |
+| Archival sibling pages | `snac-eac-cpf.md`, `OAI-PMH.md`, `IIIF.md`, `iiif.md`, `DUBLIN-CORE.md`, and `CIDOC-CRM.md` are present | Useful topic-specific guidance exists; its currentness, adoption, and role relationships require file-specific review. |
 | OAI-PMH identity | Both uppercase and lowercase files exist | `CONFLICTED / HOLD`; do not select, rename, merge, or delete from this umbrella page. |
 | IIIF identity | Both uppercase and lowercase files exist | `CONFLICTED / HOLD`; case-only migration requires consumer and cross-filesystem evidence. |
 | Provenance family | `PROV-O.md`, `PROV.md`, `PROVENANCE.md`, and `PROV/README.md` coexist | Roles and writable authority are unresolved; do not collapse PREMIS, provenance, lineage events, and scholarly attribution into one file by prose. |
-| Canonicalization family | `CANONICALIZATION.md` is canonical; `canonicalization.md` is a redirect stub (merged 2026-10-12) | Identity and edit authority are settled; the case-only path collision remains (`CANON-Q11`). |
+| Canonicalization family | `CANONICALIZATION.md` is canonical; the lowercase `canonicalization.md` was merged 2026-10-12 and its redirect stub deleted 2026-10-19 | Identity, edit authority, and the case-only path collision are settled (`CANON-Q11` resolved). |
 | Source-descriptor meaning and shape | Contract files and both singular/plural schema-family paths are present; ADR-0001 remains proposed while adopted Directory Rules already define the default machine-schema route | Presence is real; final family/compatibility reconciliation remains open. |
 | LOC connector | [`connectors/loc/src/loc/README.md`](../../connectors/loc/src/loc/README.md) records a `0.0.0` scaffold, empty initializer, comment-only retrieval/admission modules, nonconforming local descriptor, no executable tests, and TODO-only workflows | No supported LOC, IIIF, LCNAF, LCSH, maps, newspaper, or archival connector behavior is established. |
 | Archival validators | Bounded code search for the prior page's proposed validator names surfaced only this document | A dedicated executable archival-conformance suite was not established by the search; exhaustive absence outside the indexed repository remains `NEEDS VERIFICATION`. |
@@ -927,10 +926,10 @@ This document performs none of those transitions.
 | ID | Conflict or gap | Current disposition |
 |---|---|---|
 | `ARC-C01` | The prior umbrella page declared broad KFM conformance while current implementation evidence is mixed and incomplete | Narrowed to human guidance and a conformance evidence ladder. |
-| `ARC-C02` | `OAI-PMH.md` and `oai-pmh.md` coexist | `HOLD`; inventory identities, links, writers, and consumers before any case-only migration. |
+| `ARC-C02` | `OAI-PMH.md` and `oai-pmh.md` coexisted | `RESOLVED` 2026-10-19 (owner-directed): `OAI-PMH.md` is canonical; the lowercase file's unique content is carried in its Appendix A and the lowercase file was deleted. |
 | `ARC-C03` | `IIIF.md` and `iiif.md` coexist | `HOLD`; same case-collision discipline. |
 | `ARC-C04` | `PROV-O.md`, `PROV.md`, `PROVENANCE.md`, and `PROV/README.md` overlap | `HOLD / NEEDS VERIFICATION`; define ontology, general profile, implementation lane, and edit authority separately. |
-| `ARC-C05` | `CANONICALIZATION.md` and `canonicalization.md` coexist | Content merged into `CANONICALIZATION.md` on 2026-10-12 (owner-directed); the lowercase path is a redirect stub. Case-only path collision still `HOLD` (`CANON-Q11`). |
+| `ARC-C05` | `CANONICALIZATION.md` and `canonicalization.md` coexisted | `RESOLVED`: content merged into `CANONICALIZATION.md` on 2026-10-12 and the lowercase redirect stub deleted on 2026-10-19 (both owner-directed; `CANON-Q11`). |
 | `ARC-C06` | Existing `snac-eac-cpf.md` records EAC-CPF 2.0.1 while official 2026 EAS materials identify EAC-CPF 3.0 and EAC-F 1.0 alongside EAD4 | `STALE / NEEDS VERIFICATION`; file-specific currentness and migration update required. |
 | `ARC-C07` | METS 2 is available while METS 1 remains supported and widely relevant | Select per source/consumer profile; do not call unqualified “METS” conformance. |
 | `ARC-C08` | PREMIS preservation events, PROV-O provenance, OpenLineage runtime events, and KFM receipts can overlap | Define mapping and non-duplication rules before implementation. |
@@ -993,7 +992,7 @@ Keep source activation, conformance claims, structural consolidation, and public
 - [`ADR-0001`](../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md) — proposed dedicated schema-home/migration record; adopted Directory Rules already supply the default route.
 - [`CODEOWNERS`](../../.github/CODEOWNERS) — verified default GitHub review route and negative authority statement.
 - [`snac-eac-cpf.md`](./snac-eac-cpf.md) — current repository archival-authority guidance; upstream-currentness follow-up required.
-- [`OAI-PMH.md`](./OAI-PMH.md) and [`oai-pmh.md`](./oai-pmh.md) — current case-collision pair; no disposition implied here.
+- [`OAI-PMH.md`](./OAI-PMH.md) — canonical OAI-PMH guidance; the former lowercase `oai-pmh.md` was merged into it (Appendix A) and deleted on 2026-10-19.
 - [`IIIF.md`](./IIIF.md) and [`iiif.md`](IIIF.md) — current case-collision pair.
 - [`PROV-O.md`](./PROV-O.md), [`PROV.md`](./PROV.md), [`PROVENANCE.md`](./PROVENANCE.md), and [`PROV/README.md`](./PROV/README.md) — unresolved provenance family.
 - [`contracts/source/source_descriptor.md`](../../contracts/source/source_descriptor.md) — semantic source-descriptor surface.

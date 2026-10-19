@@ -84,7 +84,7 @@ This file lives at `docs/domains/hydrology/SOURCE_REGISTRY.md` per Directory Rul
 docs/domains/hydrology/SOURCE_REGISTRY.md          ← this doc (explanation)
 data/registry/sources/hydrology/                   ← registry entries (CONFIRMED pattern, §9.1; leaf NEEDS VERIFICATION)
 schemas/contracts/v1/source/source-descriptor.json ← descriptor shape (PROPOSED home; ADR-0001 / §7.4)
-contracts/source/SOURCE_DESCRIPTOR.md              ← descriptor meaning (PROPOSED)
+contracts/source/source_descriptor.md              ← descriptor meaning (PROPOSED)
 policy/sensitivity/hydrology/                       ← sensitivity & rights policy (PROPOSED)
 connectors/usgs/  connectors/fema/  …               ← source-specific fetchers (CONFIRMED root §7.3; leaves PROPOSED)
 tests/domains/hydrology/sources/                    ← admission/role/rights tests (PROPOSED)
@@ -420,7 +420,7 @@ A first thin-slice fixture pair:
 - `docs/sources/` — cross-cutting source-descriptor standards and source families *(CONFIRMED root §6.x; specific files PROPOSED)*
 - `docs/standards/PROV.md` — provenance terms used by `EvidenceBundle` and `RunReceipt` *(naming variance OPEN-DR-01)*
 - `docs/runbooks/hydrology/SOURCE_REFRESH_RUNBOOK.md` — hydrology source-refresh runbook *(PROPOSED; mirrors the Fauna pattern; subfolder convention OPEN-DR-02)*
-- `contracts/source/SOURCE_DESCRIPTOR.md` — descriptor meaning *(PROPOSED)*
+- `contracts/source/source_descriptor.md` — descriptor meaning *(PROPOSED)*
 - `schemas/contracts/v1/source/source-descriptor.json` — descriptor shape *(PROPOSED home; ADR-0001)*
 - `policy/sensitivity/hydrology/` — hydrology sensitivity rules *(PROPOSED)*
 - `data/registry/sources/hydrology/` — actual registry entries *(CONFIRMED pattern; leaf NEEDS VERIFICATION)*
