@@ -2,6 +2,7 @@ import importlib.util
 from pathlib import Path
 import unittest
 import tempfile
+from types import SimpleNamespace
 from unittest import mock
 
 SCRIPT = Path(__file__).resolve().parents[2] / "scripts/retire_vercel_deployments.py"
@@ -29,6 +30,34 @@ class FakeAPI:
 
 
 class RetirementTests(unittest.TestCase):
+    def test_existing_cli_auth_uses_fixed_host_and_no_shell_or_token_argument(self):
+        reply = SimpleNamespace(returncode=0, stdout=b"HTTP/2.0 200 OK\r\nContent-Type: application/json\r\n\r\n[]", stderr=b"")
+        with mock.patch.object(module.subprocess, "run", return_value=reply) as run:
+            self.assertEqual(module.GitHubCLI().call("GET", module.PREFIX + "?per_page=100&page=1"), [])
+        command = run.call_args.args[0]
+        self.assertEqual(command[:4], ["gh", "api", "--hostname", "github.com"])
+        self.assertNotIn("shell", run.call_args.kwargs)
+        self.assertNotIn("Authorization", " ".join(command))
+
+    def test_cli_http_error_is_bounded_and_does_not_echo_private_output(self):
+        reply = SimpleNamespace(returncode=1, stdout=b"HTTP/2.0 422 Error\n\n{}", stderr=b"private diagnostic")
+        with mock.patch.object(module.subprocess, "run", return_value=reply), mock.patch.object(module.time, "sleep"):
+            with self.assertRaises(module.APIError) as caught:
+                module.GitHubCLI().call("DELETE", module.PREFIX + "/1")
+        self.assertEqual(caught.exception.status, 422)
+        self.assertNotIn("private diagnostic", str(caught.exception))
+
+    def test_cli_refuses_other_api_resources_before_execution(self):
+        with mock.patch.object(module.subprocess, "run") as run:
+            with self.assertRaises(module.Stop):
+                module.GitHubCLI().call("DELETE", "/repos/another/project/deployments/1")
+            run.assert_not_called()
+
+    def test_cli_timeout_stops_with_unverified_outcome(self):
+        with mock.patch.object(module.subprocess, "run", side_effect=module.subprocess.TimeoutExpired("gh", 40)):
+            with self.assertRaisesRegex(module.Stop, "outcome is unverified"):
+                module.GitHubCLI().call("GET", module.PREFIX)
+
     def test_cli_defaults_to_inventory_and_retains_fingerprint(self):
         api = FakeAPI([[record()]])
         with tempfile.TemporaryDirectory() as directory, mock.patch.object(module, "GitHub", return_value=api):

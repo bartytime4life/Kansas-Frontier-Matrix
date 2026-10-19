@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import subprocess
 import time
 from urllib import error, request
 
@@ -64,6 +65,38 @@ class GitHub:
                 return json.loads(raw) if raw else None
         except error.HTTPError as exc:
             raise APIError(exc.code) from None
+
+
+class GitHubCLI:
+    """Use an operator's existing gh authentication; never create credentials."""
+    def call(self, method, path, body=None):
+        if not path.startswith(PREFIX) or method not in {"GET", "POST", "DELETE"}:
+            raise Stop("Request outside the fixed repository deployment boundary")
+        if method != "GET":
+            time.sleep(1)
+        command = ["gh", "api", "--hostname", "github.com", "--include",
+                   "--method", method, "--header", "Accept: application/vnd.github+json",
+                   "--header", "X-GitHub-Api-Version: 2026-03-10", path.lstrip("/")]
+        if body is not None:
+            command += ["--input", "-"]
+        try:
+            result = subprocess.run(command, input=None if body is None else json.dumps(body).encode(),
+                                    capture_output=True, timeout=40, check=False)
+        except (OSError, subprocess.TimeoutExpired):
+            raise Stop("GitHub CLI outcome is unverified; check access and run a fresh inventory") from None
+        raw = result.stdout.replace(b"\r\n", b"\n")
+        if len(raw) > 8_388_608:
+            raise Stop("Oversized GitHub CLI response")
+        header, separator, payload = raw.partition(b"\n\n")
+        status = re.match(rb"HTTP/\S+ (\d{3})(?: |\n|$)", header)
+        if not separator or status is None:
+            raise Stop("GitHub CLI did not return HTTP metadata; check existing authentication/network")
+        code = int(status.group(1))
+        if code >= 300:
+            raise APIError(code)
+        if result.returncode:
+            raise Stop("GitHub CLI failed; no automatic authentication or retry")
+        return json.loads(payload) if payload.strip() else None
 
 
 def inventory(api):
@@ -138,11 +171,13 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--expected-digest", default="")
+    parser.add_argument("--use-gh", action="store_true",
+                        help="Use existing GitHub CLI authentication instead of GH_TOKEN")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     if args.output.exists():
         raise Stop("Output directory already exists; preserve prior inventory/journal")
-    api = GitHub(os.environ.get("GH_TOKEN"))
+    api = GitHubCLI() if args.use_gh else GitHub(os.environ.get("GH_TOKEN"))
     snapshot, ignored = inventory(api)
     digest = fingerprint(snapshot)
     args.output.mkdir(parents=True)

@@ -1,4 +1,4 @@
-name: Retire historical Vercel deployment records
+name: Inventory historical Vercel deployment records
 
 "on":
   pull_request:
@@ -7,15 +7,6 @@ name: Retire historical Vercel deployment records
       - scripts/retire_vercel_deployments.py
       - tests/qa/test_retire_vercel_deployments.py
   workflow_dispatch:
-    inputs:
-      apply:
-        description: "Permanently delete only the fingerprinted Vercel GitHub records"
-        type: boolean
-        default: false
-      expected_digest:
-        description: "Exact SHA-256 from the reviewed read-only inventory; required for apply"
-        type: string
-        default: ""
 
 permissions:
   contents: read
@@ -36,14 +27,14 @@ jobs:
       - name: Verify retirement boundaries without network access
         run: python3 -m unittest discover -s tests/qa -p test_retire_vercel_deployments.py -v
 
-  retire:
+  inventory:
     needs: verify
     if: ${{ github.event_name == 'workflow_dispatch' && github.repository == 'bartytime4life/Kansas-Frontier-Matrix' && github.actor == github.repository_owner && github.ref == 'refs/heads/main' && github.ref_protected == true }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     permissions:
       contents: read
-      deployments: write
+      deployments: read
     steps:
       - name: Check out the reviewed operator
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -51,21 +42,16 @@ jobs:
           persist-credentials: false
           ref: ${{ github.sha }}
 
-      - name: Inventory or retire the exact selected records
+      - name: Inventory the exact selected records without write permission
         env:
           GH_TOKEN: ${{ github.token }}
-          APPLY: ${{ inputs.apply }}
-          EXPECTED_DIGEST: ${{ inputs.expected_digest }}
         shell: bash
         run: |
           set -euo pipefail
-          args=(--output "$RUNNER_TEMP/vercel-retirement-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT")
-          if [[ "$APPLY" == true ]]; then
-            args+=(--apply --expected-digest "$EXPECTED_DIGEST")
-          fi
-          python3 scripts/retire_vercel_deployments.py "${args[@]}"
+          python3 scripts/retire_vercel_deployments.py \
+            --output "$RUNNER_TEMP/vercel-retirement-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
 
-      - name: Retain inventory and partial or completed deletion journal
+      - name: Retain the read-only inventory
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:

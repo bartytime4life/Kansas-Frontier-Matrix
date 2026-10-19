@@ -52,12 +52,15 @@ security audit or evidence of current production health.
 Use [the manual cleanup workflow](../../.github/workflows/retire-vercel-deployments.yml)
 and its [one-time operator](../../scripts/retire_vercel_deployments.py). It is
 owner-only, restricted to protected `main`, serialized, and grants only contents
-read plus deployments write. It has no Vercel credentials and cannot change
+read plus deployments read. KFM-WF-009 forbids write-capable Actions jobs, so the
+workflow cannot apply deletion. The owner-run helper uses existing GitHub CLI
+authentication, or an explicitly supplied scoped GH_TOKEN, outside Actions.
+Neither creates credentials. The workflow has no Vercel credentials and cannot change
 GoDaddy, Sites, DNS, GitHub environments, repository secrets or source branches.
 
 1. Review and merge this bounded operator change through the normal repository
    checks. The draft PR itself performs no cleanup.
-2. Run **Retire historical Vercel deployment records** with `apply=false`.
+2. Run **Inventory historical Vercel deployment records**.
    Download and preserve `inventory.json` and `sha256.txt` before deletion. The
    workflow artifact lasts 30 days; it is an operational snapshot, not a release
    receipt or permanent evidence store.
@@ -66,8 +69,19 @@ GoDaddy, Sites, DNS, GitHub environments, repository secrets or source branches.
    is eligible. Other providers and `copilot`/`stage` are retained. Unknown creator
    formats require investigation; do not broaden attribution based only on an
    environment name. Deployment payloads and credentials are excluded.
-4. After approval of that exact irreversible deletion set, run with `apply=true`
-   and the full lowercase digest. A changed inventory fails before mutations.
+4. After approval of that exact irreversible deletion set, the owner runs the
+   helper from the reviewed checkout with existing authenticated `gh` access:
+
+   ```bash
+   python3 scripts/retire_vercel_deployments.py --use-gh --apply \
+     --expected-digest REVIEWED_64_CHARACTER_LOWERCASE_DIGEST \
+     --output /private/operator-records/kfm-vercel-retirement-new-run
+   ```
+
+   Replace the digest and absent output directory with reviewed values. The local
+   CLI needs deployments-write access to this repository. Missing authentication,
+   permissions or network stops the helper; it does not log in or request access.
+   A changed inventory fails before mutations.
    GitHub's records have immutable IDs/source identities; the fresh inventory
    fixes the target set. The operator tries deletion first, then permits one
    explicit inactive-status transition only after a 422 and an eligible current
