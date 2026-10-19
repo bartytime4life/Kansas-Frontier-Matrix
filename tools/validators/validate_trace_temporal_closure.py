@@ -112,6 +112,11 @@ def _array(value: Any) -> list[Any]:
     return value if isinstance(value, list) else []
 
 
+def _text(value: Any) -> bool:
+    """A usable identity: a non-empty string. Absent identities would otherwise all compare equal as None."""
+    return isinstance(value, str) and bool(value)
+
+
 def _hex_digest(value: Any) -> str | None:
     if not isinstance(value, str) or not SHA256.fullmatch(value):
         return None
@@ -223,13 +228,13 @@ def _semantic_findings(candidate: Mapping[str, Any], *, repo_root: Path) -> list
         findings.append(Finding("RUN_RECEIPT_DIGEST_MISMATCH", "/run_receipt/digest"))
     if evidence.get("digest") != link_evidence.get("digest"):
         findings.append(Finding("EVIDENCE_DIGEST_MISMATCH", "/evidence_bundle/digest"))
-    if run.get("receipt_ref") != link_run.get("receipt_ref"):
+    if not _text(run.get("receipt_ref")) or run.get("receipt_ref") != link_run.get("receipt_ref"):
         findings.append(Finding("RUN_RECEIPT_REF_MISMATCH", "/trace_receipt_link/run_receipt/receipt_ref"))
-    if evidence.get("bundle_ref") != link_evidence.get("bundle_ref"):
+    if not _text(evidence.get("bundle_ref")) or evidence.get("bundle_ref") != link_evidence.get("bundle_ref"):
         findings.append(Finding("EVIDENCE_REF_MISMATCH", "/trace_receipt_link/evidence_bundle/bundle_ref"))
 
     run_ids = (run.get("run_id"), evidence.get("run_id"), link_run.get("run_id"), link_evidence.get("run_id"), link_anchor.get("run_id"))
-    if len(set(run_ids)) != 1:
+    if not all(_text(value) for value in run_ids) or len(set(run_ids)) != 1:
         findings.append(Finding("RUN_ID_MISMATCH", "/run_receipt/run_id"))
     spec_hex = tuple(_hex_digest(value) for value in (run.get("spec_hash"), evidence.get("spec_hash"), link_run.get("spec_hash"), link_evidence.get("spec_hash"), link_anchor.get("spec_hash"), provenance.get("spec_hash")))
     if any(value is None for value in spec_hex) or len(set(spec_hex)) != 1:
@@ -243,8 +248,12 @@ def _semantic_findings(candidate: Mapping[str, Any], *, repo_root: Path) -> list
     if evidence_refs != sorted(set(item for item in evidence_refs if isinstance(item, str))):
         findings.append(Finding("TEMPORAL_EVIDENCE_REFS_NOT_CANONICAL", "/temporal_slice/provenance/evidence_bundle_refs"))
 
+    artifacts = _array(materialization.get("artifacts"))
+    if not artifacts:
+        # Byte closure needs at least one materialized artifact; an empty set would close vacuously.
+        findings.append(Finding("ARTIFACT_SET_EMPTY", "/temporal_slice/materialization/artifacts"))
     artifact_refs: set[str] = set()
-    for index, raw in enumerate(_array(materialization.get("artifacts"))):
+    for index, raw in enumerate(artifacts):
         artifact = _mapping(raw)
         path_value = artifact.get("artifact_path")
         relative = _canonical_path(path_value)
