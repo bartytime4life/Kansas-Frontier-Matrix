@@ -81,7 +81,8 @@ jobs:
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
             data/receipts/generated/genrec-pass3-catalog-trust-extension-20260808.json \
-            --repo-root .
+            --repo-root . \
+            --artifact-git-ref 7d0bab37a3c98796bc68120ae350b5aac75f0251
 
       - name: Record trust boundary
         if: always()

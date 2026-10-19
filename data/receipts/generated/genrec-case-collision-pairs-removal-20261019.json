@@ -2,8 +2,10 @@
   "receipt_id": "genrec-case-collision-pairs-removal-20261019",
   "contract_version": "3.0.0",
   "artifact_paths": [
+    ".github/workflows/stac-kfm-trust-profile.yml",
     "contracts/source/source_descriptor.md",
     "control_plane/object_family_register.yaml",
+    "control_plane/repository_governance_parity.yaml",
     "data/registry/agriculture/README.md",
     "docs/architecture/data-classification-framework.md",
     "docs/architecture/identity-and-spec-hash.md",
@@ -21,13 +23,16 @@
     "docs/standards/STAC.md",
     "docs/standards/STAC_KFM_TRUST_EXTENSION.md",
     "tests/domains/hydrology/sources/README.md",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
     "tools/validators/directory_governance/repository_topology_baseline.json",
     "tools/validators/source-descriptor/README.md",
     "tools/validators/source_descriptor/README.md"
   ],
   "artifact_hashes": {
+    ".github/workflows/stac-kfm-trust-profile.yml": "sha256:d138a29f7ec5f1e9818c99fae1b1965cfc0b232b611d2ae016ba4cc61727f213",
     "contracts/source/source_descriptor.md": "sha256:42df3bfe61b3345fb35f60e18512d68850943790a6fa7933b965093bad697621",
     "control_plane/object_family_register.yaml": "sha256:c3c8460990fcc737f2f1e5f5025c350588f0428c7ddf45d9bfe9ca1450d72295",
+    "control_plane/repository_governance_parity.yaml": "sha256:bd88389599e964c6099d3434e55cc5d08c62d3089dffcb316db2da7c568f4b40",
     "data/registry/agriculture/README.md": "sha256:822ac786edd0670bea56ff35fb9c0948b10ad503566a7b63801e5542f56ef354",
     "docs/architecture/data-classification-framework.md": "sha256:8e224f85521833f46131f6a03f9fcf9f61ea5daa359cedcae8f0f4483470a89f",
     "docs/architecture/identity-and-spec-hash.md": "sha256:41752dc7f0b64e9e07cb7f3b34e450f587e4304ee0419e3f64589f7395ff7080",
@@ -45,6 +50,7 @@
     "docs/standards/STAC.md": "sha256:93cf5c0d11f86ca0b9330b6283d4dbec219b15c013549bd0d61f0ec009831e25",
     "docs/standards/STAC_KFM_TRUST_EXTENSION.md": "sha256:dc170750aae6c86a8bc85ceb2f075908e5a19b042ba563b11c78dbce1e26b2f0",
     "tests/domains/hydrology/sources/README.md": "sha256:3f7abdba3b12dddc8db695d4568ae6b4cfe9044108ff1ca08f4678b68484300f",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:67869f0b65e11275eb170fc5bb9aae18a1733db62e9878b5f32218ef8493490d",
     "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:3427cbe06ebcb3d86d3ea08bae5d124b8d07f0231fec369e5ed250932e206b01",
     "tools/validators/source-descriptor/README.md": "sha256:d27b476bed5c5c5a28fe3e6a9ed2e152317a7dc6835da8013a41a5a14c1726b6",
     "tools/validators/source_descriptor/README.md": "sha256:7807c84821c4ade390d58358cb9664d73d4fcff182c64173f4b769b28dfec7bd"
@@ -71,8 +77,10 @@
     ]
   },
   "truth_labels": {
+    ".github/workflows/stac-kfm-trust-profile.yml": "CONFIRMED",
     "contracts/source/source_descriptor.md": "CONFIRMED",
     "control_plane/object_family_register.yaml": "CONFIRMED",
+    "control_plane/repository_governance_parity.yaml": "CONFIRMED",
     "data/registry/agriculture/README.md": "CONFIRMED",
     "docs/architecture/data-classification-framework.md": "CONFIRMED",
     "docs/architecture/identity-and-spec-hash.md": "CONFIRMED",
@@ -90,6 +98,7 @@
     "docs/standards/STAC.md": "NEEDS VERIFICATION",
     "docs/standards/STAC_KFM_TRUST_EXTENSION.md": "CONFIRMED",
     "tests/domains/hydrology/sources/README.md": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "CONFIRMED",
     "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED",
     "tools/validators/source-descriptor/README.md": "CONFIRMED",
     "tools/validators/source_descriptor/README.md": "CONFIRMED"
@@ -124,6 +133,11 @@
       "gate": "Changed-document metadata and graph",
       "outcome": "PASS",
       "reason": "Touching documents brings them into scope for the meta-block and document-graph ratchets. Metadata defects already present in six touched files were repaired: folded '>-' notes became single-line strings, the nested ISO list in DUBLIN-CORE.md was flattened, compound type values were reduced to 'standard' with the qualifiers moved to tags, missing owning_root/responsibility/truth_posture fields were added (marked NEEDS VERIFICATION), and two bare related paths were qualified. CANONICALIZATION.md drops its supersedes entry for the deleted stub's doc_id. check_meta_blocks.py and check_document_graph.py report 0 FAIL on the changed range, and check_links.py and check_stale_docs.py pass."
+    },
+    {
+      "gate": "Dependent CI projections",
+      "outcome": "PASS",
+      "reason": "repository_governance_parity.yaml expected_topology.baselined_warning and its unit-test assertion move from 93 to 89 to match the shrunk topology baseline, following the precedent of commit 91c5eaecfc; make repository-governance-parity passes. stac-kfm-trust-profile.yml now replays the historical genrec-pass3-catalog-trust-extension receipt against artifact bytes from its binding commit 7d0bab37a3c98796bc68120ae350b5aac75f0251 (the --artifact-git-ref pattern other workflows use), because this PR edits STAC_KFM_TRUST_EXTENSION.md; the replay validates. make workflow-security passes, and install_python_ci.py verify-workflows passes at the pinned migration head."
     },
     {
       "gate": "Other pre-commit hooks on changed files",
