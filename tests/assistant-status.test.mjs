@@ -23,6 +23,68 @@ const alert=tree=>findNode(tree,node=>node.props?.role==='alert');
 const lifecycleFocus=(record='one')=>({title:'Synthetic '+record,detail:'Synthetic source context',context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'knowledge',recordId:record}}});
 const deferred=()=>{let resolve,reject;const promise=new Promise((done,fail)=>{resolve=done;reject=fail;});return {promise,resolve,reject};};
 
+test('place discovery does not start the AI model and returning to Find stops readiness checks',async()=>{
+ const requests=[],discovery={query:'',items:[],status:'Ready',busy:false,onQuery(){},onChoose(){}};
+ const {h,polls,render}=await workspace(async url=>{requests.push(url);return ready();},{discovery});
+ try{
+  let tree=render();assert.equal(text(status(tree)),'Places & layers · no AI required');assert.equal(requests.length,0);
+  findNode(tree,node=>node.type==='button'&&node.props.children==='Ask').props.onClick();render();await settle();
+  tree=render();assert.deepEqual(requests,['/api/ai/status']);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+  findNode(tree,node=>node.type==='button'&&node.props.children==='Find').props.onClick();render();await settle();
+  await polls[0]();assert.equal(requests.length,1,'a stale timer cannot restart AI after returning to Find');
+ }finally{h.dispose();}
+});
+
+test('slow model readiness checks never overlap even when several polling ticks pass',async()=>{
+ const first=deferred();let requests=0;
+ const {h,polls,render}=await workspace(async()=>++requests===1?first.promise:ready());
+ try{
+  assert.equal(requests,1);await polls[0]();await polls[0]();assert.equal(requests,1);
+  first.resolve(ready());await settle();assert.equal(text(status(render())),'Qwen3 0.6B ready');
+  await polls[0]();assert.equal(requests,2,'the next completed cycle can refresh readiness');
+ }finally{first.resolve(ready());h.dispose();}
+});
+
+test('cold model startup is described as starting while the map and evidence remain available',async()=>{
+ const {h,render}=await workspace(async()=>Response.json({configured:true,online:true,ready:false,evidenceSearchAvailable:true}));
+ try{
+  const tree=render();assert.equal(text(status(tree)),'Loading model…');
+  assert.match(text(tree),/model is starting/i);assert.doesNotMatch(text(tree),/AI discussion is unavailable/);
+ }finally{h.dispose();}
+});
+
+test('non-JSON AI failures expose only bounded HTTP diagnostics and preserve the question draft',async()=>{
+ const {h,render}=await workspace(async()=>new Response('<html>PRIVATE_INTERNAL_ERROR_BODY</html>',{status:503,headers:{'Content-Type':'text/html'}}));
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Keep this unsent question.'}});tree=render();
+  assert.equal(alert(tree).props['data-ai-error'],'AI_RESPONSE_INVALID');assert.equal(alert(tree).props['data-http-status'],503);
+  assert.doesNotMatch(text(tree),/PRIVATE_INTERNAL_ERROR_BODY|<html>/);assert.equal(message(tree).props.value,'Keep this unsent question.');
+  assert.equal(send(tree).props.disabled,true);
+ }finally{h.dispose();}
+});
+
+test('readiness diagnostics never disclose arbitrary exception text and clear after recovery',async()=>{
+ let connected=false;
+ const {h,polls,render}=await workspace(async()=>{if(!connected)throw new Error('PRIVATE_ERROR_WITH_INTERNAL_URL');return ready();});
+ try{
+  let tree=render();assert.equal(alert(tree).props['data-ai-error'],'AI_CONNECTION_UNAVAILABLE');assert.equal(alert(tree).props['data-http-status'],undefined);
+  assert.doesNotMatch(text(tree),/PRIVATE_ERROR_WITH_INTERNAL_URL/);
+  connected=true;await polls[0]();tree=render();assert.equal(alert(tree),undefined);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+ }finally{h.dispose();}
+});
+
+test('entering Find aborts a pending readiness read and its late completion stays obsolete',async()=>{
+ const first=deferred(),signals=[],discovery={query:'',items:[],status:'Ready',busy:false,onQuery(){},onChoose(){}};
+ const {h,polls,render}=await workspace(async(_url,options)=>{signals.push(options.signal);return signals.length===1?first.promise:ready();},{discovery});
+ try{
+  findNode(render(),node=>node.type==='button'&&node.props.children==='Ask').props.onClick();render();await settle();assert.equal(signals.length,1);
+  findNode(render(),node=>node.type==='button'&&node.props.children==='Find').props.onClick();render();assert.equal(signals[0].aborted,true);
+  first.resolve(Response.json({reasonCode:'AI_ORIGIN_HOLD'},{status:503}));await settle();await polls[0]();assert.equal(signals.length,1);
+  findNode(render(),node=>node.type==='button'&&node.props.children==='Ask').props.onClick();render();await settle();
+  const tree=render();assert.equal(signals.length,2);assert.equal(alert(tree),undefined);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+ }finally{first.resolve(ready());h.dispose();}
+});
+
 test('A to B to A cannot resurrect a late accepted question and its opaque job is cancelled',async()=>{
  const admission=deferred(),cancelled=[],focus=lifecycleFocus();
  const {h,render}=await workspace(async(url,options)=>{

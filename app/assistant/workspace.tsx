@@ -5,6 +5,7 @@ import type {AssistantContext,AssistantFocus} from '../assistant-context';
 import {assistantSurface} from '../assistant-surfaces.mjs';
 import {buildInvestigationDraft,investigationMarkdown,type InvestigationJob} from '../assistant-investigation';
 type ChatStatus={configured:boolean;online:boolean;ready:boolean;evidenceSearchAvailable?:boolean;model?:string};
+type ChatFailureDetails={code:string;httpStatus?:number};
 type Job=Omit<InvestigationJob,'result'>&{result:(NonNullable<InvestigationJob['result']>&{followUpQuestion?:string})|null};
 type Turn={question:string;job:Job;contextKey:string;generation:number};
 type RequestRun={generation:number;id:string|null;stopped:boolean;poll:AbortController|null;noticeGeneration:number;cancel?:Promise<void>};
@@ -12,7 +13,11 @@ export type AssistantDiscovery={query:string;items:readonly {id:string;kind:stri
 type Props={place?:string;focus?:AssistantFocus;active?:boolean;discovery?:AssistantDiscovery;inputRef?:React.RefObject<HTMLTextAreaElement|null>;onInspectSources?:(context:AssistantContext,returnElement?:HTMLElement)=>boolean;draftRequest?:{id:number;value:string;intent?:'find'|'explore'|'evidence'}};
 async function chatApi(path:string,body?:object,signal?:AbortSignal){
  const response=await fetch('/api/ai/'+path,{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',signal:signal?AbortSignal.any([signal,AbortSignal.timeout(12000)]):AbortSignal.timeout(12000),headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined});
- const result=await response.json();if(!response.ok){const seconds=Number(response.headers.get('Retry-After'));throw Object.assign(new Error(result.reasonCode??'AI_UNAVAILABLE'),{retryAfterMs:Number.isFinite(seconds)&&seconds>0?Math.min(60000,Math.max(1000,seconds*1000)):4000});}return result;
+ const seconds=Number(response.headers.get('Retry-After')),details={httpStatus:response.status,retryAfterMs:Number.isFinite(seconds)&&seconds>0?Math.min(60000,Math.max(1000,seconds*1000)):4000};
+ let result;
+ try{result=await response.json();if(!result||typeof result!=='object'||Array.isArray(result))throw new Error('AI_RESPONSE_INVALID');}
+ catch{throw Object.assign(new Error('AI_RESPONSE_INVALID'),details);}
+ if(!response.ok)throw Object.assign(new Error(typeof result.reasonCode==='string'?result.reasonCode:'AI_UNAVAILABLE'),details);return result;
 }
 const guidance:Record<string,string>={MODEL_CONTINUATION_UNAVAILABLE:'There is no unfinished reply available for this guest and source context. Ask a new question.',CONTEXT_UNAVAILABLE:'The selected source could not be resolved. Select the record again or ask about the map without it.',CONTEXT_TIME_MISMATCH:'This record does not support the active map year. Choose its source time and try again.',EVIDENCE_MODEL_UNQUALIFIED:'The small model is not qualified to choose a factual answer. You can inspect the released records below.',UNVERIFIED_AI_DISCUSSION:'Generated discussion is unverified and does not establish KFM facts.',GLOBAL_RATE_LIMIT:'The shared AI allowance is used for this hour. Please try again later.',MODEL_UNAVAILABLE:'The hosted model is unavailable. Please try again later.',MODEL_FOLLOWUP_REPEATED:'The model repeated its earlier reply instead of answering the follow-up, so the duplicate was withheld. Ask a narrower question or inspect the original records.',MODEL_CONTINUATION_REPEATED:'The model repeated its earlier explanation instead of continuing, so the duplicate was withheld. Ask a narrower question or inspect the original records.',MODEL_CONTEXT_LIMIT:'This question and its evidence exceed the small model’s context limit. Try a shorter question or narrower search.',MODEL_OUTPUT_UNQUALIFIED:'The small model could not select a supported answer.',EVIDENCE_WITHHELD:'Eligible evidence could not be verified. No answer was generated.',SESSION_REQUIRED:'This temporary question session expired. Send a new question.',USER_BUSY:'You already have a question in progress.',QUEUE_FULL:'The research queue is full. Try again shortly.',USER_RATE_LIMIT:'You have reached the hourly question limit.',NO_RELEASED_EVIDENCE:'I could not find eligible released evidence for this question. I cannot provide a supported answer yet.',RELEASE_CHANGED:'The evidence changed or became unavailable, so the answer was withheld.',POLICY_WITHHELD:'This question is withheld by KFM’s policy controls.',INFERENCE_FAILED:'The model could not complete this question.',EVIDENCE_NOT_SUPPORTIVE:'The available evidence does not support an answer.'};
 Object.assign(guidance,{AI_READ_BUSY:'AI source checks are busy. Please try again shortly; your question has not changed.',AI_READ_RATE_LIMIT:'Status checks are temporarily limited. Please wait before checking the same question again.'});
@@ -28,6 +33,7 @@ const newInvestigationId=()=>globalThis.crypto?.randomUUID?.()??null;
 export default function AssistantWorkspace({place='',focus,active=true,discovery,inputRef,onInspectSources,draftRequest}:Props){
  const [mode,setMode]=useState(discovery?'find':'explore'),[chatStatus,setChatStatus]=useState<ChatStatus|null>(null),[chatFailure,setChatFailure]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false),[job,setJob]=useState<Job|null>(null),[turns,setTurns]=useState<Turn[]>([]),[question,setQuestion]=useState(''),[jobRetry,setJobRetry]=useState(0),[exportNotice,setExportNotice]=useState('');
  const [investigationId,setInvestigationId]=useState<string|null>(newInvestigationId),[awayFromLatest,setAwayFromLatest]=useState(false);
+ const [chatFailureDetails,setChatFailureDetails]=useState<ChatFailureDetails|null>(null);
  const resultListRef=useRef<HTMLDivElement>(null),discoveryBodyRef=useRef<HTMLDivElement>(null);
  useLayoutEffect(()=>{if(mode==='find')discoveryBodyRef.current?.scrollTo({top:0,behavior:'auto'});},[mode,question]);
  const messageRef=useRef<HTMLTextAreaElement>(null),composingRef=useRef(false),investigationRef=useRef(investigationId),draftSeenRef=useRef<number|null>(null);
@@ -81,11 +87,23 @@ export default function AssistantWorkspace({place='',focus,active=true,discovery
  },[contextKey,active,stopRequest]);
  useEffect(()=>{const scope=scopeRef.current;scope.mounted=true;return()=>{scope.mounted=false;scope.generation++;exportController.current?.abort();exportController.current=null;void stopRequest('Chat closed.');};},[stopRequest]);
  const refresh=useCallback(async(signal?:AbortSignal)=>{
-  await Promise.allSettled([
-   chatApi('status',undefined,signal).then(next=>{if(signal?.aborted)return;setChatStatus(next);setChatFailure('');},reason=>{if(signal?.aborted)return;setChatStatus(null);setChatFailure(reason instanceof Error&&reason.message==='AI_ORIGIN_HOLD'?'Chat setup needs attention from the site owner. Please try again later.':'Could not connect to hosted AI. Retrying automatically; your draft is still here.');})
-  ]);
+  try{const next=await chatApi('status',undefined,signal);if(signal?.aborted)return;setChatStatus(next);setChatFailure('');setChatFailureDetails(null);}
+  catch(reason){
+    if(signal?.aborted)return;
+    const failure=reason as Error&{httpStatus?:number},httpStatus=failure?.httpStatus,code=['AI_ORIGIN_HOLD','AI_UNAVAILABLE','AI_RESPONSE_INVALID'].includes(failure?.message)?failure.message:failure?.name==='TimeoutError'?'AI_STATUS_TIMEOUT':'AI_CONNECTION_UNAVAILABLE';
+    setChatStatus(null);setChatFailureDetails({code,httpStatus:typeof httpStatus==='number'&&Number.isInteger(httpStatus)&&httpStatus>=100&&httpStatus<=599?httpStatus:undefined});
+    setChatFailure(code==='AI_ORIGIN_HOLD'?'Chat setup needs attention from the site owner. Please try again later.':'Could not connect to hosted AI. Retrying automatically; your draft is still here.');
+  }
  },[]);
- useEffect(()=>{if(!active)return;const controller=new AbortController();queueMicrotask(()=>{if(!controller.signal.aborted)void refresh(controller.signal);});const timer=setInterval(()=>void refresh(controller.signal),5000);return()=>{clearInterval(timer);controller.abort();};},[refresh,active]);
+ useEffect(()=>{
+  if(!active||mode==='find')return;
+  const controller=new AbortController();let pending=false;
+  // One readiness read at a time: slow connections must not accumulate requests
+  // or load the model while the visitor is only finding a place or layer.
+  const poll=async()=>{if(pending||controller.signal.aborted)return;pending=true;try{await refresh(controller.signal);}finally{pending=false;}};
+  queueMicrotask(()=>{void poll();});const timer=setInterval(poll,5000);
+  return()=>{clearInterval(timer);controller.abort();};
+ },[refresh,active,mode]);
  // The scroll region, not the log, scrolls; bring the end of the latest turn into view above the pinned question bar.
  const conversationEnd=()=>{const body=bodyRef.current,log=logRef.current;return body&&log?log.getBoundingClientRect().bottom-body.getBoundingClientRect().bottom:0;};
  useEffect(()=>{
@@ -161,9 +179,9 @@ export default function AssistantWorkspace({place='',focus,active=true,discovery
  const statusText=mode==='find'?'Places & layers · no AI required':!chatStatus?(chatFailure?'AI connection unavailable':'Checking hosted AI'):!chatStatus.configured?'Awaiting owner setup':mode==='evidence'?(chatStatus.evidenceSearchAvailable?'Evidence search available':'Evidence search unavailable'):sourceContext?'Source summary available':!chatStatus.online?'AI unavailable':!chatStatus.ready?'Loading model…':'Qwen3 0.6B ready';
  const notices=<>
    {!investigationId&&mode!=='find'&&<p role='alert' className={styles.notice}>A secure investigation session is unavailable in this browser. Place and layer discovery remains available.</p>}
-   {chatFailure&&<p role='alert' className={styles.notice}>{chatFailure}</p>}
+   {chatFailure&&<p role='alert' data-ai-error={chatFailureDetails?.code} data-http-status={chatFailureDetails?.httpStatus} className={styles.notice}>{chatFailure}</p>}
    {error&&<p role='alert' className={styles.notice}>{error}</p>}
-   {chatStatus?.configured&&!chatStatus.ready&&(sourceContext||chatStatus.evidenceSearchAvailable)&&<p className={styles.notice}>{sourceContext?'Selected sample summaries use the original source and do not require the AI model. General discussion is unavailable.':'AI discussion is unavailable. Choose Find evidence to search released records without waiting for the model. Records may still be unavailable.'}</p>}
+   {chatStatus?.configured&&!chatStatus.ready&&(sourceContext||chatStatus.evidenceSearchAvailable)&&<p className={styles.notice}>{sourceContext?'Selected sample summaries use the original source and do not require the AI model. ':''}{chatStatus.online?'The model is starting. You can keep using the map or choose Evidence to inspect released records while it loads.':'AI discussion is unavailable. Choose Find evidence to search released records without waiting for the model. Records may still be unavailable.'}</p>}
    {exportNotice&&<p role='status' className={styles.notice}>{exportNotice}</p>}
   {requestNotice&&<p role='status' className={styles.notice}>{requestNotice}</p>}
  </>;
