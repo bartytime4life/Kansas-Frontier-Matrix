@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-source-and-trust-projection-profiles-review-packet-time-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-and-trust-projection-profiles.yml",
+    "tools/validators/release/validate_trust_projection_manifest.py",
+    "tests/release/test_trust_projection_manifest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-and-trust-projection-profiles.yml": "sha256:74ecd31b42183e1c75a06cc077122156baa2084d152de460755d3b63c20330b0",
+    "tools/validators/release/validate_trust_projection_manifest.py": "sha256:5ebbb49da5d661e2bfad15a524a44e44a03c88624c9abc5205a447cc8056f2b1",
+    "tests/release/test_trust_projection_manifest.py": "sha256:38828c0b911d6ad7acb4ea2866d980680c17471325a5026ea6fcea769eddc70c"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8203cbd73aef5acc797c4d0f806bd576b3a0920b",
+      "repo:.github/workflows/source-and-trust-projection-profiles.yml@8203cbd73aef5acc797c4d0f806bd576b3a0920b",
+      "repo:tools/validators/release/validate_trust_projection_manifest.py@8203cbd73aef5acc797c4d0f806bd576b3a0920b",
+      "repo:tests/release/test_trust_projection_manifest.py@8203cbd73aef5acc797c4d0f806bd576b3a0920b",
+      "repo:schemas/contracts/v1/release/trust_projection_manifest.schema.json@8203cbd73aef5acc797c4d0f806bd576b3a0920b",
+      "repo:fixtures/contracts/v1/release/trust_projection_manifest/valid/review_packet_reference.json@8203cbd73aef5acc797c4d0f806bd576b3a0920b",
+      "repo:pyproject.toml@8203cbd73aef5acc797c4d0f806bd576b3a0920b"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-and-trust-projection-profiles.yml": "CONFIRMED",
+    "tools/validators/release/validate_trust_projection_manifest.py": "CONFIRMED",
+    "tests/release/test_trust_projection_manifest.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "_time accepted only a trailing uppercase 'Z' and returned None for every other RFC 3339 form the schema's date-time format accepts (+00:00, -05:00, lowercase 't'/'z'). An unreadable revoked_at was then treated as absent, so a ReviewPacketReference revoked at 2026-04-13T06:00:00+00:00 and evaluated at 12:00Z passed with status ACTIVE (fail-open), while the same instant written with Z was correctly rejected. The same parser wrongly rejected valid packet and time-slice timestamps in any other offset. _time now parses every RFC 3339 offset and normalizes to UTC, and a present but unreadable revoked_at fails as REVIEW_PACKET_TIME_INVALID. A valid instant that overflows when normalized to UTC, such as 0001-01-01T00:00:00+00:01, is a time-invalid finding rather than an OverflowError (review finding on #5298). Fractions beyond microseconds, which RFC 3339 allows and datetime truncates, are kept exactly, so instants such as .0000001 and .0000009 stay distinct (review finding on #5298). The reader also reported deeply nested JSON and over-long integers as tracebacks and accepted NaN; these now report JSON_INVALID or JSON_NONFINITE_NUMBER. Six of the new tests fail on the original code."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/release/test_trust_projection_manifest.py: 15 tests (4 before, 11 new) covering sub-microsecond precision, UTC-range overflow, revocation in every offset including the inclusive boundary, offset-agnostic packet and time-slice intervals, the unreadable-revocation rule, packet lifecycle (not yet issued, zero-length validity, inclusive expiry), time-slice duplicates and correction requirements, asset-integrity outcome derivation, the governance decision requirement, every reader finding and the CLI. Branch coverage of the validator rises from 61% to 89%."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of twenty changes failed the suite, among them removing case normalization, the UTC-overflow handling, the exact fraction, the offset requirement, UTC normalization, the unreadable-revocation rule, the inclusive revocation and expiry boundaries, the not-yet-issued rule, the finite-float hook and check, the broadened JSON exception, each time-slice and asset rule, the decision-requirement event set and the CLI exit code."
+    },
+    {
+      "gate": "Workflow receipt binding",
+      "outcome": "PASS",
+      "reason": "Under the receipt list introduced in #5297, genrec-source-probe-envelope-receipt-list-20261019 moves from current to 8203cbd73aef5acc797c4d0f806bd576b3a0920b, the merge of #5297, and this receipt is added as current. The step passes as written with all six listed receipts."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports fewer findings than before (FURB162 removed) and none new. make repository-guardrails PASS, including workflow security."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8203cbd73aef5acc797c4d0f806bd576b3a0920b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T05:25:30Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Finding codes are unchanged. The unreadable-revocation rule is unreachable while the schema's date-time format check runs (rfc3339-validator is a declared dependency) and is kept so the rules stay fail-closed without it. The existing review-packet expiry test still writes a temporary file under the invalid fixture directory; it is unchanged."
+}

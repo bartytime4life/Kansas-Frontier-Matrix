@@ -97,7 +97,8 @@ jobs:
             "genrec-source-probe-envelope-open-profile-data-20261019.json 5ac72ba44a5008f3257593bf460353bf590ea489"
             "genrec-source-probe-envelope-receipt-binding-20261019.json 8c4b8da938798f00bdf503f9819530df7a8a64e0"
             "genrec-source-probe-envelope-receipt-coverage-20261019.json f24eb1650ef40239067ea06c01e6a442ca365797"
-            "genrec-source-probe-envelope-receipt-list-20261019.json current"
+            "genrec-source-probe-envelope-receipt-list-20261019.json 8203cbd73aef5acc797c4d0f806bd576b3a0920b"
+            "genrec-source-and-trust-projection-profiles-review-packet-time-20261019.json current"
           )
           validated=" "
           for entry in "${receipts[@]}"; do

@@ -6,8 +6,11 @@ import argparse
 import copy
 import hashlib
 import json
+import math
+import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -17,9 +20,14 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = REPO_ROOT / "schemas/contracts/v1/release/trust_projection_manifest.schema.json"
 FIXTURES = REPO_ROOT / "fixtures/contracts/v1/release/trust_projection_manifest"
 MAX_BYTES = 2 * 1024 * 1024
+FRACTION = re.compile(r"\.(\d+)")
 
 
 class DuplicateKeyError(ValueError):
+    pass
+
+
+class NonFiniteNumberError(ValueError):
     pass
 
 
@@ -47,6 +55,18 @@ def _unique(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return out
 
 
+def _reject_nonfinite(_value: str) -> None:
+    raise NonFiniteNumberError
+
+
+def _finite_float(text: str) -> float:
+    # A standard literal such as 1e400 overflows to infinity without calling parse_constant.
+    value = float(text)
+    if not math.isfinite(value):
+        raise NonFiniteNumberError
+    return value
+
+
 def _pointer(parts: Iterable[object]) -> str:
     values = [str(part).replace("~", "~0").replace("/", "~1") for part in parts]
     return "/" + "/".join(values) if values else "/"
@@ -60,12 +80,19 @@ def read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
             return None, [Finding("INPUT_NOT_FILE", "/")]
         if path.stat().st_size > MAX_BYTES:
             return None, [Finding("INPUT_TOO_LARGE", "/")]
-        value = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique)
+        value = json.loads(
+            path.read_text(encoding="utf-8"),
+            object_pairs_hook=_unique,
+            parse_constant=_reject_nonfinite,
+            parse_float=_finite_float,
+        )
     except UnicodeError:
         return None, [Finding("JSON_NOT_UTF8", "/")]
     except DuplicateKeyError:
         return None, [Finding("JSON_DUPLICATE_KEY", "/")]
-    except json.JSONDecodeError:
+    except NonFiniteNumberError:
+        return None, [Finding("JSON_NONFINITE_NUMBER", "/")]
+    except (ValueError, RecursionError):  # JSONDecodeError, excessive nesting, or an integer beyond the conversion limit
         return None, [Finding("JSON_INVALID", "/")]
     except OSError:
         return None, [Finding("INPUT_UNREADABLE", "/")]
@@ -81,12 +108,25 @@ def canonical_hash(value: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(encoded).hexdigest()
 
 
-def _time(value: Any) -> datetime | None:
-    if not isinstance(value, str) or not value.endswith("Z"):
+def _time(value: Any) -> tuple[datetime, Decimal] | None:
+    """An RFC 3339 instant as (whole UTC seconds, exact fraction); any offset and a lowercase "t" or "z" are valid.
+
+    The fraction is kept apart because datetime truncates to microseconds, which would make distinct instants equal.
+    """
+    if not isinstance(value, str):
+        return None
+    text = value.upper()
+    match = FRACTION.search(text)
+    fraction = Decimal("0." + match.group(1)) if match else Decimal(0)
+    try:
+        parsed = datetime.fromisoformat(FRACTION.sub("", text, count=1))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
         return None
     try:
-        return datetime.fromisoformat(value[:-1] + "+00:00").astimezone(timezone.utc)
-    except ValueError:
+        return parsed.astimezone(timezone.utc), fraction
+    except OverflowError:  # e.g. 0001-01-01T00:00:00+00:01 lies before the earliest representable UTC instant
         return None
 
 
@@ -137,7 +177,9 @@ def semantic_findings(value: Mapping[str, Any]) -> list[Finding]:
         expires = _time(value.get("expires_at"))
         evaluated = _time(value.get("evaluated_at"))
         revoked = _time(value.get("revoked_at")) if value.get("revoked_at") is not None else None
-        if None in {issued, expires, evaluated} or issued >= expires:
+        # A present but unreadable revoked_at must not read as "never revoked".
+        revocation_unreadable = value.get("revoked_at") is not None and revoked is None
+        if None in {issued, expires, evaluated} or revocation_unreadable or issued >= expires:
             findings.append(Finding("REVIEW_PACKET_TIME_INVALID", "/"))
         else:
             assert issued and expires and evaluated
