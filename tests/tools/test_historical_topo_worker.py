@@ -237,7 +237,7 @@ class RunTests(unittest.TestCase):
             worker.run(SITE + ".evil", self.raw, self.packages, TOKEN, False, self.request)
         with self.assertRaisesRegex(ValueError, "not configured"):
             self.run_worker(token="short")
-        for change in ({"state": "MO"}, {"scanId": "7"}, {"scanId": True}, {"scanId": 0}, {"scanId": -7}, {"scanId": 10**11}):
+        for change in ({"state": "MO"}, {"scanId": "7"}, {"scanId": True}, {"scanId": 0}, {"scanId": -7}, {"scanId": 10**10}):
             with self.subTest(change=change):
                 self.request.write_text(json.dumps({**ITEM, **change}))
                 with self.assertRaisesRegex(ValueError, "invalid Kansas request"):

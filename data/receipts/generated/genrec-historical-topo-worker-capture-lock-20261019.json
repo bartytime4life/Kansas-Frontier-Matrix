@@ -6,8 +6,8 @@
     "tests/tools/test_historical_topo_worker.py"
   ],
   "artifact_hashes": {
-    "tools/historical_topo_worker.py": "sha256:5eb6adc0db2da2bc7cd8a3999f37f83375ba3779a09fada7e61a6d2b3bd9b5c7",
-    "tests/tools/test_historical_topo_worker.py": "sha256:7477cf5ecc227679bdb79bc66757f42dbbad74cc458beb954da1ef804be4eadf"
+    "tools/historical_topo_worker.py": "sha256:6b2bce6d1fc225bf602a045b4384afd43dfc21f96f6d0ea18a28ab1ca29cb687",
+    "tests/tools/test_historical_topo_worker.py": "sha256:041e91488c40563f21f354389ed886f5dc3332346f0bfef66131129c9c91e1b0"
   },
   "model_identity": {
     "provider": "Anthropic",
@@ -49,7 +49,7 @@
     {
       "gate": "Mutation check",
       "outcome": "PASS",
-      "reason": "Each of nine changes failed the suite: removing the capture lock, the stale-partial cleanup, the bool exclusion, the scanId range, ConnectionError retry, the staged-result object check or the queue object check; retrying a 403; and re-running the transform for an existing package."
+      "reason": "Each of nine changes failed the suite: removing the capture lock, the stale-partial cleanup, the bool exclusion, the scanId range or restoring the 10^10 upper bound, ConnectionError retry, the staged-result object check or the queue object check; retrying a 403; and re-running the transform for an existing package."
     },
     {
       "gate": "Lint and guardrails",
@@ -87,5 +87,5 @@
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
-  "notes": "capture_raw now holds an flock on the RAW directory (the pattern tools/local_data/intake.py uses), so only one worker captures at a time and the kernel releases the lock if a worker dies; while holding it, partials left by a killed worker are removed before capture. The queue scanId must be a non-bool integer in 1..10^10, matching the connector and the Site's topoScanId. Staging also retries ConnectionError, which is safe because the Site treats a re-PUT of identical bytes as alreadyPresent. The lock uses fcntl and is POSIX-only, like the existing intake writer lock."
+  "notes": "capture_raw now holds an flock on the RAW directory (the pattern tools/local_data/intake.py uses), so only one worker captures at a time and the kernel releases the lock if a worker dies; while holding it, partials left by a killed worker are removed before capture. The queue scanId must be a non-bool integer from 1 to 9,999,999,999, the ten-digit limit of the Site's topoScanId (the connector allows one more, 10^10, which the Site would refuse at staging). Staging also retries ConnectionError, which is safe because the Site treats a re-PUT of identical bytes as alreadyPresent. The lock uses fcntl and is POSIX-only, like the existing intake writer lock."
 }

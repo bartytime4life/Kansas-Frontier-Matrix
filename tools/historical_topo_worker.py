@@ -138,9 +138,9 @@ def run(site: str, raw: Path, packages: Path, token: str, dry_run: bool, request
         print("No pending Kansas sheet requests")
         return
     item = items[0]
-    # A JSON true is a Python int; the connector and the Site both require 1..10^10.
+    # A JSON true is a Python int; the Site's topoScanId accepts at most ten digits.
     if (not isinstance(item, dict) or item.get("state") != "KS" or type(item.get("scanId")) is not int
-            or not 1 <= item["scanId"] <= 10_000_000_000):
+            or not 1 <= item["scanId"] <= 9_999_999_999):
         raise ValueError("queue returned an invalid Kansas request")
     scan = item["scanId"]
     raw.mkdir(parents=True, exist_ok=True)
