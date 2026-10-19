@@ -29,7 +29,7 @@
     "tools/validators/source_descriptor/README.md"
   ],
   "artifact_hashes": {
-    ".github/workflows/stac-kfm-trust-profile.yml": "sha256:d138a29f7ec5f1e9818c99fae1b1965cfc0b232b611d2ae016ba4cc61727f213",
+    ".github/workflows/stac-kfm-trust-profile.yml": "sha256:c19003c9aa61c2b7049cbbfbb519cbe5b613cdc3ff1a9808f738442ec598fd4c",
     "contracts/source/source_descriptor.md": "sha256:42df3bfe61b3345fb35f60e18512d68850943790a6fa7933b965093bad697621",
     "control_plane/object_family_register.yaml": "sha256:c3c8460990fcc737f2f1e5f5025c350588f0428c7ddf45d9bfe9ca1450d72295",
     "control_plane/repository_governance_parity.yaml": "sha256:bd88389599e964c6099d3434e55cc5d08c62d3089dffcb316db2da7c568f4b40",
@@ -137,7 +137,7 @@
     {
       "gate": "Dependent CI projections",
       "outcome": "PASS",
-      "reason": "repository_governance_parity.yaml expected_topology.baselined_warning and its unit-test assertion move from 93 to 89 to match the shrunk topology baseline, following the precedent of commit 91c5eaecfc; make repository-governance-parity passes. stac-kfm-trust-profile.yml now replays the historical genrec-pass3-catalog-trust-extension receipt against artifact bytes from its binding commit 7d0bab37a3c98796bc68120ae350b5aac75f0251 (the --artifact-git-ref pattern other workflows use), because this PR edits STAC_KFM_TRUST_EXTENSION.md; the replay validates. make workflow-security passes, and install_python_ci.py verify-workflows passes at the pinned migration head."
+      "reason": "repository_governance_parity.yaml expected_topology.baselined_warning and its unit-test assertion move from 93 to 89 to match the shrunk topology baseline, following the precedent of commit 91c5eaecfc; make repository-governance-parity passes. stac-kfm-trust-profile.yml now replays the historical genrec-pass3-catalog-trust-extension receipt against artifact bytes from its binding commit 7d0bab37a3c98796bc68120ae350b5aac75f0251 (the --artifact-git-ref pattern other workflows use, with a full-history checkout via fetch-depth: 0), because this PR edits STAC_KFM_TRUST_EXTENSION.md; the replay validates. make workflow-security passes, and install_python_ci.py verify-workflows passes at the pinned migration head."
     },
     {
       "gate": "Other pre-commit hooks on changed files",
