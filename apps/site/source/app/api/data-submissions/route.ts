@@ -1,5 +1,5 @@
 import { validateSubmission, validateUpload, type Submission } from "../../data-intake";
-import { boundedForm, intakeFailure, intakeHeaders, IntakeError, intakeStore, intakeUser, sameOrigin, sha256, submissionColumns } from "../../data-intake-server";
+import { boundedForm, intakeFailure, intakeHeaders, IntakeError, intakeStore, intakeUser, sameOrigin, sha256, submissionColumns, withSubmissionUpload } from "../../data-intake-server";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
@@ -22,22 +22,18 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     sameOrigin(request); const user = await intakeUser(); const { db, bucket } = intakeStore();
-    const today = new Date(Date.now() - 86_400_000).toISOString();
-    const count = await db.prepare("SELECT COUNT(*) AS n FROM data_submissions WHERE owner_key = ? AND created_at >= ?").bind(user.key, today).first<{ n: number }>();
-    if ((count?.n ?? 0) >= 20) throw new IntakeError("You have submitted 20 files in the last 24 hours. Please try tomorrow.", 429);
-    const form = await boundedForm(request);
-    if ([...form.keys()].some((key) => form.getAll(key).length !== 1)) throw new IntakeError("Each submission field must appear once.");
-    let fields; try { fields = validateSubmission(Object.fromEntries(form)); } catch (error) { throw new IntakeError((error as Error).message); }
-    if (form.get("permission") !== "yes") throw new IntakeError("Confirm that you are allowed to share this file for steward review.");
-    const file = form.get("file");
-    if (!file || typeof file === "string") throw new IntakeError("Choose a data file to submit.");
-    try { validateUpload(file.name, file.size); } catch (error) { throw new IntakeError((error as Error).message); }
-    const bytes = await file.arrayBuffer(); const hash = await sha256(bytes); const id = crypto.randomUUID();
-    const objectKey = `quarantine/${user.key}/${id}`; const now = new Date().toISOString();
-    await bucket.put(objectKey, bytes, { httpMetadata: { contentType: "application/octet-stream" } });
-    try {
-      await db.prepare("INSERT INTO data_submissions (id, owner_key, owner_name, title, source_id, source_url, description, license, sensitivity, start_date, end_date, file_name, file_bytes, file_sha256, object_key, status, version, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'submitted', 1, ?, ?)").bind(id, user.key, user.name, fields.title, fields.sourceId, fields.sourceUrl, fields.description, fields.license, fields.sensitivity, fields.startDate, fields.endDate, file.name, file.size, hash, objectKey, now, now).run();
-    } catch (error) { await bucket.delete(objectKey).catch(() => undefined); throw error; }
-    return Response.json({ id, status: "submitted", fileSha256: hash }, { status: 201, headers: intakeHeaders });
+    return await withSubmissionUpload({ db, bucket }, user.key, async ({ id, objectKey, save }) => {
+      const form = await boundedForm(request);
+      if ([...form.keys()].some((key) => form.getAll(key).length !== 1)) throw new IntakeError("Each submission field must appear once.");
+      let fields; try { fields = validateSubmission(Object.fromEntries(form)); } catch (error) { throw new IntakeError((error as Error).message); }
+      if (form.get("permission") !== "yes") throw new IntakeError("Confirm that you are allowed to share this file for steward review.");
+      const file = form.get("file");
+      if (!file || typeof file === "string") throw new IntakeError("Choose a data file to submit.");
+      try { validateUpload(file.name, file.size); } catch (error) { throw new IntakeError((error as Error).message); }
+      const bytes = await file.arrayBuffer(); const hash = await sha256(bytes);
+      const now = new Date().toISOString();
+      await save(bytes, db.prepare("INSERT INTO data_submissions (id, owner_key, owner_name, title, source_id, source_url, description, license, sensitivity, start_date, end_date, file_name, file_bytes, file_sha256, object_key, status, version, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'submitted', 1, ?, ?)").bind(id, user.key, user.name, fields.title, fields.sourceId, fields.sourceUrl, fields.description, fields.license, fields.sensitivity, fields.startDate, fields.endDate, file.name, file.size, hash, objectKey, now, now));
+      return Response.json({ id, status: "submitted", fileSha256: hash }, { status: 201, headers: intakeHeaders });
+    });
   } catch (error) { return intakeFailure(error); }
 }

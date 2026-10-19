@@ -1,5 +1,5 @@
 import { LAND_SOURCE_ID, LAND_LIMIT, landRecords, validateLandTransfer, LAND_SOURCES } from "../../land-records";
-import { boundedForm, intakeFailure, intakeHeaders, IntakeError, intakeStore, intakeUser, sameOrigin, sha256, submissionColumns } from "../../data-intake-server";
+import { boundedForm, intakeFailure, intakeHeaders, IntakeError, intakeStore, intakeUser, sameOrigin, sha256, submissionColumns, withSubmissionUpload } from "../../data-intake-server";
 import type { Submission } from "../../data-intake";
 export const dynamic="force-dynamic";
 export async function GET(request: Request) {
@@ -19,21 +19,18 @@ export async function GET(request: Request) {
 export async function POST(request:Request){
   try{
     sameOrigin(request);const user=await intakeUser(),{db,bucket}=intakeStore();
-    const count=await db.prepare("SELECT COUNT(*) AS n FROM data_submissions WHERE owner_key = ? AND created_at >= ?").bind(user.key,new Date(Date.now()-86400000).toISOString()).first<{n:number}>();
-    if((count?.n??0)>=20)throw new IntakeError("You have submitted 20 files in 24 hours. Please try tomorrow.",429);
-    const form=await boundedForm(request);
-    if([...form.keys()].some(k=>!["file","permission","title"].includes(k)||form.getAll(k).length!==1)||form.get("permission")!=="yes")throw new IntakeError("Confirm that you may share this bundle for private review.");
-    const file=form.get("file");if(!file||typeof file==="string"||!file.name.endsWith(".json")||file.size<1||file.size>LAND_LIMIT)throw new IntakeError("Choose a pipeline JSON bundle no larger than 10 MiB.",413);
-    const title=form.get("title");if(typeof title!=="string"||title.trim().length<3||title.length>160||/[\x00-\x1f\x7f]/.test(title))throw new IntakeError("Give the bundle a title of 3–160 characters.");
-    const bytes=await file.arrayBuffer();let transfer;try{transfer=await validateLandTransfer(new Uint8Array(bytes));}catch(error){throw new IntakeError((error as Error).message);}
-    const hash=await sha256(bytes),records=landRecords(transfer);
-    const prior=await db.prepare("SELECT id FROM data_submissions WHERE owner_key = ? AND source_id = ? AND file_sha256 = ? ORDER BY created_at LIMIT 1").bind(user.key,LAND_SOURCE_ID,hash).first<{id:string}>();
-    if(prior)return Response.json({id:prior.id,replayed:true,records:records.length,releaseState:"UNRELEASED"},{headers:intakeHeaders});
-    const id=crypto.randomUUID(),now=new Date().toISOString(),key=`quarantine/${user.key}/${id}`;
-    await bucket.put(key,bytes,{httpMetadata:{contentType:"application/octet-stream"}});
-    try{
-      await db.prepare("INSERT INTO data_submissions (id,owner_key,owner_name,title,source_id,source_url,description,license,sensitivity,start_date,end_date,file_name,file_bytes,file_sha256,object_key,status,version,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'submitted',1,?,?)").bind(id,user.key,user.name,title.trim(),LAND_SOURCE_ID,LAND_SOURCES[records[0].source_id].href,`${records.length} unique candidate versions in ${transfer.captures.length} source captures. Transfer ${transfer.transfer_digest}. Integrity only; normalization, rights, sensitivity, source admission and release remain pending.`,"Unknown; source-specific rights review pending","restricted",records[0].event_date,records.at(-1)!.event_date,"land-review-bundle.json",bytes.byteLength,hash,key,now,now).run();
-    }catch(error){await bucket.delete(key).catch(()=>undefined);throw error;}
-    return Response.json({id,records:records.length,releaseState:"UNRELEASED"},{status:201,headers:intakeHeaders});
+    return await withSubmissionUpload({db,bucket},user.key,async({id,objectKey:key,save})=>{
+      const form=await boundedForm(request);
+      if([...form.keys()].some(k=>!["file","permission","title"].includes(k)||form.getAll(k).length!==1)||form.get("permission")!=="yes")throw new IntakeError("Confirm that you may share this bundle for private review.");
+      const file=form.get("file");if(!file||typeof file==="string"||!file.name.endsWith(".json")||file.size<1||file.size>LAND_LIMIT)throw new IntakeError("Choose a pipeline JSON bundle no larger than 10 MiB.",413);
+      const title=form.get("title");if(typeof title!=="string"||title.trim().length<3||title.length>160||/[\x00-\x1f\x7f]/.test(title))throw new IntakeError("Give the bundle a title of 3–160 characters.");
+      const bytes=await file.arrayBuffer();let transfer;try{transfer=await validateLandTransfer(new Uint8Array(bytes));}catch(error){throw new IntakeError((error as Error).message);}
+      const hash=await sha256(bytes),records=landRecords(transfer);
+      const prior=await db.prepare("SELECT id FROM data_submissions WHERE owner_key = ? AND source_id = ? AND file_sha256 = ? ORDER BY created_at LIMIT 1").bind(user.key,LAND_SOURCE_ID,hash).first<{id:string}>();
+      if(prior)return Response.json({id:prior.id,replayed:true,records:records.length,releaseState:"UNRELEASED"},{headers:intakeHeaders});
+      const now=new Date().toISOString();
+      await save(bytes,db.prepare("INSERT INTO data_submissions (id,owner_key,owner_name,title,source_id,source_url,description,license,sensitivity,start_date,end_date,file_name,file_bytes,file_sha256,object_key,status,version,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'submitted',1,?,?)").bind(id,user.key,user.name,title.trim(),LAND_SOURCE_ID,LAND_SOURCES[records[0].source_id].href,`${records.length} unique candidate versions in ${transfer.captures.length} source captures. Transfer ${transfer.transfer_digest}. Integrity only; normalization, rights, sensitivity, source admission and release remain pending.`,"Unknown; source-specific rights review pending","restricted",records[0].event_date,records.at(-1)!.event_date,"land-review-bundle.json",bytes.byteLength,hash,key,now,now));
+      return Response.json({id,records:records.length,releaseState:"UNRELEASED"},{status:201,headers:intakeHeaders});
+    });
   }catch(error){return intakeFailure(error);}
 }

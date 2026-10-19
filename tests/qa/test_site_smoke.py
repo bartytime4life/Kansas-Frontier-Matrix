@@ -101,9 +101,11 @@ class SiteMigrationPreflightTests(unittest.TestCase):
     def test_unknown_nonadditive_migration_remains_refused(self):
         def mutate(root):
             path = root / "drizzle/meta/_journal.json"; journal = json.loads(path.read_text())
-            journal["entries"].append({"idx": 11, "tag": "0011_synthetic_unsafe"})
+            idx = len(journal["entries"])
+            tag = f"{idx:04d}_synthetic_unsafe"
+            journal["entries"].append({"idx": idx, "tag": tag})
             path.write_text(json.dumps(journal))
-            (root / "drizzle/0011_synthetic_unsafe.sql").write_text("DROP TABLE api_connection_receipts;")
+            (root / f"drizzle/{tag}.sql").write_text("DROP TABLE api_connection_receipts;")
         result, _ = self.preflight(mutate)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("is not additive", result.stderr)

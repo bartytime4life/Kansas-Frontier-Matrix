@@ -22,6 +22,45 @@ export function intakeStore() {
   if (!bucket) throw new IntakeError("Data storage is temporarily unavailable. Your form has been kept; please retry.", 503);
   return { db, bucket };
 }
+
+type IntakeStore = ReturnType<typeof intakeStore>;
+type SubmissionUpload = { id: string; objectKey: string; save(bytes: ArrayBuffer, insert: ReturnType<IntakeStore["db"]["prepare"]>): Promise<void> };
+export async function withSubmissionUpload<T>({ db, bucket }: IntakeStore, ownerKey: string, upload: (slot: SubmissionUpload) => Promise<T>): Promise<T> {
+  const id = crypto.randomUUID(), objectKey = `quarantine/${ownerKey}/${id}`;
+  // One D1 write reserves capacity across both endpoints before body reads or R2 writes.
+  // In-flight uploads never age out: a slow writer must continue to consume its slot.
+  const reserved = await db.prepare(`INSERT INTO data_submission_uploads (id, owner_key, created_at)
+    SELECT ?, ?, ? WHERE
+      (SELECT COUNT(*) FROM data_submissions WHERE owner_key = ? AND created_at >= ?) +
+      (SELECT COUNT(*) FROM data_submission_uploads AS uploads WHERE owner_key = ?
+        AND NOT EXISTS (SELECT 1 FROM data_submissions WHERE id = uploads.id)) < 20
+    RETURNING id`).bind(id, ownerKey, new Date().toISOString(), ownerKey, new Date(Date.now() - 86_400_000).toISOString(), ownerKey).first<{ id: string }>();
+  if (!reserved) throw new IntakeError("You have submitted or are uploading 20 files in the last 24 hours. Please try later.", 429);
+  const release = () => db.prepare("DELETE FROM data_submission_uploads WHERE id = ?").bind(id);
+  let writing = false, finalized = false;
+  try {
+    return await upload({ id, objectKey, async save(bytes, insert) {
+      writing = true;
+      await bucket.put(objectKey, bytes, { httpMetadata: { contentType: "application/octet-stream" } });
+      // Finalization exchanges the reservation for the visible submission atomically.
+      const result = await db.batch([insert, release()]);
+      if (result[0]?.meta?.changes !== 1 || result[1]?.meta?.changes !== 1) throw new Error("Submission upload did not finalize.");
+      finalized = true;
+    } });
+  } finally {
+    if (!finalized) {
+      try {
+        // A rejected D1 response can follow a committed transaction. Keep its object.
+        const committed = writing && await db.prepare("SELECT id FROM data_submissions WHERE id = ?").bind(id).first<{ id: string }>();
+        if (writing && !committed) await bucket.delete(objectKey);
+        await release().run();
+      } catch {
+        // Keep uncertain objects charged to the owner until an operator reconciles them.
+        console.error("KFM_INTAKE_UPLOAD_CLEANUP_PENDING");
+      }
+    }
+  }
+}
 export const intakeHeaders = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "Vary": "Cookie" };
 export function sameOrigin(request: Request) {
   if (request.headers.get("origin") !== new URL(request.url).origin || request.headers.get("sec-fetch-site") === "cross-site") throw new IntakeError("Open the submission form on this Site and try again.", 403);
