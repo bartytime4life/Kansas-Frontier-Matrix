@@ -1,0 +1,89 @@
+{
+  "receipt_id": "genrec-github-issue-inventory-read-input-shapes-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/probes/github_issue_inventory_read.py",
+    "tests/governance/test_github_issue_inventory_read.py"
+  ],
+  "artifact_hashes": {
+    "tools/probes/github_issue_inventory_read.py": "sha256:37054aba115e4f87f58ae22e516f7786e034fa6072ea1219efa51591541c33b9",
+    "tests/governance/test_github_issue_inventory_read.py": "sha256:54c5efd2a2577614a9005afa83e005a2df02de36558f933d40ad2335031a8573"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e130c8595080b654ea7b10491804486ea2e0eea1",
+      "repo:tools/probes/github_issue_inventory_read.py@e130c8595080b654ea7b10491804486ea2e0eea1",
+      "repo:tests/governance/test_github_issue_inventory_read.py@e130c8595080b654ea7b10491804486ea2e0eea1",
+      "repo:fixtures/contracts/v1/governance/github_issue_inventory_read/api_fixture.json@e130c8595080b654ea7b10491804486ea2e0eea1",
+      "repo:.github/workflows/github-issue-inventory-read.yml@e130c8595080b654ea7b10491804486ea2e0eea1"
+    ]
+  },
+  "truth_labels": {
+    "tools/probes/github_issue_inventory_read.py": "CONFIRMED",
+    "tests/governance/test_github_issue_inventory_read.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "The probe's CLI contract is one JSON ERROR line with exit 1, but API or fixture JSON of the wrong shape escaped as a traceback: a null issue state (AttributeError), a non-object issue or fixture root (TypeError), a list for headers or a null ref (AttributeError), a string issue number (TypeError when sorting), and a --now that is unparseable (ValueError raised before the error handler). A naive --now was silently read as local time, and a JSON true issue number matched requested issue 1 because True == 1. build_record now checks payload shapes and types and raises TypeError, main reports TypeError with the other errors, --now is parsed inside the handler and must carry a UTC offset, and _parse accepts lowercase t and z. Output for the valid fixture is byte-identical to the original."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/governance/test_github_issue_inventory_read.py: 15 tests (8 before, 7 new) covering every malformed payload shape, the boolean issue number, requested-id and binding rules, rate-limit reset and inclusive staleness, timestamp offsets, the CLI's ERROR, HOLD_RATE_LIMIT and HOLD_AUTH outcomes. Branch coverage of the probe rises from 60% to 88%. Seven of the new tests fail on the original code."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of eleven changes failed the suite: case normalization, the offset requirement, the object-shape check, the exact-int issue number and repository id, the state and updated_at checks, parsing --now inside the handler, reporting TypeError, the non-FRESH exit code and the staleness boundary. A redundant issues-array check that no input could distinguish was removed."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports one fewer finding than before (FURB162) and none new. The workflow's compile, test and fixture-replay steps pass as written; tests/governance passes. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e130c8595080b654ea7b10491804486ea2e0eea1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T06:04:41Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Live mode was not exercised; the redirect-denial tests and fixture mode cover the request and record paths. No earlier receipt pins these files."
+}
