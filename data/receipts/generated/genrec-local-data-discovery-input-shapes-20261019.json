@@ -1,0 +1,86 @@
+{
+  "receipt_id": "genrec-local-data-discovery-input-shapes-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/local_data/discover_water.py",
+    "tools/local_data/discover_3dep.py",
+    "tests/local_data/test_acquisition.py"
+  ],
+  "artifact_hashes": {
+    "tools/local_data/discover_water.py": "sha256:fec245b69115072ba16fbb0130fc08dba5d648af4f03c29cc092a473a9c7cafc",
+    "tools/local_data/discover_3dep.py": "sha256:ead521ea41bad09bb374b8c30aac407309b178a736a10579eeab8eb2ce5f6279",
+    "tests/local_data/test_acquisition.py": "sha256:021e788ec6c02a480e078f6d157a76b9ff9e0105e7c039beef0d70426ffb0a71"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:tools/local_data/discover_water.py@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:tools/local_data/discover_3dep.py@8a9945146e329f594ffa3070f46976aafeafe123",
+      "repo:tests/local_data/test_acquisition.py@8a9945146e329f594ffa3070f46976aafeafe123"
+    ]
+  },
+  "truth_labels": {
+    "tools/local_data/discover_water.py": "CONFIRMED",
+    "tools/local_data/discover_3dep.py": "CONFIRMED",
+    "tests/local_data/test_acquisition.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "On main, discover_water.py raised AttributeError (not caught by the CLI) for a JSON array page, a non-list links value or a non-object link, and both discoverers raised RecursionError for deeply nested JSON, so the CLI printed a traceback instead of its ERROR line. Both accepted 1e400 as infinity, which then failed canonical serialization after the metadata objects were already written to the candidate directory. Water pages are now shape-checked (object, feature objects with object properties and a string monitoring_location_id, list of link objects, string next href) and both parsers reject non-finite floats and map RecursionError to ValueError. main() now passes transport=fetch explicitly so the CLI is testable offline."
+    },
+    {
+      "gate": "Tests",
+      "outcome": "PASS",
+      "reason": "Four new DiscoveryTests cover malformed water pages, pagination bounds and URL denial, malformed 3DEP metadata and listings, and the CLI success and error paths without network; they fail against main and each targeted mutation is killed. make local-data-check passes (432 tests). Branch coverage: discover_water.py 60% to 88%, discover_3dep.py 60% to 87%."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports no new findings on the changed files. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8a9945146e329f594ffa3070f46976aafeafe123"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T06:35:03Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Candidate-only metadata discovery; no source admission, release or publication change."
+}

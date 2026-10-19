@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import re
 import sys
@@ -28,6 +29,17 @@ PAGE_LIMIT = 2 * 1024**2
 TOTAL_LIMIT = 8 * 1024**2
 PREFIX = re.compile(r"KS_[A-Za-z0-9_-]+/\Z")
 NS = {"s3": "http://s3.amazonaws.com/doc/2006-03-01/"}
+
+
+def _finite_float(text: str) -> float:
+    value = float(text)
+    if not math.isfinite(value):
+        raise ValueError("METADATA_NONFINITE")
+    return value
+
+
+def _reject_constant(_):
+    raise ValueError("METADATA_NONFINITE")
 
 
 def fetch(url: str) -> bytes:
@@ -74,9 +86,11 @@ def discover(*, max_projects: int = 128, transport=fetch) -> tuple[dict, dict, d
     for prefix in prefixes:
         endpoint = BUCKET + prefix + "ept.json"
         raw = capture(endpoint)
-        def reject(_):
-            raise ValueError("METADATA_NONFINITE")
-        value = json.loads(raw, object_pairs_hook=unique_object, parse_constant=reject)
+        try:
+            value = json.loads(raw, object_pairs_hook=unique_object, parse_constant=_reject_constant,
+                               parse_float=_finite_float)
+        except RecursionError:
+            raise ValueError("EPT_METADATA_INVALID") from None
         if not isinstance(value, dict) or value.get("dataType") not in {"laszip", "binary", "zstandard"}:
             raise ValueError("EPT_METADATA_INVALID")
         projects.append({"provider_work_unit": prefix[:-1], "source_url": endpoint,
@@ -117,7 +131,7 @@ def main(argv=None):
     parser.add_argument("--max-projects", type=int, default=128)
     args = parser.parse_args(argv)
     try:
-        discovery, inventory, objects = discover(max_projects=args.max_projects)
+        discovery, inventory, objects = discover(max_projects=args.max_projects, transport=fetch)
         create_candidate(args.output_directory)
         for name, raw in objects.items():
             write_candidate(args.output_directory, name, raw)
