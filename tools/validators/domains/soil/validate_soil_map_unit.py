@@ -5,6 +5,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[4]
 CASES = ROOT / "fixtures/domains/soil/soil_map_unit/cases.json"
+# The workflow runs no schema check; the paired schema is closed and requires every property.
+SCHEMA = ROOT / "schemas/contracts/v1/domains/soil/soil_map_unit.schema.json"
+SCHEMA_FIELDS = frozenset(json.loads(SCHEMA.read_text(encoding="utf-8"))["properties"])
 FALSE_EFFECTS={"source_activated":False,"evidence_resolved":False,"policy_evaluated":False,"review_approved":False,"released":False,"published":False}
 
 def expected_identity(c):
@@ -15,8 +18,9 @@ def expected_identity(c):
 
 def _evaluate(c):
     findings=[]
+    if set(c)!=SCHEMA_FIELDS: findings.append("FIELD_SET_INVALID")
     if c.get("profile")!="kfm.domains.soil.soil-map-unit.v1" or c.get("status")!="PROPOSED_INACTIVE": findings.append("PROFILE_INVALID")
-    if c.get("effects")!=FALSE_EFFECTS: findings.append("EFFECT_OVERCLAIM")
+    if c.get("effects")!=FALSE_EFFECTS or any(v is not False for v in c["effects"].values()): findings.append("EFFECT_OVERCLAIM")
     if c.get("public_use_allowed") is not False: findings.append("PUBLIC_USE_OVERCLAIM")
     if c.get("release_state")!="UNRELEASED" or c.get("release_ref") is not None: findings.append("RELEASE_OVERCLAIM")
     if c.get("geometry_posture") not in {"SOURCE_POLYGON","DERIVED_POLYGON","HIDDEN","DENIED"}: findings.append("PARCEL_BOUNDARY_OVERCLAIM")
@@ -29,7 +33,7 @@ def _evaluate(c):
     h,i=expected_identity(c)
     if c.get("spec_hash")!=h: findings.append("SPEC_HASH_MISMATCH")
     elif c.get("id")!=i: findings.append("ID_MISMATCH")
-    if any(x in findings for x in ("SPEC_HASH_MISMATCH","ID_MISMATCH","PROFILE_INVALID")): return "ERROR",sorted(set(findings))
+    if any(x in findings for x in ("SPEC_HASH_MISMATCH","ID_MISMATCH","PROFILE_INVALID","FIELD_SET_INVALID")): return "ERROR",sorted(set(findings))
     if findings: return "DENY",sorted(set(findings))
     return "PASS",[]
 
