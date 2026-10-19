@@ -39,7 +39,9 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
  const queryChanged=discovery?.onQuery;
  const discoveryCurrent=!discovery||discovery.query.trim().toLowerCase()===question.trim().toLowerCase(),discoveryBusy=Boolean(discovery?.busy)||!discoveryCurrent;
  useEffect(()=>{queryChanged?.(mode==='find'?question:'');},[queryChanged,mode,question]);
- useEffect(()=>{if(!draftRequest||draftSeenRef.current===draftRequest.id)return;draftSeenRef.current=draftRequest.id;setQuestion(draftRequest.value);setMode(draftRequest.intent??(queryChanged?'find':'explore'));(inputRef??messageRef).current?.focus();},[draftRequest,queryChanged,inputRef]);
+ // Apply a requested draft before paint: a passive opening effect can otherwise
+ // replace text the visitor has already entered into the newly visible input.
+ useLayoutEffect(()=>{if(!draftRequest||draftSeenRef.current===draftRequest.id)return;draftSeenRef.current=draftRequest.id;setQuestion(draftRequest.value);setMode(draftRequest.intent??(queryChanged?'find':'explore'));},[draftRequest,queryChanged]);
  const loginRef=useRef<HTMLInputElement>(null),logRef=useRef<HTMLDivElement>(null),bodyRef=useRef<HTMLDivElement>(null),nearBottomRef=useRef(true),lastTurnRef=useRef<TurnSnapshot>(null),backgroundErrorRef=useRef(''),programmaticScrollRef=useRef(false),actorRef=useRef<string|null>(null);
  const exportController=useRef<AbortController|null>(null),requestRef=useRef<RequestRun|null>(null);
  const [requestNotice,setRequestNotice]=useState(''),[requestPhase,setRequestPhase]=useState('idle'),[scopeGeneration,setScopeGeneration]=useState(0);

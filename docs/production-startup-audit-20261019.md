@@ -1,15 +1,15 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/production-startup-audit-20261019
-title: GoDaddy application source and production startup audit
+title: GoDaddy source, production startup and composer timing repair
 type: verification-record
-version: v2
+version: v3
 status: source repair; hosted diagnosis and publication pending
 owners: ["@bartytime4life"]
 created: 2026-10-19
 updated: 2026-10-19
 policy_label: public
 owning_root: docs/
-responsibility: Record corrected source identity, standalone Node verification and bounded startup HTTP diagnostic
+responsibility: Record source identity, startup diagnostics, standalone Node verification and first-open composer timing repair
 truth_posture: CONFIRMED reproduced identity defect; live 503 root cause UNKNOWN
 [/KFM_META_BLOCK_V2] -->
 
@@ -108,6 +108,13 @@ configured incomplete Python checkout also fails rather than skipping. These
 skips do not establish Cloudflare, D1 or Python parity qualification. Both
 `npm test` and CI run all `tests/*.test.mjs` with concurrency bounded to four.
 
+The Underground load-boundary test now follows the current manifest's actual
+dynamic import. Immutable older browser assets are deliberately retained for
+open tabs, so counting every matching filename incorrectly failed after a
+second build. The test still requires one current optional module, excludes all
+Underground implementation chunks from initial dependencies, and rejects static
+imports, comments or filename strings as substitutes for the dynamic import.
+
 ## Verification record
 
 Before the repair, the unchanged application passed the production build and
@@ -143,14 +150,41 @@ no `google-chrome` executable, and the existing pipe harness reported `EPIPE`.
 That attempt did not reach application acceptance. Browser checks remain in CI;
 no local browser pass is claimed.
 
-Hosted CI on the eventual immutable PR head, hosted diagnostic readback and
-public browser/3D acceptance remain pending. No inference/model qualification
+GitHub run `39205323761` checked out immutable candidate
+`a1a0c4a7b51a8372acc846ee9aa9d518ac329554`. Build, TypeScript, the complete
+suite (1,494 passed, 18 skipped), and all 18 actual Node HTTP checks passed.
+Both mobile county-browser sizes passed. The desktop first-open scenario failed
+because the initial typed query remained blank; the remaining desktop scenarios
+passed. The preview-command step did not run after that failure. This run is
+**not a complete CI pass**.
+
+Inspection identified two timing defects: a passive effect applies an incoming
+draft after the composer becomes interactable, and the panel's deferred Close
+button focus competes with the composer's focus. Both were reproduced with
+regressions that failed on the prior source: early input became blank and the
+focus sequence was composer then Close. The repair applies the requested draft
+in a bounded layout effect and gives the opening action one focus destination.
+Other chat launchers retain Close focus and their return target. Duplicate draft
+requests cannot replace later visitor edits.
+
+The two new regressions and 34 focused tests pass. Shared-harness compatibility
+passed 255 tests with one existing conditional skip, and independent review
+found no blocking issue. Changed-file ESLint has zero errors (41 warnings in the
+large existing page component). The follow-up production build and TypeScript
+check pass. Its complete suite passes **1,515 tests: 1,495 passed, zero failed
+and 20 conditional skips**, including the repeated-build import boundary.
+The exact cause of the observed browser failure is not inferred solely from its
+timeout. The unchanged browser test must pass on the follow-up immutable head
+before browser qualification.
+
+Hosted diagnostic readback and public browser/3D acceptance remain pending.
+No inference/model qualification
 is claimed. This verification record stays in `docs/`; the final artifact hashes
 and generation record use the existing `data/receipts/generated/` home.
 
 ## Scope, placement and rollback
 
-Existing `server/`, `scripts/`, `tests/`, `.github/workflows/`, `docs/` and
+Existing `app/`, `server/`, `scripts/`, `tests/`, `.github/workflows/`, `docs/` and
 `data/receipts/generated/` own the
 change under the inspected Directory Rules v2, accepted ADR-0029 and this
 composition's `AGENTS.md` and preservation record. There is no new responsibility

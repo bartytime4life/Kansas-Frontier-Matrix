@@ -203,3 +203,30 @@ test('Find has a dedicated result region and retains a long conversation reader 
   assert.equal(findNode(tree,node=>node.type==='textarea').props.value,'Ellsworth','switching intent preserves the draft');
  }finally{h.dispose();}
 });
+
+test('opening requests apply before the first editable paint and never erase input arriving before passive effects',async()=>{
+ for(const initial of ['', 'Explain the selected county']){
+  const queries=[],discovery={query:'',items:[],status:'',busy:false,onQuery:value=>queries.push(value),onChoose(){}};
+  const props={focus,discovery,active:false};
+  const {h}=await renderChat(async()=>ready(),props);
+  try{
+   const opened={...props,active:true,draftRequest:{id:1,value:initial,intent:'find'}};
+   h.render(h.exports.default,opened);
+   // React commits layout effects before paint, while a visitor can type before
+   // passive effects flush. Exercise the actual input handler in that window.
+   h.commitLayout();
+   let tree=h.render(h.exports.default,opened);
+   const textarea=findNode(tree,node=>node.type==='textarea');
+   assert.equal(textarea.props.value,initial,'the opening draft is applied before the input becomes editable');
+   textarea.props.onChange({target:{value:'Ellsworth'}});
+   h.commit();tree=h.render(h.exports.default,opened);h.commit();
+   assert.equal(findNode(tree,node=>node.type==='textarea').props.value,'Ellsworth','a late opening effect cannot clear a visitor edit');
+   assert.equal(queries.at(-1),'Ellsworth');
+   // Parent result refreshes can recreate the request object without granting
+   // the already-consumed request permission to replace the draft again.
+   tree=h.render(h.exports.default,{...opened,draftRequest:{...opened.draftRequest}});h.commit();
+   tree=h.render(h.exports.default,opened);
+   assert.equal(findNode(tree,node=>node.type==='textarea').props.value,'Ellsworth');
+  }finally{h.dispose();}
+ }
+});
