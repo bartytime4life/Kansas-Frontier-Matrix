@@ -4,11 +4,13 @@
   "artifact_paths": [
     "control_plane/object_family_register.yaml",
     "docs/architecture/identity-and-spec-hash.md",
+    "docs/registers/OBJECT_FAMILY.md",
     "docs/standards/ARCHIVAL-STANDARDS.md"
   ],
   "artifact_hashes": {
     "control_plane/object_family_register.yaml": "sha256:6e2cdb669e489fedc7e6478b22d1f429161cf1370bfc62935a2328949fd7e63b",
     "docs/architecture/identity-and-spec-hash.md": "sha256:2a10bfb824f8a1c0816ff161a78892f82b7b19d813ba723f1a1436049b3e7684",
+    "docs/registers/OBJECT_FAMILY.md": "sha256:a8e729a451d50deafbe6f7d1ee0d903f594643d75a3cb9007b93908227e67fa5",
     "docs/standards/ARCHIVAL-STANDARDS.md": "sha256:b0479df321737f0beb0464ca8e59015c71e8a8f4f58d3abacb798f99c716b3bb"
   },
   "model_identity": {
@@ -26,19 +28,21 @@
     "evidence_refs": [
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/18163f1f9e01f437b96aecdc58ceb39079018b1e",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5319#discussion_r4315415801",
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5319#discussion_r4315415821"
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5319#discussion_r4315415821",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5320#discussion_r4315648277"
     ]
   },
   "truth_labels": {
     "control_plane/object_family_register.yaml": "CONFIRMED",
     "docs/architecture/identity-and-spec-hash.md": "CONFIRMED",
+    "docs/registers/OBJECT_FAMILY.md": "CONFIRMED",
     "docs/standards/ARCHIVAL-STANDARDS.md": "CONFIRMED"
   },
   "validation_gates": [
     {
       "gate": "Review findings",
       "outcome": "PASS",
-      "reason": "Two Codex P2 findings on bartytime4life/Kansas-Frontier-Matrix#5319 were verified against the merged tree. The SourceDescriptor register entry still listed case_variant_contracts and a 'Case' alias note after the uppercase contract was deleted, and the ARCHIVAL-STANDARDS.md OAI-PMH identity row still said both case variants exist. A sweep found one more stale row, IDH-DRIFT-08 in identity-and-spec-hash.md. #5319 merged before the fix was pushed, so this is a follow-up."
+      "reason": "Two Codex P2 findings on bartytime4life/Kansas-Frontier-Matrix#5319 were verified against the merged tree. The SourceDescriptor register entry still listed case_variant_contracts and a 'Case' alias note after the uppercase contract was deleted, and the ARCHIVAL-STANDARDS.md OAI-PMH identity row still said both case variants exist. A sweep found one more stale row, IDH-DRIFT-08 in identity-and-spec-hash.md. #5319 merged before the fix was pushed, so this is a follow-up. A later Codex finding on #5320 flagged the human projection docs/registers/OBJECT_FAMILY.md, which still listed the 'Case' alias; that row was updated the same way."
     },
     {
       "gate": "Register and dependent checks",

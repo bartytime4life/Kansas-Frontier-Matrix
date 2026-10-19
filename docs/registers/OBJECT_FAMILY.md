@@ -151,7 +151,7 @@ Each machine entry records contract and schema candidates, policy dependencies, 
 | `RunReceipt` | `CONFLICTED` | Runtime, source, source-event, and release-bound candidates coexist. |
 | `RuntimeResponseEnvelope` | `PARTIAL` | The runtime schema carries the machine shape; the Focus path is a PROPOSED compatibility alias that references it. Accountable semantic acceptance, a dedicated workflow, and deployed-consumer inspection remain open. |
 | `SourceActivationDecision` | `CONFLICTED` | Hyphenated and underscored schema candidates coexist. |
-| `SourceDescriptor` | `CONFLICTED` | Case, hyphen, underscore, suffix, and `source/` versus `sources/` aliases coexist. |
+| `SourceDescriptor` | `CONFLICTED` | Hyphen, underscore, suffix, and `source/` versus `sources/` aliases coexist. |
 | `ValidationReport` | `CONFLICTED` | Generic and domain-specific report candidates coexist. |
 | `WithdrawalNotice` | `PARTIAL` | Contract and schema exist; the focused validation lane is absent. |
 
