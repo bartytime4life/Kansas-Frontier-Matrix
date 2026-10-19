@@ -9,7 +9,7 @@ owners:
   - "@bartytime4life — verified GitHub review route through CODEOWNERS"
   - "NEEDS VERIFICATION — archival-description, digital-preservation, rights, cultural-sovereignty, accessibility, security, and release stewards"
 created: 2026-05-13
-updated: 2026-10-12
+updated: 2026-10-19
 policy_label: public
 owning_root: docs/
 responsibility: >
@@ -19,7 +19,7 @@ responsibility: >
   preservation repository, conformance certificate, release decision, or publication proof.
 truth_posture: >
   CONFIRMED current repository path, adopted Directory Rules placement, direct sibling
-  standards inventory, current case-collision and provenance-family drift, CODEOWNERS
+  standards inventory, resolved case collisions, current provenance-family drift, CODEOWNERS
   routing, LOC connector scaffold state, source-descriptor surface duplication, and dated
   official upstream-currentness checks / PROPOSED KFM archival exchange profiles,
   preservation-action packet, validators, fixtures, producer and consumer bindings, and
@@ -51,7 +51,6 @@ related:
   - ./snac-eac-cpf.md
   - ./OAI-PMH.md
   - ./IIIF.md
-  - IIIF.md
   - ./DUBLIN-CORE.md
   - ./CIDOC-CRM.md
   - ./PROV-O.md
@@ -78,10 +77,11 @@ related:
   - ../../release/README.md
 notes:
   - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
+  - "2026-10-19: stale iiif.md references removed; the lowercase IIIF sibling was retired on 2026-08-22 (issue #3361, PR #3429), so ARC-C03 is recorded as resolved."
   - "Same-path standards-document modernization only."
   - "No standard or KFM profile is adopted, activated, certified, or made release-significant by this revision."
   - "No child standard file, contract, schema, policy rule, source descriptor, connector, fixture, validator, test, workflow, receipt, proof, release object, deployment, or public artifact is created or changed."
-  - "Case-collision and provenance-family drift remain HOLD items; this revision does not rename, merge, delete, or select a winner."
+  - "Provenance-family drift remains a HOLD item; this revision does not rename, merge, delete, or select a winner. The archival case collisions (OAI-PMH, IIIF, canonicalization) were resolved separately by owner decision."
   - "The previous two-sense archival framing is retained, while unsupported conformance, implementation, authority-order, immutable-ledger, and PDF-profile claims are narrowed to current evidence."
 [/KFM_META_BLOCK_V2] -->
 
@@ -96,7 +96,7 @@ notes:
 | **Evidence snapshot** | `main@34d509c690649b284a7c0be739e3a5c8c85926ee` |
 | **Directory result** | `PLACE` at the existing `docs/standards/ARCHIVAL-STANDARDS.md` path. Accepted ADR-0029 and the current standards-lane README assign human-readable standards and interoperability guidance to `docs/standards/`. |
 | **Document authority** | Human-readable boundary, currentness ledger, mapping guidance, and verification backlog only. This page is not an adopted profile or conformance certificate. |
-| **Current repository posture** | Documentation-rich and mixed-maturity: archival sibling pages exist, case-collision and provenance-family drift are recorded, the LOC connector is a `0.0.0` scaffold, and bounded search did not establish a dedicated executable archival-conformance suite. |
+| **Current repository posture** | Documentation-rich and mixed-maturity: archival sibling pages exist, the former case collisions are resolved and provenance-family drift is recorded, the LOC connector is a `0.0.0` scaffold, and bounded search did not establish a dedicated executable archival-conformance suite. |
 | **Upstream-currentness posture** | Refreshed on 2026-08-18 from official issuers. Upstream publication state does not establish KFM adoption, compatibility, or implementation. |
 | **KFM profile posture** | `UNKNOWN / NEEDS VERIFICATION`. No accepted archival exchange or preservation profile was established by the inspected repository evidence. |
 | **Release and publication effect** | None. A document update, passing check, pull request, merge, standard citation, receipt, or preservation copy is not KFM release or publication. |
@@ -225,9 +225,9 @@ This page does not:
 | This file | Tracked at the requested path; prior edition was dated 2026-05-13 and made proposal-era conformance and implementation claims | Same-path modernization is warranted; the page remains explanatory only. |
 | [`docs/standards/README.md`](./README.md) | Repository-grounded lane boundary with 50 direct Markdown files and two direct child directories at its pinned inventory | The lane is real and mixed-maturity. Child presence does not establish adoption or conformance. |
 | Placement authority | ADR-0029 is accepted and adopts Directory Rules v2 | `docs/standards/` is the correct human-readable responsibility lane. |
-| Archival sibling pages | `snac-eac-cpf.md`, `OAI-PMH.md`, `IIIF.md`, `iiif.md`, `DUBLIN-CORE.md`, and `CIDOC-CRM.md` are present | Useful topic-specific guidance exists; its currentness, adoption, and role relationships require file-specific review. |
+| Archival sibling pages | `snac-eac-cpf.md`, `OAI-PMH.md`, `IIIF.md`, `DUBLIN-CORE.md`, and `CIDOC-CRM.md` are present | Useful topic-specific guidance exists; its currentness, adoption, and role relationships require file-specific review. |
 | OAI-PMH identity | `OAI-PMH.md` is canonical; the lowercase `oai-pmh.md` was merged into its Appendix A and deleted 2026-10-19 | `RESOLVED` (owner-directed; see `ARC-C02`). |
-| IIIF identity | Both uppercase and lowercase files exist | `CONFLICTED / HOLD`; case-only migration requires consumer and cross-filesystem evidence. |
+| IIIF identity | `IIIF.md` is canonical; the lowercase `iiif.md` was retired 2026-08-22 (issue #3361, PR #3429) | `RESOLVED` (owner-directed; see `ARC-C03` and `IIIF.md` §10). |
 | Provenance family | `PROV-O.md`, `PROV.md`, `PROVENANCE.md`, and `PROV/README.md` coexist | Roles and writable authority are unresolved; do not collapse PREMIS, provenance, lineage events, and scholarly attribution into one file by prose. |
 | Canonicalization family | `CANONICALIZATION.md` is canonical; the lowercase `canonicalization.md` was merged 2026-10-12 and its redirect stub deleted 2026-10-19 | Identity, edit authority, and the case-only path collision are settled (`CANON-Q11` resolved). |
 | Source-descriptor meaning and shape | Contract files and both singular/plural schema-family paths are present; ADR-0001 remains proposed while adopted Directory Rules already define the default machine-schema route | Presence is real; final family/compatibility reconciliation remains open. |
@@ -868,7 +868,7 @@ A universal append-only or “never delete” rule is unsafe. A governed retenti
 | Umbrella archival guidance | **REPOSITORY-GROUNDED DRAFT** | This revision reconciles the page with current repository and upstream evidence. |
 | Standards-lane placement | **ACCEPTED** | ADR-0029 and Directory Rules v2 establish the human-readable lane. |
 | Upstream currentness ledger | **REFRESHED / DATED** | Official issuer pages checked on 2026-08-18; future changes require re-review. |
-| Archival child-document identity | **CONFLICTED** | OAI-PMH and IIIF case collisions; provenance and canonicalization overlaps remain held. |
+| Archival child-document identity | **CONFLICTED** | The OAI-PMH, IIIF, and canonicalization case collisions are resolved; the provenance-family overlap remains held. |
 | EAS suite KFM profile | **ABSENT / PROPOSED** | No accepted EAD4/EAC-CPF3/EAC-F1 KFM mapping or fixture set established. |
 | Source descriptor and authority model | **PARTIAL / CONFLICTED** | Meaning, singular/plural schema paths, and compatibility need closure. |
 | Archive connectors | **SCAFFOLD / UNPROVED** | LOC package explicitly records no supported behavior; other archive families require current evidence. |
@@ -927,7 +927,7 @@ This document performs none of those transitions.
 |---|---|---|
 | `ARC-C01` | The prior umbrella page declared broad KFM conformance while current implementation evidence is mixed and incomplete | Narrowed to human guidance and a conformance evidence ladder. |
 | `ARC-C02` | `OAI-PMH.md` and `oai-pmh.md` coexisted | `RESOLVED` 2026-10-19 (owner-directed): `OAI-PMH.md` is canonical; the lowercase file's unique content is carried in its Appendix A and the lowercase file was deleted. |
-| `ARC-C03` | `IIIF.md` and `iiif.md` coexist | `HOLD`; same case-collision discipline. |
+| `ARC-C03` | `IIIF.md` and `iiif.md` coexisted | `RESOLVED` 2026-08-22: owner decision (issue #3361) made `IIIF.md` canonical; PR #3429 deleted the lowercase sibling. |
 | `ARC-C04` | `PROV-O.md`, `PROV.md`, `PROVENANCE.md`, and `PROV/README.md` overlap | `HOLD / NEEDS VERIFICATION`; define ontology, general profile, implementation lane, and edit authority separately. |
 | `ARC-C05` | `CANONICALIZATION.md` and `canonicalization.md` coexisted | `RESOLVED`: content merged into `CANONICALIZATION.md` on 2026-10-12 and the lowercase redirect stub deleted on 2026-10-19 (both owner-directed; `CANON-Q11`). |
 | `ARC-C06` | Existing `snac-eac-cpf.md` records EAC-CPF 2.0.1 while official 2026 EAS materials identify EAC-CPF 3.0 and EAC-F 1.0 alongside EAD4 | `STALE / NEEDS VERIFICATION`; file-specific currentness and migration update required. |
@@ -993,7 +993,7 @@ Keep source activation, conformance claims, structural consolidation, and public
 - [`CODEOWNERS`](../../.github/CODEOWNERS) — verified default GitHub review route and negative authority statement.
 - [`snac-eac-cpf.md`](./snac-eac-cpf.md) — current repository archival-authority guidance; upstream-currentness follow-up required.
 - [`OAI-PMH.md`](./OAI-PMH.md) — canonical OAI-PMH guidance; the former lowercase `oai-pmh.md` was merged into it (Appendix A) and deleted on 2026-10-19.
-- [`IIIF.md`](./IIIF.md) and [`iiif.md`](IIIF.md) — current case-collision pair.
+- [`IIIF.md`](./IIIF.md) — canonical IIIF guidance; the former lowercase `iiif.md` was retired on 2026-08-22.
 - [`PROV-O.md`](./PROV-O.md), [`PROV.md`](./PROV.md), [`PROVENANCE.md`](./PROVENANCE.md), and [`PROV/README.md`](./PROV/README.md) — unresolved provenance family.
 - [`contracts/source/source_descriptor.md`](../../contracts/source/source_descriptor.md) — semantic source-descriptor surface.
 - [`schemas/contracts/v1/source/source_descriptor.schema.json`](../../schemas/contracts/v1/source/source_descriptor.schema.json) and [`schemas/contracts/v1/sources/source_descriptor.schema.json`](../../schemas/contracts/v1/sources/source_descriptor.schema.json) — current singular/plural machine-shape surfaces.
@@ -1031,8 +1031,8 @@ These official sources establish current upstream publication facts only. They d
 | Record hierarchy and description exchange | EAD4 | Source-native capture, mapping contract/schema, fixtures, validator, evidence | Upstream current; KFM profile not established |
 | Creator context | EAC-CPF3 | Authority/context mapping with identity conflict handling | Upstream suite current; KFM profile not established |
 | Functions and activities | EAC-F1 | Context mapping without collapsing function into record/event truth | Upstream suite current; KFM profile not established |
-| Metadata harvesting | OAI-PMH2 | SourceDescriptor, connector, RAW/QUARANTINE, harvest receipt | Two docs exist; implementation not established |
-| Digital-object presentation | IIIF stable APIs | Source catalog, rights, released derivative, governed viewer | Two docs exist; implementation not established |
+| Metadata harvesting | OAI-PMH2 | SourceDescriptor, connector, RAW/QUARANTINE, harvest receipt | One canonical doc exists; implementation not established |
+| Digital-object presentation | IIIF stable APIs | Source catalog, rights, released derivative, governed viewer | One canonical doc exists; implementation not established |
 | Descriptive metadata | Dublin Core / MODS3.8 | Source/profile-specific mapping; avoid catalog duplication | Docs exist; adoption/consumer proof unestablished |
 | Structural package metadata | METS2 or METS1 profile | Package profile, mapping, validation, consumer | No KFM profile established |
 | Preservation metadata | PREMIS3 | Preservation-action semantics/profile, mapping to receipts/provenance | No accepted KFM profile established |
