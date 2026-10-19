@@ -8,6 +8,9 @@ if (!/^[0-9]+$/.test(rawPort)) throw new Error("PORT must be an integer");
 const port = Number(rawPort);
 if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("PORT is out of range");
 const { server } = await startProdServer({ port, host: "0.0.0.0", outDir: resolve("dist") });
+// Outlive the hosting proxy's pooled idle sockets; Node's 5 s default lets it reuse a closed one and answer 503.
+server.keepAliveTimeout = 65_000;
+server.headersTimeout = 66_000;
 // Include static assets and framework-level errors that bypass route headers.
 // Later route responses can still replace these defaults with stricter policy.
 installPublicDelivery(server);
