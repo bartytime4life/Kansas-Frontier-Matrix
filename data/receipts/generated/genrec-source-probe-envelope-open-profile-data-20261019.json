@@ -1,0 +1,100 @@
+{
+  "receipt_id": "genrec-source-probe-envelope-open-profile-data-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-and-trust-projection-profiles.yml",
+    "tools/validators/source_probe/validate_source_probe_envelope.py",
+    "tests/source/test_source_probe_envelope.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-and-trust-projection-profiles.yml": "sha256:9822892a81236f567d22fe5cd64ad50169e794674d9e673b7228a9be1d0a3076",
+    "tools/validators/source_probe/validate_source_probe_envelope.py": "sha256:e12bbd8ba1195e078ef33845c06993598ce3f7c39d53c21526c4320c507d683c",
+    "tests/source/test_source_probe_envelope.py": "sha256:b2c473d997d6cd19d5453cc01278115196e9e9f3b58c48076f7ab363081dd41d"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/58b9625ff58f94701d0e29bfbfe0c4574e9c756a",
+      "repo:.github/workflows/source-and-trust-projection-profiles.yml@58b9625ff58f94701d0e29bfbfe0c4574e9c756a",
+      "repo:tools/validators/source_probe/validate_source_probe_envelope.py@58b9625ff58f94701d0e29bfbfe0c4574e9c756a",
+      "repo:tests/source/test_source_probe_envelope.py@58b9625ff58f94701d0e29bfbfe0c4574e9c756a",
+      "repo:schemas/contracts/v1/source/source_probe_envelope.schema.json@58b9625ff58f94701d0e29bfbfe0c4574e9c756a",
+      "repo:data/receipts/generated/genrec-source-and-trust-projection-profiles-20260807.json@58b9625ff58f94701d0e29bfbfe0c4574e9c756a",
+      "repo:tools/ci/python-dependency-lock-migration.json@58b9625ff58f94701d0e29bfbfe0c4574e9c756a",
+      "repo:tools/validators/validate_generated_receipt.py@58b9625ff58f94701d0e29bfbfe0c4574e9c756a"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-and-trust-projection-profiles.yml": "CONFIRMED",
+    "tools/validators/source_probe/validate_source_probe_envelope.py": "CONFIRMED",
+    "tests/source/test_source_probe_envelope.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "The schema leaves profile_data an open object, so its values reach the semantic rules with any JSON type. An EDNA control or interpretation, a KGS geology_kind or a LOC rights_state given as a list or object raised TypeError (unhashable) and the CLI printed a traceback for a record with a valid spec_hash. A NASS canonical_rows_sha256 of 'sha256:' and 64 non-hex or uppercase characters passed, although the schema's own sha256 definition requires lowercase hex. A 1e400 literal (which overflows to infinity without calling parse_constant), deeply nested JSON and an integer beyond the conversion limit also escaped as tracebacks. The semantic rules now accept only string members, the digest uses the schema's pattern, and the reader returns JSON_NONFINITE_NUMBER or JSON_INVALID. Three of the new tests fail on the original code."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/source/test_source_probe_envelope.py: 10 tests (4 before, 6 new) covering open profile_data values of any type, the digest alphabet, EDNA control precedence (a failed control requires DENY even when evidence is also incomplete), every unreadable-input finding, CLI exit codes, and fixture replay failing on a wrong-polarity or empty fixture directory. Branch coverage of the validator rises from 60% to 87%. tests/source: 88 tests pass; the workflow's fixture replays, focused tests and pinned receipt check pass as written."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of thirteen changes failed the suite, among them removing the string-membership guard, the digest pattern, the finite-float hook or its check, the broadened JSON exception, the list of control values, each EDNA materiality rule and its DENY precedence, the CLI exit aggregation, and the fixture-replay polarity and emptiness checks."
+    },
+    {
+      "gate": "Workflow receipt binding",
+      "outcome": "PASS",
+      "reason": "data/receipts/generated/genrec-source-and-trust-projection-profiles-20260807.json pins the validator and its test, and the workflow checked it against the working tree, so any fix would turn that step red; working-tree mode also stops honouring the one-time dependency-lock migration once the workflow changes. The step now passes --artifact-git-ref 8c9c5acebdadeeea0bf8539a6539b8982b20d1fa, the commit the receipt was authored at, where all 25 pinned artifacts match, and the checkout sets fetch-depth: 0 as every other fixed-ref workflow does. The prior receipt is unchanged; this receipt records the later edit. tools/ci/install_python_ci.py verify-workflows reads workflows at its fixed KFM_MIGRATION_HEAD and is unaffected."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports fewer findings than before (the previously unused math import is now used) and none new. make repository-guardrails PASS, including workflow security. tests/ci, the receipt-validator tests and the guardrail attribution tests pass."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/58b9625ff58f94701d0e29bfbfe0c4574e9c756a"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T04:46:05Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Finding codes are unchanged: a malformed rows digest still reports NASS_CONTENT_DIGEST_MISSING. The schema still leaves profile_data open; per-profile shapes stay in the validator. tests/source/README.md's inventory, pinned to an earlier revision, still lists 4 tests for this module and is left for its next re-pin."
+}
