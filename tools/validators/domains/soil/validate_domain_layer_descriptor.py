@@ -8,9 +8,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[4]
 CASES = ROOT / "fixtures/domains/soil/domain_layer_descriptor/cases.json"
-# The workflow runs no schema check; the paired schema is closed and requires every property.
+# The workflow runs no schema check; the paired schema is closed and requires every property, nested objects included.
 SCHEMA = ROOT / "schemas/contracts/v1/domains/soil/domain_layer_descriptor.schema.json"
-SCHEMA_FIELDS = frozenset(json.loads(SCHEMA.read_text(encoding="utf-8"))["properties"])
+SCHEMA_DOC = json.loads(SCHEMA.read_text(encoding="utf-8"))
 PROFILE = "kfm.domains.soil.domain-layer-descriptor.v1"
 FALSE_EFFECTS = {
     "catalog_written": False,
@@ -30,6 +30,26 @@ SUPPORT_TO_LAYER = {
     "governed_change_evidence": "CHANGE_EVIDENCE",
 }
 
+def closed_shape_violations(value, schema, path="$"):
+    """Paths that break the schema's closed objects or required fields, at every depth.
+
+    The paired schemas use only properties, required, additionalProperties and items.
+    """
+    found = []
+    properties = schema.get("properties")
+    if isinstance(value, dict) and isinstance(properties, dict):
+        if schema.get("additionalProperties") is False:
+            found += [f"{path}.{key}" for key in sorted(set(value) - set(properties))]
+        found += [f"{path}.{key}" for key in schema.get("required", []) if key not in value]
+        for key, subschema in properties.items():
+            if key in value:
+                found += closed_shape_violations(value[key], subschema, f"{path}.{key}")
+    items = schema.get("items")
+    if isinstance(value, list) and isinstance(items, dict):
+        for index, item in enumerate(value):
+            found += closed_shape_violations(item, items, f"{path}[{index}]")
+    return found
+
 
 def canonical_hash(candidate: dict) -> str:
     payload = dict(candidate)
@@ -41,7 +61,7 @@ def canonical_hash(candidate: dict) -> str:
 
 def _evaluate(candidate: dict) -> tuple[str, list[str]]:
     findings: list[str] = []
-    if set(candidate) != SCHEMA_FIELDS:
+    if closed_shape_violations(candidate, SCHEMA_DOC):
         findings.append("FIELD_SET_INVALID")
     if candidate.get("profile") != PROFILE or candidate.get("status") != "PROPOSED_INACTIVE":
         findings.append("PROFILE_MISMATCH")

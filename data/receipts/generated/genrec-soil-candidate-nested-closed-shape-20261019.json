@@ -1,0 +1,113 @@
+{
+  "receipt_id": "genrec-soil-candidate-nested-closed-shape-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/domains/soil/validate_soil_component.py",
+    "tools/validators/domains/soil/validate_soil_map_unit.py",
+    "tools/validators/domains/soil/validate_component_horizon_join.py",
+    "tools/validators/domains/soil/validate_domain_feature_identity.py",
+    "tools/validators/domains/soil/validate_domain_layer_descriptor.py",
+    "tools/validators/domains/soil/validate_domain_observation.py",
+    "tools/validators/domains/soil/validate_domain_validation_report.py",
+    "tests/validators/domains/soil/test_soil_candidate_closed_shape.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/domains/soil/validate_soil_component.py": "sha256:decf305663a86e8cda13e0b0adeacee1de8e4506a7703b538d13dc2e5d0edf2f",
+    "tools/validators/domains/soil/validate_soil_map_unit.py": "sha256:189d7dedecdd0db29f85398af2a3345c04c08143d01698bad950fb15f68f40d1",
+    "tools/validators/domains/soil/validate_component_horizon_join.py": "sha256:3312c3f69c5193a2b2e9ce45377ea1555b9d3d8d67113889b71d83a3f6abd6fe",
+    "tools/validators/domains/soil/validate_domain_feature_identity.py": "sha256:cceba0b7d6a94d44728247b969de9276cdc95239e246542e181f138fd6fe277c",
+    "tools/validators/domains/soil/validate_domain_layer_descriptor.py": "sha256:2e13b449d4d9ec5b34e435521207471120620417472fb01598d5a057c3f2aa4c",
+    "tools/validators/domains/soil/validate_domain_observation.py": "sha256:510e3972fe7d0f64c868f3204c6882e4b21f5bf4ed4ff894653d5a7aacc17dfc",
+    "tools/validators/domains/soil/validate_domain_validation_report.py": "sha256:9c9507294bd92ff3e2cb0b85f78d2878f63aeb2c5c8c6ccc5dfd5d2b4c269198",
+    "tests/validators/domains/soil/test_soil_candidate_closed_shape.py": "sha256:f2c627fae5e47ee36cb631e1800d758bf49e418b4823146d4832cb8622d2fa0e"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c397c8eb0a3b0e86d9c06227abdb70700822c1e4",
+      "repo:tools/validators/domains/soil/validate_soil_component.py@c397c8eb0a3b0e86d9c06227abdb70700822c1e4",
+      "repo:tools/validators/domains/soil/validate_soil_map_unit.py@c397c8eb0a3b0e86d9c06227abdb70700822c1e4",
+      "repo:tools/validators/domains/soil/validate_component_horizon_join.py@c397c8eb0a3b0e86d9c06227abdb70700822c1e4",
+      "repo:tools/validators/domains/soil/validate_domain_feature_identity.py@c397c8eb0a3b0e86d9c06227abdb70700822c1e4",
+      "repo:tools/validators/domains/soil/validate_domain_layer_descriptor.py@c397c8eb0a3b0e86d9c06227abdb70700822c1e4",
+      "repo:tools/validators/domains/soil/validate_domain_observation.py@c397c8eb0a3b0e86d9c06227abdb70700822c1e4",
+      "repo:tools/validators/domains/soil/validate_domain_validation_report.py@c397c8eb0a3b0e86d9c06227abdb70700822c1e4",
+      "repo:tests/validators/domains/soil/test_soil_candidate_closed_shape.py@c397c8eb0a3b0e86d9c06227abdb70700822c1e4",
+      "repo:data/receipts/generated/genrec-soil-candidate-closed-shape-20261019.json@c397c8eb0a3b0e86d9c06227abdb70700822c1e4",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5287#discussion_r4310044812"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/domains/soil/validate_soil_component.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_soil_map_unit.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_component_horizon_join.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_domain_feature_identity.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_domain_layer_descriptor.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_domain_observation.py": "CONFIRMED",
+    "tools/validators/domains/soil/validate_domain_validation_report.py": "CONFIRMED",
+    "tests/validators/domains/soil/test_soil_candidate_closed_shape.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "PR #5287 merged at bce87d9 with a top-level-only field-set check, before the fix for its Codex P1 finding was pushed. On main, soil_map_unit returns ('PASS', []) for a valid fixture with temporal_scope.release_authorized: true once spec_hash and id are recomputed; the same bypass exists in each of the seven gates through their nested closed objects. With this change the same input returns ('ERROR', ['FIELD_SET_INVALID'])."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "test_soil_candidate_closed_shape.py: 5 tests (86 subtests) over every valid fixture of all seven validators, exercising an injected and a missing field in each nested closed object (temporal_scope, source_native_keys, temporal_support, effects and report findings items). The 161 tests under tests/validators/domains/soil pass, and all 45 validator and test commands in the ten consuming workflows pass."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Reverting soil_map_unit to the top-level-only check fails the nested test."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports findings identical to main in the seven validators and none in the test module. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c397c8eb0a3b0e86d9c06227abdb70700822c1e4"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T03:24:31Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-soil-candidate-closed-shape-20261019 for these eight paths; that receipt stays unchanged as the record of the bytes merged in #5287. The closed-shape walker is kept inline in each standalone validator rather than added to the separately governed tools/validators/_common."
+}

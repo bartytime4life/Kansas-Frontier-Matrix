@@ -4,9 +4,9 @@ import argparse, hashlib, json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[4]
 CASES=ROOT/'fixtures/domains/soil/domain_feature_identity/cases.json'
-# The workflow runs no schema check; the paired schema is closed and requires every property.
+# The workflow runs no schema check; the paired schema is closed and requires every property, nested objects included.
 SCHEMA=ROOT/'schemas/contracts/v1/domains/soil/domain_feature_identity.schema.json'
-SCHEMA_FIELDS=frozenset(json.loads(SCHEMA.read_text(encoding='utf-8'))['properties'])
+SCHEMA_DOC=json.loads(SCHEMA.read_text(encoding='utf-8'))
 PROFILE='kfm.domains.soil.domain-feature-identity.v1'
 FALSE_EFFECTS={'canonical_identity_created':False,'evidence_resolved':False,'policy_evaluated':False,'review_approved':False,'released':False,'published':False}
 SUPPORT_ROLES={
@@ -19,12 +19,34 @@ SUPPORT_ROLES={
  'soil_interpretation':{'INTERPRETATION','CLASSIFICATION'},
  'governed_change_evidence':{'TEMPORAL_CAVEAT'},
 }
+
+def closed_shape_violations(value, schema, path="$"):
+    """Paths that break the schema's closed objects or required fields, at every depth.
+
+    The paired schemas use only properties, required, additionalProperties and items.
+    """
+    found = []
+    properties = schema.get("properties")
+    if isinstance(value, dict) and isinstance(properties, dict):
+        if schema.get("additionalProperties") is False:
+            found += [f"{path}.{key}" for key in sorted(set(value) - set(properties))]
+        found += [f"{path}.{key}" for key in schema.get("required", []) if key not in value]
+        for key, subschema in properties.items():
+            if key in value:
+                found += closed_shape_violations(value[key], subschema, f"{path}.{key}")
+    items = schema.get("items")
+    if isinstance(value, list) and isinstance(items, dict):
+        for index, item in enumerate(value):
+            found += closed_shape_violations(item, items, f"{path}[{index}]")
+    return found
+
+
 def canonical_hash(c):
  p=dict(c);p.pop('id',None);p.pop('spec_hash',None)
  return hashlib.sha256(json.dumps(p,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode()).hexdigest()
 def _evaluate(c):
  f=[]
- if set(c)!=SCHEMA_FIELDS:f.append('FIELD_SET_INVALID')
+ if closed_shape_violations(c,SCHEMA_DOC):f.append('FIELD_SET_INVALID')
  if c.get('profile')!=PROFILE or c.get('status')!='PROPOSED_INACTIVE':f.append('PROFILE_MISMATCH')
  if c.get('domain')!='soil' or c.get('version')!='1.0.0':f.append('IDENTITY_PROFILE_MISMATCH')
  support=c.get('support_type');role=c.get('object_role')
