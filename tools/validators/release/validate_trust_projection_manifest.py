@@ -115,7 +115,10 @@ def _time(value: Any) -> datetime | None:
         return None
     if parsed.tzinfo is None:
         return None
-    return parsed.astimezone(timezone.utc)
+    try:
+        return parsed.astimezone(timezone.utc)
+    except OverflowError:  # e.g. 0001-01-01T00:00:00+00:01 lies before the earliest representable UTC instant
+        return None
 
 
 def schema_findings(value: Mapping[str, Any]) -> list[Finding]:

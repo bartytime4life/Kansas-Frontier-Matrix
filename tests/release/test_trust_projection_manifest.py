@@ -127,6 +127,13 @@ def test_unreadable_revocation_is_not_treated_as_never_revoked() -> None:
         assert MODULE.Finding("REVIEW_PACKET_TIME_INVALID", "/") in MODULE.semantic_findings(value), revoked_at
 
 
+def test_instants_outside_the_utc_range_are_findings_not_crashes(tmp_path: Path) -> None:
+    # Valid RFC 3339 that overflows when normalized to UTC.
+    assert codes(tmp_path, rebound(PACKET, lambda v: v.update(issued_at="0001-01-01T00:00:00+00:01"))) == {"REVIEW_PACKET_TIME_INVALID"}
+    late = rebound("time_slice_manifest.json", lambda v: v["valid_time"].update(end="9999-12-31T23:59:59-00:01"))
+    assert codes(tmp_path, late) == {"TIME_SLICE_INTERVAL_INVALID"}
+
+
 def test_time_slice_rules(tmp_path: Path) -> None:
     name = "time_slice_manifest.json"
     # Intervals compare instants: 14T04:00+05:00 is 13T23:00Z (inside), 13T20:00-05:00 is 14T01:00Z (after the end).

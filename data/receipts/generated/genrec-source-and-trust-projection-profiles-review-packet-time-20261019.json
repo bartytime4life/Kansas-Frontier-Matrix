@@ -8,8 +8,8 @@
   ],
   "artifact_hashes": {
     ".github/workflows/source-and-trust-projection-profiles.yml": "sha256:74ecd31b42183e1c75a06cc077122156baa2084d152de460755d3b63c20330b0",
-    "tools/validators/release/validate_trust_projection_manifest.py": "sha256:4731f2ae0fef67bab91d85526f4ce7e391ced12d77f45b060bd0790b69477d70",
-    "tests/release/test_trust_projection_manifest.py": "sha256:9bdfeb49168054d1a3919f66df017949f3a89304717465e3c0181459d81d7fc7"
+    "tools/validators/release/validate_trust_projection_manifest.py": "sha256:8561941b14222f2546b268c29aae1480c41b8f4cd9c2e92b704199f8bad350d4",
+    "tests/release/test_trust_projection_manifest.py": "sha256:dcef74c649ed337065e7218b0a88be318df505698f1028ab0c37a83e2e4bada8"
   },
   "model_identity": {
     "provider": "Anthropic",
@@ -42,17 +42,17 @@
     {
       "gate": "Defect reproduction",
       "outcome": "PASS",
-      "reason": "_time accepted only a trailing uppercase 'Z' and returned None for every other RFC 3339 form the schema's date-time format accepts (+00:00, -05:00, lowercase 't'/'z'). An unreadable revoked_at was then treated as absent, so a ReviewPacketReference revoked at 2026-04-13T06:00:00+00:00 and evaluated at 12:00Z passed with status ACTIVE (fail-open), while the same instant written with Z was correctly rejected. The same parser wrongly rejected valid packet and time-slice timestamps in any other offset. _time now parses every RFC 3339 offset and normalizes to UTC, and a present but unreadable revoked_at fails as REVIEW_PACKET_TIME_INVALID. The reader also reported deeply nested JSON and over-long integers as tracebacks and accepted NaN; these now report JSON_INVALID or JSON_NONFINITE_NUMBER. Six of the new tests fail on the original code."
+      "reason": "_time accepted only a trailing uppercase 'Z' and returned None for every other RFC 3339 form the schema's date-time format accepts (+00:00, -05:00, lowercase 't'/'z'). An unreadable revoked_at was then treated as absent, so a ReviewPacketReference revoked at 2026-04-13T06:00:00+00:00 and evaluated at 12:00Z passed with status ACTIVE (fail-open), while the same instant written with Z was correctly rejected. The same parser wrongly rejected valid packet and time-slice timestamps in any other offset. _time now parses every RFC 3339 offset and normalizes to UTC, and a present but unreadable revoked_at fails as REVIEW_PACKET_TIME_INVALID. A valid instant that overflows when normalized to UTC, such as 0001-01-01T00:00:00+00:01, is a time-invalid finding rather than an OverflowError (review finding on #5298). The reader also reported deeply nested JSON and over-long integers as tracebacks and accepted NaN; these now report JSON_INVALID or JSON_NONFINITE_NUMBER. Six of the new tests fail on the original code."
     },
     {
       "gate": "Tests and coverage",
       "outcome": "PASS",
-      "reason": "tests/release/test_trust_projection_manifest.py: 13 tests (4 before, 9 new) covering revocation in every offset including the inclusive boundary, offset-agnostic packet and time-slice intervals, the unreadable-revocation rule, packet lifecycle (not yet issued, zero-length validity, inclusive expiry), time-slice duplicates and correction requirements, asset-integrity outcome derivation, the governance decision requirement, every reader finding and the CLI. Branch coverage of the validator rises from 61% to 89%."
+      "reason": "tests/release/test_trust_projection_manifest.py: 14 tests (4 before, 10 new) covering UTC-range overflow, revocation in every offset including the inclusive boundary, offset-agnostic packet and time-slice intervals, the unreadable-revocation rule, packet lifecycle (not yet issued, zero-length validity, inclusive expiry), time-slice duplicates and correction requirements, asset-integrity outcome derivation, the governance decision requirement, every reader finding and the CLI. Branch coverage of the validator rises from 61% to 89%."
     },
     {
       "gate": "Mutation check",
       "outcome": "PASS",
-      "reason": "Each of eighteen changes failed the suite, among them removing case normalization, the offset requirement, UTC normalization, the unreadable-revocation rule, the inclusive revocation and expiry boundaries, the not-yet-issued rule, the finite-float hook and check, the broadened JSON exception, each time-slice and asset rule, the decision-requirement event set and the CLI exit code."
+      "reason": "Each of nineteen changes failed the suite, among them removing case normalization, the UTC-overflow handling, the offset requirement, UTC normalization, the unreadable-revocation rule, the inclusive revocation and expiry boundaries, the not-yet-issued rule, the finite-float hook and check, the broadened JSON exception, each time-slice and asset rule, the decision-requirement event set and the CLI exit code."
     },
     {
       "gate": "Workflow receipt binding",
