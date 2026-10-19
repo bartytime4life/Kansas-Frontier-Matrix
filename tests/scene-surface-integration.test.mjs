@@ -202,7 +202,8 @@ test("toolbar effects stays above the evidence drawer and preserves surface insp
   const attribute = (node, name) => node.attributes.properties.find((item) => ts.isJsxAttribute(item) && item.name.getText(pageTree) === name)?.initializer;
   const closestElement = (node) => { let parent = node.parent; while (parent && !ts.isJsxElement(parent)) parent = parent.parent; return parent; };
   const scene = nodesMatching(pageTree, (node) => ts.isJsxSelfClosingElement(node) && node.tagName.getText(pageTree) === "ScenePanel")[0];
-  const drawer = nodesMatching(pageTree, (node) => ts.isJsxOpeningElement(node) && attribute(node, "className")?.text === "evidence-drawer")[0];
+  const drawer = nodesMatching(pageTree, (node) => ts.isJsxOpeningElement(node) && attribute(node, "className")?.text?.split(/\s+/).includes("evidence-drawer"))[0];
+  assert.ok(drawer, "the existing evidence drawer remains present with its Atlas styling class");
   const toolbar = closestElement(scene);
   assert.equal(attribute(toolbar.openingElement, "className").text, "map-dock-actions");
   let header = toolbar;

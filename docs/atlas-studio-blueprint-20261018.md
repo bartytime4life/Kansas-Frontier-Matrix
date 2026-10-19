@@ -416,6 +416,21 @@ or an inherited runtime failure. Subsequent steps, including hydrated browser
 acceptance, were skipped in that first run; the PR records the follow-up result.
 No application source/build input changed for this test correction.
 
+The second run `39184366438` on `b44ba1661fe921de71fdbac4c50d3a34918eaf95`
+passed all 180 AI/evidence cases, then failed one of 83 scene/water cases:
+the scene-surface AST test selected the drawer by its entire class string and
+did not tolerate the added Atlas class. It now selects the existing
+`evidence-drawer` class token and explicitly requires the drawer to exist; toolbar,
+z-index and modal-ownership assertions are retained. All eight scene/water suites
+then passed locally, 83/83. No runtime change was needed.
+
+A bounded scan also found historical assertions in two non-CI suites. Matched
+base/candidate runs show `explorer-site-audit` 3/4 and `rendered-html` 24/33 on
+both, with the same failing cases: stale source-shape/copy assumptions and
+Cloudflare `worker.fetch` assumptions against this Node composition. Those files
+are unchanged and deferred; no full-suite pass is claimed. They do not replace
+the existing Node HTTP and hydrated candidate checks.
+
 ### A1 limits, rollback and continuation
 
 Delivery states: **implemented; locally tested**. Candidate browser verification,

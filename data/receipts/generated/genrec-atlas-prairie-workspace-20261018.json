@@ -22,7 +22,8 @@
     "tests/map-starters.test.mjs",
     "tests/mobile-compatibility.test.mjs",
     "tests/public-ai-http.test.mjs",
-    "tests/public-ai.test.mjs"
+    "tests/public-ai.test.mjs",
+    "tests/scene-surface-integration.test.mjs"
   ],
   "artifact_hashes": {
     ".github/workflows/public-core-repair.yml": "sha256:9ea80b80021f59e96c182f50125b61d35ed2dee50d6cce21f9864f95ec58168f",
@@ -33,7 +34,7 @@
     "app/explorer-guide.tsx": "sha256:dca85f512757811a1d90a163d49c70dbfaa180aab7136116258bc0593d367c9e",
     "app/map-starters.ts": "sha256:77de9a1036f99a6c9386ec4154ee3183849e290671ac5e8e36f1c0117f1b750e",
     "app/page.tsx": "sha256:d845f05a8119f0fcd39809ea0dbffa432935ff25d1e404dcc3bf79a6e65f10c5",
-    "docs/atlas-studio-blueprint-20261018.md": "sha256:e4f504755adf6c163ae1e045df4dd01f719d200baa773d9d4f0cae3e4fee4983",
+    "docs/atlas-studio-blueprint-20261018.md": "sha256:86c7478942f82b65e9900e2cc409de837266883dfd585c6f4132bc32a0bb48f7",
     "server/public-ai-handler.mjs": "sha256:6012c2322e1025462c77310a4a6c9f6c34d98582eb69d0a08e5b24466bc94e7e",
     "tests/assistant-status.test.mjs": "sha256:5f77512eb0801f6029beda1270c2d68e5f2e34e201d91927c8eef447171b8e19",
     "tests/atlas-discovery.test.mjs": "sha256:25ffd81ae6bce61f09aa56a8c50fce54c88bcea6a0b4a834d18e1b41007a94e4",
@@ -45,14 +46,15 @@
     "tests/map-starters.test.mjs": "sha256:b0c76bb801d560d0c557b475c2b77c0163b4e6f16aff3ab3ec45caf56695fba0",
     "tests/mobile-compatibility.test.mjs": "sha256:a4d63461075ab4210dfc28ecc600f1765b08f1d3809a751f398f8e265626b6e5",
     "tests/public-ai-http.test.mjs": "sha256:803abf3960bb4245cb08054be2a0fc4f5d441fcfe887fae969dc9f133172de4b",
-    "tests/public-ai.test.mjs": "sha256:776590c2c88f2242b815a88c474b9bf474a87be7ad82d7ea3ba3d4c3af9b3dd8"
+    "tests/public-ai.test.mjs": "sha256:776590c2c88f2242b815a88c474b9bf474a87be7ad82d7ea3ba3d4c3af9b3dd8",
+    "tests/scene-surface-integration.test.mjs": "sha256:c4a51ee02bddcbee4a2604d1bb271f18e1675d84fce7978b0432da16f8e7df04"
   },
   "model_identity": {
     "provider": "OpenAI",
     "model": "Codex",
     "version": "UNKNOWN; exact runtime build identifier unavailable"
   },
-  "prompt_or_contract": "sha256:e4f504755adf6c163ae1e045df4dd01f719d200baa773d9d4f0cae3e4fee4983",
+  "prompt_or_contract": "sha256:86c7478942f82b65e9900e2cc409de837266883dfd585c6f4132bc32a0bb48f7",
   "parameters": {
     "seed": null,
     "temperature": null,
@@ -101,7 +103,8 @@
     "tests/mobile-compatibility.test.mjs": "CONFIRMED",
     "tests/public-ai.test.mjs": "CONFIRMED",
     "tests/public-ai-http.test.mjs": "NEEDS VERIFICATION",
-    "tests/godaddy-node-runtime.test.mjs": "NEEDS VERIFICATION"
+    "tests/godaddy-node-runtime.test.mjs": "NEEDS VERIFICATION",
+    "tests/scene-surface-integration.test.mjs": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -168,6 +171,11 @@
       "gate": "ci-copy-assertion-followup",
       "outcome": "PASS",
       "reason": "Syntax and focused ESLint pass for two corrected HTTP test files. Initial CI run39184136162 on a94dd2ea passed build/types and groups11+23+88, then179/180 AI/evidence checks: stale removed-promotional-copy assertion failed. Two tests now assert actual panel/title/public200 and absent removed copy; no access/origin/private/admin assertions removed. Runtime bytes unchanged. HTTP/browser execution unavailable locally; follow-up CI remains pending, not claimed passing."
+    },
+    {
+      "gate": "scene-selector-ci-followup",
+      "outcome": "PASS",
+      "reason": "Second CI run39184366438 on b44ba1661 passes180/180 AI/evidence cases, then scene/water82/83 due exact class-string test selector. Test now selects evidence-drawer token and requires presence, retaining toolbar/zindex/modal assertions. Eight scene/water suites pass83/83 locally. No runtime change. Two untouched historical non-CI suites reproduce same failing cases on base/candidate: explorer-site-audit3/4 and rendered-html24/33; deferred, not full green."
     }
   ],
   "policy_decisions": [],
@@ -226,5 +234,5 @@
     "adr_link": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/ca54cf54653731e133d8ef9c2234531054bbdfc7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
     "drift_register_entry": null
   },
-  "notes": "A1 workspace foundation for task KFM-20261018-ATLAS-01, base 5f8a790d58761e416592d1597db7d870cc008eaf. Explicit Find/Ask/Evidence in one composer; existing county/local-index/source projection, compact per-turn sources and active-context-only inspector, 22 labelled welcome discussion starters, optional validated UUIDv4 history partition within existing guest/context/source authority. New/context changes/Stop/pending hide rotate partitions; compatible completed hide/reopen and follow-ups remain. Existing queues, deadlines, release/source/permission checks, provider endpoints and data stores are preserved. No token streaming or automatic model map/tool contract. No new dependencies, corpus admission, services, account/audience changes, Sites replacement, model activation, merge, ready transition, deployment, DNS or publication. Browser/mobile final acceptance, durable conversation manager, simultaneous evidence/chat desktop composition, Time Sweep and corpus expansion remain explicit continuation. Exact deployed revision UNKNOWN. Historical receipts unchanged. Rollback by reviewed revert, preserving subsequent work; no migration. Root assumed integration/docs after agent capacity interruptions, reviewer remained non-author. Receipt proves artifact shape/integrity only, not human approval. Follow-up first CI failure is explicitly recorded in blueprint. Two HTTP tests now match the intentionally changed UI wording while preserving access/security assertions; source runtime and measured asset inventory unchanged. Final receipt now binds21 artifacts; new final SHA review and CI are recorded in PR."
+  "notes": "A1 workspace foundation for task KFM-20261018-ATLAS-01, base 5f8a790d58761e416592d1597db7d870cc008eaf. Explicit Find/Ask/Evidence in one composer; existing county/local-index/source projection, compact per-turn sources and active-context-only inspector, 22 labelled welcome discussion starters, optional validated UUIDv4 history partition within existing guest/context/source authority. New/context changes/Stop/pending hide rotate partitions; compatible completed hide/reopen and follow-ups remain. Existing queues, deadlines, release/source/permission checks, provider endpoints and data stores are preserved. No token streaming or automatic model map/tool contract. No new dependencies, corpus admission, services, account/audience changes, Sites replacement, model activation, merge, ready transition, deployment, DNS or publication. Browser/mobile final acceptance, durable conversation manager, simultaneous evidence/chat desktop composition, Time Sweep and corpus expansion remain explicit continuation. Exact deployed revision UNKNOWN. Historical receipts unchanged. Rollback by reviewed revert, preserving subsequent work; no migration. Root assumed integration/docs after agent capacity interruptions, reviewer remained non-author. Receipt proves artifact shape/integrity only, not human approval. Follow-up first CI failure is explicitly recorded in blueprint. Two HTTP tests now match the intentionally changed UI wording while preserving access/security assertions; source runtime and measured asset inventory unchanged. Final receipt now binds21 artifacts; new final SHA review and CI are recorded in PR. Second CI test-selector correction binds22 artifacts. Browser job not reached in prior two runs; final PR records actual later results. Untouched historical source/Cloudflare tests have matched base failures; no full-suite claim."
 }
