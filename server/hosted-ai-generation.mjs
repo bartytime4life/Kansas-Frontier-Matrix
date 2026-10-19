@@ -17,6 +17,8 @@ export async function generateHosted({session,tokenizer,ort},prompt,maximum,canc
  try{
   while(generated.length<maximum){
    if(performance.now()-generationBegan>=milliseconds){finishReason='time_limit';break;}
+   // One macrotask turn per step lets an IPC cancel message land before more inference.
+   await new Promise(resolveTurn=>setImmediate(resolveTurn));
    if(Atomics.load(cancel,0))fail('MODEL_CANCELLED');
    const current=pendingInput.slice(0,HOSTED_PREFILL_TOKENS);
    const feeds={...past,input_ids:i64(current),attention_mask:i64(Array(pastLength+current.length).fill(1)),position_ids:i64(current.map((_,i)=>pastLength+i))};

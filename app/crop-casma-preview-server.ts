@@ -16,7 +16,7 @@ function providerUrl(year: number, params: Record<string, string>) {
 async function provider(url: string, media: string) {
   const response = await fetch(url, { redirect: "manual", signal: AbortSignal.timeout(12_000), headers: { Accept: media } });
   if (!response.ok || !response.headers.get("content-type")?.includes(media) || Number(response.headers.get("content-length")) > LIMIT) {
-    void response.body?.cancel(); throw new Error("Provider unavailable");
+    void response.body?.cancel().catch(() => undefined); throw new Error("Provider unavailable");
   }
   return response;
 }
@@ -47,7 +47,7 @@ export async function cropCasmaPreview(request: Request) {
     const reader = response.body?.getReader(); if (!reader) throw new Error("Missing image");
     const chunks: Uint8Array[] = []; let length = 0;
     try { while (true) { const { done, value } = await reader.read(); if (done) break; length += value.length; if (length > LIMIT) throw new Error("Image too large"); chunks.push(value); } }
-    catch (error) { void reader.cancel(); throw error; } finally { reader.releaseLock(); }
+    catch (error) { void reader.cancel().catch(() => undefined); throw error; } finally { reader.releaseLock(); }
     const bytes = new Uint8Array(length); let offset = 0; for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
     const view = new DataView(bytes.buffer);
     if (length < 33 || ![137,80,78,71,13,10,26,10].every((v, i) => bytes[i] === v) || view.getUint32(8) !== 13 || view.getUint32(12) !== 0x49484452 || view.getUint32(16) !== 1024 || view.getUint32(20) !== 512) throw new Error("Invalid image");

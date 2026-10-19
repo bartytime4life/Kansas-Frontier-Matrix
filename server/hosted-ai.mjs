@@ -1,4 +1,5 @@
-import {Worker} from 'node:worker_threads';
+import {fork} from 'node:child_process';
+import {readFileSync} from 'node:fs';
 import {randomUUID} from 'node:crypto';
 import {resolve} from 'node:path';
 export const HOSTED_MODEL='Qwen3-0.6B INT8 · server WebAssembly';
@@ -10,12 +11,32 @@ export const PUBLIC_AI_JOB_MS=270000;
 export const PUBLIC_AI_MAX_LIFETIME_MS=3*PUBLIC_AI_JOB_MS;
 export {CONTINUE_REPLY} from './hosted-ai-prompt.mjs';
 const error=code=>Object.assign(new Error(code),{code});
-const diagnosticCodes=new Set(['HOSTED_MEMORY_HEADROOM','MODEL_UNAVAILABLE','MODEL_LOAD_TIMEOUT','MODEL_MEMORY_LIMIT','MODEL_TIMEOUT','HOSTED_MODEL_FAILED','HOSTED_MODEL_FILES_UNSAFE','HOSTED_MODEL_IDENTITY','HOSTED_MODEL_INTEGRITY','HOSTED_MODEL_CONFIG','HOSTED_MODEL_INPUTS','HOSTED_MODEL_SELF_CHECK','HOSTED_PROFILE_IDENTITY','MODULE_NOT_FOUND','ERR_MODULE_NOT_FOUND','ENOENT','EACCES','ENOMEM','ERR_WORKER_OUT_OF_MEMORY']);
+// Only these non-secret variables reach the model process; DB, OAuth and session secrets stay in the web process.
+const CHILD_ENV=['PATH','HOME','TMPDIR','LANG','NODE_ENV','HTTPS_PROXY','HTTP_PROXY','NO_PROXY'];
+// The model runs in its own OS process, not a worker thread. When the host runs
+// out of memory the kernel then kills the model (largest RSS, raised OOM score)
+// instead of the whole web server, and chat alone becomes unavailable.
+export function forkModelProcess(path,{workerData,execArgv=[],env=process.env}={}){
+ const childEnv=Object.fromEntries(CHILD_ENV.filter(key=>env[key]!==undefined).map(key=>[key,env[key]]));
+ childEnv.KFM_HOSTED_AI_WORKER_DATA=JSON.stringify(workerData??{});
+ const child=fork(path,[],{env:childEnv,execArgv:[...execArgv,'--max-old-space-size=256'],stdio:['ignore','inherit','inherit','ipc']});
+ child.postMessage=message=>{if(child.connected)child.send(message,failure=>{if(failure)child.kill('SIGKILL');});};
+ child.terminate=async()=>{if(child.exitCode===null&&child.signalCode===null)child.kill('SIGKILL');};
+ return child;
+}
+// Linux /proc readback of the model process alone; null elsewhere or after exit.
+export function processRssBytes(pid){
+ try{const kb=Number(readFileSync('/proc/'+pid+'/status','utf8').match(/^VmRSS:\s+(\d+)\s+kB/m)?.[1]);return kb>0?kb*1024:null;}catch{return null;}
+}
+const diagnosticCodes=new Set(['HOSTED_MEMORY_HEADROOM','MODEL_UNAVAILABLE','MODEL_LOAD_TIMEOUT','MODEL_MEMORY_LIMIT','MODEL_TIMEOUT','HOSTED_MODEL_FAILED','HOSTED_MODEL_FILES_UNSAFE','HOSTED_MODEL_IDENTITY','HOSTED_MODEL_INTEGRITY','HOSTED_MODEL_CONFIG','HOSTED_MODEL_INPUTS','HOSTED_MODEL_SELF_CHECK','HOSTED_PROFILE_IDENTITY','MODULE_NOT_FOUND','ERR_MODULE_NOT_FOUND','ENOENT','EACCES','ENOMEM','ERR_WORKER_OUT_OF_MEMORY','MODEL_PROCESS_KILLED']);
 export class HostedAiModel{
- constructor({discussionProfile='context-aware-v2',modelDirectory='/private/kfm-embedded-qwen3-06b-int8-wasm-20261018/model',workerFactory=(path,options)=>new Worker(path,options),memoryUsage=process.memoryUsage,diagnostic=code=>console.warn('[KFM hosted AI] '+code)}={}){
+ constructor({discussionProfile='context-aware-v2',modelDirectory='/private/kfm-embedded-qwen3-06b-int8-wasm-20261018/model',workerFactory=forkModelProcess,memoryUsage,diagnostic=code=>console.warn('[KFM hosted AI] '+code)}={}){
   this.diagnostic=diagnostic;
-  this.ready=false;this.online=true;this.reason='MODEL_LOADING';this.peakRssBytes=memoryUsage().rss;this.pending=null;this.stopped=false;
-  this.worker=workerFactory(resolve('server/hosted-ai-worker.mjs'),{workerData:{modelDirectory,discussionProfile},execArgv:process.execArgv.filter(x=>!x.startsWith('--input-type=')),resourceLimits:{maxOldGenerationSizeMb:256}});
+  this.ready=false;this.online=true;this.reason='MODEL_LOADING';this.pending=null;this.stopped=false;
+  this.worker=workerFactory(resolve('server/hosted-ai-worker.mjs'),{workerData:{modelDirectory,discussionProfile},execArgv:process.execArgv.filter(x=>!x.startsWith('--input-type='))});
+  // Budget the model process itself; the web server's own memory is no longer counted against chat.
+  memoryUsage??=()=>({rss:processRssBytes(this.worker.pid)??0});
+  this.peakRssBytes=memoryUsage().rss;
   this.loaded=new Promise((resolveReady,rejectReady)=>{this.resolveReady=resolveReady;this.rejectReady=rejectReady;});
   this.loaded.catch(()=>{});
   this.loadTimer=setTimeout(()=>this.stop('MODEL_LOAD_TIMEOUT'),HOSTED_LIMITS.loadMs);this.loadTimer.unref?.();
@@ -30,7 +51,7 @@ export class HostedAiModel{
     else pending.resolve(pending.kind==='discuss'?{text:message.discussion,contextTrimmed:Boolean(message.contextTrimmed),outputLimited:message.finishReason?message.finishReason!=='stop':Boolean(message.outputLimited)}:message.selection);
    }
   });
-  this.worker.once('error',failure=>this.stop('MODEL_UNAVAILABLE',failure?.code));this.worker.once('exit',()=>this.stop('MODEL_UNAVAILABLE'));
+  this.worker.once('error',failure=>this.stop('MODEL_UNAVAILABLE',failure?.code));this.worker.once('exit',(_code,signal)=>this.stop('MODEL_UNAVAILABLE',signal==='SIGKILL'?'MODEL_PROCESS_KILLED':undefined));
  }
  select(question,facts,signal){return this.call('select',{question,facts},signal);}
  discuss(question,{style='plain',depth='brief',history=[],context=''}={},signal){return this.call('discuss',{question,style,depth,history,context},signal);}
@@ -39,11 +60,11 @@ export class HostedAiModel{
   if(this.pending)return Promise.reject(error('MODEL_BUSY'));
   if(signal?.aborted)return Promise.reject(error('MODEL_CANCELLED'));
   return new Promise((resolveResult,reject)=>{
-   const id=randomUUID(),cancel=new SharedArrayBuffer(4),abort=()=>Atomics.store(new Int32Array(cancel),0,1);
+   const id=randomUUID(),abort=()=>this.worker.postMessage({type:'cancel',id});
    const timer=setTimeout(()=>this.stop('MODEL_TIMEOUT'),HOSTED_LIMITS.inferenceMs);
    const cleanup=()=>{clearTimeout(timer);signal?.removeEventListener('abort',abort);};
    this.pending={id,kind,resolve:resolveResult,reject,signal,cleanup};signal?.addEventListener('abort',abort,{once:true});
-   this.worker.postMessage({type:kind,id,...payload,cancel});
+   this.worker.postMessage({type:kind,id,...payload});
   });
  }
  stop(reason,detail){

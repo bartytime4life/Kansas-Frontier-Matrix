@@ -126,10 +126,19 @@ replies include a safe next-step question. Selected subsurface questions return
 a deterministic server source summary with explicit unknowns, without factual
 model generation or evidence promotion. These budgets cannot guarantee a
 complete or correct model reply; the 512-token input-context limit remains.
-The worker JS heap is 256 MiB, with one WASM thread. Whole-process RSS is sampled
-every 100 ms; exceeding 2 GiB stops the worker without automatic retry. WASM
-memory is outside the JS heap and may grow between samples. The guard is an
-application budget, not an OS-enforced allocation or a verified GoDaddy quota.
+The model runs in its own forked Node process, not a worker thread inside the
+web server. It receives only PATH/HOME/TMPDIR/LANG/NODE_ENV and proxy settings
+(no database, OAuth or session secrets), a 256 MiB JS heap and one WASM thread,
+and sets its Linux `oom_score_adj` to 1000 so the kernel reclaims it before the
+web server. It exits when the web server exits. The model process's own RSS is
+sampled every 100 ms from `/proc`; exceeding `HOSTED_LIMITS.maximumRssBytes`
+stops it without automatic retry. WASM memory is outside the JS heap and may
+grow between samples. The guard is an application budget, not an OS-enforced
+allocation or a verified GoDaddy quota. If the host kills the model first, the
+Explorer keeps serving, chat reports unavailable until the next restart, and
+the operator log records `MODEL_UNAVAILABLE:MODEL_PROCESS_KILLED`. Previously
+the model shared the web server's process, so a host out-of-memory kill took
+the whole site down and GoDaddy answered 503 until restart.
 
 KFM_HOSTED_AI_RESOURCE_PROBE=1 prints one owner-only startup record with Node's
 constrainedMemory(), availableMemory() and process RSS. It allocates no test
