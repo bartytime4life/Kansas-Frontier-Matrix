@@ -111,8 +111,16 @@ test('a second in-flight network request is rejected before provider fan-out', a
     await started;
     const second = await GET(request());
     assert.equal(second.status, 429);
+    assert.equal((await second.json()).code, 'USGS_STREAMFLOW_NETWORK_BUSY');
+    assert.equal(second.headers.get('Retry-After'), '2');
     assert.equal(calls, 1);
     releaseInventory();
-    assert.equal((await first).status, 200);
+    const completed = await first;
+    assert.equal(completed.status, 200);
+    const body = await completed.json(), completedCalls = calls;
+    const retry = await GET(request());
+    assert.equal(retry.headers.get('X-KFM-Network-Cache'), 'HIT');
+    assert.deepEqual(await retry.json(), body);
+    assert.equal(calls, completedCalls);
   } finally { releaseInventory(); globalThis.fetch = original; }
 });

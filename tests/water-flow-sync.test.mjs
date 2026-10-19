@@ -27,6 +27,8 @@ export const effectiveSceneLight = (_map, preset) => ({ preset, azimuth: 0, alti
     assert.ok(source.includes(before), `water-flow-sync still imports ${before}`);
     source = source.replace(before, after);
   }
+  // Observe retained identities without adding a production cache-control API.
+  source += "\nexport const testCachedCells = map => [...(states.get(map)?.cache.keys() ?? [])];";
   return import(toUrl(transpile(source)));
 }
 
@@ -371,4 +373,86 @@ test("a provider response for a different detail cell is rejected before geometr
   assert.equal(map.getLayer(flow.WATER_FLOW_LAYER_ID).segmentCount,0);
   map.fx.waterFlow=false;flow.syncWaterFlow(map,OPTIONS);
  } finally {globalThis.fetch=original;}
+});
+
+
+test("regional cells drain through nine concurrent reads without recomputing settled camera bounds", async (t) => {
+  const frames = displayFrames(t), flow = await loadSync(), requests = [];
+  let active = 0, peak = 0;
+  flow.setWaterFlowFetcher((key, signal) => {
+    const request = { key, signal, ...deferred() }; requests.push(request);
+    peak = Math.max(peak, ++active);
+    return request.promise.finally(() => { active--; });
+  });
+  const map = fakeMap({ zoom: 8.5 });
+  map.getBounds = () => { map.boundsReads++; return { getWest: () => -102.25, getEast: () => -94.5, getSouth: () => 36.75, getNorth: () => 40.25 }; };
+  flow.syncWaterFlow(map, OPTIONS);
+  assert.equal(requests.length, flow.MAX_FLOW_REQUESTS_IN_FLIGHT);
+  assert.equal(requests.length, 9);
+  const boundsReads = map.boundsReads;
+  for (let i = 0; i < 12; i++) {
+    assert.ok(requests[i], `queued regional cell ${i} eventually starts`);
+    const key = requests[i].key, [detail, cell] = key.split(":");
+    requests[i].resolve({ ...payload(cell, []), detail });
+    await drain(); frames.flush();
+    if (i < 11) assert.equal(flow.waterFlowStatus(map).state, "loading");
+  }
+  assert.equal(requests.length, 12);
+  assert.equal(peak, 9);
+  assert.equal(map.boundsReads, boundsReads, "refilling uses the retained selected cells, not an unsettled camera");
+  assert.equal(flow.waterFlowStatus(map).state, "partial", "the existing view-limit label remains truthful");
+  assert.equal(flow.waterFlowStatus(map).viewLimited, true);
+  assert.equal(flow.waterFlowStatus(map).cells, 12);
+  map.fire("remove");
+});
+
+test("queued regional refill retains the selected view within the 36-cell cache budget", async (t) => {
+  const frames = displayFrames(t), flow = await loadSync(), requests = [];
+  flow.setWaterFlowFetcher((key, signal) => {
+    const request = { key, signal, ...deferred() }; requests.push(request); return request.promise;
+  });
+  const map = fakeMap();
+  const finishPending = async () => {
+    while (requests.length) {
+      const request = requests.shift(), parts = request.key.split(":");
+      request.resolve({ ...payload(parts.at(-1), []), ...(parts.length === 2 ? { detail: parts[0] } : {}) });
+      await drain(); frames.flush();
+      assert.ok(flow.testCachedCells(map).length <= 36, "each completed/refilled batch respects the memory bound");
+    }
+  };
+  for (const center of [[-101, 38], [-99.5, 38], [-98, 38], [-96.5, 38]]) {
+    map.center = center; flow.syncWaterFlow(map, OPTIONS); await finishPending();
+  }
+  assert.ok(flow.testCachedCells(map).length > 27, "previous local views nearly fill the cache");
+  map.zoom = 8.5;
+  map.getBounds = () => ({ getWest: () => -102.25, getEast: () => -94.5, getSouth: () => 36.75, getNorth: () => 40.25 });
+  flow.syncWaterFlow(map, OPTIONS);
+  assert.equal(requests.length, 9);
+  await finishPending();
+  const retained = flow.testCachedCells(map);
+  assert.equal(retained.length, 36);
+  assert.equal(retained.filter(key => key.startsWith("regional:")).length, 12, "eviction keeps all selected regional cells");
+  assert.equal(flow.waterFlowStatus(map).cells, 12);
+  map.fire("remove");
+});
+
+for (const action of ["off", "remove", "move"]) test(`queued regional cells stop on ${action}`, async (t) => {
+  const frames = displayFrames(t), flow = await loadSync(), requests = [];
+  flow.setWaterFlowFetcher((key, signal) => { const request = { key, signal, ...deferred() }; requests.push(request); return request.promise; });
+  const map = fakeMap({ zoom: 8.5 });
+  map.getBounds = () => { map.boundsReads++; return { getWest: () => -102.25, getEast: () => -94.5, getSouth: () => 36.75, getNorth: () => 40.25 }; }; flow.syncWaterFlow(map, OPTIONS);
+  const [detail, cell] = requests[0].key.split(":");
+  requests[0].resolve({ ...payload(cell, []), detail });
+  if (action === "off") { map.fx.waterFlow = false; flow.syncWaterFlow(map, OPTIONS); }
+  else if (action === "remove") map.fire("remove");
+  else { map.moving = true; map.fire("movestart"); }
+  await drain(); frames.flush();
+  assert.equal(requests.length, 9, "old queue cannot launch extra requests after a state transition");
+  if (action === "move") {
+    map.zoom = 11; map.moving = false; map.fire("moveend"); await drain(); frames.flush();
+    assert.ok(requests.slice(9).length > 0);
+    assert.ok(requests.slice(9).every(request => !request.key.includes(":")), "settled view selects current local cells, never queued regional cells");
+    map.fire("remove");
+  }
+  assert.ok(requests.slice(1).every(request => request.signal.aborted));
 });

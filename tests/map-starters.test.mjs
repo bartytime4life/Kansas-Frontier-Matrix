@@ -110,6 +110,94 @@ test("welcome place choice and topic drafts are deliberate, preserve dismissal, 
   h.dispose(); assert.equal(listeners.size, 0);
 });
 
+test("restored welcome ignores only the legacy dismissal and preserves unrelated device state", async () => {
+  const storage = memoryStorage();
+  const legacyKey = "kfm.explorer.guide.dismissed.v1";
+  storage.data.set(legacyKey, "1");
+  storage.data.set("kfm.saved-workspaces", "keep the owner's saved work");
+  const before = [...storage.data];
+  const h = await componentHarness("app/explorer-guide.tsx", { "./map-starters": model }, { window: { localStorage: storage } });
+  const { EXPLORER_GUIDE_STORAGE_KEY: key, readExplorerGuideDismissed: read, writeExplorerGuideDismissed: write } = h.exports;
+  assert.notEqual(key, legacyKey);
+  assert.equal(read(), false, "a preselected legacy checkbox must not hide the restored welcome");
+  assert.deepEqual([...storage.data], before, "reading the new preference does not migrate or delete existing state");
+  write(true);
+  assert.equal(read(), true, "an explicit new opt-out survives the next startup read");
+  assert.equal(storage.data.get(legacyKey), "1");
+  assert.equal(storage.data.get("kfm.saved-workspaces"), before[1][1]);
+  write(false);
+  assert.equal(read(), false);
+  assert.deepEqual([...storage.data], before, "opting back in removes only the new guide preference");
+  for (const value of ["0", "true", "{}", ""]) {
+    storage.data.set(key, value);
+    assert.equal(read(), false, "only the exact opt-out value hides the guide");
+  }
+  h.dispose();
+});
+
+test("welcome close is temporary by default and explicit opt-out survives manual reopening", async () => {
+  const storage = memoryStorage(), listeners = new Map(), closeChoices = [];
+  storage.data.set("kfm.explorer.guide.dismissed.v1", "1");
+  const activeElement = {};
+  const h = await componentHarness("app/explorer-guide.tsx", { "./map-starters": model }, {
+    window: { localStorage: storage, addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name) },
+    document: { activeElement },
+  });
+  const props = { open: true, onAction() {}, onClose(remember) {
+    closeChoices.push(remember);
+    h.exports.writeExplorerGuideDismissed(remember);
+    props.open = false;
+  } };
+  const render = () => { const tree = h.render(h.exports.ExplorerGuide, props); h.commit(); return tree; };
+  const mount = () => {
+    render();
+    props.open = true;
+    const tree = render();
+    const checkbox = findNode(tree, node => node.type === "input" && node.props.type === "checkbox");
+    // Supply the native input's checked value for these component-handler tests.
+    checkbox.props.ref.current = { checked: checkbox.props.defaultChecked ?? false };
+    tree.props.ref.current = { contains: node => node === activeElement, querySelector: () => null };
+    return { tree, checkbox: checkbox.props.ref.current };
+  };
+  let view = mount();
+  assert.equal(view.checkbox.checked, false);
+  assert.equal(storage.writes.length, 0, "opening the guide does not persist a preference");
+  findNode(view.tree, node => node.props?.["aria-label"] === "Close quick start").props.onClick();
+  assert.deepEqual(closeChoices, [false]);
+  assert.equal(h.exports.readExplorerGuideDismissed(), false, "ordinary close allows welcome on a later startup");
+  view = mount();
+  assert.equal(view.checkbox.checked, false);
+  view.checkbox.checked = true;
+  findNode(view.tree, node => node.type === "button" && node.props.children === "Explore freely").props.onClick();
+  assert.equal(h.exports.readExplorerGuideDismissed(), true);
+  view = mount();
+  assert.equal(view.checkbox.checked, true, "manual reopening retains the explicit opt-out");
+  let stopped = false;
+  listeners.get("keydown")({ key: "Escape", stopPropagation() { stopped = true; } });
+  assert.equal(stopped, true);
+  assert.equal(h.exports.readExplorerGuideDismissed(), true, "Escape does not silently erase the stored opt-out");
+  view = mount();
+  view.checkbox.checked = false;
+  findNode(view.tree, node => node.type === "button" && node.props.children === "Explore freely").props.onClick();
+  assert.equal(h.exports.readExplorerGuideDismissed(), false, "unchecking explicitly restores startup display");
+  assert.deepEqual(closeChoices, [false, true, true, false]);
+  h.dispose();
+  assert.equal(listeners.size, 0);
+});
+
+test("welcome storage errors leave startup available and tolerate remembering or resetting", async () => {
+  for (const window of [
+    { get localStorage() { throw new Error("storage unavailable"); } },
+    { localStorage: { getItem() { throw new Error("read denied"); }, setItem() { throw new Error("write denied"); }, removeItem() { throw new Error("remove denied"); } } },
+  ]) {
+    const h = await componentHarness("app/explorer-guide.tsx", { "./map-starters": model }, { window });
+    assert.equal(h.exports.readExplorerGuideDismissed(), false);
+    assert.doesNotThrow(() => h.exports.writeExplorerGuideDismissed(true));
+    assert.doesNotThrow(() => h.exports.writeExplorerGuideDismissed(false));
+    h.dispose();
+  }
+});
+
 test("held, failed, unknown, proposed and private sources never become selectable", () => {
   const blocked = { ...available, "usgs-streamflow": { held: true, unavailable: false }, "usgs-earthquakes": { held: false, unavailable: true } };
   const restricted = { ...sources[0], id: "private-parcels", evidenceRole: "RESTRICTED" };

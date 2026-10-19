@@ -62,7 +62,11 @@ export class LayerJsonReads {
       if (!job.consumers.size || job.controller.signal.aborted) continue;
       this.active++; job.started = true;
       for (const finish of job.consumers) finish.progress?.("fetching");
-      void browserJsonRequest(job.url, { signal: job.controller.signal, maxBytes: job.maxBytes, timeoutMs: 30_000, headers: { Accept: "application/json" } })
+      void browserJsonRequest(job.url, {
+        signal: job.controller.signal, maxBytes: job.maxBytes, timeoutMs: 30_000,
+        recovery: job.url === "/api/live-context?feed=census-counties" ? "census" : undefined,
+        headers: { Accept: "application/json" },
+      })
         .then(response => {
           const result: Result = { ...response, cache: "network" };
           job.controller.signal.throwIfAborted();

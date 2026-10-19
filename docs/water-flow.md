@@ -220,3 +220,15 @@ stored data or preferences.
 Switch **Flowing water** off, or choose **Plain**. It is off by default, so
 existing preferences are unchanged. To remove it entirely, revert the commit;
 no stored data, schema, URL or saved-workspace format is affected.
+
+
+### Recovery reconciliation: bounded concurrent cell reads
+
+The hosted detail-aware flowline contract is retained. At most nine cell reads
+per map run concurrently; additional selected overview or regional cells wait
+for a slot. Waiting cells keep the status loading. Queue refill uses the existing
+selected cell identities, does not recalculate camera bounds, and pauses while
+the camera moves. A settled camera update selects the current view; switching
+the effect off or removing the map cancels pending work. Provider identity checks,
+stream-order requirements, source timestamps, geometry budgets and the existing
+terrain sampling behavior remain owned by their current implementations.
