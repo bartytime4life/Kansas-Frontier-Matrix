@@ -16,7 +16,9 @@ SCHEMA_PATH = REPO_ROOT / "schemas/contracts/v1/source/official_source_snapshot_
 
 
 def _dt(value: str | None) -> datetime | None:
-    return None if value is None else datetime.fromisoformat(value.replace("Z", "+00:00"))
+    # RFC 3339 lets "T" and "Z" be lowercase, and the schema's format check accepts them;
+    # fromisoformat does not, so normalize case before parsing.
+    return None if value is None else datetime.fromisoformat(value.upper().replace("Z", "+00:00"))
 
 
 def _snapshot_id(source_id: str, source_url: str, retrieved_at: str, content_sha256: str | None) -> str:
@@ -90,10 +92,15 @@ def validate_doc(doc: dict[str, object]) -> list[str]:
     elif outcome == "FAILED" and (digest is not None or length not in (None, 0)):
         errors.append("FAILED cannot claim captured bytes")
 
-    last_modified = _dt(doc.get("last_modified"))
-    retrieved_at = _dt(str(doc["retrieved_at"]))
-    if last_modified and retrieved_at and last_modified > retrieved_at:
-        errors.append("last_modified cannot be later than retrieved_at")
+    try:
+        last_modified = _dt(doc.get("last_modified"))
+        retrieved_at = _dt(str(doc["retrieved_at"]))
+    except ValueError as exc:
+        # A schema-valid value this parser still cannot read is a finding, never an uncaught exception.
+        errors.append(f"timestamp is not a parseable date-time: {exc}")
+    else:
+        if last_modified and retrieved_at and last_modified > retrieved_at:
+            errors.append("last_modified cannot be later than retrieved_at")
 
     expected_id = _snapshot_id(
         str(doc["source_id"]),

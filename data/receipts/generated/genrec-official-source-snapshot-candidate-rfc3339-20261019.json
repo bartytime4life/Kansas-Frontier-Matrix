@@ -1,0 +1,90 @@
+{
+  "receipt_id": "genrec-official-source-snapshot-candidate-rfc3339-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/source/official_source_snapshot_candidate.py",
+    "tests/source/test_official_source_snapshot_candidate.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/source/official_source_snapshot_candidate.py": "sha256:f34c12f81af5192639324247e877ac11a84926cdb7a42ca647ca110cc129069c",
+    "tests/source/test_official_source_snapshot_candidate.py": "sha256:22a1d01e71e325537c11730014b6eb617787c64fa65ce0c860ac80c9e7fb53bb"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/21d57ecd1f5604a528ac7462c0a1dd395c2f5794",
+      "repo:tools/validators/source/official_source_snapshot_candidate.py@21d57ecd1f5604a528ac7462c0a1dd395c2f5794",
+      "repo:tests/source/test_official_source_snapshot_candidate.py@21d57ecd1f5604a528ac7462c0a1dd395c2f5794",
+      "repo:schemas/contracts/v1/source/official_source_snapshot_candidate.schema.json@21d57ecd1f5604a528ac7462c0a1dd395c2f5794",
+      "repo:fixtures/contracts/v1/source/official_source_snapshot_candidate/valid/captured.json@21d57ecd1f5604a528ac7462c0a1dd395c2f5794",
+      "repo:pyproject.toml@21d57ecd1f5604a528ac7462c0a1dd395c2f5794"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/source/official_source_snapshot_candidate.py": "CONFIRMED",
+    "tests/source/test_official_source_snapshot_candidate.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "RFC 3339 permits lowercase 't' and 'z', and the schema's date-time format check (rfc3339-validator is a declared dependency) accepts them, but _dt only replaced an uppercase 'Z', so validate_doc raised ValueError for a schema-valid retrieved_at or last_modified on Python 3.11 and 3.13. _dt now normalizes case before parsing, and a timestamp the parser still cannot read is returned as a finding instead of an exception. Two of the new tests fail on the original code."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/source/test_official_source_snapshot_candidate.py: 9 tests (3 before, 6 new) covering lowercase separators, instant comparison across offsets, the parse-failure finding, every outcome rule (CAPTURED, NOT_MODIFIED, FAILED), identity and schema enforcement, and the CLI success and failure paths. Branch coverage of the validator rises from 52% to 96%. The 76 tests under tests/source and the lineage-assessment tests pass."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of five changes failed the suite: removing the case normalization, the ValueError finding, the last_modified ordering check, the NOT_MODIFIED byte check or the FAILED byte check."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same 2 pre-existing findings before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/21d57ecd1f5604a528ac7462c0a1dd395c2f5794"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T01:43:52Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Snapshot identity still hashes the timestamp string as given, so the same instant written with 'z' and 'Z' yields different snapshot_ids; that is the existing identity design and is unchanged. tests/source/README.md's inventory, pinned to an earlier revision, still lists 3 tests for this module and is left for its next re-pin."
+}
