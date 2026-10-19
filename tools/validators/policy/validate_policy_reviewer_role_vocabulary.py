@@ -40,7 +40,8 @@ def validate(record):
         if scopes != sorted(set(scopes)) or any(scope not in ALLOWED_SCOPES for scope in scopes):
             return "DENY"
         role_aliases = role.get("aliases", [])
-        if not isinstance(role_aliases, list) or not all(isinstance(alias, str) and alias for alias in role_aliases):
+        # Aliases are alternate role identifiers, so they take the same uppercase snake-case form as codes.
+        if not isinstance(role_aliases, list) or not all(isinstance(alias, str) and CODE.fullmatch(alias) for alias in role_aliases):
             return "DENY"
         codes.append(code)
         aliases.extend(role_aliases)
