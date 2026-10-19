@@ -1,6 +1,7 @@
 {
-  "id": "bartytime4life/kfm-qwen3-0.6b-int8-sliced-onnx",
-  "revision": "0000000000000000000000000000000000000000",
+  "id": "kfm-qwen3-0.6b-int8-sliced-onnx-20261019",
+  "installation": "manual-upload",
+  "installPath": "/private/kfm-embedded-qwen3-06b-int8-sliced-wasm-20261019/model",
   "files": [
     {
       "path": "README.md",

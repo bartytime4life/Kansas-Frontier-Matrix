@@ -27,7 +27,7 @@ export async function watchEmbeddedWorker(worker, { timeoutMs = EMBEDDED_PROBE_L
         if (peakRssBytes > maximumRssBytes) finish({ status: 'LIMITED', reason: 'EMBEDDED_MEMORY_LIMIT' });
       }, 100);
       worker.on('message', value => {
-        if (value?.type === 'stage' && ['WASM_IMPORT', 'WASM_READY', 'DOWNLOAD', 'MODEL_LOAD', 'INFERENCE'].includes(value.stage)) stage = value.stage;
+        if (value?.type === 'stage' && ['WASM_IMPORT', 'WASM_READY', 'VERIFY', 'MODEL_LOAD', 'INFERENCE'].includes(value.stage)) stage = value.stage;
         if (value?.type === 'result' && value.result && JSON.stringify(value.result).length <= 8192) {
           peakRssBytes = Math.max(peakRssBytes, memoryUsage().rss);
           if (peakRssBytes > maximumRssBytes) finish({ status: 'LIMITED', reason: 'EMBEDDED_MEMORY_LIMIT' });
@@ -44,12 +44,13 @@ export async function watchEmbeddedWorker(worker, { timeoutMs = EMBEDDED_PROBE_L
 }
 
 export async function qualifyEmbeddedAi({ root = '/private', workerFactory = path => new Worker(path, {
-  workerData: { directory: join(resolve(root), 'kfm-embedded-qwen3-06b-int8-sliced-wasm-20261019') },
+  workerData: { modelDirectory: join(resolve(root), 'kfm-embedded-qwen3-06b-int8-sliced-wasm-20261019/model') },
   // --input-type applies to stdin/eval entrypoints, never to a worker file.
   execArgv: process.execArgv.filter(flag => !flag.startsWith('--input-type=')),
   resourceLimits: { maxOldGenerationSizeMb: 256 },
 }) } = {}) {
-  const directory = join(resolve(root), 'kfm-embedded-qwen3-06b-int8-sliced-wasm-20261019');
+  // Receipts live apart from the operator-uploaded model directory.
+  const directory = join(resolve(root), 'kfm-embedded-qwen3-06b-int8-sliced-probe-20261019');
   const rootInfo = await lstat(root);
   if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink()) throw failure('EMBEDDED_ROOT_UNSAFE');
   try { await mkdir(directory, { mode: 0o700 }); } catch (error) { if (error.code !== 'EEXIST') throw error; }

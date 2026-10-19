@@ -2,7 +2,7 @@ import { parentPort, workerData } from 'node:worker_threads';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
-import { installModel } from './hosted-ai-artifacts.mjs';
+import { verifyInstalledModel } from './hosted-ai-artifacts.mjs';
 
 const stage = value => parentPort.postMessage({ type: 'stage', stage: value });
 const fail = code => { throw Object.assign(new Error(code), { code }); };
@@ -16,9 +16,9 @@ try {
   ort.env.wasm.numThreads = 1; ort.env.wasm.proxy = false;
   stage('WASM_READY');
   const manifest = JSON.parse(await readFile(new URL('./embedded-ai-model.json', import.meta.url), 'utf8'));
-  stage('DOWNLOAD'); const downloadBegan = performance.now();
-  const modelDirectory = await installModel(workerData.directory, manifest);
-  const downloadMs = Math.round(performance.now() - downloadBegan);
+  stage('VERIFY'); const verifyBegan = performance.now();
+  const modelDirectory = await verifyInstalledModel(workerData.modelDirectory, manifest);
+  const verifyMs = Math.round(performance.now() - verifyBegan);
   stage('MODEL_LOAD'); const loadBegan = performance.now();
   const externalData = [{ path: 'model_int8.onnx_data', data: await readFile(join(modelDirectory, 'onnx/model_int8.onnx_data')) }];
   const session = await ort.InferenceSession.create(await readFile(join(modelDirectory, 'onnx/model_int8.onnx')), {
@@ -75,9 +75,9 @@ try {
     const answer = tokenizer.decode(generated, { skip_special_tokens: true });
     if (typeof answer !== 'string' || answer.length > 256 || !/\bblue\b/i.test(answer) || /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(answer)) fail('SYNTHETIC_RESPONSE_UNQUALIFIED');
     parentPort.postMessage({ type: 'result', result: { status: 'SYNTHETIC_INFERENCE_PASS',
-      model: { id: manifest.id, revision: manifest.revision, license: manifest.license, dtype: 'int8' },
+      model: { id: manifest.id, installation: manifest.installation, license: manifest.license, dtype: 'int8' },
       runtime: 'onnxruntime-web@1.31.0-dev.20260914-8d85527a0 / @huggingface/tokenizers@0.2.0 / wasm single-threaded',
-      syntheticAnswer: answer, downloadMs, loadMs, inferenceMs: Math.round(performance.now() - inferenceBegan),
+      syntheticAnswer: answer, verifyMs, loadMs, inferenceMs: Math.round(performance.now() - inferenceBegan),
       inferenceRssBytes: process.memoryUsage().rss, modelFilesVerified: true,
       networkDuringInference: 'LOCAL_FILES_ONLY_NO_REMOTE_MODEL_LOADER', maximumOutputTokens: 16,
     } });
