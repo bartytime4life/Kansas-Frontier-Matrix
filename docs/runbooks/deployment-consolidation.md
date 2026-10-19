@@ -2,8 +2,9 @@
 doc_id: kfm://doc/runbooks/deployment-consolidation
 title: Deployment consolidation and Vercel retirement
 type: runbook
-version: v1.0
-status: draft; source inventory complete; external retirement pending
+version: v1.1
+prior_version: v1.0
+status: draft; record cleanup and provider absence verified; environment retirement pending
 owners: ["@bartytime4life"]
 created: 2026-10-19
 updated: 2026-10-19
@@ -23,6 +24,10 @@ Application delivery, source admission, evidence release and publication remain
 separate decisions.
 
 ## Confirmed checkpoint and remaining work
+
+The following table is the pre-retirement baseline recorded by PR #5310. Its
+resource counts and pending actions are historical; the operational checkpoint
+below records the later verified outcome and the remaining environment blocker.
 
 | Surface | Observation on 2026-10-19 | Disposition |
 | --- | --- | --- |
@@ -47,6 +52,83 @@ commit. Duplicate blobs were counted by tracked path. It covers `.github/`,
 `migrations/`, `release/` and root files. A lexical scan is not a dependency
 security audit or evidence of current production health.
 
+## Operational checkpoint after approved cleanup
+
+**PARTIAL — record retirement and provider absence are verified; environment
+retirement remains pending.** This checkpoint records external operations; merging
+this documentation does not perform or authorize another deletion.
+
+- **CONFIRMED:** [PR #5310](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5310)
+  merged the existing operator. Its read-only
+  [inventory run 39303802095](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39303802095)
+  used `main@eb992b76d3762a20e6a1cca7c0228a2b9f8c7336`, passed the 18
+  operator tests, and selected 607 Vercel records while excluding 27 records.
+- **CONFIRMED:** the owner approved the exact inventory digest
+  `8646e0197065de80abd7dd2708db2ed75922c1f2456fbe4e88412cd5a2775f53`
+  and the eight environment IDs below. A fresh preflight matched that digest.
+- **CONFIRMED:** the unchanged helper, blob
+  `acd2f78e067d2c10c14ab604482f5933a33c5570`, completed at
+  `2026-10-19T19:05:03Z` with exit 0. Its journal records exactly 607 unique
+  completed deletions and 104 scoped inactive transitions. Every journal ID
+  belongs to the approved inventory; its final re-enumeration reported
+  `ELIGIBLE_VERCEL_GITHUB_RECORDS_ABSENT`.
+- **CONFIRMED:** a separate full readback returned only the 27 owner-created
+  `stage` records. Their saved minimal metadata, including IDs, source SHAs,
+  refs, environments and timestamps, was unchanged.
+- **CONFIRMED at 19:06 UTC:** both exact Vercel project IDs in the baseline table
+  returned 404 under `team_XVYbnle9XkeYTypWx5l6LOQN`, and the full team
+  project list was empty. The repository-filtered list alone was insufficient:
+  it had previously omitted the still-existing `usgs` project.
+- **UNKNOWN:** the actor and exact time of provider-side deletion. This session
+  verified absence; it did not submit either project deletion.
+- **CONFIRMED:** repository-installed Apps remain ChatGPT Codex Connector,
+  Claude, Claude Design Import and GoDaddy Node.js Hosting, with no Vercel App.
+  Repository webhooks, Actions secret names and Actions variable names are empty.
+- **CONFIRMED at 19:11 UTC:** all eight legacy environments still exist, alongside
+  `copilot` and `stage`. Action-time checks found zero secrets, zero variables,
+  no protection rules and no branch policy on each legacy environment. Current
+  main workflow environment declarations reference only
+  `kfm-hosted-capture` and `godaddy-production`; the hosted application branch
+  `a0-hosted-ai-web-20261017@53efe37cdc0ad916b3fc15acc19411d919a2fab4`
+  has no workflow environment declarations.
+
+The exact inventory, all 608 pre-cleanup status entries, the preserved 27 record
+identities, owner approval, apply journal, exit result and readbacks are retained
+in the owner-held `KFM-Vercel-Retirement-Audit-20261019.zip`. Its checkpoint
+SHA-256 is
+`dc751a280f96f8b1e0c6860f1882c13019a3eaa40a9d7f0f9620f4534fb407f6`.
+This digest identifies the retained operational audit; it is not a public release
+receipt or an independently authenticated approval. The original GitHub inventory
+artifact is `12213155217` and expires on 2026-11-18. Do not rely on that expiring
+artifact as the sole retained copy.
+
+### Remaining environment cleanup
+
+GitHub's existing environment settings required owner reauthentication before
+deletion. The Mobile request timed out; no environment deletion was submitted.
+The owner can use a passkey or retry authentication in
+[repository environments](https://github.com/bartytime4life/Kansas-Frontier-Matrix/settings/environments).
+The exact deletion-set approval is already recorded; authentication does not
+broaden that scope.
+
+After authentication, recheck identities, secrets, variables, protection rules
+and active consumers immediately before removing only the eight listed legacy
+environments. Stop on drift or an active consumer. Preserve `copilot`
+(`11904832799`) and `stage` (`10250497541`), and verify the same 27
+deployment records remain unchanged afterward. Do not rerun deployment-record
+deletion merely because this runbook changes; the 607 approved records are
+already absent.
+
+The cleanup made no source, application-branch, GoDaddy, Sites or DNS changes.
+It did not qualify current application health. Keep the temporary operator and
+workflow until environment closure and durable audit retention are verified;
+retire them through a separately reviewed follow-up. **Full Vercel retirement
+remains incomplete.**
+
+The [generated-work receipt](../../data/receipts/generated/genrec-vercel-retirement-outcome-20261019.json)
+binds this documentation's bytes with human review pending. It is authoring
+provenance, not proof of the external operations.
+
 ## Remove GitHub's historical Vercel records
 
 Use [the manual cleanup workflow](../../.github/workflows/retire-vercel-deployments.yml)
@@ -58,8 +140,8 @@ authentication, or an explicitly supplied scoped GH_TOKEN, outside Actions.
 Neither creates credentials. The workflow has no Vercel credentials and cannot change
 GoDaddy, Sites, DNS, GitHub environments, repository secrets or source branches.
 
-1. Review and merge this bounded operator change through the normal repository
-   checks. The draft PR itself performs no cleanup.
+1. Use the reviewed operator merged by PR #5310. Review and merge any future
+   operator changes through normal repository checks; a PR itself performs no cleanup.
 2. Run **Inventory historical Vercel deployment records**.
    Download and preserve `inventory.json` and `sha256.txt` before deletion. The
    workflow artifact lasts 30 days; it is an operational snapshot, not a release
@@ -115,19 +197,21 @@ deletion. Stop if the empty-state observation changed or an active consumer is
 found. Preserve `copilot` and `stage`; their retirement is outside this request.
 Environment deletion is permanent and requires action-time confirmation.
 
-The Vercel connector returns `requires_user_action` for project deletion. The
-owner must sign in and review/confirm deletion of the two exact projects above:
+The supported Vercel project-deletion operation requires the owner to review and
+confirm in the provider dashboard. At the operational checkpoint above, both
+identified projects are absent, so no further provider deletion is needed for
+those IDs. If a future check finds either project again, verify its exact ID,
+team, domain list and retained-configuration needs before owner confirmation:
 
 - [Review deletion of kfm](https://vercel.com/blackbart555-6322/kfm/settings/general#delete-project)
 - [Review deletion of usgs](https://vercel.com/blackbart555-6322/usgs/settings/general#delete-project)
 
-Vercel project deletion also removes that project's deployments, environment
-variables, settings and project-domain associations. Recheck the domain list and
-any required retained configuration before confirmation; do not move or delete
-GoDaddy/Sites credentials as part of this operation. The current browser is at
-Vercel sign-in; no project deletion was submitted.
+Project deletion removes deployments, environment variables, settings and
+project-domain associations. Keep GoDaddy/Sites credentials and DNS outside this
+operation. Do not infer project absence from a repository-filtered result alone.
 
-Closure requires fresh readback: repository-filtered Vercel projects absent,
+Closure requires fresh readback: both exact Vercel project IDs absent, a full
+team project listing inspected rather than relying only on a repository filter,
 eligible GitHub records absent, the eight retired environments absent, and no
 Vercel app/webhook/credential or active source integration. Do not reintroduce
 Vercel to test the deletion. Retire the temporary operator/workflow through a

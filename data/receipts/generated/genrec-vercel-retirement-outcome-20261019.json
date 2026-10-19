@@ -1,0 +1,81 @@
+{
+  "receipt_id": "genrec-vercel-retirement-outcome-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/deployment-consolidation.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/deployment-consolidation.md": "sha256:2a3a3883de9e9734360bc5e36d7724356e9dd912dcc1804cbdbb08d3090a9d3b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Exact runtime build unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:8646e0197065de80abd7dd2708db2ed75922c1f2456fbe4e88412cd5a2775f53",
+      "sha256:dc751a280f96f8b1e0c6860f1882c13019a3eaa40a9d7f0f9620f4534fb407f6"
+    ],
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "KFM Contributor Reliability System_ Documentation, PR Quality, and CI Hardening.pdf"
+    ],
+    "evidence_refs": [
+      "repo:docs/runbooks/deployment-consolidation.md@eb992b76d3762a20e6a1cca7c0228a2b9f8c7336",
+      "repo:scripts/retire_vercel_deployments.py@eb992b76d3762a20e6a1cca7c0228a2b9f8c7336",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39303802095",
+      "Owner-held KFM-Vercel-Retirement-Audit-20261019.zip; checkpoint digest in evidence_hashes"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/deployment-consolidation.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused documentation and receipt validation",
+      "outcome": "PASS",
+      "reason": "Repository local link checker: one document, six local targets, zero local failures; six external URLs classified unverified by the offline checker. Repository metadata present profile: one valid block, zero findings. Receipt validator: schema, cross-field and final SHA-256 binding passed with human review pending. Scoped git diff whitespace and Markdown structure checks passed."
+    },
+    {
+      "gate": "Full repository tests and application/browser checks",
+      "outcome": "SKIPPED",
+      "reason": "Documentation plus authoring receipt only; no runtime, workflow, dependency or policy change."
+    },
+    {
+      "gate": "Human review and exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Draft authoring; not yet submitted or independently reviewed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-runbook-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/eb992b76d3762a20e6a1cca7c0228a2b9f8c7336/docs/runbooks/deployment-consolidation.md"
+    },
+    {
+      "id": "read-only-inventory-workflow",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39303802095"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T19:13:49.124Z",
+  "emitter": "Codex repository authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Covers runbook authorship and exact bytes, not external-operation proof or approval. Owner approval authorized operational cleanup, not approval of this documentation. The 607 record deletions and provider absence are bounded verified observations; eight legacy environments remain pending owner authentication. Reverting this documentation cannot restore deleted provider/GitHub resources."
+}
