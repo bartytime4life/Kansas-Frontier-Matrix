@@ -4,6 +4,21 @@ set -euo pipefail
 site_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/source" && pwd)"
 cd "$site_dir"
 
+# Every serving path must reject caller-supplied hosted identity headers. Check
+# direct-runtime eligibility before Wrangler can load local secrets or write D1.
+host="${SITE_HOST:-127.0.0.1}"
+port="${SITE_PORT:-4173}"
+if [[ "$host" != 127.0.0.1 ]]; then
+  printf 'SITE_HOST must be 127.0.0.1 for the protected local runtime.\n' >&2
+  exit 2
+fi
+SITE_PORT="$port" node --input-type=module -e '
+import { assertNodeVersion, assertNoLocalSecretFiles, parseArguments } from "./scripts/serve-local-worker.mjs";
+assertNodeVersion();
+assertNoLocalSecretFiles(process.cwd());
+parseArguments(["--state", ".", "--port", process.env.SITE_PORT]);
+'
+
 if [[ ! -x node_modules/.bin/wrangler || ! -f dist/server/wrangler.json ]]; then
   printf 'Install and build the Site first: cd apps/site/source && npm run install:ci && npm run build\n' >&2
   exit 1
@@ -93,40 +108,10 @@ done <<<"$additive_migrations"
 rm -rf "$migration_workspace"
 trap - EXIT
 
-host="${SITE_HOST:-127.0.0.1}"
-port="${SITE_PORT:-4173}"
-
 node scripts/validate-subsurface-public.mjs dist/client
 
-# Prefer the Site's direct Miniflare launcher. Wrangler's development proxy can
-# answer 500 to the request after one whose body the Worker never read. The
-# direct launcher binds only to loopback, requires Node 22.x, refuses .dev.vars
-# and ignores the .env files Wrangler would load, so anything else keeps the
-# previous wrangler dev runtime.
-fallback=""
-if [[ "$host" != 127.0.0.1 ]]; then
-  fallback="SITE_HOST=$host is not loopback"
-elif [[ ! "$port" =~ ^[1-9][0-9]{3,4}$ ]] || (( port < 1024 || port > 65535 )); then
-  fallback="SITE_PORT=$port is outside 1024-65535"
-elif [[ "$(node -p 'process.versions.node.split(".")[0]')" != 22 ]]; then
-  fallback="Node $(node -p 'process.versions.node') is not 22.x"
-elif local_vars="$(compgen -G '.dev.vars*' || compgen -G '.env*')"; then
-  fallback="${local_vars%%$'\n'*} is present"
-fi
-
-if [[ -z "$fallback" ]]; then
-  mkdir -p "$local_state/v3/d1" "$local_state/v3/r2"
-  printf 'Starting the direct local Worker runtime on http://%s:%s\n' "$host" "$port" >&2
-  exec node scripts/serve-local-worker.mjs --state "$(realpath "$local_state")" --port "$port"
-fi
-
-printf 'Starting wrangler dev (%s); its proxy can return a stray 500 after a rejected request.\n' "$fallback" >&2
-# Only the direct runtime binds the private daily-archive access file. Keep its
-# tokens out of argv and out of Wrangler's .dev.vars/.env loading, and say so
-# rather than leave the browser and capture runner with unexplained 401s.
-archive_access="${HOME:-}/.config/kfm/daily-archive-access"
-if [[ -n "${HOME:-}" && ( -e "$archive_access" || -L "$archive_access" ) ]]; then
-  printf 'wrangler dev does not load %s; archive requests return 401 unless KFM_ARCHIVE_LOCAL_OWNER_TOKEN and KFM_ARCHIVE_WORKER_TOKEN are configured for Wrangler separately. The direct runtime (loopback host, Node 22.x, no .env or .dev.vars files) uses the access file.\n' "$archive_access" >&2
-fi
-exec "$wrangler" dev --config "$config" --local \
-  --persist-to "$local_state" --ip "$host" --port "$port"
+# Never fall back to raw Wrangler: it trusts the hosted identity headers that
+# the direct runtime rejects before dispatching any application request.
+mkdir -p "$local_state/v3/d1" "$local_state/v3/r2"
+printf 'Starting the direct local Worker runtime on http://%s:%s\n' "$host" "$port" >&2
+exec node scripts/serve-local-worker.mjs --state "$(realpath "$local_state")" --port "$port"

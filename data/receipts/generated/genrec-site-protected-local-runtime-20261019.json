@@ -1,0 +1,105 @@
+{
+  "receipt_id": "genrec-site-protected-local-runtime-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/README.md",
+    "apps/site/serve-local.sh",
+    "apps/site/source/scripts/serve-local-worker.mjs",
+    "apps/site/source/tests/local-worker-runtime.test.mjs",
+    "tests/qa/test_site_smoke.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/README.md": "sha256:8ad12ba6f2e7b05a1f62ad056e5d51be962629e44c74572cf05ced908d50f290",
+    "apps/site/serve-local.sh": "sha256:f3017a0deb1f84361c3b8e4157522094bc66f792e8be62f4bc5de81ff124bea2",
+    "apps/site/source/scripts/serve-local-worker.mjs": "sha256:f4e7968572d8113d55d5735001fbceac27cd31f6c3b7e09a7761f71295a44666",
+    "apps/site/source/tests/local-worker-runtime.test.mjs": "sha256:fda4b7e0ec0b8e9dba1bab80932129e3cabd16f45c9ea479deb90d3e5f83f3ec",
+    "tests/qa/test_site_smoke.py": "sha256:b36d49d70f449bd3df50233d441c7e65ccc8d062bac29b58c1f6d93fecb3a2b1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "Session build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "CONTRIBUTING.md",
+      "SECURITY.md",
+      "apps/site/source/AGENTS.md",
+      "docs/doctrine/ai-build-operating-contract.md"
+    ],
+    "evidence_hashes": [
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:04cfbe145aa2ec38546b8137f9fb02358cc855cd3a18b3379754005720c5d3c6",
+      "sha256:0b6e1ad45d719742fd442064ab8c7cc6b35487c4abe795acc5e010bcec899c7b",
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/80ab0ae0d6c38528726593e423190b00dfd519d2",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/18163f1f9e01f437b96aecdc58ceb39079018b1e"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/README.md": "CONFIRMED",
+    "apps/site/serve-local.sh": "CONFIRMED",
+    "apps/site/source/scripts/serve-local-worker.mjs": "CONFIRMED",
+    "apps/site/source/tests/local-worker-runtime.test.mjs": "CONFIRMED",
+    "tests/qa/test_site_smoke.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Syntax, build and static checks",
+      "outcome": "PASS",
+      "reason": "Shell and changed JavaScript syntax checks, npm run build, npm run lint (0 errors; 77 warnings in unchanged files), TypeScript noEmit, and changed JavaScript ESLint pass in a disposable copy."
+    },
+    {
+      "gate": "Launcher startup and migration checks",
+      "outcome": "PASS",
+      "reason": "All 8 tests in tests/qa/test_site_smoke.py pass, including unsupported-configuration refusals and supported alternate-port/runtime controls."
+    },
+    {
+      "gate": "Site tests and compatibility",
+      "outcome": "PASS",
+      "reason": "24 focused tests and all 1376 Site tests pass with synthetic local stores, isolated HOME and TMPDIR outside the repository. Earlier temporary-directory placement caused two storage-isolation failures; both passed after correcting the execution environment."
+    },
+    {
+      "gate": "Local backend smoke",
+      "outcome": "PASS",
+      "reason": "110 checks across 79 routes pass on unused loopback port 43175 with disposable empty storage. The occupied default port was left untouched."
+    },
+    {
+      "gate": "Current-main alignment",
+      "outcome": "PASS",
+      "reason": "Latest main changes from tested base 18163f1f9e01f437b96aecdc58ceb39079018b1e to 80ab0ae0d6c38528726593e423190b00dfd519d2 affect unrelated documentation and register metadata; application, dependency, launcher and test inputs are unchanged."
+    },
+    {
+      "gate": "Hosted and provider acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted CI is pending PR creation. Nine provider-only smoke routes, hosted/browser acceptance, Vite development mode, data admission, activation, deployment and cloud-status changes are outside this local launcher repair."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "existing-direct-runtime",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/80ab0ae0d6c38528726593e423190b00dfd519d2/apps/site/source/scripts/serve-local-worker.mjs"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T17:03:16.547773Z",
+  "emitter": "Codex repository-authoring session",
+  "links": {
+    "pr_number": null
+  },
+  "notes": "Source edits, tests and local launcher documentation only. Existing Site audience, storage identities, migrations and private access-file support are preserved. This receipt records generation and bounded validation, not human approval, merge, release or deployment authority. Detailed investigation material remains outside the public repository."
+}
