@@ -4,7 +4,7 @@ import ts from "typescript";
 
 // Runs component hooks and event handlers without claiming browser or WebGL QA.
 export async function componentHarness(file, imports, globals = {}, extra = "") {
-  const slots = [], pending = [];
+  const slots = [], pending = [], pendingLayout = [];
   let cursor = 0;
   const same = (a, b) => a && b && a.length === b.length && a.every((value, i) => Object.is(value, b[i]));
   const hooks = {
@@ -23,7 +23,11 @@ export async function componentHarness(file, imports, globals = {}, extra = "") 
       if (!same(slots[i]?.deps, deps)) pending.push(() => { slots[i]?.cleanup?.(); slots[i] = { deps, cleanup: fn() }; });
     },
   };
-  hooks.useLayoutEffect = hooks.useEffect;
+  hooks.useLayoutEffect = (fn, deps) => {
+    const i = cursor++;
+    if (!same(slots[i]?.deps, deps)) pendingLayout.push(() => { slots[i]?.cleanup?.(); slots[i] = { deps, cleanup: fn() }; });
+  };
+  const commitLayout = () => { for (const fn of pendingLayout.splice(0)) fn(); };
   const jsx = (type, props) => ({ type, props });
   const exports = {};
   const code = ts.transpileModule(await readFile(file, "utf8") + extra, { compilerOptions: {
@@ -41,7 +45,8 @@ export async function componentHarness(file, imports, globals = {}, extra = "") 
   return {
     exports,
     render(component, props) { cursor = 0; return component(props); },
-    commit() { for (const fn of pending.splice(0)) fn(); },
+    commitLayout,
+    commit() { commitLayout(); for (const fn of pending.splice(0)) fn(); },
     dispose() { for (const slot of slots) slot?.cleanup?.(); },
   };
 }

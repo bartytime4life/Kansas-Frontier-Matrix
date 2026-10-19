@@ -3700,7 +3700,7 @@ export default function Home() {
     setMapQueryCandidates([]);
   }, []);
 
-  const openQwenCompanion = useCallback((returnElement?: HTMLElement | null) => {
+  const openQwenCompanion = useCallback((returnElement?: HTMLElement | null, focusTarget: "close" | "composer" = "close") => {
     qwenReturnRef.current = returnElement
       ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
     setQwenOpen(true);
@@ -3712,15 +3712,18 @@ export default function Home() {
       setTimelineOpen(false);
     }
     window.setTimeout(() => {
-      qwenPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close Qwen companion"]')?.focus({ preventScroll: true });
+      // One opening action owns one focus destination. Find must not compete
+      // with a second delayed callback that sends its first keys to Close.
+      const target = focusTarget === "composer" ? globalSearchInputRef.current
+        : qwenPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close Qwen companion"]');
+      target?.focus({ preventScroll: true });
     }, 0);
   }, [dismissMapUtilityWithoutFocus, isCompact, setQwenOpen, setRightOpen]);
 
   const openAtlasComposer = useCallback((intent: "find" | "explore", value?: string) => {
     setPrimaryWorkspace("map");
-    openQwenCompanion();
+    openQwenCompanion(undefined, "composer");
     setAssistantDraftRequest(current => ({id:(current?.id ?? 0)+1, value:value ?? globalSearchInputRef.current?.value ?? "", intent}));
-    window.requestAnimationFrame(() => globalSearchInputRef.current?.focus({preventScroll:true}));
   }, [openQwenCompanion]);
 
   useEffect(() => {
