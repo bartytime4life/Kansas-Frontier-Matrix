@@ -1,0 +1,94 @@
+{
+  "receipt_id": "genrec-private-subsurface-mirror-ci-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/qa/site_mirror.py",
+    "tests/qa/test_site_mirror.py",
+    "data/receipts/generated/site-v268-private-subsurface-output-reconciliation-20261019.json"
+  ],
+  "artifact_hashes": {
+    "tools/qa/site_mirror.py": "sha256:1dbbf75735588257b290bc6e7bbfa71b440e6e414f32409fdae5091e474fef61",
+    "tests/qa/test_site_mirror.py": "sha256:1d1f47f7681cd55ed7227756ce3ba8a36396e693a852791f9b8380747309a4e6",
+    "data/receipts/generated/site-v268-private-subsurface-output-reconciliation-20261019.json": "sha256:0e667ad7c14328e0f062746808449de52577b70df7d73c9e13f5eff0d7ec230e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "not exposed by runtime"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local deterministic validation",
+      "GitHub CI inspection and scoped branch update"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e5d3155a2fa4d887e5b8c48a18fd30286f073c550f4d91d5be34724771fb33ac"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/128da1e110973a851e43321f1d4186b4f00e1870",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/39290176611",
+      "github://bartytime4life/Kansas-Frontier-Matrix/actions/runs/39288256098"
+    ]
+  },
+  "truth_labels": {
+    "tools/qa/site_mirror.py": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "data/receipts/generated/site-v268-private-subsurface-output-reconciliation-20261019.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "base-failure-attribution",
+      "outcome": "PASS",
+      "reason": "Pinned base 7177ea6246 passes content parity locally and in hosted water run 39288256098; head 128da1e110 fails the mirror step in run 39290176611 with exactly three changed and one unrecorded Site paths."
+    },
+    {
+      "gate": "mirror-content-parity",
+      "outcome": "PASS",
+      "reason": "876 tracked Site files match; 258 withheld files remain absent; source and overlay review PENDING; hosted equivalence false."
+    },
+    {
+      "gate": "focused-mirror-regression-tests",
+      "outcome": "PASS",
+      "reason": "44 tests passed using repository-pinned pytest 9.1.1 in disposable test dependency directory."
+    },
+    {
+      "gate": "combined-mirror-topology-regressions",
+      "outcome": "PASS",
+      "reason": "78 tests and 43 subtests passed; topology ratchet reports 0 invariants, 0 new drift and 0 stale baseline entries. No baseline was changed."
+    },
+    {
+      "gate": "new-head-hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending after this CI repair is committed and pushed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; no approval or override asserted."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-19T17:05:14.630838+00:00",
+  "emitter": "OpenAI Codex desktop",
+  "links": {
+    "pr_number": 5324,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Scoped CI repair adds a content-parity successor and selector without editing historical receipts, source identity, application bytes, withheld entries, or pending acceptance. This receipt binds only the three changed repair artifacts. The earlier source receipt remains unchanged. Draft PR and Cloud finding stay open; no merge, deployment or publication. Runtime model version and sampling parameters are unavailable."
+}

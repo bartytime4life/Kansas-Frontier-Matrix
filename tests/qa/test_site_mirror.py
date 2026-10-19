@@ -627,7 +627,10 @@ def test_historical_layout_receipt_preserves_unrelated_bytes_and_private_boundar
     assert predecessor.name in receipt["rollback"]["mirror"]
 
 
-def test_selected_focus_mode_receipt_records_only_the_existing_repository_test() -> None:
+def test_historical_focus_mode_receipt_records_only_the_existing_repository_test(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-focus-mode-test-reconciliation-20261018.json")
     receipt, expected = TOOL.reviewed_receipt()
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert predecessor.name == "site-v268-explorer-reference-layout-20261017.json"
@@ -668,6 +671,59 @@ def test_selected_focus_mode_receipt_records_only_the_existing_repository_test()
     assert receipt["review"]["human_acceptance"] is receipt["review"]["hosted_equivalence"] is False
     assert receipt["review"]["source_and_overlay_review"] == "PENDING"
     assert receipt["counts"]["repository_withheld"] == 258
+    inventory = {name: item["mirror_sha256"] for name, item in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert predecessor.name in receipt["rollback"]["mirror"]
+
+
+def test_selected_subsurface_receipt_binds_only_the_private_output_patch() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-focus-mode-test-reconciliation-20261018.json"
+    previous = json.loads(predecessor.read_text())
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
+    modified = {"docs/subsurface-data.md", "scripts/prepare-subsurface.py", "tests/subsurface-assets.test.mjs"}
+    added = {"tests/test_prepare_subsurface.py"}
+    changed = modified | added
+    assert set(receipt["comparison"]) - set(previous["comparison"]) == added
+    assert set(previous["comparison"]) - set(receipt["comparison"]) == set()
+    assert {name for name in modified if receipt["comparison"][name] != previous["comparison"][name]} == modified
+    for name, entry in previous["comparison"].items():
+        if name not in changed:
+            assert receipt["comparison"][name] == entry, name
+    declarations = {item["path"]: item for item in receipt["repository_reconciliation"]["changes"]}
+    assert set(declarations) == changed
+    for name in changed:
+        entry = receipt["comparison"][name]
+        before = previous["comparison"].get(name)
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert entry["mirror_sha256"] == digest
+        assert expected[name] == "sha256:" + digest
+        assert entry["site_sha256"] == (before["site_sha256"] if before else None)
+        assert entry["state"] == ("repository_safety_overlay" if before else "repository_only_overlay")
+        declaration = declarations[name]
+        assert declaration["previous_receipt_sha256"] == (before["mirror_sha256"] if before else None)
+        assert declaration["repository_base_sha256"] == declaration["mirror_sha256"] == digest
+        assert declaration["state"] == entry["state"]
+        assert declaration["last_repository_change_commit"] == "128da1e110973a851e43321f1d4186b4f00e1870"
+        assert declaration["proposed_in_this_change"] is False
+    for key in ("profile", "status", "authority", "selector_authority", "destination", "repository_base",
+                "site_candidate_commit", "site_project_id", "site_version_id", "site_audience",
+                "site_archive_sha256", "site_deployment_status", "site_deployment_id",
+                "authoritative_site_source_paths", "canonical_document_mappings", "canonical_tool_mappings",
+                "overlay", "review", "repository_safety_changes", "historical_lineage_correction", "reconciliation"):
+        assert receipt[key] == previous[key], key
+    assert receipt["status"] == "REVIEW_ONLY"
+    assert receipt["review"]["human_acceptance"] is receipt["review"]["hosted_equivalence"] is False
+    assert receipt["review"]["source_and_overlay_review"] == "PENDING"
+    assert receipt["counts"]["repository_withheld"] == previous["counts"]["repository_withheld"] == 258
+    for key, count in previous["counts"].items():
+        delta = {"identical": -3, "repository_safety_overlay": 3, "repository_only_overlay": 1}.get(key, 0)
+        assert receipt["counts"][key] == count + delta, key
+    assert len(expected) == len(previous["comparison"]) + 1 == 876
+    assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"]
     inventory = {name: item["mirror_sha256"] for name, item in receipt["comparison"].items()}
     assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     assert predecessor.name in receipt["rollback"]["mirror"]
