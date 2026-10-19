@@ -62,6 +62,9 @@ test("local imagery read mode is explicit, exact-origin, read-only and denies cr
   for (const host of ["https://site.example", "http://127.0.0.1:4174", "http://localhost:4173", "http://127.0.0.1.evil.test:4173"]) assert.equal(localImageryReadAllowed(new Request(host+route), origin), false);
   for (const suffix of ["/stage", "/activate", "/install"]) assert.equal(localImageryReadAllowed(new Request(origin+"/api/earth-engine-context"+suffix), origin), false);
   assert.equal(localImageryReadAllowed(new Request(origin+route,{method:"POST"}),origin),false);
+  // Hyphenated set and layer IDs (terrain sets, PRISM layers) are ordinary tile reads.
+  for (const tile of ["ks-2024-abc123def/ee-cdl/7/29/48.png", "ks-1990-annual-run1/ee-prism-monthly/7/29/48.png", "ks-terrain-3dep-v1/ee-3dep/9/118/195.png"]) assert.equal(localImageryReadAllowed(new Request(`${origin}/api/earth-engine-context/${tile}`), origin), true, tile);
+  for (const tile of ["ks-2024-abc123def/ee-cdl/7/29/48.png/../stage", "ks-2024-abc/ee-cdl/7/29/48.png", "other-2024-abc123def/ee-cdl/7/29/48.png", "ks-2024-abc123def/ee-/7/29/48.png"]) assert.equal(localImageryReadAllowed(new Request(`${origin}/api/earth-engine-context/${tile}`), origin), false, tile);
   assert.equal(localImageryReadAllowed(new Request(origin+route,{headers:{Origin:"https://evil.test"}}),origin),false);
   assert.equal(localImageryReadAllowed(new Request(origin+route,{headers:{"Sec-Fetch-Site":"cross-site"}}),origin),false);
 });

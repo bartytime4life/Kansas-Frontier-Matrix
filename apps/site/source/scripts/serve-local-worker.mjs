@@ -109,8 +109,15 @@ export function localEntry(port) {
   return `import worker from "./index.js";
 export * from "./index.js";
 export default { ...worker, fetch(request, env, ctx) {
-  if (new URL(request.url).origin !== ${JSON.stringify(`http://127.0.0.1:${port}`)} ||
-      [...request.headers.keys()].some((name) => name.startsWith("oai-authenticated-"))) {
+  const url = new URL(request.url);
+  const forged = [...request.headers.keys()].some((name) => name.startsWith("oai-authenticated-"));
+  // A browser opened at localhost reaches this loopback listener with Host
+  // "localhost". Send safe navigations to the one accepted authority instead of
+  // answering 403; every other Host and every unsafe method is still refused.
+  if (!forged && url.origin === ${JSON.stringify(`http://localhost:${port}`)} && (request.method === "GET" || request.method === "HEAD")) {
+    return new Response(null, { status: 307, headers: { Location: ${JSON.stringify(`http://127.0.0.1:${port}`)} + url.pathname + url.search, "Cache-Control": "no-store" } });
+  }
+  if (url.origin !== ${JSON.stringify(`http://127.0.0.1:${port}`)} || forged) {
     return new Response("Local request authority rejected.", { status: 403, headers: { "Cache-Control": "no-store" } });
   }
   return worker.fetch(request, env, ctx);

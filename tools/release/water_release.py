@@ -121,6 +121,9 @@ def _site_origin(site_url: str) -> str:
     return parts.netloc
 
 
+SITE_USER_AGENT = "KFM-release/1 (+https://github.com/bartytime4life/Kansas-Frontier-Matrix)"
+
+
 def _site_call(netloc: str, path: str, *, data: bytes | None = None, opener=None, admin: str = "water-admin") -> dict:
     """One bounded request to a release-admin route with the staging token; no redirects followed.
 
@@ -133,7 +136,9 @@ def _site_call(netloc: str, path: str, *, data: bytes | None = None, opener=None
     token = os.environ.get("KFM_WATER_WORKER_TOKEN", "")
     if len(token) < 32:
         raise ValueError("WATER_WORKER_TOKEN_REQUIRED")
-    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+    # Cloudflare in front of the Site answers urllib's default "Python-urllib/3.x"
+    # User-Agent with 403 (error 1010) before the Worker sees the token.
+    headers = {"Authorization": f"Bearer {token}", "Accept": "application/json", "User-Agent": SITE_USER_AGENT}
     if data is not None:
         headers["Content-Type"] = "application/json"
     bypass = os.environ.get("KFM_SITES_BYPASS_TOKEN")

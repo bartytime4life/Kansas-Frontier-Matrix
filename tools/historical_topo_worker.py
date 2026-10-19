@@ -37,7 +37,8 @@ OPENER = build_opener(NoRedirect())
 
 
 def headers(token: str) -> dict[str, str]:
-    result = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+    # Cloudflare answers urllib's default "Python-urllib/3.x" User-Agent with 403 (error 1010).
+    result = {"Authorization": f"Bearer {token}", "Accept": "application/json", "User-Agent": "KFM-historical-topo-worker/1"}
     bypass = os.getenv("KFM_SITES_BYPASS_TOKEN")
     if bypass:
         result["OAI-Sites-Authorization"] = f"Bearer {bypass}"
