@@ -12,7 +12,7 @@ test('production app has no login routes and retired sessions cannot unlock priv
    const response=await fetch(origin+path,{headers:retiredHeaders,redirect:'manual'});
    assert.equal(response.status,404,path);assert.equal(response.headers.get('location'),null,path);assert.equal(response.headers.get('set-cookie'),null,path);await response.text();
   }
-  for(const path of ['/api/owner/sign-out','/api/pc-ai/sign-in','/api/pc-ai/sign-out','/api/pc-ai/activate','/api/pc-ai/admin/invite','/api/pc-ai/admin/revoke','/api/pc-ai/jobs','/api/pc-ai/worker/claim','/api/source-pipeline/control?action=resume']){
+  for(const path of ['/api/owner/sign-out','/api/pc-ai/sign-in','/api/pc-ai/sign-out','/api/pc-ai/activate','/api/pc-ai/admin/invite','/api/pc-ai/admin/revoke','/api/pc-ai/jobs','/api/pc-ai/worker/claim']){
    const response=await fetch(origin+path,{method:'POST',headers:{...retiredHeaders,Origin:origin,'Content-Type':'application/json'},body:'{}',redirect:'manual'});
    assert.equal(response.status,404,path);assert.equal(response.headers.get('set-cookie'),null,path);await response.text();
   }
@@ -31,6 +31,7 @@ test('production app has no login routes and retired sessions cannot unlock priv
    }
    const captures=await fetch(origin+'/api/source-pipeline/captures',{headers});assert.equal(captures.status,404);await captures.text();
    for(const [path,method] of [['/api/earth-engine-context/stage','PUT'],['/api/earth-engine-context/activate','POST']]){const response=await fetch(origin+path,{method,headers:{...headers,Origin:origin,'Content-Type':'application/json'},body:'{}'});assert.equal(response.status,401,path);await response.text();}
+   const control=await fetch(origin+'/api/source-pipeline/control?action=resume',{method:'POST',headers:{...headers,Origin:origin}});assert.equal(control.status,401);await control.text();
    const run=await fetch(origin+'/api/source-pipeline/run',{method:'POST',headers:{...headers,Origin:origin}});assert.equal(run.status,401);await run.text();
   }
   for(const path of ['/private/kfm-pc-ai-v1/preview/accounts-jobs.sqlite','/private/kfm-pc-ai-v1/published/accounts-jobs.sqlite']){
