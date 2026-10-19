@@ -95,10 +95,11 @@ test('Stop remains available during admission and cancellation is claimed only a
  }finally{h.dispose();}
 });
 
-test('guest readiness does not wait for the separate account request',async()=>{
- const {h,render}=await workspace(url=>url.includes('/api/pc-ai/')?new Promise(()=>{}):Promise.resolve(ready()));
+test('public chat never requests an account service or renders login controls',async()=>{
+ const requests=[];
+ const {h,polls,render}=await workspace(async url=>{requests.push(url);return ready();});
  try{
-  let tree=render();assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+  await polls[0]();let tree=render();assert.ok(requests.length>=2);assert.ok(requests.every(url=>url==='/api/ai/status'));assert.doesNotMatch(text(tree),/sign in|sign out|administrator|invitation|password/i);assert.equal(findNode(tree,node=>node.type==='input'&&node.props.type==='password'),undefined);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
   assert.equal(findNode(tree,node=>node.type==='select'&&node.props.name==='depth').props.defaultValue,'expanded');
   message(tree).props.onChange({target:{value:'Suggest a fictional story.'}});
   tree=render();assert.equal(send(tree).props.disabled,false);
@@ -449,23 +450,6 @@ test('unmounting before admission still cancels a late observable ID without res
  let tree=render();message(tree).props.onChange({target:{value:'Explain this before unmount.'}});tree=render();
  const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
  h.dispose();admission.resolve(Response.json({id:'unmounted-admission'}));await submitted;assert.deepEqual(cancelled,['/api/ai/jobs/unmounted-admission/cancel']);
-});
-
-test('an actor change invalidates pending admission while retaining the unsent draft',async()=>{
- const admission=deferred(),focus=lifecycleFocus();let account='synthetic-owner',cancels=0;
- const {h,polls,render}=await workspace(async(url,options)=>{
-  if(url.includes('/api/pc-ai/'))return Response.json({configured:true,account,role:'administrator'});
-  if(url.endsWith('/status'))return ready();
-  if(url.endsWith('/cancel')){cancels++;return Response.json({cancelled:true});}
-  if(options.method==='POST')return admission.promise;
-  throw new Error('Earlier actor request must not be polled');
- },{focus,onAccount(){}});
- try{
-  let tree=render();await settle();tree=render();message(tree).props.onChange({target:{value:'Keep my actor-change draft.'}});tree=render();
-  const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
-  account='synthetic-new-owner';await polls[0]();await settle();render();await settle();
-  admission.resolve(Response.json({id:'previous-actor'}));await submitted;tree=render();assert.equal(cancels,1);assert.equal(message(tree).props.value,'Keep my actor-change draft.');
- }finally{h.dispose();}
 });
 
 test('failed cancellation reports uncertainty while suppressing the old response',async()=>{

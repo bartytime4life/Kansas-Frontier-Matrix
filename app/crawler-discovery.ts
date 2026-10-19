@@ -5,9 +5,6 @@ export const ROBOTS_TEXT = `# Guidance only. Authentication and release controls
 User-agent: *
 Disallow: /api/
 Disallow: /acquisition
-Disallow: /source-operations
-Disallow: /stewards
-Disallow: /data
 Disallow: /earth-engine
 Disallow: /knowledge/record
 Disallow: /governed/

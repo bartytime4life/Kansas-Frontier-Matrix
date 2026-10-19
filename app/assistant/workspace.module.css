@@ -104,11 +104,6 @@
 .chat .searchResult:hover:not(:disabled),.chat .searchResult button:hover:not(:disabled) { background: #193b47; }
 .chat .searchResult:focus-visible,.chat .searchResult button:focus-visible { outline-offset: -3px; }
 .searchMeta { display: block; margin-top: 4px; color: var(--chat-muted); font-size: 11px; }
-.account { flex: 1; min-height: 0; padding: 18px; border-bottom: 1px solid var(--chat-line); overflow: auto; }
-.account h3 { margin: 0 0 12px; }
-.account form { display: grid; gap: 10px; }
-.account details { margin-top: 15px; }
-.account code { overflow-wrap: anywhere; }
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 @media (max-width:600px) {
   .chat { font-size: 15px; }

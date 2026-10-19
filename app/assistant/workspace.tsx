@@ -4,22 +4,17 @@ import styles from './workspace.module.css';
 import type {AssistantContext,AssistantFocus} from '../assistant-context';
 import {assistantSurface} from '../assistant-surfaces.mjs';
 import {buildInvestigationDraft,investigationMarkdown,type InvestigationJob} from '../assistant-investigation';
-type ChatStatus={configured:boolean;online:boolean;ready:boolean;evidenceSearchAvailable?:boolean;requiresLogin:boolean;model?:string};
-type Status={configured:boolean;online:boolean;ready:boolean;account:string|null;role?:string|null};
+type ChatStatus={configured:boolean;online:boolean;ready:boolean;evidenceSearchAvailable?:boolean;model?:string};
 type Job=Omit<InvestigationJob,'result'>&{result:(NonNullable<InvestigationJob['result']>&{followUpQuestion?:string})|null};
 type Turn={question:string;job:Job;contextKey:string;generation:number};
 type RequestRun={generation:number;id:string|null;stopped:boolean;poll:AbortController|null;noticeGeneration:number;cancel?:Promise<void>};
 export type AssistantDiscovery={query:string;items:readonly {id:string;kind:string;title:string;subtitle:string}[];status:string;busy:boolean;onQuery:(query:string)=>void;onChoose:(id:string)=>void};
-type Props={accountRequest?:number;onAccount?:(account:string|null)=>void;place?:string;focus?:AssistantFocus;active?:boolean;discovery?:AssistantDiscovery;inputRef?:React.RefObject<HTMLTextAreaElement|null>;onInspectSources?:(context:AssistantContext,returnElement?:HTMLElement)=>boolean;draftRequest?:{id:number;value:string;intent?:'find'|'explore'|'evidence'}};
-async function api(path:string,body?:object,signal?:AbortSignal){
- const response=await fetch('/api/pc-ai/'+path,{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',signal:signal?AbortSignal.any([signal,AbortSignal.timeout(8000)]):AbortSignal.timeout(8000),headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined});
- const result=await response.json();if(!response.ok)throw new Error(result.reasonCode??'PC_AI_UNAVAILABLE');return result;
-}
+type Props={place?:string;focus?:AssistantFocus;active?:boolean;discovery?:AssistantDiscovery;inputRef?:React.RefObject<HTMLTextAreaElement|null>;onInspectSources?:(context:AssistantContext,returnElement?:HTMLElement)=>boolean;draftRequest?:{id:number;value:string;intent?:'find'|'explore'|'evidence'}};
 async function chatApi(path:string,body?:object,signal?:AbortSignal){
  const response=await fetch('/api/ai/'+path,{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',signal:signal?AbortSignal.any([signal,AbortSignal.timeout(12000)]):AbortSignal.timeout(12000),headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined});
  const result=await response.json();if(!response.ok){const seconds=Number(response.headers.get('Retry-After'));throw Object.assign(new Error(result.reasonCode??'AI_UNAVAILABLE'),{retryAfterMs:Number.isFinite(seconds)&&seconds>0?Math.min(60000,Math.max(1000,seconds*1000)):4000});}return result;
 }
-const guidance:Record<string,string>={MODEL_CONTINUATION_UNAVAILABLE:'There is no unfinished reply available for this guest and source context. Ask a new question.',CONTEXT_UNAVAILABLE:'The selected source could not be resolved. Select the record again or ask about the map without it.',CONTEXT_TIME_MISMATCH:'This record does not support the active map year. Choose its source time and try again.',EVIDENCE_MODEL_UNQUALIFIED:'The small model is not qualified to choose a factual answer. You can inspect the released records below.',UNVERIFIED_AI_DISCUSSION:'Generated discussion is unverified and does not establish KFM facts.',GLOBAL_RATE_LIMIT:'The shared AI allowance is used for this hour. Please try again later.',MODEL_UNAVAILABLE:'The hosted model is unavailable. Please try again later.',MODEL_FOLLOWUP_REPEATED:'The model repeated its earlier reply instead of answering the follow-up, so the duplicate was withheld. Ask a narrower question or inspect the original records.',MODEL_CONTINUATION_REPEATED:'The model repeated its earlier explanation instead of continuing, so the duplicate was withheld. Ask a narrower question or inspect the original records.',MODEL_CONTEXT_LIMIT:'This question and its evidence exceed the small model’s context limit. Try a shorter question or narrower search.',MODEL_OUTPUT_UNQUALIFIED:'The small model could not select a supported answer.',EVIDENCE_WITHHELD:'Eligible evidence could not be verified. No answer was generated.',SESSION_REQUIRED:'This temporary question session expired. Send a new question.',PC_OFFLINE:'Your PC is offline or its model is unavailable.',USER_BUSY:'You already have a question in progress.',QUEUE_FULL:'The research queue is full. Try again shortly.',USER_RATE_LIMIT:'You have reached the hourly question limit.',SIGN_IN_DENIED:'Sign-in failed. Check your account details.',SIGN_IN_RATE_LIMIT:'Too many sign-in attempts. Wait before trying again.',NO_RELEASED_EVIDENCE:'I could not find eligible released evidence for this question. I cannot provide a supported answer yet.',RELEASE_CHANGED:'The evidence changed or became unavailable, so the answer was withheld.',POLICY_WITHHELD:'This question is withheld by KFM’s policy controls.',INFERENCE_FAILED:'The model could not complete this question.',EVIDENCE_NOT_SUPPORTIVE:'The available evidence does not support an answer.'};
+const guidance:Record<string,string>={MODEL_CONTINUATION_UNAVAILABLE:'There is no unfinished reply available for this guest and source context. Ask a new question.',CONTEXT_UNAVAILABLE:'The selected source could not be resolved. Select the record again or ask about the map without it.',CONTEXT_TIME_MISMATCH:'This record does not support the active map year. Choose its source time and try again.',EVIDENCE_MODEL_UNQUALIFIED:'The small model is not qualified to choose a factual answer. You can inspect the released records below.',UNVERIFIED_AI_DISCUSSION:'Generated discussion is unverified and does not establish KFM facts.',GLOBAL_RATE_LIMIT:'The shared AI allowance is used for this hour. Please try again later.',MODEL_UNAVAILABLE:'The hosted model is unavailable. Please try again later.',MODEL_FOLLOWUP_REPEATED:'The model repeated its earlier reply instead of answering the follow-up, so the duplicate was withheld. Ask a narrower question or inspect the original records.',MODEL_CONTINUATION_REPEATED:'The model repeated its earlier explanation instead of continuing, so the duplicate was withheld. Ask a narrower question or inspect the original records.',MODEL_CONTEXT_LIMIT:'This question and its evidence exceed the small model’s context limit. Try a shorter question or narrower search.',MODEL_OUTPUT_UNQUALIFIED:'The small model could not select a supported answer.',EVIDENCE_WITHHELD:'Eligible evidence could not be verified. No answer was generated.',SESSION_REQUIRED:'This temporary question session expired. Send a new question.',USER_BUSY:'You already have a question in progress.',QUEUE_FULL:'The research queue is full. Try again shortly.',USER_RATE_LIMIT:'You have reached the hourly question limit.',NO_RELEASED_EVIDENCE:'I could not find eligible released evidence for this question. I cannot provide a supported answer yet.',RELEASE_CHANGED:'The evidence changed or became unavailable, so the answer was withheld.',POLICY_WITHHELD:'This question is withheld by KFM’s policy controls.',INFERENCE_FAILED:'The model could not complete this question.',EVIDENCE_NOT_SUPPORTIVE:'The available evidence does not support an answer.'};
 Object.assign(guidance,{AI_READ_BUSY:'AI source checks are busy. Please try again shortly; your question has not changed.',AI_READ_RATE_LIMIT:'Status checks are temporarily limited. Please wait before checking the same question again.'});
 const running=(job?:Job)=>Boolean(job&&['preparing','queued','running'].includes(job.state));
 type TurnSnapshot={id:string;state:string;hasResult:boolean}|null;
@@ -30,8 +25,8 @@ export function shouldAutoscroll(previous:TurnSnapshot,next:TurnSnapshot,nearBot
 export function revealsAlert(error:string,backgroundMessage:string){return Boolean(error)&&error!==backgroundMessage;}
 function searchTerm(question:string){let term='';for(const char of question.trim()){if(new TextEncoder().encode(term+char).length>120)break;term+=char;}return term;}
 const newInvestigationId=()=>globalThis.crypto?.randomUUID?.()??null;
-export default function AssistantWorkspace({accountRequest=0,onAccount,place='',focus,active=true,discovery,inputRef,onInspectSources,draftRequest}:Props){
- const [mode,setMode]=useState(discovery?'find':'explore'),[chatStatus,setChatStatus]=useState<ChatStatus|null>(null),[chatFailure,setChatFailure]=useState(''),[status,setStatus]=useState<Status|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(false),[job,setJob]=useState<Job|null>(null),[turns,setTurns]=useState<Turn[]>([]),[accountOpen,setAccountOpen]=useState(false),[activate,setActivate]=useState(false),[invitation,setInvitation]=useState(''),[question,setQuestion]=useState(''),[jobRetry,setJobRetry]=useState(0),[exportNotice,setExportNotice]=useState('');
+export default function AssistantWorkspace({place='',focus,active=true,discovery,inputRef,onInspectSources,draftRequest}:Props){
+ const [mode,setMode]=useState(discovery?'find':'explore'),[chatStatus,setChatStatus]=useState<ChatStatus|null>(null),[chatFailure,setChatFailure]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false),[job,setJob]=useState<Job|null>(null),[turns,setTurns]=useState<Turn[]>([]),[question,setQuestion]=useState(''),[jobRetry,setJobRetry]=useState(0),[exportNotice,setExportNotice]=useState('');
  const [investigationId,setInvestigationId]=useState<string|null>(newInvestigationId),[awayFromLatest,setAwayFromLatest]=useState(false);
  const resultListRef=useRef<HTMLDivElement>(null),discoveryBodyRef=useRef<HTMLDivElement>(null);
  useLayoutEffect(()=>{if(mode==='find')discoveryBodyRef.current?.scrollTo({top:0,behavior:'auto'});},[mode,question]);
@@ -42,11 +37,11 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
  // Apply a requested draft before paint: a passive opening effect can otherwise
  // replace text the visitor has already entered into the newly visible input.
  useLayoutEffect(()=>{if(!draftRequest||draftSeenRef.current===draftRequest.id)return;draftSeenRef.current=draftRequest.id;setQuestion(draftRequest.value);setMode(draftRequest.intent??(queryChanged?'find':'explore'));},[draftRequest,queryChanged]);
- const loginRef=useRef<HTMLInputElement>(null),logRef=useRef<HTMLDivElement>(null),bodyRef=useRef<HTMLDivElement>(null),nearBottomRef=useRef(true),lastTurnRef=useRef<TurnSnapshot>(null),backgroundErrorRef=useRef(''),programmaticScrollRef=useRef(false),actorRef=useRef<string|null>(null);
+ const logRef=useRef<HTMLDivElement>(null),bodyRef=useRef<HTMLDivElement>(null),nearBottomRef=useRef(true),lastTurnRef=useRef<TurnSnapshot>(null),backgroundErrorRef=useRef(''),programmaticScrollRef=useRef(false);
  const exportController=useRef<AbortController|null>(null),requestRef=useRef<RequestRun|null>(null);
  const [requestNotice,setRequestNotice]=useState(''),[requestPhase,setRequestPhase]=useState('idle'),[scopeGeneration,setScopeGeneration]=useState(0);
- const contextKey=JSON.stringify(focus?.context??null),actorKey=status?.account?status.account+':'+status.role:null;
- const scopeRef=useRef({generation:0,contextKey,actorKey,active,mounted:true});
+ const contextKey=JSON.stringify(focus?.context??null);
+ const scopeRef=useRef({generation:0,contextKey,active,mounted:true});
  const ownsRequest=useCallback((run:RequestRun)=>scopeRef.current.mounted&&scopeRef.current.active&&!run.stopped&&requestRef.current===run&&scopeRef.current.generation===run.generation,[]);
  const cancelAccepted=useCallback((run:RequestRun)=>{
   if(run.cancel)return run.cancel;
@@ -76,25 +71,21 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
   return run.id?cancelAccepted(run):Promise.resolve();
  },[cancelAccepted]);
  useLayoutEffect(()=>{
-  const scope=scopeRef.current;if(scope.contextKey===contextKey&&scope.actorKey===actorKey&&scope.active===active)return;
+  const scope=scopeRef.current;if(scope.contextKey===contextKey&&scope.active===active)return;
   // Visibility alone does not change a completed investigation's meaning.
   // Closing still stops a live run, whose own invalidation advances generation.
-  if(scope.contextKey!==contextKey||scope.actorKey!==actorKey){scope.generation++;setScopeGeneration(scope.generation);const next=newInvestigationId();investigationRef.current=next;setInvestigationId(next);}
-  scope.contextKey=contextKey;scope.actorKey=actorKey;scope.active=active;
+  if(scope.contextKey!==contextKey){scope.generation++;setScopeGeneration(scope.generation);const next=newInvestigationId();investigationRef.current=next;setInvestigationId(next);}
+  scope.contextKey=contextKey;scope.active=active;
   const exported=exportController.current;exportController.current=null;exported?.abort();if(exported&&!requestRef.current)setBusy(false);
   void stopRequest(active?'Question context changed.':'Chat closed.');
- },[contextKey,actorKey,active,stopRequest]);
+ },[contextKey,active,stopRequest]);
  useEffect(()=>{const scope=scopeRef.current;scope.mounted=true;return()=>{scope.mounted=false;scope.generation++;exportController.current?.abort();exportController.current=null;void stopRequest('Chat closed.');};},[stopRequest]);
  const refresh=useCallback(async(signal?:AbortSignal)=>{
   await Promise.allSettled([
-   ...(onAccount||accountRequest?[api('status',undefined,signal).then(next=>{if(signal?.aborted)return;setStatus(next);onAccount?.(next?.account??null);},()=>{if(signal?.aborted)return;setStatus(null);onAccount?.(null);})]:[]),
    chatApi('status',undefined,signal).then(next=>{if(signal?.aborted)return;setChatStatus(next);setChatFailure('');},reason=>{if(signal?.aborted)return;setChatStatus(null);setChatFailure(reason instanceof Error&&reason.message==='AI_ORIGIN_HOLD'?'Chat setup needs attention from the site owner. Please try again later.':'Could not connect to hosted AI. Retrying automatically; your draft is still here.');})
   ]);
- },[onAccount,accountRequest]);
+ },[]);
  useEffect(()=>{if(!active)return;const controller=new AbortController();queueMicrotask(()=>{if(!controller.signal.aborted)void refresh(controller.signal);});const timer=setInterval(()=>void refresh(controller.signal),5000);return()=>{clearInterval(timer);controller.abort();};},[refresh,active]);
- useEffect(()=>{const actor=status?.account?status.account+':'+status.role:null;if(actor===actorRef.current)return;actorRef.current=actor;exportController.current?.abort();queueMicrotask(()=>{setJob(null);setTurns([]);setInvitation('');setActivate(false);setError('');setExportNotice('');});},[status?.account,status?.role]);
- useEffect(()=>{if(!accountRequest)return;queueMicrotask(()=>{setAccountOpen(true);});},[accountRequest]);
- useEffect(()=>{if(accountOpen&&!status?.account)loginRef.current?.focus();},[accountOpen,status?.account]);
  // The scroll region, not the log, scrolls; bring the end of the latest turn into view above the pinned question bar.
  const conversationEnd=()=>{const body=bodyRef.current,log=logRef.current;return body&&log?log.getBoundingClientRect().bottom-body.getBoundingClientRect().bottom:0;};
  useEffect(()=>{
@@ -114,8 +105,7 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
   run.poll=controller;
   const poll=async()=>{try{const next:Job=await chatApi('jobs/'+id,undefined,controller.signal);if(!controller.signal.aborted&&ownsRequest(run)){failures=0;setJob(current=>current?.id===id?next:current);setTurns(items=>items.map(item=>item.job.id===next.id&&item.generation===run.generation?{...item,job:next}:item));setError('');setRequestNotice('');if(running(next))timer=setTimeout(poll,2000);else{requestRef.current=null;setRequestPhase('idle');}}}catch(reason){if(!controller.signal.aborted&&ownsRequest(run)){const failure=reason as Error&{retryAfterMs?:number},pressure=['AI_READ_BUSY','AI_READ_RATE_LIMIT'].includes(failure.message);failures++;const message=failures>=5?'Status is unavailable. Your accepted question is retained. Retry status to check it; a new question will not be submitted.':pressure?'AI source checks are busy. Your accepted question is retained; checking again shortly.':'Connection interrupted. Your accepted question is retained; checking again.';backgroundErrorRef.current=message;setError(message);if(failures<5)timer=setTimeout(poll,failure.retryAfterMs??4000);}}};
   void poll();return()=>{controller.abort();clearTimeout(timer);if(run.poll===controller)run.poll=null;};
- },[id,state,jobRetry,active,contextKey,actorKey,ownsRequest]);
- const signIn=async(event:React.FormEvent<HTMLFormElement>)=>{event.preventDefault();const form=event.currentTarget,values=new FormData(form);setBusy(true);setError('');try{await api('sign-in',{username:values.get('username'),password:values.get('password')});form.reset();setAccountOpen(false);await refresh();}catch(reason){setError(guidance[(reason as Error).message]??'Sign-in could not complete.');}finally{setBusy(false);}};
+ },[id,state,jobRetry,active,contextKey,ownsRequest]);
  const ask=async(event:React.FormEvent<HTMLFormElement>)=>{
   event.preventDefault();if(mode==='find'){discovery?.onQuery(question);return;}
   const values=new FormData(event.currentTarget),submittedDraft=question,prompt=submittedDraft.trim();if(prompt.length<2||busy||requestRef.current||!active||running(job??undefined))return;
@@ -166,8 +156,6 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
   (inputRef??messageRef).current?.focus();
  };
  const jumpToLatest=()=>{const body=bodyRef.current;if(body)body.scrollTo({top:body.scrollTop+conversationEnd(),behavior:'auto'});nearBottomRef.current=true;setAwayFromLatest(false);};
- const manager=Boolean(status?.account&&['administrator','steward'].includes(status.role??''));
- const invite=async(event:React.FormEvent<HTMLFormElement>)=>{event.preventDefault();const form=event.currentTarget,values=new FormData(form);setBusy(true);setError('');setInvitation('');try{const created=await api('admin/invite',{username:values.get('username'),role:values.get('role')});setInvitation(created.invitation);form.reset();}catch{setError('Invitation could not be created. Check your permissions and account details.');}finally{setBusy(false);}};
  const sourceContext=mode==='explore'&&focus?.context.selection?.kind==='subsurface';
  const canSubmit=mode==='find'?Boolean(discovery):Boolean(investigationId&&chatStatus?.configured&&(mode==='evidence'?chatStatus.evidenceSearchAvailable===true:sourceContext||chatStatus.ready));
  const statusText=mode==='find'?'Places & layers · no AI required':!chatStatus?(chatFailure?'AI connection unavailable':'Checking hosted AI'):!chatStatus.configured?'Awaiting owner setup':mode==='evidence'?(chatStatus.evidenceSearchAvailable?'Evidence search available':'Evidence search unavailable'):sourceContext?'Source summary available':!chatStatus.online?'AI unavailable':!chatStatus.ready?'Loading model…':'Qwen3 0.6B ready';
@@ -181,13 +169,6 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
  </>;
  return <div className={styles.chat}>
   <div className={styles.toolbar}><div className={styles.identity}><span className={styles.eyebrow}>PRAIRIE FIELD DESK</span><span role='status' className={styles.status}>{statusText}</span></div><button type='button' className={styles.secondaryButton} disabled={!investigationId||requestPhase==='stopping'} onClick={newInvestigation} title={investigationId?'Start a separate temporary conversation; preserve the map':'Fresh conversation isolation requires a supported secure browser'}>New investigation</button></div>
-  {accountOpen&&notices}
-  {accountOpen&&<section className={styles.account} aria-label='Account controls'>
-   {!status?.account?<><h3>Administrator sign-in</h3><p>Protected account and stewardship tools.</p><form onSubmit={signIn}><label>Username<input ref={loginRef} name='username' required minLength={3} maxLength={64} pattern='[a-z0-9][a-z0-9_-]{2,63}' autoComplete='username'/></label><label>Password<input name='password' type='password' required minLength={14} maxLength={128} autoComplete='current-password'/></label><button disabled={busy||!status?.configured}>Sign in</button></form></>:<><p>Signed in as <strong>{status.account}</strong> · {status.role}</p><button disabled={busy} onClick={async()=>{setBusy(true);try{await api('sign-out',{});setJob(null);setTurns([]);setInvitation('');setActivate(false);await refresh();}catch{setError('Sign-out could not complete.');}finally{setBusy(false);}}}>Sign out</button></>}
-   {manager&&<details><summary>Steward tools</summary><form onSubmit={invite}><label>Account username<input name='username' required minLength={3} maxLength={64} pattern='[a-z0-9][a-z0-9_-]{2,63}'/></label><label>Account role<select name='role'><option value='researcher'>Researcher</option>{status?.role==='administrator'&&<option value='steward'>Steward</option>}</select></label><button disabled={busy}>Create invitation</button></form>{invitation&&<p>Deliver privately: <code>{invitation}</code></p>}<button type='button' onClick={()=>setActivate(value=>!value)}>Activate an invited account</button>{activate&&<form onSubmit={async event=>{event.preventDefault();const form=event.currentTarget,values=new FormData(form);setBusy(true);try{await api('activate',{username:values.get('username'),password:values.get('password'),invitation:values.get('invitation')});form.reset();setInvitation('');setActivate(false);await refresh();}catch{setError('Activation failed.');}finally{setBusy(false);}}}><label>Username<input name='username' required autoComplete='username'/></label><label>Invitation code<input name='invitation' type='password' required autoComplete='off'/></label><label>Set password<input name='password' type='password' required minLength={14} maxLength={128} autoComplete='new-password'/></label><button disabled={busy}>Activate and switch account</button></form>}</details>}
-  </section>}
-  {accountOpen&&<button type='button' onClick={()=>setAccountOpen(false)}>Back to public chat</button>}
-  {!accountOpen&&<>
   {mode==='find'&&<div ref={discoveryBodyRef} className={styles.body} aria-label='Place and layer discovery'>
    {mode==='find'&&discovery&&question.trim()&&<div ref={resultListRef} id='global-search-results' className={styles.searchResults} aria-label='Places and layers'>
     {(discoveryCurrent?discovery.items:[]).map(item=><button type='button' className={styles.searchResult} key={item.id} onClick={()=>{discovery.onChoose(item.id);setQuestion('');}}><small className={styles.searchMeta}>{item.kind}</small><strong>{item.title}</strong><span>{item.subtitle}</span></button>)}
@@ -250,6 +231,5 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
     {requestPhase!=='idle'?<>{running(job??undefined)&&<button type='button' disabled={busy} onClick={()=>setJobRetry(value=>value+1)}>Retry status</button>}<button type='button' className={styles.secondaryButton} disabled={requestPhase==='stopping'} onClick={()=>stopRequest()}>Stop</button></>:<button className={styles.sendButton} disabled={busy||!canSubmit||question.trim().length<(mode==='find'?1:2)}>{busy?'Sending…':mode==='find'?'Find':mode==='evidence'?'Search':'Send'}</button>}
    </div>
   </form>
-  </>}
  </div>;
 }

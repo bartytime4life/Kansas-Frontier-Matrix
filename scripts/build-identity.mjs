@@ -10,6 +10,7 @@ const roots = ['app', 'server', 'scripts', 'public', 'vendor', 'worker', 'db', '
 const files = ['package.json', 'package-lock.json', 'godaddy-source.json', 'next.config.ts', 'vite.config.ts', 'tsconfig.json', 'postcss.config.mjs'];
 const excluded = new Set(['app/build-info.generated.json', 'public/assets', 'public/maplibre', 'public/vendor/h5wasm']);
 export const BUILD_PROFILE = 'kfm.godaddy-application-inputs/v1';
+export const BUILD_APPLICATION = 'urdng3v1vk';
 
 function isApplicationFile(path) {
   const parts = path.split('/');
@@ -69,7 +70,7 @@ export async function applicationIdentity(root = process.cwd()) {
       else { sourceCommit = commit; commitState = 'CLEAN_CHECKOUT'; }
     } else commitState = 'WORKTREE_MODIFIED';
   } catch { /* Archive builds still have an independently comparable digest. */ }
-  return { profile: BUILD_PROFILE, application: 'q9r9beo47t', sourceDigest,
+  return { profile: BUILD_PROFILE, application: BUILD_APPLICATION, sourceDigest,
     sourceFileCount: entries.length, sourceCommit, commitState,
     scope: 'Application source inputs only; excludes build bytes, live data, settings, models, and release authority.' };
 }

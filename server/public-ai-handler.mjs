@@ -1,4 +1,5 @@
-// Public chat owns only short-lived anonymous jobs; account/admin APIs stay separate.
+import {hostedAiOriginAllowed} from './hosted-ai-origins.mjs';
+// Public chat owns only short-lived anonymous jobs; it has no user accounts.
 import {randomBytes,createHash} from 'node:crypto';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
@@ -230,7 +231,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
 let runtime;
 export function publicAiRuntime(resolveEvidence,resolveContext){
  const origin=process.env.KFM_HOSTED_AI_ORIGIN;
- const valid=process.env.KFM_HOSTED_AI==='1'&&['https://kansasfrontiermatrix.com','https://q9r9beo47t.preview.c38.airoapp.ai'].includes(origin);
+ const valid=process.env.KFM_HOSTED_AI==='1'&&hostedAiOriginAllowed(origin);
  if(!valid)return async request=>reply({configured:false,online:false,ready:false,evidenceSearchAvailable:false,requiresLogin:false,reasonCode:'HOSTED_AI_NOT_CONFIGURED'},new URL(request.url).pathname==='/api/ai/status'?200:503);
  if(!runtime)runtime=createPublicAiHandler({origin,resolveEvidence:query=>resolveEvidence(query,origin),resolveContext,model:getHostedAiModel()});
  return runtime;

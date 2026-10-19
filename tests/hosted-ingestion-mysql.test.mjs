@@ -5,7 +5,7 @@ import mysql from "mysql2/promise";
 import { MySqlIngestionStore } from "../server/ingestion-store.mjs";
 import { ARCHIVE_LIMIT_BYTES, RECEIPT_ALLOWANCE } from "../server/ingestion-config.mjs";
 import { captureRequest, fetchCapture } from "../server/ingestion-sources.mjs";
-test("real MySQL migration, fencing, reservations, rollback, integrity and owner revocation",{skip:process.env.KFM_MYSQL_TEST!=="1"},async t=>{
+test("real MySQL migration, fencing, reservations, rollback, integrity",{skip:process.env.KFM_MYSQL_TEST!=="1"},async t=>{
   const port=Number(process.env.KFM_MYSQL_TEST_PORT??"13317");
   assert.ok(Number.isInteger(port)&&port>1024&&port<65536);
   const options={host:"127.0.0.1",port,user:"root",password:"kfm-disposable-test-only",connectionLimit:10};
@@ -47,5 +47,4 @@ test("real MySQL migration, fencing, reservations, rollback, integrity and owner
   await assert.rejects(faulty.save(rollbackRequest,rollbackCapture,newer,held),/fixture-interrupted-chunk/);
   assert.equal((await pool.execute("SELECT COUNT(*) AS count FROM kfm_ingest_captures WHERE capture_id=?",[rollbackRequest.id]))[0][0].count,0,"interrupted write must leave no capture/chunks/counter commit");
   await store.release(newer);assert.equal((await store.status()).reservedBytes,0);
-  const session="A".repeat(43);await store.session(session,Date.now()+60000);assert.equal(await store.authenticate(session),true);assert.equal(await store.authenticate("B".repeat(43)),false);await store.logout(session);assert.equal(await store.authenticate(session),false);
 });

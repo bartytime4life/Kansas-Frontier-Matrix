@@ -98,131 +98,11 @@ test("local inventory and terrain reads reject oversized metadata before reading
   await assert.rejects(client.readAcquisitionLocalJson({ size: 1, text: async () => "{" }, current.signal), SyntaxError);
 });
 
-test("empty receipt is distinct from malformed GET and save must return the exact submitted digest", async () => {
-  assert.equal(client.acquisitionRead({ inventory: null }), null);
-  for (const body of [{}, null, { inventory: {} }, { inventory: [] }]) assert.throws(() => client.acquisitionRead(body));
-  const value = inventory();
-  await client.verifyAcquisitionSave({ saved: true, inventory: value, sha256: hash(encode(value)) }, value);
-  await assert.rejects(client.verifyAcquisitionSave({ saved: true, inventory: value, sha256: "b".repeat(64) }, value), /digest/);
-  const changed = { ...value, generated_at: "2026-10-05T12:00:00Z" };
-  await assert.rejects(client.verifyAcquisitionSave({ saved: true, inventory: changed, sha256: hash(encode(changed)) }, value), /identity/);
-  await assert.rejects(client.verifyAcquisitionSave({ inventory: value }, value), /not confirmed/);
-});
-
-async function harness() {
-  const objects = new Map(); let owner = true, breakReceiptReadback = false, beforeGet = async () => {};
-  class ContextError extends Error { constructor(message, status) { super(message); this.status = status; } }
-  const bucket = {
-    async get(key) { await beforeGet(key); const bytes = objects.get(key); return bytes ? { size: bytes.byteLength, arrayBuffer: async () => breakReceiptReadback && key.includes("/receipts/") ? encode({ corrupt: true }) : bytes.slice(0) } : null; },
-    async put(key, bytes) { objects.set(key, bytes.slice(0)); },
-    async list() { throw new Error("Receipt history must not be enumerated to read latest."); },
-  };
-  const server = await compile("acquisition-receipt-server", {
-    "./acquisition-inventory": schema, "./bounded-json": bounded,
-    "./earth-engine-context-server": {
-      earthEngineBucket: () => bucket, earthEngineDigest: async bytes => hash(bytes),
-      earthEngineOwner: async () => { if (!owner) throw new ContextError("Sign in", 401); },
-      earthEnginePrivateHeaders: { "Cache-Control": "private, no-store" }, EarthEngineContextError: ContextError,
-      earthEngineFailure: error => Response.json({ error: "Unavailable" }, { status: error.status ?? 503 }),
-    },
-  });
-  const routes = await compile("api/acquisition/route", { "../../acquisition-inventory": schema, "../../acquisition-receipt-server": server });
-  const terrainRoutes = await compile("api/acquisition/terrain/route", { "../../../acquisition-terrain": terrain, "../../../acquisition-receipt-server": server });
-  return { objects, routes, terrainRoutes, owner: value => { owner = value; }, breakReadback: () => { breakReceiptReadback = true; }, beforeGet: callback => { beforeGet = callback; } };
-}
-const request = (value = inventory(), overrides = {}) => new Request("https://kfm.example/api/acquisition", { method: "POST", headers: { origin: "https://kfm.example", "content-type": "application/json" }, body: JSON.stringify(value), ...overrides });
-
-test("receipt route keeps owner and origin gates and rejects malformed or aborted imports without writes", async () => {
-  const h = await harness(); h.owner(false);
-  assert.equal((await h.routes.GET()).status, 401); assert.equal((await h.routes.POST(request())).status, 401);
-  h.owner(true);
-  assert.equal((await h.routes.POST(request(undefined, { headers: { origin: "https://other.example", "content-type": "application/json" } }))).status, 403);
-  assert.equal((await h.routes.POST(request(undefined, { headers: { origin: "https://kfm.example", "content-type": "text/plain" } }))).status, 415);
-  assert.equal((await h.routes.POST(request({}))).status, 400);
-  const canceled = new AbortController(); canceled.abort();
-  assert.equal((await h.routes.POST(request(undefined, { signal: canceled.signal }))).status, 400);
-  assert.equal(h.objects.size, 0);
-});
-
-test("latest pointer preserves archive and works beyond 1000 receipts without a listing", async () => {
-  const h = await harness();
-  for (let i = 0; i < 1001; i++) h.objects.set(`acquisition/v1/receipts/old-${i}.json`, encode({ historical: i }));
-  assert.deepEqual(await (await h.routes.GET()).json(), { inventory: null });
-  const saved = await h.routes.POST(request()); assert.equal(saved.status, 201);
-  const payload = await saved.json(); await client.verifyAcquisitionSave(payload, inventory());
-  const pointer = JSON.parse(new TextDecoder().decode(h.objects.get("acquisition/v1/latest.json")));
-  assert.equal(pointer.schema, "kfm-acquisition-pointer-v1"); assert.equal(pointer.sha256, payload.sha256);
-  const loaded = await h.routes.GET(); assert.equal(loaded.status, 200); assert.deepEqual((await loaded.json()).inventory, inventory());
-  assert.equal(h.objects.size, 1003);
-});
-
-test("an existing 100 GB saved receipt remains readable without rewriting bytes or its recorded budget", async () => {
-  const h = await harness(), value = inventory(); value.cache.limit_bytes = 100_000_000_000;
-  const raw = encode(value), digest = hash(raw), key = `acquisition/v1/receipts/1700000000000-${digest}.json`;
-  h.objects.set(key, raw); h.objects.set("acquisition/v1/latest.json", encode({ schema: "kfm-acquisition-pointer-v1", key, sha256: digest }));
-  const response = await h.routes.GET(); assert.equal(response.status, 200);
-  const parsed = (await response.json()).inventory; assert.equal(parsed.cache.limit_bytes, 100_000_000_000);
-  assert.deepEqual(h.objects.get(key), raw); assert.equal(hash(h.objects.get(key)), digest);
-  const resaved = await h.routes.POST(request(parsed)); assert.equal(resaved.status, 201);
-  const receipt = await resaved.json(); assert.equal(receipt.inventory.cache.limit_bytes, 100_000_000_000); assert.equal(receipt.sha256, digest);
-  await client.verifyAcquisitionSave(receipt, parsed);
-});
-
-test("last completed import wins only after its own receipt readback; prior immutable imports remain", async () => {
-  const h = await harness(); let release, entered;
-  const held = new Promise(resolve => { release = resolve; }), started = new Promise(resolve => { entered = resolve; });
-  let firstKey;
-  h.beforeGet(async key => { if (key.includes("/receipts/") && !firstKey) { firstKey = key; entered(); await held; } });
-  const first = h.routes.POST(request()); await started;
-  const secondValue = { ...inventory(), generated_at: "2026-10-06T13:00:00Z", jobs: [job()] };
-  assert.equal((await h.routes.POST(request(secondValue))).status, 201);
-  assert.equal((await (await h.routes.GET()).json()).inventory.generated_at, secondValue.generated_at);
-  release(); assert.equal((await first).status, 201);
-  assert.equal((await (await h.routes.GET()).json()).inventory.generated_at, inventory().generated_at);
-  assert.equal(h.objects.size, 3);
-});
-
-test("corrupt pointer, digest mismatch, and failed readback never silently become no receipt", async () => {
-  const h = await harness(); await h.routes.POST(request());
-  const key = "acquisition/v1/latest.json", pointer = JSON.parse(new TextDecoder().decode(h.objects.get(key)));
-  h.objects.set(key, encode({ ...pointer, key: "../private" })); assert.equal((await h.routes.GET()).status, 503);
-  h.objects.set(key, new ArrayBuffer(1001)); assert.equal((await h.routes.GET()).status, 503);
-  h.objects.set(key, encode(pointer)); h.objects.set(pointer.key, encode({ bad: true })); assert.equal((await h.routes.GET()).status, 503);
-  const failed = await harness(); failed.breakReadback();
-  assert.equal((await failed.routes.POST(request())).status, 503);
-  assert.equal(failed.objects.has(key), false, "Unverified receipts cannot become the latest pointer");
-});
-
 test("terrain persistence projects metadata and rejects ambiguous work-unit identities", async () => {
   const value = discovery(), projected = terrain.parseAcquisitionTerrain({ ...value, private_extra: "not retained" });
   assert.ok(projected); assert.equal(projected.private_extra, undefined); assert.equal(projected.complete_for_state, false);
   assert.deepEqual(terrain.parseAcquisitionTerrain(projected), projected, "canonical projection remains stable when saved and read");
   for (const bad of [{ ...value, project_count: 2 }, { ...value, projects: [...value.projects, ...value.projects], project_count: 2 }, { ...value, projects: [{ ...value.projects[0], source_url: "https://other.example/ept.json" }] }]) assert.equal(terrain.parseAcquisitionTerrain(bad), null);
-  assert.equal(terrain.acquisitionTerrainRead({ discovery: null }), null);
-  for (const bad of [{}, { discovery: {} }, { discovery: [] }]) assert.throws(() => terrain.acquisitionTerrainRead(bad));
-  await terrain.verifyAcquisitionTerrainSave({ saved: true, discovery: projected, sha256: hash(encode(projected)) }, projected);
-  await assert.rejects(terrain.verifyAcquisitionTerrainSave({ saved: true, discovery: projected, sha256: "b".repeat(64) }, projected), /digest/);
-});
-
-test("terrain requires owner and same-origin writes, has an independent pointer, and verifies saved hashes", async () => {
-  const h = await harness(); h.owner(false);
-  assert.equal((await h.terrainRoutes.GET()).status, 401); assert.equal((await h.terrainRoutes.POST(request(discovery()))).status, 401);
-  h.owner(true);
-  assert.equal((await h.terrainRoutes.POST(request(discovery(), { headers: { origin: "https://other.example", "content-type": "application/json" } }))).status, 403);
-  assert.equal((await h.terrainRoutes.POST(request(inventory()))).status, 400);
-  assert.deepEqual(await (await h.terrainRoutes.GET()).json(), { discovery: null });
-  assert.equal((await h.routes.POST(request())).status, 201);
-  const saved = await h.terrainRoutes.POST(request(discovery())); assert.equal(saved.status, 201);
-  const body = await saved.json(); await terrain.verifyAcquisitionTerrainSave(body, terrain.parseAcquisitionTerrain(discovery()));
-  const read = await h.terrainRoutes.GET(); assert.match(read.headers.get("cache-control"), /private, no-store/);
-  assert.deepEqual((await read.json()).discovery, terrain.parseAcquisitionTerrain(discovery()));
-  const pointerKey = "acquisition/terrain/v1/latest.json", pointer = JSON.parse(new TextDecoder().decode(h.objects.get(pointerKey)));
-  const inventoryPointer = JSON.parse(new TextDecoder().decode(h.objects.get("acquisition/v1/latest.json")));
-  h.objects.set(pointerKey, encode({ ...pointer, key: inventoryPointer.key, sha256: inventoryPointer.sha256 }));
-  assert.equal((await h.terrainRoutes.GET()).status, 503, "cannot cross the inventory storage namespace");
-  h.objects.set(pointerKey, encode(pointer)); h.objects.set(pointer.key, encode({ corrupt: true }));
-  assert.equal((await h.terrainRoutes.GET()).status, 503);
-  assert.equal((await h.routes.GET()).status, 200, "terrain failure does not replace inventory");
 });
 
 test("local readback capture remains protected and cannot become provider-verified completion", async () => {
@@ -250,10 +130,22 @@ test("local readback capture remains protected and cannot become provider-verifi
   const complete = schema.parseAcquisitionInventory({ ...value, jobs: [job()] }).jobs[0];
   assert.equal(complete.checksum_basis, undefined); assert.equal(complete.provider_digest, undefined);
   assert.equal(schema.acquisitionJobLabels(complete).digest, "Expected SHA-256");
-  const h = await harness(), saved = await h.routes.POST(request(value)); assert.equal(saved.status, 201);
-  const receipt = await saved.json(); await client.verifyAcquisitionSave(receipt, parsed);
-  assert.deepEqual((await (await h.routes.GET()).json()).inventory, parsed);
-  const prior = h.objects.get("acquisition/v1/latest.json");
-  assert.equal((await h.routes.POST(request({ ...value, jobs: [{ ...captured, state: "complete" }] }))).status, 400);
-  assert.deepEqual(h.objects.get("acquisition/v1/latest.json"), prior, "a forged complete claim cannot replace the valid snapshot");
+});
+
+
+test("receipt inspector imports local files without hosted reads or save controls",async()=>{
+ const {componentHarness,findNode,settle}=await import('./component-harness.mjs');
+ let requests=0;
+ const h=await componentHarness(new URL('../app/acquisition/workspace.tsx',import.meta.url),{
+  'next/link':{default:'a'},'../acquisition-inventory':schema,'../acquisition-client':client,
+  '../terrain-provenance':{TerrainProvenancePanel:()=>null},'../acquisition-terrain':terrain,'./workspace.module.css':{default:{}}
+ },{fetch:()=>{requests++;throw new Error('No hosted request is expected');},AbortController});
+ try{
+  let tree=h.render(h.exports.default);h.commit();await settle();
+  assert.equal(requests,0);assert.equal(findNode(tree,node=>node.type==='button'&&String(node.props.children).includes('Save')),undefined);
+  const file=findNode(tree,node=>node.type==='input'&&node.props.type==='file');
+  const value=inventory(),raw=JSON.stringify(value);file.props.onChange({target:{files:[{size:Buffer.byteLength(raw),text:async()=>raw}]}});
+  await settle();tree=h.render(h.exports.default);h.commit();
+  assert.equal(requests,0);assert.ok(findNode(tree,node=>node.type==='time'&&node.props.dateTime===value.generated_at));
+ }finally{h.dispose();}
 });

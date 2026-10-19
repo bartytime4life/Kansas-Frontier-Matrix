@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { probeNodeStartup, reportNodeStartup } from '../server/startup-probe.mjs';
-import { BUILD_PROFILE } from '../scripts/build-identity.mjs';
+import { BUILD_PROFILE, BUILD_APPLICATION } from '../scripts/build-identity.mjs';
 
-const identity = { profile: BUILD_PROFILE, application: 'q9r9beo47t',
+const identity = { profile: BUILD_PROFILE, application: BUILD_APPLICATION,
   sourceDigest: 'sha256:' + 'a'.repeat(64), sourceFileCount: 773 };
 async function listening(t, handler) {
   const server = createServer(handler);

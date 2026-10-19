@@ -12,7 +12,7 @@ test('built Node responses carry browser policy, correct canonicals and public p
   const withHost=(path,host)=>new Promise((resolve,reject)=>{
     get(origin+path,{headers:{Host:host}},response=>{response.resume();response.on('end',()=>resolve({status:response.statusCode,location:response.headers.location}));}).on('error',reject);
   });
-  for (const path of ['/', '/about?view=guide', '/api/pc-ai/status']) {
+  for (const path of ['/', '/about?view=guide', '/api/ai/status']) {
     const response=await withHost(path,'www.kansasfrontiermatrix.com');
     assert.equal(response.status,308,path);
     assert.equal(response.location,'https://kansasfrontiermatrix.com'+path,path);
@@ -37,7 +37,7 @@ test('built Node responses carry browser policy, correct canonicals and public p
       assert.ok(response.headers.get('cache-control')?.includes('no-transform'),path);
     }
     if(path==='/sitemap.xml')assert.ok(body.includes('<loc>https://kansasfrontiermatrix.com/privacy</loc>'));
-    if(path==='/api/data-submissions')assert.equal(response.status,401);
+    if(path==='/api/data-submissions')assert.equal(response.status,404);
     if(path==='/%ZZ')assert.equal(response.status,400);
   }
 });

@@ -1,5 +1,5 @@
 import { get } from 'node:http';
-import { BUILD_PROFILE } from '../scripts/build-identity.mjs';
+import { BUILD_PROFILE, BUILD_APPLICATION } from '../scripts/build-identity.mjs';
 
 // One local read of an already-public route. No provider calls, model load,
 // private-store inspection, secrets, request headers or response text are logged.
@@ -45,7 +45,7 @@ export function probeNodeStartup(server, { timeoutMs = 5000 } = {}) {
           if (settled) return;
           let identity;
           try { identity = JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { /* Reject below. */ }
-          if (identity?.profile !== BUILD_PROFILE || identity.application !== 'q9r9beo47t' ||
+          if (identity?.profile !== BUILD_PROFILE || identity.application !== BUILD_APPLICATION ||
               !/^sha256:[a-f0-9]{64}$/.test(identity.sourceDigest) ||
               !Number.isSafeInteger(identity.sourceFileCount) || identity.sourceFileCount < 1) {
             finish({ outcome: 'INVALID_IDENTITY', httpStatus }); return;

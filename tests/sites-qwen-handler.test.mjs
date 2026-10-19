@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createSitesQwenHandler} from '../server/sites-qwen-handler.mjs';
-const origin='https://q9r9beo47t.preview.c38.airoapp.ai',token='s'.repeat(43),actor='a'.repeat(64),site='appgprj_6acd1aafe0d88191a4306ea2ab44ed91';
+const origin='https://urdng3v1vk.preview.c38.airoapp.ai',token='s'.repeat(43),actor='a'.repeat(64),site='appgprj_6acd1aafe0d88191a4306ea2ab44ed91';
 const req=(path,body,headers={})=>new Request(origin+'/api/sites-qwen/v1/'+path,{method:body===undefined?'GET':'POST',headers:{Authorization:'Bearer '+token,'X-KFM-Site':site,'X-KFM-Site-Actor':actor,...headers},body:body===undefined?undefined:JSON.stringify(body)});
 const status=()=>Response.json({provider:'hosted-qwen3',model:'Qwen3-0.6B INT8 · server WebAssembly',ready:true,online:true});
 const question={question:'Explain missing values',term:'missing',mode:'explore',context:{version:1,frame:2026,view:'2D',surface:'map',layers:[],selection:null}};

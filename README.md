@@ -1,3 +1,9 @@
+> **Anonymous replacement application — 2026-10-19:** Login, account management,
+> and obsolete private browser destinations are removed. The owner selected
+> GoDaddy app `urdng3v1vk` as the replacement preview. Public hosted chat, map,
+> source discovery and free exports remain. See [the current delivery record](docs/login-removal-20261019.md);
+> older private-Site implementation notes below are historical.
+
 > **Underground surface-refresh candidate — 2026-10-10:** Starting from owner-private Site v221, **Refresh surface** reloads the selected basemap's tiles while retaining the previous georeferenced cutaway image until a new frame is drawn. The status identifies the old image during loading and does not claim that unavailable new tiles are complete. A changed area, basemap, resolution, or departure from 3D still clears the old image through the existing lifecycle. No well logs, aquifer ranges, source admission, storage, or release state change. Revert this bounded change or redeploy saved v221 if rendered acceptance fails.
 
 > **Site audit — 2026-10-09 (repository source, not yet deployed):** the reviewer queue and per-owner submission pages read from new additive D1 indexes with a row-value cursor (no scan and sort). Unknown and withheld paths get a branded 404. Pages carry baseline `nosniff`, referrer and permissions headers. An axe-core sweep's serious findings are fixed. 725 Node tests (0 failures) and the local route smoke pass. See [the audit notes](docs/explorer-site-audit-2026-10-09.md).
@@ -1028,7 +1034,7 @@ Scripts that need writable project-scoped home, npm, XDG, and temporary paths us
   neither path substitutes an undated image
 - `app/api/repository-status/route.ts` contains the fixed read-only GitHub
   currentness check
-- `app/chatgpt-auth.ts` provides optional dispatch-owned ChatGPT sign-in helpers
+- `server/capture-worker-access.mjs` scopes scheduled capture to its existing machine capability
 - `.openai/hosting.json` declares optional Sites D1 and R2 bindings
 - `vite.config.ts` simulates declared bindings for local development
 - `db/index.ts` reads the D1 binding from the Cloudflare Worker environment
@@ -1041,63 +1047,23 @@ output are ignored. The tracked source tree contains only the Explorer's active
 application, runtime, migration, documentation, and verification surfaces; the
 unused starter D1 example and starter icon assets are intentionally absent.
 
-## Workspace Auth Headers
+## Public application access
 
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
+This hosted application has no login, registration, password, invitation, or user
+account service. The map, public hosted chat, and free report exports are available
+without a user account. Temporary anonymous chat cookies isolate visitor jobs;
+they do not grant private-data or administrative access.
 
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
+The retired submission, steward, release-console, daily-archive and owner-operations
+pages and their navigation links are removed. Private records are not exposed. Forged Sites
+headers and retired owner/account cookies confer no authority. The separate
+original Sites project is not changed by this removal.
 
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
-```
-
-## Optional Dispatch-Owned ChatGPT Sign-In
-
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
-
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+Scheduled source capture retains its existing narrow machine capability and
+configured production origin. It cannot read private archives or activate a
+release. See `docs/login-removal-20261019.md` for the removal and verification
+record. Existing private stores and applied database migrations are preserved;
+old session rows and account files are no longer read by this runtime.
 
 ## Diagnostic Commands
 
