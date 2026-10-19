@@ -7,7 +7,7 @@
     "tests/source/test_source_probe_envelope.py"
   ],
   "artifact_hashes": {
-    ".github/workflows/source-and-trust-projection-profiles.yml": "sha256:9822892a81236f567d22fe5cd64ad50169e794674d9e673b7228a9be1d0a3076",
+    ".github/workflows/source-and-trust-projection-profiles.yml": "sha256:0c3ffdfea2de1ef8d768d50c4a5a2e4c7a179009273b1e5dec97dc4d1fecfebb",
     "tools/validators/source_probe/validate_source_probe_envelope.py": "sha256:e12bbd8ba1195e078ef33845c06993598ce3f7c39d53c21526c4320c507d683c",
     "tests/source/test_source_probe_envelope.py": "sha256:b2c473d997d6cd19d5453cc01278115196e9e9f3b58c48076f7ab363081dd41d"
   },
@@ -58,7 +58,7 @@
     {
       "gate": "Workflow receipt binding",
       "outcome": "PASS",
-      "reason": "data/receipts/generated/genrec-source-and-trust-projection-profiles-20260807.json pins the validator and its test, and the workflow checked it against the working tree, so any fix would turn that step red; working-tree mode also stops honouring the one-time dependency-lock migration once the workflow changes. The step now passes --artifact-git-ref 8c9c5acebdadeeea0bf8539a6539b8982b20d1fa, the commit the receipt was authored at, where all 25 pinned artifacts match, and the checkout sets fetch-depth: 0 as every other fixed-ref workflow does. The prior receipt is unchanged; this receipt records the later edit. tools/ci/install_python_ci.py verify-workflows reads workflows at its fixed KFM_MIGRATION_HEAD and is unaffected."
+      "reason": "data/receipts/generated/genrec-source-and-trust-projection-profiles-20260807.json pins the validator and its test, and the workflow checked it against the working tree, so any fix would turn that step red; working-tree mode also stops honouring the one-time dependency-lock migration once the workflow changes. The step now passes --artifact-git-ref 8c9c5acebdadeeea0bf8539a6539b8982b20d1fa, the commit the receipt was authored at, where all 25 pinned artifacts match, and the checkout sets fetch-depth: 0 as every other fixed-ref workflow does. The prior receipt is unchanged; this receipt records the later edit, and the same step validates it against the current bytes, with the receipt added to the workflow's path triggers. tools/ci/install_python_ci.py verify-workflows reads workflows at its fixed KFM_MIGRATION_HEAD and is unaffected."
     },
     {
       "gate": "Lint and guardrails",
