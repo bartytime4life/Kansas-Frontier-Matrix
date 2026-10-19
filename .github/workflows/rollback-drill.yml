@@ -234,6 +234,23 @@ jobs:
                   "f3d909ad77d2644b369988b0a7aa8f7bee53458cbe48e401d22258b9a5e9356b"
               ),
           }
+          # Pins bind bytes and their checkout locations. The tests derive the
+          # helper/fixture roots from __file__.resolve(), so identical test bytes
+          # reached through a symlink could otherwise load an unpinned helper.
+          checkout_root = Path.cwd()
+          rehearsal_inputs = [
+              rollback_apply_path,
+              rehearsal_test_path,
+              hazards_rehearsal_test_path,
+              hazards_rehearsal_fixture_root,
+              *hazards_rehearsal_fixture_root.rglob("*"),
+          ]
+          for path in rehearsal_inputs:
+              assert not path.is_symlink() and path.resolve() == checkout_root / path, (
+                  "rehearsal input path is redirected; use regular checkout paths "
+                  f"without file or directory symlinks: {path}"
+              )
+
           pinned_paths = {
               rollback_apply_path.as_posix(),
               rehearsal_test_path.as_posix(),
@@ -431,6 +448,10 @@ jobs:
           print("WORKFLOW_HOLD: no accepted production rollback engine, target selection, signature/review verification, policy decision, receipt flow, external invalidation execution, or published-alias mutation exists.")
           print("No rollback card, receipt, proof, signature, release transition, or publication authority was created.")
           PY
+
+      - name: Test the pinned rehearsal execution boundary
+        shell: bash
+        run: python -I -m pytest -q -p no:cacheprovider tests/ci/test_rollback_drill_integrity.py
 
       - name: Record rollback simulation outcome
         if: always()

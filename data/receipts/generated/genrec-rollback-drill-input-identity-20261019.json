@@ -1,0 +1,101 @@
+{
+  "receipt_id": "genrec-rollback-drill-input-identity-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/rollback-drill.yml",
+    "tests/ci/test_rollback_drill_integrity.py",
+    "tests/ci/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/rollback-drill.yml": "sha256:e4673b8ee2ff89c47b6043e9a83d6353e44293b44bb8ade88ac8ff05738de283",
+    "tests/ci/test_rollback_drill_integrity.py": "sha256:819ee21e8a04beb8de0dd4975dc99bff1096c812916d40962b0892cee78a18cb",
+    "tests/ci/README.md": "sha256:10bdc453771c2f11c172bdc5f4ff1095c25baa7cc65320b504d75f09381fe0c9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "UNKNOWN; runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Codex Security",
+      "shell",
+      "read-only review agents"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/db639830610f7905b654a0ac874a59cb6d12b176/.github/workflows/rollback-drill.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/db639830610f7905b654a0ac874a59cb6d12b176/tests/release/test_synthetic_rollback_rehearsal.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/db639830610f7905b654a0ac874a59cb6d12b176/tests/domains/hazards/test_synthetic_rollback_rehearsal.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/db639830610f7905b654a0ac874a59cb6d12b176/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/db639830610f7905b654a0ac874a59cb6d12b176/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/db639830610f7905b654a0ac874a59cb6d12b176/CONTRIBUTING.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/rollback-drill.yml": "PROPOSED",
+    "tests/ci/test_rollback_drill_integrity.py": "PROPOSED",
+    "tests/ci/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "syntax-and-hygiene",
+      "outcome": "PASS",
+      "reason": "YAML parses; all workflow bash blocks pass bash -n; embedded Python and new tests parse with Python 3.11 grammar; changed text has no trailing whitespace."
+    },
+    {
+      "gate": "focused-execution-boundary",
+      "outcome": "PASS",
+      "reason": "21 pytest cases pass on Python 3.12.3. Seven new path-identity cases reject the previous workflow in a disposable source projection. No live source or production operation is used."
+    },
+    {
+      "gate": "complete-simulation-inspection",
+      "outcome": "PASS",
+      "reason": "The actual inspection shell block passes on an immutable-blob-verified 36-file dependency projection, including canonical/compatibility fixture parity and all 12 pinned synthetic rehearsal cases."
+    },
+    {
+      "gate": "changed-workflow-security",
+      "outcome": "PASS",
+      "reason": "Current workflow-security validator with --workflow .github/workflows/rollback-drill.yml --no-baseline: one workflow, zero invariant findings, zero drift."
+    },
+    {
+      "gate": "hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request CI; local Python 3.12 execution and Python 3.11 grammar are not hosted Python 3.11 runtime evidence."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-placement",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/db639830610f7905b654a0ac874a59cb6d12b176/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "source-boundary",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/db639830610f7905b654a0ac874a59cb6d12b176/.github/workflows/rollback-drill.yml"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T07:00:02Z",
+  "emitter": "Codex security remediation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Draft authoring provenance only. Existing workflow/job names, pinned bytes, fixture parity, temporary synthetic execution, read-only permissions and explicit production HOLD remain. Revert this bounded change to roll back. Base advanced from b1524d0 to db63983 only in three unrelated water-discovery paths. No merge, deployment, release, source activation or publication authority is conveyed."
+}
