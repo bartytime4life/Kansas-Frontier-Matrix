@@ -45,7 +45,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("file", type=Path)
     args = parser.parse_args(argv)
-    errors = validate_file(args.file)
+    try:
+        errors = validate_file(args.file)
+    except ValueError as exc:  # a misconfigured KFM_VALIDATION_NOW, not a finding about the input
+        print(exc, file=os.sys.stderr)
+        return 2
     if errors:
         for error in errors:
             print(error, file=os.sys.stderr)

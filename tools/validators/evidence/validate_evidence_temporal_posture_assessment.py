@@ -22,12 +22,22 @@ CANONICAL_SCHEMA = REPO_ROOT / "schemas/contracts/v1/evidence/evidence_temporal_
 FIXTURE_ROOT = REPO_ROOT / "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment"
 
 
+TIME_FIELDS = ("valid_from", "valid_to", "source_updated_at", "retrieved_at", "released_at", "corrected_at")
+
+
 def _dt(value: object) -> datetime | None:
     if value is None:
         return None
     if not isinstance(value, str):
-        raise ValueError("date-time value must be a string or null")
-    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+        raise ValueError("must be a date-time string or null")
+    # RFC 3339 allows lowercase "t" and "z", which the schema's format check accepts; Python 3.11+ parses "Z".
+    try:
+        parsed = datetime.fromisoformat(value.upper())
+    except ValueError:
+        raise ValueError(f"is not a parseable date-time: {value!r}") from None
+    if parsed.tzinfo is None:
+        raise ValueError(f"has no UTC offset: {value!r}")
+    return parsed
 
 
 def _validation_now(explicit: datetime | None = None) -> datetime:
@@ -35,9 +45,11 @@ def _validation_now(explicit: datetime | None = None) -> datetime:
         return explicit
     configured = os.environ.get("KFM_VALIDATION_NOW")
     if configured:
-        parsed = _dt(configured)
-        if parsed is None:
-            raise ValueError("KFM_VALIDATION_NOW must be a date-time")
+        try:
+            parsed = _dt(configured)
+        except ValueError as exc:
+            raise ValueError(f"KFM_VALIDATION_NOW {exc}") from None
+        assert parsed is not None
         return parsed
     return datetime.now(timezone.utc)
 
@@ -61,9 +73,17 @@ def validate_doc(
 
     times = doc["times"]
     assert isinstance(times, Mapping)
-    valid_from, valid_to = _dt(times["valid_from"]), _dt(times["valid_to"])
-    source_updated, retrieved = _dt(times["source_updated_at"]), _dt(times["retrieved_at"])
-    released, corrected = _dt(times["released_at"]), _dt(times["corrected_at"])
+    parsed: dict[str, datetime | None] = {}
+    for field, value in (*((key, times[key]) for key in TIME_FIELDS), ("freshness_deadline", doc["freshness_deadline"])):
+        try:
+            parsed[field] = _dt(value)
+        except ValueError as exc:
+            errors.append(f"{field} {exc}")
+    if errors:
+        return errors
+    valid_from, valid_to = parsed["valid_from"], parsed["valid_to"]
+    source_updated, retrieved = parsed["source_updated_at"], parsed["retrieved_at"]
+    released, corrected = parsed["released_at"], parsed["corrected_at"]
 
     if valid_from and valid_to and valid_from > valid_to:
         errors.append("valid_from must not exceed valid_to")
@@ -77,7 +97,7 @@ def validate_doc(
         errors.append("SUPERSEDED requires supersedes_ref")
     if doc["temporal_posture"] == "WITHDRAWN" and not doc.get("withdrawal_ref"):
         errors.append("WITHDRAWN requires withdrawal_ref")
-    freshness_deadline = _dt(doc["freshness_deadline"])
+    freshness_deadline = parsed["freshness_deadline"]
     if (
         doc["temporal_posture"] == "CURRENT"
         and freshness_deadline
@@ -101,7 +121,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("file", type=Path)
     args = parser.parse_args(argv)
-    errors = validate_file(args.file)
+    try:
+        errors = validate_file(args.file)
+    except ValueError as exc:  # a misconfigured KFM_VALIDATION_NOW, not a finding about the input
+        print(exc, file=os.sys.stderr)
+        return 2
     if errors:
         for error in errors:
             print(error, file=os.sys.stderr)
