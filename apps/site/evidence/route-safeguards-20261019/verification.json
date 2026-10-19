@@ -1,0 +1,131 @@
+{
+  "status": "REPLAY_TESTED_CURRENT_SOURCE_UNAVAILABLE",
+  "authority": "REVIEW_ONLY_NOT_APPLIED_NOT_DEPLOYED",
+  "repository_base": "2b3f15870fbb63a99b4f7847be7de03d06bd92e8",
+  "mirror_tree": "cacb6aa737c49ee30e0603d4ba81bfbf2e1fd4c7",
+  "recorded_site_project": "appgprj_6aa0b1c41bc08191bfd86003920f1631",
+  "recorded_site_commit": "358280aee889e2e2cf832bd598155ca21653c8de",
+  "recorded_site_version": 268,
+  "current_site_commit": null,
+  "site_access": "get_site and create_source_repository_write_credential: NOT_FOUND on 2026-10-19; list_sites has no preserved project",
+  "original_pr": 5313,
+  "original_head": "ac56ce03392f5ddbff587d8fdb5bac152143c054",
+  "revert_pr": 5314,
+  "revert_head": "81812cd80d5d6b491a96c3f278a8399b1e9c6656",
+  "patch_sha256": "ad6d222efad8259d05f0343953be3eba2301a29f0018e11970b4290c91b59611",
+  "paths": [
+    {
+      "path": "app/api/daily-archive/route.ts",
+      "before_sha256": "8b6f1789dc6d2a4459721c812abaccaffa02eadf1af1b44af1f44eb2aa84980c",
+      "after_sha256": "b5930d75f581214b958f3ea69ee83a984b3287ddb8676b8e305648bbf32993cc",
+      "recorded_site_state": "identical_to_recorded_v268_source"
+    },
+    {
+      "path": "app/api/historical-topo/activate/route.ts",
+      "before_sha256": "759767acef296703ba7a7f6a4d6142bbaacb9e73354a9383aaa1489e7f67c24c",
+      "after_sha256": "c3390276bf56f2aebcc597ae95710ee7a9f05c4420588f61753bb7c4d6cf63d7",
+      "recorded_site_state": "identical_to_recorded_v268_source"
+    },
+    {
+      "path": "app/api/historical-topo/overlay/route.ts",
+      "before_sha256": "ef28cf64d37b0c711cc594c5ded23b71771e8d75f913b1e3dc35eee0cda6ad55",
+      "after_sha256": "68ec7a1c39230398dd442a7ae92fb0d1e5b74e820c48cfce29c076ec7b6ef120",
+      "recorded_site_state": "identical_to_recorded_v268_source"
+    },
+    {
+      "path": "app/bounded-json.ts",
+      "before_sha256": "67a805413f09e293f4c59f17f37c627340dc3e12ac61ac52969c494ff3e3c392",
+      "after_sha256": "c9839f4448c74e33b15fffb4ad90dfac7c0dc452fec49aaabeeed21db068d9ed",
+      "recorded_site_state": "identical_to_recorded_v268_source"
+    },
+    {
+      "path": "app/daily-archive-store.ts",
+      "before_sha256": "3fd24c533c7d412f14aa101e99547f87fdf208b198418aea70cd3b6002e10e85",
+      "after_sha256": "e8700ea4de13828051eda72b530d5d9ffed782626aef2e6d01df68fd9d6d977f",
+      "recorded_site_state": "identical_to_recorded_v268_source"
+    },
+    {
+      "path": "app/historical-topo-overlay-server.ts",
+      "before_sha256": "e2cb809d5bb5f28eec28462d0d617948111390b7c97e1fa574fba65f6bd44408",
+      "after_sha256": "7e8bb2f9f5455b286294abf7d3d9c0648cb7225616d78491fdecdffba654f23b",
+      "recorded_site_state": "identical_to_recorded_v268_source"
+    },
+    {
+      "path": "app/lightning-server.ts",
+      "before_sha256": "002c05172545e75cd672499a75f2b804ae11c9c27eb378d14ad17834d9b67b86",
+      "after_sha256": "5ea5d95dca12a6ac96bc728526975f17078b426eb5c3990c9755e6c4ab77cbc4",
+      "recorded_site_state": "identical_to_recorded_v268_source"
+    },
+    {
+      "path": "tests/bounded-json.test.mjs",
+      "before_sha256": null,
+      "after_sha256": "b7398703822c47a6dc04875e5b032ebaad55e1eaa2a5fe16af49b4d22d23cff4",
+      "recorded_site_state": "new_test"
+    },
+    {
+      "path": "tests/daily-archive.test.mjs",
+      "before_sha256": "446d702c950ec65b71ba6bfd9c3165fd726262f1c751913d454cb46459328357",
+      "after_sha256": "2338c831ded502f8867f277da15388c8e550fd9984b30a1d5b4d0f517d5adfdd",
+      "recorded_site_state": "identical_to_recorded_v268_source"
+    },
+    {
+      "path": "tests/historical-topo-routes.test.mjs",
+      "before_sha256": "69163ebeeddb1f0a78463da660206bc3b6dc0f085f0aa41ff76aacae24145af1",
+      "after_sha256": "06e9fff218d11009f7b3892f9ba74105978e92008a7a88a35c4403b39e4165aa",
+      "recorded_site_state": "identical_to_recorded_v268_source"
+    },
+    {
+      "path": "tests/site-route-safeguards.test.mjs",
+      "before_sha256": null,
+      "after_sha256": "d4a8bbb495483b267f0eaaf2bcf5b49d473132c34ea9ace322c94e2843b7682b",
+      "recorded_site_state": "new_test"
+    }
+  ],
+  "test_environment": {
+    "node": "22.13.1",
+    "dependency_lock_sha256": "c976735961394d47a19564c9b2a2b41643647d28a879e82e6f377ac83e1a21db",
+    "dependencies": "existing cache with byte-identical lockfile; no dependency input changes",
+    "storage": "disposable node:sqlite in-memory database, actual archive SQL; D1 adapter and R2/auth/provider platform boundaries replaced",
+    "network": "no provider requests, no listener for focused regression tests"
+  },
+  "validation": {
+    "new_regressions": {
+      "baseline": {
+        "tests": 24,
+        "passed": 12,
+        "failed": 12
+      },
+      "candidate": {
+        "tests": 24,
+        "passed": 24,
+        "failed": 0
+      }
+    },
+    "bounded_json": {
+      "passed": 3,
+      "failed": 0
+    },
+    "historical_routes": {
+      "passed": 2,
+      "failed": 0
+    },
+    "lightning_data": {
+      "passed": 5,
+      "failed": 0
+    },
+    "typescript": "PASS: node node_modules/typescript/bin/tsc --noEmit",
+    "build": "PASS: npm run build; contained public subsurface assets",
+    "mirror": "PASS: 875 files, 48 overlays, 258 withheld absent; CONTENT_PARITY_ONLY; review acceptance NOT_EVALUATED",
+    "daily_archive_miniflare": "UNAVAILABLE: before hook cannot listen at 127.0.0.1 (EPERM); 18 cancelled, 0 pass",
+    "complete_site_suite": "NOT_RUN; full current-source Worker and hosted checks remain required",
+    "publication": "NOT_RUN; no Sites save, push, deploy or storage changes",
+    "patch_replay": "PASS: git apply --check, git apply and eleven postimage hashes on a clean copy of the pinned public baseline"
+  },
+  "original_patch_adjustment": "Also filter API-prefixed records out of the days aggregate, matching the entry and span filters. Storage accounting still includes API reservations.",
+  "blocked_transitions": [
+    "current authoritative source comparison/application",
+    "current-source complete Site validation and independent review",
+    "separate reviewed mirror synchronization",
+    "any publication"
+  ]
+}

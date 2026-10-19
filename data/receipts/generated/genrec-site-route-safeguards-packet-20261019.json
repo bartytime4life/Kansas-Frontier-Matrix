@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-site-route-safeguards-packet-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/evidence/route-safeguards-20261019/standalone.patch",
+    "apps/site/evidence/route-safeguards-20261019/verification.json",
+    "docs/reports/site-route-safeguards-20261019.md"
+  ],
+  "artifact_hashes": {
+    "apps/site/evidence/route-safeguards-20261019/standalone.patch": "sha256:ad6d222efad8259d05f0343953be3eba2301a29f0018e11970b4290c91b59611",
+    "apps/site/evidence/route-safeguards-20261019/verification.json": "sha256:f19a330f2eda879141d44acf02e1cac564879d6857c3e0fe678d989989e501da",
+    "docs/reports/site-route-safeguards-20261019.md": "sha256:2488ae9307f60e45feb2fb0c8c032297bd074349b7835f880c66f0380d136d26"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN; runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:d992cba6bba5aa7f8ae9e67bff53af95b4e85443e441dff0d6d7222dee103ff0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e5d3155a2fa4d887e5b8c48a18fd30286f073c550f4d91d5be34724771fb33ac"
+    ],
+    "attached_docs": [
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5313",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5314",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/2b3f15870fbb63a99b4f7847be7de03d06bd92e8/apps/site/source/AGENTS.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/evidence/route-safeguards-20261019/standalone.patch": "PROPOSED",
+    "apps/site/evidence/route-safeguards-20261019/verification.json": "CONFIRMED",
+    "docs/reports/site-route-safeguards-20261019.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "replay-regression-tests",
+      "outcome": "PASS",
+      "reason": "34 focused tests pass; 12 of 24 new tests fail on the unpatched baseline."
+    },
+    {
+      "gate": "replay-build-and-typescript",
+      "outcome": "PASS",
+      "reason": "Production build and TypeScript check pass on isolated public baseline plus patch."
+    },
+    {
+      "gate": "governed-mirror",
+      "outcome": "PASS",
+      "reason": "875 files, 48 overlays, 258 withheld paths absent; current-main tree, receipt and validator match checked snapshot. Content parity only."
+    },
+    {
+      "gate": "current-source-application",
+      "outcome": "SKIPPED",
+      "reason": "Preserved project source access returns NOT_FOUND; application, synchronization and publication remain blocked."
+    },
+    {
+      "gate": "worker-integration",
+      "outcome": "SKIPPED",
+      "reason": "Miniflare loopback listen denied EPERM; full current-source checks pending."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending. AI checks and this provenance receipt grant no review or publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Original Site edits",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5313"
+    },
+    {
+      "id": "Mirror reversion and outstanding work",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5314"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-19T14:37:19Z",
+  "emitter": "OpenAI Codex bounded KFM safeguards replay",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Review-only public patch packet. Application and existing test preimages match recorded v268 source; current standalone source is UNKNOWN. No changes under apps/site/source, no mirror receipt or selector changes, no Sites source push/save/deploy, no data admission or storage mutation. This carrier is not a parallel source authority."
+}
