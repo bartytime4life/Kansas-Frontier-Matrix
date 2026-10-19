@@ -2,9 +2,11 @@
   "receipt_id": "genrec-standards-readme-iiif-rows-20261019",
   "contract_version": "3.0.0",
   "artifact_paths": [
+    "docs/standards/ARCHIVAL-STANDARDS.md",
     "docs/standards/README.md"
   ],
   "artifact_hashes": {
+    "docs/standards/ARCHIVAL-STANDARDS.md": "sha256:53e665c92787ed5894bc1d08aa3341acd3b3e6efa86c6451d25dca1f98a20b32",
     "docs/standards/README.md": "sha256:e7695bada95d84e92da39d404f9dd0fb8510bd6d7930d1572411b68ca2a323c5"
   },
   "model_identity": {
@@ -26,13 +28,14 @@
     ]
   },
   "truth_labels": {
+    "docs/standards/ARCHIVAL-STANDARDS.md": "CONFIRMED",
     "docs/standards/README.md": "CONFIRMED"
   },
   "validation_gates": [
     {
       "gate": "Path evidence",
       "outcome": "PASS",
-      "reason": "git ls-files tracks only docs/standards/IIIF.md; commit 42b3c2c1c1 (2026-08-22) deleted docs/standards/iiif.md, and IIIF.md section 10 records the owner decision (issue #3361) and integration (PR #3429). The README still listed iiif.md in its tree and archival family table and kept STD-DRIFT-002 on CONFLICTED / HOLD."
+      "reason": "git ls-files tracks only docs/standards/IIIF.md; commit 42b3c2c1c1 (2026-08-22) deleted docs/standards/iiif.md, and IIIF.md section 10 records the owner decision (issue #3361) and integration (PR #3429). The README still listed iiif.md in its tree and archival family table and kept STD-DRIFT-002 on CONFLICTED / HOLD. ARCHIVAL-STANDARDS.md had the same stale references (a duplicate related entry, the sibling list, the IIIF identity row, ARC-C03, the link list, two 'Two docs exist' cells, and three general claims that case collisions were still open); these were updated in the same PR. The provenance-family overlap stays CONFLICTED / HOLD."
     },
     {
       "gate": "Docs checks",
