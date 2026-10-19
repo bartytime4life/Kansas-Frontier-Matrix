@@ -1,0 +1,84 @@
+{
+  "receipt_id": "genrec-github-issue-inventory-read-reset-overflow-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/probes/github_issue_inventory_read.py",
+    "tests/governance/test_github_issue_inventory_read.py"
+  ],
+  "artifact_hashes": {
+    "tools/probes/github_issue_inventory_read.py": "sha256:f4d6c2208a144bdb09a9c4de6ec1db923a7f3a3a8f63ca04b1b2f3026623ba29",
+    "tests/governance/test_github_issue_inventory_read.py": "sha256:a08ff130909e20db2ff2baa66880aac9c475421b594de5e7abbaf1ff918dd986"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/852da1676647781a0e3761d7dfd903c7d47def0f",
+      "repo:tools/probes/github_issue_inventory_read.py@852da1676647781a0e3761d7dfd903c7d47def0f",
+      "repo:tests/governance/test_github_issue_inventory_read.py@852da1676647781a0e3761d7dfd903c7d47def0f",
+      "repo:data/receipts/generated/genrec-github-issue-inventory-read-input-shapes-20261019.json@852da1676647781a0e3761d7dfd903c7d47def0f",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5304#discussion_r4310824427"
+    ]
+  },
+  "truth_labels": {
+    "tools/probes/github_issue_inventory_read.py": "CONFIRMED",
+    "tests/governance/test_github_issue_inventory_read.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "#5304 merged before this review finding was fixed: a numeric but out-of-range x-ratelimit-reset (for example 1,000 digits) makes datetime.fromtimestamp raise OverflowError, which the CLI handler did not catch, so the probe printed a traceback instead of one JSON ERROR line and exit 1. main now reports OverflowError with the other input failures. A large but representable reset such as 99999999999 (year 5138) remains a valid record."
+    },
+    {
+      "gate": "Tests",
+      "outcome": "PASS",
+      "reason": "The CLI test now covers the overflowing reset header and asserts the exact ERROR line; it fails when OverflowError is removed from the handler. tests/governance/test_github_issue_inventory_read.py passes (15 tests), as do the workflow's compile, test and fixture-replay steps and tests/governance."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same findings before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/852da1676647781a0e3761d7dfd903c7d47def0f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T06:14:44Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-github-issue-inventory-read-input-shapes-20261019, which is unchanged."
+}

@@ -169,7 +169,7 @@ def main(argv=None):
             record = read_live(args.repository, issue_ids, token, now)
         print(_canon(record))
         return 0 if record["outcome"] == "FRESH" else 2
-    except (HTTPError, URLError, OSError, ValueError, TypeError, KeyError, json.JSONDecodeError) as exc:
+    except (HTTPError, URLError, OSError, ValueError, TypeError, OverflowError, KeyError, json.JSONDecodeError) as exc:
         print(_canon({"outcome": "ERROR", "error_class": type(exc).__name__, "repository_mutation_allowed": False}), file=sys.stderr)
         return 1
 

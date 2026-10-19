@@ -211,6 +211,11 @@ class GitHubIssueInventoryReadInputTests(unittest.TestCase):
                 with self.subTest(now=now):
                     code, _, err = self.run_cli("--now", now, fixture=FIXTURE)
                     self.assertEqual((code, json.loads(err)["outcome"]), (1, "ERROR"))
+            # A numeric but out-of-range rate-limit reset overflows datetime.fromtimestamp.
+            broken.write_text(json.dumps({**self.fixture, "headers": {**self.fixture["headers"], "x-ratelimit-reset": "9" * 1000}}))
+            code, out, err = self.run_cli("--now", "2026-08-08T02:30:00Z", fixture=broken)
+            self.assertEqual((code, out), (1, ""))
+            self.assertEqual(json.loads(err), {"error_class": "OverflowError", "outcome": "ERROR", "repository_mutation_allowed": False})
             limited = Path(temp) / "limited.json"
             limited.write_text(json.dumps({**self.fixture, "headers": {**self.fixture["headers"], "x-ratelimit-remaining": "0"}}))
             code, out, _ = self.run_cli("--now", "2026-08-08T02:30:00Z", fixture=limited)
