@@ -6,6 +6,7 @@ Input archives and the PROJ grid are cached OUTSIDE the application tree.
 """
 import argparse
 import collections
+from contextlib import contextmanager
 import csv
 import datetime as dt
 import gzip
@@ -13,9 +14,11 @@ import hashlib
 import io
 import json
 import math
+import os
 from pathlib import Path
 import re
 import sqlite3
+import stat
 import tempfile
 import urllib.request
 import zipfile
@@ -111,10 +114,88 @@ def core_record_url(kid):
     return 'https://chasm.kgs.ku.edu/ords/qualified.well_page.DisplayWell?f_kid=' + kid
 
 
-def write_gzip(path, data):
+def require_private_directory(descriptor):
+    info = os.fstat(descriptor)
+    if info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077:
+        raise ValueError('Restricted output and its parent must be owned by you with owner-only permissions (0700)')
+
+
+def open_review_directory(directory, *, create=False, empty=True):
+    """Walk without following links; create only beneath an owner-private parent."""
+    if not (hasattr(os, 'O_NOFOLLOW') and hasattr(os, 'O_DIRECTORY')
+            and os.open in os.supports_dir_fd and os.mkdir in os.supports_dir_fd
+            and os.listdir in os.supports_fd):
+        raise ValueError('Restricted output requires POSIX no-follow directory descriptors')
+    directory = directory.absolute()
+    if '..' in directory.parts:
+        raise ValueError('Restricted output cannot contain parent traversal')
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    descriptor = os.open(directory.anchor, flags)
+    try:
+        for index, part in enumerate(directory.parts[1:], start=1):
+            final = index == len(directory.parts) - 1
+            if final:
+                require_private_directory(descriptor)
+            try:
+                child = os.open(part, flags, dir_fd=descriptor)
+            except FileNotFoundError:
+                require_private_directory(descriptor)
+                if not create:
+                    return None
+                os.mkdir(part, mode=0o700, dir_fd=descriptor)
+                child = os.open(part, flags, dir_fd=descriptor)
+            os.close(descriptor)
+            descriptor = child
+        require_private_directory(descriptor)
+        if empty and os.listdir(descriptor):
+            raise ValueError('Restricted output must be a new or empty review directory')
+        result = descriptor
+        descriptor = None
+        return result
+    except OSError as error:
+        raise ValueError('Restricted output must use real directories without symlinks or changed path entries') from error
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+
+
+@contextmanager
+def restricted_output(directory):
+    descriptor = open_review_directory(directory, create=True)
+    try:
+        yield descriptor
+    finally:
+        os.close(descriptor)
+
+
+def verify_review_directory(directory, descriptor):
+    """A manifest may describe only the directory still selected by the operator."""
+    current = open_review_directory(directory, empty=False)
+    try:
+        if current is None:
+            raise ValueError('Restricted output directory changed during preparation')
+        opened, selected = os.fstat(descriptor), os.fstat(current)
+        if (opened.st_dev, opened.st_ino) != (selected.st_dev, selected.st_ino):
+            raise ValueError('Restricted output directory changed during preparation')
+    finally:
+        if current is not None:
+            os.close(current)
+
+
+def write_artifact(descriptor, filename, data):
+    if Path(filename).name != filename or filename in ('', '.', '..'):
+        raise ValueError('Restricted artifact must have a single filename')
+    require_private_directory(descriptor)
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+    file_descriptor = os.open(filename, flags, 0o600, dir_fd=descriptor)
+    with os.fdopen(file_descriptor, 'wb') as output:
+        output.write(data)
+
+
+def write_gzip(descriptor, filename, data):
     raw = encode(data)
     compressed = gzip.compress(raw, compresslevel=9, mtime=0)
-    path.write_bytes(compressed)
+    write_artifact(descriptor, filename, compressed)
     return {'sha256': digest(compressed), 'bytes': len(compressed), 'uncompressedBytes': len(raw)}
 
 
@@ -128,14 +209,20 @@ def validate_storage(input_dir, output_dir):
             raise ValueError(label + ' must remain outside the repository/application tree')
         if any(part.lower() in {'public', 'dist', '.next', 'published'} for part in resolved.parts):
             raise ValueError(label + ' cannot use a deployed/published directory')
-    if output_dir.exists() and (not output_dir.is_dir() or any(output_dir.iterdir())):
-        raise ValueError('Restricted output must be a new or empty review directory')
     if output_dir.resolve().is_relative_to(input_dir.resolve()) or input_dir.resolve().is_relative_to(output_dir.resolve()):
         raise ValueError('Input cache and restricted output must be separate directories')
+    descriptor = open_review_directory(output_dir)
+    if descriptor is not None:
+        os.close(descriptor)
 
 
 def build(input_dir, output_dir):
     validate_storage(input_dir, output_dir)
+    with restricted_output(output_dir) as output_descriptor:
+        _build_candidates(input_dir, output_dir, output_descriptor)
+
+
+def _build_candidates(input_dir, output_dir, output_descriptor):
     import pyproj
     if pyproj.__version__ != '3.7.1':
         raise RuntimeError('Use pyproj==3.7.1 to reproduce the pinned horizontal transformation')
@@ -148,7 +235,6 @@ def build(input_dir, output_dir):
         '+proj=pipeline +step +proj=unitconvert +xy_in=deg +xy_out=rad '
         '+step +proj=hgridshift +grids=' + str(grid.resolve()) +
         ' +step +proj=unitconvert +xy_in=rad +xy_out=deg')
-    output_dir.mkdir(parents=True, exist_ok=True)
     stats = collections.Counter()
     with tempfile.TemporaryDirectory(prefix='kfm-subsurface-') as temporary:
         db = sqlite3.connect(str(Path(temporary) / 'display.sqlite'))
@@ -283,7 +369,7 @@ def build(input_dir, output_dir):
                     partition(group, west + x * half, south + y * half, half, tile_id + str(x + 2*y))
                 return
             filename = tile_id + '.json.gz'
-            metrics = write_gzip(output_dir / filename, records)
+            metrics = write_gzip(output_descriptor, filename, records)
             tile_entries.append({'id': tile_id, 'bounds': [west,south,west+size,south+size],
                 'url': PREFIX + filename, 'count': len(records),
                 'wellCount': sum(r['kind']=='well' for r in records), 'coreCount': sum(r['kind']=='core' for r in records), **metrics})
@@ -295,7 +381,7 @@ def build(input_dir, output_dir):
         locator.sort(key=lambda row: row[0])
         for row in locator:
             row.append(tile_by_record[row[0]])
-        locator_metrics = write_gzip(output_dir / 'locator.json.gz', locator)
+        locator_metrics = write_gzip(output_descriptor, 'locator.json.gz', locator)
         source_entries = []
         for name,(sha,date,retrieved) in ARCHIVES.items():
             source_entries.append({'id': {'wwc5_wells':'kgs-wwc5','wwc5_lith_log':'kgs-wwc5-logs','interpreted_logs':'kgs-wwc5-interpreted','coreLib':'kgs-core'}[name],
@@ -319,7 +405,8 @@ def build(input_dir, output_dir):
             'privacy':{'excludedFields':['OWNER','DIRECTIONS','DWR_NUMBER','DRILLER','OTHER_ID','OPERATOR_NAME','CURRENT_OPERATOR_NAME','LEASE_NAME','API','WELL_USE','ELEV','STATIC_DEPTH','EST_YIELD'],
                 'labels':'Generic provider record identities only. No owner/operator labels or directions are projected.'},
             'useConstraints':'Official KGS public-download factual records. KGS/KDHE accuracy and completeness disclaimers apply; no Creative Commons license or independent evidence admission is asserted.'}
-        (output_dir / 'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+        verify_review_directory(output_dir, output_descriptor)
+        write_artifact(output_descriptor, 'manifest.json', (json.dumps(manifest,ensure_ascii=False,indent=2)+'\n').encode('utf-8'))
         print(json.dumps({'totals':manifest['totals'],'tiles':len(tile_entries),'compressedBytes':sum(t['bytes'] for t in tile_entries)+locator_metrics['bytes'],'largestTileBytes':max(t['uncompressedBytes'] for t in tile_entries)},indent=2),flush=True)
 
 

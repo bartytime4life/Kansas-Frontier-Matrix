@@ -89,6 +89,10 @@ assert record['intervals']==[{'top':0.0,'bottom':10.0,'description':'synthetic s
  const result=spawnSync("python3",["-c",code,root],{encoding:"utf8"});assert.equal(result.status,0,result.stderr);
 });
 
+test("private generator storage rejects link races and enforces owner-only output",()=>{
+ const result=spawnSync("python3",["-B","tests/test_prepare_subsurface.py"],{encoding:"utf8"});assert.equal(result.status,0,result.stderr);
+});
+
 test("unauthenticated static retrieval returns only the hold notice; original locator and tile paths are absent",async t=>{
  const root=path.resolve("public");
  const server=createServer((request,response)=>{

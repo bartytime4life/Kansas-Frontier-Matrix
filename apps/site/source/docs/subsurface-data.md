@@ -20,7 +20,9 @@ claim a new rights or release review for that separate carrier.
 original intervals, datum/depth caveats and source integrity checks for private
 review. Python 3.10+ and `pyproj==3.7.1` are preparation dependencies.
 Both directories must be explicit, separate, access-controlled external paths;
-output must be new or empty so existing files and symlink targets cannot be overwritten:
+output must be new or empty. Its existing parent (or nearest existing ancestor
+when creating nested directories) and any existing output must belong to the
+effective user and have owner-only permissions, normally `0700`:
 
 ```sh
 python scripts/prepare-subsurface.py --input-dir /private/cache/kgs --output-dir /private/quarantine/kgs-candidate
@@ -29,10 +31,21 @@ python scripts/prepare-subsurface.py --input-dir /private/cache/kgs --output-dir
 There is no default public output. CLI and imported `build()` validate paths
 before dependency imports, downloads or writes. Resolved paths inside the
 repository/application or named `public`, `dist`, `.next` or `published` are
-rejected, including traversal and symlink aliases. The candidate manifest is
-`RESTRICTED_REVIEW_REQUIRED`; its file references are relative. The command
-cannot establish ACLs, infer that an arbitrary external directory is private,
-or authorize promotion. Operators must supply genuinely restricted storage.
+rejected, including traversal and symlink aliases. Every output path component
+is opened without following symlinks. Before dependencies or downloads, the
+command anchors the output to a retained POSIX directory descriptor, creates
+missing directories with `0700`, and checks owner-only directory permissions.
+All tiles, the locator and the manifest are created exclusively relative to
+that descriptor with `0600` file permissions; existing files and links are never
+overwritten. The selected directory's identity is rechecked before writing the
+manifest. Unsupported platforms fail closed. A failed run can leave an empty or
+partial private directory without a manifest; inspect and retain it separately
+before retrying into another new or empty directory.
+
+The candidate manifest is `RESTRICTED_REVIEW_REQUIRED`; its file references are
+relative. These checks do not audit filesystem ACLs, defend against a malicious
+process running as the same user or root, or authorize promotion. Operators must
+still supply genuinely restricted storage.
 Preparation continues to exclude ownership/direction fields; that exclusion
 alone does not make exact geometry or stable provider joins safe to release.
 

@@ -1,0 +1,126 @@
+{
+  "receipt_id": "genrec-private-subsurface-output-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/docs/subsurface-data.md",
+    "apps/site/source/scripts/prepare-subsurface.py",
+    "apps/site/source/tests/subsurface-assets.test.mjs",
+    "apps/site/source/tests/test_prepare_subsurface.py"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/docs/subsurface-data.md": "sha256:4e482a091b023d19150c971ebe7547d90654a7ff9bbd96be9a7042b02409cbda",
+    "apps/site/source/scripts/prepare-subsurface.py": "sha256:74ca30d80ef0f48d655911869a165d594c8932b57a38d0ac0b06d96129e3e5fe",
+    "apps/site/source/tests/subsurface-assets.test.mjs": "sha256:a724a8fd680d90ac91588094059c70bc49c42744a1ae9c1b9c00aecd2875ebfb",
+    "apps/site/source/tests/test_prepare_subsurface.py": "sha256:8456d1cc0655654138c817da1bbf8d49bbdfe5a9c58f5264f96e21574dc3223b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "not exposed by runtime"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection and validation",
+      "GitHub branch and draft pull request delivery"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7177ea6246d77e54f92e137428c8bc847401ad1b/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7177ea6246d77e54f92e137428c8bc847401ad1b/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7177ea6246d77e54f92e137428c8bc847401ad1b/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7177ea6246d77e54f92e137428c8bc847401ad1b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/docs/subsurface-data.md": "CONFIRMED",
+    "apps/site/source/scripts/prepare-subsurface.py": "CONFIRMED",
+    "apps/site/source/tests/subsurface-assets.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/test_prepare_subsurface.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "diff-and-python-javascript-syntax",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "offline-private-output-regressions",
+      "outcome": "PASS",
+      "reason": "17 synthetic storage tests passed; no live source payloads used."
+    },
+    {
+      "gate": "focused-site-suburface-tests",
+      "outcome": "PASS",
+      "reason": "9 tests passed, including the new Python suite."
+    },
+    {
+      "gate": "site-build-and-test",
+      "outcome": "PASS",
+      "reason": "npm test passed: build and 1376 Site tests, zero failures or skips."
+    },
+    {
+      "gate": "site-typecheck",
+      "outcome": "PASS",
+      "reason": "node_modules/.bin/tsc --noEmit -p . passed."
+    },
+    {
+      "gate": "site-lint",
+      "outcome": "PASS",
+      "reason": "npm run lint passed with 0 errors and 77 warnings in unchanged files."
+    },
+    {
+      "gate": "geology-validation",
+      "outcome": "PASS",
+      "reason": "12 unit tests, fixture replay, and current static containment checks passed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Draft PR publication and hosted checks follow this local authoring checkpoint."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending authorized human review."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "candidate-producer",
+      "validated": true,
+      "evidence_ref": "repo://apps/site/source/scripts/prepare-subsurface.py#sha256:74ca30d80ef0f48d655911869a165d594c8932b57a38d0ac0b06d96129e3e5fe"
+    },
+    {
+      "id": "candidate-storage-tests",
+      "validated": true,
+      "evidence_ref": "repo://apps/site/source/tests/test_prepare_subsurface.py#sha256:8456d1cc0655654138c817da1bbf8d49bbdfe5a9c58f5264f96e21574dc3223b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-19T16:57:36.537639+00:00",
+  "emitter": "OpenAI Codex desktop",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Tested against current main 7177ea6246d77e54f92e137428c8bc847401ad1b. Model runtime version and sampling parameters are unavailable; no values were invented. This receipt records only repository artifact provenance and bounded local validation. It grants no approval, merge, release, deployment, source admission or publication authority. Cloud finding remains open pending merge and verification. Sensitive report details and payloads are excluded."
+}
