@@ -90,26 +90,29 @@ jobs:
       - name: Validate generated authoring receipt
         run: |
           set -euo pipefail
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-source-and-trust-projection-profiles-20260807.json \
-            --repo-root . \
-            --artifact-git-ref 8c9c5acebdadeeea0bf8539a6539b8982b20d1fa
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-source-probe-envelope-open-profile-data-20261019.json \
-            --repo-root . \
-            --artifact-git-ref 5ac72ba44a5008f3257593bf460353bf590ea489
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-source-probe-envelope-receipt-binding-20261019.json \
-            --repo-root . \
-            --artifact-git-ref 8c4b8da938798f00bdf503f9819530df7a8a64e0
-          # The latest successor receipt binds the current bytes.
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-source-probe-envelope-receipt-coverage-20261019.json \
-            --repo-root .
-          # The path filter starts this job for any of these receipts, so each one must be validated above.
+          # Every receipt for this workflow, with the commit whose bytes it records
+          # ("current" validates the working tree). A successor adds one line here.
+          receipts=(
+            "genrec-source-and-trust-projection-profiles-20260807.json 8c9c5acebdadeeea0bf8539a6539b8982b20d1fa"
+            "genrec-source-probe-envelope-open-profile-data-20261019.json 5ac72ba44a5008f3257593bf460353bf590ea489"
+            "genrec-source-probe-envelope-receipt-binding-20261019.json 8c4b8da938798f00bdf503f9819530df7a8a64e0"
+            "genrec-source-probe-envelope-receipt-coverage-20261019.json f24eb1650ef40239067ea06c01e6a442ca365797"
+            "genrec-source-probe-envelope-receipt-list-20261019.json current"
+          )
+          validated=" "
+          for entry in "${receipts[@]}"; do
+            read -r name ref <<< "$entry"
+            args=("data/receipts/generated/$name" --repo-root .)
+            if [ "$ref" != current ]; then
+              args+=(--artifact-git-ref "$ref")
+            fi
+            python tools/validators/validate_generated_receipt.py "${args[@]}"
+            validated+="$name "
+          done
+          # The path filter starts this job for any matching receipt, so each one must be in the list above.
           for receipt in data/receipts/generated/genrec-source-and-trust-projection-profiles-*.json \
                          data/receipts/generated/genrec-source-probe-envelope-*.json; do
-            if ! grep -qF "$receipt" .github/workflows/source-and-trust-projection-profiles.yml; then
+            if [[ "$validated" != *" $(basename "$receipt") "* ]]; then
               echo "::error::$receipt is not validated by this workflow"
               exit 1
             fi
