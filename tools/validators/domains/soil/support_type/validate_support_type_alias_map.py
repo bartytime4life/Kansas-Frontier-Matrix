@@ -21,6 +21,9 @@ FALSE_GOVERNANCE = {
     "release_authorized": False,
     "public_use_allowed": False,
 }
+# The workflow runs no schema check, so this validator also enforces the schema's closed shape.
+TOP_LEVEL_FIELDS = {"object_type", "schema_version", "status", "canonical_profile", "aliases", "governance"}
+ALIAS_FIELDS = {"alias", "canonical", "class_preserved"}
 
 
 def load(path: Path) -> dict:
@@ -41,7 +44,12 @@ def validate(alias_map: dict, profile: dict) -> list[str]:
         findings.append("BAD_STATUS")
     if alias_map.get("canonical_profile") != "pipeline_specs/soil/support_type_profile.v1.json":
         findings.append("BAD_CANONICAL_PROFILE")
-    if alias_map.get("governance") != FALSE_GOVERNANCE:
+    if set(alias_map) != TOP_LEVEL_FIELDS:
+        findings.append("UNEXPECTED_FIELDS")
+    governance = alias_map.get("governance")
+    # Identity, not equality: 0 == False in Python, but a flag must be the JSON literal false.
+    if (not isinstance(governance, dict) or set(governance) != set(FALSE_GOVERNANCE)
+            or any(governance[key] is not False for key in FALSE_GOVERNANCE)):
         findings.append("GOVERNANCE_ESCALATION")
 
     aliases = alias_map.get("aliases")
@@ -59,11 +67,13 @@ def validate(alias_map: dict, profile: dict) -> list[str]:
             continue
         alias = item.get("alias")
         target = item.get("canonical")
+        if set(item) != ALIAS_FIELDS:
+            findings.append(f"UNEXPECTED_ALIAS_FIELDS:{alias}")
         if item.get("class_preserved") is not True:
             findings.append(f"CLASS_NOT_PRESERVED:{alias}")
         if alias in canon:
             findings.append(f"ALIAS_SHADOWS_CANONICAL:{alias}")
-        if target not in canon:
+        if not isinstance(target, str) or target not in canon:
             findings.append(f"UNKNOWN_CANONICAL:{target}")
         observed[str(alias)] = str(target)
 

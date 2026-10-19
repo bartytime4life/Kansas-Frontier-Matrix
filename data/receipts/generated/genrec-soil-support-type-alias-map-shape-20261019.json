@@ -1,0 +1,91 @@
+{
+  "receipt_id": "genrec-soil-support-type-alias-map-shape-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/domains/soil/support_type/validate_support_type_alias_map.py",
+    "tests/validators/domains/soil/support_type/test_support_type_alias_map.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/domains/soil/support_type/validate_support_type_alias_map.py": "sha256:8656b6bc34afe4f1aa87171ffd7d25a995dacf1bb0764dcad9c0f7e2fa7283ce",
+    "tests/validators/domains/soil/support_type/test_support_type_alias_map.py": "sha256:c242acf78fea1562270023d4a09ae21f39b5aba54fc6f836ee6ac935cfd97af9"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd",
+      "repo:tools/validators/domains/soil/support_type/validate_support_type_alias_map.py@14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd",
+      "repo:tests/validators/domains/soil/support_type/test_support_type_alias_map.py@14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd",
+      "repo:schemas/contracts/v1/domains/soil/support_type_alias_map.schema.json@14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd",
+      "repo:pipeline_specs/soil/support_type_alias_map.v1.json@14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd",
+      "repo:pipeline_specs/soil/support_type_profile.v1.json@14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd",
+      "repo:.github/workflows/soil-support-type-alias-map.yml@14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/domains/soil/support_type/validate_support_type_alias_map.py": "CONFIRMED",
+    "tests/validators/domains/soil/support_type/test_support_type_alias_map.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "The soil-support-type-alias-map workflow runs only this validator, never the schema. On main it returned no findings for a governance flag of 0 or 0.0 (dict equality treats 0 as False), an alias entry carrying public_use_allowed: true, and an extra top-level key, all of which the schema forbids; an unhashable canonical value raised TypeError. The new tests fail on the original validator (6 failures)."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/validators/domains/soil/support_type/test_support_type_alias_map.py: 9 tests (6 before, 3 new; 20 subtests) covering the closed shape, literal-false governance, every identity and alias finding, alias shadowing of a canonical token, and the CLI pass, normalize, deny and failure paths. Branch coverage of the validator rises from 56% to 98%. The workflow's three steps pass."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of five changes failed the suite: dropping the top-level shape check, comparing governance by equality instead of identity, dropping the governance key-set check, dropping the alias-entry shape check, and dropping the canonical type check."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same 1 pre-existing finding before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/14ad5d8c6b34badbcf6e4c026afc9d39aeb217bd"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T02:25:04Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "The validator now enforces the schema's closed top-level and alias-entry shapes, requires each governance flag to be the JSON literal false, and type-checks canonical targets before membership. The tracked alias map and profile are unchanged and still pass; normalization output is unchanged."
+}
