@@ -1,9 +1,9 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/site/atlas-studio-blueprint-20261018
-title: Atlas Studio campaign blueprint and request-isolation foundation
+title: Atlas Studio campaign blueprint and Prairie Field Desk foundation
 type: implementation-blueprint
-version: v0.1
-status: proposed campaign; A0 locally validated; final-head and human review pending
+version: v0.2
+status: selected Prairie Field Desk; A1 source implemented and locally validated; rendered acceptance and human review pending
 owning_root: docs/
 responsibility: Explain one coordinated product campaign, its existing boundaries, dependency order, acceptance and rollback.
 truth_posture: CONFIRMED pinned source inspection; PROPOSED product and architecture targets; NEEDS VERIFICATION runtime and milestone acceptance.
@@ -14,9 +14,9 @@ truth_posture: CONFIRMED pinned source inspection; PROPOSED product and architec
 Task `KFM-20261018-ATLAS-01`. Recorded for the October 18, 2026 America/Chicago
 campaign. This blueprint explains proposed application work and its evidence
 boundary. It creates no contract, source registry, corpus admission or release
-authority. The first delivery is a layout-independent request-isolation
-foundation. Visual implementation awaits the required choice among three
-presented design concepts; that checkpoint does not block safe lifecycle work.
+authority. The owner merged the A0 request-isolation foundation in PR #5275.
+The user selected concept **1, Prairie Field Desk**. A1 implements its bounded
+workspace foundation below; the entire campaign and Milestone A are not complete.
 
 ## Visitor outcome and acceptance scope
 
@@ -26,14 +26,14 @@ The map remains a first-class workspace. Chat, discovery, evidence, selection
 and time share one visible investigation scope. Each milestone must produce
 working behavior over eligible existing data before increasing coverage.
 
-**Current A0 boundary:** prevent responses and actions belonging to an earlier
+**Historical A0 boundary:** prevent responses and actions belonging to an earlier
 investigation generation from changing a newer one. An A → B → A navigation
 must receive a fresh generation even when the final context has the same values
 as the first A. Preserve useful drafts, truthful cancellation, source-rechecked
 exports and existing public/admin boundaries. A0 does not implement the visual
 redesign or assert that all campaign acceptance has been completed.
 
-## Pinned starting point
+## Historical A0 starting point
 
 | Surface | Status and evidence |
 | --- | --- |
@@ -79,12 +79,13 @@ this task rather than inferred from a previous failure.
 ## Proposed experience and component behavior
 
 Three visual concepts have been presented: **1 Prairie Field Desk**, **2 Atlas
-Canvas**, and **3 Investigation Notebook**. **Selection is pending.** All
+Canvas**, and **3 Investigation Notebook**. **CONFIRMED: the user selected 1,
+Prairie Field Desk.** All
 generated maps, labels, text and numbers in those concepts are illustrative
 mockup content, not geographical or scientific evidence. Runtime maps, charts
 and source cards must use permitted real data and accurate tools.
 
-The selected concept should provide one reachable multiline composer for
+The selected concept provides the direction for one reachable multiline composer for
 discovery, questions and supported map actions; a readable conversation; a
 compact county/layer/time scope; and evidence summaries with intentional deeper
 inspection. Move advanced preferences and diagnostics into compact tools.
@@ -230,18 +231,19 @@ free reports/downloads, and unmistakable synthetic/demo labels.
 
 | Milestone | Useful deliverable | Dependency and acceptance |
 | --- | --- | --- |
-| A0 — current foundation | Generation-bound async conversation actions using existing contracts. | Reproduce stale lifecycle behavior, reject A → B → A late results, preserve drafts and truthful cancellation; focused tests, build/types, independent final-head review. No visual choice is inferred. |
-| A — selected investigation workspace | Unified composer/deterministic fallback, compact evidence and useful welcome missions over verified existing data. | User selects design; validate phone county/topic → real permitted result → evidence → return, ambiguity, keyboard/scroll/draft/privacy and source-rechecked export. |
+| A0 — merged foundation | Generation-bound async conversation actions using existing contracts. | Owner-merged PR #5275; historical local checks below. |
+| A1 — current source milestone | Prairie Field Desk composer, deterministic Find, compact evidence summaries, welcome discussion starters and server history isolation. | Selected concept 1; source checks below pass. Rendered phone and hydrated candidate acceptance remain open. |
+| A2 — complete selected workspace | Tested mobile/evidence composition and truthful conversation management over verified existing data. | Build on A1; validate phone topic/county → permitted result → evidence → return, keyboard/scroll, persistence/privacy and source-rechecked export. |
 | B — county Time Sweep | Coverage planner and working player over demonstrably compatible layers. | Source-clock adapters and budget measurements; account for all active layers, actual dates/gaps, pinned/Auto-fit behavior, rapid-context cancellation and attributed replay. |
 | C — measured corpus and retrieval quality | Incremental eligible collection growth and evaluated lexical/semantic/tool use. | Verified hosted stores/capacity and admission; measure relevance, temporal understanding, citation faithfulness, withdrawal, outage fallback and resource cost. |
 
 Each PR is dependency-closed and reversible. Re-read target/overlap before
 publication, run proportionate changed-area checks, and distinguish inherited,
-introduced and environmental failures. A0 can proceed while the required visual
-selection is pending. Later milestones must stay explicitly held until their
+introduced and environmental failures. Visual selection is resolved. Later
+milestones must stay explicitly held until their
 actual dependencies are satisfied; a blueprint does not complete them.
 
-## A0 ownership, validation and rollback
+## Historical A0 ownership, validation and rollback
 
 The Master Coder owns lifecycle changes in the existing conversation workspace
 and focused request/status tests. The Lead Developer owns this blueprint,
@@ -312,12 +314,153 @@ stores, account/model settings and immutable assets. No corpus migration,
 source activation, model replacement, audience/DNS/hosting change, merge,
 deployment, promotion or public release is performed by this authoring task.
 
+## A1: selected Prairie Field Desk workspace
+
+**Task and target:** `KFM-20261018-ATLAS-01`, Creative Lead coordinating the same
+five-role team. Base `a0-hosted-ai-web-20261017` at
+`5f8a790d58761e416592d1597db7d870cc008eaf`, tree
+`d8594b1ec2189dfb655f33a621d5663f17cb122d`. This is the owner-merged A0
+[PR #5275](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5275),
+not evidence of deployment. The final PR records its exact resulting head and
+reviewed revision; neither a commit nor a draft PR changes publication state.
+
+**Visitor need / before → after:** the baseline has a separate top search,
+permanently visible preference controls and a large shared inspector. A visitor
+can now open **Find & ask**, use one multiline composer for explicit **Find**,
+**Ask** or **Evidence**, choose a county or other available result, and inspect
+compact source summaries without automatically expanding the full inspector.
+The header shows place, map time and active layer count. Existing maps, layers,
+reports, stories, administration and free exports retain their owners.
+
+**Bounded implementation, CONFIRMED by source and controlled checks:**
+
+- Prairie Field Desk uses navy/teal/wheat, restrained depth, a readable thread,
+  closed preferences, visible intent buttons, reduced-motion rules and a pinned
+  composer. Generated concept maps/numbers were not imported into application data.
+- Find projects the existing local index, eligible loaded Census county response
+  and source catalog through `atlas-discovery.ts`. It has no inference dependency,
+  new provider fetch, corpus admission or database. Only current settled-query
+  results are actionable. ArrowDown moves from the composer to an explicit result;
+  Enter never guesses a county from an ambiguous city name. `/` opens Find.
+- Ask remains unverified discussion; Evidence uses the existing released-evidence
+  path. They are explicit modes, not a new automatic tool-routing model contract.
+  Source context, released records and generated interpretation stay distinguishable.
+- New investigation clears the visible tab thread and rotates the validated
+  UUIDv4 history partition. Compatible follow-ups share that partition only within
+  the existing guest session and server-derived context/source fingerprint. A
+  context/actor change, A → B → A, Stop or closing pending work rotates it; an
+  unseen completed reply cannot contaminate the next request even if cancellation
+  is too late. A completed compatible hide/reopen preserves its partition. Legacy
+  callers omitting the ID keep existing behavior; no permission or resource cap changes.
+- Progress reflects existing preparing/queued/running/terminal events. There is no
+  invented token streaming, percent complete or reasoning trace. Stop is best-effort
+  server cancellation plus local supersession; unconfirmed cancellation is labelled.
+- Per-turn source disclosures retain captured citations and recheck server sources
+  before inspection/export. Rich map inspection is available only when the submitted
+  context still matches the current inspectable selection. An old claim never changes
+  the current camera, layers, selection or time. Closing the inspector returns to chat
+  and the invoking control or composer. The existing single foreground panel owner is
+  retained; simultaneous independent desktop chat/evidence panels are not implemented.
+- The welcome groups 22 interests using stable IDs in the existing starter module.
+  Topic cards prepare labelled **discussion drafts** only; they do not claim indexed
+  coverage, retrieve records, add layers or send AI requests. The primary Find action
+  actually opens deterministic discovery. Find/Evidence are identified as the paths
+  for checking available data. Existing recipe controls remain in Layers.
+- Chat history is in this tab; temporary server question expiry remains 15 minutes.
+  Copy/download produces an attributed draft with rechecked permitted sources.
+  No durable recent-conversation archive or persistence promise was introduced.
+
+**Ownership:** Design Artist authored the visual/starter specifications and code;
+Master Coder authored the composer and status coverage; Lead Developer delegated
+the existing discovery extraction and server history isolation. After repeated
+agent capacity failures, Creative Lead explicitly assumed remaining integration,
+tests, documentation and PR preparation. Shared-file ownership was serialized.
+The non-author Performance Reviewer reproduced the Stop/history flaw, reviewed the
+correction and independently reran 102 focused cases. Agent review is not human
+approval. The exact final-head review is recorded in the PR after commit.
+
+### A1 validation and measured limits
+
+All local results below cover the final application source. Later documentation
+and receipt edits do not change application source/build inputs. Commands run
+from the A1 checkout with Node 22.13.1 and existing locked dependencies.
+
+| Check | Actual result and boundary |
+| --- | --- |
+| Fourteen focused suites, each `node tests/<suite>.test.mjs` | **PASS 149/149:** assistant-status 37, chat-composer-reach 8, map-starters 12, atlas-discovery 7, global-search-status 9, public-ai 29, assistant-investigation 6, county-search 4, assistant-sitewide 11, inspection-panel 4, modal-background 3, workspace-map-navigation 9, workspace-help-navigation 8, mobile-compatibility 2. Controlled component/server/static checks, not a rendered phone claim. |
+| Independent reviewer subset | **PASS 102/102:** status, discovery, global search, starters, composer and public-ai suites on final application source. No remaining blocking source findings reported. |
+| Stop/history reproduction | New 37th test fails before the fix (36 pass/1 fail), then passes after UUID rotation for Stop and pending-panel hide when cancellation returns `cancelled:false`. The non-author reproduced ID reuse independently. |
+| `npm run build` | **PASS**, final runtime digest `a589fec1846921395afc23a5664b88f7c565e499674ce3a0ad6fffefaffa4a6a`, 777 source inputs. Existing Vinext route-classification notice remains. |
+| `tsc --noEmit --incremental false` | **PASS** after final application build. |
+| Changed-source/test ESLint | **0 errors / 40 warnings**, versus 0/40 on matching base files. 39 warning identities unchanged; one prior missing-dependency warning becomes an unnecessary-dependency warning on the modified close callback. No clean-lint claim. |
+| `git diff --check` | **PASS**. |
+| Compiled asset inventory | Manifest-selected unique JS/CSS assets: 49 on both base/candidate. Raw 1,929,439 → 1,961,226 bytes; per-file gzip9/mtime0 593,860 → 601,450 (+7,590, +1.28%). Assistant JS gzip 12,210 → 14,214; assistant CSS 1,586 → 3,059; associated page CSS 6,549 → 7,959. Package/lock/build-config hashes match. Unreferenced retained staged assets excluded. This is compiled inventory, not initial transfer, phone latency, FPS or host capacity. |
+| Hydrated browser fixture | Adapted existing county-search CI fixture to open Find, use the composer, ArrowDown to an explicit result, and return focus after Evidence. **Not run locally**: loopback listener denied. CI must report its actual covered revision. |
+| Phone/keyboard/accessibility/performance | **NEEDS VERIFICATION:** real virtual keyboard, touch, rendered overflow/contrast, focus behavior with assistive technology, scrolling, WebGL, frame cost and network/latency. Structural CSS/DOM assertions do not satisfy these acceptance items. |
+
+The initial batch used a nonexistent `investigation.test.mjs` filename; the correct
+`assistant-investigation.test.mjs` was then run and passed 6/6. Earlier test failures
+from the removed header selector and added focus ref were corrected to exercise the
+new actual composer/action; they are not reported as inherited application failures.
+
+**CI follow-up:** draft PR #5279's first run `39184136162` on remote head
+`a94dd2ea806fbe0450dc03ce8d19082bf3cff137` passed build, types and the first three
+test groups (11 + 23 + 88 cases). The broader AI/evidence group passed 179/180:
+`public-ai-http.test.mjs` still required the deliberately removed "No account is
+needed for chat" copy. Its sibling Node runtime test also asserted that copy and
+the old eyebrow. Both assertions now check the public 200 response, existing chat
+panel identity/title and absence of the removed promotional wording. All API
+`requiresLogin:false`, disabled/origin-hold, private-file denial and protected-admin
+checks remain. This is an introduced stale-test mismatch, not a passing CI result
+or an inherited runtime failure. Subsequent steps, including hydrated browser
+acceptance, were skipped in that first run; the PR records the follow-up result.
+No application source/build input changed for this test correction.
+
+The second run `39184366438` on `b44ba1661fe921de71fdbac4c50d3a34918eaf95`
+passed all 180 AI/evidence cases, then failed one of 83 scene/water cases:
+the scene-surface AST test selected the drawer by its entire class string and
+did not tolerate the added Atlas class. It now selects the existing
+`evidence-drawer` class token and explicitly requires the drawer to exist; toolbar,
+z-index and modal-ownership assertions are retained. All eight scene/water suites
+then passed locally, 83/83. No runtime change was needed.
+
+A bounded scan also found historical assertions in two non-CI suites. Matched
+base/candidate runs show `explorer-site-audit` 3/4 and `rendered-html` 24/33 on
+both, with the same failing cases: stale source-shape/copy assumptions and
+Cloudflare `worker.fetch` assumptions against this Node composition. Those files
+are unchanged and deferred; no full-suite pass is claimed. They do not replace
+the existing Node HTTP and hydrated candidate checks.
+
+### A1 limits, rollback and continuation
+
+Delivery states: **implemented; locally tested**. Candidate browser verification,
+exact-head CI and final committed-head review are reported separately in the PR.
+Human approval is pending. **Deployed: UNKNOWN / no deployment performed.**
+Baseline browser observations do not verify this candidate. No hosted corpus size,
+Qwen retrieval quality, model inference, temporal adapter or capacity claim is made.
+
+Rollback is a reviewed revert of this bounded change, preserving subsequent work.
+There is no data migration, new package, service, source admission or durable chat
+store to undo. The optional server partition field remains backward-compatible;
+active jobs keep existing deadlines and rate/session/source controls.
+
+Prioritized **PROPOSED** continuation, receiving owner Lead Developer:
+
+1. A2: run the hydrated candidate and phone/keyboard journey; resolve measured layout,
+   focus, performance and accessibility findings. Then implement the independent
+   evidence composition and truthful recent-investigation management against the
+   verified retention model. Do not treat welcome prompts as coverage evidence.
+2. B: inventory compatible temporal layers and source clocks, then implement county
+   coverage planning, pinned/Auto-fit historical loading and a resource-budgeted player.
+3. C: verify hosted eligible stores and measured corpus coverage before incremental
+   admission and evaluated Qwen retrieval/tool improvements.
+
 ## Placement and governing references
 
-Existing standalone `app/`, `tests/`, `docs/` and
+Existing standalone `app/`, `server/`, `tests/`, `docs/` and
 `data/receipts/generated/` responsibilities are reused; `.github/workflows/`
-is involved only if existing CI needs the focused regressions explicitly
-selected. Directory Rules §§7.2, 8.2, 9.1, 10.1 and 12.4 place UI with its app,
+adds the new discovery/starter/composer suites to the existing CI gate; no workflow
+permissions or services change. Directory Rules §§7.2, 8.2, 9.1, 10.1 and 12.4 place UI with its app,
 executable conformance with tests, explanation with docs and process memory in
 the existing receipt family. The dated blueprint is explanatory and proposed;
 it creates no new semantic/schema/policy/source/release authority. The

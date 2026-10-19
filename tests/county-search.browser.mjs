@@ -121,7 +121,7 @@ async function pageSession(browser, width, height) {
       if (last) return last;
       await pause(50);
     }
-    throw new Error(`${label}: ${JSON.stringify(last)}; ${await evaluate(`JSON.stringify({query:document.querySelector('.global-search input')?.value,status:document.querySelector('#global-search-results')?.innerText,active:document.activeElement?.outerHTML.slice(0,500),drawer:document.querySelector('.evidence-drawer')?.dataset.open,title:document.querySelector('.evidence-drawer h2')?.textContent})`)}`);
+    throw new Error(`${label}: ${JSON.stringify(last)}; ${await evaluate(`JSON.stringify({query:document.querySelector('#qwen-map-panel textarea')?.value,status:document.querySelector('#global-search-results')?.innerText,active:document.activeElement?.outerHTML.slice(0,500),drawer:document.querySelector('.evidence-drawer')?.dataset.open,title:document.querySelector('.evidence-drawer h2')?.textContent})`)}`);
   };
   const key = async (key, code, windowsVirtualKeyCode, modifiers = 0) => {
     await call('Input.dispatchKeyEvent', { type: 'rawKeyDown', key, code, windowsVirtualKeyCode, modifiers });
@@ -129,14 +129,14 @@ async function pageSession(browser, width, height) {
     await call('Input.dispatchKeyEvent', { type: 'keyUp', key, code, windowsVirtualKeyCode, modifiers });
   };
   const fill = async value => {
-    await evaluate('document.querySelector(".global-search input").focus()');
+    await evaluate('document.querySelector("#qwen-map-panel textarea").focus()');
     await key('a', 'KeyA', 65, 2);
     await key('Backspace', 'Backspace', 8);
     if (value) await call('Input.insertText', { text: value });
-    await wait(`document.querySelector('.global-search input').value === ${JSON.stringify(value)}`, 'input updated');
+    await wait(`document.querySelector('#qwen-map-panel textarea').value === ${JSON.stringify(value)}`, 'input updated');
   };
   const snapshot = () => evaluate(`(() => {
-    const input = document.querySelector('.global-search input');
+    const input = document.querySelector('#qwen-map-panel textarea');
     const popup = document.querySelector('#global-search-results');
     return { query: input?.value, busy: input?.getAttribute('aria-busy'), popup: Boolean(popup),
       status: popup?.querySelector('[role=status]')?.textContent ?? '',
@@ -145,7 +145,7 @@ async function pageSession(browser, width, height) {
   const open = async (nextMode = 'held', nextFixture = payload('ready', features), status = 200) => {
     mode = nextMode; fixture = nextFixture; httpStatus = status; held.length = 0;
     await call('Page.navigate', { url: origin.href });
-    await wait(`document.querySelector('.global-search input') && document.querySelector('.map-chrome-dock')`, 'application mounted');
+    await wait(`document.querySelector('#qwen-map-panel textarea') && document.querySelector('.map-chrome-dock')`, 'application mounted');
     const deadline = Date.now() + 30000;
     while (!held.length && Date.now() < deadline) { if (errors.length) throw new Error(errors.join('\n')); await pause(50); }
     assert.ok(held.length, 'hydrated application started its county request');
@@ -157,6 +157,10 @@ async function pageSession(browser, width, height) {
       await call('Input.dispatchMouseEvent', {type:'mouseReleased',button:'left',clickCount:1,...close});
       await wait(`!document.querySelector('.explorer-guide')`, 'first-visit guide closed');
     }
+    const find = await evaluate(`(() => {const r=document.querySelector('.atlas-scope-control').getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+    await call('Input.dispatchMouseEvent', {type:'mousePressed',button:'left',clickCount:1,...find});
+    await call('Input.dispatchMouseEvent', {type:'mouseReleased',button:'left',clickCount:1,...find});
+    await wait(`!document.querySelector('#qwen-map-panel').hidden`, 'unified Find composer opened');
     // A real key must reach React before acceptance begins; no private hooks.
     await fill('hydration probe');
     await wait(`document.querySelector('#global-search-results [role=status]')`, 'search hydration');
@@ -178,7 +182,7 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
     t.after(async () => { try { await p.close(); } catch { /* Browser cleanup may already have closed its targets. */ } });
     await t.test('slow feed, rapid edits and current-query arrival retain usable non-county results', async () => {
       await p.open();
-      await p.wait(`document.querySelector('.global-search input')?.getAttribute('aria-busy') === 'false'`, 'blank search quiet');
+      await p.wait(`document.querySelector('#qwen-map-panel textarea')?.getAttribute('aria-busy') === 'false'`, 'blank search quiet');
       await p.fill('water');
       await p.wait(`document.querySelector('#global-search-results [role=status]')?.textContent === 'Loading county matches…'`, 'real pending county feed');
       assert.ok(p.held.length);
@@ -192,9 +196,9 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       await p.wait(`document.querySelector('#global-search-results button strong')?.textContent === 'Ellsworth County'`, 'first settled query');
       // Observe actual DOM commits during debounce, not an extracted helper.
       await p.evaluate(`window.__countySearchFrames = []; window.__countySearchObserver = new MutationObserver(() => {
-        window.__countySearchFrames.push({query: document.querySelector('.global-search input').value,
+        window.__countySearchFrames.push({query: document.querySelector('#qwen-map-panel textarea').value,
           titles: [...document.querySelectorAll('#global-search-results button strong')].map(row => row.textContent)});
-      }); window.__countySearchObserver.observe(document.querySelector('.global-search'), {subtree:true, childList:true, attributes:true, characterData:true});`);
+      }); window.__countySearchObserver.observe(document.querySelector('#qwen-map-panel'), {subtree:true, childList:true, attributes:true, characterData:true});`);
       await p.fill('Saline');
       await p.wait(`document.querySelector('#global-search-results button strong')?.textContent === 'Saline County'`, 'changed settled query');
       const frames = await p.evaluate('window.__countySearchObserver.disconnect(); window.__countySearchFrames');
@@ -205,7 +209,7 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
     await t.test('completed miss, clear, whitespace, escaping and keyboard county investigation', async () => {
       await p.open();
       await p.release(payload('ready', features));
-      await p.wait(`document.querySelector('.global-search input')?.getAttribute('aria-busy') === 'false'`, 'ready inventory before completed-search cases');
+      await p.wait(`document.querySelector('#qwen-map-panel textarea')?.getAttribute('aria-busy') === 'false'`, 'ready inventory before completed-search cases');
       await p.fill('zzzzzz no county');
       await p.wait(`document.querySelector('#global-search-results [role=status]')?.textContent.startsWith('No matches for')`, 'settled completed miss');
       await p.fill('<img src=x onerror=alert(1)>');
@@ -220,11 +224,11 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       assert.equal(layout.overflow, false, 'no horizontal overflow');
       const beforeTime = await p.evaluate(`document.querySelector('.time-bar select')?.value ?? document.querySelector('select[aria-label="Preview year or earlier era"]')?.value`);
       assert.match(beforeTime ?? '', /^\d+$/, 'actual display time is observed before selection');
-      await p.key('Tab', 'Tab', 9);
-      await p.wait(`document.activeElement?.closest('#global-search-results') && document.activeElement.textContent.includes('Ellsworth County')`, 'Tab reaches result');
+      await p.key('ArrowDown', 'ArrowDown', 40);
+      await p.wait(`document.activeElement?.closest('#global-search-results') && document.activeElement.textContent.includes('Ellsworth County')`, 'ArrowDown reaches explicit result');
       await p.key('Enter', 'Enter', 13);
       await p.wait(`document.querySelector('.evidence-drawer[data-open="true"] h2')?.textContent.includes('Ellsworth')`, 'county opens Evidence Drawer');
-      const investigation = await p.evaluate(`(() => {const d=document.querySelector('.evidence-drawer');return {text:d.innerText,state:d.dataset.state,modal:d.getAttribute('aria-modal'),time:document.querySelector('.time-bar select')?.value ?? document.querySelector('select[aria-label="Preview year or earlier era"]')?.value,search:document.querySelector('.global-search input').value};})()`);
+      const investigation = await p.evaluate(`(() => {const d=document.querySelector('.evidence-drawer');return {text:d.innerText,state:d.dataset.state,modal:d.getAttribute('aria-modal'),time:document.querySelector('.time-bar select')?.value ?? document.querySelector('select[aria-label="Preview year or earlier era"]')?.value,search:document.querySelector('#qwen-map-panel textarea').value};})()`);
       assert.match(investigation.text, /Census/i);
       assert.match(investigation.text, /context/i);
       assert.notEqual(investigation.state, 'ANSWER');
@@ -232,7 +236,7 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       assert.equal(investigation.search, '');
       if (width < 600) assert.equal(investigation.modal, 'true');
       await p.key('Escape', 'Escape', 27);
-      await p.wait(`document.querySelector('.evidence-drawer')?.dataset.open === 'false' && document.activeElement === document.querySelector('.global-search input')`, 'Escape returns search focus');
+      await p.wait(`document.querySelector('.evidence-drawer')?.dataset.open === 'false' && document.activeElement === document.querySelector('#qwen-map-panel textarea')`, 'Escape returns search focus');
       t.diagnostic(JSON.stringify({ width, scenario: 'investigation', layout, state: investigation.state, time: beforeTime }));
     });
     await t.test('failed county response explains coverage and preserves layer/source matches', async () => {
