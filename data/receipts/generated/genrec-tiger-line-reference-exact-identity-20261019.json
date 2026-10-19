@@ -1,0 +1,88 @@
+{
+  "receipt_id": "genrec-tiger-line-reference-exact-identity-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/source/tiger_line_kansas_core_reference.py",
+    "tests/source/test_tiger_line_kansas_core_reference.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/source/tiger_line_kansas_core_reference.py": "sha256:2416d968e57aead19d57673cf1095d92ad7ade37afdb386e85182b6bd2a8ebe7",
+    "tests/source/test_tiger_line_kansas_core_reference.py": "sha256:9c2f58985990ac3418441a03b11811463a7462ba5db20a172cb77c2abc254ea4"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/78e2d05d692a1c53935b797e9c1af30d76cf05f1",
+      "repo:tools/validators/source/tiger_line_kansas_core_reference.py@78e2d05d692a1c53935b797e9c1af30d76cf05f1",
+      "repo:tests/source/test_tiger_line_kansas_core_reference.py@78e2d05d692a1c53935b797e9c1af30d76cf05f1",
+      "repo:connectors/census/tiger-line-2025-kansas-core.source-reference.json@78e2d05d692a1c53935b797e9c1af30d76cf05f1"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/source/tiger_line_kansas_core_reference.py": "CONFIRMED",
+    "tests/source/test_tiger_line_kansas_core_reference.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "On main, a package whose product is a JSON array raised an uncaught TypeError out of validate_manifest, and the exact-identity comparisons for source, scope, capture, package_count, product_counts and total_bytes used plain equality, so private_locator_committed: 0, county_count: 105.0 or a product count of 1.0 passed. The product is now type-checked first and those comparisons require matching JSON types. The new tests fail on the original validator (6 failures)."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/source/test_tiger_line_kansas_core_reference.py: 9 tests (3 before, 6 new) adding the malformed-value and type-exact identity cases, the CLI pass and failure exits, and verify_payload_root over a small synthetic payload (exact bytes with and without ZIP CRC, symlinked root, missing and symlinked files, size, digest, CRC, non-ZIP and total mismatches, and stopping on an invalid manifest). Branch coverage of the validator rises from 58% to 87%. The tracked manifest still passes."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of five changes failed the suite: dropping the type check in _same, the product type check, comparing capture by equality, the ZIP CRC check and the payload size check. Dropping the resolved-root containment check is not detected because the earlier symlink checks on the root, product directory and file already refuse every path out of the root; it is kept as defense in depth."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports identical findings before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/78e2d05d692a1c53935b797e9c1af30d76cf05f1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T03:35:14Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "No receipt or workflow pins this validator; its tests run in the general Python suite. The tracked TIGER/Line reference manifest is unchanged and still validates."
+}

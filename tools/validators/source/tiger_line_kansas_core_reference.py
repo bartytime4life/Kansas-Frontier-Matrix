@@ -117,6 +117,17 @@ def _mapping(value: object) -> Mapping[str, object] | None:
     return value if isinstance(value, dict) else None
 
 
+def _same(actual: object, expected: object) -> bool:
+    """Exact JSON identity: equal values of the same JSON type, so 0 never stands in for false or 1.0 for 1."""
+    if type(actual) is not type(expected):
+        return False
+    if isinstance(expected, dict):
+        return actual.keys() == expected.keys() and all(_same(actual[key], value) for key, value in expected.items())
+    if isinstance(expected, list):
+        return len(actual) == len(expected) and all(map(_same, actual, expected))
+    return actual == expected
+
+
 def _parse_utc(value: object) -> datetime | None:
     if not isinstance(value, str) or not value.endswith("Z"):
         return None
@@ -163,7 +174,7 @@ def _validate_package(package: Mapping[str, object], errors: list[str]) -> None:
     last_modified = _parse_utc(package.get("source_last_modified_at"))
     retrieved_at = _parse_utc(package.get("retrieved_at"))
 
-    if product not in EXPECTED_FILES_BY_PRODUCT:
+    if not isinstance(product, str) or product not in EXPECTED_FILES_BY_PRODUCT:
         errors.append("PRODUCT_INVALID")
     if not isinstance(file_name, str) or not file_name.endswith(".zip"):
         errors.append("FILE_NAME_INVALID")
@@ -242,7 +253,7 @@ def validate_manifest(document: object) -> list[str]:
         "landing_page": LANDING_PAGE,
         "archive_root": ARCHIVE_ROOT,
     }
-    if source != expected_source:
+    if not _same(source, expected_source):
         errors.append("SOURCE_IDENTITY_INVALID")
 
     scope = _mapping(doc.get("scope"))
@@ -262,7 +273,7 @@ def validate_manifest(document: object) -> list[str]:
             "TIGER/Line is not demographic, cadastral, or legal-boundary authority.",
         ],
     }
-    if scope != expected_scope:
+    if not _same(scope, expected_scope):
         errors.append("SCOPE_INVALID")
 
     capture = _mapping(doc.get("capture"))
@@ -278,7 +289,7 @@ def validate_manifest(document: object) -> list[str]:
         "segment_count": 6,
         "private_locator_committed": False,
     }
-    if capture != expected_capture:
+    if not _same(capture, expected_capture):
         errors.append("CAPTURE_IDENTITY_INVALID")
 
     governance = _mapping(doc.get("governance"))
@@ -306,7 +317,7 @@ def validate_manifest(document: object) -> list[str]:
         return sorted(set(errors))
     if len(packages) != EXPECTED_PACKAGE_COUNT:
         errors.append("PACKAGE_COUNT_MISMATCH")
-    if inventory.get("package_count") != EXPECTED_PACKAGE_COUNT:
+    if not _same(inventory.get("package_count"), EXPECTED_PACKAGE_COUNT):
         errors.append("PACKAGE_COUNT_MISMATCH")
 
     valid_packages: list[Mapping[str, object]] = []
@@ -337,7 +348,7 @@ def validate_manifest(document: object) -> list[str]:
     )
     if dict(sorted(observed_counts.items())) != EXPECTED_PRODUCT_COUNTS:
         errors.append("PRODUCT_COUNTS_MISMATCH")
-    if inventory.get("product_counts") != EXPECTED_PRODUCT_COUNTS:
+    if not _same(inventory.get("product_counts"), EXPECTED_PRODUCT_COUNTS):
         errors.append("PRODUCT_COUNTS_MISMATCH")
 
     observed_files: dict[str, set[str]] = {}
@@ -357,7 +368,7 @@ def validate_manifest(document: object) -> list[str]:
     )
     if actual_total != EXPECTED_TOTAL_BYTES:
         errors.append("TOTAL_BYTES_MISMATCH")
-    if inventory.get("total_bytes") != EXPECTED_TOTAL_BYTES:
+    if not _same(inventory.get("total_bytes"), EXPECTED_TOTAL_BYTES):
         errors.append("TOTAL_BYTES_MISMATCH")
 
     calculated_index = _package_index_sha256(packages)
