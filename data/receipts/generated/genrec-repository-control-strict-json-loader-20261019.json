@@ -1,0 +1,104 @@
+{
+  "receipt_id": "genrec-repository-control-strict-json-loader-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/repository_control/_model.py",
+    "tests/validators/test_repository_control_cli.py",
+    "tests/fixtures/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/repository_control/_model.py": "sha256:bc8b64ec9447870b4a08ccbc44c13cfe6479dd708953d24fded23138bfd38cc8",
+    "tests/validators/test_repository_control_cli.py": "sha256:91d5e4e489dbbd57c99e7e5f1b16040cf3a4ad6ab6fbe9de18f8932ee44652c2",
+    "tests/fixtures/README.md": "sha256:8f9f27bbb36bf2c2a45576bee9fafcd39f6d8ab0a5e6484399353720b129a3a6"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d60cb91f3ed32c68386fc3aa42645d06241399af",
+      "repo:tools/validators/repository_control/_model.py@d60cb91f3ed32c68386fc3aa42645d06241399af",
+      "repo:tools/validators/repository_control/validate_repository_control.py@d60cb91f3ed32c68386fc3aa42645d06241399af",
+      "repo:tools/validators/repository_control/validate_control_source_availability.py@d60cb91f3ed32c68386fc3aa42645d06241399af",
+      "repo:tools/validators/repository_control/fetch_bounded_issue_comments.py@d60cb91f3ed32c68386fc3aa42645d06241399af",
+      "repo:control_plane/repository_control_state.yaml@d60cb91f3ed32c68386fc3aa42645d06241399af",
+      "repo:contracts/governance/repository_control_state.md@d60cb91f3ed32c68386fc3aa42645d06241399af"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/repository_control/_model.py": "CONFIRMED",
+    "tests/validators/test_repository_control_cli.py": "CONFIRMED",
+    "tests/fixtures/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Owner authorization",
+      "outcome": "PASS",
+      "reason": "These paths are under _model.CONTROL_PREFIXES and the tracked state keeps permissions.modify_control_logic false. The repository owner explicitly authorized this control-logic change in the authoring session before any edit. The tracked state and its permissions are unchanged."
+    },
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "On main, repository_control._model.load_json, which the module docstring describes as strict JSON, accepted duplicate keys (last value wins, so a reader and the digest could disagree) and NaN/Infinity, and raised an uncaught UnicodeDecodeError for invalid UTF-8 and RecursionError for deep nesting instead of STATE_INPUT_INVALID or CONTEXT_INPUT_INVALID. It now rejects duplicates and non-standard constants the way the sibling helpers validate_control_source_availability.py and fetch_bounded_issue_comments.py already do, and reports every parse failure as an InputError. The new tests fail on the original code (8 tests and subtests)."
+    },
+    {
+      "gate": "Unchanged decisions",
+      "outcome": "PASS",
+      "reason": "The tracked state digest is unchanged (ab25ada4f8d2c5ee6d3d86bb798b2cb75f59f61f9da126be7f799d6011cc6b0c), validate-state still passes, every context fixture evaluates to the same outcome, and the 95 existing repository-control tests pass (101 with the new ones)."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "tests/validators/test_repository_control_cli.py adds 6 tests covering the digest, validate-state and evaluate commands, the outcome file against ci_outcome.schema.json, the exit-code vocabulary and nine unusable inputs. Branch coverage of validate_repository_control.py rises from 23% to 95% and of _model.py from 70% to 78%."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of four changes failed the suite: removing the duplicate-key hook, the constant hook, the RecursionError normalization or the root-object check."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same 4 pre-existing findings in the source files and none in the new test file. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d60cb91f3ed32c68386fc3aa42645d06241399af"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T00:36:17Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Owner-authorized control-logic change that only narrows accepted input; it grants no authority and does not touch the tracked state, its permissions, schemas, workflows or the evaluation rules. tests/fixtures/README.md now lists the new test as a consumer of two repository-control fixtures."
+}

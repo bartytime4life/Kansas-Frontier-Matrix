@@ -101,9 +101,14 @@ incident modules bind named terminal-divergence contexts:
 - [`test_repository_control_incident_1792.py`](../validators/test_repository_control_incident_1792.py)
 - [`test_repository_control_incident_1829.py`](../validators/test_repository_control_incident_1829.py)
 
+[`test_repository_control_cli.py`](../validators/test_repository_control_cli.py)
+runs the command-line evaluator against `context_expected_hold.json` and
+`context_pr_1829_terminal_divergence.json` to check its exit codes and outcome
+output.
+
 These fixtures exercise a repository-control evaluator; they do not grant
 repository authority, change settings, authorize merge, or prove current
-repository state. A direct hosted workflow command for this six-module group was
+repository state. A direct hosted workflow command for this seven-module group was
 not established at the pinned snapshot.
 
 ### MapLibre source metadata
