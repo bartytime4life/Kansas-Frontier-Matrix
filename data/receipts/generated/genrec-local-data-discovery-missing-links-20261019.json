@@ -1,0 +1,84 @@
+{
+  "receipt_id": "genrec-local-data-discovery-missing-links-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/local_data/discover_water.py",
+    "tests/local_data/test_acquisition.py"
+  ],
+  "artifact_hashes": {
+    "tools/local_data/discover_water.py": "sha256:2ef82f49592a410919d925ff6651173850106a6f7e2dc3bb174eb7c5c2b91a9b",
+    "tests/local_data/test_acquisition.py": "sha256:e49b4c05832c1ae4db3dec4ffd4dedc8bc2bb183b97eca36d61fbe54a527cb85"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/b1524d031c2ef21081226fc0ebc0f72a78bb6981",
+      "repo:tools/local_data/discover_water.py@b1524d031c2ef21081226fc0ebc0f72a78bb6981",
+      "repo:tests/local_data/test_acquisition.py@b1524d031c2ef21081226fc0ebc0f72a78bb6981",
+      "repo:data/receipts/generated/genrec-local-data-discovery-input-shapes-20261019.json@b1524d031c2ef21081226fc0ebc0f72a78bb6981",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5306#discussion_r4311003147"
+    ]
+  },
+  "truth_labels": {
+    "tools/local_data/discover_water.py": "CONFIRMED",
+    "tests/local_data/test_acquisition.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "#5306 merged before this review finding was fixed: load_page() validates a missing links member against an empty-list default, but the pagination lookup indexed value[\"links\"] directly, so a valid FeatureCollection that omits the optional links member raised KeyError and the CLI reported an error instead of treating it as the final page. The lookup is value.get(\"links\", []) again, as before #5306."
+    },
+    {
+      "gate": "Tests",
+      "outcome": "PASS",
+      "reason": "The water envelope test now discovers a page without links and asserts complete_for_query; it fails when the direct lookup is restored. make local-data-check passes (432 tests)."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports no new findings on the changed files. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/b1524d031c2ef21081226fc0ebc0f72a78bb6981"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T06:47:22Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-local-data-discovery-input-shapes-20261019, which is unchanged."
+}
