@@ -36,12 +36,16 @@ export const QWEN_LOCAL_REQUEST_DEADLINE_MS = 92_000;
 export const QWEN_LOCAL_ASK_TIMEOUT_MS = 95_000;
 export const QWEN_LOCAL_SITE_ORIGIN = "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site";
 export const QWEN_LOCAL_PREVIEW_ORIGIN = "http://127.0.0.1:5173";
+// Vite binds 0.0.0.0 and advertises its dev URL as localhost, so the preview
+// page's Origin is often http://localhost:5173 rather than the loopback IP.
+export const QWEN_LOCAL_PREVIEW_LOCALHOST_ORIGIN = "http://localhost:5173";
 export const QWEN_LOCAL_EXPLORER_ORIGIN = "http://127.0.0.1:4173";
 export const QWEN_LOCAL_MAX_OFFICIAL_SOURCES = 48;
 export const QWEN_LOCAL_ACCEPTED_REVIEW_STATE = "ACCEPTED";
 export const QWEN_LOCAL_ALLOWED_ORIGINS = Object.freeze([
   QWEN_LOCAL_SITE_ORIGIN,
   QWEN_LOCAL_PREVIEW_ORIGIN,
+  QWEN_LOCAL_PREVIEW_LOCALHOST_ORIGIN,
   QWEN_LOCAL_EXPLORER_ORIGIN,
 ]);
 

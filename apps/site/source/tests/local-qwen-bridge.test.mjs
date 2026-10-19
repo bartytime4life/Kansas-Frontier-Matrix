@@ -410,7 +410,7 @@ test("ask distinguishes unreachable Ollama from runtime probe faults", async () 
 
 test("exact origins receive private-network preflight and foreign origins receive no CORS grant", async () => {
   await withBridge(withReadyOllama(async () => Response.json({})), async (base) => {
-    for (const origin of [SITE_ORIGIN, LOCAL_PREVIEW_ORIGIN, LOCAL_EXPLORER_ORIGIN]) {
+    for (const origin of [SITE_ORIGIN, LOCAL_PREVIEW_ORIGIN, "http://localhost:5173", LOCAL_EXPLORER_ORIGIN]) {
       const response = await fetch(`${base}/ask`, {
         method: "OPTIONS",
         headers: { origin, "access-control-request-private-network": "true" },
@@ -419,7 +419,7 @@ test("exact origins receive private-network preflight and foreign origins receiv
       assert.equal(response.headers.get("access-control-allow-origin"), origin);
       assert.equal(response.headers.get("access-control-allow-private-network"), "true");
     }
-    for (const origin of ["https://other.test", "http://localhost:4173", "http://127.0.0.1:4174", "null"]) {
+    for (const origin of ["https://other.test", "http://localhost:4173", "http://localhost:5174", "http://127.0.0.1:4174", "null"]) {
       const response = await fetch(`${base}/health`, { headers: { origin } });
       assert.equal(response.status, 403);
       assert.equal(response.headers.get("access-control-allow-origin"), null);

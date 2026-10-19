@@ -85,3 +85,55 @@ test("staging is immutable and an interrupted manifest rerun restores owner revi
   assert.equal((await POST(activateRequest(review))).status, 403);
   assert.equal((await PUT(new Request(stageRequest(first.packageId, "9/119/195", png), { headers: { "Content-Type": "image/png", "Content-Length": String(png.byteLength), "X-KFM-SHA256": digest(png) } }))).status, 403);
 });
+
+function pagedBucket(objects) {
+  return {
+    get: async key => { const value = objects.get(key); return value ? { size: value.byteLength, arrayBuffer: async () => value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength) } : null; },
+    put: async (key, value) => { objects.set(key, Buffer.from(value)); },
+    list: async ({ prefix, cursor, limit }) => {
+      const keys = [...objects.keys()].filter(key => key.startsWith(prefix)).sort();
+      const start = cursor ? Number(cursor) : 0, page = keys.slice(start, start + limit);
+      return { objects: page.map(key => ({ key })), truncated: start + limit < keys.length, cursor: String(start + limit) };
+    },
+  };
+}
+
+test("the worker queue pages past fulfilled requests instead of failing closed", async () => {
+  const objects = new Map();
+  const pointer = Buffer.from(JSON.stringify({ packageId: "a".repeat(24) }));
+  for (let n = 0; n < 150; n++) {
+    objects.set(`historical-topo/v1/requests/${100000 + n}.json`, Buffer.from(JSON.stringify({ version: 1, id: n + 1, scanId: 100000 + n, state: "KS" })));
+    objects.set(`historical-topo/v1/active/${100000 + n}.json`, pointer);
+  }
+  objects.set("historical-topo/v1/requests/900001.json", Buffer.from(JSON.stringify({ version: 1, id: 9, scanId: 900001, state: "KS" })));
+  globalThis.__topo = { objects, owner: false, bucket: pagedBucket(objects) };
+  const { GET } = await route("queue");
+  const response = await GET(new Request("https://site.test/api/historical-topo/queue", { headers: { Authorization: "Bearer worker-secret" } }));
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.deepEqual(body.requests.map(item => item.scanId), [900001]);
+  assert.equal(body.truncated, false);
+  assert.equal((await GET(new Request("https://site.test/api/historical-topo/queue"))).status, 403);
+});
+
+test("viewer sheet requests are capped per requester per day", async () => {
+  const source = (await readFile(new URL("../app/api/historical-topo/overlay/route.ts", import.meta.url), "utf8"));
+  assert.match(source, /DAILY_REQUEST_LIMIT = 10/);
+  const objects = new Map();
+  globalThis.__topo = { objects, owner: false, bucket: pagedBucket(objects) };
+  const stubServer = dataUrl(`
+    export * from ${JSON.stringify(server)};
+    export const topoCatalogSheet = async id => ({ id, scanId: 200000 + id, name: "Sheet", year: 1890, scale: 125000, footprint: { geometry: { coordinates: [[[-96, 39], [-95.5, 39], [-95.5, 39.5], [-96, 39]]] } } });
+  `, "topo-server-catalog-stub.ts");
+  let routeSource = source.replaceAll(/"(?:\.\.\/)+historical-topo-overlay"/g, JSON.stringify(overlay));
+  routeSource = routeSource.replaceAll(/"(?:\.\.\/)+historical-topo-overlay-server"/g, JSON.stringify(stubServer));
+  const { POST } = await import(dataUrl(routeSource, "overlay-route.ts"));
+  const ask = id => POST(new Request("https://site.test/api/historical-topo/overlay", { method: "POST",
+    headers: { Origin: "https://site.test", "Content-Type": "application/json" }, body: JSON.stringify({ id }) }));
+  for (let id = 1; id <= 10; id++) assert.equal((await ask(id)).status, 202);
+  assert.equal((await ask(1)).status, 200, "an already-queued sheet does not count against the cap");
+  const limited = await ask(11);
+  assert.equal(limited.status, 429);
+  assert.match((await limited.json()).error, /limit/);
+  assert.equal(objects.has("historical-topo/v1/requests/200011.json"), false);
+});

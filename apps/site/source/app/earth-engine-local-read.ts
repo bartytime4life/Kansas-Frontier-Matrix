@@ -11,5 +11,5 @@ export function localImageryReadAllowed(request: Request, configuredOrigin: unkn
   if (origin && origin !== configuredOrigin || site && site !== "same-origin" && site !== "none") return false;
   return url.pathname === "/api/earth-engine-context/catalog"
     || url.pathname === "/api/earth-engine-context/active"
-    || /^\/api\/earth-engine-context\/ks-\d{4}-[a-z0-9]+\/ee-[a-z0-9]+\/\d+\/\d+\/\d+\.png$/.test(url.pathname);
+    || /^\/api\/earth-engine-context\/ks-(?:\d{4}|terrain)-[a-z0-9-]{6,64}\/ee-[a-z0-9]+(?:-[a-z0-9]+)*\/\d+\/\d+\/\d+\.png$/.test(url.pathname);
 }

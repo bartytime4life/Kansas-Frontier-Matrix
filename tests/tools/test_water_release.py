@@ -121,6 +121,7 @@ def test_stage_hosted_posts_the_prepared_package_and_never_activates(tmp_path, m
     assert request.full_url == "https://kfm.example.test/api/governed/water-admin/stage"
     assert request.get_header("Authorization") == "Bearer " + "t" * 40
     assert request.get_header("Oai-sites-authorization") == "Bearer bypass"
+    assert request.get_header("User-agent", "").startswith("KFM-release/"), "urllib's default UA is blocked by Cloudflare"
     assert request.data == (root / "release/candidates/hydrology" / package_id.split(":")[1] / "snapshot.json").read_bytes()
 
 

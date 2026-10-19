@@ -143,6 +143,7 @@ class StageTests(unittest.TestCase):
         self.assertEqual(request.get_header("X-kfm-sha256"), hashlib.sha256(b"\x89PNG tile").hexdigest())
         self.assertEqual(request.get_header("Content-type"), "image/png")
         self.assertEqual(request.get_header("Oai-sites-authorization"), "Bearer bypass")
+        self.assertEqual(request.get_header("User-agent"), "KFM-historical-topo-worker/1")
         manifest = self.stage(confirm, address="manifest").requests[0]
         self.assertEqual(manifest.get_header("Content-type"), "application/json")
 

@@ -138,7 +138,13 @@ test("local entry rejects forged edge identity and a rebound Host before invokin
     new Request("http://127.0.0.1:4173/", { headers: { "oai-authenticated-user-id": "owner" } }),
     new Request("http://127.0.0.1:4173/", { headers: { "OaI-AuThEnTiCaTeD-Unknown": "value" } }),
     new Request("http://127.0.0.1:4173/", { headers: [["oai-authenticated-user-email", "other@example.com"], ["OAI-Authenticated-User-Email", "owner@example.com"]] }),
+    new Request("http://localhost:4173/api/historical-topo/activate", { method: "POST", body: "bounded control" }),
+    new Request("http://localhost:4175/"),
+    new Request("http://localhost:4173/", { headers: { "oai-authenticated-user-email": "owner@example.com" } }),
   ]) assert.equal((await entryModule.default.fetch(request)).status, 403);
+  const redirected = await entryModule.default.fetch(new Request("http://localhost:4173/data?view=map"));
+  assert.equal(redirected.status, 307);
+  assert.equal(redirected.headers.get("location"), "http://127.0.0.1:4173/data?view=map");
   const response = await entryModule.default.fetch(new Request("http://127.0.0.1:4173/api/historical-topo/activate", { method: "POST", body: "bounded control" }));
   assert.deepEqual(await response.json(), { method: "POST", body: "bounded control" });
 });
