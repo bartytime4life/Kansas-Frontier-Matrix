@@ -551,3 +551,22 @@ def test_transcript_cli_is_immutable_work_before_explicit_ingestion(tmp_path, ca
     input_path.write_text('{"case_number":"A","case_number":"B"}')
     assert cli.main(argv) == 1
     assert json.loads(capsys.readouterr().out)["reason_code"] == "SHAWNEE_DUPLICATE_JSON_KEY"
+
+
+@pytest.mark.parametrize("auth", ["Bearer " + "\xe9" * 43, "Bearer \udcff", "€"])
+def test_runtime_non_ascii_review_key_is_an_auth_failure(tmp_path, auth):
+    import_csv(tmp_path, [ROW]); app = load_runtime().application(tmp_path, "x" * 43, 5271)
+    status_code, data, _ = request(app, "/review/v1/status", auth=auth)
+    assert status_code.startswith("401") and data["reason_code"] == "OWNER_REVIEW_AUTH_REQUIRED"
+
+
+@pytest.mark.parametrize("error,code", [(ValueError("FILE_LIMIT"), "400"), (OSError("unreadable"), "503")])
+def test_runtime_asset_failure_reports_json_media_type(tmp_path, monkeypatch, error, code):
+    runtime = load_runtime(); app = runtime.application(tmp_path, "x" * 43, 5271)
+    def unreadable(*_args):
+        raise error
+    monkeypatch.setattr(runtime, "read_file", unreadable)
+    for path in ("/review", "/review.js", "/review.css"):
+        status_code, data, headers = request(app, path)
+        assert status_code.startswith(code) and data["outcome"] == "ABSTAIN"
+        assert headers["Content-Type"] == "application/json"

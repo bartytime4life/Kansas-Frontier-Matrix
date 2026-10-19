@@ -306,6 +306,29 @@ def test_staging_cannot_activate_and_atomic_rollback_rehearsal(tmp_path):
         assert db.execute("SELECT COUNT(*) FROM water_activation_events").fetchone()[0] == 3
 
 
+def test_release_store_closes_every_sqlite_connection(tmp_path, monkeypatch):
+    # A sqlite3 connection's context manager only commits; each serving read must still close its handle.
+    from release.local_admin import stage, activate
+    opened = []
+
+    class Tracked(sqlite3.Connection):
+        closed = False
+
+        def close(self):
+            self.closed = True
+            super().close()
+
+    connect = sqlite3.connect
+    monkeypatch.setattr(sqlite3, "connect", lambda *args, **kwargs: opened.append(connect(*args, factory=Tracked, **kwargs)) or opened[-1])
+    root = tmp_path / "closing"
+    snapshot = synthetic_snapshot(cleared=True)
+    package_id = stage(root, canonical_bytes(snapshot), actor="synthetic-owner", now=NOW, validator=validate_candidate)
+    activate(root, package_id, synthetic_decision(snapshot), expected_active=None, now=NOW, validator=validate_candidate)
+    with pytest.raises(ValueError, match="CONFLICT"):
+        activate(root, package_id, synthetic_decision(snapshot), expected_active=None, now=NOW, validator=validate_candidate)
+    assert LocalReleaseStore(str(root)).active()[1]["package_id"] == package_id
+    assert len(opened) >= 5 and all(connection.closed for connection in opened)
+
 def test_withdrawn_package_state_immediately_withholds_active_data(tmp_path):
     from release.local_admin import stage, activate
     root = tmp_path / "withdrawal"

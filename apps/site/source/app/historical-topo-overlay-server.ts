@@ -1,4 +1,5 @@
 import { env } from "cloudflare:workers";
+import { readBoundedText } from "./bounded-json";
 import { getChatGPTUser } from "./chatgpt-auth";
 import { parseTopoCatalog, TOPO_CATALOG_URL, type TopoSheet } from "./historical-topo";
 import { parseTopoActivePointer, parseTopoOverlayManifest, topoActiveKey, topoManifestKey, type TopoActivePointer, type TopoOverlayManifest } from "./historical-topo-overlay";
@@ -56,6 +57,14 @@ export function topoJson(bytes: ArrayBuffer): unknown {
   try { return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); }
   catch { throw new TopoOverlayError("Historical map metadata failed validation.", 503); }
 }
+// Client request bodies: malformed or non-object JSON is the caller's error, not a storage failure.
+export function topoRequestJson(bytes: ArrayBuffer, message: string): Record<string, unknown> {
+  let value: unknown;
+  try { value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)); }
+  catch { throw new TopoOverlayError(message); }
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new TopoOverlayError(message);
+  return value as Record<string, unknown>;
+}
 export async function topoActive(scanId: number): Promise<{ pointer: TopoActivePointer; manifest: TopoOverlayManifest } | null> {
   const bytes = await topoBytes(topoActiveKey(scanId), 2048);
   if (!bytes) return null;
@@ -75,10 +84,9 @@ export async function topoCatalogSheet(id: number): Promise<TopoSheet> {
   const timeout = setTimeout(() => controller.abort(), 12_000);
   try {
     const response = await fetch(url, { cache: "no-store", redirect: "manual", signal: controller.signal, headers: { Accept: "application/json" } });
-    if (!response.ok || response.redirected || !response.headers.get("content-type")?.includes("json") || Number(response.headers.get("content-length") ?? 0) > 512_000) throw new Error("USGS catalog unavailable.");
-    const bytes = await response.arrayBuffer();
-    if (bytes.byteLength > 512_000) throw new Error("USGS catalog response exceeded its limit.");
-    const sheets = parseTopoCatalog(topoJson(bytes)).sheets;
+    if (!response.ok || response.redirected || !response.headers.get("content-type")?.includes("json")) throw new Error("USGS catalog unavailable.");
+    // Streamed under the limit: a chunked response without Content-Length must not be buffered whole.
+    const sheets = parseTopoCatalog(JSON.parse(await readBoundedText(response, 512_000, controller.signal))).sheets;
     if (sheets.length !== 1 || sheets[0].id !== id) throw new TopoOverlayError("Kansas historical sheet not found.", 404);
     return sheets[0];
   } catch (error) {

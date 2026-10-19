@@ -4,6 +4,7 @@ Never import this module in a serving route or acquisition worker. Decisions
 must be supplied by the trusted operator's review workflow. The library cannot
 verify the human review represented by external references and grants none.
 """
+from contextlib import closing
 from pathlib import Path
 import os
 import sqlite3
@@ -64,7 +65,7 @@ def initialize(root: Path):
     database = root / "activation.sqlite"
     if database.exists() or database.is_symlink():
         regular_bytes(database, 16*1024*1024)
-    with sqlite3.connect(database, timeout=1) as db:
+    with closing(sqlite3.connect(database, timeout=1)) as db, db:
         db.executescript(SCHEMA)
     os.chmod(database, 0o600)
 
@@ -86,7 +87,7 @@ def stage(root: Path, raw: bytes, *, actor: str, now: str, validator: Callable[[
                 raise ValueError("IMMUTABLE_OBJECT_CONFLICT")
     finally:
         Path(temporary).unlink(missing_ok=True)
-    with sqlite3.connect(root / "activation.sqlite", timeout=1) as db:
+    with closing(sqlite3.connect(root / "activation.sqlite", timeout=1)) as db, db:
         db.execute(f"INSERT OR IGNORE INTO {names['packages']} VALUES(?,?,?,?,?)", (manifest["package_id"], name, now, actor, "STAGED"))
     return manifest["package_id"]
 
@@ -107,7 +108,7 @@ def activate(root: Path, package_id: str, trusted_decision: dict, *, expected_ac
         raise ValueError("ACTIVATION_REVIEW_OR_EVIDENCE_HOLD")
     database = root / "activation.sqlite"
     regular_bytes(database, 16*1024*1024)
-    with sqlite3.connect(database, timeout=1) as db:
+    with closing(sqlite3.connect(database, timeout=1)) as db, db:
         db.execute("BEGIN IMMEDIATE")
         current = db.execute(f"SELECT package_id, previous_package_id, revision FROM {names['active']} WHERE singleton=1").fetchone()
         if (current[0] if current else None) != expected_active:

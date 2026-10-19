@@ -23,6 +23,7 @@ HEADERS = [("Cache-Control", "private, no-store"), ("X-Content-Type-Options", "n
 def application(root, token, port):
     if not isinstance(token, str) or len(token) < 40:
         raise ValueError("STRONG_REVIEW_TOKEN_REQUIRED")
+    expected_auth = ("Bearer " + token).encode("utf-8", "surrogatepass")
     def app(environ, start_response):
         status_code, payload, media = "200 OK", None, "application/json"
         try:
@@ -44,7 +45,8 @@ def application(root, token, port):
                 status_code, payload = "403 Forbidden", public_projection(None)
             elif not path.startswith("/review/v1/"):
                 status_code, payload = "404 Not Found", {"outcome": "ABSTAIN", "reason_code": "ROUTE_NOT_FOUND"}
-            elif not hmac.compare_digest(environ.get("HTTP_AUTHORIZATION", ""), "Bearer " + token):
+            # Compare bytes: compare_digest raises TypeError on non-ASCII str, which would misreport a bad key as a bad query.
+            elif not hmac.compare_digest(environ.get("HTTP_AUTHORIZATION", "").encode("utf-8", "surrogatepass"), expected_auth):
                 status_code, payload = "401 Unauthorized", {"outcome": "DENY", "reason_code": "OWNER_REVIEW_AUTH_REQUIRED"}
             else:
                 if len(environ.get("QUERY_STRING", "")) > 1024:
@@ -72,11 +74,12 @@ def application(root, token, port):
                 else:
                     raise ValueError("QUERY_OR_ROUTE_INVALID")
         except (ValueError, TypeError, KeyError):
-            status_code, payload = "400 Bad Request", {"outcome": "ABSTAIN", "reason_code": "INVALID_QUERY"}
+            # A failed static-asset read has already chosen its media type; the error body is JSON.
+            status_code, payload, media = "400 Bad Request", {"outcome": "ABSTAIN", "reason_code": "INVALID_QUERY"}, "application/json"
         except Exception as error:
             # Exception names only; no private record text, filesystem path or token.
             logging.getLogger("kfm.land-runtime").error("LAND_STORE_UNAVAILABLE %s", type(error).__name__)
-            status_code, payload = "503 Service Unavailable", {"outcome": "ABSTAIN", "reason_code": "STORE_UNAVAILABLE"}
+            status_code, payload, media = "503 Service Unavailable", {"outcome": "ABSTAIN", "reason_code": "STORE_UNAVAILABLE"}, "application/json"
         body = payload if isinstance(payload, bytes) else canonical(payload)
         start_response(status_code, [("Content-Type", media), ("Content-Length", str(len(body))), *HEADERS])
         return [body]

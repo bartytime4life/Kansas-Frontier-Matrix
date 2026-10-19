@@ -227,6 +227,8 @@ class SignInTests(unittest.TestCase):
             self.assertEqual(len(oauth.get_authorization_url.call_args.args[0]), 43)
             state = parse_qs(urlsplit(first["url"]).query)["state"][0]
             with self.assertRaisesRegex(ValueError, "OAUTH_STATE"): signin.claim("state=wrong&code=test")
+            # A non-ASCII state is an ordinary rejection, not a TypeError that escapes the callback handler.
+            with self.assertRaisesRegex(ValueError, "OAUTH_STATE"): signin.claim("state=%C3%A9&code=test")
             claimed = signin.claim(urlencode({"state": state, "code": "test-code"}))
             self.assertEqual(claimed[1], "test-code"); self.assertEqual(signin.status(), "validating")
             with self.assertRaisesRegex(ValueError, "OAUTH_STATE"): signin.claim(urlencode({"state": state, "code": "test-code"}))

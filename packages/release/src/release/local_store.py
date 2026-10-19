@@ -3,6 +3,7 @@
 Only immutable snapshot bytes and separately trusted activation metadata are
 read. The application has no method for staging, reviewing or activation.
 """
+from contextlib import closing
 from pathlib import Path
 import os
 import re
@@ -63,7 +64,7 @@ class LocalReleaseStore:
         database = self.root / "activation.sqlite"
         # Reject symlinks/special files before SQLite opens the trusted database.
         regular_bytes(database, 16 * 1024 * 1024)
-        with sqlite3.connect("file:" + quote(str(database), safe="/") + "?mode=ro", uri=True, timeout=1) as connection:
+        with closing(sqlite3.connect("file:" + quote(str(database), safe="/") + "?mode=ro", uri=True, timeout=1)) as connection:
             connection.execute("PRAGMA query_only=ON")
             try:
                 row = connection.execute(f"SELECT a.package_id, a.decision_json, p.state FROM {names['active']} a "
