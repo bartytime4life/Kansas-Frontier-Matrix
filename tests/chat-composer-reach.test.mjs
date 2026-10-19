@@ -103,10 +103,10 @@ test('autoscroll decision: new questions always scroll; status and result change
 });
 
 test('the effect scrolls the scroll region through the decision helper and tracks the reader position',()=>{
- assert.match(source,/<div ref=\{bodyRef\} className=\{styles\.body\} onScroll=\{\(\)=>\{if\(programmaticScrollRef\.current\)\{programmaticScrollRef\.current=false;return;\}nearBottomRef\.current=conversationEnd\(\)<=80;setAwayFromLatest\(!nearBottomRef\.current\);\}\}>/);
- const start=source.indexOf(' useEffect(()=>{\n  const latest=turns[turns.length-1]');assert.ok(start>=0,'autoscroll effect exists');
- const effect=source.slice(start,source.indexOf('},[turns]);',start)+11);
- assert.match(effect,/shouldAutoscroll\(previous,next,nearBottomRef\.current\)/);assert.match(effect,/body\.scrollTo\(/);assert.match(effect,/\},\[turns\]\);$/);
+ assert.match(source,/<div hidden=\{mode==='find'\} ref=\{bodyRef\} className=\{styles\.body\} onScroll=\{\(\)=>\{if\(programmaticScrollRef\.current\)\{programmaticScrollRef\.current=false;return;\}nearBottomRef\.current=conversationEnd\(\)<=80;setAwayFromLatest\(!nearBottomRef\.current\);\}\}>/);
+ const start=source.indexOf(" useEffect(()=>{\n  if(mode==='find')return;\n  const latest=turns[turns.length-1]");assert.ok(start>=0,'autoscroll effect exists');
+ const effect=source.slice(start,source.indexOf('},[turns,mode]);',start)+16);
+ assert.match(effect,/shouldAutoscroll\(previous,next,nearBottomRef\.current\)/);assert.match(effect,/body\.scrollTo\(/);assert.match(effect,/\},\[turns,mode\]\);$/);
  assert.doesNotMatch(effect,/logRef\.current\?\.scrollTo/);
 });
 
@@ -119,7 +119,7 @@ test('only an error from the visitor\'s own action scrolls to it, without being 
   assert.equal(revealsAlert(background,background),false,'a background status-poll message stays in place');
   assert.equal(revealsAlert('Cancellation could not be confirmed.',background),true,'a failed visitor action is revealed');
   assert.equal(revealsAlert('Cancellation could not be confirmed.',''),true);
-  assert.match(source,/useEffect\(\(\)=>\{const body=bodyRef\.current;if\(!body\|\|body\.scrollTop===0\|\|!revealsAlert\(error,backgroundErrorRef\.current\)\)return;programmaticScrollRef\.current=true;body\.scrollTo\(\{top:0,behavior:'auto'\}\);\},\[error\]\);/,'reveal only on error, never on the background chatFailure refresh');
+  assert.match(source,/useEffect\(\(\)=>\{const body=bodyRef\.current;if\(mode==='find'\|\|!body\|\|body\.scrollTop===0\|\|!revealsAlert\(error,backgroundErrorRef\.current\)\)return;programmaticScrollRef\.current=true;body\.scrollTo\(\{top:0,behavior:'auto'\}\);\},\[error,mode\]\);/,'reveal only on error, never on the background chatFailure refresh');
   assert.match(source,/backgroundErrorRef\.current=message;setError\(message\)/,'status polling records its message as background');
   assert.match(source,/onScroll=\{\(\)=>\{if\(programmaticScrollRef\.current\)\{programmaticScrollRef\.current=false;return;\}nearBottomRef\.current=conversationEnd\(\)<=80;setAwayFromLatest\(!nearBottomRef\.current\);\}\}/,'the reveal scroll keeps the reader position for a later reply');
   assert.doesNotMatch(source,/\[error,chatFailure\]\)|\[exportNotice\]\)/);
@@ -173,4 +173,33 @@ test('the compact chat sheet hides the duplicate heading accessibly and keeps ma
  assert.match(block(prefix+' .qwen-context-strip strong'),/text-overflow: ellipsis/);
  const page=await readFile(new URL('../app/page.tsx',import.meta.url),'utf8');
  assert.match(page,/className="qwen-panel atlas-chat-dock" role="dialog"[^>]*aria-labelledby="qwen-panel-title"/);assert.match(page,/<h2 id="qwen-panel-title">Chat with KFM<\/h2>/);
+});
+
+test('Find has a dedicated result region and retains a long conversation reader position and draft',async()=>{
+ const discovery={query:'',items:[],status:'',busy:false,onQuery(){},onChoose(){}};
+ const props={focus,discovery};
+ const {h,render}=await renderChat(async(url,options)=>url.endsWith('/status')?ready():options.method==='POST'?Response.json({id:'long-turn'}):Response.json({id:'long-turn',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'Synthetic long discussion. '.repeat(200)}}),props);
+ try{
+  let tree=render();findNode(tree,node=>node.type==='button'&&text(node)==='Ask').props.onClick();tree=render();
+  findNode(tree,node=>node.type==='textarea').props.onChange({target:{value:'Explain this synthetic county.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});render();await settle();tree=render();
+  const log=findNode(tree,node=>node.props?.role==='log'),body=findNode(tree,node=>node.props?.className==='body');
+  const scroll={scrollTop:280,getBoundingClientRect:()=>({bottom:400}),scrollTo({top}){this.scrollTop=top;}};
+  body.props.ref.current=scroll;log.props.ref.current={getBoundingClientRect:()=>({bottom:1800})};body.props.onScroll();
+  findNode(tree,node=>node.type==='textarea').props.onChange({target:{value:'Ellsworth'}});tree=render();
+  findNode(tree,node=>node.type==='button'&&text(node)==='Find').props.onClick();
+  const results={...discovery,query:'Ellsworth',items:[{id:'county:ellsworth',kind:'county',title:'Ellsworth County',subtitle:'Synthetic fixture · source context'}]};
+  tree=render({...props,discovery:results});
+  const search=findNode(tree,node=>node.props?.['aria-label']==='Place and layer discovery'),conversation=findNode(tree,node=>node.props?.role==='log');
+  assert.ok(search);assert.equal(children(search)[0].props.id,'global-search-results','results lead their own scroll region');
+  assert.equal(findNode(search,node=>node.props?.role==='log'),undefined,'long chat cannot push results below the visible region');
+  assert.match(text(conversation),/Synthetic long discussion/,'the existing thread remains mounted');
+  assert.equal(findNode(tree,node=>node.props?.ref===body.props.ref).props.hidden,true);
+  assert.equal(findNode(tree,node=>node.props?.className==='options').props.hidden,true,'irrelevant answer options do not consume Find height');
+  assert.equal(scroll.scrollTop,280,'Find never scrolls the conversation');
+  findNode(tree,node=>node.type==='button'&&text(node)==='Ask').props.onClick();tree=render({...props,discovery:results});
+  assert.equal(findNode(tree,node=>node.props?.ref===body.props.ref).props.hidden,false);
+  assert.equal(scroll.scrollTop,280,'return restores the same reader position');
+  assert.equal(findNode(tree,node=>node.type==='textarea').props.value,'Ellsworth','switching intent preserves the draft');
+ }finally{h.dispose();}
 });

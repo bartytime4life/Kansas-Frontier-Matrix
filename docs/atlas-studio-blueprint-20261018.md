@@ -337,7 +337,10 @@ reports, stories, administration and free exports retain their owners.
 - Prairie Field Desk uses navy/teal/wheat, restrained depth, a readable thread,
   closed preferences, visible intent buttons, reduced-motion rules and a pinned
   composer. Generated concept maps/numbers were not imported into application data.
-- Find projects the existing local index, eligible loaded Census county response
+- Find has its own scroll surface ahead of any conversation/welcome content. The
+  conversation stays mounted but hidden while searching, preserving its reader
+  position and draft; irrelevant answer options do not consume Find height.
+  Find projects the existing local index, eligible loaded Census county response
   and source catalog through `atlas-discovery.ts`. It has no inference dependency,
   new provider fetch, corpus admission or database. Only current settled-query
   results are actionable. ArrowDown moves from the composer to an explicit result;
@@ -376,7 +379,7 @@ the existing discovery extraction and server history isolation. After repeated
 agent capacity failures, Creative Lead explicitly assumed remaining integration,
 tests, documentation and PR preparation. Shared-file ownership was serialized.
 The non-author Performance Reviewer reproduced the Stop/history flaw, reviewed the
-correction and independently reran 102 focused cases. Agent review is not human
+correction and independently reran 103 focused cases on the final layout source. Agent review is not human
 approval. The exact final-head review is recorded in the PR after commit.
 
 ### A1 validation and measured limits
@@ -387,14 +390,14 @@ from the A1 checkout with Node 22.13.1 and existing locked dependencies.
 
 | Check | Actual result and boundary |
 | --- | --- |
-| Fourteen focused suites, each `node tests/<suite>.test.mjs` | **PASS 149/149:** assistant-status 37, chat-composer-reach 8, map-starters 12, atlas-discovery 7, global-search-status 9, public-ai 29, assistant-investigation 6, county-search 4, assistant-sitewide 11, inspection-panel 4, modal-background 3, workspace-map-navigation 9, workspace-help-navigation 8, mobile-compatibility 2. Controlled component/server/static checks, not a rendered phone claim. |
-| Independent reviewer subset | **PASS 102/102:** status, discovery, global search, starters, composer and public-ai suites on final application source. No remaining blocking source findings reported. |
+| Fourteen focused suites, each `node tests/<suite>.test.mjs` | **PASS 150/150:** assistant-status 37, chat-composer-reach 9, map-starters 12, atlas-discovery 7, global-search-status 9, public-ai 29, assistant-investigation 6, county-search 4, assistant-sitewide 11, inspection-panel 4, modal-background 3, workspace-map-navigation 9, workspace-help-navigation 8, mobile-compatibility 2. Controlled component/server/static checks, not a rendered phone claim. |
+| Independent reviewer subset | **PASS 103/103:** status, discovery, global search, starters, composer and public-ai suites on final application source. No remaining blocking source findings reported. |
 | Stop/history reproduction | New 37th test fails before the fix (36 pass/1 fail), then passes after UUID rotation for Stop and pending-panel hide when cancellation returns `cancelled:false`. The non-author reproduced ID reuse independently. |
-| `npm run build` | **PASS**, final runtime digest `a589fec1846921395afc23a5664b88f7c565e499674ce3a0ad6fffefaffa4a6a`, 777 source inputs. Existing Vinext route-classification notice remains. |
+| `npm run build` | **PASS**, final runtime digest `5f2b56d30f0e59781df953fa2a8a78daa4d9643b243d3336c376c19e72cca8ca`, 777 source inputs. Existing Vinext route-classification notice remains. |
 | `tsc --noEmit --incremental false` | **PASS** after final application build. |
 | Changed-source/test ESLint | **0 errors / 40 warnings**, versus 0/40 on matching base files. 39 warning identities unchanged; one prior missing-dependency warning becomes an unnecessary-dependency warning on the modified close callback. No clean-lint claim. |
 | `git diff --check` | **PASS**. |
-| Compiled asset inventory | Manifest-selected unique JS/CSS assets: 49 on both base/candidate. Raw 1,929,439 → 1,961,226 bytes; per-file gzip9/mtime0 593,860 → 601,450 (+7,590, +1.28%). Assistant JS gzip 12,210 → 14,214; assistant CSS 1,586 → 3,059; associated page CSS 6,549 → 7,959. Package/lock/build-config hashes match. Unreferenced retained staged assets excluded. This is compiled inventory, not initial transfer, phone latency, FPS or host capacity. |
+| Compiled asset inventory | Manifest-selected unique JS/CSS assets: 49 on both base/candidate. Raw 1,929,439 → 1,961,893 bytes; per-file gzip9/mtime0 593,860 → 601,617 (+7,757, +1.31%). Assistant JS gzip 12,210 → 14,340; assistant CSS 1,586 → 3,090; associated page CSS 6,549 → 7,959. The layout follow-up alone adds 667 raw / 167 gzip bytes over the owner-merged A1 tree. Package/lock/build-config hashes match. Unreferenced retained staged assets excluded. This is compiled inventory, not initial transfer, phone latency, FPS or host capacity. |
 | Hydrated browser fixture | Adapted existing county-search CI fixture to open Find, use the composer, ArrowDown to an explicit result, and return focus after Evidence. **Not run locally**: loopback listener denied. CI must report its actual covered revision. |
 | Phone/keyboard/accessibility/performance | **NEEDS VERIFICATION:** real virtual keyboard, touch, rendered overflow/contrast, focus behavior with assistive technology, scrolling, WebGL, frame cost and network/latency. Structural CSS/DOM assertions do not satisfy these acceptance items. |
 
@@ -430,6 +433,38 @@ both, with the same failing cases: stale source-shape/copy assumptions and
 Cloudflare `worker.fetch` assumptions against this Node composition. Those files
 are unchanged and deferred; no full-suite pass is claimed. They do not replace
 the existing Node HTTP and hydrated candidate checks.
+
+The third run `39184700140` on `683626c8965e252d498b6107d108dfbe249756cc`
+passed all source groups and 16 Node HTTP checks, then exposed a **real layout
+regression**: county results rendered after the full conversation/welcome/prompts
+and fell below the viewport at 1366×768, 390×844 and 375×667. Other browser scenarios
+passed, but the three explicit-selection child cases failed; their parent cases
+also failed. This was not waived or attributed to a test mismatch.
+
+Find now uses a dedicated scroll surface. The conversation remains mounted but
+hidden, so switching back preserves its draft/thread/reader position. Search
+scroll resets affect only search; conversation autoscroll/alert reveal is suspended
+while Find is visible. A compact grid toolbar and hidden irrelevant answer options
+preserve result space. The added ninth composer regression uses a long synthetic
+thread and checks position/draft retention. The existing browser viewport assertion
+is retained and strengthened to require the first row inside its actual scroll
+region and the composer inside the viewport. New runtime build/types and 150 focused
+cases pass locally; final rendered verification is recorded against the later PR
+head rather than borrowing the earlier failing run's checks.
+
+**Owner merge / follow-up boundary:** GitHub records the owner marking #5279 ready
+at `2026-10-19T01:15:14Z` and merging it at `2026-10-19T01:21:24Z`. These were not
+agent actions or evidence of deployment. The current layout repair therefore has
+its own draft PR, based on `a0-hosted-ai-web-20261017` at
+`421a3e82fc94fb100bd27d72df03f45796c81dfd`, tree
+`18ba351b7731512c302895f620a932221f530e18`, exactly matching the previously inspected
+candidate tree. The task branch is `codex/atlas-find-layout-20261019`; task ID stays
+`KFM-20261018-ATLAS-01`. The new generation receipt is
+`data/receipts/generated/genrec-atlas-find-layout-20261019.json`; both merged
+historical receipts remain unchanged. This repair changes the existing conversation
+presentation, its tests and this explanatory record; it does not activate a service,
+modify data, merge, deploy or authorize publication. Rendered acceptance must be
+re-established on the follow-up head.
 
 ### A1 limits, rollback and continuation
 

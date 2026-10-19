@@ -33,7 +33,8 @@ const newInvestigationId=()=>globalThis.crypto?.randomUUID?.()??null;
 export default function AssistantWorkspace({accountRequest=0,onAccount,place='',focus,active=true,discovery,inputRef,onInspectSources,draftRequest}:Props){
  const [mode,setMode]=useState(discovery?'find':'explore'),[chatStatus,setChatStatus]=useState<ChatStatus|null>(null),[chatFailure,setChatFailure]=useState(''),[status,setStatus]=useState<Status|null>(null),[error,setError]=useState(''),[busy,setBusy]=useState(false),[job,setJob]=useState<Job|null>(null),[turns,setTurns]=useState<Turn[]>([]),[accountOpen,setAccountOpen]=useState(false),[activate,setActivate]=useState(false),[invitation,setInvitation]=useState(''),[question,setQuestion]=useState(''),[jobRetry,setJobRetry]=useState(0),[exportNotice,setExportNotice]=useState('');
  const [investigationId,setInvestigationId]=useState<string|null>(newInvestigationId),[awayFromLatest,setAwayFromLatest]=useState(false);
- const resultListRef=useRef<HTMLDivElement>(null);
+ const resultListRef=useRef<HTMLDivElement>(null),discoveryBodyRef=useRef<HTMLDivElement>(null);
+ useLayoutEffect(()=>{if(mode==='find')discoveryBodyRef.current?.scrollTo({top:0,behavior:'auto'});},[mode,question]);
  const messageRef=useRef<HTMLTextAreaElement>(null),composingRef=useRef(false),investigationRef=useRef(investigationId),draftSeenRef=useRef<number|null>(null);
  const queryChanged=discovery?.onQuery;
  const discoveryCurrent=!discovery||discovery.query.trim().toLowerCase()===question.trim().toLowerCase(),discoveryBusy=Boolean(discovery?.busy)||!discoveryCurrent;
@@ -95,13 +96,14 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
  // The scroll region, not the log, scrolls; bring the end of the latest turn into view above the pinned question bar.
  const conversationEnd=()=>{const body=bodyRef.current,log=logRef.current;return body&&log?log.getBoundingClientRect().bottom-body.getBoundingClientRect().bottom:0;};
  useEffect(()=>{
+  if(mode==='find')return;
   const latest=turns[turns.length-1],next:TurnSnapshot=latest?{id:latest.job.id,state:latest.job.state,hasResult:Boolean(latest.job.result)}:null,previous=lastTurnRef.current;lastTurnRef.current=next;
   const body=bodyRef.current;if(!body||!shouldAutoscroll(previous,next,nearBottomRef.current))return;
   body.scrollTo({top:body.scrollTop+conversationEnd(),behavior:'auto'});nearBottomRef.current=true;setAwayFromLatest(false);
- },[turns]);
+ },[turns,mode]);
  // Alerts lead the scroll region (before standing notices). An error from the visitor's own action is brought into view; that
  // programmatic scroll does not count as the reader leaving the conversation end. Background alerts and success notices never scroll.
- useEffect(()=>{const body=bodyRef.current;if(!body||body.scrollTop===0||!revealsAlert(error,backgroundErrorRef.current))return;programmaticScrollRef.current=true;body.scrollTo({top:0,behavior:'auto'});},[error]);
+ useEffect(()=>{const body=bodyRef.current;if(mode==='find'||!body||body.scrollTop===0||!revealsAlert(error,backgroundErrorRef.current))return;programmaticScrollRef.current=true;body.scrollTo({top:0,behavior:'auto'});},[error,mode]);
  const id=job?.id,state=job?.state;
  useEffect(()=>{
   const run=requestRef.current;
@@ -184,7 +186,14 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
   </section>}
   {accountOpen&&<button type='button' onClick={()=>setAccountOpen(false)}>Back to public chat</button>}
   {!accountOpen&&<>
-  <div ref={bodyRef} className={styles.body} onScroll={()=>{if(programmaticScrollRef.current){programmaticScrollRef.current=false;return;}nearBottomRef.current=conversationEnd()<=80;setAwayFromLatest(!nearBottomRef.current);}}>
+  {mode==='find'&&<div ref={discoveryBodyRef} className={styles.body} aria-label='Place and layer discovery'>
+   {mode==='find'&&discovery&&question.trim()&&<div ref={resultListRef} id='global-search-results' className={styles.searchResults} aria-label='Places and layers'>
+    {(discoveryCurrent?discovery.items:[]).map(item=><button type='button' className={styles.searchResult} key={item.id} onClick={()=>{discovery.onChoose(item.id);setQuestion('');}}><small className={styles.searchMeta}>{item.kind}</small><strong>{item.title}</strong><span>{item.subtitle}</span></button>)}
+    <p role='status' aria-live='polite' aria-atomic='true'>{discoveryCurrent?(discovery.status||`${discovery.items.length} available matches.`):'Updating search…'}</p>
+   </div>}
+   {!question.trim()&&<section className={styles.messages}><h3>Find a Kansas place or layer</h3><p>Type a county, place or topic, then choose an available match. Ask and Evidence keep your conversation alongside this search.</p></section>}
+  </div>}
+  <div hidden={mode==='find'} ref={bodyRef} className={styles.body} onScroll={()=>{if(programmaticScrollRef.current){programmaticScrollRef.current=false;return;}nearBottomRef.current=conversationEnd()<=80;setAwayFromLatest(!nearBottomRef.current);}}>
   {notices}
   {focus&&<section className={styles.context} aria-label='AI question context' aria-live='polite'><div className={styles.contextHeading}><strong>{focus.title}</strong><span className={styles.contextMeta}>{focus.context.view} · {focus.context.layers.length} layers · map year {focus.context.frame}</span></div><details><summary>Question scope & limits</summary><p>{focus.detail}</p><small>Sent with each question · map display year {focus.context.frame}, not a collection date</small></details></section>}
   {surface&&<details className={styles.guide}><summary>Help with {surface.title.toLowerCase()}</summary><p>{surface.guide}</p><small>Interface guide · no model required</small>{!['reports','stories'].includes(surface.id)&&<> · <a href={surface.path}>Open this workspace</a></>}</details>}
@@ -218,20 +227,16 @@ export default function AssistantWorkspace({accountRequest=0,onAccount,place='',
    </div>)}
   </div>
   {prompts.length>0&&<div className={styles.prompts} aria-label='Suggested questions'>{prompts.map(prompt=><button type='button' key={prompt} disabled={busy||running(job??undefined)} onClick={()=>{setMode('explore');setQuestion(prompt);(inputRef??messageRef).current?.focus();}}>{prompt}</button>)}</div>}
-   {mode==='find'&&discovery&&question.trim()&&<div ref={resultListRef} id='global-search-results' className={styles.searchResults} aria-label='Places and layers'>
-    {(discoveryCurrent?discovery.items:[]).map(item=><button type='button' className={styles.searchResult} key={item.id} onClick={()=>{discovery.onChoose(item.id);setQuestion('');}}><small className={styles.searchMeta}>{item.kind}</small><strong>{item.title}</strong><span>{item.subtitle}</span></button>)}
-    <p role='status' aria-live='polite' aria-atomic='true'>{discoveryCurrent?(discovery.status||`${discovery.items.length} available matches.`):'Updating search…'}</p>
-   </div>}
   <footer className={styles.footer}>History stays in this tab. Temporary server questions expire after 15 minutes. Downloads are separate drafts.</footer>
   </div>
-  {awayFromLatest&&turns.length>0&&<button type='button' className={styles.secondaryButton} onClick={jumpToLatest}>Jump to latest</button>}
+  {mode!=='find'&&awayFromLatest&&turns.length>0&&<button type='button' className={styles.secondaryButton} onClick={jumpToLatest}>Jump to latest</button>}
   <form onSubmit={ask} className={styles.composer}>
    <div className={styles.composerTools} role='group' aria-label='Composer mode'>
     {discovery&&<button type='button' aria-pressed={mode==='find'} onClick={()=>setMode('find')}>Find</button>}
     <button type='button' aria-pressed={mode==='explore'} onClick={()=>setMode('explore')}>Ask</button>
     <button type='button' aria-pressed={mode==='evidence'} onClick={()=>setMode('evidence')}>Evidence</button>
    </div>
-   <details className={styles.options}><summary>Answer options · {mode==='find'?'Find places & layers':mode==='evidence'?'Find evidence':'Ask'}</summary><div className={styles.optionsBody}>
+   <details hidden={mode==='find'} className={styles.options}><summary>Answer options · {mode==='find'?'Find places & layers':mode==='evidence'?'Find evidence':'Ask'}</summary><div className={styles.optionsBody}>
    <input type='hidden' name='mode' value={mode}/>
    <div className={styles.dates}><label>Explanation style<select name='style'><option value='plain'>Plain language</option><option value='technical'>Technical</option></select></label><label>Reply length<select name='depth' defaultValue='expanded'><option value='brief'>Brief</option><option value='expanded'>More detail</option></select></label></div>
    <small>{mode==='find'?'Available place and layer indexes; no inference or evidence admission.':mode==='explore'?(sourceContext?'Selected sample replies summarize the original source; they are not admitted evidence.':'Ideas and explanations are generated, unverified discussion.'):'Evidence mode uses only released records; unsupported factual answers are withheld.'}</small>
