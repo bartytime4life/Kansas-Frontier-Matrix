@@ -1,0 +1,75 @@
+{
+  "receipt_id": "genrec-agriculture-ndvi-readiness-receipt-list-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/agriculture-ndvi-readiness.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/agriculture-ndvi-readiness.yml": "sha256:eb7cda556b14c9a6e51c663a3dfcdfd5407a09e2498e206792760c860be87f0a"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e54c6092d1d45a5dcab7b00570b4fbba7fd87db4",
+      "repo:.github/workflows/agriculture-ndvi-readiness.yml@e54c6092d1d45a5dcab7b00570b4fbba7fd87db4",
+      "repo:data/receipts/generated/genrec-agriculture-ndvi-readiness-reader-bounds-20261019.json@e54c6092d1d45a5dcab7b00570b4fbba7fd87db4",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5295#discussion_r4310510005"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/agriculture-ndvi-readiness.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "#5295 merged with a coverage check that accepted any textual mention of a receipt path (grep -qF), so a comment could satisfy it while the receipt went unvalidated (review finding on #5295). The step validates every receipt from a single list of receipt and ref pairs (\"current\" validates the working tree) and then fails when any receipt matching the workflow's path globs is missing from that list, so listing a receipt is what validates it: an unlisted successor, even one mentioned in a comment, exits 1 with an ::error:: line, and a stale listed receipt fails with ARTIFACT_DIGEST_MISMATCH. genrec-agriculture-ndvi-readiness-reader-bounds-20261019 is pinned to e54c6092d1d45a5dcab7b00570b4fbba7fd87db4, the merge of #5295."
+    },
+    {
+      "gate": "Workflow steps",
+      "outcome": "PASS",
+      "reason": "The step passes as written with all three listed receipts; the focused NDVI readiness tests pass. make repository-guardrails PASS, including workflow security."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e54c6092d1d45a5dcab7b00570b4fbba7fd87db4"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T05:13:39Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Earlier receipts are unchanged and each is validated at the commit where its bytes were recorded. A later change adds a successor receipt, repoints this entry from current to the commit that merges it, and adds the successor as current."
+}

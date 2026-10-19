@@ -5,7 +5,7 @@
     ".github/workflows/source-and-trust-projection-profiles.yml"
   ],
   "artifact_hashes": {
-    ".github/workflows/source-and-trust-projection-profiles.yml": "sha256:e651fa4d11b2d999abec3c69eff57a5278dd91a896560ab16c4a0e194c84772f"
+    ".github/workflows/source-and-trust-projection-profiles.yml": "sha256:2eda525f5cd29403e9a2910588c8d928b844f7cbda8269c87858918bacca44dc"
   },
   "model_identity": {
     "provider": "Anthropic",
@@ -20,10 +20,10 @@
   },
   "inputs": {
     "evidence_refs": [
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8c4b8da938798f00bdf503f9819530df7a8a64e0",
-      "repo:.github/workflows/source-and-trust-projection-profiles.yml@8c4b8da938798f00bdf503f9819530df7a8a64e0",
-      "repo:data/receipts/generated/genrec-source-probe-envelope-receipt-binding-20261019.json@8c4b8da938798f00bdf503f9819530df7a8a64e0",
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5294#discussion_r4310466453"
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e54c6092d1d45a5dcab7b00570b4fbba7fd87db4",
+      "repo:.github/workflows/source-and-trust-projection-profiles.yml@e54c6092d1d45a5dcab7b00570b4fbba7fd87db4",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5294#discussion_r4310466453",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5295#discussion_r4310510005"
     ]
   },
   "truth_labels": {
@@ -33,12 +33,12 @@
     {
       "gate": "Defect reproduction",
       "outcome": "PASS",
-      "reason": "The path filter starts this workflow for any genrec-source-probe-envelope-* or genrec-source-and-trust-projection-profiles-* receipt, but the receipt step validates only the receipts it names, so a later successor added without updating the step would pass unchecked (review finding on #5294). The step now fails when a matching receipt is not named in the workflow; with an unnamed receipt present it exits 1 with an ::error:: line. It also pins genrec-source-probe-envelope-receipt-binding-20261019 to 8c4b8da938798f00bdf503f9819530df7a8a64e0, the merge of #5294, and validates this successor against the current bytes."
+      "reason": "The path filter starts this workflow for any genrec-source-probe-envelope-* or genrec-source-and-trust-projection-profiles-* receipt, but the receipt step validated only the receipts it named, so a later successor added without updating the step would pass unchecked (review finding on #5294), and a textual coverage check could be satisfied by a mere mention of the path (review finding on #5295). The step validates every receipt from a single list of receipt and ref pairs (\"current\" validates the working tree) and then fails when any receipt matching the workflow's path globs is missing from that list, so listing a receipt is what validates it: an unlisted successor, even one mentioned in a comment, exits 1 with an ::error:: line, and a stale listed receipt fails with ARTIFACT_DIGEST_MISMATCH. genrec-source-probe-envelope-receipt-binding-20261019 is pinned to 8c4b8da938798f00bdf503f9819530df7a8a64e0, the merge of #5294."
     },
     {
       "gate": "Workflow steps",
       "outcome": "PASS",
-      "reason": "All four receipt invocations and the coverage guard pass as written; both fixture replays and the focused tests pass. make repository-guardrails PASS, including workflow security; tests/ci, the receipt-validator tests and the guardrail attribution tests pass."
+      "reason": "The step passes as written with all four listed receipts; both fixture replays and the focused tests pass. make repository-guardrails PASS, including workflow security; tests/ci, the receipt-validator tests and the guardrail attribution tests pass."
     },
     {
       "gate": "Hosted CI on the pushed head",
@@ -66,10 +66,10 @@
     "state": "pending",
     "timestamp": null
   },
-  "created_at": "2026-10-19T05:06:39Z",
+  "created_at": "2026-10-19T05:13:39Z",
   "emitter": "Claude Code repository-authoring session",
   "links": {
     "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
   },
-  "notes": "Earlier receipts are unchanged and each is validated at the commit where its bytes were recorded. A later change to the workflow, validator or test adds a successor receipt, pins this one to the commit that merges it, and names the successor in the step; the coverage guard fails the job until it does."
+  "notes": "Earlier receipts are unchanged and each is validated at the commit where its bytes were recorded. A later change to the workflow, validator or test adds a successor receipt, repoints this entry from current to the commit that merges it, and adds the successor as current; the coverage check fails the job until it does."
 }
