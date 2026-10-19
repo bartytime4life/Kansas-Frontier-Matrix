@@ -8,6 +8,9 @@ owners: <Source Registry Steward — TODO assign>, <Archives Domain Lead — TOD
 created: 2026-05-13
 updated: 2026-09-20
 policy_label: public
+owning_root: docs/
+responsibility: "Documentation for Kansas Memory — Source Family; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-10-19 case-collision link repair; the document's claims were not re-reviewed.
 related:
   - ./README.md
   - ../README.md
@@ -37,28 +40,10 @@ related:
   - policy/rights/
 tags: [kfm, source-family, archives, kansas, kshs, c10-07, c7-10]
 notes:
-  - >-
-    v0.2 path migration: this doc was at `docs/sources/catalog/kansas_memory.md`
-    in v0.1 (flat path, underscore slug) and has moved to
-    `docs/sources/catalog/kansas/kansas-memory.md` in v0.2 (nested under the
-    `kansas/` family folder, hyphenated slug for consistency with sibling
-    product pages — `fhsu-sternberg.md`, `ku-nhm.md`, etc.). OQ-KM-01 from
-    v0.1 is partially resolved by this reorganization; the
-    `catalog/<family>/<product>` convention is the one adopted.
-  - >-
-    The kansas family README v0.2 lists this product page explicitly as one of
-    eight Kansas institutions; `connectors/kansas/` is CONFIRMED (at commit
-    `b6a27916bbb9e07cbf3752870c867476e1e094e7`) as one of the nine canonical
-    `directory-rules.md` v1.2 §7.3 connector families.
-  - >-
-    Kansas Memory's role as the canonical record for "Kansas Historical
-    Quarterly indexes and Kansas Memory items" is CONFIRMED per Pass-10
-    `C7-10`. Item-count, API surface, and rights terms remain on the
-    medium-priority verification backlog — the corpus itself flags item
-    counts as ambiguous-denominator.
-  - >-
-    Item-count, API surface, rights terms remain on the medium-priority
-    verification backlog.
+  - "v0.2 path migration: this doc was at `docs/sources/catalog/kansas_memory.md` in v0.1 (flat path, underscore slug) and has moved to `docs/sources/catalog/kansas/kansas-memory.md` in v0.2 (nested under the `kansas/` family folder, hyphenated slug for consistency with sibling product pages — `fhsu-sternberg.md`, `ku-nhm.md`, etc.). OQ-KM-01 from v0.1 is partially resolved by this reorganization; the `catalog/<family>/<product>` convention is the one adopted."
+  - "The kansas family README v0.2 lists this product page explicitly as one of eight Kansas institutions; `connectors/kansas/` is CONFIRMED (at commit `b6a27916bbb9e07cbf3752870c867476e1e094e7`) as one of the nine canonical `directory-rules.md` v1.2 §7.3 connector families."
+  - "Kansas Memory's role as the canonical record for \"Kansas Historical Quarterly indexes and Kansas Memory items\" is CONFIRMED per Pass-10 `C7-10`. Item-count, API surface, and rights terms remain on the medium-priority verification backlog — the corpus itself flags item counts as ambiguous-denominator."
+  - "Item-count, API surface, rights terms remain on the medium-priority verification backlog."
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Memory — Source Family

@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards/oai-pmh
 title: OAI-PMH — KFM Harvesting Guidance and Readiness Boundary
-type: standard; interoperability-reference; source-intake-boundary
+type: standard
 version: v2.1-draft
 status: draft; repository-grounded; upstream-currentness-refreshed; case-collision-resolved; no-adoption; no-conformance-proof; no-source-activation; no-release; no-publication
 owners:
@@ -60,7 +60,7 @@ related:
   - ../../schemas/contracts/v1/sources/source_descriptor.schema.json
   - ../../connectors/kansas_memory/README.md
   - ../../.github/CODEOWNERS
-tags: [kfm, standards, oai-pmh, metadata-harvesting, archives, source-intake, xml, dublin-core, rights, sensitivity, validation, correction, rollback]
+tags: [kfm, standards, interoperability-reference, source-intake-boundary, oai-pmh, metadata-harvesting, archives, source-intake, xml, dublin-core, rights, sensitivity, validation, correction, rollback]
 notes:
   - "Same-path modernization of the uppercase target only."
   - "2026-10-19: owner-directed case-collision removal (STD-DRIFT-003). This uppercase path is canonical. Unique content of the former lowercase sibling docs/standards/oai-pmh.md (doc_id kfm://doc/standards-oai-pmh, v0.1) is carried as Appendix A, labelled PROPOSED and subordinate to sections 1-19; the lowercase file was deleted and inbound links repointed."

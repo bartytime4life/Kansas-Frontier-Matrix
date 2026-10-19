@@ -10,6 +10,7 @@ updated: 2026-07-29
 policy_label: public; intake; exploratory; cite-or-abstain
 owning_root: docs/
 responsibility: Preserve a reviewable map from the New Ideas 4-16-26 packet to current KFM repository evidence, reusable ideas, duplicate or unsafe transfers, unresolved gaps, and dependency-ordered next work without promoting packet prose into authority.
+truth_posture: NEEDS VERIFICATION — truth_posture was added during a 2026-10-19 case-collision link repair; the document's claims were not re-reviewed.
 source_evidence:
   captured_filename: New Ideas 4-16-26(1).pdf
   pdf_title: New Ideas 4-16-26

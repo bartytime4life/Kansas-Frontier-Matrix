@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/standards-dublin-core
 title: Dublin Core / DCMI Metadata Terms — KFM Mapping Boundary and Conformance Plan
-type: standard; vocabulary-guidance; interoperability-boundary
+type: standard
 version: v2.0-draft
 status: "draft; repository-grounded; upstream-currentness-refreshed; no-adoption; no-generic-profile; no-release; no-publication"
 owners:
@@ -46,9 +46,7 @@ external_currentness_review:
   access_date: 2026-08-18
   official_baseline: "DCMI Metadata Terms, DCMI Recommendation, current version dated 2020-01-20"
   namespace_policy: "Four approved DCMI namespaces; persistent term URIs"
-  iso_baselines:
-    - "ISO 15836-1:2017 — original fifteen-element set"
-    - "ISO 15836-2:2019 — broader DCMI properties and classes"
+  iso_baselines: "ISO 15836-1:2017 — original fifteen-element set; ISO 15836-2:2019 — broader DCMI properties and classes"
 related:
   - ./README.md
   - ./DCAT.md
@@ -69,7 +67,7 @@ related:
   - ../../schemas/contracts/v1/data/synthetic_release_catalog_closure_profile.schema.json
   - ../../packages/domains/flora/normalizers/dwc_occurrence.py
   - ../../.github/CODEOWNERS
-tags: [kfm, standards, metadata, dublin-core, dcmi, dcterms, dctypes, dcat, interoperability, evidence, conformance]
+tags: [kfm, standards, vocabulary-guidance, interoperability-boundary, metadata, dublin-core, dcmi, dcterms, dctypes, dcat, interoperability, evidence, conformance]
 notes:
   - "Same-path documentation modernization only; no contract, schema, policy, source, fixture, validator, workflow, runtime, release, or publication surface changes."
   - "The prior whole-page PROPOSED and no-repository posture is replaced with commit-pinned repository evidence and a separate upstream-currentness review."

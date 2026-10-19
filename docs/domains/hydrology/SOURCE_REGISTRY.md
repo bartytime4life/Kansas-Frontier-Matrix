@@ -8,9 +8,12 @@ owners: <hydrology-source-steward>   # PLACEHOLDER — confirm team/handle in CO
 created: 2026-05-18
 updated: 2026-06-07
 policy_label: public
+owning_root: docs/
+responsibility: "Documentation for Hydrology Source Registry; not evidence, policy, release, or publication authority."
+truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_posture were added during a 2026-10-19 case-collision link repair; the document's claims were not re-reviewed.
 related:
-  - ai-build-operating-contract.md
-  - directory-rules.md
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
   - docs/domains/hydrology/README.md
   - docs/domains/hydrology/SOURCE_FAMILIES.md
   - docs/domains/hydrology/PUBLICATION_POSTURE.md
