@@ -7,6 +7,7 @@ import copy
 import hashlib
 import json
 import math
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
@@ -17,6 +18,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA = REPO_ROOT / "schemas/contracts/v1/source/source_probe_envelope.schema.json"
 FIXTURES = REPO_ROOT / "fixtures/contracts/v1/source/source_probe_envelope"
 MAX_BYTES = 2 * 1024 * 1024
+SHA256 = re.compile(r"^sha256:[a-f0-9]{64}$")  # the schema's $defs/sha256 pattern
 
 
 class DuplicateKeyError(ValueError):
@@ -55,6 +57,14 @@ def _reject_nonfinite(_value: str) -> None:
     raise NonFiniteNumberError
 
 
+def _finite_float(text: str) -> float:
+    # A standard literal such as 1e400 overflows to infinity without calling parse_constant.
+    value = float(text)
+    if not math.isfinite(value):
+        raise NonFiniteNumberError
+    return value
+
+
 def _pointer(parts: Iterable[object]) -> str:
     values = [str(part).replace("~", "~0").replace("/", "~1") for part in parts]
     return "/" + "/".join(values) if values else "/"
@@ -68,14 +78,14 @@ def read(path: Path) -> tuple[dict[str, Any] | None, list[Finding]]:
             return None, [Finding("INPUT_NOT_FILE", "/")]
         if path.stat().st_size > MAX_BYTES:
             return None, [Finding("INPUT_TOO_LARGE", "/")]
-        value = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique, parse_constant=_reject_nonfinite)
+        value = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=_unique, parse_constant=_reject_nonfinite, parse_float=_finite_float)
     except UnicodeError:
         return None, [Finding("JSON_NOT_UTF8", "/")]
     except DuplicateKeyError:
         return None, [Finding("JSON_DUPLICATE_KEY", "/")]
     except NonFiniteNumberError:
         return None, [Finding("JSON_NONFINITE_NUMBER", "/")]
-    except json.JSONDecodeError:
+    except (ValueError, RecursionError):  # JSONDecodeError, excessive nesting, or an integer beyond the conversion limit
         return None, [Finding("JSON_INVALID", "/")]
     except OSError:
         return None, [Finding("INPUT_UNREADABLE", "/")]
@@ -105,6 +115,11 @@ def _mapping(value: Any) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
+def _one_of(value: Any, allowed: set[str]) -> bool:
+    # The schema leaves profile_data open, so a value may be any JSON type, including an unhashable list or object.
+    return isinstance(value, str) and value in allowed
+
+
 def semantic_findings(value: Mapping[str, Any]) -> list[Finding]:
     findings: list[Finding] = []
     profile = value.get("profile")
@@ -129,7 +144,7 @@ def semantic_findings(value: Mapping[str, Any]) -> list[Finding]:
         if isinstance(row_count, bool) or not isinstance(row_count, int) or row_count < 0:
             findings.append(Finding("NASS_ROW_COUNT_INVALID", "/profile_data/row_count"))
         digest = data.get("canonical_rows_sha256")
-        if not isinstance(digest, str) or not digest.startswith("sha256:") or len(digest) != 71:
+        if not isinstance(digest, str) or not SHA256.fullmatch(digest):
             findings.append(Finding("NASS_CONTENT_DIGEST_MISSING", "/profile_data/canonical_rows_sha256"))
 
     elif profile == "EDNA_MONITORING":
@@ -139,14 +154,14 @@ def semantic_findings(value: Mapping[str, Any]) -> list[Finding]:
         if data.get("source_role") != "observed":
             findings.append(Finding("EDNA_SOURCE_ROLE_INVALID", "/profile_data/source_role"))
         controls = _mapping(data.get("controls"))
-        if set(controls) != {"positive_control", "negative_control"} or any(controls.get(key) not in {"PASS", "FAIL", "UNKNOWN"} for key in controls):
+        if set(controls) != {"positive_control", "negative_control"} or not all(_one_of(value, {"PASS", "FAIL", "UNKNOWN"}) for value in controls.values()):
             findings.append(Finding("EDNA_CONTROLS_INVALID", "/profile_data/controls"))
         if data.get("population_status_claim") is not None:
             findings.append(Finding("EDNA_POPULATION_INFERENCE_DENIED", "/profile_data/population_status_claim"))
         interpretation = data.get("interpretation")
-        if interpretation not in {"DETECTION_SIGNAL", "NO_DETECTION", "INCONCLUSIVE"}:
+        if not _one_of(interpretation, {"DETECTION_SIGNAL", "NO_DETECTION", "INCONCLUSIVE"}):
             findings.append(Finding("EDNA_INTERPRETATION_INVALID", "/profile_data/interpretation"))
-        control_values = set(controls.values())
+        control_values = list(controls.values())
         expected = "DENY" if "FAIL" in control_values else "HOLD" if (data.get("chain_of_custody_complete") is not True or "UNKNOWN" in control_values or interpretation == "INCONCLUSIVE") else material.get("status")
         if "FAIL" in control_values and material.get("status") != "DENY":
             findings.append(Finding("EDNA_FAILED_CONTROL_NOT_DENIED", "/materiality/status"))
@@ -159,7 +174,7 @@ def semantic_findings(value: Mapping[str, Any]) -> list[Finding]:
             findings.append(Finding("KGS_PROFILE_SHAPE_INVALID", "/profile_data"))
         if data.get("source_role") != "modeled":
             findings.append(Finding("KGS_SOURCE_ROLE_INVALID", "/profile_data/source_role"))
-        if data.get("geology_kind") not in {"BEDROCK", "SURFICIAL"}:
+        if not _one_of(data.get("geology_kind"), {"BEDROCK", "SURFICIAL"}):
             findings.append(Finding("KGS_GEOLOGY_KIND_INVALID", "/profile_data/geology_kind"))
         vocab = data.get("unit_vocabulary")
         if not isinstance(vocab, list) or not vocab or not all(isinstance(item, str) and item for item in vocab):
@@ -177,7 +192,7 @@ def semantic_findings(value: Mapping[str, Any]) -> list[Finding]:
             findings.append(Finding("LOC_SOURCE_ROLE_INVALID", "/profile_data/source_role"))
         if data.get("family_decision") != "DEFERRED_OPEN_DSC_10":
             findings.append(Finding("LOC_FAMILY_DECISION_UNRESOLVED", "/profile_data/family_decision"))
-        if data.get("rights_state") not in {"UNKNOWN", "NEEDS_REVIEW"} or data.get("care_review") != "PENDING":
+        if not _one_of(data.get("rights_state"), {"UNKNOWN", "NEEDS_REVIEW"}) or data.get("care_review") != "PENDING":
             findings.append(Finding("LOC_RIGHTS_CARE_NOT_HELD", "/profile_data"))
         if data.get("source_activation") is not False:
             findings.append(Finding("LOC_ACTIVATION_DENIED", "/profile_data/source_activation"))
