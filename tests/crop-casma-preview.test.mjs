@@ -31,3 +31,17 @@ test('image reprojection uses monotonic nearest rows with correct north/south pl
  assert.ok(rows.every((n,i)=>Number.isInteger(n)&&n>=0&&n<512&&(i===0||n>=rows[i-1])));
  assert.notEqual(rows[256],256,'latitude rows are not incorrectly treated as Mercator rows');
 });
+test('an upstream image stream that errors mid-read answers 502 without an unhandled rejection',async()=>{
+ const original=globalThis.fetch,rejections=[];const {cropCasmaPreview}=await load();
+ const record=reason=>rejections.push(reason);process.on('unhandledRejection',record);
+ globalThis.fetch=async url=>{
+  if(String(url).includes('GetCapabilities'))return new Response(xml,{headers:{'Content-Type':'text/xml'}});
+  const body=new ReadableStream({pull(controller){controller.enqueue(new Uint8Array([137,80,78,71]));controller.error(new DOMException('The operation timed out.','TimeoutError'));}});
+  return new Response(body,{headers:{'Content-Type':'image/png'}});
+ };
+ try{
+  assert.equal((await cropCasmaPreview(new Request('https://site/api?day=2026-09-28'))).status,502);
+  await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setTimeout(resolve,20));
+  assert.deepEqual(rejections,[]);
+ }finally{globalThis.fetch=original;process.off('unhandledRejection',record);}
+});
