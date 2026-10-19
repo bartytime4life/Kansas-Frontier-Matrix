@@ -1,0 +1,104 @@
+{
+  "receipt_id": "genrec-repository-control-finite-float-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/repository_control/_model.py",
+    "tests/validators/test_repository_control_cli.py",
+    "tests/fixtures/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/repository_control/_model.py": "sha256:c11b12de88d58121c3067dcb1346693d3fa3ccd1536fdb156f63f5e7330be010",
+    "tests/validators/test_repository_control_cli.py": "sha256:63f6a99075c86841fd32e03120e23683c83d52186d6be60ba69d4fef2422df03",
+    "tests/fixtures/README.md": "sha256:5fc2e3a66743ae8b909d49ec61eacf0b382d7633f7c3000995a2b8ba01002abf"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/29897647a8da83af980f41af902149723126bfdc",
+      "repo:tools/validators/repository_control/_model.py@29897647a8da83af980f41af902149723126bfdc",
+      "repo:tests/validators/test_repository_control_cli.py@29897647a8da83af980f41af902149723126bfdc",
+      "repo:tests/fixtures/README.md@29897647a8da83af980f41af902149723126bfdc",
+      "repo:data/receipts/generated/genrec-repository-control-strict-json-loader-20261019.json@29897647a8da83af980f41af902149723126bfdc",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5276#discussion_r4309482741",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5276#discussion_r4309482749"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/repository_control/_model.py": "CONFIRMED",
+    "tests/validators/test_repository_control_cli.py": "CONFIRMED",
+    "tests/fixtures/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Owner authorization",
+      "outcome": "PASS",
+      "reason": "Completes the owner-authorized strict-loader change of PR #5276 (receipt genrec-repository-control-strict-json-loader-20261019), which merged before these two review fixes were pushed. Same paths and scope; the tracked state and its permissions are unchanged."
+    },
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "On main after #5276, a standard number literal such as 1e400 converts to inf without calling parse_constant, so it bypassed the non-finite check and the digest command succeeded. load_json now parses floats through a finite check; 1e400 and -1.5e999 give STATE_INPUT_INVALID while 1e308 still loads. The new tests fail against main's loader (3 failures). The fixtures README's documented repository-control consumer command omitted test_repository_control_cli.py; it now includes it."
+    },
+    {
+      "gate": "Unchanged decisions",
+      "outcome": "PASS",
+      "reason": "The tracked state digest is unchanged (ab25ada4f8d2c5ee6d3d86bb798b2cb75f59f61f9da126be7f799d6011cc6b0c), validate-state passes, all 9 context fixtures evaluate exactly as on main, and the 101 repository-control tests pass."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "test_repository_control_cli.py now covers eleven unusable inputs including two overflowing literals, and asserts that 1e308 still loads. The documented consumer command, run as written, passes 49 tests."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Removing the parse_float finite check fails 3 tests."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same 4 pre-existing findings in the source files. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/29897647a8da83af980f41af902149723126bfdc"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T00:48:13Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-repository-control-strict-json-loader-20261019 for these three paths; that receipt stays unchanged as the record of the bytes merged in #5276. Both fixes answer Codex review findings on #5276."
+}

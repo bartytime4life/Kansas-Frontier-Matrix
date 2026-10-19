@@ -146,7 +146,8 @@ KFM_NO_NETWORK=1 PYTHONDONTWRITEBYTECODE=1 PYTHONHASHSEED=0 \
   tests/validators/test_repository_control_incident_1790.py \
   tests/validators/test_repository_control_incident_1791.py \
   tests/validators/test_repository_control_incident_1792.py \
-  tests/validators/test_repository_control_incident_1829.py
+  tests/validators/test_repository_control_incident_1829.py \
+  tests/validators/test_repository_control_cli.py
 ```
 
 MapLibre source-metadata consumers, matching the focused workflow:

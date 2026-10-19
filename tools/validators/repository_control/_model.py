@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import math
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -105,13 +106,22 @@ def _reject_constant(value: str) -> Any:
     raise InputError(f"non-standard JSON constant: {value}")
 
 
+def _finite_float(text: str) -> float:
+    # A standard literal such as 1e400 still overflows to infinity without calling parse_constant.
+    value = float(text)
+    if not math.isfinite(value):
+        raise InputError(f"JSON number overflows to a non-finite value: {text}")
+    return value
+
+
 def load_json(path: Path) -> dict[str, Any]:
-    """Load strict JSON: no duplicate keys or NaN/Infinity, and every parse failure is an InputError."""
+    """Load strict JSON: no duplicate keys or non-finite numbers, and every parse failure is an InputError."""
     try:
         value = json.loads(
             path.read_text(encoding="utf-8"),
             object_pairs_hook=_object_no_duplicates,
             parse_constant=_reject_constant,
+            parse_float=_finite_float,
         )
     except (OSError, ValueError, RecursionError) as exc:  # ValueError covers JSON, UTF-8 and InputError
         raise InputError(f"cannot parse {path}: {exc}") from exc

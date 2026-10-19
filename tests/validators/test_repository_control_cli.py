@@ -80,6 +80,8 @@ class CommandTests(unittest.TestCase):
             "nested_duplicate.json": '{"a": {"b": 1, "b": 1}}',
             "nan.json": '{"a": NaN}',
             "infinity.json": '{"a": -Infinity}',
+            "overflow.json": '{"a": 1e400}',
+            "negative_overflow.json": '{"a": [-1.5e999]}',
             "utf8.json": b'{"a": "\xff"}',
             "deep.json": '{"a": ' + "[" * 100_000 + "]" * 100_000 + "}",
             "huge_int.json": '{"a": ' + "9" * 5000 + "}",
@@ -103,7 +105,9 @@ class CommandTests(unittest.TestCase):
             load_json(self.write("d.json", '{"a": 1, "a": 2}'))
         with self.assertRaisesRegex(InputError, "non-standard JSON constant: NaN"):
             load_json(self.write("n.json", '{"a": NaN}'))
-        self.assertEqual(load_json(self.write("ok.json", '{"a": [1.5, {"b": null}]}')), {"a": [1.5, {"b": None}]})
+        with self.assertRaisesRegex(InputError, "non-finite value: 1e400"):
+            load_json(self.write("o.json", '{"a": 1e400}'))
+        self.assertEqual(load_json(self.write("ok.json", '{"a": [1.5, 1e308, {"b": null}]}')), {"a": [1.5, 1e308, {"b": None}]})
 
 
 if __name__ == "__main__":
