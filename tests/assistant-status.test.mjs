@@ -19,6 +19,80 @@ const status=tree=>findNode(tree,node=>node.props?.role==='status');
 const send=tree=>findNode(tree,node=>node.type==='button'&&node.props.children==='Send');
 const message=tree=>findNode(tree,node=>node.type==='textarea');
 const alert=tree=>findNode(tree,node=>node.props?.role==='alert');
+const lifecycleFocus=(record='one')=>({title:'Synthetic '+record,detail:'Synthetic source context',context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'knowledge',recordId:record}}});
+const deferred=()=>{let resolve,reject;const promise=new Promise((done,fail)=>{resolve=done;reject=fail;});return {promise,resolve,reject};};
+
+test('A to B to A cannot resurrect a late accepted question and its opaque job is cancelled',async()=>{
+ const admission=deferred(),cancelled=[],focus=lifecycleFocus();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel')){cancelled.push(url);return Response.json({cancelled:true});}
+  if(options.method==='POST')return admission.promise;
+  return Response.json({id:'late-admission',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'OBSOLETE_REPLY'}});
+ },{focus});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Preserve this question draft.'}});tree=render();
+  const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  render({focus:lifecycleFocus('two')});await settle();render({focus});await settle();
+  admission.resolve(Response.json({id:'late-admission'}));await submitted;tree=render();await settle();tree=render();
+  assert.deepEqual(cancelled,['/api/ai/jobs/late-admission/cancel']);
+  assert.doesNotMatch(text(tree),/OBSOLETE_REPLY/);
+  assert.equal(message(tree).props.value,'Preserve this question draft.');
+ }finally{h.dispose();}
+});
+
+test('accepting a question never erases a newer draft typed while admission was pending',async()=>{
+ const admission=deferred();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel'))return Response.json({cancelled:true});
+  if(options.method==='POST')return admission.promise;
+  return Response.json({id:'draft-preserving',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'NO_RELEASED_EVIDENCE'}});
+ });
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'First submitted question.'}});tree=render();
+  const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  tree=render();message(tree).props.onChange({target:{value:'Keep this next unsent draft.'}});render();
+  admission.resolve(Response.json({id:'draft-preserving'}));await submitted;tree=render();assert.equal(message(tree).props.value,'Keep this next unsent draft.');
+ }finally{h.dispose();}
+});
+
+test('a result read already in flight cannot revive a request after A to B to A',async()=>{
+ const response=deferred(),focus=lifecycleFocus();let reads=0,cancellations=0;
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel')){cancellations++;return Response.json({cancelled:true});}
+  if(options.method==='POST')return Response.json({id:'old-read'});
+  reads++;return response.promise;
+ },{focus});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain the original selection.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  render();await settle();assert.equal(reads,1);
+  render({focus:lifecycleFocus('two')});await settle();render({focus});await settle();
+  response.resolve(Response.json({id:'old-read',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'OBSOLETE_POLL_REPLY'}}));
+  await settle();tree=render();
+  assert.equal(cancellations,1);assert.doesNotMatch(text(tree),/OBSOLETE_POLL_REPLY/);
+ }finally{h.dispose();}
+});
+
+test('Stop remains available during admission and cancellation is claimed only after acknowledgement',async()=>{
+ const admission=deferred(),cancellation=deferred();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel'))return cancellation.promise;
+  if(options.method==='POST')return admission.promise;
+  throw new Error('A stopped question must not begin polling');
+ },{focus:lifecycleFocus()});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Stop this pending request.'}});tree=render();
+  const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  tree=render();const stop=findNode(tree,node=>node.type==='button'&&node.props.children==='Stop');assert.ok(stop);assert.equal(stop.props.disabled,false);stop.props.onClick();
+  tree=render();assert.match(text(tree),/not yet confirmed/i);assert.doesNotMatch(text(tree),/Question cancelled\./);
+  admission.resolve(Response.json({id:'stop-before-accept'}));await settle();tree=render();assert.doesNotMatch(text(tree),/Question cancelled\./);
+  cancellation.resolve(Response.json({cancelled:true}));await submitted;await settle();tree=render();assert.match(text(tree),/cancellation confirmed/i);
+ }finally{h.dispose();}
+});
 
 test('guest readiness does not wait for the separate account request',async()=>{
  const {h,render}=await workspace(url=>url.includes('/api/pc-ai/')?new Promise(()=>{}):Promise.resolve(ready()));
@@ -53,6 +127,24 @@ test('a limited reply offers continuation only for the latest turn with unchange
   tree=render({focus:{...focus,context:{...focus.context,frame:2025}}});
   assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply').props.disabled,true);
   assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply'&&node.props.disabled===false),undefined);
+   tree=render({focus});assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply'&&node.props.disabled===false),undefined,'returning to the same serialized context does not revive an earlier generation');
+ }finally{h.dispose();}
+});
+
+test('hiding and reopening unchanged chat preserves completed compatible follow-ups',async()=>{
+ const focus=lifecycleFocus();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(options.method==='POST')return Response.json({id:'compatible-completed'});
+  return Response.json({id:'compatible-completed',state:'completed',deadline:0,result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'Synthetic limited reply.',outputLimited:true}});
+ },{focus});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain this selected source.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});render();await settle();tree=render();
+  const continuation=tree=>findNode(tree,node=>node.type==='button'&&node.props.children==='Continue reply');
+  assert.equal(continuation(tree).props.disabled,false);
+  render({focus,active:false});tree=render({focus,active:true});assert.equal(continuation(tree).props.disabled,false);
+  render({focus:lifecycleFocus('other')});tree=render({focus});assert.equal(continuation(tree).props.disabled,true,'a real context A to B to A still invalidates the older follow-up');
  }finally{h.dispose();}
 });
 
@@ -192,9 +284,9 @@ test('successful cancellation remains usable when follow-up result reads are thr
   await findNode(tree,n=>n.type==='form'&&n.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
   tree=render();await settle();tree=render();
   message(tree).props.onChange({target:{value:'Keep my next draft.'}});tree=render();const beforeCancel=reads;
-  await findNode(tree,n=>n.type==='button'&&n.props.children==='Cancel').props.onClick();tree=render();
+  await findNode(tree,n=>n.type==='button'&&n.props.children==='Stop').props.onClick();tree=render();
   assert.equal(cancels,1);assert.equal(posts,1);assert.equal(reads,beforeCancel,'successful cancellation must not depend on another read');
-  assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Cancel'),undefined);
+  assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Stop'),undefined);
   assert.equal(send(tree).props.disabled,false);assert.equal(message(tree).props.value,'Keep my next draft.');
  }finally{h.dispose();}
 });
@@ -303,5 +395,91 @@ test('JSON download contains only the checked investigation and never resubmits 
   const tree=await submitExportQuestion(render);findNode(tree,node=>node.type==='button'&&node.props.children==='Download investigation JSON').props.onClick();await settle();
   assert.equal(posts,1);assert.equal(anchors[0].download,'kfm-investigation-draft.json');
   const draft=JSON.parse(await urls[0].text());assert.equal(draft.status,'DRAFT');assert.equal(draft.scope.selection.intervalIndex,1);assert.equal(draft.result.answer,null);assert.match(draft.result.sourceSummary,/10–40 ft/);
+ }finally{h.dispose();}
+});
+
+test('obsolete export and recheck completions cannot unlock a newer admission or publish a stale copy',async()=>{
+ for(const action of ['Copy investigation','Recheck sources']){
+  const oldRead=deferred(),admission=deferred();let reads=0,posts=0,copied='';
+  const {h,render}=await workspace(async(url,options)=>{
+   if(url.endsWith('/status'))return ready();
+   if(url.endsWith('/cancel'))return Response.json({cancelled:true});
+   if(options.method==='POST'){posts++;return posts===1?Response.json({id:'synthetic-export'}):admission.promise;}
+   reads++;return reads===1?Response.json(exportJob()):oldRead.promise;
+  },{focus:exportFocus},{},{navigator:{clipboard:{writeText:async value=>{copied=value;}}}});
+  try{
+   let tree=await submitExportQuestion(render);const operation=findNode(tree,node=>node.type==='button'&&node.props.children===action).props.onClick();
+   tree=render({focus:lifecycleFocus('new-source')});await settle();tree=render({focus:lifecycleFocus('new-source')});
+   message(tree).props.onChange({target:{value:'Keep the new request busy.'}});tree=render({focus:lifecycleFocus('new-source')});
+   const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+   assert.equal(posts,2,'scope change releases the obsolete read without waiting for a signal-ignoring transport');
+   oldRead.resolve(Response.json(exportJob()));await operation;await settle();tree=render({focus:lifecycleFocus('new-source')});
+   assert.equal(copied,'');assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Copy investigation').props.disabled,true,'obsolete finally must preserve newer busy ownership');
+   h.dispose();admission.resolve(Response.json({id:'new-admission'}));await submitted;
+  }finally{h.dispose();}
+ }
+});
+
+test('closing the active panel aborts old polls and late failures cannot add alerts or schedule retries',async()=>{
+ const oldRead=deferred(),scheduled=[],focus=lifecycleFocus();let signal,cancels=0;
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel')){cancels++;return Response.json({cancelled:true});}
+  if(options.method==='POST')return Response.json({id:'closing-job'});
+  signal=options.signal;return oldRead.promise;
+ },{focus},{},{setTimeout:(callback,delay)=>{scheduled.push(delay);return scheduled.length;},clearTimeout:()=>{}});
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain this source.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});render();await settle();
+  render({focus,active:false});assert.equal(signal.aborted,true);await settle();
+  oldRead.reject(new Error('OBSOLETE_NETWORK_FAILURE'));await settle();tree=render({focus,active:false});
+  assert.equal(cancels,1);assert.equal(alert(tree),undefined);assert.deepEqual(scheduled,[]);
+ }finally{h.dispose();}
+});
+
+test('unmounting before admission still cancels a late observable ID without restoring the question',async()=>{
+ const admission=deferred(),cancelled=[];
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel')){cancelled.push(url);return Response.json({cancelled:true});}
+  if(options.method==='POST')return admission.promise;
+  throw new Error('Unmounted admission must not be polled');
+ });
+ let tree=render();message(tree).props.onChange({target:{value:'Explain this before unmount.'}});tree=render();
+ const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+ h.dispose();admission.resolve(Response.json({id:'unmounted-admission'}));await submitted;assert.deepEqual(cancelled,['/api/ai/jobs/unmounted-admission/cancel']);
+});
+
+test('an actor change invalidates pending admission while retaining the unsent draft',async()=>{
+ const admission=deferred(),focus=lifecycleFocus();let account='synthetic-owner',cancels=0;
+ const {h,polls,render}=await workspace(async(url,options)=>{
+  if(url.includes('/api/pc-ai/'))return Response.json({configured:true,account,role:'administrator'});
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel')){cancels++;return Response.json({cancelled:true});}
+  if(options.method==='POST')return admission.promise;
+  throw new Error('Earlier actor request must not be polled');
+ },{focus,onAccount(){}});
+ try{
+  let tree=render();await settle();tree=render();message(tree).props.onChange({target:{value:'Keep my actor-change draft.'}});tree=render();
+  const submitted=findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
+  account='synthetic-new-owner';await polls[0]();await settle();render();await settle();
+  admission.resolve(Response.json({id:'previous-actor'}));await submitted;tree=render();assert.equal(cancels,1);assert.equal(message(tree).props.value,'Keep my actor-change draft.');
+ }finally{h.dispose();}
+});
+
+test('failed cancellation reports uncertainty while suppressing the old response',async()=>{
+ const oldRead=deferred();
+ const {h,render}=await workspace(async(url,options)=>{
+  if(url.endsWith('/status'))return ready();
+  if(url.endsWith('/cancel'))throw new Error('Synthetic unreachable cancellation');
+  if(options.method==='POST')return Response.json({id:'uncertain-cancel'});
+  return oldRead.promise;
+ });
+ try{
+  let tree=render();message(tree).props.onChange({target:{value:'Explain the old source.'}});tree=render();
+  await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});tree=render();await settle();
+  await findNode(tree,node=>node.type==='button'&&node.props.children==='Stop').props.onClick();
+  oldRead.resolve(Response.json({id:'uncertain-cancel',state:'completed',result:{outcome:'ABSTAIN',reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation:'OBSOLETE_CANCEL_REPLY'}}));await settle();tree=render();
+  assert.match(text(tree),/cancellation could not be confirmed/i);assert.doesNotMatch(text(tree),/OBSOLETE_CANCEL_REPLY|cancellation confirmed\./i);
  }finally{h.dispose();}
 });
