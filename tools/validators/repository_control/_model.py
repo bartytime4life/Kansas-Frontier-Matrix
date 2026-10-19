@@ -91,10 +91,29 @@ class InputError(ValueError):
     """Raised when a state or prepared context is not structurally usable."""
 
 
+def _object_no_duplicates(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    # A duplicate key would let a reader see one value while the digest and evaluation use another.
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise InputError(f"duplicate JSON key: {key}")
+        result[key] = value
+    return result
+
+
+def _reject_constant(value: str) -> Any:
+    raise InputError(f"non-standard JSON constant: {value}")
+
+
 def load_json(path: Path) -> dict[str, Any]:
+    """Load strict JSON: no duplicate keys or NaN/Infinity, and every parse failure is an InputError."""
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
+        value = json.loads(
+            path.read_text(encoding="utf-8"),
+            object_pairs_hook=_object_no_duplicates,
+            parse_constant=_reject_constant,
+        )
+    except (OSError, ValueError, RecursionError) as exc:  # ValueError covers JSON, UTF-8 and InputError
         raise InputError(f"cannot parse {path}: {exc}") from exc
     if not isinstance(value, dict):
         raise InputError(f"{path}: root must be an object")
