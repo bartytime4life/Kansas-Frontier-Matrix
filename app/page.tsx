@@ -9427,10 +9427,10 @@ export default function Home() {
             <footer><code>EXTERNAL SOURCE → FIXED ADAPTER → MAP DISPLAY</code><span>Evidence held at admission, release, and EvidenceBundle gates · <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3393" target="_blank" rel="noreferrer">governance issue #3393 ↗</a></span></footer>
           </section>
 
-          <div className="local-layer-settings" hidden={layerCatalogView === "official" || layerCatalogView === "selected" && !matchingCatalogEntries.some(entry => entry.imagery)}>
+          <div className="local-layer-settings" hidden={!earthEngineContext.enabled || layerCatalogView === "official" || layerCatalogView === "selected" && !matchingCatalogEntries.some(entry => entry.imagery)}>
             <p className="layer-journey-intro">Reviewed Kansas imagery appears here when an approved display set is installed. Each layer has its own visibility, opacity, source period, and limits. <Link href="/earth-engine">Explore all source recipes ↗</Link></p>
             <section className="reviewed-imagery-section" aria-label="Earth Engine imagery layers">
-              <EarthEngineDisplayControls catalogView={layerCatalogView} catalogTopic={officialWorkspace} catalogQuery={officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />
+              {earthEngineContext.enabled && <EarthEngineDisplayControls catalogView={layerCatalogView} catalogTopic={officialWorkspace} catalogQuery={officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />}
             </section>
           </div>
             <nav className="layer-task-links" aria-label="Related map tools"><button type="button" onClick={event => openMapUtility("scene", event.currentTarget)}><span>Appearance</span><small>Basemap, terrain &amp; lighting</small><b aria-hidden="true">↗</b></button><button type="button" onClick={event => openSourceStatus(event.currentTarget)}><span>Source status</span><small>Connections &amp; coverage</small><b aria-hidden="true">↗</b></button></nav>
@@ -9707,7 +9707,7 @@ export default function Home() {
                 </div></details>
               </section>}
 
-              {mapUtilityView === "history" && <HistoricalTopoControl map={mapRef.current} styleReady={styleReady} locationPrivate={locationCameraRedacted} flatMap={projection === "mercator" && scenePreset !== "elevation-3d"} onFlatMap={() => activateMapRepresentation("2d")} />}
+              {mapUtilityView === "history" && <HistoricalTopoControl map={mapRef.current} styleReady={styleReady} locationPrivate={locationCameraRedacted} />}
 
               {mapUtilityView === "inspect" && <section id="map-utility-view-inspect" role="region" aria-labelledby="map-utility-title" className="map-utility-section">
                 <div className="map-utility-section-heading"><span>INSPECT</span><h3>Feature index + context receipt</h3><p>Map hover appears as a preview in the Evidence Drawer. A click or explicit Inspect action selects one feature for full details.</p></div>

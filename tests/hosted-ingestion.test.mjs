@@ -14,6 +14,8 @@ test("archive readiness is deny-by-default and requires the exact chosen capacit
   assert.equal(ingestionConfig({ ...environment, KFM_PUBLIC_ORIGIN: "https://q9r9beo47t.preview.c38.airoapp.ai" }).ready, false);
   assert.equal(ingestionConfig({ ...environment, DB_HOST: "10.0.0.1" }).ready, false);
   assert.equal(ingestionConfig({ ...environment, VINEXT_TRUSTED_HOSTS: "*" }).ready, false);
+  assert.equal(ingestionConfig({ ...environment, VINEXT_TRUSTED_HOSTS: "kansasfrontiermatrix.com,www.kansasfrontiermatrix.com" }).ready, true);
+  assert.equal(ingestionConfig({ ...environment, VINEXT_TRUSTED_HOSTS: "kansasfrontiermatrix.com,evil.example" }).ready, false);
   assert.equal(ingestionConfig({ ...environment, KFM_ARCHIVE_CAPACITY_CONFIRMED_BYTES: "80000000001" }).ready, false);
 });
 test("actual Node request conversion preserves approved proxy HTTPS and rejects forwarded-host poisoning",async()=>{
