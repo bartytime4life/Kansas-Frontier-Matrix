@@ -7,6 +7,8 @@ activates a package or changes the public release pointer.
 from __future__ import annotations
 
 import argparse
+from contextlib import contextmanager
+import fcntl
 import hashlib
 import json
 import os
@@ -62,17 +64,36 @@ def stage(url: str, token: str, scan: int, package: str, address: str, path: Pat
         try:
             with OPENER.open(request, timeout=45) as response:
                 result = json.load(response)
-                if response.status not in (200, 201) or not result.get("staged") or result.get("sha256") != digest:
+                if response.status not in (200, 201) or not isinstance(result, dict) or not result.get("staged") or result.get("sha256") != digest:
                     raise ValueError(f"Site did not confirm staged {address}")
                 return
-        except (HTTPError, URLError, TimeoutError) as error:
+        except (HTTPError, URLError, TimeoutError, ConnectionError) as error:
             if attempt == 2 or isinstance(error, HTTPError) and error.code not in (408, 425, 429, 500, 502, 503, 504):
                 raise ValueError(f"Site staging failed for tile {address}") from None
             time.sleep(2 ** attempt)
 
 
+@contextmanager
+def capture_lock(raw: Path):
+    """One capture writer per RAW directory; the kernel releases it if the worker dies."""
+    fd = os.open(raw, os.O_RDONLY)
+    try:
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise ValueError("another worker is capturing into this RAW directory") from None
+        yield
+    finally:
+        os.close(fd)
+
+
 def capture_raw(item: dict, raw: Path, scan: int) -> Path:
     """Persist the original and its receipt without exposing a partial capture."""
+    with capture_lock(raw):
+        return _capture_raw(item, raw, scan)
+
+
+def _capture_raw(item: dict, raw: Path, scan: int) -> Path:
     original = raw / f"{scan}.tif"
     receipt = raw / f"{scan}.capture.json"
     if receipt.exists():
@@ -83,6 +104,9 @@ def capture_raw(item: dict, raw: Path, scan: int) -> Path:
         raise ValueError("RAW GeoTIFF exists without its capture receipt")
     partial = raw / f"{scan}.tif.part"
     receipt_partial = raw / f"{scan}.capture.json.part"
+    # Holding the lock, any partial left here is from a worker that was killed mid-capture.
+    partial.unlink(missing_ok=True)
+    receipt_partial.unlink(missing_ok=True)
     try:
         with partial.open("xb") as output:
             record = stream_geotiff(item, output.write)
@@ -107,14 +131,16 @@ def run(site: str, raw: Path, packages: Path, token: str, dry_run: bool, request
     if not dry_run and len(token) < 32:
         raise ValueError("KFM_HISTORICAL_WORKER_TOKEN is not configured")
     queue = {"requests": [json.loads(request_file_input.read_text(encoding="utf-8"))]} if request_file_input else request_json(f"{site}/api/historical-topo/queue", token)
-    items = queue.get("requests")
+    items = queue.get("requests") if isinstance(queue, dict) else None
     if not isinstance(items, list):
         raise ValueError("Site preparation queue changed shape")
     if not items:
         print("No pending Kansas sheet requests")
         return
     item = items[0]
-    if item.get("state") != "KS" or not isinstance(item.get("scanId"), int):
+    # A JSON true is a Python int; the connector and the Site both require 1..10^10.
+    if (not isinstance(item, dict) or item.get("state") != "KS" or type(item.get("scanId")) is not int
+            or not 1 <= item["scanId"] <= 10_000_000_000):
         raise ValueError("queue returned an invalid Kansas request")
     scan = item["scanId"]
     raw.mkdir(parents=True, exist_ok=True)
