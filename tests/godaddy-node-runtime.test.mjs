@@ -38,9 +38,12 @@ test("hosted AI endpoint is present without requiring the owner's PC", async () 
   const status = await response.json();
   assert.equal(status.requiresLogin, false);
   assert.equal(status.configured, false);
-  const home = await (await fetch(origin)).text();
-  assert.match(home, /HOSTED AI/);
-  assert.match(home, /No account is needed for chat/);
+  const page = await fetch(origin);
+  assert.equal(page.status, 200);
+  const home = await page.text();
+  assert.match(home, /id="qwen-map-panel"/);
+  assert.match(home, /Chat with KFM/);
+  assert.doesNotMatch(home, /No account is needed for chat|No login needed/);
   assert.doesNotMatch(home, /OLLAMA · YOUR PC|PC offline/);
 });
 test("public crawler files are served with their text and XML media types", async () => {

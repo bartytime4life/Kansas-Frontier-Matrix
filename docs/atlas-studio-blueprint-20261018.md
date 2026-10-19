@@ -403,6 +403,19 @@ The initial batch used a nonexistent `investigation.test.mjs` filename; the corr
 from the removed header selector and added focus ref were corrected to exercise the
 new actual composer/action; they are not reported as inherited application failures.
 
+**CI follow-up:** draft PR #5279's first run `39184136162` on remote head
+`a94dd2ea806fbe0450dc03ce8d19082bf3cff137` passed build, types and the first three
+test groups (11 + 23 + 88 cases). The broader AI/evidence group passed 179/180:
+`public-ai-http.test.mjs` still required the deliberately removed "No account is
+needed for chat" copy. Its sibling Node runtime test also asserted that copy and
+the old eyebrow. Both assertions now check the public 200 response, existing chat
+panel identity/title and absence of the removed promotional wording. All API
+`requiresLogin:false`, disabled/origin-hold, private-file denial and protected-admin
+checks remain. This is an introduced stale-test mismatch, not a passing CI result
+or an inherited runtime failure. Subsequent steps, including hydrated browser
+acceptance, were skipped in that first run; the PR records the follow-up result.
+No application source/build input changed for this test correction.
+
 ### A1 limits, rollback and continuation
 
 Delivery states: **implemented; locally tested**. Candidate browser verification,
