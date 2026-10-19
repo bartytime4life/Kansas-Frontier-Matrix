@@ -6,12 +6,12 @@ version: v2
 status: current Node operation documented; historical cPanel plan retained
 owners: ["@bartytime4life"]
 created: 2026-10-12
-updated: 2026-10-17
+updated: 2026-10-19
 policy_label: public
 current_path: docs/runbooks/godaddy-hosting.md
 owning_root: docs/
 responsibility: Route operators to the active Node application and retain the earlier cPanel plan as historical context
-truth_posture: CONFIRMED Node dashboard and live map checked 2026-10-17; cPanel topology and DNS table below are historical and must not be applied to the active app
+truth_posture: CONFIRMED Node app urdng3v1vk in the provider dashboard 2026-10-19; cPanel topology and DNS table below are historical and must not be applied to the active app
 related:
   - ../../apps/public-site/README.md
   - ../../infra/godaddy/README.md
@@ -25,10 +25,11 @@ related:
 
 Use the [Node application runbook](godaddy-node-hosting.md) for the active
 Explorer at [kansasfrontiermatrix.com](https://kansasfrontiermatrix.com/).
-Open [GoDaddy app q9r9beo47t](https://host.godaddy.com/nodejs/projects/q9r9beo47t)
+Open [GoDaddy app urdng3v1vk](https://host.godaddy.com/nodejs/projects/urdng3v1vk)
 and distinguish its Published commit, Preview commit and connected source branch.
-The 2026-10-17 provider readback identifies a standalone Node.js 22 composition,
-not the monorepo root or static front-door deployment. Review, publication holds,
+The 2026-10-19 provider readback identifies a standalone Node.js 22 composition,
+not the monorepo root or static front-door deployment. The earlier app
+`q9r9beo47t` named below no longer exists. Review, publication holds,
 data admission and rollback remain separate controls.
 
 <details>
