@@ -1,0 +1,95 @@
+{
+  "receipt_id": "genrec-policy-reviewer-role-vocabulary-shape-20261019",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/policy/validate_policy_reviewer_role_vocabulary.py",
+    "tests/validators/test_validate_policy_reviewer_role_vocabulary.py",
+    "fixtures/contracts/v1/policy/policy_reviewer_role_vocabulary/cases.json"
+  ],
+  "artifact_hashes": {
+    "tools/validators/policy/validate_policy_reviewer_role_vocabulary.py": "sha256:53343e036f526b176fdf23ed93be3ee535e59717815ff90cccefcfee3af6b433",
+    "tests/validators/test_validate_policy_reviewer_role_vocabulary.py": "sha256:b5e50dfde84c37a100f21aac1d7ffd1337573547d505a89000a390cbb86dd4d1",
+    "fixtures/contracts/v1/policy/policy_reviewer_role_vocabulary/cases.json": "sha256:fef10b177f2b1faa38e7f23e239eafd5d77a6305bce19b0ba91f1ebb56788362"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c860eaa9f800eb343ece0992e3492a48fa336d86",
+      "repo:tools/validators/policy/validate_policy_reviewer_role_vocabulary.py@c860eaa9f800eb343ece0992e3492a48fa336d86",
+      "repo:tests/validators/test_validate_policy_reviewer_role_vocabulary.py@c860eaa9f800eb343ece0992e3492a48fa336d86",
+      "repo:fixtures/contracts/v1/policy/policy_reviewer_role_vocabulary/cases.json@c860eaa9f800eb343ece0992e3492a48fa336d86",
+      "repo:policy/decision/reviewer_roles.v1.json@c860eaa9f800eb343ece0992e3492a48fa336d86",
+      "repo:schemas/contracts/v1/policy/policy_reviewer_role_vocabulary.schema.json@c860eaa9f800eb343ece0992e3492a48fa336d86",
+      "repo:contracts/policy/policy_reviewer_role_vocabulary.md@c860eaa9f800eb343ece0992e3492a48fa336d86",
+      "repo:.github/workflows/policy-reviewer-role-vocabulary.yml@c860eaa9f800eb343ece0992e3492a48fa336d86"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/policy/validate_policy_reviewer_role_vocabulary.py": "CONFIRMED",
+    "tests/validators/test_validate_policy_reviewer_role_vocabulary.py": "CONFIRMED",
+    "fixtures/contracts/v1/policy/policy_reviewer_role_vocabulary/cases.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "The policy-reviewer-role-vocabulary workflow runs only this validator, never the schema. On main it returned PASS for a role carrying records_approval or a named approver, a role without a description or with a malformed code, an alias equal to a role code defined later in the list, and a registry whose status was changed from PROPOSED_INACTIVE; non-list aliases, unhashable aliases or scopes and mixed-type scopes raised TypeError. The existing duplicate_role and authority_leak fixtures were incomplete records (no governance, no roles), so they were denied for a missing section rather than their named defect. The new fixtures and tests fail on the original validator."
+    },
+    {
+      "gate": "Tests and coverage",
+      "outcome": "PASS",
+      "reason": "Fixtures go from 3 to 6 cases; each DENY case is the tracked registry with one defect, and a test asserts they stay complete records. Unit tests go from 3 to 8 (34 subtests) covering 25 single-defect mutations of the registry, distinct aliases, non-object inputs and the CLI. Branch coverage of the validator rises from 45% to 93%. The workflow's four steps (py_compile, unittest, --registry, --fixtures) pass."
+    },
+    {
+      "gate": "Mutation check",
+      "outcome": "PASS",
+      "reason": "Each of eight changes failed the suite: allowing extra top-level keys, dropping the identity values, allowing extra role keys, dropping the code pattern, the description length, the scope type check, the alias/code overlap or the alias/alias overlap."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports the same 2 pre-existing findings in these files before and after. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c860eaa9f800eb343ece0992e3492a48fa336d86"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-19T00:59:10Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "The validator now enforces the schema's shape (fixed identity and PROPOSED_INACTIVE status, no extra keys, required description, code pattern, string scopes) because the workflow runs no schema check, and checks alias overlap after all codes are known. Aliases stay allowed because the contract describes them, although the schema's role object has additionalProperties false and no aliases property; that contract/schema divergence is left for an owner decision. The tracked registry is unchanged and still passes."
+}
