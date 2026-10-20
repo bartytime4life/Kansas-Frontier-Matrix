@@ -133,7 +133,7 @@
 .living-welcome[data-immersive=true] .welcome-map-stage:before{opacity:1}
 .living-welcome .topic-callout{opacity:1;transition:opacity .55s ease,border-color .25s,background .25s,box-shadow .25s}
 .living-welcome[data-immersive=true] .topic-callout:not(.is-active){opacity:0;pointer-events:auto}
-.living-welcome .topic-callout:focus-visible{opacity:1;pointer-events:auto}
+.living-welcome[data-immersive=true] .topic-callout:focus-visible{opacity:1;pointer-events:auto}
 
 /* Recorded tool demonstrations: two editorial thumbnails, one opt-in player. */
 .living-welcome .map-demo-panel{margin:25px 0 22px;padding-top:24px;border-top:1px solid #466675}
