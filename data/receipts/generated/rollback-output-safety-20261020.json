@@ -1,0 +1,64 @@
+{
+  "receipt_id": "kfm:generated:rollback-output-safety:20261020",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/release/rollback_apply.py",
+    "tests/release/test_synthetic_rollback_rehearsal.py",
+    "tools/release/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/release/rollback_apply.py": "sha256:e95ec96b3316e60abd528653e6afc32b82385651837f23c70b07ae1fffbdb2a7",
+    "tests/release/test_synthetic_rollback_rehearsal.py": "sha256:2801110d38a38d2cf6ddfcdd507e334e1fce9ae1cad11dd5181cd2a451acf438",
+    "tools/release/README.md": "sha256:d54c777cbcb9d76a4fc7c2f32d389fd3ef253243e11d15f52955891372361a42"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session; exact backend version unavailable"
+  },
+  "prompt_or_contract": "sha256:d65115d9dc26dd229de72841658f7a6bebf381e67a79615dbfa0cf90b4eac628",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "main@29b46ce2c3f4873699fce0a8fb3225c2f6db8e72",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "tools/release/rollback_apply.py",
+      "SECURITY.md"
+    ]
+  },
+  "truth_labels": {
+    "tools/release/rollback_apply.py": "CONFIRMED",
+    "tests/release/test_synthetic_rollback_rehearsal.py": "CONFIRMED",
+    "tools/release/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "synthetic rollback rehearsal unittest suite (10 tests)",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "new output regression against original base",
+      "outcome": "PASS",
+      "reason": "Expected failure reproduced on original code; corrected suite passes."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "repository-wide validation",
+      "outcome": "SKIPPED",
+      "reason": "Bounded output change; no claim of complete repository validation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-20T21:42:51.847318+00:00",
+  "emitter": "Codex",
+  "notes": "Synthetic-only local authoring; no real secrets or live-system tests; caller must control workspace directories; no release or publication authority."
+}
