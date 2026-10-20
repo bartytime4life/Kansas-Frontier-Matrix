@@ -10,6 +10,7 @@
 //   node probe.mjs [--runs 3] [--depth brief|expanded] [--concurrency 2]
 import {randomUUID} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
+import {signRequest,newSecret,verifyResponse} from './signature.mjs';
 
 const SYNTHETIC=['In two sentences, explain what a county seat is.','Give three general reasons rivers change course over time.','Briefly explain the difference between weather and climate.'];
 
@@ -24,6 +25,10 @@ export async function probe({env=process.env,runs=3,depth='brief',concurrency=2,
   const started=clock();
   try{
    const response=await fetchImpl(origin+path,{method,redirect:'manual',signal:AbortSignal.timeout(120000),headers:{...(withAccess?access:{}),...auth,...(body?{'Content-Type':'application/json'}:{}),...headers},body:body||undefined});
+   const bytes=Buffer.from(await response.arrayBuffer());
+   const authenticated=bytes.length<=65536&&sign&&verifyResponse({secret,requestHeaders:auth,method,path,requestBody:body,status:response.status,body:bytes,headers:response.headers});
+   let value=null;try{if(bytes.length<=65536)value=JSON.parse(bytes.toString('utf8'));}catch{}
+   return {status:response.ok&&!authenticated?0:response.status,value:authenticated?value:null,authenticated,ms:clock()-started};
   }catch(error){return {status:0,value:null,ms:clock()-started,error:error?.name??'FETCH_FAILED'};}
  };
 
@@ -43,6 +48,7 @@ export async function probe({env=process.env,runs=3,depth='brief',concurrency=2,
  const health=await send('GET','/v1/health');
  const entry=health.value?.profiles?.find?.(item=>item.id===profile);
  check('health_signed_ok',health.status===200,health.status);
+ check('health_response_authenticated',health.authenticated===true);
  check('profile_ready',entry?.ready===true,entry?.ready===true?undefined:entry?.reason??'PROFILE_MISSING');
  check('profile_digest_matches_pin',entry?.digest===digest);
  const result={probe:'kfm-home-inference-probe/1',at:new Date(clock()).toISOString(),origin,keyId,profile,model:entry?.model??null,digest:entry?.digest??null,runtime:health.value?.runtime??null,healthMs:health.ms,checks,samples};
@@ -51,17 +57,18 @@ export async function probe({env=process.env,runs=3,depth='brief',concurrency=2,
  const chat=async prompt=>{
   const body=JSON.stringify({requestId:randomUUID(),profile,depth,messages:[{role:'system',content:'You are a concise assistant. Synthetic benchmark.'},{role:'user',content:prompt}]});
   const response=await send('POST','/v1/chat',{body});
+  const bound=response.authenticated&&response.value?.requestId===JSON.parse(body).requestId&&response.value?.profile===profile&&response.value?.digest===digest&&response.value?.model===entry?.model;
+  return {status:response.status===200&&!bound?0:response.status,authenticated:response.authenticated===true,error:response.value?.error??null,wallMs:response.ms,finishReason:response.value?.finishReason??null,chars:typeof response.value?.text==='string'?response.value.text.length:null,...(response.value?.timings??{}),outputTokens:response.value?.usage?.outputTokens??null,promptTokens:response.value?.usage?.promptTokens??null};
  };
  for(let i=0;i<runs;i++)samples.push({run:i+1,kind:'sequential',...await chat(SYNTHETIC[i%SYNTHETIC.length])});
  check('sequential_chats_completed',samples.every(sample=>sample.status===200),samples.map(sample=>sample.status));
- check('chat_reply_signatures_verified',samples.every(sample=>sample.verified===true));
  if(concurrency>1){
   const parallel=await Promise.all(Array.from({length:concurrency},(_,i)=>chat(SYNTHETIC[i%SYNTHETIC.length])));
   parallel.forEach((sample,i)=>samples.push({run:runs+i+1,kind:'concurrent',...sample}));
   // Either queued and served, or refused promptly as busy; never a hang or a 5xx.
   check('concurrent_chats_bounded',parallel.every(sample=>sample.status===200||sample.status===429&&sample.wallMs<10000),parallel.map(sample=>sample.status));
-  // The gateway signs its own busy refusals too, so every concurrent reply must verify.
-  check('concurrent_reply_signatures_verified',parallel.every(sample=>sample.verified===true));
+  // A prompt 429 counts only when the gateway signed it; an edge can answer busy too.
+  check('concurrent_responses_authenticated',parallel.every(sample=>sample.authenticated),parallel.map(sample=>sample.authenticated));
  }
  return finish(result);
 }

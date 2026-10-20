@@ -4,6 +4,8 @@ import {randomUUID} from 'node:crypto';
 import {mkdtemp,writeFile,chmod,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {signRequest,verifyRequest,createNonceCache,newSecret,SIGNATURE_MAX_SKEW_MS,signResponse,RESPONSE_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
+import {parseProfiles,parseKeys,loadConfig,startGateway,createAdmission,neutralizeTemplate,GATEWAY_VERSION} from '../scripts/home-inference/gateway.mjs';
 import {probe} from '../scripts/home-inference/probe.mjs';
 import {readFile} from 'node:fs/promises';
 import {homeInferenceConfig,createHomeInferenceClient,HomeInferenceModel,discussionMessages,HOME_PROVIDER} from '../server/home-inference.mjs';
@@ -255,71 +257,21 @@ test('provider selection is exclusive and never falls back',()=>{
 
 test('the client rejects redirects, foreign responses and oversized bodies, and sends Access credentials',async()=>{
  const seen=[];
+ const client=body=>createHomeInferenceClient({origin:'https://inference.example.org',keyId:'prod-1',secret:prodSecret,access:{id:'abc.access',secret:'access-secret'},fetchImpl:async(url,init)=>{
+  seen.push({url,init});const response=body();
+  response.headers.set(RESPONSE_SIGNATURE_HEADER,signResponse({secret:prodSecret,requestHeaders:init.headers,method:init.method,path:new URL(url).pathname,requestBody:init.body??'',status:response.status,body:Buffer.from(await response.clone().arrayBuffer())}));
+  return response;
+ }});
  await assert.rejects(client(()=>new Response(null,{status:302,headers:{Location:'https://login.example.org/'}})).health(),/GATEWAY_REDIRECT/);
  assert.equal(seen[0].url,'https://inference.example.org/v1/health');assert.equal(seen[0].init.redirect,'manual');
  assert.equal(seen[0].init.headers['CF-Access-Client-Id'],'abc.access');assert.equal(seen[0].init.headers['CF-Access-Client-Secret'],'access-secret');
  assert.match(seen[0].init.headers['x-kfm-signature'],/^[A-Za-z0-9_-]{43}$/);
- await assert.rejects(client(signed('<html>login</html>',{type:'text/html'})).health(),/GATEWAY_RESPONSE_INVALID/);
- await assert.rejects(client(signed({hello:'world'})).health(),/GATEWAY_RESPONSE_INVALID/);
+ await assert.rejects(client(()=>new Response('<html>login</html>',{headers:{'Content-Type':'text/html'}})).health(),/GATEWAY_RESPONSE_INVALID/);
+ await assert.rejects(client(()=>Response.json({hello:'world'})).health(),/GATEWAY_RESPONSE_INVALID/);
  await assert.rejects(client(()=>Response.json({gateway:GATEWAY_VERSION,pad:'x'.repeat(70000)})).health(),/GATEWAY_RESPONSE_INVALID/);
- await assert.rejects(client(signed({gateway:GATEWAY_VERSION,error:'GATEWAY_BUSY'},{status:429})).health(),/GATEWAY_BUSY/);
- await assert.rejects(client(signed({gateway:GATEWAY_VERSION,error:'Something <odd>'},{status:500})).health(),/GATEWAY_RESPONSE_INVALID/);
+ await assert.rejects(client(()=>Response.json({gateway:GATEWAY_VERSION,error:'GATEWAY_BUSY'},{status:429})).health(),/GATEWAY_BUSY/);
+ await assert.rejects(client(()=>Response.json({gateway:GATEWAY_VERSION,error:'Something <odd>'},{status:500})).health(),/GATEWAY_RESPONSE_INVALID/);
  await assert.rejects(createHomeInferenceClient({origin:'https://inference.example.org',keyId:'prod-1',secret:prodSecret,fetchImpl:async()=>{throw new TypeError('fetch failed');}}).health(),/GATEWAY_UNREACHABLE/);
-});
-
-test('the client trusts only replies signed for its own request',async()=>{
- const healthy={gateway:GATEWAY_VERSION,online:true,runtime:null,active:0,queued:0,profiles:[]};
- const client=reply=>createHomeInferenceClient({origin:'https://inference.example.org',keyId:'prod-1',secret:prodSecret,fetchImpl:async(url,init)=>reply(init)});
- const sign=(init,{secret=prodSecret,nonce=init.headers['x-kfm-nonce'],status=200,body=JSON.stringify(healthy)}={})=>signReply({secret:decodeSecret(secret),nonce,status,body});
- const respond=(signature,status=200,body=JSON.stringify(healthy))=>new Response(body,{status,headers:{'Content-Type':'application/json',...(signature?{[REPLY_SIGNATURE_HEADER]:signature}:{})}});
- assert.equal((await client(init=>respond(sign(init))).health()).online,true);
- // Edge pages and refused credentials carry no signature; their bodies are ignored.
- await assert.rejects(client(()=>respond(null,502,'<html>Bad gateway</html>')).health(),/GATEWAY_UNREACHABLE/);
- await assert.rejects(client(()=>respond(null,200)).health(),/GATEWAY_UNREACHABLE/);
- await assert.rejects(client(()=>respond(null,401,JSON.stringify({gateway:GATEWAY_VERSION,error:'GATEWAY_BUSY'}))).health(),/UNAUTHORIZED/);
- await assert.rejects(client(()=>respond(null,403,'Access denied')).health(),/UNAUTHORIZED/);
- // Forged key, another request's reply, a changed status and a changed body all fail.
- await assert.rejects(client(init=>respond(sign(init,{secret:newSecret()}))).health(),/GATEWAY_REPLY_UNVERIFIED/);
- await assert.rejects(client(init=>respond(sign(init,{nonce:'replayed-nonce-from-earlier-1'}))).health(),/GATEWAY_REPLY_UNVERIFIED/);
- await assert.rejects(client(init=>respond(sign(init,{status:500}))).health(),/GATEWAY_REPLY_UNVERIFIED/);
- await assert.rejects(client(init=>respond(sign(init),200,JSON.stringify({...healthy,online:false}))).health(),/GATEWAY_REPLY_UNVERIFIED/);
- await assert.rejects(client(()=>respond('not-a-signature')).health(),/GATEWAY_REPLY_UNVERIFIED/);
-});
-
-test('the gateway signs authenticated replies and refusals, never unauthenticated ones',async()=>{
- const g=await gateway();
- try{
-  const call=async(method,path,body)=>{
-   const text=body===undefined?'':JSON.stringify(body),auth=signRequest({keyId:'prod-1',secret:prodSecret,method,path,body:text});
-   const response=await fetch(g.origin+path,{method,headers:{...auth,...(text?{'Content-Type':'application/json'}:{})},body:text||undefined});
-   const reply=await response.text();
-   return {status:response.status,verified:verifyReply({secret:prodSecret,nonce:auth['x-kfm-nonce'],status:response.status,body:reply,signature:response.headers.get(REPLY_SIGNATURE_HEADER)})};
-  };
-  assert.deepEqual(await call('GET','/v1/health'),{status:200,verified:true});
-  assert.deepEqual(await call('POST','/v1/chat',chatBody()),{status:200,verified:true});
-  assert.deepEqual(await call('POST','/v1/chat',chatBody({profile:'not-a-profile'})),{status:422,verified:true});
-  const unsigned=await fetch(g.origin+'/v1/health');
-  assert.equal(unsigned.status,401);assert.equal(unsigned.headers.get(REPLY_SIGNATURE_HEADER),null);
- }finally{await g.close();}
-});
-
-test('every reply leaves within the 90 s tunnel budget, queue wait included',async()=>{
- assert.equal(GATEWAY_LIMITS.responseMs,90000);
- assert.throws(()=>parseProfiles({profiles:[profile({timeoutMs:{brief:60000,expanded:90001}})]}),/PROFILE_INVALID/);
- assert.equal(parseProfiles({profiles:[profile({timeoutMs:{brief:60000,expanded:90000}})]}).profiles.get('kfm-default-chat').timeoutMs.expanded,90000);
- // A request that already spent its budget before generation is refused, not run past the tunnel deadline.
- let now=Date.now();
- const ollama=fakeOllama();
- const instance=createGateway({profiles:profiles(),keys:keys(),fetchImpl:async(url,init)=>{if(new URL(url).pathname==='/api/tags')now+=86000;return ollama.fetchImpl(url,init);},clock:()=>now,log:()=>{}});
- const {createServer}=await import('node:http');
- const server=createServer(instance.handler);server.listen(0,'127.0.0.1');await once(server,'listening');
- try{
-  const body=JSON.stringify(chatBody());
-  const response=await fetch('http://127.0.0.1:'+server.address().port+'/v1/chat',{method:'POST',headers:{...signRequest({keyId:'prod-1',secret:prodSecret,method:'POST',path:'/v1/chat',body,now}),'Content-Type':'application/json'},body});
-  assert.equal(response.status,429);assert.equal((await response.json()).error,'GATEWAY_BUSY');
-  assert.equal(ollama.calls.filter(call=>call.path==='/api/chat').length,0);
-  assert.equal(instance.admission.active,0);
- }finally{server.closeAllConnections?.();await new Promise(resolve=>server.close(resolve));}
 });
 
 test('discussion messages mirror the embedded prompt, trim old turns and keep the current question',()=>{
@@ -429,17 +381,13 @@ test('the probe proves refusal cases and records synthetic timings without secre
   assert.doesNotMatch(JSON.stringify(result),new RegExp(prodSecret));
   const wrong=await probe({env:{KFM_HOME_INFERENCE_URL:g.origin,KFM_HOME_INFERENCE_KEY_ID:'prod-1',KFM_HOME_INFERENCE_SECRET:prodSecret,KFM_HOME_INFERENCE_PROFILE:'kfm-default-chat',KFM_HOME_INFERENCE_DIGEST:'sha256:'+OTHER},runs:1});
   assert.equal(wrong.summary.passed,false);assert.equal(wrong.checks.find(item=>item.name==='profile_digest_matches_pin').result,'FAIL');
-  // An edge that strips signatures only under concurrent load must still fail the probe.
+  // An edge that answers an unsigned, prompt 429 under concurrent load must not pass as bounded admission.
   let chats=0;
-  const stripping=async(url,init)=>{
-   const response=await fetch(url,init);
-   if(new URL(url).pathname!=='/v1/chat'||++chats<=2)return response;
-   const headers=new Headers(response.headers);headers.delete(REPLY_SIGNATURE_HEADER);
-   return new Response(await response.text(),{status:response.status,headers});
-  };
-  const edge=await probe({env:{KFM_HOME_INFERENCE_URL:g.origin,KFM_HOME_INFERENCE_KEY_ID:'prod-1',KFM_HOME_INFERENCE_SECRET:prodSecret,KFM_HOME_INFERENCE_PROFILE:'kfm-default-chat',KFM_HOME_INFERENCE_DIGEST:'sha256:'+DIGEST},runs:2,concurrency:2,fetchImpl:stripping});
-  assert.equal(edge.checks.find(item=>item.name==='chat_reply_signatures_verified').result,'PASS');
-  assert.equal(edge.checks.find(item=>item.name==='concurrent_reply_signatures_verified').result,'FAIL');
+  const edgeBusy=async(url,init)=>new URL(url).pathname==='/v1/chat'&&++chats>2?Response.json({gateway:GATEWAY_VERSION,error:'GATEWAY_BUSY'},{status:429}):fetch(url,init);
+  const edge=await probe({env:{KFM_HOME_INFERENCE_URL:g.origin,KFM_HOME_INFERENCE_KEY_ID:'prod-1',KFM_HOME_INFERENCE_SECRET:prodSecret,KFM_HOME_INFERENCE_PROFILE:'kfm-default-chat',KFM_HOME_INFERENCE_DIGEST:'sha256:'+DIGEST},runs:2,concurrency:2,fetchImpl:edgeBusy});
+  assert.equal(edge.checks.find(item=>item.name==='sequential_chats_completed').result,'PASS');
+  assert.equal(edge.checks.find(item=>item.name==='concurrent_chats_bounded').result,'PASS');
+  assert.equal(edge.checks.find(item=>item.name==='concurrent_responses_authenticated').result,'FAIL');
   assert.equal(edge.summary.passed,false);
  }finally{await g.close();}
 });

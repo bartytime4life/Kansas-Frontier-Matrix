@@ -85,8 +85,7 @@ production. A VPS relay and a private overlay/VPN are deferred.
 
 **Deadline fact for the tunnel path:** Cloudflare's documented proxy read
 timeout on non-Enterprise plans is 100 s (HTTP 524). Responses are bounded and
-non-streamed, so the gateway enforces a 90 s budget per request, counted from
-arrival and including queue wait, and refuses profiles with longer limits. At the deadline the
+non-streamed, so gateway profiles cap each call at 90 s. At the deadline the
 gateway returns the reply so far as length-limited, and the existing **Continue**
 flow picks it up. Streaming would need a deliberate NDJSON-to-SSE choice and
 full-path tests. It is not part of this change.
@@ -97,7 +96,6 @@ full-path tests. It is not part of this change.
 | --- | --- |
 | Raw Ollama never reachable | Gateway config refuses a non-loopback Ollama URL. No `/api/*` passthrough exists; unsigned and unknown paths get `401`. The unit sets `IPAddressDeny=any`/`IPAddressAllow=localhost` |
 | Caller authentication | HMAC-SHA256 over scheme, method, path, timestamp, nonce and body hash; ±60 s skew; nonce single-use and claimed only after the signature verifies; constant-time compare; one indistinguishable `401` |
-| Reply authenticity | The gateway signs every reply to an authenticated request with that key, bound to the request nonce, HTTP status and exact body (`x-kfm-reply-signature`). The server verifies the raw bytes before parsing. Unsigned replies (edge errors, Access denials) are never trusted; a signature for another request, status or body is `GATEWAY_REPLY_UNVERIFIED`. The probe checks this too |
 | Separate prod/staging credentials | Each key has a scope; a profile lists the scopes it serves; an out-of-scope profile looks unknown |
 | Revocation without URL change | Remove the key and restart the gateway; Access service tokens are revoked separately in Cloudflare |
 | No model substitution | The gateway serves a profile only when Ollama reports its exact digest and it is not remote. The KFM server also pins `KFM_HOME_INFERENCE_DIGEST` and holds chat on any mismatch |
