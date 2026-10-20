@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { ATLAS_MISSION_GROUPS, atlasMissionAvailability } from "./map-starters";
+
+const LivingWelcome = lazy(() => import("./living-welcome/welcome.jsx"));
 
 /**
  * Startup chooser over existing controls and question drafts. It never
@@ -38,8 +40,11 @@ const STEPS: ReadonlyArray<{ action: ExplorerGuideAction; glyph: string; title: 
   { action: "qwen", glyph: "Q", title: "Ask about this view", body: "Get a bounded explanation of what is on screen — never a substitute for evidence." },
 ];
 
-export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onChoosePlace }: Readonly<{
+export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onChoosePlace, visual = false, onSearch, onTopic }: Readonly<{
   open: boolean;
+  visual?: boolean;
+  onSearch?: (query: string) => void;
+  onTopic?: (topic: import("./layer-workspaces").LayerWorkspace) => void;
   onClose: (rememberDismissal: boolean) => void;
   onAction: (action: ExplorerGuideAction) => void;
   onMore?: () => void;
@@ -72,7 +77,7 @@ export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onCh
     else onAction(starterId ? "layers" : "qwen");
     onClose(remember());
   };
-  return (
+  const legacy = (
     <section ref={panelRef} className="explorer-guide" role="dialog" aria-modal="false" aria-labelledby="explorer-guide-title" aria-describedby="explorer-guide-summary">
       <header className="explorer-guide-header">
         <p className="explorer-guide-kicker">Atlas Studio · Prairie Field Desk</p>
@@ -133,4 +138,5 @@ export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onCh
       </footer>
     </section>
   );
+  return visual && onSearch && onTopic ? <Suspense fallback={legacy}><LivingWelcome onClose={onClose} onAction={onAction} onMore={onMore} onSearch={onSearch} onTopic={onTopic} questions={legacy} initialRemember={readExplorerGuideDismissed()} /></Suspense> : legacy;
 }

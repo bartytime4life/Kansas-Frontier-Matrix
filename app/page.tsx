@@ -16,6 +16,9 @@ import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
 import { hasExplorerDestination } from "./explorer-startup";
+import { WelcomeFeatureGuide } from "./living-welcome/FeatureGuide.jsx";
+import "./living-welcome/welcome.css";
+import type { WelcomeFeatureDestination } from "./living-welcome/features";
 import { basemapCacheRequest } from "./basemap-cache";
 import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
@@ -8695,6 +8698,21 @@ export default function Home() {
       if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
     });
   };
+  const runWelcomeTopic = (topic: LayerWorkspace) => {
+    runExplorerGuideAction("layers");
+    setStarterPanelOpen(false);
+    setLayerCatalogView("official");
+    setOfficialWorkspace(topic);
+  };
+  const runWelcomeSearch = (query: string) => {
+    setGlobalQuery(query);
+    openAtlasComposer("find", query);
+  };
+  const runWelcomeFeature = (destination: WelcomeFeatureDestination) => {
+    setGuideOpen(false);
+    if (destination === "sources") openSourceStatus();
+    else runWelcomeTopic(destination);
+  };
   const chooseMapMenuRepresentation = (mode: "2d" | "terrain" | "globe") => {
     setUndergroundOpen(false);
     if (mapUtilityView === "compare") setMapUtilityOpen(false);
@@ -8725,8 +8743,10 @@ export default function Home() {
           <span><strong className="atlas-title">Kansas Frontier Matrix</strong><small className="atlas-subtitle">Atlas Studio · Prairie Field Desk</small></span>
         </div>
         <div className="atlas-scope-strip" aria-label="Current investigation">
-          <button type="button" className="atlas-scope-control" onClick={() => openAtlasComposer("find")} aria-controls="qwen-map-panel" title="Find places, layers and sources · shortcut /">Find &amp; ask</button>
-          <span><strong>{selectedLabel}</strong><br /><small>Map time {temporalScopeLabel} · {selectedMapLayerCount} layers</small></span>
+          <button type="button" className="atlas-scope-control welcome-header-find" onClick={() => openAtlasComposer("find")} aria-controls="qwen-map-panel" title="Find places, layers and sources · shortcut /">Find a county or place</button>
+          <button type="button" className="welcome-ai-entry" onClick={() => openAtlasComposer("explore")} aria-controls="qwen-map-panel">✧ Ask AI</button>
+          <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion} />
+          <span className="welcome-header-context"><strong>{selectedLabel}</strong><br /><small>Map time {temporalScopeLabel} · {selectedMapLayerCount} layers</small></span>
         </div>
           <span className="sr-only" role="status">{sourceIssues.length ? `${sourceIssues.length} selected sources need attention. Open Layers, then Source status for recovery.` : ""}</span>
           <nav className="map-chrome-dock" aria-label="Map view and controls">
@@ -9546,7 +9566,7 @@ export default function Home() {
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
-          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onChoosePlace={() => openAtlasComposer("find")} onMission={question => openAtlasComposer("explore", question)} />
+          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} visual onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onChoosePlace={() => openAtlasComposer("find")} onMission={question => openAtlasComposer("explore", question)} />
           <button className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Chat with KFM about this map view" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
             <span><strong>Chat with KFM</strong><small>About this map view</small></span>
