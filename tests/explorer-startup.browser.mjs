@@ -6,6 +6,7 @@ import { spawn } from 'node:child_process';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { isStaleInterceptionCancellation } from './browser-interception.mjs';
 
 const origin = new URL(process.env.KFM_NODE_TEST_ORIGIN ?? 'http://127.0.0.1:5182');
 assert.equal(origin.protocol, 'http:');
@@ -88,10 +89,7 @@ async function pageSession(b, width, height) {
     })().catch(error => {
       // Navigation cancels old paused requests. Only that exact stale CDP error
       // is expected; current-document interception failures still fail the test.
-      const staleCancellation = requestNavigation !== navigation
-        && String(error).includes('"code":-32602')
-        && String(error).includes('"message":"Invalid InterceptionId."');
-      if (!staleCancellation) errors.push(String(error));
+      if (!isStaleInterceptionCancellation(error, requestNavigation, navigation)) errors.push(String(error));
     });
   };
   b.listeners.add(listener);

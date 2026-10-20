@@ -5,20 +5,26 @@
     "app/explorer-guide.tsx",
     "app/living-welcome/welcome.jsx",
     "tests/explorer-startup.browser.mjs",
-    "tests/living-welcome.test.mjs"
+    "tests/living-welcome.test.mjs",
+    "tests/county-search.browser.mjs",
+    "tests/browser-interception.mjs",
+    "tests/browser-interception.test.mjs"
   ],
   "artifact_hashes": {
     "app/explorer-guide.tsx": "sha256:2d8adb02b2df7fda9314655f2e178f1841c07f9454c87b0f64925dcf08617c8e",
     "app/living-welcome/welcome.jsx": "sha256:26bc395a278b82d6bd0e4fc2233baeb3b7adc96bf64d090fa6ef28e10b2db4e3",
-    "tests/explorer-startup.browser.mjs": "sha256:72e099d3d18ff558dd4ad9968e83548e7aa99fe7bf5e66e00f6263b48d593824",
-    "tests/living-welcome.test.mjs": "sha256:bac1a690982a7174cfa34468b1cbd7d3811129fdde316b9d25f3594d5b3deaef"
+    "tests/explorer-startup.browser.mjs": "sha256:fdc30ec2a7e4b7dd2eac63cf0392a69ba324b24bf1984dd8ae6a88d7c2fffb62",
+    "tests/living-welcome.test.mjs": "sha256:bac1a690982a7174cfa34468b1cbd7d3811129fdde316b9d25f3594d5b3deaef",
+    "tests/county-search.browser.mjs": "sha256:42a5d9e0f2587caa0e8aaee45b7164220289238e3b8760b40f89be084f0cfcb6",
+    "tests/browser-interception.mjs": "sha256:00ce4ce7938584aab50ac2728387eedb429a3f9596a2f9bc2fe37622380b5a63",
+    "tests/browser-interception.test.mjs": "sha256:f572134aa15b9450f4523b1e67d49b4c362bbb83a76e6b319ba084a5787a6e07"
   },
   "model_identity": {
     "provider": "OpenAI",
     "model": "GPT-6 / Codex",
     "version": "Runtime build identifier unavailable"
   },
-  "prompt_or_contract": "sha256:410d3e8664a927c44e9d33fea5e7eadc4a778b12b93d254d6c2ee5b8a51f60b5",
+  "prompt_or_contract": "sha256:0f5fa23e809c15f45b9fb0ec2bff6ac16319df87e131bf89041448e154e02e4a",
   "parameters": {
     "tools_enabled": [
       "container",
@@ -28,14 +34,18 @@
   "inputs": {
     "evidence_refs": [
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/1bbd35da1ac60cefaf80a5abd5653e75bb92add3",
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39464148259/job/118770998863"
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39464148259/job/118770998863",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39467044362/job/118781029753"
     ]
   },
   "truth_labels": {
     "app/explorer-guide.tsx": "CONFIRMED",
     "app/living-welcome/welcome.jsx": "CONFIRMED",
     "tests/explorer-startup.browser.mjs": "CONFIRMED",
-    "tests/living-welcome.test.mjs": "CONFIRMED"
+    "tests/living-welcome.test.mjs": "CONFIRMED",
+    "tests/county-search.browser.mjs": "CONFIRMED",
+    "tests/browser-interception.mjs": "CONFIRMED",
+    "tests/browser-interception.test.mjs": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -44,9 +54,14 @@
       "reason": "35 focused component/startup/navigation tests pass. New commit-phase focus/Escape regression fails against unmodified welcome source. Browser tracing showed Escape reaching body during lazy fallback replacement before passive autofocus; layout effects close that gap."
     },
     {
+      "gate": "interception-guard-regression",
+      "outcome": "PASS",
+      "reason": "Shared cancellation classifier regression passes: only exact protocol code/message from a strictly older navigation is ignored. Current/future epoch, wrong code, wrong message, malformed JSON and timeout remain errors. Focused harness lint has no errors/warnings. County dismissal now uses the existing accessible close name for both welcome renderings."
+    },
+    {
       "gate": "final-combined-node",
       "outcome": "PASS",
-      "reason": "Node 22.23.3 on base 1bbd35da1a plus this patch: 1561 pass, 0 fail, 17 skip. Used established approved unsandboxed test execution and umask 022 for disposable model-child /proc OOM and permission fixtures; assertions unchanged."
+      "reason": "Node 22.23.3 on base 1bbd35da1a plus this patch: 1562 pass, 0 fail, 17 skip. Used established approved unsandboxed test execution and umask 022 for disposable model-child /proc OOM and permission fixtures; assertions unchanged."
     },
     {
       "gate": "final-build-types-http-assigned-port",
@@ -61,7 +76,7 @@
     {
       "gate": "final-combined-browser-and-exact-head-ci",
       "outcome": "SKIPPED",
-      "reason": "Final combined browser run is in progress and exact-head CI awaits this commit at receipt emission. Final immutable-head results must be read from the follow-up PR body and linked CI run; no completed final browser/CI claim at emission."
+      "reason": "Full local combined browser run passed 33/33 before extracting shared cancellation handling. Final revised browser run is in progress at emission. First exact-head CI passed build/types/Node/18 HTTP checks but failed on stale CDP cancellation in county-search; both harnesses now share the guarded classifier. Fresh exact-head CI results must be read in the PR."
     },
     {
       "gate": "lint-diff-receipt",
@@ -93,7 +108,7 @@
     "timestamp": null
   },
   "override_record": null,
-  "created_at": "2026-10-20T17:32:15.582523+00:00",
+  "created_at": "2026-10-20T17:40:34.300296+00:00",
   "emitter": "OpenAI Codex hosted welcome completion",
-  "notes": "Five-file bounded follow-up because #5351 and #5352 were merged externally during work. Preserve both merges. Production changes only make fallback and living-welcome focus/Escape ready in layout effects; storage, destinations, scene behavior and security remain unchanged. Browser harness ignores only exact Invalid InterceptionId cancellation from an older navigation; current-document failures remain fatal. No skip added to full acceptance suite. Receipt records emission-time observations; PR/CI records later verification. Sites mirror and MEGALODON untouched. Rollback closes the draft or reverts this startup/tests/receipt commit without data/configuration migration."
+  "notes": "Eight-file bounded follow-up because #5351 and #5352 were merged externally during work. Preserve both merges. Production changes only make fallback and living-welcome focus/Escape ready in layout effects; storage, destinations, scene behavior and security remain unchanged. Both browser harnesses share an explicitly tested classifier for exact Invalid InterceptionId cancellation from an older navigation; current-epoch failures remain fatal. First CI reproduced this harness defect in county-search, extending the test-only repair to that existing acceptance file and a shared helper/regression test. No skip added to full acceptance suite. Receipt records emission-time observations; PR/CI records later verification. Sites mirror and MEGALODON untouched. Rollback closes the draft or reverts this startup/tests/receipt commit without data/configuration migration."
 }
