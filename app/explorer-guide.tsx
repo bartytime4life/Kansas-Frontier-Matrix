@@ -1,6 +1,6 @@
 "use client";
 
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ATLAS_MISSION_GROUPS, atlasMissionAvailability } from "./map-starters";
 
 const LivingWelcome = lazy(() => import("./living-welcome/welcome.jsx"));
@@ -59,7 +59,9 @@ export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onCh
   const onCloseRef = useRef(onClose);
   useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
 
-  useEffect(() => {
+  // Focus and Escape must be ready in the same commit as the fallback DOM.
+  // A passive effect leaves a keyboard gap during the lazy welcome handoff.
+  useLayoutEffect(() => {
     if (!open) return;
     const first = panelRef.current?.querySelector<HTMLElement>("[data-guide-autofocus]");
     first?.focus({ preventScroll: true });

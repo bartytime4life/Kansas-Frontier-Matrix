@@ -6,6 +6,7 @@ import { spawn } from 'node:child_process';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { isStaleInterceptionCancellation } from './browser-interception.mjs';
 
 const origin = new URL(process.env.KFM_NODE_TEST_ORIGIN ?? 'http://127.0.0.1:5182');
 assert.equal(origin.protocol, 'http:');
@@ -76,7 +77,11 @@ async function browser(t) {
 async function pageSession(browser, width, height) {
   const { targetId } = await browser.call('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await browser.call('Target.attachToTarget', { targetId, flatten: true });
-  const call = (method, params) => browser.call(method, params, sessionId);
+  let navigation = 0;
+  const call = (method, params) => {
+    if (method === 'Page.navigate' || method === 'Page.reload') navigation++;
+    return browser.call(method, params, sessionId);
+  };
   const errors = [], held = [];
   let mode = 'held', fixture = payload('ready', features), httpStatus = 200;
   const fulfill = (requestId, body, responseCode = 200) => call('Fetch.fulfillRequest', {
@@ -85,7 +90,10 @@ async function pageSession(browser, width, height) {
     body: Buffer.from(JSON.stringify(body)).toString('base64'),
   });
   const listener = message => {
-    if (message.sessionId !== sessionId || message.method !== 'Fetch.requestPaused') return;
+    if (message.sessionId !== sessionId) return;
+    if (message.method === 'Page.frameNavigated' && !message.params.frame.parentId) navigation++;
+    if (message.method !== 'Fetch.requestPaused') return;
+    const requestNavigation = navigation;
     void (async () => {
       const { requestId, request } = message.params;
       const url = new URL(request.url);
@@ -99,7 +107,9 @@ async function pageSession(browser, width, height) {
         if (url.pathname.includes('/styles/') || url.pathname.endsWith('/style.json')) await fulfill(requestId, emptyStyle);
         else await call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' });
       } else await call('Fetch.continueRequest', { requestId });
-    })().catch(error => errors.push(String(error)));
+    })().catch(error => {
+      if (!isStaleInterceptionCancellation(error, requestNavigation, navigation)) errors.push(String(error));
+    });
   };
   browser.listeners.add(listener);
   await call('Page.enable');
@@ -151,7 +161,7 @@ async function pageSession(browser, width, height) {
     assert.ok(held.length, 'hydrated application started its county request');
     // New disposable profiles see the normal first-visit guide. Close it with
     // native mouse input before typing, so its autofocus cannot steal keys.
-    const close = await evaluate(`(() => {const b=document.querySelector('.explorer-guide-close'); if(!b)return null;const r=b.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+    const close = await evaluate(`(() => {const b=document.querySelector('.explorer-guide [aria-label="Close quick start"]'); if(!b)return null;const r=b.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()`);
     if (close) {
       await call('Input.dispatchMouseEvent', {type:'mousePressed',button:'left',clickCount:1,...close});
       await call('Input.dispatchMouseEvent', {type:'mouseReleased',button:'left',clickCount:1,...close});

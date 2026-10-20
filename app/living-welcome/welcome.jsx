@@ -45,9 +45,6 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     media.addEventListener('change',change);document.addEventListener('visibilitychange',visibility);
     return()=>{media.removeEventListener('change',change);document.removeEventListener('visibilitychange',visibility);clearTimeout(leave.current);};
   },[]);
-  // The lazy visual replaces a focused fallback. Restore focus and install its
-  // keyboard owner before paint, so a fast Tab/Escape cannot fall between them.
-  useLayoutEffect(()=>{root.current?.querySelector('[data-guide-autofocus]')?.focus({preventScroll:true});},[]);
   useEffect(()=>{
     if(!modal){const target=trigger.current;trigger.current=null;if(target?.isConnected)target.focus({preventScroll:true});return;}
     const node=dialog.current,restore=isolateModalBackground(node,document.body);
