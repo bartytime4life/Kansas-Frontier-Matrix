@@ -3,6 +3,7 @@ import {hostedAiOriginAllowed} from './hosted-ai-origins.mjs';
 import {randomBytes,createHash} from 'node:crypto';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
+import {getHomeAiModel,homeAiConfig,HOME_AI_PROVIDER} from './home-ai-model.mjs';
 import {getHostedAiModel,HOSTED_MODEL,hasRepeatedPhrase,repeatsPriorReply,PUBLIC_AI_JOB_MS,PUBLIC_AI_MAX_LIFETIME_MS,CONTINUE_REPLY} from './hosted-ai.mjs';
 import {validAssistantContext} from './assistant-context.mjs';
 import {createAiReadBuffer,isAiReadPressure} from './ai-read-buffer.mjs';
@@ -138,7 +139,6 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
   if(!['GET','POST'].includes(request.method))return reply({reasonCode:'METHOD_DENIED'},405);
   if(new URL(request.url).origin!==origin)return reply({reasonCode:'AI_ORIGIN_HOLD'},503);
   if(request.method==='POST'&&(request.headers.get('origin')!==origin||request.headers.get('sec-fetch-site')==='cross-site'))return reply({reasonCode:'ORIGIN_DENIED'},403);
-  if(path==='status'&&request.method==='GET')return reply({configured:true,online:model.online,ready:model.ready,evidenceSearchAvailable:true,requiresLogin:false,provider:model.provider??'hosted-qwen3',model:model.provider?model.label??'KFM home compute (connecting)':HOSTED_MODEL,...(model.shortLabel?{modelLabel:model.shortLabel}:{})});
   let guest=cookie(request),session=sessions.get(digest(guest)),extra={};
   try{
    if(path==='jobs'&&request.method==='POST'){
@@ -229,21 +229,9 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
   }
  };
 }
-let runtime,providerWarned=false;
-// One provider per process, chosen by the operator. The embedded model is only
-// started when it is the selected provider, and nothing falls back to another.
-export function selectAiProvider(env=process.env){
- const provider=env.KFM_AI_PROVIDER||'hosted-qwen3';
- if(provider==='hosted-qwen3')return {provider};
- if(provider===HOME_PROVIDER){try{return {provider,config:homeInferenceConfig(env)};}catch(error){return {provider,reasonCode:error.code??'AI_PROVIDER_CONFIG_INVALID'};}}
- return {provider:null,reasonCode:'AI_PROVIDER_UNKNOWN'};
 }
 export function publicAiRuntime(resolveEvidence,resolveContext){
  const origin=process.env.KFM_HOSTED_AI_ORIGIN;
  const valid=process.env.KFM_HOSTED_AI==='1'&&hostedAiOriginAllowed(origin);
- const selected=valid?selectAiProvider():null;
- if(selected?.reasonCode&&!providerWarned){providerWarned=true;console.warn('[KFM public AI] '+selected.reasonCode);}
- if(!valid||selected.reasonCode)return async request=>reply({configured:false,online:false,ready:false,evidenceSearchAvailable:false,requiresLogin:false,reasonCode:'HOSTED_AI_NOT_CONFIGURED'},new URL(request.url).pathname==='/api/ai/status'?200:503);
- if(!runtime)runtime=createPublicAiHandler({origin,resolveEvidence:query=>resolveEvidence(query,origin),resolveContext,model:selected.provider===HOME_PROVIDER?getHomeInferenceModel(selected.config):getHostedAiModel()});
  return runtime;
 }

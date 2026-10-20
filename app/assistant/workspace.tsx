@@ -4,9 +4,6 @@ import styles from './workspace.module.css';
 import type {AssistantContext,AssistantFocus} from '../assistant-context';
 import {assistantSurface} from '../assistant-surfaces.mjs';
 import {buildInvestigationDraft,investigationMarkdown,type InvestigationJob} from '../assistant-investigation';
-type ChatStatus={configured:boolean;online:boolean;ready:boolean;evidenceSearchAvailable?:boolean;model?:string;modelLabel?:string};
-// The server names the selected model; the embedded Qwen build predates that field.
-const chatModelLabel=(status:ChatStatus|null)=>typeof status?.modelLabel==='string'&&/^[\w.:/-]{1,96}$/.test(status.modelLabel)?status.modelLabel:'Qwen3 0.6B';
 type ChatFailureDetails={code:string;httpStatus?:number};
 type Job=Omit<InvestigationJob,'result'>&{result:(NonNullable<InvestigationJob['result']>&{followUpQuestion?:string})|null};
 type Turn={question:string;job:Job;contextKey:string;generation:number};
@@ -178,7 +175,6 @@ export default function AssistantWorkspace({place='',focus,active=true,discovery
  const jumpToLatest=()=>{const body=bodyRef.current;if(body)body.scrollTo({top:body.scrollTop+conversationEnd(),behavior:'auto'});nearBottomRef.current=true;setAwayFromLatest(false);};
  const sourceContext=mode==='explore'&&focus?.context.selection?.kind==='subsurface';
  const canSubmit=mode==='find'?Boolean(discovery):Boolean(investigationId&&chatStatus?.configured&&(mode==='evidence'?chatStatus.evidenceSearchAvailable===true:sourceContext||chatStatus.ready));
- const statusText=mode==='find'?'Places & layers · no AI required':!chatStatus?(chatFailure?'AI connection unavailable':'Checking hosted AI'):!chatStatus.configured?'Awaiting owner setup':mode==='evidence'?(chatStatus.evidenceSearchAvailable?'Evidence search available':'Evidence search unavailable'):sourceContext?'Source summary available':!chatStatus.online?'AI unavailable':!chatStatus.ready?'Loading model…':chatModelLabel(chatStatus)+' ready';
  const notices=<>
    {!investigationId&&mode!=='find'&&<p role='alert' className={styles.notice}>A secure investigation session is unavailable in this browser. Place and layer discovery remains available.</p>}
    {chatFailure&&<p role='alert' data-ai-error={chatFailureDetails?.code} data-http-status={chatFailureDetails?.httpStatus} className={styles.notice}>{chatFailure}</p>}
@@ -223,7 +219,7 @@ export default function AssistantWorkspace({place='',focus,active=true,discovery
       <button type='button' disabled={busy||running(job??undefined)} onClick={()=>void exportInvestigation(turn,'clipboard')}>Copy investigation</button>
       <details><summary>Save & retry</summary><div className={styles.evidenceActions}><button type='button' disabled={busy||running(job??undefined)} onClick={()=>{setMode('explore');setQuestion(turn.question);(inputRef??messageRef).current?.focus();}}>Edit and retry</button><button type='button' disabled={busy||running(job??undefined)} onClick={()=>void exportInvestigation(turn,'markdown')}>Download Markdown</button><button type='button' disabled={busy||running(job??undefined)} onClick={()=>void exportInvestigation(turn,'json')}>Download investigation JSON</button><small>Sources rechecked before saving · draft only</small></div></details>
      </div>}
-     {turn.job.result?.contextLimited&&<p>Earlier messages were omitted to fit this small model’s context.</p>}
+     {turn.job.result?.contextLimited&&<p>Earlier messages were omitted to fit the model’s context.</p>}
      {turn.job.result?.outputLimited&&<><p>This reply is incomplete because it reached a bounded resource limit. Continue resumes the unfinished reply in the same source context when it fits the model’s context.</p><button type='button' disabled={busy||running(job??undefined)||turn.job.id!==job?.id||turn.contextKey!==contextKey||turn.generation!==scopeGeneration} onClick={()=>{setMode('explore');setQuestion('Continue your previous reply from where it stopped. Finish the explanation without repeating it.');}}>Continue reply</button></>}
      {turn.job.result?.followUpQuestion&&<p><strong>Next step</strong><br />{turn.job.result.followUpQuestion}</p>}
     </article>

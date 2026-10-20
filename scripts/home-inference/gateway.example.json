@@ -1,0 +1,20 @@
+{
+  "listen": {"host": "127.0.0.1", "port": 8787},
+  "ollama": "http://127.0.0.1:11434",
+  "keys": {
+    "kfm-prod-1": "REPLACE-with-output-of: node home-inference-gateway.mjs keygen kfm-prod-1"
+  },
+  "admission": {"queue": 1},
+  "profiles": [
+    {
+      "id": "kfm-general-v1",
+      "model": "REPLACE-with-the-exact-qualified-tag, e.g. from `ollama list`",
+      "digest": "sha256:REPLACE-with-the-64-hex-ID-shown-by-`ollama list`-for-that-tag",
+      "think": false,
+      "keepAlive": "30m",
+      "options": {"num_ctx": 8192, "temperature": 0.3, "top_k": 40, "top_p": 0.9, "repeat_penalty": 1.1},
+      "brief": {"tokens": 320, "milliseconds": 60000},
+      "expanded": {"tokens": 768, "milliseconds": 90000}
+    }
+  ]
+}
