@@ -34,6 +34,12 @@ if have systemctl; then
     [ "$(systemctl is-enabled "$unit" 2>/dev/null)" = enabled ] && pass "$unit starts at boot" || fail "$unit is not enabled at boot"
     [ "$(systemctl is-active "$unit" 2>/dev/null)" = active ] && pass "$unit is running" || fail "$unit is not running"
   done
+  # The poll worker is optional: it is checked only when its unit is installed.
+  for unit in kfm-inference-worker; do
+    [ -n "$(systemctl list-unit-files "$unit.service" --no-legend 2>/dev/null)" ] || continue
+    [ "$(systemctl is-enabled "$unit" 2>/dev/null)" = enabled ] && pass "$unit starts at boot" || fail "$unit is not enabled at boot"
+    [ "$(systemctl is-active "$unit" 2>/dev/null)" = active ] && pass "$unit is running" || fail "$unit is not running"
+  done
   env=$(systemctl show ollama -p Environment 2>/dev/null)
   echo "$env" | grep -q 'OLLAMA_NO_CLOUD=1' && pass "Ollama local-only mode (OLLAMA_NO_CLOUD=1)" || fail "OLLAMA_NO_CLOUD=1 is not set for the Ollama service"
   echo "$env" | grep -q 'OLLAMA_HOST=127.0.0.1:11434' && pass "Ollama bound by configuration to 127.0.0.1:11434" || fail "OLLAMA_HOST is not pinned to 127.0.0.1:11434"

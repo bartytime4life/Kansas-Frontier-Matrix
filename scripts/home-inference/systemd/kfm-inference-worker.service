@@ -1,0 +1,53 @@
+# KFM home inference worker: outbound-only link to the KFM website for homes
+# without a tunnel. Install as /etc/systemd/system/kfm-inference-worker.service,
+# with the code in /opt/kfm-inference/ and the worker key (root, mode 0600) in
+# /etc/kfm-inference/worker-key.json. Set KFM_WORKER_SITE to the website's exact
+# origin. See README.md, "Poll transport".
+[Unit]
+Description=KFM home inference worker (outbound poll, relay only)
+Documentation=file:///opt/kfm-inference/README.md
+After=network-online.target kfm-inference-gateway.service
+Wants=network-online.target kfm-inference-gateway.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /opt/kfm-inference/worker.mjs
+Environment=NODE_ENV=production
+Environment=KFM_WORKER_SITE=https://kansasfrontiermatrix.com
+Environment=KFM_WORKER_GATEWAY=http://127.0.0.1:8787
+# The worker key is handed over by systemd; the service cannot read /etc.
+LoadCredential=worker-key.json:/etc/kfm-inference/worker-key.json
+Restart=always
+RestartSec=5
+DynamicUser=yes
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectProc=invisible
+ProcSubset=pid
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+# Unlike the gateway, the worker must reach the website over the internet.
+# It accepts no inbound connections; the firewall's default deny still applies.
+MemoryMax=256M
+TasksMax=32
+
+[Install]
+WantedBy=multi-user.target

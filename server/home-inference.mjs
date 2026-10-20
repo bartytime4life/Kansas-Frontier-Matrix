@@ -5,22 +5,30 @@
 // gateway call. It never falls back to another provider or model.
 import {randomUUID} from 'node:crypto';
 import {signRequest,decodeSecret,verifyResponse} from '../scripts/home-inference/signature.mjs';
+import {getHomeRelay,homeWorkerKey} from './home-relay.mjs';
+import {hostedAiOriginAllowed} from './hosted-ai-origins.mjs';
 import {discussionSystem} from './hosted-ai-prompt.mjs';
 import {CONTINUE_REPLY,PUBLIC_AI_JOB_MS} from './hosted-ai.mjs';
 
 export const HOME_PROVIDER='home-ollama';
 export const HOME_GATEWAY='kfm-home-inference/1';
-export const HOME_LIMITS=Object.freeze({healthMs:5000,pollMs:30000,responseBytes:65536,replyChars:16384});
+export const HOME_LIMITS=Object.freeze({healthMs:5000,relayHealthMs:20000,pollMs:30000,responseBytes:65536,replyChars:16384});
 const error=code=>Object.assign(new Error(code),{code});
 const GATEWAY_CODES=new Set(['UNAUTHORIZED','INVALID_REQUEST','PROFILE_UNKNOWN','PROFILE_NOT_READY','MODEL_CONTEXT_LIMIT','MODEL_UNAVAILABLE','MODEL_TIMEOUT','MODEL_EMPTY_OUTPUT','GATEWAY_BUSY','REQUEST_TOO_LARGE','NOT_FOUND','GATEWAY_ERROR']);
 const diagnosticCodes=new Set([...GATEWAY_CODES,'GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','GATEWAY_RESPONSE_INVALID','PROFILE_UNAVAILABLE','PROFILE_IDENTITY','MODEL_CONNECTING']);
 
 // Exact configuration or nothing: a malformed value disables chat instead of guessing.
 export function homeInferenceConfig(env=process.env){
- let url;try{url=new URL(env.KFM_HOME_INFERENCE_URL??'');}catch{throw error('HOME_INFERENCE_URL_INVALID');}
- const loopback=['127.0.0.1','[::1]','localhost'].includes(url.hostname);
- // HTTPS to one fixed origin; plain HTTP only for a same-machine proof.
- if(!(url.protocol==='https:'||url.protocol==='http:'&&loopback)||url.username||url.password||url.pathname!=='/'||url.search||url.hash)throw error('HOME_INFERENCE_URL_INVALID');
+ // https: this server calls the gateway (tunnel). poll: the PC's worker calls this server.
+ const transport=env.KFM_HOME_INFERENCE_TRANSPORT||'https';
+ if(!['https','poll'].includes(transport))throw error('HOME_INFERENCE_TRANSPORT_INVALID');
+ let url=null;
+ if(transport==='https'){
+  try{url=new URL(env.KFM_HOME_INFERENCE_URL??'');}catch{throw error('HOME_INFERENCE_URL_INVALID');}
+  const loopback=['127.0.0.1','[::1]','localhost'].includes(url.hostname);
+  // HTTPS to one fixed origin; plain HTTP only for a same-machine proof.
+  if(!(url.protocol==='https:'||url.protocol==='http:'&&loopback)||url.username||url.password||url.pathname!=='/'||url.search||url.hash)throw error('HOME_INFERENCE_URL_INVALID');
+ }
  const keyId=env.KFM_HOME_INFERENCE_KEY_ID??'',secret=env.KFM_HOME_INFERENCE_SECRET??'';
  if(!/^[A-Za-z0-9._-]{1,64}$/.test(keyId)||!decodeSecret(secret))throw error('HOME_INFERENCE_KEY_INVALID');
  const profile=env.KFM_HOME_INFERENCE_PROFILE??'';
@@ -30,7 +38,19 @@ export function homeInferenceConfig(env=process.env){
  if(!/^sha256:[a-f0-9]{64}$/.test(digest))throw error('HOME_INFERENCE_DIGEST_INVALID');
  const accessId=env.KFM_HOME_INFERENCE_ACCESS_ID??'',accessSecret=env.KFM_HOME_INFERENCE_ACCESS_SECRET??'';
  if(Boolean(accessId)!==Boolean(accessSecret)||accessId&&(!/^[A-Za-z0-9._-]{1,128}$/.test(accessId)||!/^[A-Za-z0-9._-]{1,256}$/.test(accessSecret)))throw error('HOME_INFERENCE_ACCESS_INVALID');
- return Object.freeze({origin:url.origin,keyId,secret,profile,digest,access:accessId?Object.freeze({id:accessId,secret:accessSecret}):null});
+ const worker=transport==='poll'?homeWorkerKey(env,secret):null;
+ return Object.freeze({transport,origin:url?.origin??null,keyId,secret,profile,digest,worker,access:accessId?Object.freeze({id:accessId,secret:accessSecret}):null});
+}
+
+// One verification path for both transports: a reply is parsed only after the
+// gateway's signature over this exact request, status and body has been checked.
+function acceptReply({secret,method,path,body,requestHeaders,status,headers,bytes}){
+ if(!/^application\/json(?:;|$)/i.test(headers.get('content-type')??'')||bytes.length>HOME_LIMITS.responseBytes)throw error('GATEWAY_RESPONSE_INVALID');
+ if(!verifyResponse({secret,requestHeaders,method,path,requestBody:body,status,body:bytes,headers}))throw error('GATEWAY_RESPONSE_INVALID');
+ let value;try{value=JSON.parse(bytes.toString('utf8'));}catch{throw error('GATEWAY_RESPONSE_INVALID');}
+ if(value?.gateway!==HOME_GATEWAY)throw error('GATEWAY_RESPONSE_INVALID');
+ if(status<200||status>299)throw error(GATEWAY_CODES.has(value.error)?value.error:'GATEWAY_RESPONSE_INVALID');
+ return value;
 }
 
 async function boundedResponseBytes(response){
@@ -52,18 +72,27 @@ export function createHomeInferenceClient({origin,keyId,secret,access=null,fetch
   catch{throw error(signal?.aborted?'MODEL_CANCELLED':'GATEWAY_UNREACHABLE');}
   // An access-login or captive-portal redirect is a failure, never a new destination.
   if(response.type==='opaqueredirect'||response.status>=300&&response.status<400){await response.body?.cancel().catch(()=>{});throw error('GATEWAY_REDIRECT');}
-  let value;
-  try{
-   const bytes=await boundedResponseBytes(response);
-   if(!verifyResponse({secret,requestHeaders:headers,method,path,requestBody:body,status:response.status,body:bytes,headers:response.headers}))throw error('GATEWAY_RESPONSE_INVALID');
-   value=JSON.parse(bytes.toString('utf8'));
-  }catch(failure){throw signal?.aborted?error('MODEL_CANCELLED'):error(failure?.code??'GATEWAY_RESPONSE_INVALID');}
-  if(value?.gateway!==HOME_GATEWAY)throw error('GATEWAY_RESPONSE_INVALID');
-  if(!response.ok)throw error(GATEWAY_CODES.has(value.error)?value.error:'GATEWAY_RESPONSE_INVALID');
-  return value;
+  let bytes;
+  try{bytes=await boundedResponseBytes(response);}catch(failure){throw signal?.aborted?error('MODEL_CANCELLED'):error(failure?.code??'GATEWAY_RESPONSE_INVALID');}
+  return acceptReply({secret,method,path,body,requestHeaders:headers,status:response.status,headers:response.headers,bytes});
  };
  return {
   health:({signal}={})=>call('GET','/v1/health',undefined,{signal,timeoutMs:HOME_LIMITS.healthMs}),
+  chat:(payload,{signal,timeoutMs=PUBLIC_AI_JOB_MS}={})=>call('POST','/v1/chat',payload,{signal,timeoutMs}),
+ };
+}
+
+// Poll transport: the same signed gateway calls, carried by the PC's worker.
+// The relay signs at lease time; the reply is verified here exactly as above.
+export function createRelayClient({relay,secret}){
+ const call=async(method,path,payload,{signal,timeoutMs})=>{
+  const body=payload===undefined?'':JSON.stringify(payload);
+  const reply=await relay.submit({method,path,body,signal,timeoutMs});
+  return acceptReply({secret,method,path,body,...reply});
+ };
+ return {
+  // Two trips through the site instead of one direct call.
+  health:({signal}={})=>call('GET','/v1/health',undefined,{signal,timeoutMs:HOME_LIMITS.relayHealthMs}),
   chat:(payload,{signal,timeoutMs=PUBLIC_AI_JOB_MS}={})=>call('POST','/v1/chat',payload,{signal,timeoutMs}),
  };
 }
@@ -152,5 +181,16 @@ export class HomeInferenceModel{
 
 let shared;
 export function getHomeInferenceModel(config){
- return shared??=new HomeInferenceModel({client:createHomeInferenceClient(config),profile:config.profile,digest:config.digest});
+ const client=config.transport==='poll'?createRelayClient({relay:getHomeRelay(config),secret:config.secret}):createHomeInferenceClient(config);
+ return shared??=new HomeInferenceModel({client,profile:config.profile,digest:config.digest});
+}
+
+const workerReply=(reasonCode,status)=>Response.json({reasonCode},{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
+// /api/home-worker/v1/*: exists only when public chat is on with the home provider
+// in poll mode, and only on the exact configured origin.
+export function homeWorkerRuntime(env=process.env){
+ const origin=env.KFM_HOSTED_AI_ORIGIN;
+ if(env.KFM_HOSTED_AI!=='1'||!hostedAiOriginAllowed(origin)||env.KFM_AI_PROVIDER!==HOME_PROVIDER||env.KFM_HOME_INFERENCE_TRANSPORT!=='poll')return async()=>workerReply('ROUTE_NOT_FOUND',404);
+ let relay;try{relay=getHomeRelay(homeInferenceConfig(env));}catch{return async()=>workerReply('HOME_WORKER_NOT_CONFIGURED',503);}
+ return async request=>new URL(request.url).origin===origin?relay.handler(request):workerReply('AI_ORIGIN_HOLD',503);
 }

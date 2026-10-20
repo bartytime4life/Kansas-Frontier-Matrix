@@ -73,12 +73,38 @@ plain GoDaddy CNAME is not enough. This plan authorizes no nameserver move,
 purchase or subscription. An already-controlled, eligible separate domain may be
 evaluated without moving the website.
 
-**Fallback:** an outbound home worker that polls KFM for jobs over HTTPS. Use it
-when DNS must stay untouched. This is new server work: the current guest queue is
-process-local, so it needs bounded leases, expiry, worker-scoped capability,
-duplicate-result rejection and cancel propagation in an existing approved
-persistence lane. The gateway in this change serves both options unchanged,
-because the worker would call it on loopback.
+**Fallback, implemented (2026-10-20): poll transport.** The owner chose this
+route on 2026-10-20 after phase 0 showed `kansasfrontiermatrix.com` DNS is at
+GoDaddy (`ns55/ns56.domaincontrol.com`). It needs no DNS change, tunnel or
+Cloudflare account. With `KFM_HOME_INFERENCE_TRANSPORT=poll`:
+
+- `scripts/home-inference/worker.mjs` on the PC long-polls
+  `POST /api/home-worker/v1/lease` on the exact site origin, relays the leased
+  request unchanged to the loopback gateway, and posts the reply bytes to
+  `/v1/result`. It forwards only `GET /v1/health` and `POST /v1/chat`, and only
+  the four signature headers and `content-type`.
+- The **worker is a relay, not a signer.** It authenticates with its own worker
+  key (HMAC, ±60 s, single-use nonce), which must differ from the gateway key.
+  It never holds the gateway key. `server/home-relay.mjs` signs each gateway
+  request at lease time, and the reply is verified with the same response HMAC
+  as the HTTPS transport. A worker or anyone on the path cannot forge, alter or
+  replay a request or reply; tests prove fabricated, altered and replayed
+  replies are refused.
+- Leases are bounded: a queue of 8 jobs, a 20 s long-poll, 15 s for a worker to
+  take a job (otherwise `GATEWAY_UNREACHABLE`, so chat reads unavailable), and
+  15 s (health) or 100 s (chat) to answer it. A job is leased at most once and
+  is never re-offered. Late or duplicate results get `410`. A cancelled chat is
+  reported through `/v1/status`, and the worker aborts the gateway call, which
+  stops generation.
+- **Persistence.** The relay is in memory, like the public guest jobs it
+  serves (`public-ai-handler.mjs` keeps sessions and jobs in process memory). A
+  relay job lives exactly as long as its guest job. A restart expires both
+  cleanly and nothing is replayed, so no new persistent queue or registry is
+  introduced. Running more than one server replica would need shared admission
+  for both, as already noted for guest jobs.
+- `/api/home-worker/v1/*` exists only when public chat is on, the provider is
+  `home-ollama` and the transport is `poll`, on the exact configured origin.
+  Otherwise it returns `404`.
 
 **Excluded:** router port forwarding, any public Ollama, and Quick Tunnels in
 production. A VPS relay and a private overlay/VPN are deferred.
@@ -116,7 +142,9 @@ staging values on Preview and production values on Publish:
 | Variable | Value |
 | --- | --- |
 | `KFM_AI_PROVIDER` | `home-ollama` (explicit `hosted-qwen3` restores the embedded model) |
-| `KFM_HOME_INFERENCE_URL` | `https://<tunnel hostname>`, origin only |
+| `KFM_HOME_INFERENCE_TRANSPORT` | `poll` (PC worker polls the site) or `https` (default; tunnel) |
+| `KFM_HOME_INFERENCE_URL` | `https` transport only: `https://<tunnel hostname>`, origin only |
+| `KFM_HOME_WORKER_KEY_ID` / `KFM_HOME_WORKER_SECRET` | `poll` transport only: the worker key for this environment; must differ from the gateway key |
 | `KFM_HOME_INFERENCE_KEY_ID` / `KFM_HOME_INFERENCE_SECRET` | The gateway key for this environment |
 | `KFM_HOME_INFERENCE_PROFILE` | The approved profile ID, e.g. `kfm-default-chat` |
 | `KFM_HOME_INFERENCE_DIGEST` | `sha256:<64 hex>`, the admitted model digest |
