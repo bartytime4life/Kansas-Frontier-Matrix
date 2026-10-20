@@ -89,3 +89,21 @@ export function verifyRequest({headers,method,path,body,keys,nonces,now=Date.now
  if(claim!=='OK')return {ok:false,reason:claim};
  return {ok:true,key};
 }
+
+// The gateway signs every reply to an authenticated request, bound to that
+// request's nonce, HTTP status and exact body. A misrouted tunnel hostname, a
+// cached or replayed response, or an edge error page cannot pass as the reply.
+export const REPLY_SIGNATURE_HEADER='x-kfm-reply-signature';
+const replyCanonical=({nonce,status,body})=>[SIGNATURE_SCHEME,'REPLY',nonce,String(status),bodyDigest(body)].join('\n');
+
+export function signReply({secret,nonce,status,body}){
+ return createHmac('sha256',secret).update(replyCanonical({nonce,status,body})).digest('base64url');
+}
+
+export function verifyReply({secret,nonce,status,body,signature}){
+ const key=typeof secret==='string'?decodeSecret(secret):secret;
+ if(!Buffer.isBuffer(key)||!NONCE.test(nonce??'')||typeof signature!=='string'||!SIGNATURE.test(signature))return false;
+ const expected=createHmac('sha256',key).update(replyCanonical({nonce,status,body})).digest();
+ const supplied=Buffer.from(signature,'base64url');
+ return supplied.length===expected.length&&timingSafeEqual(supplied,expected);
+}

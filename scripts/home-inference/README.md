@@ -140,9 +140,6 @@ The probe exits non-zero unless every refusal check passes, the pinned digest
 matches and the synthetic chats complete. Keep the receipt privately. It records
 this path at this time; it is not a capacity or quality guarantee.
 
-**Gateway deadline.** The parser refuses profile `timeoutMs` values over 90000;
-this is an application limit independent of the transport provider's timeout.
-The public chat also
 caps a reply at 4096 bytes, so keep `outputTokens.expanded` at about 700 or less.
 
 **Compatibility and activation.** Update `gateway.mjs`, `signature.mjs` and

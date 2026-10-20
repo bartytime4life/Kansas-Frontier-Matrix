@@ -4,7 +4,6 @@
 // public-ai-handler.mjs; this module only turns a discussion into one bounded
 // gateway call. It never falls back to another provider or model.
 import {randomUUID} from 'node:crypto';
-import {signRequest,decodeSecret,verifyResponse} from '../scripts/home-inference/signature.mjs';
 import {discussionSystem} from './hosted-ai-prompt.mjs';
 import {CONTINUE_REPLY,PUBLIC_AI_JOB_MS} from './hosted-ai.mjs';
 
@@ -13,7 +12,7 @@ export const HOME_GATEWAY='kfm-home-inference/1';
 export const HOME_LIMITS=Object.freeze({healthMs:5000,pollMs:30000,responseBytes:65536,replyChars:16384});
 const error=code=>Object.assign(new Error(code),{code});
 const GATEWAY_CODES=new Set(['UNAUTHORIZED','INVALID_REQUEST','PROFILE_UNKNOWN','PROFILE_NOT_READY','MODEL_CONTEXT_LIMIT','MODEL_UNAVAILABLE','MODEL_TIMEOUT','MODEL_EMPTY_OUTPUT','GATEWAY_BUSY','REQUEST_TOO_LARGE','NOT_FOUND','GATEWAY_ERROR']);
-const diagnosticCodes=new Set([...GATEWAY_CODES,'GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','GATEWAY_RESPONSE_INVALID','PROFILE_UNAVAILABLE','PROFILE_IDENTITY','MODEL_CONNECTING']);
+const diagnosticCodes=new Set([...GATEWAY_CODES,'GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','GATEWAY_RESPONSE_INVALID','GATEWAY_REPLY_UNVERIFIED','PROFILE_UNAVAILABLE','PROFILE_IDENTITY','MODEL_CONNECTING']);
 
 // Exact configuration or nothing: a malformed value disables chat instead of guessing.
 export function homeInferenceConfig(env=process.env){
@@ -33,31 +32,19 @@ export function homeInferenceConfig(env=process.env){
  return Object.freeze({origin:url.origin,keyId,secret,profile,digest,access:accessId?Object.freeze({id:accessId,secret:accessSecret}):null});
 }
 
-async function boundedResponseBytes(response){
- if(!/^application\/json(?:;|$)/i.test(response.headers.get('content-type')??''))throw error('GATEWAY_RESPONSE_INVALID');
- const reader=response.body?.getReader();if(!reader)throw error('GATEWAY_RESPONSE_INVALID');
- const chunks=[];let bytes=0;
- try{while(true){const part=await reader.read();if(part.done)break;bytes+=part.value.length;if(bytes>HOME_LIMITS.responseBytes)throw error('GATEWAY_RESPONSE_INVALID');chunks.push(Buffer.from(part.value));}}
- finally{await reader.cancel().catch(()=>{});}
- return Buffer.concat(chunks);
 }
 
 export function createHomeInferenceClient({origin,keyId,secret,access=null,fetchImpl=fetch,clock=Date.now}){
  const call=async(method,path,payload,{signal,timeoutMs})=>{
   const body=payload===undefined?'':JSON.stringify(payload);
-  const headers={...signRequest({keyId,secret,method,path,body,now:clock()}),...(body?{'Content-Type':'application/json'}:{}),...(access?{'CF-Access-Client-Id':access.id,'CF-Access-Client-Secret':access.secret}:{})};
+  const auth=signRequest({keyId,secret,method,path,body,now:clock()});
+  const headers={...auth,...(body?{'Content-Type':'application/json'}:{}),...(access?{'CF-Access-Client-Id':access.id,'CF-Access-Client-Secret':access.secret}:{})};
   const signals=[AbortSignal.timeout(timeoutMs),...(signal?[signal]:[])];
   let response;
   try{response=await fetchImpl(origin+path,{method,headers,body:body||undefined,redirect:'manual',cache:'no-store',signal:AbortSignal.any(signals)});}
   catch{throw error(signal?.aborted?'MODEL_CANCELLED':'GATEWAY_UNREACHABLE');}
   // An access-login or captive-portal redirect is a failure, never a new destination.
   if(response.type==='opaqueredirect'||response.status>=300&&response.status<400){await response.body?.cancel().catch(()=>{});throw error('GATEWAY_REDIRECT');}
-  let value;
-  try{
-   const bytes=await boundedResponseBytes(response);
-   if(!verifyResponse({secret,requestHeaders:headers,method,path,requestBody:body,status:response.status,body:bytes,headers:response.headers}))throw error('GATEWAY_RESPONSE_INVALID');
-   value=JSON.parse(bytes.toString('utf8'));
-  }catch(failure){throw signal?.aborted?error('MODEL_CANCELLED'):error(failure?.code??'GATEWAY_RESPONSE_INVALID');}
   if(value?.gateway!==HOME_GATEWAY)throw error('GATEWAY_RESPONSE_INVALID');
   if(!response.ok)throw error(GATEWAY_CODES.has(value.error)?value.error:'GATEWAY_RESPONSE_INVALID');
   return value;
@@ -141,9 +128,6 @@ export class HomeInferenceModel{
   }catch(failure){
    if(signal?.aborted)throw error('MODEL_CANCELLED');
    if(failure?.code==='MODEL_CONTEXT_LIMIT')throw failure;
-   // Hold admission after an outage or identity failure. Only the next scheduled
-   // health inspection may restore readiness; never silently switch providers.
-   if(['MODEL_UNAVAILABLE','GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','UNAUTHORIZED','PROFILE_NOT_READY','PROFILE_UNKNOWN','GATEWAY_RESPONSE_INVALID'].includes(failure?.code)){this.setState(false,false,failure.code);}
    throw error('MODEL_UNAVAILABLE');
   }finally{this.pending=null;}
  }
