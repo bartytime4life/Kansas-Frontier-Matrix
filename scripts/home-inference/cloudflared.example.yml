@@ -1,0 +1,15 @@
+# Named Cloudflare Tunnel for the gateway. Use only after the Phase 0 DNS and
+# eligibility gate in docs/home-inference.md passes. Configure the Access
+# service-token policy on the hostname BEFORE adding its DNS route.
+# Install as /etc/cloudflared/config.yml; run with `sudo cloudflared service install`.
+tunnel: REPLACE-TUNNEL-UUID
+credentials-file: /etc/cloudflared/REPLACE-TUNNEL-UUID.json
+ingress:
+  # Only the two gateway routes. Ollama (11434) is never an ingress target.
+  - hostname: REPLACE-inference-hostname
+    path: ^/v1/(health|discuss)$
+    service: http://127.0.0.1:8787
+    originRequest:
+      connectTimeout: 10s
+      noHappyEyeballs: true
+  - service: http_status:404
