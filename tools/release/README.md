@@ -200,6 +200,17 @@ A helper belongs here only when it is deterministic, explicit about scan/input s
 
 ## Validation
 
+`rollback_apply.py` is a separate synthetic-only rehearsal helper. Its JSON
+outputs use exclusively created, private temporary files in the destination
+directory, flush before atomic replacement, and remove their temporary file if
+replacement fails. Existing sibling files are not reused. The synthetic marker,
+input checks and publication boundaries still apply; callers must control the
+workspace and its directories throughout execution.
+
+```bash
+python3 -m unittest discover -s tests/release -p test_synthetic_rollback_rehearsal.py -v
+```
+
 The implemented bounded command is:
 
 ```bash

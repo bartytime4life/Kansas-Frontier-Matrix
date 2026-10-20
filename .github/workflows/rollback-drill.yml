@@ -180,10 +180,10 @@ jobs:
           # be reviewed before these pins are deliberately updated.
           expected_rehearsal_digests = {
               rollback_apply_path.as_posix(): (
-                  "6969b626bda6a6d2279a1e0b0e4beb7f266980b450d63dce87982071a20521e1"
+                  "e95ec96b3316e60abd528653e6afc32b82385651837f23c70b07ae1fffbdb2a7"
               ),
               rehearsal_test_path.as_posix(): (
-                  "0a233ea6002bd25c490726e4f6763d3f14c830d727eb8529461aa1eee678aca0"
+                  "2801110d38a38d2cf6ddfcdd507e334e1fce9ae1cad11dd5181cd2a451acf438"
               ),
               hazards_rehearsal_test_path.as_posix(): (
                   "2df162eb9254b08f3a643e69fb027b4fc5ec68086c9f32bff3a585ffdecc0ba1"
@@ -391,8 +391,8 @@ jobs:
               )
           rehearsal_output = rehearsal_result.stdout + rehearsal_result.stderr
           assert rehearsal_result.returncode == 0, rehearsal_output
-          assert "Ran 12 tests" in rehearsal_output and "OK" in rehearsal_output, (
-              "the pinned generic and Hazards rehearsals did not run their 12 tests: "
+          assert "Ran 14 tests" in rehearsal_output and "OK" in rehearsal_output, (
+              "the pinned generic and Hazards rehearsals did not run their 14 tests: "
               + rehearsal_output
           )
 
@@ -439,7 +439,7 @@ jobs:
           print("CONFIRMED: the production rollback pipeline remains a placeholder while the generic RollbackCard entrypoint delegates to the canonical release validator.")
           print("CONFIRMED: generic and canonical RollbackCard fixture execution is byte-identical.")
           print("CONFIRMED: rollback_apply.py, its generic and Hazards behavioral tests, and the Hazards rehearsal fixture match their reviewed SHA-256 digests.")
-          print("CONFIRMED: the pinned generic and Hazards synthetic rollback rehearsal bytes ran 12 tests in an isolated interpreter and temporary roots.")
+          print("CONFIRMED: the pinned generic and Hazards synthetic rollback rehearsal bytes ran 14 tests in an isolated interpreter and temporary roots.")
           print("CONFIRMED: the release RollbackCard schema is closed and its bounded local fixture profile passes.")
           print("CONFIRMED: the Agriculture RollbackCard schema remains a permissive id-only scaffold without its declared contract, fixtures, or validator.")
           print("CONFIRMED: direct Agriculture drill inventory contains guidance only.")
@@ -460,7 +460,7 @@ jobs:
           {
             echo "### Rollback simulation"
             echo
-            echo "- The release RollbackCard profile remains closed and fixture-validated; the historical generic entrypoint delegates to the canonical validator with byte-identical fixture output, while the production pipeline remains a placeholder and rollback_apply.py is a digest-pinned synthetic-only rehearsal whose pinned generic and Hazards behavioral test bytes ran 12 cases directly in an isolated interpreter and temporary roots, bypassing import-path resolution."
+            echo "- The release RollbackCard profile remains closed and fixture-validated; the historical generic entrypoint delegates to the canonical validator with byte-identical fixture output, while the production pipeline remains a placeholder and rollback_apply.py is a digest-pinned synthetic-only rehearsal whose pinned generic and Hazards behavioral test bytes ran 14 cases directly in an isolated interpreter and temporary roots, bypassing import-path resolution."
             echo "- **WORKFLOW_SKIPPED_EXPLICIT / WORKFLOW_HOLD:** no production rollback engine, live target selection, signature/review verification, policy decision, receipt flow, external invalidation execution, or published-alias mutation is accepted."
             echo "- The Agriculture RollbackCard profile and direct drill lane remain scaffolds, and the two root JSON cards remain documentation-inventory placeholders rather than schema-admissible rollback authority."
             echo "- Result: ${{ job.status }}. No production rollback target was selected or mutated, and no card, receipt, proof, signature, release transition, or publication authority was created."

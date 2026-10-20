@@ -1,6 +1,7 @@
 from __future__ import annotations
 import importlib.util, json, sys, tempfile, unittest
 from pathlib import Path
+from unittest.mock import patch
 
 PATH = Path(__file__).resolve().parents[2] / "tools/release/rollback_apply.py"
 SPEC = importlib.util.spec_from_file_location("rollback_apply", PATH)
@@ -90,6 +91,35 @@ class RehearsalTests(unittest.TestCase):
         (self.root / m.MARKER).unlink()
         with self.assertRaises(m.RehearsalError) as c: m.rehearse(self.root, self.scenario, apply=True)
         self.assertEqual(c.exception.code, "SYNTHETIC_MARKER_MISSING")
+
+    def test_apply_ignores_preexisting_temporary_siblings(self):
+        sentinel = self.root / "sentinel.txt"
+        sentinel.write_text("synthetic sentinel\n", encoding="utf-8")
+        outputs = [
+            self.root / "published/current.json",
+            self.root / "corrections/correction:rollback:001.json",
+            self.root / "invalidations/rehearsal:rollback:001.json",
+        ]
+        for output in outputs:
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.with_name(output.name + ".tmp").symlink_to(sentinel)
+
+        self.assertEqual(m.rehearse(self.root, self.scenario, apply=True)["outcome"], "PASS")
+        self.assertEqual(sentinel.read_text(encoding="utf-8"), "synthetic sentinel\n")
+        for output in outputs:
+            self.assertFalse(output.is_symlink())
+            self.assertIsInstance(json.loads(output.read_text(encoding="utf-8")), dict)
+            self.assertTrue(output.with_name(output.name + ".tmp").is_symlink())
+            self.assertEqual(list(output.parent.glob(f".{output.name}.*.tmp")), [])
+
+    def test_failed_replace_preserves_destination_and_removes_own_temporary(self):
+        output = self.root / "published/current.json"
+        before = output.read_bytes()
+        with patch.object(m.os, "replace", side_effect=OSError("synthetic failure")):
+            with self.assertRaises(OSError):
+                m.write_json(output, {"fixture": "synthetic"})
+        self.assertEqual(output.read_bytes(), before)
+        self.assertEqual(list(output.parent.glob(".current.json.*.tmp")), [])
 
 
 if __name__ == "__main__": unittest.main()
