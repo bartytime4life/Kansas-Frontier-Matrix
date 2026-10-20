@@ -1,0 +1,258 @@
+{
+  "prepared": "2026-10-20",
+  "scope": "Seven replacement illustrative clips; locations and rights are stated independently of KFM map observations.",
+  "clips": [
+    {
+      "category": "weather",
+      "index": 0,
+      "asset": "kansas-supercell",
+      "original": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Long-lived_supercell_moving_from_Colorado_into_Kansas_at_sunset_%28CIRA_2017-05-26%29.webm?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "bytes": 3814206,
+        "sha256": "577866727ec39545f777b37a1d5f44e9f2ba4864cd107bbb2e8e738941df0bda"
+      },
+      "excerpt": {
+        "start": 0,
+        "duration": 5.8
+      },
+      "clip": {
+        "id": "weather-0",
+        "asset": "kansas-supercell",
+        "title": "Storms crossing into Kansas",
+        "action": "A long-lived supercell crosses from Colorado into Kansas as sunset illuminates its cloud towers.",
+        "context": "GOES / CIRA · Colorado–Kansas · 26 May 2017",
+        "src": "/welcome/motion/kansas-supercell-hd.webm",
+        "preview": "/welcome/motion/kansas-supercell-preview.webm",
+        "poster": "/welcome/motion/kansas-supercell.jpg",
+        "width": 1440,
+        "height": 1080,
+        "sourceTitle": "Long-lived supercell moving from Colorado into Kansas at sunset (CIRA 2017-05-26).webm",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Long-lived_supercell_moving_from_Colorado_into_Kansas_at_sunset_(CIRA_2017-05-26).webm",
+        "artist": "GOES imagery: CSU/CIRA & NOAA",
+        "license": "Public domain",
+        "licenseUrl": "https://commons.wikimedia.org/wiki/File:Long-lived_supercell_moving_from_Colorado_into_Kansas_at_sunset_(CIRA_2017-05-26).webm",
+        "adaptation": "Silent excerpt; original scene geometry retained; encoded at 30 fps with a smaller low-bandwidth preview.",
+        "duration": 5.8,
+        "fps": 30,
+        "bytes": 2323730,
+        "previewBytes": 445328
+      }
+    },
+    {
+      "category": "weather",
+      "index": 3,
+      "asset": "nebraska-supercell",
+      "original": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/80/Tornadic_Supercell_Erupts_in_Nebraska_%28CIRA_2025-04-28_-_nolabels%29.webm?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "bytes": 15196349,
+        "sha256": "07fa94b1f1acc6c8c027634fa7babb635b4aa8690e8def9becbbfa31e3d0275f"
+      },
+      "excerpt": {
+        "start": 0,
+        "duration": 9.2
+      },
+      "clip": {
+        "id": "weather-3",
+        "asset": "nebraska-supercell",
+        "title": "A supercell erupts over the plains",
+        "action": "Satellite imagery reveals a supercell growing over western Nebraska. Enhanced infrared colours reveal cloud-top temperature.",
+        "context": "GOES-19 / CIRA · Nebraska · 28 April 2025",
+        "src": "/welcome/motion/nebraska-supercell-hd.webm",
+        "preview": "/welcome/motion/nebraska-supercell-preview.webm",
+        "poster": "/welcome/motion/nebraska-supercell.jpg",
+        "width": 1920,
+        "height": 1080,
+        "sourceTitle": "Tornadic Supercell Erupts in Nebraska (CIRA 2025-04-28 - nolabels).webm",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tornadic_Supercell_Erupts_in_Nebraska_(CIRA_2025-04-28_-_nolabels).webm",
+        "artist": "GOES imagery: CSU/CIRA & NOAA",
+        "license": "Public domain",
+        "licenseUrl": "https://commons.wikimedia.org/wiki/File:Tornadic_Supercell_Erupts_in_Nebraska_(CIRA_2025-04-28_-_nolabels).webm",
+        "adaptation": "Silent excerpt; original scene geometry retained; encoded at 30 fps with a smaller low-bandwidth preview.",
+        "duration": 9.2,
+        "fps": 30,
+        "bytes": 8271872,
+        "previewBytes": 919223
+      }
+    },
+    {
+      "category": "science",
+      "index": 0,
+      "asset": "pollinators",
+      "original": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/04/Bumblebee_on_flowers.webm?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "bytes": 2805838,
+        "sha256": "578acd474526dd51ff06d6bd33bc71df73f6297ad79e5304e7e139bb53f5b0aa"
+      },
+      "excerpt": {
+        "start": 0,
+        "duration": 9.3
+      },
+      "clip": {
+        "id": "science-0",
+        "asset": "pollinators",
+        "title": "Pollination, up close",
+        "action": "A bumblebee moves among flowers, landing, feeding and taking flight.",
+        "context": "Macro wildlife footage · 8 July 2016",
+        "src": "/welcome/motion/pollinators-hd.webm",
+        "preview": "/welcome/motion/pollinators-preview.webm",
+        "poster": "/welcome/motion/pollinators.jpg",
+        "width": 1920,
+        "height": 1080,
+        "sourceTitle": "Bumblebee on flowers.webm",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bumblebee_on_flowers.webm",
+        "artist": "Роман Рябенко",
+        "license": "CC0 1.0",
+        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "adaptation": "Silent excerpt; original scene geometry retained; encoded at 30 fps with a smaller low-bandwidth preview.",
+        "duration": 9.3,
+        "fps": 30,
+        "bytes": 4317969,
+        "previewBytes": 538686
+      }
+    },
+    {
+      "category": "science",
+      "index": 2,
+      "asset": "amoeba",
+      "original": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/27/%D0%90%D0%BC%D0%B5%D0%B1%D0%B0_3.webm?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "bytes": 28665880,
+        "sha256": "73b2176c2b90fc200903a41210d3440d9c0c0f7ec346980e9ae929ce79c9752c"
+      },
+      "excerpt": {
+        "start": 15,
+        "duration": 12
+      },
+      "clip": {
+        "id": "science-2",
+        "asset": "amoeba",
+        "title": "Life beneath the microscope",
+        "action": "An amoeba changes shape as organelles stream through its living cell.",
+        "context": "Differential interference contrast microscopy · 40× objective · 2019",
+        "src": "/welcome/motion/amoeba-hd.webm",
+        "preview": "/welcome/motion/amoeba-preview.webm",
+        "poster": "/welcome/motion/amoeba.jpg",
+        "width": 1920,
+        "height": 1080,
+        "sourceTitle": "Амеба 3.webm",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:%D0%90%D0%BC%D0%B5%D0%B1%D0%B0_3.webm",
+        "artist": "Alexander Klepnev",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "adaptation": "Silent excerpt; original scene geometry retained; encoded at 30 fps with a smaller low-bandwidth preview.",
+        "duration": 12,
+        "fps": 30,
+        "bytes": 2073168,
+        "previewBytes": 182077
+      }
+    },
+    {
+      "category": "government",
+      "index": 0,
+      "asset": "capitol-glass",
+      "original": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/ae/New_U.S._Capitol_Dome_Cupola_Windows.webm?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "bytes": 65708583,
+        "sha256": "91870767656cb37ab52c932e382549458e382cf39b566fa46dd6dec66db150fa"
+      },
+      "excerpt": {
+        "start": 42,
+        "duration": 12
+      },
+      "clip": {
+        "id": "government-0",
+        "asset": "capitol-glass",
+        "title": "Crafting a public landmark",
+        "action": "Craft workers handle and roll hot glass for the restoration of the U.S. Capitol cupola windows.",
+        "context": "Architect of the Capitol · U.S. Capitol restoration · 2015",
+        "src": "/welcome/motion/capitol-glass-hd.webm",
+        "preview": "/welcome/motion/capitol-glass-preview.webm",
+        "poster": "/welcome/motion/capitol-glass.jpg",
+        "width": 1920,
+        "height": 1080,
+        "sourceTitle": "New U.S. Capitol Dome Cupola Windows.webm",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:New_U.S._Capitol_Dome_Cupola_Windows.webm",
+        "artist": "Architect of the Capitol",
+        "license": "Public domain",
+        "licenseUrl": "https://commons.wikimedia.org/wiki/File:New_U.S._Capitol_Dome_Cupola_Windows.webm",
+        "adaptation": "Silent excerpt; original scene geometry retained; encoded at 30 fps with a smaller low-bandwidth preview.",
+        "duration": 12,
+        "fps": 30,
+        "bytes": 5109845,
+        "previewBytes": 550011
+      }
+    },
+    {
+      "category": "government",
+      "index": 1,
+      "asset": "prairie-bison",
+      "original": {
+        "url": "https://www.nps.gov/nps-audiovideo/legacy/yell/FDC8AC8C-155D-451F-6709D7392955B151/yell-341A2698MOV_1280x720.mp4",
+        "bytes": 12729353,
+        "sha256": "4bf096c2cc4c451c32210c7723ba95cf9691383f7d031d4cbe12bc308731664f"
+      },
+      "excerpt": {
+        "start": 1,
+        "duration": 9
+      },
+      "clip": {
+        "id": "government-1",
+        "asset": "prairie-bison",
+        "title": "Life on protected public land",
+        "action": "Bison graze and move through protected grassland in Lamar Valley.",
+        "context": "National Park Service · Yellowstone, Wyoming · 2014",
+        "src": "/welcome/motion/prairie-bison-hd.webm",
+        "preview": "/welcome/motion/prairie-bison-preview.webm",
+        "poster": "/welcome/motion/prairie-bison.jpg",
+        "width": 1280,
+        "height": 720,
+        "sourceTitle": "Bison grazing",
+        "sourceUrl": "https://www.nps.gov/media/video/view.htm?id=FDC8AC8C-155D-451F-6709D7392955B151",
+        "artist": "NPS/Neal Herbert",
+        "license": "Public domain",
+        "licenseUrl": "https://www.nps.gov/media/video/view.htm?id=FDC8AC8C-155D-451F-6709D7392955B151",
+        "adaptation": "Silent excerpt; original scene geometry retained; encoded at 30 fps with a smaller low-bandwidth preview.",
+        "duration": 9,
+        "fps": 30,
+        "bytes": 4592913,
+        "previewBytes": 916072
+      }
+    },
+    {
+      "category": "government",
+      "index": 2,
+      "asset": "drawbridge",
+      "original": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Drone_video_of_Siuslaw_River_Bridge%2C_with_draw_span_slowly_closing_%282024%29.webm?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+        "bytes": 6680183,
+        "sha256": "695cf2ad6b6384ec5e6fd49558ceb715e83d51b9a68c2185d5ecd8b636456929"
+      },
+      "excerpt": {
+        "start": 4,
+        "duration": 12
+      },
+      "clip": {
+        "id": "government-2",
+        "asset": "drawbridge",
+        "title": "Public infrastructure at work",
+        "action": "A smooth aerial view follows the Siuslaw River Bridge as its draw span slowly closes.",
+        "context": "Oregon Department of Transportation · Florence, Oregon · 2024",
+        "src": "/welcome/motion/drawbridge-hd.webm",
+        "preview": "/welcome/motion/drawbridge-preview.webm",
+        "poster": "/welcome/motion/drawbridge.jpg",
+        "width": 1920,
+        "height": 1080,
+        "sourceTitle": "Drone video of Siuslaw River Bridge, with draw span slowly closing (2024).webm",
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Drone_video_of_Siuslaw_River_Bridge,_with_draw_span_slowly_closing_(2024).webm",
+        "artist": "Oregon Department of Transportation",
+        "license": "CC BY 2.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+        "adaptation": "Silent excerpt; original scene geometry retained; encoded at 30 fps with a smaller low-bandwidth preview.",
+        "duration": 12,
+        "fps": 30,
+        "bytes": 5272895,
+        "previewBytes": 282830
+      }
+    }
+  ]
+}

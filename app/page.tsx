@@ -19,6 +19,7 @@ import { hasExplorerDestination } from "./explorer-startup";
 import { WelcomeFeatureGuide } from "./living-welcome/FeatureGuide.jsx";
 import "./living-welcome/welcome.css";
 import type { WelcomeFeatureDestination } from "./living-welcome/features";
+import { captureBasemapSourceIds } from "../scripts/welcome-demos/capture-metrics.mjs";
 import { basemapCacheRequest } from "./basemap-cache";
 import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
@@ -28,7 +29,7 @@ import { LivingWatersControl } from "./living-waters-control";
 import { LIVING_WATERS_SOURCE } from "./living-waters-fixture";
 import { resizeMapAfterLayout } from "./cutaway-locator";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { InspectionPanelSwitch, useInspectionPanel } from "./inspection-panel";
 import "./inspection-panel.css";
 import "./explorer-controls.css";
@@ -1055,6 +1056,9 @@ const measurementLabelFor = (mode: Exclude<MeasureMode, null>, coordinates: [num
   return unit === "metric" ? `${(squareMiles * 2.58999).toFixed(1)} km² approximate` : `${squareMiles.toFixed(1)} sq mi approximate`;
 };
 
+const LocalWelcomeRecorder = __KFM_WELCOME_RECORDER__ && import.meta.env.DEV
+  ? lazy(() => import("./living-welcome/dev-recorder")) : null;
+
 export default function Home() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const windArrowCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -1072,6 +1076,8 @@ export default function Home() {
   const daylightEnabledRef = useRef(false);
   const daylightPlayingRef = useRef(false);
   const mapRef = useRef<MapLibreMap | null>(null);
+  const localCapturePixelRatioRef = useRef<number | null>(null);
+  const localCaptureWindFrameRef = useRef<WindArrowFrame | null>(null);
   const earthEngineContext = useEarthEngineContext();
   const [earthEngineDisplay, setEarthEngineDisplay] = useState<EarthEngineDisplayState>({ visible: {}, opacity: {}, years: {} });
   const styleGenerationReadyRef = useRef(false);
@@ -1360,8 +1366,9 @@ export default function Home() {
     const apply = () => {
       const budget = browserRenderBudget(renderQuality);
       // setPixelRatio always calls resize, even when its value is unchanged.
-      if (map.getPixelRatio() !== budget.pixelRatio)
-        runMapMutation("Rendering-quality update", () => map.setPixelRatio(budget.pixelRatio));
+      const pixelRatio = __KFM_WELCOME_RECORDER__ && localCapturePixelRatioRef.current !== null ? localCapturePixelRatioRef.current : budget.pixelRatio;
+      if (map.getPixelRatio() !== pixelRatio)
+        runMapMutation("Rendering-quality update", () => map.setPixelRatio(pixelRatio));
       void loadMapLibre().then(gl => { if (!disposed) runMapMutation("Image-request budget update", () => gl.setMaxParallelImageRequests(budget.imageRequests)); }).catch((error: unknown) => {
         if (!disposed) runMapMutation("MapLibre runtime update", () => { throw error; });
       });
@@ -10377,6 +10384,100 @@ export default function Home() {
         </footer>
       </main>
 
+      {LocalWelcomeRecorder && <Suspense fallback={null}><LocalWelcomeRecorder
+        getMap={() => mapRef.current}
+        prepareBenchmark={() => setGuideOpen(false)}
+        freezeSourceFrame={scenario => { localCaptureWindFrameRef.current = scenario.sources.includes("nws-forecast-wind") ? windArrowFrame : null; }}
+        releaseSourceFrame={() => { localCaptureWindFrameRef.current = null; }}
+        setCapturePixelRatio={value => {
+          localCapturePixelRatioRef.current = value;
+          const map = mapRef.current, ratio = value ?? browserRenderBudget(renderQuality).pixelRatio;
+          if (map && map.getPixelRatio() !== ratio) map.setPixelRatio(ratio);
+        }}
+        beforeFrame={(scenario, elapsedMs) => {
+          // Public redraw renders with timestamp zero. Suppress only display
+          // tile fades in the local export so real rasters are not held at 0.
+          const map = mapRef.current;
+          if (map) for (const layer of map.getStyle().layers) {
+            if (layer.type === "raster" && map.getPaintProperty(layer.id, "raster-fade-duration") !== 0) map.setPaintProperty(layer.id, "raster-fade-duration", 0);
+          }
+          const frame = localCaptureWindFrameRef.current ?? windArrowFrame;
+          if (scenario.sources.includes("nws-forecast-wind") && mapRef.current && windArrowCanvasRef.current && frame) {
+            drawWindFlowCanvas(windArrowCanvasRef.current, mapRef.current, frame, elapsedMs, true);
+          }
+        }}
+        extraCanvases={() => [windArrowCanvasRef.current, waterMotionCanvasRef.current]}
+        prepare={scenario => {
+          setGuideOpen(false); setLeftOpen(false); setRightOpen(false); setInstrumentOpen(false);
+          setTimelineOpen(false); setMapUtilityOpen(false); setUndergroundOpen(false); setSelected(null);
+          stopFlyover(false); stopSceneOrbit(false); setPlaying(false); setDaylightPlayback(false);
+          setDaylightEnabled(false); hideAllOfficialContext(); chooseTerrainDrawingMode("off");
+          setDynamicEffects(false);
+          commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Local recorded demo · source clocks retained");
+          basemapRef.current = scenario.basemap as BasemapKey; setBasemap(scenario.basemap as BasemapKey);
+          activateMapRepresentation(scenario.representation as "2d" | "terrain");
+          if (scenario.representation === "terrain") { chooseTerrainProvider("mapzen"); changeTerrainDepth(1); }
+          for (const id of scenario.sources) { setOfficialContextVisible(id as OfficialContextId, true); setOfficialContextOpacity(id as OfficialContextId, id === "kdot-roads-1918" ? 1 : id === "nasa-lightning-climatology" ? .85 : .75); }
+        }}
+        captureLayerStates={scenario => {
+          const map = mapRef.current; if (!map) return [];
+          const layers = map.getStyle().layers;
+          return scenario.sources.flatMap((requestedId: string) => {
+            const source = OFFICIAL_CONTEXT_BY_ID[requestedId as OfficialContextId];
+            return source.layerIds.map(id => {
+              const layer = map.getLayer(id), order = layers.findIndex(item => item.id === id);
+              return { sourceId: source.sourceId, layerId: id, type: layer?.type ?? "missing", order,
+                visibility: layer ? map.getLayoutProperty(id, "visibility") ?? "visible" : "missing",
+                rasterOpacity: layer?.type === "raster" ? map.getPaintProperty(id, "raster-opacity") ?? 1 : null,
+                rasterFadeDuration: layer?.type === "raster" ? map.getPaintProperty(id, "raster-fade-duration") : null,
+                minzoom: layers[order]?.minzoom ?? null, maxzoom: layers[order]?.maxzoom ?? null,
+                sourceLoaded: Boolean(map.getSource(source.sourceId) && map.isSourceLoaded(source.sourceId)) };
+            });
+          });
+        }}
+        evidence={scenario => {
+          const map = mapRef.current;
+          const attribution = [scenario.basemap === "imagery" ? "Tiles © Esri" : scenario.basemap === "kansas-aerial" ? "Kansas DASC / KGS · Kansas 911 · Surdex · 2024" : scenario.basemap === "topo" ? "USGS The National Map" : "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors"];
+          const sourceTimes = [scenario.sourceTime];
+          const answer = { ready: true, sourceTimes, attribution } as { ready: boolean; pending?: string; error?: string; sourceTimes: string[]; attribution: string[] };
+          if (!map || !styleGenerationReadyRef.current || !map.getStyle()?.layers?.length) return { ...answer, ready: false, pending: `style document synchronization${mapMutationErrorRef.current ? ` (${mapMutationErrorRef.current})` : ""}` };
+          if (basemapRef.current !== scenario.basemap) return { ...answer, ready: false, error: `Selected ${scenario.basemap} basemap unavailable; actual fallback is ${basemapRef.current}` };
+          // isStyleLoaded/areTilesLoaded include unrelated previously selected
+          // sources. Prove only this clip's actual basemap and requested layers.
+          for (const id of captureBasemapSourceIds(map.getStyle())) {
+            if (!map.isSourceLoaded(id)) { answer.ready = false; answer.pending = `${scenario.basemap} basemap source ${id}`; }
+          }
+          if (reducedMotion) return { ...answer, ready: false, error: "Reduced motion is enabled. Recording does not override this preference." };
+          if (scenario.representation === "terrain") {
+            attribution.push("Terrain Tiles · Mapzen · AWS Open Data");
+            if (terrainState === "ERROR") return { ...answer, ready: false, error: "Terrain source is unavailable" };
+            if (terrainState !== "READY") { answer.ready = false; answer.pending = "actual DEM tiles"; }
+          }
+          for (const requestedId of scenario.sources) {
+            const id = requestedId as OfficialContextId, source = OFFICIAL_CONTEXT_BY_ID[id];
+            attribution.push(source.attribution);
+            if (officialStates[id] === "error" && !(id === "nws-forecast-wind" && localCaptureWindFrameRef.current)) return { ...answer, ready: false, error: `${source.shortTitle} unavailable: ${officialErrors[id] ?? "provider request failed"}` };
+            if (id === "nws-forecast-wind") {
+              const frame = localCaptureWindFrameRef.current ?? windArrowFrame;
+              if (windArrowState === "ERROR" && !localCaptureWindFrameRef.current) return { ...answer, ready: false, error: "Actual GFS wind forecast unavailable" };
+              if (!frame || (windArrowState !== "READY" && !localCaptureWindFrameRef.current)) { answer.ready = false; answer.pending = "the real GFS model grid"; }
+              else { sourceTimes.splice(0, 1, `${frame.model} · valid ${frame.validTimeUtc}`); sourceTimes.push(`Retrieved ${frame.retrievedAtUtc}`); }
+              continue;
+            }
+            const existingLayers = source.layerIds.filter(layerId => Boolean(map.getLayer(layerId)));
+            if (existingLayers.length && existingLayers.every(layerId => map.getLayoutProperty(layerId, "visibility") === "none")) return { ...answer, ready: false, error: `${source.shortTitle} is hidden in the actual map style` };
+            for (const layerId of existingLayers) {
+              if (map.getLayer(layerId)?.type === "raster" && map.getPaintProperty(layerId, "raster-opacity") === 0) return { ...answer, ready: false, error: `${source.shortTitle} actual raster opacity is zero` };
+            }
+            const payload = officialPayloadsRef.current[id as OfficialContextFeedId];
+            if (source.apiPath && (!payload || payload.featureCount === 0)) { answer.ready = false; answer.pending = `${source.shortTitle} source records`; }
+            if (payload) sourceTimes.push(`${source.organization} · retrieved ${payload.retrievedAt}`);
+            if (!map.getSource(source.sourceId) || !map.isSourceLoaded(source.sourceId) || !source.layerIds.some(layerId => Boolean(map.getLayer(layerId)))) { answer.ready = false; answer.pending = `${source.shortTitle} map tiles`; }
+          }
+          return answer;
+        }}
+        finish={() => { mapRef.current?.stop(); setDaylightPlayback(false); }}
+      /></Suspense>}
       <div className="toast" role="status" aria-live="polite" data-visible={Boolean(toast)}>{toast}</div>
     </div>
   );

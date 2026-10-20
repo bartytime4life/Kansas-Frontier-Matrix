@@ -1,19 +1,20 @@
 {
+  "usedBytes": 108037842,
   "files": [
     {
-      "path": "/welcome/motion/clouds-hd.webm",
-      "bytes": 722614,
-      "sha256": "a56d3222cbe32cbf796977b9027408677bf136ebe1e8a2f19ca7b43420c5ae2a"
+      "path": "/welcome/motion/kansas-supercell-hd.webm",
+      "bytes": 2323730,
+      "sha256": "21fb8621f970cad9a7584cfb0bbe52c9b2be793ba825a765eb3215006975ad54"
     },
     {
-      "path": "/welcome/motion/clouds-preview.webm",
-      "bytes": 188322,
-      "sha256": "bab24a2cd44d6250c62800ad64f6a104edeafe65586ae5919ac69a2eb90c5b13"
+      "path": "/welcome/motion/kansas-supercell-preview.webm",
+      "bytes": 445328,
+      "sha256": "0bd856c1551b97504fea8bc9d992e091c807c53fd465741a6a9cb2e01c146527"
     },
     {
-      "path": "/welcome/motion/clouds.jpg",
-      "bytes": 26466,
-      "sha256": "cb8fba973b1255855902dcdbd1c244595f1484b12d367d51ede1cfcd42bc0ade"
+      "path": "/welcome/motion/kansas-supercell.jpg",
+      "bytes": 161724,
+      "sha256": "565055c4b7fd378449a59f5c66273c4f9e41cb33c82bd6f15a0daf108f98a86a"
     },
     {
       "path": "/welcome/motion/rain-hd.webm",
@@ -46,19 +47,19 @@
       "sha256": "f64a2c17c63545112b059289102ec1c3cd0213913d8ae53d3c27e2db9fc9861a"
     },
     {
-      "path": "/welcome/motion/supercell-hd.webm",
-      "bytes": 2016817,
-      "sha256": "41a50918815c8ad9aaa459efa7025eb98cdbaae7672b1fc7adb53b5001eec4de"
+      "path": "/welcome/motion/nebraska-supercell-hd.webm",
+      "bytes": 8271872,
+      "sha256": "372af557c0a061c074254abf277d94877bff1114fa9e76f1f6ebb36fb38c1190"
     },
     {
-      "path": "/welcome/motion/supercell-preview.webm",
-      "bytes": 442007,
-      "sha256": "351c1e552b77d661fac43e956c8a0de65a5484661447cad7fdddebcc39b12421"
+      "path": "/welcome/motion/nebraska-supercell-preview.webm",
+      "bytes": 919223,
+      "sha256": "7c759828f06e7c5a910767c9170409322ed78dbf45a90d45d7a4e912b14f8b36"
     },
     {
-      "path": "/welcome/motion/supercell.jpg",
-      "bytes": 62952,
-      "sha256": "908a7e656fa5ae097a7285acc32049a8017d249617b76a37b7c3f8bb35348b03"
+      "path": "/welcome/motion/nebraska-supercell.jpg",
+      "bytes": 196440,
+      "sha256": "8a84ffe3ee682b4c2f7ca31e8597812cdb092d0b0d5569e6bc37297368c53b55"
     },
     {
       "path": "/welcome/motion/tornado-hd.webm",
@@ -136,19 +137,19 @@
       "sha256": "63811a324350130862501474d7594f42b91e15bbae3bc5a505e2ac21d545b0fb"
     },
     {
-      "path": "/welcome/motion/roots-hd.webm",
-      "bytes": 280656,
-      "sha256": "057f8383a556772bb15bc9caa0f14ed6457c7acf652bc7d6a2155c7ed57f5546"
+      "path": "/welcome/motion/pollinators-hd.webm",
+      "bytes": 4317969,
+      "sha256": "50da82e664a5ec38fd037aeeec1f6cd1c97e053ab01675b4c7ec931b19dd5f71"
     },
     {
-      "path": "/welcome/motion/roots-preview.webm",
-      "bytes": 57178,
-      "sha256": "dbed3ab5b88eaf39d5425bfaa7b9acc2fec80ba4cceb01b8a4a59ce05b39bef7"
+      "path": "/welcome/motion/pollinators-preview.webm",
+      "bytes": 538686,
+      "sha256": "246e4f092538eb36cf95f54b61db2ef358d14277455e1ef1dcee46461a286185"
     },
     {
-      "path": "/welcome/motion/roots.jpg",
-      "bytes": 32911,
-      "sha256": "aef431a04100d47d4a19ee84f574ecd1168dfe9b9d5a76af34461983db69b47b"
+      "path": "/welcome/motion/pollinators.jpg",
+      "bytes": 244678,
+      "sha256": "d73d8c5a597b398b0c6d92803debb671f79e3d4801ba2974a2ba6f2d98d55e01"
     },
     {
       "path": "/welcome/motion/growth-hd.webm",
@@ -166,19 +167,19 @@
       "sha256": "50a73ef3a300b15ba5c32c58e21fec7b385355682ca69e73e47f83490ed86cad"
     },
     {
-      "path": "/welcome/motion/microscope-hd.webm",
-      "bytes": 58030,
-      "sha256": "78b0275e7848f158da4a87b6231adff02dce0b361f9e264d6758c1735d4bde32"
+      "path": "/welcome/motion/amoeba-hd.webm",
+      "bytes": 2073168,
+      "sha256": "c22c2f9eadb2f384ff14bf28490e454c9ef228c98a9e66b8bb6fd284f6d3fa1a"
     },
     {
-      "path": "/welcome/motion/microscope-preview.webm",
-      "bytes": 24625,
-      "sha256": "aaac0e585c9782caf8f02b136098c513f4812e05b2310a2571b0b069d6c6227b"
+      "path": "/welcome/motion/amoeba-preview.webm",
+      "bytes": 182077,
+      "sha256": "9d08cba3e930914fe910eeee9bd2902cb5e0bf031ccc173c79f62e104c2f1328"
     },
     {
-      "path": "/welcome/motion/microscope.jpg",
-      "bytes": 21063,
-      "sha256": "8c38ed477c2c1936f02ac5a847f984a1f46fb504dadc9848744162feffa51a44"
+      "path": "/welcome/motion/amoeba.jpg",
+      "bytes": 46093,
+      "sha256": "e872a926cffbef9d7a88678746d3cc1c2d55b54d6cff9e09b8384cc4627249fd"
     },
     {
       "path": "/welcome/motion/drilling-hd.webm",
@@ -406,50 +407,49 @@
       "sha256": "813e02d7ea65cc227d8d4e188fde5487d66c2e259a565e8b8d57f00f56c8e3e1"
     },
     {
-      "path": "/welcome/motion/civic-hd.webm",
-      "bytes": 1073522,
-      "sha256": "71d4564b6f7599ab36b2e479bac0a2ef6e79e0bd7b2468837429785970d462fb"
+      "path": "/welcome/motion/capitol-glass-hd.webm",
+      "bytes": 5109845,
+      "sha256": "f95203b8dfafaa4507de498f494d54eb5b9a1193bd950e1c9d48faaac7ecb568"
     },
     {
-      "path": "/welcome/motion/civic-preview.webm",
-      "bytes": 279540,
-      "sha256": "2b81f3d8415c1a0f47d57f1c53ef19980f093dd7ccd430640487e0123da5712a"
+      "path": "/welcome/motion/capitol-glass-preview.webm",
+      "bytes": 550011,
+      "sha256": "f4e9b2e181d0c3a4212d77fa50402584ccd293b6bdca0f35539bbe388c4fe428"
     },
     {
-      "path": "/welcome/motion/civic.jpg",
-      "bytes": 38849,
-      "sha256": "e46b71a6d5e4cbd9b7a59a3089799ecd2530aab6022cb8d4836c702ef8319397"
+      "path": "/welcome/motion/capitol-glass.jpg",
+      "bytes": 200211,
+      "sha256": "e5d01382c36e557edb1370cc8806e77612631b8bd7ac3d73fbfab4c9f2354399"
     },
     {
-      "path": "/welcome/motion/community-hd.webm",
-      "bytes": 2571291,
-      "sha256": "afb82c5cfd59e9dd71e8e314866de6c7dccf5ff281c2629b6acdd41382d5d987"
+      "path": "/welcome/motion/prairie-bison-hd.webm",
+      "bytes": 4592913,
+      "sha256": "faf103d0d46b42acf2d7ac48d45d8cde47bcdd5d6c12680e050643b11e67bb63"
     },
     {
-      "path": "/welcome/motion/community-preview.webm",
-      "bytes": 345727,
-      "sha256": "15ea94fcb77ce4d5717d170e16ec34898825e58a395f95757d5eed05faec9d66"
+      "path": "/welcome/motion/prairie-bison-preview.webm",
+      "bytes": 916072,
+      "sha256": "fa45a6fbd88d925de652616bc085926e4464d6c8c076efe5f264dd427a0634ef"
     },
     {
-      "path": "/welcome/motion/community.jpg",
-      "bytes": 101769,
-      "sha256": "29c6558034a34eab4d13a40894e53ab2010465c261586292bdb316160161cb0d"
+      "path": "/welcome/motion/prairie-bison.jpg",
+      "bytes": 178095,
+      "sha256": "11d74d5e4c69429a11bb15c96644980d7e9d376febf8a17ba3fbf87f6e776f1b"
     },
     {
-      "path": "/welcome/motion/publicwork-hd.webm",
-      "bytes": 2416967,
-      "sha256": "2471326f30bff6d1f530688cf950c75c670bd5ff17b4da077a903b377ac6ccd8"
+      "path": "/welcome/motion/drawbridge-hd.webm",
+      "bytes": 5272895,
+      "sha256": "6d16600a80eaa78a0e35bab584824043df3f96ae15025cc1821d46eff6dab2ce"
     },
     {
-      "path": "/welcome/motion/publicwork-preview.webm",
-      "bytes": 601609,
-      "sha256": "963636bde6c036552abe0a824ee42c009a5b5f607e14cead34670fcabca17736"
+      "path": "/welcome/motion/drawbridge-preview.webm",
+      "bytes": 282830,
+      "sha256": "4370128a80162084006290f0119b437ec7414f8392e76ac822c7d95fb968ae19"
     },
     {
-      "path": "/welcome/motion/publicwork.jpg",
-      "bytes": 90718,
-      "sha256": "0c832eee311ee2787aa72eacb5da3923ecd043a939dcbea58ce48be44591f857"
+      "path": "/welcome/motion/drawbridge.jpg",
+      "bytes": 287159,
+      "sha256": "f07d1ca4a0140dcda5a99f8e22cad91da20c388e0d1e6845f277cf7a63f7b4e9"
     }
-  ],
-  "usedBytes": 82380456
+  ]
 }

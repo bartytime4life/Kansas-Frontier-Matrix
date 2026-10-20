@@ -3,10 +3,10 @@ import kansasHistory from './kansas-history.json' with { type: 'json' };
 // Public presentation metadata only. No observations or connection credentials.
 export const SCENES = {
   "weather": [
-    "Clouds building & travelling",
+    "Storms crossing into Kansas",
     "Rain striking the ground",
     "Wind moving through grass",
-    "A storm grows from above",
+    "A supercell erupts over the plains",
     "A rotating tornado"
   ],
   "rivers": [
@@ -16,9 +16,9 @@ export const SCENES = {
     "The hidden water supply"
   ],
   "science": [
-    "Roots exploring their surroundings",
+    "Pollination, up close",
     "A plant opens toward the light",
-    "Seeing the invisible"
+    "Life beneath the microscope"
   ],
   "underground": [
     "Drilling to learn what lies below",
@@ -37,9 +37,9 @@ export const SCENES = {
     "From field to grain"
   ],
   "government": [
-    "Restoring public landmarks",
-    "People in public places",
-    "Public works in motion"
+    "Crafting a public landmark",
+    "Life on protected public land",
+    "Public infrastructure at work"
   ]
 };
 export const CATEGORY_IDS = Object.keys(SCENES);

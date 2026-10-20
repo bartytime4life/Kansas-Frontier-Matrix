@@ -16,6 +16,32 @@ export function applyBrowserHeaders(_request, response) {
   for (const [name, value] of Object.entries(browserHeaders)) response.setHeader(name, value);
 }
 
+// The pinned framework does not list WebM in its static MIME table. Correct
+// only successful public welcome videos at header commit; the framework still
+// owns file lookup, status, ranges, caching, lengths and the response stream.
+function welcomeVideoHeaders(request, response) {
+  if (!['GET', 'HEAD'].includes(request.method) || !/^\/welcome\/(?:motion|demos)\/[a-z0-9][a-z0-9_-]*\.webm$/.test((request.url ?? '').split('?')[0])) return;
+  const writeHead = response.writeHead;
+  response.writeHead = function (statusCode, ...args) {
+    if (Number.isInteger(statusCode) && statusCode >= 200 && statusCode < 300) {
+      const index = typeof args[0] === 'string' ? 1 : 0, supplied = args[index];
+      // Explicit writeHead headers override setHeader. Preserve every other
+      // header, including duplicate raw-array fields and the reason phrase.
+      if (Array.isArray(supplied)) {
+        const headers = [];
+        for (let i = 0; i < supplied.length; i += 2) if (String(supplied[i]).toLowerCase() !== 'content-type') headers.push(supplied[i], supplied[i + 1]);
+        args[index] = [...headers, 'Content-Type', 'video/webm'];
+      } else if (supplied && typeof supplied === 'object') {
+        const headers = { ...supplied };
+        for (const name of Object.keys(headers)) if (name.toLowerCase() === 'content-type') delete headers[name];
+        args[index] = { ...headers, 'Content-Type': 'video/webm' };
+      }
+      response.setHeader('Content-Type', 'video/webm');
+    }
+    return writeHead.call(this, statusCode, ...args);
+  };
+}
+
 export function installPublicDelivery(server) {
   const handlers=server.listeners('request');
   server.removeAllListeners('request');
@@ -33,6 +59,7 @@ export function installPublicDelivery(server) {
       response.writeHead(308,{Location:'https://kansasfrontiermatrix.com'+target});
       response.end();request.resume();return;
     }
+    welcomeVideoHeaders(request,response);
     for(const handler of handlers)handler.call(server,request,response);
   });
 }
