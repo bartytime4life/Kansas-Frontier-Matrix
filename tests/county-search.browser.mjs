@@ -6,7 +6,8 @@ import { spawn } from 'node:child_process';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { isStaleInterceptionCancellation } from './browser-interception.mjs';
+import { createInterceptionErrorTracker } from './browser-interception.mjs';
+import { isolateBrowserNetwork } from './browser-network.mjs';
 
 const origin = new URL(process.env.KFM_NODE_TEST_ORIGIN ?? 'http://127.0.0.1:5182');
 assert.equal(origin.protocol, 'http:');
@@ -29,7 +30,6 @@ const payload = (state, rows) => ({
   source: 'SYNTHETIC BROWSER FIXTURE ONLY', limitation: 'Invented test geometry; no evidence admission.',
   truncated: state === 'partial',
 });
-const emptyStyle = { version: 8, sources: {}, layers: [{ id: 'synthetic-background', type: 'background', paint: { 'background-color': '#172832' } }] };
 
 async function browser(t) {
   const profile = await mkdtemp(join(tmpdir(), 'kfm-county-browser-'));
@@ -39,7 +39,7 @@ async function browser(t) {
     '--disable-dev-shm-usage', '--enable-unsafe-swiftshader', '--use-angle=swiftshader', 'about:blank',
   ], { stdio: ['ignore', 'ignore', 'pipe', 'pipe', 'pipe'] });
   let stderr = '', sequence = 0, buffer = '', closed = false;
-  const pending = new Map(), listeners = new Set();
+  const pending = new Map(), listeners = new Set(), checks = [];
   child.stderr.on('data', chunk => { stderr = (stderr + chunk).slice(-12000); });
   const failPending = error => { closed = true; for (const entry of pending.values()) entry.reject(error); pending.clear(); };
   child.on('error', failPending);
@@ -65,13 +65,15 @@ async function browser(t) {
     child.stdio[3].write(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }) + '\0');
   });
   t.after(async () => {
-    try { await call('Browser.close'); } catch { child.kill(); }
-    if (child.exitCode === null) await Promise.race([new Promise(resolve => child.once('exit', resolve)), pause(2000)]);
-    if (child.exitCode === null) child.kill('SIGKILL');
-    await rm(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+    try { for (const check of checks) await check(); } finally {
+      try { await call('Browser.close'); } catch { child.kill(); }
+      if (child.exitCode === null) await Promise.race([new Promise(resolve => child.once('exit', resolve)), pause(2000)]);
+      if (child.exitCode === null) child.kill('SIGKILL');
+      await rm(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+    }
   });
   t.diagnostic(JSON.stringify(await call('Browser.getVersion')));
-  return { call, listeners };
+  return { call, listeners, checks };
 }
 
 async function pageSession(browser, width, height) {
@@ -82,7 +84,9 @@ async function pageSession(browser, width, height) {
     if (method === 'Page.navigate' || method === 'Page.reload') navigation++;
     return browser.call(method, params, sessionId);
   };
-  const errors = [], held = [], canceledRequests = new Set();
+  const interceptions = createInterceptionErrorTracker(), held = [];
+  const { errors } = interceptions;
+  browser.checks.push(() => interceptions.assertHealthy());
   let mode = 'held', fixture = payload('ready', features), httpStatus = 200;
   const fulfill = (requestId, body, responseCode = 200) => call('Fetch.fulfillRequest', {
     requestId, responseCode,
@@ -91,7 +95,9 @@ async function pageSession(browser, width, height) {
   });
   const listener = message => {
     if (message.sessionId !== sessionId) return;
-    if (message.method === 'Network.loadingFailed' && message.params.canceled === true) canceledRequests.add(message.params.requestId);
+    if (message.method === 'Network.loadingFailed') interceptions.loadingFailed(message.params);
+    if (message.method === 'Network.requestWillBeSent') interceptions.requestWillBeSent(message.params);
+    if (message.method === 'Page.frameNavigated') interceptions.frameNavigated(message.params);
     if (message.method === 'Page.frameNavigated' && !message.params.frame.parentId) navigation++;
     if (message.method !== 'Fetch.requestPaused') return;
     const requestNavigation = navigation;
@@ -104,14 +110,12 @@ async function pageSession(browser, width, height) {
       } else if (url.origin === origin.origin && url.pathname.startsWith('/api/') && url.pathname !== '/api/build') {
         // No provider, AI, account, storage or release operation is called.
         await fulfill(requestId, { error: 'Synthetic browser isolation: source unavailable.' }, 503);
-      } else if (url.origin !== origin.origin && /^https?:/.test(url.protocol)) {
-        if (url.pathname.includes('/styles/') || url.pathname.endsWith('/style.json')) await fulfill(requestId, emptyStyle);
-        else await call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' });
       } else await call('Fetch.continueRequest', { requestId });
     })().catch(error => {
-      if (!isStaleInterceptionCancellation(error, requestNavigation, navigation, canceledRequests.has(message.params.networkId))) {
-        errors.push(`${String(error)} [${message.params.request.url}; network=${message.params.networkId}; navigation=${requestNavigation}/${navigation}]`);
-      }
+      interceptions.failed(error, {
+        requestNavigation, navigation, networkId: message.params.networkId,
+        url: message.params.request.url,
+      });
     });
   };
   browser.listeners.add(listener);
@@ -120,16 +124,18 @@ async function pageSession(browser, width, height) {
   await call('Network.enable');
   await call('Network.setCacheDisabled', { cacheDisabled: true });
   await call('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
-  await call('Fetch.enable', { patterns: [{ urlPattern: '*' }] });
+  await isolateBrowserNetwork(call, origin);
   const evaluate = async expression => {
+    await interceptions.assertHealthy();
     const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });
     if (result.exceptionDetails) throw new Error(JSON.stringify(result.exceptionDetails));
+    await interceptions.assertHealthy();
     return result.result.value;
   };
   const wait = async (expression, label, timeout = 30000) => {
     const deadline = Date.now() + timeout; let last;
     while (Date.now() < deadline) {
-      if (errors.length) throw new Error(errors.join('\n'));
+      await interceptions.assertHealthy();
       last = await evaluate(`Boolean(${expression})`);
       if (last) return last;
       await pause(50);
@@ -160,7 +166,7 @@ async function pageSession(browser, width, height) {
     await call('Page.navigate', { url: origin.href });
     await wait(`document.querySelector('#qwen-map-panel textarea') && document.querySelector('.map-chrome-dock')`, 'application mounted');
     const deadline = Date.now() + 30000;
-    while (!held.length && Date.now() < deadline) { if (errors.length) throw new Error(errors.join('\n')); await pause(50); }
+    while (!held.length && Date.now() < deadline) { await interceptions.assertHealthy(); await pause(50); }
     assert.ok(held.length, 'hydrated application started its county request');
     // New disposable profiles see the normal first-visit guide. Close it with
     // native mouse input before typing, so its autofocus cannot steal keys.

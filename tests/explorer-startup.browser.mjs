@@ -6,7 +6,8 @@ import { spawn } from 'node:child_process';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { isStaleInterceptionCancellation } from './browser-interception.mjs';
+import { createInterceptionErrorTracker } from './browser-interception.mjs';
+import { isolateBrowserNetwork } from './browser-network.mjs';
 
 const origin = new URL(process.env.KFM_NODE_TEST_ORIGIN ?? 'http://127.0.0.1:5182');
 assert.equal(origin.protocol, 'http:');
@@ -24,7 +25,7 @@ async function browser(t) {
     '--disable-dev-shm-usage', '--enable-unsafe-swiftshader', '--use-angle=swiftshader', 'about:blank',
   ], { stdio: ['ignore', 'ignore', 'pipe', 'pipe', 'pipe'] });
   let stderr = '', sequence = 0, buffer = '', closed = false;
-  const pending = new Map(), listeners = new Set();
+  const pending = new Map(), listeners = new Set(), checks = [];
   child.stderr.on('data', chunk => { stderr = (stderr + chunk).slice(-12000); });
   const failPending = error => { closed = true; for (const entry of pending.values()) entry.reject(error); pending.clear(); };
   child.on('error', failPending);
@@ -50,13 +51,15 @@ async function browser(t) {
     child.stdio[3].write(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }) + '\0');
   });
   t.after(async () => {
-    try { await call('Browser.close'); } catch { child.kill(); }
-    if (child.exitCode === null) await Promise.race([new Promise(resolve => child.once('exit', resolve)), pause(2000)]);
-    if (child.exitCode === null) child.kill('SIGKILL');
-    await rm(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+    try { for (const check of checks) await check(); } finally {
+      try { await call('Browser.close'); } catch { child.kill(); }
+      if (child.exitCode === null) await Promise.race([new Promise(resolve => child.once('exit', resolve)), pause(2000)]);
+      if (child.exitCode === null) child.kill('SIGKILL');
+      await rm(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+    }
   });
   t.diagnostic(JSON.stringify(await call('Browser.getVersion')));
-  return { call, listeners };
+  return { call, listeners, checks };
 }
 
 async function pageSession(b, width, height) {
@@ -68,10 +71,13 @@ async function pageSession(b, width, height) {
     if (method === 'Page.navigate' || method === 'Page.reload') navigation++;
     return b.call(method, params, sessionId);
   };
-  const errors = [], canceledRequests = new Set();
+  const interceptions = createInterceptionErrorTracker();
+  b.checks.push(() => interceptions.assertHealthy());
   const listener = message => {
     if (message.sessionId !== sessionId) return;
-    if (message.method === 'Network.loadingFailed' && message.params.canceled === true) canceledRequests.add(message.params.requestId);
+    if (message.method === 'Network.loadingFailed') interceptions.loadingFailed(message.params);
+    if (message.method === 'Network.requestWillBeSent') interceptions.requestWillBeSent(message.params);
+    if (message.method === 'Page.frameNavigated') interceptions.frameNavigated(message.params);
     if (message.method === 'Page.frameNavigated' && !message.params.frame.parentId) navigation++;
     if (message.method !== 'Fetch.requestPaused') return;
     const requestNavigation = navigation;
@@ -81,18 +87,12 @@ async function pageSession(b, width, height) {
         heldWelcomeRequests.push(requestId);
       } else if (url.origin === origin.origin && url.pathname.startsWith('/api/') && url.pathname !== '/api/build') {
         await call('Fetch.fulfillRequest', { requestId, responseCode: 503, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from('{"error":"Isolated navigation test: provider unavailable"}').toString('base64') });
-      } else if (url.origin !== origin.origin && /^https?:/.test(url.protocol)) {
-        if (url.pathname.includes('/styles/') || url.pathname.endsWith('/style.json')) {
-          const style = { version: 8, sources: {}, layers: [{ id: 'test-background', type: 'background', paint: { 'background-color': '#172832' } }] };
-          await call('Fetch.fulfillRequest', { requestId, responseCode: 200, body: Buffer.from(JSON.stringify(style)).toString('base64') });
-        } else await call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' });
       } else await call('Fetch.continueRequest', { requestId });
     })().catch(error => {
-      // Navigation and browser-confirmed aborts invalidate paused requests.
-      // Unconfirmed current-request errors and other protocol failures stay fatal.
-      if (!isStaleInterceptionCancellation(error, requestNavigation, navigation, canceledRequests.has(message.params.networkId))) {
-        errors.push(`${String(error)} [${message.params.request.url}; network=${message.params.networkId}; navigation=${requestNavigation}/${navigation}]`);
-      }
+      interceptions.failed(error, {
+        requestNavigation, navigation, networkId: message.params.networkId,
+        url: message.params.request.url,
+      });
     });
   };
   b.listeners.add(listener);
@@ -101,16 +101,18 @@ async function pageSession(b, width, height) {
   await call('Network.enable');
   await call('Network.setCacheDisabled', { cacheDisabled: true });
   await call('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
-  await call('Fetch.enable', { patterns: [{ urlPattern: '*' }] });
+  await isolateBrowserNetwork(call, origin);
   const evaluate = async expression => {
+    await interceptions.assertHealthy();
     const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });
     if (result.exceptionDetails) throw new Error(JSON.stringify(result.exceptionDetails));
+    await interceptions.assertHealthy();
     return result.result.value;
   };
   const wait = async (expression, label) => {
     const deadline = Date.now() + 20000;
     while (Date.now() < deadline) {
-      assert.deepEqual(errors, []);
+      await interceptions.assertHealthy();
       if (await evaluate(`Boolean(${expression})`)) return;
       await pause(50);
     }
@@ -147,6 +149,45 @@ async function pageSession(b, width, height) {
   };
   return { call, evaluate, wait, key, open, unobstructed, holdWelcomeModule, releaseWelcomeModule };
 }
+
+test('isolated browser leaves canceled assets unpaused while enforcing network and fixture boundaries', {timeout:30000}, async t => {
+  const b=await browser(t);
+  const {targetId}=await b.call('Target.createTarget',{url:'about:blank'});
+  const {sessionId}=await b.call('Target.attachToTarget',{targetId,flatten:true});
+  const call=(method,params={})=>b.call(method,params,sessionId);
+  const paused=[],blocked=[],errors=[];
+  b.listeners.add(message=>{
+    if(message.sessionId!==sessionId)return;
+    if(message.method==='Network.loadingFailed')blocked.push(message.params);
+    if(message.method==='Fetch.requestPaused'){
+      paused.push(message.params.request.url);
+      void call('Fetch.fulfillRequest',{requestId:message.params.requestId,responseCode:503,body:Buffer.from('isolated').toString('base64')}).catch(error=>errors.push(String(error)));
+    }
+  });
+  await call('Page.enable');await call('Runtime.enable');await call('Network.enable');
+  // This standalone network test removes CSP as a confounder. Product
+  // acceptance sessions keep their normal CSP and security settings.
+  await call('Page.setBypassCSP',{enabled:true});
+  await isolateBrowserNetwork(call,origin);
+  await call('Page.navigate',{url:new URL('/robots.txt',origin).href});
+  const evaluate=async expression=>{
+    const result=await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});
+    assert.equal(result.exceptionDetails,undefined);return result.result.value;
+  };
+  const deadline=Date.now()+10000;
+  while(!await evaluate(`location.pathname==='/robots.txt' && !!document.body`)){assert.ok(Date.now()<deadline);await pause(10);}
+  assert.equal(await evaluate(`fetch('/welcome/motion/roots.jpg').then(r=>{r.body.cancel();return r.ok})`),true,'real local assets remain available');
+  await evaluate(`(async()=>{for(let i=0;i<5;i++){const v=document.createElement('video');v.preload='auto';v.src='/welcome/motion/clouds-preview.webm?cancel='+i;document.body.append(v);v.load();await new Promise(r=>setTimeout(r,10));v.removeAttribute('src');v.load();v.remove();}})()`);
+  assert.equal(await evaluate(`fetch('/api/browser-isolation-probe').then(r=>r.status)`),503,'provider/API fixtures remain intercepted');
+  assert.deepEqual(await evaluate(`fetch('https://tiles.openfreemap.org/styles/liberty').then(r=>r.json()).then(s=>[s.version,Object.keys(s.sources).length,s.layers[0].id])`),[8,0,'test-background']);
+  for(const url of ['https://kfm-network-probe.invalid/data','http://kfm-network-probe.invalid/data',new URL('http://127.0.0.1:5184/').href]) {
+    assert.equal(await evaluate(`fetch(${JSON.stringify(url)}).then(()=>false,()=>true)`),true,'off-origin requests must fail');
+  }
+  while(blocked.filter(e=>e.blockedReason==='inspector').length<3 && Date.now()<deadline)await pause(10);
+  assert.ok(blocked.filter(e=>e.blockedReason==='inspector').length>=3,`browser blocking, not DNS failure, prevents off-origin I/O: ${JSON.stringify(blocked)}`);
+  assert.deepEqual(paused,[new URL('/api/browser-isolation-probe',origin).href],'images/media/styles never acquire a Fetch interception ID');
+  assert.deepEqual(errors,[]);
+});
 
 for (const [width, height] of [[1366, 768], [390, 844]]) {
   test(`interrupted welcome dismissal at ${width}x${height}`, { timeout: 90000 }, async t => {
