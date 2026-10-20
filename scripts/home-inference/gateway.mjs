@@ -7,7 +7,7 @@ import {createServer} from 'node:http';
 import {readFileSync,statSync} from 'node:fs';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
-import {createNonceCache,decodeSecret,newSecret,verifyRequest,signResponse,RESPONSE_SIGNATURE_HEADER} from './signature.mjs';
+import {createNonceCache,decodeSecret,newSecret,verifyRequest,signResponse,isSystemdCredentialDirectory,RESPONSE_SIGNATURE_HEADER} from './signature.mjs';
 
 export const GATEWAY_VERSION='kfm-home-inference/1';
 export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,chatMs:90000});
@@ -68,13 +68,13 @@ function readJson(path,{privateFile=false,credential=false}={}){
  if(!stat.isFile()||stat.size>65536)throw fail('CONFIG_FILE_INVALID');
  // A key file readable by other local accounts is a credential leak; refuse it.
  // systemd grants a DynamicUser read access to its credential through an ACL,
- // which shows in the group bits; the credential directory is private to the
- // service, so only world access is refused there.
+ // which shows in the group bits. Only inside its verified private credential
+ // directory is group read accepted; world access is always refused.
  if(privateFile&&(stat.mode&(credential?0o007:0o077)))throw fail('KEYS_FILE_PERMISSIONS');
  return JSON.parse(readFileSync(path,'utf8'));
 }
 
-export function loadConfig(env=process.env){
+export function loadConfig(env=process.env,{credentialsRoot}={}){
  const keysPath=env.KFM_GATEWAY_KEYS||(env.CREDENTIALS_DIRECTORY?join(env.CREDENTIALS_DIRECTORY,'gateway-keys.json'):'');
  if(!keysPath)throw fail('KEYS_NOT_CONFIGURED');
  const ollama=new URL(env.KFM_OLLAMA_URL||'http://127.0.0.1:11434');
@@ -86,7 +86,7 @@ export function loadConfig(env=process.env){
  return {
   host,port,ollamaUrl:ollama.origin,
   profiles:parseProfiles(readJson(env.KFM_GATEWAY_PROFILES||'/etc/kfm-inference/profiles.json')),
-  keys:parseKeys(readJson(keysPath,{privateFile:true,credential:!env.KFM_GATEWAY_KEYS})),
+  keys:parseKeys(readJson(keysPath,{privateFile:true,credential:!env.KFM_GATEWAY_KEYS&&isSystemdCredentialDirectory(env.CREDENTIALS_DIRECTORY,{root:credentialsRoot})})),
  };
 }
 

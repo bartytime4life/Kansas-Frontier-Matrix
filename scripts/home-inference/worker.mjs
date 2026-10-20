@@ -12,7 +12,7 @@ import {readFileSync,statSync} from 'node:fs';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {setTimeout as sleep} from 'node:timers/promises';
-import {decodeSecret,signRequest,RESPONSE_SIGNATURE_HEADER,SIGNATURE_HEADERS} from './signature.mjs';
+import {decodeSecret,signRequest,isSystemdCredentialDirectory,RESPONSE_SIGNATURE_HEADER,SIGNATURE_HEADERS} from './signature.mjs';
 
 export const WORKER_VERSION='kfm-home-worker/1';
 export const WORKER_LIMITS=Object.freeze({leaseMs:30000,siteMs:15000,relayMs:110000,statusEveryMs:5000,leaseBytes:65536,replyBytes:65536,backoffMinMs:1000,backoffMaxMs:60000});
@@ -31,12 +31,12 @@ function exactOrigin(value,{loopbackOnly=false}={}){
  return url.origin;
 }
 
-export function loadWorkerConfig(env=process.env){
+export function loadWorkerConfig(env=process.env,{credentialsRoot}={}){
  // The website must be one exact HTTPS origin; plain HTTP only for a same-machine proof.
  const site=exactOrigin(env.KFM_WORKER_SITE??'');if(!site)throw fail('WORKER_SITE_INVALID');
  const gateway=exactOrigin(env.KFM_WORKER_GATEWAY||'http://127.0.0.1:8787',{loopbackOnly:true});if(!gateway)throw fail('WORKER_GATEWAY_NOT_LOOPBACK');
- const credential=!env.KFM_WORKER_KEY_FILE&&env.CREDENTIALS_DIRECTORY;
- const path=env.KFM_WORKER_KEY_FILE||(credential?join(env.CREDENTIALS_DIRECTORY,'worker-key.json'):'');
+ const path=env.KFM_WORKER_KEY_FILE||(env.CREDENTIALS_DIRECTORY?join(env.CREDENTIALS_DIRECTORY,'worker-key.json'):'');
+ const credential=!env.KFM_WORKER_KEY_FILE&&isSystemdCredentialDirectory(env.CREDENTIALS_DIRECTORY,{root:credentialsRoot});
  if(!path)throw fail('WORKER_KEY_NOT_CONFIGURED');
  const stat=statSync(path);
  if(!stat.isFile()||stat.size>4096)throw fail('WORKER_KEY_INVALID');
