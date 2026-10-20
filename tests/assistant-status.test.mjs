@@ -658,3 +658,10 @@ test('Stop and pending-panel hide isolate unseen completed server history even w
   }finally{h.dispose();}
  }
 });
+
+test('readiness names the model the server selected and ignores an unsafe label',async()=>{
+ for(const [modelLabel,expected] of [['qwen3:8b','qwen3:8b ready'],['<img src=x>','Qwen3 0.6B ready'],[undefined,'Qwen3 0.6B ready']]){
+  const {h,render}=await workspace(async()=>Response.json({configured:true,online:true,ready:true,evidenceSearchAvailable:true,requiresLogin:false,provider:'home-ollama',...(modelLabel===undefined?{}:{modelLabel})}),{mode:'explore'});
+  try{await settle();assert.equal(text(status(render({mode:'explore'}))),expected);}finally{h.dispose();}
+ }
+});

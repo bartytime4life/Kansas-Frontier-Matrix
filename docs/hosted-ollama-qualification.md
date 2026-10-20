@@ -1,5 +1,12 @@
 # Smaller Ollama model on the existing GoDaddy app
 
+> **Superseded context (2026-10-19).** The "accepted PC integration" and server
+> login mentioned below were retired on October 19 ([login removal](login-removal-20261019.md),
+> [PC inference](pc-inference.md)). The loopback `EACCES` result below concerns
+> running a daemon inside the old GoDaddy app `q9r9beo47t`. It does not show that the
+> replacement app blocks outbound HTTPS. Home-PC compute is now planned in
+> [home Ollama inference](home-ollama-inference.md); that path needs no daemon on GoDaddy.
+
 Status: **HOSTED BASELINE LIMITED / INSTALLATION BLOCKED / NOT INSTALLED**.
 Owner constraints recorded October 16, 2026: keep inference off the owner's PC,
 use Ollama with a smaller model, and add no hosting subscription, paid API,

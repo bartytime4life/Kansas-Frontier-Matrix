@@ -1,0 +1,22 @@
+{
+  "concurrency": 1,
+  "maxQueue": 2,
+  "profiles": [
+    {
+      "id": "kfm-default-chat",
+      "label": "KFM default",
+      "model": "qwen3:8b",
+      "digest": "sha256:REPLACE-WITH-THE-64-HEX-DIGEST-FROM-/api/tags",
+      "license": "Apache-2.0 (verify on the model page before admission)",
+      "capabilities": ["chat"],
+      "scopes": ["production", "staging"],
+      "contextTokens": 8192,
+      "maxInputChars": 16000,
+      "outputTokens": { "brief": 320, "expanded": 700 },
+      "timeoutMs": { "brief": 60000, "expanded": 90000 },
+      "options": { "temperature": 0.5, "top_p": 0.9, "top_k": 40, "repeat_penalty": 1.1 },
+      "think": false,
+      "keepAlive": "30m"
+    }
+  ]
+}

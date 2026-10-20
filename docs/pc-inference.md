@@ -13,7 +13,3 @@ budgets remain in place. The shared evidence reader now lives in
 Existing `/private/` files were not deleted or migrated. The application no longer
 opens the retired account database. See `login-removal-20261019.md` for current
 scope and validation. Historical implementations remain in Git history.
-
-The later home inference design ([home-inference.md](home-inference.md)) is a
-separate, anonymous-visitor provider with its own scoped machine keys. It does
-not restore this service, its routes, accounts or `KFM_PC_*` secrets.

@@ -1,0 +1,59 @@
+# KFM home inference gateway. Install as
+#   /etc/systemd/system/kfm-inference-gateway.service
+# with the gateway files in /opt/kfm-inference/ and its configuration in
+# /etc/kfm-inference/ (see README.md), then:
+#   sudo systemctl daemon-reload && sudo systemctl enable --now kfm-inference-gateway
+[Unit]
+Description=KFM home inference gateway (signed, loopback only)
+Documentation=file:///opt/kfm-inference/README.md
+After=network-online.target ollama.service
+Wants=network-online.target ollama.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/node /opt/kfm-inference/gateway.mjs
+# Re-reads profiles.json. Keys come through LoadCredential, so key rotation or
+# revocation needs `systemctl restart`, which also cancels any running generation.
+ExecReload=/bin/kill -HUP $MAINPID
+Environment=NODE_ENV=production
+Environment=KFM_GATEWAY_HOST=127.0.0.1
+Environment=KFM_GATEWAY_PORT=8787
+Environment=KFM_GATEWAY_PROFILES=/etc/kfm-inference/profiles.json
+LoadCredential=gateway-keys.json:/etc/kfm-inference/gateway-keys.json
+Restart=on-failure
+RestartSec=3
+
+# No fixed account, no privileges, no writable filesystem, no devices.
+DynamicUser=yes
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectProc=invisible
+ProcSubset=pid
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+# The kernel enforces what the code already checks: loopback in, loopback out.
+IPAddressDeny=any
+IPAddressAllow=localhost
+MemoryMax=512M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target
