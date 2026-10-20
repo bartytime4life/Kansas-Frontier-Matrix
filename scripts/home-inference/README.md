@@ -29,14 +29,23 @@ Each step below is something the owner runs deliberately on the home PC.
   and a single-use nonce. Unsigned, stale, replayed, forged and unknown-key
   requests all get the same `401`. Every other path, including all of Ollama's
   own `/api/*` routes (pull, delete, create, copy), is unreachable.
+- Every authenticated health, chat and error response carries an HMAC-SHA256
+  signature over its exact bytes and HTTP status, bound to the request's key ID,
+  nonce, timestamp, method, path and body hash with a separate response domain.
+  The server and probe reject unsigned, altered and replayed responses. A
+  request-ID echo alone is not authentication across a TLS-terminating tunnel.
 - A chat names a **profile**, a depth (`brief`/`expanded`) and up to 16 messages.
   The profile, not the caller, sets the model tag, its pinned digest, context
   window, output length, sampling options and time limit. Extra fields are refused.
 - A profile only serves when `ollama list` has that tag **with the same digest**,
   and the model is not cloud-hosted. A changed or substituted model is held, never served.
+  Admission rechecks the runtime after leaving the queue rather than trusting
+  cached health. The streamed model name must also match the approved tag.
 - One generation at a time with a short bounded queue (`429 GATEWAY_BUSY` beyond it).
   A caller that disconnects cancels its generation. At the time limit the reply so far
   comes back marked length-limited; the visitor can choose to continue it.
+  Each profile is limited to 90000 ms, covering queue wait, readiness inspection
+  and generation together. Expired queued work never starts generation.
 - An over-long prompt is refused (`MODEL_CONTEXT_LIMIT`) rather than letting
   Ollama silently truncate it. Model "thinking" text is never returned.
 - Logs one JSON line per request with timings, token counts and codes. Logs
@@ -131,10 +140,22 @@ The probe exits non-zero unless every refusal check passes, the pinned digest
 matches and the synthetic chats complete. Keep the receipt privately. It records
 this path at this time; it is not a capacity or quality guarantee.
 
-**Tunnel deadline.** Cloudflare's documented proxy read timeout on
-non-Enterprise plans is 100 seconds (HTTP 524). Keep every profile's
-`timeoutMs` at or below 90000 for the tunnel path. The public chat also
+**Gateway deadline.** The parser refuses profile `timeoutMs` values over 90000;
+this is an application limit independent of the transport provider's timeout.
+The public chat also
 caps a reply at 4096 bytes, so keep `outputTokens.expanded` at about 700 or less.
+
+**Compatibility and activation.** Update `gateway.mjs`, `signature.mjs` and
+`probe.mjs` together on the inference PC before selecting the home provider on
+the server. The new server refuses an older unsigned gateway; it never falls
+back to another provider. Updating repository source does not install the kit,
+change the GoDaddy application, select home inference, configure a tunnel or
+authorize home-network access. Complete the plan's independent gates first.
+
+The trusted home operator must not replace model tags during active requests.
+Ollama reports the model tag in its chat stream, not a weights digest. Fresh tag
+inspection detects changes before admission, but cannot attest a compromised
+local runtime or an operator swapping weights between inspection and generation.
 
 ## Stopping and rollback on this PC
 

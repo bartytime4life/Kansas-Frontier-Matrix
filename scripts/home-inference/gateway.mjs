@@ -7,10 +7,10 @@ import {createServer} from 'node:http';
 import {readFileSync,statSync} from 'node:fs';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
-import {createNonceCache,decodeSecret,newSecret,verifyRequest} from './signature.mjs';
+import {createNonceCache,decodeSecret,newSecret,verifyRequest,signResponse,RESPONSE_SIGNATURE_HEADER} from './signature.mjs';
 
 export const GATEWAY_VERSION='kfm-home-inference/1';
-export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768});
+export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,chatMs:90000});
 const DEPTHS=['brief','expanded'];
 const ROLES=['system','user','assistant'];
 const OPTION_KEYS=['temperature','top_p','top_k','min_p','repeat_penalty','presence_penalty','frequency_penalty','seed'];
@@ -41,7 +41,7 @@ export function parseProfiles(value){
   if(!Array.isArray(p.scopes)||!p.scopes.length||!p.scopes.every(scope=>SCOPE.test(scope)))throw invalid();
   if(!Array.isArray(p.capabilities)||!p.capabilities.includes('chat'))throw invalid();
   if(!positive(p.contextTokens,131072)||!positive(p.maxInputChars,262144))throw invalid();
-  if(!DEPTHS.every(depth=>positive(p.outputTokens?.[depth],8192)&&positive(p.timeoutMs?.[depth],600000)))throw invalid();
+  if(!DEPTHS.every(depth=>positive(p.outputTokens?.[depth],8192)&&positive(p.timeoutMs?.[depth],GATEWAY_LIMITS.chatMs)))throw invalid();
   if(DEPTHS.some(depth=>p.outputTokens[depth]>=p.contextTokens))throw invalid();
   const options=p.options??{};
   if(typeof options!=='object'||Object.keys(options).some(key=>!OPTION_KEYS.includes(key)||!Number.isFinite(options[key])))throw invalid();
@@ -167,6 +167,7 @@ async function streamChat({fetchImpl,ollamaUrl,profile,depth,messages,signal,pro
     if(!line)continue;
     const chunk=JSON.parse(line);
     if(chunk.error)throw fail('MODEL_UNAVAILABLE',503);
+    if(chunk.model!==profile.model)throw fail('PROFILE_NOT_READY',503);
     // Thinking text is private model reasoning; it is never returned.
     if(typeof chunk.message?.content==='string'){text+=chunk.message.content;progress.text=text;}
     if(Buffer.byteLength(text)>GATEWAY_LIMITS.outputBytes){limited=true;break;}
@@ -216,6 +217,15 @@ function readBody(req){
  });
 }
 
+function untilAbort(promise,signal){
+ return new Promise((resolve,reject)=>{
+  const abort=()=>reject(fail('REQUEST_CANCELLED',499));
+  if(signal.aborted){abort();return;}
+  signal.addEventListener('abort',abort,{once:true});
+  promise.then(resolve,reject).finally(()=>signal.removeEventListener('abort',abort));
+ });
+}
+
 export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127.0.0.1:11434',fetchImpl=fetch,clock=Date.now,log=line=>console.log(JSON.stringify(line))}){
  const state={profiles:profileConfig.profiles,keys};
  let admission=createAdmission(profileConfig);
@@ -236,14 +246,18 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
  const chat=async(value,scope,signal,record)=>{
   const request=validateChat(value,state.profiles,scope);
   Object.assign(record,{profile:request.profile.id,depth:request.depth,requestId:request.requestId});
-  const ready=(await inspector()).state.get(request.profile.id);
-  if(ready!==null)throw fail(ready==='MODEL_UNAVAILABLE'?'MODEL_UNAVAILABLE':'PROFILE_NOT_READY',503);
-  const queuedAt=clock(),release=await admission.enter(signal);
-  record.queueMs=clock()-queuedAt;
+  const queuedAt=clock();let release;
   const controller=new AbortController(),timeout=request.profile.timeoutMs[request.depth];
   const abort=()=>controller.abort();signal.addEventListener('abort',abort,{once:true});
+  if(signal.aborted)controller.abort();
+  // One deadline covers waiting, fresh identity inspection and generation.
   const timer=setTimeout(()=>controller.abort(),timeout);active.add(controller);
   try{
+   release=await admission.enter(controller.signal);
+   record.queueMs=clock()-queuedAt;
+   const ready=(await untilAbort(inspector({fresh:true}),controller.signal)).state.get(request.profile.id);
+   if(ready!==null)throw fail(ready==='MODEL_UNAVAILABLE'?'MODEL_UNAVAILABLE':'PROFILE_NOT_READY',503);
+   if(controller.signal.aborted)throw fail('MODEL_TIMEOUT',504);
    let output;const progress={text:''};
    try{output=await streamChat({fetchImpl,ollamaUrl,profile:request.profile,depth:request.depth,messages:request.messages,signal:controller.signal,progress});}
    catch(error){
@@ -267,14 +281,19 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
     text,finishReason,usage:{promptTokens,outputTokens},
     timings:{queueMs:record.queueMs,loadMs:Number.isFinite(final.load_duration)?Math.round(final.load_duration/1e6):null,totalMs:clock()-queuedAt,tokensPerSecond:seconds&&outputTokens?Math.round(outputTokens/seconds*10)/10:null},
    };
-  }finally{clearTimeout(timer);signal.removeEventListener('abort',abort);active.delete(controller);controller.abort();release();}
+  }catch(error){
+   if(signal.aborted)throw fail('REQUEST_CANCELLED',499);
+   if(controller.signal.aborted)throw fail('MODEL_TIMEOUT',504);
+   throw error;
+  }finally{clearTimeout(timer);signal.removeEventListener('abort',abort);active.delete(controller);controller.abort();release?.();}
  };
 
- const send=(res,status,body)=>{
+ const send=(res,status,body,authentication)=>{
   if(res.headersSent||res.destroyed)return;
   const payload=JSON.stringify(body);
   const close=status===413||status===408;
-  res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Content-Length':Buffer.byteLength(payload),'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...(close?{Connection:'close'}:{})});
+  const signed=authentication?{[RESPONSE_SIGNATURE_HEADER]:signResponse({...authentication,status,body:payload})}:{};
+  res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Content-Length':Buffer.byteLength(payload),'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...signed,...(close?{Connection:'close'}:{})});
   res.end(payload,close?()=>res.socket?.destroy():undefined);
  };
 
@@ -282,6 +301,7 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
   const started=clock(),record={event:'request',method:req.method,path:null,status:0,code:null};
   // The response closing before we finish means the caller went away: stop generating.
   const disconnected=new AbortController();
+  let authentication;
   res.on('close',()=>{if(!res.writableFinished)disconnected.abort();});
   try{
    const path=req.url??'';
@@ -292,6 +312,7 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
    if(req.method==='GET'&&body)throw fail('INVALID_REQUEST',400);
    const auth=verifyRequest({headers:req.headers,method:req.method,path,body,keys:state.keys,nonces,now:clock()});
    if(!auth.ok){record.authFailure=auth.reason;throw fail('UNAUTHORIZED',401);}
+   authentication={secret:auth.key.secret,requestHeaders:req.headers,method:req.method,path,requestBody:body};
    record.keyId=auth.key.id;
    let result;
    if(path==='/v1/health'&&req.method==='GET')result=await health(auth.key.scope);
@@ -301,12 +322,12 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
     result=await chat(value,auth.key.scope,disconnected.signal,record);
    }
    else throw fail('NOT_FOUND',404);
-   record.status=200;send(res,200,result);
+   record.status=200;send(res,200,result,authentication);
   }catch(error){
    const status=Number.isInteger(error?.status)?error.status:500,code=status===500?'GATEWAY_ERROR':error.code;
    Object.assign(record,{status,code});
    if(status===429)res.setHeader?.('Retry-After','5');
-   send(res,status===499?400:status,{gateway:GATEWAY_VERSION,error:code});
+   send(res,status===499?400:status,{gateway:GATEWAY_VERSION,error:code},authentication);
   }finally{
    record.totalMs=clock()-started;
    // Operational metadata only: never prompts, replies, headers or secrets.
