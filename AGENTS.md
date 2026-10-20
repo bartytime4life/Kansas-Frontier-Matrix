@@ -3,7 +3,10 @@
 The owner requested this separate GoDaddy Node hosting composition on
 2026-10-13 and explicitly excluded Airo. Its destination is GoDaddy app
 `urdng3v1vk`, selected by the owner as the replacement preview on 2026-10-19.
-The prior GoDaddy app `q9r9beo47t` remains a recovery reference. Source starts at Explorer v259 commit
+The prior GoDaddy app `q9r9beo47t` was deleted; references to it are historical,
+not an active recovery or deployment destination. For current operations use
+`urdng3v1vk` and `docs/godaddy-node-preview.md`; reverify the app and deployed
+source before any later publication. Source starts at Explorer v259 commit
 `441c3e29581ffb0293d8e643e5c37eed50319032`.
 On 2026-10-13 the owner canceled report pricing, checkout and payment setup
 and requested free reports/downloads. Keep report exports free and public;

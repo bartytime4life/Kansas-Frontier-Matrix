@@ -6,8 +6,11 @@ The owner requested complete removal of application login, then removal of dead
 connections and unavailable destination pages. The owner selected existing
 GoDaddy preview app `urdng3v1vk` as the replacement. Base source is
 `a0-hosted-ai-web-20261017@5b09c94de207409e4df08914f202097b2bcfae45`.
-The prior app `q9r9beo47t` is retained as a recovery reference. The original private
-Sites application and its data are separate and are not overwritten.
+The prior app `q9r9beo47t` was initially retained as a recovery reference, then
+recorded as deleted in the October 19 hosting update. It is historical only;
+use `urdng3v1vk` for current operations and reverify its deployed source before
+any later publication. See [current hosting documentation](godaddy-node-preview.md).
+The original private Sites application and its data are separate and are not overwritten.
 
 ## Resulting application
 

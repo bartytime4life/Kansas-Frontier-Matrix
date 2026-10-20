@@ -54,7 +54,7 @@ const proxyRequest = (path, headers) => new Promise((resolve, reject) => {
 test('published host and forwarding headers serve both the map and build identity', async () => {
   for (const headers of [
     { Host: 'kansasfrontiermatrix.com' },
-    { Host: 'q9r9beo47t.c38.airoapp.ai' },
+    { Host: 'urdng3v1vk.c38.airoapp.ai' },
     { Host: 'urdng3v1vk.preview.c38.airoapp.ai' },
     { Host: '127.0.0.1:20011', 'X-Forwarded-Host': 'kansasfrontiermatrix.com', 'X-Forwarded-Proto': 'https' },
   ]) {
