@@ -1,3 +1,4 @@
+import { isolateBrowserNetwork } from './browser-network.mjs';
 import assert from "node:assert/strict";
 import test from "node:test";
 import { isStaleInterceptionCancellation, createInterceptionErrorTracker } from "./browser-interception.mjs";
@@ -116,5 +117,13 @@ test('late paused requests need matching network and replaced document-loader ev
     tracker.failed(invalidId(),mediaRequest());
     const checked=assert.rejects(tracker.assertHealthy(),/Invalid InterceptionId/);
     expire();await checked;
+  }
+});
+
+test('network isolation refuses non-loopback or ambiguous origins before issuing CDP commands', async () => {
+  for(const origin of ['https://127.0.0.1:5182/','http://example.com/','http://user@127.0.0.1:5182/','http://127.0.0.1:5182/path','http://127.0.0.1:5182/?query=1','http://127.0.0.1:5182/#fragment']) {
+    let called=false;
+    await assert.rejects(isolateBrowserNetwork(async()=>{called=true;},origin),/loopback origin/);
+    assert.equal(called,false);
   }
 });

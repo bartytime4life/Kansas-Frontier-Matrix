@@ -7,6 +7,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
+import { isolateBrowserNetwork } from './browser-network.mjs';
 
 const origin = new URL(process.env.KFM_NODE_TEST_ORIGIN ?? 'http://127.0.0.1:5182');
 assert.equal(origin.protocol, 'http:');
@@ -110,9 +111,6 @@ async function pageSession(browser, width, height) {
       } else if (url.origin === origin.origin && url.pathname.startsWith('/api/') && url.pathname !== '/api/build') {
         // No provider, AI, account, storage or release operation is called.
         await fulfill(requestId, { error: 'Synthetic browser isolation: source unavailable.' }, 503);
-      } else if (url.origin !== origin.origin && /^https?:/.test(url.protocol)) {
-        if (url.pathname.includes('/styles/') || url.pathname.endsWith('/style.json')) await fulfill(requestId, emptyStyle);
-        else await call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' });
       } else await call('Fetch.continueRequest', { requestId });
     })().catch(error => {
       interceptions.failed(error, {
@@ -127,7 +125,7 @@ async function pageSession(browser, width, height) {
   await call('Network.enable');
   await call('Network.setCacheDisabled', { cacheDisabled: true });
   await call('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
-  await call('Fetch.enable', { patterns: [{ urlPattern: '*' }] });
+  await isolateBrowserNetwork(call, origin);
   const evaluate = async expression => {
     await interceptions.assertHealthy();
     const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });

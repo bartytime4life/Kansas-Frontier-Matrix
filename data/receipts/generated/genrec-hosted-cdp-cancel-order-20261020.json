@@ -5,13 +5,15 @@
     "tests/browser-interception.mjs",
     "tests/browser-interception.test.mjs",
     "tests/county-search.browser.mjs",
-    "tests/explorer-startup.browser.mjs"
+    "tests/explorer-startup.browser.mjs",
+    "tests/browser-network.mjs"
   ],
   "artifact_hashes": {
     "tests/browser-interception.mjs": "sha256:4636b9ff2bdd3228dc8239eda7a85c81b0754265aa2bc2e6b33e0f434850c24c",
-    "tests/browser-interception.test.mjs": "sha256:c08ca7696bd92c94688cd48ab322268e493b67efee8ef3d839a83ba022296a24",
-    "tests/county-search.browser.mjs": "sha256:bf7775e61e9e4211b5d84e075a8b0bf871fe9d3f1d3e79694e5ebbb7e2fb0e50",
-    "tests/explorer-startup.browser.mjs": "sha256:2d49627a5f687a4e5b2d90381945f5bbeb7ebbe00ca2758f4b1df96e8ba06b72"
+    "tests/browser-interception.test.mjs": "sha256:b988f9871d94274cf1316afc08acf088f26705aa8a53b050bbb6d3e9a96cbfe7",
+    "tests/county-search.browser.mjs": "sha256:dcbaf3a4aacf34d9980c679eadb6a996c20ff87c6dc60c9aa9325cd1d901c4d9",
+    "tests/explorer-startup.browser.mjs": "sha256:12d8f7dafe620f9c334d9b83133eff00f91435273840753a3fce7651cb72b231",
+    "tests/browser-network.mjs": "sha256:361026d855a4c6db731e6f1c3c997b149dcc5381aef3ac60d4b25c11557850b7"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -28,20 +30,22 @@
   "inputs": {
     "evidence_refs": [
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/cccd040842f03c7a85867dc7336c7d4342caafd8",
-      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39471835974/job/118797588658"
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39471835974/job/118797588658",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39478078436/job/118819154967"
     ]
   },
   "truth_labels": {
     "tests/browser-interception.mjs": "CONFIRMED",
     "tests/browser-interception.test.mjs": "CONFIRMED",
     "tests/county-search.browser.mjs": "CONFIRMED",
-    "tests/explorer-startup.browser.mjs": "CONFIRMED"
+    "tests/explorer-startup.browser.mjs": "CONFIRMED",
+    "tests/browser-network.mjs": "CONFIRMED"
   },
   "validation_gates": [
     {
       "gate": "deterministic-cancellation-regression",
       "outcome": "PASS",
-      "reason": "Six deterministic cases cover both cancellation orders, bounded missing confirmation, mismatched identity, unrelated errors, stale navigation, and matching replaced-loader evidence. Real Chromium reproduces same-document media abort and document-replacement invalid-ID replies; genuine events are deliberately delivered after error or matched by retired loader. Initial candidate 988d4e9df6 passed full Node/HTTP/county but failed startup on unconfirmed map-style request; later startup sequence stopped. New loader correlation requires exact network/frame/retired-loader identity; no arbitrary later navigation exemption."
+      "reason": "Seven deterministic tests preserve fatal treatment of unknown/unconfirmed interception errors and reject non-loopback fixture origins. CI proved canceled image requests may have neither Network identity nor cancellation event, and Chrome versions differ on accepting continueRequest after cancellation. The harness now avoids pausing ordinary assets: Fetch controls only local API/lazy-welcome requests; Chrome Network URL blocking enforces off-origin isolation, with the existing empty external map-style fixture supplied locally. Real browser regression verifies local assets/cancellation, API fixture, style fixture and inspector-blocked HTTP/HTTPS/other-loopback-port. Only that standalone boundary regression bypasses CSP to prove blocking independently; product acceptance keeps CSP."
     },
     {
       "gate": "final-combined-validation",

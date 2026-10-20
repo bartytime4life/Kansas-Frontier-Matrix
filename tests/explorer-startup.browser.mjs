@@ -7,6 +7,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
+import { isolateBrowserNetwork } from './browser-network.mjs';
 
 const origin = new URL(process.env.KFM_NODE_TEST_ORIGIN ?? 'http://127.0.0.1:5182');
 assert.equal(origin.protocol, 'http:');
@@ -86,11 +87,6 @@ async function pageSession(b, width, height) {
         heldWelcomeRequests.push(requestId);
       } else if (url.origin === origin.origin && url.pathname.startsWith('/api/') && url.pathname !== '/api/build') {
         await call('Fetch.fulfillRequest', { requestId, responseCode: 503, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from('{"error":"Isolated navigation test: provider unavailable"}').toString('base64') });
-      } else if (url.origin !== origin.origin && /^https?:/.test(url.protocol)) {
-        if (url.pathname.includes('/styles/') || url.pathname.endsWith('/style.json')) {
-          const style = { version: 8, sources: {}, layers: [{ id: 'test-background', type: 'background', paint: { 'background-color': '#172832' } }] };
-          await call('Fetch.fulfillRequest', { requestId, responseCode: 200, body: Buffer.from(JSON.stringify(style)).toString('base64') });
-        } else await call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' });
       } else await call('Fetch.continueRequest', { requestId });
     })().catch(error => {
       interceptions.failed(error, {
@@ -105,7 +101,7 @@ async function pageSession(b, width, height) {
   await call('Network.enable');
   await call('Network.setCacheDisabled', { cacheDisabled: true });
   await call('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
-  await call('Fetch.enable', { patterns: [{ urlPattern: '*' }] });
+  await isolateBrowserNetwork(call, origin);
   const evaluate = async expression => {
     await interceptions.assertHealthy();
     const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });
@@ -154,65 +150,42 @@ async function pageSession(b, width, height) {
   return { call, evaluate, wait, key, open, unobstructed, holdWelcomeModule, releaseWelcomeModule };
 }
 
-test('canceled welcome media confirms an invalid Fetch ID even when its Network event is delivered later', { timeout: 30000 }, async t => {
-  const b = await browser(t);
-  const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
-  const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
-  const call = (method, params = {}) => b.call(method, params, sessionId);
-  const events = [], paused = [], requests = [], frames = [];
-  b.listeners.add(message => {
-    if (message.sessionId !== sessionId) return;
-    if (message.method === 'Network.loadingFailed') events.push(message.params);
-    if (message.method === 'Network.requestWillBeSent') requests.push(message.params);
-    if (message.method === 'Page.frameNavigated') frames.push(message.params);
-    if (message.method === 'Fetch.requestPaused') paused.push(message.params);
+test('isolated browser leaves canceled assets unpaused while enforcing network and fixture boundaries', {timeout:30000}, async t => {
+  const b=await browser(t);
+  const {targetId}=await b.call('Target.createTarget',{url:'about:blank'});
+  const {sessionId}=await b.call('Target.attachToTarget',{targetId,flatten:true});
+  const call=(method,params={})=>b.call(method,params,sessionId);
+  const paused=[],blocked=[],errors=[];
+  b.listeners.add(message=>{
+    if(message.sessionId!==sessionId)return;
+    if(message.method==='Network.loadingFailed')blocked.push(message.params);
+    if(message.method==='Fetch.requestPaused'){
+      paused.push(message.params.request.url);
+      void call('Fetch.fulfillRequest',{requestId:message.params.requestId,responseCode:503,body:Buffer.from('isolated').toString('base64')}).catch(error=>errors.push(String(error)));
+    }
   });
-  await call('Page.enable'); await call('Runtime.enable'); await call('Network.enable');
-  await call('Page.navigate', { url: new URL('/api/build', origin).href });
-  const until = async predicate => {
-    const deadline = Date.now() + 10000;
-    while (!(await predicate())) { assert.ok(Date.now() < deadline, 'real media cancellation must arrive'); await pause(10); }
+  await call('Page.enable');await call('Runtime.enable');await call('Network.enable');
+  // This standalone network test removes CSP as a confounder. Product
+  // acceptance sessions keep their normal CSP and security settings.
+  await call('Page.setBypassCSP',{enabled:true});
+  await isolateBrowserNetwork(call,origin);
+  await call('Page.navigate',{url:new URL('/robots.txt',origin).href});
+  const evaluate=async expression=>{
+    const result=await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});
+    assert.equal(result.exceptionDetails,undefined);return result.result.value;
   };
-  await until(async () => (await call('Runtime.evaluate', {expression: `location.pathname === '/api/build' && !!document.body`, returnByValue:true})).result.value);
-  await call('Fetch.enable', { patterns: [{urlPattern: new URL('/welcome/motion/*', origin).href}] });
-  await call('Runtime.evaluate', {expression: `window.video=document.createElement('video');video.preload='auto';document.body.append(video);video.src=${JSON.stringify(new URL('/welcome/motion/clouds-preview.webm', origin).href)};video.load();`});
-  await until(() => paused.length > 0);
-  const request = paused[0];
-  await call('Runtime.evaluate', {expression: `video.removeAttribute('src');video.load();video.remove();`});
-  await until(() => events.some(event => event.requestId === request.networkId && event.canceled === true));
-  let failure;
-  try { await call('Fetch.continueRequest', {requestId:request.requestId}); } catch (error) { failure=error; }
-  assert.ok(failure, 'a browser-canceled media request no longer has a valid interception ID');
-  const tracker = createInterceptionErrorTracker();
-  tracker.failed(failure, {networkId:request.networkId,requestNavigation:25,navigation:25,url:request.request.url});
-  let settled=false;
-  const checked=tracker.assertHealthy().then(()=>{settled=true;});
-  await Promise.resolve();
-  assert.equal(settled,false,'the Fetch error alone is not enough to pass');
-  // Deliberately deliver the genuine matching event after the error. This
-  // exercises the opposite delivery order without depending on a timing race.
-  tracker.loadingFailed(events.find(event=>event.requestId===request.networkId && event.canceled===true));
-  await checked;
-  t.diagnostic(JSON.stringify({media:request.request.url,networkId:request.networkId,error:failure.message,confirmation:'Network.loadingFailed canceled=true, delivered after error'}));
-  // Hold another genuine media request, replace its document, and process its
-  // invalid-ID reply as though requestPaused arrived after the frame commit.
-  await call('Runtime.evaluate', {expression: `window.video=document.createElement('video');video.preload='auto';document.body.append(video);video.src=${JSON.stringify(new URL('/welcome/motion/clouds-preview.webm?document-replacement', origin).href)};video.load();`});
-  await until(()=>paused.length>1);
-  const oldRequest=paused[1];
-  await call('Page.navigate',{url:new URL('/api/build?replacement',origin).href});
-  await until(async ()=>(await call('Runtime.evaluate',{expression:`location.search==='?replacement' && !!document.body`,returnByValue:true})).result.value);
-  const identity=requests.find(event=>event.requestId===oldRequest.networkId);
-  assert.ok(identity?.loaderId,'Network identifies the paused media document');
-  assert.ok(frames.some(event=>event.frame.id===identity.frameId && event.frame.loaderId!==identity.loaderId),'Page confirms document replacement');
-  let staleFailure;
-  try {await call('Fetch.continueRequest',{requestId:oldRequest.requestId});} catch(error) {staleFailure=error;}
-  assert.ok(staleFailure);
-  const documentTracker=createInterceptionErrorTracker();
-  for(const event of frames)documentTracker.frameNavigated(event);
-  documentTracker.requestWillBeSent(identity);
-  documentTracker.failed(staleFailure,{networkId:oldRequest.networkId,requestNavigation:40,navigation:40,url:oldRequest.request.url});
-  await documentTracker.assertHealthy();
-  t.diagnostic(JSON.stringify({media:oldRequest.request.url,networkId:oldRequest.networkId,loaderId:identity.loaderId,confirmation:'matching Network loader replaced by Page.frameNavigated; no cancellation event supplied'}));
+  const deadline=Date.now()+10000;
+  while(!await evaluate(`location.pathname==='/robots.txt' && !!document.body`)){assert.ok(Date.now()<deadline);await pause(10);}
+  assert.equal(await evaluate(`fetch('/welcome/motion/roots.jpg').then(r=>{r.body.cancel();return r.ok})`),true,'real local assets remain available');
+  await evaluate(`(async()=>{for(let i=0;i<5;i++){const v=document.createElement('video');v.preload='auto';v.src='/welcome/motion/clouds-preview.webm?cancel='+i;document.body.append(v);v.load();await new Promise(r=>setTimeout(r,10));v.removeAttribute('src');v.load();v.remove();}})()`);
+  assert.equal(await evaluate(`fetch('/api/browser-isolation-probe').then(r=>r.status)`),503,'provider/API fixtures remain intercepted');
+  assert.deepEqual(await evaluate(`fetch('https://tiles.openfreemap.org/styles/liberty').then(r=>r.json()).then(s=>[s.version,Object.keys(s.sources).length,s.layers[0].id])`),[8,0,'test-background']);
+  for(const url of ['https://kfm-network-probe.invalid/data','http://kfm-network-probe.invalid/data',new URL('http://127.0.0.1:5184/').href]) {
+    assert.equal(await evaluate(`fetch(${JSON.stringify(url)}).then(()=>false,()=>true)`),true,'off-origin requests must fail');
+  }
+  assert.ok(blocked.filter(e=>e.blockedReason==='inspector').length>=3,`browser blocking, not DNS failure, prevents off-origin I/O: ${JSON.stringify(blocked)}`);
+  assert.deepEqual(paused,[new URL('/api/browser-isolation-probe',origin).href],'images/media/styles never acquire a Fetch interception ID');
+  assert.deepEqual(errors,[]);
 });
 
 for (const [width, height] of [[1366, 768], [390, 844]]) {
