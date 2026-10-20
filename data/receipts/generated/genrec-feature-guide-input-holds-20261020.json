@@ -1,0 +1,80 @@
+{
+  "receipt_id": "genrec-feature-guide-input-holds-20261020",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/living-welcome/FeatureGuide.jsx",
+    "tests/living-welcome.test.mjs",
+    "docs/living-welcome.md"
+  ],
+  "artifact_hashes": {
+    "app/living-welcome/FeatureGuide.jsx": "sha256:4ec5441317afee95ccb7ff6c57ad0b4e5c59d96c50fcae0b15d355557f4975fe",
+    "tests/living-welcome.test.mjs": "sha256:640618515706cb37844feea4655440191ee92c9535484f37f0cd87ae5dee47b1",
+    "docs/living-welcome.md": "sha256:6350d05c2f10b1c68ff38674a97f4f9ad791b8f54dc7acbc98fae7730f5a1ca5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact backend version unavailable"
+  },
+  "prompt_or_contract": "sha256:5c9b83a4b2f12d28a5cfc57b2da5ead0596b925d97aac01e5f89e2ac793a9d0b",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "a0cfc4223b8968d13b3f694ee222d44271a90bdb",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md in monorepo main@886186f2dadeb4cceedc14f81167be3fae9e4a80"
+    ]
+  },
+  "truth_labels": {
+    "app/living-welcome/FeatureGuide.jsx": "CONFIRMED",
+    "tests/living-welcome.test.mjs": "CONFIRMED",
+    "docs/living-welcome.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-source mixed-input regression",
+      "outcome": "PASS",
+      "reason": "Expected failure reproduced: pointer exit clears keyboard hold."
+    },
+    {
+      "gate": "startup and welcome tests",
+      "outcome": "PASS",
+      "reason": "26 tests passed with Node 24.19.0."
+    },
+    {
+      "gate": "production build",
+      "outcome": "PASS",
+      "reason": "npm run build completed; no deployment."
+    },
+    {
+      "gate": "TypeScript",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit --incremental false after generating application identity."
+    },
+    {
+      "gate": "browser acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Live welcome inspected; candidate not deployed. WebGL2 unavailable in audit browser."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "feature-rotation-inputs",
+      "validated": true,
+      "evidence_ref": "app/living-welcome/FeatureGuide.jsx"
+    },
+    {
+      "id": "mixed-input-regression",
+      "validated": true,
+      "evidence_ref": "tests/living-welcome.test.mjs"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-20T23:38:04.327905+00:00",
+  "emitter": "Codex",
+  "notes": "Standalone source only; no mirrored source, hosting, settings, data, or publication changes. Revert this bounded change for rollback."
+}

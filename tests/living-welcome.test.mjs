@@ -130,6 +130,29 @@ test('feature rotation suspends while hidden, resumes a full dwell and resets af
  paused=false;render();assert.equal(clock.timers.size,1);h.dispose();assert.equal(clock.timers.size,0);assert.equal(clock.listeners.size,0);
 });
 
+test('feature rotation waits until both pointer and keyboard focus leave',async()=>{
+ for(const lastToLeave of ['focus','pointer','cancel']){
+  const clock=featureClock();
+  const h=await componentHarness('app/living-welcome/FeatureGuide.jsx',{'./features':{WELCOME_FEATURES:features}},clock.globals);
+  const render=()=>{let tree=h.render(h.exports.WelcomeFeatureGuide,{onNavigate(){}});h.commit();tree=h.render(h.exports.WelcomeFeatureGuide,{onNavigate(){}});h.commit();return tree;};
+  try{
+   let tree=render();tree.props.onPointerEnter();tree=render();tree.props.onFocusCapture();tree=render();
+   tree.props.onBlurCapture({currentTarget:{contains:()=>true},relatedTarget:{}});tree=render();
+   assert.equal(clock.timers.size,0,'focus within the guide remains held');
+   const blur=()=>tree.props.onBlurCapture({currentTarget:{contains:()=>false},relatedTarget:null});
+   if(lastToLeave==='focus')tree.props.onPointerLeave();else blur();
+   tree=render();assert.equal(clock.timers.size,0,`${lastToLeave} still holds rotation`);
+   clock.advance(60000);tree=render();assert.equal(clock.wakes,0);
+   assert.equal(findNode(tree,node=>node.type==='button'&&node.props.tabIndex===0).props.children[1].props.children,'Roads');
+   if(lastToLeave==='focus')blur();else if(lastToLeave==='cancel')tree.props.onPointerCancel();else tree.props.onPointerLeave();
+   render();assert.equal(clock.timers.size,1);
+   clock.advance(6999);tree=render();assert.equal(tree.props['data-sliding'],false);
+   clock.advance(1);tree=render();assert.equal(tree.props['data-sliding'],true);
+  }finally{h.dispose();}
+  assert.equal(clock.timers.size,0);assert.equal(clock.listeners.size,0);
+ }
+});
+
 test('production welcome handlers filter existing source UI and preserve URL/dismissal lifecycle',async()=>{
  const ast=ts.createSourceFile('app/page.tsx',await readFile('app/page.tsx','utf8'),ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX),callbacks=new Map();
  const visit=node=>{if(ts.isVariableDeclaration(node)&&node.initializer&&ts.isArrowFunction(node.initializer))callbacks.set(node.name.getText(ast),node.initializer.getText(ast));ts.forEachChild(node,visit);};visit(ast);
