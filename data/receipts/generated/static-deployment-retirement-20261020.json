@@ -1,0 +1,80 @@
+{
+  "receipt_id": "kfm:generated:static-deploy-retirement:20261020",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/godaddy-public-site.yml",
+    "apps/public-site/tests/security.test.mjs",
+    "apps/public-site/tests/workflow.test.mjs",
+    "docs/runbooks/godaddy-hosting.md",
+    "docs/runbooks/godaddy-node-hosting.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/godaddy-public-site.yml": "sha256:1101f8992998de9408a2f4743ea2e50b4af65dfa0b870cc674df14dbfb4e25d5",
+    "apps/public-site/tests/security.test.mjs": "sha256:088f3eae7b635d9b21b0273f681266424e0b49c8dbe5c3d7d180da7e178eca84",
+    "apps/public-site/tests/workflow.test.mjs": "sha256:16d54da420f093199015be4ac3aba314d500451214fd26ca371433f6f1ed303a",
+    "docs/runbooks/godaddy-hosting.md": "sha256:d5781ba66e2afffff7121b05a3b4141047d8202ade1c02e1f463889b099beb39",
+    "docs/runbooks/godaddy-node-hosting.md": "sha256:422dcc94b74f32dc16f190c4156cd325ab36ffd2400b371ee84b3c5e73adffd4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session; exact backend version unavailable"
+  },
+  "prompt_or_contract": "sha256:bfd7c3f3f4c9fb49b5f6523a66208bebed4a538000852a348992730b22afe41d",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "main@29b46ce2c3f4873699fce0a8fb3225c2f6db8e72",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "GoDaddy Published dashboard urdng3v1vk: c59c38a58248793b651bb265c082573663473d31 observed 2026-10-20"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/godaddy-public-site.yml": "CONFIRMED",
+    "apps/public-site/tests/security.test.mjs": "CONFIRMED",
+    "apps/public-site/tests/workflow.test.mjs": "CONFIRMED",
+    "docs/runbooks/godaddy-hosting.md": "CONFIRMED",
+    "docs/runbooks/godaddy-node-hosting.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "static deployment workflow regression",
+      "outcome": "PASS",
+      "reason": "One direct test; no credential references, deployment job or environment remain; build check and artifact retained."
+    },
+    {
+      "gate": "static bundle build and check",
+      "outcome": "PASS",
+      "reason": "23 files, 482 KiB."
+    },
+    {
+      "gate": "workflow security ratchet",
+      "outcome": "PASS",
+      "reason": "498 workflows; zero invariant, new drift, warnings and stale entries."
+    },
+    {
+      "gate": "Apache HTTP suite",
+      "outcome": "FAIL",
+      "reason": "Apache is absent; local package installation unavailable. Unmodified HTTP assertions retained for CI with Apache installed."
+    },
+    {
+      "gate": "repository topology",
+      "outcome": "FAIL",
+      "reason": "Same uppercase-path drift and stale baseline entry as unchanged main; baseline preserved."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-20T21:51:31.253510+00:00",
+  "emitter": "Codex",
+  "notes": "Source authoring only; no deletion, provider mutation, publication, DNS, secret setting, or private Site change. The retired static bundle remains buildable for review."
+}
