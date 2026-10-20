@@ -12,7 +12,7 @@
     "tests/browser-interception.mjs": "sha256:4636b9ff2bdd3228dc8239eda7a85c81b0754265aa2bc2e6b33e0f434850c24c",
     "tests/browser-interception.test.mjs": "sha256:b988f9871d94274cf1316afc08acf088f26705aa8a53b050bbb6d3e9a96cbfe7",
     "tests/county-search.browser.mjs": "sha256:fd0b43f5202fdea623a6f1d8f6f82979bfb1389ce7ca083206742808044f144e",
-    "tests/explorer-startup.browser.mjs": "sha256:12d8f7dafe620f9c334d9b83133eff00f91435273840753a3fce7651cb72b231",
+    "tests/explorer-startup.browser.mjs": "sha256:516cf7618fdaf4451069249b1638363b3b33bea1c6ca82454b01acb8ed8d4744",
     "tests/browser-network.mjs": "sha256:361026d855a4c6db731e6f1c3c997b149dcc5381aef3ac60d4b25c11557850b7"
   },
   "model_identity": {
