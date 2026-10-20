@@ -2,7 +2,7 @@ name: Public core repair candidate
 on:
   pull_request:
   push:
-    branches: [codex/fix-public-core-visibility-20261014]
+    branches: [a0-hosted-ai-web-20261017, codex/fix-public-core-visibility-20261014]
 permissions:
   contents: read
 jobs:
