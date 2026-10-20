@@ -28,7 +28,7 @@ const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.c
 test('visual welcome owns focus and Escape before passive effects run after the fallback handoff',async()=>{
  const h=await welcome(),input={};
  const tree=h.harness.render(h.harness.exports.default,h.props);
- tree.props.ref.current={
+ findNode(tree,node=>node.props?.className==='explorer-guide living-welcome').props.ref.current={
   contains:node=>node===input,
   querySelector:()=>({focus(){h.env.document.activeElement=input;}}),
  };
