@@ -329,3 +329,48 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
   });
 }
 
+// A tall topic panel must not lose its close button behind the mobile header
+// or inside its own scroll content. Exercise hit testing, scrolling and focus.
+for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
+  test(`welcome detail close stays reachable at ${width}x${height}`, { timeout: 60000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, width, height);
+    await p.open('/');
+    await p.wait(`document.querySelector('.living-welcome .topic-weather')`, 'visual welcome loaded');
+    const closeGeometry = () => p.evaluate(`(() => {
+      const button = document.querySelector('.welcome-dialog-close');
+      const r = button.getBoundingClientRect();
+      return {top:r.top, bottom:r.bottom, left:r.left, right:r.right, width:r.width, height:r.height,
+        hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2) === button,
+        focus:document.activeElement === button};
+    })()`);
+    for (const selector of ['.topic-weather', '.topic-history', '.welcome-credits button']) {
+      await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
+      await p.key('Enter', 'Enter', 13);
+      await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'detail close receives focus');
+      const before = await closeGeometry();
+      assert.ok(before.top >= 0 && before.bottom <= height && before.left >= 0 && before.right <= width, JSON.stringify(before));
+      assert.ok(before.width >= 44 && before.height >= 44, 'close is a full touch target');
+      assert.equal(before.hit, true, 'close is above the header and all clip layers');
+      assert.equal(await p.evaluate(`document.querySelector('header.topbar').inert`), true, 'modal isolates background controls');
+      await p.evaluate(`(() => {const body=document.querySelector('.welcome-dialog-body');body.scrollTop=body.scrollHeight;})()`);
+      assert.ok(await p.evaluate(`document.querySelector('.welcome-dialog-body').scrollTop`) > 0, 'long detail actually scrolled');
+      assert.deepEqual(await closeGeometry(), before, 'content scroll cannot move or cover close');
+      await p.key('Tab', 'Tab', 9, 8);
+      assert.equal(await p.evaluate(`!!document.activeElement?.closest('.welcome-dialog-body')`), true, 'Shift+Tab wraps within modal');
+      await p.key('Tab', 'Tab', 9);
+      assert.equal((await closeGeometry()).focus, true, 'Tab returns to persistent close');
+      // Use a real pointer dispatch at the visible button, not DOM click().
+      const x=(before.left+before.right)/2, y=(before.top+before.bottom)/2;
+      await p.call('Input.dispatchMouseEvent', {type:'mousePressed', x, y, button:'left', clickCount:1});
+      await p.call('Input.dispatchMouseEvent', {type:'mouseReleased', x, y, button:'left', clickCount:1});
+      await p.wait(`!document.querySelector('.welcome-dialog')`, 'visible close dismisses detail');
+      assert.equal(await p.evaluate(`document.activeElement === document.querySelector(${JSON.stringify(selector)})`), true, 'focus returns to opening control');
+      assert.equal(await p.evaluate(`document.querySelector('header.topbar').inert`), false, 'background state restored');
+    }
+    await p.evaluate(`document.querySelector('.topic-weather').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'detail reopened');
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`!document.querySelector('.welcome-dialog') && document.activeElement?.matches('.topic-weather')`, 'Escape closes only detail and restores its trigger');
+  });
+}
