@@ -30,7 +30,6 @@ const payload = (state, rows) => ({
   source: 'SYNTHETIC BROWSER FIXTURE ONLY', limitation: 'Invented test geometry; no evidence admission.',
   truncated: state === 'partial',
 });
-const emptyStyle = { version: 8, sources: {}, layers: [{ id: 'synthetic-background', type: 'background', paint: { 'background-color': '#172832' } }] };
 
 async function browser(t) {
   const profile = await mkdtemp(join(tmpdir(), 'kfm-county-browser-'));
