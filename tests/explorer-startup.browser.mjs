@@ -68,9 +68,10 @@ async function pageSession(b, width, height) {
     if (method === 'Page.navigate' || method === 'Page.reload') navigation++;
     return b.call(method, params, sessionId);
   };
-  const errors = [];
+  const errors = [], canceledRequests = new Set();
   const listener = message => {
     if (message.sessionId !== sessionId) return;
+    if (message.method === 'Network.loadingFailed' && message.params.canceled === true) canceledRequests.add(message.params.requestId);
     if (message.method === 'Page.frameNavigated' && !message.params.frame.parentId) navigation++;
     if (message.method !== 'Fetch.requestPaused') return;
     const requestNavigation = navigation;
@@ -87,9 +88,11 @@ async function pageSession(b, width, height) {
         } else await call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' });
       } else await call('Fetch.continueRequest', { requestId });
     })().catch(error => {
-      // Navigation cancels old paused requests. Only that exact stale CDP error
-      // is expected; current-document interception failures still fail the test.
-      if (!isStaleInterceptionCancellation(error, requestNavigation, navigation)) errors.push(String(error));
+      // Navigation and browser-confirmed aborts invalidate paused requests.
+      // Unconfirmed current-request errors and other protocol failures stay fatal.
+      if (!isStaleInterceptionCancellation(error, requestNavigation, navigation, canceledRequests.has(message.params.networkId))) {
+        errors.push(`${String(error)} [${message.params.request.url}; network=${message.params.networkId}; navigation=${requestNavigation}/${navigation}]`);
+      }
     });
   };
   b.listeners.add(listener);

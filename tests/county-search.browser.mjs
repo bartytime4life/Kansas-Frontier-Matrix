@@ -82,7 +82,7 @@ async function pageSession(browser, width, height) {
     if (method === 'Page.navigate' || method === 'Page.reload') navigation++;
     return browser.call(method, params, sessionId);
   };
-  const errors = [], held = [];
+  const errors = [], held = [], canceledRequests = new Set();
   let mode = 'held', fixture = payload('ready', features), httpStatus = 200;
   const fulfill = (requestId, body, responseCode = 200) => call('Fetch.fulfillRequest', {
     requestId, responseCode,
@@ -91,6 +91,7 @@ async function pageSession(browser, width, height) {
   });
   const listener = message => {
     if (message.sessionId !== sessionId) return;
+    if (message.method === 'Network.loadingFailed' && message.params.canceled === true) canceledRequests.add(message.params.requestId);
     if (message.method === 'Page.frameNavigated' && !message.params.frame.parentId) navigation++;
     if (message.method !== 'Fetch.requestPaused') return;
     const requestNavigation = navigation;
@@ -108,7 +109,9 @@ async function pageSession(browser, width, height) {
         else await call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' });
       } else await call('Fetch.continueRequest', { requestId });
     })().catch(error => {
-      if (!isStaleInterceptionCancellation(error, requestNavigation, navigation)) errors.push(String(error));
+      if (!isStaleInterceptionCancellation(error, requestNavigation, navigation, canceledRequests.has(message.params.networkId))) {
+        errors.push(`${String(error)} [${message.params.request.url}; network=${message.params.networkId}; navigation=${requestNavigation}/${navigation}]`);
+      }
     });
   };
   browser.listeners.add(listener);
