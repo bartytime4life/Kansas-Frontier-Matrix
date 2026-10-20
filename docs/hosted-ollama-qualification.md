@@ -12,16 +12,8 @@ Owner constraints recorded October 16, 2026: keep inference off the owner's PC,
 use Ollama with a smaller model, and add no hosting subscription, paid API,
 commercial trial, or paid fallback.
 
-Correction (2026-10-19): the account-based PC integration and server login this
-record refers to were retired on October 19 ([pc-inference.md](pc-inference.md),
-[login-removal-20261019.md](login-removal-20261019.md)). They are not an accepted
-baseline. The `EACCES` loopback result below was observed in app `q9r9beo47t`; it
-does not show whether replacement app `urdng3v1vk` permits outbound HTTPS. The
-owner's later plan runs Ollama on a dedicated home Linux PC instead of on
-GoDaddy; see [home-inference.md](home-inference.md).
-
 This first change measures the existing GoDaddy runtime before downloading or
-starting a model. It did not replace the (since retired) PC integration, create an
+starting a model. It does not replace the accepted PC integration, create an
 account, process a question, admit evidence, or change published source.
 
 ## Observed GoDaddy preview result
@@ -142,7 +134,7 @@ or silently substitute a hosted API.
    Verify restart/shutdown supervision and prevent duplicate daemon ownership.
 5. Measure actual peak RSS, CPU, first-token/total latency and process recovery
    with a deliberately small context and output cap, without starving the map.
-6. Add a separate admitted hosted profile. Preserve guest isolation, rights,
+6. Add a separate admitted hosted profile. Preserve server login, rights,
    sensitivity, release, cancellation, citation reconstruction and finite
    ANSWER/ABSTAIN/DENY/ERROR behavior. Do not fake the old PC heartbeat/model ID.
 7. Test synthetic extraction and adversarial unsupported-citation cases, then

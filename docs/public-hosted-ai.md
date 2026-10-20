@@ -1,12 +1,5 @@
 # Public hosted AI: discussion and released evidence
 
-Provider selection (2026-10-19): `KFM_AI_PROVIDER` chooses exactly one model
-provider behind these same guest controls. Unset or `hosted-qwen3` keeps the
-embedded model described below. `home-ollama` uses the owner's dedicated
-inference PC through an authenticated gateway, is default-off and unqualified;
-see [home-inference.md](home-inference.md). An unknown or incomplete selection
-reports unavailable and never falls back to another model.
-
 Memory fit (2026-10-19): the [memory-fit candidate](hosted-qwen-memory-fit-20261019.md)
 serves a derived Qwen3-0.6B INT8 model with a sliced output layer and external
 weights, and lowers input context to 1,024 tokens and expanded replies to 256 tokens.
@@ -100,7 +93,7 @@ so real evidence requests return NO_RELEASED_EVIDENCE. When released references
 exist they must be rechecked against the same release. A discussion pass does
 not turn model output, source capture or uploaded documents into evidence.
 
-The former /api/pc-ai account/admin surface was removed on 2026-10-19 ([pc-inference.md](pc-inference.md)).
+The existing /api/pc-ai account/admin surface remains separate and authenticated.
 Guest /api/ai exposes only status and opaque job submit/read/cancel operations.
 A random Secure, HttpOnly, SameSite=Strict host-only cookie protects each guest's
 jobs. Writes require the exact configured HTTPS origin; arbitrary forwarded
