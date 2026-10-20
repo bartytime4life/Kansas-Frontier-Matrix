@@ -6,6 +6,8 @@ test("browser navigation cancellation never hides live-request or unrelated prot
   const canceled = new Error(JSON.stringify({ code: -32602, message: "Invalid InterceptionId." }));
   assert.equal(isStaleInterceptionCancellation(canceled, 1, 2), true);
   assert.equal(isStaleInterceptionCancellation(canceled, 2, 2), false, "same-document failure remains fatal");
+  assert.equal(isStaleInterceptionCancellation(canceled, 2, 2, true), true, "browser-confirmed cancellation can occur within a document");
+  assert.equal(isStaleInterceptionCancellation(canceled, 2, 2, "true"), false, "cancellation requires positive confirmation");
   assert.equal(isStaleInterceptionCancellation(canceled, 3, 2), false, "only earlier navigation is eligible");
   for (const error of [
     new Error("CDP timeout: Fetch.fulfillRequest"),
@@ -13,5 +15,8 @@ test("browser navigation cancellation never hides live-request or unrelated prot
     new Error(JSON.stringify({ code: -32000, message: "Invalid InterceptionId." })),
     new Error(JSON.stringify({ code: -32602, message: "Invalid parameters" })),
     new Error(JSON.stringify({ code: -32602, message: "Invalid InterceptionId. Additional failure" })),
-  ]) assert.equal(isStaleInterceptionCancellation(error, 1, 2), false);
+  ]) {
+    assert.equal(isStaleInterceptionCancellation(error, 1, 2), false);
+    assert.equal(isStaleInterceptionCancellation(error, 2, 2, true), false);
+  }
 });
