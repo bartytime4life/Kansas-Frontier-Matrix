@@ -19,6 +19,8 @@ name: MapLibre Package Compatibility
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - "packages/maplibre/**"
+      - "tools/ci/corepack/**"
+      - "tests/ci/test_corepack_bootstrap.py"
   push:
     branches: [main]
     paths:
@@ -28,6 +30,8 @@ name: MapLibre Package Compatibility
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - "packages/maplibre/**"
+      - "tools/ci/corepack/**"
+      - "tests/ci/test_corepack_bootstrap.py"
   workflow_dispatch:
 
 permissions:
@@ -63,6 +67,9 @@ jobs:
           node-version: ${{ matrix.node }}
           package-manager-cache: false
 
+      - name: Check bootstrap integrity enforcement without network
+        run: python3 -m unittest discover --start-directory tests/ci --pattern 'test_corepack_bootstrap.py' --verbose
+
       - name: Install the exact workspace graph
         shell: bash
         run: |
@@ -70,9 +77,14 @@ jobs:
           # Node 22.13.1 bundles Corepack with a retired npm signing key.
           # This exact compatible release includes the current key; never disable
           # signature verification or replace COREPACK_INTEGRITY_KEYS.
-          npm install --global --ignore-scripts corepack@0.34.0
+          # The isolated npm lock authenticates the official release tarball by
+          # SHA-256 (upstream release asset 274407268), not just its version.
+          npm ci --prefix tools/ci/corepack --ignore-scripts --no-audit --no-fund
+          corepack_bin="${GITHUB_WORKSPACE}/tools/ci/corepack/node_modules/.bin"
+          export PATH="${corepack_bin}:${PATH}"
+          printf '%s\n' "${corepack_bin}" >> "${GITHUB_PATH}"
           test "$(corepack --version)" = "0.34.0"
-          corepack enable
+          corepack enable --install-directory "${corepack_bin}"
           test "$(pnpm --version)" = "11.17.0"
           node --version
           pnpm install --frozen-lockfile
