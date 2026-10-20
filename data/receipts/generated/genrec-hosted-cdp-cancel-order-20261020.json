@@ -1,0 +1,79 @@
+{
+  "receipt_id": "genrec-hosted-cdp-cancel-order-20261020",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/browser-interception.mjs",
+    "tests/browser-interception.test.mjs",
+    "tests/county-search.browser.mjs",
+    "tests/explorer-startup.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "tests/browser-interception.mjs": "sha256:b475f9902c156ec06df2e05ed612693d58b61f6c25233efbb78747643cb7eba7",
+    "tests/browser-interception.test.mjs": "sha256:08a7c8de00ab402a88adebff899e7237be324106c6a338c55ed3a92f511b9ede",
+    "tests/county-search.browser.mjs": "sha256:0dc81238d2c644f5bdbfaaf67af0c6d18144899615e42259c356df9ba319cc83",
+    "tests/explorer-startup.browser.mjs": "sha256:76262d494a3a7ddb14549127c83ab8291efc9699b4fbc96a66fde2f94a03fe4e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:0f5fa23e809c15f45b9fb0ec2bff6ac16319df87e131bf89041448e154e02e4a",
+  "parameters": {
+    "tools_enabled": [
+      "container",
+      "GitHub"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/cccd040842f03c7a85867dc7336c7d4342caafd8",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39471835974/job/118797588658"
+    ]
+  },
+  "truth_labels": {
+    "tests/browser-interception.mjs": "CONFIRMED",
+    "tests/browser-interception.test.mjs": "CONFIRMED",
+    "tests/county-search.browser.mjs": "CONFIRMED",
+    "tests/explorer-startup.browser.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "deterministic-cancellation-regression",
+      "outcome": "PASS",
+      "reason": "Five unit cases cover both event orders, bounded missing confirmation, mismatched ID, nonboolean/noncanceled events, unrelated errors, late evidence, stale navigation and missing IDs. Real Chromium media abort reproduced exact Invalid InterceptionId and matching canceled=true; deliberately delivered genuine event after error. Baseline startup run passed once; original CI ordering remains an inference."
+    },
+    {
+      "gate": "final-combined-validation",
+      "outcome": "SKIPPED",
+      "reason": "Full Node/build/types/HTTP/browser/assigned-port and three consecutive startup runs pending on immutable candidate at receipt emission. Final PR exact-head evidence supersedes pending fields."
+    },
+    {
+      "gate": "environment-and-release-limits",
+      "outcome": "SKIPPED",
+      "reason": "Browser uses Chromium 151, loopback fixtures, SwiftShader and temporary --no-sandbox wrapper because the container sandbox helper is misconfigured. This does not prove live providers/models, physical GPU performance or deployment. Standalone branch lacks monorepo Make/pre-commit surfaces. Human review, merge, deployment, publication, activation and user-PC operations remain outside this task."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/1bbd35da1ac60cefaf80a5abd5653e75bb92add3"
+    },
+    {
+      "id": "prior-exact-head-browser-failure",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39464148259/job/118770998863"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-20T17:40:34.300296+00:00",
+  "emitter": "OpenAI Codex hosted welcome completion",
+  "notes": "Eight-file bounded follow-up because #5351 and #5352 were merged externally during work. Preserve both merges. Production changes only make fallback and living-welcome focus/Escape ready in layout effects; storage, destinations, scene behavior and security remain unchanged. Both browser harnesses share an explicitly tested classifier for exact Invalid InterceptionId cancellation from an older navigation; current-epoch failures remain fatal. First CI reproduced this harness defect in county-search, extending the test-only repair to that existing acceptance file and a shared helper/regression test. No skip added to full acceptance suite. Receipt records emission-time observations; PR/CI records later verification. Sites mirror and MEGALODON untouched. Rollback closes the draft or reverts this startup/tests/receipt commit without data/configuration migration."
+}
