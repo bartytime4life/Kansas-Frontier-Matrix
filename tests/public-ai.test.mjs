@@ -375,6 +375,6 @@ test('rotating investigation IDs cannot reset guest or process request budgets',
 
 
 test('replacement preview origin is authorized exactly without granting other preview apps access',()=>{
- for(const origin of ['https://kansasfrontiermatrix.com','https://q9r9beo47t.preview.c38.airoapp.ai','https://urdng3v1vk.preview.c38.airoapp.ai'])assert.equal(hostedAiOriginAllowed(origin),true);
- for(const origin of ['https://other.preview.c38.airoapp.ai','https://urdng3v1vk.preview.c38.airoapp.ai.evil.test','https://urdng3v1vk.preview.c38.airoapp.ai/','http://urdng3v1vk.preview.c38.airoapp.ai','https://user@urdng3v1vk.preview.c38.airoapp.ai',undefined])assert.equal(hostedAiOriginAllowed(origin),false);
+ for(const origin of ['https://kansasfrontiermatrix.com','https://urdng3v1vk.preview.c38.airoapp.ai'])assert.equal(hostedAiOriginAllowed(origin),true);
+ for(const origin of ['https://q9r9beo47t.preview.c38.airoapp.ai','https://other.preview.c38.airoapp.ai','https://urdng3v1vk.preview.c38.airoapp.ai.evil.test','https://urdng3v1vk.preview.c38.airoapp.ai/','http://urdng3v1vk.preview.c38.airoapp.ai','https://user@urdng3v1vk.preview.c38.airoapp.ai',undefined])assert.equal(hostedAiOriginAllowed(origin),false);
 });

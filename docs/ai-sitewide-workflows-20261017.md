@@ -201,8 +201,11 @@ memory/concurrency and model-quality acceptance remain required on the host.
    rerun changed-area tests if either revision advances. Confirm no overlap with
    another open change and require independent approval. Merge and publication
    remain separate authorized operations.
-2. In the existing GoDaddy Node app `q9r9beo47t`, preserve current environment,
-   public data, model files, administrator store and startup/port configuration.
+2. For subsequent operations, use replacement GoDaddy Node app `urdng3v1vk`
+   (recorded 2026-10-19); the deleted `q9r9beo47t` app is historical only.
+   Reverify the app and deployed source using
+   [current hosting documentation](godaddy-node-preview.md). Preserve current
+   environment, public data, model files, private stores and startup/port configuration.
    Use its established deployment process and the approved commit. Do not create
    another Sites application, point public AI at a PC, or invent a release binding.
 3. Before admitting public traffic, verify the deployed source revision, origin,
