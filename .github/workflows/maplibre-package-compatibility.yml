@@ -1,0 +1,130 @@
+# Bounded package qualification, separate from the held performance lane.
+# Installs the exact root pnpm lock with its committed allowBuilds policy, runs
+# the package's synthetic Node tests, reconstructs an offline install in a fresh
+# directory, and verifies that a production install does not expose Vitest.
+# Registry access is required for the first install. Tests use mocked renderers;
+# this is not browser/WebGL/performance, source admission, or release evidence.
+# PR code has read-only contents access, no persisted credentials, secrets, OIDC,
+# deployment, signing, or publication authority. Outputs are logs and summaries.
+# Revert this workflow to remove the qualification lane; the performance HOLD
+# and its separately reviewed exact dependency admission remain independent.
+name: MapLibre Package Compatibility
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/maplibre-package-compatibility.yml"
+      - ".github/workflows/maplibre-perf-governance.yml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "packages/maplibre/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/maplibre-package-compatibility.yml"
+      - ".github/workflows/maplibre-perf-governance.yml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "packages/maplibre/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: maplibre-package-compatibility-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+  COREPACK_ENABLE_STRICT: "1"
+  TZ: UTC
+
+jobs:
+  package-compatibility:
+    name: Package compatibility (Node ${{ matrix.node }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["22.13.1", "22"]
+    steps:
+      - name: Check out qualification revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up supported Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+
+      - name: Install the exact workspace graph
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Node 22.13.1 bundles Corepack with a retired npm signing key.
+          # This exact compatible release includes the current key; never disable
+          # signature verification or replace COREPACK_INTEGRITY_KEYS.
+          npm install --global --ignore-scripts corepack@0.34.0
+          test "$(corepack --version)" = "0.34.0"
+          corepack enable
+          test "$(pnpm --version)" = "11.17.0"
+          node --version
+          pnpm install --frozen-lockfile
+          git diff --exit-code -- package.json pnpm-lock.yaml pnpm-workspace.yaml packages/maplibre/package.json
+
+      - name: Run the declared package tests
+        run: |
+          set -euo pipefail
+          pnpm --filter @kfm/maplibre exec vitest --version
+          pnpm --filter @kfm/maplibre test
+
+      - name: Reconstruct and test a fresh offline install
+        shell: bash
+        run: |
+          set -euo pipefail
+          offline_dir="${RUNNER_TEMP}/maplibre-offline"
+          mkdir "${offline_dir}"
+          git archive HEAD | tar -x -C "${offline_dir}"
+          cd "${offline_dir}"
+          pnpm install --frozen-lockfile --offline
+          pnpm --filter @kfm/maplibre test
+
+      - name: Verify the production dependency boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          production_dir="${RUNNER_TEMP}/maplibre-production"
+          mkdir "${production_dir}"
+          git archive HEAD | tar -x -C "${production_dir}"
+          cd "${production_dir}"
+          pnpm install --frozen-lockfile --offline --prod
+          pnpm --filter @kfm/maplibre exec node --input-type=module - <<'JS'
+          import assert from 'node:assert/strict';
+          assert.match(import.meta.resolve('maplibre-gl'), /maplibre-gl/);
+          let unavailable = false;
+          try { import.meta.resolve('vitest'); }
+          catch (error) {
+            if (error.code !== 'ERR_MODULE_NOT_FOUND') throw error;
+            unavailable = true;
+          }
+          assert.equal(unavailable, true, 'Vitest must remain development-only');
+          console.log('Production resolves MapLibre and excludes Vitest.');
+          JS
+
+      - name: Record qualification scope
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '### MapLibre package compatibility'
+            echo '- Result: ${{ job.status }}; Node selection: ${{ matrix.node }}.'
+            echo '- Qualification: exact frozen install, synthetic package tests, fresh offline reinstall/tests, production dependency exclusion.'
+            echo '- Browser/WebGL/performance tests: NOT_RUN; no browser provider or current standalone fixture is configured in this package.'
+            echo '- This result does not approve dependency admission, review, merge, deployment, or publication; the performance governance HOLD remains separate.'
+          } >> "${GITHUB_STEP_SUMMARY}"
