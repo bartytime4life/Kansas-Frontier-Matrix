@@ -8,10 +8,10 @@
     "tests/explorer-startup.browser.mjs"
   ],
   "artifact_hashes": {
-    "tests/browser-interception.mjs": "sha256:b475f9902c156ec06df2e05ed612693d58b61f6c25233efbb78747643cb7eba7",
-    "tests/browser-interception.test.mjs": "sha256:08a7c8de00ab402a88adebff899e7237be324106c6a338c55ed3a92f511b9ede",
-    "tests/county-search.browser.mjs": "sha256:0dc81238d2c644f5bdbfaaf67af0c6d18144899615e42259c356df9ba319cc83",
-    "tests/explorer-startup.browser.mjs": "sha256:76262d494a3a7ddb14549127c83ab8291efc9699b4fbc96a66fde2f94a03fe4e"
+    "tests/browser-interception.mjs": "sha256:4636b9ff2bdd3228dc8239eda7a85c81b0754265aa2bc2e6b33e0f434850c24c",
+    "tests/browser-interception.test.mjs": "sha256:c08ca7696bd92c94688cd48ab322268e493b67efee8ef3d839a83ba022296a24",
+    "tests/county-search.browser.mjs": "sha256:bf7775e61e9e4211b5d84e075a8b0bf871fe9d3f1d3e79694e5ebbb7e2fb0e50",
+    "tests/explorer-startup.browser.mjs": "sha256:2d49627a5f687a4e5b2d90381945f5bbeb7ebbe00ca2758f4b1df96e8ba06b72"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -41,7 +41,7 @@
     {
       "gate": "deterministic-cancellation-regression",
       "outcome": "PASS",
-      "reason": "Five unit cases cover both event orders, bounded missing confirmation, mismatched ID, nonboolean/noncanceled events, unrelated errors, late evidence, stale navigation and missing IDs. Real Chromium media abort reproduced exact Invalid InterceptionId and matching canceled=true; deliberately delivered genuine event after error. Baseline startup run passed once; original CI ordering remains an inference."
+      "reason": "Six deterministic cases cover both cancellation orders, bounded missing confirmation, mismatched identity, unrelated errors, stale navigation, and matching replaced-loader evidence. Real Chromium reproduces same-document media abort and document-replacement invalid-ID replies; genuine events are deliberately delivered after error or matched by retired loader. Initial candidate 988d4e9df6 passed full Node/HTTP/county but failed startup on unconfirmed map-style request; later startup sequence stopped. New loader correlation requires exact network/frame/retired-loader identity; no arbitrary later navigation exemption."
     },
     {
       "gate": "final-combined-validation",

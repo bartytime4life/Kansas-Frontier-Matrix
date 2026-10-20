@@ -88,3 +88,33 @@ test('only navigation already stale at failure is immediately excused; missing I
   await assert.rejects(tracker.assertHealthy(), /Invalid InterceptionId/);
   assert.equal(timers.size,0);
 });
+
+test('late paused requests need matching network and replaced document-loader evidence', async () => {
+  for (const eventFirst of [true,false]) {
+    const {tracker,timers}=trackerHarness();
+    tracker.frameNavigated({frame:{id:'frame',loaderId:'old'}});
+    const confirm=()=>{
+      tracker.frameNavigated({frame:{id:'frame',loaderId:'new'}});
+      tracker.requestWillBeSent({requestId:'7294.925',frameId:'frame',loaderId:'old'});
+    };
+    if(eventFirst)confirm();
+    tracker.failed(invalidId(),mediaRequest());
+    const checked=tracker.assertHealthy();
+    if(!eventFirst)confirm();
+    await checked; assert.equal(timers.size,0);
+  }
+  for (const identity of [
+    {requestId:'7294.925',frameId:'frame',loaderId:'new'},
+    {requestId:'other',frameId:'frame',loaderId:'old'},
+    {requestId:'7294.925',frameId:'other',loaderId:'old'},
+    {requestId:'7294.925',frameId:'frame',loaderId:''},
+  ]) {
+    const {tracker,expire}=trackerHarness();
+    tracker.frameNavigated({frame:{id:'frame',loaderId:'old'}});
+    tracker.frameNavigated({frame:{id:'frame',loaderId:'new'}});
+    tracker.requestWillBeSent(identity);
+    tracker.failed(invalidId(),mediaRequest());
+    const checked=assert.rejects(tracker.assertHealthy(),/Invalid InterceptionId/);
+    expire();await checked;
+  }
+});

@@ -14,26 +14,48 @@ export function isStaleInterceptionCancellation(error, requestNavigation, naviga
 // Fetch command replies and Network events are delivered independently. Keep
 // an exact invalid-ID reply provisional for a bounded interval, so a matching
 // cancellation may arrive on either side of the reply. A later navigation is
-// not evidence for a request that was current when its command failed.
+// not evidence on its own: only a matching Network request tied to a loader
+// that Page.frameNavigated has actually replaced proves an old document.
 export function createInterceptionErrorTracker({ graceMs = 1000, setTimer = setTimeout, clearTimer = clearTimeout } = {}) {
   const errors = [], canceled = new Set(), pending = new Set();
-  const describe = (error, request) => `${String(error)} [${request.url}; network=${request.networkId}; navigation=${request.requestNavigation}/${request.navigation}]`;
+  const requests = new Map(), frameLoaders = new Map(), retiredLoaders = new Set(), networkFailures = new Map();
+  const confirmed = networkId => {
+    const request = requests.get(networkId);
+    return canceled.has(networkId) || (request && retiredLoaders.has(JSON.stringify([request.frameId, request.loaderId])));
+  };
+  const describe = (error, request) => `${String(error)} [${request.url}; network=${request.networkId}; navigation=${request.requestNavigation}/${request.navigation}; identity=${JSON.stringify(requests.get(request.networkId))}; failure=${JSON.stringify(networkFailures.get(request.networkId))}]`;
   const settle = (entry, confirmed) => {
     if (!pending.delete(entry)) return;
     clearTimer(entry.timer);
     if (!confirmed) errors.push(describe(entry.error, entry.request));
     entry.resolve();
   };
+  const confirmPending = () => {
+    for (const entry of pending) if (confirmed(entry.request.networkId)) settle(entry, true);
+  };
   return {
     errors,
-    loadingFailed({ requestId, canceled: wasCanceled }) {
+    requestWillBeSent({ requestId, frameId, loaderId }) {
+      if (typeof requestId !== 'string' || !requestId || !frameId || !loaderId) return;
+      requests.set(requestId, { frameId, loaderId });
+      confirmPending();
+    },
+    frameNavigated({ frame }) {
+      if (!frame?.id || !frame.loaderId) return;
+      const previous = frameLoaders.get(frame.id);
+      if (previous && previous !== frame.loaderId) retiredLoaders.add(JSON.stringify([frame.id, previous]));
+      frameLoaders.set(frame.id, frame.loaderId);
+      confirmPending();
+    },
+    loadingFailed({ requestId, canceled: wasCanceled, errorText }) {
+      networkFailures.set(requestId, { canceled: wasCanceled, errorText });
       if (wasCanceled !== true || typeof requestId !== 'string' || !requestId) return;
       canceled.add(requestId);
-      for (const entry of pending) if (entry.request.networkId === requestId) settle(entry, true);
+      confirmPending();
     },
     failed(error, request) {
       const { networkId, requestNavigation, navigation } = request;
-      if (isStaleInterceptionCancellation(error, requestNavigation, navigation, canceled.has(networkId))) return;
+      if (isStaleInterceptionCancellation(error, requestNavigation, navigation, confirmed(networkId))) return;
       if (!isStaleInterceptionCancellation(error, 0, 0, true) || typeof networkId !== 'string' || !networkId) {
         errors.push(describe(error, request));
         return;

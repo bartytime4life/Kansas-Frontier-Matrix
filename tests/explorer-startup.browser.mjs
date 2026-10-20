@@ -75,6 +75,8 @@ async function pageSession(b, width, height) {
   const listener = message => {
     if (message.sessionId !== sessionId) return;
     if (message.method === 'Network.loadingFailed') interceptions.loadingFailed(message.params);
+    if (message.method === 'Network.requestWillBeSent') interceptions.requestWillBeSent(message.params);
+    if (message.method === 'Page.frameNavigated') interceptions.frameNavigated(message.params);
     if (message.method === 'Page.frameNavigated' && !message.params.frame.parentId) navigation++;
     if (message.method !== 'Fetch.requestPaused') return;
     const requestNavigation = navigation;
@@ -157,10 +159,12 @@ test('canceled welcome media confirms an invalid Fetch ID even when its Network 
   const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
   const call = (method, params = {}) => b.call(method, params, sessionId);
-  const events = [], paused = [];
+  const events = [], paused = [], requests = [], frames = [];
   b.listeners.add(message => {
     if (message.sessionId !== sessionId) return;
     if (message.method === 'Network.loadingFailed') events.push(message.params);
+    if (message.method === 'Network.requestWillBeSent') requests.push(message.params);
+    if (message.method === 'Page.frameNavigated') frames.push(message.params);
     if (message.method === 'Fetch.requestPaused') paused.push(message.params);
   });
   await call('Page.enable'); await call('Runtime.enable'); await call('Network.enable');
@@ -190,6 +194,25 @@ test('canceled welcome media confirms an invalid Fetch ID even when its Network 
   tracker.loadingFailed(events.find(event=>event.requestId===request.networkId && event.canceled===true));
   await checked;
   t.diagnostic(JSON.stringify({media:request.request.url,networkId:request.networkId,error:failure.message,confirmation:'Network.loadingFailed canceled=true, delivered after error'}));
+  // Hold another genuine media request, replace its document, and process its
+  // invalid-ID reply as though requestPaused arrived after the frame commit.
+  await call('Runtime.evaluate', {expression: `window.video=document.createElement('video');video.preload='auto';document.body.append(video);video.src=${JSON.stringify(new URL('/welcome/motion/clouds-preview.webm?document-replacement', origin).href)};video.load();`});
+  await until(()=>paused.length>1);
+  const oldRequest=paused[1];
+  await call('Page.navigate',{url:new URL('/api/build?replacement',origin).href});
+  await until(async ()=>(await call('Runtime.evaluate',{expression:`location.search==='?replacement' && !!document.body`,returnByValue:true})).result.value);
+  const identity=requests.find(event=>event.requestId===oldRequest.networkId);
+  assert.ok(identity?.loaderId,'Network identifies the paused media document');
+  assert.ok(frames.some(event=>event.frame.id===identity.frameId && event.frame.loaderId!==identity.loaderId),'Page confirms document replacement');
+  let staleFailure;
+  try {await call('Fetch.continueRequest',{requestId:oldRequest.requestId});} catch(error) {staleFailure=error;}
+  assert.ok(staleFailure);
+  const documentTracker=createInterceptionErrorTracker();
+  for(const event of frames)documentTracker.frameNavigated(event);
+  documentTracker.requestWillBeSent(identity);
+  documentTracker.failed(staleFailure,{networkId:oldRequest.networkId,requestNavigation:40,navigation:40,url:oldRequest.request.url});
+  await documentTracker.assertHealthy();
+  t.diagnostic(JSON.stringify({media:oldRequest.request.url,networkId:oldRequest.networkId,loaderId:identity.loaderId,confirmation:'matching Network loader replaced by Page.frameNavigated; no cancellation event supplied'}));
 });
 
 for (const [width, height] of [[1366, 768], [390, 844]]) {

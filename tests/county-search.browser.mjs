@@ -96,6 +96,8 @@ async function pageSession(browser, width, height) {
   const listener = message => {
     if (message.sessionId !== sessionId) return;
     if (message.method === 'Network.loadingFailed') interceptions.loadingFailed(message.params);
+    if (message.method === 'Network.requestWillBeSent') interceptions.requestWillBeSent(message.params);
+    if (message.method === 'Page.frameNavigated') interceptions.frameNavigated(message.params);
     if (message.method === 'Page.frameNavigated' && !message.params.frame.parentId) navigation++;
     if (message.method !== 'Fetch.requestPaused') return;
     const requestNavigation = navigation;
