@@ -1,0 +1,130 @@
+{
+  "receipt_id": "kfm:generated:static-retirement-correction:20261020",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/README.md",
+    "apps/public-site/README.md",
+    "data/receipts/generated/static-deployment-retirement-20261020.json"
+  ],
+  "artifact_hashes": {
+    "apps/README.md": "sha256:d029f01a45e99a338876bbf50292323d928b67fb7a76dc25ee78b8425cc48350",
+    "apps/public-site/README.md": "sha256:e4afd6516345b29ca6ac001bedc51b1382772d2fa2d8879ee24150e8fdcdc5c8",
+    "data/receipts/generated/static-deployment-retirement-20261020.json": "sha256:16f01ef182a228b509363cd03fb07f5c80c5db4854ac31cef1aa2a35fa352cf5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session; exact backend version unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "main@f413abd2213961ddc280596913059c671c0448d4",
+      "PR #5361 merged as 6bb00a5b4d9af1b47abf85224e2df22e22318ffe",
+      "data/receipts/generated/static-deployment-retirement-20261020.json at f413abd2213961ddc280596913059c671c0448d4"
+    ]
+  },
+  "truth_labels": {
+    "apps/README.md": "CONFIRMED",
+    "apps/public-site/README.md": "CONFIRMED",
+    "data/receipts/generated/static-deployment-retirement-20261020.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "canonical generated-receipt validator",
+      "outcome": "PASS",
+      "reason": "Original failure DOCUMENT_CITATIONS_REQUIRED independently reproduced; corrected original receipt passes with all five existing full SHA-256 artifact bindings preserved and verified. This correction receipt also validates against final local artifacts."
+    },
+    {
+      "gate": "generated-receipt regressions and fixture polarity",
+      "outcome": "PASS",
+      "reason": "28 tests; one valid and one invalid canonical fixture."
+    },
+    {
+      "gate": "Node 22.23.3 static build and bundle checks",
+      "outcome": "PASS",
+      "reason": "23 files, 482 KiB; no deployment."
+    },
+    {
+      "gate": "Node 22.23.3 hosting and static-retirement regression suite",
+      "outcome": "PASS",
+      "reason": "8 tests using scratch-extracted Apache 2.4 and the existing unmapped-user namespace adapter; loopback only, no hosting credentials."
+    },
+    {
+      "gate": "workflow security",
+      "outcome": "PASS",
+      "reason": "28 regression tests; ratchet checks 498 workflows with zero invariant failures, new drift, baselined warnings or stale entries."
+    },
+    {
+      "gate": "documentation local targets and fragments",
+      "outcome": "PASS",
+      "reason": "Two modified Markdown files; 67 local targets pass. External targets classified without network requests. Link-check regression suite: 20 tests pass."
+    },
+    {
+      "gate": "documentation metadata",
+      "outcome": "PASS",
+      "reason": "Both metadata blocks valid; zero failures and the same 21 unsupported-nesting warnings as the pinned base."
+    },
+    {
+      "gate": "repository topology",
+      "outcome": "FAIL",
+      "reason": "Pinned base already reports path-grammar:uppercase drift, 88 baselined warnings and one stale baseline entry. No baseline or topology control changed; unrelated repair is outside this correction."
+    },
+    {
+      "gate": "exact-head GitHub CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending after draft PR creation; no approval, merge or production change is claimed."
+    },
+    {
+      "gate": "focused pre-commit hygiene",
+      "outcome": "PASS",
+      "reason": "All applicable committed hooks pass for the four changed files. Full-repository pre-commit omitted for this metadata/docs-only correction."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "retired-static-workflow",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6bb00a5b4d9af1b47abf85224e2df22e22318ffe/.github/workflows/godaddy-public-site.yml"
+    },
+    {
+      "id": "recorded-node-production-path",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6bb00a5b4d9af1b47abf85224e2df22e22318ffe/docs/runbooks/godaddy-node-hosting.md"
+    },
+    {
+      "id": "hosting-boundary",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6bb00a5b4d9af1b47abf85224e2df22e22318ffe/docs/runbooks/godaddy-hosting.md"
+    },
+    {
+      "id": "receipt-schema",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f413abd2213961ddc280596913059c671c0448d4/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "canonical-receipt-validator",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f413abd2213961ddc280596913059c671c0448d4/tools/validators/validate_generated_receipt.py"
+    },
+    {
+      "id": "directory-governance",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/f413abd2213961ddc280596913059c671c0448d4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-20T23:28:40.330515+00:00",
+  "emitter": "Codex",
+  "notes": "Focused correction to PR #5361. The original receipt receives pinned citations and an explicit amendment note; its identity, artifact hashes, generation metadata, historical gate results and pending review remain intact. Original bytes remain available at the merged commit. Documentation now describes build-only static validation and the recorded existing GoDaddy Node production path. No new provider observation, hosting mutation, static transfer activation, Sites change, history deletion or rollback execution. This receipt covers the final two READMEs and corrected original receipt; it does not bind itself."
+}

@@ -68,7 +68,23 @@
     }
   ],
   "policy_decisions": [],
-  "citations": [],
+  "citations": [
+    {
+      "id": "static-workflow-retirement",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6bb00a5b4d9af1b47abf85224e2df22e22318ffe/.github/workflows/godaddy-public-site.yml"
+    },
+    {
+      "id": "hosting-entry-point",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6bb00a5b4d9af1b47abf85224e2df22e22318ffe/docs/runbooks/godaddy-hosting.md"
+    },
+    {
+      "id": "node-production-readback",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/6bb00a5b4d9af1b47abf85224e2df22e22318ffe/docs/runbooks/godaddy-node-hosting.md"
+    }
+  ],
   "human_review": {
     "state": "pending",
     "reviewer_ids": [],
@@ -76,5 +92,5 @@
   },
   "created_at": "2026-10-20T21:51:31.253510+00:00",
   "emitter": "Codex",
-  "notes": "Source authoring only; no deletion, provider mutation, publication, DNS, secret setting, or private Site change. The retired static bundle remains buildable for review."
+  "notes": "Source authoring only; no deletion, provider mutation, publication, DNS, secret setting, or private Site change. The retired static bundle remains buildable for review. Citation-only correction after PR #5361: references resolve to the exact merged workflow and runbooks; original artifact hashes, generation metadata, reported validation and pending human-review state are preserved. This correction does not independently repeat the historical provider observation."
 }
