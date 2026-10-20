@@ -7,10 +7,12 @@ import {createServer} from 'node:http';
 import {readFileSync,statSync} from 'node:fs';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
-import {createNonceCache,decodeSecret,newSecret,verifyRequest} from './signature.mjs';
+import {createNonceCache,decodeSecret,newSecret,signReply,verifyRequest,REPLY_SIGNATURE_HEADER,SIGNATURE_HEADERS} from './signature.mjs';
 
 export const GATEWAY_VERSION='kfm-home-inference/1';
-export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768});
+// responseMs: Cloudflare answers HTTP 524 when a proxied origin takes 100 s to
+// respond (non-Enterprise plans), so every reply leaves within 90 s of arrival.
+export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,responseMs:90000,minRunMs:5000});
 const DEPTHS=['brief','expanded'];
 const ROLES=['system','user','assistant'];
 const OPTION_KEYS=['temperature','top_p','top_k','min_p','repeat_penalty','presence_penalty','frequency_penalty','seed'];
@@ -41,7 +43,7 @@ export function parseProfiles(value){
   if(!Array.isArray(p.scopes)||!p.scopes.length||!p.scopes.every(scope=>SCOPE.test(scope)))throw invalid();
   if(!Array.isArray(p.capabilities)||!p.capabilities.includes('chat'))throw invalid();
   if(!positive(p.contextTokens,131072)||!positive(p.maxInputChars,262144))throw invalid();
-  if(!DEPTHS.every(depth=>positive(p.outputTokens?.[depth],8192)&&positive(p.timeoutMs?.[depth],600000)))throw invalid();
+  if(!DEPTHS.every(depth=>positive(p.outputTokens?.[depth],8192)&&positive(p.timeoutMs?.[depth],GATEWAY_LIMITS.responseMs)))throw invalid();
   if(DEPTHS.some(depth=>p.outputTokens[depth]>=p.contextTokens))throw invalid();
   const options=p.options??{};
   if(typeof options!=='object'||Object.keys(options).some(key=>!OPTION_KEYS.includes(key)||!Number.isFinite(options[key])))throw invalid();
@@ -233,14 +235,17 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
   return {gateway:GATEWAY_VERSION,online:inspection.online,runtime:inspection.runtime?{name:'ollama',version:inspection.runtime}:null,active:admission.active,queued:admission.queued,profiles};
  };
 
- const chat=async(value,scope,signal,record)=>{
+ const chat=async(value,scope,signal,record,started)=>{
   const request=validateChat(value,state.profiles,scope);
   Object.assign(record,{profile:request.profile.id,depth:request.depth,requestId:request.requestId});
   const ready=(await inspector()).state.get(request.profile.id);
   if(ready!==null)throw fail(ready==='MODEL_UNAVAILABLE'?'MODEL_UNAVAILABLE':'PROFILE_NOT_READY',503);
   const queuedAt=clock(),release=await admission.enter(signal);
   record.queueMs=clock()-queuedAt;
-  const controller=new AbortController(),timeout=request.profile.timeoutMs[request.depth];
+  // Body read, model check and queue wait all spend the same 90 s response budget.
+  const remaining=GATEWAY_LIMITS.responseMs-(clock()-started);
+  if(remaining<GATEWAY_LIMITS.minRunMs){release();throw fail('GATEWAY_BUSY',429);}
+  const controller=new AbortController(),timeout=Math.min(request.profile.timeoutMs[request.depth],remaining);
   const abort=()=>controller.abort();signal.addEventListener('abort',abort,{once:true});
   const timer=setTimeout(()=>controller.abort(),timeout);active.add(controller);
   try{
@@ -270,11 +275,14 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
   }finally{clearTimeout(timer);signal.removeEventListener('abort',abort);active.delete(controller);controller.abort();release();}
  };
 
- const send=(res,status,body)=>{
+ // reply: the authenticated key and request nonce. Refusals before authentication
+ // stay unsigned, since the gateway cannot know whom it would be signing for.
+ const send=(res,status,body,reply=null)=>{
   if(res.headersSent||res.destroyed)return;
   const payload=JSON.stringify(body);
   const close=status===413||status===408;
-  res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Content-Length':Buffer.byteLength(payload),'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...(close?{Connection:'close'}:{})});
+  const signature=reply?{[REPLY_SIGNATURE_HEADER]:signReply({secret:reply.secret,nonce:reply.nonce,status,body:payload})}:{};
+  res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Content-Length':Buffer.byteLength(payload),'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...signature,...(close?{Connection:'close'}:{})});
   res.end(payload,close?()=>res.socket?.destroy():undefined);
  };
 
@@ -283,6 +291,7 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
   // The response closing before we finish means the caller went away: stop generating.
   const disconnected=new AbortController();
   res.on('close',()=>{if(!res.writableFinished)disconnected.abort();});
+  let reply=null;
   try{
    const path=req.url??'';
    if(!['GET','POST'].includes(req.method))throw fail('METHOD_DENIED',405);
@@ -292,21 +301,21 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
    if(req.method==='GET'&&body)throw fail('INVALID_REQUEST',400);
    const auth=verifyRequest({headers:req.headers,method:req.method,path,body,keys:state.keys,nonces,now:clock()});
    if(!auth.ok){record.authFailure=auth.reason;throw fail('UNAUTHORIZED',401);}
-   record.keyId=auth.key.id;
+   record.keyId=auth.key.id;reply={secret:auth.key.secret,nonce:req.headers[SIGNATURE_HEADERS.nonce]};
    let result;
    if(path==='/v1/health'&&req.method==='GET')result=await health(auth.key.scope);
    else if(path==='/v1/chat'&&req.method==='POST'){
     if(!/^application\/json(?:;|$)/i.test(req.headers['content-type']??''))throw fail('INVALID_REQUEST',400);
     let value;try{value=JSON.parse(body);}catch{throw fail('INVALID_REQUEST',400);}
-    result=await chat(value,auth.key.scope,disconnected.signal,record);
+    result=await chat(value,auth.key.scope,disconnected.signal,record,started);
    }
    else throw fail('NOT_FOUND',404);
-   record.status=200;send(res,200,result);
+   record.status=200;send(res,200,result,reply);
   }catch(error){
    const status=Number.isInteger(error?.status)?error.status:500,code=status===500?'GATEWAY_ERROR':error.code;
    Object.assign(record,{status,code});
    if(status===429)res.setHeader?.('Retry-After','5');
-   send(res,status===499?400:status,{gateway:GATEWAY_VERSION,error:code});
+   send(res,status===499?400:status,{gateway:GATEWAY_VERSION,error:code},reply);
   }finally{
    record.totalMs=clock()-started;
    // Operational metadata only: never prompts, replies, headers or secrets.

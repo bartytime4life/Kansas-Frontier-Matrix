@@ -132,8 +132,10 @@ matches and the synthetic chats complete. Keep the receipt privately. It records
 this path at this time; it is not a capacity or quality guarantee.
 
 **Tunnel deadline.** Cloudflare's documented proxy read timeout on
-non-Enterprise plans is 100 seconds (HTTP 524). Keep every profile's
-`timeoutMs` at or below 90000 for the tunnel path. The public chat also
+non-Enterprise plans is 100 seconds (HTTP 524). The gateway refuses a profile
+whose `timeoutMs` exceeds 90000, and every reply leaves within 90 s of the
+request arriving: body read, model check and queue wait use the same budget, and
+a request with under 5 s left is refused as `GATEWAY_BUSY`. The public chat also
 caps a reply at 4096 bytes, so keep `outputTokens.expanded` at about 700 or less.
 
 ## Stopping and rollback on this PC

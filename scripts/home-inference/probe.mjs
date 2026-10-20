@@ -10,7 +10,7 @@
 //   node probe.mjs [--runs 3] [--depth brief|expanded] [--concurrency 2]
 import {randomUUID} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
-import {signRequest,newSecret} from './signature.mjs';
+import {signRequest,newSecret,verifyReply,REPLY_SIGNATURE_HEADER,SIGNATURE_HEADERS} from './signature.mjs';
 
 const SYNTHETIC=['In two sentences, explain what a county seat is.','Give three general reasons rivers change course over time.','Briefly explain the difference between weather and climate.'];
 
@@ -25,8 +25,11 @@ export async function probe({env=process.env,runs=3,depth='brief',concurrency=2,
   const started=clock();
   try{
    const response=await fetchImpl(origin+path,{method,redirect:'manual',signal:AbortSignal.timeout(120000),headers:{...(withAccess?access:{}),...auth,...(body?{'Content-Type':'application/json'}:{}),...headers},body:body||undefined});
-   let value=null;try{value=await response.json();}catch{}
-   return {status:response.status,value,ms:clock()-started};
+   const text=await response.text();
+   let value=null;try{value=JSON.parse(text);}catch{}
+   // True only when the reply is signed for this exact request with the configured key.
+   const verified=Boolean(auth[SIGNATURE_HEADERS.nonce])&&verifyReply({secret:signing.secret??secret,nonce:auth[SIGNATURE_HEADERS.nonce],status:response.status,body:text,signature:response.headers.get(REPLY_SIGNATURE_HEADER)});
+   return {status:response.status,value,verified,ms:clock()-started};
   }catch(error){return {status:0,value:null,ms:clock()-started,error:error?.name??'FETCH_FAILED'};}
  };
 
@@ -46,6 +49,7 @@ export async function probe({env=process.env,runs=3,depth='brief',concurrency=2,
  const health=await send('GET','/v1/health');
  const entry=health.value?.profiles?.find?.(item=>item.id===profile);
  check('health_signed_ok',health.status===200,health.status);
+ check('health_reply_signature_verified',health.verified===true);
  check('profile_ready',entry?.ready===true,entry?.ready===true?undefined:entry?.reason??'PROFILE_MISSING');
  check('profile_digest_matches_pin',entry?.digest===digest);
  const result={probe:'kfm-home-inference-probe/1',at:new Date(clock()).toISOString(),origin,keyId,profile,model:entry?.model??null,digest:entry?.digest??null,runtime:health.value?.runtime??null,healthMs:health.ms,checks,samples};
@@ -54,10 +58,11 @@ export async function probe({env=process.env,runs=3,depth='brief',concurrency=2,
  const chat=async prompt=>{
   const body=JSON.stringify({requestId:randomUUID(),profile,depth,messages:[{role:'system',content:'You are a concise assistant. Synthetic benchmark.'},{role:'user',content:prompt}]});
   const response=await send('POST','/v1/chat',{body});
-  return {status:response.status,error:response.value?.error??null,wallMs:response.ms,finishReason:response.value?.finishReason??null,chars:typeof response.value?.text==='string'?response.value.text.length:null,...(response.value?.timings??{}),outputTokens:response.value?.usage?.outputTokens??null,promptTokens:response.value?.usage?.promptTokens??null};
+  return {status:response.status,verified:response.verified,error:response.value?.error??null,wallMs:response.ms,finishReason:response.value?.finishReason??null,chars:typeof response.value?.text==='string'?response.value.text.length:null,...(response.value?.timings??{}),outputTokens:response.value?.usage?.outputTokens??null,promptTokens:response.value?.usage?.promptTokens??null};
  };
  for(let i=0;i<runs;i++)samples.push({run:i+1,kind:'sequential',...await chat(SYNTHETIC[i%SYNTHETIC.length])});
  check('sequential_chats_completed',samples.every(sample=>sample.status===200),samples.map(sample=>sample.status));
+ check('chat_reply_signatures_verified',samples.every(sample=>sample.verified===true));
  if(concurrency>1){
   const parallel=await Promise.all(Array.from({length:concurrency},(_,i)=>chat(SYNTHETIC[i%SYNTHETIC.length])));
   parallel.forEach((sample,i)=>samples.push({run:runs+i+1,kind:'concurrent',...sample}));

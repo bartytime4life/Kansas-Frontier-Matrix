@@ -4,7 +4,7 @@
 // public-ai-handler.mjs; this module only turns a discussion into one bounded
 // gateway call. It never falls back to another provider or model.
 import {randomUUID} from 'node:crypto';
-import {signRequest,decodeSecret} from '../scripts/home-inference/signature.mjs';
+import {signRequest,decodeSecret,verifyReply,SIGNATURE_HEADERS,REPLY_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
 import {discussionSystem} from './hosted-ai-prompt.mjs';
 import {CONTINUE_REPLY,PUBLIC_AI_JOB_MS} from './hosted-ai.mjs';
 
@@ -13,7 +13,7 @@ export const HOME_GATEWAY='kfm-home-inference/1';
 export const HOME_LIMITS=Object.freeze({healthMs:5000,pollMs:30000,responseBytes:65536,replyChars:16384});
 const error=code=>Object.assign(new Error(code),{code});
 const GATEWAY_CODES=new Set(['UNAUTHORIZED','INVALID_REQUEST','PROFILE_UNKNOWN','PROFILE_NOT_READY','MODEL_CONTEXT_LIMIT','MODEL_UNAVAILABLE','MODEL_TIMEOUT','MODEL_EMPTY_OUTPUT','GATEWAY_BUSY','REQUEST_TOO_LARGE','NOT_FOUND','GATEWAY_ERROR']);
-const diagnosticCodes=new Set([...GATEWAY_CODES,'GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','GATEWAY_RESPONSE_INVALID','PROFILE_UNAVAILABLE','PROFILE_IDENTITY','MODEL_CONNECTING']);
+const diagnosticCodes=new Set([...GATEWAY_CODES,'GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','GATEWAY_RESPONSE_INVALID','GATEWAY_REPLY_UNVERIFIED','PROFILE_UNAVAILABLE','PROFILE_IDENTITY','MODEL_CONNECTING']);
 
 // Exact configuration or nothing: a malformed value disables chat instead of guessing.
 export function homeInferenceConfig(env=process.env){
@@ -33,27 +33,35 @@ export function homeInferenceConfig(env=process.env){
  return Object.freeze({origin:url.origin,keyId,secret,profile,digest,access:accessId?Object.freeze({id:accessId,secret:accessSecret}):null});
 }
 
-async function boundedJson(response){
- if(!/^application\/json(?:;|$)/i.test(response.headers.get('content-type')??''))throw error('GATEWAY_RESPONSE_INVALID');
- const reader=response.body?.getReader();if(!reader)throw error('GATEWAY_RESPONSE_INVALID');
+async function boundedText(response){
+ const reader=response.body?.getReader();if(!reader)return '';
  const chunks=[];let bytes=0;
  try{while(true){const part=await reader.read();if(part.done)break;bytes+=part.value.length;if(bytes>HOME_LIMITS.responseBytes)throw error('GATEWAY_RESPONSE_INVALID');chunks.push(Buffer.from(part.value));}}
  finally{await reader.cancel().catch(()=>{});}
- try{return JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw error('GATEWAY_RESPONSE_INVALID');}
+ return Buffer.concat(chunks).toString('utf8');
 }
 
 export function createHomeInferenceClient({origin,keyId,secret,access=null,fetchImpl=fetch,clock=Date.now}){
  const call=async(method,path,payload,{signal,timeoutMs})=>{
   const body=payload===undefined?'':JSON.stringify(payload);
-  const headers={...signRequest({keyId,secret,method,path,body,now:clock()}),...(body?{'Content-Type':'application/json'}:{}),...(access?{'CF-Access-Client-Id':access.id,'CF-Access-Client-Secret':access.secret}:{})};
+  const auth=signRequest({keyId,secret,method,path,body,now:clock()});
+  const headers={...auth,...(body?{'Content-Type':'application/json'}:{}),...(access?{'CF-Access-Client-Id':access.id,'CF-Access-Client-Secret':access.secret}:{})};
   const signals=[AbortSignal.timeout(timeoutMs),...(signal?[signal]:[])];
   let response;
   try{response=await fetchImpl(origin+path,{method,headers,body:body||undefined,redirect:'manual',cache:'no-store',signal:AbortSignal.any(signals)});}
   catch{throw error(signal?.aborted?'MODEL_CANCELLED':'GATEWAY_UNREACHABLE');}
   // An access-login or captive-portal redirect is a failure, never a new destination.
   if(response.type==='opaqueredirect'||response.status>=300&&response.status<400){await response.body?.cancel().catch(()=>{});throw error('GATEWAY_REDIRECT');}
-  let value;
-  try{value=await boundedJson(response);}catch(failure){throw signal?.aborted?error('MODEL_CANCELLED'):failure;}
+  let text;
+  try{text=await boundedText(response);}catch(failure){throw signal?.aborted?error('MODEL_CANCELLED'):failure;}
+  const signature=response.headers.get(REPLY_SIGNATURE_HEADER);
+  // An unsigned reply came from the tunnel or Access edge, or the gateway refused our
+  // key. Its body is never trusted; only its status picks the operator code.
+  if(!signature)throw error([401,403].includes(response.status)?'UNAUTHORIZED':'GATEWAY_UNREACHABLE');
+  // Signed, but not for this request's nonce, status and bytes: not our gateway's reply.
+  if(!verifyReply({secret,nonce:auth[SIGNATURE_HEADERS.nonce],status:response.status,body:text,signature}))throw error('GATEWAY_REPLY_UNVERIFIED');
+  if(!/^application\/json(?:;|$)/i.test(response.headers.get('content-type')??''))throw error('GATEWAY_RESPONSE_INVALID');
+  let value;try{value=JSON.parse(text);}catch{throw error('GATEWAY_RESPONSE_INVALID');}
   if(value?.gateway!==HOME_GATEWAY)throw error('GATEWAY_RESPONSE_INVALID');
   if(!response.ok)throw error(GATEWAY_CODES.has(value.error)?value.error:'GATEWAY_RESPONSE_INVALID');
   return value;
@@ -138,7 +146,7 @@ export class HomeInferenceModel{
    if(signal?.aborted)throw error('MODEL_CANCELLED');
    if(failure?.code==='MODEL_CONTEXT_LIMIT')throw failure;
    // A transport or identity failure re-reads health before the next job is admitted.
-   if(['GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','UNAUTHORIZED','PROFILE_NOT_READY','PROFILE_UNKNOWN','GATEWAY_RESPONSE_INVALID'].includes(failure?.code)){this.setState(false,failure.code==='PROFILE_NOT_READY',failure.code);void this.refresh();}
+   if(['GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','UNAUTHORIZED','PROFILE_NOT_READY','PROFILE_UNKNOWN','GATEWAY_RESPONSE_INVALID','GATEWAY_REPLY_UNVERIFIED'].includes(failure?.code)){this.setState(false,failure.code==='PROFILE_NOT_READY',failure.code);void this.refresh();}
    throw error('MODEL_UNAVAILABLE');
   }finally{this.pending=null;}
  }
