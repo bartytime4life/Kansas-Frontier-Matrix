@@ -1,0 +1,50 @@
+[
+  {
+    "asset": "kansas-territory", "title": "1854–1861 · Bleeding Kansas", "era": "1854–1861",
+    "heading": "Bleeding Kansas", "place": "Kansas Territory", "imageLabel": "John Brown · archival portrait",
+    "summary": "A struggle over slavery shaped the territory and the road to statehood.",
+    "steps": ["1854 · Kansas–Nebraska Act", "1856 · Violence in the territory", "1861 · Kansas enters as a free state"],
+    "places": [["Topeka", -95.678, 39.048], ["Lawrence", -95.235, 38.972], ["Osawatomie", -94.951, 38.497]],
+    "sourceUrl": "https://www.nps.gov/articles/bleeding-kansas.htm"
+  },
+  {
+    "asset": "kansas-lawrence", "title": "1863 · The Lawrence raid", "era": "21 AUG 1863",
+    "heading": "The Lawrence raid", "place": "Lawrence · Douglas County", "imageLabel": "The raid · contemporary illustration",
+    "summary": "Quantrill’s raiders attacked Lawrence during the Civil War, killing residents and burning the city.",
+    "steps": ["Civil War on the Kansas–Missouri border", "21 August 1863 · Lawrence attacked", "A city and its people remember"],
+    "places": [["Lawrence", -95.235, 38.972]],
+    "sourceUrl": "https://www.nps.gov/places/blue-mound.htm"
+  },
+  {
+    "asset": "kansas-mine-creek", "title": "1864 · The Battle of Mine Creek", "era": "25 OCT 1864",
+    "heading": "The Battle of Mine Creek", "place": "Mine Creek · Linn County", "imageLabel": "Price’s Raid · historical campaign map",
+    "summary": "Union cavalry defeated Confederate forces at Mine Creek during Price’s retreat.",
+    "steps": ["Price’s 1864 campaign moves west", "Union forces pursue the retreat", "25 October · Battle of Mine Creek"],
+    "places": [["Westport", -94.606, 39.035], ["Mine Creek", -94.717, 38.133]],
+    "sourceUrl": "https://www.kansashistory.gov/p/mine-creek-civil-war-battlefield/20765"
+  },
+  {
+    "asset": "kansas-nicodemus", "title": "1877 · Building Nicodemus", "era": "1877",
+    "heading": "Building Nicodemus", "place": "Nicodemus · Graham County", "imageLabel": "Washington Street · about 1885",
+    "summary": "Black settlers established a community on the High Plains after the Civil War.",
+    "steps": ["Families move west seeking opportunity", "1877 · Nicodemus is founded", "A living community preserves its story"],
+    "places": [["Nicodemus", -99.616, 39.676]],
+    "sourceUrl": "https://www.nps.gov/places/nicodemus-kansas.htm"
+  },
+  {
+    "asset": "kansas-dust", "title": "1930s · Kansas and the Dust Bowl", "era": "1930s",
+    "heading": "Kansas and the Dust Bowl", "place": "Rolla · southwestern Kansas", "imageLabel": "Rolla dust storm · 14 April 1935",
+    "summary": "Drought and wind erosion transformed lives and farmland across the High Plains.",
+    "steps": ["Drought grips the High Plains", "14 April 1935 · Dust reaches Rolla", "A landscape recorded in the archives"],
+    "places": [["Rolla", -101.633, 37.117], ["Liberal", -100.921, 37.043]],
+    "sourceUrl": "https://www.weather.gov/ddc/BlackSunday1935"
+  },
+  {
+    "asset": "kansas-brown", "title": "1954 · Brown v. Board of Education", "era": "17 MAY 1954",
+    "heading": "Brown v. Board of Education", "place": "Topeka · Shawnee County", "imageLabel": "Monroe School · the historic place today",
+    "summary": "The Topeka case joined a national challenge to segregation in public schools.",
+    "steps": ["1951 · The Topeka case is filed", "1954 · The Supreme Court rules", "The struggle for desegregation continues"],
+    "places": [["Topeka", -95.678, 39.048]],
+    "sourceUrl": "https://www.nps.gov/brvb/learn/historyculture/kansas.htm"
+  }
+]

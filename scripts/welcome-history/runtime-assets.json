@@ -1,0 +1,455 @@
+{
+  "files": [
+    {
+      "path": "/welcome/motion/clouds-hd.webm",
+      "bytes": 722614,
+      "sha256": "a56d3222cbe32cbf796977b9027408677bf136ebe1e8a2f19ca7b43420c5ae2a"
+    },
+    {
+      "path": "/welcome/motion/clouds-preview.webm",
+      "bytes": 188322,
+      "sha256": "bab24a2cd44d6250c62800ad64f6a104edeafe65586ae5919ac69a2eb90c5b13"
+    },
+    {
+      "path": "/welcome/motion/clouds.jpg",
+      "bytes": 26466,
+      "sha256": "cb8fba973b1255855902dcdbd1c244595f1484b12d367d51ede1cfcd42bc0ade"
+    },
+    {
+      "path": "/welcome/motion/rain-hd.webm",
+      "bytes": 3590682,
+      "sha256": "fca9bf09819e1ae59cca055c05fd762135b2a7d35e403ee52f2300cb27dcb23d"
+    },
+    {
+      "path": "/welcome/motion/rain-preview.webm",
+      "bytes": 681144,
+      "sha256": "ca1797141e18f027c05a182ecea57a5f1610cb460188e13df9956c7d65259e6e"
+    },
+    {
+      "path": "/welcome/motion/rain.jpg",
+      "bytes": 42972,
+      "sha256": "66ce778aa377a7b8ae81b8f1f50c7e35047e00c1c2879bd317a268c0cbea35e2"
+    },
+    {
+      "path": "/welcome/motion/wind-hd.webm",
+      "bytes": 727460,
+      "sha256": "96090263fc085eac1518f74c7e8c5816db3df3b22e923ebce88502c2d0a21623"
+    },
+    {
+      "path": "/welcome/motion/wind-preview.webm",
+      "bytes": 142842,
+      "sha256": "ec50d085630228a583bbcdf2b009d3df1e7cf8acf218d00092c7d281bfb39bbe"
+    },
+    {
+      "path": "/welcome/motion/wind.jpg",
+      "bytes": 59870,
+      "sha256": "f64a2c17c63545112b059289102ec1c3cd0213913d8ae53d3c27e2db9fc9861a"
+    },
+    {
+      "path": "/welcome/motion/supercell-hd.webm",
+      "bytes": 2016817,
+      "sha256": "41a50918815c8ad9aaa459efa7025eb98cdbaae7672b1fc7adb53b5001eec4de"
+    },
+    {
+      "path": "/welcome/motion/supercell-preview.webm",
+      "bytes": 442007,
+      "sha256": "351c1e552b77d661fac43e956c8a0de65a5484661447cad7fdddebcc39b12421"
+    },
+    {
+      "path": "/welcome/motion/supercell.jpg",
+      "bytes": 62952,
+      "sha256": "908a7e656fa5ae097a7285acc32049a8017d249617b76a37b7c3f8bb35348b03"
+    },
+    {
+      "path": "/welcome/motion/tornado-hd.webm",
+      "bytes": 673950,
+      "sha256": "48a52cbcd68ff0de0b0cd4d0be471c0b6d43c8056669fd19fa9bf1ffbaa7f1ed"
+    },
+    {
+      "path": "/welcome/motion/tornado-preview.webm",
+      "bytes": 174316,
+      "sha256": "fad6f1564c0e1d96d13619886d70fe35763ace0c42a77ce9320e3924e6bf5e48"
+    },
+    {
+      "path": "/welcome/motion/tornado.jpg",
+      "bytes": 25449,
+      "sha256": "9be51bd87241bc6618e12b6ff47a7f1733f3646eb5df7feee8fe3d2715d7eb70"
+    },
+    {
+      "path": "/welcome/motion/river-hd.webm",
+      "bytes": 4417505,
+      "sha256": "cb3c34a62194b35dbef6dcf18a1dc1158dc4ca6caeef95c9a7538a669e745a07"
+    },
+    {
+      "path": "/welcome/motion/river-preview.webm",
+      "bytes": 592864,
+      "sha256": "b5c3295bba4de454a35bec91dd9cd72eba0e066fda1f191ee5bad4f71a9faf1a"
+    },
+    {
+      "path": "/welcome/motion/river.jpg",
+      "bytes": 230934,
+      "sha256": "7f867bd6ee5d0fe6d92eeeb406239eee179df83b5832024d152dbb22f1a0f6d6"
+    },
+    {
+      "path": "/welcome/motion/spillway-hd.webm",
+      "bytes": 782069,
+      "sha256": "6729776ba0093483c2e31d084a9df4365eaa86426f4c359a84c255384b1cfae1"
+    },
+    {
+      "path": "/welcome/motion/spillway-preview.webm",
+      "bytes": 182451,
+      "sha256": "853debc4920f47e549733ef2bc3aac496a93d05e51164276bc970483af5c8b5f"
+    },
+    {
+      "path": "/welcome/motion/spillway.jpg",
+      "bytes": 43283,
+      "sha256": "6c8ecdd2eea800a50a6e662614e584dfa3dc2dd4fa06ff9e1f3806dcbafc6d4f"
+    },
+    {
+      "path": "/welcome/motion/irrigation-hd.webm",
+      "bytes": 6596913,
+      "sha256": "bbd2a2a80dd2693d4d7037023c72ec619f7b37cb55316e229b169c51b0a32a78"
+    },
+    {
+      "path": "/welcome/motion/irrigation-preview.webm",
+      "bytes": 1477270,
+      "sha256": "84640664e0c9db7bf960be24a304c331e4b5bc5eed1d0a71129690ecf206194d"
+    },
+    {
+      "path": "/welcome/motion/irrigation.jpg",
+      "bytes": 190814,
+      "sha256": "648c39d563376b9a82bacb78414e8b66477a60f3c283cf67e72187538857d0b4"
+    },
+    {
+      "path": "/welcome/motion/groundwater-hd.webm",
+      "bytes": 900608,
+      "sha256": "e98dfc42b7680a27623dd6d673c1ad1edebf1175509ea02e9875c006e32e25c2"
+    },
+    {
+      "path": "/welcome/motion/groundwater-preview.webm",
+      "bytes": 196513,
+      "sha256": "ed821f9a2ea51290898a3aaf4d5ee5ea1c3513ca01b8834dee67bc2f9be55e1c"
+    },
+    {
+      "path": "/welcome/motion/groundwater.jpg",
+      "bytes": 90467,
+      "sha256": "63811a324350130862501474d7594f42b91e15bbae3bc5a505e2ac21d545b0fb"
+    },
+    {
+      "path": "/welcome/motion/roots-hd.webm",
+      "bytes": 280656,
+      "sha256": "057f8383a556772bb15bc9caa0f14ed6457c7acf652bc7d6a2155c7ed57f5546"
+    },
+    {
+      "path": "/welcome/motion/roots-preview.webm",
+      "bytes": 57178,
+      "sha256": "dbed3ab5b88eaf39d5425bfaa7b9acc2fec80ba4cceb01b8a4a59ce05b39bef7"
+    },
+    {
+      "path": "/welcome/motion/roots.jpg",
+      "bytes": 32911,
+      "sha256": "aef431a04100d47d4a19ee84f574ecd1168dfe9b9d5a76af34461983db69b47b"
+    },
+    {
+      "path": "/welcome/motion/growth-hd.webm",
+      "bytes": 1395889,
+      "sha256": "fedb8faf282c60674ffe2585f263fac2eaf025d8b28f86210f277faad52639dc"
+    },
+    {
+      "path": "/welcome/motion/growth-preview.webm",
+      "bytes": 312357,
+      "sha256": "427af7e2093ff1527636ca785d872be962aaa5ce56bad17fac1f82ac0b7464ae"
+    },
+    {
+      "path": "/welcome/motion/growth.jpg",
+      "bytes": 133649,
+      "sha256": "50a73ef3a300b15ba5c32c58e21fec7b385355682ca69e73e47f83490ed86cad"
+    },
+    {
+      "path": "/welcome/motion/microscope-hd.webm",
+      "bytes": 58030,
+      "sha256": "78b0275e7848f158da4a87b6231adff02dce0b361f9e264d6758c1735d4bde32"
+    },
+    {
+      "path": "/welcome/motion/microscope-preview.webm",
+      "bytes": 24625,
+      "sha256": "aaac0e585c9782caf8f02b136098c513f4812e05b2310a2571b0b069d6c6227b"
+    },
+    {
+      "path": "/welcome/motion/microscope.jpg",
+      "bytes": 21063,
+      "sha256": "8c38ed477c2c1936f02ac5a847f984a1f46fb504dadc9848744162feffa51a44"
+    },
+    {
+      "path": "/welcome/motion/drilling-hd.webm",
+      "bytes": 1154679,
+      "sha256": "2b199ecd9844e70bacbe4760e0f0c9a2f728f8bb108b362b5bf21a119e9b1863"
+    },
+    {
+      "path": "/welcome/motion/drilling-preview.webm",
+      "bytes": 145622,
+      "sha256": "4ea43f9306826aa2d77680f737ad1501ea8304e0e25945731fd53e4de4bf5b97"
+    },
+    {
+      "path": "/welcome/motion/drilling.jpg",
+      "bytes": 109241,
+      "sha256": "577626e37765289b46789de42b3b735be1caa89a6a46b08d4553029bbaef2a51"
+    },
+    {
+      "path": "/welcome/motion/borehole-clear-hd.webm",
+      "bytes": 8873752,
+      "sha256": "b81cb9b59cc0d453955c368a9c97c35f54de0a84bbeb169886c8abc018ede65b"
+    },
+    {
+      "path": "/welcome/motion/borehole-clear-preview.webm",
+      "bytes": 1648035,
+      "sha256": "0011e57518e59f57d58aa2e5eabc395eace6aa2254d45eb8c87f2c7f36a348f0"
+    },
+    {
+      "path": "/welcome/motion/borehole-clear.jpg",
+      "bytes": 478344,
+      "sha256": "81db0e3e11e98e126d78d692d9f8dc0d037695a63784526c0d9162497847c62d"
+    },
+    {
+      "path": "/welcome/motion/aquifer-hd.webm",
+      "bytes": 1442078,
+      "sha256": "408fc01d71c22c6f60d9cf217e18c4bc0875468987fa687f8f0c1334e49388f6"
+    },
+    {
+      "path": "/welcome/motion/aquifer-preview.webm",
+      "bytes": 303281,
+      "sha256": "a21d2455027cf7ac7bcd0ed71f2b9f54a2719594d511d4df86a426c657222516"
+    },
+    {
+      "path": "/welcome/motion/aquifer.jpg",
+      "bytes": 120492,
+      "sha256": "b95dfb6472b8ec31d087c53c0ea786d0f18e22dcad97162633c6080299aab7b9"
+    },
+    {
+      "path": "/welcome/motion/kansas-territory-hd.webm",
+      "bytes": 766305,
+      "sha256": "08dded1fc53ceb228129fb9fc67c738bb9ba3ce32e3453fc5d418af0987be6d1"
+    },
+    {
+      "path": "/welcome/motion/kansas-territory-preview.webm",
+      "bytes": 95307,
+      "sha256": "460b2d437f5044718f62c15a0a2b6f7d7ffe8ed0b228066ad7cd624090d5a961"
+    },
+    {
+      "path": "/welcome/motion/kansas-territory.jpg",
+      "bytes": 174652,
+      "sha256": "8376357a4b0a98afabcf7adccca05218593221bc28e4de4d4741f7532fce9e8f"
+    },
+    {
+      "path": "/welcome/motion/kansas-lawrence-hd.webm",
+      "bytes": 1083967,
+      "sha256": "8d89759fdbb94faea73f14ab5cf74b394775d7544f8fa02fb4cc94a8f9d2d12c"
+    },
+    {
+      "path": "/welcome/motion/kansas-lawrence-preview.webm",
+      "bytes": 117107,
+      "sha256": "7671c93df6882579cbdb9512d5fce3aef192f4ce7925ac42dd60ba8031690502"
+    },
+    {
+      "path": "/welcome/motion/kansas-lawrence.jpg",
+      "bytes": 236053,
+      "sha256": "b3372275294cb36653cea29a1204837a93edcc3d25964e769b5dfdfa00d0e228"
+    },
+    {
+      "path": "/welcome/motion/kansas-mine-creek-hd.webm",
+      "bytes": 1163891,
+      "sha256": "e920fddced9f7281d73fc23bc90e9734e17dc214364000d60a4a36b2c3d4328c"
+    },
+    {
+      "path": "/welcome/motion/kansas-mine-creek-preview.webm",
+      "bytes": 127011,
+      "sha256": "d541c0dd3ab314e865762addf60a336555a1c1b4b0c6079cb1cdbaa8b4dabc6f"
+    },
+    {
+      "path": "/welcome/motion/kansas-mine-creek.jpg",
+      "bytes": 247729,
+      "sha256": "aaad5782076e35fd87d4a03ee57949775e8cb442724c9267d3dd84275b65f3c9"
+    },
+    {
+      "path": "/welcome/motion/kansas-nicodemus-hd.webm",
+      "bytes": 1021628,
+      "sha256": "a49870690e482b0148f684e0c46d6a26242de6acfbc5ff8015430d3078017f8d"
+    },
+    {
+      "path": "/welcome/motion/kansas-nicodemus-preview.webm",
+      "bytes": 114948,
+      "sha256": "807698f433c0c14f12fcc7445f4ea45eebbacecdf06ffb5370bf84a058cfd420"
+    },
+    {
+      "path": "/welcome/motion/kansas-nicodemus.jpg",
+      "bytes": 220667,
+      "sha256": "ae3acc4f75faa87d4091b9f809a042e5b1e370b68524e57d4812a5641a06ff9e"
+    },
+    {
+      "path": "/welcome/motion/kansas-dust-hd.webm",
+      "bytes": 1076829,
+      "sha256": "a3a833276ea207a6f7d6669121830d22af676769bd825ea5856e02f450d9de97"
+    },
+    {
+      "path": "/welcome/motion/kansas-dust-preview.webm",
+      "bytes": 119094,
+      "sha256": "9595b4110e8f08cbc225ce1e40fc42af59d0d2667845fb255b2fb9f0621d3c4e"
+    },
+    {
+      "path": "/welcome/motion/kansas-dust.jpg",
+      "bytes": 233428,
+      "sha256": "c37010373f3d3c5ba731100378adfb68e6336b98d8f76610b45001caaa90f36a"
+    },
+    {
+      "path": "/welcome/motion/kansas-brown-hd.webm",
+      "bytes": 915369,
+      "sha256": "2f19f062520effb891b520175d23f54486654612cfd2d63976859a1d33dfd5e2"
+    },
+    {
+      "path": "/welcome/motion/kansas-brown-preview.webm",
+      "bytes": 108885,
+      "sha256": "99e0953af62471eb40058553e0a3b8c49583e93bcb7bb5a3248813621d4e853d"
+    },
+    {
+      "path": "/welcome/motion/kansas-brown.jpg",
+      "bytes": 216737,
+      "sha256": "2de6c598a28429eec60c2c9b65724ecbc89b5f577d3c56deaeceefaeaffcc8f6"
+    },
+    {
+      "path": "/welcome/motion/rail-hd.webm",
+      "bytes": 3598088,
+      "sha256": "5995130d33ed99dbf36926f26edd9c809be72858400cc9bdef25d5513e16675d"
+    },
+    {
+      "path": "/welcome/motion/rail-preview.webm",
+      "bytes": 788622,
+      "sha256": "b873b9d5dbc8cd88165abc37ed369ed8ec5dc5debe156ff481ea4bb69ad76e8a"
+    },
+    {
+      "path": "/welcome/motion/rail.jpg",
+      "bytes": 99722,
+      "sha256": "28ec7e9f30bf463ab34b8a9bcb8eaeae9917da5e7a06d321a13741371e10c2bd"
+    },
+    {
+      "path": "/welcome/motion/road-steady-hd.webm",
+      "bytes": 9039744,
+      "sha256": "753472918724cd7ab975e961a350b07d3c5b6907b641a2d9f38a654c95b9324d"
+    },
+    {
+      "path": "/welcome/motion/road-steady-preview.webm",
+      "bytes": 1535144,
+      "sha256": "816c12c28e5d29b6c9a9878dc6482708bb51cc4d5adb0c1a1919a8a568bcf465"
+    },
+    {
+      "path": "/welcome/motion/road-steady.jpg",
+      "bytes": 366285,
+      "sha256": "e5d864b2fa2f70ec325b97697e857abdcebb531c8be16acac89e1f055112f5fd"
+    },
+    {
+      "path": "/welcome/motion/rush-hd.webm",
+      "bytes": 3593782,
+      "sha256": "8af1905be5002a60845e90da734328fe7d8943d4a925607683ac743fb602f677"
+    },
+    {
+      "path": "/welcome/motion/rush-preview.webm",
+      "bytes": 745843,
+      "sha256": "501c862f1dec2b6e1ba75c17f7a3e4914b9f31618926a3430878ccb65d5e724c"
+    },
+    {
+      "path": "/welcome/motion/rush.jpg",
+      "bytes": 104695,
+      "sha256": "e9ee2b2cb788fc9f7dc4ab8b69dd23b088bafaf19a49e2f751714fbdfa511b2b"
+    },
+    {
+      "path": "/welcome/motion/sprinkler-hd.webm",
+      "bytes": 1166212,
+      "sha256": "1b280d316b3ad4427c396ae9dab56f51832546bf078672bff4da5212a2e3664b"
+    },
+    {
+      "path": "/welcome/motion/sprinkler-preview.webm",
+      "bytes": 176764,
+      "sha256": "1755c59e946417cc5b4ba263b8f19017b58d7080fc217182aa5dbe87710099d8"
+    },
+    {
+      "path": "/welcome/motion/sprinkler.jpg",
+      "bytes": 89615,
+      "sha256": "3ce10068154915e949cce338b04fefde1514791f34e60f5467b54ec8905d6d53"
+    },
+    {
+      "path": "/welcome/motion/harvest-hd.webm",
+      "bytes": 1398296,
+      "sha256": "07bbad25a7e003844076bb83253eea7a20069adf06a666a73588453ebf2e2522"
+    },
+    {
+      "path": "/welcome/motion/harvest-preview.webm",
+      "bytes": 213554,
+      "sha256": "510f6f35bdfe06c5edc62cf9639e7a9c852304cb9954b9f8f8c220b4c38f7f24"
+    },
+    {
+      "path": "/welcome/motion/harvest.jpg",
+      "bytes": 78901,
+      "sha256": "82885b997781bb6acda23fb6de4dd836878eaff68e52104e3b3348fbd979b6d5"
+    },
+    {
+      "path": "/welcome/motion/grain-hd.webm",
+      "bytes": 1632138,
+      "sha256": "9f628270c29a493c5eff56896005fbbb4c0d8c063f2c659d0955c3e5f2133081"
+    },
+    {
+      "path": "/welcome/motion/grain-preview.webm",
+      "bytes": 234619,
+      "sha256": "3d19025d9b20f7911ca081eb26064406f3cbe66a3114f17b26d00031e15d7720"
+    },
+    {
+      "path": "/welcome/motion/grain.jpg",
+      "bytes": 87397,
+      "sha256": "813e02d7ea65cc227d8d4e188fde5487d66c2e259a565e8b8d57f00f56c8e3e1"
+    },
+    {
+      "path": "/welcome/motion/civic-hd.webm",
+      "bytes": 1073522,
+      "sha256": "71d4564b6f7599ab36b2e479bac0a2ef6e79e0bd7b2468837429785970d462fb"
+    },
+    {
+      "path": "/welcome/motion/civic-preview.webm",
+      "bytes": 279540,
+      "sha256": "2b81f3d8415c1a0f47d57f1c53ef19980f093dd7ccd430640487e0123da5712a"
+    },
+    {
+      "path": "/welcome/motion/civic.jpg",
+      "bytes": 38849,
+      "sha256": "e46b71a6d5e4cbd9b7a59a3089799ecd2530aab6022cb8d4836c702ef8319397"
+    },
+    {
+      "path": "/welcome/motion/community-hd.webm",
+      "bytes": 2571291,
+      "sha256": "afb82c5cfd59e9dd71e8e314866de6c7dccf5ff281c2629b6acdd41382d5d987"
+    },
+    {
+      "path": "/welcome/motion/community-preview.webm",
+      "bytes": 345727,
+      "sha256": "15ea94fcb77ce4d5717d170e16ec34898825e58a395f95757d5eed05faec9d66"
+    },
+    {
+      "path": "/welcome/motion/community.jpg",
+      "bytes": 101769,
+      "sha256": "29c6558034a34eab4d13a40894e53ab2010465c261586292bdb316160161cb0d"
+    },
+    {
+      "path": "/welcome/motion/publicwork-hd.webm",
+      "bytes": 2416967,
+      "sha256": "2471326f30bff6d1f530688cf950c75c670bd5ff17b4da077a903b377ac6ccd8"
+    },
+    {
+      "path": "/welcome/motion/publicwork-preview.webm",
+      "bytes": 601609,
+      "sha256": "963636bde6c036552abe0a824ee42c009a5b5f607e14cead34670fcabca17736"
+    },
+    {
+      "path": "/welcome/motion/publicwork.jpg",
+      "bytes": 90718,
+      "sha256": "0c832eee311ee2787aa72eacb5da3923ecd043a939dcbea58ce48be44591f857"
+    }
+  ],
+  "usedBytes": 82380456
+}

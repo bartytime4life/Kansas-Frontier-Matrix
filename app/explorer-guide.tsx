@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ATLAS_MISSION_GROUPS, atlasMissionAvailability } from "./map-starters";
+
+const LivingWelcome = lazy(() => import("./living-welcome/welcome.jsx"));
 
 /**
  * Startup chooser over existing controls and question drafts. It never
@@ -38,14 +40,20 @@ const STEPS: ReadonlyArray<{ action: ExplorerGuideAction; glyph: string; title: 
   { action: "qwen", glyph: "Q", title: "Ask about this view", body: "Get a bounded explanation of what is on screen — never a substitute for evidence." },
 ];
 
-export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onChoosePlace }: Readonly<{
+export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onChoosePlace, visual = false, onSearch, onTopic, motionEnabled = true, onMotionChange }: Readonly<{
   open: boolean;
+  visual?: boolean;
+  motionEnabled?: boolean;
+  onMotionChange?: (enabled: boolean) => void;
+  onSearch?: (query: string) => void;
+  onTopic?: (topic: import("./layer-workspaces").LayerWorkspace) => void;
   onClose: (rememberDismissal: boolean) => void;
   onAction: (action: ExplorerGuideAction) => void;
   onMore?: () => void;
   onMission?: (query: string, starterId?: string) => void;
   onChoosePlace?: () => void;
 }>) {
+  const [visualRemember, setVisualRemember] = useState(readExplorerGuideDismissed);
   const panelRef = useRef<HTMLElement | null>(null);
   const rememberRef = useRef<HTMLInputElement | null>(null);
   const onCloseRef = useRef(onClose);
@@ -72,7 +80,7 @@ export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onCh
     else onAction(starterId ? "layers" : "qwen");
     onClose(remember());
   };
-  return (
+  const legacy = (
     <section ref={panelRef} className="explorer-guide" role="dialog" aria-modal="false" aria-labelledby="explorer-guide-title" aria-describedby="explorer-guide-summary">
       <header className="explorer-guide-header">
         <p className="explorer-guide-kicker">Atlas Studio · Prairie Field Desk</p>
@@ -127,10 +135,11 @@ export function ExplorerGuide({ open, onClose, onAction, onMore, onMission, onCh
       <footer className="explorer-guide-footer">
         <p>Use Find for places and layers, Evidence for released records, and Ask for discussion. Inspect a map selection in its <b>Evidence Drawer</b>. Reopen this chooser with <b>?</b>.{onMore && <> <button className="explorer-guide-link" type="button" onClick={() => { onClose(remember()); onMore(); }}>More about the map</button></>}</p>
         <div>
-          <label><input ref={rememberRef} type="checkbox" defaultChecked={readExplorerGuideDismissed()} /> Don&apos;t show on start</label>
+          <label><input ref={rememberRef} type="checkbox" defaultChecked={visual ? visualRemember : readExplorerGuideDismissed()} onChange={visual ? event => setVisualRemember(event.target.checked) : undefined} /> Don&apos;t show on start</label>
           <button className="explorer-guide-primary" type="button" onClick={() => onClose(remember())}>Explore freely</button>
         </div>
       </footer>
     </section>
   );
+  return visual && onSearch && onTopic ? <Suspense fallback={legacy}><LivingWelcome onClose={onClose} onAction={onAction} onMore={onMore} onSearch={onSearch} onTopic={onTopic} questions={legacy} initialRemember={visualRemember} onRememberChange={setVisualRemember} motionEnabled={motionEnabled} onMotionChange={onMotionChange} /></Suspense> : legacy;
 }

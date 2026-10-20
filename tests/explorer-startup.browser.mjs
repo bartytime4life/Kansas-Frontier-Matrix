@@ -146,7 +146,7 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
     await t.test('normal startup, keyboard close/reopen and saved preferences', async () => {
       await p.open('/');
       await p.wait(`document.querySelector('.explorer-guide')?.contains(document.activeElement)`, 'welcome autofocus');
-      assert.equal(await p.evaluate(`document.querySelector('.explorer-guide input').checked`), false);
+      assert.equal(await p.evaluate(`document.querySelector('.explorer-guide input[type="checkbox"]').checked`), false);
       await p.key('Tab', 'Tab', 9);
       await p.key('Escape', 'Escape', 27);
       await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement?.matches('.guide-trigger')`, 'Escape returns focus to guide trigger');
@@ -158,7 +158,7 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
       assert.equal(await p.evaluate(`!!document.querySelector('.explorer-guide')`), false);
       await p.evaluate(`document.querySelector('.guide-trigger').focus()`);
       await p.key('Enter', 'Enter', 13);
-      await p.wait(`document.querySelector('.explorer-guide input')?.checked`, 'manual help retains opt-out');
+      await p.wait(`document.querySelector('.explorer-guide input[type="checkbox"]')?.checked`, 'manual help retains opt-out');
       await p.key('Escape', 'Escape', 27);
       assert.equal(await p.evaluate(`localStorage.getItem('kfm.explorer.guide.dismissed.v2')`), '1');
       await p.open('/', null, `localStorage.setItem('kfm.explorer.guide.dismissed.v1','1');`);

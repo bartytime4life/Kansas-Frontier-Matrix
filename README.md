@@ -1,3 +1,5 @@
+> **Living welcome candidate — 2026-10-20:** Eight map topics and 30 credited motion scenes now connect to the existing Find, Ask and source tools. Kansas history, source locations, reduced motion and pending-data boundaries are preserved. See [integration and maintenance](docs/living-welcome.md). Repository candidate; publication is separate.
+
 > **Anonymous replacement application — 2026-10-19:** Login, account management,
 > and obsolete private browser destinations are removed. The owner selected
 > GoDaddy app `urdng3v1vk` as the replacement preview. Public hosted chat, map,
