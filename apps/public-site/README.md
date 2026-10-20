@@ -34,6 +34,8 @@ This static front-door implementation records an earlier hosting plan. The inten
 
 The workflow runs on every pull request, with its `changes` job selecting whether to build; scoped `main` pushes and manual dispatches also build for review. It does not invoke the retained historical [`infra/godaddy/deploy.sh`](../../infra/godaddy/deploy.sh) helper. Reintroducing static transfer requires a separately reviewed change. The [historical hosting plan](../../docs/runbooks/godaddy-hosting.md) remains evidence, not current deployment instructions. Sites environments, historical deployment records and the Node app's rollback controls remain separate.
 
+The [successor retirement receipt](../../data/receipts/generated/static-deployment-retirement-correction-20261020.json) supplies the missing citations and binds the original retirement artifacts plus these corrected application docs. The [original receipt](../../data/receipts/generated/static-deployment-retirement-20261020.json) remains unchanged as historical evidence; its empty citations still fail `DOCUMENT_CITATIONS_REQUIRED`. Use the successor for correction validation; neither receipt grants review or deployment approval.
+
 ## Build and check
 
 ```bash
