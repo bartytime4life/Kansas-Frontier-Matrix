@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-hosted-welcome-focus-20261020",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/explorer-guide.tsx",
+    "app/living-welcome/welcome.jsx",
+    "tests/explorer-startup.browser.mjs",
+    "tests/living-welcome.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/explorer-guide.tsx": "sha256:2d8adb02b2df7fda9314655f2e178f1841c07f9454c87b0f64925dcf08617c8e",
+    "app/living-welcome/welcome.jsx": "sha256:26bc395a278b82d6bd0e4fc2233baeb3b7adc96bf64d090fa6ef28e10b2db4e3",
+    "tests/explorer-startup.browser.mjs": "sha256:72e099d3d18ff558dd4ad9968e83548e7aa99fe7bf5e66e00f6263b48d593824",
+    "tests/living-welcome.test.mjs": "sha256:bac1a690982a7174cfa34468b1cbd7d3811129fdde316b9d25f3594d5b3deaef"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:410d3e8664a927c44e9d33fea5e7eadc4a778b12b93d254d6c2ee5b8a51f60b5",
+  "parameters": {
+    "tools_enabled": [
+      "container",
+      "GitHub"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/1bbd35da1ac60cefaf80a5abd5653e75bb92add3",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39464148259/job/118770998863"
+    ]
+  },
+  "truth_labels": {
+    "app/explorer-guide.tsx": "CONFIRMED",
+    "app/living-welcome/welcome.jsx": "CONFIRMED",
+    "tests/explorer-startup.browser.mjs": "CONFIRMED",
+    "tests/living-welcome.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "regression-and-focused-tests",
+      "outcome": "PASS",
+      "reason": "35 focused component/startup/navigation tests pass. New commit-phase focus/Escape regression fails against unmodified welcome source. Browser tracing showed Escape reaching body during lazy fallback replacement before passive autofocus; layout effects close that gap."
+    },
+    {
+      "gate": "final-combined-node",
+      "outcome": "PASS",
+      "reason": "Node 22.23.3 on base 1bbd35da1a plus this patch: 1561 pass, 0 fail, 17 skip. Used established approved unsandboxed test execution and umask 022 for disposable model-child /proc OOM and permission fixtures; assertions unchanged."
+    },
+    {
+      "gate": "final-build-types-http-assigned-port",
+      "outcome": "PASS",
+      "reason": "Node 22.23.3: PORT=5183 npm run dev completed the production build and served the assigned port; TypeScript passes; 18 production HTTP cases on 5182 and both assigned-port cases on 5183 pass. No concurrent rebuild during final tests."
+    },
+    {
+      "gate": "welcome-browser-regression",
+      "outcome": "PASS",
+      "reason": "All 18 startup-browser cases passed on repaired runtime before adopting external merges. Strengthened delayed-module/repeated-dismissal tests also pass against final combined build at 1366x768 and 390x844, including blocked storage get/set/remove and selecting/clearing opt-out. Existing focus, URL, history, keyboard and Find/Ask requirements retained."
+    },
+    {
+      "gate": "final-combined-browser-and-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Final combined browser run is in progress and exact-head CI awaits this commit at receipt emission. Final immutable-head results must be read from the follow-up PR body and linked CI run; no completed final browser/CI claim at emission."
+    },
+    {
+      "gate": "lint-diff-receipt",
+      "outcome": "PASS",
+      "reason": "Focused ESLint has no errors and one inherited no-img-element warning; git diff --check and canonical generated-receipt schema validation pass; hashes recorded."
+    },
+    {
+      "gate": "environment-and-release-limits",
+      "outcome": "SKIPPED",
+      "reason": "Browser uses Chromium 151, loopback fixtures, SwiftShader and temporary --no-sandbox wrapper because the container sandbox helper is misconfigured. This does not prove live providers/models, physical GPU performance or deployment. Standalone branch lacks monorepo Make/pre-commit surfaces. Human review, merge, deployment, publication, activation and user-PC operations remain outside this task."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/1bbd35da1ac60cefaf80a5abd5653e75bb92add3"
+    },
+    {
+      "id": "prior-exact-head-browser-failure",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39464148259/job/118770998863"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-20T17:32:15.582523+00:00",
+  "emitter": "OpenAI Codex hosted welcome completion",
+  "notes": "Five-file bounded follow-up because #5351 and #5352 were merged externally during work. Preserve both merges. Production changes only make fallback and living-welcome focus/Escape ready in layout effects; storage, destinations, scene behavior and security remain unchanged. Browser harness ignores only exact Invalid InterceptionId cancellation from an older navigation; current-document failures remain fatal. No skip added to full acceptance suite. Receipt records emission-time observations; PR/CI records later verification. Sites mirror and MEGALODON untouched. Rollback closes the draft or reverts this startup/tests/receipt commit without data/configuration migration."
+}

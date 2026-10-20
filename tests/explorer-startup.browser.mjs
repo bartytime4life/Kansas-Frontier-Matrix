@@ -61,13 +61,23 @@ async function browser(t) {
 async function pageSession(b, width, height) {
   const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
-  const call = (method, params = {}) => b.call(method, params, sessionId);
+  let navigation = 0, holdWelcome = false;
+  const heldWelcomeRequests = [];
+  const call = (method, params = {}) => {
+    if (method === 'Page.navigate' || method === 'Page.reload') navigation++;
+    return b.call(method, params, sessionId);
+  };
   const errors = [];
   const listener = message => {
-    if (message.sessionId !== sessionId || message.method !== 'Fetch.requestPaused') return;
+    if (message.sessionId !== sessionId) return;
+    if (message.method === 'Page.frameNavigated' && !message.params.frame.parentId) navigation++;
+    if (message.method !== 'Fetch.requestPaused') return;
+    const requestNavigation = navigation;
     void (async () => {
       const { requestId, request } = message.params, url = new URL(request.url);
-      if (url.origin === origin.origin && url.pathname.startsWith('/api/') && url.pathname !== '/api/build') {
+      if (holdWelcome && url.origin === origin.origin && /\/assets\/welcome-[^/]+\.js$/.test(url.pathname)) {
+        heldWelcomeRequests.push(requestId);
+      } else if (url.origin === origin.origin && url.pathname.startsWith('/api/') && url.pathname !== '/api/build') {
         await call('Fetch.fulfillRequest', { requestId, responseCode: 503, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from('{"error":"Isolated navigation test: provider unavailable"}').toString('base64') });
       } else if (url.origin !== origin.origin && /^https?:/.test(url.protocol)) {
         if (url.pathname.includes('/styles/') || url.pathname.endsWith('/style.json')) {
@@ -75,7 +85,14 @@ async function pageSession(b, width, height) {
           await call('Fetch.fulfillRequest', { requestId, responseCode: 200, body: Buffer.from(JSON.stringify(style)).toString('base64') });
         } else await call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' });
       } else await call('Fetch.continueRequest', { requestId });
-    })().catch(error => errors.push(String(error)));
+    })().catch(error => {
+      // Navigation cancels old paused requests. Only that exact stale CDP error
+      // is expected; current-document interception failures still fail the test.
+      const staleCancellation = requestNavigation !== navigation
+        && String(error).includes('"code":-32602')
+        && String(error).includes('"message":"Invalid InterceptionId."');
+      if (!staleCancellation) errors.push(String(error));
+    });
   };
   b.listeners.add(listener);
   await call('Page.enable');
@@ -121,10 +138,41 @@ async function pageSession(b, width, height) {
     await key('Tab', 'Tab', 9);
     assert.equal(await evaluate(`!!document.activeElement?.closest('[inert], [aria-hidden="true"], .explorer-guide')`), false, 'Tab reaches an available control');
   };
-  return { call, evaluate, wait, key, open, unobstructed };
+  const holdWelcomeModule = () => { holdWelcome = true; };
+  const releaseWelcomeModule = async () => {
+    assert.ok(heldWelcomeRequests.length, 'the real lazy welcome module was intercepted');
+    holdWelcome = false;
+    for (const requestId of heldWelcomeRequests.splice(0)) await call('Fetch.continueRequest', { requestId });
+  };
+  return { call, evaluate, wait, key, open, unobstructed, holdWelcomeModule, releaseWelcomeModule };
 }
 
 for (const [width, height] of [[1366, 768], [390, 844]]) {
+  test(`interrupted welcome dismissal at ${width}x${height}`, { timeout: 90000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, width, height);
+    p.holdWelcomeModule();
+    await p.open('/', null, `for (const method of ['getItem','setItem','removeItem']) Object.defineProperty(Storage.prototype,method,{value(){throw new DOMException('Storage blocked','SecurityError')}});`);
+    await p.wait(`document.querySelector('.explorer-guide:not(.living-welcome)')?.contains(document.activeElement)`, 'fallback owns keyboard before lazy download');
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement.matches('.guide-trigger')`, 'fallback dismissal returns focus despite blocked storage');
+    await p.releaseWelcomeModule();
+    // Reopening must use the loaded component, proving the delayed module has
+    // finished without reopening the dismissed guide or stealing its focus.
+    await pause(250);
+    assert.equal(await p.evaluate(`!document.querySelector('.explorer-guide') && document.activeElement.matches('.guide-trigger')`), true);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await p.key('Enter', 'Enter', 13);
+      await p.wait(`document.querySelector('.living-welcome')?.contains(document.activeElement)`, 'loaded welcome owns keyboard on each reopen');
+      if (attempt > 0) {
+        await p.evaluate(`document.querySelector('.living-welcome input[type="checkbox"]').click()`);
+        await p.wait(`document.querySelector('.living-welcome input[type="checkbox"]').checked === ${attempt === 1}`, 'explicit opt-out choice remains usable when storage throws');
+      }
+      await p.key('Escape', 'Escape', 27);
+      await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement.matches('.guide-trigger')`, 'loaded dismissal returns focus');
+      await p.key('Escape', 'Escape', 27);
+      assert.equal(await p.evaluate(`!document.querySelector('.explorer-guide') && document.activeElement.matches('.guide-trigger')`), true, 'repeated Escape cannot reopen welcome');
+    }
+  });
   test(`startup destinations at ${width}x${height}`, { timeout: 240000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
     await t.test('Find and Ask retain DOM order and responsive keyboard access before map controls', async () => {
@@ -197,7 +245,7 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
       await p.open('/', null, `localStorage.setItem('kfm.explorer.guide.dismissed.v1','1');`);
       await p.wait(`document.querySelector('.explorer-guide')`, 'legacy preference does not imply v2 opt-out');
       await p.open('/', null, `Object.defineProperty(Storage.prototype,'getItem',{value(){throw new DOMException('Storage blocked','SecurityError')}});`);
-      await p.wait(`document.querySelector('.explorer-guide')`, 'blocked storage preserves welcome');
+      await p.wait(`document.querySelector('.explorer-guide')?.contains(document.activeElement)`, 'blocked storage preserves a keyboard-ready welcome');
       await p.key('Escape', 'Escape', 27);
       await p.wait(`!document.querySelector('.explorer-guide')`, 'blocked storage still permits dismissal');
     });
