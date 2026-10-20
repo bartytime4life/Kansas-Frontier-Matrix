@@ -11,6 +11,11 @@ const secret=newSecret(),digest='sha256:'+'a'.repeat(64),other='b'.repeat(64);
 const profile=(overrides={})=>({id:'test-chat',label:'Synthetic',model:'qwen3:8b',digest,license:'Apache-2.0',capabilities:['chat'],scopes:['production'],contextTokens:8192,maxInputChars:12000,outputTokens:{brief:64,expanded:128},timeoutMs:{brief:500,expanded:500},...overrides});
 const payload=(overrides={})=>({requestId:randomUUID(),profile:'test-chat',depth:'brief',messages:[{role:'user',content:'Synthetic only'}],...overrides});
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
+const waitFor=async predicate=>{
+ for(let i=0;i<100&&!predicate();i++)await tick();
+ assert.ok(predicate(),'gateway reached the expected admission state');
+};
+const reloadProfiles=(gateway,overrides={})=>gateway.reload({profiles:parseProfiles({profiles:[profile({timeoutMs:{brief:5000,expanded:5000}})],concurrency:1,maxQueue:1,...overrides})});
 
 // Exercise the real gateway handler and client without opening a network port.
 // The original home-inference suite separately covers actual HTTP sockets in CI.
@@ -41,7 +46,7 @@ function fixture({profileOverrides={},hold=false,queue=1,inspectHold=null}={}){
   if(url.endsWith('/api/tags')){runtime.tagReads++;return Response.json({models:runtime.tags});}
   assert.ok(url.endsWith('/api/chat'));
   return new Response(new ReadableStream({start(controller){
-   runtime.generations.push({signal:init.signal,finish(){
+   runtime.generations.push({signal:init.signal,messages:JSON.parse(init.body).messages,finish(){
     if(init.signal.aborted)return;
     controller.enqueue(new TextEncoder().encode(JSON.stringify({model:runtime.reportedModel,message:{content:'Synthetic reply'},done:true,prompt_eval_count:12,eval_count:2})+'\n'));
     controller.close();
@@ -143,6 +148,97 @@ test('a model changed while a request waits is rechecked after admission',async(
  f.runtime.tags[0].digest=other;f.runtime.generations[0].finish();
  await first;await second;
  assert.equal(f.runtime.generations.length,1);assert.equal(f.gateway.admission.active,0);
+});
+
+test('profile reloads preserve active work, queued work, FIFO order and overflow refusal',async()=>{
+ const f=fixture({hold:true,queue:2,profileOverrides:{timeoutMs:{brief:5000,expanded:5000}}}),work=[];
+ const admission=f.gateway.admission;
+ try{
+  work.push(f.client.chat(payload({messages:[{role:'user',content:'FIFO 0'}]})));
+  await waitFor(()=>f.runtime.generations.length===1);
+  work.push(f.client.chat(payload({messages:[{role:'user',content:'FIFO 1'}]})));
+  await waitFor(()=>admission.queued===1);
+  work.push(f.client.chat(payload({messages:[{role:'user',content:'FIFO 2'}]})));
+  await waitFor(()=>admission.queued===2);
+  for(let i=0;i<2;i++)reloadProfiles(f.gateway,{maxQueue:2});
+  assert.equal(f.gateway.admission,admission);
+  const health=await f.client.health();
+  assert.equal(health.active,1);assert.equal(health.queued,2);
+  await assert.rejects(f.client.chat(payload()),/GATEWAY_BUSY/);
+  assert.equal(f.runtime.generations.length,1);
+  for(let i=0;i<3;i++){
+   assert.equal(f.runtime.generations[i].messages[0].content,'FIFO '+i);
+   f.runtime.generations[i].finish();await work[i];
+   if(i<2)await waitFor(()=>f.runtime.generations.length===i+2);
+   assert.equal(admission.active,i<2?1:0);
+   assert.equal(admission.queued,Math.max(0,1-i));
+  }
+ }finally{f.gateway.abortAll();await Promise.allSettled(work);}
+});
+
+test('reload limit changes drain existing waiters within the new concurrency and queue bounds',async()=>{
+ const f=fixture();
+ reloadProfiles(f.gateway,{concurrency:2,maxQueue:2});
+ const admission=f.gateway.admission;
+ const first=await admission.enter(),second=await admission.enter();
+ const granted=[],third=admission.enter().then(release=>{granted.push(3);return release;}),fourth=admission.enter().then(release=>{granted.push(4);return release;});
+ reloadProfiles(f.gateway,{concurrency:1,maxQueue:0});
+ assert.equal(admission.active,2);assert.equal(admission.queued,2);
+ await assert.rejects(admission.enter(),/GATEWAY_BUSY/);
+ first();first();await tick();
+ assert.equal(admission.active,1);assert.equal(admission.queued,2);assert.deepEqual(granted,[]);
+ second();const releaseThird=await third;
+ assert.equal(admission.active,1);assert.equal(admission.queued,1);assert.deepEqual(granted,[3]);
+ reloadProfiles(f.gateway,{concurrency:2,maxQueue:1});
+ const releaseFourth=await fourth;
+ assert.deepEqual(granted,[3,4]);assert.equal(admission.active,2);assert.equal(admission.queued,0);
+ const cancelled=new AbortController(),fifth=assert.rejects(admission.enter(cancelled.signal),/REQUEST_CANCELLED/);
+ await assert.rejects(admission.enter(),/GATEWAY_BUSY/);
+ reloadProfiles(f.gateway,{concurrency:1,maxQueue:0});
+ cancelled.abort();await fifth;
+ assert.equal(admission.queued,0);
+ releaseThird();releaseThird();releaseFourth();releaseFourth();
+ assert.equal(admission.active,0);
+ const last=await admission.enter();last();assert.equal(admission.active,0);
+});
+
+test('a waiter cancelled after profile reload frees its queue place without leaking a slot',async()=>{
+ const f=fixture({hold:true,profileOverrides:{timeoutMs:{brief:5000,expanded:5000}}}),abort=new AbortController(),work=[];
+ try{
+  work.push(f.client.chat(payload()));
+  await waitFor(()=>f.runtime.generations.length===1);
+  const cancelled=assert.rejects(f.client.chat(payload(),{signal:abort.signal}),/MODEL_CANCELLED/);
+  await waitFor(()=>f.gateway.admission.queued===1);
+  reloadProfiles(f.gateway);
+  abort.abort();await cancelled;
+  await waitFor(()=>f.gateway.admission.queued===0);
+  assert.equal(f.gateway.admission.active,1);
+  work.push(f.client.chat(payload()));
+  await waitFor(()=>f.gateway.admission.queued===1);
+  f.runtime.generations[0].finish();await work[0];
+  await waitFor(()=>f.runtime.generations.length===2);
+  f.runtime.generations[1].finish();await work[1];
+  assert.equal(f.gateway.admission.active,0);assert.equal(f.gateway.admission.queued,0);
+ }finally{abort.abort();f.gateway.abortAll();await Promise.allSettled(work);}
+});
+
+test('queued work keeps its validated profile and matching inspector across a reload',async()=>{
+ const f=fixture({hold:true,profileOverrides:{timeoutMs:{brief:5000,expanded:5000}}}),work=[];
+ try{
+  work.push(f.client.chat(payload()));
+  await waitFor(()=>f.runtime.generations.length===1);
+  work.push(f.client.chat(payload()));
+  await waitFor(()=>f.gateway.admission.queued===1);
+  reloadProfiles(f.gateway,{profiles:[profile({digest:'sha256:'+other,timeoutMs:{brief:5000,expanded:5000}})]});
+  f.runtime.generations[0].finish();await work[0];
+  await waitFor(()=>f.runtime.generations.length===2);
+  f.runtime.generations[1].finish();
+  assert.equal((await work[1]).digest,digest);
+  // New requests inspect the newly pinned digest, while accepted work above
+  // completes against the original pin. The installed model is still original.
+  await assert.rejects(f.client.chat(payload()),/PROFILE_NOT_READY/);
+  assert.equal(f.runtime.generations.length,2);assert.equal(f.gateway.admission.active,0);
+ }finally{f.gateway.abortAll();await Promise.allSettled(work);}
 });
 
 test('admission cannot reuse older in-flight tags or let their late result overwrite its cache',async()=>{

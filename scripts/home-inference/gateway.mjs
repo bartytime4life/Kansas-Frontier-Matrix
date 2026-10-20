@@ -94,10 +94,16 @@ export function loadConfig(env=process.env,{credentialsRoot}={}){
 
 export function createAdmission({concurrency=1,maxQueue=2}={}){
  let active=0;const waiting=[];
- const release=()=>{let done=false;return ()=>{if(done)return;done=true;const next=waiting.shift();if(next)next.grant();else active--;};};
+ const drain=()=>{while(active<concurrency&&waiting.length){active++;waiting.shift().grant();}};
+ const release=()=>{let done=false;return ()=>{if(done)return;done=true;active--;drain();};};
  return {
   get active(){return active;},
   get queued(){return waiting.length;},
+  updateLimits({concurrency:nextConcurrency,maxQueue:nextMaxQueue}){
+   // Accepted work retains its slots and FIFO order. Lower limits apply as it
+   // drains; higher concurrency can immediately admit existing waiters.
+   concurrency=nextConcurrency;maxQueue=nextMaxQueue;drain();
+  },
   enter(signal){
    if(signal?.aborted)return Promise.reject(fail('REQUEST_CANCELLED',499));
    if(active<concurrency){active++;return Promise.resolve(release());}
@@ -239,7 +245,7 @@ function untilAbort(promise,signal){
 
 export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127.0.0.1:11434',fetchImpl=fetch,clock=Date.now,log=line=>console.log(JSON.stringify(line))}){
  const state={profiles:profileConfig.profiles,keys};
- let admission=createAdmission(profileConfig);
+ const admission=createAdmission(profileConfig);
  let inspector=createInspector({ollamaUrl,profiles:state.profiles,fetchImpl,clock});
  const nonces=createNonceCache({clock});
  const active=new Set();
@@ -256,6 +262,9 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
 
  const chat=async(value,scope,signal,record)=>{
   const request=validateChat(value,state.profiles,scope);
+  // A queued request keeps the inspector for its validated profile snapshot,
+  // so a reload cannot check a different digest before serving the old profile.
+  const inspect=inspector;
   Object.assign(record,{profile:request.profile.id,depth:request.depth,requestId:request.requestId});
   const queuedAt=clock();let release;
   const controller=new AbortController(),timeout=request.profile.timeoutMs[request.depth];
@@ -266,7 +275,7 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
   try{
    release=await admission.enter(controller.signal);
    record.queueMs=clock()-queuedAt;
-   const ready=(await untilAbort(inspector({fresh:true}),controller.signal)).state.get(request.profile.id);
+   const ready=(await untilAbort(inspect({fresh:true}),controller.signal)).state.get(request.profile.id);
    if(ready!==null)throw fail(ready==='MODEL_UNAVAILABLE'?'MODEL_UNAVAILABLE':'PROFILE_NOT_READY',503);
    if(controller.signal.aborted)throw fail('MODEL_TIMEOUT',504);
    let output;const progress={text:''};
@@ -351,7 +360,7 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
   get admission(){return admission;},
   reload({profiles:nextProfiles,keys:nextKeys}){
    if(nextKeys)state.keys=nextKeys;
-   if(nextProfiles){state.profiles=nextProfiles.profiles;admission=createAdmission(nextProfiles);inspector=createInspector({ollamaUrl,profiles:state.profiles,fetchImpl,clock});}
+   if(nextProfiles){state.profiles=nextProfiles.profiles;admission.updateLimits(nextProfiles);inspector=createInspector({ollamaUrl,profiles:state.profiles,fetchImpl,clock});}
   },
   abortAll(){for(const controller of active)controller.abort();},
   inspect:options=>inspector(options),
