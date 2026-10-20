@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { SCENES, HISTORY_ERAS, sceneArt } from './catalog.mjs';
 import { MOTION_CLIPS, motionClip } from './motion-catalog.mjs';
@@ -43,16 +43,18 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   useEffect(()=>{
     const media=window.matchMedia('(prefers-reduced-motion: reduce)'),change=()=>setReduced(media.matches),visibility=()=>setHidden(document.hidden);
     media.addEventListener('change',change);document.addEventListener('visibilitychange',visibility);
-    root.current?.querySelector('[data-guide-autofocus]')?.focus({preventScroll:true});
     return()=>{media.removeEventListener('change',change);document.removeEventListener('visibilitychange',visibility);clearTimeout(leave.current);};
   },[]);
+  // The lazy visual replaces a focused fallback. Restore focus and install its
+  // keyboard owner before paint, so a fast Tab/Escape cannot fall between them.
+  useLayoutEffect(()=>{root.current?.querySelector('[data-guide-autofocus]')?.focus({preventScroll:true});},[]);
   useEffect(()=>{
     if(!modal){const target=trigger.current;trigger.current=null;if(target?.isConnected)target.focus({preventScroll:true});return;}
     const node=dialog.current,restore=isolateModalBackground(node,document.body);
     node?.querySelector('button,a,input')?.focus({preventScroll:true});
     return restore;
   },[modal]);
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     const keyboard=event=>{
       if(!root.current?.contains(event.target))return;
       if(event.key==='Escape'){
