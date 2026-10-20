@@ -68,6 +68,8 @@ export async function probe({env=process.env,runs=3,depth='brief',concurrency=2,
   parallel.forEach((sample,i)=>samples.push({run:runs+i+1,kind:'concurrent',...sample}));
   // Either queued and served, or refused promptly as busy; never a hang or a 5xx.
   check('concurrent_chats_bounded',parallel.every(sample=>sample.status===200||sample.status===429&&sample.wallMs<10000),parallel.map(sample=>sample.status));
+  // The gateway signs its own busy refusals too, so every concurrent reply must verify.
+  check('concurrent_reply_signatures_verified',parallel.every(sample=>sample.verified===true));
  }
  return finish(result);
 }

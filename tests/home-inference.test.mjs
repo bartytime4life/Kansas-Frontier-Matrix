@@ -438,5 +438,17 @@ test('the probe proves refusal cases and records synthetic timings without secre
   assert.doesNotMatch(JSON.stringify(result),new RegExp(prodSecret));
   const wrong=await probe({env:{KFM_HOME_INFERENCE_URL:g.origin,KFM_HOME_INFERENCE_KEY_ID:'prod-1',KFM_HOME_INFERENCE_SECRET:prodSecret,KFM_HOME_INFERENCE_PROFILE:'kfm-default-chat',KFM_HOME_INFERENCE_DIGEST:'sha256:'+OTHER},runs:1});
   assert.equal(wrong.summary.passed,false);assert.equal(wrong.checks.find(item=>item.name==='profile_digest_matches_pin').result,'FAIL');
+  // An edge that strips signatures only under concurrent load must still fail the probe.
+  let chats=0;
+  const stripping=async(url,init)=>{
+   const response=await fetch(url,init);
+   if(new URL(url).pathname!=='/v1/chat'||++chats<=2)return response;
+   const headers=new Headers(response.headers);headers.delete(REPLY_SIGNATURE_HEADER);
+   return new Response(await response.text(),{status:response.status,headers});
+  };
+  const edge=await probe({env:{KFM_HOME_INFERENCE_URL:g.origin,KFM_HOME_INFERENCE_KEY_ID:'prod-1',KFM_HOME_INFERENCE_SECRET:prodSecret,KFM_HOME_INFERENCE_PROFILE:'kfm-default-chat',KFM_HOME_INFERENCE_DIGEST:'sha256:'+DIGEST},runs:2,concurrency:2,fetchImpl:stripping});
+  assert.equal(edge.checks.find(item=>item.name==='chat_reply_signatures_verified').result,'PASS');
+  assert.equal(edge.checks.find(item=>item.name==='concurrent_reply_signatures_verified').result,'FAIL');
+  assert.equal(edge.summary.passed,false);
  }finally{await g.close();}
 });
