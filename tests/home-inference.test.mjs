@@ -4,7 +4,7 @@ import {randomUUID} from 'node:crypto';
 import {mkdtemp,writeFile,chmod,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {signRequest,verifyRequest,createNonceCache,newSecret,SIGNATURE_MAX_SKEW_MS} from '../scripts/home-inference/signature.mjs';
+import {signRequest,verifyRequest,createNonceCache,newSecret,SIGNATURE_MAX_SKEW_MS,signResponse,RESPONSE_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
 import {parseProfiles,parseKeys,loadConfig,startGateway,createAdmission,neutralizeTemplate,GATEWAY_VERSION} from '../scripts/home-inference/gateway.mjs';
 import {probe} from '../scripts/home-inference/probe.mjs';
 import {readFile} from 'node:fs/promises';
@@ -32,9 +32,9 @@ function fakeOllama({tags=[{name:'qwen3:8b',model:'qwen3:8b',digest:DIGEST}],chu
   const encoder=new TextEncoder();
   return new Response(new ReadableStream({async start(controller){
    init.signal?.addEventListener('abort',()=>{try{controller.error(new DOMException('aborted','AbortError'));}catch{}});
-   for(const content of chunks)controller.enqueue(encoder.encode(JSON.stringify({message:{role:'assistant',content,thinking:'private reasoning'},done:false})+'\n'));
+   for(const content of chunks)controller.enqueue(encoder.encode(JSON.stringify({model:'qwen3:8b',message:{role:'assistant',content,thinking:'private reasoning'},done:false})+'\n'));
    if(hold)await hold;
-   if(!init.signal?.aborted){controller.enqueue(encoder.encode(JSON.stringify({message:{role:'assistant',content:''},...final})+'\n'));controller.close();}
+   if(!init.signal?.aborted){controller.enqueue(encoder.encode(JSON.stringify({model:'qwen3:8b',message:{role:'assistant',content:''},...final})+'\n'));controller.close();}
   }}),{headers:{'Content-Type':'application/x-ndjson'}});
  };
  return {fetchImpl,calls};
@@ -257,7 +257,11 @@ test('provider selection is exclusive and never falls back',()=>{
 
 test('the client rejects redirects, foreign responses and oversized bodies, and sends Access credentials',async()=>{
  const seen=[];
- const client=body=>createHomeInferenceClient({origin:'https://inference.example.org',keyId:'prod-1',secret:prodSecret,access:{id:'abc.access',secret:'access-secret'},fetchImpl:async(url,init)=>{seen.push({url,init});return body();}});
+ const client=body=>createHomeInferenceClient({origin:'https://inference.example.org',keyId:'prod-1',secret:prodSecret,access:{id:'abc.access',secret:'access-secret'},fetchImpl:async(url,init)=>{
+  seen.push({url,init});const response=body();
+  response.headers.set(RESPONSE_SIGNATURE_HEADER,signResponse({secret:prodSecret,requestHeaders:init.headers,method:init.method,path:new URL(url).pathname,requestBody:init.body??'',status:response.status,body:Buffer.from(await response.clone().arrayBuffer())}));
+  return response;
+ }});
  await assert.rejects(client(()=>new Response(null,{status:302,headers:{Location:'https://login.example.org/'}})).health(),/GATEWAY_REDIRECT/);
  assert.equal(seen[0].url,'https://inference.example.org/v1/health');assert.equal(seen[0].init.redirect,'manual');
  assert.equal(seen[0].init.headers['CF-Access-Client-Id'],'abc.access');assert.equal(seen[0].init.headers['CF-Access-Client-Secret'],'access-secret');

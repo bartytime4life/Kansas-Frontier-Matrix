@@ -4,7 +4,7 @@
 // public-ai-handler.mjs; this module only turns a discussion into one bounded
 // gateway call. It never falls back to another provider or model.
 import {randomUUID} from 'node:crypto';
-import {signRequest,decodeSecret} from '../scripts/home-inference/signature.mjs';
+import {signRequest,decodeSecret,verifyResponse} from '../scripts/home-inference/signature.mjs';
 import {discussionSystem} from './hosted-ai-prompt.mjs';
 import {CONTINUE_REPLY,PUBLIC_AI_JOB_MS} from './hosted-ai.mjs';
 
@@ -33,13 +33,13 @@ export function homeInferenceConfig(env=process.env){
  return Object.freeze({origin:url.origin,keyId,secret,profile,digest,access:accessId?Object.freeze({id:accessId,secret:accessSecret}):null});
 }
 
-async function boundedJson(response){
+async function boundedResponseBytes(response){
  if(!/^application\/json(?:;|$)/i.test(response.headers.get('content-type')??''))throw error('GATEWAY_RESPONSE_INVALID');
  const reader=response.body?.getReader();if(!reader)throw error('GATEWAY_RESPONSE_INVALID');
  const chunks=[];let bytes=0;
  try{while(true){const part=await reader.read();if(part.done)break;bytes+=part.value.length;if(bytes>HOME_LIMITS.responseBytes)throw error('GATEWAY_RESPONSE_INVALID');chunks.push(Buffer.from(part.value));}}
  finally{await reader.cancel().catch(()=>{});}
- try{return JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw error('GATEWAY_RESPONSE_INVALID');}
+ return Buffer.concat(chunks);
 }
 
 export function createHomeInferenceClient({origin,keyId,secret,access=null,fetchImpl=fetch,clock=Date.now}){
@@ -53,7 +53,11 @@ export function createHomeInferenceClient({origin,keyId,secret,access=null,fetch
   // An access-login or captive-portal redirect is a failure, never a new destination.
   if(response.type==='opaqueredirect'||response.status>=300&&response.status<400){await response.body?.cancel().catch(()=>{});throw error('GATEWAY_REDIRECT');}
   let value;
-  try{value=await boundedJson(response);}catch(failure){throw signal?.aborted?error('MODEL_CANCELLED'):failure;}
+  try{
+   const bytes=await boundedResponseBytes(response);
+   if(!verifyResponse({secret,requestHeaders:headers,method,path,requestBody:body,status:response.status,body:bytes,headers:response.headers}))throw error('GATEWAY_RESPONSE_INVALID');
+   value=JSON.parse(bytes.toString('utf8'));
+  }catch(failure){throw signal?.aborted?error('MODEL_CANCELLED'):error(failure?.code??'GATEWAY_RESPONSE_INVALID');}
   if(value?.gateway!==HOME_GATEWAY)throw error('GATEWAY_RESPONSE_INVALID');
   if(!response.ok)throw error(GATEWAY_CODES.has(value.error)?value.error:'GATEWAY_RESPONSE_INVALID');
   return value;
@@ -106,15 +110,15 @@ export class HomeInferenceModel{
    try{
     const health=await this.client.health();
     const profile=Array.isArray(health.profiles)?health.profiles.find(item=>item?.id===this.profileId):null;
-    // Only a reachable runtime that is still loading the pinned model reads as online;
-    // a missing or changed profile and an Ollama outage show visitors "unavailable".
+    // A gateway profile is either admitted or held. It does not report a loading
+    // state; a missing/substituted runtime model must also show "unavailable".
     if(!profile){this.setState(false,false,'PROFILE_UNAVAILABLE');return;}
     if(profile.digest!==this.digest||!shortModel(profile.model)){this.setState(false,false,'PROFILE_IDENTITY');return;}
     const output=profile.outputTokens;
     if(!Number.isSafeInteger(profile.maxInputChars)||profile.maxInputChars<1024||!Number.isSafeInteger(output?.brief)||!Number.isSafeInteger(output?.expanded)){this.setState(false,false,'GATEWAY_RESPONSE_INVALID');return;}
     this.limits={maxInputChars:profile.maxInputChars};
     this.shortLabel=profile.model;this.label=profile.model+' · KFM home compute (local Ollama)';
-    if(profile.ready!==true||health.online!==true){this.setState(false,health.online===true,'MODEL_UNAVAILABLE');return;}
+    if(profile.ready!==true||health.online!==true){this.setState(false,false,'MODEL_UNAVAILABLE');return;}
     this.setState(true,true,null);
    }catch(failure){this.setState(false,false,failure?.code&&diagnosticCodes.has(failure.code)?failure.code:'GATEWAY_UNREACHABLE');}
   })().finally(()=>{this.checking=null;});
@@ -130,15 +134,16 @@ export class HomeInferenceModel{
   const requestId=randomUUID();this.pending=requestId;
   try{
    const result=await this.client.chat({requestId,profile:this.profileId,depth,messages:prepared.messages},{signal});
-   if(result.requestId!==requestId||result.profile!==this.profileId||result.digest!==this.digest||typeof result.text!=='string'||!result.text||result.text.length>HOME_LIMITS.replyChars||!['stop','length'].includes(result.finishReason))throw error('GATEWAY_RESPONSE_INVALID');
+   if(result.requestId!==requestId||result.profile!==this.profileId||result.digest!==this.digest||result.model!==this.shortLabel||typeof result.text!=='string'||!result.text||result.text.length>HOME_LIMITS.replyChars||!['stop','length'].includes(result.finishReason))throw error('GATEWAY_RESPONSE_INVALID');
    // The handler appends a continuation to the earlier reply; keep the words apart.
    const text=prepared.continuing&&prepared.previousReply&&!/\s$/.test(prepared.previousReply)&&!/^[\s,.;:!?)]/.test(result.text)?' '+result.text:result.text;
    return {text,contextTrimmed:prepared.contextTrimmed,outputLimited:result.finishReason!=='stop'};
   }catch(failure){
    if(signal?.aborted)throw error('MODEL_CANCELLED');
    if(failure?.code==='MODEL_CONTEXT_LIMIT')throw failure;
-   // A transport or identity failure re-reads health before the next job is admitted.
-   if(['GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','UNAUTHORIZED','PROFILE_NOT_READY','PROFILE_UNKNOWN','GATEWAY_RESPONSE_INVALID'].includes(failure?.code)){this.setState(false,failure.code==='PROFILE_NOT_READY',failure.code);void this.refresh();}
+   // Hold admission after an outage or identity failure. Only the next scheduled
+   // health inspection may restore readiness; never silently switch providers.
+   if(['MODEL_UNAVAILABLE','GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','UNAUTHORIZED','PROFILE_NOT_READY','PROFILE_UNKNOWN','GATEWAY_RESPONSE_INVALID'].includes(failure?.code)){this.setState(false,false,failure.code);}
    throw error('MODEL_UNAVAILABLE');
   }finally{this.pending=null;}
  }
