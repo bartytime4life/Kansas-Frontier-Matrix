@@ -157,8 +157,38 @@ Ollama reports the model tag in its chat stream, not a weights digest. Fresh tag
 inspection detects changes before admission, but cannot attest a compromised
 local runtime or an operator swapping weights between inspection and generation.
 
+## Poll transport (no tunnel, DNS change or Cloudflare)
+
+The worker connects out to the website and fetches signed chat requests for the
+gateway, so nothing reaches this PC from outside. It is a relay: it has its own
+worker key, never the gateway key, so it cannot create or change requests or
+answers. The website verifies every reply.
+
+```bash
+cd ~/kfm-hosted/scripts/home-inference
+sudo install -m 0644 worker.mjs /opt/kfm-inference/
+# A separate key for the worker. Never reuse a gateway key.
+WK=$(node /opt/kfm-inference/gateway.mjs --new-key kfm-worker-prod-202610 worker)
+sudo install -m 0600 /dev/null /etc/kfm-inference/worker-key.json
+printf '%s\n' "$WK" | sudo tee /etc/kfm-inference/worker-key.json >/dev/null; unset WK
+sudo install -m 0644 systemd/kfm-inference-worker.service /etc/systemd/system/
+sudo systemctl daemon-reload && sudo systemctl enable --now kfm-inference-worker
+sudo bash /opt/kfm-inference/host-check.sh
+```
+
+The website needs the worker key's ID and secret (`KFM_HOME_WORKER_KEY_ID` and
+`KFM_HOME_WORKER_SECRET`), the production gateway key, the profile, the digest
+and `KFM_HOME_INFERENCE_TRANSPORT=poll`; see the plan's server activation
+table. Until the website has them, the worker logs `poll_failed` with
+`SITE_HTTP_404` (the route is off) or `SITE_HTTP_401` (the key does not match)
+and backs off; nothing else happens. `node /opt/kfm-inference/worker.mjs --check`
+makes one signed poll and reports whether the site accepts the worker key.
+
+Logs (`journalctl -u kfm-inference-worker`) carry fixed codes and timings only.
+
 ## Stopping and rollback on this PC
 
+- Disconnect from the website (poll transport): `sudo systemctl disable --now kfm-inference-worker`.
 - Stop generation for everyone: `sudo systemctl stop kfm-inference-gateway`
   (KFM shows chat as unavailable; maps and source discovery are unaffected).
 - Cut the network path: `sudo systemctl stop cloudflared`, or delete the tunnel's DNS route.
