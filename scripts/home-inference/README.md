@@ -120,6 +120,12 @@ chat message.
 kfm-inference-gateway`, update the KFM secret, then remove the old entry and
 restart again. Restarting cancels any generation in progress. **Change
 profiles:** edit `profiles.json` and `sudo systemctl reload kfm-inference-gateway`.
+Reload preserves active and queued requests in FIFO order; they retain their
+validated profile and receive a fresh model inspection against that profile
+before generation. New requests use the new profiles. Lower admission limits
+take effect as accepted work drains, without cancelling it; higher concurrency
+can admit queued work immediately. A smaller queue limit refuses new waiters
+until the existing queue falls below it.
 
 ## Phase 2: protected transport (synthetic data only)
 
