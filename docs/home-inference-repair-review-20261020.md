@@ -39,10 +39,10 @@ Do not mutate admitted tags during active requests.
 
 ## Verification and integration boundaries
 
-Fourteen added regression tests exercise real gateway/client logic in process,
+Fifteen added regression tests exercise real gateway/client logic in process,
 including tampering, replay, authenticated refusals, queue/inspection deadlines,
 identity changes before and during queueing, model-name mismatch, outage status,
-adapter request binding and probe success/failure. Existing socket tests remain
+adapter request binding, stale in-flight inspection races and probe success/failure. Existing socket tests remain
 mandatory in the full CI workflow. Local socket tests are blocked by the session
 sandbox (`listen EPERM`); they are not treated as passing or removed.
 Local build, TypeScript and focused ESLint checks passed. Reused local dependencies

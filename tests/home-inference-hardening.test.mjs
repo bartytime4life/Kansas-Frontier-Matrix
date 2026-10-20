@@ -34,11 +34,11 @@ function transport(handler){
 }
 
 function fixture({profileOverrides={},hold=false,queue=1,inspectHold=null}={}){
- const runtime={tags:[{name:'qwen3:8b',digest:digest.slice(7)}],down:false,generations:[],reportedModel:'qwen3:8b'};
+ const runtime={tags:[{name:'qwen3:8b',digest:digest.slice(7)}],down:false,generations:[],reportedModel:'qwen3:8b',versionHolds:[],tagReads:0};
  const fetchImpl=async(url,init={})=>{
   if(runtime.down)throw new TypeError('offline');
-  if(url.endsWith('/api/version')){if(inspectHold)await inspectHold;return Response.json({version:'synthetic'});}
-  if(url.endsWith('/api/tags'))return Response.json({models:runtime.tags});
+  if(url.endsWith('/api/version')){if(inspectHold)await inspectHold;const hold=runtime.versionHolds.shift();if(hold)await hold;return Response.json({version:'synthetic'});}
+  if(url.endsWith('/api/tags')){runtime.tagReads++;return Response.json({models:runtime.tags});}
   assert.ok(url.endsWith('/api/chat'));
   return new Response(new ReadableStream({start(controller){
    runtime.generations.push({signal:init.signal,finish(){
@@ -143,6 +143,21 @@ test('a model changed while a request waits is rechecked after admission',async(
  f.runtime.tags[0].digest=other;f.runtime.generations[0].finish();
  await first;await second;
  assert.equal(f.runtime.generations.length,1);assert.equal(f.gateway.admission.active,0);
+});
+
+test('admission cannot reuse older in-flight tags or let their late result overwrite its cache',async()=>{
+ const f=fixture();let release;
+ f.runtime.versionHolds.push(new Promise(resolve=>{release=resolve;}));
+ const oldHealth=f.client.health();
+ while(f.runtime.tagReads===0)await tick();
+ f.runtime.tags[0].digest=other;
+ try{
+  // The old inspection has approved tags but is waiting for version. Admission
+  // must inspect independently and refuse before that old request completes.
+  await assert.rejects(f.client.chat(payload()),/PROFILE_NOT_READY/);
+  assert.equal(f.runtime.tagReads,2);assert.equal(f.runtime.generations.length,0);
+ }finally{release();await oldHealth;}
+ assert.equal((await f.client.health()).profiles[0].ready,false,'late old health must not replace newer cached identity');
 });
 
 test('a mismatched runtime response model is refused',async()=>{

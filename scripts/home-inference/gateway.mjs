@@ -120,7 +120,7 @@ async function ollamaJson(fetchImpl,url,signal){
 }
 
 export function createInspector({ollamaUrl,profiles,fetchImpl=fetch,clock=Date.now}){
- let cached=null,inflight=null;
+ let cached=null,inflight=null,sequence=0,cachedSequence=0;
  const inspect=async()=>{
   const signal=AbortSignal.timeout(GATEWAY_LIMITS.inspectMs);
   try{
@@ -137,9 +137,17 @@ export function createInspector({ollamaUrl,profiles,fetchImpl=fetch,clock=Date.n
    return {at:clock(),online:false,runtime:null,state:new Map([...profiles.keys()].map(id=>[id,'MODEL_UNAVAILABLE']))};
   }
  };
+ const run=()=>{
+  const started=++sequence;
+  return inspect().then(value=>{if(started>cachedSequence){cached=value;cachedSequence=started;}return value;});
+ };
  return async({fresh=false}={})=>{
+  // Admission must start its own reads: an older health check may already have
+  // fetched tags while still awaiting version. Its eventual result must not
+  // overwrite the cache from a newer admission inspection either.
+  if(fresh)return run();
   if(!fresh&&cached&&clock()-cached.at<GATEWAY_LIMITS.inspectCacheMs)return cached;
-  inflight??=inspect().then(value=>{cached=value;return value;}).finally(()=>{inflight=null;});
+  inflight??=run().finally(()=>{inflight=null;});
   return inflight;
  };
 }
