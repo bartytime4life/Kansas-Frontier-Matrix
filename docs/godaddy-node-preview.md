@@ -7,6 +7,25 @@ and their navigation links are removed. `login-removal-20261019.md` supersedes t
 account/access descriptions below. No previous account or session cookie grants
 access. The original private Sites project is unchanged.
 
+# Build dependency maintenance — 2026-10-20
+
+The standalone manifest and lockfile pin Vite 8.2.4, the patch update from
+8.2.2. The installed dependency graph passes a clean `npm ci`; no transitive
+package version changes. The current npm audit no longer reports Vite and
+counts eight high-severity packages, down from nine, with zero critical.
+The remaining findings are unresolved; the vendored Braces patch does not make
+this an audit-clean graph. No inference, source data, runtime settings or
+publication is changed by this dependency update.
+
+Local Node 22.23.3 build and TypeScript checks pass. The complete Node suite
+reports 1,565 passing tests, 19 skipped tests and one failure in the existing
+child-process RSS observation assertion. The same assertion failed on the
+unmodified source under Node 24; the test and resource reader are unchanged.
+This is an inherited verification limit, not a claimed passing suite. Worker-only
+skips do not establish Cloudflare integration. Exact-head CI, browser acceptance
+and deployment remain separate checks. Revert the manifest and lockfile together
+and reinstall to roll back.
+
 # GoDaddy Node preview candidate
 
 ## Private-workspace holding page · 2026-10-17
