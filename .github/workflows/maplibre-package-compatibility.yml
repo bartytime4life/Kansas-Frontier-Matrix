@@ -67,6 +67,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Node 22.13.1 bundles Corepack with a retired npm signing key.
+          # This exact compatible release includes the current key; never disable
+          # signature verification or replace COREPACK_INTEGRITY_KEYS.
+          npm install --global --ignore-scripts corepack@0.34.0
+          test "$(corepack --version)" = "0.34.0"
           corepack enable
           test "$(pnpm --version)" = "11.17.0"
           node --version
