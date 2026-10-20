@@ -1,12 +1,5 @@
 # Public hosted AI: discussion and released evidence
 
-Provider selection (2026-10-19): `KFM_AI_PROVIDER` chooses exactly one model
-provider behind these same guest controls. Unset or `hosted-qwen3` keeps the
-embedded model described below. `home-ollama` uses the owner's dedicated
-inference PC through an authenticated gateway, is default-off and unqualified;
-see [home-inference.md](home-inference.md). An unknown or incomplete selection
-reports unavailable and never falls back to another model.
-
 Memory fit (2026-10-19): the [memory-fit candidate](hosted-qwen-memory-fit-20261019.md)
 serves a derived Qwen3-0.6B INT8 model with a sliced output layer and external
 weights, and lowers input context to 1,024 tokens and expanded replies to 256 tokens.

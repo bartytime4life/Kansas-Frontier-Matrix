@@ -1,3 +1,15 @@
-
+# Example /etc/cloudflared/config.yml for the phase-2 named tunnel. Use it only
+# after the phase-0 DNS/eligibility gate passes. Create the Access application
+# and its Service Auth policy BEFORE you route DNS to this tunnel. Quick
+# Tunnels (trycloudflare.com) are for development only, never production.
+tunnel: REPLACE-WITH-TUNNEL-UUID
+credentials-file: /etc/cloudflared/REPLACE-WITH-TUNNEL-UUID.json
+ingress:
+  # Only the two gateway routes. Ollama (11434) is never a tunnel target.
+  - hostname: inference.REPLACE-WITH-ELIGIBLE-DOMAIN
+    path: ^/v1/(health|chat)$
+    service: http://127.0.0.1:8787
+    originRequest:
+      connectTimeout: 5s
       noHappyEyeballs: true
   - service: http_status:404
