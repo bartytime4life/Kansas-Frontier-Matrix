@@ -70,6 +70,15 @@ Offscreen previews do not run. No shader warping or per-frame pixel rendering
 is used. The header guide holds text for seven seconds and transitions for
 1.15 seconds, with hover/focus and manual navigation controls.
 
+The feature guide schedules only the two transition deadlines, replacing its
+50 ms polling interval. A normal 8.15-second cycle needs two timer callbacks
+instead of 163 in a deterministic before/after clock replay. Hidden tabs cancel the pending timer; returning starts a
+fresh seven-second reading interval. Pause, reduced motion, hover/focus and
+manual navigation cancel or reset the same schedule. This is a bounded timer
+reduction, not a measured map FPS or whole-application CPU improvement. Component
+tests verify deadlines, suspension, manual reset and cleanup; browser rendering
+and physical-device acceptance remain separate.
+
 ## Pending data and database alignment
 
 The hosted branch already has the bounded Node/MySQL ingestion adapter in
