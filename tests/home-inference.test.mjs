@@ -310,11 +310,15 @@ test('a different model digest, missing profile or offline gateway leaves chat u
  const g=await gateway({tags:[{name:'qwen3:8b',digest:DIGEST}]});
  try{
   const pinned=await homeModel(g,{digest:'sha256:'+OTHER});
-  assert.equal(pinned.model.ready,false);assert.equal(pinned.model.reason,'PROFILE_IDENTITY');assert.deepEqual(pinned.diagnostics,['PROFILE_IDENTITY']);
+  assert.equal(pinned.model.ready,false);assert.equal(pinned.model.online,false);assert.equal(pinned.model.reason,'PROFILE_IDENTITY');assert.deepEqual(pinned.diagnostics,['PROFILE_IDENTITY']);
   await assert.rejects(pinned.model.discuss('Synthetic?'),/MODEL_UNAVAILABLE/);pinned.model.stop();
   const missing=await homeModel(g,{profile:'not-installed'});
-  assert.equal(missing.model.ready,false);assert.equal(missing.model.reason,'PROFILE_UNAVAILABLE');missing.model.stop();
+  assert.equal(missing.model.ready,false);assert.equal(missing.model.online,false);assert.equal(missing.model.reason,'PROFILE_UNAVAILABLE');missing.model.stop();
  }finally{await g.close();}
+ // A reachable gateway whose Ollama is down must read as unavailable, not as still loading.
+ const down=await gateway({down:true});
+ try{const stalled=await homeModel(down);assert.equal(stalled.model.ready,false);assert.equal(stalled.model.online,false);assert.equal(stalled.model.reason,'MODEL_UNAVAILABLE');stalled.model.stop();}
+ finally{await down.close();}
  const offline=new HomeInferenceModel({client:createHomeInferenceClient({origin:g.origin,keyId:'prod-1',secret:prodSecret}),profile:'kfm-default-chat',digest:'sha256:'+DIGEST,pollMs:60000,diagnostic:()=>{}});
  await offline.refresh();
  assert.equal(offline.ready,false);assert.equal(offline.online,false);assert.equal(offline.reason,'GATEWAY_UNREACHABLE');offline.stop();

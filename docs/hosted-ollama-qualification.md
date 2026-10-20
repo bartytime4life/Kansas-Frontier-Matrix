@@ -134,7 +134,7 @@ or silently substitute a hosted API.
    Verify restart/shutdown supervision and prevent duplicate daemon ownership.
 5. Measure actual peak RSS, CPU, first-token/total latency and process recovery
    with a deliberately small context and output cap, without starving the map.
-6. Add a separate admitted hosted profile. Preserve server login, rights,
+6. Add a separate admitted hosted profile. Preserve guest isolation, rights,
    sensitivity, release, cancellation, citation reconstruction and finite
    ANSWER/ABSTAIN/DENY/ERROR behavior. Do not fake the old PC heartbeat/model ID.
 7. Test synthetic extraction and adversarial unsupported-citation cases, then

@@ -106,13 +106,15 @@ export class HomeInferenceModel{
    try{
     const health=await this.client.health();
     const profile=Array.isArray(health.profiles)?health.profiles.find(item=>item?.id===this.profileId):null;
-    if(!profile){this.setState(false,true,'PROFILE_UNAVAILABLE');return;}
-    if(profile.digest!==this.digest||!shortModel(profile.model)){this.setState(false,true,'PROFILE_IDENTITY');return;}
+    // Only a reachable runtime that is still loading the pinned model reads as online;
+    // a missing or changed profile and an Ollama outage show visitors "unavailable".
+    if(!profile){this.setState(false,false,'PROFILE_UNAVAILABLE');return;}
+    if(profile.digest!==this.digest||!shortModel(profile.model)){this.setState(false,false,'PROFILE_IDENTITY');return;}
     const output=profile.outputTokens;
-    if(!Number.isSafeInteger(profile.maxInputChars)||profile.maxInputChars<1024||!Number.isSafeInteger(output?.brief)||!Number.isSafeInteger(output?.expanded)){this.setState(false,true,'GATEWAY_RESPONSE_INVALID');return;}
+    if(!Number.isSafeInteger(profile.maxInputChars)||profile.maxInputChars<1024||!Number.isSafeInteger(output?.brief)||!Number.isSafeInteger(output?.expanded)){this.setState(false,false,'GATEWAY_RESPONSE_INVALID');return;}
     this.limits={maxInputChars:profile.maxInputChars};
     this.shortLabel=profile.model;this.label=profile.model+' · KFM home compute (local Ollama)';
-    if(profile.ready!==true||health.online!==true){this.setState(false,true,'MODEL_UNAVAILABLE');return;}
+    if(profile.ready!==true||health.online!==true){this.setState(false,health.online===true,'MODEL_UNAVAILABLE');return;}
     this.setState(true,true,null);
    }catch(failure){this.setState(false,false,failure?.code&&diagnosticCodes.has(failure.code)?failure.code:'GATEWAY_UNREACHABLE');}
   })().finally(()=>{this.checking=null;});
@@ -136,7 +138,7 @@ export class HomeInferenceModel{
    if(signal?.aborted)throw error('MODEL_CANCELLED');
    if(failure?.code==='MODEL_CONTEXT_LIMIT')throw failure;
    // A transport or identity failure re-reads health before the next job is admitted.
-   if(['GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','UNAUTHORIZED','PROFILE_NOT_READY','PROFILE_UNKNOWN','GATEWAY_RESPONSE_INVALID'].includes(failure?.code)){this.setState(false,failure.code!=='GATEWAY_UNREACHABLE',failure.code);void this.refresh();}
+   if(['GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','UNAUTHORIZED','PROFILE_NOT_READY','PROFILE_UNKNOWN','GATEWAY_RESPONSE_INVALID'].includes(failure?.code)){this.setState(false,failure.code==='PROFILE_NOT_READY',failure.code);void this.refresh();}
    throw error('MODEL_UNAVAILABLE');
   }finally{this.pending=null;}
  }

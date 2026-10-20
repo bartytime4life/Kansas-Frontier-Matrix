@@ -93,7 +93,7 @@ so real evidence requests return NO_RELEASED_EVIDENCE. When released references
 exist they must be rechecked against the same release. A discussion pass does
 not turn model output, source capture or uploaded documents into evidence.
 
-The existing /api/pc-ai account/admin surface remains separate and authenticated.
+The former /api/pc-ai account/admin surface was removed on 2026-10-19 ([pc-inference.md](pc-inference.md)).
 Guest /api/ai exposes only status and opaque job submit/read/cancel operations.
 A random Secure, HttpOnly, SameSite=Strict host-only cookie protects each guest's
 jobs. Writes require the exact configured HTTPS origin; arbitrary forwarded
