@@ -6,14 +6,16 @@
     "tests/release/test_synthetic_rollback_rehearsal.py",
     "tools/release/README.md",
     ".github/workflows/rollback-drill.yml",
-    "tests/ci/test_rollback_drill_integrity.py"
+    "tests/ci/test_rollback_drill_integrity.py",
+    ".github/workflows/release-dry-run.yml"
   ],
   "artifact_hashes": {
     "tools/release/rollback_apply.py": "sha256:e95ec96b3316e60abd528653e6afc32b82385651837f23c70b07ae1fffbdb2a7",
     "tests/release/test_synthetic_rollback_rehearsal.py": "sha256:2801110d38a38d2cf6ddfcdd507e334e1fce9ae1cad11dd5181cd2a451acf438",
     "tools/release/README.md": "sha256:d54c777cbcb9d76a4fc7c2f32d389fd3ef253243e11d15f52955891372361a42",
     ".github/workflows/rollback-drill.yml": "sha256:2d42485929392afeb0dce56f9e7ec68d06c7d2d95401abdf9e68a64b76e5770d",
-    "tests/ci/test_rollback_drill_integrity.py": "sha256:28510487a38f6a837b670744cb58eb7abcad84c9a075e9f5ae96fde074e90c8e"
+    "tests/ci/test_rollback_drill_integrity.py": "sha256:28510487a38f6a837b670744cb58eb7abcad84c9a075e9f5ae96fde074e90c8e",
+    ".github/workflows/release-dry-run.yml": "sha256:cd7969ca54a188d36976a74eba9523371e2278f668f8a92d421938c7a052ea63"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -35,7 +37,8 @@
     "tests/release/test_synthetic_rollback_rehearsal.py": "CONFIRMED",
     "tools/release/README.md": "CONFIRMED",
     ".github/workflows/rollback-drill.yml": "CONFIRMED",
-    "tests/ci/test_rollback_drill_integrity.py": "CONFIRMED"
+    "tests/ci/test_rollback_drill_integrity.py": "CONFIRMED",
+    ".github/workflows/release-dry-run.yml": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -65,6 +68,11 @@
       "gate": "repository topology",
       "outcome": "FAIL",
       "reason": "Same 1 uppercase-path drift and 1 stale baseline entry reproduced on unchanged main index; no baseline edited."
+    },
+    {
+      "gate": "actual release-dry-run rollback-card-presence shell step",
+      "outcome": "PASS",
+      "reason": "Replayed the actual isolated step with corrected helper/test digest pins; fixtures, compatibility and rehearsal checks pass; production hold remains."
     }
   ],
   "policy_decisions": [],
@@ -74,7 +82,7 @@
     "reviewer_ids": [],
     "timestamp": null
   },
-  "created_at": "2026-10-20T21:48:41.401326+00:00",
+  "created_at": "2026-10-20T21:57:00.700668+00:00",
   "emitter": "Codex",
   "notes": "Synthetic-only local authoring; no real secrets or live-system tests; caller must control workspace directories; no release or publication authority."
 }

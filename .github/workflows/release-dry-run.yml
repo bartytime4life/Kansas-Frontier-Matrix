@@ -364,10 +364,10 @@ jobs:
           # closed and must be reviewed before these pins are deliberately updated.
           expected_rehearsal_digests = {
               rollback_helper.as_posix(): (
-                  "6969b626bda6a6d2279a1e0b0e4beb7f266980b450d63dce87982071a20521e1"
+                  "e95ec96b3316e60abd528653e6afc32b82385651837f23c70b07ae1fffbdb2a7"
               ),
               rehearsal_test.as_posix(): (
-                  "0a233ea6002bd25c490726e4f6763d3f14c830d727eb8529461aa1eee678aca0"
+                  "2801110d38a38d2cf6ddfcdd507e334e1fce9ae1cad11dd5181cd2a451acf438"
               ),
           }
           rehearsal_digests = {
