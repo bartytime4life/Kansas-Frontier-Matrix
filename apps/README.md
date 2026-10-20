@@ -3,12 +3,12 @@ doc_id: kfm://doc/apps-readme
 title: apps/ - Deployable Applications
 type: root-readme
 subtype: canonical-root-landing-page
-version: v0.11
+version: v0.12
 prior_version: v0.9
 status: historical snapshot; current app placement noted below
 owner: "NEEDS VERIFICATION — CODEOWNERS routes repository review to @bartytime4life and explicitly covers apps/governed-api/; no accepted application-steward assignment, required independent-review rule, or release authority was verified"
 created: 2026-05-10
-updated: 2026-10-12
+updated: 2026-10-20
 policy_label: public
 current_path: apps/README.md
 owning_root: apps/
@@ -387,11 +387,13 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 
 ## Current app map
 
+**Deployment correction, 2026-10-20:** [PR #5361](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5361) retired the static deployment job. The existing GoDaddy Node app `urdng3v1vk`, connected to standalone branch `a0-hosted-ai-web-20261017` in the [recorded Node runbook](../docs/runbooks/godaddy-node-hosting.md), remains the intended public production path. Verify Published and Preview revisions through that runbook before an authorized operation. The monorepo static workflow supplies build validation and review artifacts only; Sites environments and historical deployment and rollback evidence are preserved separately. The older implementation snapshots below retain their original dates and scope.
+
 | Lane | Current implementation truth | Verified entrypoint or check | Failure-safe posture |
 |---|---|---|---|
 | [`governed-api/`](governed-api/README.md) | Bounded executable WSGI, three fail-closed routes, route/envelope tests | `make governed-api-smoke`; `make governed-api-verify`; `api-test` | `ABSTAIN`, 404, or 405; no renderer/model/internal-store shortcut |
 | [`site/`](site/README.md) | Reconciled source mirror of the deployed GPT Site v74 under `site/source/`, including checked-in static assets and D1 migration | From `apps/site/source/`: `npm run install:ci`, `npm run build`, `node --test tests/*.test.mjs`, `npm run dev` | Private D1 records, R2 uploads, and live provider responses are not bundled; local success does not establish source admission or release |
-| [`public-site/`](public-site/README.md) | Zero-dependency static build of the kansasfrontiermatrix.com front door; Explorer feature cards generated from `site/source/app/site-features.ts` | `node --experimental-strip-types apps/public-site/build.mjs`; `node apps/public-site/check.mjs`; `godaddy-public-site` | No browser scripts, lifecycle stores or data release; deploy is off unless `GODADDY_DEPLOY_ENABLED` is `true` |
+| [`public-site/`](public-site/README.md) | Retained zero-dependency static front-door build for review; Explorer feature cards generated from `site/source/app/site-features.ts` | `node --experimental-strip-types apps/public-site/build.mjs`; `node apps/public-site/check.mjs`; build-only `godaddy-public-site` | No browser scripts, lifecycle stores or data release; no deployment job or hosting credentials. `GODADDY_DEPLOY_ENABLED` cannot re-enable static deployment. |
 | [`review-console/`](review-console/README.md) | README-led feature boundaries and a minimal package manifest | No accepted executable review flow | No review, promotion, correction, or rollback mutation is proven |
 | CLI | Removed 2026-09-29; the operator CLI is the installable [`packages/kfm-cli`](../packages/kfm-cli/README.md) (`doctor`, `diff`, `release-diff`, `telemetry`) | `kfm --help` after `tools/ci/install_kfm_cli.py` | Read-only local comparisons and bounded validator handoffs; no review, release, or publication authority |
 | [`workers/`](workers/README.md) | Named worker directories with explicit greenfield placeholder entrypoints | No accepted queue, schedule, worker behavior, or worker test suite | Watcher and worker outputs remain candidates or receipts, never publication |
@@ -485,6 +487,7 @@ The root is not complete while child lanes are placeholders. For a declared app 
 
 | Version | Date | Change | Runtime effect |
 |---|---|---|---|
+| v0.12 | 2026-10-20 | Corrected the static workflow retirement and routed production operation to the existing GoDaddy Node app; earlier snapshots retained. | None; documentation only. |
 | v0.10 | 2026-10-12 | Recorded the root naming decision that `apps/site/source/` keeps upstream file names, matching the topology validator's site-mirror exemption. | None; documentation only. |
 | v0.9 | 2026-08-29 | Recorded package-root NullMapRuntime conformance for the Sites-derived app and the held full renderer capability migration. | Fail-closed shell only; no source, release, deployment, promotion, or publication authority. |
 | v0.3 | 2026-07-22 | Reconciled the root contract with the seven app lanes and mixed implementation maturity. | None; documentation and receipt only. |
