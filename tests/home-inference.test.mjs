@@ -100,14 +100,22 @@ test('gateway configuration stays on loopback and refuses a shared-readable key 
   // systemd LoadCredential with DynamicUser grants read access by ACL, so the
   // credential shows group read (0440). Only world access is refused there; an
   // explicitly configured key path keeps the strict owner-only rule.
-  const credentials=join(dir,'credentials'),credential=join(credentials,'gateway-keys.json');
-  await mkdir(credentials);await writeFile(credential,await readFile(keyPath));
+  // The relaxed check applies only inside a private directory under the systemd
+  // credentials root; a CREDENTIALS_DIRECTORY set by hand elsewhere stays strict.
+  const root=join(dir,'run-credentials')+'/',credentials=join(root,'kfm-inference-gateway.service'),credential=join(credentials,'gateway-keys.json');
+  await mkdir(credentials,{recursive:true});await chmod(credentials,0o550);
+  await writeFile(credential,await readFile(keyPath));
   await chmod(credential,0o440);
-  assert.equal(loadConfig({KFM_GATEWAY_PROFILES:profilePath,CREDENTIALS_DIRECTORY:credentials}).keys.size,1);
-  await chmod(credential,0o444);
-  assert.throws(()=>loadConfig({KFM_GATEWAY_PROFILES:profilePath,CREDENTIALS_DIRECTORY:credentials}),/KEYS_FILE_PERMISSIONS/);
+  const viaSystemd={KFM_GATEWAY_PROFILES:profilePath,CREDENTIALS_DIRECTORY:credentials};
+  assert.equal(loadConfig(viaSystemd,{credentialsRoot:root}).keys.size,1);
+  assert.throws(()=>loadConfig(viaSystemd),/KEYS_FILE_PERMISSIONS/,'outside the real credentials root');
+  await chmod(credentials,0o755);
+  assert.throws(()=>loadConfig(viaSystemd,{credentialsRoot:root}),/KEYS_FILE_PERMISSIONS/,'world-accessible directory');
+  await chmod(credentials,0o550);await chmod(credential,0o444);
+  assert.throws(()=>loadConfig(viaSystemd,{credentialsRoot:root}),/KEYS_FILE_PERMISSIONS/,'world-readable credential');
   await chmod(keyPath,0o640);
-  assert.throws(()=>loadConfig({...env,CREDENTIALS_DIRECTORY:credentials}),/KEYS_FILE_PERMISSIONS/);
+  assert.throws(()=>loadConfig({...env,CREDENTIALS_DIRECTORY:credentials},{credentialsRoot:root}),/KEYS_FILE_PERMISSIONS/,'explicit path stays strict');
+  await chmod(credentials,0o755);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
 

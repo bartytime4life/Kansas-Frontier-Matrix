@@ -1,6 +1,7 @@
 // Shared by the KFM server (signer) and the home gateway (verifier) so both
 // sides always agree on one request-signing scheme. No dependencies.
 import {createHash,createHmac,randomBytes,timingSafeEqual} from 'node:crypto';
+import {realpathSync,statSync} from 'node:fs';
 
 export const SIGNATURE_SCHEME='KFM-HOME-INFERENCE-V1';
 export const SIGNATURE_HEADERS=Object.freeze({keyId:'x-kfm-key-id',timestamp:'x-kfm-timestamp',nonce:'x-kfm-nonce',signature:'x-kfm-signature'});
@@ -88,4 +89,16 @@ export function verifyRequest({headers,method,path,body,keys,nonces,now=Date.now
  const claim=nonces.claim(keyId+':'+nonce);
  if(claim!=='OK')return {ok:false,reason:claim};
  return {ok:true,key};
+}
+
+// systemd (LoadCredential with DynamicUser) grants the service read access to a
+// credential by ACL, which shows as group read. That is safe only inside the
+// real, private credential directory systemd creates under /run/credentials/.
+// A CREDENTIALS_DIRECTORY pointing anywhere else keeps the owner-only rule.
+export function isSystemdCredentialDirectory(dir,{root='/run/credentials/'}={}){
+ if(typeof dir!=='string'||!dir)return false;
+ try{
+  const real=realpathSync(dir);
+  return real.startsWith(root)&&statSync(real).isDirectory()&&(statSync(real).mode&0o007)===0;
+ }catch{return false;}
 }

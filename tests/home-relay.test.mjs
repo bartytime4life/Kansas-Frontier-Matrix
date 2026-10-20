@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
-import {mkdtemp,writeFile,chmod,rm} from 'node:fs/promises';
+import {mkdtemp,mkdir,writeFile,chmod,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {newSecret,decodeSecret,signRequest,RESPONSE_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
@@ -202,11 +202,16 @@ test('the relay bounds its queue and the worker route exists only in poll mode o
 test('the worker key file must be owner-only unless systemd provides it',async()=>{
  const dir=await mkdtemp(join(tmpdir(),'kfm-worker-'));
  try{
-  const keyPath=join(dir,'worker-key.json');
+  const root=join(dir,'run-credentials')+'/',credentials=join(root,'kfm-inference-worker.service');
+  await mkdir(credentials,{recursive:true});await chmod(credentials,0o550);
+  const keyPath=join(credentials,'worker-key.json');
   await writeFile(keyPath,JSON.stringify({id:'worker-1',scope:'worker',secret:workerSecret}));
-  await chmod(keyPath,0o640);
+  await chmod(keyPath,0o440);
   assert.throws(()=>loadWorkerConfig({KFM_WORKER_SITE:SITE,KFM_WORKER_KEY_FILE:keyPath}),/WORKER_KEY_PERMISSIONS/);
-  assert.equal(loadWorkerConfig({KFM_WORKER_SITE:SITE,CREDENTIALS_DIRECTORY:dir}).keyId,'worker-1');
+  // Group read is accepted only from a private directory under the systemd credentials root.
+  assert.equal(loadWorkerConfig({KFM_WORKER_SITE:SITE,CREDENTIALS_DIRECTORY:credentials},{credentialsRoot:root}).keyId,'worker-1');
+  assert.throws(()=>loadWorkerConfig({KFM_WORKER_SITE:SITE,CREDENTIALS_DIRECTORY:credentials}),/WORKER_KEY_PERMISSIONS/);
+  await chmod(credentials,0o755);
   await chmod(keyPath,0o600);
   assert.equal(loadWorkerConfig({KFM_WORKER_SITE:SITE,KFM_WORKER_KEY_FILE:keyPath}).gateway,'http://127.0.0.1:8787');
   assert.throws(()=>loadWorkerConfig({KFM_WORKER_SITE:'http://kansasfrontiermatrix.com',KFM_WORKER_KEY_FILE:keyPath}),/WORKER_SITE_INVALID/);
