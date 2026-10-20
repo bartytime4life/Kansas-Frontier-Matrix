@@ -4,6 +4,7 @@ import {createHash,createHmac,randomBytes,timingSafeEqual} from 'node:crypto';
 
 export const SIGNATURE_SCHEME='KFM-HOME-INFERENCE-V1';
 export const SIGNATURE_HEADERS=Object.freeze({keyId:'x-kfm-key-id',timestamp:'x-kfm-timestamp',nonce:'x-kfm-nonce',signature:'x-kfm-signature'});
+export const RESPONSE_SIGNATURE_HEADER='x-kfm-response-signature';
 // A request older or newer than this is refused; the nonce cache covers the window.
 export const SIGNATURE_MAX_SKEW_MS=60000;
 export const MIN_SECRET_BYTES=32;
@@ -32,6 +33,26 @@ export function signRequest({keyId,secret,method,path,body='',now=Date.now(),non
  const timestamp=String(Math.trunc(now));
  const signature=createHmac('sha256',key).update(canonical({method,path,timestamp,nonce,body})).digest('base64url');
  return {[SIGNATURE_HEADERS.keyId]:keyId,[SIGNATURE_HEADERS.timestamp]:timestamp,[SIGNATURE_HEADERS.nonce]:nonce,[SIGNATURE_HEADERS.signature]:signature};
+}
+
+const header=(headers,name)=>typeof headers?.get==='function'?headers.get(name):headers?.[name];
+
+// Separate domain from request signatures. Authenticate the exact response bytes
+// and HTTP status against this request's nonce, timestamp, method, path and body.
+// Health and authenticated error replies need the same binding as successful chat.
+export function signResponse({secret,requestHeaders,method,path,requestBody='',status,body}){
+ const key=typeof secret==='string'?decodeSecret(secret):secret;
+ if(!Buffer.isBuffer(key)||key.length<MIN_SECRET_BYTES)throw Object.assign(new Error('SIGNING_KEY_INVALID'),{code:'SIGNING_KEY_INVALID'});
+ const canonical=['KFM-HOME-INFERENCE-RESPONSE-V1',header(requestHeaders,SIGNATURE_HEADERS.keyId),method.toUpperCase(),path,
+  header(requestHeaders,SIGNATURE_HEADERS.timestamp),header(requestHeaders,SIGNATURE_HEADERS.nonce),bodyDigest(requestBody),String(status),bodyDigest(body)].join('\n');
+ return createHmac('sha256',key).update(canonical).digest('base64url');
+}
+
+export function verifyResponse({headers,...request}){
+ const supplied=header(headers,RESPONSE_SIGNATURE_HEADER);
+ if(typeof supplied!=='string'||!SIGNATURE.test(supplied))return false;
+ const expected=Buffer.from(signResponse(request),'base64url'),actual=Buffer.from(supplied,'base64url');
+ return actual.length===expected.length&&timingSafeEqual(actual,expected);
 }
 
 // Bounded replay memory: a nonce is remembered for the full freshness window.

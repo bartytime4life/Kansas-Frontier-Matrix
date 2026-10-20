@@ -7,12 +7,6 @@ import {createServer} from 'node:http';
 import {readFileSync,statSync} from 'node:fs';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
-import {createNonceCache,decodeSecret,newSecret,signReply,verifyRequest,REPLY_SIGNATURE_HEADER,SIGNATURE_HEADERS} from './signature.mjs';
-
-export const GATEWAY_VERSION='kfm-home-inference/1';
-// responseMs: Cloudflare answers HTTP 524 when a proxied origin takes 100 s to
-// respond (non-Enterprise plans), so every reply leaves within 90 s of arrival.
-export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,responseMs:90000,minRunMs:5000});
 const DEPTHS=['brief','expanded'];
 const ROLES=['system','user','assistant'];
 const OPTION_KEYS=['temperature','top_p','top_k','min_p','repeat_penalty','presence_penalty','frequency_penalty','seed'];
@@ -43,7 +37,6 @@ export function parseProfiles(value){
   if(!Array.isArray(p.scopes)||!p.scopes.length||!p.scopes.every(scope=>SCOPE.test(scope)))throw invalid();
   if(!Array.isArray(p.capabilities)||!p.capabilities.includes('chat'))throw invalid();
   if(!positive(p.contextTokens,131072)||!positive(p.maxInputChars,262144))throw invalid();
-  if(!DEPTHS.every(depth=>positive(p.outputTokens?.[depth],8192)&&positive(p.timeoutMs?.[depth],GATEWAY_LIMITS.responseMs)))throw invalid();
   if(DEPTHS.some(depth=>p.outputTokens[depth]>=p.contextTokens))throw invalid();
   const options=p.options??{};
   if(typeof options!=='object'||Object.keys(options).some(key=>!OPTION_KEYS.includes(key)||!Number.isFinite(options[key])))throw invalid();
@@ -122,7 +115,7 @@ async function ollamaJson(fetchImpl,url,signal){
 }
 
 export function createInspector({ollamaUrl,profiles,fetchImpl=fetch,clock=Date.now}){
- let cached=null,inflight=null;
+ let cached=null,inflight=null,sequence=0,cachedSequence=0;
  const inspect=async()=>{
   const signal=AbortSignal.timeout(GATEWAY_LIMITS.inspectMs);
   try{
@@ -139,9 +132,17 @@ export function createInspector({ollamaUrl,profiles,fetchImpl=fetch,clock=Date.n
    return {at:clock(),online:false,runtime:null,state:new Map([...profiles.keys()].map(id=>[id,'MODEL_UNAVAILABLE']))};
   }
  };
+ const run=()=>{
+  const started=++sequence;
+  return inspect().then(value=>{if(started>cachedSequence){cached=value;cachedSequence=started;}return value;});
+ };
  return async({fresh=false}={})=>{
+  // Admission must start its own reads: an older health check may already have
+  // fetched tags while still awaiting version. Its eventual result must not
+  // overwrite the cache from a newer admission inspection either.
+  if(fresh)return run();
   if(!fresh&&cached&&clock()-cached.at<GATEWAY_LIMITS.inspectCacheMs)return cached;
-  inflight??=inspect().then(value=>{cached=value;return value;}).finally(()=>{inflight=null;});
+  inflight??=run().finally(()=>{inflight=null;});
   return inflight;
  };
 }
@@ -169,6 +170,7 @@ async function streamChat({fetchImpl,ollamaUrl,profile,depth,messages,signal,pro
     if(!line)continue;
     const chunk=JSON.parse(line);
     if(chunk.error)throw fail('MODEL_UNAVAILABLE',503);
+    if(chunk.model!==profile.model)throw fail('PROFILE_NOT_READY',503);
     // Thinking text is private model reasoning; it is never returned.
     if(typeof chunk.message?.content==='string'){text+=chunk.message.content;progress.text=text;}
     if(Buffer.byteLength(text)>GATEWAY_LIMITS.outputBytes){limited=true;break;}
@@ -218,6 +220,15 @@ function readBody(req){
  });
 }
 
+function untilAbort(promise,signal){
+ return new Promise((resolve,reject)=>{
+  const abort=()=>reject(fail('REQUEST_CANCELLED',499));
+  if(signal.aborted){abort();return;}
+  signal.addEventListener('abort',abort,{once:true});
+  promise.then(resolve,reject).finally(()=>signal.removeEventListener('abort',abort));
+ });
+}
+
 export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127.0.0.1:11434',fetchImpl=fetch,clock=Date.now,log=line=>console.log(JSON.stringify(line))}){
  const state={profiles:profileConfig.profiles,keys};
  let admission=createAdmission(profileConfig);
@@ -238,17 +249,16 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
  const chat=async(value,scope,signal,record,started)=>{
   const request=validateChat(value,state.profiles,scope);
   Object.assign(record,{profile:request.profile.id,depth:request.depth,requestId:request.requestId});
-  const ready=(await inspector()).state.get(request.profile.id);
-  if(ready!==null)throw fail(ready==='MODEL_UNAVAILABLE'?'MODEL_UNAVAILABLE':'PROFILE_NOT_READY',503);
-  const queuedAt=clock(),release=await admission.enter(signal);
-  record.queueMs=clock()-queuedAt;
-  // Body read, model check and queue wait all spend the same 90 s response budget.
-  const remaining=GATEWAY_LIMITS.responseMs-(clock()-started);
-  if(remaining<GATEWAY_LIMITS.minRunMs){release();throw fail('GATEWAY_BUSY',429);}
-  const controller=new AbortController(),timeout=Math.min(request.profile.timeoutMs[request.depth],remaining);
   const abort=()=>controller.abort();signal.addEventListener('abort',abort,{once:true});
+  if(signal.aborted)controller.abort();
+  // One deadline covers waiting, fresh identity inspection and generation.
   const timer=setTimeout(()=>controller.abort(),timeout);active.add(controller);
   try{
+   release=await admission.enter(controller.signal);
+   record.queueMs=clock()-queuedAt;
+   const ready=(await untilAbort(inspector({fresh:true}),controller.signal)).state.get(request.profile.id);
+   if(ready!==null)throw fail(ready==='MODEL_UNAVAILABLE'?'MODEL_UNAVAILABLE':'PROFILE_NOT_READY',503);
+   if(controller.signal.aborted)throw fail('MODEL_TIMEOUT',504);
    let output;const progress={text:''};
    try{output=await streamChat({fetchImpl,ollamaUrl,profile:request.profile,depth:request.depth,messages:request.messages,signal:controller.signal,progress});}
    catch(error){
@@ -272,17 +282,12 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
     text,finishReason,usage:{promptTokens,outputTokens},
     timings:{queueMs:record.queueMs,loadMs:Number.isFinite(final.load_duration)?Math.round(final.load_duration/1e6):null,totalMs:clock()-queuedAt,tokensPerSecond:seconds&&outputTokens?Math.round(outputTokens/seconds*10)/10:null},
    };
-  }finally{clearTimeout(timer);signal.removeEventListener('abort',abort);active.delete(controller);controller.abort();release();}
+  }catch(error){
+   if(signal.aborted)throw fail('REQUEST_CANCELLED',499);
+   if(controller.signal.aborted)throw fail('MODEL_TIMEOUT',504);
+   throw error;
+  }finally{clearTimeout(timer);signal.removeEventListener('abort',abort);active.delete(controller);controller.abort();release?.();}
  };
-
- // reply: the authenticated key and request nonce. Refusals before authentication
- // stay unsigned, since the gateway cannot know whom it would be signing for.
- const send=(res,status,body,reply=null)=>{
-  if(res.headersSent||res.destroyed)return;
-  const payload=JSON.stringify(body);
-  const close=status===413||status===408;
-  const signature=reply?{[REPLY_SIGNATURE_HEADER]:signReply({secret:reply.secret,nonce:reply.nonce,status,body:payload})}:{};
-  res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Content-Length':Buffer.byteLength(payload),'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...signature,...(close?{Connection:'close'}:{})});
   res.end(payload,close?()=>res.socket?.destroy():undefined);
  };
 
@@ -290,6 +295,7 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
   const started=clock(),record={event:'request',method:req.method,path:null,status:0,code:null};
   // The response closing before we finish means the caller went away: stop generating.
   const disconnected=new AbortController();
+  let authentication;
   res.on('close',()=>{if(!res.writableFinished)disconnected.abort();});
   let reply=null;
   try{
@@ -301,7 +307,6 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
    if(req.method==='GET'&&body)throw fail('INVALID_REQUEST',400);
    const auth=verifyRequest({headers:req.headers,method:req.method,path,body,keys:state.keys,nonces,now:clock()});
    if(!auth.ok){record.authFailure=auth.reason;throw fail('UNAUTHORIZED',401);}
-   record.keyId=auth.key.id;reply={secret:auth.key.secret,nonce:req.headers[SIGNATURE_HEADERS.nonce]};
    let result;
    if(path==='/v1/health'&&req.method==='GET')result=await health(auth.key.scope);
    else if(path==='/v1/chat'&&req.method==='POST'){
@@ -310,12 +315,10 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
     result=await chat(value,auth.key.scope,disconnected.signal,record,started);
    }
    else throw fail('NOT_FOUND',404);
-   record.status=200;send(res,200,result,reply);
   }catch(error){
    const status=Number.isInteger(error?.status)?error.status:500,code=status===500?'GATEWAY_ERROR':error.code;
    Object.assign(record,{status,code});
    if(status===429)res.setHeader?.('Retry-After','5');
-   send(res,status===499?400:status,{gateway:GATEWAY_VERSION,error:code},reply);
   }finally{
    record.totalMs=clock()-started;
    // Operational metadata only: never prompts, replies, headers or secrets.
