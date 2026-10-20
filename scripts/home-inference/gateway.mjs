@@ -63,11 +63,14 @@ export function parseKeys(value){
  return keys;
 }
 
-function readJson(path,{privateFile=false}={}){
+function readJson(path,{privateFile=false,credential=false}={}){
  const stat=statSync(path);
  if(!stat.isFile()||stat.size>65536)throw fail('CONFIG_FILE_INVALID');
  // A key file readable by other local accounts is a credential leak; refuse it.
- if(privateFile&&(stat.mode&0o077))throw fail('KEYS_FILE_PERMISSIONS');
+ // systemd grants a DynamicUser read access to its credential through an ACL,
+ // which shows in the group bits; the credential directory is private to the
+ // service, so only world access is refused there.
+ if(privateFile&&(stat.mode&(credential?0o007:0o077)))throw fail('KEYS_FILE_PERMISSIONS');
  return JSON.parse(readFileSync(path,'utf8'));
 }
 
@@ -83,7 +86,7 @@ export function loadConfig(env=process.env){
  return {
   host,port,ollamaUrl:ollama.origin,
   profiles:parseProfiles(readJson(env.KFM_GATEWAY_PROFILES||'/etc/kfm-inference/profiles.json')),
-  keys:parseKeys(readJson(keysPath,{privateFile:true})),
+  keys:parseKeys(readJson(keysPath,{privateFile:true,credential:!env.KFM_GATEWAY_KEYS})),
  };
 }
 

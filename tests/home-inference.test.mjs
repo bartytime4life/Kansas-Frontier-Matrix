@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
-import {mkdtemp,writeFile,chmod,rm} from 'node:fs/promises';
+import {mkdtemp,mkdir,writeFile,chmod,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {signRequest,verifyRequest,createNonceCache,newSecret,SIGNATURE_MAX_SKEW_MS,signResponse,RESPONSE_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
@@ -97,6 +97,17 @@ test('gateway configuration stays on loopback and refuses a shared-readable key 
   assert.throws(()=>loadConfig({...env,KFM_OLLAMA_URL:'http://192.168.1.20:11434'}),/OLLAMA_URL_NOT_LOOPBACK/);
   assert.throws(()=>loadConfig({...env,KFM_OLLAMA_URL:'http://127.0.0.1:11434/api/pull'}),/OLLAMA_URL_NOT_LOOPBACK/);
   assert.throws(()=>loadConfig({KFM_GATEWAY_PROFILES:profilePath}),/KEYS_NOT_CONFIGURED/);
+  // systemd LoadCredential with DynamicUser grants read access by ACL, so the
+  // credential shows group read (0440). Only world access is refused there; an
+  // explicitly configured key path keeps the strict owner-only rule.
+  const credentials=join(dir,'credentials'),credential=join(credentials,'gateway-keys.json');
+  await mkdir(credentials);await writeFile(credential,await readFile(keyPath));
+  await chmod(credential,0o440);
+  assert.equal(loadConfig({KFM_GATEWAY_PROFILES:profilePath,CREDENTIALS_DIRECTORY:credentials}).keys.size,1);
+  await chmod(credential,0o444);
+  assert.throws(()=>loadConfig({KFM_GATEWAY_PROFILES:profilePath,CREDENTIALS_DIRECTORY:credentials}),/KEYS_FILE_PERMISSIONS/);
+  await chmod(keyPath,0o640);
+  assert.throws(()=>loadConfig({...env,CREDENTIALS_DIRECTORY:credentials}),/KEYS_FILE_PERMISSIONS/);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
 
