@@ -116,7 +116,7 @@ async function pageSession(b, width, height) {
       if (await evaluate(`Boolean(${expression})`)) return;
       await pause(50);
     }
-    throw new Error(`${label}: ${await evaluate(`JSON.stringify({url:location.href, guide:!!document.querySelector('.explorer-guide'), topic:document.querySelector('[aria-label="Layer topic"]')?.value, active:document.activeElement?.outerHTML.slice(0,300)})`)}`);
+    throw new Error(`${label}: ${await evaluate(`JSON.stringify({url:location.href, guide:!!document.querySelector('.explorer-guide'), topic:document.querySelector('[aria-label="Layer topic"]')?.value, active:document.activeElement?.outerHTML.slice(0,300), welcome:(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),map=document.querySelector('.map-stage>.map-canvas');return root?{immersive:root.dataset.immersive,scene:root.querySelector('.motion-atlas')?.dataset.focus,mapOpacity:map?getComputedStyle(map).opacity:null,focusedClass:document.activeElement?.className,focusVisible:document.activeElement?.matches(':focus-visible'),cards:[...root.querySelectorAll('.topic-callout')].map(card=>({classes:card.className,opacity:getComputedStyle(card).opacity,focusVisible:card.matches(':focus-visible'),hovered:card.matches(':hover'),pointerEvents:getComputedStyle(card).pointerEvents}))}:null;})()})`)}`);
   };
   const key = async (key, code, windowsVirtualKeyCode, modifiers = 0) => {
     await call('Input.dispatchKeyEvent', { type: 'rawKeyDown', key, code, windowsVirtualKeyCode, modifiers });
@@ -404,11 +404,13 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
       const root=document.querySelector('.explorer-guide.living-welcome'),active=root?.querySelector('.topic-${topic}');
       const map=document.querySelector('.map-stage > .map-canvas');
       const retained=${retainedFocus ? `root?.querySelector('.topic-${retainedFocus}')` : 'null'};
+      const showRetained=retained?.matches(':focus-visible');
       return root?.dataset.immersive === 'true' && active?.classList.contains('is-active')
         && root.querySelector('.motion-atlas')?.dataset.focus === '${topic}'
         && Number(getComputedStyle(active).opacity) >= .98
-        && [...root.querySelectorAll('.topic-callout')].filter(card=>card!==active&&card!==retained).every(card=>Number(getComputedStyle(card).opacity)<=.02)
-        && (!retained || document.activeElement===retained&&retained.matches(':focus-visible')&&Number(getComputedStyle(retained).opacity)>=.98)
+        && [...root.querySelectorAll('.topic-callout')].filter(card=>card!==active&&!(card===retained&&showRetained)).every(card=>Number(getComputedStyle(card).opacity)<=.02)
+        && (!retained || document.activeElement===retained)
+        && (!showRetained || Number(getComputedStyle(retained).opacity)>=.98)
         && map && Number(getComputedStyle(map).opacity)<=.02;
     })()`;
     const restored = `(() => {
@@ -447,8 +449,10 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
       await p.wait(`document.activeElement?.matches('.topic-weather:focus-visible')`, 'Weather retains legitimate keyboard focus');
       await move(await center('.topic-rivers'));
       await p.wait(isolated('rivers', 'weather'), 'mouse reaches River while keyboard focus stays on Weather');
+      assert.equal(await p.evaluate(`document.activeElement===document.querySelector('.topic-weather')`),true,'unpressed mouse entry must not steal Weather DOM focus');
       await move(await center('.topic-science'));
       await p.wait(isolated('science', 'weather'), 'next mouse target wins without clearing keyboard focus');
+      assert.equal(await p.evaluate(`document.activeElement===document.querySelector('.topic-weather')`),true,'a second unpressed mouse entry retains Weather DOM focus');
       await p.evaluate(`document.querySelector('.welcome-hero input').focus()`);
       await move(blank);
       await p.wait(restored, 'clearing actual keyboard focus and leaving cards restores the entire map');
