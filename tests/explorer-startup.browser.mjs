@@ -127,6 +127,39 @@ async function pageSession(b, width, height) {
 for (const [width, height] of [[1366, 768], [390, 844]]) {
   test(`startup destinations at ${width}x${height}`, { timeout: 240000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
+    await t.test('Find and Ask retain DOM order and responsive keyboard access before map controls', async () => {
+      await p.open('/', '1');
+      assert.equal(await p.evaluate(`(() => {
+        const header = document.querySelector('header.topbar');
+        const find = header?.querySelector('button.atlas-scope-control');
+        const ask = header?.querySelector('button.welcome-ai-entry');
+        const controls = header?.querySelector('nav.map-chrome-dock');
+        return !!(find && ask && controls
+          && find.textContent.includes('Find') && ask.textContent.includes('Ask')
+          && [find, ask].every(button => !button.disabled && button.tabIndex === 0
+            && !button.closest('[inert], [aria-hidden="true"]')
+            && (button.compareDocumentPosition(controls) & Node.DOCUMENT_POSITION_FOLLOWING)));
+      })()`), true, 'both named buttons remain before map navigation in the DOM');
+      await p.evaluate(`document.querySelector('.atlas-scope-control').focus()`);
+      assert.equal(await p.evaluate(`document.activeElement.matches('.atlas-scope-control')`), true);
+      // The shipped <=560px layout hides the separate Ask button; Find still
+      // opens the shared composer. Preserve that responsive design, while
+      // requiring Ask's DOM order at both sizes and its Tab order when shown.
+      assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.welcome-ai-entry')).display !== 'none'`), width > 560);
+      if (width > 560) {
+        await p.key('Tab', 'Tab', 9);
+        assert.equal(await p.evaluate(`document.activeElement.matches('.welcome-ai-entry')`), true);
+      }
+      let reachedMap = false;
+      for (let index = 0; index < 20; index++) {
+        await p.key('Tab', 'Tab', 9);
+        if (await p.evaluate(`!!document.activeElement.closest('.map-chrome-dock')`)) {
+          reachedMap = true;
+          break;
+        }
+      }
+      assert.equal(reachedMap, true, 'Tab reaches map controls after Find and Ask');
+    });
     await t.test('direct topic and restored shared topic URL', async () => {
       for (const url of ['/?topic=engineering', '/?topic=groundwater&layerView=imagery&c=-98.2,38.6&z=7&t=2026']) {
         await p.open(url);

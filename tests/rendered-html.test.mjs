@@ -11,6 +11,49 @@ const buildClockJavascript = typescriptCompiler.transpileModule(buildClockSource
 const buildClockUrl = `data:text/javascript;base64,${Buffer.from(buildClockJavascript).toString("base64")}`;
 const withBuildClock = (source) => source.replace('from "./build-clock";', `from "${buildClockUrl}";`);
 
+// Accept additional/reordered CSS classes, but never a substring of a token.
+// Works on literal JSX className attributes and on the emitted HTML classes.
+function classPosition(markup, token) {
+  return [...markup.matchAll(/\b(?:className|class)="([^"]*)"/g)]
+    .find((match) => match[1].split(/[\t\n\f\r ]+/).includes(token))?.index ?? -1;
+}
+
+function assertHeaderWorkflowOrder(markup) {
+  const topbar = classPosition(markup, "topbar");
+  const headerStart = topbar < 0 ? -1 : markup.lastIndexOf("<header", topbar);
+  const headerEnd = markup.indexOf("</header>", headerStart);
+  const mapControls = classPosition(markup, "map-chrome-dock");
+  assert.ok(headerStart >= 0 && headerEnd > headerStart, "global header must exist");
+  assert.ok(mapControls > headerStart && mapControls < headerEnd, "map controls must share the global header");
+  for (const [name, token] of [["Find", "atlas-scope-control"], ["Ask", "welcome-ai-entry"]]) {
+    const entry = classPosition(markup, token);
+    assert.ok(entry > headerStart && entry < mapControls, `${name} must precede map actions in DOM order`);
+  }
+}
+
+test("header workflow order accepts class tokens and rejects missing or misplaced entries", () => {
+  const find = '<button class="welcome-header-find atlas-scope-control extra">Find a county or place</button>';
+  const ask = '<button class="extra welcome-ai-entry">Ask AI</button>';
+  const controls = '<nav class="extra map-chrome-dock">Map controls</nav>';
+  const header = (content) => `<header class="topbar">${content}</header>`;
+  const valid = header(find + ask + controls);
+  assertHeaderWorkflowOrder(valid);
+  assertHeaderWorkflowOrder('<header class="unrelated">Other panel</header>' + valid);
+  assertHeaderWorkflowOrder(valid.replaceAll('class=', 'className='));
+  assertHeaderWorkflowOrder(valid.replace(" atlas-scope-control ", "\t atlas-scope-control\n "));
+  for (const entry of [find, ask, controls]) {
+    assert.throws(() => assertHeaderWorkflowOrder(valid.replace(entry, "")));
+  }
+  for (const token of ["atlas-scope-control", "welcome-ai-entry", "map-chrome-dock"]) {
+    assert.throws(() => assertHeaderWorkflowOrder(valid.replace(token, `${token}-lookalike`)));
+  }
+  assert.throws(() => assertHeaderWorkflowOrder(header(ask + controls + find)), /Find must precede/);
+  assert.throws(() => assertHeaderWorkflowOrder(header(find + controls + ask)), /Ask must precede/);
+  assert.throws(() => assertHeaderWorkflowOrder(find + header(ask + controls)), /Find must precede/);
+  assert.throws(() => assertHeaderWorkflowOrder(ask + header(find + controls)), /Ask must precede/);
+  assert.throws(() => assertHeaderWorkflowOrder(header(find + ask) + controls), /map controls must share/);
+});
+
 test("renders the map-first Kansas explorer shell", async () => {
   const handlerUrl = new URL("../dist/server/index.js", import.meta.url);
   handlerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
@@ -26,6 +69,7 @@ test("renders the map-first Kansas explorer shell", async () => {
     /^text\/html\b/i,
   );
   const html = await response.text();
+  assertHeaderWorkflowOrder(html);
   assert.match(html, /https:\/\/kansasfrontiermatrix\.com\/og-guided\.png/);
   assert.doesNotMatch(html, /untrusted\.example/);
   // Icons stay on this deployment; only social-card images use the canonical host.
@@ -1156,12 +1200,7 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.doesNotMatch(page, /className="mission-band map-command-bar"/);
   assert.doesNotMatch(page, /<nav className="map-view-mode-strip"/);
   assert.doesNotMatch(page, /<nav className="map-control-strip"/);
-  const headerStart = page.search(/<header\b[^>]*className="topbar">/);
-  const headerEnd = page.indexOf('      </header>', headerStart);
-  const mapControls = page.indexOf('<nav className="map-chrome-dock"');
-  assert.ok(mapControls > headerStart && mapControls < headerEnd, "map controls must share the global header");
-  const composerEntry = page.indexOf('className="atlas-scope-control"');
-  assert.ok(composerEntry > headerStart && composerEntry < mapControls, "Find and ask must precede map actions in focus order");
+  assertHeaderWorkflowOrder(page);
   assert.doesNotMatch(page, /className="mobile-primary-tabs"|className="header-workflows"/);
   assert.match(page, /className="header-overflow-panel"[\s\S]*className="header-overflow-workspaces"[\s\S]*>Map<\/button>[\s\S]*>Reports<\/button>[\s\S]*>Stories<\/button>[\s\S]*className="share-action"[\s\S]*>Share current view<\/button>[\s\S]*className="about-action" href="\/about">About<\/Link>/);
   assert.match(page, /const closeHeaderOverflow = useCallback[\s\S]*summary\?\.focus\(\{ preventScroll: true \}\)/);

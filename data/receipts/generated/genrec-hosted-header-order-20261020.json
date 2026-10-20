@@ -1,0 +1,94 @@
+{
+  "receipt_id": "genrec-hosted-header-order-20261020",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/rendered-html.test.mjs",
+    "tests/explorer-startup.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "tests/rendered-html.test.mjs": "sha256:d889172ef010f3bfc7ec84b0311bfeaedb553006e6e47006def74b27e466ec29",
+    "tests/explorer-startup.browser.mjs": "sha256:030c05a4e9e34254facafd16553277a184f70768dd6fb7368c07f4038d21be13"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:b05720d5c72655e05ab7d653cbca06fa03736ccd52073139b7749afa52c9635f",
+  "parameters": {
+    "tools_enabled": [
+      "container",
+      "GitHub"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d41b0e69dc987ceddf81d6146d31219dac0ea060",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5348",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39456170952/job/118743504873"
+    ]
+  },
+  "truth_labels": {
+    "tests/rendered-html.test.mjs": "CONFIRMED",
+    "tests/explorer-startup.browser.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-regression",
+      "outcome": "PASS",
+      "reason": "Original hosted-base header assertion reproduces failure; corrected rendered-html suite passes 34/34, including missing/misplaced/lookalike class cases and real built HTML."
+    },
+    {
+      "gate": "complete-node-suite",
+      "outcome": "PASS",
+      "reason": "Node 22.23.3: 1554 pass, 0 fail, 17 skipped. Used umask 022 and approved unsandboxed execution so the disposable model child can write /proc/self/oom_score_adj. Initial sandbox run failed these two environment-dependent checks; neither assertion was changed."
+    },
+    {
+      "gate": "build-types-http-assigned-port",
+      "outcome": "PASS",
+      "reason": "npm run build; npx tsc --noEmit; 18 actual production HTTP tests at port 5182; PORT=5183 npm run dev and both assigned-port checks pass. Startup probes report LOOPBACK_BUILD_READY, HTTP 200. Local build/HTTP Node is 24.19.0; full suite is CI-pinned 22.23.3."
+    },
+    {
+      "gate": "changed-area-lint",
+      "outcome": "PASS",
+      "reason": "No errors; two inherited unused-variable warnings in rendered-html tests. git diff --check passes."
+    },
+    {
+      "gate": "header-browser",
+      "outcome": "PASS",
+      "reason": "Chromium 151: new DOM and keyboard tests pass at 1366x768 and 390x844. Both entries precede map navigation in DOM; desktop tabs Find then Ask then map. Existing <=560px CSS hides Ask; phone Find remains keyboard reachable before map. Loopback fixture interception, SwiftShader, temporary --no-sandbox wrapper needed by container sandbox-helper configuration; no production browser/GPU claim."
+    },
+    {
+      "gate": "broader-browser",
+      "outcome": "FAIL",
+      "reason": "County-search cases pass at 1366x768, 390x844 and 375x667. Existing startup suite fails on blocked-storage welcome dismissal and CDP Invalid InterceptionId cascade. Unmodified base browser test separately reproduces blocked-storage dismissal timeout on the identical runtime. This patch does not claim complete browser acceptance."
+    },
+    {
+      "gate": "exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending commit/PR at receipt emission; exact SHA and observed run results will be recorded in PR metadata/body."
+    },
+    {
+      "gate": "monorepo-baseline-and-release",
+      "outcome": "SKIPPED",
+      "reason": "Standalone hosted branch has no monorepo Makefile/schema runner or pre-commit configuration. Receipt validated with canonical checked-out schema. Human review, merge, deployment, publication, activation and user-PC changes are outside authorization."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d41b0e69dc987ceddf81d6146d31219dac0ea060"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-20T17:12:20.088906+00:00",
+  "emitter": "OpenAI Codex hosted validation repair",
+  "notes": "Three-file budget: two existing tests and this receipt. Runtime and security code are unchanged, including signing, model identity, deadlines, origin restrictions and authentication. Base already includes merged #5349 and #5350; no credential change is copied into this patch. No open overlapping PR was present before editing. Sites mirror and MEGALODON untouched. Rollback: close draft or revert this test/receipt commit; no migration."
+}
