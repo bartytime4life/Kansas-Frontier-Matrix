@@ -374,3 +374,99 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
     await p.wait(`!document.querySelector('.welcome-dialog') && document.activeElement?.matches('.topic-weather')`, 'Escape closes only detail and restores its trigger');
   });
 }
+
+// Hover acceptance uses an unpressed native mouse move. A drag can start
+// selection/HTML drag-and-drop and suppress the very pointer-enter event under
+// test. These cases run only in the isolated CI browser fixture above.
+for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
+  test(`welcome topic geometry and real input at ${width}x${height}`, { timeout: 90000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, width, height);
+    await p.open('/');
+    await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.dataset.renderer === 'native' && document.querySelectorAll('.living-welcome .topic-callout').length === 8`, 'all eight hydrated topic cards');
+    const bounds = await p.evaluate(`Array.from(document.querySelectorAll('.living-welcome .topic-callout'), button => {
+      const r=button.getBoundingClientRect();
+      return {id:button.className.split(' ').find(name=>name.startsWith('topic-')&&name!=='topic-callout'),left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};
+    })`);
+    assert.equal(bounds.length, 8);
+    for (let index = 0; index < bounds.length; index++) {
+      const a = bounds[index];
+      assert.ok(a.width > 0 && a.height >= 44 && a.left >= 0 && a.right <= width, `visible usable card width: ${JSON.stringify(a)}`);
+      if (width > 600) assert.ok(a.top >= 0 && a.bottom <= height, `desktop card stays within viewport: ${JSON.stringify(a)}`);
+      for (const b of bounds.slice(index + 1)) {
+        const overlapX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        const overlapY = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        assert.ok(overlapX <= .5 || overlapY <= .5, `topic hit areas must not overlap: ${JSON.stringify({a,b,overlapX,overlapY})}`);
+      }
+    }
+    const center = selector => p.evaluate(`(() => {const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+    const move = async point => p.call('Input.dispatchMouseEvent', {type:'mouseMoved',...point,button:'none',buttons:0});
+    const isolated = (topic, retainedFocus = null) => `(() => {
+      const root=document.querySelector('.explorer-guide.living-welcome'),active=root?.querySelector('.topic-${topic}');
+      const map=document.querySelector('.map-stage > .map-canvas');
+      const retained=${retainedFocus ? `root?.querySelector('.topic-${retainedFocus}')` : 'null'};
+      return root?.dataset.immersive === 'true' && active?.classList.contains('is-active')
+        && root.querySelector('.motion-atlas')?.dataset.focus === '${topic}'
+        && Number(getComputedStyle(active).opacity) >= .98
+        && [...root.querySelectorAll('.topic-callout')].filter(card=>card!==active&&card!==retained).every(card=>Number(getComputedStyle(card).opacity)<=.02)
+        && (!retained || document.activeElement===retained&&retained.matches(':focus-visible')&&Number(getComputedStyle(retained).opacity)>=.98)
+        && map && Number(getComputedStyle(map).opacity)<=.02;
+    })()`;
+    const restored = `(() => {
+      const root=document.querySelector('.explorer-guide.living-welcome'),map=document.querySelector('.map-stage > .map-canvas');
+      return root?.dataset.immersive === 'false' && [...root.querySelectorAll('.topic-callout')].every(card=>Number(getComputedStyle(card).opacity)>=.98&&getComputedStyle(card).pointerEvents!=='none')
+        && map && Number(getComputedStyle(map).opacity)>=.98;
+    })()`;
+    // Keep keyboard focus outside every card so it cannot conceal a broken
+    // pointer listener or legitimately retain a preview after the mouse exits.
+    await p.evaluate(`document.querySelector('.welcome-hero input').focus()`);
+    if (width > 600) {
+      const blank = await center('.welcome-hero input');
+      await move(blank);
+      await p.wait(restored, 'all topic cards start available');
+      await move(await center('.topic-weather'));
+      await p.wait(isolated('weather'), 'unpressed weather hover isolates its actual scene and fades the map');
+      // Moving directly into a disappearing neighbour must recover that target
+      // after release; an invisible hit region must not trap the previous scene.
+      await move(await center('.topic-rivers'));
+      await p.wait(isolated('rivers'), 'direct pointer switch reaches the next topic');
+      await move(await center('.topic-science'));
+      await p.wait(isolated('science'), 'a second pointer switch keeps the latest topic');
+      await move(blank);
+      await p.wait(restored, 'leaving restores all cards and the real map');
+      const hitTests = await p.evaluate(`Array.from(document.querySelectorAll('.living-welcome .topic-callout'),card=>{const r=card.getBoundingClientRect();return document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)?.closest('.topic-callout')===card;})`);
+      assert.ok(hitTests.every(Boolean), 'restored cards have no hidden hover blockers');
+      await move(await center('.topic-weather'));
+      await p.wait(isolated('weather'), 'restored topic accepts a later ordinary hover');
+      await move(blank);
+      await p.wait(restored, 'repeated exit restores the map without a mouse-focus pin');
+      // Hybrid input: real keyboard focus remains on Weather while an ordinary
+      // mouse move must still reach the other faded card hit areas directly.
+      await p.key('Tab', 'Tab', 9);
+      await p.evaluate(`document.querySelector('.topic-weather').focus()`);
+      await p.wait(isolated('weather'), 'keyboard Weather focus isolates its topic');
+      await p.wait(`document.activeElement?.matches('.topic-weather:focus-visible')`, 'Weather retains legitimate keyboard focus');
+      await move(await center('.topic-rivers'));
+      await p.wait(isolated('rivers', 'weather'), 'mouse reaches River while keyboard focus stays on Weather');
+      await move(await center('.topic-science'));
+      await p.wait(isolated('science', 'weather'), 'next mouse target wins without clearing keyboard focus');
+      await p.evaluate(`document.querySelector('.welcome-hero input').focus()`);
+      await move(blank);
+      await p.wait(restored, 'clearing actual keyboard focus and leaving cards restores the entire map');
+    } else {
+      assert.equal(await p.evaluate(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome');return root.scrollWidth<=root.clientWidth;})()`), true, 'narrow welcome has no horizontal overflow');
+      // A narrow touch layout remains directly operable; it need not synthesize
+      // a mouse hover before opening a category or finding the persistent X.
+      await p.call('Emulation.setTouchEmulationEnabled', {enabled:true,maxTouchPoints:1});
+      await p.evaluate(`document.querySelector('.topic-weather').scrollIntoView({block:'center'});`);
+      const point = await center('.topic-weather');
+      await p.call('Input.dispatchTouchEvent', {type:'touchStart',touchPoints:[{...point,id:1,radiusX:2,radiusY:2,force:1}]});
+      await p.call('Input.dispatchTouchEvent', {type:'touchEnd',touchPoints:[]});
+      await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'touch opens weather details without a hover prerequisite');
+      const close = await p.evaluate(`(()=>{const button=document.querySelector('.welcome-dialog-close'),r=button.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,top:r.top,bottom:r.bottom,hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)===button};})()`);
+      assert.ok(close.top>=0 && close.bottom<=height && close.hit, '375px phone keeps the close target unobstructed');
+      await p.call('Input.dispatchTouchEvent', {type:'touchStart',touchPoints:[{x:close.x,y:close.y,id:1,radiusX:2,radiusY:2,force:1}]});
+      await p.call('Input.dispatchTouchEvent', {type:'touchEnd',touchPoints:[]});
+      await p.wait(`!document.querySelector('.welcome-dialog')`, 'touch closes the topic detail');
+    }
+  });
+}

@@ -16,7 +16,7 @@ async function welcome(reduced=false){
  const env=environment(reduced),calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
   'react-dom':{createPortal:content=>content},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
-  './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},
+  './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>()=>{}},
  },env);
  const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value]),questions:'preserved questions'};
@@ -131,8 +131,75 @@ test('every accepted motion asset is packaged with its provenance and Kansas his
  const manifest=JSON.parse(await readFile('scripts/welcome-history/runtime-assets.json','utf8'));
  assert.equal(manifest.files.length,90);
  for(const file of manifest.files){const bytes=await readFile('public'+file.path);assert.equal(bytes.length,file.bytes);assert.equal(createHash('sha256').update(bytes).digest('hex'),file.sha256);}
- assert.equal(manifest.files.reduce((total,file)=>total+file.bytes,0),82380456);
+ assert.equal(manifest.files.reduce((total,file)=>total+file.bytes,0),manifest.usedBytes);
  assert.equal(MOTION_CLIPS.history.length,6);
  assert.ok(MOTION_CLIPS.history.every(clip=>clip.historicalSourceUrl&&clip.mediaKind==='historical-map'));
  for(const clip of [MOTION_CLIPS.transport[1],MOTION_CLIPS.underground[1]]){assert.equal(clip.width,1920);assert.equal(clip.height,1080);assert.equal(clip.fps,30);}
+});
+
+test('hover focus isolates one topic and restores the scene after pointer focus leaves', async()=>{
+ const h=await welcome(); let tree=h.render();
+ const root=findNode(tree,node=>node.props?.className==='explorer-guide living-welcome');
+ root.props.ref.current={querySelector:()=>null};
+ const topic=findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-weather '));
+ topic.props.onPointerEnter({pointerType:'mouse'});tree=h.render();
+ assert.equal(findNode(tree,node=>node.props?.className==='explorer-guide living-welcome').props['data-immersive'],true);
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'weather');
+ topic.props.onPointerLeave();await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
+ assert.equal(findNode(tree,node=>node.props?.className==='explorer-guide living-welcome').props['data-immersive'],false);
+ // A touch-generated focus must not leave an invisible hover state behind it.
+ topic.props.onFocus({currentTarget:{matches:()=>false}});tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,null);
+ topic.props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'weather');
+ h.harness.dispose();
+});
+
+test('each topic exposes recorded demos and hands its selected tool to the existing destination',async()=>{
+ const h=await welcome();let tree=h.render();
+ findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-weather ')).props.onClick();tree=h.render();
+ const demos=findNode(tree,node=>node.type==='map-demo-panel');assert.equal(demos.props.category,'weather');
+ demos.props.onPlaybackChange(true);tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='scene-preview').props.paused,true,'decorative footage yields to the actual map demonstration');
+ demos.props.onTry({destination:{kind:'topic',value:'weather'}});
+ assert.deepEqual(h.calls,[['topic','weather'],['close',false]]);h.harness.dispose();
+});
+
+
+test('a late blur cannot cancel a fine-pointer hover, while leaving restores all topics without a mouse-focus pin',async()=>{
+ const h=await welcome();let tree=h.render(),hovered=true,finePointer=true;
+ h.env.window.matchMedia=query=>({matches:query==='(hover: hover) and (pointer: fine)'?finePointer:false});
+ findNode(tree,node=>node.props?.className==='explorer-guide living-welcome').props.ref.current={querySelector:selector=>selector==='.topic-callout:hover'&&hovered?{}:null};
+ const weather=findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-weather '));
+ weather.props.onPointerEnter({pointerType:'mouse'});weather.props.onBlur();
+ await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'weather','late focus departure preserves the actual hover');
+ hovered=false;weather.props.onPointerLeave();await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,null,'ordinary mouse focus does not pin an exited card');
+ // Touch browsers may retain CSS :hover after a tap. That stale selector must
+ // never keep every other topic hidden once touch focus has left.
+ finePointer=false;hovered=true;weather.props.onPointerEnter({pointerType:'mouse'});weather.props.onBlur();
+ await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,null,'coarse pointers ignore sticky CSS hover');
+ h.harness.dispose();
+});
+
+
+test('keyboard focus and direct mouse topic changes coexist until focus and hover both leave',async()=>{
+ const h=await welcome();let tree=h.render(),keyboardFocused=true,hovered=false;
+ h.env.window.matchMedia=query=>({matches:query==='(hover: hover) and (pointer: fine)'});
+ const keyboardTarget={};
+ findNode(tree,node=>node.props?.className==='explorer-guide living-welcome').props.ref.current={querySelector:selector=>selector==='.topic-callout:focus-visible'&&keyboardFocused?keyboardTarget:selector==='.topic-callout:hover'&&hovered?{}:null};
+ const card=id=>findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `));
+ card('weather').props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'weather');
+ hovered=true;card('rivers').props.onPointerEnter({pointerType:'mouse'});tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'rivers','actual mouse entry selects the new topic while previous keyboard focus remains');
+ card('rivers').props.onPointerLeave();card('science').props.onPointerEnter({pointerType:'mouse'});tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'science','latest direct mouse target wins');
+ hovered=false;card('science').props.onPointerLeave();await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'science','legitimate keyboard focus keeps the preview until it actually leaves');
+ keyboardFocused=false;card('weather').props.onBlur();await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,null,'no stale focus or invisible hit region pins the preview');
+ h.harness.dispose();
 });
