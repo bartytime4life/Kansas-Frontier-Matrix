@@ -8745,7 +8745,7 @@ export default function Home() {
         <div className="atlas-scope-strip" aria-label="Current investigation">
           <button type="button" className="atlas-scope-control welcome-header-find" onClick={() => openAtlasComposer("find")} aria-controls="qwen-map-panel" title="Find places, layers and sources · shortcut /">Find a county or place</button>
           <button type="button" className="welcome-ai-entry" onClick={() => openAtlasComposer("explore")} aria-controls="qwen-map-panel">✧ Ask AI</button>
-          <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion} />
+          <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} />
           <span className="welcome-header-context"><strong>{selectedLabel}</strong><br /><small>Map time {temporalScopeLabel} · {selectedMapLayerCount} layers</small></span>
         </div>
           <span className="sr-only" role="status">{sourceIssues.length ? `${sourceIssues.length} selected sources need attention. Open Layers, then Source status for recovery.` : ""}</span>
@@ -9566,7 +9566,7 @@ export default function Home() {
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
-          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} visual onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onChoosePlace={() => openAtlasComposer("find")} onMission={question => openAtlasComposer("explore", question)} />
+          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} visual motionEnabled={dynamicEffects} onMotionChange={setDynamicEffects} onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onChoosePlace={() => openAtlasComposer("find")} onMission={question => openAtlasComposer("explore", question)} />
           <button className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Chat with KFM about this map view" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
             <span className="qwen-launch-mark" aria-hidden="true">Q</span>
             <span><strong>Chat with KFM</strong><small>About this map view</small></span>

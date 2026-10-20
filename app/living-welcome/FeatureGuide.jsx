@@ -4,8 +4,11 @@ const DWELL=7000, SLIDE=1150;
 export function WelcomeFeatureGuide({onNavigate, paused=false}) {
   const [index,setIndex]=useState(0),[sliding,setSliding]=useState(false),[held,setHeld]=useState(false);
   const elapsed=useRef(0),phase=useRef(false);
+  const stopped=paused||held;
+  const [wasStopped,setWasStopped]=useState(stopped);
+  if(wasStopped!==stopped){setWasStopped(stopped);setSliding(false);}
   useEffect(()=>{
-    if(paused||held){elapsed.current=0;phase.current=false;setSliding(false);return;}
+    if(paused||held){elapsed.current=0;phase.current=false;return;}
     let last=performance.now();
     const timer=setInterval(()=>{
       const now=performance.now(),dt=now-last;last=now;if(document.hidden)return;

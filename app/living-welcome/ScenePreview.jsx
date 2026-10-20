@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import { motionClip } from './motion-catalog.mjs';
 import { MotionClip } from './MotionClip.jsx';
 export function ScenePreview({category,index,paused}){
-  const clip=motionClip(category,index),[held,setHeld]=useState(false),[hidden,setHidden]=useState(()=>typeof document!=='undefined'&&document.hidden);
-  useEffect(()=>setHeld(false),[clip.id]);
+  const clip=motionClip(category,index);
+  return <ScenePreviewPlayer key={clip.id} clip={clip} paused={paused}/>;
+}
+function ScenePreviewPlayer({clip,paused}){
+  const [held,setHeld]=useState(false),[hidden,setHidden]=useState(()=>typeof document!=='undefined'&&document.hidden);
   useEffect(()=>{const change=()=>setHidden(document.hidden);document.addEventListener('visibilitychange',change);return()=>document.removeEventListener('visibilitychange',change);},[]);
   return <div className="scene-preview" data-scene={clip.id}>
     <div className="scene-preview-visual" style={{'--scene-aspect':clip.width/clip.height}}><MotionClip clip={clip} paused={paused||held||hidden} showStatus/></div>

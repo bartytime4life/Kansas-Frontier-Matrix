@@ -6,17 +6,17 @@ import { fitScene } from './motion-playback.mjs';
 import { MotionClip } from './MotionClip.jsx';
 
 export function MotionAtlas({ paused, active, visible, manual, onReady, onScenes }) {
-  const rootRef = useRef(null), latest = useRef(null), clock = useRef(0), lastFocus = useRef(null), historyStart = useRef(0);
+  const rootRef = useRef(null), clock = useRef(0), lastFocus = useRef(null);
   const [seconds, setSeconds] = useState(0), [bounds, setBounds] = useState(null), [hidden, setHidden] = useState(() => typeof document !== 'undefined' && document.hidden), [historyOrigin,setHistoryOrigin]=useState(0);
-  latest.current = { paused, active, manual, onScenes };
   useEffect(() => {
     onReady?.(true);
     const visibility = () => setHidden(document.hidden);
     document.addEventListener('visibilitychange', visibility);
     return () => { document.removeEventListener('visibilitychange', visibility); onReady?.(false); };
-  }, []);
+  }, [onReady]);
+  const hasViewport=bounds?.view.h > 0;
   useEffect(() => {
-    if (paused || hidden || (bounds && bounds.view.h <= 0)) return;
+    if (paused || hidden || !hasViewport) return;
     let last=performance.now();
     // Native video presents frames. The story director only needs a low-rate
     // clock for scene changes; it does no per-frame rendering or pixel work.
@@ -24,9 +24,9 @@ export function MotionAtlas({ paused, active, visible, manual, onReady, onScenes
       const now=performance.now();clock.current+=Math.min(.5,(now-last)/1000);last=now;setSeconds(clock.current);
     },120);
     return()=>clearInterval(timer);
-  }, [paused, hidden, bounds?.view.h > 0]);
+  }, [paused, hidden, hasViewport]);
   useEffect(() => {
-    if (active === 'history' && lastFocus.current !== 'history') {historyStart.current=clock.current;setHistoryOrigin(clock.current);}
+    if (active === 'history' && lastFocus.current !== 'history') {setHistoryOrigin(clock.current);}
     lastFocus.current = active;
     setSeconds(clock.current);
   }, [active, manual]);
@@ -55,7 +55,7 @@ export function MotionAtlas({ paused, active, visible, manual, onReady, onScenes
   }, []);
   const indices = Object.fromEntries(CATEGORY_IDS.map(id => [id, dominantScene(sceneAt(id === 'history' ? seconds - historyOrigin : seconds, id, id === active ? manual : null))]));
   const key = Object.values(indices).join(',');
-  useEffect(() => { latest.current.onScenes?.(indices); }, [key]);
+  useEffect(() => { onScenes?.(Object.fromEntries(CATEGORY_IDS.map((id,i)=>[id,Number(key.split(',')[i])]))); }, [key,onScenes]);
   const eligible = CATEGORY_IDS.filter(id => {
     const r = bounds?.local[id], view = bounds?.view;
     return visible?.[id] !== false && r && r.y + r.h > view.y - 30 && r.y < view.y + view.h + 30;
