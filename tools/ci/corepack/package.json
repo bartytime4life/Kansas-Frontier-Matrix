@@ -1,0 +1,9 @@
+{
+  "name": "@kfm/ci-corepack",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Isolated, integrity-locked Corepack bootstrap for CI; outside the pnpm workspace.",
+  "dependencies": {
+    "corepack": "https://github.com/nodejs/corepack/releases/download/v0.34.0/corepack.tgz"
+  }
+}
