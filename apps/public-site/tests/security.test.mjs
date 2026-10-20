@@ -9,14 +9,11 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { after, before, test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { runInNewContext } from "node:vm";
 import { build, DEFAULTS, escapeRegex } from "../build.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const scratch = mkdtempSync(join(tmpdir(), "kfm-public-security-"));
 const dist = join(scratch, "bundle");
-const workflow = readFileSync(join(REPO, ".github/workflows/godaddy-public-site.yml"), "utf8");
-const deploy = workflow.split(/^  deploy:\s*$/m)[1];
 const env = { ...process.env, KFM_SITE_ORIGIN: DEFAULTS.origin, KFM_EXPLORER_URL: DEFAULTS.explorerUrl,
   KFM_BUILD_COMMIT: "a".repeat(40), KFM_BUILD_TIME: new Date().toISOString(), KFM_SITE_OUT: dist };
 let server;
@@ -108,42 +105,6 @@ after(async () => {
     await exited;
   }
   rmSync(scratch, { recursive: true, force: true });
-});
-
-test("actual deployment predicate denies unauthorized events, refs and disabled states", () => {
-  const expression = /^    if: \$\{\{ (.+) \}\}$/m.exec(deploy)?.[1];
-  assert.ok(expression, "credential job needs an explicit gate");
-  // Evaluate only the bounded boolean/comparison grammar used by this gate;
-  // never execute run steps. GitHub string comparisons are case-insensitive.
-  assert.match(expression, /^(?:vars\.GODADDY_DEPLOY_ENABLED|github\.ref_protected|github\.ref|github\.event_name|true|'[^']*'| == | && | \|\| |[()])+$/);
-  for (const enabled of [undefined, "", "false", "true"]) {
-    for (const event of ["push", "workflow_dispatch", "pull_request", "pull_request_target", "workflow_run", "repository_dispatch"]) {
-      for (const ref of ["refs/heads/main", "refs/heads/attacker", "refs/tags/main", "refs/tags/release", "refs/pull/5105/merge", "refs/heads/main-evil", ""]) {
-        for (const protectedRef of [false, true]) {
-          const allowed = runInNewContext(expression, { vars: { GODADDY_DEPLOY_ENABLED: enabled }, github: { ref, ref_protected: protectedRef, event_name: event } });
-          assert.equal(allowed, enabled === "true" && protectedRef && ref === "refs/heads/main" && ["push", "workflow_dispatch"].includes(event), `${enabled}/${event}/${ref}/${protectedRef}`);
-        }
-      }
-    }
-  }
-});
-
-test("hosting secrets remain confined to guarded environment and immutable event checkout", () => {
-  assert.match(deploy, /needs: build/);
-  assert.match(deploy, /environment:\n      name: godaddy-production/);
-  const steps = deploy.split(/^      - name: /m);
-  const secretSteps = steps.filter((step) => /\$\{\{ secrets\./.test(step));
-  assert.equal(secretSteps.length, 1);
-  assert.match(secretSteps[0], /^Mirror bundle to GoDaddy hosting/);
-  assert.equal((workflow.match(/\$\{\{ secrets\./g) || []).length, 5);
-  assert.equal((workflow.match(/ref: \$\{\{ github.sha \}\}/g) || []).length, 2);
-  assert.equal((workflow.match(/persist-credentials: false/g) || []).length, 2);
-  assert.doesNotMatch(workflow, /secrets: inherit|pull_request_target:|inputs\.(?:ref|commit|branch|tag)/);
-  assert.match(workflow.split(/^  deploy:/m)[0], /--test apps\/public-site\/tests\/security\.test\.mjs/);
-  const runbook = readFileSync(join(REPO, "docs/runbooks/godaddy-hosting.md"), "utf8");
-  assert.match(runbook, /exactly\s+one allowed policy: branch `main`/);
-  assert.match(runbook, /reviewed pull request/);
-  assert.match(runbook, /never roll back by dispatching an old branch\/tag/);
 });
 
 test("regex escaping treats every metacharacter as literal", () => {

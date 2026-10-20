@@ -6,7 +6,7 @@ version: v1
 status: verified deployment observations; hosted chat held off on Published
 owners: ["@bartytime4life"]
 created: 2026-10-17
-updated: 2026-10-19
+updated: 2026-10-20
 policy_label: public
 current_path: docs/runbooks/godaddy-node-hosting.md
 owning_root: docs/
@@ -26,6 +26,22 @@ first. The menu route is **Hosting → Node.js Hosting → My Apps → Kansas-Fr
 (urdng3v1vk)**. Re-read the provider's app list, source branch and Published and
 Preview tabs before each operation. A linked branch, latest GitHub commit, preview
 and public deployment can all differ, and on 2026-10-19 the app itself had changed.
+
+## Provider readback, 2026-10-20
+
+The authenticated GoDaddy dashboard shows app `urdng3v1vk` connected to
+`a0-hosted-ai-web-20261017`. Its Published tab reports commit
+`c59c38a58248793b651bb265c082573663473d31`, with Infra and Site status OK.
+The public Explorer opened anonymously. This provider revision observation
+supersedes the earlier connected-branch and Published-source rows below; it does
+not independently verify public build-digest parity or model configuration.
+
+The monorepo `godaddy-public-site` workflow is build-only after retirement of
+its historical static transfer job. It retains validation and a review artifact
+but cannot acquire hosting credentials or create a competing deployment. Keep
+the GoDaddy Node application as the sole intended public production path.
+Private Sites preservation and Public Staging remain separate; neither is
+unpublished by this source change. Historical deployment records are retained.
 
 ## Verified starting point, 2026-10-19
 

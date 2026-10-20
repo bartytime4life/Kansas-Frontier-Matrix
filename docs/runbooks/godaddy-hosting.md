@@ -6,7 +6,7 @@ version: v2
 status: current Node operation documented; historical cPanel plan retained
 owners: ["@bartytime4life"]
 created: 2026-10-12
-updated: 2026-10-19
+updated: 2026-10-20
 policy_label: public
 current_path: docs/runbooks/godaddy-hosting.md
 owning_root: docs/
@@ -31,6 +31,15 @@ The 2026-10-19 provider readback identifies a standalone Node.js 22 composition,
 not the monorepo root or static front-door deployment. The earlier app
 `q9r9beo47t` named below no longer exists. Review, publication holds,
 data admission and rollback remain separate controls.
+
+The `godaddy-public-site` workflow is now **build-only**: it retains the existing
+check name and downloadable static review artifact, but has no deployment job,
+hosting secrets, deployment environment or transfer inputs. Setting the former
+`GODADDY_DEPLOY_ENABLED` variable cannot restore that path. The one intended
+public production path is the GoDaddy Node application above. Private Sites
+references and staging deployments remain distinct preserved applications;
+this workflow cleanup does not unpublish them or delete historical deployment
+records. Reintroducing a static transfer requires a separately reviewed change.
 
 <details>
 <summary>Historical cPanel/static-front-door plan from 2026-10-12 — do not apply to the active Node app</summary>
