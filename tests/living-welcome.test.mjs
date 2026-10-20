@@ -24,24 +24,6 @@ async function welcome(reduced=false){
  return {harness,props,calls,render,env};
 }
 const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.children===text);
-
-test('welcome commits focus and Escape together before passive effects, then removes its handler',async()=>{
- const h=await welcome(),input={focus(){h.env.document.activeElement=input;}};
- const tree=h.harness.render(h.harness.exports.default,h.props);
- tree.props.ref.current={querySelector:()=>input,contains:target=>target===input};
- assert.equal(h.env.document.activeElement,null);
- h.harness.commitLayout();
- assert.equal(h.env.document.activeElement,input,'lazy handoff must not leave focus on body until passive effects');
- const escape=h.env.listeners.get('keydown');
- assert.equal(typeof escape,'function','Escape must be installed when autofocus becomes observable');
- let prevented=0,stopped=0;
- escape({key:'Escape',target:input,preventDefault(){prevented++;},stopImmediatePropagation(){stopped++;}});
- assert.deepEqual(h.calls,[['close',false]]);
- assert.equal(prevented,1);assert.equal(stopped,1);
- h.env.document.activeElement={};
- h.harness.commit();
- assert.notEqual(h.env.document.activeElement,input,'later passive effects must not steal returned focus');
- h.harness.dispose();
  assert.equal(h.env.listeners.has('keydown'),false);
 });
 

@@ -45,11 +45,6 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     media.addEventListener('change',change);document.addEventListener('visibilitychange',visibility);
     return()=>{media.removeEventListener('change',change);document.removeEventListener('visibilitychange',visibility);clearTimeout(leave.current);};
   },[]);
-  // The fallback can be removed in this commit. Focus before paint so an
-  // intervening Escape cannot land on body and then be followed by autofocus.
-  useLayoutEffect(()=>{
-    root.current?.querySelector('[data-guide-autofocus]')?.focus({preventScroll:true});
-  },[]);
   useEffect(()=>{
     if(!modal){const target=trigger.current;trigger.current=null;if(target?.isConnected)target.focus({preventScroll:true});return;}
     const node=dialog.current,restore=isolateModalBackground(node,document.body);
