@@ -91,18 +91,43 @@ test('pause and reduced motion stop media while detailed sources preserve the us
  quiet.harness.dispose();
 });
 
-test('header feature scroll dwells, pauses on interest, and only navigates on an explicit click',async()=>{
- let now=0,tick;const calls=[];
- const h=await componentHarness('app/living-welcome/FeatureGuide.jsx',{'./features':{WELCOME_FEATURES:features}},{performance:{now:()=>now},setInterval:fn=>{tick=fn;return 1;},clearInterval(){},document:{hidden:false}});
+function featureClock() {
+ let now=0,nextId=0,wakes=0;const timers=new Map(),listeners=new Map();
+ const document={hidden:false,addEventListener:(type,fn)=>listeners.set(type,fn),removeEventListener:(type,fn)=>{if(listeners.get(type)===fn)listeners.delete(type);}};
+ return {document,listeners,timers,get wakes(){return wakes;},
+  globals:{document,setTimeout:(fn,ms)=>{const id=++nextId;timers.set(id,{fn,at:now+ms});return id;},clearTimeout:id=>timers.delete(id)},
+  advance(ms){const until=now+ms;while(true){const due=[...timers].filter(([,v])=>v.at<=until).sort((a,b)=>a[1].at-b[1].at)[0];if(!due)break;now=due[1].at;timers.delete(due[0]);wakes++;due[1].fn();}now=until;},
+  hidden(value){document.hidden=value;listeners.get('visibilitychange')?.();},
+ };
+}
+
+test('header feature scroll uses two deadlines, pauses on interest, and navigates only on a click',async()=>{
+ const clock=featureClock(),calls=[];
+ const h=await componentHarness('app/living-welcome/FeatureGuide.jsx',{'./features':{WELCOME_FEATURES:features}},clock.globals);
  const props={onNavigate:value=>calls.push(value)};
  const render=()=>{const tree=h.render(h.exports.WelcomeFeatureGuide,props);h.commit();return tree;};
- let tree=render();for(let i=0;i<46;i++){now+=150;tick();}tree=render();assert.equal(tree.props['data-sliding'],false);
- now+=150;tick();tree=render();assert.equal(tree.props['data-sliding'],true);
- tree.props.onPointerEnter();tree=render();tree=render();assert.equal(tree.props['data-sliding'],false);
- assert.deepEqual(calls,[]);
- const current=findNode(tree,node=>node.type==='button'&&node.props.tabIndex===0);current.props.onClick();assert.deepEqual(calls,['transport']);
+ let tree=render();clock.advance(6999);tree=render();assert.equal(tree.props['data-sliding'],false);assert.equal(clock.wakes,0);
+ clock.advance(1);tree=render();assert.equal(tree.props['data-sliding'],true);
+ clock.advance(1150);tree=render();assert.equal(tree.props['data-sliding'],false);assert.equal(clock.wakes,2);
+ tree.props.onPointerEnter();tree=render();tree=render();assert.equal(clock.timers.size,0);
+ clock.advance(60000);assert.equal(clock.wakes,2);assert.deepEqual(calls,[]);
+ const current=findNode(tree,node=>node.type==='button'&&node.props.tabIndex===0);current.props.onClick();assert.deepEqual(calls,[features[1].destination]);
  const next=findNode(tree,node=>node.type==='button'&&node.props.tabIndex===-1);assert.equal(next.props['aria-hidden'],true);
- h.dispose();
+ h.dispose();assert.equal(clock.timers.size,0);assert.equal(clock.listeners.size,0);
+});
+
+test('feature rotation suspends while hidden, resumes a full dwell and resets after manual or paused input',async()=>{
+ const clock=featureClock();
+ const h=await componentHarness('app/living-welcome/FeatureGuide.jsx',{'./features':{WELCOME_FEATURES:features}},clock.globals);
+ let paused=false;const render=()=>{const tree=h.render(h.exports.WelcomeFeatureGuide,{onNavigate(){},paused});h.commit();return tree;};
+ let tree=render();clock.advance(7000);tree=render();assert.equal(tree.props['data-sliding'],true);
+ clock.hidden(true);tree=render();assert.equal(tree.props['data-sliding'],false);assert.equal(clock.timers.size,0);
+ clock.advance(60000);assert.equal(clock.wakes,1);clock.hidden(false);clock.advance(6999);tree=render();assert.equal(tree.props['data-sliding'],false);
+ clock.advance(1);tree=render();assert.equal(tree.props['data-sliding'],true);
+ findNode(tree,node=>node.props?.['aria-label']==='Next feature').props.onClick();tree=render();assert.equal(tree.props['data-sliding'],false);
+ clock.advance(1150);tree=render();assert.equal(tree.props['data-sliding'],false);assert.equal(clock.wakes,2);
+ paused=true;tree=render();tree=render();assert.equal(clock.timers.size,0);clock.advance(60000);assert.equal(clock.wakes,2);
+ paused=false;render();assert.equal(clock.timers.size,1);h.dispose();assert.equal(clock.timers.size,0);assert.equal(clock.listeners.size,0);
 });
 
 test('production welcome handlers filter existing source UI and preserve URL/dismissal lifecycle',async()=>{
