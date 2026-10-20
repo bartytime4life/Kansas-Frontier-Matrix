@@ -103,9 +103,9 @@ test('gateway configuration stays on loopback and refuses a shared-readable key 
   // The relaxed check applies only inside a private directory under the systemd
   // credentials root; a CREDENTIALS_DIRECTORY set by hand elsewhere stays strict.
   const root=join(dir,'run-credentials')+'/',credentials=join(root,'kfm-inference-gateway.service'),credential=join(credentials,'gateway-keys.json');
-  await mkdir(credentials,{recursive:true});await chmod(credentials,0o550);
+  await mkdir(credentials,{recursive:true});
   await writeFile(credential,await readFile(keyPath));
-  await chmod(credential,0o440);
+  await chmod(credential,0o440);await chmod(credentials,0o550);
   const viaSystemd={KFM_GATEWAY_PROFILES:profilePath,CREDENTIALS_DIRECTORY:credentials};
   assert.equal(loadConfig(viaSystemd,{credentialsRoot:root}).keys.size,1);
   assert.throws(()=>loadConfig(viaSystemd),/KEYS_FILE_PERMISSIONS/,'outside the real credentials root');
@@ -116,7 +116,7 @@ test('gateway configuration stays on loopback and refuses a shared-readable key 
   await chmod(keyPath,0o640);
   assert.throws(()=>loadConfig({...env,CREDENTIALS_DIRECTORY:credentials},{credentialsRoot:root}),/KEYS_FILE_PERMISSIONS/,'explicit path stays strict');
   await chmod(credentials,0o755);
- }finally{await rm(dir,{recursive:true,force:true});}
+ }finally{await chmod(join(dir,'run-credentials','kfm-inference-gateway.service'),0o700).catch(()=>{});await rm(dir,{recursive:true,force:true});}
 });
 
 test('unsigned callers reach nothing, and Ollama management routes are never forwarded',async()=>{

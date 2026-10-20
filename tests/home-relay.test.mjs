@@ -203,10 +203,10 @@ test('the worker key file must be owner-only unless systemd provides it',async()
  const dir=await mkdtemp(join(tmpdir(),'kfm-worker-'));
  try{
   const root=join(dir,'run-credentials')+'/',credentials=join(root,'kfm-inference-worker.service');
-  await mkdir(credentials,{recursive:true});await chmod(credentials,0o550);
+  await mkdir(credentials,{recursive:true});
   const keyPath=join(credentials,'worker-key.json');
   await writeFile(keyPath,JSON.stringify({id:'worker-1',scope:'worker',secret:workerSecret}));
-  await chmod(keyPath,0o440);
+  await chmod(keyPath,0o440);await chmod(credentials,0o550);
   assert.throws(()=>loadWorkerConfig({KFM_WORKER_SITE:SITE,KFM_WORKER_KEY_FILE:keyPath}),/WORKER_KEY_PERMISSIONS/);
   // Group read is accepted only from a private directory under the systemd credentials root.
   assert.equal(loadWorkerConfig({KFM_WORKER_SITE:SITE,CREDENTIALS_DIRECTORY:credentials},{credentialsRoot:root}).keyId,'worker-1');
@@ -217,5 +217,5 @@ test('the worker key file must be owner-only unless systemd provides it',async()
   assert.throws(()=>loadWorkerConfig({KFM_WORKER_SITE:'http://kansasfrontiermatrix.com',KFM_WORKER_KEY_FILE:keyPath}),/WORKER_SITE_INVALID/);
   assert.throws(()=>loadWorkerConfig({KFM_WORKER_SITE:SITE+'/api',KFM_WORKER_KEY_FILE:keyPath}),/WORKER_SITE_INVALID/);
   assert.throws(()=>loadWorkerConfig({KFM_WORKER_SITE:SITE,KFM_WORKER_GATEWAY:'http://192.168.86.25:8787',KFM_WORKER_KEY_FILE:keyPath}),/WORKER_GATEWAY_NOT_LOOPBACK/);
- }finally{await rm(dir,{recursive:true,force:true});}
+ }finally{await chmod(join(dir,'run-credentials','kfm-inference-worker.service'),0o700).catch(()=>{});await rm(dir,{recursive:true,force:true});}
 });
