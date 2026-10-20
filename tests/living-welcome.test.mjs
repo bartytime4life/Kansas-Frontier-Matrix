@@ -21,9 +21,33 @@ async function welcome(reduced=false){
  },env);
  const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value]),questions:'preserved questions'};
  const render=()=>{const tree=harness.render(harness.exports.default,props);harness.commit();return tree;};
- return {harness,props,calls,render};
+ return {harness,props,calls,render,env};
 }
 const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.children===text);
+
+test('visual welcome owns focus and Escape before passive effects run after the fallback handoff',async()=>{
+ const h=await welcome(),input={};
+ const tree=h.harness.render(h.harness.exports.default,h.props);
+ tree.props.ref.current={
+  contains:node=>node===input,
+  querySelector:()=>({focus(){h.env.document.activeElement=input;}}),
+ };
+ try{
+  // React commits layout effects before the browser can paint or dispatch
+  // another key. Passive effects may run later, after the fallback is gone.
+  h.harness.commitLayout();
+  assert.equal(h.env.document.activeElement,input);
+  const keyboard=h.env.listeners.get('keydown');
+  assert.equal(typeof keyboard,'function');
+  keyboard({target:{},key:'Escape'});
+  assert.deepEqual(h.calls,[],'keys outside the non-modal welcome remain available');
+  let prevented=false,stopped=false;
+  keyboard({target:input,key:'Escape',preventDefault(){prevented=true;},stopImmediatePropagation(){stopped=true;}});
+  assert.equal(prevented,true);assert.equal(stopped,true);
+  assert.deepEqual(h.calls,[['close',false]]);
+ }finally{h.harness.dispose();}
+ assert.equal(h.env.listeners.has('keydown'),false);
+});
 
 test('welcome uses real search and draft actions without requests or implicit dismissal preferences',async()=>{
  const h=await welcome();let tree=h.render();assert.deepEqual(h.calls,[]);
