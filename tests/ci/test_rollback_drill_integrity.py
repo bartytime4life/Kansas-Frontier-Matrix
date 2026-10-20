@@ -101,11 +101,11 @@ def run_boundary(checkout: Path) -> subprocess.CompletedProcess[str]:
 
 def assert_real_rehearsal(result: subprocess.CompletedProcess[str]) -> None:
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "Ran 12 tests" in result.stdout
+    assert "Ran 14 tests" in result.stdout
     assert "OK" in result.stdout
 
 
-def test_regular_checkout_runs_all_twelve_cases(checkout: Path) -> None:
+def test_regular_checkout_runs_all_fourteen_cases(checkout: Path) -> None:
     assert_real_rehearsal(run_boundary(checkout))
 
 
