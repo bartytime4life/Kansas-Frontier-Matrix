@@ -87,7 +87,7 @@ const feed='usgs-earthquakes',ref=current=>({current});
 function archiveContext(){
   const requests=[],states=[];
   const ctx={useCallback:fn=>fn,announce:()=>{},currentUtcDay:()=>'2026-10-11',readFireDay:async()=>null,
-    officialRequestsRef:ref(new Map()),officialArchiveDaysRef:ref({}),officialArchivePayloadsRef:ref({}),officialPayloadsRef:ref({}),
+    calendarArchiveLoads:ref(new Map()),officialRequestsRef:ref(new Map()),officialArchiveDaysRef:ref({}),officialArchivePayloadsRef:ref({}),officialPayloadsRef:ref({}),
     setOfficialArchiveDays:()=>{},setOfficialPayloads:()=>{},setOfficialStates:fn=>states.push(fn({})[feed]),setOfficialErrors:()=>{},setOfficialReadPhases:()=>{},setEarthquakeArchiveFrameIndex:()=>{},setSmokeArchiveFrameIndex:()=>{},
     OFFICIAL_CONTEXT_BY_ID:{[feed]:{apiPath:'/api/live-context?feed=usgs-earthquakes',shortTitle:'Earthquakes'}},
     layerJsonReadsRef:ref({read:(url,options)=>{const req={url,options,...deferred()};requests.push(req);return req.promise;}}),
@@ -96,7 +96,7 @@ function archiveContext(){
 }
 const snapshot=day=>({response:{ok:true,status:200},body:{feed,state:'empty',sourceDay:day,retrievedAt:'2024-06-03T00:00:00Z',featureCount:0,data:{type:'FeatureCollection',features:[]}}});
 test('production date callback coalesces identical selection and ignores an older day completing last',async()=>{
-  const r=archiveContext();const old=r.load(feed,'2024-06-01');await tick();await r.load(feed,'2024-06-01');assert.equal(r.requests.length,1);
+  const r=archiveContext();const old=r.load(feed,'2024-06-01');await tick();const duplicate=r.load(feed,'2024-06-01');assert.equal(duplicate,old,'identical dates must share completion, not only acquisition');assert.equal(r.requests.length,1);
   const next=r.load(feed,'2024-06-02');await tick();assert.equal(r.requests[0].options.signal.aborted,true);
   r.requests[1].resolve(snapshot('2024-06-02'));await next;r.requests[0].resolve(snapshot('2024-06-01'));await old;
   assert.equal(r.ctx.officialPayloadsRef.current[feed].sourceDay,'2024-06-02');assert.equal(r.ctx.officialArchivePayloadsRef.current[feed].sourceDay,'2024-06-02');assert.equal(r.states.at(-1),'empty');
