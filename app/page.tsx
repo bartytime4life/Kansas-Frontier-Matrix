@@ -4603,6 +4603,7 @@ export default function Home() {
         // Decide from the same incoming URL/saved view that owns restoration,
         // before view serialization can add default camera parameters.
         setGuideOpen(!hasDestination && !readExplorerGuideDismissed());
+        setWelcomeSourcesOpen(false);
       } else if (hasDestination) {
         // Back/Forward can restore a destination while manual help is open.
         // Do not strand keyboard focus in the removed guide or save an opt-out.
@@ -8822,9 +8823,18 @@ export default function Home() {
   const welcomeShowing = guideOpen && primaryWorkspace === "map";
   const toggleExplorerGuide = () => {
     if (welcomeShowing) { setWelcomeSourcesOpen((open) => !open); return; }
+    setWelcomeSourcesOpen(false); // every welcome opens with the sources hidden
     setPrimaryWorkspace("map");
     setGuideOpen(true);
   };
+  // The welcome keeps the licence-required map credit visible. MapLibre's compact
+  // attribution is a <details> that collapses after a map drag, and a closed
+  // <details> renders nothing, so reopen it whenever the welcome appears.
+  useEffect(() => {
+    if (!welcomeShowing) return;
+    const attribution = document.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib");
+    if (attribution) { attribution.open = true; attribution.classList.add("maplibregl-compact-show"); }
+  }, [welcomeShowing]);
   const closeExplorerGuide = (rememberDismissal: boolean) => {
     setGuideOpen(false);
     setWelcomeSourcesOpen(false);
@@ -8922,7 +8932,7 @@ export default function Home() {
             </div>
           </nav>
         <div className="top-actions">
-          <button className="guide-trigger" type="button" aria-label={welcomeShowing ? (welcomeSourcesOpen ? "Hide map sources" : "Show map sources") : "Open the quick start guide"} title={welcomeShowing ? (welcomeSourcesOpen ? "Hide map sources" : "Show map sources") : "Quick start guide"} aria-pressed={welcomeShowing ? welcomeSourcesOpen : undefined} onClick={toggleExplorerGuide}>?</button>
+          <button className="guide-trigger" type="button" aria-label={welcomeShowing ? "Map sources" : "Open the quick start guide"} title={welcomeShowing ? "Map sources" : "Quick start guide"} aria-pressed={welcomeShowing ? welcomeSourcesOpen : undefined} aria-expanded={welcomeShowing ? undefined : false} onClick={toggleExplorerGuide}>?</button>
           <details className="header-overflow-menu" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
             <summary aria-label="More site actions" title="More site actions">More <span aria-hidden="true">⌄</span></summary>
             <div className="header-overflow-panel">

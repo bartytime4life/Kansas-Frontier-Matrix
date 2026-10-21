@@ -40,7 +40,7 @@ test('actual restoration decision reads incoming state once, closes on history a
     vm.runInNewContext(ts.transpile(source), {
       params: new URLSearchParams(search), hasExplorerDestination: startup.exports.hasExplorerDestination,
       URLSearchParams, window: { location: { search } },
-      explorerRestoredRef: { current: restored }, setGuideOpen: value => { open = value; },
+      explorerRestoredRef: { current: restored }, setGuideOpen: value => { open = value; }, setWelcomeSourcesOpen: () => {},
       readExplorerGuideDismissed: () => { preferenceReads++; return dismissed; },
       document: { activeElement: { closest: () => focused }, querySelector: () => ({ focus: () => { focusReturns++; } }) },
     });

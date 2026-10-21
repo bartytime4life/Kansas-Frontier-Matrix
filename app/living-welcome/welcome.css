@@ -454,7 +454,7 @@
 @media(max-width:900px){.living-welcome .discovery-scene{justify-items:start;margin-left:0;text-align:left;flex-basis:100%}}
 @media(prefers-reduced-motion:reduce){.living-welcome .discovery-scene b{animation:none}}
 .atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-bottom-right{left:0}
-.atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib{display:flex;align-items:center;justify-content:flex-end;width:100%;max-width:none;min-height:calc(48px + env(safe-area-inset-bottom,0px));margin:0;padding:6px 16px;border:0;border-radius:0;background:#031a2b!important;text-align:right}
+.atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib{display:flex;align-items:safe center;max-height:none;justify-content:flex-end;width:100%;max-width:none;min-height:calc(48px + env(safe-area-inset-bottom,0px));margin:0;padding:6px 16px;border:0;border-radius:0;background:#031a2b!important;text-align:right}
 /* Phones: a 2×2 dock. Explore freely already closes the welcome, so the
    duplicate Skip control steps aside rather than adding a third row. */
 @media(max-width:560px){
@@ -469,3 +469,19 @@
 .living-welcome .welcome-map-stage{grid-template-rows:auto auto minmax(min-content,1fr) auto}
 .living-welcome:not([data-fullscreen=true]) .discovery-field{align-content:start}
 .living-welcome:not([data-fullscreen=true]) .welcome-preview-expand{justify-self:start;width:auto}
+/* Full-window preview keeps only its own Return and Pause controls (and Escape). */
+.living-welcome[data-fullscreen=true] .welcome-heading-row{display:none}
+.living-welcome[data-fullscreen=true] .welcome-scene-deck{position:static}
+.living-welcome[data-fullscreen=true] .domain-stage-caption{left:32px;right:auto;bottom:28px;justify-items:start;text-align:left}
+@media(max-width:700px){.living-welcome[data-fullscreen=true] .domain-stage-caption{top:16px;bottom:auto;left:18px;max-width:calc(100% - 36px)}}
+/* Phones: the full source list stays one scrollable line inside the strip. */
+@media(max-width:700px){
+  .atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib{display:block;height:calc(48px + env(safe-area-inset-bottom,0px));min-height:0;padding:0 12px;overflow-x:auto;overflow-y:hidden;text-align:left;white-space:nowrap}
+  .atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib-inner{line-height:48px;white-space:nowrap}
+}
+/* MapLibre hides the attribution text whenever its compact control collapses;
+   the welcome strip must always show it. */
+.atlas-studio:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib .maplibregl-ctrl-attrib-inner{display:block}
+/* Without WebGL (or after a lost context) there is no scene to caption. */
+.living-welcome:has(.domain-stage[data-state=unavailable]) .discovery-scene,
+.living-welcome .domain-stage[data-state=unavailable] .domain-stage-caption{display:none}

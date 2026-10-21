@@ -317,3 +317,17 @@ test('keyboard focus and direct mouse topic changes coexist until focus and hove
  assert.equal(rootOf(tree).props['data-active'],null,'no stale focus or invisible hit region pins the preview');
  h.harness.dispose();
 });
+
+test('leaving a pinned full-window preview ends the preview and restores hover and the hero',async()=>{
+ const h=await welcome();let tree=h.render();
+ findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-water ')).props.onClick();tree=h.render();
+ byText(tree,'Preview in the welcome window →').props.onClick();tree=h.render();
+ assert.equal(rootOf(tree).props['data-fullscreen'],true);assert.equal(rootOf(tree).props['data-active'],'water');
+ byText(tree,'Return to categories').props.onClick();tree=h.render();
+ assert.equal(rootOf(tree).props['data-fullscreen'],false);
+ assert.equal(rootOf(tree).props['data-active'],null,'no pin survives, so other cards can take over again');
+ assert.equal(rootOf(tree).props['data-immersive'],false,'the hero and the other cards return');
+ findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-sky ')).props.onPointerEnter({pointerType:'mouse'});tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,'sky');
+ h.harness.dispose();
+});
