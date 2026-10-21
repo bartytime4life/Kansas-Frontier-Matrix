@@ -1,0 +1,32 @@
+{
+  "kind": "GENERATED_UI_DECORATION",
+  "authority": "NONE",
+  "generatedUtc": "2026-10-21",
+  "source": "OpenAI image generation; transparent brass hourglass sand-transfer strip",
+  "sourceSha256": "f310a0aaa6b3e20f6966ee0d83c46aa3effa9021a128f5120b630b2d00612cf8",
+  "sourceDimensions": [
+    1881,
+    836
+  ],
+  "normalization": {
+    "columns": 12,
+    "sourceCropY": [
+      208,
+      610
+    ],
+    "deliveryCell": [
+      192,
+      512
+    ],
+    "fitBounds": [
+      176,
+      464
+    ],
+    "resampling": "Pillow LANCZOS; centered alpha composite; lossless WebP"
+  },
+  "delivery": "hourglass.webp",
+  "deliverySha256": "a74cbce4b25f8d15c315194e18d432be341b723a40ddfb03a4d211a9cbabed59",
+  "drainSeconds": 10,
+  "flipSeconds": 0.8,
+  "meaning": "Decorative only; does not attest map time, coverage, data or release."
+}

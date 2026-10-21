@@ -1,111 +1,73 @@
-# Living welcome integration · 2026-10-20
+# Capability welcome · 2026-10-21 candidate
 
-The accepted living welcome is integrated into the standalone public Explorer
-on `a0-hosted-ai-web-20261017`, starting at
-`ad37e47a1192a8e70786b76c85da6e64ac5f4019`. The preserved private Site and the
-monorepo application remain separate. This source change does not publish a
-GoDaddy release or change database, model, account, DNS or hosting settings.
+The current candidate replaces the welcome's representative footage with animated
+captures of the actual Explorer. The legacy footage modules, original recordings
+and their rights manifests remain as rollback/authoring inputs; the welcome no
+longer imports or mounts their players. It does not deploy a GoDaddy release.
 
-## Real application connections
+## Navigation and options
 
-`app/explorer-guide.tsx` retains first-visit dismissal, blocked-storage handling,
-URL-aware startup, the **?** entry point and all original question starters.
-Its lazy living welcome uses the existing live map; the prototype's sample
-basemap, fake place results and example AI implementation are not imported.
-The old guide remains the loading fallback and **All questions & tools** view.
+All 17 categories and their facets come directly from `app/layer-workspaces.ts`.
+There is no second domain taxonomy. Selecting a category or preview does not
+activate layers, change map time, request AI output or admit data. The explicit
+source-workspace action uses the existing topic callback. Facets describe that
+workspace; they are not independent data-activation controls.
 
-| Welcome entry | Existing application destination |
-| --- | --- |
-| County/place search | Indexed Find composer with the entered query |
-| Ask the atlas / header Ask AI | Existing Ask composer, without sending a question |
-| Weather & skies | Weather source workspace |
-| Follow the rivers | Water source workspace |
-| Science & land | Science source workspace |
-| Look underground | Groundwater sources; separate Underground Explorer action |
-| History & time | History source workspace |
-| Roads & Rail | Transport source workspace |
-| Farming | Agriculture source workspace |
-| Government | Land ownership and public-land source workspace |
+## Animations and scope
 
-Topic actions filter the source catalogue without selecting layers, changing
-the map year or claiming that a dataset has been admitted. The feature guide
-links to these same destinations; **Coming** opens current source coverage.
+`CapabilityPreview.jsx` mounts only the chosen animated WebP, or its existing
+poster when paused, hidden, reduced-motion or failed. Opening details holds the
+background still. Expanded viewing uses the welcome window and retains Return,
+Pause and Escape; it does not invoke browser fullscreen. Focus moves to Return
+when a detail selection opens expanded viewing.
 
-## Motion and source materials
+The 16 animations derive from the source-bound recordings already described in
+`scripts/welcome-demos/runtime-assets.json` and `app/living-welcome/map-demos.mjs`.
+They show recorded software output, not current observations or a live tutorial.
+Source clocks and limitations remain attached. Contextual reuse for geology,
+ecology, engineering, people, land and hazards is labeled explicitly. Sky and
+Evidence workspaces have no verified capture: they show that limitation and a
+working destination instead of invented animation. Capturing those two actual
+workflows remains open work.
 
-The 30 accepted scenes use 90 packaged files in `public/welcome/motion/`,
-**82,380,456 bytes** in total. Their hashes match the accepted prototype.
-`scripts/welcome-history/runtime-assets.json` records every path, byte count and
-SHA-256. Each scene's artist, original source, location, adaptation, dimensions,
-license and license URL remain in `app/living-welcome/motion-clips.json` and
-are visible in the credits. Example footage is not a live observation and
-non-Kansas locations are labeled. Recheck rights before adding new material.
+Use `python3 scripts/welcome-demos/build-animations.py /path/to/ffmpeg` to rebuild
+WebPs from the original local recordings. The output manifest binds source and
+derivative hashes. No remote source is fetched. At runtime only a selected
+capture is requested; the largest animation is about 5.3 MB. This trades video
+compression efficiency for the requested image-animation presentation.
 
-History contains Bleeding Kansas, the Lawrence raid, Mine Creek, Nicodemus,
-the Dust Bowl and Brown v. Board of Education. These are archival images with
-1080p30 animated schematic locators and timelines, not filmed historical
-events. They use today's Kansas outline and approximate place positions.
-Historical references remain in `app/living-welcome/kansas-history.json`.
+## Time instrument
 
-To maintain these chapters, `scripts/prepare-kansas-history.py` reads those
-records and the six original plates under
-`scripts/welcome-history/source-images/`. `archive-sources.json` alongside them
-preserves retrieved rights and attribution metadata. These are authoring inputs,
-not public runtime assets. With Python, Pillow, DejaVu fonts and FFmpeg available:
+`TimeEmblem` now uses the transparent generated hourglass delivery sprite and
+CSS keyframes: ten seconds of sand transfer followed by a 0.8-second half-turn.
+The button has no visible border, fill, rounded container or shadow; keyboard
+focus remains visible. This is decoration, not a playback timer or data-coverage
+claim. Animation preference, hidden-tab and reduced-motion gates retain a still
+frame. Hover/focus/tap calendar controls and source-loading states are preserved.
+The generation/normalization record is next to the existing time artwork.
 
-```sh
-python scripts/prepare-kansas-history.py /path/to/ffmpeg
-```
+## Authority, placement and rollback
 
-An optional list of asset names after FFmpeg regenerates only those chapters.
-The script produces the HD video, small preview and poster. It does not download
-new sources. Update the asset manifest deliberately after regeneration.
+ADR-0029 identifies `docs/doctrine/directory-rules.md` as the canonical human
+placement authority. Its responsibility protocol and the existing standalone
+composition place UI in `app/`, browser delivery images in `public/`, authoring
+conversion in `scripts/welcome-demos/`, regression checks in `tests/` and this
+behavior record in `docs/`. Directory Rules.pdf was located, but its text/page
+reader returned no readable content; the accepted canonical repository doctrine
+and ADR were inspected instead. No new root, contract home, lifecycle transition,
+source admission, data migration, policy change or Sites synchronization occurs.
 
-The player retains source proportions, crossfades posters, runs at most two
-small idle previews and one HD focused scene, and pauses background scenes for
-the detail popup. An explicit pinned scene takes priority over passive focus.
-The existing Effects control and welcome pause control share a preference.
-Reduced motion and document visibility pause both video and the feature guide.
-Offscreen previews do not run. No shader warping or per-frame pixel rendering
-is used. The header guide holds text for seven seconds and transitions for
-1.15 seconds, with hover/focus and manual navigation controls.
+Base source is the hosted composition at `a2755f07efe4bd01c2ed89b2cd392dc1d7b27ad9`.
+The complete local base tree was verified against GitHub tree
+`cc40874d1cfe1253d534af32a9d6564bd0885e0c` before authoring. Roll back by reverting
+the candidate commit. Retained original assets make this dependency-closed; no
+stored data or home-PC inference setup needs changing.
 
-The feature guide schedules only the two transition deadlines, replacing its
-50 ms polling interval. A normal 8.15-second cycle needs two timer callbacks
-instead of 163 in a deterministic before/after clock replay. Hidden tabs cancel the pending timer; returning starts a
-fresh seven-second reading interval. Pause, reduced motion, hover/focus and
-manual navigation cancel or reset the same schedule. This is a bounded timer
-reduction, not a measured map FPS or whole-application CPU improvement. Component
-tests verify deadlines, suspension, manual reset and cleanup; browser rendering
-and physical-device acceptance remain separate.
+## Verification boundary
 
-Pointer presence and keyboard focus hold feature rotation independently. Leaving
-with one input does not resume rotation while the other remains inside the
-guide. Only after both leave does a fresh seven-second reading interval begin;
-pointer cancellation releases the pointer hold without clearing keyboard focus.
-
-## Pending data and database alignment
-
-The hosted branch already has the bounded Node/MySQL ingestion adapter in
-`server/ingestion-store.mjs`. Its TLS, admission, source-date, capacity and
-review checks remain authoritative. The prototype's optional SQLite server,
-migrations and fixtures are not imported. No credentials or live database
-connection are needed for the welcome to work.
-
-For future coverage, add reviewed data through that existing source/ingestion
-path, then update the typed destinations in `app/living-welcome/features.ts`
-and scene metadata as appropriate. Keep presentation metadata separate from
-observations. A future remote scene catalogue must validate bounded records
-against known categories and approved local media; it must not execute database
-HTML, scripts, arbitrary media URLs or model instructions. Do not advertise a
-pending dataset as connected based on a visual preview.
-
-## Validation and delivery boundary
-
-The focused startup, guide navigation, map starters, interface, welcome handoff
-and playback suite contains 45 tests. Browser checks cover all 30 decoded,
-advancing clips, real Find/Ask/topic handoffs, pause and responsive layouts.
-Type checking and a production build are required for the final integration.
-This is a repository candidate; local checks do not establish deployment or
-production browser acceptance. Roll back by reverting this feature's commits;
-no database rollback or provider-setting change is involved.
+Build, type checking, changed-component lint and targeted component regressions
+are engineering evidence only. A local production preview was attempted on port
+4187; the environment denied `listen` with EPERM. No rendered candidate, actual
+hover/flip smoothness, small-phone geometry or live-provider end-to-end acceptance
+is claimed. Keep delivery a draft pending browser acceptance and independent
+review; no merge, publish, deploy or promotion is authorized here.

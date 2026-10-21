@@ -7,6 +7,11 @@ import { componentHarness, findNode } from './component-harness.mjs';
 import { SCENES, CATEGORY_IDS, HISTORY_ERAS, sceneArt } from '../app/living-welcome/catalog.mjs';
 import { MOTION_CLIPS, motionClip } from '../app/living-welcome/motion-catalog.mjs';
 
+import { capabilityPreviews, capabilityNote } from '../app/living-welcome/capability-catalog.mjs';
+const topicModule={};
+new Function('exports',ts.transpileModule(await readFile('app/layer-workspaces.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(topicModule);
+const {TOPIC_STRUCTURE}=topicModule;
+const rootOf=tree=>findNode(tree,node=>node.props?.className==='explorer-guide living-welcome');
 const features=[{id:'roads',status:'Explore',description:'Roads',destination:'transport'},{id:'farms',status:'Explore',description:'Farms',destination:'agriculture'}];
 function environment(reduced=false){
  const listeners=new Map(),media={matches:reduced,addEventListener(){},removeEventListener(){}};
@@ -15,7 +20,7 @@ function environment(reduced=false){
 async function welcome(reduced=false){
  const env=environment(reduced),calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
-  'react-dom':{createPortal:content=>content},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
+  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE},'./capability-catalog.mjs':{capabilityPreviews,capabilityNote},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};}},
  },env);
@@ -56,7 +61,7 @@ test('nested welcome dialogs own and return keyboard focus in the layout commit'
  const root=findNode(tree,node=>node.props?.className==='explorer-guide living-welcome');
  root.props.ref.current={contains:node=>node===trigger,querySelector:()=>null};
  h.env.document.activeElement=trigger;
- byText(tree,'Scene credits').props.onClick();
+ byText(tree,'Preview sources').props.onClick();
  tree=h.harness.render(h.harness.exports.default,h.props);
  findNode(tree,node=>node.props?.className==='welcome-dialog').props.ref.current={
   contains:node=>node===close,querySelector:()=>close,
@@ -93,17 +98,17 @@ test('welcome uses real search and draft actions without requests or implicit di
 });
 
 test('each topic links to its actual source workspace and preview selection does not activate layers',async()=>{
- for(const [id,target] of [['weather','weather'],['rivers','water'],['science','science'],['underground','groundwater'],['history','history'],['transport','transport'],['farming','agriculture'],['government','land']]){
+ for(const [id,target] of TOPIC_STRUCTURE.filter(t=>capabilityPreviews(t.id).length).map(t=>[t.id,t.id])){
   const h=await welcome();let tree=h.render();
   findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();
   const options=findNode(tree,node=>node.props?.className==='topic-options');
   options.props.children[1].props.onClick();tree=h.render();
-  assert.equal(findNode(tree,node=>node.type==='scene-preview').props.index,1);
+  assert.equal(findNode(tree,node=>node.type==='capability-preview'&&node.props.demo?.id===capabilityPreviews(id)[1].id).props.demo.id,capabilityPreviews(id)[1].id);
   assert.deepEqual(h.calls,[],'scene selection is presentation only');
-  byText(tree,'Preview this scene on the map →').props.onClick();tree=h.render();
-  let atlas=findNode(tree,node=>node.type==='motion-atlas');assert.equal(atlas.props.active,id);assert.equal(atlas.props.manual,1);
+  byText(tree,'Preview in the welcome window →').props.onClick();tree=h.render();
+  assert.equal(rootOf(tree).props['data-active'],id);assert.equal(findNode(tree,node=>node.type==='capability-preview').props.demo.id,capabilityPreviews(id)[1].id);
   findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-weather ')).props.onFocus();tree=h.render();
-  atlas=findNode(tree,node=>node.type==='motion-atlas');assert.equal(atlas.props.active,id,'explicit pin beats passive focus');
+  assert.equal(rootOf(tree).props['data-active'],id,'explicit pin beats passive focus');
   findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();
   findNode(tree,node=>node.type==='button'&&node.props.className==='welcome-text-action').props.onClick();
   assert.deepEqual(h.calls,[['topic',target],['close',false]]);
@@ -114,10 +119,10 @@ test('each topic links to its actual source workspace and preview selection does
 test('pause and reduced motion stop media while detailed sources preserve the user’s current layers',async()=>{
  const h=await welcome();let tree=h.render();
  findNode(tree,node=>node.props?.['aria-label']==='Pause animation').props.onClick();tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.paused,true);
+ assert.equal(findNode(tree,node=>node.type==='capability-preview').props.paused,true);
  assert.deepEqual(h.calls,[]);h.harness.dispose();
  const quiet=await welcome(true);tree=quiet.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.paused,true);
+ assert.equal(findNode(tree,node=>node.type==='capability-preview').props.paused,true);
  assert.equal(findNode(tree,node=>node.props?.['aria-label']==='Animations off: reduced motion preference').props.disabled,true);
  quiet.harness.dispose();
 });
@@ -223,27 +228,41 @@ test('hover focus isolates one topic and restores the scene after pointer focus 
  const topic=findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-weather '));
  topic.props.onPointerEnter({pointerType:'mouse'});tree=h.render();
  assert.equal(findNode(tree,node=>node.props?.className==='explorer-guide living-welcome').props['data-immersive'],true);
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'weather');
+ assert.equal(rootOf(tree).props['data-active'],'weather');
  topic.props.onPointerLeave();await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
  assert.equal(findNode(tree,node=>node.props?.className==='explorer-guide living-welcome').props['data-immersive'],false);
  // A touch-generated focus must not leave an invisible hover state behind it.
  topic.props.onFocus({currentTarget:{matches:()=>false}});tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,null);
+ assert.equal(rootOf(tree).props['data-active'],null);
  topic.props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'weather');
+ assert.equal(rootOf(tree).props['data-active'],'weather');
  h.harness.dispose();
 });
 
-test('each topic exposes recorded demos and hands its selected tool to the existing destination',async()=>{
+test('all shared domains expose their facets and actual destination without mounting a video',async()=>{
  const h=await welcome();let tree=h.render();
- findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-weather ')).props.onClick();tree=h.render();
- const demos=findNode(tree,node=>node.type==='map-demo-panel');assert.equal(demos.props.category,'weather');
- demos.props.onPlaybackChange(true);tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='scene-preview').props.paused,true,'decorative footage yields to the actual map demonstration');
- demos.props.onTry({destination:{kind:'topic',value:'weather'}});
- assert.deepEqual(h.calls,[['topic','weather'],['close',false]]);h.harness.dispose();
+ for(const topic of TOPIC_STRUCTURE){
+  findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${topic.id} `)).props.onClick();tree=h.render();
+  const facets=findNode(tree,node=>node.props?.className==='capability-facets');
+  assert.equal(facets.props.children.length,topic.facets.length);
+  assert.equal(findNode(tree,node=>node.type==='video'),undefined);
+  findNode(tree,node=>node.type==='button'&&node.props.className==='welcome-text-action').props.onClick();
+  assert.deepEqual(h.calls.splice(0),[['topic',topic.id],['close',false]]);
+ }
+ h.harness.dispose();
 });
 
+test('full-window preview returns to the same categories and missing captures stay explicit',async()=>{
+ const h=await welcome();let tree=h.render();
+ byText(tree,'Expand animation').props.onClick();tree=h.render();assert.equal(rootOf(tree).props['data-fullscreen'],true);
+ byText(tree,'Return to categories').props.onClick();tree=h.render();assert.equal(rootOf(tree).props['data-fullscreen'],false);
+ for(const id of ['sky','evidence']){
+  findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onPointerEnter({pointerType:'mouse'});tree=h.render();
+  assert.equal(findNode(tree,node=>node.type==='capability-preview').props.demo,undefined);
+  assert.match(capabilityNote(id),/No verified/);
+ }
+ h.harness.dispose();
+});
 
 test('a late blur cannot cancel a fine-pointer hover, while leaving restores all topics without a mouse-focus pin',async()=>{
  const h=await welcome();let tree=h.render(),hovered=true,finePointer=true;
@@ -252,14 +271,14 @@ test('a late blur cannot cancel a fine-pointer hover, while leaving restores all
  const weather=findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-weather '));
  weather.props.onPointerEnter({pointerType:'mouse'});weather.props.onBlur();
  await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'weather','late focus departure preserves the actual hover');
+ assert.equal(rootOf(tree).props['data-active'],'weather','late focus departure preserves the actual hover');
  hovered=false;weather.props.onPointerLeave();await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,null,'ordinary mouse focus does not pin an exited card');
+ assert.equal(rootOf(tree).props['data-active'],null,'ordinary mouse focus does not pin an exited card');
  // Touch browsers may retain CSS :hover after a tap. That stale selector must
  // never keep every other topic hidden once touch focus has left.
  finePointer=false;hovered=true;weather.props.onPointerEnter({pointerType:'mouse'});weather.props.onBlur();
  await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,null,'coarse pointers ignore sticky CSS hover');
+ assert.equal(rootOf(tree).props['data-active'],null,'coarse pointers ignore sticky CSS hover');
  h.harness.dispose();
 });
 
@@ -271,14 +290,14 @@ test('keyboard focus and direct mouse topic changes coexist until focus and hove
  findNode(tree,node=>node.props?.className==='explorer-guide living-welcome').props.ref.current={querySelector:selector=>selector==='.topic-callout:focus-visible'&&keyboardFocused?keyboardTarget:selector==='.topic-callout:hover'&&hovered?{}:null};
  const card=id=>findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `));
  card('weather').props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'weather');
- hovered=true;card('rivers').props.onPointerEnter({pointerType:'mouse'});tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'rivers','actual mouse entry selects the new topic while previous keyboard focus remains');
- card('rivers').props.onPointerLeave();card('science').props.onPointerEnter({pointerType:'mouse'});tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'science','latest direct mouse target wins');
+ assert.equal(rootOf(tree).props['data-active'],'weather');
+ hovered=true;card('water').props.onPointerEnter({pointerType:'mouse'});tree=h.render();
+ assert.equal(rootOf(tree).props['data-active'],'water','actual mouse entry selects the new topic while previous keyboard focus remains');
+ card('water').props.onPointerLeave();card('science').props.onPointerEnter({pointerType:'mouse'});tree=h.render();
+ assert.equal(rootOf(tree).props['data-active'],'science','latest direct mouse target wins');
  hovered=false;card('science').props.onPointerLeave();await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,'science','legitimate keyboard focus keeps the preview until it actually leaves');
+ assert.equal(rootOf(tree).props['data-active'],'science','legitimate keyboard focus keeps the preview until it actually leaves');
  keyboardFocused=false;card('weather').props.onBlur();await new Promise(resolve=>setTimeout(resolve,200));tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='motion-atlas').props.active,null,'no stale focus or invisible hit region pins the preview');
+ assert.equal(rootOf(tree).props['data-active'],null,'no stale focus or invisible hit region pins the preview');
  h.harness.dispose();
 });

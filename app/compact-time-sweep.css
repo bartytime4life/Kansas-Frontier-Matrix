@@ -142,3 +142,25 @@
   .compact-time .compact-time-clock { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .time-emblem-sprite[data-moving="true"] { animation: none; } }
+
+/* The instrument floats directly over the map; focus remains visible. */
+.compact-time .compact-time-emblem,
+.compact-time .compact-time-emblem:hover:not(:disabled),
+.compact-time button.compact-time-emblem[aria-pressed="true"] {
+ border:0; border-radius:0; background:transparent; box-shadow:none; overflow:visible;
+}
+.time-hourglass { display:block; width:28px; height:72px; transform-origin:center; }
+.time-hourglass-sand { display:block; width:100%; height:100%; background:url('/icons/time-sweep/hourglass.webp') left center / 1200% 100% no-repeat; }
+.time-hourglass[data-moving="true"] { animation:hourglass-flip 10.8s infinite; }
+.time-hourglass[data-moving="true"] .time-hourglass-sand { animation:hourglass-drain 10.8s steps(1,end) infinite; }
+/* Eleven measured fill changes across ten seconds, then 0.8 s to turn. */
+@keyframes hourglass-drain {
+ 0% {background-position-x:0%} 8.42% {background-position-x:9.090909%}
+ 16.84% {background-position-x:18.181818%} 25.25% {background-position-x:27.272727%}
+ 33.67% {background-position-x:36.363636%} 42.09% {background-position-x:45.454545%}
+ 50.51% {background-position-x:54.545455%} 58.92% {background-position-x:63.636364%}
+ 67.34% {background-position-x:72.727273%} 75.76% {background-position-x:81.818182%}
+ 84.18% {background-position-x:90.909091%} 92.5926%,100% {background-position-x:100%}
+}
+@keyframes hourglass-flip { 0%,92.5926% {transform:rotate(0deg)} 100% {transform:rotate(180deg)} }
+@media(prefers-reduced-motion:reduce) { .time-hourglass[data-moving="true"],.time-hourglass[data-moving="true"] .time-hourglass-sand {animation:none} }
