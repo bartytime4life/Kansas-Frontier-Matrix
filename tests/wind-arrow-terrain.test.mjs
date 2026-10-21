@@ -147,73 +147,144 @@ test("wind flow hover only reports a nearby model point and a travel direction",
   assert.equal(windCanvas.windToCompass(frame.samples[1].windToDegrees), "S");
 });
 
-test("wind flow moves curved wisps without drawing arrowheads or stationary labels", () => {
+const withWindow = (run) => {
   const previousWindow = globalThis.window;
   globalThis.window = { devicePixelRatio: 1 };
-  try {
-    const curves = [];
-    const context = {
-      setTransform() {}, clearRect() {}, save() {}, restore() {}, beginPath() {}, moveTo() {}, stroke() {},
-      quadraticCurveTo(x, y) { curves.push([x, y]); },
-      createLinearGradient() { return { addColorStop() {} }; },
-      fill() { throw new Error("stationary glyph drawn"); },
-      fillText() { throw new Error("stationary speed label drawn"); },
-    };
-    const canvas = { width: 0, height: 0, getContext: () => context };
-    const map = {
-      getCanvas: () => ({ clientWidth: 800, clientHeight: 600 }),
-      getZoom: () => 7,
-      project: ([longitude, latitude]) => ({ x: (longitude + 99) * 300, y: (latitude - 38) * 300 }),
-    };
-    const frame = { samples: [{ latitude: 39, longitude: -98, speedMetersPerSecond: 5, windFromDegrees: 270, windToDegrees: 90 }] };
-    windCanvas.drawWindFlowCanvas(canvas, map, frame, 0, true);
-    const first = curves.map((point) => [...point]);
-    curves.length = 0;
-    windCanvas.drawWindFlowCanvas(canvas, map, frame, 800, true);
-    assert.equal(first.length, 7);
-    assert.equal(curves.length, 7);
-    assert.notDeepEqual(curves, first, "wind wisps should move with elapsed time");
-  } finally {
+  try { return run(); } finally {
     if (previousWindow === undefined) delete globalThis.window;
     else globalThis.window = previousWindow;
   }
-});
+};
+// Records every stroked polyline as head→tail segments; filled glyphs or text fail.
+const recordingCanvas = () => {
+  const strokes = [];
+  let path = [], pen = null;
+  const context = {
+    setTransform() {}, clearRect() {}, beginPath() { path = []; pen = null; },
+    moveTo(x, y) { pen = [x, y]; }, lineTo(x, y) { path.push([pen[0], pen[1], x, y]); pen = [x, y]; },
+    stroke() { strokes.push({ lineWidth: this.lineWidth, style: this.strokeStyle, segments: path }); },
+    fill() { throw new Error("stationary glyph drawn"); },
+    fillText() { throw new Error("stationary speed label drawn"); },
+  };
+  return { strokes, canvas: { width: 0, height: 0, getContext: () => context } };
+};
+const mercatorY = (latitude) => (180 - (180 / Math.PI) * Math.log(Math.tan(Math.PI / 4 + latitude * Math.PI / 360))) / 360;
+// A flat Mercator camera: rotate by bearing, then a perspective tilt. Exact
+// ground→screen projective map, as MapLibre's pitched Mercator view is.
+const cameraMap = ({ zoom = 7, bearing = 0, pitch = 0, center = { lng: -98, lat: 38.5 } } = {}) => {
+  const worldSize = 512 * 2 ** zoom, cx = (center.lng + 180) / 360, cy = mercatorY(center.lat);
+  const b = bearing * Math.PI / 180, tilt = Math.tan(pitch * Math.PI / 180) / 900;
+  return {
+    getCanvas: () => ({ clientWidth: 800, clientHeight: 600 }), getZoom: () => zoom, getCenter: () => center,
+    getBearing: () => bearing, getPitch: () => pitch,
+    project: ([longitude, latitude]) => {
+      const X = ((longitude + 180) / 360 - cx) * worldSize, Y = (mercatorY(latitude) - cy) * worldSize;
+      const rx = X * Math.cos(b) + Y * Math.sin(b), ry = -X * Math.sin(b) + Y * Math.cos(b);
+      const w = 1 - ry * tilt; // farther (screen-up) ground shrinks
+      return { x: 400 + rx / w, y: 300 + ry / w };
+    },
+  };
+};
+const gridFrame = (windFromDegrees, speedMetersPerSecond = 6) => ({ samples: Array.from({ length: 16 }, (_, index) => ({
+  latitude: 38.1 + Math.floor(index / 4) * 0.25, longitude: -98.45 + (index % 4) * 0.3,
+  speedMetersPerSecond, windFromDegrees, windToDegrees: (windFromDegrees + 180) % 360,
+})) });
+const segmentsOf = (strokes) => strokes.flatMap((stroke) => stroke.segments);
+const meanVector = (segments) => {
+  let x = 0, y = 0;
+  // Segments run head → tail, so travel is the reverse of each segment.
+  for (const [x0, y0, x1, y1] of segments) { x += x0 - x1; y += y0 - y1; }
+  const length = Math.hypot(x, y);
+  return [x / length, y / length];
+};
 
-test("wind wisps and hover shrink with Kansas on the globe and stop behind it", () => {
-  const previousWindow = globalThis.window;
-  globalThis.window = { devicePixelRatio: 1 };
-  try {
-    const widths = [];
-    const context = {
-      setTransform() {}, clearRect() {}, save() {}, restore() {}, beginPath() {}, moveTo() {}, quadraticCurveTo() {},
-      stroke() { widths.push(this.lineWidth); }, createLinearGradient() { return { addColorStop() {} }; },
-    };
-    const canvas = { width: 0, height: 0, getContext: () => context };
-    let zoom = 0.6, center = { lng: -98, lat: 39 };
-    const map = {
-      getCanvas: () => ({ clientWidth: 800, clientHeight: 600 }), getZoom: () => zoom,
-      getProjection: () => ({ type: "globe" }), getCenter: () => center,
-      project: ([longitude, latitude]) => ({ x: (longitude + 99) * 100, y: (latitude - 38) * 100 }),
-    };
-    const frame = { samples: [{ latitude: 39, longitude: -98, speedMetersPerSecond: 5, windFromDegrees: 270, windToDegrees: 90 }] };
-    windCanvas.drawWindFlowCanvas(canvas, map, frame, 0, true);
-    assert.deepEqual(widths, []);
-    assert.equal(windCanvas.nearestWindFlowSample(map, frame, 100, 100), null);
-    zoom = 5.45;
-    windCanvas.drawWindFlowCanvas(canvas, map, frame, 0, true);
-    assert.ok(widths.length > 0);
-    assert.ok(widths[0] < 3.2);
-    assert.equal(windCanvas.nearestWindFlowSample(map, frame, 100, 100), frame.samples[0]);
-    center = { lng: 82, lat: 39 };
-    widths.length = 0;
-    windCanvas.drawWindFlowCanvas(canvas, map, frame, 0, true);
-    assert.deepEqual(widths, []);
-    assert.equal(windCanvas.nearestWindFlowSample(map, frame, 100, 100), null);
-  } finally {
-    if (previousWindow === undefined) delete globalThis.window;
-    else globalThis.window = previousWindow;
-  }
-});
+test("wind flow draws moving ground streamlines toward where the wind blows, without arrowheads or labels", () => withWindow(() => {
+  const { strokes, canvas } = recordingCanvas();
+  const map = cameraMap();
+  const westerly = gridFrame(270);
+  windCanvas.drawWindFlowCanvas(canvas, map, westerly, 0, true);
+  for (let time = 33; time <= 1000; time += 33) { strokes.length = 0; windCanvas.drawWindFlowCanvas(canvas, map, westerly, time, true); }
+  const stats = windCanvas.windFlowCanvasStats(canvas);
+  assert.equal(stats.mode, "homography", "a flat Mercator view projects through the exact homography");
+  assert.ok(stats.particles > 12, `${stats.particles} streamlines`);
+  const first = segmentsOf(strokes).map((segment) => [...segment]);
+  const [east, south] = meanVector(first);
+  assert.ok(east > 0.99 && Math.abs(south) < 0.05, `wind from the west flows east on screen (${east}, ${south})`);
+  strokes.length = 0;
+  windCanvas.drawWindFlowCanvas(canvas, map, westerly, 1100, true);
+  assert.notDeepEqual(segmentsOf(strokes).slice(0, 20), first.slice(0, 20), "streamlines advance with elapsed time");
+
+  const northerly = gridFrame(0);
+  const { strokes: south2, canvas: canvas2 } = recordingCanvas();
+  for (let time = 0; time <= 900; time += 33) { south2.length = 0; windCanvas.drawWindFlowCanvas(canvas2, map, northerly, time, true); }
+  const [, down] = meanVector(segmentsOf(south2));
+  assert.ok(down > 0.99, "wind from the north flows south (screen down at bearing 0)");
+}));
+
+test("streamlines rotate with bearing and foreshorten with pitch because they live on the ground", () => withWindow(() => {
+  const run = (options) => {
+    const { strokes, canvas } = recordingCanvas();
+    const map = cameraMap(options);
+    for (let time = 0; time <= 1200; time += 33) { strokes.length = 0; windCanvas.drawWindFlowCanvas(canvas, map, gridFrame(270), time, true); }
+    return segmentsOf(strokes);
+  };
+  const [, rotated] = meanVector(run({ bearing: 90 }));
+  assert.ok(Math.abs(rotated) > 0.99, "a 90° bearing turns eastward travel to the screen vertical");
+  const pitched = run({ pitch: 60 });
+  const lengthIn = (band) => {
+    const lengths = pitched.filter(([, y0]) => band(y0)).map(([x0, y0, x1, y1]) => Math.hypot(x1 - x0, y1 - y0));
+    return lengths.reduce((sum, value) => sum + value, 0) / lengths.length;
+  };
+  const far = lengthIn((y) => y < 250), near = lengthIn((y) => y > 400);
+  assert.ok(far < near * 0.8, `far ground segments are foreshortened (${far.toFixed(2)} vs ${near.toFixed(2)} px)`);
+}));
+
+test("calm forecasts draw nothing and a still frame does not move with time", () => withWindow(() => {
+  const calm = recordingCanvas();
+  windCanvas.drawWindFlowCanvas(calm.canvas, cameraMap(), gridFrame(270, 0.2), 0, true);
+  windCanvas.drawWindFlowCanvas(calm.canvas, cameraMap(), gridFrame(270, 0.2), 500, true);
+  assert.equal(segmentsOf(calm.strokes).length, 0);
+  const still = recordingCanvas();
+  const map = cameraMap({ pitch: 30 });
+  const frame = gridFrame(200);
+  windCanvas.drawWindFlowCanvas(still.canvas, map, frame, 0, false);
+  const first = segmentsOf(still.strokes);
+  still.strokes.length = 0;
+  windCanvas.drawWindFlowCanvas(still.canvas, map, frame, 5000, false);
+  assert.ok(first.length > 0);
+  assert.deepEqual(segmentsOf(still.strokes), first, "motion off (or reduced motion) holds one still frame");
+}));
+
+test("wind streamlines and hover shrink with Kansas on the globe and stop behind it", () => withWindow(() => {
+  const { strokes, canvas } = recordingCanvas();
+  let zoom = 0.6, center = { lng: -98, lat: 39 };
+  const map = {
+    getCanvas: () => ({ clientWidth: 800, clientHeight: 600 }), getZoom: () => zoom,
+    getProjection: () => ({ type: "globe" }), getCenter: () => center,
+    project: ([longitude, latitude]) => ({ x: (longitude + 99) * 100, y: (latitude - 38) * 100 }),
+  };
+  const frame = gridFrame(270, 5);
+  windCanvas.drawWindFlowCanvas(canvas, map, frame, 0, true);
+  assert.deepEqual(strokes, []);
+  assert.equal(windCanvas.nearestWindFlowSample(map, frame, 100, 100), null);
+  zoom = 5.45;
+  for (let time = 0; time <= 900; time += 33) { strokes.length = 0; windCanvas.drawWindFlowCanvas(canvas, map, frame, time, true); }
+  assert.ok(strokes.length > 0);
+  assert.equal(windCanvas.windFlowCanvasStats(canvas).mode, "per-point", "globe points are projected one by one");
+  const flat = recordingCanvas();
+  for (let time = 0; time <= 900; time += 33) { flat.strokes.length = 0; windCanvas.drawWindFlowCanvas(flat.canvas, cameraMap(), frame, time, true); }
+  const narrowest = (list) => Math.min(...list.map((stroke) => stroke.lineWidth));
+  zoom = 3.5;
+  for (let time = 1000; time <= 1900; time += 33) { strokes.length = 0; windCanvas.drawWindFlowCanvas(canvas, map, frame, time, true); }
+  assert.ok(strokes.length > 0 && narrowest(strokes) < narrowest(flat.strokes) * 0.7, "a zoomed-out globe keeps lines Kansas-sized");
+  zoom = 5.45;
+  assert.ok(windCanvas.nearestWindFlowSample(map, frame, 100, 100));
+  center = { lng: 82, lat: 39 };
+  strokes.length = 0;
+  windCanvas.drawWindFlowCanvas(canvas, map, frame, 2000, true);
+  assert.deepEqual(strokes, []);
+  assert.equal(windCanvas.nearestWindFlowSample(map, frame, 100, 100), null);
+}));
 
 test("terrain hover and profile readings remove display exaggeration", () => {
   const map = { getTerrain: () => ({ source: "terrain", exaggeration: 1.6 }), queryTerrainElevation: () => 480 };
