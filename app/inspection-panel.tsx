@@ -17,15 +17,19 @@ export function useInspectionPanel() {
   return { inspectionPanel, rightOpen: inspectionPanel === "evidence", qwenOpen: inspectionPanel === "qwen", setRightOpen, setQwenOpen, previewEvidence };
 }
 
-export function InspectionPanelSwitch({ active, onEvidence, onQwen, onClose }: {
+export function InspectionPanelSwitch({ active, onEvidence, onQwen, onClose, reading = false, onReading }: {
   active: Exclude<InspectionPanel, null>;
   onEvidence: () => void;
   onQwen: () => void;
   onClose: () => void;
+  reading?: boolean;
+  onReading?: () => void;
 }) {
   return <nav className="inspection-panel-switch" aria-label="Map inspection views">
+    {active === "qwen" && <button className="inspection-map" type="button" onClick={onClose}>Map</button>}
     <button type="button" aria-pressed={active === "evidence"} onClick={onEvidence}>Evidence</button>
-    <button type="button" aria-pressed={active === "qwen"} onClick={onQwen}>Chat with KFM</button>
+    <button type="button" aria-pressed={active === "qwen"} onClick={onQwen}>AI chat</button>
+    {active === "qwen" && onReading && <button className="inspection-reading" type="button" aria-pressed={reading} onClick={onReading}>{reading ? "Less chat" : "More chat"}</button>}
     <button className="inspection-close" type="button" onClick={onClose} aria-label={active === "qwen" ? "Close Qwen companion" : "Close Evidence Drawer"} title="Return to map">×</button>
   </nav>;
 }

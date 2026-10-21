@@ -38,3 +38,10 @@ test('context and evidence-search release identities are preserved separately wh
   result:{...job.result,reasonCode:'EVIDENCE_MODEL_UNQUALIFIED',citations:[{evidenceRef:'synthetic-ref',title:'Search record',url:'/knowledge/record?id=search-one'}]}});
  assert.equal(draft.sourceCheck.releaseId,null);assert.equal(draft.references[0].releaseId,contextReleaseId);assert.equal(draft.citations[0].releaseId,evidenceReleaseId);assert.match(api.investigationMarkdown(draft),new RegExp(evidenceReleaseId));
 });
+
+test('copy and download preserve a checked long discussion beyond the old export cap',()=>{
+ const interpretation='x'.repeat(15000)+' final checked sentence.';
+ const draft=api.buildInvestigationDraft('Synthetic question',null,{...job,result:{...job.result,reasonCode:'UNVERIFIED_AI_DISCUSSION',interpretation,sourceSummary:null}});
+ assert.equal(draft.result.generatedDiscussion,interpretation);
+ assert.match(api.investigationMarkdown(draft),/final checked sentence/);
+});

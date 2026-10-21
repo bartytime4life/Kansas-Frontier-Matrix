@@ -82,7 +82,7 @@ export function buildInvestigationDraft(question: string, submittedContext: unkn
       meaning: "Response rechecked at export time; fingerprint is not source admission, factual proof or release approval." },
     result: { outcome: result.outcome, reasonCode: result.reasonCode, answer: null,
       sourceSummary: !withheld && result.reasonCode === "SOURCE_CONTEXT_ONLY" ? bounded(result.sourceSummary, 4096) : null,
-      generatedDiscussion: !withheld && result.reasonCode === "UNVERIFIED_AI_DISCUSSION" ? bounded(result.interpretation, 12000) : null },
+      generatedDiscussion: !withheld && result.reasonCode === "UNVERIFIED_AI_DISCUSSION" ? bounded(result.interpretation, 16384) : null },
     references, citations,
     limitations: [
       "Source summaries are external context, not admitted KFM evidence. Generated discussion is unverified. No supported factual answer is asserted.",

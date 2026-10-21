@@ -14,6 +14,69 @@ truth_posture: CONFIRMED local rendered observations named below; NEEDS VERIFICA
 Recorded 2026-10-18. Draft application change on the standalone GoDaddy Node
 composition. Not deployment, publication, model qualification or data admission.
 
+## 2026-10-21 candidate: conversation space and explicit AI identity
+
+**Status: authored candidate, not deployed.** Current authoring base is
+`a0-hosted-ai-web-20261017@a2755f07efe4bd01c2ed89b2cd392dc1d7b27ad9`,
+Git tree `cc40874d1cfe1253d534af32a9d6564bd0885e0c`. The isolated authoring tree
+was reconstructed and its complete Git tree hash matched that remote tree.
+This section supersedes earlier layout descriptions for this candidate only;
+the historical verification below remains dated evidence.
+
+The live site was inspected at desktop and 390×844 on 2026-10-21. The phone
+chat showed stacked scope, identity and help blocks above the conversation.
+The candidate gives the conversation a larger desktop column (400–600 px),
+with an optional reading width up to 840 px. It removes the repeated outer
+heading and four-cell map strip from visual layout while retaining the dialog
+name. The selected context title and time remain visible in one expandable
+context row. Help, history/expiry information and answer controls are in
+Options; suggested questions leave the thread once the first turn exists.
+
+An explicit **AI assistant** badge, **AI DISCUSSION · UNVERIFIED** turn labels,
+and the pinned **AI can make mistakes · check sources** line distinguish
+interpretation from source evidence. Headings and simple lists render through
+React text nodes; model HTML is never interpreted as markup. Citations,
+withdrawal checks, evidence labels, input modes, Stop, continuation, exports,
+context partitioning and source rechecks retain their original enforcement.
+
+Phone navigation offers Map, Evidence, AI chat and More chat / Less chat.
+The default sheet leaves map context above it; More chat expands its reading
+area. Map closes the sheet through the existing cancellation and focus-return
+path. The map camera and completed thread are retained. Compact opening focus
+moves to the visible Map control rather than the hidden desktop close button.
+The existing MapLibre ResizeObserver handles desktop column-size changes.
+
+Owning responsibilities are the existing `app/`, `server/`,
+`scripts/home-inference/`, `tests/` and `docs/` roots. No new authority root,
+data source, schema, release or policy home is introduced. The named Directory
+Rules PDF was resolved but its reader/materialization was unavailable. The
+canonical `docs/doctrine/directory-rules.md` and accepted ADR-0029 were instead
+inspected at main commit `17d6dc8119ba3352c19ea161e9ec73abaef72d9b`.
+ADR-0029 adopts the exact draft-labeled doctrine bytes (blob
+`fd49a0b83e55cef52c1124281f093e263526898d`); the draft label alone does not
+reverse that acceptance. Sections 5 and 10 route by owning responsibility and
+colocate app configuration with its consumer. This change edits existing files
+inside the separately deployable app and retains the inherited adapter-kit
+placement; it does not declare that every existing path is conforming or
+create a new topology ruling. The source PDF remains unread in this session.
+
+Validation: focused component/public-handler/export and signed in-memory
+gateway tests pass locally, including a response beyond the former 4 KB cap,
+UTF-8 output bounds, unsafe tails, continuation isolation, cancellation and
+source withdrawal. Production build and TypeScript checks pass locally.
+Exact counts and remote CI belong to the PR evidence. Real-socket suites and
+local runtime startup were attempted but blocked by `listen EPERM`; a local
+static-file browser preview was also blocked by browser URL policy. Therefore
+candidate rendered geometry, mobile keyboard behavior, full HTTP transport,
+and production rendering remain **NEEDS VERIFICATION**, not passing checks.
+
+Rollback: revert this candidate's application/UI commit. No persistent schema
+or data migration is involved. AI budget rollout and rollback are documented
+in `scripts/home-inference/README.md`; existing PC settings are not replaced by
+the sample profile. Keep the PR in draft until exact-head CI and rendered
+phone/desktop acceptance complete. No merge, deployment or PC service change
+was performed by authoring this candidate.
+
 ## Starting point
 
 | Surface | Identity | Meaning |

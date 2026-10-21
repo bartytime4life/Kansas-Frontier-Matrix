@@ -261,7 +261,7 @@ test('a reply cut off by the gateway deadline returns as length-limited text, an
 });
 
 test('extra generation allowance still caps visible answers at public chat bytes without splitting UTF-8',async()=>{
- for(const chunks of [['x'.repeat(5000)],['🌾'.repeat(2000)]]){
+ for(const chunks of [['x'.repeat(20000)],['🌾'.repeat(5000)]]){
   const g=await gateway({chunks},profiles({profiles:[profile({outputTokens:{brief:1024,expanded:2048}})]}));
   try{
    const result=await g.signed('POST','/v1/chat',chatBody());
@@ -453,9 +453,9 @@ test('the shipped profile template only loads once the owner pins a real digest'
  assert.throws(()=>parseProfiles(JSON.parse(template)),/PROFILE_INVALID/);
  const parsed=parseProfiles(JSON.parse(template.replace(/sha256:REPLACE[^"]*/,'sha256:'+DIGEST)));
  const chat=parsed.profiles.get('kfm-default-chat');
- // The public handler refuses replies over 4096 bytes and Cloudflare cuts responses at about 100 s.
- assert.ok(chat.outputTokens.expanded<=2048&&chat.timeoutMs.expanded<=90000);
- assert.equal(GATEWAY_LIMITS.replyBytes,4096);
+ // Poll transport allows a longer deadline; HTTPS profiles retain a 90 s timeout.
+ assert.ok(chat.outputTokens.expanded===4096&&chat.timeoutMs.expanded===180000);
+ assert.equal(GATEWAY_LIMITS.replyBytes,16384);
 });
 
 test('the probe proves refusal cases and records synthetic timings without secrets',async()=>{

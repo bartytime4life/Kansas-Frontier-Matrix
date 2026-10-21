@@ -13,8 +13,8 @@ export const RELAY_LIMITS=Object.freeze({
  leaseWaitMs:20000,
  // A job nobody leases within this time means no worker is connected.
  unleasedMs:15000,
- // A leased job must be answered within this time. The gateway caps a run at 90 s.
- leasedMs:Object.freeze({'/v1/health':15000,'/v1/chat':100000}),
+ // A leased job must be answered within this time. The gateway caps a run at 210 s; allow time to return its signed reply.
+ leasedMs:Object.freeze({'/v1/health':15000,'/v1/chat':220000}),
 });
 const ROUTES=new Map([['/v1/health','GET'],['/v1/chat','POST']]);
 const WORKER_ERRORS=new Set(['GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','GATEWAY_RESPONSE_INVALID']);

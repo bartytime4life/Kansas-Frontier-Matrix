@@ -15,7 +15,7 @@ import {setTimeout as sleep} from 'node:timers/promises';
 import {decodeSecret,signRequest,isSystemdCredentialDirectory,RESPONSE_SIGNATURE_HEADER,SIGNATURE_HEADERS} from './signature.mjs';
 
 export const WORKER_VERSION='kfm-home-worker/1';
-export const WORKER_LIMITS=Object.freeze({leaseMs:30000,siteMs:15000,relayMs:110000,statusEveryMs:5000,leaseBytes:65536,replyBytes:65536,backoffMinMs:1000,backoffMaxMs:60000});
+export const WORKER_LIMITS=Object.freeze({leaseMs:30000,siteMs:15000,relayMs:230000,statusEveryMs:5000,leaseBytes:65536,replyBytes:65536,backoffMinMs:1000,backoffMaxMs:60000});
 // Only the gateway's two routes, and only these request headers, ever reach the gateway.
 const ROUTES=new Map([['/v1/health','GET'],['/v1/chat','POST']]);
 const FORWARD=[SIGNATURE_HEADERS.keyId,SIGNATURE_HEADERS.timestamp,SIGNATURE_HEADERS.nonce,SIGNATURE_HEADERS.signature,'content-type'];

@@ -6,6 +6,9 @@ import {newSecret,signRequest,signResponse,verifyResponse,RESPONSE_SIGNATURE_HEA
 import {createGateway,parseProfiles,parseKeys,GATEWAY_LIMITS} from '../scripts/home-inference/gateway.mjs';
 import {createHomeInferenceClient,HomeInferenceModel} from '../server/home-inference.mjs';
 import {probe} from '../scripts/home-inference/probe.mjs';
+import {RELAY_LIMITS} from '../server/home-relay.mjs';
+import {WORKER_LIMITS} from '../scripts/home-inference/worker.mjs';
+import {PUBLIC_AI_JOB_MS} from '../server/hosted-ai.mjs';
 
 const secret=newSecret(),digest='sha256:'+'a'.repeat(64),other='b'.repeat(64);
 const profile=(overrides={})=>({id:'test-chat',label:'Synthetic',model:'qwen3:8b',digest,license:'Apache-2.0',capabilities:['chat'],scopes:['production'],contextTokens:8192,maxInputChars:12000,outputTokens:{brief:64,expanded:128},timeoutMs:{brief:500,expanded:500},...overrides});
@@ -38,7 +41,7 @@ function transport(handler){
  });
 }
 
-function fixture({profileOverrides={},hold=false,queue=1,inspectHold=null}={}){
+function fixture({profileOverrides={},hold=false,queue=1,inspectHold=null,reply='Synthetic reply'}={}){
  const runtime={tags:[{name:'qwen3:8b',digest:digest.slice(7)}],down:false,generations:[],reportedModel:'qwen3:8b',versionHolds:[],tagReads:0};
  const fetchImpl=async(url,init={})=>{
   if(runtime.down)throw new TypeError('offline');
@@ -49,7 +52,7 @@ function fixture({profileOverrides={},hold=false,queue=1,inspectHold=null}={}){
   return new Response(new ReadableStream({start(controller){
    runtime.generations.push({signal:init.signal,messages:JSON.parse(init.body).messages,finish(){
     if(init.signal.aborted)return;
-    controller.enqueue(new TextEncoder().encode(JSON.stringify({model:runtime.reportedModel,message:{content:'Synthetic reply'},done:true,prompt_eval_count:12,eval_count:2})+'\n'));
+    controller.enqueue(new TextEncoder().encode(JSON.stringify({model:runtime.reportedModel,message:{content:reply},done:true,prompt_eval_count:12,eval_count:2})+'\n'));
     controller.close();
    }});
    init.signal.addEventListener('abort',()=>{try{controller.error(new DOMException('aborted','AbortError'));}catch{}},{once:true});
@@ -99,10 +102,10 @@ test('health, chat and authenticated refusal replies all verify through the real
  await assert.rejects(f.client.chat(payload({profile:'unknown'})),/PROFILE_UNKNOWN/);
 });
 
-test('profiles accept the 90-second cap and reject longer or invalid deadlines at both depths',()=>{
- assert.equal(parseProfiles({profiles:[profile({timeoutMs:{brief:90000,expanded:90000}})]}).profiles.size,1);
- assert.equal(GATEWAY_LIMITS.chatMs,90000);
- for(const depth of ['brief','expanded'])for(const value of [90001,600000,0,-1,1.5,Infinity,'90000'])
+test('profiles accept the longer poll deadline while rejecting excess or invalid deadlines',()=>{
+ assert.equal(parseProfiles({profiles:[profile({timeoutMs:{brief:90000,expanded:210000}})]}).profiles.size,1);
+ assert.equal(GATEWAY_LIMITS.chatMs,210000);
+ for(const depth of ['brief','expanded'])for(const value of [210001,600000,0,-1,1.5,Infinity,'210000'])
   assert.throws(()=>parseProfiles({profiles:[profile({timeoutMs:{brief:500,expanded:500,[depth]:value}})]}),/PROFILE_INVALID/);
 });
 
@@ -327,4 +330,22 @@ test('transport probe completes signed health, refusal and synthetic chat checks
  assert.deepEqual(result.checks.filter(item=>item.result!=='PASS'),[]);
  assert.equal(result.summary.passed,true);assert.equal(result.samples.length,3);
  assert.doesNotMatch(JSON.stringify(result),new RegExp(secret));
+});
+
+test('signed long replies pass the old bound and oversized UTF-8 text stops honestly at 16 KB',async()=>{
+ for(const value of ['A'.repeat(7000),'🌾'.repeat(5000)]){
+  const f=fixture({reply:value});
+  const reply=await f.client.chat(payload());
+  assert.ok(Buffer.byteLength(reply.text)>4096);
+  assert.ok(Buffer.byteLength(reply.text)<=16384);
+  assert.equal(reply.finishReason,Buffer.byteLength(value)>16384?'length':'stop');
+  assert.doesNotMatch(reply.text,/\uFFFD/);
+  assert.equal(reply.text,Buffer.byteLength(value)>16384?'🌾'.repeat(4096):value);
+ }
+});
+
+test('poll transport deadlines enclose the gateway run and its signed return before the public job ends',()=>{
+ assert.ok(GATEWAY_LIMITS.chatMs<RELAY_LIMITS.leasedMs['/v1/chat']);
+ assert.ok(RELAY_LIMITS.leasedMs['/v1/chat']<WORKER_LIMITS.relayMs);
+ assert.ok(WORKER_LIMITS.relayMs<PUBLIC_AI_JOB_MS);
 });

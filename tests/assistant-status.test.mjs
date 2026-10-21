@@ -577,7 +577,7 @@ test('New investigation clears only tab history and starts a distinct server-his
  },{focus},{},{crypto:{randomUUID:()=>`00000000-0000-4000-8000-${String(++sequence).padStart(12,'0')}`}});
  try{
   let tree=render();message(tree).props.onChange({target:{value:'Earlier investigation question.'}});tree=render();await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});render();await settle();tree=render();
-  findNode(tree,node=>node.type==='button'&&node.props.children==='New investigation').props.onClick();tree=render();assert.doesNotMatch(text(tree),/Earlier investigation question/);assert.match(text(tree),/held in this tab only/);assert.match(text(tree),/existing expiry/);
+  findNode(tree,node=>node.type==='button'&&node.props.children==='New chat').props.onClick();tree=render();assert.doesNotMatch(text(tree),/Earlier investigation question/);assert.match(text(tree),/held in this tab only/);assert.match(text(tree),/existing expiry/);
   message(tree).props.onChange({target:{value:'New investigation question.'}});tree=render();await findNode(tree,node=>node.type==='form'&&node.props.onSubmit).props.onSubmit({preventDefault(){},currentTarget:{}});
   assert.equal(requests.length,2);assert.notEqual(requests[0].investigationId,requests[1].investigationId);assert.match(requests[0].investigationId,/^[a-f0-9-]{36}$/);assert.deepEqual(requests[0].context,requests[1].context);
  }finally{h.dispose();}
@@ -585,7 +585,7 @@ test('New investigation clears only tab history and starts a distinct server-his
 
 test('a browser without UUID support cannot promise a fresh server conversation',async()=>{
  const {h,render}=await workspace(async()=>ready(),{}, {},{crypto:undefined});
- try{const tree=render(),reset=findNode(tree,node=>node.type==='button'&&node.props.children==='New investigation');assert.equal(reset.props.disabled,true);assert.match(reset.props.title,/requires a supported secure browser/);assert.equal(send(tree).props.disabled,true);assert.match(text(tree),/secure investigation session is unavailable/);}finally{h.dispose();}
+ try{const tree=render(),reset=findNode(tree,node=>node.type==='button'&&node.props.children==='New chat');assert.equal(reset.props.disabled,true);assert.match(reset.props.title,/requires a supported secure browser/);assert.equal(send(tree).props.disabled,true);assert.match(text(tree),/secure investigation session is unavailable/);}finally{h.dispose();}
 });
 
 test('server history partitions rotate on material A to B to A changes, preserving same-context follow-ups and hide/reopen',async()=>{

@@ -1,5 +1,9 @@
 # KFM home inference kit
 
+> Longer-answer candidate: the sample expanded timeout is for the outbound poll
+> transport. For HTTPS, retain at most 90 seconds until the actual path is
+> qualified. See [coordinated rollout](#longer-answer-candidate--2026-10-21).
+
 These files go on the owner's **second Linux PC**, the one meant to supply chat
 compute for kansasfrontiermatrix.com. They put one small signed gateway in front
 of a loopback-only Ollama. Visitors never reach this PC: the KFM server calls
@@ -213,3 +217,48 @@ Logs (`journalctl -u kfm-inference-worker`) carry fixed codes and timings only.
 - Cut the network path: `sudo systemctl stop cloudflared`, or delete the tunnel's DNS route.
 - Revoke the KFM server's access: remove its key entry and restart the gateway.
 - Model weights, receipts and logs are left in place; delete nothing as part of a rollback.
+
+## Longer-answer candidate — 2026-10-21
+
+This source revision raises the website/gateway UTF-8 reply ceiling from
+4,096 to 16,384 bytes, including the cumulative continuation ceiling. Export
+capacity is 16,384 characters, so any accepted UTF-8 reply fits without being
+cut at the former 12,000-character export boundary. Limits remain finite;
+`finishReason: length` still produces a visibly incomplete reply with a
+continuation option. A continuation that exceeds the cumulative ceiling or
+available model context is withheld rather than silently discarded.
+
+The sample expanded profile moves from 2,048 to 4,096 generation tokens and
+from 90 to 180 seconds. These are candidate budgets, not measurements or
+installation evidence. Brief stays at 1,024 tokens / 60 seconds. The gateway
+accepts profile timeouts up to 210 seconds, the site's poll lease lasts 220
+seconds, the PC worker's gateway call lasts 230 seconds, and the public
+inference job remains bounded at 270 seconds. Guest/hourly budgets, one active
+generation, signature verification, model/digest pinning, loopback restrictions,
+sensitivity checks, context rechecks and data-retention windows are unchanged.
+
+**Coordinated rollout, not performed here:** first verify the active transport.
+For `poll`, update the installed gateway and worker from this reviewed revision,
+then change only the existing profile's expanded output/timeout values after a
+resource measurement. Preserve its existing ID, model, digest, scopes, input
+budget, context window, options, credentials and service configuration. Do not
+copy the example profile over an admitted profile: its model is illustrative
+and its digest is intentionally invalid until pinned. The website relay and
+public-handler changes must also be deployed before the complete chain can
+accept the larger reply. If only one side is updated, earlier limits still win.
+
+For `https`, retain an expanded timeout of at most 90 seconds until that
+specific tunnel/proxy path is measured and qualified for a longer response.
+The 180-second sample is for the outbound poll path. No automatic transport
+switch, service restart, model substitution or credential change is included.
+
+Before production acceptance, exercise a long reply, a UTF-8 cap, a deadline,
+Stop during generation, an unavailable PC and a source-context change. Observe
+PC memory/latency and queue wait under the new profile. If accepted, record the
+exact website revision and installed gateway/worker/profile revisions.
+
+Rollback the existing profile's output/timeout first to its recorded prior
+values, then revert the website and PC source as a coordinated reviewed change.
+The old profile values remain valid under the new parser. Keep the paired
+provider, identity, credentials, services and stored data intact. A website
+source change alone does not prove that installed PC files or live limits changed.
