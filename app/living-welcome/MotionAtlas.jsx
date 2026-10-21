@@ -48,7 +48,8 @@ export function MotionAtlas({ paused, active, visible, manual, onReady, onScenes
     };
     const update = () => { if (!raf) raf = requestAnimationFrame(measure); };
     const observer = new ResizeObserver(update); observer.observe(stage);
-    stage.querySelectorAll('.scene-anchor').forEach(node => observer.observe(node));
+    // The history/control row can resize the grid without resizing the stage.
+    stage.querySelectorAll('.scene-anchor,.discovery-field').forEach(node => observer.observe(node));
     window.addEventListener('resize', update); window.addEventListener('scroll', update, { passive: true, capture: true });
     measure();
     return () => { observer.disconnect(); cancelAnimationFrame(raf); window.removeEventListener('resize', update); window.removeEventListener('scroll', update, true); };
