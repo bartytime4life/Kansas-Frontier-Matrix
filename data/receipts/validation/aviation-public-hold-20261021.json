@@ -1,0 +1,13 @@
+{
+  "decision_id": "kfm:decision:aviation-public-hold:v1",
+  "outcome": "ABSTAIN",
+  "policy_family": "capability",
+  "reasons": [
+    "AVIATION_RELEASE_PROFILE_REQUIRED"
+  ],
+  "obligations": [
+    "WITHHOLD_PUBLIC_FEATURES",
+    "NO_RAW_OR_CANDIDATE_ACCESS"
+  ],
+  "evaluated_at": "2026-10-21T22:13:24.264Z"
+}
