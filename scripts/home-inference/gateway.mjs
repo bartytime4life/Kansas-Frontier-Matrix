@@ -10,7 +10,7 @@ import {pathToFileURL} from 'node:url';
 import {createNonceCache,decodeSecret,newSecret,verifyRequest,signResponse,isSystemdCredentialDirectory,RESPONSE_SIGNATURE_HEADER} from './signature.mjs';
 
 export const GATEWAY_VERSION='kfm-home-inference/1';
-export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,replyBytes:4096,chatMs:90000});
+export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,replyBytes:16384,chatMs:210000});
 const DEPTHS=['brief','expanded'];
 const ROLES=['system','user','assistant'];
 const OPTION_KEYS=['temperature','top_p','top_k','min_p','repeat_penalty','presence_penalty','frequency_penalty','seed'];

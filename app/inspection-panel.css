@@ -10,6 +10,13 @@
 .inspection-panel-switch button { flex: 1; min-width: 0; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); font-weight: 800; }
 .inspection-panel-switch button[aria-pressed="true"] { color: var(--gold-soft); border-color: var(--gold); background: rgba(224, 186, 109, .1); }
 .inspection-panel-switch .inspection-close { flex: 0 0 44px; font-size: 20px; }
+.inspection-panel-switch .inspection-map { flex: 0 0 52px; }
+.inspection-panel-switch .inspection-reading { flex: 0 0 80px; font-size: 11px; }
+/* The workspace owns the visible identity and expandable map context. */
+.explorer-shell[data-inspector] > .qwen-panel .qwen-panel-heading {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap;
+}
 .inspection-panel-switch button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .explorer-shell[data-inspector] > .evidence-drawer[aria-hidden="true"] { display: none; }
 .explorer-shell[data-inspector] > .qwen-panel { min-width: 0; min-height: 0; overflow: hidden; overscroll-behavior: contain; }
@@ -22,6 +29,9 @@
 .explorer-shell[data-inspector] .drawer-heading h2 { overflow-wrap: anywhere; }
 
 @media (min-width: 1101px) {
+  .inspection-panel-switch .inspection-map { display: none; }
+  .explorer-shell[data-inspector="qwen"] { --inspection-width: clamp(400px, 36vw, 600px); }
+  .explorer-shell[data-inspector="qwen"]:has(.qwen-panel[data-reading="true"]) { --inspection-width: min(60vw, 840px); }
   .explorer-shell[data-inspector][data-left][data-right] {
     grid-template-columns: var(--catalog-space) minmax(0, 1fr) var(--inspection-space);
     transition: none;
@@ -48,6 +58,8 @@
 
 /* Matches the JS compact boundary. The sheet leaves map context above it. */
 @media (max-width: 1100px) {
+  .inspection-panel-switch { gap: 4px; padding: 6px 8px; }
+  .inspection-panel-switch .inspection-close { display: none; }
   .explorer-shell[data-inspector] > .qwen-panel,
   .explorer-shell[data-inspector] > .evidence-drawer {
     position: absolute; inset: auto 0 var(--status); width: 100%;
@@ -57,15 +69,4 @@
   .explorer-shell[data-inspector] > .qwen-panel { z-index: 70; }
   .explorer-shell[data-inspector] > .qwen-modal-backdrop { display: block; position: absolute; inset: 0; z-index: 69; background: rgba(0, 0, 0, .16); }
   .explorer-shell[data-inspector] > .qwen-panel .qwen-messages { max-height: none; }
-  /* The sheet already names "Chat with KFM" in its switch; keep the heading as the dialog's accessible name only. */
-  .explorer-shell[data-inspector] > .qwen-panel .qwen-panel-heading {
-    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
-    overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap;
-  }
-  /* One row of map context so the pinned question bar keeps its height on phones. */
-  .explorer-shell[data-inspector] > .qwen-panel .qwen-context-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .explorer-shell[data-inspector] > .qwen-panel .qwen-context-strip span { border-bottom: 0; border-right: 1px solid var(--line); padding: 6px 8px; }
-  .explorer-shell[data-inspector] > .qwen-panel .qwen-context-strip span:last-child { border-right: 0; }
-  .explorer-shell[data-inspector] > .qwen-panel .qwen-context-strip small { font-size: 9px; white-space: nowrap; }
-  .explorer-shell[data-inspector] > .qwen-panel .qwen-context-strip strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }

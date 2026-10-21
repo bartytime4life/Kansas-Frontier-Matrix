@@ -95,13 +95,15 @@
   .atlas-studio .explorer-guide-steps button:hover .explorer-guide-go { transform: none; }
 }
 
-/* The compact conversation needs room for its composer; map remains reachable through close. */
+/* Balanced phone sheet retains map context; More chat gives an explicit reading view. */
 @media(max-width:1100px){
- .atlas-studio .explorer-shell[data-inspector] > .qwen-panel.atlas-chat-dock { height: min(88%,760px); }
+ .atlas-studio .explorer-shell[data-inspector] > .qwen-panel.atlas-chat-dock { height: min(74%,700px); border-radius: 18px 18px 0 0; }
+ .atlas-studio .explorer-shell[data-inspector] > .qwen-panel.atlas-chat-dock[data-reading="true"] { height: calc(100% - var(--status)); }
  .atlas-studio .atlas-scope-strip > span { min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 }
 /* Short phones use the available workspace height, retaining the status bar
    and Close control rather than clipping source labels or shrinking targets. */
 @media(max-width:1100px) and (max-height:680px){
- .atlas-studio .explorer-shell[data-inspector] > .qwen-panel.atlas-chat-dock { height: calc(100% - var(--status)); }
+ .atlas-studio .explorer-shell[data-inspector] > .qwen-panel.atlas-chat-dock { height: min(86%,600px); }
+ .atlas-studio .explorer-shell[data-inspector] > .qwen-panel.atlas-chat-dock[data-reading="true"] { height: calc(100% - var(--status)); }
 }

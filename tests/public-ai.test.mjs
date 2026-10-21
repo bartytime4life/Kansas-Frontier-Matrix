@@ -297,13 +297,13 @@ test('changed display context cannot resume an answer from the old context',asyn
 });
 
 test('cumulative history retains its UTF-8 byte bound and never commits an oversized continuation',async()=>{
- const seen=[],outputs=[{text:'α'.repeat(1100),outputLimited:true},{text:'β'.repeat(1100),outputLimited:true},{text:'A short synthetic idea.'}];
+ const seen=[],outputs=[{text:'α'.repeat(4200),outputLimited:true},{text:'β'.repeat(4200),outputLimited:true},{text:'A short synthetic idea.'}];
  const f=fixture(async(q,options)=>{seen.push(options);return outputs.shift();});
  const first=await f.request('jobs',question);await f.settle(first.body.id,first.cookie);
  const next=await f.request('jobs',{...question,question:CONTINUE_REPLY},first.cookie);
  assert.equal((await f.settle(next.body.id,first.cookie)).body.result.reasonCode,'MODEL_CONTEXT_LIMIT');
  const third=await f.request('jobs',question,first.cookie);await f.settle(third.body.id,first.cookie);
- assert.equal(seen[2].history.length,1);assert.equal(Buffer.byteLength(seen[2].history[0].reply),2200);
+ assert.equal(seen[2].history.length,1);assert.equal(Buffer.byteLength(seen[2].history[0].reply),8400);
 });
 
 test('new investigation IDs isolate same-source history while matching IDs retain compatible continuation',async()=>{
@@ -394,4 +394,17 @@ test('enabled public chat refuses a missing or retired provider before creating 
    assert.equal((await handle(new Request(origin+'/api/ai/jobs',{method:'POST'}))).status,503);
   }
  }finally{for(const name of names){if(saved[name]===undefined)delete process.env[name];else process.env[name]=saved[name];}}
+});
+
+test('longer answers pass the former 4 KB limit while unsafe tails and excess bytes remain withheld',async()=>{
+ const content=Array.from({length:220},(_,i)=>`Hypothetical item ${i}: sample${i} layer${i} date${i}.`).join('\n');
+ assert.ok(Buffer.byteLength(content)>4096&&Buffer.byteLength(content)<16384);
+ for(const [output,reason] of [[content,'UNVERIFIED_AI_DISCUSSION'],[content+' https://unsafe.example','MODEL_OUTPUT_UNQUALIFIED'],['α'.repeat(8193),'MODEL_OUTPUT_UNQUALIFIED']]){
+  const f=fixture(async()=>({text:output}));
+  const accepted=await f.request('jobs',question);
+  const result=(await f.settle(accepted.body.id,accepted.cookie)).body.result;
+  assert.equal(result.reasonCode,reason);
+  assert.equal(result.interpretation,reason==='UNVERIFIED_AI_DISCUSSION'?content:null);
+  assert.equal(result.answer,null);assert.deepEqual(result.evidenceRefs,[]);
+ }
 });

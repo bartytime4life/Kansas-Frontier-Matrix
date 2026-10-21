@@ -33,7 +33,7 @@ test("inspection switches expose the active view and invoke their actual callbac
     const close = findNode(tree, n => n.props?.className === "inspection-close");
     close.props.onClick(); assert.equal(calls.at(-1), "close");
     assert.equal(close.props["aria-label"], active === "qwen" ? "Close Qwen companion" : "Close Evidence Drawer");
-    for (const [label, mode] of [["Evidence", "evidence"], ["Chat with KFM", "qwen"]]) {
+    for (const [label, mode] of [["Evidence", "evidence"], ["AI chat", "qwen"]]) {
       const button = findNode(tree, n => n.type === "button" && n.props.children === label);
       assert.equal(button.props["aria-pressed"], active === mode);
       button.props.onClick(); assert.equal(calls.at(-1), mode);
@@ -88,4 +88,19 @@ test("a Scene map sample retains selection without resizing its canvas; closing 
       assert.equal(drawer, true); assert.equal(ctx.surfaceEvidencePendingRef.current, false);
     }
   }
+});
+
+test('Map returns to the map and More chat changes reading size without changing inspector',async()=>{
+ const h=await componentHarness(new URL('../app/inspection-panel.tsx',import.meta.url),{});
+ try{
+  const calls=[];
+  const props={active:'qwen',onEvidence(){calls.push('evidence');},onQwen(){calls.push('chat');},onClose(){calls.push('map');},onReading(){calls.push('reading');},reading:false};
+  let tree=h.render(h.exports.InspectionPanelSwitch,props);
+  findNode(tree,n=>n.props?.className==='inspection-map').props.onClick();
+  const reading=findNode(tree,n=>n.props?.className==='inspection-reading');
+  assert.equal(reading.props.children,'More chat');assert.equal(reading.props['aria-pressed'],false);reading.props.onClick();
+  assert.deepEqual(calls,['map','reading']);
+  tree=h.render(h.exports.InspectionPanelSwitch,{...props,reading:true});
+  assert.equal(findNode(tree,n=>n.props?.className==='inspection-reading').props.children,'Less chat');
+ }finally{h.dispose();}
 });

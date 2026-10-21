@@ -24,8 +24,10 @@
 .status { max-width: 100%; color: #b1dec8; font-size: 12px; overflow-wrap: anywhere; }
 .body[hidden] { display: none; }
 .body { flex: 1 1 0%; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
-.context { margin: 14px 18px 0; border: 1px solid var(--chat-line); border-radius: 11px; padding: 0 12px; background: #102733; overflow-wrap: anywhere; }
-.context summary { color: var(--chat-ink); }
+.context { margin: 8px 18px 0; border-bottom: 1px solid var(--chat-line); padding: 0 0 6px; overflow-wrap: anywhere; }
+.context summary { color: var(--chat-ink); padding-block: 5px; white-space: nowrap; }
+.contextTitle { display: inline-block; max-width: calc(100% - 20px); overflow: hidden; text-overflow: ellipsis; vertical-align: bottom; font-size: 12px; }
+.context summary small { display: block; margin-left: 14px; font-size: 11px; }
 .context strong { font-size: 13px; font-weight: 650; }
 .context p { margin: 4px 0 9px; font-size: 12px; line-height: 1.55; }
 .context small,.contextMeta { color: var(--chat-muted); font-size: 11px; }
@@ -34,19 +36,24 @@
 .guide { flex: none; margin: 2px 18px 0; font-size: 12px; }
 .guide p { margin: 0 0 10px; color: var(--chat-muted); line-height: 1.6; }
 .notice { margin: 12px 18px; border: 1px solid #997b51; border-radius: 10px; padding: 11px 12px; background: #2d2922; color: #f1dfc6; font-size: 12px; overflow-wrap: anywhere; }
-.messages { flex: none; padding: 18px; overflow: visible; }
+.messages { flex: none; padding: 18px; overflow: visible; font-size: 15px; }
 .messages article { margin: 0 0 22px; max-width: 100%; overflow-wrap: anywhere; }
 .messages p { margin: 8px 0; white-space: pre-wrap; line-height: 1.7; }
 .messages small,.turnLabel { color: var(--chat-muted); font-size: 11px; letter-spacing: .04em; }
 .messages ul { padding-left: 20px; }
 .messages li { margin: 7px 0; }
 .messages strong { font-weight: 650; }
-.assistant { padding: 2px 0; background: transparent; }
+.assistant { padding: 10px 0 10px 14px; border-left: 2px solid var(--chat-teal); background: transparent; }
+.assistant>.turnLabel { color: var(--chat-teal); font-weight: 650; }
+.aiBadge { display: inline-block; margin-left: 5px; border: 1px solid #507780; border-radius: 6px; padding: 2px 6px; color: #b7e9e6; background: #183b44; font-size: 11px; font-weight: 600; letter-spacing: .025em; }
+.discussion h4 { margin: 18px 0 6px; font-size: 16px; color: var(--chat-ink); }
+.discussion ol { padding-left: 24px; }
+.nextStep { margin-top: 8px; font-size: 12px; }
 .messages .user { width: fit-content; max-width: 92%; margin-left: auto; border: 1px solid #35505f; border-radius: 15px 15px 4px 15px; padding: 11px 14px; background: var(--chat-raised); }
 .user p { margin: 4px 0; }
 .turn { margin-top: 22px; }
 .turnLabel { display: block; margin-bottom: 7px; }
-.emptyState { margin: 8px 0 24px; }
+.emptyState { margin: 8px 0 16px; }
 .emptyState h2,.emptyState h3 { margin: 0 0 12px; font-size: 23px; line-height: 1.25; letter-spacing: -.035em; font-weight: 600; }
 .emptyState p { max-width: 52ch; color: var(--chat-muted); }
 .progress { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0; color: var(--chat-muted); }
@@ -73,14 +80,14 @@
 .prompts { display: flex; flex-wrap: wrap; gap: 7px; margin: 0 18px 12px; }
 .prompts button { min-height: 44px; padding: 9px 11px; text-align: left; font-size: 12px; background: transparent; }
 .footer { padding: 5px 18px 18px; color: var(--chat-muted); font-size: 11px; line-height: 1.6; }
-.composer { display: flex; flex: 0 1 auto; flex-direction: column; min-height: 0; border-top: 1px solid var(--chat-line); padding: 12px 16px max(12px,env(safe-area-inset-bottom)); background: #0c1f2b; }
+.composer { position: relative; display: flex; flex: 0 1 auto; flex-direction: column; min-height: 0; border-top: 1px solid var(--chat-line); padding: 10px 16px max(10px,env(safe-area-inset-bottom)); background: linear-gradient(180deg,#112b39,#0c1f2b); }
 .composer>label,.actions { flex: none; }
 .composerField { display: flex; align-items: flex-end; gap: 8px; min-width: 0; border: 1px solid #476571; border-radius: 16px; padding: 8px; background: #142c39; }
 .composerField:focus-within { border-color: var(--chat-wheat); }
 .composerField label { flex: 1; min-width: 0; }
 .composerField textarea { border: 0; background: transparent; box-shadow: none; }
 .composerField textarea:focus-visible { outline-offset: -2px; }
-.composerTools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.composerTools { display: flex; align-items: center; gap: 4px; margin-right: 82px; margin-bottom: 6px; }
 .chat .composerTools button { flex: 1; min-height: 44px; padding: 8px 10px; font-size: 12px; background: transparent; }
 .chat .composerTools button[aria-pressed="true"] { border-color: var(--chat-wheat); background: #253a3c; color: #ffe0a1; box-shadow: inset 0 -2px var(--chat-wheat); }
 .chat .sendButton { flex: none; min-width: 44px; border-color: var(--chat-wheat); border-radius: 12px; background: var(--chat-wheat); color: #102331; font-weight: 700; }
@@ -90,6 +97,8 @@
 .composer details label { margin: 9px 0; }
 .composer summary { min-height: 44px; padding: 11px 0; line-height: 22px; }
 .composer .options { flex: 0 1 auto; min-height: 0; margin: -4px -4px 4px; padding: 4px; overflow-y: auto; }
+.composer .options:not([open]) { position: absolute; right: 16px; top: 10px; margin: 0; padding: 0; }
+.composer .options>summary { padding-inline: 8px; }
 .optionsBody { max-height: min(38dvh,280px); margin: 0 -4px; padding: 0 4px 7px; overflow-y: auto; overscroll-behavior: contain; }
 .optionsBody small { display: block; line-height: 1.55; color: var(--chat-muted); }
 .dates { display: flex; gap: 8px; }
@@ -107,16 +116,27 @@
 .srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 @media (max-width:600px) {
   .chat { font-size: 15px; }
-  .toolbar { min-height: 52px; padding: 10px 16px; }
+  .toolbar { min-height: 44px; padding: 6px 12px; }
   .body { scrollbar-gutter: auto; }
-  .context { margin: 12px 16px 0; }
+  .context { margin: 0 12px; padding-bottom: 0; }
   .guide { margin-inline: 16px; }
-  .messages { padding: 18px 16px; }
+  .messages { padding: 12px; }
   .messages p { line-height: 1.65; }
   .notice { margin-inline: 16px; }
   .prompts { margin-inline: 16px; }
   .footer { padding-inline: 16px; }
-  .composer { padding-inline: 12px; }
+  .composer { padding: 8px 10px max(8px,env(safe-area-inset-bottom)); }
+  .composer .options:not([open]) { right: 10px; top: 8px; }
+  .composerField { padding: 2px 4px; border-radius: 12px; }
+  .composerField textarea { min-height: 44px; height: 44px; font-size: 16px; }
+  .keyboardHint { display: none; }
+  .status { font-size: 11px; }
+  .identity strong { font-size: 14px; }
+  .chat .toolbar button { padding: 6px 10px; font-size: 12px; }
+  .prompts { flex-wrap: nowrap; overflow-x: auto; margin: 0 12px 12px; padding-bottom: 3px; }
+  .prompts button { flex: 0 0 70%; }
+  .emptyState h3 { font-size: 21px; }
+  .emptyState p { margin: 6px 0; font-size: 13px; }
   .actions { align-items: flex-end; }
   .actions small { max-width: 65%; }
 }

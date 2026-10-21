@@ -1223,6 +1223,7 @@ export default function Home() {
   const sourceStatusPanelRef = useRef<HTMLElement>(null);
   const sourceStatusReturnRef = useRef<HTMLElement | null>(null);
   const qwenPanelRef = useRef<HTMLElement>(null);
+  const [chatReadingView, setChatReadingView] = useState(false);
   const qwenReturnRef = useRef<HTMLElement | null>(null);
   const drawerTabRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const pendingViewRef = useRef<ViewState | null>(null);
@@ -3815,7 +3816,7 @@ export default function Home() {
       // One opening action owns one focus destination. Find must not compete
       // with a second delayed callback that sends its first keys to Close.
       const target = focusTarget === "composer" ? globalSearchInputRef.current
-        : qwenPanelRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close Qwen companion"]');
+        : qwenPanelRef.current?.querySelector<HTMLButtonElement>(isCompact ? '.inspection-map' : '[aria-label="Close Qwen companion"]');
       target?.focus({ preventScroll: true });
     }, 0);
   }, [dismissMapUtilityWithoutFocus, isCompact, setQwenOpen, setRightOpen]);
@@ -9682,7 +9683,7 @@ export default function Home() {
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
           <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} visual motionEnabled={dynamicEffects} onMotionChange={setDynamicEffects} onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onChoosePlace={() => openAtlasComposer("find")} onMission={question => openAtlasComposer("explore", question)} />
           <button className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Chat with KFM about this map view" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
-            <span className="qwen-launch-mark" aria-hidden="true">Q</span>
+            <span className="qwen-launch-mark" aria-hidden="true">AI</span>
             <span><strong>Chat with KFM</strong><small>About this map view</small></span>
             <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
           </button>
@@ -10174,17 +10175,11 @@ export default function Home() {
 
 
           {qwenOpen && isCompact && <div className="qwen-modal-backdrop" aria-hidden="true" onPointerDown={() => closeQwenCompanion()} />}
-          <section hidden={!qwenOpen} inert={!qwenOpen} aria-hidden={!qwenOpen} ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel atlas-chat-dock" role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
-            <InspectionPanelSwitch active="qwen" onEvidence={openEvidencePanel} onQwen={() => {}} onClose={() => closeQwenCompanion()} />
+          <section hidden={!qwenOpen} inert={!qwenOpen} aria-hidden={!qwenOpen} ref={qwenPanelRef} id="qwen-map-panel" className="qwen-panel atlas-chat-dock" data-reading={chatReadingView} role="dialog" aria-modal={isCompact} aria-labelledby="qwen-panel-title">
+            <InspectionPanelSwitch active="qwen" onEvidence={openEvidencePanel} onQwen={() => {}} onClose={() => closeQwenCompanion()} reading={chatReadingView} onReading={() => setChatReadingView(value => !value)} />
             <header className="qwen-panel-heading">
               <div><span className="qwen-eyebrow">YOUR INVESTIGATION</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
             </header>
-            <div className="qwen-context-strip" aria-label="Map context scope">
-              <span><small>VIEW</small><strong>{mapRepresentationLabel}</strong></span>
-              <span><small>TIME</small><strong>{temporalScopeLabel}</strong></span>
-              <span><small>LAYERS</small><strong>{selectedMapLayerCount}</strong></span>
-              <span><small>SELECTION</small><strong>{assistantFocus.context.selection ? "1" : "0"}</strong></span>
-            </div>
             <AssistantWorkspace active={qwenOpen} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} inputRef={globalSearchInputRef} draftRequest={assistantDraftRequest}
               discovery={{query:globalQuery, items:searchResults, status:searchStatus.message, busy:searchStatus.busy, onQuery:setGlobalQuery, onChoose:id => { const item=searchResults.find(row => row.id===id); if (item) chooseSearchResult(item); }}}
               onInspectSources={inspectAssistantSources} />

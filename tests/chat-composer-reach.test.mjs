@@ -40,17 +40,18 @@ test('the chat scroll region scrolls and the conversation log no longer scrolls 
  assert.match(css,/\.chat button:focus-visible[^{]*\.chat summary:focus-visible[^{]*\.chat textarea:focus-visible[^{]*\{outline:3px solid var\(--chat-wheat\);outline-offset:3px/);
 });
 
-test('the pinned form holds answer options, the message box and Send; prompts and the footer live in the scroll region',async()=>{
+test('the pinned form holds answer options, the message box and Send; context stays compact and supporting copy lives in Options',async()=>{
  const {h,render}=await renderChat();
  try{
   let tree=render();
   const body=findNode(tree,node=>node.props?.className==='body'),form=findNode(tree,node=>node.type==='form'&&node.props.className==='composer');
   assert.ok(body,'scroll region renders');assert.ok(form,'composer form renders');
   assert.equal(findNode(body,node=>node.type==='form'),undefined,'the form is not inside the scroll region');
-  for(const predicate of [node=>node.props?.className==='context',node=>node.props?.className==='guide',node=>node.props?.role==='log'&&node.props['aria-label']==='KFM chat conversation'&&node.props['aria-live']==='polite'&&node.props.tabIndex===0,node=>node.props?.['aria-label']==='Suggested questions',node=>node.type==='footer'])assert.ok(findNode(body,predicate));
+  for(const predicate of [node=>node.props?.className==='context',node=>node.props?.role==='log'&&node.props['aria-label']==='KFM chat conversation'&&node.props['aria-live']==='polite'&&node.props.tabIndex===0,node=>node.props?.['aria-label']==='Suggested questions'])assert.ok(findNode(body,predicate));
   const regionOrder=children(body).map(child=>child.props.role==='log'?'log':child.props['aria-label']==='Suggested questions'?'prompts':child.type==='footer'?'footer':child.props.className);
-  assert.deepEqual(regionOrder,['context','guide','log','prompts','footer']);
-  assert.match(text(findNode(body,node=>node.type==='footer')),/History stays in this tab.*Temporary server questions expire after 15 minutes/);
+  assert.deepEqual(regionOrder,['context','log','prompts']);
+  assert.equal(findNode(body,node=>node.type==='footer'),undefined);
+  assert.match(text(findNode(form,node=>node.type==='footer')),/History stays in this tab.*Temporary server questions expire after 15 minutes/);
   const prompts=all(findNode(body,node=>node.props?.['aria-label']==='Suggested questions'),node=>node.type==='button');
   assert.ok(prompts.length>0);for(const button of prompts){assert.equal(button.props.type,'button');assert.equal(button.props.disabled,false);}
   assert.equal(findNode(form,node=>node.props?.['aria-label']==='Suggested questions'),undefined,'prompts are no longer inside the form');
@@ -60,11 +61,11 @@ test('the pinned form holds answer options, the message box and Send; prompts an
   const [intent,options,messageLabel,actions]=formOrder;
   assert.equal(intent.props['aria-label'],'Composer mode');assert.ok(findNode(intent,node=>node.type==='button'&&text(node)==='Ask'));
   assert.equal(options.type,'details');assert.equal(options.props.className,'options');
-  const summary=findNode(options,node=>node.type==='summary');assert.equal(text(summary),'Answer options · Ask');
+  const summary=findNode(options,node=>node.type==='summary');assert.equal(text(summary),'Options');
   assert.ok(findNode(messageLabel,node=>node.type==='textarea'));
   assert.equal(actions.props.className,'actions');
   const submit=findNode(actions,node=>node.type==='button'&&node.props.type!=='button');assert.equal(text(submit),'Send');
-  assert.match(text(findNode(actions,node=>node.type==='small')),/unverified discussion/);
+  assert.match(text(findNode(actions,node=>node.type==='small')),/AI can make mistakes/);
   for(const name of ['mode','style','depth','term','place','start','end']){
    assert.ok(findNode(options,node=>node.props?.name===name),name+' stays inside the composer form');
    assert.equal(all(tree,node=>node.props?.name===name).length,1,name+' is rendered once');
@@ -74,7 +75,7 @@ test('the pinned form holds answer options, the message box and Send; prompts an
   findNode(form,node=>node.type==='button'&&text(node)==='Evidence').props.onClick();
   tree=render();
   const evidenceForm=findNode(tree,node=>node.type==='form'&&node.props.className==='composer');
-  assert.equal(text(findNode(evidenceForm,node=>node.type==='summary')),'Answer options · Find evidence');
+  assert.equal(text(findNode(evidenceForm,node=>node.type==='summary')),'Options');
   assert.ok(findNode(evidenceForm,node=>node.type==='button'&&text(node)==='Search'));
   assert.match(text(findNode(evidenceForm,node=>node.props?.className==='actions')),/Released records/);
  }finally{h.dispose();}
@@ -146,7 +147,7 @@ test('the pinned action row states each mode\'s trust boundary without opening o
  const line=tree=>text(findNode(findNode(tree,node=>node.props?.className==='actions'),node=>node.type==='small'));
  const plain=await renderChat();
  try{
-  let tree=plain.render();assert.match(line(tree),/^AI model · unverified discussion/);assert.doesNotMatch(line(tree),/no account needed/);
+  let tree=plain.render();assert.match(line(tree),/^AI can make mistakes · check sources/);assert.doesNotMatch(line(tree),/no account needed/);
   findNode(tree,node=>node.type==='button'&&text(node)==='Evidence').props.onClick();
   tree=plain.render();assert.match(line(tree),/^Released records · no model required · unsupported answers withheld/);
  }finally{plain.h.dispose();}
@@ -155,24 +156,19 @@ test('the pinned action row states each mode\'s trust boundary without opening o
  try{assert.match(line(source.render()),/^Source summary · no model required · not admitted evidence/);}finally{source.h.dispose();}
 });
 
-test('the compact chat sheet hides the duplicate heading accessibly and keeps map context to one row',async()=>{
- const sheet=await readFile(new URL('../app/inspection-panel.css',import.meta.url),'utf8');
- const compact=sheet.slice(sheet.indexOf('@media (max-width: 1100px)')),desktop=sheet.slice(sheet.indexOf('@media (min-width: 1101px)'),sheet.indexOf('@media (max-width: 1100px)'));
- assert.ok(compact.length&&desktop.length);
- assert.doesNotMatch(desktop+sheet.slice(0,sheet.indexOf('@media')),/qwen-panel-heading|qwen-context-strip/,'desktop and shared rules are unchanged');
- const block=selector=>{const at=compact.indexOf(selector+' {');assert.ok(at>=0,'missing compact rule '+selector);return compact.slice(at,compact.indexOf('}',at));};
- // Prefix .explorer-shell[data-inspector] > .qwen-panel outranks globals.css (.qwen-panel .qwen-context-strip span, .qwen-context-strip span:nth-child(-n+2)).
- const prefix='.explorer-shell[data-inspector] > .qwen-panel';
- const heading=block(prefix+' .qwen-panel-heading');
- for(const declaration of ['position: absolute','width: 1px','height: 1px','overflow: hidden','clip: rect(0, 0, 0, 0)','white-space: nowrap'])assert.ok(heading.includes(declaration),declaration);
- assert.doesNotMatch(heading,/display:\s*none|visibility:\s*hidden/,'the heading stays the dialog accessible name');
- assert.match(block(prefix+' .qwen-context-strip'),/grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/);
- assert.match(block(prefix+' .qwen-context-strip span'),/border-bottom: 0;[^}]*border-right: 1px solid var\(--line\)/);
- assert.match(block(prefix+' .qwen-context-strip span:last-child'),/border-right: 0/);
- assert.match(block(prefix+' .qwen-context-strip small'),/font-size: 9px;[^}]*white-space: nowrap/);
- assert.match(block(prefix+' .qwen-context-strip strong'),/text-overflow: ellipsis/);
+test('the dialog keeps its accessible name while duplicate map context is removed',async()=>{
+ const {h,render}=await renderChat();
+ try{
+  const tree=render();
+  assert.match(text(findNode(tree,node=>node.props?.className==='identity')),/AI assistant/);
+  const scope=findNode(tree,node=>node.props?.['aria-label']==='AI question context');
+  assert.equal(scope.type,'details');assert.equal(scope.props.open,undefined);
+  assert.match(text(scope),/Synthetic county.*Synthetic source context/);
+  assert.equal(findNode(tree,node=>node.type==='textarea').props.placeholder,'Ask KFM AI…');
+ }finally{h.dispose();}
  const page=await readFile(new URL('../app/page.tsx',import.meta.url),'utf8');
- assert.match(page,/className="qwen-panel atlas-chat-dock" role="dialog"[^>]*aria-labelledby="qwen-panel-title"/);assert.match(page,/<h2 id="qwen-panel-title">Chat with KFM<\/h2>/);
+ assert.match(page,/<h2 id="qwen-panel-title">Chat with KFM<\/h2>/);
+ assert.doesNotMatch(page,/className="qwen-context-strip"/);
 });
 
 test('Find has a dedicated result region and retains a long conversation reader position and draft',async()=>{
@@ -229,4 +225,16 @@ test('opening requests apply before the first editable paint and never erase inp
    assert.equal(findNode(tree,node=>node.type==='textarea').props.value,'Ellsworth');
   }finally{h.dispose();}
  }
+});
+
+test('discussion formatting keeps model HTML as text and renders headings and lists semantically',async()=>{
+ const {h}=await renderChat();
+ try{
+  const tree=h.exports.DiscussionText({value:'## A useful explanation\n\n- First idea\n- Second idea\n\n1. Inspect a source\n2. Check its date\n\n<img src=x onerror=alert(1)>'});
+  assert.equal(text(findNode(tree,n=>n.type==='h4')),'A useful explanation');
+  assert.equal(all(tree,n=>n.type==='li').length,4);
+  assert.equal(findNode(tree,n=>n.type==='img'),undefined);
+  assert.match(text(tree),/<img src=x onerror=alert\(1\)>/);
+  assert.equal(findNode(tree,n=>n.props?.dangerouslySetInnerHTML),undefined);
+ }finally{h.dispose();}
 });

@@ -115,7 +115,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      const discussion=await model.discuss(job.question,{style:job.style,depth:job.depth,context:job.context?.prompt??'',history},job.abort.signal);
      if(job.state!=='running'||job.abort.signal.aborted)continue;
      const output=discussion?.text;
-     if(!text(output,4096)||hasRepeatedPhrase(output)||/https?:\/\/|www\.|\bkfm:/i.test(output)||localQwenAnswerHasOverPreciseLocation(output))job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
+     if(!text(output,16384)||hasRepeatedPhrase(output)||/https?:\/\/|www\.|\bkfm:/i.test(output)||localQwenAnswerHasOverPreciseLocation(output))job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');
      else if(repeatsPriorReply(output,history.at(-1)?.reply)){
       const continuation=job.question===CONTINUE_REPLY;
       job.result={...envelope('ABSTAIN',continuation?'MODEL_CONTINUATION_REPEATED':'MODEL_FOLLOWUP_REPEATED'),followUpQuestion:continuation?'Would you like to ask a narrower question or inspect the original source records?':'The model repeated the earlier reply. Would you like to ask a narrower question or inspect the original source records?'};
@@ -123,7 +123,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      else{
       // A URL, precise location or repetition may cross fragment boundaries.
       const joined=continuing?previous.reply+output:output;
-      if(!text(joined,4096)){job.result=envelope('ABSTAIN','MODEL_CONTEXT_LIMIT');continue;}
+      if(!text(joined,16384)){job.result=envelope('ABSTAIN','MODEL_CONTEXT_LIMIT');continue;}
       if(hasRepeatedPhrase(joined)||/https?:\/\/|www\.|\bkfm:/i.test(joined)||localQwenAnswerHasOverPreciseLocation(joined)){job.result=envelope('ABSTAIN','MODEL_OUTPUT_UNQUALIFIED');continue;}
       job.result={...envelope('ABSTAIN','UNVERIFIED_AI_DISCUSSION'),interpretation:output,followUpQuestion:'Would you like a deeper explanation, a practical example, or help exploring the relevant map layers?',contextLimited:Boolean(discussion.contextTrimmed),outputLimited:Boolean(discussion.outputLimited)};
       if(session)session.history=[...(continuing?turns.slice(0,-1):turns),{question:continuing?previous.question:job.question,reply:joined,outputLimited:Boolean(discussion.outputLimited),contextKey:job.contextKey,at:clock()}].slice(-2);
