@@ -1,0 +1,90 @@
+{
+  "receipt_id": "genrec-site-upload-quota-doc-rename-20261021",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/docs/submission-upload-quota.md"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/docs/submission-upload-quota.md": "sha256:a9ffc3bcaf6279bb9b10452d334b81c5d5e42119e28c15f755842b0a85d590fd"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5",
+    "version": "claude-opus-5-5"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@1e5fe5dfebcaaf08d19549d58ac3aebc65ccfbd5",
+      "f6e393640e added apps/site/source/docs/SUBMISSION_UPLOAD_QUOTA.md",
+      "data/receipts/generated/genrec-site-upload-20261019.json at 1e5fe5dfebcaaf08d19549d58ac3aebc65ccfbd5",
+      "Supersedes the path binding apps/site/source/docs/SUBMISSION_UPLOAD_QUOTA.md in genrec-site-upload-20261019; original receipt remains immutable at data/receipts/generated/genrec-site-upload-20261019.json",
+      "control_plane/external_mirror_register.yaml",
+      "tools/qa/site_mirror.py"
+    ],
+    "evidence_hashes": [
+      "sha256:e38c45c42a935f06d75f8728a17c515bcc3df26f29484d24047f4a8f6b9a002e"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/docs/submission-upload-quota.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository topology ratchet",
+      "outcome": "PASS",
+      "reason": "Pinned base reports FAIL_NEW_DRIFT for path-grammar:uppercase and one stale baseline entry. After the rename: 0 invariant, 0 new drift, 89 baselined warnings, 0 stale baseline entries. The baseline is unchanged."
+    },
+    {
+      "gate": "make repository-topology",
+      "outcome": "PASS",
+      "reason": "Contract, topology tests, correction register and diagnostics all exit 0 with pyyaml and pytest installed locally."
+    },
+    {
+      "gate": "canonical generated-receipt validator",
+      "outcome": "PASS",
+      "reason": "This successor receipt validates; the full SHA-256 binding matches the renamed file."
+    },
+    {
+      "gate": "site mirror content parity",
+      "outcome": "SKIPPED",
+      "reason": "tools/qa/site_mirror.py --check already fails MIRROR_REVIEW_REQUIRED on the pinned base because several overlay files are absent from or differ from the mirror receipt. The renamed file was already an unrecorded repository-only path before and after this change. Reconciling the mirror receipt needs a human review record and is outside this change."
+    },
+    {
+      "gate": "exact-head GitHub CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the pull request; no approval, merge or deployment is claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-governance",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "external-mirror-names",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    },
+    {
+      "id": "topology-ratchet",
+      "validated": true,
+      "evidence_ref": "tools/validators/directory_governance/README.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-21T15:40:00Z",
+  "emitter": "Claude Code",
+  "notes": "Byte-identical rename of apps/site/source/docs/SUBMISSION_UPLOAD_QUOTA.md to submission-upload-quota.md. The file is a repository-only overlay: it is not in the site mirror receipt, so ADR-0048's uppercase exemption and its never-rename-in-place rule for upstream-backed files do not apply, and the default path grammar does. No other tracked file referenced the old path except the original receipt, which stays byte-for-byte unchanged as historical evidence. That original now reports ARTIFACT_NOT_FILE for the old path; this successor is the current binding for the renamed bytes. Its SHA-256 is recorded as an evidence input, not an authored artifact. No baseline, waiver, register, upstream site or deployment change. Human review remains pending; the receipt does not bind itself."
+}
