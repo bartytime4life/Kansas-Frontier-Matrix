@@ -241,6 +241,25 @@ test('queued work keeps its validated profile and matching inspector across a re
  }finally{f.gateway.abortAll();await Promise.allSettled(work);}
 });
 
+test('health keeps profile metadata paired with its inspection when reload crosses pending I/O',async()=>{
+ const f=fixture();let release;
+ f.runtime.versionHolds.push(new Promise(resolve=>{release=resolve;}));
+ const pending=f.client.health();
+ try{
+  await waitFor(()=>f.runtime.tagReads===1);
+  reloadProfiles(f.gateway,{profiles:[profile({digest:'sha256:'+other})]});
+  release();
+  const before=await pending;
+  assert.equal(before.profiles[0].digest,digest,'pending health describes the profile it inspected');
+  assert.equal(before.profiles[0].ready,true);
+  const after=await f.client.health();
+  assert.equal(after.profiles[0].digest,'sha256:'+other);
+  assert.equal(after.profiles[0].ready,false,'new health cannot approve the new pin using old readiness');
+  assert.equal(after.profiles[0].reason,'PROFILE_DIGEST_MISMATCH');
+  assert.equal(f.gateway.admission.active,0);assert.equal(f.gateway.admission.queued,0);
+ }finally{release();await pending;}
+});
+
 test('admission cannot reuse older in-flight tags or let their late result overwrite its cache',async()=>{
  const f=fixture();let release;
  f.runtime.versionHolds.push(new Promise(resolve=>{release=resolve;}));

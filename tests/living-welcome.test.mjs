@@ -17,7 +17,7 @@ async function welcome(reduced=false){
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
   'react-dom':{createPortal:content=>content},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
-  './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>()=>{}},
+  './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};}},
  },env);
  const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value]),questions:'preserved questions'};
  const render=()=>{const tree=harness.render(harness.exports.default,props);harness.commit();return tree;};
@@ -47,6 +47,37 @@ test('visual welcome owns focus and Escape before passive effects run after the 
   assert.deepEqual(h.calls,[['close',false]]);
  }finally{h.harness.dispose();}
  assert.equal(h.env.listeners.has('keydown'),false);
+});
+
+test('nested welcome dialogs own and return keyboard focus in the layout commit',async()=>{
+ const h=await welcome();let tree=h.render();
+ const trigger={isConnected:true,focus(){h.env.document.activeElement=this;}};
+ const close={focus(){h.env.document.activeElement=this;}};
+ const root=findNode(tree,node=>node.props?.className==='explorer-guide living-welcome');
+ root.props.ref.current={contains:node=>node===trigger,querySelector:()=>null};
+ h.env.document.activeElement=trigger;
+ byText(tree,'Scene credits').props.onClick();
+ tree=h.harness.render(h.harness.exports.default,h.props);
+ findNode(tree,node=>node.props?.className==='welcome-dialog').props.ref.current={
+  contains:node=>node===close,querySelector:()=>close,
+ };
+ try{
+  h.harness.commitLayout();
+  assert.equal(h.env.document.activeElement,close,'modal receives focus before passive effects');
+  assert.equal(h.env.isolated,true,'background isolation is committed with modal focus');
+  const escape=()=>h.env.listeners.get('keydown')({target:h.env.document.activeElement,key:'Escape',preventDefault(){},stopImmediatePropagation(){}});
+  escape();
+  tree=h.harness.render(h.harness.exports.default,h.props);
+  assert.equal(findNode(tree,node=>node.props?.className==='welcome-dialog'),undefined);
+  // Removing the focused dialog sends browser focus to the document body.
+  h.env.document.activeElement=h.env.document.body;
+  h.harness.commitLayout();
+  assert.equal(h.env.document.activeElement,trigger,'closing returns focus before another key can arrive');
+  assert.equal(h.env.isolated,false,'background isolation is restored before returning focus');
+  assert.deepEqual(h.calls,[],'first Escape dismisses only the nested dialog');
+  escape();
+  assert.deepEqual(h.calls,[['close',false]],'a second immediate Escape reaches the welcome owner');
+ }finally{h.harness.dispose();}
 });
 
 test('welcome uses real search and draft actions without requests or implicit dismissal preferences',async()=>{
