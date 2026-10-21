@@ -48,6 +48,10 @@ Each step below is something the owner runs deliberately on the home PC.
   and generation together. Expired queued work never starts generation.
 - An over-long prompt is refused (`MODEL_CONTEXT_LIMIT`) rather than letting
   Ollama silently truncate it. Model "thinking" text is never returned.
+  Before generation, the gateway reads `/api/show` thinking controls so an
+  always-thinking model uses Ollama's separate reasoning channel. Inline,
+  implicit and unfinished `<think>` blocks are also removed before either a
+  complete answer or a deadline-limited partial can be returned.
 - Logs one JSON line per request with timings, token counts and codes. Logs
   never contain prompts, replies, headers or secrets.
 
@@ -189,6 +193,11 @@ table. Until the website has them, the worker logs `poll_failed` with
 `SITE_HTTP_404` (the route is off) or `SITE_HTTP_401` (the key does not match)
 and backs off; nothing else happens. `node /opt/kfm-inference/worker.mjs --check`
 makes one signed poll and reports whether the site accepts the worker key.
+
+The website defers routine health probes while an admitted generation is using
+the serial worker, preserving the last verified readiness state. Its bounded
+chat deadline, response authentication and outage checks still apply. Finishing
+or cancelling that generation triggers a fresh health probe immediately.
 
 Logs (`journalctl -u kfm-inference-worker`) carry fixed codes and timings only.
 

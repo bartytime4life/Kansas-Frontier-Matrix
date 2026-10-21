@@ -163,15 +163,55 @@ export function createInspector({ollamaUrl,profiles,fetchImpl=fetch,clock=Date.n
 
 // Ollama streams NDJSON; reading it incrementally lets the gateway stop at the
 // output bound, honour cancellation and never buffer an unbounded reply.
+async function thinkingMode({fetchImpl,ollamaUrl,profile,signal}){
+ const response=await fetchImpl(ollamaUrl+'/api/show',{method:'POST',redirect:'error',
+  signal:AbortSignal.any([signal,AbortSignal.timeout(GATEWAY_LIMITS.inspectMs)]),
+  headers:{'Content-Type':'application/json'},body:JSON.stringify({model:profile.model})});
+ if(!response.ok)throw fail('MODEL_UNAVAILABLE',503);
+ const metadata=await response.json(),values=metadata.thinking?.values;
+ let think=profile.think;
+ // Some pinned templates always reason. Asking those models for think:false
+ // disables Ollama's reasoning parser without disabling their reasoning, so
+ // their private preamble lands in content. Use their supported parser mode.
+ if(think===false&&Array.isArray(values)&&values.length&&!values.includes(false)){
+  think=values.includes(true)?true:metadata.thinking.default;
+  if(think!==true&&!(typeof think==='string'&&values.includes(think)))throw fail('MODEL_UNAVAILABLE',503);
+ }
+ const implicit=think===true||typeof think==='string'||think===undefined&&metadata.thinking?.default!==false&&Array.isArray(values)&&values.some(value=>value!==false);
+ return {think,implicit};
+}
+
+// Also accept older streams that put tagged reasoning in content. A missing
+// opening tag means the model template opened it; a closing tag discards the
+// entire preamble. Incomplete blocks never become deadline/length partials.
+function answerText(raw,{implicit,separated,complete}){
+ // A native parser may omit an empty thinking channel. Its clean completed
+ // answer is valid; an unclosed implicit preamble is never a partial answer.
+ let preamble=implicit&&!separated&&!complete,depth=0,cursor=0,text='';
+ for(const match of raw.matchAll(/<\/?think>/gi)){
+  if(!preamble&&!depth)text+=raw.slice(cursor,match.index);
+  if(match[0][1]==='/'){
+   if(depth)depth--;
+   else{text='';preamble=false;}
+  }else{depth++;preamble=false;}
+  cursor=match.index+match[0].length;
+ }
+ if(!preamble&&!depth)text+=raw.slice(cursor);
+ const partial=text.lastIndexOf('<');
+ if(partial>=0&&['<think>','</think>'].some(marker=>marker.startsWith(text.slice(partial).toLowerCase())))text=text.slice(0,partial);
+ return text;
+}
+
 async function streamChat({fetchImpl,ollamaUrl,profile,depth,messages,signal,progress}){
+ const mode=await thinkingMode({fetchImpl,ollamaUrl,profile,signal});
  const response=await fetchImpl(ollamaUrl+'/api/chat',{method:'POST',signal,redirect:'error',headers:{'Content-Type':'application/json'},body:JSON.stringify({
   model:profile.model,messages,stream:true,
-  ...(profile.think===undefined?{}:{think:profile.think}),
+  ...(mode.think===undefined?{}:{think:mode.think}),
   ...(profile.keepAlive===undefined?{}:{keep_alive:profile.keepAlive}),
   options:{...profile.options,num_ctx:profile.contextTokens,num_predict:profile.outputTokens[depth]},
  })});
  if(!response.ok||!response.body)throw fail('MODEL_UNAVAILABLE',503);
- const decoder=new TextDecoder();let buffer='',text='',final=null,limited=false;
+ const decoder=new TextDecoder();let buffer='',raw='',text='',separated=false,final=null,limited=false;
  const reader=response.body.getReader();
  try{
   while(!final&&!limited){
@@ -185,9 +225,11 @@ async function streamChat({fetchImpl,ollamaUrl,profile,depth,messages,signal,pro
     const chunk=JSON.parse(line);
     if(chunk.error)throw fail('MODEL_UNAVAILABLE',503);
     if(chunk.model!==profile.model)throw fail('PROFILE_NOT_READY',503);
-    // Thinking text is private model reasoning; it is never returned.
-    if(typeof chunk.message?.content==='string'){text+=chunk.message.content;progress.text=text;}
-    if(Buffer.byteLength(text)>GATEWAY_LIMITS.outputBytes){limited=true;break;}
+    // Ollama's separate reasoning channel is never retained or returned.
+    if(typeof chunk.message?.thinking==='string'&&chunk.message.thinking)separated=true;
+    if(typeof chunk.message?.content==='string')raw+=chunk.message.content;
+    text=answerText(raw,{implicit:mode.implicit,separated,complete:chunk.done===true&&chunk.done_reason==='stop'});progress.text=text;
+    if(Buffer.byteLength(raw)>GATEWAY_LIMITS.outputBytes){limited=true;break;}
     if(chunk.done){final=chunk;break;}
    }
   }
@@ -291,7 +333,7 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
    const final=output.final,promptTokens=Number.isSafeInteger(final.prompt_eval_count)?final.prompt_eval_count:null,outputTokens=Number.isSafeInteger(final.eval_count)?final.eval_count:null;
    // Ollama silently truncates an over-long prompt; treat a full window as a refusal, not an answer.
    if(promptTokens!==null&&promptTokens>request.profile.contextTokens-request.profile.outputTokens[request.depth])throw fail('MODEL_CONTEXT_LIMIT',422);
-   const text=output.text.replace(/<think>[\s\S]*?<\/think>/g,'').trim();
+   const text=output.text.trim();
    if(!text)throw fail('MODEL_EMPTY_OUTPUT',502);
    const finishReason=output.limited||final.done_reason==='length'?'length':'stop';
    const seconds=Number.isFinite(final.eval_duration)&&final.eval_duration>0?final.eval_duration/1e9:null;

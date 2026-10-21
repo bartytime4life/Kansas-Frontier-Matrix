@@ -134,7 +134,11 @@ export class HomeInferenceModel{
   if(changed&&reason)try{this.diagnostic(diagnosticCodes.has(reason)?reason:'MODEL_UNAVAILABLE');}catch{}
  }
  refresh(){
-  if(this.stopped)return Promise.resolve();
+  // The poll worker relays one call at a time. A health job queued behind an
+  // admitted generation can expire even though that generation is healthy.
+  // Keep the last verified state while it runs; the chat still has its own
+  // deadline and failure checks, and its completion triggers a fresh probe.
+  if(this.stopped||this.pending)return Promise.resolve();
   this.checking??=(async()=>{
    try{
     const health=await this.client.health();
@@ -174,7 +178,7 @@ export class HomeInferenceModel{
    // health inspection may restore readiness; never silently switch providers.
    if(['MODEL_UNAVAILABLE','GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','UNAUTHORIZED','PROFILE_NOT_READY','PROFILE_UNKNOWN','GATEWAY_RESPONSE_INVALID'].includes(failure?.code)){this.setState(false,false,failure.code);}
    throw error('MODEL_UNAVAILABLE');
-  }finally{this.pending=null;}
+  }finally{this.pending=null;void this.refresh();}
  }
  stop(){this.stopped=true;clearInterval(this.timer);this.setState(false,false,null);}
 }
