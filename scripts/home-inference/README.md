@@ -238,9 +238,11 @@ generation, signature verification, model/digest pinning, loopback restrictions,
 sensitivity checks, context rechecks and data-retention windows are unchanged.
 
 **Coordinated rollout, not performed here:** first verify the active transport.
-For `poll`, update the installed gateway and worker from this reviewed revision,
-then change only the existing profile's expanded output/timeout values after a
-resource measurement. Preserve its existing ID, model, digest, scopes, input
+For `poll`, deploy the website's larger public-handler and relay budgets first;
+they remain compatible with the existing shorter PC profile. Then update the
+installed gateway and worker from this reviewed revision while retaining that
+profile. Finally, after resource measurement, change only the existing profile's
+expanded output/timeout values. Preserve its existing ID, model, digest, scopes, input
 budget, context window, options, credentials and service configuration. Do not
 copy the example profile over an admitted profile: its model is illustrative
 and its digest is intentionally invalid until pinned. The website relay and
