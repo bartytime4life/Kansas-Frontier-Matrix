@@ -8,6 +8,7 @@ import { SCENES, CATEGORY_IDS, HISTORY_ERAS, sceneArt } from '../app/living-welc
 import { MOTION_CLIPS, motionClip } from '../app/living-welcome/motion-catalog.mjs';
 
 import { capabilityPreviews, capabilityNote } from '../app/living-welcome/capability-catalog.mjs';
+import * as sceneCatalog from '../app/living-welcome/scenes/catalog.mjs';
 const topicModule={};
 new Function('exports',ts.transpileModule(await readFile('app/layer-workspaces.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(topicModule);
 const {TOPIC_STRUCTURE}=topicModule;
@@ -20,7 +21,7 @@ function environment(reduced=false){
 async function welcome(reduced=false){
  const env=environment(reduced),calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
-  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE},'./capability-catalog.mjs':{capabilityPreviews,capabilityNote},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
+  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE},'./capability-catalog.mjs':{capabilityPreviews,capabilityNote},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'./scenes/catalog.mjs':sceneCatalog,'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};}},
  },env);
@@ -61,7 +62,7 @@ test('nested welcome dialogs own and return keyboard focus in the layout commit'
  const root=findNode(tree,node=>node.props?.className==='explorer-guide living-welcome');
  root.props.ref.current={contains:node=>node===trigger,querySelector:()=>null};
  h.env.document.activeElement=trigger;
- byText(tree,'Preview sources').props.onClick();
+ byText(tree,'Scene notes').props.onClick();
  tree=h.harness.render(h.harness.exports.default,h.props);
  findNode(tree,node=>node.props?.className==='welcome-dialog').props.ref.current={
   contains:node=>node===close,querySelector:()=>close,
@@ -106,7 +107,7 @@ test('each topic links to its actual source workspace and preview selection does
   assert.equal(findNode(tree,node=>node.type==='capability-preview'&&node.props.demo?.id===capabilityPreviews(id)[1].id).props.demo.id,capabilityPreviews(id)[1].id);
   assert.deepEqual(h.calls,[],'scene selection is presentation only');
   byText(tree,'Preview in the welcome window →').props.onClick();tree=h.render();
-  assert.equal(rootOf(tree).props['data-active'],id);assert.equal(findNode(tree,node=>node.type==='capability-preview').props.demo.id,capabilityPreviews(id)[1].id);
+  assert.equal(rootOf(tree).props['data-active'],id);assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,id,'the pinned domain scene plays behind the cards');
   findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-weather ')).props.onFocus();tree=h.render();
   assert.equal(rootOf(tree).props['data-active'],id,'explicit pin beats passive focus');
   findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();
@@ -119,10 +120,11 @@ test('each topic links to its actual source workspace and preview selection does
 test('pause and reduced motion stop media while detailed sources preserve the user’s current layers',async()=>{
  const h=await welcome();let tree=h.render();
  findNode(tree,node=>node.props?.['aria-label']==='Pause animation').props.onClick();tree=h.render();
- assert.equal(findNode(tree,node=>node.type==='capability-preview').props.paused,true);
+ assert.equal(findNode(tree,node=>node.type==='domain-stage').props.paused,true);
  assert.deepEqual(h.calls,[]);h.harness.dispose();
  const quiet=await welcome(true);tree=quiet.render();
- assert.equal(findNode(tree,node=>node.type==='capability-preview').props.paused,true);
+ const still=findNode(tree,node=>node.type==='domain-stage');
+ assert.equal(still.props.paused,true);assert.equal(still.props.reduced,true,'reduced motion renders a still frame');
  assert.equal(findNode(tree,node=>node.props?.['aria-label']==='Animations off: reduced motion preference').props.disabled,true);
  quiet.harness.dispose();
 });
@@ -252,16 +254,30 @@ test('all shared domains expose their facets and actual destination without moun
  h.harness.dispose();
 });
 
-test('full-window preview returns to the same categories and missing captures stay explicit',async()=>{
+test('full-window preview returns to the same categories and uncaptured domains still get their own scene',async()=>{
  const h=await welcome();let tree=h.render();
  byText(tree,'Expand animation').props.onClick();tree=h.render();assert.equal(rootOf(tree).props['data-fullscreen'],true);
  byText(tree,'Return to categories').props.onClick();tree=h.render();assert.equal(rootOf(tree).props['data-fullscreen'],false);
  for(const id of ['sky','evidence']){
   findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onPointerEnter({pointerType:'mouse'});tree=h.render();
-  assert.equal(findNode(tree,node=>node.type==='capability-preview').props.demo,undefined);
-  assert.match(capabilityNote(id),/No verified/);
+  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,id);
+  assert.match(capabilityNote(id),/No verified/,'no recorded capture is claimed for this domain');
  }
  h.harness.dispose();
+});
+
+test('every topic has an illustrative scene with well-formed, labelled beats',async()=>{
+ const {SCENE_CATALOG,SCENE_LABEL,beatTitle}=await import('../app/living-welcome/scenes/catalog.mjs');
+ const {SCENE_LOADERS}=await import('../app/living-welcome/scenes/index.mjs');
+ assert.match(SCENE_LABEL,/Illustrative/);assert.match(SCENE_LABEL,/not observations/);
+ assert.deepEqual(Object.keys(SCENE_CATALOG).sort(),TOPIC_STRUCTURE.map(t=>t.id).sort());
+ assert.deepEqual(Object.keys(SCENE_LOADERS).sort(),Object.keys(SCENE_CATALOG).sort());
+ for(const [id,{duration,beats}] of Object.entries(SCENE_CATALOG)){
+  assert.ok(duration>=12&&duration<=18,`${id} loops in 12–18 s`);
+  assert.ok(beats.length>=2&&beats.length<=3);assert.equal(beats[0][0],0);
+  beats.forEach(([at],i)=>{assert.ok(at<duration);if(i)assert.ok(at>beats[i-1][0]);});
+  assert.equal(beatTitle(id,duration-.01),beats.at(-1)[1]);
+ }
 });
 
 test('a late blur cannot cancel a fine-pointer hover, while leaving restores all topics without a mouse-focus pin',async()=>{

@@ -17,9 +17,12 @@ visit(ast);
 function evaluate(code,scope){const js=ts.transpileModule(`return ${code};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;return new Function(...Object.keys(scope),js)(...Object.values(scope));}
 test('Quick start reveals the map and reopens retained help from either draft workspace',()=>{
   for(const primaryWorkspace of ['reports','stories','map'])for(const initial of [false,true]){
-    const state={primary:primaryWorkspace,open:initial},draft={title:'Keep this draft'},snapshot={id:'keep-this-snapshot'};
-    evaluate(callbacks.get('toggleExplorerGuide'),{primaryWorkspace,setPrimaryWorkspace:v=>state.primary=v,setGuideOpen:update=>state.open=update(state.open),draft,snapshot})();
-    assert.equal(state.primary,'map');assert.equal(state.open,primaryWorkspace==='map'?!initial:true);
+    const state={primary:primaryWorkspace,open:initial,sources:false},draft={title:'Keep this draft'},snapshot={id:'keep-this-snapshot'};
+    const welcomeShowing=initial&&primaryWorkspace==='map';
+    evaluate(callbacks.get('toggleExplorerGuide'),{primaryWorkspace,welcomeShowing,setPrimaryWorkspace:v=>state.primary=v,setGuideOpen:v=>state.open=typeof v==='function'?v(state.open):v,setWelcomeSourcesOpen:update=>state.sources=update(state.sources),draft,snapshot})();
+    assert.equal(state.primary,'map');assert.equal(state.open,true,'the guide opens, or stays open while it is showing');
+    // While the welcome covers the map, `?` reveals the map sources instead of closing it.
+    assert.equal(state.sources,welcomeShowing);
     assert.equal(draft.title,'Keep this draft');assert.equal(snapshot.id,'keep-this-snapshot');
   }
 });
@@ -63,7 +66,7 @@ test('guide Layers and Time enter committed destinations after dismissal, even w
       visibleFocusableElements:panel=>{assert.equal(panel,action==='layers'?leftPanelRef.current:timelineRef.current);return [target];},
     });
     const close=evaluate(callbacks.get('closeExplorerGuide'),{
-      setGuideOpen:v=>state.open=v,writeExplorerGuideDismissed:()=>{},
+      setGuideOpen:v=>state.open=v,setWelcomeSourcesOpen:v=>state.sources=v,writeExplorerGuideDismissed:()=>{},
       document:{activeElement:{closest:()=>({})},querySelector:()=>({focus:()=>focus.push('guide-trigger')})},
     });
     evaluate(guideActionClick,{onAction:route,onClose:close,step:{action},remember:()=>true})();

@@ -386,3 +386,86 @@
   .living-welcome .discovery-field .topic-callout:before,.living-welcome .topic-light:before,
   .living-welcome .discovery-field :is(.topic-arrow,.topic-copy strong,.topic-copy small){transition:none}
 }
+
+/* Header toolbar. The former footer actions share one dock with Skip welcome:
+   quiet text tools, then the gold primary, then the exit. */
+.living-welcome .welcome-heading-row{grid-template-areas:'hero toolbar';grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:16px 28px}
+.living-welcome .welcome-toolbar{grid-area:toolbar;display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:4px;margin:30px 32px 0 0;padding:5px;border:1px solid #ffffff14;border-radius:12px;background:#062230e6;box-shadow:0 14px 34px -22px #000}
+.living-welcome .welcome-tool{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 12px;border-radius:8px;font-size:12.5px;line-height:1.2;color:#cfe1e7;white-space:nowrap;transition:background-color .2s,color .2s}
+.living-welcome .welcome-tool:hover:not(:disabled){background:#ffffff10;color:#fff3d6}
+.living-welcome .welcome-tool>span[aria-hidden]{font-size:10px;letter-spacing:-1px;color:#e8c37c}
+.living-welcome label.welcome-tool{cursor:pointer}
+.living-welcome label.welcome-tool input{width:15px;height:15px;margin:0;accent-color:#e8c37c}
+.living-welcome .welcome-toolbar .welcome-primary{min-height:40px;padding:9px 16px;margin-left:6px;font-size:13px;gap:10px}
+.living-welcome .welcome-toolbar .welcome-skip{position:static;grid-area:auto;min-height:40px;padding:8px 12px;margin:0;border-color:#ffffff1f;background:transparent;font-size:12.5px}
+.living-welcome .welcome-toolbar .welcome-skip:hover{background:#ffffff10}
+.living-welcome .welcome-toolbar .welcome-skip span{font-size:16px;margin-left:6px}
+.living-welcome .discovery-hint{position:relative;z-index:4;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:22px 32px 0;font-size:13px;line-height:1.5;color:#b5ccd6}
+.living-welcome .discovery-hint strong{font-size:14px;color:#eef5f7;font-weight:600}
+.living-welcome .discovery-hint button{padding:0;font-size:12px;color:#e8c37c;text-decoration:underline;text-decoration-color:#e8c37c66;text-underline-offset:3px}
+.living-welcome .discovery-hint button:hover{text-decoration-color:#e8c37c}
+.living-welcome:not([data-fullscreen=true]) .discovery-field{margin-top:12px}
+.living-welcome[data-fullscreen=true] .discovery-hint{display:none}
+@media(max-width:1100px){
+  .living-welcome .welcome-heading-row{grid-template-areas:'toolbar' 'hero';grid-template-columns:minmax(0,1fr)}
+  .living-welcome .welcome-toolbar{justify-self:end;margin:18px 32px 0}
+}
+@media(max-width:700px){
+  .living-welcome .welcome-toolbar{justify-self:stretch;justify-content:flex-start;margin:14px 18px 0}
+  .living-welcome .welcome-toolbar .welcome-primary{margin-left:0;flex:1 1 auto}
+  .living-welcome .welcome-tool{padding:8px 10px;font-size:12px}
+  .living-welcome .discovery-hint{margin:18px 18px 0}
+  .living-welcome .welcome-hero{margin-top:20px}
+}
+
+/* Illustrative domain scene behind the cards. The canvas dips to dark on a
+   scene change and fades back once the next scene has drawn. */
+.living-welcome .domain-stage{position:absolute;inset:0;background:radial-gradient(ellipse at 62% 38%,#0c3246,#061a24 72%)}
+.living-welcome .domain-stage canvas{display:block;width:100%;height:100%;opacity:1;transition:opacity .5s ease}
+.living-welcome .domain-stage canvas[data-switching],.living-welcome .domain-stage:not([data-state=ready]) canvas{opacity:0;transition-duration:.16s}
+.living-welcome .domain-stage-caption{position:absolute;right:32px;bottom:22px;z-index:2;display:grid;justify-items:end;gap:3px;margin:0;max-width:min(460px,calc(100% - 64px));text-align:right;pointer-events:none}
+.living-welcome .domain-stage-caption span{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#9fc3cf}
+.living-welcome .domain-stage-caption strong{font-size:15px;font-weight:600;color:#f3e2b8;text-shadow:0 2px 12px #000a;animation:stage-caption .7s cubic-bezier(.16,1,.3,1) both}
+.living-welcome[data-fullscreen=true] .domain-stage-caption{bottom:110px}
+@keyframes stage-caption{from{opacity:0;transform:translateY(6px)}}
+@media(prefers-reduced-motion:reduce){.living-welcome .domain-stage canvas{transition:none}.living-welcome .domain-stage-caption strong{animation:none}}
+
+/* Map sources stay behind the top-bar `?` while the welcome is open. Only the
+   licence-required OpenMapTiles/OpenStreetMap credit remains, as a corner tag. */
+.atlas-studio:not([data-welcome-sources=open]):has(> .explorer-guide.living-welcome) .explorer-guide.living-welcome{bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+.atlas-studio:not([data-welcome-sources=open]):has(> .explorer-guide.living-welcome) .maplibregl-ctrl-bottom-right{left:0}
+.atlas-studio:not([data-welcome-sources=open]):has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib{display:block;width:100%;max-width:none;max-height:none;margin:0;padding:3px 16px;border:0;border-radius:0;background:#031a2b!important;text-align:right}
+.atlas-studio:not([data-welcome-sources=open]):has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib-button{display:none}
+.atlas-studio:not([data-welcome-sources=open]):has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib-inner{font-size:0;line-height:0;color:transparent;white-space:nowrap}
+.atlas-studio:not([data-welcome-sources=open]):has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib-inner a:is([href*="openstreetmap.org"],[href*="openmaptiles.org"]){display:inline;font-size:10px;line-height:1.6;color:#a9c7d2!important}
+.atlas-studio:not([data-welcome-sources=open]):has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib-inner a[href*="openstreetmap.org"]::before{content:'  ·  © ';white-space:pre}
+.atlas-studio:not([data-welcome-sources=open]):has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib-inner a:not([href*="openstreetmap.org"],[href*="openmaptiles.org"]){display:none}
+.atlas-studio[data-welcome-sources=open] .maplibregl-ctrl-bottom-right{animation:welcome-sources-in .35s cubic-bezier(.16,1,.3,1)}
+@keyframes welcome-sources-in{from{opacity:0;transform:translateY(12px)}}
+.atlas-studio[data-welcome-sources=open] .guide-trigger,.atlas-studio .guide-trigger[aria-pressed=true]{border-color:#e8c37c;color:#f3d38e;box-shadow:0 0 0 3px #e8c37c26}
+/* Pin the scene to the visible window while the welcome content scrolls over it. */
+.living-welcome .welcome-capability-stage{position:fixed;inset:var(--topbar,56px) 0 calc(24px + env(safe-area-inset-bottom,0px))}
+.atlas-studio[data-welcome-sources=open] .living-welcome .welcome-capability-stage{bottom:calc(48px + env(safe-area-inset-bottom,0px))}
+/* The scene caption rides the hint row; the stage keeps its own only full-window. */
+.living-welcome .discovery-scene{display:grid;justify-items:end;gap:2px;margin-left:auto;text-align:right}
+.living-welcome .discovery-scene small{font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:#93b7c4}
+.living-welcome .discovery-scene b{font-size:13.5px;font-weight:600;color:#f3e2b8;animation:stage-caption .7s cubic-bezier(.16,1,.3,1) both}
+.living-welcome:not([data-fullscreen=true]) .domain-stage-caption{display:none}
+@media(max-width:900px){.living-welcome .discovery-scene{justify-items:start;margin-left:0;text-align:left;flex-basis:100%}}
+@media(prefers-reduced-motion:reduce){.living-welcome .discovery-scene b{animation:none}}
+.atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-bottom-right{left:0}
+.atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib{display:flex;align-items:center;justify-content:flex-end;width:100%;max-width:none;min-height:calc(48px + env(safe-area-inset-bottom,0px));margin:0;padding:6px 16px;border:0;border-radius:0;background:#031a2b!important;text-align:right}
+/* Phones: a 2×2 dock. Explore freely already closes the welcome, so the
+   duplicate Skip control steps aside rather than adding a third row. */
+@media(max-width:560px){
+  .living-welcome .welcome-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .living-welcome .welcome-toolbar>*{justify-content:center;white-space:normal;text-align:center}
+  .living-welcome .welcome-toolbar .welcome-primary{margin:0}
+  .living-welcome .welcome-toolbar .welcome-skip{display:none}
+}
+/* Tablets: Explore freely already closes the welcome, so drop the duplicate exit and keep one dock row. */
+@media(max-width:900px){.living-welcome .welcome-toolbar .welcome-skip{display:none}}
+/* Rows: header, hint, cards (the stretch row), then the Expand control. */
+.living-welcome .welcome-map-stage{grid-template-rows:auto auto minmax(min-content,1fr) auto}
+.living-welcome:not([data-fullscreen=true]) .discovery-field{align-content:start}
+.living-welcome:not([data-fullscreen=true]) .welcome-preview-expand{justify-self:start;width:auto}

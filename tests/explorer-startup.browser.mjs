@@ -343,7 +343,7 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
         hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2) === button,
         focus:document.activeElement === button};
     })()`);
-    for (const selector of ['.topic-weather', '.topic-history', '.welcome-credits button', '.welcome-footer-actions button:first-child']) {
+    for (const selector of ['.topic-weather', '.topic-history', '.discovery-hint button', '.welcome-toolbar button:first-child']) {
       await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
       await p.key('Enter', 'Enter', 13);
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'detail close receives focus');
@@ -497,7 +497,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
       await p.wait(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),portals=[...root.querySelectorAll('.motion-portal')];return portals.length===8&&portals.filter(portal=>!portal.classList.contains('is-immersive')).every(portal=>{const anchor=root.querySelector('.'+portal.dataset.category+'-scene');if(!anchor)return false;const a=anchor.getBoundingClientRect(),r=portal.getBoundingClientRect();return Math.abs(a.left+a.width/2-r.left-r.width/2)<1&&Math.abs(a.top+a.height/2-r.top-r.height/2)<1;});})()`,state+': native footage follows actual topic anchors');
       const result=await p.evaluate(`(()=>{
         const root=document.querySelector('.explorer-guide.living-welcome'),stage=root.querySelector('.welcome-map-stage');
-        const selectors=['.welcome-hero','.welcome-skip','.topic-callout','.scene-caption','.history-timeline','.welcome-credits','.welcome-footer'];
+        const selectors=['.welcome-hero','.welcome-toolbar','.discovery-hint','.topic-callout','.welcome-preview-expand'];
         const boxes=selectors.flatMap(selector=>[...root.querySelectorAll(selector)].map((node,index)=>{const r=node.getBoundingClientRect();return {name:selector+(selector==='.topic-callout'?':'+node.className:index),left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};}));
         const rootBox=root.getBoundingClientRect(),header=document.querySelector('header.topbar').getBoundingClientRect(),attribution=document.querySelector('.maplibregl-ctrl-attrib')?.getBoundingClientRect();
         const timeline=[...root.querySelectorAll('.history-timeline button')].map(node=>{const r=node.getBoundingClientRect();return {name:node.textContent,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};});
