@@ -5,6 +5,7 @@ overrides:
   "@esbuild-kit/core-utils>esbuild": "0.25.12"
   "miniflare>sharp": "0.35.5"
   "source-map-js": "1.2.2"
+  "vite": "8.3.3"
 allowBuilds:
   "esbuild@0.18.20": false
   "esbuild@0.25.12": false
