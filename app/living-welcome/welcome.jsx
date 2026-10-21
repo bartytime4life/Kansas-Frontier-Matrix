@@ -49,7 +49,9 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   // The lazy visual replaces a focused fallback. Restore focus and install its
   // keyboard owner before paint, so a fast Tab/Escape cannot fall between them.
   useLayoutEffect(()=>{root.current?.querySelector('[data-guide-autofocus]')?.focus({preventScroll:true});},[]);
-  useEffect(()=>{
+  // Nested dialogs need the same before-paint handoff when opening and closing;
+  // otherwise a quick second Escape can arrive while focus is on the body.
+  useLayoutEffect(()=>{
     if(!modal){const target=trigger.current;trigger.current=null;if(target?.isConnected)target.focus({preventScroll:true});return;}
     const node=dialog.current,restore=isolateModalBackground(node,document.body);
     node?.querySelector('button,a,input')?.focus({preventScroll:true});

@@ -343,7 +343,7 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
         hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2) === button,
         focus:document.activeElement === button};
     })()`);
-    for (const selector of ['.topic-weather', '.topic-history', '.welcome-credits button']) {
+    for (const selector of ['.topic-weather', '.topic-history', '.welcome-credits button', '.welcome-footer-actions button:first-child']) {
       await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
       await p.key('Enter', 'Enter', 13);
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'detail close receives focus');
@@ -372,6 +372,8 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
     await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'detail reopened');
     await p.key('Escape', 'Escape', 27);
     await p.wait(`!document.querySelector('.welcome-dialog') && document.activeElement?.matches('.topic-weather')`, 'Escape closes only detail and restores its trigger');
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement?.matches('.guide-trigger')`, 'next Escape closes welcome and returns focus to the guide trigger');
   });
 }
 

@@ -301,8 +301,11 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
  const active=new Set();
 
  const health=async scope=>{
+  // Keep metadata paired with the inspector selected before asynchronous I/O.
+  // A reload may replace the profile map while this inspection is pending.
+  const profileSnapshot=state.profiles;
   const inspection=await inspector();
-  const profiles=[...state.profiles.values()].filter(p=>p.scopes.includes(scope)).map(p=>({
+  const profiles=[...profileSnapshot.values()].filter(p=>p.scopes.includes(scope)).map(p=>({
    id:p.id,label:p.label,model:p.model,digest:'sha256:'+p.digest,license:p.license,capabilities:[...p.capabilities],
    contextTokens:p.contextTokens,maxInputChars:p.maxInputChars,outputTokens:{...p.outputTokens},
    ready:inspection.state.get(p.id)===null,reason:inspection.state.get(p.id)??null,
