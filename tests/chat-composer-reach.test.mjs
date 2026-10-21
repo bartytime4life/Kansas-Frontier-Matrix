@@ -51,7 +51,7 @@ test('the pinned form holds answer options, the message box and Send; context st
   const regionOrder=children(body).map(child=>child.props.role==='log'?'log':child.props['aria-label']==='Suggested questions'?'prompts':child.type==='footer'?'footer':child.props.className);
   assert.deepEqual(regionOrder,['context','log','prompts']);
   assert.equal(findNode(body,node=>node.type==='footer'),undefined);
-  assert.match(text(findNode(form,node=>node.type==='footer')),/History stays in this tab.*Temporary server questions expire after 15 minutes/);
+  assert.match(text(findNode(form,node=>node.type==='footer')),/History stays in this tab.*Queued questions have up to 35 minutes under load.*finished server results expire after 15 minutes/);
   const prompts=all(findNode(body,node=>node.props?.['aria-label']==='Suggested questions'),node=>node.type==='button');
   assert.ok(prompts.length>0);for(const button of prompts){assert.equal(button.props.type,'button');assert.equal(button.props.disabled,false);}
   assert.equal(findNode(form,node=>node.props?.['aria-label']==='Suggested questions'),undefined,'prompts are no longer inside the form');

@@ -4,6 +4,7 @@ import {randomBytes,createHash} from 'node:crypto';
 import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contract.mjs';
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
 import {hasRepeatedPhrase,repeatsPriorReply,PUBLIC_AI_JOB_MS,PUBLIC_AI_MAX_LIFETIME_MS,CONTINUE_REPLY} from './hosted-ai.mjs';
+import {INFERENCE_BUDGETS} from '../scripts/home-inference/budgets.mjs';
 import {validAssistantContext} from './assistant-context.mjs';
 import {createAiReadBuffer,isAiReadPressure} from './ai-read-buffer.mjs';
 import {HOME_PROVIDER,homeInferenceConfig,getHomeInferenceModel} from './home-inference.mjs';
@@ -32,8 +33,13 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
   const now=clock();requests=requests.filter(t=>t>now-3600000);
   for(const [key,value]of sessions){if(value.created<=now-3600000)sessions.delete(key);else value.history=(value.history??[]).filter(item=>item.at>now-900000);}
   for(const [key,job]of jobs){
-   if(job.deadline<=now&&['preparing','queued','running'].includes(job.state)){job.abort?.abort();job.state='expired';job.packet=null;job.result=null;job.question='';job.query=null;job.context=null;}
-   if(job.created<=now-900000){job.abort?.abort();jobs.delete(key);}
+   if(job.deadline<=now&&['preparing','queued','running'].includes(job.state)){job.abort?.abort();job.state='expired';job.finished=clock();job.packet=null;job.result=null;job.question='';job.query=null;job.context=null;}
+   // Accepted work may outlive the result-retention period under load.
+   // Retain terminal results for 15 minutes after they finish.
+   if(!['preparing','queued','running'].includes(job.state)){
+    job.finished??=now;
+    if(job.finished<=now-INFERENCE_BUDGETS.retentionMs)jobs.delete(key);
+   }
   }
  };
  const cleanupTimer=setInterval(cleanup,30000);cleanupTimer.unref?.();
@@ -89,11 +95,11 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
   job.state='running';
   try{
    const result=await evidenceResult(job);
-   if(job.state==='running'&&clock()<job.deadline){job.state='completed';job.result=result;}
-   else if(job.state==='running'){job.state='expired';job.result=null;}
+   if(job.state==='running'&&clock()<job.deadline){job.state='completed';job.finished=clock();job.result=result;}
+   else if(job.state==='running'){job.state='expired';job.finished=clock();job.result=null;}
   }catch(error){
    if(job.state==='running'){
-    job.state=clock()<job.deadline?'completed':'expired';
+    job.state=clock()<job.deadline?'completed':'expired';job.finished=clock();
     job.result=job.state==='completed'?envelope(isAiReadPressure(error)?'ERROR':'ABSTAIN',isAiReadPressure(error)?'AI_READ_BUSY':'EVIDENCE_WITHHELD'):null;
    }
   }finally{job.question='';if(!job.result?.citations?.length){job.packet=null;job.query=null;}}
@@ -102,7 +108,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
   if(draining)return;draining=true;
   try{while(true){
    cleanup();const job=[...jobs.values()].find(j=>j.state==='queued');if(!job)break;
-   if(!model.ready){job.state='completed';job.result=envelope('ERROR','MODEL_UNAVAILABLE');job.packet=null;job.question='';job.query=null;continue;}
+   if(!model.ready){job.state='completed';job.finished=clock();job.result=envelope('ERROR','MODEL_UNAVAILABLE');job.packet=null;job.question='';job.query=null;continue;}
    job.state='running';job.deadline=Math.min(job.created+PUBLIC_AI_MAX_LIFETIME_MS,clock()+PUBLIC_AI_JOB_MS);job.abort=new AbortController();const timer=setTimeout(()=>job.abort.abort(),Math.max(1,job.deadline-clock()));timer.unref?.();
    try{
     if(job.mode==='explore'){
@@ -130,7 +136,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      }
     }
    }catch(error){if(job.state==='running')job.result=envelope(error.code==='MODEL_CONTEXT_LIMIT'?'ABSTAIN':'ERROR',isAiReadPressure(error)?'AI_READ_BUSY':error.code==='MODEL_CONTEXT_LIMIT'?'MODEL_CONTEXT_LIMIT':'MODEL_UNAVAILABLE');}
-   finally{clearTimeout(timer);if(job.state==='running'){job.state=job.abort.signal.aborted?'expired':'completed';if(job.state==='expired')job.result=null;}job.abort=null;job.question='';if(!job.result?.citations?.length){job.packet=null;job.query=null;}}
+   finally{clearTimeout(timer);if(job.state==='running'){job.state=job.abort.signal.aborted?'expired':'completed';job.finished=clock();if(job.state==='expired')job.result=null;}job.abort=null;job.question='';if(!job.result?.citations?.length){job.packet=null;job.query=null;}}
   }}finally{draining=false;}
  };
  return async request=>{
@@ -159,15 +165,16 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
     session.requests=session.requests.filter(t=>t>clock()-3600000);
     if(session.requests.length>=10)throw new Error('USER_RATE_LIMIT');
     if([...jobs.values()].some(j=>j.owner===digest(guest)&&['preparing','queued','running'].includes(j.state)))throw new Error('USER_BUSY');
-    if([...jobs.values()].filter(j=>['preparing','queued','running'].includes(j.state)).length>=3)throw new Error('QUEUE_FULL');
-    const now=clock(),job={id:token(),owner:digest(guest),question:value.question,query,mode,style,depth,state:'preparing',created:now,deadline:now+(mode==='explore'?PUBLIC_AI_JOB_MS:90000),packet:null,result:null};
+    const pending=[...jobs.values()].filter(j=>['preparing','queued','running'].includes(j.state)).length;
+    if(pending>=INFERENCE_BUDGETS.publicSlots)throw new Error('QUEUE_FULL');
+    const now=clock(),job={id:token(),owner:digest(guest),question:value.question,query,mode,style,depth,state:'preparing',created:now,deadline:now+(mode==='explore'?(pending+1)*PUBLIC_AI_JOB_MS:90000),packet:null,result:null};
     jobs.set(job.id,job);requests.push(now);session.requests.push(now);
     const prepare=async()=>{try{
      const questionScope=value.question+' '+value.term+' '+query.place+' '+(value.context?JSON.stringify(value.context):'');
      const sensitive=isSensitiveQwenQuestion(questionScope)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(questionScope);
      if(!sensitive&&value.context){
       const context=await readContext(value.context);
-      if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.context=null;job.question='';job.query=null;return;}
+      if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.finished=clock();job.context=null;job.question='';job.query=null;return;}
       job.context=context;
       if(value.context.selection&&(isSensitiveQwenQuestion(job.context.prompt)||localQwenAnswerHasOverPreciseLocation(job.context.prompt)))throw new Error('POLICY_WITHHELD');
       job.contextSelector=value.context;job.contextFingerprint=contextFingerprint(job.context);
@@ -177,19 +184,19 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
      // rechecks and budgets stay authoritative; omitted IDs retain legacy history.
      job.contextKey=value.investigationId===undefined?contextKey:digest({investigationId:value.investigationId.toLowerCase(),context:contextKey});
      const evidence=sensitive||mode==='explore'?null:await packet(query);
-     if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.context=null;job.question='';job.query=null;return;}
+     if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.finished=clock();job.context=null;job.question='';job.query=null;return;}
      if(!sensitive&&mode==='explore'&&value.context?.selection?.kind==='subsurface'){
       // Only the server-resolved, rechecked source can supply this summary.
-      job.state='completed';job.result=job.context?.sourceSummary?{...envelope('ABSTAIN','SOURCE_CONTEXT_ONLY'),sourceSummary:job.context.sourceSummary,followUpQuestion:'Would you like to inspect the original source intervals or compare nearby wells and aquifer ranges?'}:envelope('ABSTAIN','CONTEXT_UNAVAILABLE');job.question='';job.query=null;
+      job.state='completed';job.finished=clock();job.result=job.context?.sourceSummary?{...envelope('ABSTAIN','SOURCE_CONTEXT_ONLY'),sourceSummary:job.context.sourceSummary,followUpQuestion:'Would you like to inspect the original source intervals or compare nearby wells and aquifer ranges?'}:envelope('ABSTAIN','CONTEXT_UNAVAILABLE');job.question='';job.query=null;
      }
-     else if(!sensitive&&mode==='explore'){job.state='queued';job.deadline=job.created+PUBLIC_AI_MAX_LIFETIME_MS;void drain();}
-     else if(!evidence){job.state='completed';job.result=envelope(sensitive?'DENY':'ABSTAIN',sensitive?'POLICY_WITHHELD':'NO_RELEASED_EVIDENCE');job.question='';job.query=null;}
+     else if(!sensitive&&mode==='explore'){job.state='queued';void drain();}
+     else if(!evidence){job.state='completed';job.finished=clock();job.result=envelope(sensitive?'DENY':'ABSTAIN',sensitive?'POLICY_WITHHELD':'NO_RELEASED_EVIDENCE');job.question='';job.query=null;}
      else{
       job.packet=evidence;job.evidenceDigest=digest(evidence);
       // Return the opaque job promptly; do not queue discovery behind inference.
       void completeEvidence(job);
      }
-    }catch(error){if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.context=null;job.question='';job.query=null;return;}const code=isAiReadPressure(error)?'AI_READ_BUSY':['CONTEXT_UNAVAILABLE','CONTEXT_TIME_MISMATCH','POLICY_WITHHELD'].includes(error.message)?error.message:'EVIDENCE_WITHHELD';job.state='completed';job.result=envelope(code==='POLICY_WITHHELD'?'DENY':code==='AI_READ_BUSY'?'ERROR':'ABSTAIN',code);job.question='';job.packet=null;job.query=null;job.context=null;}};
+    }catch(error){if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.finished=clock();job.context=null;job.question='';job.query=null;return;}const code=isAiReadPressure(error)?'AI_READ_BUSY':['CONTEXT_UNAVAILABLE','CONTEXT_TIME_MISMATCH','POLICY_WITHHELD'].includes(error.message)?error.message:'EVIDENCE_WITHHELD';job.state='completed';job.finished=clock();job.result=envelope(code==='POLICY_WITHHELD'?'DENY':code==='AI_READ_BUSY'?'ERROR':'ABSTAIN',code);job.question='';job.packet=null;job.query=null;job.context=null;}};
     void prepare();
     return reply({id:job.id,deadline:job.deadline},202,extra);
    }
@@ -199,7 +206,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
     const job=jobs.get(match[1]);if(!job||job.owner!==digest(guest))return reply({reasonCode:'JOB_NOT_FOUND'},404);
     if(match[2]&&request.method==='POST'){
      const value=await body(request);if(Object.keys(value).length)throw new Error('INVALID_REQUEST');
-     const cancelled=['preparing','queued','running'].includes(job.state);if(cancelled){job.state='cancelled';job.abort?.abort();job.packet=null;job.result=null;job.context=null;job.question='';job.query=null;}
+     const cancelled=['preparing','queued','running'].includes(job.state);if(cancelled){job.state='cancelled';job.finished=clock();job.abort?.abort();job.packet=null;job.result=null;job.context=null;job.question='';job.query=null;}
      return reply({cancelled});
     }
     if(!match[2]&&request.method==='GET'){

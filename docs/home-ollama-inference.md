@@ -249,3 +249,31 @@ timeout and buffering, Quick Tunnel limits. Repository sources were read at
 `1d81882b`: `server/public-ai-handler.mjs`, `server/hosted-ai.mjs`,
 `server/hosted-ai-origins.mjs`, `server/sites-qwen-handler.mjs`, `docs/pc-inference.md`,
 `docs/login-removal-20261019.md`, and `docs/runbooks/godaddy-node-hosting.md` on monorepo `main`.
+
+## Queue-aware time allowances — October 21, 2026 candidate
+
+The GTX 1060 keeps one generation at a time and two gateway waiting places.
+Brief profiles may use 90 seconds and expanded profiles 180 seconds, including
+fresh model inspection and load. Waiting receives 215 seconds per occupied
+wave ahead, capped at 430 seconds; it no longer consumes the caller's own run
+budget. Request cancellation and identity checks remain authoritative.
+
+The outbound poll path permits 640 seconds through the gateway, 650 at the
+relay, 660 at the PC worker, 670 at the hosted client and 700 for a running
+public job. A known busy worker extends a waiting connection's lease allowance;
+a missing worker with no active chat still fails in 15 seconds. Public
+admission remains three jobs, reserves another 700 seconds per pending job
+ahead, and caps lifetime at 35 minutes. Terminal results expire 15 minutes
+after finishing; active work is no longer deleted at the old retention cutoff.
+
+The signed-call HTTP helper uses the caller's explicit AbortSignal rather than
+Node fetch's separate 300-second header deadline. It follows no redirects and
+retains default TLS verification. The same request/response signatures, short
+body/health deadlines, output bounds and model pins remain required.
+
+Source changes alone do not activate this allowance: install the gateway kit
+including budgets.mjs and deadline-fetch.mjs, update the approved fast profile's
+timeouts, and deploy the hosted adapter together. Verify the exact GoDaddy
+source, both relay services and real browser chat after activation. Provider
+time limits on an HTTPS tunnel are separate; this candidate targets the
+existing outbound poll transport.

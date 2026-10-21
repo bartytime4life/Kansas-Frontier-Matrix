@@ -7,14 +7,16 @@
 import {randomBytes} from 'node:crypto';
 import {createNonceCache,decodeSecret,signRequest,verifyRequest,RESPONSE_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
 
+import {INFERENCE_BUDGETS} from '../scripts/home-inference/budgets.mjs';
+
 export const RELAY_LIMITS=Object.freeze({
  queue:8,requestBytes:131072,bodyMs:5000,replyBytes:65536,
  // A long-poll is held this long before an idle 204; the worker re-polls at once.
  leaseWaitMs:20000,
  // A job nobody leases within this time means no worker is connected.
  unleasedMs:15000,
- // A leased job must be answered within this time. The gateway caps a run at 210 s; allow time to return its signed reply.
- leasedMs:Object.freeze({'/v1/health':15000,'/v1/chat':220000}),
+ // Allow the complete gateway queue and run, plus signed return overhead.
+ leasedMs:Object.freeze({'/v1/health':15000,'/v1/chat':INFERENCE_BUDGETS.relayMs}),
 });
 const ROUTES=new Map([['/v1/health','GET'],['/v1/chat','POST']]);
 const WORKER_ERRORS=new Set(['GATEWAY_UNREACHABLE','GATEWAY_REDIRECT','GATEWAY_RESPONSE_INVALID']);
@@ -69,7 +71,12 @@ export function createHomeRelay({keyId,secret,worker,clock=Date.now,limits=RELAY
   const job={id:randomBytes(18).toString('base64url'),method,path,body,state:'queued',deadline:clock()+timeoutMs,resolve,reject,signal,done:false};
   job.onAbort=()=>settle(job,error('MODEL_CANCELLED'));
   signal?.addEventListener('abort',job.onAbort,{once:true});
-  arm(job,limits.unleasedMs,'GATEWAY_UNREACHABLE');
+  // The PC worker is serial. A known leased chat can occupy it while another
+  // connection waits; that wait must not be mistaken for an absent worker.
+  const occupied=[...leased.values()].some(item=>item.path==='/v1/chat');
+  const ahead=[...leased.values(),...queue].filter(item=>item.path==='/v1/chat').length;
+  const waitMs=path==='/v1/chat'&&occupied?Math.min(INFERENCE_BUDGETS.queueMs,ahead*INFERENCE_BUDGETS.queueSlotMs):0;
+  arm(job,limits.unleasedMs+waitMs,'GATEWAY_UNREACHABLE');
   queue.push(job);
   if(waiter){const wake=waiter;waiter=null;wake();}
  });
