@@ -62,7 +62,7 @@ async function browser(t) {
   return { call, listeners, checks };
 }
 
-async function pageSession(b, width, height) {
+async function pageSession(b, width, height, networkOptions = {}) {
   const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
   let navigation = 0, holdWelcome = false;
@@ -101,7 +101,7 @@ async function pageSession(b, width, height) {
   await call('Network.enable');
   await call('Network.setCacheDisabled', { cacheDisabled: true });
   await call('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
-  await isolateBrowserNetwork(call, origin);
+  await isolateBrowserNetwork(call, origin, networkOptions);
   const evaluate = async expression => {
     await interceptions.assertHealthy();
     const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });
@@ -472,5 +472,76 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
       await p.call('Input.dispatchTouchEvent', {type:'touchEnd',touchPoints:[]});
       await p.wait(`!document.querySelector('.welcome-dialog')`, 'touch closes the topic detail');
     }
+  });
+}
+
+// Placement is a contract between actual content rectangles, not a snapshot of
+// CSS declarations. Include tall/narrow and short layouts plus historical and
+// manual controls, whose extra text previously collided with percentage pins.
+for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet'],[901,1200,'narrow desktop'],[768,1024,'tablet'],[1280,720,'short desktop'],[1024,600,'landscape'],[320,568,'narrow phone'],[640,360,'200 percent layout equivalent']]) {
+  test(`welcome content stays composed at ${width}x${height} (${label})`,{timeout:60000},async t=>{
+    const b=await browser(t),p=await pageSession(b,width,height,{attribution:'Isolated browser layout fixture attribution — empty local test geometry; no provider observations, rights claims or accepted map data.'});
+    if(label==='200 percent layout equivalent')await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:2,mobile:false});
+    await p.open('/');await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.dataset.renderer==='native'&&document.querySelectorAll('.living-welcome .topic-callout').length===8&&document.querySelectorAll('.living-welcome .motion-portal').length===8`,'eight hydrated topics with native scene measurements');
+    await p.wait(`(()=>{const attribution=document.querySelector('.maplibregl-ctrl-attrib'),r=attribution?.getBoundingClientRect();return r&&r.width>0&&r.height>0;})()`,'real MapLibre attribution mounted from bounded local style fixture');
+    const attributionToggle=await p.evaluate(`(()=>{const node=document.querySelector('.maplibregl-ctrl-attrib');if(!node.classList.contains('maplibregl-compact')||node.classList.contains('maplibregl-compact-show'))return null;const r=node.querySelector('.maplibregl-ctrl-attrib-button').getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+    if(attributionToggle){
+      await p.call('Input.dispatchMouseEvent',{type:'mousePressed',...attributionToggle,button:'left',clickCount:1});
+      await p.call('Input.dispatchMouseEvent',{type:'mouseReleased',...attributionToggle,button:'left',clickCount:1});
+      await p.wait(`document.querySelector('.maplibregl-ctrl-attrib').classList.contains('maplibregl-compact-show')`,'native attribution disclosure exposes representative wrapping text');
+    }
+    assert.match(await p.evaluate(`document.querySelector('.maplibregl-ctrl-attrib').textContent`),/Isolated browser layout fixture attribution/,'attribution geometry proves a labeled fixture only, not accepted map data');
+    const checkLayout=async state=>{
+      await p.wait(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),portals=[...root.querySelectorAll('.motion-portal')];return portals.length===8&&portals.filter(portal=>!portal.classList.contains('is-immersive')).every(portal=>{const anchor=root.querySelector('.'+portal.dataset.category+'-scene');if(!anchor)return false;const a=anchor.getBoundingClientRect(),r=portal.getBoundingClientRect();return Math.abs(a.left+a.width/2-r.left-r.width/2)<1&&Math.abs(a.top+a.height/2-r.top-r.height/2)<1;});})()`,state+': native footage follows actual topic anchors');
+      const result=await p.evaluate(`(()=>{
+        const root=document.querySelector('.explorer-guide.living-welcome'),stage=root.querySelector('.welcome-map-stage');
+        const selectors=['.welcome-hero','.welcome-skip','.topic-callout','.scene-caption','.history-timeline','.welcome-credits','.welcome-footer'];
+        const boxes=selectors.flatMap(selector=>[...root.querySelectorAll(selector)].map((node,index)=>{const r=node.getBoundingClientRect();return {name:selector+(selector==='.topic-callout'?':'+node.className:index),left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};}));
+        const rootBox=root.getBoundingClientRect(),header=document.querySelector('header.topbar').getBoundingClientRect(),attribution=document.querySelector('.maplibregl-ctrl-attrib')?.getBoundingClientRect();
+        const timeline=[...root.querySelectorAll('.history-timeline button')].map(node=>{const r=node.getBoundingClientRect();return {name:node.textContent,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};});
+        return {boxes,timeline,root:{left:rootBox.left,right:rootBox.right,top:rootBox.top,bottom:rootBox.bottom,scrollWidth:root.scrollWidth,clientWidth:root.clientWidth},headerBottom:header.bottom,attribution:attribution?{left:attribution.left,right:attribution.right,top:attribution.top,bottom:attribution.bottom,width:attribution.width,height:attribution.height}:null,stageHeight:stage.getBoundingClientRect().height,scrollHeight:root.scrollHeight};
+      })()`);
+      assert.ok(result.root.top>=result.headerBottom-.5,`${state}: header has its own space ${JSON.stringify(result)}`);
+      assert.ok(result.root.scrollWidth<=result.root.clientWidth,`${state}: no horizontal overflow`);
+      assert.ok(result.attribution?.width>0&&result.attribution?.height>0,`${state}: real attribution has measured geometry`);
+      {
+        assert.ok(result.attribution.top>=result.root.bottom-.5&&result.attribution.bottom<=height+.5,`${state}: actual attribution occupies a separate viewport strip ${JSON.stringify(result.attribution)}`);
+        assert.ok(result.attribution.left>=-.5&&result.attribution.right<=width+.5,`${state}: attribution outer width stays in the viewport`);
+      }
+      assert.equal(result.boxes.filter(box=>box.name.startsWith('.topic-callout')).length,8);
+      for(const box of result.boxes){
+        assert.ok(box.width>0&&box.height>0,`${state}: real content box ${JSON.stringify(box)}`);
+        assert.ok(box.left>=result.root.left-.5&&box.right<=result.root.right+.5,`${state}: content stays inside scroll width ${JSON.stringify(box)}`);
+      }
+      const disjoint=boxes=>{
+        for(let i=0;i<boxes.length;i++)for(const other of boxes.slice(i+1)){
+          const box=boxes[i],x=Math.min(box.right,other.right)-Math.max(box.left,other.left),y=Math.min(box.bottom,other.bottom)-Math.max(box.top,other.top);
+          assert.ok(x<=.5||y<=.5,`${state}: distinct content areas do not overlap ${JSON.stringify({box,other,x,y})}`);
+        }
+      };
+      disjoint(result.boxes);disjoint(result.timeline);
+      for(const button of result.timeline)assert.ok(button.height>=44,`${state}: historical chapter is a full touch target`);
+    };
+    await checkLayout('initial');
+    if(width===1440&&height===960){
+      assert.equal(await p.evaluate(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),footer=root.querySelector('.welcome-footer'),r=root.getBoundingClientRect(),f=footer.getBoundingClientRect();return f.top>=r.top&&f.bottom<=r.bottom+.5;})()`),true,'standard desktop shows the complete footer before scrolling');
+    }
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('header.topbar')).visibility`),'visible','global header remains available');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.qwen-map-launch')).visibility`),'hidden','background chat chrome does not peek through welcome');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.maplibregl-ctrl-scale')).visibility`),'hidden','background scale does not peek through welcome');
+    // Attribution is not part of the hidden interaction controls.
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.maplibregl-ctrl-attrib')).visibility`),'visible','actual attribution is preserved');
+    await p.key('Tab','Tab',9);await p.evaluate(`document.querySelector('.topic-history').focus()`);
+    await p.wait(`document.querySelector('.history-timeline')`,'history timeline occupies its own row');await checkLayout('history selected');
+    await p.evaluate(`document.querySelector('.history-timeline button:last-child').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`document.querySelector('[aria-label="Resume automatic scene cycling"]')`,'manual history selection retained');
+    assert.equal(await p.evaluate(`[...document.querySelectorAll('.scene-caption>button')].some(button=>button.textContent.includes('End preview'))`),true,'pinned preview exposes its exit');
+    await checkLayout('history pinned/manual');
+    await p.evaluate(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome');root.scrollTop=root.scrollHeight;})()`);
+    await p.wait(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),button=root.querySelector('.welcome-footer .welcome-primary'),r=button.getBoundingClientRect(),port=root.getBoundingClientRect();return r.top>=port.top&&r.bottom<=port.bottom+.5&&document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)?.closest('.welcome-primary')===button;})()`,'footer exit remains reachable after scrolling the expanded welcome');
+    await p.evaluate(`document.querySelector('.welcome-skip').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`!document.querySelector('.explorer-guide.living-welcome')`,'welcome dismissed');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.qwen-map-launch')).visibility`),'visible','ordinary map interaction chrome is restored');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.maplibregl-ctrl-scale')).visibility`),'visible','ordinary map scale is restored');
   });
 }
