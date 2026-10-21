@@ -79,6 +79,11 @@ reduction, not a measured map FPS or whole-application CPU improvement. Componen
 tests verify deadlines, suspension, manual reset and cleanup; browser rendering
 and physical-device acceptance remain separate.
 
+Pointer presence and keyboard focus hold feature rotation independently. Leaving
+with one input does not resume rotation while the other remains inside the
+guide. Only after both leave does a fresh seven-second reading interval begin;
+pointer cancellation releases the pointer hold without clearing keyboard focus.
+
 ## Pending data and database alignment
 
 The hosted branch already has the bounded Node/MySQL ingestion adapter in
