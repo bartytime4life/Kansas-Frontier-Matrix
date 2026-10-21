@@ -1,0 +1,20 @@
+// Each scene is its own lazy chunk; only the one on screen is ever loaded.
+export const SCENE_LOADERS = Object.freeze({
+ groundwater: () => import('./groundwater.mjs'),
+ water: () => import('./water.mjs'),
+ agriculture: () => import('./agriculture.mjs'),
+ terrain: () => import('./terrain.mjs'),
+ weather: () => import('./weather.mjs'),
+ disaster: () => import('./disaster.mjs'),
+ geology: () => import('./geology.mjs'),
+ ecology: () => import('./ecology.mjs'),
+ engineering: () => import('./engineering.mjs'),
+ transport: () => import('./transport.mjs'),
+ history: () => import('./history.mjs'),
+ land: () => import('./land.mjs'),
+ people: () => import('./people.mjs'),
+ places: () => import('./places.mjs'),
+ science: () => import('./science.mjs'),
+ sky: () => import('./sky.mjs'),
+ evidence: () => import('./evidence.mjs'),
+});

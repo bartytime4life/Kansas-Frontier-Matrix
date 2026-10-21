@@ -1498,6 +1498,8 @@ export default function Home() {
   const [helpOpen, setHelpOpen] = useState(false);
   // Welcome is decided after hydration alongside URL/history restoration.
   const [guideOpen, setGuideOpen] = useState(false);
+  // While the welcome covers the map, `?` reveals the map's source credits instead.
+  const [welcomeSourcesOpen, setWelcomeSourcesOpen] = useState(false);
   const [repositoryOpen, setRepositoryOpen] = useState(false);
   const [currentWorkspace, setCurrentWorkspace] = useState<PublicWorkspaceId>("explore");
   const [repositoryView, setRepositoryView] = useState<RepositoryView>("updates");
@@ -8817,12 +8819,15 @@ export default function Home() {
       if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
     }));
   };
+  const welcomeShowing = guideOpen && primaryWorkspace === "map";
   const toggleExplorerGuide = () => {
+    if (welcomeShowing) { setWelcomeSourcesOpen((open) => !open); return; }
     setPrimaryWorkspace("map");
-    setGuideOpen((open) => primaryWorkspace !== "map" || !open);
+    setGuideOpen(true);
   };
   const closeExplorerGuide = (rememberDismissal: boolean) => {
     setGuideOpen(false);
+    setWelcomeSourcesOpen(false);
     writeExplorerGuideDismissed(rememberDismissal);
     if (document.activeElement?.closest(".explorer-guide")) document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
   };
@@ -8878,7 +8883,7 @@ export default function Home() {
   </>;
 
   return (
-    <div className="site-root atlas-studio">
+    <div className="site-root atlas-studio" data-welcome-sources={welcomeShowing && welcomeSourcesOpen ? "open" : undefined}>
       <a className="skip-link" href="#map-canvas" onClick={returnToPrimaryMap}>Skip to the map</a>
       <header ref={explorerHeaderRef} className="topbar">
         <div className="brand-lockup">
@@ -8917,7 +8922,7 @@ export default function Home() {
             </div>
           </nav>
         <div className="top-actions">
-          <button className="guide-trigger" type="button" aria-label="Open the quick start guide" title="Quick start guide" aria-expanded={guideOpen && primaryWorkspace === "map"} onClick={toggleExplorerGuide}>?</button>
+          <button className="guide-trigger" type="button" aria-label={welcomeShowing ? (welcomeSourcesOpen ? "Hide map sources" : "Show map sources") : "Open the quick start guide"} title={welcomeShowing ? (welcomeSourcesOpen ? "Hide map sources" : "Show map sources") : "Quick start guide"} aria-pressed={welcomeShowing ? welcomeSourcesOpen : undefined} onClick={toggleExplorerGuide}>?</button>
           <details className="header-overflow-menu" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
             <summary aria-label="More site actions" title="More site actions">More <span aria-hidden="true">⌄</span></summary>
             <div className="header-overflow-panel">
