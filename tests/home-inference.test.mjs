@@ -5,7 +5,7 @@ import {mkdtemp,mkdir,writeFile,chmod,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {signRequest,verifyRequest,createNonceCache,newSecret,SIGNATURE_MAX_SKEW_MS,signResponse,RESPONSE_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
-import {parseProfiles,parseKeys,loadConfig,startGateway,createAdmission,neutralizeTemplate,GATEWAY_VERSION} from '../scripts/home-inference/gateway.mjs';
+import {parseProfiles,parseKeys,loadConfig,startGateway,createAdmission,neutralizeTemplate,GATEWAY_VERSION,GATEWAY_LIMITS} from '../scripts/home-inference/gateway.mjs';
 import {probe} from '../scripts/home-inference/probe.mjs';
 import {readFile} from 'node:fs/promises';
 import {homeInferenceConfig,createHomeInferenceClient,HomeInferenceModel,discussionMessages,HOME_PROVIDER} from '../server/home-inference.mjs';
@@ -21,18 +21,19 @@ const question={question:'What is a synthetic test?',term:'synthetic',place:'',s
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
 
 // A stand-in for loopback Ollama: only the three read/generate routes the gateway may use.
-function fakeOllama({tags=[{name:'qwen3:8b',model:'qwen3:8b',digest:DIGEST}],chunks=['Synthetic ','reply.'],final={done:true,done_reason:'stop',prompt_eval_count:120,eval_count:2,eval_duration:2e8,load_duration:1e6},hold=null,down=false}={}){
+function fakeOllama({tags=[{name:'qwen3:8b',model:'qwen3:8b',digest:DIGEST}],chunks=['Synthetic ','reply.'],final={done:true,done_reason:'stop',prompt_eval_count:120,eval_count:2,eval_duration:2e8,load_duration:1e6},hold=null,down=false,thinking='private reasoning',thinkingMetadata={values:[false,true],default:false}}={}){
  const calls=[];
  const fetchImpl=async(url,init={})=>{
   const path=new URL(url).pathname;calls.push({path,body:init.body?JSON.parse(init.body):null,signal:init.signal});
   if(down)throw new TypeError('fetch failed');
   if(path==='/api/version')return Response.json({version:'0.12.6'});
   if(path==='/api/tags')return Response.json({models:tags});
+  if(path==='/api/show')return Response.json({thinking:thinkingMetadata});
   if(path!=='/api/chat')return new Response('not found',{status:404});
   const encoder=new TextEncoder();
   return new Response(new ReadableStream({async start(controller){
    init.signal?.addEventListener('abort',()=>{try{controller.error(new DOMException('aborted','AbortError'));}catch{}});
-   for(const content of chunks)controller.enqueue(encoder.encode(JSON.stringify({model:'qwen3:8b',message:{role:'assistant',content,thinking:'private reasoning'},done:false})+'\n'));
+   for(const content of chunks)controller.enqueue(encoder.encode(JSON.stringify({model:'qwen3:8b',message:{role:'assistant',content,...(thinking===null?{}:{thinking})},done:false})+'\n'));
    if(hold)await hold;
    if(!init.signal?.aborted){controller.enqueue(encoder.encode(JSON.stringify({model:'qwen3:8b',message:{role:'assistant',content:''},...final})+'\n'));controller.close();}
   }}),{headers:{'Content-Type':'application/x-ndjson'}});
@@ -157,6 +158,58 @@ test('signed chat returns a bounded reply with pinned model identity and no priv
  }finally{await g.close();}
 });
 
+test('always-thinking models use the supported parser mode and hide an implicit reasoning preamble',async()=>{
+ const g=await gateway({thinking:null,thinkingMetadata:{values:[true],default:true},chunks:['Private preamble', '</thi', 'nk>\n', 'Public answer.']});
+ try{
+  const result=await g.signed('POST','/v1/chat',chatBody());
+  assert.equal(result.status,200);assert.equal(result.body.text,'Public answer.');
+  assert.equal(g.ollama.calls.find(call=>call.path==='/api/chat').body.think,true);
+  assert.doesNotMatch(JSON.stringify(result.body),/Private preamble|think>/);
+ }finally{await g.close();}
+});
+
+test('a native parser may return a complete answer with an empty or omitted thinking channel',async()=>{
+ for(const thinking of [null,'']){
+  const g=await gateway({thinking,thinkingMetadata:{values:[true],default:true},chunks:['Public answer.']});
+  try{
+   const result=await g.signed('POST','/v1/chat',chatBody());
+   assert.equal(result.status,200);assert.equal(result.body.text,'Public answer.');
+  }finally{await g.close();}
+ }
+});
+
+test('inline reasoning is removed across chunks, including nested and unfinished blocks',async()=>{
+ for(const [chunks,expected] of [
+  [['<thi','nk>Private preamble</th','ink>Public answer.'],'Public answer.'],
+  [['Public answer.<think>Private unfinished'],'Public answer.'],
+  [['<think>Private outer<think>Private inner</think>Private tail</think>Public answer.'],'Public answer.'],
+ ]){
+  const g=await gateway({thinking:null,chunks});
+  try{
+   const result=await g.signed('POST','/v1/chat',chatBody());
+   assert.equal(result.status,200);assert.equal(result.body.text,expected);
+   assert.doesNotMatch(JSON.stringify(result.body),/Private|think>/);
+  }finally{await g.close();}
+ }
+});
+
+test('a length or deadline cut inside reasoning never returns it as a partial answer',async()=>{
+ const never=new Promise(()=>{}),forced={thinking:null,thinkingMetadata:{values:[true],default:true}};
+ for(const options of [
+  {...forced,chunks:['Private preamble'],final:{done:true,done_reason:'length'}},
+  {...forced,chunks:['Private preamble'],hold:never},
+  {thinking:null,chunks:['<think>Private outer<think>Private inner</think>Private tail'],hold:never},
+ ]){
+  const g=await gateway(options,profiles({profiles:[profile({timeoutMs:{brief:150,expanded:150}})]}));
+  try{
+   const result=await g.signed('POST','/v1/chat',chatBody());
+   assert.notEqual(result.status,200);
+   assert.ok(['MODEL_EMPTY_OUTPUT','MODEL_TIMEOUT'].includes(result.body.error));
+   assert.doesNotMatch(JSON.stringify(result.body),/Private|think>/);
+  }finally{await g.close();}
+ }
+});
+
 test('malformed, oversized, out-of-scope and over-long chats fail before generation',async()=>{
  const g=await gateway();
  try{
@@ -205,6 +258,19 @@ test('a reply cut off by the gateway deadline returns as length-limited text, an
  try{const result=await slow.signed('POST','/v1/chat',chatBody());assert.equal(result.status,200);assert.equal(result.body.text,'Synthetic reply.');assert.equal(result.body.finishReason,'length');}finally{await slow.close();}
  const silent=await gateway({hold:never,chunks:[]},profiles({profiles:[profile({timeoutMs:{brief:150,expanded:150}})]}));
  try{const result=await silent.signed('POST','/v1/chat',chatBody());assert.equal(result.status,504);assert.equal(result.body.error,'MODEL_TIMEOUT');}finally{await silent.close();}
+});
+
+test('extra generation allowance still caps visible answers at public chat bytes without splitting UTF-8',async()=>{
+ for(const chunks of [['x'.repeat(5000)],['🌾'.repeat(2000)]]){
+  const g=await gateway({chunks},profiles({profiles:[profile({outputTokens:{brief:1024,expanded:2048}})]}));
+  try{
+   const result=await g.signed('POST','/v1/chat',chatBody());
+   assert.equal(result.status,200);assert.equal(result.body.finishReason,'length');
+   assert.equal(Buffer.byteLength(result.body.text),GATEWAY_LIMITS.replyBytes);
+   assert.doesNotMatch(result.body.text,/\uFFFD/);
+   assert.equal(g.ollama.calls.find(call=>call.path==='/api/chat').body.options.num_predict,1024);
+  }finally{await g.close();}
+ }
 });
 
 test('one generation at a time: overflow is refused and a disconnected caller stops generation',async()=>{
@@ -388,7 +454,8 @@ test('the shipped profile template only loads once the owner pins a real digest'
  const parsed=parseProfiles(JSON.parse(template.replace(/sha256:REPLACE[^"]*/,'sha256:'+DIGEST)));
  const chat=parsed.profiles.get('kfm-default-chat');
  // The public handler refuses replies over 4096 bytes and Cloudflare cuts responses at about 100 s.
- assert.ok(chat.outputTokens.expanded<=700&&chat.timeoutMs.expanded<=90000);
+ assert.ok(chat.outputTokens.expanded<=2048&&chat.timeoutMs.expanded<=90000);
+ assert.equal(GATEWAY_LIMITS.replyBytes,4096);
 });
 
 test('the probe proves refusal cases and records synthetic timings without secrets',async()=>{

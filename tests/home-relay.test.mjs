@@ -23,6 +23,7 @@ function fakeOllama({hold=null}={}){
   const path=new URL(url).pathname;calls.push(path);
   if(path==='/api/version')return Response.json({version:'0.12.6'});
   if(path==='/api/tags')return Response.json({models:[{name:'qwen3:4b',model:'qwen3:4b',digest:DIGEST}]});
+  if(path==='/api/show')return Response.json({thinking:{values:[false,true],default:false}});
   const encoder=new TextEncoder();
   return new Response(new ReadableStream({async start(controller){
    init.signal?.addEventListener('abort',()=>{try{controller.error(new DOMException('aborted','AbortError'));}catch{}});
@@ -80,6 +81,27 @@ test('the worker relays signed gateway calls end to end and the site verifies ev
   assert.ok(s.logs.every(line=>!/Synthetic question|Relayed reply|worker-1|secret/i.test(JSON.stringify(line))));
   assert.ok(s.diagnostics.includes('WORKER_CONNECTED'));
  }finally{await s.close();}
+});
+
+test('a long generation stays ready without health jobs expiring behind the serial worker',async()=>{
+ let release;const hold=new Promise(resolve=>{release=resolve;});
+ const s=await setup({hold});
+ const client=createRelayClient({relay:s.relay,secret:gatewaySecret}),health=client.health;
+ let healthChecks=0;client.health=(...args)=>{healthChecks++;return health(...args);};
+ const model=new HomeInferenceModel({client,profile:'kfm-default-chat',digest:'sha256:'+DIGEST,pollMs:40,diagnostic:()=>{}});
+ try{
+  s.running.start();await model.refresh();assert.equal(model.ready,true);
+  const chat=model.discuss('Synthetic long generation?',{depth:'brief'});
+  // Longer than the relay's unleased health deadline. Before the fix this
+  // queued a probe that expired and set the still-generating model offline.
+  await new Promise(resolve=>setTimeout(resolve,650));
+  assert.equal(model.ready,true,model.reason);assert.equal(model.online,true);
+  assert.equal(s.relay.queued,0,'no health job waits behind the generation');
+  assert.equal(healthChecks,1,'routine probes wait until the active generation finishes');
+  release();assert.equal((await chat).text,'Relayed reply.');
+  await model.refresh();assert.equal(model.ready,true);
+  assert.ok(healthChecks>=2,'completion performs a fresh health check');
+ }finally{release();model.stop();await s.close();}
 });
 
 test('unsigned, wrong-key and replayed worker calls are refused before any job is handed out',async()=>{

@@ -44,6 +44,7 @@ function fixture({profileOverrides={},hold=false,queue=1,inspectHold=null}={}){
   if(runtime.down)throw new TypeError('offline');
   if(url.endsWith('/api/version')){if(inspectHold)await inspectHold;const hold=runtime.versionHolds.shift();if(hold)await hold;return Response.json({version:'synthetic'});}
   if(url.endsWith('/api/tags')){runtime.tagReads++;return Response.json({models:runtime.tags});}
+  if(url.endsWith('/api/show'))return Response.json({thinking:{values:[false,true],default:false}});
   assert.ok(url.endsWith('/api/chat'));
   return new Response(new ReadableStream({start(controller){
    runtime.generations.push({signal:init.signal,messages:JSON.parse(init.body).messages,finish(){
