@@ -1,0 +1,23 @@
+{
+  "kind": "GENERATED_UI_DECORATION",
+  "generatedUtc": "2026-10-21",
+  "authority": "NONE",
+  "source": "OpenAI image generation, owner-requested time emblem",
+  "sourceSha256": "cf5997d72e2ac94109ed8fc6ca5daebf82f7bf26fa2b54ca383aa17caa478eea",
+  "delivery": "era-atlas.webp",
+  "deliverySha256": "d5d70472c9ce0fb85d8155192e999c6986d2788716f41f5eb7fbfcc46191dc35",
+  "width": 948,
+  "height": 1659,
+  "columns": 4,
+  "rows": 7,
+  "eras": [
+    "hourglass",
+    "stone toolmaker",
+    "medieval knight",
+    "Civil War era",
+    "internet",
+    "AI",
+    "imagined future"
+  ],
+  "meaning": "Decorative era sequence only; does not change or attest to the selected date, observation, release or coverage."
+}
