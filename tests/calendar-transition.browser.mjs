@@ -49,10 +49,11 @@ for (const exit of ['advanced Present','compact Present','annual step']) test(`h
   
   await page.waitForFunction(() => history.state?.kfmExplorerView);
   
-  await page.locator('.compact-time-emblem').click();
+  await page.locator('.compact-time-emblem').focus(); await page.keyboard.press('Enter');
   await page.locator('.compact-time-source-details').evaluate(el => { el.open = true; });
   await page.waitForFunction(() => document.querySelector('.compact-time-source-details')?.textContent.includes('1 source records'));
   assert.equal(requests.filter(x=>x==='current').length,0);
+  const priorView = new URLSearchParams(await page.evaluate(() => history.state.kfmExplorerView));
   if (exit === 'compact Present') await page.locator('.compact-time-present').click();
   else {
     await page.locator('.compact-time-legacy > summary').click();
@@ -62,6 +63,7 @@ for (const exit of ['advanced Present','compact Present','annual step']) test(`h
   await page.waitForFunction(() => { const p = new URLSearchParams(history.state?.kfmExplorerView); return !p.has('calendar') && !p.get('ctxd'); });
   const saved = new URLSearchParams(await page.evaluate(() => history.state.kfmExplorerView));
   assert.equal(saved.get('ctx'),feed); assert.equal(saved.get('l'),'');
+  for (const key of ['c','z','b','p']) assert.equal(saved.get(key),priorView.get(key),'retain camera '+key);
   assert.equal(await page.locator('.compact-time-source-details').textContent().then(text => text.includes('1 source records')),false);
   if (exit === 'annual step') {
     assert.notEqual(saved.get('t'),'2026'); assert.equal(requests.includes('current'),false);
@@ -71,7 +73,7 @@ for (const exit of ['advanced Present','compact Present','annual step']) test(`h
   assert.ok(requests.includes('current'),'Present must request current context after history');
   releaseCurrent();
   await page.waitForTimeout(300);
-  if (!await page.getByLabel('Exact map date',{exact:true}).isVisible()) await page.locator('.compact-time-emblem').click();
+  if (!await page.getByLabel('Exact map date',{exact:true}).isVisible()) { await page.locator('.compact-time-emblem').focus(); await page.keyboard.press('Enter'); }
   await page.getByLabel('Exact map date',{exact:true}).fill(day);
   await page.waitForFunction(() => new URLSearchParams(history.state?.kfmExplorerView).has('calendar'));
   await page.locator('.compact-time-present').click();
