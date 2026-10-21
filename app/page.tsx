@@ -1,4 +1,7 @@
 "use client";
+import { CompactTimeSweep, type CalendarSourceRow } from "./compact-time-sweep";
+import { CALENDAR_ARCHIVE_BOUNDS, calendarArchiveFeeds, calendarFrameDay, calendarVisibility, readCalendarSweep, type CalendarArchiveFeed, type CalendarFrameOutcome, type CalendarSweepView } from "./calendar-sweep";
+import { EarthEngineComparisonPanel } from "./earth-engine-comparison-panel";
 import { installExplorerMenuDismissal } from "./explorer-menu-dismissal";
 import { countySearchGeometry, countySearchResults, globalSearchStatus } from "./county-search";
 import { atlasDiscoveryResults, type GlobalSearchItem } from "./atlas-discovery";
@@ -590,11 +593,23 @@ const officialContextRuntimeVisibility = (
   noaaRadarReady: boolean,
   noaaRadarFrameTime: string | null,
   buildYearCurrent = true,
+  calendarDay: string | null = null,
+  checkedDays: Partial<Record<OfficialContextId, string>> = {},
 ) => {
-  const next = officialContextVisibilityForFrame(visibility, frame, buildYearCurrent);
+  const base = officialContextVisibilityForFrame(visibility, frame, buildYearCurrent);
+  const currentOnly = OFFICIAL_CONTEXT_SOURCES.filter(source => {
+    const frames = OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].supportedFrames;
+    return frames.length === 1 && frames[0] === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  }).map(source => source.id);
+  const next = calendarVisibility(base, visibility, calendarDay, frame, currentUtcDay(), checkedDays, currentOnly, buildYearCurrent);
   next["nws-radar"] = next["nws-radar"] && noaaRadarReady && Boolean(noaaRadarFrameTime);
   return next;
 };
+const checkedCalendarDays = (days: Partial<Record<OfficialContextFeedId, string>>, payloads: Partial<Record<OfficialContextFeedId, OfficialContextPayload>>): Partial<Record<OfficialContextId, string>> =>
+  Object.fromEntries((Object.keys(CALENDAR_ARCHIVE_BOUNDS) as CalendarArchiveFeed[]).flatMap(feed => {
+    const payload = payloads[feed], day = days[feed];
+    return day && payload?.feed === feed && ["ready", "partial", "empty"].includes(payload.state) ? [[feed, day]] : [];
+  }));
 const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
 const layerDomains = ["ALL", ...Array.from(new Set([...LAYER_REGISTRY.map((layer) => layer.domain), ...DOMAIN_HOLDS.map((hold) => hold.domain)])).sort()] as const;
@@ -1443,6 +1458,11 @@ export default function Home() {
   const [sweepRangeStart, setSweepRangeStart] = useState<number>(TIME_STEPS[0]);
   const [sweepRangeEnd, setSweepRangeEnd] = useState<number>(TIME_STEPS.at(-1)!);
   const [movingWindowFrames, setMovingWindowFrames] = useState(3);
+  const [calendarSweep, setCalendarSweep] = useState<CalendarSweepView | null>(null);
+  const calendarSweepRef = useRef<CalendarSweepView | null>(null);
+  const calendarSeekGeneration = useRef(0);
+  const calendarArchiveLoads = useRef(new Map<OfficialContextFeedId, { day: string; promise: Promise<void> }>());
+  useEffect(() => { calendarSweepRef.current = calendarSweep; }, [calendarSweep]);
   const [measureMode, setMeasureMode] = useState<MeasureMode>(null);
   const [measurementGeometryMode, setMeasurementGeometryMode] = useState<MeasureMode>(null);
   const [measureCoordinateCount, setMeasureCoordinateCount] = useState(0);
@@ -1564,7 +1584,7 @@ export default function Home() {
     return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", check); };
   }, []);
   const runtimeOfficialVisibility = useCallback((visibility: Record<OfficialContextId, boolean>, frame: number, radarReady: boolean, radarFrameTime: string | null) =>
-    officialContextRuntimeVisibility(visibility, frame, radarReady, radarFrameTime, buildYearCurrentRef.current), []);
+    officialContextRuntimeVisibility(visibility, frame, radarReady, radarFrameTime, buildYearCurrentRef.current, calendarSweepRef.current ? calendarFrameDay(calendarSweepRef.current) : null, checkedCalendarDays(officialArchiveDaysRef.current, officialArchivePayloadsRef.current)), []);
   useEffect(() => { officialOpacityRef.current = officialOpacity; }, [officialOpacity]);
   useEffect(() => { officialPayloadsRef.current = officialPayloads; }, [officialPayloads]);
   useEffect(() => { noaaRadarManifestRef.current = noaaRadarManifest; }, [noaaRadarManifest]);
@@ -1758,8 +1778,8 @@ export default function Home() {
     if (!noaaRadarRenderable) setNoaaRadarPlaying(false);
   }, [noaaRadarRenderable]);
   const effectiveOfficialVisibility = useMemo(
-    () => officialContextRuntimeVisibility(officialVisibility, temporalQuery.frame, noaaRadarRenderable, noaaRadarFrameTime, buildYearCurrent),
-    [buildYearCurrent, noaaRadarFrameTime, noaaRadarRenderable, officialVisibility, temporalQuery.frame],
+    () => officialContextRuntimeVisibility(officialVisibility, temporalQuery.frame, noaaRadarRenderable, noaaRadarFrameTime, buildYearCurrent, calendarSweep ? calendarFrameDay(calendarSweep) : null, checkedCalendarDays(officialArchiveDays, officialPayloads)),
+    [buildYearCurrent, calendarSweep, noaaRadarFrameTime, noaaRadarRenderable, officialArchiveDays, officialPayloads, officialVisibility, temporalQuery.frame],
   );
   const lightningSelected = effectiveOfficialVisibility["noaa-lightning-density"] && projection !== "globe";
   const lightningFrameIndex = lightningManifest?.frames.indexOf(lightningFrame ?? "") ?? -1;
@@ -2509,6 +2529,7 @@ export default function Home() {
     if (streamflowSelectedStationId) params.set("hydroStation", streamflowSelectedStationId);
     if (streamflowArchiveDay) params.set("hydroDay", streamflowArchiveDay);
     if (officialVisibility["usgs-streamflow"] || officialVisibility["nws-radar"] || officialVisibility["noaa-lightning-density"]) params.set("live", liveInstrument);
+    if (calendarSweep) params.set("calendar", JSON.stringify(calendarSweep));
     params.set("t", String(year));
     params.set("tm", temporalMode);
     params.set("tstep", temporalStepRule);
@@ -2546,7 +2567,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [officialWorkspace, layerCatalogView, soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -2610,7 +2631,8 @@ export default function Home() {
     }
   }, [setDaylightPlayback]);
 
-  const commitTemporalFrame = useCallback((next: number, message?: string) => {
+  const commitTemporalFrame = useCallback((next: number, message?: string, keepCalendar = false) => {
+    if (!keepCalendar) { calendarSeekGeneration.current++; calendarSweepRef.current = null; setCalendarSweep(null); }
     setSweepRangeStart((current) => Math.min(current, next));
     setSweepRangeEnd((current) => Math.max(current, next));
     yearRef.current = next;
@@ -3347,7 +3369,10 @@ export default function Home() {
     }
   }), []);
 
-  const loadOfficialArchiveDay = useCallback(async (feed: OfficialContextFeedId, day: string, force = false) => {
+  const loadOfficialArchiveDay = useCallback((feed: OfficialContextFeedId, day: string, force = false): Promise<void> => {
+    const prior = calendarArchiveLoads.current.get(feed);
+    if (!force && prior?.day === day) return prior.promise;
+    const promise = (async () => {
     if (!["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed)
       || !/^\d{4}-\d{2}-\d{2}$/.test(day)
       || !Number.isFinite(Date.parse(`${day}T00:00:00.000Z`))
@@ -3410,6 +3435,11 @@ export default function Home() {
     } finally {
       if (officialRequestsRef.current.get(feed) === controller) officialRequestsRef.current.delete(feed);
     }
+    })();
+    calendarArchiveLoads.current.set(feed, { day, promise });
+    const settled = () => { if (calendarArchiveLoads.current.get(feed)?.promise === promise) calendarArchiveLoads.current.delete(feed); };
+    void promise.then(settled, settled);
+    return promise;
   }, [announce]);
 
   const returnOfficialSourceToCurrent = useCallback((feed: OfficialContextFeedId) => {
@@ -3424,6 +3454,68 @@ export default function Home() {
     if (feed === "noaa-hms-smoke") setSmokeArchiveFrameIndex(-1);
     void refreshOfficialContext(feed);
   }, [refreshOfficialContext]);
+
+
+  const seekCalendarFrame = useCallback(async (candidate: CalendarSweepView): Promise<CalendarFrameOutcome> => {
+    const next = readCalendarSweep(JSON.stringify(candidate), currentUtcDay());
+    if (!next) return { state: "error", message: "Choose a valid UTC calendar range." };
+    const generation = ++calendarSeekGeneration.current, day = calendarFrameDay(next);
+    const nextYear = Number(day.slice(0, 4));
+    calendarSweepRef.current = next; setCalendarSweep(next); setPlaying(false); setTemporalMode("snapshot");
+    commitTemporalFrame(nextYear, undefined, true);
+    // A feature selected on another day must not remain bound to the drawer/AI.
+    if (selectedRef.current) { selectedRef.current = null; setSelected(null); setRightOpen(false); if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, null); }
+    const feeds = calendarArchiveFeeds(officialVisibilityRef.current, day);
+    const reads = feeds.filter(feed => officialArchiveDaysRef.current[feed] !== day || !officialArchivePayloadsRef.current[feed]);
+    for (const feed of Object.keys(CALENDAR_ARCHIVE_BOUNDS) as CalendarArchiveFeed[]) {
+      if (!officialVisibilityRef.current[feed] || officialArchiveDaysRef.current[feed] === day) continue;
+      officialRequestsRef.current.get(feed)?.abort(); officialRequestsRef.current.delete(feed);
+      officialArchivePayloadsRef.current = { ...officialArchivePayloadsRef.current, [feed]: undefined };
+      officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: undefined };
+    }
+    setOfficialPayloads(officialPayloadsRef.current);
+    // Independent bounded adapters; each already rejects stale/aborted replies.
+    await Promise.all(reads.map(feed => loadOfficialArchiveDay(feed, day)));
+    if (generation !== calendarSeekGeneration.current) return { state: "reference", message: "A newer date replaced this request." };
+    const checked = feeds.map(feed => officialArchiveDaysRef.current[feed] === day ? officialArchivePayloadsRef.current[feed] : undefined);
+    if (feeds.length && checked.every(payload => !payload)) return { state: "error", message: "Selected sources are unavailable for " + day + ". Previous dated features remain withheld." };
+    const map = mapRef.current;
+    if (map && styleGenerationReadyRef.current) {
+      applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, nextYear, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+      try {
+        await Promise.all(feeds.map(async feed => {
+          const source = map.getSource(OFFICIAL_CONTEXT_BY_ID[feed].sourceId);
+          if (source?.type === "geojson") await waitForGeoJSON(source as GeoJSONSource, AbortSignal.timeout(15_000));
+        }));
+      } catch { return { state: "error", message: "The selected date did not finish rendering. Playback paused; retry this date." }; }
+    } else if (feeds.length) return { state: "error", message: "Observations were checked; the map renderer is not ready. Playback paused." };
+    if (generation !== calendarSeekGeneration.current) return { state: "reference", message: "A newer date replaced this request." };
+    if (!feeds.length) {
+      const annual = next.step === "years" && activeLayers.some(layer => Boolean(layer.temporal));
+      return { state: annual ? "empty" : "reference", message: annual ? "Annual catalog frame selected. No daily source follows this date; catalog availability is not observed change." : "No selected source can follow this date. Open Layers to select earthquake, smoke, thermal-detection, or station-inventory history. Other source clocks remain separate." };
+    }
+    const partial = checked.some(payload => !payload || payload.state === "partial" || payload.truncated);
+    const count = checked.reduce((sum, payload) => sum + (payload?.featureCount ?? 0), 0);
+    return { state: partial ? "partial" : count ? "ready" : "empty", message: day + " UTC · " + count + " returned source records across " + feeds.length + " selected dated sources." + (partial ? " Coverage is partial or one source is unavailable." : count ? " Source dates and retrieval clocks remain separate." : " An empty response does not prove absence.") };
+  }, [activeLayers, commitTemporalFrame, loadOfficialArchiveDay, runtimeOfficialVisibility, setRightOpen]);
+
+  // Turning on a supported layer inside an active calendar view checks that
+  // same day. It never substitutes the provider's current snapshot.
+  useEffect(() => {
+    const current = calendarSweepRef.current;
+    if (!current) return;
+    const day = calendarFrameDay(current);
+    for (const feed of calendarArchiveFeeds(officialVisibility, day)) {
+      if (officialArchiveDaysRef.current[feed] !== day || !officialArchivePayloadsRef.current[feed] && !officialRequestsRef.current.has(feed)) void loadOfficialArchiveDay(feed, day);
+    }
+  }, [calendarSweep, loadOfficialArchiveDay, officialVisibility]);
+
+  const returnCalendarToPresent = useCallback(() => {
+    calendarSeekGeneration.current++; calendarSweepRef.current = null; setCalendarSweep(null);
+    setPlaying(false); setTemporalMode("snapshot"); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME);
+    temporalQueryRef.current = buildTemporalQuery("snapshot", OFFICIAL_CONTEXT_PRESENT_FRAME, OFFICIAL_CONTEXT_PRESENT_FRAME, OFFICIAL_CONTEXT_PRESENT_FRAME, [OFFICIAL_CONTEXT_PRESENT_FRAME]);
+    for (const feed of Object.keys(CALENDAR_ARCHIVE_BOUNDS) as CalendarArchiveFeed[]) if (officialVisibilityRef.current[feed]) returnOfficialSourceToCurrent(feed);
+  }, [commitTemporalFrame, returnOfficialSourceToCurrent]);
 
   const seekEarthquakeArchiveFrame = useCallback((index: number) => {
     const day = officialArchiveDaysRef.current["usgs-earthquakes"];
@@ -4626,8 +4718,10 @@ export default function Home() {
         if (day) void loadOfficialArchiveDay(feed, day);
         else if (!officialPayloadsRef.current[feed]) void refreshOfficialContext(feed);
       }
+      const restoredCalendar = readCalendarSweep(params.get("calendar"), currentUtcDay());
+      calendarSeekGeneration.current++; calendarSweepRef.current = restoredCalendar; setCalendarSweep(restoredCalendar);
       const restoredYear = Number(params.get("t"));
-      const nextYear = KNOWN_TEMPORAL_FRAMES.has(restoredYear) ? restoredYear : OFFICIAL_CONTEXT_PRESENT_FRAME;
+      const nextYear = restoredCalendar ? Number(calendarFrameDay(restoredCalendar).slice(0, 4)) : KNOWN_TEMPORAL_FRAMES.has(restoredYear) ? restoredYear : OFFICIAL_CONTEXT_PRESENT_FRAME;
       yearRef.current = nextYear;
       setYear(nextYear);
       setPreviewYear(nextYear);
@@ -4636,7 +4730,7 @@ export default function Home() {
       if (nextOfficialVisibility["noaa-nwps-gauges"] && nextYear === OFFICIAL_CONTEXT_PRESENT_FRAME) void refreshNoaaHydrologyNetwork(true);
       const restoredTemporalMode = params.get("tm");
       const nextTemporalMode: TemporalSweepMode = restoredTemporalMode === "moving-window" || restoredTemporalMode === "event-stepping" || restoredTemporalMode === "accumulation" || restoredTemporalMode === "comparison" ? restoredTemporalMode : "snapshot";
-      setTemporalMode(nextTemporalMode);
+      setTemporalMode(restoredCalendar ? "snapshot" : nextTemporalMode);
       setTemporalStepRule(params.get("tstep") === "available-events" ? "available-events" : "regular-calendar");
       const restoredSweepRange = params.get("trange")?.split(",").map(Number) ?? [];
       const validSweepRange = restoredSweepRange.length === 2
@@ -6678,7 +6772,7 @@ export default function Home() {
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || !isCompact || (surfaceInspectionOpen && !mapUtilityOpen)) return;
-    const openPanel = mapUtilityOpen ? mapUtilityPanelRef.current : rightOpen ? rightPanelRef.current : leftOpen ? leftPanelRef.current : timelineOpen ? timelineRef.current : null;
+    const openPanel = mapUtilityOpen ? mapUtilityPanelRef.current : rightOpen ? rightPanelRef.current : leftOpen ? leftPanelRef.current : null;
     if (!openPanel) return;
     const focusable = () => visibleFocusableElements(openPanel);
     const items = focusable();
@@ -8635,6 +8729,19 @@ export default function Home() {
     }
   };
 
+  const calendarSourceRows: CalendarSourceRow[] = visibleOfficialSources.map(source => {
+    const day = calendarSweep ? calendarFrameDay(calendarSweep) : null;
+    const feed = source.id as CalendarArchiveFeed;
+    const supported = Object.hasOwn(CALENDAR_ARCHIVE_BOUNDS, feed);
+    const checkedDay = supported ? officialArchiveDays[feed] : undefined;
+    const payload = supported ? officialArchivePayloadsRef.current[feed] : undefined;
+    const matched = Boolean(day && checkedDay === day && payload);
+    return { id: source.id, title: source.shortTitle,
+      state: day && supported ? day < CALENDAR_ARCHIVE_BOUNDS[feed] ? "outside bounds" : checkedDay !== day ? "unchecked" : officialStates[source.id] : day && !effectiveOfficialVisibility[source.id] ? "held" : supported ? "independent" : "separate clock",
+      detail: supported ? matched ? day + " UTC · " + payload!.featureCount + " source records · retrieved " + payload!.retrievedAt + (payload!.truncated ? " · truncated" : "") : "Exact day adapter · earliest query " + CALENDAR_ARCHIVE_BOUNDS[feed] + "; coverage is checked per request." : OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].limitation,
+    };
+  });
+
   const fireImageDay = officialPayloads["nasa-gibs-fire-points"]?.sourceDay;
   const daylightDisplayTime = formatKansasSolarTime(daylightInstant);
   const daylightInterval = kansasLocalDateRangeInterval(daylightDay, daylightThroughDay);
@@ -10281,7 +10388,11 @@ export default function Home() {
           </>}
         </aside>
 
-        <section ref={timelineRef} className="timeline-panel" aria-label="Timeline and temporal controls" aria-hidden={isCompact && !timelineOpen || undefined} inert={isCompact && !timelineOpen} aria-modal={isCompact && timelineOpen || undefined} role={isCompact && timelineOpen ? "dialog" : undefined}>
+        <section ref={timelineRef} className="timeline-panel timeline-calendar" aria-label="Timeline and temporal controls">
+          <CompactTimeSweep value={calendarSweep} year={year} years={timelineSteps} today={currentUtcDay()} reducedMotion={reducedMotion}
+            open={timelineOpen} onOpenChange={setTimelineOpen} onSeek={seekCalendarFrame}
+            onEra={next => { setPlaying(false); commitTemporalFrame(next); }} onPresent={returnCalendarToPresent}
+            sources={calendarSourceRows} imageryComparison={<EarthEngineComparisonPanel manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} />}>
           <div className="timeline-compact">
             <button className="timeline-toggle" type="button" aria-expanded={timelineOpen} onClick={() => { if (timelineOpen) { closeTimelinePanel(); return; } setTimelineOpen(true); if (isCompact) { dismissMapUtilityWithoutFocus(); setLeftOpen(false); setRightOpen(false); } }}>
               <span>TIME SWEEP</span>
@@ -10303,8 +10414,7 @@ export default function Home() {
               <button className="timeline-reset" type="button" disabled={!buildYearCurrent} onClick={() => { setPlaying(false); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME, "Returned to the operational-present frame"); }}>{buildYearCurrent ? "Present" : "Rebuild for Present"}</button>
             </div>
           </div>
-
-          {timelineOpen && <div className="timeline-detail">
+          <div className="timeline-detail">
             <section className="timeline-sweep-setup" aria-labelledby="timeline-sweep-title">
               <header><span>TIME SWEEP</span><strong id="timeline-sweep-title">Explore the map by year</strong><small>Preview a year, then Commit to update the map.</small></header>
               <div className="timeline-semantic-controls">
@@ -10370,7 +10480,8 @@ export default function Home() {
               </details>
             </section>
             <button className="icon-close timeline-close" type="button" onClick={closeTimelinePanel} aria-label="Close timeline">×</button>
-          </div>}
+          </div>
+          </CompactTimeSweep>
         </section>
 
         <footer className="status-bar" data-terrain={scenePreset === "elevation-3d"} aria-label="Map status">
