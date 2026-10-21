@@ -15,7 +15,7 @@ const feed = 'usgs-earthquakes';
 const fixture = dated => ({feed,state:'ready',featureCount:1,retrievedAt:dated?'2026-10-02T12:00:00Z':'2026-10-21T12:00:00Z',sourceDay:dated?day:undefined,data:{type:'FeatureCollection',features:[{type:'Feature',id:dated?'archive':'current',geometry:{type:'Point',coordinates:[-98,38]},properties:{id:dated?'archive':'current',title:dated?'ARCHIVE FIXTURE':'CURRENT FIXTURE',magnitude:2,time:dated?'2026-10-01T12:00:00Z':'2026-10-21T11:00:00Z'}}]}});
 for (const exit of ['advanced Present','compact Present','annual step']) test(`hydrated ${exit} retires same-year history and preserves selected layers`, {timeout:90000}, async t => {
   const browser = await chromium.launch({ executablePath: process.env.KFM_TEST_CHROME ?? '/usr/bin/chromium', headless:true,args:['--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage'] });
-  
+
   const page = await browser.newPage({ viewport:{width:1200,height:800}, reducedMotion:'reduce' });
   page.setDefaultTimeout(15000);
   page.setDefaultNavigationTimeout(15000);
@@ -46,9 +46,9 @@ for (const exit of ['advanced Present','compact Present','annual step']) test(`h
   });
   const params = new URLSearchParams({ctx:feed,l:'',t:'2026',calendar:JSON.stringify(calendar),ctxd:feed+':'+day});
   await page.goto(new URL('?'+params,origin).href, {waitUntil:'domcontentloaded'});
-  
+
   await page.waitForFunction(() => history.state?.kfmExplorerView);
-  
+
   await page.locator('.compact-time-emblem').focus(); await page.keyboard.press('Enter');
   await page.locator('.compact-time-source-details').evaluate(el => { el.open = true; });
   await page.waitForFunction(() => document.querySelector('.compact-time-source-details')?.textContent.includes('1 source records'));
