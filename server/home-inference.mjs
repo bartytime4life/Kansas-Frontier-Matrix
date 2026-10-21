@@ -8,7 +8,9 @@ import {signRequest,decodeSecret,verifyResponse} from '../scripts/home-inference
 import {getHomeRelay,homeWorkerKey} from './home-relay.mjs';
 import {hostedAiOriginAllowed} from './hosted-ai-origins.mjs';
 import {discussionSystem} from './hosted-ai-prompt.mjs';
-import {CONTINUE_REPLY,PUBLIC_AI_JOB_MS} from './hosted-ai.mjs';
+import {CONTINUE_REPLY} from './hosted-ai.mjs';
+import {INFERENCE_BUDGETS} from '../scripts/home-inference/budgets.mjs';
+import {deadlineFetch} from '../scripts/home-inference/deadline-fetch.mjs';
 
 export const HOME_PROVIDER='home-ollama';
 export const HOME_GATEWAY='kfm-home-inference/1';
@@ -62,7 +64,7 @@ async function boundedResponseBytes(response){
  return Buffer.concat(chunks);
 }
 
-export function createHomeInferenceClient({origin,keyId,secret,access=null,fetchImpl=fetch,clock=Date.now}){
+export function createHomeInferenceClient({origin,keyId,secret,access=null,fetchImpl=deadlineFetch,clock=Date.now}){
  const call=async(method,path,payload,{signal,timeoutMs})=>{
   const body=payload===undefined?'':JSON.stringify(payload);
   const headers={...signRequest({keyId,secret,method,path,body,now:clock()}),...(body?{'Content-Type':'application/json'}:{}),...(access?{'CF-Access-Client-Id':access.id,'CF-Access-Client-Secret':access.secret}:{})};
@@ -78,7 +80,7 @@ export function createHomeInferenceClient({origin,keyId,secret,access=null,fetch
  };
  return {
   health:({signal}={})=>call('GET','/v1/health',undefined,{signal,timeoutMs:HOME_LIMITS.healthMs}),
-  chat:(payload,{signal,timeoutMs=PUBLIC_AI_JOB_MS}={})=>call('POST','/v1/chat',payload,{signal,timeoutMs}),
+  chat:(payload,{signal,timeoutMs=INFERENCE_BUDGETS.clientMs}={})=>call('POST','/v1/chat',payload,{signal,timeoutMs}),
  };
 }
 
@@ -93,7 +95,7 @@ export function createRelayClient({relay,secret}){
  return {
   // Two trips through the site instead of one direct call.
   health:({signal}={})=>call('GET','/v1/health',undefined,{signal,timeoutMs:HOME_LIMITS.relayHealthMs}),
-  chat:(payload,{signal,timeoutMs=PUBLIC_AI_JOB_MS}={})=>call('POST','/v1/chat',payload,{signal,timeoutMs}),
+  chat:(payload,{signal,timeoutMs=INFERENCE_BUDGETS.clientMs}={})=>call('POST','/v1/chat',payload,{signal,timeoutMs}),
  };
 }
 

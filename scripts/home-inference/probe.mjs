@@ -8,13 +8,15 @@
 //   KFM_HOME_INFERENCE_PROFILE=kfm-default-chat KFM_HOME_INFERENCE_DIGEST=sha256:... \
 //   [KFM_HOME_INFERENCE_ACCESS_ID=... KFM_HOME_INFERENCE_ACCESS_SECRET=...] \
 //   node probe.mjs [--runs 3] [--depth brief|expanded] [--concurrency 2]
+import {INFERENCE_BUDGETS} from './budgets.mjs';
+import {deadlineFetch} from './deadline-fetch.mjs';
 import {randomUUID} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {signRequest,newSecret,verifyResponse} from './signature.mjs';
 
 const SYNTHETIC=['In two sentences, explain what a county seat is.','Give three general reasons rivers change course over time.','Briefly explain the difference between weather and climate.'];
 
-export async function probe({env=process.env,runs=3,depth='brief',concurrency=2,fetchImpl=fetch,clock=Date.now}={}){
+export async function probe({env=process.env,runs=3,depth='brief',concurrency=2,fetchImpl=deadlineFetch,clock=Date.now}={}){
  const origin=new URL(env.KFM_HOME_INFERENCE_URL).origin,keyId=env.KFM_HOME_INFERENCE_KEY_ID,secret=env.KFM_HOME_INFERENCE_SECRET;
  const profile=env.KFM_HOME_INFERENCE_PROFILE,digest=env.KFM_HOME_INFERENCE_DIGEST;
  const access=env.KFM_HOME_INFERENCE_ACCESS_ID?{'CF-Access-Client-Id':env.KFM_HOME_INFERENCE_ACCESS_ID,'CF-Access-Client-Secret':env.KFM_HOME_INFERENCE_ACCESS_SECRET??''}:{};
@@ -24,7 +26,7 @@ export async function probe({env=process.env,runs=3,depth='brief',concurrency=2,
   const auth=sign?signRequest({keyId,secret,method,path,body,now:clock(),...signing}):{};
   const started=clock();
   try{
-   const response=await fetchImpl(origin+path,{method,redirect:'manual',signal:AbortSignal.timeout(120000),headers:{...(withAccess?access:{}),...auth,...(body?{'Content-Type':'application/json'}:{}),...headers},body:body||undefined});
+   const response=await fetchImpl(origin+path,{method,redirect:'manual',signal:AbortSignal.timeout(INFERENCE_BUDGETS.clientMs),headers:{...(withAccess?access:{}),...auth,...(body?{'Content-Type':'application/json'}:{}),...headers},body:body||undefined});
    const bytes=Buffer.from(await response.arrayBuffer());
    const authenticated=bytes.length<=65536&&sign&&verifyResponse({secret,requestHeaders:auth,method,path,requestBody:body,status:response.status,body:bytes,headers:response.headers});
    let value=null;try{if(bytes.length<=65536)value=JSON.parse(bytes.toString('utf8'));}catch{}

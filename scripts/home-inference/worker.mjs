@@ -14,8 +14,11 @@ import {pathToFileURL} from 'node:url';
 import {setTimeout as sleep} from 'node:timers/promises';
 import {decodeSecret,signRequest,isSystemdCredentialDirectory,RESPONSE_SIGNATURE_HEADER,SIGNATURE_HEADERS} from './signature.mjs';
 
+import {INFERENCE_BUDGETS} from './budgets.mjs';
+import {deadlineFetch} from './deadline-fetch.mjs';
+
 export const WORKER_VERSION='kfm-home-worker/1';
-export const WORKER_LIMITS=Object.freeze({leaseMs:30000,siteMs:15000,relayMs:230000,statusEveryMs:5000,leaseBytes:65536,replyBytes:65536,backoffMinMs:1000,backoffMaxMs:60000});
+export const WORKER_LIMITS=Object.freeze({leaseMs:30000,siteMs:15000,relayMs:INFERENCE_BUDGETS.workerMs,statusEveryMs:5000,leaseBytes:65536,replyBytes:65536,backoffMinMs:1000,backoffMaxMs:60000});
 // Only the gateway's two routes, and only these request headers, ever reach the gateway.
 const ROUTES=new Map([['/v1/health','GET'],['/v1/chat','POST']]);
 const FORWARD=[SIGNATURE_HEADERS.keyId,SIGNATURE_HEADERS.timestamp,SIGNATURE_HEADERS.nonce,SIGNATURE_HEADERS.signature,'content-type'];
@@ -67,7 +70,7 @@ export function validLease(value){
  return Object.entries(headers).every(([name,header])=>FORWARD.includes(name)&&typeof header==='string'&&header.length<=200&&!/[\r\n]/.test(header));
 }
 
-export function createWorker({site,gateway,keyId,secret,fetchImpl=fetch,clock=Date.now,log=line=>console.log(JSON.stringify(line))}){
+export function createWorker({site,gateway,keyId,secret,fetchImpl=deadlineFetch,clock=Date.now,log=line=>console.log(JSON.stringify(line))}){
  const record=(event,fields={})=>{try{log({at:new Date(clock()).toISOString(),event,...fields});}catch{}};
  const post=(path,payload,timeoutMs,signal)=>{
   const body=JSON.stringify(payload);

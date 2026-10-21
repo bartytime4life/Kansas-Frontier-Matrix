@@ -9,8 +9,10 @@ import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createNonceCache,decodeSecret,newSecret,verifyRequest,signResponse,isSystemdCredentialDirectory,RESPONSE_SIGNATURE_HEADER} from './signature.mjs';
 
+import {INFERENCE_BUDGETS} from './budgets.mjs';
+
 export const GATEWAY_VERSION='kfm-home-inference/1';
-export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,replyBytes:16384,chatMs:210000});
+export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,replyBytes:16384,chatMs:INFERENCE_BUDGETS.runMs});
 const DEPTHS=['brief','expanded'];
 const ROLES=['system','user','assistant'];
 const OPTION_KEYS=['temperature','top_p','top_k','min_p','repeat_penalty','presence_penalty','frequency_penalty','seed'];
@@ -98,6 +100,7 @@ export function createAdmission({concurrency=1,maxQueue=2}={}){
  const release=()=>{let done=false;return ()=>{if(done)return;done=true;active--;drain();};};
  return {
   get active(){return active;},
+  get concurrency(){return concurrency;},
   get queued(){return waiting.length;},
   updateLimits({concurrency:nextConcurrency,maxQueue:nextMaxQueue}){
    // Accepted work retains its slots and FIFO order. Lower limits apply as it
@@ -307,7 +310,7 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
   const inspection=await inspector();
   const profiles=[...profileSnapshot.values()].filter(p=>p.scopes.includes(scope)).map(p=>({
    id:p.id,label:p.label,model:p.model,digest:'sha256:'+p.digest,license:p.license,capabilities:[...p.capabilities],
-   contextTokens:p.contextTokens,maxInputChars:p.maxInputChars,outputTokens:{...p.outputTokens},
+   contextTokens:p.contextTokens,maxInputChars:p.maxInputChars,outputTokens:{...p.outputTokens},timeoutMs:{...p.timeoutMs},
    ready:inspection.state.get(p.id)===null,reason:inspection.state.get(p.id)??null,
   }));
   return {gateway:GATEWAY_VERSION,online:inspection.online,runtime:inspection.runtime?{name:'ollama',version:inspection.runtime}:null,active:admission.active,queued:admission.queued,profiles};
@@ -323,10 +326,14 @@ export function createGateway({profiles:profileConfig,keys,ollamaUrl='http://127
   const controller=new AbortController(),timeout=request.profile.timeoutMs[request.depth];
   const abort=()=>controller.abort();signal.addEventListener('abort',abort,{once:true});
   if(signal.aborted)controller.abort();
-  // One deadline covers waiting, fresh identity inspection and generation.
-  const timer=setTimeout(()=>controller.abort(),timeout);active.add(controller);
+  // Waiting receives a bounded allowance for each occupied wave ahead. A
+  // visitor's own inspection/generation budget starts only after admission.
+  const waves=Math.ceil((admission.active+admission.queued)/admission.concurrency);
+  const queueBudget=Math.min(INFERENCE_BUDGETS.queueMs,waves*INFERENCE_BUDGETS.queueSlotMs);
+  let timer=setTimeout(()=>controller.abort(),queueBudget);active.add(controller);
   try{
    release=await admission.enter(controller.signal);
+   clearTimeout(timer);timer=setTimeout(()=>controller.abort(),timeout);
    record.queueMs=clock()-queuedAt;
    const ready=(await untilAbort(inspect({fresh:true}),controller.signal)).state.get(request.profile.id);
    if(ready!==null)throw fail(ready==='MODEL_UNAVAILABLE'?'MODEL_UNAVAILABLE':'PROFILE_NOT_READY',503);

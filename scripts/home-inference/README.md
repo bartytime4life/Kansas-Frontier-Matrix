@@ -48,8 +48,11 @@ Each step below is something the owner runs deliberately on the home PC.
 - One generation at a time with a short bounded queue (`429 GATEWAY_BUSY` beyond it).
   A caller that disconnects cancels its generation. At the time limit the reply so far
   comes back marked length-limited; the visitor can choose to continue it.
-  Each profile is limited to 90000 ms, covering queue wait, readiness inspection
-  and generation together. Expired queued work never starts generation.
+  Each profile permits at most 210000 ms for readiness inspection and generation.
+  Queue waiting has its own allowance: up to 215000 ms per occupied wave ahead,
+  capped at 430000 ms. Waiting does not consume the accepted run budget; cancellation
+  and queue expiry still prevent generation. Keep concurrency 1 and maxQueue 2 on
+  the GTX 1060 to avoid sharing its limited VRAM.
 - An over-long prompt is refused (`MODEL_CONTEXT_LIMIT`) rather than letting
   Ollama silently truncate it. Model "thinking" text is never returned.
   Before generation, the gateway reads `/api/show` thinking controls so an
@@ -154,17 +157,27 @@ The probe exits non-zero unless every refusal check passes, the pinned digest
 matches and the synthetic chats complete. Keep the receipt privately. It records
 this path at this time; it is not a capacity or quality guarantee.
 
-**Gateway deadline.** The parser refuses profile `timeoutMs` values over 90000;
+**Gateway deadline.** The parser refuses profile `timeoutMs` values over 210000;
 this is an application limit independent of the transport provider's timeout.
 Ollama's `outputTokens` allowance includes private reasoning as well as the
-answer. The example allows 1024 tokens for brief replies and 2048 for expanded
+answer. The example allows 1024 tokens for brief replies and 4096 for expanded
 replies so an always-thinking model can reach its answer. The gateway separately
-caps visible answers at public chat's 4096-byte limit, preserving UTF-8 and
+caps visible answers at public chat's 16384-byte limit, preserving UTF-8 and
 returning longer answers as partials that the visitor can continue. Hidden
 reasoning never becomes a partial answer. Keep the deadline bounded for the PC.
 
-**Compatibility and activation.** Update `gateway.mjs`, `signature.mjs` and
-`probe.mjs` together on the inference PC before selecting the home provider on
+**Coordinated limits.** `budgets.mjs` allows up to 640 seconds through the gateway,
+650 through the relay, 660 through the PC worker and 670 through the hosted client.
+Each public job has 700 seconds once running. Admission reserves another 700
+seconds per pending connection ahead, up to three accepted jobs / 35 minutes total.
+Finished results are retained for 15 minutes after completion; active jobs survive
+that retention interval until their bounded deadline. Health/offline detection,
+request-body limits and cancellation polling keep their shorter limits.
+These allowances apply to outbound poll transport; an HTTPS tunnel may impose a
+shorter independent provider limit. They do not change provider limits.
+
+**Compatibility and activation.** Update `budgets.mjs`, `gateway.mjs`, `worker.mjs`,
+`signature.mjs`, `deadline-fetch.mjs` and `probe.mjs` together on the inference PC before selecting the home provider on
 the server. The new server refuses an older unsigned gateway; it never falls
 back to another provider. Updating repository source does not install the kit,
 change the GoDaddy application, select home inference, configure a tunnel or
@@ -218,7 +231,10 @@ Logs (`journalctl -u kfm-inference-worker`) carry fixed codes and timings only.
 - Revoke the KFM server's access: remove its key entry and restart the gateway.
 - Model weights, receipts and logs are left in place; delete nothing as part of a rollback.
 
-## Longer-answer candidate — 2026-10-21
+## Earlier longer-answer preparation — 2026-10-21
+
+The queue-aware extension above supersedes the timing values in this earlier
+preparation record. Its larger UTF-8/output limits remain in place.
 
 This source revision raises the website/gateway UTF-8 reply ceiling from
 4,096 to 16,384 bytes, including the cumulative continuation ceiling. Export

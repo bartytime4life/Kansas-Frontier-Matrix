@@ -109,17 +109,21 @@ test('profiles accept the longer poll deadline while rejecting excess or invalid
   assert.throws(()=>parseProfiles({profiles:[profile({timeoutMs:{brief:500,expanded:500,[depth]:value}})]}),/PROFILE_INVALID/);
 });
 
-test('queue waiting consumes the same deadline and expired work never reaches Ollama',async()=>{
- const f=fixture({hold:true,profileOverrides:{timeoutMs:{brief:40,expanded:1000}}}),abort=new AbortController();
+test('queue waiting preserves a full generation budget',async()=>{
+ const f=fixture({hold:true,profileOverrides:{timeoutMs:{brief:100,expanded:1000}}}),abort=new AbortController();
  const first=f.client.chat(payload({depth:'expanded'}),{signal:abort.signal});
- const cancelled=assert.rejects(first,/MODEL_CANCELLED/);
- while(!f.runtime.generations.length)await tick();
+ await waitFor(()=>f.runtime.generations.length===1);
+ const second=f.client.chat(payload());
  try{
-  await assert.rejects(f.client.chat(payload()),/MODEL_TIMEOUT/);
-  assert.equal(f.gateway.admission.queued,0);assert.equal(f.gateway.admission.active,1);
-  assert.equal(f.runtime.generations.length,1);
- }finally{abort.abort();await cancelled;await tick();}
- assert.equal(f.gateway.admission.active,0);assert.equal(f.runtime.generations[0].signal.aborted,true);
+  await waitFor(()=>f.gateway.admission.queued===1);
+  await new Promise(resolve=>setTimeout(resolve,150));
+  assert.equal(f.gateway.admission.queued,1,'waiting longer than its own run budget is allowed');
+  f.runtime.generations[0].finish();await first;
+  await waitFor(()=>f.runtime.generations.length===2);
+  f.runtime.generations[1].finish();
+  assert.equal((await second).text,'Synthetic reply');
+ }finally{abort.abort();f.gateway.abortAll();}
+ assert.equal(f.gateway.admission.active,0);
 });
 
 test('fresh identity inspection is inside the deadline and releases its admission slot',async()=>{

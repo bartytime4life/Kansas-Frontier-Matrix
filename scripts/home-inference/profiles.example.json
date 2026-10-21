@@ -13,7 +13,7 @@
       "contextTokens": 8192,
       "maxInputChars": 16000,
       "outputTokens": { "brief": 1024, "expanded": 4096 },
-      "timeoutMs": { "brief": 60000, "expanded": 180000 },
+      "timeoutMs": { "brief": 90000, "expanded": 180000 },
       "options": { "temperature": 0.5, "top_p": 0.9, "top_k": 40, "repeat_penalty": 1.1 },
       "think": false,
       "keepAlive": "30m"

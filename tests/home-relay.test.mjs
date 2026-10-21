@@ -9,6 +9,10 @@ import {parseProfiles,parseKeys,startGateway} from '../scripts/home-inference/ga
 import {createWorker,loadWorkerConfig,validLease} from '../scripts/home-inference/worker.mjs';
 import {createHomeRelay,RELAY_LIMITS} from '../server/home-relay.mjs';
 import {homeInferenceConfig,createRelayClient,HomeInferenceModel,homeWorkerRuntime} from '../server/home-inference.mjs';
+import {GATEWAY_LIMITS} from '../scripts/home-inference/gateway.mjs';
+import {WORKER_LIMITS} from '../scripts/home-inference/worker.mjs';
+import {INFERENCE_BUDGETS} from '../scripts/home-inference/budgets.mjs';
+import {PUBLIC_AI_JOB_MS,PUBLIC_AI_MAX_LIFETIME_MS} from '../server/hosted-ai.mjs';
 
 const DIGEST='c'.repeat(64),gatewaySecret=newSecret(),workerSecret=newSecret();
 const SITE='https://kansasfrontiermatrix.com';
@@ -52,6 +56,32 @@ async function setup({hold,limits=fast}={}){
  return {relay,worker,running,ollama,logs,diagnostics,signedPost,close,gatewayOrigin};
 }
 const chatPayload=()=>({requestId:randomUUID(),profile:'kfm-default-chat',depth:'brief',messages:[{role:'system',content:'You are KFM.'},{role:'user',content:'Synthetic question?'}]});
+
+test('transport deadlines leave room for a full gateway queue and generation',()=>{
+ assert.ok(GATEWAY_LIMITS.chatMs+INFERENCE_BUDGETS.queueMs<=RELAY_LIMITS.leasedMs['/v1/chat']);
+ assert.ok(RELAY_LIMITS.leasedMs['/v1/chat']<WORKER_LIMITS.relayMs);
+ assert.ok(WORKER_LIMITS.relayMs<INFERENCE_BUDGETS.clientMs);
+ assert.ok(INFERENCE_BUDGETS.clientMs<PUBLIC_AI_JOB_MS);
+ assert.equal(PUBLIC_AI_MAX_LIFETIME_MS,PUBLIC_AI_JOB_MS*3);
+});
+
+test('another connection waits behind a leased chat beyond the offline lease timeout',async()=>{
+ let release;const hold=new Promise(resolve=>{release=resolve;});
+ const s=await setup({hold});
+ const client=createRelayClient({relay:s.relay,secret:gatewaySecret});
+ let first,second;
+ try{
+  s.running.start();first=client.chat(chatPayload());
+  for(let i=0;i<100&&!s.ollama.calls.includes('/api/chat');i++)await new Promise(resolve=>setTimeout(resolve,5));
+  assert.ok(s.ollama.calls.includes('/api/chat'));
+  second=client.chat(chatPayload());
+  await new Promise(resolve=>setTimeout(resolve,fast.unleasedMs+100));
+  assert.equal(s.relay.queued,1,'known busy worker keeps the waiting connection');
+  release();
+  assert.equal((await first).text,'Relayed reply.');
+  assert.equal((await second).text,'Relayed reply.');
+ }finally{release();await Promise.allSettled([first,second].filter(Boolean));await s.close();}
+});
 
 test('poll transport needs a separate worker key and no inbound URL',()=>{
  const config=homeInferenceConfig(env);

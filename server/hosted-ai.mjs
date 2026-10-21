@@ -1,7 +1,8 @@
 // Shared discussion budgets and output checks used by home inference.
 // The former embedded GoDaddy model loader is retired; this module performs no inference.
-export const PUBLIC_AI_JOB_MS=270000;
-export const PUBLIC_AI_MAX_LIFETIME_MS=3*PUBLIC_AI_JOB_MS;
+import {INFERENCE_BUDGETS} from '../scripts/home-inference/budgets.mjs';
+export const PUBLIC_AI_JOB_MS=INFERENCE_BUDGETS.jobMs;
+export const PUBLIC_AI_MAX_LIFETIME_MS=INFERENCE_BUDGETS.publicSlots*PUBLIC_AI_JOB_MS;
 export {CONTINUE_REPLY} from './hosted-ai-prompt.mjs';
 
 export function hasRepeatedPhrase(value){
