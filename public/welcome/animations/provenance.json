@@ -1,0 +1,122 @@
+{
+  "kind": "RECORDED_EXPLORER_DERIVATIVE",
+  "authority": "NONE",
+  "live": false,
+  "fps": 10,
+  "width": 960,
+  "sourceRecord": "scripts/welcome-demos/runtime-assets.json",
+  "files": [
+    {
+      "source": "/welcome/demos/farming-1.webm",
+      "sourceSha256": "2152826917b3296aed6828a9798abf8a0eb5dd093679daf6af6e67e1a8bea626",
+      "delivery": "/welcome/animations/farming-1.webp",
+      "sha256": "c987be99084ebc3309cb889bfc46194fe614271fe666454a59615fce978699c1",
+      "bytes": 1118232
+    },
+    {
+      "source": "/welcome/demos/farming-2.webm",
+      "sourceSha256": "2353170e05c7fc9c034f73fbdc8e9368c6b0f3a7bab7e9bff9c109aca1e9fa91",
+      "delivery": "/welcome/animations/farming-2.webp",
+      "sha256": "f763de7d309dd4d2ab51b4d49113516e9743fd15674dce8ce0bd0c7fb892c4e2",
+      "bytes": 3062632
+    },
+    {
+      "source": "/welcome/demos/government-1.webm",
+      "sourceSha256": "060ffb9dfabc749ee9a57012c6315cd0a48cfcc5e9503d8ec78779aeaad50492",
+      "delivery": "/welcome/animations/government-1.webp",
+      "sha256": "5f1c491ecf3b9dbfafbfacdd6e879693a3f4a420a56b6de4c294f171571beb72",
+      "bytes": 2299684
+    },
+    {
+      "source": "/welcome/demos/government-2.webm",
+      "sourceSha256": "662ef39df0f486a6a6a460601eb28d8852194feea76fcf08e7617e0fc9c499c6",
+      "delivery": "/welcome/animations/government-2.webp",
+      "sha256": "f503831a1ce7c6f88b88583291b49c9b6d685fd69001821244c86bbe297da440",
+      "bytes": 2408918
+    },
+    {
+      "source": "/welcome/demos/history-1.webm",
+      "sourceSha256": "a7be2b67e62b357f981e89dfa8efda2fb85bdd43ea173013954f952221ba3a72",
+      "delivery": "/welcome/animations/history-1.webp",
+      "sha256": "a4f4aac23ebfdaab5dfd327ed6d13ef2da9af8a1ff9c20a8588cf7ccc77f02eb",
+      "bytes": 2738694
+    },
+    {
+      "source": "/welcome/demos/history-2.webm",
+      "sourceSha256": "42d5dfc2c6b7bd5396a680bb1d4ac0c6dafbc64c4e1d791a249a28d4fba6d177",
+      "delivery": "/welcome/animations/history-2.webp",
+      "sha256": "28025b39146297519922060e88f986c011c68c1ae5178a849a82b3d47fe14261",
+      "bytes": 2476450
+    },
+    {
+      "source": "/welcome/demos/rivers-1.webm",
+      "sourceSha256": "d25098e66f9ab5f6f120783eec0fdedba15fea2c018a0bca71f55bbf13fc85b5",
+      "delivery": "/welcome/animations/rivers-1.webp",
+      "sha256": "f8cbf86baf2bd59e7626bff56dccf27312154aaafa4574c0000b1ce8a7572851",
+      "bytes": 5271410
+    },
+    {
+      "source": "/welcome/demos/rivers-2.webm",
+      "sourceSha256": "1362f1cd4aae6223058c98dd1fd4677b5ed30e421fada3ab8bdfed510ee11ac3",
+      "delivery": "/welcome/animations/rivers-2.webp",
+      "sha256": "bc4596a2c9eae10ec63bd6a23360e520c30737a3d632431b7dceec43c3a89b6a",
+      "bytes": 4332632
+    },
+    {
+      "source": "/welcome/demos/science-1.webm",
+      "sourceSha256": "dd9da6c64ce5b55ae970be943b03ee361f604d8521ea5a0b9ef2f692dfd7635d",
+      "delivery": "/welcome/animations/science-1.webp",
+      "sha256": "a878c607d783982c7a53bd70a804a4e5d0ff15d444002c143dadde876c2de541",
+      "bytes": 2250742
+    },
+    {
+      "source": "/welcome/demos/science-2.webm",
+      "sourceSha256": "b6267d782fe560dac56135bd0ca6dae7503665ba81b9c9b3631f7cf1570716a5",
+      "delivery": "/welcome/animations/science-2.webp",
+      "sha256": "d6149d0c5c72e545bf577a5e89732007808778414d56106c127fceef1a00a5e1",
+      "bytes": 1631200
+    },
+    {
+      "source": "/welcome/demos/transport-1.webm",
+      "sourceSha256": "cd21ff60f0cf0cfb22576f69cd6171b0023b3d15f512fb5f7cac694655e876ae",
+      "delivery": "/welcome/animations/transport-1.webp",
+      "sha256": "934f26228fad5178434fa6bdf51b5219a90f8cc135be602d42755111fce08c75",
+      "bytes": 5033570
+    },
+    {
+      "source": "/welcome/demos/transport-2.webm",
+      "sourceSha256": "86acb0d7b504eb4db4f25762bb55e3a948bb23df6bfc4478b1a69e9271928a79",
+      "delivery": "/welcome/animations/transport-2.webp",
+      "sha256": "f355cffe540cf06a7af8dcab937ec7de6acbb711186befe35c37ad466d58e7cc",
+      "bytes": 5219634
+    },
+    {
+      "source": "/welcome/demos/underground-1.webm",
+      "sourceSha256": "0e04a1ef66b2a069674ef80f1f145e2312f42bf2d09e47deaa344998455f3439",
+      "delivery": "/welcome/animations/underground-1.webp",
+      "sha256": "65c30ca3f5f517742197221456e9257ca1845826d238ced76b6f42bdb1c53e81",
+      "bytes": 3736860
+    },
+    {
+      "source": "/welcome/demos/underground-2.webm",
+      "sourceSha256": "acdb51c02098fdeaa4235f49f08fd3047b0ce3f9a559077f536c2ab072de0234",
+      "delivery": "/welcome/animations/underground-2.webp",
+      "sha256": "997e231ce978c90025fe40fe96222d1f4c2368ba79b3256453c6b0f6a7030f06",
+      "bytes": 3838422
+    },
+    {
+      "source": "/welcome/demos/weather-1.webm",
+      "sourceSha256": "7c307d8b69fd8899088d45cd5e312b79ac58f5c1e16232afdb1737d51148208e",
+      "delivery": "/welcome/animations/weather-1.webp",
+      "sha256": "70f5dcfa24a8603db85a3ce4030a8714f0421c6a809ff9be4e663d78f280e9a6",
+      "bytes": 224840
+    },
+    {
+      "source": "/welcome/demos/weather-2.webm",
+      "sourceSha256": "4ac234c3901a8fb9ff15b6f5c9a3d89348d2160092814d5504884a2ce41d4c37",
+      "delivery": "/welcome/animations/weather-2.webp",
+      "sha256": "45e10b86156fca88cc85b0599c9715033334fa85ba374ff4394e3316610ec369",
+      "bytes": 723934
+    }
+  ]
+}
