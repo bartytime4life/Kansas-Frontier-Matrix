@@ -2,11 +2,11 @@
 doc_id: kfm://doc/root-readme
 title: Kansas Frontier Matrix — Project Home
 type: repository-readme
-version: v3.4.0
+version: v3.5.0
 status: repository-grounded draft
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-10-17
+updated: 2026-10-21
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -15,7 +15,8 @@ truth_posture: cite-or-abstain; implementation claims require pinned repository 
 evidence_snapshot:
   repository: bartytime4life/Kansas-Frontier-Matrix
   base_ref: main
-  base_commit: 7d79ce10ace694e3bedb5e1a01b96bd479759577
+  base_commit: 91ca0314f0158736f69f953d7973457c19442fde
+hosted_evidence_commit: 65d5657536e4c42a7a8ea0772ed12ca0b78bc939
 related:
   - docs/doctrine/directory-rules.md
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
@@ -29,6 +30,7 @@ related:
   - apps/site/README.md
   - docs/brand/readme/README.md
 notes:
+  - "v3.5.0 reconciles public-app source, anonymous remote AI, investigation drafts, capture controls and held aviation against the two pinned October 21 trees. Earlier illustrations and historical maturity records retain their original evidence scope."
   - "v3.4.0 adds an animated Explorer walkthrough, Focus Mode gate trace, layer stack, capability board built from apps/site/source/app/site-features.ts, trust-membrane diagram, by-the-numbers row, four more feature cards, guided explorations, an FAQ, theme-aware dark variants and section dividers. All figures are counted from the repository at the evidence commit; all artwork stays illustrative."
   - "v3.3.0 was a visitor-first showcase refresh: illustrated feature tour, time-depth and source-lane graphics, and a build-status summary. Feature descriptions are drawn from the linked Site guides at the evidence commit; they do not add runtime, admission, release, or publication claims."
   - "All imagery under docs/brand/readme/ is illustrative artwork, not screenshots, map products, or data displays. Animations are slow, decorative-only, and stop under prefers-reduced-motion."
@@ -45,7 +47,7 @@ notes:
 # Kansas Frontier Matrix
 
 <p align="center">
-  <strong>Pick a place in Kansas. Scrub through two centuries. See exactly where every answer came from.</strong><br />
+  <strong>Explore a place in Kansas. Compare its source dates. Inspect what supports the result.</strong><br />
   A map-first, time-aware, evidence-first atlas of Kansas — built in the open.
   KFM's design goals are Kansas-first scope, auditable evidence, and reversible changes.
 </p>
@@ -53,7 +55,7 @@ notes:
 <p align="center">
   <a href="#see-it-in-action"><img src="https://img.shields.io/badge/Watch-60--second%20walkthrough-0b1f3a?style=for-the-badge" alt="Watch the walkthrough" /></a>
   <a href="#take-the-tour"><img src="https://img.shields.io/badge/Tour-10%20workspaces-2f6f4e?style=for-the-badge" alt="Take the tour of ten workspaces" /></a>
-  <a href="#where-the-data-comes-from"><img src="https://img.shields.io/badge/Sources-7%20themes%20%C2%B7%20104%20lanes-1f3a66?style=for-the-badge" alt="Seven data themes and 104 connector lanes" /></a>
+  <a href="#where-the-data-comes-from"><img src="https://img.shields.io/badge/Sources-provider%20context%20%2B%20capture%20lanes-1f3a66?style=for-the-badge" alt="Provider context and source capture lanes" /></a>
   <a href="#travel-through-time"><img src="https://img.shields.io/badge/Time%20depth-1800%20%E2%86%92%20today-8e5a2a?style=for-the-badge" alt="Time depth from 1800 to today" /></a>
 </p>
 
@@ -70,7 +72,7 @@ notes:
   <a href="#things-to-try">Things to try</a> ·
   <a href="https://kansasfrontiermatrix.com">Website</a> ·
   <a href="docs/runbooks/godaddy-node-hosting.md">Live Explorer source + hosting</a> ·
-  <a href="apps/site/README.md">Explorer source</a> ·
+  <a href="docs/runbooks/godaddy-node-hosting.md#implementation-snapshot-2026-10-21">Current Explorer implementation</a> ·
   <a href="#faq">FAQ</a> ·
   <a href="CONTRIBUTING.md">Contribute</a>
 </p>
@@ -81,6 +83,27 @@ notes:
 <p align="center">
   <img src="docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
 </p>
+
+## Which source should I use?
+
+Reviewed on **October 21, 2026** against monorepo
+[`91ca0314`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/91ca0314f0158736f69f953d7973457c19442fde)
+and standalone hosted application
+[`65d56575`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/65d5657536e4c42a7a8ea0772ed12ca0b78bc939).
+These are source checkpoints; the current Published revision and live model
+configuration were not reverified in this documentation review.
+
+| Work | Source and boundary |
+|---|---|
+| Public Explorer, chat, map controls and application routes | **`a0-hosted-ai-web-20261017`**, a separate standalone tree with `app/`, `server/` and its own npm lockfile at root. Use the [implementation snapshot and source links](docs/runbooks/godaddy-node-hosting.md#implementation-snapshot-2026-10-21). |
+| Ingestion adapters, contracts, schemas, validators and release support | **`main`**, this monorepo. Its root build/test scripts intentionally report `WORKFLOW_HOLD`; they do not build the public app. |
+| Preserved Sites application | [`apps/site/source/`](apps/site/README.md), with separate preservation, mirror and local-serving checks. It is not the public Node app's current source. |
+| Earlier static front door | [`apps/public-site/`](apps/public-site/README.md), retained for build/review. Its static deployment job is retired; the GoDaddy Node app is the intended production path. |
+
+The tour below illustrates shared capabilities using preserved Sites guides.
+For current public-app behavior, use the pinned hosted source and its guides.
+Private contribution/steward pages and the old visitor-local Qwen bridge belong
+to that earlier lineage; they are absent from the current public composition.
 
 ## See it in action
 
@@ -93,10 +116,6 @@ From a place to a shareable, evidence-bounded result in eight moves. The walkthr
 | <kbd>1</kbd> Map | <kbd>2</kbd> Area | <kbd>3</kbd> Layers | <kbd>4</kbd> Time | <kbd>5</kbd> Inspect | <kbd>6</kbd> Evidence | <kbd>7</kbd> Report | <kbd>8</kbd> Share |
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 | Open on real county and water sources | Frame a place and choose **Show this area** | Turn on gauges, radar, geology, roads… | Sweep from 1800 or step through an archive | Click a gauge, quake or log interval | See source, clocks, role and limits | **New from map** builds a draft | Share the view, protected detail withheld |
-
-<p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-by-the-numbers-dark.svg" /><img src="docs/brand/readme/kfm-by-the-numbers.svg" alt="By the numbers: 23 Explorer features in the Site registry; 104 connector lanes; 314,844 water-well records and 6,598 core locations in Underground 3D; 105 Kansas counties; 1800, the first year on the map clock." width="100%" /></picture>
-</p>
 
 ## Why KFM
 
@@ -120,7 +139,7 @@ KFM's public value is not a bigger pile of layers. It is a more trustworthy path
 
 ## Take the tour
 
-The KFM Explorer is a MapLibre-based web app (source in [`apps/site/`](apps/site/README.md)). These ten workspaces exist in the source today. Each picture is an **illustration** of the workspace, not a screenshot — follow the links for the real behavior, tests and limits.
+The KFM Explorer is a MapLibre-based web app. These ten illustrated workspaces link to the preserved [Sites guides](apps/site/README.md); the [public Node implementation](docs/runbooks/godaddy-node-hosting.md#implementation-snapshot-2026-10-21) has its own source and current behavior records. Each picture is an **illustration**, not a screenshot or current acceptance evidence.
 
 <table>
   <tr>
@@ -175,7 +194,7 @@ The KFM Explorer is a MapLibre-based web app (source in [`apps/site/`](apps/site
   </tr>
 </table>
 
-**Also in the Explorer:** a first-visit quick start (reopen it with the **?** button), a Kansas orientation outline that still draws when the online basemap is unreachable, a searchable layer catalog, a priority context deck, pinned place dossiers, an Earth Engine catalog with downloadable Kansas recipes, a private data-contribution and steward-review desk, 2D / Terrain 3D / Globe representations with natural and topographic relief and mapped 3D buildings, and an opt-in **local** Qwen companion that reads only a bounded context and never becomes a source of evidence. See the [feature matrix](docs/encyclopedia/chapters/09-master-feature-matrix.md) and the [feature, connection and action map](apps/site/source/docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md).
+**Also in the Explorer:** a first-visit quick start (reopen it with the **?** button), a Kansas orientation outline that still draws when the online basemap is unreachable, a searchable layer catalog, a priority context deck, pinned place dossiers, an Earth Engine catalog with downloadable Kansas recipes, 2D / Terrain 3D / Globe representations with natural and topographic relief and mapped 3D buildings. The public app adds anonymous, context-aware AI through its paired home-Ollama provider; browser clients use the website, and generated discussion stays unverified. Private contribution/steward pages and the earlier visitor-local Qwen companion are historical Sites features. See the [feature matrix](docs/encyclopedia/chapters/09-master-feature-matrix.md) and the [feature, connection and action map](apps/site/source/docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md).
 
 ### One place, many layers
 
@@ -204,7 +223,7 @@ Focus Mode is a **bounded proof** today: it runs against site-local demonstratio
 
 ## Things to try
 
-Run the Explorer locally ([two commands below](#try-it-yourself)) and try one of these — or press the **?** button for the built-in quick start. Labels in **bold** are the controls you'll see.
+Use the [source-specific setup below](#try-it-yourself), then try one of these shared workflows. These examples follow the preserved Sites guides; public-app labels and navigation can differ. Labels in **bold** name the controls described by those guides.
 
 <details>
 <summary>⛈️ <b>Replay a storm, hour by hour</b></summary>
@@ -288,15 +307,15 @@ Every source has its own reach into the past, and KFM keeps those reaches honest
 
 KFM draws on public data from federal, state, university and community sources. They reach KFM in two different ways, and the difference matters:
 
-- **Live context in the Explorer (today).** The Explorer's layer catalog connects to a fixed allowlist of official providers — sixteen source-specific Kansas connections plus soil moisture and the Observatory's archive carriers. These render as attributed *external context*: visible, inspectable, never silently promoted to evidence.
-- **Connector lanes in this repository (being built).** The [`connectors/`](connectors/README.md) root holds 104 source-specific lane directories (some are aliases or umbrella lanes). A lane is where capture, parsing and admission code for one source lives; a lane existing does not mean the source is active, admitted or published.
+- **Provider context in the Explorer.** Fixed provider adapters supply attributed *external context*, with source clocks, loading/partial/empty/error states and source-specific holds. An available adapter does not prove a current successful response or complete Kansas coverage. See the [current implementation snapshot](docs/runbooks/godaddy-node-hosting.md#implementation-snapshot-2026-10-21).
+- **Connector lanes in this repository (being built).** The [`connectors/`](connectors/README.md) root holds 108 direct-child lane directories at the pinned main checkpoint (some are aliases or umbrella lanes). A lane is where capture, parsing and admission code for one source lives; a lane existing does not mean the source is active, admitted or published.
 
 <details>
-<summary><strong>Browse sources by theme</strong> — what is live in the Explorer and what has a connector lane</summary>
+<summary><strong>Browse sources by theme</strong> — provider capabilities described by the preserved guides and repository connector lanes</summary>
 
 <br />
 
-| Theme | Live in the Explorer today (external context) | Connector lanes in the repository |
+| Theme | Provider capabilities in the source guides (external context) | Connector lanes in the repository |
 |---|---|---|
 | 🌊 **Water** | USGS River Pulse streamflow · NOAA NWPS gauges + forecasts · USGS 3DHP hydrography · USGS/NRCS WBD watersheds · NOAA National Water Model analysis + 18-hour outlook | [`usgs`](connectors/usgs/) · [`noaa`](connectors/noaa/) · [`kgs_kdhe_wwc5`](connectors/kgs_kdhe_wwc5/) · [`drought-monitor`](connectors/drought-monitor/) · [`nrcs-scan`](connectors/nrcs-scan/) |
 | 🌩️ **Sky & air** | NOAA nowCOAST radar loops · IEM radar archive (1995+) · NOAA HMS smoke · NWS alert areas · NASA GIBS NOAA-20 thermal detections · GOES imagery · GFS forecast wind flow | [`nws-api`](connectors/nws-api/) · [`noaa-hms-smoke`](connectors/noaa-hms-smoke/) · [`hrrr_smoke`](connectors/hrrr_smoke/) · [`goes_abi_aod`](connectors/goes_abi_aod/) · [`viirs_hotspot`](connectors/viirs_hotspot/) · [`nasa-firms`](connectors/nasa-firms/) · [`airnow`](connectors/airnow/) · [`epa_aqs`](connectors/epa_aqs/) · [`openaq`](connectors/openaq/) · [`kansas_mesonet`](connectors/kansas_mesonet/) · [`noaa-uscrn`](connectors/noaa-uscrn/) · [`noaa-storm-events`](connectors/noaa-storm-events/) |
@@ -306,7 +325,7 @@ KFM draws on public data from federal, state, university and community sources. 
 | 📜 **History & people** | Census 2020 county population and housing · USGS historical mine-map editions (1934–1996) · USGS historical topographic map scans (prepared on request, owner-reviewed before display) | [`loc`](connectors/loc/) · [`kansas_memory`](connectors/kansas_memory/) · [`kansas_state_archives`](connectors/kansas_state_archives/) · [`khri`](connectors/khri/) · [`newspapers`](connectors/newspapers/) · [`gnis`](connectors/gnis/) · [`archaeology`](connectors/archaeology/) — *people, genealogy and DNA lanes are deny-by-default* |
 | 🛤️ **Built world & hazards** | OpenStreetMap context basemap · Census TIGER counties · NIFC wildfire incident reports | [`kdot`](connectors/kdot/) · [`fhwa_hpms`](connectors/fhwa_hpms/) · [`fhwa_nhfn`](connectors/fhwa_nhfn/) · [`fra_gcis`](connectors/fra_gcis/) · [`fra_form57`](connectors/fra_form57/) · [`stb_class1`](connectors/stb_class1/) · [`ntad`](connectors/ntad/) · [`wzdx`](connectors/wzdx/) · [`hifld`](connectors/hifld/) · [`fema-nfhl`](connectors/fema-nfhl/) · [`fema-openfema`](connectors/fema-openfema/) · [`tiger_line`](connectors/tiger_line/) · [`openstreetmap`](connectors/openstreetmap/) |
 
-Live connections are listed in the Explorer's [official context adapters](apps/site/source/README.md#official-kansas-context-adapters) and [Observatory carriers](apps/site/source/README.md#date-bound-event-observatory). Admission rules live in [`docs/sources/`](docs/sources/) and the [lifecycle law](docs/doctrine/lifecycle-law.md). Every source keeps its own terms, attribution and access limits.
+The preserved Sites connections are listed in its [official context adapters](apps/site/source/README.md#official-kansas-context-adapters) and [Observatory carriers](apps/site/source/README.md#date-bound-event-observatory). Admission rules live in [`docs/sources/`](docs/sources/) and the [lifecycle law](docs/doctrine/lifecycle-law.md). Every source keeps its own terms, attribution and access limits.
 
 </details>
 
@@ -323,7 +342,7 @@ Live connections are listed in the Explorer's [official context adapters](apps/s
   <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-trust-membrane-dark.svg" /><img src="docs/brand/readme/kfm-trust-membrane.svg" alt="The trust membrane: public clients — the Explorer map, reports, exports and AI explanations — read released artifacts and call a Governed API that returns ANSWER, ABSTAIN, DENY or ERROR. Internal stores (RAW, WORK/QUARANTINE, PROCESSED, CATALOG/TRIPLETS, model runtime) stay behind a membrane that refuses direct reads." width="100%" /></picture>
 </p>
 
-Public clients never reach into internal stores. Everything they show crosses a **trust membrane** through governed interfaces — and a layer earns its way onto a public map along the trust path below.
+KFM's governed evidence path keeps internal stores behind a **trust membrane**. The public Explorer also displays explicitly attributed external provider context. That display path does not establish source admission, EvidenceBundle closure or a released KFM layer. The illustration below describes the governed lifecycle.
 
 <p align="center">
   <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-trust-path-dark.svg" /><img src="docs/brand/readme/kfm-trust-path.svg" alt="The trust path: RAW, WORK or QUARANTINE, PROCESSED, CATALOG or TRIPLETS, PUBLISHED, separated by gates. One item reaches PUBLISHED, one is held at quarantine, one ends in ABSTAIN or DENY." width="100%" /></picture>
@@ -349,22 +368,26 @@ When KFM is asked something, it answers with one of a small set of finite outcom
   <picture><source media="(prefers-color-scheme: dark)" srcset="docs/brand/readme/kfm-capability-board-dark.svg" /><img src="docs/brand/readme/kfm-capability-board.svg" alt="Capability board: all 23 features in the Explorer's site-features registry grouped by declared status — 7 LIVE UI, 12 ACTIVE CONTEXT, 2 BOUNDED PROOF and 2 HELD." width="100%" /></picture>
 </p>
 
-The board above is drawn straight from the Explorer's own [feature registry](apps/site/source/app/site-features.ts). The table below summarizes the wider repository.
+The board illustrates the preserved Sites feature registry at the earlier
+October 17 README checkpoint. It is not an inventory of the newer public app.
+The table below reflects source inspected on **October 21, 2026**; implementation
+and live operation remain separate.
 
-A quick, honest read of where things stand at `main@7d79ce10`. Each row links to the record that carries its exact evidence.
-
-| | Capability | Where it stands |
+| Capability | Confirmed implementation | Remaining boundary |
 |---|---|---|
-| ✅ | **Explorer app runs locally** | Standalone source in [`apps/site/source/`](apps/site/README.md) with its own build, TypeScript checks, Node test suite and offline smoke test. The [current Site checkpoint](apps/site/README.md#current-site-checkpoint) pins the exact version and validation. |
-| ✅ | **Live public-provider context** | USGS, NOAA, NWS, NASA, Census, KGS, GBIF and others render as attributed `EXTERNAL_CONTEXT_ONLY` layers with visible failure, partial and empty states. |
-| ✅ | **Local PC data store** | [`tools/local_data/`](tools/local_data/README.md) provides `doctor`, `init`, `plan`, `sync` and `verify` for a private, offline, quarantine-first store outside the checkout. |
-| ✅ | **Contracts, schemas, policy and validators** | Bounded slices with positive and negative fixtures, fail-closed tests and a repository topology ratchet. See [`make validate`](#validation). |
-| 🟡 | **Hosted Explorer** | The [public GoDaddy Node composition](docs/runbooks/godaddy-node-hosting.md) was browser-checked on 2026-10-17. Its published source, preview and preserved Sites mirror are distinct. Broader accessibility, device/WebGL and long-session acceptance remain open. |
-| 🟡 | **Source admission** | Connector lanes and the `connectors-core` package exist; end-to-end admission of a first governed layer is the next planned pilot ([source gap register](apps/site/source/docs/KFM_SOURCE_GAP_REGISTER.md)). |
-| 🟡 | **Evidence resolution** | Contracts, finite outcomes and resolver fixtures exist; end-to-end `EvidenceBundle` resolution against released data is not yet established. |
-| 🔭 | **Released KFM datasets and Science Pack** | Not yet. Releases, publication and the cross-domain [Science Pack](#a-finished-kfm-with-a-science-pack) are the north star. |
+| **Public Explorer** | Standalone Node/Vinext app, React and MapLibre 6.9.0; provider context, layer controls, 2D/terrain/globe, Underground, Observatory and free report/story exports. | Current Published source, live provider responses and device/WebGL acceptance need runtime verification. |
+| **Anonymous AI** | Paired `home-ollama` is the sole generation provider; server-side signed transport, context checks, guest jobs, progress, cancel and conditional continuation. Embedded GoDaddy model startup is removed. | Model configuration and physical second-PC health were not inspected here. Generated discussion is `ABSTAIN / UNVERIFIED_AI_DISCUSSION`; factual model answers remain withheld. |
+| **Search and investigations** | County-search readiness states, nearby loaded-point dossiers, saved settings and dated draft exports with source/coverage limits. | Loaded results are not complete county coverage. The county-boundary selector proposed by [PR #5394](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5394) is outside the pinned hosted checkpoint. |
+| **Time and welcome UI** | Compact calendar controls, Present/archive retirement including HMS playback cancellation, and source-bound recorded capability animations. | Recorded imagery is not live observation. Current browser/mobile acceptance is separate from source inspection. |
+| **Private capture and SQL** | MySQL capture store, additive schema, bounded worker routes and a fixed-origin GitHub scheduler definition. | Live engine/migrations, capacity, credentials and scheduler activation are unverified; no login or Source operations page exists in the current app. |
+| **Aviation** | FAA capture/transform/schema and candidate SQL on main; bounded held airport route/control in the hosted source. | Public route returns `ABSTAIN / AVIATION_RELEASE_PROFILE_REQUIRED`. Rendering, released evidence and OpenSky ingestion remain held. See [aviation intake](docs/runbooks/aviation-intake-20261021.md). |
+| **Local data tooling** | [`tools/local_data/`](tools/local_data/README.md) offers private quarantine-first capture and integrity tooling. | Large-file placement on the second AI PC is intended; storage, connectivity, capacity and backup/restore still need verification. |
+| **Governance foundation** | Contracts, schemas, policy, bounded validators, resolver fixtures and topology controls exist. | No end-to-end released cross-domain Science Pack or complete EvidenceBundle chain is established by this documentation review. |
 
-✅ works today in bounded form · 🟡 partially in place · 🔭 planned. Gaps and next slices are tracked in the [verification backlog](docs/registers/VERIFICATION_BACKLOG.md).
+The [implementation snapshot](docs/runbooks/godaddy-node-hosting.md#implementation-snapshot-2026-10-21)
+links each area to inspected code, tests and behavior guides. The
+[verification backlog](docs/registers/VERIFICATION_BACKLOG.md) retains broader
+repository follow-ups.
 
 <p align="center">
   <img src="docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
@@ -373,6 +396,27 @@ A quick, honest read of where things stand at `main@7d79ce10`. Each row links to
 ## Try it yourself
 
 ### Run the Explorer on your machine
+
+For the **public Node composition**, check out its own branch in a separate
+directory. The pinned commit below is the inspected source baseline, not a
+deployment recommendation:
+
+```bash
+git clone --single-branch --branch a0-hosted-ai-web-20261017 https://github.com/bartytime4life/Kansas-Frontier-Matrix.git kfm-public-review
+cd kfm-public-review
+git checkout --detach 65d5657536e4c42a7a8ea0772ed12ca0b78bc939
+npm ci
+npm run build
+PORT=5187 npm start
+```
+
+Use Node.js `>=22.13.0`. Open `http://127.0.0.1:5187`; provider access remains
+network-dependent and chat requires separately configured server settings.
+Read the [Node runbook](docs/runbooks/godaddy-node-hosting.md) before changing
+hosting or AI configuration. This local review does not contact or configure
+the second PC by default.
+
+For the **preserved Sites mirror**, use its separate workflow:
 
 You need Linux, Node.js `>=22.13.0`, and the helpers listed in the [Site README](apps/site/README.md#run-locally) (`flock`, `curl`, `sha256sum`, GNU `timeout`).
 
@@ -465,7 +509,7 @@ The existing domain lanes, Explorer workspaces, contracts, schemas, policies, fi
 |---|---|
 | **See what KFM can do** | The [tour](#take-the-tour) above, then the [feature matrix](docs/encyclopedia/chapters/09-master-feature-matrix.md) and [domain atlas](docs/encyclopedia/chapters/05-master-domain-atlas.md). |
 | **Read the project as a book** | The draft [KFM encyclopedia reader guide](docs/encyclopedia/chapters/01-cover.md). |
-| **Run the Explorer locally** | [`apps/site/`](apps/site/README.md) — application, checked-in assets and local scripts. |
+| **Run or edit the public Explorer** | [Node source and local checks](docs/runbooks/godaddy-node-hosting.md#choose-the-correct-source); [preserved Sites setup](apps/site/README.md) is a separate composition. |
 | **Preserve files you already downloaded** | [Local PC runbook](docs/runbooks/local-pc-data-store.md), [`tools/local_data/`](tools/local_data/README.md) and [bounded acquisition](docs/runbooks/free-data-acquisition.md). |
 | **Learn the project's rules** | [`docs/doctrine/`](docs/doctrine/), [`docs/architecture/`](docs/architecture/) and [`docs/adr/`](docs/adr/). |
 | **Make a change safely** | [`CONTRIBUTING.md`](CONTRIBUTING.md), [Directory Rules](docs/doctrine/directory-rules.md), and the README nearest the path you will touch. |
@@ -482,7 +526,7 @@ The best contribution is a small, inspectable improvement that leaves the next s
 
 1. Read [`CONTRIBUTING.md`](CONTRIBUTING.md), the applicable path-scoped README, and the [Directory Rules](docs/doctrine/directory-rules.md).
 2. Define one observable goal, its owning responsibility root, affected contracts or interfaces, validation, and rollback.
-3. Search for overlapping work and use a feature branch based on the current `main`.
+3. Search for overlapping work and branch from the [owning source](#which-source-should-i-use): `main` for monorepo work, or the standalone hosted branch for public-app work.
 4. Preserve evidence, rights, sensitivity, time, correction, and release boundaries in code and documentation.
 5. Add focused tests, fixtures, receipts, or docs when they are direct dependencies of the change.
 6. Open a draft pull request with exact base/head evidence, performed and skipped checks, open unknowns, and a clear rollback path.
@@ -520,7 +564,7 @@ Because a confident guess is worse than an honest gap. When evidence is missing,
 <details>
 <summary><b>Does KFM use AI?</b></summary>
 
-Only downstream of evidence. The Explorer offers an opt-in **local** Qwen companion that runs on your own machine through a loopback bridge and reads a bounded context; the hosted model route is dormant and fails closed. Generated language is interpretation — never evidence, approval or publication. See the [AI build operating contract](docs/doctrine/ai-build-operating-contract.md).
+The public app offers anonymous AI discussion through the website. At the pinned hosted source, `home-ollama` is the only generation provider: GoDaddy handles guest jobs and context/output checks, while the paired gateway performs inference. Missing configuration or an unavailable provider disables generation; there is no embedded-model fallback. Visitors install nothing. Generated discussion is labeled unverified and remains `ABSTAIN`; evidence search and selected-source summaries have separate deterministic paths. This source review does not verify the current live model or physical PC. See the [current AI implementation](docs/runbooks/godaddy-node-hosting.md#ai-and-second-pc-boundaries) and [AI build operating contract](docs/doctrine/ai-build-operating-contract.md).
 </details>
 
 <details>
@@ -537,7 +581,7 @@ Yes. The repository is [Apache-2.0](LICENSE), and [`CITATION.cff`](CITATION.cff)
 
 ## Current posture
 
-The table below is the detailed maturity snapshot recorded for `main@6c5be18cf8448654be95a6db688d98546cd5276e`. It is historical; [Build status at a glance](#build-status-at-a-glance) gives the current summary, and the [Site checkpoint](apps/site/README.md#current-site-checkpoint) carries the newest Explorer evidence. Execution evidence remains bounded to the exact revisions and runs named in each row.
+The table below is the detailed maturity snapshot recorded for `main@6c5be18cf8448654be95a6db688d98546cd5276e`. It is historical; [Build status at a glance](#build-status-at-a-glance) gives the current summary, and the [current source map](docs/runbooks/godaddy-node-hosting.md#implementation-snapshot-2026-10-21) distinguishes the public application from the preserved [Site checkpoint](apps/site/README.md#current-site-checkpoint). Execution evidence remains bounded to the exact revisions and runs named in each row.
 
 <details>
 <summary><strong>Detailed maturity snapshot</strong></summary>
@@ -568,18 +612,18 @@ Implementation maturity and authority are separate axes. An implemented validato
 
 ## Repository map
 
-Child READMEs own deeper detail. Directory placement is part of the trust model: read the adopted [Directory Rules decision](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and the current [Directory Rules](docs/doctrine/directory-rules.md) before creating a path, reviving a deprecated root, or introducing a parallel authority.
+The diagram shows the governed evidence responsibility path, not proof that the public Node app is wired end to end to the monorepo API. Its external-context and AI paths are described in the [Node runbook](docs/runbooks/godaddy-node-hosting.md). Child READMEs own deeper detail. Directory placement is part of the trust model: read the adopted [Directory Rules decision](docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and the current [Directory Rules](docs/doctrine/directory-rules.md) before creating a path, reviving a deprecated root, or introducing a parallel authority.
 
 ```mermaid
-flowchart LR
+flowchart TD
     classDef src fill:#F2E6D2,stroke:#8E5A2A,color:#3A2410
     classDef gov fill:#FFF8E6,stroke:#9A7A12,color:#3A2E05
     classDef life fill:#DCE6F2,stroke:#4A6FA5,color:#0E1F3A
     classDef pub fill:#E5F0E0,stroke:#3B7A57,color:#1B3A24
     SRC["Public sources"]:::src --> CON["connectors/"]:::src
-    CON --> DATA["data/ lifecycle<br/>RAW → QUARANTINE → PROCESSED"]:::life
+    CON --> DATA["data/ lifecycle"]:::life
     DATA --> PIPE["pipelines/"]:::life --> CAT["catalog/"]:::life
-    CAT --> REL["release/"]:::pub --> API["apps/governed-api"]:::pub --> APP["apps/site Explorer"]:::pub
+    CAT --> REL["release/"]:::pub --> API["apps/governed-api"]:::pub --> APP["Governed client carrier"]:::pub
     CTR["contracts/ · schemas/"]:::gov -.-> CON & DATA & API
     POL["policy/"]:::gov -.-> DATA & REL & API
 ```
@@ -677,7 +721,8 @@ The illustrations on this page are artwork. They show the *kind* of experience e
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Contribution, branch, pull-request, evidence, validation, and rollback discipline |
 | [`SECURITY.md`](SECURITY.md) | Vulnerability reporting and sensitive-disclosure boundary |
 | [`docs/`](docs/) | Human-readable doctrine, architecture, decisions, standards, source guidance, and runbooks |
-| [`apps/site/`](apps/site/README.md) | Current Explorer application source and local-hosting entry point |
+| [Public Explorer source map](docs/runbooks/godaddy-node-hosting.md#implementation-snapshot-2026-10-21) | Standalone hosted code, current behavior and validation commands |
+| [`apps/site/`](apps/site/README.md) | Preserved Sites mirror and its separate local-hosting workflow |
 | [`apps/governed-api/`](apps/governed-api/) | Governed API implementation boundary |
 | [`connectors/`](connectors/README.md) | Source-specific fetch, capture, and admission lanes |
 | [`packages/maplibre/`](packages/maplibre/) | MapLibre-facing package and adapter seam |
@@ -693,9 +738,9 @@ The illustrations on this page are artwork. They show the *kind* of experience e
 | Field | Value |
 |---|---|
 | Repository | `bartytime4life/Kansas-Frontier-Matrix` |
-| Evidence snapshot | `main@7d79ce10ace694e3bedb5e1a01b96bd479759577` |
-| Reviewed | Root README, `apps/site/source/app/site-features.ts` and `focus-mode.ts`, `apps/site/README.md` checkpoint stack, `apps/site/source/README.md` and its feature guides (water, Observatory, underground, history, soil moisture, context adapters), `connectors/` direct-child inventory, `docs/brand/` visual language and palette |
-| Change class | Showcase expansion: animated walkthrough, Focus Mode, layer stack, capability board, trust membrane, by-the-numbers, four more feature cards, guided explorations, FAQ, theme-aware dark variants and dividers |
+| Evidence snapshot | `main@91ca0314f0158736f69f953d7973457c19442fde` and hosted `65d5657536e4c42a7a8ea0772ed12ca0b78bc939`, reviewed 2026-10-21 |
+| Reviewed | Both source trees; hosted AGENTS, package/startup/provider selection, public AI, search/research/export, calendar/HMS, welcome, capture/MySQL and aviation modules/tests/guides; main contribution, Directory Rules/ADR-0029, hosting/capture/aviation runbooks and direct-child connector inventory. Earlier artwork and tour guides retain their prior snapshot. |
+| Change class | Documentation reconciliation: source selection, current implemented capabilities, remote AI, worker controls, local commands and explicit unverified/held boundaries |
 | No mutation implied | No source activation, settings change, release, deployment, promotion, publication, or lifecycle transition |
 | Not proved | Hosted runtime health, public availability, complete provider coverage, source admission, scientific validity, rights clearance, human approval, release readiness, or public operation |
 

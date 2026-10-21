@@ -1,0 +1,223 @@
+{
+  "receipt_id": "kfm:generated:documentation-built-state:20261021",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md",
+    "docs/README.md",
+    "docs/runbooks/godaddy-node-hosting.md",
+    "docs/runbooks/godaddy-hosted-capture.md"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:587be8996059f14205d344575b0939e0fbe1f92b7892026b0ae4ef4a8383540b",
+    "docs/README.md": "sha256:623406293850ac1a85a90ce9ccbf79b9ced508fc7b175eab39011e8c70e8095e",
+    "docs/runbooks/godaddy-node-hosting.md": "sha256:7221f416b760e8cc2b6e681acbd65efd88d52d2b6f2ca9f86413622ac72b4491",
+    "docs/runbooks/godaddy-hosted-capture.md": "sha256:2472af7f1184b37fa21950c724a9dc990f36349c6650370895abba5ca660fbd0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session; exact backend revision unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "91ca0314f0158736f69f953d7973457c19442fde",
+      "65d5657536e4c42a7a8ea0772ed12ca0b78bc939",
+      "PR #5394 open at review, head 988a44c4367f48b419977108533ac84be48a71e9; excluded from implemented snapshot",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/package.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/.github/workflows/godaddy-public-site.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/.github/workflows/godaddy-hosted-capture.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/docs/runbooks/aviation-intake-20261021.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/package.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/AGENTS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/start.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/public-ai-handler.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/home-inference.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/capture-worker-access.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/ingestion-config.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/ingestion-store.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/aviation-read.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/app/page.tsx",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/app/assistant-investigation.ts",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/docs/map-research-tools.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/docs/living-welcome.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/tests/hms-calendar-exit.test.mjs"
+    ],
+    "attached_docs": [
+      "KFM Contributor Reliability System: Documentation, PR Quality, and CI Hardening.pdf (lineage only)",
+      "KFM_Data_Placement_and_Site_Realization_Decision_2026-09-10(1).pdf (lineage only)"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "CONFIRMED",
+    "docs/README.md": "CONFIRMED",
+    "docs/runbooks/godaddy-node-hosting.md": "CONFIRMED",
+    "docs/runbooks/godaddy-hosted-capture.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Native local Markdown links and anchors",
+      "outcome": "PASS",
+      "reason": "4 documents; 250 local Markdown targets. External targets classified without HTTP requests."
+    },
+    {
+      "gate": "Native critical Markdown structure",
+      "outcome": "PASS",
+      "reason": "4 documents; zero findings."
+    },
+    {
+      "gate": "Native metadata validation and pinned-base comparison",
+      "outcome": "PASS",
+      "reason": "4 valid blocks, zero failures. Same 3 unsupported-nesting warnings as the pinned base; no new warning."
+    },
+    {
+      "gate": "Native metadata registry comparison",
+      "outcome": "FAIL",
+      "reason": "The unchanged document_registry.yaml produces the same 7 REGISTRY_DUPLICATE_KEY / ENTRY_INCOMPLETE / ENTRY_MALFORMED failures on the pinned base and changed tree. This is inherited parser/registry incompatibility; no registry or validator mutation is included. Metadata-only validation separately passes with 3 inherited warnings."
+    },
+    {
+      "gate": "Compatibility, HTML links, source pointers and text integrity",
+      "outcome": "PASS",
+      "reason": "61 prior anchors retained; 125 local HTML targets; 22 added immutable blob paths verified against the inspected Git objects; balanced scoped HTML and text hygiene pass."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "pre-commit hook runner",
+      "outcome": "SKIPPED",
+      "reason": "pre_commit is not installed in this environment. Direct BOM/newline/whitespace/conflict/private-key-pattern checks and native docs validators cover the changed text scope; no whole-repository hook pass claimed."
+    },
+    {
+      "gate": "Application tests, browser, deployment, DB and physical-PC acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Docs and generation provenance only. No app behavior, schema, workflow or settings changed; inspected test presence is not execution evidence."
+    },
+    {
+      "gate": "Exact-head GitHub CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft creation; validation and generation are not approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "source-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "source-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "source-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/CONTRIBUTING.md"
+    },
+    {
+      "id": "source-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/package.json"
+    },
+    {
+      "id": "source-5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/.github/workflows/godaddy-public-site.yml"
+    },
+    {
+      "id": "source-6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/.github/workflows/godaddy-hosted-capture.yml"
+    },
+    {
+      "id": "source-7",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/91ca0314f0158736f69f953d7973457c19442fde/docs/runbooks/aviation-intake-20261021.md"
+    },
+    {
+      "id": "source-8",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/package.json"
+    },
+    {
+      "id": "source-9",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/AGENTS.md"
+    },
+    {
+      "id": "source-10",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/start.mjs"
+    },
+    {
+      "id": "source-11",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/public-ai-handler.mjs"
+    },
+    {
+      "id": "source-12",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/home-inference.mjs"
+    },
+    {
+      "id": "source-13",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/capture-worker-access.mjs"
+    },
+    {
+      "id": "source-14",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/ingestion-config.mjs"
+    },
+    {
+      "id": "source-15",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/ingestion-store.mjs"
+    },
+    {
+      "id": "source-16",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/server/aviation-read.mjs"
+    },
+    {
+      "id": "source-17",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/app/page.tsx"
+    },
+    {
+      "id": "source-18",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/app/assistant-investigation.ts"
+    },
+    {
+      "id": "source-19",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/docs/map-research-tools.md"
+    },
+    {
+      "id": "source-20",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/docs/living-welcome.md"
+    },
+    {
+      "id": "source-21",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/65d5657536e4c42a7a8ea0772ed12ca0b78bc939/tests/hms-calendar-exit.test.mjs"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-21T23:31:48.818416+00:00",
+  "emitter": "Codex",
+  "notes": "Documentation alignment against two immutable source checkpoints. The four bound Markdown files contain confirmed source observations, explicitly dated historical provider records, and separately labeled unverified/proposed operational matters. This receipt does not refresh live state, qualify AI factual answers, admit FAA/OpenSky data, choose a physical storage path, activate capture, approve review, merge, deploy or publish. Existing receipts remain immutable. No restricted payloads or credentials included. Receipt does not bind itself. Revert the focused commit to roll back documentation."
+}

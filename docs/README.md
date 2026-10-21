@@ -3,13 +3,13 @@ doc_id: kfm://doc/docs-root-readme
 title: docs/ — Human-Readable Governance and Explanation Root
 type: readme/root-readme
 authority: documentation-boundary
-version: v1.0
+version: v1.1
 status: active
 owners:
   - "@bartytime4life"
 created: 2026-08-08
 created_note: "2026-08-08 identifies the same-path root-README modernization revision recorded under Evidence review and triggers below, not the file's original repository-backed creation provenance, which predates this modernization and is outside this shallow-clone repository's available Git history."
-updated: 2026-10-09
+updated: 2026-10-21
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Define the docs/ responsibility boundary, navigation contract, exposure posture, validation expectations, and relationships to KFM authority roots."
@@ -29,7 +29,7 @@ related:
   <a href="../README.md#take-the-tour"><img src="brand/readme/kfm-hero.svg" alt="Kansas Frontier Matrix — Place. Time. Evidence. An illustrated Kansas outline with rivers and a time sweep." width="100%" /></a>
 </p>
 
-> **New to KFM?** Start with the illustrated [project home](../README.md): a [six-workspace feature tour](../README.md#take-the-tour), [two centuries of time depth](../README.md#travel-through-time), [where the data comes from](../README.md#where-the-data-comes-from), and an honest [build status](../README.md#build-status-at-a-glance). The pages below are the deeper library behind it.
+> **New to KFM?** Start with the illustrated [project home](../README.md): an [illustrated feature tour](../README.md#take-the-tour), [two centuries of time depth](../README.md#travel-through-time), [where the data comes from](../README.md#where-the-data-comes-from), and an honest [build status](../README.md#build-status-at-a-glance). The pages below are the deeper library behind it.
 
 <table>
   <tr>
@@ -49,16 +49,28 @@ related:
 
 <sub>Illustrations, not screenshots or data products — see <a href="brand/readme/README.md">README artwork</a>.</sub>
 
-## Practical reading routes — 2026-10-08
+<a id="practical-reading-routes--2026-10-08"></a>
+
+## Practical reading routes — 2026-10-21
 
 | I want to… | Start here | Then use |
 |---|---|---|
 | Understand KFM | [Draft encyclopedia reader guide](encyclopedia/chapters/01-cover.md) | [Domain atlas](encyclopedia/chapters/05-master-domain-atlas.md) |
-| Run the Explorer locally | [Installation](installation.md) | [Site setup](../apps/site/README.md) |
+| Run or edit the public Explorer | [Node source, implementation and local checks](runbooks/godaddy-node-hosting.md#implementation-snapshot-2026-10-21) | [Correct checkout](runbooks/godaddy-node-hosting.md#choose-the-correct-source) |
+| Work on the preserved Sites mirror | [Site setup](../apps/site/README.md) | [Repository installation](installation.md) |
+| Understand AI and the second PC | [Current provider and placement boundaries](runbooks/godaddy-node-hosting.md#ai-and-second-pc-boundaries) | [Private capture and SQL](runbooks/godaddy-hosted-capture.md) |
+| Review aviation work | [FAA intake and remaining holds](runbooks/aviation-intake-20261021.md) | [Public-app implementation snapshot](runbooks/godaddy-node-hosting.md#implementation-snapshot-2026-10-21) |
 | Manage local data | [Local-PC store](runbooks/local-pc-data-store.md) | [Bounded acquisition](runbooks/free-data-acquisition.md) |
 | Understand map capabilities | [Feature matrix](encyclopedia/chapters/09-master-feature-matrix.md) | [Explorer source guide](../apps/site/source/README.md) |
 | Propose a new source or idea | [Intake triage](intake/triage-rules.md) | [Promotion criteria](intake/promotion-criteria.md) |
 | Review a documentation change | [Validation plan](encyclopedia/chapters/15-validation-and-acceptance-plan.md) | [PR reliability](runbooks/pr-reliability-guide.md) |
+
+Reading routes were reconciled against `main@91ca0314f0158736f69f953d7973457c19442fde`
+and hosted `65d5657536e4c42a7a8ea0772ed12ca0b78bc939` on October 21. The public
+application has its own root on `a0-hosted-ai-web-20261017`; `apps/site/source/`
+is the separately preserved Sites mirror. The reports below retain their dated
+observations. This navigation update does not refresh every child guide or
+establish the current Published revision.
 
 The [enrichment inventory and review report](reports/documentation-enrichment-20261008.md) accounts for the initial placeholder scan and validation limits.
 
@@ -269,7 +281,10 @@ docs/
 
 ## Evidence review and triggers
 
-**Last evidence review:** 2026-08-08 against `main@1001a87233e0f23695b6b12e60c654f938e6ffb5`, `docs/README.md` blob `7254b81741822a7f1cfdffa74ee9caece50fbc38`, adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, and accepted ADR-0029 blob `b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62`.
+**Reading-route review:** 2026-10-21 against the two source checkpoints above;
+current behavior pointers only. No documentation authority or lane status changed.
+
+**Boundary-contract evidence review:** 2026-08-08 against `main@1001a87233e0f23695b6b12e60c654f938e6ffb5`, `docs/README.md` blob `7254b81741822a7f1cfdffa74ee9caece50fbc38`, adopted Directory Rules blob `fd49a0b83e55cef52c1124281f093e263526898d`, and accepted ADR-0029 blob `b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62`.
 
 Re-review this boundary when:
 
