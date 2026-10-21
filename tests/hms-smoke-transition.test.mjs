@@ -112,6 +112,7 @@ test("display date commits only after upload and fade finish; exact payload is r
   });
   const pending = r.commit(day, r.next, new AbortController().signal, true);
   await started.promise; assert.deepEqual(r.commits, []);
+  assert.equal(r.context.officialPayloadsRef.current["noaa-hms-smoke"], r.prior, "upload is not confirmed evidence");
   uploaded.resolve(); await fading.promise; assert.deepEqual(r.commits, []);
   faded.resolve(); await pending;
   assert.deepEqual(r.commits, [{ "noaa-hms-smoke": day }]);
@@ -164,4 +165,36 @@ test("a superseded upload is restored before the next transition reads its prior
   assert.equal(r.context.officialPayloadsRef.current["noaa-hms-smoke"], r.prior);
   assert.deepEqual(r.commits, []);
   assert.equal(r.writes.at(-1), r.prior);
+});
+
+
+test("retiring a session cancels active and queued frames but permits a fresh session", async () => {
+  const transitions = new smoke.HmsFrameTransitions(), held = deferred(), entered = deferred(), calls = [];
+  const first = transitions.run(transitions.signal, async signal => {
+    calls.push("active"); entered.resolve(); await held.promise; signal.throwIfAborted();
+  });
+  const firstResult = assert.rejects(first, { name: "AbortError" });
+  await entered.promise;
+  const old = transitions.signal;
+  const queued = transitions.run(old, async () => calls.push("stale queued"));
+  const queuedResult = assert.rejects(queued, { name: "AbortError" });
+  transitions.cancel();
+  assert.equal(old.aborted, true);
+  const fresh = transitions.run(transitions.signal, async () => calls.push("fresh"));
+  held.resolve(); await Promise.all([firstResult, queuedResult, fresh]);
+  assert.deepEqual(calls, ["active", "fresh"]);
+});
+
+test("stopping during upload retains only the confirmed source payload", async () => {
+  const entered = deferred(), uploaded = deferred();
+  const r = renderer({ waitForGeoJSON: (_source, signal) => { if (!signal) return Promise.resolve(); entered.resolve(); return uploaded.promise; } });
+  const stop = new AbortController();
+  const pending = r.commit(day, r.next, stop.signal, false);
+  const result = assert.rejects(pending, { name: "AbortError" });
+  await entered.promise;
+  assert.equal(r.context.officialPayloadsRef.current["noaa-hms-smoke"], r.prior);
+  stop.abort(); uploaded.resolve(); await result;
+  assert.equal(r.context.officialPayloadsRef.current["noaa-hms-smoke"], r.prior);
+  assert.equal(r.writes.at(-1), r.prior);
+  assert.deepEqual(r.commits, []);
 });

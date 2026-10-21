@@ -66,7 +66,17 @@ export async function findRecentSmoke(cache: HmsFrameCache, today: string, signa
 export class HmsFrameTransitions {
   private pending: Promise<void> = Promise.resolve();
   private active: AbortController | null = null;
+  private session = new AbortController();
+  get signal() { return this.session.signal; }
+  /** Retire acquisition, queued transitions and restoration ownership together. */
+  cancel(): AbortSignal {
+    this.session.abort(new DOMException("Smoke playback retired", "AbortError"));
+    this.active?.abort(this.session.signal.reason);
+    this.session = new AbortController();
+    return this.session.signal;
+  }
   run(signal: AbortSignal, transition: (signal: AbortSignal) => Promise<void>): Promise<void> {
+    signal = AbortSignal.any([signal, this.session.signal]);
     signal.throwIfAborted();
     this.active?.abort(new DOMException("Superseded smoke frame", "AbortError"));
     const controller = new AbortController();
