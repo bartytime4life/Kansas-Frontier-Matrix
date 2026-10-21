@@ -5,8 +5,8 @@ import type {AssistantContext,AssistantFocus} from '../assistant-context';
 import {assistantSurface} from '../assistant-surfaces.mjs';
 import {buildInvestigationDraft,investigationMarkdown,type InvestigationJob} from '../assistant-investigation';
 type ChatStatus={configured:boolean;online:boolean;ready:boolean;evidenceSearchAvailable?:boolean;model?:string;modelLabel?:string};
-// The server names the selected model; the embedded Qwen build predates that field.
-const chatModelLabel=(status:ChatStatus|null)=>typeof status?.modelLabel==='string'&&/^[\w.:/-]{1,96}$/.test(status.modelLabel)?status.modelLabel:'Qwen3 0.6B';
+// Show a specific model only after the selected remote provider names it.
+const chatModelLabel=(status:ChatStatus|null)=>typeof status?.modelLabel==='string'&&/^[\w.:/-]{1,96}$/.test(status.modelLabel)?status.modelLabel:'AI model';
 type ChatFailureDetails={code:string;httpStatus?:number};
 type Job=Omit<InvestigationJob,'result'>&{result:(NonNullable<InvestigationJob['result']>&{followUpQuestion?:string})|null};
 type Turn={question:string;job:Job;contextKey:string;generation:number};

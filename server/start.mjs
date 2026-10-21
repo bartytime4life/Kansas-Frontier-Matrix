@@ -18,16 +18,8 @@ installPublicDelivery(server);
 // A failed probe is diagnostic; it does not change authorization or hide errors.
 void reportNodeStartup(server);
 
-// Opt-in private qualification only; ordinary web startup loads no AI runtime.
-if (process.env.KFM_EMBEDDED_AI_PROBE === "1" && process.env.KFM_HOSTED_AI !== "1") {
-  const { startEmbeddedAiProbe } = await import("./embedded-ai-probe.mjs");
-  void startEmbeddedAiProbe();
-}
-
-if (process.env.KFM_HOSTED_AI_ACCEPTANCE === "1") {
-  const { startHostedChatAcceptance } = await import("./hosted-ai-acceptance.mjs");
-  void startHostedChatAcceptance();
-}
+// Inference runs only on the paired home PC. Retired embedded-model probe and
+// acceptance flags deliberately have no effect on this web-server process.
 
 // Owner-only opt-in memory observation. No model is loaded by this check.
 if (process.env.KFM_HOSTED_AI_RESOURCE_PROBE === "1") {

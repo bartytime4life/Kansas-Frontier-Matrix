@@ -146,7 +146,7 @@ test('the pinned action row states each mode\'s trust boundary without opening o
  const line=tree=>text(findNode(findNode(tree,node=>node.props?.className==='actions'),node=>node.type==='small'));
  const plain=await renderChat();
  try{
-  let tree=plain.render();assert.match(line(tree),/^Qwen3 0.6B · unverified discussion/);assert.doesNotMatch(line(tree),/no account needed/);
+  let tree=plain.render();assert.match(line(tree),/^AI model · unverified discussion/);assert.doesNotMatch(line(tree),/no account needed/);
   findNode(tree,node=>node.type==='button'&&text(node)==='Evidence').props.onClick();
   tree=plain.render();assert.match(line(tree),/^Released records · no model required · unsupported answers withheld/);
  }finally{plain.h.dispose();}
