@@ -9,6 +9,7 @@ import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged 
 import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacity, requestRasterOpacity } from "./map-layer-composition";
 import { BUILD_UTC_YEAR } from "./build-clock";
 import { globeOverviewPaintSize } from "./globe-context";
+import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay } from "./fire-detection-style";
 
 export type OfficialContextId = "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
@@ -368,7 +369,9 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     domain: "Fire, smoke & hazards",
     kind: "OPERATIONAL_GEOJSON",
     sourceId: "external-nasa-gibs-fire-points",
-    layerIds: Object.freeze(["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle"]),
+    // Halo and circle stay first: they are the selectable provider points. The
+    // footprint and flame layers are display-only derivatives.
+    layerIds: Object.freeze(["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle", "external-nasa-gibs-fire-points-footprint-heat", "external-nasa-gibs-fire-points-footprint-shimmer", "external-nasa-gibs-fire-points-footprint-edge", "external-nasa-gibs-fire-points-flame"]),
     interactiveLayerIds: Object.freeze(["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle"]),
     apiPath: "/api/live-context?feed=nasa-gibs-fire-points",
     endpointLabel: "gibs.earthdata.nasa.gov · dated VIIRS NOAA-20 vector tiles",
@@ -381,7 +384,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     color: "#ff6a32",
     attribution: "NASA GIBS · VIIRS NOAA-20 thermal anomalies",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "Selectable points come from NASA GIBS NOAA-20 VIIRS daily vector tiles and retain provider acquisition time, confidence, radiative power, brightness temperatures, scan/track pixel dimensions, and hot-spot type when supplied. A thermal detection can be a non-vegetation heat source; it is not a verified wildfire, ignition point, fire perimeter, burned area, incident status, evacuation zone, or safety guidance. These points are external display context, not KFM evidence or release.",
+    boundary: "Selectable points come from NASA GIBS NOAA-20 VIIRS daily vector tiles and retain provider acquisition time, confidence, radiative power, brightness temperatures, scan/track pixel dimensions, and hot-spot type when supplied. A thermal detection can be a non-vegetation heat source; it is not a verified wildfire, ignition point, fire perimeter, burned area, incident status, evacuation zone, or safety guidance. These points are external display context, not KFM evidence or release. Zoomed in, each detection is drawn as its provider scan × track pixel on the ground, approximately oriented to the satellite pass; that shape is the satellite detection pixel, not a fire perimeter, flame front, or burned area, and the animated flame and ember texture are illustrative, not measured fire behaviour or intensity.",
     fallback: "If a current UTC-day Kansas tile is missing, the Site checks only the previous day and labels that dated snapshot partial. Explicit archive days and other tile failures remain unavailable; no substitute or complete-coverage claim is inferred. A zero-point response does not establish no fire or full satellite coverage.",
   }),
   Object.freeze({
@@ -529,7 +532,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
   }),
   Object.freeze({
     id: "nws-forecast-wind",
-    title: "GFS directional wind forecast · flowing wisps",
+    title: "GFS directional wind forecast · streamlines",
     shortTitle: "Airflow · wind flow",
     organization: "Open-Meteo · NCEP GFS",
     domain: "Atmosphere",
@@ -798,8 +801,11 @@ const ensureGeoJsonSource = (map: MapLibreMap, source: OfficialContextSource, da
 };
 /** Remove a failed current feed's old features without waiting for unrelated
  * raster-frame transitions to finish before React reapplies map state. */
-export const clearOfficialContextFeed = (map: MapLibreMap, feed: OfficialContextFeedId): boolean =>
-  updateGeoJSON(map.getSource(OFFICIAL_CONTEXT_BY_ID[feed].sourceId) as GeoJSONSource | undefined, EMPTY_CONTEXT);
+export const clearOfficialContextFeed = (map: MapLibreMap, feed: OfficialContextFeedId): boolean => {
+  const cleared = updateGeoJSON(map.getSource(OFFICIAL_CONTEXT_BY_ID[feed].sourceId) as GeoJSONSource | undefined, EMPTY_CONTEXT);
+  if (feed === "nasa-gibs-fire-points") refreshFireFootprints(map);
+  return cleared;
+};
 const ensureLayer = (map: MapLibreMap, specification: LayerSpecification, beforeId?: string) => {
   if (!map.getLayer(specification.id)) map.addLayer(specification, beforeId);
   if (specification.type !== "circle" && specification.type !== "line") return;
@@ -879,11 +885,13 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: firePoints.layerIds[0], type: "circle", source: firePoints.sourceId, paint: {
     "circle-color": "#ffb667", "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 14, 10, 20], "circle-blur": 0.55, "circle-opacity": 0.3,
   } });
+  // The former solid dot is the transparent hover/selection target for the
+  // flame glyph (zoomed out) and the ground footprint (zoomed in).
   ensureLayer(map, { id: firePoints.layerIds[1], type: "circle", source: firePoints.sourceId, paint: {
     "circle-color": ["match", ["get", "confidence"], "high", "#ff3757", "low", "#ffc46c", "#ff713b"],
-    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 6.5, 10, 10],
-    "circle-opacity": 1, "circle-stroke-color": "#201b1e", "circle-stroke-width": 2.5,
+    "circle-radius": FIRE_HIT_RADIUS, "circle-opacity": 0, "circle-stroke-opacity": 0,
   } });
+  syncFireDetectionDisplay(map, visibility[firePoints.id], opacity[firePoints.id] ?? firePoints.defaultOpacity);
 
   const fireReports = OFFICIAL_CONTEXT_BY_ID["nifc-fire-reports"];
   ensureGeoJsonSource(map, fireReports, payloads["nifc-fire-reports"]?.data ?? emptyCollection());
@@ -960,6 +968,8 @@ export const applyOfficialContextState = (
       // prevents stretched imagery and false-looking color fields at global scale.
       const globeSafeVisibility = (source.kind === "OPERATIONAL_WMS" || source.kind === "HISTORICAL_RASTER") && globeView ? false : visibility[source.id];
       setVisibleIfChanged(map, layerId, globeSafeVisibility);
+      // Fire detections use zoom-dependent opacity (flame → footprint) applied by syncFireDetectionDisplay.
+      if (source.id === "nasa-gibs-fire-points") continue;
       const safeOpacity = Math.max(0, Math.min(1, opacity[source.id] ?? source.defaultOpacity)) * (source.id === "noaa-hms-smoke" ? smokeFade.get(map) ?? 1 : 1);
       const layer = map.getLayer(layerId);
       if (layer?.type === "circle") {

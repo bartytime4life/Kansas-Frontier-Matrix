@@ -71,6 +71,7 @@ import { CropCasmaControl } from "./crop-casma-control";
 import { HistoricalTopoControl } from "./historical-topo-control";
 import { LayerSourceNotices, RenderQualityControl } from "./map-toolbar";
 import { HostedSourceStatus } from "./hosted-source-status";
+import { setFireDetectionMotion } from "./fire-detection-style";
 import { drawWindFlowCanvas, nearestWindFlowSample, resetWindFlowCanvas, windFlowToneForBasemap, windToCompass } from "./wind-arrow-canvas";
 import type { WaterPathAnalysis } from "./water-path-analysis";
 import { drawWaterMotionCanvas } from "./water-motion-canvas";
@@ -6266,7 +6267,10 @@ export default function Home() {
     setCurtainShimmer(shimmer);
     setNightSkyTwinkle(twinkle);
     setWaterFlowMotion(flowing);
-    if (!map || !(shimmer || twinkle || flowing)) return;
+    // Fire flames and embers animate themselves; they only need to know
+    // whether ambient motion is currently allowed.
+    setFireDetectionMotion(motionAllowed);
+    if (!map || !(shimmer || twinkle || flowing)) return () => setFireDetectionMotion(false);
     let frame = 0;
     let last = 0;
     const tick = (now: number) => {
@@ -6279,7 +6283,7 @@ export default function Home() {
       frame = window.requestAnimationFrame(tick);
     };
     frame = window.requestAnimationFrame(tick);
-    return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); setNightSkyTwinkle(false); setWaterFlowMotion(false); };
+    return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); setNightSkyTwinkle(false); setWaterFlowMotion(false); setFireDetectionMotion(false); };
   }, [dynamicEffects, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain, sceneEffects.stars, sceneEffects.waterFlow]);
 
   // The Scene panel reports what the flowing-water layer could draw.
