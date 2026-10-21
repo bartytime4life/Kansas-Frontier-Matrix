@@ -1113,6 +1113,16 @@ export default function Home() {
   const officialArchiveDaysRef = useRef<Partial<Record<OfficialContextFeedId, string>>>({});
   const officialArchivePayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const smokeTransitionsRef = useRef(new HmsFrameTransitions());
+  const [smokePlaybackSignal, setSmokePlaybackSignal] = useState(() => smokeTransitionsRef.current.signal);
+  const cancelSmokePlayback = useCallback(() => {
+    // Synchronous invalidation also reaches the child's independent cache read.
+    setSmokePlaybackSignal(smokeTransitionsRef.current.cancel());
+    const map = mapRef.current;
+    if (map && styleGenerationReadyRef.current) {
+      resetHmsSmokeFade(map);
+      setHmsSmokeFade(map, 1, officialOpacityRef.current["noaa-hms-smoke"]);
+    }
+  }, []);
   const layerJsonReadsRef = useRef<LayerJsonReads | null>(null);
   layerJsonReadsRef.current ??= new LayerJsonReads();
   const officialRequestsRef = useRef(new Map<OfficialContextFeedId, AbortController>());
@@ -1684,6 +1694,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => () => {
+    smokeTransitionsRef.current.cancel();
     if (placeTourTimerRef.current !== null) window.clearTimeout(placeTourTimerRef.current);
     for (const controller of officialRequestsRef.current.values()) controller.abort();
     officialRequestsRef.current.clear();
@@ -2636,6 +2647,7 @@ export default function Home() {
 
   const commitTemporalFrame = useCallback((next: number, message?: string, keepCalendar = false) => {
     if (!keepCalendar) {
+      cancelSmokePlayback();
       calendarSeekGeneration.current++;
       calendarSweepRef.current = null;
       setCalendarSweep(null);
@@ -2676,7 +2688,7 @@ export default function Home() {
     setPreviewYear(next);
     if (temporalMode === "comparison") setCompareTimeB(next);
     if (message) announce(message);
-  }, [announce, runMapMutation, setRightOpen, temporalMode]);
+  }, [announce, cancelSmokePlayback, runMapMutation, setRightOpen, temporalMode]);
 
   const stepTemporalSweep = useCallback((direction: TemporalPlaybackDirection) => {
     const next = nextTemporalFrame(temporalSequence, year, direction, "stop");
@@ -3356,54 +3368,68 @@ export default function Home() {
     }
   }, [announce, runMapMutation, runtimeOfficialVisibility]);
 
-  const reserveSmokePlayback = useCallback((day: string) => {
+  const reserveSmokePlayback = useCallback((day: string, signal: AbortSignal) => {
+    signal.throwIfAborted();
     officialRequestsRef.current.get("noaa-hms-smoke")?.abort();
     officialRequestsRef.current.delete("noaa-hms-smoke");
+    // A prior day's confirmed payload cannot certify this new reservation.
+    if (officialArchiveDaysRef.current["noaa-hms-smoke"] !== day) {
+      officialArchivePayloadsRef.current = { ...officialArchivePayloadsRef.current, "noaa-hms-smoke": undefined };
+    }
     // Pin acquisition immediately, but label the map date only after commit.
     officialArchiveDaysRef.current = { ...officialArchiveDaysRef.current, "noaa-hms-smoke": day };
   }, []);
-  const commitSmokePlayback = useCallback((day: string, payload: OfficialContextPayload, callerSignal: AbortSignal, smooth: boolean) => smokeTransitionsRef.current.run(callerSignal, async (signal) => {
-    const map = mapRef.current;
-    const sourceId = OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].sourceId;
-    const source = map?.getSource(sourceId);
-    if (!map || !styleGenerationReadyRef.current || source?.type !== "geojson") throw new Error("Smoke map is not ready.");
-    const sameSource = () => mapRef.current === map && styleGenerationReadyRef.current && map.getSource(sourceId) === source;
-    const checked = (uploaded = false) => {
-      signal.throwIfAborted();
-      if (!sameSource() || uploaded && !geoJSONHasData(source as GeoJSONSource, payload.data)) throw new Error("Smoke map changed during playback.");
-    };
-    const prior = officialPayloadsRef.current["noaa-hms-smoke"];
-    const apply = () => { if (sameSource()) applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current); };
-    const paint = (factor: number) => { if (sameSource()) setHmsSmokeFade(map, factor, officialOpacityRef.current["noaa-hms-smoke"]); };
-    try {
-      checked();
-      if (prior && smooth) await hmsFade(1, 0, signal, paint);
-      checked();
-      officialPayloadsRef.current = { ...officialPayloadsRef.current, "noaa-hms-smoke": payload }; apply();
-      await waitForGeoJSON(source as GeoJSONSource, signal);
-      checked(true);
-      if (prior && smooth) await hmsFade(0, 1, signal, paint);
-      checked(true);
-      setOfficialPayloads(officialPayloadsRef.current);
-      officialArchivePayloadsRef.current["noaa-hms-smoke"] = payload;
-      setOfficialArchiveDays(current => ({ ...current, "noaa-hms-smoke": day }));
-      setOfficialStates(current => ({ ...current, "noaa-hms-smoke": payload.state }));
-      setOfficialErrors(current => ({ ...current, "noaa-hms-smoke": undefined }));
-    } catch (error) {
-      if (officialPayloadsRef.current["noaa-hms-smoke"] === payload) {
-        officialPayloadsRef.current = { ...officialPayloadsRef.current, "noaa-hms-smoke": prior }; apply(); setOfficialPayloads(officialPayloadsRef.current);
-        // Restoration is bounded by the upload helper, but must finish before
-        // a queued transition is allowed to adopt its own prior frame.
-        if (sameSource()) await waitForGeoJSON(source as GeoJSONSource);
+  const commitSmokePlayback = useCallback((day: string, payload: OfficialContextPayload, callerSignal: AbortSignal, smooth: boolean) => {
+    const owner = smokeTransitionsRef.current.signal;
+    return smokeTransitionsRef.current.run(callerSignal, async (signal) => {
+      const map = mapRef.current;
+      const sourceId = OFFICIAL_CONTEXT_BY_ID["noaa-hms-smoke"].sourceId;
+      const source = map?.getSource(sourceId);
+      if (!map || !styleGenerationReadyRef.current || source?.type !== "geojson") throw new Error("Smoke map is not ready.");
+      const sameSource = () => mapRef.current === map && styleGenerationReadyRef.current && map.getSource(sourceId) === source;
+      const checked = (uploaded = false) => {
+        signal.throwIfAborted();
+        if (!sameSource() || uploaded && !geoJSONHasData(source as GeoJSONSource, payload.data)) throw new Error("Smoke map changed during playback.");
+      };
+      const prior = officialPayloadsRef.current["noaa-hms-smoke"];
+      const apply = (values = officialPayloadsRef.current) => { if (sameSource()) applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, values); };
+      let presented = false;
+      const paint = (factor: number) => { if (sameSource()) setHmsSmokeFade(map, factor, officialOpacityRef.current["noaa-hms-smoke"]); };
+      try {
+        checked();
+        if (prior && smooth) await hmsFade(1, 0, signal, paint);
+        checked();
+        // Tentative renderer data is not yet confirmed source/evidence state.
+        presented = true;
+        apply({ ...officialPayloadsRef.current, "noaa-hms-smoke": payload });
+        await waitForGeoJSON(source as GeoJSONSource, signal);
+        checked(true);
+        if (prior && smooth) await hmsFade(0, 1, signal, paint);
+        checked(true);
+        officialPayloadsRef.current = { ...officialPayloadsRef.current, "noaa-hms-smoke": payload };
+        setOfficialPayloads(officialPayloadsRef.current);
+        officialArchivePayloadsRef.current["noaa-hms-smoke"] = payload;
+        setOfficialArchiveDays(current => ({ ...current, "noaa-hms-smoke": day }));
+        setOfficialStates(current => ({ ...current, "noaa-hms-smoke": payload.state }));
+        setOfficialErrors(current => ({ ...current, "noaa-hms-smoke": undefined }));
+      } catch (error) {
+        if (!owner.aborted && presented && officialPayloadsRef.current["noaa-hms-smoke"] === prior) {
+          apply();
+          // Restoration is bounded by the upload helper, but must finish before
+          // a queued transition is allowed to adopt its own prior frame.
+          if (sameSource()) await waitForGeoJSON(source as GeoJSONSource);
+        }
+        throw error;
+      } finally {
+        // Style replacement can remove this source while its map remains alive.
+        // Do not leave that map's next style inheriting a zero opacity multiplier.
+        if (!owner.aborted) {
+          resetHmsSmokeFade(map);
+          if (mapRef.current === map && styleGenerationReadyRef.current) setHmsSmokeFade(map, 1, officialOpacityRef.current["noaa-hms-smoke"]);
+        }
       }
-      throw error;
-    } finally {
-      // Style replacement can remove this source while its map remains alive.
-      // Do not leave that map's next style inheriting a zero opacity multiplier.
-      resetHmsSmokeFade(map);
-      if (mapRef.current === map && styleGenerationReadyRef.current) setHmsSmokeFade(map, 1, officialOpacityRef.current["noaa-hms-smoke"]);
-    }
-  }), []);
+    });
+  }, []);
 
   const loadOfficialArchiveDay = useCallback((feed: OfficialContextFeedId, day: string, force = false): Promise<void> => {
     const prior = calendarArchiveLoads.current.get(feed);
@@ -3416,6 +3442,7 @@ export default function Home() {
       || day > currentUtcDay()
       || (feed === "nasa-gibs-fire-points" && day < "2018-01-01")
       || (feed === "noaa-hms-smoke" && day < "2005-08-05")) return;
+    if (feed === "noaa-hms-smoke") cancelSmokePlayback();
     if (officialArchiveDaysRef.current[feed] === day && !officialRequestsRef.current.get(feed)?.signal.aborted && officialRequestsRef.current.has(feed)) return;
     officialRequestsRef.current.get(feed)?.abort();
     const controller = new AbortController();
@@ -3476,9 +3503,10 @@ export default function Home() {
     const settled = () => { if (calendarArchiveLoads.current.get(feed)?.promise === promise) calendarArchiveLoads.current.delete(feed); };
     void promise.then(settled, settled);
     return promise;
-  }, [announce]);
+  }, [announce, cancelSmokePlayback]);
 
   const returnOfficialSourceToCurrent = useCallback((feed: OfficialContextFeedId) => {
+    if (feed === "noaa-hms-smoke") cancelSmokePlayback();
     officialRequestsRef.current.get(feed)?.abort();
     officialRequestsRef.current.delete(feed);
     officialArchiveDaysRef.current = { ...officialArchiveDaysRef.current, [feed]: undefined };
@@ -3489,12 +3517,13 @@ export default function Home() {
     if (feed === "usgs-earthquakes") setEarthquakeArchiveFrameIndex(-1);
     if (feed === "noaa-hms-smoke") setSmokeArchiveFrameIndex(-1);
     void refreshOfficialContext(feed);
-  }, [refreshOfficialContext]);
+  }, [cancelSmokePlayback, refreshOfficialContext]);
 
 
   const seekCalendarFrame = useCallback(async (candidate: CalendarSweepView): Promise<CalendarFrameOutcome> => {
     const next = readCalendarSweep(JSON.stringify(candidate), currentUtcDay());
     if (!next) return { state: "error", message: "Choose a valid UTC calendar range." };
+    cancelSmokePlayback();
     const generation = ++calendarSeekGeneration.current, day = calendarFrameDay(next);
     const nextYear = Number(day.slice(0, 4));
     calendarSweepRef.current = next; setCalendarSweep(next); setPlaying(false); setTemporalMode("snapshot");
@@ -3533,7 +3562,7 @@ export default function Home() {
     const partial = checked.some(payload => !payload || payload.state === "partial" || payload.truncated);
     const count = checked.reduce((sum, payload) => sum + (payload?.featureCount ?? 0), 0);
     return { state: partial ? "partial" : count ? "ready" : "empty", message: day + " UTC · " + count + " returned source records across " + feeds.length + " selected dated sources." + (partial ? " Coverage is partial or one source is unavailable." : count ? " Source dates and retrieval clocks remain separate." : " An empty response does not prove absence.") };
-  }, [activeLayers, commitTemporalFrame, loadOfficialArchiveDay, runtimeOfficialVisibility, setRightOpen]);
+  }, [activeLayers, cancelSmokePlayback, commitTemporalFrame, loadOfficialArchiveDay, runtimeOfficialVisibility, setRightOpen]);
 
   // Turning on a supported layer inside an active calendar view checks that
   // same day. It never substitutes the provider's current snapshot.
@@ -4597,6 +4626,7 @@ export default function Home() {
   }, []);
 
   const restoreExplorerFromUrl = useCallback(() => {
+      cancelSmokePlayback();
       const params = explorerHistoryParams(window.location.search, window.history.state);
       const hasDestination = hasExplorerDestination(params, new URLSearchParams(window.location.search));
       if (!explorerRestoredRef.current) {
@@ -4897,7 +4927,7 @@ export default function Home() {
       }
       explorerRestoredRef.current = true;
       setLayerPreferencesReady(true);
-  }, [loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow]);
+  }, [cancelSmokePlayback, loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow]);
 
   useEffect(() => {
     if (explorerRestoredRef.current) saveExplorerHistoryView(buildExplorerParams(), window.history);
@@ -9543,7 +9573,7 @@ export default function Home() {
                     <p>Interagency working incident reports discovered in Kansas during the last 30 days. A record confirms provider reporting; status, area, and cause can change. Satellite detections are compared only by proximity.</p>
                     <output>{!officialVisibility[source.id] ? "Report layer off." : heldAtFrame ? "Held by atlas year · Return to Present." : state === "loading" ? "Checking NIFC reports…" : state === "error" ? "NIFC reports unavailable · no substitute claims." : `${officialPayloads["nifc-fire-reports"]?.featureCount ?? 0} reports in the loaded response${state === "partial" ? " · partial" : ""}. No report is not an all-clear.`}</output>
                     <div className="source-time-actions"><button type="button" onClick={() => openPrimaryWorkspace("reports", true, buildFireReportContext("nifc-fire-reports", null, officialPayloads["nifc-fire-reports"]?.retrievedAt, officialPayloads["nifc-fire-reports"]?.state ?? "unavailable", officialPayloads["nasa-gibs-fire-points"]?.state ?? "unavailable", []))}>Build Kansas fire report</button><a href="https://inciweb.wildfire.gov/" target="_blank" rel="noreferrer">Browse InciWeb incident updates ↗</a><a href="https://www.nifc.gov/fire-information" target="_blank" rel="noreferrer">National fire news ↗</a></div>
-                  </> : source.id === "noaa-hms-smoke" ? <HmsSmokePlayback enabled={Boolean(effectiveOfficialVisibility["noaa-hms-smoke"] && styleReady)} reducedMotion={reducedMotion} displayedDay={officialArchiveDays["noaa-hms-smoke"]} payload={officialPayloads["noaa-hms-smoke"]} onReserve={reserveSmokePlayback} onFrame={commitSmokePlayback} onCurrent={() => returnOfficialSourceToCurrent("noaa-hms-smoke")} /> : ["usgs-earthquakes", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(source.id) ? <>
+                  </> : source.id === "noaa-hms-smoke" ? <HmsSmokePlayback sessionSignal={smokePlaybackSignal} enabled={Boolean(effectiveOfficialVisibility["noaa-hms-smoke"] && styleReady)} reducedMotion={reducedMotion} displayedDay={officialArchiveDays["noaa-hms-smoke"]} payload={officialPayloads["noaa-hms-smoke"]} onReserve={reserveSmokePlayback} onFrame={commitSmokePlayback} onCurrent={() => returnOfficialSourceToCurrent("noaa-hms-smoke")} /> : ["usgs-earthquakes", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(source.id) ? <>
                     <p>{source.id === "usgs-earthquakes" ? "Event timestamps; a checked day can be swept event by event." : source.id === "nasa-gibs-fire-points" ? "Selectable thermal detections for one exact UTC day; each point carries its own acquisition time. This is separate from the provider-default image layer." : "Station metadata valid for a checked date; no waveform time series on this map."}</p>
                     <div className="source-time-actions"><label>UTC archive day<input type="date" min={source.id === "nasa-gibs-fire-points" ? "2018-01-01" : undefined} max={currentUtcDay()} value={officialArchiveDraftDays[source.id as OfficialContextFeedId] ?? ""} onChange={(event) => setOfficialArchiveDraftDays((current) => ({ ...current, [source.id]: event.target.value }))} /></label><button type="button" disabled={!officialArchiveDraftDays[source.id as OfficialContextFeedId] || heldAtFrame || state === "loading" && officialArchiveDraftDays[source.id as OfficialContextFeedId] === officialArchiveDays[source.id as OfficialContextFeedId]} onClick={() => void loadOfficialArchiveDay(source.id as OfficialContextFeedId, officialArchiveDraftDays[source.id as OfficialContextFeedId]!)}>Check day on map</button>{officialArchiveDays[source.id as OfficialContextFeedId] && <button type="button" onClick={() => returnOfficialSourceToCurrent(source.id as OfficialContextFeedId)}>Current</button>}{source.id !== "nasa-gibs-fire-points" && <Link href={`/observatory?start=${encodeURIComponent(`${officialArchiveDraftDays[source.id as OfficialContextFeedId] || officialArchiveDays[source.id as OfficialContextFeedId] || currentUtcDay()}T00:00`)}&hours=24&layers=${source.id === "usgs-earthquakes" ? "earthquakes" : "shake"},counties`}>Open separate archive map ↗</Link>}</div>
                     <output>{officialArchiveDays[source.id as OfficialContextFeedId] ? state === "loading" ? "Checking day · old map features cleared" : state === "error" ? "Archive unavailable · map source empty" : !officialArchivePayloadsRef.current[source.id as OfficialContextFeedId] ? "Day not loaded · turn on layer to resume" : `${datedSourceDisplayStatus(officialArchivePayloadsRef.current[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialPayloads[source.id as OfficialContextFeedId]?.featureCount ?? 0, officialArchiveDays[source.id as OfficialContextFeedId]!, officialVisibility[source.id], effectiveOfficialVisibility[source.id], styleReady)}${state === "partial" || officialPayloads[source.id as OfficialContextFeedId]?.truncated ? " · partial; missing coverage cannot be ruled out" : ""}` : !officialVisibility[source.id] ? "Current source off · Turn on layer to display." : heldAtFrame ? "Source held by atlas year · Return to Present to display." : source.id === "nasa-gibs-fire-points" ? `${officialPayloads["nasa-gibs-fire-points"]?.sourceDay ? `NASA image day ${officialPayloads["nasa-gibs-fire-points"]!.sourceDay} UTC` : "Current UTC day · check source"}${officialPayloads["nasa-gibs-fire-points"] ? ` · ${officialPayloads["nasa-gibs-fire-points"]!.featureCount} detections loaded${officialPayloads["nasa-gibs-fire-points"]!.state === "partial" ? " · partial" : ""}` : ""}; missing detections are not an all-clear.` : "Current source clock · earliest available day is checked per request."}</output>

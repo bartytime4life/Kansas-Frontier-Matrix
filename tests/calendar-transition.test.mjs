@@ -14,7 +14,7 @@ const payload = (name = "archive") => ({ feed, state: "ready", featureCount: 1, 
 function harness() {
   const ref = current => ({ current }), state = {}, reads = [], cleared = [];
   const context = {
-    useCallback: fn => fn, announce() {}, temporalMode: "snapshot", OFFICIAL_CONTEXT_PRESENT_FRAME: 2026,
+    useCallback: fn => fn, cancelSmokePlayback() {}, announce() {}, temporalMode: "snapshot", OFFICIAL_CONTEXT_PRESENT_FRAME: 2026,
     CALENDAR_ARCHIVE_BOUNDS: { [feed]: "1800-01-01", [hidden]: "1800-01-01" },
     OFFICIAL_CONTEXT_BY_ID: { [feed]: { apiPath: "/source", shortTitle: "Quakes" } },
     calendarSeekGeneration: ref(0), calendarSweepRef: ref({ day }), calendarArchiveLoads: ref(new Map()),

@@ -3,9 +3,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { HMS_FIRST_DAY, HmsFrameCache, findRecentSmoke, hmsAdvance, hmsDayNumber, hmsToday, hmsValidDay } from "./hms-smoke-playback";
 import type { OfficialContextPayload } from "./live-context";
 
-export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload, onReserve, onFrame, onCurrent }: {
-  enabled: boolean; reducedMotion: boolean; displayedDay?: string; payload?: OfficialContextPayload;
-  onReserve: (day: string) => void;
+export function HmsSmokePlayback({ enabled, sessionSignal, reducedMotion, displayedDay, payload, onReserve, onFrame, onCurrent }: {
+  enabled: boolean; sessionSignal: AbortSignal; reducedMotion: boolean; displayedDay?: string; payload?: OfficialContextPayload;
+  onReserve: (day: string, signal: AbortSignal) => void;
   onFrame: (day: string, payload: OfficialContextPayload, signal: AbortSignal, smooth: boolean) => Promise<void>;
   onCurrent: () => void;
 }) {
@@ -21,6 +21,13 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
   const valid = hmsValidDay(from, today) && hmsValidDay(through, today) && from <= through;
   const stop = useCallback(() => { generation.current++; request.current?.abort(); prefetch.current?.abort(); setBusy(false); setPlaying(false); }, []);
   useEffect(() => {
+    let listening = true;
+    // Catch a retirement before subscription without updating state in the effect.
+    if (sessionSignal.aborted) void Promise.resolve().then(() => { if (listening) stop(); });
+    sessionSignal.addEventListener("abort", stop, { once: true });
+    return () => { listening = false; sessionSignal.removeEventListener("abort", stop); };
+  }, [sessionSignal, stop]);
+  useEffect(() => {
     // A parent map/motion change must cancel outstanding publication and frame requests immediately.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!enabled || reducedMotion) stop();
@@ -34,27 +41,31 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
   const show = useCallback(async (day: string) => {
     request.current?.abort(); prefetch.current?.abort();
     const token = ++generation.current, controller = new AbortController(); request.current = controller;
-    setCursor(day); setBusy(true); setStatus(`Checking ${day} UTC; displayed frame retained until ready.`); onReserve(day);
+    const signal = AbortSignal.any([controller.signal, sessionSignal]);
+    setCursor(day); setBusy(true); setStatus(`Checking ${day} UTC; displayed frame retained until ready.`);
     let publicationReady = false;
     try {
-      const next = await cache.current.get(day, controller.signal);
+      signal.throwIfAborted();
+      onReserve(day, signal);
+      const next = await cache.current.get(day, signal);
+      signal.throwIfAborted();
       if (generation.current !== token) return;
       publicationReady = true;
-      await onFrame(day, next, controller.signal, smooth && !reducedMotion);
+      await onFrame(day, next, signal, smooth && !reducedMotion);
       if (generation.current !== token) return;
       setStatus(`${day} UTC · ${next.featureCount} daily footprints${next.state === "partial" ? " · partial publication coverage" : ""}. No polygons is not an all-clear.`);
       if (day < through) {
         const ahead = new AbortController(); prefetch.current = ahead;
-        void cache.current.get(hmsAdvance(day, 1), ahead.signal).catch(() => {});
+        void cache.current.get(hmsAdvance(day, 1), AbortSignal.any([ahead.signal, sessionSignal])).catch(() => {});
       }
     } catch {
-      if (generation.current === token && !controller.signal.aborted) {
+      if (generation.current === token && !signal.aborted) {
         setStatus(publicationReady
           ? `Map update for ${day} UTC did not complete. The displayed date was not advanced. Retry when the map is ready.`
           : `Publication for ${day} UTC could not be checked. Last displayed date retained. Retry or use Next day to skip explicitly.`); setPlaying(false);
       }
     } finally { if (generation.current === token) setBusy(false); }
-  }, [onFrame, onReserve, reducedMotion, smooth, through]);
+  }, [onFrame, onReserve, reducedMotion, sessionSignal, smooth, through]);
   useEffect(() => {
     if (!playing || busy || !valid || !enabled || reducedMotion) return;
     const next = cursor < through ? hmsAdvance(cursor, 1) : loop ? from : null;
@@ -65,21 +76,23 @@ export function HmsSmokePlayback({ enabled, reducedMotion, displayedDay, payload
   const findSmoke = async () => {
     stop();
     const token = ++generation.current, controller = new AbortController(); request.current = controller;
+    const signal = AbortSignal.any([controller.signal, sessionSignal]);
     setBusy(true);
     try {
-      const found = await findRecentSmoke(cache.current, today, controller.signal, day => setStatus(`Looking for Kansas-area smoke: checking ${day} UTC…`));
+      const found = await findRecentSmoke(cache.current, today, signal, day => setStatus(`Looking for Kansas-area smoke: checking ${day} UTC…`));
       if (generation.current !== token) return;
       if (!found.day || !found.payload) {
         setStatus(`No footprints found in the checked publications from the last seven days.${found.missingDays.length ? ` ${found.missingDays.length} publication day(s) could not be checked.` : ""} This is not an all-clear.`);
         return;
       }
-      onReserve(found.day);
-      await onFrame(found.day, found.payload, controller.signal, smooth && !reducedMotion);
+      signal.throwIfAborted();
+      onReserve(found.day, signal);
+      await onFrame(found.day, found.payload, signal, smooth && !reducedMotion);
       if (generation.current !== token) return;
       setFrom(hmsAdvance(today, -6)); setThrough(today); setCursor(found.day);
       setStatus(`Showing ${found.payload.featureCount} Kansas-area footprints from ${found.day} UTC.${found.missingDays.length ? ` ${found.missingDays.length} newer publication day(s) unavailable; this may not be the latest smoke.` : ""} Historical daily footprint, not current smoke.`);
     } catch {
-      if (generation.current === token && !controller.signal.aborted) setStatus("Smoke search or map update could not finish. The last displayed frame is retained.");
+      if (generation.current === token && !signal.aborted) setStatus("Smoke search or map update could not finish. The last displayed frame is retained.");
     } finally { if (generation.current === token) setBusy(false); }
   };
   return <div className="hms-playback">
