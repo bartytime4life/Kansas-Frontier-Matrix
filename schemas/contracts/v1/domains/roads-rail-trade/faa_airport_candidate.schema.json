@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/roads-rail-trade/faa_airport_candidate.schema.json",
+  "title": "Held FAA airport candidate profile",
+  "type": "object",
+  "required": ["profile", "candidate_id", "edition", "retrieved_at", "source_publication_time", "release_time", "release_state", "rights_state", "records", "rejects", "future_at_capture", "coverage"],
+  "properties": {
+    "profile": {"const":"kfm.faa-airports-candidate/v1"},
+    "candidate_id": {"type":"string","pattern":"^sha256:[a-f0-9]{64}$"},
+    "edition": {"type":"string","format":"date"},
+    "retrieved_at": {"type":"string","format":"date-time"},
+    "source_publication_time": {"type":"null"},
+    "release_time": {"type":"null"},
+    "release_state": {"const":"HELD"},
+    "rights_state": {"const":"REVIEW_REQUIRED"},
+    "future_at_capture": {"type":"boolean"},
+    "coverage": {"enum":["PARTIAL","REQUESTED_STATES"]},
+    "records": {"type":"array","maxItems":10000,"items":{
+      "type":"object",
+      "required":["entity_id","revision_id","edition","longitude","latitude","elevation_unit","vertical_reference","horizontal_datum","original","evidence_ref","bundle","public_candidate"],
+      "properties":{
+        "entity_id":{"type":"string","pattern":"^faa:site:[0-9]{5}\\.[0-9]{0,3}:[a-z]$"},
+        "revision_id":{"type":"string","pattern":"^faa:revision:[a-f0-9]{64}$"},
+        "longitude":{"type":"number","minimum":-180,"maximum":180},
+        "latitude":{"type":"number","minimum":-90,"maximum":90},
+        "elevation_unit":{"const":"ft"},
+        "vertical_reference":{"const":"MSL"},
+        "horizontal_datum":{"const":"UNVERIFIED_SOURCE_DATUM"},
+        "original":{"type":"object"},
+        "public_candidate":{"type":"boolean"},
+        "evidence_ref":{"$ref":"https://schemas.kfm.local/contracts/v1/evidence/evidence_ref.schema.json"},
+        "bundle":{"$ref":"https://schemas.kfm.local/contracts/v1/evidence/evidence_bundle.schema.json"}
+      }
+    }},
+    "rejects":{"type":"array","maxItems":30000,"items":{"type":"object","required":["row","record_digest","reason","original"]}}
+  }
+}

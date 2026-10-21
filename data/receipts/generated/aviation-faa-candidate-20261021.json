@@ -1,0 +1,111 @@
+{
+  "receipt_id": "kfm:generated:aviation-faa-candidate:20261021",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/faa/README.md",
+    "connectors/faa/capture.py",
+    "contracts/domains/roads-rail-trade/faa_airport_candidate.md",
+    "data/receipts/validation/aviation-public-hold-20261021.json",
+    "docs/runbooks/aviation-intake-20261021.md",
+    "fixtures/connectors/faa/apt-headers.json",
+    "migrations/database/20261021_faa_airport_candidates.mysql.sql",
+    "migrations/rollback/20261021_faa_airport_candidates.mysql.sql",
+    "pipelines/domains/roads-rail-trade/faa_airports.py",
+    "schemas/contracts/v1/domains/roads-rail-trade/faa_airport_candidate.schema.json",
+    "tests/connectors/test_faa_airports.py",
+    "tools/local_data/faa_airport_rehearsal.py"
+  ],
+  "artifact_hashes": {
+    "connectors/faa/README.md": "sha256:082a14be53e5888aca94d8f4c625e313da1476d0017905e0321a48661fb56eb3",
+    "connectors/faa/capture.py": "sha256:05915d66dd66527f655c4638b79037a42d37efc57c9f5448e3e42fcdbfcea562",
+    "contracts/domains/roads-rail-trade/faa_airport_candidate.md": "sha256:d4d9a93f97ed8d2a7ec94f10fbeed64d36847ee5fe3f5dfe102243f812a75f8c",
+    "data/receipts/validation/aviation-public-hold-20261021.json": "sha256:94af7faa8766d337a06a3a74b68ca0eb577e8e6a5fa8c5960343dbb2a8c494c1",
+    "docs/runbooks/aviation-intake-20261021.md": "sha256:5c3dd4985c9ca22506e248223f94bd0d75cb6f44328be239d4ae459215ad5e39",
+    "fixtures/connectors/faa/apt-headers.json": "sha256:49a3604ac21508cb8c7ad55f1c09f4791816cd439148fd51f8087ab1cc282f1c",
+    "migrations/database/20261021_faa_airport_candidates.mysql.sql": "sha256:5cb2a6dd7b8008bc65ba4704591629cdcf3efdd01be6dafec1a036939cf18902",
+    "migrations/rollback/20261021_faa_airport_candidates.mysql.sql": "sha256:3fa8ba29fe572d68e9a7e0e580b3221e186e6cfee84bfa59cdaba9c5fb3c5084",
+    "pipelines/domains/roads-rail-trade/faa_airports.py": "sha256:e0f71db8e815f3ec30eb24d1c889a73c474b2489e8746a5005ac75b615696c7e",
+    "schemas/contracts/v1/domains/roads-rail-trade/faa_airport_candidate.schema.json": "sha256:e1f85623fa0addc0bc4f3405f0683646bc9c96c608bf760a3b6333aa540a1875",
+    "tests/connectors/test_faa_airports.py": "sha256:a395403d58330f7dd6634d2d1e5836678cecdf851a0d871dd1f3152380b36654",
+    "tools/local_data/faa_airport_rehearsal.py": "sha256:f8ceebb3b4390f7cf71e371f28e946e9d0210d0b7900027047685e25e6880f97"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session; exact backend version unavailable"
+  },
+  "prompt_or_contract": "sha256:60f097e52a29538d6ed999720205715e6c0a2499cead5ef5346a31241eeb38ad",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "main@7f2f683e5267f76d40af6b609c6110a41758be42",
+      "ADR-0029",
+      "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/2026-10-01/",
+      "https://opensky-network.org/about/terms-of-use"
+    ]
+  },
+  "truth_labels": {
+    "connectors/faa/README.md": "CONFIRMED",
+    "connectors/faa/capture.py": "CONFIRMED",
+    "contracts/domains/roads-rail-trade/faa_airport_candidate.md": "PROPOSED",
+    "data/receipts/validation/aviation-public-hold-20261021.json": "CONFIRMED",
+    "docs/runbooks/aviation-intake-20261021.md": "CONFIRMED",
+    "fixtures/connectors/faa/apt-headers.json": "CONFIRMED",
+    "migrations/database/20261021_faa_airport_candidates.mysql.sql": "PROPOSED",
+    "migrations/rollback/20261021_faa_airport_candidates.mysql.sql": "PROPOSED",
+    "pipelines/domains/roads-rail-trade/faa_airports.py": "CONFIRMED",
+    "schemas/contracts/v1/domains/roads-rail-trade/faa_airport_candidate.schema.json": "PROPOSED",
+    "tests/connectors/test_faa_airports.py": "CONFIRMED",
+    "tools/local_data/faa_airport_rehearsal.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "targeted FAA suite",
+      "outcome": "PASS",
+      "reason": "20 passed; synthetic failures, schema, capture replay, SQL rehearsal, evidence/report tamper and correction."
+    },
+    {
+      "gate": "real FAA capture/rehearsal",
+      "outcome": "PASS",
+      "reason": "380 held records, zero rejects; retry 0 inserts; isolated SQLite integrity ok; not MySQL."
+    },
+    {
+      "gate": "topology compared to exact base",
+      "outcome": "PASS",
+      "reason": "89 inherited warnings, no new drift/invariants, no stale entries; no baseline changes."
+    },
+    {
+      "gate": "live MySQL and second PC acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No live engine/storage access or infrastructure authority; no changes attempted."
+    }
+  ],
+  "policy_decisions": [
+    "data/receipts/validation/aviation-public-hold-20261021.json"
+  ],
+  "citations": [
+    {
+      "id": "faa-exact-edition",
+      "validated": true,
+      "evidence_ref": "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/2026-10-01/"
+    },
+    {
+      "id": "opensky-terms",
+      "validated": true,
+      "evidence_ref": "https://opensky-network.org/about/terms-of-use"
+    },
+    {
+      "id": "directory-authority",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-21T22:14:26.622666Z",
+  "emitter": "Codex",
+  "notes": "Private candidate authoring and a recorded ABSTAIN process receipt. No rights approval, release, deployment, live migration, or second-PC change. Independent review and aviation release profile remain held."
+}
