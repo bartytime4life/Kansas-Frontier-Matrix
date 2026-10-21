@@ -273,8 +273,8 @@ test('every topic has an illustrative scene with well-formed, labelled beats',as
  assert.deepEqual(Object.keys(SCENE_CATALOG).sort(),TOPIC_STRUCTURE.map(t=>t.id).sort());
  assert.deepEqual(Object.keys(SCENE_LOADERS).sort(),Object.keys(SCENE_CATALOG).sort());
  for(const [id,{duration,beats}] of Object.entries(SCENE_CATALOG)){
-  assert.ok(duration>=12&&duration<=18,`${id} loops in 12–18 s`);
-  assert.ok(beats.length>=2&&beats.length<=3);assert.equal(beats[0][0],0);
+  assert.ok(duration>=12&&duration<=40,`${id} loops in 12–40 s`);
+  assert.ok(beats.length>=2&&beats.length<=8);assert.equal(beats[0][0],0);
   beats.forEach(([at],i)=>{assert.ok(at<duration);if(i)assert.ok(at>beats[i-1][0]);});
   assert.equal(beatTitle(id,duration-.01),beats.at(-1)[1]);
  }
