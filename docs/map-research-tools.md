@@ -143,3 +143,58 @@ owner-private audience and DB/R2 bindings. Site v153 is the preceding saved
 rollback target. Revert the bounded review patch to reverse the repository
 change; existing saved records remain compatible and new optional context can
 be ignored by the prior UI.
+
+
+## 2026-10-21 county-scoped hosted investigation follow-up
+
+CONFIRMED source baseline: standalone GoDaddy application branch
+`a0-hosted-ai-web-20261017` at `65d5657536e4c42a7a8ea0772ed12ca0b78bc939`.
+Main was `91ca0314f0158736f69f953d7973457c19442fde`; its
+`apps/site/source` remains a governed mirror, not the editing destination.
+The open-PR collection was empty at inspection. PRs #5391 and #5392 are already
+included in those respective branch heads; this follow-up preserves aviation
+holds and existing AI configuration. Hosting/runtime identity is NEEDS VERIFICATION.
+
+The first dependency-closed increment extends Near here rather than adding a
+second investigation store. Enable Census counties, select a public-safe point,
+open Near here, choose Ellsworth County (or another loaded Kansas county), and
+choose radius and map time using the existing controls. Results are the
+intersection of that radius, county boundary and existing eligible loaded point
+inventory. The map retains its camera and layer state; it is not clipped to the
+county, and the anchor can lie outside the county. Point membership is a display
+filter, not a surveyed spatial join, track intersection or causal relationship.
+
+The selected GEOID and Census edition persist with saved investigation settings
+and captured draft report context. Results are refreshed on reopen; cached records
+are not restored. A missing, malformed, duplicate or different-edition boundary
+withholds results rather than silently reverting to radius scope. Polygon holes
+are excluded (including their boundaries); exterior boundaries are included.
+The existing bounded county adapter supplies geometry; no new upstream, credential,
+database, scheduler or storage placement is introduced. County boundary edition,
+map time, record source time and retrieval time remain separate.
+
+Loaded-source states describe the inventory before county/radius filtering. They
+are not complete spatial/temporal coverage or observation denominators. Empty
+results do not establish absence of activity. Provider points remain
+EXTERNAL_CONTEXT_ONLY, and the county context never populates includedEvidenceIds.
+Existing location redaction omits the entire context from saved/exported work.
+AI remains governed by its existing typed selection contract; it does not receive
+this county result inventory or acquire new answer authority. Cross-domain
+three-source acceptance, county-aware bounded AI tools, correction-aware released
+citations, and actual coverage denominators remain PROPOSED follow-ons.
+
+Placement: application behavior under `app/`, regression tests under `tests/`, and
+this existing behavior document under `docs/`, within the authoritative standalone
+application responsibility. Basis: adopted Directory Rules via ADR-0029,
+DIR-PLACE-002/003 and DIR-EXEC-001/002; no parallel registry, contract, evidence,
+policy or release home. No mirror synchronization or infrastructure change.
+
+Implementation is draft-reviewable, not deployed or published. Synthetic polygon
+fixtures exercise membership and failure states; they are not actual Ellsworth
+geometry or admitted evidence. Exact validation and commit/tree identity belong
+to the draft PR. Browser/mobile/keyboard acceptance and live provider data are
+NEEDS VERIFICATION. Revert this bounded commit to restore prior behavior. Older
+validators reject the new optional county field, so remove that field from a
+copied local saved record before reopening it with the prior application; do not
+mutate the original as a rollback step. Existing records without county remain
+compatible. Historical source/version and rollback claims above remain historical.

@@ -370,6 +370,7 @@ export default function ReportStoryWorkspaces({
           {report.researchContext && <section className="fire-report-source-card" aria-label="Captured place dossier">
             <strong>Near {report.researchContext.anchor.title} · {report.researchContext.radiusMiles} miles</strong>
             <p>Captured {report.researchContext.capturedAt} · {report.researchContext.mapTime} · {report.researchContext.records.length} of {report.researchContext.total} available records.</p>
+            {report.researchContext.county && <p>County filter: {report.researchContext.county.title} · GEOID {report.researchContext.county.geoid} · {report.researchContext.county.edition} Census boundary · {report.researchContext.county.state}. Intersected with the anchor radius.</p>}
             <p>This dated context stays fixed in this report. Provider records are separate from included evidence; coverage is limited to eligible loaded data.</p>
             <details><summary>Captured sources and coverage</summary><pre style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>{researchMarkdown(report.researchContext)}</pre></details>
           </section>}
