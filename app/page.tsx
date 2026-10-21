@@ -2633,7 +2633,40 @@ export default function Home() {
   }, [setDaylightPlayback]);
 
   const commitTemporalFrame = useCallback((next: number, message?: string, keepCalendar = false) => {
-    if (!keepCalendar) { calendarSeekGeneration.current++; calendarSweepRef.current = null; setCalendarSweep(null); }
+    if (!keepCalendar) {
+      calendarSeekGeneration.current++;
+      calendarSweepRef.current = null;
+      setCalendarSweep(null);
+      // Annual controls leave dated-source mode, even when the year stays the
+      // same. Retire hidden archives too, before Present can expose them.
+      const retired = (Object.keys(CALENDAR_ARCHIVE_BOUNDS) as CalendarArchiveFeed[])
+        .filter(feed => officialArchiveDaysRef.current[feed] || calendarArchiveLoads.current.has(feed));
+      for (const feed of retired) {
+        officialRequestsRef.current.get(feed)?.abort();
+        officialRequestsRef.current.delete(feed);
+        calendarArchiveLoads.current.delete(feed);
+        officialArchiveDaysRef.current = { ...officialArchiveDaysRef.current, [feed]: undefined };
+        officialArchivePayloadsRef.current = { ...officialArchivePayloadsRef.current, [feed]: undefined };
+        officialPayloadsRef.current = { ...officialPayloadsRef.current, [feed]: undefined };
+        setOfficialStates(current => ({ ...current, [feed]: "idle" }));
+        setOfficialErrors(current => ({ ...current, [feed]: undefined }));
+        setOfficialReadPhases(current => ({ ...current, [feed]: undefined }));
+      }
+      if (retired.length) {
+        setOfficialArchiveDays(officialArchiveDaysRef.current);
+        setOfficialPayloads(officialPayloadsRef.current);
+        setEarthquakeArchiveFrameIndex(-1);
+        setSmokeArchiveFrameIndex(-1);
+        const selectedFeed = officialContextIdForSelection(selectedRef.current);
+        const clearSelection = selectedFeed !== null && retired.includes(selectedFeed as CalendarArchiveFeed);
+        if (clearSelection) { selectedRef.current = null; setSelected(null); setRightOpen(false); }
+        const map = mapRef.current;
+        if (map && styleGenerationReadyRef.current) runMapMutation("Leave dated calendar sources", () => {
+          for (const feed of retired) clearOfficialContextFeed(map, feed);
+          if (clearSelection) updateSelectionSource(map, null);
+        });
+      }
+    }
     setSweepRangeStart((current) => Math.min(current, next));
     setSweepRangeEnd((current) => Math.max(current, next));
     yearRef.current = next;
@@ -2641,7 +2674,7 @@ export default function Home() {
     setPreviewYear(next);
     if (temporalMode === "comparison") setCompareTimeB(next);
     if (message) announce(message);
-  }, [announce, temporalMode]);
+  }, [announce, runMapMutation, setRightOpen, temporalMode]);
 
   const stepTemporalSweep = useCallback((direction: TemporalPlaybackDirection) => {
     const next = nextTemporalFrame(temporalSequence, year, direction, "stop");
@@ -3512,11 +3545,8 @@ export default function Home() {
   }, [calendarSweep, loadOfficialArchiveDay, officialVisibility]);
 
   const returnCalendarToPresent = useCallback(() => {
-    calendarSeekGeneration.current++; calendarSweepRef.current = null; setCalendarSweep(null);
     setPlaying(false); setTemporalMode("snapshot"); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME);
-    temporalQueryRef.current = buildTemporalQuery("snapshot", OFFICIAL_CONTEXT_PRESENT_FRAME, OFFICIAL_CONTEXT_PRESENT_FRAME, OFFICIAL_CONTEXT_PRESENT_FRAME, [OFFICIAL_CONTEXT_PRESENT_FRAME]);
-    for (const feed of Object.keys(CALENDAR_ARCHIVE_BOUNDS) as CalendarArchiveFeed[]) if (officialVisibilityRef.current[feed]) returnOfficialSourceToCurrent(feed);
-  }, [commitTemporalFrame, returnOfficialSourceToCurrent]);
+  }, [commitTemporalFrame]);
 
   const seekEarthquakeArchiveFrame = useCallback((index: number) => {
     const day = officialArchiveDaysRef.current["usgs-earthquakes"];
@@ -3777,7 +3807,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!buildYearCurrent || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
+    if (!buildYearCurrent || calendarSweep || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
       for (const [feed, controller] of officialRequestsRef.current) {
         if (officialArchiveDaysRef.current[feed]) continue;
         controller.abort(); officialRequestsRef.current.delete(feed);
@@ -3793,7 +3823,7 @@ export default function Home() {
       }
     }, 40);
     return () => window.clearTimeout(timer);
-  }, [buildYearCurrent, refreshOfficialContext, temporalQuery.frame]);
+  }, [buildYearCurrent, calendarSweep, officialArchiveDays, refreshOfficialContext, temporalQuery.frame]);
 
   const dismissMapUtilityWithoutFocus = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -6376,12 +6406,10 @@ export default function Home() {
         setPlaying(false);
         return;
       }
-      yearRef.current = next;
-      setYear(next);
-      setPreviewYear(next);
+      commitTemporalFrame(next);
     }, 1300 / playbackSpeed);
     return () => window.clearInterval(timer);
-  }, [playbackDirection, playbackLoopMode, playbackSpeed, playing, reducedMotion, temporalMode, temporalSequence]);
+  }, [commitTemporalFrame, playbackDirection, playbackLoopMode, playbackSpeed, playing, reducedMotion, temporalMode, temporalSequence]);
 
   useEffect(() => {
     if (!noaaRadarManifest) return;
