@@ -55,7 +55,15 @@ test("compact Qwen is a scrollable modal with contained keyboard focus", async (
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
 
-  assert.match(page, /className="qwen-panel atlas-chat-dock" role="dialog" aria-modal=\{isCompact\}/);
+  // Attribute order is presentation syntax; retain the actual dialog/focus contract.
+  const panel = page.match(/<section\s[^>]*\bid="qwen-map-panel"[^>]*>/)?.[0];
+  assert.ok(panel, "the map chat panel must exist");
+  assert.match(panel, /className="qwen-panel atlas-chat-dock"/);
+  assert.match(panel, /role="dialog"/);
+  assert.match(panel, /aria-modal=\{isCompact\}/);
+  assert.match(panel, /aria-labelledby="qwen-panel-title"/);
+  assert.match(panel, /hidden=\{!qwenOpen\}/);
+  assert.match(panel, /inert=\{!qwenOpen\}/);
   const effectStart = page.indexOf("if (!qwenOpen || !isCompact) return;");
   const effectEnd = page.indexOf("}, [closeQwenCompanion, isCompact, qwenOpen]);", effectStart);
   assert.ok(effectStart >= 0 && effectEnd > effectStart, "compact Qwen focus effect must be present");
