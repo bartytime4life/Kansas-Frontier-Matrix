@@ -83,7 +83,7 @@ test('resolved source changes invalidate same-selector history and pending expir
  const settle=async(id,cookie)=>{for(let i=0;i<20;i++){const result=await request('jobs/'+id,null,cookie);if(!['preparing','queued','running'].includes(result.body.state))return result;await new Promise(resolve=>setImmediate(resolve));}};
  const first=await request('jobs',input);await settle(first.body.id,first.cookie);
  revision='two';const second=await request('jobs',input,first.cookie);await settle(second.body.id,first.cookie);assert.equal(seen[1].history.length,0);
- revision='pending';const pending=request('jobs',input,first.cookie);while(!release)await new Promise(resolve=>setImmediate(resolve));now+=270001;
+ revision='pending';const pending=request('jobs',input,first.cookie);while(!release)await new Promise(resolve=>setImmediate(resolve));now=(await pending).body.deadline+1;
  release({key:'late',prompt:'Late synthetic source',label:'Late source',boundary:'Unverified context'});
  const late=await pending;assert.equal((await settle(late.body.id,first.cookie)).body.state,'expired');assert.equal(calls,2);
 });
