@@ -59,6 +59,23 @@ test('chat works without account login and isolates guest job capabilities',asyn
  assert.equal((await f.request('jobs/'+first.body.id)).response.status,401);
  assert.equal((await f.request('admin/invite',{username:'owner'})).response.status,404);
 });
+test('an accepted long-running question refreshes guest ownership through its run budget',async()=>{
+ let release;
+ const f=fixture(async()=>release?new Promise(resolve=>{release=resolve;}):{text:'The first synthetic reply.'});
+ const first=await f.request('jobs',question);await f.settle(first.body.id,first.cookie);
+ f.advance(50*60000);release=()=>{};
+ const later=await f.request('jobs',question,first.cookie);
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(later.cookie,first.cookie,'refresh the same guest capability');
+ assert.match(later.response.headers.get('set-cookie'),/HttpOnly; Secure; SameSite=Strict; Max-Age=3600/);
+ f.advance(10*60000+1);
+ const running=await f.request('jobs/'+later.body.id,undefined,later.cookie);
+ assert.equal(running.response.status,200);
+ assert.equal(running.body.state,'running','ownership survives the original one-hour expiry');
+ release({text:'The later synthetic reply completed.'});
+ assert.equal((await f.settle(later.body.id,later.cookie)).body.state,'completed');
+});
+
 test('same-origin gate, request limits and browser-supplied evidence fail closed',async()=>{
  const f=fixture();
  assert.equal((await f.request('jobs',question,null,'https://attacker.test')).response.status,403);
