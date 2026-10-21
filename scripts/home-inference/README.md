@@ -152,8 +152,12 @@ this path at this time; it is not a capacity or quality guarantee.
 
 **Gateway deadline.** The parser refuses profile `timeoutMs` values over 90000;
 this is an application limit independent of the transport provider's timeout.
-The public chat also
-caps a reply at 4096 bytes, so keep `outputTokens.expanded` at about 700 or less.
+Ollama's `outputTokens` allowance includes private reasoning as well as the
+answer. The example allows 1024 tokens for brief replies and 2048 for expanded
+replies so an always-thinking model can reach its answer. The gateway separately
+caps visible answers at public chat's 4096-byte limit, preserving UTF-8 and
+returning longer answers as partials that the visitor can continue. Hidden
+reasoning never becomes a partial answer. Keep the deadline bounded for the PC.
 
 **Compatibility and activation.** Update `gateway.mjs`, `signature.mjs` and
 `probe.mjs` together on the inference PC before selecting the home provider on

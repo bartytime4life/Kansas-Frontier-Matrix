@@ -10,7 +10,7 @@ import {pathToFileURL} from 'node:url';
 import {createNonceCache,decodeSecret,newSecret,verifyRequest,signResponse,isSystemdCredentialDirectory,RESPONSE_SIGNATURE_HEADER} from './signature.mjs';
 
 export const GATEWAY_VERSION='kfm-home-inference/1';
-export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,chatMs:90000});
+export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messages:16,inspectMs:3000,inspectCacheMs:10000,outputBytes:32768,replyBytes:4096,chatMs:90000});
 const DEPTHS=['brief','expanded'];
 const ROLES=['system','user','assistant'];
 const OPTION_KEYS=['temperature','top_p','top_k','min_p','repeat_penalty','presence_penalty','frequency_penalty','seed'];
@@ -228,7 +228,15 @@ async function streamChat({fetchImpl,ollamaUrl,profile,depth,messages,signal,pro
     // Ollama's separate reasoning channel is never retained or returned.
     if(typeof chunk.message?.thinking==='string'&&chunk.message.thinking)separated=true;
     if(typeof chunk.message?.content==='string')raw+=chunk.message.content;
-    text=answerText(raw,{implicit:mode.implicit,separated,complete:chunk.done===true&&chunk.done_reason==='stop'});progress.text=text;
+    text=answerText(raw,{implicit:mode.implicit,separated,complete:chunk.done===true&&chunk.done_reason==='stop'});
+    // Generation tokens include private reasoning. Bound the visible answer
+    // separately so extra reasoning allowance cannot exceed public chat's cap.
+    const bytes=Buffer.from(text);
+    if(bytes.length>GATEWAY_LIMITS.replyBytes){
+     text=new TextDecoder().decode(bytes.subarray(0,GATEWAY_LIMITS.replyBytes),{stream:true});limited=true;
+    }
+    progress.text=text;
+    if(limited)break;
     if(Buffer.byteLength(raw)>GATEWAY_LIMITS.outputBytes){limited=true;break;}
     if(chunk.done){final=chunk;break;}
    }

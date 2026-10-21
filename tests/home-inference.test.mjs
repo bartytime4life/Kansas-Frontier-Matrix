@@ -5,7 +5,7 @@ import {mkdtemp,mkdir,writeFile,chmod,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {signRequest,verifyRequest,createNonceCache,newSecret,SIGNATURE_MAX_SKEW_MS,signResponse,RESPONSE_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
-import {parseProfiles,parseKeys,loadConfig,startGateway,createAdmission,neutralizeTemplate,GATEWAY_VERSION} from '../scripts/home-inference/gateway.mjs';
+import {parseProfiles,parseKeys,loadConfig,startGateway,createAdmission,neutralizeTemplate,GATEWAY_VERSION,GATEWAY_LIMITS} from '../scripts/home-inference/gateway.mjs';
 import {probe} from '../scripts/home-inference/probe.mjs';
 import {readFile} from 'node:fs/promises';
 import {homeInferenceConfig,createHomeInferenceClient,HomeInferenceModel,discussionMessages,HOME_PROVIDER} from '../server/home-inference.mjs';
@@ -260,6 +260,19 @@ test('a reply cut off by the gateway deadline returns as length-limited text, an
  try{const result=await silent.signed('POST','/v1/chat',chatBody());assert.equal(result.status,504);assert.equal(result.body.error,'MODEL_TIMEOUT');}finally{await silent.close();}
 });
 
+test('extra generation allowance still caps visible answers at public chat bytes without splitting UTF-8',async()=>{
+ for(const chunks of [['x'.repeat(5000)],['🌾'.repeat(2000)]]){
+  const g=await gateway({chunks},profiles({profiles:[profile({outputTokens:{brief:1024,expanded:2048}})]}));
+  try{
+   const result=await g.signed('POST','/v1/chat',chatBody());
+   assert.equal(result.status,200);assert.equal(result.body.finishReason,'length');
+   assert.equal(Buffer.byteLength(result.body.text),GATEWAY_LIMITS.replyBytes);
+   assert.doesNotMatch(result.body.text,/\uFFFD/);
+   assert.equal(g.ollama.calls.find(call=>call.path==='/api/chat').body.options.num_predict,1024);
+  }finally{await g.close();}
+ }
+});
+
 test('one generation at a time: overflow is refused and a disconnected caller stops generation',async()=>{
  let release;const hold=new Promise(resolve=>{release=resolve;});
  const g=await gateway({hold});
@@ -441,7 +454,8 @@ test('the shipped profile template only loads once the owner pins a real digest'
  const parsed=parseProfiles(JSON.parse(template.replace(/sha256:REPLACE[^"]*/,'sha256:'+DIGEST)));
  const chat=parsed.profiles.get('kfm-default-chat');
  // The public handler refuses replies over 4096 bytes and Cloudflare cuts responses at about 100 s.
- assert.ok(chat.outputTokens.expanded<=700&&chat.timeoutMs.expanded<=90000);
+ assert.ok(chat.outputTokens.expanded<=2048&&chat.timeoutMs.expanded<=90000);
+ assert.equal(GATEWAY_LIMITS.replyBytes,4096);
 });
 
 test('the probe proves refusal cases and records synthetic timings without secrets',async()=>{
