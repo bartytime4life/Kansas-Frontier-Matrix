@@ -67,7 +67,7 @@ test("quick start routes only to existing controls and tolerates blocked storage
   assert.match(guide, /panelRef\.current\?\.contains\(document\.activeElement\)/, "Escape only closes when focus is inside");
   assert.doesNotMatch(guide, /fetch\(|import\(.*api/);
   assert.match(page, /<ExplorerGuide open=\{guideOpen && primaryWorkspace === "map"\}/);
-  assert.match(page, /className="guide-trigger" type="button" aria-label=\{welcomeShowing \? \(welcomeSourcesOpen \? "Hide map sources" : "Show map sources"\) : "Open the quick start guide"\}/);
+  assert.match(page, /className="guide-trigger" type="button" aria-label=\{welcomeShowing \? "Map sources" : "Open the quick start guide"\}.*aria-pressed=\{welcomeShowing \? welcomeSourcesOpen : undefined\}/);
   // While the welcome is showing, `?` reveals the map sources instead of closing it.
   assert.match(page, /if \(welcomeShowing\) \{ setWelcomeSourcesOpen\(\(open\) => !open\); return; \}/);
   assert.match(page, /data-welcome-sources=\{welcomeShowing && welcomeSourcesOpen \? "open" : undefined\}/);

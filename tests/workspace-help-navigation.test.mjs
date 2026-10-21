@@ -19,7 +19,7 @@ test('Quick start reveals the map and reopens retained help from either draft wo
   for(const primaryWorkspace of ['reports','stories','map'])for(const initial of [false,true]){
     const state={primary:primaryWorkspace,open:initial,sources:false},draft={title:'Keep this draft'},snapshot={id:'keep-this-snapshot'};
     const welcomeShowing=initial&&primaryWorkspace==='map';
-    evaluate(callbacks.get('toggleExplorerGuide'),{primaryWorkspace,welcomeShowing,setPrimaryWorkspace:v=>state.primary=v,setGuideOpen:v=>state.open=typeof v==='function'?v(state.open):v,setWelcomeSourcesOpen:update=>state.sources=update(state.sources),draft,snapshot})();
+    evaluate(callbacks.get('toggleExplorerGuide'),{primaryWorkspace,welcomeShowing,setPrimaryWorkspace:v=>state.primary=v,setGuideOpen:v=>state.open=typeof v==='function'?v(state.open):v,setWelcomeSourcesOpen:v=>state.sources=typeof v==='function'?v(state.sources):v,draft,snapshot})();
     assert.equal(state.primary,'map');assert.equal(state.open,true,'the guide opens, or stays open while it is showing');
     // While the welcome covers the map, `?` reveals the map sources instead of closing it.
     assert.equal(state.sources,welcomeShowing);

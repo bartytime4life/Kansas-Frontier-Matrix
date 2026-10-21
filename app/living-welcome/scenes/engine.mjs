@@ -22,7 +22,7 @@ export function createSceneEngine(canvas, { onBeat, onReady, onError } = {}) {
  let dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1), ceiling = dpr;
  renderer.setPixelRatio(dpr);
 
- let current = null, wanted = null, token = 0, paused = true, reduced = false, frame = 0, last = 0, clock = 0, beat = -1, slow = 0, quick = 0, ema = 16;
+ let current = null, wanted = null, token = 0, paused = true, reduced = false, frame = 0, last = 0, clock = 0, beat = -1, slow = 0, quick = 0, ema = 16, contextLost = false;
 
  function resize() {
   const w = canvas.clientWidth || 1, h = canvas.clientHeight || 1;
@@ -42,12 +42,12 @@ export function createSceneEngine(canvas, { onBeat, onReady, onError } = {}) {
   }
   current?.resize?.(w, h);
  }
- const observer = new ResizeObserver(() => { resize(); if (!running()) draw(0); });
+ const observer = new ResizeObserver(() => { if (contextLost) return; resize(); if (!running()) draw(0); });
  observer.observe(canvas);
 
- const running = () => Boolean(current && !paused && !reduced && !document.hidden);
+ const running = () => Boolean(current && !contextLost && !paused && !reduced && !document.hidden);
  function draw(dt) {
-  if (!current) return;
+  if (!current || contextLost) return;
   const duration = current.duration;
   const t = reduced ? duration * .62 : clock % duration;
   current.update(t, dt);
@@ -82,8 +82,8 @@ export function createSceneEngine(canvas, { onBeat, onReady, onError } = {}) {
  document.addEventListener('visibilitychange', visibility);
  // A lost GPU context (driver reset, too many contexts) must not freeze the
  // page: stop, fade out, and rebuild the current scene if the context returns.
- const lost = event => { event.preventDefault(); stop(); canvas.dataset.switching = 'true'; onError?.(new Error('WebGL context lost')); };
- const restored = () => { const id = wanted; wanted = null; if (current) { current.dispose?.(); current = null; } if (id) show(id); };
+ const lost = event => { event.preventDefault(); contextLost = true; stop(); canvas.dataset.switching = 'true'; onError?.(new Error('WebGL context lost')); };
+ const restored = () => { contextLost = false; const id = wanted; wanted = null; if (current) { current.dispose?.(); current = null; } if (id) show(id); };
  canvas.addEventListener('webglcontextlost', lost);
  canvas.addEventListener('webglcontextrestored', restored);
 
@@ -91,14 +91,19 @@ export function createSceneEngine(canvas, { onBeat, onReady, onError } = {}) {
   if (!SCENE_LOADERS[id] || id === wanted) return;
   wanted = id;
   const mine = ++token;
+  // Back to the scene already on screen (A→B→A while B loads): cancel the switch, keep A running.
+  if (id === current?.id && !contextLost) { delete canvas.dataset.switching; return; }
   canvas.dataset.switching = 'true';
-  let loaded;
-  try { loaded = await SCENE_LOADERS[id](); } catch (error) { if (mine === token) onError?.(error); return; }
+  // A failed load or build must not wedge the stage: forget the request so it
+  // can be retried, and keep showing whatever was there.
+  const fail = error => { if (mine !== token) return; wanted = current?.id ?? null; if (current) delete canvas.dataset.switching; else onError?.(error); };
+  let loaded, next;
+  try { loaded = await SCENE_LOADERS[id](); } catch (error) { fail(error); return; }
   if (mine !== token) return;
   // Let the fade-out finish before the swap so the cut lands in the dark.
   await new Promise(resolve => setTimeout(resolve, 160));
-  if (mine !== token) return;
-  const next = loaded.create({ THREE, renderer });
+  if (mine !== token || contextLost) return;
+  try { next = loaded.create({ THREE, renderer }); } catch (error) { fail(error); return; }
   const previous = current;
   current = { ...next, id, duration: SCENE_CATALOG[id].duration };
   if (previous) { previous.dispose?.(); disposeTree(previous.scene); }
@@ -128,9 +133,11 @@ export function createSceneEngine(canvas, { onBeat, onReady, onError } = {}) {
    token++; stop(); observer.disconnect(); document.removeEventListener('visibilitychange', visibility);
    canvas.removeEventListener('webglcontextlost', lost); canvas.removeEventListener('webglcontextrestored', restored);
    if (current) { current.dispose?.(); disposeTree(current.scene); current = null; }
-   // No forceContextLoss: React may hand the same canvas to the next engine
-   // (Strict Mode, fast refresh), and a detached canvas frees its context anyway.
    renderer.dispose();
+   // Release the GPU context only once the canvas has left the page: Strict Mode
+   // and fast refresh hand a still-mounted canvas to the next engine, which must
+   // not inherit a lost context. Unmount cleanups run after the canvas detaches.
+   if (!canvas.isConnected) renderer.forceContextLoss();
   },
  };
 }
