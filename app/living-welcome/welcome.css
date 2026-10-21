@@ -107,9 +107,6 @@
 .atlas-studio:has(> .explorer-guide.living-welcome[data-immersive=true]) .map-stage > .map-canvas{opacity:0}
 .living-welcome .welcome-map-stage:before{content:'';position:absolute;inset:0;z-index:0;background:#031923;opacity:0;transition:opacity .65s ease;pointer-events:none}
 .living-welcome[data-immersive=true] .welcome-map-stage:before{opacity:1}
-.living-welcome .topic-callout{opacity:1;transition:opacity .55s ease,border-color .25s,background .25s,box-shadow .25s}
-.living-welcome[data-immersive=true] .topic-callout:not(.is-active){opacity:0;pointer-events:auto}
-.living-welcome[data-immersive=true] .topic-callout:focus-visible{opacity:1;pointer-events:auto}
 
 /* Recorded tool demonstrations: two editorial thumbnails, one opt-in player. */
 .living-welcome .map-demo-panel{margin:25px 0 22px;padding-top:24px;border-top:1px solid #466675}
@@ -142,7 +139,7 @@
 .living-welcome .map-demo-context .welcome-text-action{width:100%;padding:7px 0;font-size:12px}
 @media(max-width:560px){.living-welcome .map-demo-choices{gap:8px}.living-welcome .map-demo-choice-copy{padding:10px 9px}.living-welcome .map-demo-heading h3{font-size:20px}.living-welcome .map-demo-choice-copy strong{font-size:11px}.living-welcome .map-demo-transport{gap:8px}}
 @media(prefers-reduced-motion:reduce){.atlas-studio .map-stage>.map-canvas,.living-welcome .welcome-map-stage:before,.living-welcome .map-demo-choice{transition:none}}
-.living-welcome[data-motion=paused] .welcome-map-stage:before,.living-welcome[data-motion=paused] .topic-callout{transition:none}
+.living-welcome[data-motion=paused] .welcome-map-stage:before{transition:none}
 .atlas-studio:has(> .explorer-guide.living-welcome[data-motion=paused]) .map-stage>.map-canvas{transition:none}
 .living-welcome .welcome-hero>:is(.welcome-kicker,h1,p){transition:opacity .55s ease}
 .living-welcome[data-immersive=true] .welcome-hero>:is(.welcome-kicker,h1,p){opacity:0}
@@ -268,9 +265,8 @@
 .living-welcome .welcome-hero h1 {font-size:clamp(32px,3.2vw,58px)}
 .living-welcome .welcome-hero>p {font-size:17px;margin-bottom:16px}
 .living-welcome .discovery-field {position:relative;inset:auto;margin:28px 32px 260px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;z-index:4}
-.living-welcome .topic-callout {position:relative;inset:auto!important;width:auto!important;min-height:90px;padding:14px 16px;background:#082a3ded;border:1px solid #60828a66;border-radius:10px;text-align:left;transition:background .2s,border-color .2s}
+.living-welcome .topic-callout {position:relative;inset:auto!important;width:auto!important;min-height:90px;padding:14px 16px;text-align:left}
 .living-welcome .topic-callout:after {display:none}
-.living-welcome .topic-callout.is-active,.living-welcome .topic-callout:hover {background:#123d50f2;border-color:#e5c47c}
 .living-welcome .topic-copy strong {font-size:15px}
 .living-welcome .topic-copy small {font-size:11px;line-height:1.5}
 .living-welcome .topic-now {display:none}
@@ -307,3 +303,86 @@
 @media(max-width:700px) {.living-welcome:not([data-fullscreen=true]) .scene-caption,.living-welcome:not([data-fullscreen=true]) .welcome-footer,.living-welcome .welcome-credits {margin-inline:18px;width:calc(100% - 36px)}.living-welcome:not([data-fullscreen=true]) .welcome-preview-expand {margin-inline:18px}}
 
 .living-welcome .welcome-preview-pause {position:absolute;bottom:38px;right:32px;z-index:5;min-height:40px;border:1px solid #d9ba78;border-radius:6px;padding:8px 12px;background:#082a3df2;color:#e9d3a0;font-size:12px}
+
+/* Topic constellation. The chosen card rises into the light while every other
+   choice recedes to translucent glass: dimmer, still legible, one move away.
+   Cards animate opacity and transform only; colour changes are one-shot paints
+   and the pointer light updates CSS variables without a React render. */
+.living-welcome .discovery-field{--topic-ease-out:cubic-bezier(.16,1,.3,1);--topic-ease-glide:cubic-bezier(.22,.61,.36,1)}
+.living-welcome .discovery-field .topic-callout{
+  --hue:136 207 232;
+  isolation:isolate;
+  background-color:#0a2c3ff0;
+  background-image:linear-gradient(165deg,#ffffff0b,transparent 55%);
+  border:1px solid rgb(var(--hue) / .2);
+  border-radius:12px;
+  box-shadow:inset 0 1px 0 #ffffff0d,0 12px 26px -20px #000;
+  opacity:1;
+  transform:translate3d(0,0,0);
+  transition:opacity .26s var(--topic-ease-glide),transform .5s var(--topic-ease-out),background-color .3s var(--topic-ease-glide),border-color .3s var(--topic-ease-glide);
+  animation:topic-arrive .8s var(--topic-ease-out) calc(var(--i,0) * 32ms + 80ms) backwards;
+}
+.living-welcome .discovery-field .topic-callout[data-color=green]{--hue:182 206 138}
+/* Aura: a pre-composed glow whose opacity fades, instead of a box-shadow transition. */
+.living-welcome .discovery-field .topic-callout:before{
+  content:'';position:absolute;inset:-1px;z-index:-1;border-radius:inherit;pointer-events:none;
+  box-shadow:0 0 0 1px rgb(var(--hue) / .5),0 18px 40px -16px rgb(var(--hue) / .5),0 0 26px -6px rgb(232 195 124 / .3);
+  opacity:0;transition:opacity .45s var(--topic-ease-glide);
+}
+.living-welcome .topic-light{position:absolute;inset:0;z-index:-1;border-radius:inherit;overflow:hidden;pointer-events:none}
+.living-welcome .topic-light:before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(240px circle at var(--mx,28%) var(--my,0%),rgb(var(--hue) / .2),transparent 70%);
+  opacity:0;transition:opacity .4s var(--topic-ease-glide);
+}
+.living-welcome .topic-light:after{
+  content:'';position:absolute;top:-20%;bottom:-20%;left:0;width:45%;
+  background:linear-gradient(100deg,transparent 20%,rgb(255 240 205 / .12) 46%,rgb(255 240 205 / .2) 50%,transparent 64%);
+  transform:translate3d(-110%,0,0) skewX(-14deg);opacity:0;
+}
+.living-welcome .discovery-field .topic-copy strong{transition:color .3s var(--topic-ease-glide)}
+.living-welcome .discovery-field .topic-copy small{transition:color .3s var(--topic-ease-glide)}
+.living-welcome .discovery-field .topic-arrow{opacity:.65;transition:transform .45s var(--topic-ease-out),color .3s,opacity .3s}
+
+.living-welcome .discovery-field .topic-callout.is-active{
+  transform:translate3d(0,-3px,0);
+  background-color:#0f3a50f7;
+  border-color:rgb(var(--hue) / .62);
+  box-shadow:inset 0 1px 0 #ffffff17,0 12px 26px -20px #000;
+  transition-duration:.2s,.5s,.3s,.3s;
+}
+.living-welcome .discovery-field .topic-callout.is-active:before,
+.living-welcome .discovery-field .topic-callout.is-active .topic-light:before{opacity:1}
+.living-welcome .discovery-field .topic-callout.is-active .topic-light:after{animation:topic-sweep 1.15s var(--topic-ease-glide) 40ms}
+.living-welcome .discovery-field .topic-callout.is-active .topic-copy strong{color:#fff7e3}
+.living-welcome .discovery-field .topic-callout.is-active .topic-copy small{color:#d3e6ec}
+.living-welcome .discovery-field .topic-callout.is-active .topic-arrow{opacity:1;color:#f0d28f;transform:translate3d(4px,0,0)}
+
+/* Receding choices fade in a wave from the chosen card (--wake, set on entry)
+   and return together, faster, the moment the pointer leaves. */
+.living-welcome[data-immersive=true] .discovery-field .topic-callout:not(.is-active){
+  opacity:.4;
+  transform:translate3d(0,0,0) scale(.982);
+  background-color:#04192470;
+  border-color:rgb(var(--hue) / .13);
+  box-shadow:none;
+  transition:opacity .42s var(--topic-ease-glide) var(--wake,0ms),transform .6s var(--topic-ease-out) var(--wake,0ms),background-color .42s var(--topic-ease-glide) var(--wake,0ms),border-color .42s var(--topic-ease-glide) var(--wake,0ms);
+}
+.living-welcome[data-immersive=true] .discovery-field .topic-callout:not(.is-active):focus-visible{opacity:1;transform:none}
+
+/* Promote card layers only while the pointer is over the field. */
+@media(hover:hover){.living-welcome .discovery-field:hover .topic-callout{will-change:opacity,transform}}
+
+@keyframes topic-arrive{from{opacity:0;transform:translate3d(0,14px,0) scale(.985)}}
+@keyframes topic-sweep{
+  0%{opacity:0;transform:translate3d(-110%,0,0) skewX(-14deg)}
+  18%{opacity:1}
+  100%{opacity:0;transform:translate3d(340%,0,0) skewX(-14deg)}
+}
+@media(prefers-reduced-motion:reduce){
+  .living-welcome .discovery-field .topic-callout,
+  .living-welcome[data-immersive=true] .discovery-field .topic-callout:not(.is-active){transform:none}
+  .living-welcome .topic-light:after{display:none}
+  .living-welcome .discovery-field .topic-callout:before,.living-welcome .topic-light:before,
+  .living-welcome .discovery-field :is(.topic-arrow,.topic-copy strong,.topic-copy small){transition:none}
+}

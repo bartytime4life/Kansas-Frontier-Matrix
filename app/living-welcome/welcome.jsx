@@ -11,6 +11,22 @@ import { isolateModalBackground } from '../modal-background';
 const TOPICS=TOPIC_STRUCTURE.map(t=>({...t,target:t.id,short:t.facets.join(' · '),note:t.limitation}));
 const SCENES=Object.fromEntries(TOPICS.map(t=>[t.id,capabilityPreviews(t.id).map(d=>d.title)]));
 for(const t of TOPICS)if(!SCENES[t.id].length)SCENES[t.id]=[t.title+' tools'];
+// Siblings recede in a wave that starts at the chosen card. All rects are read
+// before any write so one pointer entry costs a single layout, not seventeen.
+function wake(card){
+  const cards=card?.parentElement?.children;if(!cards?.length||!card.getBoundingClientRect)return;
+  const rects=[...cards].map(node=>node.getBoundingClientRect()),a=card.getBoundingClientRect(),ax=a.left+a.width/2,ay=a.top+a.height/2;
+  rects.forEach((r,i)=>cards[i].style.setProperty('--wake',`${Math.min(180,Math.round(Math.hypot(r.left+r.width/2-ax,r.top+r.height/2-ay)*.14))}ms`));
+}
+// The card light follows the pointer through CSS variables, at most once per
+// frame and without a React render.
+let glowFrame=0;
+function glow(event){
+  if(event.pointerType==='touch')return;
+  const card=event.currentTarget,x=event.clientX,y=event.clientY;
+  cancelAnimationFrame(glowFrame);
+  glowFrame=requestAnimationFrame(()=>{const r=card.getBoundingClientRect();card.style.setProperty('--mx',`${x-r.left}px`);card.style.setProperty('--my',`${y-r.top}px`);});
+}
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,questions,initialRemember=false,onRememberChange,motionEnabled=true,onMotionChange}){
   const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null);
   const [localRemember,setRemember]=useState(initialRemember),[query,setQuery]=useState('');
@@ -81,7 +97,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
         <div className="welcome-mobile-guide"><WelcomeFeatureGuide onNavigate={feature} paused={paused}/></div>
       </div>
       <button type="button" className="welcome-skip" aria-label="Close quick start" onClick={()=>onClose(remember)}>Skip welcome <span aria-hidden="true">×</span></button></div>
-      <section className="discovery-field" aria-label="Choose an exploration topic">{TOPICS.map(t=><button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} key={t.id} data-color={t.group==='Earth & environment'?'green':'sky'} aria-label={`${t.title}: ${t.short}`} onPointerEnter={e=>{if(e.pointerType!=='touch')engage(t.id);}} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false)engage(t.id);}} onBlur={release} onClick={()=>openTopic(t.id)}><span className="topic-copy"><strong>{t.title}</strong><small>{t.short}</small><span className="topic-now">▸ {SCENES[t.id][sceneIndex(t.id)]}</span></span><span className="topic-arrow" aria-hidden="true">→</span></button>)}</section>
+      <section className="discovery-field" aria-label="Choose an exploration topic">{TOPICS.map((t,i)=><button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} key={t.id} style={{'--i':i}} data-color={t.group==='Earth & environment'?'green':'sky'} aria-label={`${t.title}: ${t.short}`} onPointerEnter={e=>{if(e.pointerType!=='touch'){wake(e.currentTarget);engage(t.id);}}} onPointerMove={glow} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false){wake(e?.currentTarget);engage(t.id);}}} onBlur={release} onClick={()=>openTopic(t.id)}><span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.short}</small><span className="topic-now">▸ {SCENES[t.id][sceneIndex(t.id)]}</span></span><span className="topic-arrow" aria-hidden="true">→</span></button>)}</section>
       <div className="welcome-scene-deck"><div className="scene-caption" aria-label="Software preview controls"><div><small>{currentPreview?.context?'CONTEXT PREVIEW':'SOFTWARE CAPABILITIES'}</small><strong>{TOPICS.find(t=>t.id===control)?.title}</strong><span>{SCENES[control][sceneIndex(control)]}</span><small>{currentPreview?'Recorded Explorer view · source dates retained':'Workspace available · animation not yet verified'}</small></div><div className="scene-nav"><button type="button" aria-label="Previous scene" onClick={()=>step(-1)}>‹</button><span>{sceneIndex(control)+1} / {SCENES[control].length}</span><button type="button" aria-label="Next scene" onClick={()=>step(1)}>›</button>{manual&&<button type="button" aria-label="Resume automatic scene cycling" onClick={()=>setManual(null)}>▶</button>}</div>{pinned&&<button type="button" onClick={()=>{setPinned(null);setManual(null);setActive(null);}}>End preview ×</button>}</div>
       <button type="button" className="welcome-preview-expand" aria-pressed={fullscreen} onClick={()=>setFullscreen(v=>!v)}>{fullscreen?'Return to categories':'Expand animation'}</button>{fullscreen&&<button type="button" className="welcome-preview-pause" disabled={reduced} aria-pressed={!paused} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{paused?'Play animation':'Pause animation'}</button>}</div>
       <div className="welcome-credits"><span>Actual Explorer captures · not live observations</span><button type="button" onClick={()=>openPanel('credits')}>Preview sources</button></div>

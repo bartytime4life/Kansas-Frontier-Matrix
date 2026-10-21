@@ -410,7 +410,7 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
       return root?.dataset.immersive === 'true' && active?.classList.contains('is-active')
         && root.querySelector('.motion-atlas')?.dataset.focus === '${topic}'
         && Number(getComputedStyle(active).opacity) >= .98
-        && [...root.querySelectorAll('.topic-callout')].filter(card=>card!==active&&!(card===retained&&showRetained)).every(card=>Number(getComputedStyle(card).opacity)<=.02)
+        && [...root.querySelectorAll('.topic-callout')].filter(card=>card!==active&&!(card===retained&&showRetained)).every(card=>{const o=Number(getComputedStyle(card).opacity);return o>=.3&&o<=.6&&getComputedStyle(card).pointerEvents!=='none';})
         && (!retained || document.activeElement===retained)
         && (!showRetained || Number(getComputedStyle(retained).opacity)>=.98)
         && map && Number(getComputedStyle(map).opacity)<=.02;
