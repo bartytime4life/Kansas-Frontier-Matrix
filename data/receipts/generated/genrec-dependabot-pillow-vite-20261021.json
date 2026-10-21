@@ -1,0 +1,119 @@
+{
+  "receipt_id": "genrec-dependabot-pillow-vite-20261021",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/crop-casma-tile-compatibility.yml",
+    "pipelines/domains/soil/crop_casma_tiles/README.md",
+    "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt",
+    "pnpm-workspace.yaml",
+    "pnpm-lock.yaml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/crop-casma-tile-compatibility.yml": "sha256:6038fb3fdba0fdc2219dc353c3d40d5f7bc5167e73d7eeee43f77dae27e94bf8",
+    "pipelines/domains/soil/crop_casma_tiles/README.md": "sha256:146208900cd127e6f8ee2c2b9312d5dd88a27cdd57839971359d410f9c7d627f",
+    "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt": "sha256:7bcfcf6f8c986d4e28d1c97e592151e04271b98a8440a30c7247055538a526dc",
+    "pnpm-workspace.yaml": "sha256:2168576848e494eb2ff2bd8bdab6ff2d72fa445dc7ad72b58e9f8cf0ef750956",
+    "pnpm-lock.yaml": "sha256:d28dfe45d884c81ddedcef300397fd9033c69c777bbbf7b1ac0db18e76f1b556"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "not exposed by session"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "temperature": null,
+    "seed": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/87a2a71df83a6d21ff40c46d232d84c58411293d/SECURITY.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/87a2a71df83a6d21ff40c46d232d84c58411293d/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/87a2a71df83a6d21ff40c46d232d84c58411293d/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/87a2a71df83a6d21ff40c46d232d84c58411293d/packages/maplibre/package.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/87a2a71df83a6d21ff40c46d232d84c58411293d/pipelines/domains/soil/crop_casma_tiles/prepare.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/87a2a71df83a6d21ff40c46d232d84c58411293d/pipelines/domains/soil/crop_casma_tiles/test_prepare.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/92",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/96",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/93",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/100",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/99",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/97",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/95",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/101",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/98",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/94",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/102",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/79"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/crop-casma-tile-compatibility.yml": "PROPOSED",
+    "pipelines/domains/soil/crop_casma_tiles/README.md": "PROPOSED",
+    "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt": "PROPOSED",
+    "pnpm-workspace.yaml": "PROPOSED",
+    "pnpm-lock.yaml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact base source tree",
+      "outcome": "PASS",
+      "reason": "Isolated snapshot tree matched 72a101f29181320ee16cf31065791f95ab82a7c2 before edits."
+    },
+    {
+      "gate": "Pnpm 11.17.0 isolated Vite resolution",
+      "outcome": "PASS",
+      "reason": "Offline generator resolved Vite 8.3.3 and Rolldown 1.2.13 using cached registry metadata, preserving PostCSS 8.5.28 and nanoid 3.3.19. Exact generated package records copied into the workspace lock; Vitest and MapLibre pins unchanged."
+    },
+    {
+      "gate": "Dependency readiness and 10 MapLibre governance functions",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Workflow YAML and read-only token policy; git diff --check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Independent candidate review correction",
+      "outcome": "PASS",
+      "reason": "Reviewer identified stale dependency edges in the assembled lock. Corrected from exact base and pnpm-generated complete records; all importer/snapshot edges and every corresponding package now resolve. Review found no other concrete regression. Runtime compatibility remains pending CI."
+    },
+    {
+      "gate": "Fresh patched Python install, pip check and tile tests",
+      "outcome": "SKIPPED",
+      "reason": "Local registry access blocked (DNS EAI_AGAIN); isolated no-index install lacks NumPy 2.5.4/Pillow13. CI workflow added to run the real pinned stack on Python3.12."
+    },
+    {
+      "gate": "Workspace frozen install, package tests, offline reconstruction and production exclusion",
+      "outcome": "SKIPPED",
+      "reason": "Local pnpm supply-chain metadata fetch blocked by DNS. No trust policy or integrity checks disabled. Existing MapLibre Package Compatibility workflow must pass on the exact candidate head."
+    },
+    {
+      "gate": "Windows/WSL upstream exploit reproducers; old/new tile byte identity",
+      "outcome": "SKIPPED",
+      "reason": "No Windows/WSL executor or patched binary wheel stack available locally. Changed graph inspection is a focused substitute; no exploitation or cross-version byte identity claim."
+    },
+    {
+      "gate": "Independent candidate review and exact-head CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt emission; actual GitHub review/check metadata remains authoritative."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "base-87a2a71",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/87a2a71df83a6d21ff40c46d232d84c58411293d/pnpm-lock.yaml"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-21T14:26:59.376920Z",
+  "emitter": "OpenAI Codex",
+  "notes": "Bounded remediation for 12 supplied dependency alerts; no runtime exploitability or incident claim. Updates the affected tile Pillow pin and workspace Vite closure. Root source tree snapshot is exact main before edits. No application, AI provider, origin, remote PC, model, credential, release, deployment or publication settings changed. A separate historical-topography Pillow11.3.0 hash lock was identified outside the supplied manifest; it remains open verification and is not covered by this receipt. This receipt is provenance, not approval or proof."
+}

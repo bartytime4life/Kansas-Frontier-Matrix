@@ -1,0 +1,48 @@
+# Synthetic pipeline qualification only; no source access or publication.
+name: Crop CASMA Tile Compatibility
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/crop-casma-tile-compatibility.yml"
+      - "pipelines/domains/soil/crop_casma_tiles/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/crop-casma-tile-compatibility.yml"
+      - "pipelines/domains/soil/crop_casma_tiles/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crop-casma-tile-compatibility-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tile-compatibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      TZ: UTC
+      PYTHONDONTWRITEBYTECODE: "1"
+      KFM_NO_NETWORK: "1"
+    steps:
+      - name: Check out qualification revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up tile Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Install declared tile dependencies
+        run: |
+          python -m pip install --disable-pip-version-check --only-binary=:all: -r pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt
+      - name: Check dependency consistency and patched Pillow
+        run: |
+          python -m pip check
+          python -c "from PIL import Image; assert Image.__version__ == '13.0.0', Image.__version__"
+      - name: Verify synthetic tiles and tamper rejection
+        run: python -m unittest discover -s pipelines/domains/soil/crop_casma_tiles -p 'test_*.py' -v
