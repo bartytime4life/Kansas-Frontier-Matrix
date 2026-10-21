@@ -30,6 +30,7 @@ const satelliteModuleUrl = await compileModuleUrl("noaa-satellite");
 const lightningModuleUrl = await compileModuleUrl("lightning-data");
 const performanceModuleUrl = await compileModuleUrl("map-performance");
 const globeModuleUrl = await compileModuleUrl("globe-context");
+const fireModuleUrl = await compileModuleUrl("fire-detection-style", source => source.replace('from "./map-performance";', `from "${performanceModuleUrl}";`).replace('from "./globe-context";', `from "${globeModuleUrl}";`));
 const compositionModuleUrl = `data:text/javascript;base64,${Buffer.from("export const balanceMapFills=()=>{}; export const balanceMapRasters=()=>{}; export const composeMapLayers=()=>{}; export const requestFillOpacity=()=>{}; export const requestRasterOpacity=()=>{};").toString("base64")}`;
 const official = await import(await compileModuleUrl("live-context", (source) => source.replace('from "./aquifer-layers";', `from "${aquiferModuleUrl}";`).replace('from "./kansas-reference-layers";', `from "${referenceModuleUrl}";`)
   .replace('from "./noaa-radar";', `from "${radarModuleUrl}";`)
@@ -37,7 +38,8 @@ const official = await import(await compileModuleUrl("live-context", (source) =>
   .replace('from "./lightning-data";', `from "${lightningModuleUrl}";`)
   .replace('from "./map-performance";', `from "${performanceModuleUrl}";`)
   .replace('from "./map-layer-composition";', `from "${compositionModuleUrl}";`)
-  .replace('from "./globe-context";', `from "${globeModuleUrl}";`)));
+  .replace('from "./globe-context";', `from "${globeModuleUrl}";`)
+  .replace('from "./fire-detection-style";', `from "${fireModuleUrl}";`)));
 
 const feature = (fid, title, year) => ({
   type: "Feature",

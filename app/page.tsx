@@ -71,7 +71,8 @@ import { CropCasmaControl } from "./crop-casma-control";
 import { HistoricalTopoControl } from "./historical-topo-control";
 import { LayerSourceNotices, RenderQualityControl } from "./map-toolbar";
 import { HostedSourceStatus } from "./hosted-source-status";
-import { drawWindFlowCanvas, nearestWindFlowSample, windToCompass } from "./wind-arrow-canvas";
+import { setFireDetectionMotion } from "./fire-detection-style";
+import { drawWindFlowCanvas, nearestWindFlowSample, resetWindFlowCanvas, windFlowToneForBasemap, windToCompass } from "./wind-arrow-canvas";
 import type { WaterPathAnalysis } from "./water-path-analysis";
 import { drawWaterMotionCanvas } from "./water-motion-canvas";
 import { readProgressiveDownstreamGuide, waterReadingCue, type DownstreamGuide, type DownstreamPath } from "./water-flow-context";
@@ -5920,20 +5921,27 @@ export default function Home() {
     let controller: AbortController | null = null;
     let debounceTimer = 0;
     let drawTimer = 0;
+    let lastDraw = -Infinity;
     const animated = dynamicEffects && !reducedMotion;
+    // Streamlines live on the ground and are re-projected on every camera
+    // move, so they stay glued to the map while it pans, rotates or pitches.
+    // Idle motion is paced to ~30 fps; nothing runs while the tab is hidden.
     const render = () => {
-      if (!disposed && frame && !document.hidden) drawWindFlowCanvas(canvas, map, frame, performance.now(), animated);
+      if (disposed || !frame || document.hidden) return;
+      lastDraw = performance.now();
+      // Line colours follow the active basemap (dark lines on light maps).
+      drawWindFlowCanvas(canvas, map, frame, lastDraw, animated, windFlowToneForBasemap(basemapRef.current));
     };
-    const tick = () => {
+    const tick = (now: number) => {
       drawTimer = 0;
-      render();
-      if (animated && frame && !disposed && !document.hidden) drawTimer = window.setTimeout(tick, 50);
+      if (now - lastDraw >= 31) render();
+      startMotion();
     };
     const startMotion = () => {
-      if (animated && frame && !disposed && !document.hidden && !drawTimer) drawTimer = window.setTimeout(tick, 50);
+      if (animated && frame && !disposed && !document.hidden && !drawTimer) drawTimer = window.requestAnimationFrame(tick);
     };
     const onVisibilityChange = () => {
-      if (document.hidden) { window.clearTimeout(drawTimer); drawTimer = 0; }
+      if (document.hidden) { window.cancelAnimationFrame(drawTimer); drawTimer = 0; }
       else { render(); startMotion(); }
     };
     const onPointerMove = (event: { point: { x: number; y: number } }) => {
@@ -5947,7 +5955,7 @@ export default function Home() {
       } : null);
     };
     const onPointerLeave = () => setWindArrowHover(null);
-    const onMapMove = () => { if (!animated) render(); };
+    const onMapMove = () => render();
     const load = async () => {
       const bounds = map.getBounds();
       const center = map.getCenter();
@@ -5957,7 +5965,7 @@ export default function Home() {
       const north = Math.min(40.1, Math.max(bounds.getNorth(), center.lat + 0.06));
       controller?.abort();
       frame = null;
-      window.clearTimeout(drawTimer);
+      window.cancelAnimationFrame(drawTimer);
       drawTimer = 0;
       setWindArrowHover(null);
       canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
@@ -6008,8 +6016,9 @@ export default function Home() {
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.clearInterval(refreshTimer);
       window.clearTimeout(debounceTimer);
-      window.clearTimeout(drawTimer);
+      window.cancelAnimationFrame(drawTimer);
       setWindArrowHover(null);
+      resetWindFlowCanvas(canvas);
       canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
     };
   }, [buildYearCurrent, dynamicEffects, officialVisibility, reducedMotion, styleReady, temporalQuery.frame, windArrowReloadToken]);
@@ -6288,7 +6297,10 @@ export default function Home() {
     setCurtainShimmer(shimmer);
     setNightSkyTwinkle(twinkle);
     setWaterFlowMotion(flowing);
-    if (!map || !(shimmer || twinkle || flowing)) return;
+    // Fire flames and embers animate themselves; they only need to know
+    // whether ambient motion is currently allowed.
+    setFireDetectionMotion(motionAllowed);
+    if (!map || !(shimmer || twinkle || flowing)) return () => setFireDetectionMotion(false);
     let frame = 0;
     let last = 0;
     const tick = (now: number) => {
@@ -6301,7 +6313,7 @@ export default function Home() {
       frame = window.requestAnimationFrame(tick);
     };
     frame = window.requestAnimationFrame(tick);
-    return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); setNightSkyTwinkle(false); setWaterFlowMotion(false); };
+    return () => { window.cancelAnimationFrame(frame); setCurtainShimmer(false); setNightSkyTwinkle(false); setWaterFlowMotion(false); setFireDetectionMotion(false); };
   }, [dynamicEffects, reducedMotion, renderQuality, runtime.kind, sceneEffects.curtain, sceneEffects.stars, sceneEffects.waterFlow]);
 
   // The Scene panel reports what the flowing-water layer could draw.
@@ -10582,7 +10594,7 @@ export default function Home() {
           }
           const frame = localCaptureWindFrameRef.current ?? windArrowFrame;
           if (scenario.sources.includes("nws-forecast-wind") && mapRef.current && windArrowCanvasRef.current && frame) {
-            drawWindFlowCanvas(windArrowCanvasRef.current, mapRef.current, frame, elapsedMs, true);
+            drawWindFlowCanvas(windArrowCanvasRef.current, mapRef.current, frame, elapsedMs, true, windFlowToneForBasemap(basemapRef.current));
           }
         }}
         extraCanvases={() => [windArrowCanvasRef.current, waterMotionCanvasRef.current]}

@@ -230,7 +230,7 @@ test("merged curtain, star and water callback shares bounded repaint timing and 
       dynamicEffects: true, reducedMotion: mode === "reduced", renderQuality: "auto", browserRenderBudget: () => ({ efficient: mode === "efficient" }),
       sceneEffects: { curtain: mode === "curtain", stars: mode !== "curtain" && mode !== "off" && mode !== "water", waterFlow: mode === "water" },
       setCurtainShimmer: (value) => shimmer.push(value), setNightSkyTwinkle: (value) => twinkle.push(value), curtainIsVisible: () => true, nightSkyIsTwinkling: () => true,
-      setWaterFlowMotion: (value) => flow.push(value), waterFlowIsAnimating: () => mode === "water",
+      setWaterFlowMotion: (value) => flow.push(value), setFireDetectionMotion: () => {}, waterFlowIsAnimating: () => mode === "water",
       document: { hidden: false }, window: { requestAnimationFrame(callback) { const id = ++nextFrame; frames.set(id, callback); return id; }, cancelAnimationFrame(id) { frames.delete(id); } },
     };
     const cleanup = new Function(...Object.keys(context), `${code}; return effect;`)(...Object.values(context))();
