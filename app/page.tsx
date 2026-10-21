@@ -317,6 +317,7 @@ import { HydrologyObservatory,
   type HydrologyPlaybackSpeed,
   type HydrologyRange,
 } from "./hydrology-observatory";
+import { AviationControl } from "./aviation-control";
 import { boundedUtcDay, datedSourceDisplayStatus, earthquakeEventTimes, earthquakesThroughEvent, smokeInitialFrameIndex, smokeValidityTimes, smokeValidAt } from "./source-time";
 import {
   NOAA_HYDROLOGY_NETWORK_API_PATH,
@@ -9662,6 +9663,7 @@ export default function Home() {
               <button type="button" onClick={() => setLeftPanelMode("views")}>Views</button>
               <button type="button" onClick={() => setLeftPanelMode("places")}>Places</button>
               <Link href="/observatory">Event Observatory</Link>
+              <AviationControl contextKey={JSON.stringify([year, calendarSweep, selected?.featureId ?? null, visibility, officialVisibility])} />
               <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("history"); }}>Kansas historic maps</button>
               <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("navigate"); }}>Map controls</button>
             </nav>
