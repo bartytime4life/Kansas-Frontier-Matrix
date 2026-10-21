@@ -29,7 +29,7 @@ test('place discovery does not start the AI model and returning to Find stops re
  try{
   let tree=render();assert.equal(text(status(tree)),'Places & layers · no AI required');assert.equal(requests.length,0);
   findNode(tree,node=>node.type==='button'&&node.props.children==='Ask').props.onClick();render();await settle();
-  tree=render();assert.deepEqual(requests,['/api/ai/status']);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+  tree=render();assert.deepEqual(requests,['/api/ai/status']);assert.equal(text(status(tree)),'AI model ready');
   findNode(tree,node=>node.type==='button'&&node.props.children==='Find').props.onClick();render();await settle();
   await polls[0]();assert.equal(requests.length,1,'a stale timer cannot restart AI after returning to Find');
  }finally{h.dispose();}
@@ -40,7 +40,7 @@ test('slow model readiness checks never overlap even when several polling ticks 
  const {h,polls,render}=await workspace(async()=>++requests===1?first.promise:ready());
  try{
   assert.equal(requests,1);await polls[0]();await polls[0]();assert.equal(requests,1);
-  first.resolve(ready());await settle();assert.equal(text(status(render())),'Qwen3 0.6B ready');
+  first.resolve(ready());await settle();assert.equal(text(status(render())),'AI model ready');
   await polls[0]();assert.equal(requests,2,'the next completed cycle can refresh readiness');
  }finally{first.resolve(ready());h.dispose();}
 });
@@ -69,7 +69,7 @@ test('readiness diagnostics never disclose arbitrary exception text and clear af
  try{
   let tree=render();assert.equal(alert(tree).props['data-ai-error'],'AI_CONNECTION_UNAVAILABLE');assert.equal(alert(tree).props['data-http-status'],undefined);
   assert.doesNotMatch(text(tree),/PRIVATE_ERROR_WITH_INTERNAL_URL/);
-  connected=true;await polls[0]();tree=render();assert.equal(alert(tree),undefined);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+  connected=true;await polls[0]();tree=render();assert.equal(alert(tree),undefined);assert.equal(text(status(tree)),'AI model ready');
  }finally{h.dispose();}
 });
 
@@ -81,7 +81,7 @@ test('entering Find aborts a pending readiness read and its late completion stay
   findNode(render(),node=>node.type==='button'&&node.props.children==='Find').props.onClick();render();assert.equal(signals[0].aborted,true);
   first.resolve(Response.json({reasonCode:'AI_ORIGIN_HOLD'},{status:503}));await settle();await polls[0]();assert.equal(signals.length,1);
   findNode(render(),node=>node.type==='button'&&node.props.children==='Ask').props.onClick();render();await settle();
-  const tree=render();assert.equal(signals.length,2);assert.equal(alert(tree),undefined);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+  const tree=render();assert.equal(signals.length,2);assert.equal(alert(tree),undefined);assert.equal(text(status(tree)),'AI model ready');
  }finally{first.resolve(ready());h.dispose();}
 });
 
@@ -161,7 +161,7 @@ test('public chat never requests an account service or renders login controls',a
  const requests=[];
  const {h,polls,render}=await workspace(async url=>{requests.push(url);return ready();});
  try{
-  await polls[0]();let tree=render();assert.ok(requests.length>=2);assert.ok(requests.every(url=>url==='/api/ai/status'));assert.doesNotMatch(text(tree),/sign in|sign out|administrator|invitation|password/i);assert.equal(findNode(tree,node=>node.type==='input'&&node.props.type==='password'),undefined);assert.equal(text(status(tree)),'Qwen3 0.6B ready');
+  await polls[0]();let tree=render();assert.ok(requests.length>=2);assert.ok(requests.every(url=>url==='/api/ai/status'));assert.doesNotMatch(text(tree),/sign in|sign out|administrator|invitation|password/i);assert.equal(findNode(tree,node=>node.type==='input'&&node.props.type==='password'),undefined);assert.equal(text(status(tree)),'AI model ready');
   assert.equal(findNode(tree,node=>node.type==='select'&&node.props.name==='depth').props.defaultValue,'expanded');
   message(tree).props.onChange({target:{value:'Suggest a fictional story.'}});
   tree=render();assert.equal(send(tree).props.disabled,false);
@@ -221,7 +221,7 @@ test('failed status becomes a visible error, keeps the draft, and recovers on re
   message(tree).props.onChange({target:{value:'Keep this draft.'}});
   tree=render();assert.equal(send(tree).props.disabled,true);assert.equal(message(tree).props.value,'Keep this draft.');
   connected=true;polls[0]();await settle();tree=render();
-  assert.equal(text(status(tree)),'Qwen3 0.6B ready');assert.equal(alert(tree),undefined);
+  assert.equal(text(status(tree)),'AI model ready');assert.equal(alert(tree),undefined);
   assert.equal(message(tree).props.value,'Keep this draft.');assert.equal(send(tree).props.disabled,false);
  }finally{h.dispose();}
 });
@@ -660,7 +660,7 @@ test('Stop and pending-panel hide isolate unseen completed server history even w
 });
 
 test('readiness names the model the server selected and ignores an unsafe label',async()=>{
- for(const [modelLabel,expected] of [['qwen3:8b','qwen3:8b ready'],['<img src=x>','Qwen3 0.6B ready'],[undefined,'Qwen3 0.6B ready']]){
+ for(const [modelLabel,expected] of [['qwen3:8b','qwen3:8b ready'],['<img src=x>','AI model ready'],[undefined,'AI model ready']]){
   const {h,render}=await workspace(async()=>Response.json({configured:true,online:true,ready:true,evidenceSearchAvailable:true,requiresLogin:false,provider:'home-ollama',...(modelLabel===undefined?{}:{modelLabel})}),{mode:'explore'});
   try{await settle();assert.equal(text(status(render({mode:'explore'}))),expected);}finally{h.dispose();}
  }

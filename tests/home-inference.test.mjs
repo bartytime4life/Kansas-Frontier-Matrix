@@ -333,8 +333,8 @@ test('server configuration accepts one exact HTTPS origin and a pinned model dig
 });
 
 test('provider selection is exclusive and never falls back',()=>{
- assert.deepEqual(selectAiProvider({}),{provider:'hosted-qwen3'});
- assert.deepEqual(selectAiProvider({KFM_AI_PROVIDER:'hosted-qwen3'}),{provider:'hosted-qwen3'});
+ assert.deepEqual(selectAiProvider({}),{provider:null,reasonCode:'AI_PROVIDER_NOT_CONFIGURED'});
+ assert.deepEqual(selectAiProvider({KFM_AI_PROVIDER:'hosted-qwen3'}),{provider:null,reasonCode:'AI_PROVIDER_RETIRED'});
  assert.equal(selectAiProvider({...env(),KFM_AI_PROVIDER:HOME_PROVIDER}).config.profile,'kfm-default-chat');
  assert.deepEqual(selectAiProvider({...env({KFM_HOME_INFERENCE_DIGEST:''}),KFM_AI_PROVIDER:HOME_PROVIDER}),{provider:HOME_PROVIDER,reasonCode:'HOME_INFERENCE_DIGEST_INVALID'});
  assert.deepEqual(selectAiProvider({KFM_AI_PROVIDER:'openai'}),{provider:null,reasonCode:'AI_PROVIDER_UNKNOWN'});

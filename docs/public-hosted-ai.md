@@ -1,5 +1,19 @@
 # Public hosted AI: discussion and released evidence
 
+> Current composition — 2026-10-21: public chat uses the paired home-Ollama
+> provider only. The embedded GoDaddy Qwen/ONNX runtime, installation manifest,
+> local generation and qualification tools, startup probe switches and dedicated
+> qualification workflows have been removed from this composition. Missing,
+> unknown or retired provider selections fail closed. See
+> [home inference](home-ollama-inference.md) for the current settings and rollback.
+> The records below describe historical implementations; their installation,
+> activation and rollback instructions do not apply to this composition. Shared
+> prompt, sensitivity, continuation, guest-job and evidence checks remain active.
+>
+> This source cleanup does not remove GoDaddy private-storage caches. File Manager
+> was read-only during inspection. It does not alter the installed home gateway,
+> worker, Ollama, model, profiles, credentials or hosting settings.
+
 Memory fit (2026-10-19): the [memory-fit candidate](hosted-qwen-memory-fit-20261019.md)
 serves a derived Qwen3-0.6B INT8 model with a sliced output layer and external
 weights, and lowers input context to 1,024 tokens and expanded replies to 256 tokens.

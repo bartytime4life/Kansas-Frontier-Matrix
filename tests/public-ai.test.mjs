@@ -378,3 +378,20 @@ test('replacement preview origin is authorized exactly without granting other pr
  for(const origin of ['https://kansasfrontiermatrix.com','https://urdng3v1vk.preview.c38.airoapp.ai'])assert.equal(hostedAiOriginAllowed(origin),true);
  for(const origin of ['https://q9r9beo47t.preview.c38.airoapp.ai','https://other.preview.c38.airoapp.ai','https://urdng3v1vk.preview.c38.airoapp.ai.evil.test','https://urdng3v1vk.preview.c38.airoapp.ai/','http://urdng3v1vk.preview.c38.airoapp.ai','https://user@urdng3v1vk.preview.c38.airoapp.ai',undefined])assert.equal(hostedAiOriginAllowed(origin),false);
 });
+
+
+test('enabled public chat refuses a missing or retired provider before creating any runtime',async()=>{
+ const names=['KFM_HOSTED_AI','KFM_HOSTED_AI_ORIGIN','KFM_AI_PROVIDER'];
+ const saved=Object.fromEntries(names.map(name=>[name,process.env[name]]));
+ try{
+  process.env.KFM_HOSTED_AI='1';process.env.KFM_HOSTED_AI_ORIGIN=origin;
+  for(const provider of [undefined,'','hosted-qwen3','unknown-provider']){
+   if(provider===undefined)delete process.env.KFM_AI_PROVIDER;else process.env.KFM_AI_PROVIDER=provider;
+   const handle=publicAiRuntime(()=>{throw Error('must not read evidence');});
+   const response=await handle(new Request(origin+'/api/ai/status'));
+   assert.equal(response.status,200);
+   assert.deepEqual(await response.json(),{configured:false,online:false,ready:false,evidenceSearchAvailable:false,requiresLogin:false,reasonCode:'HOSTED_AI_NOT_CONFIGURED'});
+   assert.equal((await handle(new Request(origin+'/api/ai/jobs',{method:'POST'}))).status,503);
+  }
+ }finally{for(const name of names){if(saved[name]===undefined)delete process.env[name];else process.env[name]=saved[name];}}
+});

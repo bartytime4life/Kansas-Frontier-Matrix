@@ -49,9 +49,6 @@
     "vinext": "file:vendor/vinext-0.0.50-kfm.2.tgz",
     "vite": "8.2.4",
     "mysql2": "3.24.6",
-    "@huggingface/transformers": "4.3.1",
-    "@huggingface/tokenizers": "0.2.0",
-    "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0",
     "braces": "file:vendor/braces-3.0.3-kfm.1.tgz"
   },
   "type": "module",

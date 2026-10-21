@@ -3,12 +3,26 @@
 Task KFM-HOME-OLLAMA-20261019 · plan dated 2026-10-19 · base
 `a0-hosted-ai-web-20261017` at `1d81882b2addb8f286b9ed49f516a3f8288045cc`.
 
-**Status: PROPOSED, default off.** This change adds the home gateway kit and a
-server provider adapter, with negative tests. It does not install anything on
-either home PC, open router ports, change DNS, configure Cloudflare, set GoDaddy
-secrets, deploy or publish. Hardware, connectivity, model quality and live
-acceptance are still unverified. With no new environment variables set, the
-server behaves exactly as before.
+**Current website composition, 2026-10-21:** home-Ollama is the only supported
+inference provider. Explicit `KFM_AI_PROVIDER=home-ollama` plus the existing
+paired transport/profile/identity settings is required. Missing or retired
+provider selections disable generation; no embedded GoDaddy runtime remains.
+
+CONFIRMED live observation before cleanup: the public website displayed
+`qwen3:4b ready` and completed a neutral discussion request. GoDaddy identified
+Published source `56220f501127a44302c58411b1f16aab6ef002be`. That source verifies
+signed gateway health and request-bound replies with pinned model identity,
+and starts only the selected provider. These observations establish functional
+use of the paired remote inference service. The physical PC, its processes,
+GPU use and other GoDaddy processes were not inspected in this cleanup session.
+
+This source cleanup changes no installed home gateway/worker/Ollama files,
+profiles, credentials, model weights, services, GoDaddy settings or stored data.
+The remote kit under `scripts/home-inference/` is retained byte-for-byte.
+GoDaddy File Manager was read-only and showed an old embedded-model cache under
+Private Storage; **private-storage deletion remains unperformed**. Deleting it
+is not needed for the verified remote request path. The original plan and gates
+below are retained as historical design/acceptance context, not current status.
 
 ## Goal and request path
 
@@ -44,16 +58,16 @@ unavailable. Maps, source links, evidence discovery and exports keep working.
 | --- | --- | --- |
 | Home PC kit | [`scripts/home-inference/`](../scripts/home-inference/README.md): inventory, Ollama drop-in, gateway, hardened unit, host check, probe, tunnel/firewall examples | Inert until the owner installs it |
 | Server adapter | `server/home-inference.mjs` | Loaded only when `KFM_AI_PROVIDER=home-ollama` |
-| Provider selection | `server/public-ai-handler.mjs` (`selectAiProvider`) | `hosted-qwen3`, as before |
-| Truthful model label | `/api/ai/status` `provider`, `model`, `modelLabel`; `app/assistant/workspace.tsx` | Embedded build still shows "Qwen3 0.6B" |
+| Provider selection | `server/public-ai-handler.mjs` (`selectAiProvider`) | Disabled until explicitly configured as `home-ollama` |
+| Truthful model label | `/api/ai/status` `provider`, `model`, `modelLabel`; `app/assistant/workspace.tsx` | Specific tag only after remote status names it; otherwise neutral "AI model" |
 | Tests | `tests/home-inference.test.mjs`, `tests/assistant-status.test.mjs` | — |
 
-The adapter implements the same `ready`/`online`/`discuss()` interface as
-`HostedAiModel`. Guest sessions, job ownership, cancellation, budgets,
+The adapter implements the `ready`/`online`/`discuss()` interface required by
+the public job handler. Guest sessions, job ownership, cancellation, budgets,
 sensitivity checks, context rechecks and output qualification are reused
 unchanged, and there is no second public chat authority. Selecting
-`home-ollama` never forks the embedded model process, so it adds no model
-memory to the GoDaddy app.
+`home-ollama` performs generation on the paired PC. The website no longer
+contains an embedded model process to start.
 
 The fixed Sites adapter (`server/sites-qwen-handler.mjs`) requires provider
 `hosted-qwen3` and the exact WebAssembly model. With `home-ollama` selected it
@@ -141,7 +155,7 @@ staging values on Preview and production values on Publish:
 
 | Variable | Value |
 | --- | --- |
-| `KFM_AI_PROVIDER` | `home-ollama` (explicit `hosted-qwen3` restores the embedded model) |
+| `KFM_AI_PROVIDER` | `home-ollama` (required; the retired `hosted-qwen3` selection disables chat) |
 | `KFM_HOME_INFERENCE_TRANSPORT` | `poll` (PC worker polls the site) or `https` (default; tunnel) |
 | `KFM_HOME_INFERENCE_URL` | `https` transport only: `https://<tunnel hostname>`, origin only |
 | `KFM_HOME_WORKER_KEY_ID` / `KFM_HOME_WORKER_SECRET` | `poll` transport only: the worker key for this environment; must differ from the gateway key |
@@ -156,7 +170,7 @@ Any malformed value disables chat: `/api/ai/status` reports
 explicitly; do not rely on deleting a variable to disable it** (see
 [public hosted AI](public-hosted-ai.md#private-activation-and-rollback)).
 
-## Delivery phases and gates
+## Historical original delivery phases and gates
 
 | Phase | Work | Gate | State after this change |
 | --- | --- | --- | --- |
@@ -183,17 +197,20 @@ explicitly; do not rely on deleting a variable to disable it** (see
 
 ## Rollback
 
-1. Server: set `KFM_AI_PROVIDER=hosted-qwen3` with `KFM_HOSTED_AI=0`, or set
-   `KFM_HOSTED_AI=0` alone, and restart. Chat shows unavailable; deterministic
-   search and maps continue. Re-enable the embedded model only after its own
-   health and memory qualification (it does not fit Published on Plus Launch).
+1. Server: set `KFM_HOSTED_AI=0` and restart to disable generation. Keep all
+   paired-home settings intact. Chat shows unavailable; deterministic search
+   and maps continue. This composition has no embedded-model provider. Restore
+   removed source only through a reviewed Git revert; do not select a fallback.
 2. Pending work: a restart drops the process-local guest jobs. While the server
    keeps running and the gateway is down, queued jobs end as `MODEL_UNAVAILABLE`.
    A cancelled or expired job never receives a late result.
-3. Home PC: stop `kfm-inference-gateway` and `cloudflared`, and remove or rotate keys.
+3. Home PC: no change is required for a website-source rollback. Leave the
+   installed gateway, polling worker, Ollama, profiles, keys and services alone.
 4. Keep model digests, profiles, probe receipts and correction history. Delete
    no evidence, databases, model caches or unrelated source.
-5. Revert this change only if needed; with the variables unset it is inert.
+5. Revert the website cleanup only if needed; retain explicit home-provider
+   selection. Missing provider selection fails closed. Do not run old embedded
+   model installation or qualification instructions.
 
 ## Corrections to earlier records
 
