@@ -31,7 +31,7 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
  const cookie=request=>(request.headers.get('cookie')??'').split(';').map(x=>x.trim()).find(x=>x.startsWith('__Host-kfm_ai_guest='))?.slice(20)??'';
  const cleanup=()=>{
   const now=clock();requests=requests.filter(t=>t>now-3600000);
-  for(const [key,value]of sessions){if(value.created<=now-3600000)sessions.delete(key);else value.history=(value.history??[]).filter(item=>item.at>now-900000);}
+  for(const [key,value]of sessions){if((value.lastAccepted??value.created)<=now-3600000)sessions.delete(key);else value.history=(value.history??[]).filter(item=>item.at>now-900000);}
   for(const [key,job]of jobs){
    if(job.deadline<=now&&['preparing','queued','running'].includes(job.state)){job.abort?.abort();job.state='expired';job.finished=clock();job.packet=null;job.result=null;job.question='';job.query=null;job.context=null;}
    // Accepted work may outlive the result-retention period under load.
@@ -169,6 +169,10 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
     if(pending>=INFERENCE_BUDGETS.publicSlots)throw new Error('QUEUE_FULL');
     const now=clock(),job={id:token(),owner:digest(guest),question:value.question,query,mode,style,depth,state:'preparing',created:now,deadline:now+(mode==='explore'?(pending+1)*PUBLIC_AI_JOB_MS:90000),packet:null,result:null};
     jobs.set(job.id,job);requests.push(now);session.requests.push(now);
+    // A job accepted near the old cookie expiry still owns its full run and
+    // result window. Refresh the same capability, without resetting rate counts.
+    session.lastAccepted=now;
+    extra={'Set-Cookie':'__Host-kfm_ai_guest='+guest+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600'};
     const prepare=async()=>{try{
      const questionScope=value.question+' '+value.term+' '+query.place+' '+(value.context?JSON.stringify(value.context):'');
      const sensitive=isSensitiveQwenQuestion(questionScope)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(questionScope);
