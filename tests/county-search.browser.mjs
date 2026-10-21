@@ -161,6 +161,10 @@ async function pageSession(browser, width, height) {
       status: popup?.querySelector('[role=status]')?.textContent ?? '',
       rows: [...(popup?.querySelectorAll('button') ?? [])].map(row => ({ title: row.querySelector('strong')?.textContent, text: row.textContent })) };
   })()`);
+  const displayTime = () => evaluate(`(() => {
+    const read = label => document.querySelector('select[aria-label="' + label + '"]')?.value ?? null;
+    return {year:read('Sweep year or earlier era'),month:read('Sweep month'),day:read('Sweep day')};
+  })()`);
   const open = async (nextMode = 'held', nextFixture = payload('ready', features), status = 200) => {
     mode = nextMode; fixture = nextFixture; httpStatus = status; held.length = 0;
     await call('Page.navigate', { url: origin.href });
@@ -190,7 +194,7 @@ async function pageSession(browser, width, height) {
     mode = 'respond'; fixture = body; httpStatus = status;
     for (const requestId of held.splice(0)) await fulfill(requestId, body, status);
   };
-  return { call, evaluate, wait, key, fill, snapshot, open, release, held, errors,
+  return { call, evaluate, wait, key, fill, snapshot, displayTime, open, release, held, errors,
     close: async () => { browser.listeners.delete(listener); await browser.call('Target.closeTarget', { targetId }); },
   };
 }
@@ -243,17 +247,17 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       assert.ok(layout.top >= layout.body.top && layout.bottom <= layout.body.bottom + 1, 'first result is visible inside its actual scroll region: '+JSON.stringify(layout));
       assert.ok(layout.composer.top >= 0 && layout.composer.bottom <= height, 'composer stays in the viewport: '+JSON.stringify(layout));
       assert.equal(layout.overflow, false, 'no horizontal overflow');
-      const beforeTime = await p.evaluate(`document.querySelector('.time-bar select')?.value ?? document.querySelector('select[aria-label="Preview year or earlier era"]')?.value`);
-      assert.match(beforeTime ?? '', /^\d+$/, 'actual display time is observed before selection');
+      const beforeTime = await p.displayTime();
+      for (const part of ['year','month','day']) assert.match(beforeTime[part] ?? '', /^\d+$/, `actual display ${part} is observed before selection`);
       await p.key('ArrowDown', 'ArrowDown', 40);
       await p.wait(`document.activeElement?.closest('#global-search-results') && document.activeElement.textContent.includes('Ellsworth County')`, 'ArrowDown reaches explicit result');
       await p.key('Enter', 'Enter', 13);
       await p.wait(`document.querySelector('.evidence-drawer[data-open="true"] h2')?.textContent.includes('Ellsworth')`, 'county opens Evidence Drawer');
-      const investigation = await p.evaluate(`(() => {const d=document.querySelector('.evidence-drawer');return {text:d.innerText,state:d.dataset.state,modal:d.getAttribute('aria-modal'),time:document.querySelector('.time-bar select')?.value ?? document.querySelector('select[aria-label="Preview year or earlier era"]')?.value,search:document.querySelector('#qwen-map-panel textarea').value};})()`);
+      const investigation = await p.evaluate(`(() => {const d=document.querySelector('.evidence-drawer');return {text:d.innerText,state:d.dataset.state,modal:d.getAttribute('aria-modal'),search:document.querySelector('#qwen-map-panel textarea').value};})()`);
       assert.match(investigation.text, /Census/i);
       assert.match(investigation.text, /context/i);
       assert.notEqual(investigation.state, 'ANSWER');
-      assert.equal(investigation.time, beforeTime);
+      assert.deepEqual(await p.displayTime(), beforeTime, 'county investigation preserves the full displayed date');
       assert.equal(investigation.search, '');
       if (width < 600) assert.equal(investigation.modal, 'true');
       await p.key('Escape', 'Escape', 27);
