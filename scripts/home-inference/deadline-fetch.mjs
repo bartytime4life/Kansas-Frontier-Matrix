@@ -11,7 +11,9 @@ export function deadlineFetch(input,{method='GET',headers={},body,signal}={}){
   const url=new URL(input);
   if(!['http:','https:'].includes(url.protocol)||url.username||url.password){reject(new TypeError('Invalid transport URL'));return;}
   const request=url.protocol==='https:'?httpsRequest:httpRequest;
-  const req=request(url,{method,headers:Object.fromEntries(new Headers(headers)),signal},res=>{
+  const requestHeaders=new Headers({'accept':'*/*','user-agent':'node'});
+  for(const [name,value]of new Headers(headers))requestHeaders.set(name,value);
+  const req=request(url,{method,headers:Object.fromEntries(requestHeaders),signal},res=>{
    try{
     const responseHeaders=new Headers();
     for(let i=0;i<res.rawHeaders.length;i+=2)responseHeaders.append(res.rawHeaders[i],res.rawHeaders[i+1]);

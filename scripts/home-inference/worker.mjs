@@ -70,7 +70,10 @@ export function validLease(value){
  return Object.entries(headers).every(([name,header])=>FORWARD.includes(name)&&typeof header==='string'&&header.length<=200&&!/[\r\n]/.test(header));
 }
 
-export function createWorker({site,gateway,keyId,secret,fetchImpl=deadlineFetch,clock=Date.now,log=line=>console.log(JSON.stringify(line))}){
+export function createWorker({site,gateway,keyId,secret,fetchImpl=fetch,clock=Date.now,log=line=>console.log(JSON.stringify(line))}){
+ // Keep the website's existing fetch behavior; only the long loopback gateway
+ // call needs a larger headers allowance. Injected test transports cover both.
+ const gatewayFetch=fetchImpl===fetch?deadlineFetch:fetchImpl;
  const record=(event,fields={})=>{try{log({at:new Date(clock()).toISOString(),event,...fields});}catch{}};
  const post=(path,payload,timeoutMs,signal)=>{
   const body=JSON.stringify(payload);
@@ -87,7 +90,7 @@ export function createWorker({site,gateway,keyId,secret,fetchImpl=deadlineFetch,
   },WORKER_LIMITS.statusEveryMs);watch.unref?.();
   try{
    let response;
-   try{response=await fetchImpl(gateway+request.path,{method:request.method,headers:Object.fromEntries(Object.entries(request.headers).filter(([name])=>FORWARD.includes(name))),body:request.body||undefined,redirect:'manual',cache:'no-store',signal:AbortSignal.any([controller.signal,AbortSignal.timeout(WORKER_LIMITS.relayMs)])});}
+   try{response=await gatewayFetch(gateway+request.path,{method:request.method,headers:Object.fromEntries(Object.entries(request.headers).filter(([name])=>FORWARD.includes(name))),body:request.body||undefined,redirect:'manual',cache:'no-store',signal:AbortSignal.any([controller.signal,AbortSignal.timeout(WORKER_LIMITS.relayMs)])});}
    catch{
     if(controller.signal.aborted){record('relay_cancelled',{path:request.path,ms:clock()-started});return;}
     record('relay_failed',{path:request.path,code:'GATEWAY_UNREACHABLE'});await report({leaseId:lease.leaseId,error:'GATEWAY_UNREACHABLE'});return;
