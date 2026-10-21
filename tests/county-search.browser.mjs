@@ -174,6 +174,10 @@ async function pageSession(browser, width, height) {
     assert.ok(held.length, 'hydrated application started its county request');
     // New disposable profiles see the normal first-visit guide. Close it with
     // native mouse input before typing, so its autofocus cannot steal keys.
+    // The lazy visual welcome replaces its text fallback (moving the close
+    // control); measure only once that swap has happened.
+    const settle = Date.now() + 15000;
+    while (Date.now() < settle && await evaluate(`Boolean(document.querySelector('.explorer-guide') && !document.querySelector('.explorer-guide.living-welcome'))`)) await pause(100);
     const close = await evaluate(`(() => {const b=document.querySelector('.explorer-guide [aria-label="Close quick start"]'); if(!b)return null;const r=b.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};})()`);
     if (close) {
       await call('Input.dispatchMouseEvent', {type:'mousePressed',button:'left',clickCount:1,...close});

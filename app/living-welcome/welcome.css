@@ -455,16 +455,19 @@
 @media(prefers-reduced-motion:reduce){.living-welcome .discovery-scene b{animation:none}}
 .atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-bottom-right{left:0}
 .atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib{display:flex;align-items:safe center;max-height:none;justify-content:flex-end;width:100%;max-width:none;min-height:calc(48px + env(safe-area-inset-bottom,0px));margin:0;padding:6px 16px;border:0;border-radius:0;background:#031a2b!important;text-align:right}
-/* Phones: a 2×2 dock. Explore freely already closes the welcome, so the
-   duplicate Skip control steps aside rather than adding a third row. */
+/* Phones: a 2×2 dock with the compact close button down its right edge. */
 @media(max-width:560px){
-  .living-welcome .welcome-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .living-welcome .welcome-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr)) auto;gap:4px}
   .living-welcome .welcome-toolbar>*{justify-content:center;white-space:normal;text-align:center}
   .living-welcome .welcome-toolbar .welcome-primary{margin:0}
-  .living-welcome .welcome-toolbar .welcome-skip{display:none}
+  .living-welcome .welcome-toolbar .welcome-skip{grid-column:3;grid-row:1 / span 2;align-self:stretch}
 }
-/* Tablets: Explore freely already closes the welcome, so drop the duplicate exit and keep one dock row. */
-@media(max-width:900px){.living-welcome .welcome-toolbar .welcome-skip{display:none}}
+/* Tablets and phones: Skip shrinks to its × so the dock stays compact; its
+   accessible name ("Close quick start") is unchanged. */
+@media(max-width:900px){
+  .living-welcome .welcome-toolbar .welcome-skip{font-size:0;padding:8px 12px;min-width:44px;display:inline-flex;align-items:center;justify-content:center}
+  .living-welcome .welcome-toolbar .welcome-skip span{font-size:18px;margin:0}
+}
 /* Rows: header, hint, cards (the stretch row), then the Expand control. */
 .living-welcome .welcome-map-stage{grid-template-rows:auto auto minmax(min-content,1fr) auto}
 .living-welcome:not([data-fullscreen=true]) .discovery-field{align-content:start}
