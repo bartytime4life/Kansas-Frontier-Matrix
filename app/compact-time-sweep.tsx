@@ -86,10 +86,13 @@ export function CompactTimeSweep({ value, year, years, today, reducedMotion, ope
     let nextIndex = calendarFrameIndex(frames, state.day) + 1;
     if (skipGaps) while (nextIndex < frames.length && visited.current.get(frames[nextIndex])?.state === "empty") nextIndex++;
     const next = frames[nextIndex];
-    if (!next) return;
+    if (!next) {
+      const timer = window.setTimeout(() => setPlaying(false), 0);
+      return () => window.clearTimeout(timer);
+    }
     const timer = window.setTimeout(() => seekDay(next, true), 1400 / speed);
     return () => window.clearTimeout(timer);
-  }, [playing, busy, era, reducedMotion, state.day, state.showing, frames, skipGaps, speed, seekDay]);
+  }, [playing, busy, era, reducedMotion, state.day, state.showing, frames, skipGaps, speed, seekDay, setPlaying]);
   useEffect(() => {
     if (!open) return;
     const dismiss = (event: PointerEvent) => { if (event.target instanceof Node && !rootRef.current?.contains(event.target)) { onOpenChange(false); setExpanded(false); setPinnedOpen(false); } };
