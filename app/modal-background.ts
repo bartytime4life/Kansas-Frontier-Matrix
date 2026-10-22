@@ -36,3 +36,23 @@ export function modalReturnTarget(trigger: HTMLElement | null, fallback: HTMLEle
   }
   return target.isConnected && !target.closest("[hidden], [inert]") && target.getClientRects().length > 0 ? target : fallback;
 }
+
+/** Native Tab candidates, including disclosure summaries but not closed content.
+ * A layout box alone does not make a closed-details descendant focusable.
+ * Do not require viewport intersection: focusing a scrolled control reveals it.
+ */
+export function modalFocusableElements(panel: HTMLElement): HTMLElement[] {
+  const selector = "button, input, select, textarea, summary, a[href], [tabindex]";
+  return Array.from(panel.querySelectorAll<HTMLElement>(selector)).filter(element => {
+    if (element.tabIndex < 0 || element.matches(":disabled") || element.closest("[hidden], [inert]") || !element.getClientRects().length) return false;
+    const style = element.ownerDocument.defaultView?.getComputedStyle(element);
+    if (style?.display === "none" || style?.visibility === "hidden" || style?.visibility === "collapse") return false;
+    for (let ancestor = element.parentElement; ancestor && panel.contains(ancestor); ancestor = ancestor.parentElement) {
+      if (ancestor instanceof HTMLDetailsElement && !ancestor.open) {
+        const summary = ancestor.querySelector(":scope > summary");
+        if (summary !== element && !summary?.contains(element)) return false;
+      }
+    }
+    return true;
+  });
+}
