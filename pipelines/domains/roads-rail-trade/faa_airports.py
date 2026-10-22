@@ -2,6 +2,7 @@
 
 This is not NTAD/BTS data; never assigns FAA authority to a community source.
 """
+from copy import deepcopy
 from datetime import date, datetime, timedelta
 from pathlib import PurePosixPath
 import csv
@@ -27,6 +28,33 @@ def canonical(value):
 
 def sha(value):
     return "sha256:" + hashlib.sha256(value).hexdigest()
+
+
+def _record(original, edition, archive_sha256, retrieved_at):
+    """One deterministic projection for preparation and consumption checks."""
+    row = original
+    row_digest = sha(canonical(original))
+    lat, lon = float(row["LAT_DECIMAL"]), float(row["LONG_DECIMAL"])
+    elev = float(row["ELEV"]) if row["ELEV"] else None
+    entity = "faa:site:" + (row["SITE_NO"] + ":" + row["SITE_TYPE_CODE"]).lower()
+    revision = "faa:revision:" + sha(canonical([entity, edition.isoformat(), row_digest])).split(":")[1]
+    bundle_id = "faa:bundle:" + revision.split(":")[-1]
+    ref = {"ref": "kfm://aviation/airport/" + revision, "kind": "record", "bundle_ref": bundle_id}
+    bundle = {"bundle_id": bundle_id, "claim_scope": "FAA landing facility reference edition; research/context only, not navigation or flight planning.",
+              "evidence_refs": [ref], "source_records": ["sha256:" + archive_sha256, row_digest],
+              "citations": [SOURCE], "rights": {"license": "FAA source; independent product rights review required"},
+              "sensitivity": {"level": "quarantine", "reason": "Unadmitted aviation candidate", "applied_at": retrieved_at},
+              "transforms": ["kfm:transform:faa-apt:v1"], "checksums": {"archive": "sha256:" + archive_sha256, "record": row_digest}}
+    bundle["spec_hash"] = {"value": sha(canonical(bundle))}
+    return {"entity_id": entity, "revision_id": revision, "edition": edition.isoformat(),
+            "valid_to_exclusive": (edition + timedelta(days=28)).isoformat(), "state": row["STATE_CODE"],
+            "county_name": row["COUNTY_NAME"], "county_state": row["COUNTY_ASSOC_STATE"],
+            "name": row["ARPT_NAME"], "faa_id": row["ARPT_ID"], "icao_id": row["ICAO_ID"] or None,
+            "facility_type": row["SITE_TYPE_CODE"], "facility_use": row["FACILITY_USE_CODE"],
+            "public_candidate": row["SITE_TYPE_CODE"] == "A" and row["FACILITY_USE_CODE"] == "PU" and row["OWNERSHIP_TYPE_CODE"] in {"PU", "PR"} and row["ARPT_STATUS"] == "O",
+            "longitude": lon, "latitude": lat, "horizontal_datum": "UNVERIFIED_SOURCE_DATUM",
+            "elevation": elev, "elevation_unit": "ft", "vertical_reference": "MSL",
+            "original": original, "evidence_ref": ref, "bundle": bundle}
 
 
 def prepare(archive, receipt, *, states=("KS",)):
@@ -86,25 +114,7 @@ def prepare(archive, receipt, *, states=("KS",)):
             elev = float(row["ELEV"]) if row["ELEV"] else None
             if elev is not None and (not math.isfinite(elev) or not -1500 <= elev <= 15000):
                 raise ValueError("ELEVATION_INVALID")
-            entity = "faa:site:" + key.lower()
-            revision = "faa:revision:" + sha(canonical([entity, edition.isoformat(), row_digest])).split(":")[1]
-            bundle_id = "faa:bundle:" + revision.split(":")[-1]
-            ref = {"ref": "kfm://aviation/airport/" + revision, "kind": "record", "bundle_ref": bundle_id}
-            bundle = {"bundle_id": bundle_id, "claim_scope": "FAA landing facility reference edition; research/context only, not navigation or flight planning.",
-                      "evidence_refs": [ref], "source_records": ["sha256:" + receipt["sha256"], row_digest],
-                      "citations": [SOURCE], "rights": {"license": "FAA source; independent product rights review required"},
-                      "sensitivity": {"level": "quarantine", "reason": "Unadmitted aviation candidate", "applied_at": receipt["retrieved_at"]},
-                      "transforms": ["kfm:transform:faa-apt:v1"], "checksums": {"archive": "sha256:" + receipt["sha256"], "record": row_digest}}
-            bundle["spec_hash"] = {"value": sha(canonical(bundle))}
-            records.append({"entity_id": entity, "revision_id": revision, "edition": edition.isoformat(),
-                            "valid_to_exclusive": (edition + timedelta(days=28)).isoformat(), "state": row["STATE_CODE"],
-                            "county_name": row["COUNTY_NAME"], "county_state": row["COUNTY_ASSOC_STATE"],
-                            "name": row["ARPT_NAME"], "faa_id": row["ARPT_ID"], "icao_id": row["ICAO_ID"] or None,
-                            "facility_type": row["SITE_TYPE_CODE"], "facility_use": row["FACILITY_USE_CODE"],
-                            "public_candidate": row["SITE_TYPE_CODE"] == "A" and row["FACILITY_USE_CODE"] == "PU" and row["OWNERSHIP_TYPE_CODE"] in {"PU", "PR"} and row["ARPT_STATUS"] == "O",
-                            "longitude": lon, "latitude": lat, "horizontal_datum": "UNVERIFIED_SOURCE_DATUM",
-                            "elevation": elev, "elevation_unit": "ft", "vertical_reference": "MSL",
-                            "original": original, "evidence_ref": ref, "bundle": bundle})
+            records.append(_record(original, edition, receipt["sha256"], receipt["retrieved_at"]))
         except (ValueError, OverflowError) as error:
             rejects.append({"row": number, "record_digest": row_digest, "reason": str(error), "original": original})
     records.sort(key=lambda r: r["revision_id"])
@@ -115,6 +125,49 @@ def prepare(archive, receipt, *, states=("KS",)):
                "future_at_capture": edition > retrieved.date(), "records": records, "rejects": rejects}
     payload["candidate_id"] = sha(canonical(payload))
     return payload
+
+
+def verify_candidate(candidate):
+    """Return a detached, integrity-checked private candidate; never authorize release.
+
+    The outer seal covers every field. Rebuilding each record also prevents a
+    rehashed container from assigning changed projections to an old revision.
+    This is content integrity, not authentication of an FAA source capture.
+    """
+    candidate = deepcopy(candidate)
+    if not isinstance(candidate, dict):
+        raise ValueError("CANDIDATE_SHAPE_INVALID")
+    subject = {k: v for k, v in candidate.items() if k != "candidate_id"}
+    try:
+        expected_id = sha(canonical(subject))
+    except (TypeError, ValueError):
+        raise ValueError("CANDIDATE_SHAPE_INVALID") from None
+    if candidate.get("candidate_id") != expected_id:
+        raise ValueError("CANDIDATE_DIGEST_MISMATCH")
+    if (candidate.get("profile") != "kfm.faa-airports-candidate/v1"
+            or candidate.get("parser_version") != VERSION
+            or candidate.get("release_state") != "HELD"
+            or candidate.get("rights_state") != "REVIEW_REQUIRED"
+            or candidate.get("release_time") is not None):
+        raise ValueError("CANDIDATE_STATE_INVALID")
+    try:
+        edition = date.fromisoformat(candidate["edition"])
+        if not isinstance(candidate["records"], list):
+            raise ValueError
+        seen = set()
+        for record in candidate["records"]:
+            original = record["original"]
+            if (not isinstance(original, dict) or set(original) != set(FIELDS)
+                    or any(not isinstance(v, str) for v in original.values())):
+                raise ValueError
+            expected = _record(original, edition, candidate["archive_sha256"], candidate["retrieved_at"])
+            if (canonical(record) != canonical(expected) or record["entity_id"] in seen
+                    or datetime.strptime(original["EFF_DATE"], "%Y/%m/%d").date() != edition):
+                raise ValueError
+            seen.add(record["entity_id"])
+    except (KeyError, TypeError, ValueError, OverflowError):
+        raise ValueError("RECORD_BINDING_MISMATCH") from None
+    return candidate
 
 
 # Updated only after an explicit schema review; populated from the exact official edition.

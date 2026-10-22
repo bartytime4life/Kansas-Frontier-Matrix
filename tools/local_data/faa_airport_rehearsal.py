@@ -17,14 +17,12 @@ spec.loader.exec_module(faa)
 
 def inspect_selection(candidate, revision_id):
     """Private review chain only. Never a public report or released evidence."""
+    candidate = faa.verify_candidate(candidate)
     matches = [r for r in candidate["records"] if r["revision_id"] == revision_id]
     if len(matches) != 1:
         raise ValueError("SELECTION_NOT_FOUND")
     record = matches[0]
     bundle = record["bundle"]
-    subject = {k: v for k, v in bundle.items() if k != "spec_hash"}
-    if bundle["spec_hash"]["value"] != faa.sha(faa.canonical(subject)) or record["evidence_ref"] not in bundle["evidence_refs"]:
-        raise ValueError("EVIDENCE_DIGEST_MISMATCH")
     return {"release_state": "HELD", "entity_id": record["entity_id"], "revision_id": revision_id,
             "evidence_ref": record["evidence_ref"], "bundle": bundle,
             "report": "PRIVATE REVIEW DRAFT - HELD\n" + record["name"] + "\nReference edition: " + record["edition"]
@@ -34,6 +32,7 @@ def inspect_selection(candidate, revision_id):
 
 def rehearse(candidate, database):
     """Isolated caller-owned test database; a retry cannot overwrite a revision."""
+    candidate = faa.verify_candidate(candidate)
     with sqlite3.connect(database) as db:
         db.execute("CREATE TABLE IF NOT EXISTS faa_candidate (candidate TEXT, revision TEXT, state TEXT, county TEXT, record TEXT, PRIMARY KEY(candidate,revision))")
         db.execute("CREATE INDEX IF NOT EXISTS faa_county ON faa_candidate(candidate,state,county,revision)")
