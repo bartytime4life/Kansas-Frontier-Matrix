@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import test from "node:test";
+import test, { mock } from "node:test";
 import ts from "typescript";
 
 const modules = new Map();
@@ -147,10 +147,15 @@ test("wind flow hover only reports a nearby model point and a travel direction",
   assert.equal(windCanvas.windToCompass(frame.samples[1].windToDegrees), "S");
 });
 
-const withWindow = (run) => {
+const withWindow = (run, now = () => 0) => {
   const previousWindow = globalThis.window;
+  // Geometry must not depend on CI scheduling: the renderer deliberately
+  // reduces particle density when measured frame CPU time exceeds its budget.
+  // Animation still advances through each draw's explicit elapsedMs argument.
+  const clock = mock.method(performance, "now", now);
   globalThis.window = { devicePixelRatio: 1 };
   try { return run(); } finally {
+    clock.mock.restore();
     if (previousWindow === undefined) delete globalThis.window;
     else globalThis.window = previousWindow;
   }
@@ -220,6 +225,26 @@ test("wind flow draws moving ground streamlines toward where the wind blows, wit
   const [, down] = meanVector(segmentsOf(south2));
   assert.ok(down > 0.99, "wind from the north flows south (screen down at bearing 0)");
 }));
+
+test("wind density reduces after an expensive frame and recovers when CPU headroom returns", () => {
+  let cpuMs = 0, reads = 0;
+  withWindow(() => {
+    const { canvas } = recordingCanvas(), map = cameraMap(), frame = gridFrame(270);
+    let elapsed = 0;
+    for (; elapsed <= 1000; elapsed += 33) windCanvas.drawWindFlowCanvas(canvas, map, frame, elapsed, true);
+    const normal = windCanvas.windFlowCanvasStats(canvas);
+    assert.equal(normal.mode, "homography");
+    assert.ok(normal.particles > 12);
+    cpuMs = 8;
+    for (let i = 0; i < 12; i++, elapsed += 33) windCanvas.drawWindFlowCanvas(canvas, map, frame, elapsed, true);
+    const limited = windCanvas.windFlowCanvasStats(canvas);
+    assert.equal(limited.cpuMs, 8);
+    assert.ok(limited.active < normal.active, "the real frame-budget control lowers density");
+    cpuMs = 0;
+    for (let i = 0; i < 50; i++, elapsed += 33) windCanvas.drawWindFlowCanvas(canvas, map, frame, elapsed, true);
+    assert.equal(windCanvas.windFlowCanvasStats(canvas).active, normal.active, "density recovers without changing the data or animation time");
+  }, () => reads++ % 2 === 0 ? 0 : cpuMs);
+});
 
 test("streamlines rotate with bearing and foreshorten with pitch because they live on the ground", () => withWindow(() => {
   const run = (options) => {
