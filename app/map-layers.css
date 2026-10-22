@@ -230,14 +230,38 @@
   .soil-playback output { grid-column: 1 / -1; text-align: left; }
   .soil-display-panel strong { font-size: 19px; }
 }
-.layer-panel-explore { flex: none; border-top: 1px solid #365459; background: #102a2e; }
-.layer-panel-explore > summary { display: flex; align-items: center; gap: 9px; min-height: 48px; padding: 0 17px; color: #e5efe8; font-size: 13px; font-weight: 750; list-style: none; cursor: pointer; }
+/* One bounded scroll region for links and disclosures; expansion cannot grow
+   the panel or push controls past its clipped edge. Keep the close header free. */
+.layer-panel-explore { flex: 0 1 auto; min-height: 48px; max-height: 55%; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scroll-padding-block: 56px 8px; border-top: 1px solid #365459; background: #102a2e; scrollbar-color: #668b84 transparent; }
+.layer-panel-explore > summary { position: sticky; z-index: 2; top: 0; display: flex; align-items: center; gap: 9px; min-height: 48px; padding: 0 17px; background: #102a2e; color: #e5efe8; font-size: 13px; font-weight: 750; list-style: none; cursor: pointer; }
 .layer-panel-explore > summary::-webkit-details-marker { display: none; }
+.layer-panel-explore > summary:focus-visible { outline-offset: -3px; }
 .layer-panel-explore > summary span { color: #91aaa3; font-size: 11px; font-weight: 500; }
 .layer-panel-explore > summary::after { content: '⌄'; margin-left: auto; color: #9cddd7; }
 .layer-panel-explore[open] > summary::after { transform: rotate(180deg); }
-.layer-panel-explore nav { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding: 0 17px 13px; }
-.layer-panel-explore nav > * { display: grid; place-items: center; min-height: 42px; border: 1px solid #365459; border-radius: 7px; background: #17363b; color: #d6e6df; font-size: 12px; font-weight: 700; text-decoration: none; }
+.layer-panel-explore > nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; padding: 4px 17px 13px; }
+.layer-panel-explore > nav > :is(button, a) { display: grid; place-items: center; min-height: 44px; border: 1px solid #365459; border-radius: 7px; background: #17363b; color: #d6e6df; padding: 6px; font-size: 12px; font-weight: 700; text-align: center; text-decoration: none; overflow-wrap: anywhere; }
+.aviation-control { margin: 0 17px 13px; border: 1px solid #365459; border-radius: 7px; color: #d6e6df; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.aviation-control summary { min-height: 44px; padding: 11px 10px; color: #e5efe8; font-weight: 700; cursor: pointer; }
+.aviation-control-body { display: grid; gap: 10px; min-width: 0; padding: 0 10px 10px; }
+.aviation-control p { margin: 0; }
+.aviation-control label { display: grid; gap: 5px; min-width: 0; }
+.aviation-control :is(input, select, button, a) { min-width: 0; min-height: 44px; border: 1px solid #547873; border-radius: 6px; background: #153136; color: #e9f4ee; padding: 8px; font: inherit; }
+.aviation-control :is(input, select) { width: 100%; color-scheme: dark; }
+.aviation-control button { cursor: pointer; }
+.aviation-control button:disabled { opacity: .6; cursor: wait; }
+.aviation-control details { display: grid; gap: 10px; border-top: 1px solid #365459; }
+.aviation-control details > :not(summary) { margin-top: 10px; }
+.aviation-control a { display: flex; align-items: center; color: #9de5dd; text-underline-offset: 3px; }
+/* Short windows cannot fit the fixed panel controls plus a second scroll
+   viewport. Scroll the panel as one region, retaining its close heading. */
+@media (max-height: 600px) {
+  .layer-panel[data-panel-mode="layers"], .layer-panel[data-panel-mode="live"] { display: block; overflow-y: auto; overscroll-behavior: contain; scroll-padding-block: 90px 8px; }
+  .layer-panel[data-panel-mode="layers"] .panel-heading, .layer-panel[data-panel-mode="live"] .panel-heading { position: sticky; z-index: 3; top: 0; background: #0d2529; }
+  .layer-panel[data-panel-mode="layers"] .layer-catalog-body, .layer-panel[data-panel-mode="live"] .layer-catalog-body { overflow: visible; }
+  .layer-panel-explore { max-height: none; overflow: visible; }
+  .layer-panel-explore > summary { position: static; }
+}
 @media (max-width: 760px) {
   .layer-panel[data-panel-mode="layers"], .layer-panel[data-panel-mode="live"] { top: auto; right: 0; bottom: var(--status); left: 0; width: 100%; height: min(84dvh, 760px); max-height: none; border-radius: 17px 17px 0 0; }
 }

@@ -22,8 +22,9 @@ export function AviationControl({ contextKey }: { contextKey: string }) {
     } catch { if (token.current()) setStatus("Unavailable · aviation service could not be reached."); }
     finally { if (token.current()) setBusy(false); }
   };
-  return <details open={open} className="governed-water-control" onToggle={e => { const visible = e.currentTarget.open; setOpen(visible); if (!visible) retire(); }}>
+  return <details open={open} className="aviation-control" onToggle={e => { const visible = e.currentTarget.open; setOpen(visible); if (!visible) retire(); }}>
     <summary>Aviation research · held</summary>
+    <div className="aviation-control-body">
     <p>Research/context only. Not for navigation or flight planning.</p>
     <label>County association<input value={county} maxLength={64} onChange={e => { retire(); setCounty(e.target.value); }} /></label>
     <label>Reference edition<select value={edition} onChange={e => { retire(); setEdition(e.target.value); }}><option value="present">Present · released editions</option><option value="2026-10-01">2026-10-01 · candidate held</option></select></label>
@@ -36,5 +37,6 @@ export function AviationControl({ contextKey }: { contextKey: string }) {
       <p>OpenSky operational integration requires written permission. Independent feeds require their own admission and coverage review.</p>
       <a href="https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/" target="_blank" rel="noreferrer">FAA editions and product documentation ↗</a>
     </details>
+    </div>
   </details>;
 }
