@@ -2,7 +2,7 @@
 doc_id: kfm://register/milestone-progress-2026-10-08
 title: KFM Milestone and Issue Progress — 2026-10-08
 type: dated-progress-ledger
-version: v1.2
+version: v1.3
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-08
@@ -82,6 +82,40 @@ conformance report still needs an exact-candidate successor and independent
 review. Browser interaction, accessibility, hosted equivalence, recovery and
 release acceptance are not established by these repairs. No milestone, alert,
 source-admission or release closure is claimed.
+
+### Later October 22 readback
+
+[Main `123d8645b84e705789390f2ca4cbd66cc1eb2f0e`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/123d8645b84e705789390f2ca4cbd66cc1eb2f0e)
+includes merged #5406, #5407 and #5409. The separate
+[hosted source base `41d7908d7eef051d76fc62a716733efdc2b60dc7`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/41d7908d7eef051d76fc62a716733efdc2b60dc7)
+contains merged #5408. Earlier draft states and 28-alert counts above are historical.
+
+[Draft PR #5410](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5410)
+now has head `ea43eea6a8d8b20f17c2f1a2361cef6aa6346d7d`. Its tree
+`e44cba214aa92313ea0862c03591da07cd1464cc` matches the isolated combined tree
+that passed build, typecheck, 1,643 Node tests with 17 skipped and zero failed,
+and 37 browser tests using Chrome 156 and Node 22.13. The prior UI head's
+[hosted job](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39838770090/job/120033941640)
+also passed the complete Node, HTTP, county, aviation, welcome and preview checks.
+[Exact-new-head hosted CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39840675088)
+remains PENDING at this readback. These are source/fixture checks, not deployment
+or hosted-equivalence acceptance.
+
+A fresh owner-visible read of both alert pages shows **39 open Pillow alerts:
+4 critical, 23 high and 12 moderate**.
+[Alert #125](https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot/125),
+GHSA-v9pv-5gc8-w2m6, reports affected versions `>=11.0.0,<13.0.0` and fixed
+version 13.0.0; the declaration and lock already pin 13.0.0. Its logs link
+returns the earlier Dependabot job. The current-main
+[crop-lock audit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39838735970/job/120033822577)
+reports no known vulnerabilities, and [PyPI's exact 13.0.0 metadata](https://pypi.org/pypi/Pillow/13.0.0/json)
+lists no vulnerability entries at this readback. These are bounded advisory
+signals. Why GitHub alerts remain OPEN is **UNKNOWN**; no alert reconciliation,
+vulnerability-absence or deployed-version claim follows.
+
+Milestone acceptance, independent review, conformance, SBOM/signature proof,
+hosted equivalence and recovery remain open. These observations establish no
+milestone, alert, admission or release closure.
 
 **Validation boundary.** This pass re-read GitHub source, alert UI and workflow
 results. Local candidate regressions are recorded on their PRs; historical test
