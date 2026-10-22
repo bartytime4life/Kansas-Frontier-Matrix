@@ -103,6 +103,13 @@ inspect its journal first. Then enable `kfm-pipeline.timer`. Configure and verif
 The latter runs nightly at 02:30 local time and retains failed/incomplete copies
 for investigation. Repeat restore tests monthly. Both units have CPU/memory/I/O
 limits; tune only after measuring coexistence with real inference traffic.
+Acquisition and backup services hold the same kernel `flock` for their complete
+operation. Backup waits for an active capture; capture ticks defer while backup
+holds the lock. This prevents a backup from collecting a new receipt while
+missing the immutable object it references. The kernel releases the lock on
+process death. Pause the timers before manual acquisition/package/backup commands,
+or run those commands under that same lock. Backup is a complete selected-object
+copy, not a scan racing an active writer.
 
 ## GoDaddy database and artifact qualification
 

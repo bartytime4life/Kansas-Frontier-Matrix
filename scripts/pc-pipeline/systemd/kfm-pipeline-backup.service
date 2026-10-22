@@ -6,7 +6,8 @@ ConditionPathExists=/etc/kfm-pipeline/backup.json
 Type=oneshot
 User=kfm-pipeline
 Group=kfm-pipeline
-ExecStart=/usr/bin/node /opt/kfm-pipeline/scripts/pc-pipeline/cli.mjs backup /etc/kfm-pipeline/config.json /etc/kfm-pipeline/backup.json
+ExecStart=/usr/bin/flock --no-fork --exclusive --wait 600 --conflict-exit-code=75 /srv/kfm-data/.kfm-pipeline.lock /usr/bin/node /opt/kfm-pipeline/scripts/pc-pipeline/cli.mjs backup /etc/kfm-pipeline/config.json /etc/kfm-pipeline/backup.json
+SuccessExitStatus=75
 UMask=0077
 NoNewPrivileges=yes
 ProtectSystem=strict

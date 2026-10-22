@@ -9,7 +9,8 @@ ConditionPathExists=/etc/kfm-pipeline/config.json
 Type=oneshot
 User=kfm-pipeline
 Group=kfm-pipeline
-ExecStart=/usr/bin/node /opt/kfm-pipeline/scripts/pc-pipeline/worker.mjs /etc/kfm-pipeline/config.json
+ExecStart=/usr/bin/flock --no-fork --exclusive --nonblock --conflict-exit-code=75 /srv/kfm-data/.kfm-pipeline.lock /usr/bin/node /opt/kfm-pipeline/scripts/pc-pipeline/worker.mjs /etc/kfm-pipeline/config.json
+SuccessExitStatus=75
 LoadCredential=pipeline-worker-key:/etc/kfm-pipeline/worker-key
 UMask=0077
 NoNewPrivileges=yes

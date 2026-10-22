@@ -34,6 +34,9 @@ if (!process.argv.includes('--apply')) {
   await copyFile(backupPath, '/etc/kfm-pipeline/restore-receipt.json');
   // Capture-only installation: empty credential is never used until a separate paired setup.
   const { writeFile } = await import('node:fs/promises'); await writeFile('/etc/kfm-pipeline/worker-key', '', { mode: 0o600, flag: 'wx' });
+  // Kernel-owned lock spans complete capture/backup operations and releases on process death.
+  await writeFile('/srv/kfm-data/.kfm-pipeline.lock', '', { mode: 0o600, flag: 'wx' });
+  execFileSync('chown', ['kfm-pipeline:kfm-pipeline','/srv/kfm-data/.kfm-pipeline.lock']);
   for (const unit of ['kfm-pipeline.service','kfm-pipeline.timer','kfm-pipeline-backup.service','kfm-pipeline-backup.timer']) await copyFile(resolve(root, 'scripts/pc-pipeline/systemd', unit), resolve('/etc/systemd/system', unit));
   execFileSync('chown', ['root:kfm-pipeline','/opt/kfm-pipeline','/etc/kfm-pipeline','/etc/kfm-pipeline/config.json','/etc/kfm-pipeline/approvals']);
   // Only the new dedicated store may be handed to the new service account.
