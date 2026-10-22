@@ -28,6 +28,40 @@ and reinstall to roll back.
 
 # GoDaddy Node preview candidate
 
+## Next.js dependency candidate — 2026-10-22
+
+The separate hosted source at baseline
+`1000a5c4521bb3055e3863110754e924cdda801e` declared production Next 16.3.8.
+A registry audit identified the affected `>=16.0.0 <=16.4.0` range for
+[SVG image optimization](https://github.com/advisories/GHSA-2464-fhr4-w9xw),
+[Server Actions denial of service](https://github.com/advisories/GHSA-p3m5-59mp-jv5r),
+and [typed-array cache deserialization](https://github.com/advisories/GHSA-673q-mjm6-r5xr).
+The candidate selects registry-reported 16.4.2 for Next and its matching ESLint config. Npm
+regenerated the lock while retaining all existing overrides and vendored forks.
+
+`npm audit --omit=dev --json` changes from eight high and one critical finding
+to eight high and zero critical findings. The remaining high graph is associated
+with the existing vendored Braces fork; it is not dismissed or called clean.
+The source runs Vinext and its image handler. Dependency inventory alone does
+not prove that an advisory's Next-server path is reachable in this composition.
+
+Local candidate validation passed `npm ci`, production build, TypeScript and
+the complete Node suite: 1,639 passed, zero failed, 17 skipped. The suite includes
+the real loopback HTTP boundary and existing Braces depth/fork-integrity tests.
+Whole-tree lint remains failing. An exact-base comparison excluding generated
+`public/assets` finds the same four source errors and 72 warnings in both trees;
+lint is not claimed passing. The default post-build lint also traverses generated
+assets and reports additional diagnostics. These are bounded local results,
+not hosted CI, rendered-browser acceptance or production verification.
+
+No GoDaddy publication, environment/model change, private-store migration,
+source admission, or Sites synchronization follows from this candidate. The
+separate monorepo Site mirror needs its own recorded safety overlay and receipt.
+Before publication, verify this exact candidate's build, type checks, full Node
+suite, HTTP boundary and hosted revision. Revert the manifest and lock together
+after authorized integration to undo this candidate; do not use a vulnerable
+dependency version as an alert workaround.
+
 ## Private-workspace holding page · 2026-10-17
 
 Public browser acceptance found `/stewards` redirecting to the unimplemented
