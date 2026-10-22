@@ -209,6 +209,13 @@ Python 3.11/3.12 binary readers. The local-data workflow uses it for synthetic
 NetCDF4 time/packing/ID fixtures; no live NOAA requests run in CI. It does not
 change root runtime dependencies.
 
+The finite `crop-casma-tiles` profile reuses the existing
+`pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock` without changing
+its dependency pins or hashes. The Crop CASMA Tile Compatibility workflow calls
+the shared installer on Python 3.12 with SHA-256 enforcement and binary-only
+distributions. Its synthetic tests still reject tampered inputs; no source
+acquisition, lifecycle promotion or publication is authorized by this profile.
+
 The finite `geo-transforms` profile uses `python-geo.lock`: the optional
 `pyproj==3.7.2` declared by `packages/geo/pyproject.toml`, plus hash-pinned certifi.
 Wheel hashes cover Python 3.11/3.12; CI requires binary distributions. This adds
