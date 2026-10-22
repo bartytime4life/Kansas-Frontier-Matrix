@@ -3,8 +3,12 @@ import { getChatGPTUser } from "./chatgpt-auth";
 import { parseTopoCatalog, TOPO_CATALOG_URL, type TopoSheet } from "./historical-topo";
 import { parseTopoActivePointer, parseTopoOverlayManifest, topoActiveKey, topoManifestKey, type TopoActivePointer, type TopoOverlayManifest } from "./historical-topo-overlay";
 
-type Stored = { size: number; arrayBuffer(): Promise<ArrayBuffer> };
-export type TopoBucket = { get(key: string): Promise<Stored | null>; put(key: string, value: ArrayBuffer, options?: { httpMetadata?: { contentType: string } }): Promise<unknown>; list(options: { prefix: string; cursor?: string; limit: number }): Promise<{ objects: { key: string }[]; truncated: boolean; cursor?: string }> };
+type Stored = { size: number; etag: string; arrayBuffer(): Promise<ArrayBuffer> };
+export type TopoBucket = {
+  get(key: string): Promise<Stored | null>;
+  put(key: string, value: ArrayBuffer, options?: { httpMetadata?: { contentType: string }; onlyIf?: { etagMatches?: string; etagDoesNotMatch?: string } }): Promise<{ etag: string } | null>;
+  list(options: { prefix: string; cursor?: string; limit: number }): Promise<{ objects: { key: string }[]; truncated: boolean; cursor?: string }>;
+};
 export class TopoOverlayError extends Error { constructor(message: string, readonly status = 400) { super(message); } }
 export const topoPrivateHeaders = { "Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff", "Vary": "Cookie" };
 export function topoBucket(): TopoBucket {

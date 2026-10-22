@@ -88,8 +88,12 @@ test("staging is immutable and an interrupted manifest rerun restores owner revi
 
 function pagedBucket(objects) {
   return {
-    get: async key => { const value = objects.get(key); return value ? { size: value.byteLength, arrayBuffer: async () => value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength) } : null; },
-    put: async (key, value) => { objects.set(key, Buffer.from(value)); },
+    get: async key => { const value = objects.get(key); return value ? { size: value.byteLength, etag: digest(value), arrayBuffer: async () => value.buffer.slice(value.byteOffset, value.byteOffset + value.byteLength) } : null; },
+    put: async (key, value, options) => {
+      const prior = objects.get(key), condition = options?.onlyIf;
+      if (condition?.etagDoesNotMatch === "*" && prior || condition?.etagMatches && (!prior || digest(prior) !== condition.etagMatches)) return null;
+      objects.set(key, Buffer.from(value)); return { etag: digest(Buffer.from(value)) };
+    },
     list: async ({ prefix, cursor, limit }) => {
       const keys = [...objects.keys()].filter(key => key.startsWith(prefix)).sort();
       const start = cursor ? Number(cursor) : 0, page = keys.slice(start, start + limit);
@@ -118,15 +122,17 @@ test("the worker queue pages past fulfilled requests instead of failing closed",
 
 test("viewer sheet requests are capped per requester per day", async () => {
   const source = (await readFile(new URL("../app/api/historical-topo/overlay/route.ts", import.meta.url), "utf8"));
-  assert.match(source, /DAILY_REQUEST_LIMIT = 10/);
   const objects = new Map();
   globalThis.__topo = { objects, owner: false, bucket: pagedBucket(objects) };
   const stubServer = dataUrl(`
     export * from ${JSON.stringify(server)};
-    export const topoCatalogSheet = async id => ({ id, scanId: 200000 + id, name: "Sheet", year: 1890, scale: 125000, footprint: { geometry: { coordinates: [[[-96, 39], [-95.5, 39], [-95.5, 39.5], [-96, 39]]] } } });
+    export const topoCatalogSheet = async id => { globalThis.__topo.catalogCalls = (globalThis.__topo.catalogCalls ?? 0) + 1; return { id, scanId: 200000 + id, name: "Sheet", year: 1890, scale: 125000, footprint: { geometry: { coordinates: [[[-96, 39], [-95.5, 39], [-95.5, 39.5], [-96, 39]]] } } }; };
   `, "topo-server-catalog-stub.ts");
   let routeSource = source.replaceAll(/"(?:\.\.\/)+historical-topo-overlay"/g, JSON.stringify(overlay));
   routeSource = routeSource.replaceAll(/"(?:\.\.\/)+historical-topo-overlay-server"/g, JSON.stringify(stubServer));
+  const quota = dataUrl((await readFile(new URL("../app/historical-topo-request-quota.ts", import.meta.url), "utf8"))
+    .replace('"./historical-topo-overlay"', JSON.stringify(overlay)).replace('"./historical-topo-overlay-server"', JSON.stringify(stubServer)), "quota.ts");
+  routeSource = routeSource.replace('"../../../historical-topo-request-quota"', JSON.stringify(quota));
   const { POST } = await import(dataUrl(routeSource, "overlay-route.ts"));
   const ask = id => POST(new Request("https://site.test/api/historical-topo/overlay", { method: "POST",
     headers: { Origin: "https://site.test", "Content-Type": "application/json" }, body: JSON.stringify({ id }) }));
@@ -136,4 +142,5 @@ test("viewer sheet requests are capped per requester per day", async () => {
   assert.equal(limited.status, 429);
   assert.match((await limited.json()).error, /limit/);
   assert.equal(objects.has("historical-topo/v1/requests/200011.json"), false);
+  assert.equal(globalThis.__topo.catalogCalls, 10, "duplicates and over-quota requests must not call USGS");
 });
