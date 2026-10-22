@@ -117,8 +117,24 @@ class ControlPlaneRegistryPacketValidatorTests(unittest.TestCase):
                 check_paths=True,
                 check_git=True,
             )
+            cli = subprocess.run(
+                [
+                    sys.executable,
+                    "tools/validators/control_plane/validate_control_plane_registry_packet.py",
+                    str(candidate_path),
+                    "--repo-root",
+                    str(root),
+                ],
+                cwd=REPO_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
 
         self.assertTrue(result.ok, result.findings)
+        self.assertEqual(0, cli.returncode, cli.stdout + cli.stderr)
+        self.assertEqual("PASS", json.loads(cli.stdout)["outcome"])
+        self.assertEqual("", cli.stderr)
 
     def test_source_digests_must_match_pinned_subject_and_governing_bytes(self) -> None:
         candidate = yaml.safe_load(
@@ -249,6 +265,46 @@ class ControlPlaneRegistryPacketValidatorTests(unittest.TestCase):
         self.assertEqual(1, result.returncode)
         self.assertNotIn(marker, result.stdout + result.stderr)
         self.assertIn("SCHEMA_INVALID", result.stdout)
+
+    def test_cli_malformed_base_refs_return_finite_findings(self) -> None:
+        marker = "synthetic-sensitive-reference-must-not-echo"
+        malformed_refs = (
+            marker + "\x00",
+            marker + "\ud800",
+            "1" * 39,
+            "1" * 41,
+            "A" * 40,
+            "1" * 40 + "\n",
+        )
+        for base_ref in malformed_refs:
+            with self.subTest(base_ref=ascii(base_ref)):
+                with tempfile.TemporaryDirectory() as directory:
+                    path = Path(directory) / "untrusted.yaml"
+                    path.write_text(
+                        json.dumps({"base_ref": base_ref}, ensure_ascii=True),
+                        encoding="utf-8",
+                    )
+                    result = subprocess.run(
+                        [
+                            sys.executable,
+                            "tools/validators/control_plane/validate_control_plane_registry_packet.py",
+                            str(path),
+                            "--skip-path-existence",
+                        ],
+                        cwd=REPO_ROOT,
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                self.assertEqual(1, result.returncode)
+                self.assertEqual("", result.stderr)
+                self.assertNotIn(marker, result.stdout)
+                report = json.loads(result.stdout)
+                self.assertEqual("FAIL", report["outcome"])
+                self.assertIn(
+                    "BASE_COMMIT_NOT_FOUND",
+                    {finding["code"] for finding in report["findings"]},
+                )
 
     def test_pinned_blob_reads_are_shared_only_within_one_validation(self) -> None:
         base_ref = subprocess.run(
