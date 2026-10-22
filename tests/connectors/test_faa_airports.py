@@ -1,5 +1,6 @@
 """Synthetic FAA failure and replay coverage; no provider calls or release grants."""
 import csv
+from copy import deepcopy
 from datetime import date
 import hashlib
 import importlib.util
@@ -179,5 +180,122 @@ def test_selection_evidence_report_and_correction_preserve_prior_revision():
     assert corrected["records"][0]["revision_id"] != selected["revision_id"]
     assert rehearsal.inspect_selection(first, selected["revision_id"]) == result
     selected["bundle"]["citations"] = ["https://invalid.test/"]
-    with pytest.raises(ValueError, match="EVIDENCE_DIGEST_MISMATCH"):
+    with pytest.raises(ValueError, match="CANDIDATE_DIGEST_MISMATCH"):
         rehearsal.inspect_selection(first, selected["revision_id"])
+
+
+# Rehashing the outer container must not let a changed projection reuse a revision.
+TAMPERS = [
+    (("records", 0, "name"), "SYNTHETIC MODIFIED NAME"),
+    (("records", 0, "county_name"), "UNBOUND COUNTY"),
+    (("records", 0, "state"), "MO"),
+    (("archive_sha256",), "0" * 64),
+    (("records", 0, "edition"), "2026-10-29"),
+    (("edition",), "2026-10-29"),
+    (("records", 0, "entity_id"), "faa:site:88888.01:a"),
+    (("records", 0, "revision_id"), "faa:revision:" + "0" * 64),
+    (("records", 0, "faa_id"), "FORGED"),
+    (("records", 0, "icao_id"), "KZZZ"),
+    (("records", 0, "original", "ARPT_NAME"), "SYNTHETIC MODIFIED ORIGINAL"),
+    (("records", 0, "original", "SITE_NO"), "88888.01"),
+    (("records", 0, "evidence_ref", "ref"), "kfm://aviation/airport/unbound"),
+    (("records", 0, "evidence_ref", "bundle_ref"), "faa:bundle:unbound"),
+    (("records", 0, "bundle", "citations"), ["https://invalid.test/"]),
+    (("records", 0, "bundle", "evidence_refs"), []),
+    (("records", 0, "bundle", "source_records"), ["sha256:" + "0" * 64]),
+    (("records", 0, "bundle", "checksums", "record"), "sha256:" + "0" * 64),
+]
+
+
+@pytest.mark.parametrize("path,value", TAMPERS)
+@pytest.mark.parametrize("reseal", [False, True], ids=["original-seal", "rehashed-container"])
+def test_tampered_candidate_rejected_before_report_or_sql(path, value, reseal, tmp_path, monkeypatch):
+    candidate = faa.prepare(*payload())
+    target = candidate
+    for part in path[:-1]:
+        target = target[part]
+    target[path[-1]] = value
+    if reseal:
+        bundle = candidate["records"][0]["bundle"]
+        bundle["spec_hash"]["value"] = faa.sha(faa.canonical({k: v for k, v in bundle.items() if k != "spec_hash"}))
+        candidate["candidate_id"] = faa.sha(faa.canonical({k: v for k, v in candidate.items() if k != "candidate_id"}))
+    before = deepcopy(candidate)
+    def forbidden_connect(*args, **kwargs):
+        pytest.fail("invalid candidate reached SQLite")
+    monkeypatch.setattr(rehearsal.sqlite3, "connect", forbidden_connect)
+    error = "RECORD_BINDING_MISMATCH" if reseal else "CANDIDATE_DIGEST_MISMATCH"
+    with pytest.raises(ValueError, match=error):
+        rehearsal.inspect_selection(candidate, candidate["records"][0]["revision_id"])
+    database = tmp_path / "rejected.sqlite"
+    with pytest.raises(ValueError, match=error):
+        rehearsal.rehearse(candidate, database)
+    assert not database.exists() and candidate == before
+
+
+def test_selection_missing_ambiguous_and_unselected_tampering(tmp_path):
+    candidate = faa.prepare(*payload([row(), row(SITE_NO="88888.01")]))
+    with pytest.raises(ValueError, match="SELECTION_NOT_FOUND"):
+        rehearsal.inspect_selection(candidate, "faa:revision:" + "0" * 64)
+    selected = candidate["records"][0]["revision_id"]
+    candidate["records"][1]["name"] = "SYNTHETIC MODIFIED UNSELECTED"
+    with pytest.raises(ValueError, match="CANDIDATE_DIGEST_MISMATCH"):
+        rehearsal.inspect_selection(candidate, selected)
+    candidate = faa.prepare(*payload())
+    candidate["records"].append(deepcopy(candidate["records"][0]))
+    candidate["candidate_id"] = faa.sha(faa.canonical({k: v for k, v in candidate.items() if k != "candidate_id"}))
+    with pytest.raises(ValueError, match="RECORD_BINDING_MISMATCH"):
+        rehearsal.inspect_selection(candidate, candidate["records"][0]["revision_id"])
+    with pytest.raises(ValueError, match="RECORD_BINDING_MISMATCH"):
+        rehearsal.rehearse(candidate, tmp_path / "duplicate.sqlite")
+
+
+def test_verified_selection_does_not_alias_candidate():
+    candidate = faa.prepare(*payload())
+    before = deepcopy(candidate)
+    result = rehearsal.inspect_selection(candidate, candidate["records"][0]["revision_id"])
+    result["bundle"]["citations"].append("https://invalid.test/")
+    result["evidence_ref"]["ref"] = "kfm://aviation/airport/unbound"
+    assert candidate == before
+
+
+@pytest.mark.parametrize("changes", [
+    {}, {"ELEV": "", "ICAO_ID": ""}, {"SITE_TYPE_CODE": "H", "FACILITY_USE_CODE": "PR"},
+    {"OWNERSHIP_TYPE_CODE": "MA"}, {"SITE_NO": "99999."}, {"LAT_DECIMAL": "NaN"},
+])
+def test_verified_candidates_preserve_schema_json_replay_and_holds(changes, tmp_path):
+    candidate = faa.prepare(*payload([row(**changes)]))
+    candidate = json.loads(faa.canonical(candidate))
+    before = deepcopy(candidate)
+    assert faa.verify_candidate(candidate) == candidate
+    assert rehearsal.rehearse(candidate, tmp_path / "valid.sqlite")["rows"] == len(candidate["records"])
+    if candidate["records"]:
+        result = rehearsal.inspect_selection(candidate, candidate["records"][0]["revision_id"])
+        assert result["release_state"] == "HELD" and candidate["records"][0]["name"] in result["report"]
+    assert candidate == before and candidate["release_state"] == "HELD" and candidate["release_time"] is None
+
+
+@pytest.mark.parametrize("field,value", [
+    ("profile", "unsupported"), ("parser_version", "unsupported"),
+    ("release_state", "RELEASED"), ("rights_state", "APPROVED"), ("release_time", "2026-10-21T19:00:00Z"),
+])
+def test_resealed_authority_changes_rejected(field, value, tmp_path):
+    candidate = faa.prepare(*payload())
+    candidate[field] = value
+    candidate["candidate_id"] = faa.sha(faa.canonical({k: v for k, v in candidate.items() if k != "candidate_id"}))
+    with pytest.raises(ValueError, match="CANDIDATE_STATE_INVALID"):
+        rehearsal.inspect_selection(candidate, candidate["records"][0]["revision_id"])
+    path = tmp_path / "held.sqlite"
+    with pytest.raises(ValueError, match="CANDIDATE_STATE_INVALID"):
+        rehearsal.rehearse(candidate, path)
+    assert not path.exists()
+
+
+def test_invalid_candidate_leaves_existing_database_unchanged(tmp_path):
+    candidate = faa.prepare(*payload())
+    path = tmp_path / "existing.sqlite"
+    rehearsal.rehearse(candidate, path)
+    before = path.read_bytes()
+    candidate["records"][0]["name"] = "SYNTHETIC MODIFIED NAME"
+    with pytest.raises(ValueError, match="CANDIDATE_DIGEST_MISMATCH"):
+        rehearsal.rehearse(candidate, path)
+    assert path.read_bytes() == before

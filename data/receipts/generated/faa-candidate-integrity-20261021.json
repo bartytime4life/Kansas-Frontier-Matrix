@@ -1,0 +1,86 @@
+{
+  "receipt_id": "kfm:generated:faa-candidate-integrity:20261021",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/domains/roads-rail-trade/faa_airports.py",
+    "tests/connectors/test_faa_airports.py",
+    "tools/local_data/faa_airport_rehearsal.py"
+  ],
+  "artifact_hashes": {
+    "pipelines/domains/roads-rail-trade/faa_airports.py": "sha256:49718c4f4f3abdd3f4d01fce28401082594471b7a05ced6ed47784f03490abe5",
+    "tests/connectors/test_faa_airports.py": "sha256:ff03a0147663fe25661d70be0a0ff840b6a44a0578dca9cdcc7ccfdc5de23ff1",
+    "tools/local_data/faa_airport_rehearsal.py": "sha256:5af6896772bc3273e6c88901b48dcf28e2b1d111ac8feeb0811bb1bb5efad9cc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session; exact backend version unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "main@91ca0314f0158736f69f953d7973457c19442fde",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5391",
+      "contracts/domains/roads-rail-trade/faa_airport_candidate.md",
+      "data/receipts/validation/aviation-public-hold-20261021.json"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/domains/roads-rail-trade/faa_airports.py": "CONFIRMED",
+    "tests/connectors/test_faa_airports.py": "CONFIRMED",
+    "tools/local_data/faa_airport_rehearsal.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Python compile",
+      "outcome": "PASS",
+      "reason": "py_compile on all three changed Python files."
+    },
+    {
+      "gate": "FAA synthetic regression suite",
+      "outcome": "PASS",
+      "reason": "70 passed; candidate, revision, projection and evidence consistency; SQL replay and rejection before connection; correction history and detached outputs."
+    },
+    {
+      "gate": "Exact-base preparation compatibility",
+      "outcome": "PASS",
+      "reason": "Canonical candidate bytes and identifiers unchanged for seven synthetic variants against 91ca0314; independent read-only review also compared nine variants."
+    },
+    {
+      "gate": "Repository baseline make validate",
+      "outcome": "PASS",
+      "reason": "Nine core schema validators PASS; 502 schema/contract tests and 53 subtests passed."
+    },
+    {
+      "gate": "Repository topology",
+      "outcome": "PASS",
+      "reason": "89 inherited warnings; zero new drift, invariant failures or stale baseline entries; exact trusted base 91ca0314."
+    },
+    {
+      "gate": "Independent read-only patch review",
+      "outcome": "PASS",
+      "reason": "No concrete surviving bypass or prepare-output regression found; not human approval."
+    },
+    {
+      "gate": "pre-commit all files",
+      "outcome": "SKIPPED",
+      "reason": "Attempted python -m pre_commit run --all-files; optional pre_commit package is not installed."
+    },
+    {
+      "gate": "Live capture, shared database, source admission and release",
+      "outcome": "SKIPPED",
+      "reason": "Outside corrective scope; synthetic local checks only; FAA remains HELD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-22T01:43:45.630596Z",
+  "emitter": "Codex",
+  "notes": "Bounded private candidate-consistency correction. Historical evidence and prior generated receipt are preserved. No production migration, source admission, aviation activation, public data release or remote-PC change. A passing check does not authenticate capture provenance or approve release."
+}
