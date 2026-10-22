@@ -5,6 +5,15 @@
 > directory preserves the original Sites mirror and its review history; its
 > historical Site checkpoints do not establish the public Node version.
 
+> **Repository dependency safety candidate — 2026-10-22:** the [successor receipt](../../data/receipts/generated/site-v268-next-security-overlay-20261022.json)
+> records Next.js and `eslint-config-next` 16.4.2 with an npm-regenerated lock as
+> two repository safety overlays. Local checks pass: 48 mirror regressions,
+> 1401 Node tests, typecheck, production build and lint (0 errors; 77 warnings).
+> Local backend smoke passes 110 checks across 79 routes on an unused port;
+> the initial attempt safely refused an occupied default port. Parity passes
+> for 883 paths, with 258 withheld paths absent. Source and overlay
+> review remains pending; human acceptance and hosted equivalence remain false.
+
 <p align="center">
   <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../../docs/brand/readme/kfm-explorer-walkthrough-dark.svg" /><img src="../../docs/brand/readme/kfm-explorer-walkthrough.svg" alt="Animated illustration of the KFM Explorer: map, area, layers, time, inspect, evidence, report and share." width="100%" /></picture></a>
 </p>
