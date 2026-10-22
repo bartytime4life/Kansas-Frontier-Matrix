@@ -23,7 +23,7 @@ async function welcome(reduced=false){
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
   'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE},'./capability-catalog.mjs':{capabilityPreviews,capabilityNote},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'./scenes/catalog.mjs':sceneCatalog,'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
-  './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};}},
+  './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
  const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value]),questions:'preserved questions'};
  const render=()=>{const tree=harness.render(harness.exports.default,props);harness.commit();return tree;};
@@ -84,6 +84,29 @@ test('nested welcome dialogs own and return keyboard focus in the layout commit'
   escape();
   assert.deepEqual(h.calls,[['close',false]],'a second immediate Escape reaches the welcome owner');
  }finally{h.harness.dispose();}
+});
+
+test('nested modal Tab wraps through eligible controls and a notes-only modal keeps its sole close',async()=>{
+ for(const bodyControls of [0,2]){
+  const h=await welcome();let tree=h.render();
+  const trigger={isConnected:true,focus(){h.env.document.activeElement=this;}};
+  const controls=Array.from({length:bodyControls+1},()=>({focus(){h.env.document.activeElement=this;}}));
+  const root=rootOf(tree),panel={contains:node=>controls.includes(node),querySelector:()=>controls[0]};
+  root.props.ref.current={contains:node=>node===trigger,querySelector:()=>null};
+  h.env.document.activeElement=trigger;
+  byText(tree,'Scene notes').props.onClick();
+  tree=h.harness.render(h.harness.exports.default,h.props);
+  findNode(tree,node=>node.props?.className==='welcome-dialog').props.ref.current=panel;
+  h.env.focusCandidates=actual=>{assert.equal(actual,panel);return controls;};
+  try{
+   h.harness.commitLayout();assert.equal(h.env.document.activeElement,controls[0]);
+   const tab=shiftKey=>{let prevented=false;h.env.listeners.get('keydown')({target:h.env.document.activeElement,key:'Tab',shiftKey,preventDefault(){prevented=true;}});return prevented;};
+   assert.equal(tab(true),true);assert.equal(h.env.document.activeElement,controls.at(-1),'reverse wrap uses the eligible last control');
+   assert.equal(tab(false),true);assert.equal(h.env.document.activeElement,controls[0],'forward wrap returns to persistent close');
+   if(bodyControls){h.env.document.activeElement=controls[1];assert.equal(tab(false),false,'native Tab handles interior controls');}
+   assert.deepEqual(h.calls,[],'Tab does not close the welcome or invoke a workspace');
+  }finally{h.harness.dispose();}
+ }
 });
 
 test('welcome uses real search and draft actions without requests or implicit dismissal preferences',async()=>{

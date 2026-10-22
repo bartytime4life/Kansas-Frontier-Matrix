@@ -7,7 +7,7 @@ import { CapabilityPreview } from './CapabilityPreview.jsx';
 import { WelcomeFeatureGuide } from './FeatureGuide.jsx';
 import { DomainStage } from './DomainStage.jsx';
 import { SCENE_CATALOG, SCENE_LABEL } from './scenes/catalog.mjs';
-import { isolateModalBackground } from '../modal-background';
+import { isolateModalBackground, modalFocusableElements } from '../modal-background';
 
 // Reuse the governed navigation taxonomy; a welcome tile does not admit data.
 const TOPICS=TOPIC_STRUCTURE.map(t=>({...t,target:t.id,short:t.facets.join(' · '),note:t.limitation}));
@@ -70,7 +70,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
         if(modal)closePanel();else if(fullscreen){setFullscreen(false);setPinned(null);}else if(pinned){setPinned(null);setActive(null);}else onClose(remember);
       }
       if(event.key==='Tab'&&modal){
-        const nodes=[...(dialog.current?.querySelectorAll('button,a[href],input')||[])].filter(n=>!n.disabled&&n.getClientRects().length&&!n.closest('[hidden],[inert]'));
+        const nodes=dialog.current?modalFocusableElements(dialog.current):[];
         if(event.shiftKey&&document.activeElement===nodes[0]){event.preventDefault();nodes.at(-1)?.focus();}
         else if(!event.shiftKey&&document.activeElement===nodes.at(-1)){event.preventDefault();nodes[0]?.focus();}
       }
