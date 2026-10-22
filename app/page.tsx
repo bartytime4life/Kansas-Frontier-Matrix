@@ -53,6 +53,7 @@ import { parseRepositoryObservation, type RepositoryConnection } from "./reposit
 import { replaceExplorerHistory } from "./embed-runtime";
 import { parseSavedWorkspaceList, writeSavedWorkspaceList } from "./saved-workspaces";
 import ResearchPanel from "./research-panel";
+import { countyResearch, researchCounties } from "./research-county";
 import AssistantWorkspace from "./assistant/workspace";
 import {sampleAssistantSelection, type AssistantFocus, type AssistantContext} from "./assistant-context";
 import UndergroundPanel, { SubsurfaceInspector, type SubsurfaceInspection } from "./underground-panel-loader";
@@ -1428,6 +1429,7 @@ export default function Home() {
   const [subsurfacePrivate, setSubsurfacePrivate] = useState(false);
   const [undergroundRestoreKey, setUndergroundRestoreKey] = useState(0);
   useEffect(() => { if (undergroundOpen && locationCameraRedacted) setSubsurfacePrivate(true); }, [undergroundOpen, locationCameraRedacted]);
+  const [researchCounty, setResearchCounty] = useState<NonNullable<ResearchContext["county"]> | null>(null);
   const [researchAnchor, setResearchAnchor] = useState<ResearchRecord | null>(null);
   const [researchLocationRedacted, setResearchLocationRedacted] = useState(false);
   const [researchOpen, setResearchOpen] = useState(false);
@@ -2130,10 +2132,14 @@ export default function Home() {
     }
     return { records, coverage };
   }, [mapEvidenceFilter, officialArchiveDays, officialContextConnections, officialPayloads, researchMissingSources, researchSnapshotPoints, temporalQuery, visibility]);
-  const researchContext = useMemo<ResearchContext | null>(() => researchAnchor ? {
-    version: 1, anchor: researchAnchor, radiusMiles: nearbyRadiusMiles, mapTime: temporalScopeLabel,
-    capturedAt: new Date().toISOString(), ...nearbyResearch(researchAnchor, researchData.records, nearbyRadiusMiles), coverage: researchData.coverage,
-  } : null, [nearbyRadiusMiles, researchAnchor, researchData, temporalScopeLabel]);
+  const researchCountyOptions = useMemo(() => researchCounties(officialPayloads["census-counties"], officialStates["census-counties"]), [officialPayloads, officialStates]);
+  const researchContext = useMemo<ResearchContext | null>(() => {
+    if (!researchAnchor) return null;
+    const scoped = countyResearch(researchCounty, researchData.records, officialPayloads["census-counties"], officialStates["census-counties"]);
+    return { version: 1, anchor: researchAnchor, radiusMiles: nearbyRadiusMiles, mapTime: temporalScopeLabel,
+      ...(scoped.county ? { county: scoped.county } : {}),
+      capturedAt: new Date().toISOString(), ...nearbyResearch(researchAnchor, scoped.records, nearbyRadiusMiles), coverage: researchData.coverage };
+  }, [nearbyRadiusMiles, researchAnchor, researchCounty, researchData, temporalScopeLabel, officialPayloads, officialStates]);
   const researchAnchorAvailable = Boolean(researchAnchor && researchData.records.some(record => researchIdentity(record) === researchIdentity(researchAnchor)));
   const selectedResearchRecord = selected ? researchData.records.find(record => record.kind === "registry"
     ? record.sourceId === selected.layer.sourceId && record.featureId === selected.featureId
@@ -7949,12 +7955,14 @@ export default function Home() {
     setUndergroundRestoreKey(v => v + 1);
     const savedResearch = !restoredLocationCameraRedaction && validResearchContext(snapshot.researchContext) ? snapshot.researchContext : null;
     setResearchAnchor(savedResearch?.anchor ?? null);
+    setResearchCounty(savedResearch?.county ?? null);
     setResearchLocationRedacted(false);
     setNearbyRadiusMiles(savedResearch?.radiusMiles ?? 25);
     setResearchOpen(Boolean(savedResearch));
     setRightOpen(Boolean(savedResearch));
     if (savedResearch) {
       const sourceIds = new Set(savedResearch.coverage.map(item => item.sourceId));
+      if (savedResearch.county) sourceIds.add("census-counties");
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
         const visible = sourceIds.has(source.id);
         if (officialVisibilityRef.current[source.id] !== visible) setOfficialContextVisible(source.id, visible);
@@ -10281,7 +10289,7 @@ export default function Home() {
             onCenter={() => mapRef.current?.easeTo({ center: subsurfaceInspection.record.coordinates, zoom: 13, duration: motionDuration(400) })}
             onSave={saveCurrentWorkspace} onReport={() => openPrimaryWorkspace("reports", true, null, null, subsurfaceContext)} /> : researchOpen && researchContext ? <div className="drawer-scroll">
             {selected && <button className="map-catalog-launch" type="button" onClick={() => { setResearchOpen(false); window.requestAnimationFrame(() => rightPanelRef.current?.querySelector<HTMLElement>("[data-selection-summary]")?.focus()); }}>Back to selected record</button>}
-            <ResearchPanel key={researchIdentity(researchContext.anchor)} context={researchContext} anchorAvailable={researchAnchorAvailable} onRadius={setNearbyRadiusMiles}
+            <ResearchPanel key={researchIdentity(researchContext.anchor)} context={researchContext} counties={researchCountyOptions} onCounty={setResearchCounty} anchorAvailable={researchAnchorAvailable} onRadius={setNearbyRadiusMiles}
               onInspect={inspectResearchRecord} onCenter={centerResearchRecord} onSave={saveCurrentWorkspace}
               onReport={() => openPrimaryWorkspace("reports", true, null, researchContext)} redacted={researchLocationRedacted || locationCameraRedacted || locationDerivedViewRef.current} />
           </div> : <>

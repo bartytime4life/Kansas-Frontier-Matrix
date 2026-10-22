@@ -24,6 +24,7 @@ export type ResearchCoverage = Readonly<{
 }>;
 export type ResearchContext = Readonly<{
   version: 1;
+  county?: Readonly<{ geoid: string; title: string; edition: "2010" | "2020"; state: "ready" | "unavailable" }>;
   capturedAt: string;
   anchor: ResearchRecord;
   radiusMiles: ResearchRadius;
@@ -63,12 +64,16 @@ export function validResearchRecord(value: unknown): value is ResearchRecord {
     && text(value.limitation, 2000);
 }
 export function validResearchContext(value: unknown): value is ResearchContext {
-  if (!object(value) || !keys(value, ["version", "capturedAt", "anchor", "radiusMiles", "mapTime", "total", "records", "coverage"]) || value.version !== 1 || !date(value.capturedAt) || !validResearchRecord(value.anchor)
+  if (!object(value) || !keys(value, ["version", "capturedAt", "anchor", "radiusMiles", "mapTime", "total", "records", "coverage", "county"]) || value.version !== 1 || !date(value.capturedAt) || !validResearchRecord(value.anchor)
     || Object.hasOwn(value.anchor, "distanceMiles")
     || !RESEARCH_RADII.includes(value.radiusMiles as ResearchRadius) || !text(value.mapTime, 240)
     || !Number.isSafeInteger(value.total) || Number(value.total) < 0 || Number(value.total) > 100_000
     || !Array.isArray(value.records) || value.records.length > 50 || value.records.length > Number(value.total)
     || !Array.isArray(value.coverage) || value.coverage.length > 100) return false;
+  if (value.county !== undefined && (!object(value.county) || !keys(value.county, ["geoid", "title", "edition", "state"])
+    || !(typeof value.county.geoid === "string" && /^20\d{3}$/.test(value.county.geoid)) || !text(value.county.title, 120)
+    || !["2010", "2020"].includes(String(value.county.edition)) || !["ready", "unavailable"].includes(String(value.county.state))
+    || value.county.state === "unavailable" && (value.records.length > 0 || value.total !== 0))) return false;
   const ids = new Set<string>();
   for (const row of value.records) {
     const distance = object(row) ? row.distanceMiles : undefined;
@@ -148,11 +153,13 @@ export function researchMarkdown(context: ResearchContext): string {
   return [
     "## Near here · captured research context",
     `Anchor: ${md(context.anchor.title)} · ${context.radiusMiles} miles · captured ${context.capturedAt}`,
+    ...(context.county ? [`County filter: ${md(context.county.title)} · GEOID ${context.county.geoid} · ${context.county.edition} Census boundary · ${context.county.state}. Intersected with the anchor radius; supplied display points only. This boundary is not reconstructed for the map date.`] : []),
     `Map time: ${md(context.mapTime)}. Showing ${context.records.length} of ${context.total} eligible loaded records.`,
     "Provider context is not admitted KFM evidence. Proximity does not establish a relationship or complete coverage.",
     `Anchor source: ${md(context.anchor.sourceTitle)} · ${context.anchor.sourceUrl ? md(context.anchor.sourceUrl) : "No source link supplied"}`,
     ...context.records.map(row => `- ${md(row.title)} · ${row.distanceMiles.toFixed(1)} mi (${row.kind === "registry" ? "registry anchor" : "provider point"}); ${md(row.evidenceLabel)}. Source: ${md(row.sourceTitle)}; ${row.sourceUrl ? md(row.sourceUrl) : "no source link"}. Source time: ${md(row.sourceTime)}. Retrieved: ${row.retrievedAt ?? "not supplied"}. ${md(row.limitation)}`),
-    "### Coverage at capture",
+    "### Loaded-source status at capture",
+    "Source states describe loaded inventories before county and radius filtering; ready does not establish complete county or historical coverage.",
     ...context.coverage.map(row => `- ${md(row.title)}: ${row.state}; retrieved ${row.retrievedAt ?? "not supplied"}. ${md(row.limitation)}`),
   ].join("\n\n");
 }

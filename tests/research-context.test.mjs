@@ -16,6 +16,7 @@ async function moduleUrl(name) {
   urls.set(name, url);
   return url;
 }
+const county = await import(await moduleUrl("research-county"));
 const r = await import(await moduleUrl("research-context"));
 const catalog = await import(await moduleUrl("layer-workspaces"));
 const saved = await import(await moduleUrl("saved-workspaces"));
@@ -178,4 +179,53 @@ test("exports keep source links, observation versus retrieval time, roles and co
   assert.match(text, /provider point/); assert.match(text, /partial/);
   assert.match(text, /Provider context is not admitted KFM evidence/);
   assert.doesNotMatch(text, /<img|\[fake\]\(/);
+});
+
+// Synthetic Kansas polygon; not an Ellsworth County boundary fixture.
+const box = [[-99, 37], [-97, 37], [-97, 39], [-99, 39], [-99, 37]];
+const hole = [[-98.5, 37.5], [-97.5, 37.5], [-97.5, 38.5], [-98.5, 38.5], [-98.5, 37.5]];
+const countyFeature = { type: "Feature", geometry: { type: "Polygon", coordinates: [box, hole] },
+  properties: { geoid: "20053", featureId: "us-census-county-20053", name: "Synthetic county", vintage: "2020" } };
+const countyPayload = (features = [countyFeature]) => ({ feed: "census-counties", state: "ready", data: { type: "FeatureCollection", features } });
+const scope = () => county.researchCounties(countyPayload(), "ready")[0];
+
+test("county membership respects holes, edges and disjoint multipolygons without changing source roles", () => {
+  const rows = [record("inside", [-98.8, 38]), record("hole", [-98, 38]), record("edge", [-99, 38]), record("outside", [-96, 38]), record("hole-edge", [-98.5, 38])];
+  assert.deepEqual(county.countyResearch(scope(), rows, countyPayload(), "ready").records.map(r => r.featureId), ["inside", "edge"]);
+  const multi = { ...countyFeature, geometry: { type: "MultiPolygon", coordinates: [[box, hole], [[[-96, 37], [-95, 37], [-95, 38], [-96, 38], [-96, 37]]]] } };
+  assert.equal(county.countyResearch(scope(), [record("island", [-95.5, 37.5])], countyPayload([multi]), "ready").records[0].evidenceLabel, "EXTERNAL_CONTEXT_ONLY");
+});
+
+test("missing, malformed, duplicate and wrong-edition boundaries hold the county scope closed", () => {
+  for (const [payload, state] of [[undefined, "loading"], [countyPayload(), "error"], [{ ...countyPayload(), feed: "other" }, "ready"],
+    [countyPayload([countyFeature, countyFeature]), "ready"], [countyPayload([null]), "ready"],
+    [countyPayload([{ ...countyFeature, geometry: { type: "Polygon", coordinates: [null] } }]), "ready"],
+    [countyPayload([{ ...countyFeature, geometry: { type: "MultiPolygon" } }]), "ready"], [countyPayload([{ ...countyFeature, properties: { ...countyFeature.properties, vintage: "2010" } }]), "ready"],
+    [countyPayload([{ ...countyFeature, geometry: { type: "Polygon", coordinates: [box.slice(0, -1)] } }]), "ready"]]) {
+    const result = county.countyResearch(scope(), [record("inside", [-98.8, 38])], payload, state);
+    assert.equal(result.county.state, "unavailable"); assert.deepEqual(result.records, []);
+  }
+});
+
+test("county filtering precedes nearest-50 truncation and never substitutes a radius for a hold", () => {
+  const rows = Array.from({ length: 60 }, (_, i) => record(`outside-${i}`, [-98, 38 + i / 10000]));
+  rows.push(record("inside", [-98.8, 38]));
+  const scoped = county.countyResearch(scope(), rows, countyPayload(), "ready");
+  assert.deepEqual(r.nearbyResearch(anchor, scoped.records, 100).records.map(row => row.featureId), ["inside"]);
+  assert.equal(county.countyResearch(null, rows, undefined, "loading").records, rows);
+});
+
+test("county scope survives settings and reports; unavailable scopes cannot claim records", () => {
+  const captured = { ...context(), county: scope() };
+  assert.equal(r.validResearchContext(captured), true);
+  const settings = r.persistableResearch(captured, false, true);
+  assert.deepEqual(settings.county, scope()); assert.deepEqual(settings.records, []);
+  assert.equal(saved.validSavedWorkspaceRecord({ ...workspace, researchContext: settings }), true);
+  const report = model.createReportDraft(snapshot, [], undefined, captured);
+  assert.equal(storage.validReportDraft(report), true);
+  assert.match(r.researchMarkdown(report.researchContext), /GEOID 20053.*2020 Census boundary/);
+  assert.deepEqual(report.includedEvidenceIds, []);
+  assert.equal(r.validResearchContext({ ...captured, county: { ...scope(), geoid: 20053 } }), false);
+  assert.equal(r.validResearchContext({ ...captured, county: { ...scope(), state: "unavailable" } }), false);
+  assert.equal(r.persistableResearch(captured, true), undefined);
 });
