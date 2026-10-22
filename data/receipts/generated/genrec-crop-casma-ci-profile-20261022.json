@@ -1,0 +1,91 @@
+{
+  "receipt_id": "kfm:generated:crop-casma-ci-profile:20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/crop-casma-tile-compatibility.yml",
+    "tools/ci/install_python_ci.py",
+    "tests/ci/test_install_python_ci.py",
+    "tools/ci/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/crop-casma-tile-compatibility.yml": "sha256:3a8d18a54fa31a4bdb3351674e3a7d8f4fd78a2575236197b884b6ca34881ea0",
+    "tools/ci/install_python_ci.py": "sha256:5866e3e9d9a04dec679cf6f4fbd05cc66ebc03382f7f590fbbdd1fdee169583f",
+    "tests/ci/test_install_python_ci.py": "sha256:c6e5d42f62ecb10b67af5d3bcca6da0c66ee0cd25a1be648b3ecb658bd8583c1",
+    "tools/ci/README.md": "sha256:15fee5e165a3910417162407fe4c1c30572b4a1d66df15dd2986e4559f5c6541"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session; exact backend version unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "main@3dc133f98e9496a8f74c21aca8390d6354be6889",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5380",
+      "4ec3786e2f1d16c27c3285b2d97f5b2a503404b1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39799396484",
+      "37fd56f9826f14c162c2881c721ebae88d2e6e87"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/crop-casma-tile-compatibility.yml": "CONFIRMED",
+    "tools/ci/install_python_ci.py": "CONFIRMED",
+    "tests/ci/test_install_python_ci.py": "CONFIRMED",
+    "tools/ci/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Baseline reproduction",
+      "outcome": "PASS",
+      "reason": "Exact same direct-install policy failure reproduced on pre-quota main b8c9501. Workflow entered main via #5380; #5400 and both quota qualification corrections do not change it."
+    },
+    {
+      "gate": "Installer and wrapper regressions",
+      "outcome": "PASS",
+      "reason": "21 installer tests; 37 full-local/CLI tests plus 12 subtests. Original no-direct-install assertion retained. New profile enforces original unchanged lock and binary-only mode."
+    },
+    {
+      "gate": "Tile profile install",
+      "outcome": "PASS",
+      "reason": "Fresh Python 3.12 venv successfully installed all nine pinned dependencies with unchanged lock hashes and binary-only enforcement."
+    },
+    {
+      "gate": "Exact-head GitHub CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending publication and exact-head CI; no failure waiver."
+    },
+    {
+      "gate": "Production, source acquisition and publication",
+      "outcome": "SKIPPED",
+      "reason": "Outside scope; synthetic validation only."
+    },
+    {
+      "gate": "Synthetic tile compatibility",
+      "outcome": "PASS",
+      "reason": "Two tile/value/no-data/tamper/candidate-identity tests passed; pip check clean; exact Pillow 13.0.0 verified."
+    },
+    {
+      "gate": "Repository topology",
+      "outcome": "PASS",
+      "reason": "Zero invariant/new/stale findings; 89 inherited warnings; baseline unchanged."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tile-profile-implementation",
+      "validated": true,
+      "evidence_ref": "tools/ci/install_python_ci.py and .github/workflows/crop-casma-tile-compatibility.yml"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-22T14:59:16.986164+00:00",
+  "emitter": "Codex",
+  "notes": "Focused follow-up CI compatibility correction. Reuses unchanged tile dependency lock; no protection, policy assertion, historical migration ledger or baseline changes. This receipt is not review or release approval."
+}
