@@ -7,11 +7,12 @@ from pathlib import Path
 from urllib.request import Request, build_opener, HTTPRedirectHandler
 from urllib.error import HTTPError
 import hashlib
+import io
 import json
-import os
 import shutil
-import tempfile
 import time
+
+from tools.local_data.candidate_capture import atomic_candidate, candidate_path, write_candidate
 
 PRODUCTS = {"2026-10-01": "https://nfdc.faa.gov/webContent/28DaySub/extra/01_Oct_2026_APT_CSV.zip"}
 MAX_BYTES = 16 * 1024 * 1024
@@ -28,6 +29,8 @@ def capture(root, edition, *, opener=None, today=None):
 
     Interrupted downloads restart; HTTP byte-range resume is deliberately absent.
     Root is an operator-selected private RAW directory, never a browser parameter.
+    The shared candidate boundary permits only external KFM_DATA_ROOT/data/raw
+    destinations or disposable system temporary storage, never this repository.
     """
     today = today or datetime.now(timezone.utc).date()
     if edition not in PRODUCTS or date.fromisoformat(edition) > today:
@@ -35,7 +38,7 @@ def capture(root, edition, *, opener=None, today=None):
     root = Path(root)
     if not root.is_dir() or any(p.is_symlink() for p in [root, *root.parents]):
         raise ValueError("RAW_ROOT_INVALID")
-    target = root / ("faa-apt-" + edition)
+    target = candidate_path(root.absolute() / ("faa-apt-" + edition))
     if target.exists():
         if target.is_symlink() or not target.is_dir():
             raise ValueError("CAPTURE_PATH_INVALID")
@@ -49,8 +52,7 @@ def capture(root, edition, *, opener=None, today=None):
         return target
     if shutil.disk_usage(root).free < RESERVE_BYTES + MAX_BYTES:
         raise OSError("DISK_RESERVE_REQUIRED")
-    stage = Path(tempfile.mkdtemp(prefix=".faa-capture-", dir=root))
-    try:
+    with atomic_candidate(target) as stage:
         digest, length = hashlib.sha256(), 0
         started = time.monotonic()
         request = Request(PRODUCTS[edition], headers={"User-Agent": "KFM-Research-Capture/1", "Accept-Encoding": "identity"})
@@ -61,7 +63,9 @@ def capture(root, edition, *, opener=None, today=None):
             if error.code in (429, 503):
                 raise OSError("UPSTREAM_BACKOFF_REQUIRED") from None
             raise OSError("UPSTREAM_UNAVAILABLE") from None
-        with response, (stage / "archive.zip").open("xb") as output:
+        # Keep source acquisition separate from filesystem authority. Memory is
+        # bounded by MAX_BYTES; the shared operator writer validates every sink.
+        with response, io.BytesIO() as output:
             if response.status != 200 or response.geturl() != PRODUCTS[edition]:
                 raise ValueError("UPSTREAM_NOT_ALLOWED")
             declared = response.headers.get("Content-Length")
@@ -80,27 +84,14 @@ def capture(root, edition, *, opener=None, today=None):
                 output.write(chunk)
             if not length or declared and length != int(declared):
                 raise ValueError("INCOMPLETE_CAPTURE")
-            output.flush()
-            os.fsync(output.fileno())
+            write_candidate(stage, "archive.zip", output.getvalue())
         receipt = {"source_id": "faa-nasr-apt", "edition": edition, "url": PRODUCTS[edition],
                    "sha256": digest.hexdigest(), "byte_length": length,
                    "retrieved_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
                    "parser_version": "faa-apt-v1", "lifecycle": "RAW", "release_state": "HELD",
                    "source_publication_time": None, "rights": "REVIEW_REQUIRED"}
-        with (stage / "receipt.json").open("x") as output:
-            json.dump(receipt, output, sort_keys=True)
-            output.flush()
-            os.fsync(output.fileno())
-        os.rename(stage, target)  # Complete-directory visibility; existing capture is never overwritten.
-        directory = os.open(root, os.O_RDONLY | os.O_DIRECTORY)
-        try:
-            os.fsync(directory)
-        finally:
-            os.close(directory)
-        return target
-    finally:
-        if stage.exists():
-            shutil.rmtree(stage)
+        write_candidate(stage, "receipt.json", json.dumps(receipt, sort_keys=True).encode("utf-8"))
+    return target
 
 
 def disabled_observations(provider):
