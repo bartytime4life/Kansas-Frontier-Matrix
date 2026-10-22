@@ -732,7 +732,10 @@ def test_historical_subsurface_receipt_binds_only_the_private_output_patch(
     assert predecessor.name in receipt["rollback"]["mirror"]
 
 
-def test_selected_main_overlay_receipt_binds_only_the_merged_overlay_changes() -> None:
+def test_historical_main_overlay_receipt_binds_only_the_merged_overlay_changes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-main-overlay-reconciliation-20261021.json")
     receipt, expected = TOOL.reviewed_receipt()
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert predecessor.name == "site-v268-private-subsurface-output-reconciliation-20261019.json"
@@ -766,12 +769,37 @@ def test_selected_main_overlay_receipt_binds_only_the_merged_overlay_changes() -
     for name, entry in previous["comparison"].items():
         if name not in changed:
             assert receipt["comparison"][name] == entry, name
+    # Golden digests independently verified against the historical Git source basis.
+    recorded_digests = {
+        'app/api/data-submissions/route.ts': '6b77501518d38cdb5013fede89385f969353859d2f10df04ecffe1547721a371',
+        'app/api/historical-topo/overlay/route.ts': '84da2d5fa4d5981e958b7f86c1515711c7df0c0b6cca2910378e8c39b31ec3e3',
+        'app/api/historical-topo/queue/route.ts': '41e1b9f62a5cb5ac0d346330176e4a235a705730aae6895e75c0c661fef5b247',
+        'app/api/land-records/route.ts': '1ee1f26703db1a9582b466c928d1b5e57fb1ff574e7b8e428aa677b5fb3cba38',
+        'app/data-intake-server.ts': '65d5f58c947ecd4ef5237fdcbe51aa863687c335bb96f04f0a61364bc92163a9',
+        'app/earth-engine-local-read.ts': '7e39801c0ffaf5b15e739c2497e63e2af94bcc6686d1b6e7e6cdc6eca56168a1',
+        'docs/submission-upload-quota.md': 'a9ffc3bcaf6279bb9b10452d334b81c5d5e42119e28c15f755842b0a85d590fd',
+        'drizzle/0011_submission_uploads.sql': 'f040dd7bd87559b50fccb1a7a2c90deaaa2676e26a905319abb8d6a77c24bd36',
+        'drizzle/meta/_journal.json': '7a4257d669148a8f5af469fa1d676a1a723da42975b4e1c18c53d7826fb591d6',
+        'package-lock.json': '6c3aff35387b14e40e4f8fd2436a8d78e71bcab3869ef7a30e37dc982e236bf4',
+        'package.json': '8782b3a363afb7855605523aaf8d963608dd1ba26e388d8b35fd390380ef8a5b',
+        'scripts/earth-engine/requirements.txt': 'a81839f87d88bded8814af2f5a36ef64033501c32a5fd6e203d68ff6f5b272a1',
+        'scripts/qwen-local-contract.mjs': '1f4a4bf09f136453c27b6c28276477517a1afc1336fea679e6df31ca080ffe90',
+        'scripts/serve-local-worker.mjs': '967721a420eef809a5f33d4dcd2259b08e0ac49ff4c55831ee52e2b0dd65ceb2',
+        'tests/helpers/land-fixture.mjs': 'e79fe9ef914971dbc509c00dc0339d289a7744023d1cf5573ff8f4122e375ee6',
+        'tests/historical-topo-routes.test.mjs': 'b75eddd652d89adcb0e1d87052efc8bbf7ec9c513a569e1c2f15d071af1c1382',
+        'tests/hms-smoke-playback.test.mjs': 'fbe86c252b68404e8b41e26d503c4821b94d2acf266cafa66e8416bd90e1718b',
+        'tests/land-records.test.mjs': '12750d5a942e1bacda44a78e35170fcd83fd190e03ccf57edfdd0a547a6d3fb5',
+        'tests/local-qwen-bridge.test.mjs': '5b1b5c3bd17b638d8e4d49bb1f1a8355ffbab739d830df62f27cb27f757fc7d2',
+        'tests/local-worker-runtime.test.mjs': '0a6cd813e7f669c7c4943dc4ef20db39f55e6286d976883873ab88420271a217',
+        'tests/submission-quota.test.mjs': '846465d3e86b03f2ab139c41c3d4e20d89fdb79c6683543656e6b1c2c63cb029',
+    }
+    assert hashlib.sha256(TOOL.RECEIPT.read_bytes()).hexdigest() == "22ad18bc3d002965c672a22a0bb45be18ca881b8d11e565ae6c5300bfa942ca4"
     declarations = {item["path"]: item for item in receipt["repository_reconciliation"]["changes"]}
     assert set(declarations) == set(changed)
     for name, pull_request in changed.items():
         entry = receipt["comparison"][name]
         before = previous["comparison"].get(name)
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        digest = recorded_digests[name]
         assert entry["mirror_sha256"] == digest != (before["mirror_sha256"] if before else None)
         assert expected[name] == "sha256:" + digest
         assert entry["site_sha256"] == (before["site_sha256"] if before else None)
@@ -810,3 +838,81 @@ def test_selected_main_overlay_receipt_binds_only_the_merged_overlay_changes() -
     inventory = {name: item["mirror_sha256"] for name, item in receipt["comparison"].items()}
     assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     assert predecessor.name in receipt["rollback"]["mirror"]
+
+
+def test_selected_quota_receipt_binds_exact_merged_bytes_and_preserves_history() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    assert TOOL.RECEIPT.name == "site-v268-historical-quota-reconciliation-20261022.json"
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-main-overlay-reconciliation-20261021.json"
+    previous = json.loads(predecessor.read_text())
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
+    # The prior receipt is intact, and its source basis is the actual pre-quota merge.
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == "22ad18bc3d002965c672a22a0bb45be18ca881b8d11e565ae6c5300bfa942ca4"
+    changed = {
+        "app/api/historical-topo/overlay/route.ts", "app/historical-topo-overlay-server.ts",
+        "app/historical-topo-request-quota.ts", "docs/historical-topo-request-quota.md",
+        "tests/historical-topo-quota.test.mjs", "tests/historical-topo-routes.test.mjs",
+    }
+    added = {"app/historical-topo-request-quota.ts", "docs/historical-topo-request-quota.md",
+             "tests/historical-topo-quota.test.mjs"}
+    head = "3a0c40d8033bb43f432320ef9dcfbded8b9d0000"
+    # Pinned source manifest verified from the six PR #5400 Git blobs. CI may
+    # use a shallow checkout; historical provenance must not depend on network.
+    source_digests = {
+        'app/api/historical-topo/overlay/route.ts': '4a7d594c16feb56ca83c57bde11a42eb7318467453cd3e54fe4e126c5cfaf420',
+        'app/historical-topo-overlay-server.ts': '57f6f59875719c67a656d7022189cd433d0118e30918e80f00e376a337cd3b0f',
+        'app/historical-topo-request-quota.ts': '4aa535df5311249ef4660249959e278f80eb5b817c8487808d717ab931df0a1d',
+        'docs/historical-topo-request-quota.md': 'e0be1c54a8c2fe434376e26b387a311451536662fcf87d8c7464f3e053ca98f1',
+        'tests/historical-topo-quota.test.mjs': '971e8585fe938da9f063b6dc9e9c8496860b2b8c3e77c9dfaff0f049fac41e97',
+        'tests/historical-topo-routes.test.mjs': '9c09ab92e161be63f3dc7d03921f2609b812d5f6f8b1fc59d2416e5932c5a63d',
+    }
+    assert set(source_digests) == changed
+    assert set(receipt["comparison"]) - set(previous["comparison"]) == added
+    assert set(previous["comparison"]) - set(receipt["comparison"]) == set()
+    declarations = {item["path"]: item for item in receipt["repository_reconciliation"]["changes"]}
+    assert set(declarations) == changed
+    for name, entry in previous["comparison"].items():
+        if name not in changed:
+            assert receipt["comparison"][name] == entry, name
+    for name in changed:
+        body = (TOOL.DESTINATION / name).read_bytes()
+        digest = hashlib.sha256(body).hexdigest()
+        assert digest == source_digests[name]
+        before = previous["comparison"].get(name)
+        entry, declaration = receipt["comparison"][name], declarations[name]
+        assert entry["mirror_sha256"] == digest != (before["mirror_sha256"] if before else None)
+        assert expected[name] == "sha256:" + digest
+        assert entry["site_sha256"] == (before["site_sha256"] if before else None)
+        assert entry["state"] == ("repository_only_overlay" if before is None else
+                                  "repository_safety_overlay" if before["state"] == "identical" else before["state"])
+        assert "#5400" in entry["difference"]
+        assert declaration["previous_receipt_sha256"] == (before["mirror_sha256"] if before else None)
+        assert declaration["repository_base_sha256"] == declaration["mirror_sha256"] == digest
+        assert declaration["state"] == entry["state"]
+        assert declaration["pull_request"] == 5400
+        assert declaration["last_repository_change_commit"] == head
+        assert declaration["proposed_in_this_change"] is False
+    for key in previous:
+        if key not in {"comparison", "counts", "inventory_sha256", "predecessor_receipt",
+                       "predecessor_receipt_sha256", "recorded_at", "repository_reconciled_base",
+                       "repository_reconciliation", "rollback", "validation"}:
+            assert receipt[key] == previous[key], key
+    for key, count in previous["counts"].items():
+        assert receipt["counts"][key] == count + {
+            "identical": -1, "repository_safety_overlay": 1, "repository_only_overlay": 3,
+        }.get(key, 0), key
+    assert receipt["status"] == "REVIEW_ONLY"
+    assert receipt["review"]["source_and_overlay_review"] == "PENDING"
+    assert receipt["review"]["human_acceptance"] is receipt["review"]["hosted_equivalence"] is False
+    assert receipt["counts"]["repository_withheld"] == 258
+    assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "3dc133f98e9496a8f74c21aca8390d6354be6889"
+    inventory = {name: item["mirror_sha256"] for name, item in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert predecessor.name in receipt["rollback"]["mirror"]
+    result = TOOL.check()
+    assert result["files"] == len(expected) == 883
+    assert result["outcome"] == "PASS"
+    assert result["hosted_equivalence"] is False
