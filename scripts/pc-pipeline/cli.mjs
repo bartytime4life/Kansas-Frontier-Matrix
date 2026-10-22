@@ -174,7 +174,8 @@ export async function cli(argv) {
       await captureFile(resolve(args[1], 'data', item.path), resolve(restored, 'data', item.path), item);
     }
     const receipt = { format: 'kfm-pipeline-restore-receipt-v1', state: 'verified', storeId: manifest.storeId, sourceDevice: manifest.sourceDevice,
-      backupDevice: manifest.backupDevice, inventorySha256: manifest.inventorySha256, files: manifest.files.length, restoredAt: new Date().toISOString() };
+      backupDevice: manifest.backupDevice, inventorySha256: manifest.inventorySha256, files: manifest.files.length,
+      payloadObjects: manifest.files.filter(f => /^(?:quarantine|raw)\//.test(f.path) && f.bytes > 0).length, restoredAt: new Date().toISOString() };
     await immutable(resolve(restored, 'restore-receipt.json'), bytes(receipt)); return receipt;
   }
   return { usage: 'inventory | keys DIR | profile-template SOURCE | approve PROFILE PRIVATE_KEY OUTPUT | control COMMAND PRIVATE_KEY | rehearse PRIVATE_ROOT | init ROOT MOUNT CONFIG | tick CONFIG | status CONFIG | stage-package CONFIG water|weather SNAPSHOT DECISION | ftps-mirror CONFIG RELEASE_ID PUBLIC_PRODUCT | backup CONFIG BACKUP_CONFIG | verify-backup MANIFEST ROOT | restore-test MANIFEST BACKUP_ROOT EMPTY_RESTORE_ROOT' };

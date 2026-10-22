@@ -1,4 +1,4 @@
-import { fail, parse, canonical } from './pipeline-contract.mjs';
+import { fail, parse, canonical, sha } from './pipeline-contract.mjs';
 
 export class PipelineStore {
   constructor(pool) { this.pool = pool; }
@@ -51,7 +51,7 @@ export class PipelineStore {
       if ((head.release_id ?? null) !== expected) fail('ACTIVATION_CONFLICT');
       await c.execute("UPDATE kfm_pipeline_releases SET projection_json=?,state='COMMITTED' WHERE release_id=?", [canonical(projection), id]);
       await c.execute('UPDATE kfm_pipeline_heads SET previous_id=release_id,release_id=?,revision=revision+1 WHERE source_id=?', [id, r.sourceId]);
-      await c.execute('INSERT INTO kfm_pipeline_events (event_id,source_id,release_id,previous_id,action,occurred_at) VALUES (?,?,?,?,?,?)', ['activate:' + id, r.sourceId, id, expected, 'ACTIVATE', now]);
+      await c.execute('INSERT INTO kfm_pipeline_events (event_id,source_id,release_id,previous_id,action,occurred_at) VALUES (?,?,?,?,?,?)', [sha('activate:' + id), r.sourceId, id, expected, 'ACTIVATE', now]);
       return { releaseId: id, active: true, revision: Number(head.revision) + 1 };
     });
   }
@@ -66,7 +66,7 @@ export class PipelineStore {
       if ((heads[0]?.release_id ?? null) !== expected) fail('ACTIVATION_CONFLICT');
       await c.execute("UPDATE kfm_pipeline_releases SET state='WITHDRAWN' WHERE release_id=?", [id]);
       await c.execute('UPDATE kfm_pipeline_heads SET previous_id=release_id,release_id=NULL,revision=revision+1 WHERE source_id=? AND release_id=?', [r.sourceId, id]);
-      await c.execute('INSERT IGNORE INTO kfm_pipeline_events (event_id,source_id,release_id,previous_id,action,occurred_at) VALUES (?,?,?,?,?,?)', ['withdraw:' + id, r.sourceId, id, expected, 'WITHDRAW', now]);
+      await c.execute('INSERT IGNORE INTO kfm_pipeline_events (event_id,source_id,release_id,previous_id,action,occurred_at) VALUES (?,?,?,?,?,?)', [sha('withdraw:' + id), r.sourceId, id, expected, 'WITHDRAW', now]);
       return { releaseId: id, state: 'WITHDRAWN' };
     });
   }

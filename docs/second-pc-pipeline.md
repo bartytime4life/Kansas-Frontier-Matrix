@@ -64,6 +64,8 @@ sudo authentication unavailable to this session. Do not format them.
    Initialize with `cli.mjs init ROOT MOUNT CONFIG_OUTPUT`. The command records
    filesystem device identity and a random store marker; it refuses an unmounted
    directory on the root filesystem.
+   Run the bounded `rehearse` against this store before its first backup so the
+   restore exercise includes captured payloads, not only configuration records.
 4. Qualify an independent backup filesystem, mounted at `/srv/kfm-backup` from
    the original PC/NAS. Initialize a separate backup root/config the same way.
    Source and backup must be different devices. A second directory is insufficient.

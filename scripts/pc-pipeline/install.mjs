@@ -18,7 +18,7 @@ if (!process.argv.includes('--apply')) {
   if (config.mount !== '/srv/kfm-data' || config.publish !== false) fail('INSTALL_CAPTURE_ONLY_CONFIG_REQUIRED');
   const backup = parse(await readRegular(backupPath, 65536));
   if (backup.format !== 'kfm-pipeline-restore-receipt-v1' || backup.state !== 'verified' || backup.storeId !== config.storeId || String(backup.sourceDevice) !== String(config.device)
-    || String(backup.backupDevice) === String(config.device) || !/^[a-f0-9]{64}$/.test(backup.inventorySha256 ?? '')) fail('VERIFIED_INDEPENDENT_RESTORE_REQUIRED');
+    || String(backup.backupDevice) === String(config.device) || !/^[a-f0-9]{64}$/.test(backup.inventorySha256 ?? '') || !(backup.payloadObjects > 0)) fail('VERIFIED_INDEPENDENT_RESTORE_REQUIRED');
   for (const path of ['/opt/kfm-pipeline','/etc/kfm-pipeline','/etc/kfm-pipeline/approvals']) {
     try { await lstat(path); fail('INSTALL_TARGET_EXISTS'); } catch (e) { if (e.code !== 'ENOENT') throw e; }
     await mkdir(path, { recursive: true, mode: 0o750 });

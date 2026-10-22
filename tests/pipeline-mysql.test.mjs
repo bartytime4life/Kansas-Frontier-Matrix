@@ -21,10 +21,15 @@ test('MySQL: additive migration, persistent replay, atomic activation/CAS and wi
   assert.equal(await store.claimNonce('c'.repeat(64), now), true); assert.equal(await new PipelineStore(pool).claimNonce('c'.repeat(64), now), false);
   const a = 'a'.repeat(64), b = 'b'.repeat(64); await store.stage(a, m, now); await store.stage(b, m, now);
   const outcomes = await Promise.allSettled([store.commit(a, null, { value: 1 }, now), store.commit(b, null, { value: 2 }, now)]);
-  assert.equal(outcomes.filter(o => o.status === 'fulfilled').length, 1);
+  assert.equal(outcomes.filter(o => o.status === 'fulfilled').length, 1, JSON.stringify(outcomes.map(o => o.status === 'rejected' ? o.reason.message : o.status)));
   const head = await store.active('nws-alerts'); assert.ok(head); assert.ok(head.projection);
   assert.equal((await pool.query('SELECT COUNT(*) AS n FROM kfm_pipeline_events'))[0][0].n, 1);
+  assert.equal((await pool.query('SELECT MAX(CHAR_LENGTH(event_id)) AS n FROM kfm_pipeline_events'))[0][0].n, 64);
   await store.commit(head.id, null, null, now); assert.equal((await store.active('nws-alerts')).id, head.id);
+  const next = head.id === a ? b : a;
+  await store.commit(next, head.id, { value: 3 }, now);
+  await store.rollback(head.id, next, 'd'.repeat(64), now);
+  assert.equal((await store.active('nws-alerts')).id, head.id);
   await assert.rejects(store.withdraw(head.id, 'f'.repeat(64), now), /ACTIVATION_CONFLICT/);
   await store.withdraw(head.id, head.id, now); assert.equal(await store.active('nws-alerts'), null);
   assert.equal((await store.release(head.id)).state, 'WITHDRAWN');

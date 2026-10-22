@@ -54,6 +54,8 @@ export async function storageGuard(config, { reserve = 0 } = {}) {
   const marker = (await readRegular(resolve(root, '.kfm-pipeline-store'), 128)).toString().trim();
   if (marker !== config.storeId) fail('STORAGE_IDENTITY_CHANGED');
   const data = await statfs(root); const system = await statfs('/');
+  // Linux persistent disk/NAS filesystems only; tmpfs/ramfs/overlay are not a data store.
+  if (![0xef53, 0x58465342, 0x9123683e, 0x6969, 0xff534d42, 0xfe534d42, 0x2fc12fc1].includes(data.type >>> 0)) fail('DURABLE_FILESYSTEM_REQUIRED');
   const free = data.bavail * data.bsize; const size = data.blocks * data.bsize;
   if (free - reserve < size * 0.20 || system.bavail * system.bsize < 30 * 1024 ** 3) fail('DISK_RESERVE_REQUIRED');
   return { freeBytes: free, totalBytes: size, reserveBytes: reserve };
