@@ -5,6 +5,7 @@ import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contr
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
 import {hasRepeatedPhrase,repeatsPriorReply,PUBLIC_AI_JOB_MS,PUBLIC_AI_MAX_LIFETIME_MS,CONTINUE_REPLY} from './hosted-ai.mjs';
 import {INFERENCE_BUDGETS} from '../scripts/home-inference/budgets.mjs';
+import {generalDiscussionQuestion} from './public-discussion-scope.mjs';
 import {validAssistantContext} from './assistant-context.mjs';
 import {createAiReadBuffer,isAiReadPressure} from './ai-read-buffer.mjs';
 import {HOME_PROVIDER,homeInferenceConfig,getHomeInferenceModel} from './home-inference.mjs';
@@ -16,6 +17,7 @@ const digest=value=>createHash('sha256').update(JSON.stringify(value)).digest('h
 const text=(x,max)=>typeof x==='string'&&x.length>0&&Buffer.byteLength(x)<=max&&!/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(x);
 const investigationId=x=>typeof x==='string'&&x.length===36&&/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(x);
 const date=x=>x===''||/^\d{4}-\d{2}-\d{2}$/.test(x)&&Number.isFinite(Date.parse(x+'T00:00:00Z'))&&new Date(x+'T00:00:00Z').toISOString().slice(0,10)===x;
+const sensitiveScope=value=>isSensitiveQwenQuestion(value)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(value);
 async function body(request){
  if(!/^application\/json(?:;|$)/i.test(request.headers.get('content-type')??''))throw new Error('INVALID_REQUEST');
  const reader=request.body?.getReader();if(!reader)throw new Error('INVALID_REQUEST');
@@ -174,8 +176,12 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
     session.lastAccepted=now;
     extra={'Set-Cookie':'__Host-kfm_ai_guest='+guest+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600'};
     const prepare=async()=>{try{
-     const questionScope=value.question+' '+value.term+' '+query.place+' '+(value.context?JSON.stringify(value.context):'');
-     const sensitive=isSensitiveQwenQuestion(questionScope)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(questionScope);
+     // General definitions use a fixed server-owned education question only.
+     // A selected record, place/date filter or unrelated search term cannot
+     // borrow this exception. Evidence mode retains its original deny gates.
+     const general=mode==='explore'&&!value.context?.selection&&!query.place&&!query.start&&!query.end&&value.question.trim().startsWith(value.term.trim())?generalDiscussionQuestion(value.question):null;
+     const sensitive=sensitiveScope(query.place+' '+(value.context?JSON.stringify(value.context):''))||!general&&sensitiveScope(value.question+' '+value.term);
+     if(general)job.question=general;
      if(!sensitive&&value.context){
       const context=await readContext(value.context);
       if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.finished=clock();job.context=null;job.question='';job.query=null;return;}

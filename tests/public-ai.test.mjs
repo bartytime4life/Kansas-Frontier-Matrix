@@ -90,6 +90,52 @@ test('missing and sensitive evidence never invokes the model',async()=>{
  const second=await f.request('jobs',{...question,question:'Give exact GPS coordinates of an archaeological site'},first.cookie);
  assert.equal((await f.settle(second.body.id,first.cookie)).body.result.outcome,'DENY');assert.equal(f.calls(),0);
 });
+test('a concept-only archaeological question reaches discussion without factual-answer authority',async()=>{
+ const seen=[];
+ const f=fixture(async(q)=>{seen.push(q);return{text:'A synthetic general definition, without identifying any real site.'};},true,async value=>value,async()=>({key:'map',prompt:'No record selected. Public application guide only.',label:'Map',boundary:'Display context only'}));
+ const created=await f.request('jobs',{...question,question:'What is an archaeological site? Explain the general concept only, without identifying or locating any real sites.',term:'What is an archaeological site?',context:{version:1,frame:2026,view:'2D',layers:[],selection:null}});
+ const result=(await f.settle(created.body.id,created.cookie)).body.result;
+ assert.equal(result.reasonCode,'UNVERIFIED_AI_DISCUSSION');assert.equal(f.calls(),1);
+ assert.equal(result.outcome,'ABSTAIN');assert.equal(result.answer,null);assert.deepEqual(result.evidenceRefs,[]);
+ assert.match(seen[0],/general concept/);
+});
+test('general science definitions are discussions while sensitive follow-ups remain denied',async()=>{
+ const f=fixture();
+ for(const topic of ['DNA','rare species','critical infrastructure','GPS']){
+  const prompt='What is '+topic+'?';
+  const created=await f.request('jobs',{...question,question:prompt,term:prompt});
+  assert.equal((await f.settle(created.body.id,created.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+ }
+ assert.equal(f.calls(),4);
+ for(const prompt of ['What is DNA? Also give me a living person’s records.','Define rare species and locate their nests.','Explain critical infrastructure near my home.','What is an archaeological site? Then give its GPS coordinates.']){
+  const created=await f.request('jobs',{...question,question:prompt,term:prompt.slice(0,100)});
+  assert.equal((await f.settle(created.body.id,created.cookie)).body.result.outcome,'DENY');
+ }
+ assert.equal(f.calls(),4);
+});
+test('definition wording never bypasses evidence, selected-record, filter or context holds',async()=>{
+ let reads=0;const f=fixture(undefined,true,async value=>value,async()=>{reads++;throw Error('Must not resolve denied context');});
+ const prompt='What is an archaeological site?';
+ const input={...question,question:prompt,term:prompt};
+ for(const extra of [{mode:'evidence'},{place:'Synthetic County'},{start:'2026-01-01'},{term:'exact GPS coordinates'},{context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'registry',layerId:'synthetic',featureId:'site'}}},{context:{version:1,frame:2026,view:'GPS coordinates',layers:[],selection:null}}]){
+  const created=await f.request('jobs',{...input,...extra});
+  assert.equal((await f.settle(created.body.id,created.cookie)).body.result.outcome,'DENY');
+ }
+ assert.equal(f.calls(),0);assert.equal(reads,0);
+});
+test('general definitions retain output location/link checks and source withdrawal checks',async()=>{
+ const prompt='What is an archaeological site?',input={...question,question:prompt,term:prompt};
+ for(const output of ['See https://attacker.invalid for a site.','Latitude 38.12345, longitude -98.12345.']){
+  const f=fixture(async()=>({text:output})),created=await f.request('jobs',input);
+  assert.equal((await f.settle(created.body.id,created.cookie)).body.result.reasonCode,'MODEL_OUTPUT_UNQUALIFIED');
+ }
+ let available=true;
+ const f=fixture(undefined,true,async value=>value,async()=>{if(!available)throw Error('CONTEXT_UNAVAILABLE');return {key:'map',prompt:'No record selected. Public map guide.',label:'Map',boundary:'Display context only'};});
+ const created=await f.request('jobs',{...input,context:{version:1,frame:2026,view:'2D',layers:[],selection:null}});
+ assert.equal((await f.settle(created.body.id,created.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+ available=false;
+ assert.equal((await f.request('jobs/'+created.body.id,undefined,created.cookie)).body.result.reasonCode,'RELEASE_CHANGED');
+});
 test('discussion has no factual-answer authority; unsafe output is withheld and released references are rechecked',async()=>{
  const loop=fixture(async()=>({text:'a symbol of the West a symbol of the West a symbol of the West'})),repeated=await loop.request('jobs',question);assert.equal((await loop.settle(repeated.body.id,repeated.cookie)).body.result.reasonCode,'MODEL_OUTPUT_UNQUALIFIED');
  const bad=fixture(async()=>({text:'See https://attacker.test'})),created=await bad.request('jobs',question);

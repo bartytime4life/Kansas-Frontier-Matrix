@@ -1,5 +1,53 @@
 # Public hosted AI: discussion and released evidence
 
+## General-definition repair — 2026-10-21 Central / 2026-10-22 UTC
+
+Live inspection observed application `urdng3v1vk` reporting Published source
+`00e59603e6012c144fcb7dbf1119f6b0e6ea29a4` and provider `home-ollama`,
+model `qwen3.5:4b`, online and ready. A logged-out visitor received a complete
+ordinary discussion reply. This establishes one functional remote request, not
+physical-host/GPU attestation or continuous availability. The inspected hosted
+target `7f23ef9f57e8f9c8fc0202629411edbacfefb998` has identical AI handler,
+adapter, composer and legacy sensitivity code to that published source.
+
+The concept-only question “What is an archaeological site? Explain the general
+concept only, without identifying or locating any real sites.” was denied live.
+The same failure was reproduced locally before this correction. The public
+handler treated a topic name as a sensitive-record request before inference.
+
+`server/public-discussion-scope.mjs` now recognizes a closed vocabulary of
+whole-question definitions: archaeology/archaeological sites, rare species,
+critical infrastructure, DNA, GPS and geographic coordinates/latitude/longitude.
+Only Ask/discussion mode, without a selected record or place/date filter and
+with a search term derived from that question, may use this path. It sends a
+fixed server-owned general-education question to the same configured provider.
+Only a bounded set of complete question forms/qualifiers is accepted; arbitrary
+questions or an “educational” disclaimer are not a policy override. This is a
+focused repair, not a general-purpose intent classifier or broad policy waiver.
+
+Sensitive context and all other questions retain the existing gates. Evidence
+mode, source withdrawal checks, precise-location/link/repetition output checks,
+guest ownership, rate limits, cancellation and signed remote transport remain
+authoritative. Definitions remain `ABSTAIN / UNVERIFIED_AI_DISCUSSION` with
+`answer: null` and no EvidenceRefs; they are useful labeled discussion, not
+governed factual answers. The composer explains restricted requests and gives a
+general-question example instead of an unexplained policy refusal.
+
+The second-PC gateway/worker, model weights/tag/profile, credentials, GoDaddy
+settings, DNS and BARTA implementation are unchanged. BARTA's separate PR #26
+was still an unmerged draft at inspection, with real pairing/deployment
+unfinished; its live helper reported unavailable. No cause connecting that
+unfinished work to KFM's definition-policy defect was established.
+
+Regression coverage includes the live question, ordinary definitions, appended
+instructions, real-site/precise-location requests, evidence mode, record/filter
+scope, sensitive context, unsafe model output and source withdrawal. Full build,
+type, suite and exact-head CI outcomes belong to the repair PR. Deployment and
+repeating the same question on the published revision are separate acceptance
+steps. The cloud browser lacked WebGL2, so its map fallback is not evidence of a
+production map regression. Roll back only these application files and redeploy;
+there is no PC, credential, model or stored-data migration.
+
 > Current composition — 2026-10-21: public chat uses the paired home-Ollama
 > provider only. The embedded GoDaddy Qwen/ONNX runtime, installation manifest,
 > local generation and qualification tools, startup probe switches and dedicated
