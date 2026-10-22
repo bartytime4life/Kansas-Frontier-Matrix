@@ -612,7 +612,9 @@ def test_historical_layout_receipt_preserves_unrelated_bytes_and_private_boundar
         assert declared[path]["previous_receipt_sha256"] == previous["comparison"][path]["mirror_sha256"]
         assert declared[path]["repository_base_sha256"] == declared[path]["previous_receipt_sha256"]
         assert declared[path]["mirror_sha256"] == entry["mirror_sha256"]
-        assert TOOL.sha((TOOL.DESTINATION / path).read_bytes()) == expected[path]
+        # Bound to the receipt's own declaration: a successor (aviation layers)
+        # changes current page.tsx bytes, and the selected receipt records that.
+        assert "sha256:" + declared[path]["mirror_sha256"] == expected[path]
     for key in ("site_candidate_commit", "site_project_id", "site_version_id", "site_audience",
                 "authoritative_site_source_paths", "canonical_document_mappings", "canonical_tool_mappings",
                 "overlay", "review", "repository_safety_changes", "historical_lineage_correction"):
@@ -917,9 +919,12 @@ def test_historical_quota_receipt_binds_exact_merged_bytes_and_preserves_history
     assert predecessor.name in receipt["rollback"]["mirror"]
 
 
-def test_selected_next_receipt_binds_only_the_dependency_safety_overlay() -> None:
+def test_historical_next_receipt_binds_only_the_dependency_safety_overlay(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-next-security-overlay-20261022.json")
     receipt, expected = TOOL.reviewed_receipt()
-    assert TOOL.RECEIPT.name == "site-v268-next-security-overlay-20261022.json"
+    assert hashlib.sha256(TOOL.RECEIPT.read_bytes()).hexdigest() == "0ffbfaf7293dede78f560d6e9131b9b6df08069d9fbb7f8582b1243d1f697fae"
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert predecessor.name == "site-v268-historical-quota-reconciliation-20261022.json"
     predecessor_digest = "77d8ba17e70384f4f37f76a2648f46899a1e18bfcd0d02dcee1cc04aeff75b63"
@@ -990,13 +995,75 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert len(next_packages) == 12
     assert {entry["version"] for entry in next_packages.values()} == {"16.4.2"}
     result = TOOL.check()
-    assert result["files"] == len(expected) == len(receipt["comparison"]) == 883
+    assert result["files"] == len(expected) == len(receipt["comparison"]) == 892
     assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
     assert result["authority"] == "CONTENT_PARITY_ONLY"
-    assert result["file_states"]["inherited_repository_overlay"] == 48
+    assert result["file_states"]["inherited_repository_overlay"] == 52
+    assert result["file_states"]["repository_only_overlay"] == 27
     assert result["file_states"]["repository_safety_overlay"] == 8
     assert result["withheld_files"] == 258
     assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
     assert result["review_acceptance"]["source_and_overlay_review"] == "PENDING"
     assert result["hosted_equivalence"] is False
+
+
+AVIATION_ADDED = {
+    "app/api/aviation/metar/route.ts", "app/api/aviation/pireps/route.ts", "app/aviation-airspace.ts",
+    "app/aviation-control.tsx", "app/aviation-weather-server.ts", "app/aviation-weather.ts",
+    "docs/aviation-layers.md", "public/data/aviation/kansas-aviation-context.json", "tests/aviation.test.mjs",
+}
+AVIATION_CHANGED = {
+    "app/explorer-controls.css", "app/layer-workspaces.ts", "app/page.tsx", "app/site-architecture.ts",
+    "app/site-features.ts", "docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md", "tests/layer-explorer.test.mjs",
+}
+
+
+def test_selected_aviation_receipt_binds_only_the_aviation_overlay() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    assert TOOL.RECEIPT.name == "site-v268-aviation-layers-overlay-20261022.json"
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-next-security-overlay-20261022.json"
+    predecessor_digest = "0ffbfaf7293dede78f560d6e9131b9b6df08069d9fbb7f8582b1243d1f697fae"
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"] == predecessor_digest
+    previous = json.loads(predecessor.read_text())
+    assert set(receipt) == set(previous)
+    assert set(receipt["comparison"]) == set(previous["comparison"]) | AVIATION_ADDED
+    assert not AVIATION_ADDED & set(previous["comparison"])
+    actual_delta = {name for name, entry in receipt["comparison"].items() if entry != previous["comparison"].get(name)}
+    assert actual_delta == AVIATION_ADDED | AVIATION_CHANGED
+    declarations = {entry["path"]: entry for entry in receipt["repository_reconciliation"]["changes"]}
+    assert set(declarations) == actual_delta and len(receipt["repository_reconciliation"]["changes"]) == len(actual_delta)
+    for name in actual_delta:
+        entry, before = receipt["comparison"][name], previous["comparison"].get(name)
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
+        if before is None:
+            assert entry["state"] == "repository_only_overlay" and entry["site_sha256"] is None
+        else:
+            assert entry["site_sha256"] == before["site_sha256"], name
+            assert entry["state"] == ("inherited_repository_overlay" if before["state"] == "identical" else before["state"])
+        assert declarations[name] == {
+            "path": name, "previous_receipt_sha256": before["mirror_sha256"] if before else None,
+            "repository_base_sha256": before["mirror_sha256"] if before else None,
+            "mirror_sha256": digest, "state": entry["state"], "proposed_in_this_change": True,
+        }
+    administrative = {
+        "comparison", "counts", "inventory_sha256", "predecessor_receipt",
+        "predecessor_receipt_sha256", "recorded_at", "repository_reconciled_base",
+        "repository_reconciliation", "rollback", "security", "validation",
+    }
+    for key in previous.keys() - administrative:
+        assert receipt[key] == previous[key], key
+    for key, count in previous["counts"].items():
+        delta = {"identical": -4, "inherited_repository_overlay": 4, "repository_only_overlay": 9}.get(key, 0)
+        assert receipt["counts"][key] == count + delta, key
+    assert receipt["status"] == "REVIEW_ONLY"
+    assert receipt["review"] == previous["review"]
+    assert receipt["overlay"] == previous["overlay"]
+    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "123d8645b84e705789390f2ca4cbd66cc1eb2f0e"
+    assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    inventory = {name: item["mirror_sha256"] for name, item in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert predecessor.name in receipt["rollback"]["mirror"]

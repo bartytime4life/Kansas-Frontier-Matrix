@@ -200,6 +200,12 @@ control does not close these gates.
 
 ## Remaining work and rollback
 
+Follow-up on 2026-10-22: Site display-context layers for airspace, drones,
+airports, airways, METAR and PIREP are recorded in
+`aviation-airspace-layers-20261022.md`. The hold below still governs the
+evidence-grade APT candidate and live surveillance.
+
+
 Before public FAA rendering: product rights/sensitivity admission; horizontal
 CRS/datum verification and transform; exact release-profile integration with
 existing policy/verification-history replay; reviewer identity and valid release

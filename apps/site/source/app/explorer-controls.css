@@ -177,3 +177,10 @@
 /* Four layer views share the same drawer without horizontal scrolling. */
 .layer-panel .layer-source-switch { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .layer-panel .layer-source-switch button { min-width: 0; min-height: 44px; font-size: 12px; padding-inline: 4px; flex-wrap: wrap; }
+.layer-panel .official-context-option-body fieldset { margin: 10px 0; padding: 8px 10px; border: 1px solid #344151; border-radius: 6px; display: grid; gap: 6px; }
+.layer-panel .official-context-option-body legend { padding: 0 4px; color: #f1d992; font-size: 12px; font-weight: 650; }
+.layer-panel .aviation-legend { display: grid; gap: 4px; margin: 2px 0; padding: 0; list-style: none; font-size: 11px; line-height: 1.4; color: #c4d4dc; }
+.layer-panel .aviation-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 2px; vertical-align: -2px; }
+.layer-panel .aviation-column { display: grid; gap: 8px; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+.layer-panel .aviation-column table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.layer-panel .aviation-column :is(th,td) { padding: 4px; border-bottom: 1px solid #2a3746; text-align: left; vertical-align: top; }
