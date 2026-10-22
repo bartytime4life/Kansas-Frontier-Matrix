@@ -1,0 +1,87 @@
+{
+  "receipt_id": "kfm:generated:historical-quota-mirror-20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/qa/site_mirror.py",
+    "tests/qa/test_site_mirror.py",
+    "data/receipts/generated/site-v268-historical-quota-reconciliation-20261022.json"
+  ],
+  "artifact_hashes": {
+    "tools/qa/site_mirror.py": "sha256:fbc77319137ddf523f80966b84ac5aa4eacb979d69f8b130196fc194ec3d5a97",
+    "tests/qa/test_site_mirror.py": "sha256:b68431c555a5201aede1844bad09bd58058dcb55b7c6f1421477382b19806f49",
+    "data/receipts/generated/site-v268-historical-quota-reconciliation-20261022.json": "sha256:77d8ba17e70384f4f37f76a2648f46899a1e18bfcd0d02dcee1cc04aeff75b63"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session; exact backend version unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "main@3dc133f98e9496a8f74c21aca8390d6354be6889",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5400",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5398",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5396",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "tools/qa/site_mirror.py": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "data/receipts/generated/site-v268-historical-quota-reconciliation-20261022.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Pinned baseline reproduction",
+      "outcome": "PASS",
+      "reason": "Pre-quota water 346 passed; quota head and actual merge 345 passed/1 failed; FAA gate failed identically on all three."
+    },
+    {
+      "gate": "Historical provenance",
+      "outcome": "PASS",
+      "reason": "21 historical digests and six quota Git blobs independently verified against exact commits. Immutable predecessor SHA-256 22ad18bc3d002965c672a22a0bb45be18ca881b8d11e565ae6c5300bfa942ca4; successor records only quota delta."
+    },
+    {
+      "gate": "Water conformance",
+      "outcome": "PASS",
+      "reason": "347 tests passed; fixture regeneration passed; 883 path content parity with 258 withheld absent."
+    },
+    {
+      "gate": "Historical map local R2 tests",
+      "outcome": "PASS",
+      "reason": "24 tests passed on original exact quota head; no USGS or hosted storage used."
+    },
+    {
+      "gate": "Exact-head GitHub CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending published corrective heads; inherited FAA gate is tracked in separate stacked correction."
+    },
+    {
+      "gate": "Deployment and source activation",
+      "outcome": "SKIPPED",
+      "reason": "Outside scope; production preserved."
+    },
+    {
+      "gate": "Repository topology",
+      "outcome": "PASS",
+      "reason": "Exact trusted base 3dc133f98e9496a8f74c21aca8390d6354be6889; zero invariant failures, zero new drift, 89 inherited warnings, zero stale entries; baseline unchanged."
+    },
+    {
+      "gate": "Optional pre-commit",
+      "outcome": "SKIPPED",
+      "reason": "pre_commit package unavailable; syntax, whitespace, focused tests, topology and receipt checks run separately."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-22T14:46:55.078646+00:00",
+  "emitter": "Codex",
+  "notes": "Generation and local validation are not human approval, release or deployment. Historical receipts are immutable; no scanner, policy or protection exception."
+}

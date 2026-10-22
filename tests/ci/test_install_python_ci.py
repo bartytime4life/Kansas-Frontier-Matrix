@@ -25,6 +25,7 @@ class InstallPythonCiTests(unittest.TestCase):
                 "all-local-test",
                 "audit-tool",
                 "connectors-core",
+                "crop-casma-tiles",
                 "geo-transforms",
                 "nwm-netcdf",
                 "geoparquet-pyarrow-25",
@@ -75,6 +76,22 @@ class InstallPythonCiTests(unittest.TestCase):
             REPO_ROOT / "tools/ci/geoparquet-pyarrow-25.lock"
         ).read_text(encoding="utf-8")
         self.assertIn("pyarrow==25.0.0", geoparquet_lock.lower())
+
+    def test_crop_casma_profile_preserves_its_exact_lock_and_binary_only_install(self) -> None:
+        profile = module.PROFILES["crop-casma-tiles"]
+        self.assertEqual(
+            "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock",
+            profile.lockfile,
+        )
+        commands = module.build_commands("crop-casma-tiles", executable="python")
+        self.assertEqual(1, len(commands))
+        self.assertIn("--only-binary=:all:", commands[0])
+        self.assertIn("--require-hashes", commands[0])
+        self.assertEqual(str(REPO_ROOT / profile.lockfile), commands[0][commands[0].index("--requirement") + 1])
+        self.assertFalse(profile.local_specs)
+        workflow = REPO_ROOT / ".github/workflows/crop-casma-tile-compatibility.yml"
+        self.assertEqual(frozenset({"crop-casma-tiles"}), module.profiles_for_workflow(workflow))
+        self.assertNotIn("--only-binary=:all:", module.build_commands("project-test")[0])
 
     def test_geo_profile_matches_declared_optional_transform_dependency(self) -> None:
         import tomllib
