@@ -1,0 +1,94 @@
+{
+  "receipt_id": "genrec-site-mirror-main-overlay-reconciliation-20261021",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/qa/site_mirror.py",
+    "tests/qa/test_site_mirror.py",
+    "data/receipts/generated/site-v268-main-overlay-reconciliation-20261021.json"
+  ],
+  "artifact_hashes": {
+    "tools/qa/site_mirror.py": "sha256:2d9db2d8b689b9931421e64a0d44e10a30c8ced28ee76c1fbb04cfe521fa61e9",
+    "tests/qa/test_site_mirror.py": "sha256:3b238f6a16863c47b305da0bcf7116bc90d1c9c17b0617e7e37c65721917480b",
+    "data/receipts/generated/site-v268-main-overlay-reconciliation-20261021.json": "sha256:22ad18bc3d002965c672a22a0bb45be18ca881b8d11e565ae6c5300bfa942ca4"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5",
+    "version": "claude-opus-5-5"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@acb7831b8652470438fa15579ac3c557b0fde99e",
+      "data/receipts/generated/site-v268-private-subsurface-output-reconciliation-20261019.json at acb7831b8652470438fa15579ac3c557b0fde99e",
+      "Merged pull requests #5325, #5326, #5327, #5364, #5365 and #5378, attributed through the GitHub commit-to-pull-request API and checked against the exact recorded blob bytes",
+      "Precedent: 23a7ce1e2e2f38627b531b0eacd0019c0dba494d (repository-side successor receipt without a new Site comparison)"
+    ],
+    "evidence_hashes": [
+      "sha256:0e667ad7c14328e0f062746808449de52577b70df7d73c9e13f5eff0d7ec230e"
+    ]
+  },
+  "truth_labels": {
+    "tools/qa/site_mirror.py": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "data/receipts/generated/site-v268-main-overlay-reconciliation-20261021.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "site mirror content parity",
+      "outcome": "PASS",
+      "reason": "Pinned base fails MIRROR_REVIEW_REQUIRED with 17 changed and 4 unrecorded mirror paths. After selecting the successor, --check passes on 880 files and --diagnose reports RECORDED_BYTES_MATCH."
+    },
+    {
+      "gate": "water-conformance job steps under Python 3.12 with the hash-locked water-pilot profile",
+      "outcome": "PASS",
+      "reason": "346 tests pass, including 45 in tests/qa/test_site_mirror.py; tools/fixtures/regenerate.py passes without changing tracked files; content parity passes."
+    },
+    {
+      "gate": "make repository-topology",
+      "outcome": "PASS",
+      "reason": "0 invariant, 0 new drift, 89 baselined warnings, 0 stale baseline entries with the new selector."
+    },
+    {
+      "gate": "Site source comparison against an upstream checkout",
+      "outcome": "SKIPPED",
+      "reason": "Site identity is unchanged (site_candidate_commit 358280aee889e2e2cf832bd598155ca21653c8de); this records repository-side bytes only, following the 23a7ce1e2e precedent."
+    },
+    {
+      "gate": "exact-head GitHub CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the pull request; source and overlay review remains PENDING and no approval, merge or deployment is claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "external-mirror-names",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    },
+    {
+      "id": "external-mirror-register",
+      "validated": true,
+      "evidence_ref": "control_plane/external_mirror_register.yaml"
+    },
+    {
+      "id": "directory-governance",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-21T16:30:00Z",
+  "emitter": "Claude Code",
+  "notes": "Successor site mirror receipt for bytes already merged to main. Fourteen previously identical files become inherited_repository_overlay, three existing overlays keep their state with updated digests, and four repository-only files are added. Every comparison entry outside those 21 paths, the Site identity, the 258 withheld paths and the pending review declarations are unchanged. The predecessor receipt stays byte-for-byte unchanged; its SHA-256 is recorded as an evidence input. Content parity is not review acceptance, hosted equivalence or deployment. Human review remains pending; the receipt does not bind itself."
+}

@@ -676,7 +676,10 @@ def test_historical_focus_mode_receipt_records_only_the_existing_repository_test
     assert predecessor.name in receipt["rollback"]["mirror"]
 
 
-def test_selected_subsurface_receipt_binds_only_the_private_output_patch() -> None:
+def test_historical_subsurface_receipt_binds_only_the_private_output_patch(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-private-subsurface-output-reconciliation-20261019.json")
     receipt, expected = TOOL.reviewed_receipt()
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert predecessor.name == "site-v268-focus-mode-test-reconciliation-20261018.json"
@@ -723,6 +726,86 @@ def test_selected_subsurface_receipt_binds_only_the_private_output_patch() -> No
     assert len(expected) == len(previous["comparison"]) + 1 == 876
     assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
     assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"]
+    inventory = {name: item["mirror_sha256"] for name, item in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert predecessor.name in receipt["rollback"]["mirror"]
+
+
+def test_selected_main_overlay_receipt_binds_only_the_merged_overlay_changes() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-private-subsurface-output-reconciliation-20261019.json"
+    previous = json.loads(predecessor.read_text())
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
+    commits = {
+        5326: "f6e393640ec66870f4a1b50cd718ff39e6cfd565",
+        5327: "592b7b1c873ea345e6e8231a3b65b96ca3a1f707",
+        5364: "c3522ce8aa1d6262ff934d4dc587a5582f2c0a78",
+        5365: "245796d6dc8f44e0140ba6645f02886009b5f39f",
+        5378: "94ccd8180f20f191a4955ac35ec845f4dcaf2dcc",
+    }
+    modified = {
+        "app/api/data-submissions/route.ts": 5326, "app/api/land-records/route.ts": 5326,
+        "app/data-intake-server.ts": 5326, "drizzle/meta/_journal.json": 5326, "tests/land-records.test.mjs": 5326,
+        "app/api/historical-topo/overlay/route.ts": 5327, "app/api/historical-topo/queue/route.ts": 5327,
+        "app/earth-engine-local-read.ts": 5327, "scripts/qwen-local-contract.mjs": 5327,
+        "scripts/serve-local-worker.mjs": 5327, "tests/historical-topo-routes.test.mjs": 5327,
+        "tests/hms-smoke-playback.test.mjs": 5327, "tests/local-qwen-bridge.test.mjs": 5327,
+        "tests/local-worker-runtime.test.mjs": 5327,
+        "scripts/earth-engine/requirements.txt": 5364,
+        "package-lock.json": 5365, "package.json": 5365,
+    }
+    added = {
+        "drizzle/0011_submission_uploads.sql": 5326, "tests/helpers/land-fixture.mjs": 5326,
+        "tests/submission-quota.test.mjs": 5326, "docs/submission-upload-quota.md": 5378,
+    }
+    changed = modified | added
+    assert set(receipt["comparison"]) - set(previous["comparison"]) == set(added)
+    assert set(previous["comparison"]) - set(receipt["comparison"]) == set()
+    for name, entry in previous["comparison"].items():
+        if name not in changed:
+            assert receipt["comparison"][name] == entry, name
+    declarations = {item["path"]: item for item in receipt["repository_reconciliation"]["changes"]}
+    assert set(declarations) == set(changed)
+    for name, pull_request in changed.items():
+        entry = receipt["comparison"][name]
+        before = previous["comparison"].get(name)
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert entry["mirror_sha256"] == digest != (before["mirror_sha256"] if before else None)
+        assert expected[name] == "sha256:" + digest
+        assert entry["site_sha256"] == (before["site_sha256"] if before else None)
+        if before is None:
+            assert entry["state"] == "repository_only_overlay"
+        elif before["state"] == "identical":
+            assert entry["state"] == "inherited_repository_overlay"
+        else:
+            assert entry["state"] == before["state"]
+        assert f"#{pull_request}" in entry["difference"]
+        declaration = declarations[name]
+        assert declaration["previous_receipt_sha256"] == (before["mirror_sha256"] if before else None)
+        assert declaration["repository_base_sha256"] == declaration["mirror_sha256"] == digest
+        assert declaration["state"] == entry["state"]
+        assert declaration["pull_request"] == pull_request
+        assert declaration["last_repository_change_commit"] == commits[pull_request]
+        assert declaration["proposed_in_this_change"] is False
+    for key in ("profile", "status", "authority", "selector_authority", "destination", "repository_base",
+                "site_candidate_commit", "site_project_id", "site_version_id", "site_audience",
+                "site_archive_sha256", "site_deployment_status", "site_deployment_id",
+                "authoritative_site_source_paths", "canonical_document_mappings", "canonical_tool_mappings",
+                "overlay", "review", "repository_safety_changes", "historical_lineage_correction", "reconciliation"):
+        assert receipt[key] == previous[key], key
+    assert receipt["status"] == "REVIEW_ONLY"
+    assert receipt["review"]["human_acceptance"] is receipt["review"]["hosted_equivalence"] is False
+    assert receipt["review"]["source_and_overlay_review"] == "PENDING"
+    assert receipt["counts"]["repository_withheld"] == previous["counts"]["repository_withheld"] == 258
+    for key, count in previous["counts"].items():
+        delta = {"identical": -14, "inherited_repository_overlay": 14, "repository_only_overlay": 4}.get(key, 0)
+        assert receipt["counts"][key] == count + delta, key
+    assert len(expected) == len(previous["comparison"]) + 4 == 880
+    assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    assert receipt["repository_reconciliation"]["overlap"]["pull_requests"] == [5325, 5326, 5327, 5364, 5365, 5378]
     assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"]
     inventory = {name: item["mirror_sha256"] for name, item in receipt["comparison"].items()}
     assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
