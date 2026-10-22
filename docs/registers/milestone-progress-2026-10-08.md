@@ -2,11 +2,11 @@
 doc_id: kfm://register/milestone-progress-2026-10-08
 title: KFM Milestone and Issue Progress — 2026-10-08
 type: dated-progress-ledger
-version: v1.0
+version: v1.1
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-08
-updated: 2026-10-08
+updated: 2026-10-22
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Record per-milestone progress across the 37 native GitHub milestones and 56 open issues since the 2026-09-16 portfolio audit, name the merged work that moved each milestone, record the issue state changes made in this pass, and list counter anomalies and owner actions, without creating review, policy, source, lifecycle, release, or publication authority."
@@ -28,6 +28,50 @@ notes:
 <a id="top"></a>
 
 # KFM Milestone and Issue Progress — 2026-10-08
+
+## Currentness addendum — 2026-10-22
+
+The October 8 sections below remain historical. This addendum records a fresh
+readback of [main at `e18b56879cd71ff13502c6e12f2f1f4c7f02ee6d`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/e18b56879cd71ff13502c6e12f2f1f4c7f02ee6d),
+after [PR #5405](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5405).
+It does not replace the historical evidence snapshot in this document's header.
+
+| Current observation | Evidence and limit |
+|---|---|
+| 52 open issues; no open PRs at intake | GitHub issue and pull-request collections read October 22. Subsequent corrective PRs are separate candidates, not part of this main snapshot. |
+| 67 successful and 2 skipped workflow runs for this exact main SHA in the latest 100-run collection | [Exact-main runs](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions?query=branch%3Amain). The skips were APIsec and GoDaddy hosted capture. No failed exact-SHA run appeared in that collection. This is a bounded workflow readback, not a full check or acceptance census. |
+| Topology ratchet passed in the exact-main validator suite | [Run 39803643350](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39803643350), both jobs successful. Historical statements that this check currently fails must not be reused without a new failure. |
+| Native milestone 1 is 5 closed / 5 open; current due date is November 9, 2026, 6 p.m. America/Chicago | GitHub issue milestone metadata reports `2026-11-10T00:00:00Z`. September deadline text below is historical. Open items remain #3359, #3360, #3361, #3363, #3364. |
+| 28 open Dependabot alerts: 3 critical, 16 high, 9 moderate | Both pages of the owner-visible [alert list](https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot) were read. All name Pillow in the crop-tile requirements file. Open-alert state is confirmed; closure is not. |
+| Crop declaration and hash lock both pin Pillow 13.0.0 | [Declaration](../../pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt), [lock](../../pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock), and [compatibility workflow](../../.github/workflows/crop-casma-tile-compatibility.yml) at the pinned main. Alert #120 names 13.0.0 as patched. [Dependabot job 119911197076](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39803708341/job/119911197076) read this exact SHA and reported no update needed for Pillow 13.0.0. The reason alerts remain open is UNKNOWN; no dismissal or deployed-version claim follows. |
+
+### Bounded advancement queue
+
+| Issue / milestone | Confirmed gap and next proof |
+|---|---|
+| [#3382 / M17](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3382) | The Python advisory gate at this main audits `tools/ci/python-test.lock`, not the crop-tile lock. The accompanying candidate adds a separate Python 3.12 crop-lock audit and offline failure-propagation regression. Exact-candidate hosted audit execution, GitHub alert reconciliation, and artifact/SBOM/signature acceptance remain distinct. |
+| [#3359 / native milestone 1](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3359) | [Draft PR #5406](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5406) corrects reproduced NUL/surrogate `base_ref` CLI crashes before Git subprocess use. Its partial-tree checks passed 13 tests and 11 subtests; three full-packet/history checks were deselected. Bounded JSON rejection and valid Git-pin replay passed locally; exact-candidate hosted checks are separate. Registry authority and normalization acceptance remain open. |
+| [#3364 / native milestone 1](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3364) | The [conformance report](../../artifacts/qa/validation/milestone-1/ci_conformance_report.json) is historical, pinned to `c653d573c1641503215844c5c4fc85bc15060ced`. It remains BLOCKED, with no hosted runs and independent review pending. Prepare a successor bound to a stable final candidate; preserve the original. |
+| [#3388 / M25](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3388) | Reconcile current issue and milestone acceptance against exact artifacts; this addendum updates the human coordination view only. |
+| [#3397 / M33](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) | Same-candidate interaction, keyboard, touch, accessibility and device/WebGL acceptance are not established by the workflow census. |
+| [#4418 / M35](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418) | Source/build identity, hosted browser equivalence and saved-predecessor recovery still require an exact-candidate packet. The skipped GoDaddy capture cannot count as acceptance. |
+| [#3396 and #4415 / M36](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3396) | Independent acceptance and same-candidate release proof remain open. Green workflows or closed issue ratios do not authorize release. |
+
+**Validation boundary.** This pass re-read GitHub source, alert UI and workflow
+results. Local candidate regressions are recorded on their PRs; historical test
+counts below were not rerun by this addendum. No milestone, issue, review,
+source, lifecycle, policy, release, deployment, or publication state is changed.
+
+**Placement and recovery.** This same-path human progress ledger remains under
+`docs/registers/`, per its [boundary README](README.md) and accepted
+[ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md).
+Platform workflow changes belong under `.github/`, and executable regression
+tests under `tests/`. No parallel register or proof home is introduced. Correct
+this addendum in place through review; preserve historical reports and receipts.
+Abandon an unaccepted candidate or revert its bounded change after authorized
+integration. Do not restore a vulnerable dependency as an alert workaround.
+
+---
 
 > [!IMPORTANT]
 > This ledger is a review aid. It records what changed after the 2026-09-16 portfolio audit and what this pass did to GitHub issue state. It does not approve, admit, release, deploy, or publish anything. A closed issue means its stated completion boundary was met. It does not mean independent review happened.
@@ -173,3 +217,4 @@ Not run: hosted workflows for this snapshot, browser or WebGL checks, the full r
 This ledger and its issue updates do not accept an ADR or policy, admit or activate a source, approve review, change repository settings, transition lifecycle data, release, deploy, or publish. To correct a closure, reopen the issue and append a comment linked to its closure comment. To correct this file, make a same-path forward fix or revert it through review.
 
 [Back to top](#top)
+
