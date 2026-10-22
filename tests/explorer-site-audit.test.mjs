@@ -86,7 +86,7 @@ test("audit fixes keep landmarks, roles and in-text links valid", async () => {
   assert.ok(chatPanel, "the map chat has a section landmark");
   for (const attribute of ['role="dialog"', 'aria-labelledby="qwen-panel-title"', 'hidden={!qwenOpen}', 'inert={!qwenOpen}', 'aria-hidden={!qwenOpen}']) assert.ok(chatPanel.includes(attribute), attribute);
   assert.match(page, /<h2 id="qwen-panel-title">Chat with KFM<\/h2>/);
-  assert.match(page.slice(page.indexOf(chatPanel), page.indexOf("</section>", page.indexOf(chatPanel))), /<AssistantWorkspace active=\{qwenOpen\}/);
+  assert.match(page.slice(page.indexOf(chatPanel), page.indexOf("</section>", page.indexOf(chatPanel))), /<AssistantWorkspace\b[^>]*\bactive=\{qwenOpen\}/);
   // The transcript now belongs to the shared hosted assistant; its interactive
   // rendering is also covered by chat-composer-reach.test.mjs.
   const assistant = await read("app/assistant/workspace.tsx");

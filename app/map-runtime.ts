@@ -163,6 +163,11 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
 
 const emptyCollection = (): FeatureCollection => ({ type: "FeatureCollection", features: [] });
 
+export const SELECTION_POINT_FILTER: FilterSpecification = ["all",
+  ["==", ["geometry-type"], "Point"],
+  ["!", ["in", ["get", "displaySourceId"], ["literal", ["nasa-gibs-fire-points", "nifc-fire-reports"]]]],
+];
+
 const SYSTEM_LAYER_IDS = [
   "kfm-import-preview-fill",
   "kfm-import-preview-line",
@@ -212,7 +217,7 @@ const addSystemLayers = (map: MapLibreMap) => {
     map.addLayer({ id: "kfm-selection-glow", type: "line", source: "kfm-selection", filter: ["in", ["geometry-type"], ["literal", ["LineString", "MultiLineString", "Polygon", "MultiPolygon"]]], layout: { "line-join": "round", "line-cap": "round" }, paint: { "line-color": "#ffd98a", "line-width": 16, "line-blur": 10, "line-opacity": 0.5 } });
   }
   if (!map.getLayer("kfm-selection-halo")) {
-    map.addLayer({ id: "kfm-selection-halo", type: "circle", source: "kfm-selection", filter: ["==", ["geometry-type"], "Point"], paint: { "circle-color": "#ffd98a", "circle-radius": 26, "circle-blur": 0.85, "circle-opacity": 0.42 } });
+    map.addLayer({ id: "kfm-selection-halo", type: "circle", source: "kfm-selection", filter: SELECTION_POINT_FILTER, paint: { "circle-color": "#ffd98a", "circle-radius": 26, "circle-blur": 0.85, "circle-opacity": 0.42 } });
   }
   if (!map.getLayer("kfm-selection-fill")) {
     map.addLayer({ id: "kfm-selection-fill", type: "fill", source: "kfm-selection", filter: ["==", ["geometry-type"], "Polygon"], paint: { "fill-color": "#f4dfae", "fill-opacity": 0.18, "fill-outline-color": "#fff4ce" } });
@@ -221,11 +226,11 @@ const addSystemLayers = (map: MapLibreMap) => {
     map.addLayer({ id: "kfm-selection-line", type: "line", source: "kfm-selection", filter: ["==", ["geometry-type"], "LineString"], paint: { "line-color": "#fff4ce", "line-width": 6, "line-opacity": 0.95 } });
   }
   if (!map.getLayer("kfm-selection-point")) {
-    map.addLayer({ id: "kfm-selection-point", type: "circle", source: "kfm-selection", filter: ["==", ["geometry-type"], "Point"], paint: { "circle-color": "#fff4ce", "circle-radius": 11, "circle-opacity": 0.95, "circle-stroke-color": "#061416", "circle-stroke-width": 4 } });
+    map.addLayer({ id: "kfm-selection-point", type: "circle", source: "kfm-selection", filter: SELECTION_POINT_FILTER, paint: { "circle-color": "#fff4ce", "circle-radius": 11, "circle-opacity": 0.95, "circle-stroke-color": "#061416", "circle-stroke-width": 4 } });
   }
   // Expanding ping ring, animated briefly after a selection (see scene-effects).
   if (!map.getLayer(SELECTION_PULSE_LAYER_ID)) {
-    map.addLayer({ id: SELECTION_PULSE_LAYER_ID, type: "circle", source: "kfm-selection", filter: ["==", ["geometry-type"], "Point"], paint: { "circle-color": "rgba(0, 0, 0, 0)", "circle-radius": 12, "circle-stroke-color": "#fff4ce", "circle-stroke-width": 2.5, "circle-stroke-opacity": 0 } });
+    map.addLayer({ id: SELECTION_PULSE_LAYER_ID, type: "circle", source: "kfm-selection", filter: SELECTION_POINT_FILTER, paint: { "circle-color": "rgba(0, 0, 0, 0)", "circle-radius": 12, "circle-stroke-color": "#fff4ce", "circle-stroke-width": 2.5, "circle-stroke-opacity": 0 } });
   }
 
   if (!map.getSource("kfm-measure")) {

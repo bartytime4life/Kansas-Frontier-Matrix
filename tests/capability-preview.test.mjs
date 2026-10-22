@@ -24,7 +24,7 @@ test('context reuse and uncaptured workspaces cannot invent observation coverage
  for(const id of ['sky','evidence']){assert.deepEqual(capabilityPreviews(id),[]);assert.match(capabilityNote(id),/No verified/);}
 });
 
-test('hourglass keeps reduced motion and hidden tabs still without a JavaScript animation timer',async()=>{
+test('archived hourglass component keeps reduced motion and hidden tabs still',async()=>{
  const listeners=new Map(),document={hidden:false,addEventListener:(k,v)=>listeners.set(k,v),removeEventListener:k=>listeners.delete(k)};
  const h=await componentHarness('app/time-emblem.tsx',{}, {document});const props={animated:true,reducedMotion:false};
  const render=()=>{const t=h.render(h.exports.TimeEmblem,props);h.commit();return t;};
@@ -32,7 +32,7 @@ test('hourglass keeps reduced motion and hidden tabs still without a JavaScript 
  props.reducedMotion=false;document.hidden=true;listeners.get('visibilitychange')();assert.equal(render().props['data-moving'],false);
  document.hidden=false;listeners.get('visibilitychange')();props.visible=false;assert.equal(render().props['data-moving'],false);
  h.dispose();assert.equal(listeners.size,0);
- const css=await readFile('app/compact-time-sweep.css','utf8');assert.match(css,/hourglass-flip 10\.8s/);assert.match(css,/92\.5926%/);
+ // The retired component is retained for source compatibility; the Explorer no longer mounts it.
 });
 
 test('delivered animations and generated decoration retain source integrity',async()=>{

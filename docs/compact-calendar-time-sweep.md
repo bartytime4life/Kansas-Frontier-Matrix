@@ -2,22 +2,20 @@
 
 Status: implementation candidate; browser acceptance and publication are separate gates.
 
-The main time menu rests as a 56 × 56 pixel animated era emblem. Mouse hover
-reveals the date transport and settings together. A 420 ms leave delay bridges
-the gap between the trigger and popover. Focus inside the control preserves it;
-Enter, Space, and Arrow Up open it for keyboard users. Tap pins it open on touch
-screens. Escape, the close button, or an outside click dismiss it. Configuration
-does not resize the map or reserve a bottom timeline row. The reveal aligns with
-the map grid area, including catalog and inspection panel boundaries.
+The main time menu rests as a stationary yellow clock in a 56 × 56 pixel
+control. Click, tap, Enter, or Space toggles the transport and settings from
+that same position. Arrow Up opens it; Escape, the close button, or an outside
+click dismisses it. Hover and pointer departure do not change the open state.
+Configuration does not resize the map or reserve a bottom timeline row.
 
-The generated transparent atlas has seven rows and four poses per row: hourglass,
-stone toolmaker, medieval knight, Civil War era, internet, AI, imagined flying car.
-The 948 × 1659 source uses uniform 237-pixel cells. Its local WebP delivery asset
-is approximately 541 KiB. CSS advances the four poses; a single 3.2-second deadline
-advances each decorative era. Hidden tabs and expanded controls pause the emblem.
-Reduced-motion users get a still hourglass. An optional checkbox disables the
-animation. The flying car is imaginative artwork, not a future observation or an
-available data period. The illustration sequence never changes the map date.
+The hourglass is no longer mounted by the Explorer, and its animation option
+has been removed. Earlier artwork and the unused component remain recoverable
+for compatibility; they are not part of the active time control. On phones,
+the scrollable settings sheet ends above the clock and transport so the same
+clock remains available to close it. The expanded time panel stacks above
+map navigation. The original playback, date range, source clocks, and A/B
+behavior remain governed by their existing source and time rules.
+
 The small progress indicator reports the requested cursor position in the user's
 range, not source completeness or a measurement.
 
@@ -69,3 +67,5 @@ hosting settings are changed. No production publication is authorized by the PR.
 Validation: record exact executed results and browser acceptance in the PR and
 docs/compact-calendar-time-sweep-qa.md (the durable copy of the local root design-qa.md). Builds and unit checks do not prove hover, mobile, rendered
 animation quality, or live provider behavior.
+
+2026-10-22 follow-up: the map stage cannot scroll during control focus; phone attribution clears the time row, and short-window settings retain their header below the toolbar. See docs/explorer-controls-ai-polish-qa-20261021.md for current browser evidence and the separate CI/publication hold.

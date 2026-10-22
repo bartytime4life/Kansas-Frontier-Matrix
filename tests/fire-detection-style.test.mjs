@@ -10,6 +10,7 @@ async function moduleUrl(file) {
   if (modules.has(file)) return modules.get(file);
   let js = ts.transpileModule(await readFile(file, "utf8"), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
   for (const match of [...js.matchAll(/from ["'](\.[^"']+)["']/g)]) js = js.replace(match[0], `from ${JSON.stringify(await moduleUrl(path.resolve(path.dirname(file), match[1]) + ".ts"))}`);
+  js = js.replace(/from ["']([^.'"][^'"]*)["']/g, (_match, name) => `from ${JSON.stringify(import.meta.resolve(name))}`);
   const url = `data:text/javascript;base64,${Buffer.from(js).toString("base64")}`;
   modules.set(file, url); return url;
 }
@@ -72,10 +73,10 @@ test("only detections with provider pixel dimensions get a footprint, and deriva
   assert.equal(fire.deriveFireFootprints(undefined).collection.features.length, 0);
 });
 
-test("fire detections keep their selectable ids while the flame and footprint layers are display-only", () => {
+test("fire detections keep their selectable ids including the flame hit target without admitting its animation as evidence", () => {
   const source = context.OFFICIAL_CONTEXT_BY_ID["nasa-gibs-fire-points"];
-  assert.deepEqual([...source.interactiveLayerIds], ["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle"]);
-  assert.deepEqual(source.layerIds.slice(0, 2), source.interactiveLayerIds);
+  assert.deepEqual([...source.interactiveLayerIds], ["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle", "external-nasa-gibs-fire-points-flame"]);
+  assert.ok(source.interactiveLayerIds.every(id => source.layerIds.includes(id)));
   assert.ok(Object.values(fire.FIRE_POINT_LAYER_IDS).every(id => source.layerIds.includes(id)));
   assert.ok(!source.layerIds.some(id => id.endsWith("-fill")), "not counted as a composed fill surface");
   assert.ok(fire.FIRE_FOOTPRINT_SOURCE_ID.startsWith("kfm-"), "derived rectangles are never inspected as a separate provider record");
@@ -119,4 +120,78 @@ test("the ember texture tiles seamlessly and loops in time", () => {
   assert.ok(seam < inner * 2.5, "wrapping across the tile edge is no harsher than an ordinary step");
   const loop = fire.renderEmberFrame(fire.FIRE_FRAME_COUNT, size);
   assert.deepEqual([...loop], [...frame]);
+});
+
+
+test("incident flames replace report dots and retain source hit identity through opacity and visibility changes", () => {
+  const { map, layers } = mapHarness();
+  const report = context.OFFICIAL_CONTEXT_BY_ID["nifc-fire-reports"];
+  const reports = { ...payload([detection("incident-1", -98, 38, {incidentType:"Prescribed fire"})]), feed:"nifc-fire-reports" };
+  const visibility = { ...only([]), "nifc-fire-reports": true };
+  context.applyOfficialContextState(map, visibility, { ...opacity, "nifc-fire-reports": 0.6 }, { "nifc-fire-reports": reports });
+  for (const id of report.interactiveLayerIds.slice(0, 2)) {
+    assert.equal(layers.get(id).paint["circle-opacity"], 0);
+    assert.equal(layers.get(id).paint["circle-stroke-opacity"], 0);
+  }
+  const flame = layers.get(fire.FIRE_REPORT_FLAME_ID);
+  assert.equal(flame.source, report.sourceId);
+  assert.equal(flame.paint["icon-opacity"], 0.6);
+  assert.ok(report.interactiveLayerIds.includes(flame.id));
+  assert.equal(flame.maxzoom, undefined, "reported locations do not vanish at footprint zoom");
+  const flatSize = structuredClone(flame.layout["icon-size"]);
+  map.getProjection = () => ({ type: "globe" });
+  context.applyOfficialContextState(map, visibility, opacity, { "nifc-fire-reports": reports });
+  assert.notDeepEqual(layers.get(flame.id).layout["icon-size"], flatSize, "report icons follow globe overview sizing");
+  context.applyOfficialContextState(map, only([]), opacity, { "nifc-fire-reports": reports });
+  assert.equal(layers.get(flame.id).layout.visibility, "none");
+  context.applyOfficialContextState(map, visibility, opacity, { "nifc-fire-reports": reports });
+  assert.equal(layers.get(report.layerIds[1]).paint["circle-stroke-opacity"], 0, "generic opacity cannot restore a dot");
+});
+
+
+test("MapLibre selection filter preserves ordinary points and never covers either kind of flame", async () => {
+  const runtime = await import(await moduleUrl("app/map-runtime.ts"));
+  const {featureFilter} = await import("@maplibre/maplibre-gl-style-spec");
+  const compiled = featureFilter(runtime.SELECTION_POINT_FILTER, "layers[0].filter");
+  const point = displaySourceId => ({ type: 1, properties: displaySourceId ? {displaySourceId} : {}, geometry: [] });
+  for (const id of ["nasa-gibs-fire-points", "nifc-fire-reports"]) assert.equal(compiled.filter({zoom:8}, point(id)), false);
+  for (const id of [undefined, "usgs-streamflow", "census-counties"]) assert.equal(compiled.filter({zoom:8}, point(id)), true);
+  assert.equal(compiled.filter({zoom:8}, {type:3,properties:{},geometry:[]}), false);
+});
+
+
+test("both fire displays share one ticker and reduced motion or a hidden tab settles them without losing selection layers", t => {
+  const original = Object.fromEntries(["window", "document", "setTimeout", "clearTimeout"].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
+  const timers = new Map(), listeners = new Map(), mediaListeners = new Map();
+  const media = { matches: false, addEventListener: (name, fn) => mediaListeners.set(name, fn) };
+  const document = { hidden: false, addEventListener: (name, fn) => listeners.set(name, fn) };
+  let sequence = 0;
+  Object.assign(globalThis, { document, window: { matchMedia: () => media, location: { search: "" } },
+    setTimeout(fn) { const id = ++sequence; timers.set(id, fn); return id; },
+    clearTimeout(id) { timers.delete(id); } });
+  const { map, layers } = mapHarness();
+  const removed = [];
+  Object.assign(map, { triggerRepaint() {}, on() {}, off() {}, once(name, fn) { if (name === "remove") removed.push(fn); } });
+  t.after(() => {
+    for (const fn of removed) fn();
+    fire.setFireDetectionMotion(false);
+    for (const [key, descriptor] of Object.entries(original)) {
+      if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key];
+    }
+  });
+  const reports = { ...payload([detection("report", -98, 38, { incidentType: "Wildfire", scanKm: undefined, trackKm: undefined })]), feed: "nifc-fire-reports" };
+  const data = { "nasa-gibs-fire-points": payload([detection("pixel", -98, 38)]), "nifc-fire-reports": reports };
+  const apply = ids => context.applyOfficialContextState(map, only(ids), opacity, data);
+  fire.setFireDetectionMotion(true);
+  apply(["nasa-gibs-fire-points", "nifc-fire-reports"]);
+  assert.equal(timers.size, 1, "two sources must not create competing repaint loops");
+  media.matches = true; mediaListeners.get("change")();
+  assert.equal(timers.size, 0, "system reduced motion overrides an enabled ambient preference");
+  assert.equal(fire.fireMotionAllowed(), false);
+  for (const id of [fire.FIRE_POINT_LAYER_IDS.flame, fire.FIRE_REPORT_FLAME_ID]) assert.equal(layers.get(id).layout.visibility ?? "visible", "visible", "reduced motion preserves still selectable symbols");
+  media.matches = false; mediaListeners.get("change")(); assert.equal(timers.size, 1);
+  document.hidden = true; listeners.get("visibilitychange")(); assert.equal(timers.size, 0);
+  document.hidden = false; listeners.get("visibilitychange")(); assert.equal(timers.size, 1);
+  apply(["nifc-fire-reports"]); assert.equal(timers.size, 1, "hiding detections must not stop report motion");
+  apply([]); assert.equal(timers.size, 0);
 });

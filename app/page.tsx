@@ -967,7 +967,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     },
     geometry: {
       type: "Feature",
-      properties: {},
+      properties: { displaySourceId: officialSource?.id ?? "basemap" },
       geometry: JSON.parse(JSON.stringify(candidate.geometry)) as Geometry,
     },
   };
@@ -10275,7 +10275,7 @@ export default function Home() {
             <header className="qwen-panel-heading">
               <div><span className="qwen-eyebrow">YOUR INVESTIGATION</span><h2 id="qwen-panel-title">Chat with KFM</h2></div>
             </header>
-            <AssistantWorkspace active={qwenOpen} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} inputRef={globalSearchInputRef} draftRequest={assistantDraftRequest}
+            <AssistantWorkspace initialMode="explore" active={qwenOpen} focus={assistantFocus} place={selected ? String(selected.properties.title ?? "") : ""} inputRef={globalSearchInputRef} draftRequest={assistantDraftRequest}
               discovery={{query:globalQuery, items:searchResults, status:searchStatus.message, busy:searchStatus.busy, onQuery:setGlobalQuery, onChoose:id => { const item=searchResults.find(row => row.id===id); if (item) chooseSearchResult(item); }}}
               onInspectSources={inspectAssistantSources} />
           </section>

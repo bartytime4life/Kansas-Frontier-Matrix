@@ -12,7 +12,7 @@ type Job=Omit<InvestigationJob,'result'>&{result:(NonNullable<InvestigationJob['
 type Turn={question:string;job:Job;contextKey:string;generation:number};
 type RequestRun={generation:number;id:string|null;stopped:boolean;poll:AbortController|null;noticeGeneration:number;cancel?:Promise<void>};
 export type AssistantDiscovery={query:string;items:readonly {id:string;kind:string;title:string;subtitle:string}[];status:string;busy:boolean;onQuery:(query:string)=>void;onChoose:(id:string)=>void};
-type Props={place?:string;focus?:AssistantFocus;active?:boolean;discovery?:AssistantDiscovery;inputRef?:React.RefObject<HTMLTextAreaElement|null>;onInspectSources?:(context:AssistantContext,returnElement?:HTMLElement)=>boolean;draftRequest?:{id:number;value:string;intent?:'find'|'explore'|'evidence'}};
+type Props={initialMode?:'find'|'explore';place?:string;focus?:AssistantFocus;active?:boolean;discovery?:AssistantDiscovery;inputRef?:React.RefObject<HTMLTextAreaElement|null>;onInspectSources?:(context:AssistantContext,returnElement?:HTMLElement)=>boolean;draftRequest?:{id:number;value:string;intent?:'find'|'explore'|'evidence'}};
 async function chatApi(path:string,body?:object,signal?:AbortSignal){
  const response=await fetch('/api/ai/'+path,{method:body?'POST':'GET',credentials:'same-origin',cache:'no-store',signal:signal?AbortSignal.any([signal,AbortSignal.timeout(12000)]):AbortSignal.timeout(12000),headers:body?{'Content-Type':'application/json'}:undefined,body:body?JSON.stringify(body):undefined});
  const seconds=Number(response.headers.get('Retry-After')),details={httpStatus:response.status,retryAfterMs:Number.isFinite(seconds)&&seconds>0?Math.min(60000,Math.max(1000,seconds*1000)):4000};
@@ -41,8 +41,8 @@ export function DiscussionText({value}:{value:string}){
 }
 function searchTerm(question:string){let term='';for(const char of question.trim()){if(new TextEncoder().encode(term+char).length>120)break;term+=char;}return term;}
 const newInvestigationId=()=>globalThis.crypto?.randomUUID?.()??null;
-export default function AssistantWorkspace({place='',focus,active=true,discovery,inputRef,onInspectSources,draftRequest}:Props){
- const [mode,setMode]=useState(discovery?'find':'explore'),[chatStatus,setChatStatus]=useState<ChatStatus|null>(null),[chatFailure,setChatFailure]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false),[job,setJob]=useState<Job|null>(null),[turns,setTurns]=useState<Turn[]>([]),[question,setQuestion]=useState(''),[jobRetry,setJobRetry]=useState(0),[exportNotice,setExportNotice]=useState('');
+export default function AssistantWorkspace({initialMode,place='',focus,active=true,discovery,inputRef,onInspectSources,draftRequest}:Props){
+ const [mode,setMode]=useState<'find'|'explore'|'evidence'>(initialMode??(discovery?'find':'explore')),[chatStatus,setChatStatus]=useState<ChatStatus|null>(null),[chatFailure,setChatFailure]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false),[job,setJob]=useState<Job|null>(null),[turns,setTurns]=useState<Turn[]>([]),[question,setQuestion]=useState(''),[jobRetry,setJobRetry]=useState(0),[exportNotice,setExportNotice]=useState('');
  const [investigationId,setInvestigationId]=useState<string|null>(newInvestigationId),[awayFromLatest,setAwayFromLatest]=useState(false);
  const [chatFailureDetails,setChatFailureDetails]=useState<ChatFailureDetails|null>(null);
  const resultListRef=useRef<HTMLDivElement>(null),discoveryBodyRef=useRef<HTMLDivElement>(null);
@@ -196,20 +196,20 @@ export default function AssistantWorkspace({place='',focus,active=true,discovery
    {exportNotice&&<p role='status' className={styles.notice}>{exportNotice}</p>}
   {requestNotice&&<p role='status' className={styles.notice}>{requestNotice}</p>}
  </>;
- return <div className={styles.chat}>
+ return <div className={styles.chat} data-mode={mode}>
   <div className={styles.toolbar}><div className={styles.identity}><strong>KFM <span className={styles.aiBadge}>AI assistant</span></strong><span role='status' className={styles.status}>{statusText}</span></div><button type='button' className={styles.secondaryButton} disabled={!investigationId||requestPhase==='stopping'} onClick={newInvestigation} title={investigationId?'Start a separate temporary conversation; preserve the map':'Fresh conversation isolation requires a supported secure browser'}>New chat</button></div>
   {mode==='find'&&<div ref={discoveryBodyRef} className={styles.body} aria-label='Place and layer discovery'>
    {mode==='find'&&discovery&&question.trim()&&<div ref={resultListRef} id='global-search-results' className={styles.searchResults} aria-label='Places and layers'>
     {(discoveryCurrent?discovery.items:[]).map(item=><button type='button' className={styles.searchResult} key={item.id} onClick={()=>{discovery.onChoose(item.id);setQuestion('');}}><small className={styles.searchMeta}>{item.kind}</small><strong>{item.title}</strong><span>{item.subtitle}</span></button>)}
     <p role='status' aria-live='polite' aria-atomic='true'>{discoveryCurrent?(discovery.status||`${discovery.items.length} available matches.`):'Updating search…'}</p>
    </div>}
-   {!question.trim()&&<section className={styles.messages}><h3>Find a Kansas place or layer</h3><p>Type a county, place or topic, then choose an available match. Ask and Evidence keep your conversation alongside this search.</p></section>}
+   {!question.trim()&&<section className={styles.messages}><h3>Find a Kansas place or layer</h3><p>Type a county, place or topic, then choose an available match. Switch to Ask to discuss what you find.</p></section>}
   </div>}
   <div hidden={mode==='find'} ref={bodyRef} className={styles.body} onScroll={()=>{if(programmaticScrollRef.current){programmaticScrollRef.current=false;return;}nearBottomRef.current=conversationEnd()<=80;setAwayFromLatest(!nearBottomRef.current);}}>
   {notices}
   {focus&&<details className={styles.context} aria-label='AI question context'><summary><span className={styles.contextTitle}>{focus.title}</span><small>{focus.context.view} · {focus.context.frame} · {focus.context.layers.length} layers</small></summary><strong>{focus.title}</strong><p>{focus.detail}</p><small>Sent with each question · map display year, not a collection date</small></details>}
   <div ref={logRef} className={styles.messages} role='log' aria-label='KFM chat conversation' aria-live='polite' tabIndex={0}>
-   {turns.length===0&&<section className={styles.emptyState} aria-label='Start an investigation'><span className={styles.eyebrow}>EXPLORE WITH AI</span><h3>Follow your curiosity.</h3><p>Ask about this map, connect ideas, or explore a question.</p></section>}
+   {turns.length===0&&<section className={styles.emptyState} aria-label='Start an investigation'><span className={styles.eyebrow}>EXPLORE WITH AI</span><h3>Where shall we explore?</h3><p>Ask KFM AI about this map or follow an idea. Your map context travels with each question.</p></section>}
    {turns.map(turn=><div key={turn.job.id} className={styles.turn}>
     <article className={styles.user}><small className={styles.turnLabel}>YOU</small><p>{turn.question}</p>{turn.job.context&&<small>About: {turn.job.context.label} · {turn.job.context.boundary}</small>}</article>
     <article className={styles.assistant} data-state={turn.job.state}>
@@ -244,7 +244,7 @@ export default function AssistantWorkspace({place='',focus,active=true,discovery
    <div className={styles.composerTools} role='group' aria-label='Composer mode'>
     {discovery&&<button type='button' aria-pressed={mode==='find'} onClick={()=>setMode('find')}>Find</button>}
     <button type='button' aria-pressed={mode==='explore'} onClick={()=>setMode('explore')}>Ask</button>
-    <button type='button' aria-pressed={mode==='evidence'} onClick={()=>setMode('evidence')}>Evidence</button>
+    {chatStatus?.evidenceSearchAvailable===true&&<button type='button' aria-pressed={mode==='evidence'} onClick={()=>setMode('evidence')}>Evidence</button>}
    </div>
    <details hidden={mode==='find'} className={styles.options}><summary>Options</summary><div className={styles.optionsBody}>
    <input type='hidden' name='mode' value={mode}/>
