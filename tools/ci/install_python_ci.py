@@ -99,6 +99,7 @@ class InstallProfile:
     lockfile: str
     local_specs: tuple[str, ...] = ()
     editable: bool = True
+    only_binary: bool = False
 
 
 PROFILES = {
@@ -120,6 +121,10 @@ PROFILES = {
     "audit-tool": InstallProfile("tools/ci/python-audit.lock"),
     "connectors-core": InstallProfile(
         "tools/ci/python-test.lock", ("./packages/connectors-core",)
+    ),
+    "crop-casma-tiles": InstallProfile(
+        "pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock",
+        only_binary=True,
     ),
     "geo-transforms": InstallProfile("tools/ci/python-geo.lock"),
     "nwm-netcdf": InstallProfile("tools/ci/python-nwm.lock"),
@@ -482,6 +487,8 @@ def build_commands(
             str(lockfile),
         )
     ]
+    if profile.only_binary:
+        commands[0] += ("--only-binary=:all:",)
     if profile.local_specs:
         local = [
             python,
