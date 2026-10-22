@@ -26,7 +26,8 @@
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5380",
       "4ec3786e2f1d16c27c3285b2d97f5b2a503404b1",
       "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39799396484",
-      "37fd56f9826f14c162c2881c721ebae88d2e6e87"
+      "37fd56f9826f14c162c2881c721ebae88d2e6e87",
+      "0ec883be49"
     ]
   },
   "truth_labels": {
@@ -39,7 +40,7 @@
     {
       "gate": "Baseline reproduction",
       "outcome": "PASS",
-      "reason": "Exact same direct-install policy failure reproduced on pre-quota main b8c9501. Workflow entered main via #5380; #5400 and both quota qualification corrections do not change it."
+      "reason": "Exact same direct-install policy failure reproduced on pre-quota main b8c9501. Original workflow 0ec883be49 already used a direct install; #5380 retained it while adding hashes. #5400 and the two quota qualification corrections leave it unchanged."
     },
     {
       "gate": "Installer and wrapper regressions",
