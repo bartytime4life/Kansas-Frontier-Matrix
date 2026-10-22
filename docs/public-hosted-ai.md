@@ -48,6 +48,14 @@ steps. The cloud browser lacked WebGL2, so its map fallback is not evidence of a
 production map regression. Roll back only these application files and redeploy;
 there is no PC, credential, model or stored-data migration.
 
+The initial CI run also exposed an unchanged wind-geometry test's wall-clock
+dependency: the renderer lowers particle density when a frame exceeds its CPU
+budget, while the geometry test asserted a minimum density using real runner
+time. A simulated expensive clock reproduces that assertion failure. The test
+now controls CPU time separately from animation time, retains the geometry
+assertions, and explicitly checks density reduction and recovery. No production
+wind code or frame budget is changed, and no check is skipped or weakened.
+
 > Current composition — 2026-10-21: public chat uses the paired home-Ollama
 > provider only. The embedded GoDaddy Qwen/ONNX runtime, installation manifest,
 > local generation and qualification tools, startup probe switches and dedicated
