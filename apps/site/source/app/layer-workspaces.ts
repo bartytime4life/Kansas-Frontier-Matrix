@@ -14,7 +14,7 @@ export type TopicDefinition = Readonly<{
 export const TOPIC_GROUPS: readonly TopicGroup[] = ["Built systems", "Earth & environment", "People & place", "Research & reference"];
 export const TOPIC_STRUCTURE: readonly TopicDefinition[] = Object.freeze(([
   { id: "engineering", title: "Engineering & infrastructure", group: "Built systems", description: "Inspect the built landscape and the terrain and water context around it.", facets: ["Bridges & structures", "Survey & measurement", "Terrain & drainage"], limitation: "Recorded bridge status, map measurements and terrain context do not establish structural safety, design suitability or permission to access an asset.", resources: [{ title: "Measure on the map", href: "/?maptab=measure&mapui=open" }] },
-  { id: "transport", title: "Transportation & movement", group: "Built systems", description: "Follow Kansas roads, rail corridors and bridge references across source editions.", facets: ["Roads & bridges", "Active & abandoned rail", "Historic networks"], limitation: "Source designations are not live traffic, train movement or proof of access. Missing routes are not inferred closed.", resources: [{ title: "Local map archive", href: "/?maptab=compare&mapui=open" }] },
+  { id: "transport", title: "Transportation & movement", group: "Built systems", description: "Follow Kansas roads, rail corridors and bridge references across source editions.", facets: ["Roads & bridges", "Active & abandoned rail", "Historic networks", "Airports, airspace & airways"], limitation: "Source designations are not live traffic, train movement or proof of access. Missing routes are not inferred closed.", resources: [{ title: "Local map archive", href: "/?maptab=compare&mapui=open" }] },
   { id: "weather", title: "Weather & climate", group: "Earth & environment", description: "Compare observed weather, forecast guidance and climate summaries on their own clocks.", facets: ["Radar & satellite", "Wind & lightning", "Rainfall & climate"], limitation: "Observations, forecasts and historical composites are different products. A missing frame is not clear weather; these displays are not a warning service.", resources: [{ title: "Almanac references", href: "/almanacs?topic=weather" }, { title: "Event Observatory", href: "/observatory" }, { title: "Daily source archive", href: "/daily-archive" }] },
   { id: "disaster", title: "Hazards & disasters", group: "Earth & environment", description: "Inspect flood, fire, smoke, seismic and disaster-declaration context.", facets: ["Flooding", "Fire & smoke", "Seismic events", "Declared disasters"], limitation: "Declaration areas, hazard zones, detections and observations do not share one footprint and do not establish current safety.", resources: [{ title: "Event Observatory", href: "/observatory" }] },
   { id: "water", title: "Water & watersheds", group: "Earth & environment", description: "Connect station observations, rivers, watershed boundaries and modeled water guidance.", facets: ["River observations", "Hydrography & basins", "Water forecasts"], limitation: "A gauge reading does not establish flow across a river or basin. Modeled guidance remains separate from observations.", resources: [{ title: "Daily water archive", href: "/daily-archive" }] },
@@ -114,6 +114,7 @@ export function specialtyLayerTopics(id: string): readonly TopicId[] {
   if (id === "reviewed-soil") return ["agriculture", "water", "land", "science"];
   if (id === "reviewed-storm-events") return ["weather", "disaster", "history", "science"];
   if (id === "reviewed-earthquakes") return ["geology", "disaster", "science"];
+  if (id === "aviation") return ["transport", "weather", "engineering", "sky", "science"];
   return [];
 }
 
@@ -124,6 +125,7 @@ export const SPECIALTY_LAYER_CATALOG = Object.freeze([
   { id: "reviewed-soil", title: "Reviewed soil moisture" },
   { id: "reviewed-storm-events", title: "Reviewed storm event reports" },
   { id: "reviewed-earthquakes", title: "Reviewed earthquakes" },
+  { id: "aviation", title: "Airspace, airports & aviation weather" },
 ]);
 
 export function registryLayerTopics(domain: string): readonly TopicId[] {

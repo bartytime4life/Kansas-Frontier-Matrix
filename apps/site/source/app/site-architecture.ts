@@ -59,6 +59,14 @@ export const SITE_CODE_SURFACES = Object.freeze([
     verification: ["tests/event-atlas.test.mjs", "tests/noaa-radar.test.mjs"],
   },
   {
+    id: "aviation-context",
+    title: "Airspace, airports and aviation weather",
+    role: "Owns the pinned FAA NASR Kansas airspace/airport/airway product, 3D airspace and drone rule layers, and live AWC METAR/PIREP context.",
+    paths: ["app/aviation-airspace.ts", "app/aviation-weather.ts", "app/aviation-weather-server.ts", "app/aviation-control.tsx", "app/api/aviation", "public/data/aviation"],
+    handles: ["airspace volumes with source vertical references", "small-UAS rule slabs", "airspace column at a point", "station weather and pilot reports"],
+    verification: ["tests/aviation.test.mjs", "tests/layer-explorer.test.mjs"],
+  },
+  {
     id: "evidence-and-workspaces",
     title: "Evidence, Focus, and workspace handoffs",
     role: "Keeps selection, evidence policy, bounded Focus results, reports, stories, and device-local drafts coherent.",
@@ -127,6 +135,13 @@ export const SITE_ROUTE_CONTRACTS = Object.freeze([
     owner: "app/api/noaa-satellite/frames/route.ts",
     purpose: "Bounded dated frame catalog for NOAA GOES GeoColor display imagery.",
     trustBoundary: "One fixed NOAA ImageServer query, bounded response and frame count, source timestamps, explicit stale and error states; no evidence admission.",
+  },
+  {
+    id: "aviation-weather-routes",
+    route: "/api/aviation/metar, /api/aviation/pireps",
+    owner: "app/api/aviation/",
+    purpose: "Latest Kansas-region METAR per station and 3-hour pilot reports from the NOAA/NWS Aviation Weather Center.",
+    trustBoundary: "Fixed upstream URLs with no caller input, no redirects, 12-second timeout, 2 MB bound, 2-minute shared cache; failures return no substitute observations.",
   },
   {
     id: "hydrology-routes",

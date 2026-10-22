@@ -47,6 +47,11 @@ rehearsal. `pipelines/domains/roads-rail-trade/faa_airports.py` owns normalizati
 `docs/runbooks/aviation-intake-20261021.md` records exact source discovery,
 placement, operational limits, remaining gates and recovery.
 
+The Site airspace, airport, airway and drone layers use a separate pinned NASR
+display-context product (`pipelines/domains/roads-rail-trade/faa_airspace.py`,
+`docs/runbooks/aviation-airspace-layers-20261022.md`); they do not read this
+adapter's captures or change the held APT candidate.
+
 OpenSky and adsb.lol adapters return explicit disabled states without network
 access. A provider directory entry, public radio transmission, aggregation,
 rendering, embedding or AI summary does not grant redistribution permission.

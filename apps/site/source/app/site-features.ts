@@ -198,6 +198,18 @@ export const SITE_FEATURES = Object.freeze([
     boundary: "Discovery, access, activation, admission, release, and publication remain separate lifecycle decisions.",
   },
   {
+    id: "aviation-airspace-context",
+    title: "Airspace, airports and aviation weather",
+    domain: "atmosphere",
+    status: "ACTIVE_CONTEXT",
+    surface: "Map layers > Airspace, airports & aviation weather",
+    userOutcome: "See Class B/C/D/E, MOA and restricted airspace as labelled 3D shells, where drones need authorization below 400 ft, public-use airports, airways, live station weather and pilot reports, and the full airspace column at any point.",
+    sourceIds: [],
+    actionIds: ["open-provider-source"],
+    codePaths: ["app/aviation-airspace.ts", "app/aviation-weather.ts", "app/aviation-control.tsx", "app/api/aviation", "public/data/aviation"],
+    boundary: "Pinned FAA NASR cycle with edition status and live AWC observations as external context. Not navigation, flight planning or UAS authorization; TFRs, NOTAM activations, UAS Facility Map ceilings and live aircraft positions are not shown.",
+  },
+  {
     id: "held-raspberry-waveform-bridge",
     title: "Raspberry Shake waveform bridge scaffold",
     domain: "earthquakes",
