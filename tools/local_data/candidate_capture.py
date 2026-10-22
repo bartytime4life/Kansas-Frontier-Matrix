@@ -7,8 +7,11 @@ No candidate produced here is admitted, reviewed, or released.
 
 from __future__ import annotations
 
+from contextlib import contextmanager
+import errno
 import os
 import re
+import shutil
 import stat
 import tempfile
 from pathlib import Path
@@ -20,7 +23,8 @@ NAME = re.compile(r"[a-z0-9][a-z0-9._-]{0,127}\Z")
 MAX_OBJECT_BYTES = 32 * 1024 * 1024
 
 
-def _external(path: Path) -> Path:
+def candidate_path(path: Path) -> Path:
+    """Validate a private candidate destination before acquisition or replay."""
     if not isinstance(path, Path) or not path.is_absolute() or ".." in path.parts:
         raise ValueError("CANDIDATE_PATH_INVALID")
     check_directory(path.parent)
@@ -45,13 +49,13 @@ def _external(path: Path) -> Path:
 
 
 def create_candidate(directory: Path) -> None:
-    target = _external(directory)
+    target = candidate_path(directory)
     target.mkdir(mode=0o700, exist_ok=False)
     fsync_directory(target.parent)
 
 
 def write_candidate(directory: Path, name: str, body: bytes) -> None:
-    target = _external(directory)
+    target = candidate_path(directory)
     if not NAME.fullmatch(name) or name in {".", ".."}:
         raise ValueError("CANDIDATE_NAME_INVALID")
     if not isinstance(body, bytes) or len(body) > MAX_OBJECT_BYTES:
@@ -66,3 +70,34 @@ def write_candidate(directory: Path, name: str, body: bytes) -> None:
         output.flush()
         os.fsync(output.fileno())
     fsync_directory(target)
+
+
+@contextmanager
+def atomic_candidate(directory: Path):
+    """Commit a complete private candidate directory; clean interrupted staging.
+
+    Concurrent complete candidates are nonempty, so rename cannot replace them.
+    Like the other local helpers, this is not a sandbox against ancestor races.
+    """
+    target = candidate_path(directory)
+    if target.exists() or target.is_symlink():
+        raise FileExistsError("CANDIDATE_ALREADY_EXISTS")
+    stage = Path(tempfile.mkdtemp(prefix=".candidate-", dir=target.parent))
+    try:
+        yield stage
+        # Recheck the placement and ancestors after acquisition, before commit.
+        candidate_path(target)
+        if target.exists() or target.is_symlink():
+            raise FileExistsError("CANDIDATE_ALREADY_EXISTS")
+        if not any(stage.iterdir()):
+            raise ValueError("CANDIDATE_EMPTY")
+        try:
+            os.rename(stage, target)
+        except OSError as error:
+            if error.errno in {errno.EEXIST, errno.ENOTEMPTY}:
+                raise FileExistsError("CANDIDATE_ALREADY_EXISTS") from error
+            raise
+        fsync_directory(target.parent)
+    finally:
+        if stage.exists():
+            shutil.rmtree(stage)

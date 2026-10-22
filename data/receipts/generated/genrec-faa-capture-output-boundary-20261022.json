@@ -1,0 +1,96 @@
+{
+  "receipt_id": "kfm:generated:faa-capture-output-boundary-20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/faa/capture.py",
+    "connectors/faa/README.md",
+    "tools/local_data/candidate_capture.py",
+    "tests/connectors/test_faa_capture_paths.py"
+  ],
+  "artifact_hashes": {
+    "connectors/faa/capture.py": "sha256:e027663c06dbc6e9faa1d89d1e471c2b3943a413f4f7cebebd4bd540f53edee1",
+    "connectors/faa/README.md": "sha256:04b527b6764957cff076b3106baff731b6bba7ed1938fdd44c19d72a60f6fa07",
+    "tools/local_data/candidate_capture.py": "sha256:ddb21a680b046226c8ae0ea35a5ff413faab5dcd3864e68a3a4b77828bc99fd1",
+    "tests/connectors/test_faa_capture_paths.py": "sha256:d2fbc1cd658da51368988eceafc870a6ccef4d3d0cdfbc41fefa70ba9079e68f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session; exact backend version unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "main@3dc133f98e9496a8f74c21aca8390d6354be6889",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5400",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5398",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5396",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "connectors/faa/capture.py": "CONFIRMED",
+    "connectors/faa/README.md": "CONFIRMED",
+    "tools/local_data/candidate_capture.py": "CONFIRMED",
+    "tests/connectors/test_faa_capture_paths.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Connector output gate",
+      "outcome": "PASS",
+      "reason": "Unchanged scanner: 111 source files, zero findings; focused policy and gate entrypoint tests passed."
+    },
+    {
+      "gate": "FAA and shared writer regressions",
+      "outcome": "PASS",
+      "reason": "101 tests plus three subtests passed across FAA integrity/capture, new path/concurrency cases, shared writer, DASC, policy and gate entrypoint."
+    },
+    {
+      "gate": "Connectors core and IngestReceipt",
+      "outcome": "PASS",
+      "reason": "156 tests plus five subtests passed across shared writer, DASC, connectors core and IngestReceipt; fixture polarity valid=2 invalid=3."
+    },
+    {
+      "gate": "Exact-head GitHub CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending published corrective heads; quota receipt correction is tracked separately."
+    },
+    {
+      "gate": "Live capture, deployment, admission and production SQL",
+      "outcome": "SKIPPED",
+      "reason": "Outside scope; FAA remains HELD; no live provider or host changes."
+    },
+    {
+      "gate": "Repository baseline",
+      "outcome": "PASS",
+      "reason": "make validate: nine core validators and 502 schema/contract tests plus 53 subtests passed."
+    },
+    {
+      "gate": "Repository topology",
+      "outcome": "PASS",
+      "reason": "Exact trusted base 3dc133f98e9496a8f74c21aca8390d6354be6889; zero invariant failures, zero new drift, 89 inherited warnings, zero stale entries; baseline unchanged."
+    },
+    {
+      "gate": "Optional pre-commit",
+      "outcome": "SKIPPED",
+      "reason": "pre_commit package unavailable; syntax, whitespace, focused tests, topology and receipt checks run separately."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "faa-private-output-boundary",
+      "validated": true,
+      "evidence_ref": "connectors/faa/capture.py and tools/local_data/candidate_capture.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-22T14:46:55.079094+00:00",
+  "emitter": "Codex",
+  "notes": "Generation and local validation are not human approval, release or deployment. Historical receipts are immutable; no scanner, policy or protection exception."
+}
