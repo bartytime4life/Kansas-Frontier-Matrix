@@ -840,9 +840,12 @@ def test_historical_main_overlay_receipt_binds_only_the_merged_overlay_changes(
     assert predecessor.name in receipt["rollback"]["mirror"]
 
 
-def test_selected_quota_receipt_binds_exact_merged_bytes_and_preserves_history() -> None:
+def test_historical_quota_receipt_binds_exact_merged_bytes_and_preserves_history(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-historical-quota-reconciliation-20261022.json")
     receipt, expected = TOOL.reviewed_receipt()
-    assert TOOL.RECEIPT.name == "site-v268-historical-quota-reconciliation-20261022.json"
+    assert hashlib.sha256(TOOL.RECEIPT.read_bytes()).hexdigest() == "77d8ba17e70384f4f37f76a2648f46899a1e18bfcd0d02dcee1cc04aeff75b63"
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert predecessor.name == "site-v268-main-overlay-reconciliation-20261021.json"
     previous = json.loads(predecessor.read_text())
@@ -876,9 +879,9 @@ def test_selected_quota_receipt_binds_exact_merged_bytes_and_preserves_history()
         if name not in changed:
             assert receipt["comparison"][name] == entry, name
     for name in changed:
-        body = (TOOL.DESTINATION / name).read_bytes()
-        digest = hashlib.sha256(body).hexdigest()
-        assert digest == source_digests[name]
+        # Keep the historical assertion bound to the independently verified
+        # source manifest when a successor changes current mirror bytes.
+        digest = source_digests[name]
         before = previous["comparison"].get(name)
         entry, declaration = receipt["comparison"][name], declarations[name]
         assert entry["mirror_sha256"] == digest != (before["mirror_sha256"] if before else None)
@@ -912,7 +915,88 @@ def test_selected_quota_receipt_binds_exact_merged_bytes_and_preserves_history()
     inventory = {name: item["mirror_sha256"] for name, item in receipt["comparison"].items()}
     assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     assert predecessor.name in receipt["rollback"]["mirror"]
+
+
+def test_selected_next_receipt_binds_only_the_dependency_safety_overlay() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    assert TOOL.RECEIPT.name == "site-v268-next-security-overlay-20261022.json"
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-historical-quota-reconciliation-20261022.json"
+    predecessor_digest = "77d8ba17e70384f4f37f76a2648f46899a1e18bfcd0d02dcee1cc04aeff75b63"
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"] == predecessor_digest
+    previous = json.loads(predecessor.read_text())
+    changed = {"package.json", "package-lock.json"}
+    assert set(receipt) == set(previous)
+    assert set(receipt["comparison"]) == set(previous["comparison"])
+    actual_delta = {name for name, entry in receipt["comparison"].items()
+                    if entry != previous["comparison"][name]}
+    assert actual_delta == changed
+    digests = {
+        "package.json": "118cf2b5fc62446eb5ad8b895ef0a9a24715e2774e23e88b7fa25947d21b6f7a",
+        "package-lock.json": "caf3c477c1c017e9b5aacbad2cbaffb68512098e3df20cb2de646d3c4a305a09",
+    }
+    declarations = receipt["repository_reconciliation"]["changes"]
+    assert len(declarations) == len(changed)
+    declarations = {entry["path"]: entry for entry in declarations}
+    assert set(declarations) == changed
+    for name, entry in receipt["comparison"].items():
+        before = previous["comparison"][name]
+        assert entry.get("site_sha256") == before.get("site_sha256"), name
+        if name not in changed:
+            assert entry == before, name
+            continue
+        assert before["state"] == "inherited_repository_overlay"
+        assert entry["state"] == "repository_safety_overlay"
+        assert entry["mirror_sha256"] == digests[name] != before["mirror_sha256"]
+        assert expected[name] == "sha256:" + digests[name]
+        assert declarations[name] == {
+            "path": name, "previous_receipt_sha256": before["mirror_sha256"],
+            "repository_base_sha256": before["mirror_sha256"],
+            "mirror_sha256": digests[name], "state": "repository_safety_overlay",
+            "proposed_in_this_change": True,
+        }
+    administrative = {
+        "comparison", "counts", "inventory_sha256", "predecessor_receipt",
+        "predecessor_receipt_sha256", "recorded_at", "repository_reconciled_base",
+        "repository_reconciliation", "rollback", "security", "validation",
+    }
+    for key in previous.keys() - administrative:
+        assert receipt[key] == previous[key], key
+    for key, count in previous["counts"].items():
+        delta = {"inherited_repository_overlay": -2, "repository_safety_overlay": 2}.get(key, 0)
+        assert receipt["counts"][key] == count + delta, key
+    assert receipt["site_candidate_commit"] == "358280aee889e2e2cf832bd598155ca21653c8de"
+    assert receipt["status"] == "REVIEW_ONLY"
+    assert receipt["review"]["source_and_overlay_review"] == "PENDING"
+    assert receipt["review"]["human_acceptance"] is receipt["review"]["hosted_equivalence"] is False
+    assert receipt["counts"]["repository_withheld"] == 258
+    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "e18b56879cd71ff13502c6e12f2f1f4c7f02ee6d"
+    assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    inventory = {name: item["mirror_sha256"] for name, item in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert predecessor.name in receipt["rollback"]["mirror"]
+
+
+def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    manifest = json.loads((TOOL.DESTINATION / "package.json").read_text())
+    lock = json.loads((TOOL.DESTINATION / "package-lock.json").read_text())
+    for section, name in (("dependencies", "next"), ("devDependencies", "eslint-config-next")):
+        assert manifest[section][name] == lock["packages"][""][section][name] == "16.4.2"
+    next_packages = {name: entry for name, entry in lock["packages"].items()
+                     if name.startswith("node_modules/@next/") or name in {
+                         "node_modules/next", "node_modules/eslint-config-next"}}
+    assert len(next_packages) == 12
+    assert {entry["version"] for entry in next_packages.values()} == {"16.4.2"}
     result = TOOL.check()
-    assert result["files"] == len(expected) == 883
+    assert result["files"] == len(expected) == len(receipt["comparison"]) == 883
+    assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
+    assert result["authority"] == "CONTENT_PARITY_ONLY"
+    assert result["file_states"]["inherited_repository_overlay"] == 48
+    assert result["file_states"]["repository_safety_overlay"] == 8
+    assert result["withheld_files"] == 258
+    assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
+    assert result["review_acceptance"]["source_and_overlay_review"] == "PENDING"
     assert result["hosted_equivalence"] is False

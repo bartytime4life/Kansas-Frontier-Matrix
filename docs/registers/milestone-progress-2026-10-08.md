@@ -2,7 +2,7 @@
 doc_id: kfm://register/milestone-progress-2026-10-08
 title: KFM Milestone and Issue Progress — 2026-10-08
 type: dated-progress-ledger
-version: v1.1
+version: v1.2
 status: draft; repository-grounded; non-authoritative
 owner: "NEEDS VERIFICATION — review routes through current CODEOWNERS (@bartytime4life)"
 created: 2026-10-08
@@ -45,7 +45,7 @@ It does not replace the historical evidence snapshot in this document's header.
 | 28 open Dependabot alerts: 3 critical, 16 high, 9 moderate | Both pages of the owner-visible [alert list](https://github.com/bartytime4life/Kansas-Frontier-Matrix/security/dependabot) were read. All name Pillow in the crop-tile requirements file. Open-alert state is confirmed; closure is not. |
 | Crop declaration and hash lock both pin Pillow 13.0.0 | [Declaration](../../pipelines/domains/soil/crop_casma_tiles/requirements-tiles.txt), [lock](../../pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock), and [compatibility workflow](../../.github/workflows/crop-casma-tile-compatibility.yml) at the pinned main. Alert #120 names 13.0.0 as patched. [Dependabot job 119911197076](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39803708341/job/119911197076) read this exact SHA and reported no update needed for Pillow 13.0.0. The reason alerts remain open is UNKNOWN; no dismissal or deployed-version claim follows. |
 
-### Bounded advancement queue
+### Bounded advancement queue at intake
 
 | Issue / milestone | Confirmed gap and next proof |
 |---|---|
@@ -56,6 +56,32 @@ It does not replace the historical evidence snapshot in this document's header.
 | [#3397 / M33](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3397) | Same-candidate interaction, keyboard, touch, accessibility and device/WebGL acceptance are not established by the workflow census. |
 | [#4418 / M35](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418) | Source/build identity, hosted browser equivalence and saved-predecessor recovery still require an exact-candidate packet. The skipped GoDaddy capture cannot count as acceptance. |
 | [#3396 and #4415 / M36](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3396) | Independent acceptance and same-candidate release proof remain open. Green workflows or closed issue ratios do not authorize release. |
+
+### October 22 follow-through
+
+After the intake snapshot above, [main advanced to `3cc00a065d5d0849c189a9bc31a2e26c30a86909`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/3cc00a065d5d0849c189a9bc31a2e26c30a86909),
+incorporating the two bounded repairs below. The intake queue remains historical.
+
+| Work | Follow-through and remaining boundary |
+|---|---|
+| Registry input handling | [PR #5406](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5406) merged. Its [exact-head hosted registry job](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39830490490/job/120005027387) passed all 16 tests, fixtures, seven registries and the authoring receipt. Registry authority and normalization acceptance remain open. |
+| Crop-lock advisory coverage | [PR #5407](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5407) merged. Its [hosted crop-lock audit](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39830672858/job/120005647849) reported no known vulnerabilities. The alert UI was re-read after integration: 28 Pillow alerts remain open; graph/alert reconciliation is UNKNOWN. A passing audit does not establish deployed versions, SBOM, attestation or signature acceptance. |
+| Critical Next.js inventory finding | The separate Site npm gate failed on Next 16.3.8. [Draft PR #5408](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5408) prepares the standalone source update to selected target 16.4.2. The accompanying main mirror candidate updates the same Next family and preserves a successor parity receipt. Local production audits report zero critical findings after repair; eight inherited high findings remain in the standalone inventory. Runtime exploitability and deployment state are not established by inventory findings. |
+
+The mirror candidate passes 1,401 Node tests, 48 mirror regressions, production
+build, typecheck, lint (zero errors; 77 warnings), and local smoke (110 checks
+across 79 routes). Its parity check covers 883 paths and keeps 258 paths withheld;
+source/overlay review remains PENDING, human acceptance and hosted equivalence
+remain false. Topology passes with zero invariant/new-drift findings and 89
+baselined warnings. The standalone candidate passes 1,639 tests with 17 skipped,
+build and typecheck; source lint retains four errors also reproduced at its exact
+base. These local results do not replace exact-head hosted checks or review.
+
+Native milestone 1's five open acceptance items remain open. The historical
+conformance report still needs an exact-candidate successor and independent
+review. Browser interaction, accessibility, hosted equivalence, recovery and
+release acceptance are not established by these repairs. No milestone, alert,
+source-admission or release closure is claimed.
 
 **Validation boundary.** This pass re-read GitHub source, alert UI and workflow
 results. Local candidate regressions are recorded on their PRs; historical test
