@@ -6,6 +6,7 @@ name: python-dependency-lock
 "on":
   pull_request:
     paths:
+      - ".github/workflows/dependency-scan.yml"
       - ".github/workflows/python-dependency-lock.yml"
       - "packages/connectors-core/pyproject.toml"
       - "packages/hashing/pyproject.toml"
@@ -33,6 +34,7 @@ name: python-dependency-lock
     branches:
       - main
     paths:
+      - ".github/workflows/dependency-scan.yml"
       - ".github/workflows/python-dependency-lock.yml"
       - "packages/connectors-core/pyproject.toml"
       - "packages/hashing/pyproject.toml"
@@ -110,6 +112,7 @@ jobs:
       - name: Verify installer invariants and environment consistency
         run: |
           python -m unittest tests/ci/test_install_python_ci.py -v
+          python -m unittest discover -s tests/ci -p 'test_dependency_scan_workflow.py' -v
           python -m pytest -q tests/ci/test_install_full_local_test.py tests/ci/test_install_kfm_cli.py
           python -m pip check
           python -m py_compile tools/ci/install_python_ci.py

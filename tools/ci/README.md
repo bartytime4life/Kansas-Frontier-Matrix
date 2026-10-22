@@ -216,6 +216,20 @@ the shared installer on Python 3.12 with SHA-256 enforcement and binary-only
 distributions. Its synthetic tests still reject tampered inputs; no source
 acquisition, lifecycle promotion or publication is authorized by this profile.
 
+The separate `dependency-scan / pip-audit-crop-casma` job audits that same
+tile lock on Python 3.12 with the existing `audit-tool` profile. It runs on
+pull requests, pushes to main, the advisory schedule, and manual dispatch.
+It uses `--require-hashes --disable-pip --strict`: dependency collection uses
+the pinned lock without a pip resolver/bootstrap, and skipped dependencies
+fail the audit. It does not install the tile stack. Known findings and scanner errors fail
+the job; an empty advisory result does not prove alert closure, vulnerability
+absence, compatibility, or deployment. The offline regression executes the
+committed audit shell with a synthetic scanner to check exit-code propagation:
+
+```sh
+python -m unittest discover -s tests/ci -p 'test_dependency_scan_workflow.py' -v
+```
+
 The finite `geo-transforms` profile uses `python-geo.lock`: the optional
 `pyproj==3.7.2` declared by `packages/geo/pyproject.toml`, plus hash-pinned certifi.
 Wheel hashes cover Python 3.11/3.12; CI requires binary distributions. This adds

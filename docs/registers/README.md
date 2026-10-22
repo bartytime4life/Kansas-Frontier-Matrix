@@ -38,6 +38,10 @@ notes:
 
 `docs/registers/` is KFM's repository-facing lane for human-readable governance registers, cross-register pointers, drift records, verification queues, and explanatory views of machine governance projections.
 
+For the latest bounded issue, dependency-alert and milestone readback, see the
+[October 22 currentness addendum](milestone-progress-2026-10-08.md#currentness-addendum--2026-10-22).
+The earlier dated inventory and progress sections retain their own evidence pins.
+
 > [!IMPORTANT]
 > **A register records or explains authority; it does not manufacture authority.** A path, row, badge, digest, workflow result, receipt, pull request, or merged commit does not by itself establish source truth, policy approval, review, release, promotion, or publication.
 

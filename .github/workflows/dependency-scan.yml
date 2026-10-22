@@ -1,5 +1,5 @@
 # KFM dependency vulnerability scanning workflow.
-# Status: executable Python audit, locked pnpm audit, and the Explorer Site npm audit.
+# Status: Python CI and crop-tile lock audits, locked pnpm audit, and Site npm audit.
 #
 # Authority boundary:
 # - This workflow queries public vulnerability advisory services and reports
@@ -85,6 +85,57 @@ jobs:
           The result is not proof of vulnerability absence, compatibility,
           source integrity, release readiness, deployment approval, or
           publication authority.
+          EOF
+
+  pip-audit-crop-casma:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out scanned revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up crop-tile audit Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            tools/ci/python-audit.lock
+            pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock
+
+      - name: Install pinned audit tool
+        run: python tools/ci/install_python_ci.py audit-tool
+
+      - name: Audit the hash-locked crop-tile dependency set
+        run: >-
+          python -m pip_audit
+          --requirement pipelines/domains/soil/crop_casma_tiles/requirements-tiles.lock
+          --require-hashes
+          --disable-pip
+          --strict
+          --progress-spinner off
+          --desc off
+          --format columns
+
+      - name: Record crop-tile audit boundary
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### Crop-CASMA dependency audit boundary
+
+          This lane audits the existing hash-locked crop-tile dependency set on
+          Python 3.12 with the separately hash-locked pip-audit tool. Findings
+          and scanner errors fail this job. No tile dependencies are installed
+          or source data acquired by the audit command.
+
+          A green result is a point-in-time advisory result for this lockfile.
+          Synthetic tile compatibility has its own workflow. Neither result
+          proves GitHub alert closure, vulnerability absence, source admission,
+          release readiness, deployment, or publication authority.
           EOF
 
   npm-audit:
