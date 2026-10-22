@@ -31,6 +31,12 @@
 
 # Kansas Frontier Matrix Explorer
 
+**Next.js dependency candidate — October 22, 2026.** The standalone Node
+source pins Next and its ESLint configuration to 16.4.2, preserving the existing
+Vinext, React, Braces fork and hosting settings. See the
+[dependency verification boundary](docs/godaddy-node-preview.md#nextjs-dependency-candidate--2026-10-22).
+This source correction does not establish the deployed GoDaddy revision.
+
 The [2026-10-06 reliability review](docs/explorer-reliability-review-2026-10-06.md) records dropdown focus and Escape repairs, saved-scene basemap and terrain restoration, location-redacted preview cameras, and knowledge-record retries. Production-worker route checks and executable interaction tests remain separate from pending rendered browser/WebGL acceptance.
 
 See [the local PC reconciliation record](docs/local-pc-consolidation.md) for current local source, storage, validation, and recovery instructions and earlier dated checkpoints.
