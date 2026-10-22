@@ -248,6 +248,10 @@ def _resolve_path(
 
 
 def _git_commit_status(repo_root: Path, base_ref: str) -> bool | None:
+    # Schema findings do not short-circuit semantic validation. Keep malformed
+    # references out of process arguments, including NULs and lone surrogates.
+    if len(base_ref) != 40 or any(char not in "0123456789abcdef" for char in base_ref):
+        return False
     try:
         completed = subprocess.run(
             ["git", "cat-file", "-e", f"{base_ref}^{{commit}}"],

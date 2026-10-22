@@ -7,7 +7,7 @@ status: proposed; repository-grounded; schema-backed; implementation-partial; no
 owners:
   - UNKNOWN
 created: 2026-08-22
-updated: 2026-08-22
+updated: 2026-10-22
 policy_label: internal-governance; projection-only; cite-or-abstain; fail-closed
 owning_root: contracts/
 responsibility: define one common semantic envelope for seven existing legacy control-plane registry projections without creating a parallel registry home inventing owners activating sources approving policy changing lifecycle or release state or publishing
@@ -146,6 +146,14 @@ After declared dependencies are installed, the profile performs no network calls
 
 Malformed input, duplicate IDs, unknown fields, self-authority, unresolved references, digest mismatch, incomplete material authority, noncanonical ordering, or packet-member omission fails closed.
 
+With Git validation enabled, `base_ref` must be exactly 40 lowercase hexadecimal
+characters before it can reach a Git subprocess. Malformed references, including
+escaped NUL and lone-surrogate values, produce finite JSON `FAIL` findings with
+the existing `BASE_COMMIT_NOT_FOUND` code and applicable schema findings. Raw
+reference values are not echoed. Valid canonical commits still use the existing
+pinned-tree replay; the schema, finding vocabulary and authority boundary are
+unchanged.
+
 Correction uses the same seven canonical paths. Preserve stable IDs and reason/evidence lineage. Before merge, close the draft change. After an authorized merge, apply a transparent revert or same-path forward fix with a new receipt. Do not create `control_plane/registers/` copies or compatibility mirrors to avoid correction.
 
 ## Non-effects
@@ -160,3 +168,4 @@ This packet does not:
 - deprecate, retire, migrate, or delete a path;
 - approve release, promotion, rollback, deployment, or publication;
 - prove any external consumer or production behavior.
+
