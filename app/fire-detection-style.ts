@@ -1,5 +1,5 @@
 import type { Feature, FeatureCollection, Polygon } from "geojson";
-import type { ExpressionSpecification, GeoJSONSource, LayerSpecification, Map as MapLibreMap, StyleImageInterface, StyleImageWebGLData } from "./maplibre-seam";
+import type { ExpressionSpecification, GeoJSONSource, LayerSpecification, SymbolLayerSpecification, Map as MapLibreMap, StyleImageInterface, StyleImageWebGLData } from "./maplibre-seam";
 import { browserRenderBudget, updateGeoJSON, rememberGeoJSON, setVisibleIfChanged, uploadedGeoJSON } from "./map-performance";
 import { globeOverviewPaintSize } from "./globe-context";
 
@@ -163,7 +163,7 @@ const footprintLayers = (): LayerSpecification[] => [
   { id: FIRE_POINT_LAYER_IDS.edge, type: "line", source: FIRE_FOOTPRINT_SOURCE_ID, minzoom: 10,
     paint: { "line-color": "#ffc27a", "line-width": ["interpolate", ["linear"], ["zoom"], 10, 0.5, 14, 1, 18, 1.6], "line-opacity": 0 } },
 ];
-const flameLayer = (globe: boolean): LayerSpecification => ({
+const flameLayer = (globe: boolean): SymbolLayerSpecification => ({
   id: FIRE_POINT_LAYER_IDS.flame, type: "symbol", source: FIRE_POINT_SOURCE_ID, maxzoom: 13.5,
   layout: {
     "icon-image": confidenceMatch({ high: flameImageId("high"), nominal: flameImageId("nominal"), low: flameImageId("low") }),
@@ -175,6 +175,35 @@ const flameLayer = (globe: boolean): LayerSpecification => ({
   },
   paint: { "icon-opacity": 0 },
 });
+
+export const FIRE_REPORT_FLAME_ID = "external-nifc-fire-reports-flame";
+const REPORT_SOURCE = "external-nifc-fire-reports";
+const REPORT_ICON_SIZE: ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 4, 0.76, 8, 0.93, 10, 1.03];
+/** Incident reports retain their own IDs and type-specific palettes; the flame is illustrative. */
+export function syncFireReportDisplay(map: MapLibreMap, visible: boolean, opacity: number): void {
+  const points = uploadedGeoJSON(map.getSource(REPORT_SOURCE) as GeoJSONSource | undefined);
+  const footprints = deriveFireFootprints(points);
+  const hasData = Boolean(points?.features?.length);
+  if (visible && hasData) ensureFireImages(map);
+  if (map.getSource(REPORT_SOURCE) && !map.getLayer(FIRE_REPORT_FLAME_ID)) {
+    const layer = flameLayer(false);
+    const { maxzoom: _maxzoom, ...reportLayer } = layer;
+    void _maxzoom;
+    map.addLayer({ ...reportLayer, id: FIRE_REPORT_FLAME_ID, source: REPORT_SOURCE,
+      layout: { ...layer.layout, "icon-image": ["match", ["get", "incidentType"],
+        "Prescribed fire", flameImageId("low"), "Incident complex", flameImageId("nominal"), flameImageId("high")],
+        "icon-size": REPORT_ICON_SIZE } });
+  }
+  setLayoutExpression(map, FIRE_REPORT_FLAME_ID, "icon-size", map.getProjection?.()?.type === "globe" ? globeOverviewPaintSize(REPORT_ICON_SIZE) : REPORT_ICON_SIZE);
+  setVisibleIfChanged(map, FIRE_REPORT_FLAME_ID, visible);
+  setPaintExpression(map, FIRE_REPORT_FLAME_ID, "icon-opacity", Math.max(0, Math.min(1, opacity)));
+  for (const id of [REPORT_SOURCE + "-halo", REPORT_SOURCE + "-point"]) {
+    setPaintExpression(map, id, "circle-opacity", 0);
+    setPaintExpression(map, id, "circle-stroke-opacity", 0);
+    setPaintExpression(map, id, "circle-translate", [0, -9]);
+  }
+  syncFireDisplayMotion(map, "reports", visible && opacity > 0 && hasData, footprints.bounds);
+}
 
 const setPaintExpression = (map: MapLibreMap, id: string, property: string, value: unknown) => {
   if (!map.getLayer(id)) return;
@@ -214,7 +243,7 @@ export function syncFireDetectionDisplay(map: MapLibreMap, visible: boolean, opa
   setPaintExpression(map, FIRE_POINT_LAYER_IDS.heat, "fill-opacity", heatOpacity(amount));
   setPaintExpression(map, FIRE_POINT_LAYER_IDS.shimmer, "line-opacity", shimmerOpacity(amount));
   setPaintExpression(map, FIRE_POINT_LAYER_IDS.edge, "line-opacity", edgeOpacity(amount));
-  syncFireAnimation(map, { visible: visible && amount > 0 && hasData, bounds: footprints.bounds });
+  syncFireDisplayMotion(map, "detections", visible && amount > 0 && hasData, footprints.bounds);
 }
 
 /**
@@ -230,7 +259,7 @@ export function refreshFireFootprints(map: MapLibreMap): FireFootprints {
     map.addSource(FIRE_FOOTPRINT_SOURCE_ID, { type: "geojson", data: footprints.collection, attribution: "NASA GIBS · VIIRS NOAA-20 thermal anomalies" });
     rememberGeoJSON(map.getSource(FIRE_FOOTPRINT_SOURCE_ID) as GeoJSONSource, footprints.collection);
   }
-  if (!footprints.collection.features.length && animators.has(map)) syncFireAnimation(map, { visible: false });
+  if (!footprints.collection.features.length && animators.has(map)) syncFireDisplayMotion(map, "detections", false, null);
   return footprints;
 }
 
@@ -528,6 +557,18 @@ const inView = (map: MapLibreMap, bounds: Animator["bounds"]) => {
     return !(bounds[0] > view.getEast() || bounds[2] < view.getWest() || bounds[1] > view.getNorth() || bounds[3] < view.getSouth());
   } catch { return true; }
 };
+
+// One ticker per map, shared by independently toggled incident and detection layers.
+const fireDisplays = new WeakMap<MapLibreMap, Map<string, { visible: boolean; bounds: Animator["bounds"] }>>();
+function syncFireDisplayMotion(map: MapLibreMap, source: string, visible: boolean, bounds: Animator["bounds"]) {
+  let displays = fireDisplays.get(map);
+  if (!displays) { displays = new Map(); fireDisplays.set(map, displays); }
+  displays.set(source, { visible, bounds });
+  const active = [...displays.values()].filter(display => display.visible);
+  const extents = active.flatMap(display => display.bounds ? [display.bounds] : []);
+  const union: Animator["bounds"] = extents.length ? [Math.min(...extents.map(b => b[0])), Math.min(...extents.map(b => b[1])), Math.max(...extents.map(b => b[2])), Math.max(...extents.map(b => b[3]))] : null;
+  syncFireAnimation(map, { visible: active.length > 0, bounds: union });
+}
 
 function syncFireAnimation(map: MapLibreMap, update?: Partial<Pick<Animator, "visible" | "bounds">>) {
   let animator = animators.get(map);

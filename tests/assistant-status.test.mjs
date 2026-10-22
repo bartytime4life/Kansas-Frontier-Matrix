@@ -256,8 +256,9 @@ test('evidence search fails closed when its capability is missing or the runtime
   const {h,render}=await workspace(async url=>url.includes('/api/pc-ai/')?Response.json({configured:false,account:null}):Response.json(chatStatus));
   try{
    let tree=render();message(tree).props.onChange({target:{value:'Find river records.'}});
-   findNode(tree,node=>node.type==='button'&&node.props.children==='Evidence').props.onClick();
-   tree=render();assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Search').props.disabled,true);
+   const evidence=findNode(tree,node=>node.type==='button'&&node.props.children==='Evidence');
+   if(chatStatus.evidenceSearchAvailable!==true){assert.equal(evidence,undefined,'unavailable capability has no action');}
+   else{evidence.props.onClick();tree=render();assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Search').props.disabled,true);}
   }finally{h.dispose();}
  }
 });
@@ -664,4 +665,14 @@ test('readiness names the model the server selected and ignores an unsafe label'
   const {h,render}=await workspace(async()=>Response.json({configured:true,online:true,ready:true,evidenceSearchAvailable:true,requiresLogin:false,provider:'home-ollama',...(modelLabel===undefined?{}:{modelLabel})}),{mode:'explore'});
   try{await settle();assert.equal(text(status(render({mode:'explore'}))),expected);}finally{h.dispose();}
  }
+});
+
+
+test('map chat can open directly in Ask while explicit place discovery retains its mode',async()=>{
+ const discovery={query:'',items:[],status:'Ready',busy:false,onQuery(){},onChoose(){}};
+ const {h,render}=await workspace(async()=>ready(),{discovery,initialMode:'explore'});
+ try{
+  const tree=render();assert.equal(findNode(tree,node=>node.type==='button'&&node.props.children==='Ask').props['aria-pressed'],true);
+  assert.equal(text(status(tree)),'AI model ready');
+ }finally{h.dispose();}
 });

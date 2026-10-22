@@ -28,3 +28,30 @@ test('exhausted checked-empty playback clears intent and does not restart when s
   assert.ok(button(tree,'Play time sweep'), 'changing skip must not revive play intent');
   h.dispose();
 });
+
+
+test('one stationary clock opens and closes time controls without hover or an animation setting', async () => {
+  const h = await componentHarness('app/compact-time-sweep.tsx', {
+    './calendar-sweep': calendar, './compact-time-sweep.css': {},
+  }, { window: { requestAnimationFrame: fn => fn(), setTimeout, clearTimeout }, document: { addEventListener() {}, removeEventListener() {} } });
+  const props = { value:null,year:2026,years:[2026],today:'2026-10-21',sources:[],open:false,
+    onOpenChange(value){props.open=value;},onSeek:async()=>({state:'empty',message:'No records'}),onEra(){},onPresent(){} };
+  const render=()=>{const tree=h.render(h.exports.CompactTimeSweep,props);h.commit();return tree;};
+  let tree=render();
+  const clock=()=>findNode(tree,n=>n.props?.className?.includes('compact-time-clock-toggle'));
+  assert.equal(clock().props['aria-expanded'],false);
+  assert.equal(clock().props.onPointerEnter,undefined);
+  assert.equal(findNode(tree,n=>n.type==='img'&&n.props.src.endsWith('/clock.svg')).props.alt,'');
+  clock().props.onClick();tree=render();
+  assert.equal(clock().props['aria-expanded'],true);
+  assert.ok(findNode(tree,n=>n.props?.role==='dialog'));
+  assert.equal(findNode(tree,n=>n.props?.className==='compact-time-animation-choice'),undefined);
+  clock().props.onClick();tree=render();
+  assert.equal(clock().props['aria-expanded'],false);
+  assert.equal(findNode(tree,n=>n.props?.role==='dialog'),undefined);
+  clock().props.onKeyDown({key:'ArrowUp',preventDefault(){}});tree=render();
+  assert.equal(clock().props['aria-expanded'],true);
+  tree.props.onKeyDown({key:'Escape',preventDefault(){},stopPropagation(){}});tree=render();
+  assert.equal(clock().props['aria-expanded'],false);
+  h.dispose();
+});

@@ -1,7 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { calendarDateParts, calendarDayInRange, calendarFrameDay, calendarFrameIndex, calendarFrames, defaultCalendarSweep, replaceCalendarPart, validCalendarDay, type CalendarFrameOutcome, type CalendarStep, type CalendarSweepView } from "./calendar-sweep";
-import { TimeEmblem } from "./time-emblem";
 import "./compact-time-sweep.css";
 
 export type CalendarSourceRow = Readonly<{ id: string; title: string; state: string; detail: string }>;
@@ -25,10 +24,9 @@ export function CompactTimeSweep({ value, year, years, today, reducedMotion, ope
   const setPlaying = useCallback((active: boolean) => setPlayIntent({ active, sources: sourcesKey }), [sourcesKey]);
   const playing = playIntent.active && playIntent.sources === sourcesKey && !reducedMotion && !era && state.showing === "B" && state.day < state.end;
   const [pending, setPending] = useState(false);
-  const [expanded, setExpanded] = useState(false), [pinnedOpen, setPinnedOpen] = useState(false);
-  const [animateEmblem, setAnimateEmblem] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const [checkedFrames, setCheckedFrames] = useState<{ sources: string; frames: ReadonlyMap<string, CalendarFrameOutcome> }>({ sources: "", frames: new Map() });
-  const emblemRef = useRef<HTMLButtonElement>(null), collapseTimer = useRef<number | null>(null);
+  const emblemRef = useRef<HTMLButtonElement>(null);
   const [speed, setSpeed] = useState(1), [skipGaps, setSkipGaps] = useState(false);
   const [scrubDay, setScrubDay] = useState<string | null>(null);
   const [outcome, setOutcome] = useState<CalendarFrameOutcome>({ state: "reference", message: "Choose a date to follow selected dated layers. Years and months are dated snapshots, not averages." });
@@ -93,28 +91,17 @@ export function CompactTimeSweep({ value, year, years, today, reducedMotion, ope
     const timer = window.setTimeout(() => seekDay(next, true), 1400 / speed);
     return () => window.clearTimeout(timer);
   }, [playing, busy, era, reducedMotion, state.day, state.showing, frames, skipGaps, speed, seekDay, setPlaying]);
+  const shown = expanded || open;
   useEffect(() => {
-    if (!open) return;
-    const dismiss = (event: PointerEvent) => { if (event.target instanceof Node && !rootRef.current?.contains(event.target)) { onOpenChange(false); setExpanded(false); setPinnedOpen(false); } };
+    if (!shown) return;
+    const dismiss = (event: PointerEvent) => { if (event.target instanceof Node && !rootRef.current?.contains(event.target)) { onOpenChange(false); setExpanded(false); } };
     document.addEventListener("pointerdown", dismiss);
     return () => document.removeEventListener("pointerdown", dismiss);
-  }, [open, onOpenChange]);
-  const shown = expanded || open;
-  const cancelCollapse = () => { if (collapseTimer.current !== null) window.clearTimeout(collapseTimer.current); collapseTimer.current = null; };
-  useEffect(() => () => { if (collapseTimer.current !== null) window.clearTimeout(collapseTimer.current); }, []);
-  const reveal = (focus = false) => {
-    cancelCollapse(); setExpanded(true); onOpenChange(true);
-    if (focus) window.requestAnimationFrame(() => rootRef.current?.querySelector<HTMLSelectElement>("select")?.focus());
-  };
+  }, [shown, onOpenChange]);
+  const reveal = () => { setExpanded(true); onOpenChange(true); };
   const collapse = (returnFocus = false) => {
-    cancelCollapse(); onOpenChange(false); setExpanded(false); setPinnedOpen(false);
+    onOpenChange(false); setExpanded(false);
     if (returnFocus) window.requestAnimationFrame(() => emblemRef.current?.focus());
-  };
-  const scheduleCollapse = () => {
-    cancelCollapse();
-    collapseTimer.current = window.setTimeout(() => {
-      if (!pinnedOpen && !rootRef.current?.contains(document.activeElement)) collapse();
-    }, 420);
   };
   const close = () => collapse(true);
   const togglePlay = () => {
@@ -141,14 +128,13 @@ export function CompactTimeSweep({ value, year, years, today, reducedMotion, ope
     if (next) seekDay(next);
   };
   const badge = scrubDay ? "Preview" : busy ? "Loading" : sources.some(source => source.state === "error") ? "Check sources" : value ? outcome.state === "empty" ? "No data" : outcome.state === "partial" ? "Partial" : outcome.state === "error" ? "Unavailable" : "" : "";
-  return <div className="compact-time" data-expanded={shown} ref={rootRef} onPointerEnter={cancelCollapse} onPointerLeave={scheduleCollapse} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) scheduleCollapse(); }} onKeyDown={event => { if (event.key === "Escape" && open) { event.preventDefault(); event.stopPropagation(); close(); } else if (event.key === "Escape" && shown) { event.preventDefault(); collapse(true); } }}>
-    <button className="compact-time-emblem" ref={emblemRef} type="button" aria-label={"Open time sweep. " + (era ? "Atlas year " + year : shortDate(date) + " UTC") + (playing ? ". Playback running." : ". Paused.")} aria-expanded={shown} onClick={() => { setPinnedOpen(true); reveal(true); }} onPointerEnter={event => { if (event.pointerType === "mouse") reveal(); }} onKeyDown={event => { if (event.key === "ArrowUp" || event.key === "Enter" || event.key === " ") { event.preventDefault(); setPinnedOpen(true); reveal(true); } }} title="Hover to explore time · animated eras are decorative">
-      <TimeEmblem animated={animateEmblem} reducedMotion={reducedMotion} visible={!shown} />
+  return <div className="compact-time" data-expanded={shown} ref={rootRef} onKeyDown={event => { if (event.key === "Escape" && shown) { event.preventDefault(); event.stopPropagation(); close(); } }}>
+    <button className="compact-time-emblem compact-time-clock-toggle" ref={emblemRef} type="button" aria-label={(shown ? "Close" : "Open") + " time sweep"} aria-expanded={shown} aria-controls="compact-time-transport" onClick={() => shown ? close() : reveal()} onKeyDown={event => { if (event.key === "ArrowUp") { event.preventDefault(); reveal(); } }} title={(shown ? "Close" : "Open") + " time sweep"}>
+      {icon("clock")}
       {value && <progress aria-label="Requested position in configured time range" value={index + 1} max={Math.max(1, frames.length)} />}
       {busy && <span className="compact-time-emblem-status">Loading</span>}
     </button>
-    <div className="compact-time-row" role="group" aria-label="Time sweep" inert={!shown}>
-      <button className="compact-time-clock" type="button" onClick={() => collapse(true)} aria-label="Collapse time sweep" title="Collapse to animated time emblem">{icon("clock")}</button>
+    <div id="compact-time-transport" className="compact-time-row" role="group" aria-label="Time sweep" inert={!shown}>
       <div className="compact-time-date">
         <label><span>Year</span><select aria-label="Sweep year or earlier era" value={era ? year : shownYear} onChange={event => { const next = Number(event.target.value); if (next < 1800) { setPlaying(false); onEra(next); } else changePart("year", next); }}>{years.map(y => <option key={y} value={y}>{y < 0 ? y <= -1e9 ? Math.abs(y / 1e9) + " Ga BP" : y <= -1e6 ? Math.abs(y / 1e6) + " Ma BP" : Math.abs(y).toLocaleString() + " BCE/BP" : y}</option>)}</select></label>
         <label><span>Month</span><select aria-label="Sweep month" disabled={era} value={shownMonth} onChange={event => changePart("month", Number(event.target.value))}>{months.map((name, i) => <option key={name} value={i + 1} disabled={shownYear === Number(today.slice(0, 4)) && i + 1 > Number(today.slice(5, 7))}>{name}</option>)}</select></label>
@@ -173,7 +159,6 @@ export function CompactTimeSweep({ value, year, years, today, reducedMotion, ope
     <p className="sr-only" role="status" aria-live="polite">{busy ? "Loading " + shortDate(date) + " UTC. Prior dated features are withheld." : value ? shortDate(date) + " UTC. " + outcome.message : "Atlas year " + year + ". Calendar sweep not applied."}</p>
     {open && <div className="compact-time-popover" id="compact-time-settings" ref={popupRef} role="dialog" aria-label={tab === "compare" ? "Compare dates" : "Time sweep settings"}>
       <header><div><span>TIME SWEEP · UTC</span><h2>{tab === "compare" ? "Before & after" : "Your time window"}</h2></div><button type="button" aria-label="Close time settings" onClick={close}>{icon("x")}</button></header>
-      <label className="compact-time-animation-choice"><input type="checkbox" checked={animateEmblem && !reducedMotion} disabled={reducedMotion} onChange={event => setAnimateEmblem(event.target.checked)} /> Animate the collapsed time emblem</label>
       <div className="compact-time-tabs" role="group" aria-label="Time settings views"><button type="button" aria-pressed={tab === "settings"} onClick={() => setTab("settings")}>Range & playback</button><button type="button" aria-pressed={tab === "compare"} onClick={() => setTab("compare")}>Compare dates</button></div>
       {tab === "settings" ? <>
         <label className="compact-time-exact-date">Map date · UTC<input type="date" aria-label="Exact map date" min="1800-01-01" max={today} value={date} onChange={event => seekDay(event.target.value)} /></label>

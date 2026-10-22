@@ -9,7 +9,7 @@ import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged 
 import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacity, requestRasterOpacity } from "./map-layer-composition";
 import { BUILD_UTC_YEAR } from "./build-clock";
 import { globeOverviewPaintSize } from "./globe-context";
-import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay } from "./fire-detection-style";
+import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay, FIRE_REPORT_FLAME_ID } from "./fire-detection-style";
 
 export type OfficialContextId = "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones";
 export type OfficialContextFeedId = "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
@@ -372,7 +372,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     // Halo and circle stay first: they are the selectable provider points. The
     // footprint and flame layers are display-only derivatives.
     layerIds: Object.freeze(["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle", "external-nasa-gibs-fire-points-footprint-heat", "external-nasa-gibs-fire-points-footprint-shimmer", "external-nasa-gibs-fire-points-footprint-edge", "external-nasa-gibs-fire-points-flame"]),
-    interactiveLayerIds: Object.freeze(["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle"]),
+    interactiveLayerIds: Object.freeze(["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle", "external-nasa-gibs-fire-points-flame"]),
     apiPath: "/api/live-context?feed=nasa-gibs-fire-points",
     endpointLabel: "gibs.earthdata.nasa.gov · dated VIIRS NOAA-20 vector tiles",
     sourceUrl: "https://gibs.earthdata.nasa.gov/vector-metadata/v1.0/FIRMS_VIIRS_Thermal_Anomalies.json",
@@ -395,8 +395,8 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     domain: "Fire, smoke & hazards",
     kind: "OPERATIONAL_GEOJSON",
     sourceId: "external-nifc-fire-reports",
-    layerIds: Object.freeze(["external-nifc-fire-reports-halo", "external-nifc-fire-reports-point"]),
-    interactiveLayerIds: Object.freeze(["external-nifc-fire-reports-halo", "external-nifc-fire-reports-point"]),
+    layerIds: Object.freeze(["external-nifc-fire-reports-halo", "external-nifc-fire-reports-point", FIRE_REPORT_FLAME_ID]),
+    interactiveLayerIds: Object.freeze(["external-nifc-fire-reports-halo", "external-nifc-fire-reports-point", FIRE_REPORT_FLAME_ID]),
     apiPath: "/api/live-context?feed=nifc-fire-reports",
     endpointLabel: "NIFC WFIGS/IRWIN · incident locations year to date",
     sourceUrl: "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_YearToDate/FeatureServer/0",
@@ -408,7 +408,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     color: "#ffd37e",
     attribution: "NIFC WFIGS · IRWIN incident locations",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "This layer reports incident records in the NIFC WFIGS/IRWIN working dataset, including wildfire, prescribed fire, and incident complex. Its point is an approximate reported location, not a perimeter. A missing out date does not establish that a fire remains active. Reported size, containment, and cause can be absent or revised. Nearby satellite thermal detections are spatial context only and do not independently confirm the same incident. Official news pages are linked for further reporting, but articles are not ingested or automatically matched to a specific record. These reports are not KFM EvidenceBundles or certified occurrence records.",
+    boundary: "This layer reports incident records in the NIFC WFIGS/IRWIN working dataset, including wildfire, prescribed fire, and incident complex. Its animated flame marks an approximate reported location, not a perimeter or measured fire behavior. A missing out date does not establish that a fire remains active. Reported size, containment, and cause can be absent or revised. Nearby satellite thermal detections are spatial context only and do not independently confirm the same incident. Official news pages are linked for further reporting, but articles are not ingested or automatically matched to a specific record. These reports are not KFM EvidenceBundles or certified occurrence records.",
     fallback: "A failed or partial query stays labeled. Missing incident records or thermal matches are never presented as no fire or an all-clear.",
   }),
   Object.freeze({
@@ -804,6 +804,7 @@ const ensureGeoJsonSource = (map: MapLibreMap, source: OfficialContextSource, da
 export const clearOfficialContextFeed = (map: MapLibreMap, feed: OfficialContextFeedId): boolean => {
   const cleared = updateGeoJSON(map.getSource(OFFICIAL_CONTEXT_BY_ID[feed].sourceId) as GeoJSONSource | undefined, EMPTY_CONTEXT);
   if (feed === "nasa-gibs-fire-points") refreshFireFootprints(map);
+  if (feed === "nifc-fire-reports") syncFireReportDisplay(map, false, 0);
   return cleared;
 };
 const ensureLayer = (map: MapLibreMap, specification: LayerSpecification, beforeId?: string) => {
@@ -900,9 +901,11 @@ export const applyOfficialContextState = (
   } });
   ensureLayer(map, { id: fireReports.layerIds[1], type: "circle", source: fireReports.sourceId, paint: {
     "circle-color": ["match", ["get", "incidentType"], "Prescribed fire", "#ffcb6a", "Incident complex", "#b9a4ff", "#ff4e67"],
-    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 7.5, 10, 12],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 14, 10, 18],
     "circle-stroke-color": "#fff1d1", "circle-stroke-width": 2.6,
   } });
+
+  syncFireReportDisplay(map, visibility[fireReports.id], opacity[fireReports.id] ?? fireReports.defaultOpacity);
 
   const raspberryShake = OFFICIAL_CONTEXT_BY_ID["raspberry-shake-stations"];
   ensureGeoJsonSource(map, raspberryShake, payloads["raspberry-shake-stations"]?.data ?? emptyCollection());
@@ -969,7 +972,7 @@ export const applyOfficialContextState = (
       const globeSafeVisibility = (source.kind === "OPERATIONAL_WMS" || source.kind === "HISTORICAL_RASTER") && globeView ? false : visibility[source.id];
       setVisibleIfChanged(map, layerId, globeSafeVisibility);
       // Fire detections use zoom-dependent opacity (flame → footprint) applied by syncFireDetectionDisplay.
-      if (source.id === "nasa-gibs-fire-points") continue;
+      if (source.id === "nasa-gibs-fire-points" || source.id === "nifc-fire-reports") continue;
       const safeOpacity = Math.max(0, Math.min(1, opacity[source.id] ?? source.defaultOpacity)) * (source.id === "noaa-hms-smoke" ? smokeFade.get(map) ?? 1 : 1);
       const layer = map.getLayer(layerId);
       if (layer?.type === "circle") {

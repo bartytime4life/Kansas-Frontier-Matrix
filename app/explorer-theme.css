@@ -247,10 +247,25 @@ button:active:not(:disabled) { transform: translateY(1px); }
 }
 .qwen-map-launch strong { color: var(--ink); }
 
-/* Keep attribution clear of the Qwen launcher on wide screens. */
-@media (min-width: 761px) {
-  .map-stage .maplibregl-ctrl-bottom-right { right: 284px; }
+/* Attribution owns a fixed button footprint; its source text opens above the
+   time transport instead of changing the control's width and position. */
+.map-stage .maplibregl-ctrl-bottom-right { right: 8px; }
+.map-stage .maplibregl-ctrl-attrib.maplibregl-compact {
+ position: relative; width: 44px; height: 44px; min-height: 44px; padding: 0;
+ margin: 0 0 0 10px; border-radius: 50%; overflow: visible;
 }
+.map-stage .maplibregl-ctrl-attrib-button { width: 44px; height: 44px; right: 0; top: 0; background-repeat: no-repeat; background-position: center; background-size: 24px 24px; }
+.map-stage .maplibregl-ctrl-attrib-inner {
+ position: absolute; right: 0; bottom: calc(100% + 72px); box-sizing: border-box;
+ width: min(380px, calc(100cqw - 24px)); max-height: min(28dvh, 180px);
+ overflow-y: auto; overscroll-behavior: contain; padding: 12px 16px;
+ border: 1px solid var(--line); border-radius: 18px;
+ background: #102330; box-shadow: 0 8px 24px #0004;
+}
+.map-stage .maplibregl-ctrl-attrib:not(.maplibregl-compact-show) .maplibregl-ctrl-attrib-inner { display: none; }
+.map-stage .maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-inner { display: block; }
+.map-stage .qwen-map-launch { border-radius: 999px; }
+
 
 /* ---------- Time sweep and status ---------- */
 .timeline-panel {

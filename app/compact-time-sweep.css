@@ -149,27 +149,12 @@
 .compact-time button.compact-time-emblem[aria-pressed="true"] {
  border:0; border-radius:0; background:transparent; box-shadow:none; overflow:visible;
 }
-.time-hourglass { display:block; width:28px; height:72px; transform-origin:center; }
-.time-hourglass-sand { display:block; width:100%; height:100%; background:url('/icons/time-sweep/hourglass.webp') left center / 1200% 100% no-repeat; }
-.time-hourglass[data-moving="true"] { animation:hourglass-flip 10.8s infinite; }
-.time-hourglass[data-moving="true"] .time-hourglass-sand { animation:hourglass-drain 10.8s steps(1,end) infinite; }
-/* Eleven measured fill changes across ten seconds, then 0.8 s to turn. */
-@keyframes hourglass-drain {
- 0% {background-position-x:0%} 8.42% {background-position-x:9.090909%}
- 16.84% {background-position-x:18.181818%} 25.25% {background-position-x:27.272727%}
- 33.67% {background-position-x:36.363636%} 42.09% {background-position-x:45.454545%}
- 50.51% {background-position-x:54.545455%} 58.92% {background-position-x:63.636364%}
- 67.34% {background-position-x:72.727273%} 75.76% {background-position-x:81.818182%}
- 84.18% {background-position-x:90.909091%} 92.5926%,100% {background-position-x:100%}
-}
-@keyframes hourglass-flip { 0%,92.5926% {transform:rotate(0deg)} 100% {transform:rotate(180deg)} }
-@media(prefers-reduced-motion:reduce) { .time-hourglass[data-moving="true"],.time-hourglass[data-moving="true"] .time-hourglass-sand {animation:none} }
 /* Phones: the settings panel opened upward from the time bar and could rise
    under the top bar, hiding its header and close button. Pin it as a sheet
    between the top bar and the screen bottom; its header stays in view while
    the body scrolls. */
 @media (max-width: 760px) {
-  .compact-time-popover, .timeline-calendar .compact-time-popover { position: fixed; top: calc(var(--topbar, 56px) + 8px); bottom: calc(8px + env(safe-area-inset-bottom, 0px)); left: 8px; right: 8px; width: auto; max-width: none; max-height: none; z-index: 260; }
+  .compact-time-popover, .timeline-calendar .compact-time-popover { position: fixed; top: calc(var(--topbar, 56px) + 8px); bottom: calc(148px + env(safe-area-inset-bottom, 0px)); left: 8px; right: 8px; width: auto; max-width: none; max-height: none; z-index: 260; }
   .compact-time-popover header { position: sticky; top: -16px; z-index: 1; margin: -16px -16px 0; padding: 16px 16px 4px; background: #102330; border-bottom: 1px solid #ffffff10; }
   .compact-time-popover header button { width: 44px; min-width: 44px; min-height: 44px; }
 }
@@ -179,4 +164,22 @@
    is open; closing the drawer brings the time bar back. */
 @media (max-width: 760px) {
   .explorer-shell[data-right="true"] > .timeline-panel.timeline-calendar { visibility: hidden; pointer-events: none; }
+}
+
+/* A single stationary clock is the time menu's explicit open/close control. */
+.compact-time .compact-time-clock-toggle,
+.compact-time[data-expanded="true"] .compact-time-clock-toggle {
+ position:absolute; inset:0 auto auto 0; z-index:2; display:grid; width:56px; height:56px;
+ visibility:visible; pointer-events:auto; border:1px solid #637174; border-radius:18px;
+ background:#102330f5; box-shadow:0 4px 16px #0003;
+}
+.compact-time .compact-time-clock-toggle img { width:28px; height:28px; filter:invert(80%) sepia(38%) saturate(600%) hue-rotate(350deg); }
+.timeline-calendar .compact-time-row { padding-left:64px; transform-origin:28px center; }
+@container (max-width:420px) {
+ .timeline-calendar .compact-time-row { padding-left:60px; }
+ .compact-time .compact-time-date-mobile { max-width:110px; }
+}
+
+@media (max-width:760px) {
+ .explorer-shell > .timeline-panel.timeline-calendar:has(.compact-time[data-expanded="true"]) { z-index:260; }
 }

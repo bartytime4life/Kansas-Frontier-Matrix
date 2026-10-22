@@ -7,8 +7,8 @@
   --inspection-width: clamp(340px, 28vw, 420px);
 }
 .inspection-panel-switch { position: sticky; top: 0; z-index: 2; background: var(--panel); display: flex; flex: none; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
-.inspection-panel-switch button { flex: 1; min-width: 0; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); font-weight: 800; }
-.inspection-panel-switch button[aria-pressed="true"] { color: var(--gold-soft); border-color: var(--gold); background: rgba(224, 186, 109, .1); }
+.inspection-panel-switch button { flex: 1; min-width: 0; min-height: 44px; border: 1px solid transparent; border-radius: 22px; background: transparent; color: var(--muted); font-weight: 800; }
+.inspection-panel-switch button[aria-pressed="true"] { color: var(--gold-soft); border-color: rgba(224, 186, 109, .4); background: rgba(224, 186, 109, .08); }
 .inspection-panel-switch .inspection-close { flex: 0 0 44px; font-size: 20px; }
 .inspection-panel-switch .inspection-map { flex: 0 0 52px; }
 .inspection-panel-switch .inspection-reading { flex: 0 0 80px; font-size: 11px; }
@@ -70,3 +70,8 @@
   .explorer-shell[data-inspector] > .qwen-modal-backdrop { display: block; position: absolute; inset: 0; z-index: 69; background: rgba(0, 0, 0, .16); }
   .explorer-shell[data-inspector] > .qwen-panel .qwen-messages { max-height: none; }
 }
+
+@media (min-width:1101px) {
+ .explorer-shell[data-inspector] > .qwen-panel { border-radius:24px 0 0 24px; border-left:1px solid var(--line); }
+}
+.inspection-panel-switch .inspection-close { border-radius:50%; }
