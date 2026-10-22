@@ -1,0 +1,22 @@
+[Unit]
+Description=KFM verified copy to an independent mounted backup store
+RequiresMountsFor=/srv/kfm-data /srv/kfm-backup
+ConditionPathExists=/etc/kfm-pipeline/backup.json
+[Service]
+Type=oneshot
+User=kfm-pipeline
+Group=kfm-pipeline
+ExecStart=/usr/bin/flock --no-fork --exclusive --wait 600 --conflict-exit-code=75 /srv/kfm-data/.kfm-pipeline.lock /usr/bin/node /opt/kfm-pipeline/scripts/pc-pipeline/cli.mjs backup /etc/kfm-pipeline/config.json /etc/kfm-pipeline/backup.json
+SuccessExitStatus=75
+UMask=0077
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/srv/kfm-data /srv/kfm-backup
+PrivateTmp=yes
+PrivateDevices=yes
+MemoryMax=1G
+CPUQuota=100%
+Nice=15
+IOSchedulingClass=idle
+TimeoutStartSec=6h

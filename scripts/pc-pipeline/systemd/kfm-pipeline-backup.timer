@@ -1,0 +1,9 @@
+[Unit]
+Description=Nightly independent KFM backup
+[Timer]
+OnCalendar=*-*-* 02:30:00
+Persistent=true
+RandomizedDelaySec=10min
+Unit=kfm-pipeline-backup.service
+[Install]
+WantedBy=timers.target

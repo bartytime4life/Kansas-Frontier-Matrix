@@ -1,0 +1,201 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { generateKeyPairSync, sign, randomBytes } from 'node:crypto';
+import { mkdtemp, writeFile, readFile, readdir, symlink } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { resolve } from 'node:path';
+import { canonical, sha, verifyProfile, recipeDigest, ORIGIN, MAX_PACKAGE, CHUNK_SIZE, PipelineError } from '../server/pipeline-contract.mjs';
+import { signRequest } from '../server/pipeline-auth.mjs';
+import { handlePipeline, publicContext } from '../server/pipeline-handler.mjs';
+import { ArtifactFiles, immutable, readRegular, storageGuard, hashFile } from '../server/pipeline-files.mjs';
+import { captureRequest, fetchCapture } from '../server/ingestion-sources.mjs';
+import { normalizeCapture, providerTime, validateContext } from '../server/pipeline-normalize.mjs';
+import { Journal } from '../scripts/pc-pipeline/journal.mjs';
+import { tick } from '../scripts/pc-pipeline/worker.mjs';
+import { publish } from '../scripts/pc-pipeline/publisher.mjs';
+import { captureFile } from '../scripts/pc-pipeline/copy.mjs';
+import { mirrorFtps } from '../scripts/pc-pipeline/ftps.mjs';
+
+const now = Date.now();
+const keys = generateKeyPairSync('ed25519');
+const publicKey = keys.publicKey.export({ format: 'pem', type: 'spki' });
+const secret = randomBytes(32).toString('hex');
+const recipe = await recipeDigest();
+const env = { KFM_PIPELINE_ENABLED: 'true', KFM_RUNTIME_ROLE: 'published', KFM_PIPELINE_APPROVER_PUBLIC_KEY: publicKey, KFM_PIPELINE_WORKER_SECRET: secret };
+function approval(sourceId = 'nws-alerts') {
+  const profile = { format: 'kfm-pc-release-delegation-v1', id: 'test-owner-approval', sourceId, recipeSha256: recipe, approver: 'fixture-owner',
+    validFrom: new Date(now - 60000).toISOString(), expiresAt: new Date(now + 86400000).toISOString(), rights: 'redistribution-allowed', sensitivity: 'public',
+    sourceRef: 'kfm://source/fixture', rightsRef: 'kfm://review/fixture-rights', reviewRef: 'kfm://review/fixture', releaseProfileRef: 'kfm://release/profile/fixture',
+    maxBytes: MAX_PACKAGE, maxRows: 1000, staleAfterSeconds: 7200, role: ['water','weather'].includes(sourceId) ? 'governed-package' : 'external-context' };
+  return { profile, signature: sign(null, Buffer.from(canonical(profile)), keys.privateKey).toString('base64url') };
+}
+async function candidate(id = 'fixture-alert', geometry = null) {
+  const request = captureRequest('nws-alerts', now);
+  const capture = await fetchCapture(request, { fetcher: async () => Response.json({ type: 'FeatureCollection', features: [{ type: 'Feature', id, geometry, properties: {
+    sent: new Date(now - 120000).toISOString(), effective: new Date(now - 120000).toISOString(), expires: new Date(now + 60000).toISOString(),
+    event: 'Synthetic fixture', severity: 'Unknown', privateUnapprovedField: 'MUST_NOT_PUBLISH', description: 'Synthetic only' } }] }) });
+  return normalizeCapture(request, capture);
+}
+class MemoryStore {
+  constructor() { this.rows = new Map(); this.heads = new Map(); this.nonces = new Set(); this.paused = false; }
+  async claimNonce(n) { if (this.nonces.has(n)) return false; this.nonces.add(n); return true; }
+  async ready() { return { paused: this.paused }; }
+  async stage(id, manifest) { if (this.paused) throw new PipelineError('PIPELINE_PAUSED'); const r = this.rows.get(id) ?? { id, sourceId: manifest.sourceId, manifest, state: 'STAGED' }; this.rows.set(id, r); return r; }
+  async release(id) { return this.rows.get(id) ?? null; }
+  async active(sourceId) { return this.rows.get(this.heads.get(sourceId)) ?? null; }
+  async commit(id, expected, projection) {
+    if (this.paused) throw new PipelineError('PIPELINE_PAUSED');
+    const r = this.rows.get(id); const head = this.heads.get(r.sourceId) ?? null;
+    if (r.state === 'COMMITTED') return { releaseId: id, active: head === id };
+    if (head !== expected) throw new PipelineError('ACTIVATION_CONFLICT');
+    r.projection = projection; r.state = 'COMMITTED'; this.heads.set(r.sourceId, id); return { releaseId: id, active: true };
+  }
+  async heartbeat() { return { receivedAt: now }; }
+}
+async function fixture() {
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-pipeline-test-')); await writeFile(resolve(root, '.qualified'), 'kfm-private-artifacts-v1');
+  const store = new MemoryStore(), files = new ArtifactFiles(root);
+  const request = async (action, body, options = {}) => {
+    const raw = canonical(body), path = '/api/pipeline/v1/' + action;
+    const headers = signRequest({ secret: options.secret ?? secret, method: 'POST', path, body: raw, now });
+    const req = new Request(ORIGIN + path, { method: 'POST', headers: { 'content-type': 'application/json', ...headers, ...options.headers }, body: raw });
+    return handlePipeline(req, { store, files, environment: options.environment ?? env, now, ...options.dependencies });
+  };
+  const fetcher = async (url, options) => handlePipeline(new Request(url, options), { store, files, environment: env });
+  return { store, files, request, fetcher, root };
+}
+function transfer(payload, sourceId = 'nws-alerts', expectedActive = null) {
+  return { format: 'kfm-pc-release-transfer-v1', sourceId, recipeSha256: recipe, byteLength: payload.length, payloadSha256: sha(payload), approval: approval(sourceId), expectedActive };
+}
+
+test('owner delegation binds source, recipe, rights, expiration and exact bytes', () => {
+  const a = approval(); assert.equal(verifyProfile(a, publicKey, { now, recipe, sourceId: 'nws-alerts' }).sourceId, 'nws-alerts');
+  for (const changed of [{ ...a, signature: 'bad' }, { ...a, profile: { ...a.profile, rights: 'unknown' } }, { ...a, profile: { ...a.profile, recipeSha256: 'a'.repeat(64) } }]) assert.throws(() => verifyProfile(changed, publicKey, { now, recipe, sourceId: 'nws-alerts' }), /APPROVAL_INVALID/);
+  assert.throws(() => verifyProfile(a, publicKey, { now: now + 2 * 86400000, recipe, sourceId: 'nws-alerts' }), /APPROVAL_INVALID/);
+  assert.throws(() => verifyProfile(a, publicKey, { now, recipe, sourceId: 'water' }), /APPROVAL_INVALID/);
+});
+test('private capture normalizes only allowlisted fields and preserves external-context role', async () => {
+  const { product, bytes } = await candidate();
+  assert.equal(product.evidenceEligible, false); assert.equal(product.evidenceRole, 'EXTERNAL_CONTEXT_ONLY');
+  assert.doesNotMatch(bytes.toString(), /MUST_NOT_PUBLISH|privateUnapprovedField/);
+  await assert.rejects(candidate('bad-geometry', { type: 'Point', coordinates: [0, 91] }), /GEOMETRY_INVALID/);
+});
+test('HTTPS publisher verifies staging, every chunk and committed identity; replays are rejected', async () => {
+  const f = await fixture(); const { bytes } = await candidate(); const m = transfer(bytes);
+  const receipt = await publish(m, bytes, secret, { fetcher: f.fetcher }); assert.equal(receipt.state, 'COMMITTED');
+  const data = await publicContext('nws-alerts', { store: f.store, environment: env, now });
+  assert.equal(data.releaseId, sha(canonical(m))); assert.equal(data.data.features.length, 1); assert.equal(data.freshness, 'current');
+  const repeat = await publish(m, bytes, secret, { fetcher: f.fetcher }); assert.equal(repeat.state, 'COMMITTED');
+  const body = canonical({ state: 'idle' }), path = '/api/pipeline/v1/heartbeat'; const h = signRequest({ secret, method: 'POST', path, body, now });
+  const req = () => new Request(ORIGIN + path, { method: 'POST', headers: h, body });
+  assert.equal((await handlePipeline(req(), { store: f.store, environment: env, now })).status, 200);
+  assert.equal((await handlePipeline(req(), { store: f.store, environment: env, now })).status, 401);
+});
+test('lost commit response recovers by immutable release lookup without double activation', async () => {
+  const f = await fixture(); const { bytes } = await candidate(); const m = transfer(bytes); let dropped = false;
+  const unreliable = async (url, options) => { const result = await f.fetcher(url, options); if (url.endsWith('/commit') && !dropped) { dropped = true; throw new Error('connection lost'); } return result; };
+  await assert.rejects(publish(m, bytes, secret, { fetcher: unreliable }), /connection lost/);
+  assert.equal(f.store.heads.size, 1);
+  assert.equal((await publish(m, bytes, secret, { fetcher: f.fetcher })).state, 'COMMITTED'); assert.equal(f.store.rows.size, 1);
+});
+test('preview, browser-origin calls, tampering and pause cannot publish', async () => {
+  const f = await fixture(); const { bytes } = await candidate(); const m = transfer(bytes);
+  assert.equal((await f.request('stage', m, { environment: { ...env, KFM_RUNTIME_ROLE: 'preview' } })).status, 404);
+  assert.equal((await f.request('stage', m, { headers: { origin: ORIGIN } })).status, 401);
+  assert.equal((await f.request('stage', m, { secret: 'f'.repeat(64) })).status, 401);
+  f.store.paused = true; assert.equal((await f.request('stage', m)).status, 409); assert.equal(f.store.heads.size, 0);
+});
+test('incomplete artifacts and conflicting immutable chunks cannot replace active data', async () => {
+  const f = await fixture(); const { bytes } = await candidate(); const m = transfer(bytes); const staged = await (await f.request('stage', m)).json();
+  assert.equal((await f.request('commit', { releaseId: staged.releaseId })).status, 503); assert.equal(f.store.heads.size, 0);
+  assert.equal((await f.request('chunk', { releaseId: staged.releaseId, index: 0, data: bytes.toString('base64') })).status, 200);
+  const wrong = Buffer.from(bytes); wrong[0] ^= 1;
+  assert.equal((await f.request('chunk', { releaseId: staged.releaseId, index: 0, data: wrong.toString('base64') })).status, 409);
+  assert.equal((await f.request('commit', { releaseId: staged.releaseId })).status, 200);
+});
+test('CAS rejects a stale publisher and public reads reject corrupt, revoked and expired projections', async () => {
+  const f = await fixture(); const a = (await candidate('a')).bytes, b = (await candidate('b')).bytes;
+  const ma = transfer(a), mb = transfer(b);
+  await publish(ma, a, secret, { fetcher: f.fetcher });
+  await assert.rejects(publish(mb, b, secret, { fetcher: f.fetcher }), /ACTIVATION_CONFLICT/);
+  await assert.rejects(publicContext('nws-alerts', { store: f.store, environment: { ...env, KFM_PIPELINE_REVOKED_PROFILES: 'test-owner-approval' }, now }), /APPROVAL_REVOKED/);
+  await assert.rejects(publicContext('nws-alerts', { store: f.store, environment: env, now: now + 2 * 86400000 }), /APPROVAL_INVALID/);
+  const row = await f.store.active('nws-alerts'); row.projection.data.features[0].properties.event = 'corrupt';
+  await assert.rejects(publicContext('nws-alerts', { store: f.store, environment: env, now }), /PROJECTION_INTEGRITY_FAILED/);
+});
+test('expired alerts are labeled and do not become a fresh active-alert claim', async () => {
+  const f = await fixture(); const { bytes } = await candidate(); await publish(transfer(bytes), bytes, secret, { fetcher: f.fetcher });
+  const result = await publicContext('nws-alerts', { store: f.store, environment: env, now: now + 3 * 3600000 });
+  assert.equal(result.freshness, 'stale'); assert.equal(result.data.features[0].properties.expired, true);
+});
+test('actual SQLite journal fences old workers and survives close/reopen', async () => {
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-journal-test-')); const path = resolve(root, 'journal.sqlite');
+  let j = await Journal.open(path); const a = j.claim('nws-alerts', 1000, now); assert.ok(a);
+  assert.equal(j.claim('nws-alerts', 1000, now), null); j.close();
+  j = await Journal.open(path); const b = j.claim('nws-alerts', 1000, now + 600001); assert.ok(b);
+  assert.throws(() => j.update(a, { state: 'complete' }, now + 600002), /LEASE_LOST/);
+  j.update(b, { product_path: 'data/processed/test.json' }, now + 600002); j.finish(b, null, now + 600002); j.close();
+  j = await Journal.open(path); assert.equal(j.status()[0].state, 'complete'); assert.equal(j.claim('nws-alerts', 1000, now + 700000), null); j.close();
+});
+test('PC worker retains failed raw input and avoids repeating completed hourly work', async () => {
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-worker-test-')); const config = { root, sources: ['nws-alerts'], publish: false };
+  let calls = 0;
+  const acquire = async req => { calls++; return fetchCapture(req, { fetcher: async () => Response.json({ type: 'FeatureCollection', features: [] }) }); };
+  const options = { now, acquire, memory: () => 8 * 1024 ** 3, guard: async () => ({}) };
+  assert.equal((await tick(config, options)).outcomes[0].state, 'candidate-only');
+  await tick(config, options); assert.equal(calls, 1);
+  const other = await mkdtemp(resolve(tmpdir(), 'kfm-worker-invalid-'));
+  const bad = await tick({ ...config, root: other }, { ...options, acquire: req => fetchCapture(req, { fetcher: async () => Response.json({ unexpected: true }) }) });
+  assert.equal(bad.outcomes[0].state, 'held'); assert.ok((await readdir(resolve(other, 'data/quarantine/nws-alerts/objects/sha256'))).length);
+});
+test('storage guards reject the root filesystem and immutable writes reject symlinks', async () => {
+  await assert.rejects(storageGuard({ root: '/tmp/test', mount: '/', device: '0', storeId: 'x' }), /DEDICATED_DATA_MOUNT_REQUIRED/);
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-files-test-')); const file = resolve(root, 'object');
+  await immutable(file, Buffer.from('original')); await immutable(file, Buffer.from('original'));
+  await assert.rejects(immutable(file, Buffer.from('changed!')), /IMMUTABLE_CONFLICT/);
+  await symlink(file, resolve(root, 'symlink')); await assert.rejects(readRegular(resolve(root, 'symlink'), 100));
+});
+test('backup streams multi-megabyte originals, verifies bytes and refuses conflicting copies', async () => {
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-backup-test-')); const source = resolve(root, 'source'), destination = resolve(root, 'copy');
+  const content = randomBytes(CHUNK_SIZE * 13); await writeFile(source, content); const expected = await hashFile(source);
+  await captureFile(source, destination, expected); assert.deepEqual(await readFile(destination), content);
+  await captureFile(source, destination, expected); await writeFile(destination, 'corrupt');
+  await assert.rejects(captureFile(source, destination, expected), /BACKUP_CONFLICT/);
+});
+test('real provider formats preserve decimal source values and RFC3339 offset/subsecond clocks', async () => {
+  assert.equal(providerTime('2026-10-22T20:06:29.034006+00:00'), '2026-10-22T20:06:29.034Z');
+  assert.equal(providerTime('2026-10-22T15:06:29-05:00'), '2026-10-22T20:06:29.000Z');
+  assert.throws(() => providerTime('2026-02-30T20:06:29+00:00'), /SOURCE_TIME_INVALID/);
+  const request = captureRequest('usgs-streamflow', now);
+  const acquired = await fetchCapture(request, { fetcher: async () => Response.json({ type: 'FeatureCollection', features: [{ type: 'Feature', id: 'fixture-usgs', geometry: { type: 'Point', coordinates: [-98, 38] },
+    properties: { parameter_code: '00060', monitoring_location_id: 'USGS-07144486', time: new Date(request.slot).toISOString().replace('Z', '+00:00'), value: '0.09', unit_of_measure: 'ft^3/s', approval_status: 'Provisional', qualifier: null } }] }) });
+  const { product } = normalizeCapture(request, acquired); assert.equal(product.data.features[0].properties.value, 0.09);
+  assert.equal(product.data.features[0].properties.originalValue, '0.09'); assert.equal(validateContext(product), product);
+  product.data.features[0].properties.privateContact = 'must not pass'; assert.throws(() => validateContext(product), /CONTEXT_INVALID/);
+});
+test('multi-chunk publication checks every chunk and reconstructs the exact bytes', async () => {
+  const f = await fixture(); const c = await candidate();
+  const features = Array.from({ length: 50 }, (_, i) => ({ ...c.product.data.features[0], id: 'fixture-' + i, properties: { ...c.product.data.features[0].properties, description: 'x'.repeat(10000) } }));
+  const payload = Buffer.from(canonical({ ...c.product, data: { type: 'FeatureCollection', features } })); assert.ok(payload.length > CHUNK_SIZE);
+  const receipt = await publish(transfer(payload), payload, secret, { fetcher: f.fetcher });
+  assert.equal((await publicContext('nws-alerts', { store: f.store, environment: env, now })).data.features.length, 50);
+  assert.equal(receipt.payloadSha256, sha(payload));
+});
+test('FTPS verifies encrypted private staging before rename and keeps credentials out of arguments', async () => {
+  const payload = (await candidate()).bytes, m = transfer(payload), id = sha(canonical(m));
+  const receipt = { state: 'COMMITTED', releaseId: id, payloadSha256: sha(payload) };
+  const config = { format: 'kfm-qualified-ftps-v1', qualified: true, host: 'ftp.example.test', username: 'fixture-user', password: 'fixture-password', privateDirectory: '/private/staging', publicDirectory: '/public/data', httpsBase: 'https://files.example.test/data' };
+  const calls = [];
+  const run = async (args, input) => {
+    calls.push(args); assert.ok(args.includes('--ssl-reqd')); assert.ok(args.includes('--tlsv1.2')); assert.ok(!args.join(' ').includes(config.password)); assert.ok(input.includes(config.password));
+    const output = args.indexOf('--output'); if (output >= 0) await writeFile(args[output + 1], payload);
+  };
+  assert.equal((await mirrorFtps(config, m, payload, receipt, { run, fetcher: async () => new Response(payload) })).state, 'mirror-verified'); assert.equal(calls.length, 3);
+  let renamed = false;
+  await assert.rejects(mirrorFtps(config, m, payload, receipt, { run: async args => { if (args.includes('--quote')) renamed = true; const output = args.indexOf('--output'); if (output >= 0) await writeFile(args[output + 1], 'corrupt'); } }), /FTPS_READBACK_FAILED/);
+  assert.equal(renamed, false);
+});
+test('governed packages cannot use the external-context shortcut', async () => {
+  const f = await fixture(); const payload = Buffer.from(canonical({ snapshot: {}, decision: {} })); const m = transfer(payload, 'water');
+  await assert.rejects(publish(m, payload, secret, { fetcher: f.fetcher }), /GOVERNED_VALIDATOR_REQUIRED/); assert.equal(f.store.heads.size, 0);
+});
