@@ -104,3 +104,110 @@ one change. No database migration, source admission, release, merge, deployment,
 or home-PC change is authorized or performed by this candidate.
 
 final result: blocked
+
+
+## 2026-10-22 follow-up: connected-browser acceptance and remaining release hold
+
+This follow-up supersedes the earlier WebGL limitation only for the executed
+checks below. It extends the same draft PR #5401, rather than adding a second
+fire renderer or competing pull request.
+
+### Published/source comparison
+
+GoDaddy app `urdng3v1vk`'s **Published** tab reported commit
+`00e59603e6012c144fcb7dbf1119f6b0e6ea29a4`. Its preview was out of sync.
+The hosted branch remained `4e0377e35fe5aa1440819b93bb51de304780a3b5`;
+the corrective PR started at `f31227c4b24ff499401e368e23bd6d15f27d703f`.
+A Git comparison confirmed no fire-renderer or compact-time-control differences
+between the reported published revision and hosted branch. Their differences
+include AI discussion and aviation-layout changes; a whole-branch publication
+would therefore carry more than this UI correction.
+
+The public page was reloaded and showed VIIRS flames plus the unwanted
+hourglass. GoDaddy's commit report is deployment metadata, not a byte-identity
+proof: the browser blocked direct navigation to /api/build, and no matching
+application-input digest was obtained. The published runtime was not changed.
+The available GoDaddy connector supports domain discovery, not deployment;
+existing hosting UI was inspected read-only.
+
+The source findings remain distinct: NIFC incident points have their own style,
+and the generic selection dot previously covered selected thermal detections.
+The existing PR treats both using the established flame renderer and provider
+identities. The local NIFC response contained no features, so a real incident
+flame/hit test was unavailable; its behavior is covered with labeled test data.
+
+### Additional corrections within existing owning roots
+
+- app/explorer-theme.css: overflow:clip prevents browser focus from scrolling
+  the map stage. The reproduced stage scrollTop was 265.6 pixels, displacing
+  attribution and other map controls. Child dialogs retain their own scroll
+  regions. The normal phone attribution anchor gains 60 pixels of clearance
+  above the time row; live observation docks and Underground retain their
+  existing positioning rules.
+- app/compact-time-sweep.css: constrain the non-phone settings height using the
+  actual toolbar allowance. At 911 x 600 CSS pixels the header previously rose
+  under the toolbar; it now starts at y=67, below the y=54 toolbar edge.
+- tests/fire-detection-style.test.mjs: one ticker for independently visible fire
+  sources; reduced-motion and hidden-tab cancellation; still selectable symbols;
+  hiding one fire source does not stop the other source's animation.
+- tests/explorer-startup.browser.mjs: actual component geometry at desktop,
+  tablet, short-window and phone sizes, stationary attribution, keyboard/focus,
+  and an emulated touch close from the same clock. Provider responses are
+  isolated fixtures; these tests do not assert data admission or release.
+
+Placement follows the adopted Directory Rules v2 and accepted ADR-0029 read
+from current main: this is an existing standalone composition. UI stays in app/,
+regressions in tests/, and human QA in docs/. No responsibility root, mirror,
+contract, policy, source-admission or release home was created or moved. The
+unversioned Directory Rules.pdf was not available in the supplied sources;
+the accepted successor was used as placement authority.
+
+### Executed validation
+
+- Production build: passed after the CSS corrections. TypeScript: passed.
+- Complete ordinary Node suite: 1,639 passed, 17 skipped, 0 failed, 1,656 total.
+  These are current-session results, not inherited PR claims.
+- Fire/time focused suite: 11 passed, including the new motion-lifecycle check.
+- New browser-test file content: syntax checked; execution is pending hosted CI.
+  It was not run through a separate automation driver in the connected browser.
+- Manual connected Chrome acceptance used the actual loopback production build,
+  without hosting credentials, AI configuration or home-PC access. The local
+  runtime acquired public provider context normally; this is not data admission.
+
+| CSS viewport | Observed outcome |
+|---|---|
+| 1366 x 900 | Animated flames visible; pointer selection opened a NASA record with acquisition time and provider fields; selected flame stayed unobscured. Enter and Escape operated the clock and returned focus. |
+| 1024 x 768 | Settings top y=67 below the 54-pixel toolbar; row y=626..682; information button y=687.47..731.47; source popup ends y=615.47; no horizontal overflow. |
+| 911 x 600 | Settings top y=67 and height=382; toolbar ends y=54; map-stage scrollTop=0. |
+| 390 x 844 | 56-pixel clock remains below settings; information button y=643.73..687.73 clears row y=702.27..758.27; source popup fits x=15.48..381.87 and ends y=571.73; focus does not scroll the map; no horizontal overflow. |
+
+Additional real-map checks: flames remained visible in pitched Terrain 3D with
+DEM and in globe projection; clicking a pitched flame selected its original
+NASA record. An exact provider-pixel view at zoom 12 with satellite imagery,
+terrain and motion=off showed the ember footprint. The opacity slider at zero
+removed the fire display, and the visibility toggle removed the source. No
+independent renderer, replacement provider record, evidence promotion, changed
+source clock or inference configuration was introduced. Pointer interactions
+at resized viewports were inconsistent through the browser connection; keyboard
+and measured geometry were used for repeatable acceptance. Physical-device
+and real touch acceptance remain unverified. Motion=off is an application
+setting; system reduced-motion cancellation was verified by the unit regression,
+not by changing the user's operating-system setting.
+
+### CI and publication boundary
+
+The original PR head's verify-core-delivery check failed in run 39785360544,
+job 119846991366: 19 browser checks passed and 14 failed. Eleven failures involve
+welcome assertions that still require eight topic cards/portals while the
+rendered welcome has 17 topics. Three failures report Shift+Tab modal wrapping.
+The welcome/browser-test source is unchanged between the hosted base and the
+original PR head, but no exact-base browser rerun was executed; this is not a
+claim that all failures are unrelated or harmless. No assertion was weakened.
+
+Independent review, new exact-head hosted CI, physical touch devices and broader
+provider/device combinations remain open. Do not publish while those release
+checks are held. Roll back this follow-up by reverting its CSS, regressions and
+documentation together; the whole PR retains its existing rollback boundary.
+No merge, production publication, runtime binding, AI or home-PC change occurred.
+
+Follow-up status: SOURCE_CORRECTED / RELEASE_HELD.

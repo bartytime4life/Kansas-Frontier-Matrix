@@ -42,7 +42,7 @@
 /* ---------- Base surfaces ---------- */
 body, .site-root { background: var(--bg); }
 .explorer-shell { background: radial-gradient(1200px 600px at 70% -10%, rgba(121, 198, 226, .06), transparent 60%), var(--bg); }
-.map-stage { background: #081624; }
+.map-stage { background: #081624; overflow: clip; }
 
 button, a, summary, input, select {
   transition: background-color var(--kfm-fast) var(--kfm-ease), border-color var(--kfm-fast) var(--kfm-ease), color var(--kfm-fast) var(--kfm-ease), box-shadow var(--kfm-fast) var(--kfm-ease), transform var(--kfm-fast) var(--kfm-ease);
@@ -265,6 +265,12 @@ button:active:not(:disabled) { transform: translateY(1px); }
 .map-stage .maplibregl-ctrl-attrib:not(.maplibregl-compact-show) .maplibregl-ctrl-attrib-inner { display: none; }
 .map-stage .maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-inner { display: block; }
 .map-stage .qwen-map-launch { border-radius: 999px; }
+/* The phone transport occupies the strip above the bottom navigation. Keep
+   attribution above that strip; live observation docks retain their clearance. */
+@media (max-width: 760px) {
+ .map-stage:not([data-live-dock="true"]):not([data-underground="true"]) .maplibregl-ctrl-bottom-right { bottom: calc(128px + env(safe-area-inset-bottom)); }
+}
+
 
 
 /* ---------- Time sweep and status ---------- */

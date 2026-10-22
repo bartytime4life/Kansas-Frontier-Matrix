@@ -547,3 +547,52 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.maplibregl-ctrl-scale')).visibility`),'visible','ordinary map scale is restored');
   });
 }
+
+
+// Real component geometry with isolated provider responses; no accepted data is
+// inferred from this fixture. These checks deliberately do not inspect welcome
+// topic counts, flame pixel colours, or CSS declaration text.
+for (const [width, height] of [[1366, 900], [1024, 768], [911, 600], [390, 844]]) {
+  test(`compact clock and attribution stay separate at ${width}x${height}`, { timeout: 60000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, width, height, { attribution: 'Isolated control geometry fixture: source timing and rights remain unavailable.' });
+    await p.open('/?motion=off', '1');
+    await p.wait(`document.querySelector('.compact-time-clock-toggle') && document.querySelector('.maplibregl-ctrl-attrib-button')`, 'real time and attribution controls mounted');
+    const rects = () => p.evaluate(`(() => {
+      const rect = selector => { const r = document.querySelector(selector)?.getBoundingClientRect(); return r ? { left:r.left, right:r.right, top:r.top, bottom:r.bottom, width:r.width, height:r.height } : null; };
+      return { header:rect('.topbar'), clock:rect('.compact-time-clock-toggle'), info:rect('.maplibregl-ctrl-attrib-button'), row:rect('.compact-time-row'), settings:rect('.compact-time-popover'), sources:rect('.maplibregl-ctrl-attrib-inner'), scroll:document.querySelector('.map-stage').scrollTop, overflow:document.documentElement.scrollWidth > innerWidth };
+    })()`);
+    const initial = await rects();
+    await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.querySelector('.compact-time-clock-toggle')?.getAttribute('aria-expanded') === 'true' && document.querySelector('.compact-time-popover')`, 'Enter opens settings');
+    await pause(250);
+    let g = await rects();
+    assert.ok(g.settings.top >= g.header.bottom + 4, 'settings header clears the toolbar at short heights');
+    assert.ok(g.settings.bottom <= g.row.top - 4, 'settings leave the same clock reachable');
+    assert.ok(g.info.bottom <= g.row.top - .5 || g.info.top >= g.row.bottom + .5, 'information button does not occupy the time row');
+    assert.ok(g.clock.width >= 44 && g.info.width >= 44, 'touch targets retain their size');
+    assert.equal(g.overflow, false);
+    await p.evaluate(`document.querySelector('.maplibregl-ctrl-attrib-button').focus()`);
+    if (!await p.evaluate(`document.querySelector('.maplibregl-ctrl-attrib').classList.contains('maplibregl-compact-show')`)) await p.key('Enter', 'Enter', 13);
+    await pause(100);
+    g = await rects();
+    assert.ok(g.sources.width > 0 && g.sources.left >= 0 && g.sources.right <= width + 1);
+    assert.ok(g.sources.bottom <= g.row.top - 4, 'source information clears the displayed time');
+    assert.ok(Math.abs(g.info.left - initial.info.left) < 1 && Math.abs(g.info.top - initial.info.top) < 1, 'source toggle does not move its indicator');
+    assert.equal(g.scroll, 0, 'keyboard focus cannot scroll the map and displace controls');
+    await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`document.querySelector('.compact-time-clock-toggle')?.getAttribute('aria-expanded') === 'false' && !document.querySelector('.compact-time-popover')`, 'Escape closes settings');
+    assert.equal(await p.evaluate(`document.activeElement === document.querySelector('.compact-time-clock-toggle')`), true);
+    if (width < 600) {
+      await p.key('Enter', 'Enter', 13);
+      await p.wait(`document.querySelector('.compact-time-clock-toggle')?.getAttribute('aria-expanded') === 'true'`, 'reopen before touch close');
+      await pause(250);
+      const r = (await rects()).clock;
+      await p.call('Emulation.setTouchEmulationEnabled', { enabled:true, maxTouchPoints:1 });
+      await p.call('Input.dispatchTouchEvent', { type:'touchStart', touchPoints:[{ x:r.left+r.width/2, y:r.top+r.height/2 }] });
+      await p.call('Input.dispatchTouchEvent', { type:'touchEnd', touchPoints:[] });
+      await p.wait(`document.querySelector('.compact-time-clock-toggle')?.getAttribute('aria-expanded') === 'false'`, 'touch closes from the same clock');
+    }
+  });
+}

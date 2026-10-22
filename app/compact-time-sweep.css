@@ -131,7 +131,7 @@
 .compact-time .compact-time-date-mobile { display: none; }
 .compact-time-exact-date { display: grid; gap: 5px; margin-bottom: 12px; color: #becdd3; font-size: 12px; }
 .compact-time-exact-date input { min-height: 40px; width: 100%; border: 1px solid #425965; border-radius: 6px; padding: 6px; background: #0c1d29; color: #ecf3f3; color-scheme: dark; }
-.timeline-calendar .compact-time-popover { width: min(380px, 100cqw); }
+.timeline-calendar .compact-time-popover { width: min(380px, 100cqw); max-height: min(590px, calc(100dvh - var(--topbar, 54px) - 164px)); }
 .time-emblem-sprite[data-moving="true"] { animation: time-emblem-frames 1.15s steps(1, end) infinite, time-emblem-arrive 220ms ease-out; }
 @keyframes time-emblem-arrive { from { opacity: .15; transform: scale(.86); } to { opacity: 1; transform: scale(1); } }
 @container (max-width: 420px) {

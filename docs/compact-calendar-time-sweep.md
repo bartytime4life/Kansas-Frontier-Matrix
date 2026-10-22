@@ -67,3 +67,5 @@ hosting settings are changed. No production publication is authorized by the PR.
 Validation: record exact executed results and browser acceptance in the PR and
 docs/compact-calendar-time-sweep-qa.md (the durable copy of the local root design-qa.md). Builds and unit checks do not prove hover, mobile, rendered
 animation quality, or live provider behavior.
+
+2026-10-22 follow-up: the map stage cannot scroll during control focus; phone attribution clears the time row, and short-window settings retain their header below the toolbar. See docs/explorer-controls-ai-polish-qa-20261021.md for current browser evidence and the separate CI/publication hold.

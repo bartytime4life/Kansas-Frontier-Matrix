@@ -158,3 +158,40 @@ test("MapLibre selection filter preserves ordinary points and never covers eithe
   for (const id of [undefined, "usgs-streamflow", "census-counties"]) assert.equal(compiled.filter({zoom:8}, point(id)), true);
   assert.equal(compiled.filter({zoom:8}, {type:3,properties:{},geometry:[]}), false);
 });
+
+
+test("both fire displays share one ticker and reduced motion or a hidden tab settles them without losing selection layers", t => {
+  const original = Object.fromEntries(["window", "document", "setTimeout", "clearTimeout"].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
+  const timers = new Map(), listeners = new Map(), mediaListeners = new Map();
+  const media = { matches: false, addEventListener: (name, fn) => mediaListeners.set(name, fn) };
+  const document = { hidden: false, addEventListener: (name, fn) => listeners.set(name, fn) };
+  let sequence = 0;
+  Object.assign(globalThis, { document, window: { matchMedia: () => media, location: { search: "" } },
+    setTimeout(fn) { const id = ++sequence; timers.set(id, fn); return id; },
+    clearTimeout(id) { timers.delete(id); } });
+  const { map, layers } = mapHarness();
+  const removed = [];
+  Object.assign(map, { triggerRepaint() {}, on() {}, off() {}, once(name, fn) { if (name === "remove") removed.push(fn); } });
+  t.after(() => {
+    for (const fn of removed) fn();
+    fire.setFireDetectionMotion(false);
+    for (const [key, descriptor] of Object.entries(original)) {
+      if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key];
+    }
+  });
+  const reports = { ...payload([detection("report", -98, 38, { incidentType: "Wildfire", scanKm: undefined, trackKm: undefined })]), feed: "nifc-fire-reports" };
+  const data = { "nasa-gibs-fire-points": payload([detection("pixel", -98, 38)]), "nifc-fire-reports": reports };
+  const apply = ids => context.applyOfficialContextState(map, only(ids), opacity, data);
+  fire.setFireDetectionMotion(true);
+  apply(["nasa-gibs-fire-points", "nifc-fire-reports"]);
+  assert.equal(timers.size, 1, "two sources must not create competing repaint loops");
+  media.matches = true; mediaListeners.get("change")();
+  assert.equal(timers.size, 0, "system reduced motion overrides an enabled ambient preference");
+  assert.equal(fire.fireMotionAllowed(), false);
+  for (const id of [fire.FIRE_POINT_LAYER_IDS.flame, fire.FIRE_REPORT_FLAME_ID]) assert.equal(layers.get(id).layout.visibility ?? "visible", "visible", "reduced motion preserves still selectable symbols");
+  media.matches = false; mediaListeners.get("change")(); assert.equal(timers.size, 1);
+  document.hidden = true; listeners.get("visibilitychange")(); assert.equal(timers.size, 0);
+  document.hidden = false; listeners.get("visibilitychange")(); assert.equal(timers.size, 1);
+  apply(["nifc-fire-reports"]); assert.equal(timers.size, 1, "hiding detections must not stop report motion");
+  apply([]); assert.equal(timers.size, 0);
+});
