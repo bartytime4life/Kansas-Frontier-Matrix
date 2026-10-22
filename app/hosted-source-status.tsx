@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
+import Link from 'next/link';
 type CaptureStatus = { state: string; configured: boolean; limitBytes: number; usedBytes: number | null; captures: number | null; lastTick: number | null; sources: { id: string; name: string; intervalMs: number; state: string; checkedAt?: number | null }[] };
 const STATUS_LABELS: Record<string, string> = { "storage-not-configured": "Archive setup pending", "configuration-required": "Archive setup pending", "storage-unavailable": "Archive unavailable", paused: "Capture paused", "awaiting-scheduled-tick": "Waiting for scheduled capture" };
 export function HostedSourceStatus() {
@@ -16,6 +17,7 @@ export function HostedSourceStatus() {
   return <section className="hosted-source-status" aria-label="Hosted source archive">
     <header><strong>Hosted source archive</strong><span>{failed ? "Status unavailable" : status ? STATUS_LABELS[status.state] ?? "Capture status" : "Checking…"}</span></header>
     <p>Scheduled captures preserve original source data for review. Archived captures remain private and do not change the map’s live layers.</p>
+    <p><Link href="/curated">Curated source snapshots, map and downloads</Link></p>
     {status && <><dl><div><dt>Archive limit</dt><dd>80 GB</dd></div><div><dt>Stored</dt><dd>{status.usedBytes === null ? "Not verified" : `${(status.usedBytes / 1e9).toFixed(3)} GB`}</dd></div><div><dt>Captures</dt><dd>{status.captures ?? "Not verified"}</dd></div><div><dt>Last capture check</dt><dd>{status.lastTick ? new Date(status.lastTick).toISOString().replace("T", " ").slice(0, 19) + " UTC" : "Not yet recorded"}</dd></div></dl>
       <ul>{status.sources.map(source => <li key={source.id}><strong>{source.name}</strong><span>{source.state === "quarantined" ? "Captured · awaiting review" : source.state === "quarantined-invalid" ? "Captured · validation needs attention" : source.state === "retry-held" ? "Retry held" : "No verified capture"}</span></li>)}</ul></>}
     <div><button type="button" disabled={loading} onClick={() => { setLoading(true); setFailed(false); void refresh(); }}>{loading ? "Checking…" : "Refresh archive status"}</button></div>

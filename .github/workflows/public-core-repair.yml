@@ -9,6 +9,19 @@ jobs:
   verify-core-delivery:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      pipeline-mysql:
+        image: mysql:8.4.13
+        env:
+          MYSQL_ROOT_PASSWORD: kfm-disposable-test-only
+          MYSQL_ROOT_HOST: "%"
+        ports:
+          - "127.0.0.1:13317:3306"
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1 --password=kfm-disposable-test-only"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -23,6 +36,11 @@ jobs:
       - run: npx tsc --noEmit
       - name: Complete standalone Node suite
         run: node --test --test-concurrency=4 tests/*.test.mjs
+      - name: Disposable MySQL pipeline migration and transaction checks
+        env:
+          KFM_PIPELINE_MYSQL_TEST: "1"
+          KFM_MYSQL_TEST: "1"
+        run: node --test tests/pipeline-mysql.test.mjs tests/hosted-ingestion-mysql.test.mjs
       - name: Actual Node HTTP boundary
         shell: bash
         run: |
@@ -35,6 +53,7 @@ jobs:
             sleep 1
           done
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/godaddy-node-runtime.test.mjs
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/pipeline-http.test.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/county-search.browser.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/aviation-layout.browser.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/explorer-startup.browser.mjs

@@ -13,6 +13,12 @@ export async function governedWaterRead(request: Request, view: string) {
       const url = new URL(request.url), entries = [...url.searchParams.entries()];
       if (url.search.length > 256 || entries.length > 1 || entries.some(([key, value]) => key !== "station_id" || !["USGS-06892518", "USGS-07156900"].includes(value))) { status = 400; result = await waterNegative("INVALID_QUERY", now); }
       else {
+        if (process.env.KFM_PIPELINE_ENABLED === "true") {
+          const { governedPipelineSnapshot } = await import("./pipeline-server");
+          const snapshot = await governedPipelineSnapshot("water");
+          if (!snapshot) result = await waterNegative("NO_APPROVED_SNAPSHOT", now);
+          else result = await projectWater(await parseWaterPackage(JSON.stringify(snapshot.snapshot)), snapshot.decision, view, new Date().toISOString(), url.searchParams.get("station_id"));
+        } else {
         const active = await getRawDb().prepare("SELECT a.package_id, a.decision_json, p.state FROM water_active a LEFT JOIN water_packages p ON p.package_id = a.package_id WHERE a.singleton = 1").first<{ package_id: string; decision_json: string; state: string }>();
         if (!active || active.state !== "STAGED") result = await waterNegative("NO_APPROVED_SNAPSHOT", now);
         else {
@@ -26,6 +32,7 @@ export async function governedWaterRead(request: Request, view: string) {
           const pkg = await parseWaterPackage(text);
           if (pkg.manifest.package_id !== active.package_id) throw new Error("ACTIVE_BINDING_MISMATCH");
           result = await projectWater(pkg, object(parseWaterJson(active.decision_json)), view, new Date().toISOString(), url.searchParams.get("station_id"));
+        }
         }
       }
     }
