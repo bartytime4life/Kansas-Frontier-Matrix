@@ -1,0 +1,98 @@
+{
+  "receipt_id": "kfm:generated:privacy-path-redaction:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/docs/HISTORIC_ROAD_MAP_STUDY.md",
+    "apps/site/source/docs/basemap-cache.md",
+    "apps/site/source/docs/unified-download-workspace.md",
+    "docs/reports/kansas-history-library-20261009.md",
+    "docs/reports/kfm-synchronization-20261009.md",
+    "docs/reports/repo-live-alignment-20261009.md",
+    "docs/runbooks/deployment-consolidation.md",
+    "docs/runbooks/free-data-acquisition.md",
+    "tools/qa/site_mirror.py",
+    "tests/qa/test_site_mirror.py",
+    "data/receipts/generated/site-v268-privacy-path-redaction-overlay-20261023.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/docs/HISTORIC_ROAD_MAP_STUDY.md": "sha256:0404497cfb35e7758668923409d0a4058e7045539a1c75b80a46db06339244b2",
+    "apps/site/source/docs/basemap-cache.md": "sha256:e31f70b72b5dedf510ed880ef6afd2666f443f2abbcb1a697fb9d9d5a5252e5c",
+    "apps/site/source/docs/unified-download-workspace.md": "sha256:897f5bddf9476e5da0fae4d052113be117c124e47bcc32bbb9b693ce3ff8984d",
+    "docs/reports/kansas-history-library-20261009.md": "sha256:13a6f65123e2ec6fde23b9e744ffb36efbc285825686957284a8f6159141772f",
+    "docs/reports/kfm-synchronization-20261009.md": "sha256:64178746635122fe19069bb4ec7722214cf66a32dec186251740dc8db5180a2b",
+    "docs/reports/repo-live-alignment-20261009.md": "sha256:943cec32f13ef68a207f7935066fd61cf8bb33c1ab8394dd912050be5137f7af",
+    "docs/runbooks/deployment-consolidation.md": "sha256:8c80149502e342e476a84360d1553ae7b6775390b2fcdb28854d3e3250700c21",
+    "docs/runbooks/free-data-acquisition.md": "sha256:97c4e4dd5fe6bf2008c11e1486d066fbd0f2ec4082344f68689fb10c5dc6e426",
+    "tools/qa/site_mirror.py": "sha256:6f2ce785dd49f7f9abc40540963ec92ab9efbf29d0e25dac64f176f4c37e3eb5",
+    "tests/qa/test_site_mirror.py": "sha256:25f138b338933fb59a1f31e70defb7937b4d303dc12ce3a88746257df60fc827",
+    "data/receipts/generated/site-v268-privacy-path-redaction-overlay-20261023.json": "sha256:40e10139fc1eb7101fcecac2528c25c0330191ac3c69852ed28a1ff9fa6a879f"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5 (Claude Code)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@ce0aed1abee79dbe5d0eb1f12aa71c633905e02f",
+      "docs/doctrine/retention.md@ce0aed1abee79dbe5d0eb1f12aa71c633905e02f",
+      "data/receipts/generated/site-v268-river-pulse-dismissal-overlay-20261022.json@ce0aed1abee79dbe5d0eb1f12aa71c633905e02f",
+      "data/receipts/generated/genrec-deployment-environment-closure-20261022.json@ce0aed1abee79dbe5d0eb1f12aa71c633905e02f"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/docs/HISTORIC_ROAD_MAP_STUDY.md": "CONFIRMED",
+    "apps/site/source/docs/basemap-cache.md": "CONFIRMED",
+    "apps/site/source/docs/unified-download-workspace.md": "CONFIRMED",
+    "docs/reports/kansas-history-library-20261009.md": "CONFIRMED",
+    "docs/reports/kfm-synchronization-20261009.md": "CONFIRMED",
+    "docs/reports/repo-live-alignment-20261009.md": "CONFIRMED",
+    "docs/runbooks/deployment-consolidation.md": "CONFIRMED",
+    "docs/runbooks/free-data-acquisition.md": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "data/receipts/generated/site-v268-privacy-path-redaction-overlay-20261023.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Site mirror tests and content parity",
+      "outcome": "PASS",
+      "reason": "tests/qa/test_site_mirror.py: 52 passed. tools/qa/site_mirror.py --check: content parity PASS; immutable River Pulse predecessor; exact three-path delta."
+    },
+    {
+      "gate": "Historical receipts preserved",
+      "outcome": "PASS",
+      "reason": "All previously recorded receipts are byte-identical to main; none edited."
+    },
+    {
+      "gate": "Exact-head GitHub CI and human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending after push; no independent review claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-main-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/ce0aed1abee79dbe5d0eb1f12aa71c633905e02f"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T05:35:11.921911+00:00",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Privacy redaction only: an absolute operator home-directory prefix is replaced with $HOME in documentation, and a personal Vercel team slug in the deployment-consolidation runbook is replaced with a <vercel-team> placeholder. Append-only: historical receipts that recorded those values are preserved byte-for-byte and are not redacted by this change. This receipt binds the revised runbook bytes; genrec-deployment-environment-closure-20261022.json remains the immutable record of the prior bytes. No source data, release, deployment, dependency or authorization changes. Roll back all bound files, the selector and this receipt together."
+}
