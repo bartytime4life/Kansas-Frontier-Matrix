@@ -58,3 +58,16 @@ test('failed queries close the connection and missing configuration never connec
   const missing = createDatabaseCheck({ environment: () => ({}), connect: async () => assert.fail('must not connect') });
   assert.equal((await missing()).reason, 'configuration-missing');
 });
+
+test('TLS diagnosis distinguishes missing provider trust from unavailable TLS without exposing host details', async () => {
+  for (const [code, message, expected] of [
+    ['HANDSHAKE_NO_SSL_SUPPORT', 'Server does not support secure connection', 'server-does-not-support-tls'],
+    ['HANDSHAKE_SSL_ERROR', 'self-signed certificate at private.example', 'provider-ca-required'],
+    ['ERR_TLS_CERT_ALTNAME_INVALID', 'Hostname does not match private.example', 'certificate-hostname-mismatch'],
+  ]) {
+    const check = createDatabaseCheck({ environment: () => env, connect: async () => { throw Object.assign(new Error(message), { code }); } });
+    const result = await check();
+    assert.equal(result.tlsFailure, expected);
+    assert.doesNotMatch(JSON.stringify(result), /private.example/);
+  }
+});

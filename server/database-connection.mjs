@@ -26,6 +26,14 @@ function reason(error) {
   return 'connection-unavailable';
 }
 
+function tlsFailure(error) {
+  if (error?.code === 'HANDSHAKE_NO_SSL_SUPPORT') return 'server-does-not-support-tls';
+  const message = String(error?.message ?? '');
+  if (/self.signed|unable to verify|issuer certificate|certificate.*expired/i.test(message)) return 'provider-ca-required';
+  if (/altname|hostname.*match|certificate.*name/i.test(message)) return 'certificate-hostname-mismatch';
+  return 'provider-tls-configuration-required';
+}
+
 export function createDatabaseCheck({
   environment = () => process.env, now = Date.now,
   connect = async options => (await import('mysql2/promise')).createConnection(options),
@@ -45,6 +53,7 @@ export function createDatabaseCheck({
         result = { connected: true, state: 'connected', transport };
       } catch (error) {
         result = { connected: false, state: 'unavailable', reason: reason(error) };
+        if (result.reason === 'verified-tls-unavailable') result.tlsFailure = tlsFailure(error);
       } finally {
         // No idle pool, retry loop or unattended database workload.
         if (connection) connection.destroy();
