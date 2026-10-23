@@ -497,7 +497,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     const b=await browser(t),p=await pageSession(b,width,height,{attribution:'Isolated browser layout fixture attribution — empty geometry; no observations, rights claims or accepted data. <a href="https://openmaptiles.org/">Fixture OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">Fixture OpenStreetMap</a>'});
     if(label==='200 percent layout equivalent')await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:2,mobile:false});
     await p.open('/');await readyWelcome(p);
-    await p.wait(`(()=>{const r=document.querySelector('.maplibregl-ctrl-attrib')?.getBoundingClientRect();return r&&r.width>0&&r.height>0;})()`,'real MapLibre attribution mounted from bounded local style fixture');
+    await p.wait(`(()=>{const r=document.querySelector('#map-canvas .maplibregl-ctrl-bottom-right .maplibregl-ctrl-attrib')?.getBoundingClientRect();return r&&r.width>0&&r.height>0;})()`,'real MapLibre attribution mounted in its welcome strip from the bounded local style fixture');
     const checkLayout=async state=>{
       const result=await p.evaluate(`(()=>{
         const root=document.querySelector('.explorer-guide.living-welcome');
