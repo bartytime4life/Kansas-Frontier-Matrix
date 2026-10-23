@@ -8906,7 +8906,7 @@ export default function Home() {
       const fullscreen = owner.fullscreenElement
         ?? (owner as Document & { webkitFullscreenElement?: Element | null }).webkitFullscreenElement;
       const position = welcomeShowing ? ".maplibregl-ctrl-bottom-right" : ".maplibregl-ctrl-top-right";
-      const destination = welcomeShowing || fullscreen === container ? container.querySelector(position) : host;
+      const destination = welcomeShowing || fullscreen === container || container.classList.contains("maplibregl-pseudo-fullscreen") ? container.querySelector(position) : host;
       if (!attribution || !destination) return;
       destination.appendChild(attribution);
       attribution.open = welcomeShowing;
@@ -8914,10 +8914,21 @@ export default function Home() {
     };
     owner.addEventListener("fullscreenchange", synchronize);
     owner.addEventListener("webkitfullscreenchange", synchronize);
+    // The renderer's CSS fallback changes only the map class, without a
+    // document fullscreen event. Observe that transition before the next paint.
+    let pseudoFullscreen = container.classList.contains("maplibregl-pseudo-fullscreen");
+    const pseudoObserver = new MutationObserver(() => {
+      const next = container.classList.contains("maplibregl-pseudo-fullscreen");
+      if (next === pseudoFullscreen) return;
+      pseudoFullscreen = next;
+      synchronize();
+    });
+    pseudoObserver.observe(container, { attributes: true, attributeFilter: ["class"] });
     synchronize();
     return () => {
       owner.removeEventListener("fullscreenchange", synchronize);
       owner.removeEventListener("webkitfullscreenchange", synchronize);
+      pseudoObserver.disconnect();
     };
   }, [welcomeShowing, styleReady]);
   const closeExplorerGuide = (rememberDismissal: boolean) => {

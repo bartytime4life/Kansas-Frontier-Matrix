@@ -267,3 +267,5 @@ installation. Visual/browser acceptance remains blocked by the admin browser
 security check. Hosted deployment is separate. Rollback uses local 5e87610 and
 its retained build; no DB/R2 changes. Placement reuses existing Site app/tests/
 docs responsibilities under the repository's ADR-0029 directory rules.
+
+The same credit ownership follows MapLibre's CSS fullscreen fallback when native fullscreen APIs are unavailable. A scoped class observer detects entry and exit; it ignores unrelated class changes and disconnects with the host effect. The hydrated browser check exercises real fallback entry, visible credits, and return placement after temporarily withholding native entry/exit APIs.

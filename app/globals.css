@@ -4780,6 +4780,7 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 /* Native fullscreen owns the credit control; no external-host gap is needed. */
 @media (max-width: 760px), (max-height: 480px) {
   .map-stage .map-canvas:fullscreen .maplibregl-ctrl-top-right { right: 8px; }
+  .map-stage .map-canvas.maplibregl-pseudo-fullscreen .maplibregl-ctrl-top-right { right: 8px; }
   .map-stage .map-canvas:-webkit-full-screen .maplibregl-ctrl-top-right { right: 8px; }
 }
 .map-stage .maplibregl-ctrl-top-right .maplibregl-ctrl-attrib { background: #102b33 !important; border-color: #52737e; }

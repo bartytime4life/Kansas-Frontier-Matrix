@@ -233,6 +233,29 @@ for (const layout of [
   await p.activate('.map-stage .maplibregl-ctrl-attrib-button');
   await p.activate('[aria-label="Exit fullscreen"]');
   await p.wait(`!document.fullscreenElement && !!document.querySelector('.map-information-home .maplibregl-ctrl-attrib')`, 'native fullscreen exits and credits return to the upper host');
+  if(layout.width===390) {
+    // Exercise the renderer's supported CSS fallback with both native entry and
+    // exit APIs unavailable, then restore the browser before continuing.
+    await p.evaluate(`(() => {
+      const map=document.querySelector('#map-canvas');
+      window.__kfmFullscreenDescriptors=[[map,'requestFullscreen'],[map,'webkitRequestFullscreen'],[document,'exitFullscreen'],[document,'webkitCancelFullScreen']].map(([target,key])=>({target,key,descriptor:Object.getOwnPropertyDescriptor(target,key)}));
+      for(const {target,key} of window.__kfmFullscreenDescriptors)Object.defineProperty(target,key,{value:undefined,configurable:true});
+    })()`);
+    try {
+      await p.activate('[aria-label="Enter fullscreen"]');
+      await p.wait(`document.querySelector('#map-canvas')?.classList.contains('maplibregl-pseudo-fullscreen') && document.querySelector('#map-canvas .maplibregl-ctrl-attrib')`, 'CSS fullscreen keeps credits in the visible map');
+      await p.activate('#map-canvas .maplibregl-ctrl-attrib-button');
+      await p.wait(`document.querySelector('#map-canvas .maplibregl-ctrl-attrib')?.classList.contains('maplibregl-compact-show')`, 'CSS fullscreen credits open');
+      const fallbackCredits=await p.rect('#map-canvas .maplibregl-ctrl-attrib-inner');
+      assert.ok(fallbackCredits.width>0 && fallbackCredits.height>0 && fallbackCredits.x>=0 && fallbackCredits.y>=0 && fallbackCredits.x+fallbackCredits.width<=layout.width && fallbackCredits.y+fallbackCredits.height<=layout.height,'CSS fullscreen credits fit the viewport');
+      assert.ok(await p.evaluate(`(() => {const e=document.querySelector('#map-canvas .maplibregl-ctrl-attrib-inner'),r=e.getBoundingClientRect();return e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`),'CSS fullscreen credits remain hit-testable');
+      await p.activate('#map-canvas .maplibregl-ctrl-attrib-button');
+      await p.activate('[aria-label="Exit fullscreen"]');
+      await p.wait(`!document.querySelector('#map-canvas')?.classList.contains('maplibregl-pseudo-fullscreen') && document.querySelector('.map-information-home .maplibregl-ctrl-attrib')`, 'CSS fullscreen exits and credits return');
+    } finally {
+      await p.evaluate(`(() => {for(const {target,key,descriptor} of window.__kfmFullscreenDescriptors ?? []){if(descriptor)Object.defineProperty(target,key,descriptor);else delete target[key];}delete window.__kfmFullscreenDescriptors;})()`);
+    }
+  }
   const presentationSnapshot = await snapshot();
   assert.equal(await p.evaluate(`document.querySelector('.river-map-presentation button:first-child').getAttribute('aria-pressed')`), 'true', 'quiet River view is the default');
   await p.activate('.river-map-presentation button:last-child');
