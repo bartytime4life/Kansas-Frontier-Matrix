@@ -1,0 +1,67 @@
+{
+  "receipt_id": "kfm:generated:river-css-fullscreen-viewport-layer:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/globals.css",
+    "docs/water-flow-paths.md"
+  ],
+  "artifact_hashes": {
+    "app/globals.css": "sha256:7349b158ebb7aa1ba80ca674a80a00c31d2c898add8e0bc0b29eb47dffc8e250",
+    "docs/water-flow-paths.md": "sha256:48790a5ce8001ac19733c52666a90cd9c526265f935cb7c8cfd04ae3a91459ee"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@ba6a540dd4b5f44cfc3060dc22298a19dfdca60e",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39987705771"
+    ]
+  },
+  "truth_labels": {
+    "app/globals.css": "NEEDS VERIFICATION",
+    "docs/water-flow-paths.md": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "CSS fallback browser diagnostic",
+      "outcome": "FAIL",
+      "reason": "571f9d6 reaches actual renderer CSS fullscreen and moves credits correctly, but normal .map-canvas z-index 0 and .map-stage overflow clip leave its y8 control row behind/clipped by the y104 workspace boundary. Strict painted-target check rejects the hidden attribution button."
+    },
+    {
+      "gate": "CSS fullscreen foreground and viewport",
+      "outcome": "SKIPPED",
+      "reason": "Only while the renderer's fallback class exists, elevate the shell, promote its map stage to the fixed viewport, and raise the fullscreen canvas above sibling docks. Existing 390px fallback viewport, native hit, credits and restore assertions remain unchanged. Exact-head CI pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "css-fullscreen-diagnostic",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39987705771"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T16:41:17.257Z",
+  "emitter": "Codex",
+  "notes": "Two existing artifacts plus successor receipt. Fullscreen-only CSS; ordinary layout, source data, camera, rights and policy unchanged. No new dependency, agent merge or deployment. Existing behavioral assertions preserved."
+}
