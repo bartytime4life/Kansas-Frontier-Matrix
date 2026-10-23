@@ -166,6 +166,7 @@ for (const layout of [
   {width:1440,height:900,touch:false,motion:'no-preference'},
 ]) test(`River Pulse dismissal at ${layout.width}x${layout.height}, ${layout.touch?'touch':'mouse'}, ${layout.motion}`, {timeout:90000}, async t => {
   const b=await browser(t),p=await pageSession(b,layout);
+  try {
   await p.wait(`document.querySelector('.living-welcome [aria-label="Close quick start"]')`, 'welcome hydrated');
   await p.activate('[aria-label="Close quick start"]');
   await p.wait(`!document.querySelector('.explorer-guide') && document.querySelector('#map-canvas canvas')`, 'map ready');
@@ -314,5 +315,19 @@ for (const layout of [
   await p.key('Enter','Enter',13);
   await closed();
   t.diagnostic(JSON.stringify(layout));
+  } catch (error) {
+    try {
+      const probe = await p.evaluate(`(() => {
+        const selectors=['.map-stage','#map-canvas','.hydrology-observatory','.hydrology-sticky-heading','.hydrology-close','.map-information-home','.map-information-home .maplibregl-ctrl-attrib-button','.map-information-home .maplibregl-ctrl-attrib-inner','.maplibregl-ctrl-top-right:not(.map-information-home)'];
+        const elements=Object.fromEntries(selectors.map(selector=>{const e=document.querySelector(selector);if(!e)return[selector,null];const r=e.getBoundingClientRect(),s=getComputedStyle(e);return[selector,{x:r.x,y:r.y,width:r.width,height:r.height,clientHeight:e.clientHeight,scrollHeight:e.scrollHeight,scrollTop:e.scrollTop,display:s.display,visibility:s.visibility,z:s.zIndex,pointer:s.pointerEvents,maximum:s.maxHeight,padding:s.padding,scrollPadding:s.scrollPaddingTop}];}));
+        const close=document.querySelector('.hydrology-close'),r=close?.getBoundingClientRect();
+        return {viewport:{width:innerWidth,height:innerHeight},fullscreen:document.fullscreenElement?{tag:document.fullscreenElement.tagName,id:document.fullscreenElement.id,classes:document.fullscreenElement.className}:null,elements,closeHit:r?document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.outerHTML.slice(0,400):null,buttons:[...document.querySelectorAll('.maplibregl-control-container button,.maplibregl-control-container summary')].map(e=>({label:e.getAttribute('aria-label'),title:e.getAttribute('title'),classes:e.className}))};
+      })()`);
+      t.diagnostic('KFM_RIVER_PROBE ' + JSON.stringify({ layout, probe }));
+      const screenshot = await p.call('Page.captureScreenshot', { format:'jpeg', quality:65, captureBeyondViewport:false });
+      t.diagnostic('KFM_RIVER_IMAGE ' + JSON.stringify({ layout, data:screenshot.data }));
+    } catch (diagnosticError) { t.diagnostic('KFM_RIVER_DIAGNOSTIC_ERROR ' + String(diagnosticError)); }
+    throw error;
+  }
 });
 
