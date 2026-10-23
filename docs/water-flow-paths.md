@@ -21,6 +21,10 @@ AI badge that remains available on phones. Its floating duplicate is removed.
 Map attribution (the circled **i**) belongs to the upper-right navigation rail
 below location controls. Opening River Pulse no longer moves either control;
 provider credit links remain available in the expandable attribution control.
+The quick-start welcome retains its existing bottom credit strip and Map sources
+toggle. On returning to the map, the same native attribution control moves to
+an upper host outside the isolated map canvas, keeping its downward disclosure
+reachable above an open River Pulse panel.
 
 Placement reuses existing application, tests and adjacent documentation
 responsibilities under adopted Directory Rules §§10–11 and accepted ADR-0029.

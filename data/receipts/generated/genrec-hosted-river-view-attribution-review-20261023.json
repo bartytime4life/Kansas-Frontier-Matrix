@@ -1,0 +1,78 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-view-attribution-review:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/page.tsx",
+    "app/globals.css",
+    "tests/explorer-startup.browser.mjs",
+    "tests/river-pulse.browser.mjs",
+    "docs/water-flow-paths.md"
+  ],
+  "artifact_hashes": {
+    "app/page.tsx": "sha256:195ef08a65bc8de2fd13f35f4267c8a9a66a9973732d4eea659a84a8079413d2",
+    "app/globals.css": "sha256:26893b5e25ee088815586dee3bcea17c5b5adc5f136d035282b4129d0568bf36",
+    "tests/explorer-startup.browser.mjs": "sha256:129285c37918902c0bdafc44886088478c426986fb11fbe75864b72d4a264bf1",
+    "tests/river-pulse.browser.mjs": "sha256:bcf5369cf14d1ae97403a1a378f2eed892192751f61e9e9284b11158124f3761",
+    "docs/water-flow-paths.md": "sha256:27f60ffc30fd9229d4413e319215803836b88e164233b0eeaaacd9681167f509"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@b62ec120e74202fd879115d12d717bb62efe0fba",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5432#discussion_r4361014071",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5432#discussion_r4361014078",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5432#discussion_r4361014086"
+    ]
+  },
+  "truth_labels": {
+    "app/page.tsx": "NEEDS VERIFICATION",
+    "app/globals.css": "NEEDS VERIFICATION",
+    "tests/explorer-startup.browser.mjs": "NEEDS VERIFICATION",
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION",
+    "docs/water-flow-paths.md": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Review findings",
+      "outcome": "FAIL",
+      "reason": "Fresh source review confirms three findings despite resolved thread metadata: welcome CSS still owns the bottom credit strip, the relocated popup inherited bottom anchoring, and browser header checks expected Ask. This successor corrects all three rather than relying on thread status."
+    },
+    {
+      "gate": "Candidate correction and verification",
+      "outcome": "SKIPPED",
+      "reason": "Reparent the same native attribution DOM between its existing welcome strip and an upper map-stage host outside the isolated canvas, retaining source listeners. Explicit downward anchoring replaces bottom placement; header assertion uses Chat with KFM. Five-layout River Pulse checks now require a visible unobscured attribution disclosure above the dock. Exact-head validation pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T15:16:55.357Z",
+  "emitter": "Codex",
+  "notes": "Immutable review successor; previous source hashes and failed checks retained. Existing app/page, styles, browser tests and behavior guide only. No source, data, dependency, rights, policy or hosting mutation. No merge/publication."
+}
