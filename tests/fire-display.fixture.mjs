@@ -22,7 +22,13 @@ if(query.has('fallback')) map.addImage=()=>{throw new Error('Synthetic unavailab
 const sync=()=>applyOfficialContextState(map,visibility,opacity,payloads);
 setFireDetectionMotion(false); sync();
 const draw=()=>new Promise(resolve=>{map.once('render',()=>requestAnimationFrame(resolve));map.triggerRepaint();});
-const ready=async()=>{for(let i=0;i<120;i++){await draw();if(map.areTilesLoaded())return;}throw new Error('fixture tiles did not load');};
+const ready=()=>new Promise((resolve,reject)=>{
+  // Tiles can be ready before the current projection and symbol placement.
+  // Use the renderer's actual idle event before queries and screenshots.
+  const settled=()=>{clearTimeout(timer);resolve();};
+  const timer=setTimeout(()=>{map.off('idle',settled);reject(new Error('fixture renderer did not settle: '+errors.join('; ')));},15000);
+  map.once('idle',settled);map.triggerRepaint();
+});
 const ids=[...OFFICIAL_CONTEXT_SOURCES.filter(s=>visibility[s.id]).flatMap(s=>s.interactiveLayerIds)];
 map.on('click',event=>{
   const feature=map.queryRenderedFeatures(event.point,{layers:ids.filter(id=>map.getLayer(id))})[0];

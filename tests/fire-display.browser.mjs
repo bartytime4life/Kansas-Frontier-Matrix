@@ -126,6 +126,7 @@ for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,t
       await call('Input.dispatchMouseEvent',{type:'mousePressed',x:point.x,y:point.y-12,button:'left',clickCount:1});
       await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x,y:point.y-12,button:'left',clickCount:1});
       const record=JSON.parse(await evaluate(`document.querySelector('#inspection').textContent`));
+      t.diagnostic(JSON.stringify({requested:id,point,selected:record.id}));
       assert.equal(record.id,id);assert.equal(record.source,id==='fixture-report'?'external-nifc-fire-reports':'external-nasa-gibs-fire-points');
     }
     await evaluate('fireFixture.motion(true)');
@@ -146,7 +147,7 @@ for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,t
     // Full hydrated Explorer: actual map click, selection routing and Evidence
     // Drawer, using loopback-only synthetic provider responses.
     fullApp=true; await isolateBrowserNetwork(call,origin);
-    const waitFor=async(expression,label)=>{const end=Date.now()+30000;while(Date.now()<end){if(await evaluate(expression))return;await pause(100);}throw new Error('Timed out: '+label);};
+    const waitFor=async(expression,label)=>{const end=Date.now()+30000;while(Date.now()<end){if(await evaluate(expression))return;await pause(100);}await capture('failure');throw new Error('Timed out: '+label+'; '+await evaluate('document.body.innerText.slice(-2500)')); };
     await call('Page.addScriptToEvaluateOnNewDocument',{source:`(() => {
       if(!new URLSearchParams(location.search).has('testNoFireCanvas'))return;
       for(const type of [window.OffscreenCanvas,window.HTMLCanvasElement])if(type){
