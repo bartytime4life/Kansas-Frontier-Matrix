@@ -25,10 +25,11 @@ The quick-start welcome retains its existing bottom credit strip and Map sources
 toggle. On returning to the map, the same native attribution control moves to
 an upper host outside the isolated map canvas, keeping its downward disclosure
 reachable above an open River Pulse panel.
-Native fullscreen targets the map stage, including the information host and
-observation dock, so source credits remain available in that view. The renderer
-adapter owns its Enter/Exit label and uses the native fullscreen APIs, including
-an accessible unavailable state if the browser rejects a request.
+Native fullscreen retains the original renderer control and its interaction
+handling. The same credit element moves inside the native fullscreen map while
+that view is active, then returns to the upper information host on exit. Standard
+and prefixed fullscreen-change events keep the placement synchronized; the
+experimental replacement fullscreen control is not retained.
 Phone dock height accounts for both the bottom navigation and the upper control
 row. Short landscape reduces vertical padding while retaining 44px actions,
 keeping compact and expanded sticky dismissal clear of map information.
