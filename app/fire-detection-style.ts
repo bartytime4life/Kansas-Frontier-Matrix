@@ -188,6 +188,7 @@ export function syncFireReportDisplay(map: MapLibreMap, visible: boolean, opacit
   if (map.getLayer(FIRE_REPORT_FLAME_ID)) setVisibleIfChanged(map, FIRE_REPORT_FLAME_ID, visible && imagesReady);
   setPaintExpression(map, FIRE_REPORT_FLAME_ID, "icon-opacity", imagesReady ? amount : 0);
   for (const id of [REPORT_SOURCE + "-halo", REPORT_SOURCE + "-point"]) {
+    if (!map.getLayer(id)) continue;
     setVisibleIfChanged(map, id, visible);
     setPaintExpression(map, id, "circle-opacity", imagesReady ? 0 : amount * (id.endsWith("-halo") ? 0.3 : 1));
     setPaintExpression(map, id, "circle-stroke-opacity", imagesReady ? 0 : amount);

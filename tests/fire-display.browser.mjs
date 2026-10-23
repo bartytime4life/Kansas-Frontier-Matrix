@@ -1,6 +1,6 @@
 // Real MapLibre/Canvas component acceptance with explicitly synthetic data.
 // No provider requests or deployed fixture endpoint. The original Explorer
-// Evidence Drawer still requires full-app acceptance before publication.
+// Evidence Drawer is checked separately through the hydrated application.
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { spawn } from 'node:child_process';
@@ -8,6 +8,7 @@ import { mkdtemp, rm, readFile, mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { build } from 'esbuild';
+import { isolateBrowserNetwork } from './browser-network.mjs';
 const origin=new URL(process.env.KFM_NODE_TEST_ORIGIN??'http://127.0.0.1:5182');
 assert.equal(origin.protocol,'http:');
 assert.ok(['127.0.0.1','localhost','[::1]'].includes(origin.hostname));
@@ -69,12 +70,23 @@ for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,t
     const {targetId}=await b.call('Target.createTarget',{url:'about:blank'});
     const {sessionId}=await b.call('Target.attachToTarget',{targetId,flatten:true});
     const call=(method,params={})=>b.call(method,params,sessionId);
-    const errors=[];
+    const errors=[]; let fullApp=false; const feedResponses=new Map();
     b.listeners.add(message=>{
       if(message.sessionId!==sessionId||message.method!=='Fetch.requestPaused')return;
       const {requestId,request}=message.params,url=new URL(request.url);
-      const body=url.pathname==='/__fire-acceptance/'?(url.searchParams.has('baseline')?html.replace('/fixture.mjs','/baseline.mjs'):html):url.pathname==='/__fire-acceptance/fixture.mjs'?fixture.outputFiles[0].text:url.pathname==='/__fire-acceptance/baseline.mjs'?baseline?.outputFiles[0].text??null:null;
-      const op=body!==null?call('Fetch.fulfillRequest',{requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:url.pathname.endsWith('.mjs')?'text/javascript':'text/html'}],body:Buffer.from(body).toString('base64')}):call('Fetch.continueRequest',{requestId});
+      let apiBody=null;
+      if(fullApp && url.pathname.startsWith('/api/')){
+        const feed=url.searchParams.get('feed');
+        if(url.pathname==='/api/live-context' && ['nasa-gibs-fire-points','nifc-fire-reports'].includes(feed)){
+          const day=url.searchParams.get('day')??new Date().toISOString().slice(0,10);
+          const properties={featureId:'fixture-'+feed,name:'SYNTHETIC '+feed,confidence:'high',scanKm:0.5,trackKm:0.4,dayNight:'Day',acquiredAt:day+'T12:00:00Z',incidentType:'Incident complex',reportState:'Synthetic browser fixture; current activity not established'};
+          const data={type:'FeatureCollection',features:[{type:'Feature',id:properties.featureId,geometry:{type:'Point',coordinates:[-98.4,38.5]},properties}]};
+          apiBody=JSON.stringify({feed,state:'ready',retrievedAt:new Date().toISOString(),upstreamUpdatedAt:null,sourceDay:day,featureCount:1,data,source:'https://example.invalid/synthetic-test',limitation:'SYNTHETIC BROWSER FIXTURE',truncated:false});
+          feedResponses.set(feed,(feedResponses.get(feed)??0)+1);
+        } else if(url.pathname!=='/api/build')apiBody=JSON.stringify({error:'Unrelated provider unavailable in isolated fire test'});
+      }
+      const body=apiBody??(url.pathname==='/__fire-acceptance/'?(url.searchParams.has('baseline')?html.replace('/fixture.mjs','/baseline.mjs'):html):url.pathname==='/__fire-acceptance/fixture.mjs'?fixture.outputFiles[0].text:url.pathname==='/__fire-acceptance/baseline.mjs'?baseline?.outputFiles[0].text??null:null);
+      const op=body!==null?call('Fetch.fulfillRequest',{requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:apiBody?'application/json':url.pathname.endsWith('.mjs')?'text/javascript':'text/html'}],body:Buffer.from(body).toString('base64')}):call('Fetch.continueRequest',{requestId});
       void op.catch(error=>errors.push(String(error)));
     });
     await call('Page.enable');await call('Runtime.enable');await call('Network.enable');
@@ -130,5 +142,36 @@ for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,t
     const fallback=await evaluate('fireFixture.state()');assert.deepEqual(fallback.errors,[]);assert.equal(fallback.images.length,0);
     for(const id of ['external-nasa-gibs-fire-points-circle','external-nifc-fire-reports-point'])assert.equal(fallback.layers[id].opacity,1);
     await capture('image-fallback');assert.deepEqual(errors,[]);
+    // Full hydrated Explorer: actual map click, selection routing and Evidence
+    // Drawer, using loopback-only synthetic provider responses.
+    fullApp=true; await isolateBrowserNetwork(call,origin);
+    const waitFor=async(expression,label)=>{const end=Date.now()+30000;while(Date.now()<end){if(await evaluate(expression))return;await pause(100);}throw new Error('Timed out: '+label);};
+    await call('Page.addScriptToEvaluateOnNewDocument',{source:`(() => {
+      if(!new URLSearchParams(location.search).has('testNoFireCanvas'))return;
+      for(const type of [window.OffscreenCanvas,window.HTMLCanvasElement])if(type){
+        const original=type.prototype.getContext;
+        type.prototype.getContext=function(kind,...args){return kind==='2d'?null:original.call(this,kind,...args);};
+      }
+    })();`});
+    for(const fallbackMode of [false,true])for(const feed of ['nasa-gibs-fire-points','nifc-fire-reports']){
+      const prior=feedResponses.get(feed)??0;
+      await call('Page.navigate',{url:new URL(`/?c=-98.4,38.5&z=12&l=&ctx=${feed}&motion=off${fallbackMode?'&testNoFireCanvas=1':''}`,origin).href});
+      await waitFor(`!!history.state?.kfmExplorerView && !!document.querySelector('#map-canvas canvas') && !document.querySelector('.explorer-guide')`,'Explorer map hydration');
+      const end=Date.now()+30000;while((feedResponses.get(feed)??0)<=prior && Date.now()<end)await pause(100);
+      assert.ok((feedResponses.get(feed)??0)>prior,'synthetic fire response delivered');
+      await evaluate('new Promise(resolve=>{let frames=0;const next=()=>++frames>=30?resolve():requestAnimationFrame(next);requestAnimationFrame(next);})');
+      const point=await evaluate(`(()=>{const r=document.querySelector('#map-canvas canvas').getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()`);
+      // The same centre is an inspectable confidence marker in fallback mode.
+      const y=point.y-(fallbackMode?0:12);
+      if(layout.touch){await call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:point.x,y}]});await call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
+      else {await call('Input.dispatchMouseEvent',{type:'mousePressed',x:point.x,y,button:'left',clickCount:1});await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x,y,button:'left',clickCount:1});}
+      await waitFor(`document.querySelector('.evidence-drawer')?.dataset.open==='true' && document.querySelector('.evidence-drawer h2')?.textContent.includes(${JSON.stringify('SYNTHETIC ')}+${JSON.stringify(feed)})`,'original source record in real Evidence Drawer');
+      const text=await evaluate(`document.querySelector('.evidence-drawer').textContent`);
+      assert.match(text,feed==='nifc-fire-reports'?/NIFC|IRWIN/:/NASA|VIIRS/);
+      assert.match(text,/no KFM EvidenceBundle|not KFM evidence|EXTERNAL_CONTEXT_ONLY|External context/i);
+      await capture(`explorer-${feed}-${fallbackMode?'fallback':'flame'}`);
+    }
+    assert.deepEqual(errors,[]);
+
   });
 }

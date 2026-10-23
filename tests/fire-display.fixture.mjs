@@ -46,6 +46,6 @@ window.fireFixture={map,errors,draw,ready,sync,currentFireFrame,motion:setFireDe
   async amount(amount){for(const id of ['nasa-gibs-fire-points','nifc-fire-reports'])opacity[id]=amount;sync();await ready();},
   async visible(value){for(const id of ['nasa-gibs-fire-points','nifc-fire-reports'])visibility[id]=value;sync();await ready();},
   point(id){const feature=id==='fixture-report'?reports.features[0]:features.find(f=>f.id===id);return map.project(feature.geometry.coordinates);},
-  state(){return {errors,frame:currentFireFrame(),images:map.listImages().filter(id=>id.startsWith('kfm-fire')),layers:Object.fromEntries([...Object.values(FIRE_POINT_LAYER_IDS),FIRE_REPORT_FLAME_ID,'external-nifc-fire-reports-point'].filter(id=>map.getLayer(id)).map(id=>[id,{visibility:map.getLayoutProperty(id,'visibility'),opacity:map.getPaintProperty(id,map.getLayer(id).type==='symbol'?'icon-opacity':'circle-opacity')}]))};},
+  state(){return {errors,frame:currentFireFrame(),images:map.listImages().filter(id=>id.startsWith('kfm-fire')),layers:Object.fromEntries([...Object.values(FIRE_POINT_LAYER_IDS),FIRE_REPORT_FLAME_ID,'external-nifc-fire-reports-point'].filter(id=>map.getLayer(id)).map(id=>[id,{visibility:map.getLayoutProperty(id,'visibility'),opacity:map.getPaintProperty(id,({'symbol':'icon-opacity','circle':'circle-opacity','line':'line-opacity','fill':'fill-opacity'})[map.getLayer(id).type])}]))};},
 };
 await ready(); document.body.dataset.ready='true';

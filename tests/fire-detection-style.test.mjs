@@ -216,16 +216,18 @@ test("both fire displays share one ticker and reduced motion or a hidden tab set
 // Fresh renderer instances keep Canvas failures independent of successful caches.
 async function freshFire(label) { return import((await moduleUrl('app/fire-detection-style.ts')) + '#' + label); }
 function canvasStub(t, { offscreen = 'ok', readback = true, dom = true } = {}) {
+  let canRead = readback;
   const keys = ['OffscreenCanvas', 'document'];
   const original = keys.map(key => Object.getOwnPropertyDescriptor(globalThis, key));
   const gradient = { addColorStop() {} };
   const ctx = new Proxy({
-    getImageData: () => { if (!readback) throw new Error('readback unavailable'); return { data:new Uint8ClampedArray(144*192*4) }; },
+    getImageData: () => { if (!canRead) throw new Error('readback unavailable'); return { data:new Uint8ClampedArray(144*192*4) }; },
     createRadialGradient: () => gradient, createLinearGradient: () => gradient,
   }, { get: (target,key) => target[key] ?? (() => {}) });
   globalThis.OffscreenCanvas = class { getContext() { if(offscreen==='throw') throw new Error('unsupported'); return offscreen==='null' ? null : ctx; } };
   globalThis.document = { createElement: () => ({ getContext: () => dom ? ctx : null }) };
   t.after(() => keys.forEach((key,i) => original[i] ? Object.defineProperty(globalThis,key,original[i]) : delete globalThis[key]));
+  return { allowReadback() { canRead = true; } };
 }
 function unregistered(map) {
   const images = new Set();
@@ -287,17 +289,24 @@ test('offscreen failure falls back to ordinary Canvas and registration recovers 
 });
 
 test('Canvas readback denial and silent registration failure retain markers without throwing', async t => {
-  canvasStub(t,{readback:false});
+  const canvas = canvasStub(t,{readback:false});
   const renderer=await freshFire('denied-readback');
   const {map,layers}=mapHarness(); const {apply}=bothDisplays(map); apply(1); unregistered(map);
   renderer.syncFireDetectionDisplay(map,true,0.7); renderer.syncFireReportDisplay(map,true,0.7);
   assertFallback(layers,0.7);
   // An implementation exposing addImage but not registering must also fail closed.
-  canvasStub(t);
+  canvas.allowReadback();
   const silent=await freshFire('silent-registration'); map.addImage=()=>{};
   silent.syncFireDetectionDisplay(map,true,0.4); silent.syncFireReportDisplay(map,true,0.4);
   assertFallback(layers,0.4);
   delete map.addImage;
   silent.syncFireDetectionDisplay(map,true,0.3); silent.syncFireReportDisplay(map,true,0.3);
   assertFallback(layers,0.3);
+});
+
+test('a cleared or replacing style has no missing-layer visibility writes', () => {
+  const {map,layers}=mapHarness();
+  assert.doesNotThrow(()=>fire.syncFireReportDisplay(map,false,0));
+  assert.doesNotThrow(()=>fire.syncFireDetectionDisplay(map,false,0));
+  assert.equal(layers.size,0);
 });

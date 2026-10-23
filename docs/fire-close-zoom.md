@@ -79,7 +79,9 @@ HTTP, and creates no production route or provider observations. The matrix
 captures desktop and phone viewports at zooms 4, 8, 10, 12, 14, 17 and 20, plus
 pitched terrain, pitched globe, globe overview, light background, reduced
 motion, opacity zero and image-atlas fallback. It checks real rendered-feature
-queries against original source IDs. A pinned pre-redesign renderer can be
+queries against original source IDs and separately clicks both synthetic source
+types in the hydrated Explorer to inspect the actual Evidence Drawer, including
+when both Canvas 2D implementations are unavailable. A pinned pre-redesign renderer can be
 supplied through `KFM_FIRE_BASELINE_FILE` for matching zoom 8/12/14 screenshots.
 The workflow supplies commit `1000a5c4521bb3055e3863110754e924cdda801e` and uploads
 `fire-renderer-visual-comparison` artifacts. These are illustrative fixtures,
@@ -87,8 +89,8 @@ not acceptance of live fire data or measured terrain.
 
 The cloud browser cannot reach the local workspace listener. Local browser
 execution is therefore not claimed. Exact-head CI execution, screenshot review,
-full Explorer Evidence Drawer interaction, physical phones and real provider
-terrain must be distinguished from component acceptance. Keep the follow-up
+full Explorer Evidence Drawer results, physical phones and real provider terrain
+must be distinguished from component acceptance. Keep the follow-up
 in draft and do not qualify it for publication until the outstanding browser
 checks and visual comparison have been reviewed. No publication or deployment
 is performed by this change.
@@ -96,3 +98,9 @@ is performed by this change.
 All work stays within the existing standalone runtime, tests, workflow and docs
 owners under ADR-0029. Roll back this follow-up to restore the prior fallback;
 reverting PR #5441 separately restores the earlier rectangular presentation.
+
+The first CI run passed build, TypeScript, all 1,728 ordinary tests and
+disposable MySQL checks. Its new browser test caught a fixture-diagnostic bug:
+it asked fill/line layers for circle opacity. That test helper is corrected;
+the failed run is not counted as browser acceptance. A further style-replacement
+regression checks that absent layers cause no visibility writes.
