@@ -1,0 +1,77 @@
+{
+  "receipt_id": "kfm:generated:water-performance-browser-actionability:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/river-pulse.browser.mjs",
+    "docs/water-flow.md"
+  ],
+  "artifact_hashes": {
+    "tests/river-pulse.browser.mjs": "sha256:824017596b992e5df79212ec99adf63458fed331bfa911d6c7e1f9c7ec04b6f1",
+    "docs/water-flow.md": "sha256:70b1aca06b5aaebad194d6b73dd2f761f21d60f37abb09a72a138472b7c57241"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:e1b0ad7ad402f923c9c728d6d7b26515bae87ae62354a95c87666d780a1c3c1a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "node_repl"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@a23d8a43f12ade5d41fe87a9d1b7e09e6bba5987",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39908486467",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39906810557"
+    ]
+  },
+  "truth_labels": {
+    "tests/river-pulse.browser.mjs": "CONFIRMED",
+    "docs/water-flow.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Initial exact-head CI",
+      "outcome": "FAIL",
+      "reason": "Build, TypeScript, complete Node suite and disposable MySQL passed; desktop River Pulse More → Status hit-test failed, with evidence dd at target centre. Four smaller layouts passed; assigned-port check skipped."
+    },
+    {
+      "gate": "Successor local browser and lint",
+      "outcome": "PASS",
+      "reason": "All five retained layouts pass with target-centre readiness before native input. Original viewport/hit assertions and every state-preservation check remain. Browser syntax, lint and diff pass. A separate unmodified desktop run under 4x CPU throttling also passes."
+    },
+    {
+      "gate": "Unchanged application bytes",
+      "outcome": "PASS",
+      "reason": "Only existing browser helper and behavior guide change in this successor. Application digest remains sha256:1466d16a306b893be7757c893e66c539d60828ffa68a081071a38ebc67ec4bed; prior generation receipt remains immutable."
+    },
+    {
+      "gate": "Successor exact-head CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending after upload. The intermittent failure root cause is not established; no passing CI or product stacking repair is claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "initial-ci-failure",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39908486467"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T06:09:47.693Z",
+  "emitter": "Codex",
+  "notes": "Use existing tests/docs/generated-receipt responsibilities under Directory Rules v2 and accepted ADR-0029. Rollback this test-only wait independently; preserve geometry optimization and all historical receipts. No runtime CSS, deployment, source admission or data change."
+}

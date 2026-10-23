@@ -298,3 +298,22 @@ this candidate's final CI remain separate checks; no timeout or assertion is rem
 Rollback: revert this bounded gauge-filter/diagnostic change while retaining
 newer unrelated work. Source data, policy, storage and deployment state need no
 migration. This authoring change does not merge or publish the application.
+
+
+### CI actionability follow-up
+
+Initial performance head a23d8a43 passed CI build, types, the complete Node suite
+and disposable MySQL integration, then failed the desktop River Pulse native
+hit test for More → Status while evidence was open. The retained #5429 baseline
+passed its own CI; the unchanged test also passed locally, including a desktop
+run under 4× CPU throttling. The intermittent failure's root cause is not yet
+established.
+
+The browser helper now waits, within its existing 15-second actionability
+deadline, for the scrolled target's centre to hit that target before sending
+native input. It then retains the original viewport and strict hit-test
+assertions. No force click, hidden evidence, CSS change, removed assertion,
+timeout extension or reduced layout matrix is used. This is a bounded
+paint/actionability qualification change, not a claim of a proven product
+stacking fix. The successor receipt records the local five-layout pass and
+leaves exact-head CI and independent review pending.
