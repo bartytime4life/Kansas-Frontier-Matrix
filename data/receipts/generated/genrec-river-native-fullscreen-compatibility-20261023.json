@@ -1,0 +1,85 @@
+{
+  "receipt_id": "kfm:generated:river-native-fullscreen-compatibility:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/page.tsx",
+    "app/globals.css",
+    "app/maplibre-seam.ts",
+    "tests/river-pulse.browser.mjs",
+    "tests/rendered-html.test.mjs",
+    "docs/water-flow-paths.md"
+  ],
+  "artifact_hashes": {
+    "app/page.tsx": "sha256:76bbf4ec3b0189c2078ed8718b5542b00b43f63a5461be0e48b5f1f1570b2053",
+    "app/globals.css": "sha256:3bc3c0bf8fc2b79afd1b84a78805297f5e1ec941381f9da2be676008fd992323",
+    "app/maplibre-seam.ts": "sha256:8846c093ddc5ba66631c3f688662cf3d8388bc224e93a15d1adda5df33d0085b",
+    "tests/river-pulse.browser.mjs": "sha256:c41b68302c309e8bffd02fb9b6c88682b1d9c6b18bd70e3f895eebe1da1eb466",
+    "tests/rendered-html.test.mjs": "sha256:fe0c0c463a34f580a50b018261c854b665f502803d488eb5a966391ca04b0999",
+    "docs/water-flow-paths.md": "sha256:f27d0a6c56a370989530edd23bf172c484ef6c66230783d48b187f3a5e816084"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@3d24f4ae1866f9b9407cdb07e8390b18c23371c4",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5435#discussion_r4361590883",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5435#discussion_r4361590897"
+    ]
+  },
+  "truth_labels": {
+    "app/page.tsx": "NEEDS VERIFICATION",
+    "app/globals.css": "NEEDS VERIFICATION",
+    "app/maplibre-seam.ts": "NEEDS VERIFICATION",
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION",
+    "tests/rendered-html.test.mjs": "NEEDS VERIFICATION",
+    "docs/water-flow-paths.md": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Fullscreen compatibility review",
+      "outcome": "FAIL",
+      "reason": "Fresh source confirms the experimental control does not preserve renderer-owned cooperative-gesture restoration or prefixed request/exit support, despite resolved review metadata. Restore the original renderer control and acquisition seam."
+    },
+    {
+      "gate": "Native control and credit ownership",
+      "outcome": "SKIPPED",
+      "reason": "Move the same provider-credit element into the renderer's native fullscreen map corner while fullscreen is active, then back to the ordinary upper host. Listen for standard and prefixed fullscreen-change events. Five-layout fullscreen entry/exit, viewport and actual credit hit checks remain enabled; the three unit tests specific to the removed experimental adapter are deleted as part of that dependency-closed rollback. Exact-head CI pending."
+    },
+    {
+      "gate": "Browser script syntax",
+      "outcome": "PASS",
+      "reason": "Current browser regression parses as async JavaScript after stripping imports; no behavioral acceptance inferred."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T16:17:24.428Z",
+  "emitter": "Codex",
+  "notes": "Six corrected artifacts, deletion of the experimental adapter-specific test, restored original maplibre-seam bytes, native fullscreen behavior retained. No feature assertion, source, data, rights, policy, dependency or hosting change. No merge/publication by this task."
+}

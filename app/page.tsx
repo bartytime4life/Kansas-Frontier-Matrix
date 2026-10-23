@@ -92,7 +92,7 @@ import { browserRenderBudget, controlOwnsMapSourceErrors, mapRuntimeErrorCode, r
 import { webgl2Available } from "./webgl-support";
 import { sameRecord, sameValues } from "./state-equality";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
-import { createStageFullscreenControl, loadMapLibre, type GeoJSONSource, type Map as MapLibreMap, type MapSourceDataEvent, type ScaleControl } from "./maplibre-seam";
+import { loadMapLibre, type GeoJSONSource, type Map as MapLibreMap, type MapSourceDataEvent, type ScaleControl } from "./maplibre-seam";
 import {
   CATEGORY_ORDER,
   findFeature,
@@ -5069,7 +5069,7 @@ export default function Home() {
         scaleControlRef.current = scaleControl;
         map.addControl(scaleControl, "bottom-left");
         const navigationControl = new mapLibre.NavigationControl({ showCompass: true, showZoom: false, visualizePitch: true });
-        const fullscreenControl = createStageFullscreenControl(mapContainer.closest<HTMLElement>(".map-stage") ?? mapContainer);
+        const fullscreenControl = new mapLibre.FullscreenControl();
         const geolocateControl = new mapLibre.GeolocateControl({
           positionOptions: { enableHighAccuracy: false },
           trackUserLocation: false,
@@ -8894,20 +8894,31 @@ export default function Home() {
     setPrimaryWorkspace("map");
     setGuideOpen(true);
   };
-  // Welcome owns its existing bottom credit strip. Ordinary map attribution
-  // shares the upper navigation rail but lives outside the isolated map canvas,
-  // so its disclosure remains reachable above an open observation dock.
-  // Reparent the native control's DOM; keep its source listeners and identity.
+  // Keep the native provider-credit control in the visible ownership subtree:
+  // the welcome strip, native fullscreen map, or ordinary map information host.
   useEffect(() => {
     const container = mapContainerRef.current, host = mapInformationHostRef.current;
     if (!container || !host || !styleReady) return;
-    const attribution = host.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib")
-      ?? container.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib");
-    const destination = welcomeShowing ? container.querySelector(".maplibregl-ctrl-bottom-right") : host;
-    if (!attribution || !destination) return;
-    destination.appendChild(attribution);
-    attribution.open = welcomeShowing;
-    attribution.classList.toggle("maplibregl-compact-show", welcomeShowing);
+    const owner = container.ownerDocument;
+    const synchronize = () => {
+      const attribution = host.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib")
+        ?? container.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib");
+      const fullscreen = owner.fullscreenElement
+        ?? (owner as Document & { webkitFullscreenElement?: Element | null }).webkitFullscreenElement;
+      const position = welcomeShowing ? ".maplibregl-ctrl-bottom-right" : ".maplibregl-ctrl-top-right";
+      const destination = welcomeShowing || fullscreen === container ? container.querySelector(position) : host;
+      if (!attribution || !destination) return;
+      destination.appendChild(attribution);
+      attribution.open = welcomeShowing;
+      attribution.classList.toggle("maplibregl-compact-show", welcomeShowing);
+    };
+    owner.addEventListener("fullscreenchange", synchronize);
+    owner.addEventListener("webkitfullscreenchange", synchronize);
+    synchronize();
+    return () => {
+      owner.removeEventListener("fullscreenchange", synchronize);
+      owner.removeEventListener("webkitfullscreenchange", synchronize);
+    };
   }, [welcomeShowing, styleReady]);
   const closeExplorerGuide = (rememberDismissal: boolean) => {
     setGuideOpen(false);

@@ -207,6 +207,11 @@ for (const layout of [
   await p.wait(`!!document.querySelector('.map-information-home .maplibregl-ctrl-attrib')`, 'information returns from the welcome strip to its upper rail');
   const chatHome = await p.rect('.qwen-header-entry');
   const creditHome = await p.rect('.maplibregl-ctrl-attrib-button');
+  const railButtons=await p.evaluate(`[...document.querySelectorAll('#map-canvas .maplibregl-ctrl-top-right button')].map(e=>{const r=e.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,height:r.height};})`);
+  for(const button of railButtons) {
+    const gap=Math.max(creditHome.x-button.x-button.width,button.x-creditHome.x-creditHome.width,creditHome.y-button.y-button.height,button.y-creditHome.y-creditHome.height);
+    assert.ok(gap>=6,'map information has breathing room from every native map control');
+  }
   await open();
   assert.deepEqual(await p.rect('.qwen-header-entry'), chatHome, 'opening River Pulse never moves chat');
   assert.deepEqual(await p.rect('.maplibregl-ctrl-attrib-button'), creditHome, 'opening River Pulse never moves information');
@@ -218,14 +223,16 @@ for (const layout of [
   assert.ok(await p.evaluate(`(() => { const e=document.querySelector('.map-information-home .maplibregl-ctrl-attrib-inner'),r=e.getBoundingClientRect();return e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)); })()`), 'source disclosure remains above the River Pulse dock');
   await p.activate('.map-information-home .maplibregl-ctrl-attrib-button');
   await p.activate('[aria-label="Enter fullscreen"]');
-  await p.wait(`document.fullscreenElement?.classList.contains('map-stage')`, 'the map stage enters native fullscreen');
-  assert.ok(await p.evaluate(`document.fullscreenElement.contains(document.querySelector('.map-information-home .maplibregl-ctrl-attrib'))`), 'fullscreen retains native information and provider credits');
-  await p.activate('.map-information-home .maplibregl-ctrl-attrib-button');
-  await p.wait(`document.querySelector('.map-information-home .maplibregl-ctrl-attrib')?.classList.contains('maplibregl-compact-show')`, 'fullscreen information opens');
-  assert.ok(await p.evaluate(`(() => { const e=document.querySelector('.map-information-home .maplibregl-ctrl-attrib-inner'),r=e.getBoundingClientRect();return r.width>0 && r.height>0 && e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)); })()`), 'fullscreen credits remain hit-testable');
-  await p.activate('.map-information-home .maplibregl-ctrl-attrib-button');
+  await p.wait(`document.fullscreenElement?.id==='map-canvas'`, 'the native map enters fullscreen');
+  await p.wait(`document.fullscreenElement?.contains(document.querySelector('.map-stage .maplibregl-ctrl-attrib'))`, 'native fullscreen retains provider credits');
+  await p.activate('.map-stage .maplibregl-ctrl-attrib-button');
+  await p.wait(`document.querySelector('.map-stage .maplibregl-ctrl-attrib')?.classList.contains('maplibregl-compact-show')`, 'fullscreen information opens');
+  const fullscreenCredits = await p.rect('.map-stage .maplibregl-ctrl-attrib-inner');
+  assert.ok(fullscreenCredits.x>=0 && fullscreenCredits.y>=0 && fullscreenCredits.x+fullscreenCredits.width<=layout.width && fullscreenCredits.y+fullscreenCredits.height<=layout.height, 'fullscreen source disclosure fits the viewport');
+  assert.ok(await p.evaluate(`(() => { const e=document.querySelector('.map-stage .maplibregl-ctrl-attrib-inner'),r=e.getBoundingClientRect();return r.width>0 && r.height>0 && e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)); })()`), 'fullscreen credits remain hit-testable');
+  await p.activate('.map-stage .maplibregl-ctrl-attrib-button');
   await p.activate('[aria-label="Exit fullscreen"]');
-  await p.wait(`!document.fullscreenElement`, 'native fullscreen exits');
+  await p.wait(`!document.fullscreenElement && !!document.querySelector('.map-information-home .maplibregl-ctrl-attrib')`, 'native fullscreen exits and credits return to the upper host');
   const presentationSnapshot = await snapshot();
   assert.equal(await p.evaluate(`document.querySelector('.river-map-presentation button:first-child').getAttribute('aria-pressed')`), 'true', 'quiet River view is the default');
   await p.activate('.river-map-presentation button:last-child');
@@ -253,7 +260,6 @@ for (const layout of [
     await p.wait(`document.querySelector('.hydrology-observatory').dataset.expanded===${JSON.stringify(String(expanded))}`, 'panel size');
     // Wheel/touch gestures scroll the actual panel, never the map or document.
     await p.evaluate(`document.querySelector('.hydrology-observatory').scrollTop=0`);
-    const r=await p.rect('.hydrology-observatory');
     // Commit the reset before native compositor scrolling, then begin over
     // visible passive content, outside controls, sticky heading and scrollbar.
     await p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
@@ -268,11 +274,20 @@ for (const layout of [
     })()`);
     const {x,y}=origin;
     assert.ok(await p.evaluate(`(()=>{const e=document.elementFromPoint(${x},${y});return e?.closest('.hydrology-observatory') && !e.closest('button,input,select,a');})()`),'scroll gesture begins outside interactive controls');
-    if(layout.touch) {
-      await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
-      for(let i=1;i<=8;i++){await p.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-i*7}]});await pause(20);}
-      await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-    } else await p.call('Input.dispatchMouseEvent',{type:'mouseWheel',x,y,deltaX:0,deltaY:240});
+    // Let Chrome synthesize the native gesture, including compositor timing.
+    // The source and strict postcondition stay touch/mouse and real panel scroll.
+    await p.evaluate(`(() => {
+      window.__kfmRiverScrollOrigin=${JSON.stringify(origin)};
+      window.__kfmRiverScrollEvents=[];
+      const panel=document.querySelector('.hydrology-observatory');
+      for(const type of ['wheel','touchstart','touchmove','scroll'])panel.addEventListener(type,event=>{
+        queueMicrotask(()=>window.__kfmRiverScrollEvents.push({type:event.type,trusted:event.isTrusted,prevented:event.defaultPrevented,target:event.target?.className,scrollTop:panel.scrollTop}));
+      },{passive:true,once:true});
+    })()`);
+    await p.call('Input.synthesizeScrollGesture',{
+      x,y,xDistance:0,yDistance:-120,speed:450,preventFling:true,
+      gestureSourceType:layout.touch?'touch':'mouse',
+    });
     await p.wait(`document.querySelector('.hydrology-observatory').scrollTop>10`, 'native panel scrolling');
     let previousScroll=-1;
     for(let i=0;i<30;i++) {
@@ -331,9 +346,9 @@ for (const layout of [
     try {
       const probe = await p.evaluate(`(() => {
         const selectors=['.map-stage','#map-canvas','.hydrology-observatory','.hydrology-sticky-heading','.hydrology-close','.map-information-home','.map-information-home .maplibregl-ctrl-attrib-button','.map-information-home .maplibregl-ctrl-attrib-inner','.maplibregl-ctrl-top-right:not(.map-information-home)'];
-        const elements=Object.fromEntries(selectors.map(selector=>{const e=document.querySelector(selector);if(!e)return[selector,null];const r=e.getBoundingClientRect(),s=getComputedStyle(e);return[selector,{x:r.x,y:r.y,width:r.width,height:r.height,clientHeight:e.clientHeight,scrollHeight:e.scrollHeight,scrollTop:e.scrollTop,display:s.display,visibility:s.visibility,z:s.zIndex,pointer:s.pointerEvents,maximum:s.maxHeight,padding:s.padding,scrollPadding:s.scrollPaddingTop}];}));
+        const elements=Object.fromEntries(selectors.map(selector=>{const e=document.querySelector(selector);if(!e)return[selector,null];const r=e.getBoundingClientRect(),s=getComputedStyle(e);return[selector,{x:r.x,y:r.y,width:r.width,height:r.height,clientHeight:e.clientHeight,scrollHeight:e.scrollHeight,scrollTop:e.scrollTop,display:s.display,visibility:s.visibility,z:s.zIndex,pointer:s.pointerEvents,maximum:s.maxHeight,padding:s.padding,scrollPadding:s.scrollPaddingTop,overflowX:s.overflowX,overflowY:s.overflowY,touchAction:s.touchAction}];}));
         const close=document.querySelector('.hydrology-close'),r=close?.getBoundingClientRect();
-        return {viewport:{width:innerWidth,height:innerHeight},fullscreen:document.fullscreenElement?{tag:document.fullscreenElement.tagName,id:document.fullscreenElement.id,classes:document.fullscreenElement.className}:null,elements,closeHit:r?{tag:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.tagName,classes:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.className}:null,buttons:[...document.querySelectorAll('.maplibregl-control-container button,.maplibregl-control-container summary')].map(e=>({label:e.getAttribute('aria-label'),title:e.getAttribute('title'),classes:e.className}))};
+        return {scrollOrigin:window.__kfmRiverScrollOrigin,scrollEvents:window.__kfmRiverScrollEvents,viewport:{width:innerWidth,height:innerHeight},fullscreen:document.fullscreenElement?{tag:document.fullscreenElement.tagName,id:document.fullscreenElement.id,classes:document.fullscreenElement.className}:null,elements,closeHit:r?{tag:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.tagName,classes:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.className}:null,buttons:[...document.querySelectorAll('.maplibregl-control-container button,.maplibregl-control-container summary')].map(e=>({label:e.getAttribute('aria-label'),title:e.getAttribute('title'),classes:e.className}))};
       })()`);
       t.diagnostic('KFM_RIVER_PROBE ' + JSON.stringify({ layout, probe }));
       const screenshot = await p.call('Page.captureScreenshot', { format:'jpeg', quality:65, captureBeyondViewport:false });
