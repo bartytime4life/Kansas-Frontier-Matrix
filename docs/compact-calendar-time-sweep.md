@@ -8,6 +8,11 @@ that same position. Arrow Up opens it; Escape, the close button, or an outside
 click dismisses it. Hover and pointer departure do not change the open state.
 Configuration does not resize the map or reserve a bottom timeline row.
 
+The stationary clock keeps its dark background, border, and shadow on hover,
+including above light terrain and street basemaps. The legacy transparent
+decorative-emblem style excludes this button. Moving onto or away from the
+clock and transport leaves the menu's open state unchanged.
+
 The hourglass is no longer mounted by the Explorer, and its animation option
 has been removed. Earlier artwork and the unused component remain recoverable
 for compatibility; they are not part of the active time control. On phones,
