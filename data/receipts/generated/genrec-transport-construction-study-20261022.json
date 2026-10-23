@@ -1,0 +1,142 @@
+{
+  "receipt_id": "genrec-transport-construction-study-20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/page.tsx",
+    "app/transport-construction-layer.ts",
+    "app/transport-crew-models.ts",
+    "app/transport-crew-preview.tsx",
+    "app/transport-history-control.tsx",
+    "app/transport-history-sources.ts",
+    "app/transport-history.css",
+    "app/transport-history.ts",
+    "docs/transport-construction-history.md",
+    "public/transport-construction-study-example.json",
+    "tests/transport-history-control.test.mjs",
+    "tests/transport-history.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/page.tsx": "sha256:4b93f14e49f8934c7787e7e5a2e17abb663eb7726045b4df6d3ae4e85ccaeff3",
+    "app/transport-construction-layer.ts": "sha256:8c2286513309d208a3aa5aee66909c307850985dde7bfea84ad6a574e62c02d1",
+    "app/transport-crew-models.ts": "sha256:de1bb341b90a98c88c6052bef943cf2ba70db5fb75bced0f3b54262ef9c68506",
+    "app/transport-crew-preview.tsx": "sha256:462811ba7b71432402be99a5ea0f4e2d63be0f225c376d6868769b7d6383c97b",
+    "app/transport-history-control.tsx": "sha256:6e62cb2440f22aef0841431b72f0aa62b855e7d920a3d9e1d64d49b83f9cb8bf",
+    "app/transport-history-sources.ts": "sha256:377e92a8d073453570463072ce221bb5e161c8d24c1f8e14949923757ef95fab",
+    "app/transport-history.css": "sha256:45248ed2dfd2de0ea2450c56158c9537d12568157e20e2a3b8bd059c8726dd38",
+    "app/transport-history.ts": "sha256:430bdc1042052a3a002ef038a7653daeca7d973e36e4a141f90251438efe7d13",
+    "docs/transport-construction-history.md": "sha256:adfca83280c57c03194a3c5e1131406eb2786ed686946fe2d43b22a342b85178",
+    "public/transport-construction-study-example.json": "sha256:77c1d77e9ab626ada615160d9e8e70509749733ba209cc8e779b186fb21af818",
+    "tests/transport-history-control.test.mjs": "sha256:6874d4d31342b3a2cc802c0ec97dc6519c4e7fe9b4b35f664bafe790eb8d6825",
+    "tests/transport-history.test.mjs": "sha256:a80846bfbbf8431c971ce7836350bc28fc409dda76ce77a19cb6b4c4fb36d430"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "UNKNOWN; exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:b10b39a4fe680011258e5ff0cb1772f59f5b2fbb997957fee32752b64a396b7e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "local shell",
+      "public web search",
+      "cloud browser"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Contributor Reliability System: Documentation, PR Quality, and CI Hardening",
+      "maplibre3d.md (proposal input only)"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d7b74a040b6d62bdbd4c808e54a51dea70208655",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/e699ac0a2995ac26fd801fb493c03d03cbdd38c7/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/e699ac0a2995ac26fd801fb493c03d03cbdd38c7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://www.bnsf.com/news-media/customer-notifications/notification.page?notId=industrial-products-network-update-for-friday-october-25-2024",
+      "https://www.ksdot.gov/Home/Components/News/News/2831/386",
+      "https://www.kansashistory.gov/kansapedia/eisenhower-highway-interstate-70/16894"
+    ]
+  },
+  "truth_labels": {
+    "app/page.tsx": "CONFIRMED",
+    "app/transport-construction-layer.ts": "NEEDS VERIFICATION",
+    "app/transport-crew-models.ts": "NEEDS VERIFICATION",
+    "app/transport-crew-preview.tsx": "NEEDS VERIFICATION",
+    "app/transport-history-control.tsx": "CONFIRMED",
+    "app/transport-history-sources.ts": "CONFIRMED",
+    "app/transport-history.css": "CONFIRMED",
+    "app/transport-history.ts": "CONFIRMED",
+    "docs/transport-construction-history.md": "CONFIRMED",
+    "public/transport-construction-study-example.json": "CONFIRMED",
+    "tests/transport-history-control.test.mjs": "CONFIRMED",
+    "tests/transport-history.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-construction-and-adjacent-reference-tests",
+      "outcome": "PASS",
+      "reason": "24 passed, zero failed/skipped; includes date/progress/closure/removal/reverse-seek, LOD, mesh disposal, valid styles, import race, reduced motion and overlay cleanup. Combined construction and newly merged welcome/traffic tests: 21 passed."
+    },
+    {
+      "gate": "production-build-and-full-standalone-suite",
+      "outcome": "PASS",
+      "reason": "Fresh combined-base production build and full suite: 1689 passed, zero failed, 21 skipped, 1710 total. Earlier combined run exposed stale generated identity; preserved prior output/cache and rebuilt cleanly. Skips are not executed checks."
+    },
+    {
+      "gate": "typescript-and-changed-file-eslint",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit and all added-code/test ESLint pass; page ESLint has zero errors and 41 existing warnings."
+    },
+    {
+      "gate": "local-browser-controls",
+      "outcome": "PASS",
+      "reason": "Transportation topic exposes construction tool; equipment disclosure and unavailable-WebGL fallback verified."
+    },
+    {
+      "gate": "webgl-realism-device-performance-and-file-picker-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Cloud browser reports WebGL2 unavailable. Synthetic local file-chooser check timed out; no successful rendered model, browser import, device or terrain/globe acceptance claimed."
+    },
+    {
+      "gate": "historical-data-admission-and-publication",
+      "outcome": "SKIPPED",
+      "reason": "Four primary-source discovery notes only. No source-qualified route-progress dataset connected or admitted. No SQL/PC/storage/Sites/hosting change."
+    },
+    {
+      "gate": "independent-review-and-deployment",
+      "outcome": "SKIPPED",
+      "reason": "Draft authoring only; human review pending. No merge, ready transition or deployment."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Pinned hosted base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/d7b74a040b6d62bdbd4c808e54a51dea70208655"
+    },
+    {
+      "id": "Accepted Directory Rules authority",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/e699ac0a2995ac26fd801fb493c03d03cbdd38c7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-23T01:36:10.673121+00:00",
+  "emitter": "OpenAI Codex KFM construction study authoring",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "PARTIAL against the complete owner goal: local candidate renderer and controls, not statewide historical coverage or visual realism acceptance. Supplied study assertions are unverified and do not reach Evidence Drawer, AI, exports or release stores. Four visible crews maximum, terrain/globe and removals retain line cues. Original Sites and monorepo mirror untouched. PR 5420 merged during final preparation; its five non-overlapping welcome-scene paths are retained in the exact base d7b74a0. Self-review only."
+}

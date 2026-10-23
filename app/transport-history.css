@@ -1,0 +1,31 @@
+.transport-history-control { margin: 14px 0; border: 1px solid color-mix(in srgb, currentColor 18%, transparent); border-radius: 18px; overflow: clip; }
+.transport-history-control > summary { min-height: 56px; cursor: pointer; padding: 14px 16px; }
+.transport-history-control > summary strong { font-size: 14px; }
+.transport-history-control > summary span { display: block; font-size: 11px; opacity: .72; padding: 4px 0 0 16px; }
+.transport-history-body { padding: 0 14px 14px; font-size: 12px; line-height: 1.55; }
+.transport-history-body p { margin: 10px 0; }
+.transport-history-body a { text-decoration: underline; text-underline-offset: 3px; }
+.transport-history-body details > summary { cursor: pointer; padding: 12px 0; min-height: 44px; }
+.transport-history-actions, .transport-preview-controls > div { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.transport-history-actions button, .transport-preview-controls button { min-height: 44px; padding: 8px 12px; border-radius: 12px; font: inherit; cursor: pointer; border: 1px solid color-mix(in srgb, currentColor 24%, transparent); background: color-mix(in srgb, currentColor 5%, transparent); color: inherit; }
+.transport-history-control button:focus-visible, .transport-history-control input:focus-visible, .transport-history-control summary:focus-visible { outline: 2px solid #e0b56e; outline-offset: 3px; }
+.transport-history-control button:disabled { opacity: .45; cursor: default; }
+.transport-history-control button[aria-pressed="true"] { background: color-mix(in srgb, #b68d46 22%, transparent); }
+.transport-history-actions small { flex: 1 1 160px; }
+.transport-study-input, .transport-study-date, .transport-study-scrub { display: grid; gap: 6px; margin: 14px 0; font-weight: 600; }
+.transport-study-input input, .transport-study-date input { width: 100%; min-height: 44px; font: inherit; padding: 8px; border-radius: 10px; border: 1px solid color-mix(in srgb, currentColor 24%, transparent); background: transparent; color: inherit; box-sizing: border-box; }
+.transport-study-scrub input { width: 100%; min-height: 44px; accent-color: #c89e58; }
+.transport-history-note, .transport-history-sources small { opacity: .76; font-size: 11px; }
+.transport-history-sources article, .transport-study-record { padding: 12px 0; border-top: 1px solid color-mix(in srgb, currentColor 13%, transparent); }
+.transport-history-sources article > span { font-size: 10px; letter-spacing: .04em; }
+.transport-history-sources h4, .transport-study-record h4 { font-size: 13px; margin: 6px 0; }
+.transport-history-sources article > a { display: block; min-height: 36px; padding-top: 8px; }
+.transport-study-error { color: #e68573; }
+.transport-study-legend { display: flex; flex-wrap: wrap; gap: 5px 12px; margin: 10px 0; font-size: 10px; }
+.transport-crew-preview { margin: 12px 0; background: #222d2a; border-radius: 15px; color: #eee8dc; overflow: hidden; }
+.transport-preview-controls { padding: 12px 10px 0; }
+.transport-preview-controls strong { display: block; margin-bottom: 8px; font-size: 11px; }
+.transport-preview-stage { width: 100%; height: 260px; }
+.transport-preview-stage canvas { display: block; width: 100%; max-width: 100%; }
+.transport-crew-preview > p { font-size: 10px; padding: 0 12px 10px; opacity: .8; }
+@media (max-width: 540px) { .transport-history-body { padding: 0 10px 12px; } .transport-history-actions button { flex: 1 1 auto; } }
