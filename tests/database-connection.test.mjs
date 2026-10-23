@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createDatabaseCheck, databaseOptions } from '../server/database-connection.mjs';
+import { createDatabaseCheck, databaseOptions, connectionOptions } from '../server/database-connection.mjs';
 
 const env = { DB_HOST: 'database.example.test', DB_NAME: 'private-db', DB_USER: 'private-user', DB_PASSWORD: 'private-password' };
 
@@ -70,4 +70,25 @@ test('TLS diagnosis distinguishes missing provider trust from unavailable TLS wi
     assert.equal(result.tlsFailure, expected);
     assert.doesNotMatch(JSON.stringify(result), /private.example/);
   }
+});
+
+test('provider-native transport needs explicit opt-in and pins only verified private DNS addresses', async () => {
+  const lookup = async () => [{ address: '172.20.0.3', family: 4 }];
+  assert.ok((await connectionOptions(env, lookup)).options.ssl);
+  const selected = { ...env, KFM_DATABASE_CONNECTION_TRANSPORT: 'provider-private-network' };
+  const result = await connectionOptions(selected, lookup);
+  assert.equal(result.transport, 'provider-private-network');
+  assert.equal(result.options.host, '172.20.0.3');
+  assert.equal(result.options.ssl, undefined);
+  for (const addresses of [[], [{ address: '8.8.8.8' }], [{ address: '10.1.2.3' }, { address: '8.8.8.8' }], [{ address: '::1' }]]) {
+    await assert.rejects(connectionOptions(selected, async () => addresses), /DATABASE_PRIVATE_NETWORK_REQUIRED/);
+  }
+});
+
+test('an approved provider mode still refuses public/mixed addresses before credentials are sent', async () => {
+  const check = createDatabaseCheck({ environment: () => ({ ...env, KFM_DATABASE_CONNECTION_TRANSPORT: 'provider-private-network' }),
+    lookup: async () => [{ address: '1.1.1.1' }], connect: async () => assert.fail('must not send credentials') });
+  const result = await check();
+  assert.equal(result.connected, false);
+  assert.equal(result.reason, 'private-provider-network-required');
 });
