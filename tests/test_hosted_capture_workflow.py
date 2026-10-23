@@ -17,7 +17,7 @@ class HostedCaptureWorkflowTest(unittest.TestCase):
         job = WORKFLOW['jobs']['capture']
         self.assertIn("github.ref == 'refs/heads/main'", job['if'])
         self.assertIn("vars.KFM_HOSTED_CAPTURE_ENABLED == 'true'", job['if'])
-        self.assertEqual(job['environment'], 'kfm-hosted-capture')
+        self.assertEqual(job['environment'], {'name': 'kfm-hosted-capture', 'deployment': False})
         self.assertEqual(job['timeout-minutes'], 4)
         self.assertEqual(len(job['steps']), 1)
         self.assertNotIn('uses', job['steps'][0])
