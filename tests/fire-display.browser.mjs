@@ -130,7 +130,7 @@ for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,t
       assert.equal(record.id,id);assert.equal(record.source,id==='fixture-report'?'external-nifc-fire-reports':'external-nasa-gibs-fire-points');
     }
     await evaluate('fireFixture.motion(true)');
-    const moving=await evaluate('fireFixture.currentFireFrame()');await pause(180);
+    const moving=await evaluate('fireFixture.currentFireFrame()');const animatedBefore=await call('Page.captureScreenshot',{format:'png'});await pause(180);const animatedAfter=await call('Page.captureScreenshot',{format:'png'});assert.notEqual(animatedBefore.data,animatedAfter.data,'animation changes actual rendered pixels');
     assert.notEqual(await evaluate('fireFixture.currentFireFrame()'),moving,'visible motion advances the shared cached image frames');
     await call('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
     await pause(80);assert.equal(await evaluate('fireFixture.currentFireFrame()'),3,'system reduced motion settles on a complete still flame');
