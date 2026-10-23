@@ -27,7 +27,7 @@ if (!process.argv.includes('--apply')) {
   catch { execFileSync('useradd', ['--system','--home-dir','/nonexistent','--shell','/usr/sbin/nologin','kfm-pipeline']); }
   const root = fileURLToPath(new URL('../..', import.meta.url));
   const files = ['server/ingestion-sources.mjs','server/pipeline-contract.mjs','server/pipeline-normalize.mjs','server/pipeline-files.mjs','server/pipeline-auth.mjs',
-    'scripts/pc-pipeline/journal.mjs','scripts/pc-pipeline/publisher.mjs','scripts/pc-pipeline/worker.mjs','scripts/pc-pipeline/cli.mjs','scripts/pc-pipeline/copy.mjs','scripts/pc-pipeline/ftps.mjs'];
+    'scripts/pc-pipeline/journal.mjs','scripts/pc-pipeline/publisher.mjs','scripts/pc-pipeline/worker.mjs','scripts/pc-pipeline/cli.mjs','scripts/pc-pipeline/connection.mjs','scripts/pc-pipeline/copy.mjs','scripts/pc-pipeline/ftps.mjs'];
   await mkdir('/opt/kfm-pipeline/server', { recursive: true }); await mkdir('/opt/kfm-pipeline/scripts/pc-pipeline', { recursive: true });
   for (const name of files) { const target = resolve('/opt/kfm-pipeline', name); await copyFile(resolve(root, name), target); await chmod(target, 0o644); }
   await copyFile(configPath, '/etc/kfm-pipeline/config.json'); await chmod('/etc/kfm-pipeline/config.json', 0o640);
