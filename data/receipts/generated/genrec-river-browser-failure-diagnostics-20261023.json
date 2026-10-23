@@ -1,0 +1,72 @@
+{
+  "receipt_id": "kfm:generated:river-browser-failure-diagnostics:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/river-pulse.browser.mjs",
+    ".github/workflows/public-core-repair.yml"
+  ],
+  "artifact_hashes": {
+    "tests/river-pulse.browser.mjs": "sha256:0d03df684faff11a2f6fc9f0eee26b4edc54f16baefe3c13c67df99245716e0c",
+    ".github/workflows/public-core-repair.yml": "sha256:1764fd89c77fb6419146f78e5d2ba37f7b3fffec5efc031a422f79c1a13fdd7d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@e830b5980b6f08fef0dc474c65944b55be7b50c9",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39978698044"
+    ]
+  },
+  "truth_labels": {
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION",
+    ".github/workflows/public-core-repair.yml": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Merged UI browser qualification",
+      "outcome": "FAIL",
+      "reason": "8cdaa994 passed build/types, 1706 Node tests with 19 skips, MySQL/HTTP, county and aviation checks. All five River Pulse cases failed across fullscreen transition, scroll, control overlap or selector behavior. No readiness/deployment acceptance is claimed."
+    },
+    {
+      "gate": "Diagnostic script syntax",
+      "outcome": "PASS",
+      "reason": "The JavaScript parser accepted the diagnostic test body after stripping import declarations, without executing browser operations."
+    },
+    {
+      "gate": "Diagnostic CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending. Adds failure-only DOM/geometry/button-attribute measurements and JPEG capture from isolated synthetic browser fixtures, rethrowing the original error. Moves the existing River Pulse invocation earlier within the same HTTP stage; no check, permission or trigger is removed or weakened."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T15:40:15.792Z",
+  "emitter": "Codex",
+  "notes": "Test and existing platform CI projection only; no application/runtime change, source admission, merge or publication. Captures are of the isolated synthetic CI page, never a user browser or private content. Existing checks remain intact."
+}

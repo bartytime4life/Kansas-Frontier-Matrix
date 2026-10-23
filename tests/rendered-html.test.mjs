@@ -161,7 +161,7 @@ test("adds bounded smoke, water, elevation, tile, and scene navigation features"
   assert.match(page, /Orbit started · drag, scroll or press a key to take back the camera/, "orbit announces how to interrupt the camera motion");
   assert.match(page, /External DEM; not KFM evidence/);
   assert.match(page, /new mapLibre\.NavigationControl/);
-  assert.match(page, /new mapLibre\.FullscreenControl/);
+  assert.match(page, /createStageFullscreenControl\(mapContainer\.closest/);
   assert.match(page, /aria-label="Unified map controls"/);
   assert.match(page, /SOURCE CONNECTIONS/);
   assert.match(page, /querySourceFeatures/);

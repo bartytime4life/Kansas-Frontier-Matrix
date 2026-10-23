@@ -127,6 +127,7 @@ async function pageSession(b, { width, height, touch, motion }) {
   const rect = selector => evaluate(`(() => { const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height}; })()`);
   const activate = async selector => {
     // Scroll through the real scroll container, then deliver native pointer input.
+    await wait(`!!document.querySelector(${JSON.stringify(selector)})`, `mounted target ${selector}`);
     await evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',behavior:'instant'})`);
     // Native details and scrolling can finish painting after their DOM state.
     // Wait for the same strict hit test that is asserted below; never force a
@@ -166,6 +167,7 @@ for (const layout of [
   {width:1440,height:900,touch:false,motion:'no-preference'},
 ]) test(`River Pulse dismissal at ${layout.width}x${layout.height}, ${layout.touch?'touch':'mouse'}, ${layout.motion}`, {timeout:90000}, async t => {
   const b=await browser(t),p=await pageSession(b,layout);
+  try {
   await p.wait(`document.querySelector('.living-welcome [aria-label="Close quick start"]')`, 'welcome hydrated');
   await p.activate('[aria-label="Close quick start"]');
   await p.wait(`!document.querySelector('.explorer-guide') && document.querySelector('#map-canvas canvas')`, 'map ready');
@@ -252,8 +254,19 @@ for (const layout of [
     // Wheel/touch gestures scroll the actual panel, never the map or document.
     await p.evaluate(`document.querySelector('.hydrology-observatory').scrollTop=0`);
     const r=await p.rect('.hydrology-observatory');
-    // Begin in inert padding so a native swipe cannot activate Latest or Play.
-    const x=r.x+r.width-4,y=r.y+r.height-8;
+    // Commit the reset before native compositor scrolling, then begin over
+    // visible passive content, outside controls, sticky heading and scrollbar.
+    await p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
+    const origin=await p.evaluate(`(() => {
+      const panel=document.querySelector('.hydrology-observatory'),r=panel.getBoundingClientRect(),heading=panel.querySelector('.hydrology-sticky-heading').getBoundingClientRect();
+      const inset=Math.max(14,panel.offsetWidth-panel.clientWidth+4);
+      for(const selector of ['.river-map-presentation p','.hydrology-state','.hydrology-clock strong','.hydrology-clock small']) {
+        const e=panel.querySelector(selector);if(!e)continue;const box=e.getBoundingClientRect(),x=box.x+box.width/2,y=box.y+box.height/2,hit=document.elementFromPoint(x,y);
+        if(x>r.left+12&&x<r.right-inset&&y>heading.bottom+2&&y<r.bottom-8&&hit&&e.contains(hit)&&!hit.closest('button,input,select,a,summary'))return{x,y,selector};
+      }
+      throw new Error('No visible passive panel content for native scrolling');
+    })()`);
+    const {x,y}=origin;
     assert.ok(await p.evaluate(`(()=>{const e=document.elementFromPoint(${x},${y});return e?.closest('.hydrology-observatory') && !e.closest('button,input,select,a');})()`),'scroll gesture begins outside interactive controls');
     if(layout.touch) {
       await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
@@ -314,5 +327,19 @@ for (const layout of [
   await p.key('Enter','Enter',13);
   await closed();
   t.diagnostic(JSON.stringify(layout));
+  } catch (error) {
+    try {
+      const probe = await p.evaluate(`(() => {
+        const selectors=['.map-stage','#map-canvas','.hydrology-observatory','.hydrology-sticky-heading','.hydrology-close','.map-information-home','.map-information-home .maplibregl-ctrl-attrib-button','.map-information-home .maplibregl-ctrl-attrib-inner','.maplibregl-ctrl-top-right:not(.map-information-home)'];
+        const elements=Object.fromEntries(selectors.map(selector=>{const e=document.querySelector(selector);if(!e)return[selector,null];const r=e.getBoundingClientRect(),s=getComputedStyle(e);return[selector,{x:r.x,y:r.y,width:r.width,height:r.height,clientHeight:e.clientHeight,scrollHeight:e.scrollHeight,scrollTop:e.scrollTop,display:s.display,visibility:s.visibility,z:s.zIndex,pointer:s.pointerEvents,maximum:s.maxHeight,padding:s.padding,scrollPadding:s.scrollPaddingTop}];}));
+        const close=document.querySelector('.hydrology-close'),r=close?.getBoundingClientRect();
+        return {viewport:{width:innerWidth,height:innerHeight},fullscreen:document.fullscreenElement?{tag:document.fullscreenElement.tagName,id:document.fullscreenElement.id,classes:document.fullscreenElement.className}:null,elements,closeHit:r?{tag:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.tagName,classes:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.className}:null,buttons:[...document.querySelectorAll('.maplibregl-control-container button,.maplibregl-control-container summary')].map(e=>({label:e.getAttribute('aria-label'),title:e.getAttribute('title'),classes:e.className}))};
+      })()`);
+      t.diagnostic('KFM_RIVER_PROBE ' + JSON.stringify({ layout, probe }));
+      const screenshot = await p.call('Page.captureScreenshot', { format:'jpeg', quality:65, captureBeyondViewport:false });
+      t.diagnostic('KFM_RIVER_IMAGE ' + JSON.stringify({ layout, data:screenshot.data }));
+    } catch (diagnosticError) { t.diagnostic('KFM_RIVER_DIAGNOSTIC_ERROR ' + String(diagnosticError)); }
+    throw error;
+  }
 });
 

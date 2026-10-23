@@ -92,7 +92,7 @@ import { browserRenderBudget, controlOwnsMapSourceErrors, mapRuntimeErrorCode, r
 import { webgl2Available } from "./webgl-support";
 import { sameRecord, sameValues } from "./state-equality";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
-import { loadMapLibre, type GeoJSONSource, type Map as MapLibreMap, type MapSourceDataEvent, type ScaleControl } from "./maplibre-seam";
+import { createStageFullscreenControl, loadMapLibre, type GeoJSONSource, type Map as MapLibreMap, type MapSourceDataEvent, type ScaleControl } from "./maplibre-seam";
 import {
   CATEGORY_ORDER,
   findFeature,
@@ -5069,9 +5069,7 @@ export default function Home() {
         scaleControlRef.current = scaleControl;
         map.addControl(scaleControl, "bottom-left");
         const navigationControl = new mapLibre.NavigationControl({ showCompass: true, showZoom: false, visualizePitch: true });
-        const fullscreenControl = new mapLibre.FullscreenControl({
-          container: mapContainer.closest<HTMLElement>(".map-stage") ?? mapContainer,
-        });
+        const fullscreenControl = createStageFullscreenControl(mapContainer.closest<HTMLElement>(".map-stage") ?? mapContainer);
         const geolocateControl = new mapLibre.GeolocateControl({
           positionOptions: { enableHighAccuracy: false },
           trackUserLocation: false,
