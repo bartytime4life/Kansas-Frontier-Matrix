@@ -254,9 +254,19 @@ for (const layout of [
     // Wheel/touch gestures scroll the actual panel, never the map or document.
     await p.evaluate(`document.querySelector('.hydrology-observatory').scrollTop=0`);
     const r=await p.rect('.hydrology-observatory');
-    // Begin in inert padding so a native swipe cannot activate Latest or Play.
-    const inset=await p.evaluate(`(()=>{const e=document.querySelector('.hydrology-observatory');return Math.max(14,e.offsetWidth-e.clientWidth+4);})()`);
-    const x=r.x+r.width-inset,y=r.y+r.height-8;
+    // Commit the reset before native compositor scrolling, then begin over
+    // visible passive content, outside controls, sticky heading and scrollbar.
+    await p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
+    const origin=await p.evaluate(`(() => {
+      const panel=document.querySelector('.hydrology-observatory'),r=panel.getBoundingClientRect(),heading=panel.querySelector('.hydrology-sticky-heading').getBoundingClientRect();
+      const inset=Math.max(14,panel.offsetWidth-panel.clientWidth+4);
+      for(const selector of ['.river-map-presentation p','.hydrology-state','.hydrology-clock strong','.hydrology-clock small']) {
+        const e=panel.querySelector(selector);if(!e)continue;const box=e.getBoundingClientRect(),x=box.x+box.width/2,y=box.y+box.height/2,hit=document.elementFromPoint(x,y);
+        if(x>r.left+12&&x<r.right-inset&&y>heading.bottom+2&&y<r.bottom-8&&hit&&e.contains(hit)&&!hit.closest('button,input,select,a,summary'))return{x,y,selector};
+      }
+      throw new Error('No visible passive panel content for native scrolling');
+    })()`);
+    const {x,y}=origin;
     assert.ok(await p.evaluate(`(()=>{const e=document.elementFromPoint(${x},${y});return e?.closest('.hydrology-observatory') && !e.closest('button,input,select,a');})()`),'scroll gesture begins outside interactive controls');
     if(layout.touch) {
       await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
