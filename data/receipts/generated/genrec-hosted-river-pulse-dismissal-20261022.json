@@ -1,0 +1,108 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-pulse-dismissal:20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/globals.css",
+    "app/hydrology-observatory.tsx",
+    "app/page.tsx",
+    "docs/water-flow-paths.md",
+    "tests/river-pulse-visuals.test.mjs",
+    "tests/component-harness.mjs"
+  ],
+  "artifact_hashes": {
+    "app/globals.css": "sha256:eaeae57db983da3614155f813cade5d79725f4f255670f390495fc1fe85d400f",
+    "app/hydrology-observatory.tsx": "sha256:41d8dd8928a17510f775aa57f774089ebb6c13ffbc1d68fd51959356a98b9a50",
+    "app/page.tsx": "sha256:6df51fc2d8a04ebffe3dbac86b48dfd21974a4f2c19aa7ce21ef23eb22d16361",
+    "docs/water-flow-paths.md": "sha256:50a9a200c437547847216c9d96bd13ff0a64a8c0067cf7a5a4774d136b691fa9",
+    "tests/river-pulse-visuals.test.mjs": "sha256:b7361cbebde9d9d9218e917cea5dc398a536ac05402a6757951461b0eae0a752",
+    "tests/component-harness.mjs": "sha256:cd42c638df891de15594dea2b953e4817e3391623ee08966d45178c90ce23620"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact model revision unavailable in this session"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "apply_patch",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@6a725fe64c0cccefec0a7b474d52b6f8e67d2ed0",
+      "AGENTS.md@6a725fe64c0cccefec0a7b474d52b6f8e67d2ed0",
+      "docs/doctrine/directory-rules.md@e699ac0a2995ac26fd801fb493c03d03cbdd38c7",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e699ac0a2995ac26fd801fb493c03d03cbdd38c7",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5418"
+    ]
+  },
+  "truth_labels": {
+    "app/globals.css": "CONFIRMED",
+    "app/hydrology-observatory.tsx": "CONFIRMED",
+    "app/page.tsx": "CONFIRMED",
+    "docs/water-flow-paths.md": "CONFIRMED",
+    "tests/river-pulse-visuals.test.mjs": "CONFIRMED",
+    "tests/component-harness.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused River Pulse and related interaction tests",
+      "outcome": "PASS",
+      "reason": "25 passed. Test harness gains useId support and maps the hosted water-flow-motion dependency; no runtime dependency change."
+    },
+    {
+      "gate": "Production build and TypeScript",
+      "outcome": "PASS",
+      "reason": "Normal build identity generated first; final typecheck passed. An initial parallel typecheck ran before generation and reported missing build-info.generated.json; sequencing corrected."
+    },
+    {
+      "gate": "Full standalone hosted Node suite",
+      "outcome": "PASS",
+      "reason": "1671 passed, 0 failed, 21 environment-specific skips; 1692 total. Skips are not executed checks."
+    },
+    {
+      "gate": "Changed-file ESLint",
+      "outcome": "PASS",
+      "reason": "0 errors, 41 page warnings in unaffected code."
+    },
+    {
+      "gate": "Representative local browser dismissal in companion main source",
+      "outcome": "PASS",
+      "reason": "Desktop and 390px iframe click, Escape, reopen, scroll reachability and map-focus return verified for the shared hydrology component and close behavior; hosted page/runtime not visually requalified."
+    },
+    {
+      "gate": "Live provider/WebGL, hosted acceptance and publication",
+      "outcome": "SKIPPED",
+      "reason": "No deployment; companion preview lacked WebGL2 and USGS data. No hosted equivalence claim."
+    },
+    {
+      "gate": "Exact-head CI and human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending after draft creation. Author self-review only."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "hosted-source-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/6a725fe64c0cccefec0a7b474d52b6f8e67d2ed0"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T00:50:49.869994+00:00",
+  "emitter": "Codex",
+  "notes": "Narrow companion to main PR 5418 for the separate GoDaddy composition. Initial base 29c0a49 advanced to 6a725fe before final validation, preserving merged wind and AI changes. Existing app/tests/docs roots; accountability receipt in established generated lane. No publication, provider, data, auth, dependency, PC or storage changes. Rollback this commit. Initial test-only loader and missing useId support were corrected before final full-suite pass."
+}

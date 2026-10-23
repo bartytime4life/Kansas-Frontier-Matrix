@@ -36,6 +36,7 @@ export type HydrologyObservatoryProps = Readonly<{
   downstreamPathCount: number;
   downstreamAnalysis?: WaterPathAnalysis | null;
   sourceSwitcher?: ReactNode;
+  onClose: () => void;
   onRefresh: () => void;
   onTogglePlay: () => void;
   onStep: (direction: "reverse" | "forward") => void;
@@ -180,6 +181,7 @@ export function HydrologyObservatory({
   downstreamPathCount,
   downstreamAnalysis = null,
   sourceSwitcher,
+  onClose,
   onRefresh,
   onTogglePlay,
   onStep,
@@ -255,6 +257,12 @@ export function HydrologyObservatory({
   const chartSummary = `${hydrographSummary.valid.length} exact observations; minimum ${formatDischarge(hydrographSummary.minimum, hydrographSummary.unit)}; maximum ${formatDischarge(hydrographSummary.maximum, hydrographSummary.unit)}; latest ${formatDischarge(hydrographSummary.latest?.value ?? null, hydrographSummary.unit)}; ${gapCount} detected gap${gapCount === 1 ? "" : "s"}.`;
 
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      onClose();
+      return;
+    }
     if (event.target !== event.currentTarget) return;
     if (event.key === " ") {
       event.preventDefault();
@@ -299,6 +307,7 @@ export function HydrologyObservatory({
         <b className="hydrology-state" role="status" aria-live={playing ? "off" : "polite"}>{displayState}</b>
         <button type="button" onClick={onRefresh} disabled={state === "loading"}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>
       </div>
+      <button className="hydrology-close" type="button" onClick={onClose} aria-label="Close River Pulse" title="Close River Pulse (Esc)"><span aria-hidden="true">×</span></button>
     </header>
 
     <RiverNetworkSignal frame={frame} selected={selectedStationId} onSelect={onSelectStation} />
