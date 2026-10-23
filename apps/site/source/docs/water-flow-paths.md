@@ -1,5 +1,15 @@
 # Water-flow paths and terrain context
 
+## Closing River Pulse
+
+Use the **× Close River Pulse** control in the panel header, or press **Escape**
+from anywhere inside the panel. The header stays visible while its details
+scroll, including on narrow screens. Closing pauses live observation playback
+and returns keyboard focus to the map. The selected gauge, observation frame,
+layer visibility and evidence remain available when **Live controls** is reopened
+through **More → Status → Live controls**. The same toggle also pauses playback
+when hiding controls.
+
 ## Local rendering repair — 2026-10-05
 
 River trails retain every mapped vertex between their endpoints, rather than
