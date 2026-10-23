@@ -15,11 +15,13 @@ const worldPosition = (lng: number, lat: number, zoom: number) => ({
 export function transportLineData(works: readonly TransportWork[], date: string): FeatureCollection<LineString> {
   return { type: "FeatureCollection", features: works.flatMap(work => {
     const frame = transportFrame(work, date), length = routeLengthM(work.coordinates);
-    const pieces: [number, number, string][] = work.action === "remove"
+    const pieces: [number, number, string][] = work.progressMode === "milestones"
+      ? [[0, length, "context"]]
+      : work.action === "remove"
       ? [[frame.chainageM, length, frame.closed ? "closed" : "existing"], [0, frame.chainageM, "removed"]]
       : [[0, frame.chainageM, frame.closed ? "closed" : "built"], [frame.chainageM, length, frame.closed ? "closed" : "pending"]];
     return pieces.filter(([a, b]) => b - a > .1).map(([a, b, state]) => ({ type: "Feature" as const,
-      properties: { id: work.id, title: work.title, state, mode: work.mode, widthM: work.widthM, latitude: work.coordinates[0][1] },
+      properties: { id: work.id, title: work.title, state, basis: frame.basis, mode: work.mode, widthM: work.widthM, latitude: work.coordinates[0][1] },
       geometry: { type: "LineString" as const, coordinates: routeSlice(work.coordinates, a, b).map(p => [...p]) } }));
   }) };
 }
@@ -38,8 +40,8 @@ export function attachTransportConstruction(map: MapLibreMap, initial: readonly 
     if (source) source.setData(data); else map.addSource(SOURCE, { type: "geojson", data });
     if (!map.getLayer(LINE)) map.addLayer({ id: LINE, type: "line", source: SOURCE,
       layout: { "line-cap": "butt", "line-join": "round" }, paint: {
-        "line-color": ["match", ["get", "state"], "built", "#47555b", "existing", "#87918d", "closed", "#ce6553", "removed", "#866b55", "#d6ad61"],
-        "line-opacity": ["match", ["get", "state"], "pending", .35, "removed", .25, .9],
+        "line-color": ["case", ["all", ["==", ["get", "basis"], "interpolated"], ["!=", ["get", "state"], "closed"]], "#b890cf", ["match", ["get", "state"], "built", "#47555b", "existing", "#87918d", "closed", "#ce6553", "removed", "#866b55", "context", "#9aa7c4", "#d6ad61"]],
+        "line-opacity": ["match", ["get", "state"], "pending", .35, "removed", .25, "context", .55, ["case", ["==", ["get", "basis"], "interpolated"], .6, .9]],
         // Physical width when resolvable; a labelled thin overview line below it.
         "line-width": ["interpolate", ["exponential", 2], ["zoom"], 5, ["max", 1.5, ["*", ["get", "widthM"], ["/", 16384, ["*", 40075016.686, ["cos", ["*", ["get", "latitude"], 0.017453292519943295]]]]]], 13, ["max", 1.5, ["*", ["get", "widthM"], ["/", 4194304, ["*", 40075016.686, ["cos", ["*", ["get", "latitude"], 0.017453292519943295]]]]]], 15, ["max", 1.5, ["*", ["get", "widthM"], ["/", 16777216, ["*", 40075016.686, ["cos", ["*", ["get", "latitude"], 0.017453292519943295]]]]]], 18, ["max", 1.5, ["*", ["get", "widthM"], ["/", 134217728, ["*", 40075016.686, ["cos", ["*", ["get", "latitude"], 0.017453292519943295]]]]]], 22, ["max", 1.5, ["*", ["get", "widthM"], ["/", 2147483648, ["*", 40075016.686, ["cos", ["*", ["get", "latitude"], 0.017453292519943295]]]]]]],
       } });

@@ -1,0 +1,156 @@
+{
+  "receipt_id": "genrec-transport-junction-city-pilot-20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/transport-history.ts",
+    "app/transport-history-control.tsx",
+    "app/transport-construction-layer.ts",
+    "tests/transport-history.test.mjs",
+    "tests/transport-history-control.test.mjs",
+    "docs/transport-construction-history.md",
+    "docs/transport-construction-pilot-junction-city.md",
+    "data/work/transport/junction-city-i70-2024.study.json",
+    "data/work/transport/junction-city-i70-2024.geometry.json",
+    "data/work/transport/junction-city-i70-2024.sources.json"
+  ],
+  "artifact_hashes": {
+    "app/transport-history.ts": "sha256:94696e5e7cddafcbb4be4552aa40c18cfb04499805a21848e9c0bc25feaa23ca",
+    "app/transport-history-control.tsx": "sha256:7bf0f8fadcc3dafae9be7c42a2753b78efb57a2faa52726fb4aa6a75b1e58a33",
+    "app/transport-construction-layer.ts": "sha256:c882183e3360ff4e0646ea108aba68a6af17eb9d138dd76fd2a70450aeef2455",
+    "tests/transport-history.test.mjs": "sha256:c556cb9fa2edc9ec3952a712707f2e768dcfc9e9f0463247cf877124149fa4f4",
+    "tests/transport-history-control.test.mjs": "sha256:be14159dd091d8a91a5dba9242902b51488cb52d310964e9b9faec50d2387170",
+    "docs/transport-construction-history.md": "sha256:61953cd6a90758868a28c6a92cf0736fc80cabd043bc2cecd69b7d708069d09e",
+    "docs/transport-construction-pilot-junction-city.md": "sha256:0f62a778ec46f6b8cf25e91d892964a01ad92aecfcea77f1c2554bf02e61712c",
+    "data/work/transport/junction-city-i70-2024.study.json": "sha256:ff79119de10d6d0edaf7863b18bef3f5034efe1ddf5eff5665628af48d5a664a",
+    "data/work/transport/junction-city-i70-2024.geometry.json": "sha256:d29765fc3d171ed85837ee5208402f9eefd9968e4c766f3ccdbc961b2e6b8da0",
+    "data/work/transport/junction-city-i70-2024.sources.json": "sha256:b8868a58196db35c696ef7532b9363578e931be4e3f3e3057ca946eceeaed9d8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Session-declared model family; exact runtime revision unavailable"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "temperature": null,
+    "top_p": null,
+    "seed": null,
+    "tools_enabled": [
+      "GitHub",
+      "Web search",
+      "Node runtime",
+      "Playwright"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "c59fad434eeffad9a1cfdf3e9d1170495a0728e6",
+      "main@c6924b7e4699391ff2a5822243224e82005db4bf",
+      "https://www.ksdot.gov/Home/Components/News/News/1597/712",
+      "https://www.ksdot.gov/Home/Components/News/News/1595/712",
+      "https://www.ksdot.gov/Home/Components/News/News/658/712",
+      "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Transportation/LRS_State/MapServer/0/query?f=json&where=StateRouteId+%3D+%2710700100000%27&outFields=OBJECTID%2CStateRouteId&returnGeometry=true&returnM=true&outSR=4326",
+      "https://kanplan.ksdot.gov/arcgis_web_adaptor/rest/services/Layers/KDOT_reference_post_markers/MapServer/0/query?f=json&where=ReferencePost+%3E%3D+296+AND+ReferencePost+%3C%3D+300&geometry=-96.92%2C38.97%2C-96.74%2C39.04&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CRouteID%2CMeasure%2CReferencePost%2CReferenceDirection%2CMeasuredLatitude%2CMeasuredLongitude&returnGeometry=true&outSR=4326",
+      "https://www.ksdot.gov/home/showpublisheddocument/11503/638942156092530000",
+      "https://www.ksdot.gov/home/showpublishedimage/4414/638947417700830000"
+    ],
+    "attached_docs": [
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "CONTRIBUTING.md",
+      ".github/PULL_REQUEST_TEMPLATE.md",
+      "AGENTS.md"
+    ]
+  },
+  "truth_labels": {
+    "app/transport-history.ts": "PROPOSED",
+    "app/transport-history-control.tsx": "PROPOSED",
+    "app/transport-construction-layer.ts": "PROPOSED",
+    "tests/transport-history.test.mjs": "PROPOSED",
+    "tests/transport-history-control.test.mjs": "PROPOSED",
+    "docs/transport-construction-history.md": "PROPOSED",
+    "docs/transport-construction-pilot-junction-city.md": "PROPOSED",
+    "data/work/transport/junction-city-i70-2024.study.json": "NEEDS VERIFICATION",
+    "data/work/transport/junction-city-i70-2024.geometry.json": "NEEDS VERIFICATION",
+    "data/work/transport/junction-city-i70-2024.sources.json": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused construction/control and adjacent traffic/scene regression",
+      "outcome": "PASS",
+      "reason": "26 tests, zero failures/skips; existing scene behavior retained."
+    },
+    {
+      "gate": "Focused strict TypeScript",
+      "outcome": "PASS",
+      "reason": "Three affected transport modules and imported local dependencies; no emit."
+    },
+    {
+      "gate": "Isolated Chromium browser import and date seeking",
+      "outcome": "PASS",
+      "reason": "440px viewport: local file accepted; report counts 0/1/2/3 and reverse to 1; no final page errors."
+    },
+    {
+      "gate": "Isolated MapLibre 6.9.0 Mercator/WebGL2",
+      "outcome": "PASS",
+      "reason": "Worker and custom layer installed; source/rendered line context with unknown basis; fit/date controls observed. Blank reference map harness, not production app acceptance."
+    },
+    {
+      "gate": "Full production build / full standalone suite",
+      "outcome": "SKIPPED",
+      "reason": "Bounded source checkout with validation dependencies; full composition not built."
+    },
+    {
+      "gate": "Historical as-built, independent source admission and physical GPU/device acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Source records do not support daily front, certified historical accuracy or observed crew assets. Governance and production publication remain pending."
+    },
+    {
+      "gate": "Markdown QA / git diff --check / receipt schema and hashes",
+      "outcome": "PASS",
+      "reason": "Single H1 per guide, balanced fences, relative links resolve, final newline; no whitespace errors; current Draft 2020-12 receipt schema and all ten artifact hashes checked."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "work-report",
+      "validated": true,
+      "evidence_ref": "https://www.ksdot.gov/Home/Components/News/News/1597/712"
+    },
+    {
+      "id": "traffic-report",
+      "validated": true,
+      "evidence_ref": "https://www.ksdot.gov/Home/Components/News/News/1595/712"
+    },
+    {
+      "id": "phase-completion",
+      "validated": true,
+      "evidence_ref": "https://www.ksdot.gov/Home/Components/News/News/658/712"
+    },
+    {
+      "id": "kdot-route-and-posts",
+      "validated": true,
+      "evidence_ref": "data/work/transport/junction-city-i70-2024.geometry.json"
+    },
+    {
+      "id": "planning-flyer",
+      "validated": true,
+      "evidence_ref": "https://www.ksdot.gov/home/showpublisheddocument/11503/638942156092530000"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-23T04:25:15.456Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Draft source contribution only. One geographically grounded current corridor; no statewide or historical as-built coverage claim. Factual candidate admission/reuse/source registration and public release are pending. No public asset, original Site, evidence/AI connection, host settings, dependency manifests or production publication changes."
+}
