@@ -3,6 +3,7 @@ import { generateKeyPairSync, createPublicKey, sign, randomBytes } from 'node:cr
 import { lstat, statfs, readdir } from 'node:fs/promises';
 import { resolve, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { homedir } from 'node:os';
 import { captureRequest, fetchCapture } from '../../server/ingestion-sources.mjs';
 import { normalizeCapture } from '../../server/pipeline-normalize.mjs';
 import { canonical, sha, parse, recipeDigest, verifyProfile, fail, MAX_PACKAGE, ORIGIN } from '../../server/pipeline-contract.mjs';
@@ -10,6 +11,7 @@ import { directory, immutable, readRegular, hashFile, storageGuard } from '../..
 import { Journal } from './journal.mjs';
 import { loadConfig, tick } from './worker.mjs';
 import { pipelineCall, publish } from './publisher.mjs';
+import { connectionCheck } from './connection.mjs';
 
 const checkout = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const bytes = value => Buffer.from(canonical(value));
@@ -33,8 +35,17 @@ async function walk(path, prefix = '') {
   }
   return results;
 }
-export async function cli(argv) {
+export async function cli(argv, connectionDependencies) {
   const [command, ...args] = argv;
+  if (command === 'connection') {
+    if (args.length > 1 || args[0]?.startsWith('-')) fail('CONNECTION_USAGE_INVALID');
+    const root = await rootPath(args[0] ?? resolve(homedir(), '.local/state/kfm-data'));
+    const result = await connectionCheck(connectionDependencies);
+    const receiptPath = resolve(root, 'data/receipts/pipeline/connection', sha(bytes(result)) + '.json');
+    try { await immutable(receiptPath, bytes(result)); }
+    catch { fail('CONNECTION_RECEIPT_WRITE_FAILED'); }
+    return { ...result, receiptPath };
+  }
   if (command === 'inventory') {
     const fs = await statfs('/');
     return { format: 'kfm-pipeline-inventory-v1', node: process.versions.node, systemFreeBytes: fs.bavail * fs.bsize,
@@ -178,9 +189,13 @@ export async function cli(argv) {
       payloadObjects: manifest.files.filter(f => /^(?:quarantine|raw)\//.test(f.path) && f.bytes > 0).length, restoredAt: new Date().toISOString() };
     await immutable(resolve(restored, 'restore-receipt.json'), bytes(receipt)); return receipt;
   }
-  return { usage: 'inventory | keys DIR | profile-template SOURCE | approve PROFILE PRIVATE_KEY OUTPUT | control COMMAND PRIVATE_KEY | rehearse PRIVATE_ROOT | init ROOT MOUNT CONFIG | tick CONFIG | status CONFIG | stage-package CONFIG water|weather SNAPSHOT DECISION | ftps-mirror CONFIG RELEASE_ID PUBLIC_PRODUCT | backup CONFIG BACKUP_CONFIG | verify-backup MANIFEST ROOT | restore-test MANIFEST BACKUP_ROOT EMPTY_RESTORE_ROOT' };
+  return { usage: 'connection [PRIVATE_ROOT] | inventory | keys DIR | profile-template SOURCE | approve PROFILE PRIVATE_KEY OUTPUT | control COMMAND PRIVATE_KEY | rehearse PRIVATE_ROOT | init ROOT MOUNT CONFIG | tick CONFIG | status CONFIG | stage-package CONFIG water|weather SNAPSHOT DECISION | ftps-mirror CONFIG RELEASE_ID PUBLIC_PRODUCT | backup CONFIG BACKUP_CONFIG | verify-backup MANIFEST ROOT | restore-test MANIFEST BACKUP_ROOT EMPTY_RESTORE_ROOT' };
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  try { console.log(canonical(await cli(process.argv.slice(2)))); }
+  try {
+    const result = await cli(process.argv.slice(2));
+    console.log(canonical(result));
+    if (process.argv[2] === 'connection' && result.state !== 'connected') process.exitCode = 1;
+  }
   catch (e) { console.error(canonical({ state: 'held', reason: /^[A-Z_]{1,64}$/.test(e.message) ? e.message : 'PIPELINE_OPERATION_FAILED' })); process.exitCode = 1; }
 }

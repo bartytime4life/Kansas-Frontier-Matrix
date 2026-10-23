@@ -44,6 +44,12 @@ node scripts/migrate-pipeline.mjs
 node tests/pc-pipeline.test.mjs
 ```
 
+For the separate read-only hosted SQL connectivity check, use
+`npm run --silent kfm-data -- connection` from this checkout. See
+[connection-only instructions](database-connection-only.md) for private local
+receipts, verified TLS acceptance and failure states. This manual command does
+not initialize a data mount, capture feeds or enable publication.
+
 `rehearse` captures only two bounded feeds into an external private directory.
 It never schedules, signs approvals, pairs credentials, writes SQL or publishes.
 Its per-source results must be inspected: process success alone is not proof
