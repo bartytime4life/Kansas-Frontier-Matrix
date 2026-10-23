@@ -407,7 +407,7 @@ export function HydrologyObservatory({
         <section aria-label="Discharge marker size">
           <strong>MAP DISPLAY</strong>
           <div className="hydrology-size-key"><span><i data-size="small" />Lower</span><span><i data-size="medium" />Medium</span><span><i data-size="large" />Higher</span></div>
-          <p>River view uses small, neutral station locators. Gauge conditions adds trend color and a logarithmic ft³/s size scale. Missing readings stay hollow; the selected missing gauge shows a dashed ×, and measured zero an amber −. Raw discharge is not a flood category.</p>
+          <p>River view uses small, neutral station locators. Gauge conditions adds trend color and a logarithmic ft³/s size scale. Missing readings stay hollow; the selected missing gauge shows a dashed ×, and measured zero an amber −. Raw discharge is not a flood category. Discharge is not directly comparable across differently sized basins.</p>
         </section>
         <section aria-label="Observation trend">
           <strong>CHANGE FROM PRIOR OBSERVATION</strong>

@@ -1,0 +1,67 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-view-legend-test:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/hydrology-observatory.tsx",
+    "tests/rendered-html.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/hydrology-observatory.tsx": "sha256:c4c7a0df62a0a8740279a626fd6d89123fd133c29ab02c4a62fa0c49f3fc73f7",
+    "tests/rendered-html.test.mjs": "sha256:fe0c0c463a34f580a50b018261c854b665f502803d488eb5a966391ca04b0999"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@f9d1219d10bba13411f10c9b9868b192e5c2b659",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39974084615"
+    ]
+  },
+  "truth_labels": {
+    "app/hydrology-observatory.tsx": "NEEDS VERIFICATION",
+    "tests/rendered-html.test.mjs": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Prior exact-head CI",
+      "outcome": "FAIL",
+      "reason": "Build and TypeScript passed. Full Node suite had 1702 passes, one failure and 19 skips. The sole failure expected superseded marker-size wording; this successor aligns the assertion to the new condition-view legend and explicitly preserves the basin-comparison limitation. Later MySQL/HTTP/browser stages were skipped."
+    },
+    {
+      "gate": "Current exact-head CI and visual acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Pending after this successor. Editing/browser environment remains unavailable. No deployment or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T15:02:21.954Z",
+  "emitter": "Codex",
+  "notes": "Immutable successor to genrec-hosted-river-view-controls-20261023.json for the two changed artifacts. Restores explicit basin comparability wording and updates the corresponding legend assertion; no test is removed or disabled."
+}

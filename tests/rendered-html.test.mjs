@@ -886,7 +886,8 @@ test("adds bounded exact-time streamflow, NOAA hydrology roles, and a gap-aware 
 
   assert.match(observatory, /aria-label="River Pulse streamflow observation controls"/);
   assert.match(observatory, /aria-label="Select an exact streamflow observation frame"/);
-  assert.match(observatory, /Marker area uses a logarithmic ft³\/s scale/);
+  assert.match(observatory, /Gauge conditions adds trend color and a logarithmic ft³\/s size scale/);
+  assert.match(observatory, /Discharge is not directly comparable across differently sized basins/);
   assert.match(observatory, /Raw discharge is not a flood category/);
   assert.match(observatory, /Exact values · gaps break the path/);
   assert.match(observatory, /no value interpolation/);
