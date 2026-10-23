@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import StoragePanel from "./storage-panel";
 import { useEffect, useState } from "react";
 import { acquisitionJobLabels, parseAcquisitionInventory, formatAcquisitionBytes as size, type AcquisitionInventory } from "../acquisition-inventory";
 import { createAcquisitionSession, readAcquisitionLocalJson } from "../acquisition-client";
@@ -41,6 +42,7 @@ export default function AcquisitionWorkspace() {
     <header><Link href="/">KFM / Explorer</Link><nav aria-label="Acquisition navigation"><Link href="/earth-engine">History & recipes</Link><Link href="/downloads">Library &amp; downloads</Link><Link href="/acquisition" aria-current="page">Acquisition</Link></nav></header>
     <section className={styles.intro}><p className={styles.eyebrow}>LOCAL KANSAS DATA / OWNER-SET CACHE</p><h1>Data acquisition & terrain history</h1><p>Selected Kansas history belongs on this PC under Projects/KFM-data. Choose the replaceable cache budget for selected downloads; provider originals remain available remotely. You choose which global data and volumes to add.</p></section>
     <div className={styles.policy}><strong>No paid transport or automatic overages</strong><p>The replaceable cache starts at 500 GB. Increase or decrease it in Data & downloads → Local cache budget. Existing originals, evidence and backups stay separate and protected. Unbounded sizes and unavailable free capacity hold a transfer. Ordinary worker completion requires an expected checksum; a separately recorded local capture without a provider checksum stays an unreviewed protected candidate.</p><p>The owner reports verified Earth Engine Community eligibility for noncommercial research. The Community tier currently provides 150 EECU-hours per month. Remaining quota and available export storage are unverified. <a href="https://developers.google.com/earth-engine/guides/noncommercial_tiers" target="_blank" rel="noreferrer">Check current free access ↗</a></p></div>
+    <StoragePanel />
     <section aria-labelledby="receipt-heading" className={styles.panel}>
       <h2 id="receipt-heading">Acquisition receipts</h2><p><Link href="/downloads">Open the local library &amp; live background jobs →</Link></p><p>Inspect a saved status snapshot from the local worker. Files are inspected in this tab; importing a receipt does not upload it, start jobs or admit datasets.</p>
       <div className={styles.controls}><label>Import inventory JSON<input type="file" accept="application/json,.json" onChange={(e) => void importFile(e.target.files?.[0])} /></label></div>

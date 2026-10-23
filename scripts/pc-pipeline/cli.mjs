@@ -8,6 +8,7 @@ import { captureRequest, fetchCapture } from '../../server/ingestion-sources.mjs
 import { normalizeCapture } from '../../server/pipeline-normalize.mjs';
 import { canonical, sha, parse, recipeDigest, verifyProfile, fail, MAX_PACKAGE, ORIGIN } from '../../server/pipeline-contract.mjs';
 import { directory, immutable, readRegular, hashFile, storageGuard } from '../../server/pipeline-files.mjs';
+import { storagePlan } from './storage-policy.mjs';
 import { Journal } from './journal.mjs';
 import { loadConfig, tick } from './worker.mjs';
 import { pipelineCall, publish } from './publisher.mjs';
@@ -105,11 +106,12 @@ export async function cli(argv, connectionDependencies) {
     await storageGuard(config);
     await immutable(resolve(args[2]), bytes(config)); return { state: 'initialized', publish: false, configPath: args[2] };
   }
+  if (command === 'plan') return storagePlan(await loadConfig(resolve(args[0])));
   if (command === 'tick') return tick(await loadConfig(resolve(args[0])));
   if (command === 'status') {
     const config = await loadConfig(resolve(args[0])); await storageGuard(config);
     const j = await Journal.open(resolve(config.root, 'pipeline-journal.sqlite'));
-    try { return { storage: 'verified', jobs: j.status() }; } finally { j.close(); }
+    try { return { format: 'kfm-storage-status-v1', capturedAt: new Date().toISOString(), storage: 'verified', plan: storagePlan(config), jobs: j.status() }; } finally { j.close(); }
   }
   if (command === 'stage-package') {
     const config = await loadConfig(resolve(args[0])); await storageGuard(config);
@@ -189,7 +191,6 @@ export async function cli(argv, connectionDependencies) {
       payloadObjects: manifest.files.filter(f => /^(?:quarantine|raw)\//.test(f.path) && f.bytes > 0).length, restoredAt: new Date().toISOString() };
     await immutable(resolve(restored, 'restore-receipt.json'), bytes(receipt)); return receipt;
   }
-  return { usage: 'connection [PRIVATE_ROOT] | inventory | keys DIR | profile-template SOURCE | approve PROFILE PRIVATE_KEY OUTPUT | control COMMAND PRIVATE_KEY | rehearse PRIVATE_ROOT | init ROOT MOUNT CONFIG | tick CONFIG | status CONFIG | stage-package CONFIG water|weather SNAPSHOT DECISION | ftps-mirror CONFIG RELEASE_ID PUBLIC_PRODUCT | backup CONFIG BACKUP_CONFIG | verify-backup MANIFEST ROOT | restore-test MANIFEST BACKUP_ROOT EMPTY_RESTORE_ROOT' };
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
