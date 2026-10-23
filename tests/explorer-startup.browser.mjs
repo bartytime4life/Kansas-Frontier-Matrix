@@ -89,8 +89,8 @@ async function browser(t) {
 async function pageSession(b, width, height, networkOptions = {}) {
   const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
-  let navigation = 0, holdWelcome = false;
-  const heldWelcomeRequests = [];
+  let navigation = 0, holdScene = false;
+  const heldSceneRequests = [];
   const call = (method, params = {}) => {
     if (method === 'Page.navigate' || method === 'Page.reload') navigation++;
     return b.call(method, params, sessionId);
@@ -107,8 +107,8 @@ async function pageSession(b, width, height, networkOptions = {}) {
     const requestNavigation = navigation;
     void (async () => {
       const { requestId, request } = message.params, url = new URL(request.url);
-      if (holdWelcome && url.origin === origin.origin && /\/assets\/welcome-[^/]+\.js$/.test(url.pathname)) {
-        heldWelcomeRequests.push(requestId);
+      if (holdScene && url.origin === origin.origin && /\/assets\/engine-[^/]+\.js$/.test(url.pathname)) {
+        heldSceneRequests.push(requestId);
       } else if (url.origin === origin.origin && url.pathname.startsWith('/api/') && url.pathname !== '/api/build') {
         await call('Fetch.fulfillRequest', { requestId, responseCode: 503, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from('{"error":"Isolated navigation test: provider unavailable"}').toString('base64') });
       } else await call('Fetch.continueRequest', { requestId });
@@ -165,13 +165,18 @@ async function pageSession(b, width, height, networkOptions = {}) {
     await key('Tab', 'Tab', 9);
     assert.equal(await evaluate(`!!document.activeElement?.closest('[inert], [aria-hidden="true"], .explorer-guide')`), false, 'Tab reaches an available control');
   };
-  const holdWelcomeModule = () => { holdWelcome = true; };
-  const releaseWelcomeModule = async () => {
-    assert.ok(heldWelcomeRequests.length, 'the real lazy welcome module was intercepted');
-    holdWelcome = false;
-    for (const requestId of heldWelcomeRequests.splice(0)) await call('Fetch.continueRequest', { requestId });
+  const holdSceneModule = () => { holdScene = true; };
+  const waitForSceneModule = async () => {
+    const deadline = Date.now() + 20000;
+    while (!heldSceneRequests.length && Date.now() < deadline) await pause(25);
+    assert.ok(heldSceneRequests.length, 'scene request starts while the welcome is usable');
   };
-  return { call, evaluate, wait, key, open, unobstructed, holdWelcomeModule, releaseWelcomeModule };
+  const releaseSceneModule = async () => {
+    assert.ok(heldSceneRequests.length, 'the real lazy scene engine was intercepted');
+    holdScene = false;
+    for (const requestId of heldSceneRequests.splice(0)) await call('Fetch.continueRequest', { requestId });
+  };
+  return { call, evaluate, wait, key, open, unobstructed, holdSceneModule, waitForSceneModule, releaseSceneModule };
 }
 
 test('isolated browser leaves canceled assets unpaused while enforcing network and fixture boundaries', {timeout:30000}, async t => {
@@ -216,14 +221,15 @@ test('isolated browser leaves canceled assets unpaused while enforcing network a
 for (const [width, height] of [[1366, 768], [390, 844]]) {
   test(`interrupted welcome dismissal at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
-    p.holdWelcomeModule();
+    p.holdSceneModule();
     await p.open('/', null, `for (const method of ['getItem','setItem','removeItem']) Object.defineProperty(Storage.prototype,method,{value(){throw new DOMException('Storage blocked','SecurityError')}});`);
-    await p.wait(`document.querySelector('.explorer-guide:not(.living-welcome)')?.contains(document.activeElement)`, 'fallback owns keyboard before lazy download');
+    await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.contains(document.activeElement)`, 'animated welcome owns keyboard while the scene engine loads');
+    assert.equal(await p.evaluate(`document.querySelectorAll('.explorer-guide:not(.living-welcome),.welcome-legacy-questions').length`), 0);
+    await p.waitForSceneModule();
     await p.key('Escape', 'Escape', 27);
-    await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement.matches('.guide-trigger')`, 'fallback dismissal returns focus despite blocked storage');
-    await p.releaseWelcomeModule();
-    // Reopening must use the loaded component, proving the delayed module has
-    // finished without reopening the dismissed guide or stealing its focus.
+    await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement.matches('.guide-trigger')`, 'welcome dismissal returns focus despite blocked storage');
+    await p.releaseSceneModule();
+    // Finishing the delayed scene download must not reopen the welcome or steal focus.
     await pause(250);
     assert.equal(await p.evaluate(`!document.querySelector('.explorer-guide') && document.activeElement.matches('.guide-trigger')`), true);
     for (let attempt = 0; attempt < 3; attempt++) {
@@ -231,7 +237,7 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
       await p.wait(`document.querySelector('.living-welcome')?.contains(document.activeElement)`, 'loaded welcome owns keyboard on each reopen');
       if (attempt > 0) {
         await p.evaluate(`document.querySelector('.living-welcome input[type="checkbox"]').click()`);
-        await p.wait(`document.querySelector('.living-welcome input[type="checkbox"]').checked === ${attempt === 1}`, 'explicit opt-out choice remains usable when storage throws');
+        await p.wait(`document.querySelector('.living-welcome input[type="checkbox"]').checked === true`, 'explicit opt-out choice remains usable when storage throws');
       }
       await p.key('Escape', 'Escape', 27);
       await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement.matches('.guide-trigger')`, 'loaded dismissal returns focus');
@@ -366,7 +372,7 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
         hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2) === button,
         focus:document.activeElement === button};
     })()`);
-    for (const selector of ['.topic-weather', '.topic-history', '.discovery-hint button', '.welcome-toolbar button:first-child']) {
+    for (const selector of ['.topic-weather', '.topic-history', '.discovery-hint button']) {
       await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
       await p.key('Enter', 'Enter', 13);
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'detail close receives focus');
@@ -384,18 +390,9 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
       } else {
         assert.equal(await p.evaluate(`!!document.activeElement?.closest('.welcome-dialog-body')`), true, 'Shift+Tab wraps to an available body control');
         assert.equal(await p.evaluate(`(()=>{for(let node=document.activeElement?.parentElement;node&&!node.matches('.welcome-dialog');node=node.parentElement){if(node.matches('details:not([open])')&&!node.querySelector(':scope>summary')?.contains(document.activeElement))return false;}return true;})()`), true, 'closed disclosure descendants never receive wrapped focus');
-        if (selector === '.welcome-toolbar button:first-child') assert.equal(await p.evaluate(`document.activeElement.matches('.explorer-guide-footer .explorer-guide-primary')`), true, 'questions wrap to its visible footer, not a retained box inside closed tools');
       }
       await p.key('Tab', 'Tab', 9);
       assert.equal((await closeGeometry()).focus, true, 'Tab returns to persistent close');
-      if (selector === '.welcome-toolbar button:first-child') {
-        await p.evaluate(`document.querySelector('.welcome-legacy-questions .atlas-welcome-topics>summary').focus()`);
-        await p.key('Enter', 'Enter', 13);
-        await p.wait(`document.querySelector('.welcome-legacy-questions .atlas-welcome-topics').open`, 'native summary opens the retained topics disclosure');
-        await p.key('Tab', 'Tab', 9);
-        assert.equal(await p.evaluate(`document.activeElement.matches('.atlas-welcome-group>summary')`), true, 'native Tab reaches a visible nested summary');
-        await p.evaluate(`document.querySelector('.welcome-dialog-close').focus()`);
-      }
       // Use a real pointer dispatch at the visible button, not DOM click().
       const x=(before.left+before.right)/2, y=(before.top+before.bottom)/2;
       await p.call('Input.dispatchMouseEvent', {type:'mousePressed', x, y, button:'left', clickCount:1});
@@ -442,8 +439,9 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
       const showRetained=retained?.matches(':focus-visible');
       return root?.dataset.immersive==='true'&&root.dataset.active==='${topic}'&&active?.classList.contains('is-active')
         &&root.querySelector('.domain-stage')?.dataset.topic==='${topic}'&&Number(getComputedStyle(active).opacity)>=.98
-        &&[...root.querySelectorAll('.topic-callout')].filter(card=>card!==active&&!(card===retained&&showRetained)).every(card=>{const o=Number(getComputedStyle(card).opacity);return o>=.3&&o<=.6&&getComputedStyle(card).pointerEvents!=='none';})
+        &&[...root.querySelectorAll('.topic-callout')].filter(card=>card!==active&&!(card===retained&&showRetained)).every(card=>{const o=Number(getComputedStyle(card).opacity);return o>=.98&&getComputedStyle(card).pointerEvents!=='none';})
         &&(!retained||document.activeElement===retained)&&(!showRetained||Number(getComputedStyle(retained).opacity)>=.98)
+        &&Number(getComputedStyle(root.querySelector('h1')).opacity)>=.98
         &&map&&Number(getComputedStyle(map).opacity)<=.02;
     })()`;
     const restored = `(() => {

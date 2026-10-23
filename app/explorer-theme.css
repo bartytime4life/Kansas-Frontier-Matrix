@@ -292,76 +292,6 @@ button:active:not(:disabled) { transform: translateY(1px); }
   box-shadow: var(--kfm-shadow-2);
 }
 
-/* ---------- Quick start guide ---------- */
-.explorer-guide {
-  position: absolute;
-  z-index: 40;
-  left: 50%;
-  bottom: 24px;
-  width: min(720px, calc(100% - 32px));
-  max-height: calc(100% - 48px);
-  overflow-y: auto;
-  transform: translateX(-50%);
-  border: 1px solid rgba(224, 186, 109, .32);
-  border-radius: 22px;
-  background:
-    radial-gradient(600px 220px at 15% -20%, rgba(224, 186, 109, .14), transparent 70%),
-    radial-gradient(500px 240px at 110% 120%, rgba(121, 198, 226, .12), transparent 70%),
-    var(--kfm-glass);
-  color: var(--ink);
-  padding: 22px 24px 18px;
-  box-shadow: var(--kfm-shadow-2);
-  backdrop-filter: var(--kfm-glass-blur);
-  animation: kfm-guide-in 420ms var(--kfm-ease) both;
-}
-@keyframes kfm-guide-in { from { opacity: 0; transform: translate(-50%, 14px); } to { opacity: 1; transform: translate(-50%, 0); } }
-.explorer-guide-header { position: relative; padding-right: 48px; }
-.explorer-guide-kicker { margin: 0; color: var(--gold); font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
-.explorer-guide-header h2 { margin: 6px 0 6px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(20px, 2.4vw, 27px); font-weight: 500; line-height: 1.15; letter-spacing: -.015em; }
-.explorer-guide-header p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.5; }
-.explorer-guide-header p b { color: var(--gold-soft); }
-.explorer-guide-close {
-  position: absolute; top: -4px; right: -6px;
-  display: grid; place-items: center;
-  width: 44px; height: 44px;
-  border: 1px solid var(--line); border-radius: 50%;
-  background: rgba(255, 255, 255, .03); color: var(--muted); font-size: 20px;
-}
-.explorer-guide-close:hover { border-color: var(--line-strong); color: var(--ink); }
-.explorer-guide-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 18px 0 14px; padding: 0; list-style: none; }
-.explorer-guide-steps button {
-  display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 12px;
-  width: 100%; min-height: 76px;
-  border: 1px solid var(--line); border-radius: 14px;
-  background: rgba(255, 255, 255, .03); color: var(--ink);
-  padding: 12px 14px; text-align: left;
-}
-.explorer-guide-steps button:hover, .explorer-guide-steps button:focus-visible { border-color: rgba(224, 186, 109, .55); background: rgba(224, 186, 109, .07); box-shadow: var(--kfm-gold-glow); }
-.explorer-guide-glyph {
-  display: grid; place-items: center; width: 40px; height: 40px;
-  border-radius: 12px; background: var(--kfm-accent); color: #1a1205;
-  font-size: 18px; font-weight: 900;
-}
-.explorer-guide-text { display: grid; gap: 3px; min-width: 0; }
-.explorer-guide-text strong { font-size: 14.5px; }
-.explorer-guide-text small { color: var(--muted); font-size: 12.5px; line-height: 1.4; }
-.explorer-guide-go { color: var(--gold); font-size: 18px; transition: transform var(--kfm-fast) var(--kfm-ease); }
-.explorer-guide-steps button:hover .explorer-guide-go { transform: translateX(3px); }
-.explorer-guide-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; border-top: 1px solid var(--line); padding-top: 12px; }
-.explorer-guide-footer p { flex: 1 1 280px; margin: 0; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
-.explorer-guide-footer kbd { display: inline-grid; place-items: center; min-width: 22px; height: 22px; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 6px; background: rgba(255, 255, 255, .05); color: var(--ink); padding: 0 5px; font: 700 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
-.explorer-guide-footer > div { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-.explorer-guide-footer label { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; color: var(--muted); font-size: 12.5px; }
-.explorer-guide-footer input { width: 16px; height: 16px; accent-color: var(--gold); }
-.explorer-guide .explorer-guide-link { display: inline-flex; align-items: center; min-height: 44px; border: 0; background: none; color: var(--water); padding: 0; font-size: 12.5px; text-decoration: underline; text-underline-offset: 3px; }
-.explorer-guide .explorer-guide-primary {
-  min-height: 44px; border: 0; border-radius: 12px;
-  background: var(--kfm-accent); color: #1a1205;
-  padding: 0 18px; font-weight: 800; letter-spacing: .01em;
-  box-shadow: 0 8px 22px rgba(224, 186, 109, .25);
-}
-.explorer-guide-primary:hover { filter: brightness(1.06); box-shadow: 0 10px 28px rgba(224, 186, 109, .35); }
-
 @media (max-width: 760px) {
   /* The closed time sheet must clear the status bar too; 105% of its own
      height left a 20 px strip peeking over the status bar. */
@@ -369,24 +299,6 @@ button:active:not(:disabled) { transform: translateY(1px); }
   .maplibregl-ctrl-attrib-inner { font-size: 10px; line-height: 1.35; }
   .status-bar > span:last-child { display: none; }
   .status-bar > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .explorer-guide {
-    bottom: calc(10px + env(safe-area-inset-bottom));
-    width: calc(100% - 16px);
-    max-height: calc(100% - 20px);
-    border-radius: 18px;
-    padding: 16px 16px 12px;
-  }
-  .explorer-guide-header h2 { font-size: 19px; }
-  .explorer-guide-header p { font-size: 12.5px; }
-  .explorer-guide-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 12px 0 10px; }
-  .explorer-guide-steps button { grid-template-columns: 1fr; justify-items: start; gap: 8px; min-height: 0; padding: 10px; }
-  .explorer-guide-glyph { width: 32px; height: 32px; border-radius: 10px; font-size: 15px; }
-  .explorer-guide-text small, .explorer-guide-go { display: none; }
-  .explorer-guide-text strong { font-size: 13.5px; }
-  .explorer-guide-footer p { font-size: 12px; }
-  .explorer-guide-footer { flex-direction: column; align-items: stretch; }
-  .explorer-guide-footer p { flex: none; }
-  .explorer-guide-footer > div { justify-content: space-between; }
 }
 
 /* ---------- Not found ---------- */
@@ -439,7 +351,6 @@ button:active:not(:disabled) { transform: translateY(1px); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0ms !important; }
-  .explorer-guide { animation: none; }
   .kfm-not-found-card { animation: none; }
   button:active:not(:disabled) { transform: none; }
 }
