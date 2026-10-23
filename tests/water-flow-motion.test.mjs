@@ -13,7 +13,8 @@ async function compile(file) {
   return `data:text/javascript;base64,${Buffer.from(js).toString("base64")}`;
 }
 const flow = await import(await compile("app/water-flow-motion.ts"));
-const { GET } = await import(await compile("app/api/hydrology/flowlines/route.ts"));
+let routeInstance = 0;
+const freshRoute = async () => (await import(await compile("app/api/hydrology/flowlines/route.ts") + "#instance=" + routeInstance++)).GET;
 const request = (suffix) => ({ nextUrl: new URL(`https://local/api/hydrology/flowlines${suffix}`), signal: new AbortController().signal });
 const reach = (id, coordinates, extra = {}) => ({ properties: { id3dhp: id, hydrosequence: 30, dnhydrosequence: 20, uphydrosequence: null, levelpath: 10, flowdirection: 1, featuretype: 1, gnisidlabel: "Fixture Creek", ...extra }, geometry: { type: "LineString", coordinates } });
 const near = (actual, expected, tolerance, message) => assert.ok(Math.abs(actual - expected) <= tolerance, `${message}: ${actual} vs ${expected}`);
@@ -39,6 +40,7 @@ test("the view asks for nearby cells only at river zoom, nearest first and cappe
 });
 
 test("the route returns only provider-directed reaches for a valid cell", async () => {
+ const GET = await freshRoute();
   const original = globalThis.fetch;
   let seen;
   globalThis.fetch = async (url) => {
@@ -60,6 +62,7 @@ test("the route returns only provider-directed reaches for a valid cell", async 
 });
 
 test("the route refuses bad cells before calling USGS and reports provider failure", async () => {
+ const GET = await freshRoute();
   const original = globalThis.fetch;
   let calls = 0;
   globalThis.fetch = async () => { calls += 1; return new Response("down", { status: 502 }); };
@@ -236,6 +239,7 @@ test("statewide detail covers all Kansas cells while adding smaller channels onl
 });
 
 test("overview query is fixed, source-ranked and refuses unranked or mismatched provider data", async () => {
+ const GET = await freshRoute();
  const original=globalThis.fetch; let calls=0;
  globalThis.fetch=async url=>{
    calls++; const u=new URL(url);
@@ -254,12 +258,14 @@ test("overview query is fixed, source-ranked and refuses unranked or mismatched 
    for (const suffix of ["?cell=-98.25,36.75&detail=unknown","?cell=-98.25,36.75&detail=overview&detail=local","?cell=-98.00,38.00&detail=overview","?cell=-98.25,36.75&detail=overview&url=https://example.com"]) assert.equal((await GET(request(suffix))).status,400);
    assert.equal(calls,1);
    globalThis.fetch=async()=>new Response(JSON.stringify({features:[{properties:{id3dhp:"B1",flowdirection:1,featuretype:1,streamorder:2},geometry:{type:"LineString",coordinates:[[-98,38],[-97.9,38]]}}]}));
-   assert.equal((await GET(request("?cell=-98.25,36.75&detail=overview"))).status,503);
+   const coldGET = await freshRoute(); // validation must run on an uncached provider read
+   assert.equal((await coldGET(request("?cell=-98.25,36.75&detail=overview"))).status,503);
  } finally {globalThis.fetch=original;}
 });
 
 
 test("edge-cell server and client accept the same bounded provider coordinates", async () => {
+ const GET = await freshRoute();
  const original=globalThis.fetch;
  globalThis.fetch=async()=>Response.json({features:[reach("EDGE1",[[-102.24,36.76],[-102.23,36.77]],{streamorder:6}),reach("EDGE2",[[-100.2,40.23],[-100.1,40.24]],{streamorder:6})]});
  try {

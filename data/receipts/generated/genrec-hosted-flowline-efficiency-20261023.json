@@ -1,0 +1,107 @@
+{
+  "receipt_id": "kfm:generated:hosted-flowline-request-efficiency:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/api/hydrology/flowlines/route.ts",
+    "app/flowline-request-pool.ts",
+    "tests/water-flow-motion.test.mjs",
+    "tests/flowline-request-harness.mjs",
+    "tests/flowline-requests.test.mjs",
+    "tests/flowline-capacity.benchmark.mjs",
+    "tests/flowline-capacity-http.test.mjs",
+    "docs/flowline-request-efficiency.md"
+  ],
+  "artifact_hashes": {
+    "app/api/hydrology/flowlines/route.ts": "sha256:5a048d91cf02b7fa099eca754b1f3f952934dc42d23eba4a551d0dd714868f73",
+    "app/flowline-request-pool.ts": "sha256:83e1e3b61c81ca080253681ed625b12960a3e7552ba12da48e75e7c1534ba594",
+    "tests/water-flow-motion.test.mjs": "sha256:a8d3ff0451a1cc031b426bbb0201f3684616c91f9ef26b5a95a5758433d0dc12",
+    "tests/flowline-request-harness.mjs": "sha256:6f6dd80e11cfc8711daf9cd071d6fcdfa750d519537626ef60492e23af41341d",
+    "tests/flowline-requests.test.mjs": "sha256:0db51c7783eea12b56fc93b318a6420bc5f341dae4f2b7522a303fa9904402a6",
+    "tests/flowline-capacity.benchmark.mjs": "sha256:4ebfbc92ecde552778f2d991e2864e0da6eb4992632eb746155d85ea988e16bb",
+    "tests/flowline-capacity-http.test.mjs": "sha256:758a684aa1bfdf45428c3575d4750e975935c1ad5e1fa943ba1eb7b366aed0cd",
+    "docs/flowline-request-efficiency.md": "sha256:bb399e3b5c3a90edcf91252f66debec9868888938949649ac423a95a51d6f0ee"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:aa5d50a7c8ff23e722e9e3b849abde21f5cacf4c2097b1b97e1eab71647595ec",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "exec_command",
+      "independent review agent"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@15ec2493a7cf2e4b014b0d8d25069f1f7877d728",
+      "bartytime4life/Kansas-Frontier-Matrix@c336e8b38135d7110a79b44f038faee756006f21",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5431",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "app/api/hydrology/flowlines/route.ts": "CONFIRMED",
+    "app/flowline-request-pool.ts": "CONFIRMED",
+    "tests/water-flow-motion.test.mjs": "CONFIRMED",
+    "tests/flowline-request-harness.mjs": "CONFIRMED",
+    "tests/flowline-requests.test.mjs": "CONFIRMED",
+    "tests/flowline-capacity.benchmark.mjs": "CONFIRMED",
+    "tests/flowline-capacity-http.test.mjs": "CONFIRMED",
+    "docs/flowline-request-efficiency.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Synthetic concurrent actual route dispatch",
+      "outcome": "PASS",
+      "reason": "24 duplicate clients: 24 baseline reads/peak versus 1 candidate; cached replay 24 baseline additional versus zero candidate. 24 distinct held cells: baseline24 versus candidate9 active with15 retryable503s. Gated fake provider only; no network traffic. Node22.13.1, baseline route SHA256 6af359285bf9dbe56a999384d236b7bfe548b05f7b0adf3b74ba29b9d30217f4."
+    },
+    {
+      "gate": "Focused source regressions and independent AI review",
+      "outcome": "PASS",
+      "reason": "13 new capacity and15 retained water-flow tests pass, including provider validation, failures, cancellation, timeout and recovery, TTL/LRU/byte/admission bounds. Independent agent reran28 tests and found no remaining blocking runtime defect. Cancelled-subscriber retention and rejected-provider body findings corrected. Separate20000-cancellation GC diagnostic retained zero cancelled signals. Human review pending. PR #5431 subsequently merged as15ec2493a7cf2e4b014b0d8d25069f1f7877d728; exact tree retained and integrated water suite18/18 passes (31 focused total)."
+    },
+    {
+      "gate": "Local build, TypeScript and changed-file ESLint",
+      "outcome": "PASS",
+      "reason": "Production build, post-build TypeScript, changed-file lint and diff checks pass using linked existing dependencies (Next16.3.8/TypeScript5.9.3), not the pinned Next16.4.2 install. Pre-build types initially lacked generated build-identity JSON; post-build types pass."
+    },
+    {
+      "gate": "Clean local installation",
+      "outcome": "FAIL",
+      "reason": "npm ci could not retrieve registry packages: EAI_AGAIN; final npm error Exit handler never called. Clean pinned install remains delegated to exact-head CI; no lockfile/package modification."
+    },
+    {
+      "gate": "Built loopback HTTP regression locally",
+      "outcome": "FAIL",
+      "reason": "Host sandbox rejected listen127.0.0.1 with EPERM before assertions. New real built-route24-client HTTP regression is included in ordinary CI suite. No local HTTP pass claimed."
+    },
+    {
+      "gate": "Exact-head CI, hosted resources and publication",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head CI pending upload. Production concurrency, replica count, memory, provider impact and physical transport drainage unmeasured. Per-instance application protection only; no deployment, merge or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "authoring-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T15:12:49.577359+00:00",
+  "emitter": "Codex",
+  "notes": "Existing hosted app/tests/docs/generated receipt responsibilities under canonical Directory Rules v2 adopted by accepted ADR-0029. No new authority or storage contract. Separate non-dependent follow-up to #5431. Revert focused correction preserving later work; no migration. Cache UTF8 bytes are not total heap and loader counts are not TCP-socket or deployment-wide guarantees. Integrated authoring base15ec2493a7cf2e4b014b0d8d25069f1f7877d728 has exact treead494ca2cc08b4e36b76111e36f9f2168ae8ba35, identical to #5431 head tree. Its seven changed paths are retained; only adjacent water test instance isolation overlaps."
+}

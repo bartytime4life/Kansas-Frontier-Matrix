@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readBoundedJson } from "../../../bounded-json";
+import { createFlowlineRequestPool } from "../../../flowline-request-pool";
 import { FLOW_PROFILES, FLOWLINE_EXTENT, isFlowDetail, FLOWLINE_LIMITATION, FLOWLINE_SERVICE, parseFlowlineCell, type FlowlineCellPayload } from "../../../water-flow-motion";
 import { parseWaterReaches } from "../../../water-path-analysis";
 
 export const dynamic = "force-dynamic";
 
 const round = (value: number) => Math.round(value * 1e5) / 1e5;
+const requests = createFlowlineRequestPool();
 
 /**
  * One fixed Kansas grid cell at the requested display detail of USGS 3DHP flowlines that carry the
@@ -32,10 +34,12 @@ export async function GET(request: NextRequest) {
     // Profile-specific display simplification preserves downstream vertex order.
     maxAllowableOffset: profile.offset, orderByFields: profile.minOrder ? "streamorder DESC,hydrosequence DESC" : "hydrosequence DESC",
   })) upstream.searchParams.set(key, value);
-  const signal = AbortSignal.any([request.signal, AbortSignal.timeout(30_000)]);
-  try {
+  const result = await requests.get(detail + ":" + cell.join(","), request.signal, async signal => {
     const response = await fetch(upstream, { headers: { Accept: "application/json" }, redirect: "manual", cache: "no-store", signal });
-    if (!response.ok) throw new Error("USGS service unavailable.");
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => undefined);
+      throw new Error("USGS service unavailable.");
+    }
     const raw = await readBoundedJson(response, 6 * 1024 * 1024, signal) as { exceededTransferLimit?: unknown };
     const parsed = parseWaterReaches(raw);
     if (profile.minOrder && parsed.some(reach => !(typeof reach.streamOrder === "number" && reach.streamOrder >= profile.minOrder))) throw new Error("Provider stream order does not match the requested detail.");
@@ -49,8 +53,12 @@ export async function GET(request: NextRequest) {
       truncated: raw.exceededTransferLimit === true, reaches,
       source: FLOWLINE_SERVICE, retrievedAt: new Date().toISOString(), evidenceRole: "EXTERNAL_CONTEXT_ONLY", limitation: FLOWLINE_LIMITATION + " " + profile.label + "; stream order " + (profile.minOrder || "all supplied") + "; display geometry generalization " + profile.offset + " degrees. Stream order is not discharge. Coverage is limited to returned tiles and reaches.",
     };
-    return NextResponse.json(payload, { headers: { "Cache-Control": "private, max-age=3600" } });
-  } catch {
-    return NextResponse.json({ error: "USGS 3DHP flowlines are unavailable for this cell." }, { status: 503, headers: { "Cache-Control": "no-store" } });
-  }
+    return JSON.stringify(payload);
+  });
+  if (result.state === "ready") return new NextResponse(result.body, { headers: {
+    "Content-Type": "application/json", "Cache-Control": "private, max-age=" + Math.max(0, Math.floor((result.expires - Date.now()) / 1000)),
+  } });
+  return NextResponse.json({ error: "USGS 3DHP flowlines are unavailable for this cell." }, { status: 503, headers: {
+    "Cache-Control": "no-store", ...(result.state === "cancelled" ? {} : { "Retry-After": "1" }),
+  } });
 }
