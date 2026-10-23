@@ -29,10 +29,11 @@ assert.equal(origin.search, '');
 assert.equal(origin.username + origin.password, '');
 const chrome = process.env.KFM_TEST_CHROME ?? 'google-chrome';
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
-async function browser(t) {
+async function browser(t, layout) {
   const profile = await mkdtemp(join(tmpdir(), 'kfm-county-browser-'));
   const child = spawn(chrome, [
     '--headless=new', '--remote-debugging-pipe', `--user-data-dir=${profile}`,
+    `--window-size=${Math.max(800,layout.width)},${Math.max(600,layout.height+100)}`,
     '--no-first-run', '--no-default-browser-check', '--disable-background-networking',
     ...(process.getuid?.() === 0 ? ['--no-sandbox'] : []), '--disable-dev-shm-usage', '--enable-unsafe-swiftshader', '--use-angle=swiftshader', 'about:blank',
   ], { stdio: ['ignore', 'ignore', 'pipe', 'pipe', 'pipe'] });
@@ -80,6 +81,8 @@ async function pageSession(b, { width, height, touch, motion }) {
   const riverFixture=fixture();
   let riverResponses=0;
   const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
+  const { bounds:inputWindow } = await b.call('Browser.getWindowForTarget', { targetId });
+  assert.ok(inputWindow.width>=width && inputWindow.height>=height,'physical native-input window covers the emulated viewport');
   const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
   const call = (method, params = {}) => b.call(method, params, sessionId);
   const interceptions = createInterceptionErrorTracker();
@@ -166,7 +169,7 @@ for (const layout of [
   {width:844,height:390,touch:true,motion:'no-preference'},
   {width:1440,height:900,touch:false,motion:'no-preference'},
 ]) test(`River Pulse dismissal at ${layout.width}x${layout.height}, ${layout.touch?'touch':'mouse'}, ${layout.motion}`, {timeout:90000}, async t => {
-  const b=await browser(t),p=await pageSession(b,layout);
+  const b=await browser(t,layout),p=await pageSession(b,layout);
   try {
   await p.wait(`document.querySelector('.living-welcome [aria-label="Close quick start"]')`, 'welcome hydrated');
   await p.activate('[aria-label="Close quick start"]');
