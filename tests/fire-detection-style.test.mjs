@@ -81,7 +81,7 @@ test("fire detections keep their selectable ids including the flame hit target w
   assert.ok(!source.layerIds.some(id => id.endsWith("-fill")), "not counted as a composed fill surface");
   assert.ok(fire.FIRE_FOOTPRINT_SOURCE_ID.startsWith("kfm-"), "derived rectangles are never inspected as a separate provider record");
   assert.match(source.boundary, /satellite detection pixel, not a fire perimeter, flame front, or burned area/);
-  assert.match(source.boundary, /illustrative, not measured fire behaviour or intensity/);
+  assert.match(source.boundary, /illustration, not measured fire behaviour or intensity/);
   assert.match(source.boundary, /not a verified wildfire, ignition point, fire perimeter, burned area/);
 });
 
@@ -98,10 +98,13 @@ test("applying the fire source derives footprints, hides the old dot and follows
   assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.flame).type, "symbol");
   assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.flame).source, "external-nasa-gibs-fire-points");
   assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.heat).source, fire.FIRE_FOOTPRINT_SOURCE_ID);
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.heat).paint["fill-pattern"], fire.FIRE_EMBER_PATTERN_ID);
+  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.heat).paint["fill-pattern"], undefined);
+  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.heat).paint["fill-opacity"], 0);
+  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.shimmer).paint["line-opacity"], 0);
+  assert.deepEqual(layers.get(fire.FIRE_POINT_LAYER_IDS.edge).paint["line-dasharray"], [3, 4]);
   // The user's opacity scales every zoom stop.
   context.applyOfficialContextState(map, only(["nasa-gibs-fire-points"]), { ...opacity, "nasa-gibs-fire-points": 0.5 }, { "nasa-gibs-fire-points": data });
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.flame).paint["icon-opacity"][4], 0.5);
+  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.flame).paint["icon-opacity"], 0.5);
   assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.halo).paint["circle-opacity"][4], 0.15);
   context.applyOfficialContextState(map, only([]), opacity, { "nasa-gibs-fire-points": data });
   for (const id of Object.values(fire.FIRE_POINT_LAYER_IDS)) assert.equal(layers.get(id).layout.visibility, "none", id);
@@ -109,17 +112,21 @@ test("applying the fire source derives footprints, hides the old dot and follows
   assert.equal(sources.get(fire.FIRE_FOOTPRINT_SOURCE_ID).data.features.length, 0);
 });
 
-test("the ember texture tiles seamlessly and loops in time", () => {
-  const size = 32;
-  const frame = fire.renderEmberFrame(0, size);
-  assert.equal(frame.length, size * size * 4);
-  const pixel = (x, y) => frame.slice((y * size + x) * 4, (y * size + x) * 4 + 3);
-  const step = (a, b) => a.reduce((sum, value, index) => sum + Math.abs(value - b[index]), 0);
-  let seam = 0, inner = 0;
-  for (let y = 0; y < size; y++) { seam += step(pixel(size - 1, y), pixel(0, y)); inner += step(pixel(1, y), pixel(0, y)); }
-  assert.ok(seam < inner * 2.5, "wrapping across the tile edge is no harsher than an ordinary step");
-  const loop = fire.renderEmberFrame(fire.FIRE_FRAME_COUNT, size);
-  assert.deepEqual([...loop], [...frame]);
+test("close zoom retains a bounded flame for detections with and without pixel dimensions", async () => {
+  const { createPropertyExpression, latest } = await import("@maplibre/maplibre-gl-style-spec");
+  const { map, layers } = mapHarness();
+  context.applyOfficialContextState(map, only(["nasa-gibs-fire-points"]), opacity,
+    { "nasa-gibs-fire-points": payload([detection("pixel", -98, 38), detection("no-pixel", -98.1, 38, {scanKm:null})]) });
+  const flame = layers.get(fire.FIRE_POINT_LAYER_IDS.flame);
+  assert.equal(flame.maxzoom, undefined, "close zoom never removes the flame layer");
+  assert.equal(flame.paint["icon-opacity"], 1, "a known footprint no longer fades its flame out");
+  const compiled = createPropertyExpression(flame.layout["icon-size"], "layout", latest.layout_symbol["icon-size"]);
+  assert.equal(compiled.result, "success");
+  const size = zoom => compiled.value.evaluate({zoom}, {type:1,properties:{scanKm:0.5,trackKm:0.4}});
+  assert.ok(size(14) > size(10), "a close view reveals more flame detail");
+  assert.equal(size(17), size(22), "the graphic stops growing at its screen-size cap");
+  assert.ok(size(22) <= 2.1);
+  assert.equal(flame.layout["icon-pitch-alignment"], "viewport", "tilting never flattens it into a ground rectangle");
 });
 
 
@@ -195,3 +202,4 @@ test("both fire displays share one ticker and reduced motion or a hidden tab set
   apply(["nifc-fire-reports"]); assert.equal(timers.size, 1, "hiding detections must not stop report motion");
   apply([]); assert.equal(timers.size, 0);
 });
+

@@ -384,7 +384,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     color: "#ff6a32",
     attribution: "NASA GIBS · VIIRS NOAA-20 thermal anomalies",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "Selectable points come from NASA GIBS NOAA-20 VIIRS daily vector tiles and retain provider acquisition time, confidence, radiative power, brightness temperatures, scan/track pixel dimensions, and hot-spot type when supplied. A thermal detection can be a non-vegetation heat source; it is not a verified wildfire, ignition point, fire perimeter, burned area, incident status, evacuation zone, or safety guidance. These points are external display context, not KFM evidence or release. Zoomed in, each detection is drawn as its provider scan × track pixel on the ground, approximately oriented to the satellite pass; that shape is the satellite detection pixel, not a fire perimeter, flame front, or burned area, and the animated flame and ember texture are illustrative, not measured fire behaviour or intensity.",
+    boundary: "Selectable points come from NASA GIBS NOAA-20 VIIRS daily vector tiles and retain provider acquisition time, confidence, radiative power, brightness temperatures, scan/track pixel dimensions, and hot-spot type when supplied. A thermal detection can be a non-vegetation heat source; it is not a verified wildfire, ignition point, fire perimeter, burned area, incident status, evacuation zone, or safety guidance. These points are external display context, not KFM evidence or release. At close zoom, a dashed outline shows the provider scan × track pixel on the ground, approximately oriented to the satellite pass; that shape is the satellite detection pixel, not a fire perimeter, flame front, or burned area. The animated flame remains a bounded screen-sized illustration, not measured fire behaviour or intensity. Its height, flicker and sparks do not encode radiative power, spread, wind, or current activity.",
     fallback: "If a current UTC-day Kansas tile is missing, the Site checks only the previous day and labels that dated snapshot partial. Explicit archive days and other tile failures remain unavailable; no substitute or complete-coverage claim is inferred. A zero-point response does not establish no fire or full satellite coverage.",
   }),
   Object.freeze({
@@ -1140,3 +1140,4 @@ export const setNoaaLightningGlow = (map: MapLibreMap, amount: number): void => 
   requestRasterOpacity(map, id, Math.max(0, Math.min(0.28, amount)));
   balanceMapRasters(map);
 };
+
