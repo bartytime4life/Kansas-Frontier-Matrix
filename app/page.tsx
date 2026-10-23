@@ -4168,6 +4168,14 @@ export default function Home() {
     mapGuideRef.current?.querySelector<HTMLButtonElement>('[aria-label="Close map guide"]')?.focus({ preventScroll: true });
   }, [helpOpen]);
 
+  const closeLiveInstrument = useCallback(() => {
+    setInstrumentOpen(false);
+    setStreamflowPlaying(false);
+    setNoaaRadarPlaying(false);
+    setLightningPlaying(false);
+    window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true }));
+  }, []);
+
   const closeRightPanel = useCallback(() => {
     const assistantReturn = assistantEvidenceReturnRef.current;
     assistantEvidenceReturnRef.current = null;
@@ -6914,11 +6922,12 @@ export default function Home() {
         mapRef.current?.doubleClickZoom.enable();
         if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
       }
+      else if (liveDockVisible && !glmFlashesEnabled) closeLiveInstrument();
       else if (!isCompact && rightOpen) closeRightPanel();
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [sourceStatusOpen, helpOpen, isCompact, mapContextOpen, mapUtilityOpen, qwenOpen, repositoryOpen, rightOpen, closeMapUtility, closeQwenCompanion, closeRightPanel, closeSourceStatus, closeMapGuide]);
+  }, [sourceStatusOpen, helpOpen, isCompact, mapContextOpen, mapUtilityOpen, qwenOpen, repositoryOpen, rightOpen, liveDockVisible, glmFlashesEnabled, closeLiveInstrument, closeMapUtility, closeQwenCompanion, closeRightPanel, closeSourceStatus, closeMapGuide]);
 
   const chooseSearchResult = (item: GlobalSearchItem) => {
     setPrimaryWorkspace("map");
@@ -9084,7 +9093,7 @@ export default function Home() {
               </div>
               <div className="status-map-links">
                 <button type="button" aria-expanded={sourceStatusOpen} aria-controls="map-source-status" onClick={() => { setRepositoryOpen(false); openSourceStatus(repositoryButtonRef.current?.closest("details")?.querySelector<HTMLElement>("summary")); }}><strong>Source status</strong><small>Freshness, limits, and recovery</small></button>
-                <button type="button" aria-pressed={instrumentOpen} onClick={() => { setRepositoryOpen(false); setInstrumentOpen((open) => !open); setCurrentWorkspace("explore"); window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true })); }}><strong>Live controls</strong><small>River, radar, and lightning playback</small></button>
+                <button type="button" aria-pressed={instrumentOpen} onClick={() => { setRepositoryOpen(false); if (instrumentOpen) closeLiveInstrument(); else setInstrumentOpen(true); setCurrentWorkspace("explore"); window.requestAnimationFrame(() => mapContainerRef.current?.focus({ preventScroll: true })); }}><strong>Live controls</strong><small>River, radar, and lightning playback</small></button>
                 <button type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong><small>Reset to the current daily view</small></button>
               </div>
             </section>
@@ -9701,6 +9710,7 @@ export default function Home() {
             downstreamPathCount={downstreamPaths.length}
             downstreamAnalysis={downstreamAnalysis}
             sourceSwitcher={liveObservationSwitcher}
+            onClose={closeLiveInstrument}
             onRefresh={() => { void refreshSelectedStreamflow(); }}
             onTogglePlay={toggleStreamflowPlayback}
             onStep={stepStreamflow}
