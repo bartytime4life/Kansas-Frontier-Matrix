@@ -5481,14 +5481,14 @@
     },
     "local_install": {
       "build_files": 428,
-      "current": "$HOME/Projects/KFM-Explorer-Site-aligned-v252-20261012",
+      "current": "/home/bartytime/Projects/KFM-Explorer-Site-aligned-v252-20261012",
       "data_migration": false,
       "health": "PASS",
-      "previous": "$HOME/Projects/KFM-Explorer-Site-final-reviewed-20261011-v251",
+      "previous": "/home/bartytime/Projects/KFM-Explorer-Site-final-reviewed-20261011-v251",
       "retained_old_assets": 44,
       "source_commit": "190d16acb2f866cb9c2eb108dbd204ca30465269",
       "source_files": 984,
-      "state": "$HOME/Projects/KFM-Explorer-Site-v109/.wrangler/local-state"
+      "state": "/home/bartytime/Projects/KFM-Explorer-Site-v109/.wrangler/local-state"
     },
     "mirror": "PENDING remaining current-source validation",
     "mirror_build": "PASS",

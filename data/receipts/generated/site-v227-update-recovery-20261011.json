@@ -4850,7 +4850,7 @@
     "local_copy": {
       "all_bytes_verified": true,
       "build_files": 427,
-      "path": "$HOME/Projects/KFM-Explorer-Site-update-recovery-20261011-v227",
+      "path": "/home/bartytime/Projects/KFM-Explorer-Site-update-recovery-20261011-v227",
       "persistent_store_changed": false,
       "rollback": "v227 > v226 > v227 exact asset digest verified",
       "source_paths": 928

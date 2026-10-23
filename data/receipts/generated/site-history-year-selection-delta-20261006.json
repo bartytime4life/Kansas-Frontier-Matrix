@@ -172,7 +172,7 @@
   "mirror_review": "MIRROR_REVIEW_REQUIRED remains. Original v153 guard and historical receipts are unchanged. Source parity, deployment, browser acceptance, local installation, source admission and release approval remain separate.",
   "local_runtime": {
     "source_commit": "6b5477617a0f30bd70b266e3e45d4d0616dcccf8",
-    "installed_path": "$HOME/Projects/KFM-Explorer-Site-v163",
+    "installed_path": "/home/bartytime/Projects/KFM-Explorer-Site-v163",
     "port": 4173,
     "cutover": "CONFIRMED_BY_PARENT",
     "install_receipt_sha256": "69786a88ed28aa4f29583bd287802e24d651af8e49d6c53fa8de03e6cfdd1891",

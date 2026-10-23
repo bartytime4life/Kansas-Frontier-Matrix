@@ -4674,8 +4674,8 @@
     "method": "Retain the merged-main reconciliation and every predecessor receipt. Mirror the three v229 serialization repair files; select the new content-only receipt.",
     "predecessors": {
       "site-v226-water-decision-expiry-overlay-20261011.json": "7ac27beb1383a79148ec34ae6635912c9d95364365727f4a8aa62c5f0a8cfec4",
-      "site-v227-update-recovery-20261011.json": "127b563ca3a74966092413dfd5599b52d18beeb27eeadc36a42a005832d7f56d",
-      "site-v228-first-selection-reconciled-20261011.json": "df72ee6747b023c71c604dfc54736b2eaaef4c60eb05ebc07bf00452127500e8"
+      "site-v227-update-recovery-20261011.json": "598166bc51dda4bacb811e8fd0e738f5e8a8f035cb6d43036cd737b390dcc140",
+      "site-v228-first-selection-reconciled-20261011.json": "430775783b4e3d5fba642bcf01a2467fdefb21c40f290338ca57997f405dd174"
     },
     "prior_pr_5029_head": "b20628b7c3961af9a68b6a2f27ba98d087ff4f78",
     "shared_conflict": "tools/qa/site_mirror.py receipt selector"
@@ -4925,7 +4925,7 @@
     "local_copy": {
       "all_bytes_verified": true,
       "build_files": 427,
-      "path": "$HOME/Projects/KFM-Explorer-Site-serialization-20261011-v229",
+      "path": "/home/bartytime/Projects/KFM-Explorer-Site-serialization-20261011-v229",
       "persistent_store_changed": false,
       "rollback": "v229 > v228 > v229 exact asset digests verified; earlier v228 > v227 > v228 also verified",
       "source_paths": 930
