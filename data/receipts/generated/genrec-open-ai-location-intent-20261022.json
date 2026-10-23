@@ -1,0 +1,91 @@
+{
+  "receipt_id": "genrec-open-ai-location-intent-20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "server/public-discussion-scope.mjs",
+    "tests/public-discussion-scope.test.mjs"
+  ],
+  "artifact_hashes": {
+    "server/public-discussion-scope.mjs": "sha256:9b2aead9cceb142c5ce9eabb6ef3e52e81d1486d89f1a4b8959a94a5220a7ee6",
+    "tests/public-discussion-scope.test.mjs": "sha256:6105c0a2ff17beb1ac362a8367333b6565aa7781de5ad39d9a0d9c0d75489638"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "UNKNOWN; exact runtime build identifier not supplied"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "local shell"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e67dfcbaccf5f42cc6631eb72d7329ba09ec1fa84d3ddbe4ae5e908d5152a199"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/29c0a4905079a97b59133d74daa8b6462b31771c/server/public-discussion-scope.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5415"
+    ]
+  },
+  "truth_labels": {
+    "server/public-discussion-scope.mjs": "CONFIRMED",
+    "tests/public-discussion-scope.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "merged-source-reproduction",
+      "outcome": "PASS",
+      "reason": "Three mapping/coordinate/fiction questions denied by merged PR 5415 are admitted by the final source. Explicit protected-location requests remain held."
+    },
+    {
+      "gate": "focused-final-application-checks",
+      "outcome": "PASS",
+      "reason": "88 handler, prompt, composer, admission and home-transport tests pass; final table includes all three additional false-denial cases."
+    },
+    {
+      "gate": "full-runtime-and-application-validation",
+      "outcome": "PASS",
+      "reason": "Final runtime source: rebuilt npm test passes 1664 tests, zero failures, 21 environment-dependent skips, 1685 total. The final test-table wording was refined afterward and the focused 88 tests rerun. TypeScript and changed-file lint pass. Earlier source-only failures from filter admission and stale build inputs were corrected and rebuilt; no guard/limit was weakened."
+    },
+    {
+      "gate": "schema-and-integrity",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema and both final artifact hashes verified; predecessor receipt preserved byte-for-byte."
+    },
+    {
+      "gate": "live-inference-deployment-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Application authoring only; real model quality, hosted acceptance and human approval remain pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Merged open-conversation source",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/29c0a4905079a97b59133d74daa8b6462b31771c/server/public-discussion-scope.mjs"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-23T00:38:56.649659Z",
+  "emitter": "OpenAI Codex KFM application follow-up",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Successor to PR 5415 provenance. The predecessor receipt is unchanged. This narrow refinement distinguishes mapping education and fictional site stories from actual protected-location requests. It creates no host tool access, data release or publication authority."
+}
