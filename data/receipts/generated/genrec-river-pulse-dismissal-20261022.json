@@ -1,0 +1,118 @@
+{
+  "receipt_id": "kfm:generated:river-pulse-dismissal:20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/globals.css",
+    "apps/site/source/app/hydrology-observatory.tsx",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/docs/water-flow-paths.md",
+    "apps/site/source/tests/river-pulse-visuals.test.mjs",
+    "tools/qa/site_mirror.py",
+    "tests/qa/test_site_mirror.py",
+    "data/receipts/generated/site-v268-river-pulse-dismissal-overlay-20261022.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/globals.css": "sha256:919d23b4131d81b6b5eaff596ba723294d783aeaf2c8dfa59c949e28a97572d4",
+    "apps/site/source/app/hydrology-observatory.tsx": "sha256:41d8dd8928a17510f775aa57f774089ebb6c13ffbc1d68fd51959356a98b9a50",
+    "apps/site/source/app/page.tsx": "sha256:016c983dd6d476d7ee606f15b7d00d825d3349063c63524eb72fee082c9788d6",
+    "apps/site/source/docs/water-flow-paths.md": "sha256:50a9a200c437547847216c9d96bd13ff0a64a8c0067cf7a5a4774d136b691fa9",
+    "apps/site/source/tests/river-pulse-visuals.test.mjs": "sha256:7909fa9f2814b7efaa52a0e17be76d697f977ecb40cd511b029760f00a648dab",
+    "tools/qa/site_mirror.py": "sha256:40cc6a68f55eb32328aaf5b963d375c8aadd8c1c58e7bf0e38bfafb1dacffe58",
+    "tests/qa/test_site_mirror.py": "sha256:9122562dc16010c4d685c7a37ccb78a848cec64071496305a93a97d7800f59d2",
+    "data/receipts/generated/site-v268-river-pulse-dismissal-overlay-20261022.json": "sha256:4cb09be62161eb53f52d575abefecd2624945ef442f2ad1b31149e7e70b26c25"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact model revision unavailable in this session"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "apply_patch",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@e699ac0a2995ac26fd801fb493c03d03cbdd38c7",
+      "apps/site/source/AGENTS.md@e699ac0a2995ac26fd801fb493c03d03cbdd38c7",
+      "docs/doctrine/directory-rules.md@e699ac0a2995ac26fd801fb493c03d03cbdd38c7",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e699ac0a2995ac26fd801fb493c03d03cbdd38c7",
+      "data/receipts/generated/site-v268-pirep-weather-parsing-overlay-20261022.json@e699ac0a2995ac26fd801fb493c03d03cbdd38c7"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/globals.css": "CONFIRMED",
+    "apps/site/source/app/hydrology-observatory.tsx": "CONFIRMED",
+    "apps/site/source/app/page.tsx": "CONFIRMED",
+    "apps/site/source/docs/water-flow-paths.md": "CONFIRMED",
+    "apps/site/source/tests/river-pulse-visuals.test.mjs": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "data/receipts/generated/site-v268-river-pulse-dismissal-overlay-20261022.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Three added regressions against original main@472747fe source",
+      "outcome": "PASS",
+      "reason": "All three failed for absent close, Escape and wiring; original two visual tests passed."
+    },
+    {
+      "gate": "Final production build and TypeScript",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Final standalone Site Node suite",
+      "outcome": "PASS",
+      "reason": "1423 passed, 0 failed, 2 existing root/Ollama installer skips; 1425 total."
+    },
+    {
+      "gate": "Changed-file ESLint",
+      "outcome": "PASS",
+      "reason": "0 errors; 42 existing page warnings; initial base, unchanged lines."
+    },
+    {
+      "gate": "Mirror tests and content parity",
+      "outcome": "PASS",
+      "reason": "51 tests, 892 paths, 258 withheld paths absent; no review or hosted equivalence authority."
+    },
+    {
+      "gate": "Local desktop and 390px iframe browser dismissal",
+      "outcome": "PASS",
+      "reason": "Click, descendant Escape, reopen, scroll reachability and map focus verified. 44x44 phone target. Phone click protocol timeout followed by observed closed state."
+    },
+    {
+      "gate": "Live USGS/WebGL and hosted acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Preview reported WebGL2 unsupported and USGS unavailable. No deployment performed."
+    },
+    {
+      "gate": "Exact-head GitHub CI and human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending after draft creation; no independent review claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-repository-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e699ac0a2995ac26fd801fb493c03d03cbdd38c7"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T00:43:39.089791+00:00",
+  "emitter": "Codex",
+  "notes": "UI dismissal and reversible content accounting only. No source data, release, authorization, dependency, hosting or storage changes. Initial base 472747fe updated to merged PIREP base e699ac0a before final validation. Open PR 5416 touches only hosted AI discussion files on a different base; no path overlap. Author self-review only; human review pending. Roll back all changed files and selector/receipt together."
+}
