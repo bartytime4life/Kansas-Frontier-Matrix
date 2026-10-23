@@ -2,12 +2,12 @@
 doc_id: kfm://doc/runbooks/deployment-consolidation
 title: Deployment consolidation and Vercel retirement
 type: runbook
-version: v1.1
-prior_version: v1.0
-status: draft; record cleanup and provider absence verified; environment retirement pending
+version: v1.2
+prior_version: v1.1
+status: draft; record cleanup, provider absence and environment retirement verified
 owners: ["@bartytime4life"]
 created: 2026-10-19
-updated: 2026-10-19
+updated: 2026-10-22
 policy_label: public
 current_path: docs/runbooks/deployment-consolidation.md
 owning_root: docs/
@@ -102,7 +102,33 @@ receipt or an independently authenticated approval. The original GitHub inventor
 artifact is `12213155217` and expires on 2026-11-18. Do not rely on that expiring
 artifact as the sole retained copy.
 
-### Remaining environment cleanup
+### Environment closure on 2026-10-22
+
+**CONFIRMED — the repository now has one environment, `Production`, and zero
+deployment records.** The owner requested that the Deployments page be reduced
+to a single environment and approved this exact set in the authoring session.
+
+- **CONFIRMED:** the 27 owner-created `stage` records (2025-11-27 to
+  2025-12-22, ref `main`, every latest status `failure`) were set inactive and
+  then deleted. Their source, the scheduled `kfm-auto-update.yml` workflow, is
+  no longer on main.
+- **CONFIRMED:** environments `stage`, `copilot`, `Preview`, `Preview – kfm`,
+  `Production – kfm`, `Preview – kansas-frontier-matrix-explorer-web`,
+  `Production – kansas-frontier-matrix-explorer-web` and `Production – usgs`
+  were deleted. Each had zero secrets, variables and protection rules at action
+  time. `Preview – usgs` was already absent.
+- **CONFIRMED:** `Production` (`20759133715`) is retained by owner choice and is
+  empty. The GoDaddy application is published from its own dashboard and
+  creates no GitHub deployment records.
+- **Recreation sources:** the Copilot coding agent recreates `copilot` when it
+  runs. [godaddy-hosted-capture.yml](../../.github/workflows/godaddy-hosted-capture.yml)
+  sets `deployment: false`, so enabling capture adds the `kfm-hosted-capture`
+  environment but no deployment records.
+
+This supersedes the preservation of `copilot`, `stage` and `Production` in the
+2026-10-19 sections below, which remain as the historical procedure.
+
+### Remaining environment cleanup (2026-10-19, superseded)
 
 GitHub's existing environment settings required owner reauthentication before
 deletion. The Mobile request timed out; no environment deletion was submitted.

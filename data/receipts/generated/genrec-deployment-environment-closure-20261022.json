@@ -1,0 +1,69 @@
+{
+  "receipt_id": "genrec-deployment-environment-closure-20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/deployment-consolidation.md",
+    ".github/workflows/godaddy-hosted-capture.yml",
+    "tests/test_hosted_capture_workflow.py"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/deployment-consolidation.md": "sha256:47ab4604bc337e08e82924eeb2b979e005e427b0552dee18675462fca4355c8f",
+    ".github/workflows/godaddy-hosted-capture.yml": "sha256:7b8699047638f9a288edfe861ad5657b8ac6caf57ff13b2db49779818ab6a946",
+    "tests/test_hosted_capture_workflow.py": "sha256:1234278d7f0f1322ccc79253a023f3fa55a0649d2d6173bc6a3fab494a0fc56e"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5 (Claude Code)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:docs/runbooks/deployment-consolidation.md@77f5079b1e530a9ac9fbdf20e506e1b313940edb",
+      "repo:.github/workflows/godaddy-hosted-capture.yml@77f5079b1e530a9ac9fbdf20e506e1b313940edb",
+      "repo:tests/test_hosted_capture_workflow.py@77f5079b1e530a9ac9fbdf20e506e1b313940edb",
+      "repo:data/receipts/generated/genrec-vercel-retirement-outcome-20261019.json@77f5079b1e530a9ac9fbdf20e506e1b313940edb"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/deployment-consolidation.md": "CONFIRMED",
+    ".github/workflows/godaddy-hosted-capture.yml": "CONFIRMED",
+    "tests/test_hosted_capture_workflow.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused workflow, test and receipt validation",
+      "outcome": "PASS",
+      "reason": "tests/test_hosted_capture_workflow.py: 3 tests passed. tools/validators/governance/validate_workflow_security.py: PASS across 499 workflows, zero findings. Receipt validator: schema, cross-field and final SHA-256 binding passed with human review pending."
+    },
+    {
+      "gate": "Human review and exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Draft authoring; not yet reviewed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-main-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/77f5079b1e530a9ac9fbdf20e506e1b313940edb"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T04:38:19.581Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Covers authorship and exact bytes of the runbook checkpoint, the capture workflow's deployment: false setting and its test. The 27 stage record deletions and eight environment deletions were owner-approved external operations observed by readback; this receipt is not proof of them. Reverting these files cannot restore deleted GitHub environments or deployment records."
+}
