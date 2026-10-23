@@ -23,6 +23,9 @@ function mapHarness() {
     getSource: id => sources.get(id), getLayer: id => layers.get(id), getStyle: () => ({ layers: [...layers.values()] }),
     moveLayer(id) { const layer = layers.get(id); layers.delete(id); layers.set(id, layer); },
     getProjection: () => ({ type: "mercator" }),
+    // Existing registered images exercise the successful display path without
+    // requiring browser Canvas in the ordinary Node suite.
+    hasImage: () => true, addImage() {},
     addSource(id, spec) { sources.set(id, { ...spec, setData(data) { this.data = data; } }); },
     addLayer(layer) { layers.set(layer.id, structuredClone(layer)); },
     getLayoutProperty: (id, key) => layers.get(id)?.layout?.[key], getPaintProperty: (id, key) => layers.get(id)?.paint?.[key],
@@ -199,7 +202,102 @@ test("both fire displays share one ticker and reduced motion or a hidden tab set
   media.matches = false; mediaListeners.get("change")(); assert.equal(timers.size, 1);
   document.hidden = true; listeners.get("visibilitychange")(); assert.equal(timers.size, 0);
   document.hidden = false; listeners.get("visibilitychange")(); assert.equal(timers.size, 1);
+  map.hasImage = () => false;
+  apply(["nasa-gibs-fire-points", "nifc-fire-reports"]);
+  assert.equal(timers.size, 0, "unavailable flame images never keep a repaint timer alive");
+  map.hasImage = () => true;
+  apply(["nasa-gibs-fire-points", "nifc-fire-reports"]);
+  assert.equal(timers.size, 1, "successful registration can resume the shared ticker");
   apply(["nifc-fire-reports"]); assert.equal(timers.size, 1, "hiding detections must not stop report motion");
   apply([]); assert.equal(timers.size, 0);
 });
 
+
+// Fresh renderer instances keep Canvas failures independent of successful caches.
+async function freshFire(label) { return import((await moduleUrl('app/fire-detection-style.ts')) + '#' + label); }
+function canvasStub(t, { offscreen = 'ok', readback = true, dom = true } = {}) {
+  const keys = ['OffscreenCanvas', 'document'];
+  const original = keys.map(key => Object.getOwnPropertyDescriptor(globalThis, key));
+  const gradient = { addColorStop() {} };
+  const ctx = new Proxy({
+    getImageData: () => { if (!readback) throw new Error('readback unavailable'); return { data:new Uint8ClampedArray(144*192*4) }; },
+    createRadialGradient: () => gradient, createLinearGradient: () => gradient,
+  }, { get: (target,key) => target[key] ?? (() => {}) });
+  globalThis.OffscreenCanvas = class { getContext() { if(offscreen==='throw') throw new Error('unsupported'); return offscreen==='null' ? null : ctx; } };
+  globalThis.document = { createElement: () => ({ getContext: () => dom ? ctx : null }) };
+  t.after(() => keys.forEach((key,i) => original[i] ? Object.defineProperty(globalThis,key,original[i]) : delete globalThis[key]));
+}
+function unregistered(map) {
+  const images = new Set();
+  map.hasImage = id => images.has(id);
+  map.addImage = id => images.add(id);
+  return images;
+}
+function assertFallback(layers, amount) {
+  for (const id of [fire.FIRE_POINT_LAYER_IDS.circle, 'external-nifc-fire-reports-point']) {
+    assert.equal(layers.get(id).paint['circle-opacity'], amount, id);
+    assert.equal(layers.get(id).paint['circle-stroke-opacity'], amount, id);
+    assert.deepEqual(layers.get(id).paint['circle-translate'], [0,0], 'fallback stays at the provider point');
+  }
+  for (const id of [fire.FIRE_POINT_LAYER_IDS.flame, fire.FIRE_REPORT_FLAME_ID]) {
+    if(layers.has(id)) {
+      assert.equal(layers.get(id).paint['icon-opacity'], 0);
+      assert.equal(layers.get(id).layout.visibility, 'none');
+    }
+  }
+}
+function bothDisplays(map) {
+  const reports = {...payload([detection('report', -98.1,38,{incidentType:'Incident complex'})]),feed:'nifc-fire-reports'};
+  const data = {'nasa-gibs-fire-points':payload([detection('pixel',-98,38)]),'nifc-fire-reports':reports};
+  const ids=['nasa-gibs-fire-points','nifc-fire-reports'];
+  const apply=amount=>context.applyOfficialContextState(map,only(ids),{...opacity,...Object.fromEntries(ids.map(id=>[id,amount]))},data);
+  return {apply,data};
+}
+
+test('missing Canvas keeps original incident and confidence markers visible and centred', t => {
+  canvasStub(t, {offscreen:'null',dom:false});
+  const {map,layers}=mapHarness(); unregistered(map);
+  const {apply,data}=bothDisplays(map);
+  apply(0.6); assertFallback(layers,0.6);
+  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.circle).paint['circle-radius'].at(-1),8,'fallback size is capped, never satellite-pixel-sized');
+  assert.deepEqual(layers.get('external-nifc-fire-reports-point').paint['circle-color'].slice(2,6),['Prescribed fire','#ffcb6a','Incident complex','#b9a4ff']);
+  apply(0); assertFallback(layers,0);
+  context.applyOfficialContextState(map,only([]),opacity,data);
+  for(const id of [fire.FIRE_POINT_LAYER_IDS.circle,'external-nifc-fire-reports-point']) assert.equal(layers.get(id).layout.visibility,'none');
+});
+
+test('offscreen failure falls back to ordinary Canvas and registration recovers after partial failure and style reload', async t => {
+  canvasStub(t,{offscreen:'throw'});
+  const renderer=await freshFire('registration-recovery');
+  const {map,layers}=mapHarness();
+  const {apply}=bothDisplays(map); apply(1);
+  const images=unregistered(map);
+  let reject=true;
+  map.addImage=id=>{if(reject && id.endsWith('nominal')) throw new Error('atlas unavailable'); images.add(id);};
+  renderer.syncFireDetectionDisplay(map,true,0.5); renderer.syncFireReportDisplay(map,true,0.5);
+  assertFallback(layers,0.5);
+  assert.equal(images.size,1,'one registered palette never hides all provider markers');
+  reject=false;
+  renderer.syncFireDetectionDisplay(map,true,0.5); renderer.syncFireReportDisplay(map,true,0.5);
+  assert.equal(images.size,3);
+  for(const id of [fire.FIRE_POINT_LAYER_IDS.flame,fire.FIRE_REPORT_FLAME_ID]) assert.equal(layers.get(id).paint['icon-opacity'],0.5);
+  images.clear();
+  renderer.syncFireDetectionDisplay(map,true,1);
+  assert.equal(images.size,3,'a new style gets its images back');
+});
+
+test('Canvas readback denial and silent registration failure retain markers without throwing', async t => {
+  canvasStub(t,{readback:false});
+  const renderer=await freshFire('denied-readback');
+  const {map,layers}=mapHarness(); const {apply}=bothDisplays(map); apply(1); unregistered(map);
+  renderer.syncFireDetectionDisplay(map,true,0.7); renderer.syncFireReportDisplay(map,true,0.7);
+  assertFallback(layers,0.7);
+  // An implementation exposing addImage but not registering must also fail closed.
+  canvasStub(t);
+  const silent=await freshFire('silent-registration'); map.addImage=()=>{};
+  silent.syncFireDetectionDisplay(map,true,0.4); silent.syncFireReportDisplay(map,true,0.4);
+  assertFallback(layers,0.4);
+  delete map.addImage;
+  silent.syncFireDetectionDisplay(map,true,0.3); silent.syncFireReportDisplay(map,true,0.3);
+  assertFallback(layers,0.3);
+});

@@ -51,3 +51,48 @@ admission or storage authority is introduced (ADR-0029).
 Rollback: revert the complete visual change, including source boundary,
 generated knowledge pack, test and provenance updates. No data migration is
 required.
+
+## Checked image fallback and browser acceptance follow-up — 2026-10-23
+
+PR #5441 has merged into the hosted branch. This follow-up retains its artwork
+and source boundaries; it completes the missing-image fallback and adds a
+repeatable browser matrix rather than creating another renderer.
+
+Provider circles are suppressed only when every confidence image is actually
+registered. Missing Canvas, denied pixel readback, throwing or incomplete
+image registration keep confidence-coloured detection points and the original
+incident-type markers visible at their exact provider locations. The fallback
+radius stays bounded at close zoom. Successful later registration or a style
+reload can restore flames. Hidden or zero-opacity layers retain those settings,
+and unavailable images do not start a repaint ticker. Generic layer styling
+cannot overwrite the renderer's visibility or continually reset its radius.
+
+The ordinary regression suite adds unavailable Canvas, ordinary-Canvas fallback,
+readback denial, partial and silent registration failure, recovery, style reload
+and no-animation-without-images coverage. Existing source-identity, confidence,
+footprint dimensions, opacity, globe sizing and motion gates remain exercised.
+
+`tests/fire-display.browser.mjs` bundles the actual renderer, live-context source
+registry and pinned MapLibre runtime into a **test-only component scene**. It
+uses synthetic points and a synthetic constant-height DEM, blocks off-origin
+HTTP, and creates no production route or provider observations. The matrix
+captures desktop and phone viewports at zooms 4, 8, 10, 12, 14, 17 and 20, plus
+pitched terrain, pitched globe, globe overview, light background, reduced
+motion, opacity zero and image-atlas fallback. It checks real rendered-feature
+queries against original source IDs. A pinned pre-redesign renderer can be
+supplied through `KFM_FIRE_BASELINE_FILE` for matching zoom 8/12/14 screenshots.
+The workflow supplies commit `1000a5c4521bb3055e3863110754e924cdda801e` and uploads
+`fire-renderer-visual-comparison` artifacts. These are illustrative fixtures,
+not acceptance of live fire data or measured terrain.
+
+The cloud browser cannot reach the local workspace listener. Local browser
+execution is therefore not claimed. Exact-head CI execution, screenshot review,
+full Explorer Evidence Drawer interaction, physical phones and real provider
+terrain must be distinguished from component acceptance. Keep the follow-up
+in draft and do not qualify it for publication until the outstanding browser
+checks and visual comparison have been reviewed. No publication or deployment
+is performed by this change.
+
+All work stays within the existing standalone runtime, tests, workflow and docs
+owners under ADR-0029. Roll back this follow-up to restore the prior fallback;
+reverting PR #5441 separately restores the earlier rectangular presentation.

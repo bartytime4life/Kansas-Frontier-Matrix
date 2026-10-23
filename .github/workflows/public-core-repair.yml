@@ -54,6 +54,9 @@ jobs:
           done
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/godaddy-node-runtime.test.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/pipeline-http.test.mjs
+          git fetch --no-tags --depth=1 origin 1000a5c4521bb3055e3863110754e924cdda801e
+          git show FETCH_HEAD:app/fire-detection-style.ts > "$RUNNER_TEMP/fire-before.ts"
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_FIRE_BASELINE_FILE="$RUNNER_TEMP/fire-before.ts" KFM_FIRE_SCREENSHOTS="$RUNNER_TEMP/fire-screenshots" node --test tests/fire-display.browser.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/river-pulse.browser.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/county-search.browser.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test tests/aviation-layout.browser.mjs
@@ -82,3 +85,11 @@ jobs:
             sleep 1
           done
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5183 node --test --test-name-pattern='anonymous map|hosted AI endpoint' tests/godaddy-node-runtime.test.mjs
+      - name: Fire renderer visual comparison artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: fire-renderer-visual-comparison
+          path: ${{ runner.temp }}/fire-screenshots
+          if-no-files-found: warn
+          retention-days: 14

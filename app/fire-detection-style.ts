@@ -169,13 +169,15 @@ const flameLayer = (globe: boolean): SymbolLayerSpecification => ({
 export const FIRE_REPORT_FLAME_ID = "external-nifc-fire-reports-flame";
 const REPORT_SOURCE = "external-nifc-fire-reports";
 const REPORT_ICON_SIZE: ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 4, 0.76, 8, 0.93, 10, 1.03];
+const FALLBACK_POINT_RADIUS: ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 4, 4, 10, 6, 16, 8];
 /** Incident reports retain their own IDs and type-specific palettes; the flame is illustrative. */
 export function syncFireReportDisplay(map: MapLibreMap, visible: boolean, opacity: number): void {
   const points = uploadedGeoJSON(map.getSource(REPORT_SOURCE) as GeoJSONSource | undefined);
   const footprints = deriveFireFootprints(points);
   const hasData = Boolean(points?.features?.length);
-  if (visible && hasData) ensureFireImages(map);
-  if (map.getSource(REPORT_SOURCE) && !map.getLayer(FIRE_REPORT_FLAME_ID)) {
+  const imagesReady = visible && hasData && ensureFireImages(map);
+  const amount = Math.max(0, Math.min(1, opacity));
+  if (imagesReady && map.getSource(REPORT_SOURCE) && !map.getLayer(FIRE_REPORT_FLAME_ID)) {
     const layer = flameLayer(false);
     map.addLayer({ ...layer, id: FIRE_REPORT_FLAME_ID, source: REPORT_SOURCE,
       layout: { ...layer.layout, "icon-image": ["match", ["get", "incidentType"],
@@ -183,14 +185,15 @@ export function syncFireReportDisplay(map: MapLibreMap, visible: boolean, opacit
         "icon-size": REPORT_ICON_SIZE } });
   }
   setLayoutExpression(map, FIRE_REPORT_FLAME_ID, "icon-size", map.getProjection?.()?.type === "globe" ? globeOverviewPaintSize(REPORT_ICON_SIZE) : REPORT_ICON_SIZE);
-  setVisibleIfChanged(map, FIRE_REPORT_FLAME_ID, visible);
-  setPaintExpression(map, FIRE_REPORT_FLAME_ID, "icon-opacity", Math.max(0, Math.min(1, opacity)));
+  if (map.getLayer(FIRE_REPORT_FLAME_ID)) setVisibleIfChanged(map, FIRE_REPORT_FLAME_ID, visible && imagesReady);
+  setPaintExpression(map, FIRE_REPORT_FLAME_ID, "icon-opacity", imagesReady ? amount : 0);
   for (const id of [REPORT_SOURCE + "-halo", REPORT_SOURCE + "-point"]) {
-    setPaintExpression(map, id, "circle-opacity", 0);
-    setPaintExpression(map, id, "circle-stroke-opacity", 0);
-    setPaintExpression(map, id, "circle-translate", [0, -9]);
+    setVisibleIfChanged(map, id, visible);
+    setPaintExpression(map, id, "circle-opacity", imagesReady ? 0 : amount * (id.endsWith("-halo") ? 0.3 : 1));
+    setPaintExpression(map, id, "circle-stroke-opacity", imagesReady ? 0 : amount);
+    setPaintExpression(map, id, "circle-translate", imagesReady ? [0, -9] : [0, 0]);
   }
-  syncFireDisplayMotion(map, "reports", visible && opacity > 0 && hasData, footprints.bounds);
+  syncFireDisplayMotion(map, "reports", imagesReady && amount > 0, footprints.bounds);
 }
 
 const setPaintExpression = (map: MapLibreMap, id: string, property: string, value: unknown) => {
@@ -214,24 +217,30 @@ export function syncFireDetectionDisplay(map: MapLibreMap, visible: boolean, opa
   const points = uploadedGeoJSON(pointSource);
   const footprints = refreshFireFootprints(map);
   const hasData = Boolean(points?.features?.length);
-  if (visible && hasData) ensureFireImages(map);
+  const imagesReady = visible && hasData && ensureFireImages(map);
   const globe = map.getProjection?.()?.type === "globe";
   if (map.getSource(FIRE_FOOTPRINT_SOURCE_ID)) for (const layer of footprintLayers()) if (!map.getLayer(layer.id)) map.addLayer(layer);
-  if (pointSource && !map.getLayer(FIRE_POINT_LAYER_IDS.flame)) map.addLayer(flameLayer(globe));
+  if (imagesReady && pointSource && !map.getLayer(FIRE_POINT_LAYER_IDS.flame)) map.addLayer(flameLayer(globe));
   setLayoutExpression(map, FIRE_POINT_LAYER_IDS.flame, "icon-size", globe ? globeOverviewPaintSize(FLAME_ICON_SIZE) : FLAME_ICON_SIZE);
 
   const amount = Math.max(0, Math.min(1, opacity));
   for (const id of Object.values(FIRE_POINT_LAYER_IDS)) if (map.getLayer(id)) setVisibleIfChanged(map, id, visible);
-  setPaintExpression(map, FIRE_POINT_LAYER_IDS.halo, "circle-opacity", haloOpacity(amount));
-  // The former solid dot is now the transparent selection/hover target.
-  setPaintExpression(map, FIRE_POINT_LAYER_IDS.circle, "circle-opacity", 0);
-  setPaintExpression(map, FIRE_POINT_LAYER_IDS.circle, "circle-stroke-opacity", 0);
-  setPaintExpression(map, FIRE_POINT_LAYER_IDS.circle, "circle-translate", FIRE_HIT_TRANSLATE);
-  setPaintExpression(map, FIRE_POINT_LAYER_IDS.flame, "icon-opacity", amount);
+  if (map.getLayer(FIRE_POINT_LAYER_IDS.flame)) setVisibleIfChanged(map, FIRE_POINT_LAYER_IDS.flame, visible && imagesReady);
+  setPaintExpression(map, FIRE_POINT_LAYER_IDS.halo, "circle-opacity", imagesReady ? haloOpacity(amount) : amount * 0.3);
+  // Keep a bounded, centred confidence marker if Canvas or image registration
+  // fails. Never reveal the footprint-sized transparent hit circle as a dot.
+  const radius = imagesReady ? FIRE_HIT_RADIUS : FALLBACK_POINT_RADIUS;
+  setPaintExpression(map, FIRE_POINT_LAYER_IDS.circle, "circle-radius", globe ? globeOverviewPaintSize(radius) : radius);
+  setPaintExpression(map, FIRE_POINT_LAYER_IDS.circle, "circle-opacity", imagesReady ? 0 : amount);
+  setPaintExpression(map, FIRE_POINT_LAYER_IDS.circle, "circle-stroke-color", "#fff1d1");
+  setPaintExpression(map, FIRE_POINT_LAYER_IDS.circle, "circle-stroke-width", 1.2);
+  setPaintExpression(map, FIRE_POINT_LAYER_IDS.circle, "circle-stroke-opacity", imagesReady ? 0 : amount);
+  setPaintExpression(map, FIRE_POINT_LAYER_IDS.circle, "circle-translate", imagesReady ? FIRE_HIT_TRANSLATE : [0, 0]);
+  setPaintExpression(map, FIRE_POINT_LAYER_IDS.flame, "icon-opacity", imagesReady ? amount : 0);
   setPaintExpression(map, FIRE_POINT_LAYER_IDS.heat, "fill-opacity", 0);
   setPaintExpression(map, FIRE_POINT_LAYER_IDS.shimmer, "line-opacity", 0);
   setPaintExpression(map, FIRE_POINT_LAYER_IDS.edge, "line-opacity", edgeOpacity(amount));
-  syncFireDisplayMotion(map, "detections", visible && amount > 0 && hasData, footprints.bounds);
+  syncFireDisplayMotion(map, "detections", imagesReady && amount > 0, footprints.bounds);
 }
 
 /**
@@ -274,13 +283,18 @@ let flameFrames: Partial<Record<FireConfidence, Frames>> | null = null;
 type Canvas2D = OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D;
 const createContext = (width: number, height: number): Canvas2D | null => {
   try {
-    if (typeof OffscreenCanvas !== "undefined") return new OffscreenCanvas(width, height).getContext("2d", { willReadFrequently: true });
+    if (typeof OffscreenCanvas !== "undefined") {
+      const context = new OffscreenCanvas(width, height).getContext("2d", { willReadFrequently: true });
+      if (context) return context;
+    }
+  } catch { /* try the ordinary canvas when OffscreenCanvas is unavailable */ }
+  try {
     if (typeof document !== "undefined") {
       const canvas = document.createElement("canvas");
       canvas.width = width; canvas.height = height;
       return canvas.getContext("2d", { willReadFrequently: true });
     }
-  } catch { /* no 2D canvas: the layer draws nothing rather than failing the map */ }
+  } catch { /* the original provider circles remain visible */ }
   return null;
 };
 
@@ -433,12 +447,24 @@ class FireImage implements StyleImageInterface {
   }
 }
 
-function ensureFireImages(map: MapLibreMap) {
-  if (typeof map.addImage !== "function" || typeof map.hasImage !== "function" || !buildFrames()) return;
-  for (const confidence of CONFIDENCES) {
-    const id = flameImageId(confidence);
-    if (!map.hasImage(id)) map.addImage(id, new FireImage(flameFrames![confidence]!), { pixelRatio: PIXEL_RATIO });
-  }
+function ensureFireImages(map: MapLibreMap): boolean {
+  if (typeof map.addImage !== "function" || typeof map.hasImage !== "function") return false;
+  try {
+    if (CONFIDENCES.every(confidence => map.hasImage(flameImageId(confidence)))) return true;
+    if (!buildFrames()) return false;
+    for (const confidence of CONFIDENCES) {
+      const id = flameImageId(confidence);
+      if (!map.hasImage(id)) {
+        // Validate drawing and pixel readback before hiding any provider marker.
+        // Some browsers expose Canvas APIs but deny getImageData at runtime.
+        premultiply(flameFrames![confidence]!.frame(currentFireFrame()));
+        map.addImage(id, new FireImage(flameFrames![confidence]!), { pixelRatio: PIXEL_RATIO });
+      }
+    }
+    // Treat partial registration as unavailable for both displays. A later sync
+    // can retry, including after a style reload, without losing source identity.
+    return CONFIDENCES.every(confidence => map.hasImage(flameImageId(confidence)));
+  } catch { return false; }
 }
 
 // ---------------------------------------------------------------------------
