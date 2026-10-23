@@ -1,0 +1,64 @@
+{
+  "receipt_id": "kfm:generated:river-native-fullscreen-assertion:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/rendered-html.test.mjs"
+  ],
+  "artifact_hashes": {
+    "tests/rendered-html.test.mjs": "sha256:b2dcf4fb9bde837313b6d88843746a3919cd7d088259f6c594ae71f752826d8e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@5fe13af6be528f29638be67b260928a7e569b7a9",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39982163705"
+    ]
+  },
+  "truth_labels": {
+    "tests/rendered-html.test.mjs": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Previous CI",
+      "outcome": "FAIL",
+      "reason": "Build and types passed. Node suite: 1722 passes, one failure, 19 skips. Sole failure expected the old renderer FullscreenControl constructor in a source-presence assertion. Native stage-control behavior tests passed; browser stages were not reached."
+    },
+    {
+      "gate": "Corrected source-presence assertion",
+      "outcome": "SKIPPED",
+      "reason": "Require the new stage-fullscreen adapter call instead. No behavior test, native browser input or hit assertion is removed. Current exact-head CI pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T15:59:04.039Z",
+  "emitter": "Codex",
+  "notes": "Immutable test-only successor for a deliberate renderer adapter replacement. No runtime/source/data/policy/settings changes."
+}
