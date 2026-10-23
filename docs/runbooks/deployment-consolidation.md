@@ -229,8 +229,8 @@ identified projects are absent, so no further provider deletion is needed for
 those IDs. If a future check finds either project again, verify its exact ID,
 team, domain list and retained-configuration needs before owner confirmation:
 
-- [Review deletion of kfm](https://vercel.com/blackbart555-6322/kfm/settings/general#delete-project)
-- [Review deletion of usgs](https://vercel.com/blackbart555-6322/usgs/settings/general#delete-project)
+- [Review deletion of kfm](https://vercel.com/<vercel-team>/kfm/settings/general#delete-project)
+- [Review deletion of usgs](https://vercel.com/<vercel-team>/usgs/settings/general#delete-project)
 
 Project deletion removes deployments, environment variables, settings and
 project-domain associations. Keep GoDaddy/Sites credentials and DNS outside this

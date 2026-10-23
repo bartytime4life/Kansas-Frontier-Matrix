@@ -61,8 +61,8 @@ numbers. Neither narrative nor private captures become governed map facts.
 | Published owner-private version | **v199**, `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_c227789ba398819185d1a99de527a231` |
 | Successful deployment | `appgdep_6ac9374e4f8881919a802f292229aa40` |
 | Stored whole-application archive | `sha256:bbac12c17ab6b8b9ea9d764bdae441950a2ce81c59b64efd5c95bfd86f61518f`, 50,708,480 bytes, 409 files |
-| Local Site installation | `/home/bartytime/Projects/KFM-Explorer-Site-history-final-20261009` |
-| Local companion source | `/home/bartytime/Projects/KFM-History-Downloads-20261009/source` |
+| Local Site installation | `$HOME/Projects/KFM-Explorer-Site-history-final-20261009` |
+| Local companion source | `$HOME/Projects/KFM-History-Downloads-20261009/source` |
 
 All **16 changed Site paths** match the standalone source byte for byte. This
 scoped comparison is not a new claim of complete repository/Site parity or an
@@ -83,7 +83,7 @@ companion source remain available for rollback; no data migration occurred.
 
 Both downloads completed through the browser's existing local operator and show
 **Downloaded**. Files reside under
-`/home/bartytime/Projects/KFM-data/data/raw/public-maps/history-prentis-1909/`
+`$HOME/Projects/KFM-data/data/raw/public-maps/history-prentis-1909/`
 and `history-arnold-history/`, within their corresponding job directories.
 Receipts reside under `data/receipts/ingest/public-maps/` in the same data root.
 Both stored files passed independent SHA-256 readback. The Prentis PDF also

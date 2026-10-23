@@ -81,7 +81,7 @@ transport allowlist to accommodate temporary authenticated download URLs.
 Run from the repository root, with the existing physical data root selected:
 
 ```bash
-export KFM_DATA_ROOT=/home/bartytime/Projects/KFM-data
+export KFM_DATA_ROOT=$HOME/Projects/KFM-data
 python3 tools/local_data/candidate_queue.py
 python3 tools/local_data/discover_3dep.py \
   --output-directory "$KFM_DATA_ROOT/data/raw/usgs-3dep-discovery-NEW-CAPTURE"

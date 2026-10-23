@@ -66,8 +66,8 @@
     "browser_visual_touch_device_webgl_and_full_keyboard": "UNVERIFIED"
   },
   "local": {
-    "alias": "/home/bartytime/Projects/KFM-Explorer-Site-current",
-    "checkout": "/home/bartytime/Projects/KFM-Explorer-Site-v173",
+    "alias": "$HOME/Projects/KFM-Explorer-Site-current",
+    "checkout": "$HOME/Projects/KFM-Explorer-Site-v173",
     "source_commit": "e2e7ba5de69f14ac9d91587a8680b8fd40a4d4d4",
     "tracked_files_match_source": 708,
     "dist_files_match_source": 382,
@@ -75,7 +75,7 @@
     "service": "kfm-explorer-local.service active",
     "http_origin": "http://127.0.0.1:4173",
     "http_root_status": 200,
-    "physical_state": "/home/bartytime/Projects/KFM-Explorer-Site-v109/.wrangler/local-state",
+    "physical_state": "$HOME/Projects/KFM-Explorer-Site-v109/.wrangler/local-state",
     "sqlite_stores_observed": 8,
     "prior_v172_checkout_retained": true,
     "data_store_migration": false
