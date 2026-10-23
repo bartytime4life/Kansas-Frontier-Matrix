@@ -1,0 +1,98 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-pulse-short-landscape:20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-core-repair.yml",
+    "app/globals.css",
+    "tests/river-pulse.browser.mjs"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-core-repair.yml": "sha256:42c37280f4c7f16e79323d08331a10f3fb992e19f4d67cd1528c1853e1feda21",
+    "app/globals.css": "sha256:40d83e52f8bba51eea6ea533f1bb21ebe9e00cfe3aa0881b5660fed90cc1980d",
+    "tests/river-pulse.browser.mjs": "sha256:8c92d52f132b0810b88b54adcd6550fbc9e7b0ee89c953d3537f85aba852dbb6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact model revision unavailable in this session"
+  },
+  "prompt_or_contract": "sha256:d9931195fb588995d25ca5f4f832076a8f556dee7fb21f37f86334c218ef3e13",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser",
+      "node_repl"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@88fac525f4d40d09ff09a8550073788963cbcefd",
+      "AGENTS.md@88fac525f4d40d09ff09a8550073788963cbcefd",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5424",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39901571945"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-core-repair.yml": "CONFIRMED",
+    "app/globals.css": "CONFIRMED",
+    "tests/river-pulse.browser.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact merged-base reconciliation",
+      "outcome": "PASS",
+      "reason": "1491 baseline blobs verified; only the three named source/test/workflow paths differ. Newer Junction City transportation pilot retained byte-for-byte."
+    },
+    {
+      "gate": "Production build and TypeScript",
+      "outcome": "PASS",
+      "reason": "Final local build and tsc --noEmit pass; application source digest sha256:4a63c49918b1973cc174747e24ff5d6bb84bb0badef45235f9eb845665022bd4; 1042 inputs."
+    },
+    {
+      "gate": "Complete standalone Node suite",
+      "outcome": "PASS",
+      "reason": "1700 passed, zero failures, 19 skipped; 1719 total. Includes newly merged transportation tests. Skips are not executed checks."
+    },
+    {
+      "gate": "Five rendered browser layouts",
+      "outcome": "PASS",
+      "reason": "320x568, 390x844 reduced motion, 568x320 short landscape, 844x390 and 1440x900. Two selected live sources, native touch/mouse scroll, source switching, persistent unobscured 44px close/source targets, compact/expanded close/reopen, keyboard/descendant/map Escape, paused playback and retained station/frame/layers/evidence. Synthetic loopback fixtures only; no physical-phone or provider-data qualification."
+    },
+    {
+      "gate": "Changed-code lint and diff checks",
+      "outcome": "PASS",
+      "reason": "Zero errors, 41 inherited page warnings; git diff --check passes."
+    },
+    {
+      "gate": "Exact-head CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending follow-up PR. Earlier 49154d9 independently reviewed with no findings, but this small-layout extension requires its own review and CI."
+    },
+    {
+      "gate": "Corrected GoDaddy publication",
+      "outcome": "SKIPPED",
+      "reason": "Pending current follow-up qualification; no new deployed acceptance or publication claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "merged-hosted-baseline",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/88fac525f4d40d09ff09a8550073788963cbcefd"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T05:03:06.228997+00:00",
+  "emitter": "Codex",
+  "notes": "Additional 568x320 testing found the stacked header/clock obstruction. Short screens now use one sticky row; narrow short content reserves the floating clock lane. Existing close, Escape, measurement, focus, observation and evidence semantics are retained. Hosted CI budget increases 15 to 20 minutes because the initial successful full job consumed about 14.5 minutes and the browser matrix now adds a case; no check or assertion is removed. Previous receipts remain immutable. Rollback this focused follow-up only."
+}
