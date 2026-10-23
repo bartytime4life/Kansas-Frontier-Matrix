@@ -232,3 +232,88 @@ the camera moves. A settled camera update selects the current view; switching
 the effect off or removing the map cancels pending work. Provider identity checks,
 stream-order requirements, source timestamps, geometry budgets and the existing
 terrain sampling behavior remain owned by their current implementations.
+
+
+## Gauge matching performance — 2026-10-23
+
+Base: hosted composition `1c89384ba274890fd7653d584287b7bd1970535e`. The
+geometry builder previously scanned every reach segment for every gauge. It now
+computes conservative reach bounds once per rebuild and selects candidates inside
+the existing 250 m spherical snap radius before calling the unchanged exact
+snapper. Original reach order, duplicate replacement, equal-distance ties,
+downstream coordinates/distances, measured-zero behavior, gauge falloff, terrain
+slots, truncation and all request/render budgets are preserved. Bounds are
+transient; there is no new retained cache, provider call or source admission.
+
+Three alternating baseline/candidate pairs, 12 timed builds per case after three
+warmups, on Node 22.13.1 / AMD Ryzen 9 9950X measured these medians of trial
+medians with 193 synthetic gauges:
+
+| Segments | Baseline median | Candidate median | Less CPU time |
+|---:|---:|---:|---:|
+| 3,000 | 20.37 ms | 1.41 ms | 93.1% |
+| 20,000 | 135.76 ms | 5.62 ms | 95.9% |
+| 60,000 | 407.35 ms | 14.43 ms | 96.5% |
+
+These are synthetic, spread-out Kansas reaches, **not browser FPS, real provider
+latency, a dense worst-case guarantee, physical-phone performance or hosted
+capacity qualification**. At 60,000 segments the candidate trial p95 values span
+21.99–36.60 ms; garbage collection and geometry allocation still matter. Every
+Float32 GPU byte, terrain vertex/slot and geometry count matched the baseline in
+200 seeded cases with 25 gauges each. Checked-in radius-edge regressions cover
+northern/southern Kansas, east/west and north/south boundaries, degenerate
+segments, crossing reaches, duplicate identities, original indices and ties.
+
+Run the opt-in diagnostic separately from ordinary CI:
+
+```sh
+node tests/water-flow.benchmark.mjs
+# Optional explicit source file from an isolated baseline checkout:
+node tests/water-flow.benchmark.mjs /absolute/path/to/baseline-water-flow-motion.ts
+```
+
+The diagnostic prints source SHA-256, CPU/Node identity, sample counts, medians,
+p95 and GPU-buffer bytes; it makes no provider requests and adds no timing gate.
+Existing `app/`, `tests/` and `docs/` own this implementation, regression and
+explanation under the canonical Directory Rules v2 adopted by ADR-0029.
+
+Separate stress observations remain open: parsing 100,000 observations took about
+214 ms and rebuilding its 400-gauge playback frame about 37 ms in the initial
+CPU-only trial. Aquifer polygon clipping took about 100 ms in its separate worker
+path. Water/groundwater welcome rendering was exercised with SwiftShader software
+WebGL at phone/desktop sizes; pause and reduced motion stopped scheduled frames.
+Those checks do not qualify a physical GPU, long-duration memory stability, live
+provider throughput, MySQL persistence or multi-user GoDaddy load. A synthetic
+24-request in-process success-path check produced 24 concurrent upstream
+flowline reads: the per-map nine-request client cap is not a shared server
+admission/coalescing bound. Shared flowline admission remains an open follow-up,
+so this change does not establish site-wide overload protection. The local
+water-suite and browser results are recorded in the new generation receipt;
+the earlier #5427 CI run failed an exact-frame browser assertion even though the
+same five layouts passed locally. Concurrent merged #5429 moved its synthetic
+touch-scroll origin off interactive controls; that correction is retained in
+validation base `c336e8b38135d7110a79b44f038faee756006f21`. Its exact-head CI and
+this candidate's final CI remain separate checks; no timeout or assertion is removed.
+
+Rollback: revert this bounded gauge-filter/diagnostic change while retaining
+newer unrelated work. Source data, policy, storage and deployment state need no
+migration. This authoring change does not merge or publish the application.
+
+
+### CI actionability follow-up
+
+Initial performance head a23d8a43 passed CI build, types, the complete Node suite
+and disposable MySQL integration, then failed the desktop River Pulse native
+hit test for More → Status while evidence was open. The retained #5429 baseline
+passed its own CI; the unchanged test also passed locally, including a desktop
+run under 4× CPU throttling. The intermittent failure's root cause is not yet
+established.
+
+The browser helper now waits, within its existing 15-second actionability
+deadline, for the scrolled target's centre to hit that target before sending
+native input. It then retains the original viewport and strict hit-test
+assertions. No force click, hidden evidence, CSS change, removed assertion,
+timeout extension or reduced layout matrix is used. This is a bounded
+paint/actionability qualification change, not a claim of a proven product
+stacking fix. The successor receipt records the local five-layout pass and
+leaves exact-head CI and independent review pending.

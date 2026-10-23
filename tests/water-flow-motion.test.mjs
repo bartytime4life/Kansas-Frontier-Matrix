@@ -269,3 +269,61 @@ test("edge-cell server and client accept the same bounded provider coordinates",
   assert.throws(()=>flow.parseFlowlinePayload({...payload,reaches:[{...payload.reaches[0],coordinates:[[-102.3,36.76],[-102.23,36.77]]}]}));
  } finally {globalThis.fetch=original;}
 });
+
+
+// The exhaustive public snapper remains the distance/tie-order reference.
+// Exercise the optimized geometry path with radius-edge and indexing cases.
+function litReachIndices(reaches, cue) {
+  const geometry = flow.buildFlowGeometry(reaches, [cue]);
+  const unique = [...new Map(reaches.map(reach => [reach.id, reach])).values()];
+  let offset = 0;
+  const lit = [];
+  for (let index = 0; index < unique.length; index++) {
+    const count = unique[index].coordinates.length - 1;
+    if (Array.from({ length: count }, (_, i) => geometry.segments[(offset + i) * flow.FLOW_SEGMENT_FLOATS + 8]).some(value => value > 0)) lit.push(index);
+    offset += count;
+  }
+  return { geometry, lit, unique };
+}
+const searchReach = (id, coordinates) => ({ id, sequence: null, downstream: null, levelpath: null, name: null, featureType: 1, coordinates });
+
+test("gauge bounds retain exact radius-edge hits at southern and northern Kansas latitudes", () => {
+  for (const latitude of [37, 40]) for (const meters of [249.9999, 250, 250.0001]) for (const sign of [-1, 1]) {
+    const angle = meters / 6371008.8;
+    const delta = sign * angle * 180 / Math.PI;
+    const longitudeDelta = sign * 2 * Math.asin(Math.sin(angle / 2) / Math.cos(latitude * Math.PI / 180)) * 180 / Math.PI;
+    for (const coordinates of [
+      [[-98.00001, latitude + delta], [-97.99999, latitude + delta]],
+      [[-98 + longitudeDelta, latitude], [-98 + longitudeDelta, latitude]],
+      [[-98 + longitudeDelta, latitude - .00001], [-98 + longitudeDelta, latitude + .00001]],
+    ]) {
+      const reaches = [searchReach("far", [[-101, 38], [-100.99, 38]]), searchReach("edge", coordinates)];
+      const cue = { coordinate: [-98, latitude], intensity: 1, moving: true, tint: "rising" };
+      const exact = flow.snapGauge(reaches, cue.coordinate);
+      const { geometry, lit } = litReachIndices(reaches, cue);
+      assert.equal(geometry.gauged, exact ? 1 : 0, JSON.stringify({latitude, meters, sign, coordinates}));
+      assert.deepEqual(lit, exact ? [exact.reach] : []);
+    }
+  }
+});
+
+test("gauge filtering preserves original indices, duplicate replacement and nearest-reach ties", () => {
+  const coordinates = [[-98.0002, 38], [-97.9998, 38]];
+  const reaches = [searchReach("far", [[-101, 38], [-100.99, 38]]), searchReach("a", coordinates), searchReach("b", coordinates), searchReach("far", [[-100, 39], [-99.99, 39]])];
+  const cue = { coordinate: [-98, 38], intensity: 1, moving: false, tint: "unknown" };
+  const { geometry, lit, unique } = litReachIndices(reaches, cue);
+  assert.equal(flow.snapGauge(unique, cue.coordinate).reach, 1);
+  assert.deepEqual(lit, [1]);
+  assert.equal(geometry.reaches, 3);
+  assert.equal(geometry.gauged, 1);
+  assert.equal(geometry.segments[flow.FLOW_SEGMENT_FLOATS + 9], 0);
+});
+
+test("bounds retain a reach crossing the gauge even when both endpoints are outside the radius", () => {
+  const reaches = [searchReach("crossing", [[-98.1, 38], [-97.9, 38]]), searchReach("degenerate", [[-98, 38], [-98, 38]])];
+  const cue = { coordinate: [-98, 38], intensity: 1, moving: true, tint: "steady" };
+  const { geometry, lit } = litReachIndices(reaches, cue);
+  assert.deepEqual(lit, [0]);
+  assert.equal(geometry.gauged, 1);
+  assert.equal(flow.buildFlowGeometry([reaches[1]], [cue]).gauged, 0);
+});

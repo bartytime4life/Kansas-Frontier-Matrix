@@ -247,10 +247,37 @@ export const gaugeFalloff = (distanceM: number): number => {
  */
 export function buildFlowGeometry(reaches: readonly FlowReach[], gauges: readonly GaugeCue[]): FlowGeometry {
   const unique = [...new Map(reaches.map((reach) => [reach.id, reach])).values()];
+  // A gauge can influence only a reach within the existing 250 m snap radius.
+  // Reject whole reach bounds before the exact segment scan. Preserve original
+  // order so equally close reaches retain the exhaustive search's tie behavior.
+  const bounds = gauges.length ? unique.map(reach => {
+    let west = Infinity, south = Infinity, east = -Infinity, north = -Infinity;
+    for (const [lng, lat] of reach.coordinates) {
+      west = Math.min(west, lng); east = Math.max(east, lng);
+      south = Math.min(south, lat); north = Math.max(north, lat);
+    }
+    return { west, south, east, north };
+  }) : [];
+  const angularRadius = GAUGE_SNAP_M / 6371008.8;
+  const latitudePad = angularRadius / RADIANS + 1e-10;
   const snapped = new Map<number, { alongM: number; cue: GaugeCue }[]>();
   for (const cue of gauges) {
-    const hit = snapGauge(unique, cue.coordinate);
-    if (hit) snapped.set(hit.reach, [...(snapped.get(hit.reach) ?? []), { alongM: hit.alongM, cue }]);
+    const [lng, lat] = cue.coordinate;
+    // Spherical-cap longitude extent; the small margin retains boundary hits
+    // despite floating-point rounding. This filter never substitutes distance.
+    const longitudePad = Math.asin(Math.min(1, Math.sin(angularRadius) / Math.cos(lat * RADIANS))) / RADIANS + 1e-10;
+    const indices: number[] = [];
+    const nearby = unique.filter((_reach, index) => {
+      const box = bounds[index];
+      if (box.east < lng - longitudePad || box.west > lng + longitudePad
+        || box.north < lat - latitudePad || box.south > lat + latitudePad) return false;
+      indices.push(index); return true;
+    });
+    const hit = snapGauge(nearby, cue.coordinate);
+    if (hit) {
+      const reach = indices[hit.reach];
+      snapped.set(reach, [...(snapped.get(reach) ?? []), { alongM: hit.alongM, cue }]);
+    }
   }
   const total = Math.min(MAX_FLOW_SEGMENTS, unique.reduce((sum, reach) => sum + reach.coordinates.length - 1, 0));
   const segments = new Float32Array(total * FLOW_SEGMENT_FLOATS);
