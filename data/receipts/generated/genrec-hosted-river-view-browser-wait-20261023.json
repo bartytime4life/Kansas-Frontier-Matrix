@@ -1,0 +1,65 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-view-browser-wait:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/river-pulse.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "tests/river-pulse.browser.mjs": "sha256:d502d7c5086364f44a947cb17aecd9d946d0dad9f8df3fac3c563fb550c5723a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@48ea2e60cf06e7ddbce3f1a247e270abf7d67a9d",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39974840052",
+      "bartytime4life/Kansas-Frontier-Matrix@75ad69fde63d8fed9e2182c575ab36be752a3eb4:tests/river-pulse.browser.mjs"
+    ]
+  },
+  "truth_labels": {
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Prior exact-head CI",
+      "outcome": "FAIL",
+      "reason": "Runtime build, TypeScript, all 1703 Node tests (19 skips), disposable MySQL, 21 runtime HTTP checks, pipeline HTTP, 15 county browser checks and six aviation browser checks passed. Four River Pulse touch layouts passed. Desktop later failed an immediate More > Status hit test while evidence remained open. Remaining Explorer browser and preview-port stages were not reached."
+    },
+    {
+      "gate": "Synchronized native hit testing",
+      "outcome": "SKIPPED",
+      "reason": "Port the existing seven-line correction from performance PR #5431: wait until the same strict center-point hit test succeeds, then assert it again and dispatch native input. No forced click, hidden evidence, reduced assertion or runtime change. Exact-head CI pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T15:11:26.011Z",
+  "emitter": "Codex",
+  "notes": "Immutable successor for the River Pulse browser helper. Shared test-only overlap with #5431 is intentional and byte-identical in this helper; performance runtime changes are not imported. Earlier failed runs remain recorded. No merge or publication."
+}

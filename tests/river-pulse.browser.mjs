@@ -128,6 +128,13 @@ async function pageSession(b, { width, height, touch, motion }) {
   const activate = async selector => {
     // Scroll through the real scroll container, then deliver native pointer input.
     await evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',behavior:'instant'})`);
+    // Native details and scrolling can finish painting after their DOM state.
+    // Wait for the same strict hit test that is asserted below; never force a
+    // click through a drawer or hide evidence to make an action reachable.
+    await wait(
+      `(() => { const e=document.querySelector(${JSON.stringify(selector)}),r=e?.getBoundingClientRect();return r && r.width>0 && r.height>0 && e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)); })()`,
+      `painted target ${selector}`,
+    );
     const r = await rect(selector), x = r.x + r.width / 2, y = r.y + r.height / 2;
     assert.ok(x > 0 && x < width && y > 0 && y < height, `reachable target ${selector}`);
     assert.ok(await evaluate(`document.querySelector(${JSON.stringify(selector)}).contains(document.elementFromPoint(${x},${y}))`), `unobscured target ${selector} ${JSON.stringify(r)}: ${await evaluate(`JSON.stringify({hit:document.elementFromPoint(${x},${y})?.outerHTML.slice(0,300),panel:document.querySelector('.hydrology-observatory')?.getBoundingClientRect().toJSON(),header:document.querySelector('.hydrology-header')?.getBoundingClientRect().toJSON(),scrollPadding:getComputedStyle(document.querySelector('.hydrology-observatory')??document.body).scrollPaddingTop})`)}`);
