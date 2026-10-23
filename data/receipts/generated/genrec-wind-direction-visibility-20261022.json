@@ -1,0 +1,128 @@
+{
+  "receipt_id": "genrec-wind-direction-visibility-20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md",
+    "app/live-context.ts",
+    "app/page.tsx",
+    "app/wind-arrow-canvas.ts",
+    "scripts/qwen-knowledge-pack.mjs",
+    "tests/wind-arrow-terrain.test.mjs"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:3454dfe73dd73bcfc509c75b874b194ca20a566776e91ba626ab5b32ffe8c44c",
+    "app/live-context.ts": "sha256:c16ecde67122933666afa221aa7a1833c06a0e0f22e2bc25b83b6d0cf1e9fd26",
+    "app/page.tsx": "sha256:e4c6dad3a97935ebc5fc94def4e2ff117925699823d7c78710ca2500c6c58940",
+    "app/wind-arrow-canvas.ts": "sha256:cc55cc1a82f57ba3e21332b1b098a84d4a5e10d5b1dbe29eb90bac4edcfa88e3",
+    "scripts/qwen-knowledge-pack.mjs": "sha256:31bb64a2925420cfeb0b021cd2239fc0497f4ccaaec1faf879d67ea81dd3140c",
+    "tests/wind-arrow-terrain.test.mjs": "sha256:8bcfc16b9264a6dcd792041eadf71ae3f0638e72b6a573c3081e393ce9e97b5e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "UNKNOWN; exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:ded7fdbd3db2c544ac585a11febf2dede0f1102e92de93f1158fbb4df96713ee",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "local shell",
+      "public web search",
+      "cloud browser"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:9602d5861f5e664f657ec1e765691088aaf1bdf4dc497902e5b027ed1d44fdf7",
+      "sha256:da2ae50239087254a2ff959705d7a8af8db3503ee45566b34bce4c28a4da4888",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [
+      "KFM Contributor Reliability System: Documentation, PR Quality, and CI Hardening"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/29c0a4905079a97b59133d74daa8b6462b31771c/AGENTS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/29c0a4905079a97b59133d74daa8b6462b31771c/app/wind-arrow-data.ts",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/29c0a4905079a97b59133d74daa8b6462b31771c/app/page.tsx",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/472747fe92a343472829234f40e85b47d9c8e694/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/472747fe92a343472829234f40e85b47d9c8e694/docs/doctrine/directory-rules.md",
+      "https://open-meteo.com/en/docs/gfs-api"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "CONFIRMED",
+    "app/live-context.ts": "CONFIRMED",
+    "app/page.tsx": "CONFIRMED",
+    "app/wind-arrow-canvas.ts": "CONFIRMED",
+    "scripts/qwen-knowledge-pack.mjs": "CONFIRMED",
+    "tests/wind-arrow-terrain.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "base-regression-reproduction",
+      "outcome": "PASS",
+      "reason": "Three new wind geometry/lifecycle tests fail on unchanged efb0bee19d source, including late old-frame replacement. They pass with the correction."
+    },
+    {
+      "gate": "production-build-and-complete-standalone-suite",
+      "outcome": "PASS",
+      "reason": "npm test on current base 29c0a4905079a97b59133d74daa8b6462b31771c: production build, 1668 pass, 0 fail, 21 environment skips, 1689 total."
+    },
+    {
+      "gate": "typescript",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit completed without diagnostics on rebased source."
+    },
+    {
+      "gate": "changed-code-lint",
+      "outcome": "PASS",
+      "reason": "ESLint on the three changed TypeScript/TSX modules: zero errors, 41 page warnings. Warnings are not represented as absent."
+    },
+    {
+      "gate": "knowledge-pack-diff-and-integrity",
+      "outcome": "PASS",
+      "reason": "Deterministic knowledge-pack --check, git diff --check, and artifact path/SHA-256 equality passed."
+    },
+    {
+      "gate": "receipt-schema",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema and format validation; pending human review is not merge approval."
+    },
+    {
+      "gate": "existing-public-wind-feed",
+      "outcome": "PASS",
+      "reason": "Live endpoint returned 16 real GFS forecast samples, valid 2026-10-23T00:00:00Z, retrieved 2026-10-23T00:30:43.920Z. Existing catalog control was observed in the browser. This does not qualify the new renderer or prove observed local wind."
+    },
+    {
+      "gate": "new-renderer-live-desktop-phone-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Cloud browser has no WebGL2. Supported-device visual acceptance, hosted exact-head CI, independent review and publication remain open. No merge or deployment performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Existing bounded GFS forecast adapter",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/29c0a4905079a97b59133d74daa8b6462b31771c/app/wind-arrow-data.ts"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-23T00:41:18.092795+00:00",
+  "emitter": "OpenAI Codex KFM application authoring",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Application candidate in the existing standalone GoDaddy composition. New receipt stays in existing data/receipts/generated accountability lane; no alternate authority home. Direction uses GFS forecast samples, not invented weather or admitted KFM evidence. Identity, source admission, Present-only hold, provider, runtime budgets, Sites bindings, PC/model and hosting configuration are preserved. Revert this bounded change to roll back. Receipt grants no review, merge, release or publication authority."
+}

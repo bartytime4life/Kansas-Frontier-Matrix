@@ -1339,6 +1339,7 @@ export default function Home() {
   const [windArrowHover, setWindArrowHover] = useState<WindArrowHover | null>(null);
   const [windArrowSampleIndex, setWindArrowSampleIndex] = useState(0);
   const [windArrowReloadToken, setWindArrowReloadToken] = useState(0);
+  const windLayerSelected = officialVisibility["nws-forecast-wind"];
   const [reducedMotion, setReducedMotion] = useState(false);
   const [mapViewportBounds, setMapViewportBounds] = useState<MapBoundsState>(SUPPORTED_CONTEXT_BOUNDS);
   const [analysisArea, setAnalysisArea] = useState<MapBoundsState | null>(null);
@@ -5913,7 +5914,7 @@ export default function Home() {
   useEffect(() => {
     const map = mapRef.current;
     const canvas = windArrowCanvasRef.current;
-    const selected = buildYearCurrent && officialVisibility["nws-forecast-wind"]
+    const selected = buildYearCurrent && windLayerSelected
       && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
     if (!map || !canvas || !styleReady || !selected) {
       setWindArrowState("OFF");
@@ -5981,14 +5982,15 @@ export default function Home() {
         setWindArrowFrame(null);
         return;
       }
-      controller = new AbortController();
+      const requestController = new AbortController();
+      controller = requestController;
       setWindArrowState("LOADING");
       setWindArrowFrame(null);
       setWindArrowDirect(false);
       try {
         const bbox = [west, south, east, north].map(value => value.toFixed(3)).join(",");
-        const { frame: next, transport } = await loadWindFlowFrame(bbox, controller.signal);
-        if (disposed) return;
+        const { frame: next, transport } = await loadWindFlowFrame(bbox, requestController.signal);
+        if (disposed || requestController.signal.aborted) return;
         frame = next;
         setWindArrowFrame(next);
         setWindArrowDirect(transport === "direct-provider");
@@ -5996,7 +5998,7 @@ export default function Home() {
         render();
         startMotion();
       } catch (error) {
-        if (disposed || (error instanceof DOMException && error.name === "AbortError")) return;
+        if (disposed || requestController.signal.aborted || (error instanceof DOMException && error.name === "AbortError")) return;
         frame = null;
         setWindArrowFrame(null);
         setWindArrowDirect(false);
@@ -6028,7 +6030,7 @@ export default function Home() {
       resetWindFlowCanvas(canvas);
       canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
     };
-  }, [buildYearCurrent, dynamicEffects, officialVisibility, reducedMotion, styleReady, temporalQuery.frame, windArrowReloadToken]);
+  }, [buildYearCurrent, dynamicEffects, windLayerSelected, reducedMotion, styleReady, temporalQuery.frame, windArrowReloadToken]);
 
   useEffect(() => {
     const next: OfficialContextState = windArrowState === "READY" ? "ready" : windArrowState === "LOADING" ? "loading" : windArrowState === "ERROR" ? "error" : "idle";
@@ -9603,9 +9605,9 @@ export default function Home() {
                   {heldAtFrame && <small>Selected source is held by the global atlas year. Return that axis to Present to display its source clock.</small>}
                 </section>
                 {source.id === "nws-forecast-wind" && <div className="wind-arrow-source-card" data-state={windArrowState}>
-                  <strong>Forecast wind flow</strong>
-                  <p>Soft wind wisps move where the Open-Meteo NCEP GFS 10 m forecast points. Their curl and spacing are illustrative, not measured air or particle paths. Stationary wind barbs are removed.</p>
-                  <output aria-live="polite">{!officialVisibility[source.id] ? "Turn on Airflow to show wind flow" : heldAtFrame ? "Held by atlas year" : windArrowState === "READY" && windArrowFrame ? `Valid ${windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC · ${windArrowFrame.samples.length} model grid points · retrieved ${windArrowFrame.retrievedAtUtc.replace("T", " ").slice(0, 16)} UTC${windArrowDirect ? " · direct provider request" : " · Site adapter"} · ${reducedMotion ? "Still wind traces for reduced motion" : dynamicEffects ? "Wind wisps moving with model direction" : "Still wind traces; ambient motion off"}` : windArrowState === "ERROR" ? "Model unavailable or outside Kansas · no wind flow drawn" : "Checking model direction and valid time…"}</output>
+                  <strong>Wind direction &amp; speed</strong>
+                  <p>Open-Meteo NCEP GFS supplies the 10 m forecast speed and direction. Streamlines move toward the forecast direction; with motion off, arrows mark the model points. Wind-from bearings describe where wind comes from. Spacing and motion are illustrative, not measured particle paths.</p>
+                  <output aria-live="polite">{!officialVisibility[source.id] ? "Turn on Wind direction & speed to show the forecast" : heldAtFrame ? "Held by atlas year" : windArrowState === "READY" && windArrowFrame ? `Valid ${windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC · ${windArrowFrame.samples.length} model grid points · retrieved ${windArrowFrame.retrievedAtUtc.replace("T", " ").slice(0, 16)} UTC${windArrowDirect ? " · direct provider request" : " · Site adapter"} · ${reducedMotion ? "Direction arrows for reduced motion" : dynamicEffects ? "Streamlines moving with model direction" : "Direction arrows; ambient motion off"}` : windArrowState === "ERROR" ? "Model unavailable or outside Kansas · no wind flow drawn" : "Checking model direction and valid time…"}</output>
                   {windArrowState === "READY" && windArrowFrame && <details className="wind-arrow-samples">
                     <summary>Inspect model grid points</summary>
                     <label>Grid point<select value={windArrowSampleIndex} onChange={(event) => setWindArrowSampleIndex(Number(event.target.value))}>{windArrowFrame.samples.map((sample, index) => <option key={`${sample.latitude},${sample.longitude}`} value={index}>Point {index + 1} · {sample.latitude.toFixed(3)}° N, {Math.abs(sample.longitude).toFixed(3)}° W</option>)}</select></label>
@@ -9793,7 +9795,7 @@ export default function Home() {
           {scenePreset === "elevation-3d" && flyoverStopIndex === null && !reducedMotion && runtime.kind === "ready" && !undergroundOpen
             && <button type="button" className="flyover-launch" onClick={startFlyover}><span aria-hidden="true">✈</span> Fly over Kansas</button>}
           <div className="map-effects" aria-hidden="true">
-            <canvas ref={windArrowCanvasRef} className="wind-arrow-canvas" aria-hidden="true" />
+            <canvas ref={windArrowCanvasRef} className="wind-arrow-canvas" style={{ opacity: officialOpacity["nws-forecast-wind"] }} aria-hidden="true" />
             <canvas ref={waterMotionCanvasRef} className="water-motion-canvas" style={{ opacity: officialOpacity["usgs-streamflow"] }} aria-hidden="true" />
             {windArrowState === "READY" && windArrowFrame && windArrowHover && <output className="wind-arrow-hover" style={{ left: windArrowHover.screenX, top: windArrowHover.screenY }} aria-label="Nearest wind model grid point"><span>GFS MODEL GRID POINT · VALID {windArrowFrame.validTimeUtc.replace("T", " ").slice(0, 16)} UTC</span><strong>{Math.round(windArrowHover.sample.speedMetersPerSecond * 2.23694)} mph <b>→ {windToCompass(windArrowHover.sample.windToDegrees)}</b></strong><small>{windArrowHover.sample.latitude.toFixed(3)}°, {windArrowHover.sample.longitude.toFixed(3)}° · 10 m forecast</small></output>}
           </div>
