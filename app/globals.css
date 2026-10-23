@@ -4453,7 +4453,11 @@ body { font-size: 14px; }
 .hydrology-observatory[data-expanded="true"] { max-height: min(740px, calc(100dvh - 150px)); }
 .hydrology-observatory::before { display: none; }
 .hydrology-identity > strong { font-size: 16px; letter-spacing: -.02em; }
-.hydrology-header { position: sticky; top: 0; z-index: 3; display: grid; grid-template-columns: minmax(0, 1fr) auto 44px; padding-block: 6px; background: #071d28; }
+.hydrology-sticky-heading { position: sticky; top: 0; z-index: 3; display: grid; gap: 8px; background: #071d28; }
+.hydrology-sticky-heading .live-observation-switcher { position: static; }
+.hydrology-sticky-heading .live-observation-switcher button { min-height: 44px; }
+.hydrology-observatory:has(.live-observation-switcher) { scroll-padding-top: 136px; }
+.hydrology-header { display: grid; grid-template-columns: minmax(0, 1fr) 44px; padding-block: 6px; background: #071d28; }
 .hydrology-header > .hydrology-close { display: grid; place-items: center; width: 44px; min-height: 44px; padding: 0; border: 1px solid #6e9ca7; border-radius: 50%; background: #122f3c; color: #e1f5f4; font: inherit; font-size: 28px; line-height: 1; cursor: pointer; }
 .hydrology-close:hover { background: #224b59; }
 .hydrology-close:focus-visible { outline: 3px solid var(--gold-soft); outline-offset: 2px; }
@@ -4524,7 +4528,7 @@ body { font-size: 14px; }
 .hydrology-legend summary { font-size: 14px; }
 .hydrology-legend-grid p, .hydrology-legend-grid section > strong, .hydrology-size-key, .hydrology-trend-key, .hydrology-quality-key { font-size: 12px; }
 @media (max-width: 640px) {
- .hydrology-observatory { max-height: min(440px, 53dvh); scroll-padding-top: 148px; padding: 12px; }
+ .hydrology-observatory { max-height: min(440px, 53dvh); padding: 12px; }
  .hydrology-observatory[data-expanded="true"] { max-height: calc(100dvh - 160px); }
  .river-network-signal { grid-template-columns: 76px minmax(0, 1fr); gap: 10px; padding: 10px; }
  .river-network-dial { width: 76px; }

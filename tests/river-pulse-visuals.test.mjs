@@ -108,3 +108,31 @@ test('the wired dismiss action hides controls, pauses all live playback and retu
   frames[0]();
   assert.deepEqual(mutations.at(-1), ['focus', true]);
 });
+
+test('map Escape cancels an active measurement before dismissing live controls or evidence', async () => {
+  const source=await readFile('app/page.tsx','utf8');
+  const ast=ts.createSourceFile('page.tsx',source,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);
+  let handler;
+  function visit(node) {
+    if(ts.isVariableDeclaration(node) && node.name.getText(ast)==='handleEscape') handler=node.initializer.getText(ast);
+    ts.forEachChild(node,visit);
+  }
+  visit(ast);assert.ok(handler);
+  const calls=[];
+  const scope={repositoryOpen:false,workspaceDetailsRef:{current:null},sourceStatusOpen:false,qwenOpen:false,mapContextOpen:false,helpOpen:false,mapUtilityOpen:false,
+    liveDockVisible:true,glmFlashesEnabled:false,isCompact:false,rightOpen:true,
+    measureModeRef:{current:'distance'},measurementGeometryModeRef:{current:'distance'},measureCoordinatesRef:{current:[[0,0]]},
+    mapRef:{current:{doubleClickZoom:{enable:()=>calls.push('zoom enabled')},isStyleLoaded:()=>false}},
+    setMeasureCoordinateCount:value=>calls.push(['count',value]),setMeasureMode:value=>calls.push(['mode',value]),
+    setMeasurementGeometryMode:value=>calls.push(['geometry',value]),setMeasurement:value=>calls.push(['message',value]),
+    closeLiveInstrument:()=>calls.push('dock dismissed'),closeRightPanel:()=>calls.push('evidence dismissed'),
+  };
+  const javascript=ts.transpileModule(handler,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText.trim().replace(/;$/,'');
+  const run=new Function('scope',`with(scope){return (${javascript})}`)(scope);
+  const event={key:'Escape',defaultPrevented:false,target:{closest:()=>null}};
+  run(event);
+  assert.equal(scope.measureModeRef.current,null);assert.equal(scope.measurementGeometryModeRef.current,null);
+  assert.deepEqual(scope.measureCoordinatesRef.current,[]);assert.ok(calls.includes('zoom enabled'));
+  assert.ok(!calls.includes('dock dismissed'));assert.ok(!calls.includes('evidence dismissed'));
+  run(event);assert.equal(calls.at(-1),'dock dismissed');assert.ok(!calls.includes('evidence dismissed'));
+});

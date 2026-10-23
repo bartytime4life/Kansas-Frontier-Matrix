@@ -295,20 +295,22 @@ export function HydrologyObservatory({
     aria-busy={state === "loading"}
     onKeyDown={handleKeyDown}
   >
-    {sourceSwitcher}
-    <header className="hydrology-header">
-      <div className="hydrology-identity">
-        <span>RIVER PULSE · USGS OBSERVATIONS</span>
-        <strong>Current and historical Kansas streamflow</strong>
-      </div>
-      <div className="hydrology-header-actions">
-        <button type="button" className="river-follow" onClick={() => { setExpanded(false); onShowDirection(); }} disabled={!bundle?.stations.length}>Follow a river</button>
-        <button type="button" className="river-expand" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Compact" : "Expand details"}</button>
-        <b className="hydrology-state" role="status" aria-live={playing ? "off" : "polite"}>{displayState}</b>
-        <button type="button" onClick={onRefresh} disabled={state === "loading"}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>
-      </div>
-      <button className="hydrology-close" type="button" onClick={onClose} aria-label="Close River Pulse" title="Close River Pulse (Esc)"><span aria-hidden="true">×</span></button>
-    </header>
+    <div className="hydrology-sticky-heading">
+      {sourceSwitcher}
+      <header className="hydrology-header">
+        <div className="hydrology-identity">
+          <span>RIVER PULSE · USGS OBSERVATIONS</span>
+          <strong>Current and historical Kansas streamflow</strong>
+        </div>
+        <button className="hydrology-close" type="button" onClick={onClose} aria-label="Close River Pulse" title="Close River Pulse (Esc)"><span aria-hidden="true">×</span></button>
+      </header>
+    </div>
+    <div className="hydrology-header-actions">
+      <button type="button" className="river-follow" onClick={() => { setExpanded(false); onShowDirection(); }} disabled={!bundle?.stations.length}>Follow a river</button>
+      <button type="button" className="river-expand" aria-expanded={expanded} onClick={() => setExpanded(value => !value)}>{expanded ? "Compact" : "Expand details"}</button>
+      <b className="hydrology-state" role="status" aria-live={playing ? "off" : "polite"}>{displayState}</b>
+      <button type="button" onClick={onRefresh} disabled={state === "loading"}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>
+    </div>
 
     <RiverNetworkSignal frame={frame} selected={selectedStationId} onSelect={onSelectStation} />
     <div className="hydrology-clock" role="status" aria-live={playing ? "off" : "polite"} aria-atomic="true">

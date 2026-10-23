@@ -6911,7 +6911,6 @@ export default function Home() {
       else if (mapContextOpen) setMapContextOpen(false);
       else if (helpOpen) closeMapGuide();
       else if (mapUtilityOpen) closeMapUtility();
-      else if (liveDockVisible && !glmFlashesEnabled) closeLiveInstrument();
       else if (measureModeRef.current) {
         measureModeRef.current = null;
         measurementGeometryModeRef.current = null;
@@ -6923,6 +6922,7 @@ export default function Home() {
         mapRef.current?.doubleClickZoom.enable();
         if (mapRef.current?.isStyleLoaded()) updateMeasurementSource(mapRef.current, buildMeasurementData([], null));
       }
+      else if (liveDockVisible && !glmFlashesEnabled) closeLiveInstrument();
       else if (!isCompact && rightOpen) closeRightPanel();
     };
     document.addEventListener("keydown", handleEscape);

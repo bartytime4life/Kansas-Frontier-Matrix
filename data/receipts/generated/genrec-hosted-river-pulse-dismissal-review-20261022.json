@@ -1,0 +1,116 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-pulse-dismissal-review:20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/public-core-repair.yml",
+    "app/globals.css",
+    "app/hydrology-observatory.tsx",
+    "app/page.tsx",
+    "docs/water-flow-paths.md",
+    "tests/component-harness.mjs",
+    "tests/river-pulse-visuals.test.mjs",
+    "tests/river-pulse.browser.mjs"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/public-core-repair.yml": "sha256:387d21f5db88055095ea078b900c515b01bfc6fd0349fa1015aaf7594836c384",
+    "app/globals.css": "sha256:552559100240dfa11b0c113c1ebd4ec6fc518787461f34acd43e5b56439cb068",
+    "app/hydrology-observatory.tsx": "sha256:32fe33933e44d5c950eac716fc4fdd97c8008118da1e0a3f7741f1cd5567320a",
+    "app/page.tsx": "sha256:c7b152c4813993eeed6800b0cbc2edcfc4e390dc3610b880efa373981164df04",
+    "docs/water-flow-paths.md": "sha256:50a9a200c437547847216c9d96bd13ff0a64a8c0067cf7a5a4774d136b691fa9",
+    "tests/component-harness.mjs": "sha256:cd42c638df891de15594dea2b953e4817e3391623ee08966d45178c90ce23620",
+    "tests/river-pulse-visuals.test.mjs": "sha256:d74967e6c221f55c21bf147a99135864d964b002d56de9a6b83b80132e4799e9",
+    "tests/river-pulse.browser.mjs": "sha256:2e3956e1139ac2a95eae6a8f166569dfc865d9e83fd1e3db5a096470bc39c624"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact model revision unavailable in this session"
+  },
+  "prompt_or_contract": "sha256:ce4acbfa8150ecda6a31c1e3a423d44357dc9f6dfa7ac2bd79443056c8a7dc7b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser",
+      "node_repl"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@c59fad434eeffad9a1cfdf3e9d1170495a0728e6",
+      "AGENTS.md@c59fad434eeffad9a1cfdf3e9d1170495a0728e6",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5419",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5418",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5424",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5424#discussion_r4356175128",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5424#discussion_r4356175131"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/public-core-repair.yml": "CONFIRMED",
+    "app/globals.css": "CONFIRMED",
+    "app/hydrology-observatory.tsx": "CONFIRMED",
+    "app/page.tsx": "CONFIRMED",
+    "docs/water-flow-paths.md": "CONFIRMED",
+    "tests/component-harness.mjs": "CONFIRMED",
+    "tests/river-pulse-visuals.test.mjs": "CONFIRMED",
+    "tests/river-pulse.browser.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build and TypeScript",
+      "outcome": "PASS",
+      "reason": "Final local production build and tsc --noEmit pass."
+    },
+    {
+      "gate": "Complete standalone hosted Node suite",
+      "outcome": "PASS",
+      "reason": "1695 passed, zero failures, 19 skipped; 1714 total. Skips are not executed checks."
+    },
+    {
+      "gate": "Rendered dismissal interaction acceptance",
+      "outcome": "PASS",
+      "reason": "Four desktop/touch layouts pass with two live sources enabled, both panel sizes, native scroll/source switching, persistent close/source targets, descendant/map Escape, paused reopen and retained station/frame/layers/evidence. Measurement handler regression proves first map Escape cancels geometry and restores double-click zoom; second dismisses dock before evidence. Synthetic loopback fixtures only."
+    },
+    {
+      "gate": "Actual standalone Node HTTP boundary",
+      "outcome": "PASS",
+      "reason": "21 tests pass against a separate server/start.mjs process on loopback. Earlier GitHub run remains delayed in this step; no CI pass inferred."
+    },
+    {
+      "gate": "Changed-file ESLint and diff checks",
+      "outcome": "PASS",
+      "reason": "Zero errors; 41 inherited page warnings; git diff --check passes."
+    },
+    {
+      "gate": "Exact-head CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Initial independent review found two valid P2 issues. Both corrected locally with regressions; exact successor-head CI and fresh independent review pending."
+    },
+    {
+      "gate": "GoDaddy deployed acceptance and publication",
+      "outcome": "SKIPPED",
+      "reason": "Dashboard Preview and Published show healthy c59fad4 before repair; corrected deployment remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "hosted-baseline",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c59fad434eeffad9a1cfdf3e9d1170495a0728e6"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T04:53:50.633476+00:00",
+  "emitter": "Codex",
+  "notes": "Immutable successor to genrec-hosted-river-pulse-dismissal-restore-20261022.json. Independent findings corrected: measurement Escape cleanup precedes dock; source tabs and title/close share one sticky container. Secondary actions scroll outside the sticky block so short phone layouts retain playback room. Earlier receipt retained as historical evidence. Fresh independent review and exact-head CI remain pending; no publication or human approval claimed."
+}

@@ -137,7 +137,7 @@ async function pageSession(b, { width, height, touch, motion }) {
       await call('Input.dispatchMouseEvent', { type: 'mouseReleased', x, y, button: 'left', clickCount: 1 });
     }
   };
-  await call('Page.navigate', { url: new URL('?l=&ctx=usgs-streamflow', origin).href });
+  await call('Page.navigate', { url: new URL('?l=&ctx=usgs-streamflow,nws-radar', origin).href });
   await wait(`history.state?.kfmExplorerView && document.querySelector('.map-chrome-dock')`, 'hydration');
   return { call, evaluate, wait, key, rect, activate };
 }
@@ -160,6 +160,9 @@ for (const layout of [
     await p.wait(`document.querySelector('.hydrology-observatory')`, 'River Pulse open');
     // Status is nested in More; close the native popover without hiding River Pulse.
     if(await p.evaluate(`document.querySelector('[aria-label="More site actions"]').closest('details').open`)) await p.activate('[aria-label="More site actions"]');
+    // Reopen schedules map-focus restoration; let that action finish before
+    // attempting keyboard traversal inside the newly mounted dock.
+    await p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
   };
   const snapshot = () => p.evaluate(`JSON.stringify({view:history.state.kfmExplorerView,station:document.querySelector('.hydrology-station-control select')?.value,frame:document.querySelector('.hydrology-clock time')?.dateTime,drawer:document.querySelector('.evidence-drawer')?.innerHTML})`);
   const closeTarget = async () => {
@@ -210,6 +213,13 @@ for (const layout of [
     // Check the final scroll position too: the sticky header must persist.
     await p.evaluate(`document.querySelector('.hydrology-observatory').scrollTop=100000`);
     await closeTarget();
+    const switcher=await p.rect('.hydrology-observatory .live-observation-switcher'),heading=await p.rect('.hydrology-header');
+    assert.ok(switcher.y+switcher.height<=heading.y,'sticky source tabs and header never overlap');
+    for(const selector of ['.hydrology-observatory .live-observation-switcher button:first-child','.hydrology-observatory .live-observation-switcher button:last-child']) {
+      const r=await p.rect(selector);
+      assert.ok(r.height>=44,'source switch is a touch-sized target');
+      assert.ok(await p.evaluate(`(()=>{const e=document.querySelector(${JSON.stringify(selector)}),r=e.getBoundingClientRect();return e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`),'source switch remains hit-testable after scrolling');
+    }
     assert.equal(await p.evaluate('window.scrollY'),0,'no document scroll');
     assert.equal(await snapshot(),before,'scroll and expansion preserve selection, frame, layers and evidence');
     await p.activate('.hydrology-close');
@@ -217,6 +227,11 @@ for (const layout of [
     await open();
     assert.equal(await snapshot(),before,'reopen preserves selection, frame, layers and evidence');
   }
+  await p.activate('.hydrology-observatory .live-observation-switcher button:last-child');
+  await p.wait(`document.querySelector('.noaa-radar-loop')`, 'native source switch to radar');
+  await p.activate('.noaa-radar-loop .live-observation-switcher button:first-child');
+  await p.wait(`document.querySelector('.hydrology-observatory')`, 'native source switch back to River Pulse');
+  assert.equal(await snapshot(),before,'source switching retains station, frame, layers and evidence');
   // Playback stops on dismissal and stays stopped after reopen.
   if(layout.motion!=='reduce') {
     await p.activate('.hydrology-play');
