@@ -103,7 +103,12 @@ test("applying the fire source derives footprints, hides the old dot and follows
   assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.heat).source, fire.FIRE_FOOTPRINT_SOURCE_ID);
   assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.heat).paint["fill-pattern"], undefined);
   assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.heat).paint["fill-opacity"], 0);
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.shimmer).paint["line-opacity"], 0);
+  const casing = layers.get(fire.FIRE_POINT_LAYER_IDS.shimmer).paint;
+  const edge = layers.get(fire.FIRE_POINT_LAYER_IDS.edge).paint;
+  assert.equal(casing["line-color"], "#253e46", "neutral dark casing survives a light basemap");
+  assert.equal(edge["line-color"], "#fff1d1", "pale centre survives a dark basemap");
+  assert.deepEqual(casing["line-opacity"], edge["line-opacity"]);
+  assert.deepEqual(casing["line-dasharray"].map(n => n * casing["line-width"]), edge["line-dasharray"].map(n => n * edge["line-width"]), "both narrow dashed strokes share exact segment lengths");
   assert.deepEqual(layers.get(fire.FIRE_POINT_LAYER_IDS.edge).paint["line-dasharray"], [3, 4]);
   // The user's opacity scales every zoom stop.
   context.applyOfficialContextState(map, only(["nasa-gibs-fire-points"]), { ...opacity, "nasa-gibs-fire-points": 0.5 }, { "nasa-gibs-fire-points": data });

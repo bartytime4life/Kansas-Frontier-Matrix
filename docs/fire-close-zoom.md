@@ -109,3 +109,12 @@ The follow-up runtime and full-app test source passed the local production build
 full TypeScript, changed-module ESLint and 1,729 ordinary tests (21 skips, zero
 failures). The phone component scene uses an explicit viewport and emulated
 touch input. Exact-head CI/browser results remain the publication gate.
+
+The browser comparison identified a real light-background contrast gap in the
+merged artwork's satellite-pixel outline. A neutral dark dashed casing now sits
+beneath its narrow pale dashes. Both follow identical ground geometry and dash
+lengths, fade in only near pixel zoom, and scale with source opacity. There is
+still no filled or glowing rectangular surface. This preserves a distinguishable
+measurement footprint on both light and dark backgrounds. Fire acceptance and
+its screenshot artifact upload have dedicated CI steps ahead of unrelated
+browser suites so their results remain separately reviewable.

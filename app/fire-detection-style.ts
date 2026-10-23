@@ -142,16 +142,18 @@ export const FIRE_HIT_TRANSLATE = ["interpolate", ["linear"], ["zoom"], 10, ["li
 /** Screen-sized illustration, bounded at close zoom; never a physical flame-height estimate. */
 export const FLAME_ICON_SIZE: ExpressionSpecification = ["interpolate", ["linear"], ["zoom"], 4, 0.76, 8, 0.93, 10, 1.03, 12, 1.35, 14, 1.8, 17, 2.1];
 const haloOpacity = (opacity: number): ExpressionSpecification => ["interpolate", ["linear"], ["zoom"], 10, opacity * 0.3, 12, opacity * 0.14, 13, 0];
-const edgeOpacity = (opacity: number): ExpressionSpecification => ["interpolate", ["linear"], ["zoom"], 10.5, 0, 12, opacity * 0.18, 15, opacity * 0.3];
+const edgeOpacity = (opacity: number): ExpressionSpecification => ["interpolate", ["linear"], ["zoom"], 10.5, 0, 12, opacity * 0.42, 15, opacity * 0.62];
 
 const footprintLayers = (): LayerSpecification[] => [
   { id: FIRE_POINT_LAYER_IDS.heat, type: "fill", source: FIRE_FOOTPRINT_SOURCE_ID, minzoom: 8,
     paint: { "fill-color": "#dac9ad", "fill-opacity": 0, "fill-antialias": true } },
   { id: FIRE_POINT_LAYER_IDS.shimmer, type: "line", source: FIRE_FOOTPRINT_SOURCE_ID, minzoom: 8.5,
     layout: { "line-join": "round" },
-    paint: { "line-color": confidenceMatch(FIRE_CONFIDENCE_COLORS), "line-width": 0, "line-blur": 0, "line-opacity": 0 } },
+    // Neutral casing keeps the measurement footprint legible on light maps.
+    // Dash lengths match the narrow pale line above (dash units × width).
+    paint: { "line-color": "#253e46", "line-width": 2.6, "line-dasharray": [1.5, 2], "line-blur": 0, "line-opacity": 0 } },
   { id: FIRE_POINT_LAYER_IDS.edge, type: "line", source: FIRE_FOOTPRINT_SOURCE_ID, minzoom: 10,
-    paint: { "line-color": "#dac9ad", "line-width": 1, "line-dasharray": [3, 4], "line-opacity": 0 } },
+    paint: { "line-color": "#fff1d1", "line-width": 1.3, "line-dasharray": [3, 4], "line-opacity": 0 } },
 ];
 const flameLayer = (globe: boolean): SymbolLayerSpecification => ({
   id: FIRE_POINT_LAYER_IDS.flame, type: "symbol", source: FIRE_POINT_SOURCE_ID,
@@ -239,7 +241,7 @@ export function syncFireDetectionDisplay(map: MapLibreMap, visible: boolean, opa
   setPaintExpression(map, FIRE_POINT_LAYER_IDS.circle, "circle-translate", imagesReady ? FIRE_HIT_TRANSLATE : [0, 0]);
   setPaintExpression(map, FIRE_POINT_LAYER_IDS.flame, "icon-opacity", imagesReady ? amount : 0);
   setPaintExpression(map, FIRE_POINT_LAYER_IDS.heat, "fill-opacity", 0);
-  setPaintExpression(map, FIRE_POINT_LAYER_IDS.shimmer, "line-opacity", 0);
+  setPaintExpression(map, FIRE_POINT_LAYER_IDS.shimmer, "line-opacity", edgeOpacity(amount));
   setPaintExpression(map, FIRE_POINT_LAYER_IDS.edge, "line-opacity", edgeOpacity(amount));
   syncFireDisplayMotion(map, "detections", imagesReady && amount > 0, footprints.bounds);
 }
