@@ -1,4 +1,5 @@
 import { THREE, HALF, terrain, liveSurface, blockSides, riverWater, heroCamera, stage, orbit, glowPoints, gridSampler, riverZ, smooth, window01, lerp, clamp, rng } from './kit.mjs';
+import { createTraffic, crossingZones, roadKey } from './transport-traffic.mjs';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 // Transport through time: an era clock runs 1860 → 2025 in five-year steps.
 // Trails give way to rail, section-line roads, paved highways and the interstate;
@@ -6,8 +7,8 @@ import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 // that exists in that era, and towns light up as a line first reaches them.
 
 const D = 36, TAU = Math.PI * 2;
-// Vehicles are modelled near true proportion, then enlarged so each era's types read at hero distance.
-const GS = 1.45, TS = 1.3, AS = 1.25, CS = 1.6;
+// Keep model widths inside their lane; camera framing supplies the close detail.
+const GS = .42, TS = .62, AS = .6, CS = .7;
 // Catalog-aligned keyframes (beat start → year), a hold on today, then a rewind to 1860.
 const KEYS = [[0, 1860], [5, 1880], [10.5, 1910], [15.5, 1930], [21.5, 1955], [27.5, 1990], [32.4, 2025]];
 function eraYear(t) {
@@ -25,13 +26,13 @@ const NET = [
  { id: 'trail', kind: 0, w: .12, y: [1850, 1850], fn: s => [lerp(HALF, -HALF, s), lerp(-1.6, 4, s) + .45 * Math.sin(s * 7)] },
  { id: 'cattle', kind: 1, w: .3, y: [1866, 1869], fn: s => [lerp(.3, 1, s) + .3 * Math.sin(s * 9) * (1 - s), lerp(HALF, R1z(1), s)] },
  ...SECTION.flatMap((v, i) => [
-  { id: `ns${i}`, kind: 3, w: .06, y: [1897 + i * 2.6, 1902 + i * 2.6], fn: NS(v) },
-  { id: `ew${i}`, kind: 3, w: .06, y: [1898.3 + i * 2.6, 1903.3 + i * 2.6], fn: EW(v) },
+  { id: `ns${i}`, kind: 3, w: .18, y: [1897 + i * 2.6, 1902 + i * 2.6], fn: NS(v) },
+  { id: `ew${i}`, kind: 3, w: .18, y: [1898.3 + i * 2.6, 1903.3 + i * 2.6], fn: EW(v) },
  ]),
- { id: 'H1', kind: 4, w: .17, y: [1926, 1934], fn: EW(-4.5) },
- { id: 'H2', kind: 4, w: .17, y: [1929, 1938], fn: NS(-1.5) },
- { id: 'H3', kind: 4, w: .17, y: [1933, 1942], fn: EW(4.5) },
- { id: 'H4', kind: 4, w: .17, y: [1935, 1941], fn: EW(-1.5) }, // paved over a section road beside the main line
+ { id: 'H1', kind: 4, w: .18, y: [1926, 1934], fn: EW(-4.5) },
+ { id: 'H2', kind: 4, w: .18, y: [1929, 1938], fn: NS(-1.5) },
+ { id: 'H3', kind: 4, w: .18, y: [1933, 1942], fn: EW(4.5) },
+ { id: 'H4', kind: 4, w: .18, y: [1935, 1941], fn: EW(-1.5) }, // paved over a section road beside the main line
  { id: 'R1', kind: 2, w: .11, y: [1863, 1872], fn: s => { const x = lerp(HALF, -HALF, s); return [x, R1z(x)]; } },
  { id: 'R1b', kind: 2, w: .11, y: [1968, 1973], fn: s => { const x = lerp(-HALF, HALF, s); return [x, R1z(x) - .15]; } },
  { id: 'R2', kind: 2, w: .11, y: [1869, 1880], fn: s => { const x = lerp(HALF, -HALF, s); return [x, R2z(x)]; } },
@@ -116,7 +117,7 @@ const NET_FRAG = `uniform float uYear; uniform float uTime; uniform float uPulse
    float dash = step(fract(vAlong * 2.2), .55) * band(a, .35);
    col = mix(col, vec3(.72, .55, .36), h); glow += vec3(.9, .5, .25) * ember; alpha = mix(alpha, dash * .45, h);
   } else if (vKind < 3.5) { // section-line dirt road
-   col = vec3(.78, .67, .5); alpha = band(a, .55) * .48;
+   col = vec3(.78, .67, .5); alpha = soft * .62;
   } else if (vKind < 4.5) { // paved two-lane highway with edge and centre lines
    float edge = band(abs(a - .78), .07), centre = band(a, .07) * step(fract(vAlong * 4.0), .5);
    col = vec3(.27, .29, .32); col = mix(col, vec3(.86, .84, .78), edge * .5); col = mix(col, vec3(.98, .78, .3), centre * .8);
@@ -125,7 +126,7 @@ const NET_FRAG = `uniform float uYear; uniform float uTime; uniform float uPulse
    float wide = smoothstep(0.0, 1.0, (uYear - 1994.0 - vAlong * .6) / 2.0), outer = mix(.64, .97, wide);
    float lane = step(.2, a) * (1.0 - smoothstep(outer - .03, outer, a));
    float lines = band(abs(a - (outer - .05)), .025) + band(abs(a - .24), .02) + band(abs(a - mix(.42, .5, wide)), .016) * step(fract(vAlong * 3.0), .45) + band(abs(a - .74), .016) * step(fract(vAlong * 3.0), .45) * wide;
-   float lamps = band(a, .07) * smoothstep(1966.0, 1974.0, uYear) * pow(.5 + .5 * cos(vAlong * 12.566), 8.0);
+   float lamps = .15 * band(a, .07) * smoothstep(1966.0, 1974.0, uYear) * pow(.5 + .5 * cos(vAlong * 12.566), 8.0);
    col = mix(vec3(.36, .38, .41), vec3(.9, .88, .82), clamp(lines, 0.0, 1.0) * lane * .6);
    col = mix(vec3(.15, .2, .16), col, lane); glow += gold * lamps * 2.4;
    alpha = max(max(lane * .97, step(a, .2) * .35), lamps);
@@ -135,7 +136,7 @@ const NET_FRAG = `uniform float uYear; uniform float uTime; uniform float uPulse
   // A bright construction front leads every new line; a closing pulse runs the whole network.
   float head = exp(-age * age / 1.4) * (vKind > .5 ? 1.0 : 0.0);
   float pulse = uPulse * pow(.5 + .5 * sin(vAlong * 1.7 - uTime * 5.0), 14.0) * (vKind > 1.5 && uYear < vGone ? 1.0 : 0.0);
-  col = pow(col, vec3(2.2)) + glow + gold * (head * 1.8 + pulse * 1.6); // palette above is sRGB
+  col = pow(col, vec3(2.2)) + glow + gold * (head * .4 + pulse * .25); // palette above is sRGB
   alpha = max(alpha, (head * .85 + pulse * .8) * soft);
   gl_FragColor = vec4(col, clamp(alpha, 0.0, 1.0));
   #include <tonemapping_fragment>
@@ -165,14 +166,21 @@ const HEAD = ['#ffe2b0', 3.2], LED = ['#eef4ff', 3.4], TAIL = ['#ff3a24', 2.2], 
 const lamp = (x, y, z, e, s = .016) => part(box(s * .5, s, s), '#222', { x, y, z, emit: e });
 const lamps = (x, y, z, e, s) => [lamp(x, y, z, e, s), lamp(x, y, -z, e, s)];
 const truck = (x, w = .085) => [part(box(.07, .028, w), '#141414', { x, y: .03 }), ...wheels([x - .022, x + .022], w / 2 - .004, .022)];
+const horse = (x, z) => [
+ part(ball(.033), '#513a28', { x, y: .054, z, sx: 1.5, sy: .72, sz: .48 }),
+ part(ball(.017), '#513a28', { x: x + .042, y: .081, z, sx: 1.15, sy: .75, sz: .65 }),
+ part(box(.014, .04, .018), '#513a28', { x: x + .027, y: .065, z, rz: -.35 }),
+ ...[-.028, .025].flatMap(dx => [-.01, .01].map(dz => part(cyl(.003, .003, .039, 6), '#30251f', { x: x + dx, y: .021, z: z + dz }))),
+ part(box(.08, .004, .003), '#29221c', { x: x - .035, y: .052, z: z + .016 }),
+];
 
 // Every model is built once; instance colour tints the parts painted light.
 const MODELS = {
  wagon: () => [part(box(.24, .05, .11), '#6a4a2c', { y: .075 }), part(cyl(.062, .062, .22, 8, 0, Math.PI), '#e9e0c6', { y: .1, rz: Math.PI / 2 }),
-  ...wheels([-.08, .08], .06, .04, '#2e2216'), part(box(.07, .045, .035), '#4a3626', { x: .2, y: .045, z: .03 }), part(box(.07, .045, .035), '#4a3626', { x: .2, y: .045, z: -.03 }), lamp(.125, .12, 0, ['#ffb35a', 3])],
+  ...wheels([-.08, .08], .06, .04, '#2e2216'), ...horse(.2, .03), ...horse(.2, -.03), lamp(.125, .12, 0, ['#ffb35a', 3])],
  stage: () => [part(box(.15, .09, .1), '#6b2a20', { y: .12 }), part(box(.14, .016, .09), '#2a1a14', { y: .172 }), part(box(.06, .034, .104), '#000', { y: .13, emit: ['#ffbe6a', 1.2] }),
   part(box(.04, .03, .09), '#3a2418', { x: .09, y: .15 }), ...wheels([-.055, .06], .055, .045, '#c9a040'),
-  ...[.2, .29].flatMap(x => [part(box(.065, .045, .03), '#3b2a1e', { x, y: .045, z: .028 }), part(box(.065, .045, .03), '#3b2a1e', { x, y: .045, z: -.028 })]), lamp(.12, .16, .05, ['#ffb35a', 3])],
+  ...[.2, .31].flatMap(x => [...horse(x, .028), ...horse(x, -.028)]), lamp(.12, .16, .05, ['#ffb35a', 3])],
  modelT: () => [part(box(.24, .02, .09), '#141416', { y: .05 }), part(box(.07, .045, .07), '#fff', { x: .075, y: .08 }), part(box(.09, .075, .085), '#fff', { x: -.02, y: .1 }),
   part(box(.12, .008, .095), '#151515', { x: -.02, y: .142 }), part(box(.008, .035, .07), '#b08a3a', { x: .113, y: .085 }), ...wheels([-.075, .075], .05, .032, '#d8cdb2', .012), ...lamps(.118, .1, .03, HEAD),
   part(cyl(.03, .03, .012, 10), '#151515', { x: -.125, y: .085, rz: Math.PI / 2 }), part(box(.006, .05, .08), '#3a3a3a', { x: .025, y: .13 })],
@@ -258,11 +266,11 @@ const span = (y, a, b, edge = 1.6) => smooth(a - edge, a + .4, y) * (1 - smooth(
 
 export function create() {
  const scene = new THREE.Scene(), camera = heroCamera();
- const { hemi } = stage(scene, { fog: .02, sun: [7, 5, 4.5], sunColor: '#ffc690', sunIntensity: 2.5 });
+ const { hemi } = stage(scene, { fog: .02, sun: [7, 5, 4.5], sunColor: '#ffc690', sunIntensity: 2.1 });
  hemi.intensity = .8; hemi.color.set('#9fc4dd');
  const land = terrain({ segments: 220 });
  const u = liveSurface(land);
- u.tint.value.set('#1d2c3a'); u.tintMix.value = .1; u.grey.value = 0;
+ u.tint.value.set('#465445'); u.tintMix.value = .08; u.grey.value = 0;
  const hs = gridSampler(land), sides = blockSides(land.sample), water = riverWater(land.sample);
  scene.add(land.mesh, sides, water);
  const random = rng(1860);
@@ -270,6 +278,61 @@ export function create() {
  // Network: every line in one mesh; the shader hides what is not yet built.
  const lines = {};
  for (const spec of NET) lines[spec.id] = { ...spec, ...track(spec.fn, hs) };
+ // Lift the road and its vehicles together. Decks span the river with level
+ // abutments; the north/south freeway crosses above the east/west freeway.
+ const bridges = [], bridgeBox = new THREE.BoxGeometry(1, 1, 1);
+ const concrete = new THREE.MeshStandardMaterial({ color: '#8d8b80', roughness: .92 });
+ const steel = new THREE.MeshStandardMaterial({ color: '#748083', roughness: .65, metalness: .35 });
+ function spanBridge(l, middle, radius, deckY) {
+  for (let i = 0; i < l.n; i++) {
+   const d = Math.abs(i * l.ds - middle), weight = 1 - smooth(radius * .58, radius, d);
+   l.ys[i] = lerp(l.ys[i], Math.max(deckY, l.ys[i]), weight);
+  }
+  if (bridges.some(b => b.route === roadKey(l.id) && Math.abs(b.middle - middle) < .1)) return;
+  const group = new THREE.Group(); group.name = `bridge-${l.id}`;
+  const pieces = new Map([[concrete, []], [steel, []]]);
+  const add = (x, y, z, w, h, d, material, angle = 0) => {
+   const matrix = new THREE.Matrix4().makeRotationY(angle);
+   matrix.scale(new THREE.Vector3(w, h, d)); matrix.setPosition(x, y, z); pieces.get(material).push(matrix);
+  };
+  for (let i = 0; i < l.n - 1; i++) {
+   const distance = Math.abs((i + .5) * l.ds - middle);
+   if (distance > radius * .59) continue;
+   const x = (l.xs[i] + l.xs[i + 1]) / 2, z = (l.zs[i] + l.zs[i + 1]) / 2, y = (l.ys[i] + l.ys[i + 1]) / 2;
+   const angle = Math.atan2(-(l.zs[i + 1] - l.zs[i]), l.xs[i + 1] - l.xs[i]);
+   add(x, y - .025, z, l.ds * 1.08, .045, l.w + .025, concrete, angle);
+   for (const side of [-1, 1]) {
+    const off = side * (l.w / 2 + .008);
+    add(x + l.sx[i] * off, y + .035, z + l.sz[i] * off, l.ds * 1.08, .025, .012, steel, angle);
+   }
+  }
+  // Piers sit beside the underpassing route rather than blocking its lanes.
+  for (const side of [-1, 1]) {
+   const i = Math.max(0, Math.min(l.n - 1, Math.round((middle + side * radius * .45) / l.ds)));
+   for (const edge of [-1, 1]) {
+    const x = l.xs[i] + l.sx[i] * l.w * .38 * edge, z = l.zs[i] + l.sz[i] * l.w * .38 * edge, bottom = hs(x, z), top = l.ys[i] - .045;
+    if (top > bottom + .03) add(x, (top + bottom) / 2, z, .035, top - bottom, .035, concrete);
+   }
+  }
+  for (const [material, matrices] of pieces) {
+   const mesh = new THREE.InstancedMesh(bridgeBox, material, matrices.length);
+   matrices.forEach((matrix, i) => mesh.setMatrixAt(i, matrix)); group.add(mesh);
+  }
+  bridges.push({ group, year: l.y[1], route: roadKey(l.id), middle }); scene.add(group);
+ }
+ for (const l of Object.values(lines)) {
+  if (![3, 4, 5].includes(l.kind)) continue;
+  for (let i = 1; i < l.n; i++) {
+   if ((l.zs[i - 1] - riverZ(l.xs[i - 1])) * (l.zs[i] - riverZ(l.xs[i])) >= 0) continue;
+   const d = i * l.ds, radius = .85, reach = Math.ceil(radius / l.ds);
+   let deck = l.ys[i] + .12;
+   for (let j = Math.max(0, i - reach); j <= Math.min(l.n - 1, i + reach); j++) deck = Math.max(deck, l.ys[j] + .04);
+   spanBridge(l, d, radius, deck);
+  }
+ }
+ const over = lines.I2, under = lines.I1;
+ const oi = Math.round((HUB[1] + HALF) / over.ds), ui = Math.round((HALF - HUB[0]) / under.ds);
+ spanBridge(over, oi * over.ds, 1.25, Math.max(over.ys[oi], under.ys[ui]) + .38);
  const pos = [], along = [], acr = [], built = [], gone = [], kinds = [], index = [];
  for (const kind of ORDER) for (const l of Object.values(lines)) {
   if (l.kind !== kind) continue;
@@ -308,10 +371,15 @@ export function create() {
    if (l.kind === 1 || l.kind === 6) continue;
    for (let k = 0; k < l.n; k++) if (Math.hypot(l.xs[k] - x, l.zs[k] - z) < .32) { const y = lerp(l.y[0], l.y[1], k / (l.n - 1)); if (y < access) { access = y; via = { l, k }; } }
   }
-  const count = [9, 14, 24][size], grow = [6, 3.6, 2][size], houses = [];
+  const count = [5, 8, 12][size], grow = [6, 3.6, 2][size], houses = [];
   for (let k = 0; k < count; k++) {
-   const r = .09 + .052 * Math.sqrt(k) * (1 + size * .25), a = k * 2.39996 + i;
+   const r = .22 + .1 * Math.sqrt(k) * (1 + size * .25), a = k * 2.39996 + i;
    const hx = Math.round((x + Math.cos(a) * r) / .07) * .07, hz = Math.round((z + Math.sin(a) * r) / .07) * .07;
+   // Leave room for road shoulders, rail beds and the river.
+   if (Math.abs(hz - riverZ(hx)) < .38 || Object.values(lines).some(l => {
+    for (let n = 0; n < l.n; n += 2) if (Math.hypot(l.xs[n] - hx, l.zs[n] - hz) < l.w / 2 + .11) return true;
+    return false;
+   })) continue;
    const tint = ['#efe6d4', '#e8dcc0', '#d9d2c6', '#c96f4f', '#f2efe8'][Math.floor(random() * 5)];
    houses.push({ x: hx, z: hz, y: hs(hx, hz), rot: random() < .5 ? 0 : Math.PI / 2, s: .8 + random() * .45, at: access + .6 + k * grow * (.7 + random() * .6), idx: take('house', tint), slot: light('#ffd89a', .32 + random() * .1) });
   }
@@ -325,21 +393,23 @@ export function create() {
  });
 
  // ---- fleets: each runs in its era, only on lines already built there.
- const fleets = [];
+ const fleets = [], routeCounts = {};
  const roadFleet = (type, years, routes, count, { lane = .045, colors = ['#ffffff'], half = .15, lights = 'car' } = {}) => {
   const units = [];
   for (let i = 0; i < count; i++) {
-   const l = lines[routes[i % routes.length]], dir = i % 2 ? -1 : 1, cycle = l.len + .8;
+   const l = lines[routes[i % routes.length]], key = roadKey(l.id), dir = (routeCounts[key] = (routeCounts[key] || 0) + 1) % 2 ? 1 : -1, cycle = l.len + .8;
    const head = lights === 'lantern' ? [light('#ffb35a', .12)] : [light(lights === 'led' ? '#eef4ff' : lights === 'ev' ? '#8ff0ff' : '#ffe6b8', .2), light('#ff3a24', .1)];
-   units.push({ l, dir, cycle, v: 0, d0: 0, lane: lane * (lights === 'lantern' ? .5 : 1) * (1 + (random() < .3 && l.kind === 5 ? .8 : 0)), parts: [{ type, idx: take(type, colors[i % colors.length]), back: 0, half: half * GS, lat: 0, g: GS }], head });
+   units.push({ l, dir, cycle, v: 0, d0: 0, lane: l.kind === 5 ? .092 : l.kind === 0 ? .03 : .045, parts: [{ type, idx: take(type, colors[i % colors.length]), back: 0, half: half * GS, lat: 0, g: GS }], head });
   }
   fleets.push({ years, units, mode: 'ground', lights });
  };
  const trainFleet = (years, consists, opts = {}) => {
-  const units = consists.map(([route, dir, phase, cars]) => {
+  const seen = new Set();
+  const units = consists.filter(([route]) => ['R1', 'R2', 'R1b'].includes(route) && !seen.has(route) && seen.add(route)).map(([route, , phase, cars]) => {
+   const dir = route === 'R2' ? -1 : 1;
    const l = lines[route], parts = [];
    let back = 0;
-   for (const [type, len0, color] of cars) { const len = len0 * TS; parts.push({ type, idx: take(type, color), back: back + len / 2, half: len / 2, lat: 0, g: TS }); if (type === 'stack') parts.push({ type: 'stackTop', idx: take('stackTop', STACK[(parts.length * 7) % STACK.length]), back: back + len / 2, half: len / 2, lat: 0, g: TS }); back += len + .02; }
+   for (const [type, len0, color] of cars) { const len = len0 * TS * 1.6; parts.push({ type, idx: take(type, color), back: back + len / 2, half: len / 2, lat: 0, g: TS }); if (type === 'stack') parts.push({ type: 'stackTop', idx: take('stackTop', STACK[(parts.length * 7) % STACK.length]), back: back + len / 2, half: len / 2, lat: 0, g: TS }); back += len + .02; }
    return { l, dir, cycle: l.len + back + 1, v: opts.v ?? .6, d0: phase * (l.len + back), lane: dir * (opts.lane ?? 0), parts, head: [light('#fff0c8', .34)], smoke: opts.smoke ? Array.from({ length: 12 }, () => light('#aeb6bb', .2)) : null };
   });
   fleets.push({ years, units, mode: 'ground', lights: 'train' });
@@ -348,26 +418,20 @@ export function create() {
  const BOX = ['#7a3b26', '#6e3420', '#8a5a2a', '#5a4a3a', '#7a3b26'];
  const DIRT = SECTION.flatMap((_, i) => [`ns${i}`, `ew${i}`]);
 
- roadFleet('wagon', [1850, 1899], ['trail'], 6, { half: .14, lights: 'lantern', lane: .03 });
- roadFleet('stage', [1850, 1893], ['trail'], 3, { half: .18, lights: 'lantern', lane: .03 });
- roadFleet('wagon', [1896, 1914], DIRT, 8, { half: .14, lights: 'lantern', lane: .02 });
- roadFleet('modelT', [1907, 1931], [...DIRT, 'H1', 'H2'], 18, { half: .13, colors: ['#1e1e20', '#1e1e20', '#1e1e20', '#24342a', '#3a2020'], lane: .03 });
- roadFleet('sedan', [1929, 1961], ['H1', 'H2', 'H3', 'H4', 'H1', 'H2', 'H3', 'H4', ...DIRT.slice(0, 4)], 18, { colors: ['#2f4a3a', '#6a2a2a', '#d8cfb0', '#26304a', '#3a3a3a', '#8a7a5a'] });
- roadFleet('pickup', [1932, 1966], ['H1', 'H2', 'H3', 'H4', ...DIRT.slice(4)], 8, { colors: ['#b04a2a', '#3a5a7a', '#5a6a3a', '#c8b070'] });
- roadFleet('boxtruck', [1930, 1966], ['H1', 'H2', 'H3'], 8, { half: .18, colors: ['#e8e4da', '#c8a040', '#a83a2a', '#3a6a5a'] });
- roadFleet('semi', [1950, 2030], ['H1', 'H2', 'H3', 'I1', 'I2', 'I1', 'I2', 'I1'], 16, { half: .34, colors: ['#e8e8e8', '#b8322a', '#2e4a7a', '#e2b43a', '#d8d8d8', '#3a6a4a'], lane: .085 });
- roadFleet('car70', [1964, 2003], ['I1', 'I2', 'I1', 'I2', 'H1', 'H2', 'H3'], 22, { half: .17, colors: ['#8a5a2a', '#c8a040', '#7aa0c8', '#b03a2a', '#3a5a3a', '#d8d4c8', '#b8bcc0'], lane: .085 });
- roadFleet('suv', [1999, 2030], ['I1', 'I2', 'I1', 'I2', 'H1', 'H2', 'H3'], 16, { colors: ['#d8dadc', '#2a2c30', '#8a9098', '#5a1a1a', '#e8e8e8', '#2a3a5a'], lane: .09, lights: 'led' });
- roadFleet('ev', [2008, 2030], ['I1', 'I2', 'I1', 'I2', 'H2'], 10, { colors: ['#f0f2f4', '#c8ccd0', '#3a4048', '#b8302a'], lane: .09, lights: 'ev' });
- // Traffic keeps its spacing: everyone on a carriageway moves at that road's pace,
- // evenly phased across every era's fleet, so vehicles never drive through each other.
- const PACE = { 0: 0, 3: .62, 4: .85, 5: 1.12 }, lanesOf = {};
- fleets.forEach((f, fi) => { const mine = {}; for (const unit of f.units) { const key = `${unit.l.id}${unit.dir}`; (mine[key] ??= []).push(unit); } for (const [key, list] of Object.entries(mine)) list.forEach((unit, r) => (lanesOf[key] ??= []).push([r / list.length + fi * .013, unit])); });
- // Interleave the fleets so each era's vehicles spread over the whole road.
- for (const group of Object.values(lanesOf)) group.sort((p, q) => p[0] - q[0]).forEach(([, unit], j) => {
-  unit.v = unit.l.kind ? PACE[unit.l.kind] : unit.cycle / D; // trail traffic laps exactly once a loop, so 1860 restarts seamlessly
-  unit.d0 = (j / group.length + (unit.dir < 0 ? .37 : 0)) * unit.cycle; unit.mates = group;
- });
+ roadFleet('wagon', [1850, 1899], ['trail'], 3, { half: .14, lights: 'lantern', lane: .03 });
+ roadFleet('stage', [1850, 1893], ['trail'], 2, { half: .18, lights: 'lantern', lane: .03 });
+ roadFleet('wagon', [1896, 1914], DIRT, 6, { half: .14, lights: 'lantern', lane: .02 });
+ roadFleet('modelT', [1907, 1931], [...DIRT, 'H1', 'H2'], 10, { half: .13, colors: ['#1e1e20', '#1e1e20', '#1e1e20', '#24342a', '#3a2020'], lane: .03 });
+ roadFleet('sedan', [1929, 1961], ['H1', 'H2', 'H3', 'H4', 'H1', 'H2', 'H3', 'H4', ...DIRT.slice(0, 4)], 10, { colors: ['#2f4a3a', '#6a2a2a', '#d8cfb0', '#26304a', '#3a3a3a', '#8a7a5a'] });
+ roadFleet('pickup', [1932, 1966], ['H1', 'H2', 'H3', 'H4', ...DIRT.slice(4)], 4, { colors: ['#b04a2a', '#3a5a7a', '#5a6a3a', '#c8b070'] });
+ roadFleet('boxtruck', [1930, 1966], ['H1', 'H2', 'H3'], 3, { half: .18, colors: ['#e8e4da', '#c8a040', '#a83a2a', '#3a6a5a'] });
+ roadFleet('semi', [1950, 2030], ['H1', 'H2', 'H3', 'I1', 'I2', 'I1', 'I2', 'I1'], 8, { half: .34, colors: ['#e8e8e8', '#b8322a', '#2e4a7a', '#e2b43a', '#d8d8d8', '#3a6a4a'], lane: .085 });
+ roadFleet('car70', [1964, 2003], ['I1', 'I2', 'I1', 'I2', 'H1', 'H2', 'H3'], 10, { half: .17, colors: ['#8a5a2a', '#c8a040', '#7aa0c8', '#b03a2a', '#3a5a3a', '#d8d4c8', '#b8bcc0'], lane: .085 });
+ roadFleet('suv', [1999, 2030], ['I1', 'I2', 'I1', 'I2', 'H1', 'H2', 'H3'], 8, { colors: ['#d8dadc', '#2a2c30', '#8a9098', '#5a1a1a', '#e8e8e8', '#2a3a5a'], lane: .09, lights: 'led' });
+ roadFleet('ev', [2008, 2030], ['I1', 'I2', 'I1', 'I2', 'H2'], 6, { colors: ['#f0f2f4', '#c8ccd0', '#3a4048', '#b8302a'], lane: .09, lights: 'ev' });
+ // A fixed physical lane and pace; the controller handles headway and junctions.
+ const PACE = { 0: .24, 3: .38, 4: .55, 5: .72 };
+ for (const f of fleets) for (const unit of f.units) unit.v = PACE[unit.l.kind];
 
  const steamCars = n => [['steam', .56, '#ffffff'], ...Array.from({ length: n }, (_, i) => ['boxcar', .36, BOX[i % BOX.length]])];
  trainFleet([1863, 1946], [['R1', 1, 0, steamCars(5)], ['R1', 1, .55, steamCars(4)], ['R2', -1, .3, steamCars(5)], ['B1', 1, .2, steamCars(3)], ['B2', 1, .6, steamCars(3)], ['B4', -1, .1, steamCars(2)]], { v: .55, smoke: true });
@@ -387,42 +451,28 @@ export function create() {
  const loop8 = (R, r, y, rot, dy = .25) => (p, out) => { const x = R * Math.sin(p), z = r * Math.sin(2 * p), c = Math.cos(rot), s = Math.sin(rot); return out.set(x * c - z * s, y + dy * Math.sin(2 * p + 1), x * s + z * c); };
  const ellipse = (R, r, y, rot, dy = .2) => (p, out) => { const x = R * Math.cos(p), z = r * Math.sin(p), c = Math.cos(rot), s = Math.sin(rot); return out.set(x * c - z * s, y + dy * Math.sin(3 * p), x * s + z * c); };
  flyer('biplane', [1913, 1937], loop8(4.6, 2.4, 3.1, .3), .26, 0, '#e2b43a');
- flyer('biplane', [1918, 1937], ellipse(5, 3.2, 3.4, -.5), -.22, 2, '#b8322a');
  flyer('propliner', [1935, 1966], ellipse(5.6, 3.4, 3.6, .2), .28, .5);
- flyer('propliner', [1938, 1966], loop8(5.2, 2.8, 3.3, -.9), -.25, 3.5);
- const contrail = () => Array.from({ length: 56 }, () => light('#dfe9f2', .2));
+ const contrail = () => Array.from({ length: 24 }, () => light('#dfe9f2', .2));
  flyer('jet', [1958, 2030], ellipse(6.4, 4.2, 4.3, .4, .15), .3, 0, '#ffffff', { trail: contrail() });
- flyer('jet', [1962, 2030], loop8(6, 3.2, 4.6, -.6, .15), -.24, 1.8, '#ffffff', { trail: contrail() });
- flyer('jet', [1975, 2030], ellipse(6.8, 3.6, 4.0, 2.1, .15), -.27, 4, '#ffffff', { trail: contrail() });
- const hover = (ax, az, fx, fz, y, ph) => (p, out) => out.set(ax * Math.sin(p * fx + ph), y + .18 * Math.sin(p * 2.3), az * Math.sin(p * fz));
- flyer('heli', [1951, 2030], hover(3.4, 2.6, 1, 1.5, 2.2, .4), .32, 0, '#ffffff', { rotor: take('rotor') });
- flyer('heli', [1985, 2030], hover(2.6, 3.2, 1.5, 1, 2.5, 2), -.28, 1, '#ffffff', { rotor: take('rotor') });
 
  // ---- hero chases: midway through each beat the camera glides down beside that era's signature vehicles.
  const grounds = fleets.filter(f => f.mode === 'ground').flatMap(f => f.units.map(u => ({ f, u })));
- const find = (type, route, dir) => grounds.find(({ u }) => u.parts[0].type === type && u.l.id === route && (dir === undefined || u.dir === dir));
- const alongAt = (l, x, z) => { let best = 0, bd = Infinity; for (let i = 0; i < l.n; i++) { const dd = (l.xs[i] - x) ** 2 + (z === undefined ? 0 : (l.zs[i] - z) ** 2); if (dd < bd) { bd = dd; best = i; } } return best * l.ds; };
- // Rephase a unit so its lead sits at (x[, z]) at time tm; lane- or line-mates shift with it and keep their spacing.
- const place = ({ f, u }, tm, x, z) => {
-  const d = alongAt(u.l, x, z), shift = (u.dir > 0 ? d : u.l.len - d) + u.parts[0].back + .4 - u.v * tm - u.d0;
-  for (const o of u.mates ? u.mates.map(m => m[1]) : f.units.filter(o => o.l === u.l && o.dir === u.dir)) o.d0 += shift;
-  return u;
- };
+ // Close views follow the same traffic state as the renderer. They never
+ // rephase vehicles or push a whole lane through another fleet.
  // An aircraft that flies with the chase: `from`/`to` are distances along the lead's heading over the chase.
  const escort = (type, color, from, to, side, up) => ({ type, idx: take(type, color), from, to, side, up, nav: [light('#ff3a2a', .14), light('#3aff6a', .14), light('#ffffff', .2)], trail: type === 'jet' ? contrail() : null, rotor: type === 'heli' ? take('rotor') : undefined });
- const hero = (t0, t1, [type, route, dir, x, z], cam, others = [], air = null) => {
-  const tm = (t0 + t1) / 2, lead = place(find(type, route, dir), tm, x, z);
+ const hero = (t0, t1, [type, route], cam, air = null) => {
+  const lead = grounds.find(({ u }) => u.parts[0].type === type && u.l.id === route).u;
   if (cam.color) want[type][lead.parts[0].idx] = cam.color; // a signature paint job so the hero reads at a glance
-  for (const [ty, ro, di, ox, oz] of others) place(find(ty, ro, di), tm, ox, oz);
-  return { t0, t1, lead, air, cam: { back: 3, side: 1.5, up: 1, ahead: 1.2, lift: .3, ...cam } };
+  return { t0, t1, lead, air, cam: { back: (cam.back ?? 2.7) * .55, side: (cam.side ?? 1.4) * .55, up: (cam.up ?? 1.2) * .55, ahead: (cam.ahead ?? 1.4) * .55, lift: .15 } };
  };
  const HEROES = [
-  hero(1, 4.8, ['wagon', 'trail', 1, 4.7], { side: 1.6 }, [['steam', 'R1', 1, 5.0]]),
-  hero(6.2, 10.2, ['steam', 'R2', -1, 1.5], { back: 2.2, side: 2, up: 1.1, ahead: 1.4 }),
-  hero(11.7, 15.2, ['modelT', 'ns3', undefined, 4.5, -3.2], {}, [], escort('biplane', '#e2b43a', -3, 3.5, .3, .85)),
-  hero(16.8, 21.2, ['sedan', 'H4', -1, -3.3], { side: 1.5, color: '#8a2a2a' }, [['diesel', 'R1', -1, -3.0]], escort('propliner', '#ffffff', 6, -3, .8, 1.15)),
-  hero(22.8, 27.2, ['semi', 'I2', 1, 3.4, -3.4], { back: 3.4, side: 1.6, color: '#c8322a' }, [], escort('jet', '#ffffff', 9, -4, -1.2, 1.5)),
-  hero(29.2, 32.9, ['ev', 'I1', -1, -3.9], { back: 2.4, side: .8, up: 1.2, ahead: 1.4, color: '#eef2f5' }, [['amtrak', 'R1b', 1, -3.6], ['freight', 'R1', 1, -2.6]], escort('heli', '#ffffff', 4.2, 2.6, -.9, 1.05)),
+  hero(1, 4.8, ['wagon', 'trail'], { side: 1.6 }),
+  hero(6.2, 10.2, ['steam', 'R2'], { back: 2.2, side: 2, up: 1.1, ahead: 1.4 }),
+  hero(11.7, 15.2, ['modelT', 'ns3'], {}, escort('biplane', '#e2b43a', -3, 3.5, .3, .85)),
+  hero(16.8, 21.2, ['sedan', 'H4'], { side: 1.5, color: '#8a2a2a' }, escort('propliner', '#ffffff', 6, -3, .8, 1.15)),
+  hero(22.8, 27.2, ['semi', 'I2'], { back: 3.4, side: 1.6, color: '#c8322a' }, escort('jet', '#ffffff', 9, -4, -1.2, 1.5)),
+  hero(29.2, 32.9, ['ev', 'I1'], { back: 2.4, side: .8, up: 1.2, ahead: 1.4, color: '#eef2f5' }, escort('heli', '#ffffff', 4.2, 2.6, -.9, 1.05)),
  ];
 
  // Era clock: one dot per five-year step along the foot of the north wall.
@@ -431,14 +481,30 @@ export function create() {
  // Build instanced meshes now that every request is known.
  const material = vehicleMaterial(), meshes = {}, ZERO = new THREE.Matrix4().makeScale(0, 0, 0);
  for (const [type, colors] of Object.entries(want)) {
-  const mesh = new THREE.InstancedMesh(mergeGeometries(MODELS[type]()), material, colors.length);
+  const geometry = mergeGeometries(MODELS[type]());
+  if (['steam', 'boxcar', 'diesel', 'freight', 'stack', 'stackTop', 'amtrak', 'coach'].includes(type)) geometry.scale(1.6, 1, 1);
+  const mesh = new THREE.InstancedMesh(geometry, material, colors.length);
+  mesh.name = `transport-${type}`;
+  mesh.geometry.computeBoundingBox();
   mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   mesh.frustumCulled = false; // instances move anywhere; bounds would go stale
   colors.forEach((c, i) => { mesh.setMatrixAt(i, ZERO); mesh.setColorAt(i, _c.set(c)); });
   meshes[type] = mesh; scene.add(mesh);
  }
- const glow = glowPoints(slots.length, { size: .2 });
- slots.forEach(([c, s], i) => { _c.set(c); glow.colors.set([_c.r, _c.g, _c.b], i * 3); glow.sizes[i] = s; glow.alphas[i] = 0; });
+ // Measure the actual geometry, including wheels, horses and trailers.
+ const vehicles = fleets.filter(f => f.mode === 'ground' && f.lights !== 'none').flatMap(f => f.units.map(u => {
+  const lead = u.parts[0].back;
+  for (const p of u.parts) p.half = Math.max(Math.abs(meshes[p.type].geometry.boundingBox.min.x), meshes[p.type].geometry.boundingBox.max.x) * p.g;
+  u.front = Math.max(...u.parts.map(p => meshes[p.type].geometry.boundingBox.max.x * p.g - (p.back - lead)));
+  u.rear = Math.max(...u.parts.map(p => -meshes[p.type].geometry.boundingBox.min.x * p.g + (p.back - lead)));
+  u.halfWidth = Math.max(...u.parts.map(p => Math.max(Math.abs(meshes[p.type].geometry.boundingBox.min.z), meshes[p.type].geometry.boundingBox.max.z) * p.g));
+  u.years = f.years;
+  return u;
+ }));
+ const traffic = createTraffic(vehicles, crossingZones(lines), eraYear);
+ let trafficState = traffic.sample(0);
+ const glow = glowPoints(slots.length, { size: .1 });
+ slots.forEach(([c, s], i) => { _c.set(c); glow.colors.set([_c.r, _c.g, _c.b], i * 3); glow.sizes[i] = s * .4; glow.alphas[i] = 0; });
  scene.add(glow);
 
  // Town buildings are static: place them once, scale them by year in update.
@@ -451,7 +517,7 @@ export function create() {
  function pose(l, d, dir, off, half) {
   l.at(d + half * dir, off, F); l.at(d - half * dir, off, Q); l.at(d, off, P);
   F.sub(Q); if (F.lengthSq() < 1e-8) F.set(dir, 0, 0); F.normalize();
-  P.y = Math.max(P.y, hs(P.x, P.z) + .03);
+  P.y = Math.max(P.y, hs(P.x, P.z) + .03) + (l.kind === 5 ? .012 : 0);
   S.crossVectors(F, Y).normalize(); Up.crossVectors(S, F);
  }
  const colorFor = (year, out) => out.set('#ffb35a').lerp(_tmpC.set('#ffd89a'), smooth(1905, 1935, year)).lerp(_tmpC.set('#e8f0ff'), smooth(2000, 2020, year) * .5);
@@ -461,6 +527,8 @@ export function create() {
   const year = eraYear(t), live = 1 - smooth(33.9, 34.3, t) + smooth(35.45, 35.95, t), pulse = window01(t, 32.8, 34.6, .5);
   nu.uYear.value = year; nu.uTime.value = t; nu.uPulse.value = pulse;
   glow.alphas.fill(0);
+  trafficState = traffic.sample(t);
+  for (const bridge of bridges) bridge.group.visible = year >= bridge.year;
 
   // Towns: a flash when the first line arrives, then houses and lights fill in.
   colorFor(year, townCol);
@@ -468,13 +536,13 @@ export function create() {
    const reached = smooth(town.access, town.access + .6, year);
    P.set(town.x, town.y + .12, town.z);
    setLight(town.flash, P, live * smooth(town.access, town.access + .3, year) * (1 - smooth(town.access + .3, town.access + 4, year)) * .9 + pulse * (.35 + .25 * Math.sin(t * 5 + ti)) * reached);
-   setLight(town.glow, P, reached * (.32 + .08 * town.size) * (.8 + .2 * smooth(1930, 2000, year)));
+   setLight(town.glow, P, reached * (.12 + .04 * town.size) * (.8 + .2 * smooth(1930, 2000, year)));
    for (const h of town.houses) {
     const k = smooth(h.at, h.at + 1.4, year);
     M.makeRotationY(h.rot); M.scale(scl.set(h.s * Math.max(k, 1e-4), h.s * Math.max(k, 1e-4), h.s * Math.max(k, 1e-4))); M.setPosition(h.x, h.y, h.z);
     meshes.house.setMatrixAt(h.idx, k > .001 ? M : ZERO);
     P.set(h.x, h.y + .07, h.z);
-    setLight(h.slot, P, k * (.7 + .3 * smooth(1915, 1950, year)));
+    setLight(h.slot, P, k * (.25 + .15 * smooth(1915, 1950, year)));
     glow.colors.set([townCol.r, townCol.g, townCol.b], h.slot * 3);
    }
    if (town.elevator) {
@@ -515,9 +583,10 @@ export function create() {
   let hw = 0, hh = null;
   for (const h of HEROES) {
    const w = smooth(h.t0, h.t0 + 1.2, t) * (1 - smooth(h.t1 - 1.2, h.t1, t));
-   if (w > .002) { hw = w; hh = h; } else if (h.air) { meshes[h.air.type].setMatrixAt(h.air.idx, ZERO); if (h.air.rotor !== undefined) meshes.rotor.setMatrixAt(h.air.rotor, ZERO); }
+   const st = trafficState.get(h.lead);
+   if (w > .002 && st?.admitted && st.s > 0 && st.s < h.lead.l.len) { hw = w; hh = h; } else if (h.air) { meshes[h.air.type].setMatrixAt(h.air.idx, ZERO); if (h.air.rotor !== undefined) meshes.rotor.setMatrixAt(h.air.rotor, ZERO); }
   }
-  if (hh) { heroFrame(hh, t); if (hh.air) escortAt(hh.air, hh, t, hw); }
+  if (hh) { heroFrame(hh); if (hh.air) escortAt(hh.air, hh, t, hw); }
   glow.commit();
 
   // Overview: the camera sways (seamless) around the block...
@@ -533,15 +602,15 @@ export function create() {
   }
  }
 
- const HP = new THREE.Vector3(), HF = new THREE.Vector3(), HS = new THREE.Vector3(), HT = new THREE.Vector3(), ov = new THREE.Vector3(), camP = new THREE.Vector3(), look = new THREE.Vector3(), TARGET = new THREE.Vector3(0, -.55, 0);
- function leadAt(u, t) {
-  const front = ((u.d0 + u.v * t) % u.cycle + u.cycle) % u.cycle - .4, p = u.parts[0], s = front - p.back;
+ const HP = new THREE.Vector3(), HF = new THREE.Vector3(), HS = new THREE.Vector3(), ov = new THREE.Vector3(), camP = new THREE.Vector3(), look = new THREE.Vector3(), TARGET = new THREE.Vector3(0, -.55, 0);
+ function leadAt(u) {
+  const p = u.parts[0], s = trafficState.get(u)?.s ?? 0;
   pose(u.l, u.dir > 0 ? s : u.l.len - s, u.dir, u.lane * u.dir + p.lat, p.half);
  }
- /** Lead position and a heading averaged over ±0.35 s, so the chase camera does not twitch on curves. */
- function heroFrame(h, t) {
-  leadAt(h.lead, t - .35); HT.copy(F); leadAt(h.lead, t + .35); HT.add(F); leadAt(h.lead, t);
-  HP.copy(P); HF.copy(HT).add(F).setY(0).normalize(); HS.set(-HF.z, 0, HF.x);
+ /** Follow the current traffic pose, including stops and gradual restarts. */
+ function heroFrame(h) {
+  leadAt(h.lead);
+  HP.copy(P); HF.copy(F).setY(0).normalize(); HS.set(-HF.z, 0, HF.x);
  }
  function escortAt(a, h, t, w) {
   const along = lerp(a.from, a.to, clamp((t - h.t0) / (h.t1 - h.t0))), sign = a.to > a.from ? 1 : -1;
@@ -562,7 +631,8 @@ export function create() {
  }
 
  function groundUnit(u, t, year, vis, kind) {
-  const { l } = u, front = ((u.d0 + u.v * t) % u.cycle + u.cycle) % u.cycle - .4;
+  const { l } = u, state = trafficState.get(u), front = state ? state.s + u.parts[0].back : ((u.d0 + u.v * t) % u.cycle + u.cycle) % u.cycle - .4;
+  if (state && !state.admitted) vis = 0;
   let shown = 0;
   for (const p of u.parts) {
    const s = front - p.back, d = u.dir > 0 ? s : l.len - s;
@@ -576,16 +646,16 @@ export function create() {
     shown = k;
     if (kind === 'train') setLight(u.head[0], local(p.half * .95, .17 * p.g, 0), k * .95);
     else if (kind === 'lantern') setLight(u.head[0], local(p.half * .9, .13 * p.g, .02), k * (.5 + .1 * Math.sin(t * 9 + u.d0)));
-    else if (kind !== 'none') { setLight(u.head[0], local(p.half + .03, .08 * p.g, 0), k * .85); setLight(u.head[1], local(-p.half, .08 * p.g, 0), k * .6); }
+    else if (kind !== 'none') { setLight(u.head[0], local(p.half, .08 * p.g, 0), k * .85); setLight(u.head[1], local(-p.half, .08 * p.g, 0), k * .6); }
    }
   }
   // Steam: puffs leave the stack and drift up and downwind, from where the engine was.
   if (u.smoke && shown > 0) for (const [j, slot] of u.smoke.entries()) {
-   const age = ((t * 1.1 + j / u.smoke.length) % 1), then = t - age * 1.2, fr = ((u.d0 + u.v * then) % u.cycle + u.cycle) % u.cycle - .4 - u.parts[0].back;
+   const age = ((t * 1.1 + j / u.smoke.length) % 1), fr = (state?.s ?? front - u.parts[0].back) - age * 1.2 * (state?.speed ?? u.v);
    if (fr < 0 || fr > l.len) continue;
    pose(l, u.dir > 0 ? fr : l.len - fr, u.dir, u.lane * u.dir, .1);
    local(.2 * TS, .24 * TS + age * .5, 0); Q.x += age * .35; Q.z += age * .18;
-   setLight(slot, Q, shown * Math.pow(1 - age, 1.2) * .55, .2 + age * .7);
+   setLight(slot, Q, shown * Math.pow(1 - age, 1.2) * .22, .06 + age * .25);
   }
  }
 
@@ -630,5 +700,5 @@ export function create() {
  }
 
  update(0);
- return { scene, camera, update, dispose() { for (const m of Object.values(meshes)) m.dispose(); } };
+ return { scene, camera, update, trafficSnapshot() { return vehicles.map(u => ({ route: u.l.id, physical: roadKey(u.l.id), dir: u.dir, front: u.front, rear: u.rear, halfWidth: u.halfWidth, lane: u.lane, width: u.l.w, length: u.l.len, cycle: u.cycle, ...trafficState.get(u) })); }, dispose() { for (const m of Object.values(meshes)) m.dispose(); } };
 }
