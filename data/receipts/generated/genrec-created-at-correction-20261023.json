@@ -1,0 +1,91 @@
+{
+  "receipt_id": "genrec-created-at-correction-20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/docs/submission-upload-quota.md",
+    "data/receipts/generated/site-v268-main-overlay-reconciliation-20261021.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/docs/submission-upload-quota.md": "sha256:a9ffc3bcaf6279bb9b10452d334b81c5d5e42119e28c15f755842b0a85d590fd",
+    "data/receipts/generated/site-v268-main-overlay-reconciliation-20261021.json": "sha256:22ad18bc3d002965c672a22a0bb45be18ca881b8d11e565ae6c5300bfa942ca4"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Opus 5.5",
+    "version": "claude-opus-5-5"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@fb08f8442b26158d6b30ff3d4d6dd409f7560bd9",
+      "Supersedes the created_at value of genrec-site-upload-quota-doc-rename-20261021 (PR #5378); original receipt remains immutable at data/receipts/generated/genrec-site-upload-quota-doc-rename-20261021.json",
+      "Supersedes the created_at value of genrec-site-mirror-main-overlay-reconciliation-20261021 (PR #5398); original receipt remains immutable at data/receipts/generated/genrec-site-mirror-main-overlay-reconciliation-20261021.json",
+      "Commit 94ccd8180f20f191a4955ac35ec845f4dcaf2dcc committed 2026-10-21T15:27:02Z contains the first original receipt",
+      "Commit 85dfc4027de931446c4b5844b068dee724c59b0d committed 2026-10-22T02:24:09Z contains the second original receipt",
+      "site-v268-main-overlay-reconciliation-20261021.json records recorded_at 2026-10-22T02:22:53.241375+00:00",
+      "Codex review finding on PR #5398 (provenance timestamp chronology)",
+      "Second original receipt also bound tools/qa/site_mirror.py sha256:2d9db2d8b689b9931421e64a0d44e10a30c8ced28ee76c1fbb04cfe521fa61e9 and tests/qa/test_site_mirror.py sha256:3b238f6a16863c47b305da0bcf7116bc90d1c9c17b0617e7e37c65721917480b at 85dfc4027d; later commits 37fd56f982, 9060dcdbdd, adf87d5889, 3694174c8d, f5ab12fa67 and b268dbcd3e changed both files under their own receipts, so they are not rebound here"
+    ],
+    "evidence_hashes": [
+      "sha256:2bacbbc6c055547b21eb0b75b8770d0cccc7382dfed1b2d960d517385cc2b487",
+      "sha256:077659f7697d3b1906c1a20f01cf739412a306fb5df915f9211d979d438a6683"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/docs/submission-upload-quota.md": "CONFIRMED",
+    "data/receipts/generated/site-v268-main-overlay-reconciliation-20261021.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "canonical generated-receipt validator",
+      "outcome": "PASS",
+      "reason": "This correction validates with full SHA-256 bindings for the two original artifacts whose bytes are unchanged on main. Both original receipts stay byte-for-byte unchanged."
+    },
+    {
+      "gate": "timestamp chronology",
+      "outcome": "PASS",
+      "reason": "The corrected bounds below are derived from commit times and the bound successor's recorded_at, not typed by hand. This receipt's created_at was read from the system clock."
+    },
+    {
+      "gate": "make repository-topology",
+      "outcome": "PASS",
+      "reason": "0 invariant, 0 new drift, 0 stale baseline entries with this receipt added."
+    },
+    {
+      "gate": "exact-head GitHub CI and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the pull request; no approval or merge is claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "receipt-schema",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "generated-receipts-lane",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/README.md"
+    },
+    {
+      "id": "directory-governance",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T18:14:09Z",
+  "emitter": "Claude Code",
+  "notes": "Explicit successor correction for two hand-typed created_at values. genrec-site-upload-quota-doc-rename-20261021 records 2026-10-21T15:40:00Z, which is after commit 94ccd8180f (2026-10-21T15:27:02Z) that contains it; its actual finalization was at or before 2026-10-21T15:27:02Z, and the exact time was not captured. genrec-site-mirror-main-overlay-reconciliation-20261021 records 2026-10-21T16:30:00Z, which is before the successor mirror receipt it hashes was written; its actual finalization was after 2026-10-22T02:22:53.241375Z and at or before commit 85dfc4027d (2026-10-22T02:24:09Z). All other fields of both originals are unaffected. Both originals remain byte-for-byte unchanged as historical evidence and their SHA-256 values are recorded as evidence inputs, not authored artifacts. No application, mirror selector, baseline or deployment change. Human review remains pending; the receipt does not bind itself."
+}
