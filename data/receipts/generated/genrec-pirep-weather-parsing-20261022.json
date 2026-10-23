@@ -1,0 +1,155 @@
+{
+  "artifact_hashes": {
+    "apps/site/source/app/aviation-control.tsx": "sha256:19401e239ff70a2b733e8092941d24e37db3b6871166b1a1c8eb83b605c549af",
+    "apps/site/source/app/aviation-weather.ts": "sha256:4b2988222acd2a27d43e7a7f0bbf5cc1f576af21875e1334ea2a9a97ba2656c4",
+    "apps/site/source/docs/aviation-layers.md": "sha256:eac90bf4b7533feabea721643db77eeec0af85472ac781b64047aaf22669a01a",
+    "apps/site/source/tests/aviation.test.mjs": "sha256:7d81eec840de9fbf29ef9c69dec578b5749bd173a61674229c788de65abc0423",
+    "data/receipts/generated/site-v268-pirep-weather-parsing-overlay-20261022.json": "sha256:8a1ae49ed41d78b9dc25ac97348b217ac4d0e9a91ccf8af7c179bb78bb930dcd",
+    "docs/runbooks/aviation-airspace-layers-20261022.md": "sha256:3cbc1d49e5f8dc97f628437f9dc2f4853c1a0c0612a14982564429c4bd11b502",
+    "tests/qa/test_site_mirror.py": "sha256:45592a7b53a5c229ef1ee24e9811fabd898821ea549461f286bae6660628b832",
+    "tools/qa/site_mirror.py": "sha256:d9c3e088dee81d86b8335bd51f948866336f078ee6e9d399ffb25fc14812dfa3"
+  },
+  "artifact_paths": [
+    "apps/site/source/app/aviation-control.tsx",
+    "apps/site/source/app/aviation-weather.ts",
+    "apps/site/source/docs/aviation-layers.md",
+    "apps/site/source/tests/aviation.test.mjs",
+    "data/receipts/generated/site-v268-pirep-weather-parsing-overlay-20261022.json",
+    "docs/runbooks/aviation-airspace-layers-20261022.md",
+    "tests/qa/test_site_mirror.py",
+    "tools/qa/site_mirror.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "https://aviationweather.gov/data/schema/openapi.yaml",
+      "id": "awc-spec",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/",
+      "id": "faa-nasr-index",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/2026-10-29/",
+      "id": "faa-preview-page",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5412",
+      "id": "original-pr-and-reviews",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-10-23T00:19:20.702339Z",
+  "emitter": "Codex primary implementation agent",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_hashes": [
+      "sha256:4eb4023ea68788001cc601cc70585dc0b04ea3f9c4fb6ac3c3c64e4cb355bf47",
+      "sha256:d4a9464379636a046b4426a8db79e7cf92b14024d6848f5b6f9f8f2739608092"
+    ],
+    "evidence_refs": [
+      "https://aviationweather.gov/data/schema/openapi.yaml",
+      "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/",
+      "https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/2026-10-29/",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5412",
+      "main@472747fe92a343472829234f40e85b47d9c8e694",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "links": {
+    "adr_link": null,
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex",
+    "provider": "OpenAI",
+    "version": "GPT-6 family; exact backend version not exposed"
+  },
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "web retrieval",
+      "local shell",
+      "independent AI reviewer"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "receipt_id": "genrec:pirep-weather-parsing:20261022",
+  "truth_labels": {
+    "apps/site/source/app/aviation-control.tsx": "CONFIRMED",
+    "apps/site/source/app/aviation-weather.ts": "CONFIRMED",
+    "apps/site/source/docs/aviation-layers.md": "CONFIRMED",
+    "apps/site/source/tests/aviation.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v268-pirep-weather-parsing-overlay-20261022.json": "CONFIRMED",
+    "docs/runbooks/aviation-airspace-layers-20261022.md": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Synthetic base reproduction",
+      "outcome": "PASS",
+      "reason": "Six new PIREP test groups failed against the original parser; final focused aviation/layer suite passes 26 tests."
+    },
+    {
+      "gate": "Final clean Site build and full Node suite",
+      "outcome": "PASS",
+      "reason": "1422 tests: 1420 passed, 0 failed, 2 root/Ollama installer skips; clean build avoids duplicate stale generated chunks from a repeated build."
+    },
+    {
+      "gate": "TypeScript and lint",
+      "outcome": "PASS",
+      "reason": "tsc noEmit PASS; full lint 0 errors/77 inherited warnings; changed-file lint 0 errors/warnings."
+    },
+    {
+      "gate": "FAA connector and mirror regressions",
+      "outcome": "PASS",
+      "reason": "85 FAA tests; 50 mirror tests; content parity for 892 paths, all 258 withheld paths absent."
+    },
+    {
+      "gate": "Changed documentation",
+      "outcome": "PASS",
+      "reason": "Link classification and present-metadata profile pass for both modified guides; external sources independently inspected."
+    },
+    {
+      "gate": "Independent AI review",
+      "outcome": "PASS",
+      "reason": "Separate reviewer found one P2 on unknown-altitude surface boxes. Fixed by omitting null-height extrusions and retaining API/inspector records with truthful phase text; re-review found no remaining code/test defects and independently ran focused tests/typecheck/diff check. Not human approval."
+    },
+    {
+      "gate": "Rendered browser and hosted acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Not performed; synthetic map geometry is not rendered WebGL/hosted acceptance."
+    },
+    {
+      "gate": "Publication, deployment and source admission",
+      "outcome": "SKIPPED",
+      "reason": "Not requested or performed; FAA restrictions, context-only role, preview snapshot and review holds retained."
+    },
+    {
+      "gate": "Exact-head GitHub checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending after draft PR creation; no hosted result inferred from local checks."
+    },
+    {
+      "gate": "Local built Worker smoke",
+      "outcome": "PASS",
+      "reason": "PASS: SITE_PORT=43319 bash ../smoke-local.sh on final built Worker: 110 checks across 79 routes; 11 provider-only routes listed and not called. Disposable local storage; no hosted/publication state changes."
+    }
+  ]
+}

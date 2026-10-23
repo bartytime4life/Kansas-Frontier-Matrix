@@ -15,6 +15,8 @@ export const MAX_METARS = 400;
 export const MAX_PIREPS = 300;
 
 export type FlightCategory = "VFR" | "MVFR" | "IFR" | "LIFR";
+const PIREP_FLIGHT_LEVEL_TYPES = ["GRND", "DURC", "DURD", "CRUISE", "OTHER", "UNKN"] as const;
+export type PirepFlightLevelType = (typeof PIREP_FLIGHT_LEVEL_TYPES)[number];
 export type CloudLayer = Readonly<{ cover: string; baseFtAgl: number | null }>;
 export type MetarObservation = Readonly<{
   station: string; name: string | null; lon: number; lat: number; elevationFt: number | null; observedAt: string; raw: string;
@@ -24,7 +26,7 @@ export type MetarObservation = Readonly<{
   providerCategory: string | null; densityAltitudeFt: number | null;
 }>;
 export type PirepReport = Readonly<{
-  id: string; observedAt: string; aircraftType: string | null; lon: number; lat: number; altitudeFtMsl: number | null; urgent: boolean;
+  id: string; observedAt: string; aircraftType: string | null; lon: number; lat: number; altitudeFtMsl: number | null; flightLevelType: PirepFlightLevelType | null; urgent: boolean;
   turbulence: string | null; icing: string | null; skyCondition: string | null; raw: string;
 }>;
 export type AviationWeatherEnvelope<T> = Readonly<{ retrievedAt: string; sourceTitle: string; sourceUrl: string; evidenceRole: "EXTERNAL_CONTEXT_ONLY"; records: readonly T[]; dropped: number; limitation: string }>;
@@ -117,7 +119,14 @@ const intensity = (item: Record<string, unknown>, prefix: "tb" | "icg"): string 
   return `${level}${type ? ` ${type}` : ""}${span}`;
 };
 
-/** PIREP flight level is in hundreds of feet MSL; "DURC"/"DURD" (climb/descent) has no single altitude. */
+/** AWC PIREPJSON.fltLvl is a digit string in hundreds of feet; live JSON also uses numbers. */
+const pirepFlightLevel = (value: unknown): number | null => {
+  const parsed = typeof value === "string" && /^\d{1,3}$/.test(value.trim()) ? Number(value.trim()) : value;
+  const level = num(parsed, 0, 600);
+  return level !== null && Number.isInteger(level) ? level : null;
+};
+
+/** See https://aviationweather.gov/data/schema/openapi.yaml (PIREPJSON and CloudInfo). */
 export function parsePireps(value: unknown, now: number, maxAgeHours = 3): Readonly<{ records: readonly PirepReport[]; dropped: number }> {
   if (!Array.isArray(value)) throw new Error("The PIREP response was not a list.");
   const records: PirepReport[] = [];
@@ -128,10 +137,17 @@ export function parsePireps(value: unknown, now: number, maxAgeHours = 3): Reado
     if (!isObject(item) || lon === null || lat === null || !observedAt || !raw || !inRegion(lon, lat)) { dropped++; continue; }
     const ageHours = (now - Date.parse(observedAt)) / 3600000;
     if (ageHours > maxAgeHours || ageHours < -0.25) { dropped++; continue; }
-    const level = num(item.fltLvl, 0, 600);
-    const cloud = Array.isArray(item.clouds) ? item.clouds.filter(isObject).map(layer => [str(layer.cover, 8), num(layer.base, 0, 600) !== null ? `${(layer.base as number) * 100}` : null].filter(Boolean).join(" ")).filter(Boolean).join(", ") : "";
+    const phase = str(item.fltLvlType, 8);
+    const flightLevelType = PIREP_FLIGHT_LEVEL_TYPES.find(type => type === phase) ?? null;
+    // A climb/descent observation spans changing altitudes, not a single fixed flight level.
+    const level = flightLevelType === "DURC" || flightLevelType === "DURD" ? null : pirepFlightLevel(item.fltLvl);
+    const cloud = Array.isArray(item.clouds) ? item.clouds.filter(isObject).map(layer => {
+      // CloudInfo.base is already integer feet, unlike fltLvl; do not scale it by 100.
+      const base = num(layer.base, 0, 60000);
+      return [str(layer.cover, 8), base !== null && Number.isInteger(base) ? `${base} ft` : null].filter(Boolean).join(" ");
+    }).filter(Boolean).join(", ") : "";
     records.push(Object.freeze({ id: `${observedAt}:${lon.toFixed(3)}:${lat.toFixed(3)}:${records.length}`, observedAt, aircraftType: str(item.acType, 16), lon, lat,
-      altitudeFtMsl: level === null ? null : level * 100, urgent: /urgent|UUA/i.test(String(item.pirepType ?? "")) || /^\s*\S+\s+UUA\b/.test(raw),
+      altitudeFtMsl: level === null ? null : level * 100, flightLevelType, urgent: /urgent|UUA/i.test(String(item.pirepType ?? "")) || /^\s*\S+\s+UUA\b/.test(raw),
       turbulence: intensity(item, "tb"), icing: intensity(item, "icg"), skyCondition: cloud || null, raw }));
     if (records.length >= MAX_PIREPS) break;
   }
@@ -177,17 +193,25 @@ export function metarFeatures(records: readonly MetarObservation[], exaggeration
   return Object.freeze({ stations: { type: "FeatureCollection", features: stations }, ceilings: { type: "FeatureCollection", features: ceilings } });
 }
 
+export function pirepAltitudeLabel(record: Pick<PirepReport, "altitudeFtMsl" | "flightLevelType">): string {
+  return record.flightLevelType === "DURC" ? "climb (altitude varies)" : record.flightLevelType === "DURD" ? "descent (altitude varies)"
+    : record.altitudeFtMsl === null ? "altitude unavailable" : `${record.altitudeFtMsl.toLocaleString("en-US")} ft MSL`;
+}
+
 /**
- * Pilot reports are placed at their reported altitude above an approximate
- * ground elevation (nearest airport); climb/descent reports sit at the surface.
+ * Pilot reports with a fixed altitude are placed above an approximate ground
+ * elevation (nearest airport). Unknown/variable heights stay in the inspector,
+ * not at an invented zero in the altitude layer.
  */
 export function pirepFeatures(records: readonly PirepReport[], groundFtAt: (lon: number, lat: number) => number, exaggeration: number): GeoJSON.FeatureCollection {
-  const features: GeoJSON.Feature[] = records.map(record => {
-    const aboveGround = record.altitudeFtMsl === null ? 0 : Math.max(0, record.altitudeFtMsl - groundFtAt(record.lon, record.lat));
+  const features: GeoJSON.Feature[] = records.filter(record => record.altitudeFtMsl !== null).map(record => {
+    const aboveGround = Math.max(0, (record.altitudeFtMsl as number) - groundFtAt(record.lon, record.lat));
     const half = 0.012, kmLift = aboveGround * 0.3048 * exaggeration;
     return { type: "Feature", id: record.id, geometry: { type: "Polygon", coordinates: [[[record.lon - half, record.lat - half], [record.lon + half, record.lat - half], [record.lon + half, record.lat + half], [record.lon - half, record.lat + half], [record.lon - half, record.lat - half]]] },
-      properties: { id: record.id, base: kmLift, top: kmLift + 120 * exaggeration, urgent: record.urgent, color: record.urgent ? "#d33a2c" : record.turbulence || record.icing ? "#e08a1c" : "#4a6fa5",
-        label: `${record.urgent ? "UUA " : ""}${record.aircraftType ?? "Aircraft"} ${record.altitudeFtMsl === null ? "climb/descent" : `${record.altitudeFtMsl.toLocaleString("en-US")} MSL`}${record.turbulence ? ` · TB ${record.turbulence}` : ""}${record.icing ? ` · IC ${record.icing}` : ""}` } };
+      properties: { id: record.id, base: kmLift, top: kmLift + 120 * exaggeration, urgent: record.urgent,
+        altitude_ft_msl: record.altitudeFtMsl, flight_level_type: record.flightLevelType,
+        color: record.urgent ? "#d33a2c" : record.turbulence || record.icing ? "#e08a1c" : "#4a6fa5",
+        label: `${record.urgent ? "UUA " : ""}${record.aircraftType ?? "Aircraft"} ${pirepAltitudeLabel(record)}${record.turbulence ? ` · TB ${record.turbulence}` : ""}${record.icing ? ` · IC ${record.icing}` : ""}` } };
   });
   return { type: "FeatureCollection", features };
 }

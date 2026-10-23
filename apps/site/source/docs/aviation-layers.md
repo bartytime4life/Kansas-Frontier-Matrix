@@ -47,7 +47,9 @@ facilities are drawn or used as nearest-airport references.
 - **METAR stations** coloured by FAA flight category (VFR, MVFR, IFR, LIFR);
   **cloud ceilings** as discs at the reported height above each station.
 - **PIREPs** as markers at the reported altitude; urgent reports in red,
-  turbulence or icing in orange.
+  turbulence or icing in orange. Reports with a climb/descent phase or an
+  unavailable altitude remain in the point inspector, labelled accordingly;
+  they are omitted from the altitude layer rather than drawn at ground level.
 
 ## The airspace column
 
@@ -71,6 +73,22 @@ elevation for Class B/C/D/E2–E4, otherwise the nearest public-use airport
 (distance recorded per volume). Kansas terrain varies, so drawn MSL limits can
 be off by the difference between that airport and the local ground; the labels
 and the column table always show the official values.
+
+PIREP flight levels accept the AWC API's documented digit strings (for example,
+`"230"` = 23,000 ft MSL) and numeric values observed in live JSON. `fltLvlType`
+keeps climb (`DURC`) distinct from descent (`DURD`); neither defines one fixed
+altitude. Missing or malformed levels remain unavailable. Fixed PIREP drawing
+heights subtract the nearest public-use airport's elevation, clamp below-ground
+results to the surface, then convert feet to metres and apply the selected
+exaggeration. This is an approximate display reference, not a measured terrain
+or aircraft position. A genuine reported zero is retained.
+
+The shared AWC `CloudInfo.base` field is already integer feet: 500 stays 500 ft,
+and 5,000 stays 5,000 ft. Values outside 0–60,000 ft or with a malformed type
+remain unavailable; known cloud cover can remain without an invented base.
+Cloud bases never substitute for an aircraft's missing altitude. See the
+[AWC OpenAPI specification](https://aviationweather.gov/data/schema/openapi.yaml)
+(`PIREPJSON` and `CloudInfo`).
 
 ## Limits
 

@@ -1,7 +1,7 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook/aviation-airspace-layers-20261022
 title: Airspace, airport, drone and aviation weather layers
-version: v0.1
+version: v0.2
 type: runbook
 status: draft
 owners: ["@bartytime4life"]
@@ -9,7 +9,7 @@ created: 2026-10-22
 updated: 2026-10-22
 owning_root: docs/
 responsibility: Plan, sources, rebuild steps, verification and rollback for the Site aviation layers.
-truth_posture: CONFIRMED local implementation and tests; upstream AWC response shape NOT VERIFIED from this environment; no deployment or release.
+truth_posture: CONFIRMED local implementation, AWC specification and bounded PIREP response readback; rendered and hosted acceptance NOT VERIFIED; no deployment or release.
 policy_label: public
 [/KFM_META_BLOCK_V2] -->
 
@@ -42,8 +42,8 @@ METAR cloud ceilings are drawn in the same height frame as the airspace shells.
 
 ## Sources
 
-NASR products were not directly downloadable from this environment (FAA and
-AWC hosts are denied by its network policy). The airspace, airport and airway
+At the original layer build, NASR products were not directly downloadable from
+its environment (FAA and AWC hosts were denied by its network policy). The airspace, airport and airway
 inputs come from npm packages that pre-process the FAA NASR subscription:
 `@squawk/airspace-data@0.9.1`, `@squawk/airport-data@0.9.2`,
 `@squawk/airway-data@0.7.3` (MIT; FAA NASR is a U.S. Government work). Each
@@ -62,10 +62,9 @@ SFC to 1,000 ft AGL). Whether that is a charting change or a package
 correction was not independently verified.
 
 METAR/PIREP: `https://aviationweather.gov/api/data/{metar,pirep}` with a fixed
-Kansas-region bbox. Field handling follows the AWC Data API documentation; the
-response could not be fetched from this environment, so parsers accept the
-documented forms (Unix `obsTime`, hPa altimeter, `"10+"` visibility) and count
-anything else as dropped rather than guessing.
+Kansas-region bbox. The original build could not fetch upstream responses.
+The PIREP correction follow-up below independently checks the specification and
+one live response. METAR live acceptance remains unverified by that follow-up.
 
 ## Rebuild the product for a new cycle
 
@@ -91,8 +90,53 @@ adapter (`connectors/faa/`) remains the preferred future source.
   successor mirror receipt `site-v268-aviation-layers-overlay-20261022.json`.
 - `python tools/qa/site_mirror.py --check` against that successor receipt.
 
-Not run: browser visual/touch QA of the 3D layers, live AWC requests, hosted
-deployment.
+Not run in the original build: browser visual/touch QA of the 3D layers, live
+AWC requests, hosted deployment. See the bounded follow-up below for PIREP
+readback; browser and hosted acceptance remain separate.
+
+## PIREP parsing correction — October 22, 2026
+
+Inspected `main@472747fe92a343472829234f40e85b47d9c8e694` and both review
+findings on [PR #5412](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5412).
+Resolved discussion state did not establish a code correction. The follow-up
+accepts numeric-string flight levels, classifies `fltLvlType`, and preserves
+cloud bases in feet. A 23,000 ft MSL report draws at
+`max(0, 23000 - nearestAirportElevationFt) * 0.3048 * exaggeration` metres.
+Climb/descent and missing altitudes retain their records in the API and point
+inspector, with explicit phase/unavailable text, but create no altitude extrusion.
+
+Independent upstream checks:
+
+- [AWC OpenAPI](https://aviationweather.gov/data/schema/openapi.yaml), retrieved
+  October 22 at 19:09 CDT (October 23 at 00:09 UTC): SHA-256
+  `4eb4023ea68788001cc601cc70585dc0b04ea3f9c4fb6ac3c3c64e4cb355bf47`.
+  `PIREPJSON.items.properties.fltLvl` is a string in hundreds of feet;
+  `fltLvlType` enumerates `GRND`, `DURC`, `DURD`, `CRUISE`, `OTHER`, `UNKN`.
+  `CloudInfo.items.properties.base` is integer feet. Parsing keeps the existing
+  flight-level range 0–600 and validates cloud bases as integer feet 0–60,000.
+- One fixed Kansas request to
+  `https://aviationweather.gov/api/data/pirep?bbox=36.7,-102.3,40.3,-94.3&format=json&age=3`
+  at 19:10 CDT (00:10 UTC) returned HTTP 200, JSON, 1,320 bytes and two records. Both flight levels were
+  numbers (230 and 360), with phase `OTHER`. Therefore numeric compatibility is
+  retained alongside documented strings. Response SHA-256:
+  `d4a9464379636a046b4426a8db79e7cf92b14024d6848f5b6f9f8f2739608092`.
+  This transient response is not a committed fixture, source admission, or
+  evidence of continuing availability.
+- The [FAA NASR index](https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/)
+  lists October 1 as current and October 29 as preview. The
+  [October 29 subscription page](https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/2026-10-29/)
+  is published with download links. This confirms preview publication status;
+  it does not requalify package geometry against official FAA bytes. The pinned
+  product and its preview/expiry behavior are unchanged.
+
+Synthetic regression coverage includes cruise strings/numbers and zero;
+climb/descent with and without numeric levels; unknown/malformed levels; low,
+high, zero and invalid cloud bases; missing, stale and out-of-region reports;
+and map heights at 1×/3×/6×. No live report is used as a fixture. The successor
+mirror receipt is `site-v268-pirep-weather-parsing-overlay-20261022.json`;
+generated-work provenance is `genrec-pirep-weather-parsing-20261022.json`.
+Independent AI review is distinct from pending human acceptance. No FAA rights,
+held APT lane, evidence-role, source-admission or publication decision changes.
 
 ## Decision for the owner
 
@@ -108,3 +152,6 @@ do not depend on it.
 Revert the change. The Site has no persisted state for this layer; the routes
 store nothing. Select the predecessor mirror receipt
 `site-v268-next-security-overlay-20261022.json` in `tools/qa/site_mirror.py`.
+For only the parsing correction, revert its application/docs/tests and receipt
+selector together to `site-v268-aviation-layers-overlay-20261022.json`; retain
+historical receipts unchanged.

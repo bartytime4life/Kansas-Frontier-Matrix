@@ -153,6 +153,92 @@ test("PIREPs keep reported altitude, intensities and urgency; climb/descent has 
   assert.ok(Math.abs(features.features.find(f => !f.properties.urgent).properties.base - (11000 - 1500) * 0.3048) < 1e-6);
 });
 
+// Synthetic provider records: no live observations or aircraft identifiers are fixtures.
+const pirep = (changes = {}) => ({ obsTime: NOW / 1000 - 1800, lat: 38.5, lon: -98,
+  rawOb: "SYNTHETIC PIREP FOR PARSER TEST", acType: "TEST", fltLvl: "230", fltLvlType: "CRUISE", ...changes });
+
+test("PIREP string and numeric flight levels reach the map at reported feet MSL", () => {
+  for (const [fltLvl, feet] of [["230", 23000], [230, 23000], ["095", 9500], [" 230 ", 23000], ["600", 60000], ["000", 0], [0, 0]]) {
+    const { records, dropped } = weather.parsePireps([pirep({ fltLvl })], NOW);
+    assert.equal(dropped, 0);
+    assert.equal(records[0].altitudeFtMsl, feet, String(fltLvl));
+    assert.equal(records[0].flightLevelType, "CRUISE");
+    for (const exaggeration of [1, 3, 6]) {
+      const feature = weather.pirepFeatures(records, () => 1500, exaggeration).features[0];
+      assert.ok(Math.abs(feature.properties.base - Math.max(0, feet - 1500) * 0.3048 * exaggeration) < 1e-8);
+      assert.equal(feature.properties.altitude_ft_msl, feet);
+      assert.equal(feature.properties.flight_level_type, "CRUISE");
+      assert.match(feature.properties.label, /ft MSL/);
+      assert.doesNotMatch(feature.properties.label, /climb|descent|unavailable/);
+    }
+  }
+});
+
+test("PIREP climb and descent phases have distinct labels and no fabricated fixed altitude", () => {
+  for (const [fltLvlType, label] of [["DURC", /climb/], ["DURD", /descent/]]) {
+    for (const fltLvl of ["230", 230, "DURC", "DURD", null, undefined]) {
+      const { records } = weather.parsePireps([pirep({ fltLvlType, fltLvl })], NOW);
+      assert.equal(records[0].flightLevelType, fltLvlType);
+      assert.equal(records[0].altitudeFtMsl, null);
+      assert.deepEqual(weather.pirepFeatures(records, () => { throw new Error("No fixed altitude to project"); }, 3).features, []);
+      assert.match(weather.pirepAltitudeLabel(records[0]), label);
+      assert.match(weather.pirepAltitudeLabel(records[0]), /altitude varies/);
+      assert.doesNotMatch(weather.pirepAltitudeLabel(records[0]), /ft MSL/);
+    }
+  }
+});
+
+test("PIREP malformed and missing flight levels stay unavailable rather than becoming zero or a phase", () => {
+  for (const fltLvl of [undefined, null, "", " ", "UNKN", "DURC", "DURD", "230junk", "FL230", "230.5", "2.3e2", "0xe6", "-1", "601", true, false, [], {}, NaN, Infinity, -1, 601, 230.5]) {
+    const { records } = weather.parsePireps([pirep({ fltLvl })], NOW);
+    assert.equal(records.length, 1, "a missing altitude does not erase the reported location");
+    assert.equal(records[0].altitudeFtMsl, null, String(fltLvl));
+    assert.deepEqual(weather.pirepFeatures(records, () => 1500, 1).features, []);
+    assert.match(weather.pirepAltitudeLabel(records[0]), /altitude unavailable/);
+    assert.doesNotMatch(weather.pirepAltitudeLabel(records[0]), /climb|descent|ft MSL/);
+  }
+  for (const fltLvlType of ["GRND", "OTHER", "UNKN", undefined, null, "", "invalid", 0, {}]) {
+    const { records } = weather.parsePireps([pirep({ fltLvlType })], NOW);
+    assert.equal(records[0].altitudeFtMsl, 23000, "valid altitude is retained independently of an absent/unknown phase");
+    assert.equal(records[0].flightLevelType, ["GRND", "OTHER", "UNKN"].includes(fltLvlType) ? fltLvlType : null);
+  }
+});
+
+test("PIREP cloud bases are bounded integer feet, with low/high and zero observations preserved", () => {
+  for (const base of [0, 500, 5000, 11000, 60000]) {
+    const { records } = weather.parsePireps([pirep({ clouds: [{ cover: "BKN", base }] })], NOW);
+    assert.equal(records[0].skyCondition, `BKN ${base} ft`);
+    assert.equal(records[0].altitudeFtMsl, 23000, "cloud height is never the aircraft altitude");
+  }
+  const { records } = weather.parsePireps([pirep({ clouds: [{ cover: "SCT", base: 500 }, { cover: "BKN", base: 5000 }] })], NOW);
+  assert.equal(records[0].skyCondition, "SCT 500 ft, BKN 5000 ft");
+});
+
+test("PIREP malformed or absent cloud heights never fabricate a height or observation", () => {
+  for (const base of [undefined, null, "500", "", "UNKN", -1, 60001, 500.5, NaN, Infinity, false, [], {}]) {
+    const { records } = weather.parsePireps([pirep({ clouds: [{ cover: "BKN", base }] })], NOW);
+    assert.equal(records[0].skyCondition, "BKN", String(base));
+  }
+  for (const clouds of [undefined, null, [], {}, "BKN005", [null, 42, {}, { base: null }]]) {
+    const { records } = weather.parsePireps([pirep({ clouds })], NOW);
+    assert.equal(records[0].skyCondition, null);
+  }
+});
+
+test("PIREP missing/invalid observations are empty or dropped, never synthesized", () => {
+  assert.deepEqual(weather.parsePireps([], NOW), { records: [], dropped: 0 });
+  assert.deepEqual(weather.pirepFeatures([], () => 1500, 1).features, []);
+  for (const payload of [null, undefined, {}, ""]) assert.throws(() => weather.parsePireps(payload, NOW), /not a list/);
+  const invalid = [null, {}, pirep({ obsTime: undefined }), pirep({ obsTime: "invalid" }), pirep({ obsTime: NOW / 1000 - 4 * 3600 }),
+    pirep({ obsTime: NOW / 1000 + 3600 }), pirep({ rawOb: undefined }), pirep({ lon: undefined }), pirep({ lat: undefined }), pirep({ lon: -110 })];
+  assert.deepEqual(weather.parsePireps(invalid, NOW), { records: [], dropped: invalid.length });
+  const { records } = weather.parsePireps([pirep({ fltLvl: undefined, fltLvlType: undefined, acType: undefined, clouds: undefined })], NOW);
+  assert.equal(records[0].altitudeFtMsl, null);
+  assert.equal(records[0].flightLevelType, null);
+  assert.equal(records[0].aircraftType, null);
+  assert.equal(records[0].skyCondition, null);
+});
+
 test("metar features draw ceilings as discs at reported height", () => {
   const { records } = weather.parseMetars([metar()], NOW);
   const { stations, ceilings } = weather.metarFeatures(records, 2);

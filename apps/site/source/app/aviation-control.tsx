@@ -9,7 +9,7 @@ import {
   type AirspaceGroup, type AirwaySegment, type AviationContext,
 } from "./aviation-airspace";
 import {
-  AVIATION_METAR_API_PATH, AVIATION_PIREP_API_PATH, FLIGHT_CATEGORY_COLORS, basicVfrCheck, metarFeatures, pirepFeatures,
+  AVIATION_METAR_API_PATH, AVIATION_PIREP_API_PATH, FLIGHT_CATEGORY_COLORS, basicVfrCheck, metarFeatures, pirepAltitudeLabel, pirepFeatures,
   type AviationWeatherEnvelope, type MetarObservation, type PirepReport,
 } from "./aviation-weather";
 
@@ -249,6 +249,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
           <label><input type="checkbox" checked={showMetar} onChange={event => setShowMetar(event.target.checked)} /> METAR stations (ASOS/AWOS) by flight category</label>
           <label><input type="checkbox" checked={showCeilings} disabled={!showMetar} onChange={event => setShowCeilings(event.target.checked)} /> Cloud ceilings as discs at reported height</label>
           <label><input type="checkbox" checked={showPireps} onChange={event => setShowPireps(event.target.checked)} /> Pilot reports (PIREP) at reported altitude</label>
+          {showPireps && <small>Climb/descent and unknown altitudes remain in the point inspector; no height is drawn for them.</small>}
           <ul className="aviation-legend">{(Object.keys(FLIGHT_CATEGORY_COLORS) as (keyof typeof FLIGHT_CATEGORY_COLORS)[]).map(category => <li key={category}><i style={{ background: FLIGHT_CATEGORY_COLORS[category] }} /> {category}</li>)}</ul>
           {showMetar && <small role="status">METAR: {metar.state === "ready" && metar.envelope ? `${metar.envelope.records.length} stations · retrieved ${minutesAgo(metar.envelope.retrievedAt, clock)} min ago` : metar.state === "error" ? metar.message : "Checking…"}</small>}
           {showPireps && <small role="status">PIREP: {pireps.state === "ready" && pireps.envelope ? `${pireps.envelope.records.length} reports in 3 h${pireps.envelope.records.some(report => report.urgent) ? " · includes URGENT" : ""}` : pireps.state === "error" ? pireps.message : "Checking…"}</small>}
@@ -265,7 +266,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
                 <td>{feet(band.floorFtAgl)} → {feet(band.ceilingFtAgl)}</td><td>{band.manned} <small>({band.cite})</small></td></tr>)}</tbody></table>
             <p><strong>Weather now:</strong> {inspection.station ? <>{inspection.station.record.raw} <small>({inspection.station.km.toFixed(0)} km away, {minutesAgo(inspection.station.record.observedAt, clock)} min old{inspection.station.record.densityAltitudeFt !== null ? `, density altitude ≈ ${feet(inspection.station.record.densityAltitudeFt)}` : ""})</small></> : "No METAR station within 50 km."} {inspection.vfr.text} <small>({inspection.vfr.cite})</small></p>
             {inspection.routes.length > 0 && <p><strong>Airways within 4 NM:</strong> {inspection.routes.map(route => `${route.designation}${route.mea_ft ? ` (MEA ${route.mea_ft.toLocaleString("en-US")})` : ""}`).join(", ")}</p>}
-            {inspection.reports.length > 0 && <p><strong>Pilot reports within 60 km (3 h):</strong> {inspection.reports.slice(0, 5).map(report => report.raw).join(" · ")}</p>}
+            {inspection.reports.length > 0 && <p><strong>Pilot reports within 60 km (3 h):</strong> {inspection.reports.slice(0, 5).map(report => `${report.raw} (${pirepAltitudeLabel(report)})`).join(" · ")}</p>}
           </div>}
         </fieldset>
         <details><summary>Source, edition &amp; limits</summary>
