@@ -128,7 +128,7 @@ async function pageSession(b, { width, height, touch, motion }) {
     await evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',behavior:'instant'})`);
     const r = await rect(selector), x = r.x + r.width / 2, y = r.y + r.height / 2;
     assert.ok(x > 0 && x < width && y > 0 && y < height, `reachable target ${selector}`);
-    assert.ok(await evaluate(`document.querySelector(${JSON.stringify(selector)}).contains(document.elementFromPoint(${x},${y}))`), `unobscured target ${selector}: ${await evaluate(`JSON.stringify({hit:document.elementFromPoint(${x},${y})?.outerHTML.slice(0,300),panel:document.querySelector('.hydrology-observatory')?.getBoundingClientRect().toJSON(),header:document.querySelector('.hydrology-header')?.getBoundingClientRect().toJSON(),scrollPadding:getComputedStyle(document.querySelector('.hydrology-observatory')??document.body).scrollPaddingTop})`)}`);
+    assert.ok(await evaluate(`document.querySelector(${JSON.stringify(selector)}).contains(document.elementFromPoint(${x},${y}))`), `unobscured target ${selector} ${JSON.stringify(r)}: ${await evaluate(`JSON.stringify({hit:document.elementFromPoint(${x},${y})?.outerHTML.slice(0,300),panel:document.querySelector('.hydrology-observatory')?.getBoundingClientRect().toJSON(),header:document.querySelector('.hydrology-header')?.getBoundingClientRect().toJSON(),scrollPadding:getComputedStyle(document.querySelector('.hydrology-observatory')??document.body).scrollPaddingTop})`)}`);
     if (touch) {
       await call('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
       await call('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
@@ -145,6 +145,7 @@ async function pageSession(b, { width, height, touch, motion }) {
 for (const layout of [
   {width:320,height:568,touch:true,motion:'no-preference'},
   {width:390,height:844,touch:true,motion:'reduce'},
+  {width:568,height:320,touch:true,motion:'no-preference'},
   {width:844,height:390,touch:true,motion:'no-preference'},
   {width:1440,height:900,touch:false,motion:'no-preference'},
 ]) test(`River Pulse dismissal at ${layout.width}x${layout.height}, ${layout.touch?'touch':'mouse'}, ${layout.motion}`, {timeout:90000}, async t => {
@@ -213,8 +214,8 @@ for (const layout of [
     // Check the final scroll position too: the sticky header must persist.
     await p.evaluate(`document.querySelector('.hydrology-observatory').scrollTop=100000`);
     await closeTarget();
-    const switcher=await p.rect('.hydrology-observatory .live-observation-switcher'),heading=await p.rect('.hydrology-header');
-    assert.ok(switcher.y+switcher.height<=heading.y,'sticky source tabs and header never overlap');
+    const switcher=await p.rect('.hydrology-observatory .live-observation-switcher'),close=await p.rect('.hydrology-close');
+    assert.ok(switcher.y+switcher.height<=close.y || switcher.x+switcher.width<=close.x,'sticky source tabs and close never overlap');
     for(const selector of ['.hydrology-observatory .live-observation-switcher button:first-child','.hydrology-observatory .live-observation-switcher button:last-child']) {
       const r=await p.rect(selector);
       assert.ok(r.height>=44,'source switch is a touch-sized target');
