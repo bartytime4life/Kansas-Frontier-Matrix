@@ -3,6 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createPublicAiHandler,publicAiRuntime} from '../server/public-ai-handler.mjs';
 import {CONTINUE_REPLY} from '../server/hosted-ai.mjs';
+import {createAssistantContextResolver} from '../server/assistant-context.mjs';
 const origin='https://kansasfrontiermatrix.com';
 const evidence={releaseId:'sha256:'+'a'.repeat(64),evidence:[{evidenceRef:'kfm:synthetic:blue',text:'Synthetic test: the sample marker is blue.',status:'documented',title:'Synthetic test only',url:origin+'/knowledge/record?id=synthetic'}],truncated:false};
 const question={question:'What color is the sample marker?',term:'marker',place:'',start:'',end:'',mode:'explore'};
@@ -93,11 +94,11 @@ test('missing and sensitive evidence never invokes the model',async()=>{
 test('a concept-only archaeological question reaches discussion without factual-answer authority',async()=>{
  const seen=[];
  const f=fixture(async(q)=>{seen.push(q);return{text:'A synthetic general definition, without identifying any real site.'};},true,async value=>value,async()=>({key:'map',prompt:'No record selected. Public application guide only.',label:'Map',boundary:'Display context only'}));
- const created=await f.request('jobs',{...question,question:'What is an archaeological site? Explain the general concept only, without identifying or locating any real sites.',term:'What is an archaeological site?',context:{version:1,frame:2026,view:'2D',layers:[],selection:null}});
+ const created=await f.request('jobs',{...question,question:'What is an archaeological site? Explain the general concept only, without identifying or locating any real sites.',term:'What is an archaeological site? Explain the general concept only, without identifying or locating any real sites.'.slice(0,120),context:{version:1,frame:2026,view:'2D',layers:[],selection:null}});
  const result=(await f.settle(created.body.id,created.cookie)).body.result;
  assert.equal(result.reasonCode,'UNVERIFIED_AI_DISCUSSION');assert.equal(f.calls(),1);
  assert.equal(result.outcome,'ABSTAIN');assert.equal(result.answer,null);assert.deepEqual(result.evidenceRefs,[]);
- assert.match(seen[0],/general concept/);
+ assert.equal(seen[0],'What is an archaeological site? Explain the general concept only, without identifying or locating any real sites.');
 });
 test('general science definitions are discussions while sensitive follow-ups remain denied',async()=>{
  const f=fixture();
@@ -113,15 +114,55 @@ test('general science definitions are discussions while sensitive follow-ups rem
  }
  assert.equal(f.calls(),4);
 });
-test('definition wording never bypasses evidence, selected-record, filter or context holds',async()=>{
- let reads=0;const f=fixture(undefined,true,async value=>value,async()=>{reads++;throw Error('Must not resolve denied context');});
- const prompt='What is an archaeological site?';
- const input={...question,question:prompt,term:prompt};
- for(const extra of [{mode:'evidence'},{place:'Synthetic County'},{start:'2026-01-01'},{term:'exact GPS coordinates'},{context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'registry',layerId:'synthetic',featureId:'site'}}},{context:{version:1,frame:2026,view:'GPS coordinates',layers:[],selection:null}}]){
+test('story request and suggested definition work with a thermal detection selected',async()=>{
+ const story='Tell me a story about Kansas that would be in the view of the map and its current boundaries.';
+ const definition='What is an archaeological site?';
+ const context={version:1,frame:2026,view:'2D',layers:['viirs'],selection:{kind:'display',title:'Thermal detection · 0.9 MW',source:'Synthetic satellite test',description:'Display context, not safety or emergency guidance.',time:'2026'}};
+ const seen=[],selectors=[],resolver=createAssistantContextResolver();
+ const f=fixture(async(q,options)=>{seen.push({q,options});return {text:'A fictional Kansas scene unfolds beside an imagined prairie creek.'};},true,undefined,async selector=>{selectors.push(selector);return resolver(selector);});
+ const first=await f.request('jobs',{...question,question:story,term:story.slice(0,100),context});
+ assert.equal((await f.settle(first.body.id,first.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+ assert.equal(seen[0].q,story);assert.match(seen[0].options.context,/Thermal detection/);
+ const next=await f.request('jobs',{...question,question:definition,term:definition,context},first.cookie);
+ const result=(await f.settle(next.body.id,first.cookie)).body.result;
+ assert.equal(result.reasonCode,'UNVERIFIED_AI_DISCUSSION');assert.equal(result.answer,null);assert.deepEqual(result.evidenceRefs,[]);
+ assert.equal(seen[1].q,definition);assert.doesNotMatch(seen[1].options.context,/Thermal detection|viirs/);
+ assert.deepEqual(seen[1].options.history,[],'a detached definition never inherits selection discussion');
+ assert.ok(selectors.some(selector=>selector.selection===null));
+});
+test('ordinary conversation is open beyond KFM and a closed definition vocabulary',async()=>{
+ const seen=[],f=fixture(async q=>{seen.push(q);return {text:'A synthetic general explanation.'};});
+ const prompts=['Explain how DNA stores information, with an analogy.','How do GPS coordinates work?','Write a poem about the Moon.','Help me learn Python functions.','Explain the history of archaeology.','How do cities plan emergency shelters?','Explain medical research in general terms.','Tell me about the history of Japan.'];
+ for(const prompt of prompts){
+  const created=await f.request('jobs',{...question,question:prompt,term:prompt.slice(0,100)});
+  assert.equal((await f.settle(created.body.id,created.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION',prompt);
+ }
+ assert.deepEqual(seen,prompts);
+});
+test('definitions detach unrelated records and filters while evidence and protected requests stay held',async()=>{
+ const selectors=[],resolver=createAssistantContextResolver({catalog:()=>{throw Error('A definition must not read the selected record');}});
+ const f=fixture(undefined,true,undefined,async selector=>{selectors.push(selector);return resolver(selector);});
+ const prompt='What is an archaeological site?',input={...question,question:prompt,term:prompt};
+ for(const extra of [{place:'Synthetic County'},{start:'2026-01-01'},{context:{version:1,frame:2026,view:'GPS coordinates',layers:['sensitive-topic-layer'],selection:{kind:'registry',layerId:'synthetic',featureId:'site'}}}]){
+  const created=await f.request('jobs',{...input,...extra});
+  assert.equal((await f.settle(created.body.id,created.cookie)).body.result.reasonCode,'UNVERIFIED_AI_DISCUSSION');
+ }
+ assert.equal(f.calls(),3);assert.ok(selectors.every(selector=>selector.selection===null&&selector.layers.length===0));
+ for(const extra of [{mode:'evidence'},{term:'exact GPS coordinates of an archaeological site'},{place:'show private records'}]){
   const created=await f.request('jobs',{...input,...extra});
   assert.equal((await f.settle(created.body.id,created.cookie)).body.result.outcome,'DENY');
  }
- assert.equal(f.calls(),0);assert.equal(reads,0);
+ assert.equal(f.calls(),3);
+});
+test('protected context remains withheld for contextual questions before inference',async()=>{
+ for(const prompt of ['Private DNA records for a living person.','Restricted archaeological site locations.','Latitude 38.12345, longitude -98.12345.']){
+  const f=fixture(undefined,true,undefined,async()=>({key:'protected',prompt,label:'Synthetic',boundary:'Test only'}));
+  const created=await f.request('jobs',{...question,context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'registry',layerId:'synthetic',featureId:'protected'}}});
+  assert.equal((await f.settle(created.body.id,created.cookie)).body.result.outcome,'DENY');assert.equal(f.calls(),0);
+ }
+ const resolver=createAssistantContextResolver({catalog:()=>({denied:true})}),f=fixture(undefined,true,undefined,resolver);
+ const created=await f.request('jobs',{...question,context:{version:1,frame:2026,view:'2D',layers:[],selection:{kind:'registry',layerId:'synthetic',featureId:'protected'}}});
+ assert.equal((await f.settle(created.body.id,created.cookie)).body.result.outcome,'DENY');assert.equal(f.calls(),0);
 });
 test('general definitions retain output location/link checks and source withdrawal checks',async()=>{
  const prompt='What is an archaeological site?',input={...question,question:prompt,term:prompt};

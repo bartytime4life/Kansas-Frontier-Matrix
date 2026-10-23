@@ -1,0 +1,131 @@
+{
+  "receipt_id": "genrec-open-ai-conversation-20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/assistant/workspace.tsx",
+    "docs/public-hosted-ai.md",
+    "server/hosted-ai-prompt.mjs",
+    "server/public-ai-handler.mjs",
+    "server/public-discussion-scope.mjs",
+    "tests/chat-composer-reach.test.mjs",
+    "tests/hosted-ai-prompt.test.mjs",
+    "tests/public-ai.test.mjs",
+    "tests/public-discussion-scope.test.mjs"
+  ],
+  "artifact_hashes": {
+    "app/assistant/workspace.tsx": "sha256:ada5bf759844fa0d8d5306d602e404ab279d175b2a2b9135738c3b520f742637",
+    "docs/public-hosted-ai.md": "sha256:67e685c128bfecdb0172f88abec5c719ba3ff212025292459d4f4ec6df07e126",
+    "server/hosted-ai-prompt.mjs": "sha256:add736e152072f3ce1075cc54dc3a44f4e7ded38b6835d3dc911cda392ff5504",
+    "server/public-ai-handler.mjs": "sha256:05a08d233af78c986e66f3fc7e35a93013590c83fb1d0aeedb26db6444630c64",
+    "server/public-discussion-scope.mjs": "sha256:e67dfcbaccf5f42cc6631eb72d7329ba09ec1fa84d3ddbe4ae5e908d5152a199",
+    "tests/chat-composer-reach.test.mjs": "sha256:dad52ca8bbb8c6a0b2a9068a8a5ee7f53a9a003782837ca8de9ea27d23242cb8",
+    "tests/hosted-ai-prompt.test.mjs": "sha256:72e96fbba5b81121fd5141dc3b8506f0f5f69ed93b9a25f620e9aeaf3b0e7b6d",
+    "tests/public-ai.test.mjs": "sha256:a639f4bd2ed55f98d6b2437aa3108a6a31ee7bfbc8b9e684e62f75d3346a7dc4",
+    "tests/public-discussion-scope.test.mjs": "sha256:bd59554a24028f9611758549e57f555c6e2d5362ad42311c62cece60dbdd23f5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "UNKNOWN; exact runtime build identifier not supplied"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "local shell"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:74c5df84dd9fa45789306486de22eddf26d6a4d1fb60653528b592e002dc321a"
+    ],
+    "attached_docs": [
+      "Owner screenshot: ordinary Kansas story denied with a thermal detection selected"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/efb0bee19d7d6f7fb493e17bf695031b278ac681/AGENTS.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/efb0bee19d7d6f7fb493e17bf695031b278ac681/server/public-ai-handler.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/efb0bee19d7d6f7fb493e17bf695031b278ac681/server/assistant-context.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/efb0bee19d7d6f7fb493e17bf695031b278ac681/scripts/home-inference/gateway.mjs"
+    ]
+  },
+  "truth_labels": {
+    "app/assistant/workspace.tsx": "CONFIRMED",
+    "docs/public-hosted-ai.md": "CONFIRMED",
+    "server/hosted-ai-prompt.mjs": "CONFIRMED",
+    "server/public-ai-handler.mjs": "CONFIRMED",
+    "server/public-discussion-scope.mjs": "CONFIRMED",
+    "tests/chat-composer-reach.test.mjs": "CONFIRMED",
+    "tests/hosted-ai-prompt.test.mjs": "CONFIRMED",
+    "tests/public-ai.test.mjs": "CONFIRMED",
+    "tests/public-discussion-scope.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-source-regressions",
+      "outcome": "PASS",
+      "reason": "Three new handler regression groups fail on original base source; files restored after reproduction."
+    },
+    {
+      "gate": "focused-admission-prompt-composer-transport",
+      "outcome": "PASS",
+      "reason": "88 tests passed, zero failed/skipped."
+    },
+    {
+      "gate": "production-build-and-complete-standalone-suite",
+      "outcome": "PASS",
+      "reason": "npm test: production build and 1664 passed, zero failed, 21 environment-dependent skips, 1685 total. Initial run found stale placeholder expectation and an oversized system prompt; expectation updated and prompt shortened; final clean execution passed."
+    },
+    {
+      "gate": "typescript-and-changed-file-lint",
+      "outcome": "PASS",
+      "reason": "npx tsc --noEmit and eslint on all changed code/test files passed with zero errors or warnings."
+    },
+    {
+      "gate": "actual-node-http-boundary",
+      "outcome": "PASS",
+      "reason": "Built Node server on assigned local port; 22 runtime and pipeline HTTP checks passed, zero failed/skipped. AI was intentionally unconfigured; no real inference or live hosting claim."
+    },
+    {
+      "gate": "documentation-and-diff",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fences, final newline, seven local document links resolve; git diff --check passed."
+    },
+    {
+      "gate": "receipt-schema-and-integrity",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema from pinned main; final artifact path/hash/label sets verified."
+    },
+    {
+      "gate": "live-model-browser-publication-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "No paired-PC or hosted settings changed. Synthetic admission tests do not qualify real inference. Live acceptance, publication and human approval remain pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "Current hosted application base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/efb0bee19d7d6f7fb493e17bf695031b278ac681/server/public-ai-handler.mjs"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-23T00:32:06.423686Z",
+  "emitter": "OpenAI Codex KFM application authoring",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Application source candidate only. General discussion is not released evidence. This receipt grants no merge, release, deployment or publication authority. Existing selected-source/precision, signed transport, guest and resource protections remain. Runtime and stored-data configuration are unchanged."
+}

@@ -1,5 +1,53 @@
 # Public hosted AI: discussion and released evidence
 
+## Open conversation and selected-context repair — 2026-10-22
+
+**Implementation candidate; publication and live model acceptance NEEDS
+VERIFICATION.** This section supersedes the narrower definition exception below.
+The owner requested ordinary conversation beyond KFM and reported that the
+assistant denied its own suggested archaeology definition. The screenshot also
+shows a Kansas story request denied with a thermal detection selected.
+
+Ask now admits general conversation without a topic allowlist. Science, history,
+programming, brainstorming and fiction are valid discussion topics. Admission
+checks distinguish explicit protected-data/host-access requests from topic words;
+source warning text such as “not safety or emergency guidance” is data, not a
+request for emergency advice. These bounded expressions are an admission aid,
+not a complete intent classifier or a host-security boundary.
+
+A recognized standalone definition omits the selected record and layer identifiers
+before resolving context, even if a record or search filter is present. The
+original question reaches the model. A derived search-term prefix cannot block
+that same definition; unrelated search terms retain their own checks. The
+sanitized context has its own conversation partition, so selected-record history
+is not inherited. Arbitrary contextual questions still use source resolution,
+protected-data/precision gates and source-withdrawal rechecks. Evidence mode
+retains its existing stricter checks and released-record reader.
+
+The public prompt explicitly permits general topics, labels fiction and separates
+general knowledge from recorded map facts. Current context does **not** include
+viewport bounds or camera coordinates; the model must disclose that gap rather
+than claim a story describes the exact visible area. This correction does not add
+viewport extraction. The composer invites broader questions and no longer offers
+a fixed sensitive-topic retry as the refusal message.
+
+Discussion remains `ABSTAIN / UNVERIFIED_AI_DISCUSSION`, with `answer: null` and
+no EvidenceRefs. This is a generated-discussion label, not a refusal to converse.
+Plain-text rendering, output qualification, source checks, anonymous job ownership,
+same-origin writes, signed remote transport, bounded queues and rate limits remain.
+Inference has no tools, shell, file/network operations or administrative action
+path. The change does not install software or alter the paired PC, gateway,
+model/profile, credentials, hosting settings, source assets or release decisions.
+
+Three regression groups fail against the pinned original application source
+`efb0bee19d7d6f7fb493e17bf695031b278ac681`: the thermal-selection story/definition,
+broader ordinary topics, and definitions with an unrelated record/filter. Focused
+corrected-source tests pass. Full validation and exact-head CI belong to the PR;
+synthetic admission tests do not prove actual model answer quality or public
+publication. Rollback restores this focused application/test/documentation change
+and its generated receipt together; no stored-data migration is required.
+
+
 ## General-definition repair — 2026-10-21 Central / 2026-10-22 UTC
 
 Live inspection observed application `urdng3v1vk` reporting Published source
