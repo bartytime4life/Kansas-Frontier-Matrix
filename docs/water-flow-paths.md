@@ -27,6 +27,8 @@ an upper host outside the isolated map canvas, keeping its downward disclosure
 reachable above an open River Pulse panel.
 Native fullscreen targets the map stage, including the information host and
 observation dock, so source credits remain available in that view.
+Short landscape reserves a top control row above both compact and expanded
+River Pulse, keeping its sticky close control clear of map information.
 
 Placement reuses existing application, tests and adjacent documentation
 responsibilities under adopted Directory Rules §§10–11 and accepted ADR-0029.

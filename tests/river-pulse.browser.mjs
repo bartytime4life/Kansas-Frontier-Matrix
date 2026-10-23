@@ -190,6 +190,10 @@ for (const layout of [
     assert.ok(r.width>=44 && r.height>=44,'44px dismissal target');
     assert.ok(r.x>=0 && r.y>=0 && r.x+r.width<=layout.width && r.y+r.height<=layout.height,'close fits viewport');
     assert.ok(await p.evaluate(`(()=>{const e=document.querySelector('.hydrology-close'),r=e.getBoundingClientRect();return e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`),'close is unobscured');
+    const information=await p.rect('.map-information-home .maplibregl-ctrl-attrib-button');
+    const overlapX=Math.min(r.x+r.width,information.x+information.width)-Math.max(r.x,information.x);
+    const overlapY=Math.min(r.y+r.height,information.y+information.height)-Math.max(r.y,information.y);
+    assert.ok(overlapX<=0 || overlapY<=0,'River Pulse dismissal and map information never overlap');
     return r;
   };
   const closed = async () => {

@@ -4758,3 +4758,9 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
   .map-stage .maplibregl-ctrl-top-right:not(.map-information-home) { right: 62px; }
   .map-stage .map-information-home { top: var(--map-overlay-top); right: 8px; }
 }
+
+/* Short landscape keeps the sticky dismissal below the reserved native-control row. */
+@media (max-height: 480px) {
+  .map-stage .hydrology-observatory,
+  .map-stage .hydrology-observatory[data-expanded="true"] { max-height: calc(100% - 76px); }
+}
