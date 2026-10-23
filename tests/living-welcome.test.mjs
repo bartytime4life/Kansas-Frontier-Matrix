@@ -25,13 +25,13 @@ async function welcome(reduced=false){
   './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
- const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value]),questions:'preserved questions'};
+ const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value])};
  const render=()=>{const tree=harness.render(harness.exports.default,props);harness.commit();return tree;};
  return {harness,props,calls,render,env};
 }
 const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.children===text);
 
-test('visual welcome owns focus and Escape before passive effects run after the fallback handoff',async()=>{
+test('visual welcome owns focus and Escape before passive effects run',async()=>{
  const h=await welcome(),input={};
  const tree=h.harness.render(h.harness.exports.default,h.props);
  findNode(tree,node=>node.props?.className==='explorer-guide living-welcome').props.ref.current={
@@ -40,7 +40,7 @@ test('visual welcome owns focus and Escape before passive effects run after the 
  };
  try{
   // React commits layout effects before the browser can paint or dispatch
-  // another key. Passive effects may run later, after the fallback is gone.
+  // another key. Scene loading does not postpone keyboard ownership.
   h.harness.commitLayout();
   assert.equal(h.env.document.activeElement,input);
   const keyboard=h.env.listeners.get('keydown');

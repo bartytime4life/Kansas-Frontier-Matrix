@@ -57,7 +57,7 @@ test('actual restoration decision reads incoming state once, closes on history a
 test('v2 opt-out remains explicit, legacy and blocked storage retain welcome', async () => {
   const values = new Map([['kfm.explorer.guide.dismissed.v1', '1']]);
   const storage = { getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), removeItem: key => values.delete(key) };
-  const guide = await componentHarness('app/explorer-guide.tsx', { './map-starters': {} }, { window: { localStorage: storage } });
+  const guide = await componentHarness('app/explorer-guide.tsx', { './living-welcome/welcome.jsx': { default: 'living-welcome' } }, { window: { localStorage: storage } });
   assert.equal(guide.exports.readExplorerGuideDismissed(), false);
   guide.exports.writeExplorerGuideDismissed(true);
   assert.equal(guide.exports.readExplorerGuideDismissed(), true);
@@ -67,4 +67,23 @@ test('v2 opt-out remains explicit, legacy and blocked storage retain welcome', a
   storage.getItem = storage.setItem = storage.removeItem = () => { throw new Error('storage blocked'); };
   assert.equal(guide.exports.readExplorerGuideDismissed(), false);
   assert.doesNotThrow(() => guide.exports.writeExplorerGuideDismissed(true));
+});
+
+
+test('startup mounts only the animated welcome and forwards deliberate actions', async () => {
+  const calls = [];
+  const h = await componentHarness('app/explorer-guide.tsx', {
+    './living-welcome/welcome.jsx': { default: 'living-welcome' },
+  }, { window: { localStorage: { getItem: () => '1' } } });
+  const props = { open: true, onClose: value => calls.push(['close', value]),
+    onSearch: value => calls.push(['search', value]), onTopic: value => calls.push(['topic', value]), onAction() {} };
+  try {
+    const view = h.render(h.exports.ExplorerGuide, props);
+    assert.equal(view.type, 'living-welcome');
+    assert.equal(view.props.initialRemember, true);
+    assert.deepEqual(calls, []);
+    view.props.onSearch('Ellsworth'); view.props.onTopic('water'); view.props.onClose(true);
+    assert.deepEqual(calls, [['search', 'Ellsworth'], ['topic', 'water'], ['close', true]]);
+    assert.equal(h.render(h.exports.ExplorerGuide, { ...props, open: false }), null);
+  } finally { h.dispose(); }
 });

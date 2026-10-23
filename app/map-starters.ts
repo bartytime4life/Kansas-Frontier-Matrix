@@ -22,57 +22,6 @@ export const MAP_STARTERS = [
     limitation: "Reference boundaries have different purposes and dates. Area population does not identify individuals or establish property rights." },
 ] as const satisfies readonly { id: string; title: string; description: string; ids: readonly OfficialContextId[]; limitation: string }[];
 
-/** Conversation entry points, not source coverage, admission, or release authority. */
-export type AtlasMission = Readonly<{
-  id: string;
-  title: string;
-  question: string;
-  starterId?: (typeof MAP_STARTERS)[number]["id"];
-  kind?: "demo";
-}>;
-export type AtlasMissionGroup = Readonly<{ id: string; title: string; description: string; missions: readonly AtlasMission[] }>;
-export const ATLAS_MISSION_GROUPS: readonly AtlasMissionGroup[] = [
-  { id: "work-learning", title: "Work & learning", description: "Starting questions for your work, classroom or research.", missions: [
-    { id: "farming", title: "Farming & land stewardship", starterId: "land-water", question: "Find available water, land and aquifer source context for this place. Show the dates and limits relevant to farming." },
-    { id: "science", title: "Science & research", starterId: "field-science", question: "Find available observations and reference layers for a scientific investigation of this place. Separate measurements from context." },
-    { id: "government", title: "Government officials & workers", starterId: "community-planning", question: "Find available county, roads, watershed and flood-zone context for public-service planning here. Explain gaps and source dates." },
-    { id: "education", title: "Education & classrooms", starterId: "learning-kansas", question: "Help me build a classroom investigation of this Kansas place using available sources, their dates and limitations." },
-    { id: "business", title: "Business", question: "Find available public sources that could support a business investigation of this place. Explain which questions the indexed records cannot answer." },
-  ] },
-  { id: "weather-living", title: "Weather, wildlife & resources", description: "Explore the environment while respecting source coverage and sensitive locations.", missions: [
-    { id: "weather", title: "Weather & water", question: "Find available weather and water sources for this place. Separate observations, forecasts and historical context, with actual timestamps." },
-    { id: "fauna", title: "Fauna & wildlife", question: "Find public-safe wildlife source coverage for this place. Explain gaps and avoid precise sensitive species locations." },
-    { id: "flora", title: "Flora & plants", question: "Find public-safe plant and landcover source coverage for this place, with dates, scale and limits." },
-    { id: "resources", title: "Natural resources", starterId: "land-water", question: "Find available natural-resource and water context for this place. Explain what the mapped sources support and what remains unknown." },
-    { id: "hunting", title: "Hunting & outdoor context", question: "Find available public-safe outdoor and wildlife source context for this place. Do not infer hunting permission, access rights or current regulations from a map." },
-  ] },
-  { id: "history-heritage", title: "History & heritage", description: "Follow dated evidence without revealing protected places or implying land rights.", missions: [
-    { id: "history", title: "History", starterId: "historical-landscape", question: "Find dated historical road, rail and county context for this place. Identify the actual source editions and evidence gaps." },
-    { id: "archaeology", title: "Archaeology", starterId: "historical-landscape", question: "Find safe historical landscape context for an archaeological background investigation here. Do not reveal protected sites or infer access permission." },
-    { id: "tribal", title: "Tribal lands & context", question: "Find available authoritative, public-safe tribal context for this place. Distinguish historical references from current sovereignty, jurisdiction and access rights; withhold uncertain sensitive details." },
-  ] },
-  { id: "networks-projects", title: "Networks & public projects", description: "Reference geography for movement, infrastructure and public work.", missions: [
-    { id: "roads", title: "Roads & bridges", starterId: "infrastructure", question: "Find available road and bridge reference sources for this place, with dates and limits. Do not infer current safety or road conditions." },
-    { id: "rail", title: "Rail", starterId: "historical-landscape", question: "Find available rail source context for this place. Distinguish historical or abandoned references from current operations." },
-    { id: "aviation", title: "Air traffic & aviation", question: "Check whether governed aviation or air-traffic sources are indexed for this place. Report actual coverage, timestamps and gaps rather than inventing live traffic." },
-    { id: "utilities", title: "Public utilities", question: "Check available public-safe utility context for this place. Do not expose protected infrastructure detail or infer service reliability." },
-    { id: "projects", title: "Public projects", question: "Find indexed public-project sources for this place. Separate proposals, approvals and completed work using the dates and authority of each source." },
-  ] },
-  { id: "culture-economy", title: "Culture, news & economy", description: "Ask what is indexed before relying on current-event or economic claims.", missions: [
-    { id: "entertainment", title: "Entertainment & local stories", question: "Find available public sources about cultural activities and local stories for this place. Verify dates and availability before presenting events as current." },
-    { id: "news", title: "News & current events", question: "Check which dated news or public updates are indexed for this place. Cite their sources and distinguish publication date from event date." },
-    { id: "money", title: "Money & economy", question: "Find available population, income and economic source context for this place. Explain editions, geographic scale and uncertainty without giving personalized financial advice." },
-  ] },
-  { id: "demonstrations", title: "Demos & guided exploration", description: "Understand an example before treating it as an operational capability.", missions: [
-    { id: "demos", title: "Demos", kind: "demo", question: "Which demonstrations and guided exploration workflows are available here? Label synthetic examples, distinguish implemented behavior from proposals, and explain their limits." },
-  ] },
-];
-
-export function atlasMissionAvailability(mission: AtlasMission): string {
-  if (mission.kind === "demo") return "Demo discovery · not operational evidence";
-  return mission.starterId ? "Existing context recipe · review source availability" : "No bundled layer set · check search coverage";
-}
-
 export type StarterAccess = Readonly<{ held: boolean; unavailable: boolean; guidance?: string }>;
 export type StarterAccessMap = Readonly<Partial<Record<OfficialContextId, StarterAccess>>>;
 export type ContextSelection = Readonly<Partial<Record<OfficialContextId, boolean>>>;

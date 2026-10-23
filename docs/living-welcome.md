@@ -1,5 +1,53 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Single welcome surface · 2026-10-23 candidate
+
+**CONFIRMED source change; candidate browser appearance NEEDS VERIFICATION.**
+The animated “Kansas is full of stories” surface is now the only startup chooser.
+The older “What would you like to explore?” dialog, its All questions & tools
+entry, duplicate checkbox/exit controls, mission-only question catalogue and
+exclusive CSS have been removed. Six layer recipes remain in the existing
+Layers controls. Search, Ask, topic destinations, source notes and map help keep
+their existing owners and evidence boundaries.
+
+The lightweight welcome component loads with the Explorer; only its WebGL scene
+engine remains deferred. There is no second dialog during a delayed download.
+Escape, explicit device-local opt-out, manual reopening and destination-link
+bypass remain supported. Existing storage keys are retained to honor user
+preferences; unrelated device storage is never cleared. A blocked storage write
+cannot persist a preference across unmount/reopen.
+
+Graphical changes keep the heading and every topic readable during previews,
+move the search focus outline to the rounded field boundary, use 44px toolbar
+and Scene notes targets, and stack cards on screens at or below 420px for longer
+labels. The scene remains illustrative, with its synthetic-terrain caption and
+source limitations. The tradeoff is a slightly larger initial UI module and a
+longer phone scroll, while the heavy engine stays deferred.
+
+Placement: inspected Directory Rules.pdf and current main ADR-0029 v1.5
+(accepted) / docs/doctrine/directory-rules.md. Changes stay in the verified
+hosted composition's existing app/, tests/ and docs/ responsibility lanes;
+no roots, source registries, contracts or release homes are added. This does
+not change the original Sites composition or any dataset lifecycle state.
+
+Source base: hosted a0-hosted-ai-web-20261017 at
+1f9c2a83b0963734ee84b6e83be3e8127bb0bdfd. The isolated source snapshot was
+verified against every remote Git blob before editing. No open PRs were
+returned by the GitHub pulls API during the overlap check.
+
+Validation: production build, TypeScript checking, and five focused test files
+(startup, welcome, layer recipes, demos and playback) passed locally. Candidate browser acceptance is not claimed: the production
+server could not bind a listening socket (EPERM) in this execution environment.
+The existing CI startup browser suite is updated to hold the deferred scene
+engine, check there is no alternate chooser, preserve keyboard/storage checks,
+and require readable headings/cards during hover. CI results are separate
+from these local checks. Review narrow phone, landscape, desktop, source-strip
+access, Escape/reopen, reduced motion, all topic destinations and delayed scene
+loading before merge. No deployment or publication is performed here.
+
+Rollback: revert the cleanup commit. No data migration, storage deletion or
+host configuration change is needed.
+
 ## Transportation scene polish · 2026-10-22 candidate
 
 The illustrative transportation backdrop now sizes vehicles to the road lanes
