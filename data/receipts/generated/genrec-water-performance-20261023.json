@@ -1,0 +1,104 @@
+{
+  "receipt_id": "kfm:generated:water-performance:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/water-flow-motion.ts",
+    "tests/water-flow-motion.test.mjs",
+    "tests/water-flow.benchmark.mjs",
+    "docs/water-flow.md"
+  ],
+  "artifact_hashes": {
+    "app/water-flow-motion.ts": "sha256:97e8e0798e96b8f88ae608f2a01b44ce8b0fd4a8a8cb818b851b326dbdc13d57",
+    "tests/water-flow-motion.test.mjs": "sha256:ef369289ee1b02f41820626f35e97f76de881923331b7c995869b6d86f7a1ef5",
+    "tests/water-flow.benchmark.mjs": "sha256:c5b9f7c2dd4e1ce6c66a391bd447200fa4bb14b74a047442a099e61dc6696747",
+    "docs/water-flow.md": "sha256:1eacd9cf9e605ba7675817bf4b487eea51a0d923881631207c9717aa81eb7bf4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:035705dc5184e15a49672dddffad69220c5410121e61c029d0d4c1a2afe9575c",
+  "parameters": {
+    "seed": 20261023,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "node_repl"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@1c89384ba274890fd7653d584287b7bd1970535e",
+      "bartytime4life/Kansas-Frontier-Matrix@c336e8b38135d7110a79b44f038faee756006f21",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5429",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39905066459"
+    ]
+  },
+  "truth_labels": {
+    "app/water-flow-motion.ts": "CONFIRMED",
+    "tests/water-flow-motion.test.mjs": "CONFIRMED",
+    "tests/water-flow.benchmark.mjs": "CONFIRMED",
+    "docs/water-flow.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Deterministic geometry equivalence",
+      "outcome": "PASS",
+      "reason": "200 seeded baseline/candidate trials with 25 gauges each preserve every Float32 GPU byte, terrain vertex/slot and geometry count. Added radius-edge, degenerate, crossing, duplicate and tie regressions pass."
+    },
+    {
+      "gate": "Paired synthetic CPU benchmark",
+      "outcome": "PASS",
+      "reason": "Three alternating pairs; 12 timed builds after three warmups per case. With 193 gauges, 60000 segments: median of trial medians 407.35 ms baseline versus 14.43 ms candidate (96.46% less CPU time). Synthetic spread-out geometry only; no worst-case or hosted FPS claim."
+    },
+    {
+      "gate": "Production build, TypeScript, changed-code lint and diff",
+      "outcome": "PASS",
+      "reason": "Executed on final application bytes; application digest sha256:1466d16a306b893be7757c893e66c539d60828ffa68a081071a38ebc67ec4bed. No errors in changed-code lint or diff."
+    },
+    {
+      "gate": "Complete Node suite",
+      "outcome": "PASS",
+      "reason": "1703 passed, 0 failed, 19 skipped, 1722 total. Executed before the test-only #5429 base advance; all ordinary test and application bytes retained. Skips are not executed checks."
+    },
+    {
+      "gate": "Water and ingestion/effect focused suites",
+      "outcome": "PASS",
+      "reason": "Built water subset 209/209; additional ingestion/effect subset 83 passed, 2 skipped. Three new geometry regressions pass in the complete candidate suite. Suite counts overlap and must not be added."
+    },
+    {
+      "gate": "Actual loopback browser and HTTP",
+      "outcome": "PASS",
+      "reason": "Final retained #5429 browser file passes all five layouts at candidate application digest; 21 HTTP tests pass against a separate startup process. Synthetic observations and SwiftShader software WebGL; no live provider or physical phone claim."
+    },
+    {
+      "gate": "Welcome lifecycle and overload screen",
+      "outcome": "PASS",
+      "reason": "Actual water/groundwater engine rendered at 390x844 and 1440x900 using SwiftShader; no captured engine errors; pause/reduced motion each scheduled zero callbacks over 500 ms. Synthetic 24-request success path exposed 24 concurrent upstream flowline calls; shared server admission remains open."
+    },
+    {
+      "gate": "Exact-head CI, independent review and hosted capacity",
+      "outcome": "SKIPPED",
+      "reason": "Pending after PR creation. GoDaddy hosting telemetry, physical GPUs, maximum-size browser parsing/playback, long-duration heap/GPU stability and disposable MySQL integration were not qualified. No merge, publication or live load test."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "final-authoring-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T05:54:39.945Z",
+  "emitter": "Codex",
+  "notes": "Existing app/tests/docs/generated-receipt responsibility lanes under canonical Directory Rules v2 and accepted ADR-0029. Historical receipts remain immutable. Bounds filter precedes the unchanged exact gauge snapper; source identity, measured-zero/missing semantics, tie order, geometry and source/render/request budgets are unchanged. Revert this bounded change for rollback; no data or storage migration."
+}
