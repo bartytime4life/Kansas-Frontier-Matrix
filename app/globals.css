@@ -4733,7 +4733,7 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .map-stage .maplibregl-ctrl-top-right .maplibregl-ctrl-attrib.maplibregl-compact { min-width: 44px; min-height: 44px; }
 .map-stage .maplibregl-ctrl-top-right .maplibregl-ctrl-attrib-button { width: 44px; height: 44px; right: 0; top: 0; border-radius: 12px; }
 .map-stage .maplibregl-ctrl-top-right .maplibregl-ctrl-attrib-inner { position: absolute; top: 50px; bottom: auto; right: 0; width: min(360px, calc(100cqw - 24px)); max-height: 150px; overflow-y: auto; padding: 12px; }
-.map-stage .map-information-home { z-index: 21; top: calc(var(--map-overlay-top) + 162px); pointer-events: none; }
+.map-stage .map-information-home { z-index: 21; top: calc(var(--map-overlay-top) + 180px); pointer-events: none; }
 .river-map-presentation { display: grid; gap: 7px; }
 .river-map-presentation [role="group"] { display: flex; gap: 4px; width: fit-content; max-width: 100%; padding: 3px; border: 1px solid #31515d; border-radius: 999px; background: #071d28; }
 .river-map-presentation button { min-height: 44px; padding: 7px 15px; border: 0; border-radius: 999px; background: transparent; color: #a4c1cc; font-size: 13px; cursor: pointer; }

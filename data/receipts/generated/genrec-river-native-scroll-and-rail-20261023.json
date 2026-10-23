@@ -1,0 +1,72 @@
+{
+  "receipt_id": "kfm:generated:river-native-scroll-and-rail:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/globals.css",
+    "tests/river-pulse.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "app/globals.css": "sha256:95024503725ab91063f74fc820937257f3786bec8385b7f8f7d45ed58d9899a4",
+    "tests/river-pulse.browser.mjs": "sha256:5f3a34a0e3c43dee0003a7bbed25b03149de8f60e956a6b800d05743b7e3e924"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@9ec5c3c587beace00d669a19df476499c24d00f8",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39986011342"
+    ]
+  },
+  "truth_labels": {
+    "app/globals.css": "NEEDS VERIFICATION",
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Browser source syntax",
+      "outcome": "PASS",
+      "reason": "Browser regression parses as async JavaScript after stripping imports."
+    },
+    {
+      "gate": "Previous native-input qualification",
+      "outcome": "FAIL",
+      "reason": "4616fc2 passed build, types, 1720 Node tests (19 skips), MySQL/HTTP, and three browser layouts. Hand-dispatched native scrolling timed out at 390x844 and 1440x900. No behavioral pass inferred."
+    },
+    {
+      "gate": "Native gesture and separated rail qualification",
+      "outcome": "SKIPPED",
+      "reason": "Chrome Input.synthesizeScrollGesture now supplies native touch/mouse compositor timing over the same strictly hit-tested passive content. The panel must still scroll by more than 10px; no action is forced, no overlay is hidden, and no postcondition is removed. Failed runs capture trusted/prevented scroll events and computed overflow. Information offset increases by 18px to remove a desktop overlap, with a new six-pixel minimum separation check against every native map button. Exact-head full CI pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "diagnostic-run",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39986011342"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T16:29:06.919Z",
+  "emitter": "Codex",
+  "notes": "Two changed existing artifacts plus this successor receipt; prior receipts immutable. No observation, source, camera, selection, rights, policy, dependency or hosting changes. No merge/deployment by this task."
+}
