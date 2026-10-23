@@ -212,7 +212,9 @@ for (const layout of [
     // Wheel/touch gestures scroll the actual panel, never the map or document.
     await p.evaluate(`document.querySelector('.hydrology-observatory').scrollTop=0`);
     const r=await p.rect('.hydrology-observatory');
-    const x=r.x+r.width-20,y=r.y+r.height-20;
+    // Begin in inert padding so a native swipe cannot activate Latest or Play.
+    const x=r.x+r.width-4,y=r.y+r.height-8;
+    assert.ok(await p.evaluate(`(()=>{const e=document.elementFromPoint(${x},${y});return e?.closest('.hydrology-observatory') && !e.closest('button,input,select,a');})()`),'scroll gesture begins outside interactive controls');
     if(layout.touch) {
       await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
       for(let i=1;i<=8;i++){await p.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-i*7}]});await pause(20);}
