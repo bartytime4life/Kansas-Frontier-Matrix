@@ -29,10 +29,11 @@ assert.equal(origin.search, '');
 assert.equal(origin.username + origin.password, '');
 const chrome = process.env.KFM_TEST_CHROME ?? 'google-chrome';
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
-async function browser(t) {
+async function browser(t, layout) {
   const profile = await mkdtemp(join(tmpdir(), 'kfm-county-browser-'));
   const child = spawn(chrome, [
     '--headless=new', '--remote-debugging-pipe', `--user-data-dir=${profile}`,
+    `--window-size=${Math.max(800,layout.width)},${Math.max(600,layout.height+100)}`,
     '--no-first-run', '--no-default-browser-check', '--disable-background-networking',
     ...(process.getuid?.() === 0 ? ['--no-sandbox'] : []), '--disable-dev-shm-usage', '--enable-unsafe-swiftshader', '--use-angle=swiftshader', 'about:blank',
   ], { stdio: ['ignore', 'ignore', 'pipe', 'pipe', 'pipe'] });
@@ -80,6 +81,8 @@ async function pageSession(b, { width, height, touch, motion }) {
   const riverFixture=fixture();
   let riverResponses=0;
   const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
+  const { bounds:inputWindow } = await b.call('Browser.getWindowForTarget', { targetId });
+  assert.ok(inputWindow.width>=width && inputWindow.height>=height,'physical native-input window covers the emulated viewport');
   const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
   const call = (method, params = {}) => b.call(method, params, sessionId);
   const interceptions = createInterceptionErrorTracker();
@@ -156,7 +159,7 @@ async function pageSession(b, { width, height, touch, motion }) {
     await wait(`document.querySelector('.hydrology-observatory')?.dataset.state==='ready' && document.querySelector('.hydrology-observatory')?.getAttribute('aria-busy')==='false'`, 'station refresh rendered');
     await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
   };
-  return { call, evaluate, wait, key, rect, activate, riverResponseCount:()=>riverResponses, waitForRiverResponseAfter };
+  return { targetId, call, evaluate, wait, key, rect, activate, riverResponseCount:()=>riverResponses, waitForRiverResponseAfter };
 }
 
 for (const layout of [
@@ -166,7 +169,7 @@ for (const layout of [
   {width:844,height:390,touch:true,motion:'no-preference'},
   {width:1440,height:900,touch:false,motion:'no-preference'},
 ]) test(`River Pulse dismissal at ${layout.width}x${layout.height}, ${layout.touch?'touch':'mouse'}, ${layout.motion}`, {timeout:90000}, async t => {
-  const b=await browser(t),p=await pageSession(b,layout);
+  const b=await browser(t,layout),p=await pageSession(b,layout);
   try {
   await p.wait(`document.querySelector('.living-welcome [aria-label="Close quick start"]')`, 'welcome hydrated');
   await p.activate('[aria-label="Close quick start"]');
@@ -201,6 +204,9 @@ for (const layout of [
   const closed = async () => {
     await p.wait(`!document.querySelector('.hydrology-observatory')`, 'panel dismissed');
     await p.wait(`document.activeElement?.id==='map-canvas' || document.querySelector('#map-canvas')?.contains(document.activeElement)`, 'map focus restored');
+    // Escape can begin with map focus already satisfied. Finish the scheduled
+    // return-focus frame before opening a native menu that dismisses on focusout.
+    await p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
   };
   assert.ok(await p.evaluate(`!!document.querySelector('.qwen-header-entry')?.closest('header.topbar')`), 'AI chat has one stable header home');
   assert.equal(await p.evaluate(`document.querySelectorAll('.qwen-map-launch').length`), 0, 'floating chat duplicate is removed');
@@ -233,6 +239,29 @@ for (const layout of [
   await p.activate('.map-stage .maplibregl-ctrl-attrib-button');
   await p.activate('[aria-label="Exit fullscreen"]');
   await p.wait(`!document.fullscreenElement && !!document.querySelector('.map-information-home .maplibregl-ctrl-attrib')`, 'native fullscreen exits and credits return to the upper host');
+  if(layout.width===390) {
+    // Exercise the renderer's supported CSS fallback with both native entry and
+    // exit APIs unavailable, then restore the browser before continuing.
+    await p.evaluate(`(() => {
+      const map=document.querySelector('#map-canvas');
+      window.__kfmFullscreenDescriptors=[[map,'requestFullscreen'],[map,'webkitRequestFullscreen'],[document,'exitFullscreen'],[document,'webkitCancelFullScreen']].map(([target,key])=>({target,key,descriptor:Object.getOwnPropertyDescriptor(target,key)}));
+      for(const {target,key} of window.__kfmFullscreenDescriptors)Object.defineProperty(target,key,{value:undefined,configurable:true});
+    })()`);
+    try {
+      await p.activate('[aria-label="Enter fullscreen"]');
+      await p.wait(`document.querySelector('#map-canvas')?.classList.contains('maplibregl-pseudo-fullscreen') && document.querySelector('#map-canvas .maplibregl-ctrl-attrib')`, 'CSS fullscreen keeps credits in the visible map');
+      await p.activate('#map-canvas .maplibregl-ctrl-attrib-button');
+      await p.wait(`document.querySelector('#map-canvas .maplibregl-ctrl-attrib')?.classList.contains('maplibregl-compact-show')`, 'CSS fullscreen credits open');
+      const fallbackCredits=await p.rect('#map-canvas .maplibregl-ctrl-attrib-inner');
+      assert.ok(fallbackCredits.width>0 && fallbackCredits.height>0 && fallbackCredits.x>=0 && fallbackCredits.y>=0 && fallbackCredits.x+fallbackCredits.width<=layout.width && fallbackCredits.y+fallbackCredits.height<=layout.height,'CSS fullscreen credits fit the viewport');
+      assert.ok(await p.evaluate(`(() => {const e=document.querySelector('#map-canvas .maplibregl-ctrl-attrib-inner'),r=e.getBoundingClientRect();return e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`),'CSS fullscreen credits remain hit-testable');
+      await p.activate('#map-canvas .maplibregl-ctrl-attrib-button');
+      await p.activate('[aria-label="Exit fullscreen"]');
+      await p.wait(`!document.querySelector('#map-canvas')?.classList.contains('maplibregl-pseudo-fullscreen') && document.querySelector('.map-information-home .maplibregl-ctrl-attrib')`, 'CSS fullscreen exits and credits return');
+    } finally {
+      await p.evaluate(`(() => {for(const {target,key,descriptor} of window.__kfmFullscreenDescriptors ?? []){if(descriptor)Object.defineProperty(target,key,descriptor);else delete target[key];}delete window.__kfmFullscreenDescriptors;})()`);
+    }
+  }
   const presentationSnapshot = await snapshot();
   assert.equal(await p.evaluate(`document.querySelector('.river-map-presentation button:first-child').getAttribute('aria-pressed')`), 'true', 'quiet River view is the default');
   await p.activate('.river-map-presentation button:last-child');
@@ -274,8 +303,8 @@ for (const layout of [
     })()`);
     const {x,y}=origin;
     assert.ok(await p.evaluate(`(()=>{const e=document.elementFromPoint(${x},${y});return e?.closest('.hydrology-observatory') && !e.closest('button,input,select,a');})()`),'scroll gesture begins outside interactive controls');
-    // Let Chrome synthesize the native gesture, including compositor timing.
-    // The source and strict postcondition stay touch/mouse and real panel scroll.
+    // The physical headless window covers the emulated viewport, including
+    // after fullscreen exits. Keep trusted-event diagnostics on failure.
     await p.evaluate(`(() => {
       window.__kfmRiverScrollOrigin=${JSON.stringify(origin)};
       window.__kfmRiverScrollEvents=[];
@@ -284,10 +313,11 @@ for (const layout of [
         queueMicrotask(()=>window.__kfmRiverScrollEvents.push({type:event.type,trusted:event.isTrusted,prevented:event.defaultPrevented,target:event.target?.className,scrollTop:panel.scrollTop}));
       },{passive:true,once:true});
     })()`);
-    await p.call('Input.synthesizeScrollGesture',{
-      x,y,xDistance:0,yDistance:-120,speed:450,preventFling:true,
-      gestureSourceType:layout.touch?'touch':'mouse',
-    });
+    if(layout.touch) {
+      await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
+      for(let i=1;i<=8;i++){await p.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-i*7}]});await pause(20);}
+      await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    } else await p.call('Input.dispatchMouseEvent',{type:'mouseWheel',x,y,deltaX:0,deltaY:240});
     await p.wait(`document.querySelector('.hydrology-observatory').scrollTop>10`, 'native panel scrolling');
     let previousScroll=-1;
     for(let i=0;i<30;i++) {
@@ -350,7 +380,8 @@ for (const layout of [
         const close=document.querySelector('.hydrology-close'),r=close?.getBoundingClientRect();
         return {scrollOrigin:window.__kfmRiverScrollOrigin,scrollEvents:window.__kfmRiverScrollEvents,viewport:{width:innerWidth,height:innerHeight},fullscreen:document.fullscreenElement?{tag:document.fullscreenElement.tagName,id:document.fullscreenElement.id,classes:document.fullscreenElement.className}:null,elements,closeHit:r?{tag:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.tagName,classes:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.className}:null,buttons:[...document.querySelectorAll('.maplibregl-control-container button,.maplibregl-control-container summary')].map(e=>({label:e.getAttribute('aria-label'),title:e.getAttribute('title'),classes:e.className}))};
       })()`);
-      t.diagnostic('KFM_RIVER_PROBE ' + JSON.stringify({ layout, probe }));
+      const window=await b.call('Browser.getWindowForTarget',{targetId:p.targetId});
+      t.diagnostic('KFM_RIVER_PROBE ' + JSON.stringify({ layout, probe, inputWindow:window.bounds }));
       const screenshot = await p.call('Page.captureScreenshot', { format:'jpeg', quality:65, captureBeyondViewport:false });
       t.diagnostic('KFM_RIVER_IMAGE ' + JSON.stringify({ layout, data:screenshot.data }));
     } catch (diagnosticError) { t.diagnostic('KFM_RIVER_DIAGNOSTIC_ERROR ' + String(diagnosticError)); }

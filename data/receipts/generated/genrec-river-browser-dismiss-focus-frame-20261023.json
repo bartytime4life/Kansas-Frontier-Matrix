@@ -1,0 +1,70 @@
+{
+  "receipt_id": "kfm:generated:river-browser-dismiss-focus-frame:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/river-pulse.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "tests/river-pulse.browser.mjs": "sha256:02af223cbc350f26ef583c8194d503fc77806ae662549d481d5926716b6844bb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@b3c2caf2e8a0aee48d84d3848f25f7442dd202ab",
+      "bartytime4life/Kansas-Frontier-Matrix@b0952a3ebf3c8f5939d11dec3cdd1522eb6ec0a5",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39988201295"
+    ]
+  },
+  "truth_labels": {
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Previous strict browser acceptance",
+      "outcome": "FAIL",
+      "reason": "ba6a540 passes native panel scrolling including trusted desktop wheel and 240px scroll. Its desktop late reopen fails strict Status paint while More is closed. closeLiveInstrument schedules a requestAnimationFrame focus return; Escape from already-focused map satisfies the previous closed predicate before that callback runs, allowing it to dismiss the newly opened native menu."
+    },
+    {
+      "gate": "Browser syntax",
+      "outcome": "PASS",
+      "reason": "Changed browser script parses after import stripping."
+    },
+    {
+      "gate": "Dismissal focus sequencing",
+      "outcome": "SKIPPED",
+      "reason": "Await two animation frames after the existing map-focus predicate before any next native action. All focus, native menu, scroll, selection, source, viewport, fullscreen and hit assertions remain. No forced action, retry, overlay hiding, or runtime change. Exact-head CI pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "dismissal-browser-diagnostic",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39988201295"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T16:48:24.157Z",
+  "emitter": "Codex",
+  "notes": "One existing browser harness artifact and this immutable successor receipt. Synchronize the already-scheduled production focus frame before the test starts a different interaction. No runtime/data/rights/dependency/hosting changes; no agent merge/deployment."
+}
