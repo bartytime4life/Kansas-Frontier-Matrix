@@ -4764,3 +4764,15 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
   .map-stage .hydrology-observatory,
   .map-stage .hydrology-observatory[data-expanded="true"] { max-height: calc(100% - 76px); }
 }
+
+/* The phone's 62px bottom navigation and the upper control row both own space. */
+@media (max-width: 760px) {
+  .map-stage .hydrology-observatory { max-height: min(440px, 53dvh, calc(100% - 128px)); }
+  .map-stage .hydrology-observatory[data-expanded="true"] { max-height: calc(100% - 128px); }
+}
+@media (max-height: 480px) {
+  .map-stage .hydrology-observatory { padding-block: 6px; }
+  .map-stage .hydrology-observatory:has(.live-observation-switcher) { scroll-padding-top: 52px; }
+}
+.map-stage .map-information-home .maplibregl-ctrl-attrib { background: #102b33 !important; border-color: #52737e; }
+.map-stage .map-information-home .maplibregl-ctrl-attrib-button { background-color: transparent !important; filter: invert(.9); }

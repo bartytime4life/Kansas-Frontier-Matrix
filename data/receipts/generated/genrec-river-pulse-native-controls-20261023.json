@@ -1,0 +1,84 @@
+{
+  "receipt_id": "kfm:generated:river-pulse-native-controls:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/page.tsx",
+    "app/globals.css",
+    "app/maplibre-seam.ts",
+    "tests/river-pulse.browser.mjs",
+    "tests/map-stage-fullscreen.test.mjs",
+    "docs/water-flow-paths.md"
+  ],
+  "artifact_hashes": {
+    "app/page.tsx": "sha256:b0dc6193304eefd6fbd9588b12034021a409ba51e5e48613188ba8404cbad468",
+    "app/globals.css": "sha256:1792cece2128e6d75666203d490c650841485d70d114a8a2d86c7507028feccb",
+    "app/maplibre-seam.ts": "sha256:4eb06d8f9863a028ce740413463061c39a119ec16104fa3dab24bcc7329cd96f",
+    "tests/river-pulse.browser.mjs": "sha256:a5e8cbc6ffbd1a9437ea8308f77f95207ad294a7362c59d3a3eecd420de9818c",
+    "tests/map-stage-fullscreen.test.mjs": "sha256:ca63941cb1da5c1aa9c2bb01cc3a0d779ec7df6827cd2fe642b6040966adee75",
+    "docs/water-flow-paths.md": "sha256:79f401c0afaba303c7cd196784991122822f96001b28c623333dac7deb3ba63a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@c7b24422c3f358b8e0f6f1a03260b338254fbdd3",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39980275129"
+    ]
+  },
+  "truth_labels": {
+    "app/page.tsx": "NEEDS VERIFICATION",
+    "app/globals.css": "NEEDS VERIFICATION",
+    "app/maplibre-seam.ts": "NEEDS VERIFICATION",
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION",
+    "tests/map-stage-fullscreen.test.mjs": "NEEDS VERIFICATION",
+    "docs/water-flow-paths.md": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Diagnostic browser evidence",
+      "outcome": "FAIL",
+      "reason": "Five isolated JPEGs and geometry records captured actual failures. At 320px the expanded dock began at y=70 while the map begins y=104; the old cap omitted the 62px bottom navigation clearance. At 568px the dock covered native fullscreen. Desktop was genuinely fullscreen while its control still advertised Enter fullscreen. Touch-swipe origins occupied the scrollbar edge; this interpretation is tested by moving the gesture away while preserving its strict scroll assertion."
+    },
+    {
+      "gate": "Bounded correction",
+      "outcome": "SKIPPED",
+      "reason": "Phone dock cap now accounts for top and bottom clearances. The existing renderer acquisition adapter owns native stage fullscreen, labels, rejected-request status and cleanup. Added three behavior tests. Browser gestures retain strict native input but start beyond the measured scrollbar; mounted controls wait before scrolling. Full exact-head CI remains required."
+    },
+    {
+      "gate": "JavaScript syntax",
+      "outcome": "PASS",
+      "reason": "The browser regression and new fullscreen test parse as async JavaScript bodies after import declarations are stripped. No behavioral pass is inferred."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T15:53:28.282Z",
+  "emitter": "Codex",
+  "notes": "Existing renderer seam, page/styles, adjacent guide and test responsibilities only. Diagnostic images are synthetic CI pages. No source, policy, rights, dependency, database, hosting, merge or publication change. Historical diagnostic receipt remains immutable."
+}

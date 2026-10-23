@@ -26,9 +26,12 @@ toggle. On returning to the map, the same native attribution control moves to
 an upper host outside the isolated map canvas, keeping its downward disclosure
 reachable above an open River Pulse panel.
 Native fullscreen targets the map stage, including the information host and
-observation dock, so source credits remain available in that view.
-Short landscape reserves a top control row above both compact and expanded
-River Pulse, keeping its sticky close control clear of map information.
+observation dock, so source credits remain available in that view. The renderer
+adapter owns its Enter/Exit label and uses the native fullscreen APIs, including
+an accessible unavailable state if the browser rejects a request.
+Phone dock height accounts for both the bottom navigation and the upper control
+row. Short landscape reduces vertical padding while retaining 44px actions,
+keeping compact and expanded sticky dismissal clear of map information.
 
 Placement reuses existing application, tests and adjacent documentation
 responsibilities under adopted Directory Rules §§10–11 and accepted ADR-0029.
