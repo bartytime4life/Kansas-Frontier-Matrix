@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "synthetic": true,
+  "routes": [
+    {
+      "id": "synthetic-road-study",
+      "title": "Format demonstration \u2014 no actual road or historical event",
+      "mode": "road",
+      "action": "build",
+      "coordinates": [
+        [
+          -98.5,
+          38.5
+        ],
+        [
+          -98.497,
+          38.5
+        ]
+      ],
+      "widthM": 8,
+      "positionAccuracyM": 1,
+      "start": "2024-01-01",
+      "end": "2024-01-11",
+      "closedFrom": "2024-01-01",
+      "reopenedAt": "2024-01-11",
+      "progress": [
+        {
+          "date": "2024-01-01",
+          "chainageM": 0,
+          "sourceUrl": "https://example.invalid/synthetic"
+        },
+        {
+          "date": "2024-01-06",
+          "chainageM": 130.53308488317788,
+          "sourceUrl": "https://example.invalid/synthetic"
+        },
+        {
+          "date": "2024-01-11",
+          "chainageM": 261.06616976635576,
+          "sourceUrl": "https://example.invalid/synthetic"
+        }
+      ],
+      "interpolate": false,
+      "sourceUrl": "https://example.invalid/synthetic",
+      "geometrySourceUrl": "https://example.invalid/synthetic",
+      "limitation": "SYNTHETIC FORMAT EXAMPLE. Invented line and dates in Kansas; no actual route, closure, observed rate, release or historical claim. URLs are placeholders and are never fetched."
+    }
+  ]
+}
