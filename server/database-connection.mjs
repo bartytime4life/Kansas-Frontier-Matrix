@@ -1,4 +1,6 @@
 // Connection health only. No datasets, schema changes or SQL supplied by callers.
+import { isIP } from 'node:net';
+import { lookup as systemLookup } from 'node:dns/promises';
 const SQL = 'SELECT 1 AS connection_ok';
 export function databaseOptions(env) {
   if (!['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD'].every(k => typeof env[k] === 'string' && env[k].length)) {
@@ -19,8 +21,27 @@ export function databaseOptions(env) {
   return { options, transport: local ? 'host-loopback' : 'verified-tls' };
 }
 
+function providerPrivateAddress(address) {
+  if (isIP(address) !== 4) return false;
+  const [a, b] = address.split('.').map(Number);
+  return a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168);
+}
+
+export async function connectionOptions(env, lookup = systemLookup) {
+  const result = databaseOptions(env);
+  if (env.KFM_DATABASE_CONNECTION_TRANSPORT !== 'provider-private-network' || result.transport === 'host-loopback') return result;
+  // Explicit owner opt-in only. No fallback after a TLS failure, public address,
+  // mixed DNS result or unknown network. Pin the validated IP to avoid rebinding.
+  const addresses = await lookup(env.DB_HOST, { all: true, family: 4 });
+  if (!addresses.length || !addresses.every(item => providerPrivateAddress(item.address))) throw new Error('DATABASE_PRIVATE_NETWORK_REQUIRED');
+  const options = { ...result.options, host: addresses[0].address };
+  delete options.ssl;
+  return { options, transport: 'provider-private-network' };
+}
+
 function reason(error) {
   if (error?.message === 'DATABASE_CONFIGURATION_MISSING') return 'configuration-missing';
+  if (error?.message === 'DATABASE_PRIVATE_NETWORK_REQUIRED') return 'private-provider-network-required';
   if (/CERT|TLS|SSL|SELF_SIGNED|UNABLE_TO_VERIFY/.test(error?.code ?? '')) return 'verified-tls-unavailable';
   if (error?.code === 'ER_ACCESS_DENIED_ERROR') return 'authentication-failed';
   return 'connection-unavailable';
@@ -36,6 +57,7 @@ function tlsFailure(error) {
 
 export function createDatabaseCheck({
   environment = () => process.env, now = Date.now,
+  lookup = systemLookup,
   connect = async options => (await import('mysql2/promise')).createConnection(options),
 } = {}) {
   let cached, until = 0, pending;
@@ -46,7 +68,7 @@ export function createDatabaseCheck({
       let connection;
       let result;
       try {
-        const { options, transport } = databaseOptions(environment());
+        const { options, transport } = await connectionOptions(environment(), lookup);
         connection = await connect(options);
         const [rows] = await connection.query({ sql: SQL, timeout: 2000 });
         if (Number(rows[0]?.connection_ok) !== 1) throw new Error('DATABASE_CHECK_FAILED');
