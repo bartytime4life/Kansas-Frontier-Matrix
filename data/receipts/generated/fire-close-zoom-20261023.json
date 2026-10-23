@@ -1,0 +1,79 @@
+{
+  "receipt_id": "kfm:generated:fire-close-zoom:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/fire-detection-style.ts",
+    "app/live-context.ts",
+    "tests/fire-detection-style.test.mjs",
+    "scripts/qwen-knowledge-pack.mjs",
+    "docs/fire-close-zoom.md"
+  ],
+  "artifact_hashes": {
+    "app/fire-detection-style.ts": "sha256:4816712d41fcca4d7a2466230b822875b2746831aaa5cab4a150924a3cb25abf",
+    "app/live-context.ts": "sha256:1986220a45d86ba68eb982f1c09c606a152c7675d69fee68bb9f1f802eb1fbdb",
+    "tests/fire-detection-style.test.mjs": "sha256:e2ed463d735af1c8052a1a3e7f73015f8fde4fe9c8a6b3384434498f467777a9",
+    "scripts/qwen-knowledge-pack.mjs": "sha256:2874cf78b0bcb80e2b93fd808322246d863eee249df36c52f53ac5acd8043eb7",
+    "docs/fire-close-zoom.md": "sha256:5aceb9e79c8b236152de4891a155ddeb68f9b3582b580aa3617b9a9442d8f40b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:c488a7ca06eb87c4696a1ac4b36edbb6e0c3988c08725362fcec6e0a4fbd5f70",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@b33131ce39898f611386b95dbcc0b1ddaf6e7052"
+    ]
+  },
+  "truth_labels": {
+    "app/fire-detection-style.ts": "NEEDS VERIFICATION",
+    "app/live-context.ts": "NEEDS VERIFICATION",
+    "tests/fire-detection-style.test.mjs": "NEEDS VERIFICATION",
+    "scripts/qwen-knowledge-pack.mjs": "NEEDS VERIFICATION",
+    "docs/fire-close-zoom.md": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Focused fire regression",
+      "outcome": "PASS",
+      "reason": "Nine focused tests including actual MapLibre expression evaluation, original selection identity, zoom cap, clearing, opacity and motion gates."
+    },
+    {
+      "gate": "Changed-module checks",
+      "outcome": "PASS",
+      "reason": "TypeScript, ESLint and deterministic knowledge pack check passed."
+    },
+    {
+      "gate": "Source artwork inspection",
+      "outcome": "PASS",
+      "reason": "Executed all 24 frames through a recording Canvas context; inspected five sampled frames rasterized from actual paths/gradients by Cairo. Browser shadows not reproduced."
+    },
+    {
+      "gate": "Full application and browser acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Local checkout predates hosted source; isolated modules used. Browser policy blocks local-file previews. Full build, complete suite and integrated rendering await CI and browser acceptance."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T16:57:03.415619+00:00",
+  "emitter": "Codex",
+  "notes": "Illustrative display only. Existing source records, pass orientation, evidence boundaries, motion gates and map identities retained. Reversible draft candidate; no merge or live publication."
+}
