@@ -809,6 +809,9 @@ export const clearOfficialContextFeed = (map: MapLibreMap, feed: OfficialContext
 };
 const ensureLayer = (map: MapLibreMap, specification: LayerSpecification, beforeId?: string) => {
   if (!map.getLayer(specification.id)) map.addLayer(specification, beforeId);
+  // The fire renderer selects a footprint hit radius or a bounded fallback
+  // radius and applies globe scaling. Do not reset it on every state sync.
+  if (specification.id === "external-nasa-gibs-fire-points-circle") return;
   if (specification.type !== "circle" && specification.type !== "line") return;
   const property = specification.type === "circle" ? "circle-radius" : "line-width";
   const base = specification.type === "circle" ? specification.paint?.["circle-radius"] : specification.paint?.["line-width"];
@@ -966,14 +969,15 @@ export const applyOfficialContextState = (
 
   const globeView = map.getProjection?.()?.type === "globe";
   for (const source of OFFICIAL_CONTEXT_SOURCES) {
+    // Fire display sync owns both visibility and paint, including its checked
+    // image fallback. Generic styling must not re-enable an unavailable symbol.
+    if (source.id === "nasa-gibs-fire-points" || source.id === "nifc-fire-reports") continue;
     for (const layerId of source.layerIds) {
       if (!map.getLayer(layerId)) continue;
       // Regional rasters use a Mercator tile grid. Hiding them in globe mode
       // prevents stretched imagery and false-looking color fields at global scale.
       const globeSafeVisibility = (source.kind === "OPERATIONAL_WMS" || source.kind === "HISTORICAL_RASTER") && globeView ? false : visibility[source.id];
       setVisibleIfChanged(map, layerId, globeSafeVisibility);
-      // Fire detections use zoom-dependent opacity (flame → footprint) applied by syncFireDetectionDisplay.
-      if (source.id === "nasa-gibs-fire-points" || source.id === "nifc-fire-reports") continue;
       const safeOpacity = Math.max(0, Math.min(1, opacity[source.id] ?? source.defaultOpacity)) * (source.id === "noaa-hms-smoke" ? smokeFade.get(map) ?? 1 : 1);
       const layer = map.getLayer(layerId);
       if (layer?.type === "circle") {

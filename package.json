@@ -6,6 +6,7 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "kfm-data": "node scripts/pc-pipeline/cli.mjs",
     "archive:migration": "node scripts/migrate-hosted-ingestion.mjs",
     "install:ci": "npm ci",
     "prepare:maplibre": "node scripts/prepare-maplibre-assets.mjs",
