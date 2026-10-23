@@ -67,13 +67,13 @@ and the Underground renderer releases its own context on teardown.
 ## Runtime and recovery
 
 The stable local origin remains `http://127.0.0.1:4173`; the source alias is
-`/home/bartytime/Projects/KFM-Explorer-Site-current`. The physical store remains
-`/home/bartytime/Projects/KFM-Explorer-Site-v109/.wrangler/local-state`.
+`$HOME/Projects/KFM-Explorer-Site-current`. The physical store remains
+`$HOME/Projects/KFM-Explorer-Site-v109/.wrangler/local-state`.
 The application source, source-history bundle, previous build, service unit and
 drop-ins, stopped-writer D1/R2 snapshot and file hashes are preserved outside app
-source under `/home/bartytime/KFM-site-recovery/kfm-sync-20261009`. The second install
+source under `$HOME/KFM-site-recovery/kfm-sync-20261009`. The second install
 retains v187 source/build in its original directory and another consistent snapshot
-under `/home/bartytime/KFM-site-recovery/kfm-sync-20261009-webgl`.
+under `$HOME/KFM-site-recovery/kfm-sync-20261009-webgl`.
 
 The initial consistent snapshot verified 18,410 files and eight SQLite databases.
 Copied-state rehearsals used ports 4187 and 4188. Both selected submission indexes are

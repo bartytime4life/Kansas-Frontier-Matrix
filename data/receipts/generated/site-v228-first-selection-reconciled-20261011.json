@@ -4674,7 +4674,7 @@
     "method": "Merge current main without rewriting history; carry the seven water application files into the authoritative Site. Select this combined receipt; retain both predecessors byte-identical. All Site application files now match the repository mirror.",
     "predecessors": {
       "site-v226-water-decision-expiry-overlay-20261011.json": "7ac27beb1383a79148ec34ae6635912c9d95364365727f4a8aa62c5f0a8cfec4",
-      "site-v227-update-recovery-20261011.json": "598166bc51dda4bacb811e8fd0e738f5e8a8f035cb6d43036cd737b390dcc140"
+      "site-v227-update-recovery-20261011.json": "127b563ca3a74966092413dfd5599b52d18beeb27eeadc36a42a005832d7f56d"
     },
     "prior_pr_5029_head": "d270b72dd203f8f3584d7fd2955be62c0e9a8f4a",
     "shared_conflict": "tools/qa/site_mirror.py receipt selector"
@@ -4882,7 +4882,7 @@
     "local_copy": {
       "all_bytes_verified": true,
       "build_files": 427,
-      "path": "/home/bartytime/Projects/KFM-Explorer-Site-first-selection-20261011-v228",
+      "path": "$HOME/Projects/KFM-Explorer-Site-first-selection-20261011-v228",
       "persistent_store_changed": false,
       "rollback": "v228 > v227 > v228 exact asset digests verified",
       "source_paths": 930

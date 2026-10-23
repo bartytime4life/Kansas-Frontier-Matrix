@@ -63,7 +63,7 @@ receipt and approval state are unchanged.
 | Private hosted Site | **v192**, deployment `appgdep_6ac9102d8b1081918a2454f93eab18ae`, succeeded at 2026-10-09 16:03:06 UTC |
 | Saved version | `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_056f2824f95c819182bd04d885776532` |
 | Stored deployment archive | `sha256:1050e4d8b3593d0258c4cf42c4aba9b509be51fea464e8f5b3e45ec17ba546a0`, 49,807,360 bytes, 398 files |
-| Local installation | `/home/bartytime/Projects/KFM-Explorer-Site-alignment-20261009`; stable alias selects it; service active; loopback `/` returns 200 |
+| Local installation | `$HOME/Projects/KFM-Explorer-Site-alignment-20261009`; stable alias selects it; service active; loopback `/` returns 200 |
 | Access and storage | Existing project, owner-only access revision 1, environment revision 5, `DB` and `BUCKET` unchanged |
 
 All **817 mirrored source files** equal the standalone source byte for byte.
@@ -115,10 +115,10 @@ The root JavaScript workspace's explicit `WORKFLOW_HOLD` scripts remain delibera
 ## Recovery
 
 Recovery material is outside the repository at
-`/home/bartytime/KFM-site-recovery/repo-live-alignment-20261009`: previous source
+`$HOME/KFM-site-recovery/repo-live-alignment-20261009`: previous source
 bundle, service configuration, verified stopped-store snapshot in `state-verified`
 and the installation result. The old installation remains at
-`/home/bartytime/Projects/KFM-Explorer-Site-connection-repair-20261009`.
+`$HOME/Projects/KFM-Explorer-Site-connection-repair-20261009`.
 An initial snapshot comparison detected SQLite shared-memory initialization and
 returned to the old service before source switching; the verified retry records
 store hashes after the read-only SQLite inspection.

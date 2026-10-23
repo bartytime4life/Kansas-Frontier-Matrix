@@ -123,7 +123,7 @@ The implementation starts at repository main
 `5874802f4f4be4968a68a96ed526d7fb4d68cd8d`, after mine-map PR #4944 merged. Its
 765 Site source files matched the existing local checkout before editing.
 The final local application is installed under
-`/home/bartytime/Projects/KFM-Explorer-Site-download-workspace-20261008-r2` and
+`$HOME/Projects/KFM-Explorer-Site-download-workspace-20261008-r2` and
 served through the existing `KFM-Explorer-Site-current` alias on port 4173.
 The original Git remote `/tmp/kfm-authoritative-site-20261008` and persistent
 `KFM-Explorer-Site-v109/.wrangler/local-state` remain in use. The loopback
