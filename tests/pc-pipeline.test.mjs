@@ -199,3 +199,63 @@ test('governed packages cannot use the external-context shortcut', async () => {
   const f = await fixture(); const payload = Buffer.from(canonical({ snapshot: {}, decision: {} })); const m = transfer(payload, 'water');
   await assert.rejects(publish(m, payload, secret, { fetcher: f.fetcher }), /GOVERNED_VALIDATOR_REQUIRED/); assert.equal(f.store.heads.size, 0);
 });
+
+test('hosting outage keeps captures private and retries after recovery without reacquiring', async () => {
+  const f = await fixture(); const credentials = await mkdtemp(resolve(tmpdir(), 'kfm-credentials-'));
+  await writeFile(resolve(credentials, 'pipeline-worker-key'), secret);
+  await writeFile(resolve(credentials, 'nws-alerts.json'), canonical(approval()));
+  const previous = process.env.CREDENTIALS_DIRECTORY; process.env.CREDENTIALS_DIRECTORY = credentials;
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-outage-'));
+  const config = { root, sources: ['nws-alerts'], publish: true, approvalDirectory: credentials };
+  let captures = 0;
+  const options = { now, memory: () => 8 * 1024 ** 3, guard: async () => ({}), acquire: req => {
+    captures++; return fetchCapture(req, { fetcher: async () => Response.json({ type: 'FeatureCollection', features: [] }) });
+  } };
+  try {
+    const down = await tick(config, { ...options, fetcher: async () => { throw Error('offline'); } });
+    assert.equal(down.outcomes[0].state, 'deferred'); assert.equal(captures, 1);
+    const j = await Journal.open(resolve(root, 'pipeline-journal.sqlite'));
+    assert.ok(j.status()[0].retry_at > now); assert.equal(j.status()[0].attempts, 0);
+    // Advance eligibility in this private fixture without depending on the wall-clock hour boundary.
+    j.db.exec('UPDATE jobs SET retry_at=0'); j.close();
+    const recovered = await tick(config, { ...options, fetcher: f.fetcher });
+    assert.equal(recovered.outcomes[0].state, 'published');
+    assert.equal(captures, 1);
+  } finally { if (previous === undefined) delete process.env.CREDENTIALS_DIRECTORY; else process.env.CREDENTIALS_DIRECTORY = previous; }
+});
+
+test('priority and one-publication budget preserve the second candidate for a later tick', async () => {
+  const f = await fixture(); const root = await mkdtemp(resolve(tmpdir(), 'kfm-priority-'));
+  const credentials = await mkdtemp(resolve(tmpdir(), 'kfm-priority-credentials-'));
+  await writeFile(resolve(credentials, 'pipeline-worker-key'), secret);
+  for (const id of ['nws-alerts', 'usgs-streamflow']) await writeFile(resolve(credentials, id + '.json'), canonical(approval(id)));
+  const previous = process.env.CREDENTIALS_DIRECTORY; process.env.CREDENTIALS_DIRECTORY = credentials;
+  const config = { root, sources: ['usgs-streamflow', 'nws-alerts'], publish: true, approvalDirectory: credentials };
+  const acquired = [];
+  try {
+    const result = await tick(config, { now, fetcher: f.fetcher, memory: () => 8 * 1024 ** 3, guard: async () => ({}), acquire: req => {
+      acquired.push(req.sourceId); return fetchCapture(req, { fetcher: async () => Response.json({ type: 'FeatureCollection', features: [] }) });
+    } });
+    assert.deepEqual(result.outcomes.map(x => [x.sourceId, x.state]), [['nws-alerts', 'published'], ['usgs-streamflow', 'deferred']]);
+    assert.equal(result.outcomes[1].reason, 'PUBLICATION_BUDGET'); assert.equal(acquired.length, 2);
+    assert.equal(result.publication.attempted, 1); assert.equal(f.store.heads.size, 1);
+    const j = await Journal.open(resolve(root, 'pipeline-journal.sqlite'));
+    assert.equal(j.status().find(x => x.source === 'usgs-streamflow').attempts, 0);
+    j.db.exec('UPDATE jobs SET retry_at=0'); j.close();
+    const later = await tick(config, { now, fetcher: f.fetcher, memory: () => 8 * 1024 ** 3, guard: async () => ({}), acquire: async () => { throw Error('must reuse saved candidates'); } });
+    assert.equal(later.outcomes.find(x => x.sourceId === 'usgs-streamflow').state, 'published');
+    assert.equal(f.store.heads.size, 2);
+  } finally { if (previous === undefined) delete process.env.CREDENTIALS_DIRECTORY; else process.env.CREDENTIALS_DIRECTORY = previous; }
+});
+
+test('capture-only completion can later publish and deferrals remain fenced', async () => {
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-promotion-')); const j = await Journal.open(resolve(root, 'journal.sqlite'));
+  try {
+    const a = j.claim('nws-alerts', 1, now); j.update(a, { product_path: 'candidate.json' }, now); j.finish(a, null, now);
+    assert.equal(j.claim('nws-alerts', 1, now), null);
+    const b = j.claim('nws-alerts', 1, now, true); assert.ok(b);
+    assert.throws(() => j.defer(a, 'PUBLICATION_BUDGET', now), /LEASE_LOST/);
+    j.defer(b, 'PUBLICATION_BUDGET', now); assert.equal(j.claim('nws-alerts', 1, now + 1, true), null);
+    assert.ok(j.claim('nws-alerts', 1, now + 300001, true));
+  } finally { j.close(); }
+});

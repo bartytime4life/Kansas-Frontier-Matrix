@@ -19,12 +19,12 @@ export class Journal {
       retry_at INTEGER NOT NULL DEFAULT 0, lease_token TEXT, lease_until INTEGER NOT NULL DEFAULT 0, product_path TEXT, transfer_path TEXT, release_id TEXT, reason TEXT,
       PRIMARY KEY(source,slot));`);
   }
-  claim(source, slot, now = Date.now()) {
+  claim(source, slot, now = Date.now(), publish = false) {
     this.db.exec('BEGIN IMMEDIATE');
     try {
       this.db.prepare('INSERT OR IGNORE INTO jobs(source,slot) VALUES (?,?)').run(source, slot);
       const row = this.db.prepare('SELECT * FROM jobs WHERE source=? AND slot=?').get(source, slot);
-      if (row.state === 'complete' || row.lease_until > now || row.retry_at > now || row.attempts >= 3) { this.db.exec('COMMIT'); return null; }
+      if ((row.state === 'complete' && !(publish && row.product_path && !row.release_id)) || row.lease_until > now || row.retry_at > now || row.attempts >= 3) { this.db.exec('COMMIT'); return null; }
       const token = randomUUID();
       this.db.prepare("UPDATE jobs SET state='running',attempts=attempts+1,lease_token=?,lease_until=? WHERE source=? AND slot=?").run(token, now + 600000, source, slot);
       this.db.exec('COMMIT'); return { ...row, token, source, slot };
@@ -40,6 +40,12 @@ export class Journal {
   finish(job, reason = null, now = Date.now()) {
     const r = this.db.prepare('UPDATE jobs SET state=?,reason=?,retry_at=?,lease_token=NULL,lease_until=0 WHERE source=? AND slot=? AND lease_token=? AND lease_until>?')
       .run(reason ? 'held' : 'complete', reason, reason ? now + 300000 * 2 ** Math.min(job.attempts, 3) : 0, job.source, job.slot, job.token, now);
+    if (r.changes !== 1) throw new Error('LEASE_LOST');
+  }
+  defer(job, reason, now = Date.now()) {
+    // A capacity/offline deferral does not consume a source-validation attempt.
+    const r = this.db.prepare("UPDATE jobs SET state='pending',reason=?,retry_at=?,attempts=MAX(0,attempts-1),lease_token=NULL,lease_until=0 WHERE source=? AND slot=? AND lease_token=? AND lease_until>?")
+      .run(reason, now + 300000, job.source, job.slot, job.token, now);
     if (r.changes !== 1) throw new Error('LEASE_LOST');
   }
   status() { return this.db.prepare('SELECT source,slot,state,attempts,retry_at,release_id,reason FROM jobs ORDER BY slot DESC LIMIT 100').all(); }

@@ -1,17 +1,19 @@
 import { ORIGIN, CHUNK_SIZE, canonical, sha, parse, fail } from '../../server/pipeline-contract.mjs';
 import { signRequest } from '../../server/pipeline-auth.mjs';
 
-export async function pipelineCall(action, value, secret, { fetcher = fetch } = {}) {
+export async function pipelineCall(action, value, secret, { fetcher = fetch, signal } = {}) {
   const body = canonical(value), path = '/api/pipeline/v1/' + action;
-  const response = await fetcher(ORIGIN + path, { method: 'POST', redirect: 'manual', signal: AbortSignal.timeout(30000),
+  const response = await fetcher(ORIGIN + path, { method: 'POST', redirect: 'manual', signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(30000)]) : AbortSignal.timeout(30000),
     headers: { 'Content-Type': 'application/json', ...signRequest({ secret, method: 'POST', path, body }) }, body });
   const limit = 65536; const reader = response.body?.getReader(); let n = 0; const chunks = [];
   if (reader) try { while (true) { const { value: chunk, done } = await reader.read(); if (done) break; n += chunk.length; if (n > limit) { await reader.cancel(); fail('REMOTE_RESPONSE_LIMIT'); } chunks.push(chunk); } } finally { reader.releaseLock(); }
+  if (response.status === 429 || response.status === 503) fail('REMOTE_BUSY');
   const result = parse(Buffer.concat(chunks), limit);
   if (!response.ok) fail(typeof result.error === 'string' && /^[A-Z_]{1,64}$/.test(result.error) ? result.error : 'REMOTE_UNAVAILABLE');
   return result;
 }
 export async function publish(manifest, payload, secret, options = {}) {
+  options = { ...options, signal: options.signal ? AbortSignal.any([options.signal, AbortSignal.timeout(120000)]) : AbortSignal.timeout(120000) };
   if (sha(payload) !== manifest.payloadSha256 || payload.length !== manifest.byteLength) fail('LOCAL_ARTIFACT_CHANGED');
   const id = sha(canonical(manifest));
   const staged = await pipelineCall('stage', manifest, secret, options);

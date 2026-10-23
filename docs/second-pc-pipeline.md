@@ -223,3 +223,74 @@ or the production database. Existing domain gates retain their regression tests.
 Physical disk qualification, independent backup/restore, actual MySQL execution,
 FTP credentials, hosted durability and production activation require real-host
 evidence. Source/build/unit success cannot stand in for those steps.
+
+## Storage priorities and publication budget (2026-10-23)
+
+The second PC remains the capture/processing authority: original objects, full
+history, private receipts and the local SQLite journal stay there. GoDaddy MySQL
+stores approved projections and release metadata for public reads. This is
+one-way application publication, not SQL replication; no remote database port,
+shared SQLite file or raw-archive upload is introduced.
+
+The automatic worker defaults to NWS context first, USGS streamflow second,
+one release attempt per tick and 8 MiB of normalized payload. Each source still
+has its existing hourly capture slot. The lower-priority candidate is captured
+and saved even when publication is deferred. A subsequent eligible tick can
+publish it without repeating acquisition. Reviewed water/weather packages keep
+the separate manual `stage-package` workflow; its transfers are **not** governed
+by this automatic-worker budget. Additional pipeline adapters are not implied.
+
+Optional configuration (merge into the existing private config; preserve all
+other properties and do not turn on `publish` merely to edit priorities):
+
+```json
+"storagePolicy": {
+  "priority": ["nws-alerts", "usgs-streamflow"],
+  "maxPublicationsPerTick": 1,
+  "maxBytesPerTick": 8388608
+}
+```
+
+Priority must contain both sources once. Attempts may be 1–2; byte budget may
+be 256 KiB–16 MiB. The existing per-product ceiling stays 8 MiB. Failed attempts
+also consume the run's budget. A product larger than the chosen budget remains
+private and deferred; increase the budget within bounds or prepare a smaller
+approved product. Counts exclude HTTP/base64 overhead and are **not** MySQL
+capacity measurements. Existing 1 GiB/10,000 release admission caps still apply;
+index, log, backup and provider quota headroom must be measured before activation.
+
+A failed heartbeat no longer stops collection. After an unavailable/busy host,
+the worker holds further publication for that run and retries eligible candidates
+on later ticks with a five-minute minimum delay. Such deferrals do not consume
+validation retries. Signature, approval, integrity and source errors still hold
+the affected job under the existing retry limit. Publication has a two-minute
+aggregate timeout in addition to each call's 30-second timeout. Signed release
+identity and readback remain mandatory after ambiguous delivery.
+
+The scheduler intentionally considers the **current hourly slot**. Older
+candidates remain private and are not automatically replayed after an extended
+outage: replaying all history could overload hosting or replace current context
+with stale data. No raw objects or releases are deleted by this change. An
+explicit reviewed historical release workflow remains future work.
+
+`node scripts/pc-pipeline/cli.mjs plan CONFIG` validates and explains placement
+and budgets without network calls or storage writes. `status CONFIG` verifies
+local storage and returns a timestamped snapshot of the latest 100 journal rows,
+including deferred reasons/retry times, plus the plan. Local status does not
+prove remote availability, hosting capacity, or deployment success. The public
+Acquisition page offers an accessible configuration planner; its controls only
+prepare text for the operator's private configuration, never mutate a server.
+
+Activation still requires verified host transport, actual MySQL quota/grants,
+qualified PC and hosted storage, independent backup/restore evidence, current
+signed release approval and a verified deployed revision. Existing enabled flags
+are unchanged. No production migration or live load test was run for this change.
+Roll back by restoring the previous code and removing the optional storagePolicy
+property. Existing journal rows remain compatible; do not delete the journal or
+releases. Pause publication before rollback if needed using the signed control.
+
+Technical references: [SQLite WAL](https://www.sqlite.org/wal.html) describes its
+single-writer and local-filesystem constraints; [MySQL connection limits](https://dev.mysql.com/doc/refman/8.0/en/too-many-connections.html)
+explain why client concurrency must fit measured server limits. The existing
+three-connection/eight-waiter hosting pool is unchanged; no unsupported claim of
+visitor capacity or database latency improvement is made.
