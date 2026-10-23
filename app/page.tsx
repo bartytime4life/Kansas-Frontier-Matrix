@@ -1097,6 +1097,7 @@ export default function Home() {
   const daylightEnabledRef = useRef(false);
   const daylightPlayingRef = useRef(false);
   const mapRef = useRef<MapLibreMap | null>(null);
+  const mapInformationHostRef = useRef<HTMLDivElement>(null);
   const localCapturePixelRatioRef = useRef<number | null>(null);
   const localCaptureWindFrameRef = useRef<WindArrowFrame | null>(null);
   const earthEngineContext = useEarthEngineContext();
@@ -8893,14 +8894,21 @@ export default function Home() {
     setPrimaryWorkspace("map");
     setGuideOpen(true);
   };
-  // The welcome keeps the licence-required map credit visible. MapLibre's compact
-  // attribution is a <details> that collapses after a map drag, and a closed
-  // <details> renders nothing, so reopen it whenever the welcome appears.
+  // Welcome owns its existing bottom credit strip. Ordinary map attribution
+  // shares the upper navigation rail but lives outside the isolated map canvas,
+  // so its disclosure remains reachable above an open observation dock.
+  // Reparent the native control's DOM; keep its source listeners and identity.
   useEffect(() => {
-    if (!welcomeShowing) return;
-    const attribution = document.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib");
-    if (attribution) { attribution.open = true; attribution.classList.add("maplibregl-compact-show"); }
-  }, [welcomeShowing]);
+    const container = mapContainerRef.current, host = mapInformationHostRef.current;
+    if (!container || !host || !styleReady) return;
+    const attribution = host.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib")
+      ?? container.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib");
+    const destination = welcomeShowing ? container.querySelector(".maplibregl-ctrl-bottom-right") : host;
+    if (!attribution || !destination) return;
+    destination.appendChild(attribution);
+    attribution.open = welcomeShowing;
+    attribution.classList.toggle("maplibregl-compact-show", welcomeShowing);
+  }, [welcomeShowing, styleReady]);
   const closeExplorerGuide = (rememberDismissal: boolean) => {
     setGuideOpen(false);
     setWelcomeSourcesOpen(false);
@@ -9695,6 +9703,8 @@ export default function Home() {
         </aside>
 
         <section className="map-stage" data-underground={undergroundOpen ? "true" : undefined} data-live-dock={liveDockVisible || glmFlashesEnabled} data-radar-loop={showRadarDock} data-raster-fallback={runtime.kind === "unsupported" && earthEngineContext.manifests.length > 0} aria-label="Kansas MapLibre Explorer">
+
+          <div ref={mapInformationHostRef} className="maplibregl-ctrl-top-right map-information-home" role="group" aria-label="Map information and source attribution" />
 
           {instrumentOpen && !glmFlashesEnabled && showStreamflowDock && <HydrologyObservatory
             bundle={streamflowBundle}
