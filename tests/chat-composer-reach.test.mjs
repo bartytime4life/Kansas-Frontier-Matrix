@@ -164,7 +164,7 @@ test('the dialog keeps its accessible name while duplicate map context is remove
   const scope=findNode(tree,node=>node.props?.['aria-label']==='AI question context');
   assert.equal(scope.type,'details');assert.equal(scope.props.open,undefined);
   assert.match(text(scope),/Synthetic county.*Synthetic source context/);
-  assert.equal(findNode(tree,node=>node.type==='textarea').props.placeholder,'Ask KFM AI…');
+  assert.equal(findNode(tree,node=>node.type==='textarea').props.placeholder,'Ask KFM AI about anything…');
  }finally{h.dispose();}
  const page=await readFile(new URL('../app/page.tsx',import.meta.url),'utf8');
  assert.match(page,/<h2 id="qwen-panel-title">Chat with KFM<\/h2>/);

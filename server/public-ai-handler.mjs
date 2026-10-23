@@ -5,7 +5,7 @@ import {localQwenAnswerHasOverPreciseLocation} from '../scripts/qwen-local-contr
 import {isSensitiveQwenQuestion} from '../scripts/local-qwen-bridge.mjs';
 import {hasRepeatedPhrase,repeatsPriorReply,PUBLIC_AI_JOB_MS,PUBLIC_AI_MAX_LIFETIME_MS,CONTINUE_REPLY} from './hosted-ai.mjs';
 import {INFERENCE_BUDGETS} from '../scripts/home-inference/budgets.mjs';
-import {generalDiscussionQuestion} from './public-discussion-scope.mjs';
+import {generalDiscussionQuestion,blockedDiscussionRequest} from './public-discussion-scope.mjs';
 import {validAssistantContext} from './assistant-context.mjs';
 import {createAiReadBuffer,isAiReadPressure} from './ai-read-buffer.mjs';
 import {HOME_PROVIDER,homeInferenceConfig,getHomeInferenceModel} from './home-inference.mjs';
@@ -18,6 +18,9 @@ const text=(x,max)=>typeof x==='string'&&x.length>0&&Buffer.byteLength(x)<=max&&
 const investigationId=x=>typeof x==='string'&&x.length===36&&/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(x);
 const date=x=>x===''||/^\d{4}-\d{2}-\d{2}$/.test(x)&&Number.isFinite(Date.parse(x+'T00:00:00Z'))&&new Date(x+'T00:00:00Z').toISOString().slice(0,10)===x;
 const sensitiveScope=value=>isSensitiveQwenQuestion(value)||/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(value);
+// Context is data, not a question. A source's "not safety guidance" warning
+// must not reject a harmless story. Protected subjects/precision remain held.
+const protectedContext=value=>/\b(?:dna|living person|rare species|archaeological site|critical infrastructure)\b/i.test(value)||localQwenAnswerHasOverPreciseLocation(value);
 async function body(request){
  if(!/^application\/json(?:;|$)/i.test(request.headers.get('content-type')??''))throw new Error('INVALID_REQUEST');
  const reader=request.body?.getReader();if(!reader)throw new Error('INVALID_REQUEST');
@@ -176,26 +179,29 @@ export function createPublicAiHandler({origin,resolveEvidence,resolveContext=asy
     session.lastAccepted=now;
     extra={'Set-Cookie':'__Host-kfm_ai_guest='+guest+'; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600'};
     const prepare=async()=>{try{
-     // General definitions use a fixed server-owned education question only.
-     // A selected record, place/date filter or unrelated search term cannot
-     // borrow this exception. Evidence mode retains its original deny gates.
-     const general=mode==='explore'&&!value.context?.selection&&!query.place&&!query.start&&!query.end&&value.question.trim().startsWith(value.term.trim())?generalDiscussionQuestion(value.question):null;
-     const sensitive=sensitiveScope(query.place+' '+(value.context?JSON.stringify(value.context):''))||!general&&sensitiveScope(value.question+' '+value.term);
-     if(general)job.question=general;
+     const general=mode==='explore'?generalDiscussionQuestion(value.question):null;
+     const derivedGeneralTerm=general&&value.question.trim().startsWith(value.term.trim());
+     const sensitive=mode==='explore'
+      ? (!general&&blockedDiscussionRequest(value.question))||(!derivedGeneralTerm&&blockedDiscussionRequest(value.term))||blockedDiscussionRequest(query.place)
+      : sensitiveScope(query.place+' '+(value.context?JSON.stringify(value.context):'')+' '+value.question+' '+value.term);
+     // Standalone definitions do not need the currently selected record. Resolve
+     // only the public page frame; never read or transmit that record, and keep
+     // its conversation partition separate. Other questions retain source gates.
+     const contextSelector=general&&value.context?{...value.context,layers:[],selection:null}:value.context;
      if(!sensitive&&value.context){
-      const context=await readContext(value.context);
+      const context=await readContext(contextSelector);
       if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.finished=clock();job.context=null;job.question='';job.query=null;return;}
       job.context=context;
-      if(value.context.selection&&(isSensitiveQwenQuestion(job.context.prompt)||localQwenAnswerHasOverPreciseLocation(job.context.prompt)))throw new Error('POLICY_WITHHELD');
-      job.contextSelector=value.context;job.contextFingerprint=contextFingerprint(job.context);
+      if(protectedContext(job.context.prompt))throw new Error('POLICY_WITHHELD');
+      job.contextSelector=contextSelector;job.contextFingerprint=contextFingerprint(job.context);
      }
-     const contextKey=job.context?digest({selector:value.context,source:job.contextFingerprint}):'no-context';
+     const contextKey=job.context?digest({selector:contextSelector,source:job.contextFingerprint}):'no-context';
      // An untrusted, ephemeral partition hint only. Guest ownership, source
      // rechecks and budgets stay authoritative; omitted IDs retain legacy history.
      job.contextKey=value.investigationId===undefined?contextKey:digest({investigationId:value.investigationId.toLowerCase(),context:contextKey});
      const evidence=sensitive||mode==='explore'?null:await packet(query);
      if(job.state!=='preparing'||clock()>=job.deadline){if(job.state==='preparing')job.state='expired';job.finished=clock();job.context=null;job.question='';job.query=null;return;}
-     if(!sensitive&&mode==='explore'&&value.context?.selection?.kind==='subsurface'){
+     if(!sensitive&&mode==='explore'&&contextSelector?.selection?.kind==='subsurface'){
       // Only the server-resolved, rechecked source can supply this summary.
       job.state='completed';job.finished=clock();job.result=job.context?.sourceSummary?{...envelope('ABSTAIN','SOURCE_CONTEXT_ONLY'),sourceSummary:job.context.sourceSummary,followUpQuestion:'Would you like to inspect the original source intervals or compare nearby wells and aquifer ranges?'}:envelope('ABSTAIN','CONTEXT_UNAVAILABLE');job.question='';job.query=null;
      }

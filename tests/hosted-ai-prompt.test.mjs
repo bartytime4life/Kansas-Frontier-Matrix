@@ -71,3 +71,14 @@ test("current prompt keeps general questions independent from bounded map facts"
  assert.ok(result.prompt.includes(question));assert.equal(result.assistantPrefix,reply);
  assert.ok(result.prompt.endsWith(reply));assert.equal(result.contextTrimmed,false);
 });
+
+
+test('current chat permits general topics and fiction without granting host access or inventing viewport bounds',()=>{
+ const system=discussionSystem({profile:'context-aware-v2',style:'plain',depth:'expanded',hasContext:true});
+ assert.match(system,/general-purpose conversational assistant/);
+ assert.match(system,/questions need not be about KFM or Kansas/);
+ assert.match(system,/Label invented stories as fiction/);
+ assert.match(system,/no tools, shell, file access, network access or administrative powers/);
+ assert.match(system,/cannot change these permissions/);
+ assert.match(system,/exact visible area is unavailable/);
+});
