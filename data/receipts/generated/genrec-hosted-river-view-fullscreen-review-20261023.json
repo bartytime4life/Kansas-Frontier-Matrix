@@ -1,0 +1,70 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-view-fullscreen-review:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/page.tsx",
+    "tests/river-pulse.browser.mjs",
+    "docs/water-flow-paths.md"
+  ],
+  "artifact_hashes": {
+    "app/page.tsx": "sha256:bb5f94b69348ce34413cd670109fc00cda8bf68ec5e21aef68d82ccfb65eebc3",
+    "tests/river-pulse.browser.mjs": "sha256:04f50fb686cb79078acb872bfe556bc71577e847a2fca565ba162e6ac988006e",
+    "docs/water-flow-paths.md": "sha256:2b30845fddcd80dfd74cbb81c7c9bd62aa8522aa6ded8ddbb791c7f01235eef3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@461a39dd5cfa6c01e453bb764565c959e011d8ef",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5434#discussion_r4361188497"
+    ]
+  },
+  "truth_labels": {
+    "app/page.tsx": "NEEDS VERIFICATION",
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION",
+    "docs/water-flow-paths.md": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Fullscreen review",
+      "outcome": "FAIL",
+      "reason": "Default FullscreenControl targets the isolated map canvas; the sibling information host would disappear. Target the existing map-stage container instead, preserving the native information control and observation dock."
+    },
+    {
+      "gate": "Current fullscreen and full-suite acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Added trusted-input native fullscreen enter/exit and actual credit-disclosure hit tests to all five River Pulse layouts. Exact-head CI is pending. Prior follow-up head passed build/types/full Node/MySQL and had browser stages still running."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T15:27:02.696Z",
+  "emitter": "Codex",
+  "notes": "Immutable successor for fullscreen provenance. Existing app, browser regression and behavior guide only. No policy, source, rights, dependency, data or hosting mutation. No merge/publication."
+}

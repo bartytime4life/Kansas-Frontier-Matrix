@@ -211,6 +211,15 @@ for (const layout of [
   assert.ok(credits.width > 0 && credits.height > 0 && credits.x >= 0 && credits.y >= 0 && credits.x + credits.width <= layout.width && credits.y + credits.height <= layout.height, 'source disclosure opens downward inside the viewport');
   assert.ok(await p.evaluate(`(() => { const e=document.querySelector('.map-information-home .maplibregl-ctrl-attrib-inner'),r=e.getBoundingClientRect();return e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)); })()`), 'source disclosure remains above the River Pulse dock');
   await p.activate('.map-information-home .maplibregl-ctrl-attrib-button');
+  await p.activate('[aria-label="Enter fullscreen"]');
+  await p.wait(`document.fullscreenElement?.classList.contains('map-stage')`, 'the map stage enters native fullscreen');
+  assert.ok(await p.evaluate(`document.fullscreenElement.contains(document.querySelector('.map-information-home .maplibregl-ctrl-attrib'))`), 'fullscreen retains native information and provider credits');
+  await p.activate('.map-information-home .maplibregl-ctrl-attrib-button');
+  await p.wait(`document.querySelector('.map-information-home .maplibregl-ctrl-attrib')?.classList.contains('maplibregl-compact-show')`, 'fullscreen information opens');
+  assert.ok(await p.evaluate(`(() => { const e=document.querySelector('.map-information-home .maplibregl-ctrl-attrib-inner'),r=e.getBoundingClientRect();return r.width>0 && r.height>0 && e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)); })()`), 'fullscreen credits remain hit-testable');
+  await p.activate('.map-information-home .maplibregl-ctrl-attrib-button');
+  await p.activate('[aria-label="Exit fullscreen"]');
+  await p.wait(`!document.fullscreenElement`, 'native fullscreen exits');
   const presentationSnapshot = await snapshot();
   assert.equal(await p.evaluate(`document.querySelector('.river-map-presentation button:first-child').getAttribute('aria-pressed')`), 'true', 'quiet River view is the default');
   await p.activate('.river-map-presentation button:last-child');

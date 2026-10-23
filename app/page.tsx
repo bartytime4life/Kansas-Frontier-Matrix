@@ -5069,7 +5069,9 @@ export default function Home() {
         scaleControlRef.current = scaleControl;
         map.addControl(scaleControl, "bottom-left");
         const navigationControl = new mapLibre.NavigationControl({ showCompass: true, showZoom: false, visualizePitch: true });
-        const fullscreenControl = new mapLibre.FullscreenControl();
+        const fullscreenControl = new mapLibre.FullscreenControl({
+          container: mapContainer.closest<HTMLElement>(".map-stage") ?? mapContainer,
+        });
         const geolocateControl = new mapLibre.GeolocateControl({
           positionOptions: { enableHighAccuracy: false },
           trackUserLocation: false,
