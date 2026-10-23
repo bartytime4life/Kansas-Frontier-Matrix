@@ -47,8 +47,10 @@ export function blockedDiscussionRequest(input){
  const disclosure=/\b(?:give|show|read|reveal|print|dump|fetch|download|expose|extract|access|list|find|get|want|need|locat\w*)\b/;
  const protectedData=/\b(?:private|withheld|restricted|unreleased|confidential|secret)\b.{0,80}\b(?:records?|data|files?|locations?|coordinates?|keys?|tokens?|passwords?|credentials?)\b/;
  const personalData=/\b(?:living person|someone|person|people|owner|user|visitor)\b.{0,60}\b(?:records?|results?|address|dna|genome|password|credentials?)\b|\b(?:their|his|her|someone s) (?:private |medical |genetic )?(?:records?|results?|address|dna|genome)\b/;
- const protectedPlaces=/\b(?:archaeolog\w*|burial|rare species|nests?|critical infrastructure|substations?)\b/;
- const locating=/\b(?:locat\w*|where|near|names?|list|identify|show|plot|map|gps|coordinates?|latitude|longitude|exact)\b/;
+ const protectedPlaces=/\b(?:archaeological sites?|burial sites?|rare species|nests?|critical infrastructure|substations?)\b/;
+ // "Maps in archaeology" and a fictional site story do not ask to locate a
+ // real site. Target disclosure requests, rather than the topic word "map".
+ const locating=/^(?:exact |precise )?(?:gps )?coordinates?\b|^(?:please )?(?:where (?:are|is)|give|show|plot|map|list|identify|locate|find)\b|\b(?:then|also|and) (?:give|show|plot|map|list|identify|locate|find)\b|\bnear (?:my|our|the selected)\b|\b(?:give|show|reveal|extract|provide)\b.{0,80}\b(?:coordinates?|gps|latitude|longitude|exact location)\b/;
  const hostAccess=/\b(?:read|reveal|print|dump|fetch|download|expose|show|give|extract)\b.{0,100}(?:\/(?:etc|proc|root|home|private)\/|\b(?:environment variables|api keys?|access tokens?|passwords?|credentials?|server files?|host files?)\b)|\b(?:run|execute|install|delete|modify|change|disable)\b.{0,70}\b(?:shell|commands?|code|scripts?|software|files?|configuration|firewall|security controls?)\b.{0,60}\b(?:server|host|hosting|computer|pc|website)\b/;
  const hostTarget=/\b(?:your|this|the) (?:website|server|host|hosting|computer|pc)\b|\bhosting computer\b|\bhost (?:files?|environment)\b|^(?:please )?(?:read|dump|reveal) \/(?:etc|proc|root|home|private)\//;
  const personalSafety=/\b(?:is it|is this|is that|are they)\b.{0,40}\b(?:safe|dangerous|drinkable|potable)\b|\b(?:evacuate|rescue me|diagnose me|legal advice for me)\b/;
