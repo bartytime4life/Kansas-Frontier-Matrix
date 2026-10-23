@@ -333,6 +333,36 @@ function projectPoint(view: View, x: number, y: number, out: Float64Array): bool
   return true;
 }
 
+/** Stationary travel arrows are anchored only at actual model samples. Their
+ * screen heading is projected geographically, so bearing and pitch apply. */
+export function windDirectionGlyphs(map: MapLibreMap, frame: WindArrowFrame): readonly {
+  x: number; y: number; dx: number; dy: number; length: number;
+}[] {
+  const globe = map.getProjection?.()?.type === "globe";
+  const scale = globe ? globeOverviewSizeScale(map.getZoom()) : 1;
+  if (scale < 0.06) return [];
+  const center = globe ? map.getCenter() : null;
+  const canvas = map.getCanvas();
+  const glyphs: { x: number; y: number; dx: number; dy: number; length: number }[] = [];
+  for (const sample of frame.samples) {
+    if (![sample.latitude, sample.longitude, sample.windFromDegrees, sample.speedMetersPerSecond].every(Number.isFinite)
+      || sample.speedMetersPerSecond < CALM_METERS_PER_SECOND) continue;
+    if (center && !onVisibleGlobeHemisphere(center, [sample.longitude, sample.latitude])) continue;
+    const point = map.project([sample.longitude, sample.latitude]);
+    const heading = windToHeading(sample.windFromDegrees) * Math.PI / 180;
+    const next = map.project([
+      sample.longitude + Math.sin(heading) * 0.01 / Math.cos(sample.latitude * Math.PI / 180),
+      sample.latitude + Math.cos(heading) * 0.01,
+    ]);
+    const dx = next.x - point.x, dy = next.y - point.y, magnitude = Math.hypot(dx, dy);
+    if (![point.x, point.y, magnitude].every(Number.isFinite) || magnitude < 0.001
+      || point.x < 0 || point.y < 0 || point.x > canvas.clientWidth || point.y > canvas.clientHeight
+      || glyphs.some(other => Math.hypot(other.x - point.x, other.y - point.y) < 24)) continue;
+    glyphs.push({ x: point.x, y: point.y, dx: dx / magnitude, dy: dy / magnitude, length: 18 * Math.min(1, scale * 2.2) });
+  }
+  return glyphs;
+}
+
 /** Screen → ground on the flat map plane; false above the horizon. */
 function unprojectScreen(view: View, sx: number, sy: number, out: Float64Array): boolean {
   const m = view.inverse!, h = view.h!;
@@ -615,6 +645,25 @@ export function drawWindFlowCanvas(canvas: HTMLCanvasElement, map: MapLibreMap, 
   // 4. Small bright head.
   context.lineCap = "round";
   for (let level = 0; level < ALPHA_LEVELS; level += 1) strokeBucket(colorBuckets + level, `rgba(${palette.head}, ${levelAlpha(level).toFixed(3)})`, lineWidth * 1.3);
+
+  // Still trails alone cannot communicate travel direction reliably. With
+  // reduced/disabled motion, add a small arrow at each visible model point.
+  if (!animate) for (const glyph of windDirectionGlyphs(map, frame)) {
+    const { x, y, dx, dy, length } = glyph;
+    const tipX = x + dx * length / 2, tipY = y + dy * length / 2;
+    context.beginPath();
+    context.moveTo(x - dx * length / 2, y - dy * length / 2);
+    context.lineTo(tipX, tipY);
+    context.moveTo(tipX - dx * length * 0.35 - dy * length * 0.25, tipY - dy * length * 0.35 + dx * length * 0.25);
+    context.lineTo(tipX, tipY);
+    context.lineTo(tipX - dx * length * 0.35 + dy * length * 0.25, tipY - dy * length * 0.35 - dx * length * 0.25);
+    context.strokeStyle = `rgba(${palette.halo}, 0.9)`;
+    context.lineWidth = lineWidth + 2;
+    context.stroke();
+    context.strokeStyle = `rgba(${palette.speed[2]}, 1)`;
+    context.lineWidth = lineWidth * 1.5;
+    context.stroke();
+  }
 
   const cpuMs = now() - started;
   if (overBudget || cpuMs > FRAME_BUDGET_MS) state.load = Math.max(0.05, state.load * 0.6);

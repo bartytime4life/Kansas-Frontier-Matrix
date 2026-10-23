@@ -92,6 +92,19 @@ test("stale or incomplete wind model data draws no arrows and remains retryable"
   assert.equal(calls, 2);
 });
 
+test("a missing model direction is unavailable rather than an invented wind bearing", async () => {
+  const serve = wind.createWindArrowService({ now: () => NOW, fetchUpstream: async url => {
+    const rows = modelRows(url);
+    rows[0].hourly.wind_direction_10m[0] = null;
+    return Response.json(rows);
+  } });
+  const response = await serve(extent("-98,38,-97,39"));
+  assert.equal(response.status, 502);
+  const body = await response.json();
+  assert.equal(body.code, "MODEL_INVALID_GRID");
+  assert.equal(body.samples, undefined);
+});
+
 test("cached forecast is dropped as soon as its valid hour becomes stale", async () => {
   let clock = Date.parse("2026-09-27T16:34:00Z");
   let calls = 0;
@@ -145,6 +158,94 @@ test("wind flow hover only reports a nearby model point and a travel direction",
   assert.equal(windCanvas.nearestWindFlowSample(map, { samples: [{ ...frame.samples[0], speedMetersPerSecond: 0.2 }] }, 100, 100), null);
   assert.equal(windCanvas.windToCompass(frame.samples[0].windToDegrees), "E");
   assert.equal(windCanvas.windToCompass(frame.samples[1].windToDegrees), "S");
+});
+
+test("still direction arrows use meteorological model bearings and the projected map camera", () => {
+  for (const [from, bearing, expectedX, expectedY] of [[270, 0, 1, 0], [0, 0, 0, 1], [270, 90, 0, -1]]) {
+    const map = cameraMap({ bearing });
+    const glyphs = windCanvas.windDirectionGlyphs(map, gridFrame(from));
+    assert.ok(glyphs.length > 0);
+    for (const glyph of glyphs) {
+      assert.ok(Math.abs(glyph.dx - expectedX) < 0.02 && Math.abs(glyph.dy - expectedY) < 0.02);
+      assert.ok(gridFrame(from).samples.some(sample => {
+        const point = map.project([sample.longitude, sample.latitude]);
+        return point.x === glyph.x && point.y === glyph.y;
+      }), "every arrow is anchored at a model sample, not a random particle");
+    }
+  }
+  assert.deepEqual(windCanvas.windDirectionGlyphs(cameraMap(), gridFrame(270, 0.2)), []);
+  assert.deepEqual(windCanvas.windDirectionGlyphs(cameraMap(), { samples: [] }), []);
+  const missing = gridFrame(270).samples.map(sample => ({ ...sample, windFromDegrees: NaN }));
+  assert.deepEqual(windCanvas.windDirectionGlyphs(cameraMap(), { samples: missing }), []);
+  const globe = { ...cameraMap({ center: { lng: 82, lat: 39 } }), getProjection: () => ({ type: "globe" }) };
+  assert.deepEqual(windCanvas.windDirectionGlyphs(globe, gridFrame(270)), []);
+});
+
+const findWindEffect = async () => {
+  const source = await readFile("app/page.tsx", "utf8");
+  const tree = ts.createSourceFile("page.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let effect;
+  const visit = node => {
+    if (ts.isCallExpression(node) && node.expression.getText(tree) === "useEffect"
+      && node.arguments[0]?.getText(tree).includes("const canvas = windArrowCanvasRef.current;")) effect = node;
+    ts.forEachChild(node, visit);
+  };
+  visit(tree);
+  assert.ok(effect);
+  return { tree, effect };
+};
+
+test("unrelated source selections do not restart the wind effect", async () => {
+  const { tree, effect } = await findWindEffect();
+  const dependencies = effect.arguments[1].elements.map(node => node.getText(tree));
+  assert.ok(dependencies.includes("windLayerSelected"));
+  assert.ok(!dependencies.includes("officialVisibility"), "another source's visibility must not clear/reload wind");
+});
+
+test("wind reloads ignore late success and failure from superseded camera requests", async () => {
+  const { tree, effect } = await findWindEffect();
+  const requests = [], events = new Map(), pendingTimers = [];
+  const states = { frame: null, state: null };
+  const canvas = { width: 800, height: 600, getContext: () => ({ clearRect() {} }) };
+  const map = {
+    getBounds: () => ({ getWest: () => -99, getEast: () => -97, getSouth: () => 38, getNorth: () => 39 }),
+    getCenter: () => ({ lng: -98, lat: 38.5 }),
+    getCanvas: () => ({ addEventListener() {}, removeEventListener() {} }),
+    on: (name, callback) => events.set(name, callback), off() {},
+  };
+  const values = {
+    mapRef: { current: map }, windArrowCanvasRef: { current: canvas }, buildYearCurrent: true,
+    windLayerSelected: true, officialVisibility: { "nws-forecast-wind": true }, temporalQuery: { frame: 2026 }, OFFICIAL_CONTEXT_PRESENT_FRAME: 2026,
+    styleReady: true, dynamicEffects: false, reducedMotion: true,
+    document: { hidden: false, addEventListener() {}, removeEventListener() {} },
+    window: { setTimeout: callback => { pendingTimers.push(callback); return pendingTimers.length; }, clearTimeout() {},
+      setInterval: () => 1, clearInterval() {}, cancelAnimationFrame() {} },
+    performance: { now: () => 0 }, AbortController, DOMException,
+    setWindArrowState: value => { states.state = value; }, setWindArrowFrame: value => { states.frame = value; },
+    setWindArrowDirect() {}, setWindArrowHover() {},
+    loadWindFlowFrame: (_bbox, signal) => new Promise((resolve, reject) => requests.push({ resolve, reject, signal })),
+    drawWindFlowCanvas() {}, resetWindFlowCanvas() {}, windFlowToneForBasemap: () => "light",
+    basemapRef: { current: "standard" },
+  };
+  const code = ts.transpileModule(`const effect = ${effect.arguments[0].getText(tree)};`, {
+    compilerOptions: { target: ts.ScriptTarget.ES2022 },
+  }).outputText;
+  const cleanup = new Function(...Object.keys(values), `${code}; return effect();`)(...Object.values(values));
+  const move = () => { events.get("moveend")(); pendingTimers.pop()(); };
+  const settle = async () => { await Promise.resolve(); await Promise.resolve(); };
+  move();
+  assert.equal(requests[0].signal.aborted, true);
+  const current = { samples: [], validTimeUtc: "new" };
+  requests[1].resolve({ frame: current, transport: "site" }); await settle();
+  requests[0].resolve({ frame: { samples: [], validTimeUtc: "old" }, transport: "site" }); await settle();
+  assert.equal(states.frame, current);
+  assert.equal(states.state, "READY");
+  move(); move();
+  requests[3].resolve({ frame: current, transport: "site" }); await settle();
+  requests[2].reject(new Error("late failure")); await settle();
+  assert.equal(states.frame, current);
+  assert.equal(states.state, "READY");
+  cleanup();
 });
 
 const withWindow = (run, now = () => 0) => {
@@ -269,11 +370,16 @@ test("calm forecasts draw nothing and a still frame does not move with time", ()
   windCanvas.drawWindFlowCanvas(calm.canvas, cameraMap(), gridFrame(270, 0.2), 0, true);
   windCanvas.drawWindFlowCanvas(calm.canvas, cameraMap(), gridFrame(270, 0.2), 500, true);
   assert.equal(segmentsOf(calm.strokes).length, 0);
+  windCanvas.drawWindFlowCanvas(calm.canvas, cameraMap(), gridFrame(270, 0.2), 1000, false);
+  assert.equal(segmentsOf(calm.strokes).length, 0, "calm has no direction arrow with motion off either");
   const still = recordingCanvas();
   const map = cameraMap({ pitch: 30 });
   const frame = gridFrame(200);
   windCanvas.drawWindFlowCanvas(still.canvas, map, frame, 0, false);
   const first = segmentsOf(still.strokes);
+  const arrows = windCanvas.windDirectionGlyphs(map, frame);
+  assert.ok(arrows.length > 0);
+  assert.ok(still.strokes.slice(-arrows.length * 2).every(stroke => stroke.segments.length === 3), "still rendering includes arrow shafts and two wings at model points");
   still.strokes.length = 0;
   windCanvas.drawWindFlowCanvas(still.canvas, map, frame, 5000, false);
   assert.ok(first.length > 0);

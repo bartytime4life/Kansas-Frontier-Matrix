@@ -532,8 +532,8 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
   }),
   Object.freeze({
     id: "nws-forecast-wind",
-    title: "GFS directional wind forecast · streamlines",
-    shortTitle: "Airflow · wind flow",
+    title: "Wind direction & speed · GFS 10 m forecast",
+    shortTitle: "Wind direction & speed",
     organization: "Open-Meteo · NCEP GFS",
     domain: "Atmosphere",
     kind: "MODEL_CANVAS",
@@ -550,7 +550,7 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     color: "#92d8e5",
     attribution: "Open-Meteo · NCEP GFS",
     evidenceRole: "EXTERNAL_CONTEXT_ONLY",
-    boundary: "Animated wisps depict NCEP GFS forecast 10 m wind supplied by Open-Meteo at sampled grid points. Motion and curl illustrate direction, not observed airflow, gusts, smoke transport, or particle trajectories. Forecast values between grid points are not measured here. This is external context, not admitted KFM evidence.",
+    boundary: "Streamlines depict NCEP GFS forecast 10 m wind supplied by Open-Meteo at sampled grid points. With motion off, arrows at model points indicate where wind blows toward; reported wind-from bearings retain the meteorological convention. Motion, spacing and interpolation are illustrative, not observed airflow, gusts, smoke transport, or particle trajectories. This is external context, not admitted KFM evidence.",
     fallback: "If the model grid is unavailable or incomplete, no wind flow is drawn. No static barbs, synthetic wind field, or historical frame are substituted.",
   }),
   Object.freeze({

@@ -736,13 +736,47 @@ requests cannot supply an arbitrary upstream URL.
 | USGS 3DEP LiDAR hillshade | Off | Dynamic multidirectional hillshade from the current 3DEP elevation mosaic | Rendered relief only; no work-unit, point-cloud, datum, pulse-spacing, or accuracy claim |
 | USGS 3DEP LiDAR slope | Off | Dynamic slope visualization from the same 3DEP service | Image context only; no numeric slope/elevation or source-artifact claim |
 | NWS alert areas | Off | Active Kansas alerts and bounded affected-zone geometry | Not a warning-delivery service or an all-clear |
-| GFS forecast wind flow · Airflow | Off | Open-Meteo NCEP GFS 10 m wind at 16 model grid points, shown as moving wisps over Kansas with valid and retrieval times | Motion and curl are illustrative, not observed airflow, gusts, smoke transport, measured particle paths, or a historical frame. No stationary NDFD wind barbs are mounted on the map |
+| Wind direction & speed · GFS 10 m forecast | Off | Open-Meteo NCEP GFS 10 m wind at 16 model grid points, shown as streamlines with valid and retrieval times; motion-off/reduced-motion views add travel-direction arrows at the model points | Forecast context, not observed airflow, gusts, smoke transport, measured particle paths, or a historical frame. Arrows point toward travel; wind-from bearings retain their meteorological meaning. No stationary NDFD wind barbs are mounted on the map |
 | NOAA nowCOAST radar | Off | Recent CONUS base-reflectivity observations at exact NOAA-advertised times, with 30-minute, 1-hour, and 2-hour loop views | Context only; pixels do not establish rainfall rate, storm motion, warning status, forecast, or an emergency all-clear |
 
 Every connection is `EXTERNAL_CONTEXT_ONLY`. It is excluded from KFM reports,
 exports, source admission, release state, and EvidenceBundle resolution. Failed,
 partial, empty, and refreshed states remain visible instead of being converted
 into inferred facts.
+
+### Wind direction visibility repair - October 22, 2026
+
+Implementation candidate in the separate GoDaddy Node composition. Open
+**Layers > Browse > Weather & climate**, search **wind**, and select
+**Wind direction & speed · GFS 10 m forecast**. The layer remains opt-in;
+existing source IDs, saved selections, and the Present-only time boundary are
+preserved. Its opacity slider now controls the wind canvas.
+
+The existing `/api/wind-arrows` adapter supplies 16 bounded Open-Meteo NCEP
+GFS 10 m model samples. Animated streamlines use model speed and wind-from
+direction, converted to travel direction. With ambient motion disabled or
+reduced motion enabled, arrows at the actual model sample positions make
+direction readable without animation. Arrow size is a display cue. Calm or
+missing directions produce no arrow; unavailable grids produce no substitute
+field. Valid time, retrieval time, provider attribution, and the inspectable
+grid-point values remain visible. Other layer selections no longer reset the
+wind effect, and superseded camera requests cannot replace a newer frame or
+turn its success into an error.
+
+Current-session live inspection confirmed the existing wind catalog control
+and a successful 16-sample response from the public endpoint. This is forecast
+data availability, not proof of observed local wind or the new renderer's live
+deployment. The inspection browser has no WebGL2, so visual acceptance on a
+supported desktop and phone remains open. After publication, verify direction
+with motion on/off, rotation and pitch, opacity, rapid panning, source times,
+and historical-frame holds. Rollback is a revert of this bounded change; no
+provider, source admission, model, database, PC, or hosting setting is changed.
+
+Placement follows accepted ADR-0029 and the canonical Directory Rules v2
+implementation/test/documentation ownership: existing standalone `app/`,
+`tests/`, `scripts/` generated knowledge-pack, root README, and existing
+`data/receipts/generated/` accountability paths only.
+The original Sites source and monorepo mirror are separate authority boundaries.
 
 ## Backend connection posture
 
