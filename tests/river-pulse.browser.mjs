@@ -204,6 +204,9 @@ for (const layout of [
   const closed = async () => {
     await p.wait(`!document.querySelector('.hydrology-observatory')`, 'panel dismissed');
     await p.wait(`document.activeElement?.id==='map-canvas' || document.querySelector('#map-canvas')?.contains(document.activeElement)`, 'map focus restored');
+    // Escape can begin with map focus already satisfied. Finish the scheduled
+    // return-focus frame before opening a native menu that dismisses on focusout.
+    await p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
   };
   assert.ok(await p.evaluate(`!!document.querySelector('.qwen-header-entry')?.closest('header.topbar')`), 'AI chat has one stable header home');
   assert.equal(await p.evaluate(`document.querySelectorAll('.qwen-map-launch').length`), 0, 'floating chat duplicate is removed');
