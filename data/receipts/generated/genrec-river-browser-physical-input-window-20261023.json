@@ -1,0 +1,69 @@
+{
+  "receipt_id": "kfm:generated:river-browser-physical-input-window:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/river-pulse.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "tests/river-pulse.browser.mjs": "sha256:28f2667b7773f19636f3f235d8806d98a0592e2f3a88ff371001e30b5fa5000f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@571f9d65faa408c4b8b5173d00b21f44c29aaee6",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39987211654"
+    ]
+  },
+  "truth_labels": {
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Native gesture diagnostics",
+      "outcome": "FAIL",
+      "reason": "Prior head's native compositor calls report Position out of bounds at y623 and y679; trusted events never reach those origins. Hand-dispatched gestures previously passed shorter layouts but not those same tall origins. Computed overflow is auto, touchAction auto. Suspected default 800x600 physical headless input surface after fullscreen."
+    },
+    {
+      "gate": "Browser syntax",
+      "outcome": "PASS",
+      "reason": "Changed browser script parses as async JavaScript after stripping imports."
+    },
+    {
+      "gate": "Physical-window native-input qualification",
+      "outcome": "SKIPPED",
+      "reason": "Launch Chrome with physical window width covering the viewport and height at least viewport+100, assert window bounds, and restore the original strict hand-dispatched touch/wheel checks. Emulated CSS dimensions, native fullscreen and CSS fallback checks, >10px real scrolling, source/camera/evidence invariants, hit tests, and dismissal assertions remain unchanged. Exact-head CI pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "native-input-diagnostic-run",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39987211654"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T16:36:02.094Z",
+  "emitter": "Codex",
+  "notes": "One browser harness artifact plus this successor receipt; no runtime change. Earlier receipts preserved. No forced action or bypass; fixture remains loopback-only and isolated. No source/data/rights/dependency/hosting changes or agent merge/deploy."
+}
