@@ -1,0 +1,109 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-view-controls:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/streamflow.ts",
+    "app/page.tsx",
+    "app/live-context.ts",
+    "app/water-motion-canvas.ts",
+    "app/hydrology-observatory.tsx",
+    "app/globals.css",
+    "tests/rendered-html.test.mjs",
+    "tests/explorer-startup.browser.mjs",
+    "tests/river-pulse-visuals.test.mjs",
+    "tests/water-motion-canvas.test.mjs",
+    "docs/water-flow-paths.md",
+    "tests/river-pulse.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "app/streamflow.ts": "sha256:652a85140a8f5aa6d51d53fab42f196752689967ea8c94483931e757ba8b47e4",
+    "app/page.tsx": "sha256:869e092ec7561d818b4db015d176eb13a36d297311db7aca1df106ec79ab324d",
+    "app/live-context.ts": "sha256:9059b8d44d25fe2b21d41d0b9fdfca0f4929ad9100b1ba71748126567f845e85",
+    "app/water-motion-canvas.ts": "sha256:5b191d5c291562ce945f50e6c445176619c96849abe0a4224b1c3b65c0bb65d8",
+    "app/hydrology-observatory.tsx": "sha256:f328b88a2d2705d37f71a304f0e7e47b5e9e3ba9b0201e58174bc26b61d045ec",
+    "app/globals.css": "sha256:4cc7073b61f9526ffb0332100081d44972ad80e8d4d50f5f731b4e8d349bd88a",
+    "tests/rendered-html.test.mjs": "sha256:469752bc95dfe3326bbd0b3b8741875043772e46834682db757d85abbbd8eae9",
+    "tests/explorer-startup.browser.mjs": "sha256:1ce05f29e4bb5c90341bbc7ec7021ae3108be50789c52cec1cd3f71f52a570ce",
+    "tests/river-pulse-visuals.test.mjs": "sha256:4321b5d0fed31888fd66c62ca5dc82e652f9968734b201895d99ad393b5c600d",
+    "tests/water-motion-canvas.test.mjs": "sha256:b95122ebe73722d5320a5217b2dd80b7d9309bdf3858fdaadea78eda7d05002c",
+    "docs/water-flow-paths.md": "sha256:916d11bbef626a8c3794d13cadc6d07b9bc5b750d4b769d28eea2fb16ff09ffe",
+    "tests/river-pulse.browser.mjs": "sha256:0c5132ef4d86a2b2fe96dc8386967b727af0a69ea28c16d0137b2d34be6d3f19"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@c336e8b38135d7110a79b44f038faee756006f21",
+      "https://kansasfrontiermatrix.com/",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "app/streamflow.ts": "NEEDS VERIFICATION",
+    "app/page.tsx": "NEEDS VERIFICATION",
+    "app/live-context.ts": "NEEDS VERIFICATION",
+    "app/water-motion-canvas.ts": "NEEDS VERIFICATION",
+    "app/hydrology-observatory.tsx": "NEEDS VERIFICATION",
+    "app/globals.css": "NEEDS VERIFICATION",
+    "tests/rendered-html.test.mjs": "NEEDS VERIFICATION",
+    "tests/explorer-startup.browser.mjs": "NEEDS VERIFICATION",
+    "tests/river-pulse-visuals.test.mjs": "NEEDS VERIFICATION",
+    "tests/water-motion-canvas.test.mjs": "NEEDS VERIFICATION",
+    "docs/water-flow-paths.md": "NEEDS VERIFICATION",
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Current hosted source and live visual inspection",
+      "outcome": "PASS",
+      "reason": "Inspected exact hosted base and live map. Multicolored gauges, expanding ring implementation, floating chat and bottom attribution were confirmed. Recent dismissal and scrolling fixes retained."
+    },
+    {
+      "gate": "Initial focused-file checks and whitespace",
+      "outcome": "PASS",
+      "reason": "Before disconnection, Node returned success for river-pulse-visuals.test.mjs and water-motion-canvas.test.mjs; git diff --check passed. These preceded final reconstruction and new regressions and are not final-head acceptance."
+    },
+    {
+      "gate": "Final build, TypeScript, full Node and browser suites",
+      "outcome": "SKIPPED",
+      "reason": "Editing environment became unavailable during build. Final source reconstructed deterministically from exact GitHub base. Exact-head CI and desktop/phone/short-landscape acceptance are required."
+    },
+    {
+      "gate": "Independent review and publication",
+      "outcome": "SKIPPED",
+      "reason": "Pending review. No merge, deployment, publication, source admission or promotion."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T14:56:42.368Z",
+  "emitter": "Codex",
+  "notes": "Existing application/test/docs roots only. Default quiet River view, optional condition symbols, selected-only stationary locator and unchanged provider-path motion. Header chat replaces its floating duplicate; attribution moves to upper-right controls, with a horizontal compact rail. Page-session view choice is not serialized in URLs/reports. Revert the bounded presentation commit, preserving subsequent unrelated work. Historical generation receipts unchanged."
+}

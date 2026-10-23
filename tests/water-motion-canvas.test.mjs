@@ -103,3 +103,12 @@ test("a visible tail survives when its leading arrow is outside the viewport", (
   assert.equal(result.arrows.length, 0);
   assert.ok(result.trailLengths.some(length => length >= 200));
 });
+
+
+test("unselected gauges have no animated canvas rings; selected locator stays still", () => {
+  const feature = { geometry: { type: "Point", coordinates: [50, 40] }, properties: { stationId: "other-gauge", missing: false, value: 10, trend: "rising" } };
+  assert.deepEqual(draw(100, 0, true, 10, { features: [feature] }).rings, []);
+  const selected = { ...feature, properties: { ...feature.properties, stationId: "USGS-06864500" } };
+  assert.deepEqual(draw(100, 0, true, 10, { features: [selected] }).rings, [10]);
+  assert.deepEqual(draw(100, 1200, true, 10, { features: [selected] }).rings, [10]);
+});

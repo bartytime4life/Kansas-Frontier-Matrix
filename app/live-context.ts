@@ -839,18 +839,19 @@ export const applyOfficialContextState = (
   ensureLayer(map, { id: county.layerIds[1], type: "line", source: county.sourceId, paint: { "line-color": county.color, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.15, 10, 2.5], "line-opacity": 0.72 } });
 
   const streamflow = OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"];
+  const gaugeConditions: ExpressionSpecification = ["==", ["get", "gaugeConditions"], true];
   ensureGeoJsonSource(map, streamflow, payloads["usgs-streamflow"]?.data ?? emptyCollection());
   ensureLayer(map, { id: streamflow.layerIds[0], type: "circle", source: streamflow.sourceId, filter: ["all", ["!=", ["get", "missing"], true], [">", ["get", "value"], 0]], paint: {
     "circle-color": ["case", ["==", ["get", "trend"], "rising"], "#67e8f9", ["==", ["get", "trend"], "falling"], "#a5b4ff", ["==", ["get", "trend"], "steady"], "#72d5a7", streamflow.color],
     "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 7, 4, 20], 10, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 12, 4, 34]],
-    "circle-blur": 0.72, "circle-opacity": 0.3,
+    "circle-blur": 0, "circle-opacity": 0,
   } });
   ensureLayer(map, { id: streamflow.layerIds[1], type: "circle", source: streamflow.sourceId, paint: {
-    "circle-color": ["case", ["==", ["get", "missing"], true], "#17343b", ["==", ["get", "value"], 0], "#ffb869", ["==", ["get", "trend"], "rising"], "#55e6ff", ["==", ["get", "trend"], "falling"], "#a5b4ff", ["==", ["get", "trend"], "steady"], "#73cfa8", streamflow.color],
-    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 3.5, 4, 8.5], 10, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 6, 4, 13]],
+    "circle-color": ["case", ["!", gaugeConditions], "#456778", ["==", ["get", "missing"], true], "#17343b", ["==", ["get", "value"], 0], "#ffb869", ["==", ["get", "trend"], "rising"], "#55e6ff", ["==", ["get", "trend"], "falling"], "#a5b4ff", ["==", ["get", "trend"], "steady"], "#73cfa8", streamflow.color],
+    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["case", ["==", ["get", "selected"], true], 5, gaugeConditions, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 3, 4, 6], 2.8], 10, ["case", ["==", ["get", "selected"], true], 6, gaugeConditions, ["interpolate", ["linear"], ["coalesce", ["get", "visualMagnitude"], 0], 0, 4, 4, 9], 4]],
     "circle-opacity": ["case", ["==", ["get", "missing"], true], 0.38, 0.96],
-    "circle-stroke-color": ["case", ["==", ["get", "selected"], true], "#ffe5a4", ["==", ["get", "missing"], true], "#a4bdc2", ["==", ["get", "approvalStatus"], "Approved"], "#d5fff0", "#f3c969"],
-    "circle-stroke-width": ["case", ["==", ["get", "selected"], true], 3.4, ["==", ["get", "missing"], true], 2.2, 1.4],
+    "circle-stroke-color": ["case", ["==", ["get", "selected"], true], "#d9fffa", ["!", gaugeConditions], "#456778", ["==", ["get", "missing"], true], "#a4bdc2", "#e7f4f4"],
+    "circle-stroke-width": ["case", ["==", ["get", "selected"], true], 2, 1],
   } });
   ensureLayer(map, { id: streamflow.layerIds[2], type: "symbol", source: streamflow.sourceId, minzoom: 8.5, layout: {
     "text-font": ["Noto Sans Regular"], "text-field": ["coalesce", ["get", "stationName"], ["get", "name"], ["get", "monitoringLocationId"]], "text-size": 10.5, "text-offset": [0, 1.25], "text-anchor": "top", "text-optional": true,
@@ -977,9 +978,10 @@ export const applyOfficialContextState = (
       const layer = map.getLayer(layerId);
       if (layer?.type === "circle") {
         if (source.id === "usgs-streamflow" && layerId.endsWith("-points")) {
-          const expression: ExpressionSpecification = ["case", ["==", ["get", "missing"], true], safeOpacity * 0.18, safeOpacity];
+          const expression: ExpressionSpecification = ["case", ["==", ["get", "missing"], true], 0, ["==", ["get", "selected"], true], safeOpacity, gaugeConditions, safeOpacity * 0.82, safeOpacity * 0.16];
           if (JSON.stringify(map.getPaintProperty(layerId, "circle-opacity")) !== JSON.stringify(expression)) map.setPaintProperty(layerId, "circle-opacity", expression);
-        } else setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
+        } else if (source.id === "usgs-streamflow") setPaintIfChanged(map, layerId, "circle-opacity", 0);
+        else setPaintIfChanged(map, layerId, "circle-opacity", layerId.endsWith("-glow") || layerId.endsWith("-halo") ? safeOpacity * 0.3 : safeOpacity);
       }
       if (layer?.type === "circle") setPaintIfChanged(map, layerId, "circle-stroke-opacity", safeOpacity);
       if (layer?.type === "fill") requestFillOpacity(map, layerId, source.id === "census-counties" ? safeOpacity * 0.18 : safeOpacity);

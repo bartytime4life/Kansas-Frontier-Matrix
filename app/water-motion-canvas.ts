@@ -98,7 +98,7 @@ export function drawWaterMotionCanvas(
   paths: readonly DownstreamPath[],
   selectedCue: WaterReadingCue | null,
   elapsedMs: number,
-  animateReadings: boolean,
+  _animateReadings: boolean, // Retained call signature for existing integrations; gauge rings are stationary.
   animateDirection: boolean,
 ): void {
   const width = map.getCanvas().clientWidth;
@@ -119,13 +119,15 @@ export function drawWaterMotionCanvas(
   const center = globe ? map.getCenter() : null;
   const onVisibleHemisphere = (coordinate: readonly number[]) => !center || onVisibleGlobeHemisphere(center, coordinate);
 
-  // Rings report change at each gauge. They do not spread water over the map.
+  // Only the selected station receives a quiet, stationary locator.
+  // Channel geometry, rather than a statewide field of pulsing lights, carries motion.
   for (const feature of frame.features) {
     if (feature.geometry.type !== "Point") continue;
     if (!onVisibleHemisphere(feature.geometry.coordinates)) continue;
     const point = map.project(feature.geometry.coordinates as [number, number]);
     if (point.x < -24 || point.y < -24 || point.x > width + 24 || point.y > height + 24) continue;
     const selected = feature.properties.stationId === selectedStationId;
+    if (!selected) continue;
     const unavailable = feature.properties.missing || feature.properties.value === null;
     const trend = unavailable ? "missing" : feature.properties.value === 0 ? "zero" : feature.properties.trend;
     if (unavailable || trend === "zero") {
@@ -144,29 +146,10 @@ export function drawWaterMotionCanvas(
       context.stroke(); context.restore();
       continue;
     }
-    const color = trend === "rising" ? "102, 233, 239" : trend === "falling" ? "165, 180, 255" : trend === "steady" ? "162, 218, 190" : "204, 216, 220";
-    const pulsing = animateReadings && (trend === "rising" || trend === "falling");
-    if (selected) {
-      context.save();
-      context.strokeStyle = "rgba(192, 255, 240, .85)";
-      context.lineWidth = 1.8 * visualScale;
-      const rotation = animateDirection || animateReadings ? elapsedMs / 9000 : 0;
-      for (let segment = 0; segment < 4; segment++) {
-        const angle = rotation + segment * Math.PI / 2;
-        context.beginPath(); context.arc(point.x, point.y, 21 * visualScale, angle, angle + .38); context.stroke();
-      }
-      context.restore();
-    }
-    const seed = [...feature.properties.stationId].reduce((sum, character) => (sum * 31 + character.charCodeAt(0)) % 997, 0) / 997;
-    const phase = pulsing ? (elapsedMs / (selected ? 1800 : 2600) + seed) % 1 : 0.45;
-    const eased = phase * phase * (3 - 2 * phase);
-    const travel = trend === "falling" ? 1 - eased : eased;
-    const radius = (selected ? 10 + travel * 14 : 6 + travel * 8) * visualScale;
     context.beginPath();
-    context.arc(point.x, point.y, radius, 0, Math.PI * 2);
-    const opacity = pulsing ? Math.sin(Math.PI * phase) : 0.46;
-    context.strokeStyle = `rgba(${color}, ${(selected ? 0.62 : 0.35) * opacity})`;
-    context.lineWidth = (selected ? 2.5 : 1.5) * visualScale;
+    context.arc(point.x, point.y, 10 * visualScale, 0, Math.PI * 2);
+    context.strokeStyle = "rgba(83, 145, 157, .9)";
+    context.lineWidth = 1.5 * visualScale;
     context.stroke();
 
   }

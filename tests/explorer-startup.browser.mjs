@@ -256,11 +256,10 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
       })()`), true, 'both named buttons remain before map navigation in the DOM');
       await p.evaluate(`document.querySelector('.atlas-scope-control').focus()`);
       assert.equal(await p.evaluate(`document.activeElement.matches('.atlas-scope-control')`), true);
-      // The shipped <=560px layout hides the separate Ask button; Find still
-      // opens the shared composer. Preserve that responsive design, while
-      // requiring Ask's DOM order at both sizes and its Tab order when shown.
-      assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.welcome-ai-entry')).display !== 'none'`), width > 560);
-      if (width > 560) {
+      // Chat remains available as a compact AI badge on phones.
+      // Preserve header DOM order and require its Tab order at both sizes.
+      assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.welcome-ai-entry')).display !== 'none'`), true);
+      {
         await p.key('Tab', 'Tab', 9);
         assert.equal(await p.evaluate(`document.activeElement.matches('.welcome-ai-entry')`), true);
       }
@@ -538,7 +537,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     await checkCredits('initial license strip');
     for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('header.topbar')).visibility`),'visible','global header remains available');
-    for(const selector of ['.qwen-map-launch','.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'hidden','background map chrome does not peek through welcome');
+    for(const selector of ['.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'hidden','background map chrome does not peek through welcome');
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.maplibregl-ctrl-attrib')).visibility`),'visible','real attribution remains available');
     await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.site-root').dataset.welcomeSources==='open'`,'Map sources opens the current attribution strip');
@@ -590,7 +589,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     await p.key('Escape','Escape',27);await p.wait(`document.querySelector('.living-welcome').dataset.fullscreen==='false'`,'Escape returns to categories without dismissing welcome');
     await p.evaluate(`document.querySelector('.welcome-skip').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`!document.querySelector('.explorer-guide.living-welcome')&&document.activeElement?.matches('.guide-trigger')`,'current toolbar exit dismisses welcome and returns focus');
-    for(const selector of ['.qwen-map-launch','.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'visible','ordinary map chrome is restored');
+    for(const selector of ['.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'visible','ordinary map chrome is restored');
   });
 }
 

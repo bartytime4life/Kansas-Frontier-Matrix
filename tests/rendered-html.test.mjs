@@ -886,7 +886,8 @@ test("adds bounded exact-time streamflow, NOAA hydrology roles, and a gap-aware 
 
   assert.match(observatory, /aria-label="River Pulse streamflow observation controls"/);
   assert.match(observatory, /aria-label="Select an exact streamflow observation frame"/);
-  assert.match(observatory, /Marker area uses a logarithmic ft³\/s scale/);
+  assert.match(observatory, /Gauge conditions adds trend color and a logarithmic ft³\/s size scale/);
+  assert.match(observatory, /Discharge is not directly comparable across differently sized basins/);
   assert.match(observatory, /Raw discharge is not a flood category/);
   assert.match(observatory, /Exact values · gaps break the path/);
   assert.match(observatory, /no value interpolation/);
@@ -1227,7 +1228,8 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.match(page, /QUICK_LIVE_CONTEXT_IDS\.map/);
   assert.match(page, /mapUtilityView === "scene"[\s\S]*?<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
   assert.doesNotMatch(page, /className="qwen-header-action"/);
-  assert.match(page, /className="qwen-map-launch"/);
+  assert.match(page, /className="welcome-ai-entry qwen-header-entry"/);
+  assert.doesNotMatch(page, /className="qwen-map-launch"/);
   assert.doesNotMatch(page, /["'`]\/api\/qwen/);
   assert.match(page, /else if \(qwenOpen\) closeQwenCompanion\(\);/);
   assert.match(page, /id="qwen-map-panel"[^>]*role="dialog"/);

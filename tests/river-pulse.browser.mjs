@@ -196,8 +196,22 @@ for (const layout of [
     await p.wait(`!document.querySelector('.hydrology-observatory')`, 'panel dismissed');
     await p.wait(`document.activeElement?.id==='map-canvas' || document.querySelector('#map-canvas')?.contains(document.activeElement)`, 'map focus restored');
   };
+  assert.ok(await p.evaluate(`!!document.querySelector('.qwen-header-entry')?.closest('header.topbar')`), 'AI chat has one stable header home');
+  assert.equal(await p.evaluate(`document.querySelectorAll('.qwen-map-launch').length`), 0, 'floating chat duplicate is removed');
+  assert.ok(await p.evaluate(`!!document.querySelector('.maplibregl-ctrl-attrib')?.closest('.maplibregl-ctrl-top-right')`), 'information belongs to the navigation rail');
+  const chatHome = await p.rect('.qwen-header-entry');
+  const creditHome = await p.rect('.maplibregl-ctrl-attrib-button');
   await open();
+  assert.deepEqual(await p.rect('.qwen-header-entry'), chatHome, 'opening River Pulse never moves chat');
+  assert.deepEqual(await p.rect('.maplibregl-ctrl-attrib-button'), creditHome, 'opening River Pulse never moves information');
   await p.wait(`document.querySelector('.hydrology-station-control select').options.length===2`, 'synthetic observation fixture loaded');
+  const presentationSnapshot = await snapshot();
+  assert.equal(await p.evaluate(`document.querySelector('.river-map-presentation button:first-child').getAttribute('aria-pressed')`), 'true', 'quiet River view is the default');
+  await p.activate('.river-map-presentation button:last-child');
+  await p.wait(`document.querySelector('.river-map-presentation button:last-child').getAttribute('aria-pressed')==='true'`, 'gauge conditions selected');
+  assert.equal(await snapshot(), presentationSnapshot, 'conditions retain camera, station, observation and evidence');
+  await p.activate('.river-map-presentation button:first-child');
+  assert.equal(await snapshot(), presentationSnapshot, 'River view retains camera, station, observation and evidence');
   // Native selection, exact-frame stepping and keyboard traversal.
   const responsesBeforeSelection=p.riverResponseCount();
   await p.evaluate(`document.querySelector('.hydrology-station-control select').focus()`);
