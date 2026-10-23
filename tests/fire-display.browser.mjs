@@ -63,7 +63,7 @@ async function browser(t, layout) {
 
 const fixture=await build({entryPoints:['tests/fire-display.fixture.mjs'],bundle:true,write:false,format:'esm',platform:'browser',target:'es2022'});
 const baseline=process.env.KFM_FIRE_BASELINE_FILE ? await build({entryPoints:['tests/fire-display.fixture.mjs'],bundle:true,write:false,format:'esm',platform:'browser',target:'es2022',plugins:[{name:'pinned-fire-baseline',setup(build){build.onLoad({filter:/app\/fire-detection-style\.ts$/},async ()=>({contents:await readFile(process.env.KFM_FIRE_BASELINE_FILE,'utf8'),loader:'ts',resolveDir:join(process.cwd(),'app')}));}}]}) : null;
-const html=`<!doctype html><html lang="en"><title>Synthetic fire renderer acceptance</title><style>body{margin:0;background:#162d35;color:#fff;font:14px system-ui}header{padding:10px}#map{position:absolute;inset:58px 0 110px}#inspection{position:absolute;bottom:0;height:90px;overflow:auto;max-width:100%;font:12px monospace}canvas{position:absolute}</style><header>SYNTHETIC RENDERER TEST · illustrative flames · dashed outline = satellite pixel, not perimeter</header><div id="map"></div><output id="inspection">Click a synthetic source record</output><script type="module" src="/__fire-acceptance/fixture.mjs"></script></html>`;
+const html=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Synthetic fire renderer acceptance</title><style>body{margin:0;background:#162d35;color:#fff;font:14px system-ui}header{padding:10px}#map{position:absolute;inset:58px 0 110px}#inspection{position:absolute;bottom:0;height:90px;overflow:auto;max-width:100%;font:12px monospace}canvas{position:absolute}</style><header>SYNTHETIC RENDERER TEST · illustrative flames · dashed outline = satellite pixel, not perimeter</header><div id="map"></div><output id="inspection">Click a synthetic source record</output><script type="module" src="/__fire-acceptance/fixture.mjs"></script></html>`;
 for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,touch:true}]) {
   test(`fire Canvas/WebGL visual matrix ${layout.width}x${layout.height}`,{timeout:180000},async t=>{
     const b=await browser(t,layout);
@@ -91,6 +91,7 @@ for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,t
     });
     await call('Page.enable');await call('Runtime.enable');await call('Network.enable');
     await call('Emulation.setDeviceMetricsOverride',{width:layout.width,height:layout.height,deviceScaleFactor:1,mobile:layout.touch});
+    await call('Emulation.setTouchEmulationEnabled',{enabled:layout.touch});
     await call('Network.setBlockedURLs',{urlPatterns:[{urlPattern:`${origin.origin}/*`,block:false},{urlPattern:'*://*:*/*',block:true}]});
     await call('Fetch.enable',{patterns:[{urlPattern:`${origin.origin}/__fire-acceptance/*`}]});
     const evaluate=async expression=>{

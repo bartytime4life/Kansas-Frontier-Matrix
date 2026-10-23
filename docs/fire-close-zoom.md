@@ -67,7 +67,7 @@ reload can restore flames. Hidden or zero-opacity layers retain those settings,
 and unavailable images do not start a repaint ticker. Generic layer styling
 cannot overwrite the renderer's visibility or continually reset its radius.
 
-The ordinary regression suite adds unavailable Canvas, ordinary-Canvas fallback,
+Thirteen fire regressions now cover unavailable Canvas, ordinary-Canvas fallback,
 readback denial, partial and silent registration failure, recovery, style reload
 and no-animation-without-images coverage. Existing source-identity, confidence,
 footprint dimensions, opacity, globe sizing and motion gates remain exercised.
@@ -104,3 +104,8 @@ disposable MySQL checks. Its new browser test caught a fixture-diagnostic bug:
 it asked fill/line layers for circle opacity. That test helper is corrected;
 the failed run is not counted as browser acceptance. A further style-replacement
 regression checks that absent layers cause no visibility writes.
+
+The follow-up runtime and full-app test source passed the local production build,
+full TypeScript, changed-module ESLint and 1,729 ordinary tests (21 skips, zero
+failures). The phone component scene uses an explicit viewport and emulated
+touch input. Exact-head CI/browser results remain the publication gate.
