@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "status": "CANDIDATE_NOT_ADMITTED",
+  "reports": [
+    {
+      "id": "work-report",
+      "url": "https://www.ksdot.gov/Home/Components/News/News/1597/712",
+      "date": "2024-04-29",
+      "title": "I-70 ramps scheduled to reopen in Junction City",
+      "status": 200,
+      "sha256": "5ab20c1c69e99f266fb16ea7149655843123d74f3f9e434c1233045ab44e7f55",
+      "bytes": 148047,
+      "capturedAt": "2026-10-23T04:17:51.477Z",
+      "hashScope": "Exact retrieved HTML bytes (mutable navigation/session markup can change); original capture not admitted to RAW."
+    },
+    {
+      "id": "traffic-report",
+      "url": "https://www.ksdot.gov/Home/Components/News/News/1595/712",
+      "date": "2024-05-02",
+      "title": "Updated traffic changes on I-70 at Junction City",
+      "status": 200,
+      "sha256": "5fc4016fb18adf01be406752bfc5034f70dc6ff4508e35e2da808a488fe8c5ff",
+      "bytes": 148326,
+      "capturedAt": "2026-10-23T04:17:51.649Z",
+      "hashScope": "Exact retrieved HTML bytes (mutable navigation/session markup can change); original capture not admitted to RAW."
+    },
+    {
+      "id": "phase-completion",
+      "url": "https://www.ksdot.gov/Home/Components/News/News/658/712",
+      "date": "2024-11-22",
+      "title": "I-70 in Junction City reopens to unrestricted traffic for winter",
+      "status": 200,
+      "sha256": "b42127e943f4e5195ea8f246d625470477627a10e7cfa0fc828bf39ef28d27b5",
+      "bytes": 147611,
+      "capturedAt": "2026-10-23T04:17:51.461Z",
+      "hashScope": "Exact retrieved HTML bytes (mutable navigation/session markup can change); original capture not admitted to RAW."
+    }
+  ],
+  "map": {
+    "url": "https://www.ksdot.gov/home/showpublishedimage/4414/638947417700830000",
+    "sha256": "bda22518e332d3b738365ae86122b279bf60288fb5781a1f1ed4b65af963f700",
+    "role": "Visual corridor plausibility check; not georeferenced engineering survey"
+  },
+  "planningFlyer": {
+    "url": "https://www.ksdot.gov/home/showpublisheddocument/11503/638942156092530000",
+    "sha256": "94ae1d1f397bfb0ca24eda803b0d84e8b51f073e9bb7976370ea777ea1ecb7e7",
+    "role": "Planned 2024 ramp restrictions, not actual closure confirmation"
+  },
+  "projectPage": {
+    "url": "https://www.ksdot.gov/projects/i-70-pavement-replacement-in-junction-city",
+    "sha256": "9d8b1d4675d706bc3421c5440142a0bebffa72b314b2351edcf50a6a1ea2195f",
+    "role": "Phase extent and separate month-level completions; mutable current page"
+  },
+  "unavailableLegacyUrls": [
+    {
+      "url": "https://www.ksdot.gov/Assets/wwwksdotorg/District-Two/pdf_files_2024/GearyCoPavementReplacementPhase2-2.pdf",
+      "status": 404,
+      "role": "Search-index research lead only; excluded as admitted observation"
+    },
+    {
+      "url": "https://www.ksdot.gov/Assets/wwwksdotorg/District-Two/pdf_files_2024/I70TrafficUpdatesJunctionCity.pdf",
+      "status": 404,
+      "role": "Search-index research lead only; excluded as admitted observation"
+    },
+    {
+      "url": "https://www.ksdot.gov/Assets/wwwksdotorg/District-Two/pdf_files_2024/I70ReopensInGearyCo.pdf",
+      "status": 404,
+      "role": "Search-index research lead only; excluded as admitted observation"
+    },
+    {
+      "url": "https://www.ksdot.gov/Assets/wwwksdotorg/bureaus/offTransInfo/TRANSLIN/TransExpress/2024/May2024Translines.pdf",
+      "status": 404,
+      "role": "Search-index research lead only; excluded as admitted observation"
+    }
+  ],
+  "qualification": {
+    "rawAdmission": "not_performed",
+    "sourceRegistry": "not_registered",
+    "rights": "formal_reuse_review_pending",
+    "sensitivity": "ordinary public highway context; formal review pending",
+    "publicRelease": "not_authorized",
+    "intermediateProgress": "unknown",
+    "direction": "index runs west to east; construction direction unknown",
+    "exactWorkDates": "unknown",
+    "closureIntervals": "unknown",
+    "equipmentAssets": "unknown",
+    "geometryAccuracy": "not certified; no physical equipment permitted"
+  }
+}

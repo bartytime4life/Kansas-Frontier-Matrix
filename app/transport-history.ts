@@ -2,11 +2,13 @@
  * this module cannot admit, publish or turn a study into KFM evidence. */
 export type RoutePoint = readonly [number, number];
 export type ProgressSample = Readonly<{ date: string; chainageM: number; sourceUrl: string }>;
+export type TransportMilestone = Readonly<{ date: string; kind: "planned" | "activity-reported" | "completion-reported"; title: string; sourceUrl: string }>;
 export type TransportWork = Readonly<{
   id: string; title: string; mode: "road" | "rail"; action: "build" | "reconstruct" | "remove";
   coordinates: readonly RoutePoint[]; widthM: number; positionAccuracyM: number;
   start: string; end: string; closedFrom?: string; reopenedAt?: string;
   progress: readonly ProgressSample[]; interpolate: boolean;
+  progressMode?: "front" | "milestones"; milestones?: readonly TransportMilestone[];
   sourceUrl: string; geometrySourceUrl: string; limitation: string; synthetic: boolean;
 }>;
 export const TRANSPORT_STUDY_MAX_BYTES = 2_000_000;
@@ -73,6 +75,27 @@ export function inspectTransportStudy(text: string): readonly TransportWork[] {
     const points = coordinates as RoutePoint[];
     const length = routeLengthM(points);
     if (length < 80 || length > 500_000 || points.slice(1).some((p, i) => routeDistanceM(points[i], p) < .1)) fail("route length must be 80 m–500 km with no repeated vertices.");
+    if (record.progressMode !== undefined && record.progressMode !== "front" && record.progressMode !== "milestones") fail("choose front or milestones progressMode.");
+    if (record.progressMode === "milestones") {
+      // Dates bound reports, not a fabricated actual work interval. No physical
+      // width, front, closure interval or interpolation may be inferred here.
+      const from = transportDay(start), to = transportDay(end);
+      if (from === null || to === null || to <= from || !url(sourceUrl) || !url(geometrySourceUrl)) fail("provide ordered report-window dates and HTTPS source links.");
+      if (record.interpolate !== false || !Array.isArray(record.progress) || record.progress.length || widthM !== undefined || positionAccuracyM !== undefined || record.closedFrom !== undefined || record.reopenedAt !== undefined) fail("milestone studies cannot assert a front, physical width/accuracy, interpolation or whole-route closure.");
+      if (!Array.isArray(record.milestones) || record.milestones.length < 1 || record.milestones.length > 400) fail("provide 1–400 sourced milestones.");
+      let previous = -Infinity;
+      const milestones = (record.milestones as Record<string, unknown>[]).map(m => {
+        if (!m || typeof m !== "object") return fail("invalid milestone.");
+        const day = transportDay(m.date);
+        if (day === null || day <= previous || day < (from as number) || day > (to as number) || !["planned", "activity-reported", "completion-reported"].includes(m.kind as string) || typeof m.title !== "string" || !m.title.trim() || m.title.length > 500 || !url(m.sourceUrl)) return fail("milestones require ordered report dates, a bounded title, kind and HTTPS source.");
+        previous = day;
+        return { date: m.date as string, kind: m.kind as TransportMilestone["kind"], title: m.title, sourceUrl: m.sourceUrl as string };
+      });
+      return { id, title, mode, action, coordinates: points, start, end, sourceUrl, geometrySourceUrl, limitation,
+        progressMode: "milestones", milestones, progress: [], interpolate: false,
+        // Internal sentinels only; milestone lines use a fixed cartographic width.
+        widthM: 0, positionAccuracyM: 10_000, synthetic: input.synthetic === true } as TransportWork;
+    }
     if (typeof widthM !== "number" || !Number.isFinite(widthM) || widthM < 2 || widthM > 40 || typeof positionAccuracyM !== "number" || !Number.isFinite(positionAccuracyM) || positionAccuracyM < .1 || positionAccuracyM > 10_000) fail("provide width (2–40 m) and positional uncertainty (0.1–10,000 m).");
     const startMs = transportDay(start), endMs = transportDay(end);
     if (startMs === null || endMs === null || endMs <= startMs || !url(sourceUrl) || !url(geometrySourceUrl)) fail("provide ordered actual work dates and HTTPS date/geometry source links.");
@@ -97,10 +120,14 @@ export function inspectTransportStudy(text: string): readonly TransportWork[] {
       sourceUrl, geometrySourceUrl, limitation, synthetic: input.synthetic === true } as TransportWork;
   });
 }
-export type TransportFrame = Readonly<{ state: "planned" | "working" | "complete" | "removed"; closed: boolean; chainageM: number; basis: "observed" | "interpolated" | "unknown"; sourceDate: string | null; rateMPerDay: number | null }>;
+export type TransportFrame = Readonly<{ state: "planned" | "working" | "complete" | "removed" | "unknown"; closed: boolean; chainageM: number; basis: "observed" | "interpolated" | "unknown"; sourceDate: string | null; rateMPerDay: number | null }>;
 export function transportFrame(work: TransportWork, date: string): TransportFrame {
   const time = transportDay(date);
   if (time === null) return { state: "planned", closed: false, chainageM: 0, basis: "unknown", sourceDate: null, rateMPerDay: null };
+  if (work.progressMode === "milestones") {
+    const last = [...(work.milestones ?? [])].reverse().find(m => transportDay(m.date)! <= time);
+    return { state: "unknown", closed: false, chainageM: 0, basis: "unknown", sourceDate: last?.date ?? null, rateMPerDay: null };
+  }
   const start = transportDay(work.start)!, end = transportDay(work.end)!;
   const closed = Boolean(work.closedFrom && time >= transportDay(work.closedFrom)! && (!work.reopenedAt || time < transportDay(work.reopenedAt)!));
   if (time < start) return { state: "planned", closed, chainageM: 0, basis: "unknown", sourceDate: null, rateMPerDay: null };

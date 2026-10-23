@@ -108,3 +108,71 @@ test('failed style installation removes partial resources and keeps pre-existing
   const map={isStyleLoaded:()=>true,getSource:id=>sources.get(id),addSource(id,s){sources.set(id,s);},getLayer:id=>layers.get(id),addLayer(){throw Error('injected style failure');},removeLayer(id){layers.delete(id);},removeSource(id){sources.delete(id);}};
   try{assert.throws(()=>layer.attachTransportConstruction(map,[work],'2024-01-06',false),/injected/);assert.equal(sources.size,0);assert.deepEqual([...layers.keys()],['original']);}finally{globalThis.document=oldDocument;}
 });
+
+const pilot = JSON.parse(await readFile(new URL('../data/work/transport/junction-city-i70-2024.study.json', import.meta.url), 'utf8'));
+const [milestoneWork] = inspect(pilot);
+test('real milestone reports never create a moving front, completion fraction, closure or average rate', () => {
+  for (const day of ['2024-04-28', '2024-04-29', '2024-05-01', '2024-05-02', '2024-08-01', '2024-11-22', '2025-01-01']) {
+    const frame = h.transportFrame(milestoneWork, day);
+    assert.equal(frame.state, 'unknown'); assert.equal(frame.basis, 'unknown');
+    assert.equal(frame.chainageM, 0); assert.equal(frame.rateMPerDay, null); assert.equal(frame.closed, false);
+    const features = layer.transportLineData([milestoneWork], day).features;
+    assert.equal(features.length, 1); assert.equal(features[0].properties.state, 'context');
+    assert.equal(features[0].properties.basis, 'unknown');
+    assert.ok(Math.abs(h.routeLengthM(features[0].geometry.coordinates) - h.routeLengthM(milestoneWork.coordinates)) < .01);
+  }
+  const gap = h.transportFrame(milestoneWork, '2024-08-01');
+  assert.equal(gap.sourceDate, '2024-05-02');
+  assert.equal(h.transportFrame(milestoneWork, '2024-04-28').sourceDate, null);
+  assert.deepEqual(h.transportFrame(milestoneWork, '2024-08-01'), gap);
+});
+test('milestone mode rejects invented front semantics and unsafe or contradictory reports', () => {
+  const reject = (fn, re) => { const v = structuredClone(pilot); fn(v.routes[0]); assert.throws(() => inspect(v), re); };
+  for (const field of ['widthM', 'positionAccuracyM', 'closedFrom', 'reopenedAt']) reject(r => r[field] = field.endsWith('M') ? 8 : '2024-05-01', /cannot assert/);
+  reject(r => r.progress = [{date:r.start,chainageM:0,sourceUrl:r.sourceUrl}], /cannot assert/);
+  reject(r => r.interpolate = true, /cannot assert/);
+  reject(r => r.progressMode = 'trust-me', /choose front/);
+  reject(r => r.milestones = [], /1–400/);
+  reject(r => r.milestones = Array(401).fill(r.milestones[0]), /1–400/);
+  reject(r => r.milestones[1].date = r.milestones[0].date, /ordered report/);
+  reject(r => r.milestones[0].date = '2024-02-30', /ordered report/);
+  reject(r => r.milestones[0].kind = 'observed-front', /ordered report/);
+  reject(r => r.milestones[0].title = 'x'.repeat(501), /ordered report/);
+  reject(r => r.milestones[0].sourceUrl = 'https://user:pass@example.invalid', /ordered report/);
+  reject(r => r.end = r.start, /report-window/);
+  const safe=structuredClone(pilot);safe.routes[0].milestones[0].asset='https://example.invalid/script';
+  assert.equal(inspect(safe)[0].milestones[0].asset,undefined);
+});
+test('pilot geometry is reproducible from KDOT vertices and consistent reference-post anchors', async () => {
+  const g = JSON.parse(await readFile(new URL('../data/work/transport/junction-city-i70-2024.geometry.json', import.meta.url), 'utf8'));
+  assert.equal(g.status, 'CANDIDATE_NOT_ADMITTED'); assert.equal(g.crs, 'EPSG:4326');
+  const expected = [g.anchors[0].projectedCoordinate, ...g.routeExcerpt.slice(1,-1).map(p=>p.slice(0,2)), g.anchors[1].projectedCoordinate];
+  assert.deepEqual(milestoneWork.coordinates, expected);
+  assert.equal(expected.length, 79);
+  assert.ok(h.routeLengthM(expected)>6300 && h.routeLengthM(expected)<6600);
+  assert.ok(g.routeExcerpt.every((p,i)=>i===0||p[2]>g.routeExcerpt[i-1][2]));
+  assert.ok(expected[0][0]<expected.at(-1)[0]); // indexing only, never work direction
+  for (const anchor of g.anchors) {
+    const i=anchor.excerptSegmentIndex,a=g.routeExcerpt[i],b=g.routeExcerpt[i+1],f=anchor.fraction;
+    assert.ok(f>=0&&f<=1);
+    assert.deepEqual(anchor.projectedCoordinate,[a[0]+f*(b[0]-a[0]),a[1]+f*(b[1]-a[1])]);
+    const marker=g.markers.find(m=>m.attributes.RouteID==='0311000700100000'&&m.attributes.ReferencePost===anchor.referencePost);
+    assert.ok(h.routeDistanceM([marker.geometry.x,marker.geometry.y],anchor.projectedCoordinate)<1);
+    assert.ok(h.routeDistanceM([marker.attributes.MeasuredLongitude,marker.attributes.MeasuredLatitude],anchor.projectedCoordinate)<15);
+  }
+  const bad=g.markers.find(m=>m.attributes.OBJECTID===g.excludedMarker.objectId);
+  assert.ok(h.routeDistanceM([bad.geometry.x,bad.geometry.y],[bad.attributes.MeasuredLongitude,bad.attributes.MeasuredLatitude])>8000);
+  assert.ok(g.anchors.every(a=>a.referencePost!==bad.attributes.ReferencePost||g.markers.some(m=>m.attributes.RouteID==='0311000700100000'&&m.attributes.ReferencePost===a.referencePost)));
+});
+test('candidate source reports retain date precision and do not enter public assets or source registry', async () => {
+  const s=JSON.parse(await readFile(new URL('../data/work/transport/junction-city-i70-2024.sources.json', import.meta.url),'utf8'));
+  assert.equal(s.status,'CANDIDATE_NOT_ADMITTED');assert.equal(s.qualification.rawAdmission,'not_performed');
+  assert.equal(s.qualification.publicRelease,'not_authorized');
+  assert.deepEqual(milestoneWork.milestones.map(m=>m.date),s.reports.map(r=>r.date));
+  assert.equal(milestoneWork.milestones.at(-1).kind,'completion-reported');
+  assert.match(milestoneWork.milestones.at(-1).title,/Exact completion day is unknown/);
+  for(const report of s.reports){assert.match(report.sha256,/^[0-9a-f]{64}$/);assert.ok(milestoneWork.milestones.some(m=>m.sourceUrl===report.url));}
+  assert.equal(pilot.routes[0].widthM,undefined);assert.equal(pilot.routes[0].positionAccuracyM,undefined);
+  const control=await readFile(new URL('../app/transport-history-control.tsx',import.meta.url),'utf8');
+  assert.doesNotMatch(control,/junction-city-i70|data\/work|fetch\(/);
+});
