@@ -1,0 +1,70 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-view-landscape-spacing:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/globals.css",
+    "tests/river-pulse.browser.mjs",
+    "docs/water-flow-paths.md"
+  ],
+  "artifact_hashes": {
+    "app/globals.css": "sha256:a5fc5c47ab913b21abb5d7f8c71fbcece8d370eb4d90b9211596395c9d7982d1",
+    "tests/river-pulse.browser.mjs": "sha256:a480e96d92ffb841841b5ef8f8717eb93366a035b4876d01c63b6fb67d7b6b40",
+    "docs/water-flow-paths.md": "sha256:c8b0a345e10ba87864e4d491b7cd0b1bf735f6889bc11b67dbf602ec9c583c30"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:1e3e12d641d6f71717f133ce9ff8e93ace1c62e33aa789b19ec4dd2ea1d951d9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@568bef2c60922b73c681f6771d40155b8ec8ea5b",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39977540057"
+    ]
+  },
+  "truth_labels": {
+    "app/globals.css": "NEEDS VERIFICATION",
+    "tests/river-pulse.browser.mjs": "NEEDS VERIFICATION",
+    "docs/water-flow-paths.md": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Previous follow-up browser qualification",
+      "outcome": "FAIL",
+      "reason": "Head 461a39dd passed build/types, 1706 Node tests with 19 skips, MySQL, HTTP, county and aviation checks. River Pulse passed four layouts; 568x320 failed the strict close-button hit test after expansion because the new upper information control occupied the same short-landscape row."
+    },
+    {
+      "gate": "Reserved top-control row",
+      "outcome": "SKIPPED",
+      "reason": "Bound both compact and expanded short-landscape dock heights to the containing map stage minus 76px. Add explicit dismissal/information rectangle non-overlap to the existing strict hit test; no assertion is removed. Current exact-head CI pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/c336e8b38135d7110a79b44f038faee756006f21"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T15:29:17.558Z",
+  "emitter": "Codex",
+  "notes": "Immutable spacing successor. Existing style, browser regression and adjacent behavior guide only. Fullscreen and provider-credit checks remain enabled. No source, data, settings, merge or publication change."
+}

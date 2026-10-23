@@ -241,7 +241,7 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
   });
   test(`startup destinations at ${width}x${height}`, { timeout: 240000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
-    await t.test('Find and Ask retain DOM order and responsive keyboard access before map controls', async () => {
+    await t.test('Find and Chat retain DOM order and responsive keyboard access before map controls', async () => {
       await p.open('/', '1');
       assert.equal(await p.evaluate(`(() => {
         const header = document.querySelector('header.topbar');
@@ -249,7 +249,7 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
         const ask = header?.querySelector('button.welcome-ai-entry');
         const controls = header?.querySelector('nav.map-chrome-dock');
         return !!(find && ask && controls
-          && find.textContent.includes('Find') && ask.textContent.includes('Ask')
+          && find.textContent.includes('Find') && ask.textContent.includes('Chat with KFM')
           && [find, ask].every(button => !button.disabled && button.tabIndex === 0
             && !button.closest('[inert], [aria-hidden="true"]')
             && (button.compareDocumentPosition(controls) & Node.DOCUMENT_POSITION_FOLLOWING)));
@@ -271,7 +271,7 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
           break;
         }
       }
-      assert.equal(reachedMap, true, 'Tab reaches map controls after Find and Ask');
+      assert.equal(reachedMap, true, 'Tab reaches map controls after Find and Chat');
     });
     await t.test('direct topic and restored shared topic URL', async () => {
       for (const url of ['/?topic=engineering', '/?topic=groundwater&layerView=imagery&c=-98.2,38.6&z=7&t=2026']) {
