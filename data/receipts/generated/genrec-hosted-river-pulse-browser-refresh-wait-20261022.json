@@ -1,0 +1,76 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-pulse-browser-refresh-wait:20261022",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/river-pulse.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "tests/river-pulse.browser.mjs": "sha256:eb5718efb8e4556b60fd0edd372aff526e8759032b072623f748343debfdcc31"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:c815ff64efa3e15fe67f7e565549b38e02e28ee2a647079f79111e9bd37a9702",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser",
+      "node_repl"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@05d2f05f9993efb797d9795f4e235375ea397afd",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39902822760",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5425"
+    ]
+  },
+  "truth_labels": {
+    "tests/river-pulse.browser.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Five rendered browser layouts",
+      "outcome": "PASS",
+      "reason": "Five layouts pass with one frozen synthetic bundle per page, explicit station refresh response/ready/render synchronization, and visible More/status dialog waits. Every state-preservation and hit-test assertion remains enabled."
+    },
+    {
+      "gate": "Lint and diff",
+      "outcome": "PASS",
+      "reason": "Changed browser test has zero lint errors/warnings; diff check passes."
+    },
+    {
+      "gate": "Prior full application regression",
+      "outcome": "PASS",
+      "reason": "Unchanged application source passed 1700 Node tests with 19 skips, build and TypeScript. This follow-up changes only test synchronization; application digest remains sha256:4a63c49918b1973cc174747e24ff5d6bb84bb0badef45235f9eb845665022bd4."
+    },
+    {
+      "gate": "Exact-head CI, independent review, hosted acceptance and publication",
+      "outcome": "SKIPPED",
+      "reason": "Pending after this test-only corrective PR; actual Preview additionally has a missing dynamically imported browser module under investigation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "merged-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/05d2f05f9993efb797d9795f4e235375ea397afd"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T05:12:22.761292+00:00",
+  "emitter": "Codex",
+  "notes": "CI exposed an allowed station-change refresh arriving after the test sought a prior frame. Observe that response/render first and hold fixture timestamps fixed within each page. Product polling and all preservation assertions remain unchanged. Previous receipts remain immutable; rollback this test-only follow-up. The test also observes the native More disclosure and repository-overlay visibility/render, rather than treating an always-mounted hidden dialog as open."
+}

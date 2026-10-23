@@ -77,6 +77,8 @@ async function browser(t) {
 // Uses the actual production page/CSS with loopback-only synthetic observations.
 // External provider calls are blocked; these are interaction tests, not data acceptance.
 async function pageSession(b, { width, height, touch, motion }) {
+  const riverFixture=fixture();
+  let riverResponses=0;
   const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
   const call = (method, params = {}) => b.call(method, params, sessionId);
@@ -91,7 +93,7 @@ async function pageSession(b, { width, height, touch, motion }) {
     const { requestId, request, networkId } = message.params, url = new URL(request.url);
     const river = url.pathname === '/api/hydrology/streamflow';
     const operation = url.pathname.startsWith('/api/') && url.pathname !== '/api/build'
-      ? call('Fetch.fulfillRequest', { requestId, responseCode: river ? 200 : 503, responseHeaders: [{ name:'Content-Type',value:'application/json' }], body:Buffer.from(JSON.stringify(river ? fixture() : {error:'Isolated dismissal test: unrelated provider unavailable'})).toString('base64') })
+      ? call('Fetch.fulfillRequest', { requestId, responseCode: river ? 200 : 503, responseHeaders: [{ name:'Content-Type',value:'application/json' }], body:Buffer.from(JSON.stringify(river ? riverFixture : {error:'Isolated dismissal test: unrelated provider unavailable'})).toString('base64') }).then(result=>{if(river) riverResponses++;return result;})
       : call('Fetch.continueRequest', {requestId});
     void operation
       .catch(error => interceptions.failed(error, { requestNavigation: 0, navigation: 0, networkId, url: request.url }));
@@ -139,7 +141,14 @@ async function pageSession(b, { width, height, touch, motion }) {
   };
   await call('Page.navigate', { url: new URL('?l=&ctx=usgs-streamflow,nws-radar', origin).href });
   await wait(`history.state?.kfmExplorerView && document.querySelector('.map-chrome-dock')`, 'hydration');
-  return { call, evaluate, wait, key, rect, activate };
+  const waitForRiverResponseAfter=async count=>{
+    const deadline=Date.now()+15000;
+    while(riverResponses<=count && Date.now()<deadline) await pause(25);
+    assert.ok(riverResponses>count,'station-change refresh response completed');
+    await wait(`document.querySelector('.hydrology-observatory')?.dataset.state==='ready' && document.querySelector('.hydrology-observatory')?.getAttribute('aria-busy')==='false'`, 'station refresh rendered');
+    await evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
+  };
+  return { call, evaluate, wait, key, rect, activate, riverResponseCount:()=>riverResponses, waitForRiverResponseAfter };
 }
 
 for (const layout of [
@@ -155,8 +164,11 @@ for (const layout of [
   await p.wait(`!document.querySelector('.explorer-guide') && document.querySelector('#map-canvas canvas')`, 'map ready');
   const open = async () => {
     if(!await p.evaluate(`document.querySelector('[aria-label="More site actions"]').closest('details').open`)) await p.activate('[aria-label="More site actions"]');
+    await p.wait(`document.querySelector('[aria-label="More site actions"]').closest('details').open`, 'More disclosure opened');
+    await p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
     await p.activate('.status-header-action');
-    await p.wait(`document.querySelector('#repository-briefing')`, 'status open');
+    await p.wait(`document.querySelector('.repository-overlay')?.hidden===false`, 'status dialog shown');
+    await p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
     await p.activate('.status-map-links button:nth-child(2)');
     await p.wait(`document.querySelector('.hydrology-observatory')`, 'River Pulse open');
     // Status is nested in More; close the native popover without hiding River Pulse.
@@ -180,10 +192,12 @@ for (const layout of [
   await open();
   await p.wait(`document.querySelector('.hydrology-station-control select').options.length===2`, 'synthetic observation fixture loaded');
   // Native selection, exact-frame stepping and keyboard traversal.
+  const responsesBeforeSelection=p.riverResponseCount();
   await p.evaluate(`document.querySelector('.hydrology-station-control select').focus()`);
   await p.key('ArrowDown','ArrowDown',40);
   await p.key('Tab','Tab',9);
   await p.wait(`document.querySelector('.hydrology-station-control select').value==='USGS-06864500'`, 'station selected');
+  await p.waitForRiverResponseAfter(responsesBeforeSelection);
   await p.activate('[aria-label="Previous exact streamflow frame"]');
   if(!layout.touch) {
     await p.activate('.hydrology-close');await closed();
