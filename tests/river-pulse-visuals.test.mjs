@@ -136,3 +136,34 @@ test('map Escape cancels an active measurement before dismissing live controls o
   assert.ok(!calls.includes('dock dismissed'));assert.ok(!calls.includes('evidence dismissed'));
   run(event);assert.equal(calls.at(-1),'dock dismissed');assert.ok(!calls.includes('evidence dismissed'));
 });
+
+
+test('map display changes only presentation and keeps source measurements and selection intact', () => {
+  const feature = { type: 'Feature', geometry: { type: 'Point', coordinates: [-98, 38] }, properties: { stationId: 'gauge', value: 0, missing: false, observedAt: '2026-10-23T00:00:00Z', trend: 'steady' } };
+  const frame = { type: 'FeatureCollection', features: [feature] };
+  const bundle = { retrievedAt: '2026-10-23T00:05:00Z', observations: [{}], state: 'ready', source: {}, limitation: 'context', truncated: false };
+  const quiet = streamflow.streamflowContextPayload(bundle, frame, '2026-10-23T00:00:00Z', 'gauge');
+  const conditions = streamflow.streamflowContextPayload(bundle, frame, '2026-10-23T00:00:00Z', 'gauge', 'conditions');
+  assert.equal(quiet.data.features[0].properties.gaugeConditions, false);
+  assert.equal(conditions.data.features[0].properties.gaugeConditions, true);
+  assert.equal(quiet.data.features[0].properties.selected, true);
+  const stripDisplay = payload => { const properties = { ...payload.data.features[0].properties }; delete properties.gaugeConditions; return properties; };
+  assert.deepEqual(stripDisplay(quiet), stripDisplay(conditions));
+  assert.equal(feature.properties.gaugeConditions, undefined);
+  assert.equal(streamflow.streamflowContextPayload(bundle, null, null, 'gauge').featureCount, 0);
+});
+
+test('presentation controls announce their state and do not seek or select a station', async () => {
+  const h = await harnessFor();
+  const changes = [];
+  const props = { ...emptyProps(() => {}), mapDisplay: 'rivers', onMapDisplay: mode => changes.push(mode), onSeek: () => assert.fail('no seek'), onSelectStation: () => assert.fail('no station change') };
+  const tree = h.render(h.exports.HydrologyObservatory, props);
+  const group = findNode(tree, node => node.props?.['aria-label'] === 'River Pulse map display');
+  const rivers = findNode(group, node => node.type === 'button' && node.props['aria-pressed'] === true);
+  const conditions = findNode(group, node => node.type === 'button' && node.props['aria-pressed'] === false);
+  assert.ok(rivers); assert.ok(conditions);
+  conditions.props.onClick(); rivers.props.onClick();
+  assert.deepEqual(changes, ['conditions', 'rivers']);
+  const details = findNode(tree, node => node.type === 'details' && node.props.className === 'river-network-details');
+  assert.ok(details); assert.ok(!details.props.open);
+});

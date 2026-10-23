@@ -14,6 +14,7 @@ import {
   type StreamflowFrame,
   type StreamflowObservation,
   type StreamflowStation,
+  type RiverMapDisplay,
 } from "./streamflow";
 
 export type HydrologyObservatoryState = "idle" | "loading" | "ready" | "partial" | "empty" | "stale" | "error";
@@ -36,6 +37,8 @@ export type HydrologyObservatoryProps = Readonly<{
   downstreamPathCount: number;
   downstreamAnalysis?: WaterPathAnalysis | null;
   sourceSwitcher?: ReactNode;
+  mapDisplay?: RiverMapDisplay;
+  onMapDisplay?: (display: RiverMapDisplay) => void;
   onClose: () => void;
   onRefresh: () => void;
   onTogglePlay: () => void;
@@ -181,6 +184,8 @@ export function HydrologyObservatory({
   downstreamPathCount,
   downstreamAnalysis = null,
   sourceSwitcher,
+  mapDisplay = "rivers",
+  onMapDisplay,
   onClose,
   onRefresh,
   onTogglePlay,
@@ -312,7 +317,16 @@ export function HydrologyObservatory({
       <button type="button" onClick={onRefresh} disabled={state === "loading"}>{state === "loading" ? "Refreshing…" : "Refresh"}</button>
     </div>
 
-    <RiverNetworkSignal frame={frame} selected={selectedStationId} onSelect={onSelectStation} />
+    {onMapDisplay && <div className="river-map-presentation">
+      <div role="group" aria-label="River Pulse map display">
+        <button type="button" aria-pressed={mapDisplay === "rivers"} onClick={() => onMapDisplay("rivers")}>≋ River view</button>
+        <button type="button" aria-pressed={mapDisplay === "conditions"} onClick={() => onMapDisplay("conditions")}>Gauge conditions</button>
+      </div>
+      <p>{mapDisplay === "rivers" ? "Quiet gauge locations · select one, then Follow a river for mapped channel motion." : "Color shows change at each gauge; size shows discharge, never flood severity."}</p>
+    </div>}
+    <details className="river-network-details"><summary>Gauge network at this frame</summary>
+      <RiverNetworkSignal frame={frame} selected={selectedStationId} onSelect={onSelectStation} />
+    </details>
     <div className="hydrology-clock" role="status" aria-live={playing ? "off" : "polite"} aria-atomic="true">
       <div>
         <span>{observationTimes.length ? "EXACT OBSERVATION FRAME" : "REQUEST END · NO OBSERVATIONS"}</span>
@@ -379,7 +393,7 @@ export function HydrologyObservatory({
       {(downstreamState === "ready" || downstreamState === "loading" && downstreamAnalysis?.upstreamM !== undefined) && downstreamAnalysis && <WaterTerrainProfile analysis={downstreamAnalysis} />}
       </details>
       <button className="hydrology-direction-action" type="button" onClick={onShowDirection} disabled={!bundle?.stations.length}>{selectedStation ? "Zoom to flow direction" : "Show flow direction on map"}</button>
-      <small className="hydrology-reading-boundary">Gauge rings show change at a station. Relative low or high describes only the loaded station readings; it is not a drought or flood threshold.</small>
+      <small className="hydrology-reading-boundary">River motion follows the selected mapped channel at illustrative speed. Relative low or high describes only the loaded station readings; it is not a drought or flood threshold.</small>
     </section>
 
     {(state === "loading" || state === "empty" || state === "stale" || state === "error" || error) && <div className="hydrology-message" data-state={state} role={state === "error" ? "alert" : "status"}>
@@ -391,9 +405,9 @@ export function HydrologyObservatory({
       <summary>Discharge, trend and quality legend</summary>
       <div className="hydrology-legend-grid">
         <section aria-label="Discharge marker size">
-          <strong>DISCHARGE MAGNITUDE</strong>
+          <strong>MAP DISPLAY</strong>
           <div className="hydrology-size-key"><span><i data-size="small" />Lower</span><span><i data-size="medium" />Medium</span><span><i data-size="large" />Higher</span></div>
-          <p>Marker area uses a logarithmic ft³/s scale. Raw discharge is not a flood category and is not directly comparable across differently sized basins.</p>
+          <p>River view uses small, neutral station locators. Gauge conditions adds trend color and a logarithmic ft³/s size scale. Missing readings stay hollow; the selected missing gauge shows a dashed ×, and measured zero an amber −. Raw discharge is not a flood category.</p>
         </section>
         <section aria-label="Observation trend">
           <strong>CHANGE FROM PRIOR OBSERVATION</strong>
@@ -402,7 +416,7 @@ export function HydrologyObservatory({
         </section>
         <section aria-label="Observation quality">
           <strong>QUALITY / AVAILABILITY</strong>
-          <div className="hydrology-quality-key"><span data-quality="approved"><i />Approved</span><span data-quality="provisional"><i />Provisional</span><span data-quality="missing"><i />Dashed ×: missing or too old</span><span data-quality="zero"><i />Amber −: measured zero</span></div>
+          <div className="hydrology-quality-key"><span data-quality="approved"><i />Approved</span><span data-quality="provisional"><i />Provisional</span><span data-quality="missing"><i />Hollow: missing or too old</span><span data-quality="zero"><i />Amber −: measured zero</span></div>
           <p>Missing stations remain hollow. Provisional USGS values may be revised.</p>
         </section>
       </div>

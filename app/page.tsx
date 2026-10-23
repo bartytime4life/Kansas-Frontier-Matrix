@@ -312,6 +312,7 @@ import {
   stationObservations,
   type StreamflowBundle,
   type StreamflowFrame,
+  type RiverMapDisplay,
 } from "./streamflow";
 import { riverDrawerObservation } from "./evidence-drawer-observation";
 import { drawerArtifactAttributes, parseUsgsStageDetail, type DrawerAttribute, type UsgsStageDetail } from "./evidence-drawer-data";
@@ -1290,6 +1291,7 @@ export default function Home() {
   const [streamflowError, setStreamflowError] = useState<string | null>(null);
   const [streamflowFrameIndex, setStreamflowFrameIndex] = useState(-1);
   const [streamflowPlaying, setStreamflowPlaying] = useState(false);
+  const [riverMapDisplay, setRiverMapDisplay] = useState<RiverMapDisplay>("rivers");
   const [streamflowPlaybackSpeed, setStreamflowPlaybackSpeed] = useState<HydrologyPlaybackSpeed>(1);
   const [streamflowRange, setStreamflowRange] = useState<HydrologyRange>("24h");
   const [streamflowSelectedStationId, setStreamflowSelectedStationId] = useState<string | null>(null);
@@ -3206,10 +3208,10 @@ export default function Home() {
 
   useEffect(() => {
     if (!streamflowBundle) return;
-    const payload = streamflowContextPayload(streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowSelectedStationId);
+    const payload = streamflowContextPayload(streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowSelectedStationId, riverMapDisplay);
     officialPayloadsRef.current = { ...officialPayloadsRef.current, "usgs-streamflow": payload };
     setOfficialPayloads(officialPayloadsRef.current);
-  }, [streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowSelectedStationId]);
+  }, [streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowSelectedStationId, riverMapDisplay]);
 
   const stepStreamflow = useCallback((direction: "reverse" | "forward") => {
     if (streamflowFrames.length === 0) return;
@@ -5006,7 +5008,7 @@ export default function Home() {
           minZoom: projectionRef.current === "globe" ? 0 : 4,
           maxZoom: 16,
           maxBounds: projectionRef.current === "globe" ? undefined : REGIONAL_NAVIGATION_BOUNDS,
-          attributionControl: { compact: true },
+          attributionControl: false,
           cooperativeGestures: gestureModeRef.current === "cooperative",
           boxZoom: {
             boxZoomEnd: (mapInstance, start, end) => {
@@ -5074,6 +5076,7 @@ export default function Home() {
         map.addControl(navigationControl, "top-right");
         map.addControl(fullscreenControl, "top-right");
         map.addControl(geolocateControl, "top-right");
+        map.addControl(new mapLibre.AttributionControl({ compact: true }), "top-right");
         geolocateControl.on("geolocate", () => {
           locationDerivedViewRef.current = true;
           setLocationCameraRedacted(true);
@@ -5887,15 +5890,14 @@ export default function Home() {
       return;
     }
     const motionHealthy = streamflowDisplayState === "ready" || streamflowDisplayState === "partial";
-    const animateReadings = motionHealthy && dynamicEffects && !reducedMotion && streamflowPlaying;
     const animateDirection = motionHealthy && dynamicEffects && !reducedMotion && downstreamPaths.length > 0
       && selectedWaterCue.value !== null && selectedWaterCue.value > 0;
-    const animate = animateReadings || animateDirection;
+    const animate = animateDirection;
     let timer = 0;
     let lastDraw = 0;
     const render = () => {
       if (!document.hidden) drawWaterMotionCanvas(canvas, map, streamflowFrame, streamflowSelectedStationId,
-        downstreamPaths, selectedWaterCue, performance.now(), animateReadings, animateDirection);
+        downstreamPaths, selectedWaterCue, performance.now(), false, animateDirection);
     };
     const tick = (now: number) => {
       timer = 0;
@@ -8966,7 +8968,7 @@ export default function Home() {
         </div>
         <div className="atlas-scope-strip" aria-label="Current investigation">
           <button type="button" className="atlas-scope-control welcome-header-find" onClick={() => openAtlasComposer("find")} aria-controls="qwen-map-panel" title="Find places, layers and sources · shortcut /">Find a county or place</button>
-          <button type="button" className="welcome-ai-entry" onClick={() => openAtlasComposer("explore")} aria-controls="qwen-map-panel">✧ Ask AI</button>
+          <button type="button" className="welcome-ai-entry qwen-header-entry" aria-label="Chat with KFM about this map view" title="Chat with KFM · AI assistant" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel"><span className="qwen-launch-mark" aria-hidden="true">AI</span><span className="qwen-header-label">Chat with KFM</span></button>
           <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} />
           <span className="welcome-header-context"><strong>{selectedLabel}</strong><br /><small>Map time {temporalScopeLabel} · {selectedMapLayerCount} layers</small></span>
         </div>
@@ -9704,6 +9706,8 @@ export default function Home() {
             speed={streamflowPlaybackSpeed}
             range={streamflowRange}
             selectedStationId={streamflowSelectedStationId}
+            mapDisplay={riverMapDisplay}
+            onMapDisplay={setRiverMapDisplay}
             frameTimes={streamflowFrames}
             reducedMotion={reducedMotion}
             downstreamState={downstreamState}
@@ -9792,11 +9796,7 @@ export default function Home() {
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
           <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} visual motionEnabled={dynamicEffects} onMotionChange={setDynamicEffects} onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} onChoosePlace={() => openAtlasComposer("find")} onMission={question => openAtlasComposer("explore", question)} />
-          <button className="qwen-map-launch" type="button" aria-label="Chat with KFM about this map view" title="Chat with KFM about this map view" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel" data-open={qwenOpen}>
-            <span className="qwen-launch-mark" aria-hidden="true">AI</span>
-            <span><strong>Chat with KFM</strong><small>About this map view</small></span>
-            <b aria-hidden="true">{qwenOpen ? "×" : "↗"}</b>
-          </button>
+
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">

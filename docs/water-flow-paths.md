@@ -1,5 +1,39 @@
 # Water-flow paths and terrain context
 
+## River view and control placement — 2026-10-23
+
+River Pulse starts in **River view**: small neutral gauge locators keep the
+waterways legible. **Gauge conditions** restores trend color and bounded
+logarithmic discharge sizing for comparison. Neither view uses statewide glow
+or expanding gauge rings. The selected gauge has a stationary locator; the
+existing **Follow a river** action shows motion only on its provider-mapped
+channel, at illustrative screen speed rather than measured water velocity.
+Missing readings remain hollow and measured zero never animates a river.
+Network counts and condition-selection buttons are available under **Gauge
+network at this frame**, collapsed initially to give the exact-time controls
+more room. Selection, source values, timestamps, quality, Evidence Drawer,
+opacity and playback are shared between both views; changing the display
+neither fetches data nor changes the camera. The view choice lasts for this
+page session and is not currently encoded in shared URLs or reports.
+
+**Chat with KFM** now lives next to place search in the global header, with an
+AI badge that remains available on phones. Its floating duplicate is removed.
+Map attribution (the circled **i**) belongs to the upper-right navigation rail
+below location controls. Opening River Pulse no longer moves either control;
+provider credit links remain available in the expandable attribution control.
+
+Placement reuses existing application, tests and adjacent documentation
+responsibilities under adopted Directory Rules §§10–11 and accepted ADR-0029.
+No source admission, trust state, storage, dependency or publication change.
+Revert this presentation change to restore the previous view; retain later
+unrelated work.
+
+Validation status: the editing environment disconnected while the build was
+running. The final reconstructed source, added regressions, full suite, rendered
+desktop/phone layouts, attribution disclosure and production behavior require
+verification. Earlier focused-file checks are not final-head acceptance.
+This section documents candidate behavior and does not establish publication.
+
 ## Closing River Pulse
 
 Use the **× Close River Pulse** control in the panel header, or press **Escape**

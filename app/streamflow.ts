@@ -122,18 +122,22 @@ export type StreamflowFrameProperties = Readonly<{
 
 export type StreamflowFrame = FeatureCollection<Point, StreamflowFrameProperties>;
 
+export type RiverMapDisplay = "rivers" | "conditions";
+
 /** Each accepted response replaces the map payload, including an empty result. */
 export const streamflowContextPayload = (
   bundle: StreamflowBundle,
   frame: StreamflowFrame | null,
   frameTime: string | null,
   selectedStationId: string | null,
+  mapDisplay: RiverMapDisplay = "rivers",
 ): OfficialContextPayload => {
   const features = frame && frameTime ? frame.features.map((feature) => ({
     ...feature,
     properties: {
       ...feature.properties,
       selected: feature.properties.stationId === selectedStationId,
+      gaugeConditions: mapDisplay === "conditions",
       retrievedAt: bundle.retrievedAt,
     },
   })) : [];

@@ -1227,7 +1227,8 @@ test("keeps the global header and map controls in one responsive toolbar", async
   assert.match(page, /QUICK_LIVE_CONTEXT_IDS\.map/);
   assert.match(page, /mapUtilityView === "scene"[\s\S]*?<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);
   assert.doesNotMatch(page, /className="qwen-header-action"/);
-  assert.match(page, /className="qwen-map-launch"/);
+  assert.match(page, /className="welcome-ai-entry qwen-header-entry"/);
+  assert.doesNotMatch(page, /className="qwen-map-launch"/);
   assert.doesNotMatch(page, /["'`]\/api\/qwen/);
   assert.match(page, /else if \(qwenOpen\) closeQwenCompanion\(\);/);
   assert.match(page, /id="qwen-map-panel"[^>]*role="dialog"/);
