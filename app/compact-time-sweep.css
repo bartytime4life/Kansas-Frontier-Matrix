@@ -143,10 +143,11 @@
 }
 @media (prefers-reduced-motion: reduce) { .time-emblem-sprite[data-moving="true"] { animation: none; } }
 
-/* The instrument floats directly over the map; focus remains visible. */
-.compact-time .compact-time-emblem,
-.compact-time .compact-time-emblem:hover:not(:disabled),
-.compact-time button.compact-time-emblem[aria-pressed="true"] {
+/* Only decorative emblems float without a surface. The stationary clock needs
+   its opaque hit target on bright basemaps, including while hovered. */
+.compact-time .compact-time-emblem:not(.compact-time-clock-toggle),
+.compact-time .compact-time-emblem:not(.compact-time-clock-toggle):hover:not(:disabled),
+.compact-time button.compact-time-emblem:not(.compact-time-clock-toggle)[aria-pressed="true"] {
  border:0; border-radius:0; background:transparent; box-shadow:none; overflow:visible;
 }
 /* Phones: the settings panel opened upward from the time bar and could rise

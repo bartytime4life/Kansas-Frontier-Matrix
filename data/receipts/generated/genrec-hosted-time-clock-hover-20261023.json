@@ -1,0 +1,86 @@
+{
+  "receipt_id": "kfm:generated:hosted-time-clock-hover:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/compact-time-sweep.css",
+    "tests/explorer-startup.browser.mjs",
+    "docs/compact-calendar-time-sweep.md"
+  ],
+  "artifact_hashes": {
+    "app/compact-time-sweep.css": "sha256:a188b60eadfdae148aa59a4119a6d1840395efde935f04b4e2f8e765d60521ff",
+    "tests/explorer-startup.browser.mjs": "sha256:849d8f3c854c092e26ddd7413d32b136286be8db4f2a8a6ddccbb2a92065b2fa",
+    "docs/compact-calendar-time-sweep.md": "sha256:916661ca066bbf6fa4e45d91d69acfca39fb13a06dbb3aafb194bb123471bc1a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:f9c3b4d06ce9aa87b77939786abdabc1869d5a472bb7ae89a2974375a15eb39d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@e830b5980b6f08fef0dc474c65944b55be7b50c9",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "app/compact-time-sweep.css": "NEEDS VERIFICATION",
+    "tests/explorer-startup.browser.mjs": "NEEDS VERIFICATION",
+    "docs/compact-calendar-time-sweep.md": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Isolated Chrome CSS baseline/candidate reproduction",
+      "outcome": "PASS",
+      "reason": "Exact baseline hover made background transparent, border 0px and shadow none. Candidate hover is opaque rgb(28,52,65), border 1px and retained shadow; geometry remains 56x56 and hit-testable."
+    },
+    {
+      "gate": "Current combined-source production build, TypeScript, changed-test ESLint and diff",
+      "outcome": "PASS",
+      "reason": "Executed after incorporating hosted PRs #5433/#5434. Local linked dependencies: Next 16.3.8 and TypeScript 5.9.3; not a clean pinned Next 16.4.2 install."
+    },
+    {
+      "gate": "Complete hosted Node suite",
+      "outcome": "PASS",
+      "reason": "1720 pass, zero failures, 19 skips, 1739 total in the working runtime. The first restricted-shell run encountered environment failures and did not complete; it is not a pass."
+    },
+    {
+      "gate": "Hydrated clock/attribution browser matrix",
+      "outcome": "PASS",
+      "reason": "1366x900, 1024x768, 911x600, 390x844 in Chrome 156. Native mouse hover and open/close; pointer travel onto/away from transport and popup; opacity/border/shadow/hit target; existing keyboard/Escape/touch, viewport and attribution checks all pass. Synthetic isolated providers. Initial combined-source failures were reproduced using the original test: attribution geometry was sampled before reparenting. Awaiting its existing final host resolved this without changing assertions or runtime."
+    },
+    {
+      "gate": "Exact-head CI, separate review, physical devices and publication",
+      "outcome": "SKIPPED",
+      "reason": "Pending. No merge, deployment, provider-load test, source admission or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-hosted-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/e830b5980b6f08fef0dc474c65944b55be7b50c9"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T16:09:11.008235+00:00",
+  "emitter": "Codex",
+  "notes": "Existing hosted app/tests/docs/generated-receipt responsibilities only; Directory Rules v2 adopted by ADR-0029. Three clock-exclusion selectors retain decorative compatibility. No new dependency or workflow. Revert this focused correction; no data/settings migration. Earlier receipts remain immutable. Local base tree verified 4231bb3adab5339012ae75bcbe57138fc7dc6efa. Application digest from final built HTTP startup sha256:e14e5cc8169f1f119f51d26ae8014207b18e0832af0dd426b76c35e82ee9c0dc, 1043 inputs. Human review remains pending."
+}

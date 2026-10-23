@@ -600,12 +600,48 @@ for (const [width, height] of [[1366, 900], [1024, 768], [911, 600], [390, 844]]
   test(`compact clock and attribution stay separate at ${width}x${height}`, { timeout: 60000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height, { attribution: 'Isolated control geometry fixture: source timing and rights remain unavailable.' });
     await p.open('/?motion=off', '1');
-    await p.wait(`document.querySelector('.compact-time-clock-toggle') && document.querySelector('.maplibregl-ctrl-attrib-button')`, 'real time and attribution controls mounted');
+    await p.wait(`document.querySelector('.compact-time-clock-toggle') && document.querySelector('.map-information-home .maplibregl-ctrl-attrib-button')`, 'real time and attribution controls mounted in their final map homes');
     const rects = () => p.evaluate(`(() => {
       const rect = selector => { const r = document.querySelector(selector)?.getBoundingClientRect(); return r ? { left:r.left, right:r.right, top:r.top, bottom:r.bottom, width:r.width, height:r.height } : null; };
       return { header:rect('.topbar'), clock:rect('.compact-time-clock-toggle'), info:rect('.maplibregl-ctrl-attrib-button'), row:rect('.compact-time-row'), settings:rect('.compact-time-popover'), sources:rect('.maplibregl-ctrl-attrib-inner'), scroll:document.querySelector('.map-stage').scrollTop, overflow:document.documentElement.scrollWidth > innerWidth };
     })()`);
     const initial = await rects();
+    const clockAppearance = () => p.evaluate(`(() => {
+      const button = document.querySelector('.compact-time-clock-toggle'), style = getComputedStyle(button), r = button.getBoundingClientRect();
+      return { backgroundAlpha:style.backgroundColor.startsWith('rgba(') ? Number(style.backgroundColor.split(',').at(-1).replace(')','')) : 1,
+        border:style.borderTopWidth, shadow:style.boxShadow,
+        visible:style.visibility === 'visible' && Number(style.opacity) > .9,
+        hit:button.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)),
+        expanded:button.getAttribute('aria-expanded') };
+    })()`);
+    const idleClock = await clockAppearance();
+    const clockPoint = { x:initial.clock.left+initial.clock.width/2, y:initial.clock.top+initial.clock.height/2 };
+    await p.call('Input.dispatchMouseEvent', { type:'mouseMoved', ...clockPoint });
+    const hoveredClock = await clockAppearance();
+    assert.ok(hoveredClock.backgroundAlpha >= .9, 'hover retains an opaque clock surface above light basemaps');
+    assert.equal(hoveredClock.border, idleClock.border, 'hover retains the clock border');
+    assert.notEqual(hoveredClock.border, '0px');
+    assert.equal(hoveredClock.shadow, idleClock.shadow, 'hover retains the clock shadow');
+    assert.notEqual(hoveredClock.shadow, 'none');
+    assert.ok(hoveredClock.visible && hoveredClock.hit, 'the hovered clock stays visible and hit-testable');
+    assert.equal(hoveredClock.expanded, 'false', 'hover does not open or dismiss time controls');
+    const clickClock = async () => {
+      await p.call('Input.dispatchMouseEvent', { type:'mousePressed', button:'left', clickCount:1, ...clockPoint });
+      await p.call('Input.dispatchMouseEvent', { type:'mouseReleased', button:'left', clickCount:1, ...clockPoint });
+    };
+    await clickClock();
+    await p.wait(`document.querySelector('.compact-time-clock-toggle')?.getAttribute('aria-expanded') === 'true' && document.querySelector('.compact-time-popover')`, 'ordinary mouse click opens the hovered clock');
+    await pause(250);
+    for (const selector of ['.compact-time-row', '.compact-time-popover header', '.topbar']) {
+      const point = await p.evaluate(`(() => {const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+      await p.call('Input.dispatchMouseEvent', { type:'mouseMoved', ...point });
+      assert.equal(await p.evaluate(`document.querySelector('.compact-time-clock-toggle').getAttribute('aria-expanded')`), 'true', 'moving onto and away from '+selector+' keeps time controls open');
+    }
+    await p.call('Input.dispatchMouseEvent', { type:'mouseMoved', ...clockPoint });
+    assert.ok((await clockAppearance()).backgroundAlpha >= .9, 'the expanded clock also retains its hover surface');
+    await clickClock();
+    await p.wait(`document.querySelector('.compact-time-clock-toggle')?.getAttribute('aria-expanded') === 'false' && !document.querySelector('.compact-time-popover')`, 'the same hovered clock closes settings');
+    await p.call('Input.dispatchMouseEvent', { type:'mouseMoved', x:width/2, y:80 });
     await p.evaluate(`document.querySelector('.compact-time-clock-toggle').focus()`);
     await p.key('Enter', 'Enter', 13);
     await p.wait(`document.querySelector('.compact-time-clock-toggle')?.getAttribute('aria-expanded') === 'true' && document.querySelector('.compact-time-popover')`, 'Enter opens settings');
