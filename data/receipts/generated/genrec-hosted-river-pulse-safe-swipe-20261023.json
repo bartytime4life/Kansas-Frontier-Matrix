@@ -1,0 +1,75 @@
+{
+  "receipt_id": "kfm:generated:hosted-river-pulse-safe-swipe:20261023",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/river-pulse.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "tests/river-pulse.browser.mjs": "sha256:6a2786318b9d7616315e8e7201b79b8a5688677d13b5bfc4eb623202c67dce94"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Exact revision unavailable"
+  },
+  "prompt_or_contract": "sha256:c815ff64efa3e15fe67f7e565549b38e02e28ee2a647079f79111e9bd37a9702",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "shell",
+      "GitHub",
+      "browser",
+      "node_repl"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@1c89384ba274890fd7653d584287b7bd1970535e",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/39905066459"
+    ]
+  },
+  "truth_labels": {
+    "tests/river-pulse.browser.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Five rendered browser layouts",
+      "outcome": "PASS",
+      "reason": "All five rendered layouts pass with touch swipes starting in noninteractive panel padding; a hit-test assertion rejects starts on buttons, links, inputs or selects. All dismissal, playback, focus and state-preservation assertions remain enabled."
+    },
+    {
+      "gate": "Lint and diff",
+      "outcome": "PASS",
+      "reason": "Changed browser test has zero lint errors/warnings; diff check passes."
+    },
+    {
+      "gate": "Prior full application regression",
+      "outcome": "PASS",
+      "reason": "Unchanged application source passed 1700 Node tests with 19 skips, build and TypeScript. This follow-up changes only test synchronization; application digest remains sha256:4a63c49918b1973cc174747e24ff5d6bb84bb0badef45235f9eb845665022bd4."
+    },
+    {
+      "gate": "Exact-head CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending for this test-only successor. Hosted Preview has been verified separately against the unchanged application digest; production publication remains pending qualification."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "merged-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/1c89384ba274890fd7653d584287b7bd1970535e"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-23T05:37:11.817Z",
+  "emitter": "Codex",
+  "notes": "CI showed the selected frame reset to Latest only after a touch scroll. The prior swipe could begin over a playback control. Move its origin into inert padding and assert that origin; preserve every state assertion. Runtime code is unchanged. Historical receipts remain immutable."
+}
