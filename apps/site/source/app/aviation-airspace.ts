@@ -8,8 +8,8 @@
  */
 export const AVIATION_CONTEXT_ASSET = Object.freeze({
   url: "/data/aviation/kansas-aviation-context.json",
-  sha256: "5c84efb22b6d34472a35bc007648c5597585ece0fc01638067a02fead477b7f2",
-  productId: "sha256:02bf23132d8c7031def9d3d77d4a0dba0fdc47b3ff43398ba6655399828053c1",
+  sha256: "ada5a80a5c54f8af52d1c466504ed08244f3dd3576ce50820936a857dccddc13",
+  productId: "sha256:66fd3695e5a481625f8d16923117df47bbbab015e358bdeea21ce9b317c66b86",
   nasrCycle: "2026-10-29",
   maxBytes: 2 * 1024 * 1024,
 });
@@ -33,7 +33,7 @@ export type AviationRunway = Readonly<{ id: string; length_ft: number; width_ft:
   ends: readonly Readonly<{ id: string; lon: number; lat: number; elevation_ft: number | null }>[] }>;
 export type AviationAirport = Readonly<{
   faa_id: string; icao_id: string | null; name: string; city: string | null; county: string | null; state: string | null;
-  lon: number; lat: number; elevation_ft: number; facility_type: string; ownership: string | null; tower: string | null;
+  lon: number; lat: number; elevation_ft: number; facility_type: string; use: "PUBLIC" | "PRIVATE"; ownership: string | null; tower: string | null;
   weather_station: string | null; ctaf_mhz: number | null; traffic_pattern_ft_agl: number | null; runways: readonly AviationRunway[];
 }>;
 export type AirwaySegment = Readonly<{ designation: string; type: "VICTOR" | "JET" | "RNAV_T" | "RNAV_Q"; from: string; to: string;
@@ -42,7 +42,6 @@ export type AviationContext = Readonly<{
   productId: string; nasrCycle: string; validFrom: string; validToExclusive: string; limitations: readonly string[];
   classA: Readonly<{ floor: AltitudeBound; ceiling: AltitudeBound }> | null;
   volumes: readonly AirspaceVolume[]; airports: readonly AviationAirport[]; airways: readonly AirwaySegment[];
-  privateUseWithheld: number;
 }>;
 
 const TYPES: ReadonlySet<string> = new Set(["CLASS_B", "CLASS_C", "CLASS_D", "CLASS_E2", "CLASS_E3", "CLASS_E4", "CLASS_E5", "CLASS_E6", "CLASS_E7", "MOA", "RESTRICTED", "PROHIBITED", "WARNING", "ALERT", "NSA"]);
@@ -62,7 +61,7 @@ const bound = (value: unknown): AltitudeBound => {
 
 /** Fails closed on any shape drift; the bytes were already checked against the pinned SHA-256. */
 export function parseAviationContext(value: unknown): AviationContext {
-  if (!isObject(value) || value.profile !== "kfm.aviation-kansas-context/v1" || value.evidence_role !== "EXTERNAL_CONTEXT_ONLY"
+  if (!isObject(value) || value.profile !== "kfm.aviation-kansas-context/v2" || value.evidence_role !== "EXTERNAL_CONTEXT_ONLY"
     || value.product_id !== AVIATION_CONTEXT_ASSET.productId || value.nasr_cycle !== AVIATION_CONTEXT_ASSET.nasrCycle
     || !isoDay(value.valid_from) || !isoDay(value.valid_to_exclusive) || !Array.isArray(value.volumes) || !Array.isArray(value.airports) || !Array.isArray(value.airways)) {
     throw new Error("The aviation context did not match its pinned product contract.");
@@ -86,7 +85,7 @@ export function parseAviationContext(value: unknown): AviationContext {
   });
   const airports = value.airports.map((item): AviationAirport => {
     if (!isObject(item) || !text(item.faa_id, 8) || !item.faa_id || !text(item.name, 160) || !finite(item.lon, -180, 180) || !finite(item.lat, -90, 90)
-      || !finite(item.elevation_ft, -1500, 15000) || !text(item.facility_type, 32) || !Array.isArray(item.runways)) throw new Error("Invalid airport record.");
+      || !finite(item.elevation_ft, -1500, 15000) || !text(item.facility_type, 32) || (item.use !== "PUBLIC" && item.use !== "PRIVATE") || !Array.isArray(item.runways)) throw new Error("Invalid airport record.");
     const runways = item.runways.flatMap((runway): AviationRunway[] => {
       if (!isObject(runway) || !text(runway.id, 16) || !finite(runway.length_ft, 1, 30000) || !Array.isArray(runway.ends) || runway.ends.length !== 2) return [];
       const ends = runway.ends.filter(isObject).filter(end => text(end.id, 8) && finite(end.lon, -180, 180) && finite(end.lat, -90, 90))
@@ -96,7 +95,7 @@ export function parseAviationContext(value: unknown): AviationContext {
     });
     return Object.freeze({ faa_id: item.faa_id, icao_id: text(item.icao_id, 4) && /^[A-Z]{4}$/.test(item.icao_id) ? item.icao_id : null, name: item.name,
       city: optionalText(item.city), county: optionalText(item.county), state: optionalText(item.state), lon: item.lon, lat: item.lat,
-      elevation_ft: item.elevation_ft, facility_type: item.facility_type, ownership: optionalText(item.ownership), tower: optionalText(item.tower),
+      elevation_ft: item.elevation_ft, facility_type: item.facility_type, use: item.use, ownership: optionalText(item.ownership), tower: optionalText(item.tower),
       weather_station: optionalText(item.weather_station), ctaf_mhz: finite(item.ctaf_mhz, 100, 400) ? item.ctaf_mhz : null,
       traffic_pattern_ft_agl: finite(item.traffic_pattern_ft_agl, 100, 5000) ? item.traffic_pattern_ft_agl : null, runways: Object.freeze(runways) });
   });
@@ -109,10 +108,9 @@ export function parseAviationContext(value: unknown): AviationContext {
       mea_ft: finite(item.mea_ft, 0, 60000) ? item.mea_ft : null, maa_ft: finite(item.maa_ft, 0, 99999) ? item.maa_ft : null });
   });
   const classA = isObject(value.class_a) ? Object.freeze({ floor: bound(value.class_a.floor), ceiling: bound(value.class_a.ceiling) }) : null;
-  const withheld = isObject(value.withheld) && finite(value.withheld.private_use_airports, 0, 100000) ? value.withheld.private_use_airports : 0;
   return Object.freeze({ productId: value.product_id, nasrCycle: value.nasr_cycle, validFrom: value.valid_from, validToExclusive: value.valid_to_exclusive,
     limitations: Object.freeze(Array.isArray(value.limitations) ? value.limitations.filter((item): item is string => text(item, 512)) : []),
-    classA, volumes: Object.freeze(volumes), airports: Object.freeze(airports), airways: Object.freeze(airways), privateUseWithheld: withheld });
+    classA, volumes: Object.freeze(volumes), airports: Object.freeze(airports), airways: Object.freeze(airways) });
 }
 
 export type EditionStatus = Readonly<{ state: "PREVIEW" | "CURRENT" | "EXPIRED"; text: string }>;
@@ -276,6 +274,19 @@ export function airspaceColumn(context: Pick<AviationContext, "volumes" | "class
   return Object.freeze(bands.sort((left, right) => left.floorFtAgl - right.floorFtAgl || left.ceilingFtAgl - right.ceilingFtAgl));
 }
 
+/**
+ * The airspace an aircraft occupies at one altitude: the most specific band
+ * whose floor/ceiling (converted with `groundFt`) contains it. Designated
+ * B/C/D and special use outrank the Class E/G defaults they sit within.
+ */
+export function occupiedAirspace(context: Pick<AviationContext, "volumes" | "classA">, lon: number, lat: number, altitudeMslFt: number, groundFt: number): string {
+  const above = altitudeMslFt - groundFt;
+  const rank: Record<ColumnClass, number> = { B: 6, C: 5, D: 4, SUA: 3, A: 2, E: 1, G: 0 };
+  const containing = airspaceColumn(context, lon, lat, groundFt).filter(band => band.floorFtAgl <= above && above < band.ceilingFtAgl)
+    .sort((left, right) => rank[right.airspaceClass] - rank[left.airspaceClass]);
+  return containing.length ? containing.map(band => band.label.split(" · ").slice(0, 2).join(" · ")).join(" + ") : "Class E";
+}
+
 export type DroneVerdict = Readonly<{ rule: DroneRule; governing: string; ceilingFtAgl: number }>;
 
 /** Most restrictive small-UAS rule for SFC–400 ft AGL at a point; Class G is the default. */
@@ -365,9 +376,13 @@ export function droneFeatures(context: Pick<AviationContext, "volumes">, exagger
   return { type: "FeatureCollection", features };
 }
 
+/** Facilities whose published elevation is ground level: heliports can be rooftops, so they never anchor heights (as in the pipeline). */
+export const groundAnchors = (airports: readonly AviationAirport[]): readonly AviationAirport[] => airports.filter(airport => airport.facility_type !== "HELIPORT");
+
 export function airportFeatures(context: Pick<AviationContext, "airports">): Readonly<{ points: GeoJSON.FeatureCollection; runways: GeoJSON.FeatureCollection }> {
   const points: Feature[] = context.airports.map(airport => ({ type: "Feature", id: airport.faa_id, geometry: { type: "Point", coordinates: [airport.lon, airport.lat] },
-    properties: { faa_id: airport.faa_id, label: `${airport.icao_id ?? airport.faa_id} · ${grouped(airport.elevation_ft)} ft`, facility: airport.facility_type,
+    properties: { faa_id: airport.faa_id, label: `${airport.icao_id ?? airport.faa_id} · ${grouped(airport.elevation_ft)} ft${airport.use === "PRIVATE" ? " · PVT" : ""}`, facility: airport.facility_type,
+      private: airport.use === "PRIVATE",
       towered: Boolean(airport.tower && airport.tower !== "NON-ATCT"), weather: airport.weather_station } }));
   const runways: Feature[] = context.airports.flatMap(airport => airport.runways.map((runway): Feature => ({ type: "Feature", id: `${airport.faa_id}:${runway.id}`,
     geometry: { type: "LineString", coordinates: runway.ends.map(end => [end.lon, end.lat]) },

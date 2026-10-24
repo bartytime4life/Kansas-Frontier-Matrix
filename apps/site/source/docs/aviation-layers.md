@@ -2,29 +2,31 @@
 
 One specialty layer, **Map layers > Airspace, airports & aviation weather**,
 draws Kansas airspace as labelled 3D volumes, shows where small drones need
-authorization, and ties live airport weather and pilot reports to the airspace
-they occur in. It is display context only: **not navigation, flight planning or
+authorization, and ties live aircraft, airport weather and pilot reports to the
+airspace they occur in. It is display context only: **not navigation, flight planning or
 UAS authorization**. Active Kansas temporary flight restrictions (TFRs) are
-listed but their boundaries are not drawn; NOTAM activations and live aircraft
-positions are not shown.
+listed but their boundaries are not drawn; NOTAM activations are not shown.
 
 ## Sources and clocks
 
 | Data | Source | Clock |
 |---|---|---|
-| Airspace volumes, public-use airports and runways, airways | FAA NASR 28-day subscription, cycle 2026-10-29, via the pinned `public/data/aviation/kansas-aviation-context.json` | Valid 2026-10-29 up to (not including) 2026-11-26. Before the 29th the layer says it is a *preview* edition; after the 26th it says *expired*. |
+| Airspace volumes, public- and private-use airports and runways, airways | FAA NASR 28-day subscription, cycle 2026-10-29, via the pinned `public/data/aviation/kansas-aviation-context.json` | Valid 2026-10-29 up to (not including) 2026-11-26. Before the 29th the layer says it is a *preview* edition; after the 26th it says *expired*. |
 | METAR (ASOS/AWOS station weather) | NOAA/NWS Aviation Weather Center Data API via `/api/aviation/metar` | Each station's own observation time; latest within 90 minutes; refreshed every 5 minutes while shown |
 | PIREP (pilot reports) | Same API via `/api/aviation/pireps` | Report time; last 3 hours |
 | LAANC grid ceilings | FAA UAS Facility Maps (ArcGIS `FAA_UAS_FacilityMap_Data`) via `/api/aviation/uas-grid` | FAA 56-day cycle; read once per session, cached a day at the edge |
 | Temporary flight restrictions | FAA TFR list (`tfr.faa.gov/tfrapi/exportTfrList`) via `/api/aviation/tfrs` | Current list; refreshed every 10 minutes while shown |
+| Live aircraft | Public ADS-B/Mode S receiver networks via `/api/aviation/traffic`: [adsb.lol](https://adsb.lol/) (ODbL 1.0), else [adsb.fi](https://adsb.fi/) open data (non-commercial, attribution) | Positions no older than 60 seconds; refreshed every 20 seconds while shown, 15-second shared cache |
 
 The product file is built by
 `pipelines/domains/roads-rail-trade/faa_airspace.py` from a NASR-derived
 snapshot whose package integrity and data-file SHA-256 digests are recorded in
 the file. The browser checks the file's SHA-256 against
 `AVIATION_CONTEXT_ASSET` before parsing it, and refuses any shape drift.
-Private-use airports (345 in the region) are withheld; only public-use
-facilities are drawn or used as nearest-airport references.
+All open facilities are listed: 188 public-use and 345 private-use (airports,
+heliports, glider, ultralight and balloon ports). Nearest-ground references use
+every listed facility except heliports, whose published elevation can be a
+rooftop. Contacts, owner names and remarks are never copied.
 
 ## What is drawn
 
@@ -51,11 +53,20 @@ facilities are drawn or used as nearest-airport references.
   "KANSAS"/", KS" in the text) appear in the drone section with their NOTAM IDs,
   and the point inspector warns when any are active. Their boundaries and
   times are in each NOTAM at tfr.faa.gov.
-- **Airports and runways.** Blue dots are towered, magenta non-towered. Labels
-  give the identifier and field elevation; runways draw from their surveyed end
-  points at zoom 10+.
+- **Airports and runways.** Blue dots are towered, magenta non-towered public-use
+  airports. Private-use facilities are smaller hollow dots labelled `PVT`, with
+  their own toggle: landing at one needs the owner's permission. Labels give the
+  identifier and field elevation; runways draw from their surveyed end points at
+  zoom 10+.
 - **Airways.** Victor/T routes (1,200 AGL–below FL180) and Jet/Q routes
   (FL180–FL450), labelled with designation and MEA.
+- **Live aircraft.** Each aircraft is an arrowhead pointing along its track,
+  lifted to its reported altitude (geometric if reported, else barometric) above
+  the nearest ground-reference facility's elevation, and coloured by altitude band;
+  emergency squawks (7500, 7600, 7700) are red. At zoom 8+ the label gives
+  callsign, type, altitude, ground speed and the airspace the aircraft is in at
+  that altitude (for example `CLASS C · ICT`). The panel names the network that
+  supplied the positions, with its terms.
 - **METAR stations** coloured by FAA flight category (VFR, MVFR, IFR, LIFR);
   **cloud ceilings** as discs at the reported height above each station.
 - **PIREPs** as markers at the reported altitude; urgent reports in red,
@@ -75,13 +86,14 @@ the 14 CFR section. The panel also gives:
 - the drone verdict for SFC–400 ft AGL and the volume that governs it;
 - the nearest METAR within 50 km with density altitude, checked against the
   basic VFR minimums for the surface class (14 CFR 91.155);
-- airways within 4 NM and pilot reports within 60 km.
+- airways within 4 NM, pilot reports within 60 km and up to 12 aircraft within
+  15 km, each with the airspace it occupies.
 
 ## Heights
 
 Source limits keep their reference: MSL, AGL or SFC. Only the drawing converts
 them, to height above a stated ground reference: the associated airport's
-elevation for Class B/C/D/E2–E4, otherwise the nearest public-use airport
+elevation for Class B/C/D/E2–E4, otherwise the nearest non-heliport facility
 (distance recorded per volume). Kansas terrain varies, so drawn MSL limits can
 be off by the difference between that airport and the local ground; the labels
 and the column table always show the official values.
@@ -90,7 +102,7 @@ PIREP flight levels accept the AWC API's documented digit strings (for example,
 `"230"` = 23,000 ft MSL) and numeric values observed in live JSON. `fltLvlType`
 keeps climb (`DURC`) distinct from descent (`DURD`); neither defines one fixed
 altitude. Missing or malformed levels remain unavailable. Fixed PIREP drawing
-heights subtract the nearest public-use airport's elevation, clamp below-ground
+heights subtract the nearest non-heliport facility's elevation, clamp below-ground
 results to the surface, then convert feet to metres and apply the selected
 exaggeration. This is an approximate display reference, not a measured terrain
 or aircraft position. A genuine reported zero is retained.
@@ -106,10 +118,14 @@ Cloud bases never substitute for an aircraft's missing altitude. See the
 
 - A station observation describes its own site. A missing report is not
   evidence of good weather; few PIREPs do not mean little traffic.
-- Live ADS-B/Mode S traffic is not displayed. The aviation intake runbook
-  (`docs/runbooks/aviation-intake-20261021.md` in the monorepo) records why:
-  OpenSky requires a written licence and adsb.lol's ODbL terms need admission
-  review.
+- Live traffic comes from volunteer receivers. Low-altitude aircraft, aircraft
+  without ADS-B and anything out of receiver range are missing, so an empty sky
+  is not evidence of no traffic. Positions older than 60 seconds are dropped,
+  not extrapolated. Nothing identifies owners, missions or intent. OpenSky is
+  not used: its terms require a written licence for this kind of display.
+- The traffic route tries adsb.lol, then adsb.fi, with fixed URLs, no caller
+  input, no redirects, a 10-second timeout and a 6 MB read limit. If both fail
+  it returns an error and no positions are shown.
 - The AWC routes take no caller input, refuse redirects, time out after
   12 seconds, read at most 2 MB and share a 2-minute cache. On failure they
   return an error and the layer shows no substitute observations.

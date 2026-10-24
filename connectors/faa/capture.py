@@ -94,8 +94,13 @@ def capture(root, edition, *, opener=None, today=None):
     return target
 
 
-def disabled_observations(provider):
-    if provider not in {"opensky", "adsb-lol"}:
-        raise ValueError("SOURCE_NOT_ALLOWED")
-    return {"outcome": "DENY", "reason_code": "WRITTEN_LICENSE_REQUIRED" if provider == "opensky" else "ADMISSION_REVIEW_REQUIRED",
-            "ingestion_enabled": False, "public_display_enabled": False, "evidence_refs": []}
+def surveillance_decision(provider):
+    """Live position feeds. Owner direction (2026-10-24): public receiver networks may be
+    shown in the Site as attributed display context; nothing is ingested or admitted as evidence."""
+    if provider == "opensky":
+        return {"outcome": "DENY", "reason_code": "WRITTEN_LICENSE_REQUIRED", "attribution_required": True,
+                "ingestion_enabled": False, "public_display_enabled": False, "evidence_refs": []}
+    if provider in {"adsb-lol", "adsb-fi"}:
+        return {"outcome": "ALLOW_DISPLAY_ONLY", "reason_code": "OWNER_DIRECTED_PUBLIC_RECEIVER_DATA", "attribution_required": True,
+                "ingestion_enabled": False, "public_display_enabled": True, "evidence_refs": []}
+    raise ValueError("SOURCE_NOT_ALLOWED")

@@ -13,6 +13,7 @@ const compileModule = async (name) => {
 const airspace = await compileModule("aviation-airspace");
 const weather = await compileModule("aviation-weather");
 const drone = await compileModule("aviation-drone-data");
+const traffic = await compileModule("aviation-traffic");
 const bytes = await readFile(new URL("../public/data/aviation/kansas-aviation-context.json", import.meta.url));
 const context = airspace.parseAviationContext(JSON.parse(bytes.toString("utf8")));
 const SALINA = [-97.6522, 38.7906], RURAL = [-100.35, 39.35], FORT_RILEY_RANGE = [-96.85, 39.2];
@@ -85,6 +86,19 @@ test("point-in-polygon honours holes and bbox prefilter", () => {
   assert.equal(airspace.pointInRings(2, 2, [ring, hole]), true);
   assert.equal(airspace.pointInRings(5, 5, [ring, hole]), false);
   assert.equal(airspace.pointInRings(11, 5, [ring]), false);
+});
+
+test("private-use facilities are listed with a use flag, styled apart, and heliports never anchor ground", () => {
+  const privateUse = context.airports.filter(airport => airport.use === "PRIVATE");
+  assert.ok(privateUse.length > 300 && context.airports.every(airport => airport.use === "PUBLIC" || airport.use === "PRIVATE"));
+  assert.ok(privateUse.some(airport => airport.facility_type === "HELIPORT"));
+  const anchors = airspace.groundAnchors(context.airports);
+  assert.ok(anchors.length < context.airports.length && anchors.every(airport => airport.facility_type !== "HELIPORT"));
+  const { points } = airspace.airportFeatures({ airports: privateUse.slice(0, 1) });
+  assert.equal(points.features[0].properties.private, true);
+  assert.match(points.features[0].properties.label, / · PVT$/);
+  const raw = JSON.parse(bytes.toString("utf8"));
+  assert.throws(() => airspace.parseAviationContext({ ...raw, airports: [{ ...raw.airports[0], use: "MILITARY" }] }), /Invalid airport record/);
 });
 
 test("nearest airport and airway proximity", () => {
@@ -255,10 +269,44 @@ test("weather route uses fixed upstream URLs and never forwards caller input", a
   const droneServer = await readFile(new URL("../app/aviation-drone-server.ts", import.meta.url), "utf8");
   assert.doesNotMatch(droneServer, /searchParams|nextUrl|NextRequest|headers\.get/, "drone routes never read caller input");
   assert.match(droneServer, /if \(!complete\) throw/, "an unfinished UASFM paging run fails instead of drawing a partial grid");
-  for (const route of ["metar", "pireps", "uas-grid", "tfrs"]) {
+  const trafficServer = await readFile(new URL("../app/aviation-traffic-server.ts", import.meta.url), "utf8");
+  assert.match(trafficServer, /for \(const provider of TRAFFIC_PROVIDERS\)/, "providers are tried in a fixed order");
+  assert.doesNotMatch(trafficServer, /searchParams|nextUrl|NextRequest|headers\.get/, "the traffic route never reads caller input");
+  for (const route of ["metar", "pireps", "traffic", "uas-grid", "tfrs"]) {
     const handler = await readFile(new URL(`../app/api/aviation/${route}/route.ts`, import.meta.url), "utf8");
     assert.match(handler, /export async function GET\(\)/, "handler takes no request input");
   }
+});
+
+const aircraft = (changes = {}) => ({ hex: "a1b2c3", flight: "SWA123  ", r: "N123SW", t: "B738", category: "A3", lat: 37.65, lon: -97.43, alt_baro: 4000, alt_geom: 4100,
+  gs: 210.4, track: 15, baro_rate: -800, squawk: "4521", seen_pos: 2.1, seen: 0.4, ...changes });
+
+test("traffic parsing keeps fresh in-region positions, decodes ground and emergencies, accepts both list keys", () => {
+  const { records, dropped } = traffic.parseTraffic({ ac: [aircraft(), aircraft({ hex: "a1b2c4", seen_pos: 90 }), aircraft({ hex: "a1b2c5", lon: -120 }),
+    aircraft({ hex: "A1B2C3" }), aircraft({ hex: "c0ffee", alt_baro: "ground", alt_geom: undefined, flight: "N5" }), aircraft({ hex: "beef01", squawk: "7700" }), { junk: 1 }] });
+  assert.equal(dropped, 4, "stale, out-of-region, duplicate hex and malformed");
+  const byHex = Object.fromEntries(records.map(record => [record.hex, record]));
+  assert.equal(byHex.a1b2c3.callsign, "SWA123");
+  assert.equal(traffic.aircraftAltitudeMsl(byHex.a1b2c3), 4100);
+  assert.equal(byHex.c0ffee.onGround, true); assert.equal(traffic.aircraftAltitudeMsl(byHex.c0ffee), null);
+  assert.equal(byHex.beef01.emergency, "general emergency");
+  assert.equal(traffic.parseTraffic({ aircraft: [aircraft()] }).records.length, 1);
+  assert.throws(() => traffic.parseTraffic({ msg: "no" }), /no aircraft list/);
+  assert.deepEqual(traffic.TRAFFIC_PROVIDERS.map(provider => provider.id), ["adsb-lol", "adsb-fi"]);
+  assert.ok(traffic.TRAFFIC_PROVIDERS.every(provider => provider.url.startsWith("https://") && provider.terms && provider.homepage.startsWith("https://")));
+});
+
+test("aircraft are tagged with the airspace they occupy at their altitude", () => {
+  // Over Wichita: 4,000 MSL is inside the Class C (ceiling 5,300 MSL); 12,000 MSL is above it.
+  assert.match(airspace.occupiedAirspace(context, -97.433, 37.65, 4000, 1333), /CLASS C · ICT/);
+  assert.doesNotMatch(airspace.occupiedAirspace(context, -97.433, 37.65, 12000, 1333), /CLASS C/);
+  assert.match(airspace.occupiedAirspace(context, -98.35, 38.5, 35000, 1700), /CLASS A/);
+  const [feature] = traffic.trafficFeatures(traffic.parseTraffic({ ac: [aircraft()] }).records, () => 1333, 1, () => "CLASS C · ICT").features;
+  assert.ok(Math.abs(feature.properties.base - (4100 - 1333) * 0.3048) < 1e-6);
+  assert.equal(feature.properties.airspace, "CLASS C · ICT");
+  assert.match(feature.properties.label, /SWA123 B738 · 4,100 ft · 210 kt/);
+  const [grounded] = traffic.trafficFeatures(traffic.parseTraffic({ ac: [aircraft({ alt_baro: "ground", alt_geom: undefined })] }).records, () => 1333, 3, () => "unused").features;
+  assert.equal(grounded.properties.base, 0); assert.equal(grounded.properties.airspace, "surface");
 });
 
 const cell = (lon, lat, ceiling, size = 0.0083) => ({ type: "Feature", properties: { CEILING: ceiling, APT1_FAAID: "SLN", APT1_NAME: "SALINA RGNL" },
@@ -310,7 +358,7 @@ test("the UAS grid request survives its own loading-state re-render and reaches 
       : {};
   };
   const h = await componentHarness("app/aviation-control.tsx", {
-    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic,
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };

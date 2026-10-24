@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 # Keep exactly one RECEIPT binding: mirror checks and ADR-0048 topology read it.
 # Resolve conflicts to the successor matching the merged bytes; never delete it.
 # Content parity does not approve overlays, activation, or publication.
-RECEIPT = ROOT / "data/receipts/generated/site-v268-aviation-uas-grid-request-fix-20261024.json"
+RECEIPT = ROOT / "data/receipts/generated/site-v268-aviation-live-traffic-private-airports-overlay-20261024.json"
 DESTINATION = ROOT / "apps/site/source"
 
 
