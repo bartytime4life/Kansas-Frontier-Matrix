@@ -300,3 +300,37 @@ single-writer and local-filesystem constraints; [MySQL connection limits](https:
 explain why client concurrency must fit measured server limits. The existing
 three-connection/eight-waiter hosting pool is unchanged; no unsupported claim of
 visitor capacity or database latency improvement is made.
+
+## Installation and failure-classification checks (2026-10-23)
+
+The installed kit includes `storage-policy.mjs`, which both its worker and CLI
+load. `tests/pipeline-install.test.mjs` copies the same kit as the installer into
+an isolated tree and runs its planner and worker import without access to the
+checkout's modules. Run this before root installation:
+
+```sh
+node --test tests/pipeline-install.test.mjs tests/pc-pipeline.test.mjs tests/storage-policy.test.mjs
+node scripts/pc-pipeline/install.mjs
+```
+
+The second command remains review-only. These source tests neither qualify a
+real mount nor install services. The systemd units use `/usr/bin/node`; verify
+that exact executable is Node 22.13+ on the development PC before installation.
+
+Publication transport failures have explicit remote error codes. A malformed,
+empty or mismatched worker key is held under the bounded validation retry policy,
+while capture bytes stay private. A missing local approval file is also held;
+it does not mark healthy hosting unavailable or block another eligible source
+when the run's budget permits it. Transient network failures and busy hosting
+remain deferred without consuming validation retries. Error output contains
+bounded codes, never arbitrary transport errors or credential contents.
+
+Synthetic checks cover the payload budget, the 8 MiB product ceiling, deferred
+candidate reuse, lost commit responses, replay denial and installed-tree loading.
+They use injected acquisition/transport and do not establish real MySQL
+transactions, provider capacity, PC storage/restore, or a live release approval.
+Keep `publish:false`, both timers disabled, and hosting publication disabled
+until the infrastructure and approval qualifications above are independently
+recorded. Preview and Published sharing a database does not qualify its TLS,
+backup or restore. Read-only connection success through a provider-private
+network does not satisfy the publishing store's verified-TLS requirement.

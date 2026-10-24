@@ -1,13 +1,22 @@
-import { ORIGIN, CHUNK_SIZE, canonical, sha, parse, fail } from '../../server/pipeline-contract.mjs';
+import { ORIGIN, CHUNK_SIZE, canonical, sha, parse, fail, PipelineError } from '../../server/pipeline-contract.mjs';
 import { signRequest } from '../../server/pipeline-auth.mjs';
 
 export async function pipelineCall(action, value, secret, { fetcher = fetch, signal } = {}) {
   const body = canonical(value), path = '/api/pipeline/v1/' + action;
-  const response = await fetcher(ORIGIN + path, { method: 'POST', redirect: 'manual', signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(30000)]) : AbortSignal.timeout(30000),
-    headers: { 'Content-Type': 'application/json', ...signRequest({ secret, method: 'POST', path, body }) }, body });
-  const limit = 65536; const reader = response.body?.getReader(); let n = 0; const chunks = [];
-  if (reader) try { while (true) { const { value: chunk, done } = await reader.read(); if (done) break; n += chunk.length; if (n > limit) { await reader.cancel(); fail('REMOTE_RESPONSE_LIMIT'); } chunks.push(chunk); } } finally { reader.releaseLock(); }
+  // Signing/credential faults are permanent errors, not transport outages.
+  const headers = { 'Content-Type': 'application/json', ...signRequest({ secret, method: 'POST', path, body }) };
+  let response;
+  const limit = 65536; let n = 0; const chunks = [];
+  try {
+    response = await fetcher(ORIGIN + path, { method: 'POST', redirect: 'manual', signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(30000)]) : AbortSignal.timeout(30000), headers, body });
+    const reader = response.body?.getReader();
+    if (reader) try { while (true) { const { value: chunk, done } = await reader.read(); if (done) break; n += chunk.length; if (n > limit) { await reader.cancel(); fail('REMOTE_RESPONSE_LIMIT'); } chunks.push(chunk); } } finally { reader.releaseLock(); }
+  } catch (error) {
+    if (error instanceof PipelineError) throw error;
+    fail('REMOTE_UNAVAILABLE');
+  }
   if (response.status === 429 || response.status === 503) fail('REMOTE_BUSY');
+  if (response.status >= 500) fail('REMOTE_UNAVAILABLE');
   const result = parse(Buffer.concat(chunks), limit);
   if (!response.ok) fail(typeof result.error === 'string' && /^[A-Z_]{1,64}$/.test(result.error) ? result.error : 'REMOTE_UNAVAILABLE');
   return result;
