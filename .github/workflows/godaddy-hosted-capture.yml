@@ -14,7 +14,10 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' && vars.KFM_HOSTED_CAPTURE_ENABLED == 'true' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 4
-    environment: kfm-hosted-capture
+    # Environment secrets only; deployment: false keeps capture runs off the Deployments page.
+    environment:
+      name: kfm-hosted-capture
+      deployment: false
     steps:
       - name: Trigger bounded capture at the approved published origin
         env:
