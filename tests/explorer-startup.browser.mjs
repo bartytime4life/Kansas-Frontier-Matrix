@@ -705,7 +705,7 @@ test('server markup and startup frames keep the map covered until the welcome de
   assert.ok(frames.filter(frame=>!frame.pending).every(frame=>frame.welcome),'first resolved frame shows the graphical welcome');
 });
 
-for(const [width,height] of [[1280,800],[768,900],[390,844],[320,740]]){
+for(const [width,height] of [[1280,800],[768,900],[390,844],[320,740],[568,320]]){
  test('full-width tips and Chat handoff at '+width+'x'+height,{timeout:60000},async t=>{
   const b=await browser(t),p=await pageSession(b,width,height);
   await p.open('/');await readyWelcome(p);
@@ -714,13 +714,14 @@ for(const [width,height] of [[1280,800],[768,900],[390,844],[320,740]]){
     const header=document.querySelector('.topbar'),tips=header.querySelector(':scope>.welcome-feature-guide'),chat=header.querySelector('.qwen-header-entry'),map=header.querySelector('.map-chrome-dock');
     return {header:rect(header),tips:rect(tips),chat:rect(chat),map:rect(map),chatClipped:chat.scrollWidth>chat.clientWidth+1,overflow:document.documentElement.scrollWidth>innerWidth,controls:[...tips.querySelectorAll('.welcome-feature-steppers button')].map(rect),duplicates:document.querySelectorAll('.welcome-feature-guide').length};
   })()`);
-  assert.ok(geometry.tips.width>=geometry.header.width-34,'tips stretch across the header');
+  if(height>480)assert.ok(geometry.tips.width>=geometry.header.width-34,'tips stretch across the header');
+  else assert.ok(geometry.header.height<=54&&geometry.tips.width>200,'short landscape keeps a full reading area without taking map height');
   assert.equal(geometry.duplicates,1);assert.equal(geometry.overflow,false);assert.equal(geometry.chatClipped,false);
   assert.ok(geometry.chat.right<=geometry.map.left+.5,'Chat and map controls do not overlap');
   for(const box of geometry.controls)assert.ok(box.width>=44&&box.height>=44);
   for(let i=0;i<6;i++){
     await p.evaluate(`document.querySelector('.topbar .welcome-feature-steppers button:last-child').focus()`);await p.key('Enter','Enter',13);
-    assert.equal(await p.evaluate(`(()=>{const text=document.querySelector('.welcome-feature-item>span:nth-child(2)');return text.scrollHeight>text.clientHeight+1;})()`),false,'every tip is readable');
+    assert.equal(await p.evaluate(`(()=>{const text=document.querySelector('.welcome-feature-item>span:nth-child(2)'),r=text.getBoundingClientRect(),window=text.closest('.welcome-feature-window').getBoundingClientRect();return text.scrollHeight>text.clientHeight+1||r.top<window.top-.5||r.bottom>window.bottom+.5;})()`),false,'every tip is readable');
   }
   await p.evaluate(`document.querySelector('.qwen-header-entry').focus()`);await p.key('Enter','Enter',13);
   await p.wait(`!document.querySelector('.living-welcome')&&document.querySelector('.qwen-map-launch')===null&&document.querySelector('#qwen-map-panel')?.hidden===false&&document.activeElement?.tagName==='TEXTAREA'`,'Chat replaces welcome and focuses composer');

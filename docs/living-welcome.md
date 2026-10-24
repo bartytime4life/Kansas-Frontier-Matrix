@@ -36,7 +36,10 @@ Geometry is owned by the Explorer's existing globals.css lane: 110px desktop
 header, 126px phone header, shared by map, welcome and panel offsets. Below 1000px,
 Time/Layers/Places remain in the Map menu; below 500px Effects uses its labelled
 icon button, and at 380px or less Chat keeps a shorter visible label and full
-accessible name. The tradeoff is less vertical map space for a readable tip row.
+accessible name. The tradeoff is less vertical map space for a readable tip row. Short landscape
+(501px or wider, at most 480px high) instead fits tips into the command row and
+uses a 54px header with a labelled chat icon. This preserves the space required
+by River Pulse’s sticky heading and touch controls.
 
 Placement basis: Directory Rules.pdf responsibility protocol and compatibility
 handling, accepted ADR-0029 v1.5 and canonical docs/doctrine/directory-rules.md,
@@ -48,7 +51,7 @@ Source base: a0-hosted-ai-web-20261017 at
 291cbf394209520b38af72fcad91d7dfc5da1aee; all 1,537 source blobs matched remote
 Git identities before editing. No open PRs were returned during overlap checks.
 
-Validation: final production build, TypeScript and whitespace checks passed;
+Validation before the landscape follow-up: production build, TypeScript and whitespace checks passed;
 full Node suite: 1,757 PASS, 19 SKIP, zero failures. Fifty-five focused navigation,
 welcome, pause and focus regressions passed. Existing tests that still extracted
 the retired guide's callbacks/styles now exercise the retained graphical welcome.
@@ -59,12 +62,18 @@ widths, all six tip texts on the narrow phone, 44px tip targets, Chat from the
 welcome, composer focus and Escape return. Server HTML returned status 200,
 data-startup=pending and the cover, with no retired chooser text. These checks do
 not prove a frame-by-frame slow-network startup. The existing CI browser suite
-now includes first-frame sampling, SSR cover checks and four responsive Chat
+now includes first-frame sampling, SSR cover checks and five responsive Chat
 cases; that automated browser execution and independent review remain open.
 The first terminal suite attempt was constrained by EPERM on listening sockets;
 the reported complete result is the subsequent preview-capable runtime run.
 
-Rollback: revert this candidate commit. No migration, storage deletion, host
+The first exact-head CI run passed build, TypeScript, the full Node suite,
+disposable MySQL and fire browser acceptance, then exposed River Pulse clipping
+at 568×320 before startup browser tests could run. The follow-up compacts the
+landscape header and adds that viewport and full text bounds to acceptance.
+That failed run is not a passing acceptance result.
+
+Rollback: revert the candidate commits. No migration, storage deletion, host
 configuration, merge or publication is part of this change.
 
 
