@@ -1,0 +1,87 @@
+{
+  "receipt_id": "genrec-validator-orchestrator-input-hardening-20261024",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/validate_all.py",
+    "tests/validators/test_validator_orchestrator.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/validate_all.py": "sha256:dd298692cdfda39e56f4426a151f1d714462f398c557b4082de39d7af5319fd9",
+    "tests/validators/test_validator_orchestrator.py": "sha256:323d9027f4e0741a74aacc537470676964b0436537113bc2724586b46108c9ba"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tools/validators/validate_all.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tests/validators/test_validator_orchestrator.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/validate_all.py": "CONFIRMED",
+    "tests/validators/test_validator_orchestrator.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "On main, a deeply nested registry raised RecursionError and an over-long integer raised a plain ValueError, neither caught by the registry loader or the CLI, so the orchestrator printed a traceback instead of its ORCHESTRATOR_CONFIGURATION_ERROR JSON. A non-UTF-8 --changed-path-file did the same with UnicodeDecodeError. The output symlink guard used exists() and is_symlink() together, and exists() is false for a dangling link: a dangling symlink at <output>.tmp received the report (written to its target) and was then renamed over the output path. All three now fail closed as configuration errors with exit 2."
+    },
+    {
+      "gate": "Tests",
+      "outcome": "PASS",
+      "reason": "Six new orchestrator tests cover unparseable registries, CLI configuration errors, --list/--validate-registry/--output, dangling output and temporary symlinks, child timeout and selection errors, and registry and changed-path shape errors. They fail against main and each targeted mutation is killed. tests/validators passes (4766 tests). Branch coverage of validate_all.py: 61% to 91%."
+    },
+    {
+      "gate": "Workflow commands",
+      "outcome": "PASS",
+      "reason": "tools/validate_all.py --validate-registry, the layer-manifest and dataset-version selections, and --profile release-dry-run all exit 0 as before."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports no new findings on the changed files. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/370e9ad30911fef806aa4fbd2ff25bea6eaf1626"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-24T06:22:29Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Orchestrator input handling only; registry contents, profiles and report schema are unchanged."
+}

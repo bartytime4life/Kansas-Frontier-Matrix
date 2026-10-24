@@ -129,7 +129,7 @@ def _load_json(path: Path) -> tuple[dict[str, object], bytes]:
             parse_constant=_finite_constant,
             parse_float=_finite_float,
         )
-    except (UnicodeDecodeError, json.JSONDecodeError, RegistryError) as exc:
+    except (ValueError, RecursionError) as exc:
         raise RegistryError(f"registry JSON is invalid: {type(exc).__name__}") from exc
     if not isinstance(value, dict):
         raise RegistryError("registry root must be an object")
@@ -219,7 +219,11 @@ def normalize_changed_paths(values: Iterable[str]) -> tuple[str, ...]:
 def read_changed_path_file(path: Path) -> tuple[str, ...]:
     if path.is_symlink() or not path.is_file() or path.stat().st_size > 1024 * 1024:
         raise RegistryError(f"changed-path file is missing, unsafe, or too large: {path}")
-    return normalize_changed_paths(path.read_text(encoding="utf-8").splitlines())
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise RegistryError(f"changed-path file is not UTF-8: {path}") from exc
+    return normalize_changed_paths(text.splitlines())
 
 
 def select_validators(
@@ -376,11 +380,11 @@ def orchestrate(
 
 
 def _write(path: Path, text: str) -> None:
-    if path.exists() and path.is_symlink():
+    if path.is_symlink():
         raise RegistryError(f"output symlink is denied: {path}")
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_name(path.name + ".tmp")
-    if temporary.exists() and temporary.is_symlink():
+    if temporary.is_symlink():
         raise RegistryError(f"temporary output symlink is denied: {temporary}")
     temporary.write_text(text, encoding="utf-8")
     temporary.replace(path)
