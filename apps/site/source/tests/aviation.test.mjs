@@ -296,6 +296,23 @@ test("traffic parsing keeps fresh in-region positions, decodes ground and emerge
   assert.ok(traffic.TRAFFIC_PROVIDERS.every(provider => provider.url.startsWith("https://") && provider.terms && provider.homepage.startsWith("https://")));
 });
 
+test("aircraft positions expire 60 s after observation, counting edge-cache age but not a wrong browser clock", () => {
+  const records = traffic.parseTraffic({ ac: [aircraft({ seen_pos: 10 }), aircraft({ hex: "b00001", seen_pos: 50 })] }).records;
+  const received = Date.parse("2026-10-24T22:00:00Z");
+  const load = (retrievedAt, receivedAt = received) => ({ retrievedAt, receivedAt, records });
+  const fresh = load("2026-10-24T22:00:00Z");
+  assert.equal(traffic.freshAircraft(fresh, received), records, "nothing expired: same array, so the map is not redrawn");
+  assert.deepEqual(traffic.freshAircraft(fresh, received + 15_000).map(record => record.hex), ["a1b2c3"]);
+  assert.deepEqual(traffic.freshAircraft(fresh, received + 55_000), []);
+  // Served 20 s after retrieval from the edge cache: the 50 s position is already too old.
+  assert.deepEqual(traffic.freshAircraft(load("2026-10-24T21:59:40Z"), received).map(record => record.hex), ["a1b2c3"]);
+  // A browser clock an hour fast or slow counts at most the 30 s cache window, never an hour.
+  assert.equal(traffic.freshAircraft(load("2026-10-24T21:00:00Z"), received).length, 1);
+  assert.equal(traffic.freshAircraft(load("2026-10-24T23:00:00Z"), received), records);
+  assert.deepEqual(traffic.freshAircraft(load("not a time"), received), []);
+  assert.deepEqual(traffic.freshAircraft(null, received), []);
+});
+
 test("aircraft are tagged with the airspace they occupy at their altitude", () => {
   // Over Wichita: 4,000 MSL is inside the Class C (ceiling 5,300 MSL); 12,000 MSL is above it.
   assert.match(airspace.occupiedAirspace(context, -97.433, 37.65, 4000, 1333), /CLASS C · ICT/);
@@ -373,4 +390,44 @@ test("the UAS grid request survives its own loading-state re-render and reaches 
   const status = JSON.stringify(findNode(tree, node => node.type === "small" && JSON.stringify(node.props.children ?? "").includes("UAS Facility Map:")));
   assert.match(status, /1 grid cells/);
   } finally { release(); h.dispose(); }
+});
+
+test("turning traffic off and on never redraws the previous positions as current", { timeout: 10_000 }, async () => {
+  const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
+  let trafficReads = 0, release;
+  const fetch = async (path) => {
+    if (path === traffic.AVIATION_TRAFFIC_API_PATH) {
+      trafficReads++;
+      if (trafficReads > 1) await new Promise(resolve => { release = resolve; });
+      return { ok: true, path };
+    }
+    if (path === airspace.AVIATION_CONTEXT_ASSET.url) return { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) };
+    return { ok: false, path };
+  };
+  const readBoundedJson = async (response, _max, signal) => {
+    if (signal?.aborted) throw new Error("aborted");
+    return response.path === traffic.AVIATION_TRAFFIC_API_PATH
+      ? { evidenceRole: "EXTERNAL_CONTEXT_ONLY", retrievedAt: new Date().toISOString(), provider: traffic.TRAFFIC_PROVIDERS[0], records: traffic.parseTraffic({ ac: [aircraft()] }).records, dropped: 0, limitation: "" }
+      : {};
+  };
+  const h = await componentHarness("app/aviation-control.tsx", {
+    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic,
+  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  const props = { mapRef: { current: null }, styleReady: false };
+  const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
+  const status = tree => JSON.stringify(findNode(tree, node => node.type === "small" && JSON.stringify(node.props.children ?? "").includes("Traffic:")) ?? null);
+  const trafficToggle = tree => findNode(findNode(tree, node => node.type === "label" && JSON.stringify(node.props.children ?? "").includes("Live aircraft (ADS-B)")), node => node.type === "input");
+  try {
+    let tree = await cycle();
+    findNode(tree, node => node.type === "input" && node.props["aria-label"] === "Show airspace and aviation layers").props.onChange({ target: { checked: true } });
+    await cycle(); tree = await cycle();
+    assert.match(status(tree), /\[1," aircraft · retrieved /);
+    trafficToggle(tree).props.onChange({ target: { checked: false } });
+    tree = await cycle();
+    trafficToggle(tree).props.onChange({ target: { checked: true } });
+    tree = await cycle(); tree = await cycle();
+    assert.equal(trafficReads, 2, "re-enabling requests fresh positions");
+    assert.doesNotMatch(status(tree), /aircraft ·/, "the previous response is not shown while the new one is pending");
+    assert.match(status(tree), /Checking/);
+  } finally { release?.(); h.dispose(); }
 });

@@ -12,7 +12,7 @@ import {
   AVIATION_METAR_API_PATH, AVIATION_PIREP_API_PATH, FLIGHT_CATEGORY_COLORS, basicVfrCheck, metarFeatures, pirepAltitudeLabel, pirepFeatures,
   type AviationWeatherEnvelope, type MetarObservation, type PirepReport,
 } from "./aviation-weather";
-import { AVIATION_TRAFFIC_API_PATH, TRAFFIC_ALTITUDE_COLORS, aircraftAltitudeMsl, trafficFeatures, type TrafficEnvelope } from "./aviation-traffic";
+import { AVIATION_TRAFFIC_API_PATH, TRAFFIC_ALTITUDE_COLORS, aircraftAltitudeMsl, freshAircraft, trafficFeatures, type TrafficEnvelope } from "./aviation-traffic";
 import { TFR_API_PATH, TFR_HOME, UASFM_API_PATH, UAS_CEILING_COLORS, uasCeilingAt, uasFeatures, type TfrEntry, type UasCell } from "./aviation-drone-data";
 
 const PREFIX = "kfm-aviation";
@@ -21,6 +21,7 @@ const LAYERS = ["airspace-3d", "airspace-edge", "airspace-label", "drone-3d", "d
   "airports-dot", "airports-label", "metar-dot", "metar-label", "ceilings-3d", "pireps-3d", "traffic-3d", "traffic-label", "pick-dot"].map(name => `${PREFIX}-${name}`);
 const WEATHER_REFRESH_MS = 5 * 60_000;
 const TRAFFIC_REFRESH_MS = 20_000;
+const TRAFFIC_EXPIRY_TICK_MS = 5_000;
 const TFR_REFRESH_MS = 10 * 60_000;
 const EXAGGERATIONS = [1, 3, 6] as const;
 
@@ -72,7 +73,8 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
   const [showPireps, setShowPireps] = useState(true);
   const [showUas, setShowUas] = useState(true);
   const [showTraffic, setShowTraffic] = useState(true);
-  const [traffic, setTraffic] = useState<FeedState<TrafficEnvelope>>({ state: "idle", value: null });
+  const [traffic, setTraffic] = useState<FeedState<TrafficEnvelope & { receivedAt: number }>>({ state: "idle", value: null });
+  const [trafficNow, setTrafficNow] = useState(() => Date.now());
   const [uas, setUas] = useState<FeedState<UasGrid>>({ state: "idle", value: null });
   const [tfrs, setTfrs] = useState<FeedState<TfrList>>({ state: "idle", value: null });
   const [exaggeration, setExaggeration] = useState<(typeof EXAGGERATIONS)[number]>(1);
@@ -153,12 +155,15 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
     if (!visible || !showTraffic) return;
     const abort = new AbortController();
     const load = () => readFeed<TrafficEnvelope>(AVIATION_TRAFFIC_API_PATH, abort.signal, 8 * 1024 * 1024, value => Array.isArray(value.records) && Boolean(value.provider) && typeof value.provider === "object")
-      .then(value => setTraffic({ state: "ready", value })).catch(() => { if (!abort.signal.aborted) setTraffic({ state: "error", value: null }); });
-    const initial = setTimeout(load, 0), interval = setInterval(load, TRAFFIC_REFRESH_MS);
-    return () => { abort.abort(); clearTimeout(initial); clearInterval(interval); };
+      .then(value => setTraffic({ state: "ready", value: { ...value, receivedAt: Date.now() } })).catch(() => { if (!abort.signal.aborted) setTraffic({ state: "error", value: null }); });
+    const tick = () => setTrafficNow(Date.now());
+    const initial = setTimeout(() => { tick(); void load(); }, 0), interval = setInterval(load, TRAFFIC_REFRESH_MS), expiry = setInterval(tick, TRAFFIC_EXPIRY_TICK_MS);
+    // Positions are only meaningful while fresh: turning traffic off drops them, so turning it back on never redraws old aircraft as "now".
+    return () => { abort.abort(); clearTimeout(initial); clearInterval(interval); clearInterval(expiry); setTraffic({ state: "idle", value: null }); };
   }, [visible, showTraffic]);
 
-  const trafficRecords = useMemo(() => showTraffic ? traffic.value?.records ?? [] : [], [showTraffic, traffic.value]);
+  // Each position expires 60 s after it was observed, between refreshes and if a refresh stalls.
+  const trafficRecords = useMemo(() => showTraffic ? freshAircraft(traffic.value, trafficNow) : [], [showTraffic, traffic.value, trafficNow]);
   const uasCells = useMemo(() => uas.value?.cells ?? [], [uas.value]);
   const metarRecords = useMemo(() => showMetar ? metar.envelope?.records ?? [] : [], [showMetar, metar.envelope]);
   const pirepRecords = useMemo(() => showPireps ? pireps.envelope?.records ?? [] : [], [showPireps, pireps.envelope]);
@@ -333,7 +338,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
           <label><input type="checkbox" checked={airwayKinds.has("JET")} onChange={event => toggleAirway(["JET", "RNAV_Q"], event.target.checked)} /> High routes (Jet, Q routes) · FL180–FL450</label>
           <label><input type="checkbox" checked={showTraffic} onChange={event => setShowTraffic(event.target.checked)} /> Live aircraft (ADS-B), drawn at reported altitude and labelled with the airspace they are in</label>
           <ul className="aviation-legend">{TRAFFIC_ALTITUDE_COLORS.map(([value, color]) => <li key={value}><i style={{ background: color }} /> {value === 0 ? "Surface / no altitude" : `${value.toLocaleString("en-US")} ft MSL and above`}</li>)}<li><i style={{ background: "#e0301e" }} /> Emergency squawk (7500/7600/7700)</li></ul>
-          {showTraffic && <small role="status">Traffic: {traffic.state === "ready" && traffic.value ? <>{traffic.value.records.length} aircraft · retrieved {minutesAgo(traffic.value.retrievedAt, clock) < 1 ? "just now" : `${minutesAgo(traffic.value.retrievedAt, clock)} min ago`} · data <a href={traffic.value.provider.homepage} target="_blank" rel="noreferrer">{traffic.value.provider.title}</a> ({traffic.value.provider.terms}){traffic.value.records.some(record => record.emergency) ? " · EMERGENCY squawk present" : ""}</> : traffic.state === "error" ? "Unavailable from every listed receiver network. No cached positions are shown." : "Checking…"}</small>}
+          {showTraffic && <small role="status">Traffic: {traffic.state === "ready" && traffic.value ? <>{trafficRecords.length} aircraft · retrieved {minutesAgo(traffic.value.retrievedAt, clock) < 1 ? "just now" : `${minutesAgo(traffic.value.retrievedAt, clock)} min ago`} · data <a href={traffic.value.provider.homepage} target="_blank" rel="noreferrer">{traffic.value.provider.title}</a> ({traffic.value.provider.terms}){trafficRecords.some(record => record.emergency) ? " · EMERGENCY squawk present" : ""}</> : traffic.state === "error" ? "Unavailable from every listed receiver network. No cached positions are shown." : "Checking…"}</small>}
           <small>Volunteer receiver coverage: some aircraft, especially low or on the ground, are missing. An empty sky on the map is not evidence of no traffic.</small>
         </fieldset>
         <fieldset><legend>Airport weather &amp; pilot reports (live)</legend>
