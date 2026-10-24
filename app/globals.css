@@ -4801,7 +4801,12 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .qwen-header-entry .qwen-launch-mark { display:grid;place-items:center; }
 .explorer-startup-cover { position:fixed;inset:var(--topbar) 0 0;z-index:219;display:grid;place-items:center;background:#081c29;color:#c7dce4;font-size:14px; }
 .atlas-studio[data-startup="pending"] .explorer-shell { visibility:hidden; }
-@media(max-width:1100px){.atlas-studio .welcome-header-find{display:none}}
+.welcome-find-icon{display:none}
+@media(max-width:1100px){
+ .atlas-studio .welcome-header-find{display:grid;place-items:center;width:44px;min-width:44px;padding:0}
+ .welcome-find-label{display:none}
+ .welcome-find-icon{display:grid;place-items:center;font-size:22px;line-height:1}
+}
 @media(max-width:1000px){
  .atlas-studio .map-dock-actions>.map-dock-action{display:none}
  .atlas-studio .map-dock-menu-quick{display:grid}
@@ -4811,6 +4816,7 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
  .atlas-studio .topbar{grid-template-rows:54px 72px;column-gap:5px;padding-inline:8px}
  .atlas-studio .qwen-header-entry{font-size:12px;gap:6px}
  .atlas-studio .qwen-header-label{display:inline}
+ .atlas-studio .qwen-header-name{display:none}
 }
 @media(max-width:500px){
  .atlas-studio .topbar{grid-template-areas:"search map actions" "features features features";grid-template-columns:minmax(0,1fr) auto auto}
@@ -4819,7 +4825,7 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
  .atlas-studio .scene-panel-toolbar .scene-panel-trigger strong{display:none}
  .atlas-studio .map-dock-menu>summary{min-width:44px;padding-inline:4px}
 }
-@media(max-width:380px){.atlas-studio .qwen-header-name{display:none}}
+@media(max-width:380px){.atlas-studio .qwen-header-label{display:none}.atlas-studio .qwen-header-entry{width:44px;padding:4px}.atlas-studio .atlas-scope-strip{gap:6px}}
 
 /* Short landscape uses the available command-row space for tips instead of
    taking the height needed by the River Pulse sticky header and touch controls. */

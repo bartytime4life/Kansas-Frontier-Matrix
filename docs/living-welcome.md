@@ -34,7 +34,8 @@ opt-out and destination handling remain; device storage is not cleared.
 
 Geometry is owned by the Explorer's existing globals.css lane: 110px desktop
 header, 126px phone header, shared by map, welcome and panel offsets. Below 1000px,
-Time/Layers/Places remain in the Map menu; below 500px Effects uses its labelled
+Time/Layers/Places remain in the Map menu. Find stays a visible 44px search icon
+below 1100px (short landscape uses the existing Find tab in Chat); below 500px Effects uses its labelled
 icon button, and at 380px or less Chat keeps a shorter visible label and full
 accessible name. The tradeoff is less vertical map space for a readable tip row. Short landscape
 (501px or wider, at most 480px high) instead fits tips into the command row and
@@ -71,7 +72,10 @@ The first exact-head CI run passed build, TypeScript, the full Node suite,
 disposable MySQL and fire browser acceptance, then exposed River Pulse clipping
 at 568×320 before startup browser tests could run. The follow-up compacts the
 landscape header and adds that viewport and full text bounds to acceptance.
-That failed run is not a passing acceptance result.
+That failed run is not a passing acceptance result. The next CI run passed all
+five River Pulse layouts, then caught hidden phone Find triggers in county-search
+acceptance. Find is restored as a visible, named search icon on normal phone and
+tablet layouts; the existing county-search cases remain unchanged.
 
 Rollback: revert the candidate commits. No migration, storage deletion, host
 configuration, merge or publication is part of this change.
