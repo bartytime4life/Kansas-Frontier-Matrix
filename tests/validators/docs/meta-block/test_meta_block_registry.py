@@ -158,6 +158,17 @@ class DocsMetaBlockRegistryTests(DocsMetaBlockTestCase):
         with self.assertRaises(meta_block.MetaBlockError):
             self._validate(root)
 
+    @unittest.skipIf(os.name == "nt", "symlink semantics differ on Windows")
+    def test_dangling_output_symlink_is_denied(self) -> None:
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        target = Path(temporary.name) / "target.json"
+        link = Path(temporary.name) / "report.json"
+        link.symlink_to(target)
+        with self.assertRaisesRegex(meta_block.MetaBlockError, "symbolic link denied"):
+            meta_block._write_output(link, "{}")
+        self.assertFalse(target.exists())
+
     def test_validator_has_no_network_client_import(self) -> None:
         source = VALIDATOR_PATH.read_text(encoding="utf-8")
         for forbidden in ("import requests", "import urllib", "import socket", "httpx"):

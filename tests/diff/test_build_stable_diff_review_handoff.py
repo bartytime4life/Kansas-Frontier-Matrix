@@ -18,6 +18,7 @@ from tools.ci.build_stable_diff_review_handoff import (
     CONTEXT_SCHEMA_VERSION,
     HandoffError,
     _canonical_bytes,
+    _write_output,
     build_review_handoff,
 )
 from tools.ci.render_stable_diff_summary import render_stable_diff_summary
@@ -275,6 +276,19 @@ class StableDiffReviewHandoffTests(unittest.TestCase):
                 path.as_posix(),
             )
 
+
+    def test_dangling_output_symlinks_are_denied(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            victim = root / "victim.json"
+            for link in (root / "handoff.json", root / "handoff.json.tmp"):
+                with self.subTest(link.name):
+                    link.symlink_to(victim)
+                    with self.assertRaises(HandoffError) as raised:
+                        _write_output(root / "handoff.json", "{}\n")
+                    self.assertEqual(raised.exception.code, "OUTPUT_SYMLINK_DENIED")
+                    self.assertFalse(victim.exists())
+                    link.unlink()
 
 if __name__ == "__main__":
     unittest.main()

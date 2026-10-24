@@ -91,7 +91,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     if args.output:
         output = Path(args.output)
-        if output.exists() and output.is_symlink():
+        if output.is_symlink():
             print("ERROR output symbolic link denied", file=sys.stderr)
             return 2
         try:

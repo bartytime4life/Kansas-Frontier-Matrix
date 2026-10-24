@@ -1,0 +1,92 @@
+{
+  "receipt_id": "genrec-stable-diff-review-handoff-dangling-output-20261024",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/stable-diff-review-handoff.yml",
+    "tools/ci/build_stable_diff_review_handoff.py",
+    "tests/diff/test_build_stable_diff_review_handoff.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/stable-diff-review-handoff.yml": "sha256:5e3aba04f93a409c8a4a4a5b12beaf776b71f41b11ee2d5e44b1e6cce5284a57",
+    "tools/ci/build_stable_diff_review_handoff.py": "sha256:19fd729cbfcfa19acf4edc288c3c620676ffc0d4bec830c957050bc0041238c7",
+    "tests/diff/test_build_stable_diff_review_handoff.py": "sha256:bd7d8925baf7f2941dbf4d73208c969dc0e6054bbccec1f4f9f47f198f6b45cf"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:.github/workflows/stable-diff-review-handoff.yml@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tools/ci/build_stable_diff_review_handoff.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tests/diff/test_build_stable_diff_review_handoff.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:data/receipts/generated/genrec-stable-diff-review-handoff-20260830.json@370e9ad30911fef806aa4fbd2ff25bea6eaf1626"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/stable-diff-review-handoff.yml": "CONFIRMED",
+    "tools/ci/build_stable_diff_review_handoff.py": "CONFIRMED",
+    "tests/diff/test_build_stable_diff_review_handoff.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "On main, _write_output in build_stable_diff_review_handoff.py tested exists() and is_symlink() together; exists() is false for a dangling symlink, so a dangling link passed the guard and the following write_text/write_bytes created or overwrote the link target. Each guard now tests is_symlink() alone. A dangling symlink at the output path or at <output>.tmp received the handoff JSON."
+    },
+    {
+      "gate": "Tests",
+      "outcome": "PASS",
+      "reason": "A new handoff test writes through dangling symlinks at the output and temporary paths and asserts OUTPUT_SYMLINK_DENIED with no target created; it fails against main. The workflow's handoff test step passes."
+    },
+    {
+      "gate": "Workflow receipt chain",
+      "outcome": "PASS",
+      "reason": "The receipt step now validates a list: genrec-stable-diff-review-handoff-20260808 at e2f10e37668f4d90eb4a369875a6c16782e1f9aa (previously unvalidated), genrec-stable-diff-review-handoff-20260830 at 370e9ad30911fef806aa4fbd2ff25bea6eaf1626 (its last matching commit), and this receipt against the working tree, with fetch-depth 0 and a guard that every matching receipt is listed. The step passes locally."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports no new findings on the changed files. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/370e9ad30911fef806aa4fbd2ff25bea6eaf1626"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-24T06:35:07Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Successor to genrec-stable-diff-review-handoff-20260830, which is unchanged."
+}

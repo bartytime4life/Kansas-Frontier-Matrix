@@ -390,5 +390,36 @@ class DocumentGraphTests(unittest.TestCase):
             self.assertNotIn(token, source)
 
 
+    @unittest.skipUnless(hasattr(Path, "symlink_to"), "symlinks unavailable")
+    def test_cli_denies_dangling_symbolic_link_output(self) -> None:
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        target = Path(temporary.name) / "target.json"
+        link = Path(temporary.name) / "graph.json"
+        link.symlink_to(target)
+        completed = subprocess.run(
+            [
+                sys.executable,
+                str(VALIDATOR_PATH),
+                "--repo-root",
+                str(FIXTURE_ROOT),
+                "--entrypoint",
+                "README.md",
+                "--registry",
+                "control_plane/document_registry.yaml",
+                "--format",
+                "json",
+                "--output",
+                str(link),
+                "README.md",
+                "docs",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(completed.returncode, 2, completed.stderr)
+        self.assertFalse(target.exists())
+
 if __name__ == "__main__":
     unittest.main()
