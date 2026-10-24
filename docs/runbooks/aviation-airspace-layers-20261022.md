@@ -35,7 +35,7 @@ Site uses for NOAA radar: not a KFM release, not navigation.
 | Observed traffic signal | NOAA/NWS AWC PIREP | Built: live route, reports at altitude |
 | Live aircraft positions | adsb.lol, else adsb.fi (public ADS-B receiver networks) | Built 2026-10-24: `/api/aviation/traffic`, aircraft at altitude tagged with occupied airspace; OpenSky still denied |
 | UAS Facility Map grid ceilings | FAA UASFM ArcGIS service | Built 2026-10-24: `/api/aviation/uas-grid`, 3D LAANC cells, ceiling in the point inspector |
-| TFRs | FAA TFR list | Built 2026-10-24 as a Kansas list and inspector warning; boundaries not drawn (the list has no geometry) |
+| TFRs | FAA TFR list + NOTAM detail files | Built 2026-10-24 as a Kansas list; 3D volumes from detail files added the same day (see TFR boundaries follow-up) |
 | NOTAM activation | FAA NOTAM services | **Not built** |
 
 The data mesh link is the point inspector: one click joins the airspace class
@@ -228,6 +228,32 @@ aircraft. A component test reproduces the toggle case and fails on the merged
 control. Successor mirror receipt:
 `site-v268-aviation-traffic-expiry-fix-20261024.json`. Rollback: revert the
 fix commit, which selects the live-traffic receipt again.
+
+## TFR boundaries follow-up — October 24, 2026
+
+The TFR list has no geometry, but each NOTAM's XNOTAM detail file does:
+`https://tfr.faa.gov/download/detail_<id>.xml`, where `6/1234` becomes
+`detail_6_1234.xml`. `/api/aviation/tfrs` now reads these for Kansas and
+neighbouring-state entries: at most 30 files, six at a time, 8 s and 1 MB each,
+and no new reads after a 20 s deadline. It returns each area that reaches the
+region as `shapes`, with `detailsChecked` and `detailsFailed` counts.
+
+Field use follows OpenSectional's XNOTAM parser (`src/xnotam_parser.cpp`, read
+on 2026-10-24, because the FAA host was unreachable from the build environment):
+
+- **Path.** `XNOTAM-Update/Group/Add/Not/TfrNot/TFRAreaGroup`.
+- **Boundary.** `abdMergedArea/Avx` `geoLat`/`geoLong` decimal degrees with a
+  hemisphere letter. The alternate `aseShapes` description is ignored.
+- **Altitude.** `codeDistVer*`, `valDistVer*` and `uomDistVer*`: `FL` is
+  hundreds of feet, `HEI` is above ground, 99999 or more is unlimited, and
+  anything else is MSL.
+
+Malformed altitudes or vertices drop that area only. The detail URL is built
+only from ids matching `^\d/\d{1,5}$`. The response stays cached 5 minutes at
+the edge. Field names and the detail-file media type must be confirmed on the
+first hosted run.
+
+Rollback: revert the follow-up commit; the list-only route returns.
 
 ## Decision for the owner
 

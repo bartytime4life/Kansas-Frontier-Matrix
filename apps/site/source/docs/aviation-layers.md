@@ -2,10 +2,11 @@
 
 One specialty layer, **Map layers > Airspace, airports & aviation weather**,
 draws Kansas airspace as labelled 3D volumes, shows where small drones need
-authorization, and ties live aircraft, airport weather and pilot reports to the
-airspace they occur in. It is display context only: **not navigation, flight planning or
-UAS authorization**. Active Kansas temporary flight restrictions (TFRs) are
-listed but their boundaries are not drawn; NOTAM activations are not shown.
+authorization, draws active temporary flight restrictions (TFRs) as 3D volumes,
+and ties live aircraft, airport weather and pilot reports to the airspace they
+occur in. It is display context only: **not navigation, flight planning or
+UAS authorization**. NOTAM activations of other airspace (MOAs,
+restricted areas) are not shown.
 
 ## Sources and clocks
 
@@ -15,7 +16,7 @@ listed but their boundaries are not drawn; NOTAM activations are not shown.
 | METAR (ASOS/AWOS station weather) | NOAA/NWS Aviation Weather Center Data API via `/api/aviation/metar` | Each station's own observation time; latest within 90 minutes; refreshed every 5 minutes while shown |
 | PIREP (pilot reports) | Same API via `/api/aviation/pireps` | Report time; last 3 hours |
 | LAANC grid ceilings | FAA UAS Facility Maps (ArcGIS `FAA_UAS_FacilityMap_Data`) via `/api/aviation/uas-grid` | FAA 56-day cycle; read once per session, cached a day at the edge |
-| Temporary flight restrictions | FAA TFR list (`tfr.faa.gov/tfrapi/exportTfrList`) via `/api/aviation/tfrs` | Current list; refreshed every 10 minutes while shown |
+| Temporary flight restrictions | FAA TFR list (`tfr.faa.gov/tfrapi/exportTfrList`) and each NOTAM's detail file (`tfr.faa.gov/download/detail_<id>.xml`) via `/api/aviation/tfrs` | Current list; refreshed every 10 minutes, cached 5 minutes at the edge |
 | Live aircraft | Public ADS-B/Mode S receiver networks via `/api/aviation/traffic`: [adsb.lol](https://adsb.lol/) (ODbL 1.0), else [adsb.fi](https://adsb.fi/) open data (non-commercial, attribution) | Positions no older than 60 seconds; refreshed every 20 seconds while shown, 15-second shared cache |
 
 The product file is built by
@@ -50,9 +51,17 @@ rooftop. Contacts, owner names and remarks are never copied.
   A ceiling is the most LAANC can approve, not an approval. If paging the FAA
   service does not finish, no grid is drawn rather than a partial one.
 - **TFRs.** Kansas entries from the FAA's national list (matched by state or by
-  "KANSAS"/", KS" in the text) appear in the drone section with their NOTAM IDs,
-  and the point inspector warns when any are active. Their boundaries and
-  times are in each NOTAM at tfr.faa.gov.
+  "KANSAS"/", KS" in the text) appear in the drone section with their NOTAM IDs.
+  For Kansas and neighbouring-state TFRs (at most 30 per refresh), each NOTAM's
+  detail file supplies the boundary the FAA has already traced (circles and arcs
+  included) and the floor and ceiling. Every area that reaches the region is
+  drawn as a red volume from floor to ceiling, labelled
+  `TFR 6/1234 HAZARDS · SFC–3,000 MSL`. Limits keep their reference: `SFC`,
+  `AGL` (FAA height code), `MSL`, flight level, or `UNL` (drawn to FL600).
+  Picking a point inside a TFR lists each area with its limits and times (UTC),
+  ahead of the drone verdict. A detail file that fails, or arrives after the
+  route's 20-second deadline, is counted. The panel then says how many
+  boundaries could not be read, rather than implying no TFR is there.
 - **Airports and runways.** Blue dots are towered, magenta non-towered public-use
   airports. Private-use facilities are smaller hollow dots labelled `PVT`, with
   their own toggle: landing at one needs the owner's permission. Labels give the

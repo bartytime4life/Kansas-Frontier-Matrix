@@ -20,16 +20,23 @@ export class UpstreamError extends Error {
 
 /** Fixed-URL JSON read: no redirects, bounded time and bytes. Shared by every aviation route. */
 export async function fetchJson(url: string, maxBytes = MAX_BYTES, timeoutMs = TIMEOUT_MS): Promise<unknown> {
+  const body = await fetchText(url, "json", maxBytes, timeoutMs);
+  // AWC answers 204 when nothing matches: that is an empty list, not an error.
+  if (body === null) return [];
+  try { return JSON.parse(body) as unknown; } catch { throw new UpstreamError("Request failed."); }
+}
+
+/** Fixed-URL text read of one media type (`json`, `xml`); null for 204 No Content. */
+export async function fetchText(url: string, media: "json" | "xml", maxBytes = MAX_BYTES, timeoutMs = TIMEOUT_MS): Promise<string | null> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const response = await fetch(url, { cache: "no-store", redirect: "manual", signal: controller.signal,
-      headers: { Accept: "application/json", "User-Agent": USER_AGENT } });
-    // AWC answers 204 when nothing matches: that is an empty list, not an error.
-    if (response.status === 204) return [];
+      headers: { Accept: media === "json" ? "application/json" : "application/xml, text/xml", "User-Agent": USER_AGENT } });
+    if (response.status === 204) return null;
     if (!response.ok) throw new UpstreamError(`Upstream returned HTTP ${response.status}.`);
-    if (!(response.headers.get("content-type") ?? "").toLowerCase().includes("json")) throw new UpstreamError("Unexpected media type.");
-    return JSON.parse(await readBoundedText(response, maxBytes, controller.signal)) as unknown;
+    if (!(response.headers.get("content-type") ?? "").toLowerCase().includes(media)) throw new UpstreamError("Unexpected media type.");
+    return await readBoundedText(response, maxBytes, controller.signal);
   } catch (error) {
     if (error instanceof UpstreamError) throw error;
     if (error instanceof Error && error.name === "AbortError") throw new UpstreamError("Request timed out.", true);

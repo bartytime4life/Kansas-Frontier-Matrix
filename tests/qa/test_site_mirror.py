@@ -1440,9 +1440,10 @@ def test_historical_traffic_expiry_fix_receipt_binds_only_the_fix(monkeypatch: p
 TRAFFIC_IDENTITY_CHANGED = {"app/aviation-traffic.ts", "tests/aviation.test.mjs"}
 
 
-def test_selected_receipt_binds_only_the_traffic_identity_fix() -> None:
+def test_historical_traffic_identity_fix_receipt_binds_only_the_fix(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-aviation-traffic-identity-fix-20261024.json")
+    assert hashlib.sha256(TOOL.RECEIPT.read_bytes()).hexdigest() == "80cbf64ded731867de68b7e0dd62ea51014581e3cf7274b7d3fac356670f515b"
     receipt, expected = TOOL.reviewed_receipt()
-    assert TOOL.RECEIPT.name == "site-v268-aviation-traffic-identity-fix-20261024.json"
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert predecessor.name == "site-v268-aviation-traffic-expiry-fix-20261024.json"
     assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"] == "a37218e4ca7dcab4859d3c2a6ed91ed4cef7e147c7bc40cf4c30916094ef1339"
@@ -1453,6 +1454,49 @@ def test_selected_receipt_binds_only_the_traffic_identity_fix() -> None:
     declarations = {entry["path"]: entry for entry in receipt["repository_reconciliation"]["changes"]}
     assert set(declarations) == TRAFFIC_IDENTITY_CHANGED and len(receipt["repository_reconciliation"]["changes"]) == len(TRAFFIC_IDENTITY_CHANGED)
     for name in TRAFFIC_IDENTITY_CHANGED:
+        entry, before = receipt["comparison"][name], previous["comparison"][name]
+        # Bound to the receipt's own declaration: the TFR volume successor changes current bytes of the test file.
+        digest = declarations[name]["mirror_sha256"]
+        assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
+        assert entry["state"] == before["state"] and entry["site_sha256"] == before["site_sha256"], name
+        assert declarations[name] == {
+            "path": name, "previous_receipt_sha256": before["mirror_sha256"],
+            "repository_base_sha256": before["mirror_sha256"], "mirror_sha256": digest,
+            "state": entry["state"], "proposed_in_this_change": True,
+        }
+    administrative = {"comparison", "inventory_sha256", "predecessor_receipt", "predecessor_receipt_sha256",
+                      "recorded_at", "repository_reconciled_base", "repository_reconciliation", "rollback", "security", "validation"}
+    for key in previous.keys() - administrative:
+        assert receipt[key] == previous[key], key
+    assert receipt["counts"] == previous["counts"]
+    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "0e434a0792ee80966e1411f49bc21c5e938e93df"
+    assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert predecessor.name in receipt["rollback"]["mirror"]
+
+
+TFR_VOLUMES_CHANGED = {
+    "app/aviation-control.tsx", "app/aviation-drone-data.ts", "app/aviation-drone-server.ts", "app/aviation-weather-server.ts",
+    "app/site-architecture.ts", "app/site-features.ts", "docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md", "docs/aviation-layers.md",
+    "tests/aviation.test.mjs",
+}
+
+
+def test_selected_receipt_binds_only_the_tfr_volumes() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    assert TOOL.RECEIPT.name == "site-v268-aviation-tfr-volumes-20261024.json"
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-aviation-traffic-identity-fix-20261024.json"
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"] == "80cbf64ded731867de68b7e0dd62ea51014581e3cf7274b7d3fac356670f515b"
+    previous = json.loads(predecessor.read_text())
+    assert set(receipt) == set(previous)
+    assert set(receipt["comparison"]) == set(previous["comparison"])
+    assert {name for name, entry in receipt["comparison"].items() if entry != previous["comparison"][name]} == TFR_VOLUMES_CHANGED
+    declarations = {entry["path"]: entry for entry in receipt["repository_reconciliation"]["changes"]}
+    assert set(declarations) == TFR_VOLUMES_CHANGED and len(receipt["repository_reconciliation"]["changes"]) == len(TFR_VOLUMES_CHANGED)
+    for name in TFR_VOLUMES_CHANGED:
         entry, before = receipt["comparison"][name], previous["comparison"][name]
         digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
         assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
@@ -1467,7 +1511,7 @@ def test_selected_receipt_binds_only_the_traffic_identity_fix() -> None:
     for key in previous.keys() - administrative:
         assert receipt[key] == previous[key], key
     assert receipt["counts"] == previous["counts"]
-    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "0e434a0792ee80966e1411f49bc21c5e938e93df"
+    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "9678e903c7cf620373afc26170070a32c2da5e75"
     assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
     assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
     inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
