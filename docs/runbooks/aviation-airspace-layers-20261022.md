@@ -214,6 +214,21 @@ Rollback: revert the follow-up commits, which restores
 `site-v268-aviation-uas-grid-request-fix-20261024.json` as the selected mirror
 receipt and the v1 product. The route stores nothing.
 
+## Traffic expiry fix — October 24, 2026
+
+Review finding on [PR #5459](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5459)
+(merged with the thread resolved but no code change): the browser redrew the
+last traffic response after traffic was turned off and on, and kept a position
+past the 60-second limit until the next refresh. The control now discards
+positions when traffic or the layer is turned off. Between refreshes it expires
+each position 60 s after observation: the position's age at retrieval, plus up
+to 30 s of edge-cache age, plus the time since this browser received it. The
+cache age is clamped so that a wrong browser clock cannot expire every
+aircraft. A component test reproduces the toggle case and fails on the merged
+control. Successor mirror receipt:
+`site-v268-aviation-traffic-expiry-fix-20261024.json`. Rollback: revert the
+fix commit, which selects the live-traffic receipt again.
+
 ## Decision for the owner
 
 The intake runbook held public FAA airport rendering behind an aviation release

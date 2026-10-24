@@ -66,6 +66,25 @@ export function parseTraffic(value: unknown): Readonly<{ records: readonly Aircr
   return Object.freeze({ records: Object.freeze(records), dropped });
 }
 
+// The route's edge cache serves a response for at most max-age 15 s + stale-while-revalidate 15 s.
+export const TRAFFIC_MAX_CACHE_AGE_S = 30;
+
+/**
+ * Records still inside the 60-second position limit at `now`. A record's age is
+ * its age at retrieval, plus how long the response sat in the edge cache (from
+ * the server's `retrievedAt`, clamped to 0–30 s so a wrong browser clock cannot
+ * expire everything), plus the time since this browser received it.
+ * Returns the same array when nothing has expired, so callers can skip redraws.
+ */
+export function freshAircraft(load: (Pick<TrafficEnvelope, "retrievedAt" | "records"> & { receivedAt: number }) | null, now: number): readonly Aircraft[] {
+  const retrieved = load ? Date.parse(load.retrievedAt) : Number.NaN;
+  if (!load || !Number.isFinite(retrieved) || !Number.isFinite(load.receivedAt)) return [];
+  const cachedS = Math.min(TRAFFIC_MAX_CACHE_AGE_S, Math.max(0, (load.receivedAt - retrieved) / 1000));
+  const elapsedS = cachedS + Math.max(0, (now - load.receivedAt) / 1000);
+  const kept = load.records.filter(record => record.positionAgeS + elapsedS <= TRAFFIC_MAX_POSITION_AGE_S);
+  return kept.length === load.records.length ? load.records : kept;
+}
+
 /** Barometric altitude is pressure altitude above 18,000 ft; below it either reported altitude is close to MSL. */
 export const aircraftAltitudeMsl = (aircraft: Pick<Aircraft, "onGround" | "altBaroFt" | "altGeomFt">): number | null =>
   aircraft.onGround ? null : aircraft.altGeomFt ?? aircraft.altBaroFt;

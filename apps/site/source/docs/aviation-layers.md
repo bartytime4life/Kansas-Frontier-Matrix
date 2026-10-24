@@ -121,7 +121,10 @@ Cloud bases never substitute for an aircraft's missing altitude. See the
 - Live traffic comes from volunteer receivers. Low-altitude aircraft, aircraft
   without ADS-B and anything out of receiver range are missing, so an empty sky
   is not evidence of no traffic. Positions older than 60 seconds are dropped,
-  not extrapolated. Nothing identifies owners, missions or intent. OpenSky is
+  not extrapolated. The browser keeps applying that limit between refreshes
+  (counting up to 30 seconds of edge-cache age), so a stalled refresh empties the
+  sky instead of freezing it, and turning traffic off discards the last
+  positions rather than redrawing them later as current. Nothing identifies owners, missions or intent. OpenSky is
   not used: its terms require a written licence for this kind of display.
 - The traffic route tries adsb.lol, then adsb.fi, with fixed URLs, no caller
   input, no redirects, a 10-second timeout and a 6 MB read limit. If both fail

@@ -1351,9 +1351,10 @@ LIVE_TRAFFIC_CHANGED = {
 }
 
 
-def test_selected_receipt_binds_only_live_traffic_and_private_use_airports() -> None:
+def test_historical_live_traffic_receipt_binds_only_traffic_and_private_use_airports(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-aviation-live-traffic-private-airports-overlay-20261024.json")
+    assert hashlib.sha256(TOOL.RECEIPT.read_bytes()).hexdigest() == "e5ef16580d831d16534402a8343d080188d3558e166bf57e876327744a3dfcd6"
     receipt, expected = TOOL.reviewed_receipt()
-    assert TOOL.RECEIPT.name == "site-v268-aviation-live-traffic-private-airports-overlay-20261024.json"
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert predecessor.name == "site-v268-aviation-uas-grid-request-fix-20261024.json"
     assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"] == "718e1730302527ceed7282bf62512c10d6c4cffa3c974d5e96ced21415eda2cf"
@@ -1367,7 +1368,8 @@ def test_selected_receipt_binds_only_live_traffic_and_private_use_airports() -> 
     assert set(declarations) == delta and len(receipt["repository_reconciliation"]["changes"]) == len(delta)
     for name in delta:
         entry, before = receipt["comparison"][name], previous["comparison"].get(name)
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        # Bound to the receipt's own declaration: the traffic expiry fix successor changes current bytes of several of these files.
+        digest = declarations[name]["mirror_sha256"]
         assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
         if before is None:
             assert entry["state"] == "repository_only_overlay" and entry["site_sha256"] is None
@@ -1388,6 +1390,44 @@ def test_selected_receipt_binds_only_live_traffic_and_private_use_airports() -> 
     assert receipt["status"] == "REVIEW_ONLY"
     assert receipt["review"] == previous["review"] and receipt["overlay"] == previous["overlay"]
     assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "151e4f1bca7c3827683955f0fd15f4a7a18b5cfd"
+    assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert predecessor.name in receipt["rollback"]["mirror"]
+
+
+TRAFFIC_EXPIRY_CHANGED = {"app/aviation-control.tsx", "app/aviation-traffic.ts", "docs/aviation-layers.md", "tests/aviation.test.mjs"}
+
+
+def test_selected_receipt_binds_only_the_traffic_expiry_fix() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    assert TOOL.RECEIPT.name == "site-v268-aviation-traffic-expiry-fix-20261024.json"
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-aviation-live-traffic-private-airports-overlay-20261024.json"
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"] == "e5ef16580d831d16534402a8343d080188d3558e166bf57e876327744a3dfcd6"
+    previous = json.loads(predecessor.read_text())
+    assert set(receipt) == set(previous)
+    assert set(receipt["comparison"]) == set(previous["comparison"])
+    assert {name for name, entry in receipt["comparison"].items() if entry != previous["comparison"][name]} == TRAFFIC_EXPIRY_CHANGED
+    declarations = {entry["path"]: entry for entry in receipt["repository_reconciliation"]["changes"]}
+    assert set(declarations) == TRAFFIC_EXPIRY_CHANGED and len(receipt["repository_reconciliation"]["changes"]) == len(TRAFFIC_EXPIRY_CHANGED)
+    for name in TRAFFIC_EXPIRY_CHANGED:
+        entry, before = receipt["comparison"][name], previous["comparison"][name]
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
+        assert entry["state"] == before["state"] and entry["site_sha256"] == before["site_sha256"], name
+        assert declarations[name] == {
+            "path": name, "previous_receipt_sha256": before["mirror_sha256"],
+            "repository_base_sha256": before["mirror_sha256"], "mirror_sha256": digest,
+            "state": entry["state"], "proposed_in_this_change": True,
+        }
+    administrative = {"comparison", "inventory_sha256", "predecessor_receipt", "predecessor_receipt_sha256",
+                      "recorded_at", "repository_reconciled_base", "repository_reconciliation", "rollback", "security", "validation"}
+    for key in previous.keys() - administrative:
+        assert receipt[key] == previous[key], key
+    assert receipt["counts"] == previous["counts"]
+    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "848461d0a5a9a844f920af9a266290ac6ac7d4eb"
     assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
     assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
     inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
