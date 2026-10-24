@@ -32,7 +32,9 @@ Site uses for NOAA radar: not a KFM release, not navigation.
 | Airport weather | NOAA/NWS AWC METAR (ASOS/AWOS) | Built: live route, flight category, cloud-ceiling discs, density altitude, VFR check |
 | Observed traffic signal | NOAA/NWS AWC PIREP | Built: live route, reports at altitude |
 | Live aircraft positions | OpenSky / adsb.lol | **Not built**: rights gates in the intake runbook still apply |
-| UAS Facility Map grid ceilings, TFRs, NOTAM activation | FAA UASFM, TFR and NOTAM services | **Not built**: next candidates; not reachable from this environment |
+| UAS Facility Map grid ceilings | FAA UASFM ArcGIS service | Built 2026-10-24: `/api/aviation/uas-grid`, 3D LAANC cells, ceiling in the point inspector |
+| TFRs | FAA TFR list | Built 2026-10-24 as a Kansas list and inspector warning; boundaries not drawn (the list has no geometry) |
+| NOTAM activation | FAA NOTAM services | **Not built** |
 
 The data mesh link is the point inspector: one click joins the airspace class
 at that point, the drone rule, the nearest station's ceiling and visibility
@@ -137,6 +139,37 @@ mirror receipt is `site-v268-pirep-weather-parsing-overlay-20261022.json`;
 generated-work provenance is `genrec-pirep-weather-parsing-20261022.json`.
 Independent AI review is distinct from pending human acceptance. No FAA rights,
 held APT lane, evidence-role, source-admission or publication decision changes.
+
+## Drone grid and TFR follow-up — October 24, 2026
+
+Owner-directed follow-up after #5412 merged. Two FAA public safety feeds were
+added; live ADS-B traffic and private-use airports were deliberately left out
+of this change.
+
+- `/api/aviation/uas-grid` pages the FAA UAS Facility Map service
+  (`FAA_UAS_FacilityMap_Data/FeatureServer/0`, fields `CEILING`, `APT1_FAAID`,
+  `APT1_NAME`) over the Kansas region, 2,000 cells per page, at most 15 pages
+  and 30,000 cells. A page with an `error` body, a missing or out-of-range
+  `CEILING`, or paging that does not finish fails the whole response: no
+  partial grid is drawn. Cached a day at the edge (FAA 56-day cycle).
+- `/api/aviation/tfrs` reads the FAA TFR list (`tfr.faa.gov/tfrapi/exportTfrList`)
+  and keeps entries with state `KS` or "KANSAS"/", KS" in the text. Several
+  field spellings are accepted because the FAA has changed them before. No
+  boundaries are drawn: the list has no geometry.
+- Neither host was reachable from the build environment, so both parsers
+  follow published field names (UASFM fields confirmed only from public
+  mirrors) and must be confirmed on the first hosted run.
+
+Verification: build; typecheck; lint (0 errors, 77 unchanged warnings); full
+Site suite 1,427 tests (1,425 passed, 0 failed, 2 root-refusal skips); local
+Worker smoke 110 checks across 79 routes with 13 provider-only routes; mirror
+parity against `site-v268-aviation-drone-grid-tfr-overlay-20261024.json`
+(896 files); `tests/qa/test_site_mirror.py` and FAA connector tests (149
+passed); topology PASS with 0 new drift.
+
+Rollback: revert the follow-up commit, which restores
+`site-v268-privacy-path-redaction-overlay-20261023.json` as the selected
+mirror receipt. The routes store nothing.
 
 ## Decision for the owner
 

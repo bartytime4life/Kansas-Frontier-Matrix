@@ -14,21 +14,22 @@ const PRODUCTS = {
     limitation: "Voluntary pilot reports from the last 3 hours. Few reports does not mean little traffic or smooth air; locations and altitudes are as reported." },
 } as const;
 
-class UpstreamError extends Error {
+export class UpstreamError extends Error {
   constructor(message: string, readonly timeout = false) { super(message); }
 }
 
-async function fetchJson(url: string): Promise<unknown> {
+/** Fixed-URL JSON read: no redirects, bounded time and bytes. Shared by every aviation route. */
+export async function fetchJson(url: string, maxBytes = MAX_BYTES, timeoutMs = TIMEOUT_MS): Promise<unknown> {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const response = await fetch(url, { cache: "no-store", redirect: "manual", signal: controller.signal,
       headers: { Accept: "application/json", "User-Agent": USER_AGENT } });
     // AWC answers 204 when nothing matches: that is an empty list, not an error.
     if (response.status === 204) return [];
-    if (!response.ok) throw new UpstreamError(`Aviation Weather Center returned HTTP ${response.status}.`);
+    if (!response.ok) throw new UpstreamError(`Upstream returned HTTP ${response.status}.`);
     if (!(response.headers.get("content-type") ?? "").toLowerCase().includes("json")) throw new UpstreamError("Unexpected media type.");
-    return JSON.parse(await readBoundedText(response, MAX_BYTES, controller.signal)) as unknown;
+    return JSON.parse(await readBoundedText(response, maxBytes, controller.signal)) as unknown;
   } catch (error) {
     if (error instanceof UpstreamError) throw error;
     if (error instanceof Error && error.name === "AbortError") throw new UpstreamError("Request timed out.", true);
