@@ -79,6 +79,10 @@ tablet layouts; the existing county-search cases remain unchanged. PR #5454 was
 merged externally at head 201c462c7d828b25a2cfb489075f04f410efbb29 while
 acceptance was still running. The Find correction is a separate follow-up based
 on hosted 63fb2ac9795251d16837f6a817b3c7b0b73d0d82, not part of that merge.
+The first follow-up run passed all county-search layouts, then found an aviation
+test still clicking the former direct Layers button on compact screens. Its
+navigation helper now chooses the rendered direct/mobile entry or the actual
+Map-menu Layers entry, retaining strict native pointer reachability checks.
 
 Rollback: revert the candidate commits. No migration, storage deletion, host
 configuration, merge or publication is part of this change.

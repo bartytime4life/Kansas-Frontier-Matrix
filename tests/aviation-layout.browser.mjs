@@ -148,7 +148,17 @@ const layouts = [
 for (const layout of layouts) test(`aviation disclosures remain reachable at ${layout.width}×${layout.height}, ${layout.touch ? 'touch' : 'mouse'}, ${layout.motion}`, { timeout: 90000 }, async t => {
   const b = await browser(t), p = await pageSession(b, layout);
   const explore = '.layer-panel-explore', aviation = '.aviation-control', evidence = '.aviation-control-body > details', scrollHost = layout.height <= 600 ? '.layer-panel' : explore;
-  await p.activate(layout.width <= 760 ? '.map-mobile-actions button:first-child' : '.map-dock-actions > button:nth-child(2)');
+  // The compact header keeps Layers in the Map menu. Follow an actually
+  // rendered entry, retaining activate()'s scroll, bounds and native hit tests.
+  const directLayers = '.map-dock-actions > button:nth-child(2)';
+  const mobileLayers = '.map-mobile-actions button:first-child';
+  const visible = selector => p.evaluate(`(() => {const e=document.querySelector(${JSON.stringify(selector)}),r=e?.getBoundingClientRect();return !!r&&r.width>0&&r.height>0;})()`);
+  if(await visible(directLayers)) await p.activate(directLayers);
+  else if(await visible(mobileLayers)) await p.activate(mobileLayers);
+  else {
+    await p.activate('.map-dock-map-menu > summary');
+    await p.activate('.map-dock-menu-quick button:nth-child(2)');
+  }
   await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='false'`, 'layers open');
   await p.wait(`(() => { const r=document.querySelector('.layer-panel').getBoundingClientRect(); return r.x>=0 && r.right<=innerWidth+1 && r.bottom<=innerHeight+1; })()`, 'panel animation settled');
   await pause(300);
