@@ -127,5 +127,19 @@ class StaleScanCliTests(unittest.TestCase):
         self.assertEqual(target.read_text(encoding="utf-8"), "preserve")
 
 
+    @unittest.skipIf(os.name == "nt", "symbolic-link behavior varies on Windows")
+    def test_cli_denies_dangling_symbolic_link_output(self) -> None:
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        base = Path(temporary.name)
+        target = base / "target.txt"
+        link = base / "output.txt"
+        link.symlink_to(target)
+
+        completed = self._run("--as-of", "2026-08-07", "--output", str(link), "README.md", "docs")
+
+        self.assertEqual(completed.returncode, 2)
+        self.assertFalse(target.exists())
+
 if __name__ == "__main__":
     unittest.main()

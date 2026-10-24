@@ -52,6 +52,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
       - name: Set up repository Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -116,9 +117,28 @@ jobs:
         run: |
           set -euo pipefail
           sha256sum .github/workflows/stable-diff-review-handoff.yml
-          python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-stable-diff-review-handoff-20260830.json \
-            --repo-root .
+          receipts=(
+            "genrec-stable-diff-review-handoff-20260808.json e2f10e37668f4d90eb4a369875a6c16782e1f9aa"
+            "genrec-stable-diff-review-handoff-20260830.json 370e9ad30911fef806aa4fbd2ff25bea6eaf1626"
+            "genrec-stable-diff-review-handoff-dangling-output-20261024.json current"
+          )
+          validated=" "
+          for entry in "${receipts[@]}"; do
+            read -r name ref <<< "$entry"
+            args=("data/receipts/generated/$name" --repo-root .)
+            if [ "$ref" != current ]; then
+              args+=(--artifact-git-ref "$ref")
+            fi
+            python tools/validators/validate_generated_receipt.py "${args[@]}"
+            validated+="$name "
+          done
+          # The path filter starts this job for any matching receipt, so each one must be in the list above.
+          for receipt in data/receipts/generated/genrec-stable-diff-review-handoff-*.json; do
+            if [[ "$validated" != *" $(basename "$receipt") "* ]]; then
+              echo "::error::$receipt is not validated by this workflow"
+              exit 1
+            fi
+          done
       - name: Record trust boundary
         if: always()
         run: |

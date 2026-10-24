@@ -415,11 +415,11 @@ def build_review_handoff(
 
 def _write_output(path: Path, text: str) -> None:
     try:
-        if path.exists() and path.is_symlink():
+        if path.is_symlink():
             raise HandoffError("OUTPUT_SYMLINK_DENIED", "/output")
         path.parent.mkdir(parents=True, exist_ok=True)
         temporary = path.with_name(path.name + ".tmp")
-        if temporary.exists() and temporary.is_symlink():
+        if temporary.is_symlink():
             raise HandoffError("OUTPUT_SYMLINK_DENIED", "/output")
         temporary.write_text(text, encoding="utf-8", newline="\n")
         os.replace(temporary, path)

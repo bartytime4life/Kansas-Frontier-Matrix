@@ -162,6 +162,26 @@ def test_output_is_explicit_and_never_written_to_lifecycle_roots() -> None:
         assert output_path.read_bytes() == MODULE.canonical_bytes(written)
 
 
+
+def test_dangling_packet_output_symlink_is_denied() -> None:
+    candidate = MODULE.materialize_case(manifest(), manifest()["cases"][0])
+    with tempfile.TemporaryDirectory() as directory:
+        input_path = Path(directory) / "candidate.json"
+        target = Path(directory) / "target.json"
+        link = Path(directory) / "packet.json"
+        input_path.write_text(json.dumps(candidate), encoding="utf-8")
+        link.symlink_to(target)
+        run = subprocess.run(
+            [sys.executable, str(VALIDATOR), str(input_path), "--write-packet", str(link)],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        assert run.returncode == 2, run.stdout + run.stderr
+        assert "OUTPUT_SYMLINK_DENIED" in run.stdout
+        assert not target.exists()
+
 def test_duplicate_nonfinite_and_symlink_inputs_fail_closed() -> None:
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)

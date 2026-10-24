@@ -1,0 +1,106 @@
+{
+  "receipt_id": "genrec-dangling-output-symlink-guards-20261024",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/docs/stale-scan/check_stale_docs.py",
+    "tests/validators/docs/stale-scan/test_stale_scan_cli.py",
+    "tools/validators/docs/meta-block/check_meta_blocks.py",
+    "tests/validators/docs/meta-block/test_meta_block_registry.py",
+    "tools/validators/docs/document-graph/check_document_graph.py",
+    "tests/validators/docs/document-graph/test_document_graph.py",
+    "tools/validators/catalog_closure/validate_synthetic_release_catalog_closure.py",
+    "tests/validators/catalog_closure/test_synthetic_release_catalog_closure.py"
+  ],
+  "artifact_hashes": {
+    "tools/validators/docs/stale-scan/check_stale_docs.py": "sha256:e76bafa70b77e588105d4ee0cc5f2fd0348a9eae6bbf8a94a1ba94b0eaed6ec8",
+    "tests/validators/docs/stale-scan/test_stale_scan_cli.py": "sha256:a09a78338d22c2c54c1f544f93a299ecb89c984d900f2e4512ce5a431e77c86f",
+    "tools/validators/docs/meta-block/check_meta_blocks.py": "sha256:5ae9dc8905fb4e6462b5a23ae7cfdcafd0eb9e0317277b367f20475947022359",
+    "tests/validators/docs/meta-block/test_meta_block_registry.py": "sha256:9ea91521a12ebbbbf7abb78b52abbe800251695c6ca5751aa78aae0377e5f793",
+    "tools/validators/docs/document-graph/check_document_graph.py": "sha256:ef4ea9391fe5d1c0b94002b1726478cf6366478b1b878b77141fc4a828ee5e46",
+    "tests/validators/docs/document-graph/test_document_graph.py": "sha256:a9b52a8bf560ecb6135a5589a6a900f4d47bafa53b50171352ebdf01082851d3",
+    "tools/validators/catalog_closure/validate_synthetic_release_catalog_closure.py": "sha256:5d031e6f9a7c9c4475239e45e153e1665f49daca7db83beb5aec34911865a2d7",
+    "tests/validators/catalog_closure/test_synthetic_release_catalog_closure.py": "sha256:43a1e49be9bda9f3e8102f197dfa126ff4a56e7718ef6192ddb2686c7c203429"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tools/validators/docs/stale-scan/check_stale_docs.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tests/validators/docs/stale-scan/test_stale_scan_cli.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tools/validators/docs/meta-block/check_meta_blocks.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tests/validators/docs/meta-block/test_meta_block_registry.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tools/validators/docs/document-graph/check_document_graph.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tests/validators/docs/document-graph/test_document_graph.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tools/validators/catalog_closure/validate_synthetic_release_catalog_closure.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626",
+      "repo:tests/validators/catalog_closure/test_synthetic_release_catalog_closure.py@370e9ad30911fef806aa4fbd2ff25bea6eaf1626"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/docs/stale-scan/check_stale_docs.py": "CONFIRMED",
+    "tests/validators/docs/stale-scan/test_stale_scan_cli.py": "CONFIRMED",
+    "tools/validators/docs/meta-block/check_meta_blocks.py": "CONFIRMED",
+    "tests/validators/docs/meta-block/test_meta_block_registry.py": "CONFIRMED",
+    "tools/validators/docs/document-graph/check_document_graph.py": "CONFIRMED",
+    "tests/validators/docs/document-graph/test_document_graph.py": "CONFIRMED",
+    "tools/validators/catalog_closure/validate_synthetic_release_catalog_closure.py": "CONFIRMED",
+    "tests/validators/catalog_closure/test_synthetic_release_catalog_closure.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Defect reproduction",
+      "outcome": "PASS",
+      "reason": "On main, each output or path guard tested exists() and is_symlink() together; exists() is false for a dangling symlink, so a dangling link passed the guard and the following write_text/write_bytes created or overwrote the link target. Each guard now tests is_symlink() alone. Affected: the stale-scan, meta-block and document-graph --output writers and the synthetic release catalog closure --write-packet writer. tools/release/rollback_apply.py has the same pattern in safe() but is digest-pinned by release-dry-run and rollback-drill; it is left unchanged here for a deliberate re-pin."
+    },
+    {
+      "gate": "Tests",
+      "outcome": "PASS",
+      "reason": "One new test per tool creates a dangling symlink at the output and asserts the tool refuses it without creating the target; each fails against main and passes here. The four tools' test files pass."
+    },
+    {
+      "gate": "Lint and guardrails",
+      "outcome": "PASS",
+      "reason": "ruff reports no new findings on the changed files. make repository-guardrails PASS."
+    },
+    {
+      "gate": "Hosted CI on the pushed head",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/370e9ad30911fef806aa4fbd2ff25bea6eaf1626"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-24T06:35:07Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Same guard defect as fixed in tools/validators/validate_all.py by #5450; companion receipt genrec-stable-diff-review-handoff-dangling-output-20261024 covers the stable-diff handoff writer."
+}

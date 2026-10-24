@@ -197,7 +197,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if result.packet is None:
             print(_serialize(result))
             return {"PASS": 0, "DENY": 1, "ERROR": 2}[result.outcome]
-        if args.write_packet.exists() and args.write_packet.is_symlink():
+        if args.write_packet.is_symlink():
             print(json.dumps({
                 "outcome": "ERROR",
                 "findings": [{"code": "OUTPUT_SYMLINK_DENIED", "path": "/"}],

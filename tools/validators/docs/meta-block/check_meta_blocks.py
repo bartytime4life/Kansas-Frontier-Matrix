@@ -60,7 +60,7 @@ def _parser() -> argparse.ArgumentParser:
 
 
 def _write_output(path: Path, content: str) -> None:
-    if path.exists() and path.is_symlink():
+    if path.is_symlink():
         raise MetaBlockError("output symbolic link denied")
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
