@@ -61,7 +61,7 @@ def safe(root: Path, relative: str) -> Path:
     cursor = root
     for part in rel.parts:
         cursor /= part
-        if cursor.exists() and cursor.is_symlink():
+        if cursor.is_symlink():
             raise RehearsalError("UNSAFE_SYMLINK", relative)
     return path
 

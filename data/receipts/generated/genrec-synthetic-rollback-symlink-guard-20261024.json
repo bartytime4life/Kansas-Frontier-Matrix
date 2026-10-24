@@ -1,0 +1,110 @@
+{
+  "receipt_id": "genrec-synthetic-rollback-symlink-guard-20261024",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/release/rollback_apply.py",
+    "tests/release/test_synthetic_rollback_rehearsal.py",
+    "tools/release/README.md",
+    ".github/workflows/release-dry-run.yml",
+    ".github/workflows/rollback-drill.yml"
+  ],
+  "artifact_hashes": {
+    "tools/release/rollback_apply.py": "sha256:6864f3e8c4de17031cdefc0d4de3ccd765c5222c917a13790ddcf8a923149290",
+    "tests/release/test_synthetic_rollback_rehearsal.py": "sha256:6ad2dd085774cc520ef3dd4cc57328509917ed49930b81a81075495c90bae2cd",
+    "tools/release/README.md": "sha256:af8e058ab9f616712f61fdac20b2f4b9386637311e0bd1f9094bf6df4147eed5",
+    ".github/workflows/release-dry-run.yml": "sha256:49bd9c10b1809e7cdf443d901925fc2a90f80666b73592d82cea3a65a0aa2a8e",
+    ".github/workflows/rollback-drill.yml": "sha256:0df23ac9913385d14ea277ec37ecf33dcf121880ae9e0451d34fdb2d9b135836"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6)",
+    "version": "Runtime model build not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/1a664987317bd13e0d4de2b0e5dc179b7b880303",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5451",
+      "repo:tools/release/rollback_apply.py@1a664987317bd13e0d4de2b0e5dc179b7b880303",
+      "repo:tests/release/test_synthetic_rollback_rehearsal.py@1a664987317bd13e0d4de2b0e5dc179b7b880303",
+      "repo:tools/release/README.md@1a664987317bd13e0d4de2b0e5dc179b7b880303",
+      "repo:.github/workflows/release-dry-run.yml@1a664987317bd13e0d4de2b0e5dc179b7b880303",
+      "repo:.github/workflows/rollback-drill.yml@1a664987317bd13e0d4de2b0e5dc179b7b880303"
+    ]
+  },
+  "truth_labels": {
+    "tools/release/rollback_apply.py": "CONFIRMED",
+    "tests/release/test_synthetic_rollback_rehearsal.py": "CONFIRMED",
+    "tools/release/README.md": "CONFIRMED",
+    ".github/workflows/release-dry-run.yml": "CONFIRMED",
+    ".github/workflows/rollback-drill.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Original boundary reproduction",
+      "outcome": "PASS",
+      "reason": "Isolated synthetic execution confirmed dangling correction and invalidation leaves pass the old guard and are atomically replaced; missing targets remain absent. Dangling input alias yields REQUIRED_FILE_MISSING; dangling output parent yields FileExistsError. No arbitrary-file write demonstrated."
+    },
+    {
+      "gate": "Syntax and final diff inspection",
+      "outcome": "PASS",
+      "reason": "Changed Python parses; only the shared guard, focused tests, scoped README, deliberate helper/test pins and combined test-count statements change."
+    },
+    {
+      "gate": "Security triggers and compatibility",
+      "outcome": "PASS",
+      "reason": "Fifteen generic and four retained Hazards rehearsal tests pass. New coverage includes live/dangling leaf/ancestor links, regular/missing paths, alias denial, both output writers in rollback/withdrawal, target non-mutation, history preservation, temporary cleanup and successful recovery. New dangling cases fail against the original helper."
+    },
+    {
+      "gate": "Workflow pin and YAML verification",
+      "outcome": "PASS",
+      "reason": "Both workflow YAML files parse, helper/test digests match current bytes, and rollback-drill expects 19 combined tests. Unchanged Hazards fixture/test pins remain retained."
+    },
+    {
+      "gate": "RollbackCard fixture profile",
+      "outcome": "PASS",
+      "reason": "Canonical fixture CLI exits zero: three valid candidates pass and six invalid candidates retain expected findings."
+    },
+    {
+      "gate": "Exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending at receipt creation; GitHub results govern."
+    },
+    {
+      "gate": "Independent code review",
+      "outcome": "SKIPPED",
+      "reason": "Fresh read-only candidate review requested; review outcome will be reported in the PR."
+    },
+    {
+      "gate": "Human approval",
+      "outcome": "SKIPPED",
+      "reason": "Pending; no approval or override is inferred from generation or testing."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/1a664987317bd13e0d4de2b0e5dc179b7b880303"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-24T16:27:35.710Z",
+  "emitter": "Codex repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Narrow follow-up to PR #5451. Existing historical receipts and all synthetic-only governance boundaries are retained. Per-file atomic replacement is unchanged; apply remains sequential and callers must control directories. This receipt records generation and bounded local validation, not human approval, merge or rollback authority."
+}
