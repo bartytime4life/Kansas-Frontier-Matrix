@@ -203,7 +203,7 @@ export const SITE_FEATURES = Object.freeze([
     domain: "atmosphere",
     status: "ACTIVE_CONTEXT",
     surface: "Map layers > Airspace, airports & aviation weather",
-    userOutcome: "See Class B/C/D/E, MOA and restricted airspace as labelled 3D shells, where drones need authorization below 400 ft and the LAANC ceiling per FAA grid cell, active Kansas TFRs, public-use airports, airways, live aircraft at their reported altitude tagged with the airspace they are in, live station weather and pilot reports, and the full airspace column at any point.",
+    userOutcome: "See Class B/C/D/E, MOA and restricted airspace as labelled 3D shells, where drones need authorization below 400 ft and the LAANC ceiling per FAA grid cell, active Kansas TFRs, public- and private-use airports, airways, live aircraft at their reported altitude tagged with the airspace they are in, live station weather and pilot reports, and the full airspace column at any point.",
     sourceIds: [],
     actionIds: ["open-provider-source"],
     codePaths: ["app/aviation-airspace.ts", "app/aviation-weather.ts", "app/aviation-drone-data.ts", "app/aviation-traffic.ts", "app/aviation-control.tsx", "app/api/aviation", "public/data/aviation"],

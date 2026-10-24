@@ -11,7 +11,7 @@ listed but their boundaries are not drawn; NOTAM activations are not shown.
 
 | Data | Source | Clock |
 |---|---|---|
-| Airspace volumes, public-use airports and runways, airways | FAA NASR 28-day subscription, cycle 2026-10-29, via the pinned `public/data/aviation/kansas-aviation-context.json` | Valid 2026-10-29 up to (not including) 2026-11-26. Before the 29th the layer says it is a *preview* edition; after the 26th it says *expired*. |
+| Airspace volumes, public- and private-use airports and runways, airways | FAA NASR 28-day subscription, cycle 2026-10-29, via the pinned `public/data/aviation/kansas-aviation-context.json` | Valid 2026-10-29 up to (not including) 2026-11-26. Before the 29th the layer says it is a *preview* edition; after the 26th it says *expired*. |
 | METAR (ASOS/AWOS station weather) | NOAA/NWS Aviation Weather Center Data API via `/api/aviation/metar` | Each station's own observation time; latest within 90 minutes; refreshed every 5 minutes while shown |
 | PIREP (pilot reports) | Same API via `/api/aviation/pireps` | Report time; last 3 hours |
 | LAANC grid ceilings | FAA UAS Facility Maps (ArcGIS `FAA_UAS_FacilityMap_Data`) via `/api/aviation/uas-grid` | FAA 56-day cycle; read once per session, cached a day at the edge |
@@ -23,8 +23,10 @@ The product file is built by
 snapshot whose package integrity and data-file SHA-256 digests are recorded in
 the file. The browser checks the file's SHA-256 against
 `AVIATION_CONTEXT_ASSET` before parsing it, and refuses any shape drift.
-Private-use airports (345 in the region) are withheld; only public-use
-facilities are drawn or used as nearest-airport references.
+All open facilities are listed: 188 public-use and 345 private-use (airports,
+heliports, glider, ultralight and balloon ports). Nearest-ground references use
+every listed facility except heliports, whose published elevation can be a
+rooftop. Contacts, owner names and remarks are never copied.
 
 ## What is drawn
 
@@ -51,14 +53,16 @@ facilities are drawn or used as nearest-airport references.
   "KANSAS"/", KS" in the text) appear in the drone section with their NOTAM IDs,
   and the point inspector warns when any are active. Their boundaries and
   times are in each NOTAM at tfr.faa.gov.
-- **Airports and runways.** Blue dots are towered, magenta non-towered. Labels
-  give the identifier and field elevation; runways draw from their surveyed end
-  points at zoom 10+.
+- **Airports and runways.** Blue dots are towered, magenta non-towered public-use
+  airports. Private-use facilities are smaller hollow dots labelled `PVT`, with
+  their own toggle: landing at one needs the owner's permission. Labels give the
+  identifier and field elevation; runways draw from their surveyed end points at
+  zoom 10+.
 - **Airways.** Victor/T routes (1,200 AGL–below FL180) and Jet/Q routes
   (FL180–FL450), labelled with designation and MEA.
 - **Live aircraft.** Each aircraft is an arrowhead pointing along its track,
   lifted to its reported altitude (geometric if reported, else barometric) above
-  the nearest public-use airport's elevation, and coloured by altitude band;
+  the nearest ground-reference facility's elevation, and coloured by altitude band;
   emergency squawks (7500, 7600, 7700) are red. At zoom 8+ the label gives
   callsign, type, altitude, ground speed and the airspace the aircraft is in at
   that altitude (for example `CLASS C · ICT`). The panel names the network that
@@ -89,7 +93,7 @@ the 14 CFR section. The panel also gives:
 
 Source limits keep their reference: MSL, AGL or SFC. Only the drawing converts
 them, to height above a stated ground reference: the associated airport's
-elevation for Class B/C/D/E2–E4, otherwise the nearest public-use airport
+elevation for Class B/C/D/E2–E4, otherwise the nearest non-heliport facility
 (distance recorded per volume). Kansas terrain varies, so drawn MSL limits can
 be off by the difference between that airport and the local ground; the labels
 and the column table always show the official values.
@@ -98,7 +102,7 @@ PIREP flight levels accept the AWC API's documented digit strings (for example,
 `"230"` = 23,000 ft MSL) and numeric values observed in live JSON. `fltLvlType`
 keeps climb (`DURC`) distinct from descent (`DURD`); neither defines one fixed
 altitude. Missing or malformed levels remain unavailable. Fixed PIREP drawing
-heights subtract the nearest public-use airport's elevation, clamp below-ground
+heights subtract the nearest non-heliport facility's elevation, clamp below-ground
 results to the surface, then convert feet to metres and apply the selected
 exaggeration. This is an approximate display reference, not a measured terrain
 or aircraft position. A genuine reported zero is retained.

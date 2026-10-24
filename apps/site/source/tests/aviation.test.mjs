@@ -88,6 +88,19 @@ test("point-in-polygon honours holes and bbox prefilter", () => {
   assert.equal(airspace.pointInRings(11, 5, [ring]), false);
 });
 
+test("private-use facilities are listed with a use flag, styled apart, and heliports never anchor ground", () => {
+  const privateUse = context.airports.filter(airport => airport.use === "PRIVATE");
+  assert.ok(privateUse.length > 300 && context.airports.every(airport => airport.use === "PUBLIC" || airport.use === "PRIVATE"));
+  assert.ok(privateUse.some(airport => airport.facility_type === "HELIPORT"));
+  const anchors = airspace.groundAnchors(context.airports);
+  assert.ok(anchors.length < context.airports.length && anchors.every(airport => airport.facility_type !== "HELIPORT"));
+  const { points } = airspace.airportFeatures({ airports: privateUse.slice(0, 1) });
+  assert.equal(points.features[0].properties.private, true);
+  assert.match(points.features[0].properties.label, / · PVT$/);
+  const raw = JSON.parse(bytes.toString("utf8"));
+  assert.throws(() => airspace.parseAviationContext({ ...raw, airports: [{ ...raw.airports[0], use: "MILITARY" }] }), /Invalid airport record/);
+});
+
 test("nearest airport and airway proximity", () => {
   assert.equal(airspace.nearestAirport(context.airports, ...SALINA).airport.faa_id, "SLN");
   const near = airspace.airwaysNearPoint(context, ...SALINA);

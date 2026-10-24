@@ -2,7 +2,7 @@
 doc_id: kfm://contract/transport/faa-airspace-context
 title: FAA airspace and aviation context profile
 type: contract
-version: v0.1
+version: v0.2
 status: proposed
 owners: ["@bartytime4life"]
 created: 2026-10-22
@@ -15,7 +15,7 @@ policy_label: public
 
 # FAA airspace and aviation context profile
 
-`kfm.aviation-kansas-context/v1` is **external display context**
+`kfm.aviation-kansas-context/v2` is **external display context**
 (`evidence_role: EXTERNAL_CONTEXT_ONLY`), the same role the Site gives NOAA
 radar or basemap carriers. It is not a KFM-released record, EvidenceBundle or
 reportable claim, and it does not replace or advance the held APT candidate in
@@ -44,7 +44,8 @@ Every limit keeps its source reference: `SFC` (value 0), `AGL` or `MSL`, in
 feet. `inclusive: false` marks "up to but not including" (for example, Class E
 and MOA ceilings below FL180). No AGL value is converted to MSL. A
 `ground_reference` (associated airport elevation for Class B/C/D/E2–E4,
-otherwise the nearest *public-use* airport with its distance) exists only so a
+otherwise the nearest open non-heliport facility, public or private use, with
+its distance) exists only so a
 display can draw heights above ground; consumers must label official limits
 from `floor`/`ceiling`, never from drawn heights.
 
@@ -54,10 +55,15 @@ Features are kept whole when their envelope touches the region
 
 ## Airports and airways
 
-Airports are public-use, open NASR facilities in the region with runway end
-points, surface, lighting, CTAF and the ASOS/AWOS type parsed from the
-frequency use field. Frequency remarks, contacts and private-use facilities
-are not projected; the withheld private-use count is reported. Airway segments
+Airports are every open NASR facility in the region, public and private use,
+each with a `use` flag (`PUBLIC` or `PRIVATE`), runway end points, surface,
+lighting, CTAF and the ASOS/AWOS type parsed from the frequency use field;
+`airport_counts` reports both totals. Frequency remarks, contacts and
+owner/manager names are not projected. A private-use facility requires the
+owner's permission to use; listing it grants nothing. Heliports are listed but
+never used as nearest-ground anchors, because their published elevation can be
+a rooftop. v2 replaced v1's `withheld.private_use_airports` count (v1 projected
+public-use facilities only) on owner direction, 2026-10-24. Airway segments
 (Victor, Jet, RNAV T and Q) touching the region carry the leg's MEA and MAA
 from its first waypoint.
 

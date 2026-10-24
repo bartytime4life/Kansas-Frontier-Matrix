@@ -3,7 +3,7 @@
   "$id": "https://schemas.kfm.local/contracts/v1/domains/roads-rail-trade/faa_airspace_context.schema.json",
   "title": "Kansas FAA airspace, airport and airway display context",
   "type": "object",
-  "required": ["profile", "generator", "nasr_cycle", "valid_from", "valid_to_exclusive", "evidence_role", "region_bbox", "source", "limitations", "class_a", "volumes", "airports", "airways", "withheld", "rejects", "product_id"],
+  "required": ["profile", "generator", "nasr_cycle", "valid_from", "valid_to_exclusive", "evidence_role", "region_bbox", "source", "limitations", "class_a", "volumes", "airports", "airways", "airport_counts", "rejects", "product_id"],
   "additionalProperties": false,
   "$defs": {
     "bound": {
@@ -30,8 +30,8 @@
     "position": {"type": "array", "prefixItems": [{"type": "number", "minimum": -180, "maximum": 180}, {"type": "number", "minimum": -90, "maximum": 90}], "minItems": 2, "maxItems": 2}
   },
   "properties": {
-    "profile": {"const": "kfm.aviation-kansas-context/v1"},
-    "generator": {"const": "faa-airspace-v1"},
+    "profile": {"const": "kfm.aviation-kansas-context/v2"},
+    "generator": {"const": "faa-airspace-v2"},
     "nasr_cycle": {"type": "string", "format": "date"},
     "valid_from": {"type": "string", "format": "date"},
     "valid_to_exclusive": {"type": "string", "format": "date"},
@@ -73,13 +73,14 @@
     }},
     "airports": {"type": "array", "maxItems": 5000, "items": {
       "type": "object",
-      "required": ["faa_id", "icao_id", "name", "lon", "lat", "elevation_ft", "facility_type", "weather_station", "runways"],
+      "required": ["faa_id", "icao_id", "name", "lon", "lat", "elevation_ft", "facility_type", "use", "weather_station", "runways"],
       "properties": {
         "faa_id": {"type": "string", "minLength": 2, "maxLength": 8},
         "icao_id": {"type": ["string", "null"], "pattern": "^[A-Z]{4}$"},
         "lon": {"type": "number", "minimum": -180, "maximum": 180},
         "lat": {"type": "number", "minimum": -90, "maximum": 90},
         "elevation_ft": {"type": "number"},
+        "use": {"enum": ["PUBLIC", "PRIVATE"]},
         "weather_station": {"type": ["string", "null"]},
         "runways": {"type": "array"}
       }
@@ -98,7 +99,8 @@
         "maa_ft": {"type": ["number", "null"]}
       }
     }},
-    "withheld": {"type": "object", "required": ["private_use_airports"], "properties": {"private_use_airports": {"type": "integer", "minimum": 0}}},
+    "airport_counts": {"type": "object", "required": ["public_use", "private_use"], "additionalProperties": false,
+      "properties": {"public_use": {"type": "integer", "minimum": 0}, "private_use": {"type": "integer", "minimum": 0}}},
     "rejects": {"type": "array"},
     "product_id": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
   }

@@ -61,16 +61,22 @@ def test_deterministic_product_keeps_vertical_references_and_cycle_validity():
     assert first["source"]["airspace"]["sha256"].startswith("sha256:")
 
 
-def test_private_use_facilities_are_withheld_and_never_used_as_nearest_anchor():
-    product = airspace.prepare(*inputs(features=[volume("MOA", "MTEST", (500, "AGL"), (18000, "MSL"), square(-97.05, 37.95, 0.1), inclusive=False)]), SOURCE)
-    assert [a["faa_id"] for a in product["airports"]] == ["ZZZ"] and product["withheld"]["private_use_airports"] == 1
+def test_private_use_facilities_are_flagged_and_anchor_ground_except_heliports():
+    moa = [volume("MOA", "MTEST", (500, "AGL"), (18000, "MSL"), square(-97.05, 37.95, 0.1), inclusive=False)]
+    product = airspace.prepare(*inputs(features=moa), SOURCE)
+    assert [(a["faa_id"], a["use"]) for a in product["airports"]] == [("PVT", "PRIVATE"), ("ZZZ", "PUBLIC")]
+    assert product["airport_counts"] == {"public_use": 1, "private_use": 1} and "withheld" not in product
     ground = product["volumes"][0]["ground_reference"]
-    assert ground["method"] == "NEAREST_AIRPORT" and ground["airport"] == "ZZZ" and ground["distance_km"] > 0
+    assert ground["method"] == "NEAREST_AIRPORT" and ground["airport"] == "PVT" and ground["ft"] == 1500
     assert product["volumes"][0]["ceiling"]["inclusive"] is False
+    # A heliport's published elevation can be a rooftop: listed, but never the nearest-ground anchor.
+    heliport = airspace.prepare(*inputs(features=moa, airports=[airport(), airport("H1", "PRIVATE", -97.0, 38.0, 1900, facilityType="HELIPORT")]), SOURCE)
+    assert [a["faa_id"] for a in heliport["airports"]] == ["H1", "ZZZ"]
+    assert heliport["volumes"][0]["ground_reference"]["airport"] == "ZZZ"
 
 
 def test_airport_projection_drops_remarks_and_parses_weather_station():
-    [a] = airspace.prepare(*inputs(), SOURCE)["airports"]
+    [a] = [item for item in airspace.prepare(*inputs(), SOURCE)["airports"] if item["faa_id"] == "ZZZ"]
     assert a["weather_station"] == "ASOS" and a["ctaf_mhz"] == 118.7
     assert "PHONE" not in json.dumps(a) and "frequencies" not in a
     assert a["runways"][0]["length_ft"] == 6000 and len(a["runways"][0]["ends"]) == 2
@@ -126,6 +132,9 @@ def test_committed_site_product_is_sealed_and_kansas_scoped():
     ids = {(v["type"], v["identifier"]) for v in product["volumes"]}
     assert {("CLASS_C", "ICT"), ("CLASS_D", "SLN"), ("RESTRICTED", "R3602A"), ("CLASS_B", "MCI")} <= ids
     assert all(a["faa_id"] and a["elevation_ft"] is not None for a in product["airports"])
+    counts = product["airport_counts"]
+    assert counts["private_use"] > 300 and counts["public_use"] > 150
+    assert counts["public_use"] + counts["private_use"] == len(product["airports"])
     # The Site pins this digest; changing the file without the pin must fail.
     pin = (ROOT / "apps/site/source/app/aviation-airspace.ts").read_text()
     assert hashlib.sha256(PRODUCT.read_bytes()).hexdigest() in pin

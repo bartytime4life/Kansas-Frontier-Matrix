@@ -5,7 +5,7 @@ import type { Map as MapLibreMap, MapLayerMouseEvent, MapMouseEvent } from "./ma
 import { readBoundedJson } from "./bounded-json";
 import {
   AIRSPACE_COLORS, AIRSPACE_GROUPS, AVIATION_CONTEXT_ASSET, DRONE_RULE_COLORS, airportFeatures, airspaceColumn, airspaceFeatures, airwayFeatures,
-  airwaysNearPoint, aviationEditionStatus, distanceKm, droneFeatures, droneVerdictAtPoint, nearestAirport, occupiedAirspace, parseAviationContext,
+  airwaysNearPoint, aviationEditionStatus, distanceKm, droneFeatures, droneVerdictAtPoint, groundAnchors, nearestAirport, occupiedAirspace, parseAviationContext,
   type AirspaceGroup, type AirwaySegment, type AviationContext,
 } from "./aviation-airspace";
 import {
@@ -65,6 +65,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
   const [groups, setGroups] = useState<ReadonlySet<AirspaceGroup>>(() => new Set((Object.keys(AIRSPACE_GROUPS) as AirspaceGroup[]).filter(group => AIRSPACE_GROUPS[group].defaultOn)));
   const [showDrone, setShowDrone] = useState(true);
   const [showAirports, setShowAirports] = useState(true);
+  const [showPrivate, setShowPrivate] = useState(true);
   const [airwayKinds, setAirwayKinds] = useState<ReadonlySet<AirwaySegment["type"]>>(() => new Set(["VICTOR", "RNAV_T"]));
   const [showMetar, setShowMetar] = useState(true);
   const [showCeilings, setShowCeilings] = useState(true);
@@ -175,15 +176,16 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
     remove();
     if (!visible || !context) return;
     try {
-      const groundAt = (lon: number, lat: number) => nearestAirport(context.airports, lon, lat)?.airport.elevation_ft ?? 0;
-      const airports = airportFeatures(context);
+      const anchors = groundAnchors(context.airports);
+      const groundAt = (lon: number, lat: number) => nearestAirport(anchors, lon, lat)?.airport.elevation_ft ?? 0;
+      const airports = airportFeatures({ airports: context.airports.filter(airport => airport.use === "PRIVATE" ? showPrivate : showAirports) });
       const weatherLayers = metarFeatures(metarRecords, exaggeration);
       const add = (id: string, data: GeoJSON.FeatureCollection) => map.addSource(`${PREFIX}-${id}`, { type: "geojson", data });
       add("airspace", airspaceFeatures(context, groups, exaggeration));
       add("drone", showDrone ? droneFeatures(context, exaggeration) : { type: "FeatureCollection", features: [] });
       add("airways", airwayFeatures(context, airwayKinds));
-      add("runways", showAirports ? airports.runways : { type: "FeatureCollection", features: [] });
-      add("airports", showAirports ? airports.points : { type: "FeatureCollection", features: [] });
+      add("runways", airports.runways);
+      add("airports", airports.points);
       add("metar", weatherLayers.stations);
       add("ceilings", showCeilings ? weatherLayers.ceilings : { type: "FeatureCollection", features: [] });
       add("pireps", pirepFeatures(pirepRecords, groundAt, exaggeration));
@@ -217,8 +219,10 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
       map.addLayer({ id: `${PREFIX}-runways-line`, type: "line", source: `${PREFIX}-runways`, minzoom: 10, paint: { "line-color": "#2b2b2b",
         "line-width": ["interpolate", ["exponential", 2], ["zoom"], 10, 1.5, 16, ["*", ["get", "width_ft"], 0.08]] } });
       map.addLayer({ id: `${PREFIX}-airports-dot`, type: "circle", source: `${PREFIX}-airports`, paint: {
-        "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 3, 10, 6], "circle-color": ["case", ["get", "towered"], "#1f5fbf", "#b5338a"],
-        "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5 } });
+        // Private-use facilities are hollow and smaller: on the map, but visibly not open to the public.
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, ["case", ["get", "private"], 2, 3], 10, ["case", ["get", "private"], 4.5, 6]],
+        "circle-color": ["case", ["get", "private"], "#ffffff", ["get", "towered"], "#1f5fbf", "#b5338a"],
+        "circle-stroke-color": ["case", ["get", "private"], "#6b5876", "#ffffff"], "circle-stroke-width": 1.5 } });
       map.addLayer({ id: `${PREFIX}-airports-label`, type: "symbol", source: `${PREFIX}-airports`, minzoom: 8, layout: {
         "text-font": font, "text-field": ["get", "label"], "text-size": 10.5, "text-offset": [0, 1.2], "text-anchor": "top", "text-optional": true },
         paint: { "text-color": "#1d2f44", "text-halo-color": "#ffffff", "text-halo-width": 1.3 } });
@@ -241,7 +245,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
       const choose = (event: MapLayerMouseEvent) => {
         const id = event.features?.[0]?.properties?.faa_id;
         const airport = context.airports.find(item => item.faa_id === id);
-        if (airport) setPicked({ lon: airport.lon, lat: airport.lat, label: `${airport.name} (${airport.icao_id ?? airport.faa_id})` });
+        if (airport) setPicked({ lon: airport.lon, lat: airport.lat, label: `${airport.name} (${airport.icao_id ?? airport.faa_id}${airport.use === "PRIVATE" ? `, private-use ${airport.facility_type.toLowerCase()}` : ""})` });
       };
       const rendered = () => setRender("Map frame drawn");
       map.on("click", `${PREFIX}-airports-dot`, choose);
@@ -252,7 +256,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setRender("Map rendering unavailable"); remove();
     }
-  }, [mapRef, styleReady, visible, context, groups, showDrone, showAirports, airwayKinds, showCeilings, metarRecords, pirepRecords, exaggeration, picked, showUas, uasCells, trafficRecords]);
+  }, [mapRef, styleReady, visible, context, groups, showDrone, showAirports, showPrivate, airwayKinds, showCeilings, metarRecords, pirepRecords, exaggeration, picked, showUas, uasCells, trafficRecords]);
 
   // Point inspection is opt-in so the page's own click tools keep working.
   useEffect(() => {
@@ -268,7 +272,8 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
   const shownRender = !visible ? "Hidden" : !context ? contextState === "error" ? "Unavailable" : "Loading" : !styleReady ? "Not ready" : render;
   const inspection = useMemo(() => {
     if (!context || !picked) return null;
-    const near = nearestAirport(context.airports, picked.lon, picked.lat);
+    const anchors = groundAnchors(context.airports);
+    const near = nearestAirport(anchors, picked.lon, picked.lat);
     const groundFt = near?.airport.elevation_ft ?? 0;
     const column = airspaceColumn(context, picked.lon, picked.lat, groundFt);
     const drone = droneVerdictAtPoint(context, picked.lon, picked.lat);
@@ -284,7 +289,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
       .filter(item => item.km <= 15).sort((a, b) => a.km - b.km).slice(0, 12)
       .map(item => {
         const msl = aircraftAltitudeMsl(item.record);
-        const ground = nearestAirport(context.airports, item.record.lon, item.record.lat)?.airport.elevation_ft ?? 0;
+        const ground = nearestAirport(anchors, item.record.lon, item.record.lat)?.airport.elevation_ft ?? 0;
         return { ...item, msl, airspace: msl === null ? "on the surface" : occupiedAirspace(context, item.record.lon, item.record.lat, msl, ground) };
       });
     return { near, groundFt, column, drone, station: usable, vfr, routes, reports, laanc, aircraft };
@@ -322,7 +327,8 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
           {tfrs.value && tfrs.value.kansas.length > 0 && <ul>{tfrs.value.kansas.slice(0, 20).map(entry => <li key={entry.notam}><strong>{entry.notam}</strong>{entry.type ? ` · ${entry.type}` : ""}: {entry.description}</li>)}</ul>}
         </fieldset>
         <fieldset><legend>Airports &amp; air traffic structure</legend>
-          <label><input type="checkbox" checked={showAirports} onChange={event => setShowAirports(event.target.checked)} /> Public-use airports and runways ({context.airports.length}; {context.privateUseWithheld} private-use facilities withheld)</label>
+          <label><input type="checkbox" checked={showAirports} onChange={event => setShowAirports(event.target.checked)} /> Public-use airports and runways ({context.airports.filter(airport => airport.use === "PUBLIC").length})</label>
+          <label><input type="checkbox" checked={showPrivate} onChange={event => setShowPrivate(event.target.checked)} /> Private-use airports, heliports and strips ({context.airports.filter(airport => airport.use === "PRIVATE").length}; hollow dots, “PVT”). Landing needs the owner’s permission.</label>
           <label><input type="checkbox" checked={airwayKinds.has("VICTOR")} onChange={event => toggleAirway(["VICTOR", "RNAV_T"], event.target.checked)} /> Low airways (Victor, T routes) · 1,200 AGL–below FL180</label>
           <label><input type="checkbox" checked={airwayKinds.has("JET")} onChange={event => toggleAirway(["JET", "RNAV_Q"], event.target.checked)} /> High routes (Jet, Q routes) · FL180–FL450</label>
           <label><input type="checkbox" checked={showTraffic} onChange={event => setShowTraffic(event.target.checked)} /> Live aircraft (ADS-B), drawn at reported altitude and labelled with the airspace they are in</label>

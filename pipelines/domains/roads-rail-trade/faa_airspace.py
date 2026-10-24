@@ -15,8 +15,8 @@ import re
 
 import rfc8785
 
-VERSION = "faa-airspace-v1"
-PROFILE = "kfm.aviation-kansas-context/v1"
+VERSION = "faa-airspace-v2"
+PROFILE = "kfm.aviation-kansas-context/v2"
 # Kansas plus a ~15 NM margin so neighbouring Class B/C/D and MOAs that reach
 # into the state stay whole. Features are kept or dropped, never clipped.
 REGION = (-102.3, 36.7, -94.3, 40.3)
@@ -96,7 +96,7 @@ def _distance_km(lon1, lat1, lon2, lat2):
 
 
 def _airport(record):
-    """Public-use projection. Private-use fields, contacts and remarks are never copied."""
+    """Published NASR facility fields. Contacts, owner/manager names and remarks are never copied."""
     stations = sorted({m.group(2) for f in record.get("frequencies") or [] if isinstance(f, dict)
                        for m in [WEATHER_STATION.match(str(f.get("use") or ""))] if m})
     ctaf = sorted({f["frequencyMhz"] for f in record.get("frequencies") or []
@@ -116,6 +116,7 @@ def _airport(record):
             "name": record["name"], "city": record.get("city"), "county": record.get("county"), "state": record.get("state"),
             "lon": round(record["lon"], 6), "lat": round(record["lat"], 6),
             "elevation_ft": round(record["elevationFt"], 1), "facility_type": record["facilityType"],
+            "use": "PUBLIC" if record.get("useType") == "PUBLIC" else "PRIVATE",
             "ownership": record.get("ownershipType"), "tower": record.get("towerType"),
             "weather_station": stations[0] if stations else None, "ctaf_mhz": ctaf[0] if ctaf else None,
             "traffic_pattern_ft_agl": record.get("trafficPatternAltitudeFtAgl") if _finite(record.get("trafficPatternAltitudeFtAgl"), 100, 5000) else None,
@@ -159,7 +160,7 @@ def prepare(airspace_gz, airports_gz, airways_gz, source):
                                                          or not all(isinstance(v, str) and v for v in source[k].values()) for k in source):
         raise ValueError("SOURCE_BINDING_INVALID")
 
-    elevations, public, private_withheld, by_id = [], [], 0, {}
+    elevations, facilities, by_id = [], [], {}
     for record in airports["records"]:
         if not isinstance(record, dict) or not _finite(record.get("lon"), -180, 180) or not _finite(record.get("lat"), -90, 90):
             continue
@@ -167,15 +168,13 @@ def prepare(airspace_gz, airports_gz, airways_gz, source):
             continue
         if record.get("status") != "OPEN" or not _finite(record.get("elevationFt"), -1500, 15000) or not record.get("faaId"):
             continue
-        # An airspace record already names its associated airport (military
-        # fields included), so any open facility may anchor that volume. Only
-        # public-use facilities become map points or nearest-airport anchors.
+        # Every open facility, public or private use, is projected and may anchor
+        # its own airspace. Nearest-ground anchors skip heliports, whose
+        # published elevation can be a rooftop rather than the ground.
         by_id[record["faaId"]] = (record["lon"], record["lat"], record["elevationFt"])
-        if record.get("useType") == "PUBLIC":
-            public.append(_airport(record))
+        facilities.append(_airport(record))
+        if record.get("facilityType") != "HELIPORT":
             elevations.append((record["faaId"], record["lon"], record["lat"], record["elevationFt"]))
-        else:
-            private_withheld += 1
 
     volumes, rejects, class_a = [], [], None
     for index, feature in enumerate(airspace["features"]):
@@ -222,7 +221,7 @@ def prepare(airspace_gz, airports_gz, airways_gz, source):
     for volume in volumes:
         # Identity is the content: a boundary or limit change yields a new ID.
         volume["id"] = "faa-airspace:" + hashlib.sha256(canonical({k: volume[k] for k in ("type", "identifier", "name", "floor", "ceiling", "rings")})).hexdigest()[:16]
-    public.sort(key=lambda a: a["faa_id"])
+    facilities.sort(key=lambda a: a["faa_id"])
     routes = sorted((segment for record in airways["records"] if isinstance(record, dict) and record.get("type") in AIRWAY_TYPES
                      and isinstance(record.get("designation"), str) for segment in _airway_segments(record)),
                     key=lambda r: (r["type"], r["designation"], r["coords"]))
@@ -236,10 +235,13 @@ def prepare(airspace_gz, airports_gz, airways_gz, source):
                           "airways": {**source["airways"], "sha256": sha(airways_gz)}},
                "limitations": ["Not for navigation, flight planning or UAS authorization. Check current FAA charts, NOTAMs, TFRs and B4UFLY/LAANC.",
                                "Temporary flight restrictions, NOTAM activations and UAS Facility Map grid ceilings are not included.",
+                               "Private-use facilities need the owner's permission to land; listing one is not an invitation to use it.",
                                "Display heights above ground use an associated or nearest airport elevation; source limits keep their MSL/AGL/SFC reference.",
                                "Horizontal coordinates are NASR NAD83 values used as WGS84 for display (sub-metre difference in Kansas)."],
-               "class_a": class_a, "volumes": volumes, "airports": public, "airways": routes,
-               "withheld": {"private_use_airports": private_withheld}, "rejects": rejects}
+               "class_a": class_a, "volumes": volumes, "airports": facilities, "airways": routes,
+               "airport_counts": {"public_use": sum(a["use"] == "PUBLIC" for a in facilities),
+                                  "private_use": sum(a["use"] == "PRIVATE" for a in facilities)},
+               "rejects": rejects}
     payload["product_id"] = sha(canonical(payload))
     return payload
 
