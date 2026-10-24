@@ -78,6 +78,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
   const [render, setRender] = useState("Hidden");
   const [clock, setClock] = useState(() => Date.now());
   const contextRequest = useRef<AbortController | null>(null);
+  const uasLoaded = useRef(false);
 
   useEffect(() => { onSelectionChange?.(visible); }, [visible, onSelectionChange]);
   useEffect(() => { const timer = setInterval(() => setClock(Date.now()), 60_000); return () => clearInterval(timer); }, []);
@@ -118,17 +119,20 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
     return () => { abort.abort(); clearTimeout(initial); clearInterval(interval); };
   }, [visible, showMetar, showPireps, refreshWeather]);
 
-  // UAS Facility Map grids change on a 56-day FAA cycle: one read per session.
+  // UAS Facility Map grids change on a 56-day FAA cycle: one successful read per session.
+  // The request is keyed to visibility only; its own loading state must not cancel it.
+  // Hiding and re-showing the layer retries after a cancelled or failed read.
   useEffect(() => {
-    if (!visible || !showUas || uas.state === "ready" || uas.state === "loading") return;
+    if (!visible || !showUas || uasLoaded.current) return;
     const abort = new AbortController();
     const start = setTimeout(() => {
       setUas({ state: "loading", value: null });
       readFeed<UasGrid>(UASFM_API_PATH, abort.signal, 16 * 1024 * 1024, value => Array.isArray(value.cells))
-        .then(value => setUas({ state: "ready", value })).catch(() => { if (!abort.signal.aborted) setUas({ state: "error", value: null }); });
+        .then(value => { uasLoaded.current = true; setUas({ state: "ready", value }); })
+        .catch(() => { if (!abort.signal.aborted) setUas({ state: "error", value: null }); });
     }, 0);
     return () => { clearTimeout(start); abort.abort(); };
-  }, [visible, showUas, uas.state]);
+  }, [visible, showUas]);
 
   useEffect(() => {
     if (!visible) return;

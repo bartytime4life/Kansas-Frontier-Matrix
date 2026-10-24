@@ -1213,9 +1213,10 @@ DRONE_GRID_CHANGED = {
 }
 
 
-def test_selected_drone_grid_receipt_binds_only_the_grid_and_tfr_overlay() -> None:
+def test_historical_drone_grid_receipt_binds_only_the_grid_and_tfr_overlay(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-aviation-drone-grid-tfr-overlay-20261024.json")
     receipt, expected = TOOL.reviewed_receipt()
-    assert TOOL.RECEIPT.name == "site-v268-aviation-drone-grid-tfr-overlay-20261024.json"
+    assert hashlib.sha256(TOOL.RECEIPT.read_bytes()).hexdigest() == "058b11ff01dff3f692d79a74e96f610518799dee8f75fddf0aadbe2e4052aba1"
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert predecessor.name == "site-v268-privacy-path-redaction-overlay-20261023.json"
     assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"] == "40e10139fc1eb7101fcecac2528c25c0330191ac3c69852ed28a1ff9fa6a879f"
@@ -1229,7 +1230,9 @@ def test_selected_drone_grid_receipt_binds_only_the_grid_and_tfr_overlay() -> No
     assert set(declarations) == delta and len(receipt["repository_reconciliation"]["changes"]) == len(delta)
     for name in delta:
         entry, before = receipt["comparison"][name], previous["comparison"].get(name)
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        # Bound to the receipt's own declaration: the grid-request fix successor
+        # changes current bytes of two of these files, and the selected receipt records that.
+        digest = declarations[name]["mirror_sha256"]
         assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
         if before is None:
             assert entry["state"] == "repository_only_overlay" and entry["site_sha256"] is None
@@ -1250,6 +1253,42 @@ def test_selected_drone_grid_receipt_binds_only_the_grid_and_tfr_overlay() -> No
     assert receipt["status"] == "REVIEW_ONLY"
     assert receipt["review"] == previous["review"] and receipt["overlay"] == previous["overlay"]
     assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "370e9ad30911fef806aa4fbd2ff25bea6eaf1626"
+    assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert predecessor.name in receipt["rollback"]["mirror"]
+
+
+def test_selected_receipt_binds_only_the_uas_grid_request_fix() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    assert TOOL.RECEIPT.name == "site-v268-aviation-uas-grid-request-fix-20261024.json"
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-aviation-drone-grid-tfr-overlay-20261024.json"
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"] == "058b11ff01dff3f692d79a74e96f610518799dee8f75fddf0aadbe2e4052aba1"
+    previous = json.loads(predecessor.read_text())
+    changed = {"app/aviation-control.tsx", "tests/aviation.test.mjs"}
+    assert set(receipt) == set(previous)
+    assert set(receipt["comparison"]) == set(previous["comparison"])
+    assert {name for name, entry in receipt["comparison"].items() if entry != previous["comparison"][name]} == changed
+    declarations = {entry["path"]: entry for entry in receipt["repository_reconciliation"]["changes"]}
+    assert set(declarations) == changed and len(receipt["repository_reconciliation"]["changes"]) == len(changed)
+    for name in changed:
+        entry, before = receipt["comparison"][name], previous["comparison"][name]
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
+        assert entry["state"] == before["state"] == "repository_only_overlay" and entry["site_sha256"] is None
+        assert declarations[name] == {
+            "path": name, "previous_receipt_sha256": before["mirror_sha256"],
+            "repository_base_sha256": before["mirror_sha256"], "mirror_sha256": digest,
+            "state": entry["state"], "proposed_in_this_change": True,
+        }
+    administrative = {"comparison", "inventory_sha256", "predecessor_receipt", "predecessor_receipt_sha256",
+                      "recorded_at", "repository_reconciled_base", "repository_reconciliation", "rollback", "security", "validation"}
+    for key in previous.keys() - administrative:
+        assert receipt[key] == previous[key], key
+    assert receipt["counts"] == previous["counts"]
+    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "b9e90c5e7dd7800e337a29bed97a0bd3e14b23d1"
     assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
     assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
     inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
