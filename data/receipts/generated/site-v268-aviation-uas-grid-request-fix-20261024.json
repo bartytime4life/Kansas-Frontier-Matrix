@@ -1619,7 +1619,7 @@
       "state": "repository_only_overlay"
     },
     "app/aviation-control.tsx": {
-      "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@b9e90c5e7dd7800e337a29bed97a0bd3e14b23d1: UAS Facility Map grid request no longer cancelled by its own loading state, with a component regression test. Recorded bytes only; no Site deployment implied.",
+      "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@e5ea665b351e13149dd09ff5d11d5bc27d928df8: UAS Facility Map grid request no longer cancelled by its own loading state, with a component regression test. Recorded bytes only; no Site deployment implied.",
       "mirror_sha256": "e604972c7432067ab08f4256258416d37a0aa48aaf0a7d4397d714e2ef0c734f",
       "site_sha256": null,
       "state": "repository_only_overlay"
@@ -3885,14 +3885,14 @@
       "state": "identical"
     },
     "package-lock.json": {
-      "difference": "Proposed repository dependency safety overlay: Next.js and eslint-config-next 16.3.8 to 16.4.2 with npm-regenerated lock metadata. Site source digest is unchanged; review, deployment and hosted equivalence remain separate.",
-      "mirror_sha256": "caf3c477c1c017e9b5aacbad2cbaffb68512098e3df20cb2de646d3c4a305a09",
+      "difference": "Proposed repository dependency safety overlay: Next.js and eslint-config-next 16.3.8 to 16.4.2, then overrides fast-uri 3.1.8 to 3.1.9 and miniflare's undici 7.29.1 to 7.30.1 (Dependabot alerts 134-137 and 140), with npm-regenerated lock metadata. Site source digest is unchanged; review, deployment and hosted equivalence remain separate.",
+      "mirror_sha256": "07123ab5bb8fcb52649740f37848fe786b24b54d27d18ba10c06c87fdab14011",
       "site_sha256": "c976735961394d47a19564c9b2a2b41643647d28a879e82e6f377ac83e1a21db",
       "state": "repository_safety_overlay"
     },
     "package.json": {
-      "difference": "Proposed repository dependency safety overlay: Next.js and eslint-config-next 16.3.8 to 16.4.2 with npm-regenerated lock metadata. Site source digest is unchanged; review, deployment and hosted equivalence remain separate.",
-      "mirror_sha256": "118cf2b5fc62446eb5ad8b895ef0a9a24715e2774e23e88b7fa25947d21b6f7a",
+      "difference": "Proposed repository dependency safety overlay: Next.js and eslint-config-next 16.3.8 to 16.4.2, then overrides fast-uri 3.1.8 to 3.1.9 and miniflare's undici 7.29.1 to 7.30.1 (Dependabot alerts 134-137 and 140), with npm-regenerated lock metadata. Site source digest is unchanged; review, deployment and hosted equivalence remain separate.",
+      "mirror_sha256": "174e94477576b1a38cc6c6af92fbe3a46cc1aff961e8b94756015f414d5359b3",
       "site_sha256": "baf5fdfe197c95fff478431997ca0214c45c603f0733947893f2c23a45d0ccd3",
       "state": "repository_safety_overlay"
     },
@@ -4221,7 +4221,7 @@
       "state": "identical"
     },
     "tests/aviation.test.mjs": {
-      "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@b9e90c5e7dd7800e337a29bed97a0bd3e14b23d1: UAS Facility Map grid request no longer cancelled by its own loading state, with a component regression test. Recorded bytes only; no Site deployment implied.",
+      "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@e5ea665b351e13149dd09ff5d11d5bc27d928df8: UAS Facility Map grid request no longer cancelled by its own loading state, with a component regression test. Recorded bytes only; no Site deployment implied.",
       "mirror_sha256": "d5ddb95c1054afb55c64f69a8b4675c25df9e60fe4d37f4f8b69905d77adfdc3",
       "site_sha256": null,
       "state": "repository_only_overlay"
@@ -5582,7 +5582,7 @@
     ]
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "c4a7c69c5693031216050718f393f700cfd78d21a3b2f1aa5725eb3d1a723117",
+  "inventory_sha256": "6c89daec2fcb9da4a2f37b5488eb6a825817dd6acc0e1392616a02b4ca196bb5",
   "overlay": {
     "scope": "The 258 hashes identify historical v261 carriers now absent from both current source trees. The retained deny list is containment history, not current Site bytes or approval.",
     "withheld_paths": [
@@ -7652,8 +7652,8 @@
       }
     ]
   },
-  "predecessor_receipt": "site-v268-aviation-drone-grid-tfr-overlay-20261024.json",
-  "predecessor_receipt_sha256": "058b11ff01dff3f692d79a74e96f610518799dee8f75fddf0aadbe2e4052aba1",
+  "predecessor_receipt": "site-v268-fast-uri-undici-security-overlay-20261024.json",
+  "predecessor_receipt_sha256": "e5e6fd1bfb0d7143c0875295037e2e59dcf9deeb2aa1371dab5732e6cb8137f4",
   "profile": "kfm.site-mirror-receipt/v1",
   "reconciliation": {
     "base_site": "8b4c03a5ba2c803d1f323460a23778adc8e4c76b",
@@ -7750,12 +7750,12 @@
       ]
     }
   },
-  "recorded_at": "2026-10-24T18:42:43.971339+00:00",
+  "recorded_at": "2026-10-24T19:36:32.735037+00:00",
   "repository_base": "5ff78dacc4f035e92959625155994979a2640c17",
-  "repository_reconciled_base": "b9e90c5e7dd7800e337a29bed97a0bd3e14b23d1",
+  "repository_reconciled_base": "e5ea665b351e13149dd09ff5d11d5bc27d928df8",
   "repository_reconciliation": {
     "authority": "CONTENT_PARITY_ONLY",
-    "base_commit": "b9e90c5e7dd7800e337a29bed97a0bd3e14b23d1",
+    "base_commit": "e5ea665b351e13149dd09ff5d11d5bc27d928df8",
     "changes": [
       {
         "mirror_sha256": "e604972c7432067ab08f4256258416d37a0aa48aaf0a7d4397d714e2ef0c734f",
@@ -7774,7 +7774,7 @@
         "state": "repository_only_overlay"
       }
     ],
-    "delta_basis": "Exact main base b9e90c5e7dd7800e337a29bed97a0bd3e14b23d1 matches the immutable predecessor for every Site path. This proposed successor records the working-tree aviation layer files; it does not invent a final commit or pull request.",
+    "delta_basis": "Exact main base e5ea665b351e13149dd09ff5d11d5bc27d928df8 matches the immutable predecessor for every Site path. This proposed successor records the working-tree aviation layer files; it does not invent a final commit or pull request.",
     "restored_recorded_paths": [],
     "scope": "2 Site paths: 0 repository-only additions and 2 changed paths. Every other comparison entry, Site identity and source hash, all withheld paths and pending review declarations are preserved."
   },
@@ -7796,7 +7796,7 @@
     "source_and_overlay_review": "PENDING"
   },
   "rollback": {
-    "mirror": "Revert this successor, the selector, the regression assertions and the grid-request fix together to select site-v268-aviation-drone-grid-tfr-overlay-20261024.json. Keep historical receipts unchanged.",
+    "mirror": "Revert this successor, the selector, the regression assertions and the grid-request fix together to select site-v268-fast-uri-undici-security-overlay-20261024.json. Keep historical receipts unchanged.",
     "runtime": "Client-only change; reverting restores the request that could stay stuck at Loading.",
     "site": "No hosted source synchronization, deployment, data promotion or publication performed."
   },
