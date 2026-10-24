@@ -74,16 +74,25 @@ export const TRAFFIC_MAX_CACHE_AGE_S = 30;
  * its age at retrieval, plus how long the response sat in the edge cache (from
  * the server's `retrievedAt`, clamped to 0–30 s so a wrong browser clock cannot
  * expire everything), plus the time since this browser received it.
- * Returns the same array when nothing has expired, so callers can skip redraws.
+ * Returns the same array while the kept set is unchanged (including one shared
+ * empty array), so callers keyed on identity redraw only when a position expires.
  */
 export function freshAircraft(load: (Pick<TrafficEnvelope, "retrievedAt" | "records"> & { receivedAt: number }) | null, now: number): readonly Aircraft[] {
   const retrieved = load ? Date.parse(load.retrievedAt) : Number.NaN;
-  if (!load || !Number.isFinite(retrieved) || !Number.isFinite(load.receivedAt)) return [];
+  if (!load || !Number.isFinite(retrieved) || !Number.isFinite(load.receivedAt)) return NO_AIRCRAFT;
   const cachedS = Math.min(TRAFFIC_MAX_CACHE_AGE_S, Math.max(0, (load.receivedAt - retrieved) / 1000));
   const elapsedS = cachedS + Math.max(0, (now - load.receivedAt) / 1000);
   const kept = load.records.filter(record => record.positionAgeS + elapsedS <= TRAFFIC_MAX_POSITION_AGE_S);
-  return kept.length === load.records.length ? load.records : kept;
+  if (!kept.length) return NO_AIRCRAFT;
+  if (kept.length === load.records.length) return load.records;
+  // For one response the kept sets are nested (one age threshold), so an equal count means an equal set.
+  const previous = keptByLoad.get(load);
+  if (previous?.length === kept.length) return previous;
+  keptByLoad.set(load, kept);
+  return kept;
 }
+const NO_AIRCRAFT: readonly Aircraft[] = Object.freeze([]);
+const keptByLoad = new WeakMap<object, readonly Aircraft[]>();
 
 /** Barometric altitude is pressure altitude above 18,000 ft; below it either reported altitude is close to MSL. */
 export const aircraftAltitudeMsl = (aircraft: Pick<Aircraft, "onGround" | "altBaroFt" | "altGeomFt">): number | null =>
