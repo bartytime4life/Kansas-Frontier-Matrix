@@ -4742,7 +4742,7 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .river-map-presentation p { margin: 0; color: #a3bbc6; font-size: 12px; line-height: 1.5; }
 .river-network-details > summary { padding: 8px 0; color: #a4c4cf; font-size: 13px; cursor: pointer; }
 .river-network-details .river-network-signal { margin-top: 6px; }
-@media (max-width: 760px) { .qwen-header-entry .qwen-header-label { display: none; } .atlas-studio .qwen-header-entry { padding: 4px; flex: none; } }
+@media (max-width: 760px) { .atlas-studio .qwen-header-entry { padding: 4px 10px 4px 6px; flex: none; } }
 @media (max-height: 500px) { .map-stage .maplibregl-ctrl-top-right .maplibregl-ctrl-attrib-inner { max-height: 80px; } }
 
 /* On phones and short landscape screens the native rail stays in one top row.
@@ -4792,3 +4792,31 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
   position: fixed; inset: 0; z-index: 1000; width: 100vw; height: 100dvh;
 }
 .map-stage > .map-canvas.maplibregl-pseudo-fullscreen { z-index: 1000; }
+
+/* The Explorer owns both header rows; all fixed surfaces share this height. */
+.atlas-studio { --topbar: 110px; }
+.atlas-studio .topbar { grid-template-areas: "brand search map actions" "features features features features"; grid-template-columns: auto minmax(0, 1fr) auto auto; grid-template-rows: 54px 56px; gap: 0 12px; }
+.atlas-studio .topbar > .welcome-feature-guide { grid-area: features; align-self:stretch; border-top:1px solid #365361; }
+.atlas-studio .qwen-header-entry { flex:none; }
+.qwen-header-entry .qwen-launch-mark { display:grid;place-items:center; }
+.explorer-startup-cover { position:fixed;inset:var(--topbar) 0 0;z-index:219;display:grid;place-items:center;background:#081c29;color:#c7dce4;font-size:14px; }
+.atlas-studio[data-startup="pending"] .explorer-shell { visibility:hidden; }
+@media(max-width:1100px){.atlas-studio .welcome-header-find{display:none}}
+@media(max-width:1000px){
+ .atlas-studio .map-dock-actions>.map-dock-action{display:none}
+ .atlas-studio .map-dock-menu-quick{display:grid}
+}
+@media(max-width:760px){
+ .atlas-studio{--topbar:126px}
+ .atlas-studio .topbar{grid-template-rows:54px 72px;column-gap:5px;padding-inline:8px}
+ .atlas-studio .qwen-header-entry{font-size:12px;gap:6px}
+ .atlas-studio .qwen-header-label{display:inline}
+}
+@media(max-width:500px){
+ .atlas-studio .topbar{grid-template-areas:"search map actions" "features features features";grid-template-columns:minmax(0,1fr) auto auto}
+ .atlas-studio .brand-lockup{display:none}
+ .atlas-studio .scene-panel-toolbar .scene-panel-trigger{width:44px;min-width:44px;padding:0}
+ .atlas-studio .scene-panel-toolbar .scene-panel-trigger strong{display:none}
+ .atlas-studio .map-dock-menu>summary{min-width:44px;padding-inline:4px}
+}
+@media(max-width:380px){.atlas-studio .qwen-header-name{display:none}}

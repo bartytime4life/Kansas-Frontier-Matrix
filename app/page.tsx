@@ -1517,7 +1517,8 @@ export default function Home() {
   const [projection, setProjection] = useState<"mercator" | "globe">("mercator");
   const [helpOpen, setHelpOpen] = useState(false);
   // Welcome is decided after hydration alongside URL/history restoration.
-  const [guideOpen, setGuideOpen] = useState(false);
+  // null owns the first server/client paint until URL and device preferences resolve.
+  const [guideOpen, setGuideOpen] = useState<boolean | null>(null);
   // While the welcome covers the map, `?` reveals the map's source credits instead.
   const [welcomeSourcesOpen, setWelcomeSourcesOpen] = useState(false);
   const [repositoryOpen, setRepositoryOpen] = useState(false);
@@ -3879,6 +3880,9 @@ export default function Home() {
   const openQwenCompanion = useCallback((returnElement?: HTMLElement | null, focusTarget: "close" | "composer" = "close") => {
     qwenReturnRef.current = returnElement
       ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    setPrimaryWorkspace("map");
+    setGuideOpen(false);
+    setWelcomeSourcesOpen(false);
     setQwenOpen(true);
     setHelpOpen(false);
     dismissMapUtilityWithoutFocus();
@@ -8887,7 +8891,7 @@ export default function Home() {
       if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
     }));
   };
-  const welcomeShowing = guideOpen && primaryWorkspace === "map";
+  const welcomeShowing = guideOpen === true && primaryWorkspace === "map";
   const toggleExplorerGuide = () => {
     if (welcomeShowing) { setWelcomeSourcesOpen((open) => !open); return; }
     setWelcomeSourcesOpen(false); // every welcome opens with the sources hidden
@@ -8989,7 +8993,8 @@ export default function Home() {
   </>;
 
   return (
-    <div className="site-root atlas-studio" data-welcome-sources={welcomeShowing && welcomeSourcesOpen ? "open" : undefined}>
+    <div className="site-root atlas-studio" data-startup={guideOpen === null ? "pending" : "ready"} data-welcome-sources={welcomeShowing && welcomeSourcesOpen ? "open" : undefined}>
+      {guideOpen === null && <div className="explorer-startup-cover" role="status"><span>Opening the atlas…</span></div>}
       <a className="skip-link" href="#map-canvas" onClick={returnToPrimaryMap}>Skip to the map</a>
       <header ref={explorerHeaderRef} className="topbar">
         <div className="brand-lockup">
@@ -8998,8 +9003,7 @@ export default function Home() {
         </div>
         <div className="atlas-scope-strip" aria-label="Current investigation">
           <button type="button" className="atlas-scope-control welcome-header-find" onClick={() => openAtlasComposer("find")} aria-controls="qwen-map-panel" title="Find places, layers and sources · shortcut /">Find a county or place</button>
-          <button type="button" className="welcome-ai-entry qwen-header-entry" aria-label="Chat with KFM about this map view" title="Chat with KFM · AI assistant" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel"><span className="qwen-launch-mark" aria-hidden="true">AI</span><span className="qwen-header-label">Chat with KFM</span></button>
-          <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} />
+          <button type="button" className="welcome-ai-entry qwen-header-entry" aria-label="Chat with KFM about this map view" title="Chat with KFM · AI assistant" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget, "composer")} aria-expanded={qwenOpen} aria-controls="qwen-map-panel"><span className="qwen-launch-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M20 11.5a8 8 0 0 1-8 8H5l-4 3 1.5-6A8 8 0 1 1 20 11.5Z"/><path d="M6.5 9h9M6.5 13h6"/></svg></span><span className="qwen-header-label">Chat<span className="qwen-header-name"> with KFM</span></span></button>
           <span className="welcome-header-context"><strong>{selectedLabel}</strong><br /><small>Map time {temporalScopeLabel} · {selectedMapLayerCount} layers</small></span>
         </div>
           <span className="sr-only" role="status">{sourceIssues.length ? `${sourceIssues.length} selected sources need attention. Open Layers, then Source status for recovery.` : ""}</span>
@@ -9082,6 +9086,7 @@ export default function Home() {
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. Map controls support coordinate navigation and camera orientation; Inspect has a keyboard-accessible feature list. Terrain uses an external display DEM when available. The comparison tool accepts browser-local road-year linework; display context is not an admitted KFM source.</p>
           <button className="map-guide-start" type="button" onClick={openMapGuideDiagnostics}>Map diagnostics</button>
         </aside>}
+        <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} />
       </header>
 
       {primaryWorkspace !== "map" && workspaceSnapshot && <ReportStoryWorkspaces
@@ -9827,7 +9832,7 @@ export default function Home() {
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
-          <ExplorerGuide open={guideOpen && primaryWorkspace === "map"} motionEnabled={dynamicEffects} onMotionChange={setDynamicEffects} onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
+          <ExplorerGuide open={guideOpen === true && primaryWorkspace === "map"} motionEnabled={dynamicEffects} onMotionChange={setDynamicEffects} onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
 
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />

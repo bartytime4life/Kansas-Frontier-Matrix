@@ -19,7 +19,7 @@ test('all catalogue subjects and existing tool links are intentional destination
 });
 
 test('source-status compatibility, explicit views and shared URLs bypass welcome', () => {
-  for (const search of ['layers=sources', 'maptab=localAtlas', 'topic=all', 'layerView=imagery', 'layerView=selected', 'mapui=open', 'tm=comparison', 'c=-98.2,38.6&z=7&t=2026', 'f=shared-record']) {
+  for (const search of ['layers=sources', 'maptab=localAtlas', 'topic=all', 'layerView=imagery', 'layerView=selected', 'mapui=open', 'tm=comparison', 'kfm-chat=1', 'c=-98.2,38.6&z=7&t=2026', 'f=shared-record']) {
     assert.equal(destination(search), true, search);
   }
 });

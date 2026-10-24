@@ -4,7 +4,6 @@ import { createPortal } from 'react-dom';
 import { TOPIC_STRUCTURE } from '../layer-workspaces';
 import { capabilityPreviews, capabilityNote } from './capability-catalog.mjs';
 import { CapabilityPreview } from './CapabilityPreview.jsx';
-import { WelcomeFeatureGuide } from './FeatureGuide.jsx';
 import { DomainStage } from './DomainStage.jsx';
 import { SCENE_CATALOG, SCENE_LABEL } from './scenes/catalog.mjs';
 import { isolateModalBackground, modalFocusableElements } from '../modal-background';
@@ -44,7 +43,6 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   function openPanel(name){trigger.current=document.activeElement;setDetail(null);setPanel(name);}
   function closePanel(){setDetail(null);setPanel(null);}
   function pin(id){setPinned(id);setActive(null);setLast(id);closePanel();}
-  function feature(destination){if(destination==='sources')openPanel('data');else run(()=>onTopic(destination));}
   useEffect(()=>{
     const media=window.matchMedia('(prefers-reduced-motion: reduce)'),change=()=>setReduced(media.matches),visibility=()=>setHidden(document.hidden);
     media.addEventListener('change',change);document.addEventListener('visibilitychange',visibility);
@@ -84,7 +82,6 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
         <h1 id="living-welcome-title">Kansas is full of <em>stories.</em></h1>
         <p>Explore the skies, the land, and the stories beneath.</p>
         <div className="welcome-hero-actions"><form onSubmit={e=>{e.preventDefault();run(()=>onSearch(query.trim()));}}><label><span aria-hidden="true">⌕</span><span className="sr-only">Find a county or place</span><input data-guide-autofocus="" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find a county or place" maxLength={180}/></label><button type="submit" className="welcome-primary">Explore <span aria-hidden="true">→</span></button></form><button type="button" className="welcome-ask" onClick={()=>run(()=>onAction('qwen'))}><span aria-hidden="true">✧</span><span><strong>Ask the atlas</strong><small>Start with a question</small></span><span aria-hidden="true">↗</span></button></div>
-        <div className="welcome-mobile-guide"><WelcomeFeatureGuide onNavigate={feature} paused={paused}/></div>
       </div>
       </div>
       <p className="discovery-hint"><strong>Choose a topic or start with a place.</strong> <span>17 domains · hover to preview, choose one for options and source limits.</span> <button type="button" onClick={()=>openPanel('credits')}>Scene notes</button><span className="discovery-scene"><small>{SCENE_LABEL}</small><b key={`${control}-${beat.id===control?beat.index:0}`}>{SCENE_CATALOG[control]?.beats[beat.id===control?beat.index:0]?.[1]}</b></span></p>

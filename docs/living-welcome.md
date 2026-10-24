@@ -1,5 +1,73 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Header, Chat and first paint · 2026-10-24 candidate
+
+**CONFIRMED in the isolated candidate; production publication is not established.**
+The current public page still displayed All questions & tools during this review,
+even though PR #5447 removed it from the hosted source. Do not infer a deployed
+revision from that observation. This change builds on that removal.
+
+The information carousel now occupies the full second header row. Its text is
+unmasked and unclamped, with separate 44px Previous, Pause/Resume and Next
+controls. Hover, keyboard focus, hidden tabs, reduced motion and the shared
+animation preference still suspend automatic rotation. Explicit pause survives
+those temporary interruptions. The offscreen item is inert. Manual navigation
+does not activate a layer until the current tip is chosen. The duplicate
+carousel inside the phone welcome and its exclusive styles are removed.
+
+Chat retains one header home, uses a conversation symbol, and opens the existing
+composer with keyboard focus. It reveals the map workspace when opened from a
+retained Reports or Stories workspace without discarding their drafts. Opening Chat dismisses the welcome and its source
+strip; Escape/Close returns focus to the triggering control. Find shares this
+handoff. Explicit kfm-chat=1 links bypass the welcome. No question is sent merely
+by opening Chat, and evidence selection, source policies and inference settings
+are unchanged. In the isolated preview inference correctly reported Awaiting
+owner setup; successful answers were not tested.
+
+The initial guide state is unresolved until URL/history and device preferences
+are restored. Server markup and the identical first client render show an opaque
+Opening the atlas cover and hide the map shell. The decision then removes the
+cover in the same commit that mounts the graphical welcome or reveals an
+intentional destination. This avoids exposing the underlying map while waiting
+for the decision, without reintroducing an alternate chooser. Existing explicit
+opt-out and destination handling remain; device storage is not cleared.
+
+Geometry is owned by the Explorer's existing globals.css lane: 110px desktop
+header, 126px phone header, shared by map, welcome and panel offsets. Below 1000px,
+Time/Layers/Places remain in the Map menu; below 500px Effects uses its labelled
+icon button, and at 380px or less Chat keeps a shorter visible label and full
+accessible name. The tradeoff is less vertical map space for a readable tip row.
+
+Placement basis: Directory Rules.pdf responsibility protocol and compatibility
+handling, accepted ADR-0029 v1.5 and canonical docs/doctrine/directory-rules.md,
+plus the verified GoDaddy composition's existing app/, tests/ and docs/ lanes.
+No root, policy, contract, source registry or data lifecycle changes. The original
+Sites composition and synced project reference files are untouched.
+
+Source base: a0-hosted-ai-web-20261017 at
+291cbf394209520b38af72fcad91d7dfc5da1aee; all 1,537 source blobs matched remote
+Git identities before editing. No open PRs were returned during overlap checks.
+
+Validation: final production build, TypeScript and whitespace checks passed;
+full Node suite: 1,757 PASS, 19 SKIP, zero failures. Fifty-five focused navigation,
+welcome, pause and focus regressions passed. Existing tests that still extracted
+the retired guide's callbacks/styles now exercise the retained graphical welcome.
+A new Chat dependency was added to its existing navigation harness.
+
+Native browser inspection of the candidate covered 320, 390, 768 and 1280px
+widths, all six tip texts on the narrow phone, 44px tip targets, Chat from the
+welcome, composer focus and Escape return. Server HTML returned status 200,
+data-startup=pending and the cover, with no retired chooser text. These checks do
+not prove a frame-by-frame slow-network startup. The existing CI browser suite
+now includes first-frame sampling, SSR cover checks and four responsive Chat
+cases; that automated browser execution and independent review remain open.
+The first terminal suite attempt was constrained by EPERM on listening sockets;
+the reported complete result is the subsequent preview-capable runtime run.
+
+Rollback: revert this candidate commit. No migration, storage deletion, host
+configuration, merge or publication is part of this change.
+
+
 ## Single welcome surface · 2026-10-23 candidate
 
 **CONFIRMED source change; candidate browser appearance NEEDS VERIFICATION.**

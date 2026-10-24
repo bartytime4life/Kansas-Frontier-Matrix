@@ -63,10 +63,11 @@ test("the map exposes one zoom control set and no fixed place label", async () =
 test("quick start routes only to existing controls and tolerates blocked storage", async () => {
   const guide = await read("app/explorer-guide.tsx");
   const page = await read("app/page.tsx");
-  assert.match(guide, /role="dialog" aria-modal="false"/);
-  assert.match(guide, /panelRef\.current\?\.contains\(document\.activeElement\)/, "Escape only closes when focus is inside");
+  const welcome = await read("app/living-welcome/welcome.jsx");
+  assert.match(welcome, /role="dialog" aria-modal="false"/);
+  assert.match(welcome, /root\.current\?\.contains\(event\.target\)/, "Escape only closes when focus is inside the retained welcome or its dialog");
   assert.doesNotMatch(guide, /fetch\(|import\(.*api/);
-  assert.match(page, /<ExplorerGuide open=\{guideOpen && primaryWorkspace === "map"\}/);
+  assert.match(page, /<ExplorerGuide open=\{guideOpen === true && primaryWorkspace === "map"\}/);
   assert.match(page, /className="guide-trigger" type="button" aria-label=\{welcomeShowing \? "Map sources" : "Open the quick start guide"\}.*aria-pressed=\{welcomeShowing \? welcomeSourcesOpen : undefined\}/);
   // While the welcome is showing, `?` reveals the map sources instead of closing it.
   assert.match(page, /if \(welcomeShowing\) \{ setWelcomeSourcesOpen\(\(open\) => !open\); return; \}/);
@@ -96,7 +97,8 @@ test("theme loads last, keeps tested geometry in globals and honours reduced mot
   assert.ok(layout.indexOf('import "./explorer-theme.css"') > layout.indexOf('import "./map-layers.css"'));
   for (const token of ["--bg", "--panel", "--gold", "--water", "--kfm-radius-m", "--kfm-glass"]) assert.match(theme, new RegExp(`${token}:`));
   assert.doesNotMatch(theme, /--topbar:|--global-header-height:|--map-overlay-top:/, "layout tokens stay in globals.css");
-  assert.match(theme, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.explorer-guide \{ animation: none; \}/);
+  const welcomeCss = await read("app/living-welcome/welcome.css");
+  assert.match(welcomeCss, /@media\(prefers-reduced-motion:reduce\)[\s\S]*\.welcome-feature-strip[^{}]*\{animation:none!important;/);
   assert.match(theme, /\.explorer-shell\[data-timeline="false"\] \.timeline-panel \{ transform: translateY\(calc\(100% \+ var\(--status\) \+ 16px\)\)/);
   const banner = theme.match(/\.runtime-degraded-banner \{([^}]+)\}/)?.[1] ?? "";
   assert.doesNotMatch(banner, /(^|[\s;])(pointer-events|top|left|width)\s*:/, "notice geometry is owned by globals.css");

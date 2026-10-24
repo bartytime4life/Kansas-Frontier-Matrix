@@ -42,10 +42,10 @@ test('source status reveals the map before frame focus and retains the supplied 
 
 // Execute the actual guide click callback so dismissal's synchronous focus return
 // is part of the regression, rather than calling the destination in isolation.
-const guideAst=ts.createSourceFile('explorer-guide.tsx',await readFile('app/explorer-guide.tsx','utf8'),ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);
+const guideAst=ts.createSourceFile('welcome.jsx',await readFile('app/living-welcome/welcome.jsx','utf8'),ts.ScriptTarget.ES2022,true,ts.ScriptKind.JSX);
 let guideActionClick,helpOpenEffect;
 function guideVisit(node){
-  if(ts.isArrowFunction(node)&&node.getText(guideAst).includes('onAction(step.action); onClose(remember());'))guideActionClick=node.getText(guideAst);
+  if(ts.isVariableDeclaration(node)&&node.name.getText(guideAst)==='run')guideActionClick=node.initializer.getText(guideAst);
   ts.forEachChild(node,guideVisit);
 }
 guideVisit(guideAst);
@@ -69,7 +69,8 @@ test('guide Layers and Time enter committed destinations after dismissal, even w
       setGuideOpen:v=>state.open=v,setWelcomeSourcesOpen:v=>state.sources=v,writeExplorerGuideDismissed:()=>{},
       document:{activeElement:{closest:()=>({})},querySelector:()=>({focus:()=>focus.push('guide-trigger')})},
     });
-    evaluate(guideActionClick,{onAction:route,onClose:close,step:{action},remember:()=>true})();
+    assert.ok(guideActionClick,'the graphical welcome owns the action and dismissal callback');
+    evaluate(guideActionClick,{onClose:close,remember:true})(()=>route(action));
     assert.equal(state.open,false);assert.deepEqual(focus,['guide-trigger']);
     assert.equal(frames.length,1,'focus must be scheduled after guide dismissal and panel commit');
     leftPanelRef.current={};timelineRef.current={};frames[0]();
