@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/runbook/aviation-airspace-layers-20261022
 title: Airspace, airport, drone and aviation weather layers
-version: v0.2
+version: v0.3
 type: runbook
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-10-22
-updated: 2026-10-22
+updated: 2026-10-24
 owning_root: docs/
 responsibility: Plan, sources, rebuild steps, verification and rollback for the Site aviation layers.
 truth_posture: CONFIRMED local implementation, AWC specification and bounded PIREP response readback; rendered and hosted acceptance NOT VERIFIED; no deployment or release.
@@ -15,8 +15,10 @@ policy_label: public
 
 # Airspace, airport, drone and aviation weather layers
 
-Follows `aviation-intake-20261021.md`. That runbook's held APT candidate lane,
-its public hold decision and the disabled surveillance adapters are unchanged.
+Follows `aviation-intake-20261021.md`. That runbook's held APT candidate lane
+and its public hold decision are unchanged. Its disabled surveillance adapters
+were changed on 2026-10-24 (see the live traffic follow-up below): adsb.lol and
+adsb.fi are display-only; OpenSky stays denied.
 This change adds **display context** in the Site, the same evidence role the
 Site uses for NOAA radar: not a KFM release, not navigation.
 
@@ -27,11 +29,11 @@ Site uses for NOAA radar: not a KFM release, not navigation.
 | Airspace shells (3D), technical labels | FAA NASR Class B/C/D/E, MOA, restricted, alert volumes, cycle 2026-10-29 | Built: pinned product + extrusion layers |
 | Drone fly zones, SFC–400 ft AGL | Derived from the same volumes and 14 CFR 107 / 49 U.S.C. 44809 | Built: rule slabs + point verdict |
 | "What can fly here at each height" | Volumes + 14 CFR 71 defaults + 14 CFR 91 requirements | Built: airspace column inspector |
-| Airports and runways | NASR APT public-use facilities, runway ends, ASOS/AWOS type | Built: points, runway lines |
+| Airports and runways | NASR APT open facilities, public and private use, runway ends, ASOS/AWOS type | Built: points, runway lines; private use added 2026-10-24 |
 | Air traffic structure | NASR Victor/Jet/T/Q airway legs with MEA/MAA | Built: airway lines |
 | Airport weather | NOAA/NWS AWC METAR (ASOS/AWOS) | Built: live route, flight category, cloud-ceiling discs, density altitude, VFR check |
 | Observed traffic signal | NOAA/NWS AWC PIREP | Built: live route, reports at altitude |
-| Live aircraft positions | OpenSky / adsb.lol | **Not built**: rights gates in the intake runbook still apply |
+| Live aircraft positions | adsb.lol, else adsb.fi (public ADS-B receiver networks) | Built 2026-10-24: `/api/aviation/traffic`, aircraft at altitude tagged with occupied airspace; OpenSky still denied |
 | UAS Facility Map grid ceilings | FAA UASFM ArcGIS service | Built 2026-10-24: `/api/aviation/uas-grid`, 3D LAANC cells, ceiling in the point inspector |
 | TFRs | FAA TFR list | Built 2026-10-24 as a Kansas list and inspector warning; boundaries not drawn (the list has no geometry) |
 | NOTAM activation | FAA NOTAM services | **Not built** |
@@ -170,6 +172,47 @@ passed); topology PASS with 0 new drift.
 Rollback: revert the follow-up commit, which restores
 `site-v268-privacy-path-redaction-overlay-20261023.json` as the selected
 mirror receipt. The routes store nothing.
+
+## Live traffic and private-use airports follow-up — October 24, 2026
+
+Owner direction: "Use any public record. If it is publicly available than it
+is within the use of the public", then "Allow it all" for the held items.
+
+- `/api/aviation/traffic` reads `api.adsb.lol/v2/point/38.5/-98.35/250`, and
+  if that fails, `opendata.adsb.fi/api/v3/lat/38.5/lon/-98.35/dist/250`.
+  adsb.fi documents its `/v2/lat` route as deprecated in favour of v3 (250 NM
+  maximum, 1 request per second); adsb.lol needs no key today but says one will
+  be required in the future. Both accept `ac` or `aircraft` lists. Positions
+  older than 60 seconds, outside the Kansas region plus ~50 NM, or with
+  malformed identifiers are dropped. A 15-second shared cache keeps viewers
+  well under provider limits. Responses name the provider and its terms
+  (adsb.lol: ODbL 1.0; adsb.fi: personal, non-commercial use with attribution).
+- `connectors/faa/capture.py:surveillance_decision` records the display-only
+  allowance (`ALLOW_DISPLAY_ONLY`, `OWNER_DIRECTED_PUBLIC_RECEIVER_DATA`):
+  nothing is ingested, stored or admitted as evidence. OpenSky remains
+  `DENY`/`WRITTEN_LICENSE_REQUIRED`.
+- The airspace product moved to profile v2: all 533 open facilities in the
+  region (188 public use, 345 private use) with a `use` flag and
+  `airport_counts`. Heliports are listed but never anchor ground heights (their
+  elevation can be a rooftop); the 278 added non-heliport anchors moved 28
+  volumes to a closer ground reference. New product
+  `sha256:66fd3695e5a481625f8d16923117df47bbbab015e358bdeea21ce9b317c66b86`,
+  file SHA-256 `ada5a80a5c54f8af52d1c466504ed08244f3dd3576ce50820936a857dccddc13`,
+  rebuilt from the same verified package inputs.
+- Neither traffic host was reachable from the build environment; the parser
+  follows the readsb JSON format and must be confirmed on the first hosted run.
+
+Verification: build; typecheck; lint (0 errors, 77 unchanged warnings); full
+Site suite 1,431 tests (1,429 passed, 0 failed, 2 root-refusal skips); local
+Worker smoke 110 checks across 79 routes with 14 provider-only routes; mirror
+parity against
+`site-v268-aviation-live-traffic-private-airports-overlay-20261024.json`
+(899 files); `tests/qa/test_site_mirror.py` and FAA connector tests (141
+passed); topology PASS with 0 new drift.
+
+Rollback: revert the follow-up commits, which restores
+`site-v268-aviation-uas-grid-request-fix-20261024.json` as the selected mirror
+receipt and the v1 product. The route stores nothing.
 
 ## Decision for the owner
 
