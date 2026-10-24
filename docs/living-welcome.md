@@ -83,6 +83,11 @@ The first follow-up run passed all county-search layouts, then found an aviation
 test still clicking the former direct Layers button on compact screens. Its
 navigation helper now chooses the rendered direct/mobile entry or the actual
 Map-menu Layers entry, retaining strict native pointer reachability checks.
+The next run passed that suite, first-frame startup sampling and all five new
+Chat/tip layouts, then found source credits overlapping time at 911×600. The
+existing horizontal native-control arrangement now applies through 640px height,
+keeping the information button stable and its scrollable credits above time.
+The original credit/time clearance assertion remains unchanged.
 
 Rollback: revert the candidate commits. No migration, storage deletion, host
 configuration, merge or publication is part of this change.

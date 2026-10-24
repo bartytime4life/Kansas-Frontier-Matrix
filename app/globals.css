@@ -4745,16 +4745,16 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 @media (max-width: 760px) { .atlas-studio .qwen-header-entry { padding: 4px 10px 4px 6px; flex: none; } }
 @media (max-height: 500px) { .map-stage .maplibregl-ctrl-top-right .maplibregl-ctrl-attrib-inner { max-height: 80px; } }
 
-/* On phones and short landscape screens the native rail stays in one top row.
+/* On phones and constrained-height screens the native rail stays in one top row.
    Attribution opens below it without moving navigation or observation controls. */
-@media (max-width: 760px), (max-height: 480px) {
+@media (max-width: 760px), (max-height: 640px) {
   .map-stage .maplibregl-ctrl-top-right { display: flex; align-items: flex-start; gap: 6px; }
   .map-stage .maplibregl-ctrl-top-right > .maplibregl-ctrl { margin: 0; flex: none; }
   .map-stage .maplibregl-ctrl-top-right .maplibregl-ctrl-attrib { width: 44px; max-width: 44px; padding: 0; }
   .map-stage .maplibregl-ctrl-top-right .maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-inner { position: absolute; right: 0; top: 50px; bottom: auto; width: min(300px, calc(100vw - 24px)); box-sizing: border-box; max-height: min(150px, 35dvh); padding: 12px; border: 1px solid #55767e; border-radius: 12px; background: #102b33; box-shadow: 0 12px 30px #0004; }
 }
 
-@media (max-width: 760px), (max-height: 480px) {
+@media (max-width: 760px), (max-height: 640px) {
   .map-stage .maplibregl-ctrl-top-right:not(.map-information-home) { right: 62px; }
   .map-stage .map-information-home { top: var(--map-overlay-top); right: 8px; }
 }
@@ -4778,7 +4778,7 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
 .map-stage .map-information-home .maplibregl-ctrl-attrib-button { background-color: transparent !important; filter: invert(.9); }
 
 /* Native fullscreen owns the credit control; no external-host gap is needed. */
-@media (max-width: 760px), (max-height: 480px) {
+@media (max-width: 760px), (max-height: 640px) {
   .map-stage .map-canvas:fullscreen .maplibregl-ctrl-top-right { right: 8px; }
   .map-stage .map-canvas.maplibregl-pseudo-fullscreen .maplibregl-ctrl-top-right { right: 8px; }
   .map-stage .map-canvas:-webkit-full-screen .maplibregl-ctrl-top-right { right: 8px; }
