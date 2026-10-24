@@ -13,12 +13,12 @@ import {
   type AviationWeatherEnvelope, type MetarObservation, type PirepReport,
 } from "./aviation-weather";
 import { AVIATION_TRAFFIC_API_PATH, TRAFFIC_ALTITUDE_COLORS, aircraftAltitudeMsl, freshAircraft, trafficFeatures, type TrafficEnvelope } from "./aviation-traffic";
-import { TFR_API_PATH, TFR_HOME, UASFM_API_PATH, UAS_CEILING_COLORS, uasCeilingAt, uasFeatures, type TfrEntry, type UasCell } from "./aviation-drone-data";
+import { TFR_API_PATH, TFR_COLOR, TFR_HOME, UASFM_API_PATH, UAS_CEILING_COLORS, formatTfrLimit, tfrFeatures, tfrsAtPoint, uasCeilingAt, uasFeatures, type TfrEntry, type TfrShape, type UasCell } from "./aviation-drone-data";
 
 const PREFIX = "kfm-aviation";
-const SOURCES = ["airspace", "drone", "uas", "airways", "runways", "airports", "metar", "ceilings", "pireps", "traffic", "pick"].map(name => `${PREFIX}-${name}`);
+const SOURCES = ["airspace", "drone", "uas", "airways", "runways", "airports", "metar", "ceilings", "pireps", "tfr", "traffic", "pick"].map(name => `${PREFIX}-${name}`);
 const LAYERS = ["airspace-3d", "airspace-edge", "airspace-label", "drone-3d", "drone-edge", "uas-3d", "uas-label", "airways-line", "airways-label", "runways-line",
-  "airports-dot", "airports-label", "metar-dot", "metar-label", "ceilings-3d", "pireps-3d", "traffic-3d", "traffic-label", "pick-dot"].map(name => `${PREFIX}-${name}`);
+  "airports-dot", "airports-label", "metar-dot", "metar-label", "ceilings-3d", "pireps-3d", "tfr-3d", "tfr-edge", "tfr-label", "traffic-3d", "traffic-label", "pick-dot"].map(name => `${PREFIX}-${name}`);
 const WEATHER_REFRESH_MS = 5 * 60_000;
 const TRAFFIC_REFRESH_MS = 20_000;
 const TRAFFIC_EXPIRY_TICK_MS = 5_000;
@@ -30,7 +30,7 @@ type Picked = Readonly<{ lon: number; lat: number; label: string }>;
 type WeatherState<T> = Readonly<{ state: LoadState; envelope: AviationWeatherEnvelope<T> | null; message: string }>;
 type FeedState<T> = Readonly<{ state: LoadState; value: T | null }>;
 type UasGrid = Readonly<{ retrievedAt: string; cells: readonly UasCell[] }>;
-type TfrList = Readonly<{ retrievedAt: string; kansas: readonly TfrEntry[]; total: number }>;
+type TfrList = Readonly<{ retrievedAt: string; kansas: readonly TfrEntry[]; total: number; shapes: readonly TfrShape[]; detailsChecked: number; detailsFailed: number }>;
 
 /** Same-origin read of one aviation route; `check` rejects any shape the route did not promise. */
 async function readFeed<T>(path: string, signal: AbortSignal, maxBytes: number, check: (value: Record<string, unknown>) => boolean): Promise<T> {
@@ -144,7 +144,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
   useEffect(() => {
     if (!visible) return;
     const abort = new AbortController();
-    const load = () => readFeed<TfrList>(TFR_API_PATH, abort.signal, 1024 * 1024, value => Array.isArray(value.kansas))
+    const load = () => readFeed<TfrList>(TFR_API_PATH, abort.signal, 4 * 1024 * 1024, value => Array.isArray(value.kansas) && Array.isArray(value.shapes) && typeof value.detailsFailed === "number")
       .then(value => setTfrs({ state: "ready", value })).catch(() => { if (!abort.signal.aborted) setTfrs({ state: "error", value: null }); });
     const initial = setTimeout(load, 0), interval = setInterval(load, TFR_REFRESH_MS);
     return () => { abort.abort(); clearTimeout(initial); clearInterval(interval); };
@@ -165,6 +165,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
   // Each position expires 60 s after it was observed, between refreshes and if a refresh stalls.
   const trafficRecords = useMemo(() => showTraffic ? freshAircraft(traffic.value, trafficNow) : [], [showTraffic, traffic.value, trafficNow]);
   const uasCells = useMemo(() => uas.value?.cells ?? [], [uas.value]);
+  const tfrShapes = useMemo(() => tfrs.value?.shapes ?? [], [tfrs.value]);
   const metarRecords = useMemo(() => showMetar ? metar.envelope?.records ?? [] : [], [showMetar, metar.envelope]);
   const pirepRecords = useMemo(() => showPireps ? pireps.envelope?.records ?? [] : [], [showPireps, pireps.envelope]);
 
@@ -195,6 +196,8 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
       add("ceilings", showCeilings ? weatherLayers.ceilings : { type: "FeatureCollection", features: [] });
       add("pireps", pirepFeatures(pirepRecords, groundAt, exaggeration));
       add("uas", showUas ? uasFeatures(uasCells, exaggeration) : { type: "FeatureCollection", features: [] });
+      // TFRs are always drawn while the layer is visible: they are the restriction a drone or pilot most needs to see.
+      add("tfr", tfrFeatures(tfrShapes, groundAt, exaggeration));
       add("traffic", trafficFeatures(trafficRecords, groundAt, exaggeration, (aircraft, ground) => occupiedAirspace(context, aircraft.lon, aircraft.lat, aircraftAltitudeMsl(aircraft) ?? ground, ground)));
       add("pick", { type: "FeatureCollection", features: picked ? [{ type: "Feature", geometry: { type: "Point", coordinates: [picked.lon, picked.lat] }, properties: {} }] : [] });
       const font = ["Noto Sans Regular"];
@@ -235,6 +238,12 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
         "fill-extrusion-color": ["get", "color"], "fill-extrusion-base": ["get", "base"], "fill-extrusion-height": ["get", "top"], "fill-extrusion-opacity": 0.55 } });
       map.addLayer({ id: `${PREFIX}-pireps-3d`, type: "fill-extrusion", source: `${PREFIX}-pireps`, paint: {
         "fill-extrusion-color": ["get", "color"], "fill-extrusion-base": ["get", "base"], "fill-extrusion-height": ["get", "top"], "fill-extrusion-opacity": 0.85 } });
+      map.addLayer({ id: `${PREFIX}-tfr-3d`, type: "fill-extrusion", source: `${PREFIX}-tfr`, paint: {
+        "fill-extrusion-color": ["get", "color"], "fill-extrusion-base": ["get", "base"], "fill-extrusion-height": ["get", "top"], "fill-extrusion-opacity": 0.4 } });
+      map.addLayer({ id: `${PREFIX}-tfr-edge`, type: "line", source: `${PREFIX}-tfr`, paint: { "line-color": TFR_COLOR, "line-width": 2.5, "line-dasharray": ["literal", [4, 2]] } });
+      map.addLayer({ id: `${PREFIX}-tfr-label`, type: "symbol", source: `${PREFIX}-tfr`, layout: {
+        "text-font": font, "text-field": ["get", "label"], "text-size": 11, "text-optional": true },
+        paint: { "text-color": "#9b0014", "text-halo-color": "#ffffff", "text-halo-width": 1.5 } });
       map.addLayer({ id: `${PREFIX}-traffic-3d`, type: "fill-extrusion", source: `${PREFIX}-traffic`, paint: {
         "fill-extrusion-color": ["get", "color"], "fill-extrusion-base": ["get", "base"], "fill-extrusion-height": ["get", "top"], "fill-extrusion-opacity": 0.9 } });
       map.addLayer({ id: `${PREFIX}-traffic-label`, type: "symbol", source: `${PREFIX}-traffic`, minzoom: 8, layout: {
@@ -261,7 +270,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setRender("Map rendering unavailable"); remove();
     }
-  }, [mapRef, styleReady, visible, context, groups, showDrone, showAirports, showPrivate, airwayKinds, showCeilings, metarRecords, pirepRecords, exaggeration, picked, showUas, uasCells, trafficRecords]);
+  }, [mapRef, styleReady, visible, context, groups, showDrone, showAirports, showPrivate, airwayKinds, showCeilings, metarRecords, pirepRecords, exaggeration, picked, showUas, uasCells, trafficRecords, tfrShapes]);
 
   // Point inspection is opt-in so the page's own click tools keep working.
   useEffect(() => {
@@ -297,8 +306,9 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
         const ground = nearestAirport(anchors, item.record.lon, item.record.lat)?.airport.elevation_ft ?? 0;
         return { ...item, msl, airspace: msl === null ? "on the surface" : occupiedAirspace(context, item.record.lon, item.record.lat, msl, ground) };
       });
-    return { near, groundFt, column, drone, station: usable, vfr, routes, reports, laanc, aircraft };
-  }, [context, picked, metarRecords, pirepRecords, uasCells, trafficRecords]);
+    const restrictions = tfrsAtPoint(tfrShapes, picked.lon, picked.lat);
+    return { near, groundFt, column, drone, station: usable, vfr, routes, reports, laanc, aircraft, restrictions };
+  }, [context, picked, metarRecords, pirepRecords, uasCells, trafficRecords, tfrShapes]);
 
   const toggleGroup = (group: AirspaceGroup, on: boolean) => setGroups(current => { const next = new Set(current); if (on) next.add(group); else next.delete(group); return next; });
   const toggleAirway = (kinds: AirwaySegment["type"][], on: boolean) => setAirwayKinds(current => { const next = new Set(current); for (const kind of kinds) { if (on) next.add(kind); else next.delete(kind); } return next; });
@@ -307,7 +317,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
   return <section className="official-context-row" aria-label="Airspace, airports and aviation weather">
     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visible} aria-label={visible ? "Hide airspace and aviation layers" : "Show airspace and aviation layers"} onChange={event => { setVisible(event.target.checked); if (event.target.checked) setRender("Waiting for map frame"); }} /><span aria-hidden="true" /></label><i style={{ "--swatch": AIRSPACE_COLORS.CLASS_C } as React.CSSProperties} /><div><strong>Airspace, airports &amp; aviation weather</strong><small>FAA NASR · NOAA AWC · {visible ? shownRender : "Off"}</small></div></div>
     <details className="specialty-layer-details"><summary>Airspace shells, drone zones, weather &amp; controls</summary><div className="official-context-option-body">
-      <p><strong>Not for navigation, flight planning or drone authorization.</strong> Check current FAA charts, NOTAMs and TFRs, and use B4UFLY / LAANC before flying. TFR boundaries are not drawn.</p>
+      <p><strong>Not for navigation, flight planning or drone authorization.</strong> Check current FAA charts, NOTAMs and TFRs, and use B4UFLY / LAANC before flying. TFR boundaries are drawn from the FAA detail files; times and exceptions are in each NOTAM.</p>
       {contextState === "loading" && <p role="status">Loading the pinned FAA NASR airspace product…</p>}
       {contextState === "error" && <p role="status">Airspace context unavailable: {contextError} Nothing is drawn in its place.</p>}
       {edition && <p role="status" data-edition={edition.state}><strong>{edition.state === "CURRENT" ? "Current edition" : edition.state === "PREVIEW" ? "Preview edition" : "Expired edition"}:</strong> {edition.text}</p>}
@@ -328,7 +338,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
           <label><input type="checkbox" checked={showUas} onChange={event => setShowUas(event.target.checked)} /> FAA UAS Facility Map: LAANC ceiling per grid cell (zoom in)</label>
           <ul className="aviation-legend">{UAS_CEILING_COLORS.map(([value, color]) => <li key={value}><i style={{ background: color }} /> {value} ft AGL{value === 0 ? " (no LAANC approval; use DroneZone)" : ""}</li>)}</ul>
           {showUas && <small role="status">UAS Facility Map: {uas.state === "ready" && uas.value ? `${uas.value.cells.length.toLocaleString("en-US")} grid cells` : uas.state === "error" ? "Unavailable. No partial grid is drawn." : "Loading…"}</small>}
-          <p><strong>Temporary flight restrictions:</strong> {tfrs.state === "ready" && tfrs.value ? tfrs.value.kansas.length ? `${tfrs.value.kansas.length} Kansas-related of ${tfrs.value.total} active nationwide.` : `None matched Kansas among ${tfrs.value.total} active nationwide.` : tfrs.state === "error" ? "FAA TFR list unavailable." : "Checking…"} <a href={TFR_HOME} target="_blank" rel="noreferrer">Check tfr.faa.gov</a></p>
+          <p><strong>Temporary flight restrictions:</strong> {tfrs.state === "ready" && tfrs.value ? tfrs.value.kansas.length ? `${tfrs.value.kansas.length} Kansas-related of ${tfrs.value.total} active nationwide.` : `None matched Kansas among ${tfrs.value.total} active nationwide.` : tfrs.state === "error" ? "FAA TFR list unavailable." : "Checking…"}{tfrs.value ? ` ${tfrs.value.shapes.length} area(s) drawn in red${tfrs.value.detailsFailed > 0 ? `; ${tfrs.value.detailsFailed} of ${tfrs.value.detailsChecked} boundary file(s) could not be read in full, so not every TFR area is drawn` : ""}.` : ""} <a href={TFR_HOME} target="_blank" rel="noreferrer">Check tfr.faa.gov</a></p>
           {tfrs.value && tfrs.value.kansas.length > 0 && <ul>{tfrs.value.kansas.slice(0, 20).map(entry => <li key={entry.notam}><strong>{entry.notam}</strong>{entry.type ? ` · ${entry.type}` : ""}: {entry.description}</li>)}</ul>}
         </fieldset>
         <fieldset><legend>Airports &amp; air traffic structure</legend>
@@ -358,7 +368,9 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
             <p><strong>{picked.label}</strong> · ground reference {feet(inspection.groundFt)} MSL{inspection.near ? ` (${inspection.near.airport.faa_id}, ${inspection.near.km.toFixed(1)} km)` : ""}</p>
             <p style={{ borderLeft: `4px solid ${DRONE_RULE_COLORS[inspection.drone.rule.code]}`, paddingLeft: 8 }}><strong>Drone, SFC–400 ft AGL:</strong> {inspection.drone.rule.title}. {inspection.drone.rule.detail} <small>({inspection.drone.governing} · {inspection.drone.rule.cite})</small></p>
             {inspection.laanc && <p><strong>LAANC ceiling here:</strong> {inspection.laanc.ceilingFt} ft AGL{inspection.laanc.airport ? ` (${inspection.laanc.airportName ?? inspection.laanc.airport} grid)` : ""}. {inspection.laanc.ceilingFt === 0 ? "LAANC cannot approve flight in this cell; request a DroneZone authorization." : "LAANC can approve up to this altitude; it is not approval by itself."} <small>(FAA UAS Facility Map)</small></p>}
-            {tfrs.value && tfrs.value.kansas.length > 0 && <p><strong>Check TFRs:</strong> {tfrs.value.kansas.length} Kansas-related temporary flight restriction(s) are active; their boundaries are not drawn here.</p>}
+            {inspection.restrictions.length > 0 && <div style={{ borderLeft: `4px solid ${TFR_COLOR}`, paddingLeft: 8 }}><p><strong>Temporary flight restriction here:</strong> flight inside these limits, drones included, is prohibited unless the NOTAM allows it.</p>
+              <ul>{inspection.restrictions.map(shape => <li key={`${shape.notam}:${shape.name ?? ""}`}><strong>{shape.notam}</strong>{shape.type ? ` ${shape.type}` : ""}{shape.name ? ` · ${shape.name}` : ""}: {formatTfrLimit(shape.floor)} to {formatTfrLimit(shape.ceiling)}{shape.effective || shape.expires ? ` · ${shape.effective ?? "?"} to ${shape.expires ?? "until further notice"} (UTC)` : ""}</li>)}</ul></div>}
+            {tfrs.value && (tfrs.value.kansas.length > 0 || tfrs.value.detailsFailed > 0) && inspection.restrictions.length === 0 && <p><strong>Check TFRs:</strong> {tfrs.value.kansas.length} Kansas-related temporary flight restriction(s) are active, none drawn at this point{tfrs.value.detailsFailed > 0 ? `, but ${tfrs.value.detailsFailed} boundary file(s) could not be read in full, so a restriction here may not be shown` : ""}.</p>}
             <table><thead><tr><th scope="col">Band</th><th scope="col">Floor → ceiling</th><th scope="col">≈ above ground</th><th scope="col">Who can fly, and how</th></tr></thead>
               <tbody>{[...inspection.column].reverse().map(band => <tr key={band.key}><th scope="row">{band.label}</th><td>{band.floorText} → {band.ceilingText}</td>
                 <td>{feet(band.floorFtAgl)} → {feet(band.ceilingFtAgl)}</td><td>{band.manned} <small>({band.cite})</small></td></tr>)}</tbody></table>
@@ -372,7 +384,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
           <dl><dt>Airspace, airports, airways</dt><dd>FAA NASR cycle {context.nasrCycle} (valid {context.validFrom} to {context.validToExclusive}, exclusive) · product <code>{context.productId.slice(0, 19)}…</code></dd>
             <dt>Weather</dt><dd><a href="https://aviationweather.gov/data/api/" target="_blank" rel="noreferrer">NOAA/NWS Aviation Weather Center Data API</a></dd>
             <dt>Live traffic</dt><dd><a href="https://adsb.lol/" target="_blank" rel="noreferrer">adsb.lol</a> (ODbL 1.0), else <a href="https://adsb.fi/" target="_blank" rel="noreferrer">adsb.fi</a> open data (non-commercial, attribution)</dd>
-            <dt>Drone grid and TFRs</dt><dd>FAA UAS Facility Maps; FAA TFR list (<a href={TFR_HOME} target="_blank" rel="noreferrer">tfr.faa.gov</a>)</dd>
+            <dt>Drone grid and TFRs</dt><dd>FAA UAS Facility Maps; FAA TFR list and NOTAM detail files (<a href={TFR_HOME} target="_blank" rel="noreferrer">tfr.faa.gov</a>)</dd>
             <dt>Evidence role</dt><dd>External display context only; not a KFM-released record.</dd></dl>
           <ul>{context.limitations.map(item => <li key={item}>{item}</li>)}</ul>
         </details>
