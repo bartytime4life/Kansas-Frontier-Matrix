@@ -34,7 +34,8 @@ opt-out and destination handling remain; device storage is not cleared.
 
 Geometry is owned by the Explorer's existing globals.css lane: 110px desktop
 header, 126px phone header, shared by map, welcome and panel offsets. Below 1000px,
-Time/Layers/Places remain in the Map menu; below 500px Effects uses its labelled
+Time/Layers/Places remain in the Map menu. Find stays a visible 44px search icon
+below 1100px (short landscape uses the existing Find tab in Chat); below 500px Effects uses its labelled
 icon button, and at 380px or less Chat keeps a shorter visible label and full
 accessible name. The tradeoff is less vertical map space for a readable tip row. Short landscape
 (501px or wider, at most 480px high) instead fits tips into the command row and
@@ -71,7 +72,22 @@ The first exact-head CI run passed build, TypeScript, the full Node suite,
 disposable MySQL and fire browser acceptance, then exposed River Pulse clipping
 at 568×320 before startup browser tests could run. The follow-up compacts the
 landscape header and adds that viewport and full text bounds to acceptance.
-That failed run is not a passing acceptance result.
+That failed run is not a passing acceptance result. The next CI run passed all
+five River Pulse layouts, then caught hidden phone Find triggers in county-search
+acceptance. Find is restored as a visible, named search icon on normal phone and
+tablet layouts; the existing county-search cases remain unchanged. PR #5454 was
+merged externally at head 201c462c7d828b25a2cfb489075f04f410efbb29 while
+acceptance was still running. The Find correction is a separate follow-up based
+on hosted 63fb2ac9795251d16837f6a817b3c7b0b73d0d82, not part of that merge.
+The first follow-up run passed all county-search layouts, then found an aviation
+test still clicking the former direct Layers button on compact screens. Its
+navigation helper now chooses the rendered direct/mobile entry or the actual
+Map-menu Layers entry, retaining strict native pointer reachability checks.
+The next run passed that suite, first-frame startup sampling and all five new
+Chat/tip layouts, then found source credits overlapping time at 911×600. The
+existing horizontal native-control arrangement now applies through 640px height,
+keeping the information button stable and its scrollable credits above time.
+The original credit/time clearance assertion remains unchanged.
 
 Rollback: revert the candidate commits. No migration, storage deletion, host
 configuration, merge or publication is part of this change.
