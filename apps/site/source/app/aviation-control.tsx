@@ -5,20 +5,22 @@ import type { Map as MapLibreMap, MapLayerMouseEvent, MapMouseEvent } from "./ma
 import { readBoundedJson } from "./bounded-json";
 import {
   AIRSPACE_COLORS, AIRSPACE_GROUPS, AVIATION_CONTEXT_ASSET, DRONE_RULE_COLORS, airportFeatures, airspaceColumn, airspaceFeatures, airwayFeatures,
-  airwaysNearPoint, aviationEditionStatus, distanceKm, droneFeatures, droneVerdictAtPoint, nearestAirport, parseAviationContext,
+  airwaysNearPoint, aviationEditionStatus, distanceKm, droneFeatures, droneVerdictAtPoint, nearestAirport, occupiedAirspace, parseAviationContext,
   type AirspaceGroup, type AirwaySegment, type AviationContext,
 } from "./aviation-airspace";
 import {
   AVIATION_METAR_API_PATH, AVIATION_PIREP_API_PATH, FLIGHT_CATEGORY_COLORS, basicVfrCheck, metarFeatures, pirepAltitudeLabel, pirepFeatures,
   type AviationWeatherEnvelope, type MetarObservation, type PirepReport,
 } from "./aviation-weather";
+import { AVIATION_TRAFFIC_API_PATH, TRAFFIC_ALTITUDE_COLORS, aircraftAltitudeMsl, trafficFeatures, type TrafficEnvelope } from "./aviation-traffic";
 import { TFR_API_PATH, TFR_HOME, UASFM_API_PATH, UAS_CEILING_COLORS, uasCeilingAt, uasFeatures, type TfrEntry, type UasCell } from "./aviation-drone-data";
 
 const PREFIX = "kfm-aviation";
-const SOURCES = ["airspace", "drone", "uas", "airways", "runways", "airports", "metar", "ceilings", "pireps", "pick"].map(name => `${PREFIX}-${name}`);
+const SOURCES = ["airspace", "drone", "uas", "airways", "runways", "airports", "metar", "ceilings", "pireps", "traffic", "pick"].map(name => `${PREFIX}-${name}`);
 const LAYERS = ["airspace-3d", "airspace-edge", "airspace-label", "drone-3d", "drone-edge", "uas-3d", "uas-label", "airways-line", "airways-label", "runways-line",
-  "airports-dot", "airports-label", "metar-dot", "metar-label", "ceilings-3d", "pireps-3d", "pick-dot"].map(name => `${PREFIX}-${name}`);
+  "airports-dot", "airports-label", "metar-dot", "metar-label", "ceilings-3d", "pireps-3d", "traffic-3d", "traffic-label", "pick-dot"].map(name => `${PREFIX}-${name}`);
 const WEATHER_REFRESH_MS = 5 * 60_000;
+const TRAFFIC_REFRESH_MS = 20_000;
 const TFR_REFRESH_MS = 10 * 60_000;
 const EXAGGERATIONS = [1, 3, 6] as const;
 
@@ -68,6 +70,8 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
   const [showCeilings, setShowCeilings] = useState(true);
   const [showPireps, setShowPireps] = useState(true);
   const [showUas, setShowUas] = useState(true);
+  const [showTraffic, setShowTraffic] = useState(true);
+  const [traffic, setTraffic] = useState<FeedState<TrafficEnvelope>>({ state: "idle", value: null });
   const [uas, setUas] = useState<FeedState<UasGrid>>({ state: "idle", value: null });
   const [tfrs, setTfrs] = useState<FeedState<TfrList>>({ state: "idle", value: null });
   const [exaggeration, setExaggeration] = useState<(typeof EXAGGERATIONS)[number]>(1);
@@ -143,6 +147,17 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
     return () => { abort.abort(); clearTimeout(initial); clearInterval(interval); };
   }, [visible]);
 
+  // Live positions refresh every 20 seconds while shown; the route's shared cache bounds provider load.
+  useEffect(() => {
+    if (!visible || !showTraffic) return;
+    const abort = new AbortController();
+    const load = () => readFeed<TrafficEnvelope>(AVIATION_TRAFFIC_API_PATH, abort.signal, 8 * 1024 * 1024, value => Array.isArray(value.records) && Boolean(value.provider) && typeof value.provider === "object")
+      .then(value => setTraffic({ state: "ready", value })).catch(() => { if (!abort.signal.aborted) setTraffic({ state: "error", value: null }); });
+    const initial = setTimeout(load, 0), interval = setInterval(load, TRAFFIC_REFRESH_MS);
+    return () => { abort.abort(); clearTimeout(initial); clearInterval(interval); };
+  }, [visible, showTraffic]);
+
+  const trafficRecords = useMemo(() => showTraffic ? traffic.value?.records ?? [] : [], [showTraffic, traffic.value]);
   const uasCells = useMemo(() => uas.value?.cells ?? [], [uas.value]);
   const metarRecords = useMemo(() => showMetar ? metar.envelope?.records ?? [] : [], [showMetar, metar.envelope]);
   const pirepRecords = useMemo(() => showPireps ? pireps.envelope?.records ?? [] : [], [showPireps, pireps.envelope]);
@@ -173,6 +188,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
       add("ceilings", showCeilings ? weatherLayers.ceilings : { type: "FeatureCollection", features: [] });
       add("pireps", pirepFeatures(pirepRecords, groundAt, exaggeration));
       add("uas", showUas ? uasFeatures(uasCells, exaggeration) : { type: "FeatureCollection", features: [] });
+      add("traffic", trafficFeatures(trafficRecords, groundAt, exaggeration, (aircraft, ground) => occupiedAirspace(context, aircraft.lon, aircraft.lat, aircraftAltitudeMsl(aircraft) ?? ground, ground)));
       add("pick", { type: "FeatureCollection", features: picked ? [{ type: "Feature", geometry: { type: "Point", coordinates: [picked.lon, picked.lat] }, properties: {} }] : [] });
       const font = ["Noto Sans Regular"];
       // Translucent shells: the "upside-down wedding cake" of Class B/C reads from the stacked bases and tops.
@@ -210,6 +226,11 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
         "fill-extrusion-color": ["get", "color"], "fill-extrusion-base": ["get", "base"], "fill-extrusion-height": ["get", "top"], "fill-extrusion-opacity": 0.55 } });
       map.addLayer({ id: `${PREFIX}-pireps-3d`, type: "fill-extrusion", source: `${PREFIX}-pireps`, paint: {
         "fill-extrusion-color": ["get", "color"], "fill-extrusion-base": ["get", "base"], "fill-extrusion-height": ["get", "top"], "fill-extrusion-opacity": 0.85 } });
+      map.addLayer({ id: `${PREFIX}-traffic-3d`, type: "fill-extrusion", source: `${PREFIX}-traffic`, paint: {
+        "fill-extrusion-color": ["get", "color"], "fill-extrusion-base": ["get", "base"], "fill-extrusion-height": ["get", "top"], "fill-extrusion-opacity": 0.9 } });
+      map.addLayer({ id: `${PREFIX}-traffic-label`, type: "symbol", source: `${PREFIX}-traffic`, minzoom: 8, layout: {
+        "text-font": font, "text-field": ["concat", ["get", "label"], "\n", ["get", "airspace"]], "text-size": 10, "text-optional": true, "text-anchor": "top", "text-offset": [0, 0.8] },
+        paint: { "text-color": ["case", ["get", "emergency"], "#b3170b", "#1d2f44"], "text-halo-color": "#ffffff", "text-halo-width": 1.3 } });
       map.addLayer({ id: `${PREFIX}-metar-dot`, type: "circle", source: `${PREFIX}-metar`, paint: {
         "circle-radius": 6, "circle-color": ["get", "color"], "circle-stroke-color": "#ffffff", "circle-stroke-width": 2 } });
       map.addLayer({ id: `${PREFIX}-metar-label`, type: "symbol", source: `${PREFIX}-metar`, minzoom: 7, layout: {
@@ -231,7 +252,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setRender("Map rendering unavailable"); remove();
     }
-  }, [mapRef, styleReady, visible, context, groups, showDrone, showAirports, airwayKinds, showCeilings, metarRecords, pirepRecords, exaggeration, picked, showUas, uasCells]);
+  }, [mapRef, styleReady, visible, context, groups, showDrone, showAirports, airwayKinds, showCeilings, metarRecords, pirepRecords, exaggeration, picked, showUas, uasCells, trafficRecords]);
 
   // Point inspection is opt-in so the page's own click tools keep working.
   useEffect(() => {
@@ -259,8 +280,15 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
     const routes = [...new Map(airwaysNearPoint(context, picked.lon, picked.lat).map(segment => [segment.designation, segment])).values()];
     const reports = pirepRecords.filter(report => distanceKm(picked.lon, picked.lat, report.lon, report.lat) <= 60);
     const laanc = uasCeilingAt(uasCells, picked.lon, picked.lat);
-    return { near, groundFt, column, drone, station: usable, vfr, routes, reports, laanc };
-  }, [context, picked, metarRecords, pirepRecords, uasCells]);
+    const aircraft = trafficRecords.map(record => ({ record, km: distanceKm(picked.lon, picked.lat, record.lon, record.lat) }))
+      .filter(item => item.km <= 15).sort((a, b) => a.km - b.km).slice(0, 12)
+      .map(item => {
+        const msl = aircraftAltitudeMsl(item.record);
+        const ground = nearestAirport(context.airports, item.record.lon, item.record.lat)?.airport.elevation_ft ?? 0;
+        return { ...item, msl, airspace: msl === null ? "on the surface" : occupiedAirspace(context, item.record.lon, item.record.lat, msl, ground) };
+      });
+    return { near, groundFt, column, drone, station: usable, vfr, routes, reports, laanc, aircraft };
+  }, [context, picked, metarRecords, pirepRecords, uasCells, trafficRecords]);
 
   const toggleGroup = (group: AirspaceGroup, on: boolean) => setGroups(current => { const next = new Set(current); if (on) next.add(group); else next.delete(group); return next; });
   const toggleAirway = (kinds: AirwaySegment["type"][], on: boolean) => setAirwayKinds(current => { const next = new Set(current); for (const kind of kinds) { if (on) next.add(kind); else next.delete(kind); } return next; });
@@ -269,7 +297,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
   return <section className="official-context-row" aria-label="Airspace, airports and aviation weather">
     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visible} aria-label={visible ? "Hide airspace and aviation layers" : "Show airspace and aviation layers"} onChange={event => { setVisible(event.target.checked); if (event.target.checked) setRender("Waiting for map frame"); }} /><span aria-hidden="true" /></label><i style={{ "--swatch": AIRSPACE_COLORS.CLASS_C } as React.CSSProperties} /><div><strong>Airspace, airports &amp; aviation weather</strong><small>FAA NASR · NOAA AWC · {visible ? shownRender : "Off"}</small></div></div>
     <details className="specialty-layer-details"><summary>Airspace shells, drone zones, weather &amp; controls</summary><div className="official-context-option-body">
-      <p><strong>Not for navigation, flight planning or drone authorization.</strong> Check current FAA charts, NOTAMs and TFRs, and use B4UFLY / LAANC before flying. Temporary flight restrictions are not shown.</p>
+      <p><strong>Not for navigation, flight planning or drone authorization.</strong> Check current FAA charts, NOTAMs and TFRs, and use B4UFLY / LAANC before flying. TFR boundaries are not drawn.</p>
       {contextState === "loading" && <p role="status">Loading the pinned FAA NASR airspace product…</p>}
       {contextState === "error" && <p role="status">Airspace context unavailable: {contextError} Nothing is drawn in its place.</p>}
       {edition && <p role="status" data-edition={edition.state}><strong>{edition.state === "CURRENT" ? "Current edition" : edition.state === "PREVIEW" ? "Preview edition" : "Expired edition"}:</strong> {edition.text}</p>}
@@ -297,7 +325,10 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
           <label><input type="checkbox" checked={showAirports} onChange={event => setShowAirports(event.target.checked)} /> Public-use airports and runways ({context.airports.length}; {context.privateUseWithheld} private-use facilities withheld)</label>
           <label><input type="checkbox" checked={airwayKinds.has("VICTOR")} onChange={event => toggleAirway(["VICTOR", "RNAV_T"], event.target.checked)} /> Low airways (Victor, T routes) · 1,200 AGL–below FL180</label>
           <label><input type="checkbox" checked={airwayKinds.has("JET")} onChange={event => toggleAirway(["JET", "RNAV_Q"], event.target.checked)} /> High routes (Jet, Q routes) · FL180–FL450</label>
-          <small>Live aircraft positions are not shown: no surveillance feed is licensed for public display (see the aviation intake runbook). Pilot reports below are the observed traffic signal.</small>
+          <label><input type="checkbox" checked={showTraffic} onChange={event => setShowTraffic(event.target.checked)} /> Live aircraft (ADS-B), drawn at reported altitude and labelled with the airspace they are in</label>
+          <ul className="aviation-legend">{TRAFFIC_ALTITUDE_COLORS.map(([value, color]) => <li key={value}><i style={{ background: color }} /> {value === 0 ? "Surface / no altitude" : `${value.toLocaleString("en-US")} ft MSL and above`}</li>)}<li><i style={{ background: "#e0301e" }} /> Emergency squawk (7500/7600/7700)</li></ul>
+          {showTraffic && <small role="status">Traffic: {traffic.state === "ready" && traffic.value ? <>{traffic.value.records.length} aircraft · retrieved {minutesAgo(traffic.value.retrievedAt, clock) < 1 ? "just now" : `${minutesAgo(traffic.value.retrievedAt, clock)} min ago`} · data <a href={traffic.value.provider.homepage} target="_blank" rel="noreferrer">{traffic.value.provider.title}</a> ({traffic.value.provider.terms}){traffic.value.records.some(record => record.emergency) ? " · EMERGENCY squawk present" : ""}</> : traffic.state === "error" ? "Unavailable from every listed receiver network. No cached positions are shown." : "Checking…"}</small>}
+          <small>Volunteer receiver coverage: some aircraft, especially low or on the ground, are missing. An empty sky on the map is not evidence of no traffic.</small>
         </fieldset>
         <fieldset><legend>Airport weather &amp; pilot reports (live)</legend>
           <label><input type="checkbox" checked={showMetar} onChange={event => setShowMetar(event.target.checked)} /> METAR stations (ASOS/AWOS) by flight category</label>
@@ -321,6 +352,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
               <tbody>{[...inspection.column].reverse().map(band => <tr key={band.key}><th scope="row">{band.label}</th><td>{band.floorText} → {band.ceilingText}</td>
                 <td>{feet(band.floorFtAgl)} → {feet(band.ceilingFtAgl)}</td><td>{band.manned} <small>({band.cite})</small></td></tr>)}</tbody></table>
             <p><strong>Weather now:</strong> {inspection.station ? <>{inspection.station.record.raw} <small>({inspection.station.km.toFixed(0)} km away, {minutesAgo(inspection.station.record.observedAt, clock)} min old{inspection.station.record.densityAltitudeFt !== null ? `, density altitude ≈ ${feet(inspection.station.record.densityAltitudeFt)}` : ""})</small></> : "No METAR station within 50 km."} {inspection.vfr.text} <small>({inspection.vfr.cite})</small></p>
+            {inspection.aircraft.length > 0 && <><p><strong>Aircraft within 15 km now:</strong></p><ul>{inspection.aircraft.map(item => <li key={item.record.hex}>{item.record.callsign ?? item.record.registration ?? item.record.hex.toUpperCase()}{item.record.type ? ` (${item.record.type})` : ""} · {item.record.onGround ? "on ground" : item.msl === null ? "altitude n/a" : `${feet(item.msl)} MSL`} · {item.km.toFixed(1)} km · in {item.airspace}{item.record.emergency ? ` · ${item.record.squawk ?? ""} ${item.record.emergency.toUpperCase()}` : ""}</li>)}</ul></>}
             {inspection.routes.length > 0 && <p><strong>Airways within 4 NM:</strong> {inspection.routes.map(route => `${route.designation}${route.mea_ft ? ` (MEA ${route.mea_ft.toLocaleString("en-US")})` : ""}`).join(", ")}</p>}
             {inspection.reports.length > 0 && <p><strong>Pilot reports within 60 km (3 h):</strong> {inspection.reports.slice(0, 5).map(report => `${report.raw} (${pirepAltitudeLabel(report)})`).join(" · ")}</p>}
           </div>}
@@ -328,6 +360,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
         <details><summary>Source, edition &amp; limits</summary>
           <dl><dt>Airspace, airports, airways</dt><dd>FAA NASR cycle {context.nasrCycle} (valid {context.validFrom} to {context.validToExclusive}, exclusive) · product <code>{context.productId.slice(0, 19)}…</code></dd>
             <dt>Weather</dt><dd><a href="https://aviationweather.gov/data/api/" target="_blank" rel="noreferrer">NOAA/NWS Aviation Weather Center Data API</a></dd>
+            <dt>Live traffic</dt><dd><a href="https://adsb.lol/" target="_blank" rel="noreferrer">adsb.lol</a> (ODbL 1.0), else <a href="https://adsb.fi/" target="_blank" rel="noreferrer">adsb.fi</a> open data (non-commercial, attribution)</dd>
             <dt>Drone grid and TFRs</dt><dd>FAA UAS Facility Maps; FAA TFR list (<a href={TFR_HOME} target="_blank" rel="noreferrer">tfr.faa.gov</a>)</dd>
             <dt>Evidence role</dt><dd>External display context only; not a KFM-released record.</dd></dl>
           <ul>{context.limitations.map(item => <li key={item}>{item}</li>)}</ul>

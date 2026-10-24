@@ -276,6 +276,19 @@ export function airspaceColumn(context: Pick<AviationContext, "volumes" | "class
   return Object.freeze(bands.sort((left, right) => left.floorFtAgl - right.floorFtAgl || left.ceilingFtAgl - right.ceilingFtAgl));
 }
 
+/**
+ * The airspace an aircraft occupies at one altitude: the most specific band
+ * whose floor/ceiling (converted with `groundFt`) contains it. Designated
+ * B/C/D and special use outrank the Class E/G defaults they sit within.
+ */
+export function occupiedAirspace(context: Pick<AviationContext, "volumes" | "classA">, lon: number, lat: number, altitudeMslFt: number, groundFt: number): string {
+  const above = altitudeMslFt - groundFt;
+  const rank: Record<ColumnClass, number> = { B: 6, C: 5, D: 4, SUA: 3, A: 2, E: 1, G: 0 };
+  const containing = airspaceColumn(context, lon, lat, groundFt).filter(band => band.floorFtAgl <= above && above < band.ceilingFtAgl)
+    .sort((left, right) => rank[right.airspaceClass] - rank[left.airspaceClass]);
+  return containing.length ? containing.map(band => band.label.split(" · ").slice(0, 2).join(" · ")).join(" + ") : "Class E";
+}
+
 export type DroneVerdict = Readonly<{ rule: DroneRule; governing: string; ceilingFtAgl: number }>;
 
 /** Most restrictive small-UAS rule for SFC–400 ft AGL at a point; Class G is the default. */

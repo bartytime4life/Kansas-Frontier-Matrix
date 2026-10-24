@@ -6,7 +6,7 @@ version: v0.1
 status: proposed
 owners: ["@bartytime4life"]
 created: 2026-10-22
-updated: 2026-10-22
+updated: 2026-10-24
 owning_root: contracts/
 responsibility: Meaning and display limits of the Kansas airspace, airport and airway context product.
 truth_posture: PROPOSED profile; implemented pipeline and Site display context; no KFM release.
@@ -75,4 +75,7 @@ only.
 
 No navigation, flight-planning, LAANC, current-activation, traffic-count,
 aircraft-identity or legal-advice claim arises from this profile. Live
-surveillance remains disabled (`connectors/faa/capture.py:disabled_observations`).
+positions from public receiver networks (adsb.lol, adsb.fi) are Site display
+context only, attributed per provider terms: never ingested, stored or admitted
+as evidence; OpenSky stays denied
+(`connectors/faa/capture.py:surveillance_decision`).

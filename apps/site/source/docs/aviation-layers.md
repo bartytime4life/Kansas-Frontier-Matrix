@@ -2,11 +2,10 @@
 
 One specialty layer, **Map layers > Airspace, airports & aviation weather**,
 draws Kansas airspace as labelled 3D volumes, shows where small drones need
-authorization, and ties live airport weather and pilot reports to the airspace
-they occur in. It is display context only: **not navigation, flight planning or
+authorization, and ties live aircraft, airport weather and pilot reports to the
+airspace they occur in. It is display context only: **not navigation, flight planning or
 UAS authorization**. Active Kansas temporary flight restrictions (TFRs) are
-listed but their boundaries are not drawn; NOTAM activations and live aircraft
-positions are not shown.
+listed but their boundaries are not drawn; NOTAM activations are not shown.
 
 ## Sources and clocks
 
@@ -17,6 +16,7 @@ positions are not shown.
 | PIREP (pilot reports) | Same API via `/api/aviation/pireps` | Report time; last 3 hours |
 | LAANC grid ceilings | FAA UAS Facility Maps (ArcGIS `FAA_UAS_FacilityMap_Data`) via `/api/aviation/uas-grid` | FAA 56-day cycle; read once per session, cached a day at the edge |
 | Temporary flight restrictions | FAA TFR list (`tfr.faa.gov/tfrapi/exportTfrList`) via `/api/aviation/tfrs` | Current list; refreshed every 10 minutes while shown |
+| Live aircraft | Public ADS-B/Mode S receiver networks via `/api/aviation/traffic`: [adsb.lol](https://adsb.lol/) (ODbL 1.0), else [adsb.fi](https://adsb.fi/) open data (non-commercial, attribution) | Positions no older than 60 seconds; refreshed every 20 seconds while shown, 15-second shared cache |
 
 The product file is built by
 `pipelines/domains/roads-rail-trade/faa_airspace.py` from a NASR-derived
@@ -56,6 +56,13 @@ facilities are drawn or used as nearest-airport references.
   points at zoom 10+.
 - **Airways.** Victor/T routes (1,200 AGL–below FL180) and Jet/Q routes
   (FL180–FL450), labelled with designation and MEA.
+- **Live aircraft.** Each aircraft is an arrowhead pointing along its track,
+  lifted to its reported altitude (geometric if reported, else barometric) above
+  the nearest public-use airport's elevation, and coloured by altitude band;
+  emergency squawks (7500, 7600, 7700) are red. At zoom 8+ the label gives
+  callsign, type, altitude, ground speed and the airspace the aircraft is in at
+  that altitude (for example `CLASS C · ICT`). The panel names the network that
+  supplied the positions, with its terms.
 - **METAR stations** coloured by FAA flight category (VFR, MVFR, IFR, LIFR);
   **cloud ceilings** as discs at the reported height above each station.
 - **PIREPs** as markers at the reported altitude; urgent reports in red,
@@ -75,7 +82,8 @@ the 14 CFR section. The panel also gives:
 - the drone verdict for SFC–400 ft AGL and the volume that governs it;
 - the nearest METAR within 50 km with density altitude, checked against the
   basic VFR minimums for the surface class (14 CFR 91.155);
-- airways within 4 NM and pilot reports within 60 km.
+- airways within 4 NM, pilot reports within 60 km and up to 12 aircraft within
+  15 km, each with the airspace it occupies.
 
 ## Heights
 
@@ -106,10 +114,14 @@ Cloud bases never substitute for an aircraft's missing altitude. See the
 
 - A station observation describes its own site. A missing report is not
   evidence of good weather; few PIREPs do not mean little traffic.
-- Live ADS-B/Mode S traffic is not displayed. The aviation intake runbook
-  (`docs/runbooks/aviation-intake-20261021.md` in the monorepo) records why:
-  OpenSky requires a written licence and adsb.lol's ODbL terms need admission
-  review.
+- Live traffic comes from volunteer receivers. Low-altitude aircraft, aircraft
+  without ADS-B and anything out of receiver range are missing, so an empty sky
+  is not evidence of no traffic. Positions older than 60 seconds are dropped,
+  not extrapolated. Nothing identifies owners, missions or intent. OpenSky is
+  not used: its terms require a written licence for this kind of display.
+- The traffic route tries adsb.lol, then adsb.fi, with fixed URLs, no caller
+  input, no redirects, a 10-second timeout and a 6 MB read limit. If both fail
+  it returns an error and no positions are shown.
 - The AWC routes take no caller input, refuse redirects, time out after
   12 seconds, read at most 2 MB and share a 2-minute cache. On failure they
   return an error and the layer shows no substitute observations.

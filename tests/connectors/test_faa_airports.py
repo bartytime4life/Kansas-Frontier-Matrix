@@ -106,8 +106,14 @@ def test_future_edition_and_observation_rights_holds():
     data, receipt = payload()
     c = faa.prepare(data, {**receipt, "retrieved_at": "2026-09-30T12:00:00Z"})
     assert c["future_at_capture"] and c["release_state"] == "HELD"
-    for provider in ("opensky", "adsb-lol"):
-        assert capture.disabled_observations(provider)["outcome"] == "DENY"
+    assert capture.surveillance_decision("opensky")["outcome"] == "DENY"
+    assert not capture.surveillance_decision("opensky")["public_display_enabled"]
+    for provider in ("adsb-lol", "adsb-fi"):
+        decision = capture.surveillance_decision(provider)
+        assert decision["outcome"] == "ALLOW_DISPLAY_ONLY" and decision["attribution_required"]
+        assert decision["public_display_enabled"] and not decision["ingestion_enabled"] and decision["evidence_refs"] == []
+    with pytest.raises(ValueError, match="SOURCE_NOT_ALLOWED"):
+        capture.surveillance_decision("unknown-feed")
 
 
 class Response(io.BytesIO):
