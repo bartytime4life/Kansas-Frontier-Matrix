@@ -11,6 +11,8 @@ import { Journal } from './journal.mjs';
 import { pipelineCall, publish } from './publisher.mjs';
 
 const SAFE = /^[A-Z][A-Z_]{1,63}$/;
+const remoteDeferral = code => ['REMOTE_UNAVAILABLE','PIPELINE_PAUSED','PROJECTION_BUDGET_REACHED','REMOTE_BUSY'].includes(code);
+const errorCode = error => SAFE.test(error.message ?? '') ? error.message : 'PIPELINE_OPERATION_FAILED';
 export async function tick(config, { fetcher = fetch, now = Date.now(), acquire = fetchCapture, memory = freemem, guard = storageGuard } = {}) {
   const policy = storagePolicy(config);
   if (!Array.isArray(config.sources) || config.sources.some(id => !policy.priority.includes(id))) fail('SOURCE_NOT_ALLOWED');
@@ -18,14 +20,15 @@ export async function tick(config, { fetcher = fetch, now = Date.now(), acquire 
   if (memory() < 3 * 1024 ** 3) fail('MEMORY_RESERVE_REQUIRED');
   const journal = await Journal.open(resolve(config.root, 'pipeline-journal.sqlite'));
   const outcomes = [];
-  let secret; let remoteAvailable = true; let publications = 0; let publishedBytes = 0;
+  let secret; let heartbeatFailure; let remoteAvailable = true; let publications = 0; let publishedBytes = 0;
   try {
   if (config.publish === true) {
     const credentialRoot = process.env.CREDENTIALS_DIRECTORY;
     if (!credentialRoot) fail('SYSTEMD_CREDENTIAL_REQUIRED');
     secret = (await readFile(resolve(credentialRoot, 'pipeline-worker-key'))).toString().trim();
   }
-    if (secret) try { await pipelineCall('heartbeat', { state: 'running' }, secret, { fetcher }); } catch { remoteAvailable = false; }
+    if (config.publish === true) try { await pipelineCall('heartbeat', { state: 'running' }, secret, { fetcher }); }
+    catch (error) { remoteAvailable = false; heartbeatFailure = errorCode(error); }
     for (const sourceId of policy.priority.filter(id => config.sources.includes(id))) {
       if (!['usgs-streamflow','nws-alerts'].includes(sourceId)) fail('SOURCE_NOT_ALLOWED');
       await guard(config, { reserve: 64 * 1024 ** 2 });
@@ -47,7 +50,10 @@ export async function tick(config, { fetcher = fetch, now = Date.now(), acquire 
           journal.update(job, { product_path: productPath });
         }
         const payload = await readRegular(resolve(config.root, productPath), 8 * 1024 ** 2);
-        if (secret) {
+        if (config.publish === true) {
+          // Still preserve captures when pairing is broken, but expose the fault
+          // as held under the bounded retry policy rather than endless outage deferral.
+          if (heartbeatFailure && !remoteDeferral(heartbeatFailure)) fail(heartbeatFailure);
           const reason = !remoteAvailable ? 'HOSTING_UNAVAILABLE' : publications >= policy.maxPublicationsPerTick || publishedBytes + payload.length > policy.maxBytesPerTick ? 'PUBLICATION_BUDGET' : null;
           if (reason) { journal.defer(job, reason); outcomes.push({ sourceId, state: 'deferred', reason }); continue; }
           // Count attempts too: an ambiguous delivery must not free the budget.
@@ -68,8 +74,8 @@ export async function tick(config, { fetcher = fetch, now = Date.now(), acquire 
         }
         journal.finish(job); outcomes.push({ sourceId, state: secret ? 'published' : 'candidate-only' });
       } catch (e) {
-        const code = SAFE.test(e.message ?? '') ? e.message : 'PIPELINE_OPERATION_FAILED';
-        const deferred = Boolean(secret) && ['PIPELINE_OPERATION_FAILED','REMOTE_UNAVAILABLE','PIPELINE_PAUSED','PROJECTION_BUDGET_REACHED','REMOTE_BUSY'].includes(code);
+        const code = errorCode(e);
+        const deferred = config.publish === true && remoteDeferral(code);
         if (deferred) { remoteAvailable = false; journal.defer(job, code); }
         else journal.finish(job, code);
         outcomes.push({ sourceId, state: deferred ? 'deferred' : 'held', reason: code });

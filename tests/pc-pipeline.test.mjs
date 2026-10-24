@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync, sign, randomBytes } from 'node:crypto';
-import { mkdtemp, writeFile, readFile, readdir, symlink } from 'node:fs/promises';
+import { mkdtemp, writeFile, readFile, readdir, symlink, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import { canonical, sha, verifyProfile, recipeDigest, ORIGIN, MAX_PACKAGE, CHUNK_SIZE, PipelineError } from '../server/pipeline-contract.mjs';
@@ -94,7 +94,7 @@ test('HTTPS publisher verifies staging, every chunk and committed identity; repl
 test('lost commit response recovers by immutable release lookup without double activation', async () => {
   const f = await fixture(); const { bytes } = await candidate(); const m = transfer(bytes); let dropped = false;
   const unreliable = async (url, options) => { const result = await f.fetcher(url, options); if (url.endsWith('/commit') && !dropped) { dropped = true; throw new Error('connection lost'); } return result; };
-  await assert.rejects(publish(m, bytes, secret, { fetcher: unreliable }), /connection lost/);
+  await assert.rejects(publish(m, bytes, secret, { fetcher: unreliable }), /REMOTE_UNAVAILABLE/);
   assert.equal(f.store.heads.size, 1);
   assert.equal((await publish(m, bytes, secret, { fetcher: f.fetcher })).state, 'COMMITTED'); assert.equal(f.store.rows.size, 1);
 });
@@ -258,4 +258,107 @@ test('capture-only completion can later publish and deferrals remain fenced', as
     j.defer(b, 'PUBLICATION_BUDGET', now); assert.equal(j.claim('nws-alerts', 1, now + 1, true), null);
     assert.ok(j.claim('nws-alerts', 1, now + 300001, true));
   } finally { j.close(); }
+});
+
+async function workerFixture(t, workerSecret = secret) {
+  const f = await fixture();
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-qualified-synthetic-'));
+  const credentials = await mkdtemp(resolve(tmpdir(), 'kfm-fixture-credentials-'));
+  await writeFile(resolve(credentials, 'pipeline-worker-key'), workerSecret);
+  for (const sourceId of ['nws-alerts', 'usgs-streamflow']) await writeFile(resolve(credentials, sourceId + '.json'), canonical(approval(sourceId)));
+  const previous = process.env.CREDENTIALS_DIRECTORY; process.env.CREDENTIALS_DIRECTORY = credentials;
+  t.after(async () => {
+    if (previous === undefined) delete process.env.CREDENTIALS_DIRECTORY; else process.env.CREDENTIALS_DIRECTORY = previous;
+    for (const path of [root, credentials, f.root]) await rm(path, { recursive: true, force: true });
+  });
+  const config = { root, sources: ['nws-alerts', 'usgs-streamflow'], publish: true, approvalDirectory: credentials };
+  const captured = [];
+  const options = { now, fetcher: f.fetcher, memory: () => 8 * 1024 ** 3, guard: async () => ({}), acquire: req => {
+    captured.push(req.sourceId); return fetchCapture(req, { fetcher: async () => Response.json({ type: 'FeatureCollection', features: [] }) });
+  } };
+  const journal = async work => {
+    const j = await Journal.open(resolve(root, 'pipeline-journal.sqlite'));
+    try { return await work(j); } finally { j.close(); }
+  };
+  return { ...f, root, credentials, config, options, captured, journal };
+}
+
+test('malformed, empty and mismatched heartbeat keys hold bounded jobs while preserving raw captures', async t => {
+  for (const [key, code] of [['malformed', 'PIPELINE_KEY_INVALID'], ['', 'PIPELINE_KEY_INVALID'], ['0'.repeat(64), 'PIPELINE_AUTH_REQUIRED']]) {
+    await t.test(code + ':' + key.length, async t => {
+      const f = await workerFixture(t, key);
+      for (let i = 0; i < 3; i++) {
+        const result = await tick(f.config, f.options);
+        assert.deepEqual(result.outcomes.map(row => [row.state, row.reason]), [['held', code], ['held', code]]);
+        assert.equal(result.publication.attempted, 0);
+        await f.journal(j => { assert.ok(j.status().every(row => row.attempts === i + 1)); j.db.exec('UPDATE jobs SET retry_at=0'); });
+      }
+      const stopped = await tick(f.config, f.options);
+      assert.ok(stopped.outcomes.every(row => row.state === 'already-complete-or-held'));
+      assert.equal(f.captured.length, 2); assert.equal(f.store.rows.size, 0);
+      for (const id of f.config.sources) assert.equal((await readdir(resolve(f.root, 'data/quarantine', id, 'objects/sha256'))).length, 1);
+    });
+  }
+});
+
+test('missing local approval is held and does not prevent the other source from publishing', async t => {
+  const f = await workerFixture(t);
+  await rm(resolve(f.credentials, 'nws-alerts.json'));
+  f.config.storagePolicy = { maxPublicationsPerTick: 2 };
+  const result = await tick(f.config, f.options);
+  assert.deepEqual(result.outcomes.map(row => [row.state, row.reason]), [['held', 'PIPELINE_OPERATION_FAILED'], ['published', undefined]]);
+  assert.equal(result.publication.remoteAvailable, true);
+  await f.journal(j => assert.equal(j.status().find(row => row.source === 'nws-alerts').attempts, 1));
+  assert.equal(f.store.heads.size, 1); assert.equal(f.captured.length, 2);
+});
+
+test('byte budget defers an oversized candidate then publishes the saved bytes when budget permits', async t => {
+  const f = await workerFixture(t);
+  f.config.sources = ['nws-alerts']; f.config.storagePolicy = { maxBytesPerTick: CHUNK_SIZE };
+  let captures = 0;
+  const options = { ...f.options, acquire: req => {
+    captures++;
+    return fetchCapture(req, { fetcher: async () => Response.json({ type: 'FeatureCollection', features: Array.from({ length: 40 }, (_, i) => ({
+      type: 'Feature', id: 'synthetic-byte-budget-' + i, geometry: null,
+      properties: { sent: new Date(now - 120000).toISOString(), effective: new Date(now - 120000).toISOString(), expires: new Date(now + 60000).toISOString(),
+        event: 'Synthetic fixture', severity: 'Unknown', description: 'x'.repeat(10000) }
+    })) }) });
+  } };
+  const deferred = await tick(f.config, options);
+  assert.equal(deferred.outcomes[0].reason, 'PUBLICATION_BUDGET');
+  assert.equal(deferred.publication.attempted, 0); assert.equal(deferred.publication.payloadBytes, 0);
+  assert.equal(f.store.rows.size, 0);
+  await f.journal(j => { assert.equal(j.status()[0].attempts, 0); j.db.exec('UPDATE jobs SET retry_at=0'); });
+  f.config.storagePolicy.maxBytesPerTick = 1024 ** 2;
+  const recovered = await tick(f.config, options);
+  assert.equal(recovered.outcomes[0].state, 'published'); assert.equal(captures, 1);
+  assert.ok(recovered.publication.payloadBytes > CHUNK_SIZE && recovered.publication.payloadBytes <= 1024 ** 2);
+  await tick(f.config, options); assert.equal(captures, 1); assert.equal(f.store.rows.size, 1);
+});
+
+test('receiver rejects a product beyond 8 MiB without staging any release', async () => {
+  const f = await fixture(); const m = transfer((await candidate()).bytes); m.byteLength = MAX_PACKAGE + 1;
+  const result = await f.request('stage', m);
+  assert.equal(result.status, 400); assert.equal((await result.json()).error, 'MANIFEST_INVALID'); assert.equal(f.store.rows.size, 0);
+});
+
+test('busy hosting consumes one failed attempt and blocks further publication for the run', async t => {
+  const f = await workerFixture(t); f.config.storagePolicy = { maxPublicationsPerTick: 2 };
+  let stages = 0;
+  const result = await tick(f.config, { ...f.options, fetcher: (url, options) => {
+    if (url.endsWith('/stage')) { stages++; return Promise.resolve(new Response('busy', { status: 503 })); }
+    return f.fetcher(url, options);
+  } });
+  assert.deepEqual(result.outcomes.map(row => [row.state, row.reason]), [['deferred', 'REMOTE_BUSY'], ['deferred', 'HOSTING_UNAVAILABLE']]);
+  assert.equal(stages, 1); assert.equal(result.publication.attempted, 1); assert.ok(result.publication.payloadBytes > 0);
+  await f.journal(j => assert.ok(j.status().every(row => row.attempts === 0)));
+  assert.equal(f.captured.length, 2); assert.equal(f.store.rows.size, 0);
+});
+
+test('publication respects an aborted aggregate signal without retrying or leaking transport errors', async () => {
+  const payload = (await candidate()).bytes; let calls = 0;
+  await assert.rejects(publish(transfer(payload), payload, secret, { signal: AbortSignal.abort(), fetcher: async (url, options) => {
+    calls++; options.signal.throwIfAborted(); throw Error('synthetic-private-transport-text');
+  } }), /^Error: REMOTE_UNAVAILABLE$/);
+  assert.equal(calls, 1);
 });
