@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function TopicsPage() {
   return <main className={styles.page}>
-    <header className={styles.header}><Link href="/">← Kansas map</Link><Link href="/about">Explorer guide</Link></header>
+    <header className={styles.header}><Link href="/">← Kansas map</Link><Link href="/about">Explorer guide</Link><Link href="/civic">Government & civic atlas</Link></header>
     <div className={styles.intro}><p>KANSAS FRONTIER MATRIX</p><h1>Explore by subject</h1>
       <p>Start with engineering, science, weather, history, land or people, then follow related layers and tools. A layer can belong to several subjects while keeping one source identity.</p>
       <p className={styles.boundary}>Coverage below describes configured source context and catalogue entries. Connections, reviewed imagery installation and released evidence are checked in their own views.</p>
