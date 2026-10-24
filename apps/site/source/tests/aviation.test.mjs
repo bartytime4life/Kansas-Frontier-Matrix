@@ -303,7 +303,9 @@ test("aircraft positions expire 60 s after observation, counting edge-cache age 
   const fresh = load("2026-10-24T22:00:00Z");
   assert.equal(traffic.freshAircraft(fresh, received), records, "nothing expired: same array, so the map is not redrawn");
   assert.deepEqual(traffic.freshAircraft(fresh, received + 15_000).map(record => record.hex), ["a1b2c3"]);
+  assert.equal(traffic.freshAircraft(fresh, received + 20_000), traffic.freshAircraft(fresh, received + 15_000), "an unchanged subset keeps its identity across expiry ticks");
   assert.deepEqual(traffic.freshAircraft(fresh, received + 55_000), []);
+  assert.equal(traffic.freshAircraft(fresh, received + 55_000), traffic.freshAircraft(null, received), "every empty result is one shared array");
   // Served 20 s after retrieval from the edge cache: the 50 s position is already too old.
   assert.deepEqual(traffic.freshAircraft(load("2026-10-24T21:59:40Z"), received).map(record => record.hex), ["a1b2c3"]);
   // A browser clock an hour fast or slow counts at most the 30 s cache window, never an hour.
@@ -357,6 +359,13 @@ test("TFR list accepts known field spellings and keeps Kansas entries", () => {
   assert.throws(() => drone.parseTfrList({}), /not an array/);
 });
 
+// Hashing and parsing the pinned product takes a variable time under load, so
+// component tests wait (boundedly) for a rendered state instead of counting renders.
+const renderUntil = async (cycle, ready, what) => {
+  for (let attempt = 0; attempt < 400; attempt++) { const tree = await cycle(); if (ready(tree)) return tree; }
+  assert.fail(`timed out waiting for ${what}`);
+};
+
 test("the UAS grid request survives its own loading-state re-render and reaches ready", { timeout: 10_000 }, async () => {
   const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
   const control = await import("node:fs/promises").then(fs => fs.readFile(new URL("../app/aviation-control.tsx", import.meta.url), "utf8"));
@@ -386,9 +395,9 @@ test("the UAS grid request survives its own loading-state re-render and reaches 
   tree = await cycle();   // re-render with state "loading": the old code aborted here
   assert.ok(gridSignal && !gridSignal.aborted, "the in-flight grid request was not cancelled by its own loading state");
   release(); await settle();
-  tree = await cycle();
-  const status = JSON.stringify(findNode(tree, node => node.type === "small" && JSON.stringify(node.props.children ?? "").includes("UAS Facility Map:")));
-  assert.match(status, /1 grid cells/);
+  const status = tree => JSON.stringify(findNode(tree, node => node.type === "small" && JSON.stringify(node.props.children ?? "").includes("UAS Facility Map:")) ?? null);
+  tree = await renderUntil(cycle, tree => /1 grid cells/.test(status(tree)), "the grid to reach ready");
+  assert.match(status(tree), /1 grid cells/);
   } finally { release(); h.dispose(); }
 });
 
@@ -420,13 +429,12 @@ test("turning traffic off and on never redraws the previous positions as current
   try {
     let tree = await cycle();
     findNode(tree, node => node.type === "input" && node.props["aria-label"] === "Show airspace and aviation layers").props.onChange({ target: { checked: true } });
-    await cycle(); tree = await cycle();
-    assert.match(status(tree), /\[1," aircraft · retrieved /);
+    tree = await renderUntil(cycle, tree => /\[1," aircraft · retrieved /.test(status(tree)), "the first traffic response");
     trafficToggle(tree).props.onChange({ target: { checked: false } });
     tree = await cycle();
     trafficToggle(tree).props.onChange({ target: { checked: true } });
-    tree = await cycle(); tree = await cycle();
-    assert.equal(trafficReads, 2, "re-enabling requests fresh positions");
+    tree = await renderUntil(cycle, () => trafficReads === 2, "the second traffic request");
+    tree = await cycle();
     assert.doesNotMatch(status(tree), /aircraft ·/, "the previous response is not shown while the new one is pending");
     assert.match(status(tree), /Checking/);
   } finally { release?.(); h.dispose(); }
