@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import sys
 import tempfile
@@ -376,6 +377,144 @@ class ValidatorOrchestratorTests(unittest.TestCase):
                 legacy_runner._load_legacy_inventory(),
                 ["validate_fixture.py"],
             )
+
+    def test_unparseable_registry_json_is_a_configuration_error(self) -> None:
+        path = self.root / "tools/validators/validator_registry.json"
+        cases = {
+            "deep": "[" * 100_000 + "]" * 100_000,
+            "int-digits": '{"a": ' + "1" * 5000 + "}",
+            "overflow": '{"a": 1e400}',
+            "nan": '{"a": NaN}',
+            "duplicate": '{"a": 1, "a": 2}',
+            "not-utf8": b"\xff",
+            "array": "[]",
+        }
+        for name, body in cases.items():
+            with self.subTest(name):
+                if isinstance(body, bytes):
+                    path.write_bytes(body)
+                else:
+                    path.write_text(body, encoding="utf-8")
+                with self.assertRaises(orchestrator.RegistryError):
+                    self._load(path)
+
+    def test_cli_reports_configuration_errors_as_json_exit_two(self) -> None:
+        self._registry([self._entry("alpha-check", self._script("validate_alpha.py", 0))])
+        changed = self.root / "changed.txt"
+        changed.write_bytes(b"tools/\xff.py\n")
+        (self.root / "tools/validators/validator_registry.json").write_text("[" * 100_000, encoding="utf-8")
+        argvs = (
+            ["--validate-registry"],
+            ["--profile", "focused", "--require-match"],
+        )
+        for argv in argvs:
+            with self.subTest(argv), mock.patch("sys.stderr", new_callable=io.StringIO) as err:
+                self.assertEqual(orchestrator.main([*argv, "--repo-root", str(self.root)]), 2)
+            self.assertEqual(json.loads(err.getvalue())["reason_code"], "ORCHESTRATOR_CONFIGURATION_ERROR")
+        self._registry([self._entry("alpha-check", self._script("validate_alpha.py", 0))])
+        with mock.patch("sys.stderr", new_callable=io.StringIO) as err:
+            code = orchestrator.main(["--profile", "changed-area", "--changed-path-file", str(changed),
+                                      "--repo-root", str(self.root)])
+        self.assertEqual(code, 2)
+        self.assertIn("not UTF-8", json.loads(err.getvalue())["detail"])
+
+    def test_cli_list_validate_and_output_round_trip(self) -> None:
+        self._registry([self._entry("alpha-check", self._script("validate_alpha.py", 0))])
+        root = ["--repo-root", str(self.root)]
+        with mock.patch("sys.stdout", new_callable=io.StringIO) as out:
+            self.assertEqual(orchestrator.main(["--list", *root]), 0)
+        self.assertEqual(json.loads(out.getvalue())["validators"], ["alpha-check"])
+        with mock.patch("sys.stdout", new_callable=io.StringIO) as out:
+            self.assertEqual(orchestrator.main(["--validate-registry", *root]), 0)
+        self.assertEqual(json.loads(out.getvalue())["reason_code"], "REGISTRY_VALID")
+        output = self.root / "reports/report.json"
+        with mock.patch("sys.stdout", new_callable=io.StringIO) as out:
+            self.assertEqual(orchestrator.main(["--profile", "focused", "--output", str(output), "--quiet", *root]), 0)
+        self.assertEqual(out.getvalue(), "")
+        self.assertEqual(json.loads(output.read_text(encoding="utf-8"))["outcome"], "PASS")
+        self.assertFalse(output.with_name("report.json.tmp").exists())
+
+    def test_output_symlinks_are_denied_even_when_dangling(self) -> None:
+        self._registry([self._entry("alpha-check", self._script("validate_alpha.py", 0))])
+        victim = self.root / "victim.txt"
+        for name, link in (("output", "out.json"), ("temporary", "out.json.tmp")):
+            with self.subTest(name):
+                output = self.root / "out.json"
+                for leftover in (output, output.with_name("out.json.tmp")):
+                    if leftover.is_symlink() or leftover.exists():
+                        leftover.unlink()
+                (self.root / link).symlink_to(victim)
+                with mock.patch("sys.stderr", new_callable=io.StringIO) as err:
+                    code = orchestrator.main(["--profile", "focused", "--output", str(output), "--quiet",
+                                              "--repo-root", str(self.root)])
+                self.assertEqual(code, 2)
+                self.assertIn("symlink is denied", json.loads(err.getvalue())["detail"])
+                self.assertFalse(victim.exists())
+
+    def test_timeout_and_selection_errors_fail_closed(self) -> None:
+        slow = self.root / "tools/validators/validate_slow.py"
+        slow.write_text("import time\ntime.sleep(5)\n", encoding="utf-8")
+        entry = self._entry("slow-check", "tools/validators/validate_slow.py", timeout=1)
+        registry = self._load(self._registry([entry]))
+        code, report = orchestrator.orchestrate(registry, repo_root=self.root, profile="focused",
+                                                include_timing=True)
+        self.assertEqual(code, 2)
+        self.assertEqual(report["results"][0]["reason_code"], "VALIDATOR_TIMEOUT")
+        self.assertIsNone(report["results"][0]["return_code"])
+        self.assertIn("total_duration_ms", report)
+        for kwargs, message in (
+            ({"requested_ids": ["slow-check", "slow-check"]}, "duplicates"),
+            ({"requested_ids": ["nope-check"]}, "unknown explicit"),
+            ({"require_match": True}, "require_match"),
+        ):
+            with self.subTest(message), self.assertRaisesRegex(orchestrator.RegistryError, message):
+                orchestrator.orchestrate(registry, repo_root=self.root, profile="focused", **kwargs)
+
+    def test_registry_and_changed_path_shape_errors(self) -> None:
+        script = self._script("validate_alpha.py", 0)
+        good = self._entry("alpha-check", script)
+        cases = {
+            "root keys": ({"extra": 1}, None, "root keys"),
+            "schema": ({"schema_version": "v0"}, None, "schema_version"),
+            "registry id": ({"registry_id": "http://x"}, None, "registry_id"),
+            "validators empty": ({"validators": []}, None, "non-empty"),
+            "entry keys": (None, {**good, "extra": 1}, "v1 contract"),
+            "id": (None, {**good, "id": "Bad"}, ".id is invalid"),
+            "description": (None, {**good, "description": " "}, "description"),
+            "script traversal": (None, {**good, "script": "tools/validators/../x.py"}, "normalized"),
+            "script location": (None, {**good, "script": "tools/other.py"}, "required location"),
+            "script backslash": (None, {**good, "script": "tools\\validators\\x.py"}, "backslashes"),
+            "script suffix": (None, {**good, "script": "tools/validators/x.sh"}, "Python"),
+            "args": (None, {**good, "args": [""]}, "args"),
+            "args duplicate": (None, {**good, "args": ["a", "a"]}, "duplicate"),
+            "globs empty": (None, {**good, "path_globs": []}, "path_globs"),
+            "globs duplicate": (None, {**good, "path_globs": ["a", "a"]}, "duplicates"),
+            "timeout bool": (None, {**good, "timeout_seconds": True}, "timeout"),
+            "timeout range": (None, {**good, "timeout_seconds": 601}, "timeout"),
+        }
+        path = self.root / "tools/validators/validator_registry.json"
+        for name, (root_change, entry, message) in cases.items():
+            with self.subTest(name):
+                self._registry([entry or good])
+                if root_change is not None:
+                    data = json.loads(path.read_text(encoding="utf-8"))
+                    data.update(root_change)
+                    path.write_text(json.dumps(data), encoding="utf-8")
+                with self.assertRaisesRegex(orchestrator.RegistryError, message):
+                    self._load(path)
+        for profiles, message in (
+            ({"focused": ["alpha-check"], "changed-area": [], "full": ["alpha-check"]}, "must contain"),
+            ({"focused": ["ghost-check"], "changed-area": [], "release-dry-run": ["alpha-check"],
+              "full": ["alpha-check"]}, "unknown validators"),
+            ({"focused": [], "changed-area": [], "release-dry-run": ["alpha-check"],
+              "full": ["alpha-check"]}, "non-empty"),
+        ):
+            with self.subTest(message), self.assertRaisesRegex(orchestrator.RegistryError, message):
+                self._load(self._registry([good], profiles=profiles))
+        for value in ("/abs/path", "a/../b", "a\\b"):
+            with self.subTest(value), self.assertRaises(orchestrator.RegistryError):
+                orchestrator.normalize_changed_paths([value])
+        self.assertEqual(orchestrator.normalize_changed_paths([" b ", "a", "", "a"]), ("a", "b"))
 
 
 if __name__ == "__main__":
