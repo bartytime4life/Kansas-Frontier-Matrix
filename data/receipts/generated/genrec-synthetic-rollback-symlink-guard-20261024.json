@@ -6,14 +6,16 @@
     "tests/release/test_synthetic_rollback_rehearsal.py",
     "tools/release/README.md",
     ".github/workflows/release-dry-run.yml",
-    ".github/workflows/rollback-drill.yml"
+    ".github/workflows/rollback-drill.yml",
+    "tests/ci/test_rollback_drill_integrity.py"
   ],
   "artifact_hashes": {
     "tools/release/rollback_apply.py": "sha256:6864f3e8c4de17031cdefc0d4de3ccd765c5222c917a13790ddcf8a923149290",
     "tests/release/test_synthetic_rollback_rehearsal.py": "sha256:6ad2dd085774cc520ef3dd4cc57328509917ed49930b81a81075495c90bae2cd",
     "tools/release/README.md": "sha256:af8e058ab9f616712f61fdac20b2f4b9386637311e0bd1f9094bf6df4147eed5",
     ".github/workflows/release-dry-run.yml": "sha256:49bd9c10b1809e7cdf443d901925fc2a90f80666b73592d82cea3a65a0aa2a8e",
-    ".github/workflows/rollback-drill.yml": "sha256:0df23ac9913385d14ea277ec37ecf33dcf121880ae9e0451d34fdb2d9b135836"
+    ".github/workflows/rollback-drill.yml": "sha256:0df23ac9913385d14ea277ec37ecf33dcf121880ae9e0451d34fdb2d9b135836",
+    "tests/ci/test_rollback_drill_integrity.py": "sha256:706910e1d101951b20c42da05e36160347bb2fe1c27b4e46d77d0bc903bc0243"
   },
   "model_identity": {
     "provider": "OpenAI",
@@ -34,7 +36,8 @@
       "repo:tests/release/test_synthetic_rollback_rehearsal.py@1a664987317bd13e0d4de2b0e5dc179b7b880303",
       "repo:tools/release/README.md@1a664987317bd13e0d4de2b0e5dc179b7b880303",
       "repo:.github/workflows/release-dry-run.yml@1a664987317bd13e0d4de2b0e5dc179b7b880303",
-      "repo:.github/workflows/rollback-drill.yml@1a664987317bd13e0d4de2b0e5dc179b7b880303"
+      "repo:.github/workflows/rollback-drill.yml@1a664987317bd13e0d4de2b0e5dc179b7b880303",
+      "repo:tests/ci/test_rollback_drill_integrity.py@1a664987317bd13e0d4de2b0e5dc179b7b880303"
     ]
   },
   "truth_labels": {
@@ -42,7 +45,8 @@
     "tests/release/test_synthetic_rollback_rehearsal.py": "CONFIRMED",
     "tools/release/README.md": "CONFIRMED",
     ".github/workflows/release-dry-run.yml": "CONFIRMED",
-    ".github/workflows/rollback-drill.yml": "CONFIRMED"
+    ".github/workflows/rollback-drill.yml": "CONFIRMED",
+    "tests/ci/test_rollback_drill_integrity.py": "CONFIRMED"
   },
   "validation_gates": [
     {
@@ -84,6 +88,11 @@
       "gate": "Human approval",
       "outcome": "SKIPPED",
       "reason": "Pending; no approval or override is inferred from generation or testing."
+    },
+    {
+      "gate": "Rollback drill integrity regressions",
+      "outcome": "PASS",
+      "reason": "All 21 tests pass through the actual workflow integrity gate and isolated loader. The positive-path expected count is reconciled from 14 to 19; symlink redirection, byte drift, import aliases and hostile bytecode remain denied or inert."
     }
   ],
   "policy_decisions": [
