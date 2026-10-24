@@ -3900,9 +3900,9 @@ export default function Home() {
     }, 0);
   }, [dismissMapUtilityWithoutFocus, isCompact, setQwenOpen, setRightOpen]);
 
-  const openAtlasComposer = useCallback((intent: "find" | "explore", value?: string) => {
+  const openAtlasComposer = useCallback((intent: "find" | "explore", value?: string, returnElement?: HTMLElement | null) => {
     setPrimaryWorkspace("map");
-    openQwenCompanion(undefined, "composer");
+    openQwenCompanion(returnElement, "composer");
     setAssistantDraftRequest(current => ({id:(current?.id ?? 0)+1, value:value ?? globalSearchInputRef.current?.value ?? "", intent}));
   }, [openQwenCompanion]);
 
@@ -9003,7 +9003,7 @@ export default function Home() {
         </div>
         <div className="atlas-scope-strip" aria-label="Current investigation">
           <button type="button" className="atlas-scope-control welcome-header-find" onClick={() => openAtlasComposer("find")} aria-label="Find a county or place" aria-controls="qwen-map-panel" title="Find places, layers and sources · shortcut /"><span className="welcome-find-icon" aria-hidden="true">⌕</span><span className="welcome-find-label">Find a county or place</span></button>
-          <button type="button" className="welcome-ai-entry qwen-header-entry" aria-label="Chat with KFM about this map view" title="Chat with KFM · AI assistant" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openQwenCompanion(event.currentTarget, "composer")} aria-expanded={qwenOpen} aria-controls="qwen-map-panel"><span className="qwen-launch-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M20 11.5a8 8 0 0 1-8 8H5l-4 3 1.5-6A8 8 0 1 1 20 11.5Z"/><path d="M6.5 9h9M6.5 13h6"/></svg></span><span className="qwen-header-label">Chat<span className="qwen-header-name"> with KFM</span></span></button>
+          <button type="button" className="welcome-ai-entry qwen-header-entry" aria-label="Chat with KFM about this map view" title="Chat with KFM · AI assistant" onClick={(event) => qwenOpen ? closeQwenCompanion(event.currentTarget) : openAtlasComposer("explore", undefined, event.currentTarget)} aria-expanded={qwenOpen} aria-controls="qwen-map-panel"><span className="qwen-launch-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M20 11.5a8 8 0 0 1-8 8H5l-4 3 1.5-6A8 8 0 1 1 20 11.5Z"/><path d="M6.5 9h9M6.5 13h6"/></svg></span><span className="qwen-header-label">Chat<span className="qwen-header-name"> with KFM</span></span></button>
           <span className="welcome-header-context"><strong>{selectedLabel}</strong><br /><small>Map time {temporalScopeLabel} · {selectedMapLayerCount} layers</small></span>
         </div>
           <span className="sr-only" role="status">{sourceIssues.length ? `${sourceIssues.length} selected sources need attention. Open Layers, then Source status for recovery.` : ""}</span>
