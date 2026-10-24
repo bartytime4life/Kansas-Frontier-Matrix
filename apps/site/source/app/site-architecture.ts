@@ -61,9 +61,9 @@ export const SITE_CODE_SURFACES = Object.freeze([
   {
     id: "aviation-context",
     title: "Airspace, airports and aviation weather",
-    role: "Owns the pinned FAA NASR Kansas airspace/airport/airway product, 3D airspace and drone rule layers, and live AWC METAR/PIREP context.",
-    paths: ["app/aviation-airspace.ts", "app/aviation-weather.ts", "app/aviation-weather-server.ts", "app/aviation-control.tsx", "app/api/aviation", "public/data/aviation"],
-    handles: ["airspace volumes with source vertical references", "small-UAS rule slabs", "airspace column at a point", "station weather and pilot reports"],
+    role: "Owns the pinned FAA NASR Kansas airspace/airport/airway product, 3D airspace and drone rule layers, and live AWC METAR/PIREP, FAA UAS Facility Map and FAA TFR context.",
+    paths: ["app/aviation-airspace.ts", "app/aviation-weather.ts", "app/aviation-weather-server.ts", "app/aviation-drone-data.ts", "app/aviation-drone-server.ts", "app/aviation-control.tsx", "app/api/aviation", "public/data/aviation"],
+    handles: ["airspace volumes with source vertical references", "small-UAS rule slabs and LAANC grid ceilings", "Kansas TFR list", "airspace column at a point", "station weather and pilot reports"],
     verification: ["tests/aviation.test.mjs", "tests/layer-explorer.test.mjs"],
   },
   {
@@ -138,10 +138,10 @@ export const SITE_ROUTE_CONTRACTS = Object.freeze([
   },
   {
     id: "aviation-weather-routes",
-    route: "/api/aviation/metar, /api/aviation/pireps",
+    route: "/api/aviation/metar, /api/aviation/pireps, /api/aviation/uas-grid, /api/aviation/tfrs",
     owner: "app/api/aviation/",
-    purpose: "Latest Kansas-region METAR per station and 3-hour pilot reports from the NOAA/NWS Aviation Weather Center.",
-    trustBoundary: "Fixed upstream URLs with no caller input, no redirects, 12-second timeout, 2 MB bound, 2-minute shared cache; failures return no substitute observations.",
+    purpose: "Latest Kansas-region METAR per station and 3-hour pilot reports (NOAA/NWS AWC), FAA UAS Facility Map ceilings for the Kansas region, and the FAA TFR list.",
+    trustBoundary: "Fixed upstream URLs with no caller input, no redirects, bounded time and bytes, shared caches (2 minutes for weather, 5 for TFRs, a day for the grid); an incomplete grid or failed read returns no substitute data.",
   },
   {
     id: "hydrology-routes",

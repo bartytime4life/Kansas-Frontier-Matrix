@@ -4,8 +4,9 @@ One specialty layer, **Map layers > Airspace, airports & aviation weather**,
 draws Kansas airspace as labelled 3D volumes, shows where small drones need
 authorization, and ties live airport weather and pilot reports to the airspace
 they occur in. It is display context only: **not navigation, flight planning or
-UAS authorization**. Temporary flight restrictions (TFRs), NOTAM activations,
-UAS Facility Map grid ceilings and live aircraft positions are not shown.
+UAS authorization**. Active Kansas temporary flight restrictions (TFRs) are
+listed but their boundaries are not drawn; NOTAM activations and live aircraft
+positions are not shown.
 
 ## Sources and clocks
 
@@ -14,6 +15,8 @@ UAS Facility Map grid ceilings and live aircraft positions are not shown.
 | Airspace volumes, public-use airports and runways, airways | FAA NASR 28-day subscription, cycle 2026-10-29, via the pinned `public/data/aviation/kansas-aviation-context.json` | Valid 2026-10-29 up to (not including) 2026-11-26. Before the 29th the layer says it is a *preview* edition; after the 26th it says *expired*. |
 | METAR (ASOS/AWOS station weather) | NOAA/NWS Aviation Weather Center Data API via `/api/aviation/metar` | Each station's own observation time; latest within 90 minutes; refreshed every 5 minutes while shown |
 | PIREP (pilot reports) | Same API via `/api/aviation/pireps` | Report time; last 3 hours |
+| LAANC grid ceilings | FAA UAS Facility Maps (ArcGIS `FAA_UAS_FacilityMap_Data`) via `/api/aviation/uas-grid` | FAA 56-day cycle; read once per session, cached a day at the edge |
+| Temporary flight restrictions | FAA TFR list (`tfr.faa.gov/tfrapi/exportTfrList`) via `/api/aviation/tfrs` | Current list; refreshed every 10 minutes while shown |
 
 The product file is built by
 `pipelines/domains/roads-rail-trade/faa_airspace.py` from a NASR-derived
@@ -39,6 +42,15 @@ facilities are drawn or used as nearest-airport references.
   required (14 CFR 107.41; 49 U.S.C. 44809(a)(5)). Yellow: MOA or alert area
   reaching low altitude, caution. Unshaded is Class G: up to 400 ft AGL without
   ATC authorization (14 CFR 107.51(b)).
+- **LAANC grid (zoom 8+).** Each FAA UAS Facility Map cell is extruded from the
+  ground to the altitude LAANC can approve there: 0 ft red (DroneZone request
+  only), 50/100/200/300 ft, 400 ft green. Ceiling labels appear at zoom 11.5+.
+  A ceiling is the most LAANC can approve, not an approval. If paging the FAA
+  service does not finish, no grid is drawn rather than a partial one.
+- **TFRs.** Kansas entries from the FAA's national list (matched by state or by
+  "KANSAS"/", KS" in the text) appear in the drone section with their NOTAM IDs,
+  and the point inspector warns when any are active. Their boundaries and
+  times are in each NOTAM at tfr.faa.gov.
 - **Airports and runways.** Blue dots are towered, magenta non-towered. Labels
   give the identifier and field elevation; runways draw from their surveyed end
   points at zoom 10+.

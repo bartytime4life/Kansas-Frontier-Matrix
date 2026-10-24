@@ -46,7 +46,7 @@ smoke_routes=(
 # invalid input and provider failure alike as 502. An offline check cannot tell
 # a healthy route from a broken one.
 network_routes=(
-  aviation/metar aviation/pireps
+  aviation/metar aviation/pireps aviation/tfrs aviation/uas-grid
   event-atlas/radar-frame event-atlas/tile
   lightning/frames lightning/legend lightning/preview
   "lightning/tiles/[frame]/[z]/[x]/[y]" noaa-radar/frames noaa-satellite/frames

@@ -12,6 +12,7 @@ const compileModule = async (name) => {
 
 const airspace = await compileModule("aviation-airspace");
 const weather = await compileModule("aviation-weather");
+const drone = await compileModule("aviation-drone-data");
 const bytes = await readFile(new URL("../public/data/aviation/kansas-aviation-context.json", import.meta.url));
 const context = airspace.parseAviationContext(JSON.parse(bytes.toString("utf8")));
 const SALINA = [-97.6522, 38.7906], RURAL = [-100.35, 39.35], FORT_RILEY_RANGE = [-96.85, 39.2];
@@ -250,9 +251,43 @@ test("metar features draw ceilings as discs at reported height", () => {
 test("weather route uses fixed upstream URLs and never forwards caller input", async () => {
   const server = await readFile(new URL("../app/aviation-weather-server.ts", import.meta.url), "utf8");
   assert.match(server, /redirect: "manual"/);
-  assert.match(server, /readBoundedText\(response, MAX_BYTES/);
-  for (const route of ["metar", "pireps"]) {
+  assert.match(server, /readBoundedText\(response, maxBytes/);
+  const droneServer = await readFile(new URL("../app/aviation-drone-server.ts", import.meta.url), "utf8");
+  assert.doesNotMatch(droneServer, /searchParams|nextUrl|NextRequest|headers\.get/, "drone routes never read caller input");
+  assert.match(droneServer, /if \(!complete\) throw/, "an unfinished UASFM paging run fails instead of drawing a partial grid");
+  for (const route of ["metar", "pireps", "uas-grid", "tfrs"]) {
     const handler = await readFile(new URL(`../app/api/aviation/${route}/route.ts`, import.meta.url), "utf8");
     assert.match(handler, /export async function GET\(\)/, "handler takes no request input");
   }
+});
+
+const cell = (lon, lat, ceiling, size = 0.0083) => ({ type: "Feature", properties: { CEILING: ceiling, APT1_FAAID: "SLN", APT1_NAME: "SALINA RGNL" },
+  geometry: { type: "Polygon", coordinates: [[[lon, lat], [lon + size, lat], [lon + size, lat + size], [lon, lat + size], [lon, lat]]] } });
+
+test("UAS Facility Map pages parse strictly, report paging, and give the lowest ceiling at a point", () => {
+  const page = drone.parseUasfmPage({ type: "FeatureCollection", features: [cell(-97.66, 38.78, 0), cell(-97.65, 38.78, 200)], properties: { exceededTransferLimit: true } });
+  assert.equal(page.cells.length, 2); assert.equal(page.more, true);
+  assert.equal(drone.uasCeilingAt(page.cells, -97.655, 38.784).ceilingFt, 0);
+  assert.equal(drone.uasCeilingAt(page.cells, -97.645, 38.784).ceilingFt, 200);
+  assert.equal(drone.uasCeilingAt(page.cells, -97.0, 38.0), null);
+  assert.equal(drone.parseUasfmPage({ type: "FeatureCollection", features: [] }).more, false);
+  assert.throws(() => drone.parseUasfmPage({ error: { code: 400 } }), /FeatureCollection/);
+  assert.throws(() => drone.parseUasfmPage({ type: "FeatureCollection", features: [{ ...cell(0, 0, 0), properties: { CEILING: 500 } }] }), /CEILING/);
+  const url = new URL(drone.uasfmPageUrl(2));
+  assert.equal(url.searchParams.get("resultOffset"), "4000"); assert.equal(url.searchParams.get("f"), "geojson");
+  assert.throws(() => drone.uasfmPageUrl(drone.UASFM_MAX_PAGES), /out of range/);
+  const [extruded] = drone.uasFeatures(page.cells, 1).features;
+  assert.equal(extruded.properties.label, "0 ft"); assert.equal(extruded.properties.color, drone.UAS_CEILING_COLORS[0][1]);
+  assert.ok(Math.abs(drone.uasFeatures(page.cells, 1).features[1].properties.top - 200 * 0.3048) < 1e-9);
+});
+
+test("TFR list accepts known field spellings and keeps Kansas entries", () => {
+  const list = [{ notam_id: "6/1234", type: "HAZARDS", state: "KS", description: "WICHITA, KS, Saturday ..." },
+    { notamId: "6/5678", type: "VIP", state: "DC", description: "WASHINGTON, DC" },
+    { NOTAM_ID: "6/9999", DESCRIPTION: "15NM NE MANHATTAN, KS FIRE FIGHTING" }, { nothing: true }];
+  const parsed = drone.parseTfrList(list);
+  assert.equal(parsed.total, 3);
+  assert.deepEqual(parsed.kansas.map(entry => entry.notam), ["6/1234", "6/9999"]);
+  assert.equal(drone.parseTfrList({ tfrs: list }).total, 3);
+  assert.throws(() => drone.parseTfrList({}), /not an array/);
 });
