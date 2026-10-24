@@ -59,9 +59,11 @@ rooftop. Contacts, owner names and remarks are never copied.
   `TFR 6/1234 HAZARDS · SFC–3,000 MSL`. Limits keep their reference: `SFC`,
   `AGL` (FAA height code), `MSL`, flight level, or `UNL` (drawn to FL600).
   Picking a point inside a TFR lists each area with its limits and times (UTC),
-  ahead of the drone verdict. A detail file that fails, or arrives after the
-  route's 20-second deadline, is counted. The panel then says how many
-  boundaries could not be read, rather than implying no TFR is there.
+  ahead of the drone verdict. A detail file is counted as not fully read when
+  it fails, arrives after the route's 20-second deadline, or has any area whose
+  boundary or limits cannot be read whole. Such areas are never shortened or
+  guessed. The panel and the point inspector then say how many could not be
+  read, rather than implying no TFR is there.
 - **Airports and runways.** Blue dots are towered, magenta non-towered public-use
   airports. Private-use facilities are smaller hollow dots labelled `PVT`, with
   their own toggle: landing at one needs the owner's permission. Labels give the

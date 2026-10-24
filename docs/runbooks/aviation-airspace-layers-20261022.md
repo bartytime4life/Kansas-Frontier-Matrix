@@ -248,7 +248,10 @@ on 2026-10-24, because the FAA host was unreachable from the build environment):
   hundreds of feet, `HEI` is above ground, 99999 or more is unlimited, and
   anything else is MSL.
 
-Malformed altitudes or vertices drop that area only. The detail URL is built
+An area with malformed limits or vertices, no boundary, or more than 20,000
+vertices is never shortened or guessed. It is left undrawn, and its file is
+counted in `detailsFailed`, so the panel warns that boundaries are missing.
+Areas wholly outside the region are left out without a count. The detail URL is built
 only from ids matching `^\d/\d{1,5}$`. The response stays cached 5 minutes at
 the edge. Field names and the detail-file media type must be confirmed on the
 first hosted run.

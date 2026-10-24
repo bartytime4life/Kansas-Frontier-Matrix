@@ -36,9 +36,9 @@ const TFR_DETAIL_DEADLINE_MS = 20_000;
 
 /**
  * Boundaries for Kansas and neighbouring-state TFRs, read from each NOTAM's
- * detail file a few at a time. A detail that fails or arrives after the
- * deadline is counted, not guessed: the list entry stays and the map says how
- * many boundaries are missing.
+ * detail file a few at a time. A file that fails, arrives after the deadline,
+ * or has any area that cannot be read whole is counted, not guessed: the list
+ * entry stays, readable areas are drawn, and the map says boundaries are missing.
  */
 async function tfrShapes(notams: readonly string[]): Promise<Readonly<{ shapes: TfrShape[]; failed: number }>> {
   const shapes: TfrShape[] = [];
@@ -51,7 +51,9 @@ async function tfrShapes(notams: readonly string[]): Promise<Readonly<{ shapes: 
       try {
         const xml = await fetchText(tfrDetailUrl(notam), "xml", 1024 * 1024, 8_000);
         if (xml === null) throw new Error("Empty detail.");
-        shapes.push(...parseTfrDetail(xml, notam));
+        const detail = parseTfrDetail(xml, notam);
+        shapes.push(...detail.shapes);
+        if (detail.unreadable > 0) failed++;
       } catch {
         failed++;
       }

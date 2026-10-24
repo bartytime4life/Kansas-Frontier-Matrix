@@ -387,8 +387,9 @@ test("TFR detail files give boundaries and altitude limits for areas reaching Ka
     tfrArea({ name: "BAD VERTEX", vertices: [[-97.5, 37.6], [-97.4, 37.6], [-97.4, 37.7]].map(([lon, lat], index) => index === 1 ? [lon, Number.NaN] : [lon, lat]) }),
     tfrArea({ name: "BAD ALTITUDE", upper: ["ALT", "lots", "FT"], vertices: square(-97.5, 37.6, 0.1) }),
   ]);
-  const shapes = drone.parseTfrDetail(xml, "6/1234");
-  assert.deepEqual(shapes.map(shape => shape.name), ["WICHITA & AREA", "HIGH"], "out-of-region, malformed-vertex and malformed-altitude areas are dropped");
+  const { shapes, unreadable } = drone.parseTfrDetail(xml, "6/1234");
+  assert.deepEqual(shapes.map(shape => shape.name), ["WICHITA & AREA", "HIGH"]);
+  assert.equal(unreadable, 2, "the malformed vertex and altitude areas are counted; the out-of-region area is not");
   const [low, high] = shapes;
   assert.deepEqual([low.floor, low.ceiling], [{ valueFt: 0, reference: "SFC" }, { valueFt: 3000, reference: "MSL" }]);
   assert.deepEqual(high.ceiling, { valueFt: 18000, reference: "FL" });
@@ -399,9 +400,12 @@ test("TFR detail files give boundaries and altitude limits for areas reaching Ka
   assert.ok(low.ring.every(([lon, lat]) => lon < -97 && lat > 37), "only abdMergedArea vertices are used, with W/N signs applied");
   assert.equal(drone.formatTfrLimit(high.ceiling), "FL180");
   assert.equal(drone.formatTfrLimit({ valueFt: 99999, reference: "UNL" }), "UNL");
-  assert.equal(drone.parseTfrDetail(xnotam([tfrArea({ upper: ["ALT", "99999", "FT"], vertices: square(-97.5, 37.6, 0.1) })]), "6/1234")[0].ceiling.reference, "UNL");
-  assert.equal(drone.parseTfrDetail(xnotam([tfrArea({ lower: ["HEI", "400", "FT"], vertices: square(-97.5, 37.6, 0.1) })]), "6/1234")[0].floor.reference, "AGL");
-  assert.deepEqual(drone.parseTfrDetail(xnotam([]), "6/1234"), []);
+  assert.equal(drone.parseTfrDetail(xnotam([tfrArea({ upper: ["ALT", "99999", "FT"], vertices: square(-97.5, 37.6, 0.1) })]), "6/1234").shapes[0].ceiling.reference, "UNL");
+  assert.equal(drone.parseTfrDetail(xnotam([tfrArea({ lower: ["HEI", "400", "FT"], vertices: square(-97.5, 37.6, 0.1) })]), "6/1234").shapes[0].floor.reference, "AGL");
+  assert.deepEqual(drone.parseTfrDetail(xnotam([]), "6/1234"), { shapes: [], unreadable: 1 }, "a NOTAM with no area is reported, not treated as clear");
+  // A 20,001-vertex circle around Wichita: rejected whole and counted, never shortened into a different polygon.
+  const circle = Array.from({ length: 20_001 }, (_, index) => [-97.43 + 0.2 * Math.cos(index / 20_001 * 2 * Math.PI), 37.65 + 0.2 * Math.sin(index / 20_001 * 2 * Math.PI)]);
+  assert.deepEqual(drone.parseTfrDetail(xnotam([tfrArea({ vertices: circle })]), "6/1234"), { shapes: [], unreadable: 1 });
   assert.throws(() => drone.parseTfrDetail("<html>maintenance</html>", "6/1234"), /Not an XNOTAM/);
 });
 
@@ -414,7 +418,7 @@ test("TFR volumes rise from floor to ceiling and the inspector finds the areas c
   const [low, high] = drone.parseTfrDetail(xnotam([
     tfrArea({ vertices: square(-97.5, 37.6, 0.1) }),
     tfrArea({ name: "HIGH", lower: ["ALT", "3000", "FT"], upper: ["STD", "180", "FL"], vertices: square(-97.5, 37.6, 0.1) }),
-  ]), "6/1234");
+  ]), "6/1234").shapes;
   const features = drone.tfrFeatures([low, high], () => 1333, 1).features;
   assert.equal(features[0].properties.base, 0);
   assert.ok(Math.abs(features[0].properties.top - (3000 - 1333) * 0.3048) < 1e-6);
@@ -431,6 +435,7 @@ test("the TFR route reads detail files only through the guarded URL builder, wit
   assert.match(server, /fetchText\(tfrDetailUrl\(notam\), "xml"/);
   assert.match(server, /if \(Date\.now\(\) > deadline\) \{ failed\+\+; continue; \}/, "late details are counted as missing, not awaited");
   assert.match(server, /detailsFailed: details\.failed/);
+  assert.match(server, /if \(detail\.unreadable > 0\) failed\+\+;/, "a file with any unreadable area counts as not fully read");
 });
 
 // Hashing and parsing the pinned product takes a variable time under load, so

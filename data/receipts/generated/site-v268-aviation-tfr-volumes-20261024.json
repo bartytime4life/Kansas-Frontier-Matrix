@@ -1626,19 +1626,19 @@
     },
     "app/aviation-control.tsx": {
       "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@e5ea665b351e13149dd09ff5d11d5bc27d928df8: UAS Facility Map grid request no longer cancelled by its own loading state, with a component regression test. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@151e4f1bca7c3827683955f0fd15f4a7a18b5cfd: live ADS-B traffic route and layer (adsb.lol, else adsb.fi) and private-use airports in the pinned aviation product (profile v2). Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@848461d0a5a9a844f920af9a266290ac6ac7d4eb: live aircraft positions expire 60 s after observation in the browser and are discarded when traffic is turned off, with regression tests. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "79a212646fb33bdccfe0bd4ccfa3d0cec66bb77ff28a058598ee2751681a9caf",
+      "mirror_sha256": "86d00852677bc332d8bde9d7bc35f16c6dfa027eb97926c95bb02b87af16b347",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
     "app/aviation-drone-data.ts": {
       "difference": "Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "dda47b28d95f3fbf9a940b4b9933d07f5d5c3dde35c382f9b5fe94d43d02e2df",
+      "mirror_sha256": "ce179f63961141db25b3fa405aac38733695dd8d4fe94daf00a70b0676f64c49",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
     "app/aviation-drone-server.ts": {
       "difference": "Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "1f39bda73b221a5df29e80bcc060a2410b3438073ec029d81811165f024d1255",
+      "mirror_sha256": "ba18466ba2b6ae8bb76c7d707e3361821d2cb3cea93cfb6fe22ffe1540eab8a6",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -3435,7 +3435,7 @@
     },
     "docs/aviation-layers.md": {
       "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@151e4f1bca7c3827683955f0fd15f4a7a18b5cfd: live ADS-B traffic route and layer (adsb.lol, else adsb.fi) and private-use airports in the pinned aviation product (profile v2). Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@848461d0a5a9a844f920af9a266290ac6ac7d4eb: live aircraft positions expire 60 s after observation in the browser and are discarded when traffic is turned off, with regression tests. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "44284532d5c035c6a8a4475063f3ae3005c90c4a89bcfd6fbeffe679169bbd4c",
+      "mirror_sha256": "5e69de148d22d7f31e2ba8c6fad690863ebce8fc209549e841893965fc556362",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -4240,7 +4240,7 @@
     },
     "tests/aviation.test.mjs": {
       "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@e5ea665b351e13149dd09ff5d11d5bc27d928df8: UAS Facility Map grid request no longer cancelled by its own loading state, with a component regression test. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@151e4f1bca7c3827683955f0fd15f4a7a18b5cfd: live ADS-B traffic route and layer (adsb.lol, else adsb.fi) and private-use airports in the pinned aviation product (profile v2). Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@848461d0a5a9a844f920af9a266290ac6ac7d4eb: live aircraft positions expire 60 s after observation in the browser and are discarded when traffic is turned off, with regression tests. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@0e434a0792ee80966e1411f49bc21c5e938e93df: the fresh-traffic list keeps its identity between expiry ticks (one shared empty array; the previous subset reused while unchanged), and both aviation component tests wait on rendered state. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "9fc878ca600fb8caa01403d87f245354376e7d58912c41dfd3c321e11f120d9c",
+      "mirror_sha256": "ab1681c51fa8ee57b5426bec48b9286c58b2daa52cb029feb5f77a2d0fbf5260",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -5600,7 +5600,7 @@
     ]
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "8df0976ba464eca0bee9c7d5f65c8e8d1dd18c213819c99a1def2eb18dbc34a1",
+  "inventory_sha256": "85f94ce32dc5fe6d576c6078e51a56b5d39d9cc2c47512f396b652d5fd51b79a",
   "overlay": {
     "scope": "The 258 hashes identify historical v261 carriers now absent from both current source trees. The retained deny list is containment history, not current Site bytes or approval.",
     "withheld_paths": [
@@ -7768,7 +7768,7 @@
       ]
     }
   },
-  "recorded_at": "2026-10-24T22:48:31.318031+00:00",
+  "recorded_at": "2026-10-24T22:55:03.078210+00:00",
   "repository_base": "5ff78dacc4f035e92959625155994979a2640c17",
   "repository_reconciled_base": "9678e903c7cf620373afc26170070a32c2da5e75",
   "repository_reconciliation": {
@@ -7776,7 +7776,7 @@
     "base_commit": "9678e903c7cf620373afc26170070a32c2da5e75",
     "changes": [
       {
-        "mirror_sha256": "79a212646fb33bdccfe0bd4ccfa3d0cec66bb77ff28a058598ee2751681a9caf",
+        "mirror_sha256": "86d00852677bc332d8bde9d7bc35f16c6dfa027eb97926c95bb02b87af16b347",
         "path": "app/aviation-control.tsx",
         "previous_receipt_sha256": "c98bcc8d39453cac688d1910f0240f89603004c89d49f77aaa2b8168c8c13e6e",
         "proposed_in_this_change": true,
@@ -7784,7 +7784,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "dda47b28d95f3fbf9a940b4b9933d07f5d5c3dde35c382f9b5fe94d43d02e2df",
+        "mirror_sha256": "ce179f63961141db25b3fa405aac38733695dd8d4fe94daf00a70b0676f64c49",
         "path": "app/aviation-drone-data.ts",
         "previous_receipt_sha256": "fa0be4805fa589bde60e336e97db4d4d9f75d44cbdecff98423bce6f291c7c70",
         "proposed_in_this_change": true,
@@ -7792,7 +7792,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "1f39bda73b221a5df29e80bcc060a2410b3438073ec029d81811165f024d1255",
+        "mirror_sha256": "ba18466ba2b6ae8bb76c7d707e3361821d2cb3cea93cfb6fe22ffe1540eab8a6",
         "path": "app/aviation-drone-server.ts",
         "previous_receipt_sha256": "c0abb30b73d4900423b17f76ff608e1df5d763d59ddd13f52c3fd8b6e2c31f57",
         "proposed_in_this_change": true,
@@ -7832,7 +7832,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "44284532d5c035c6a8a4475063f3ae3005c90c4a89bcfd6fbeffe679169bbd4c",
+        "mirror_sha256": "5e69de148d22d7f31e2ba8c6fad690863ebce8fc209549e841893965fc556362",
         "path": "docs/aviation-layers.md",
         "previous_receipt_sha256": "ce92bc637c9576609ac5bda6663ca5db57a2ee5645a282c2f1014bd6808225f0",
         "proposed_in_this_change": true,
@@ -7840,7 +7840,7 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "9fc878ca600fb8caa01403d87f245354376e7d58912c41dfd3c321e11f120d9c",
+        "mirror_sha256": "ab1681c51fa8ee57b5426bec48b9286c58b2daa52cb029feb5f77a2d0fbf5260",
         "path": "tests/aviation.test.mjs",
         "previous_receipt_sha256": "bdc5ded28faf150d62c4fd07b971daf8f27710646072654a97941fc971176454",
         "proposed_in_this_change": true,

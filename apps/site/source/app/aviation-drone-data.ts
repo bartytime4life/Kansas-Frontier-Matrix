@@ -159,40 +159,49 @@ const coordinate = (value: string | null, positive: string, negative: string, li
   return Math.abs(degrees) <= limit ? degrees : null;
 };
 
+// Bounds that reject, never truncate: a shortened boundary would draw and test the wrong area.
+const TFR_MAX_AREAS = 50;
+const TFR_MAX_VERTICES = 20_000;
+
 /**
  * Areas of one XNOTAM detail file that reach the Kansas region. Geometry is the
  * FAA's pre-traced `abdMergedArea` boundary (circles and arcs already
- * polygonised); the alternate `aseShapes` description is ignored. A malformed
- * altitude or vertex rejects that area; a file without a usable area yields none.
+ * polygonised); the alternate `aseShapes` description is ignored. An area whose
+ * boundary or limits cannot be read whole is counted in `unreadable`, never
+ * dropped silently or shortened, so the map can say a restriction is missing.
+ * Only areas wholly outside the region are left out without a count.
  */
-export function parseTfrDetail(xml: string, notam: string): readonly TfrShape[] {
+export function parseTfrDetail(xml: string, notam: string): Readonly<{ shapes: readonly TfrShape[]; unreadable: number }> {
   if (!/<XNOTAM-Update[\s>]/.test(xml)) throw new Error("Not an XNOTAM document.");
   const not = blocks(xml, "Not")[0];
   const tfr = not === undefined ? undefined : blocks(not, "TfrNot")[0];
-  if (not === undefined || tfr === undefined) return Object.freeze([]);
+  const groups = tfr === undefined ? [] : blocks(tfr, "TFRAreaGroup");
+  if (not === undefined || tfr === undefined || !groups.length) return Object.freeze({ shapes: Object.freeze([]), unreadable: 1 });
   const type = leaf(tfr, "codeType", 64), notEffective = leaf(not, "dateEffective", 40), notExpires = leaf(not, "dateExpire", 40);
-  const shapes = blocks(tfr, "TFRAreaGroup").slice(0, 20).flatMap((group): TfrShape[] => {
+  let unreadable = Math.max(0, groups.length - TFR_MAX_AREAS);
+  const shapes = groups.slice(0, TFR_MAX_AREAS).flatMap((group): TfrShape[] => {
     const area = blocks(group, "aseTFRArea")[0], merged = blocks(group, "abdMergedArea")[0];
-    if (area === undefined || merged === undefined) return [];
-    let floor: TfrLimit, ceiling: TfrLimit;
-    try {
-      floor = tfrLimit(leaf(area, "codeDistVerLower", 8), leaf(area, "valDistVerLower", 8), leaf(area, "uomDistVerLower", 8));
-      ceiling = tfrLimit(leaf(area, "codeDistVerUpper", 8), leaf(area, "valDistVerUpper", 8), leaf(area, "uomDistVerUpper", 8));
-    } catch { return []; }
-    const points = blocks(merged, "Avx").slice(0, 5000).map(vertex => [coordinate(leaf(vertex, "geoLong", 24), "E", "W", 180), coordinate(leaf(vertex, "geoLat", 24), "N", "S", 90)] as const);
-    if (points.length < 3 || points.some(([lon, lat]) => lon === null || lat === null)) return [];
+    const vertices = merged === undefined ? [] : blocks(merged, "Avx");
+    if (area === undefined || vertices.length < 3 || vertices.length > TFR_MAX_VERTICES) { unreadable++; return []; }
+    const points = vertices.map(vertex => [coordinate(leaf(vertex, "geoLong", 24), "E", "W", 180), coordinate(leaf(vertex, "geoLat", 24), "N", "S", 90)] as const);
+    if (points.some(([lon, lat]) => lon === null || lat === null)) { unreadable++; return []; }
     const ring = (points as (readonly [number, number])[]).map(point => Object.freeze([point[0], point[1]] as const));
     const [first, last] = [ring[0], ring[ring.length - 1]];
     if (first[0] !== last[0] || first[1] !== last[1]) ring.push(first);
     const xs = ring.map(point => point[0]), ys = ring.map(point => point[1]);
     const bbox = Object.freeze([Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)] as [number, number, number, number]);
     if (bbox[2] < TFR_REGION_BBOX[0] || bbox[0] > TFR_REGION_BBOX[2] || bbox[3] < TFR_REGION_BBOX[1] || bbox[1] > TFR_REGION_BBOX[3]) return [];
+    let floor: TfrLimit, ceiling: TfrLimit;
+    try {
+      floor = tfrLimit(leaf(area, "codeDistVerLower", 8), leaf(area, "valDistVerLower", 8), leaf(area, "uomDistVerLower", 8));
+      ceiling = tfrLimit(leaf(area, "codeDistVerUpper", 8), leaf(area, "valDistVerUpper", 8), leaf(area, "uomDistVerUpper", 8));
+    } catch { unreadable++; return []; }
     const schedule = blocks(area, "ScheduleGroup")[0];
     return [Object.freeze({ notam, type, name: leaf(area, "txtName", 200), floor, ceiling, ring: Object.freeze(ring), bbox,
       effective: (schedule !== undefined ? leaf(schedule, "dateEffective", 40) : null) ?? notEffective,
       expires: (schedule !== undefined ? leaf(schedule, "dateExpire", 40) : null) ?? notExpires })];
   });
-  return Object.freeze(shapes);
+  return Object.freeze({ shapes: Object.freeze(shapes), unreadable });
 }
 
 export const formatTfrLimit = (limit: TfrLimit): string => limit.reference === "SFC" ? "SFC" : limit.reference === "UNL" ? "UNL"
