@@ -207,6 +207,15 @@ replacement fails. Existing sibling files are not reused. The synthetic marker,
 input checks and publication boundaries still apply; callers must control the
 workspace and its directories throughout execution.
 
+Internal rehearsal paths reject both existing and dangling symlinks, including
+directory components, with `UNSAFE_SYMLINK` (or `UNSAFE_PATH` when resolution
+escapes the workspace). Ordinary regular files and missing output paths remain
+supported. Apply writes the alias, correction and invalidation sequentially;
+atomic replacement is per file, so a later rejection can follow earlier synthetic
+writes. Recovery requires repairing the rejected path and restoring the expected
+synthetic alias before retrying. The caller-selected `--scenario` and `--report`
+paths are outside this internal path guard.
+
 ```bash
 python3 -m unittest discover -s tests/release -p test_synthetic_rollback_rehearsal.py -v
 ```
