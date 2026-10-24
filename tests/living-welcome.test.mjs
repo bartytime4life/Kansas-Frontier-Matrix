@@ -162,6 +162,28 @@ function featureClock() {
  };
 }
 
+test('tips can stay paused through pointer, focus and tab visibility changes; manual navigation still works',async()=>{
+ const clock=featureClock(),calls=[];
+ const h=await componentHarness('app/living-welcome/FeatureGuide.jsx',{'./features':{WELCOME_FEATURES:features}},clock.globals);
+ const render=()=>{const tree=h.render(h.exports.WelcomeFeatureGuide,{onNavigate:value=>calls.push(value)});h.commit();return tree;};
+ try{
+  let tree=render();
+  findNode(tree,node=>node.props?.['aria-label']==='Pause tips').props.onClick();tree=render();tree=render();
+  assert.equal(clock.timers.size,0);
+  assert.equal(findNode(tree,node=>node.props?.['aria-label']==='Resume tips').props['aria-pressed'],true);
+  tree.props.onPointerEnter();tree=render();tree.props.onPointerLeave();tree=render();
+  tree.props.onFocusCapture();tree=render();tree.props.onBlurCapture({currentTarget:{contains:()=>false},relatedTarget:null});tree=render();
+  clock.hidden(true);clock.hidden(false);clock.advance(60000);tree=render();
+  assert.equal(clock.timers.size,0,'explicit pause survives hover, focus and hidden-tab resume');
+  findNode(tree,node=>node.props?.['aria-label']==='Next feature').props.onClick();tree=render();
+  findNode(tree,node=>node.props?.tabIndex===0).props.onClick();assert.deepEqual(calls,[features[1].destination]);
+  assert.equal(findNode(tree,node=>node.props?.tabIndex===-1).props.inert,true,'the offscreen clone cannot receive pointer or focus input');
+  findNode(tree,node=>node.props?.['aria-label']==='Resume tips').props.onClick();tree=render();tree=render();
+  clock.advance(6999);tree=render();assert.equal(tree.props['data-sliding'],false);
+  clock.advance(1);tree=render();assert.equal(tree.props['data-sliding'],true,'resuming gives a complete reading interval');
+ }finally{h.dispose();}
+});
+
 test('header feature scroll uses two deadlines, pauses on interest, and navigates only on a click',async()=>{
  const clock=featureClock(),calls=[];
  const h=await componentHarness('app/living-welcome/FeatureGuide.jsx',{'./features':{WELCOME_FEATURES:features}},clock.globals);

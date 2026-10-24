@@ -11,6 +11,7 @@ export function hasExplorerDestination(params: URLSearchParams, addressParams = 
     || params.get("layerView") === "imagery"
     || params.get("layerView") === "selected"
     || params.get("tm") === "comparison"
+    || params.get("kfm-chat") === "1"
     // A shared camera in the address is intentional. The default camera saved
     // in every history entry must not silence welcome on a plain '/' reload.
     || (camera?.length === 2 && camera.every(value => value.trim() !== "" && Number.isFinite(Number(value))))

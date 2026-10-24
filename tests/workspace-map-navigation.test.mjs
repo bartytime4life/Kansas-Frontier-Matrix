@@ -27,6 +27,7 @@ test('opening Find or a suggested question gives one focus owner to the composer
       isCompact,HTMLElement:class {},document:{activeElement:trigger},qwenReturnRef:{current:null},
       globalSearchInputRef:{current:input},qwenPanelRef:{current:{querySelector:()=>({focus:()=>focused.push('close')})}},
       setQwenOpen:value=>changes.push(['open',value]),setHelpOpen:()=>{},dismissMapUtilityWithoutFocus:()=>{},
+      setGuideOpen:value=>changes.push(['guide',value]),setWelcomeSourcesOpen:value=>changes.push(['sources',value]),
       setLeftOpen:()=>{},setRightOpen:()=>{},setTimelineOpen:()=>{},setPrimaryWorkspace:value=>changes.push(['workspace',value]),
       setAssistantDraftRequest:update=>changes.push(['draft',update({id:4,value:'Old request'})]),
       window:{setTimeout:fn=>timers.push(fn),requestAnimationFrame:fn=>frames.push(fn)},
@@ -39,6 +40,7 @@ test('opening Find or a suggested question gives one focus owner to the composer
     frames.forEach(fn=>fn());timers.forEach(fn=>fn());
     assert.deepEqual(focused,['composer']);
     assert.ok(changes.some(([name,value])=>name==='open'&&value===true));
+    assert.ok(changes.some(([name,value])=>name==='guide'&&value===false));
     assert.deepEqual(changes.find(([name])=>name==='draft')[1],{id:5,value:intent==='find'?'Retained draft':'Explain this county',intent});
     focused.length=0;timers.length=0;frames.length=0;
     scope.openQwenCompanion(trigger);timers.forEach(fn=>fn());
