@@ -14,11 +14,41 @@ function visit(node) {
   ts.forEachChild(node, visit);
 }
 visit(ast);
+let headerChatClick;
+function findHeaderChat(node) {
+  if (ts.isJsxOpeningElement(node) && node.tagName.getText(ast) === 'button') {
+    const attrs = node.attributes.properties;
+    if (attrs.some(a => a.name?.getText(ast) === 'aria-label' && a.initializer?.text === 'Chat with KFM about this map view')) {
+      headerChatClick = attrs.find(a => a.name?.getText(ast) === 'onClick').initializer.expression.getText(ast);
+    }
+  }
+  ts.forEachChild(node, findHeaderChat);
+}
+findHeaderChat(ast);
 function execute(name, scope) {
   assert.ok(callbacks.has(name), `run the actual ${name} handler`);
   const code = ts.transpileModule(`return ${callbacks.get(name)};`, {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
   return new Function(...Object.keys(scope), code)(...Object.values(scope));
 }
+
+test('header Chat selects Ask after Find, retains the draft and keeps its explicit focus-return target',()=>{
+  const trigger = {}, input = {value:'Ellsworth county'}, opened = [], closed = [];
+  let draft = {id:7,value:'Ellsworth county',intent:'find'};
+  const scope = {
+    qwenOpen:false,globalSearchInputRef:{current:input},setPrimaryWorkspace(){},
+    openQwenCompanion:(...args)=>opened.push(args),
+    setAssistantDraftRequest:update=>{draft=update(draft);},
+    closeQwenCompanion:target=>closed.push(target),
+  };
+  scope.openAtlasComposer=execute('openAtlasComposer',scope);
+  assert.ok(headerChatClick);
+  const click = () => new Function(...Object.keys(scope),ts.transpileModule(`return ${headerChatClick};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(scope));
+  click()({currentTarget:trigger});
+  assert.deepEqual(draft,{id:8,value:'Ellsworth county',intent:'explore'});
+  assert.deepEqual(opened,[[trigger,'composer']]);
+  scope.qwenOpen=true;click()({currentTarget:trigger});
+  assert.deepEqual(closed,[trigger]);assert.equal(draft.id,8,'closing the open panel does not rewrite its draft');
+});
 
 test('opening Find or a suggested question gives one focus owner to the composer',()=>{
   for(const isCompact of [false,true]) for(const intent of ['find','explore']) {

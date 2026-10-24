@@ -1,5 +1,26 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Chat mode follow-up · 2026-10-24
+
+GoDaddy Preview was independently verified at clean commit
+`7ee04f68c55b8dd450ebaf1df6c43ee0fa428b2c`, application digest
+`sha256:c5a1d14b49b71d97126dadb5f8334834cb7aefd92763678cff4df8d4e24e9b99`.
+Its header tips measured 1,331px across a 1,363px desktop viewport; Previous,
+Pause/Resume, Next, Find focus and Escape return worked. Production still
+reported `934766fdfadbfd96f14e094f0301f9a34b981dd4` at this checkpoint.
+
+The Preview sequence Find → close → header Chat exposed a remaining mode bug:
+Chat reopened discovery. The header now explicitly selects Ask through the
+existing composer handoff, preserving the unsent draft and explicit return
+control. It sends no request. A focused callback regression and all five
+existing responsive browser cases cover this sequence and draft preservation.
+
+The available acceptance browser reports WebGL2 unavailable and offers no
+device or reduced-motion emulation. Desktop composer/geometry observations
+are separate from the isolated CI matrix; actual hosted phone, reduced-motion,
+source-credit and River Pulse acceptance remain unverified in this browser.
+No source data, evidence controls, settings or private stores change.
+
 ## Header, Chat and first paint · 2026-10-24 candidate
 
 **CONFIRMED in the isolated candidate; production publication is not established.**

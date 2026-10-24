@@ -725,7 +725,18 @@ for(const [width,height] of [[1280,800],[768,900],[390,844],[320,740],[568,320]]
   }
   await p.evaluate(`document.querySelector('.qwen-header-entry').focus()`);await p.key('Enter','Enter',13);
   await p.wait(`!document.querySelector('.living-welcome')&&document.querySelector('.qwen-map-launch')===null&&document.querySelector('#qwen-map-panel')?.hidden===false&&document.activeElement?.tagName==='TEXTAREA'`,'Chat replaces welcome and focuses composer');
+  // Reopening Chat after discovery must select Ask, retaining the visitor's
+  // draft instead of silently reopening Find. Exercise the real keyboard path.
+  await p.evaluate(`document.querySelector('#qwen-map-panel [aria-label="Composer mode"] button').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('#qwen-map-panel textarea')?.placeholder==='Find a county, city or layer…'`,'Find mode selected');
+  await p.evaluate(`document.querySelector('#qwen-map-panel textarea').focus()`);
+  await p.call('Input.insertText',{text:'Ellsworth county'});
   await p.key('Escape','Escape',27);
   await p.wait(`document.querySelector('#qwen-map-panel')?.hidden&&document.activeElement===document.querySelector('.qwen-header-entry')`,'close returns focus to the same Chat button');
+  await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('#qwen-map-panel')?.hidden===false&&document.activeElement?.tagName==='TEXTAREA'&&[...document.querySelectorAll('#qwen-map-panel [aria-label="Composer mode"] button')].some(button=>button.textContent==='Ask'&&button.getAttribute('aria-pressed')==='true')`,'Chat reopens Ask after Find');
+  assert.equal(await p.evaluate(`document.querySelector('#qwen-map-panel textarea').value`),'Ellsworth county','changing entry mode retains the unsent draft');
+  await p.key('Escape','Escape',27);
+  await p.wait(`document.querySelector('#qwen-map-panel')?.hidden&&document.activeElement===document.querySelector('.qwen-header-entry')`,'reopened Chat returns focus to its header trigger');
  });
 }
