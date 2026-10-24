@@ -291,3 +291,38 @@ test("TFR list accepts known field spellings and keeps Kansas entries", () => {
   assert.equal(drone.parseTfrList({ tfrs: list }).total, 3);
   assert.throws(() => drone.parseTfrList({}), /not an array/);
 });
+
+test("the UAS grid request survives its own loading-state re-render and reaches ready", { timeout: 10_000 }, async () => {
+  const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
+  const control = await import("node:fs/promises").then(fs => fs.readFile(new URL("../app/aviation-control.tsx", import.meta.url), "utf8"));
+  assert.doesNotMatch(control, /\[visible, showUas, uas\.state\]/, "loading state must not be a dependency of its own request");
+  let release, gridSignal;
+  const pendingGrid = new Promise(resolve => { release = resolve; });
+  const fetch = async (path, init) => {
+    if (path === drone.UASFM_API_PATH) { gridSignal = init.signal; await pendingGrid; return { ok: true, path }; }
+    if (path === airspace.AVIATION_CONTEXT_ASSET.url) return { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) };
+    return { ok: false, path };
+  };
+  const readBoundedJson = async (response, _max, signal) => {
+    if (signal?.aborted) throw new Error("aborted");
+    return response.path === drone.UASFM_API_PATH
+      ? { evidenceRole: "EXTERNAL_CONTEXT_ONLY", retrievedAt: "2026-10-24T00:00:00Z", cells: [{ ceilingFt: 200, airport: "SLN", airportName: null, bbox: [0, 0, 1, 1], ring: [[0, 0], [1, 0], [1, 1], [0, 0]] }] }
+      : {};
+  };
+  const h = await componentHarness("app/aviation-control.tsx", {
+    "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  const props = { mapRef: { current: null }, styleReady: false };
+  const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
+  try {
+  let tree = await cycle();
+  findNode(tree, node => node.type === "input" && node.props["aria-label"] === "Show airspace and aviation layers").props.onChange({ target: { checked: true } });
+  await cycle();          // effect schedules the grid read
+  tree = await cycle();   // re-render with state "loading": the old code aborted here
+  assert.ok(gridSignal && !gridSignal.aborted, "the in-flight grid request was not cancelled by its own loading state");
+  release(); await settle();
+  tree = await cycle();
+  const status = JSON.stringify(findNode(tree, node => node.type === "small" && JSON.stringify(node.props.children ?? "").includes("UAS Facility Map:")));
+  assert.match(status, /1 grid cells/);
+  } finally { release(); h.dispose(); }
+});
