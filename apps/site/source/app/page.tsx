@@ -1631,6 +1631,7 @@ export default function Home() {
   const [reviewedStormEventsSelected, setReviewedStormEventsSelected] = useState(false);
   const [reviewedEarthquakesSelected, setReviewedEarthquakesSelected] = useState(false);
   const [aviationSelected, setAviationSelected] = useState(false);
+  const [aviationResearch, setAviationResearch] = useState<readonly ResearchRecord[] | null>(null);
   const [soilMapState, setSoilMapState] = useState<SoilMapState>(DEFAULT_SOIL_MAP_STATE);
   const changeSoilMapState = useCallback((next: Partial<SoilMapState>) => setSoilMapState(current => ({ ...current, ...next })), []);
   const [soilMoistureContext, setSoilMoistureContext] = useState<SoilMoistureEngineContext | null>(null);
@@ -2198,8 +2199,16 @@ export default function Home() {
       coverage.push({ sourceId: source.id, title: source.title, state: coverageState, retrievedAt: connection.retrievedAt ?? null,
         limitation: `${points.length} eligible loaded points before radius filtering. ${connection.limitation ?? source.boundary} ${!payload ? "No point inventory available here; raster pixels, polygons and streamed tiles are excluded." : "Invalid or missing point coordinates and identities are excluded. Provider response extent and limits apply; absence does not prove no records exist."}`.slice(0, 2000) });
     }
+    if (aviationResearch) {
+      // The aviation layer offers its point inventory while shown: public-use airports and METAR stations.
+      const points = aviationResearch.filter(validResearchRecord);
+      records.push(...points);
+      coverage.push({ sourceId: "aviation-context", title: "Airspace, airports & aviation weather", state: points.length ? "ready" : "empty",
+        retrievedAt: points.find(point => point.retrievedAt)?.retrievedAt ?? null,
+        limitation: `${points.length} public-use airports and weather stations before radius filtering. Airspace volumes and TFR areas are polygons and are excluded, as are private-use facilities and live aircraft; open the aviation layer's point inspector for the airspace at a place.` });
+    }
     return { records, coverage };
-  }, [mapEvidenceFilter, officialArchiveDays, officialContextConnections, officialPayloads, researchMissingSources, researchSnapshotPoints, temporalQuery, visibility]);
+  }, [aviationResearch, mapEvidenceFilter, officialArchiveDays, officialContextConnections, officialPayloads, researchMissingSources, researchSnapshotPoints, temporalQuery, visibility]);
   const researchContext = useMemo<ResearchContext | null>(() => researchAnchor ? {
     version: 1, anchor: researchAnchor, radiusMiles: nearbyRadiusMiles, mapTime: temporalScopeLabel,
     capturedAt: new Date().toISOString(), ...nearbyResearch(researchAnchor, researchData.records, nearbyRadiusMiles), coverage: researchData.coverage,
@@ -9662,7 +9671,7 @@ export default function Home() {
             <div hidden={!shownCatalogIds.has("reviewed-soil")}><GovernedSoilControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedSoilSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-storm-events")}><GovernedStormEventsControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedStormEventsSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-earthquakes")}><GovernedEarthquakesControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedEarthquakesSelected} /></div>
-            <div hidden={!shownCatalogIds.has("aviation")}><AviationControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} /></div>
+            <div hidden={!shownCatalogIds.has("aviation")}><AviationControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} /></div>
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
             <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
             {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}
