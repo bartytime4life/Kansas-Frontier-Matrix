@@ -94,6 +94,14 @@ export function writeSceneEffects(settings: SceneEffectSettings): void {
 const registered = new WeakMap<object, SceneEffectSettings>();
 export const registerSceneEffects = (map: object, settings: SceneEffectSettings): void => { registered.set(map, settings); };
 export const sceneEffectsFor = (map: object): SceneEffectSettings => registered.get(map) ?? DEFAULT_SCENE_EFFECTS;
+// A visitor-chosen instant for the computed sun (a time-of-day study), so every
+// renderer helper lights the map for the same moment. None follows the clock.
+const sunInstants = new WeakMap<object, number>();
+export const registerSunInstant = (map: object, instant: number | null): void => {
+  if (instant === null || !Number.isFinite(instant)) sunInstants.delete(map);
+  else sunInstants.set(map, instant);
+};
+export const sunInstantFor = (map: object): number => sunInstants.get(map) ?? Date.now();
 
 const normalizeDegrees = (value: number, fallback: number) => ((Number.isFinite(value) ? value : fallback) % 360 + 360) % 360;
 const clamp = (value: number, minimum: number, maximum: number) => Math.max(minimum, Math.min(maximum, value));
@@ -130,7 +138,7 @@ export function sunSceneLight(instant: Date | number, longitude: number, latitud
 }
 
 /** The light the renderer should use for the requested manual preset. */
-export function effectiveSceneLight(map: Pick<MapLibreMap, "getCenter">, preset: SceneLightPreset, azimuth: number, now: number = Date.now()): SceneLight {
+export function effectiveSceneLight(map: Pick<MapLibreMap, "getCenter">, preset: SceneLightPreset, azimuth: number, now: number = sunInstantFor(map)): SceneLight {
   if (sceneEffectsFor(map).sunSync) {
     try {
       const center = map.getCenter();

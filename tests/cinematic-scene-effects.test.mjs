@@ -74,6 +74,35 @@ test("manual light is used unless the map opted into following the sun", async (
   assert.equal(synced.azimuth, 100);
 });
 
+test("a time-of-day study lights every renderer helper for the same chosen instant", async () => {
+  const orientationUrl = toUrl(transpile(await read("app/kansas-orientation.ts")));
+  const curtainUrl = toUrl(transpile(await read("app/aurora-curtain-layer.ts")));
+  const reliefUrl = toUrl(transpile(await read("app/terrain-relief-style.ts")));
+  // The stand-in sun records the instant it was asked about.
+  const recording = toUrl("export const solarPositionAt = (instant) => { globalThis.__sunInstants.push(instant); return { azimuthDegrees: 120, elevationDegrees: 30 }; };");
+  globalThis.__sunInstants = [];
+  const effects = await loadModule("app/scene-effects.ts", [
+    ['from "./aurora-curtain-layer";', `from "${curtainUrl}";`],
+    ['from "./daylight-layer";', `from "${recording}";`],
+    ['from "./kansas-orientation";', `from "${orientationUrl}";`],
+    ['from "./terrain-relief-style";', `from "${reliefUrl}";`],
+  ]);
+  const map = { getCenter: () => ({ lng: -98.4, lat: 38.5 }) };
+  effects.registerSceneEffects(map, { cinematic: true, curtain: true, sunSync: true });
+  const study = Date.UTC(2026, 5, 21, 13, 15);
+  effects.registerSunInstant(map, study);
+  effects.effectiveSceneLight(map, "night", 210);
+  assert.equal(globalThis.__sunInstants.at(-1), study, "callers that pass no instant get the study time");
+  assert.equal(effects.sunInstantFor(map), study);
+  effects.registerSunInstant(map, null);
+  const before = Date.now();
+  effects.effectiveSceneLight(map, "night", 210);
+  assert.ok(globalThis.__sunInstants.at(-1) >= before, "clearing the study follows the clock again");
+  effects.registerSunInstant(map, Number.NaN);
+  assert.ok(effects.sunInstantFor(map) >= before, "an invalid instant is never stored");
+  delete globalThis.__sunInstants;
+});
+
 test("cinematic relief keeps the standard method so array-free paint stays valid", async () => {
   const effects = await loadSceneEffects();
   const paint = effects.cinematicHillshadePaint("general", "dusk", -125);

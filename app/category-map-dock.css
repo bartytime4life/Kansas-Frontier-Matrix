@@ -18,6 +18,9 @@
 .category-map-dock-range output{text-align:right;font-variant-numeric:tabular-nums;color:#f1e6c2}
 .category-map-dock-sun-reading{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:8px;margin:0;min-height:32px;font-size:12px;color:#b6d0dc}
 .category-map-dock-sun-reading output{font-variant-numeric:tabular-nums;color:#f1e6c2}
+.category-map-dock .category-map-dock-sun-time{grid-template-columns:62px 1fr 44px}
+.category-map-dock .category-map-dock-sun-time button{min-width:44px;min-height:44px;padding:0 4px;border:1px solid #749bac80;border-radius:7px;background:#0a2d3d;color:#e6eff2;font-size:11px;font-weight:700;cursor:pointer}
+.category-map-dock .category-map-dock-sun-time button:disabled{opacity:.45;cursor:default}
 .category-map-dock .category-map-dock-sun{min-height:44px;border:1px solid #d8c58f66;border-radius:8px;background:transparent;color:#f1e6c2;font-size:12px;font-weight:600;cursor:pointer}
 .category-map-dock .category-map-dock-sun:hover{background:#d8c58f1a}
 .category-map-dock .category-map-dock-sun[aria-pressed=true]{border-color:#749bac80;color:#cfe2ea}

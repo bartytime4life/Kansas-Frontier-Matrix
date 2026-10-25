@@ -56,7 +56,7 @@ test('opening a category map applies its look additively and follows the same ca
 test('the dock reflects the view and routes every control to an existing handler',async()=>{
  const h=await componentHarness('app/category-map-dock.tsx',{});
  const calls=[];const look=maps.CATEGORY_MAPS.aviation;
- const props={look,mode:'terrain',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode:v=>calls.push(['mode',v]),onDepth:v=>calls.push(['depth',v]),onAzimuth:v=>calls.push(['azimuth',v]),onRealSun:v=>calls.push(['sun',v]),onReset:()=>calls.push(['reset']),onLayers:()=>calls.push(['layers']),onClose:()=>calls.push(['close'])};
+ const props={look,mode:'terrain',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode:v=>calls.push(['mode',v]),onDepth:v=>calls.push(['depth',v]),onAzimuth:v=>calls.push(['azimuth',v]),onRealSun:v=>calls.push(['sun',v]),onSunTime:v=>calls.push(['time',v]),onReset:()=>calls.push(['reset']),onLayers:()=>calls.push(['layers']),onClose:()=>calls.push(['close'])};
  let tree=h.render(h.exports.CategoryMapDock,props);
  const button=label=>findNode(tree,n=>n.type==='button'&&n.props.children===label);
  assert.equal(button('3D').props['aria-pressed'],true);assert.equal(button('2D').props['aria-pressed'],false);
@@ -70,9 +70,19 @@ test('the dock reflects the view and routes every control to an existing handler
  assert.deepEqual(calls,[['mode','2d'],['mode','globe'],['depth',1.5],['azimuth',90],['reset'],['layers'],['sun',true],['close']]);
  // Following the computed sun, the hand-set slider would be a dead control: it gives way to the reading.
  const at=Date.UTC(2026,5,21,21,0);
- tree=h.render(h.exports.CategoryMapDock,{...props,sun:{light:{preset:'clear',azimuth:245,altitude:52,source:'sun',solarElevation:52.4},at}});
+ const sunLight={preset:'clear',azimuth:245,altitude:52,source:'sun',solarElevation:52.4};
+ tree=h.render(h.exports.CategoryMapDock,{...props,sun:{light:sunLight,at,dayFraction:16/24,live:true}});
  const sunRanges=[];findNode(tree,n=>{if(n.type==='input'&&n.props.type==='range')sunRanges.push(n);return false;});
- assert.equal(sunRanges.length,1,'only relief stays a slider');
+ assert.equal(sunRanges.length,2,'relief, then the time of day in place of the hand-set direction');
+ const timeOfDay=sunRanges[1];
+ assert.equal(timeOfDay.props['aria-labelledby'],'category-map-dock-sun-time');
+ assert.equal(timeOfDay.props.value,64,'quarter-hour steps: 4 PM is step 64 of 96');
+ assert.equal(button('Now').props.disabled,true,'already following the clock');
+ timeOfDay.props.onChange({target:{value:'30'}});assert.deepEqual(calls.at(-1),['time',30/96]);
+ assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='category-map-dock-sun-reading')),/Real sun/);
+ tree=h.render(h.exports.CategoryMapDock,{...props,sun:{light:sunLight,at,dayFraction:16/24,live:false}});
+ assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='category-map-dock-sun-reading')),/Sun at/,'a study time is never shown as the live sun');
+ button('Now').props.onClick();assert.deepEqual(calls.at(-1),['time',null]);
  assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='category-map-dock-sun-reading')),/52° up, from SW · 4:00\u202fPM CDT|52° up, from SW · 4:00 PM CDT/);
  assert.equal(button('Set light by hand').props['aria-pressed'],true);button('Set light by hand').props.onClick();
  assert.deepEqual(calls.at(-1),['sun',false]);
@@ -123,8 +133,11 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.match(helper,/runMapMutation\("Category light", \(\) => \{\s*applySceneEnvironment\(map, atmosphere, azimuth\);/,'and the map is lit now, even when state was already equal');
  assert.match(helper,/syncSceneOverlays\(map, atmosphere, azimuth, renderEfficientRef\.current\)/,'basemap hillshade re-aims too');
  assert.doesNotMatch(helper,/updateSceneEffects/);
- assert.match(page,/sun=\{sceneEffects\.sunSync \? \{ light: sunSceneLight\(sunClock, view\.center\[0\], view\.center\[1\]\), at: sunClock \} : null\}/,'the dock reads the same computed sun as the renderer');
- assert.match(page,/onRealSun=\{\(sunSync\) => updateSceneEffects\(\{ \.\.\.sceneEffectsRef\.current, sunSync \}\)\}/,'only the visitor turns the real sun on or off');
+ assert.match(page,/sun=\{sceneEffects\.sunSync \? \{ light: sunSceneLight\(sunAt, view\.center\[0\], view\.center\[1\]\), at: sunAt,/,'the dock reads the same computed sun as the renderer');
+ assert.match(page,/const sunAt = sunStudyAt \?\? sunClock;/);
+ assert.match(page,/registerSceneEffects\(map, sceneEffects\);\s*registerSunInstant\(map, sunStudyAt\);/,'the renderer lights the study time');
+ assert.equal((page.match(/light=\{sceneEffects\.sunSync \? sunSceneLight\(sunAt,/g)||[]).length,2,'the Scene studio reads the same instant');
+ assert.match(page,/onRealSun=\{\(sunSync\) => \{ setSunStudyAt\(null\); updateSceneEffects\(\{ \.\.\.sceneEffectsRef\.current, sunSync \}\); \}\}/,'only the visitor turns the real sun on or off, and that ends any study');
  const reset=page.slice(page.indexOf('  const resetCategoryView = () => {'),page.indexOf('announce(`${activeCategoryMap.name} view reset`)'));
  assert.match(reset,/if \(activeCategoryMap\.light\) applyCategoryLight\(activeCategoryMap\.light\);/,'Reset view restores the look light too');
 });

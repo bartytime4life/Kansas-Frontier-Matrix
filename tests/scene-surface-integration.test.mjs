@@ -76,7 +76,7 @@ test("shared renderer config includes surface-only mode and suspends probes with
   for (const scene of ["overview-2d", "elevation-3d"]) for (const measureMode of [null, "distance"]) {
     const configs = [], readings = [];
     const context = {
-      mapRef: { current: {} }, effectiveSceneLight: () => ({ preset: "dusk", azimuth: 265 }), atmospherePreset: "dusk", lightAzimuth: 265, sunClock: 1,
+      mapRef: { current: {} }, effectiveSceneLight: () => ({ preset: "dusk", azimuth: 265 }), atmospherePreset: "dusk", lightAzimuth: 265, sunAt: 1,
       styleReady: true, styleGenerationReadyRef: { current: true }, scenePreset: scene, projection: "mercator", undergroundOpen: false,
       terrainDrawingMode: "off", terrainSurfaceMode: "slope", terrainSurfaceOpacity: .4, measureMode, terrainProvider: "usgs-3dep", browserRenderBudget: () => ({ efficient: true }), renderQuality: "efficient", terrainDrawingDetail: false,
       terrainDrawingConfigRef: { current: null }, terrainDrawingRef: { current: { update: (value) => configs.push(value) } }, setTerrainSurfaceProbe: (value) => readings.push(value),

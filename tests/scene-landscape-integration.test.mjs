@@ -114,7 +114,7 @@ test("drawing configuration updates one existing renderer and is enabled only fo
   for (const ready of [false, true]) for (const scene of ["overview-2d", "elevation-3d"]) for (const projection of ["mercator", "globe"]) {
     const updates = [];
     const context = {
-      mapRef: { current: {} }, effectiveSceneLight: () => ({ preset: "dusk", azimuth: 265 }), atmospherePreset: "night", lightAzimuth: 210, sunClock: 1,
+      mapRef: { current: {} }, effectiveSceneLight: () => ({ preset: "dusk", azimuth: 265 }), atmospherePreset: "night", lightAzimuth: 210, sunAt: 1,
       styleReady: ready, styleGenerationReadyRef: { current: ready }, scenePreset: scene, projection, undergroundOpen: false,
       terrainDrawingMode: "both", terrainSurfaceMode: "off", terrainSurfaceOpacity: 0.55, measureMode: null, terrainProvider: "usgs-3dep", browserRenderBudget: () => ({ efficient: true }), renderQuality: "efficient", terrainDrawingDetail: true,
       terrainDrawingConfigRef: { current: null }, terrainDrawingRef: { current: { update: (config) => updates.push(config) } },
