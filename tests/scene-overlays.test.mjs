@@ -77,6 +77,22 @@ test("2D relief appears only on flat Mercator maps and removes its DEM source wh
   assert.equal(map.getSource(overlays.RELIEF_2D_SOURCE_ID), undefined, "no DEM requests once off");
 });
 
+test("a category basemap's own hillshade follows the scene light and suppresses the second 2D relief", async () => {
+  const overlays = await loadOverlays();
+  const dem = { tileTemplate: "https://example.test/{z}/{x}/{y}.png", tileSize: 256, maxZoom: 11, encoding: "terrarium", attribution: "DEM" };
+  const id = overlays.CATEGORY_BASEMAP_HILLSHADE_LAYER_ID;
+  for (const relief2d of [true, false]) {
+    const map = fakeMap({ fx: { ...ALL_ON, relief2d }, layers: [{ id: "kfm-background", type: "background" }, { id, type: "hillshade", paint: { "hillshade-illumination-direction": 315 } }] });
+    map.paint.set(`${id}:hillshade-illumination-direction`, 315);
+    overlays.syncRelief2d(map, dem, "dusk", 100);
+    assert.equal(map.getPaintProperty(id, "hillshade-illumination-direction"), 100, "the dock's sun control moves the basemap's shadows");
+    overlays.syncRelief2d(map, dem, "dusk", -45);
+    assert.equal(map.getPaintProperty(id, "hillshade-illumination-direction"), 315, "normalized to 0–360");
+    assert.equal(map.getLayer(overlays.RELIEF_2D_LAYER_ID), undefined, "no second hillshade is added");
+    assert.equal(map.getSource(overlays.RELIEF_2D_SOURCE_ID), undefined);
+  }
+});
+
 test("Kansas glow adds a beacon everywhere and defers to the offline styles' own outline", async () => {
   const overlays = await loadOverlays();
   for (const layer of overlays.kansasGlowLayers()) {
