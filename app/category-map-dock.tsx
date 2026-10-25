@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import type { CategoryMap, CategoryScene } from "./category-maps";
+import type { SceneLight } from "./scene-effects";
 
 const MODES: readonly (readonly [CategoryScene, string, string])[] = [
   ["2d", "2D", "Flat map, straight down"],
@@ -15,20 +16,33 @@ export function azimuthLabel(degrees: number): string {
   return names[Math.round((((degrees % 360) + 360) % 360) / 45) % 8];
 }
 
+const SUN_CLOCK = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
+
+/** Plain reading of the computed sun over the map center, at the time it was computed. */
+export function sunReading(light: SceneLight, at: number): string {
+  const time = Number.isFinite(at) ? ` · ${SUN_CLOCK.format(at)}` : "";
+  return light.source === "sun"
+    ? `${Math.round(light.solarElevation ?? light.altitude)}° up, from ${azimuthLabel(light.azimuth)}${time}`
+    : `Below the horizon · night fill${time}`;
+}
+
 /**
  * The category map's own instrument panel: which map look is on, and the few
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, terrainAvailable, onMode, onDepth, onAzimuth, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
   azimuth: number;
+  /** The computed sun when the scene follows it; the hand-set light is then ignored. */
+  sun: Readonly<{ light: SceneLight; at: number }> | null;
   terrainAvailable: boolean;
   onMode: (mode: CategoryScene) => void;
   onDepth: (value: number) => void;
   onAzimuth: (value: number) => void;
+  onRealSun: (on: boolean) => void;
   onReset: () => void;
   onLayers: () => void;
   onClose: () => void;
@@ -47,9 +61,13 @@ export function CategoryMapDock({ look, mode, depth, azimuth, terrainAvailable, 
     {mode === "terrain" && <label className="category-map-dock-range"><span>Relief</span>
       <input type="range" min={0.5} max={3} step={0.1} value={depth} aria-valuetext={`${depth.toFixed(1)} times vertical exaggeration`} onChange={event => onDepth(Number(event.target.value))} />
       <output>{depth.toFixed(1)}×</output></label>}
-    {mode !== "globe" && <label className="category-map-dock-range"><span>Sun from</span>
-      <input type="range" min={0} max={355} step={5} value={Math.round(azimuth) % 360} aria-valuetext={`Light from ${azimuthLabel(azimuth)}, ${Math.round(azimuth)} degrees`} onChange={event => onAzimuth(Number(event.target.value))} />
-      <output>{azimuthLabel(azimuth)}</output></label>}
+    {mode !== "globe" && (sun
+      ? <p className="category-map-dock-sun-reading" aria-live="polite"><span>Real sun</span><output>{sunReading(sun.light, sun.at)}</output></p>
+      : <label className="category-map-dock-range"><span>Sun from</span>
+        <input type="range" min={0} max={355} step={5} value={Math.round(azimuth) % 360} aria-valuetext={`Light from ${azimuthLabel(azimuth)}, ${Math.round(azimuth)} degrees`} onChange={event => onAzimuth(Number(event.target.value))} />
+        <output>{azimuthLabel(azimuth)}</output></label>)}
+    {mode !== "globe" && <button type="button" className="category-map-dock-sun" aria-pressed={sun !== null} onClick={() => onRealSun(sun === null)}
+      title={sun ? "Set the light direction by hand" : "Light the map from where the sun is now over the map center"}>{sun ? "Set light by hand" : "Use the real sun now"}</button>}
     <p className="category-map-dock-lede">{look.lede}</p>
     <div className="category-map-dock-actions">
       <button type="button" onClick={onReset}>Reset view</button>

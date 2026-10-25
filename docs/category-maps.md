@@ -12,7 +12,7 @@ one map look:
 | `camera` | Center, zoom, pitch and bearing. Only 3D looks start tilted. |
 | `starters` | Existing official provider-context ids that are switched **on**. They are never switched off. |
 | `swatch` | Three colours used to sketch the basemap on the start card and the dock. |
-| `light` | Optional scene recipe (`daylight`, `golden`, `blue`, `survey`) the look opens under. Only its atmosphere and sun azimuth are applied, through `changeStudioLight`, so the visitor's effect settings never change. Relief looks use a raking sun (Terrain golden, Geology/Engineering/Groundwater survey), weather and water a dark sky (`blue`), aviation `daylight`. **Reset view** restores it. |
+| `light` | Optional scene recipe (`daylight`, `golden`, `blue`, `survey`) the look opens under. Only its atmosphere and sun azimuth are applied, through `changeStudioLight`, so the visitor's effect settings never change. Relief looks use a raking sun (Terrain golden, Geology/Engineering/Groundwater survey), weather and water a dark sky (`blue`), aviation `daylight`. **Reset view** restores it. While the visitor follows the real sun, the computed sun lights the map instead. |
 
 Choosing a look is presentation and navigation only. Starters are the same
 provider-context switches the Layers panel offers, with their own source clocks,
@@ -28,10 +28,17 @@ holds and limits. They are display context, not admitted evidence.
   - 2D, 3D and Globe;
   - relief depth (3D only);
   - sun direction (not on the globe);
+  - **Use the real sun now**, which switches on the Scene studio's "Follow
+    real sun" effect. While it is on, the sun slider gives way to a reading of
+    the computed sun over the map center, such as "52° up, from SW · 4:00 PM
+    CDT", because a hand-set direction would have no effect. **Set light by
+    hand** switches it back off. Only the visitor changes this setting; a look
+    never does;
   - reset view and "Layers for this map".
 
   Every control reuses an existing handler: `activateMapRepresentation`,
-  `changeTerrainDepth`, `changeStudioLight` and `openAtlasPanel`. The dock can
+  `changeTerrainDepth`, `changeStudioLight`, `updateSceneEffects` and
+  `openAtlasPanel`. The dock can
   be hidden. It returns the next time a category map is opened.
 - **Layers panel.** When a category is chosen in the Layers catalogue, its
   topic guide shows the same map-look card: name, scene and what you'll see.
