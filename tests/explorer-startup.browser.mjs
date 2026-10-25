@@ -17,7 +17,7 @@ new Function('exports', ts.transpileModule(await readFile('app/layer-workspaces.
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 }).outputText)(taxonomy);
 const welcomeTopics = taxonomy.TOPIC_STRUCTURE.map(({ id, title, facets, limitation }) => ({ id, title, facets, limitation }));
-assert.equal(welcomeTopics.length, 17, 'the current shared taxonomy has seventeen domains');
+assert.equal(welcomeTopics.length, 19, 'the current shared taxonomy has nineteen domains');
 
 async function readyWelcome(p) {
   await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.dataset.renderer === 'capability' && ${JSON.stringify(welcomeTopics.map(topic => '.living-welcome .topic-' + topic.id))}.every(selector=>document.querySelector(selector))`, 'all shared domain cards hydrated');
