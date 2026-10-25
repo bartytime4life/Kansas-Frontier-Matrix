@@ -74,3 +74,22 @@ test('the dock reflects the view and routes every control to an existing handler
  assert.equal(h.exports.azimuthLabel(315),'NW');assert.equal(h.exports.azimuthLabel(-90),'W');assert.equal(h.exports.azimuthLabel(359),'N');
  h.dispose?.();
 });
+
+test('the Layers topic guide shows the category map look and opens it only when it is not on',async()=>{
+ const h=await componentHarness('app/topic-navigation.tsx',{'next/link':{default:'a'},'./layer-workspaces':topics},{URLSearchParams});
+ const look=maps.CATEGORY_MAPS.aviation;let opened=0;
+ const mapLook={name:look.name,lede:look.lede,sceneLabel:maps.categorySceneLabel(look.scene),swatch:look.swatch,active:false};
+ let tree=h.render(h.exports.TopicGuide,{value:'aviation',mapLook,onOpenMap:()=>opened++});
+ const card=findNode(tree,n=>n.props?.className==='topic-map-look');
+ assert.ok(card);assert.match(JSON.stringify(card),/Aviation chart/);assert.match(JSON.stringify(card),/3D terrain/);
+ findNode(tree,n=>n.type==='button'&&n.props.children==='Open this map').props.onClick();assert.equal(opened,1);
+ tree=h.render(h.exports.TopicGuide,{value:'aviation',mapLook:{...mapLook,active:true},onOpenMap:()=>opened++});
+ assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Open this map'),undefined,'no button once the look is on');
+ assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='topic-map-look')),/on the map now/);
+ tree=h.render(h.exports.TopicGuide,{value:'aviation'});
+ assert.equal(findNode(tree,n=>n.props?.className==='topic-map-look'),undefined,'callers without a look render the guide as before');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/<TopicGuide value=\{officialWorkspace\}[\s\S]{0,200}?mapLook=\{activeCategoryMap \? \{ name: activeCategoryMap\.name[\s\S]{0,300}?active: activeCategoryMap\.basemap === basemap \} : null\}/);
+ assert.match(page,/onOpenMap=\{activeCategoryMap \? \(\) => openCategoryMap\(activeCategoryMap\.topic\) : undefined\}/);
+});

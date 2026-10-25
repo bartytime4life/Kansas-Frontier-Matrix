@@ -17,13 +17,22 @@ export function TopicSelect({ value, onChange, label }: {
   </label>;
 }
 
-export function TopicGuide({ value, onTool }: {
+/** The category's own map look, as the page resolves it; `active` when it is already on screen. */
+export type TopicMapLook = Readonly<{ name: string; lede: string; sceneLabel: string; swatch: readonly [string, string, string]; active: boolean }>;
+
+export function TopicGuide({ value, onTool, mapLook, onOpenMap }: {
   value: LayerWorkspace; onTool?: (view: MapUtilityView, element: HTMLButtonElement) => void;
+  mapLook?: TopicMapLook | null; onOpenMap?: () => void;
 }) {
   const topic = topicDefinition(value);
   if (!topic) return null;
   return <section className="topic-guide" aria-label={`${topic.title} guide`}>
     <h3 className="sr-only">{topic.title}</h3><p>{topic.description}</p>
+    {mapLook && <div className="topic-map-look" style={{ "--m0": mapLook.swatch[0], "--m1": mapLook.swatch[1], "--m2": mapLook.swatch[2] } as React.CSSProperties}>
+      <span className="topic-map-look-swatch" aria-hidden="true" />
+      <div><strong>{mapLook.name}</strong><small>{mapLook.sceneLabel}{mapLook.active ? " · on the map now" : ""}</small><p>{mapLook.lede}</p></div>
+      {!mapLook.active && onOpenMap && <button type="button" onClick={onOpenMap}>Open this map</button>}
+    </div>}
     <details key={topic.id}><summary>Subtopics &amp; coverage</summary><small>{topic.group}</small>
       <ul aria-label={`${topic.title} subtopics`}>{topic.facets.map(facet => <li key={facet}>{facet}</li>)}</ul>
       <p>{topic.limitation}</p>

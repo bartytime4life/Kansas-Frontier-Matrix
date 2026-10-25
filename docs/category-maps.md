@@ -32,6 +32,10 @@ holds and limits. They are display context, not admitted evidence.
   Every control reuses an existing handler: `activateMapRepresentation`,
   `changeTerrainDepth`, `changeStudioLight` and `openAtlasPanel`. The dock can
   be hidden. It returns the next time a category map is opened.
+- **Layers panel.** When a category is chosen in the Layers catalogue, its
+  topic guide shows the same map-look card: name, scene and what you'll see.
+  **Open this map** applies the look, and once the look is on the card reads
+  "on the map now".
 - **Shared URLs.** No new parameter is needed. `topic`, `base`, `proj` and
   `scene` already restore the category, basemap and renderer, and the dock
   follows the restored category when its basemap is on screen.
