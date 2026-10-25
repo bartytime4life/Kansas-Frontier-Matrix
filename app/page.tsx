@@ -9027,6 +9027,8 @@ export default function Home() {
     if (!look) { runWelcomeTopic(topic); return; }
     setUndergroundOpen(false);
     activateMapRepresentation(look.scene);
+    // A look's light sets only atmosphere and sun azimuth; the visitor's effect settings stay as they are.
+    if (look.light) changeStudioLight({ atmosphere: SCENE_RECIPES[look.light].atmosphere, azimuth: SCENE_RECIPES[look.light].azimuth });
     basemapRef.current = look.basemap;
     setBasemap(look.basemap);
     for (const id of look.starters) setOfficialContextVisible(id, true);
@@ -9057,6 +9059,7 @@ export default function Home() {
   const resetCategoryView = () => {
     if (!activeCategoryMap) return;
     const { center, zoom, bearing, pitch } = activeCategoryMap.camera;
+    if (activeCategoryMap.light) changeStudioLight({ atmosphere: SCENE_RECIPES[activeCategoryMap.light].atmosphere, azimuth: SCENE_RECIPES[activeCategoryMap.light].azimuth });
     mapRef.current?.flyTo({ center: [center[0], center[1]], zoom: categoryMode === "globe" ? Math.min(zoom, 3.2) : zoom, bearing: categoryMode === "2d" ? 0 : bearing, pitch: categoryMode === "terrain" ? Math.max(pitch, 45) : 0, duration: motionDuration(1200), essential: false });
     announce(`${activeCategoryMap.name} view reset`);
   };
