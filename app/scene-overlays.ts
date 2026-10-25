@@ -146,12 +146,23 @@ export function relief2dPaint(preset: SceneLightPreset, azimuth: number) {
   };
 }
 
+/** Matches BASEMAP_HILLSHADE_LAYER_ID in category-basemaps.ts (kept local so this module stays dependency-light). */
+export const CATEGORY_BASEMAP_HILLSHADE_LAYER_ID = "basemap-relief-hillshade";
+
 /** 2D relief is shown only on flat (Mercator, no terrain) maps; Terrain 3D has its own relief. */
 export const relief2dShouldShow = (relief2d: boolean, terrainOn: boolean, projection: MapProjection): boolean =>
   relief2d && !terrainOn && projection !== "globe";
 
 export function syncRelief2d(map: MapLibreMap, dem: TerrainSourceRecord, light: SceneLightPreset, azimuth: number): void {
-  const show = relief2dShouldShow(sceneEffectsFor(map).relief2d, Boolean(map.getTerrain()), projectionOf(map));
+  // A category basemap's own hillshade is lit from the same direction as the scene, so the sun control moves its shadows too.
+  if (map.getLayer(CATEGORY_BASEMAP_HILLSHADE_LAYER_ID)) {
+    const direction = ((effectiveSceneLight(map, light, azimuth).azimuth % 360) + 360) % 360;
+    if (map.getPaintProperty(CATEGORY_BASEMAP_HILLSHADE_LAYER_ID, "hillshade-illumination-direction") !== direction) {
+      map.setPaintProperty(CATEGORY_BASEMAP_HILLSHADE_LAYER_ID, "hillshade-illumination-direction", direction);
+    }
+  }
+  // Category basemaps draw their own relief; a second hillshade would double the shading.
+  const show = relief2dShouldShow(sceneEffectsFor(map).relief2d, Boolean(map.getTerrain()), projectionOf(map)) && !map.getLayer(CATEGORY_BASEMAP_HILLSHADE_LAYER_ID);
   // Removing the source (not just hiding it) stops DEM requests when off.
   if (!show || !dem.tileTemplate) { removeLayers(map, [RELIEF_2D_LAYER_ID], RELIEF_2D_SOURCE_ID); return; }
   if (!map.getSource(RELIEF_2D_SOURCE_ID)) {

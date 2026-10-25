@@ -76,7 +76,7 @@ const PALETTES = {
   },
 } as const;
 const SPEED_BUCKETS = 5;
-const LIGHT_BASEMAPS = new Set(["standard", "prairie", "streets", "topo"]);
+const LIGHT_BASEMAPS = new Set(["standard", "aviation-chart", "civic", "prairie", "streets", "topo"]);
 /** Light vector basemaps get dark lines; midnight and imagery get light ones. */
 export const windFlowToneForBasemap = (basemap: string): WindFlowTone => LIGHT_BASEMAPS.has(basemap) ? "light" : "dark";
 

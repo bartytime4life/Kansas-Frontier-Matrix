@@ -173,3 +173,10 @@
 .topic-guide a, .topic-guide button { color: #a3d8df; font-size: 12px; min-height: 44px; display: inline-flex; align-items: center; }
 .topic-guide button { border: 0; background: transparent; padding: 0; cursor: pointer; text-align: left; }
 .topic-select select:focus-visible, .topic-guide :focus-visible, .layer-topic-index :focus-visible { outline: 2px solid #e5c887; outline-offset: 3px; }
+
+/* Aviation layer: legend swatches and the point inspector's airspace column. */
+.layer-panel .aviation-legend { display: grid; gap: 4px; margin: 2px 0; padding: 0; list-style: none; font-size: 11px; line-height: 1.4; color: #c4d4dc; }
+.layer-panel .aviation-legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; border-radius: 2px; vertical-align: -2px; }
+.layer-panel .aviation-column { display: grid; gap: 8px; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+.layer-panel .aviation-column table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.layer-panel .aviation-column :is(th,td) { padding: 4px; border-bottom: 1px solid #2a3746; text-align: left; vertical-align: top; }

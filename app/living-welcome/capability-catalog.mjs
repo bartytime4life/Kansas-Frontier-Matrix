@@ -9,6 +9,8 @@ const selections = {
  land: ['government', 'County and survey reference context; not ownership evidence.'],
  people: ['government', 'Aggregate county geography; not individual people.'], places: ['government'],
  science: ['science'], disaster: ['weather', 'Weather context only; not a hazard reconstruction or warning.'],
+ aviation: [null, 'Open the aviation chart for runways, airport identifiers and terrain relief. No verified aviation capture is available yet.'],
+ government: ['government', 'County and city reference geography; not legal boundaries or office records.'],
  sky: [null, 'Use Sky tools for calculated daylight and solar geometry. No verified sky animation is available yet.'],
  evidence: [null, 'Open the source catalogue to inspect provenance, dates and limitations. No verified workflow animation is available yet.'],
 };

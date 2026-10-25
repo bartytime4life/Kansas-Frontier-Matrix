@@ -32,9 +32,11 @@ export function ExplorerGuide({ open, ...props }: Readonly<{
   onMotionChange?: (enabled: boolean) => void;
   onSearch: (query: string) => void;
   onTopic: (topic: import("./layer-workspaces").LayerWorkspace) => void;
+  /** Open the category's own map look (basemap, scene, camera and starter layers). */
+  onMap?: (topic: import("./layer-workspaces").TopicId) => void;
   onClose: (rememberDismissal: boolean) => void;
   onAction: (action: ExplorerGuideAction) => void;
   onMore?: () => void;
 }>) {
-  return open ? <LivingWelcome {...props} onMore={props.onMore} onMotionChange={props.onMotionChange} initialRemember={readExplorerGuideDismissed()} /> : null;
+  return open ? <LivingWelcome {...props} onMap={props.onMap} onMore={props.onMore} onMotionChange={props.onMotionChange} initialRemember={readExplorerGuideDismissed()} /> : null;
 }

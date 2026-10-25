@@ -34,7 +34,7 @@ function nodes(tree, predicate) {
 test("requested subjects have grouped subtopics, inspectable limits and real internal routes", async () => {
   const required = ["engineering", "science", "weather", "history", "land", "people"];
   const ids = topics.TOPIC_STRUCTURE.map(topic => topic.id);
-  assert.equal(ids.length, 17);
+  assert.equal(ids.length, 19);
   assert.equal(new Set(ids).size, ids.length);
   assert.ok(required.every(id => ids.includes(id)));
   assert.deepEqual(topics.LAYER_WORKSPACES.map(([id]) => id), ["all", ...ids]);
@@ -115,7 +115,7 @@ test("grouped accessible selector validates topic values and guides dispatch exi
   const select = findNode(tree, node => node.type === "select");
   assert.equal(select.props["aria-label"], "Layer topic");
   assert.equal(nodes(tree, node => node.type === "optgroup").length, 4);
-  assert.equal(nodes(tree, node => node.type === "option").length, 18);
+  assert.equal(nodes(tree, node => node.type === "option").length, 20);
   select.props.onChange({ target: { value: "engineering" } }); assert.equal(selected, "engineering");
   select.props.onChange({ target: { value: "__proto__" } }); assert.equal(selected, "all");
   let opened;

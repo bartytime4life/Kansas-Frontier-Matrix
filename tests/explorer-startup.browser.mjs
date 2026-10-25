@@ -570,7 +570,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     }
     await revealControl(p,'.topic-history');await p.evaluate(`document.querySelector('.topic-history').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'history detail reopened');
-    await p.evaluate(`document.querySelector('.welcome-dialog-body>.welcome-primary').focus()`);await p.key('Enter','Enter',13);
+    await p.evaluate(`document.querySelector('.welcome-dialog-body>.welcome-preview-action').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.living-welcome')?.dataset.fullscreen==='true'&&document.activeElement?.matches('.welcome-preview-expand')`,'explicit preview hands focus to Return');
     assert.equal(await p.evaluate(`document.querySelector('.domain-stage').dataset.topic`),'history');
     const previewControls=await p.evaluate(`[...document.querySelectorAll('.welcome-preview-expand,.welcome-preview-pause')].map(button=>{const r=button.getBoundingClientRect();return{text:button.textContent,top:r.top,bottom:r.bottom,left:r.left,right:r.right,width:r.width,height:r.height,hit:button.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2))};})`);

@@ -85,7 +85,7 @@ const reportMarkdown = (draft: ReportDraft, evidence: readonly EvidenceRecord[])
     `**Time:** ${draft.snapshot.committedTime.label}`,
     `**Representation:** ${draft.snapshot.representation}`,
     `**Basemap:** ${draft.snapshot.basemap} (display context)` ,
-    "**Map attribution:** " + (draft.snapshot.basemap === "standard" ? "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors" : draft.snapshot.basemap === "imagery" ? "Tiles © Esri" : draft.snapshot.basemap === "streets" ? "© OpenStreetMap contributors" : "KFM local background style"),
+    "**Map attribution:** " + (draft.snapshot.basemap === "standard" || draft.snapshot.basemap === "aviation-chart" || draft.snapshot.basemap === "civic" ? "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors" : draft.snapshot.basemap === "imagery" ? "Tiles © Esri" : draft.snapshot.basemap === "streets" ? "© OpenStreetMap contributors" : "KFM local background style"),
     ...(terrainDescription ? [`**Display terrain:** ${terrainDescription}`] : []),
     ...(draft.subsurfaceContext ? ["", subsurfaceMarkdown(draft.subsurfaceContext), ""] : []),
     ...(draft.researchContext ? ["", researchMarkdown(draft.researchContext), ""] : []),
