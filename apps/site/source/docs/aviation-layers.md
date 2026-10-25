@@ -107,6 +107,30 @@ The panel switches between two drawings of the same features:
   from the same drawn floors and ceilings as the 3D forms, so the two views
   cannot disagree.
 
+## Side view (cross-section)
+
+**Draw a side view**, then click point A and point B (up to 320 NM apart). The
+panel draws the vertical slice along that line:
+- **Axes.** Distance from A runs across, in nautical miles; altitude runs up,
+  from 0 to 20,000 ft MSL.
+- **Ground.** The brown profile is sampled at 241 points: terrain where 3D
+  terrain is loaded and agrees with the nearest facility, otherwise the nearest
+  facility's elevation, as in the point inspector. The dashed green line is the
+  400 ft AGL drone ceiling.
+- **Volumes.** Every airspace volume in the enabled groups, and every TFR, is a
+  shape whose top and bottom are its ceiling and floor at each sample. AGL limits
+  follow the ground; a floor below the ground starts at the ground.
+- **Class A.** Shaded from FL180.
+- **Aircraft.** Those within 5 km of the line are dots at their reported
+  altitude.
+
+A text list under the chart gives each crossing, so the same data is readable
+without the drawing. A line due east along 37.65°N from 97.9°W to 96.95°W lists
+`CLASS C · ICT · SFC–5,300 MSL, 17.3 to 27.1 NM` (the 5 NM core) and
+`CLASS C · ICT · 2,700 MSL–5,300 MSL, 12.2 to 32.0 NM` (the 10 NM shelf). The line
+is drawn on the map in both views. Where no shape is drawn, the airspace is
+Class E or G.
+
 ## The airspace column
 
 **Pick a point on the map** (or click an airport) to list, surface upward,

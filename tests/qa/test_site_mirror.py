@@ -997,12 +997,12 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert manifest["overrides"]["fast-uri"] == lock["packages"]["node_modules/fast-uri"]["version"] == "3.1.9"
     assert manifest["overrides"]["miniflare"]["undici"] == lock["packages"]["node_modules/undici"]["version"] == "7.30.1"
     result = TOOL.check()
-    assert result["files"] == len(expected) == len(receipt["comparison"]) == 900
+    assert result["files"] == len(expected) == len(receipt["comparison"]) == 901
     assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
     assert result["authority"] == "CONTENT_PARITY_ONLY"
     assert result["file_states"]["inherited_repository_overlay"] == 58
-    assert result["file_states"]["repository_only_overlay"] == 35
+    assert result["file_states"]["repository_only_overlay"] == 36
     assert result["file_states"]["repository_safety_overlay"] == 8
     assert result["withheld_files"] == 258
     assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
@@ -1521,7 +1521,7 @@ def test_historical_tfr_volumes_receipt_binds_only_the_tfr_volumes(monkeypatch: 
     assert predecessor.name in receipt["rollback"]["mirror"]
 
 
-CHART_2D_ADDED = {"app/aviation-chart.ts"}
+CHART_2D_ADDED = {"app/aviation-chart.ts", "app/aviation-profile.ts"}
 CHART_2D_CHANGED = {
     "app/aviation-airspace.ts", "app/aviation-control.tsx", "app/aviation-drone-data.ts", "app/aviation-traffic.ts",
     "app/site-architecture.ts", "app/site-features.ts", "docs/SITE_FEATURE_CONNECTION_ACTION_MAP.md", "docs/aviation-layers.md",
@@ -1562,7 +1562,7 @@ def test_selected_receipt_binds_only_the_2d_chart() -> None:
     for key in previous.keys() - administrative:
         assert receipt[key] == previous[key], key
     for key, count in previous["counts"].items():
-        assert receipt["counts"][key] == count + {"repository_only_overlay": 1}.get(key, 0), key
+        assert receipt["counts"][key] == count + {"repository_only_overlay": 2}.get(key, 0), key
     assert receipt["status"] == "REVIEW_ONLY"
     assert receipt["review"] == previous["review"] and receipt["overlay"] == previous["overlay"]
     assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "4fd89b28a37211e47a9d5eae9934272fc64f896f"

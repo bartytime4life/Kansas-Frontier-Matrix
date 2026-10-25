@@ -203,10 +203,10 @@ export const SITE_FEATURES = Object.freeze([
     domain: "atmosphere",
     status: "ACTIVE_CONTEXT",
     surface: "Map layers > Airspace, airports & aviation weather",
-    userOutcome: "See Class B/C/D/E, MOA and restricted airspace as labelled 3D shells or as a 2D sectional-style chart sliced at any altitude, where drones need authorization below 400 ft and the LAANC ceiling per FAA grid cell, active TFRs as 3D volumes at their altitude limits, public- and private-use airports, airways, live aircraft at their reported altitude tagged with the airspace they are in, live station weather and pilot reports, and the full airspace column at any point.",
+    userOutcome: "See Class B/C/D/E, MOA and restricted airspace as labelled 3D shells or as a 2D sectional-style chart sliced at any altitude, a side view (cross-section) between any two points, where drones need authorization below 400 ft and the LAANC ceiling per FAA grid cell, active TFRs as 3D volumes at their altitude limits, public- and private-use airports, airways, live aircraft at their reported altitude tagged with the airspace they are in, live station weather and pilot reports, and the full airspace column at any point.",
     sourceIds: [],
     actionIds: ["open-provider-source"],
-    codePaths: ["app/aviation-airspace.ts", "app/aviation-weather.ts", "app/aviation-drone-data.ts", "app/aviation-traffic.ts", "app/aviation-chart.ts", "app/aviation-control.tsx", "app/api/aviation", "public/data/aviation"],
+    codePaths: ["app/aviation-airspace.ts", "app/aviation-weather.ts", "app/aviation-drone-data.ts", "app/aviation-traffic.ts", "app/aviation-chart.ts", "app/aviation-profile.ts", "app/aviation-control.tsx", "app/api/aviation", "public/data/aviation"],
     boundary: "Pinned FAA NASR cycle with edition status and live AWC observations as external context. Not navigation, flight planning or UAS authorization; TFR volumes are drawn from FAA NOTAM detail files with an approximate ground reference and an explicit count of unreadable boundaries, NOTAM activations of other airspace are not shown, and live traffic is volunteer-receiver coverage with provider attribution, not surveillance-grade.",
   },
   {

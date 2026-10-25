@@ -280,8 +280,17 @@ data displayable in 2D.
   the column table.
 - **Wording.** The Class G drone text no longer says TFRs are not shown.
 
-Rollback: revert the commit; the 3D-only layer and nearest-facility point ground
-return.
+- **Side view.** `app/aviation-profile.ts` samples 241 points between two
+  clicks (up to 320 NM). Each volume and TFR becomes runs of samples with its
+  floor and ceiling in feet MSL over the ground at each sample. The chart
+  (0–20,000 ft MSL) shows the ground, the 400 ft AGL drone ceiling, Class A
+  shading, and aircraft within 5 km; a text list repeats every crossing. NASR
+  charts the Wichita Class C shelf as the full 10 NM circle over the core, so a
+  line through Wichita shows the core from the ground inside the shelf from
+  2,700 ft.
+
+Rollback: revert the commit; the 3D-only layer, nearest-facility point ground
+and no side view return.
 
 ## Decision for the owner
 

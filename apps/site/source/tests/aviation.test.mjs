@@ -15,6 +15,7 @@ const weather = await compileModule("aviation-weather");
 const drone = await compileModule("aviation-drone-data");
 const traffic = await compileModule("aviation-traffic");
 const chart = await compileModule("aviation-chart");
+const profile = await compileModule("aviation-profile");
 const bytes = await readFile(new URL("../public/data/aviation/kansas-aviation-context.json", import.meta.url));
 const context = airspace.parseAviationContext(JSON.parse(bytes.toString("utf8")));
 const SALINA = [-97.6522, 38.7906], RURAL = [-100.35, 39.35], FORT_RILEY_RANGE = [-96.85, 39.2];
@@ -509,7 +510,7 @@ test("the UAS grid request survives its own loading-state re-render and reaches 
   };
   const h = await componentHarness("app/aviation-control.tsx", {
     "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic,
-    "./aviation-chart": chart, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-chart": chart, "./aviation-profile": profile, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -546,7 +547,7 @@ test("turning traffic off and on never redraws the previous positions as current
   };
   const h = await componentHarness("app/aviation-control.tsx", {
     "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic,
-    "./aviation-chart": chart, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-chart": chart, "./aviation-profile": profile, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -578,7 +579,7 @@ test("switching to the 2D chart redraws every 3D form flat, with chart labels an
     ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
   const h = await componentHarness("app/aviation-control.tsx", {
     "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
-    "./aviation-traffic": traffic, "./aviation-chart": chart, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: map }, styleReady: true };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -606,5 +607,86 @@ test("switching to the 2D chart redraws every 3D form flat, with chart labels an
     await renderUntil(cycle, () => layers.get("kfm-aviation-airspace-3d")?.type === "fill-extrusion", "the 3D layers again");
     assert.equal(cameras.at(-1).pitch, 62, "3D tilts back so floors and ceilings show");
     assert.ok(sources.get("kfm-aviation-airspace").data.features.some(feature => feature.properties.chart === "ICT 53/27"), "the slice applies to the 2D chart only");
+  } finally { h.dispose(); }
+});
+
+const msl = (limit, ground) => limit.reference === "SFC" ? ground : limit.reference === "AGL" ? ground + limit.value_ft : limit.value_ft;
+const profileVolumes = (types) => context.volumes.filter(volume => types.includes(volume.type)).map(volume => ({ key: volume.id, label: airspace.airspaceLabel(volume),
+  color: "#000", kind: "airspace", bbox: volume.bbox, rings: volume.rings, lowFt: ground => msl(volume.floor, ground), highFt: ground => msl(volume.ceiling, ground) }));
+
+test("a side view across Wichita shows the Class C core from the ground and the shelf from 2,700 ft", () => {
+  const points = profile.profilePath({ lon: -97.9, lat: 37.65 }, { lon: -96.95, lat: 37.65 }).map(point => ({ ...point, groundFt: 1333 }));
+  assert.equal(points.length, profile.PROFILE_SAMPLES);
+  assert.ok(Math.abs(points.at(-1).distanceNm - 45.1) < 0.5);
+  const bands = profile.profileBands(points, profileVolumes(["CLASS_C"]));
+  const core = bands.find(band => band.label === "CLASS C · ICT · SFC–5,300 MSL"), shelf = bands.find(band => band.label === "CLASS C · ICT · 2,700 MSL–5,300 MSL");
+  assert.equal(core.segments.length, 1);
+  // NASR charts the shelf as the full 10 NM circle over the 5 NM core, so the line crosses it once, around the core.
+  assert.equal(shelf.segments.length, 1);
+  assert.ok(core.segments[0].low.every(value => value === 1333) && core.segments[0].high.every(value => value === 5300), "the core runs from the ground to 5,300 MSL");
+  assert.ok(shelf.segments[0].low.every(value => value === 2700));
+  assert.ok(shelf.segments[0].from < core.segments[0].from && core.segments[0].to < shelf.segments[0].to, "the shelf reaches farther out than the core on both sides");
+  // A ring with a hole is crossed twice, on either side of the hole.
+  const ring = [[-97.7, 37.5], [-97.2, 37.5], [-97.2, 37.8], [-97.7, 37.8], [-97.7, 37.5]], hole = [[-97.5, 37.6], [-97.4, 37.6], [-97.4, 37.7], [-97.5, 37.7], [-97.5, 37.6]];
+  const [annulus] = profile.profileBands(points, [{ key: "a", label: "ANNULUS", color: "#000", kind: "airspace", bbox: [-97.7, 37.5, -97.2, 37.8], rings: [ring, hole], lowFt: () => 3000, highFt: () => 4000 }]);
+  assert.equal(annulus.segments.length, 2);
+  assert.equal(bands[0], core, "bands are ordered bottom-up");
+  const summary = profile.profileSummary(points, bands);
+  assert.ok(summary.some(line => /^CLASS C · ICT · SFC–5,300 MSL, \d+\.\d to \d+\.\d NM$/.test(line)));
+  // A floor below the ground starts at the ground; an MSL ceiling below a high ground still never inverts.
+  const [low] = profile.profileBands(points.map(point => ({ ...point, groundFt: 3000 })), profileVolumes(["CLASS_C"])).filter(band => band.label.includes("2,700"));
+  assert.ok(low.segments[0].low.every(value => value === 3000));
+});
+
+test("side-view geometry: path limits and aircraft near the line", () => {
+  assert.throws(() => profile.profilePath({ lon: -97, lat: 38 }, { lon: -97, lat: 38 }), /two distinct points/);
+  assert.throws(() => profile.profilePath({ lon: -102, lat: 37 }, { lon: -94, lat: 40 }), /within 320 NM/);
+  const a = { lon: -98, lat: 38 }, b = { lon: -97, lat: 38 };
+  assert.ok(Math.abs(profile.alongTrackNm(a, b, -97.5, 38.01) - 23.7) < 0.3, "about halfway, 1 km off the line");
+  assert.equal(profile.alongTrackNm(a, b, -97.5, 38.1), null, "11 km off the line");
+  assert.equal(profile.alongTrackNm(a, b, -96.9, 38), null, "beyond B");
+});
+
+test("drawing a side view with two map clicks renders the cross-section and its text list", { timeout: 15_000 }, async () => {
+  const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
+  const layers = new Map(), sources = new Map();
+  let click = null;
+  const map = {
+    getLayer: id => layers.get(id), removeLayer: id => { layers.delete(id); }, addLayer: layer => { layers.set(layer.id, layer); },
+    getSource: id => sources.get(id), removeSource: id => { sources.delete(id); }, addSource: (id, source) => { sources.set(id, source); },
+    on() {}, off() { click = null; }, once: (type, handler) => { if (type === "click") click = handler; }, getCanvas: () => ({ style: {} }), getBearing: () => 0, easeTo() {},
+  };
+  const fetch = async (path) => path === airspace.AVIATION_CONTEXT_ASSET.url
+    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
+  const h = await componentHarness("app/aviation-control.tsx", {
+    "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  const props = { mapRef: { current: map }, styleReady: true };
+  const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
+  const button = (tree, text) => findNode(tree, node => node.type === "button" && JSON.stringify(node.props.children ?? "").includes(text));
+  try {
+    let tree = await cycle();
+    findNode(tree, node => node.type === "input" && node.props["aria-label"] === "Show airspace and aviation layers").props.onChange({ target: { checked: true } });
+    tree = await renderUntil(cycle, tree => Boolean(button(tree, "Draw a side view")), "the aviation panel");
+    button(tree, "Draw a side view").props.onClick();
+    tree = await renderUntil(cycle, () => typeof click === "function", "the first click handler");
+    click({ lngLat: { lng: -97.9, lat: 37.65 } });
+    tree = await renderUntil(cycle, tree => Boolean(button(tree, "Now click point B")) && typeof click === "function", "the second click handler");
+    click({ lngLat: { lng: -96.95, lat: 37.65 } });
+    tree = await renderUntil(cycle, tree => Boolean(findNode(tree, node => node.type === "figure")), "the side view");
+    const figure = JSON.stringify(findNode(tree, node => node.type === "figure"));
+    assert.match(figure, /Side view A→B/);
+    assert.match(figure, /CLASS C · ICT · SFC–5,300 MSL, \d+\.\d to \d+\.\d NM/);
+    assert.match(figure, /nearest facility['’]s elevation \(turn on 3D terrain/, "without loaded terrain the ground source is named");
+    // The harness renders shallowly; the chart is a pure component, so render its element directly.
+    const chartElement = findNode(tree, node => typeof node.type === "function" && node.type.name === "ProfileChart");
+    const svg = findNode(chartElement.type(chartElement.props), node => node.type === "svg");
+    assert.match(svg.props["aria-label"], /^Side view from A to B, \d+\.\d nautical miles, altitude in feet MSL$/);
+    assert.match(JSON.stringify(svg), /drone ceiling 400 ft AGL/);
+    assert.match(JSON.stringify(svg), /Class A from FL180/);
+    await renderUntil(cycle, () => sources.get("kfm-aviation-profile")?.data.features.length === 3, "the A–B line on the map");
+    button(tree, "Clear side view").props.onClick();
+    tree = await renderUntil(cycle, tree => !findNode(tree, node => node.type === "figure"), "the cleared side view");
   } finally { h.dispose(); }
 });
