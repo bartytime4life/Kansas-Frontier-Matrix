@@ -14,9 +14,10 @@ import type { TemporalSweepQuery } from "./temporal-sweep";
 import { buildDaylightGeometry, solarPositionAt } from "./daylight-layer";
 import { createDaylightShaderLayer, DAYLIGHT_SHADE_STOPS, type DaylightShaderLayer } from "./daylight-shader-layer";
 import { ORIENTATION_SOURCE_ID, orientationLayers, orientationSource } from "./kansas-orientation";
+import { aviationChartStyle, civicStyle } from "./category-basemaps";
 import { CINEMATIC_LIGHT_COLOR, CINEMATIC_LIGHT_INTENSITY, CINEMATIC_SKIES, GLOBE_ATMOSPHERE_BLEND, SELECTION_PULSE_LAYER_ID, effectiveSceneLight, registerCurtainLight, reliefPaintFor, sceneEffectsFor } from "./scene-effects";
 
-export type BasemapKey = "standard" | "imagery" | "kansas-aerial" | "midnight" | "prairie" | "streets" | "topo";
+export type BasemapKey = "standard" | "aviation-chart" | "civic" | "imagery" | "kansas-aerial" | "midnight" | "prairie" | "streets" | "topo";
 export type AtmospherePreset = "night" | "dusk" | "clear";
 
 const openFreeMapContext = externalContextSource("openfreemap-liberty");
@@ -30,6 +31,16 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
     title: "Standard vector context",
     note: "OpenFreeMap · OpenMapTiles · OpenStreetMap · display context · not evidence",
     style: openFreeMapContext.requestUrl,
+  },
+  "aviation-chart": {
+    title: "Aviation chart",
+    note: "Sectional-style relief, runways and airport identifiers · OpenFreeMap · OpenMapTiles · OpenStreetMap · Terrarium relief · display context · not for navigation",
+    style: aviationChartStyle(),
+  },
+  civic: {
+    title: "Government & civic",
+    note: "State, county and city boundaries with their places · OpenFreeMap · OpenMapTiles · OpenStreetMap · display context · not legal boundaries",
+    style: civicStyle(),
   },
   imagery: {
     title: "Satellite imagery",
@@ -281,6 +292,9 @@ export const TERRAIN_COLOR_SOURCE_ID = "kfm-terrain-color-dem";
  * sources, or an unidentified error before its style document has loaded (the
  * style JSON, sprite or glyphs are unreachable). After that, unidentified errors
  * can also come from terrain, glyphs, or other overlays. */
+/** Vector basemaps on the OpenFreeMap carrier: globe-safe, and replaced by the local style if that carrier fails. */
+export const VECTOR_BASEMAPS: ReadonlySet<BasemapKey> = new Set<BasemapKey>(["standard", "aviation-chart", "civic"]);
+export const isBasemapKey = (value: unknown): value is BasemapKey => typeof value === "string" && Object.hasOwn(BASEMAPS, value);
 export const shouldFallbackStandardBasemap = (sourceId: string | undefined, localSource: boolean, officialSource: boolean, styleDocumentLoaded = true): boolean =>
   !localSource && !officialSource && (sourceId === "openmaptiles" || sourceId === "ne2_shaded" || (!sourceId && !styleDocumentLoaded));
 export const TERRAIN_COLOR_RELIEF_LAYER_ID = "kfm-terrain-color-relief";

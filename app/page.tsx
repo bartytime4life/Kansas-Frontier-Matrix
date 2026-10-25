@@ -19,6 +19,10 @@ import { MapStartersControl } from "./map-starters-control";
 import { contextSelectionChanges, preferredContextIds, readContextPreference, starterPlan, type StarterAccessMap } from "./map-starters";
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
+import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
+import { CategoryMapDock } from "./category-map-dock";
+import { AviationLayerControl } from "./aviation-layer-control";
+import { AVIATION_RESEARCH_SOURCE } from "./aviation-research";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
 import { hasExplorerDestination } from "./explorer-startup";
 import { WelcomeFeatureGuide } from "./living-welcome/FeatureGuide.jsx";
@@ -38,6 +42,7 @@ import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } fro
 import { InspectionPanelSwitch, useInspectionPanel } from "./inspection-panel";
 import "./inspection-panel.css";
 import "./explorer-controls.css";
+import "./category-map-dock.css";
 import "./atlas-studio.css";
 import Link from "next/link";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
@@ -120,6 +125,8 @@ import {
   setElevationExaggeration,
   setDaylightMapLayer,
   shouldFallbackStandardBasemap,
+  isBasemapKey,
+  VECTOR_BASEMAPS,
   terrainSourceLoadState,
   unexaggeratedTerrainElevation,
   TERRAIN_HILLSHADE_LAYER_ID,
@@ -249,7 +256,7 @@ import { EXTERNAL_CONTEXT_SOURCES } from "./external-context-sources";
 import { ExplorerControlsNavigation } from "./explorer-controls-navigation";
 import { officialSourceTopics, specialtyLayerTopics, registryLayerTopics, atlasViewTopics, featureTopics, functionTopics, topicDefinition, topicSearchText, restoreTopic, serializeTopicSelection, imageryTopics, layerEntryMatches, selectedCatalogCount, type LayerCatalogEntry, type LayerBrowseView } from "./layer-workspaces";
 import { TopicSelect, TopicGuide } from "./topic-navigation";
-import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace } from "./layer-workspaces";
+import { DISASTER_COVERAGE_HOLDS, LAYER_WORKSPACES, filterOfficialSources, sourceMinimumZoom, sourceNeedsCloserView, type LayerWorkspace, type TopicId } from "./layer-workspaces";
 import {
   applyOfficialContextState,
   clearOfficialContextFeed,
@@ -1453,6 +1460,13 @@ export default function Home() {
   const [officialSourceQuery, setOfficialSourceQuery] = useState("");
   const [officialCatalogFilter, setOfficialCatalogFilter] = useState<CatalogFilter>("all");
   const [officialWorkspace, setOfficialWorkspace] = useState<LayerWorkspace>("all");
+  // The category whose map look was opened, and whether its dock was hidden.
+  const [categoryDockTopic, setCategoryDockTopic] = useState<TopicId | null>(null);
+  const [categoryDockHidden, setCategoryDockHidden] = useState(false);
+  const [aviationSelected, setAviationSelected] = useState(false);
+  const [aviationShowRequest, setAviationShowRequest] = useState(0);
+  const [aviationResearch, setAviationResearch] = useState<readonly ResearchRecord[] | null>(null);
+  const [aviationInspect, setAviationInspect] = useState<Readonly<{ lon: number; lat: number; label: string; nonce: number }> | null>(null);
   const { inspectionPanel, rightOpen, qwenOpen, setRightOpen, setQwenOpen, previewEvidence } = useInspectionPanel();
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [drawerView, setDrawerView] = useState<DrawerView>("evidence");
@@ -1790,6 +1804,7 @@ export default function Home() {
     { id: "crop", title: "Soil moisture 1 km hybrid", keywords: "USDA NASS Crop-CASMA direct provider preview reviewed numeric cells", topics: specialtyLayerTopics("crop"), selected: cropSelected },
     { id: "reviewed-water", title: "Reviewed water stations", keywords: "USGS governed snapshot evidence", topics: specialtyLayerTopics("reviewed-water"), selected: reviewedWaterSelected },
     { id: "reviewed-weather", title: "Reviewed daily weather", keywords: "NOAA GHCN-Daily precipitation temperature governed snapshot evidence", topics: specialtyLayerTopics("reviewed-weather"), selected: reviewedWeatherSelected },
+    { id: "aviation", title: "Airspace, airports & aviation weather", keywords: "FAA NASR airspace class B C D E airports runways airways 3D drone UAS LAANC TFR METAR PIREP ADS-B traffic", topics: specialtyLayerTopics("aviation"), selected: aviationSelected },
     ...EARTH_ENGINE_CONTEXT_LAYERS.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.source} ${layer.attribution}`, topics: imageryTopics(layer.id), selected: Boolean(earthEngineDisplay.visible[layer.id]), imagery: true })),
     ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: registryLayerTopics(layer.domain), selected: Boolean(visibility[layer.id]) })),
   ];
@@ -2137,8 +2152,16 @@ export default function Home() {
       coverage.push({ sourceId: source.id, title: source.title, state: coverageState, retrievedAt: connection.retrievedAt ?? null,
         limitation: `${points.length} eligible loaded points before radius filtering. ${connection.limitation ?? source.boundary} ${!payload ? "No point inventory available here; raster pixels, polygons and streamed tiles are excluded." : "Invalid or missing point coordinates and identities are excluded. Provider response extent and limits apply; absence does not prove no records exist."}`.slice(0, 2000) });
     }
+    if (aviationResearch) {
+      // The aviation layer offers its point inventory while shown: public-use airports and METAR stations.
+      const points = aviationResearch.filter(validResearchRecord);
+      records.push(...points);
+      coverage.push({ sourceId: "aviation-context", title: "Airspace, airports & aviation weather", state: points.length ? "ready" : "empty",
+        retrievedAt: points.find(point => point.retrievedAt)?.retrievedAt ?? null,
+        limitation: `${points.length} public-use airports and weather stations before radius filtering. Airspace volumes and TFR areas are polygons and are excluded, as are private-use facilities and live aircraft; open the aviation layer's point inspector for the airspace at a place.` });
+    }
     return { records, coverage };
-  }, [mapEvidenceFilter, officialArchiveDays, officialContextConnections, officialPayloads, researchMissingSources, researchSnapshotPoints, temporalQuery, visibility]);
+  }, [aviationResearch, mapEvidenceFilter, officialArchiveDays, officialContextConnections, officialPayloads, researchMissingSources, researchSnapshotPoints, temporalQuery, visibility]);
   const researchCountyOptions = useMemo(() => researchCounties(officialPayloads["census-counties"], officialStates["census-counties"]), [officialPayloads, officialStates]);
   const researchContext = useMemo<ResearchContext | null>(() => {
     if (!researchAnchor) return null;
@@ -4840,7 +4863,7 @@ export default function Home() {
       mapEvidenceFilterRef.current = nextEvidenceFilter;
       setMapEvidenceFilter(nextEvidenceFilter);
       const restoredBasemap = params.get("base");
-      const nextBasemap: BasemapKey = restoredBasemap === "standard" || restoredBasemap === "imagery" || restoredBasemap === "kansas-aerial" || restoredBasemap === "midnight" || restoredBasemap === "prairie" || restoredBasemap === "streets" || restoredBasemap === "topo" ? restoredBasemap : "standard";
+      const nextBasemap: BasemapKey = isBasemapKey(restoredBasemap) ? restoredBasemap : "standard";
       basemapRef.current = nextBasemap;
       setBasemap(nextBasemap);
       const restoredProjection = params.get("proj");
@@ -5541,10 +5564,10 @@ export default function Home() {
           const message = mapRuntimeErrorCode("event", sourceId);
           const affectedLayer = sourceId ? LAYER_REGISTRY.find((layer) => layer.sourceId === sourceId) : undefined;
           const affectedOfficialContext = officialContextForMapSource(sourceId);
-          if (basemapRef.current === "standard" && !styleFallbackAttempted && shouldFallbackStandardBasemap(sourceId, Boolean(affectedLayer), Boolean(affectedOfficialContext), styleDocumentLoadedRef.current)) {
+          if (VECTOR_BASEMAPS.has(basemapRef.current) && !styleFallbackAttempted && shouldFallbackStandardBasemap(sourceId, Boolean(affectedLayer), Boolean(affectedOfficialContext), styleDocumentLoadedRef.current)) {
             styleFallbackAttempted = true;
             runtimeError = null;
-            degradedReason = `Standard vector basemap unavailable; switched to the local MapLibre style. ${message}`;
+            degradedReason = `${BASEMAPS[basemapRef.current].title} basemap unavailable; switched to the local MapLibre style. ${message}`;
             basemapRef.current = "midnight";
             setBasemap("midnight");
             setRuntime({ kind: "degraded", message: degradedReason });
@@ -5604,8 +5627,10 @@ export default function Home() {
             return;
           }
           // A missing display basemap tile must not block cutaway navigation or records.
+          // That covers raster carriers and, once the one local fallback has been used,
+          // the category basemaps' own vector and relief tiles.
           const basemapStyle = BASEMAPS[basemapRef.current].style;
-          if (sourceId && typeof basemapStyle !== "string" && basemapStyle.sources[sourceId]?.type === "raster") {
+          if (sourceId && typeof basemapStyle !== "string" && (basemapStyle.sources[sourceId]?.type === "raster" || VECTOR_BASEMAPS.has(basemapRef.current) && Object.hasOwn(basemapStyle.sources, sourceId))) {
             degradedReason = "Some basemap tiles are unavailable. Gaps are unknown; choose another basemap or retry. Map controls and records remain available.";
             setRuntime({ kind: "degraded", message: degradedReason });
             return;
@@ -7435,9 +7460,9 @@ export default function Home() {
     setAtmospherePreset(nextAtmosphere);
     setLightAzimuth(lightAzimuthRef.current);
     setFieldOfView(nextFieldOfView);
-    if (mode === "globe" && basemapRef.current !== "standard") {
-      // The alternate basemaps are regional raster carriers. Standard vector
-      // context remains visually stable as the globe zooms out.
+    if (mode === "globe" && !VECTOR_BASEMAPS.has(basemapRef.current)) {
+      // The alternate basemaps are regional raster carriers. The vector
+      // basemaps remain visually stable as the globe zooms out.
       basemapRef.current = "standard";
       setBasemap("standard");
     }
@@ -7857,7 +7882,7 @@ export default function Home() {
     const savedOrder = Array.isArray(snapshot.layerOrder) ? snapshot.layerOrder.filter((id) => knownLayerIds.has(id)) : [];
     const nextOrder = [...savedOrder, ...defaultOrder.filter((id) => !savedOrder.includes(id))];
     const nextYear = KNOWN_TEMPORAL_FRAMES.has(snapshot.year) ? snapshot.year : OFFICIAL_CONTEXT_PRESENT_FRAME;
-    const nextBasemap: BasemapKey = snapshot.basemap === "standard" || snapshot.basemap === "imagery" || snapshot.basemap === "kansas-aerial" || snapshot.basemap === "midnight" || snapshot.basemap === "prairie" || snapshot.basemap === "streets" || snapshot.basemap === "topo" ? snapshot.basemap : "standard";
+    const nextBasemap: BasemapKey = isBasemapKey(snapshot.basemap) ? snapshot.basemap : "standard";
     const nextProjection = snapshot.projection === "globe" ? "globe" : "mercator";
     // Legacy snapshots predate the marker, so fail closed instead of exposing a possibly location-derived camera.
     const restoredLocationCameraRedaction = snapshot.locationCameraRedacted !== false;
@@ -8083,6 +8108,21 @@ export default function Home() {
       announce("This record is no longer in the eligible loaded data. Its captured source details remain in the dossier."); return;
     }
     researchResultFocusRef.current = researchIdentity(record);
+    if (record.kind === "provider" && (Object.values(AVIATION_RESEARCH_SOURCE) as string[]).includes(record.sourceId)) {
+      // Aviation points open the aviation layer's own point inspector: airspace column, drone rule and weather there.
+      const [lon, lat] = record.coordinates;
+      setAviationInspect({ lon, lat, label: record.title, nonce: Date.now() });
+      mapRef.current?.easeTo({ center: [lon, lat], zoom: Math.max(mapRef.current.getZoom(), 10), duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 600 });
+      setResearchOpen(false);
+      // The inspector lives in the Layers panel, which a compact dossier closed (and made inert).
+      setSourceStatusOpen(false);
+      setLeftPanelMode("layers");
+      setLeftOpen(true);
+      if (isCompact) { setRightOpen(false); setTimelineOpen(false); }
+      announce(shownCatalogIds.has("aviation") ? "Opened in the airspace, airports and aviation weather point inspector."
+        : "Opened in the aviation point inspector, which the current catalog search hides; clear the search to see it.");
+      return;
+    }
     if (record.kind === "registry") {
       const layer = LAYER_REGISTRY.find(item => visibility[item.id] && item.sourceId === record.sourceId && item.data.features.some(feature => feature.properties.fid === record.featureId));
       if (!layer) { announce("This registry source is no longer available."); return; }
@@ -8962,6 +9002,47 @@ export default function Home() {
     setLayerCatalogView("official");
     setOfficialWorkspace(topic);
   };
+  // A category opens on its own map look: basemap, renderer, camera and a few
+  // starter context layers. The Layers catalogue follows the same category, and
+  // everything the visitor already switched on stays on.
+  const openCategoryMap = (topic: TopicId) => {
+    const look = categoryMap(topic);
+    if (!look) { runWelcomeTopic(topic); return; }
+    setUndergroundOpen(false);
+    activateMapRepresentation(look.scene);
+    basemapRef.current = look.basemap;
+    setBasemap(look.basemap);
+    for (const id of look.starters) setOfficialContextVisible(id, true);
+    if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
+    setStarterPanelOpen(false);
+    setLayerCatalogView("official");
+    setOfficialWorkspace(topic);
+    setCategoryDockTopic(topic);
+    setCategoryDockHidden(false);
+    const camera: ViewState = { center: [look.camera.center[0], look.camera.center[1]], zoom: look.camera.zoom, bearing: look.camera.bearing, pitch: look.camera.pitch };
+    const map = mapRef.current;
+    if (map) map.flyTo({ ...camera, duration: motionDuration(1800), essential: false });
+    else pendingViewRef.current = camera;
+    announce(`${look.name} opened · ${categorySceneLabel(look.scene)} · display context, not evidence`);
+  };
+  const runWelcomeMap = (topic: TopicId) => openCategoryMap(topic);
+  // The dock follows the catalogue's category while its map look is on screen,
+  // including after a shared URL restores that basemap.
+  const activeCategoryMap = officialWorkspace === "all" ? undefined : categoryMap(officialWorkspace);
+  const categoryMode: CategoryScene = projection === "globe" ? "globe" : scenePreset === "elevation-3d" ? "terrain" : "2d";
+  const showCategoryDock = Boolean(activeCategoryMap && !categoryDockHidden && guideOpen === false && primaryWorkspace === "map" && !undergroundOpen
+    && (activeCategoryMap.basemap === basemap || categoryDockTopic === activeCategoryMap.topic));
+  const chooseCategoryMode = (mode: CategoryScene) => {
+    activateMapRepresentation(mode);
+    // Vector category basemaps survive the globe; raster ones hand over to the standard style there.
+    if (activeCategoryMap && (mode !== "globe" || VECTOR_BASEMAPS.has(activeCategoryMap.basemap))) { basemapRef.current = activeCategoryMap.basemap; setBasemap(activeCategoryMap.basemap); }
+  };
+  const resetCategoryView = () => {
+    if (!activeCategoryMap) return;
+    const { center, zoom, bearing, pitch } = activeCategoryMap.camera;
+    mapRef.current?.flyTo({ center: [center[0], center[1]], zoom: categoryMode === "globe" ? Math.min(zoom, 3.2) : zoom, bearing: categoryMode === "2d" ? 0 : bearing, pitch: categoryMode === "terrain" ? Math.max(pitch, 45) : 0, duration: motionDuration(1200), essential: false });
+    announce(`${activeCategoryMap.name} view reset`);
+  };
   const runWelcomeSearch = (query: string) => {
     setGlobalQuery(query);
     openAtlasComposer("find", query);
@@ -9518,7 +9599,7 @@ export default function Home() {
               {activeLayers.length === 0 && <p>{visibleOfficialCount ? `${visibleOfficialCount} official context sources selected; connection states and record counts appear above.` : "No layers selected. Open Layer Catalog to choose a starting stack."}</p>}
             </div>
             {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
-            <p className="map-legend-note">{basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
+            <p className="map-legend-note">{basemap === "aviation-chart" ? "Aviation chart · sectional-style elevation bands at 1,000 ft, hillshade, runways and airport identifiers from OpenMapTiles · display context, not for navigation." : basemap === "civic" ? "Government & civic · state, county and city boundaries and places from OpenMapTiles · display context, not legal boundaries." : basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
           </aside>
           </aside>}
 
@@ -9686,6 +9767,7 @@ export default function Home() {
             <div hidden={!shownCatalogIds.has("reviewed-weather")}><GovernedWeatherControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWeatherSelected} /></div>
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
             <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
+            <div hidden={!shownCatalogIds.has("aviation")}><AviationLayerControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} inspectRequest={aviationInspect} showRequest={aviationShowRequest} /></div>
             {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}
             <details className="layer-source-diagnostics"><summary>Source status &amp; coverage</summary>
 {composedSurfaceCount > 1 && <p className="layer-balance-note">Multiple surfaces are active. The map balances their opacity so boundaries and points stay readable; each slider keeps your selected value.</p>}
@@ -9832,10 +9914,14 @@ export default function Home() {
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
-          <ExplorerGuide open={guideOpen === true && primaryWorkspace === "map"} motionEnabled={dynamicEffects} onMotionChange={setDynamicEffects} onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
+          <ExplorerGuide open={guideOpen === true && primaryWorkspace === "map"} motionEnabled={dynamicEffects} onMotionChange={setDynamicEffects} onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onMap={runWelcomeMap} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
 
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
+          {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth}
+            terrainAvailable={runtime.kind !== "unsupported" && runtime.kind !== "error" && terrainState !== "ERROR"} onMode={chooseCategoryMode} onDepth={changeTerrainDepth}
+            onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onReset={resetCategoryView}
+            onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
             <strong>{KANSAS_FLYOVER[flyoverStopIndex].label}</strong>

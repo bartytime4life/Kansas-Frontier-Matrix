@@ -1,0 +1,23 @@
+/* Category map dock: a small instrument card over the map's lower left.
+   It uses the Explorer's dark glass panel language and 44px touch targets. */
+.category-map-dock{position:absolute;left:82px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:6;width:min(300px,calc(100% - 28px));display:grid;gap:10px;padding:12px 12px 12px 14px;border:1px solid #d8c58f55;border-radius:12px;background:#07171ae8;box-shadow:0 14px 34px #0007;color:#e6eff2;backdrop-filter:blur(6px)}
+.category-map-dock header{display:flex;align-items:center;gap:10px;min-width:0}
+.category-map-dock header>div{display:grid;gap:1px;min-width:0;flex:1}
+.category-map-dock strong{font-family:Georgia,"Times New Roman",serif;font-size:15px;color:#f1e6c2}
+.category-map-dock small{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#9fc6d4}
+.category-map-dock-swatch{flex:none;width:34px;height:34px;border-radius:7px;border:1px solid #ffffff38;background:radial-gradient(circle at 68% 34%,var(--m2) 0 10%,transparent 11%),linear-gradient(160deg,transparent 0 52%,var(--m1) 52% 60%,transparent 60%),linear-gradient(135deg,var(--m0),color-mix(in srgb,var(--m0) 70%,var(--m1)))}
+.category-map-dock-close{flex:none;width:44px;height:44px;margin:-8px -8px -8px 0;border:0;border-radius:8px;background:transparent;color:#b6d0dc;font-size:20px;cursor:pointer}
+.category-map-dock-close:hover{background:#ffffff14}
+.category-map-dock-modes{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:3px;border-radius:9px;background:#0d2a35}
+.category-map-dock .category-map-dock-modes button{min-height:44px;border:0;border-radius:7px;background:transparent;color:#cfe2ea;font-weight:700;font-size:13px;cursor:pointer}
+.category-map-dock .category-map-dock-modes button[aria-pressed=true]{background:#d8c58f;color:#14212a;box-shadow:inset 0 0 0 1px #f1e6c2}
+.category-map-dock .category-map-dock-modes button:disabled{opacity:.45;cursor:not-allowed;background:transparent}
+.category-map-dock-range{display:grid;grid-template-columns:62px 1fr 38px;align-items:center;gap:8px;font-size:12px;color:#b6d0dc}
+.category-map-dock-range input{width:100%;min-height:32px;accent-color:#d8c58f}
+.category-map-dock-range output{text-align:right;font-variant-numeric:tabular-nums;color:#f1e6c2}
+.category-map-dock-lede{margin:0;font-size:12px;line-height:1.45;color:#b9cdd6}
+.category-map-dock-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.category-map-dock-actions button{min-height:44px;border:1px solid #749bac80;border-radius:8px;background:#0a2d3d;color:#e6eff2;font-size:12px;font-weight:600;cursor:pointer}
+.category-map-dock-actions button:hover,.category-map-dock-modes button:not([aria-pressed=true]):hover{background:#0f3a4d}
+.category-map-dock :focus-visible{outline:2px solid #f1e6c2;outline-offset:2px}
+@media(max-width:640px){.category-map-dock{left:72px;right:8px;width:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px))}.category-map-dock-lede{display:none}}

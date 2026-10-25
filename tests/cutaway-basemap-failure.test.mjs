@@ -11,7 +11,7 @@ function visit(node){if(ts.isCallExpression(node)&&node.expression.getText(ast)=
 const code=ts.transpileModule(`exports.handle=${handler}`,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
 test('a selected aerial tile failure leaves cutaway controls usable with explicit missing coverage',()=>{
  const states=[],exports={};const sourceId='kansas-ng911-2024';
- vm.runInNewContext(code,{...performanceModule,exports,basemapRef:{current:'kansas-aerial'},BASEMAPS:{'kansas-aerial':{style:{sources:{[sourceId]:{type:'raster'}}}}},LAYER_REGISTRY:[],OFFICIAL_CONTEXT_BY_SOURCE_ID:{},officialContextForMapSource:()=>undefined,degradedReason:null,setRuntime:state=>states.push(state)});
+ vm.runInNewContext(code,{...performanceModule,exports,basemapRef:{current:'kansas-aerial'},VECTOR_BASEMAPS:new Set(['standard','aviation-chart','civic']),BASEMAPS:{'kansas-aerial':{style:{sources:{[sourceId]:{type:'raster'}}}}},LAYER_REGISTRY:[],OFFICIAL_CONTEXT_BY_SOURCE_ID:{},officialContextForMapSource:()=>undefined,degradedReason:null,setRuntime:state=>states.push(state)});
  exports.handle({sourceId,error:new Error('private provider URL must never enter UI')});
  assert.equal(states[0].kind,'degraded');assert.match(states[0].message,/Gaps are unknown/);assert.match(states[0].message,/controls and records remain available/);assert.doesNotMatch(states[0].message,/private provider/);
 });

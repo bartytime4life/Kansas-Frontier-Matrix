@@ -220,11 +220,28 @@ longer imports or mounts their players. It does not deploy a GoDaddy release.
 
 ## Navigation and options
 
-All 17 categories and their facets come directly from `app/layer-workspaces.ts`.
-There is no second domain taxonomy. Selecting a category or preview does not
-activate layers, change map time, request AI output or admit data. The explicit
-source-workspace action uses the existing topic callback. Facets describe that
-workspace; they are not independent data-activation controls.
+All 19 categories and their facets come directly from `app/layer-workspaces.ts`.
+There is no second domain taxonomy. The welcome groups them under the four
+`TOPIC_GROUPS` headings, and each card carries a three-colour sketch and the name
+of its map look from `app/category-maps.ts`.
+
+Hovering, opening details or previewing a category does not activate layers,
+change map time, request AI output or admit data. Two explicit actions do:
+
+- **Open the {map look}** (primary) calls `onMap`, which runs `openCategoryMap`.
+  It applies that category's basemap, renderer (2D, 3D terrain or globe) and
+  camera, switches on its few starter provider-context layers additively, and
+  filters the Layers catalogue to the category. Nothing the visitor already
+  switched on is turned off, and map time is unchanged. A small dock on the map
+  then names the map look and offers 2D/3D/Globe, relief, sun direction, reset
+  and the category's layers.
+- **Explore {category} sources** keeps the existing topic callback and opens the
+  Layers catalogue without changing the map.
+
+Facets describe the workspace; they are not independent data-activation
+controls. Aviation and Government have their own specialized basemaps (an
+aviation chart and a civic map; see `docs/category-maps.md`) and their own
+illustrative scenes.
 
 ## Animations and scope
 
@@ -238,9 +255,9 @@ The 16 animations derive from the source-bound recordings already described in
 `scripts/welcome-demos/runtime-assets.json` and `app/living-welcome/map-demos.mjs`.
 They show recorded software output, not current observations or a live tutorial.
 Source clocks and limitations remain attached. Contextual reuse for geology,
-ecology, engineering, people, land and hazards is labeled explicitly. Sky and
-Evidence workspaces have no verified capture: they show that limitation and a
-working destination instead of invented animation. Capturing those two actual
+ecology, engineering, people, government, land and hazards is labeled explicitly.
+Aviation, Sky and Evidence have no verified capture: they show that limitation and a
+working destination instead of invented animation. Capturing those three actual
 workflows remains open work.
 
 Use `python3 scripts/welcome-demos/build-animations.py /path/to/ffmpeg` to rebuild
