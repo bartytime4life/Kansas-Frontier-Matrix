@@ -85,6 +85,28 @@ rooftop. Contacts, owner names and remarks are never copied.
   unavailable altitude remain in the point inspector, labelled accordingly;
   they are omitted from the altitude layer rather than drawn at ground level.
 
+## 3D volumes and the 2D chart
+
+The panel switches between two drawings of the same features:
+
+- **3D volumes** (default). Every zone is a solid form from its floor to its
+  ceiling: airspace shells, drone slabs, LAANC cells, TFRs, cloud-ceiling discs,
+  pilot reports and aircraft. Choosing it tilts the map so floors and ceilings
+  show; vertical exaggeration (1×, 3×, 6×) applies here.
+- **2D chart.** The camera looks straight down and every form is drawn as a
+  flat, translucent fill with the same boundary lines. Airspace labels switch to
+  sectional-chart notation, ceiling/floor in hundreds of feet MSL: `ICT 53/27`
+  is 2,700 to 5,300 ft MSL, `ICT 53/SFC` starts at the surface, and AGL limits
+  are marked (`7 AGL`).
+- **Altitude slice (2D only).** "All altitudes" draws everything. "Drone
+  altitudes" keeps forms that start below 400 ft AGL. A level from 1,500 to
+  25,000 ft MSL keeps only forms that contain that altitude. Aircraft, pilot
+  reports and cloud bases are kept within 1,000 ft of the level. Where nothing
+  is drawn, the airspace is Class E or G (the column inspector lists it); from
+  FL180 Class A covers the whole region and is not a shape. Slice heights come
+  from the same drawn floors and ceilings as the 3D forms, so the two views
+  cannot disagree.
+
 ## The airspace column
 
 **Pick a point on the map** (or click an airport) to list, surface upward,
@@ -108,6 +130,17 @@ elevation for Class B/C/D/E2–E4, otherwise the nearest non-heliport facility
 (distance recorded per volume). Kansas terrain varies, so drawn MSL limits can
 be off by the difference between that airport and the local ground; the labels
 and the column table always show the official values.
+
+At a **picked point**, the ground is the terrain elevation there when 3D
+terrain is on and its tiles are loaded, provided it is within 1,000 ft of the
+nearest facility. Larger gaps are known DEM artefacts, and the inspector says
+when a reading was set aside. Otherwise the ground is the nearest non-heliport
+facility's elevation. Terrain is never requested by this layer: the elevation
+tiles are opt-in network, used only when the viewer turns 3D terrain on. The
+point's ground drives the column's above-ground heights and the drone verdict.
+For example, under the Wichita Class C shelf (floor 2,700 MSL), drones are
+clear of Class C where the ground is low enough to leave the shelf above
+400 ft AGL.
 
 PIREP flight levels accept the AWC API's documented digit strings (for example,
 `"230"` = 23,000 ft MSL) and numeric values observed in live JSON. `fltLvlType`

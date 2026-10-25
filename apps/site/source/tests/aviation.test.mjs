@@ -14,6 +14,7 @@ const airspace = await compileModule("aviation-airspace");
 const weather = await compileModule("aviation-weather");
 const drone = await compileModule("aviation-drone-data");
 const traffic = await compileModule("aviation-traffic");
+const chart = await compileModule("aviation-chart");
 const bytes = await readFile(new URL("../public/data/aviation/kansas-aviation-context.json", import.meta.url));
 const context = airspace.parseAviationContext(JSON.parse(bytes.toString("utf8")));
 const SALINA = [-97.6522, 38.7906], RURAL = [-100.35, 39.35], FORT_RILEY_RANGE = [-96.85, 39.2];
@@ -99,6 +100,50 @@ test("private-use facilities are listed with a use flag, styled apart, and helip
   assert.match(points.features[0].properties.label, / · PVT$/);
   const raw = JSON.parse(bytes.toString("utf8"));
   assert.throws(() => airspace.parseAviationContext({ ...raw, airports: [{ ...raw.airports[0], use: "MILITARY" }] }), /Invalid airport record/);
+});
+
+test("2D chart labels read ceiling/floor in hundreds of feet, as on a sectional", () => {
+  const ict = context.volumes.filter(volume => volume.type === "CLASS_C" && volume.identifier === "ICT").map(airspace.chartLabel).sort();
+  assert.deepEqual(ict, ["ICT 53/27", "ICT 53/SFC"]);
+  assert.equal(airspace.chartLimit({ value_ft: 700, reference: "AGL" }), "7 AGL");
+  assert.equal(airspace.chartLimit({ value_ft: 18000, reference: "MSL", inclusive: false }), "180");
+  const features = airspace.airspaceFeatures(context, new Set(["controlled"]), 1).features;
+  assert.ok(features.every(feature => typeof feature.properties.chart === "string" && Number.isFinite(feature.properties.groundFt)));
+});
+
+test("the altitude slice keeps what exists at one height, in 2D, from the same features as 3D", () => {
+  const groundAt = () => 1333;
+  const controlled = airspace.airspaceFeatures(context, new Set(["controlled"]), 3);
+  const ictAt = (slice) => chart.sliceCollection(controlled, slice, 3, groundAt).features.filter(feature => feature.properties.chart.startsWith("ICT ")).map(feature => feature.properties.chart).sort();
+  assert.deepEqual(ictAt({ kind: "msl", ft: 4000 }), ["ICT 53/27", "ICT 53/SFC"], "4,000 ft MSL is inside the core and the shelf");
+  assert.deepEqual(ictAt({ kind: "msl", ft: 2000 }), ["ICT 53/SFC"], "below the 2,700 ft shelf floor only the core remains");
+  assert.deepEqual(ictAt({ kind: "msl", ft: 6000 }), [], "above the 5,300 ft ceiling Class C is gone");
+  assert.deepEqual(ictAt({ kind: "drone" }), ["ICT 53/SFC"], "the drone slice keeps volumes that start below 400 ft AGL");
+  assert.equal(chart.sliceCollection(controlled, chart.ALL_ALTITUDES, 3, groundAt), controlled);
+  // Thin point markers (aircraft) use a tolerance band instead of containment.
+  const plane = traffic.trafficFeatures(traffic.parseTraffic({ ac: [aircraft()] }).records, groundAt, 1, () => "CLASS C · ICT");
+  assert.equal(chart.sliceCollection(plane, { kind: "msl", ft: 4500 }, 1, groundAt, chart.SLICE_POINT_TOLERANCE_FT).features.length, 1);
+  assert.equal(chart.sliceCollection(plane, { kind: "msl", ft: 6000 }, 1, groundAt, chart.SLICE_POINT_TOLERANCE_FT).features.length, 0);
+  assert.equal(chart.sliceTitle({ kind: "msl", ft: 14500 }), "14,500 ft MSL");
+});
+
+test("picked-point ground uses loaded terrain only when it agrees with the nearest facility", () => {
+  const anchors = airspace.groundAnchors(context.airports);
+  const sln = anchors.find(airport => airport.faa_id === "SLN");
+  const at = (terrainFt) => airspace.pointGroundReference(anchors, sln.lon, sln.lat, terrainFt);
+  assert.deepEqual([at(sln.elevation_ft + 40).method, at(sln.elevation_ft + 40).ft], ["TERRAIN_DEM", sln.elevation_ft + 40]);
+  const spike = at(sln.elevation_ft + 1500);
+  assert.deepEqual([spike.method, spike.ft, spike.terrainRejected], ["NEAREST_FACILITY", sln.elevation_ft, true], "a DEM spike is reported, not used");
+  assert.deepEqual([at(null).method, at(null).terrainRejected], ["NEAREST_FACILITY", false]);
+  assert.equal(airspace.pointGroundReference([], -98, 38, 1800).method, "TERRAIN_DEM");
+  assert.deepEqual(airspace.pointGroundReference([], -98, 38, null), { ft: 0, method: "NONE", facility: null, km: null, terrainRejected: false });
+});
+
+test("the drone verdict judges MSL floors against the picked point's ground", () => {
+  // Under the Wichita Class C shelf (floor 2,700 MSL): ~1,367 ft above 1,333 ft ground, but 250 ft above 2,450 ft ground.
+  assert.equal(airspace.droneVerdictAtPoint(context, -97.6, 37.7, 1333).rule.code, "ABOVE_DRONE_CEILING");
+  assert.equal(airspace.droneVerdictAtPoint(context, -97.6, 37.7, 2450).rule.code, "ATC_AUTHORIZATION_REQUIRED");
+  assert.match(airspace.droneVerdictAtPoint(context, -100.35, 39.35).rule.detail, /TFRs still apply \(drawn when their FAA boundary can be read\)/);
 });
 
 test("nearest airport and airway proximity", () => {
@@ -464,6 +509,7 @@ test("the UAS grid request survives its own loading-state re-render and reaches 
   };
   const h = await componentHarness("app/aviation-control.tsx", {
     "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic,
+    "./aviation-chart": chart, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -500,6 +546,7 @@ test("turning traffic off and on never redraws the previous positions as current
   };
   const h = await componentHarness("app/aviation-control.tsx", {
     "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic,
+    "./aviation-chart": chart, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -517,4 +564,47 @@ test("turning traffic off and on never redraws the previous positions as current
     assert.doesNotMatch(status(tree), /aircraft ·/, "the previous response is not shown while the new one is pending");
     assert.match(status(tree), /Checking/);
   } finally { release?.(); h.dispose(); }
+});
+
+test("switching to the 2D chart redraws every 3D form flat, with chart labels and a top-down camera", { timeout: 15_000 }, async () => {
+  const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
+  const layers = new Map(), sources = new Map(), cameras = [];
+  const map = {
+    getLayer: id => layers.get(id), removeLayer: id => { layers.delete(id); }, addLayer: layer => { layers.set(layer.id, layer); },
+    getSource: id => sources.get(id), removeSource: id => { sources.delete(id); }, addSource: (id, source) => { sources.set(id, source); },
+    on() {}, off() {}, once() {}, getCanvas: () => ({ style: {} }), getBearing: () => -18, easeTo: options => { cameras.push(options); },
+  };
+  const fetch = async (path) => path === airspace.AVIATION_CONTEXT_ASSET.url
+    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
+  const h = await componentHarness("app/aviation-control.tsx", {
+    "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./aviation-traffic": traffic, "./aviation-chart": chart, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  const props = { mapRef: { current: map }, styleReady: true };
+  const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
+  const formTypes = () => Object.fromEntries([...layers.values()].filter(layer => layer.id.endsWith("-3d")).map(layer => [layer.id.replace("kfm-aviation-", ""), layer.type]));
+  try {
+    let tree = await cycle();
+    findNode(tree, node => node.type === "input" && node.props["aria-label"] === "Show airspace and aviation layers").props.onChange({ target: { checked: true } });
+    tree = await renderUntil(cycle, () => layers.has("kfm-aviation-airspace-3d"), "the aviation layers");
+    assert.ok(Object.values(formTypes()).every(type => type === "fill-extrusion"), "3D draws extruded volumes");
+    const radio = label => findNode(findNode(tree, node => node.type === "label" && JSON.stringify(node.props.children ?? "").includes(label)), node => node.type === "input");
+    radio("2D chart").props.onChange({ target: { checked: true } });
+    tree = await renderUntil(cycle, () => layers.get("kfm-aviation-airspace-3d")?.type === "fill", "the 2D chart layers");
+    const forms = formTypes();
+    assert.deepEqual(Object.keys(forms).sort(), ["airspace-3d", "ceilings-3d", "drone-3d", "pireps-3d", "tfr-3d", "traffic-3d", "uas-3d"]);
+    assert.ok(Object.values(forms).every(type => type === "fill"), "every 3D form has a flat twin in 2D");
+    // Compared as JSON: the harness realm's arrays have their own prototype.
+    assert.equal(JSON.stringify(layers.get("kfm-aviation-airspace-label").layout["text-field"]), JSON.stringify(["get", "chart"]));
+    assert.equal(cameras.at(-1).pitch, 0, "2D looks straight down");
+    // Slicing at 2,000 ft MSL drops the Wichita Class C shelf (floor 2,700 MSL) and keeps its surface core.
+    const slicer = findNode(tree, node => node.type === "select" && JSON.stringify(node.props.children ?? "").includes("Drone altitudes"));
+    slicer.props.onChange({ target: { value: "2000" } });
+    await renderUntil(cycle, () => !sources.get("kfm-aviation-airspace").data.features.some(feature => feature.properties.chart === "ICT 53/27"), "the 2,000 ft slice");
+    assert.ok(sources.get("kfm-aviation-airspace").data.features.some(feature => feature.properties.chart === "ICT 53/SFC"));
+    radio("3D volumes").props.onChange({ target: { checked: true } });
+    await renderUntil(cycle, () => layers.get("kfm-aviation-airspace-3d")?.type === "fill-extrusion", "the 3D layers again");
+    assert.equal(cameras.at(-1).pitch, 62, "3D tilts back so floors and ceilings show");
+    assert.ok(sources.get("kfm-aviation-airspace").data.features.some(feature => feature.properties.chart === "ICT 53/27"), "the slice applies to the 2D chart only");
+  } finally { h.dispose(); }
 });
