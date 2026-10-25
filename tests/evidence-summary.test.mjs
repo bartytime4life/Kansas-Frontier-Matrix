@@ -13,10 +13,18 @@ test('every selection answers the same three questions from its own fields',()=>
  const s=summary.evidenceSummary(base);
  assert.equal(s.what,'A dated station anchor.','whitespace is normalized, not reworded');
  assert.equal(s.where,'Kansas River at DeSoto · display anchor 38.980° N, 94.960° W');
- assert.equal(s.when,'2026-10-25 · source updated 2026-10-24');
+ assert.equal(s.when,'2026-10-25 · record updated 2026-10-24','a registry record carries its own update');
  assert.equal(s.source,'USGS');assert.equal(s.status,'ANSWER');
  assert.equal(s.limits,'Display anchor. Location ±30 m.');
  assert.deepEqual([...s.topics],['water'],'registry membership uses the catalogue rule');
+});
+
+test('a retrieval time or listed freshness is never presented as a provider update',()=>{
+ const official={...base,kind:'basemap',officialId:'usgs-streamflow'};
+ assert.equal(summary.evidenceSummary({...official,lastUpdate:'2026-10-25T18:04:11.000Z'}).when,'2026-10-25 · retrieved 2026-10-25T18:04:11.000Z');
+ assert.equal(summary.evidenceSummary({...official,lastUpdate:'Every 15 minutes'}).when,'2026-10-25 · listed freshness: Every 15 minutes');
+ assert.equal(summary.evidenceSummary({...base,kind:'basemap',lastUpdate:'Provider-defined'}).when,'2026-10-25','a basemap record has no update clause');
+ for(const s of [summary.evidenceSummary(official),summary.evidenceSummary({...base,kind:'basemap'})])assert.doesNotMatch(s.when,/source updated/);
 });
 
 test('a live observation time leads, and missing fields are said plainly rather than invented',()=>{

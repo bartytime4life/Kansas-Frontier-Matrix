@@ -48,7 +48,10 @@ three questions for every source (`app/evidence-summary.ts`):
 - **What it is** is the record's own summary. A provider basemap record is
   labelled as the provider's mapped record.
 - **Where & when** gives the spatial scope and display anchor, then the
-  observation or source time, with the source update when it differs.
+  observation or source time. The second clause is labelled by what it is:
+  "retrieved …" for an official feature's retrieval time, "listed freshness: …"
+  when only the source's cadence is known, and "record updated …" for a
+  registry record. A provider basemap record gets no update clause.
 - **Source & limits** gives the organization, the evidence state (a basemap
   record stays "External context only · no KFM EvidenceBundle") and the
   recorded generalization and uncertainty.

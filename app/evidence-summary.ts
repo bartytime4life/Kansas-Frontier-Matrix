@@ -45,6 +45,20 @@ const coordinate = (lng: number, lat: number): string | null => Number.isFinite(
   ? `${Math.abs(lat).toFixed(3)}° ${lat >= 0 ? "N" : "S"}, ${Math.abs(lng).toFixed(3)}° ${lng >= 0 ? "E" : "W"}`
   : null;
 const clean = (value: string | null | undefined) => (value ?? "").replace(/\s+/g, " ").trim();
+const ISO_TIME = /^\d{4}-\d{2}-\d{2}(?:[T ][\d:.]+(?:Z|[+-]\d{2}:?\d{2})?)?$/;
+
+/**
+ * `lastUpdate` means different things by carrier, so it is labelled by what it
+ * is, never as a provider update: an official feature carries its retrieval
+ * time (or the source's listed freshness when none was recorded), a basemap
+ * record carries no time, and a registry record carries its own update.
+ */
+function updateClause(input: EvidenceSummaryInput, value: string): string {
+  if (!value) return "";
+  // Official provider features arrive as basemap-kind selections with their source id.
+  if (input.officialId) return ISO_TIME.test(value) ? `retrieved ${value}` : `listed freshness: ${value}`;
+  return input.kind === "basemap" ? "" : `record updated ${value}`;
+}
 
 export function evidenceSummary(input: EvidenceSummaryInput): EvidenceSummary {
   const at = coordinate(input.focusLng, input.focusLat);
@@ -55,7 +69,7 @@ export function evidenceSummary(input: EvidenceSummaryInput): EvidenceSummary {
     topics: selectionTopics(input.kind, input.officialId, input.layerDomain),
     what: input.kind === "basemap" ? "A provider’s mapped record and the attributes it reports." : clean(input.summary) || clean(input.title),
     where: [scope, at && `display anchor ${at}`].filter(Boolean).join(" · ") || "No location recorded",
-    when: [time || "No time recorded", updated && updated !== time ? `source updated ${updated}` : ""].filter(Boolean).join(" · "),
+    when: [time || "No time recorded", updated !== time ? updateClause(input, updated) : ""].filter(Boolean).join(" · "),
     source: clean(input.sourceOrganization) || "Source not recorded",
     status: input.kind === "basemap" ? "External context only · no KFM EvidenceBundle" : clean(input.evidenceState) || "Evidence state not recorded",
     limits: [clean(input.generalizationNote), clean(input.uncertainty)].filter(Boolean).join(" ") || "No limitation is recorded; that does not mean there is none.",
