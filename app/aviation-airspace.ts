@@ -306,9 +306,9 @@ export type DroneVerdict = Readonly<{ rule: DroneRule; governing: string; ceilin
 /** Most restrictive small-UAS rule for SFC–400 ft AGL at a point; Class G is the default. */
 export function droneVerdictAtPoint(context: Pick<AviationContext, "volumes">, lon: number, lat: number, groundFt?: number): DroneVerdict {
   const rank: Record<DroneRuleCode, number> = { NO_FLY_WITHOUT_PERMISSION: 3, ATC_AUTHORIZATION_REQUIRED: 2, CAUTION: 1, ABOVE_DRONE_CEILING: 0 };
-  let best: DroneVerdict = Object.freeze({ governing: "Class G (uncontrolled) at the surface", ceilingFtAgl: DRONE_CEILING_FT_AGL,
-    rule: Object.freeze({ code: "ABOVE_DRONE_CEILING" as const, title: "Class G: fly up to 400 ft AGL without ATC authorization",
-      detail: "Part 107 pilots (and recreational flyers with TRUST) may fly to 400 ft AGL here, within visual line of sight, yielding to manned aircraft, with Remote ID. TFRs still apply (drawn when their FAA boundary can be read), as do NOTAMs, which are not shown.",
+  let best: DroneVerdict = Object.freeze({ governing: "Loaded NASR surface context only", ceilingFtAgl: DRONE_CEILING_FT_AGL,
+    rule: Object.freeze({ code: "ABOVE_DRONE_CEILING" as const, title: "No surface restriction found in the loaded NASR volumes",
+      detail: "This partial context result does not establish Class G, clearance or permission to fly. Check current FAA airspace, NOTAMs, TFRs and authorization requirements. Missing or unreadable boundaries may conceal restrictions.",
       cite: "14 CFR 107.31, 107.37, 107.51(b); 14 CFR Part 89; 49 U.S.C. 44809" }) });
   for (const volume of volumesAtPoint(context, lon, lat)) {
     const rule = droneRule(volume, groundFt);

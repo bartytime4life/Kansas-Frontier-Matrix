@@ -50,13 +50,17 @@ test("the actual delayed map hover uses non-interrupting preview arbitration", a
   const h = await componentHarness(new URL("../app/inspection-panel.tsx", import.meta.url), {});
   const render = () => h.render(h.exports.useInspectionPanel);
   const timers = [];
-  const context = { surfaceInspectionOpenRef: { current: false }, hoverCandidateIdRef: { current: null }, hoverDrawerTimerRef: { current: null }, compactRef: { current: false }, rightPanelRef: { current: { dataset: { open: "false" } } }, window: { setTimeout(fn) { timers.push(fn); return timers.length; }, clearTimeout() {} }, previewEvidence: render().previewEvidence, setHoverActive() {}, setHoverSummary() {} };
+  const context = { aviationPickingRef: { current: false }, surfaceInspectionOpenRef: { current: false }, hoverCandidateIdRef: { current: null }, hoverDrawerTimerRef: { current: null }, compactRef: { current: false }, rightPanelRef: { current: { dataset: { open: "false" } } }, window: { setTimeout(fn) { timers.push(fn); return timers.length; }, clearTimeout() {} }, previewEvidence: render().previewEvidence, setHoverActive() {}, setHoverSummary() {} };
   const code = ts.transpileModule(`const show = ${show.getText(tree)};`, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
   const hover = new Function(...Object.keys(context), `${code}; return show;`)(...Object.values(context));
   hover({ id: "county", title: "Seward" }, true);
   assert.equal(timers.length, 1);
   render().setQwenOpen(true); timers[0]();
   assert.equal(render().inspectionPanel, "qwen");
+  render().setQwenOpen(false);
+  hover({ id: "another", title: "County" }, true);
+  context.aviationPickingRef.current = true; timers.at(-1)();
+  assert.equal(render().inspectionPanel, null, "an already scheduled preview cannot open during aviation drawing");
 });
 
 test("a Scene map sample retains selection without resizing its canvas; closing Scene reveals evidence", async () => {

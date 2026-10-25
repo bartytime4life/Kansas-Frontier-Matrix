@@ -41,6 +41,74 @@ assert.equal(origin.search, '');
 assert.equal(origin.username + origin.password, '');
 const chrome = process.env.KFM_TEST_CHROME ?? 'google-chrome';
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+// Native geometry fixture: use the actual stateless dock component and production
+// CSS without depending on provider tiles or activating any source.
+for (const [width, height] of [[320, 568], [390, 844], [568, 320], [760, 700], [1440, 900]]) {
+  test(`category dock controls remain unobscured at ${width}x${height}`, { timeout: 30000 }, async t => {
+    const { createRequire } = await import('node:module');
+    const { renderToStaticMarkup } = await import('react-dom/server');
+    const { createElement } = await import('react');
+    const dock = {}, looks = {};
+    new Function('exports', 'require', ts.transpileModule(await readFile('app/category-map-dock.tsx', 'utf8'), {
+      compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX },
+    }).outputText)(dock, createRequire(import.meta.url));
+    new Function('exports', ts.transpileModule(await readFile('app/category-maps.ts', 'utf8'), {
+      compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+    }).outputText)(looks);
+    const css = await readFile('app/globals.css', 'utf8') + await readFile('app/category-map-dock.css', 'utf8');
+    const b = await browser(t), { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
+    const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
+    const call = (method, params = {}) => b.call(method, params, sessionId);
+    await call('Page.enable'); await call('Runtime.enable'); await call('Network.enable');
+    await call('Network.setBlockedURLs', { urls: ['*'] });
+    await call('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
+    const evaluate = async expression => {
+      const result = await call('Runtime.evaluate', { expression, returnByValue: true });
+      if (result.exceptionDetails) throw new Error(JSON.stringify(result.exceptionDetails));
+      return result.result.value;
+    };
+    const { frameTree } = await call('Page.getFrameTree');
+    for (const topic of ['aviation', 'government']) for (const mode of ['2d', 'terrain', 'globe']) {
+      const markup = renderToStaticMarkup(createElement(dock.CategoryMapDock, {
+        look: looks.CATEGORY_MAPS[topic], mode, depth: 2.5, azimuth: 235, terrainAvailable: true,
+      }));
+      const header = height < 500 ? 62 : width < 800 ? 126 : 110;
+      await call('Page.setDocumentContent', { frameId: frameTree.frame.id, html: `<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><style>${css}</style></head><body style="margin:0"><main class="map-stage" style="position:relative;margin-top:${header}px;height:calc(100dvh - ${header + 28}px)">${markup}<nav class="map-mobile-actions"><button>Map layers<b>6</b></button><button>Places<b>0</b></button><button>Sources</button><button>Time<b>2026</b></button><button>Style</button></nav></main></body></html>` });
+      const selectors = ['.category-map-dock-close', ...[1, 2, 3].map(n => `.category-map-dock-modes button:nth-child(${n})`), ...[1, 2].map(n => `.category-map-dock-actions button:nth-child(${n})`)];
+      if (mode !== 'globe') selectors.push('.category-map-dock-range input');
+      for (const selector of selectors) {
+        await evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})`);
+        const at = await evaluate(`(() => {const e=document.querySelector(${JSON.stringify(selector)}),r=e.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2,hit:e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)),body:document.documentElement.scrollWidth};})()`);
+        assert.ok(at.x > 0 && at.x < width && at.y > 0 && at.y < height, `${topic} ${mode}: ${selector} in viewport`);
+        assert.ok(at.hit, `${topic} ${mode}: ${selector} is not covered by map navigation`);
+        assert.ok(at.body <= width + 1, 'no document horizontal overflow');
+      }
+    }
+  });
+}
+
+test('category evidence summary keeps source qualifications readable on its paper card', { timeout: 30000 }, async t => {
+  const b = await browser(t), { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
+  const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
+  const call = (method, params = {}) => b.call(method, params, sessionId);
+  await call('Page.enable'); await call('Runtime.enable'); await call('Network.enable');
+  await call('Network.setBlockedURLs', { urls: ['*'] });
+  const { frameTree } = await call('Page.getFrameTree');
+  const globals = await readFile('app/globals.css', 'utf8'), paper = await readFile('app/research.module.css', 'utf8'), facts = await readFile('app/evidence-summary.css', 'utf8');
+  const luminance = color => color.match(/[\d.]+/g).slice(0, 3).map(Number).map(v => v / 255).map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4).reduce((sum, v, i) => sum + v * [.2126, .7152, .0722][i], 0);
+  for (const css of [globals + paper + facts, globals + facts + paper]) {
+    await call('Page.setDocumentContent', { frameId: frameTree.frame.id, html: `<!doctype html><html><head><style>${css}</style></head><body><section class="summary"><h3>Selected record</h3><dl class="drawer-facts"><div><dt>Source &amp; limits</dt><dd><strong>U.S. Census Bureau</strong> · External context only · no KFM EvidenceBundle<p>Dated source context. Missing coverage does not establish clearance.</p></dd></div></dl></section></body></html>` });
+    const result = await call('Runtime.evaluate', { expression: `({background:getComputedStyle(document.querySelector('.summary')).backgroundColor,colors:[...document.querySelectorAll('.drawer-facts dt,.drawer-facts dd,.drawer-facts dd strong,.drawer-facts dd p')].map(e=>getComputedStyle(e).color)})`, returnByValue: true });
+    assert.equal(result.exceptionDetails, undefined);
+    const { background, colors } = result.result.value;
+    for (const color of colors) {
+      const a = luminance(color), c = luminance(background), contrast = (Math.max(a, c) + .05) / (Math.min(a, c) + .05);
+      assert.ok(contrast >= 4.5, `${color} on ${background}: contrast ${contrast.toFixed(2)} must be at least 4.5`);
+    }
+  }
+});
+
 async function browser(t) {
   const profile = await mkdtemp(join(tmpdir(), 'kfm-guide-browser-'));
   const child = spawn(chrome, [

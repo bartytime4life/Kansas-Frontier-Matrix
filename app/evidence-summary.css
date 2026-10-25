@@ -9,8 +9,8 @@
 .drawer-category button:hover{background:#d8c58f1a}
 .drawer-facts{display:grid;gap:8px;margin:8px 0 12px}
 .drawer-facts>div{display:grid;grid-template-columns:minmax(84px,28%) 1fr;gap:10px;align-items:start;padding-bottom:8px;border-bottom:1px solid #ffffff14}
-.drawer-facts dt{font-size:11px;font-weight:700;letter-spacing:.04em;color:#d8c58f}
-.drawer-facts dd{margin:0;font-size:13px;line-height:1.45;color:#dbe7ec;overflow-wrap:anywhere}
-.drawer-facts dd p{margin:4px 0 0;font-size:12px;color:#aec4cd}
+.drawer-facts dt{font-size:11px;font-weight:700;letter-spacing:.04em;color:inherit}
+.drawer-facts dd{margin:0;font-size:13px;line-height:1.45;color:inherit;overflow-wrap:anywhere}
+.drawer-facts dd p{margin:4px 0 0;font-size:12px;color:inherit}
 .drawer-category :focus-visible{outline:2px solid #f1e6c2;outline-offset:2px}
 @media(max-width:420px){.drawer-facts>div{grid-template-columns:1fr;gap:2px}}

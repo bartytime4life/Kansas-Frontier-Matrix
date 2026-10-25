@@ -277,3 +277,11 @@
 .reference-layer-legend i { flex: none; display: inline-block; width: 18px; height: 3px; margin-top: 7px; }
 .thermal-context-note { display: grid; gap: 3px; margin: 0 14px 10px; border-left: 3px solid #e9b66b; background: rgba(233, 182, 107, .08); padding: 8px 10px; color: #dce9df; font-size: 11px; line-height: 1.45; }
 .thermal-context-note strong { color: #ffe0aa; font-size: 10px; letter-spacing: .05em; }
+
+.aviation-profile { margin: 12px 0; min-width: 0; }
+.aviation-profile-scroll { max-width: 100%; overflow-x: auto; border: 1px solid #7a9395; border-radius: 4px; }
+.aviation-profile-scroll:focus-visible { outline: 2px solid #dfc16a; outline-offset: 2px; }
+.aviation-profile-scroll svg { display: block; min-width: 760px; width: 100%; }
+.aviation-profile figcaption { font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.aviation-profile figcaption ol { padding-left: 22px; }
+.aviation-profile figcaption li { margin: 8px 0; }

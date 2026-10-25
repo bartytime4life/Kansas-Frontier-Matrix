@@ -1,6 +1,7 @@
 /* Category map dock: a small instrument card over the map's lower left.
    It uses the Explorer's dark glass panel language and 44px touch targets. */
 .category-map-dock{position:absolute;left:82px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:6;width:min(300px,calc(100% - 28px));display:grid;gap:10px;padding:12px 12px 12px 14px;border:1px solid #d8c58f55;border-radius:12px;background:#07171ae8;box-shadow:0 14px 34px #0007;color:#e6eff2;backdrop-filter:blur(6px)}
+.category-map-dock{max-height:calc(100% - 28px);overflow-y:auto;overscroll-behavior:contain}
 .category-map-dock header{display:flex;align-items:center;gap:10px;min-width:0}
 .category-map-dock header>div{display:grid;gap:1px;min-width:0;flex:1}
 .category-map-dock strong{font-family:Georgia,"Times New Roman",serif;font-size:15px;color:#f1e6c2}
@@ -20,7 +21,8 @@
 .category-map-dock-actions button{min-height:44px;border:1px solid #749bac80;border-radius:8px;background:#0a2d3d;color:#e6eff2;font-size:12px;font-weight:600;cursor:pointer}
 .category-map-dock-actions button:hover,.category-map-dock-modes button:not([aria-pressed=true]):hover{background:#0f3a4d}
 .category-map-dock :focus-visible{outline:2px solid #f1e6c2;outline-offset:2px}
-@media(max-width:640px){.category-map-dock{left:72px;right:8px;width:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px))}.category-map-dock-lede{display:none}}
+/* Keep the card above the mobile action rail; short screens scroll the card. */
+@media(max-width:760px){.category-map-dock{left:72px;right:8px;width:auto;bottom:calc(80px + env(safe-area-inset-bottom,0px));max-height:calc(100% - 96px - env(safe-area-inset-bottom,0px))}.category-map-dock-lede{display:none}}
 
 /* The Layers panel's topic guide shows the category's map look with the same sketch. */
 .topic-guide .topic-map-look{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;margin:8px 0;padding:10px;border:1px solid #d8c58f44;border-radius:10px;background:#0a2533}
