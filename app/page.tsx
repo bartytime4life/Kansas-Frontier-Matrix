@@ -9022,15 +9022,29 @@ export default function Home() {
   // A category opens on its own map look: basemap, renderer, camera and a few
   // starter context layers. The Layers catalogue follows the same category, and
   // everything the visitor already switched on stays on.
+  // A look's light sets only atmosphere and sun azimuth; the visitor's effect settings stay as they are.
+  // It is applied to the map now as well as to state: when state already holds these values (the
+  // same look opened again), React skips the light effect after the representation transaction has
+  // repainted its own default, so the map would keep that default while the controls showed the look.
+  const applyCategoryLight = (recipe: SceneRecipe) => {
+    const { atmosphere, azimuth } = SCENE_RECIPES[recipe];
+    changeStudioLight({ atmosphere, azimuth });
+    const map = mapRef.current;
+    if (!map || !styleGenerationReadyRef.current) return;
+    runMapMutation("Category light", () => {
+      applySceneEnvironment(map, atmosphere, azimuth);
+      if (scenePresetRef.current === "elevation-3d") applyTerrainReliefStyle(map, basemapRef.current === "topo" ? "topographic" : "general", atmosphere, azimuth);
+      syncSceneOverlays(map, atmosphere, azimuth, renderEfficientRef.current);
+    });
+  };
   const openCategoryMap = (topic: TopicId) => {
     const look = categoryMap(topic);
     if (!look) { runWelcomeTopic(topic); return; }
     setUndergroundOpen(false);
     activateMapRepresentation(look.scene);
-    // A look's light sets only atmosphere and sun azimuth; the visitor's effect settings stay as they are.
-    if (look.light) changeStudioLight({ atmosphere: SCENE_RECIPES[look.light].atmosphere, azimuth: SCENE_RECIPES[look.light].azimuth });
     basemapRef.current = look.basemap;
     setBasemap(look.basemap);
+    if (look.light) applyCategoryLight(look.light);
     for (const id of look.starters) setOfficialContextVisible(id, true);
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
     setStarterPanelOpen(false);
@@ -9059,7 +9073,7 @@ export default function Home() {
   const resetCategoryView = () => {
     if (!activeCategoryMap) return;
     const { center, zoom, bearing, pitch } = activeCategoryMap.camera;
-    if (activeCategoryMap.light) changeStudioLight({ atmosphere: SCENE_RECIPES[activeCategoryMap.light].atmosphere, azimuth: SCENE_RECIPES[activeCategoryMap.light].azimuth });
+    if (activeCategoryMap.light) applyCategoryLight(activeCategoryMap.light);
     mapRef.current?.flyTo({ center: [center[0], center[1]], zoom: categoryMode === "globe" ? Math.min(zoom, 3.2) : zoom, bearing: categoryMode === "2d" ? 0 : bearing, pitch: categoryMode === "terrain" ? Math.max(pitch, 45) : 0, duration: motionDuration(1200), essential: false });
     announce(`${activeCategoryMap.name} view reset`);
   };
