@@ -140,6 +140,19 @@ export const AIRSPACE_CLASS_TITLES: Readonly<Record<AirspaceType, string>> = Obj
   WARNING: "Warning Area", ALERT: "Alert Area", NSA: "National Security Area",
 });
 
+/** Chart notation in hundreds of feet: 5,300 MSL → "53", SFC → "SFC", 700 AGL → "7 AGL". */
+export function chartLimit(limit: AltitudeBound): string {
+  if (limit.reference === "SFC") return "SFC";
+  const hundreds = String(Math.round(limit.value_ft / 100));
+  return limit.reference === "AGL" ? `${hundreds} AGL` : hundreds;
+}
+
+/** Sectional-style label: identifier then ceiling/floor, e.g. "ICT 53/27"; special use keeps its name. */
+export function chartLabel(volume: Pick<AirspaceVolume, "type" | "identifier" | "name" | "floor" | "ceiling">): string {
+  const name = volume.identifier && !["MOA", "ALERT", "WARNING", "NSA"].includes(volume.type) ? volume.identifier : volume.name.replace(/,\s*[A-Z]{2}$/, "");
+  return `${name} ${chartLimit(volume.ceiling)}/${chartLimit(volume.floor)}`;
+}
+
 /** One-line technical label drawn on the map and listed in the column inspector. */
 export function airspaceLabel(volume: Pick<AirspaceVolume, "type" | "identifier" | "name" | "floor" | "ceiling">): string {
   const limits = `${formatAltitudeBound(volume.floor)}–${formatAltitudeBound(volume.ceiling)}`;
@@ -170,8 +183,9 @@ export type DroneRule = Readonly<{ code: DroneRuleCode; title: string; detail: s
 const SURFACE_CONTROLLED: ReadonlySet<AirspaceType> = new Set(["CLASS_B", "CLASS_C", "CLASS_D", "CLASS_E2", "CLASS_E3", "CLASS_E4"]);
 
 /** Small-UAS rule for the part of this volume that lies at or below 400 ft AGL, if any. */
-export function droneRule(volume: Pick<AirspaceVolume, "type" | "identifier" | "floor" | "ground_reference">): DroneRule {
-  const floorAgl = feetAboveGround(volume.floor, volume.ground_reference?.ft ?? null);
+export function droneRule(volume: Pick<AirspaceVolume, "type" | "identifier" | "floor" | "ground_reference">, groundFt?: number): DroneRule {
+  // A point's own ground, when known, decides whether an MSL floor is within 400 ft of it; otherwise the volume's reference.
+  const floorAgl = feetAboveGround(volume.floor, groundFt ?? volume.ground_reference?.ft ?? null);
   if (floorAgl >= DRONE_CEILING_FT_AGL) {
     return Object.freeze({ code: "ABOVE_DRONE_CEILING", title: "Above the 400 ft drone ceiling",
       detail: `This volume starts about ${grouped(floorAgl)} ft above the ground. A drone below 400 ft AGL here is governed by the airspace beneath it.`,
@@ -290,17 +304,36 @@ export function occupiedAirspace(context: Pick<AviationContext, "volumes" | "cla
 export type DroneVerdict = Readonly<{ rule: DroneRule; governing: string; ceilingFtAgl: number }>;
 
 /** Most restrictive small-UAS rule for SFC–400 ft AGL at a point; Class G is the default. */
-export function droneVerdictAtPoint(context: Pick<AviationContext, "volumes">, lon: number, lat: number): DroneVerdict {
+export function droneVerdictAtPoint(context: Pick<AviationContext, "volumes">, lon: number, lat: number, groundFt?: number): DroneVerdict {
   const rank: Record<DroneRuleCode, number> = { NO_FLY_WITHOUT_PERMISSION: 3, ATC_AUTHORIZATION_REQUIRED: 2, CAUTION: 1, ABOVE_DRONE_CEILING: 0 };
   let best: DroneVerdict = Object.freeze({ governing: "Class G (uncontrolled) at the surface", ceilingFtAgl: DRONE_CEILING_FT_AGL,
     rule: Object.freeze({ code: "ABOVE_DRONE_CEILING" as const, title: "Class G: fly up to 400 ft AGL without ATC authorization",
-      detail: "Part 107 pilots (and recreational flyers with TRUST) may fly to 400 ft AGL here, within visual line of sight, yielding to manned aircraft, with Remote ID. TFRs and NOTAMs still apply and are not shown.",
+      detail: "Part 107 pilots (and recreational flyers with TRUST) may fly to 400 ft AGL here, within visual line of sight, yielding to manned aircraft, with Remote ID. TFRs still apply (drawn when their FAA boundary can be read), as do NOTAMs, which are not shown.",
       cite: "14 CFR 107.31, 107.37, 107.51(b); 14 CFR Part 89; 49 U.S.C. 44809" }) });
   for (const volume of volumesAtPoint(context, lon, lat)) {
-    const rule = droneRule(volume);
+    const rule = droneRule(volume, groundFt);
     if (rank[rule.code] > rank[best.rule.code]) best = Object.freeze({ rule, governing: airspaceLabel(volume), ceilingFtAgl: DRONE_CEILING_FT_AGL });
   }
   return best;
+}
+
+export type PointGround = Readonly<{ ft: number; method: "TERRAIN_DEM" | "NEAREST_FACILITY" | "NONE"; facility: string | null; km: number | null; terrainRejected: boolean }>;
+// Kansas relief between a point and its nearest non-heliport facility stays well under this; larger gaps are DEM artefacts.
+export const TERRAIN_AGREEMENT_FT = 1000;
+
+/**
+ * Ground under one picked point. A terrain reading (feet MSL, from DEM tiles the
+ * viewer already loaded) is used when it agrees with the nearest facility to
+ * within 1,000 ft; otherwise, or without one, the nearest facility's elevation.
+ * Never a guessed value: no reading and no facility reports NONE at 0 ft.
+ */
+export function pointGroundReference(anchors: readonly AviationAirport[], lon: number, lat: number, terrainFt: number | null): PointGround {
+  const near = nearestAirport(anchors, lon, lat);
+  const usable = terrainFt !== null && Number.isFinite(terrainFt) && terrainFt > -1500 && terrainFt < 15000;
+  const agrees = usable && (!near || Math.abs((terrainFt as number) - near.airport.elevation_ft) <= TERRAIN_AGREEMENT_FT);
+  if (agrees) return Object.freeze({ ft: terrainFt as number, method: "TERRAIN_DEM" as const, facility: near?.airport.faa_id ?? null, km: near?.km ?? null, terrainRejected: false });
+  if (near) return Object.freeze({ ft: near.airport.elevation_ft, method: "NEAREST_FACILITY" as const, facility: near.airport.faa_id, km: near.km, terrainRejected: usable });
+  return Object.freeze({ ft: 0, method: "NONE" as const, facility: null, km: null, terrainRejected: false });
 }
 
 /** Great-circle km; used to pick the nearest airport elevation and weather station. */
@@ -357,8 +390,8 @@ export function airspaceFeatures(context: Pick<AviationContext, "volumes">, grou
     const { base, top } = displayHeightsMeters(volume, exaggeration);
     const rule = droneRule(volume);
     return { type: "Feature", id: volume.id, geometry: { type: "Polygon", coordinates: volume.rings.map(ring => ring.map(point => [point[0], point[1]])) },
-      properties: { id: volume.id, type: volume.type, label: airspaceLabel(volume), color: AIRSPACE_COLORS[volume.type], base, top,
-        floor: formatAltitudeBound(volume.floor), ceiling: formatAltitudeBound(volume.ceiling), drone: rule.code } };
+      properties: { id: volume.id, type: volume.type, label: airspaceLabel(volume), chart: chartLabel(volume), color: AIRSPACE_COLORS[volume.type], base, top,
+        groundFt: volume.ground_reference?.ft ?? 0, floor: formatAltitudeBound(volume.floor), ceiling: formatAltitudeBound(volume.ceiling), drone: rule.code } };
   });
   return { type: "FeatureCollection", features };
 }
@@ -370,7 +403,7 @@ export function droneFeatures(context: Pick<AviationContext, "volumes">, exagger
     if (rule.code === "ABOVE_DRONE_CEILING") return [];
     const floor = feetAboveGround(volume.floor, volume.ground_reference?.ft ?? null);
     return [{ type: "Feature", id: `drone:${volume.id}`, geometry: { type: "Polygon", coordinates: volume.rings.map(ring => ring.map(point => [point[0], point[1]])) },
-      properties: { id: volume.id, code: rule.code, color: DRONE_RULE_COLORS[rule.code], base: floor * FEET_TO_METERS * exaggeration,
+      properties: { id: volume.id, code: rule.code, color: DRONE_RULE_COLORS[rule.code], groundFt: volume.ground_reference?.ft ?? 0, base: floor * FEET_TO_METERS * exaggeration,
         top: DRONE_CEILING_FT_AGL * FEET_TO_METERS * exaggeration, label: `UAS: ${rule.title} · ${volume.identifier || volume.name} · ${formatAltitudeBound(volume.floor)}–400 AGL` } }];
   });
   return { type: "FeatureCollection", features };

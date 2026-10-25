@@ -258,6 +258,40 @@ first hosted run.
 
 Rollback: revert the follow-up commit; the list-only route returns.
 
+## 2D chart, altitude slices and point ground — October 25, 2026
+
+Owner direction: the flight zones should be viewable as 3D forms, with the same
+data displayable in 2D.
+
+- **View switch.** The panel switches between 3D volumes (fill-extrusion,
+  tilted camera) and a 2D chart (flat fills, top-down camera). Both are drawn
+  from the same GeoJSON sources; each 3D layer id keeps a flat twin.
+- **Labels.** 2D airspace labels use sectional notation (ceiling/floor in
+  hundreds of feet; `ICT 53/27`).
+- **Altitude slice.** `app/aviation-chart.ts` keeps features containing a chosen
+  MSL level, or starting below 400 ft AGL for the drone slice. It recovers each
+  feature's floor and ceiling from its drawn base/top plus its ground reference
+  (`groundFt`, now carried by airspace, drone, TFR and traffic features), so the
+  views agree.
+- **Point ground.** The picked point's ground uses already-loaded terrain only
+  when it agrees with the nearest facility to within 1,000 ft. No new terrain
+  requests are made; the tiles stay opt-in. The drone verdict now judges MSL
+  floors against that point ground rather than the volume's reference, matching
+  the column table.
+- **Wording.** The Class G drone text no longer says TFRs are not shown.
+
+- **Side view.** `app/aviation-profile.ts` samples 241 points between two
+  clicks (up to 320 NM). Each volume and TFR becomes runs of samples with its
+  floor and ceiling in feet MSL over the ground at each sample. The chart
+  (0–20,000 ft MSL) shows the ground, the 400 ft AGL drone ceiling, Class A
+  shading, and aircraft within 5 km; a text list repeats every crossing. NASR
+  charts the Wichita Class C shelf as the full 10 NM circle over the core, so a
+  line through Wichita shows the core from the ground inside the shelf from
+  2,700 ft.
+
+Rollback: revert the commit; the 3D-only layer, nearest-facility point ground
+and no side view return.
+
 ## Decision for the owner
 
 The intake runbook held public FAA airport rendering behind an aviation release

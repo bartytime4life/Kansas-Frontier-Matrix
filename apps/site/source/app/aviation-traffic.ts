@@ -122,7 +122,7 @@ export function trafficFeatures(records: readonly Aircraft[], groundFtAt: (lon: 
     const ring = [point(0.8, 0), point(-0.5, 0.45), point(-0.25, 0), point(-0.5, -0.45), point(0.8, 0)];
     const altitudeText = aircraft.onGround ? "on ground" : msl === null ? "altitude n/a" : `${Math.round(msl).toLocaleString("en-US")} ft`;
     return { type: "Feature", id: aircraft.hex, geometry: { type: "Polygon", coordinates: [ring] },
-      properties: { hex: aircraft.hex, base: lift, top: lift + 90 * exaggeration, emergency: Boolean(aircraft.emergency),
+      properties: { hex: aircraft.hex, base: lift, top: lift + 90 * exaggeration, groundFt: ground, emergency: Boolean(aircraft.emergency),
         color: aircraft.emergency ? "#e0301e" : altitudeColor(msl),
         label: `${aircraft.callsign ?? aircraft.registration ?? aircraft.hex.toUpperCase()}${aircraft.type ? ` ${aircraft.type}` : ""} · ${altitudeText}${aircraft.groundSpeedKt !== null ? ` · ${Math.round(aircraft.groundSpeedKt)} kt` : ""}${aircraft.emergency ? ` · ${aircraft.squawk ?? ""} ${aircraft.emergency.toUpperCase()}` : ""}`,
         airspace: msl === null ? "surface" : occupied(aircraft, ground) } };

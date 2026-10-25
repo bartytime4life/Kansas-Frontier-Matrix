@@ -85,6 +85,52 @@ rooftop. Contacts, owner names and remarks are never copied.
   unavailable altitude remain in the point inspector, labelled accordingly;
   they are omitted from the altitude layer rather than drawn at ground level.
 
+## 3D volumes and the 2D chart
+
+The panel switches between two drawings of the same features:
+
+- **3D volumes** (default). Every zone is a solid form from its floor to its
+  ceiling: airspace shells, drone slabs, LAANC cells, TFRs, cloud-ceiling discs,
+  pilot reports and aircraft. Choosing it tilts the map so floors and ceilings
+  show; vertical exaggeration (1×, 3×, 6×) applies here.
+- **2D chart.** The camera looks straight down and every form is drawn as a
+  flat, translucent fill with the same boundary lines. Airspace labels switch to
+  sectional-chart notation, ceiling/floor in hundreds of feet MSL: `ICT 53/27`
+  is 2,700 to 5,300 ft MSL, `ICT 53/SFC` starts at the surface, and AGL limits
+  are marked (`7 AGL`).
+- **Altitude slice (2D only).** "All altitudes" draws everything. "Drone
+  altitudes" keeps forms that start below 400 ft AGL. A level from 1,500 to
+  25,000 ft MSL keeps only forms that contain that altitude. Aircraft, pilot
+  reports and cloud bases are kept within 1,000 ft of the level. Where nothing
+  is drawn, the airspace is Class E or G (the column inspector lists it); from
+  FL180 Class A covers the whole region and is not a shape. Slice heights come
+  from the same drawn floors and ceilings as the 3D forms, so the two views
+  cannot disagree.
+
+## Side view (cross-section)
+
+**Draw a side view**, then click point A and point B (up to 320 NM apart). The
+panel draws the vertical slice along that line:
+- **Axes.** Distance from A runs across, in nautical miles; altitude runs up,
+  from 0 to 20,000 ft MSL.
+- **Ground.** The brown profile is sampled at 241 points: terrain where 3D
+  terrain is loaded and agrees with the nearest facility, otherwise the nearest
+  facility's elevation, as in the point inspector. The dashed green line is the
+  400 ft AGL drone ceiling.
+- **Volumes.** Every airspace volume in the enabled groups, and every TFR, is a
+  shape whose top and bottom are its ceiling and floor at each sample. AGL limits
+  follow the ground; a floor below the ground starts at the ground.
+- **Class A.** Shaded from FL180.
+- **Aircraft.** Those within 5 km of the line are dots at their reported
+  altitude.
+
+A text list under the chart gives each crossing, so the same data is readable
+without the drawing. A line due east along 37.65°N from 97.9°W to 96.95°W lists
+`CLASS C · ICT · SFC–5,300 MSL, 17.3 to 27.1 NM` (the 5 NM core) and
+`CLASS C · ICT · 2,700 MSL–5,300 MSL, 12.2 to 32.0 NM` (the 10 NM shelf). The line
+is drawn on the map in both views. Where no shape is drawn, the airspace is
+Class E or G.
+
 ## The airspace column
 
 **Pick a point on the map** (or click an airport) to list, surface upward,
@@ -108,6 +154,17 @@ elevation for Class B/C/D/E2–E4, otherwise the nearest non-heliport facility
 (distance recorded per volume). Kansas terrain varies, so drawn MSL limits can
 be off by the difference between that airport and the local ground; the labels
 and the column table always show the official values.
+
+At a **picked point**, the ground is the terrain elevation there when 3D
+terrain is on and its tiles are loaded, provided it is within 1,000 ft of the
+nearest facility. Larger gaps are known DEM artefacts, and the inspector says
+when a reading was set aside. Otherwise the ground is the nearest non-heliport
+facility's elevation. Terrain is never requested by this layer: the elevation
+tiles are opt-in network, used only when the viewer turns 3D terrain on. The
+point's ground drives the column's above-ground heights and the drone verdict.
+For example, under the Wichita Class C shelf (floor 2,700 MSL), drones are
+clear of Class C where the ground is low enough to leave the shelf above
+400 ft AGL.
 
 PIREP flight levels accept the AWC API's documented digit strings (for example,
 `"230"` = 23,000 ft MSL) and numeric values observed in live JSON. `fltLvlType`

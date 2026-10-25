@@ -224,7 +224,7 @@ export function tfrFeatures(shapes: readonly TfrShape[], groundFtAt: (lon: numbe
     const base = tfrLimitAboveGround(shape.floor, ground) * 0.3048 * exaggeration;
     const top = Math.max(base + 30, tfrLimitAboveGround(shape.ceiling, ground) * 0.3048 * exaggeration);
     return { type: "Feature", id: index, geometry: { type: "Polygon", coordinates: [shape.ring.map(point => [point[0], point[1]])] },
-      properties: { notam: shape.notam, base, top, color: TFR_COLOR,
+      properties: { notam: shape.notam, base, top, groundFt: ground, color: TFR_COLOR,
         label: `TFR ${shape.notam}${shape.type ? ` ${shape.type}` : ""} · ${formatTfrLimit(shape.floor)}–${formatTfrLimit(shape.ceiling)}` } };
   }) };
 }

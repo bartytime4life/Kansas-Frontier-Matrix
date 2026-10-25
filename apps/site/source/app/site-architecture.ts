@@ -62,8 +62,8 @@ export const SITE_CODE_SURFACES = Object.freeze([
     id: "aviation-context",
     title: "Airspace, airports and aviation weather",
     role: "Owns the pinned FAA NASR Kansas airspace/airport/airway product, 3D airspace and drone rule layers, and live AWC METAR/PIREP, FAA UAS Facility Map, FAA TFR and public ADS-B traffic context.",
-    paths: ["app/aviation-airspace.ts", "app/aviation-weather.ts", "app/aviation-weather-server.ts", "app/aviation-drone-data.ts", "app/aviation-drone-server.ts", "app/aviation-traffic.ts", "app/aviation-traffic-server.ts", "app/aviation-control.tsx", "app/api/aviation", "public/data/aviation"],
-    handles: ["airspace volumes with source vertical references", "small-UAS rule slabs and LAANC grid ceilings", "TFR list and 3D TFR volumes", "airspace column at a point", "station weather and pilot reports", "live aircraft at altitude with the airspace they occupy"],
+    paths: ["app/aviation-airspace.ts", "app/aviation-weather.ts", "app/aviation-weather-server.ts", "app/aviation-drone-data.ts", "app/aviation-drone-server.ts", "app/aviation-traffic.ts", "app/aviation-traffic-server.ts", "app/aviation-chart.ts", "app/aviation-profile.ts", "app/aviation-control.tsx", "app/api/aviation", "public/data/aviation"],
+    handles: ["airspace volumes with source vertical references", "small-UAS rule slabs and LAANC grid ceilings", "TFR list and 3D TFR volumes", "airspace column at a point", "station weather and pilot reports", "live aircraft at altitude with the airspace they occupy", "3D volumes and 2D chart with altitude slices", "side view (vertical cross-section) between two points"],
     verification: ["tests/aviation.test.mjs", "tests/layer-explorer.test.mjs"],
   },
   {
