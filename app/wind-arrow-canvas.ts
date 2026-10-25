@@ -1,6 +1,7 @@
 import type { Map as MapLibreMap } from "./maplibre-seam";
 import type { WindArrowFrame, WindArrowSample } from "./wind-arrow-data";
 import { globeOverviewSizeScale, onVisibleGlobeHemisphere } from "./globe-context";
+import { LIGHT_CATEGORY_BASEMAPS } from "./category-basemap-keys";
 
 /** Meteorological directions describe where wind comes from. Flow moves toward
  * where it blows; screen motion is an illustrative cue, not a trajectory. */
@@ -76,7 +77,7 @@ const PALETTES = {
   },
 } as const;
 const SPEED_BUCKETS = 5;
-const LIGHT_BASEMAPS = new Set(["standard", "aviation-chart", "civic", "prairie", "streets", "topo"]);
+const LIGHT_BASEMAPS = new Set<string>(["standard", ...LIGHT_CATEGORY_BASEMAPS, "prairie", "streets", "topo"]);
 /** Light vector basemaps get dark lines; midnight and imagery get light ones. */
 export const windFlowToneForBasemap = (basemap: string): WindFlowTone => LIGHT_BASEMAPS.has(basemap) ? "light" : "dark";
 

@@ -6,7 +6,7 @@ import ts from 'typescript';
 import {validateStyleMin} from '@maplibre/maplibre-gl-style-spec';
 
 // Load the style module and its two local dependencies as CommonJS in one context.
-const files={'./external-context-sources':'app/external-context-sources.ts','./kansas-orientation':'app/kansas-orientation.ts','./category-basemaps':'app/category-basemaps.ts'};
+const files={'./external-context-sources':'app/external-context-sources.ts','./kansas-orientation':'app/kansas-orientation.ts','./category-basemaps':'app/category-basemaps.ts','./category-basemap-keys':'app/category-basemap-keys.ts'};
 const compiled=Object.fromEntries(await Promise.all(Object.entries(files).map(async([id,path])=>[id,ts.transpileModule(await readFile(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText])));
 const cache=new Map();
 function load(id){
@@ -17,7 +17,9 @@ function load(id){
 }
 const basemaps=load('./category-basemaps');
 const sources=load('./external-context-sources');
-const styles={aviation:basemaps.aviationChartStyle(),civic:basemaps.civicStyle()};
+const keys=load('./category-basemap-keys');
+const styles=Object.fromEntries(Object.entries(basemaps.CATEGORY_BASEMAPS).map(([key,entry])=>[key,entry.style()]));
+styles.aviation=styles['aviation-chart'];
 
 test('category basemaps are valid MapLibre styles',()=>{
  for(const [name,style] of Object.entries(styles)){
@@ -38,7 +40,9 @@ test('category basemaps only request registered carriers: OpenFreeMap tiles and 
   assert.deepEqual(Object.keys(style.sources).sort(),['basemap-relief-dem','openmaptiles','orientation-kansas']);
  }
  for(const id of ['openfreemap-liberty','aws-mapzen-terrarium'])
-  for(const key of ['aviation-chart','civic']) assert.ok(sources.externalContextSource(id).activatesWhen.includes(key),`${id} discloses ${key}`);
+  for(const key of keys.CATEGORY_BASEMAP_KEYS) assert.ok(sources.externalContextSource(id).activatesWhen.includes(key),`${id} discloses ${key}`);
+ assert.deepEqual(Object.keys(basemaps.CATEGORY_BASEMAPS).sort(),[...keys.CATEGORY_BASEMAP_KEYS].sort(),'one registry entry per key');
+ for(const [key,entry] of Object.entries(basemaps.CATEGORY_BASEMAPS))assert.ok(entry.title&&entry.note.includes('display context')&&/display (context|geography|DEM)/.test(entry.legend),`${key} discloses its role`);
 });
 
 test('basemap layer ids stay below overlays and share the relief id the 2D relief effect defers to',async()=>{
@@ -79,16 +83,38 @@ test('the civic map makes state, county and municipal boundaries the subject and
  assert.match(JSON.stringify(layers['civic-place-labels'].layout['text-field']),/★/);
 });
 
+test('the four science basemaps each make their subject the lead layer',()=>{
+ const ids=key=>styles[key].layers.map(layer=>layer.id),layer=(key,id)=>styles[key].layers.find(l=>l.id===id);
+ assert.match(JSON.stringify(layer('hydro','hydro-waterway').paint['line-width']),/"match",\["get","class"\],"river",1/,'rivers are scaled by class');
+ assert.ok(ids('hydro').indexOf('hydro-waterway-glow')<ids('hydro').indexOf('hydro-waterway'),'the glow sits under the course');
+ assert.equal(layer('hydro','hydro-waterway-labels').layout['symbol-placement'],'line','river names follow their courses');
+ const ramp=JSON.parse(JSON.stringify(layer('relief','relief-tint').paint['color-relief-color']));
+ assert.equal(ramp[0],'interpolate');const elevations=ramp.slice(3).filter((_,i)=>i%2===0);
+ assert.deepEqual(elevations,[...elevations].sort((a,b)=>a-b),'relief stops ascend');
+ assert.ok(layer('relief',basemaps.BASEMAP_HILLSHADE_LAYER_ID).paint['hillshade-exaggeration']>=0.8,'relief hillshade is the strongest');
+ assert.equal(layer('storm','kfm-background').paint['background-color'],'#12171d');
+ const chroma=hex=>{const channels=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);return Math.max(...channels)-Math.min(...channels);};
+ for(const color of JSON.stringify(styles.storm.layers).match(/#[0-9a-f]{6}/gi))assert.ok(chroma(color)<0.2,`storm ground ${color} stays neutral so radar and alert colours read true`);
+ assert.ok(ids('storm').includes('storm-county-boundary')&&ids('storm').includes('storm-place-labels'),'where weather is hitting: counties and towns');
+ assert.match(JSON.stringify(layer('network','network-roads').paint['line-color']),/motorway.*trunk.*primary/);
+ assert.equal(layer('network','network-route-numbers')['source-layer'],'transportation_name');
+ assert.match(JSON.stringify(layer('network','network-road-casing').paint['line-color']),/"brunnel"\],"bridge"/,'bridges are cased');
+ assert.ok(ids('network').indexOf('network-rail-ties')>ids('network').indexOf('network-rail'),'ties draw over the rail line');
+});
+
 test('every surface that whitelists basemaps accepts the category basemaps',async()=>{
  const [runtime,page,saved,wind,report]=await Promise.all(['app/map-runtime.ts','app/page.tsx','app/saved-workspaces.ts','app/wind-arrow-canvas.ts','app/report-story-workspaces.tsx'].map(path=>readFile(path,'utf8')));
- assert.match(runtime,/export type BasemapKey = "standard" \| "aviation-chart" \| "civic"/);
- assert.match(runtime,/VECTOR_BASEMAPS: ReadonlySet<BasemapKey> = new Set<BasemapKey>\(\["standard", "aviation-chart", "civic"\]\)/);
+ assert.match(runtime,/export type BasemapKey = "standard" \| CategoryBasemapKey \|/);
+ assert.match(runtime,/\.\.\.Object\.fromEntries\(CATEGORY_BASEMAP_KEYS\.map\(key => \[key, \{ title: CATEGORY_BASEMAPS\[key\]\.title/);
+ assert.match(runtime,/VECTOR_BASEMAPS: ReadonlySet<BasemapKey> = new Set<BasemapKey>\(\["standard", \.\.\.CATEGORY_BASEMAP_KEYS\]\)/);
+ assert.match(page,/isCategoryBasemapKey\(basemap\) \? CATEGORY_BASEMAPS\[basemap\]\.legend/);
+ assert.deepEqual([...keys.LIGHT_CATEGORY_BASEMAPS].sort(),['aviation-chart','civic','network','relief'],'dark grounds (hydro, storm) get light wind strokes');
  assert.equal((page.match(/isBasemapKey\((restoredBasemap|snapshot\.basemap)\)/g)||[]).length,2,'URL and snapshot restore accept every BASEMAPS key');
  assert.match(page,/VECTOR_BASEMAPS\.has\(basemapRef\.current\) && !styleFallbackAttempted && shouldFallbackStandardBasemap/);
  assert.match(page,/mode === "globe" && !VECTOR_BASEMAPS\.has\(basemapRef\.current\)/);
- assert.match(saved,/"standard", "aviation-chart", "civic", "imagery"/);
- assert.match(wind,/"standard", "aviation-chart", "civic", "prairie"/);
- assert.match(report,/basemap === "aviation-chart" \|\| draft\.snapshot\.basemap === "civic"/);
+ assert.match(saved,/"standard", \.\.\.CATEGORY_BASEMAP_KEYS, "imagery"/);
+ assert.match(wind,/"standard", \.\.\.LIGHT_CATEGORY_BASEMAPS, "prairie"/);
+ assert.match(report,/draft\.snapshot\.basemap === "standard" \|\| isCategoryBasemapKey\(draft\.snapshot\.basemap\)/);
 });
 
 test('a category basemap tile failure after the one local fallback degrades the map instead of stopping it',async()=>{

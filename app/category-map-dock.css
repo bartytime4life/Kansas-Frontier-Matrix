@@ -21,3 +21,13 @@
 .category-map-dock-actions button:hover,.category-map-dock-modes button:not([aria-pressed=true]):hover{background:#0f3a4d}
 .category-map-dock :focus-visible{outline:2px solid #f1e6c2;outline-offset:2px}
 @media(max-width:640px){.category-map-dock{left:72px;right:8px;width:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px))}.category-map-dock-lede{display:none}}
+
+/* The Layers panel's topic guide shows the category's map look with the same sketch. */
+.topic-guide .topic-map-look{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;margin:8px 0;padding:10px;border:1px solid #d8c58f44;border-radius:10px;background:#0a2533}
+.topic-guide .topic-map-look>div{display:grid;gap:2px;min-width:0;flex:1 1 160px}
+.topic-guide .topic-map-look strong{font-size:13px;color:#f1e6c2}
+.topic-guide .topic-map-look small{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9fc6d4}
+.topic-guide .topic-map-look p{margin:2px 0 0;font-size:12px;line-height:1.4;color:#c9dbe2}
+.topic-guide .topic-map-look-swatch{flex:none;width:30px;height:30px;border-radius:6px;border:1px solid #ffffff38;background:radial-gradient(circle at 68% 34%,var(--m2) 0 10%,transparent 11%),linear-gradient(160deg,transparent 0 52%,var(--m1) 52% 60%,transparent 60%),linear-gradient(135deg,var(--m0),color-mix(in srgb,var(--m0) 70%,var(--m1)))}
+.topic-guide .topic-map-look button{flex:1 1 100%;min-height:44px;padding:0 12px;border:1px solid #d8c58f88;border-radius:8px;background:transparent;color:#f1e6c2;font-size:12px;font-weight:600;cursor:pointer}
+.topic-guide .topic-map-look button:hover{background:#d8c58f1a}

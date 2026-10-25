@@ -20,7 +20,11 @@ import { contextSelectionChanges, preferredContextIds, readContextPreference, st
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
+import { CATEGORY_BASEMAPS } from "./category-basemaps";
+import { isCategoryBasemapKey } from "./category-basemap-keys";
 import { CategoryMapDock } from "./category-map-dock";
+import { evidenceSummary } from "./evidence-summary";
+import "./evidence-summary.css";
 import { AviationLayerControl } from "./aviation-layer-control";
 import { AVIATION_RESEARCH_SOURCE } from "./aviation-research";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
@@ -2429,6 +2433,9 @@ export default function Home() {
   const selectedRiverObservation = useMemo(() => selectedOfficialContextId === "usgs-streamflow"
     ? riverDrawerObservation(selected?.externalStationId ?? null, streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowDisplayState)
     : null, [selectedOfficialContextId, selected?.externalStationId, streamflowBundle, streamflowFrame, streamflowFrameTime, streamflowDisplayState]);
+  // The drawer asks the same three questions of every selection; this only restates its own fields.
+  const selectedSummary = useMemo(() => selected ? evidenceSummary({ ...selected.properties, kind: selected.kind, officialId: selectedOfficialContextId,
+    layerDomain: selected.layer.domain, observedAt: selectedRiverObservation?.observedAt ?? null }) : null, [selected, selectedOfficialContextId, selectedRiverObservation]);
   const selectedOfficialFeature = selected?.externalFeatureId && selectedOfficialPayload?.data.features.find((feature) =>
     feature.properties?.featureId === selected.externalFeatureId);
   const selectedFireComparisonId = selectedOfficialContextId === "nifc-fire-reports" ? "nasa-gibs-fire-points" : selectedOfficialContextId === "nasa-gibs-fire-points" ? "nifc-fire-reports" : null;
@@ -9599,7 +9606,7 @@ export default function Home() {
               {activeLayers.length === 0 && <p>{visibleOfficialCount ? `${visibleOfficialCount} official context sources selected; connection states and record counts appear above.` : "No layers selected. Open Layer Catalog to choose a starting stack."}</p>}
             </div>
             {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
-            <p className="map-legend-note">{basemap === "aviation-chart" ? "Aviation chart · sectional-style elevation bands at 1,000 ft, hillshade, runways and airport identifiers from OpenMapTiles · display context, not for navigation." : basemap === "civic" ? "Government & civic · state, county and city boundaries and places from OpenMapTiles · display context, not legal boundaries." : basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
+            <p className="map-legend-note">{isCategoryBasemapKey(basemap) ? CATEGORY_BASEMAPS[basemap].legend : basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
           </aside>
           </aside>}
 
@@ -9616,7 +9623,9 @@ export default function Home() {
           <div className="layer-catalog-body" hidden={starterPanelOpen || sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
           <div className="layer-browse-context"><TopicSelect label="Layer topic" value={officialWorkspace} onChange={topic => { setOfficialWorkspace(topic); setOfficialCatalogFilter("all"); }} /><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
           <div className="layer-topic-index"><Link href="/topics">Explore subjects &amp; coverage ↗</Link>{officialWorkspace !== "all" && <button type="button" onClick={() => setOfficialWorkspace("all")}>Clear topic</button>}</div>
-          <TopicGuide value={officialWorkspace} onTool={(view, element) => openMapUtility(view, element)} />
+          <TopicGuide value={officialWorkspace} onTool={(view, element) => openMapUtility(view, element)}
+            mapLook={activeCategoryMap ? { name: activeCategoryMap.name, lede: activeCategoryMap.lede, sceneLabel: categorySceneLabel(activeCategoryMap.scene), swatch: activeCategoryMap.swatch, active: activeCategoryMap.basemap === basemap } : null}
+            onOpenMap={activeCategoryMap ? () => openCategoryMap(activeCategoryMap.topic) : undefined} />
           {officialWorkspace === "transport" && <TransportHistoryControl map={mapRef.current} mapReady={styleReady} date={calendarSweep ? calendarFrameDay(calendarSweep) : temporalQuery.frame >= 1000 && temporalQuery.frame <= 9999 ? `${temporalQuery.frame}-01-01` : null} reducedMotion={reducedMotion} animate={dynamicEffects} />}
           {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
           {matchingCatalogEntries.length === 0 && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
@@ -10439,10 +10448,21 @@ export default function Home() {
           {!selected ? !hoverSummary && <div className="drawer-empty"><span aria-hidden="true">⌖</span><h3>No feature selected</h3><p>Choose a map feature or use a Layer Catalog “Features” action. The map identifies a candidate; the registry supplies the stable context.</p></div> : <>
             <div className="drawer-scroll">
             <section className={researchStyles.summary} aria-label="Selection summary">
+              {selectedSummary && selectedSummary.topics.length > 0 && (() => {
+                const primary = selectedSummary.topics[0], look = categoryMap(primary);
+                const lookOn = look && look.basemap === basemap && officialWorkspace === primary;
+                return <div className="drawer-category" style={look ? { "--m0": look.swatch[0], "--m1": look.swatch[1], "--m2": look.swatch[2] } as React.CSSProperties : undefined}>
+                  <span className="drawer-category-swatch" aria-hidden="true" />
+                  <div><small>Category</small><strong>{selectedSummary.topics.slice(0, 3).map(topic => topicDefinition(topic)?.title ?? topic).join(" · ")}</strong></div>
+                  {look && !lookOn && <button type="button" onClick={() => openCategoryMap(primary)}>Open the {look.name.toLowerCase()}</button>}
+                </div>;
+              })()}
               <h3 data-selection-summary tabIndex={-1}>Selected record</h3>
-              <dl><div><dt>Source &amp; time</dt><dd>{selected.properties.sourceOrganization} · {selectedRiverObservation?.observedAt ?? selected.properties.temporalScope}</dd></div>
-                <div><dt>Evidence status</dt><dd>{selected.kind === "basemap" ? "External context only · no KFM EvidenceBundle" : selected.properties.evidenceState}</dd></div></dl>
-              <details><summary>What this supports and its limits</summary><p>{selected.kind === "basemap" ? "Inspection of a provider’s mapped record and reported attributes." : selected.properties.summary}</p><p>{selected.properties.generalizationNote} {selected.properties.uncertainty}</p></details>
+              {selectedSummary && <dl className="drawer-facts">
+                <div><dt>What it is</dt><dd>{selectedSummary.what}</dd></div>
+                <div><dt>Where &amp; when</dt><dd>{selectedSummary.where}<br />{selectedSummary.when}</dd></div>
+                <div><dt>Source &amp; limits</dt><dd><strong>{selectedSummary.source}</strong> · {selectedSummary.status}<p>{selectedSummary.limits}</p></dd></div>
+              </dl>}
               <div className={researchStyles.actions}>
                 <button type="button" onClick={() => openQwenCompanion()}>Ask AI about this record</button>
                 <button type="button" onClick={() => { activateDrawerView("evidence"); window.requestAnimationFrame(() => document.getElementById("drawer-tab-evidence")?.focus()); }}>Inspect</button>
