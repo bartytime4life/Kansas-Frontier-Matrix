@@ -16,6 +16,11 @@
 .category-map-dock-range{display:grid;grid-template-columns:62px 1fr 38px;align-items:center;gap:8px;font-size:12px;color:#b6d0dc}
 .category-map-dock-range input{width:100%;min-height:32px;accent-color:#d8c58f}
 .category-map-dock-range output{text-align:right;font-variant-numeric:tabular-nums;color:#f1e6c2}
+.category-map-dock-sun-reading{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:8px;margin:0;min-height:32px;font-size:12px;color:#b6d0dc}
+.category-map-dock-sun-reading output{font-variant-numeric:tabular-nums;color:#f1e6c2}
+.category-map-dock .category-map-dock-sun{min-height:44px;border:1px solid #d8c58f66;border-radius:8px;background:transparent;color:#f1e6c2;font-size:12px;font-weight:600;cursor:pointer}
+.category-map-dock .category-map-dock-sun:hover{background:#d8c58f1a}
+.category-map-dock .category-map-dock-sun[aria-pressed=true]{border-color:#749bac80;color:#cfe2ea}
 .category-map-dock-lede{margin:0;font-size:12px;line-height:1.45;color:#b9cdd6}
 .category-map-dock-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .category-map-dock-actions button{min-height:44px;border:1px solid #749bac80;border-radius:8px;background:#0a2d3d;color:#e6eff2;font-size:12px;font-weight:600;cursor:pointer}
