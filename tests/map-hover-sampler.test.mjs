@@ -44,15 +44,17 @@ test("the production pointer callback queues the latest event and cancels while 
   }
   visit(tree); assert.ok(registration);
   let handler, moving = false, cleared = 0, canceled = 0; const samples = [];
+  const aviationPickingRef = {current:false};
   const ready = {current:true}, underground = {current:false}, measure = {current:null}, document = {hidden:false};
   const javascript = ts.transpileModule(registration, {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-  new Function("map", "hoverSampler", "clearHoverCandidate", "styleGenerationReadyRef", "document", "undergroundOpenRef", "measureModeRef", javascript)(
+  new Function("map", "hoverSampler", "clearHoverCandidate", "styleGenerationReadyRef", "document", "undergroundOpenRef", "measureModeRef", "aviationPickingRef", javascript)(
     {on:(_event, callback)=>{handler=callback;},isMoving:()=>moving},
-    {push:event=>samples.push(event),cancel:()=>canceled++},()=>cleared++, ready, document, underground, measure);
+    {push:event=>samples.push(event),cancel:()=>canceled++},()=>cleared++, ready, document, underground, measure, aviationPickingRef);
   handler("visible"); assert.deepEqual(samples,["visible"]);
   moving=true;handler("pan");moving=false;
   ready.current=false;handler("style");ready.current=true;
   document.hidden=true;handler("hidden");document.hidden=false;
+  aviationPickingRef.current=true;handler("aviation");aviationPickingRef.current=false;
   underground.current=true;handler("cutaway");
-  assert.equal(canceled,4);assert.equal(cleared,4);assert.deepEqual(samples,["visible"]);
+  assert.equal(canceled,5);assert.equal(cleared,5);assert.deepEqual(samples,["visible"]);
 });

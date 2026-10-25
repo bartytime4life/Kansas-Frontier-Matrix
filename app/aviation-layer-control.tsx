@@ -86,30 +86,30 @@ function ProfileChart({ points, bands, aircraft }: Readonly<{ points: readonly P
   const distanceStep = totalNm > 120 ? 40 : totalNm > 60 ? 20 : totalNm > 20 ? 10 : 2;
   return <svg viewBox={`0 0 ${width} ${height}`} width="100%" role="img" aria-label={`Side view from A to B, ${totalNm.toFixed(1)} nautical miles, altitude in feet MSL`} style={{ background: "#f7fafc", border: "1px solid #ccd6e0" }}>
     <rect x={left} y={y(PROFILE_TOP_FT)} width={width - left - right} height={y(18000) - y(PROFILE_TOP_FT)} fill="#d9dee5" />
-    <text x={left + 4} y={y(18000) - 4} fontSize="10" fill="#4a5563">Class A from FL180 (whole region)</text>
-    {altitudeTicks.map(ft => <g key={ft}><line x1={left} x2={width - right} y1={y(ft)} y2={y(ft)} stroke="#e3e8ee" /><text x={left - 4} y={y(ft) + 3} fontSize="9" textAnchor="end" fill="#4a5563">{ft === 0 ? "0" : `${ft / 1000}k`}</text></g>)}
-    {Array.from({ length: Math.floor(totalNm / distanceStep) + 1 }, (_, index) => index * distanceStep).map(nm => <text key={nm} x={x(nm)} y={height - bottom + 13} fontSize="9" textAnchor="middle" fill="#4a5563">{nm}</text>)}
-    <text x={(left + width - right) / 2} y={height - 4} fontSize="10" textAnchor="middle" fill="#1d2f44">nautical miles from A · feet MSL</text>
-    {bands.flatMap(band => band.segments.map((segment, index) => {
+    <text x={left + 4} y={y(18000) - 4} fontSize="11" fill="#4a5563">Class A from FL180 (whole region)</text>
+    {altitudeTicks.map(ft => <g key={ft}><line x1={left} x2={width - right} y1={y(ft)} y2={y(ft)} stroke="#e3e8ee" /><text x={left - 4} y={y(ft) + 3} fontSize="11" textAnchor="end" fill="#4a5563">{ft === 0 ? "0" : `${ft / 1000}k`}</text></g>)}
+    {Array.from({ length: Math.floor(totalNm / distanceStep) + 1 }, (_, index) => index * distanceStep).map(nm => <text key={nm} x={x(nm)} y={height - bottom + 13} fontSize="11" textAnchor="middle" fill="#4a5563">{nm}</text>)}
+    <text x={(left + width - right) / 2} y={height - 4} fontSize="11" textAnchor="middle" fill="#1d2f44">nautical miles from A · feet MSL</text>
+    {bands.flatMap((band, bandIndex) => band.segments.map((segment, index) => {
       const span = points.slice(segment.from, segment.to + 1);
       const outline = [...span.map((point, i) => [point.distanceNm, segment.high[i]] as const), ...[...span].reverse().map((point, i) => [point.distanceNm, segment.low[segment.low.length - 1 - i]] as const)];
       const mid = span[Math.floor(span.length / 2)], midIndex = Math.floor(span.length / 2);
-      return <g key={`${band.key}:${index}`}><path d={`${line(outline)}Z`} fill={band.color} fillOpacity={band.kind === "tfr" ? 0.35 : 0.18} stroke={band.color} strokeWidth={band.kind === "tfr" ? 2 : 1.2} strokeDasharray={band.kind === "tfr" ? "5 3" : undefined} />
-        {x(span[span.length - 1].distanceNm) - x(span[0].distanceNm) > 60 && <text x={x(mid.distanceNm)} y={Math.max(top + 10, y(segment.high[midIndex]) + 11)} fontSize="9.5" textAnchor="middle" fill="#1d2f44">{band.label.split(" · ").slice(0, 2).join(" · ")}</text>}</g>;
+      return <g key={`${band.key}:${index}`}><title>{`${bandIndex + 1}. ${band.label}`}</title><path d={`${line(outline)}Z`} fill={band.color} fillOpacity={band.kind === "tfr" ? 0.35 : 0.18} stroke={band.color} strokeWidth={band.kind === "tfr" ? 2 : 1.2} strokeDasharray={band.kind === "tfr" ? "5 3" : undefined} />
+        {x(span[span.length - 1].distanceNm) - x(span[0].distanceNm) > 12 && <text x={x(mid.distanceNm)} y={Math.max(top + 14, y(segment.high[midIndex]) + 14 + (bandIndex % 3) * 13)} fontSize="12" fontWeight="bold" textAnchor="middle" fill="#1d2f44" stroke="#fff" strokeWidth="3" paintOrder="stroke">{bandIndex + 1}</text>}</g>;
     }))}
     <path d={`${line(ground)}L${x(totalNm)},${y(0)}L${x(0)},${y(0)}Z`} fill="#b59a72" fillOpacity={0.85} />
     <path d={line(points.map(point => [point.distanceNm, point.groundFt + 400] as const))} fill="none" stroke="#2f8f4e" strokeWidth={1.4} strokeDasharray="4 3" />
-    <text x={width - right - 4} y={y(points[points.length - 1].groundFt + 400) - 4} fontSize="9" textAnchor="end" fill="#2f8f4e">drone ceiling 400 ft AGL</text>
-    {aircraft.map(plane => <g key={plane.hex}><circle cx={x(plane.distanceNm)} cy={y(plane.altitudeFt)} r={3.5} fill={plane.emergency ? "#e0301e" : "#1d2f44"} /><text x={x(plane.distanceNm) + 5} y={y(plane.altitudeFt) - 4} fontSize="9" fill="#1d2f44">{plane.label}</text></g>)}
+    <text x={width - right - 4} y={y(points[points.length - 1].groundFt + 400) - 4} fontSize="11" textAnchor="end" fill="#2f8f4e">drone ceiling 400 ft AGL</text>
+    {aircraft.map(plane => <g key={plane.hex}><circle cx={x(plane.distanceNm)} cy={y(plane.altitudeFt)} r={3.5} fill={plane.emergency ? "#e0301e" : "#1d2f44"} /><text x={x(plane.distanceNm) + 5} y={y(plane.altitudeFt) - 4} fontSize="11" fill="#1d2f44">{plane.label}</text></g>)}
     <text x={x(0)} y={top + 10} fontSize="11" fontWeight="bold" fill="#111">A</text><text x={x(totalNm) - 9} y={top + 10} fontSize="11" fontWeight="bold" fill="#111">B</text>
   </svg>;
 }
 
-export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, onResearchRecords, inspectRequest, showRequest }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void;
-  /** A category map asking for this layer to be shown (a new number each time); never hides it. */
+export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, onResearchRecords, inspectRequest, onPickingChange, showRequest }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void;
+  /** A category map asks to show this layer; it never hides it. */
   showRequest?: number;
   /** Points this layer offers the "Near here" dossier while shown; null while hidden or loading. */
-  onResearchRecords?: (records: readonly ResearchRecord[] | null) => void;
+  onResearchRecords?: (records: readonly ResearchRecord[] | null) => void; onPickingChange?: (active: boolean) => void;
   /** A dossier "Inspect" on an aviation record: open this layer's point inspector there (a new nonce each time). */
   inspectRequest?: Readonly<{ lon: number; lat: number; label: string; nonce: number }> | null }) {
   const [visible, setVisible] = useState(false);
@@ -139,6 +139,7 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   const [sideStep, setSideStep] = useState<"a" | "b" | null>(null);
   const [sideA, setSideA] = useState<Readonly<{ lon: number; lat: number }> | null>(null);
   const [side, setSide] = useState<SideView | null>(null);
+  const [sideError, setSideError] = useState("");
   const [picked, setPicked] = useState<Picked | null>(null);
   const [render, setRender] = useState("Hidden");
   // A new show request from a category map turns the layer on during render (React's
@@ -151,6 +152,24 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   const [clock, setClock] = useState(() => Date.now());
   const contextRequest = useRef<AbortController | null>(null);
   const uasLoaded = useRef(false);
+  const drawingRef = useRef(false);
+
+  useEffect(() => {
+    drawingRef.current = visible && (picking || sideStep !== null);
+    onPickingChange?.(drawingRef.current);
+    return () => { drawingRef.current = false; onPickingChange?.(false); };
+  }, [visible, picking, sideStep, onPickingChange]);
+  useEffect(() => {
+    if (!visible || (!picking && !sideStep) || typeof window === "undefined") return;
+    const cancel = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault(); event.stopPropagation();
+      setPicking(false); setSideStep(null); setSideA(null);
+    };
+    // Capture before the compact layer panel's Escape handler closes that panel.
+    window.addEventListener("keydown", cancel, true);
+    return () => window.removeEventListener("keydown", cancel, true);
+  }, [visible, picking, sideStep]);
 
   useEffect(() => { onSelectionChange?.(visible); }, [visible, onSelectionChange]);
   useEffect(() => { const timer = setInterval(() => setClock(Date.now()), 60_000); return () => clearInterval(timer); }, []);
@@ -337,14 +356,15 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
       map.addLayer({ id: `${PREFIX}-pick-dot`, type: "circle", source: `${PREFIX}-pick`, paint: {
         "circle-radius": 7, "circle-color": "rgba(0,0,0,0)", "circle-stroke-color": "#111111", "circle-stroke-width": 2.5 } });
       const choose = (event: MapLayerMouseEvent) => {
+        if (drawingRef.current) return;
         const id = event.features?.[0]?.properties?.faa_id;
         const airport = context.airports.find(item => item.faa_id === id);
         if (airport) setPicked({ lon: airport.lon, lat: airport.lat, terrainFt: terrainFtAt(map, airport.lon, airport.lat), label: `${airport.name} (${airport.icao_id ?? airport.faa_id}${airport.use === "PRIVATE" ? `, private-use ${airport.facility_type.toLowerCase()}` : ""})` });
       };
       const rendered = () => setRender("Map frame drawn");
       map.on("click", `${PREFIX}-airports-dot`, choose);
-      map.once("idle", rendered);
-      return () => { map.off("click", `${PREFIX}-airports-dot`, choose); map.off("idle", rendered); remove(); };
+      map.once("render", rendered);
+      return () => { map.off("click", `${PREFIX}-airports-dot`, choose); map.off("render", rendered); remove(); };
     } catch {
       // The external renderer failed during source installation; surface that failure immediately.
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -355,12 +375,12 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   // Point inspection is opt-in so the page's own click tools keep working.
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !picking) return;
+    if (!map || !picking || !visible) return;
     const clicked = (event: MapMouseEvent) => { setPicked({ lon: event.lngLat.lng, lat: event.lngLat.lat, terrainFt: terrainFtAt(map, event.lngLat.lng, event.lngLat.lat), label: `${event.lngLat.lat.toFixed(4)}, ${event.lngLat.lng.toFixed(4)}` }); setPicking(false); };
     map.getCanvas().style.cursor = "crosshair";
     map.once("click", clicked);
     return () => { map.off("click", clicked); map.getCanvas().style.cursor = ""; };
-  }, [mapRef, picking]);
+  }, [mapRef, picking, visible]);
 
   // Dossier "Inspect" on an airport or weather station: the airspace column, drone rule and weather at that point.
   const inspectorRef = useRef<HTMLDivElement | null>(null);
@@ -379,11 +399,10 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   }, [picked]);
 
   // Side view: two clicks, A then B. Ground at each sample uses loaded terrain where it agrees with the nearest facility.
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !sideStep || !context) return;
-    const clicked = (event: MapMouseEvent) => {
-      const at = { lon: event.lngLat.lng, lat: event.lngLat.lat };
+  const chooseSidePoint = useCallback((at: Readonly<{ lon: number; lat: number }>) => {
+      const map = mapRef.current;
+      if (!map || !context) return;
+      setSideError("");
       if (sideStep === "a") { setSideA(at); setSideStep("b"); return; }
       if (!sideA) { setSideStep("a"); return; }
       try {
@@ -395,13 +414,17 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
           return Object.freeze({ ...point, groundFt: ground.ft });
         });
         setSide({ a: sideA, b: at, points, terrainShare: terrain / points.length });
-      } catch { setSide(null); }
+      } catch (error) { setSideError(error instanceof Error ? error.message : "The side view could not be drawn."); }
       setSideStep(null); setSideA(null);
-    };
+  }, [mapRef, context, sideStep, sideA]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !sideStep || !context || !visible) return;
+    const clicked = (event: MapMouseEvent) => chooseSidePoint({ lon: event.lngLat.lng, lat: event.lngLat.lat });
     map.getCanvas().style.cursor = "crosshair";
     map.once("click", clicked);
     return () => { map.off("click", clicked); map.getCanvas().style.cursor = ""; };
-  }, [mapRef, sideStep, sideA, context]);
+  }, [mapRef, sideStep, context, visible, chooseSidePoint]);
 
   const profile = useMemo(() => {
     if (!context || !side) return null;
@@ -450,15 +473,16 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
 
   const toggleGroup = (group: AirspaceGroup, on: boolean) => setGroups(current => { const next = new Set(current); if (on) next.add(group); else next.delete(group); return next; });
   const toggleAirway = (kinds: AirwaySegment["type"][], on: boolean) => setAirwayKinds(current => { const next = new Set(current); for (const kind of kinds) { if (on) next.add(kind); else next.delete(kind); } return next; });
-  const tilt = () => mapRef.current?.easeTo({ pitch: 62, bearing: mapRef.current.getBearing() || -18, duration: 900 });
+  const cameraDuration = (duration: number) => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 0 : duration;
+  const tilt = () => mapRef.current?.easeTo({ pitch: 62, bearing: mapRef.current.getBearing() || -18, duration: cameraDuration(900) });
   // 2D reads like a chart from straight above; 3D tilts so the shells' floors and ceilings show.
-  const chooseView = (next: AviationView) => { setView(next); if (next === "2d") mapRef.current?.easeTo({ pitch: 0, duration: 700 }); else tilt(); };
+  const chooseView = (next: AviationView) => { setView(next); if (next === "2d") mapRef.current?.easeTo({ pitch: 0, duration: cameraDuration(700) }); else tilt(); };
   const sliceValue = slice.kind === "msl" ? String(slice.ft) : slice.kind;
 
   return <section className="official-context-row" aria-label="Airspace, airports and aviation weather">
-    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visible} aria-label={visible ? "Hide airspace and aviation layers" : "Show airspace and aviation layers"} onChange={event => { setVisible(event.target.checked); if (event.target.checked) setRender("Waiting for map frame"); }} /><span aria-hidden="true" /></label><i style={{ "--swatch": AIRSPACE_COLORS.CLASS_C } as React.CSSProperties} /><div><strong>Airspace, airports &amp; aviation weather</strong><small>FAA NASR · NOAA AWC · {visible ? shownRender : "Off"}</small></div></div>
+    <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visible} aria-label={visible ? "Hide airspace and aviation layers" : "Show airspace and aviation layers"} onChange={event => { setVisible(event.target.checked); setPicking(false); setSideStep(null); setSideA(null); if (event.target.checked) setRender("Waiting for map frame"); }} /><span aria-hidden="true" /></label><i style={{ "--swatch": AIRSPACE_COLORS.CLASS_C } as React.CSSProperties} /><div><strong>Airspace, airports &amp; aviation weather</strong><small>FAA NASR · NOAA AWC · {visible ? shownRender : "Off"}</small></div></div>
     <details className="specialty-layer-details" ref={detailsRef}><summary>Airspace shells, drone zones, weather &amp; controls</summary><div className="official-context-option-body">
-      <p><strong>Not for navigation, flight planning or drone authorization.</strong> Check current FAA charts, NOTAMs and TFRs, and use B4UFLY / LAANC before flying. TFR boundaries are drawn from the FAA detail files; times and exceptions are in each NOTAM.</p>
+      <p><strong>Not for navigation, flight planning or drone authorization.</strong> Check current FAA charts, NOTAMs and TFRs, and use B4UFLY / LAANC before flying. Listed TFR boundaries may be future-dated or incomplete; effective times and exceptions must be checked in each FAA NOTAM.</p>
       {contextState === "loading" && <p role="status">Loading the pinned FAA NASR airspace product…</p>}
       {contextState === "error" && <p role="status">Airspace context unavailable: {contextError} Nothing is drawn in its place.</p>}
       {edition && <p role="status" data-edition={edition.state}><strong>{edition.state === "CURRENT" ? "Current edition" : edition.state === "PREVIEW" ? "Preview edition" : "Expired edition"}:</strong> {edition.text}</p>}
@@ -466,12 +490,12 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
         <fieldset><legend>Airspace volumes</legend>
           <div role="radiogroup" aria-label="Airspace display"><label><input type="radio" name="kfm-aviation-view" checked={view === "3d"} onChange={() => chooseView("3d")} /> 3D volumes</label>
             <label><input type="radio" name="kfm-aviation-view" checked={view === "2d"} onChange={() => chooseView("2d")} /> 2D chart</label></div>
-          {view === "2d" && <><label>Altitude slice<select value={sliceValue} onChange={event => setSlice(event.target.value === "all" ? ALL_ALTITUDES : event.target.value === "drone" ? { kind: "drone" } : { kind: "msl", ft: Number(event.target.value) })}>
+          {view === "2d" && <><label>Altitude slice<select aria-label="Altitude slice" value={sliceValue} onChange={event => setSlice(event.target.value === "all" ? ALL_ALTITUDES : event.target.value === "drone" ? { kind: "drone" } : { kind: "msl", ft: Number(event.target.value) })}>
               <option value="all">All altitudes</option><option value="drone">Drone altitudes (SFC–400 ft AGL)</option>
               {SLICE_MSL_FEET.map(ft => <option key={ft} value={ft}>{ft.toLocaleString("en-US")} ft MSL</option>)}</select></label>
-            <small role="status">2D chart · {sliceTitle(slice)}. Labels read ceiling/floor in hundreds of feet MSL, as on a sectional (ICT 53/27 = 2,700 to 5,300 ft; SFC = surface; AGL is marked).{slice.kind === "msl" ? ` Shapes containing ${slice.ft.toLocaleString("en-US")} ft are shown, with aircraft, pilot reports and cloud bases within ${SLICE_POINT_TOLERANCE_FT.toLocaleString("en-US")} ft.` : ""}{slice.kind === "msl" && slice.ft >= 18000 ? " Class A covers the whole region from FL180 to FL600 and is not drawn as a shape." : ""}{slice.kind === "msl" && slice.ft < 18000 ? " Where no shape is drawn, the airspace is Class E or G (see the airspace column)." : ""}</small></>}
+            <small role="status">2D chart · {sliceTitle(slice)}. Labels read ceiling/floor in hundreds of feet MSL, as on a sectional (ICT 53/27 = 2,700 to 5,300 ft; SFC = surface; AGL is marked).{slice.kind === "msl" ? ` Shapes containing ${slice.ft.toLocaleString("en-US")} ft are shown, with aircraft, pilot reports and cloud bases within ${SLICE_POINT_TOLERANCE_FT.toLocaleString("en-US")} ft.` : ""}{slice.kind === "msl" && slice.ft >= 18000 ? " Class A covers the whole region from FL180 to FL600 and is not drawn as a shape." : ""}{slice.kind === "msl" && slice.ft < 18000 ? " Unshaded areas can include hidden or unavailable volumes; inspect the source limits." : ""}</small></>}
           {(Object.keys(AIRSPACE_GROUPS) as AirspaceGroup[]).map(group => <label key={group}><input type="checkbox" checked={groups.has(group)} onChange={event => toggleGroup(group, event.target.checked)} /> {AIRSPACE_GROUPS[group].title}</label>)}
-          <label>Vertical exaggeration (3D)<select disabled={view === "2d"} value={exaggeration} onChange={event => setExaggeration(Number(event.target.value) as (typeof EXAGGERATIONS)[number])}>{EXAGGERATIONS.map(value => <option key={value} value={value}>{value}×{value === 1 ? " (true scale)" : ""}</option>)}</select></label>
+          <label>Vertical exaggeration (3D)<select aria-label="Vertical exaggeration (3D)" disabled={view === "2d"} value={exaggeration} onChange={event => setExaggeration(Number(event.target.value) as (typeof EXAGGERATIONS)[number])}>{EXAGGERATIONS.map(value => <option key={value} value={value}>{value}×{value === 1 ? " (true scale)" : ""}</option>)}</select></label>
           {view === "3d" && <button type="button" onClick={tilt}>Tilt map to see shells in 3D</button>}
         </fieldset>
         <fieldset><legend>Drones (small UAS), surface to 400 ft AGL</legend>
@@ -480,12 +504,12 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
             <li><i style={{ background: DRONE_RULE_COLORS.NO_FLY_WITHOUT_PERMISSION }} /> No flight without the using agency&apos;s permission (restricted/prohibited) · 14 CFR 107.45</li>
             <li><i style={{ background: DRONE_RULE_COLORS.ATC_AUTHORIZATION_REQUIRED }} /> FAA/ATC authorization required (LAANC/DroneZone) · 14 CFR 107.41</li>
             <li><i style={{ background: DRONE_RULE_COLORS.CAUTION }} /> Caution: MOA or alert area reaching low altitude</li>
-            <li><i style={{ background: DRONE_RULE_COLORS.ABOVE_DRONE_CEILING }} /> Unshaded = Class G: up to 400 ft AGL without ATC authorization · 14 CFR 107.51(b)</li>
+            <li><i style={{ background: DRONE_RULE_COLORS.ABOVE_DRONE_CEILING }} /> Unshaded means no drone rule is drawn. Hidden or missing data can include restrictions; verify with current FAA sources.</li>
           </ul>
           <label><input type="checkbox" checked={showUas} onChange={event => setShowUas(event.target.checked)} /> FAA UAS Facility Map: LAANC ceiling per grid cell (zoom in)</label>
           <ul className="aviation-legend">{UAS_CEILING_COLORS.map(([value, color]) => <li key={value}><i style={{ background: color }} /> {value} ft AGL{value === 0 ? " (no LAANC approval; use DroneZone)" : ""}</li>)}</ul>
           {showUas && <small role="status">UAS Facility Map: {uas.state === "ready" && uas.value ? `${uas.value.cells.length.toLocaleString("en-US")} grid cells` : uas.state === "error" ? "Unavailable. No partial grid is drawn." : "Loading…"}</small>}
-          <p><strong>Temporary flight restrictions:</strong> {tfrs.state === "ready" && tfrs.value ? tfrs.value.kansas.length ? `${tfrs.value.kansas.length} Kansas-related of ${tfrs.value.total} active nationwide.` : `None matched Kansas among ${tfrs.value.total} active nationwide.` : tfrs.state === "error" ? "FAA TFR list unavailable." : "Checking…"}{tfrs.value ? ` ${tfrs.value.shapes.length} area(s) drawn in red${tfrs.value.detailsFailed > 0 ? `; ${tfrs.value.detailsFailed} of ${tfrs.value.detailsChecked} boundary file(s) could not be read in full, so not every TFR area is drawn` : ""}.` : ""} <a href={TFR_HOME} target="_blank" rel="noreferrer">Check tfr.faa.gov</a></p>
+          <p><strong>Temporary flight restrictions:</strong> {tfrs.state === "ready" && tfrs.value ? tfrs.value.kansas.length ? `${tfrs.value.kansas.length} Kansas-related of ${tfrs.value.total} listed nationwide.` : `None matched Kansas among ${tfrs.value.total} listed nationwide.` : tfrs.state === "error" ? "FAA TFR list unavailable." : "Checking…"}{tfrs.value ? ` ${tfrs.value.shapes.length} area(s) drawn in red${tfrs.value.detailsFailed > 0 ? `; ${tfrs.value.detailsFailed} of ${tfrs.value.detailsChecked} boundary file(s) could not be read in full, so not every TFR area is drawn` : ""}.` : ""} {tfrs.value && <small>List retrieved {tfrs.value.retrievedAt}; listed areas may be future-dated.</small>} <a href={TFR_HOME} target="_blank" rel="noreferrer">Check tfr.faa.gov</a></p>
           {tfrs.value && tfrs.value.kansas.length > 0 && <ul>{tfrs.value.kansas.slice(0, 20).map(entry => <li key={entry.notam}><strong>{entry.notam}</strong>{entry.type ? ` · ${entry.type}` : ""}: {entry.description}</li>)}</ul>}
         </fieldset>
         <fieldset><legend>Airports &amp; air traffic structure</legend>
@@ -509,22 +533,26 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
           <small>NOAA/NWS Aviation Weather Center. Observations describe each station site; an absent report is not evidence of good weather or no traffic.</small>
         </fieldset>
         <fieldset><legend>What can fly here, at each height</legend>
-          <button type="button" aria-pressed={picking} onClick={() => setPicking(value => !value)}>{picking ? "Click the map… (press again to cancel)" : "Pick a point on the map"}</button>
+          <button type="button" disabled={!visible || !styleReady} aria-pressed={picking} onClick={() => { setSideStep(null); setSideA(null); setPicking(value => !value); }}>{picking ? "Click the map… (press again to cancel)" : "Pick a point on the map"}</button>
+          {picking && <button type="button" onClick={() => { const map = mapRef.current; if (!map) return; const at = map.getCenter(); setPicked({ lon: at.lng, lat: at.lat, terrainFt: terrainFtAt(map, at.lng, at.lat), label: `${at.lat.toFixed(4)}, ${at.lng.toFixed(4)}` }); setPicking(false); }}>Inspect map center</button>}
           <small>Or click an airport dot.</small>
-          <button type="button" aria-pressed={sideStep !== null} onClick={() => { setSideStep(step => step ? null : "a"); setSideA(null); }}>{sideStep === "a" ? "Click point A… (press again to cancel)" : sideStep === "b" ? "Now click point B…" : "Draw a side view (A to B)"}</button>
+          <button type="button" disabled={!visible || !styleReady} aria-pressed={sideStep !== null} onClick={() => { setPicking(false); setSideError(""); setSideStep(step => step ? null : "a"); setSideA(null); }}>{sideStep === "a" ? "Click point A… (press again to cancel)" : sideStep === "b" ? "Now click point B…" : "Draw a side view (A to B)"}</button>
+          {sideStep && <><p role="status">Choose {sideStep.toUpperCase()} on the map, or pan the map with its arrow keys and use the map center. Escape cancels.</p><button type="button" onClick={() => { const at = mapRef.current?.getCenter(); if (at) chooseSidePoint({ lon: at.lng, lat: at.lat }); }}>Use map center for {sideStep.toUpperCase()}</button></>}
+          {sideError && <p role="status">{sideError}</p>}
           {side && profile && <figure className="aviation-profile">
-            <ProfileChart points={side.points} bands={profile.bands} aircraft={profile.aircraft} />
-            <figcaption><strong>Side view A→B, {side.points[side.points.length - 1].distanceNm.toFixed(1)} NM.</strong> Shapes show each volume’s floor and ceiling over the ground; the brown profile is {side.terrainShare >= 0.99 ? "terrain elevation" : side.terrainShare > 0 ? "terrain where loaded, otherwise the nearest facility's elevation" : "the nearest facility's elevation (turn on 3D terrain for the local ground)"}; the green dashes are the 400 ft AGL drone ceiling; dots are aircraft within 5 km of the line. Where no shape is drawn the airspace is Class E or G.
-              {profile.summary.length > 0 ? <ul>{profile.summary.map(line => <li key={line}>{line}</li>)}</ul> : <> No charted volume or TFR crosses this line.</>}
+            <div className="aviation-profile-scroll" role="region" aria-label="Scrollable aviation cross-section chart" tabIndex={0}><ProfileChart points={side.points} bands={profile.bands} aircraft={profile.aircraft} /></div>
+            <figcaption><strong>Side view A→B, {side.points[side.points.length - 1].distanceNm.toFixed(1)} NM.</strong> Shapes show each volume’s floor and ceiling over the ground; the brown profile is {side.terrainShare >= 0.99 ? "terrain elevation" : side.terrainShare > 0 ? "terrain where loaded, otherwise the nearest facility's elevation" : "the nearest facility's elevation (turn on 3D terrain for the local ground)"}; the green dashes are the 400 ft AGL drone ceiling; dots are aircraft within 5 km of the line. Unshaded areas can include hidden or unavailable volumes.
+              <p>Scroll the chart horizontally or focus it and use the arrow keys. Numbered bands match the list below. Flight levels are pressure references, approximated on this MSL axis without pressure correction. AGL/surface bounds follow the sampled ground here; map forms use facility references, so their approximate positions can differ. Hidden or unavailable volumes are not evidence of clearance.</p>
+              {profile.bands.length > 0 ? <ol>{profile.bands.map(band => <li key={band.key}>{profileSummary(side.points, [band]).join("; ")}</li>)}</ol> : <> No enabled, available volume or TFR crosses this sampled line.</>}
               <button type="button" onClick={() => setSide(null)}>Clear side view</button></figcaption>
           </figure>}
           {inspection && picked && <div className="aviation-column" data-aviation-inspector tabIndex={-1} ref={inspectorRef}>
             <p><strong>{picked.label}</strong> · ground {feet(inspection.groundFt)} MSL {inspection.ground.method === "TERRAIN_DEM" ? "(terrain elevation at this point)" : inspection.ground.method === "NEAREST_FACILITY" ? `(nearest facility ${inspection.ground.facility}, ${(inspection.ground.km ?? 0).toFixed(1)} km${inspection.ground.terrainRejected ? "; the terrain reading here disagreed by over 1,000 ft and was not used" : "; turn on 3D terrain for the local ground"})` : "(no ground reference)"}</p>
             <p style={{ borderLeft: `4px solid ${DRONE_RULE_COLORS[inspection.drone.rule.code]}`, paddingLeft: 8 }}><strong>Drone, SFC–400 ft AGL:</strong> {inspection.drone.rule.title}. {inspection.drone.rule.detail} <small>({inspection.drone.governing} · {inspection.drone.rule.cite})</small></p>
             {inspection.laanc && <p><strong>LAANC ceiling here:</strong> {inspection.laanc.ceilingFt} ft AGL{inspection.laanc.airport ? ` (${inspection.laanc.airportName ?? inspection.laanc.airport} grid)` : ""}. {inspection.laanc.ceilingFt === 0 ? "LAANC cannot approve flight in this cell; request a DroneZone authorization." : "LAANC can approve up to this altitude; it is not approval by itself."} <small>(FAA UAS Facility Map)</small></p>}
-            {inspection.restrictions.length > 0 && <div style={{ borderLeft: `4px solid ${TFR_COLOR}`, paddingLeft: 8 }}><p><strong>Temporary flight restriction here:</strong> flight inside these limits, drones included, is prohibited unless the NOTAM allows it.</p>
+            {inspection.restrictions.length > 0 && <div style={{ borderLeft: `4px solid ${TFR_COLOR}`, paddingLeft: 8 }}><p><strong>Temporary flight restriction listed here:</strong> Check its effective times, exceptions and applicability in the FAA NOTAM; the drawn area alone does not establish a current prohibition.</p>
               <ul>{inspection.restrictions.map(shape => <li key={`${shape.notam}:${shape.name ?? ""}`}><strong>{shape.notam}</strong>{shape.type ? ` ${shape.type}` : ""}{shape.name ? ` · ${shape.name}` : ""}: {formatTfrLimit(shape.floor)} to {formatTfrLimit(shape.ceiling)}{shape.effective || shape.expires ? ` · ${shape.effective ?? "?"} to ${shape.expires ?? "until further notice"} (UTC)` : ""}</li>)}</ul></div>}
-            {tfrs.value && (tfrs.value.kansas.length > 0 || tfrs.value.detailsFailed > 0) && inspection.restrictions.length === 0 && <p><strong>Check TFRs:</strong> {tfrs.value.kansas.length} Kansas-related temporary flight restriction(s) are active, none drawn at this point{tfrs.value.detailsFailed > 0 ? `, but ${tfrs.value.detailsFailed} boundary file(s) could not be read in full, so a restriction here may not be shown` : ""}.</p>}
+            {tfrs.value && (tfrs.value.kansas.length > 0 || tfrs.value.detailsFailed > 0) && inspection.restrictions.length === 0 && <p><strong>Check TFRs:</strong> {tfrs.value.kansas.length} Kansas-related temporary flight restriction(s) are listed, none drawn at this point{tfrs.value.detailsFailed > 0 ? `, but ${tfrs.value.detailsFailed} boundary file(s) could not be read in full, so a restriction here may not be shown` : ""}.</p>}
             <table><thead><tr><th scope="col">Band</th><th scope="col">Floor → ceiling</th><th scope="col">≈ above ground</th><th scope="col">Who can fly, and how</th></tr></thead>
               <tbody>{[...inspection.column].reverse().map(band => <tr key={band.key}><th scope="row">{band.label}</th><td>{band.floorText} → {band.ceilingText}</td>
                 <td>{feet(band.floorFtAgl)} → {feet(band.ceilingFtAgl)}</td><td>{band.manned} <small>({band.cite})</small></td></tr>)}</tbody></table>

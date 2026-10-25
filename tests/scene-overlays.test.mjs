@@ -93,6 +93,40 @@ test("a category basemap's own hillshade follows the scene light and suppresses 
   }
 });
 
+test("aviation and civic styles follow sun changes across flat, terrain and globe transitions", async () => {
+  const vm = await import("node:vm");
+  const modules = {
+    "./category-basemaps": "app/category-basemaps.ts", "./category-basemap-keys": "app/category-basemap-keys.ts",
+    "./external-context-sources": "app/external-context-sources.ts", "./kansas-orientation": "app/kansas-orientation.ts",
+  };
+  const cache = new Map();
+  const compiled = Object.fromEntries(await Promise.all(Object.entries(modules).map(async ([id, path]) => [id,
+    ts.transpileModule(await read(path), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText])));
+  function load(id) {
+    if (cache.has(id)) return cache.get(id);
+    assert.ok(id in compiled, `known dependency ${id}`);
+    const module = { exports: {} }; cache.set(id, module.exports);
+    vm.runInNewContext(compiled[id], { module, exports: module.exports, require: load, URL });
+    cache.set(id, module.exports); return module.exports;
+  }
+  const basemaps = load("./category-basemaps"), overlays = await loadOverlays();
+  const id = basemaps.BASEMAP_HILLSHADE_LAYER_ID;
+  const dem = { tileTemplate: "https://example.test/{z}/{x}/{y}.png", encoding: "terrarium", attribution: "test" };
+  for (const key of ["aviation-chart", "civic"]) for (const relief2d of [true, false]) {
+    for (const scene of [{ projection: "mercator", terrain: null }, { projection: "mercator", terrain: { source: "terrain" } }, { projection: "globe", terrain: null }]) {
+      const style = basemaps.CATEGORY_BASEMAPS[key].style();
+      const map = fakeMap({ ...scene, fx: { ...ALL_ON, relief2d }, layers: style.layers, sources: style.sources });
+      const initial = style.layers.find(layer => layer.id === id).paint["hillshade-illumination-direction"];
+      map.paint.set(`${id}:hillshade-illumination-direction`, initial);
+      for (const [azimuth, expected] of [[90, 90], [235, 235], [-45, 315], [450, 90], [360, 0]]) {
+        overlays.syncRelief2d(map, dem, "dusk", azimuth);
+        assert.equal(map.getPaintProperty(id, "hillshade-illumination-direction"), expected, `${key}: ${scene.projection}, terrain=${!!scene.terrain}, relief=${relief2d}`);
+        assert.equal(map.getLayer(overlays.RELIEF_2D_LAYER_ID), undefined, "category relief is never doubled");
+      }
+    }
+  }
+});
+
 test("Kansas glow adds a beacon everywhere and defers to the offline styles' own outline", async () => {
   const overlays = await loadOverlays();
   for (const layer of overlays.kansasGlowLayers()) {

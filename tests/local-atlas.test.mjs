@@ -112,11 +112,12 @@ test('hosted global click selection filters hidden official layers and yields to
  const javascript=ts.transpileModule(statements.join('\n')+'\nreturn renderedHits;',{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
  const hidden={source:'hidden-source',layer:{id:'hidden'}},visible={source:'visible-source',layer:{id:'visible'}},registry={source:'registry',layer:{id:'registry'}},proof={source:'synthetic-proof',layer:{id:'proof'}};
  let queries=0;
- const scope={map:{queryRenderedFeatures:()=>{queries++;return [hidden,visible,registry,proof];}},event:{point:{x:1,y:2}},undergroundOpenRef:{current:false},measureModeRef:{current:null},
+ const scope={aviationPickingRef:{current:false},map:{queryRenderedFeatures:()=>{queries++;return [hidden,visible,registry,proof];}},event:{point:{x:1,y:2}},undergroundOpenRef:{current:false},measureModeRef:{current:null},
   OFFICIAL_CONTEXT_BY_SOURCE_ID:{'hidden-source':{id:'hidden'},'visible-source':{id:'visible'}},officialOpacityRef:{current:{hidden:0,visible:.5}},
   findLayerByRenderer:id=>id==='registry'?{id:'registry',defaultOpacity:1}:null,opacityRef:{current:{registry:0}}};
  const handler=()=>new Function(...Object.keys(scope),javascript)(...Object.values(scope));
  assert.deepEqual(handler(),[visible,proof]);assert.equal(queries,1);
+ scope.aviationPickingRef.current=true;assert.equal(handler(),undefined);assert.equal(queries,1);scope.aviationPickingRef.current=false;
  scope.undergroundOpenRef.current=true;assert.equal(handler(),undefined);assert.equal(queries,1);
 });
 test('raster image bounds own only visible local clicks without claiming pixel values', () => {
