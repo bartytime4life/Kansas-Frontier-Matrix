@@ -36,6 +36,28 @@ holds and limits. They are display context, not admitted evidence.
   `scene` already restore the category, basemap and renderer, and the dock
   follows the restored category when its basemap is on screen.
 
+## In the Evidence Drawer
+
+A selected record now opens with the category it belongs to, then the same
+three questions for every source (`app/evidence-summary.ts`):
+
+- **What it is** is the record's own summary. A provider basemap record is
+  labelled as the provider's mapped record.
+- **Where & when** gives the spatial scope and display anchor, then the
+  observation or source time, with the source update when it differs.
+- **Source & limits** gives the organization, the evidence state (a basemap
+  record stays "External context only · no KFM EvidenceBundle") and the
+  recorded generalization and uncertainty.
+
+  When no limitation is recorded, the drawer says so rather than implying
+  none.
+
+Categories come from the same source-identity rules as the Layers catalogue:
+`officialSourceTopics` or `registryLayerTopics`. When that category's map look
+is not already on screen, the drawer offers **Open the {map look}**. The
+summary only restates fields the selection already carries; the existing
+Data, Metadata, Trace and Focus tabs are unchanged.
+
 ## Specialized basemaps
 
 Six category styles live in `app/category-basemaps.ts`, listed with their
