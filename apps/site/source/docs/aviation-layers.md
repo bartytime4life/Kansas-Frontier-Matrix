@@ -141,7 +141,8 @@ airspace volumes and TFR areas are polygons and stay out. Private-use strips are
 also excluded, so they cannot crowd the 50-record list near towns, and live
 aircraft are excluded because their positions are transient. **Inspect** on an
 aviation record moves the map there and opens this layer's point inspector at
-that point. Use the side view for the airspace along a line.
+that point. It also opens the Layers panel and expands this layer's controls,
+so the inspector is visible and takes focus. Use the side view for the airspace along a line.
 
 ## The airspace column
 

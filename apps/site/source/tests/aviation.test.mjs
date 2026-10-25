@@ -743,6 +743,14 @@ test("Inspect on an aviation dossier record opens the aviation point inspector t
     "aviation records are handled before the official-provider lookup that cannot find them");
   assert.match(handler, /setAviationInspect\(\{ lon, lat, label: record\.title, nonce: Date\.now\(\) \}\)/);
   assert.match(page, /<AviationControl [^>]*inspectRequest=\{aviationInspect\}/);
+  const branch = handler.slice(handler.indexOf("AVIATION_RESEARCH_SOURCE"), handler.indexOf("OFFICIAL_CONTEXT_SOURCES"));
+  for (const reveal of ["setSourceStatusOpen(false)", 'setLeftPanelMode("layers")', "setLeftOpen(true)", "if (isCompact) { setRightOpen(false); setTimelineOpen(false); }"]) {
+    assert.ok(branch.includes(reveal), `the Layers panel holding the inspector is revealed: ${reveal}`);
+  }
+  const control = await readFile(new URL("../app/aviation-control.tsx", import.meta.url), "utf8");
+  assert.match(control, /<details className="specialty-layer-details" ref=\{detailsRef\}>/);
+  assert.match(control.slice(control.indexOf("if (!inspectRequest || !context) return;"), control.indexOf("setPicked({ lon: inspectRequest.lon")),
+    /detailsRef\.current\.open = true/, "the collapsed aviation controls expand before the inspector is focused");
   const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
   const fetch = async (path) => path === airspace.AVIATION_CONTEXT_ASSET.url
     ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };

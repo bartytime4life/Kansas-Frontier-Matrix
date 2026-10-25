@@ -355,11 +355,14 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange, onResea
 
   // Dossier "Inspect" on an airport or weather station: the airspace column, drone rule and weather at that point.
   const inspectorRef = useRef<HTMLDivElement | null>(null);
+  const detailsRef = useRef<HTMLDetailsElement | null>(null);
   const focusInspector = useRef(false);
   useEffect(() => {
     if (!inspectRequest || !context) return;
     const map = mapRef.current;
     focusInspector.current = true;
+    // The inspector sits inside the collapsible controls; expand them so it can be seen and focused.
+    if (detailsRef.current) detailsRef.current.open = true;
     setPicked({ lon: inspectRequest.lon, lat: inspectRequest.lat, label: inspectRequest.label, terrainFt: map ? terrainFtAt(map, inspectRequest.lon, inspectRequest.lat) : null });
   }, [inspectRequest, context, mapRef]);
   useEffect(() => {
@@ -445,7 +448,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange, onResea
 
   return <section className="official-context-row" aria-label="Airspace, airports and aviation weather">
     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visible} aria-label={visible ? "Hide airspace and aviation layers" : "Show airspace and aviation layers"} onChange={event => { setVisible(event.target.checked); if (event.target.checked) setRender("Waiting for map frame"); }} /><span aria-hidden="true" /></label><i style={{ "--swatch": AIRSPACE_COLORS.CLASS_C } as React.CSSProperties} /><div><strong>Airspace, airports &amp; aviation weather</strong><small>FAA NASR · NOAA AWC · {visible ? shownRender : "Off"}</small></div></div>
-    <details className="specialty-layer-details"><summary>Airspace shells, drone zones, weather &amp; controls</summary><div className="official-context-option-body">
+    <details className="specialty-layer-details" ref={detailsRef}><summary>Airspace shells, drone zones, weather &amp; controls</summary><div className="official-context-option-body">
       <p><strong>Not for navigation, flight planning or drone authorization.</strong> Check current FAA charts, NOTAMs and TFRs, and use B4UFLY / LAANC before flying. TFR boundaries are drawn from the FAA detail files; times and exceptions are in each NOTAM.</p>
       {contextState === "loading" && <p role="status">Loading the pinned FAA NASR airspace product…</p>}
       {contextState === "error" && <p role="status">Airspace context unavailable: {contextError} Nothing is drawn in its place.</p>}

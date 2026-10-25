@@ -8131,6 +8131,11 @@ export default function Home() {
       setAviationInspect({ lon, lat, label: record.title, nonce: Date.now() });
       mapRef.current?.easeTo({ center: [lon, lat], zoom: Math.max(mapRef.current.getZoom(), 10), duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 600 });
       setResearchOpen(false);
+      // The inspector lives in the Layers panel, which a compact dossier closed (and made inert).
+      setSourceStatusOpen(false);
+      setLeftPanelMode("layers");
+      setLeftOpen(true);
+      if (isCompact) { setRightOpen(false); setTimelineOpen(false); }
       announce(shownCatalogIds.has("aviation") ? "Opened in the airspace, airports and aviation weather point inspector."
         : "Opened in the aviation point inspector, which the current catalog search hides; clear the search to see it.");
       return;
