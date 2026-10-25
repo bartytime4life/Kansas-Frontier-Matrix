@@ -737,6 +737,44 @@ test("the aviation layer offers dossier points while shown and withdraws them wh
   } finally { h.dispose(); }
 });
 
+test("Inspect on an aviation dossier record opens the aviation point inspector there", { timeout: 15_000 }, async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const handler = page.slice(page.indexOf("const inspectResearchRecord"), page.indexOf("const isolateLayer"));
+  assert.ok(handler.indexOf("AVIATION_RESEARCH_SOURCE") > 0 && handler.indexOf("AVIATION_RESEARCH_SOURCE") < handler.indexOf("OFFICIAL_CONTEXT_SOURCES"),
+    "aviation records are handled before the official-provider lookup that cannot find them");
+  assert.match(handler, /setAviationInspect\(\{ lon, lat, label: record\.title, nonce: Date\.now\(\) \}\)/);
+  assert.match(page, /<AviationControl [^>]*inspectRequest=\{aviationInspect\}/);
+  const branch = handler.slice(handler.indexOf("AVIATION_RESEARCH_SOURCE"), handler.indexOf("OFFICIAL_CONTEXT_SOURCES"));
+  for (const reveal of ["setSourceStatusOpen(false)", 'setLeftPanelMode("layers")', "setLeftOpen(true)", "if (isCompact) { setRightOpen(false); setTimelineOpen(false); }"]) {
+    assert.ok(branch.includes(reveal), `the Layers panel holding the inspector is revealed: ${reveal}`);
+  }
+  const control = await readFile(new URL("../app/aviation-control.tsx", import.meta.url), "utf8");
+  assert.match(control, /<details className="specialty-layer-details" ref=\{detailsRef\}>/);
+  assert.match(control.slice(control.indexOf("if (!inspectRequest || !context) return;"), control.indexOf("setPicked({ lon: inspectRequest.lon")),
+    /detailsRef\.current\.open = true/, "the collapsed aviation controls expand before the inspector is focused");
+  const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
+  const fetch = async (path) => path === airspace.AVIATION_CONTEXT_ASSET.url
+    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
+  const h = await componentHarness("app/aviation-control.tsx", {
+    "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  const props = { mapRef: { current: null }, styleReady: false, inspectRequest: null };
+  const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
+  const inspector = tree => findNode(tree, node => node.type === "div" && node.props["data-aviation-inspector"] !== undefined);
+  try {
+    let tree = await cycle();
+    findNode(tree, node => node.type === "input" && node.props["aria-label"] === "Show airspace and aviation layers").props.onChange({ target: { checked: true } });
+    tree = await renderUntil(cycle, tree => Boolean(findNode(tree, node => node.type === "button" && JSON.stringify(node.props.children ?? "").includes("Pick a point"))), "the loaded panel");
+    assert.equal(inspector(tree), undefined);
+    props.inspectRequest = { lon: -97.6522, lat: 38.7906, label: "Salina Rgnl (KSLN) · public-use airport", nonce: 1 };
+    tree = await renderUntil(cycle, tree => Boolean(inspector(tree)), "the point inspector");
+    const text = JSON.stringify(inspector(tree));
+    assert.match(text, /Salina Rgnl \(KSLN\) · public-use airport/);
+    assert.match(text, /Drone, SFC–400 ft AGL:/, "the drone rule at that point is shown");
+  } finally { h.dispose(); }
+});
+
 
 test("aviation drawing owns selection until cancelled and supports keyboard map-center points", { timeout: 15_000 }, async () => {
   const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
@@ -754,7 +792,7 @@ test("aviation drawing owns selection until cancelled and supports keyboard map-
     "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
     "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder, Error,
-    window: { matchMedia: () => ({ matches: true }), addEventListener: (key, fn) => keys.set(key, fn), removeEventListener: (key, fn) => { if (keys.get(key) === fn) keys.delete(key); } } });
+    window: { matchMedia: () => ({ matches: true }), addEventListener: (key, fn, capture) => { assert.equal(capture, true); keys.set(key, fn); }, removeEventListener: (key, fn, capture) => { assert.equal(capture, true); if (keys.get(key) === fn) keys.delete(key); } } });
   const props = { mapRef: { current: map }, styleReady: true, onPickingChange: value => ownership.push(value) };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
   const label = node => typeof node === "object" && node ? [node.props?.children].flat(Infinity).map(label).join("") : String(node ?? "");
@@ -783,7 +821,9 @@ test("aviation drawing owns selection until cancelled and supports keyboard map-
     button(tree, "Pick a point on the map").props.onClick();
     tree = await renderUntil(cycle, t => Boolean(button(t, "Inspect map center")), "point inspection");
     assert.equal(ownership.at(-1), true);
-    keys.get("keydown")({ key: "Escape" });
+    let prevented = false, stopped = false;
+    keys.get("keydown")({ key: "Escape", preventDefault() { prevented = true; }, stopPropagation() { stopped = true; } });
+    assert.ok(prevented && stopped, "aviation consumes Escape before the parent compact panel can close");
     tree = await renderUntil(cycle, t => !button(t, "Inspect map center"), "Escape cancellation");
     assert.equal(ownership.at(-1), false);
     findNode(tree, n => n.type === "input" && n.props?.type === "radio" && n.props.checked === false).props.onChange();

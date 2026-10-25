@@ -1585,8 +1585,8 @@ NEAR_HERE_CHANGED = {
 
 def test_historical_near_here_receipt_binds_only_the_dossier_link(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-aviation-near-here-dossier-20261025.json")
+    assert hashlib.sha256(TOOL.RECEIPT.read_bytes()).hexdigest() == "0bbc3d604015b3047dc232ff5e826c41fd60a1abbbde89105a14c98c850a7cf3"
     receipt, expected = TOOL.reviewed_receipt()
-    assert TOOL.RECEIPT.name == "site-v268-aviation-near-here-dossier-20261025.json"
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert predecessor.name == "site-v268-aviation-2d-chart-20261025.json"
     assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"] == "0608a4ae27a0bf3e84f758db1fcb1d530808a8b81b078970794b8c87c50da31f"
@@ -1600,6 +1600,7 @@ def test_historical_near_here_receipt_binds_only_the_dossier_link(monkeypatch: p
     assert set(declarations) == delta and len(receipt["repository_reconciliation"]["changes"]) == len(delta)
     for name in delta:
         entry, before = receipt["comparison"][name], previous["comparison"].get(name)
+        # Bound to the receipt's own declaration: the dossier Inspect fix changes current bytes of several of these files.
         digest = declarations[name]["mirror_sha256"]
         assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
         if before is None:
@@ -1631,13 +1632,52 @@ def test_historical_near_here_receipt_binds_only_the_dossier_link(monkeypatch: p
     assert predecessor.name in receipt["rollback"]["mirror"]
 
 
-AVIATION_BROWSER_CHANGED = {"app/aviation-airspace.ts", "app/aviation-control.tsx", "app/map-layers.css", "app/page.tsx", "docs/aviation-layers.md", "tests/aviation.test.mjs", "tests/local-atlas.test.mjs", "tests/map-hover-sampler.test.mjs", "tests/scene-surface-integration.test.mjs"}
+DOSSIER_INSPECT_CHANGED = {"app/aviation-control.tsx", "app/page.tsx", "docs/aviation-layers.md", "docs/map-research-tools.md", "tests/aviation.test.mjs"}
+
+
+def test_historical_dossier_inspect_receipt_binds_only_the_fix(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-aviation-dossier-inspect-20261025.json")
+    receipt, expected = TOOL.reviewed_receipt()
+    assert TOOL.RECEIPT.name == "site-v268-aviation-dossier-inspect-20261025.json"
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-aviation-near-here-dossier-20261025.json"
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"] == "0bbc3d604015b3047dc232ff5e826c41fd60a1abbbde89105a14c98c850a7cf3"
+    previous = json.loads(predecessor.read_text())
+    assert set(receipt) == set(previous)
+    assert set(receipt["comparison"]) == set(previous["comparison"])
+    assert {name for name, entry in receipt["comparison"].items() if entry != previous["comparison"][name]} == DOSSIER_INSPECT_CHANGED
+    declarations = {entry["path"]: entry for entry in receipt["repository_reconciliation"]["changes"]}
+    assert set(declarations) == DOSSIER_INSPECT_CHANGED and len(receipt["repository_reconciliation"]["changes"]) == len(DOSSIER_INSPECT_CHANGED)
+    for name in DOSSIER_INSPECT_CHANGED:
+        entry, before = receipt["comparison"][name], previous["comparison"][name]
+        digest = declarations[name]["mirror_sha256"]
+        assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
+        assert entry["state"] == before["state"] and entry["site_sha256"] == before["site_sha256"], name
+        assert declarations[name] == {
+            "path": name, "previous_receipt_sha256": before["mirror_sha256"],
+            "repository_base_sha256": before["mirror_sha256"], "mirror_sha256": digest,
+            "state": entry["state"], "proposed_in_this_change": True,
+        }
+    administrative = {"comparison", "inventory_sha256", "predecessor_receipt", "predecessor_receipt_sha256",
+                      "recorded_at", "repository_reconciled_base", "repository_reconciliation", "rollback", "security", "validation"}
+    for key in previous.keys() - administrative:
+        assert receipt[key] == previous[key], key
+    assert receipt["counts"] == previous["counts"]
+    assert receipt["repository_reconciled_base"] == receipt["repository_reconciliation"]["base_commit"] == "965b8783c171a14275e9b25e1ef84c0b174fb9f8"
+    assert receipt["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    assert predecessor.name in receipt["rollback"]["mirror"]
+
+
+AVIATION_BROWSER_CHANGED = {"app/aviation-airspace.ts", "app/aviation-control.tsx", "app/map-layers.css", "app/page.tsx", "docs/aviation-layers.md", "tests/aviation.test.mjs", "tests/local-atlas.test.mjs", "tests/map-hover-sampler.test.mjs", "tests/scene-surface-integration.test.mjs", "tests/inspection-panel.test.mjs"}
 
 def test_selected_receipt_binds_only_aviation_browser_corrections() -> None:
     receipt, expected = TOOL.reviewed_receipt()
     assert TOOL.RECEIPT.name == "site-v268-aviation-browser-qualification-20261025.json"
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
-    assert predecessor.name == "site-v268-aviation-near-here-dossier-20261025.json"
+    assert predecessor.name == "site-v268-aviation-dossier-inspect-20261025.json"
     assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
     previous = json.loads(predecessor.read_text())
     assert set(receipt["comparison"]) == set(previous["comparison"])

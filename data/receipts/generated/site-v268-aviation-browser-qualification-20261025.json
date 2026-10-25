@@ -1631,8 +1631,8 @@
       "state": "repository_only_overlay"
     },
     "app/aviation-control.tsx": {
-      "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@e5ea665b351e13149dd09ff5d11d5bc27d928df8: UAS Facility Map grid request no longer cancelled by its own loading state, with a component regression test. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@151e4f1bca7c3827683955f0fd15f4a7a18b5cfd: live ADS-B traffic route and layer (adsb.lol, else adsb.fi) and private-use airports in the pinned aviation product (profile v2). Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@848461d0a5a9a844f920af9a266290ac6ac7d4eb: live aircraft positions expire 60 s after observation in the browser and are discarded when traffic is turned off, with regression tests. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@4fd89b28a37211e47a9d5eae9934272fc64f896f: 3D volumes / 2D chart switch with sectional labels and altitude slices, a side view (cross-section) between two points, and terrain-aware ground at a picked point. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@d08e613d2cbf41af929a9f4b377b6694035b5ca5: aviation public-use airports and METAR stations join the Near-here dossier while the layer is shown. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "c58d20e4df4d3ac71a7fc72e0995fd2cf956dc69c3a64aef66bf0dcb90fbec31",
+      "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@e5ea665b351e13149dd09ff5d11d5bc27d928df8: UAS Facility Map grid request no longer cancelled by its own loading state, with a component regression test. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@151e4f1bca7c3827683955f0fd15f4a7a18b5cfd: live ADS-B traffic route and layer (adsb.lol, else adsb.fi) and private-use airports in the pinned aviation product (profile v2). Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@848461d0a5a9a844f920af9a266290ac6ac7d4eb: live aircraft positions expire 60 s after observation in the browser and are discarded when traffic is turned off, with regression tests. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@4fd89b28a37211e47a9d5eae9934272fc64f896f: 3D volumes / 2D chart switch with sectional labels and altitude slices, a side view (cross-section) between two points, and terrain-aware ground at a picked point. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@d08e613d2cbf41af929a9f4b377b6694035b5ca5: aviation public-use airports and METAR stations join the Near-here dossier while the layer is shown. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@965b8783c171a14275e9b25e1ef84c0b174fb9f8: Inspect on an aviation Near-here record opens the aviation point inspector at that point instead of reporting the provider record unavailable. Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "b29c984c7e18dda5711a8b55369eda3b275226c77e91090ee1a008c7fa8c2737",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -2850,8 +2850,8 @@
       "state": "identical"
     },
     "app/page.tsx": {
-      "difference": "Verified local reference layout follow-up: desktop Evidence drawer and responsive bottom timeline; repository-only presentation change, no Site deployment. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@123d8645b84e705789390f2ca4cbd66cc1eb2f0e: FAA NASR airspace/airport/airway context and NOAA AWC METAR/PIREP routes. Recorded bytes only; no Site deployment implied. Repository-only River Pulse dismissal: persistent close control, Escape, playback pause and focus return. Recorded content only; no hosted deployment. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@d08e613d2cbf41af929a9f4b377b6694035b5ca5: aviation public-use airports and METAR stations join the Near-here dossier while the layer is shown. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "43f91057b48579c967918ce441348e706b611c7f2da309cbebb0c71237be69d3",
+      "difference": "Verified local reference layout follow-up: desktop Evidence drawer and responsive bottom timeline; repository-only presentation change, no Site deployment. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@123d8645b84e705789390f2ca4cbd66cc1eb2f0e: FAA NASR airspace/airport/airway context and NOAA AWC METAR/PIREP routes. Recorded bytes only; no Site deployment implied. Repository-only River Pulse dismissal: persistent close control, Escape, playback pause and focus return. Recorded content only; no hosted deployment. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@d08e613d2cbf41af929a9f4b377b6694035b5ca5: aviation public-use airports and METAR stations join the Near-here dossier while the layer is shown. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@965b8783c171a14275e9b25e1ef84c0b174fb9f8: Inspect on an aviation Near-here record opens the aviation point inspector at that point instead of reporting the provider record unavailable. Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "ad3de009143dc2eeefc54310e309facb707d54c24b13cab3f842b350b23531b6",
       "site_sha256": "2833eb08843b9fce2ee6bf8ca2903a55f9a3580afd460cf35321642972f27610",
       "state": "inherited_repository_overlay"
     },
@@ -3452,8 +3452,8 @@
       "state": "identical"
     },
     "docs/aviation-layers.md": {
-      "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@151e4f1bca7c3827683955f0fd15f4a7a18b5cfd: live ADS-B traffic route and layer (adsb.lol, else adsb.fi) and private-use airports in the pinned aviation product (profile v2). Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@848461d0a5a9a844f920af9a266290ac6ac7d4eb: live aircraft positions expire 60 s after observation in the browser and are discarded when traffic is turned off, with regression tests. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@4fd89b28a37211e47a9d5eae9934272fc64f896f: 3D volumes / 2D chart switch with sectional labels and altitude slices, a side view (cross-section) between two points, and terrain-aware ground at a picked point. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@d08e613d2cbf41af929a9f4b377b6694035b5ca5: aviation public-use airports and METAR stations join the Near-here dossier while the layer is shown. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "8ef0bb1bcfc547a3a0b93c32ea2ab5701c7051558c34dc6e2867eff0c07b3449",
+      "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@151e4f1bca7c3827683955f0fd15f4a7a18b5cfd: live ADS-B traffic route and layer (adsb.lol, else adsb.fi) and private-use airports in the pinned aviation product (profile v2). Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@848461d0a5a9a844f920af9a266290ac6ac7d4eb: live aircraft positions expire 60 s after observation in the browser and are discarded when traffic is turned off, with regression tests. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@4fd89b28a37211e47a9d5eae9934272fc64f896f: 3D volumes / 2D chart switch with sectional labels and altitude slices, a side view (cross-section) between two points, and terrain-aware ground at a picked point. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@d08e613d2cbf41af929a9f4b377b6694035b5ca5: aviation public-use airports and METAR stations join the Near-here dossier while the layer is shown. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@965b8783c171a14275e9b25e1ef84c0b174fb9f8: Inspect on an aviation Near-here record opens the aviation point inspector at that point instead of reporting the provider record unavailable. Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "232f0b38b8c3f292e49fbe887046685f5a26f3f464fe3a685cb7a24a08ff88bf",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -3717,8 +3717,8 @@
       "state": "identical"
     },
     "docs/map-research-tools.md": {
-      "difference": "Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@d08e613d2cbf41af929a9f4b377b6694035b5ca5: aviation public-use airports and METAR stations join the Near-here dossier while the layer is shown. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "40502292ac3caa702e7d5d8cf44f69800a2a64a88a8951e9722b5109e6315e65",
+      "difference": "Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@d08e613d2cbf41af929a9f4b377b6694035b5ca5: aviation public-use airports and METAR stations join the Near-here dossier while the layer is shown. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@965b8783c171a14275e9b25e1ef84c0b174fb9f8: Inspect on an aviation Near-here record opens the aviation point inspector at that point instead of reporting the provider record unavailable. Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "1ec8683d84053f194bb3ffcb1ca4e5247fa60313cc5a183dbe10e4fd59fc2700",
       "site_sha256": "a1a0eed6f869cadfbf652a5ded0059eee18223fcca8f7a3953ba3c71e12b9be6",
       "state": "inherited_repository_overlay"
     },
@@ -4258,8 +4258,8 @@
       "state": "identical"
     },
     "tests/aviation.test.mjs": {
-      "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@e5ea665b351e13149dd09ff5d11d5bc27d928df8: UAS Facility Map grid request no longer cancelled by its own loading state, with a component regression test. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@151e4f1bca7c3827683955f0fd15f4a7a18b5cfd: live ADS-B traffic route and layer (adsb.lol, else adsb.fi) and private-use airports in the pinned aviation product (profile v2). Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@848461d0a5a9a844f920af9a266290ac6ac7d4eb: live aircraft positions expire 60 s after observation in the browser and are discarded when traffic is turned off, with regression tests. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@0e434a0792ee80966e1411f49bc21c5e938e93df: the fresh-traffic list keeps its identity between expiry ticks (one shared empty array; the previous subset reused while unchanged), and both aviation component tests wait on rendered state. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@4fd89b28a37211e47a9d5eae9934272fc64f896f: 3D volumes / 2D chart switch with sectional labels and altitude slices, a side view (cross-section) between two points, and terrain-aware ground at a picked point. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@d08e613d2cbf41af929a9f4b377b6694035b5ca5: aviation public-use airports and METAR stations join the Near-here dossier while the layer is shown. Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "3c581043d0cdc5fb956ef3643faec6e43b49abe5896108f5ba04f1ce0afb7531",
+      "difference": "Repository-only PIREP parsing correction from main@472747fe92a343472829234f40e85b47d9c8e694: numeric/string flight levels, flight phase, feet cloud bases and no unknown-altitude extrusions. Recorded content only; no source admission, review acceptance or publication. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@370e9ad30911fef806aa4fbd2ff25bea6eaf1626: FAA UAS Facility Map grid ceilings and the FAA TFR list in the aviation layer. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@e5ea665b351e13149dd09ff5d11d5bc27d928df8: UAS Facility Map grid request no longer cancelled by its own loading state, with a component regression test. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@151e4f1bca7c3827683955f0fd15f4a7a18b5cfd: live ADS-B traffic route and layer (adsb.lol, else adsb.fi) and private-use airports in the pinned aviation product (profile v2). Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@848461d0a5a9a844f920af9a266290ac6ac7d4eb: live aircraft positions expire 60 s after observation in the browser and are discarded when traffic is turned off, with regression tests. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@0e434a0792ee80966e1411f49bc21c5e938e93df: the fresh-traffic list keeps its identity between expiry ticks (one shared empty array; the previous subset reused while unchanged), and both aviation component tests wait on rendered state. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@9678e903c7cf620373afc26170070a32c2da5e75: TFR boundaries and altitude limits read from FAA NOTAM detail files and drawn as 3D volumes, with point inspection. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@4fd89b28a37211e47a9d5eae9934272fc64f896f: 3D volumes / 2D chart switch with sectional labels and altitude slices, a side view (cross-section) between two points, and terrain-aware ground at a picked point. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@d08e613d2cbf41af929a9f4b377b6694035b5ca5: aviation public-use airports and METAR stations join the Near-here dossier while the layer is shown. Recorded bytes only; no Site deployment implied. Repository-only aviation layer change proposed on branch claude/air-traffic-airport-layers-wet7fb from main@965b8783c171a14275e9b25e1ef84c0b174fb9f8: Inspect on an aviation Near-here record opens the aviation point inspector at that point instead of reporting the provider record unavailable. Recorded bytes only; no Site deployment implied.",
+      "mirror_sha256": "46d90f7d79558849774b2ae2e932cb073123554f245ffd3dffdec8eb4705e165",
       "site_sha256": null,
       "state": "repository_only_overlay"
     },
@@ -4890,7 +4890,7 @@
     },
     "tests/inspection-panel.test.mjs": {
       "difference": "Repository bytes changed in #5220 (0597487585, GoDaddy layout controls port). Recorded bytes only; no Site deployment implied.",
-      "mirror_sha256": "b1d2e2efe0c9247513f8bd4003a9e472f24ff3dbbad85e95ddeaaf7d18fad7f0",
+      "mirror_sha256": "962b8a665294a396813eaa1bbb397de133db7403dc59f29bc0d8d5805cf275fd",
       "site_sha256": "ef937950d49f6d0a209f81122ee1018f0375c3b264a39fe85780a6309ac8cb8f",
       "state": "inherited_repository_overlay"
     },
@@ -5039,7 +5039,7 @@
       "state": "identical"
     },
     "tests/map-hover-sampler.test.mjs": {
-      "mirror_sha256": "a1c41a82c735433ea199d6169bb1cce1dd5965bb040d61944679b75662df542e",
+      "mirror_sha256": "eed920f49238167bc9dab04bf898a1569134a5ed1a741c0d640087e4a3956cfb",
       "site_sha256": "d9b842a450f34eb9ce61b31ff078683f76b94f4979a8f9d4b445323e6e6e18e2",
       "state": "inherited_repository_overlay"
     },
@@ -5619,7 +5619,7 @@
     ]
   },
   "inventory_digest_basis": "SHA256 of compact sorted JSON mapping mirrored paths to mirror_sha256 values; canonical mappings recorded separately.",
-  "inventory_sha256": "b730da4af77ae2cf9507bc236c5e4a243d94d4acf902cbafc8edc965a9d54f02",
+  "inventory_sha256": "e53f8a361a66f37592fc9d4b225798cf0141f4e3d361ef12d72760e14cda9ddb",
   "overlay": {
     "scope": "The 258 hashes identify historical v261 carriers now absent from both current source trees. The retained deny list is containment history, not current Site bytes or approval.",
     "withheld_paths": [
@@ -7689,8 +7689,8 @@
       }
     ]
   },
-  "predecessor_receipt": "site-v268-aviation-near-here-dossier-20261025.json",
-  "predecessor_receipt_sha256": "0bbc3d604015b3047dc232ff5e826c41fd60a1abbbde89105a14c98c850a7cf3",
+  "predecessor_receipt": "site-v268-aviation-dossier-inspect-20261025.json",
+  "predecessor_receipt_sha256": "a53e700ceca43dfc502f410a3693702a4b73236b736997b09ca5b50376d9bc56",
   "profile": "kfm.site-mirror-receipt/v1",
   "reconciliation": {
     "base_site": "8b4c03a5ba2c803d1f323460a23778adc8e4c76b",
@@ -7789,10 +7789,10 @@
   },
   "recorded_at": "2026-10-25T18:24:02.526485+00:00",
   "repository_base": "5ff78dacc4f035e92959625155994979a2640c17",
-  "repository_reconciled_base": "965b8783c171a14275e9b25e1ef84c0b174fb9f8",
+  "repository_reconciled_base": "852dcafa68ae04bc4e9bedb4d5513bf44e41e687",
   "repository_reconciliation": {
     "authority": "CONTENT_PARITY_ONLY",
-    "base_commit": "965b8783c171a14275e9b25e1ef84c0b174fb9f8",
+    "base_commit": "852dcafa68ae04bc4e9bedb4d5513bf44e41e687",
     "changes": [
       {
         "mirror_sha256": "19aaa3bdf8b4c4f4cfb5a7b75fa482944da6aec58d73618d493ec50033486d80",
@@ -7803,11 +7803,11 @@
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "c58d20e4df4d3ac71a7fc72e0995fd2cf956dc69c3a64aef66bf0dcb90fbec31",
+        "mirror_sha256": "b29c984c7e18dda5711a8b55369eda3b275226c77e91090ee1a008c7fa8c2737",
         "path": "app/aviation-control.tsx",
-        "previous_receipt_sha256": "8fc0088c416bcc9a724093f6c0ae4a468ca8477c5ba71f0cc29328539ea9533e",
+        "previous_receipt_sha256": "c9bd95ced2dfc79ea1d6f9595312d564c2b504bfc58d16fb355ac044a5c2082d",
         "proposed_in_this_change": true,
-        "repository_base_sha256": "8fc0088c416bcc9a724093f6c0ae4a468ca8477c5ba71f0cc29328539ea9533e",
+        "repository_base_sha256": "c9bd95ced2dfc79ea1d6f9595312d564c2b504bfc58d16fb355ac044a5c2082d",
         "state": "repository_only_overlay"
       },
       {
@@ -7819,27 +7819,27 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "43f91057b48579c967918ce441348e706b611c7f2da309cbebb0c71237be69d3",
+        "mirror_sha256": "ad3de009143dc2eeefc54310e309facb707d54c24b13cab3f842b350b23531b6",
         "path": "app/page.tsx",
-        "previous_receipt_sha256": "e12c8276a24c4f32c69ed832bd32180bccb58137f9f7973df55dd77e6de2f9b6",
+        "previous_receipt_sha256": "2742a1996e75d2aa836bf1c4476acc23b14e7e8105e132d6f09f1b854785f45b",
         "proposed_in_this_change": true,
-        "repository_base_sha256": "e12c8276a24c4f32c69ed832bd32180bccb58137f9f7973df55dd77e6de2f9b6",
+        "repository_base_sha256": "2742a1996e75d2aa836bf1c4476acc23b14e7e8105e132d6f09f1b854785f45b",
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "8ef0bb1bcfc547a3a0b93c32ea2ab5701c7051558c34dc6e2867eff0c07b3449",
+        "mirror_sha256": "232f0b38b8c3f292e49fbe887046685f5a26f3f464fe3a685cb7a24a08ff88bf",
         "path": "docs/aviation-layers.md",
-        "previous_receipt_sha256": "83bbf379c024e5fe8cf7987aa8586deeca81740e89843aa06c94c25722823f0c",
+        "previous_receipt_sha256": "f9c56322068e117c27b44a72efc4862594a7f740dce3a26faf1665a7793cfddd",
         "proposed_in_this_change": true,
-        "repository_base_sha256": "83bbf379c024e5fe8cf7987aa8586deeca81740e89843aa06c94c25722823f0c",
+        "repository_base_sha256": "f9c56322068e117c27b44a72efc4862594a7f740dce3a26faf1665a7793cfddd",
         "state": "repository_only_overlay"
       },
       {
-        "mirror_sha256": "3c581043d0cdc5fb956ef3643faec6e43b49abe5896108f5ba04f1ce0afb7531",
+        "mirror_sha256": "46d90f7d79558849774b2ae2e932cb073123554f245ffd3dffdec8eb4705e165",
         "path": "tests/aviation.test.mjs",
-        "previous_receipt_sha256": "c4ffa3a192429039fbe94fb0eca845f95ded70cef1f0450f801b0c61bd524181",
+        "previous_receipt_sha256": "9edf2ef0dc0b1d3fbc0d1a6b1a0d2f66fa10ec1b54fd176bc698363ec01ba9e5",
         "proposed_in_this_change": true,
-        "repository_base_sha256": "c4ffa3a192429039fbe94fb0eca845f95ded70cef1f0450f801b0c61bd524181",
+        "repository_base_sha256": "9edf2ef0dc0b1d3fbc0d1a6b1a0d2f66fa10ec1b54fd176bc698363ec01ba9e5",
         "state": "repository_only_overlay"
       },
       {
@@ -7851,7 +7851,7 @@
         "state": "inherited_repository_overlay"
       },
       {
-        "mirror_sha256": "a1c41a82c735433ea199d6169bb1cce1dd5965bb040d61944679b75662df542e",
+        "mirror_sha256": "eed920f49238167bc9dab04bf898a1569134a5ed1a741c0d640087e4a3956cfb",
         "path": "tests/map-hover-sampler.test.mjs",
         "previous_receipt_sha256": "d9b842a450f34eb9ce61b31ff078683f76b94f4979a8f9d4b445323e6e6e18e2",
         "proposed_in_this_change": true,
@@ -7864,6 +7864,14 @@
         "previous_receipt_sha256": "b1aa0d42a55a41abaec40b46f7b5efc800200664131f3c660d0e9cfa75418eeb",
         "proposed_in_this_change": true,
         "repository_base_sha256": "b1aa0d42a55a41abaec40b46f7b5efc800200664131f3c660d0e9cfa75418eeb",
+        "state": "inherited_repository_overlay"
+      },
+      {
+        "mirror_sha256": "962b8a665294a396813eaa1bbb397de133db7403dc59f29bc0d8d5805cf275fd",
+        "path": "tests/inspection-panel.test.mjs",
+        "previous_receipt_sha256": "b1d2e2efe0c9247513f8bd4003a9e472f24ff3dbbad85e95ddeaaf7d18fad7f0",
+        "proposed_in_this_change": true,
+        "repository_base_sha256": "b1d2e2efe0c9247513f8bd4003a9e472f24ff3dbbad85e95ddeaaf7d18fad7f0",
         "state": "inherited_repository_overlay"
       }
     ],
@@ -7887,7 +7895,7 @@
     "source_and_overlay_review": "PENDING"
   },
   "rollback": {
-    "mirror": "Revert this successor, selector, tests and application corrections together to select site-v268-aviation-near-here-dossier-20261025.json. Preserve historical receipts.",
+    "mirror": "Revert the qualification successor and selector together to select site-v268-aviation-dossier-inspect-20261025.json. Preserve merged historical receipts.",
     "runtime": "No data or storage migration; restore prior UI by reverting the follow-up commit.",
     "site": "No public deployment performed."
   },
@@ -7910,11 +7918,12 @@
   "site_version_id": "appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_c76832df88b881918a36e35dbbfed33b",
   "status": "REVIEW_ONLY",
   "validation": {
-    "application_validation": "PASS locally: production build, TypeScript, focused ESLint (0 errors, 42 existing page warnings), 44 aviation tests and changed callback suites. Full suite before final copy qualification: 1448 tests, 1447 passed, 1 skipped, 0 failed. Exact-head hosted results remain separate.",
+    "application_validation": "PASS locally: reviewed production build, TypeScript, focused ESLint (0 errors; 42 existing warnings), 45 aviation and 4 hover tests. Inspection-panel consumer harness updated and passes. New complete-suite result and exact-head hosted checks are recorded separately in the PR.",
     "deployment": "NOT_PERFORMED",
     "github_exact_head_checks": "PENDING",
     "historical_validation": "Historical receipts preserved byte-for-byte.",
+    "independent_review_followup": "Two P2 findings on 7746c4f7 corrected: capture and consume Escape before the compact panel, cancel pending hover drawer timer and guard already-queued callback. Actual callback regressions added; new-head review and hosted checks pending. Draft receipt revision 7746c4f7 remains retrievable in Git; merged main historical receipts are unchanged.",
     "local_content_parity": "Content parity only; review acceptance NOT_EVALUATED and hosted_equivalence false.",
-    "native_browser": "Native Chrome: desktop 1707x865 and phone 390x844; 2D/MSL/drone slices, 3D camera and exaggeration, real A/B clicks without underlying selection, map-center keyboard placement, chart keyboard scrolling, Escape, named facility fallback and loaded DEM point reference. Native reduced-motion emulation not forced; component test passes. Public deployment not performed."
+    "native_browser": "Native Chrome: desktop 1707x865 and phone 390x844; 2D/MSL/drone slices, 3D camera and exaggeration, real A/B clicks without underlying selection, map-center keyboard placement, chart keyboard scrolling, Escape, named facility fallback and loaded DEM point reference. Native reduced-motion emulation not forced; component test passes. Public deployment not performed. Post-review native phone check: Escape from both the draw toggle and map-center B cancels the tool while leaving the compact layer panel open. Listed-TFR retrieval timestamp and future-date qualification visually read back."
   }
 }

@@ -379,3 +379,24 @@ effective times. Full local suite: 1,448 tests, 1,447 passed, 1 skipped, 0 faile
 Changed-area checks: 44 aviation, 16 local-atlas, 3 hover and 11 scene tests pass;
 TypeScript passes; focused ESLint has 0 errors and 42 existing page warnings.
 Mirror checks pass: 62 tests, 902 files, 258 withheld paths absent.
+
+
+### Independent review corrections and #5467 reconciliation
+
+The independent Codex review of 7746c4f7 found two P2 cases: the compact panel
+consumed Escape before the aviation listener; a previously scheduled 240 ms hover
+preview could open after aviation took ownership. The follow-up captures and
+consumes aviation Escape first, cancels the pending preview timer and candidate
+on ownership transfer, and guards an already-queued callback. Tests execute the
+actual ownership/hover callbacks and verify ordinary preview resumption.
+
+Native phone checks on the corrected production build cancelled from the A/B
+toggle and map-center B, leaving the layer panel open with drawing off. The new
+listed-TFR retrieval timestamp and future-date wording were read back visually.
+
+#5467 merged during review at 852dcafa68ae04bc4e9bedb4d5513bf44e41e687. Its
+inspection-request prop, details ref, dossier wiring and tests were retained.
+The selected qualification receipt now follows its immutable dossier-inspect
+receipt. The earlier draft receipt remains retrievable at 7746c4f7 in Git.
+Source hashes, all merged historical receipts and 258 withheld paths are
+preserved. New-head independent review and hosted checks remain separate.
