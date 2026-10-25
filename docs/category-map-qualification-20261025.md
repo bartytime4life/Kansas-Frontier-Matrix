@@ -70,6 +70,20 @@ at all four phone/tablet layouts before the fix, and passes at 320×568,
 not claim live-tile rendering or hydrated callback acceptance; those are
 separately covered by native UI review and the component regressions.
 
+The repaired phone dock was rechecked on the hydrated build: both action
+buttons passed elementFromPoint, their bottom was 723.33 pixels above the
+navigation rail's 753.67-pixel top, and a native tap opened Layers. After
+cancellation, an ordinary desktop click selected Rice County and opened the
+existing Evidence Drawer with its dated 2020 Census and no-EvidenceBundle
+qualification intact.
+
+That review also exposed faint summary text on the drawer's paper card.
+Source/time/limitation text now inherits the card's foreground instead of
+using the dark panel's light colors. A native computed-color regression
+checks at least 4.5:1 contrast under both stylesheet orders; the old gold
+label failed at 1.50:1. The test uses the actual paper-card and summary CSS.
+Changed-file ESLint has zero errors and 41 existing page warnings.
+
 Some live aviation services returned context during local review; METAR returned
 unavailable, and some basemap tiles failed. The viewer displayed the explicit
 unavailable-observation and partial-map-degradation messages, retained controls,

@@ -88,6 +88,27 @@ for (const [width, height] of [[320, 568], [390, 844], [568, 320], [760, 700], [
   });
 }
 
+test('category evidence summary keeps source qualifications readable on its paper card', { timeout: 30000 }, async t => {
+  const b = await browser(t), { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
+  const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
+  const call = (method, params = {}) => b.call(method, params, sessionId);
+  await call('Page.enable'); await call('Runtime.enable'); await call('Network.enable');
+  await call('Network.setBlockedURLs', { urls: ['*'] });
+  const { frameTree } = await call('Page.getFrameTree');
+  const globals = await readFile('app/globals.css', 'utf8'), paper = await readFile('app/research.module.css', 'utf8'), facts = await readFile('app/evidence-summary.css', 'utf8');
+  const luminance = color => color.match(/[\d.]+/g).slice(0, 3).map(Number).map(v => v / 255).map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4).reduce((sum, v, i) => sum + v * [.2126, .7152, .0722][i], 0);
+  for (const css of [globals + paper + facts, globals + facts + paper]) {
+    await call('Page.setDocumentContent', { frameId: frameTree.frame.id, html: `<!doctype html><html><head><style>${css}</style></head><body><section class="summary"><h3>Selected record</h3><dl class="drawer-facts"><div><dt>Source &amp; limits</dt><dd><strong>U.S. Census Bureau</strong> · External context only · no KFM EvidenceBundle<p>Dated source context. Missing coverage does not establish clearance.</p></dd></div></dl></section></body></html>` });
+    const result = await call('Runtime.evaluate', { expression: `({background:getComputedStyle(document.querySelector('.summary')).backgroundColor,colors:[...document.querySelectorAll('.drawer-facts dt,.drawer-facts dd,.drawer-facts dd strong,.drawer-facts dd p')].map(e=>getComputedStyle(e).color)})`, returnByValue: true });
+    assert.equal(result.exceptionDetails, undefined);
+    const { background, colors } = result.result.value;
+    for (const color of colors) {
+      const a = luminance(color), c = luminance(background), contrast = (Math.max(a, c) + .05) / (Math.min(a, c) + .05);
+      assert.ok(contrast >= 4.5, `${color} on ${background}: contrast ${contrast.toFixed(2)} must be at least 4.5`);
+    }
+  }
+});
+
 async function browser(t) {
   const profile = await mkdtemp(join(tmpdir(), 'kfm-guide-browser-'));
   const child = spawn(chrome, [

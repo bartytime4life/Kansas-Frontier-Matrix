@@ -105,9 +105,9 @@ test("aviation and civic styles follow sun changes across flat, terrain and glob
   function load(id) {
     if (cache.has(id)) return cache.get(id);
     assert.ok(id in compiled, `known dependency ${id}`);
-    const module = { exports: {} }; cache.set(id, module.exports);
-    vm.runInNewContext(compiled[id], { module, exports: module.exports, require: load, URL });
-    cache.set(id, module.exports); return module.exports;
+    const mod = { exports: {} }; cache.set(id, mod.exports);
+    vm.runInNewContext(compiled[id], { module: mod, exports: mod.exports, require: load, URL });
+    cache.set(id, mod.exports); return mod.exports;
   }
   const basemaps = load("./category-basemaps"), overlays = await loadOverlays();
   const id = basemaps.BASEMAP_HILLSHADE_LAYER_ID;
