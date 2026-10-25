@@ -139,8 +139,10 @@ nearby public-use airports and METAR weather stations, with distances. A
 coverage row counts them. Only point records join, per the dossier's rule:
 airspace volumes and TFR areas are polygons and stay out. Private-use strips are
 also excluded, so they cannot crowd the 50-record list near towns, and live
-aircraft are excluded because their positions are transient. Use this layer's
-point inspector or side view for the airspace at a place.
+aircraft are excluded because their positions are transient. **Inspect** on an
+aviation record moves the map there and opens this layer's point inspector at
+that point. It also opens the Layers panel and expands this layer's controls,
+so the inspector is visible and takes focus. Use the side view for the airspace along a line.
 
 ## The airspace column
 

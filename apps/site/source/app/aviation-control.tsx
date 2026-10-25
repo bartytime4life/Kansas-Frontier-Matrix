@@ -105,9 +105,11 @@ function ProfileChart({ points, bands, aircraft }: Readonly<{ points: readonly P
   </svg>;
 }
 
-export function AviationControl({ mapRef, styleReady, onSelectionChange, onResearchRecords }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void;
+export function AviationControl({ mapRef, styleReady, onSelectionChange, onResearchRecords, inspectRequest }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void;
   /** Points this layer offers the "Near here" dossier while shown; null while hidden or loading. */
-  onResearchRecords?: (records: readonly ResearchRecord[] | null) => void }) {
+  onResearchRecords?: (records: readonly ResearchRecord[] | null) => void;
+  /** A dossier "Inspect" on an aviation record: open this layer's point inspector there (a new nonce each time). */
+  inspectRequest?: Readonly<{ lon: number; lat: number; label: string; nonce: number }> | null }) {
   const [visible, setVisible] = useState(false);
   const [contextState, setContextState] = useState<LoadState>("idle");
   const [context, setContext] = useState<AviationContext | null>(null);
@@ -351,6 +353,22 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange, onResea
     return () => { map.off("click", clicked); map.getCanvas().style.cursor = ""; };
   }, [mapRef, picking]);
 
+  // Dossier "Inspect" on an airport or weather station: the airspace column, drone rule and weather at that point.
+  const inspectorRef = useRef<HTMLDivElement | null>(null);
+  const detailsRef = useRef<HTMLDetailsElement | null>(null);
+  const focusInspector = useRef(false);
+  useEffect(() => {
+    if (!inspectRequest || !context) return;
+    const map = mapRef.current;
+    focusInspector.current = true;
+    // The inspector sits inside the collapsible controls; expand them so it can be seen and focused.
+    if (detailsRef.current) detailsRef.current.open = true;
+    setPicked({ lon: inspectRequest.lon, lat: inspectRequest.lat, label: inspectRequest.label, terrainFt: map ? terrainFtAt(map, inspectRequest.lon, inspectRequest.lat) : null });
+  }, [inspectRequest, context, mapRef]);
+  useEffect(() => {
+    if (focusInspector.current && picked && inspectorRef.current) { focusInspector.current = false; inspectorRef.current.focus(); }
+  }, [picked]);
+
   // Side view: two clicks, A then B. Ground at each sample uses loaded terrain where it agrees with the nearest facility.
   useEffect(() => {
     const map = mapRef.current;
@@ -430,7 +448,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange, onResea
 
   return <section className="official-context-row" aria-label="Airspace, airports and aviation weather">
     <div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visible} aria-label={visible ? "Hide airspace and aviation layers" : "Show airspace and aviation layers"} onChange={event => { setVisible(event.target.checked); if (event.target.checked) setRender("Waiting for map frame"); }} /><span aria-hidden="true" /></label><i style={{ "--swatch": AIRSPACE_COLORS.CLASS_C } as React.CSSProperties} /><div><strong>Airspace, airports &amp; aviation weather</strong><small>FAA NASR · NOAA AWC · {visible ? shownRender : "Off"}</small></div></div>
-    <details className="specialty-layer-details"><summary>Airspace shells, drone zones, weather &amp; controls</summary><div className="official-context-option-body">
+    <details className="specialty-layer-details" ref={detailsRef}><summary>Airspace shells, drone zones, weather &amp; controls</summary><div className="official-context-option-body">
       <p><strong>Not for navigation, flight planning or drone authorization.</strong> Check current FAA charts, NOTAMs and TFRs, and use B4UFLY / LAANC before flying. TFR boundaries are drawn from the FAA detail files; times and exceptions are in each NOTAM.</p>
       {contextState === "loading" && <p role="status">Loading the pinned FAA NASR airspace product…</p>}
       {contextState === "error" && <p role="status">Airspace context unavailable: {contextError} Nothing is drawn in its place.</p>}
@@ -491,7 +509,7 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange, onResea
               {profile.summary.length > 0 ? <ul>{profile.summary.map(line => <li key={line}>{line}</li>)}</ul> : <> No charted volume or TFR crosses this line.</>}
               <button type="button" onClick={() => setSide(null)}>Clear side view</button></figcaption>
           </figure>}
-          {inspection && picked && <div className="aviation-column">
+          {inspection && picked && <div className="aviation-column" data-aviation-inspector tabIndex={-1} ref={inspectorRef}>
             <p><strong>{picked.label}</strong> · ground {feet(inspection.groundFt)} MSL {inspection.ground.method === "TERRAIN_DEM" ? "(terrain elevation at this point)" : inspection.ground.method === "NEAREST_FACILITY" ? `(nearest facility ${inspection.ground.facility}, ${(inspection.ground.km ?? 0).toFixed(1)} km${inspection.ground.terrainRejected ? "; the terrain reading here disagreed by over 1,000 ft and was not used" : "; turn on 3D terrain for the local ground"})` : "(no ground reference)"}</p>
             <p style={{ borderLeft: `4px solid ${DRONE_RULE_COLORS[inspection.drone.rule.code]}`, paddingLeft: 8 }}><strong>Drone, SFC–400 ft AGL:</strong> {inspection.drone.rule.title}. {inspection.drone.rule.detail} <small>({inspection.drone.governing} · {inspection.drone.rule.cite})</small></p>
             {inspection.laanc && <p><strong>LAANC ceiling here:</strong> {inspection.laanc.ceilingFt} ft AGL{inspection.laanc.airport ? ` (${inspection.laanc.airportName ?? inspection.laanc.airport} grid)` : ""}. {inspection.laanc.ceilingFt === 0 ? "LAANC cannot approve flight in this cell; request a DroneZone authorization." : "LAANC can approve up to this altitude; it is not approval by itself."} <small>(FAA UAS Facility Map)</small></p>}

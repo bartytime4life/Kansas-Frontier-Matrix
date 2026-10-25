@@ -22,6 +22,7 @@ import { GovernedSoilControl } from "./governed-soil-control";
 import { GovernedStormEventsControl } from "./governed-storm-events-control";
 import { GovernedEarthquakesControl } from "./governed-earthquakes-control";
 import { AviationControl } from "./aviation-control";
+import { AVIATION_RESEARCH_SOURCE } from "./aviation-research";
 import { LivingWatersControl } from "./living-waters-control";
 import { LIVING_WATERS_SOURCE } from "./living-waters-fixture";
 import { resizeMapAfterLayout } from "./cutaway-locator";
@@ -1632,6 +1633,7 @@ export default function Home() {
   const [reviewedEarthquakesSelected, setReviewedEarthquakesSelected] = useState(false);
   const [aviationSelected, setAviationSelected] = useState(false);
   const [aviationResearch, setAviationResearch] = useState<readonly ResearchRecord[] | null>(null);
+  const [aviationInspect, setAviationInspect] = useState<Readonly<{ lon: number; lat: number; label: string; nonce: number }> | null>(null);
   const [soilMapState, setSoilMapState] = useState<SoilMapState>(DEFAULT_SOIL_MAP_STATE);
   const changeSoilMapState = useCallback((next: Partial<SoilMapState>) => setSoilMapState(current => ({ ...current, ...next })), []);
   const [soilMoistureContext, setSoilMoistureContext] = useState<SoilMoistureEngineContext | null>(null);
@@ -8123,6 +8125,21 @@ export default function Home() {
       announce("This record is no longer in the eligible loaded data. Its captured source details remain in the dossier."); return;
     }
     researchResultFocusRef.current = researchIdentity(record);
+    if (record.kind === "provider" && (Object.values(AVIATION_RESEARCH_SOURCE) as string[]).includes(record.sourceId)) {
+      // Aviation points open the aviation layer's own point inspector: airspace column, drone rule and weather there.
+      const [lon, lat] = record.coordinates;
+      setAviationInspect({ lon, lat, label: record.title, nonce: Date.now() });
+      mapRef.current?.easeTo({ center: [lon, lat], zoom: Math.max(mapRef.current.getZoom(), 10), duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 600 });
+      setResearchOpen(false);
+      // The inspector lives in the Layers panel, which a compact dossier closed (and made inert).
+      setSourceStatusOpen(false);
+      setLeftPanelMode("layers");
+      setLeftOpen(true);
+      if (isCompact) { setRightOpen(false); setTimelineOpen(false); }
+      announce(shownCatalogIds.has("aviation") ? "Opened in the airspace, airports and aviation weather point inspector."
+        : "Opened in the aviation point inspector, which the current catalog search hides; clear the search to see it.");
+      return;
+    }
     if (record.kind === "registry") {
       const layer = LAYER_REGISTRY.find(item => visibility[item.id] && item.sourceId === record.sourceId && item.data.features.some(feature => feature.properties.fid === record.featureId));
       if (!layer) { announce("This registry source is no longer available."); return; }
@@ -9671,7 +9688,7 @@ export default function Home() {
             <div hidden={!shownCatalogIds.has("reviewed-soil")}><GovernedSoilControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedSoilSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-storm-events")}><GovernedStormEventsControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedStormEventsSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-earthquakes")}><GovernedEarthquakesControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedEarthquakesSelected} /></div>
-            <div hidden={!shownCatalogIds.has("aviation")}><AviationControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} /></div>
+            <div hidden={!shownCatalogIds.has("aviation")}><AviationControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} inspectRequest={aviationInspect} /></div>
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
             <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
             {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}

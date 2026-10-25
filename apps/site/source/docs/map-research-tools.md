@@ -25,7 +25,9 @@ registry anchors and loaded point responses from existing provider adapters,
 including the loaded KGS monitoring-location snapshot. While the airspace,
 airports and aviation weather layer is shown, it adds its public-use airports
 (FAA NASR reference points) and METAR stations (latest observation), with
-their own coverage row. Its airspace volumes and TFR areas are polygons and
+their own coverage row. **Inspect** on one of those records opens the aviation
+layer's point inspector there, showing the airspace column, drone rule, weather
+and TFRs at that spot. The Layers panel opens with that layer's controls expanded. Its airspace volumes and TFR areas are polygons and
 stay out, as do private-use strips and live aircraft. Provider reads reuse
 application responses or MapLibre's public `getData()` for that snapshot.
 Canceled reads cannot replace a newer inventory. Loading, failed and held
