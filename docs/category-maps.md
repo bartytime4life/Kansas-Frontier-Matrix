@@ -12,6 +12,7 @@ one map look:
 | `camera` | Center, zoom, pitch and bearing. Only 3D looks start tilted. |
 | `starters` | Existing official provider-context ids that are switched **on**. They are never switched off. |
 | `swatch` | Three colours used to sketch the basemap on the start card and the dock. |
+| `light` | Optional scene recipe (`daylight`, `golden`, `blue`, `survey`) the look opens under. Only its atmosphere and sun azimuth are applied, through `changeStudioLight`, so the visitor's effect settings never change. Relief looks use a raking sun (Terrain golden, Geology/Engineering/Groundwater survey), weather and water a dark sky (`blue`), aviation `daylight`. **Reset view** restores it. |
 
 Choosing a look is presentation and navigation only. Starters are the same
 provider-context switches the Layers panel offers, with their own source clocks,

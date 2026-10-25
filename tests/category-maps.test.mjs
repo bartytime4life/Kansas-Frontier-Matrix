@@ -93,3 +93,19 @@ test('the Layers topic guide shows the category map look and opens it only when 
  assert.match(page,/<TopicGuide value=\{officialWorkspace\}[\s\S]{0,200}?mapLook=\{activeCategoryMap \? \{ name: activeCategoryMap\.name[\s\S]{0,300}?active: activeCategoryMap\.basemap === basemap \} : null\}/);
  assert.match(page,/onOpenMap=\{activeCategoryMap \? \(\) => openCategoryMap\(activeCategoryMap\.topic\) : undefined\}/);
 });
+
+test('each look can open under its own light, applied as atmosphere and sun only',async()=>{
+ const studio=await readFile('app/scene-studio.ts','utf8');
+ const recipes=[...studio.matchAll(/^  (\w+): \{ label:/gm)].map(m=>m[1]);
+ assert.deepEqual(recipes,['daylight','golden','blue','survey']);
+ for(const [id,look] of Object.entries(maps.CATEGORY_MAPS))if(look.light!==undefined)assert.ok(recipes.includes(look.light),`${id}: ${look.light} is a scene recipe`);
+ assert.equal(maps.CATEGORY_MAPS.terrain.light,'golden','relief under a raking sun');
+ assert.equal(maps.CATEGORY_MAPS.weather.light,'blue','weather on a dark sky');
+ const page=await readFile('app/page.tsx','utf8');
+ const open=page.slice(page.indexOf('  const openCategoryMap = (topic: TopicId) => {'),page.indexOf('  const runWelcomeMap ='));
+ assert.match(open,/if \(look\.light\) changeStudioLight\(\{ atmosphere: SCENE_RECIPES\[look\.light\]\.atmosphere, azimuth: SCENE_RECIPES\[look\.light\]\.azimuth \}\);/);
+ assert.ok(open.indexOf('changeStudioLight')>open.indexOf('activateMapRepresentation(look.scene)'),'the look light wins over the representation default');
+ assert.doesNotMatch(open,/updateSceneEffects|chooseSceneRecipe|sceneRecipePresentation/,'effect settings the visitor chose are never rewritten');
+ const reset=page.slice(page.indexOf('  const resetCategoryView = () => {'),page.indexOf('announce(`${activeCategoryMap.name} view reset`)'));
+ assert.match(reset,/changeStudioLight\(\{ atmosphere: SCENE_RECIPES\[activeCategoryMap\.light\]\.atmosphere/,'Reset view restores the look light too');
+});
