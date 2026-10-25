@@ -43,8 +43,8 @@ rooftop. Contacts, owner names and remarks are never copied.
   without the using agency's permission (14 CFR 107.45). Amber: controlled
   airspace reaches the ground, so FAA/ATC authorization (LAANC or DroneZone) is
   required (14 CFR 107.41; 49 U.S.C. 44809(a)(5)). Yellow: MOA or alert area
-  reaching low altitude, caution. Unshaded is Class G: up to 400 ft AGL without
-  ATC authorization (14 CFR 107.51(b)).
+  reaching low altitude, caution. Unshaded means no drone rule is drawn. It does not establish Class G or
+  permission: hidden, missing or unreadable source information can conceal restrictions.
 - **LAANC grid (zoom 8+).** Each FAA UAS Facility Map cell is extruded from the
   ground to the altitude LAANC can approve there: 0 ft red (DroneZone request
   only), 50/100/200/300 ft, 400 ft green. Ceiling labels appear at zoom 11.5+.
@@ -101,11 +101,10 @@ The panel switches between two drawings of the same features:
 - **Altitude slice (2D only).** "All altitudes" draws everything. "Drone
   altitudes" keeps forms that start below 400 ft AGL. A level from 1,500 to
   25,000 ft MSL keeps only forms that contain that altitude. Aircraft, pilot
-  reports and cloud bases are kept within 1,000 ft of the level. Where nothing
-  is drawn, the airspace is Class E or G (the column inspector lists it); from
+  reports and cloud bases are kept within 1,000 ft of the level. An unshaded area can include hidden or unavailable volumes; from
   FL180 Class A covers the whole region and is not a shape. Slice heights come
-  from the same drawn floors and ceilings as the 3D forms, so the two views
-  cannot disagree.
+  from the same drawn floors and ceilings as the 3D forms, so the two map modes use the same source limits. Their placement still depends
+  on approximate facility ground references; it is not surveyed altitude.
 
 ## Side view (cross-section)
 
@@ -214,3 +213,36 @@ Cloud bases never substitute for an aircraft's missing altitude. See the
 
 Verification: `tests/aviation.test.mjs`, `tests/layer-explorer.test.mjs`, and
 in the monorepo `tests/connectors/test_faa_airspace.py`.
+
+
+## Browser qualification corrections — October 25, 2026
+
+Native Chrome interaction against the #5465 merge reproduced county selection
+and an unsolicited Evidence Drawer opening on each cross-section click. Aviation
+point/profile picking now owns those clicks while active; normal evidence
+selection resumes afterwards. The Near-here records from #5466 remain available.
+
+A narrow sidebar previously reduced the 640-unit SVG to roughly 278 pixels. The
+chart now keeps a readable minimum width in a keyboard-focusable horizontal
+scroll region. Numbered bands match an ordered crossing list. A and B may also
+be placed at the map center after keyboard panning. Escape cancels; identical or
+overlong points produce visible feedback. Camera transitions respect reduced
+motion. Hiding aviation cancels its active drawing tool.
+
+The brown ground profile uses qualified loaded DEM readings or nearby facility
+elevations. AGL/surface bounds in the profile follow that sampled ground; map
+forms use source/facility references. These approximate placements can differ
+with terrain. Flight levels are pressure references approximated on an MSL axis
+without pressure correction. The cross-section samples 241 points and ends at
+20,000 ft; narrow unsampled areas and higher volumes can be absent.
+
+The NASR cycle remains a preview until October 29. A successful live TFR parser
+response is not an independent completeness assessment of the FAA feed. Missing
+geometry, nonactivated NOTAM areas, receiver gaps and unavailable observations
+remain explicit limitations. These displays do not provide flight clearance,
+flight planning, navigation or drone authorization. Public deployment and
+independent review are separate acceptance gates.
+
+The TFR panel describes **listed**, rather than verified active, areas and shows
+its retrieval timestamp. A future-dated listed NOTAM is not represented as a
+current prohibition; its effective times and exceptions still require FAA review.

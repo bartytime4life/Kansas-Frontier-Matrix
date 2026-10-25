@@ -1631,6 +1631,8 @@ export default function Home() {
   const [reviewedStormEventsSelected, setReviewedStormEventsSelected] = useState(false);
   const [reviewedEarthquakesSelected, setReviewedEarthquakesSelected] = useState(false);
   const [aviationSelected, setAviationSelected] = useState(false);
+  const aviationPickingRef = useRef(false);
+  const setAviationPicking = useCallback((active: boolean) => { aviationPickingRef.current = active; }, []);
   const [aviationResearch, setAviationResearch] = useState<readonly ResearchRecord[] | null>(null);
   const [soilMapState, setSoilMapState] = useState<SoilMapState>(DEFAULT_SOIL_MAP_STATE);
   const changeSoilMapState = useCallback((next: Partial<SoilMapState>) => setSoilMapState(current => ({ ...current, ...next })), []);
@@ -5326,7 +5328,7 @@ export default function Home() {
             && current.subtitle === summary.subtitle && current.state === summary.state ? current : summary);
         };
         const hoverSampler = createMapHoverSampler<MapMouseEvent>((event) => {
-          if (disposed || !styleGenerationReadyRef.current || document.hidden) return;
+          if (disposed || aviationPickingRef.current || !styleGenerationReadyRef.current || document.hidden) return;
           if (undergroundOpenRef.current && !measureModeRef.current) return;
           if (map.isMoving()) { clearHoverCandidate(); return; }
           if (scenePresetRef.current === "elevation-3d" && styleGenerationReadyRef.current
@@ -5419,7 +5421,7 @@ export default function Home() {
         });
         cancelHoverSample = hoverSampler.cancel;
         map.on("mousemove", (event) => {
-          if (map.isMoving() || !styleGenerationReadyRef.current || document.hidden
+          if (aviationPickingRef.current || map.isMoving() || !styleGenerationReadyRef.current || document.hidden
             || undergroundOpenRef.current && !measureModeRef.current) {
             hoverSampler.cancel(); clearHoverCandidate(); return;
           }
@@ -5439,6 +5441,8 @@ export default function Home() {
         map.on("movestart", () => { hoverSampler.cancel(); clearHoverCandidate(); });
 
         map.on("click", (event) => {
+          // Aviation point/profile tools own these clicks; retain the existing Evidence Drawer selection.
+          if (aviationPickingRef.current) return;
           if (undergroundOpenRef.current && !measureModeRef.current) return;
           if (measureModeRef.current) {
             measureCoordinatesRef.current = measureModeRef.current === "point"
@@ -9671,7 +9675,7 @@ export default function Home() {
             <div hidden={!shownCatalogIds.has("reviewed-soil")}><GovernedSoilControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedSoilSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-storm-events")}><GovernedStormEventsControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedStormEventsSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-earthquakes")}><GovernedEarthquakesControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedEarthquakesSelected} /></div>
-            <div hidden={!shownCatalogIds.has("aviation")}><AviationControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} /></div>
+            <div hidden={!shownCatalogIds.has("aviation")}><AviationControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} onPickingChange={setAviationPicking} /></div>
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
             <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
             {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}

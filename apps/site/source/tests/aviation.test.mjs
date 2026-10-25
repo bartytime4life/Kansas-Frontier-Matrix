@@ -70,7 +70,8 @@ test("drone rules: surface controlled needs authorization, restricted needs agen
   assert.equal(airspace.droneVerdictAtPoint(context, ...SALINA).rule.code, "ATC_AUTHORIZATION_REQUIRED");
   assert.equal(airspace.droneVerdictAtPoint(context, ...FORT_RILEY_RANGE).rule.code, "NO_FLY_WITHOUT_PERMISSION");
   assert.equal(airspace.droneVerdictAtPoint(context, ...RURAL).rule.code, "ABOVE_DRONE_CEILING");
-  assert.match(airspace.droneVerdictAtPoint(context, ...RURAL).rule.title, /Class G/);
+  assert.match(airspace.droneVerdictAtPoint(context, ...RURAL).rule.title, /No surface restriction found/);
+  assert.match(airspace.droneVerdictAtPoint(context, ...RURAL).rule.detail, /does not establish Class G, clearance or permission/);
 });
 
 test("airspace column stacks NASR volumes on the regulatory defaults, surface upward", () => {
@@ -146,7 +147,7 @@ test("the drone verdict judges MSL floors against the picked point's ground", ()
   // Under the Wichita Class C shelf (floor 2,700 MSL): ~1,367 ft above 1,333 ft ground, but 250 ft above 2,450 ft ground.
   assert.equal(airspace.droneVerdictAtPoint(context, -97.6, 37.7, 1333).rule.code, "ABOVE_DRONE_CEILING");
   assert.equal(airspace.droneVerdictAtPoint(context, -97.6, 37.7, 2450).rule.code, "ATC_AUTHORIZATION_REQUIRED");
-  assert.match(airspace.droneVerdictAtPoint(context, -100.35, 39.35).rule.detail, /TFRs still apply \(drawn when their FAA boundary can be read\)/);
+  assert.match(airspace.droneVerdictAtPoint(context, -100.35, 39.35).rule.detail, /Missing or unreadable boundaries may conceal restrictions/);
 });
 
 test("nearest airport and airway proximity", () => {
@@ -733,5 +734,60 @@ test("the aviation layer offers dossier points while shown and withdraws them wh
     assert.ok(offered.at(-1).every(dossier.validResearchRecord));
     toggle(tree).props.onChange({ target: { checked: false } });
     await renderUntil(cycle, () => offered.at(-1) === null, "the withdrawn records");
+  } finally { h.dispose(); }
+});
+
+
+test("aviation drawing owns selection until cancelled and supports keyboard map-center points", { timeout: 15_000 }, async () => {
+  const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
+  const layers = new Map(), sources = new Map(), keys = new Map(), ownership = [], cameras = [];
+  let center = { lng: -97.9, lat: 37.65 };
+  const map = {
+    getLayer: id => layers.get(id), removeLayer: id => layers.delete(id), addLayer: layer => layers.set(layer.id, layer),
+    getSource: id => sources.get(id), removeSource: id => sources.delete(id), addSource: (id, source) => sources.set(id, source),
+    on() {}, off() {}, once() {}, getCanvas: () => ({ style: {} }), getCenter: () => center,
+    getBearing: () => 0, easeTo: value => cameras.push(value),
+  };
+  const fetch = async path => path === airspace.AVIATION_CONTEXT_ASSET.url
+    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
+  const h = await componentHarness("app/aviation-control.tsx", {
+    "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder, Error,
+    window: { matchMedia: () => ({ matches: true }), addEventListener: (key, fn) => keys.set(key, fn), removeEventListener: (key, fn) => { if (keys.get(key) === fn) keys.delete(key); } } });
+  const props = { mapRef: { current: map }, styleReady: true, onPickingChange: value => ownership.push(value) };
+  const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
+  const label = node => typeof node === "object" && node ? [node.props?.children].flat(Infinity).map(label).join("") : String(node ?? "");
+  const button = (tree, text) => findNode(tree, node => node.type === "button" && label(node).includes(text));
+  try {
+    let tree = await cycle();
+    findNode(tree, n => n.type === "input" && n.props["aria-label"] === "Show airspace and aviation layers").props.onChange({ target: { checked: true } });
+    tree = await renderUntil(cycle, t => Boolean(button(t, "Draw a side view")), "the aviation panel");
+    button(tree, "Draw a side view").props.onClick();
+    tree = await renderUntil(cycle, t => Boolean(button(t, "Use map center for A")), "keyboard point A");
+    assert.equal(ownership.at(-1), true);
+    button(tree, "Use map center for A").props.onClick();
+    tree = await renderUntil(cycle, t => Boolean(button(t, "Use map center for B")), "keyboard point B");
+    center = { lng: -96.95, lat: 37.65 };
+    button(tree, "Use map center for B").props.onClick();
+    tree = await renderUntil(cycle, t => Boolean(findNode(t, n => n.props?.["aria-label"] === "Scrollable aviation cross-section chart")), "keyboard cross-section");
+    assert.equal(ownership.at(-1), false);
+    assert.equal(findNode(tree, n => n.props?.["aria-label"] === "Scrollable aviation cross-section chart").props.tabIndex, 0);
+    button(tree, "Draw a side view").props.onClick();
+    tree = await renderUntil(cycle, t => Boolean(button(t, "Use map center for A")), "another side view");
+    button(tree, "Use map center for A").props.onClick();
+    tree = await renderUntil(cycle, t => Boolean(button(t, "Use map center for B")), "same-point test");
+    button(tree, "Use map center for B").props.onClick();
+    tree = await renderUntil(cycle, t => JSON.stringify(t).includes("two distinct points"), "invalid-path feedback");
+    assert.equal(ownership.at(-1), false);
+    button(tree, "Pick a point on the map").props.onClick();
+    tree = await renderUntil(cycle, t => Boolean(button(t, "Inspect map center")), "point inspection");
+    assert.equal(ownership.at(-1), true);
+    keys.get("keydown")({ key: "Escape" });
+    tree = await renderUntil(cycle, t => !button(t, "Inspect map center"), "Escape cancellation");
+    assert.equal(ownership.at(-1), false);
+    findNode(tree, n => n.type === "input" && n.props?.type === "radio" && n.props.checked === false).props.onChange();
+    await cycle();
+    assert.equal(cameras.at(-1).duration, 0, "reduced motion disables aviation camera animation");
   } finally { h.dispose(); }
 });
