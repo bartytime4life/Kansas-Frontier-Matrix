@@ -41,13 +41,34 @@ failures. The focused reconciliation suite reported 103 passing tests. A fresh
 exact-head hosted workflow and independent review remain merge requirements;
 local checks are not their substitutes.
 
+The final aviation suite, including category show-after-hide, passed all 45
+tests. The actual Node HTTP boundary passed 22 tests. Isolated native-browser
+startup/county-search and aviation-layout suites passed 58 and 6 tests,
+respectively, including unavailable external services and mobile layouts.
+
 Native Chrome on the local production build confirmed category navigation,
 aviation preview labeling, map-dock 2D/3D controls and the sun slider, accessible
 altitude slices, compact Escape cancellation without closing Layers, invalid
 same-point feedback, map-center A/B placement and keyboard profile scrolling.
 The chart remained 760 pixels wide in a 299-pixel panel; ArrowRight moved its
-scroll position to 26.67 pixels. Desktop and mobile acceptance continues in this
-PR's validation record.
+scroll position to 26.67 pixels. At the 390×844 phone viewport, the document
+remained 390 pixels wide, the profile was 760 pixels in a 333-pixel scroll
+region, map-center point inspection worked, and Escape at point B cancelled
+drawing while preserving the open Layers sheet. Aviation 3D exaggeration,
+government's illustrative welcome, civic navigation and globe/2D controls were
+also exercised. The phone inspector qualified the loaded DEM reference and
+did not infer clearance from missing surface restrictions.
+
+Phone hit testing found another category-dock defect: the existing bottom
+navigation covered both action buttons. The dock now reserves space above
+that rail through its actual 760-pixel breakpoint and scrolls on short screens.
+A native geometry fixture renders the actual stateless dock component with
+production CSS for both categories and all three modes; it checks viewport
+bounds, horizontal overflow and elementFromPoint for every button. It failed
+at all four phone/tablet layouts before the fix, and passes at 320×568,
+390×844, 568×320, 760×700 and 1440×900 afterward. This geometry fixture does
+not claim live-tile rendering or hydrated callback acceptance; those are
+separately covered by native UI review and the component regressions.
 
 Some live aviation services returned context during local review; METAR returned
 unavailable, and some basemap tiles failed. The viewer displayed the explicit
