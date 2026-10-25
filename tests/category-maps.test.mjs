@@ -103,9 +103,14 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.equal(maps.CATEGORY_MAPS.weather.light,'blue','weather on a dark sky');
  const page=await readFile('app/page.tsx','utf8');
  const open=page.slice(page.indexOf('  const openCategoryMap = (topic: TopicId) => {'),page.indexOf('  const runWelcomeMap ='));
- assert.match(open,/if \(look\.light\) changeStudioLight\(\{ atmosphere: SCENE_RECIPES\[look\.light\]\.atmosphere, azimuth: SCENE_RECIPES\[look\.light\]\.azimuth \}\);/);
- assert.ok(open.indexOf('changeStudioLight')>open.indexOf('activateMapRepresentation(look.scene)'),'the look light wins over the representation default');
+ assert.match(open,/if \(look\.light\) applyCategoryLight\(look\.light\);/);
+ assert.ok(open.indexOf('applyCategoryLight')>open.indexOf('activateMapRepresentation(look.scene)')&&open.indexOf('applyCategoryLight')>open.indexOf('basemapRef.current = look.basemap'),'the look light wins over the representation default and sees the new basemap');
  assert.doesNotMatch(open,/updateSceneEffects|chooseSceneRecipe|sceneRecipePresentation/,'effect settings the visitor chose are never rewritten');
+ const helper=page.slice(page.indexOf('  const applyCategoryLight = (recipe: SceneRecipe) => {'),page.indexOf('  const openCategoryMap = (topic: TopicId) => {'));
+ assert.match(helper,/changeStudioLight\(\{ atmosphere, azimuth \}\);/,'state follows the look');
+ assert.match(helper,/runMapMutation\("Category light", \(\) => \{\s*applySceneEnvironment\(map, atmosphere, azimuth\);/,'and the map is lit now, even when state was already equal');
+ assert.match(helper,/syncSceneOverlays\(map, atmosphere, azimuth, renderEfficientRef\.current\)/,'basemap hillshade re-aims too');
+ assert.doesNotMatch(helper,/updateSceneEffects/);
  const reset=page.slice(page.indexOf('  const resetCategoryView = () => {'),page.indexOf('announce(`${activeCategoryMap.name} view reset`)'));
- assert.match(reset,/changeStudioLight\(\{ atmosphere: SCENE_RECIPES\[activeCategoryMap\.light\]\.atmosphere/,'Reset view restores the look light too');
+ assert.match(reset,/if \(activeCategoryMap\.light\) applyCategoryLight\(activeCategoryMap\.light\);/,'Reset view restores the look light too');
 });
