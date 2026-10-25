@@ -328,3 +328,75 @@ store nothing. Select the predecessor mirror receipt
 For only the parsing correction, revert its application/docs/tests and receipt
 selector together to `site-v268-aviation-layers-overlay-20261022.json`; retain
 historical receipts unchanged.
+
+
+## October 25 native-browser qualification follow-up
+
+Status: candidate corrections, independent review and exact-head hosted checks
+pending. #5465 had already merged at d08e613d2cbf41af929a9f4b377b6694035b5ca5;
+this follow-up starts at #5466's 965b8783c171a14275e9b25e1ef84c0b174fb9f8 and
+preserves its Near-here records. #5467 was open during the final overlap check
+and affects aviation point-inspector wiring; recheck its disposition before merge.
+
+Evidence is native Chrome against a local production build of the candidate,
+not production or a recording-map mock. The #5465 source copy was verified
+against all 901 Git blob hashes before testing. The follow-up preserves the
+902-file mirror inventory.
+
+| Scenario | Observed result |
+|---|---|
+| Desktop, 1707 × 865 CSS pixels | 2D chart, 4,000 ft MSL slice, 3D switch, 3× exaggeration and camera tilt exercised |
+| Real mouse A/B clicks plus keyboard pan | Cross-section completed; no underlying county selection or Evidence Drawer opening while drawing |
+| Phone, 390 × 844 CSS pixels | Drone slice, keyboard map-center A/B placement, readable 760-pixel chart in a 311-pixel scroll region; document has no horizontal overflow |
+| Chart keyboard scrolling | ArrowRight moved scrollLeft to 53.33 CSS pixels |
+| Ground without terrain | Point showed 1,633 ft MSL, nearest facility 9K7 at 18.9 km; reference explicitly stated |
+| Loaded terrain | Terrain 3D reached DEM-ready; a new point inspection used 1,641 ft MSL terrain elevation at the point |
+| Native Escape | Cancelled an armed A/B tool and returned its toggle to off |
+| Source uncertainty | Preview NASR cycle warning, missing-observation states, source limits and non-authorization wording visible |
+| Reduced motion and DEM spike rejection | Deterministic component/unit tests; native OS/media emulation and a real DEM spike were not forced |
+
+Demonstrated defects corrected: draw clicks and deferred hover previews competed
+with evidence selection; the chart shrank to roughly 278 pixels; inaccessible
+map-point placement; invalid paths failed silently; labels could imply clearance
+from unshaded or incomplete data. The camera honors reduced motion in tests.
+
+Data limitations remain: NASR 2026-10-29 is a preview until its effective date;
+TFR parser success is not independent feed-completeness qualification; NOTAM
+activation of other airspace is not implemented; ADS-B coverage is partial;
+241 profile samples can miss narrow areas; chart height stops at 20,000 ft;
+AGL placements depend on approximate ground references; flight levels are
+approximated on an MSL axis without pressure correction. This is not certified
+navigation, flight-planning or drone-authorization guidance.
+
+No public deployment or Sites synchronization was performed. Revert the follow-up
+application changes, receipt selector and receipt regression tests together to
+restore the predecessor. Source bytes, provider requests and stored data are
+unchanged.
+
+The TFR list included a future-dated NOTAM; the follow-up replaces unqualified
+“active” wording with “listed,” exposes retrieval time and requires checking
+effective times. Full local suite: 1,448 tests, 1,447 passed, 1 skipped, 0 failed.
+Changed-area checks: 44 aviation, 16 local-atlas, 3 hover and 11 scene tests pass;
+TypeScript passes; focused ESLint has 0 errors and 42 existing page warnings.
+Mirror checks pass: 62 tests, 902 files, 258 withheld paths absent.
+
+
+### Independent review corrections and #5467 reconciliation
+
+The independent Codex review of 7746c4f7 found two P2 cases: the compact panel
+consumed Escape before the aviation listener; a previously scheduled 240 ms hover
+preview could open after aviation took ownership. The follow-up captures and
+consumes aviation Escape first, cancels the pending preview timer and candidate
+on ownership transfer, and guards an already-queued callback. Tests execute the
+actual ownership/hover callbacks and verify ordinary preview resumption.
+
+Native phone checks on the corrected production build cancelled from the A/B
+toggle and map-center B, leaving the layer panel open with drawing off. The new
+listed-TFR retrieval timestamp and future-date wording were read back visually.
+
+#5467 merged during review at 852dcafa68ae04bc4e9bedb4d5513bf44e41e687. Its
+inspection-request prop, details ref, dossier wiring and tests were retained.
+The selected qualification receipt now follows its immutable dossier-inspect
+receipt. The earlier draft receipt remains retrievable at 7746c4f7 in Git.
+Source hashes, all merged historical receipts and 258 withheld paths are
+preserved. New-head independent review and hosted checks remain separate.

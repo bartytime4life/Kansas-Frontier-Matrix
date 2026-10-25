@@ -175,6 +175,13 @@
 .official-context-options[open] > summary { color: #edc67b; }
 .official-context-option-body { border-top: 1px solid #29474b; padding: 12px 16px 15px; }
 .official-context-option-body .opacity-control { margin: 0 0 12px; }
+.aviation-profile { margin: 12px 0; min-width: 0; }
+.aviation-profile-scroll { max-width: 100%; overflow-x: auto; border: 1px solid #7a9395; border-radius: 4px; }
+.aviation-profile-scroll:focus-visible { outline: 2px solid #dfc16a; outline-offset: 2px; }
+.aviation-profile-scroll svg { display: block; min-width: 760px; width: 100%; }
+.aviation-profile figcaption { font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.aviation-profile figcaption ol { padding-left: 22px; }
+.aviation-profile figcaption li { margin: 8px 0; }
 .terrain-layer-key { display: block; margin: 0 0 12px; color: #c7d6ce; font-size: 11px; line-height: 1.5; }
 .terrain-layer-key::before { content: ""; display: block; height: 7px; margin-bottom: 6px; border-radius: 4px; background: linear-gradient(90deg, #b7b5ae, #e7db9a 52%, #a76945); }
 .official-context-option-body .source-time-control { margin: 0 0 12px; }

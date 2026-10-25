@@ -1001,7 +1001,7 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
     assert result["authority"] == "CONTENT_PARITY_ONLY"
-    assert result["file_states"]["inherited_repository_overlay"] == 59
+    assert result["file_states"]["inherited_repository_overlay"] == 62
     assert result["file_states"]["repository_only_overlay"] == 37
     assert result["file_states"]["repository_safety_overlay"] == 8
     assert result["withheld_files"] == 258
@@ -1635,7 +1635,8 @@ def test_historical_near_here_receipt_binds_only_the_dossier_link(monkeypatch: p
 DOSSIER_INSPECT_CHANGED = {"app/aviation-control.tsx", "app/page.tsx", "docs/aviation-layers.md", "docs/map-research-tools.md", "tests/aviation.test.mjs"}
 
 
-def test_selected_receipt_binds_only_the_dossier_inspect_fix() -> None:
+def test_historical_dossier_inspect_receipt_binds_only_the_fix(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-aviation-dossier-inspect-20261025.json")
     receipt, expected = TOOL.reviewed_receipt()
     assert TOOL.RECEIPT.name == "site-v268-aviation-dossier-inspect-20261025.json"
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
@@ -1649,7 +1650,7 @@ def test_selected_receipt_binds_only_the_dossier_inspect_fix() -> None:
     assert set(declarations) == DOSSIER_INSPECT_CHANGED and len(receipt["repository_reconciliation"]["changes"]) == len(DOSSIER_INSPECT_CHANGED)
     for name in DOSSIER_INSPECT_CHANGED:
         entry, before = receipt["comparison"][name], previous["comparison"][name]
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        digest = declarations[name]["mirror_sha256"]
         assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
         assert entry["state"] == before["state"] and entry["site_sha256"] == before["site_sha256"], name
         assert declarations[name] == {
@@ -1668,3 +1669,29 @@ def test_selected_receipt_binds_only_the_dossier_inspect_fix() -> None:
     inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
     assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     assert predecessor.name in receipt["rollback"]["mirror"]
+
+
+AVIATION_BROWSER_CHANGED = {"app/aviation-airspace.ts", "app/aviation-control.tsx", "app/map-layers.css", "app/page.tsx", "docs/aviation-layers.md", "tests/aviation.test.mjs", "tests/local-atlas.test.mjs", "tests/map-hover-sampler.test.mjs", "tests/scene-surface-integration.test.mjs", "tests/inspection-panel.test.mjs"}
+
+def test_selected_receipt_binds_only_aviation_browser_corrections() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    assert TOOL.RECEIPT.name == "site-v268-aviation-browser-qualification-20261025.json"
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-aviation-dossier-inspect-20261025.json"
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
+    previous = json.loads(predecessor.read_text())
+    assert set(receipt["comparison"]) == set(previous["comparison"])
+    delta = {n for n, e in receipt["comparison"].items() if e != previous["comparison"][n]}
+    assert delta == AVIATION_BROWSER_CHANGED
+    declarations = {e["path"]: e for e in receipt["repository_reconciliation"]["changes"]}
+    assert set(declarations) == delta
+    for name in delta:
+        entry, before = receipt["comparison"][name], previous["comparison"][name]
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert expected[name] == "sha256:" + digest == "sha256:" + declarations[name]["mirror_sha256"]
+        assert entry["site_sha256"] == before["site_sha256"]
+        assert declarations[name]["previous_receipt_sha256"] == before["mirror_sha256"]
+    assert receipt["review"] == previous["review"] and receipt["overlay"] == previous["overlay"]
+    assert receipt["status"] == "REVIEW_ONLY" and receipt["review"]["hosted_equivalence"] is False
+    inventory = {n:e["mirror_sha256"] for n,e in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()

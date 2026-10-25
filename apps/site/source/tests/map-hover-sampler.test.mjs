@@ -44,15 +44,47 @@ test("the production pointer callback queues the latest event and cancels while 
   }
   visit(tree); assert.ok(registration);
   let handler, moving = false, cleared = 0, canceled = 0; const samples = [];
+  const aviation = {current:false};
   const ready = {current:true}, underground = {current:false}, measure = {current:null}, document = {hidden:false};
   const javascript = ts.transpileModule(registration, {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-  new Function("map", "hoverSampler", "clearHoverCandidate", "styleGenerationReadyRef", "document", "undergroundOpenRef", "measureModeRef", javascript)(
+  new Function("map", "hoverSampler", "clearHoverCandidate", "styleGenerationReadyRef", "document", "undergroundOpenRef", "measureModeRef", "aviationPickingRef", javascript)(
     {on:(_event, callback)=>{handler=callback;},isMoving:()=>moving},
-    {push:event=>samples.push(event),cancel:()=>canceled++},()=>cleared++, ready, document, underground, measure);
+    {push:event=>samples.push(event),cancel:()=>canceled++},()=>cleared++, ready, document, underground, measure, aviation);
   handler("visible"); assert.deepEqual(samples,["visible"]);
   moving=true;handler("pan");moving=false;
   ready.current=false;handler("style");ready.current=true;
   document.hidden=true;handler("hidden");document.hidden=false;
   underground.current=true;handler("cutaway");
-  assert.equal(canceled,4);assert.equal(cleared,4);assert.deepEqual(samples,["visible"]);
+  underground.current=false; aviation.current=true;handler("aviation drawing");
+  assert.equal(canceled,5);assert.equal(cleared,5);assert.deepEqual(samples,["visible"]);
+});
+
+test("aviation ownership cancels pending drawer previews and rejects an already-queued callback", async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const ast = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let claim, hover;
+  function visit(node) {
+    if (ts.isVariableDeclaration(node)) {
+      if (node.name.getText(ast) === "setAviationPicking") claim = node.initializer.arguments[0].getText(ast);
+      if (node.name.getText(ast) === "showHoverInDrawer") hover = node.initializer.getText(ast);
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(ast); assert.ok(claim && hover);
+  const script = ts.transpileModule(`return [${claim}, ${hover}];`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+  const owner = { current: false }, timer = { current: null }, candidate = { current: null };
+  let pending, opened = 0, cleared = 0, active;
+  const [takeOwnership, show] = new Function("aviationPickingRef", "hoverDrawerTimerRef", "hoverCandidateIdRef", "setHoverActive", "window", "compactRef", "rightPanelRef", "surfaceInspectionOpenRef", "previewEvidence", "setHoverSummary", script)(
+    owner, timer, candidate, value => { active = value; },
+    { setTimeout(fn) { pending = fn; return 7; }, clearTimeout(id) { assert.equal(id, 7); cleared++; } },
+    { current: false }, { current: { dataset: { open: "false" } } }, { current: false }, () => opened++, () => {});
+  const summary = { id: "county:1", title: "County", subtitle: "Context", state: "Unreleased" };
+  show(summary, true); const queuedBeforeClaim = pending;
+  assert.equal(timer.current, 7);
+  takeOwnership(true);
+  assert.equal(cleared, 1); assert.equal(timer.current, null); assert.equal(candidate.current, null); assert.equal(active, false);
+  candidate.current = summary.id; // A callback already queued before cancellation must still respect ownership.
+  queuedBeforeClaim(); assert.equal(opened, 0);
+  takeOwnership(false); candidate.current = null;
+  show(summary, true); pending(); assert.equal(opened, 1, "ordinary hover previews resume after aviation releases ownership");
 });
