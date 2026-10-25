@@ -1,6 +1,7 @@
 import type { ExpressionSpecification, LayerSpecification, SourceSpecification, StyleSpecification } from "./maplibre-seam";
 import { externalContextSource } from "./external-context-sources";
 import { ORIENTATION_SOURCE_ID, orientationSource } from "./kansas-orientation";
+import type { CategoryBasemapKey } from "./category-basemap-keys";
 
 /**
  * Category base maps: purpose-made cartography built from the same OpenFreeMap
@@ -13,6 +14,14 @@ import { ORIENTATION_SOURCE_ID, orientationSource } from "./kansas-orientation";
  *   circled airport symbols with ICAO/IATA identifiers.
  * - Government & civic: a light reference map where state, county and city
  *   boundaries and their places are the subject, with land and roads receding.
+ * - River network: a deep-water ground where rivers glow by size and streams,
+ *   wetlands and river names carry the drainage.
+ * - Relief model: a smooth hypsometric tint under strong hillshade, so the
+ *   land surface is the subject; roads and labels stay quiet.
+ * - Storm desk: a neutral charcoal ground that keeps radar and alert colours
+ *   true, with towns and county lines to read where weather is hitting.
+ * - Network map: a light base with the road hierarchy in colour, route
+ *   numbers, classic dashed rail and bridges.
  *
  * Layer ids avoid the `kfm-` and `external-` prefixes (except `kfm-background`)
  * so overlay placement keeps treating them as basemap. Every layer here is
@@ -35,6 +44,14 @@ const FEET_PER_METER = 3.28084;
 const ft = (feet: number) => Math.round(feet / FEET_PER_METER);
 const zoomRamp = (...stops: number[]): ExpressionSpecification =>
   ["interpolate", ["linear"], ["zoom"], ...stops] as unknown as ExpressionSpecification;
+
+/** Each category basemap carries one hillshade under this id; the scene's sun direction re-aims it. */
+const hillshade = (exaggeration: number, shadow: string, highlight: string, accent: string): LayerSpecification => ({
+  id: BASEMAP_HILLSHADE_LAYER_ID, type: "hillshade", source: BASEMAP_RELIEF_DEM_SOURCE_ID, paint: {
+    "hillshade-exaggeration": exaggeration, "hillshade-shadow-color": shadow, "hillshade-highlight-color": highlight, "hillshade-accent-color": accent,
+    "hillshade-illumination-direction": 315, "hillshade-illumination-anchor": "map",
+  },
+});
 
 function vectorSources(): Record<string, SourceSpecification> {
   return {
@@ -167,6 +184,107 @@ function civicLayers(): LayerSpecification[] {
   ] as LayerSpecification[];
 }
 
+function hydroLayers(): LayerSpecification[] {
+  const omt = OPENMAPTILES_SOURCE_ID;
+  const river = ["match", ["get", "class"], "river", 1, "canal", 0.55, 0.35];
+  return [
+    { id: "kfm-background", type: "background", paint: { "background-color": "#0b1d2c" } },
+    hillshade(0.5, "#020b12", "#3f6f92", "#0a2a3f"),
+    { id: "hydro-wetland", type: "fill", source: omt, "source-layer": "landcover", filter: ["==", ["get", "class"], "wetland"], paint: { "fill-color": "#11455a", "fill-opacity": 0.7 } },
+    { id: "hydro-urban", type: "fill", source: omt, "source-layer": "landuse", filter: ["in", ["get", "class"], ["literal", ["residential", "commercial", "industrial"]]], paint: { "fill-color": "#13293a", "fill-opacity": 0.8 } },
+    { id: "hydro-roads", type: "line", source: omt, "source-layer": "transportation", filter: ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary"]]], paint: { "line-color": "#21384b", "line-width": zoomRamp(5, 0.4, 12, 1.6) } },
+    { id: "hydro-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#1c6a99", "fill-outline-color": "#55b8e6" } },
+    // A soft glow under each river, then its bright course, both scaled by class.
+    { id: "hydro-waterway-glow", type: "line", source: omt, "source-layer": "waterway", filter: ["in", ["get", "class"], ["literal", ["river", "canal", "stream"]]],
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: { "line-color": "#3fa9e0", "line-blur": 3, "line-opacity": 0.35, "line-width": ["interpolate", ["linear"], ["zoom"], 5, ["*", river, 3], 12, ["*", river, 10]] } },
+    { id: "hydro-waterway", type: "line", source: omt, "source-layer": "waterway", filter: ["in", ["get", "class"], ["literal", ["river", "canal", "stream"]]],
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: { "line-color": ["match", ["get", "class"], "river", "#7fd3f7", "#4aa6d6"], "line-width": ["interpolate", ["linear"], ["zoom"], 5, ["*", river, 1.1], 12, ["*", river, 3.4]], "line-dasharray": ["match", ["get", "class"], "canal", ["literal", [3, 2]], ["literal", [1, 0]]] } },
+    { id: "hydro-state-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["all", ["==", ["get", "admin_level"], 4], ["!=", ["get", "maritime"], 1]], paint: { "line-color": "#d9b45f", "line-width": 1.2, "line-dasharray": [4, 2], "line-opacity": 0.8 } },
+    { id: "hydro-kansas-outline", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], paint: { "line-color": "#d9b45f", "line-width": zoomRamp(4, 1.2, 10, 2.2), "line-opacity": 0.7 } },
+    { id: "hydro-waterway-labels", type: "symbol", source: omt, "source-layer": "waterway", minzoom: 7, filter: ["==", ["get", "class"], "river"],
+      layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-font": ITALIC, "text-size": zoomRamp(7, 10, 12, 13), "text-letter-spacing": 0.08 },
+      paint: { "text-color": "#9fdcf8", "text-halo-color": "#0b1d2c", "text-halo-width": 1.4 } },
+    { id: "hydro-water-labels", type: "symbol", source: omt, "source-layer": "water_name", layout: { "text-field": ["get", "name"], "text-font": ITALIC, "text-size": 11 }, paint: { "text-color": "#9fdcf8", "text-halo-color": "#0b1d2c", "text-halo-width": 1.2 } },
+    { id: "hydro-place-labels", type: "symbol", source: omt, "source-layer": "place", filter: ["in", ["get", "class"], ["literal", ["city", "town"]]],
+      layout: { "text-field": ["get", "name"], "text-font": REGULAR, "text-size": ["match", ["get", "class"], "city", 12, 10], "symbol-sort-key": ["get", "rank"] },
+      paint: { "text-color": "#b9d4e4", "text-halo-color": "#0b1d2c", "text-halo-width": 1.4 } },
+  ] as LayerSpecification[];
+}
+
+/** Smooth hypsometric ramp in metres for the Kansas plains to the Front Range. */
+export const RELIEF_RAMP: readonly (readonly [number, string])[] = Object.freeze([
+  [150, "#5f8f5a"], [300, "#86a866"], [450, "#a9bb72"], [650, "#cdc884"], [850, "#dcc58f"], [1100, "#c9a77a"], [1500, "#a98965"], [2500, "#e9e2d6"],
+]);
+
+function reliefLayers(): LayerSpecification[] {
+  const omt = OPENMAPTILES_SOURCE_ID;
+  return [
+    { id: "kfm-background", type: "background", paint: { "background-color": "#d9d2bf" } },
+    { id: "relief-tint", type: "color-relief", source: BASEMAP_RELIEF_DEM_SOURCE_ID,
+      paint: { "color-relief-color": ["interpolate", ["linear"], ["elevation"], ...RELIEF_RAMP.flat()], "color-relief-opacity": 0.92 } } as LayerSpecification,
+    hillshade(0.85, "#3b2f22", "#fffaf0", "#6b5536"),
+    { id: "relief-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#7aa6c2" } },
+    { id: "relief-waterway", type: "line", source: omt, "source-layer": "waterway", filter: ["==", ["get", "class"], "river"], paint: { "line-color": "#4f86ab", "line-width": zoomRamp(6, 0.6, 12, 2) } },
+    { id: "relief-roads", type: "line", source: omt, "source-layer": "transportation", minzoom: 7, filter: ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary"]]], paint: { "line-color": "#f6f1e4", "line-width": zoomRamp(7, 0.5, 13, 2), "line-opacity": 0.75 } },
+    { id: "relief-state-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["all", ["==", ["get", "admin_level"], 4], ["!=", ["get", "maritime"], 1]], paint: { "line-color": "#4a3d2c", "line-width": 1.2, "line-dasharray": [5, 2] } },
+    { id: "relief-kansas-outline", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], paint: { "line-color": "#4a3d2c", "line-width": zoomRamp(4, 1, 10, 2), "line-opacity": 0.6 } },
+    { id: "relief-peaks", type: "symbol", source: omt, "source-layer": "mountain_peak", minzoom: 9,
+      layout: { "text-field": ["concat", "▲ ", ["get", "name"]], "text-font": ITALIC, "text-size": 11 }, paint: { "text-color": "#3b2f22", "text-halo-color": "#f6f1e4", "text-halo-width": 1.2 } },
+    { id: "relief-place-labels", type: "symbol", source: omt, "source-layer": "place", filter: ["in", ["get", "class"], ["literal", ["city", "town"]]],
+      layout: { "text-field": ["get", "name"], "text-font": REGULAR, "text-size": ["match", ["get", "class"], "city", 12, 10], "symbol-sort-key": ["get", "rank"] },
+      paint: { "text-color": "#2f2618", "text-halo-color": "rgba(246,241,228,0.85)", "text-halo-width": 1.3 } },
+  ] as LayerSpecification[];
+}
+
+function stormLayers(): LayerSpecification[] {
+  const omt = OPENMAPTILES_SOURCE_ID;
+  return [
+    { id: "kfm-background", type: "background", paint: { "background-color": "#12171d" } },
+    hillshade(0.18, "#05080b", "#2a333d", "#0c1116"),
+    { id: "storm-urban", type: "fill", source: omt, "source-layer": "landuse", filter: ["in", ["get", "class"], ["literal", ["residential", "commercial", "industrial"]]], paint: { "fill-color": "#1d252e", "fill-opacity": 0.85 } },
+    { id: "storm-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#0f2a3b" } },
+    { id: "storm-roads", type: "line", source: omt, "source-layer": "transportation", filter: ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary"]]], paint: { "line-color": "#2b343f", "line-width": zoomRamp(5, 0.5, 12, 2) } },
+    { id: "storm-county-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["==", ["get", "admin_level"], 6], paint: { "line-color": "#3a4552", "line-width": zoomRamp(6, 0.5, 11, 1.2) } },
+    { id: "storm-state-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["all", ["==", ["get", "admin_level"], 4], ["!=", ["get", "maritime"], 1]], paint: { "line-color": "#8b97a4", "line-width": zoomRamp(4, 1, 10, 2) } },
+    { id: "storm-kansas-outline", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], paint: { "line-color": "#8b97a4", "line-width": zoomRamp(4, 1.2, 10, 2.2), "line-opacity": 0.8 } },
+    { id: "storm-place-labels", type: "symbol", source: omt, "source-layer": "place", filter: ["in", ["get", "class"], ["literal", ["city", "town", "village"]]],
+      layout: { "text-field": ["get", "name"], "text-font": ["match", ["get", "class"], "city", ["literal", BOLD], ["literal", REGULAR]], "text-size": ["interpolate", ["linear"], ["zoom"], 6, ["match", ["get", "class"], "city", 12, 9], 12, ["match", ["get", "class"], "city", 16, 12]], "symbol-sort-key": ["get", "rank"] },
+      paint: { "text-color": "#d4dde6", "text-halo-color": "#0a0e12", "text-halo-width": 1.6 } },
+  ] as LayerSpecification[];
+}
+
+function networkLayers(): LayerSpecification[] {
+  const omt = OPENMAPTILES_SOURCE_ID;
+  const roadColor = ["match", ["get", "class"], "motorway", "#d6553a", "trunk", "#e08a3c", "primary", "#e3b04b", "secondary", "#c9bfa9", "#d8d2c4"];
+  const roadWidth = ["interpolate", ["linear"], ["zoom"], 5, ["match", ["get", "class"], "motorway", 1.4, "trunk", 1.1, "primary", 0.8, 0.3], 14, ["match", ["get", "class"], "motorway", 7, "trunk", 6, "primary", 5, "secondary", 3.5, 2]];
+  const roads = ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary", "secondary", "tertiary", "minor"]]];
+  return [
+    { id: "kfm-background", type: "background", paint: { "background-color": "#f2efe9" } },
+    hillshade(0.2, "#9c9483", "#ffffff", "#b9b1a0"),
+    { id: "network-urban", type: "fill", source: omt, "source-layer": "landuse", filter: ["in", ["get", "class"], ["literal", ["residential", "commercial", "industrial", "retail"]]], paint: { "fill-color": "#e6e0d4" } },
+    { id: "network-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#c6dbe8" } },
+    { id: "network-waterway", type: "line", source: omt, "source-layer": "waterway", filter: ["==", ["get", "class"], "river"], paint: { "line-color": "#a9c8dc", "line-width": zoomRamp(6, 0.5, 12, 1.8) } },
+    { id: "network-runway", type: "line", source: omt, "source-layer": "aeroway", minzoom: 10, filter: ["==", ["get", "class"], "runway"], paint: { "line-color": "#b9b4aa", "line-width": zoomRamp(10, 2, 15, 18) } },
+    { id: "network-county-boundary", type: "line", source: omt, "source-layer": "boundary", minzoom: 7, filter: ["==", ["get", "admin_level"], 6], paint: { "line-color": "#cfc6b5", "line-width": 0.8, "line-dasharray": [3, 2] } },
+    { id: "network-state-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["all", ["==", ["get", "admin_level"], 4], ["!=", ["get", "maritime"], 1]], paint: { "line-color": "#8c8270", "line-width": 1.4, "line-dasharray": [5, 2] } },
+    { id: "network-kansas-outline", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], paint: { "line-color": "#8c8270", "line-width": zoomRamp(4, 1, 10, 2), "line-opacity": 0.6 } },
+    { id: "network-road-casing", type: "line", source: omt, "source-layer": "transportation", minzoom: 9, filter: roads, layout: { "line-cap": "round", "line-join": "round" },
+      paint: { "line-color": ["case", ["==", ["get", "brunnel"], "bridge"], "#5a5246", "#ffffff"], "line-gap-width": roadWidth, "line-width": ["case", ["==", ["get", "brunnel"], "bridge"], 1.6, 0.8] } },
+    { id: "network-roads", type: "line", source: omt, "source-layer": "transportation", filter: roads, layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": roadColor, "line-width": roadWidth } },
+    // Classic rail: a dark line with white ties.
+    { id: "network-rail", type: "line", source: omt, "source-layer": "transportation", filter: ["==", ["get", "class"], "rail"], paint: { "line-color": "#3a3a3a", "line-width": zoomRamp(6, 0.8, 14, 3) } },
+    { id: "network-rail-ties", type: "line", source: omt, "source-layer": "transportation", minzoom: 8, filter: ["==", ["get", "class"], "rail"], paint: { "line-color": "#f2efe9", "line-width": zoomRamp(8, 0.5, 14, 1.8), "line-dasharray": [2, 3] } },
+    { id: "network-route-numbers", type: "symbol", source: omt, "source-layer": "transportation_name", minzoom: 7, filter: ["all", ["has", "ref"], ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary"]]]],
+      layout: { "symbol-placement": "line", "symbol-spacing": 320, "text-field": ["get", "ref"], "text-font": BOLD, "text-size": 10, "text-rotation-alignment": "viewport" },
+      paint: { "text-color": "#ffffff", "text-halo-color": ["match", ["get", "class"], "motorway", "#b8432b", "#9a6a1f"], "text-halo-width": 3 } },
+    { id: "network-place-labels", type: "symbol", source: omt, "source-layer": "place", filter: ["in", ["get", "class"], ["literal", ["city", "town", "village"]]],
+      layout: { "text-field": ["get", "name"], "text-font": ["match", ["get", "class"], "city", ["literal", BOLD], ["literal", REGULAR]], "text-size": ["match", ["get", "class"], "city", 13, 10], "symbol-sort-key": ["get", "rank"] },
+      paint: { "text-color": "#3a3329", "text-halo-color": "rgba(255,255,255,0.9)", "text-halo-width": 1.4 } },
+  ] as LayerSpecification[];
+}
+
 export function aviationChartStyle(): StyleSpecification {
   return { version: 8, name: "KFM Aviation Chart", glyphs: GLYPHS_URL, sources: vectorSources(), layers: aviationLayers() };
 }
@@ -174,3 +292,27 @@ export function aviationChartStyle(): StyleSpecification {
 export function civicStyle(): StyleSpecification {
   return { version: 8, name: "KFM Government & Civic", glyphs: GLYPHS_URL, sources: vectorSources(), layers: civicLayers() };
 }
+
+const style = (name: string, layers: () => LayerSpecification[]) => (): StyleSpecification => ({ version: 8, name, glyphs: GLYPHS_URL, sources: vectorSources(), layers: layers() });
+
+/** Every category basemap: its picker title, network note, map legend and style. */
+export const CATEGORY_BASEMAPS: Readonly<Record<CategoryBasemapKey, Readonly<{ title: string; note: string; legend: string; style: () => StyleSpecification }>>> = Object.freeze({
+  "aviation-chart": { title: "Aviation chart", style: aviationChartStyle,
+    note: "Sectional-style relief, runways and airport identifiers · OpenFreeMap · OpenMapTiles · OpenStreetMap · Terrarium relief · display context · not for navigation",
+    legend: "Aviation chart · sectional-style elevation bands at 1,000 ft, hillshade, runways and airport identifiers from OpenMapTiles · display context, not for navigation." },
+  civic: { title: "Government & civic", style: civicStyle,
+    note: "State, county and city boundaries with their places · OpenFreeMap · OpenMapTiles · OpenStreetMap · display context · not legal boundaries",
+    legend: "Government & civic · state, county and city boundaries and places from OpenMapTiles · display context, not legal boundaries." },
+  hydro: { title: "River network", style: style("KFM River Network", hydroLayers),
+    note: "Rivers, streams, lakes and wetlands on a deep-water ground · OpenFreeMap · OpenMapTiles · OpenStreetMap · Terrarium relief · display context",
+    legend: "River network · mapped rivers, streams, lakes and wetlands from OpenMapTiles, scaled by class · display geography, not measured flow or watershed boundaries." },
+  relief: { title: "Relief model", style: style("KFM Relief Model", reliefLayers),
+    note: "Hypsometric elevation tint and strong hillshade · Terrarium DEM · OpenFreeMap · OpenMapTiles · display context",
+    legend: "Relief model · display DEM coloured by elevation with hillshade · mixed-source display elevation, not survey measurement." },
+  storm: { title: "Storm desk", style: style("KFM Storm Desk", stormLayers),
+    note: "Neutral dark ground with towns and county lines so weather colours stay true · OpenFreeMap · OpenMapTiles · display context",
+    legend: "Storm desk · towns and county lines from OpenMapTiles on a neutral dark ground · display context; weather layers keep their own clocks." },
+  network: { title: "Network map", style: style("KFM Network Map", networkLayers),
+    note: "Road hierarchy, route numbers, rail and bridges · OpenFreeMap · OpenMapTiles · OpenStreetMap · display context",
+    legend: "Network map · road classes, route numbers, rail and bridges from OpenMapTiles · display context, not traffic, condition or access." },
+});

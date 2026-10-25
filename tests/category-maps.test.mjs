@@ -9,7 +9,8 @@ const topics=await load('app/layer-workspaces.ts');
 const maps=await load('app/category-maps.ts');
 const runtime=await readFile('app/map-runtime.ts','utf8');
 const live=await readFile('app/live-context.ts','utf8');
-const basemapKeys=JSON.parse(`[${runtime.match(/export type BasemapKey = ([^;]+);/)[1].replaceAll('|',',')}]`);
+const categoryKeys=await load('app/category-basemap-keys.ts');
+const basemapKeys=runtime.match(/export type BasemapKey = ([^;]+);/)[1].split('|').map(part=>part.trim()).flatMap(part=>part==='CategoryBasemapKey'?[...categoryKeys.CATEGORY_BASEMAP_KEYS]:[JSON.parse(part)]);
 const officialIds=JSON.parse(`[${live.match(/export type OfficialContextId = ([^;]+);/)[1].replaceAll('|',',')}]`);
 
 test('every start-page category has exactly one map look with a real basemap, scene, camera and starters',()=>{

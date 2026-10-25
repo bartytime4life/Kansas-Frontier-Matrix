@@ -20,6 +20,8 @@ import { contextSelectionChanges, preferredContextIds, readContextPreference, st
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
+import { CATEGORY_BASEMAPS } from "./category-basemaps";
+import { isCategoryBasemapKey } from "./category-basemap-keys";
 import { CategoryMapDock } from "./category-map-dock";
 import { AviationLayerControl } from "./aviation-layer-control";
 import { AVIATION_RESEARCH_SOURCE } from "./aviation-research";
@@ -9599,7 +9601,7 @@ export default function Home() {
               {activeLayers.length === 0 && <p>{visibleOfficialCount ? `${visibleOfficialCount} official context sources selected; connection states and record counts appear above.` : "No layers selected. Open Layer Catalog to choose a starting stack."}</p>}
             </div>
             {activeLayers.length > 5 && <footer>+{activeLayers.length - 5} more in Layer Catalog</footer>}
-            <p className="map-legend-note">{basemap === "aviation-chart" ? "Aviation chart · sectional-style elevation bands at 1,000 ft, hillshade, runways and airport identifiers from OpenMapTiles · display context, not for navigation." : basemap === "civic" ? "Government & civic · state, county and city boundaries and places from OpenMapTiles · display context, not legal boundaries." : basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
+            <p className="map-legend-note">{isCategoryBasemapKey(basemap) ? CATEGORY_BASEMAPS[basemap].legend : basemap === "standard" ? "OpenFreeMap vector context · counties, places, roads, rail, water, and labels are display context; KFM overlays remain explicit." : basemap === "kansas-aerial" ? "Kansas NG911 aerial imagery · February–April 2024 · approximately 1 foot · display context, not KFM evidence. Local flight date unresolved; independent of map time." : basemap === "imagery" ? "Satellite imagery and provider-backed overlays are display context only." : basemap === "streets" ? "OpenStreetMap reference and provider-backed overlays are display context only." : basemap === "topo" ? "USGS The National Map topographic tiles are display context only · KFM evidence remains separate." : "Site-local display style and provider-backed overlays are display context only."}</p>
           </aside>
           </aside>}
 

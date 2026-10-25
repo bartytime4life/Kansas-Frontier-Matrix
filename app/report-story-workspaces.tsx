@@ -19,6 +19,7 @@ import { readDraft, REPORT_STORAGE_KEY, STORY_STORAGE_KEY } from "./workspace-st
 import { FIRE_REPORT_SOURCES, type FireReportContext } from "./fire-report-analysis";
 import { subsurfaceMarkdown, sectionSvg, intervalCsv, type SubsurfaceContext } from "./subsurface-model";
 import { researchMarkdown, type ResearchContext } from "./research-context";
+import { isCategoryBasemapKey } from "./category-basemap-keys";
 
 type WorkspaceMode = "reports" | "stories";
 
@@ -85,7 +86,7 @@ const reportMarkdown = (draft: ReportDraft, evidence: readonly EvidenceRecord[])
     `**Time:** ${draft.snapshot.committedTime.label}`,
     `**Representation:** ${draft.snapshot.representation}`,
     `**Basemap:** ${draft.snapshot.basemap} (display context)` ,
-    "**Map attribution:** " + (draft.snapshot.basemap === "standard" || draft.snapshot.basemap === "aviation-chart" || draft.snapshot.basemap === "civic" ? "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors" : draft.snapshot.basemap === "imagery" ? "Tiles © Esri" : draft.snapshot.basemap === "streets" ? "© OpenStreetMap contributors" : "KFM local background style"),
+    "**Map attribution:** " + (draft.snapshot.basemap === "standard" || isCategoryBasemapKey(draft.snapshot.basemap) ? "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors" : draft.snapshot.basemap === "imagery" ? "Tiles © Esri" : draft.snapshot.basemap === "streets" ? "© OpenStreetMap contributors" : "KFM local background style"),
     ...(terrainDescription ? [`**Display terrain:** ${terrainDescription}`] : []),
     ...(draft.subsurfaceContext ? ["", subsurfaceMarkdown(draft.subsurfaceContext), ""] : []),
     ...(draft.researchContext ? ["", researchMarkdown(draft.researchContext), ""] : []),

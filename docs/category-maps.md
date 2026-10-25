@@ -38,22 +38,36 @@ holds and limits. They are display context, not admitted evidence.
 
 ## Specialized basemaps
 
-Both new styles live in `app/category-basemaps.ts`. They are built only from
-carriers already listed in `app/external-context-sources.ts`:
+Six category styles live in `app/category-basemaps.ts`, listed with their
+picker title, network note and legend in `CATEGORY_BASEMAPS`. Their keys are in
+the import-free `app/category-basemap-keys.ts`, which the allow-lists share.
+They are built only from carriers already listed in
+`app/external-context-sources.ts`:
 
 - OpenFreeMap vector tiles and fonts (`openfreemap-liberty`);
 - the Terrarium display DEM (`aws-mapzen-terrarium`), for relief;
 - the bundled simplified Kansas outline and graticule.
 
-Both carriers now disclose `aviation-chart` and `civic` in `activatesWhen`. No
-sprite is requested: airport symbols are drawn as circles.
+Both carriers disclose every category key in `activatesWhen`. No sprite is
+requested: symbols such as airport circles and peak triangles are drawn or set
+in text.
+
+| Key | Map look | Used by |
+|---|---|---|
+| `aviation-chart` | Aviation chart | Aviation |
+| `civic` | Government & civic | Government, People, Places |
+| `hydro` | River network | Water |
+| `relief` | Relief model | Terrain, Geology |
+| `storm` | Storm desk | Weather, Hazards |
+| `network` | Network map | Transport, Engineering |
 
 ### Aviation chart (`aviation-chart`)
 
 A reading of a VFR sectional chart:
 
-- elevation bands at 1,000 ft steps (`AVIATION_TINT_BANDS`, a stepped
-  `color-relief`), plus hillshade;
+- elevation bands at 1,000 ft steps (`AVIATION_TINT_BANDS`), drawn as a
+  `color-relief` whose interpolate stops pair one metre apart for hard chart
+  edges, plus hillshade;
 - yellow built-up areas, quiet blue water and magenta roads;
 - a dashed state line and a dashed 1° graticule;
 - OpenMapTiles `aeroway` runways, taxiways and aprons;
@@ -77,23 +91,63 @@ At statewide zoom the vector tiles thin out county lines, so the Government,
 People and Places looks also switch on the Census county layer as a starter.
 Boundaries are display geography, not legal descriptions.
 
+### River network (`hydro`)
+
+- deep-water ground with a lifted hillshade, so the drainage pattern reads even
+  before vector tiles load;
+- rivers, canals and streams scaled by class, each with a soft glow, canals
+  dashed;
+- lakes and wetlands;
+- river names follow their courses, and towns are labelled quietly.
+
+It shows display geography, not measured flow or watershed boundaries.
+
+### Relief model (`relief`)
+
+- a smooth hypsometric tint (`RELIEF_RAMP`, a `color-relief` from about 150 m
+  to 2,500 m) under the strongest hillshade of the set;
+- rivers, main roads, peaks and towns stay quiet.
+
+It is mixed-source display elevation, not survey measurement.
+
+### Storm desk (`storm`)
+
+- a neutral charcoal ground; every colour in the style has low chroma, so
+  radar, alert and fire colours stay distinguishable;
+- county and state lines and town labels show where weather is hitting.
+
+Weather layers keep their own clocks.
+
+### Network map (`network`)
+
+- road classes in colour (motorway, trunk, primary, secondary), white-cased,
+  with darker casing on bridges;
+- route numbers from `transportation_name`;
+- classic dark rail with white ties, plus runways and county lines.
+
+It is display context, not traffic, condition or access.
+
 ### Shared behaviour
 
-- **Fallback.** Both styles use the `openmaptiles` source id. If that carrier
+- **Fallback.** All six styles use the `openmaptiles` source id. If that carrier
   fails, the existing fallback swaps to the local Midnight style
   (`VECTOR_BASEMAPS`, `shouldFallbackStandardBasemap`).
 - **Globe.** Vector basemaps stay on the globe. Raster ones still hand over to
   the standard style there.
-- **Relief.** The 2D relief scene effect defers to a basemap that draws its own
-  hillshade (`CATEGORY_BASEMAP_HILLSHADE_LAYER_ID`), so shading is never
-  doubled.
+- **Relief.** Each style draws its own hillshade under
+  `CATEGORY_BASEMAP_HILLSHADE_LAYER_ID`. The 2D relief scene effect defers to
+  it, so shading is never doubled, and the overlay sync aims it at the scene's
+  sun direction.
+- **Contrast.** `LIGHT_CATEGORY_BASEMAPS` marks the light grounds, so wind
+  arrows draw dark strokes there and light strokes on `hydro` and `storm`.
 - **Persistence.** Saved views, snapshots, report attribution and wind-arrow
   contrast all accept the new keys.
 
 ## Limits
 
-- The visual result of the two vector styles was validated against the MapLibre
-  style specification and by tests. It was not rendered against live
+- The vector layers of all six styles were validated against the MapLibre
+  style specification and by tests. Their relief, tint and outline layers were
+  rendered in a browser. It was not rendered against live
   OpenFreeMap tiles in the build container, which cannot reach that host.
 - The aviation chart basemap draws airports from OpenStreetMap data, not the
   FAA NASR airport list, and carries no airspace itself. The Aviation look
