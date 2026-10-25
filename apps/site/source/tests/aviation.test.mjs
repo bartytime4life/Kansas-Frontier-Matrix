@@ -16,6 +16,8 @@ const drone = await compileModule("aviation-drone-data");
 const traffic = await compileModule("aviation-traffic");
 const chart = await compileModule("aviation-chart");
 const profile = await compileModule("aviation-profile");
+const research = await compileModule("aviation-research");
+const dossier = await compileModule("research-context");
 const bytes = await readFile(new URL("../public/data/aviation/kansas-aviation-context.json", import.meta.url));
 const context = airspace.parseAviationContext(JSON.parse(bytes.toString("utf8")));
 const SALINA = [-97.6522, 38.7906], RURAL = [-100.35, 39.35], FORT_RILEY_RANGE = [-96.85, 39.2];
@@ -510,7 +512,7 @@ test("the UAS grid request survives its own loading-state re-render and reaches 
   };
   const h = await componentHarness("app/aviation-control.tsx", {
     "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic,
-    "./aviation-chart": chart, "./aviation-profile": profile, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -547,7 +549,7 @@ test("turning traffic off and on never redraws the previous positions as current
   };
   const h = await componentHarness("app/aviation-control.tsx", {
     "./bounded-json": { readBoundedJson }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone, "./aviation-traffic": traffic,
-    "./aviation-chart": chart, "./aviation-profile": profile, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: null }, styleReady: false };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -579,7 +581,7 @@ test("switching to the 2D chart redraws every 3D form flat, with chart labels an
     ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
   const h = await componentHarness("app/aviation-control.tsx", {
     "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
-    "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: map }, styleReady: true };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -660,7 +662,7 @@ test("drawing a side view with two map clicks renders the cross-section and its 
     ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
   const h = await componentHarness("app/aviation-control.tsx", {
     "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
-    "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+    "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
   }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
   const props = { mapRef: { current: map }, styleReady: true };
   const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
@@ -688,5 +690,48 @@ test("drawing a side view with two map clicks renders the cross-section and its 
     await renderUntil(cycle, () => sources.get("kfm-aviation-profile")?.data.features.length === 3, "the A–B line on the map");
     button(tree, "Clear side view").props.onClick();
     tree = await renderUntil(cycle, tree => !findNode(tree, node => node.type === "figure"), "the cleared side view");
+  } finally { h.dispose(); }
+});
+
+const metarAt = (station, lon, lat) => ({ station, name: "SALINA RGNL", lon, lat, observedAt: "2026-10-25T08:53:00.000Z", flightCategory: "VFR" });
+
+test("aviation joins the Near-here dossier with public-use airports and weather stations only", () => {
+  const records = research.aviationResearchPoints({ airports: context.airports, nasrCycle: context.nasrCycle, validFrom: context.validFrom, validToExclusive: context.validToExclusive,
+    metars: [metarAt("KSLN", -97.65, 38.79)], metarRetrievedAt: "2026-10-25T09:00:00.000Z" });
+  assert.ok(records.length > 150 && records.every(dossier.validResearchRecord), "every record passes the dossier's own validator");
+  const airports = records.filter(record => record.sourceId === research.AVIATION_RESEARCH_SOURCE.airports);
+  assert.equal(airports.length, context.airports.filter(airport => airport.use === "PUBLIC").length, "private-use strips stay out of the 50-record dossier");
+  const anchor = { kind: "provider", sourceId: "test", featureId: "anchor", title: "Salina", coordinates: [-97.61, 38.84], sourceTitle: "Test", sourceUrl: null,
+    sourceTime: "now", retrievedAt: null, evidenceLabel: "EXTERNAL_CONTEXT_ONLY", limitation: "Test anchor." };
+  const near = dossier.nearbyResearch(anchor, records, 25).records.map(record => record.featureId);
+  assert.ok(near.includes("airport:SLN") && near.includes("metar:KSLN"), "a Salina dossier lists the airport and its weather station");
+  assert.match(records.find(record => record.featureId === "metar:KSLN").title, /KSLN SALINA RGNL weather station · VFR/);
+  assert.match(records.find(record => record.featureId === "airport:SLN").title, /\(KSLN\) · public-use airport, towered · 1,288 ft$/);
+});
+
+test("the aviation layer offers dossier points while shown and withdraws them when hidden; the page feeds them to Near here", { timeout: 15_000 }, async () => {
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  assert.match(page, /<AviationControl [^>]*onResearchRecords=\{setAviationResearch\}/);
+  assert.match(page, /if \(aviationResearch\) \{[\s\S]*?records\.push\(\.\.\.points\);[\s\S]*?sourceId: "aviation-context"/);
+  assert.match(page, /\}, \[aviationResearch, mapEvidenceFilter,/);
+  const { componentHarness, findNode, settle } = await import("./component-harness.mjs");
+  const offered = [];
+  const fetch = async (path) => path === airspace.AVIATION_CONTEXT_ASSET.url
+    ? { ok: true, path, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) } : { ok: false, path };
+  const h = await componentHarness("app/aviation-control.tsx", {
+    "./bounded-json": { readBoundedJson: async () => ({}) }, "./aviation-airspace": airspace, "./aviation-weather": weather, "./aviation-drone-data": drone,
+    "./aviation-traffic": traffic, "./aviation-chart": chart, "./aviation-profile": profile, "./aviation-research": research, "./map-runtime": { unexaggeratedTerrainElevation: () => null },
+  }, { fetch, setInterval, clearInterval, crypto: globalThis.crypto, TextDecoder });
+  const props = { mapRef: { current: null }, styleReady: false, onResearchRecords: records => offered.push(records) };
+  const cycle = async () => { const tree = h.render(h.exports.AviationControl, props); h.commit(); await new Promise(resolve => setTimeout(resolve, 5)); await settle(); return tree; };
+  const toggle = tree => findNode(tree, node => node.type === "input" && /aviation layers$/.test(node.props["aria-label"] ?? ""));
+  try {
+    let tree = await cycle();
+    assert.equal(offered.at(-1), null, "nothing is offered while hidden");
+    toggle(tree).props.onChange({ target: { checked: true } });
+    tree = await renderUntil(cycle, () => Array.isArray(offered.at(-1)) && offered.at(-1).length > 150, "the offered airports");
+    assert.ok(offered.at(-1).every(dossier.validResearchRecord));
+    toggle(tree).props.onChange({ target: { checked: false } });
+    await renderUntil(cycle, () => offered.at(-1) === null, "the withdrawn records");
   } finally { h.dispose(); }
 });

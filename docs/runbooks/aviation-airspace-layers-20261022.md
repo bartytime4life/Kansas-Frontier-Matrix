@@ -292,6 +292,25 @@ data displayable in 2D.
 Rollback: revert the commit; the 3D-only layer, nearest-facility point ground
 and no side view return.
 
+## Near-here dossier link — October 25, 2026
+
+Original direction: the aviation data should fit with the Site's other features
+as a data mesh. While the aviation layer is shown, it now offers point records to
+the page's **Near here** dossier: public-use airports at their FAA NASR
+reference points, and METAR stations with their latest observation
+(`app/aviation-research.ts`, through the control's `onResearchRecords`).
+`app/page.tsx` adds them, validated by the dossier's own `validResearchRecord`,
+with an "Airspace, airports & aviation weather" coverage row.
+
+Excluded, with the reasons given in that coverage row:
+- airspace volumes and TFR areas, because they are polygons and the dossier
+  admits supplied points only;
+- private-use strips, so they cannot crowd the 50 nearest records near towns;
+- live aircraft, because their positions are transient and dossiers can be
+  saved.
+
+Rollback: revert the commit; the dossier returns to its earlier sources.
+
 ## Decision for the owner
 
 The intake runbook held public FAA airport rendering behind an aviation release

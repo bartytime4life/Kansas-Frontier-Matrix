@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import type { Map as MapLibreMap, MapLayerMouseEvent, MapMouseEvent } from "./maplibre-seam";
 import { readBoundedJson } from "./bounded-json";
+import { aviationResearchPoints } from "./aviation-research";
+import type { ResearchRecord } from "./research-context";
 import { unexaggeratedTerrainElevation } from "./map-runtime";
 import { PROFILE_TOP_FT, alongTrackNm, profileBands, profilePath, profileSummary, type ProfileBand, type ProfilePoint, type ProfileVolume } from "./aviation-profile";
 import { ALL_ALTITUDES, SLICE_MSL_FEET, SLICE_POINT_TOLERANCE_FT, sliceCollection, sliceTitle, type AltitudeSlice, type AviationView } from "./aviation-chart";
@@ -103,7 +105,9 @@ function ProfileChart({ points, bands, aircraft }: Readonly<{ points: readonly P
   </svg>;
 }
 
-export function AviationControl({ mapRef, styleReady, onSelectionChange }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void }) {
+export function AviationControl({ mapRef, styleReady, onSelectionChange, onResearchRecords }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void;
+  /** Points this layer offers the "Near here" dossier while shown; null while hidden or loading. */
+  onResearchRecords?: (records: readonly ResearchRecord[] | null) => void }) {
   const [visible, setVisible] = useState(false);
   const [contextState, setContextState] = useState<LoadState>("idle");
   const [context, setContext] = useState<AviationContext | null>(null);
@@ -217,6 +221,12 @@ export function AviationControl({ mapRef, styleReady, onSelectionChange }: { map
   const uasCells = useMemo(() => uas.value?.cells ?? [], [uas.value]);
   const tfrShapes = useMemo(() => tfrs.value?.shapes ?? [], [tfrs.value]);
   const metarRecords = useMemo(() => showMetar ? metar.envelope?.records ?? [] : [], [showMetar, metar.envelope]);
+  // Data mesh: while shown, public-use airports and weather stations join the page's "Near here" dossier for any feature.
+  useEffect(() => {
+    onResearchRecords?.(visible && context ? aviationResearchPoints({ airports: context.airports, nasrCycle: context.nasrCycle, validFrom: context.validFrom,
+      validToExclusive: context.validToExclusive, metars: metarRecords, metarRetrievedAt: metar.envelope?.retrievedAt ?? null }) : null);
+  }, [onResearchRecords, visible, context, metarRecords, metar.envelope]);
+  useEffect(() => () => onResearchRecords?.(null), [onResearchRecords]);
   const pirepRecords = useMemo(() => showPireps ? pireps.envelope?.records ?? [] : [], [showPireps, pireps.envelope]);
 
   // Install every aviation source/layer together; any toggle rebuilds them from pure feature builders.

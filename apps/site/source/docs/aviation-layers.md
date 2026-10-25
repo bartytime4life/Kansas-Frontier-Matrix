@@ -131,6 +131,17 @@ without the drawing. A line due east along 37.65°N from 97.9°W to 96.95°W lis
 is drawn on the map in both views. Where no shape is drawn, the airspace is
 Class E or G.
 
+## In the Near-here dossier
+
+While this layer is shown, the page's **Near here** dossier for any selected
+feature, such as a well, gauge, storm report or historic site, also lists the
+nearby public-use airports and METAR weather stations, with distances. A
+coverage row counts them. Only point records join, per the dossier's rule:
+airspace volumes and TFR areas are polygons and stay out. Private-use strips are
+also excluded, so they cannot crowd the 50-record list near towns, and live
+aircraft are excluded because their positions are transient. Use this layer's
+point inspector or side view for the airspace at a place.
+
 ## The airspace column
 
 **Pick a point on the map** (or click an airport) to list, surface upward,
