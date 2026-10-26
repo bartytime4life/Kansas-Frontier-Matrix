@@ -1,1 +1,0 @@
-# agriculture :: ingest — greenfield placeholder
