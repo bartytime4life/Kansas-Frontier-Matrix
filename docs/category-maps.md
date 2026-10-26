@@ -132,10 +132,12 @@ holds and limits. They are display context, not admitted evidence.
 
 ## What is not on every map
 
-County boundaries, USGS river gauges and the USGS 3DHP stream network are
-**off by default**. They appear on the maps whose subject they are (the civic,
-community and reference maps start with counties; the water map with its
-gauges) or when a visitor turns them on. The county payload still loads once
+County boundaries, USGS river gauges, the USGS 3DHP stream network and the fire
+layers (NOAA-20 fire detections and NIFC fire reports) are **off by default**;
+the plain Explorer starts with no provider layer. They appear on the maps whose
+subject they are (the civic, community and reference maps start with counties;
+the water map with its gauges; Hazard watch with alert areas, fire detections
+and fire reports) or when a visitor turns them on. The county payload still loads once
 in the background so **Find a county** works; loaded but hidden layers are not
 drawn (`searchNeedsCounties`).
 

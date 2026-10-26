@@ -790,8 +790,9 @@ test("connects bounded official context sources without admitting evidence", asy
     "noaa-lightning-density",
     "nasa-lightning-climatology",
   ]);
-  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["nasa-gibs-fire-points", "nifc-fire-reports"]);
-  // Counties and running water are not drawn on every map by default; Find a county still reads the county payload.
+  // No provider layer is drawn on every map by default (counties, running water and fire start
+  // off; fire is a Hazard watch starter); Find a county still reads the county payload.
+  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), []);
   const explorer = await readFile("app/page.tsx", "utf8");
   assert.match(explorer, /const searchNeedsCounties = \(id: OfficialContextId\) => id === "census-counties" && !officialPayloadsRef\.current\["census-counties"\];/);
   assert.match(explorer, /if \(source\.apiPath && \(officialVisibilityRef\.current\[source\.id\] \|\| searchNeedsCounties\(source\.id\)\)\) void refreshOfficialContext/, "first entry loads the hidden county payload for search");
