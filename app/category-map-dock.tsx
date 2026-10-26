@@ -16,7 +16,11 @@ export function azimuthLabel(degrees: number): string {
   return names[Math.round((((degrees % 360) + 360) % 360) / 45) % 8];
 }
 
-/** Quarter-hour steps through the day for the time-of-day study. */
+/**
+ * Quarter-hour steps through the day for the time-of-day study. The last step
+ * is 11:45 PM: a full fraction would be tomorrow's midnight, outside the day
+ * the slider measures against.
+ */
 const SUN_TIME_STEPS = 96;
 const SUN_CLOCK = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
 
@@ -73,7 +77,7 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
       ? <>
         <p className="category-map-dock-sun-reading" aria-live="polite"><span>{sun.live ? "Real sun" : "Sun at"}</span><output>{sunReading(sun.light, sun.at)}</output></p>
         <div className="category-map-dock-range category-map-dock-sun-time"><span id="category-map-dock-sun-time">Time</span>
-          <input type="range" min={0} max={SUN_TIME_STEPS} step={1} value={Math.round(sun.dayFraction * SUN_TIME_STEPS)} aria-labelledby="category-map-dock-sun-time"
+          <input type="range" min={0} max={SUN_TIME_STEPS - 1} step={1} value={Math.min(SUN_TIME_STEPS - 1, Math.round(sun.dayFraction * SUN_TIME_STEPS))} aria-labelledby="category-map-dock-sun-time"
             aria-valuetext={sunReading(sun.light, sun.at)} onChange={event => onSunTime(Number(event.target.value) / SUN_TIME_STEPS)} />
           <button type="button" disabled={sun.live} onClick={() => onSunTime(null)} title="Follow the clock again">Now</button></div>
       </>

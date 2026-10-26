@@ -77,6 +77,10 @@ test('the dock reflects the view and routes every control to an existing handler
  const timeOfDay=sunRanges[1];
  assert.equal(timeOfDay.props['aria-labelledby'],'category-map-dock-sun-time');
  assert.equal(timeOfDay.props.value,64,'quarter-hour steps: 4 PM is step 64 of 96');
+ assert.equal(timeOfDay.props.max,95,'the last step is 11:45 PM, never tomorrow\'s midnight');
+ const lateTree=h.render(h.exports.CategoryMapDock,{...props,sun:{light:sunLight,at,dayFraction:1,live:false}});
+ const late=[];findNode(lateTree,n=>{if(n.type==='input'&&n.props.type==='range')late.push(n);return false;});
+ assert.equal(late[1].props.value,95,'a fraction at the day edge stays on the last step');
  assert.equal(button('Now').props.disabled,true,'already following the clock');
  timeOfDay.props.onChange({target:{value:'30'}});assert.deepEqual(calls.at(-1),['time',30/96]);
  assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='category-map-dock-sun-reading')),/Real sun/);
@@ -137,7 +141,10 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.match(page,/const sunAt = sunStudyAt \?\? sunClock;/);
  assert.match(page,/registerSceneEffects\(map, sceneEffects\);\s*registerSunInstant\(map, sunStudyAt\);/,'the renderer lights the study time');
  assert.equal((page.match(/light=\{sceneEffects\.sunSync \? sunSceneLight\(sunAt,/g)||[]).length,2,'the Scene studio reads the same instant');
- assert.match(page,/onRealSun=\{\(sunSync\) => \{ setSunStudyAt\(null\); updateSceneEffects\(\{ \.\.\.sceneEffectsRef\.current, sunSync \}\); \}\}/,'only the visitor turns the real sun on or off, and that ends any study');
+ assert.match(page,/onRealSun=\{\(sunSync\) => updateSceneEffects\(\{ \.\.\.sceneEffectsRef\.current, sunSync \}\)\}/,'only the visitor turns the real sun on or off');
+ const update=page.slice(page.indexOf('  const updateSceneEffects = (next: SceneEffectSettings) => {'),page.indexOf('  const chooseSceneRecipe ='));
+ assert.match(update,/if \(next\.sunSync !== sceneEffectsRef\.current\.sunSync\) setSunStudyAt\(null\);\s*sceneEffectsRef\.current = next;/,'every control that turns the real sun on or off (dock, Scene studio, recipes, looks) ends a study, read before the ref moves on');
+ assert.equal((page.match(/setSceneEffects\(/g)||[]).length,2,'settings change only in updateSceneEffects and the stored-settings restore');
  const reset=page.slice(page.indexOf('  const resetCategoryView = () => {'),page.indexOf('announce(`${activeCategoryMap.name} view reset`)'));
  assert.match(reset,/if \(activeCategoryMap\.light\) applyCategoryLight\(activeCategoryMap\.light\);/,'Reset view restores the look light too');
 });

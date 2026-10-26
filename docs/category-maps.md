@@ -41,7 +41,9 @@ holds and limits. They are display context, not admitted evidence.
     says "Sun at" rather than "Real sun", and **Now** returns to the clock.
     The chosen instant is registered per map (`registerSunInstant`), so the
     sky, relief, glow, buildings and Scene studio all read the same moment.
-    Turning the real sun off ends the study. It is display lighting only; no
+    Turning the real sun off or on from any control (the dock, the Scene
+    studio checkbox, a recipe or a look preset) ends the study. The last
+    step is 11:45 PM, so the slider never picks tomorrow's midnight. It is display lighting only; no
     source time, archive date or evidence clock changes;
   - reset view and "Layers for this map".
 
