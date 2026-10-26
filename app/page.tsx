@@ -24,6 +24,7 @@ import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulat
 import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots } from "./reviewed-snapshots";
 import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
 import { setReviewedSnapshot } from "./reviewed-snapshot-layers";
+import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
 import { AVIATION_TINT_BANDS, CATEGORY_BASEMAPS, RELIEF_RAMP } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
@@ -1483,6 +1484,16 @@ export default function Home() {
   const [categoryDockTopic, setCategoryDockTopic] = useState<TopicId | null>(null);
   // County population prisms: on with the People map, toggled from its dock.
   const [populationPrisms, setPopulationPrismsShown] = useState(false);
+  // The Kansas earthquake record since 1973 (Landform relief): shown or not, the
+  // served record once read, whether the read failed, one year or all, and the
+  // event a visitor selected. While it is shown the 30-day catalog is hidden.
+  const [quakeRecordOn, setQuakeRecordOn] = useState(false);
+  const [quakeRecord, setQuakeRecord] = useState<EarthquakeRecord | null>(null);
+  const [quakeRecordFailed, setQuakeRecordFailed] = useState(false);
+  const [quakeRecordYear, setQuakeRecordYear] = useState<number | null>(null);
+  const [quakeRecordSelected, setQuakeRecordSelected] = useState<EarthquakeRecordEvent | null>(null);
+  const quakeRecordEventsRef = useRef<ReadonlyMap<string, EarthquakeRecordEvent>>(new Map());
+  const quakeLiveWasOnRef = useRef(false);
   // The landscape the photo-real 3D view last flew to.
   const [photorealPlace, setPhotorealPlace] = useState<string | null>(null);
   // The provider hillshade switched off on entering the photograph, restored on return.
@@ -2603,6 +2614,7 @@ export default function Home() {
     params.set("ctxo", OFFICIAL_CONTEXT_SOURCES.map((source) => `${source.id}:${(officialOpacity[source.id] ?? source.defaultOpacity).toFixed(2)}`).join(","));
     serializeSoilMapState(params, soilMapState);
     if (populationPrisms) params.set("prisms", "on");
+    if (quakeRecordOn) params.set("quakes", "record");
     params.set("sunDay", daylightDay);
     params.set("sunThrough", daylightThroughDay);
     params.set("sunAt", new Date(daylightInstant).toISOString());
@@ -2657,7 +2669,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -3822,6 +3834,52 @@ export default function Home() {
     if (styleReady && styleGenerationReadyRef.current) applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
   }, [populationPrisms, styleReady, runtimeOfficialVisibility]);
 
+  // The earthquake record replaces the 30-day catalog while it is shown, so one
+  // colour scale is on the map at a time; hiding it brings the catalog back.
+  const showQuakeRecord = useCallback((on: boolean) => {
+    setQuakeRecordOn(on);
+    setQuakeRecordYear(null);
+    setQuakeRecordSelected(null);
+    if (on) {
+      setQuakeRecordFailed(false);
+      quakeLiveWasOnRef.current = Boolean(officialVisibilityRef.current["usgs-earthquakes"]);
+      if (quakeLiveWasOnRef.current) setOfficialContextVisible("usgs-earthquakes", false);
+    } else if (quakeLiveWasOnRef.current) {
+      quakeLiveWasOnRef.current = false;
+      setOfficialContextVisible("usgs-earthquakes", true);
+    }
+  }, [setOfficialContextVisible]);
+  useEffect(() => {
+    if (!quakeRecordOn || quakeRecord || quakeRecordFailed) return;
+    const controller = new AbortController();
+    void fetch("/api/earthquake-record", { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validEarthquakeRecord(value)) throw new Error("Invalid earthquake record.");
+        quakeRecordEventsRef.current = new Map(value.events.map(event => [event.id, event]));
+        setQuakeRecord(value);
+        announce(`${value.events.length.toLocaleString("en-US")} Kansas earthquakes of magnitude ${value.minMagnitude} or more since ${value.startYear} are on the map, coloured by year`);
+      })
+      .catch(() => { if (!controller.signal.aborted) setQuakeRecordFailed(true); });
+    return () => controller.abort();
+  }, [quakeRecordOn, quakeRecord, quakeRecordFailed, announce]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const record = quakeRecordOn ? quakeRecord : null;
+    const sync = () => {
+      try { syncEarthquakeRecord(map, record, quakeRecordYear, quakeRecordSelected?.id ?? null); }
+      catch { /* The style is reloading; its styledata event draws the record again. */ }
+    };
+    sync();
+    if (!record) return;
+    // A new style drops the record's source; put it back once the style has loaded.
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(EARTHQUAKE_RECORD_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [quakeRecordOn, quakeRecord, quakeRecordYear, quakeRecordSelected, styleReady]);
+
   const refreshVisibleOfficialContext = useCallback(() => {
     if (!buildYearCurrentRef.current) {
       announce("This site build does not match the UTC year; rebuild before refreshing current sources");
@@ -4833,6 +4891,9 @@ export default function Home() {
       setOfficialPayloads(officialPayloadsRef.current);
       setSoilMapState(restoreSoilMapState(params));
       setPopulationPrismsShown(params.get("prisms") === "on");
+      // A shared record view hid the 30-day catalog; leaving the record brings it back.
+      quakeLiveWasOnRef.current = params.get("quakes") === "record" && restoredTopic !== "all" && Boolean(categoryMap(restoredTopic)?.tools?.includes("quakes"));
+      setQuakeRecordOn(quakeLiveWasOnRef.current);
       const officialOpacityPairs = params.get("ctxo")?.split(",").map((pair) => pair.split(":")) ?? [];
       const restoredOfficialOpacity = Object.fromEntries(officialOpacityPairs
         .filter(([id, value]) => knownOfficialIds.has(id as OfficialContextId) && typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value)))
@@ -5337,7 +5398,7 @@ export default function Home() {
             const record = findLayerByRenderer(feature.layer.id);
             return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
           });
-          if (renderedHits[0]?.source === LIVING_WATERS_SOURCE) {
+          if (renderedHits[0]?.source === LIVING_WATERS_SOURCE || renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID) {
             map.getCanvas().style.cursor = "pointer";
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
@@ -5448,6 +5509,13 @@ export default function Home() {
           // context underneath its schematic as evidence for that schematic.
           if (renderedHits[0]?.source === LIVING_WATERS_SOURCE) {
             setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true);
+            return;
+          }
+          // The earthquake record owns its selection: the dock shows the event; nothing beneath it is inspected.
+          if (renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID) {
+            const id = renderedHits[0].properties?.id;
+            const event = typeof id === "string" ? quakeRecordEventsRef.current.get(id) : undefined;
+            if (event) setQuakeRecordSelected(event);
             return;
           }
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
@@ -9164,6 +9232,12 @@ export default function Home() {
     setBasemap(look.basemap);
     if (look.light) applyCategoryLight(look.light);
     photorealHidHillshadeRef.current = false;
+    // The earthquake record belongs to the map that offers it and closes with it; the
+    // starters below decide whether the 30-day catalog is on.
+    quakeLiveWasOnRef.current = false;
+    setQuakeRecordOn(false);
+    setQuakeRecordYear(null);
+    setQuakeRecordSelected(null);
     // Each map opens on its own subject: only its starters are on, as a starter set does.
     for (const source of OFFICIAL_CONTEXT_SOURCES) {
       const on = look.starters.includes(source.id);
@@ -9196,6 +9270,7 @@ export default function Home() {
   const reviewedSource = categoryMapOnScreen?.tools?.includes("reviewed") ? REVIEWED_SOURCE_BY_TOPIC[categoryMapOnScreen.topic] ?? null : null;
   const reviewed = useReviewedSnapshots(reviewedSource, !reducedMotion);
   const reviewedData = reviewed.on && reviewed.product ? reviewed.product.data : null;
+  const quakeCounts = useMemo(() => quakeRecord ? annualCounts(quakeRecord).map(entry => ({ ...entry, color: recordYearColor(entry.year, quakeRecord.endYear) })) : null, [quakeRecord]);
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -10125,7 +10200,7 @@ export default function Home() {
             measuringArea={measureMode === "area"} onMeasureArea={() => beginMapMeasurement("area")}
             radar={{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME }}
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
-            keys={withElevationKey(withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null),
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -10143,6 +10218,13 @@ export default function Home() {
             onSoil={showCategorySoil} onSoilDepth={(depth) => changeSoilMapState({ view: depth })}
             population={activeCategoryMap.tools?.includes("population") ? { on: populationPrisms, ...densityGroupCounts(officialPayloads["census-counties"]?.data.features ?? []), metresPerPerson: PRISM_METRES_PER_PERSON_PER_SQUARE_MILE } : undefined}
             onPopulation={setPopulationPrismsShown}
+            quakes={activeCategoryMap.tools?.includes("quakes") ? { on: quakeRecordOn, loading: quakeRecordOn && !quakeRecord && !quakeRecordFailed, failed: quakeRecordFailed,
+              counts: quakeCounts, total: quakeRecord?.events.length ?? 0, startYear: quakeRecord?.startYear ?? 1973, endYear: quakeRecord?.endYear ?? new Date().getUTCFullYear(),
+              minMagnitude: quakeRecord?.minMagnitude ?? 2.5, truncated: Boolean(quakeRecord?.truncated), year: quakeRecordYear,
+              selected: quakeRecordSelected, selectedUrl: quakeRecordSelected ? earthquakeEventUrl(quakeRecordSelected.id) : null } : undefined}
+            onQuakes={showQuakeRecord}
+            onQuakeYear={year => { setQuakeRecordYear(year); setQuakeRecordSelected(null); }}
+            onQuakeClear={() => setQuakeRecordSelected(null)}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>

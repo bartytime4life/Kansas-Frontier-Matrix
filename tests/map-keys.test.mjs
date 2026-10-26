@@ -59,7 +59,7 @@ test('the dock draws each key as the map draws it, and the page passes the keys 
  assert.doesNotMatch(JSON.stringify(tree),/category-map-dock-key/,'no keys, no section');
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/keys=\{withElevationKey\(withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\),/);
+ assert.match(page,/keys=\{withElevationKey\(\[\.\.\.\(quakeRecordOn && quakeRecord \? \[earthquakeRecordKey\(quakeRecord\.endYear\)\] : \[\]\), \.\.\.withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\)\],/);
 });
 
 const luminance=hex=>{const c=rgb(hex).map(v=>v/255).map(v=>v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4);return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];};
@@ -129,7 +129,7 @@ test('a drawn reviewed snapshot adds its key once, and alerts share the live sev
  assert.deepEqual(keys.withReviewedKey(storm,'nws-alerts').map(k=>k.id),['nws-alerts'],'not shown twice');
  assert.deepEqual(keys.withReviewedKey([],'nws-alerts').map(k=>k.id),['nws-alerts'],'shown when the live alerts are off');
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/keys=\{withElevationKey\(withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\),/);
+ assert.match(page,/keys=\{withElevationKey\(\[\.\.\.\(quakeRecordOn && quakeRecord \? \[earthquakeRecordKey\(quakeRecord\.endYear\)\] : \[\]\), \.\.\.withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\)\],/);
 });
 
 test('the relief and chart bases key their elevation colours from the ramps the styles draw',async()=>{
