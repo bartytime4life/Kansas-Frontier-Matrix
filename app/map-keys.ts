@@ -72,8 +72,10 @@ const along = (stops: readonly (readonly [number, number])[], x: number): number
 };
 
 export type MapKeyItem = Readonly<{ label: string; color: string; shape: "dot" | "area" | "line" | "ring"; size?: number; dashed?: boolean; stroke?: string }>;
+/** A colour ramp drawn as a bar: its CSS gradient and tick labels placed along it (0–100 %). */
+export type MapKeyRamp = Readonly<{ css: string; ticks: readonly Readonly<{ label: string; at: number }>[] }>;
 /** Keys that share a group are shown as one, under the group's title and note. */
-export type MapKey = Readonly<{ id: string; title: string; items: readonly MapKeyItem[]; note: string; group?: Readonly<{ id: string; title: string; note: string }> }>;
+export type MapKey = Readonly<{ id: string; title: string; items: readonly MapKeyItem[]; note: string; group?: Readonly<{ id: string; title: string; note: string }>; ramp?: MapKeyRamp }>;
 
 const KDOT_NETWORK = Object.freeze({ id: "kdot-network", title: "KDOT roads and rail",
   note: "Drawn by KDOT's service: roads from zoom 9, railroads from zoom 8. One line weight for every road; it is not road class or width." });
@@ -147,3 +149,44 @@ export const withReviewedKey = (keys: readonly MapKey[], reviewedSourceId: strin
   const key = reviewedSourceId === "usgs-streamflow" ? REVIEWED_DISCHARGE_KEY : reviewedSourceId === "nws-alerts" ? MAP_KEYS["nws-alerts"] : null;
   return key && !keys.some(k => k.id === key.id) ? [...keys, key] : keys;
 };
+
+// ---------------------------------------------------------------------------
+// Elevation keys for the basemaps that colour the ground by height. The ramps
+// stay with the styles (category-basemaps.ts); these draw them as a bar.
+// ---------------------------------------------------------------------------
+
+export const FEET_PER_METRE = 3.28084;
+type Stops = readonly (readonly [number, string])[];
+const percent = (value: number, min: number, max: number) => Math.round((value - min) / (max - min) * 1000) / 10;
+/** A CSS gradient over [min, max]: interpolated like MapLibre's "interpolate", or hard bands from each stop to the next. */
+export const rampGradient = (stops: Stops, min: number, max: number, stepped: boolean): string => {
+  const parts = stepped
+    ? stops.map(([value, color], i) => `${color} ${percent(value, min, max)}% ${percent(stops[i + 1]?.[0] ?? max + (max - min), min, max)}%`)
+    : stops.map(([value, color]) => `${color} ${percent(value, min, max)}%`);
+  return `linear-gradient(to right, ${parts.join(", ")})`;
+};
+const ticks = (values: readonly number[], min: number, max: number) =>
+  Object.freeze(values.map(value => Object.freeze({ label: value.toLocaleString("en-US"), at: percent(value, min, max) })));
+
+/** Kansas spans 207 m (679 ft) where the Verdigris River leaves the state to 1,231 m (4,039 ft) at Mount Sunflower. */
+export const KANSAS_ELEVATION_M = Object.freeze({ low: 207, high: 1231 });
+
+/** The relief basemap's continuous elevation ramp, in metres. */
+export const reliefElevationKey = (ramp: Stops): MapKey => Object.freeze({
+  id: "elevation-relief", title: "Elevation (m above sea level)", items: Object.freeze([]),
+  ramp: Object.freeze({ css: rampGradient(ramp, 200, 1300, false), ticks: ticks([300, 600, 900, 1200], 200, 1300) }),
+  note: `Colour is height alone; shading is the scene's sun. Kansas spans ${KANSAS_ELEVATION_M.low} m, where the Verdigris River leaves the state, to ${KANSAS_ELEVATION_M.high.toLocaleString("en-US")} m at Mount Sunflower.`,
+});
+
+/** The aviation chart's 1,000 ft terrain bands, in feet as sectional charts give them. */
+export const chartElevationKey = (bands: Stops): MapKey => {
+  const feet: Stops = bands.map(([metres, color]) => [Math.round(metres * FEET_PER_METRE / 10) * 10, color] as const);
+  return Object.freeze({
+    id: "elevation-chart", title: "Terrain elevation (ft)", items: Object.freeze([]),
+    ramp: Object.freeze({ css: rampGradient(feet, 500, 4500, true), ticks: ticks([1000, 2000, 3000, 4000], 500, 4500) }),
+    note: `Tinted in 1,000 ft bands, as sectional charts tint terrain. Kansas spans about ${Math.round(KANSAS_ELEVATION_M.low * FEET_PER_METRE / 10) * 10} to ${(Math.round(KANSAS_ELEVATION_M.high * FEET_PER_METRE / 10) * 10).toLocaleString("en-US")} ft.`,
+  });
+};
+
+/** A map's keys with its basemap's elevation key first, when the basemap colours the ground by height. */
+export const withElevationKey = (keys: readonly MapKey[], key: MapKey | null): readonly MapKey[] => key ? [key, ...keys] : keys;
