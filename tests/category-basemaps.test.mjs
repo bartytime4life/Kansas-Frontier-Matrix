@@ -95,7 +95,7 @@ test('the four science basemaps each make their subject the lead layer',()=>{
  assert.equal(layer('storm','kfm-background').paint['background-color'],'#12171d');
  const chroma=hex=>{const channels=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);return Math.max(...channels)-Math.min(...channels);};
  for(const color of JSON.stringify(styles.storm.layers).match(/#[0-9a-f]{6}/gi))assert.ok(chroma(color)<0.2,`storm ground ${color} stays neutral so radar and alert colours read true`);
- assert.ok(ids('storm').includes('storm-county-boundary')&&ids('storm').includes('storm-place-labels'),'where weather is hitting: counties and towns');
+ assert.ok(ids('storm').includes('storm-place-labels')&&ids('storm').includes('storm-state-boundary'),'where weather is hitting: towns and the state line');
  assert.match(JSON.stringify(layer('network','network-roads').paint['line-color']),/motorway.*trunk.*primary/);
  assert.equal(layer('network','network-route-numbers')['source-layer'],'transportation_name');
  assert.match(JSON.stringify(layer('network','network-road-casing').paint['line-color']),/"brunnel"\],"bridge"/,'bridges are cased');
@@ -107,10 +107,18 @@ test('the historic atlas makes railroads the subject on a parchment ground and l
  assert.equal(layer('kfm-background').paint['background-color'],'#efe4c8');
  assert.equal(layer('historic-graticule').source,'orientation-kansas','the atlas graticule comes from the bundled orientation source');
  assert.ok(ids.indexOf('historic-rail-ties')>ids.indexOf('historic-rail')&&ids.indexOf('historic-rail')>ids.indexOf('historic-roads'),'ties cross the rail, both over the receding roads');
- assert.deepEqual(JSON.parse(JSON.stringify(layer('historic-county-boundary').paint['line-dasharray'])),[1,2],'dotted county lines');
  assert.match(JSON.stringify(layer('historic-place-labels').layout['text-field']),/"upcase"/,'city names are capitals');
  assert.equal(layer('historic-roads').minzoom,6);
  assert.match(basemaps.CATEGORY_BASEMAPS.historic.legend,/present-day/,'the base is today\'s geography in an atlas style, not a historical map');
+});
+
+test('county lines and river lines appear only on the maps whose subject they are',()=>{
+ const sourceLayers=key=>new Set(styles[key].layers.filter(l=>l['source-layer']==='waterway').map(l=>l.id));
+ const counties=key=>styles[key].layers.filter(l=>l['source-layer']==='boundary'&&JSON.stringify(l.filter).includes('"admin_level"],6')).map(l=>l.id);
+ for(const key of Object.keys(styles)){
+  assert.equal(counties(key).join(),key==='civic'?'civic-county-boundary':'',`${key}: county lines only where jurisdictions are the subject`);
+  assert.equal(sourceLayers(key).size>0,key==='hydro'||key==='aviation'||key==='aviation-chart',`${key}: river lines only on the river network and the aviation chart`);
+ }
 });
 
 test('every surface that whitelists basemaps accepts the category basemaps',async()=>{

@@ -10,7 +10,7 @@ one map look:
 | `basemap` | A `BASEMAPS` key in `app/map-runtime.ts`. |
 | `scene` | `2d`, `terrain` (3D terrain) or `globe`. It is applied through the existing `activateMapRepresentation`. |
 | `camera` | Center, zoom, pitch and bearing. Only 3D looks start tilted. |
-| `starters` | Existing official provider-context ids that are switched **on**. They are never switched off. |
+| `starters` | Existing official provider-context ids that are switched **on**. Opening the map switches every other provider-context layer **off**, as a starter set does, so each map opens on its own subject. |
 | `swatch` | Three colours used to sketch the basemap on the start card and the dock. |
 | `light` | Optional scene recipe (`daylight`, `golden`, `blue`, `survey`) the look opens under. Only its atmosphere and sun azimuth are applied, through `changeStudioLight`, so the visitor's effect settings never change. Relief looks use a raking sun (Terrain golden, Geology/Engineering/Groundwater survey), weather and water a dark sky (`blue`), aviation `daylight`. **Reset view** restores it. While the visitor follows the real sun, the computed sun lights the map instead. |
 
@@ -71,12 +71,55 @@ holds and limits. They are display context, not admitted evidence.
     motion, ambient motion off or an efficient render budget (the same rule the
     animation uses), the rivers are drawn still and the dock names which applies. The flow reaches
     are display context, not measured discharge;
+  - **Explore underground**, on the Aquifer and Geology looks
+    (`tools: ["underground"]`). It opens the existing Underground view of
+    recorded well logs, cores and aquifer sections (`enterUnderground`, the
+    same entry the guide's Underground action uses), which switches to the 2D
+    map and takes focus. The dock steps aside while Underground is open and
+    returns when it closes, if the look's basemap is still on;
+  - **Show day and night**, on the Sky and Observation globes
+    (`tools: ["daylight"]`). It switches the existing Daylight & twilight
+    layer on or off through the layer card's own path
+    (`toggleDaylightVisibility`): the calculated night side of the Earth and
+    its civil, nautical and astronomical twilight bands. When the layer's
+    chosen date range holds the current time, it opens at now
+    (`showCategoryDaylight`); a past day chosen in the layer card keeps its own
+    clock. While it is shown, the dock reads that clock in Kansas Central time
+    and what it means at the look's center, for example "Kansas center: Sun 9°
+    below the horizon · nautical twilight" (`daylightPhaseReading`, using the
+    overlay's own band edges). **Play day and night** runs the layer's 60-second
+    loop through the day; reduced motion disables it. It is calculated
+    geometry, not observed brightness or cloud cover;
+  - **Measure an area**, on the Field and Survey grid looks
+    (`tools: ["area"]`). It starts the Map menu's own Polygon measurement
+    (`beginMapMeasurement("area")`); pressed again while points are being
+    added, it cancels. Click around a field or parcel and **Finish** in the
+    measurement readout. Areas under one square mile read in acres (hectares
+    in metric), larger ones in square miles with acres alongside
+    (`formatMeasuredArea`), so a PLSS section reads "1.0 sq mi (640 acres)".
+    The geometry stays in the browser and is an approximation, not a survey.
+    While a measurement readout is on the map (from this tool or **Draw a
+    cross-section**), the dock lifts above it; on a phone (760px or narrower)
+    it steps aside instead, so the map can be tapped, and returns when the
+    measurement is cleared;
+  - **Watch the radar loop**, on the Storm desk (`tools: ["radar"]`). It
+    turns radar on and opens its live loop controls (`watchRadarLoop`, shared
+    with the radar layer card's "Watch live loop"); while they are open it
+    reads **Close radar loop** (`closeLiveInstrument`). The live loop plays at
+    the present map time, so the button waits until Time is at Present. Opening
+    the Storm desk already starts the loop, so the button is mostly for closing
+    and reopening it. While a radar or lightning loop panel is open the dock
+    sits above it; the taller river and satellite-flash panels, and any loop
+    panel on a phone, have the bottom of the map to themselves and the dock
+    returns when they close;
   - reset view and "Layers for this map".
 
   Every control reuses an existing handler: `activateMapRepresentation`,
   `changeTerrainDepth`, `changeStudioLight`, `updateSceneEffects`,
-  `startTerrainInvestigation` (through `startCategoryTransect`) and
-  `openAtlasPanel`. Turning river flow on or off also goes through
+  `startTerrainInvestigation` (through `startCategoryTransect`),
+  `enterUnderground`, `toggleDaylightVisibility` (through
+  `showCategoryDaylight`), `beginMapMeasurement`, `watchRadarLoop`,
+  `closeLiveInstrument` and `openAtlasPanel`. Turning river flow on or off also goes through
   `updateSceneEffects`. The dock can
   be hidden. It returns the next time a category map is opened.
 - **Layers panel.** When a category is chosen in the Layers catalogue, its
@@ -86,6 +129,19 @@ holds and limits. They are display context, not admitted evidence.
 - **Shared URLs.** No new parameter is needed. `topic`, `base`, `proj` and
   `scene` already restore the category, basemap and renderer, and the dock
   follows the restored category when its basemap is on screen.
+
+## What is not on every map
+
+County boundaries, USGS river gauges and the USGS 3DHP stream network are
+**off by default**. They appear on the maps whose subject they are (the civic,
+community and reference maps start with counties; the water map with its
+gauges) or when a visitor turns them on. The county payload still loads once
+in the background so **Find a county** works; loaded but hidden layers are not
+drawn (`searchNeedsCounties`).
+
+The category basemaps follow the same rule. County lines are drawn only on the
+civic style; river lines only on the river network and, as chart landmarks, the
+aviation chart. Lakes stay in every style as water fill.
 
 ## In the Evidence Drawer
 
@@ -122,7 +178,7 @@ They are built only from carriers already listed in
 
 - OpenFreeMap vector tiles and fonts (`openfreemap-liberty`);
 - the Terrarium display DEM (`aws-mapzen-terrarium`), for relief;
-- the bundled simplified Kansas outline and graticule.
+- the bundled Census Kansas boundary (simplified for state-scale display) and graticule.
 
 Both carriers disclose every category key in `activatesWhen`. No sprite is
 requested: symbols such as airport circles and peak triangles are drawn or set

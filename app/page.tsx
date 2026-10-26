@@ -354,7 +354,10 @@ import {
   kansasLocalDateRangeInterval,
   kansasLocalDayInterval,
   restoreDaylightView,
+  solarReferenceElevation,
 } from "./daylight-layer";
+import { daylightPhaseReading } from "./daylight-shader-layer";
+import { formatMeasuredArea } from "./measurement-format";
 
 /** How long each quarter-hour step of Play the day holds: 5:00 AM to 11:45 PM plays in about 15 seconds. */
 const SUN_PLAY_STEP_MS = 200;
@@ -1087,8 +1090,7 @@ const measurementLabelFor = (mode: Exclude<MeasureMode, null>, coordinates: [num
     return unit === "metric" ? `${(miles * 1.609344).toFixed(1)} km approximate` : `${miles.toFixed(1)} mi approximate`;
   }
   if (coordinates.length < 3) return `Add ${3 - coordinates.length} more point${coordinates.length === 2 ? "" : "s"}`;
-  const squareMiles = areaSquareMiles(coordinates);
-  return unit === "metric" ? `${(squareMiles * 2.58999).toFixed(1)} km² approximate` : `${squareMiles.toFixed(1)} sq mi approximate`;
+  return formatMeasuredArea(areaSquareMiles(coordinates), unit === "metric");
 };
 
 const LocalWelcomeRecorder = __KFM_WELCOME_RECORDER__ && import.meta.env.DEV
@@ -3371,6 +3373,9 @@ export default function Home() {
     void refreshStreamflow("24h", streamflowSelectedStationId, false, streamflowArchiveDraftDay);
   }, [refreshStreamflow, streamflowArchiveDraftDay, streamflowSelectedStationId]);
 
+  // Find a county reads the county payload, so it loads once even while the
+  // county layer is hidden (it is off by default); hidden data is not drawn.
+  const searchNeedsCounties = (id: OfficialContextId) => id === "census-counties" && !officialPayloadsRef.current["census-counties"];
   const refreshOfficialContext = useCallback(async (feed: OfficialContextFeedId) => {
     if (!buildYearCurrentRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME || officialArchiveDaysRef.current[feed]) return;
     if (officialRequestsRef.current.has(feed)) return;
@@ -3911,7 +3916,7 @@ export default function Home() {
     // Archived and historical frames never initiate a current-source request.
     const timer = window.setTimeout(() => {
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
-        if (source.apiPath && officialVisibilityRef.current[source.id]) void refreshOfficialContext(source.id as OfficialContextFeedId);
+        if (source.apiPath && (officialVisibilityRef.current[source.id] || searchNeedsCounties(source.id))) void refreshOfficialContext(source.id as OfficialContextFeedId);
       }
     }, 40);
     return () => window.clearTimeout(timer);
@@ -7524,6 +7529,16 @@ export default function Home() {
     announce(`Terrain investigation ready at ${verticalExaggerationRef.current.toFixed(1)}× display scale. Draw a line on the map, finish it, then preview unexaggerated DEM samples.`);
   };
 
+  // The dock shows the calculated day and night at the current time when the
+  // layer's date range holds it; another chosen day keeps its own clock.
+  const showCategoryDaylight = (on: boolean) => {
+    toggleDaylightVisibility(on);
+    if (!on) return;
+    const interval = kansasLocalDateRangeInterval(daylightDayRef.current, daylightThroughDayRef.current);
+    const now = Date.now();
+    if (now >= interval.startMs && now < interval.endMs) seekDaylight(intervalFractionAtInstant(now, interval));
+  };
+
   // From the category dock the investigation's steps sit in the Scene panel's collapsed
   // "Terrain tools" section, so open it and bring them into view.
   const startCategoryTransect = () => {
@@ -8302,7 +8317,7 @@ export default function Home() {
     setNoaaRadarFollowLatest(true);
     setNoaaRadarFrameLoadState("idle");
     for (const source of OFFICIAL_CONTEXT_SOURCES) {
-      if (source.defaultVisibility && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
+      if ((source.defaultVisibility || searchNeedsCounties(source.id)) && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
     }
     setLayerOrder(defaultOrder);
     setYear(OFFICIAL_CONTEXT_PRESENT_FRAME);
@@ -8967,6 +8982,9 @@ export default function Home() {
     }}>{instrument === "river" ? "River Pulse" : instrument === "radar" ? "Radar Loop" : "Lightning"}</button>)}
   </nav> : null;
 
+  // Radar on, then its live loop controls on the map.
+  const watchRadarLoop = () => { setOfficialContextVisible("nws-radar", true); setLiveInstrument("radar"); setInstrumentOpen(true); };
+
   const toggleUnderground = () => { const open = primaryWorkspace !== "map" || !undergroundOpen; if (open) activateMapRepresentation("2d"); setUndergroundOpen(open); setPlaying(false); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); };
   const openMapGuideDiagnostics = () => {
     openMapUtility("diagnostics");
@@ -9027,13 +9045,15 @@ export default function Home() {
     writeExplorerGuideDismissed(rememberDismissal);
     if (document.activeElement?.closest(".explorer-guide")) document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
   };
+  // Opens Underground (or keeps it open) and moves focus into it.
+  const enterUnderground = () => {
+    if (primaryWorkspace !== "map" || !undergroundOpen) toggleUnderground();
+    setUndergroundFocusRequest((request) => request + 1);
+  };
   const runExplorerGuideAction = (action: ExplorerGuideAction) => {
     if (action === "layers") { setSourceStatusOpen(false); setStarterPanelOpen(true); openAtlasPanel("layers"); }
     else if (action === "time") { setPrimaryWorkspace("map"); setTimelineOpen(true); }
-    else if (action === "underground") {
-      if (primaryWorkspace !== "map" || !undergroundOpen) toggleUnderground();
-      setUndergroundFocusRequest((request) => request + 1);
-    }
+    else if (action === "underground") enterUnderground();
     else if (action === "qwen") openQwenCompanion(null);
     if (action === "layers" || action === "time") window.requestAnimationFrame(() => {
       // Guide dismissal restores its trigger synchronously. Enter the destination
@@ -9074,7 +9094,11 @@ export default function Home() {
     basemapRef.current = look.basemap;
     setBasemap(look.basemap);
     if (look.light) applyCategoryLight(look.light);
-    for (const id of look.starters) setOfficialContextVisible(id, true);
+    // Each map opens on its own subject: only its starters are on, as a starter set does.
+    for (const source of OFFICIAL_CONTEXT_SOURCES) {
+      const on = look.starters.includes(source.id);
+      if (on || officialVisibilityRef.current[source.id]) setOfficialContextVisible(source.id, on);
+    }
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
     setStarterPanelOpen(false);
     setLayerCatalogView("official");
@@ -9744,7 +9768,7 @@ export default function Home() {
                   <strong>Watch radar over time</strong>
                   <p>Live nowCOAST scans use their exact observation times. Choose an older UTC day to watch NOAA/NWS-derived archive mosaics in Event Observatory.</p>
                   <div>
-                    <button type="button" onClick={() => { setOfficialContextVisible("nws-radar", true); setLiveInstrument("radar"); setInstrumentOpen(true); }}>Watch live loop</button>
+                    <button type="button" onClick={watchRadarLoop}>Watch live loop</button>
                     <label>Archive UTC day<input type="date" min="1995-01-01" max={currentUtcDay()} value={radarArchiveDraftDay} onInput={(event) => setRadarArchiveDraftDay(event.currentTarget.value)} onChange={(event) => setRadarArchiveDraftDay(event.target.value)} /></label>
                     <Link href={`/observatory?start=${encodeURIComponent(`${radarArchiveDraftDay || currentUtcDay()}T00:00`)}&hours=24&layers=radar,counties&replay=radar`}>Watch selected day ↗</Link>
                   </div>
@@ -10002,7 +10026,13 @@ export default function Home() {
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
             onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => updateSceneEffects({ ...sceneEffectsRef.current, sunSync })}
             onSunTime={(fraction) => { setSunPlaying(false); setSunStudyAt(fraction === null ? null : instantAtIntervalFraction(kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunClock))), fraction)); }}
-            sunPlaying={sunPlaying} motionAllowed={!reducedMotion} onSunPlay={playSunDay} onTransect={startCategoryTransect}
+            sunPlaying={sunPlaying} motionAllowed={!reducedMotion} onSunPlay={playSunDay} onTransect={startCategoryTransect} onUnderground={enterUnderground}
+            daylight={activeCategoryMap.tools?.includes("daylight") ? { on: daylightEnabled, playing: daylightPlaying, time: daylightDisplayTime.central,
+              reading: `Kansas center: ${daylightPhaseReading(solarReferenceElevation(daylightInstant, activeCategoryMap.camera.center[1], activeCategoryMap.camera.center[0]))}` } : undefined}
+            onDaylight={showCategoryDaylight} onDaylightPlay={setDaylightPlayback}
+            measuringArea={measureMode === "area"} onMeasureArea={() => beginMapMeasurement("area")}
+            radar={{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME }}
+            onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}

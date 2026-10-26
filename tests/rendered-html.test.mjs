@@ -790,7 +790,11 @@ test("connects bounded official context sources without admitting evidence", asy
     "noaa-lightning-density",
     "nasa-lightning-climatology",
   ]);
-  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["census-counties", "usgs-streamflow", "usgs-3dhp-hydrography", "nasa-gibs-fire-points", "nifc-fire-reports"]);
+  assert.deepEqual(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.defaultVisibility).map((record) => record.id), ["nasa-gibs-fire-points", "nifc-fire-reports"]);
+  // Counties and running water are not drawn on every map by default; Find a county still reads the county payload.
+  const explorer = await readFile("app/page.tsx", "utf8");
+  assert.match(explorer, /const searchNeedsCounties = \(id: OfficialContextId\) => id === "census-counties" && !officialPayloadsRef\.current\["census-counties"\];/);
+  assert.match(explorer, /if \(source\.apiPath && \(officialVisibilityRef\.current\[source\.id\] \|\| searchNeedsCounties\(source\.id\)\)\) void refreshOfficialContext/, "first entry loads the hidden county payload for search");
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nifc-fire-reports"].boundary, /working dataset[\s\S]*not a perimeter/i);
   assert.equal(registry.OFFICIAL_CONTEXT_SOURCES.every((record) => record.evidenceRole === "EXTERNAL_CONTEXT_ONLY"), true);
   assert.equal(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.domain === "Living waters").length, 6);

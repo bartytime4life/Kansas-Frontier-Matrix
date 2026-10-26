@@ -42,12 +42,12 @@ test('aviation and government are categories with their own specialized basemaps
  assert.equal(topics.restoreTopic('aviation'),'aviation');assert.equal(topics.restoreTopic('government'),'government');
 });
 
-test('opening a category map applies its look additively and follows the same category in Layers',async()=>{
+test('opening a category map opens on its own subject and follows the same category in Layers',async()=>{
  const page=await readFile('app/page.tsx','utf8');
  const body=page.slice(page.indexOf('  const openCategoryMap = (topic: TopicId) => {'),page.indexOf('  const runWelcomeMap ='));
- const order=['activateMapRepresentation(look.scene)','basemapRef.current = look.basemap','setBasemap(look.basemap)','setOfficialContextVisible(id, true)','setOfficialWorkspace(topic)','map.flyTo('];
+ const order=['activateMapRepresentation(look.scene)','basemapRef.current = look.basemap','setBasemap(look.basemap)','setOfficialContextVisible(source.id, on)','setOfficialWorkspace(topic)','map.flyTo('];
  let at=-1;for(const step of order){const next=body.indexOf(step);assert.ok(next>at,`${step} follows the previous step`);at=next;}
- assert.doesNotMatch(body,/setOfficialContextVisible\([^)]*false\)|setVisibility\(/,'starters only add; nothing the visitor chose is switched off');
+ assert.match(body,/for \(const source of OFFICIAL_CONTEXT_SOURCES\) \{\s*const on = look\.starters\.includes\(source\.id\);\s*if \(on \|\| officialVisibilityRef\.current\[source\.id\]\) setOfficialContextVisible\(source\.id, on\);/,'only the look\'s starters are on, as a starter set does; untouched layers are not toggled');
  assert.match(body,/motionDuration\(1800\)/,'camera flight honours reduced motion');
  assert.match(page,/onTopic=\{runWelcomeTopic\} onMap=\{runWelcomeMap\}/);
  assert.match(page,/<CategoryMapDock look=\{activeCategoryMap\} mode=\{categoryMode\}/);
@@ -156,6 +156,107 @@ test('the water map toggles the flowing-water effect from its dock and reports w
  assert.match(page,/onFlow=\{\(waterFlow\) => updateSceneEffects\(\{ \.\.\.sceneEffectsRef\.current, waterFlow \}\)\}/,'only the visitor turns it on or off, through the shared settings path');
  assert.match(page,/const flowing = motionAllowed && sceneEffects\.waterFlow;/);
  assert.match(page,/const motionAllowed = runtime\.kind === "ready" && dynamicEffects && !reducedMotion && !browserRenderBudget\(renderQuality\)\.efficient;/,'same rule as the dock reading');
+});
+
+test('the aquifer and geology maps open Underground from their dock through the guide\'s own entry',async()=>{
+ const withUnderground=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('underground')).map(([id])=>id).sort();
+ assert.deepEqual(withUnderground,['geology','groundwater']);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];const base={mode:'2d',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onTransect(){},onUnderground:()=>calls.push('underground'),onReset(){},onLayers(){},onClose(){}};
+ const tool=tree=>findNode(tree,n=>n.type==='button'&&n.props.children==='Explore underground');
+ let tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.groundwater});
+ tool(tree).props.onClick();assert.deepEqual(calls,['underground']);
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.geology,mode:'terrain'});
+ assert.ok(tool(tree),'geology offers it beside the cross-section');
+ assert.ok(findNode(tree,n=>n.type==='button'&&n.props.children==='Draw a cross-section'));
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.water});
+ assert.equal(tool(tree),undefined,'looks without the tool show no button');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/onUnderground=\{enterUnderground\}/);
+ assert.match(page,/const enterUnderground = \(\) => \{\s*if \(primaryWorkspace !== "map" \|\| !undergroundOpen\) toggleUnderground\(\);\s*setUndergroundFocusRequest\(\(request\) => request \+ 1\);\s*\};/,'opens Underground or keeps it open, then moves focus into it');
+ assert.match(page,/else if \(action === "underground"\) enterUnderground\(\);/,'the guide uses the same entry');
+ assert.match(page,/const showCategoryDock = Boolean\([^;]*!undergroundOpen/,'the dock steps aside while Underground is open');
+});
+
+test('the globe looks show the calculated day and night from their dock, at the current time',async()=>{
+ const withDaylight=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('daylight')).map(([id])=>id).sort();
+ assert.deepEqual(withDaylight,['science','sky']);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];const base={look:maps.CATEGORY_MAPS.sky,mode:'globe',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onDaylight:v=>calls.push(['show',v]),onDaylightPlay:v=>calls.push(['play',v]),onReset(){},onLayers(){},onClose(){}};
+ const button=(tree,label)=>findNode(tree,n=>n.type==='button'&&n.props.children===label);
+ const reading=tree=>findNode(tree,n=>n.props?.className==='category-map-dock-reading');
+ const daylight={on:false,playing:false,time:'Mon, Oct 26, 3:42:10 PM CDT',reading:'Kansas center: Sun 31° up · daylight'};
+ let tree=h.render(h.exports.CategoryMapDock,{...base,daylight});
+ assert.equal(button(tree,'Show day and night').props['aria-pressed'],false);
+ assert.equal(reading(tree),undefined);assert.equal(button(tree,'Play day and night'),undefined,'no clock until the layer is shown');
+ button(tree,'Show day and night').props.onClick();assert.deepEqual(calls,[['show',true]]);
+ tree=h.render(h.exports.CategoryMapDock,{...base,daylight:{...daylight,on:true}});
+ assert.match(JSON.stringify(reading(tree)),/3:42:10 PM CDT.*Kansas center: Sun 31° up · daylight/);
+ assert.equal(reading(tree).props['aria-live'],'polite');
+ button(tree,'Play day and night').props.onClick();
+ tree=h.render(h.exports.CategoryMapDock,{...base,daylight:{...daylight,on:true,playing:true}});
+ assert.equal(reading(tree).props['aria-live'],'off','a running clock is not read out every frame');
+ button(tree,'Pause day and night').props.onClick();
+ button(tree,'Hide day and night').props.onClick();
+ assert.deepEqual(calls,[['show',true],['play',true],['play',false],['show',false]]);
+ tree=h.render(h.exports.CategoryMapDock,{...base,motionAllowed:false,daylight:{...daylight,on:true,playing:true}});
+ assert.equal(button(tree,'Play day and night').props.disabled,true,'reduced motion keeps the clock still');
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.water,mode:'2d',daylight});
+ assert.equal(button(tree,'Show day and night'),undefined,'looks without the tool show no toggle');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/onDaylight=\{showCategoryDaylight\} onDaylightPlay=\{setDaylightPlayback\}/);
+ assert.match(page,/daylight=\{activeCategoryMap\.tools\?\.includes\("daylight"\) \? \{ on: daylightEnabled, playing: daylightPlaying, time: daylightDisplayTime\.central,\s*reading: `Kansas center: \$\{daylightPhaseReading\(solarReferenceElevation\(daylightInstant, activeCategoryMap\.camera\.center\[1\], activeCategoryMap\.camera\.center\[0\]\)\)\}` \} : undefined\}/,'the reading uses the layer\'s own clock at the look\'s center');
+ const show=page.slice(page.indexOf('  const showCategoryDaylight = (on: boolean) => {'),page.indexOf('  // From the category dock the investigation'));
+ assert.match(show,/toggleDaylightVisibility\(on\);\s*if \(!on\) return;/,'the layer card\'s own switch path');
+ assert.match(show,/if \(now >= interval\.startMs && now < interval\.endMs\) seekDaylight\(intervalFractionAtInstant\(now, interval\)\);/,'it opens on the current time when the chosen range holds it');
+});
+
+test('the field and survey maps start a polygon measurement from their dock',async()=>{
+ const withArea=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('area')).map(([id])=>id).sort();
+ assert.deepEqual(withArea,['agriculture','land']);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ let calls=0;const base={look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onMeasureArea:()=>calls++,onReset(){},onLayers(){},onClose(){}};
+ const tool=tree=>findNode(tree,n=>n.type==='button'&&n.props.className==='category-map-dock-tool');
+ let tree=h.render(h.exports.CategoryMapDock,{...base,measuringArea:false});
+ assert.equal(tool(tree).props.children,'Measure an area');assert.equal(tool(tree).props['aria-pressed'],false);
+ tool(tree).props.onClick();
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.land,measuringArea:true});
+ assert.equal(tool(tree).props.children,'Cancel area');assert.equal(tool(tree).props['aria-pressed'],true);
+ tool(tree).props.onClick();assert.equal(calls,2,'the same handler starts and cancels, as the Map menu\'s Polygon does');
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.water});
+ assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Measure an area'),undefined,'looks without the tool show no button');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/measuringArea=\{measureMode === "area"\} onMeasureArea=\{\(\) => beginMapMeasurement\("area"\)\}/,'the Map menu\'s own Polygon entry');
+ const css=await readFile('app/category-map-dock.css','utf8');
+ assert.match(css,/\.map-stage:has\(\.measurement-readout\) \.category-map-dock\{bottom:calc\(76px/,'the dock lifts above the readout along the bottom edge');
+ assert.match(css,/@media\(max-width:760px\)\{\.map-stage:has\(\.measurement-readout\) \.category-map-dock\{display:none\}\}/,'on a phone it steps aside so the map can be tapped');
+});
+
+test('the storm desk opens and closes the live radar loop from its dock, clear of the loop panel',async()=>{
+ const withRadar=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('radar')).map(([id])=>id);
+ assert.deepEqual(withRadar,['weather']);
+ assert.ok(maps.CATEGORY_MAPS.weather.starters.includes('nws-radar'));
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];const base={look:maps.CATEGORY_MAPS.weather,mode:'2d',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onRadar:v=>calls.push(v),onReset(){},onLayers(){},onClose(){}};
+ const tool=tree=>findNode(tree,n=>n.type==='button'&&n.props.className==='category-map-dock-tool');
+ let tree=h.render(h.exports.CategoryMapDock,{...base,radar:{watching:false,available:true}});
+ assert.equal(tool(tree).props.children,'Watch the radar loop');tool(tree).props.onClick();
+ tree=h.render(h.exports.CategoryMapDock,{...base,radar:{watching:true,available:true}});
+ assert.equal(tool(tree).props.children,'Close radar loop');assert.equal(tool(tree).props['aria-pressed'],true);tool(tree).props.onClick();
+ assert.deepEqual(calls,[true,false]);
+ tree=h.render(h.exports.CategoryMapDock,{...base,radar:{watching:false,available:false}});
+ assert.equal(tool(tree).props.disabled,true,'the live loop waits for the present map time');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/const watchRadarLoop = \(\) => \{ setOfficialContextVisible\("nws-radar", true\); setLiveInstrument\("radar"\); setInstrumentOpen\(true\); \};/);
+ assert.match(page,/<button type="button" onClick=\{watchRadarLoop\}>Watch live loop<\/button>/,'the radar card shares the same entry');
+ assert.match(page,/radar=\{\{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery\.frame === OFFICIAL_CONTEXT_PRESENT_FRAME \}\}\s*onRadar=\{\(watch\) => watch \? watchRadarLoop\(\) : closeLiveInstrument\(\)\}/);
+ const css=await readFile('app/category-map-dock.css','utf8');
+ assert.match(css,/\.map-stage\[data-live-dock="true"\] \.category-map-dock\{bottom:calc\(var\(--live-dock-clearance\) \+ 6px\)/,'the dock sits above the radar and lightning panels');
+ assert.match(css,/@media\(max-width:760px\)\{\.map-stage\[data-live-dock="true"\] \.category-map-dock\{display:none\}\}/,'on a phone the loop panel has the bottom of the map to itself');
 });
 
 test('the Layers topic guide shows the category map look and opens it only when it is not on',async()=>{

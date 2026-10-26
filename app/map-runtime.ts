@@ -83,27 +83,27 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
   },
   midnight: {
     title: "Midnight navy",
-    note: "High-contrast local style · simplified Kansas orientation, works offline",
+    note: "High-contrast local style · Census Kansas boundary, works offline",
     style: {
       version: 8,
       name: "KFM Midnight",
       sources: { [ORIENTATION_SOURCE_ID]: orientationSource() },
       layers: [
         { id: "kfm-background", type: "background", paint: { "background-color": "#081624" } },
-        ...orientationLayers({ land: "#0e2236", outline: "#d9b45f", river: "#5fa8c9", graticule: "#1b3550" }),
+        ...orientationLayers({ land: "#0e2236", outline: "#d9b45f", muted: "#5fa8c9", graticule: "#1b3550" }),
       ],
     },
   },
   prairie: {
     title: "Prairie dusk",
-    note: "Low-glare earthen local style · simplified Kansas orientation, works offline",
+    note: "Low-glare earthen local style · Census Kansas boundary, works offline",
     style: {
       version: 8,
       name: "KFM Prairie Dusk",
       sources: { [ORIENTATION_SOURCE_ID]: orientationSource() },
       layers: [
         { id: "kfm-background", type: "background", paint: { "background-color": "#17231f" } },
-        ...orientationLayers({ land: "#22312a", outline: "#c9a466", river: "#7fb3b0", graticule: "#2b3d35" }),
+        ...orientationLayers({ land: "#22312a", outline: "#c9a466", muted: "#7fb3b0", graticule: "#2b3d35" }),
       ],
     },
   },

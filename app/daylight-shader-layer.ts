@@ -57,6 +57,17 @@ export const solarElevationFromSubsolar = (subsolarLongitude: number, declinatio
 export const daylightBandForElevation = (elevation: number): DaylightBand | null =>
   DAYLIGHT_BANDS.find(({ below }) => elevation < below)?.band ?? null;
 
+/**
+ * A solar elevation in plain words, using the bands the overlay draws. Between
+ * 0° and the -0.833° boundary the Sun's disc still touches the horizon.
+ */
+export const daylightPhaseReading = (elevation: number): string => {
+  const band = daylightBandForElevation(elevation);
+  const phase = band === "night" ? "night" : band ? `${band} twilight` : elevation < 0 ? "sunrise or sunset" : "daylight";
+  const degrees = Math.round(Math.abs(elevation));
+  return `Sun ${degrees}° ${elevation < 0 ? "below the horizon" : "up"} · ${phase}`;
+};
+
 // A fixed world grid in Mercator 0–1 coordinates; fine enough to follow the
 // globe's curvature. Band edges come from the fragment shader, not the mesh.
 const GRID_X = 128, GRID_Y = 64;
