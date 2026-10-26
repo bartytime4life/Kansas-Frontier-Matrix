@@ -1,2 +1,0 @@
-ESTIMATE_CLASSIFICATION_SCHEME_MISSING	$.claim.classification_scheme_ref
-ESTIMATE_CONFIDENCE_CLASS_MISSING	$.claim.confidence_class

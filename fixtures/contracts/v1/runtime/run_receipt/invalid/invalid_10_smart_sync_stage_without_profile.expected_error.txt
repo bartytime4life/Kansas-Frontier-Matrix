@@ -1,1 +1,0 @@
-{"kind":"schema","field":"/","keyword":"required","contains":"smart_sync"}

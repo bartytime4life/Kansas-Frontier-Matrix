@@ -1,4 +1,0 @@
-DEPTH_INTERVAL_INVALID	$.depth_interval_cm
-MEASUREMENT_PROPERTY_INVALID	$.measurement.property
-MEASUREMENT_UNIT_INVALID	$.measurement.unit
-MEASUREMENT_VALUE_OUT_OF_RANGE	$.measurement.value
