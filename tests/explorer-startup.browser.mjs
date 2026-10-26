@@ -109,7 +109,7 @@ test('category evidence summary keeps source qualifications readable on its pape
   }
 });
 
-// CI renders WebGL in SwiftShader, where each welcome scene switch compiles its
+// CI renders WebGL in SwiftShader, where each welcome map style switch compiles its
 // shaders synchronously and holds the page's main thread for 2-5 s. The desktop
 // journey switches through every domain, so a call can queue behind two or
 // three switches; the test's own timeout still bounds the whole journey.
@@ -181,7 +181,7 @@ async function pageSession(b, width, height, networkOptions = {}) {
     const requestNavigation = navigation;
     void (async () => {
       const { requestId, request } = message.params, url = new URL(request.url);
-      if (holdScene && url.origin === origin.origin && /\/assets\/engine-[^/]+\.js$/.test(url.pathname)) {
+      if (holdScene && url.origin === origin.origin && /\/assets\/map-engine-[^/]+\.js$/.test(url.pathname)) {
         heldSceneRequests.push(requestId);
       } else if (url.origin === origin.origin && url.pathname.startsWith('/api/') && url.pathname !== '/api/build') {
         await call('Fetch.fulfillRequest', { requestId, responseCode: 503, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from('{"error":"Isolated navigation test: provider unavailable"}').toString('base64') });
@@ -246,7 +246,7 @@ async function pageSession(b, width, height, networkOptions = {}) {
     assert.ok(heldSceneRequests.length, 'scene request starts while the welcome is usable');
   };
   const releaseSceneModule = async () => {
-    assert.ok(heldSceneRequests.length, 'the real lazy scene engine was intercepted');
+    assert.ok(heldSceneRequests.length, 'the real lazy welcome map engine was intercepted');
     holdScene = false;
     for (const requestId of heldSceneRequests.splice(0)) await call('Fetch.continueRequest', { requestId });
   };
@@ -297,7 +297,7 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
     const b = await browser(t), p = await pageSession(b, width, height);
     p.holdSceneModule();
     await p.open('/', null, `for (const method of ['getItem','setItem','removeItem']) Object.defineProperty(Storage.prototype,method,{value(){throw new DOMException('Storage blocked','SecurityError')}});`);
-    await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.contains(document.activeElement)`, 'animated welcome owns keyboard while the scene engine loads');
+    await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.contains(document.activeElement)`, 'animated welcome owns keyboard while the map engine loads');
     assert.equal(await p.evaluate(`document.querySelectorAll('.explorer-guide:not(.living-welcome),.welcome-legacy-questions').length`), 0);
     await p.waitForSceneModule();
     await p.key('Escape', 'Escape', 27);
@@ -575,7 +575,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
         const root=document.querySelector('.explorer-guide.living-welcome');
         const selectors=['.welcome-hero','.welcome-toolbar','.discovery-hint','.topic-callout','.welcome-preview-expand'];
         const boxes=selectors.flatMap(selector=>[...root.querySelectorAll(selector)].map((node,index)=>{const r=node.getBoundingClientRect();return{name:selector+':'+index,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};}));
-        const r=root.getBoundingClientRect(),header=document.querySelector('header.topbar').getBoundingClientRect(),a=document.querySelector('.maplibregl-ctrl-attrib')?.getBoundingClientRect();
+        const r=root.getBoundingClientRect(),header=document.querySelector('header.topbar').getBoundingClientRect(),a=document.querySelector('#map-canvas .maplibregl-ctrl-attrib')?.getBoundingClientRect();
         return {boxes,root:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,scrollWidth:root.scrollWidth,clientWidth:root.clientWidth},headerBottom:header.bottom,attribution:a?{left:a.left,right:a.right,top:a.top,bottom:a.bottom,width:a.width,height:a.height}:null};
       })()`);
       assert.ok(result.root.top>=result.headerBottom-.5,`${state}: header has its own space ${JSON.stringify(result)}`);
@@ -595,29 +595,30 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
       }
     };
     const checkCredits=async state=>{
-      const count=await p.evaluate(`[...document.querySelectorAll('.maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture ')).length`);
+      const count=await p.evaluate(`[...document.querySelectorAll('#map-canvas .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture ')).length`);
       assert.equal(count,2,'both explicit fixture credits remain in the real attribution control');
       for(let index=0;index<count;index++){
-        await p.evaluate(`[...document.querySelectorAll('.maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}].scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})`);
-        const credit=await p.evaluate(`(()=>{const a=[...document.querySelectorAll('.maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}],r=a.getBoundingClientRect(),strip=document.querySelector('.maplibregl-ctrl-attrib').getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome').getBoundingClientRect(),style=getComputedStyle(a);return{text:a.textContent,width:r.width,height:r.height,top:r.top,bottom:r.bottom,left:r.left,right:r.right,strip:{top:strip.top,bottom:strip.bottom,left:strip.left,right:strip.right},welcomeBottom:root.bottom,font:parseFloat(style.fontSize),display:style.display,visibility:style.visibility,hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)?.closest('a')===a};})()`);
+        await p.evaluate(`[...document.querySelectorAll('#map-canvas .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}].scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})`);
+        const credit=await p.evaluate(`(()=>{const a=[...document.querySelectorAll('#map-canvas .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}],r=a.getBoundingClientRect(),strip=document.querySelector('#map-canvas .maplibregl-ctrl-attrib').getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome').getBoundingClientRect(),style=getComputedStyle(a);return{text:a.textContent,width:r.width,height:r.height,top:r.top,bottom:r.bottom,left:r.left,right:r.right,strip:{top:strip.top,bottom:strip.bottom,left:strip.left,right:strip.right},welcomeBottom:root.bottom,font:parseFloat(style.fontSize),display:style.display,visibility:style.visibility,hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)?.closest('a')===a,hitBy:(e=>e?e.tagName+'.'+String(e.className||'')+'#'+e.id+' in '+String(e.parentElement?.className||''):'none')(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2))};})()`);
         assert.ok(credit.width>0&&credit.height>0&&credit.font>0&&credit.display!=='none'&&credit.visibility==='visible',`${state}: credit text has actual visible geometry ${JSON.stringify(credit)}`);
         assert.ok(credit.top>=credit.welcomeBottom-.5&&credit.top>=credit.strip.top-.5&&credit.bottom<=credit.strip.bottom+.5&&credit.bottom<=height+.5&&credit.left>=credit.strip.left-.5&&credit.right<=credit.strip.right+.5,`${state}: credit fits its reserved viewport strip ${JSON.stringify(credit)}`);
-        assert.equal(credit.hit,true,`${state}: the credit is reachable above clip and background layers`);
+        assert.equal(credit.hit,true,`${state}: the credit is reachable above clip and background layers ${JSON.stringify(credit)}`);
       }
     };
     await checkLayout('initial');
     await checkCredits('initial license strip');
+    await p.wait(`!!document.querySelector('.living-welcome .domain-stage .maplibregl-ctrl-attrib')`,'the live welcome map carries its own provider credits');
     for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('header.topbar')).visibility`),'visible','global header remains available');
     for(const selector of ['.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'hidden','background map chrome does not peek through welcome');
-    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.maplibregl-ctrl-attrib')).visibility`),'visible','real attribution remains available');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('#map-canvas .maplibregl-ctrl-attrib')).visibility`),'visible','real attribution remains available');
     await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.site-root').dataset.welcomeSources==='open'`,'Map sources opens the current attribution strip');
-    await p.wait(`(()=>{const bar=document.querySelector('.maplibregl-ctrl-bottom-right'),strip=document.querySelector('.maplibregl-ctrl-attrib'),root=document.querySelector('.explorer-guide.living-welcome'),r=strip?.getBoundingClientRect(),port=root?.getBoundingClientRect();return bar&&r&&port&&!bar.getAnimations({subtree:true}).some(animation=>animation.pending||animation.playState==='running')&&r.top>=port.bottom-.5&&r.bottom<=innerHeight+.5;})()`,'source-strip entrance finishes inside its reserved viewport');
+    await p.wait(`(()=>{const bar=document.querySelector('#map-canvas .maplibregl-ctrl-bottom-right'),strip=document.querySelector('#map-canvas .maplibregl-ctrl-attrib'),root=document.querySelector('.explorer-guide.living-welcome'),r=strip?.getBoundingClientRect(),port=root?.getBoundingClientRect();return bar&&r&&port&&!bar.getAnimations({subtree:true}).some(animation=>animation.pending||animation.playState==='running')&&r.top>=port.bottom-.5&&r.bottom<=innerHeight+.5;})()`,'source-strip entrance finishes inside its reserved viewport');
     await checkLayout('source strip open');
     await checkCredits('expanded source strip');
-    assert.match(await p.evaluate(`document.querySelector('.maplibregl-ctrl-attrib').textContent`),/Isolated browser layout fixture attribution/,'source text remains a labeled empty fixture, not accepted observations');
-    assert.ok(await p.evaluate(`parseFloat(getComputedStyle(document.querySelector('.maplibregl-ctrl-attrib-inner')).fontSize)>0`),'expanded sources expose readable attribution text');
+    assert.match(await p.evaluate(`document.querySelector('#map-canvas .maplibregl-ctrl-attrib').textContent`),/Isolated browser layout fixture attribution/,'source text remains a labeled empty fixture, not accepted observations');
+    assert.ok(await p.evaluate(`parseFloat(getComputedStyle(document.querySelector('#map-canvas .maplibregl-ctrl-attrib-inner')).fontSize)>0`),'expanded sources expose readable attribution text');
     const before=await p.evaluate(`({search:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`);
     // All domains get a real native-keyboard detail journey on desktop and the
     // smallest phone. Other viewports retain captured and uncaptured examples.
@@ -651,7 +652,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     assert.equal(previewControls.length,2);
     for(const box of previewControls)assert.ok(box.width>0&&box.height>0&&box.top>=0&&box.bottom<=height&&box.left>=0&&box.right<=width&&box.hit,'Return and Pause stay visible and operable: '+JSON.stringify(box));
     await p.key('Tab','Tab',9);assert.equal(await p.evaluate(`document.activeElement.matches('.welcome-preview-pause')`),true,'native Tab reaches Pause');
-    await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.living-welcome').dataset.motion==='paused'`,'Pause stops the illustrative scene');
+    await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.living-welcome').dataset.motion==='paused'`,'Pause stops the live map drift');
     await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.living-welcome').dataset.motion==='playing'`,'Play resumes after explicit input');
     await p.evaluate(`document.querySelector('.welcome-preview-expand').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.living-welcome').dataset.fullscreen==='false'&&document.querySelector('.living-welcome').dataset.active===undefined`,'Return clears the explicit preview pin');

@@ -23,7 +23,7 @@ function environment(reduced=false){
 async function welcome(reduced=false){
  const env=environment(reduced),calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
-  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'./scenes/catalog.mjs':sceneCatalog,'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
+  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas'})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
@@ -64,7 +64,7 @@ test('nested welcome dialogs own and return keyboard focus in the layout commit'
  const root=findNode(tree,node=>node.props?.className==='explorer-guide living-welcome');
  root.props.ref.current={contains:node=>node===trigger,querySelector:()=>null};
  h.env.document.activeElement=trigger;
- byText(tree,'Scene notes').props.onClick();
+ byText(tree,'Map notes').props.onClick();
  tree=h.harness.render(h.harness.exports.default,h.props);
  findNode(tree,node=>node.props?.className==='welcome-dialog').props.ref.current={
   contains:node=>node===close,querySelector:()=>close,
@@ -96,7 +96,7 @@ test('nested modal Tab wraps through eligible controls and a notes-only modal ke
   const root=rootOf(tree),panel={contains:node=>controls.includes(node),querySelector:()=>controls[0]};
   root.props.ref.current={contains:node=>node===trigger,querySelector:()=>null};
   h.env.document.activeElement=trigger;
-  byText(tree,'Scene notes').props.onClick();
+  byText(tree,'Map notes').props.onClick();
   tree=h.harness.render(h.harness.exports.default,h.props);
   findNode(tree,node=>node.props?.className==='welcome-dialog').props.ref.current=panel;
   h.env.focusCandidates=actual=>{assert.equal(actual,panel);return controls;};
@@ -389,5 +389,16 @@ test('leaving a pinned full-window preview ends the preview and restores hover a
  assert.equal(rootOf(tree).props['data-immersive'],false,'the hero and the other cards return');
  findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-sky ')).props.onPointerEnter({pointerType:'mouse'});tree=h.render();
  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,'sky');
+ h.harness.dispose();
+});
+
+test('the live map shows the default map until a visitor points at a category, then that category\'s map',async()=>{
+ const h=await welcome();let tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,null,'no topic preview, and no opt-in provider, before a choice');
+ assert.match(JSON.stringify(findNode(tree,node=>node.props?.className==='discovery-scene')),/Kansas/);
+ findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-aviation ')).props.onPointerEnter({pointerType:'mouse',currentTarget:{}});tree=h.render();
+ assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,'aviation');
+ assert.match(JSON.stringify(findNode(tree,node=>node.props?.className==='discovery-scene')),/Aviation chart/);
+ assert.deepEqual(h.calls,[],'previewing a map changes nothing in the Explorer');
  h.harness.dispose();
 });

@@ -266,21 +266,39 @@ derivative hashes. No remote source is fetched. At runtime only a selected
 capture is requested; the largest animation is about 5.3 MB. This trades video
 compression efficiency for the requested image-animation presentation.
 
-### Scene switching and shader compiles
+### Live map behind the categories
 
-The domain stage keeps one WebGL renderer (`app/living-welcome/scenes/engine.mjs`)
-and builds only the selected scene. A new scene's shaders are compiled the first
-time it draws, which can hold the main thread: under software WebGL (SwiftShader
-in CI) each switch measured 2-5 s, almost all of it in shader compilation.
+The domain stage is a live map, not an illustration. `DomainStage.jsx` lazily
+loads `app/living-welcome/map-engine.mjs`, which keeps one non-interactive
+MapLibre map behind the welcome (provider credits stay on it in the compact
+attribution control).
 
-Where the browser offers `KHR_parallel_shader_compile` (common with hardware
-WebGL), the engine now awaits `renderer.compileAsync` after building the next
-scene and swaps only when its shaders are ready. The current scene keeps
-animating in the meantime, and a scene superseded during its compile is disposed
-without being drawn. Without the extension the first draw compiles, as before.
-`tests/welcome-scene-engine.test.mjs` covers all three paths. Smoothness on
-hardware GPUs has not been measured from this environment, which only has
-SwiftShader.
+- **Which map.** `app/welcome-map-view.ts` takes each topic's basemap, view
+  (2D, 3D terrain or globe) and camera from `CATEGORY_MAPS`, the same look the
+  category opens with in the Explorer. The base map choice decides the preview.
+  3D terrain looks get their own Terrarium DEM source; globe looks the globe
+  projection.
+- **Before a choice.** Until a visitor points at, focuses or pins a category,
+  the stage shows the Explorer's default vector map over the whole state. So
+  providers that are off by default (Esri imagery, the Kansas aerials, USGS
+  topo and the Terrarium DEM) are requested only for a category the visitor
+  chose to preview.
+- **No data layers.** The preview switches on no provider-context layers; the
+  caption names the map, its view and its basemap credits.
+- **Motion.** While the welcome plays, tilted and globe views turn slowly about
+  their centre and flat maps ease gently in and out (`welcomeDriftLeg`). Pause,
+  reduced motion, a hidden tab and open details hold the camera still.
+- **Switching.** A pointer sweep across the cards restyles once it settles
+  (220 ms). A preview with the same basemap and view only moves the camera.
+  Styles are resolved by the engine and passed whole to `setStyle`, because
+  `setStyle`'s `transformStyle` waits for the previous style to load and would
+  stall every later preview after one provider failure.
+
+`tests/welcome-map.test.mjs` covers the views, the terrain and globe styles, the
+drift and the engine's style handling; `tests/living-welcome.test.mjs` covers the
+default-map rule. Provider tiles cannot be reached from the development
+container, so the rendered maps were checked by their provider requests, not by
+eye.
 
 ## Time instrument
 

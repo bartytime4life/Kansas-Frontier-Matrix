@@ -1,28 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
-import { SCENE_CATALOG, SCENE_LABEL } from './scenes/catalog.mjs';
+import { BASEMAPS } from '../map-runtime';
+import { welcomeView } from '../welcome-map-view';
 
 /**
- * Full-window illustrative scene for the selected domain. The WebGL engine
- * loads after the welcome has painted; until then (or without WebGL) the stage
- * stays a quiet backdrop and the caption still names the scene.
+ * Full-window live map for the selected domain: the real map that topic opens
+ * with (basemap, view and camera), drifting slowly while the welcome plays.
+ * The map engine loads after the welcome has painted; until then (or without
+ * WebGL) the stage stays a quiet backdrop and the caption still names the map.
  */
-export function DomainStage({ topic, paused = false, reduced = false, onBeat }) {
- const canvas = useRef(null), engine = useRef(null), latest = useRef({ topic, paused, reduced }), beatListener = useRef(onBeat);
- const [beat, setBeat] = useState({ id: topic, index: 0 }), [state, setState] = useState('loading');
+export function DomainStage({ topic, paused = false, reduced = false }) {
+ const host = useRef(null), engine = useRef(null), latest = useRef({ topic, paused, reduced });
+ const [state, setState] = useState('loading');
  useEffect(() => {
   let cancelled = false, idle = 0;
-  const boot = () => import('./scenes/engine.mjs').then(({ createSceneEngine }) => {
-   if (cancelled || !canvas.current) return;
-   const instance = createSceneEngine(canvas.current, {
-    onBeat: (id, index) => { setBeat({ id, index }); beatListener.current?.(id, index); },
-    onReady: () => setState('ready'),
-    onError: () => setState('unavailable'),
-   });
+  const boot = () => import('./map-engine.mjs').then(({ createWelcomeMap }) => {
+   if (cancelled || !host.current) return null;
+   return createWelcomeMap(host.current, { onReady: () => { if (!cancelled) setState('ready'); }, onError: () => { if (!cancelled) setState('unavailable'); } });
+  }).then(instance => {
    if (!instance) return;
+   if (cancelled) { instance.dispose(); return; }
    engine.current = instance;
    const { topic: id, paused: stopped, reduced: still } = latest.current;
    instance.setReduced(still); instance.setPaused(stopped); instance.show(id);
-   if (import.meta.env?.DEV) window.__kfmScene = instance; // development review hook only
   }).catch(() => { if (!cancelled) setState('unavailable'); });
   if (typeof window.requestIdleCallback === 'function') idle = window.requestIdleCallback(boot, { timeout: 900 });
   else idle = setTimeout(boot, 120);
@@ -32,14 +31,13 @@ export function DomainStage({ topic, paused = false, reduced = false, onBeat }) 
    engine.current?.dispose(); engine.current = null;
   };
  }, []);
- useEffect(() => { beatListener.current = onBeat; }, [onBeat]);
  // The latest props also seed the engine when it finishes loading.
  useEffect(() => { latest.current = { topic, paused, reduced }; engine.current?.show(topic); }, [topic, paused, reduced]);
  useEffect(() => { engine.current?.setPaused(paused); }, [paused]);
  useEffect(() => { engine.current?.setReduced(reduced); }, [reduced]);
- const entry = SCENE_CATALOG[topic], index = beat.id === topic ? beat.index : 0;
- return <div className="domain-stage" data-state={state} data-topic={topic}>
-  <canvas ref={canvas} aria-hidden="true" />
-  {entry && <p className="domain-stage-caption"><span>{SCENE_LABEL}</span><strong key={`${topic}-${index}`}>{entry.beats[index][1]}</strong></p>}
+ const view = welcomeView(topic);
+ return <div className="domain-stage" data-state={state} data-topic={view.topic ?? 'kansas'}>
+  <div ref={host} className="domain-stage-map" />
+  <p className="domain-stage-caption"><span>Live map preview</span><strong key={view.topic ?? 'kansas'}>{view.name}</strong><small>{view.detail}</small><small className="domain-stage-credit">{BASEMAPS[view.basemap].note}</small></p>
  </div>;
 }
