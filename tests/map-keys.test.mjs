@@ -59,7 +59,7 @@ test('the dock draws each key as the map draws it, and the page passes the keys 
  assert.doesNotMatch(JSON.stringify(tree),/category-map-dock-key/,'no keys, no section');
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/keys=\{mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\)\}/);
+ assert.match(page,/keys=\{withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\)\}/);
 });
 
 const luminance=hex=>{const c=rgb(hex).map(v=>v/255).map(v=>v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4);return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];};
@@ -107,4 +107,27 @@ test('the Hazard watch keys alerts, satellite detections and reported incidents,
  assert.match(detections.note,/375 m detection pixel[\s\S]*not a perimeter/);
  assert.deepEqual(reports.items.map(i=>[i.label,i.shape]),[['Wildfire','ring'],['Prescribed fire','ring'],['Incident complex','ring']],'a ring, never a detection dot');
  assert.deepEqual(reports.items.map(i=>i.color),keys.FIRE_REPORT_COLORS.map(([,c])=>c));
+});
+
+test('reviewed discharge snapshots get a proportional-symbol key at the sizes the gauges are drawn',async()=>{
+ const key=keys.REVIEWED_DISCHARGE_KEY;
+ // radius = 3 + 0.06·√Q px: 100 → 3.6, 1,000 → 4.9, 10,000 → 9, 62,500 → 18 (the cap).
+ assert.deepEqual(key.items.slice(0,4).map(i=>[i.label,i.size]),[['100',7],['1,000',10],['10,000',18],['62,500+',36]]);
+ assert.deepEqual(key.items.slice(4).map(i=>[i.label,i.stroke]),[['Provisional',keys.GAUGE_PROVISIONAL_RING],['Approved',keys.GAUGE_APPROVED_RING]]);
+ assert.match(key.note,/area grows with discharge from a 3 px floor[\s\S]*above 62,500/);
+ assert.deepEqual(keys.dischargeRadius().slice(3),keys.DISCHARGE_RADIUS_STOPS.flat());
+ const layers=await readFile('app/reviewed-snapshot-layers.ts','utf8');
+ assert.match(layers,/"circle-radius": dischargeRadius\(\), "circle-color": GAUGE_FILL_COLOR/,'the gauges use the keyed scale');
+ assert.match(layers,/GAUGE_PROVISIONAL_RING, GAUGE_APPROVED_RING\]/);
+});
+
+test('a drawn reviewed snapshot adds its key once, and alerts share the live severity key',async()=>{
+ const live=keys.mapKeysFor(maps.CATEGORY_MAPS.water.starters,()=>true);
+ assert.deepEqual(keys.withReviewedKey(live,'usgs-streamflow').map(k=>k.id),[...live.map(k=>k.id),'reviewed-discharge']);
+ assert.equal(keys.withReviewedKey(live,null),live,'no snapshot drawn, no key');
+ const storm=keys.mapKeysFor(maps.CATEGORY_MAPS.weather.starters,()=>true);
+ assert.deepEqual(keys.withReviewedKey(storm,'nws-alerts').map(k=>k.id),['nws-alerts'],'not shown twice');
+ assert.deepEqual(keys.withReviewedKey([],'nws-alerts').map(k=>k.id),['nws-alerts'],'shown when the live alerts are off');
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/keys=\{withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\)\}/);
 });

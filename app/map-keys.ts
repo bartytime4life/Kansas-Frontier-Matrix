@@ -48,6 +48,19 @@ export const FIRE_CONFIDENCE_COLORS = Object.freeze({ high: "#ff3757", nominal: 
 export const FIRE_REPORT_COLORS = Object.freeze([["Wildfire", "#ff4e67"], ["Prescribed fire", "#ffcb6a"], ["Incident complex", "#b9a4ff"]] as const);
 export const FIRE_REPORT_OTHER_COLOR = "#ff4e67";
 
+/**
+ * Reviewed USGS discharge snapshots: circle radius (px) stops over the square
+ * root of discharge (ft³/s), so area grows with discharge from a 3 px floor
+ * (radius = 3 + 0.06·√Q) and stops growing at 62,500 ft³/s. The ring says
+ * whether the value is provisional or approved.
+ */
+export const DISCHARGE_RADIUS_STOPS = Object.freeze([[0, 3], [100, 9], [250, 18]] as const);
+export const GAUGE_FILL_COLOR = "#3fd0c9";
+export const GAUGE_PROVISIONAL_RING = "#f2b84b";
+export const GAUGE_APPROVED_RING = "#f4fbfb";
+export const dischargeRadius = (): ExpressionSpecification =>
+  ["interpolate", ["linear"], ["sqrt", ["max", 0, ["to-number", ["get", "value"], 0]]], ...DISCHARGE_RADIUS_STOPS.flat()] as unknown as ExpressionSpecification;
+
 /** Linear interpolation through [x, y] stops, clamped at the ends, as MapLibre's "interpolate" does. */
 const along = (stops: readonly (readonly [number, number])[], x: number): number => {
   if (x <= stops[0][0]) return stops[0][1];
@@ -58,7 +71,7 @@ const along = (stops: readonly (readonly [number, number])[], x: number): number
   return stops[stops.length - 1][1];
 };
 
-export type MapKeyItem = Readonly<{ label: string; color: string; shape: "dot" | "area" | "line" | "ring"; size?: number; dashed?: boolean }>;
+export type MapKeyItem = Readonly<{ label: string; color: string; shape: "dot" | "area" | "line" | "ring"; size?: number; dashed?: boolean; stroke?: string }>;
 /** Keys that share a group are shown as one, under the group's title and note. */
 export type MapKey = Readonly<{ id: string; title: string; items: readonly MapKeyItem[]; note: string; group?: Readonly<{ id: string; title: string; note: string }> }>;
 
@@ -102,6 +115,19 @@ export const MAP_KEYS: Readonly<Record<string, MapKey>> = Object.freeze({
   })),
 });
 
+/** The key for reviewed discharge snapshots, drawn at the sizes the gauges take. */
+export const REVIEWED_DISCHARGE_KEY: MapKey = Object.freeze({
+  id: "reviewed-discharge", title: "Reviewed discharge (USGS, ft³/s)",
+  items: Object.freeze([
+    ...([100, 1_000, 10_000, 62_500] as const).map((flow, i, all) => Object.freeze({
+      label: `${flow.toLocaleString("en-US")}${i === all.length - 1 ? "+" : ""}`, color: GAUGE_FILL_COLOR, shape: "dot" as const,
+      size: Math.round(2 * along(DISCHARGE_RADIUS_STOPS, Math.sqrt(flow))), stroke: GAUGE_APPROVED_RING })),
+    Object.freeze({ label: "Provisional", color: GAUGE_FILL_COLOR, shape: "dot" as const, size: 12, stroke: GAUGE_PROVISIONAL_RING }),
+    Object.freeze({ label: "Approved", color: GAUGE_FILL_COLOR, shape: "dot" as const, size: 12, stroke: GAUGE_APPROVED_RING }),
+  ]),
+  note: "Circle area grows with discharge from a 3 px floor; flows above 62,500 ft³/s draw at the largest size. Amber ring: provisional USGS value; white: approved.",
+});
+
 /** The keys for the starter layers a map shows, in the map's own order; keys of one group are merged. */
 export const mapKeysFor = (starters: readonly string[], visible: (id: string) => boolean): readonly MapKey[] => {
   const keys: MapKey[] = [];
@@ -114,4 +140,10 @@ export const mapKeysFor = (starters: readonly string[], visible: (id: string) =>
     else keys.push(group ? { id: group.id, title: group.title, note: group.note, items: key.items } : key);
   }
   return keys;
+};
+
+/** A map's keys with the key for a drawn reviewed snapshot added, once (alerts share the live key). */
+export const withReviewedKey = (keys: readonly MapKey[], reviewedSourceId: string | null): readonly MapKey[] => {
+  const key = reviewedSourceId === "usgs-streamflow" ? REVIEWED_DISCHARGE_KEY : reviewedSourceId === "nws-alerts" ? MAP_KEYS["nws-alerts"] : null;
+  return key && !keys.some(k => k.id === key.id) ? [...keys, key] : keys;
 };
