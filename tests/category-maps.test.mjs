@@ -289,6 +289,7 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.deepEqual(recipes,['daylight','golden','blue','survey']);
  for(const [id,look] of Object.entries(maps.CATEGORY_MAPS))if(look.light!==undefined)assert.ok(recipes.includes(look.light),`${id}: ${look.light} is a scene recipe`);
  assert.equal(maps.CATEGORY_MAPS.terrain.light,'golden','relief under a raking sun');
+ assert.deepEqual([...maps.CATEGORY_MAPS.terrain.starters],[],'the relief basemap is lit by the scene sun; no fixed-light provider hillshade over it');
  assert.equal(maps.CATEGORY_MAPS.weather.light,'blue','weather on a dark sky');
  const page=await readFile('app/page.tsx','utf8');
  const open=page.slice(page.indexOf('  const openCategoryMap = (topic: TopicId) => {'),page.indexOf('  const runWelcomeMap ='));

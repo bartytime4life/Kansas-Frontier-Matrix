@@ -88,6 +88,7 @@ test("a category basemap's own hillshade follows the scene light and suppresses 
     assert.equal(map.getPaintProperty(id, "hillshade-illumination-direction"), 100, "the dock's sun control moves the basemap's shadows");
     overlays.syncRelief2d(map, dem, "dusk", -45);
     assert.equal(map.getPaintProperty(id, "hillshade-illumination-direction"), 315, "normalized to 0–360");
+    assert.equal(map.getPaintProperty(id, "hillshade-illumination-altitude"), 30, "lit from the scene light's height");
     assert.equal(map.getLayer(overlays.RELIEF_2D_LAYER_ID), undefined, "no second hillshade is added");
     assert.equal(map.getSource(overlays.RELIEF_2D_SOURCE_ID), undefined);
   }

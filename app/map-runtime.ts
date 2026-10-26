@@ -14,7 +14,7 @@ import type { TemporalSweepQuery } from "./temporal-sweep";
 import { buildDaylightGeometry, solarPositionAt } from "./daylight-layer";
 import { createDaylightShaderLayer, DAYLIGHT_SHADE_STOPS, type DaylightShaderLayer } from "./daylight-shader-layer";
 import { ORIENTATION_SOURCE_ID, orientationLayers, orientationSource } from "./kansas-orientation";
-import { CATEGORY_BASEMAPS } from "./category-basemaps";
+import { BASEMAP_HILLSHADE_LAYER_ID, CATEGORY_BASEMAPS } from "./category-basemaps";
 import { CATEGORY_BASEMAP_KEYS, type CategoryBasemapKey } from "./category-basemap-keys";
 import { CINEMATIC_LIGHT_COLOR, CINEMATIC_LIGHT_INTENSITY, CINEMATIC_SKIES, GLOBE_ATMOSPHERE_BLEND, SELECTION_PULSE_LAYER_ID, effectiveSceneLight, registerCurtainLight, reliefPaintFor, sceneEffectsFor } from "./scene-effects";
 
@@ -309,7 +309,14 @@ export const TERRAIN_HILLSHADE_SOURCE_ID = "kfm-terrain-shadow-dem";
 export const TERRAIN_HILLSHADE_LAYER_ID = "kfm-terrain-hillshade";
 /** The photographic basemap's imagery layer; with it loaded, no painted relief is drawn over the photograph. */
 export const PHOTOREAL_IMAGERY_LAYER_ID = "photoreal-world-imagery";
-const reliefShadingVisibility = (map: MapLibreMap): "visible" | "none" => map.getLayer(PHOTOREAL_IMAGERY_LAYER_ID) ? "none" : "visible";
+/**
+ * The terrain hillshade is drawn only where nothing else shades the ground:
+ * not over the photograph, which carries the real light of its flight, and
+ * not over a category basemap, whose own hillshade is already lit by the
+ * scene's sun. Two hillshades would double every shadow.
+ */
+const reliefShadingVisibility = (map: MapLibreMap): "visible" | "none" =>
+  map.getLayer(PHOTOREAL_IMAGERY_LAYER_ID) || map.getLayer(BASEMAP_HILLSHADE_LAYER_ID) ? "none" : "visible";
 export const TERRAIN_COLOR_SOURCE_ID = "kfm-terrain-color-dem";
 
 /** Only failures from the standard style itself may replace it: its own tile
