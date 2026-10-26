@@ -132,6 +132,32 @@ test('relief looks offer a cross-section through the existing terrain investigat
  assert.match(page,/<details className="explorer-secondary"><summary>Terrain tools, sources &amp; rendering<\/summary>[\s\S]{0,9000}?className="terrain-investigation"/,'the steps live in that uncontrolled section');
 });
 
+test('the water map toggles the flowing-water effect from its dock and reports what it drew',async()=>{
+ const withFlow=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('flow')).map(([id])=>id);
+ assert.deepEqual(withFlow,['water']);
+ assert.ok(maps.CATEGORY_MAPS.water.starters.includes('usgs-streamflow'),'the gauges that light reaches are a starter of the same look');
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];const base={look:maps.CATEGORY_MAPS.water,mode:'2d',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onTransect(){},onFlow:v=>calls.push(v),onReset(){},onLayers(){},onClose(){}};
+ const button=(tree,label)=>findNode(tree,n=>n.type==='button'&&n.props.children===label);
+ const reading=tree=>findNode(tree,n=>n.props?.className==='category-map-dock-reading');
+ let tree=h.render(h.exports.CategoryMapDock,{...base,flow:{on:false,reading:null,still:null}});
+ assert.equal(button(tree,'Show river flow').props['aria-pressed'],false);assert.equal(reading(tree),undefined);
+ button(tree,'Show river flow').props.onClick();assert.deepEqual(calls,[true]);
+ tree=h.render(h.exports.CategoryMapDock,{...base,flow:{on:true,reading:'1,204 reaches with a USGS flow direction · 12 lit by a gauge reading',still:null}});
+ assert.match(JSON.stringify(reading(tree)),/1,204 reaches with a USGS flow direction · 12 lit by a gauge reading"/);
+ button(tree,'Hide river flow').props.onClick();assert.deepEqual(calls,[true,false]);
+ tree=h.render(h.exports.CategoryMapDock,{...base,flow:{on:true,reading:null,still:'reduced motion'}});
+ assert.match(JSON.stringify(reading(tree)),/Starting river flow….*drawn still: .*reduced motion/,'the dock names why the rivers hold still');
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.terrain,flow:{on:false,reading:null,still:null}});
+ assert.equal(button(tree,'Show river flow'),undefined,'looks without the tool show no toggle');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/flow=\{\{ on: sceneEffects\.waterFlow, reading: sceneReadings\.waterFlow, still: runtime\.kind === "degraded" \? "the map is degraded" : runtime\.kind !== "ready" \? "the map is still starting" : reducedMotion \? "reduced motion" : !dynamicEffects \? "ambient motion is off" : browserRenderBudget\(renderQuality\)\.efficient \? "efficient rendering" : null \}\}/,'the dock names each condition of the water animation\'s motion rule');
+ assert.match(page,/onFlow=\{\(waterFlow\) => updateSceneEffects\(\{ \.\.\.sceneEffectsRef\.current, waterFlow \}\)\}/,'only the visitor turns it on or off, through the shared settings path');
+ assert.match(page,/const flowing = motionAllowed && sceneEffects\.waterFlow;/);
+ assert.match(page,/const motionAllowed = runtime\.kind === "ready" && dynamicEffects && !reducedMotion && !browserRenderBudget\(renderQuality\)\.efficient;/,'same rule as the dock reading');
+});
+
 test('the Layers topic guide shows the category map look and opens it only when it is not on',async()=>{
  const h=await componentHarness('app/topic-navigation.tsx',{'next/link':{default:'a'},'./layer-workspaces':topics},{URLSearchParams});
  const look=maps.CATEGORY_MAPS.aviation;let opened=0;

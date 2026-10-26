@@ -29,6 +29,8 @@
 .category-map-dock .category-map-dock-tool{min-height:44px;border:1px solid #d8c58f88;border-radius:8px;background:#d8c58f1a;color:#f1e6c2;font-size:12px;font-weight:700;cursor:pointer}
 .category-map-dock .category-map-dock-tool:hover{background:#d8c58f2e}
 .category-map-dock .category-map-dock-tool:disabled{opacity:.45;cursor:not-allowed}
+.category-map-dock .category-map-dock-tool[aria-pressed=true]{background:#d8c58f;color:#14212a}
+.category-map-dock-reading{margin:0;font-size:12px;line-height:1.4;color:#c9dbe2}
 .category-map-dock-lede{margin:0;font-size:12px;line-height:1.45;color:#b9cdd6}
 .category-map-dock-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .category-map-dock-actions button{min-height:44px;border:1px solid #749bac80;border-radius:8px;background:#0a2d3d;color:#e6eff2;font-size:12px;font-weight:600;cursor:pointer}

@@ -45,7 +45,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -69,6 +69,12 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
   onSunPlay: (on: boolean) => void;
   /** Starts the terrain investigation for looks that offer the transect tool. */
   onTransect?: () => void;
+  /**
+   * The flowing-water effect and its reading, for looks that offer the flow
+   * tool. `still` names why the rivers are not moving, if they are not.
+   */
+  flow?: Readonly<{ on: boolean; reading: string | null; still: string | null }>;
+  onFlow?: (on: boolean) => void;
   onReset: () => void;
   onLayers: () => void;
   onClose: () => void;
@@ -105,6 +111,11 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
         <button type="button" className="category-map-dock-sun" aria-pressed={true} onClick={() => onRealSun(false)} title="Set the light direction by hand">Set light by hand</button>
       </div>
       : <button type="button" className="category-map-dock-sun" aria-pressed={false} onClick={() => onRealSun(true)} title="Light the map from where the sun is now over the map center">Use the real sun now</button>)}
+    {look.tools?.includes("flow") && flow && onFlow && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={flow.on} onClick={() => onFlow(!flow.on)}
+        title="Rivers flow downstream where USGS 3DHP maps a direction; a USGS gauge reading lights its own reach">{flow.on ? "Hide river flow" : "Show river flow"}</button>
+      {flow.on && <p className="category-map-dock-reading" aria-live="polite">{flow.reading ?? "Starting river flow…"}{flow.still ? ` · drawn still: ${flow.still}` : ""}</p>}
+    </>}
     {look.tools?.includes("transect") && onTransect && <button type="button" className="category-map-dock-tool" disabled={!terrainAvailable} onClick={onTransect}
       title="Draw a line across the relief, then preview its elevation profile without the 3D exaggeration">Draw a cross-section</button>}
     <p className="category-map-dock-lede">{look.lede}</p>
