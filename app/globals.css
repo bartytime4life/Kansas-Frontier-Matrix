@@ -3141,7 +3141,10 @@ body { font-size: 14px; }
 .noaa-radar-error strong { color: var(--red); font-size: 11px; }
 .noaa-radar-error span { color: var(--muted); font-size: 10px; line-height: 1.4; }
 .noaa-radar-motion-note { margin: 0; border-left: 2px solid var(--gold); color: var(--gold-soft); padding-left: 8px; font-size: 10px; }
-.noaa-radar-loop > footer { color: var(--dim); font-size: 10px; line-height: 1.35; }
+.noaa-radar-details > footer { color: var(--dim); font-size: 10px; line-height: 1.35; }
+/* Settings, legend and notes sit in the dock's own grid on wider screens; the toggle is for phones. */
+.noaa-radar-details { display: contents; }
+.noaa-radar-details-toggle { display: none; }
 
 .lightning-observatory {
   position: absolute;
@@ -3501,6 +3504,17 @@ body { font-size: 14px; }
     transform: none;
   }
   .noaa-radar-loop > header strong { font-size: 14px; }
+  /* The radar dock opens on its reading and transport and sits above the time-sweep clock, leaving the map in view; Settings opens the rest. */
+  .noaa-radar-loop { bottom: calc(126px + env(safe-area-inset-bottom)); }
+  .noaa-radar-loop[data-details="closed"] { max-height: min(36dvh, 300px); }
+  .noaa-radar-loop[data-details="closed"] .noaa-radar-details { display: none; }
+  .noaa-radar-loop > header { flex-wrap: wrap; row-gap: 6px; }
+  .noaa-radar-loop > header div { flex: 1 1 100%; }
+  .noaa-radar-loop > header > b { margin-right: auto; }
+  .noaa-radar-details-toggle { display: inline-flex; flex: none; align-items: center; min-height: 44px; border: 1px solid rgba(115, 199, 210, .42); border-radius: 8px; background: transparent; color: var(--water); padding: 0 10px; font-size: 12px; font-weight: 800; }
+  .noaa-radar-details-toggle::after { content: "▾"; margin-left: 6px; }
+  .noaa-radar-details-toggle[aria-expanded="true"]::after { content: "▴"; }
+  .map-stage[data-live-dock="true"]:has(.noaa-radar-loop[data-details="closed"]) { --live-dock-clearance: calc(min(36dvh, 300px) + 136px + env(safe-area-inset-bottom)); }
   .hydrology-identity > strong,
   .hydrology-hydrograph > header strong { font-size: 14px; }
   .noaa-radar-transport { grid-template-columns: 42px 78px 42px minmax(80px, 1fr) 60px; }

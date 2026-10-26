@@ -1470,6 +1470,8 @@ export default function Home() {
   const [sourceStatusOpen, setSourceStatusOpen] = useState(false);
   const [sourceStatusScope, setSourceStatusScope] = useState<"selected" | "all">("selected");
   const [instrumentOpen, setInstrumentOpen] = useState(false);
+  // On phones the radar dock opens on its reading and transport; loop, speed, opacity and the legend fold behind Settings.
+  const [radarDetailsOpen, setRadarDetailsOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
   const [layerCatalogView, setLayerCatalogView] = useState<LayerBrowseView>("official");
   const [starterPanelOpen, setStarterPanelOpen] = useState(true);
@@ -10038,6 +10040,7 @@ export default function Home() {
           {instrumentOpen && !glmFlashesEnabled && showRadarDock && <aside
             className="noaa-radar-loop"
             data-state={noaaRadarDisplayState.toLowerCase().replaceAll(" ", "-")}
+            data-details={radarDetailsOpen ? "open" : "closed"}
             tabIndex={0}
             aria-label="NOAA observed radar loop controls"
             onKeyDown={(event) => {
@@ -10052,6 +10055,7 @@ export default function Home() {
             <header>
               <div><span>OBSERVED RADAR · EXTERNAL CONTEXT</span><strong>{NOAA_RADAR_PRODUCT_TITLE}</strong></div>
               <b>{noaaRadarDisplayState}</b>
+              <button type="button" className="noaa-radar-details-toggle" aria-expanded={radarDetailsOpen} aria-controls="noaa-radar-details" onClick={() => setRadarDetailsOpen(open => !open)}>Settings</button>
             </header>
             <div className="noaa-radar-frame" role="status" aria-live={noaaRadarPlaying ? "off" : "polite"} aria-busy={noaaRadarFrameLoadState === "loading"} aria-atomic="true">
               <div><strong>{noaaRadarFrameHeadline}</strong><small>{noaaRadarFrameDetail}</small></div>
@@ -10072,23 +10076,25 @@ export default function Home() {
               }} aria-label="Select an exact NOAA radar observation" aria-valuetext={noaaRadarActiveFrame ? `${formatNoaaRadarLocalTime(noaaRadarActiveFrame)}; ${formatNoaaRadarUtcTime(noaaRadarActiveFrame)}` : "No radar frame available"} />
               <button className="noaa-radar-live" type="button" aria-pressed={noaaRadarFollowLatest && noaaRadarSelectedIsLatest} onClick={jumpNoaaRadarToLatest}>Latest</button>
             </div>
-            <div className="noaa-radar-settings">
-              <label><span>Loop</span><select value={noaaRadarLoopSpan} onChange={(event) => { setNoaaRadarPlaying(false); setNoaaRadarLoopSpan(event.target.value === "all" ? "all" : Number(event.target.value) as NoaaRadarLoopSpanMinutes); }}><option value={30}>30 min</option><option value={60}>1 hour</option><option value={120}>2 hours</option><option value="all">All available</option></select></label>
-              <label><span>Speed</span><select value={noaaRadarPlaybackSpeed} onChange={(event) => setNoaaRadarPlaybackSpeed(Number(event.target.value) as NoaaRadarPlaybackSpeed)}><option value={0.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option></select></label>
-              <label><span>Opacity</span><input type="range" min="10" max="100" value={Math.round(officialOpacity["nws-radar"] * 100)} onChange={(event) => setOfficialContextOpacity("nws-radar", Number(event.target.value) / 100)} aria-valuetext={`${Math.round(officialOpacity["nws-radar"] * 100)} percent`} /></label>
-              <button type="button" onClick={() => void refreshNoaaRadarManifest()} disabled={noaaRadarManifestState === "loading"}>Refresh</button>
-            </div>
-            <details className="noaa-radar-legend">
-              <summary>Reflectivity legend + source</summary>
-              <img src={NOAA_RADAR_LEGEND_URL} width="272" height="21" loading="lazy" alt="NOAA base-reflectivity color legend in dBZ" />
-              <p>Playback starts with the oldest scan in the selected window, advances through exact observations to the newest scan, then repeats. Transparent pixels mean no displayed echo. Missing or unavailable imagery is not interpreted as clear weather. A settled request means MapLibre reported no source error; it does not prove complete radar coverage.</p>
-              <dl><div><dt>Source</dt><dd>{NOAA_RADAR_SOURCE_TITLE}</dd></div><div><dt>Cadence</dt><dd>{noaaRadarManifest ? `${Math.round(noaaRadarManifest.nominalCadenceSeconds / 60)} min observed median` : "Discovered from NOAA"}</dd></div><div><dt>Latest age</dt><dd>{noaaRadarLatestAgeMinutes === null ? "Unknown" : `${noaaRadarLatestAgeMinutes} min`}</dd></div><div><dt>Gaps</dt><dd>{noaaRadarManifest ? noaaRadarManifest.gapCount : "Unknown"}</dd></div></dl>
-              {noaaRadarCrossDomainSources.length > 0 && <p><strong>Co-visible operational context:</strong> {noaaRadarCrossDomainSources.join(" · ")}. Each source keeps its own observation or retrieval clock; visual overlap does not establish correlation, lag, direction, or causation.</p>}
-              <a href={OFFICIAL_CONTEXT_BY_ID["nws-radar"].sourceUrl} target="_blank" rel="noreferrer">Open NOAA nowCOAST ↗</a>
-            </details>
             {noaaRadarFrameError && <div className="noaa-radar-error" role="alert"><strong>{noaaRadarRenderable ? "Frozen on the last confirmed observation" : "Radar withheld"}</strong><span>{noaaRadarFrameError} No untimed or synthetic fallback was used.</span></div>}
-            {reducedMotion && <p className="noaa-radar-motion-note">Reduced motion is active. Automatic looping is off; exact-frame stepping remains available.</p>}
-            <footer>Situational display only · not an emergency warning service · times remain separate from the atlas year</footer>
+            <div id="noaa-radar-details" className="noaa-radar-details">
+              <div className="noaa-radar-settings">
+                <label><span>Loop</span><select value={noaaRadarLoopSpan} onChange={(event) => { setNoaaRadarPlaying(false); setNoaaRadarLoopSpan(event.target.value === "all" ? "all" : Number(event.target.value) as NoaaRadarLoopSpanMinutes); }}><option value={30}>30 min</option><option value={60}>1 hour</option><option value={120}>2 hours</option><option value="all">All available</option></select></label>
+                <label><span>Speed</span><select value={noaaRadarPlaybackSpeed} onChange={(event) => setNoaaRadarPlaybackSpeed(Number(event.target.value) as NoaaRadarPlaybackSpeed)}><option value={0.5}>0.5×</option><option value={1}>1×</option><option value={2}>2×</option></select></label>
+                <label><span>Opacity</span><input type="range" min="10" max="100" value={Math.round(officialOpacity["nws-radar"] * 100)} onChange={(event) => setOfficialContextOpacity("nws-radar", Number(event.target.value) / 100)} aria-valuetext={`${Math.round(officialOpacity["nws-radar"] * 100)} percent`} /></label>
+                <button type="button" onClick={() => void refreshNoaaRadarManifest()} disabled={noaaRadarManifestState === "loading"}>Refresh</button>
+              </div>
+              <details className="noaa-radar-legend">
+                <summary>Reflectivity legend + source</summary>
+                <img src={NOAA_RADAR_LEGEND_URL} width="272" height="21" loading="lazy" alt="NOAA base-reflectivity color legend in dBZ" />
+                <p>Playback starts with the oldest scan in the selected window, advances through exact observations to the newest scan, then repeats. Transparent pixels mean no displayed echo. Missing or unavailable imagery is not interpreted as clear weather. A settled request means MapLibre reported no source error; it does not prove complete radar coverage.</p>
+                <dl><div><dt>Source</dt><dd>{NOAA_RADAR_SOURCE_TITLE}</dd></div><div><dt>Cadence</dt><dd>{noaaRadarManifest ? `${Math.round(noaaRadarManifest.nominalCadenceSeconds / 60)} min observed median` : "Discovered from NOAA"}</dd></div><div><dt>Latest age</dt><dd>{noaaRadarLatestAgeMinutes === null ? "Unknown" : `${noaaRadarLatestAgeMinutes} min`}</dd></div><div><dt>Gaps</dt><dd>{noaaRadarManifest ? noaaRadarManifest.gapCount : "Unknown"}</dd></div></dl>
+                {noaaRadarCrossDomainSources.length > 0 && <p><strong>Co-visible operational context:</strong> {noaaRadarCrossDomainSources.join(" · ")}. Each source keeps its own observation or retrieval clock; visual overlap does not establish correlation, lag, direction, or causation.</p>}
+                <a href={OFFICIAL_CONTEXT_BY_ID["nws-radar"].sourceUrl} target="_blank" rel="noreferrer">Open NOAA nowCOAST ↗</a>
+              </details>
+              {reducedMotion && <p className="noaa-radar-motion-note">Reduced motion is active. Automatic looping is off; exact-frame stepping remains available.</p>}
+              <footer>Situational display only · not an emergency warning service · times remain separate from the atlas year</footer>
+            </div>
           </aside>}
           {instrumentOpen && !glmFlashesEnabled && showLightningDock && <aside className="lightning-observatory" data-signal={lightningPreview} aria-label="NOAA lightning density controls">
             {liveObservationSwitcher}

@@ -1003,6 +1003,14 @@ test("adds an exact-time NOAA nowCOAST radar loop and a fail-closed control surf
   assert.match(css, /\.noaa-radar-transport/);
   assert.match(css, /\.noaa-radar-legend/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.noaa-radar-loop/);
+  // On phones the dock opens on its reading and transport, above the time-sweep clock; Settings holds the rest.
+  assert.match(page, /data-details=\{radarDetailsOpen \? "open" : "closed"\}/);
+  assert.match(page, /className="noaa-radar-details-toggle" aria-expanded=\{radarDetailsOpen\} aria-controls="noaa-radar-details"/);
+  assert.match(page, /<div id="noaa-radar-details" className="noaa-radar-details">\s*<div className="noaa-radar-settings">/);
+  assert.ok(page.indexOf('className="noaa-radar-error"') < page.indexOf('id="noaa-radar-details"'), 'a withheld or frozen radar notice stays in view when Settings is closed');
+  assert.match(css, /\.noaa-radar-details \{ display: contents; \}/);
+  assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.noaa-radar-loop\[data-details="closed"\] \.noaa-radar-details \{ display: none; \}/);
+  assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.noaa-radar-loop \{ bottom: calc\(126px \+ env\(safe-area-inset-bottom\)\); \}/);
 });
 
 test("checks current GitHub main through one fixed read-only backend route", async () => {
