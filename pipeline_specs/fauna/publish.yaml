@@ -1,4 +1,0 @@
-# pipeline_specs :: fauna :: publish
-name: fauna-publish
-version: 1
-stages: []
