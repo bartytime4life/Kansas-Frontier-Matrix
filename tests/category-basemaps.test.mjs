@@ -92,6 +92,7 @@ test('the four science basemaps each make their subject the lead layer',()=>{
  assert.equal(ramp[0],'interpolate');const elevations=ramp.slice(3).filter((_,i)=>i%2===0);
  assert.deepEqual(elevations,[...elevations].sort((a,b)=>a-b),'relief stops ascend');
  assert.ok(layer('relief',basemaps.BASEMAP_HILLSHADE_LAYER_ID).paint['hillshade-exaggeration']>=0.8,'relief hillshade is the strongest');
+ for(const key of Object.keys(styles))assert.ok(layer(key,basemaps.BASEMAP_HILLSHADE_LAYER_ID).paint['hillshade-exaggeration']>=0.38,`${key}: the ground shows its relief, not a blank colour`);
  assert.equal(layer('storm','kfm-background').paint['background-color'],'#12171d');
  const chroma=hex=>{const channels=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);return Math.max(...channels)-Math.min(...channels);};
  for(const color of JSON.stringify(styles.storm.layers).match(/#[0-9a-f]{6}/gi))assert.ok(chroma(color)<0.2,`storm ground ${color} stays neutral so radar and alert colours read true`);
@@ -138,7 +139,7 @@ test('every surface that whitelists basemaps accepts the category basemaps',asyn
 
 test('a category basemap tile failure after the one local fallback degrades the map instead of stopping it',async()=>{
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/basemapStyle\.sources\[sourceId\]\?\.type === "raster" \|\| VECTOR_BASEMAPS\.has\(basemapRef\.current\) && Object\.hasOwn\(basemapStyle\.sources, sourceId\)/);
+ assert.match(page,/basemapStyle\.sources\[sourceId\]\?\.type === "raster" \|\| basemapStyle\.sources\[sourceId\]\?\.type === "raster-dem" \|\| VECTOR_BASEMAPS\.has\(basemapRef\.current\) && Object\.hasOwn\(basemapStyle\.sources, sourceId\)/);
  const fallback=page.indexOf('VECTOR_BASEMAPS.has(basemapRef.current) && !styleFallbackAttempted'),degrade=page.indexOf('VECTOR_BASEMAPS.has(basemapRef.current) && Object.hasOwn(basemapStyle.sources, sourceId)');
  assert.ok(fallback>0&&degrade>fallback,'the local-style fallback is tried first');
 });

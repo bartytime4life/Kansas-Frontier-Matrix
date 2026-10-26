@@ -58,7 +58,7 @@ test("automatic embedded rendering uses the smallest bounded GPU budget", () => 
   assert.equal(budget.tileCache, 48);
   assert.equal(budget.workerCount, 1);
   assert.equal(budget.efficient, true);
-  assert.equal(perf.renderBudget("detail", 3, false, false, true).pixelRatio, 2);
+  assert.equal(perf.renderBudget("detail", 3, false, false, true).pixelRatio, 3);
 });
 
 test("map health keeps a rendering failure finite and excludes sensitive exception text", () => {

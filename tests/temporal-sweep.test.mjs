@@ -25,6 +25,7 @@ const atlasData = await import(await compileModuleUrl("explorer-data"));
 const bridgeModuleUrl = await compileModuleUrl("kansas-bridge-records");
 const aquiferModuleUrl = await compileModuleUrl("aquifer-layers");
 const mapKeysModuleUrl = await compileModuleUrl("map-keys");
+const hdModuleUrl = await compileModuleUrl("hd-rasters");
 const referenceModuleUrl = await compileModuleUrl("kansas-reference-layers", source => source.replace('from "./kansas-bridge-records";', `from "${bridgeModuleUrl}";`).replace('from "./map-keys";', `from "${mapKeysModuleUrl}";`));
 const radarModuleUrl = await compileModuleUrl("noaa-radar");
 const satelliteModuleUrl = await compileModuleUrl("noaa-satellite");
@@ -45,7 +46,8 @@ const official = await import(await compileModuleUrl("live-context", (source) =>
   .replace('from "./fire-detection-style";', `from "${fireModuleUrl}";`)
   .replace('from "./population-prisms";', `from "${prismsModuleUrl}";`)
   .replace('from "./reviewed-snapshot-layers";', `from "${reviewedModuleUrl}";`)
-  .replace('from "./map-keys";', `from "${mapKeysModuleUrl}";`)));
+  .replace('from "./map-keys";', `from "${mapKeysModuleUrl}";`)
+  .replace('from "./hd-rasters";', `from "${hdModuleUrl}";`)));
 
 const feature = (fid, title, year) => ({
   type: "Feature",

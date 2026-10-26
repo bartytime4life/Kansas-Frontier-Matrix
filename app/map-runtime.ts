@@ -14,7 +14,7 @@ import type { TemporalSweepQuery } from "./temporal-sweep";
 import { buildDaylightGeometry, solarPositionAt } from "./daylight-layer";
 import { createDaylightShaderLayer, DAYLIGHT_SHADE_STOPS, type DaylightShaderLayer } from "./daylight-shader-layer";
 import { ORIENTATION_SOURCE_ID, orientationLayers, orientationSource } from "./kansas-orientation";
-import { BASEMAP_HILLSHADE_LAYER_ID, CATEGORY_BASEMAPS } from "./category-basemaps";
+import { BASEMAP_HILLSHADE_LAYER_ID, BASEMAP_RELIEF_DEM_SOURCE_ID, CATEGORY_BASEMAPS, localReliefShade, reliefDemSource } from "./category-basemaps";
 import { CATEGORY_BASEMAP_KEYS, type CategoryBasemapKey } from "./category-basemap-keys";
 import { CINEMATIC_LIGHT_COLOR, CINEMATIC_LIGHT_INTENSITY, CINEMATIC_SKIES, GLOBE_ATMOSPHERE_BLEND, SELECTION_PULSE_LAYER_ID, effectiveSceneLight, registerCurtainLight, reliefPaintFor, sceneEffectsFor } from "./scene-effects";
 
@@ -26,6 +26,17 @@ const kansasAerialContext = externalContextSource("kansas-ng911-2024");
 const esriImageryContext = externalContextSource("esri-world-imagery");
 const openStreetMapContext = externalContextSource("openstreetmap-standard");
 const usgsTopoContext = externalContextSource("usgs-national-map-topo");
+
+/**
+ * A local style's layers: its ground colour, the Kansas land fill, the shaded
+ * relief across the whole view, then the state line on top. The relief keeps
+ * real terrain under the data; if the DEM cannot load, the outline remains.
+ */
+function withLocalRelief(orientation: LayerSpecification[], ground: string, relief: LayerSpecification): LayerSpecification[] {
+  const land = orientation.findIndex(layer => layer.id === "orientation-kansas-land");
+  return [{ id: "kfm-background", type: "background", paint: { "background-color": ground } },
+    ...orientation.slice(0, land + 1), relief, ...orientation.slice(land + 1)];
+}
 
 export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: StyleSpecification | string }> = {
   standard: {
@@ -112,28 +123,24 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
   },
   midnight: {
     title: "Midnight navy",
-    note: "High-contrast local style · Census Kansas boundary, works offline",
+    note: "High-contrast local style · Census Kansas boundary over Terrarium shaded relief; the outline works offline",
     style: {
       version: 8,
       name: "KFM Midnight",
-      sources: { [ORIENTATION_SOURCE_ID]: orientationSource() },
-      layers: [
-        { id: "kfm-background", type: "background", paint: { "background-color": "#081624" } },
-        ...orientationLayers({ land: "#0e2236", outline: "#d9b45f", muted: "#5fa8c9", graticule: "#1b3550" }),
-      ],
+      sources: { [ORIENTATION_SOURCE_ID]: orientationSource(), [BASEMAP_RELIEF_DEM_SOURCE_ID]: reliefDemSource() },
+      layers: withLocalRelief(orientationLayers({ land: "#0e2236", outline: "#d9b45f", muted: "#5fa8c9", graticule: "#1b3550" }), "#081624",
+        localReliefShade(0.7, "#01060c", "#4f7ea6", "#0a1f33")),
     },
   },
   prairie: {
     title: "Prairie dusk",
-    note: "Low-glare earthen local style · Census Kansas boundary, works offline",
+    note: "Low-glare earthen local style · Census Kansas boundary over Terrarium shaded relief; the outline works offline",
     style: {
       version: 8,
       name: "KFM Prairie Dusk",
-      sources: { [ORIENTATION_SOURCE_ID]: orientationSource() },
-      layers: [
-        { id: "kfm-background", type: "background", paint: { "background-color": "#17231f" } },
-        ...orientationLayers({ land: "#22312a", outline: "#c9a466", muted: "#7fb3b0", graticule: "#2b3d35" }),
-      ],
+      sources: { [ORIENTATION_SOURCE_ID]: orientationSource(), [BASEMAP_RELIEF_DEM_SOURCE_ID]: reliefDemSource() },
+      layers: withLocalRelief(orientationLayers({ land: "#22312a", outline: "#c9a466", muted: "#7fb3b0", graticule: "#2b3d35" }), "#17231f",
+        localReliefShade(0.7, "#050a07", "#7d9a88", "#17251e")),
     },
   },
   streets: {

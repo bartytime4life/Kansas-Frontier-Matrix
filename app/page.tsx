@@ -25,6 +25,7 @@ import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useR
 import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
 import { setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type SpcOutlook } from "./spc-outlook";
+import { hiDpiBasemapStyle } from "./hd-rasters";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
 import { AVIATION_TINT_BANDS, CATEGORY_BASEMAPS, RELIEF_RAMP } from "./category-basemaps";
@@ -5180,7 +5181,7 @@ export default function Home() {
         const renderBudget = browserRenderBudget();
         const map = new mapLibre.Map({ transformRequest: basemapCacheRequest,
           container: mapContainerRef.current,
-          style: BASEMAPS[basemapRef.current].style,
+          style: hiDpiBasemapStyle(BASEMAPS[basemapRef.current].style, renderBudget.pixelRatio),
           center: initialView.center,
           zoom: initialView.zoom,
           bearing: initialView.bearing,
@@ -5801,7 +5802,7 @@ export default function Home() {
           // That covers raster carriers and, once the one local fallback has been used,
           // the category basemaps' own vector and relief tiles.
           const basemapStyle = BASEMAPS[basemapRef.current].style;
-          if (sourceId && typeof basemapStyle !== "string" && (basemapStyle.sources[sourceId]?.type === "raster" || VECTOR_BASEMAPS.has(basemapRef.current) && Object.hasOwn(basemapStyle.sources, sourceId))) {
+          if (sourceId && typeof basemapStyle !== "string" && (basemapStyle.sources[sourceId]?.type === "raster" || basemapStyle.sources[sourceId]?.type === "raster-dem" || VECTOR_BASEMAPS.has(basemapRef.current) && Object.hasOwn(basemapStyle.sources, sourceId))) {
             degradedReason = "Some basemap tiles are unavailable. Gaps are unknown; choose another basemap or retry. Map controls and records remain available.";
             setRuntime({ kind: "degraded", message: degradedReason });
             return;
@@ -6344,7 +6345,7 @@ export default function Home() {
     noaaRadarFrameLoadCleanupRef.current = null;
     noaaRadarFrameFailureRef.current = null;
     if (pendingRadarFrame) setNoaaRadarFrameLoadState("idle");
-    if (!runMapMutation("Basemap style update", () => map.setStyle(BASEMAPS[basemap].style, { diff: false }))) return;
+    if (!runMapMutation("Basemap style update", () => map.setStyle(hiDpiBasemapStyle(BASEMAPS[basemap].style, map.getPixelRatio()), { diff: false }))) return;
     styleDocumentLoadedRef.current = false;
     styleGenerationReadyRef.current = false;
     attachedTerrainProviderRef.current = null;

@@ -104,7 +104,7 @@ export function drawWaterMotionCanvas(
   const width = map.getCanvas().clientWidth;
   const height = map.getCanvas().clientHeight;
   if (!width || !height) return;
-  const ratio = Math.min(1.5, window.devicePixelRatio || 1);
+  const ratio = Math.min(2, window.devicePixelRatio || 1);
   if (canvas.width !== Math.round(width * ratio) || canvas.height !== Math.round(height * ratio)) {
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);

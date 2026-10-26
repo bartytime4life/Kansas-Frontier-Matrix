@@ -41,15 +41,16 @@ test("offline orientation is the real Census Kansas boundary, with no drawn rive
   assert.match(orientation.orientationSource().attribution, /Census Kansas boundary · display only/);
 });
 
-test("local basemaps carry the orientation layer and stay network-free", async () => {
+test("local basemaps carry the orientation layer over shared shaded relief, with no other network source", async () => {
   const runtime = await read("app/map-runtime.ts");
   for (const name of ["KFM Midnight", "KFM Prairie Dusk"]) {
     const block = runtime.slice(runtime.indexOf(name), runtime.indexOf(name) + 600);
-    assert.match(block, /\[ORIENTATION_SOURCE_ID\]: orientationSource\(\)/);
-    assert.match(block, /\.\.\.orientationLayers\(/);
-    assert.match(block, /id: "kfm-background"/);
+    assert.match(block, /sources: \{ \[ORIENTATION_SOURCE_ID\]: orientationSource\(\), \[BASEMAP_RELIEF_DEM_SOURCE_ID\]: reliefDemSource\(\) \}/);
+    assert.match(block, /withLocalRelief\(orientationLayers\(/);
     assert.doesNotMatch(block, /tiles:|https?:\/\//);
   }
+  // The state line draws last, so it stands without the network.
+  assert.match(runtime, /return \[\{ id: "kfm-background", type: "background", paint: \{ "background-color": ground \} \},\s*\.\.\.orientation\.slice\(0, land \+ 1\), relief, \.\.\.orientation\.slice\(land \+ 1\)\];/);
 });
 
 test("the map exposes one zoom control set and no fixed place label", async () => {

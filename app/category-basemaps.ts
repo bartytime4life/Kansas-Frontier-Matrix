@@ -61,11 +61,22 @@ const hillshade = (exaggeration: number, shadow: string, highlight: string, acce
   },
 });
 
+/**
+ * The display DEM every base shades its ground from. Zoom 12 (about 38 m per
+ * pixel at Kansas's latitude) keeps valleys and breaks crisp at county and
+ * city scales; closer views overzoom it.
+ */
+export const reliefDemSource = (): SourceSpecification =>
+  ({ type: "raster-dem", tiles: [terrarium.requestUrl], tileSize: 256, maxzoom: 12, encoding: "terrarium", attribution: terrarium.attribution });
+
+/** Real shaded relief for the local (non-vector) styles, so no base is an empty colour. */
+export const localReliefShade = (exaggeration: number, shadow: string, highlight: string, accent: string): LayerSpecification =>
+  hillshade(exaggeration, shadow, highlight, accent);
+
 function vectorSources(): Record<string, SourceSpecification> {
   return {
     [OPENMAPTILES_SOURCE_ID]: { type: "vector", url: TILEJSON_URL, attribution: openFreeMap.attribution },
-    // Capped at zoom 11 like the 3D terrain carrier; closer views overzoom it.
-    [BASEMAP_RELIEF_DEM_SOURCE_ID]: { type: "raster-dem", tiles: [terrarium.requestUrl], tileSize: 256, maxzoom: 11, encoding: "terrarium", attribution: terrarium.attribution },
+    [BASEMAP_RELIEF_DEM_SOURCE_ID]: reliefDemSource(),
     [ORIENTATION_SOURCE_ID]: orientationSource(),
   };
 }
@@ -155,7 +166,7 @@ function civicLayers(): LayerSpecification[] {
   return [
     { id: "kfm-background", type: "background", paint: { "background-color": "#f3f1ec" } },
     { id: BASEMAP_HILLSHADE_LAYER_ID, type: "hillshade", source: BASEMAP_RELIEF_DEM_SOURCE_ID, paint: {
-      "hillshade-exaggeration": 0.28, "hillshade-shadow-color": "#8c8577", "hillshade-highlight-color": "#ffffff", "hillshade-accent-color": "#a59d8e",
+      "hillshade-exaggeration": 0.4, "hillshade-shadow-color": "#857e70", "hillshade-highlight-color": "#ffffff", "hillshade-accent-color": "#a59d8e",
       "hillshade-illumination-direction": 315, "hillshade-illumination-anchor": "map",
     } },
     { id: "civic-urban", type: "fill", source: omt, "source-layer": "landuse", filter: ["in", ["get", "class"], ["literal", ["residential", "commercial", "industrial", "retail"]]],
@@ -248,7 +259,7 @@ function stormLayers(): LayerSpecification[] {
   const omt = OPENMAPTILES_SOURCE_ID;
   return [
     { id: "kfm-background", type: "background", paint: { "background-color": "#12171d" } },
-    hillshade(0.18, "#05080b", "#2a333d", "#0c1116"),
+    hillshade(0.55, "#000000", "#4a5664", "#0c1116"),
     { id: "storm-urban", type: "fill", source: omt, "source-layer": "landuse", filter: ["in", ["get", "class"], ["literal", ["residential", "commercial", "industrial"]]], paint: { "fill-color": "#1d252e", "fill-opacity": 0.85 } },
     { id: "storm-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#0f2a3b" } },
     { id: "storm-roads", type: "line", source: omt, "source-layer": "transportation", filter: ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary"]]], paint: { "line-color": "#2b343f", "line-width": zoomRamp(5, 0.5, 12, 2) } },
@@ -267,7 +278,7 @@ function networkLayers(): LayerSpecification[] {
   const roads = ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary", "secondary", "tertiary", "minor"]]];
   return [
     { id: "kfm-background", type: "background", paint: { "background-color": "#f2efe9" } },
-    hillshade(0.2, "#9c9483", "#ffffff", "#b9b1a0"),
+    hillshade(0.38, "#958c7a", "#ffffff", "#b3aa98"),
     { id: "network-urban", type: "fill", source: omt, "source-layer": "landuse", filter: ["in", ["get", "class"], ["literal", ["residential", "commercial", "industrial", "retail"]]], paint: { "fill-color": "#e6e0d4" } },
     { id: "network-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#c6dbe8" } },
     { id: "network-runway", type: "line", source: omt, "source-layer": "aeroway", minzoom: 10, filter: ["==", ["get", "class"], "runway"], paint: { "line-color": "#b9b4aa", "line-width": zoomRamp(10, 2, 15, 18) } },
@@ -293,7 +304,7 @@ function historicLayers(): LayerSpecification[] {
   const ink = "#4a3523", sepia = "#8c6d47";
   return [
     { id: "kfm-background", type: "background", paint: { "background-color": "#efe4c8" } },
-    hillshade(0.32, "#7a5c38", "#fbf3dd", "#9c7a4c"),
+    hillshade(0.42, "#7a5c38", "#fbf3dd", "#9c7a4c"),
     { id: "historic-graticule", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "graticule"], paint: { "line-color": "#b79f74", "line-width": 0.6, "line-opacity": 0.6 } },
     { id: "historic-urban", type: "fill", source: omt, "source-layer": "landuse", filter: ["in", ["get", "class"], ["literal", ["residential", "commercial", "industrial"]]], paint: { "fill-color": "#e2cfa6", "fill-opacity": 0.7 } },
     { id: "historic-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#b9c9c0", "fill-outline-color": "#6f8f8a" } },

@@ -38,7 +38,10 @@ export function renderBudget(quality: RenderQuality, deviceRatio = 1, saveData =
   const touchBalanced = quality === "auto" && coarsePointer && !efficient;
   return {
     efficient,
-    pixelRatio: Math.max(1, Math.min(Number.isFinite(deviceRatio) ? deviceRatio : 1, efficient ? 1 : quality === "detail" ? 2 : touchBalanced ? 1.25 : 1.5)),
+    // Draw at the screen's own density so lines, labels and relief stay sharp on
+    // high-DPI displays: up to 2× by default, up to 3× on High detail. Only
+    // Battery saver draws at 1×.
+    pixelRatio: Math.max(1, Math.min(Number.isFinite(deviceRatio) ? deviceRatio : 1, efficient ? 1 : quality === "detail" ? 3 : 2)),
     imageRequests: efficient ? 6 : quality === "detail" ? 12 : touchBalanced ? 7 : 10,
     tileCache: efficient ? 48 : quality === "detail" ? 112 : touchBalanced ? 64 : 96,
     workerCount: efficient ? 1 : quality === "detail" ? 4 : 2,

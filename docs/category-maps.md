@@ -328,6 +328,33 @@ alerts.
   a warning; probabilistic tornado, wind and hail outlooks are not drawn.
   Leaving the map closes it.
 
+## High-definition rendering and real ground
+
+Every map draws at the screen's own density and on real terrain.
+
+- **Render density.** The map renders at the device pixel ratio: up to 2× on
+  Balanced (desktop and touch alike; it had been capped at 1.5× and 1.25×), up
+  to 3× on High detail, and 1× only on Battery saver or with the browser's
+  Save-Data preference (`app/map-performance.ts`). The wind-arrow and water
+  motion canvases draw at up to 2×.
+- **Provider overlays.** ArcGIS MapServer exports (KDOT, KGS aquifers, BLM,
+  FEMA, WBD, NWM and the rest) are requested at 512 px and 192 dpi on screens
+  of 1.5× or more, so each CSS pixel has two image pixels and ArcGIS keeps the
+  symbols their on-screen size (`app/hd-rasters.ts`).
+- **Imagery and topo.** Esri world imagery, the 2024 Kansas one-foot aerial
+  and the USGS topographic map are declared at half their tile size on those
+  screens, so MapLibre draws the next, finer zoom level. OpenStreetMap's tile
+  policy keeps its raster at 1×.
+- **Real ground everywhere.** The local styles (Prairie dusk, under the Aquifer
+  map, and Midnight navy, the fallback when the vector basemap cannot load)
+  now shade the Terrarium DEM under the state line, so no map sits on an empty
+  colour; the outline still draws offline. Every category base's hillshade is
+  at least 0.38 exaggeration (the storm base's had been 0.18, too faint to
+  read on its dark ground). The basemap DEM loads to zoom 12, about 38 m per
+  pixel, for crisper valleys and breaks at county and city scales.
+- **Not changed.** NOAA radar keeps nearest-neighbour 256-pixel frames, so each
+  radar cell stays an exact cell and the loop's downloads stay bounded.
+
 ## Photo-real 3D (Terrain)
 
 The Relief model dock's **Photo-real 3D** drapes the photographed ground on the

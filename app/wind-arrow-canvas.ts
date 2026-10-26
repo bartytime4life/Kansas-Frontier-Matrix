@@ -463,7 +463,7 @@ export function drawWindFlowCanvas(canvas: HTMLCanvasElement, map: MapLibreMap, 
   const width = mapCanvas.clientWidth;
   const height = mapCanvas.clientHeight;
   if (!width || !height) return;
-  const pixelRatio = Math.min(1.5, window.devicePixelRatio || 1);
+  const pixelRatio = Math.min(2, window.devicePixelRatio || 1);
   const targetWidth = Math.round(width * pixelRatio);
   const targetHeight = Math.round(height * pixelRatio);
   if (canvas.width !== targetWidth || canvas.height !== targetHeight) {

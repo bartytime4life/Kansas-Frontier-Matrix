@@ -1,4 +1,5 @@
 import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-layers";
+import { hiDpiExportUrl } from "./hd-rasters";
 import { KANSAS_REFERENCE_SOURCES, KANSAS_REFERENCE_BOUNDS } from "./kansas-reference-layers";
 import type { FeatureCollection } from "geojson";
 import type { ExpressionSpecification, GeoJSONSource, LayerSpecification, Map as MapLibreMap, RasterTileSource } from "./maplibre-seam";
@@ -939,7 +940,7 @@ export const applyOfficialContextState = (
     if (!visibility[raster.id] && !map.getSource(raster.sourceId)) continue;
     const terrainDisplay = raster.id === "usgs-3dep-hillshade" || raster.id === "usgs-3dep-slope";
     if (!map.getSource(raster.sourceId)) map.addSource(raster.sourceId, {
-      type: "raster", tiles: [raster.mapUrl!], tileSize: raster.tileSize ?? 256, attribution: raster.attribution,
+      type: "raster", tiles: [hiDpiExportUrl(raster.mapUrl!, typeof map.getPixelRatio === "function" ? map.getPixelRatio() : 1)], tileSize: raster.tileSize ?? 256, attribution: raster.attribution,
       ...(raster.id === "nasa-lightning-climatology" ? {} : { bounds: [...([...KANSAS_REFERENCE_SOURCES, ...AQUIFER_RASTER_SOURCES].some(source => source.id === raster.id) || raster.id.startsWith("blm-") ? KANSAS_REFERENCE_BOUNDS : [-104.8, 34.8, -92, 42.2])] as [number, number, number, number] }),
       // BLM source-layer minScale: township 1:4m, section 1:500k, intersected 1:200k.
       minzoom: raster.minDisplayZoom ?? (raster.id === "nasa-lightning-climatology" ? 0 : terrainDisplay ? TERRAIN_DISPLAY_MIN_ZOOM : 3),
