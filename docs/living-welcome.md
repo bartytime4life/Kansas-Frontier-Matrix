@@ -266,6 +266,22 @@ derivative hashes. No remote source is fetched. At runtime only a selected
 capture is requested; the largest animation is about 5.3 MB. This trades video
 compression efficiency for the requested image-animation presentation.
 
+### Scene switching and shader compiles
+
+The domain stage keeps one WebGL renderer (`app/living-welcome/scenes/engine.mjs`)
+and builds only the selected scene. A new scene's shaders are compiled the first
+time it draws, which can hold the main thread: under software WebGL (SwiftShader
+in CI) each switch measured 2-5 s, almost all of it in shader compilation.
+
+Where the browser offers `KHR_parallel_shader_compile` (common with hardware
+WebGL), the engine now awaits `renderer.compileAsync` after building the next
+scene and swaps only when its shaders are ready. The current scene keeps
+animating in the meantime, and a scene superseded during its compile is disposed
+without being drawn. Without the extension the first draw compiles, as before.
+`tests/welcome-scene-engine.test.mjs` covers all three paths. Smoothness on
+hardware GPUs has not been measured from this environment, which only has
+SwiftShader.
+
 ## Time instrument
 
 `TimeEmblem` now uses the transparent generated hourglass delivery sprite and

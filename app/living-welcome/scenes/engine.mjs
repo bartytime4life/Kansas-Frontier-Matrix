@@ -19,6 +19,7 @@ export function createSceneEngine(canvas, { onBeat, onReady, onError } = {}) {
  renderer.toneMapping = THREE.ACESFilmicToneMapping;
  renderer.toneMappingExposure = 1.08;
  renderer.localClippingEnabled = true;
+ const parallelCompile = typeof renderer.compileAsync === 'function' && Boolean(renderer.extensions?.has?.('KHR_parallel_shader_compile'));
  let dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1), ceiling = dpr;
  renderer.setPixelRatio(dpr);
 
@@ -104,6 +105,13 @@ export function createSceneEngine(canvas, { onBeat, onReady, onError } = {}) {
   await new Promise(resolve => setTimeout(resolve, 160));
   if (mine !== token || contextLost) return;
   try { next = loaded.create({ THREE, renderer }); } catch (error) { fail(error); return; }
+  // Where the browser compiles shaders in parallel, finish them before the swap:
+  // the current scene keeps animating instead of the page freezing on the new
+  // scene's first draw. Without it (software WebGL) the first draw compiles.
+  if (parallelCompile) {
+   try { await renderer.compileAsync(next.scene, next.camera); } catch { /* the first draw compiles instead */ }
+   if (mine !== token || contextLost) { next.dispose?.(); disposeTree(next.scene); return; }
+  }
   const previous = current;
   current = { ...next, id, duration: SCENE_CATALOG[id].duration };
   if (previous) { previous.dispose?.(); disposeTree(previous.scene); }
