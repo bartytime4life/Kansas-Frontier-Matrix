@@ -63,7 +63,7 @@ async function browser(t, layout) {
 
 const fixture=await build({entryPoints:['tests/fire-display.fixture.mjs'],bundle:true,write:false,format:'esm',platform:'browser',target:'es2022'});
 const baseline=process.env.KFM_FIRE_BASELINE_FILE ? await build({entryPoints:['tests/fire-display.fixture.mjs'],bundle:true,write:false,format:'esm',platform:'browser',target:'es2022',plugins:[{name:'pinned-fire-baseline',setup(build){build.onLoad({filter:/app\/fire-detection-style\.ts$/},async ()=>({contents:await readFile(process.env.KFM_FIRE_BASELINE_FILE,'utf8'),loader:'ts',resolveDir:join(process.cwd(),'app')}));}}]}) : null;
-const html=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Synthetic fire renderer acceptance</title><style>body{margin:0;background:#162d35;color:#fff;font:14px system-ui}header{padding:10px}#map{position:absolute;inset:58px 0 110px}#inspection{position:absolute;bottom:0;height:90px;overflow:auto;max-width:100%;font:12px monospace}canvas{position:absolute}</style><header>SYNTHETIC RENDERER TEST · illustrative flames · dashed outline = satellite pixel, not perimeter</header><div id="map"></div><output id="inspection">Click a synthetic source record</output><script type="module" src="/__fire-acceptance/fixture.mjs"></script></html>`;
+const html=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Synthetic fire renderer acceptance</title><style>body{margin:0;background:#162d35;color:#fff;font:14px system-ui}header{padding:10px}#map{position:absolute;inset:58px 0 110px}#inspection{position:absolute;bottom:0;height:90px;overflow:auto;max-width:100%;font:12px monospace}canvas{position:absolute}</style><header>SYNTHETIC RENDERER TEST · dot = detection pixel centre · ring = reported incident · dashed outline = satellite pixel, not perimeter</header><div id="map"></div><output id="inspection">Click a synthetic source record</output><script type="module" src="/__fire-acceptance/fixture.mjs"></script></html>`;
 for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,touch:true}]) {
   test(`fire Canvas/WebGL visual matrix ${layout.width}x${layout.height}`,{timeout:180000},async t=>{
     const b=await browser(t,layout);
@@ -113,8 +113,9 @@ for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,t
     await call('Page.navigate',{url:new URL('/__fire-acceptance/',origin).href});await ready();
     for(const zoom of [4,8,10,12,14,17,20]){
       await evaluate(`fireFixture.view({zoom:${zoom}})`);
-      const state=await evaluate('fireFixture.state()');assert.deepEqual(state.errors,[]);assert.equal(state.images.length,3);
-      assert.equal(state.layers['external-nasa-gibs-fire-points-flame'].opacity,1);
+      const state=await evaluate('fireFixture.state()');assert.deepEqual(state.errors,[]);assert.equal(state.images.length,0,'no illustrated images');
+      assert.equal(state.layers['external-nasa-gibs-fire-points-circle'].opacity,1,'the confidence marker is drawn at every zoom');
+      assert.equal(state.layers['external-nifc-fire-reports-point'].opacity,0.85,'the incident ring is drawn at every zoom');
       await capture(`z${zoom}`);
     }
     for(const view of [{zoom:12,pitch:60,terrain:true},{zoom:12,pitch:60,globe:true},{zoom:5,globe:true},{zoom:14,light:true}]){
@@ -123,26 +124,22 @@ for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,t
     await evaluate('fireFixture.view({zoom:12})');
     for(const id of ['fixture-0','fixture-report']){
       const point=await evaluate(`fireFixture.point(${JSON.stringify(id)})`);
-      await call('Input.dispatchMouseEvent',{type:'mousePressed',x:point.x,y:point.y-12,button:'left',clickCount:1});
-      await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x,y:point.y-12,button:'left',clickCount:1});
+      await call('Input.dispatchMouseEvent',{type:'mousePressed',x:point.x,y:point.y,button:'left',clickCount:1});
+      await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x,y:point.y,button:'left',clickCount:1});
       const record=JSON.parse(await evaluate(`document.querySelector('#inspection').textContent`));
       t.diagnostic(JSON.stringify({requested:id,point,selected:record.id}));
       assert.equal(record.id,id);assert.equal(record.source,id==='fixture-report'?'external-nifc-fire-reports':'external-nasa-gibs-fire-points');
     }
-    await evaluate('fireFixture.motion(true)');
-    const moving=await evaluate('fireFixture.currentFireFrame()');const animatedBefore=await call('Page.captureScreenshot',{format:'png'});await pause(180);const animatedAfter=await call('Page.captureScreenshot',{format:'png'});assert.notEqual(animatedBefore.data,animatedAfter.data,'animation changes actual rendered pixels');
-    assert.notEqual(await evaluate('fireFixture.currentFireFrame()'),moving,'visible motion advances the shared cached image frames');
-    await call('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
-    await pause(80);assert.equal(await evaluate('fireFixture.currentFireFrame()'),3,'system reduced motion settles on a complete still flame');
-    await capture('reduced-motion');
-    await call('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});
-    await evaluate('fireFixture.motion(false)');
-    await evaluate('fireFixture.amount(0)');assert.equal((await evaluate('fireFixture.state()')).layers['external-nasa-gibs-fire-points-flame'].opacity,0);await capture('opacity-zero');
-    await evaluate('fireFixture.amount(0.4)');assert.equal((await evaluate('fireFixture.state()')).layers['external-nifc-fire-reports-flame'].opacity,0.4);
+    // Static: nothing moves between frames, with or without reduced motion.
+    const stillBefore=await call('Page.captureScreenshot',{format:'png'});await pause(250);const stillAfter=await call('Page.captureScreenshot',{format:'png'});
+    assert.equal(stillBefore.data,stillAfter.data,'no animation');
+    await evaluate('fireFixture.amount(0)');{const layers=(await evaluate('fireFixture.state()')).layers;assert.equal(layers['external-nasa-gibs-fire-points-circle'].opacity,0);assert.equal(layers['external-nifc-fire-reports-point'].opacity,0);}await capture('opacity-zero');
+    await evaluate('fireFixture.amount(0.4)');assert.equal((await evaluate('fireFixture.state()')).layers['external-nasa-gibs-fire-points-circle'].opacity,0.4);
     await evaluate('fireFixture.visible(false)');for(const layer of Object.values((await evaluate('fireFixture.state()')).layers))assert.equal(layer.visibility,'none');
     await call('Page.navigate',{url:new URL('/__fire-acceptance/?fallback=1',origin).href});await ready();
+    // An unavailable image atlas changes nothing: no fire symbol needs one.
     const fallback=await evaluate('fireFixture.state()');assert.deepEqual(fallback.errors,[]);assert.equal(fallback.images.length,0);
-    for(const id of ['external-nasa-gibs-fire-points-circle','external-nifc-fire-reports-point'])assert.equal(fallback.layers[id].opacity,1);
+    assert.equal(fallback.layers['external-nasa-gibs-fire-points-circle'].opacity,1);assert.equal(fallback.layers['external-nifc-fire-reports-point'].opacity,0.85);
     await capture('image-fallback');assert.deepEqual(errors,[]);
     // Full hydrated Explorer: actual map click, selection routing and Evidence
     // Drawer, using loopback-only synthetic provider responses.
@@ -163,15 +160,15 @@ for(const layout of [{width:1366,height:900,touch:false},{width:390,height:844,t
       assert.ok((feedResponses.get(feed)??0)>prior,'synthetic fire response delivered');
       await evaluate('new Promise(resolve=>{let frames=0;const next=()=>++frames>=30?resolve():requestAnimationFrame(next);requestAnimationFrame(next);})');
       const point=await evaluate(`(()=>{const r=document.querySelector('#map-canvas canvas').getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()`);
-      // The same centre is an inspectable confidence marker in fallback mode.
-      const y=point.y-(fallbackMode?0:12);
+      // The marker sits on the record's own point in both modes.
+      const y=point.y;
       if(layout.touch){await call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:point.x,y}]});await call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
       else {await call('Input.dispatchMouseEvent',{type:'mousePressed',x:point.x,y,button:'left',clickCount:1});await call('Input.dispatchMouseEvent',{type:'mouseReleased',x:point.x,y,button:'left',clickCount:1});}
       await waitFor(`document.querySelector('.evidence-drawer')?.dataset.open==='true' && document.querySelector('.evidence-drawer h2')?.textContent.includes(${JSON.stringify('SYNTHETIC ')}+${JSON.stringify(feed)})`,'original source record in real Evidence Drawer');
       const text=await evaluate(`document.querySelector('.evidence-drawer').textContent`);
       assert.match(text,feed==='nifc-fire-reports'?/NIFC|IRWIN/:/NASA|VIIRS/);
       assert.match(text,/no KFM EvidenceBundle|not KFM evidence|EXTERNAL_CONTEXT_ONLY|External context/i);
-      await capture(`explorer-${feed}-${fallbackMode?'fallback':'flame'}`);
+      await capture(`explorer-${feed}-${fallbackMode?'no-canvas':'marker'}`);
     }
     assert.deepEqual(errors,[]);
 

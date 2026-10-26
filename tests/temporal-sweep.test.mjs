@@ -33,7 +33,7 @@ const performanceModuleUrl = await compileModuleUrl("map-performance");
 const globeModuleUrl = await compileModuleUrl("globe-context");
 const prismsModuleUrl = await compileModuleUrl("population-prisms");
 const reviewedModuleUrl = await compileModuleUrl("reviewed-snapshot-layers", source => source.replaceAll('from "./map-keys";', `from "${mapKeysModuleUrl}";`));
-const fireModuleUrl = await compileModuleUrl("fire-detection-style", source => source.replace('from "./map-performance";', `from "${performanceModuleUrl}";`).replace('from "./globe-context";', `from "${globeModuleUrl}";`));
+const fireModuleUrl = await compileModuleUrl("fire-detection-style", source => source.replace('from "./map-performance";', `from "${performanceModuleUrl}";`).replace('from "./globe-context";', `from "${globeModuleUrl}";`).replace('from "./map-keys";', `from "${mapKeysModuleUrl}";`));
 const compositionModuleUrl = `data:text/javascript;base64,${Buffer.from("export const balanceMapFills=()=>{}; export const balanceMapRasters=()=>{}; export const composeMapLayers=()=>{}; export const requestFillOpacity=()=>{}; export const requestRasterOpacity=()=>{};").toString("base64")}`;
 const official = await import(await compileModuleUrl("live-context", (source) => source.replace('from "./aquifer-layers";', `from "${aquiferModuleUrl}";`).replace('from "./kansas-reference-layers";', `from "${referenceModuleUrl}";`)
   .replace('from "./noaa-radar";', `from "${radarModuleUrl}";`)

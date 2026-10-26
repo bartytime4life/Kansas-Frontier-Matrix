@@ -1,5 +1,32 @@
 # Close-zoom fire display
 
+## Scientific markers — 2026-10-26 (current)
+
+The animated flames are retired. The Hazard watch drew NASA VIIRS detections
+and NIFC incident reports with the same flame artwork, so a red flame could be
+a high-confidence detection or a reported wildfire. The two are different
+datasets, and an illustrated flame is not a measurement. Both are now static
+markers (`app/fire-detection-style.ts`), keyed in the dock (`app/map-keys.ts`):
+
+- **Detection:** a dot at the provider pixel centre, coloured by VIIRS
+  detection confidence (high, nominal, low), at one screen size from the
+  statewide view to the closest. Its size encodes nothing. From zoom 10.5 the
+  dashed outline of the provider scan × track pixel, approximately oriented
+  to the NOAA-20 pass, shows the area the detection covers. That pixel is not
+  a fire perimeter, flame front or burned area.
+- **Reported incident:** a ring with a dark centre at the reported location,
+  coloured by incident type (wildfire, prescribed fire, incident complex), so
+  it never reads as a detection.
+- Transparent hit targets keep each record selectable through its original
+  `-halo` and `-circle`/`-point` layer ids. Close in, a detection's target
+  covers its whole footprint.
+- Nothing animates, and no Canvas images or repaint ticker are used.
+
+`tests/fire-detection-style.test.mjs` and `tests/fire-display.browser.mjs`
+cover the markers, the footprint, selection, opacity, visibility, globe
+sizing, and that nothing moves between frames. The sections below record the
+earlier flame display, which this one replaces.
+
 NASA thermal detections retain an animated flame at every zoom. Close views
 increase its screen size smoothly, up to 2.1 times the 36 × 48 logical-pixel
 image at zoom 17. Its base remains at the provider point. The illustration

@@ -88,3 +88,4 @@
 .category-map-dock-key-area{flex:none;width:16px;height:12px;border-radius:2px;background:color-mix(in srgb,var(--key) 34%,transparent);box-shadow:inset 0 0 0 2px var(--key)}
 .category-map-dock-key-line{flex:none;width:22px;height:0;border-top:2px solid var(--key)}
 .category-map-dock-key-line[data-dashed=true]{border-top-style:dashed}
+.category-map-dock-key-ring{flex:none;width:13px;height:13px;border-radius:50%;background:#11161b;box-shadow:inset 0 0 0 2.5px var(--key)}
