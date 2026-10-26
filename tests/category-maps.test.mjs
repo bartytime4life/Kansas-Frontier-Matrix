@@ -158,6 +158,27 @@ test('the water map toggles the flowing-water effect from its dock and reports w
  assert.match(page,/const motionAllowed = runtime\.kind === "ready" && dynamicEffects && !reducedMotion && !browserRenderBudget\(renderQuality\)\.efficient;/,'same rule as the dock reading');
 });
 
+test('the aquifer and geology maps open Underground from their dock through the guide\'s own entry',async()=>{
+ const withUnderground=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('underground')).map(([id])=>id).sort();
+ assert.deepEqual(withUnderground,['geology','groundwater']);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];const base={mode:'2d',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onTransect(){},onUnderground:()=>calls.push('underground'),onReset(){},onLayers(){},onClose(){}};
+ const tool=tree=>findNode(tree,n=>n.type==='button'&&n.props.children==='Explore underground');
+ let tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.groundwater});
+ tool(tree).props.onClick();assert.deepEqual(calls,['underground']);
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.geology,mode:'terrain'});
+ assert.ok(tool(tree),'geology offers it beside the cross-section');
+ assert.ok(findNode(tree,n=>n.type==='button'&&n.props.children==='Draw a cross-section'));
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.water});
+ assert.equal(tool(tree),undefined,'looks without the tool show no button');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/onUnderground=\{enterUnderground\}/);
+ assert.match(page,/const enterUnderground = \(\) => \{\s*if \(primaryWorkspace !== "map" \|\| !undergroundOpen\) toggleUnderground\(\);\s*setUndergroundFocusRequest\(\(request\) => request \+ 1\);\s*\};/,'opens Underground or keeps it open, then moves focus into it');
+ assert.match(page,/else if \(action === "underground"\) enterUnderground\(\);/,'the guide uses the same entry');
+ assert.match(page,/const showCategoryDock = Boolean\([^;]*!undergroundOpen/,'the dock steps aside while Underground is open');
+});
+
 test('the Layers topic guide shows the category map look and opens it only when it is not on',async()=>{
  const h=await componentHarness('app/topic-navigation.tsx',{'next/link':{default:'a'},'./layer-workspaces':topics},{URLSearchParams});
  const look=maps.CATEGORY_MAPS.aviation;let opened=0;

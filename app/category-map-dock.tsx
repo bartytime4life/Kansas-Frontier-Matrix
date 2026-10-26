@@ -45,7 +45,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -69,6 +69,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
   onSunPlay: (on: boolean) => void;
   /** Starts the terrain investigation for looks that offer the transect tool. */
   onTransect?: () => void;
+  /** Opens the Underground view for looks that offer the underground tool. */
+  onUnderground?: () => void;
   /**
    * The flowing-water effect and its reading, for looks that offer the flow
    * tool. `still` names why the rivers are not moving, if they are not.
@@ -118,6 +120,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
     </>}
     {look.tools?.includes("transect") && onTransect && <button type="button" className="category-map-dock-tool" disabled={!terrainAvailable} onClick={onTransect}
       title="Draw a line across the relief, then preview its elevation profile without the 3D exaggeration">Draw a cross-section</button>}
+    {look.tools?.includes("underground") && onUnderground && <button type="button" className="category-map-dock-tool" onClick={onUnderground}
+      title="Open recorded well logs, cores and aquifer sections beneath the map, on the 2D map">Explore underground</button>}
     <p className="category-map-dock-lede">{look.lede}</p>
     <div className="category-map-dock-actions">
       <button type="button" onClick={onReset}>Reset view</button>

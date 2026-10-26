@@ -71,12 +71,18 @@ holds and limits. They are display context, not admitted evidence.
     motion, ambient motion off or an efficient render budget (the same rule the
     animation uses), the rivers are drawn still and the dock names which applies. The flow reaches
     are display context, not measured discharge;
+  - **Explore underground**, on the Aquifer and Geology looks
+    (`tools: ["underground"]`). It opens the existing Underground view of
+    recorded well logs, cores and aquifer sections (`enterUnderground`, the
+    same entry the guide's Underground action uses), which switches to the 2D
+    map and takes focus. The dock steps aside while Underground is open and
+    returns when it closes, if the look's basemap is still on;
   - reset view and "Layers for this map".
 
   Every control reuses an existing handler: `activateMapRepresentation`,
   `changeTerrainDepth`, `changeStudioLight`, `updateSceneEffects`,
-  `startTerrainInvestigation` (through `startCategoryTransect`) and
-  `openAtlasPanel`. Turning river flow on or off also goes through
+  `startTerrainInvestigation` (through `startCategoryTransect`),
+  `enterUnderground` and `openAtlasPanel`. Turning river flow on or off also goes through
   `updateSceneEffects`. The dock can
   be hidden. It returns the next time a category map is opened.
 - **Layers panel.** When a category is chosen in the Layers catalogue, its

@@ -9027,13 +9027,15 @@ export default function Home() {
     writeExplorerGuideDismissed(rememberDismissal);
     if (document.activeElement?.closest(".explorer-guide")) document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
   };
+  // Opens Underground (or keeps it open) and moves focus into it.
+  const enterUnderground = () => {
+    if (primaryWorkspace !== "map" || !undergroundOpen) toggleUnderground();
+    setUndergroundFocusRequest((request) => request + 1);
+  };
   const runExplorerGuideAction = (action: ExplorerGuideAction) => {
     if (action === "layers") { setSourceStatusOpen(false); setStarterPanelOpen(true); openAtlasPanel("layers"); }
     else if (action === "time") { setPrimaryWorkspace("map"); setTimelineOpen(true); }
-    else if (action === "underground") {
-      if (primaryWorkspace !== "map" || !undergroundOpen) toggleUnderground();
-      setUndergroundFocusRequest((request) => request + 1);
-    }
+    else if (action === "underground") enterUnderground();
     else if (action === "qwen") openQwenCompanion(null);
     if (action === "layers" || action === "time") window.requestAnimationFrame(() => {
       // Guide dismissal restores its trigger synchronously. Enter the destination
@@ -10002,7 +10004,7 @@ export default function Home() {
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
             onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => updateSceneEffects({ ...sceneEffectsRef.current, sunSync })}
             onSunTime={(fraction) => { setSunPlaying(false); setSunStudyAt(fraction === null ? null : instantAtIntervalFraction(kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunClock))), fraction)); }}
-            sunPlaying={sunPlaying} motionAllowed={!reducedMotion} onSunPlay={playSunDay} onTransect={startCategoryTransect}
+            sunPlaying={sunPlaying} motionAllowed={!reducedMotion} onSunPlay={playSunDay} onTransect={startCategoryTransect} onUnderground={enterUnderground}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
