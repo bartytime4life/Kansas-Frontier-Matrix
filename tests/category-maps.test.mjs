@@ -333,5 +333,9 @@ test('the review fixes: a hint per map, sun controls only where the light shows,
  assert.match(page,/const sunControlsShown = showCategoryDock && categoryMode !== "globe" && categorySunAvailable;/,'Play the day stops where the controls are not shown');
  assert.match(page,/<b>\{categoryMapOnScreen\?\.name \?\? activeAtlasView\?\.title \?\? "Kansas Overview"\}<\/b>/,'the status bar names the open map, not a view guessed from the basemap');
  assert.match(page,/hint=\{categoryMapOnScreen && primaryWorkspace === "map" \? \{ title: categoryMapOnScreen\.name, text: categoryMapOnScreen\.tip \} : null\}/);
+ // Short landscape screens hide the tips' trailing arrow (the third span); a hint has two spans, title and text.
+ const css=await readFile('app/globals.css','utf8');
+ assert.doesNotMatch(css,/\.welcome-feature-item>span:last-child\{display:none\}/,'a hint\'s text is its last span and must stay visible');
+ assert.match(css,/\.welcome-feature-item>span:nth-child\(3\)\{display:none\}/);
  assert.match(page,/styleDocumentLoadedRef\.current = true;\s*\/\/[^\n]*\n(?:\s*\/\/[^\n]*\n)*\s*styleFallbackAttempted = false;/,'a loaded style re-arms the basemap fallback, so a second outage falls back instead of failing the map');
 });
