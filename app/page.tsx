@@ -10056,6 +10056,7 @@ export default function Home() {
               <div><span>OBSERVED RADAR · EXTERNAL CONTEXT</span><strong>{NOAA_RADAR_PRODUCT_TITLE}</strong></div>
               <b>{noaaRadarDisplayState}</b>
               <button type="button" className="noaa-radar-details-toggle" aria-expanded={radarDetailsOpen} aria-controls="noaa-radar-details" onClick={() => setRadarDetailsOpen(open => !open)}>Settings</button>
+              <button type="button" className="noaa-radar-close" onClick={closeLiveInstrument} aria-label="Close radar loop controls" title="Close the loop controls; the radar stays on the map"><span aria-hidden="true">×</span></button>
             </header>
             <div className="noaa-radar-frame" role="status" aria-live={noaaRadarPlaying ? "off" : "polite"} aria-busy={noaaRadarFrameLoadState === "loading"} aria-atomic="true">
               <div><strong>{noaaRadarFrameHeadline}</strong><small>{noaaRadarFrameDetail}</small></div>

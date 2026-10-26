@@ -3142,6 +3142,9 @@ body { font-size: 14px; }
 .noaa-radar-error span { color: var(--muted); font-size: 10px; line-height: 1.4; }
 .noaa-radar-motion-note { margin: 0; border-left: 2px solid var(--gold); color: var(--gold-soft); padding-left: 8px; font-size: 10px; }
 .noaa-radar-details > footer { color: var(--dim); font-size: 10px; line-height: 1.35; }
+.noaa-radar-close { display: grid; flex: none; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid rgba(115, 199, 210, .42); border-radius: 50%; background: transparent; color: var(--ink); font: inherit; font-size: 24px; line-height: 1; cursor: pointer; }
+.noaa-radar-close:hover { background: rgba(115, 199, 210, .14); }
+.noaa-radar-close:focus-visible { outline: 3px solid var(--gold-soft); outline-offset: 2px; }
 /* Settings, legend and notes sit in the dock's own grid on wider screens; the toggle is for phones. */
 .noaa-radar-details { display: contents; }
 .noaa-radar-details-toggle { display: none; }
