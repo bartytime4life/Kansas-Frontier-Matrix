@@ -1,2 +1,0 @@
-EVALUATION_STATE_INVALID	$.calibration.evaluation.uncertainty_state
-EVALUATION_STATE_INVALID	$.calibration.evaluation.validity_bound

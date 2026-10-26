@@ -1,4 +1,0 @@
-# connectors/inaturalist pyproject — greenfield placeholder
-[project]
-name = "kfm-connector-inaturalist"
-version = "0.0.0"
