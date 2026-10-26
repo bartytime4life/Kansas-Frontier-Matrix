@@ -248,7 +248,9 @@ attribution control).
   minutes. Radar shows its newest advertised scan from `/api/noaa-radar/frames`
   (`setNoaaRadarObservationTime`), only while that scan passes the Explorer's
   freshness rule; the caption gives the scan time, and a stale or unavailable
-  frame list shows no radar and claims none. GOES imagery and river gauges need
+  frame list shows no radar and claims none. The rule is applied again on every
+  draw, and a selected radar preview is re-checked every minute (a new frame list
+  every two), so a scan that ages past it leaves the map and the caption. GOES imagery and river gauges need
   live controls (the satellite frame list or the River Pulse adapter) and are
   left out of previews (`WELCOME_PREVIEW_SKIPPED_STARTERS`); they appear when
   the map is opened. The caption names the map, its view, the data drawn at the

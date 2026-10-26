@@ -21,7 +21,7 @@ const stubs = {
   "'../noaa-radar'": toUrl(`
     export const NOAA_RADAR_FRAME_API_PATH = '/api/noaa-radar/frames';
     export const isNoaaRadarManifest = value => Array.isArray(value?.frames);
-    export const noaaRadarManifestIsFresh = manifest => manifest.fresh === true;`),
+    export const noaaRadarManifestIsFresh = manifest => globalThis.__welcome.fresh(manifest.frames.at(-1));`),
   "'../welcome-map-view'": toUrl(`
     const view = (topic, basemap, scene, zoom, starters = []) => ({ topic, basemap, scene, camera: { center: [-98, 38], zoom, pitch: 0, bearing: 0 }, starters });
     const VIEWS = { evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']), weather: view('weather', 'relief', 'terrain', 5.9, ['nws-alerts', 'nws-radar']) };
@@ -58,7 +58,7 @@ class FakeMap {
 const settle = () => new Promise(resolve => setTimeout(resolve, SETTLE_MS + 30));
 async function start() {
   const fetches = [];
-  globalThis.__welcome = { FakeMap, drawn: [], radar: [] };
+  globalThis.__welcome = { FakeMap, drawn: [], radar: [], fresh: () => true };
   // Style documents and starter payloads each wait until the test releases them.
   globalThis.fetch = url => new Promise(resolve => fetches.push({ url, resolve: () => resolve({ ok: true, json: async () => url === '/api/noaa-radar/frames' ? globalThis.__welcome.radarManifest : url.startsWith('/api/') ? { feed: new URL(url, 'http://x').searchParams.get('feed'), data: { type: 'FeatureCollection', features: [] } } : { version: 8, url, sources: {}, layers: [] } }) }));
   let ready = 0;
@@ -129,7 +129,8 @@ test('a previewed category draws its starter data with the Explorer renderer, an
 test('the storm preview draws the newest radar scan only while it is current, and reports its time', async () => {
   for (const fresh of [true, false]) {
     const { engine, fetches, map, radarReports } = await start();
-    globalThis.__welcome.radarManifest = { frames: ['2026-10-26T16:00:00Z', '2026-10-26T16:04:00Z'], fresh };
+    globalThis.__welcome.radarManifest = { frames: ['2026-10-26T16:00:00Z', '2026-10-26T16:04:00Z'] };
+    globalThis.__welcome.fresh = () => fresh;
     engine.show('weather'); await tick(); await tick();
     map.emit('style.load');
     fetches.find(f => f.url === '/api/noaa-radar/frames').resolve(); await tick(); await tick(); await tick();
@@ -147,4 +148,21 @@ test('the storm preview draws the newest radar scan only while it is current, an
     }
     engine.dispose();
   }
+});
+
+test('a radar scan that ages past the freshness rule leaves the preview and its caption', async t => {
+  t.mock.timers.enable({ apis: ['setInterval'] });
+  const { engine, fetches, map, radarReports } = await start();
+  const { RADAR_RECHECK_MS } = await loadEngine();
+  globalThis.__welcome.radarManifest = { frames: ['2026-10-26T16:00:00Z', '2026-10-26T16:04:00Z'] };
+  engine.show('weather'); await tick(); await tick();
+  map.emit('style.load');
+  fetches.find(f => f.url === '/api/noaa-radar/frames').resolve(); await tick(); await tick(); await tick();
+  assert.deepEqual(radarReports, ['2026-10-26T16:04:00Z']);
+  // Fifteen minutes later the same scan is no longer current.
+  globalThis.__welcome.fresh = () => false;
+  t.mock.timers.tick(RADAR_RECHECK_MS); await tick(); await tick(); await tick();
+  assert.deepEqual(radarReports, ['2026-10-26T16:04:00Z', null], 'the caption drops the stale scan');
+  assert.ok(!globalThis.__welcome.drawn.at(-1).shown.includes('nws-radar'), 'and the radar layer is hidden');
+  engine.dispose();
 });
