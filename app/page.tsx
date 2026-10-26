@@ -6434,6 +6434,8 @@ export default function Home() {
   };
 
   const updateSceneEffects = (next: SceneEffectSettings) => {
+    // Turning the real sun on or off from any control ends a time-of-day study.
+    if (next.sunSync !== sceneEffectsRef.current.sunSync) setSunStudyAt(null);
     sceneEffectsRef.current = next;
     setSceneEffects(next);
     writeSceneEffects(next);
@@ -9961,7 +9963,7 @@ export default function Home() {
           {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth}
             terrainAvailable={runtime.kind !== "unsupported" && runtime.kind !== "error" && terrainState !== "ERROR"} onMode={chooseCategoryMode} onDepth={changeTerrainDepth}
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
-            onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => { setSunStudyAt(null); updateSceneEffects({ ...sceneEffectsRef.current, sunSync }); }}
+            onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => updateSceneEffects({ ...sceneEffectsRef.current, sunSync })}
             onSunTime={(fraction) => setSunStudyAt(fraction === null ? null : instantAtIntervalFraction(kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunClock))), fraction))} onReset={resetCategoryView}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
