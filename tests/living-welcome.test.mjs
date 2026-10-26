@@ -200,6 +200,22 @@ test('header feature scroll uses two deadlines, pauses on interest, and navigate
  h.dispose();assert.equal(clock.timers.size,0);assert.equal(clock.listeners.size,0);
 });
 
+test('an open category map holds the strip on its own hint: no rotation, no steppers, nothing to follow away',async()=>{
+ const clock=featureClock(),calls=[];
+ const h=await componentHarness('app/living-welcome/FeatureGuide.jsx',{'./features':{WELCOME_FEATURES:features}},clock.globals);
+ let hint={title:'Hazard watch',text:'Select a fire detection to compare it with nearby fire reports.'};
+ const render=()=>{const tree=h.render(h.exports.WelcomeFeatureGuide,{onNavigate:value=>calls.push(value),hint});h.commit();return tree;};
+ let tree=render();tree=render();
+ assert.equal(tree.props['data-hint'],'true');assert.equal(tree.props['aria-label'],'Hazard watch: what to try');
+ assert.match(JSON.stringify(tree),/Hazard watch.*Select a fire detection/);
+ assert.equal(findNode(tree,node=>node.type==='button'),undefined,'no steppers and no link away from the open map');
+ assert.equal(clock.timers.size,0,'the hint does not rotate');clock.advance(60000);assert.equal(clock.wakes,0);assert.deepEqual(calls,[]);
+ hint=null;tree=render();tree=render();
+ assert.ok(findNode(tree,node=>node.props?.['aria-label']==='Next feature'),'leaving the map brings the tips back');
+ assert.equal(clock.timers.size,1,'and their rotation');
+ h.dispose();
+});
+
 test('feature rotation suspends while hidden, resumes a full dwell and resets after manual or paused input',async()=>{
  const clock=featureClock();
  const h=await componentHarness('app/living-welcome/FeatureGuide.jsx',{'./features':{WELCOME_FEATURES:features}},clock.globals);

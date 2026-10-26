@@ -44,6 +44,7 @@
 .welcome-feature-strip.is-sliding{animation:welcome-feature-scroll 1150ms cubic-bezier(.22,.7,.25,1) both}
 .welcome-feature-item{display:flex;gap:14px;align-items:center;width:100%;height:var(--feature-height);min-height:44px;text-align:left;color:inherit;background:transparent;border:0;line-height:1.5;padding:4px 8px;cursor:pointer}
 .welcome-feature-item>span:nth-child(2){flex:1;min-width:0;white-space:normal;overflow-wrap:anywhere}
+.welcome-feature-guide[data-hint] .welcome-feature-item{margin:0;cursor:default}
 .welcome-feature-status{flex:none;font-size:10px;color:#e0c77e;letter-spacing:.08em;text-transform:uppercase}
 .welcome-feature-steppers{display:flex;gap:2px;flex:none}
 .welcome-feature-steppers button{display:grid;place-items:center;border:1px solid transparent;border-radius:50%;background:transparent;color:#b8d2de;width:44px;height:44px;font-size:16px;cursor:pointer}

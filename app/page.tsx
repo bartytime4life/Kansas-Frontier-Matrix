@@ -5178,6 +5178,10 @@ export default function Home() {
         const syncStyle = (): boolean => {
           cancelHoverSample();
           styleDocumentLoadedRef.current = true;
+          // A style that loads ends the outage that used the fallback, so a later
+          // basemap that fails (a category map asking for the vector base again)
+          // falls back too instead of failing the map.
+          styleFallbackAttempted = false;
           styleGenerationReadyRef.current = false;
           mapMutationErrorRef.current = null;
           if (hoverDrawerTimerRef.current !== null) window.clearTimeout(hoverDrawerTimerRef.current);
@@ -9114,10 +9118,13 @@ export default function Home() {
   // including after a shared URL restores that basemap.
   const activeCategoryMap = officialWorkspace === "all" ? undefined : categoryMap(officialWorkspace);
   const categoryMode: CategoryScene = projection === "globe" ? "globe" : scenePreset === "elevation-3d" ? "terrain" : "2d";
-  const showCategoryDock = Boolean(activeCategoryMap && !categoryDockHidden && guideOpen === false && primaryWorkspace === "map" && !undergroundOpen
-    && (activeCategoryMap.basemap === basemap || categoryDockTopic === activeCategoryMap.topic));
-  // Play the day runs only while its controls are on screen: the dock is shown and not on the globe.
-  const sunControlsShown = showCategoryDock && categoryMode !== "globe";
+  // The category map on screen: its look's basemap is on, or it was opened and not left since.
+  const categoryMapOnScreen = activeCategoryMap && (activeCategoryMap.basemap === basemap || categoryDockTopic === activeCategoryMap.topic) ? activeCategoryMap : undefined;
+  const showCategoryDock = Boolean(categoryMapOnScreen && !categoryDockHidden && guideOpen === false && primaryWorkspace === "map" && !undergroundOpen);
+  // The light changes the map in 3D terrain and on category basemaps, whose shaded relief follows it.
+  const categorySunAvailable = categoryMode === "terrain" || isCategoryBasemapKey(basemap);
+  // Play the day runs only while its controls are on screen: the dock is shown with its sun controls, not on the globe.
+  const sunControlsShown = showCategoryDock && categoryMode !== "globe" && categorySunAvailable;
   if (sunPlaying && !sunControlsShown) setSunPlaying(false);
   // Play the day: one quarter-hour step of the sun study at a time, until 11:45 PM.
   useEffect(() => {
@@ -9266,7 +9273,7 @@ export default function Home() {
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. Map controls support coordinate navigation and camera orientation; Inspect has a keyboard-accessible feature list. Terrain uses an external display DEM when available. The comparison tool accepts browser-local road-year linework; display context is not an admitted KFM source.</p>
           <button className="map-guide-start" type="button" onClick={openMapGuideDiagnostics}>Map diagnostics</button>
         </aside>}
-        <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} />
+        <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} />
       </header>
 
       {primaryWorkspace !== "map" && workspaceSnapshot && <ReportStoryWorkspaces
@@ -10019,7 +10026,7 @@ export default function Home() {
 
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
-          {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth}
+          {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth} sunAvailable={categorySunAvailable}
             terrainAvailable={runtime.kind !== "unsupported" && runtime.kind !== "error" && terrainState !== "ERROR"} onMode={chooseCategoryMode} onDepth={changeTerrainDepth}
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
             onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => updateSceneEffects({ ...sceneEffectsRef.current, sunSync })}
@@ -10836,7 +10843,7 @@ export default function Home() {
         </section>
 
         <footer className="status-bar" data-terrain={scenePreset === "elevation-3d"} aria-label="Map status">
-          <span><b>{activeAtlasView?.title ?? "Kansas Overview"}</b> · {selected?.properties.title ?? "Kansas statewide"}</span>
+          <span><b>{categoryMapOnScreen?.name ?? activeAtlasView?.title ?? "Kansas Overview"}</b> · {selected?.properties.title ?? "Kansas statewide"}</span>
           {scenePreset === "elevation-3d" ? <output className="status-terrain-readout" data-state={terrainState === "ERROR" ? "error" : terrainState !== "READY" ? "loading" : terrainElevationUnavailable ? "unavailable" : terrainElevationReading ? "sample" : "idle"} aria-live="off">
             <em>DEM · {(terrainElevationReading?.provider ?? terrainProvider) === "usgs-3dep" ? "USGS 3DEP" : "MAPZEN"}</em>
             <strong>{terrainState === "ERROR" ? "Unavailable" : terrainState !== "READY" ? "Loading elevation" : terrainElevationReading ? `${terrainElevationReading.feet.toFixed(0)} ft` : terrainElevationUnavailable ? "No sample here" : "Hover for height"}</strong>
