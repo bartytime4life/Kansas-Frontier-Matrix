@@ -5,6 +5,13 @@ import type { CategoryMap, CategoryScene } from "./category-maps";
 import type { SceneLight } from "./scene-effects";
 import type { KansasDensityGroup } from "./population-prisms";
 
+export type AquiferView = "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-aquifer-high-plains";
+const AQUIFER_VIEWS: readonly (readonly [AquiferView, string, string])[] = [
+  ["kgs-saturated-thickness", "Thickness", "Saturated thickness: how much of the aquifer still holds water, in feet"],
+  ["kgs-depth-to-water", "Depth to water", "Depth from the land surface down to the water table, in feet"],
+  ["kgs-aquifer-high-plains", "Extent", "Where the High Plains aquifer is mapped"],
+];
+
 const MODES: readonly (readonly [CategoryScene, string, string])[] = [
   ["2d", "2D", "Flat map, straight down"],
   ["terrain", "3D", "Tilted 3D terrain"],
@@ -46,7 +53,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, soil, onSoil, onSoilDepth, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, soil, onSoil, onSoilDepth, aquifer, onAquiferView, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -117,6 +124,12 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
   soil?: Readonly<{ on: boolean; depth: "surface" | "root"; reading: string; legendUrl: string }>;
   onSoil?: (on: boolean) => void;
   onSoilDepth?: (depth: "surface" | "root") => void;
+  /**
+   * The High Plains aquifer view, for looks that offer the aquifer tool: which
+   * KGS map is drawn (or none), and that map's classes in feet, in order.
+   */
+  aquifer?: Readonly<{ view: AquiferView | null; legend: readonly Readonly<{ label: string; color: string }>[] | null }>;
+  onAquiferView?: (view: AquiferView) => void;
   onReset: () => void;
   onLayers: () => void;
   onClose: () => void;
@@ -176,6 +189,15 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
         <ul>{population.groups.map(group => <li key={group.id}><span className="category-map-dock-chip" style={{ background: group.color }} aria-hidden="true" />
           <span>{group.label}<small>{group.range}</small></span><b>{population.counties ? `${group.count} ${group.count === 1 ? "county" : "counties"}` : "…"}</b></li>)}</ul>
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
+      </div>}
+    </>}
+    {look.tools?.includes("aquifer") && aquifer && onAquiferView && <>
+      <div className="category-map-dock-modes" role="group" aria-label="Aquifer map">
+        {AQUIFER_VIEWS.map(([view, label, title]) => <button key={view} type="button" aria-pressed={aquifer.view === view} title={title} onClick={() => onAquiferView(view)}>{label}</button>)}
+      </div>
+      {aquifer.legend && <div className="category-map-dock-legend" aria-label={aquifer.view === "kgs-depth-to-water" ? "Depth to water, feet" : "Saturated thickness, feet"}>
+        <ul className="category-map-dock-ramp">{aquifer.legend.map(entry => <li key={entry.label}><span className="category-map-dock-chip" style={{ background: entry.color }} aria-hidden="true" /><span>{entry.label}</span></li>)}</ul>
+        <p className="category-map-dock-reading">{aquifer.view === "kgs-depth-to-water" ? "Depth to water" : "Saturated thickness"}, feet · KGS High Plains Atlas, 2022–2024 classes, not well measurements</p>
       </div>}
     </>}
     {look.tools?.includes("soil") && soil && onSoil && <>

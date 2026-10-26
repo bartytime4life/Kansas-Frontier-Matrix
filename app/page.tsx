@@ -23,7 +23,7 @@ import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-
 import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulationPrisms } from "./population-prisms";
 import { CATEGORY_BASEMAPS } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
-import { CategoryMapDock, nextSunStep, SUN_PLAY_RESTART_STEP, SUN_TIME_STEPS } from "./category-map-dock";
+import { CategoryMapDock, nextSunStep, SUN_PLAY_RESTART_STEP, SUN_TIME_STEPS, type AquiferView } from "./category-map-dock";
 import { evidenceSummary } from "./evidence-summary";
 import "./evidence-summary.css";
 import { AviationLayerControl } from "./aviation-layer-control";
@@ -35,7 +35,7 @@ import "./living-welcome/welcome.css";
 import type { WelcomeFeatureDestination } from "./living-welcome/features";
 import { captureBasemapSourceIds } from "../scripts/welcome-demos/capture-metrics.mjs";
 import { basemapCacheRequest } from "./basemap-cache";
-import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
+import { GROUNDWATER_CLASS_LEGENDS, GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, SOIL_VIEWS, soilLegendUrl, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
 import { GovernedWaterControl } from "./governed-water-control";
 import { GovernedWeatherControl } from "./governed-weather-control";
@@ -7554,6 +7554,12 @@ export default function Home() {
     if (on && map && map.getZoom() > SOIL_REGIONAL_ZOOM + 0.5) map.easeTo({ zoom: SOIL_REGIONAL_ZOOM, duration: motionDuration(1200), essential: false });
     announce(on ? "NASA SMAP soil moisture shown · 9 km modelled cells over the region" : "Soil moisture hidden");
   };
+  // The aquifer map shows one KGS view at a time; the dock switches between them.
+  const AQUIFER_VIEW_IDS: readonly AquiferView[] = ["kgs-saturated-thickness", "kgs-depth-to-water", "kgs-aquifer-high-plains"];
+  const aquiferView = AQUIFER_VIEW_IDS.find(id => officialVisibility[id]) ?? null;
+  const showAquiferView = (view: AquiferView) => {
+    for (const id of AQUIFER_VIEW_IDS) if (id === view || officialVisibilityRef.current[id]) setOfficialContextVisible(id, id === view);
+  };
   const soilReading = !soilMapState.visible ? ""
     : soilMoistureContext?.renderedFrameTimeUtc ? `${SOIL_VIEWS[soilMapState.view].label} · ${soilMoistureContext.renderedFrameTimeUtc.slice(0, 16).replace("T", " ")} UTC · NASA SMAP L4, 9 km modelled cells`
     : soilMoistureContext?.availabilityState === "error" || soilMoistureContext?.mapState === "error" ? "NASA soil moisture is unavailable right now; nothing is drawn in its place"
@@ -10066,6 +10072,8 @@ export default function Home() {
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
+            aquifer={activeCategoryMap.tools?.includes("aquifer") ? { view: aquiferView, legend: aquiferView && aquiferView !== "kgs-aquifer-high-plains" ? GROUNDWATER_CLASS_LEGENDS[aquiferView] : null } : undefined}
+            onAquiferView={showAquiferView}
             soil={activeCategoryMap.tools?.includes("soil") ? { on: soilMapState.visible, depth: soilMapState.view === "root" ? "root" : "surface", reading: soilReading, legendUrl: soilLegendUrl(soilMapState.view === "root" ? "root" : "surface") } : undefined}
             onSoil={showCategorySoil} onSoilDepth={(depth) => changeSoilMapState({ view: depth })}
             population={activeCategoryMap.tools?.includes("population") ? { on: populationPrisms, ...densityGroupCounts(officialPayloads["census-counties"]?.data.features ?? []), metresPerPerson: PRISM_METRES_PER_PERSON_PER_SQUARE_MILE } : undefined}

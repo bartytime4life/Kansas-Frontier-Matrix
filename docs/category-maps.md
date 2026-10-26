@@ -174,6 +174,23 @@ moisture, through the Explorer's own soil-moisture control
   outside its own row (the dock, or a shared link that restores `soil=1`), not
   only from its switch.
 
+## Saturated thickness on the Aquifer map (Groundwater)
+
+The Aquifer map opens on the Kansas Geological Survey's 2022–2024 saturated
+thickness of the High Plains aquifer: how many feet of the aquifer still hold
+water. It is centred on western Kansas, where the aquifer is. Its dock switches
+one KGS view at a time:
+
+- **Thickness**, classes from under 50 to over 300 feet;
+- **Depth to water**, from under 25 to over 350 feet below the land surface;
+- **Extent**, where the aquifer is mapped.
+
+The legend lists the KGS classes in feet with the colours the snapshots carry
+(`GROUNDWATER_CLASS_LEGENDS`); `tests/aquifer-legend.test.mjs` keeps it equal to
+the snapshot files in `public/data/groundwater/`. These are regional classified
+estimates, not well measurements; Explore underground opens the recorded well
+logs and cores.
+
 ## What is not on every map
 
 County boundaries, USGS river gauges, the USGS 3DHP stream network and the fire

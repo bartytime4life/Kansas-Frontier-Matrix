@@ -365,3 +365,23 @@ test('the Field view shows NASA soil moisture at a chosen depth, names the day d
  const control=await readFile('app/soil-moisture-control.tsx','utf8');
  assert.match(control,/if \(enabled && availability === null && !checking\) void checkAvailability\(\);/,'switched on from outside the row, it still checks NASA\'s days');
 });
+
+test('the Aquifer map opens on saturated thickness and switches one KGS view at a time, with its classes as the legend',async()=>{
+ const look=maps.CATEGORY_MAPS.groundwater;
+ assert.deepEqual([...look.starters],['kgs-saturated-thickness']);assert.deepEqual([...look.tools],['aquifer','underground']);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];
+ const base={look,mode:'2d',depth:2.5,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onUnderground(){},onAquiferView:v=>calls.push(v)};
+ const legend=[{label:'Under 50',color:'#ffff73'},{label:'Over 300',color:'#0c2c84'}];
+ const button=(tree,label)=>findNode(tree,n=>n.type==='button'&&n.props.children===label);
+ let tree=h.render(h.exports.CategoryMapDock,{...base,aquifer:{view:'kgs-saturated-thickness',legend}});
+ assert.equal(button(tree,'Thickness').props['aria-pressed'],true);
+ assert.match(JSON.stringify(tree),/Under 50.*Over 300.*Saturated thickness.*feet · KGS High Plains Atlas, 2022–2024 classes, not well measurements/);
+ button(tree,'Depth to water').props.onClick();button(tree,'Extent').props.onClick();
+ assert.deepEqual(calls,['kgs-depth-to-water','kgs-aquifer-high-plains']);
+ tree=h.render(h.exports.CategoryMapDock,{...base,aquifer:{view:'kgs-aquifer-high-plains',legend:null}});
+ assert.doesNotMatch(JSON.stringify(tree),/feet ·/,'the extent has no classes');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/for \(const id of AQUIFER_VIEW_IDS\) if \(id === view \|\| officialVisibilityRef\.current\[id\]\) setOfficialContextVisible\(id, id === view\);/,'one view at a time');
+});
