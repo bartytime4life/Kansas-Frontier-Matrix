@@ -13,6 +13,8 @@
 .category-map-dock .category-map-dock-modes button{min-height:44px;border:0;border-radius:7px;background:transparent;color:#cfe2ea;font-weight:700;font-size:13px;cursor:pointer}
 .category-map-dock .category-map-dock-modes button[aria-pressed=true]{background:#d8c58f;color:#14212a;box-shadow:inset 0 0 0 1px #f1e6c2}
 .category-map-dock .category-map-dock-modes button:disabled{opacity:.45;cursor:not-allowed;background:transparent}
+/* A requested mode that is unavailable (3D while the DEM fails) keeps a readable label and an outline. */
+.category-map-dock .category-map-dock-modes button[aria-pressed=true]:disabled{color:#f1e6c2;box-shadow:inset 0 0 0 1px #d8c58f99}
 .category-map-dock-range{display:grid;grid-template-columns:62px 1fr 38px;align-items:center;gap:8px;font-size:12px;color:#b6d0dc}
 .category-map-dock-range input{width:100%;min-height:32px;accent-color:#d8c58f}
 .category-map-dock-range output{text-align:right;font-variant-numeric:tabular-nums;color:#f1e6c2}
@@ -37,7 +39,8 @@
 .category-map-dock-actions button:hover,.category-map-dock-modes button:not([aria-pressed=true]):hover{background:#0f3a4d}
 .category-map-dock :focus-visible{outline:2px solid #f1e6c2;outline-offset:2px}
 /* Keep the card above the mobile action rail; short screens scroll the card. */
-@media(max-width:760px){.category-map-dock{left:72px;right:8px;width:auto;bottom:calc(80px + env(safe-area-inset-bottom,0px));max-height:calc(100% - 96px - env(safe-area-inset-bottom,0px))}.category-map-dock-lede{display:none}}
+/* On phones the dock stops 72px below the map top, so its header and close stay clear of the map information button. */
+@media(max-width:760px){.category-map-dock{left:72px;right:8px;width:auto;bottom:calc(80px + env(safe-area-inset-bottom,0px));max-height:calc(100% - 152px - env(safe-area-inset-bottom,0px))}.category-map-dock-lede{display:none}}
 
 /* The Layers panel's topic guide shows the category's map look with the same sketch. */
 .topic-guide .topic-map-look{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start;margin:8px 0;padding:10px;border:1px solid #d8c58f44;border-radius:10px;background:#0a2533}
