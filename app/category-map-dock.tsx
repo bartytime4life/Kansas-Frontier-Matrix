@@ -6,6 +6,7 @@ import type { SceneLight } from "./scene-effects";
 import type { KansasDensityGroup } from "./population-prisms";
 import type { PhotorealLandscape } from "./photoreal-landscapes";
 import type { MapKey } from "./map-keys";
+import type { EarthquakeRecordEvent, YearCount } from "./earthquake-record";
 
 export type AquiferView = "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-aquifer-high-plains";
 const AQUIFER_VIEWS: readonly (readonly [AquiferView, string, string])[] = [
@@ -55,7 +56,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, keys, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -118,6 +119,18 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
    */
   population?: Readonly<{ on: boolean; groups: readonly (KansasDensityGroup & { count: number })[]; counties: number; statewide: number | null; metresPerPerson: number }>;
   onPopulation?: (on: boolean) => void;
+  /**
+   * The Kansas earthquake record since 1973, for looks that offer the quakes
+   * tool: whether it is shown and read, the events per year, the one year
+   * drawn (null for all), and the event a visitor selected on the map.
+   */
+  quakes?: Readonly<{
+    on: boolean; loading: boolean; failed: boolean; counts: readonly (YearCount & { color: string })[] | null; total: number; startYear: number; endYear: number;
+    minMagnitude: number; truncated: boolean; year: number | null; selected: EarthquakeRecordEvent | null; selectedUrl: string | null;
+  }>;
+  onQuakes?: (on: boolean) => void;
+  onQuakeYear?: (year: number | null) => void;
+  onQuakeClear?: () => void;
   /**
    * NASA SMAP L4 soil moisture, for looks that offer the soil tool: whether it
    * is drawn, at which depth, what the map shows now (the exact day drawn, or
@@ -215,6 +228,25 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
       </div>}
     </>}
+    {look.tools?.includes("quakes") && quakes && onQuakes && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={quakes.on} onClick={() => onQuakes(!quakes.on)}
+        title={`Every USGS-catalogued Kansas earthquake of magnitude ${quakes.minMagnitude} or more since ${quakes.startYear}, coloured by year`}>{quakes.on ? "Back to the past 30 days" : `Earthquake record since ${quakes.startYear}`}</button>
+      {quakes.on && <div className="category-map-dock-quakes">
+        {quakes.counts && <QuakeHistogram counts={quakes.counts} year={quakes.year} onYear={onQuakeYear} />}
+        {quakes.counts && <label className="category-map-dock-range category-map-dock-quake-year"><span>Year</span>
+          <select value={quakes.year ?? ""} onChange={event => onQuakeYear?.(event.target.value ? Number(event.target.value) : null)}>
+            <option value="">All years</option>
+            {quakes.counts.filter(entry => entry.count > 0).map(entry => <option key={entry.year} value={entry.year}>{entry.year} · {entry.count}</option>)}
+          </select></label>}
+        <p className="category-map-dock-reading" aria-live="polite">{quakeReading(quakes)}</p>
+        {quakes.selected && <div className="category-map-dock-quake-event" aria-live="polite">
+          <p><b>M {quakes.selected.magnitude.toFixed(1)}{quakes.selected.magnitudeType ? ` ${quakes.selected.magnitudeType}` : ""}</b> · {quakes.selected.time.slice(0, 16).replace("T", " ")} UTC<br />
+            {quakes.selected.place ?? "Kansas"}{quakes.selected.depthKilometers !== null ? ` · depth ${quakes.selected.depthKilometers} km` : ""}{quakes.selected.status ? ` · ${quakes.selected.status}` : ""}</p>
+          <div>{quakes.selectedUrl && <a href={quakes.selectedUrl} target="_blank" rel="noreferrer">USGS event page ↗</a>}
+            <button type="button" onClick={onQuakeClear} aria-label="Clear the selected earthquake">Clear</button></div>
+        </div>}
+      </div>}
+    </>}
     {look.tools?.includes("photoreal") && photoreal && onPhotoreal && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={photoreal.on} onClick={() => onPhotoreal(photoreal.on ? null : photoreal.place ?? photoreal.landscapes[0].id)}
         title="The 2024 one-foot Kansas aerial on the USGS 3DEP bare-earth DEM at true vertical scale, lit by the real sun">{photoreal.on ? "Back to relief colours" : "Photo-real 3D"}</button>
@@ -282,4 +314,41 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
       <button type="button" onClick={onLayers}>Layers for this map</button>
     </div>
   </section>;
+}
+
+type QuakeDockState = NonNullable<Parameters<typeof CategoryMapDock>[0]["quakes"]>;
+
+/** What the record shows now, or why it shows nothing. */
+export function quakeReading(quakes: Pick<QuakeDockState, "loading" | "failed" | "counts" | "total" | "startYear" | "endYear" | "minMagnitude" | "truncated" | "year">): string {
+  if (quakes.loading) return "Reading the USGS earthquake catalog…";
+  if (quakes.failed || !quakes.counts) return "The USGS catalog did not answer. Go back to the past 30 days, or try the record again.";
+  const cut = quakes.truncated ? " · the catalog answer was cut short" : "";
+  if (quakes.year !== null) {
+    const count = quakes.counts.find(entry => entry.year === quakes.year)?.count ?? 0;
+    return `${count.toLocaleString("en-US")} ${count === 1 ? "earthquake" : "earthquakes"} M${quakes.minMagnitude}+ in ${quakes.year} · choose All years to see the record${cut}`;
+  }
+  const peak = quakes.counts.reduce((best, entry) => entry.count > best.count ? entry : best, { year: quakes.startYear, count: 0 });
+  return `${quakes.total.toLocaleString("en-US")} earthquakes M${quakes.minMagnitude}+ inside Kansas, ${quakes.startYear}–${quakes.endYear}${peak.count ? ` · most in ${peak.year} (${peak.count})` : ""}${cut}`;
+}
+
+/**
+ * Events per year as bars in each year's map colour, so the chart is also the
+ * colour key. A bar selects its year; the select beside it does the same from
+ * the keyboard.
+ */
+function QuakeHistogram({ counts, year, onYear }: Readonly<{ counts: readonly (YearCount & { color: string })[]; year: number | null; onYear?: (year: number | null) => void }>) {
+  const max = Math.max(1, ...counts.map(entry => entry.count));
+  const width = counts.length * 4, height = 44;
+  return <figure className="category-map-dock-histogram" aria-label={`Earthquakes per year, ${counts[0]?.year}–${counts[counts.length - 1]?.year}; the most in one year is ${max}`}>
+    <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" aria-hidden="true">
+      {counts.map((entry, i) => {
+        const h = entry.count ? Math.max(1.2, entry.count / max * (height - 2)) : 0;
+        return <g key={entry.year} onClick={() => entry.count && onYear?.(year === entry.year ? null : entry.year)} data-year={entry.year}>
+          <rect x={i * 4} y={0} width={4} height={height} fill="transparent" />
+          {h > 0 && <rect x={i * 4 + 0.4} y={height - h} width={3.2} height={h} fill={entry.color} stroke="#e6eff2" strokeOpacity={0.45} strokeWidth={0.6} vectorEffect="non-scaling-stroke" opacity={year === null || year === entry.year ? 1 : 0.3} />}
+        </g>;
+      })}
+    </svg>
+    <figcaption><span>{counts[0]?.year}</span><span>{max} in the busiest year</span><span>{counts[counts.length - 1]?.year}</span></figcaption>
+  </figure>;
 }

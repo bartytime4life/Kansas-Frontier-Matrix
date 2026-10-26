@@ -274,6 +274,36 @@ read the same constants, so the two cannot drift apart:
 Radar keeps its dBZ legend in its own panel, and stream gauges keep theirs in
 River Pulse.
 
+## Earthquake record (Landform relief)
+
+The Landform relief dock's **Earthquake record since 1973** replaces the rolling
+30-day catalog with every USGS ComCat earthquake of magnitude 2.5 or more whose
+epicentre lies inside Kansas, from 1 January 1973 to now
+(`app/earthquake-record.ts`, served by `/api/earthquake-record`).
+
+- **Source and clip.** One FDSN event query over the state's bounding box,
+  oldest first, kept on the server for six hours. Events in the box but outside
+  the Census state outline (northern Oklahoma, north-west Missouri) are dropped
+  and counted; the outline is accurate to a few hundred metres, finer than the
+  catalog's epicentre uncertainty. If the provider returns more than 6,000
+  events the reading says the answer was cut short.
+- **Symbols.** Size is magnitude, on the record's own scale (it holds far more
+  events than 30 days). Colour is the year: 1973–2009 share one dark violet,
+  when Kansas had few seismometers and few M2.5+ events, then the perceptually
+  ordered "plasma" ramp runs from 2010 to the current year, so the rise in
+  south-central Kansas after 2013 is read by colour as well as by place. Larger
+  events draw on top.
+- **Histogram.** The dock charts events per year in each year's map colour, so
+  the chart is also the colour key. A bar, or the Year list, shows one year on
+  the map; the reading gives the count and the busiest year.
+- **Selection.** Selecting an event shows its magnitude and magnitude type,
+  UTC time, USGS place, depth and review status in the dock, with a link to the
+  USGS event page. The basemap beneath is not inspected.
+- **Limits.** Detection improved as seismometers were added after 2013, so early
+  decades miss some small events and counts across decades are not directly
+  comparable. Locations, magnitudes and review status can be revised by USGS.
+  Hiding the record brings the 30-day catalog back; leaving the map closes it.
+
 ## Photo-real 3D (Terrain)
 
 The Relief model dock's **Photo-real 3D** drapes the photographed ground on the
