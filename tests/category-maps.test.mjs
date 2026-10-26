@@ -56,7 +56,7 @@ test('opening a category map applies its look additively and follows the same ca
 test('the dock reflects the view and routes every control to an existing handler',async()=>{
  const h=await componentHarness('app/category-map-dock.tsx',{});
  const calls=[];const look=maps.CATEGORY_MAPS.aviation;
- const props={look,mode:'terrain',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode:v=>calls.push(['mode',v]),onDepth:v=>calls.push(['depth',v]),onAzimuth:v=>calls.push(['azimuth',v]),onRealSun:v=>calls.push(['sun',v]),onSunTime:v=>calls.push(['time',v]),onReset:()=>calls.push(['reset']),onLayers:()=>calls.push(['layers']),onClose:()=>calls.push(['close'])};
+ const props={look,mode:'terrain',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode:v=>calls.push(['mode',v]),onDepth:v=>calls.push(['depth',v]),onAzimuth:v=>calls.push(['azimuth',v]),onRealSun:v=>calls.push(['sun',v]),onSunTime:v=>calls.push(['time',v]),sunPlaying:false,motionAllowed:true,onSunPlay:v=>calls.push(['play',v]),onReset:()=>calls.push(['reset']),onLayers:()=>calls.push(['layers']),onClose:()=>calls.push(['close'])};
  let tree=h.render(h.exports.CategoryMapDock,props);
  const button=label=>findNode(tree,n=>n.type==='button'&&n.props.children===label);
  assert.equal(button('3D').props['aria-pressed'],true);assert.equal(button('2D').props['aria-pressed'],false);
@@ -87,6 +87,16 @@ test('the dock reflects the view and routes every control to an existing handler
  tree=h.render(h.exports.CategoryMapDock,{...props,sun:{light:sunLight,at,dayFraction:16/24,live:false}});
  assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='category-map-dock-sun-reading')),/Sun at/,'a study time is never shown as the live sun');
  button('Now').props.onClick();assert.deepEqual(calls.at(-1),['time',null]);
+ // Play the day sweeps the study forward; reduced motion leaves only the slider.
+ assert.equal(button('Play the day').props['aria-pressed'],false);button('Play the day').props.onClick();assert.deepEqual(calls.at(-1),['play',true]);
+ tree=h.render(h.exports.CategoryMapDock,{...props,sun:{light:sunLight,at,dayFraction:16/24,live:false},sunPlaying:true});
+ assert.equal(button('Pause').props['aria-pressed'],true);button('Pause').props.onClick();assert.deepEqual(calls.at(-1),['play',false]);
+ tree=h.render(h.exports.CategoryMapDock,{...props,sun:{light:sunLight,at,dayFraction:16/24,live:false},sunPlaying:true,motionAllowed:false});
+ assert.equal(button('Play the day').props.disabled,true,'no time-lapse under reduced motion');assert.equal(button('Play the day').props['aria-pressed'],false);
+ assert.equal(h.exports.nextSunStep(0),1/96);assert.equal(h.exports.nextSunStep(64/96),65/96);
+ assert.equal(h.exports.nextSunStep(64.5/96),65/96,'a time between steps moves to the next quarter hour');
+ assert.equal(h.exports.nextSunStep(94/96),95/96);assert.equal(h.exports.nextSunStep(95/96),null,'playback stops at 11:45 PM');assert.equal(h.exports.nextSunStep(1),null);
+ assert.equal(h.exports.SUN_PLAY_RESTART_STEP/h.exports.SUN_TIME_STEPS*24,5,'a played-out day restarts at 5:00 AM');
  assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='category-map-dock-sun-reading')),/52° up, from SW · 4:00\u202fPM CDT|52° up, from SW · 4:00 PM CDT/);
  assert.equal(button('Set light by hand').props['aria-pressed'],true);button('Set light by hand').props.onClick();
  assert.deepEqual(calls.at(-1),['sun',false]);
@@ -142,8 +152,14 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.match(page,/registerSceneEffects\(map, sceneEffects\);\s*registerSunInstant\(map, sunStudyAt\);/,'the renderer lights the study time');
  assert.equal((page.match(/light=\{sceneEffects\.sunSync \? sunSceneLight\(sunAt,/g)||[]).length,2,'the Scene studio reads the same instant');
  assert.match(page,/onRealSun=\{\(sunSync\) => updateSceneEffects\(\{ \.\.\.sceneEffectsRef\.current, sunSync \}\)\}/,'only the visitor turns the real sun on or off');
- const update=page.slice(page.indexOf('  const updateSceneEffects = (next: SceneEffectSettings) => {'),page.indexOf('  const chooseSceneRecipe ='));
- assert.match(update,/if \(next\.sunSync !== sceneEffectsRef\.current\.sunSync\) setSunStudyAt\(null\);\s*sceneEffectsRef\.current = next;/,'every control that turns the real sun on or off (dock, Scene studio, recipes, looks) ends a study, read before the ref moves on');
+ const update=page.slice(page.indexOf('  const updateSceneEffects = (next: SceneEffectSettings) => {'),page.indexOf('  const playSunDay ='));
+ assert.match(update,/if \(next\.sunSync !== sceneEffectsRef\.current\.sunSync\) \{ setSunStudyAt\(null\); setSunPlaying\(false\); \}\s*sceneEffectsRef\.current = next;/,'every control that turns the real sun on or off (dock, Scene studio, recipes, looks) ends a study and its playback, read before the ref moves on');
+ const play=page.slice(page.indexOf('  // Play the day: one quarter-hour step'),page.indexOf('  // Scene effects are display treatment;'));
+ assert.match(play,/if \(!sunPlaying \|\| !sceneEffects\.sunSync \|\| reducedMotion\) return;/,'playback only runs while following the sun and motion is allowed');
+ assert.match(play,/window\.setTimeout\([\s\S]*?if \(next === null\) setSunPlaying\(false\);\s*else setSunStudyAt\(instantAtIntervalFraction\(day, next\)\);[\s\S]*?SUN_PLAY_STEP_MS\);\s*return \(\) => window\.clearTimeout\(timer\);/,'one step per timer, cleared on every change, stopping at the last step');
+ assert.match(page,/onSunTime=\{\(fraction\) => \{ setSunPlaying\(false\);/,'moving Time or pressing Now stops playback');
+ assert.match(page,/onClose=\{\(\) => \{ setSunPlaying\(false\); setCategoryDockHidden\(true\); \}\}/,'hiding the dock stops playback');
+ assert.match(page,/motionAllowed=\{!reducedMotion\}/);
  assert.equal((page.match(/setSceneEffects\(/g)||[]).length,2,'settings change only in updateSceneEffects and the stored-settings restore');
  const reset=page.slice(page.indexOf('  const resetCategoryView = () => {'),page.indexOf('announce(`${activeCategoryMap.name} view reset`)'));
  assert.match(reset,/if \(activeCategoryMap\.light\) applyCategoryLight\(activeCategoryMap\.light\);/,'Reset view restores the look light too');

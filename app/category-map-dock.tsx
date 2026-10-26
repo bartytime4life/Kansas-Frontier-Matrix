@@ -21,7 +21,15 @@ export function azimuthLabel(degrees: number): string {
  * is 11:45 PM: a full fraction would be tomorrow's midnight, outside the day
  * the slider measures against.
  */
-const SUN_TIME_STEPS = 96;
+export const SUN_TIME_STEPS = 96;
+/** Play the day restarts here once it has reached the end: 5:00 AM, before sunrise in every Kansas season. */
+export const SUN_PLAY_RESTART_STEP = 20;
+
+/** The day fraction of the next quarter-hour step, or null once the last step (11:45 PM) is reached. */
+export function nextSunStep(dayFraction: number): number | null {
+  const step = Math.min(SUN_TIME_STEPS - 1, Math.max(0, Math.floor((Number.isFinite(dayFraction) ? dayFraction : 0) * SUN_TIME_STEPS + 1e-9)));
+  return step >= SUN_TIME_STEPS - 1 ? null : (step + 1) / SUN_TIME_STEPS;
+}
 const SUN_CLOCK = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
 
 /** Plain reading of the computed sun over the map center, at the time it was computed. */
@@ -37,7 +45,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -55,6 +63,10 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
   onRealSun: (on: boolean) => void;
   /** A time of day as a fraction of today in Kansas, or null to follow the clock again. */
   onSunTime: (dayFraction: number | null) => void;
+  /** Whether Play the day is sweeping the sun, and whether motion is allowed at all. */
+  sunPlaying: boolean;
+  motionAllowed: boolean;
+  onSunPlay: (on: boolean) => void;
   onReset: () => void;
   onLayers: () => void;
   onClose: () => void;
@@ -84,8 +96,13 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
       : <label className="category-map-dock-range"><span>Sun from</span>
         <input type="range" min={0} max={355} step={5} value={Math.round(azimuth) % 360} aria-valuetext={`Light from ${azimuthLabel(azimuth)}, ${Math.round(azimuth)} degrees`} onChange={event => onAzimuth(Number(event.target.value))} />
         <output>{azimuthLabel(azimuth)}</output></label>)}
-    {mode !== "globe" && <button type="button" className="category-map-dock-sun" aria-pressed={sun !== null} onClick={() => onRealSun(sun === null)}
-      title={sun ? "Set the light direction by hand" : "Light the map from where the sun is now over the map center"}>{sun ? "Set light by hand" : "Use the real sun now"}</button>}
+    {mode !== "globe" && (sun
+      ? <div className="category-map-dock-sun-actions">
+        <button type="button" className="category-map-dock-sun" aria-pressed={sunPlaying && motionAllowed} disabled={!motionAllowed} onClick={() => onSunPlay(!sunPlaying)}
+          title={motionAllowed ? "Sweep the sun through the rest of today in quarter-hour steps" : "Reduced motion is on; move Time by hand"}>{sunPlaying && motionAllowed ? "Pause" : "Play the day"}</button>
+        <button type="button" className="category-map-dock-sun" aria-pressed={true} onClick={() => onRealSun(false)} title="Set the light direction by hand">Set light by hand</button>
+      </div>
+      : <button type="button" className="category-map-dock-sun" aria-pressed={false} onClick={() => onRealSun(true)} title="Light the map from where the sun is now over the map center">Use the real sun now</button>)}
     <p className="category-map-dock-lede">{look.lede}</p>
     <div className="category-map-dock-actions">
       <button type="button" onClick={onReset}>Reset view</button>

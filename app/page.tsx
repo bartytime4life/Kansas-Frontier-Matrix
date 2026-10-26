@@ -22,7 +22,7 @@ import { BasemapCacheControls } from "./basemap-cache-controls";
 import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
 import { CATEGORY_BASEMAPS } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
-import { CategoryMapDock } from "./category-map-dock";
+import { CategoryMapDock, nextSunStep, SUN_PLAY_RESTART_STEP, SUN_TIME_STEPS } from "./category-map-dock";
 import { evidenceSummary } from "./evidence-summary";
 import "./evidence-summary.css";
 import { AviationLayerControl } from "./aviation-layer-control";
@@ -355,6 +355,9 @@ import {
   kansasLocalDayInterval,
   restoreDaylightView,
 } from "./daylight-layer";
+
+/** How long each quarter-hour step of Play the day holds: 5:00 AM to 11:45 PM plays in about 15 seconds. */
+const SUN_PLAY_STEP_MS = 200;
 
 const KNOWN_TEMPORAL_FRAMES = new Set<number>([
   ...TIME_STEPS,
@@ -1351,6 +1354,7 @@ export default function Home() {
   // A time-of-day study for the computed sun; null follows the clock.
   const [sunStudyAt, setSunStudyAt] = useState<number | null>(null);
   const sunAt = sunStudyAt ?? sunClock;
+  const [sunPlaying, setSunPlaying] = useState(false);
   const [dynamicEffects, setDynamicEffects] = useState(true);
   const [windArrowState, setWindArrowState] = useState<"OFF" | "LOADING" | "READY" | "ERROR">("OFF");
   const [windArrowFrame, setWindArrowFrame] = useState<WindArrowFrame | null>(null);
@@ -6279,6 +6283,18 @@ export default function Home() {
     return () => window.clearInterval(timer);
   }, [sceneEffects.sunSync]);
 
+  // Play the day: one quarter-hour step of the sun study at a time, until 11:45 PM.
+  useEffect(() => {
+    if (!sunPlaying || !sceneEffects.sunSync || reducedMotion) return;
+    const timer = window.setTimeout(() => {
+      const day = kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)));
+      const next = nextSunStep(intervalFractionAtInstant(sunAt, day));
+      if (next === null) setSunPlaying(false);
+      else setSunStudyAt(instantAtIntervalFraction(day, next));
+    }, SUN_PLAY_STEP_MS);
+    return () => window.clearTimeout(timer);
+  }, [reducedMotion, sceneEffects.sunSync, sunAt, sunPlaying]);
+
   // Scene effects are display treatment; re-apply them whenever the settings,
   // style generation, projection, render budget or (when following it) the sun changes.
   useEffect(() => {
@@ -6435,7 +6451,7 @@ export default function Home() {
 
   const updateSceneEffects = (next: SceneEffectSettings) => {
     // Turning the real sun on or off from any control ends a time-of-day study.
-    if (next.sunSync !== sceneEffectsRef.current.sunSync) setSunStudyAt(null);
+    if (next.sunSync !== sceneEffectsRef.current.sunSync) { setSunStudyAt(null); setSunPlaying(false); }
     sceneEffectsRef.current = next;
     setSceneEffects(next);
     writeSceneEffects(next);
@@ -6444,6 +6460,14 @@ export default function Home() {
     const preset = matchingLookPreset(next);
     if (changed && label && SCENE_EFFECT_KEYS.filter((key) => next[key] !== sceneEffects[key]).length === 1) announce(`${label} ${next[changed] ? "on" : "off"} · display only`);
     else if (preset) announce(`${SCENE_LOOK_PRESETS[preset].label} look applied · display only`);
+  };
+
+  // Play the day starts from the shown time, or from 5:00 AM once the day has been played out.
+  const playSunDay = (on: boolean) => {
+    if (!on) { setSunPlaying(false); return; }
+    const day = kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)));
+    setSunStudyAt(nextSunStep(intervalFractionAtInstant(sunAt, day)) === null ? instantAtIntervalFraction(day, SUN_PLAY_RESTART_STEP / SUN_TIME_STEPS) : sunAt);
+    setSunPlaying(true);
   };
 
   const chooseSceneRecipe = (recipe: SceneRecipe) => {
@@ -9964,8 +9988,9 @@ export default function Home() {
             terrainAvailable={runtime.kind !== "unsupported" && runtime.kind !== "error" && terrainState !== "ERROR"} onMode={chooseCategoryMode} onDepth={changeTerrainDepth}
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
             onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => updateSceneEffects({ ...sceneEffectsRef.current, sunSync })}
-            onSunTime={(fraction) => setSunStudyAt(fraction === null ? null : instantAtIntervalFraction(kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunClock))), fraction))} onReset={resetCategoryView}
-            onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
+            onSunTime={(fraction) => { setSunPlaying(false); setSunStudyAt(fraction === null ? null : instantAtIntervalFraction(kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunClock))), fraction)); }}
+            sunPlaying={sunPlaying} motionAllowed={!reducedMotion} onSunPlay={playSunDay} onReset={resetCategoryView}
+            onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => { setSunPlaying(false); setCategoryDockHidden(true); }} />}
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
             <strong>{KANSAS_FLYOVER[flyoverStopIndex].label}</strong>
