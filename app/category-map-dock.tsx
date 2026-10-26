@@ -45,7 +45,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -67,6 +67,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
   sunPlaying: boolean;
   motionAllowed: boolean;
   onSunPlay: (on: boolean) => void;
+  /** Starts the terrain investigation for looks that offer the transect tool. */
+  onTransect?: () => void;
   onReset: () => void;
   onLayers: () => void;
   onClose: () => void;
@@ -103,6 +105,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
         <button type="button" className="category-map-dock-sun" aria-pressed={true} onClick={() => onRealSun(false)} title="Set the light direction by hand">Set light by hand</button>
       </div>
       : <button type="button" className="category-map-dock-sun" aria-pressed={false} onClick={() => onRealSun(true)} title="Light the map from where the sun is now over the map center">Use the real sun now</button>)}
+    {look.tools?.includes("transect") && onTransect && <button type="button" className="category-map-dock-tool" disabled={!terrainAvailable} onClick={onTransect}
+      title="Draw a line across the relief, then preview its elevation profile without the 3D exaggeration">Draw a cross-section</button>}
     <p className="category-map-dock-lede">{look.lede}</p>
     <div className="category-map-dock-actions">
       <button type="button" onClick={onReset}>Reset view</button>
