@@ -202,9 +202,13 @@ publishing pipeline normalized, checked against their signed manifest and
 committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
 `/api/curated/{source}` and its `/history` (up to 20 releases).
 
-- Gauges are circles whose area is in proportion to discharge (radius by the
-  square root of ft³/s); provisional USGS values carry an amber ring, approved
-  values a white one; a gauge without a value is not drawn as zero.
+- Gauges are circles whose area grows with discharge: radius = 3 + 0.06·√Q px
+  (Q in ft³/s), from a 3 px floor and capped at 62,500 ft³/s. Provisional USGS
+  values carry an amber ring, approved values a white one; a gauge without a
+  value is not drawn as zero. While a snapshot is drawn, the dock keys the
+  scale at 100, 1,000, 10,000 and 62,500+ ft³/s at the sizes drawn, and the
+  two rings (`REVIEWED_DISCHARGE_KEY` in `app/map-keys.ts`, which the gauge
+  layer also reads). Reviewed alert snapshots share the live NWS severity key.
 - Alert areas take their NWS severity colour; alerts that have expired leave
   the display, as on `/curated`.
 - The scrubber runs oldest to newest; each step names the hour the capture is

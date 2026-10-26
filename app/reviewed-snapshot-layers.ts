@@ -1,6 +1,6 @@
 import type { FeatureCollection } from "geojson";
-import type { ExpressionSpecification, LayerSpecification, Map as MapLibreMap } from "./maplibre-seam";
-import { nwsSeverityColor } from "./map-keys";
+import type { LayerSpecification, Map as MapLibreMap } from "./maplibre-seam";
+import { dischargeRadius, GAUGE_APPROVED_RING, GAUGE_FILL_COLOR, GAUGE_PROVISIONAL_RING, nwsSeverityColor } from "./map-keys";
 
 /**
  * How a reviewed snapshot from the site database is drawn (see
@@ -14,16 +14,15 @@ export const REVIEWED_LAYER_IDS = Object.freeze(["external-reviewed-snapshot-are
 // Alert areas take the same severity palette as the live alerts (map-keys.ts).
 export { NWS_SEVERITY_COLORS } from "./map-keys";
 const severityColor = nwsSeverityColor();
-/** Circle area in proportion to discharge: radius grows with the square root of the value. */
-const dischargeRadius: ExpressionSpecification = ["interpolate", ["linear"], ["sqrt", ["max", 0, ["to-number", ["get", "value"], 0]]], 0, 3, 100, 9, 250, 18];
+// Circle area grows with discharge: radius by the square root of the value, from a floor (map-keys.ts, which the dock keys).
 
 export const reviewedLayers = (): LayerSpecification[] => [
   { id: REVIEWED_LAYER_IDS[0], type: "fill", source: REVIEWED_SOURCE_ID, filter: ["==", ["geometry-type"], "Polygon"], paint: { "fill-color": severityColor, "fill-opacity": 0.32 } },
   { id: REVIEWED_LAYER_IDS[1], type: "line", source: REVIEWED_SOURCE_ID, filter: ["==", ["geometry-type"], "Polygon"], paint: { "line-color": severityColor, "line-width": 1.6 } },
   { id: REVIEWED_LAYER_IDS[2], type: "circle", source: REVIEWED_SOURCE_ID, filter: ["all", ["==", ["geometry-type"], "Point"], ["==", ["typeof", ["get", "value"]], "number"]], paint: {
-    "circle-radius": dischargeRadius, "circle-color": "#3fd0c9", "circle-opacity": 0.72,
+    "circle-radius": dischargeRadius(), "circle-color": GAUGE_FILL_COLOR, "circle-opacity": 0.72,
     // Provisional USGS values carry an amber ring; approved values a white one.
-    "circle-stroke-color": ["case", ["==", ["get", "provisional"], true], "#f2b84b", "#f4fbfb"], "circle-stroke-width": 1.5,
+    "circle-stroke-color": ["case", ["==", ["get", "provisional"], true], GAUGE_PROVISIONAL_RING, GAUGE_APPROVED_RING], "circle-stroke-width": 1.5,
   } },
 ];
 
