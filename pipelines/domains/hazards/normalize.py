@@ -1,1 +1,0 @@
-# hazards :: normalize — greenfield placeholder

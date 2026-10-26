@@ -1,4 +1,0 @@
-# pipeline_specs :: archaeology :: publish
-name: archaeology-publish
-version: 1
-stages: []
