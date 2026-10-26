@@ -134,8 +134,11 @@ export function recordYearColor(year: number, endYear: number): string {
 const magnitude: ExpressionSpecification = ["get", "magnitude"];
 export const recordColor = (endYear: number): ExpressionSpecification =>
   ["interpolate", ["linear"], ["get", "year"], ...rampStops(endYear).flat()] as unknown as ExpressionSpecification;
-export const recordRadius = (): ExpressionSpecification =>
-  ["interpolate", ["linear"], ["zoom"], 5, ["interpolate", ["linear"], magnitude, ...RECORD_RADIUS_Z5.flat()], 10, ["interpolate", ["linear"], magnitude, ...RECORD_RADIUS_Z10.flat()]] as unknown as ExpressionSpecification;
+/** Circle radius by magnitude; `extra` pixels widen every stop (the selection ring), keeping zoom at the top level as MapLibre requires. */
+export const recordRadius = (extra = 0): ExpressionSpecification => {
+  const stops = (radii: readonly (readonly [number, number])[]) => radii.flatMap(([m, r]) => [m, r + extra]);
+  return ["interpolate", ["linear"], ["zoom"], 5, ["interpolate", ["linear"], magnitude, ...stops(RECORD_RADIUS_Z5)], 10, ["interpolate", ["linear"], magnitude, ...stops(RECORD_RADIUS_Z10)]] as unknown as ExpressionSpecification;
+};
 
 const along = (stops: readonly (readonly [number, number])[], x: number) => {
   if (x <= stops[0][0]) return stops[0][1];
@@ -187,7 +190,7 @@ export function syncEarthquakeRecord(map: MapLibreMap, record: EarthquakeRecord 
     layout: { "circle-sort-key": magnitude },
     paint: { "circle-color": recordColor(record.endYear), "circle-radius": recordRadius(), "circle-opacity": 0.88, "circle-stroke-color": RECORD_STROKE, "circle-stroke-width": 0.8, "circle-stroke-opacity": 0.9 } }, before);
   if (!map.getLayer(EARTHQUAKE_RECORD_SELECTED_LAYER_ID)) map.addLayer({ id: EARTHQUAKE_RECORD_SELECTED_LAYER_ID, type: "circle", source: EARTHQUAKE_RECORD_SOURCE_ID,
-    paint: { "circle-color": "rgba(0,0,0,0)", "circle-radius": ["+", recordRadius(), 3.5], "circle-stroke-color": "#ffffff", "circle-stroke-width": 2 } }, before);
+    paint: { "circle-color": "rgba(0,0,0,0)", "circle-radius": recordRadius(3.5), "circle-stroke-color": "#ffffff", "circle-stroke-width": 2 } }, before);
   map.setFilter(EARTHQUAKE_RECORD_LAYER_ID, year === null ? null : ["==", ["get", "year"], year]);
   map.setFilter(EARTHQUAKE_RECORD_SELECTED_LAYER_ID, ["==", ["get", "id"], selectedId ?? ""]);
 }

@@ -105,6 +105,18 @@ test('the map layers draw the record, filter a year and ring the selected event'
  assert.equal(quakes.earthquakeEventUrl('us2000abcd'),'https://earthquake.usgs.gov/earthquakes/eventpage/us2000abcd');
 });
 
+test('both record layers pass the MapLibre style validator, filters included',async()=>{
+ const {validateStyleMin}=await import('@maplibre/maplibre-gl-style-spec');
+ const added=[];
+ const map={getSource:()=>undefined,addSource(){},getLayer:()=>undefined,addLayer:spec=>added.push(spec),getStyle:()=>({layers:[]}),setFilter:(id,filter)=>{const layer=added.find(l=>l.id===id);if(filter)layer.filter=filter;}};
+ quakes.syncEarthquakeRecord(map,{endYear:2026,events:[]},2015,'us2000abcd');
+ const style={version:8,sources:{[quakes.EARTHQUAKE_RECORD_SOURCE_ID]:{type:'geojson',data:{type:'FeatureCollection',features:[]}}},layers:added};
+ assert.deepEqual(validateStyleMin(JSON.parse(JSON.stringify(style))).map(e=>e.message),[]);
+ const ring=added.find(l=>l.id===quakes.EARTHQUAKE_RECORD_SELECTED_LAYER_ID).paint['circle-radius'];
+ assert.deepEqual(ring.slice(0,3),['interpolate',['linear'],['zoom']],'zoom stays the top-level input');
+ assert.deepEqual(ring[4].slice(3),[2.5,5.7,4,8,5,10.5],'the ring sits 3.5 px outside the event');
+});
+
 test('the Landform relief dock offers the record, with the histogram, a year, and the selected event',async()=>{
  const geology=maps.categoryMap('geology');
  assert.ok(geology.tools.includes('quakes'));
