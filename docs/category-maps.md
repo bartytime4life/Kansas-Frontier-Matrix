@@ -43,7 +43,14 @@ holds and limits. They are display context, not admitted evidence.
     sky, relief, glow, buildings and Scene studio all read the same moment.
     Turning the real sun off or on from any control (the dock, the Scene
     studio checkbox, a recipe or a look preset) ends the study. The last
-    step is 11:45 PM, so the slider never picks tomorrow's midnight. It is display lighting only; no
+    step is 11:45 PM, so the slider never picks tomorrow's midnight.
+  - **Play the day**, next to **Set light by hand** while following the real
+    sun: a time-lapse that steps the study forward one quarter hour every
+    200 ms (`SUN_PLAY_STEP_MS`) and stops at 11:45 PM, about 15 seconds from
+    5:00 AM. It starts from the time shown, or from 5:00 AM once the day has
+    been played out. Moving Time, pressing **Now**, hiding the dock or turning
+    the real sun off stops it. Under reduced motion the button is disabled and
+    only the slider moves the sun; It is display lighting only; no
     source time, archive date or evidence clock changes;
   - reset view and "Layers for this map".
 
