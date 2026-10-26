@@ -8,6 +8,7 @@ import { noaaSatelliteTileUrl, type NoaaSatelliteFrame } from "./noaa-satellite"
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacity, requestRasterOpacity } from "./map-layer-composition";
 import { BUILD_UTC_YEAR } from "./build-clock";
+import { POPULATION_PRISM_LAYER_ID, populationPrismLayer, populationPrismsOn } from "./population-prisms";
 import { globeOverviewPaintSize } from "./globe-context";
 import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay, FIRE_REPORT_FLAME_ID } from "./fire-detection-style";
 
@@ -129,7 +130,8 @@ export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object
     kind: "SNAPSHOT_GEOJSON",
     sourceId: "external-census-counties",
     layerIds: Object.freeze(["external-census-counties-fill", "external-census-counties-line"]),
-    interactiveLayerIds: Object.freeze(["external-census-counties-fill"]),
+    // The population prisms are drawn from the same source when a map asks for them.
+    interactiveLayerIds: Object.freeze(["external-census-counties-fill", POPULATION_PRISM_LAYER_ID]),
     apiPath: "/api/live-context?feed=census-counties",
     endpointLabel: "TIGERweb Census2020 counties · population, housing, land/water area",
     sourceUrl: "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Census2020/MapServer/82",
@@ -994,6 +996,12 @@ export const applyOfficialContextState = (
       if (layer?.type === "symbol") setPaintIfChanged(map, layerId, "text-opacity", safeOpacity);
     }
   }
+  // County population prisms, for maps that ask for them: they stand in for the
+  // county outline, which would otherwise draw across the columns.
+  const prisms = Boolean(visibility["census-counties"]) && populationPrismsOn(map) && !globeView;
+  if (prisms) ensureLayer(map, populationPrismLayer(county.sourceId));
+  if (map.getLayer(POPULATION_PRISM_LAYER_ID)) setVisibleIfChanged(map, POPULATION_PRISM_LAYER_ID, prisms);
+  if (prisms && map.getLayer(county.layerIds[1])) setVisibleIfChanged(map, county.layerIds[1], false);
   const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];
   const radarBuffer = radarBufferIds();
   const radarVisible = visibility["nws-radar"] && !globeView;

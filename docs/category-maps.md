@@ -130,6 +130,30 @@ holds and limits. They are display context, not admitted evidence.
   `scene` already restore the category, basemap and renderer, and the dock
   follows the restored category when its basemap is on screen.
 
+## Population in 3D (People)
+
+The People map draws every Kansas county as a column (`app/population-prisms.ts`).
+Each column is built from the same 2020 Census county record the Evidence
+Drawer shows:
+
+- **Height** is linear in density: 100 m for every person per square mile of
+  land (`AREALAND`, water excluded). There is no logarithm and no exaggeration,
+  so the metro counties stand as tall as their density says.
+- **Colour** is the county's Kansas population density peer group, the KDHE
+  classification: Frontier (under 6 people per square mile), Rural (6–19.9),
+  Densely-settled rural (20–39.9), Semi-urban (40–149.9) and Urban (150 and
+  over).
+- The dock legend counts the counties in each group, and gives the statewide
+  density (total people over total land, not an average of county ratios), from
+  the loaded payload.
+- A selected column opens its county record, which now carries
+  `peoplePerSquareMile` and `densityGroup` beside the counts.
+
+The columns replace the county outline while they stand, are hidden on the
+globe, and appear in the start-page preview of the People map. Counts describe
+areas, not people; a county's column says nothing about where in the county
+people live.
+
 ## What is not on every map
 
 County boundaries, USGS river gauges, the USGS 3DHP stream network and the fire

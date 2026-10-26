@@ -58,3 +58,9 @@
 .map-stage[data-live-dock="true"]:has(.measurement-readout) .category-map-dock{bottom:calc(var(--live-dock-clearance) + 66px);max-height:calc(100% - var(--live-dock-clearance) - 80px)}
 .map-stage[data-live-dock="true"]:has(.hydrology-observatory) .category-map-dock,.map-stage[data-live-dock="true"]:has(.glm-flash-studio) .category-map-dock{display:none}
 @media(max-width:760px){.map-stage[data-live-dock="true"] .category-map-dock{display:none}}
+.category-map-dock-legend ul{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.category-map-dock-legend li{display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:8px;align-items:center;font-size:12px;color:#e4edf0}
+.category-map-dock-legend li small{display:block;font-size:10.5px;color:#9fb6bf;text-transform:none;letter-spacing:0}
+.category-map-dock-legend li b{font-weight:600;font-variant-numeric:tabular-nums;color:#f1e6c2}
+.category-map-dock-chip{width:14px;height:14px;border-radius:3px;box-shadow:inset 0 0 0 1px #ffffff33}
+.category-map-dock-legend .category-map-dock-reading{margin-top:6px}

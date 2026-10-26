@@ -25,7 +25,7 @@ export type CategoryMap = Readonly<{
   camera: CategoryCamera;
   starters: readonly OfficialContextId[];
   /** Specialty overlays this look switches on, such as the 3D airspace layer. */
-  overlays?: readonly "aviation"[];
+  overlays?: readonly ("aviation" | "population")[];
   /**
    * Explorer tools the dock offers for this look. `transect` starts the
    * existing terrain investigation: draw a line, then preview its
@@ -34,9 +34,10 @@ export type CategoryMap = Readonly<{
    * of recorded well logs, cores and aquifer sections. `daylight` shows the
    * calculated night side and twilight bands at the current time. `area`
    * starts the existing polygon measurement for outlining a field or parcel.
-   * `radar` opens the live NOAA radar loop on the map.
+   * `radar` opens the live NOAA radar loop on the map. `population` shows or
+   * hides the county population prisms and their Kansas density-group legend.
    */
-  tools?: readonly ("transect" | "flow" | "underground" | "daylight" | "area" | "radar")[];
+  tools?: readonly ("transect" | "flow" | "underground" | "daylight" | "area" | "radar" | "population")[];
   /**
    * The light this look opens under, by scene recipe: only its atmosphere and
    * sun azimuth are applied, never its effect settings. Relief reads best under
@@ -65,7 +66,7 @@ export const CATEGORY_MAPS: Readonly<Record<TopicId, CategoryMap>> = Object.free
   agriculture: { topic: "agriculture", name: "Field view", lede: "Kansas 2024 aerial imagery for reading fields and pivots up close.", tip: "Measure an area to outline a field or pivot on the 2024 Kansas aerial imagery.", basemap: "kansas-aerial", scene: "2d", camera: Object.freeze({ center: [-100.9, 37.98] as const, zoom: 10.5, pitch: 0, bearing: 0 }), starters: [], tools: ["area"], swatch: ["#5c6b3a", "#b7a36a", "#3f5d2e"] },
   history: { topic: "history", name: "Historic atlas", lede: "The 1918 road map and abandoned railroads along the Abilene–Salina corridor, on a parchment atlas of today's rails and towns.", tip: "The 1918 roads and abandoned rail are dated KDOT references over today's geography.", basemap: "historic", scene: "2d", camera: Object.freeze({ center: [-97.45, 38.86] as const, zoom: 8.2, pitch: 0, bearing: 0 }), starters: ["kdot-roads-1918", "kdot-rail-abandoned"], swatch: ["#efe4c8", "#4a3523", "#8c6d47"] },
   land: { topic: "land", name: "Survey grid", lede: "PLSS townships counted from the Sixth Principal Meridian and the 40th-parallel baseline: survey references, not ownership.", tip: "Townships count south from the 40th parallel; ranges count east and west of the Sixth Principal Meridian.", basemap: "topo", scene: "2d", camera: Object.freeze({ center: [-97.37, 39.62] as const, zoom: 8.4, pitch: 0, bearing: 0 }), starters: ["blm-plss-townships"], tools: ["area"], swatch: ["#eae4d3", "#b08a52", "#6c7a5a"] },
-  people: { topic: "people", name: "Community map", lede: "County outlines on the civic base, ready for aggregate Census context.", tip: "Select a county for its 2020 Census population and housing; counts describe areas, not people.", basemap: "civic", scene: "2d", camera: STATEWIDE, starters: ["census-counties"], swatch: ["#f3f1ec", "#e3dcef", "#6d559b"] },
+  people: { topic: "people", name: "Population in 3D", lede: "Every county as a column: its height and colour show 2020 Census people per square mile of land, by Kansas's density groups.", tip: "Columns rise 100 m per person per square mile of land; select one for its 2020 Census counts.", basemap: "civic", scene: "terrain", camera: tilted(54, -14, 6.3, [-97.3, 38.15]), starters: ["census-counties"], overlays: ["population"], tools: ["population"], swatch: ["#f3f1ec", "#e3dcef", "#6d559b"] },
   government: { topic: "government", name: "Civic map", lede: "Kansas by jurisdiction: state, county and city boundaries with their places, the capital starred.", tip: "Select a county for its Census record, or find a county or place from the search box.", basemap: "civic", scene: "2d", camera: STATEWIDE, starters: ["census-counties"], swatch: ["#f3f1ec", "#6d559b", "#3f2a6b"] },
   places: { topic: "places", name: "Reference map", lede: "Counties and watersheds on the civic base for orienting an investigation.", tip: "Select a county to start an investigation there; watershed lines show the drainage it sits in.", basemap: "civic", scene: "2d", camera: STATEWIDE, starters: ["census-counties", "usgs-wbd-watersheds"], swatch: ["#f3f1ec", "#9fc0d4", "#6d559b"] },
   science: { topic: "science", name: "Satellite view", lede: "The latest NOAA GOES satellite image over Kansas and its neighbours, at its own scan time, with the calculated day–night line.", tip: "Each satellite image keeps its NOAA scan time; show day and night for the calculated terminator.", basemap: "standard", scene: "2d", camera: Object.freeze({ center: [-98.38, 38.5] as const, zoom: 5.4, pitch: 0, bearing: 0 }), starters: ["noaa-goes-geocolor"], tools: ["daylight"], swatch: ["#0b1830", "#2c6fb0", "#e8eef5"] },

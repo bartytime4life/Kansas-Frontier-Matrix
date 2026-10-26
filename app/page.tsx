@@ -20,6 +20,7 @@ import { contextSelectionChanges, preferredContextIds, readContextPreference, st
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
+import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulationPrisms } from "./population-prisms";
 import { CATEGORY_BASEMAPS } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
 import { CategoryMapDock, nextSunStep, SUN_PLAY_RESTART_STEP, SUN_TIME_STEPS } from "./category-map-dock";
@@ -1475,6 +1476,8 @@ export default function Home() {
   const [officialWorkspace, setOfficialWorkspace] = useState<LayerWorkspace>("all");
   // The category whose map look was opened, and whether its dock was hidden.
   const [categoryDockTopic, setCategoryDockTopic] = useState<TopicId | null>(null);
+  // County population prisms: on with the People map, toggled from its dock.
+  const [populationPrisms, setPopulationPrismsShown] = useState(false);
   const [categoryDockHidden, setCategoryDockHidden] = useState(false);
   const aviationPickingRef = useRef(false);
   const setAviationPicking = useCallback((active: boolean) => {
@@ -3801,6 +3804,13 @@ export default function Home() {
     const map = mapRef.current;
     if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), next, officialPayloadsRef.current);
   }, [runtimeOfficialVisibility]);
+  // The context renderer draws the prisms on each pass while the map asks for them.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    setPopulationPrisms(map, populationPrisms);
+    if (styleReady && styleGenerationReadyRef.current) applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+  }, [populationPrisms, styleReady, runtimeOfficialVisibility]);
 
   const refreshVisibleOfficialContext = useCallback(() => {
     if (!buildYearCurrentRef.current) {
@@ -9102,6 +9112,7 @@ export default function Home() {
       if (on || officialVisibilityRef.current[source.id]) setOfficialContextVisible(source.id, on);
     }
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
+    setPopulationPrismsShown(Boolean(look.overlays?.includes("population")));
     setStarterPanelOpen(false);
     setLayerCatalogView("official");
     setOfficialWorkspace(topic);
@@ -10040,6 +10051,8 @@ export default function Home() {
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
+            population={activeCategoryMap.tools?.includes("population") ? { on: populationPrisms, ...densityGroupCounts(officialPayloads["census-counties"]?.data.features ?? []), metresPerPerson: PRISM_METRES_PER_PERSON_PER_SQUARE_MILE } : undefined}
+            onPopulation={setPopulationPrismsShown}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>

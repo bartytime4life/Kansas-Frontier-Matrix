@@ -7,6 +7,7 @@ import { browserRenderBudget } from '../map-performance';
 import { webgl2Available } from '../webgl-support';
 import { applyOfficialContextState, defaultOfficialContextOpacity, OFFICIAL_CONTEXT_BY_ID, OFFICIAL_CONTEXT_SOURCES, setNoaaRadarObservationTime } from '../live-context';
 import { isNoaaRadarManifest, NOAA_RADAR_FRAME_API_PATH, noaaRadarManifestIsFresh } from '../noaa-radar';
+import { setPopulationPrisms } from '../population-prisms';
 import { WELCOME_IDLE_VIEW, welcomeDriftLeg, welcomeStyle, welcomeView } from '../welcome-map-view';
 
 const WORKER_URL = '/maplibre/maplibre-gl-worker.mjs';
@@ -101,6 +102,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar } 
     visibility['nws-radar'] = Boolean(radar);
     try {
       if (radar) setNoaaRadarObservationTime(map, radar);
+      setPopulationPrisms(map, view.prisms);
       applyOfficialContextState(map, visibility, opacity, loaded);
     } catch { /* Preview data is optional; the map stays. */ }
     // The caption names the radar scan only while one is drawn.

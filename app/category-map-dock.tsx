@@ -3,6 +3,7 @@
 import type { CSSProperties } from "react";
 import type { CategoryMap, CategoryScene } from "./category-maps";
 import type { SceneLight } from "./scene-effects";
+import type { KansasDensityGroup } from "./population-prisms";
 
 const MODES: readonly (readonly [CategoryScene, string, string])[] = [
   ["2d", "2D", "Flat map, straight down"],
@@ -45,7 +46,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -100,6 +101,14 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
    */
   flow?: Readonly<{ on: boolean; reading: string | null; still: string | null }>;
   onFlow?: (on: boolean) => void;
+  /**
+   * The county population prisms, for looks that offer the population tool:
+   * whether they are drawn, how many counties fall in each Kansas density
+   * group, the statewide density, all from the loaded 2020 county payload,
+   * and the height scale.
+   */
+  population?: Readonly<{ on: boolean; groups: readonly (KansasDensityGroup & { count: number })[]; counties: number; statewide: number | null; metresPerPerson: number }>;
+  onPopulation?: (on: boolean) => void;
   onReset: () => void;
   onLayers: () => void;
   onClose: () => void;
@@ -152,6 +161,15 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
     </>}
     {look.tools?.includes("radar") && radar && onRadar && <button type="button" className="category-map-dock-tool" aria-pressed={radar.watching} disabled={!radar.watching && !radar.available} onClick={() => onRadar(!radar.watching)}
       title={radar.watching ? "Close the radar loop controls" : radar.available ? "Play the latest NOAA radar scans on the map at their observation times" : "The live loop plays at the present map time; return to Present in Time"}>{radar.watching ? "Close radar loop" : "Watch the radar loop"}</button>}
+    {look.tools?.includes("population") && population && onPopulation && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={population.on} onClick={() => onPopulation(!population.on)}
+        title="Raise each county by its 2020 Census people per square mile of land">{population.on ? "Flatten the counties" : "Show population in 3D"}</button>
+      {population.on && <div className="category-map-dock-legend" aria-label="Kansas density groups, people per square mile of land">
+        <ul>{population.groups.map(group => <li key={group.id}><span className="category-map-dock-chip" style={{ background: group.color }} aria-hidden="true" />
+          <span>{group.label}<small>{group.range}</small></span><b>{population.counties ? `${group.count} ${group.count === 1 ? "county" : "counties"}` : "…"}</b></li>)}</ul>
+        <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
+      </div>}
+    </>}
     {look.tools?.includes("area") && onMeasureArea && <button type="button" className="category-map-dock-tool" aria-pressed={Boolean(measuringArea)} onClick={onMeasureArea}
       title={measuringArea ? "Cancel the outline in progress" : "Click around a field or parcel, then Finish, for its approximate area; not a survey"}>{measuringArea ? "Cancel area" : "Measure an area"}</button>}
     {look.tools?.includes("transect") && onTransect && <button type="button" className="category-map-dock-tool" disabled={!terrainAvailable} onClick={onTransect}

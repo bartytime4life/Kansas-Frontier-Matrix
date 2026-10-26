@@ -18,13 +18,14 @@ const stubs = {
     export const defaultOfficialContextOpacity = () => ({});
     export const applyOfficialContextState = (map, visibility, opacity, payloads) => globalThis.__welcome.drawn.push({ shown: Object.keys(visibility).filter(id => visibility[id]), payloads: Object.keys(payloads) });
     export const setNoaaRadarObservationTime = (map, at) => globalThis.__welcome.radar.push(at);`),
+  "'../population-prisms'": toUrl(`export const setPopulationPrisms = (map, on) => globalThis.__welcome.prisms.push(on);`),
   "'../noaa-radar'": toUrl(`
     export const NOAA_RADAR_FRAME_API_PATH = '/api/noaa-radar/frames';
     export const isNoaaRadarManifest = value => Array.isArray(value?.frames);
     export const noaaRadarManifestIsFresh = manifest => globalThis.__welcome.fresh(manifest.frames.at(-1));`),
   "'../welcome-map-view'": toUrl(`
-    const view = (topic, basemap, scene, zoom, starters = []) => ({ topic, basemap, scene, camera: { center: [-98, 38], zoom, pitch: 0, bearing: 0 }, starters });
-    const VIEWS = { evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']), weather: view('weather', 'relief', 'terrain', 5.9, ['nws-alerts', 'nws-radar']) };
+    const view = (topic, basemap, scene, zoom, starters = [], prisms = false) => ({ topic, basemap, scene, camera: { center: [-98, 38], zoom, pitch: 0, bearing: 0 }, starters, prisms });
+    const VIEWS = { evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']), weather: view('weather', 'relief', 'terrain', 5.9, ['nws-alerts', 'nws-radar']), people: view('people', 'relief', 'terrain', 6.3, ['census-counties'], true) };
     export const WELCOME_IDLE_VIEW = view(null, 'standard', '2d', 6.1);
     export const welcomeView = topic => VIEWS[topic] ?? WELCOME_IDLE_VIEW;
     export const welcomeStyle = (style, v) => ({ ...style, scene: v.scene });
@@ -58,7 +59,7 @@ class FakeMap {
 const settle = () => new Promise(resolve => setTimeout(resolve, SETTLE_MS + 30));
 async function start() {
   const fetches = [];
-  globalThis.__welcome = { FakeMap, drawn: [], radar: [], fresh: () => true };
+  globalThis.__welcome = { FakeMap, drawn: [], radar: [], prisms: [], fresh: () => true };
   // Style documents and starter payloads each wait until the test releases them.
   globalThis.fetch = url => new Promise(resolve => fetches.push({ url, resolve: () => resolve({ ok: true, json: async () => url === '/api/noaa-radar/frames' ? globalThis.__welcome.radarManifest : url.startsWith('/api/') ? { feed: new URL(url, 'http://x').searchParams.get('feed'), data: { type: 'FeatureCollection', features: [] } } : { version: 8, url, sources: {}, layers: [] } }) }));
   let ready = 0;
@@ -164,5 +165,16 @@ test('a radar scan that ages past the freshness rule leaves the preview and its 
   t.mock.timers.tick(RADAR_RECHECK_MS); await tick(); await tick(); await tick();
   assert.deepEqual(radarReports, ['2026-10-26T16:04:00Z', null], 'the caption drops the stale scan');
   assert.ok(!globalThis.__welcome.drawn.at(-1).shown.includes('nws-radar'), 'and the radar layer is hidden');
+  engine.dispose();
+});
+
+test('the People preview draws its counties as population prisms, and the next map does not', async () => {
+  const { engine, map } = await start();
+  engine.show('people'); await tick(); await tick();
+  map.emit('style.load');
+  assert.deepEqual(globalThis.__welcome.prisms.at(-1), true, 'prisms asked for before the counties are drawn');
+  assert.deepEqual(globalThis.__welcome.drawn.at(-1).shown, ['census-counties']);
+  engine.show('geology'); await settle();
+  assert.equal(globalThis.__welcome.prisms.at(-1), false, 'a map without the overlay draws flat');
   engine.dispose();
 });
