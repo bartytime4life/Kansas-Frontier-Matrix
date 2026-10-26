@@ -1,1 +1,0 @@
-# inaturalist fetcher — greenfield placeholder
