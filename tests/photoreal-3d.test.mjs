@@ -52,7 +52,9 @@ test('the Relief model dock enters photo-real 3D at true scale, names the scale 
  assert.deepEqual(calls,['red-hills','konza',null]);
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/if \(basemapRef\.current !== "photoreal"\) \{ basemapRef\.current = "photoreal"; setBasemap\("photoreal"\); changeTerrainDepth\(1\); \}/,'true vertical scale on entry');
+ assert.match(page,/if \(basemapRef\.current !== "photoreal"\) \{\n      basemapRef\.current = "photoreal"; setBasemap\("photoreal"\); changeTerrainDepth\(1\);/,'true vertical scale on entry');
+ assert.match(page,/photorealHidHillshadeRef\.current = Boolean\(officialVisibilityRef\.current\["usgs-3dep-hillshade"\]\);\n      if \(photorealHidHillshadeRef\.current\) setOfficialContextVisible\("usgs-3dep-hillshade", false\);/,'the provider hillshade leaves the photograph');
+ assert.match(page,/if \(photorealHidHillshadeRef\.current\) \{ photorealHidHillshadeRef\.current = false; setOfficialContextVisible\("usgs-3dep-hillshade", true\); \}/,'and returns with the relief colours');
  assert.match(page,/if \(terrainProviderRef\.current !== "usgs-3dep"\) chooseTerrainProvider\("usgs-3dep"\);/,'the USGS 3DEP bare-earth DEM');
  assert.match(page,/if \(!sceneEffectsRef\.current\.sunSync\) updateSceneEffects\(\{ \.\.\.sceneEffectsRef\.current, sunSync: true \}\);/,'lit by the real sun');
 });

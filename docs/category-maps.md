@@ -232,7 +232,10 @@ which carries oblique views past the state line) on the USGS 3DEP bare-earth DEM
 the map centre, with OpenStreetMap buildings raised to the heights OpenMapTiles
 records (`render_height`, from `render_min_height`). The style is the
 `photoreal` basemap: no labels, painted shading or stylisation over the
-photograph.
+photograph. The photograph carries the real light of its flight, so the DEM
+hillshade is not drawn while it is loaded, and the Relief model's 3DEP
+hillshade starter is switched off on entry and back on with "Back to relief
+colours".
 
 It flies to six real landscapes (`app/photoreal-landscapes.ts`), each captioned
 with what the ground is: the Red Hills (Permian red beds capped by gypsum),
