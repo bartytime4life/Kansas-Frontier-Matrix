@@ -1,4 +1,4 @@
-import test from 'node:test';
+import test, {mock} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import ts from 'typescript';
@@ -8,7 +8,7 @@ const compile=async path=>{const exports={};new Function('exports','require',ts.
 const snapshots=await compile('app/reviewed-snapshots.ts');
 const layers=await compile('app/reviewed-snapshot-layers.ts');
 const id=c=>c.repeat(64);
-const product=(over={})=>({state:'available',sourceId:'usgs-streamflow',releaseId:id('a'),evidenceRole:'EXTERNAL_CONTEXT_ONLY',retrievedAt:'2026-10-26T17:05:00Z',bucketAt:'2026-10-26T17:00:00Z',freshness:'current',measurementFreshness:'current',limitation:'Provisional USGS values.',
+const product=(over={})=>({state:'available',sourceId:'usgs-streamflow',releaseId:id('a'),evidenceRole:'EXTERNAL_CONTEXT_ONLY',retrievedAt:'2026-10-26T17:05:00Z',bucketAt:'2026-10-26T17:00:00Z',approvalExpiresAt:'2099-01-01T00:00:00Z',freshness:'current',measurementFreshness:'current',limitation:'Provisional USGS values.',
  data:{type:'FeatureCollection',features:[{type:'Feature',id:'g1',geometry:{type:'Point',coordinates:[-97.3,38.9]},properties:{stationId:'USGS-06887500',value:1520,unit:'ft^3/s',provisional:true}}]},...over});
 
 test('the release history runs oldest to newest, keeps only signed release ids, and names why it is empty',()=>{
@@ -26,6 +26,11 @@ test('a release is shown only when it is the requested source, context-only and 
  assert.deepEqual(snapshots.parseReviewedProduct({state:'withheld',reason:'NO_APPROVED_RELEASE'},'usgs-streamflow'),{withheld:'NO_APPROVED_RELEASE'});
  for(const bad of [{sourceId:'nws-alerts'},{evidenceRole:'EVIDENCE'},{releaseId:'x'},{bucketAt:'later'},{data:{type:'Feature'}}])
   assert.ok('withheld' in snapshots.parseReviewedProduct(product(bad),'usgs-streamflow'),JSON.stringify(bad));
+ const now=Date.parse('2026-10-26T18:00:00Z');
+ assert.equal(snapshots.parseReviewedProduct(product({approvalExpiresAt:'2026-10-26T18:30:00Z'}),'usgs-streamflow',now).approvalExpiresAt,'2026-10-26T18:30:00Z','the approval expiry is kept');
+ assert.deepEqual(snapshots.parseReviewedProduct(product({approvalExpiresAt:'2026-10-26T18:00:00Z'}),'usgs-streamflow',now),{withheld:'APPROVAL_EXPIRED'},'an expired approval is not shown');
+ assert.deepEqual(snapshots.parseReviewedProduct(product({approvalExpiresAt:undefined}),'usgs-streamflow',now),{withheld:'RELEASE_STORE_UNAVAILABLE'},'nor one without an expiry');
+ assert.ok(snapshots.REVIEWED_REASONS.APPROVAL_EXPIRED);
  const alerts=snapshots.parseReviewedProduct(product({sourceId:'nws-alerts',data:{type:'FeatureCollection',features:[{type:'Feature',properties:{event:'Flood Warning',severity:'Severe',expired:false}},{type:'Feature',properties:{event:'Wind Advisory',severity:'Minor',expired:true}}]}}),'nws-alerts');
  assert.deepEqual(alerts.data.features.map(f=>f.properties.event),['Flood Warning']);
  assert.deepEqual({...snapshots.REVIEWED_SOURCE_BY_TOPIC},{water:'usgs-streamflow',weather:'nws-alerts',disaster:'nws-alerts'});
@@ -70,4 +75,65 @@ test('the dock steps through the stored snapshots and says plainly when there ar
  assert.match(page,/setReviewedSnapshot\(map, reviewedData\);/);
  const live=await readFile('app/live-context.ts','utf8');
  assert.match(live,/drawReviewedSnapshot\(map\);/,'drawn by the context renderer, so a style reload keeps it');
+});
+
+// A minimal hook runtime: state, refs and effects, committed after each render
+// and re-rendered while state changes, so the hook runs as it does in React.
+function hookRuntime(){
+ const slots=[];let cursor=0,dirty=false,pending=[];
+ const react={
+  useState(init){const k=cursor++;if(!(k in slots))slots[k]={value:init};const slot=slots[k];return [slot.value,next=>{const value=typeof next==='function'?next(slot.value):next;if(!Object.is(value,slot.value)){slot.value=value;dirty=true;}}];},
+  useRef(init){const k=cursor++;if(!(k in slots))slots[k]={current:init};return slots[k];},
+  useCallback(fn){cursor++;return fn;},
+  useEffect(fn,deps){const k=cursor++;const prev=slots[k];if(!prev||deps.some((d,j)=>!Object.is(d,prev.deps[j])))pending.push(()=>{prev?.cleanup?.();slots[k]={deps,cleanup:fn()};});},
+ };
+ const render=hook=>{for(let n=0;n<50;n++){let out;do{cursor=0;dirty=false;pending=[];out=hook();}while(dirty);const run=pending;pending=[];run.forEach(f=>f());if(!dirty)return out;}throw new Error('render loop');};
+ return {react,render};
+}
+
+test('the snapshot player waits for each release, withholds one whose approval expires, and follows the history as it is revalidated',async()=>{
+ const start=Date.parse('2026-10-26T18:00:00Z');
+ mock.timers.enable({apis:['setTimeout','setInterval','Date'],now:start});
+ globalThis.window=globalThis;
+ try{
+  const runtime=hookRuntime();
+  const exports={};
+  new Function('exports','require',ts.transpileModule(await readFile('app/reviewed-snapshots.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(exports,id=>{if(id==='react')return runtime.react;if(id==='./bounded-json')return{readBoundedJson:response=>response.json()};throw new Error(id);});
+  const at=minutes=>new Date(start+minutes*60_000).toISOString();
+  let releases=[{releaseId:id('a'),publishedAt:at(-120)},{releaseId:id('b'),publishedAt:at(-60)}];
+  const expiry={[id('a')]:at(5),[id('b')]:at(600)};
+  const requests=[];
+  globalThis.fetch=async url=>{requests.push(url);const release=new URL(url,'http://x').searchParams.get('release');
+   return {json:async()=>release?product({releaseId:release,approvalExpiresAt:expiry[release]}):{sourceId:'usgs-streamflow',items:releases}};};
+  const flush=async()=>{for(let n=0;n<6;n++)await new Promise(resolve=>setImmediate(resolve));};
+  const view=()=>runtime.render(()=>exports.useReviewedSnapshots('usgs-streamflow',true));
+  let s=view();
+  assert.equal(s.status,'idle');
+  s.setOn(true);s=view();
+  assert.equal(s.status,'loading','reading the history');
+  await flush();s=view();await flush();s=view();
+  assert.equal(s.status,'ready');assert.equal(s.index,1,'the newest is shown first');assert.equal(s.product.releaseId,id('b'));
+
+  s.setIndex(0);s=view();
+  assert.equal(s.status,'loading','a newly picked release reads as loading until it is drawn');
+  assert.equal(s.product.releaseId,id('b'),'the last release drawn stays on the map meanwhile');
+  await flush();s=view();
+  assert.equal(s.status,'ready');assert.equal(s.product.releaseId,id('a'));
+
+  const historyReads=()=>requests.filter(url=>url.endsWith('/history')).length;
+  const before=historyReads();
+  mock.timers.tick(5*60_000);s=view();
+  assert.equal(s.status,'withheld');assert.equal(s.reason,'APPROVAL_EXPIRED');assert.equal(s.product,null,'an expired release leaves the map at its expiry');
+  // The history is read again; the server no longer lists the expired release.
+  releases=[releases[1]];
+  await flush();s=view();await flush();s=view();
+  assert.ok(historyReads()>before,'expiry re-reads the history');
+  assert.equal(s.history.length,1);assert.equal(s.index,0);assert.equal(s.status,'ready');assert.equal(s.product.releaseId,id('b'),'falls back to the newest release still approved');
+
+  // A new release published later appears on the next revalidation, and the newest is followed.
+  releases=[...releases,{releaseId:id('c'),publishedAt:at(30)}];expiry[id('c')]=at(600);
+  mock.timers.tick(exports.REVIEWED_REVALIDATE_MS);s=view();
+  await flush();s=view();await flush();s=view();
+  assert.equal(s.history.length,2);assert.equal(s.product.releaseId,id('c'));
+ }finally{mock.timers.reset();delete globalThis.window;}
 });

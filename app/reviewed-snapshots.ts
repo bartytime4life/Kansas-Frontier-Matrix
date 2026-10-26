@@ -16,7 +16,7 @@ export const REVIEWED_SOURCE_LABEL: Readonly<Record<ReviewedSourceId, string>> =
 export type ReviewedRelease = Readonly<{ releaseId: string; publishedAt: string }>;
 export type ReviewedProduct = Readonly<{
   state: "available" | "partial" | "empty"; sourceId: ReviewedSourceId; releaseId: string;
-  retrievedAt: string; bucketAt: string; freshness: string; measurementFreshness: string;
+  retrievedAt: string; bucketAt: string; approvalExpiresAt: string; freshness: string; measurementFreshness: string;
   limitation: string; data: FeatureCollection;
 }>;
 
@@ -26,6 +26,7 @@ export const REVIEWED_REASONS: Readonly<Record<string, string>> = Object.freeze(
   NO_APPROVED_RELEASE: "No approved snapshot has been published yet.",
   RELEASE_STORE_UNAVAILABLE: "The site database is unavailable right now.",
   HISTORY_UNAVAILABLE: "The site database is unavailable right now.",
+  APPROVAL_EXPIRED: "This snapshot's publication approval has expired.",
 });
 const releaseIdPattern = /^[a-f0-9]{64}$/;
 const isTime = (value: unknown): value is string => typeof value === "string" && Number.isFinite(Date.parse(value));
@@ -42,16 +43,19 @@ export function parseReviewedHistory(value: unknown): { items: ReviewedRelease[]
 }
 
 /** The release read, checked as /curated checks it; anything else is withheld. */
-export function parseReviewedProduct(value: unknown, sourceId: ReviewedSourceId): ReviewedProduct | { withheld: string } {
+export function parseReviewedProduct(value: unknown, sourceId: ReviewedSourceId, now = Date.now()): ReviewedProduct | { withheld: string } {
   const p = value as Record<string, unknown> | null;
   if (!p || typeof p !== "object") return { withheld: "RELEASE_STORE_UNAVAILABLE" };
   if (!["available", "partial", "empty"].includes(String(p.state))) return { withheld: typeof p.reason === "string" ? p.reason : "NO_APPROVED_RELEASE" };
   const data = p.data as FeatureCollection | undefined;
   if (p.sourceId !== sourceId || p.evidenceRole !== "EXTERNAL_CONTEXT_ONLY" || typeof p.releaseId !== "string" || !releaseIdPattern.test(p.releaseId)
     || !isTime(p.retrievedAt) || !isTime(p.bucketAt) || data?.type !== "FeatureCollection" || !Array.isArray(data.features) || data.features.length > 1000) return { withheld: "RELEASE_STORE_UNAVAILABLE" };
+  // A release is shown only while its publication approval holds.
+  if (!isTime(p.approvalExpiresAt)) return { withheld: "RELEASE_STORE_UNAVAILABLE" };
+  if (Date.parse(p.approvalExpiresAt) <= now) return { withheld: "APPROVAL_EXPIRED" };
   // Expired alert areas leave the display; the release still records them.
   const features = sourceId === "nws-alerts" ? data.features.filter(feature => feature.properties?.expired !== true) : data.features;
-  return { state: p.state as ReviewedProduct["state"], sourceId, releaseId: p.releaseId, retrievedAt: p.retrievedAt as string, bucketAt: p.bucketAt as string,
+  return { state: p.state as ReviewedProduct["state"], sourceId, releaseId: p.releaseId, retrievedAt: p.retrievedAt as string, bucketAt: p.bucketAt as string, approvalExpiresAt: p.approvalExpiresAt,
     freshness: String(p.freshness ?? "unknown"), measurementFreshness: String(p.measurementFreshness ?? "unknown"),
     limitation: typeof p.limitation === "string" ? p.limitation : "", data: { type: "FeatureCollection", features } };
 }
@@ -65,32 +69,47 @@ export type ReviewedSnapshots = Readonly<{
   product: ReviewedProduct | null;
 }>;
 export const REVIEWED_STEP_MS = 1400;
+/** How often the release history is read again while snapshots are shown, as /curated revalidates. */
+export const REVIEWED_REVALIDATE_MS = 60_000;
+const MAX_TIMER_MS = 2 ** 31 - 1;
+const NO_RELEASES: readonly ReviewedRelease[] = Object.freeze([]);
+const approvalHolds = (product: ReviewedProduct, now: number) => Date.parse(product.approvalExpiresAt) > now;
+const sameReleases = (a: readonly ReviewedRelease[], b: readonly ReviewedRelease[]) =>
+  a.length === b.length && a.every((release, i) => release.releaseId === b[i].releaseId && release.publishedAt === b[i].publishedAt);
 
 /**
  * Reviewed snapshots for one source: the release history when switched on, the
- * selected release (newest first shown), and a player that steps forward
- * through the releases. Releases are cached by id, so replay does not refetch.
+ * selected release (the newest unless one is picked), and a player that steps
+ * forward through the releases. The history is read again every minute, so a
+ * release whose approval lapses or is revoked leaves the scrubber; a shown
+ * release also leaves the map the moment its own approval expires. Releases
+ * are cached by id while their approval holds, so replay does not refetch.
  */
 export function useReviewedSnapshots(sourceId: ReviewedSourceId | null, motionAllowed: boolean): ReviewedSnapshots {
   const [on, setOnState] = useState(false);
-  const [status, setStatus] = useState<ReviewedSnapshots["status"]>("idle");
-  const [reason, setReason] = useState<string | null>(null);
-  const [history, setHistory] = useState<readonly ReviewedRelease[]>([]);
-  const [index, setIndex] = useState(-1);
+  // null until the history has been read.
+  const [historyState, setHistoryState] = useState<Readonly<{ items: readonly ReviewedRelease[]; reason: string | null }> | null>(null);
+  // The picked release; null follows the newest.
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const [product, setProduct] = useState<ReviewedProduct | null>(null);
+  const [withheld, setWithheld] = useState<Readonly<{ releaseId: string; reason: string }> | null>(null);
+  const [revalidation, setRevalidation] = useState(0);
   const cache = useRef(new Map<string, ReviewedProduct>());
+  const reset = () => { setPlaying(false); setProduct(null); setWithheld(null); setHistoryState(null); setSelectedId(null); };
   const setOn = useCallback((next: boolean) => {
     setOnState(next); setPlaying(false);
-    if (next) setStatus("loading"); else { setProduct(null); setStatus("idle"); }
+    if (!next) { setProduct(null); setWithheld(null); setHistoryState(null); setSelectedId(null); }
   }, []);
   // A different source starts over (reset while rendering, not in an effect).
   const [shownSource, setShownSource] = useState(sourceId);
-  if (shownSource !== sourceId) {
-    setShownSource(sourceId); setOnState(false); setPlaying(false); setProduct(null);
-    setHistory([]); setIndex(-1); setStatus("idle"); setReason(null);
-  }
+  if (shownSource !== sourceId) { setShownSource(sourceId); setOnState(false); reset(); }
   useEffect(() => { cache.current.clear(); }, [sourceId]);
+  useEffect(() => {
+    if (!on || !sourceId) return;
+    const timer = window.setInterval(() => setRevalidation(count => count + 1), REVIEWED_REVALIDATE_MS);
+    return () => window.clearInterval(timer);
+  }, [on, sourceId]);
   useEffect(() => {
     if (!on || !sourceId) return;
     const controller = new AbortController();
@@ -98,40 +117,72 @@ export function useReviewedSnapshots(sourceId: ReviewedSourceId | null, motionAl
       .then(response => readBoundedJson(response, 65_536, controller.signal))
       .then(value => {
         const parsed = parseReviewedHistory(value);
-        setHistory(parsed.items); setReason(parsed.reason);
-        setIndex(parsed.items.length - 1);
-        if (!parsed.items.length) setStatus("withheld");
+        // Releases no longer listed are no longer approved to show.
+        for (const releaseId of cache.current.keys()) if (!parsed.items.some(release => release.releaseId === releaseId)) cache.current.delete(releaseId);
+        setHistoryState(previous => previous && previous.reason === parsed.reason && sameReleases(previous.items, parsed.items) ? previous : parsed);
       })
-      .catch(() => { if (!controller.signal.aborted) { setHistory([]); setReason("HISTORY_UNAVAILABLE"); setStatus("withheld"); } });
+      // A failed re-read keeps the history already shown; each release still expires on its own.
+      .catch(() => { if (!controller.signal.aborted) setHistoryState(previous => previous?.items.length ? previous : { items: [], reason: "HISTORY_UNAVAILABLE" }); });
     return () => controller.abort();
-  }, [on, sourceId]);
-  const release = index >= 0 ? history[index] : undefined;
+  }, [on, sourceId, revalidation]);
+  const history = historyState?.items ?? NO_RELEASES;
+  const picked = selectedId ? history.findIndex(release => release.releaseId === selectedId) : -1;
+  const index = picked >= 0 ? picked : history.length - 1;
+  const releaseId = index >= 0 ? history[index].releaseId : undefined;
   useEffect(() => {
-    if (!on || !sourceId || !release) return;
+    if (!on || !sourceId || !releaseId) return;
     const controller = new AbortController();
-    const cached = cache.current.get(release.releaseId);
+    const show = (shown: ReviewedProduct) => { setProduct(shown); setWithheld(null); };
+    const hold = (reason: string) => { setProduct(null); setWithheld({ releaseId, reason }); setPlaying(false); };
+    const cached = cache.current.get(releaseId);
     // A cached release is shown on the next tick, the same path a fetched one takes.
-    if (cached) { void Promise.resolve().then(() => { if (!controller.signal.aborted) { setProduct(cached); setReason(null); setStatus("ready"); } }); return () => controller.abort(); }
-    void fetch(`/api/curated/${sourceId}?release=${release.releaseId}`, { cache: "no-store", signal: controller.signal })
+    if (cached && approvalHolds(cached, Date.now())) { void Promise.resolve().then(() => { if (!controller.signal.aborted) show(cached); }); return () => controller.abort(); }
+    cache.current.delete(releaseId);
+    void fetch(`/api/curated/${sourceId}?release=${releaseId}`, { cache: "no-store", signal: controller.signal })
       .then(response => readBoundedJson(response, 8 * 1024 * 1024 + 65_536, controller.signal))
       .then(value => {
         const parsed = parseReviewedProduct(value, sourceId);
-        if ("withheld" in parsed) { setProduct(null); setReason(parsed.withheld); setStatus("withheld"); setPlaying(false); return; }
-        cache.current.set(parsed.releaseId, parsed);
-        setProduct(parsed); setReason(null); setStatus("ready");
+        if ("withheld" in parsed) return hold(parsed.withheld);
+        if (parsed.releaseId !== releaseId) return hold("RELEASE_STORE_UNAVAILABLE");
+        cache.current.set(releaseId, parsed);
+        show(parsed);
       })
-      .catch(() => { if (!controller.signal.aborted) { setProduct(null); setReason("RELEASE_STORE_UNAVAILABLE"); setStatus("withheld"); setPlaying(false); } });
+      .catch(() => { if (!controller.signal.aborted) hold("RELEASE_STORE_UNAVAILABLE"); });
     return () => controller.abort();
-  }, [on, sourceId, release]);
-  // Play steps forward one release at a time and stops at the newest.
+  }, [on, sourceId, releaseId]);
+  // The shown release leaves the map when its approval expires, and the history is read again.
+  useEffect(() => {
+    if (!product) return;
+    const expiresAt = Date.parse(product.approvalExpiresAt);
+    let timer = 0;
+    const check = () => {
+      const remaining = expiresAt - Date.now();
+      if (remaining > 0) { timer = window.setTimeout(check, Math.min(remaining, MAX_TIMER_MS)); return; }
+      cache.current.delete(product.releaseId);
+      setProduct(null); setWithheld({ releaseId: product.releaseId, reason: "APPROVAL_EXPIRED" }); setPlaying(false);
+      setRevalidation(count => count + 1);
+    };
+    timer = window.setTimeout(check, Math.min(Math.max(0, expiresAt - Date.now()), MAX_TIMER_MS));
+    return () => window.clearTimeout(timer);
+  }, [product]);
+  // Ready only once the selected release itself has been read; until then it is loading.
+  const status: ReviewedSnapshots["status"] = !on || !sourceId ? "idle" : !historyState ? "loading" : !releaseId ? "withheld"
+    : withheld?.releaseId === releaseId ? "withheld" : product?.releaseId === releaseId ? "ready" : "loading";
+  const reason = status !== "withheld" ? null : releaseId ? withheld?.reason ?? null : historyState?.reason ?? "NO_APPROVED_RELEASE";
+  const setIndex = useCallback((next: number) => {
+    // Picking the newest follows the newest as new releases are published.
+    setSelectedId(next >= 0 && next < history.length - 1 ? history[next].releaseId : null);
+  }, [history]);
+  // Play steps forward one release at a time, each once it has been drawn, and stops at the newest.
   useEffect(() => {
     if (!playing || !motionAllowed || status !== "ready" || index >= history.length - 1) return;
     const timer = window.setTimeout(() => {
-      const next = Math.min(history.length - 1, index + 1);
-      setIndex(next);
+      const next = index + 1;
+      setSelectedId(next < history.length - 1 ? history[next].releaseId : null);
       if (next >= history.length - 1) setPlaying(false);
     }, REVIEWED_STEP_MS);
     return () => window.clearTimeout(timer);
-  }, [playing, motionAllowed, status, index, history.length]);
-  return { on, setOn, status, reason, history, index, setIndex, playing, setPlaying, product };
+  }, [playing, motionAllowed, status, index, history]);
+  // While a newly selected release loads, the last one drawn stays on the map.
+  return { on, setOn, status, reason, history, index, setIndex, playing, setPlaying, product: status === "idle" || status === "withheld" ? null : product };
 }

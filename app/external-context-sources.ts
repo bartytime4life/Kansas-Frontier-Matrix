@@ -6,7 +6,7 @@ export type ExternalContextSourceId =
   | "usgs-national-map-topo"
   | "aws-mapzen-terrarium";
 
-export type ExternalContextActivation = "standard" | "aviation-chart" | "civic" | "hydro" | "relief" | "storm" | "network" | "historic" | "imagery" | "kansas-aerial" | "streets" | "topo" | "elevation-3d";
+export type ExternalContextActivation = "standard" | "aviation-chart" | "civic" | "hydro" | "relief" | "storm" | "network" | "historic" | "imagery" | "kansas-aerial" | "photoreal" | "streets" | "topo" | "elevation-3d";
 
 export type ExternalContextSource = Readonly<{
   id: ExternalContextSourceId;
@@ -40,7 +40,7 @@ export const EXTERNAL_CONTEXT_SOURCES: readonly ExternalContextSource[] = Object
     organization: "OpenFreeMap / OpenMapTiles / OpenStreetMap",
     kind: "VECTOR_STYLE",
     capabilities: Object.freeze(["BASEMAP", "STRUCTURES_3D"] as const),
-    activatesWhen: Object.freeze(["standard", "aviation-chart", "civic", "hydro", "relief", "storm", "network", "historic"] as const),
+    activatesWhen: Object.freeze(["standard", "aviation-chart", "civic", "hydro", "relief", "storm", "network", "historic", "photoreal"] as const),
     requestMode: "DEFAULT_NETWORK",
     requestUrl: "https://tiles.openfreemap.org/styles/liberty",
     endpointLabel: "tiles.openfreemap.org",
@@ -57,7 +57,7 @@ export const EXTERNAL_CONTEXT_SOURCES: readonly ExternalContextSource[] = Object
     organization: "Esri",
     kind: "RASTER_BASEMAP",
     capabilities: Object.freeze(["BASEMAP"] as const),
-    activatesWhen: Object.freeze(["imagery"] as const),
+    activatesWhen: Object.freeze(["imagery", "photoreal"] as const),
     requestMode: "OPT_IN_NETWORK",
     requestUrl: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     endpointLabel: "server.arcgisonline.com",
@@ -74,7 +74,7 @@ export const EXTERNAL_CONTEXT_SOURCES: readonly ExternalContextSource[] = Object
     organization: "Kansas DASC / Kansas Geological Survey / Kansas 911 / Surdex",
     kind: "RASTER_BASEMAP",
     capabilities: Object.freeze(["BASEMAP"] as const),
-    activatesWhen: Object.freeze(["kansas-aerial"] as const),
+    activatesWhen: Object.freeze(["kansas-aerial", "photoreal"] as const),
     requestMode: "OPT_IN_NETWORK",
     requestUrl: "https://dascservices.kansasgis.org/arcgis/rest/services/IMAGERY_STATEWIDE/NG911_2024_1ft_Natural_Color/ImageServer/exportImage?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=512,512&format=png32&interpolation=RSP_NearestNeighbor&f=image",
     endpointLabel: "dascservices.kansasgis.org · NG911 2024",

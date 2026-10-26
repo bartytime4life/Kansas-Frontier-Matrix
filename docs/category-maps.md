@@ -148,6 +148,9 @@ Drawer shows:
   the loaded payload.
 - A selected column opens its county record, which now carries
   `peoplePerSquareMile` and `densityGroup` beside the counts.
+- The county layer's opacity slider fades the columns (as drawn at its
+  default setting, gone at zero), and a shared link (`prisms=on`) reopens with
+  them standing.
 
 The columns replace the county outline while they stand, are hidden on the
 globe, and appear in the start-page preview of the People map. Counts describe
@@ -207,11 +210,39 @@ committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
 - The scrubber runs oldest to newest; each step names the hour the capture is
   for, when it was published and how many features it holds, and says when it
   is older than two hours. Play steps forward and stops at the newest.
+- A release is shown only while its publication approval holds: the history
+  is read again every minute, so a release whose approval lapses or is revoked
+  leaves the scrubber, and a shown release leaves the map the moment its own
+  `approvalExpiresAt` passes. With no release picked, the newest is followed as
+  new ones are published.
+- A newly picked release reads as loading until it is drawn, and Play steps on
+  only after each release has been drawn.
 - When the pipeline is not switched on, has no approved release, or the
   database is unavailable, the dock says so and nothing is drawn.
 
 The snapshots are drawn by the context renderer (`app/reviewed-snapshot-layers.ts`)
 and are approved context releases, not admitted evidence.
+
+## Photo-real 3D (Terrain)
+
+The Relief model dock's **Photo-real 3D** drapes the photographed ground on the
+measured one: the 2024 Kansas NG911 one-foot aerial (over Esri world imagery,
+which carries oblique views past the state line) on the USGS 3DEP bare-earth DEM
+(`/api/3dep-dem-tile`), at **true vertical scale** (1×), lit by the real sun at
+the map centre, with OpenStreetMap buildings raised to the heights OpenMapTiles
+records (`render_height`, from `render_min_height`). The style is the
+`photoreal` basemap: no labels, painted shading or stylisation over the
+photograph.
+
+It flies to six real landscapes (`app/photoreal-landscapes.ts`), each captioned
+with what the ground is: the Red Hills (Permian red beds capped by gypsum),
+Monument Rocks and Little Jerusalem (Niobrara Chalk), Konza Prairie in the
+Flint Hills (Permian limestone and chert under tallgrass prairie), the Arikaree
+Breaks (canyons in loess), and downtown Wichita on the Arkansas River. The
+reading always states the vertical scale: "True vertical scale (1×)" or the
+exaggeration chosen with Relief. The status bar's DEM readout gives the 3DEP
+height under the pointer. "Back to relief colours" restores the look's own map,
+the Mapzen relief and the default depth.
 
 ## What is not on every map
 

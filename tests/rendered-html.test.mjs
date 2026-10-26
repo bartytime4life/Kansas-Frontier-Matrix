@@ -712,7 +712,7 @@ test("keeps every top-level external map carrier in a display-only disclosure re
   assert.match(runtime, /externalContextSource\("openfreemap-liberty"\)/);
   assert.match(runtime, /externalContextSource\("esri-world-imagery"\)/);
   const aerial = registry.externalContextSource("kansas-ng911-2024");
-  assert.deepEqual(aerial.activatesWhen, ["kansas-aerial"]);
+  assert.deepEqual(aerial.activatesWhen, ["kansas-aerial", "photoreal"], "the Field view and the photo-real 3D view draw the 2024 aerial");
   assert.equal(aerial.requestMode, "OPT_IN_NETWORK");
   assert.match(aerial.requestUrl, /NG911_2024_1ft_Natural_Color/);
   assert.match(aerial.requestUrl, /interpolation=RSP_NearestNeighbor/);

@@ -23,6 +23,7 @@ import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-
 import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulationPrisms } from "./population-prisms";
 import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots } from "./reviewed-snapshots";
 import { setReviewedSnapshot } from "./reviewed-snapshot-layers";
+import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
 import { CATEGORY_BASEMAPS } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
 import { CategoryMapDock, nextSunStep, SUN_PLAY_RESTART_STEP, SUN_TIME_STEPS, type AquiferView } from "./category-map-dock";
@@ -1480,6 +1481,8 @@ export default function Home() {
   const [categoryDockTopic, setCategoryDockTopic] = useState<TopicId | null>(null);
   // County population prisms: on with the People map, toggled from its dock.
   const [populationPrisms, setPopulationPrismsShown] = useState(false);
+  // The landscape the photo-real 3D view last flew to.
+  const [photorealPlace, setPhotorealPlace] = useState<string | null>(null);
   const [categoryDockHidden, setCategoryDockHidden] = useState(false);
   const aviationPickingRef = useRef(false);
   const setAviationPicking = useCallback((active: boolean) => {
@@ -2595,6 +2598,7 @@ export default function Home() {
     params.set("ctxd", Object.entries(officialArchiveDays).filter(([, day]) => day).map(([feed, day]) => `${feed}:${day}`).join(","));
     params.set("ctxo", OFFICIAL_CONTEXT_SOURCES.map((source) => `${source.id}:${(officialOpacity[source.id] ?? source.defaultOpacity).toFixed(2)}`).join(","));
     serializeSoilMapState(params, soilMapState);
+    if (populationPrisms) params.set("prisms", "on");
     params.set("sunDay", daylightDay);
     params.set("sunThrough", daylightThroughDay);
     params.set("sunAt", new Date(daylightInstant).toISOString());
@@ -2649,7 +2653,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -4824,6 +4828,7 @@ export default function Home() {
       setOfficialArchiveDraftDays({ "noaa-hms-smoke": currentUtcDay(), ...restoredDays });
       setOfficialPayloads(officialPayloadsRef.current);
       setSoilMapState(restoreSoilMapState(params));
+      setPopulationPrismsShown(params.get("prisms") === "on");
       const officialOpacityPairs = params.get("ctxo")?.split(",").map((pair) => pair.split(":")) ?? [];
       const restoredOfficialOpacity = Object.fromEntries(officialOpacityPairs
         .filter(([id, value]) => knownOfficialIds.has(id as OfficialContextId) && typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value)))
@@ -7547,6 +7552,30 @@ export default function Home() {
 
   // The dock shows the calculated day and night at the current time when the
   // layer's date range holds it; another chosen day keeps its own clock.
+  // Photo-real 3D: the 2024 one-foot aerial on the USGS 3DEP bare-earth DEM at
+  // true vertical scale, under the real sun; a landscape id flies there, null
+  // returns to the look's own map and the Mapzen relief at the default depth.
+  const showPhotoreal = (landscapeId: string | null) => {
+    const look = categoryMapOnScreen;
+    if (!look) return;
+    if (landscapeId === null) {
+      basemapRef.current = look.basemap; setBasemap(look.basemap);
+      if (terrainProviderRef.current !== "mapzen") chooseTerrainProvider("mapzen");
+      changeTerrainDepth(DEFAULT_TERRAIN_DEPTH);
+      announce(`${look.name} relief colours restored`);
+      return;
+    }
+    const landscape = PHOTOREAL_LANDSCAPES.find(candidate => candidate.id === landscapeId);
+    if (!landscape) return;
+    if (categoryMode !== "terrain") activateMapRepresentation("terrain");
+    if (basemapRef.current !== "photoreal") { basemapRef.current = "photoreal"; setBasemap("photoreal"); changeTerrainDepth(1); }
+    if (terrainProviderRef.current !== "usgs-3dep") chooseTerrainProvider("usgs-3dep");
+    if (!sceneEffectsRef.current.sunSync) updateSceneEffects({ ...sceneEffectsRef.current, sunSync: true });
+    setPhotorealPlace(landscape.id);
+    const { center, zoom, pitch, bearing } = landscape.camera;
+    mapRef.current?.flyTo({ center: [center[0], center[1]], zoom, pitch, bearing, duration: motionDuration(2600), essential: false });
+    announce(`${landscape.name} · photo-real 3D · USGS 3DEP at ${verticalExaggerationRef.current === 1 ? "true vertical scale" : `vertical ×${verticalExaggerationRef.current.toFixed(1)}`}`);
+  };
   // NASA SMAP L4 cells are 9 km across: a field-scale view would show one cell as
   // a flat wash, so switching the soil tool on pulls out to the region they describe.
   const SOIL_REGIONAL_ZOOM = 7.2;
@@ -10085,6 +10114,8 @@ export default function Home() {
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
+            photoreal={activeCategoryMap.tools?.includes("photoreal") ? { on: basemap === "photoreal", landscapes: PHOTOREAL_LANDSCAPES, place: photorealPlace, depth: verticalExaggeration } : undefined}
+            onPhotoreal={showPhotoreal}
             reviewed={reviewedSource ? { source: REVIEWED_SOURCE_LABEL[reviewedSource], on: reviewed.on, loading: reviewed.status === "loading",
               reason: reviewed.status === "withheld" && reviewed.reason ? REVIEWED_REASONS[reviewed.reason] ?? "No reviewed snapshot can be shown." : null,
               count: reviewed.history.length, index: reviewed.index, publishedAt: reviewedTime(reviewed.history[reviewed.index]?.publishedAt), capturedFor: reviewedTime(reviewed.product?.bucketAt),
