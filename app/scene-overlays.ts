@@ -154,11 +154,16 @@ export const relief2dShouldShow = (relief2d: boolean, terrainOn: boolean, projec
   relief2d && !terrainOn && projection !== "globe";
 
 export function syncRelief2d(map: MapLibreMap, dem: TerrainSourceRecord, light: SceneLightPreset, azimuth: number): void {
-  // A category basemap's own hillshade is lit from the same direction as the scene, so the sun control moves its shadows too.
+  // A category basemap's own hillshade is lit as the scene is: from the sun's
+  // direction and at its height, so the sun control moves and lengthens its
+  // shadows. The height is held between 12° (a sun near or below the horizon
+  // would black out every slope) and 60°.
   if (map.getLayer(CATEGORY_BASEMAP_HILLSHADE_LAYER_ID)) {
-    const direction = ((effectiveSceneLight(map, light, azimuth).azimuth % 360) + 360) % 360;
-    if (map.getPaintProperty(CATEGORY_BASEMAP_HILLSHADE_LAYER_ID, "hillshade-illumination-direction") !== direction) {
-      map.setPaintProperty(CATEGORY_BASEMAP_HILLSHADE_LAYER_ID, "hillshade-illumination-direction", direction);
+    const scene = effectiveSceneLight(map, light, azimuth);
+    const direction = ((scene.azimuth % 360) + 360) % 360;
+    const altitude = Math.round(Math.max(12, Math.min(60, scene.altitude)));
+    for (const [property, value] of [["hillshade-illumination-direction", direction], ["hillshade-illumination-altitude", altitude]] as const) {
+      if (map.getPaintProperty(CATEGORY_BASEMAP_HILLSHADE_LAYER_ID, property) !== value) map.setPaintProperty(CATEGORY_BASEMAP_HILLSHADE_LAYER_ID, property, value);
     }
   }
   // Category basemaps draw their own relief; a second hillshade would double the shading.

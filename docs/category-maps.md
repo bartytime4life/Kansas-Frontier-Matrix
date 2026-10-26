@@ -233,8 +233,8 @@ the map centre, with OpenStreetMap buildings raised to the heights OpenMapTiles
 records (`render_height`, from `render_min_height`). The style is the
 `photoreal` basemap: no labels, painted shading or stylisation over the
 photograph. The photograph carries the real light of its flight, so the DEM
-hillshade is not drawn while it is loaded, and the Relief model's 3DEP
-hillshade starter is switched off on entry and back on with "Back to relief
+hillshade is not drawn while it is loaded, and the USGS 3DEP hillshade, if
+switched on, is switched off on entry and back on with "Back to relief
 colours".
 
 It flies to six real landscapes (`app/photoreal-landscapes.ts`), each captioned
@@ -402,9 +402,13 @@ case and colour rather than a serif face.
 - **Globe.** Vector basemaps stay on the globe. Raster ones still hand over to
   the standard style there.
 - **Relief.** Each style draws its own hillshade under
-  `CATEGORY_BASEMAP_HILLSHADE_LAYER_ID`. The 2D relief scene effect defers to
-  it, so shading is never doubled, and the overlay sync aims it at the scene's
-  sun direction.
+  `CATEGORY_BASEMAP_HILLSHADE_LAYER_ID`. The 2D relief scene effect and, in
+  3D, the terrain hillshade (`kfm-terrain-hillshade`) both defer to it, so
+  shading is never doubled. The overlay sync lights it as the scene is lit:
+  from the sun's direction and at its height (held between 12° and 60°), so
+  the real sun lengthens and turns its shadows. The Relief model no longer
+  starts with the USGS 3DEP hillshade, whose fixed multidirectional light
+  would contradict the scene's sun; it stays in Layers for finer detail.
 - **Contrast.** `LIGHT_CATEGORY_BASEMAPS` marks the light grounds, so wind
   arrows draw dark strokes there and light strokes on `hydro` and `storm`.
 - **Persistence.** Saved views, snapshots, report attribution and wind-arrow
