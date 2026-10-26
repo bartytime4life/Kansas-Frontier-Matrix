@@ -5,7 +5,8 @@ import { BASEMAPS } from '../map-runtime';
 import { basemapCacheRequest } from '../basemap-cache';
 import { browserRenderBudget } from '../map-performance';
 import { webgl2Available } from '../webgl-support';
-import { applyOfficialContextState, defaultOfficialContextOpacity, OFFICIAL_CONTEXT_BY_ID, OFFICIAL_CONTEXT_SOURCES } from '../live-context';
+import { applyOfficialContextState, defaultOfficialContextOpacity, OFFICIAL_CONTEXT_BY_ID, OFFICIAL_CONTEXT_SOURCES, setNoaaRadarObservationTime } from '../live-context';
+import { isNoaaRadarManifest, NOAA_RADAR_FRAME_API_PATH, noaaRadarManifestIsFresh } from '../noaa-radar';
 import { WELCOME_IDLE_VIEW, welcomeDriftLeg, welcomeStyle, welcomeView } from '../welcome-map-view';
 
 const WORKER_URL = '/maplibre/maplibre-gl-worker.mjs';
@@ -39,9 +40,20 @@ function loadPayload(feed) {
   promise.catch(() => { if (payloads.get(feed)?.promise === promise) payloads.delete(feed); });
   return promise;
 }
+// Radar shows its newest advertised scan, and only while that scan is current
+// (the Explorer's own freshness rule); otherwise the preview shows no radar.
+const RADAR_TTL_MS = 2 * 60_000;
+let radarFrame = null;
+function loadRadarFrame() {
+  if (radarFrame && Date.now() - radarFrame.at < RADAR_TTL_MS) return radarFrame.promise;
+  const promise = fetch(NOAA_RADAR_FRAME_API_PATH).then(response => response.ok ? response.json() : null)
+    .then(manifest => isNoaaRadarManifest(manifest) && noaaRadarManifestIsFresh(manifest, Date.now()) ? manifest.frames.at(-1) : null, () => null);
+  radarFrame = { at: Date.now(), promise };
+  return promise;
+}
 const readsPayload = id => { const source = OFFICIAL_CONTEXT_BY_ID[id]; return Boolean(source?.apiPath && source.kind.endsWith('GEOJSON')); };
 
-export async function createWelcomeMap(container, { onReady, onError } = {}) {
+export async function createWelcomeMap(container, { onReady, onError, onRadar } = {}) {
   if (!webgl2Available()) { onError?.(); return null; }
   const lib = await loadMapLibre();
   lib.setWorkerUrl(WORKER_URL);
@@ -75,14 +87,22 @@ export async function createWelcomeMap(container, { onReady, onError } = {}) {
   // renderer with every other provider layer hidden. Re-run after each style
   // load (a new style drops them) and as each GeoJSON payload arrives.
   const opacity = defaultOfficialContextOpacity();
-  let loaded = {};
+  let loaded = {}, radarAt = null, radarShown = null;
   const drawData = () => {
     if (disposed || !styleLoaded || !view) return;
     const shown = new Set(view.starters);
     const visibility = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => [source.id, shown.has(source.id)]));
-    try { applyOfficialContextState(map, visibility, opacity, loaded); } catch { /* Preview data is optional; the map stays. */ }
+    const radar = shown.has('nws-radar') && radarAt ? radarAt : null;
+    visibility['nws-radar'] = Boolean(radar);
+    try {
+      if (radar) setNoaaRadarObservationTime(map, radar);
+      applyOfficialContextState(map, visibility, opacity, loaded);
+    } catch { /* Preview data is optional; the map stays. */ }
+    // The caption names the radar scan only while one is drawn.
+    if (radar !== radarShown) { radarShown = radar; onRadar?.(radar); }
   };
   const requestData = next => {
+    if (next.starters.includes('nws-radar')) loadRadarFrame().then(at => { if (disposed) return; radarAt = at; if (view?.starters.includes('nws-radar')) drawData(); });
     for (const feed of next.starters.filter(readsPayload)) {
       if (loaded[feed]) continue;
       loadPayload(feed).then(payload => { if (disposed) return; loaded = { ...loaded, [feed]: payload }; if (view?.starters.includes(feed)) drawData(); }, () => {});

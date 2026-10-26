@@ -245,10 +245,14 @@ attribution control).
   starters visible, so tiles and GeoJSON are styled exactly as in the
   Explorer; GeoJSON starters (counties, earthquakes, alerts) are read from the
   same `/api/live-context` adapters and shared between previews for five
-  minutes. Radar, GOES imagery and river gauges need live controls (a current
-  frame list or the River Pulse adapter) and are left out of previews
-  (`WELCOME_PREVIEW_SKIPPED_STARTERS`); they appear when the map is opened. The
-  caption names the map, its view, the data shown and its basemap credits.
+  minutes. Radar shows its newest advertised scan from `/api/noaa-radar/frames`
+  (`setNoaaRadarObservationTime`), only while that scan passes the Explorer's
+  freshness rule; the caption gives the scan time, and a stale or unavailable
+  frame list shows no radar and claims none. GOES imagery and river gauges need
+  live controls (the satellite frame list or the River Pulse adapter) and are
+  left out of previews (`WELCOME_PREVIEW_SKIPPED_STARTERS`); they appear when
+  the map is opened. The caption names the map, its view, the data drawn at the
+  preview's zoom and its basemap credits.
 - **Motion.** While the welcome plays, tilted and globe views turn slowly about
   their centre and flat maps ease gently in and out (`welcomeDriftLeg`). Pause,
   reduced motion, a hidden tab and open details hold the camera still.

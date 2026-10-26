@@ -12,14 +12,19 @@ const stubs = {
   "'../map-performance'": toUrl(`export const browserRenderBudget = () => ({ pixelRatio: 1, tileCache: 8 });`),
   "'../webgl-support'": toUrl(`export const webgl2Available = () => true;`),
   "'../live-context'": toUrl(`
-    const SOURCES = [{ id: 'usgs-earthquakes', kind: 'OPERATIONAL_GEOJSON', apiPath: '/api/live-context?feed=usgs-earthquakes' }, { id: 'kdot-roads', kind: 'OPERATIONAL_WMS' }, { id: 'census-counties', kind: 'SNAPSHOT_GEOJSON', apiPath: '/api/live-context?feed=census-counties' }];
+    const SOURCES = [{ id: 'nws-radar', kind: 'OPERATIONAL_WMS' }, { id: 'nws-alerts', kind: 'OPERATIONAL_GEOJSON', apiPath: '/api/live-context?feed=nws-alerts' }, { id: 'usgs-earthquakes', kind: 'OPERATIONAL_GEOJSON', apiPath: '/api/live-context?feed=usgs-earthquakes' }, { id: 'kdot-roads', kind: 'OPERATIONAL_WMS' }, { id: 'census-counties', kind: 'SNAPSHOT_GEOJSON', apiPath: '/api/live-context?feed=census-counties' }];
     export const OFFICIAL_CONTEXT_SOURCES = SOURCES;
     export const OFFICIAL_CONTEXT_BY_ID = Object.fromEntries(SOURCES.map(s => [s.id, s]));
     export const defaultOfficialContextOpacity = () => ({});
-    export const applyOfficialContextState = (map, visibility, opacity, payloads) => globalThis.__welcome.drawn.push({ shown: Object.keys(visibility).filter(id => visibility[id]), payloads: Object.keys(payloads) });`),
+    export const applyOfficialContextState = (map, visibility, opacity, payloads) => globalThis.__welcome.drawn.push({ shown: Object.keys(visibility).filter(id => visibility[id]), payloads: Object.keys(payloads) });
+    export const setNoaaRadarObservationTime = (map, at) => globalThis.__welcome.radar.push(at);`),
+  "'../noaa-radar'": toUrl(`
+    export const NOAA_RADAR_FRAME_API_PATH = '/api/noaa-radar/frames';
+    export const isNoaaRadarManifest = value => Array.isArray(value?.frames);
+    export const noaaRadarManifestIsFresh = manifest => manifest.fresh === true;`),
   "'../welcome-map-view'": toUrl(`
     const view = (topic, basemap, scene, zoom, starters = []) => ({ topic, basemap, scene, camera: { center: [-98, 38], zoom, pitch: 0, bearing: 0 }, starters });
-    const VIEWS = { evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']) };
+    const VIEWS = { evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']), weather: view('weather', 'relief', 'terrain', 5.9, ['nws-alerts', 'nws-radar']) };
     export const WELCOME_IDLE_VIEW = view(null, 'standard', '2d', 6.1);
     export const welcomeView = topic => VIEWS[topic] ?? WELCOME_IDLE_VIEW;
     export const welcomeStyle = (style, v) => ({ ...style, scene: v.scene });
@@ -53,13 +58,14 @@ class FakeMap {
 const settle = () => new Promise(resolve => setTimeout(resolve, SETTLE_MS + 30));
 async function start() {
   const fetches = [];
-  globalThis.__welcome = { FakeMap, drawn: [] };
+  globalThis.__welcome = { FakeMap, drawn: [], radar: [] };
   // Style documents and starter payloads each wait until the test releases them.
-  globalThis.fetch = url => new Promise(resolve => fetches.push({ url, resolve: () => resolve({ ok: true, json: async () => url.startsWith('/api/') ? { feed: new URL(url, 'http://x').searchParams.get('feed'), data: { type: 'FeatureCollection', features: [] } } : { version: 8, url, sources: {}, layers: [] } }) }));
+  globalThis.fetch = url => new Promise(resolve => fetches.push({ url, resolve: () => resolve({ ok: true, json: async () => url === '/api/noaa-radar/frames' ? globalThis.__welcome.radarManifest : url.startsWith('/api/') ? { feed: new URL(url, 'http://x').searchParams.get('feed'), data: { type: 'FeatureCollection', features: [] } } : { version: 8, url, sources: {}, layers: [] } }) }));
   let ready = 0;
+  const radarReports = [];
   const { createWelcomeMap } = await loadEngine();
-  const engine = await createWelcomeMap({}, { onReady: () => ready++ });
-  return { engine, fetches, map: globalThis.__welcome.map, ready: () => ready };
+  const engine = await createWelcomeMap({}, { onReady: () => ready++, onRadar: at => radarReports.push(at) });
+  return { engine, fetches, map: globalThis.__welcome.map, ready: () => ready, radarReports };
 }
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
 
@@ -118,4 +124,27 @@ test('a previewed category draws its starter data with the Explorer renderer, an
   assert.deepEqual(drawn().at(-1), { shown: ['kdot-roads'], payloads: ['usgs-earthquakes'] }, 'the same style switches its data in place; tile starters need no payload');
   assert.equal(fetches.filter(f => f.url.startsWith('/api/')).length, 1, 'tile starters make no adapter request');
   engine.dispose();
+});
+
+test('the storm preview draws the newest radar scan only while it is current, and reports its time', async () => {
+  for (const fresh of [true, false]) {
+    const { engine, fetches, map, radarReports } = await start();
+    globalThis.__welcome.radarManifest = { frames: ['2026-10-26T16:00:00Z', '2026-10-26T16:04:00Z'], fresh };
+    engine.show('weather'); await tick(); await tick();
+    map.emit('style.load');
+    fetches.find(f => f.url === '/api/noaa-radar/frames').resolve(); await tick(); await tick(); await tick();
+    const last = globalThis.__welcome.drawn.at(-1);
+    if (fresh) {
+      assert.deepEqual(globalThis.__welcome.radar, ['2026-10-26T16:04:00Z'], 'the newest advertised scan, by its exact time');
+      assert.ok(last.shown.includes('nws-radar'));
+      assert.deepEqual(radarReports, ['2026-10-26T16:04:00Z'], 'the caption learns the scan time');
+      engine.show('geology'); await settle();
+      assert.deepEqual(radarReports, ['2026-10-26T16:04:00Z', null], 'and loses it when the next map has no radar');
+    } else {
+      assert.deepEqual(globalThis.__welcome.radar, [], 'a stale scan list shows no radar');
+      assert.ok(!last.shown.includes('nws-radar'));
+      assert.deepEqual(radarReports, [], 'and the caption claims none');
+    }
+    engine.dispose();
+  }
 });
