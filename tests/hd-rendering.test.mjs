@@ -29,10 +29,10 @@ test('ArcGIS exports ask for twice the pixels and dpi on high-DPI screens, so sy
  assert.match(live,/tiles: \[hiDpiExportUrl\(raster\.mapUrl!, typeof map\.getPixelRatio === \"function\" \? map\.getPixelRatio\(\) : 1\)\]/,'every provider raster overlay goes through it');
 });
 
-test('imagery and topo basemaps draw the next zoom level on high-DPI screens; OpenStreetMap stays at 1×',()=>{
+test('photographic imagery draws the next zoom level on high-DPI screens; labelled topo and OpenStreetMap keep their tile size',()=>{
  const style={version:8,sources:{'esri-imagery':{type:'raster',tiles:['e'],tileSize:256},'kansas-ng911-2024':{type:'raster',tiles:['k'],tileSize:512},'usgs-topo-context':{type:'raster',tiles:['u'],tileSize:256},'osm-context':{type:'raster',tiles:['o'],tileSize:256},'basemap-relief-dem':{type:'raster-dem',tiles:['d'],tileSize:256}},layers:[]};
  const sharp=hd.hiDpiBasemapStyle(style,2);
- assert.deepEqual(Object.fromEntries(Object.entries(sharp.sources).map(([id,s])=>[id,s.tileSize])),{'esri-imagery':128,'kansas-ng911-2024':256,'usgs-topo-context':128,'osm-context':256,'basemap-relief-dem':256});
+ assert.deepEqual(Object.fromEntries(Object.entries(sharp.sources).map(([id,s])=>[id,s.tileSize])),{'esri-imagery':128,'kansas-ng911-2024':256,'usgs-topo-context':256,'osm-context':256,'basemap-relief-dem':256});
  assert.equal(style.sources['esri-imagery'].tileSize,256,'the shared style is not mutated');
  assert.equal(hd.hiDpiBasemapStyle(style,1),style);
  assert.equal(hd.hiDpiBasemapStyle('https://tiles.example/style.json',2),'https://tiles.example/style.json');

@@ -341,10 +341,11 @@ Every map draws at the screen's own density and on real terrain.
   FEMA, WBD, NWM and the rest) are requested at 512 px and 192 dpi on screens
   of 1.5× or more, so each CSS pixel has two image pixels and ArcGIS keeps the
   symbols their on-screen size (`app/hd-rasters.ts`).
-- **Imagery and topo.** Esri world imagery, the 2024 Kansas one-foot aerial
-  and the USGS topographic map are declared at half their tile size on those
-  screens, so MapLibre draws the next, finer zoom level. OpenStreetMap's tile
-  policy keeps its raster at 1×.
+- **Imagery.** Esri world imagery and the 2024 Kansas one-foot aerial are
+  declared at half their tile size on those screens, so MapLibre draws the
+  next, finer zoom level. The USGS topographic map and OpenStreetMap keep their
+  tile size: their labels and symbols are baked into the tiles, and the next
+  zoom level would draw them at half size.
 - **Real ground everywhere.** The local styles (Prairie dusk, under the Aquifer
   map, and Midnight navy, the fallback when the vector basemap cannot load)
   now shade the Terrarium DEM under the state line, so no map sits on an empty

@@ -8,8 +8,12 @@ import type { SourceSpecification, StyleSpecification } from "./maplibre-seam";
  */
 export const HIDPI_MIN_RATIO = 1.5;
 
-/** Tiled imagery and topo with finer zoom levels than a 1× screen uses; OpenStreetMap's tile policy keeps it at 1×. */
-const DENSER_TILES = new Set(["esri-imagery", "kansas-ng911-2024", "usgs-topo-context"]);
+/**
+ * Photographic imagery with finer zoom levels than a 1× screen uses. Labelled
+ * rasters (USGS topo, OpenStreetMap) are left out: their text and symbols are
+ * baked into the tile, and the next zoom level would draw them at half size.
+ */
+const DENSER_TILES = new Set(["esri-imagery", "kansas-ng911-2024"]);
 
 /**
  * A basemap style whose imagery tiles are declared at half their pixel size,
