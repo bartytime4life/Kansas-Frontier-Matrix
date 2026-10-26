@@ -1,4 +1,0 @@
-# pipeline_specs :: soil :: publish
-name: soil-publish
-version: 1
-stages: []

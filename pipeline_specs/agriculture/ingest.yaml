@@ -1,4 +1,0 @@
-# pipeline_specs :: agriculture :: ingest
-name: agriculture-ingest
-version: 1
-stages: []
