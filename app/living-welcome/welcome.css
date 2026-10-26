@@ -483,6 +483,8 @@
    credits instead flow inside its reserved strip, without changing that map UI. */
 .atlas-studio:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib-inner:not(.domain-stage *){position:static;right:auto;bottom:auto;width:auto;max-width:100%;max-height:none;overflow:visible;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
 .atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib-inner:not(.domain-stage *){max-height:36px;overflow:auto}
+/* A credit wraps between providers, never inside a provider's name. */
+.atlas-studio[data-welcome-sources=open]:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-attrib-inner:not(.domain-stage *) a{white-space:nowrap}
 /* Phones: a 2×2 dock with the compact close button down its right edge. */
 @media(max-width:560px){
   .living-welcome .welcome-toolbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr)) auto;gap:4px}

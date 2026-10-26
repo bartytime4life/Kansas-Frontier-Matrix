@@ -38,7 +38,7 @@ test("offline orientation is the real Census Kansas boundary, with no drawn rive
     assert.notEqual(layer.type, "symbol", "no glyph dependency offline");
   }
   assert.equal(orientation.orientationSource().type, "geojson");
-  assert.match(orientation.orientationSource().attribution, /U\.S\. Census Bureau cartographic boundaries.*display only/);
+  assert.match(orientation.orientationSource().attribution, /Census Kansas boundary · display only/);
 });
 
 test("local basemaps carry the orientation layer and stay network-free", async () => {

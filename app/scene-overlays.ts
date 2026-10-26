@@ -104,7 +104,7 @@ export function syncKansasGlow(map: MapLibreMap, light: SceneLightPreset = "nigh
   }
   const colors = KANSAS_GLOW_PALETTES[effectiveSceneLight(map, light, azimuth).preset];
   syncOfflineOutlineColor(map, true, colors);
-  if (!map.getSource(KANSAS_GLOW_SOURCE_ID)) map.addSource(KANSAS_GLOW_SOURCE_ID, { type: "geojson", data: kansasGlowData(), attribution: "U.S. Census Bureau Kansas boundary (2017, simplified) · display only" });
+  if (!map.getSource(KANSAS_GLOW_SOURCE_ID)) map.addSource(KANSAS_GLOW_SOURCE_ID, { type: "geojson", data: kansasGlowData(), attribution: "Census Kansas boundary · display only" });
   if (!map.getLayer(KANSAS_GLOW_LAYER_IDS[0])) {
     const beforeId = firstOverlayId(map);
     for (const layer of kansasGlowLayers()) map.addLayer(layer, beforeId);
