@@ -117,7 +117,8 @@ test("reference images use fixed Kansas services; MLRS excludes generalized loca
       const id = source.id === "kdot-roads" ? 4 : ["kdot-rail-active", "kdot-roads-1918"].includes(source.id) ? 0 : 1;
       assert.equal(dynamic.source.mapLayerId, id);
       assert.equal(url.searchParams.get("layers"), `show:${id}`);
-      assert.equal(dynamic.drawingInfo.renderer.symbol.style, ["kdot-rail-abandoned", "kdot-roads-1918"].includes(source.id) ? "esriSLSDash" : "esriSLSSolid");
+      // Only former rail is dashed: the 1918 roads differ from it by line as well as colour (map-keys.ts).
+      assert.equal(dynamic.drawingInfo.renderer.symbol.style, source.id === "kdot-rail-abandoned" ? "esriSLSDash" : "esriSLSSolid");
     }
     assert.equal(source.evidenceRole, "EXTERNAL_CONTEXT_ONLY");
     assert.deepEqual(context.OFFICIAL_CONTEXT_TEMPORAL_SUPPORT[source.id].supportedFrames, [context.OFFICIAL_CONTEXT_PRESENT_FRAME]);

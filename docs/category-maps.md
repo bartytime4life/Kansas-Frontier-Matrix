@@ -239,6 +239,18 @@ read the same constants, so the two cannot drift apart:
   the dark storm base. An alert without a recognised severity is neutral grey,
   off the scale.
 
+- **KDOT roads and rail** (Network map) and **1918 roads and former rail**
+  (Historic atlas): the lines KDOT's service draws with our symbols
+  (`KDOT_LINE_SYMBOLS`), so the request and the key share them. Public roads
+  are amber, active railroads teal, 1918 state highways brick red, and
+  abandoned railroads violet and dashed; dashes mean former rail only. The
+  KDOT colours had been chosen for the dark default map: on the Network map's
+  near-white ground and the Historic atlas's parchment they reached only
+  1.04–1.3:1, and the 1918 roads and abandoned rail were the same orange dash.
+  Each colour now has at least 3:1 against both the light category grounds
+  and the dark ones, and no two datasets share one. Lines of one map are
+  keyed together under one title.
+
 Radar keeps its dBZ legend in its own panel, and stream gauges keep theirs in
 River Pulse.
 

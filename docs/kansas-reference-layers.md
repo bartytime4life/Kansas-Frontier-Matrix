@@ -21,8 +21,11 @@ Regional raster overlays disclose when they need **Use flat map**. Current
 references remain held at historical atlas frames; **Use Present** is explicit.
 No control silently changes the atlas year to make a layer appear.
 
-Roads and rails use KDOT's unchanged geometry rendered in EPSG:3857, with gold
-road lines, cyan active rails, and orange dashed abandoned rails. These colors
+Roads and rails use KDOT's unchanged geometry rendered in EPSG:3857, with amber
+road lines, teal active rails, brick-red 1918 roads and violet dashed abandoned
+rails (`KDOT_LINE_SYMBOLS` in `app/map-keys.ts`, also shown as the category
+dock's key). Each is a mid-luminance colour at 3:1 or more against the light
+category bases and the dark ones, and no two datasets share one. These colors
 are display styling, not provider classifications of road width or severity.
 Each survey/transport opacity is preserved independently even with multiple
 line-image overlays. Provider errors retain the existing bounded retry and

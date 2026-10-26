@@ -268,6 +268,7 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
     {keys?.map(key => <section className="category-map-dock-legend category-map-dock-key" key={key.id} aria-label={`Key: ${key.title}`}>
       <strong>{key.title}</strong>
       <ul>{key.items.map(item => <li key={item.label}><span className={`category-map-dock-key-${item.shape}`} aria-hidden="true"
+        data-dashed={item.dashed ? "true" : undefined}
         style={{ "--key": item.color, ...(item.size ? { "--size": `${item.size}px` } : {}) } as CSSProperties} /><span>{item.label}</span></li>)}</ul>
       <small>{key.note}</small>
     </section>)}
