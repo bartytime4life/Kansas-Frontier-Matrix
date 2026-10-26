@@ -61,12 +61,23 @@ holds and limits. They are display context, not admitted evidence.
     line. Finish the line, then **Preview display profile** samples the
     display DEM along it without the 3D exaggeration. It waits for terrain,
     and the profile stays display context, not survey measurement;
+  - **Show river flow**, on the Water look (`tools: ["flow"]`). It switches the
+    Scene studio's "Flowing water" effect on or off through
+    `updateSceneEffects`: rivers flow downstream where USGS 3DHP maps a
+    direction, and a USGS gauge reading lights its own reach. While it is on,
+    the dock shows the effect's own reading, for example how many reaches have
+    a flow direction and how many a gauge lights, or that it is loading or needs
+    a closer zoom. When the map is degraded or still starting, or with reduced
+    motion, ambient motion off or an efficient render budget (the same rule the
+    animation uses), the rivers are drawn still and the dock names which applies. The flow reaches
+    are display context, not measured discharge;
   - reset view and "Layers for this map".
 
   Every control reuses an existing handler: `activateMapRepresentation`,
   `changeTerrainDepth`, `changeStudioLight`, `updateSceneEffects`,
   `startTerrainInvestigation` (through `startCategoryTransect`) and
-  `openAtlasPanel`. The dock can
+  `openAtlasPanel`. Turning river flow on or off also goes through
+  `updateSceneEffects`. The dock can
   be hidden. It returns the next time a category map is opened.
 - **Layers panel.** When a category is chosen in the Layers catalogue, its
   topic guide shows the same map-look card: name, scene and what you'll see.
