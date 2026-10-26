@@ -339,3 +339,49 @@ test('the review fixes: a hint per map, sun controls only where the light shows,
  assert.match(css,/\.welcome-feature-item>span:nth-child\(3\)\{display:none\}/);
  assert.match(page,/styleDocumentLoadedRef\.current = true;\s*\/\/[^\n]*\n(?:\s*\/\/[^\n]*\n)*\s*styleFallbackAttempted = false;/,'a loaded style re-arms the basemap fallback, so a second outage falls back instead of failing the map');
 });
+
+test('the Field view shows NASA soil moisture at a chosen depth, names the day drawn, and keeps it to the maps that offer it',async()=>{
+ assert.deepEqual([...maps.CATEGORY_MAPS.agriculture.tools],['area','soil']);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];
+ const base={look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:2.5,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onSoil:v=>calls.push(['soil',v]),onSoilDepth:v=>calls.push(['depth',v])};
+ const soil={on:false,depth:'surface',reading:'',legendUrl:'https://gibs.earthdata.nasa.gov/legends/SMAP_Analyzed_Soil_Moisture_H.svg'};
+ const button=(tree,label)=>findNode(tree,n=>n.type==='button'&&n.props.children===label);
+ let tree=h.render(h.exports.CategoryMapDock,{...base,soil});
+ assert.equal(button(tree,'Surface 0–5 cm'),undefined,'no depth or scale while hidden');
+ button(tree,'Show soil moisture').props.onClick();
+ tree=h.render(h.exports.CategoryMapDock,{...base,soil:{...soil,on:true,reading:'Surface moisture · 0–5 cm · 2026-10-25 12:00 UTC · NASA SMAP L4, 9 km modelled cells'}});
+ assert.equal(button(tree,'Surface 0–5 cm').props['aria-pressed'],true);
+ button(tree,'Root zone 0–100 cm').props.onClick();
+ assert.match(JSON.stringify(tree),/2026-10-25 12:00 UTC · NASA SMAP L4, 9 km modelled cells/);
+ assert.equal(findNode(tree,n=>n.type==='img').props.src,soil.legendUrl,'NASA\'s own colour scale');
+ button(tree,'Hide soil moisture').props.onClick();
+ assert.deepEqual(calls,[['soil',true],['depth','root'],['soil',false]]);
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/if \(on && map && map\.getZoom\(\) > SOIL_REGIONAL_ZOOM \+ 0\.5\) map\.easeTo\(\{ zoom: SOIL_REGIONAL_ZOOM/,'a field-scale view pulls out to the region the 9 km cells describe');
+ assert.match(page,/if \(!look\.tools\?\.includes\("soil"\)\) setSoilMapState\(current => current\.visible \? hideSoilContext\(current\) : current\);/,'soil moisture does not follow into other maps');
+ assert.match(page,/soilMoistureContext\?\.renderedFrameTimeUtc \? `\$\{SOIL_VIEWS\[soilMapState\.view\]\.label\}/,'the reading names the frame actually rendered');
+ const control=await readFile('app/soil-moisture-control.tsx','utf8');
+ assert.match(control,/if \(enabled && availability === null && !checking\) void checkAvailability\(\);/,'switched on from outside the row, it still checks NASA\'s days');
+});
+
+test('the Aquifer map opens on saturated thickness and switches one KGS view at a time, with its classes as the legend',async()=>{
+ const look=maps.CATEGORY_MAPS.groundwater;
+ assert.deepEqual([...look.starters],['kgs-saturated-thickness']);assert.deepEqual([...look.tools],['aquifer','underground']);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];
+ const base={look,mode:'2d',depth:2.5,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onUnderground(){},onAquiferView:v=>calls.push(v)};
+ const legend=[{label:'Under 50',color:'#ffff73'},{label:'Over 300',color:'#0c2c84'}];
+ const button=(tree,label)=>findNode(tree,n=>n.type==='button'&&n.props.children===label);
+ let tree=h.render(h.exports.CategoryMapDock,{...base,aquifer:{view:'kgs-saturated-thickness',legend}});
+ assert.equal(button(tree,'Thickness').props['aria-pressed'],true);
+ assert.match(JSON.stringify(tree),/Under 50.*Over 300.*Saturated thickness.*feet · KGS High Plains Atlas, 2022–2024 classes, not well measurements/);
+ button(tree,'Depth to water').props.onClick();button(tree,'Extent').props.onClick();
+ assert.deepEqual(calls,['kgs-depth-to-water','kgs-aquifer-high-plains']);
+ tree=h.render(h.exports.CategoryMapDock,{...base,aquifer:{view:'kgs-aquifer-high-plains',legend:null}});
+ assert.doesNotMatch(JSON.stringify(tree),/feet ·/,'the extent has no classes');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/for \(const id of AQUIFER_VIEW_IDS\) if \(id === view \|\| officialVisibilityRef\.current\[id\]\) setOfficialContextVisible\(id, id === view\);/,'one view at a time');
+});

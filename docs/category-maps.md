@@ -154,6 +154,65 @@ globe, and appear in the start-page preview of the People map. Counts describe
 areas, not people; a county's column says nothing about where in the county
 people live.
 
+## Soil moisture on the Field view (Agriculture)
+
+The Field view opens on the 2024 Kansas aerial imagery at field scale. Its dock
+adds **Show soil moisture**: NASA SMAP Level-4 (SPL4SMAU V008) modelled soil
+moisture, through the Explorer's own soil-moisture control
+(`app/soil-moisture-control.tsx`).
+
+- SMAP cells are 9 km across; at field scale one cell would fill the screen and
+  read as a per-field value it is not. Switching the tool on therefore pulls a
+  closer view out to zoom 7.2, the region the cells describe.
+- **Surface 0–5 cm** and **Root zone 0–100 cm** switch the modelled depth.
+- The reading names the frame actually drawn (its UTC day and depth), or says
+  plainly that NASA is unavailable and nothing is drawn; NASA's own colour scale
+  sits beneath it.
+- Soil moisture stays with the maps that offer it: opening another category map
+  hides it.
+- The control now checks NASA's available days whenever it is switched on from
+  outside its own row (the dock, or a shared link that restores `soil=1`), not
+  only from its switch.
+
+## Saturated thickness on the Aquifer map (Groundwater)
+
+The Aquifer map opens on the Kansas Geological Survey's 2022–2024 saturated
+thickness of the High Plains aquifer: how many feet of the aquifer still hold
+water. It is centred on western Kansas, where the aquifer is. Its dock switches
+one KGS view at a time:
+
+- **Thickness**, classes from under 50 to over 300 feet;
+- **Depth to water**, from under 25 to over 350 feet below the land surface;
+- **Extent**, where the aquifer is mapped.
+
+The legend lists the KGS classes in feet with the colours the snapshots carry
+(`GROUNDWATER_CLASS_LEGENDS`); `tests/aquifer-legend.test.mjs` keeps it equal to
+the snapshot files in `public/data/groundwater/`. These are regional classified
+estimates, not well measurements; Explore underground opens the recorded well
+logs and cores.
+
+## Reviewed snapshots from the site database
+
+The River network, Storm desk and Hazard watch docks offer **Reviewed …
+snapshots**: the hourly USGS discharge and NWS alert captures that the site's
+publishing pipeline normalized, checked against their signed manifest and
+committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
+`/api/curated/{source}` and its `/history` (up to 20 releases).
+
+- Gauges are circles whose area is in proportion to discharge (radius by the
+  square root of ft³/s); provisional USGS values carry an amber ring, approved
+  values a white one; a gauge without a value is not drawn as zero.
+- Alert areas take their NWS severity colour; alerts that have expired leave
+  the display, as on `/curated`.
+- The scrubber runs oldest to newest; each step names the hour the capture is
+  for, when it was published and how many features it holds, and says when it
+  is older than two hours. Play steps forward and stops at the newest.
+- When the pipeline is not switched on, has no approved release, or the
+  database is unavailable, the dock says so and nothing is drawn.
+
+The snapshots are drawn by the context renderer (`app/reviewed-snapshot-layers.ts`)
+and are approved context releases, not admitted evidence.
+
 ## What is not on every map
 
 County boundaries, USGS river gauges, the USGS 3DHP stream network and the fire

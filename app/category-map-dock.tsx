@@ -5,6 +5,13 @@ import type { CategoryMap, CategoryScene } from "./category-maps";
 import type { SceneLight } from "./scene-effects";
 import type { KansasDensityGroup } from "./population-prisms";
 
+export type AquiferView = "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-aquifer-high-plains";
+const AQUIFER_VIEWS: readonly (readonly [AquiferView, string, string])[] = [
+  ["kgs-saturated-thickness", "Thickness", "Saturated thickness: how much of the aquifer still holds water, in feet"],
+  ["kgs-depth-to-water", "Depth to water", "Depth from the land surface down to the water table, in feet"],
+  ["kgs-aquifer-high-plains", "Extent", "Where the High Plains aquifer is mapped"],
+];
+
 const MODES: readonly (readonly [CategoryScene, string, string])[] = [
   ["2d", "2D", "Flat map, straight down"],
   ["terrain", "3D", "Tilted 3D terrain"],
@@ -46,7 +53,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -109,6 +116,33 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
    */
   population?: Readonly<{ on: boolean; groups: readonly (KansasDensityGroup & { count: number })[]; counties: number; statewide: number | null; metresPerPerson: number }>;
   onPopulation?: (on: boolean) => void;
+  /**
+   * NASA SMAP L4 soil moisture, for looks that offer the soil tool: whether it
+   * is drawn, at which depth, what the map shows now (the exact day drawn, or
+   * why none is), and NASA's own colour scale.
+   */
+  soil?: Readonly<{ on: boolean; depth: "surface" | "root"; reading: string; legendUrl: string }>;
+  onSoil?: (on: boolean) => void;
+  onSoilDepth?: (depth: "surface" | "root") => void;
+  /**
+   * The High Plains aquifer view, for looks that offer the aquifer tool: which
+   * KGS map is drawn (or none), and that map's classes in feet, in order.
+   */
+  aquifer?: Readonly<{ view: AquiferView | null; legend: readonly Readonly<{ label: string; color: string }>[] | null }>;
+  onAquiferView?: (view: AquiferView) => void;
+  /**
+   * Reviewed snapshots from the site database, for looks that offer them:
+   * which source, whether shown, the release list and the one drawn, or the
+   * plain reason none is.
+   */
+  reviewed?: Readonly<{
+    source: string; on: boolean; loading: boolean; reason: string | null;
+    count: number; index: number; publishedAt: string | null; capturedFor: string | null;
+    features: number | null; freshness: string | null; playing: boolean; motionAllowed: boolean;
+  }>;
+  onReviewed?: (on: boolean) => void;
+  onReviewedIndex?: (index: number) => void;
+  onReviewedPlay?: (on: boolean) => void;
   onReset: () => void;
   onLayers: () => void;
   onClose: () => void;
@@ -169,6 +203,41 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
           <span>{group.label}<small>{group.range}</small></span><b>{population.counties ? `${group.count} ${group.count === 1 ? "county" : "counties"}` : "…"}</b></li>)}</ul>
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
       </div>}
+    </>}
+    {look.tools?.includes("reviewed") && reviewed && onReviewed && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={reviewed.on} onClick={() => onReviewed(!reviewed.on)}
+        title="Hourly snapshots the site's publishing pipeline reviewed and stored, each at its own capture time">{reviewed.on ? "Hide reviewed snapshots" : `Reviewed ${reviewed.source} snapshots`}</button>
+      {reviewed.on && <div className="category-map-dock-reviewed">
+        {reviewed.count > 1 && <div className="category-map-dock-range"><span id="category-map-dock-reviewed">Snapshot</span>
+          <input type="range" min={0} max={reviewed.count - 1} step={1} value={Math.max(0, reviewed.index)} aria-labelledby="category-map-dock-reviewed"
+            aria-valuetext={reviewed.publishedAt ?? "no snapshot"} onChange={event => { onReviewedPlay?.(false); onReviewedIndex?.(Number(event.target.value)); }} />
+          <button type="button" aria-pressed={reviewed.playing && reviewed.motionAllowed} disabled={!reviewed.motionAllowed} onClick={() => onReviewedPlay?.(!reviewed.playing)}
+            title={reviewed.motionAllowed ? "Step through the stored snapshots, oldest to newest" : "Reduced motion is on; move Snapshot by hand"}>{reviewed.playing && reviewed.motionAllowed ? "Pause" : "Play"}</button></div>}
+        <p className="category-map-dock-reading" aria-live={reviewed.playing ? "off" : "polite"}>{reviewed.loading ? "Reading the site database…"
+          : reviewed.reason ? reviewed.reason
+          : `Snapshot ${reviewed.index + 1} of ${reviewed.count} · captured for ${reviewed.capturedFor} · published ${reviewed.publishedAt} · ${reviewed.features} ${reviewed.features === 1 ? "feature" : "features"}${reviewed.freshness === "stale" ? " · older than two hours" : ""}`}</p>
+      </div>}
+    </>}
+    {look.tools?.includes("aquifer") && aquifer && onAquiferView && <>
+      <div className="category-map-dock-modes" role="group" aria-label="Aquifer map">
+        {AQUIFER_VIEWS.map(([view, label, title]) => <button key={view} type="button" aria-pressed={aquifer.view === view} title={title} onClick={() => onAquiferView(view)}>{label}</button>)}
+      </div>
+      {aquifer.legend && <div className="category-map-dock-legend" aria-label={aquifer.view === "kgs-depth-to-water" ? "Depth to water, feet" : "Saturated thickness, feet"}>
+        <ul className="category-map-dock-ramp">{aquifer.legend.map(entry => <li key={entry.label}><span className="category-map-dock-chip" style={{ background: entry.color }} aria-hidden="true" /><span>{entry.label}</span></li>)}</ul>
+        <p className="category-map-dock-reading">{aquifer.view === "kgs-depth-to-water" ? "Depth to water" : "Saturated thickness"}, feet · KGS High Plains Atlas, 2022–2024 classes, not well measurements</p>
+      </div>}
+    </>}
+    {look.tools?.includes("soil") && soil && onSoil && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={soil.on} onClick={() => onSoil(!soil.on)}
+        title="NASA SMAP L4 modelled soil moisture in 9 km cells; a field-scale view pulls out to the region the cells describe">{soil.on ? "Hide soil moisture" : "Show soil moisture"}</button>
+      {soil.on && <>
+        <div className="category-map-dock-modes category-map-dock-depth" role="group" aria-label="Soil depth">
+          {([["surface", "Surface 0–5 cm"], ["root", "Root zone 0–100 cm"]] as const).map(([depth, label]) =>
+            <button key={depth} type="button" aria-pressed={soil.depth === depth} onClick={() => onSoilDepth?.(depth)}>{label}</button>)}
+        </div>
+        <p className="category-map-dock-reading" aria-live="polite">{soil.reading}</p>
+        <img className="category-map-dock-scale" src={soil.legendUrl} alt="NASA colour scale for soil moisture" loading="lazy" />
+      </>}
     </>}
     {look.tools?.includes("area") && onMeasureArea && <button type="button" className="category-map-dock-tool" aria-pressed={Boolean(measuringArea)} onClick={onMeasureArea}
       title={measuringArea ? "Cancel the outline in progress" : "Click around a field or parcel, then Finish, for its approximate area; not a survey"}>{measuringArea ? "Cancel area" : "Measure an area"}</button>}

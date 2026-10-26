@@ -172,6 +172,12 @@ export function SoilMoistureControl({
       if (id === requestId.current) setChecking(false);
     }
   }, [clearRaster, day, range.from, range.through]);
+  // Switched on from outside this row (a category dock, or a shared link that
+  // restores soil=1): check NASA's days once, as the switch itself does.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (enabled && availability === null && !checking) void checkAvailability();
+  }, [enabled, availability, checking, checkAvailability]);
 
   const displayState = enabled && checking ? "loading" : mapState.state;
 

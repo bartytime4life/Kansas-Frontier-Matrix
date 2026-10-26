@@ -9,6 +9,7 @@ import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged 
 import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacity, requestRasterOpacity } from "./map-layer-composition";
 import { BUILD_UTC_YEAR } from "./build-clock";
 import { POPULATION_PRISM_LAYER_ID, populationPrismLayer, populationPrismsOn } from "./population-prisms";
+import { drawReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { globeOverviewPaintSize } from "./globe-context";
 import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay, FIRE_REPORT_FLAME_ID } from "./fire-detection-style";
 
@@ -1002,6 +1003,8 @@ export const applyOfficialContextState = (
   if (prisms) ensureLayer(map, populationPrismLayer(county.sourceId));
   if (map.getLayer(POPULATION_PRISM_LAYER_ID)) setVisibleIfChanged(map, POPULATION_PRISM_LAYER_ID, prisms);
   if (prisms && map.getLayer(county.layerIds[1])) setVisibleIfChanged(map, county.layerIds[1], false);
+  // A reviewed snapshot from the site database, for maps that show one.
+  drawReviewedSnapshot(map);
   const radar = OFFICIAL_CONTEXT_BY_ID["nws-radar"];
   const radarBuffer = radarBufferIds();
   const radarVisible = visibility["nws-radar"] && !globeView;
