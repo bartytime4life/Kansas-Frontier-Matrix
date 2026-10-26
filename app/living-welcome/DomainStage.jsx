@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { BASEMAPS } from '../map-runtime';
+import { OFFICIAL_CONTEXT_BY_ID } from '../live-context';
 import { welcomeView } from '../welcome-map-view';
 
 /**
  * Full-window live map for the selected domain: the real map that topic opens
- * with (basemap, view and camera), drifting slowly while the welcome plays.
+ * with (basemap, view, camera and its starter data), drifting slowly while the
+ * welcome plays.
  * The map engine loads after the welcome has painted; until then (or without
  * WebGL) the stage stays a quiet backdrop and the caption still names the map.
  */
@@ -36,8 +38,10 @@ export function DomainStage({ topic, paused = false, reduced = false }) {
  useEffect(() => { engine.current?.setPaused(paused); }, [paused]);
  useEffect(() => { engine.current?.setReduced(reduced); }, [reduced]);
  const view = welcomeView(topic);
+ // Name only the data drawn at the preview's zoom; closer-zoom layers wait for the opened map.
+ const shown = view.starters.map(id => OFFICIAL_CONTEXT_BY_ID[id]).filter(source => source && (source.minDisplayZoom ?? 0) <= view.camera.zoom).map(source => source.shortTitle);
  return <div className="domain-stage" data-state={state} data-topic={view.topic ?? 'kansas'}>
   <div ref={host} className="domain-stage-map" />
-  <p className="domain-stage-caption"><span>Live map preview</span><strong key={view.topic ?? 'kansas'}>{view.name}</strong><small>{view.detail}</small><small className="domain-stage-credit">{BASEMAPS[view.basemap].note}</small></p>
+  <p className="domain-stage-caption"><span>Live map preview</span><strong key={view.topic ?? 'kansas'}>{view.name}</strong><small>{view.detail}</small>{shown.length>0&&<small className="domain-stage-data">Showing {shown.join(' · ')}</small>}<small className="domain-stage-credit">{BASEMAPS[view.basemap].note}</small></p>
  </div>;
 }

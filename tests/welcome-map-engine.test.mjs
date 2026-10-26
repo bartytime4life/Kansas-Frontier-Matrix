@@ -11,9 +11,15 @@ const stubs = {
   "'../basemap-cache'": toUrl(`export const basemapCacheRequest = url => ({ url });`),
   "'../map-performance'": toUrl(`export const browserRenderBudget = () => ({ pixelRatio: 1, tileCache: 8 });`),
   "'../webgl-support'": toUrl(`export const webgl2Available = () => true;`),
+  "'../live-context'": toUrl(`
+    const SOURCES = [{ id: 'usgs-earthquakes', kind: 'OPERATIONAL_GEOJSON', apiPath: '/api/live-context?feed=usgs-earthquakes' }, { id: 'kdot-roads', kind: 'OPERATIONAL_WMS' }, { id: 'census-counties', kind: 'SNAPSHOT_GEOJSON', apiPath: '/api/live-context?feed=census-counties' }];
+    export const OFFICIAL_CONTEXT_SOURCES = SOURCES;
+    export const OFFICIAL_CONTEXT_BY_ID = Object.fromEntries(SOURCES.map(s => [s.id, s]));
+    export const defaultOfficialContextOpacity = () => ({});
+    export const applyOfficialContextState = (map, visibility, opacity, payloads) => globalThis.__welcome.drawn.push({ shown: Object.keys(visibility).filter(id => visibility[id]), payloads: Object.keys(payloads) });`),
   "'../welcome-map-view'": toUrl(`
-    const view = (topic, basemap, scene, zoom) => ({ topic, basemap, scene, camera: { center: [-98, 38], zoom, pitch: 0, bearing: 0 } });
-    const VIEWS = { evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4) };
+    const view = (topic, basemap, scene, zoom, starters = []) => ({ topic, basemap, scene, camera: { center: [-98, 38], zoom, pitch: 0, bearing: 0 }, starters });
+    const VIEWS = { evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']) };
     export const WELCOME_IDLE_VIEW = view(null, 'standard', '2d', 6.1);
     export const welcomeView = topic => VIEWS[topic] ?? WELCOME_IDLE_VIEW;
     export const welcomeStyle = (style, v) => ({ ...style, scene: v.scene });
@@ -47,8 +53,9 @@ class FakeMap {
 const settle = () => new Promise(resolve => setTimeout(resolve, SETTLE_MS + 30));
 async function start() {
   const fetches = [];
-  globalThis.__welcome = { FakeMap };
-  globalThis.fetch = url => new Promise(resolve => fetches.push({ url, resolve: () => resolve({ ok: true, json: async () => ({ version: 8, url, sources: {}, layers: [] }) }) }));
+  globalThis.__welcome = { FakeMap, drawn: [] };
+  // Style documents and starter payloads each wait until the test releases them.
+  globalThis.fetch = url => new Promise(resolve => fetches.push({ url, resolve: () => resolve({ ok: true, json: async () => url.startsWith('/api/') ? { feed: new URL(url, 'http://x').searchParams.get('feed'), data: { type: 'FeatureCollection', features: [] } } : { version: 8, url, sources: {}, layers: [] } }) }));
   let ready = 0;
   const { createWelcomeMap } = await loadEngine();
   const engine = await createWelcomeMap({}, { onReady: () => ready++ });
@@ -94,5 +101,21 @@ test('the preview is ready on its first settled frame even while the camera drif
   assert.equal(ready(), 1, 'ready without waiting for the camera to stop');
   map.emit('render');
   assert.equal(ready(), 1, 'reported once');
+  engine.dispose();
+});
+
+test('a previewed category draws its starter data with the Explorer renderer, and its GeoJSON when it arrives', async () => {
+  const { engine, fetches, map } = await start();
+  engine.show('geology'); await tick(); await tick();
+  const quakes = fetches.find(f => f.url.startsWith('/api/'));
+  assert.equal(quakes.url, '/api/live-context?feed=usgs-earthquakes', 'the same adapter the Explorer reads');
+  map.emit('style.load');
+  const drawn = () => globalThis.__welcome.drawn;
+  assert.deepEqual(drawn().at(-1), { shown: ['usgs-earthquakes'], payloads: [] }, 'drawn as soon as the style loads; every other provider layer hidden');
+  quakes.resolve(); await tick(); await tick();
+  assert.deepEqual(drawn().at(-1), { shown: ['usgs-earthquakes'], payloads: ['usgs-earthquakes'] }, 'redrawn with its payload');
+  engine.show('transport'); await settle();
+  assert.deepEqual(drawn().at(-1), { shown: ['kdot-roads'], payloads: ['usgs-earthquakes'] }, 'the same style switches its data in place; tile starters need no payload');
+  assert.equal(fetches.filter(f => f.url.startsWith('/api/')).length, 1, 'tile starters make no adapter request');
   engine.dispose();
 });

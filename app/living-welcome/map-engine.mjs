@@ -5,6 +5,7 @@ import { BASEMAPS } from '../map-runtime';
 import { basemapCacheRequest } from '../basemap-cache';
 import { browserRenderBudget } from '../map-performance';
 import { webgl2Available } from '../webgl-support';
+import { applyOfficialContextState, defaultOfficialContextOpacity, OFFICIAL_CONTEXT_BY_ID, OFFICIAL_CONTEXT_SOURCES } from '../live-context';
 import { WELCOME_IDLE_VIEW, welcomeDriftLeg, welcomeStyle, welcomeView } from '../welcome-map-view';
 
 const WORKER_URL = '/maplibre/maplibre-gl-worker.mjs';
@@ -21,6 +22,24 @@ function resolveStyle(style) {
   }).catch(error => { styleDocuments.delete(style); throw error; }));
   return styleDocuments.get(style);
 }
+
+// Starter data the Explorer reads as GeoJSON comes from the same fixed
+// adapters; the payload is shared between previews for a few minutes.
+const PAYLOAD_TTL_MS = 5 * 60_000;
+const payloads = new Map();
+function loadPayload(feed) {
+  const cached = payloads.get(feed);
+  if (cached && Date.now() - cached.at < PAYLOAD_TTL_MS) return cached.promise;
+  const promise = fetch(OFFICIAL_CONTEXT_BY_ID[feed].apiPath).then(response => response.ok ? response.json() : Promise.reject(new Error('Feed unavailable')))
+    .then(body => {
+      if (body?.feed !== feed || body.data?.type !== 'FeatureCollection' || !Array.isArray(body.data.features)) throw new Error('Unexpected feed payload');
+      return body;
+    });
+  payloads.set(feed, { at: Date.now(), promise });
+  promise.catch(() => { if (payloads.get(feed)?.promise === promise) payloads.delete(feed); });
+  return promise;
+}
+const readsPayload = id => { const source = OFFICIAL_CONTEXT_BY_ID[id]; return Boolean(source?.apiPath && source.kind.endsWith('GEOJSON')); };
 
 export async function createWelcomeMap(container, { onReady, onError } = {}) {
   if (!webgl2Available()) { onError?.(); return null; }
@@ -52,9 +71,27 @@ export async function createWelcomeMap(container, { onReady, onError } = {}) {
   // Ready once a real style has drawn with its tiles settled. `idle` would also
   // wait for the camera to stop, which the drift never does.
   map.on('render', () => { if (!ready && !disposed && styleLoaded && map.loaded()) { ready = true; onReady?.(); } });
+  // The selected topic's starter layers, drawn by the Explorer's own context
+  // renderer with every other provider layer hidden. Re-run after each style
+  // load (a new style drops them) and as each GeoJSON payload arrives.
+  const opacity = defaultOfficialContextOpacity();
+  let loaded = {};
+  const drawData = () => {
+    if (disposed || !styleLoaded || !view) return;
+    const shown = new Set(view.starters);
+    const visibility = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => [source.id, shown.has(source.id)]));
+    try { applyOfficialContextState(map, visibility, opacity, loaded); } catch { /* Preview data is optional; the map stays. */ }
+  };
+  const requestData = next => {
+    for (const feed of next.starters.filter(readsPayload)) {
+      if (loaded[feed]) continue;
+      loadPayload(feed).then(payload => { if (disposed) return; loaded = { ...loaded, [feed]: payload }; if (view?.starters.includes(feed)) drawData(); }, () => {});
+    }
+  };
   const apply = next => {
     if (disposed) return;
     view = next; leg = 0;
+    requestData(next);
     const key = `${next.basemap}|${next.scene}`;
     // Stopping the last drift ends a move; it must not start one for the new view.
     applying = true; map.stop(); applying = false;
@@ -66,12 +103,15 @@ export async function createWelcomeMap(container, { onReady, onError } = {}) {
         if (disposed || styleKey !== key) return;
         map.setStyle(welcomeStyle(style, view), { diff: false });
         // Jumping ends a move, which starts the drift for the view selected now.
-        map.once('style.load', () => { if (disposed || styleKey !== key) return; styleLoaded = true; map.jumpTo(cameraOf(view)); });
+        map.once('style.load', () => { if (disposed || styleKey !== key) return; styleLoaded = true; drawData(); map.jumpTo(cameraOf(view)); });
       }, () => { if (styleKey === key) styleKey = null; });
     } else if (!styleLoaded) {
-      // The pending style jumps to this view when it loads.
-    } else if (reduced || paused) map.jumpTo(cameraOf(next));
-    else map.flyTo({ ...cameraOf(next), duration: 2200, essential: true });
+      // The pending style jumps to this view, and draws its data, when it loads.
+    } else {
+      drawData();
+      if (reduced || paused) map.jumpTo(cameraOf(next));
+      else map.flyTo({ ...cameraOf(next), duration: 2200, essential: true });
+    }
   };
   return {
     get view() { return view; },

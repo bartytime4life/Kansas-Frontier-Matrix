@@ -22,10 +22,15 @@ test('each topic previews the map it opens with, and the idle view is the defaul
   const v=view.welcomeView(topic);
   assert.equal(v.topic,topic);assert.equal(v.basemap,look.basemap,`${topic}: the base map choice decides the preview`);
   assert.equal(v.scene,look.scene);assert.deepEqual(plain(v.camera),plain(look.camera));assert.equal(v.name,look.name);
+  assert.deepEqual(plain(v.starters),plain(look.starters.filter(id=>!view.WELCOME_PREVIEW_SKIPPED_STARTERS.has(id))),`${topic}: the preview draws the category's own starters`);
  }
  for(const topic of [null,'unknown','__proto__'])assert.equal(view.welcomeView(topic),view.WELCOME_IDLE_VIEW);
  assert.equal(view.WELCOME_IDLE_VIEW.basemap,'standard','before a topic is chosen only the default-network vector map is requested');
  assert.equal(view.WELCOME_IDLE_VIEW.scene,'2d');
+ assert.deepEqual(plain(view.WELCOME_IDLE_VIEW.starters),[],'the default map carries no data');
+ assert.deepEqual(plain(view.welcomeView('weather').starters),['nws-alerts'],'radar needs its live frame list, so the storm preview shows alerts');
+ assert.deepEqual(plain(view.welcomeView('geology').starters),['usgs-earthquakes']);
+ assert.deepEqual([...view.WELCOME_PREVIEW_SKIPPED_STARTERS].sort(),['noaa-goes-geocolor','nws-radar','usgs-streamflow']);
 });
 
 test('terrain looks get their own Terrarium DEM, globe looks the globe projection, flat maps neither',()=>{

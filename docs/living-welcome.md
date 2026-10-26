@@ -240,8 +240,15 @@ attribution control).
   providers that are off by default (Esri imagery, the Kansas aerials, USGS
   topo and the Terrarium DEM) are requested only for a category the visitor
   chose to preview.
-- **No data layers.** The preview switches on no provider-context layers; the
-  caption names the map, its view and its basemap credits.
+- **Its data.** A previewed category also shows its starter layers. The engine
+  calls the Explorer's own `applyOfficialContextState` with only those
+  starters visible, so tiles and GeoJSON are styled exactly as in the
+  Explorer; GeoJSON starters (counties, earthquakes, alerts) are read from the
+  same `/api/live-context` adapters and shared between previews for five
+  minutes. Radar, GOES imagery and river gauges need live controls (a current
+  frame list or the River Pulse adapter) and are left out of previews
+  (`WELCOME_PREVIEW_SKIPPED_STARTERS`); they appear when the map is opened. The
+  caption names the map, its view, the data shown and its basemap credits.
 - **Motion.** While the welcome plays, tilted and globe views turn slowly about
   their centre and flat maps ease gently in and out (`welcomeDriftLeg`). Pause,
   reduced motion, a hidden tab and open details hold the camera still.
