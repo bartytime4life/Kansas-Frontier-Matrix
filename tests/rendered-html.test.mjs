@@ -1011,6 +1011,9 @@ test("adds an exact-time NOAA nowCOAST radar loop and a fail-closed control surf
   assert.match(css, /\.noaa-radar-details \{ display: contents; \}/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.noaa-radar-loop\[data-details="closed"\] \.noaa-radar-details \{ display: none; \}/);
   assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.noaa-radar-loop \{ bottom: calc\(126px \+ env\(safe-area-inset-bottom\)\); \}/);
+  // The scale and legend clear the raised dock whether Settings is closed or open.
+  assert.match(css, /:has\(\.noaa-radar-loop\[data-details="closed"\]\) \{ --live-dock-clearance: calc\(min\(36dvh, 300px\) \+ 136px/);
+  assert.match(css, /:has\(\.noaa-radar-loop\[data-details="open"\]\) \{ --live-dock-clearance: calc\(min\(48dvh, 440px\) \+ 136px/);
 });
 
 test("checks current GitHub main through one fixed read-only backend route", async () => {
