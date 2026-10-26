@@ -28,10 +28,11 @@ export type WelcomeView = Readonly<{
 
 /**
  * Starters a preview leaves out: each needs live machinery the welcome does
- * not run (radar and GOES imagery a current frame list, river gauges the
- * River Pulse adapter). They appear when the map is opened.
+ * not run (GOES imagery its satellite frame list, river gauges the River Pulse
+ * adapter). They appear when the map is opened. Radar is previewed as its
+ * newest current scan.
  */
-export const WELCOME_PREVIEW_SKIPPED_STARTERS: ReadonlySet<string> = new Set(["nws-radar", "noaa-goes-geocolor", "usgs-streamflow"]);
+export const WELCOME_PREVIEW_SKIPPED_STARTERS: ReadonlySet<string> = new Set(["noaa-goes-geocolor", "usgs-streamflow"]);
 
 export const WELCOME_DEM_SOURCE_ID = "welcome-terrain-dem";
 export const WELCOME_TERRAIN_EXAGGERATION = 1.5;
