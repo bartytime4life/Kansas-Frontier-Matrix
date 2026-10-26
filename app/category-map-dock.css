@@ -48,3 +48,7 @@
 .topic-guide .topic-map-look-swatch{flex:none;width:30px;height:30px;border-radius:6px;border:1px solid #ffffff38;background:radial-gradient(circle at 68% 34%,var(--m2) 0 10%,transparent 11%),linear-gradient(160deg,transparent 0 52%,var(--m1) 52% 60%,transparent 60%),linear-gradient(135deg,var(--m0),color-mix(in srgb,var(--m0) 70%,var(--m1)))}
 .topic-guide .topic-map-look button{flex:1 1 100%;min-height:44px;padding:0 12px;border:1px solid #d8c58f88;border-radius:8px;background:transparent;color:#f1e6c2;font-size:12px;font-weight:600;cursor:pointer}
 .topic-guide .topic-map-look button:hover{background:#d8c58f1a}
+/* An active measurement readout runs along the map's bottom edge; lift the dock clear of it. */
+.map-stage:has(.measurement-readout) .category-map-dock{bottom:calc(76px + env(safe-area-inset-bottom,0px));max-height:calc(100% - 90px - env(safe-area-inset-bottom,0px))}
+/* On a phone the dock would cover the map being outlined; the readout keeps Finish and Clear. */
+@media(max-width:760px){.map-stage:has(.measurement-readout) .category-map-dock{display:none}}

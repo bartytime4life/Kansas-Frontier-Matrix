@@ -30,9 +30,10 @@ export type CategoryMap = Readonly<{
    * unexaggerated display-DEM profile. `flow` switches the Scene studio's
    * flowing-water effect on or off. `underground` opens the Underground view
    * of recorded well logs, cores and aquifer sections. `daylight` shows the
-   * calculated night side and twilight bands at the current time.
+   * calculated night side and twilight bands at the current time. `area`
+   * starts the existing polygon measurement for outlining a field or parcel.
    */
-  tools?: readonly ("transect" | "flow" | "underground" | "daylight")[];
+  tools?: readonly ("transect" | "flow" | "underground" | "daylight" | "area")[];
   /**
    * The light this look opens under, by scene recipe: only its atmosphere and
    * sun azimuth are applied, never its effect settings. Relief reads best under
@@ -58,9 +59,9 @@ export const CATEGORY_MAPS: Readonly<Record<TopicId, CategoryMap>> = Object.free
   geology: { topic: "geology", name: "Landform relief", lede: "Recorded earthquakes over a coloured relief model in 3D.", basemap: "relief", scene: "terrain", camera: tilted(52, 20), starters: ["usgs-earthquakes"], tools: ["transect", "underground"], light: "survey", swatch: ["#cdc884", "#a98965", "#c94c3c"] },
   terrain: { topic: "terrain", name: "Relief model", lede: "The land surface in 3D, coloured by elevation and lit by the sun; tilt and turn to read the slopes.", basemap: "relief", scene: "terrain", camera: tilted(62, -24, 7.4, [-99.6, 38.9]), starters: ["usgs-3dep-hillshade"], tools: ["transect"], light: "golden", swatch: ["#86a866", "#dcc58f", "#a98965"] },
   ecology: { topic: "ecology", name: "Land cover view", lede: "Satellite imagery with watershed boundaries for landscape questions.", basemap: "imagery", scene: "2d", camera: STATEWIDE, starters: ["usgs-wbd-watersheds"], swatch: ["#3b4a2c", "#7d8f4e", "#a8c7d8"] },
-  agriculture: { topic: "agriculture", name: "Field view", lede: "Kansas 2024 aerial imagery for reading fields and pivots up close.", basemap: "kansas-aerial", scene: "2d", camera: Object.freeze({ center: [-100.9, 37.98] as const, zoom: 10.5, pitch: 0, bearing: 0 }), starters: [], swatch: ["#5c6b3a", "#b7a36a", "#3f5d2e"] },
+  agriculture: { topic: "agriculture", name: "Field view", lede: "Kansas 2024 aerial imagery for reading fields and pivots up close.", basemap: "kansas-aerial", scene: "2d", camera: Object.freeze({ center: [-100.9, 37.98] as const, zoom: 10.5, pitch: 0, bearing: 0 }), starters: [], tools: ["area"], swatch: ["#5c6b3a", "#b7a36a", "#3f5d2e"] },
   history: { topic: "history", name: "Historic atlas", lede: "The 1918 road map and abandoned railroads on a parchment atlas of today's rails, counties and towns.", basemap: "historic", scene: "2d", camera: STATEWIDE, starters: ["kdot-roads-1918", "kdot-rail-abandoned"], swatch: ["#efe4c8", "#4a3523", "#8c6d47"] },
-  land: { topic: "land", name: "Survey grid", lede: "PLSS townships on topographic context: survey references, not ownership.", basemap: "topo", scene: "2d", camera: STATEWIDE, starters: ["blm-plss-townships"], swatch: ["#eae4d3", "#b08a52", "#6c7a5a"] },
+  land: { topic: "land", name: "Survey grid", lede: "PLSS townships on topographic context: survey references, not ownership.", basemap: "topo", scene: "2d", camera: STATEWIDE, starters: ["blm-plss-townships"], tools: ["area"], swatch: ["#eae4d3", "#b08a52", "#6c7a5a"] },
   people: { topic: "people", name: "Community map", lede: "County outlines on the civic base, ready for aggregate Census context.", basemap: "civic", scene: "2d", camera: STATEWIDE, starters: ["census-counties"], swatch: ["#f3f1ec", "#e3dcef", "#6d559b"] },
   government: { topic: "government", name: "Civic map", lede: "Kansas by jurisdiction: state, county and city boundaries with their places, the capital starred.", basemap: "civic", scene: "2d", camera: STATEWIDE, starters: ["census-counties"], swatch: ["#f3f1ec", "#6d559b", "#3f2a6b"] },
   places: { topic: "places", name: "Reference map", lede: "Counties and watersheds on the civic base for orienting an investigation.", basemap: "civic", scene: "2d", camera: STATEWIDE, starters: ["census-counties", "usgs-wbd-watersheds"], swatch: ["#f3f1ec", "#9fc0d4", "#6d559b"] },

@@ -90,13 +90,25 @@ holds and limits. They are display context, not admitted evidence.
     overlay's own band edges). **Play day and night** runs the layer's 60-second
     loop through the day; reduced motion disables it. It is calculated
     geometry, not observed brightness or cloud cover;
+  - **Measure an area**, on the Field and Survey grid looks
+    (`tools: ["area"]`). It starts the Map menu's own Polygon measurement
+    (`beginMapMeasurement("area")`); pressed again while points are being
+    added, it cancels. Click around a field or parcel and **Finish** in the
+    measurement readout. Areas under one square mile read in acres (hectares
+    in metric), larger ones in square miles with acres alongside
+    (`formatMeasuredArea`), so a PLSS section reads "1.0 sq mi (640 acres)".
+    The geometry stays in the browser and is an approximation, not a survey.
+    While a measurement readout is on the map (from this tool or **Draw a
+    cross-section**), the dock lifts above it; on a phone (760px or narrower)
+    it steps aside instead, so the map can be tapped, and returns when the
+    measurement is cleared;
   - reset view and "Layers for this map".
 
   Every control reuses an existing handler: `activateMapRepresentation`,
   `changeTerrainDepth`, `changeStudioLight`, `updateSceneEffects`,
   `startTerrainInvestigation` (through `startCategoryTransect`),
   `enterUnderground`, `toggleDaylightVisibility` (through
-  `showCategoryDaylight`) and `openAtlasPanel`. Turning river flow on or off also goes through
+  `showCategoryDaylight`), `beginMapMeasurement` and `openAtlasPanel`. Turning river flow on or off also goes through
   `updateSceneEffects`. The dock can
   be hidden. It returns the next time a category map is opened.
 - **Layers panel.** When a category is chosen in the Layers catalogue, its

@@ -45,7 +45,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -79,6 +79,9 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
   daylight?: Readonly<{ on: boolean; playing: boolean; time: string; reading: string }>;
   onDaylight?: (on: boolean) => void;
   onDaylightPlay?: (on: boolean) => void;
+  /** Whether a polygon measurement is taking points, and the handler that starts or cancels one. */
+  measuringArea?: boolean;
+  onMeasureArea?: () => void;
   /**
    * The flowing-water effect and its reading, for looks that offer the flow
    * tool. `still` names why the rivers are not moving, if they are not.
@@ -135,6 +138,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
           title={motionAllowed ? "Run the calculated day through 24 hours in a 60-second loop" : "Reduced motion is on; set the time in the Daylight & twilight layer"}>{daylight.playing && motionAllowed ? "Pause day and night" : "Play day and night"}</button>}
       </>}
     </>}
+    {look.tools?.includes("area") && onMeasureArea && <button type="button" className="category-map-dock-tool" aria-pressed={Boolean(measuringArea)} onClick={onMeasureArea}
+      title={measuringArea ? "Cancel the outline in progress" : "Click around a field or parcel, then Finish, for its approximate area; not a survey"}>{measuringArea ? "Cancel area" : "Measure an area"}</button>}
     {look.tools?.includes("transect") && onTransect && <button type="button" className="category-map-dock-tool" disabled={!terrainAvailable} onClick={onTransect}
       title="Draw a line across the relief, then preview its elevation profile without the 3D exaggeration">Draw a cross-section</button>}
     {look.tools?.includes("underground") && onUnderground && <button type="button" className="category-map-dock-tool" onClick={onUnderground}

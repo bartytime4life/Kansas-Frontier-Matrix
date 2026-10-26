@@ -213,6 +213,28 @@ test('the globe looks show the calculated day and night from their dock, at the 
  assert.match(show,/if \(now >= interval\.startMs && now < interval\.endMs\) seekDaylight\(intervalFractionAtInstant\(now, interval\)\);/,'it opens on the current time when the chosen range holds it');
 });
 
+test('the field and survey maps start a polygon measurement from their dock',async()=>{
+ const withArea=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('area')).map(([id])=>id).sort();
+ assert.deepEqual(withArea,['agriculture','land']);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ let calls=0;const base={look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onMeasureArea:()=>calls++,onReset(){},onLayers(){},onClose(){}};
+ const tool=tree=>findNode(tree,n=>n.type==='button'&&n.props.className==='category-map-dock-tool');
+ let tree=h.render(h.exports.CategoryMapDock,{...base,measuringArea:false});
+ assert.equal(tool(tree).props.children,'Measure an area');assert.equal(tool(tree).props['aria-pressed'],false);
+ tool(tree).props.onClick();
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.land,measuringArea:true});
+ assert.equal(tool(tree).props.children,'Cancel area');assert.equal(tool(tree).props['aria-pressed'],true);
+ tool(tree).props.onClick();assert.equal(calls,2,'the same handler starts and cancels, as the Map menu\'s Polygon does');
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.water});
+ assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Measure an area'),undefined,'looks without the tool show no button');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/measuringArea=\{measureMode === "area"\} onMeasureArea=\{\(\) => beginMapMeasurement\("area"\)\}/,'the Map menu\'s own Polygon entry');
+ const css=await readFile('app/category-map-dock.css','utf8');
+ assert.match(css,/\.map-stage:has\(\.measurement-readout\) \.category-map-dock\{bottom:calc\(76px/,'the dock lifts above the readout along the bottom edge');
+ assert.match(css,/@media\(max-width:760px\)\{\.map-stage:has\(\.measurement-readout\) \.category-map-dock\{display:none\}\}/,'on a phone it steps aside so the map can be tapped');
+});
+
 test('the Layers topic guide shows the category map look and opens it only when it is not on',async()=>{
  const h=await componentHarness('app/topic-navigation.tsx',{'next/link':{default:'a'},'./layer-workspaces':topics},{URLSearchParams});
  const look=maps.CATEGORY_MAPS.aviation;let opened=0;

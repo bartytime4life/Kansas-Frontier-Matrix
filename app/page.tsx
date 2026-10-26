@@ -357,6 +357,7 @@ import {
   solarReferenceElevation,
 } from "./daylight-layer";
 import { daylightPhaseReading } from "./daylight-shader-layer";
+import { formatMeasuredArea } from "./measurement-format";
 
 /** How long each quarter-hour step of Play the day holds: 5:00 AM to 11:45 PM plays in about 15 seconds. */
 const SUN_PLAY_STEP_MS = 200;
@@ -1089,8 +1090,7 @@ const measurementLabelFor = (mode: Exclude<MeasureMode, null>, coordinates: [num
     return unit === "metric" ? `${(miles * 1.609344).toFixed(1)} km approximate` : `${miles.toFixed(1)} mi approximate`;
   }
   if (coordinates.length < 3) return `Add ${3 - coordinates.length} more point${coordinates.length === 2 ? "" : "s"}`;
-  const squareMiles = areaSquareMiles(coordinates);
-  return unit === "metric" ? `${(squareMiles * 2.58999).toFixed(1)} km² approximate` : `${squareMiles.toFixed(1)} sq mi approximate`;
+  return formatMeasuredArea(areaSquareMiles(coordinates), unit === "metric");
 };
 
 const LocalWelcomeRecorder = __KFM_WELCOME_RECORDER__ && import.meta.env.DEV
@@ -10020,6 +10020,7 @@ export default function Home() {
             daylight={activeCategoryMap.tools?.includes("daylight") ? { on: daylightEnabled, playing: daylightPlaying, time: daylightDisplayTime.central,
               reading: `Kansas center: ${daylightPhaseReading(solarReferenceElevation(daylightInstant, activeCategoryMap.camera.center[1], activeCategoryMap.camera.center[0]))}` } : undefined}
             onDaylight={showCategoryDaylight} onDaylightPlay={setDaylightPlayback}
+            measuringArea={measureMode === "area"} onMeasureArea={() => beginMapMeasurement("area")}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
