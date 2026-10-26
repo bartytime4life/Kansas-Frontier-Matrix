@@ -14,7 +14,7 @@ async function importTs(path) {
   return import(`data:text/javascript;base64,${Buffer.from(javascript).toString("base64")}`);
 }
 
-test("offline orientation is bundled display geometry inside the Kansas frame", async () => {
+test("offline orientation is the real Census Kansas boundary, with no drawn rivers or counties", async () => {
   const orientation = await importTs("app/kansas-orientation.ts");
   const features = orientation.KANSAS_ORIENTATION.features;
   const outline = features.find((feature) => feature.properties.role === "outline");
@@ -25,9 +25,11 @@ test("offline orientation is bundled display geometry inside the Kansas frame", 
     assert.ok(lon >= -102.06 && lon <= -94.58, `longitude ${lon} inside Kansas`);
     assert.ok(lat >= 36.99 && lat <= 40.01, `latitude ${lat} inside Kansas`);
   }
-  assert.ok(features.filter((feature) => feature.properties.role === "river").length >= 4);
-  assert.ok(features.some((feature) => feature.properties.role === "graticule"));
-  const layers = orientation.orientationLayers({ land: "#000", outline: "#111", river: "#222", graticule: "#333" });
+  // The Census boundary follows the Missouri River north of Kansas City (not a straight sketch edge).
+  assert.ok(ring.length >= 60, "Census boundary, not a hand-simplified sketch");
+  assert.ok(ring.filter(([lon, lat]) => lon > -95.4 && lat > 39.1).length >= 30, "the Missouri River edge is traced");
+  assert.deepEqual([...new Set(features.map((feature) => feature.properties.role))].sort(), ["graticule", "outline", "world-graticule"], "no rivers or county lines compete with chosen layers");
+  const layers = orientation.orientationLayers({ land: "#000", outline: "#111", muted: "#222", graticule: "#333" });
   assert.ok(layers.length >= 3);
   for (const layer of layers) {
     // `kfm-` ids are treated as registry overlays by placement logic.
@@ -36,7 +38,7 @@ test("offline orientation is bundled display geometry inside the Kansas frame", 
     assert.notEqual(layer.type, "symbol", "no glyph dependency offline");
   }
   assert.equal(orientation.orientationSource().type, "geojson");
-  assert.match(orientation.orientationSource().attribution, /display only/);
+  assert.match(orientation.orientationSource().attribution, /U\.S\. Census Bureau cartographic boundaries.*display only/);
 });
 
 test("local basemaps carry the orientation layer and stay network-free", async () => {

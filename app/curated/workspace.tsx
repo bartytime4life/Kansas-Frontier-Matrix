@@ -59,7 +59,7 @@ export default function CuratedWorkspace() {
       instance = new runtime.Map({ container: container.current, center: [-98.4, 38.6], zoom: 5.5,
         style: { version: 8, sources: { [ORIENTATION_SOURCE_ID]: orientationSource() }, layers: [
           { id: 'background', type: 'background', paint: { 'background-color': '#101e2b' } },
-          ...orientationLayers({ land: '#1b3540', outline: '#83a5aa', river: '#456c7e', graticule: '#294350' })] } });
+          ...orientationLayers({ land: '#1b3540', outline: '#83a5aa', muted: '#456c7e', graticule: '#294350' })] } });
       map.current = instance;
       instance.on('load', () => { if (!disposed) { setReady(true); setMapState('Map ready'); } });
       instance.addControl(new runtime.NavigationControl());
@@ -96,7 +96,7 @@ export default function CuratedWorkspace() {
     {product?.reason && <p>{reasons[product.reason] ?? (product.reason.includes(' ') ? product.reason : 'Published data is unavailable. Refresh to check again.')}</p>}
     {product?.retrievedAt && <p>Retrieved <time dateTime={product.retrievedAt}>{product.retrievedAt}</time> · {features.length} records</p>}
     <div ref={container} className="curated-map" role="region" aria-label="Dated Kansas provider context map" />
-    <p>{mapState} · Simplified Kansas orientation is display context only. Records without provider geometry are listed below.</p>
+    <p>{mapState} · The Census Kansas boundary is display context only. Records without provider geometry are listed below.</p>
     {product?.releaseId && <p><a href={'/api/curated/' + source + '?release=' + product.releaseId + '&download=1'} download={source + '-' + product.releaseId + '.json'}>Download this snapshot with provenance</a><br /><small>SHA-256: {product.payloadSha256}</small></p>}
     {product?.sourceUrl && <p><a href={product.sourceUrl}>Provider query</a>{' · '}<a href={product.rightsUrl}>Provider terms</a></p>}
     {product?.limitation && <p>{product.limitation}</p>}

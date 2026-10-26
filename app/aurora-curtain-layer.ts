@@ -1,8 +1,8 @@
 import type { CustomLayerInterface, CustomRenderMethodInput, Map as MapLibreMap } from "./maplibre-seam";
 
 /**
- * A glowing curtain of light standing on a closed ring (the simplified Kansas
- * outline). Drawn as a MapLibre custom WebGL2 layer so it can blend
+ * A glowing curtain of light standing on a closed ring (the Census Kansas
+ * boundary, simplified for state-scale display). Drawn as a MapLibre custom WebGL2 layer so it can blend
  * additively — bright at the foot, fading upward, with an optional slow
  * shimmer. Wall feet follow the rendered terrain surface when Terrain 3D is on.
  *

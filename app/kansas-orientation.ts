@@ -4,28 +4,39 @@ import type { LayerSpecification, SourceSpecification } from "./maplibre-seam";
 /**
  * Offline orientation for the local basemaps. When the standard vector
  * basemap is unreachable, the Site falls back to a local style; without this
- * the map is an empty colour. These shapes are hand-simplified display
- * geometry (a few dozen vertices) bundled with the application. They orient
- * the reader and carry no evidence, measurement, legal boundary or source
- * authority. Layer ids deliberately avoid the `kfm-` prefix so registry and
- * overlay placement logic keeps treating them as basemap.
+ * the map is an empty colour. The state line is the real Census cartographic
+ * boundary, simplified for state-scale display and bundled with the
+ * application; no rivers or county lines are drawn, so nothing competes with
+ * the layers a visitor chooses. They orient the reader and carry no evidence,
+ * measurement, legal boundary or source authority. Layer ids deliberately
+ * avoid the `kfm-` prefix so registry and overlay placement logic keeps
+ * treating them as basemap.
  */
 export const ORIENTATION_SOURCE_ID = "orientation-kansas";
 
+/**
+ * The Kansas state boundary from the U.S. Census Bureau's cartographic boundary
+ * files (2017 edition), as distributed in us-atlas 3.0.1 (states-10m, simplified
+ * for 1:10,000,000 display). The Missouri River edge follows the river; vertex
+ * accuracy is a few hundred metres, so it is display context at state scale, not
+ * a legal boundary.
+ */
 export const KANSAS_OUTLINE: readonly [number, number][] = [
-  [-102.0517, 40.0], [-95.308, 40.0], [-95.2, 39.93], [-95.08, 39.87], [-94.99, 39.78],
-  [-95.01, 39.68], [-95.1, 39.57], [-95.04, 39.47], [-94.96, 39.37], [-94.9, 39.3],
-  [-94.8, 39.2], [-94.62, 39.115], [-94.608, 39.05], [-94.6178, 37.0], [-102.0418, 36.993],
-  [-102.0517, 40.0],
-];
-
-// Simplified courses of major Kansas rivers (display only).
-const RIVERS: { name: string; coordinates: [number, number][] }[] = [
-  { name: "Arkansas River", coordinates: [[-102.05, 38.05], [-101.4, 38.0], [-101.0, 37.97], [-100.5, 37.85], [-100.0, 37.75], [-99.6, 37.85], [-99.3, 37.95], [-99.0, 38.2], [-98.77, 38.36], [-98.45, 38.3], [-98.2, 38.2], [-97.9, 38.06], [-97.6, 37.9], [-97.33, 37.69], [-97.2, 37.4], [-97.04, 37.0]] },
-  { name: "Smoky Hill and Kansas rivers", coordinates: [[-102.05, 38.9], [-101.5, 38.88], [-101.0, 38.85], [-100.3, 38.83], [-99.5, 38.85], [-98.9, 38.78], [-98.6, 38.75], [-98.1, 38.78], [-97.61, 38.84], [-97.2, 38.95], [-96.83, 39.03], [-96.57, 39.18], [-96.2, 39.12], [-95.68, 39.05], [-95.23, 38.97], [-94.9, 39.07], [-94.62, 39.11]] },
-  { name: "Republican River", coordinates: [[-98.0, 40.0], [-97.75, 39.8], [-97.6, 39.6], [-97.4, 39.45], [-97.2, 39.3], [-97.0, 39.15], [-96.83, 39.03]] },
-  { name: "Neosho River", coordinates: [[-96.9, 38.9], [-96.5, 38.6], [-96.18, 38.4], [-95.8, 38.1], [-95.5, 37.85], [-95.3, 37.6], [-95.0, 37.25], [-94.85, 37.0]] },
-  { name: "Solomon River", coordinates: [[-100.5, 39.45], [-99.8, 39.45], [-99.0, 39.4], [-98.3, 39.3], [-97.8, 39.1], [-97.61, 38.84]] },
+  [-102.0529, 40.0029], [-101.1304, 40.002], [-100.7572, 40.002], [-99.8132, 40.0012], [-98.8333, 40.002],
+  [-98.2482, 40.002], [-97.2468, 40.0012], [-96.3028, 40.0003], [-95.786, 40.0003], [-95.3086, 40.0003],
+  [-95.2512, 39.9488], [-95.2045, 39.9393], [-95.2009, 39.9024], [-95.1543, 39.9075], [-95.1363, 39.8766],
+  [-95.043, 39.8646], [-95.0143, 39.8998], [-94.9281, 39.8886], [-94.9425, 39.8646], [-94.9174, 39.8362],
+  [-94.8779, 39.8268], [-94.8923, 39.7907], [-94.9246, 39.7898], [-94.9138, 39.7589], [-94.8707, 39.7727],
+  [-94.8743, 39.7306], [-94.9102, 39.7254], [-94.9569, 39.746], [-94.9748, 39.6816], [-95.0286, 39.6653],
+  [-95.0538, 39.6301], [-95.0466, 39.5948], [-95.1076, 39.5742], [-95.104, 39.533], [-95.0502, 39.4978],
+  [-95.0466, 39.4729], [-94.9892, 39.4462], [-94.9461, 39.3938], [-94.8958, 39.3938], [-94.8779, 39.3758],
+  [-94.9102, 39.3543], [-94.8887, 39.2864], [-94.8241, 39.2418], [-94.8348, 39.2177], [-94.781, 39.2065],
+  [-94.763, 39.1799], [-94.7128, 39.1705], [-94.6805, 39.1842], [-94.6625, 39.1576], [-94.5908, 39.155],
+  [-94.6087, 39.1198], [-94.6087, 38.7384], [-94.6123, 38.6353], [-94.6123, 38.0374], [-94.6159, 37.9927],
+  [-94.6159, 37.3235], [-94.6195, 37.2402], [-94.6195, 36.9988], [-95.5132, 36.9996], [-96.2167, 36.9988],
+  [-96.8233, 36.9988], [-97.6058, 36.9988], [-98.3523, 36.9979], [-99.2784, 36.9996], [-99.6481, 36.9996],
+  [-100.2008, 37.0022], [-100.7356, 36.9988], [-101.4858, 36.9953], [-102.0421, 36.9928], [-102.0421, 37.9283],
+  [-102.0457, 38.046], [-102.0457, 39.137], [-102.0493, 39.3028], [-102.0493, 39.6756], [-102.0529, 40.0029],
 ];
 
 function graticule(): { coordinates: [number, number][] }[] {
@@ -47,28 +58,25 @@ function worldGraticule(): { coordinates: [number, number][] }[] {
 export const KANSAS_ORIENTATION: FeatureCollection<Polygon | LineString, { role: string; name?: string }> = Object.freeze({
   type: "FeatureCollection",
   features: [
-    { type: "Feature", properties: { role: "outline", name: "Kansas (simplified)" }, geometry: { type: "Polygon", coordinates: [[...KANSAS_OUTLINE]] } },
-    ...RIVERS.map((river) => ({ type: "Feature" as const, properties: { role: "river", name: river.name }, geometry: { type: "LineString" as const, coordinates: river.coordinates } })),
+    { type: "Feature", properties: { role: "outline", name: "Kansas" }, geometry: { type: "Polygon", coordinates: [[...KANSAS_OUTLINE]] } },
     ...graticule().map((line) => ({ type: "Feature" as const, properties: { role: "graticule" }, geometry: { type: "LineString" as const, coordinates: line.coordinates } })),
     ...worldGraticule().map((line) => ({ type: "Feature" as const, properties: { role: "world-graticule" }, geometry: { type: "LineString" as const, coordinates: line.coordinates } })),
   ],
 }) as FeatureCollection<Polygon | LineString, { role: string; name?: string }>;
 
-export type OrientationPalette = Readonly<{ land: string; outline: string; river: string; graticule: string }>;
+export type OrientationPalette = Readonly<{ land: string; outline: string; muted: string; graticule: string }>;
 
 export function orientationSource(): SourceSpecification {
-  return { type: "geojson", data: KANSAS_ORIENTATION, attribution: "KFM simplified orientation outline · display only" };
+  return { type: "geojson", data: KANSAS_ORIENTATION, attribution: "U.S. Census Bureau cartographic boundaries (2017, simplified) · display only" };
 }
 
 export function orientationLayers(palette: OrientationPalette): LayerSpecification[] {
   return [
-    { id: "orientation-world-graticule", type: "line", source: ORIENTATION_SOURCE_ID, maxzoom: 5, filter: ["==", ["get", "role"], "world-graticule"], paint: { "line-color": palette.river, "line-width": 0.8, "line-opacity": ["interpolate", ["linear"], ["zoom"], 0, 0.42, 3, 0.26, 4.6, 0] } },
+    { id: "orientation-world-graticule", type: "line", source: ORIENTATION_SOURCE_ID, maxzoom: 5, filter: ["==", ["get", "role"], "world-graticule"], paint: { "line-color": palette.muted, "line-width": 0.8, "line-opacity": ["interpolate", ["linear"], ["zoom"], 0, 0.42, 3, 0.26, 4.6, 0] } },
     { id: "orientation-graticule", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "graticule"], paint: { "line-color": palette.graticule, "line-width": 0.6, "line-opacity": 0.55 } },
     { id: "orientation-kansas-land", type: "fill", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], paint: { "fill-color": palette.land, "fill-opacity": 0.9 } },
-    // Soft blurred under-strokes give the offline style depth. Presentation only.
-    { id: "orientation-rivers-glow", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "river"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": palette.river, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 5, 9, 12], "line-blur": ["interpolate", ["linear"], ["zoom"], 4, 4, 9, 9], "line-opacity": 0.28 } },
+    // A soft blurred under-stroke gives the offline style depth. Presentation only.
     { id: "orientation-kansas-glow", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], layout: { "line-join": "round" }, paint: { "line-color": palette.outline, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 9, 9, 18], "line-blur": ["interpolate", ["linear"], ["zoom"], 4, 7, 9, 14], "line-opacity": 0.32 } },
-    { id: "orientation-rivers", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "river"], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": palette.river, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1, 9, 2.6], "line-opacity": 0.85 } },
     { id: "orientation-kansas-outline", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], layout: { "line-join": "round" }, paint: { "line-color": palette.outline, "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.2, 9, 2.4], "line-opacity": 0.9 } },
   ];
 }
