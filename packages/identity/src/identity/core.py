@@ -1,1 +1,0 @@
-# identity core — greenfield placeholder

@@ -1,1 +1,0 @@
-# geology :: ingest — greenfield placeholder

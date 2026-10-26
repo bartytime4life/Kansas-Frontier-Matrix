@@ -1,1 +1,0 @@
-# ebird fetcher — greenfield placeholder

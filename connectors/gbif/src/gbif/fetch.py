@@ -1,1 +1,0 @@
-# gbif fetcher — greenfield placeholder

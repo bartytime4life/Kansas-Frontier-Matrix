@@ -1,1 +1,0 @@
-# soil :: catalog — greenfield placeholder

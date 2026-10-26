@@ -1,2 +1,0 @@
-METEOROLOGY_INPUTS_REQUIRED	$.calibration.meteorology_inputs
-
