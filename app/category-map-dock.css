@@ -52,3 +52,9 @@
 .map-stage:has(.measurement-readout) .category-map-dock{bottom:calc(76px + env(safe-area-inset-bottom,0px));max-height:calc(100% - 90px - env(safe-area-inset-bottom,0px))}
 /* On a phone the dock would cover the map being outlined; the readout keeps Finish and Clear. */
 @media(max-width:760px){.map-stage:has(.measurement-readout) .category-map-dock{display:none}}
+/* Live loop panels (radar, lightning) open along the same edge: the dock sits above them.
+   The taller river and satellite-flash panels leave no room, so it steps aside, as on a phone. */
+.map-stage[data-live-dock="true"] .category-map-dock{bottom:calc(var(--live-dock-clearance) + 6px);max-height:calc(100% - var(--live-dock-clearance) - 20px)}
+.map-stage[data-live-dock="true"]:has(.measurement-readout) .category-map-dock{bottom:calc(var(--live-dock-clearance) + 66px);max-height:calc(100% - var(--live-dock-clearance) - 80px)}
+.map-stage[data-live-dock="true"]:has(.hydrology-observatory) .category-map-dock,.map-stage[data-live-dock="true"]:has(.glm-flash-studio) .category-map-dock{display:none}
+@media(max-width:760px){.map-stage[data-live-dock="true"] .category-map-dock{display:none}}

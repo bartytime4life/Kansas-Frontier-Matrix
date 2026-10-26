@@ -8979,6 +8979,9 @@ export default function Home() {
     }}>{instrument === "river" ? "River Pulse" : instrument === "radar" ? "Radar Loop" : "Lightning"}</button>)}
   </nav> : null;
 
+  // Radar on, then its live loop controls on the map.
+  const watchRadarLoop = () => { setOfficialContextVisible("nws-radar", true); setLiveInstrument("radar"); setInstrumentOpen(true); };
+
   const toggleUnderground = () => { const open = primaryWorkspace !== "map" || !undergroundOpen; if (open) activateMapRepresentation("2d"); setUndergroundOpen(open); setPlaying(false); setSubsurfacePrivate(v => v || locationCameraRedacted || locationDerivedViewRef.current); setTimelineOpen(false); setLeftOpen(false); setRightOpen(false); setMapUtilityOpen(false); };
   const openMapGuideDiagnostics = () => {
     openMapUtility("diagnostics");
@@ -9758,7 +9761,7 @@ export default function Home() {
                   <strong>Watch radar over time</strong>
                   <p>Live nowCOAST scans use their exact observation times. Choose an older UTC day to watch NOAA/NWS-derived archive mosaics in Event Observatory.</p>
                   <div>
-                    <button type="button" onClick={() => { setOfficialContextVisible("nws-radar", true); setLiveInstrument("radar"); setInstrumentOpen(true); }}>Watch live loop</button>
+                    <button type="button" onClick={watchRadarLoop}>Watch live loop</button>
                     <label>Archive UTC day<input type="date" min="1995-01-01" max={currentUtcDay()} value={radarArchiveDraftDay} onInput={(event) => setRadarArchiveDraftDay(event.currentTarget.value)} onChange={(event) => setRadarArchiveDraftDay(event.target.value)} /></label>
                     <Link href={`/observatory?start=${encodeURIComponent(`${radarArchiveDraftDay || currentUtcDay()}T00:00`)}&hours=24&layers=radar,counties&replay=radar`}>Watch selected day ↗</Link>
                   </div>
@@ -10021,6 +10024,8 @@ export default function Home() {
               reading: `Kansas center: ${daylightPhaseReading(solarReferenceElevation(daylightInstant, activeCategoryMap.camera.center[1], activeCategoryMap.camera.center[0]))}` } : undefined}
             onDaylight={showCategoryDaylight} onDaylightPlay={setDaylightPlayback}
             measuringArea={measureMode === "area"} onMeasureArea={() => beginMapMeasurement("area")}
+            radar={{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME }}
+            onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}

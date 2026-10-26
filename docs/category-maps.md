@@ -102,13 +102,24 @@ holds and limits. They are display context, not admitted evidence.
     cross-section**), the dock lifts above it; on a phone (760px or narrower)
     it steps aside instead, so the map can be tapped, and returns when the
     measurement is cleared;
+  - **Watch the radar loop**, on the Storm desk (`tools: ["radar"]`). It
+    turns radar on and opens its live loop controls (`watchRadarLoop`, shared
+    with the radar layer card's "Watch live loop"); while they are open it
+    reads **Close radar loop** (`closeLiveInstrument`). The live loop plays at
+    the present map time, so the button waits until Time is at Present. Opening
+    the Storm desk already starts the loop, so the button is mostly for closing
+    and reopening it. While a radar or lightning loop panel is open the dock
+    sits above it; the taller river and satellite-flash panels, and any loop
+    panel on a phone, have the bottom of the map to themselves and the dock
+    returns when they close;
   - reset view and "Layers for this map".
 
   Every control reuses an existing handler: `activateMapRepresentation`,
   `changeTerrainDepth`, `changeStudioLight`, `updateSceneEffects`,
   `startTerrainInvestigation` (through `startCategoryTransect`),
   `enterUnderground`, `toggleDaylightVisibility` (through
-  `showCategoryDaylight`), `beginMapMeasurement` and `openAtlasPanel`. Turning river flow on or off also goes through
+  `showCategoryDaylight`), `beginMapMeasurement`, `watchRadarLoop`,
+  `closeLiveInstrument` and `openAtlasPanel`. Turning river flow on or off also goes through
   `updateSceneEffects`. The dock can
   be hidden. It returns the next time a category map is opened.
 - **Layers panel.** When a category is chosen in the Layers catalogue, its

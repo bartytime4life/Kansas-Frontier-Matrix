@@ -235,6 +235,30 @@ test('the field and survey maps start a polygon measurement from their dock',asy
  assert.match(css,/@media\(max-width:760px\)\{\.map-stage:has\(\.measurement-readout\) \.category-map-dock\{display:none\}\}/,'on a phone it steps aside so the map can be tapped');
 });
 
+test('the storm desk opens and closes the live radar loop from its dock, clear of the loop panel',async()=>{
+ const withRadar=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('radar')).map(([id])=>id);
+ assert.deepEqual(withRadar,['weather']);
+ assert.ok(maps.CATEGORY_MAPS.weather.starters.includes('nws-radar'));
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];const base={look:maps.CATEGORY_MAPS.weather,mode:'2d',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onRadar:v=>calls.push(v),onReset(){},onLayers(){},onClose(){}};
+ const tool=tree=>findNode(tree,n=>n.type==='button'&&n.props.className==='category-map-dock-tool');
+ let tree=h.render(h.exports.CategoryMapDock,{...base,radar:{watching:false,available:true}});
+ assert.equal(tool(tree).props.children,'Watch the radar loop');tool(tree).props.onClick();
+ tree=h.render(h.exports.CategoryMapDock,{...base,radar:{watching:true,available:true}});
+ assert.equal(tool(tree).props.children,'Close radar loop');assert.equal(tool(tree).props['aria-pressed'],true);tool(tree).props.onClick();
+ assert.deepEqual(calls,[true,false]);
+ tree=h.render(h.exports.CategoryMapDock,{...base,radar:{watching:false,available:false}});
+ assert.equal(tool(tree).props.disabled,true,'the live loop waits for the present map time');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/const watchRadarLoop = \(\) => \{ setOfficialContextVisible\("nws-radar", true\); setLiveInstrument\("radar"\); setInstrumentOpen\(true\); \};/);
+ assert.match(page,/<button type="button" onClick=\{watchRadarLoop\}>Watch live loop<\/button>/,'the radar card shares the same entry');
+ assert.match(page,/radar=\{\{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery\.frame === OFFICIAL_CONTEXT_PRESENT_FRAME \}\}\s*onRadar=\{\(watch\) => watch \? watchRadarLoop\(\) : closeLiveInstrument\(\)\}/);
+ const css=await readFile('app/category-map-dock.css','utf8');
+ assert.match(css,/\.map-stage\[data-live-dock="true"\] \.category-map-dock\{bottom:calc\(var\(--live-dock-clearance\) \+ 6px\)/,'the dock sits above the radar and lightning panels');
+ assert.match(css,/@media\(max-width:760px\)\{\.map-stage\[data-live-dock="true"\] \.category-map-dock\{display:none\}\}/,'on a phone the loop panel has the bottom of the map to itself');
+});
+
 test('the Layers topic guide shows the category map look and opens it only when it is not on',async()=>{
  const h=await componentHarness('app/topic-navigation.tsx',{'next/link':{default:'a'},'./layer-workspaces':topics},{URLSearchParams});
  const look=maps.CATEGORY_MAPS.aviation;let opened=0;

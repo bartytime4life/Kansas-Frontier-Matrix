@@ -32,8 +32,9 @@ export type CategoryMap = Readonly<{
    * of recorded well logs, cores and aquifer sections. `daylight` shows the
    * calculated night side and twilight bands at the current time. `area`
    * starts the existing polygon measurement for outlining a field or parcel.
+   * `radar` opens the live NOAA radar loop on the map.
    */
-  tools?: readonly ("transect" | "flow" | "underground" | "daylight" | "area")[];
+  tools?: readonly ("transect" | "flow" | "underground" | "daylight" | "area" | "radar")[];
   /**
    * The light this look opens under, by scene recipe: only its atmosphere and
    * sun azimuth are applied, never its effect settings. Relief reads best under
@@ -52,7 +53,7 @@ export const CATEGORY_MAPS: Readonly<Record<TopicId, CategoryMap>> = Object.free
   engineering: { topic: "engineering", name: "Structures in relief", lede: "State bridges on a lit 3D landscape, so crossings read against the valleys they span.", basemap: "network", scene: "terrain", camera: tilted(58, -16, 7.2, [-97.3, 38.9]), starters: ["kdot-bridges-state"], tools: ["transect"], light: "survey", swatch: ["#f2efe9", "#d6553a", "#3a3a3a"] },
   transport: { topic: "transport", name: "Network map", lede: "Highways by class, route numbers, active rail and bridges on a clean network base.", basemap: "network", scene: "2d", camera: STATEWIDE, starters: ["kdot-roads", "kdot-rail-active"], swatch: ["#f2efe9", "#e08a3c", "#3a3a3a"] },
   aviation: { topic: "aviation", name: "Aviation chart", lede: "A sectional-style chart with the FAA airspace above it as 3D volumes, airports, drone ceilings and live weather.", basemap: "aviation-chart", scene: "terrain", camera: tilted(58, -18, 7.9, [-97.4, 37.72]), starters: [], overlays: ["aviation"], light: "daylight", swatch: ["#cfe0ae", "#14306a", "#f5d96a"] },
-  weather: { topic: "weather", name: "Storm desk", lede: "Radar and active alerts over towns and county lines, on a neutral dark base that keeps reflectivity colours true.", basemap: "storm", scene: "2d", camera: STATEWIDE, starters: ["nws-alerts", "nws-radar"], light: "blue", swatch: ["#12171d", "#3fae6a", "#e0c33a"] },
+  weather: { topic: "weather", name: "Storm desk", lede: "Radar and active alerts over towns and county lines, on a neutral dark base that keeps reflectivity colours true.", basemap: "storm", scene: "2d", camera: STATEWIDE, starters: ["nws-alerts", "nws-radar"], tools: ["radar"], light: "blue", swatch: ["#12171d", "#3fae6a", "#e0c33a"] },
   disaster: { topic: "disaster", name: "Hazard watch", lede: "Alerts and fire detections over a dark base, each on its own clock.", basemap: "storm", scene: "2d", camera: STATEWIDE, starters: ["nws-alerts", "nasa-firms-active-fire"], light: "blue", swatch: ["#12171d", "#e8622c", "#f2c14e"] },
   water: { topic: "water", name: "River network", lede: "Stream gauges along glowing rivers, streams and lakes on a deep-water base.", basemap: "hydro", scene: "2d", camera: STATEWIDE, starters: ["usgs-streamflow"], tools: ["flow"], light: "blue", swatch: ["#0b1d2c", "#1c6a99", "#7fd3f7"] },
   groundwater: { topic: "groundwater", name: "Aquifer map", lede: "The High Plains aquifer extent on an earthen base, ready for the Underground cutaway.", basemap: "prairie", scene: "2d", camera: STATEWIDE, starters: ["kgs-aquifer-high-plains"], tools: ["underground"], light: "survey", swatch: ["#17231f", "#7fb3b0", "#c9a466"] },
