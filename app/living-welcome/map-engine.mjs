@@ -42,7 +42,12 @@ function loadPayload(feed) {
 }
 // Radar shows its newest advertised scan, and only while that scan is current
 // (the Explorer's own freshness rule); otherwise the preview shows no radar.
+// The rule is applied again on every draw, and a selected radar preview is
+// re-checked every minute (a new frame list every two), so a scan that ages
+// past the rule leaves the map and the caption.
 const RADAR_TTL_MS = 2 * 60_000;
+export const RADAR_RECHECK_MS = 60_000;
+const radarCurrent = at => Boolean(at) && noaaRadarManifestIsFresh({ frames: [at] }, Date.now());
 let radarFrame = null;
 function loadRadarFrame() {
   if (radarFrame && Date.now() - radarFrame.at < RADAR_TTL_MS) return radarFrame.promise;
@@ -92,7 +97,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar } 
     if (disposed || !styleLoaded || !view) return;
     const shown = new Set(view.starters);
     const visibility = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => [source.id, shown.has(source.id)]));
-    const radar = shown.has('nws-radar') && radarAt ? radarAt : null;
+    const radar = shown.has('nws-radar') && radarCurrent(radarAt) ? radarAt : null;
     visibility['nws-radar'] = Boolean(radar);
     try {
       if (radar) setNoaaRadarObservationTime(map, radar);
@@ -101,8 +106,10 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar } 
     // The caption names the radar scan only while one is drawn.
     if (radar !== radarShown) { radarShown = radar; onRadar?.(radar); }
   };
+  const refreshRadar = () => loadRadarFrame().then(at => { if (disposed) return; radarAt = at; if (view?.starters.includes('nws-radar')) drawData(); });
+  const radarTimer = setInterval(() => { if (!disposed && view?.starters.includes('nws-radar')) refreshRadar(); }, RADAR_RECHECK_MS);
   const requestData = next => {
-    if (next.starters.includes('nws-radar')) loadRadarFrame().then(at => { if (disposed) return; radarAt = at; if (view?.starters.includes('nws-radar')) drawData(); });
+    if (next.starters.includes('nws-radar')) refreshRadar();
     for (const feed of next.starters.filter(readsPayload)) {
       if (loaded[feed]) continue;
       loadPayload(feed).then(payload => { if (disposed) return; loaded = { ...loaded, [feed]: payload }; if (view?.starters.includes(feed)) drawData(); }, () => {});
@@ -144,6 +151,6 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar } 
     },
     setPaused(value) { if (paused === value) return; paused = value; if (paused) map.stop(); else drift(); },
     setReduced(value) { if (reduced === value) return; reduced = value; if (reduced) map.stop(); else drift(); },
-    dispose() { disposed = true; clearTimeout(settle); try { map.remove(); } catch { /* Already removed. */ } },
+    dispose() { disposed = true; clearTimeout(settle); clearInterval(radarTimer); try { map.remove(); } catch { /* Already removed. */ } },
   };
 }
