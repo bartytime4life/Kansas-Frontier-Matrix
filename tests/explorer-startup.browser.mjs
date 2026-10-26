@@ -109,6 +109,12 @@ test('category evidence summary keeps source qualifications readable on its pape
   }
 });
 
+// CI renders WebGL in SwiftShader, where each welcome scene switch compiles its
+// shaders synchronously and holds the page's main thread for 2-5 s. The desktop
+// journey switches through every domain, so a call can queue behind two or
+// three switches; the test's own timeout still bounds the whole journey.
+const CDP_CALL_TIMEOUT_MS = 60000;
+
 async function browser(t) {
   const profile = await mkdtemp(join(tmpdir(), 'kfm-guide-browser-'));
   const child = spawn(chrome, [
@@ -138,7 +144,7 @@ async function browser(t) {
   const call = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
     if (closed) { reject(new Error(`Chrome unavailable: ${stderr}`)); return; }
     const id = ++sequence;
-    const timer = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}; ${stderr}`)); }, 20000);
+    const timer = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method} ${String(params.expression ?? '').slice(0, 240)}; ${stderr}`)); }, CDP_CALL_TIMEOUT_MS);
     pending.set(id, { resolve: value => { clearTimeout(timer); resolve(value); }, reject: error => { clearTimeout(timer); reject(error); } });
     child.stdio[3].write(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }) + '\0');
   });
