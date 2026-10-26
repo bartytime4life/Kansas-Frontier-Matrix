@@ -1,1 +1,0 @@
-{"kind":"schema","field":"/smart_sync/decision","keyword":"const","contains":"no_op"}
