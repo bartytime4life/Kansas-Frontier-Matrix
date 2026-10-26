@@ -31,6 +31,6 @@ export async function isolateBrowserNetwork(call, origin, { attribution = null }
   })();` });
   await call('Fetch.enable', { patterns: [
     { urlPattern: `${base.origin}/api/*` },
-    { urlPattern: `${base.origin}/assets/engine-*.js` },
+    { urlPattern: `${base.origin}/assets/map-engine-*.js` },
   ] });
 }

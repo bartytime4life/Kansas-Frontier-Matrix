@@ -1,0 +1,71 @@
+import { BASEMAP_RELIEF_DEM_SOURCE_ID } from "./category-basemaps";
+import { CATEGORY_MAPS, categorySceneLabel, type CategoryCamera, type CategoryScene } from "./category-maps";
+import { externalContextSource } from "./external-context-sources";
+import type { BasemapKey } from "./map-runtime";
+import type { StyleSpecification } from "./maplibre-seam";
+
+/**
+ * What the welcome's background map shows: the real map each topic opens
+ * with (its basemap, scene and camera from CATEGORY_MAPS), never an
+ * illustration. Until a visitor points at a topic it shows the Explorer's
+ * default vector map over the whole state, so opt-in providers (imagery,
+ * aerials, topo, the Terrarium DEM) are requested only for a topic the
+ * visitor chose to preview. No data layers are switched on in the preview.
+ */
+export type WelcomeView = Readonly<{
+  /** The topic, or null for the statewide default. */
+  topic: string | null;
+  basemap: BasemapKey;
+  scene: CategoryScene;
+  camera: CategoryCamera;
+  /** Caption: the map's name and what it shows. */
+  name: string;
+  detail: string;
+}>;
+
+export const WELCOME_DEM_SOURCE_ID = "welcome-terrain-dem";
+export const WELCOME_TERRAIN_EXAGGERATION = 1.5;
+
+export const WELCOME_IDLE_VIEW: WelcomeView = Object.freeze({
+  topic: null,
+  basemap: "standard",
+  scene: "2d",
+  camera: Object.freeze({ center: [-98.38, 38.48] as const, zoom: 6.1, pitch: 0, bearing: 0 }),
+  name: "Kansas",
+  detail: "The Explorer's default vector map · choose a category to preview its map",
+});
+
+export function welcomeView(topic: string | null): WelcomeView {
+  const look = topic && Object.hasOwn(CATEGORY_MAPS, topic) ? CATEGORY_MAPS[topic as keyof typeof CATEGORY_MAPS] : null;
+  if (!look) return WELCOME_IDLE_VIEW;
+  return { topic: look.topic, basemap: look.basemap, scene: look.scene, camera: look.camera, name: look.name, detail: `${categorySceneLabel(look.scene)} · ${look.lede}` };
+}
+
+/**
+ * The basemap style as the welcome draws it: the same style, with the globe
+ * projection for globe looks, and a Terrarium DEM for 3D terrain looks (its own
+ * source, so the style's hillshade source is not also driving the terrain mesh).
+ */
+export function welcomeStyle(style: StyleSpecification, view: WelcomeView): StyleSpecification {
+  const projection = { type: view.scene === "globe" ? "globe" : "mercator" } as StyleSpecification["projection"];
+  if (view.scene !== "terrain") {
+    const { terrain: _terrain, ...rest } = style;
+    return { ...rest, projection };
+  }
+  const terrarium = externalContextSource("aws-mapzen-terrarium");
+  const relief = style.sources?.[BASEMAP_RELIEF_DEM_SOURCE_ID];
+  const dem = relief?.type === "raster-dem" ? relief
+    : { type: "raster-dem" as const, tiles: [terrarium.requestUrl], tileSize: 256, maxzoom: 11, encoding: "terrarium" as const, attribution: terrarium.attribution };
+  return { ...style, projection, sources: { ...style.sources, [WELCOME_DEM_SOURCE_ID]: { ...dem } }, terrain: { source: WELCOME_DEM_SOURCE_ID, exaggeration: WELCOME_TERRAIN_EXAGGERATION } };
+}
+
+/**
+ * The slow camera drift while the welcome plays: tilted and globe views turn
+ * about their center, flat maps ease gently in and back out. Each leg is one
+ * eased move; the engine alternates legs until paused.
+ */
+export function welcomeDriftLeg(view: WelcomeView, leg: number): Readonly<{ bearing: number; zoom: number; duration: number }> {
+  const out = leg % 2 === 0;
+  if (view.scene === "2d") return { bearing: view.camera.bearing, zoom: view.camera.zoom + (out ? 0.35 : 0), duration: 24_000 };
+  return { bearing: view.camera.bearing + (out ? 24 : 0), zoom: view.camera.zoom, duration: 30_000 };
+}

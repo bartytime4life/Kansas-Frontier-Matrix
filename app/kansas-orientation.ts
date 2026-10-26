@@ -67,7 +67,7 @@ export const KANSAS_ORIENTATION: FeatureCollection<Polygon | LineString, { role:
 export type OrientationPalette = Readonly<{ land: string; outline: string; muted: string; graticule: string }>;
 
 export function orientationSource(): SourceSpecification {
-  return { type: "geojson", data: KANSAS_ORIENTATION, attribution: "U.S. Census Bureau cartographic boundaries (2017, simplified) · display only" };
+  return { type: "geojson", data: KANSAS_ORIENTATION, attribution: "Census Kansas boundary · display only" };
 }
 
 export function orientationLayers(palette: OrientationPalette): LayerSpecification[] {
