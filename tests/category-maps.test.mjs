@@ -111,6 +111,27 @@ test('the dock reflects the view and routes every control to an existing handler
  h.dispose?.();
 });
 
+test('relief looks offer a cross-section through the existing terrain investigation',async()=>{
+ const withTransect=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('transect')).map(([id])=>id).sort();
+ assert.deepEqual(withTransect,['engineering','geology','terrain']);
+ for(const id of withTransect)assert.equal(maps.CATEGORY_MAPS[id].scene,'terrain',`${id}: a cross-section is offered on 3D relief looks`);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];const base={mode:'terrain',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onTransect:()=>calls.push('transect'),onReset(){},onLayers(){},onClose(){}};
+ const tool=tree=>findNode(tree,n=>n.type==='button'&&n.props.children==='Draw a cross-section');
+ let tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.terrain});
+ tool(tree).props.onClick();assert.deepEqual(calls,['transect']);assert.equal(tool(tree).props.disabled,false);
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.terrain,terrainAvailable:false});
+ assert.equal(tool(tree).props.disabled,true,'the transect samples the 3D terrain, so it waits for it');
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.aviation});
+ assert.equal(tool(tree),undefined,'looks without the tool show no button');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/onTransect=\{startCategoryTransect\}/);
+ const start=page.slice(page.indexOf('  const startCategoryTransect = () => {'),page.indexOf('  const toggleTopographicHeightOverlay ='));
+ assert.match(start,/startTerrainInvestigation\(\);\s*window\.requestAnimationFrame\(\(\) => \{\s*const steps = document\.querySelector<HTMLElement>\("\.map-utility-panel \.terrain-investigation"\);\s*steps\?\.closest\("details"\)\?\.setAttribute\("open", ""\);\s*steps\?\.scrollIntoView\(\{ behavior: reducedMotion \? "auto" : "smooth", block: "start" \}\);/,'the dock reuses the existing investigation, opens its collapsed section and brings its steps into view');
+ assert.match(page,/<details className="explorer-secondary"><summary>Terrain tools, sources &amp; rendering<\/summary>[\s\S]{0,9000}?className="terrain-investigation"/,'the steps live in that uncontrolled section');
+});
+
 test('the Layers topic guide shows the category map look and opens it only when it is not on',async()=>{
  const h=await componentHarness('app/topic-navigation.tsx',{'next/link':{default:'a'},'./layer-workspaces':topics},{URLSearchParams});
  const look=maps.CATEGORY_MAPS.aviation;let opened=0;

@@ -54,10 +54,18 @@ holds and limits. They are display context, not admitted evidence.
     (`sunControlsShown`). Under reduced motion the button is disabled and
     only the slider moves the sun; It is display lighting only; no
     source time, archive date or evidence clock changes;
+  - **Draw a cross-section**, on the Terrain, Geology and Engineering looks
+    (`tools: ["transect"]`). It starts the existing terrain investigation
+    (`startTerrainInvestigation`): 3D terrain, the Scene panel with its "Terrain tools"
+    section opened and scrolled to the investigation steps, and a distance
+    line. Finish the line, then **Preview display profile** samples the
+    display DEM along it without the 3D exaggeration. It waits for terrain,
+    and the profile stays display context, not survey measurement;
   - reset view and "Layers for this map".
 
   Every control reuses an existing handler: `activateMapRepresentation`,
-  `changeTerrainDepth`, `changeStudioLight`, `updateSceneEffects` and
+  `changeTerrainDepth`, `changeStudioLight`, `updateSceneEffects`,
+  `startTerrainInvestigation` (through `startCategoryTransect`) and
   `openAtlasPanel`. The dock can
   be hidden. It returns the next time a category map is opened.
 - **Layers panel.** When a category is chosen in the Layers catalogue, its

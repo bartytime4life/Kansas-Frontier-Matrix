@@ -7524,6 +7524,17 @@ export default function Home() {
     announce(`Terrain investigation ready at ${verticalExaggerationRef.current.toFixed(1)}× display scale. Draw a line on the map, finish it, then preview unexaggerated DEM samples.`);
   };
 
+  // From the category dock the investigation's steps sit in the Scene panel's collapsed
+  // "Terrain tools" section, so open it and bring them into view.
+  const startCategoryTransect = () => {
+    startTerrainInvestigation();
+    window.requestAnimationFrame(() => {
+      const steps = document.querySelector<HTMLElement>(".map-utility-panel .terrain-investigation");
+      steps?.closest("details")?.setAttribute("open", "");
+      steps?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+    });
+  };
+
   const toggleTopographicHeightOverlay = () => {
     const next = !topographicOverlayRef.current;
     const map = mapRef.current;
@@ -9991,7 +10002,7 @@ export default function Home() {
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
             onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => updateSceneEffects({ ...sceneEffectsRef.current, sunSync })}
             onSunTime={(fraction) => { setSunPlaying(false); setSunStudyAt(fraction === null ? null : instantAtIntervalFraction(kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunClock))), fraction)); }}
-            sunPlaying={sunPlaying} motionAllowed={!reducedMotion} onSunPlay={playSunDay} onReset={resetCategoryView}
+            sunPlaying={sunPlaying} motionAllowed={!reducedMotion} onSunPlay={playSunDay} onTransect={startCategoryTransect} onReset={resetCategoryView}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>

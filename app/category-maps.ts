@@ -25,6 +25,12 @@ export type CategoryMap = Readonly<{
   /** Specialty overlays this look switches on, such as the 3D airspace layer. */
   overlays?: readonly "aviation"[];
   /**
+   * Explorer tools the dock offers for this look. `transect` starts the
+   * existing terrain investigation: draw a line, then preview its
+   * unexaggerated display-DEM profile.
+   */
+  tools?: readonly "transect"[];
+  /**
    * The light this look opens under, by scene recipe: only its atmosphere and
    * sun azimuth are applied, never its effect settings. Relief reads best under
    * a raking sun, weather on a dark sky.
@@ -39,15 +45,15 @@ const tilted = (pitch: number, bearing: number, zoom = 6.1, center: readonly [nu
   Object.freeze({ center, zoom, pitch, bearing });
 
 export const CATEGORY_MAPS: Readonly<Record<TopicId, CategoryMap>> = Object.freeze({
-  engineering: { topic: "engineering", name: "Structures in relief", lede: "State bridges on a lit 3D landscape, so crossings read against the valleys they span.", basemap: "network", scene: "terrain", camera: tilted(58, -16, 7.2, [-97.3, 38.9]), starters: ["kdot-bridges-state"], light: "survey", swatch: ["#f2efe9", "#d6553a", "#3a3a3a"] },
+  engineering: { topic: "engineering", name: "Structures in relief", lede: "State bridges on a lit 3D landscape, so crossings read against the valleys they span.", basemap: "network", scene: "terrain", camera: tilted(58, -16, 7.2, [-97.3, 38.9]), starters: ["kdot-bridges-state"], tools: ["transect"], light: "survey", swatch: ["#f2efe9", "#d6553a", "#3a3a3a"] },
   transport: { topic: "transport", name: "Network map", lede: "Highways by class, route numbers, active rail and bridges on a clean network base.", basemap: "network", scene: "2d", camera: STATEWIDE, starters: ["kdot-roads", "kdot-rail-active"], swatch: ["#f2efe9", "#e08a3c", "#3a3a3a"] },
   aviation: { topic: "aviation", name: "Aviation chart", lede: "A sectional-style chart with the FAA airspace above it as 3D volumes, airports, drone ceilings and live weather.", basemap: "aviation-chart", scene: "terrain", camera: tilted(58, -18, 7.9, [-97.4, 37.72]), starters: [], overlays: ["aviation"], light: "daylight", swatch: ["#cfe0ae", "#14306a", "#f5d96a"] },
   weather: { topic: "weather", name: "Storm desk", lede: "Radar and active alerts over towns and county lines, on a neutral dark base that keeps reflectivity colours true.", basemap: "storm", scene: "2d", camera: STATEWIDE, starters: ["nws-alerts", "nws-radar"], light: "blue", swatch: ["#12171d", "#3fae6a", "#e0c33a"] },
   disaster: { topic: "disaster", name: "Hazard watch", lede: "Alerts and fire detections over a dark base, each on its own clock.", basemap: "storm", scene: "2d", camera: STATEWIDE, starters: ["nws-alerts", "nasa-firms-active-fire"], light: "blue", swatch: ["#12171d", "#e8622c", "#f2c14e"] },
   water: { topic: "water", name: "River network", lede: "Stream gauges along glowing rivers, streams and lakes on a deep-water base.", basemap: "hydro", scene: "2d", camera: STATEWIDE, starters: ["usgs-streamflow"], light: "blue", swatch: ["#0b1d2c", "#1c6a99", "#7fd3f7"] },
   groundwater: { topic: "groundwater", name: "Aquifer map", lede: "The High Plains aquifer extent on an earthen base, ready for the Underground cutaway.", basemap: "prairie", scene: "2d", camera: STATEWIDE, starters: ["kgs-aquifer-high-plains"], light: "survey", swatch: ["#17231f", "#7fb3b0", "#c9a466"] },
-  geology: { topic: "geology", name: "Landform relief", lede: "Recorded earthquakes over a coloured relief model in 3D.", basemap: "relief", scene: "terrain", camera: tilted(52, 20), starters: ["usgs-earthquakes"], light: "survey", swatch: ["#cdc884", "#a98965", "#c94c3c"] },
-  terrain: { topic: "terrain", name: "Relief model", lede: "The land surface in 3D, coloured by elevation and lit by the sun; tilt and turn to read the slopes.", basemap: "relief", scene: "terrain", camera: tilted(62, -24, 7.4, [-99.6, 38.9]), starters: ["usgs-3dep-hillshade"], light: "golden", swatch: ["#86a866", "#dcc58f", "#a98965"] },
+  geology: { topic: "geology", name: "Landform relief", lede: "Recorded earthquakes over a coloured relief model in 3D.", basemap: "relief", scene: "terrain", camera: tilted(52, 20), starters: ["usgs-earthquakes"], tools: ["transect"], light: "survey", swatch: ["#cdc884", "#a98965", "#c94c3c"] },
+  terrain: { topic: "terrain", name: "Relief model", lede: "The land surface in 3D, coloured by elevation and lit by the sun; tilt and turn to read the slopes.", basemap: "relief", scene: "terrain", camera: tilted(62, -24, 7.4, [-99.6, 38.9]), starters: ["usgs-3dep-hillshade"], tools: ["transect"], light: "golden", swatch: ["#86a866", "#dcc58f", "#a98965"] },
   ecology: { topic: "ecology", name: "Land cover view", lede: "Satellite imagery with watershed boundaries for landscape questions.", basemap: "imagery", scene: "2d", camera: STATEWIDE, starters: ["usgs-wbd-watersheds"], swatch: ["#3b4a2c", "#7d8f4e", "#a8c7d8"] },
   agriculture: { topic: "agriculture", name: "Field view", lede: "Kansas 2024 aerial imagery for reading fields and pivots up close.", basemap: "kansas-aerial", scene: "2d", camera: Object.freeze({ center: [-100.9, 37.98] as const, zoom: 10.5, pitch: 0, bearing: 0 }), starters: [], swatch: ["#5c6b3a", "#b7a36a", "#3f5d2e"] },
   history: { topic: "history", name: "Historic map", lede: "The 1918 road map on USGS topographic context.", basemap: "topo", scene: "2d", camera: STATEWIDE, starters: ["kdot-roads-1918"], swatch: ["#efe6cf", "#9c6b3c", "#4d4a3f"] },
