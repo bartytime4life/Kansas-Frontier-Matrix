@@ -15,7 +15,7 @@ export type MapViewProfile = Readonly<{
 }>;
 
 export const MAP_VIEW_PROFILES: readonly MapViewProfile[] = Object.freeze([
-  Object.freeze({ id: "overview", title: "Kansas overview", summary: "Census county boundaries and baseline counts, USGS stream observations, and mapped hydrography.", visibleLayerIds: Object.freeze([]), year: BUILD_UTC_YEAR, basemap: "streets", projection: "mercator" }),
+  Object.freeze({ id: "overview", title: "Kansas overview", summary: "The statewide base map with no provider layer switched on.", visibleLayerIds: Object.freeze([]), year: BUILD_UTC_YEAR, basemap: "streets", projection: "mercator" }),
   Object.freeze({ id: "water", title: "Living waters", summary: "USGS observations and hydrography with WBD watersheds and NOAA context, each on its own source clock.", visibleLayerIds: Object.freeze([]), year: BUILD_UTC_YEAR, basemap: "midnight", projection: "mercator" }),
   Object.freeze({ id: "smoke", title: "Smoke context", summary: "NOAA HMS analyzed smoke footprints and observed radar frames with their source times.", visibleLayerIds: Object.freeze([]), year: BUILD_UTC_YEAR, basemap: "midnight", projection: "mercator" }),
   Object.freeze({ id: "elevation", title: "Terrain & landforms", summary: "Published elevation-derived terrain and USGS 3DEP display context with source limitations.", visibleLayerIds: Object.freeze([]), year: BUILD_UTC_YEAR, basemap: "prairie", projection: "mercator" }),

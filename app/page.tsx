@@ -7846,11 +7846,9 @@ export default function Home() {
     setCurrentWorkspace("explore");
     setLeftPanelMode("views");
     if (profile) applyViewProfile(profile);
-    if (atlasView.id === "living-waters") {
-      (["usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwps-gauges", "usgs-streamflow"] as const)
-        .forEach((sourceId) => setOfficialContextVisible(sourceId, true));
-      setLiveInstrument("river");
-    }
+    // The profile sets its starting stack; a view adds the sources only it needs.
+    for (const sourceId of atlasView.sources) setOfficialContextVisible(sourceId, true);
+    if (atlasView.id === "living-waters") setLiveInstrument("river");
     if (atlasView.camera && !atlasView.story) {
       mapRef.current?.easeTo({
         center: [...atlasView.camera.center] as [number, number],
