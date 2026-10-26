@@ -22,10 +22,10 @@ import { BasemapCacheControls } from "./basemap-cache-controls";
 import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
 import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulationPrisms } from "./population-prisms";
 import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots } from "./reviewed-snapshots";
-import { mapKeysFor, withReviewedKey } from "./map-keys";
+import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
 import { setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
-import { CATEGORY_BASEMAPS } from "./category-basemaps";
+import { AVIATION_TINT_BANDS, CATEGORY_BASEMAPS, RELIEF_RAMP } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
 import { CategoryMapDock, nextSunStep, SUN_PLAY_RESTART_STEP, SUN_TIME_STEPS, type AquiferView } from "./category-map-dock";
 import { evidenceSummary } from "./evidence-summary";
@@ -10125,7 +10125,8 @@ export default function Home() {
             measuringArea={measureMode === "area"} onMeasureArea={() => beginMapMeasurement("area")}
             radar={{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME }}
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
-            keys={withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null)}
+            keys={withElevationKey(withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null),
+              basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
             photoreal={activeCategoryMap.tools?.includes("photoreal") ? { on: basemap === "photoreal", landscapes: PHOTOREAL_LANDSCAPES, place: photorealPlace, depth: verticalExaggeration } : undefined}

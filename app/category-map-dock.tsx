@@ -267,9 +267,13 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
       title="Open recorded well logs, cores and aquifer sections beneath the map, on the 2D map">Explore underground</button>}
     {keys?.map(key => <section className="category-map-dock-legend category-map-dock-key" key={key.id} aria-label={`Key: ${key.title}`}>
       <strong>{key.title}</strong>
-      <ul>{key.items.map(item => <li key={item.label}><span className={`category-map-dock-key-${item.shape}`} aria-hidden="true"
+      {key.ramp && <div className="category-map-dock-key-ramp">
+        <span className="category-map-dock-key-ramp-bar" aria-hidden="true" style={{ background: key.ramp.css }} />
+        <span className="category-map-dock-key-ramp-ticks">{key.ramp.ticks.map(tick => <span key={tick.label} style={{ left: `${tick.at}%` }}>{tick.label}</span>)}</span>
+      </div>}
+      {key.items.length > 0 && <ul>{key.items.map(item => <li key={item.label}><span className={`category-map-dock-key-${item.shape}`} aria-hidden="true"
         data-dashed={item.dashed ? "true" : undefined}
-        style={{ "--key": item.color, ...(item.size ? { "--size": `${item.size}px` } : {}), ...(item.stroke ? { "--stroke": item.stroke } : {}) } as CSSProperties} /><span>{item.label}</span></li>)}</ul>
+        style={{ "--key": item.color, ...(item.size ? { "--size": `${item.size}px` } : {}), ...(item.stroke ? { "--stroke": item.stroke } : {}) } as CSSProperties} /><span>{item.label}</span></li>)}</ul>}
       <small>{key.note}</small>
     </section>)}
     <p className="category-map-dock-lede">{look.lede}</p>

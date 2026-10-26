@@ -89,3 +89,7 @@
 .category-map-dock-key-line{flex:none;width:22px;height:0;border-top:2px solid var(--key)}
 .category-map-dock-key-line[data-dashed=true]{border-top-style:dashed}
 .category-map-dock-key-ring{flex:none;width:13px;height:13px;border-radius:50%;background:#11161b;box-shadow:inset 0 0 0 2.5px var(--key)}
+.category-map-dock-key-ramp{display:grid;gap:3px;padding:0 6px}
+.category-map-dock-key-ramp-bar{display:block;height:12px;border-radius:2px;box-shadow:inset 0 0 0 1px #ffffff2e}
+.category-map-dock-key-ramp-ticks{position:relative;display:block;height:14px;font-size:11px;font-variant-numeric:tabular-nums;color:#cfe2ea}
+.category-map-dock-key-ramp-ticks span{position:absolute;top:0;transform:translateX(-50%);white-space:nowrap}

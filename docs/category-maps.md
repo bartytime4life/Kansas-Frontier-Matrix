@@ -259,6 +259,17 @@ read the same constants, so the two cannot drift apart:
   Each colour now has at least 3:1 against both the light category grounds
   and the dark ones, and no two datasets share one. Lines of one map are
   keyed together under one title.
+- **Elevation** (Relief model, Landform relief, Aviation chart): the basemaps
+  that colour the ground by height show their ramp as a bar, first in the
+  dock, while that basemap is drawn. The bar is built from the same stops the
+  style uses (`RELIEF_RAMP`, `AVIATION_TINT_BANDS` in
+  `app/category-basemaps.ts`). The relief key is continuous, in metres above
+  sea level (200–1,300 m, ticks every 300 m). The aviation chart's key is
+  stepped into its 1,000 ft bands and labelled in feet, as sectional charts
+  are. Both notes give the state's span, 207 m (679 ft) where the Verdigris
+  River leaves Kansas to 1,231 m (4,039 ft) at Mount Sunflower, so a reader
+  can turn a colour into a height. The key is gone when the basemap is not
+  (photo-real ground, or the local fallback style).
 
 Radar keeps its dBZ legend in its own panel, and stream gauges keep theirs in
 River Pulse.

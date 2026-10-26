@@ -59,7 +59,7 @@ test('the dock draws each key as the map draws it, and the page passes the keys 
  assert.doesNotMatch(JSON.stringify(tree),/category-map-dock-key/,'no keys, no section');
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/keys=\{withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\)\}/);
+ assert.match(page,/keys=\{withElevationKey\(withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\),/);
 });
 
 const luminance=hex=>{const c=rgb(hex).map(v=>v/255).map(v=>v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4);return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];};
@@ -129,5 +129,33 @@ test('a drawn reviewed snapshot adds its key once, and alerts share the live sev
  assert.deepEqual(keys.withReviewedKey(storm,'nws-alerts').map(k=>k.id),['nws-alerts'],'not shown twice');
  assert.deepEqual(keys.withReviewedKey([],'nws-alerts').map(k=>k.id),['nws-alerts'],'shown when the live alerts are off');
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/keys=\{withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\)\}/);
+ assert.match(page,/keys=\{withElevationKey\(withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\),/);
+});
+
+test('the relief and chart bases key their elevation colours from the ramps the styles draw',async()=>{
+ const basemaps=await readFile('app/category-basemaps.ts','utf8');
+ const ramp=JSON.parse(basemaps.match(/export const RELIEF_RAMP[^=]*= Object\.freeze\((\[[\s\S]*?\])\);/)[1].replace(/\s/g,'').replace(/,\]$/,']'));
+ const relief=keys.reliefElevationKey(ramp);
+ assert.equal(relief.title,'Elevation (m above sea level)');
+ // 200–1300 m across the bar: the 150 m stop sits just before it, 1100 m at 81.8 %.
+ assert.match(relief.ramp.css,/^linear-gradient\(to right, #5f8f5a -4\.5%, #86a866 9\.1%,[\s\S]*#c9a77a 81\.8%/);
+ assert.deepEqual(relief.ramp.ticks.map(t=>[t.label,t.at]),[['300',9.1],['600',36.4],['900',63.6],['1,200',90.9]]);
+ assert.match(relief.note,/207 m[\s\S]*1,231 m at Mount Sunflower/);
+ const bands=[[0,'#bcd6a4'],[305,'#cfe0ae'],[610,'#e2e4b8'],[914,'#ead7ab'],[1219,'#e1c597'],[1524,'#d6b48a']];
+ const chart=keys.chartElevationKey(bands);
+ assert.equal(chart.title,'Terrain elevation (ft)');
+ // Hard 1,000 ft bands: each colour runs from its band to the next.
+ assert.match(chart.ramp.css,/#cfe0ae 12\.5% 37\.5%, #e2e4b8 37\.5% 62\.5%, #ead7ab 62\.5% 87\.5%/);
+ assert.deepEqual(chart.ramp.ticks.map(t=>t.label),['1,000','2,000','3,000','4,000']);
+ assert.match(chart.note,/680 to 4,040 ft/);
+ assert.deepEqual(keys.withElevationKey([keys.MAP_KEYS['usgs-earthquakes']],relief).map(k=>k.id),['elevation-relief','usgs-earthquakes'],'the base comes first');
+ assert.deepEqual(keys.withElevationKey([],null),[]);
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/basemap === "relief" \? reliefElevationKey\(RELIEF_RAMP\) : basemap === "aviation-chart" \? chartElevationKey\(AVIATION_TINT_BANDS\) : null/,'only while that base is drawn (not the photograph)');
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const tree=h.render(h.exports.CategoryMapDock,{look:maps.CATEGORY_MAPS.terrain,mode:'terrain',depth:2.5,azimuth:315,sun:null,sunAvailable:true,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},keys:[relief]});
+ const bar=findNode(tree,n=>n.props?.className==='category-map-dock-key-ramp-bar');
+ assert.equal(bar.props.style.background,relief.ramp.css);
+ assert.match(JSON.stringify(tree),/"left":"36\.4%"[\s\S]*600/);
+ h.dispose?.();
 });
