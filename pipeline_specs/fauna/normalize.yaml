@@ -1,4 +1,0 @@
-# pipeline_specs :: fauna :: normalize
-name: fauna-normalize
-version: 1
-stages: []

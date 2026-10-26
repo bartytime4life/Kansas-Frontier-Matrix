@@ -1,4 +1,0 @@
-# pipeline_specs :: fauna :: ingest
-name: fauna-ingest
-version: 1
-stages: []

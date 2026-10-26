@@ -1,3 +1,0 @@
-# Encyclopedia
-
-Status: PROPOSED placeholder.
