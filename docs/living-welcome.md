@@ -162,56 +162,13 @@ loading before merge. No deployment or publication is performed here.
 Rollback: revert the cleanup commit. No data migration, storage deletion or
 host configuration change is needed.
 
-## Transportation scene polish · 2026-10-22 candidate
+## Synthetic scenes removed · 2026-10-26
 
-The illustrative transportation backdrop now sizes vehicles to the road lanes
-instead of enlarging them for visibility. Close camera views follow the same
-vehicle positions as the overview. Road traffic uses consistent right-hand
-lanes, measured model footprints, following gaps, gentle acceleration and
-exclusive at-grade junction reservations. Reservations include a train's whole
-consist. Dirt roads later paved over share one physical traffic lane. Main-line
-trains travel in one direction per track, with passenger traffic on its separate
-line; branch rail geometry remains visible without dispatched branch trains.
-
-Road crossings of the synthetic river have raised decks, guardrails and piers.
-The freeway interchange has a separate overpass elevation; vehicles and road
-geometry use that same height profile. Bridge components are instanced in two
-draw batches per span, and duplicate dirt/paved bridge structures are avoided.
-Traffic, aircraft, town density, smoke and glow have been reduced. Buildings
-are kept clear of transportation corridors and the main river. Horses have
-separate bodies, heads, legs and harness traces; train bodies have longer
-proportions relative to cars and trucks.
-
-The traffic controller uses fixed 1/120-second steps and reconstructs its state
-on rewind. Pause and seek preserve deterministic positions. Its behavior is
-illustrative staging, not a road engineering simulation, historical traffic
-reconstruction, live transport feed, or evidence of road access or safety. The
-existing synthetic-scene caption, source captures and workspace actions remain.
-
-Placement follows accepted ADR-0029 and the inspected canonical
-`docs/doctrine/directory-rules.md`: application scene code remains under the
-existing `app/living-welcome/scenes/` responsibility, executable regressions
-under `tests/`, and this behavior record under `docs/`. No new authority root,
-source admission, policy, data lifecycle transition or storage is introduced.
-`Directory Rules.pdf` is absent from the supplied local attachment inventory;
-the accepted repository doctrine and ADR are the checked placement basis.
-
-The source base is hosted branch `a0-hosted-ai-web-20261017` at
-`6a725fe64c0cccefec0a7b474d52b6f8e67d2ed0`. Its complete materialized local
-tree was verified against GitHub tree `7f9920d243dc32290ea715d93cc3d6b6ec9d6381`
-before editing. Focused regressions cover lane containment, following gaps over
-the complete 36-second loop, at-grade exclusion, train-tail clearance, mixed
-speeds, stop/resume, pause, seek and rewind. Construction checks do not render
-the scene or prove GPU performance.
-
-Browser visual acceptance remains open. The public page was inspected, but
-this browser reported WebGL2 unavailable. The supervised local preview built
-successfully and then timed out because the Node composition listened on port
-3000 while the preview expected 4173. No candidate screenshot, mobile visual
-acceptance, smoothness judgment or production publication is claimed. Review
-the 1860s, 1910s, 1940s, 1970s and current-era scene in a WebGL2 browser before
-merge and deployment. Roll back by reverting the single polish commit; no data
-or host configuration needs changing.
+The three.js scenes that stood behind the categories (`app/living-welcome/scenes/`,
+including the transportation traffic staging recorded here on 2026-10-22), their
+smoke script and their tests are removed. The welcome now shows each category's
+real map instead; see "Live map behind the categories" below. The removed code
+remains in the repository history.
 
 The current candidate replaces the welcome's representative footage with animated
 captures of the actual Explorer. The legacy footage modules, original recordings

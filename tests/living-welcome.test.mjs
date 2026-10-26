@@ -8,7 +8,6 @@ import { SCENES, CATEGORY_IDS, HISTORY_ERAS, sceneArt } from '../app/living-welc
 import { MOTION_CLIPS, motionClip } from '../app/living-welcome/motion-catalog.mjs';
 
 import { capabilityPreviews, capabilityNote } from '../app/living-welcome/capability-catalog.mjs';
-import * as sceneCatalog from '../app/living-welcome/scenes/catalog.mjs';
 const topicModule={};
 new Function('exports',ts.transpileModule(await readFile('app/layer-workspaces.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(topicModule);
 const {TOPIC_STRUCTURE,TOPIC_GROUPS}=topicModule;
@@ -324,20 +323,6 @@ test('full-window preview returns to the same categories and uncaptured domains 
   assert.match(capabilityNote(id),/No verified/,'no recorded capture is claimed for this domain');
  }
  h.harness.dispose();
-});
-
-test('every topic has an illustrative scene with well-formed, labelled beats',async()=>{
- const {SCENE_CATALOG,SCENE_LABEL,beatTitle}=await import('../app/living-welcome/scenes/catalog.mjs');
- const {SCENE_LOADERS}=await import('../app/living-welcome/scenes/index.mjs');
- assert.match(SCENE_LABEL,/Illustrative/);assert.match(SCENE_LABEL,/not observations/);
- assert.deepEqual(Object.keys(SCENE_CATALOG).sort(),TOPIC_STRUCTURE.map(t=>t.id).sort());
- assert.deepEqual(Object.keys(SCENE_LOADERS).sort(),Object.keys(SCENE_CATALOG).sort());
- for(const [id,{duration,beats}] of Object.entries(SCENE_CATALOG)){
-  assert.ok(duration>=12&&duration<=40,`${id} loops in 12–40 s`);
-  assert.ok(beats.length>=2&&beats.length<=8);assert.equal(beats[0][0],0);
-  beats.forEach(([at],i)=>{assert.ok(at<duration);if(i)assert.ok(at>beats[i-1][0]);});
-  assert.equal(beatTitle(id,duration-.01),beats.at(-1)[1]);
- }
 });
 
 test('a late blur cannot cancel a fine-pointer hover, while leaving restores all topics without a mouse-focus pin',async()=>{
