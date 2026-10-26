@@ -184,7 +184,7 @@ test('the aquifer and geology maps open Underground from their dock through the 
  assert.match(page,/const showCategoryDock = Boolean\([^;]*!undergroundOpen/,'the dock steps aside while Underground is open');
 });
 
-test('the globe looks show the calculated day and night from their dock, at the current time',async()=>{
+test('Sky and Science show the calculated day and night from their dock, at the current time',async()=>{
  const withDaylight=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('daylight')).map(([id])=>id).sort();
  assert.deepEqual(withDaylight,['science','sky']);
  const h=await componentHarness('app/category-map-dock.tsx',{});
