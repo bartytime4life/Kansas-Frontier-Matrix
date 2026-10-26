@@ -1,1 +1,0 @@
-# hazards :: catalog — greenfield placeholder

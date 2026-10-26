@@ -1,8 +1,0 @@
-{
-  "case_id": "complete-synthetic-compatibility-bundle",
-  "expected": {
-    "issue_codes": [],
-    "status": "STRUCTURAL_PASS"
-  },
-  "mutation": "none"
-}

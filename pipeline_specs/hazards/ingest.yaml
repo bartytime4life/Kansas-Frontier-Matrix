@@ -1,4 +1,0 @@
-# pipeline_specs :: hazards :: ingest
-name: hazards-ingest
-version: 1
-stages: []

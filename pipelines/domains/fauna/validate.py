@@ -1,1 +1,0 @@
-# fauna :: validate — greenfield placeholder
