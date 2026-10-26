@@ -154,6 +154,26 @@ globe, and appear in the start-page preview of the People map. Counts describe
 areas, not people; a county's column says nothing about where in the county
 people live.
 
+## Soil moisture on the Field view (Agriculture)
+
+The Field view opens on the 2024 Kansas aerial imagery at field scale. Its dock
+adds **Show soil moisture**: NASA SMAP Level-4 (SPL4SMAU V008) modelled soil
+moisture, through the Explorer's own soil-moisture control
+(`app/soil-moisture-control.tsx`).
+
+- SMAP cells are 9 km across; at field scale one cell would fill the screen and
+  read as a per-field value it is not. Switching the tool on therefore pulls a
+  closer view out to zoom 7.2, the region the cells describe.
+- **Surface 0–5 cm** and **Root zone 0–100 cm** switch the modelled depth.
+- The reading names the frame actually drawn (its UTC day and depth), or says
+  plainly that NASA is unavailable and nothing is drawn; NASA's own colour scale
+  sits beneath it.
+- Soil moisture stays with the maps that offer it: opening another category map
+  hides it.
+- The control now checks NASA's available days whenever it is switched on from
+  outside its own row (the dock, or a shared link that restores `soil=1`), not
+  only from its switch.
+
 ## What is not on every map
 
 County boundaries, USGS river gauges, the USGS 3DHP stream network and the fire

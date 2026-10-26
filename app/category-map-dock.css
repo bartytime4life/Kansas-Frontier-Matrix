@@ -64,3 +64,6 @@
 .category-map-dock-legend li b{font-weight:600;font-variant-numeric:tabular-nums;color:#f1e6c2}
 .category-map-dock-chip{width:14px;height:14px;border-radius:3px;box-shadow:inset 0 0 0 1px #ffffff33}
 .category-map-dock-legend .category-map-dock-reading{margin-top:6px}
+.category-map-dock-scale{display:block;width:100%;max-height:44px;object-fit:contain;background:#ffffff0d;border-radius:6px}
+.category-map-dock-modes.category-map-dock-depth{grid-template-columns:1fr 1fr}
+.category-map-dock .category-map-dock-depth button{font-size:12px;line-height:1.25;padding:4px 6px}

@@ -46,7 +46,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, soil, onSoil, onSoilDepth, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -109,6 +109,14 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
    */
   population?: Readonly<{ on: boolean; groups: readonly (KansasDensityGroup & { count: number })[]; counties: number; statewide: number | null; metresPerPerson: number }>;
   onPopulation?: (on: boolean) => void;
+  /**
+   * NASA SMAP L4 soil moisture, for looks that offer the soil tool: whether it
+   * is drawn, at which depth, what the map shows now (the exact day drawn, or
+   * why none is), and NASA's own colour scale.
+   */
+  soil?: Readonly<{ on: boolean; depth: "surface" | "root"; reading: string; legendUrl: string }>;
+  onSoil?: (on: boolean) => void;
+  onSoilDepth?: (depth: "surface" | "root") => void;
   onReset: () => void;
   onLayers: () => void;
   onClose: () => void;
@@ -169,6 +177,18 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
           <span>{group.label}<small>{group.range}</small></span><b>{population.counties ? `${group.count} ${group.count === 1 ? "county" : "counties"}` : "…"}</b></li>)}</ul>
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
       </div>}
+    </>}
+    {look.tools?.includes("soil") && soil && onSoil && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={soil.on} onClick={() => onSoil(!soil.on)}
+        title="NASA SMAP L4 modelled soil moisture in 9 km cells; a field-scale view pulls out to the region the cells describe">{soil.on ? "Hide soil moisture" : "Show soil moisture"}</button>
+      {soil.on && <>
+        <div className="category-map-dock-modes category-map-dock-depth" role="group" aria-label="Soil depth">
+          {([["surface", "Surface 0–5 cm"], ["root", "Root zone 0–100 cm"]] as const).map(([depth, label]) =>
+            <button key={depth} type="button" aria-pressed={soil.depth === depth} onClick={() => onSoilDepth?.(depth)}>{label}</button>)}
+        </div>
+        <p className="category-map-dock-reading" aria-live="polite">{soil.reading}</p>
+        <img className="category-map-dock-scale" src={soil.legendUrl} alt="NASA colour scale for soil moisture" loading="lazy" />
+      </>}
     </>}
     {look.tools?.includes("area") && onMeasureArea && <button type="button" className="category-map-dock-tool" aria-pressed={Boolean(measuringArea)} onClick={onMeasureArea}
       title={measuringArea ? "Cancel the outline in progress" : "Click around a field or parcel, then Finish, for its approximate area; not a survey"}>{measuringArea ? "Cancel area" : "Measure an area"}</button>}

@@ -36,7 +36,7 @@ import type { WelcomeFeatureDestination } from "./living-welcome/features";
 import { captureBasemapSourceIds } from "../scripts/welcome-demos/capture-metrics.mjs";
 import { basemapCacheRequest } from "./basemap-cache";
 import { GROUNDWATER_MANIFEST, safeKgsWellUrl } from "./aquifer-layers";
-import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
+import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, SOIL_VIEWS, soilLegendUrl, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
 import { GovernedWaterControl } from "./governed-water-control";
 import { GovernedWeatherControl } from "./governed-weather-control";
 import { LivingWatersControl } from "./living-waters-control";
@@ -1603,7 +1603,7 @@ export default function Home() {
   const [reviewedWeatherSelected, setReviewedWeatherSelected] = useState(false);
   const [soilMapState, setSoilMapState] = useState<SoilMapState>(DEFAULT_SOIL_MAP_STATE);
   const changeSoilMapState = useCallback((next: Partial<SoilMapState>) => setSoilMapState(current => ({ ...current, ...next })), []);
-  const [, setSoilMoistureContext] = useState<SoilMoistureEngineContext | null>(null);
+  const [soilMoistureContext, setSoilMoistureContext] = useState<SoilMoistureEngineContext | null>(null);
   const [toast, setToast] = useState("");
   const [isCompact, setIsCompact] = useState(false);
   const [sourceStates, setSourceStates] = useState<Record<string, "loading" | "ready" | "error">>(
@@ -7545,6 +7545,19 @@ export default function Home() {
 
   // The dock shows the calculated day and night at the current time when the
   // layer's date range holds it; another chosen day keeps its own clock.
+  // NASA SMAP L4 cells are 9 km across: a field-scale view would show one cell as
+  // a flat wash, so switching the soil tool on pulls out to the region they describe.
+  const SOIL_REGIONAL_ZOOM = 7.2;
+  const showCategorySoil = (on: boolean) => {
+    changeSoilMapState({ visible: on });
+    const map = mapRef.current;
+    if (on && map && map.getZoom() > SOIL_REGIONAL_ZOOM + 0.5) map.easeTo({ zoom: SOIL_REGIONAL_ZOOM, duration: motionDuration(1200), essential: false });
+    announce(on ? "NASA SMAP soil moisture shown · 9 km modelled cells over the region" : "Soil moisture hidden");
+  };
+  const soilReading = !soilMapState.visible ? ""
+    : soilMoistureContext?.renderedFrameTimeUtc ? `${SOIL_VIEWS[soilMapState.view].label} · ${soilMoistureContext.renderedFrameTimeUtc.slice(0, 16).replace("T", " ")} UTC · NASA SMAP L4, 9 km modelled cells`
+    : soilMoistureContext?.availabilityState === "error" || soilMoistureContext?.mapState === "error" ? "NASA soil moisture is unavailable right now; nothing is drawn in its place"
+    : "Finding NASA's latest soil moisture day…";
   const showCategoryDaylight = (on: boolean) => {
     toggleDaylightVisibility(on);
     if (!on) return;
@@ -9113,6 +9126,8 @@ export default function Home() {
     }
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
     setPopulationPrismsShown(Boolean(look.overlays?.includes("population")));
+    // Soil moisture belongs to the maps that offer it; it does not follow into the others.
+    if (!look.tools?.includes("soil")) setSoilMapState(current => current.visible ? hideSoilContext(current) : current);
     setStarterPanelOpen(false);
     setLayerCatalogView("official");
     setOfficialWorkspace(topic);
@@ -10051,6 +10066,8 @@ export default function Home() {
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
+            soil={activeCategoryMap.tools?.includes("soil") ? { on: soilMapState.visible, depth: soilMapState.view === "root" ? "root" : "surface", reading: soilReading, legendUrl: soilLegendUrl(soilMapState.view === "root" ? "root" : "surface") } : undefined}
+            onSoil={showCategorySoil} onSoilDepth={(depth) => changeSoilMapState({ view: depth })}
             population={activeCategoryMap.tools?.includes("population") ? { on: populationPrisms, ...densityGroupCounts(officialPayloads["census-counties"]?.data.features ?? []), metresPerPerson: PRISM_METRES_PER_PERSON_PER_SQUARE_MILE } : undefined}
             onPopulation={setPopulationPrismsShown}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
