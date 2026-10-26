@@ -18,7 +18,7 @@ import { CATEGORY_BASEMAPS } from "./category-basemaps";
 import { CATEGORY_BASEMAP_KEYS, type CategoryBasemapKey } from "./category-basemap-keys";
 import { CINEMATIC_LIGHT_COLOR, CINEMATIC_LIGHT_INTENSITY, CINEMATIC_SKIES, GLOBE_ATMOSPHERE_BLEND, SELECTION_PULSE_LAYER_ID, effectiveSceneLight, registerCurtainLight, reliefPaintFor, sceneEffectsFor } from "./scene-effects";
 
-export type BasemapKey = "standard" | CategoryBasemapKey | "imagery" | "kansas-aerial" | "midnight" | "prairie" | "streets" | "topo";
+export type BasemapKey = "standard" | CategoryBasemapKey | "imagery" | "kansas-aerial" | "photoreal" | "midnight" | "prairie" | "streets" | "topo";
 export type AtmospherePreset = "night" | "dusk" | "clear";
 
 const openFreeMapContext = externalContextSource("openfreemap-liberty");
@@ -79,6 +79,35 @@ export const BASEMAPS: Record<BasemapKey, { title: string; note: string; style: 
       },
       layers: [{ id: "kansas-ng911-2024-raster", type: "raster", source: "kansas-ng911-2024",
         paint: { "raster-opacity": 1, "raster-resampling": "nearest", "raster-fade-duration": 0 } }],
+    },
+  },
+  // Photo-real 3D: the 1-foot 2024 Kansas aerial over world imagery (which
+  // carries oblique views past the state line), with OpenStreetMap buildings
+  // raised to the heights OpenMapTiles records. Draped on a DEM it is the
+  // landscape as photographed; nothing is painted or stylised.
+  photoreal: {
+    title: "Photo-real 3D · Kansas aerial 2024",
+    note: `${kansasAerialContext.boundary} Buildings at OpenStreetMap heights where recorded (OpenMapTiles render height), otherwise its default; display context, not evidence.`,
+    style: {
+      version: 8,
+      name: "KFM Photo-real 3D",
+      sources: {
+        "esri-imagery": { type: "raster", tiles: [esriImageryContext.requestUrl], tileSize: 256, attribution: esriImageryContext.attribution, minzoom: 4, maxzoom: 19 },
+        "kansas-ng911-2024": { type: "raster", tiles: [kansasAerialContext.requestUrl], tileSize: 512, bounds: [-102.071, 36.93, -94.556, 40.077], attribution: kansasAerialContext.attribution, minzoom: 4, maxzoom: 18 },
+        "photoreal-openmaptiles": { type: "vector", url: `${new URL(openFreeMapContext.requestUrl).origin}/planet`, attribution: openFreeMapContext.attribution },
+      },
+      layers: [
+        { id: "photoreal-world-imagery", type: "raster", source: "esri-imagery", paint: { "raster-fade-duration": 120 } },
+        { id: "photoreal-kansas-aerial", type: "raster", source: "kansas-ng911-2024", paint: { "raster-resampling": "linear", "raster-fade-duration": 120 } },
+        { id: "photoreal-buildings", type: "fill-extrusion", source: "photoreal-openmaptiles", "source-layer": "building", minzoom: 13, paint: {
+          "fill-extrusion-height": ["coalesce", ["get", "render_height"], 0],
+          "fill-extrusion-base": ["coalesce", ["get", "render_min_height"], 0],
+          // Neutral built-material tones by height, lit by the scene's sun.
+          "fill-extrusion-color": ["interpolate", ["linear"], ["coalesce", ["get", "render_height"], 0], 0, "#cfc9bf", 40, "#c3beb6", 120, "#b5b3b0"],
+          "fill-extrusion-opacity": 0.92,
+          "fill-extrusion-vertical-gradient": true,
+        } },
+      ],
     },
   },
   midnight: {

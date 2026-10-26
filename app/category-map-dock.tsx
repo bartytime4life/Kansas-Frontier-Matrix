@@ -4,6 +4,7 @@ import type { CSSProperties } from "react";
 import type { CategoryMap, CategoryScene } from "./category-maps";
 import type { SceneLight } from "./scene-effects";
 import type { KansasDensityGroup } from "./population-prisms";
+import type { PhotorealLandscape } from "./photoreal-landscapes";
 
 export type AquiferView = "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-aquifer-high-plains";
 const AQUIFER_VIEWS: readonly (readonly [AquiferView, string, string])[] = [
@@ -53,7 +54,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -143,6 +144,13 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
   onReviewed?: (on: boolean) => void;
   onReviewedIndex?: (index: number) => void;
   onReviewedPlay?: (on: boolean) => void;
+  /**
+   * The photo-real 3D view, for looks that offer it: whether it is on, the
+   * landscapes it flies to, which one is framed, and the vertical scale in use.
+   */
+  photoreal?: Readonly<{ on: boolean; landscapes: readonly PhotorealLandscape[]; place: string | null; depth: number }>;
+  /** A landscape id flies there in photo-real 3D; null returns to the look's own map. */
+  onPhotoreal?: (landscape: string | null) => void;
   onReset: () => void;
   onLayers: () => void;
   onClose: () => void;
@@ -203,6 +211,15 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
           <span>{group.label}<small>{group.range}</small></span><b>{population.counties ? `${group.count} ${group.count === 1 ? "county" : "counties"}` : "…"}</b></li>)}</ul>
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
       </div>}
+    </>}
+    {look.tools?.includes("photoreal") && photoreal && onPhotoreal && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={photoreal.on} onClick={() => onPhotoreal(photoreal.on ? null : photoreal.place ?? photoreal.landscapes[0].id)}
+        title="The 2024 one-foot Kansas aerial on the USGS 3DEP bare-earth DEM at true vertical scale, lit by the real sun">{photoreal.on ? "Back to relief colours" : "Photo-real 3D"}</button>
+      {photoreal.on && <div className="category-map-dock-places" role="group" aria-label="Kansas landscapes">
+        {photoreal.landscapes.map(landscape => <button key={landscape.id} type="button" aria-pressed={photoreal.place === landscape.id} onClick={() => onPhotoreal(landscape.id)}>{landscape.name}</button>)}
+      </div>}
+      {photoreal.on && <p className="category-map-dock-reading" aria-live="polite">{photoreal.landscapes.find(landscape => landscape.id === photoreal.place)?.caption}{" "}
+        <span className="category-map-dock-scale-note">{Math.abs(photoreal.depth - 1) < 0.05 ? "True vertical scale (1×)" : `Vertical ×${photoreal.depth.toFixed(1)}`} · USGS 3DEP bare earth · Kansas aerial 2024, 1 ft</span></p>}
     </>}
     {look.tools?.includes("reviewed") && reviewed && onReviewed && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={reviewed.on} onClick={() => onReviewed(!reviewed.on)}

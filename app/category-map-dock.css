@@ -71,3 +71,7 @@
 .category-map-dock-ramp li{grid-template-columns:14px minmax(0,1fr)}
 .category-map-dock-reviewed{display:grid;gap:6px}
 .category-map-dock-reviewed .category-map-dock-range{grid-template-columns:auto minmax(0,1fr) auto}
+.category-map-dock-places{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.category-map-dock .category-map-dock-places button{min-height:40px;border:1px solid #2c4a57;border-radius:7px;background:#0d2a35;color:#d6e4ea;font-size:11.5px;line-height:1.25;padding:4px 6px;text-align:left;cursor:pointer}
+.category-map-dock .category-map-dock-places button[aria-pressed=true]{background:#d8c58f;color:#14212a;border-color:#f1e6c2}
+.category-map-dock-scale-note{display:block;margin-top:4px;color:#9fb6bf;font-size:11px}

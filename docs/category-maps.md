@@ -213,6 +213,27 @@ committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
 The snapshots are drawn by the context renderer (`app/reviewed-snapshot-layers.ts`)
 and are approved context releases, not admitted evidence.
 
+## Photo-real 3D (Terrain)
+
+The Relief model dock's **Photo-real 3D** drapes the photographed ground on the
+measured one: the 2024 Kansas NG911 one-foot aerial (over Esri world imagery,
+which carries oblique views past the state line) on the USGS 3DEP bare-earth DEM
+(`/api/3dep-dem-tile`), at **true vertical scale** (1×), lit by the real sun at
+the map centre, with OpenStreetMap buildings raised to the heights OpenMapTiles
+records (`render_height`, from `render_min_height`). The style is the
+`photoreal` basemap: no labels, painted shading or stylisation over the
+photograph.
+
+It flies to six real landscapes (`app/photoreal-landscapes.ts`), each captioned
+with what the ground is: the Red Hills (Permian red beds capped by gypsum),
+Monument Rocks and Little Jerusalem (Niobrara Chalk), Konza Prairie in the
+Flint Hills (Permian limestone and chert under tallgrass prairie), the Arikaree
+Breaks (canyons in loess), and downtown Wichita on the Arkansas River. The
+reading always states the vertical scale: "True vertical scale (1×)" or the
+exaggeration chosen with Relief. The status bar's DEM readout gives the 3DEP
+height under the pointer. "Back to relief colours" restores the look's own map,
+the Mapzen relief and the default depth.
+
 ## What is not on every map
 
 County boundaries, USGS river gauges, the USGS 3DHP stream network and the fire
