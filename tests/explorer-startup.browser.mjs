@@ -764,7 +764,9 @@ test('server markup and startup frames keep the map covered until the welcome de
       if(root){
         const pending=root.dataset.startup==='pending',cover=document.querySelector('.explorer-startup-cover'),shell=document.querySelector('.explorer-shell');
         const welcome=!!document.querySelector('.living-welcome');
-        window.__kfmStartupFrames.push({pending,welcome,covered:!!cover&&getComputedStyle(cover).visibility!=='hidden',mapHidden:!!shell&&getComputedStyle(shell).visibility==='hidden',retired:!!document.querySelector('.explorer-guide:not(.living-welcome)')});
+        // A frame can be sampled while the document is still parsing: the root and cover
+        // exist but the shell does not yet. An unparsed shell shows no map, so it counts as hidden.
+        window.__kfmStartupFrames.push({pending,welcome,shell:!!shell,covered:!!cover&&getComputedStyle(cover).visibility!=='hidden',mapHidden:!shell||getComputedStyle(shell).visibility==='hidden',retired:!!document.querySelector('.explorer-guide:not(.living-welcome)')});
         if(!pending&&welcome)return;
       }
       requestAnimationFrame(sampleStartup);
@@ -775,7 +777,8 @@ test('server markup and startup frames keep the map covered until the welcome de
   const frames=await p.evaluate('window.__kfmStartupFrames');
   assert.ok(frames.length>0);
   assert.ok(frames.every(frame=>!frame.retired));
-  assert.ok(frames.filter(frame=>frame.pending).every(frame=>frame.covered&&frame.mapHidden));
+  assert.ok(frames.filter(frame=>frame.pending).every(frame=>frame.covered&&frame.mapHidden),JSON.stringify(frames));
+  assert.ok(frames.some(frame=>frame.pending&&frame.shell),'at least one pending frame sees the parsed shell held hidden');
   assert.ok(frames.filter(frame=>!frame.pending).every(frame=>frame.welcome),'first resolved frame shows the graphical welcome');
 });
 
