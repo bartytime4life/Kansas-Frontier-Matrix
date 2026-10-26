@@ -1,1 +1,0 @@
-PERMIT_AS_DEPOSIT_DENIED	$.claim
