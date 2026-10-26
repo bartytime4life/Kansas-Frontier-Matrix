@@ -1,1 +1,0 @@
-# geology :: normalize — greenfield placeholder
