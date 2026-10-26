@@ -77,12 +77,26 @@ holds and limits. They are display context, not admitted evidence.
     same entry the guide's Underground action uses), which switches to the 2D
     map and takes focus. The dock steps aside while Underground is open and
     returns when it closes, if the look's basemap is still on;
+  - **Show day and night**, on the Sky and Observation globes
+    (`tools: ["daylight"]`). It switches the existing Daylight & twilight
+    layer on or off through the layer card's own path
+    (`toggleDaylightVisibility`): the calculated night side of the Earth and
+    its civil, nautical and astronomical twilight bands. When the layer's
+    chosen date range holds the current time, it opens at now
+    (`showCategoryDaylight`); a past day chosen in the layer card keeps its own
+    clock. While it is shown, the dock reads that clock in Kansas Central time
+    and what it means at the look's center, for example "Kansas center: Sun 9°
+    below the horizon · nautical twilight" (`daylightPhaseReading`, using the
+    overlay's own band edges). **Play day and night** runs the layer's 60-second
+    loop through the day; reduced motion disables it. It is calculated
+    geometry, not observed brightness or cloud cover;
   - reset view and "Layers for this map".
 
   Every control reuses an existing handler: `activateMapRepresentation`,
   `changeTerrainDepth`, `changeStudioLight`, `updateSceneEffects`,
   `startTerrainInvestigation` (through `startCategoryTransect`),
-  `enterUnderground` and `openAtlasPanel`. Turning river flow on or off also goes through
+  `enterUnderground`, `toggleDaylightVisibility` (through
+  `showCategoryDaylight`) and `openAtlasPanel`. Turning river flow on or off also goes through
   `updateSceneEffects`. The dock can
   be hidden. It returns the next time a category map is opened.
 - **Layers panel.** When a category is chosen in the Layers catalogue, its

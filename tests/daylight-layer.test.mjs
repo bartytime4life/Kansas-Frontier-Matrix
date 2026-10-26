@@ -410,3 +410,12 @@ test("page persists selected solar cursor and restores the layer paused with red
     assert.ok(typeof contract === "string" ? page.includes(contract) : contract.test(page), description);
   }
 });
+
+test("the dock reads a solar elevation in the overlay's own bands", () => {
+  assert.equal(shader.daylightPhaseReading(23.4), "Sun 23° up · daylight");
+  assert.equal(shader.daylightPhaseReading(-0.4), "Sun 0° below the horizon · sunrise or sunset", "the disc still touches the horizon above -0.833°");
+  assert.equal(shader.daylightPhaseReading(-3), "Sun 3° below the horizon · civil twilight");
+  assert.equal(shader.daylightPhaseReading(-9), "Sun 9° below the horizon · nautical twilight");
+  assert.equal(shader.daylightPhaseReading(-15), "Sun 15° below the horizon · astronomical twilight");
+  assert.equal(shader.daylightPhaseReading(-40), "Sun 40° below the horizon · night");
+});

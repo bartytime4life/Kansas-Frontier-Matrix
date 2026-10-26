@@ -45,7 +45,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -71,6 +71,14 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
   onTransect?: () => void;
   /** Opens the Underground view for looks that offer the underground tool. */
   onUnderground?: () => void;
+  /**
+   * The calculated day-and-night layer, for looks that offer the daylight
+   * tool: whether it is shown and playing, its clock, and what that clock
+   * means at the look's center.
+   */
+  daylight?: Readonly<{ on: boolean; playing: boolean; time: string; reading: string }>;
+  onDaylight?: (on: boolean) => void;
+  onDaylightPlay?: (on: boolean) => void;
   /**
    * The flowing-water effect and its reading, for looks that offer the flow
    * tool. `still` names why the rivers are not moving, if they are not.
@@ -117,6 +125,15 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
       <button type="button" className="category-map-dock-tool" aria-pressed={flow.on} onClick={() => onFlow(!flow.on)}
         title="Rivers flow downstream where USGS 3DHP maps a direction; a USGS gauge reading lights its own reach">{flow.on ? "Hide river flow" : "Show river flow"}</button>
       {flow.on && <p className="category-map-dock-reading" aria-live="polite">{flow.reading ?? "Starting river flow…"}{flow.still ? ` · drawn still: ${flow.still}` : ""}</p>}
+    </>}
+    {look.tools?.includes("daylight") && daylight && onDaylight && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={daylight.on} onClick={() => onDaylight(!daylight.on)}
+        title="Shade the night side of the Earth and its civil, nautical and astronomical twilight, calculated from the Sun's position">{daylight.on ? "Hide day and night" : "Show day and night"}</button>
+      {daylight.on && <>
+        <p className="category-map-dock-reading" aria-live={daylight.playing ? "off" : "polite"}>{daylight.time}<br />{daylight.reading}</p>
+        {onDaylightPlay && <button type="button" className="category-map-dock-sun" aria-pressed={daylight.playing && motionAllowed} disabled={!motionAllowed} onClick={() => onDaylightPlay(!daylight.playing)}
+          title={motionAllowed ? "Run the calculated day through 24 hours in a 60-second loop" : "Reduced motion is on; set the time in the Daylight & twilight layer"}>{daylight.playing && motionAllowed ? "Pause day and night" : "Play day and night"}</button>}
+      </>}
     </>}
     {look.tools?.includes("transect") && onTransect && <button type="button" className="category-map-dock-tool" disabled={!terrainAvailable} onClick={onTransect}
       title="Draw a line across the relief, then preview its elevation profile without the 3D exaggeration">Draw a cross-section</button>}

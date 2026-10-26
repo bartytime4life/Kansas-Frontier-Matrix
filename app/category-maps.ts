@@ -29,9 +29,10 @@ export type CategoryMap = Readonly<{
    * existing terrain investigation: draw a line, then preview its
    * unexaggerated display-DEM profile. `flow` switches the Scene studio's
    * flowing-water effect on or off. `underground` opens the Underground view
-   * of recorded well logs, cores and aquifer sections.
+   * of recorded well logs, cores and aquifer sections. `daylight` shows the
+   * calculated night side and twilight bands at the current time.
    */
-  tools?: readonly ("transect" | "flow" | "underground")[];
+  tools?: readonly ("transect" | "flow" | "underground" | "daylight")[];
   /**
    * The light this look opens under, by scene recipe: only its atmosphere and
    * sun azimuth are applied, never its effect settings. Relief reads best under
@@ -63,8 +64,8 @@ export const CATEGORY_MAPS: Readonly<Record<TopicId, CategoryMap>> = Object.free
   people: { topic: "people", name: "Community map", lede: "County outlines on the civic base, ready for aggregate Census context.", basemap: "civic", scene: "2d", camera: STATEWIDE, starters: ["census-counties"], swatch: ["#f3f1ec", "#e3dcef", "#6d559b"] },
   government: { topic: "government", name: "Civic map", lede: "Kansas by jurisdiction: state, county and city boundaries with their places, the capital starred.", basemap: "civic", scene: "2d", camera: STATEWIDE, starters: ["census-counties"], swatch: ["#f3f1ec", "#6d559b", "#3f2a6b"] },
   places: { topic: "places", name: "Reference map", lede: "Counties and watersheds on the civic base for orienting an investigation.", basemap: "civic", scene: "2d", camera: STATEWIDE, starters: ["census-counties", "usgs-wbd-watersheds"], swatch: ["#f3f1ec", "#9fc0d4", "#6d559b"] },
-  science: { topic: "science", name: "Observation globe", lede: "Kansas on the globe with satellite context, then zoom in to the instruments.", basemap: "standard", scene: "globe", camera: Object.freeze({ center: [-98.38, 38.48] as const, zoom: 3.2, pitch: 0, bearing: 0 }), starters: ["noaa-goes-geocolor"], swatch: ["#0b1830", "#2c6fb0", "#e8eef5"] },
-  sky: { topic: "sky", name: "Sky globe", lede: "The globe under calculated daylight and night-sky presentation.", basemap: "standard", scene: "globe", camera: Object.freeze({ center: [-98.38, 38.48] as const, zoom: 2.6, pitch: 0, bearing: 0 }), starters: [], swatch: ["#060c1c", "#3b4f8f", "#f2d27a"] },
+  science: { topic: "science", name: "Observation globe", lede: "Kansas on the globe with satellite context, then zoom in to the instruments.", basemap: "standard", scene: "globe", camera: Object.freeze({ center: [-98.38, 38.48] as const, zoom: 3.2, pitch: 0, bearing: 0 }), starters: ["noaa-goes-geocolor"], tools: ["daylight"], swatch: ["#0b1830", "#2c6fb0", "#e8eef5"] },
+  sky: { topic: "sky", name: "Sky globe", lede: "The globe under calculated daylight and night-sky presentation.", basemap: "standard", scene: "globe", camera: Object.freeze({ center: [-98.38, 38.48] as const, zoom: 2.6, pitch: 0, bearing: 0 }), starters: [], tools: ["daylight"], swatch: ["#060c1c", "#3b4f8f", "#f2d27a"] },
   evidence: { topic: "evidence", name: "Reference base", lede: "The standard vector base with nothing extra switched on, for inspecting sources.", basemap: "standard", scene: "2d", camera: STATEWIDE, starters: [], swatch: ["#efece4", "#9fb7c9", "#4d4a3f"] },
 } satisfies Record<TopicId, CategoryMap>);
 

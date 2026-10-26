@@ -354,7 +354,9 @@ import {
   kansasLocalDateRangeInterval,
   kansasLocalDayInterval,
   restoreDaylightView,
+  solarReferenceElevation,
 } from "./daylight-layer";
+import { daylightPhaseReading } from "./daylight-shader-layer";
 
 /** How long each quarter-hour step of Play the day holds: 5:00 AM to 11:45 PM plays in about 15 seconds. */
 const SUN_PLAY_STEP_MS = 200;
@@ -7524,6 +7526,16 @@ export default function Home() {
     announce(`Terrain investigation ready at ${verticalExaggerationRef.current.toFixed(1)}× display scale. Draw a line on the map, finish it, then preview unexaggerated DEM samples.`);
   };
 
+  // The dock shows the calculated day and night at the current time when the
+  // layer's date range holds it; another chosen day keeps its own clock.
+  const showCategoryDaylight = (on: boolean) => {
+    toggleDaylightVisibility(on);
+    if (!on) return;
+    const interval = kansasLocalDateRangeInterval(daylightDayRef.current, daylightThroughDayRef.current);
+    const now = Date.now();
+    if (now >= interval.startMs && now < interval.endMs) seekDaylight(intervalFractionAtInstant(now, interval));
+  };
+
   // From the category dock the investigation's steps sit in the Scene panel's collapsed
   // "Terrain tools" section, so open it and bring them into view.
   const startCategoryTransect = () => {
@@ -10005,6 +10017,9 @@ export default function Home() {
             onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => updateSceneEffects({ ...sceneEffectsRef.current, sunSync })}
             onSunTime={(fraction) => { setSunPlaying(false); setSunStudyAt(fraction === null ? null : instantAtIntervalFraction(kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunClock))), fraction)); }}
             sunPlaying={sunPlaying} motionAllowed={!reducedMotion} onSunPlay={playSunDay} onTransect={startCategoryTransect} onUnderground={enterUnderground}
+            daylight={activeCategoryMap.tools?.includes("daylight") ? { on: daylightEnabled, playing: daylightPlaying, time: daylightDisplayTime.central,
+              reading: `Kansas center: ${daylightPhaseReading(solarReferenceElevation(daylightInstant, activeCategoryMap.camera.center[1], activeCategoryMap.camera.center[0]))}` } : undefined}
+            onDaylight={showCategoryDaylight} onDaylightPlay={setDaylightPlayback}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}

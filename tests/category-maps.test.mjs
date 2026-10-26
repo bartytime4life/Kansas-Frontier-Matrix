@@ -179,6 +179,40 @@ test('the aquifer and geology maps open Underground from their dock through the 
  assert.match(page,/const showCategoryDock = Boolean\([^;]*!undergroundOpen/,'the dock steps aside while Underground is open');
 });
 
+test('the globe looks show the calculated day and night from their dock, at the current time',async()=>{
+ const withDaylight=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('daylight')).map(([id])=>id).sort();
+ assert.deepEqual(withDaylight,['science','sky']);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];const base={look:maps.CATEGORY_MAPS.sky,mode:'globe',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onDaylight:v=>calls.push(['show',v]),onDaylightPlay:v=>calls.push(['play',v]),onReset(){},onLayers(){},onClose(){}};
+ const button=(tree,label)=>findNode(tree,n=>n.type==='button'&&n.props.children===label);
+ const reading=tree=>findNode(tree,n=>n.props?.className==='category-map-dock-reading');
+ const daylight={on:false,playing:false,time:'Mon, Oct 26, 3:42:10 PM CDT',reading:'Kansas center: Sun 31° up · daylight'};
+ let tree=h.render(h.exports.CategoryMapDock,{...base,daylight});
+ assert.equal(button(tree,'Show day and night').props['aria-pressed'],false);
+ assert.equal(reading(tree),undefined);assert.equal(button(tree,'Play day and night'),undefined,'no clock until the layer is shown');
+ button(tree,'Show day and night').props.onClick();assert.deepEqual(calls,[['show',true]]);
+ tree=h.render(h.exports.CategoryMapDock,{...base,daylight:{...daylight,on:true}});
+ assert.match(JSON.stringify(reading(tree)),/3:42:10 PM CDT.*Kansas center: Sun 31° up · daylight/);
+ assert.equal(reading(tree).props['aria-live'],'polite');
+ button(tree,'Play day and night').props.onClick();
+ tree=h.render(h.exports.CategoryMapDock,{...base,daylight:{...daylight,on:true,playing:true}});
+ assert.equal(reading(tree).props['aria-live'],'off','a running clock is not read out every frame');
+ button(tree,'Pause day and night').props.onClick();
+ button(tree,'Hide day and night').props.onClick();
+ assert.deepEqual(calls,[['show',true],['play',true],['play',false],['show',false]]);
+ tree=h.render(h.exports.CategoryMapDock,{...base,motionAllowed:false,daylight:{...daylight,on:true,playing:true}});
+ assert.equal(button(tree,'Play day and night').props.disabled,true,'reduced motion keeps the clock still');
+ tree=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.water,mode:'2d',daylight});
+ assert.equal(button(tree,'Show day and night'),undefined,'looks without the tool show no toggle');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/onDaylight=\{showCategoryDaylight\} onDaylightPlay=\{setDaylightPlayback\}/);
+ assert.match(page,/daylight=\{activeCategoryMap\.tools\?\.includes\("daylight"\) \? \{ on: daylightEnabled, playing: daylightPlaying, time: daylightDisplayTime\.central,\s*reading: `Kansas center: \$\{daylightPhaseReading\(solarReferenceElevation\(daylightInstant, activeCategoryMap\.camera\.center\[1\], activeCategoryMap\.camera\.center\[0\]\)\)\}` \} : undefined\}/,'the reading uses the layer\'s own clock at the look\'s center');
+ const show=page.slice(page.indexOf('  const showCategoryDaylight = (on: boolean) => {'),page.indexOf('  // From the category dock the investigation'));
+ assert.match(show,/toggleDaylightVisibility\(on\);\s*if \(!on\) return;/,'the layer card\'s own switch path');
+ assert.match(show,/if \(now >= interval\.startMs && now < interval\.endMs\) seekDaylight\(intervalFractionAtInstant\(now, interval\)\);/,'it opens on the current time when the chosen range holds it');
+});
+
 test('the Layers topic guide shows the category map look and opens it only when it is not on',async()=>{
  const h=await componentHarness('app/topic-navigation.tsx',{'next/link':{default:'a'},'./layer-workspaces':topics},{URLSearchParams});
  const look=maps.CATEGORY_MAPS.aviation;let opened=0;
