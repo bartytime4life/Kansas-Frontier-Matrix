@@ -10,6 +10,7 @@ import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacit
 import { BUILD_UTC_YEAR } from "./build-clock";
 import { POPULATION_PRISM_LAYER_ID, PRISM_OPACITY, populationPrismLayer, populationPrismsOn } from "./population-prisms";
 import { drawReviewedSnapshot } from "./reviewed-snapshot-layers";
+import { earthquakeColor, earthquakeRadius, nwsSeverityColor } from "./map-keys";
 import { globeOverviewPaintSize } from "./globe-context";
 import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay, FIRE_REPORT_FLAME_ID } from "./fire-detection-style";
 
@@ -876,8 +877,8 @@ export const applyOfficialContextState = (
   const earthquakes = OFFICIAL_CONTEXT_BY_ID["usgs-earthquakes"];
   ensureGeoJsonSource(map, earthquakes, payloads["usgs-earthquakes"]?.data ?? emptyCollection());
   ensureLayer(map, { id: earthquakes.layerIds[0], type: "circle", source: earthquakes.sourceId, paint: {
-    "circle-color": ["interpolate", ["linear"], ["coalesce", ["get", "magnitude"], 0], 0, "#ffd7a8", 2, earthquakes.color, 4, "#ef6b45", 6, "#d9364f"],
-    "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["interpolate", ["linear"], ["coalesce", ["get", "magnitude"], 0], 0, 3, 3, 7, 6, 12], 10, ["interpolate", ["linear"], ["coalesce", ["get", "magnitude"], 0], 0, 5, 3, 11, 6, 18]],
+    "circle-color": earthquakeColor(),
+    "circle-radius": earthquakeRadius(),
     "circle-opacity": 0.92, "circle-stroke-color": "#27130a", "circle-stroke-width": 1.5,
   } });
 
@@ -928,9 +929,9 @@ export const applyOfficialContextState = (
 
   const alerts = OFFICIAL_CONTEXT_BY_ID["nws-alerts"];
   ensureGeoJsonSource(map, alerts, payloads["nws-alerts"]?.data ?? emptyCollection());
-  const severityColor = ["match", ["get", "severity"], "Extreme", "#d9364f", "Severe", "#ef6b45", "Moderate", "#f2c14e", "Minor", "#78c6d0", "#b78ad7"] as unknown as string;
-  ensureLayer(map, { id: alerts.layerIds[0], type: "fill", source: alerts.sourceId, paint: { "fill-color": severityColor, "fill-opacity": 0.34 } });
-  ensureLayer(map, { id: alerts.layerIds[1], type: "line", source: alerts.sourceId, paint: { "line-color": severityColor, "line-width": 2.4, "line-opacity": 0.94 } });
+  // The same ordinal severity palette as the reviewed snapshots and the dock's key (map-keys.ts).
+  ensureLayer(map, { id: alerts.layerIds[0], type: "fill", source: alerts.sourceId, paint: { "fill-color": nwsSeverityColor(), "fill-opacity": 0.34 } });
+  ensureLayer(map, { id: alerts.layerIds[1], type: "line", source: alerts.sourceId, paint: { "line-color": nwsSeverityColor(), "line-width": 2.4, "line-opacity": 0.94 } });
 
   const declarations = OFFICIAL_CONTEXT_BY_ID["fema-disaster-declarations"];
   ensureGeoJsonSource(map, declarations, payloads["fema-disaster-declarations"]?.data ?? emptyCollection());
