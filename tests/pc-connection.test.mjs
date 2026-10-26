@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, lstat, mkdir, symlink, readdir, rm } from 'node:fs/promises';
+import { chmod, mkdtemp, readFile, lstat, mkdir, symlink, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -153,6 +153,8 @@ test('unsafe roots, unexpected arguments and receipt-write errors fail explicitl
   await assert.rejects(cli(['connection', '.'], options), /ABSOLUTE_ROOT_REQUIRED/);
   await assert.rejects(cli(['connection', resolve('outputs')], options), /DATA_ROOT_MUST_BE_OUTSIDE_CHECKOUT/);
   const publicRoot = resolve(root, 'public'); await mkdir(publicRoot, { mode: 0o755 });
+  // Preserve the unsafe fixture even when this process uses umask 077.
+  await chmod(publicRoot, 0o755);
   await assert.rejects(cli(['connection', publicRoot], options), /PRIVATE_ROOT_REQUIRED/);
   const linked = resolve(root, 'linked'); await symlink(publicRoot, linked);
   await assert.rejects(cli(['connection', linked], options), /DIRECTORY_UNSAFE/);

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { lstat, mkdtemp, mkdir, rm, symlink } from "node:fs/promises";
+import { chmod, lstat, mkdtemp, mkdir, rm, symlink } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -45,6 +45,8 @@ test("a symlinked reference library blocks download and recovery setup", async (
 test("existing permissive recovery folder blocks setup", async () => {
   await withHome(async (home) => {
     await mkdir(path.join(home, "KFM-site-recovery"), { mode: 0o755 });
+    // A private process umask must not hide the deliberately unsafe fixture.
+    await chmod(path.join(home, "KFM-site-recovery"), 0o755);
     await assert.rejects(inspectLocalPc(home, true), /INSECURE_DIRECTORY_MODE/);
     await assert.rejects(lstat(path.join(home, "Downloads")), { code: "ENOENT" });
   });
