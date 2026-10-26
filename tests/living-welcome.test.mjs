@@ -301,6 +301,19 @@ test('all shared domains expose their facets and actual destination without moun
  h.harness.dispose();
 });
 
+test('Return from the full-window preview clears an engaged card even when no blur arrives',async()=>{
+ const h=await welcome();let tree=h.render();
+ const card=()=>findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-history '));
+ card().props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();
+ assert.equal(rootOf(tree).props['data-active'],'history');
+ // Expanding hides the cards; Chrome can drop their focus without firing blur, so onBlur/release never runs.
+ byText(tree,'Expand animation').props.onClick();tree=h.render();
+ byText(tree,'Return to categories').props.onClick();tree=h.render();
+ assert.equal(rootOf(tree).props['data-fullscreen'],false);
+ assert.equal(rootOf(tree).props['data-active'],null,'Return leaves no card engaged');
+ h.harness.dispose();
+});
+
 test('full-window preview returns to the same categories and uncaptured domains still get their own scene',async()=>{
  const h=await welcome();let tree=h.render();
  byText(tree,'Expand animation').props.onClick();tree=h.render();assert.equal(rootOf(tree).props['data-fullscreen'],true);

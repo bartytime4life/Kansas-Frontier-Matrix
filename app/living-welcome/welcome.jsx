@@ -40,6 +40,8 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const paused=!motion||reduced||hidden,engaged=pinned||active,control=engaged||last;
   const topic=TOPICS.find(t=>t.id===detail),modal=Boolean(detail||panel);
   const run=action=>{action?.();onClose(remember);};
+  // Leaving the full-window preview clears the engaged card itself: hidden cards can
+  // lose focus without a blur event, so release() alone may never run.
   function engage(id){clearTimeout(leave.current);setActive(id);setLast(id);}
   function release(){clearTimeout(leave.current);leave.current=setTimeout(()=>{const keyboardFocus=root.current?.querySelector('.topic-callout:focus-visible');const pointerHover=window.matchMedia('(hover: hover) and (pointer: fine)').matches&&root.current?.querySelector('.topic-callout:hover');if(!keyboardFocus&&!pointerHover)setActive(null);},180);}
   function openTopic(id){trigger.current=document.activeElement;setItem(0);setDetail(id);setPanel(null);setFullscreen(false);}
@@ -66,7 +68,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       if(!root.current?.contains(event.target)&&!dialog.current?.contains(event.target))return;
       if(event.key==='Escape'){
         event.preventDefault();event.stopImmediatePropagation();
-        if(modal)closePanel();else if(fullscreen){setFullscreen(false);setPinned(null);}else if(pinned){setPinned(null);setActive(null);}else onClose(remember);
+        if(modal)closePanel();else if(fullscreen){setFullscreen(false);setPinned(null);setActive(null);}else if(pinned){setPinned(null);setActive(null);}else onClose(remember);
       }
       if(event.key==='Tab'&&modal){
         const nodes=dialog.current?modalFocusableElements(dialog.current):[];
@@ -89,7 +91,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       </div>
       <p className="discovery-hint"><strong>Choose a category to open its map, or start with a place.</strong> <span>{TOPICS.length} categories · each opens on a map built for its data.</span> <button type="button" onClick={()=>openPanel('credits')}>Scene notes</button><span className="discovery-scene"><small>{SCENE_LABEL}</small><b key={`${control}-${beat.id===control?beat.index:0}`}>{SCENE_CATALOG[control]?.beats[beat.id===control?beat.index:0]?.[1]}</b></span></p>
       <section className="discovery-field discovery-field--grouped" aria-label="Choose an exploration topic">{TOPIC_GROUPS.map(group=><div className="discovery-group" role="group" aria-label={group} key={group}><h2 className="discovery-group-title">{group}</h2>{TOPICS.map((t,i)=>[t,i]).filter(([t])=>t.group===group).map(([t,i])=><button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} key={t.id} style={{'--i':i}} data-color={t.group==='Earth & environment'?'green':'sky'} aria-label={`${t.title}: ${t.short}`} onPointerEnter={e=>{if(e.pointerType!=='touch'){wake(e.currentTarget);engage(t.id);}}} onPointerMove={glow} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false){wake(e?.currentTarget);engage(t.id);}}} onBlur={release} onClick={()=>openTopic(t.id)}><span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.short}</small>{t.look&&<span className="topic-map" style={swatch(t.look)}><i aria-hidden="true"/>{t.look.name}</span>}</span><span className="topic-arrow" aria-hidden="true">→</span></button>)}</div>)}</section>
-      <div className="welcome-scene-deck"><button type="button" className="welcome-preview-expand" aria-pressed={fullscreen} onClick={()=>{if(fullscreen)setPinned(null);setFullscreen(!fullscreen);}}>{fullscreen?'Return to categories':'Expand animation'}</button>{fullscreen&&<button type="button" className="welcome-preview-pause" disabled={reduced} aria-pressed={!paused} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{paused?'Play animation':'Pause animation'}</button>}</div>
+      <div className="welcome-scene-deck"><button type="button" className="welcome-preview-expand" aria-pressed={fullscreen} onClick={()=>{if(fullscreen){setPinned(null);setActive(null);}setFullscreen(!fullscreen);}}>{fullscreen?'Return to categories':'Expand animation'}</button>{fullscreen&&<button type="button" className="welcome-preview-pause" disabled={reduced} aria-pressed={!paused} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{paused?'Play animation':'Pause animation'}</button>}</div>
       
     </div>
   </section>
