@@ -241,7 +241,7 @@ It shows display geography, not measured flow or watershed boundaries.
 
 - a smooth hypsometric tint (`RELIEF_RAMP`, a `color-relief` from about 150 m
   to 2,500 m) under the strongest hillshade of the set;
-- rivers, main roads, peaks and towns stay quiet.
+- lakes, main roads, peaks and towns stay quiet.
 
 It is mixed-source display elevation, not survey measurement.
 
@@ -249,7 +249,7 @@ It is mixed-source display elevation, not survey measurement.
 
 - a neutral charcoal ground; every colour in the style has low chroma, so
   radar, alert and fire colours stay distinguishable;
-- county and state lines and town labels show where weather is hitting.
+- the state line and town labels show where weather is hitting.
 
 Weather layers keep their own clocks.
 
@@ -258,7 +258,7 @@ Weather layers keep their own clocks.
 - road classes in colour (motorway, trunk, primary, secondary), white-cased,
   with darker casing on bridges;
 - route numbers from `transportation_name`;
-- classic dark rail with white ties, plus runways and county lines.
+- classic dark rail with white ties, plus runways.
 
 It is display context, not traffic, condition or access.
 
@@ -267,9 +267,9 @@ It is display context, not traffic, condition or access.
 - a parchment ground with a sepia hillshade and the bundled 1° graticule;
 - railroads are the subject: an ink line crossed by ties, the way atlases drew
   the lines that placed Kansas towns;
-- county lines are dotted and the state line is dash-dot;
+- the state line is dash-dot;
 - modern roads, urban areas and water recede;
-- city names are letter-spaced capitals, and river names follow their courses.
+- city names are letter-spaced capitals.
 
 It is present-day OpenMapTiles geography drawn in an atlas style, not a
 historical map. The History look adds the dated layers on top: the digitized

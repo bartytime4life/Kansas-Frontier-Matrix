@@ -39,6 +39,8 @@ test('aviation and government are categories with their own specialized basemaps
  assert.equal(maps.CATEGORY_MAPS.aviation.basemap,'aviation-chart');assert.equal(maps.CATEGORY_MAPS.aviation.scene,'terrain');
  assert.equal(maps.CATEGORY_MAPS.government.basemap,'civic');assert.deepEqual([...maps.CATEGORY_MAPS.government.starters],['census-counties']);
  assert.ok(topics.officialSourceTopics('census-counties').includes('government'));
+ // A lede promises only what the map draws: county lines come from the civic base or the Census starter.
+ for(const [id,look] of Object.entries(maps.CATEGORY_MAPS))if(look.basemap!=='civic'&&!look.starters.includes('census-counties'))assert.doesNotMatch(look.lede,/count(y|ies)/i,`${id}: no county lines on this map`);
  // Fire starts off everywhere and is a Hazard watch layer: its detections and reports are that map's starters.
  assert.deepEqual([...maps.CATEGORY_MAPS.disaster.starters],['nws-alerts','nasa-gibs-fire-points','nifc-fire-reports']);
  for(const id of ['nasa-gibs-fire-points','nifc-fire-reports'])assert.ok(topics.officialSourceTopics(id).includes('disaster'),`${id} is listed under Hazards`);
