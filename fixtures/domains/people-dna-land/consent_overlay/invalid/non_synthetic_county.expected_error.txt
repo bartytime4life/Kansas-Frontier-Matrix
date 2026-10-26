@@ -1,1 +1,0 @@
-NON_SYNTHETIC_COUNTY_DENIED	$.events[0].place_bucket.county_fips
