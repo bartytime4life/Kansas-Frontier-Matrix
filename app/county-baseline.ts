@@ -1,5 +1,6 @@
 import { boundedFetch } from "./api/event-atlas/upstream";
 import type { FeatureCollection, Geometry } from "geojson";
+import { kansasDensityGroup, peoplePerSquareMile } from "./population-prisms";
 
 export const COUNTY_EDITIONS = { "2010": 100, "2020": 82 } as const;
 export type CountyEdition = keyof typeof COUNTY_EDITIONS;
@@ -15,9 +16,13 @@ export async function countyBaseline(edition: CountyEdition) {
     const p = feature.properties;
     if (!p || typeof p.GEOID !== "string" || !/^20\d{3}$/.test(p.GEOID) || ids.has(p.GEOID) || !["Polygon", "MultiPolygon"].includes(feature.geometry?.type)) throw new Error("Census county identity or geometry was invalid.");
     ids.add(p.GEOID);
+    const landSquareMiles = number(p.AREALAND) === null ? null : Number(p.AREALAND) / 2589988.110336;
+    const density = peoplePerSquareMile(number(p.POP100), landSquareMiles);
     return { type: "Feature", id: p.GEOID, geometry: feature.geometry, properties: {
       featureId: `us-census-county-${p.GEOID}`, geoid: p.GEOID, name: p.BASENAME ?? p.NAME, stateFips: "20", countyFips: p.GEOID.slice(2),
-      population: number(p.POP100), housingUnits: number(p.HU100), landSquareMiles: number(p.AREALAND) === null ? null : Number(p.AREALAND) / 2589988.110336, waterSquareMiles: number(p.AREAWATER) === null ? null : Number(p.AREAWATER) / 2589988.110336,
+      population: number(p.POP100), housingUnits: number(p.HU100), landSquareMiles, waterSquareMiles: number(p.AREAWATER) === null ? null : Number(p.AREAWATER) / 2589988.110336,
+      // People per square mile of land, and the Kansas (KDHE) density peer group it falls in.
+      peoplePerSquareMile: density === null ? null : Math.round(density * 10) / 10, densityGroup: density === null ? null : kansasDensityGroup(density).label,
       populationEstimate: number(p.POP100), populationEstimateYear: Number(edition), populationEstimateProduct: `${edition} decennial census count`, vintage: edition, sourceOrganization: "U.S. Census Bureau", evidenceRole: "EXTERNAL_CONTEXT_ONLY",
     } };
   }) };

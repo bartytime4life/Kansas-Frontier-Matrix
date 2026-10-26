@@ -15,7 +15,7 @@ const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readon
   "kgs-depth-to-water": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
   "kgs-monitoring-wells": [["LOCAL_WELL", "Local well"], ["USGS_ID", "USGS identifier"], ["recordUrl", "KGS well record"], ["period", "Edition"]],
 
-  "census-counties": [["geoid", "County GEOID"], ["name", "County"], ["vintage", "Census edition"], ["population", "Population count"], ["housingUnits", "Housing units"], ["landSquareMiles", "Land · sq mi"], ["waterSquareMiles", "Water · sq mi"]],
+  "census-counties": [["geoid", "County GEOID"], ["name", "County"], ["vintage", "Census edition"], ["population", "Population count"], ["housingUnits", "Housing units"], ["landSquareMiles", "Land · sq mi"], ["peoplePerSquareMile", "People per sq mi of land"], ["densityGroup", "Kansas density group"], ["waterSquareMiles", "Water · sq mi"]],
   "usgs-streamflow": [["stationId", "USGS station"], ["displayValue", "Discharge at frame"], ["observedAt", "Observed at"], ["approvalStatus", "USGS status"], ["trend", "Trend at frame"]],
   "noaa-nwps-gauges": [["lid", "NOAA gauge"], ["observedValue", "Observed value"], ["observedUnit", "Observed unit"], ["observedAt", "Observed at"], ["forecastValue", "Forecast value"], ["forecastUnit", "Forecast unit"], ["forecastAt", "Forecast valid at"], ["floodCategory", "Provider flood category"]],
   "usgs-earthquakes": [["magnitude", "Magnitude"], ["magnitudeType", "Magnitude type"], ["depthKilometers", "Depth · km"], ["observedAt", "Event time"], ["updatedAt", "Provider update"], ["reviewStatus", "Review status"], ["eventType", "Event type"], ["place", "Place"]],

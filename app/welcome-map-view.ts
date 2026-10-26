@@ -21,6 +21,8 @@ export type WelcomeView = Readonly<{
   camera: CategoryCamera;
   /** Starter data layers the preview draws (provider-context ids). */
   starters: readonly string[];
+  /** Whether the county starter is drawn as population prisms, as the map draws it. */
+  prisms: boolean;
   /** Caption: the map's name and what it shows. */
   name: string;
   detail: string;
@@ -43,6 +45,7 @@ export const WELCOME_IDLE_VIEW: WelcomeView = Object.freeze({
   scene: "2d",
   camera: Object.freeze({ center: [-98.38, 38.48] as const, zoom: 6.1, pitch: 0, bearing: 0 }),
   starters: Object.freeze([]),
+  prisms: false,
   name: "Kansas",
   detail: "The Explorer's default vector map · choose a category to preview its map",
 });
@@ -51,7 +54,7 @@ export function welcomeView(topic: string | null): WelcomeView {
   const look = topic && Object.hasOwn(CATEGORY_MAPS, topic) ? CATEGORY_MAPS[topic as keyof typeof CATEGORY_MAPS] : null;
   if (!look) return WELCOME_IDLE_VIEW;
   const starters = look.starters.filter(id => !WELCOME_PREVIEW_SKIPPED_STARTERS.has(id));
-  return { topic: look.topic, basemap: look.basemap, scene: look.scene, camera: look.camera, starters, name: look.name, detail: `${categorySceneLabel(look.scene)} · ${look.lede}` };
+  return { topic: look.topic, basemap: look.basemap, scene: look.scene, camera: look.camera, starters, prisms: Boolean(look.overlays?.includes("population")), name: look.name, detail: `${categorySceneLabel(look.scene)} · ${look.lede}` };
 }
 
 /**
