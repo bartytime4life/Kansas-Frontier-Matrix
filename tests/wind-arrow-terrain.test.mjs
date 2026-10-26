@@ -465,6 +465,22 @@ test("leaving 3D destroys DEM tile managers before the next terrain entry", () =
   assert.equal(layers.has(terrain.TERRAIN_COLOR_RELIEF_LAYER_ID), true);
 });
 
+test("no painted DEM hillshade is drawn over the photographic basemap", () => {
+  const sources = new Map(), layers = new Map();
+  const map = {
+    getSource: (id) => sources.get(id), addSource: (id, spec) => sources.set(id, { ...spec }), removeSource: (id) => sources.delete(id),
+    getLayer: (id) => layers.get(id), addLayer: (layer) => layers.set(layer.id, structuredClone(layer)), removeLayer: (id) => layers.delete(id),
+    setLayoutProperty: (id, key, value) => { layers.get(id).layout[key] = value; },
+    getStyle: () => ({ layers: [...layers.values()] }), setTerrain() {},
+  };
+  layers.set(terrain.PHOTOREAL_IMAGERY_LAYER_ID, { id: terrain.PHOTOREAL_IMAGERY_LAYER_ID, type: "raster", source: "esri-imagery", layout: {} });
+  assert.equal(terrain.setTerrainPresentation(map, true, 1), "LOADING");
+  assert.equal(layers.get(terrain.TERRAIN_HILLSHADE_LAYER_ID).layout.visibility, "none", "the photograph carries its own light");
+  layers.delete(terrain.PHOTOREAL_IMAGERY_LAYER_ID);
+  terrain.setTerrainPresentation(map, true, 2.5);
+  assert.equal(layers.get(terrain.TERRAIN_HILLSHADE_LAYER_ID).layout.visibility, "visible", "relief colours shade the terrain again");
+});
+
 test("switching terrain providers replaces both DEM tile managers and verifies the attached source", () => {
   const sources = new Map(), layers = new Map(), operations = [];
   let currentTerrain = null;

@@ -1483,6 +1483,8 @@ export default function Home() {
   const [populationPrisms, setPopulationPrismsShown] = useState(false);
   // The landscape the photo-real 3D view last flew to.
   const [photorealPlace, setPhotorealPlace] = useState<string | null>(null);
+  // The provider hillshade switched off on entering the photograph, restored on return.
+  const photorealHidHillshadeRef = useRef(false);
   const [categoryDockHidden, setCategoryDockHidden] = useState(false);
   const aviationPickingRef = useRef(false);
   const setAviationPicking = useCallback((active: boolean) => {
@@ -7560,6 +7562,7 @@ export default function Home() {
     if (!look) return;
     if (landscapeId === null) {
       basemapRef.current = look.basemap; setBasemap(look.basemap);
+      if (photorealHidHillshadeRef.current) { photorealHidHillshadeRef.current = false; setOfficialContextVisible("usgs-3dep-hillshade", true); }
       if (terrainProviderRef.current !== "mapzen") chooseTerrainProvider("mapzen");
       changeTerrainDepth(DEFAULT_TERRAIN_DEPTH);
       announce(`${look.name} relief colours restored`);
@@ -7568,7 +7571,12 @@ export default function Home() {
     const landscape = PHOTOREAL_LANDSCAPES.find(candidate => candidate.id === landscapeId);
     if (!landscape) return;
     if (categoryMode !== "terrain") activateMapRepresentation("terrain");
-    if (basemapRef.current !== "photoreal") { basemapRef.current = "photoreal"; setBasemap("photoreal"); changeTerrainDepth(1); }
+    if (basemapRef.current !== "photoreal") {
+      basemapRef.current = "photoreal"; setBasemap("photoreal"); changeTerrainDepth(1);
+      // The photograph carries the real light of its flight; painted relief stays off it.
+      photorealHidHillshadeRef.current = Boolean(officialVisibilityRef.current["usgs-3dep-hillshade"]);
+      if (photorealHidHillshadeRef.current) setOfficialContextVisible("usgs-3dep-hillshade", false);
+    }
     if (terrainProviderRef.current !== "usgs-3dep") chooseTerrainProvider("usgs-3dep");
     if (!sceneEffectsRef.current.sunSync) updateSceneEffects({ ...sceneEffectsRef.current, sunSync: true });
     setPhotorealPlace(landscape.id);
@@ -9156,6 +9164,7 @@ export default function Home() {
     basemapRef.current = look.basemap;
     setBasemap(look.basemap);
     if (look.light) applyCategoryLight(look.light);
+    photorealHidHillshadeRef.current = false;
     // Each map opens on its own subject: only its starters are on, as a starter set does.
     for (const source of OFFICIAL_CONTEXT_SOURCES) {
       const on = look.starters.includes(source.id);

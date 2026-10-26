@@ -307,6 +307,9 @@ export type RegistryEvidenceFilter = EvidenceState | "ALL";
 export const TERRAIN_SOURCE_ID = "kfm-terrain-dem";
 export const TERRAIN_HILLSHADE_SOURCE_ID = "kfm-terrain-shadow-dem";
 export const TERRAIN_HILLSHADE_LAYER_ID = "kfm-terrain-hillshade";
+/** The photographic basemap's imagery layer; with it loaded, no painted relief is drawn over the photograph. */
+export const PHOTOREAL_IMAGERY_LAYER_ID = "photoreal-world-imagery";
+const reliefShadingVisibility = (map: MapLibreMap): "visible" | "none" => map.getLayer(PHOTOREAL_IMAGERY_LAYER_ID) ? "none" : "visible";
 export const TERRAIN_COLOR_SOURCE_ID = "kfm-terrain-color-dem";
 
 /** Only failures from the standard style itself may replace it: its own tile
@@ -465,14 +468,14 @@ export const setTerrainPresentation = (
         id: TERRAIN_HILLSHADE_LAYER_ID,
         type: "hillshade",
         source: TERRAIN_HILLSHADE_SOURCE_ID,
-        layout: { visibility: "visible" },
+        layout: { visibility: reliefShadingVisibility(map) },
         paint: {
           ...reliefPaintFor(map, "general", "clear", 235),
           "hillshade-illumination-anchor": "map",
         },
       }, overlay);
     } else {
-      map.setLayoutProperty(TERRAIN_HILLSHADE_LAYER_ID, "visibility", "visible");
+      map.setLayoutProperty(TERRAIN_HILLSHADE_LAYER_ID, "visibility", reliefShadingVisibility(map));
     }
     const safeExaggeration = Math.max(0.1, Math.min(3, Number.isFinite(exaggeration) ? exaggeration : 1));
     map.setTerrain({ source: TERRAIN_SOURCE_ID, exaggeration: safeExaggeration });
