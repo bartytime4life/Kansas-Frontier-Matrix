@@ -4,12 +4,14 @@ export const latestSafeCursor = (now = new Date()) => new Date(now.getTime() - 6
 
 // Real provider-backed starting stacks. Unsupported domains remain available
 // for historical/source exploration, never filled with synthetic measurements.
+// Counties are a subject (people), not a backdrop for every view, and the
+// overview adds nothing: it is the Explorer's own uncluttered start.
 export const BASELINE_STACKS: Record<string, readonly string[]> = {
-  overview: ["census-counties", "usgs-streamflow", "usgs-3dhp-hydrography"],
-  water: ["census-counties", "usgs-streamflow", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwps-gauges"],
-  hazards: ["census-counties", "usgs-earthquakes", "noaa-hms-smoke", "nws-alerts"],
-  smoke: ["census-counties", "noaa-hms-smoke", "nws-radar"],
-  elevation: ["census-counties", "usgs-3dep-hillshade"],
-  ecosystems: ["census-counties", "usgs-wbd-watersheds"],
+  overview: [],
+  water: ["usgs-streamflow", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwps-gauges"],
+  hazards: ["usgs-earthquakes", "noaa-hms-smoke", "nws-alerts"],
+  smoke: ["noaa-hms-smoke", "nws-radar"],
+  elevation: ["usgs-3dep-hillshade"],
+  ecosystems: ["usgs-wbd-watersheds"],
   "people-movement": ["census-counties"],
 };

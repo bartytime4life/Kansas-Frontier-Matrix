@@ -1,3 +1,4 @@
+import type { OfficialContextId } from "./live-context";
 import type { MapViewProfile } from "./map-interface";
 
 export type LivingAtlasViewStatus = "REAL_BASELINE";
@@ -15,6 +16,8 @@ export type LivingAtlasView = Readonly<{
   report: string;
   status: LivingAtlasViewStatus;
   profileId?: MapViewProfile["id"];
+  /** Provider layers the view adds on top of its profile's starting stack (BASELINE_STACKS). */
+  sources: readonly OfficialContextId[];
   story?: boolean;
   syntheticProof?: boolean;
   camera?: Readonly<{
@@ -45,14 +48,15 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
     scope: "Kansas statewide",
     domains: ["places", "water", "movement"],
     display: "2D",
-    time: "Today’s observations + pinned Census edition",
-    sourcePosture: "Census county baseline + USGS water sources",
+    time: "Today’s base map",
+    sourcePosture: "Base map only; add sources from Layers or a topic map",
     motion: "Paused; camera only",
     report: "Statewide orientation + report starter",
     status: "REAL_BASELINE",
     profileId: "overview",
+    sources: Object.freeze([]),
     camera: camera([-98.38, 38.48], 5.45),
-    note: "Opens on all 105 real county boundaries, decennial population/housing counts, stream observations and mapped hydrography. No synthetic overlay starts enabled.",
+    note: "Opens statewide on the base map with no provider layer switched on, so the sources you choose stand on their own. The views below and the topic maps each switch on their own.",
   }),
   Object.freeze({
     id: "county-atlas",
@@ -67,6 +71,7 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
     report: "County dossier + coverage table",
     status: "REAL_BASELINE",
     profileId: "overview",
+    sources: Object.freeze(["census-counties"] as const),
     camera: camera([-98.45, 38.56], 8.1),
     note: "Click a real county boundary to inspect its population, housing and land/water area. Use the archive for independently dated 2010 and 2020 baseline editions.",
   }),
@@ -83,6 +88,7 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
     report: "Elevation concept + limitations",
     status: "REAL_BASELINE",
     profileId: "elevation",
+    sources: Object.freeze([]),
     camera: camera([-96.55, 38.55], 7.85, -22, 48),
     note: "Shows actual published elevation-derived terrain context. The layer retains its source limitations and makes no acquisition-date or accuracy claim for an individual pixel.",
   }),
@@ -100,6 +106,7 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
     report: "USGS and NOAA source clocks",
     status: "REAL_BASELINE",
     profileId: "water",
+    sources: Object.freeze([]),
     camera: camera([-96.75, 39.0], 7.35, 12, 42),
     note: "Start with real observations and mapped waterways. Explore each station’s declared record span and daily or continuous samples in the archive. No gauge value is generalized to a reach or basin.",
   }),
@@ -116,6 +123,7 @@ export const LIVING_ATLAS_VIEWS: readonly LivingAtlasView[] = Object.freeze([
     report: "Smoke context + boundary notes",
     status: "REAL_BASELINE",
     profileId: "smoke",
+    sources: Object.freeze([]),
     camera: camera([-99.0, 38.7], 6.4, 8, 18),
     note: "Actual smoke footprints and observed radar frames retain their provider times. This layer does not infer smoke movement, surface concentration, or exposure.",
   }),
