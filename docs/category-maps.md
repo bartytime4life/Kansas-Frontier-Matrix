@@ -223,6 +223,25 @@ committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
 The snapshots are drawn by the context renderer (`app/reviewed-snapshot-layers.ts`)
 and are approved context releases, not admitted evidence.
 
+## Map keys
+
+A map whose starter layers encode a value shows a key for each one in its
+dock, while that layer is on (`app/map-keys.ts`). The layer styles and the keys
+read the same constants, so the two cannot drift apart:
+
+- **Earthquake magnitude** (Landform relief): USGS magnitude; colour and
+  circle size both rise with it. The key draws M 0, 2, 4 and 6+ at their
+  statewide (zoom 4) sizes.
+- **NWS alert severity** (Storm desk, Hazard watch): the alert's CAP severity,
+  as one ordinal palette for live and reviewed alerts alike. It runs from pale
+  yellow (Minor) through orange and red to magenta (Extreme, the Storm
+  Prediction Center's colour for its highest risk), each step more salient on
+  the dark storm base. An alert without a recognised severity is neutral grey,
+  off the scale.
+
+Radar keeps its dBZ legend in its own panel, and stream gauges keep theirs in
+River Pulse.
+
 ## Photo-real 3D (Terrain)
 
 The Relief model dock's **Photo-real 3D** drapes the photographed ground on the

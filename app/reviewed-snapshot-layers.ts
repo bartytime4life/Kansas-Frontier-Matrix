@@ -1,5 +1,6 @@
 import type { FeatureCollection } from "geojson";
 import type { ExpressionSpecification, LayerSpecification, Map as MapLibreMap } from "./maplibre-seam";
+import { nwsSeverityColor } from "./map-keys";
 
 /**
  * How a reviewed snapshot from the site database is drawn (see
@@ -10,8 +11,9 @@ import type { ExpressionSpecification, LayerSpecification, Map as MapLibreMap } 
 export const REVIEWED_SOURCE_ID = "external-reviewed-snapshot";
 export const REVIEWED_LAYER_IDS = Object.freeze(["external-reviewed-snapshot-areas", "external-reviewed-snapshot-edges", "external-reviewed-snapshot-gauges"]);
 /** NWS severity, strongest first, with the colour each alert area takes. */
-export const NWS_SEVERITY_COLORS = Object.freeze([["Extreme", "#a50f15"], ["Severe", "#de2d26"], ["Moderate", "#fb6a4a"], ["Minor", "#fcae91"]] as const);
-const severityColor = ["match", ["get", "severity"], ...NWS_SEVERITY_COLORS.flat(), "#bdbdbd"] as unknown as ExpressionSpecification;
+// Alert areas take the same severity palette as the live alerts (map-keys.ts).
+export { NWS_SEVERITY_COLORS } from "./map-keys";
+const severityColor = nwsSeverityColor();
 /** Circle area in proportion to discharge: radius grows with the square root of the value. */
 const dischargeRadius: ExpressionSpecification = ["interpolate", ["linear"], ["sqrt", ["max", 0, ["to-number", ["get", "value"], 0]]], 0, 3, 100, 9, 250, 18];
 

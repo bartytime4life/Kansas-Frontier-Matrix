@@ -4,7 +4,8 @@ import {readFile} from 'node:fs/promises';
 import ts from 'typescript';
 import {componentHarness, findNode} from './component-harness.mjs';
 
-const compile=async path=>{const exports={};new Function('exports','require',ts.transpileModule(await readFile(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(exports,id=>{if(id==='react')return{useCallback:f=>f,useEffect(){},useRef:v=>({current:v}),useState:v=>[v,()=>{}]};if(id==='./bounded-json')return{readBoundedJson(){}};throw new Error(id);});return exports;};
+const compile=async path=>{const exports={};new Function('exports','require',ts.transpileModule(await readFile(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(exports,id=>{if(id==='react')return{useCallback:f=>f,useEffect(){},useRef:v=>({current:v}),useState:v=>[v,()=>{}]};if(id==='./bounded-json')return{readBoundedJson(){}};if(id==='./map-keys')return mapKeys;throw new Error(id);});return exports;};
+const mapKeys={};new Function('exports',ts.transpileModule(await readFile('app/map-keys.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(mapKeys);
 const snapshots=await compile('app/reviewed-snapshots.ts');
 const layers=await compile('app/reviewed-snapshot-layers.ts');
 const id=c=>c.repeat(64);

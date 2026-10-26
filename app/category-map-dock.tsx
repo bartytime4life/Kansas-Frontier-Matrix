@@ -5,6 +5,7 @@ import type { CategoryMap, CategoryScene } from "./category-maps";
 import type { SceneLight } from "./scene-effects";
 import type { KansasDensityGroup } from "./population-prisms";
 import type { PhotorealLandscape } from "./photoreal-landscapes";
+import type { MapKey } from "./map-keys";
 
 export type AquiferView = "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-aquifer-high-plains";
 const AQUIFER_VIEWS: readonly (readonly [AquiferView, string, string])[] = [
@@ -54,7 +55,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, keys, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -153,6 +154,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
   onPhotoreal?: (landscape: string | null) => void;
   onReset: () => void;
   onLayers: () => void;
+  /** Keys for the shown starter layers whose symbols encode a value (map-keys.ts). */
+  keys?: readonly MapKey[];
   onClose: () => void;
 }>) {
   const swatch = { "--m0": look.swatch[0], "--m1": look.swatch[1], "--m2": look.swatch[2] } as CSSProperties;
@@ -262,6 +265,12 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
       title="Draw a line across the relief, then preview its elevation profile without the 3D exaggeration">Draw a cross-section</button>}
     {look.tools?.includes("underground") && onUnderground && <button type="button" className="category-map-dock-tool" onClick={onUnderground}
       title="Open recorded well logs, cores and aquifer sections beneath the map, on the 2D map">Explore underground</button>}
+    {keys?.map(key => <section className="category-map-dock-legend category-map-dock-key" key={key.id} aria-label={`Key: ${key.title}`}>
+      <strong>{key.title}</strong>
+      <ul>{key.items.map(item => <li key={item.label}><span className={`category-map-dock-key-${item.shape}`} aria-hidden="true"
+        style={{ "--key": item.color, ...(item.size ? { "--size": `${item.size}px` } : {}) } as CSSProperties} /><span>{item.label}</span></li>)}</ul>
+      <small>{key.note}</small>
+    </section>)}
     <p className="category-map-dock-lede">{look.lede}</p>
     <div className="category-map-dock-actions">
       <button type="button" onClick={onReset}>Reset view</button>
