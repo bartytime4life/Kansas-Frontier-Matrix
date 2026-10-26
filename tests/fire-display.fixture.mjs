@@ -1,7 +1,9 @@
 // Browser-only synthetic renderer scene. Bundled in tests; never a public route.
 import { loadMapLibre } from '../app/maplibre-seam';
 import { applyOfficialContextState, OFFICIAL_CONTEXT_SOURCES } from '../app/live-context';
-import { setFireDetectionMotion, FIRE_POINT_LAYER_IDS, FIRE_REPORT_FLAME_ID, currentFireFrame } from '../app/fire-detection-style';
+// A namespace import: the same fixture also bundles against a pinned earlier
+// renderer (the CI baseline screenshots), whose exports differ.
+import * as fire from '../app/fire-detection-style';
 const runtime = await loadMapLibre();
 runtime.setWorkerUrl('/maplibre/maplibre-gl-worker.mjs');
 const query=new URLSearchParams(location.search);
@@ -20,7 +22,7 @@ map.on('error',event=>errors.push(String(event.error?.message??event.error)));
 await new Promise(resolve=>map.once('load',resolve));
 if(query.has('fallback')) map.addImage=()=>{throw new Error('Synthetic unavailable image atlas');};
 const sync=()=>applyOfficialContextState(map,visibility,opacity,payloads);
-setFireDetectionMotion(false); sync();
+fire.setFireDetectionMotion?.(false); sync();
 const draw=()=>new Promise(resolve=>{map.once('render',()=>requestAnimationFrame(resolve));map.triggerRepaint();});
 const ready=()=>new Promise((resolve,reject)=>{
   // Tiles can be ready before the current projection and symbol placement.
@@ -35,7 +37,7 @@ map.on('click',event=>{
   document.querySelector('#inspection').textContent=feature?JSON.stringify({id:feature.properties.featureId,source:feature.source,properties:feature.properties}):'No record';
 });
 // Test-local API: no production diagnostic hooks or source changes.
-window.fireFixture={map,errors,draw,ready,sync,currentFireFrame,motion:setFireDetectionMotion,
+window.fireFixture={map,errors,draw,ready,sync,
   async view({zoom,pitch=0,globe=false,terrain=false,light=false}){
     map.setProjection({type:globe?'globe':'mercator'});
     map.setTerrain(null);
@@ -52,6 +54,6 @@ window.fireFixture={map,errors,draw,ready,sync,currentFireFrame,motion:setFireDe
   async amount(amount){for(const id of ['nasa-gibs-fire-points','nifc-fire-reports'])opacity[id]=amount;sync();await ready();},
   async visible(value){for(const id of ['nasa-gibs-fire-points','nifc-fire-reports'])visibility[id]=value;sync();await ready();},
   point(id){const feature=id==='fixture-report'?reports.features[0]:features.find(f=>f.id===id);const point=map.project(feature.geometry.coordinates),rect=map.getCanvas().getBoundingClientRect();return {x:point.x+rect.x,y:point.y+rect.y};},
-  state(){return {errors,frame:currentFireFrame(),images:map.listImages().filter(id=>id.startsWith('kfm-fire')),layers:Object.fromEntries([...Object.values(FIRE_POINT_LAYER_IDS),FIRE_REPORT_FLAME_ID,'external-nifc-fire-reports-point'].filter(id=>map.getLayer(id)).map(id=>[id,{visibility:map.getLayoutProperty(id,'visibility'),opacity:map.getPaintProperty(id,({'symbol':'icon-opacity','circle':'circle-opacity','line':'line-opacity','fill':'fill-opacity'})[map.getLayer(id).type])}]))};},
+  state(){return {errors,images:map.listImages().filter(id=>id.startsWith('kfm-fire')),layers:Object.fromEntries([...Object.values(fire.FIRE_POINT_LAYER_IDS),'external-nifc-fire-reports-halo','external-nifc-fire-reports-point'].filter(id=>map.getLayer(id)).map(id=>[id,{visibility:map.getLayoutProperty(id,'visibility'),opacity:map.getPaintProperty(id,({'symbol':'icon-opacity','circle':'circle-opacity','line':'line-opacity','fill':'fill-opacity'})[map.getLayer(id).type])}]))};},
 };
 await ready(); document.body.dataset.ready='true';

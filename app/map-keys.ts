@@ -43,6 +43,11 @@ export type KdotLineId = keyof typeof KDOT_LINE_SYMBOLS;
 /** An ArcGIS RGBA colour for a #rrggbb hex. */
 export const esriColor = (hex: string): number[] => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).concat(255);
 
+/** VIIRS detection confidence (provider classes), and NIFC incident types. */
+export const FIRE_CONFIDENCE_COLORS = Object.freeze({ high: "#ff3757", nominal: "#ff713b", low: "#ffc46c" } as const);
+export const FIRE_REPORT_COLORS = Object.freeze([["Wildfire", "#ff4e67"], ["Prescribed fire", "#ffcb6a"], ["Incident complex", "#b9a4ff"]] as const);
+export const FIRE_REPORT_OTHER_COLOR = "#ff4e67";
+
 /** Linear interpolation through [x, y] stops, clamped at the ends, as MapLibre's "interpolate" does. */
 const along = (stops: readonly (readonly [number, number])[], x: number): number => {
   if (x <= stops[0][0]) return stops[0][1];
@@ -53,7 +58,7 @@ const along = (stops: readonly (readonly [number, number])[], x: number): number
   return stops[stops.length - 1][1];
 };
 
-export type MapKeyItem = Readonly<{ label: string; color: string; shape: "dot" | "area" | "line"; size?: number; dashed?: boolean }>;
+export type MapKeyItem = Readonly<{ label: string; color: string; shape: "dot" | "area" | "line" | "ring"; size?: number; dashed?: boolean }>;
 /** Keys that share a group are shown as one, under the group's title and note. */
 export type MapKey = Readonly<{ id: string; title: string; items: readonly MapKeyItem[]; note: string; group?: Readonly<{ id: string; title: string; note: string }> }>;
 
@@ -78,6 +83,16 @@ export const MAP_KEYS: Readonly<Record<string, MapKey>> = Object.freeze({
     items: Object.freeze([...NWS_SEVERITY_COLORS.map(([label, color]) => Object.freeze({ label, color, shape: "area" as const })),
       Object.freeze({ label: "Unknown", color: NWS_SEVERITY_UNKNOWN_COLOR, shape: "area" as const })]),
     note: "Each area takes its alert's CAP severity; select one for its event, urgency and expiry.",
+  }),
+  "nasa-gibs-fire-points": Object.freeze({
+    id: "nasa-gibs-fire-points", title: "Satellite fire detections (VIIRS)",
+    items: Object.freeze((["high", "nominal", "low"] as const).map(level => Object.freeze({ label: `${level[0].toUpperCase()}${level.slice(1)} confidence`, color: FIRE_CONFIDENCE_COLORS[level], shape: "dot" as const, size: 10 }))),
+    note: "Each dot is a 375 m detection pixel's centre; zoom in for the dashed scan × track pixel. A heat source, not a perimeter or a confirmed wildfire.",
+  }),
+  "nifc-fire-reports": Object.freeze({
+    id: "nifc-fire-reports", title: "Reported fire incidents (NIFC)",
+    items: Object.freeze(FIRE_REPORT_COLORS.map(([label, color]) => Object.freeze({ label, color, shape: "ring" as const }))),
+    note: "The incident's reported location, not its extent; size, containment and cause are in the record.",
   }),
   ...Object.fromEntries((Object.keys(KDOT_LINE_SYMBOLS) as KdotLineId[]).map(id => {
     const { color, dashed, label } = KDOT_LINE_SYMBOLS[id];

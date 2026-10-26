@@ -748,10 +748,10 @@ test("connects bounded official context sources without admitting evidence", asy
   const performanceUrl = `data:text/javascript;base64,${Buffer.from(compile(performanceSource, "map-performance.ts")).toString("base64")}`;
   const globeSource = await readFile(new URL("../app/globe-context.ts", import.meta.url), "utf8");
   const globeUrl = `data:text/javascript;base64,${Buffer.from(compile(globeSource, "globe-context.ts")).toString("base64")}`;
-  const fireSource = (await readFile(new URL("../app/fire-detection-style.ts", import.meta.url), "utf8")).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./globe-context";', `from "${globeUrl}";`);
+  const mapKeysUrl = `data:text/javascript;base64,${Buffer.from(compile(await readFile(new URL("../app/map-keys.ts", import.meta.url), "utf8"), "map-keys.ts")).toString("base64")}`;
+  const fireSource = (await readFile(new URL("../app/fire-detection-style.ts", import.meta.url), "utf8")).replace('from "./map-performance";', `from "${performanceUrl}";`).replace('from "./globe-context";', `from "${globeUrl}";`).replace('from "./map-keys";', `from "${mapKeysUrl}";`);
   const fireUrl = `data:text/javascript;base64,${Buffer.from(compile(fireSource, "fire-detection-style.ts")).toString("base64")}`;
   const prismsUrl = `data:text/javascript;base64,${Buffer.from(compile(await readFile(new URL("../app/population-prisms.ts", import.meta.url), "utf8"), "population-prisms.ts")).toString("base64")}`;
-  const mapKeysUrl = `data:text/javascript;base64,${Buffer.from(compile(await readFile(new URL("../app/map-keys.ts", import.meta.url), "utf8"), "map-keys.ts")).toString("base64")}`;
   const reviewedUrl = `data:text/javascript;base64,${Buffer.from(compile((await readFile(new URL("../app/reviewed-snapshot-layers.ts", import.meta.url), "utf8")).replaceAll('from "./map-keys";', `from "${mapKeysUrl}";`), "reviewed-snapshot-layers.ts")).toString("base64")}`;
   // This metadata test imports a data URL; provide no-op map render helpers here.
   const compositionUrl = `data:text/javascript;base64,${Buffer.from("export const balanceMapFills=()=>{}; export const balanceMapRasters=()=>{}; export const composeMapLayers=()=>{}; export const requestFillOpacity=()=>{}; export const requestRasterOpacity=()=>{};").toString("base64")}`;

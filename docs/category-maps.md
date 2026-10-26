@@ -239,6 +239,11 @@ read the same constants, so the two cannot drift apart:
   the dark storm base. An alert without a recognised severity is neutral grey,
   off the scale.
 
+- **Satellite fire detections (VIIRS)** and **Reported fire incidents
+  (NIFC)** (Hazard watch): a detection is a dot at its pixel centre coloured
+  by detection confidence (with the dashed scan × track pixel close in); a
+  reported incident is a ring coloured by incident type. The two datasets no
+  longer share a symbol, and nothing animates (`docs/fire-close-zoom.md`).
 - **KDOT roads and rail** (Network map) and **1918 roads and former rail**
   (Historic atlas): the lines KDOT's service draws with our symbols
   (`KDOT_LINE_SYMBOLS`), so the request and the key share them. Public roads

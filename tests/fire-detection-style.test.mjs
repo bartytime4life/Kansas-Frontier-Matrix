@@ -16,6 +16,7 @@ async function moduleUrl(file) {
 }
 const context = await import(await moduleUrl("app/live-context.ts"));
 const fire = await import(await moduleUrl("app/fire-detection-style.ts"));
+const keys = await import(await moduleUrl("app/map-keys.ts"));
 
 function mapHarness() {
   const sources = new Map(), layers = new Map();
@@ -23,9 +24,6 @@ function mapHarness() {
     getSource: id => sources.get(id), getLayer: id => layers.get(id), getStyle: () => ({ layers: [...layers.values()] }),
     moveLayer(id) { const layer = layers.get(id); layers.delete(id); layers.set(id, layer); },
     getProjection: () => ({ type: "mercator" }),
-    // Existing registered images exercise the successful display path without
-    // requiring browser Canvas in the ordinary Node suite.
-    hasImage: () => true, addImage() {},
     addSource(id, spec) { sources.set(id, { ...spec, setData(data) { this.data = data; } }); },
     addLayer(layer) { layers.set(layer.id, structuredClone(layer)); },
     getLayoutProperty: (id, key) => layers.get(id)?.layout?.[key], getPaintProperty: (id, key) => layers.get(id)?.paint?.[key],
@@ -76,95 +74,80 @@ test("only detections with provider pixel dimensions get a footprint, and deriva
   assert.equal(fire.deriveFireFootprints(undefined).collection.features.length, 0);
 });
 
-test("fire detections keep their selectable ids including the flame hit target without admitting its animation as evidence", () => {
+test("fire detections keep their selectable ids, and the record says what the marker is and is not", () => {
   const source = context.OFFICIAL_CONTEXT_BY_ID["nasa-gibs-fire-points"];
-  assert.deepEqual([...source.interactiveLayerIds], ["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle", "external-nasa-gibs-fire-points-flame"]);
+  assert.deepEqual([...source.interactiveLayerIds], ["external-nasa-gibs-fire-points-halo", "external-nasa-gibs-fire-points-circle"]);
   assert.ok(source.interactiveLayerIds.every(id => source.layerIds.includes(id)));
-  assert.ok(Object.values(fire.FIRE_POINT_LAYER_IDS).every(id => source.layerIds.includes(id)));
+  assert.deepEqual([...source.layerIds].sort(), Object.values(fire.FIRE_POINT_LAYER_IDS).sort());
   assert.ok(!source.layerIds.some(id => id.endsWith("-fill")), "not counted as a composed fill surface");
   assert.ok(fire.FIRE_FOOTPRINT_SOURCE_ID.startsWith("kfm-"), "derived rectangles are never inspected as a separate provider record");
   assert.match(source.boundary, /satellite detection pixel, not a fire perimeter, flame front, or burned area/);
-  assert.match(source.boundary, /illustration, not measured fire behaviour or intensity/);
+  assert.match(source.boundary, /fixed-size dot at its pixel centre, coloured by the provider's detection confidence; its size does not encode radiative power/);
   assert.match(source.boundary, /not a verified wildfire, ignition point, fire perimeter, burned area/);
+  assert.doesNotMatch(source.boundary + context.OFFICIAL_CONTEXT_BY_ID["nifc-fire-reports"].boundary, /animated/i);
 });
 
-test("applying the fire source derives footprints, hides the old dot and follows visibility, opacity and clearing", () => {
+test("a detection is a confidence-coloured dot with a transparent hit target and its ground pixel, following visibility, opacity and clearing", () => {
   const { map, sources, layers } = mapHarness();
+  let images = 0; map.addImage = () => { images++; };
   const data = payload([detection("a", -96.1, 39.3, { confidence: "high" }), detection("b", -96.2, 39.4, { scanKm: undefined })]);
-  context.applyOfficialContextState(map, only(["nasa-gibs-fire-points"]), opacity, { "nasa-gibs-fire-points": data });
-  const footprints = sources.get(fire.FIRE_FOOTPRINT_SOURCE_ID);
-  assert.equal(footprints.data.features.length, 1);
+  context.applyOfficialContextState(map, only(["nasa-gibs-fire-points"]), { ...opacity, "nasa-gibs-fire-points": 0.5 }, { "nasa-gibs-fire-points": data });
+  assert.equal(sources.get(fire.FIRE_FOOTPRINT_SOURCE_ID).data.features.length, 1);
   for (const id of Object.values(fire.FIRE_POINT_LAYER_IDS)) assert.equal(layers.get(id)?.layout?.visibility ?? "visible", "visible", id);
-  const circle = layers.get("external-nasa-gibs-fire-points-circle");
-  assert.equal(circle.paint["circle-opacity"], 0);
-  assert.equal(circle.paint["circle-stroke-opacity"], 0);
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.flame).type, "symbol");
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.flame).source, "external-nasa-gibs-fire-points");
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.heat).source, fire.FIRE_FOOTPRINT_SOURCE_ID);
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.heat).paint["fill-pattern"], undefined);
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.heat).paint["fill-opacity"], 0);
+  const dot = layers.get(fire.FIRE_POINT_LAYER_IDS.circle).paint;
+  assert.deepEqual(dot["circle-color"], ["match", ["get", "confidence"], "high", keys.FIRE_CONFIDENCE_COLORS.high, "low", keys.FIRE_CONFIDENCE_COLORS.low, keys.FIRE_CONFIDENCE_COLORS.nominal]);
+  assert.equal(dot["circle-opacity"], 0.5);assert.equal(dot["circle-stroke-opacity"], 0.5);
+  assert.deepEqual(dot["circle-radius"], fire.FIRE_MARKER_RADIUS);
+  const hit = layers.get(fire.FIRE_POINT_LAYER_IDS.halo).paint;
+  assert.equal(hit["circle-opacity"], 0);assert.equal(hit["circle-stroke-opacity"], 0);assert.deepEqual(hit["circle-radius"], fire.FIRE_HIT_RADIUS);
+  assert.ok(![...layers.values()].some(layer => /fire/.test(String(layer.source)) && layer.type === "symbol"), "no illustrated fire symbols");
+  assert.equal(images, 0, "no images are drawn or registered");
   const casing = layers.get(fire.FIRE_POINT_LAYER_IDS.shimmer).paint;
   const edge = layers.get(fire.FIRE_POINT_LAYER_IDS.edge).paint;
   assert.equal(casing["line-color"], "#253e46", "neutral dark casing survives a light basemap");
   assert.equal(edge["line-color"], "#fff1d1", "pale centre survives a dark basemap");
   assert.deepEqual(casing["line-opacity"], edge["line-opacity"]);
   assert.deepEqual(casing["line-dasharray"].map(n => n * casing["line-width"]), edge["line-dasharray"].map(n => n * edge["line-width"]), "both narrow dashed strokes share exact segment lengths");
-  assert.deepEqual(layers.get(fire.FIRE_POINT_LAYER_IDS.edge).paint["line-dasharray"], [3, 4]);
-  // The user's opacity scales every zoom stop.
-  context.applyOfficialContextState(map, only(["nasa-gibs-fire-points"]), { ...opacity, "nasa-gibs-fire-points": 0.5 }, { "nasa-gibs-fire-points": data });
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.flame).paint["icon-opacity"], 0.5);
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.halo).paint["circle-opacity"][4], 0.15);
   context.applyOfficialContextState(map, only([]), opacity, { "nasa-gibs-fire-points": data });
   for (const id of Object.values(fire.FIRE_POINT_LAYER_IDS)) assert.equal(layers.get(id).layout.visibility, "none", id);
   context.clearOfficialContextFeed(map, "nasa-gibs-fire-points");
   assert.equal(sources.get(fire.FIRE_FOOTPRINT_SOURCE_ID).data.features.length, 0);
 });
 
-test("close zoom retains a bounded flame for detections with and without pixel dimensions", async () => {
+test("the dot keeps one screen size at every zoom; close in, the dashed pixel shows the area a detection covers", async () => {
   const { createPropertyExpression, latest } = await import("@maplibre/maplibre-gl-style-spec");
+  const radius = createPropertyExpression(fire.FIRE_MARKER_RADIUS, "paint", latest.paint_circle["circle-radius"]);
+  assert.equal(radius.result, "success");
+  const at = zoom => radius.value.evaluate({ zoom });
+  assert.equal(at(4), 3.5);assert.equal(at(12), 5.5);assert.equal(at(18), 5.5, "a marker, never grown into a burning area");
   const { map, layers } = mapHarness();
-  context.applyOfficialContextState(map, only(["nasa-gibs-fire-points"]), opacity,
-    { "nasa-gibs-fire-points": payload([detection("pixel", -98, 38), detection("no-pixel", -98.1, 38, {scanKm:null})]) });
-  const flame = layers.get(fire.FIRE_POINT_LAYER_IDS.flame);
-  assert.equal(flame.maxzoom, undefined, "close zoom never removes the flame layer");
-  assert.equal(flame.paint["icon-opacity"], 1, "a known footprint no longer fades its flame out");
-  const compiled = createPropertyExpression(flame.layout["icon-size"], "layout", latest.layout_symbol["icon-size"]);
-  assert.equal(compiled.result, "success");
-  const size = zoom => compiled.value.evaluate({zoom}, {type:1,properties:{scanKm:0.5,trackKm:0.4}});
-  assert.ok(size(14) > size(10), "a close view reveals more flame detail");
-  assert.equal(size(17), size(22), "the graphic stops growing at its screen-size cap");
-  assert.ok(size(22) <= 2.1);
-  assert.equal(flame.layout["icon-pitch-alignment"], "viewport", "tilting never flattens it into a ground rectangle");
+  context.applyOfficialContextState(map, only(["nasa-gibs-fire-points"]), opacity, { "nasa-gibs-fire-points": payload([detection("pixel", -98, 38)]) });
+  const edge = createPropertyExpression(layers.get(fire.FIRE_POINT_LAYER_IDS.edge).paint["line-opacity"], "paint", latest.paint_line["line-opacity"]);
+  assert.equal(edge.value.evaluate({ zoom: 10 }), 0);assert.ok(edge.value.evaluate({ zoom: 13 }) > 0);
 });
 
-
-test("incident flames replace report dots and retain source hit identity through opacity and visibility changes", () => {
+test("a reported incident is a ring coloured by incident type, never a detection dot, and keeps its source hit identity", () => {
   const { map, layers } = mapHarness();
   const report = context.OFFICIAL_CONTEXT_BY_ID["nifc-fire-reports"];
-  const reports = { ...payload([detection("incident-1", -98, 38, {incidentType:"Prescribed fire"})]), feed:"nifc-fire-reports" };
+  assert.deepEqual([...report.interactiveLayerIds], ["external-nifc-fire-reports-halo", "external-nifc-fire-reports-point"]);
+  const reports = { ...payload([detection("incident-1", -98, 38, { incidentType: "Prescribed fire" })]), feed: "nifc-fire-reports" };
   const visibility = { ...only([]), "nifc-fire-reports": true };
   context.applyOfficialContextState(map, visibility, { ...opacity, "nifc-fire-reports": 0.6 }, { "nifc-fire-reports": reports });
-  for (const id of report.interactiveLayerIds.slice(0, 2)) {
-    assert.equal(layers.get(id).paint["circle-opacity"], 0);
-    assert.equal(layers.get(id).paint["circle-stroke-opacity"], 0);
-  }
-  const flame = layers.get(fire.FIRE_REPORT_FLAME_ID);
-  assert.equal(flame.source, report.sourceId);
-  assert.equal(flame.paint["icon-opacity"], 0.6);
-  assert.ok(report.interactiveLayerIds.includes(flame.id));
-  assert.equal(flame.maxzoom, undefined, "reported locations do not vanish at footprint zoom");
-  const flatSize = structuredClone(flame.layout["icon-size"]);
+  const ring = layers.get(report.layerIds[1]).paint;
+  assert.equal(ring["circle-color"], "#11161b", "a dark centre: a ring, not a filled dot");
+  assert.deepEqual(ring["circle-stroke-color"], ["match", ["get", "incidentType"], ...keys.FIRE_REPORT_COLORS.flat(), keys.FIRE_REPORT_OTHER_COLOR]);
+  assert.equal(ring["circle-stroke-width"], 2.5);assert.equal(ring["circle-stroke-opacity"], 0.6);
+  const hit = layers.get(report.layerIds[0]).paint;
+  assert.equal(hit["circle-opacity"], 0);assert.equal(hit["circle-stroke-opacity"], 0);
+  const flat = structuredClone(ring["circle-radius"]);
   map.getProjection = () => ({ type: "globe" });
   context.applyOfficialContextState(map, visibility, opacity, { "nifc-fire-reports": reports });
-  assert.notDeepEqual(layers.get(flame.id).layout["icon-size"], flatSize, "report icons follow globe overview sizing");
+  assert.notDeepEqual(layers.get(report.layerIds[1]).paint["circle-radius"], flat, "rings follow globe overview sizing");
   context.applyOfficialContextState(map, only([]), opacity, { "nifc-fire-reports": reports });
-  assert.equal(layers.get(flame.id).layout.visibility, "none");
-  context.applyOfficialContextState(map, visibility, opacity, { "nifc-fire-reports": reports });
-  assert.equal(layers.get(report.layerIds[1]).paint["circle-stroke-opacity"], 0, "generic opacity cannot restore a dot");
+  for (const id of report.layerIds) assert.equal(layers.get(id).layout.visibility, "none");
 });
 
-
-test("MapLibre selection filter preserves ordinary points and never covers either kind of flame", async () => {
+test("MapLibre selection filter preserves ordinary points and never covers either fire marker", async () => {
   const runtime = await import(await moduleUrl("app/map-runtime.ts"));
   const {featureFilter} = await import("@maplibre/maplibre-gl-style-spec");
   const compiled = featureFilter(runtime.SELECTION_POINT_FILTER, "layers[0].filter");
@@ -175,138 +158,11 @@ test("MapLibre selection filter preserves ordinary points and never covers eithe
 });
 
 
-test("both fire displays share one ticker and reduced motion or a hidden tab settles them without losing selection layers", t => {
-  const original = Object.fromEntries(["window", "document", "setTimeout", "clearTimeout"].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
-  const timers = new Map(), listeners = new Map(), mediaListeners = new Map();
-  const media = { matches: false, addEventListener: (name, fn) => mediaListeners.set(name, fn) };
-  const document = { hidden: false, addEventListener: (name, fn) => listeners.set(name, fn) };
-  let sequence = 0;
-  Object.assign(globalThis, { document, window: { matchMedia: () => media, location: { search: "" } },
-    setTimeout(fn) { const id = ++sequence; timers.set(id, fn); return id; },
-    clearTimeout(id) { timers.delete(id); } });
-  const { map, layers } = mapHarness();
-  const removed = [];
-  Object.assign(map, { triggerRepaint() {}, on() {}, off() {}, once(name, fn) { if (name === "remove") removed.push(fn); } });
-  t.after(() => {
-    for (const fn of removed) fn();
-    fire.setFireDetectionMotion(false);
-    for (const [key, descriptor] of Object.entries(original)) {
-      if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key];
-    }
-  });
-  const reports = { ...payload([detection("report", -98, 38, { incidentType: "Wildfire", scanKm: undefined, trackKm: undefined })]), feed: "nifc-fire-reports" };
-  const data = { "nasa-gibs-fire-points": payload([detection("pixel", -98, 38)]), "nifc-fire-reports": reports };
-  const apply = ids => context.applyOfficialContextState(map, only(ids), opacity, data);
-  fire.setFireDetectionMotion(true);
-  apply(["nasa-gibs-fire-points", "nifc-fire-reports"]);
-  assert.equal(timers.size, 1, "two sources must not create competing repaint loops");
-  media.matches = true; mediaListeners.get("change")();
-  assert.equal(timers.size, 0, "system reduced motion overrides an enabled ambient preference");
-  assert.equal(fire.fireMotionAllowed(), false);
-  for (const id of [fire.FIRE_POINT_LAYER_IDS.flame, fire.FIRE_REPORT_FLAME_ID]) assert.equal(layers.get(id).layout.visibility ?? "visible", "visible", "reduced motion preserves still selectable symbols");
-  media.matches = false; mediaListeners.get("change")(); assert.equal(timers.size, 1);
-  document.hidden = true; listeners.get("visibilitychange")(); assert.equal(timers.size, 0);
-  document.hidden = false; listeners.get("visibilitychange")(); assert.equal(timers.size, 1);
-  map.hasImage = () => false;
-  apply(["nasa-gibs-fire-points", "nifc-fire-reports"]);
-  assert.equal(timers.size, 0, "unavailable flame images never keep a repaint timer alive");
-  map.hasImage = () => true;
-  apply(["nasa-gibs-fire-points", "nifc-fire-reports"]);
-  assert.equal(timers.size, 1, "successful registration can resume the shared ticker");
-  apply(["nifc-fire-reports"]); assert.equal(timers.size, 1, "hiding detections must not stop report motion");
-  apply([]); assert.equal(timers.size, 0);
-});
-
-
-// Fresh renderer instances keep Canvas failures independent of successful caches.
-async function freshFire(label) { return import((await moduleUrl('app/fire-detection-style.ts')) + '#' + label); }
-function canvasStub(t, { offscreen = 'ok', readback = true, dom = true } = {}) {
-  let canRead = readback;
-  const keys = ['OffscreenCanvas', 'document'];
-  const original = keys.map(key => Object.getOwnPropertyDescriptor(globalThis, key));
-  const gradient = { addColorStop() {} };
-  const ctx = new Proxy({
-    getImageData: () => { if (!canRead) throw new Error('readback unavailable'); return { data:new Uint8ClampedArray(144*192*4) }; },
-    createRadialGradient: () => gradient, createLinearGradient: () => gradient,
-  }, { get: (target,key) => target[key] ?? (() => {}) });
-  globalThis.OffscreenCanvas = class { getContext() { if(offscreen==='throw') throw new Error('unsupported'); return offscreen==='null' ? null : ctx; } };
-  globalThis.document = { createElement: () => ({ getContext: () => dom ? ctx : null }) };
-  t.after(() => keys.forEach((key,i) => original[i] ? Object.defineProperty(globalThis,key,original[i]) : delete globalThis[key]));
-  return { allowReadback() { canRead = true; } };
-}
-function unregistered(map) {
-  const images = new Set();
-  map.hasImage = id => images.has(id);
-  map.addImage = id => images.add(id);
-  return images;
-}
-function assertFallback(layers, amount) {
-  for (const id of [fire.FIRE_POINT_LAYER_IDS.circle, 'external-nifc-fire-reports-point']) {
-    assert.equal(layers.get(id).paint['circle-opacity'], amount, id);
-    assert.equal(layers.get(id).paint['circle-stroke-opacity'], amount, id);
-    assert.deepEqual(layers.get(id).paint['circle-translate'], [0,0], 'fallback stays at the provider point');
-  }
-  for (const id of [fire.FIRE_POINT_LAYER_IDS.flame, fire.FIRE_REPORT_FLAME_ID]) {
-    if(layers.has(id)) {
-      assert.equal(layers.get(id).paint['icon-opacity'], 0);
-      assert.equal(layers.get(id).layout.visibility, 'none');
-    }
-  }
-}
-function bothDisplays(map) {
-  const reports = {...payload([detection('report', -98.1,38,{incidentType:'Incident complex'})]),feed:'nifc-fire-reports'};
-  const data = {'nasa-gibs-fire-points':payload([detection('pixel',-98,38)]),'nifc-fire-reports':reports};
-  const ids=['nasa-gibs-fire-points','nifc-fire-reports'];
-  const apply=amount=>context.applyOfficialContextState(map,only(ids),{...opacity,...Object.fromEntries(ids.map(id=>[id,amount]))},data);
-  return {apply,data};
-}
-
-test('missing Canvas keeps original incident and confidence markers visible and centred', t => {
-  canvasStub(t, {offscreen:'null',dom:false});
-  const {map,layers}=mapHarness(); unregistered(map);
-  const {apply,data}=bothDisplays(map);
-  apply(0.6); assertFallback(layers,0.6);
-  assert.equal(layers.get(fire.FIRE_POINT_LAYER_IDS.circle).paint['circle-radius'].at(-1),8,'fallback size is capped, never satellite-pixel-sized');
-  assert.deepEqual(layers.get('external-nifc-fire-reports-point').paint['circle-color'].slice(2,6),['Prescribed fire','#ffcb6a','Incident complex','#b9a4ff']);
-  apply(0); assertFallback(layers,0);
-  context.applyOfficialContextState(map,only([]),opacity,data);
-  for(const id of [fire.FIRE_POINT_LAYER_IDS.circle,'external-nifc-fire-reports-point']) assert.equal(layers.get(id).layout.visibility,'none');
-});
-
-test('offscreen failure falls back to ordinary Canvas and registration recovers after partial failure and style reload', async t => {
-  canvasStub(t,{offscreen:'throw'});
-  const renderer=await freshFire('registration-recovery');
-  const {map,layers}=mapHarness();
-  const {apply}=bothDisplays(map); apply(1);
-  const images=unregistered(map);
-  let reject=true;
-  map.addImage=id=>{if(reject && id.endsWith('nominal')) throw new Error('atlas unavailable'); images.add(id);};
-  renderer.syncFireDetectionDisplay(map,true,0.5); renderer.syncFireReportDisplay(map,true,0.5);
-  assertFallback(layers,0.5);
-  assert.equal(images.size,1,'one registered palette never hides all provider markers');
-  reject=false;
-  renderer.syncFireDetectionDisplay(map,true,0.5); renderer.syncFireReportDisplay(map,true,0.5);
-  assert.equal(images.size,3);
-  for(const id of [fire.FIRE_POINT_LAYER_IDS.flame,fire.FIRE_REPORT_FLAME_ID]) assert.equal(layers.get(id).paint['icon-opacity'],0.5);
-  images.clear();
-  renderer.syncFireDetectionDisplay(map,true,1);
-  assert.equal(images.size,3,'a new style gets its images back');
-});
-
-test('Canvas readback denial and silent registration failure retain markers without throwing', async t => {
-  const canvas = canvasStub(t,{readback:false});
-  const renderer=await freshFire('denied-readback');
-  const {map,layers}=mapHarness(); const {apply}=bothDisplays(map); apply(1); unregistered(map);
-  renderer.syncFireDetectionDisplay(map,true,0.7); renderer.syncFireReportDisplay(map,true,0.7);
-  assertFallback(layers,0.7);
-  // An implementation exposing addImage but not registering must also fail closed.
-  canvas.allowReadback();
-  const silent=await freshFire('silent-registration'); map.addImage=()=>{};
-  silent.syncFireDetectionDisplay(map,true,0.4); silent.syncFireReportDisplay(map,true,0.4);
-  assertFallback(layers,0.4);
-  delete map.addImage;
-  silent.syncFireDetectionDisplay(map,true,0.3); silent.syncFireReportDisplay(map,true,0.3);
-  assertFallback(layers,0.3);
+test("nothing about the fire display is animated", async () => {
+  const source = await readFile("app/fire-detection-style.ts", "utf8");
+  assert.doesNotMatch(source, /requestAnimationFrame|setTimeout|addImage|Canvas|icon-image/);
+  assert.equal(fire.setFireDetectionMotion, undefined);
+  assert.doesNotMatch(await readFile("app/page.tsx", "utf8"), /setFireDetectionMotion/);
 });
 
 test('a cleared or replacing style has no missing-layer visibility writes', () => {

@@ -98,3 +98,13 @@ test('each map keys its own lines, grouped under one title',()=>{
  assert.match(historic[0].note,/inked lines with ties/,'the base map draws today\'s rail; the key says so');
  assert.deepEqual(keys.mapKeysFor(maps.CATEGORY_MAPS.history.starters,id=>id==='kdot-rail-abandoned')[0].items.map(i=>i.label),['Abandoned railroads'],'only the lines that are on');
 });
+
+test('the Hazard watch keys alerts, satellite detections and reported incidents, each as the map draws it',()=>{
+ const hazard=keys.mapKeysFor(maps.CATEGORY_MAPS.disaster.starters,()=>true);
+ assert.deepEqual(hazard.map(k=>k.id),['nws-alerts','nasa-gibs-fire-points','nifc-fire-reports']);
+ const [,detections,reports]=hazard;
+ assert.deepEqual(detections.items.map(i=>[i.label,i.color,i.shape]),[['High confidence',keys.FIRE_CONFIDENCE_COLORS.high,'dot'],['Nominal confidence',keys.FIRE_CONFIDENCE_COLORS.nominal,'dot'],['Low confidence',keys.FIRE_CONFIDENCE_COLORS.low,'dot']]);
+ assert.match(detections.note,/375 m detection pixel[\s\S]*not a perimeter/);
+ assert.deepEqual(reports.items.map(i=>[i.label,i.shape]),[['Wildfire','ring'],['Prescribed fire','ring'],['Incident complex','ring']],'a ring, never a detection dot');
+ assert.deepEqual(reports.items.map(i=>i.color),keys.FIRE_REPORT_COLORS.map(([,c])=>c));
+});
