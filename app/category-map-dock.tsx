@@ -7,6 +7,7 @@ import type { KansasDensityGroup } from "./population-prisms";
 import type { PhotorealLandscape } from "./photoreal-landscapes";
 import type { MapKey } from "./map-keys";
 import type { EarthquakeRecordEvent, YearCount } from "./earthquake-record";
+import type { OutlookDay } from "./spc-outlook";
 
 export type AquiferView = "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-aquifer-high-plains";
 const AQUIFER_VIEWS: readonly (readonly [AquiferView, string, string])[] = [
@@ -56,7 +57,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, outlook, onOutlook, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, keys, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -131,6 +132,13 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
   onQuakes?: (on: boolean) => void;
   onQuakeYear?: (year: number | null) => void;
   onQuakeClear?: () => void;
+  /**
+   * The SPC convective outlook, for looks that offer the outlook tool: the day
+   * shown (null when off), whether it is being read or failed, and what it
+   * says for Kansas with its issue and valid times.
+   */
+  outlook?: Readonly<{ day: OutlookDay | null; loading: boolean; failed: boolean; reading: string | null; url: string }>;
+  onOutlook?: (day: OutlookDay | null) => void;
   /**
    * NASA SMAP L4 soil moisture, for looks that offer the soil tool: whether it
    * is drawn, at which depth, what the map shows now (the exact day drawn, or
@@ -219,6 +227,19 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
     </>}
     {look.tools?.includes("radar") && radar && onRadar && <button type="button" className="category-map-dock-tool" aria-pressed={radar.watching} disabled={!radar.watching && !radar.available} onClick={() => onRadar(!radar.watching)}
       title={radar.watching ? "Close the radar loop controls" : radar.available ? "Play the latest NOAA radar scans on the map at their observation times" : "The live loop plays at the present map time; return to Present in Time"}>{radar.watching ? "Close radar loop" : "Watch the radar loop"}</button>}
+    {look.tools?.includes("outlook") && outlook && onOutlook && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={outlook.day !== null} onClick={() => onOutlook(outlook.day === null ? 1 : null)}
+        title="NOAA Storm Prediction Center categorical convective outlook: a forecast of thunderstorm and severe-storm risk, drawn as outlines">{outlook.day === null ? "Show the SPC severe outlook" : "Hide the SPC outlook"}</button>
+      {outlook.day !== null && <>
+        <div className="category-map-dock-modes" role="group" aria-label="Outlook day">
+          {([1, 2, 3] as const).map(day => <button key={day} type="button" aria-pressed={outlook.day === day} onClick={() => onOutlook(day)}>Day {day}</button>)}
+        </div>
+        <p className="category-map-dock-reading" aria-live="polite">{outlook.loading ? "Reading the SPC outlook…"
+          : outlook.failed ? "The SPC outlook did not answer. Try again, or another day."
+          : outlook.reading}</p>
+        <p className="category-map-dock-reading"><a href={outlook.url} target="_blank" rel="noreferrer">SPC outlook page ↗</a> · forecast risk, not a warning</p>
+      </>}
+    </>}
     {look.tools?.includes("population") && population && onPopulation && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={population.on} onClick={() => onPopulation(!population.on)}
         title="Raise each county by its 2020 Census people per square mile of land">{population.on ? "Flatten the counties" : "Show population in 3D"}</button>
