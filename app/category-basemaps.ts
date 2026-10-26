@@ -19,12 +19,17 @@ import type { CategoryBasemapKey } from "./category-basemap-keys";
  * - Relief model: a smooth hypsometric tint under strong hillshade, so the
  *   land surface is the subject; roads and labels stay quiet.
  * - Storm desk: a neutral charcoal ground that keeps radar and alert colours
- *   true, with towns and county lines to read where weather is hitting.
+ *   true, with towns and the state line to read where weather is hitting.
  * - Network map: a light base with the road hierarchy in colour, route
  *   numbers, classic dashed rail and bridges.
  * - Historic atlas: a parchment ground with sepia relief and a 1° graticule,
- *   where railroads are the subject in classic atlas style, county lines are
- *   dotted, modern roads recede and city names are letter-spaced capitals.
+ *   where railroads are the subject in classic atlas style, modern roads
+ *   recede and city names are letter-spaced capitals.
+ *
+ * County lines are drawn only where jurisdictions are the subject (civic), and
+ * river lines only where drainage is (river network) or where a chart uses them
+ * as landmarks (aviation). Every other style leaves them out, so a map opens on
+ * its own subject; the census-counties and 3DHP layers add them on request.
  *
  * Layer ids avoid the `kfm-` and `external-` prefixes (except `kfm-background`)
  * so overlay placement keeps treating them as basemap. Every layer here is
@@ -157,7 +162,6 @@ function civicLayers(): LayerSpecification[] {
       paint: { "fill-color": "#e3dcef", "fill-opacity": zoomRamp(5, 0.9, 13, 0.55) } },
     { id: "civic-parks", type: "fill", source: omt, "source-layer": "park", paint: { "fill-color": "#dce8d2", "fill-opacity": 0.7 } },
     { id: "civic-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#c3d9e6" } },
-    { id: "civic-waterway", type: "line", source: omt, "source-layer": "waterway", filter: ["==", ["get", "class"], "river"], paint: { "line-color": "#9fc0d4", "line-width": zoomRamp(6, 0.5, 12, 1.8) } },
     { id: "civic-roads-minor", type: "line", source: omt, "source-layer": "transportation", minzoom: 11, filter: ["in", ["get", "class"], ["literal", ["secondary", "tertiary", "minor"]]],
       paint: { "line-color": "#ffffff", "line-width": zoomRamp(11, 0.6, 16, 5) } },
     { id: "civic-roads-major", type: "line", source: omt, "source-layer": "transportation", filter: ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary"]]],
@@ -229,7 +233,6 @@ function reliefLayers(): LayerSpecification[] {
       paint: { "color-relief-color": ["interpolate", ["linear"], ["elevation"], ...RELIEF_RAMP.flat()], "color-relief-opacity": 0.92 } } as LayerSpecification,
     hillshade(0.85, "#3b2f22", "#fffaf0", "#6b5536"),
     { id: "relief-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#7aa6c2" } },
-    { id: "relief-waterway", type: "line", source: omt, "source-layer": "waterway", filter: ["==", ["get", "class"], "river"], paint: { "line-color": "#4f86ab", "line-width": zoomRamp(6, 0.6, 12, 2) } },
     { id: "relief-roads", type: "line", source: omt, "source-layer": "transportation", minzoom: 7, filter: ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary"]]], paint: { "line-color": "#f6f1e4", "line-width": zoomRamp(7, 0.5, 13, 2), "line-opacity": 0.75 } },
     { id: "relief-state-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["all", ["==", ["get", "admin_level"], 4], ["!=", ["get", "maritime"], 1]], paint: { "line-color": "#4a3d2c", "line-width": 1.2, "line-dasharray": [5, 2] } },
     { id: "relief-kansas-outline", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], paint: { "line-color": "#4a3d2c", "line-width": zoomRamp(4, 1, 10, 2), "line-opacity": 0.6 } },
@@ -249,7 +252,6 @@ function stormLayers(): LayerSpecification[] {
     { id: "storm-urban", type: "fill", source: omt, "source-layer": "landuse", filter: ["in", ["get", "class"], ["literal", ["residential", "commercial", "industrial"]]], paint: { "fill-color": "#1d252e", "fill-opacity": 0.85 } },
     { id: "storm-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#0f2a3b" } },
     { id: "storm-roads", type: "line", source: omt, "source-layer": "transportation", filter: ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary"]]], paint: { "line-color": "#2b343f", "line-width": zoomRamp(5, 0.5, 12, 2) } },
-    { id: "storm-county-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["==", ["get", "admin_level"], 6], paint: { "line-color": "#3a4552", "line-width": zoomRamp(6, 0.5, 11, 1.2) } },
     { id: "storm-state-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["all", ["==", ["get", "admin_level"], 4], ["!=", ["get", "maritime"], 1]], paint: { "line-color": "#8b97a4", "line-width": zoomRamp(4, 1, 10, 2) } },
     { id: "storm-kansas-outline", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], paint: { "line-color": "#8b97a4", "line-width": zoomRamp(4, 1.2, 10, 2.2), "line-opacity": 0.8 } },
     { id: "storm-place-labels", type: "symbol", source: omt, "source-layer": "place", filter: ["in", ["get", "class"], ["literal", ["city", "town", "village"]]],
@@ -268,9 +270,7 @@ function networkLayers(): LayerSpecification[] {
     hillshade(0.2, "#9c9483", "#ffffff", "#b9b1a0"),
     { id: "network-urban", type: "fill", source: omt, "source-layer": "landuse", filter: ["in", ["get", "class"], ["literal", ["residential", "commercial", "industrial", "retail"]]], paint: { "fill-color": "#e6e0d4" } },
     { id: "network-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#c6dbe8" } },
-    { id: "network-waterway", type: "line", source: omt, "source-layer": "waterway", filter: ["==", ["get", "class"], "river"], paint: { "line-color": "#a9c8dc", "line-width": zoomRamp(6, 0.5, 12, 1.8) } },
     { id: "network-runway", type: "line", source: omt, "source-layer": "aeroway", minzoom: 10, filter: ["==", ["get", "class"], "runway"], paint: { "line-color": "#b9b4aa", "line-width": zoomRamp(10, 2, 15, 18) } },
-    { id: "network-county-boundary", type: "line", source: omt, "source-layer": "boundary", minzoom: 7, filter: ["==", ["get", "admin_level"], 6], paint: { "line-color": "#cfc6b5", "line-width": 0.8, "line-dasharray": [3, 2] } },
     { id: "network-state-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["all", ["==", ["get", "admin_level"], 4], ["!=", ["get", "maritime"], 1]], paint: { "line-color": "#8c8270", "line-width": 1.4, "line-dasharray": [5, 2] } },
     { id: "network-kansas-outline", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], paint: { "line-color": "#8c8270", "line-width": zoomRamp(4, 1, 10, 2), "line-opacity": 0.6 } },
     { id: "network-road-casing", type: "line", source: omt, "source-layer": "transportation", minzoom: 9, filter: roads, layout: { "line-cap": "round", "line-join": "round" },
@@ -297,22 +297,15 @@ function historicLayers(): LayerSpecification[] {
     { id: "historic-graticule", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "graticule"], paint: { "line-color": "#b79f74", "line-width": 0.6, "line-opacity": 0.6 } },
     { id: "historic-urban", type: "fill", source: omt, "source-layer": "landuse", filter: ["in", ["get", "class"], ["literal", ["residential", "commercial", "industrial"]]], paint: { "fill-color": "#e2cfa6", "fill-opacity": 0.7 } },
     { id: "historic-water", type: "fill", source: omt, "source-layer": "water", paint: { "fill-color": "#b9c9c0", "fill-outline-color": "#6f8f8a" } },
-    { id: "historic-waterway", type: "line", source: omt, "source-layer": "waterway", filter: ["in", ["get", "class"], ["literal", ["river", "stream"]]],
-      paint: { "line-color": "#6f8f8a", "line-width": ["interpolate", ["linear"], ["zoom"], 6, ["match", ["get", "class"], "river", 0.9, 0.25], 12, ["match", ["get", "class"], "river", 2.4, 0.8]] } },
     // Modern roads recede so the historical overlays and the railroads lead.
     { id: "historic-roads", type: "line", source: omt, "source-layer": "transportation", minzoom: 6, filter: ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary"]]],
       paint: { "line-color": "#cdb88f", "line-width": zoomRamp(6, 0.4, 13, 1.6) } },
-    { id: "historic-county-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["==", ["get", "admin_level"], 6],
-      paint: { "line-color": sepia, "line-width": zoomRamp(6, 0.6, 12, 1.2), "line-dasharray": [1, 2], "line-opacity": 0.85 } },
     { id: "historic-state-boundary", type: "line", source: omt, "source-layer": "boundary", filter: ["all", ["==", ["get", "admin_level"], 4], ["!=", ["get", "maritime"], 1]],
       paint: { "line-color": ink, "line-width": zoomRamp(4, 1.2, 10, 2.4), "line-dasharray": [6, 2, 1, 2] } },
     { id: "historic-kansas-outline", type: "line", source: ORIENTATION_SOURCE_ID, filter: ["==", ["get", "role"], "outline"], paint: { "line-color": ink, "line-width": zoomRamp(4, 1.2, 10, 2.4), "line-opacity": 0.55 } },
     // Atlas railroad: an ink line crossed by ties.
     { id: "historic-rail", type: "line", source: omt, "source-layer": "transportation", filter: ["==", ["get", "class"], "rail"], paint: { "line-color": ink, "line-width": zoomRamp(5, 0.8, 14, 2.2) } },
     { id: "historic-rail-ties", type: "line", source: omt, "source-layer": "transportation", minzoom: 7, filter: ["==", ["get", "class"], "rail"], paint: { "line-color": ink, "line-width": zoomRamp(7, 3, 14, 7), "line-dasharray": [0.3, 3] } },
-    { id: "historic-water-labels", type: "symbol", source: omt, "source-layer": "waterway", minzoom: 8, filter: ["==", ["get", "class"], "river"],
-      layout: { "symbol-placement": "line", "text-field": ["get", "name"], "text-font": ITALIC, "text-size": 11, "text-letter-spacing": 0.1 },
-      paint: { "text-color": "#4f6f6a", "text-halo-color": "#efe4c8", "text-halo-width": 1.2 } },
     { id: "historic-place-labels", type: "symbol", source: omt, "source-layer": "place", filter: ["in", ["get", "class"], ["literal", ["city", "town", "village"]]],
       layout: {
         "text-field": ["case", ["==", ["get", "class"], "city"], ["upcase", ["get", "name"]], ["get", "name"]],
@@ -349,12 +342,12 @@ export const CATEGORY_BASEMAPS: Readonly<Record<CategoryBasemapKey, Readonly<{ t
     note: "Hypsometric elevation tint and strong hillshade · Terrarium DEM · OpenFreeMap · OpenMapTiles · display context",
     legend: "Relief model · display DEM coloured by elevation with hillshade · mixed-source display elevation, not survey measurement." },
   storm: { title: "Storm desk", style: style("KFM Storm Desk", stormLayers),
-    note: "Neutral dark ground with towns and county lines so weather colours stay true · OpenFreeMap · OpenMapTiles · display context",
-    legend: "Storm desk · towns and county lines from OpenMapTiles on a neutral dark ground · display context; weather layers keep their own clocks." },
+    note: "Neutral dark ground with towns and the state line so weather colours stay true · OpenFreeMap · OpenMapTiles · display context",
+    legend: "Storm desk · towns and the state line from OpenMapTiles on a neutral dark ground · display context; weather layers keep their own clocks." },
   network: { title: "Network map", style: style("KFM Network Map", networkLayers),
     note: "Road hierarchy, route numbers, rail and bridges · OpenFreeMap · OpenMapTiles · OpenStreetMap · display context",
     legend: "Network map · road classes, route numbers, rail and bridges from OpenMapTiles · display context, not traffic, condition or access." },
   historic: { title: "Historic atlas", style: style("KFM Historic Atlas", historicLayers),
-    note: "Parchment atlas ground with railroads, county lines and towns · OpenFreeMap · OpenMapTiles · OpenStreetMap · Terrarium relief · display context · present-day geography",
-    legend: "Historic atlas · present-day railroads, county lines, water and towns from OpenMapTiles drawn in an atlas style · display context; historical layers keep their own source dates." },
+    note: "Parchment atlas ground with railroads and towns · OpenFreeMap · OpenMapTiles · OpenStreetMap · Terrarium relief · display context · present-day geography",
+    legend: "Historic atlas · present-day railroads, lakes and towns from OpenMapTiles drawn in an atlas style · display context; historical layers keep their own source dates." },
 });

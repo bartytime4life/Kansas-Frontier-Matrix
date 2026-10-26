@@ -3373,6 +3373,9 @@ export default function Home() {
     void refreshStreamflow("24h", streamflowSelectedStationId, false, streamflowArchiveDraftDay);
   }, [refreshStreamflow, streamflowArchiveDraftDay, streamflowSelectedStationId]);
 
+  // Find a county reads the county payload, so it loads once even while the
+  // county layer is hidden (it is off by default); hidden data is not drawn.
+  const searchNeedsCounties = (id: OfficialContextId) => id === "census-counties" && !officialPayloadsRef.current["census-counties"];
   const refreshOfficialContext = useCallback(async (feed: OfficialContextFeedId) => {
     if (!buildYearCurrentRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME || officialArchiveDaysRef.current[feed]) return;
     if (officialRequestsRef.current.has(feed)) return;
@@ -3913,7 +3916,7 @@ export default function Home() {
     // Archived and historical frames never initiate a current-source request.
     const timer = window.setTimeout(() => {
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
-        if (source.apiPath && officialVisibilityRef.current[source.id]) void refreshOfficialContext(source.id as OfficialContextFeedId);
+        if (source.apiPath && (officialVisibilityRef.current[source.id] || searchNeedsCounties(source.id))) void refreshOfficialContext(source.id as OfficialContextFeedId);
       }
     }, 40);
     return () => window.clearTimeout(timer);
@@ -8314,7 +8317,7 @@ export default function Home() {
     setNoaaRadarFollowLatest(true);
     setNoaaRadarFrameLoadState("idle");
     for (const source of OFFICIAL_CONTEXT_SOURCES) {
-      if (source.defaultVisibility && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
+      if ((source.defaultVisibility || searchNeedsCounties(source.id)) && source.apiPath && !officialPayloadsRef.current[source.id as OfficialContextFeedId]) void refreshOfficialContext(source.id as OfficialContextFeedId);
     }
     setLayerOrder(defaultOrder);
     setYear(OFFICIAL_CONTEXT_PRESENT_FRAME);
@@ -9091,7 +9094,11 @@ export default function Home() {
     basemapRef.current = look.basemap;
     setBasemap(look.basemap);
     if (look.light) applyCategoryLight(look.light);
-    for (const id of look.starters) setOfficialContextVisible(id, true);
+    // Each map opens on its own subject: only its starters are on, as a starter set does.
+    for (const source of OFFICIAL_CONTEXT_SOURCES) {
+      const on = look.starters.includes(source.id);
+      if (on || officialVisibilityRef.current[source.id]) setOfficialContextVisible(source.id, on);
+    }
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
     setStarterPanelOpen(false);
     setLayerCatalogView("official");

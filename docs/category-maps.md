@@ -10,7 +10,7 @@ one map look:
 | `basemap` | A `BASEMAPS` key in `app/map-runtime.ts`. |
 | `scene` | `2d`, `terrain` (3D terrain) or `globe`. It is applied through the existing `activateMapRepresentation`. |
 | `camera` | Center, zoom, pitch and bearing. Only 3D looks start tilted. |
-| `starters` | Existing official provider-context ids that are switched **on**. They are never switched off. |
+| `starters` | Existing official provider-context ids that are switched **on**. Opening the map switches every other provider-context layer **off**, as a starter set does, so each map opens on its own subject. |
 | `swatch` | Three colours used to sketch the basemap on the start card and the dock. |
 | `light` | Optional scene recipe (`daylight`, `golden`, `blue`, `survey`) the look opens under. Only its atmosphere and sun azimuth are applied, through `changeStudioLight`, so the visitor's effect settings never change. Relief looks use a raking sun (Terrain golden, Geology/Engineering/Groundwater survey), weather and water a dark sky (`blue`), aviation `daylight`. **Reset view** restores it. While the visitor follows the real sun, the computed sun lights the map instead. |
 
@@ -130,6 +130,19 @@ holds and limits. They are display context, not admitted evidence.
   `scene` already restore the category, basemap and renderer, and the dock
   follows the restored category when its basemap is on screen.
 
+## What is not on every map
+
+County boundaries, USGS river gauges and the USGS 3DHP stream network are
+**off by default**. They appear on the maps whose subject they are (the civic,
+community and reference maps start with counties; the water map with its
+gauges) or when a visitor turns them on. The county payload still loads once
+in the background so **Find a county** works; loaded but hidden layers are not
+drawn (`searchNeedsCounties`).
+
+The category basemaps follow the same rule. County lines are drawn only on the
+civic style; river lines only on the river network and, as chart landmarks, the
+aviation chart. Lakes stay in every style as water fill.
+
 ## In the Evidence Drawer
 
 A selected record now opens with the category it belongs to, then the same
@@ -165,7 +178,7 @@ They are built only from carriers already listed in
 
 - OpenFreeMap vector tiles and fonts (`openfreemap-liberty`);
 - the Terrarium display DEM (`aws-mapzen-terrarium`), for relief;
-- the bundled simplified Kansas outline and graticule.
+- the bundled Census Kansas boundary (simplified for state-scale display) and graticule.
 
 Both carriers disclose every category key in `activatesWhen`. No sprite is
 requested: symbols such as airport circles and peak triangles are drawn or set

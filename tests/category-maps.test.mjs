@@ -42,12 +42,12 @@ test('aviation and government are categories with their own specialized basemaps
  assert.equal(topics.restoreTopic('aviation'),'aviation');assert.equal(topics.restoreTopic('government'),'government');
 });
 
-test('opening a category map applies its look additively and follows the same category in Layers',async()=>{
+test('opening a category map opens on its own subject and follows the same category in Layers',async()=>{
  const page=await readFile('app/page.tsx','utf8');
  const body=page.slice(page.indexOf('  const openCategoryMap = (topic: TopicId) => {'),page.indexOf('  const runWelcomeMap ='));
- const order=['activateMapRepresentation(look.scene)','basemapRef.current = look.basemap','setBasemap(look.basemap)','setOfficialContextVisible(id, true)','setOfficialWorkspace(topic)','map.flyTo('];
+ const order=['activateMapRepresentation(look.scene)','basemapRef.current = look.basemap','setBasemap(look.basemap)','setOfficialContextVisible(source.id, on)','setOfficialWorkspace(topic)','map.flyTo('];
  let at=-1;for(const step of order){const next=body.indexOf(step);assert.ok(next>at,`${step} follows the previous step`);at=next;}
- assert.doesNotMatch(body,/setOfficialContextVisible\([^)]*false\)|setVisibility\(/,'starters only add; nothing the visitor chose is switched off');
+ assert.match(body,/for \(const source of OFFICIAL_CONTEXT_SOURCES\) \{\s*const on = look\.starters\.includes\(source\.id\);\s*if \(on \|\| officialVisibilityRef\.current\[source\.id\]\) setOfficialContextVisible\(source\.id, on\);/,'only the look\'s starters are on, as a starter set does; untouched layers are not toggled');
  assert.match(body,/motionDuration\(1800\)/,'camera flight honours reduced motion');
  assert.match(page,/onTopic=\{runWelcomeTopic\} onMap=\{runWelcomeMap\}/);
  assert.match(page,/<CategoryMapDock look=\{activeCategoryMap\} mode=\{categoryMode\}/);
