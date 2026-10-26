@@ -1,9 +1,0 @@
-BOUNDED VALIDATOR (enforced by validate_domain_feature_identity.py; not by the permissive schema stub):
-ERROR: identity validation failed
-reason_code: OBJECT_FAMILY_NOT_DISTINGUISHABLE
-fields: object_family, feature_role
-detail: domain_feature_identity requires object_family (e.g. Settlement, InfrastructureAsset) and feature_role so that place-side and infrastructure-side identities cannot collapse into one convenience object (invariant 3 in contracts/domains/settlements-infrastructure/domain_feature_identity.md).
-
-CURRENT SCHEMA (PROPOSED stub, requiring only "id" and allowing additionalProperties):
-this fixture still passes shape validation. The separate candidate validator
-rejects the object-family collapse; this does not approve any release or policy.
