@@ -16,6 +16,8 @@ export function azimuthLabel(degrees: number): string {
   return names[Math.round((((degrees % 360) + 360) % 360) / 45) % 8];
 }
 
+/** Quarter-hour steps through the day for the time-of-day study. */
+const SUN_TIME_STEPS = 96;
 const SUN_CLOCK = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", hour: "numeric", minute: "2-digit", timeZoneName: "short" });
 
 /** Plain reading of the computed sun over the map center, at the time it was computed. */
@@ -31,18 +33,24 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
   azimuth: number;
-  /** The computed sun when the scene follows it; the hand-set light is then ignored. */
-  sun: Readonly<{ light: SceneLight; at: number }> | null;
+  /**
+   * The computed sun when the scene follows it; the hand-set light is then
+   * ignored. `dayFraction` places `at` in its Kansas day; `live` is false while
+   * the visitor studies another time of day.
+   */
+  sun: Readonly<{ light: SceneLight; at: number; dayFraction: number; live: boolean }> | null;
   terrainAvailable: boolean;
   onMode: (mode: CategoryScene) => void;
   onDepth: (value: number) => void;
   onAzimuth: (value: number) => void;
   onRealSun: (on: boolean) => void;
+  /** A time of day as a fraction of today in Kansas, or null to follow the clock again. */
+  onSunTime: (dayFraction: number | null) => void;
   onReset: () => void;
   onLayers: () => void;
   onClose: () => void;
@@ -62,7 +70,13 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
       <input type="range" min={0.5} max={3} step={0.1} value={depth} aria-valuetext={`${depth.toFixed(1)} times vertical exaggeration`} onChange={event => onDepth(Number(event.target.value))} />
       <output>{depth.toFixed(1)}×</output></label>}
     {mode !== "globe" && (sun
-      ? <p className="category-map-dock-sun-reading" aria-live="polite"><span>Real sun</span><output>{sunReading(sun.light, sun.at)}</output></p>
+      ? <>
+        <p className="category-map-dock-sun-reading" aria-live="polite"><span>{sun.live ? "Real sun" : "Sun at"}</span><output>{sunReading(sun.light, sun.at)}</output></p>
+        <div className="category-map-dock-range category-map-dock-sun-time"><span id="category-map-dock-sun-time">Time</span>
+          <input type="range" min={0} max={SUN_TIME_STEPS} step={1} value={Math.round(sun.dayFraction * SUN_TIME_STEPS)} aria-labelledby="category-map-dock-sun-time"
+            aria-valuetext={sunReading(sun.light, sun.at)} onChange={event => onSunTime(Number(event.target.value) / SUN_TIME_STEPS)} />
+          <button type="button" disabled={sun.live} onClick={() => onSunTime(null)} title="Follow the clock again">Now</button></div>
+      </>
       : <label className="category-map-dock-range"><span>Sun from</span>
         <input type="range" min={0} max={355} step={5} value={Math.round(azimuth) % 360} aria-valuetext={`Light from ${azimuthLabel(azimuth)}, ${Math.round(azimuth)} degrees`} onChange={event => onAzimuth(Number(event.target.value))} />
         <output>{azimuthLabel(azimuth)}</output></label>)}
