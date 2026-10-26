@@ -240,8 +240,15 @@ attribution control).
   providers that are off by default (Esri imagery, the Kansas aerials, USGS
   topo and the Terrarium DEM) are requested only for a category the visitor
   chose to preview.
-- **No data layers.** The preview switches on no provider-context layers; the
-  caption names the map, its view and its basemap credits.
+- **Its data.** A previewed category also shows its starter layers. The engine
+  calls the Explorer's own `applyOfficialContextState` with only those
+  starters visible, so tiles and GeoJSON are styled exactly as in the
+  Explorer; GeoJSON starters (counties, earthquakes, alerts) are read from the
+  same `/api/live-context` adapters and shared between previews for five
+  minutes. Radar, GOES imagery and river gauges need live controls (a current
+  frame list or the River Pulse adapter) and are left out of previews
+  (`WELCOME_PREVIEW_SKIPPED_STARTERS`); they appear when the map is opened. The
+  caption names the map, its view, the data shown and its basemap credits.
 - **Motion.** While the welcome plays, tilted and globe views turn slowly about
   their centre and flat maps ease gently in and out (`welcomeDriftLeg`). Pause,
   reduced motion, a hidden tab and open details hold the camera still.
@@ -250,9 +257,16 @@ attribution control).
   Styles are resolved by the engine and passed whole to `setStyle`, because
   `setStyle`'s `transformStyle` waits for the previous style to load and would
   stall every later preview after one provider failure.
+  The style applied or pending is tracked by basemap and view, apart from the
+  selected topic, so topics that share a style (Science and Sky, or Evidence
+  and the default map) can take turns while it loads and it still applies.
+- **Ready.** The map fades in on its first frame after a real style has loaded
+  with its tiles settled. MapLibre's `idle` would also wait for the camera to
+  stop, which the drift never does.
 
-`tests/welcome-map.test.mjs` covers the views, the terrain and globe styles, the
-drift and the engine's style handling; `tests/living-welcome.test.mjs` covers the
+`tests/welcome-map.test.mjs` covers the views, the terrain and globe styles and
+the drift; `tests/welcome-map-engine.test.mjs` drives the real engine against a
+stand-in map for shared pending styles, superseded styles and readiness; `tests/living-welcome.test.mjs` covers the
 default-map rule. Provider tiles cannot be reached from the development
 container, so the rendered maps were checked by their provider requests, not by
 eye.

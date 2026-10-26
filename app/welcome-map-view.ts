@@ -10,7 +10,8 @@ import type { StyleSpecification } from "./maplibre-seam";
  * illustration. Until a visitor points at a topic it shows the Explorer's
  * default vector map over the whole state, so opt-in providers (imagery,
  * aerials, topo, the Terrarium DEM) are requested only for a topic the
- * visitor chose to preview. No data layers are switched on in the preview.
+ * visitor chose to preview. A previewed topic also shows its starter data
+ * layers, drawn as the Explorer draws them.
  */
 export type WelcomeView = Readonly<{
   /** The topic, or null for the statewide default. */
@@ -18,10 +19,19 @@ export type WelcomeView = Readonly<{
   basemap: BasemapKey;
   scene: CategoryScene;
   camera: CategoryCamera;
+  /** Starter data layers the preview draws (provider-context ids). */
+  starters: readonly string[];
   /** Caption: the map's name and what it shows. */
   name: string;
   detail: string;
 }>;
+
+/**
+ * Starters a preview leaves out: each needs live machinery the welcome does
+ * not run (radar and GOES imagery a current frame list, river gauges the
+ * River Pulse adapter). They appear when the map is opened.
+ */
+export const WELCOME_PREVIEW_SKIPPED_STARTERS: ReadonlySet<string> = new Set(["nws-radar", "noaa-goes-geocolor", "usgs-streamflow"]);
 
 export const WELCOME_DEM_SOURCE_ID = "welcome-terrain-dem";
 export const WELCOME_TERRAIN_EXAGGERATION = 1.5;
@@ -31,6 +41,7 @@ export const WELCOME_IDLE_VIEW: WelcomeView = Object.freeze({
   basemap: "standard",
   scene: "2d",
   camera: Object.freeze({ center: [-98.38, 38.48] as const, zoom: 6.1, pitch: 0, bearing: 0 }),
+  starters: Object.freeze([]),
   name: "Kansas",
   detail: "The Explorer's default vector map · choose a category to preview its map",
 });
@@ -38,7 +49,8 @@ export const WELCOME_IDLE_VIEW: WelcomeView = Object.freeze({
 export function welcomeView(topic: string | null): WelcomeView {
   const look = topic && Object.hasOwn(CATEGORY_MAPS, topic) ? CATEGORY_MAPS[topic as keyof typeof CATEGORY_MAPS] : null;
   if (!look) return WELCOME_IDLE_VIEW;
-  return { topic: look.topic, basemap: look.basemap, scene: look.scene, camera: look.camera, name: look.name, detail: `${categorySceneLabel(look.scene)} · ${look.lede}` };
+  const starters = look.starters.filter(id => !WELCOME_PREVIEW_SKIPPED_STARTERS.has(id));
+  return { topic: look.topic, basemap: look.basemap, scene: look.scene, camera: look.camera, starters, name: look.name, detail: `${categorySceneLabel(look.scene)} · ${look.lede}` };
 }
 
 /**
