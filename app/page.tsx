@@ -6283,18 +6283,6 @@ export default function Home() {
     return () => window.clearInterval(timer);
   }, [sceneEffects.sunSync]);
 
-  // Play the day: one quarter-hour step of the sun study at a time, until 11:45 PM.
-  useEffect(() => {
-    if (!sunPlaying || !sceneEffects.sunSync || reducedMotion) return;
-    const timer = window.setTimeout(() => {
-      const day = kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)));
-      const next = nextSunStep(intervalFractionAtInstant(sunAt, day));
-      if (next === null) setSunPlaying(false);
-      else setSunStudyAt(instantAtIntervalFraction(day, next));
-    }, SUN_PLAY_STEP_MS);
-    return () => window.clearTimeout(timer);
-  }, [reducedMotion, sceneEffects.sunSync, sunAt, sunPlaying]);
-
   // Scene effects are display treatment; re-apply them whenever the settings,
   // style generation, projection, render budget or (when following it) the sun changes.
   useEffect(() => {
@@ -9095,6 +9083,20 @@ export default function Home() {
   const categoryMode: CategoryScene = projection === "globe" ? "globe" : scenePreset === "elevation-3d" ? "terrain" : "2d";
   const showCategoryDock = Boolean(activeCategoryMap && !categoryDockHidden && guideOpen === false && primaryWorkspace === "map" && !undergroundOpen
     && (activeCategoryMap.basemap === basemap || categoryDockTopic === activeCategoryMap.topic));
+  // Play the day runs only while its controls are on screen: the dock is shown and not on the globe.
+  const sunControlsShown = showCategoryDock && categoryMode !== "globe";
+  if (sunPlaying && !sunControlsShown) setSunPlaying(false);
+  // Play the day: one quarter-hour step of the sun study at a time, until 11:45 PM.
+  useEffect(() => {
+    if (!sunPlaying || !sunControlsShown || !sceneEffects.sunSync || reducedMotion) return;
+    const timer = window.setTimeout(() => {
+      const day = kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)));
+      const next = nextSunStep(intervalFractionAtInstant(sunAt, day));
+      if (next === null) setSunPlaying(false);
+      else setSunStudyAt(instantAtIntervalFraction(day, next));
+    }, SUN_PLAY_STEP_MS);
+    return () => window.clearTimeout(timer);
+  }, [reducedMotion, sceneEffects.sunSync, sunAt, sunControlsShown, sunPlaying]);
   const chooseCategoryMode = (mode: CategoryScene) => {
     activateMapRepresentation(mode);
     // Vector category basemaps survive the globe; raster ones hand over to the standard style there.
@@ -9990,7 +9992,7 @@ export default function Home() {
             onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => updateSceneEffects({ ...sceneEffectsRef.current, sunSync })}
             onSunTime={(fraction) => { setSunPlaying(false); setSunStudyAt(fraction === null ? null : instantAtIntervalFraction(kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunClock))), fraction)); }}
             sunPlaying={sunPlaying} motionAllowed={!reducedMotion} onSunPlay={playSunDay} onReset={resetCategoryView}
-            onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => { setSunPlaying(false); setCategoryDockHidden(true); }} />}
+            onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>
             <strong>{KANSAS_FLYOVER[flyoverStopIndex].label}</strong>
