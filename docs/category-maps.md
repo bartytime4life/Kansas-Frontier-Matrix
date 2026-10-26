@@ -191,6 +191,28 @@ the snapshot files in `public/data/groundwater/`. These are regional classified
 estimates, not well measurements; Explore underground opens the recorded well
 logs and cores.
 
+## Reviewed snapshots from the site database
+
+The River network, Storm desk and Hazard watch docks offer **Reviewed …
+snapshots**: the hourly USGS discharge and NWS alert captures that the site's
+publishing pipeline normalized, checked against their signed manifest and
+committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
+`/api/curated/{source}` and its `/history` (up to 20 releases).
+
+- Gauges are circles whose area is in proportion to discharge (radius by the
+  square root of ft³/s); provisional USGS values carry an amber ring, approved
+  values a white one; a gauge without a value is not drawn as zero.
+- Alert areas take their NWS severity colour; alerts that have expired leave
+  the display, as on `/curated`.
+- The scrubber runs oldest to newest; each step names the hour the capture is
+  for, when it was published and how many features it holds, and says when it
+  is older than two hours. Play steps forward and stops at the newest.
+- When the pipeline is not switched on, has no approved release, or the
+  database is unavailable, the dock says so and nothing is drawn.
+
+The snapshots are drawn by the context renderer (`app/reviewed-snapshot-layers.ts`)
+and are approved context releases, not admitted evidence.
+
 ## What is not on every map
 
 County boundaries, USGS river gauges, the USGS 3DHP stream network and the fire

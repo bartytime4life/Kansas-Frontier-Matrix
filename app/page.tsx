@@ -21,6 +21,8 @@ import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
 import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulationPrisms } from "./population-prisms";
+import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots } from "./reviewed-snapshots";
+import { setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { CATEGORY_BASEMAPS } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
 import { CategoryMapDock, nextSunStep, SUN_PLAY_RESTART_STEP, SUN_TIME_STEPS, type AquiferView } from "./category-map-dock";
@@ -9153,6 +9155,17 @@ export default function Home() {
   // The category map on screen: its look's basemap is on, or it was opened and not left since.
   const categoryMapOnScreen = activeCategoryMap && (activeCategoryMap.basemap === basemap || categoryDockTopic === activeCategoryMap.topic) ? activeCategoryMap : undefined;
   const showCategoryDock = Boolean(categoryMapOnScreen && !categoryDockHidden && guideOpen === false && primaryWorkspace === "map" && !undergroundOpen);
+  // Reviewed snapshots from the site database, for the maps that offer them.
+  const reviewedSource = categoryMapOnScreen?.tools?.includes("reviewed") ? REVIEWED_SOURCE_BY_TOPIC[categoryMapOnScreen.topic] ?? null : null;
+  const reviewed = useReviewedSnapshots(reviewedSource, !reducedMotion);
+  const reviewedData = reviewed.on && reviewed.product ? reviewed.product.data : null;
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    setReviewedSnapshot(map, reviewedData);
+    if (styleReady && styleGenerationReadyRef.current) applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
+  }, [reviewedData, styleReady, runtimeOfficialVisibility]);
+  const reviewedTime = (value: string | undefined) => value ? new Date(value).toISOString().slice(0, 16).replace("T", " ") + " UTC" : null;
   // The light changes the map in 3D terrain and on category basemaps, whose shaded relief follows it.
   const categorySunAvailable = categoryMode === "terrain" || isCategoryBasemapKey(basemap);
   // Play the day runs only while its controls are on screen: the dock is shown with its sun controls, not on the globe.
@@ -10072,6 +10085,12 @@ export default function Home() {
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
+            reviewed={reviewedSource ? { source: REVIEWED_SOURCE_LABEL[reviewedSource], on: reviewed.on, loading: reviewed.status === "loading",
+              reason: reviewed.status === "withheld" && reviewed.reason ? REVIEWED_REASONS[reviewed.reason] ?? "No reviewed snapshot can be shown." : null,
+              count: reviewed.history.length, index: reviewed.index, publishedAt: reviewedTime(reviewed.history[reviewed.index]?.publishedAt), capturedFor: reviewedTime(reviewed.product?.bucketAt),
+              features: reviewed.product?.data.features.length ?? null, freshness: reviewed.product?.freshness ?? null, playing: reviewed.playing, motionAllowed: !reducedMotion } : undefined}
+            onReviewed={reviewed.setOn} onReviewedIndex={reviewed.setIndex}
+            onReviewedPlay={(on) => { if (on && reviewed.index >= reviewed.history.length - 1) reviewed.setIndex(0); reviewed.setPlaying(on); }}
             aquifer={activeCategoryMap.tools?.includes("aquifer") ? { view: aquiferView, legend: aquiferView && aquiferView !== "kgs-aquifer-high-plains" ? GROUNDWATER_CLASS_LEGENDS[aquiferView] : null } : undefined}
             onAquiferView={showAquiferView}
             soil={activeCategoryMap.tools?.includes("soil") ? { on: soilMapState.visible, depth: soilMapState.view === "root" ? "root" : "surface", reading: soilReading, legendUrl: soilLegendUrl(soilMapState.view === "root" ? "root" : "surface") } : undefined}
