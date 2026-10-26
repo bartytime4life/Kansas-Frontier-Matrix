@@ -6,7 +6,7 @@ export type ExternalContextSourceId =
   | "usgs-national-map-topo"
   | "aws-mapzen-terrarium";
 
-export type ExternalContextActivation = "standard" | "aviation-chart" | "civic" | "hydro" | "relief" | "storm" | "network" | "imagery" | "kansas-aerial" | "streets" | "topo" | "elevation-3d";
+export type ExternalContextActivation = "standard" | "aviation-chart" | "civic" | "hydro" | "relief" | "storm" | "network" | "historic" | "imagery" | "kansas-aerial" | "streets" | "topo" | "elevation-3d";
 
 export type ExternalContextSource = Readonly<{
   id: ExternalContextSourceId;
@@ -40,7 +40,7 @@ export const EXTERNAL_CONTEXT_SOURCES: readonly ExternalContextSource[] = Object
     organization: "OpenFreeMap / OpenMapTiles / OpenStreetMap",
     kind: "VECTOR_STYLE",
     capabilities: Object.freeze(["BASEMAP", "STRUCTURES_3D"] as const),
-    activatesWhen: Object.freeze(["standard", "aviation-chart", "civic", "hydro", "relief", "storm", "network"] as const),
+    activatesWhen: Object.freeze(["standard", "aviation-chart", "civic", "hydro", "relief", "storm", "network", "historic"] as const),
     requestMode: "DEFAULT_NETWORK",
     requestUrl: "https://tiles.openfreemap.org/styles/liberty",
     endpointLabel: "tiles.openfreemap.org",
@@ -125,7 +125,7 @@ export const EXTERNAL_CONTEXT_SOURCES: readonly ExternalContextSource[] = Object
     organization: "AWS Open Data / Mapzen",
     kind: "RASTER_DEM",
     capabilities: Object.freeze(["TERRAIN_3D", "HILLSHADE"] as const),
-    activatesWhen: Object.freeze(["elevation-3d", "aviation-chart", "civic", "hydro", "relief", "storm", "network"] as const),
+    activatesWhen: Object.freeze(["elevation-3d", "aviation-chart", "civic", "hydro", "relief", "storm", "network", "historic"] as const),
     requestMode: "OPT_IN_NETWORK",
     requestUrl: "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
     endpointLabel: "s3.amazonaws.com/elevation-tiles-prod",

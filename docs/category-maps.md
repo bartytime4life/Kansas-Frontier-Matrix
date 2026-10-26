@@ -114,7 +114,7 @@ Data, Metadata, Trace and Focus tabs are unchanged.
 
 ## Specialized basemaps
 
-Six category styles live in `app/category-basemaps.ts`, listed with their
+Seven category styles live in `app/category-basemaps.ts`, listed with their
 picker title, network note and legend in `CATEGORY_BASEMAPS`. Their keys are in
 the import-free `app/category-basemap-keys.ts`, which the allow-lists share.
 They are built only from carriers already listed in
@@ -136,6 +136,7 @@ in text.
 | `relief` | Relief model | Terrain, Geology |
 | `storm` | Storm desk | Weather, Hazards |
 | `network` | Network map | Transport, Engineering |
+| `historic` | Historic atlas | History |
 
 ### Aviation chart (`aviation-chart`)
 
@@ -203,9 +204,24 @@ Weather layers keep their own clocks.
 
 It is display context, not traffic, condition or access.
 
+### Historic atlas (`historic`)
+
+- a parchment ground with a sepia hillshade and the bundled 1° graticule;
+- railroads are the subject: an ink line crossed by ties, the way atlases drew
+  the lines that placed Kansas towns;
+- county lines are dotted and the state line is dash-dot;
+- modern roads, urban areas and water recede;
+- city names are letter-spaced capitals, and river names follow their courses.
+
+It is present-day OpenMapTiles geography drawn in an atlas style, not a
+historical map. The History look adds the dated layers on top: the digitized
+1918 road map and abandoned railroads, each with its own source limitation.
+OpenFreeMap provides only Noto Sans, so the atlas feel comes from spacing,
+case and colour rather than a serif face.
+
 ### Shared behaviour
 
-- **Fallback.** All six styles use the `openmaptiles` source id. If that carrier
+- **Fallback.** All seven styles use the `openmaptiles` source id. If that carrier
   fails, the existing fallback swaps to the local Midnight style
   (`VECTOR_BASEMAPS`, `shouldFallbackStandardBasemap`).
 - **Globe.** Vector basemaps stay on the globe. Raster ones still hand over to
@@ -221,7 +237,7 @@ It is display context, not traffic, condition or access.
 
 ## Limits
 
-- The vector layers of all six styles were validated against the MapLibre
+- The vector layers of all seven styles were validated against the MapLibre
   style specification and by tests. Their relief, tint and outline layers were
   rendered in a browser. It was not rendered against live
   OpenFreeMap tiles in the build container, which cannot reach that host.

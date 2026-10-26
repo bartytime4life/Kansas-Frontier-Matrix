@@ -102,13 +102,24 @@ test('the four science basemaps each make their subject the lead layer',()=>{
  assert.ok(ids('network').indexOf('network-rail-ties')>ids('network').indexOf('network-rail'),'ties draw over the rail line');
 });
 
+test('the historic atlas makes railroads the subject on a parchment ground and lets modern roads recede',()=>{
+ const ids=styles.historic.layers.map(layer=>layer.id),layer=id=>styles.historic.layers.find(l=>l.id===id);
+ assert.equal(layer('kfm-background').paint['background-color'],'#efe4c8');
+ assert.equal(layer('historic-graticule').source,'orientation-kansas','the atlas graticule comes from the bundled orientation source');
+ assert.ok(ids.indexOf('historic-rail-ties')>ids.indexOf('historic-rail')&&ids.indexOf('historic-rail')>ids.indexOf('historic-roads'),'ties cross the rail, both over the receding roads');
+ assert.deepEqual(JSON.parse(JSON.stringify(layer('historic-county-boundary').paint['line-dasharray'])),[1,2],'dotted county lines');
+ assert.match(JSON.stringify(layer('historic-place-labels').layout['text-field']),/"upcase"/,'city names are capitals');
+ assert.equal(layer('historic-roads').minzoom,6);
+ assert.match(basemaps.CATEGORY_BASEMAPS.historic.legend,/present-day/,'the base is today\'s geography in an atlas style, not a historical map');
+});
+
 test('every surface that whitelists basemaps accepts the category basemaps',async()=>{
  const [runtime,page,saved,wind,report]=await Promise.all(['app/map-runtime.ts','app/page.tsx','app/saved-workspaces.ts','app/wind-arrow-canvas.ts','app/report-story-workspaces.tsx'].map(path=>readFile(path,'utf8')));
  assert.match(runtime,/export type BasemapKey = "standard" \| CategoryBasemapKey \|/);
  assert.match(runtime,/\.\.\.Object\.fromEntries\(CATEGORY_BASEMAP_KEYS\.map\(key => \[key, \{ title: CATEGORY_BASEMAPS\[key\]\.title/);
  assert.match(runtime,/VECTOR_BASEMAPS: ReadonlySet<BasemapKey> = new Set<BasemapKey>\(\["standard", \.\.\.CATEGORY_BASEMAP_KEYS\]\)/);
  assert.match(page,/isCategoryBasemapKey\(basemap\) \? CATEGORY_BASEMAPS\[basemap\]\.legend/);
- assert.deepEqual([...keys.LIGHT_CATEGORY_BASEMAPS].sort(),['aviation-chart','civic','network','relief'],'dark grounds (hydro, storm) get light wind strokes');
+ assert.deepEqual([...keys.LIGHT_CATEGORY_BASEMAPS].sort(),['aviation-chart','civic','historic','network','relief'],'dark grounds (hydro, storm) get light wind strokes');
  assert.equal((page.match(/isBasemapKey\((restoredBasemap|snapshot\.basemap)\)/g)||[]).length,2,'URL and snapshot restore accept every BASEMAPS key');
  assert.match(page,/VECTOR_BASEMAPS\.has\(basemapRef\.current\) && !styleFallbackAttempted && shouldFallbackStandardBasemap/);
  assert.match(page,/mode === "globe" && !VECTOR_BASEMAPS\.has\(basemapRef\.current\)/);
