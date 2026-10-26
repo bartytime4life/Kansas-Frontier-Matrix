@@ -250,9 +250,16 @@ attribution control).
   Styles are resolved by the engine and passed whole to `setStyle`, because
   `setStyle`'s `transformStyle` waits for the previous style to load and would
   stall every later preview after one provider failure.
+  The style applied or pending is tracked by basemap and view, apart from the
+  selected topic, so topics that share a style (Science and Sky, or Evidence
+  and the default map) can take turns while it loads and it still applies.
+- **Ready.** The map fades in on its first frame after a real style has loaded
+  with its tiles settled. MapLibre's `idle` would also wait for the camera to
+  stop, which the drift never does.
 
-`tests/welcome-map.test.mjs` covers the views, the terrain and globe styles, the
-drift and the engine's style handling; `tests/living-welcome.test.mjs` covers the
+`tests/welcome-map.test.mjs` covers the views, the terrain and globe styles and
+the drift; `tests/welcome-map-engine.test.mjs` drives the real engine against a
+stand-in map for shared pending styles, superseded styles and readiness; `tests/living-welcome.test.mjs` covers the
 default-map rule. Provider tiles cannot be reached from the development
 container, so the rendered maps were checked by their provider requests, not by
 eye.

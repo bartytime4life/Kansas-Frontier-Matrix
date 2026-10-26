@@ -56,7 +56,7 @@ test('the drift turns tilted and globe views and eases flat maps, one slow leg a
 test('the engine resolves styles itself, so one failed style never stalls later previews',async()=>{
  const source=await readFile('app/living-welcome/map-engine.mjs','utf8');
  assert.doesNotMatch(source,/transformStyle:/,'setStyle transformStyle waits for the previous style, which never loads after a failure');
- assert.match(source,/void resolveStyle\(BASEMAPS\[next\.basemap\]\.style\)\.then\(style => \{\s*if \(disposed \|\| view !== next\) return;\s*map\.setStyle\(welcomeStyle\(style, next\), \{ diff: false \}\);/,'a superseded preview is dropped');
+ assert.match(source,/void resolveStyle\(BASEMAPS\[next\.basemap\]\.style\)\.then\(style => \{\s*if \(disposed \|\| styleKey !== key\) return;\s*map\.setStyle\(welcomeStyle\(style, view\), \{ diff: false \}\);/,'a superseded style is dropped; a pending one serves the topic selected when it arrives (behaviour in welcome-map-engine.test)');
  assert.match(source,/interactive: false/,'the welcome map is a backdrop, not a second map to operate');
  assert.match(source,/attributionControl: \{ compact: true \}/,'provider credits stay on the map');
  const stage=await readFile('app/living-welcome/DomainStage.jsx','utf8');

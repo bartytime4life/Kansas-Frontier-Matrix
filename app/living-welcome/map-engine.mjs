@@ -37,34 +37,41 @@ export async function createWelcomeMap(container, { onReady, onError } = {}) {
   } catch { onError?.(); return null; }
   map.getCanvas().setAttribute('aria-hidden', 'true');
   map.getCanvas().tabIndex = -1;
-  let view = null, basemap = null, paused = true, reduced = false, leg = 0, settle = 0, disposed = false, ready = false, applying = false;
+  // `styleKey` names the style applied or still pending (basemap and view); it
+  // is tracked apart from the selected topic, because topics that share a
+  // style (Science and Sky, or Evidence and the default map) take turns while
+  // it loads, and the loaded style serves whichever of them is selected then.
+  let view = null, styleKey = null, styleLoaded = false, paused = true, reduced = false, leg = 0, settle = 0, disposed = false, ready = false, applying = false;
+  const cameraOf = ({ camera: { center, zoom, pitch, bearing } }) => ({ center: [center[0], center[1]], zoom, pitch, bearing });
   const drift = () => {
     if (disposed || paused || reduced || applying || !view) return;
     const next = welcomeDriftLeg(view, leg++);
     map.easeTo({ bearing: next.bearing, zoom: next.zoom, duration: next.duration, easing: t => t * t * (3 - 2 * t), essential: true });
   };
   map.on('moveend', event => { if (!event.originalEvent && !paused) drift(); });
-  map.on('idle', () => { if (!ready && !disposed) { ready = true; onReady?.(); } });
+  // Ready once a real style has drawn with its tiles settled. `idle` would also
+  // wait for the camera to stop, which the drift never does.
+  map.on('render', () => { if (!ready && !disposed && styleLoaded && map.loaded()) { ready = true; onReady?.(); } });
   const apply = next => {
     if (disposed) return;
-    const restyle = next.basemap !== basemap || next.scene !== view?.scene;
     view = next; leg = 0;
-    const { center, zoom, pitch, bearing } = next.camera;
-    const camera = { center: [center[0], center[1]], zoom, pitch, bearing };
+    const key = `${next.basemap}|${next.scene}`;
     // Stopping the last drift ends a move; it must not start one for the new view.
     applying = true; map.stop(); applying = false;
-    if (restyle) {
-      basemap = next.basemap;
+    if (key !== styleKey) {
+      styleKey = key; styleLoaded = false;
       // Styles are resolved here rather than through setStyle's transformStyle,
       // which waits for the previous style to load and so stalls after one fails.
       void resolveStyle(BASEMAPS[next.basemap].style).then(style => {
-        if (disposed || view !== next) return;
-        map.setStyle(welcomeStyle(style, next), { diff: false });
-        // Jumping ends a move, which starts the drift for this view.
-        map.once('style.load', () => { if (view === next) map.jumpTo(camera); });
-      }, () => { if (view === next) basemap = null; });
-    } else if (reduced || paused) map.jumpTo(camera);
-    else map.flyTo({ ...camera, duration: 2200, essential: true });
+        if (disposed || styleKey !== key) return;
+        map.setStyle(welcomeStyle(style, view), { diff: false });
+        // Jumping ends a move, which starts the drift for the view selected now.
+        map.once('style.load', () => { if (disposed || styleKey !== key) return; styleLoaded = true; map.jumpTo(cameraOf(view)); });
+      }, () => { if (styleKey === key) styleKey = null; });
+    } else if (!styleLoaded) {
+      // The pending style jumps to this view when it loads.
+    } else if (reduced || paused) map.jumpTo(cameraOf(next));
+    else map.flyTo({ ...cameraOf(next), duration: 2200, essential: true });
   };
   return {
     get view() { return view; },
