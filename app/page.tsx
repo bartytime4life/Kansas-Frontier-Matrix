@@ -2598,6 +2598,7 @@ export default function Home() {
     params.set("ctxd", Object.entries(officialArchiveDays).filter(([, day]) => day).map(([feed, day]) => `${feed}:${day}`).join(","));
     params.set("ctxo", OFFICIAL_CONTEXT_SOURCES.map((source) => `${source.id}:${(officialOpacity[source.id] ?? source.defaultOpacity).toFixed(2)}`).join(","));
     serializeSoilMapState(params, soilMapState);
+    if (populationPrisms) params.set("prisms", "on");
     params.set("sunDay", daylightDay);
     params.set("sunThrough", daylightThroughDay);
     params.set("sunAt", new Date(daylightInstant).toISOString());
@@ -2652,7 +2653,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -4827,6 +4828,7 @@ export default function Home() {
       setOfficialArchiveDraftDays({ "noaa-hms-smoke": currentUtcDay(), ...restoredDays });
       setOfficialPayloads(officialPayloadsRef.current);
       setSoilMapState(restoreSoilMapState(params));
+      setPopulationPrismsShown(params.get("prisms") === "on");
       const officialOpacityPairs = params.get("ctxo")?.split(",").map((pair) => pair.split(":")) ?? [];
       const restoredOfficialOpacity = Object.fromEntries(officialOpacityPairs
         .filter(([id, value]) => knownOfficialIds.has(id as OfficialContextId) && typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value)))

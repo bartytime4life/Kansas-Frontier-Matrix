@@ -8,7 +8,7 @@ import { noaaSatelliteTileUrl, type NoaaSatelliteFrame } from "./noaa-satellite"
 import { rememberGeoJSON, updateGeoJSON, setVisibleIfChanged, setPaintIfChanged } from "./map-performance";
 import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacity, requestRasterOpacity } from "./map-layer-composition";
 import { BUILD_UTC_YEAR } from "./build-clock";
-import { POPULATION_PRISM_LAYER_ID, populationPrismLayer, populationPrismsOn } from "./population-prisms";
+import { POPULATION_PRISM_LAYER_ID, PRISM_OPACITY, populationPrismLayer, populationPrismsOn } from "./population-prisms";
 import { drawReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { globeOverviewPaintSize } from "./globe-context";
 import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay, FIRE_REPORT_FLAME_ID } from "./fire-detection-style";
@@ -1001,7 +1001,13 @@ export const applyOfficialContextState = (
   // county outline, which would otherwise draw across the columns.
   const prisms = Boolean(visibility["census-counties"]) && populationPrismsOn(map) && !globeView;
   if (prisms) ensureLayer(map, populationPrismLayer(county.sourceId));
-  if (map.getLayer(POPULATION_PRISM_LAYER_ID)) setVisibleIfChanged(map, POPULATION_PRISM_LAYER_ID, prisms);
+  if (map.getLayer(POPULATION_PRISM_LAYER_ID)) {
+    // The prisms follow the county opacity slider: as drawn at its default
+    // setting, fading below it and leaving the map at zero.
+    const countyOpacity = Math.max(0, Math.min(1, opacity["census-counties"] ?? county.defaultOpacity));
+    setVisibleIfChanged(map, POPULATION_PRISM_LAYER_ID, prisms && countyOpacity > 0);
+    setPaintIfChanged(map, POPULATION_PRISM_LAYER_ID, "fill-extrusion-opacity", Math.min(1, PRISM_OPACITY * countyOpacity / county.defaultOpacity));
+  }
   if (prisms && map.getLayer(county.layerIds[1])) setVisibleIfChanged(map, county.layerIds[1], false);
   // A reviewed snapshot from the site database, for maps that show one.
   drawReviewedSnapshot(map);

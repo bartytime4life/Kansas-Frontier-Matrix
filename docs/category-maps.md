@@ -148,6 +148,9 @@ Drawer shows:
   the loaded payload.
 - A selected column opens its county record, which now carries
   `peoplePerSquareMile` and `densityGroup` beside the counts.
+- The county layer's opacity slider fades the columns (as drawn at its
+  default setting, gone at zero), and a shared link (`prisms=on`) reopens with
+  them standing.
 
 The columns replace the county outline while they stand, are hidden on the
 globe, and appear in the start-page preview of the People map. Counts describe
@@ -207,6 +210,13 @@ committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
 - The scrubber runs oldest to newest; each step names the hour the capture is
   for, when it was published and how many features it holds, and says when it
   is older than two hours. Play steps forward and stops at the newest.
+- A release is shown only while its publication approval holds: the history
+  is read again every minute, so a release whose approval lapses or is revoked
+  leaves the scrubber, and a shown release leaves the map the moment its own
+  `approvalExpiresAt` passes. With no release picked, the newest is followed as
+  new ones are published.
+- A newly picked release reads as loading until it is drawn, and Play steps on
+  only after each release has been drawn.
 - When the pipeline is not switched on, has no approved release, or the
   database is unavailable, the dock says so and nothing is drawn.
 

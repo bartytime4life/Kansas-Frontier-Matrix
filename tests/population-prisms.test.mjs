@@ -43,6 +43,10 @@ test('the context renderer draws prisms only where a map asks, with counties on 
  assert.match(baseline,/peoplePerSquareMile: density === null \? null : Math\.round\(density \* 10\) \/ 10, densityGroup: density === null \? null : kansasDensityGroup\(density\)\.label/,'the record carries the same density the prism is drawn from');
  const page=await readFile('app/page.tsx','utf8');
  assert.match(page,/setPopulationPrismsShown\(Boolean\(look\.overlays\?\.includes\("population"\)\)\);/,'on with the People map, off with any other');
+ assert.match(page,/if \(populationPrisms\) params\.set\("prisms", "on"\);/,'a shared link carries the prisms');
+ assert.match(page,/setPopulationPrismsShown\(params\.get\("prisms"\) === "on"\);/,'and opening it restores them');
+ assert.match(live,/setVisibleIfChanged\(map, POPULATION_PRISM_LAYER_ID, prisms && countyOpacity > 0\);/,'county opacity at zero hides the prisms');
+ assert.match(live,/"fill-extrusion-opacity", Math\.min\(1, PRISM_OPACITY \* countyOpacity \/ county\.defaultOpacity\)\)/,'and the county slider fades them');
 });
 
 test('the People dock toggles the prisms and shows the density groups with their county counts and the height scale',async()=>{

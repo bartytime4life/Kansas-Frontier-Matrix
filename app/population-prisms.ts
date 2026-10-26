@@ -17,6 +17,8 @@ export type KansasDensityGroup = (typeof KANSAS_DENSITY_GROUPS)[number];
 /** Prism height: 100 m for every person per square mile of land, on a linear scale. */
 export const PRISM_METRES_PER_PERSON_PER_SQUARE_MILE = 100;
 export const POPULATION_PRISM_LAYER_ID = "external-census-counties-population-prisms";
+/** Prism opacity at full county opacity; the county opacity slider scales it. */
+export const PRISM_OPACITY = 0.9;
 
 /** People per square mile of land, or null when either count is missing. */
 export function peoplePerSquareMile(population: unknown, landSquareMiles: unknown): number | null {
@@ -61,7 +63,7 @@ export const populationPrismLayer = (sourceId: string): LayerSpecification => ({
     "fill-extrusion-color": groupColor,
     "fill-extrusion-height": ["*", density, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE],
     "fill-extrusion-base": 0,
-    "fill-extrusion-opacity": 0.9,
+    "fill-extrusion-opacity": PRISM_OPACITY,
     "fill-extrusion-vertical-gradient": true,
   },
 });
