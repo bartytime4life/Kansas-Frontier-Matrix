@@ -304,6 +304,30 @@ epicentre lies inside Kansas, from 1 January 1973 to now
   comparable. Locations, magnitudes and review status can be revised by USGS.
   Hiding the record brings the 30-day catalog back; leaving the map closes it.
 
+## SPC convective outlook (Storm desk)
+
+The Storm desk dock's **Show the SPC severe outlook** draws the NOAA Storm
+Prediction Center's categorical convective outlook for Day 1, 2 or 3
+(`app/spc-outlook.ts`, served by `/api/spc-outlook?day=`), beside radar and
+alerts.
+
+- **Source.** SPC's own `dayNotlk_cat.lyr.geojson`, kept ten minutes on the
+  server and re-read in the browser once a shown day is a quarter-hour old,
+  since SPC reissues Day 1 several times a day. Only SPC's six categories
+  (TSTM, MRGL, SLGT, ENH, MDT, HIGH) with valid polygons are drawn; provider
+  properties other than the category do not travel.
+- **Symbols.** Outlines, not fills, so radar reflectivity keeps its colours, in
+  SPC's own category fill colours, which stay legible on the dark storm base
+  where SPC's darker stroke colours do not. Higher categories lie inside lower
+  ones, as SPC layers them. The key lists the categories with SPC's numbering,
+  1 Marginal to 5 High.
+- **Reading.** The highest category reaching Kansas (tested every 0.1°, about
+  10 km, inside the Census outline), with the outlook's issue time and valid
+  period in UTC, and a link to SPC's outlook page.
+- **Limits.** The outlook is a forecast of risk, not an observation, a watch or
+  a warning; probabilistic tornado, wind and hail outlooks are not drawn.
+  Leaving the map closes it.
+
 ## Photo-real 3D (Terrain)
 
 The Relief model dock's **Photo-real 3D** drapes the photographed ground on the
