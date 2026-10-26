@@ -48,8 +48,10 @@ holds and limits. They are display context, not admitted evidence.
     sun: a time-lapse that steps the study forward one quarter hour every
     200 ms (`SUN_PLAY_STEP_MS`) and stops at 11:45 PM, about 15 seconds from
     5:00 AM. It starts from the time shown, or from 5:00 AM once the day has
-    been played out. Moving Time, pressing **Now**, hiding the dock or turning
-    the real sun off stops it. Under reduced motion the button is disabled and
+    been played out. Moving Time, pressing **Now**, turning the real sun off, or
+    anything that takes its controls off screen stops it: hiding the dock,
+    clearing the category, opening the guide or switching to the globe
+    (`sunControlsShown`). Under reduced motion the button is disabled and
     only the slider moves the sun; It is display lighting only; no
     source time, archive date or evidence clock changes;
   - reset view and "Layers for this map".

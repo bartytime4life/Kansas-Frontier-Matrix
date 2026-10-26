@@ -154,11 +154,13 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.match(page,/onRealSun=\{\(sunSync\) => updateSceneEffects\(\{ \.\.\.sceneEffectsRef\.current, sunSync \}\)\}/,'only the visitor turns the real sun on or off');
  const update=page.slice(page.indexOf('  const updateSceneEffects = (next: SceneEffectSettings) => {'),page.indexOf('  const playSunDay ='));
  assert.match(update,/if \(next\.sunSync !== sceneEffectsRef\.current\.sunSync\) \{ setSunStudyAt\(null\); setSunPlaying\(false\); \}\s*sceneEffectsRef\.current = next;/,'every control that turns the real sun on or off (dock, Scene studio, recipes, looks) ends a study and its playback, read before the ref moves on');
- const play=page.slice(page.indexOf('  // Play the day: one quarter-hour step'),page.indexOf('  // Scene effects are display treatment;'));
- assert.match(play,/if \(!sunPlaying \|\| !sceneEffects\.sunSync \|\| reducedMotion\) return;/,'playback only runs while following the sun and motion is allowed');
+ const play=page.slice(page.indexOf('  // Play the day runs only while its controls are on screen'),page.indexOf('}, [reducedMotion, sceneEffects.sunSync, sunAt, sunControlsShown, sunPlaying]);')+80);
+ assert.ok(page.indexOf('  const showCategoryDock = Boolean(')<page.indexOf('  const sunControlsShown ='),'playback reads the dock visibility computed just above it');
+ assert.match(play,/const sunControlsShown = showCategoryDock && categoryMode !== "globe";\s*if \(sunPlaying && !sunControlsShown\) setSunPlaying\(false\);/,'clearing the topic, hiding the dock, opening the guide or going to the globe stops playback');
+ assert.match(play,/if \(!sunPlaying \|\| !sunControlsShown \|\| !sceneEffects\.sunSync \|\| reducedMotion\) return;/,'playback only runs while its controls are shown, following the sun, with motion allowed');
  assert.match(play,/window\.setTimeout\([\s\S]*?if \(next === null\) setSunPlaying\(false\);\s*else setSunStudyAt\(instantAtIntervalFraction\(day, next\)\);[\s\S]*?SUN_PLAY_STEP_MS\);\s*return \(\) => window\.clearTimeout\(timer\);/,'one step per timer, cleared on every change, stopping at the last step');
  assert.match(page,/onSunTime=\{\(fraction\) => \{ setSunPlaying\(false\);/,'moving Time or pressing Now stops playback');
- assert.match(page,/onClose=\{\(\) => \{ setSunPlaying\(false\); setCategoryDockHidden\(true\); \}\}/,'hiding the dock stops playback');
+ assert.match(page,/onClose=\{\(\) => setCategoryDockHidden\(true\)\}/,'hiding the dock stops playback through sunControlsShown');
  assert.match(page,/motionAllowed=\{!reducedMotion\}/);
  assert.equal((page.match(/setSceneEffects\(/g)||[]).length,2,'settings change only in updateSceneEffects and the stored-settings restore');
  const reset=page.slice(page.indexOf('  const resetCategoryView = () => {'),page.indexOf('announce(`${activeCategoryMap.name} view reset`)'));
