@@ -61,3 +61,40 @@ test('the dock draws each key as the map draws it, and the page passes the keys 
  const page=await readFile('app/page.tsx','utf8');
  assert.match(page,/keys=\{mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\)\}/);
 });
+
+const luminance=hex=>{const c=rgb(hex).map(v=>v/255).map(v=>v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4);return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];};
+const contrast=(a,b)=>{const [x,y]=[luminance(a),luminance(b)].sort((p,q)=>p-q);return (y+0.05)/(x+0.05);};
+
+test('KDOT lines read on their own light maps and on the dark ones, and no two datasets share a colour',async()=>{
+ const basemaps=await readFile('app/category-basemaps.ts','utf8');
+ const ground=name=>basemaps.slice(basemaps.indexOf(`function ${name}(`)).match(/"background-color": "(#[0-9a-f]{6})"/)[1];
+ const light={network:ground('networkLayers'),historic:ground('historicLayers'),civic:ground('civicLayers')};
+ const dark={storm:ground('stormLayers'),navy:'#0b1d2a'};
+ const symbols=Object.entries(keys.KDOT_LINE_SYMBOLS);
+ for(const [id,{color}] of symbols)for(const [base,bg] of Object.entries({...light,...dark}))
+  assert.ok(contrast(color,bg)>=3,`${id} on ${base}: ${contrast(color,bg).toFixed(2)}:1`);
+ assert.equal(new Set(symbols.map(([,s])=>s.color)).size,symbols.length,'one colour per dataset');
+ assert.deepEqual(symbols.filter(([,s])=>s.dashed).map(([id])=>id),['kdot-rail-abandoned'],'only the former rail is dashed');
+ assert.deepEqual(keys.esriColor('#0f8a80'),[15,138,128,255]);
+});
+
+test('the requests KDOT draws use the same symbols the key shows',async()=>{
+ const reference=await readFile('app/kansas-reference-layers.ts','utf8');
+ for(const id of Object.keys(keys.KDOT_LINE_SYMBOLS)){
+  assert.match(reference,new RegExp(`kdotLine\\("[A-Za-z_]+", \\d, "${id}"\\)`),`${id} request`);
+  assert.match(reference,new RegExp(`color: KDOT_LINE_SYMBOLS\\["${id}"\\]\\.color`),`${id} registry colour`);
+ }
+ assert.match(reference,/color: esriColor\(color\), width: 1\.5/);
+ assert.doesNotMatch(reference,/\[24[5-7], 1[67]\d, 1[01]\d, 255\]/,'the old near-identical oranges are gone');
+});
+
+test('each map keys its own lines, grouped under one title',()=>{
+ const network=keys.mapKeysFor(maps.CATEGORY_MAPS.transport.starters,()=>true);
+ assert.deepEqual(network.map(k=>k.title),['KDOT roads and rail']);
+ assert.deepEqual(network[0].items.map(i=>[i.label,i.shape,Boolean(i.dashed)]),[['Public roads','line',false],['Active railroads','line',false]]);
+ const historic=keys.mapKeysFor(maps.CATEGORY_MAPS.history.starters,()=>true);
+ assert.deepEqual(historic.map(k=>k.title),['1918 roads and former rail']);
+ assert.deepEqual(historic[0].items.map(i=>[i.label,Boolean(i.dashed)]),[['1918 state highways',false],['Abandoned railroads',true]]);
+ assert.match(historic[0].note,/inked lines with ties/,'the base map draws today\'s rail; the key says so');
+ assert.deepEqual(keys.mapKeysFor(maps.CATEGORY_MAPS.history.starters,id=>id==='kdot-rail-abandoned')[0].items.map(i=>i.label),['Abandoned railroads'],'only the lines that are on');
+});

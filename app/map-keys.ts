@@ -27,6 +27,22 @@ export const earthquakeColor = (): ExpressionSpecification =>
 export const earthquakeRadius = (): ExpressionSpecification =>
   ["interpolate", ["linear"], ["zoom"], 4, ["interpolate", ["linear"], magnitude, ...EARTHQUAKE_RADIUS_Z4.flat()], 10, ["interpolate", ["linear"], magnitude, ...EARTHQUAKE_RADIUS_Z10.flat()]] as unknown as ExpressionSpecification;
 
+/**
+ * KDOT reference lines, drawn by KDOT's own service with these symbols
+ * (esriSLS, 1.5 px). Mid-luminance colours, at least 3:1 against both the
+ * light category bases (network, civic, parchment) and the dark ones, so
+ * each line reads on its own map. Two datasets never share a colour.
+ */
+export const KDOT_LINE_SYMBOLS = Object.freeze({
+  "kdot-roads": Object.freeze({ color: "#b8730c", dashed: false, label: "Public roads" }),
+  "kdot-rail-active": Object.freeze({ color: "#0f8a80", dashed: false, label: "Active railroads" }),
+  "kdot-roads-1918": Object.freeze({ color: "#b5432c", dashed: false, label: "1918 state highways" }),
+  "kdot-rail-abandoned": Object.freeze({ color: "#7d68b0", dashed: true, label: "Abandoned railroads" }),
+} as const);
+export type KdotLineId = keyof typeof KDOT_LINE_SYMBOLS;
+/** An ArcGIS RGBA colour for a #rrggbb hex. */
+export const esriColor = (hex: string): number[] => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).concat(255);
+
 /** Linear interpolation through [x, y] stops, clamped at the ends, as MapLibre's "interpolate" does. */
 const along = (stops: readonly (readonly [number, number])[], x: number): number => {
   if (x <= stops[0][0]) return stops[0][1];
@@ -37,8 +53,14 @@ const along = (stops: readonly (readonly [number, number])[], x: number): number
   return stops[stops.length - 1][1];
 };
 
-export type MapKeyItem = Readonly<{ label: string; color: string; shape: "dot" | "area"; size?: number }>;
-export type MapKey = Readonly<{ id: string; title: string; items: readonly MapKeyItem[]; note: string }>;
+export type MapKeyItem = Readonly<{ label: string; color: string; shape: "dot" | "area" | "line"; size?: number; dashed?: boolean }>;
+/** Keys that share a group are shown as one, under the group's title and note. */
+export type MapKey = Readonly<{ id: string; title: string; items: readonly MapKeyItem[]; note: string; group?: Readonly<{ id: string; title: string; note: string }> }>;
+
+const KDOT_NETWORK = Object.freeze({ id: "kdot-network", title: "KDOT roads and rail",
+  note: "Drawn by KDOT's service: roads from zoom 9, railroads from zoom 8. One line weight for every road; it is not road class or width." });
+const HISTORIC_LINES = Object.freeze({ id: "kdot-historic", title: "1918 roads and former rail",
+  note: "The 1918 State Highway Commission map as KDOT digitized it, and lines KDOT designates abandoned. Today's railroads are the inked lines with ties." });
 
 /** Keys for the starter layers whose symbols encode a value, by source id. */
 export const MAP_KEYS: Readonly<Record<string, MapKey>> = Object.freeze({
@@ -57,8 +79,24 @@ export const MAP_KEYS: Readonly<Record<string, MapKey>> = Object.freeze({
       Object.freeze({ label: "Unknown", color: NWS_SEVERITY_UNKNOWN_COLOR, shape: "area" as const })]),
     note: "Each area takes its alert's CAP severity; select one for its event, urgency and expiry.",
   }),
+  ...Object.fromEntries((Object.keys(KDOT_LINE_SYMBOLS) as KdotLineId[]).map(id => {
+    const { color, dashed, label } = KDOT_LINE_SYMBOLS[id];
+    const historic = id === "kdot-roads-1918" || id === "kdot-rail-abandoned";
+    return [id, Object.freeze({ id, title: label, items: Object.freeze([Object.freeze({ label, color, dashed, shape: "line" as const })]), note: "",
+      group: historic ? HISTORIC_LINES : KDOT_NETWORK })];
+  })),
 });
 
-/** The keys for the starter layers a map shows, in the map's own order. */
-export const mapKeysFor = (starters: readonly string[], visible: (id: string) => boolean): readonly MapKey[] =>
-  starters.filter(id => MAP_KEYS[id] && visible(id)).map(id => MAP_KEYS[id]);
+/** The keys for the starter layers a map shows, in the map's own order; keys of one group are merged. */
+export const mapKeysFor = (starters: readonly string[], visible: (id: string) => boolean): readonly MapKey[] => {
+  const keys: MapKey[] = [];
+  for (const id of starters) {
+    const key = MAP_KEYS[id];
+    if (!key || !visible(id)) continue;
+    const group = key.group;
+    const shared = group ? keys.findIndex(k => k.id === group.id) : -1;
+    if (group && shared >= 0) keys[shared] = { ...keys[shared], items: [...keys[shared].items, ...key.items] };
+    else keys.push(group ? { id: group.id, title: group.title, note: group.note, items: key.items } : key);
+  }
+  return keys;
+};

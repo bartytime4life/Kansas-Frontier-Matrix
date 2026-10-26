@@ -134,7 +134,7 @@ export const MAP_DEMOS = {
       "id": "history-1",
       "category": "history",
       "title": "Trace Kansas roads from 1918",
-      "caption": "Orange dashed lines trace routes digitized from 1918 maps over modern imagery.",
+      "caption": "Brick-red lines trace routes digitized from 1918 maps over modern imagery.",
       "sourceTime": "KDOT · digitized 1918 named routes · modern imagery background",
       "limitation": "Modern imagery is not the 1918 landscape. Approximate route digitization; not exact alignment, ownership or today’s road conditions.",
       "destination": {
