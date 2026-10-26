@@ -719,18 +719,23 @@ finds these sources directly, the Data action opens their controls, and the
 connection pulse reports loaded feature counts and retrieval time. Browser
 requests cannot supply an arbitrary upstream URL.
 
+Every connection starts off in the plain Explorer. A category map switches on
+its own starter layers instead: Hazard watch, for example, opens with NWS alert
+areas, the selectable NOAA-20 fire detections and NIFC fire reports
+(`app/category-maps.ts`).
+
 | Connection | Default | Added context | Explicit boundary |
 |---|---:|---|---|
-| Census counties + decennial population | On | 2020 TIGERweb geometry with 2020 `POP100` population and `HU100` housing counts | Decennial baseline only; not a current population estimate or EvidenceBundle |
-| USGS River Pulse | On | Bounded Kansas discharge `00060` observations from USGS Water Data API v1, with exact-frame playback and selected-station history | Samples may be provisional, qualified, delayed, revised, missing, or truncated; not flood guidance or an all-stations inventory |
+| Census counties + decennial population | Off | 2020 TIGERweb geometry with 2020 `POP100` population and `HU100` housing counts | Decennial baseline only; not a current population estimate or EvidenceBundle |
+| USGS River Pulse | Off | Bounded Kansas discharge `00060` observations from USGS Water Data API v1, with exact-frame playback and selected-station history | Samples may be provisional, qualified, delayed, revised, missing, or truncated; not flood guidance or an all-stations inventory |
 | NOAA NWPS gauges + forecast | Off | Operational Kansas gauge status plus separately labeled observations and forecasts | NWPS is not a durable general archive or warning-delivery service; flood categories appear only when supplied by NOAA |
-| USGS 3DHP hydrography | On | Provider-rendered flowlines and waterbodies for network orientation | Transitional/current image carrier, not queryable analysis topology; gauge values are never extended along it |
+| USGS 3DHP hydrography | Off | Provider-rendered flowlines and waterbodies for network orientation | Transitional/current image carrier, not queryable analysis topology; gauge values are never extended along it |
 | USGS/NRCS WBD watersheds | Off | Scale-dependent HUC8, HUC10, and HUC12 boundary context from the published legacy service | USGS no longer maintains WBD as a current product; image carrier, not selected-vector geometry or a basin condition estimate |
 | NOAA NWM high-flow analysis | Off | Provider-current modeled analysis-guidance snapshot | Not a gauge observation or warning; the map service advertises no selectable historical time axis |
 | NOAA NWM 18-hour outlook | Off | Provider-current maximum modeled high-flow guidance for the next-18-hour window | Not an official RFC forecast or deterministic outcome; the map service advertises no selectable historical time axis |
 | USGS earthquakes | Off | Bounded 30-day Kansas-area event catalog with magnitude and depth | Catalog values can change; not an alert or hazard forecast |
 | NASA GIBS daily VIIRS NOAA-20 thermal anomalies | Off | Provider-default daily thermal-anomaly image; exact UTC image date is not resolved by the Site | Display context only; not a rolling 24-hour FIRMS feed, fire perimeter, incident status, evacuation product, or all-clear. Blank tiles may reflect coverage or publication gaps |
-| NASA GIBS selectable NOAA-20 thermal detections | On | Dated Kansas-window vector records with per-point acquisition time, confidence, radiative power, temperatures, pixel dimensions, and provider ID in the Evidence Drawer | Thermal anomalies include possible non-fire heat sources; records are external context, not verified wildfires, perimeters, alerts, KFM evidence, or an all-clear. The separate image layer may show a different provider-default day |
+| NASA GIBS selectable NOAA-20 thermal detections | Off | Dated Kansas-window vector records with per-point acquisition time, confidence, radiative power, temperatures, pixel dimensions, and provider ID in the Evidence Drawer | Thermal anomalies include possible non-fire heat sources; records are external context, not verified wildfires, perimeters, alerts, KFM evidence, or an all-clear. The separate image layer may show a different provider-default day |
 | NOAA HMS smoke footprints | Off | Dated qualitative smoke polygons from the rolling 24-hour provider window | Not surface PM2.5, plume altitude, measured transport, a fire perimeter, warning, health advisory, or all-clear |
 | Raspberry Shake stations | Off | Kansas-bounded FDSN AM station metadata with StationView handoff | Not realtime waveforms, an event catalog, alert, calibrated measurement, or KFM evidence |
 | USGS 3DEP LiDAR hillshade | Off | Dynamic multidirectional hillshade from the current 3DEP elevation mosaic | Rendered relief only; no work-unit, point-cloud, datum, pulse-spacing, or accuracy claim |
