@@ -45,7 +45,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, radar, onRadar, flow, onFlow, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -56,6 +56,12 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
    * the visitor studies another time of day.
    */
   sun: Readonly<{ light: SceneLight; at: number; dayFraction: number; live: boolean }> | null;
+  /**
+   * Whether the light changes this map: 3D terrain, or a category basemap with
+   * its shaded relief. Flat imagery, topo and the standard base have none, so
+   * the sun controls stay off the dock there.
+   */
+  sunAvailable?: boolean;
   terrainAvailable: boolean;
   onMode: (mode: CategoryScene) => void;
   onDepth: (value: number) => void;
@@ -112,7 +118,7 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
     {mode === "terrain" && <label className="category-map-dock-range"><span>Relief</span>
       <input type="range" min={0.5} max={3} step={0.1} value={depth} aria-valuetext={`${depth.toFixed(1)} times vertical exaggeration`} onChange={event => onDepth(Number(event.target.value))} />
       <output>{depth.toFixed(1)}×</output></label>}
-    {mode !== "globe" && (sun
+    {mode !== "globe" && sunAvailable && (sun
       ? <>
         <p className="category-map-dock-sun-reading" aria-live="polite"><span>{sun.live ? "Real sun" : "Sun at"}</span><output>{sunReading(sun.light, sun.at)}</output></p>
         <div className="category-map-dock-range category-map-dock-sun-time"><span id="category-map-dock-sun-time">Time</span>
@@ -123,7 +129,7 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, terrainAvaila
       : <label className="category-map-dock-range"><span>Sun from</span>
         <input type="range" min={0} max={355} step={5} value={Math.round(azimuth) % 360} aria-valuetext={`Light from ${azimuthLabel(azimuth)}, ${Math.round(azimuth)} degrees`} onChange={event => onAzimuth(Number(event.target.value))} />
         <output>{azimuthLabel(azimuth)}</output></label>)}
-    {mode !== "globe" && (sun
+    {mode !== "globe" && sunAvailable && (sun
       ? <div className="category-map-dock-sun-actions">
         <button type="button" className="category-map-dock-sun" aria-pressed={sunPlaying && motionAllowed} disabled={!motionAllowed} onClick={() => onSunPlay(!sunPlaying)}
           title={motionAllowed ? "Sweep the sun through the rest of today in quarter-hour steps" : "Reduced motion is on; move Time by hand"}>{sunPlaying && motionAllowed ? "Pause" : "Play the day"}</button>

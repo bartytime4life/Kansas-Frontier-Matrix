@@ -77,7 +77,7 @@ holds and limits. They are display context, not admitted evidence.
     same entry the guide's Underground action uses), which switches to the 2D
     map and takes focus. The dock steps aside while Underground is open and
     returns when it closes, if the look's basemap is still on;
-  - **Show day and night**, on the Sky and Observation globes
+  - **Show day and night**, on the Sky globe and the Satellite view
     (`tools: ["daylight"]`). It switches the existing Daylight & twilight
     layer on or off through the layer card's own path
     (`toggleDaylightVisibility`): the calculated night side of the Earth and

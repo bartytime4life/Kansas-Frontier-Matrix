@@ -160,7 +160,9 @@ for (const layout of layouts) test(`aviation disclosures remain reachable at ${l
     await p.activate('.map-dock-menu-quick button:nth-child(2)');
   }
   await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='false'`, 'layers open');
-  await p.wait(`(() => { const r=document.querySelector('.layer-panel').getBoundingClientRect(); return r.x>=0 && r.right<=innerWidth+1 && r.bottom<=innerHeight+1; })()`, 'panel animation settled');
+  // The panel slides in with a CSS transition and crosses x = 0 before it ends; on a
+  // busy runner a fixed pause can still catch it moving, so wait for the transition itself.
+  await p.wait(`(() => { const e=document.querySelector('.layer-panel'),r=e.getBoundingClientRect(); return e.getAnimations().length===0 && r.x>=0 && r.right<=innerWidth+1 && r.bottom<=innerHeight+1; })()`, 'panel animation settled');
   await pause(300);
   const mapBefore = await p.rect('.map-stage'), panelBefore = await p.rect('.layer-panel');
   await p.activate(explore + ' > summary');

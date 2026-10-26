@@ -797,6 +797,15 @@ test("connects bounded official context sources without admitting evidence", asy
   assert.match(explorer, /const searchNeedsCounties = \(id: OfficialContextId\) => id === "census-counties" && !officialPayloadsRef\.current\["census-counties"\];/);
   assert.match(explorer, /if \(source\.apiPath && \(officialVisibilityRef\.current\[source\.id\] \|\| searchNeedsCounties\(source\.id\)\)\) void refreshOfficialContext/, "first entry loads the hidden county payload for search");
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["nifc-fire-reports"].boundary, /working dataset[\s\S]*not a perimeter/i);
+  // Every category map opens with its starters drawn: each starter's display zoom is reached by
+  // the opening camera, and no regional raster starts on a globe, where rasters are hidden.
+  const categoryMaps = {};
+  new Function("exports", ts.transpileModule(await readFile(new URL("../app/category-maps.ts", import.meta.url), "utf8"), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText)(categoryMaps);
+  for (const [topic, look] of Object.entries(categoryMaps.CATEGORY_MAPS)) for (const id of look.starters) {
+    const source = registry.OFFICIAL_CONTEXT_BY_ID[id];
+    assert.ok((source.minDisplayZoom ?? 0) <= look.camera.zoom, `${topic}: ${id} draws from zoom ${source.minDisplayZoom}, but the map opens at ${look.camera.zoom}`);
+    assert.ok(!(look.scene === "globe" && ["OPERATIONAL_WMS", "HISTORICAL_RASTER"].includes(source.kind)), `${topic}: ${id} is a regional raster, hidden on the globe`);
+  }
   assert.equal(registry.OFFICIAL_CONTEXT_SOURCES.every((record) => record.evidenceRole === "EXTERNAL_CONTEXT_ONLY"), true);
   assert.equal(registry.OFFICIAL_CONTEXT_SOURCES.filter((record) => record.domain === "Living waters").length, 6);
   assert.match(registry.OFFICIAL_CONTEXT_BY_ID["usgs-streamflow"].serviceUrl, /^https:\/\/api\.waterdata\.usgs\.gov\/ogcapi\/v1\//);

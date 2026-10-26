@@ -184,7 +184,7 @@ test('the aquifer and geology maps open Underground from their dock through the 
  assert.match(page,/const showCategoryDock = Boolean\([^;]*!undergroundOpen/,'the dock steps aside while Underground is open');
 });
 
-test('the globe looks show the calculated day and night from their dock, at the current time',async()=>{
+test('Sky and Science show the calculated day and night from their dock, at the current time',async()=>{
  const withDaylight=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('daylight')).map(([id])=>id).sort();
  assert.deepEqual(withDaylight,['science','sky']);
  const h=await componentHarness('app/category-map-dock.tsx',{});
@@ -309,7 +309,7 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.match(update,/if \(next\.sunSync !== sceneEffectsRef\.current\.sunSync\) \{ setSunStudyAt\(null\); setSunPlaying\(false\); \}\s*sceneEffectsRef\.current = next;/,'every control that turns the real sun on or off (dock, Scene studio, recipes, looks) ends a study and its playback, read before the ref moves on');
  const play=page.slice(page.indexOf('  // Play the day runs only while its controls are on screen'),page.indexOf('}, [reducedMotion, sceneEffects.sunSync, sunAt, sunControlsShown, sunPlaying]);')+80);
  assert.ok(page.indexOf('  const showCategoryDock = Boolean(')<page.indexOf('  const sunControlsShown ='),'playback reads the dock visibility computed just above it');
- assert.match(play,/const sunControlsShown = showCategoryDock && categoryMode !== "globe";\s*if \(sunPlaying && !sunControlsShown\) setSunPlaying\(false\);/,'clearing the topic, hiding the dock, opening the guide or going to the globe stops playback');
+ assert.match(play,/const sunControlsShown = showCategoryDock && categoryMode !== "globe" && categorySunAvailable;\s*if \(sunPlaying && !sunControlsShown\) setSunPlaying\(false\);/,'clearing the topic, hiding the dock, opening the guide, going to the globe or to a base without shading stops playback');
  assert.match(play,/if \(!sunPlaying \|\| !sunControlsShown \|\| !sceneEffects\.sunSync \|\| reducedMotion\) return;/,'playback only runs while its controls are shown, following the sun, with motion allowed');
  assert.match(play,/window\.setTimeout\([\s\S]*?if \(next === null\) setSunPlaying\(false\);\s*else setSunStudyAt\(instantAtIntervalFraction\(day, next\)\);[\s\S]*?SUN_PLAY_STEP_MS\);\s*return \(\) => window\.clearTimeout\(timer\);/,'one step per timer, cleared on every change, stopping at the last step');
  assert.match(page,/onSunTime=\{\(fraction\) => \{ setSunPlaying\(false\);/,'moving Time or pressing Now stops playback');
@@ -318,4 +318,20 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.equal((page.match(/setSceneEffects\(/g)||[]).length,2,'settings change only in updateSceneEffects and the stored-settings restore');
  const reset=page.slice(page.indexOf('  const resetCategoryView = () => {'),page.indexOf('announce(`${activeCategoryMap.name} view reset`)'));
  assert.match(reset,/if \(activeCategoryMap\.light\) applyCategoryLight\(activeCategoryMap\.light\);/,'Reset view restores the look light too');
+});
+
+test('the review fixes: a hint per map, sun controls only where the light shows, the open map named in the status bar',async()=>{
+ for(const [id,look] of Object.entries(maps.CATEGORY_MAPS))assert.ok(look.tip&&look.tip.length<=110,`${id}: one short hint for the tip strip`);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const base={look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){}};
+ const sunControls=tree=>JSON.stringify(tree).match(/Sun from|Use the real sun now/g)??[];
+ assert.equal(sunControls(h.render(h.exports.CategoryMapDock,base)).length,2,'shown by default');
+ assert.deepEqual(sunControls(h.render(h.exports.CategoryMapDock,{...base,sunAvailable:false})),[],'flat imagery has no shading for the light to move');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/const categorySunAvailable = categoryMode === "terrain" \|\| isCategoryBasemapKey\(basemap\);/);
+ assert.match(page,/const sunControlsShown = showCategoryDock && categoryMode !== "globe" && categorySunAvailable;/,'Play the day stops where the controls are not shown');
+ assert.match(page,/<b>\{categoryMapOnScreen\?\.name \?\? activeAtlasView\?\.title \?\? "Kansas Overview"\}<\/b>/,'the status bar names the open map, not a view guessed from the basemap');
+ assert.match(page,/hint=\{categoryMapOnScreen && primaryWorkspace === "map" \? \{ title: categoryMapOnScreen\.name, text: categoryMapOnScreen\.tip \} : null\}/);
+ assert.match(page,/styleDocumentLoadedRef\.current = true;\s*\/\/[^\n]*\n(?:\s*\/\/[^\n]*\n)*\s*styleFallbackAttempted = false;/,'a loaded style re-arms the basemap fallback, so a second outage falls back instead of failing the map');
 });
