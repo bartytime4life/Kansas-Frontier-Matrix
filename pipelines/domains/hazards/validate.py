@@ -1,1 +1,0 @@
-# hazards :: validate — greenfield placeholder

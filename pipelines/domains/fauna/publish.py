@@ -1,1 +1,0 @@
-# fauna :: publish — greenfield placeholder

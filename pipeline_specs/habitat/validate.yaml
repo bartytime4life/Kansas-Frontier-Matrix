@@ -1,4 +1,0 @@
-# pipeline_specs :: habitat :: validate
-name: habitat-validate
-version: 1
-stages: []
