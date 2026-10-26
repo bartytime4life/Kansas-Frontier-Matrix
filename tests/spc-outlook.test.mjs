@@ -108,7 +108,9 @@ test('the Storm desk dock offers the outlook by day with its reading',async()=>{
 
 test('the page reads each day once a quarter-hour, keys and draws only the day shown, and closes with its map',()=>{
  assert.match(page,/fetch\(`\/api\/spc-outlook\?day=\$\{outlookDay\}`/);
- assert.match(page,/Date\.now\(\) - Date\.parse\(current\.retrievedAt\) < 15 \* 60_000/);
+ assert.match(page,/const OUTLOOK_REFRESH_MS = 15 \* 60_000;/);
+ assert.match(page,/if \(age < OUTLOOK_REFRESH_MS\) \{[\s\S]{0,160}const timer = setTimeout\(\(\) => setOutlookTick\(tick => tick \+ 1\), OUTLOOK_REFRESH_MS - age\);\s*return \(\) => clearTimeout\(timer\);/,'a shown outlook re-reads itself when it turns a quarter-hour old');
+ assert.match(page,/\}, \[outlookDay, outlooks, outlookFailed, outlookTick, announce\]\);/);
  assert.match(page,/const shownOutlook = outlookDay \? outlooks\[outlookDay\] \?\? null : null;/);
  assert.match(page,/\.\.\.\(shownOutlook \? \[spcOutlookKey\(shownOutlook\.day\)\] : \[\]\)/);
  assert.match(page,/setOutlookDay\(null\);\s*\/\/ Each map opens on its own subject/);

@@ -1500,6 +1500,8 @@ export default function Home() {
   const [outlookDay, setOutlookDay] = useState<OutlookDay | null>(null);
   const [outlooks, setOutlooks] = useState<Partial<Record<OutlookDay, SpcOutlook>>>({});
   const [outlookFailed, setOutlookFailed] = useState<OutlookDay | null>(null);
+  // Bumped when a shown outlook reaches its quarter-hour, so the read below runs again.
+  const [outlookTick, setOutlookTick] = useState(0);
   // The landscape the photo-real 3D view last flew to.
   const [photorealPlace, setPhotorealPlace] = useState<string | null>(null);
   // The provider hillshade switched off on entering the photograph, restored on return.
@@ -3886,12 +3888,18 @@ export default function Home() {
     map.on("styledata", restore);
     return () => { map.off("styledata", restore); };
   }, [quakeRecordOn, quakeRecord, quakeRecordYear, quakeRecordSelected, styleReady]);
-  // A day's outlook is read when it is first shown, and again once it is a quarter-hour old.
+  // A day's outlook is read when it is first shown, and again each time it is a quarter-hour old.
+  const OUTLOOK_REFRESH_MS = 15 * 60_000;
   const chooseOutlook = useCallback((day: OutlookDay | null) => { setOutlookDay(day); setOutlookFailed(null); }, []);
   useEffect(() => {
     if (!outlookDay || outlookFailed === outlookDay) return;
     const current = outlooks[outlookDay];
-    if (current && Date.now() - Date.parse(current.retrievedAt) < 15 * 60_000) return;
+    const age = current ? Date.now() - Date.parse(current.retrievedAt) : Infinity;
+    if (age < OUTLOOK_REFRESH_MS) {
+      // Fresh: come back when it is a quarter-hour old, while this day is still shown.
+      const timer = setTimeout(() => setOutlookTick(tick => tick + 1), OUTLOOK_REFRESH_MS - age);
+      return () => clearTimeout(timer);
+    }
     const controller = new AbortController();
     void fetch(`/api/spc-outlook?day=${outlookDay}`, { signal: controller.signal })
       .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
@@ -3903,7 +3911,7 @@ export default function Home() {
       })
       .catch(() => { if (!controller.signal.aborted) setOutlookFailed(outlookDay); });
     return () => controller.abort();
-  }, [outlookDay, outlooks, outlookFailed, announce]);
+  }, [outlookDay, outlooks, outlookFailed, outlookTick, announce]);
   const shownOutlook = outlookDay ? outlooks[outlookDay] ?? null : null;
   useEffect(() => {
     const map = mapRef.current;
