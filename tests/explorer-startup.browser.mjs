@@ -860,6 +860,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
         node.scrollIntoView({block:'center', inline:'nearest', behavior:'instant'}); node.focus();
       })()`);
       await p.key('Enter', 'Enter', 13);
+      if (title === 'Return to map') await p.wait(`!document.querySelector('.primary-workspace-surface')&&document.querySelector('#map-canvas')?.contains(document.activeElement)`, 'map return focus completes before the next menu action');
     };
     const openMore = async () => {
       if (!await p.evaluate(`document.querySelector('.header-overflow-menu').open`)) {
@@ -944,7 +945,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     await openMore();
     await p.evaluate(`document.querySelector('.new-from-map-action').focus()`);
     await p.key('Enter', 'Enter', 13);
-    await p.wait(`document.querySelector('#map-context-card')`, 'explicit composition opened');
+    await p.wait(`document.querySelector('#map-context-card')&&document.activeElement?.matches('[aria-label="Close map context composer"]')`, 'explicit composition opened and its initial focus handoff completed');
     await p.evaluate(`document.querySelector('.map-context-actions button').focus()`);
     await p.key('Enter', 'Enter', 13);
     await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace === 'reports'`, 'fresh report mounted');
