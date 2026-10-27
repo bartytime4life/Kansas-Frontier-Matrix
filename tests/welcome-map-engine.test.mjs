@@ -10,7 +10,7 @@ const stubs = {
   "'../maplibre-seam'": toUrl(`export const loadMapLibre = async () => ({ setWorkerUrl() {}, Map: globalThis.__welcome.FakeMap });`),
   "'../map-runtime'": toUrl(`export const BASEMAPS = { standard: { style: 'https://style.test/standard' }, relief: { style: { version: 8, name: 'relief', sources: {}, layers: [] } } };`),
   "'../basemap-cache'": toUrl(`export const basemapCacheRequest = url => ({ url });`),
-  "'../map-performance'": toUrl(`export const browserRenderBudget = () => ({ pixelRatio: 1, tileCache: 8 });`),
+  "'../map-performance'": toUrl(`export const browserRenderBudget = () => globalThis.__welcome.budget;`),
   "'../webgl-support'": toUrl(`export const webgl2Available = () => true;`),
   "'../live-context'": toUrl(`
     const SOURCES = [{ id: 'noaa-goes-geocolor', kind: 'OPERATIONAL_WMS' }, { id: 'nws-radar', kind: 'OPERATIONAL_WMS' }, { id: 'nws-alerts', kind: 'OPERATIONAL_GEOJSON', apiPath: '/api/live-context?feed=nws-alerts' }, { id: 'usgs-earthquakes', kind: 'OPERATIONAL_GEOJSON', apiPath: '/api/live-context?feed=usgs-earthquakes' }, { id: 'kdot-roads', kind: 'OPERATIONAL_WMS' }, { id: 'census-counties', kind: 'SNAPSHOT_GEOJSON', apiPath: '/api/live-context?feed=census-counties' }];
@@ -45,7 +45,7 @@ const loadEngine = () => import(toUrl(`${source}\n// copy ${++copies}`));
 const { SETTLE_MS } = await loadEngine();
 
 class FakeMap {
-  constructor() { globalThis.__welcome.map = this; this.handlers = new Map(); this.log = []; this.isLoaded = false; this.canvas = { setAttribute() {}, tabIndex: 0 }; }
+  constructor(options) { globalThis.__welcome.map = this; this.options = options; this.handlers = new Map(); this.log = []; this.isLoaded = false; this.canvas = { setAttribute() {}, tabIndex: 0 }; }
   getCanvas() { return this.canvas; }
   on(type, fn) { this.handlers.set(type, [...(this.handlers.get(type) ?? []), { fn }]); }
   once(type, fn) { this.handlers.set(type, [...(this.handlers.get(type) ?? []), { fn, once: true }]); }
@@ -60,9 +60,9 @@ class FakeMap {
   remove() {}
 }
 const settle = () => new Promise(resolve => setTimeout(resolve, SETTLE_MS + 30));
-async function start() {
+async function start(budget = { pixelRatio: 1, tileCache: 8 }) {
   const fetches = [];
-  globalThis.__welcome = { FakeMap, drawn: [], radar: [], satellite: [], prisms: [], fresh: () => true };
+  globalThis.__welcome = { FakeMap, budget, drawn: [], radar: [], satellite: [], prisms: [], fresh: () => true };
   // Style documents and starter payloads each wait until the test releases them.
   globalThis.fetch = url => new Promise((resolve, reject) => fetches.push({ url, fail: () => reject(new Error('style unavailable')), resolve: () => resolve({ ok: true, json: async () => url === '/api/noaa-satellite/frames' ? globalThis.__welcome.satelliteManifest : url === '/api/noaa-radar/frames' ? globalThis.__welcome.radarManifest : url.startsWith('/api/') ? { feed: new URL(url, 'http://x').searchParams.get('feed'), data: { type: 'FeatureCollection', features: [] } } : { version: 8, url, sources: {}, layers: [] } }) }));
   let ready = 0;
@@ -72,6 +72,48 @@ async function start() {
   return { engine, fetches, map: globalThis.__welcome.map, ready: () => ready, radarReports, sourceReports };
 }
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
+
+test('returning to a still-pending style applies it only once', async t => {
+  const { engine, fetches, map } = await start();
+  t.after(() => engine.dispose());
+  engine.show('evidence');
+  engine.show('terrain'); await settle();
+  engine.show('evidence'); await settle();
+  fetches[0].resolve(); await tick(); await tick();
+  assert.equal(fetches.length, 1, 'the pending document is reused');
+  assert.equal(map.log.filter(([name, style]) => name === 'setStyle' && style === 'https://style.test/standard').length, 1, 'one style rebuild for the returning category');
+  const jumps = map.log.filter(([name]) => name === 'jumpTo').length;
+  map.emit('style.load');
+  assert.equal(map.log.filter(([name]) => name === 'jumpTo').length, jumps + 1, 'only the current application owns style.load');
+  engine.dispose();
+});
+
+test('preview retention is bounded without reducing the selected pixel density', async t => {
+  for (const [budget, expected] of [
+    [{ pixelRatio: 3, tileCache: 112 }, 48],
+    [{ pixelRatio: 2, tileCache: 64, coarsePointer: true }, 32],
+    [{ pixelRatio: 1, tileCache: 48, efficient: true }, 24],
+    [{ pixelRatio: 1, tileCache: 8 }, 8],
+  ]) {
+    const { engine, map } = await start(budget);
+    t.after(() => engine.dispose());
+    assert.equal(map.options.maxTileCacheSize, expected);
+    assert.equal(map.options.pixelRatio, budget.pixelRatio);
+    engine.dispose();
+  }
+});
+
+test('battery saver previews stay still across focus and category changes', async t => {
+  const { engine, map } = await start({ pixelRatio: 1, tileCache: 48, efficient: true });
+  t.after(() => engine.dispose());
+  engine.setPaused(false); engine.show('terrain'); await tick(); await tick(); map.emit('style.load');
+  engine.show('geology'); await settle();
+  engine.setReduced(true); engine.setReduced(false);
+  engine.setPaused(true); engine.setPaused(false);
+  assert.equal(map.log.filter(([name]) => name === 'easeTo' || name === 'flyTo').length, 0);
+  assert.equal(map.log.filter(([name]) => name === 'jumpTo').length, 2, 'the requested cameras still update');
+  engine.dispose();
+});
 
 test('a topic that shares a pending style gets that style when it arrives', async () => {
   // Evidence uses the same default map as the idle view, Sky the same globe style as Science.

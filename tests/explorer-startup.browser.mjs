@@ -208,7 +208,7 @@ async function pageSession(b, width, height, networkOptions = {}) {
     return result.result.value;
   };
   const wait = async (expression, label) => {
-    const deadline = Date.now() + 20000;
+    const deadline = Date.now() + (networkOptions.waitTimeoutMs ?? 20000);
     while (Date.now() < deadline) {
       await interceptions.assertHealthy();
       if (await evaluate(`Boolean(${expression})`)) return;
@@ -251,6 +251,134 @@ async function pageSession(b, width, height, networkOptions = {}) {
     for (const requestId of heldSceneRequests.splice(0)) await call('Fetch.continueRequest', { requestId });
   };
   return { call, evaluate, wait, key, open, unobstructed, holdSceneModule, waitForSceneModule, releaseSceneModule };
+}
+
+// Opt-in measurement pass uses the same hydrated app and network isolation as
+// navigation acceptance. Timings describe this runner's empty-style/failure
+// fixture, never provider cartography, production INP or physical mobile GPUs.
+for (const profile of [
+  { id: 'desktop', width: 1440, height: 960, ratio: 1, cpu: 1, latency: 0, throughput: -1, reduced: false },
+  { id: 'mobile-4x', width: 390, height: 844, ratio: 2, cpu: 4, latency: 80, throughput: 200000, reduced: false },
+  { id: 'mobile-reduced', width: 390, height: 844, ratio: 2, cpu: 4, latency: 80, throughput: 200000, reduced: true },
+]) {
+  test(`welcome performance ${profile.id}`, { skip: process.env.KFM_WELCOME_PERFORMANCE !== '1', timeout: 240000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, profile.width, profile.height, { waitTimeoutMs: 60000 });
+    const report = { schema: 'kfm-welcome-performance/v1', profile, source: process.env.KFM_PERFORMANCE_SOURCE ?? null, browser: await b.call('Browser.getVersion'),
+      scope: 'Built application; isolated empty styles; unavailable API providers; software WebGL; emulated CPU/network. Renderer JS heap excludes workers, native and GPU memory.',
+      completed: false, network: { requests: 0, transferredBytes: 0 }, startup: null, frames: [], actions: [], memory: [] };
+    const artifactDir = process.env.KFM_WELCOME_PERFORMANCE_ARTIFACTS;
+    t.after(async () => {
+      t.diagnostic('KFM_WELCOME_PERFORMANCE ' + JSON.stringify(report));
+      if (artifactDir) {
+        await mkdir(artifactDir, { recursive: true });
+        await writeFile(join(artifactDir, profile.id + '.json'), JSON.stringify(report, null, 2) + '\n');
+      }
+    });
+    b.listeners.add(message => {
+      if (message.sessionId !== undefined && message.method === 'Network.requestWillBeSent'
+        && message.params.request.url.startsWith(origin.origin + '/')) report.network.requests++;
+      if (message.method === 'Network.loadingFinished') report.network.transferredBytes += message.params.encodedDataLength;
+    });
+    await p.call('Emulation.setDeviceMetricsOverride', { width: profile.width, height: profile.height, deviceScaleFactor: profile.ratio, mobile: profile.width < 600 });
+    await p.call('Emulation.setCPUThrottlingRate', { rate: profile.cpu });
+    await p.call('Network.emulateNetworkConditions', { offline: false, latency: profile.latency, downloadThroughput: profile.throughput, uploadThroughput: profile.throughput });
+    await p.call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: profile.reduced ? 'reduce' : 'no-preference' }] });
+    await p.call('Performance.enable');
+    await p.call('Page.addScriptToEvaluateOnNewDocument', { source: `(() => {
+      window.__kfmWelcomePerf = { lcp: 0, cls: 0, longTasks: [], events: [] };
+      for (const type of ['largest-contentful-paint', 'layout-shift', 'longtask', 'event']) {
+        if (!PerformanceObserver.supportedEntryTypes.includes(type)) continue;
+        new PerformanceObserver(list => { for (const entry of list.getEntries()) {
+          const state = window.__kfmWelcomePerf;
+          if (type === 'largest-contentful-paint') state.lcp = entry.startTime;
+          if (type === 'layout-shift' && !entry.hadRecentInput) state.cls += entry.value;
+          if (type === 'longtask' && state.longTasks.length < 500) state.longTasks.push(entry.duration);
+          if (type === 'event' && state.events.length < 500) state.events.push({ name: entry.name, durationMs: entry.duration, inputDelayMs: entry.processingStart - entry.startTime });
+        }}).observe({ type, buffered: true, ...(type === 'event' ? { durationThreshold: 16 } : {}) });
+      }
+    })();` });
+    const metrics = async () => Object.fromEntries((await p.call('Performance.getMetrics')).metrics.map(({ name, value }) => [name, value]));
+    const twoFrames = () => p.evaluate(`new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve(performance.now()))))`);
+    const sample = async label => {
+      const before = await metrics();
+      const cadence = await p.evaluate(`new Promise(resolve => {
+        const gaps = [], start = performance.now(); let previous = start;
+        function frame(now) { gaps.push(now - previous); previous = now;
+          if (now - start < 1200) requestAnimationFrame(frame);
+          else { gaps.sort((a,b)=>a-b); resolve({ sampleMs: now-start, callbacks: gaps.length, medianGapMs: gaps[Math.floor(gaps.length*.5)], p95GapMs: gaps[Math.floor(gaps.length*.95)], maxGapMs: gaps.at(-1) }); }
+        } requestAnimationFrame(frame);
+      })`);
+      const after = await metrics();
+      report.frames.push({ label, ...cadence, taskMs: (after.TaskDuration - before.TaskDuration) * 1000,
+        scriptMs: (after.ScriptDuration - before.ScriptDuration) * 1000, layoutMs: (after.LayoutDuration - before.LayoutDuration) * 1000,
+        styleMs: (after.RecalcStyleDuration - before.RecalcStyleDuration) * 1000 });
+    };
+    const keyAction = async (selector, label, condition) => {
+      await revealControl(p, selector);
+      await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus(); window.__kfmWelcomeActionAt = performance.now()`);
+      await p.key('Enter', 'Enter', 13);
+      await p.wait(condition, label);
+      const at = await twoFrames();
+      const elapsedMs = at - await p.evaluate('window.__kfmWelcomeActionAt');
+      report.actions.push({ label, readinessMsIncludingAutomation: elapsedMs });
+      assert.ok(elapsedMs < 15000, label + ' remains usable within the fixture timeout');
+    };
+    await p.open('/'); await readyWelcome(p); await twoFrames();
+    report.startup = await p.evaluate(`({ readyMs: performance.now(), paints: performance.getEntriesByType('paint').map(e=>({name:e.name,ms:e.startTime})), lcpMs: window.__kfmWelcomePerf.lcp })`);
+    await p.wait(`document.querySelector('.domain-stage .maplibregl-canvas')`, 'software WebGL preview is actually mounted');
+    await p.wait(`document.querySelector('.domain-stage')?.dataset.state==='ready'`, 'default preview draws its first settled fixture frame');
+    report.startup.mapReadyMs = await p.evaluate('performance.now()');
+    await sample('unselected-still');
+    assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage .maplibregl-canvas').length`), 1, 'one shared preview renderer');
+    assert.equal(await p.evaluate(`document.querySelectorAll('.living-welcome video').length`), 0, 'no initial decoder');
+    if (profile.reduced) assert.equal(await p.evaluate(`document.querySelector('.living-welcome').dataset.motion`), 'paused');
+    for (let cycle = 0; cycle < 3; cycle++) {
+      if (cycle) {
+        await p.key('Enter', 'Enter', 13);
+        await readyWelcome(p);
+      }
+      await keyAction('.topic-weather', 'weather-detail-' + cycle, `document.activeElement?.matches('.welcome-dialog-close')`);
+      assert.equal(await p.evaluate(`document.querySelectorAll('.welcome-dialog video').length`), 0, 'opening a category does not admit a decoder');
+      await keyAction('.welcome-dialog-body > .welcome-preview-action', 'expand-map-' + cycle, `document.querySelector('.living-welcome')?.dataset.fullscreen==='true'`);
+      await p.wait(`document.querySelector('.domain-stage')?.dataset.topic==='weather'`, 'selected map preview');
+      await p.wait(`document.querySelector('.domain-stage')?.dataset.state==='ready'`, 'selected preview draws before sampling');
+      await twoFrames();
+      assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage .maplibregl-canvas').length`), 1);
+      if (!cycle) {
+        await sample('selected-preview');
+        if (artifactDir) {
+          await mkdir(artifactDir, { recursive: true });
+          const capture = await p.call('Page.captureScreenshot', { format: 'png' });
+          await writeFile(join(artifactDir, profile.id + '.png'), Buffer.from(capture.data, 'base64'));
+        }
+      }
+      if (!profile.reduced) {
+        await keyAction('.welcome-preview-pause', 'pause-' + cycle, `document.querySelector('.living-welcome')?.dataset.motion==='paused'`);
+        if (!cycle) await sample('explicitly-paused');
+        await keyAction('.welcome-preview-pause', 'resume-' + cycle, `document.querySelector('.living-welcome')?.dataset.motion==='playing'`);
+      }
+      await p.key('Escape', 'Escape', 27);
+      await p.wait(`document.querySelector('.living-welcome')?.dataset.fullscreen==='false'`, 'return to categories');
+      await p.key('Escape', 'Escape', 27);
+      await p.wait(`!document.querySelector('.living-welcome')&&document.activeElement?.matches('.guide-trigger')`, 'dismissal restores real map controls');
+      await twoFrames();
+      assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage .maplibregl-canvas,.capability-preview video').length`), 0, 'preview renderer and decoders leave on dismissal');
+      await p.call('HeapProfiler.collectGarbage');
+      const heap = await p.call('Runtime.getHeapUsage'), runtime = await metrics();
+      report.memory.push({ cycle, usedBytes: heap.usedSize, backingStoreBytes: heap.backingStorageSize ?? null, nodes: runtime.Nodes, documents: runtime.Documents });
+    }
+    report.retainedGrowthBytes = report.memory.at(-1).usedBytes - report.memory[0].usedBytes;
+    assert.ok(report.retainedGrowthBytes < 32 * 1024 * 1024, 'three short reopen cycles do not retain another 32 MiB of renderer JS heap');
+    await p.key('Enter', 'Enter', 13); await readyWelcome(p);
+    await keyAction('.topic-aviation', 'aviation-detail', `document.activeElement?.matches('.welcome-dialog-close')`);
+    const destination = await p.evaluate(`document.querySelector('.welcome-map-look strong').textContent`);
+    await keyAction('.welcome-open-map', 'open-category-map', `!document.querySelector('.living-welcome')&&document.querySelector('.category-map-dock header strong')?.textContent===${JSON.stringify(destination)}`);
+    assert.equal(await p.evaluate(`document.querySelector('[aria-label="Layer topic"]').value`), 'aviation', 'preview enters the real category workspace');
+    report.transition = { topic: 'aviation', dock: destination };
+    report.observed = await p.evaluate('window.__kfmWelcomePerf');
+    assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage').length`), 0);
+    report.completed = true;
+  });
 }
 
 test('isolated browser leaves canceled assets unpaused while enforcing network and fixture boundaries', {timeout:30000}, async t => {
@@ -609,7 +737,9 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     await checkLayout('initial');
     if(width===1440){
       const before=await p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top`);
-      await p.evaluate(`document.querySelector('.topic-weather').focus()`);
+      // Native focus may scroll the welcome to reveal the card. Isolate layout
+      // movement here; the real-keyboard journeys separately check scrolling.
+      await p.evaluate(`document.querySelector('.topic-weather').focus({preventScroll:true})`);
       await p.wait(`document.querySelector('.welcome-preview-brief h2').textContent===${JSON.stringify(categoryGlimpse('weather').title)}`,'shared brief follows keyboard interest');
       const after=await p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top`);
       assert.ok(Math.abs(after-before)<2,'changing a glimpse never shifts the category rows under the pointer');
