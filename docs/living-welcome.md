@@ -18,6 +18,9 @@ These are configured limits, not measured RAM savings or production FPS gains.
 The first measurement attempt exposed a 40px expanded Pause control (and the
 Return control was configured at 36px). Both now have 44px minimum hit areas,
 checked by the responsive browser matrix as well as the performance journeys.
+The same first run also exposed an older source-text assertion coupled to the
+replaced style-key guard. It now checks only the style-loading boundary; the
+existing supersession/retry and new A→B→A tests execute those behaviors instead.
 
 An independent CI job measures the actual built/hydrated application at desktop
 1440×960 and emulated phone 390×844 at 2× density, including 4× CPU slowdown,
