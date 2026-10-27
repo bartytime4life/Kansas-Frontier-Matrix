@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { spawn } from 'node:child_process';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
@@ -818,4 +818,115 @@ for(const [width,height] of [[1280,800],[768,900],[390,844],[320,740],[568,320]]
   await p.key('Escape','Escape',27);
   await p.wait(`document.querySelector('#qwen-map-panel')?.hidden&&document.activeElement===document.querySelector('.qwen-header-entry')`,'reopened Chat returns focus to its header trigger');
  });
+}
+
+// Persistence acceptance uses a disposable browser profile and the real hydrated
+// workspace. All provider/AI APIs are isolated by pageSession; no release occurs.
+for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
+  test(`draft workspaces preserve independent investigations at ${width}x${height}`, { timeout: 120000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, width, height);
+    await p.open('/?motion=off', '1');
+    await p.wait(`!document.querySelector('.explorer-guide')`, 'saved preference permits map access');
+    const button = async (title, scope) => {
+      const selector = JSON.stringify(scope), name = JSON.stringify(title);
+      await p.evaluate(`(() => {
+        const node = [...document.querySelectorAll(${selector} + ' button')].find(node => node.textContent.trim() === ${name});
+        if (!node) throw new Error('Missing workspace control: ' + ${name});
+        node.scrollIntoView({block:'center', inline:'nearest', behavior:'instant'}); node.focus();
+      })()`);
+      await p.key('Enter', 'Enter', 13);
+    };
+    const openFromMap = async mode => {
+      await p.evaluate(`document.querySelector('summary[aria-label="More site actions"]').focus()`);
+      await p.key('Enter', 'Enter', 13);
+      await p.wait(`document.querySelector('.header-overflow-menu').open`, 'More menu open');
+      await button(mode, '.header-overflow-workspaces');
+      await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace === ${JSON.stringify(mode.toLowerCase())}`, mode + ' mounted');
+    };
+    const switchTo = async mode => {
+      await button(mode, '[aria-label="Report and story workspaces"]');
+      await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace === ${JSON.stringify(mode.toLowerCase())}`, mode + ' mounted');
+    };
+    const fill = async (selector, value) => {
+      await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
+      await p.key('a', 'KeyA', 65, 2); await p.key('Backspace', 'Backspace', 8);
+      await p.call('Input.insertText', { text: value });
+      await p.wait(`document.querySelector(${JSON.stringify(selector)})?.value === ${JSON.stringify(value)}`, 'edited title rendered');
+    };
+    const stored = mode => p.evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify('kfm-' + mode + '-draft-v2')}))`);
+    const capture = async name => {
+      if (!process.env.KFM_WORKSPACE_SCREENSHOTS) return;
+      await p.evaluate(`document.querySelector('#primary-workspace-title').scrollIntoView({block:'start',behavior:'instant'})`);
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, { recursive: true });
+      const shot = await p.call('Page.captureScreenshot', { format: 'png' });
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `${width}x${height}-${name}.png`), Buffer.from(shot.data, 'base64'));
+    };
+    const nav = '[aria-label="Report and story workspaces"]';
+    await openFromMap('Reports');
+    await fill('.report-title-field input', 'QA report kept separate');
+    // Leave through the actual navigation immediately after the edit, without
+    // awaiting the 300 ms debounce. The unmount path must preserve the report.
+    await switchTo('Stories');
+    const report = await stored('report');
+    assert.equal(report.title, 'QA report kept separate');
+    assert.equal(await p.evaluate(`document.querySelectorAll('.story-scene-list .scene-select').length`), 1, 'new story contains one captured map scene');
+    await fill('.story-draft-fields input', 'QA story kept separate');
+    await switchTo('Reports');
+    const story = await stored('story');
+    assert.equal(story.title, 'QA story kept separate');
+    assert.deepEqual(story.scenes[0].snapshot, story.baseSnapshot);
+    assert.deepEqual(story.scenes[0].evidenceRefs, story.baseSnapshot.evidenceRefs);
+    assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`), report.title);
+    assert.equal(await p.evaluate(`document.querySelector('.snapshot-context time').dateTime`), report.snapshot.createdAt);
+    await fill('.report-title-field input', 'QA latest report before exit');
+    await button('Return to map', nav);
+    await p.wait(`!document.querySelector('.primary-workspace-surface')`, 'map restored');
+    assert.equal((await stored('report')).title, 'QA latest report before exit');
+    await openFromMap('Stories');
+    assert.equal(await p.evaluate(`document.querySelector('.story-draft-fields input').value`), story.title);
+    assert.equal((await stored('story')).baseSnapshot.id, story.baseSnapshot.id);
+    await capture('restored-story');
+    await button('Return to map', nav);
+    await p.call('Page.reload');
+    await p.wait(`document.querySelector('.map-chrome-dock') && history.state?.kfmExplorerView && !document.querySelector('.explorer-guide')`, 'reload restored ordinary map');
+    await openFromMap('Reports');
+    assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`), 'QA latest report before exit');
+    assert.equal((await stored('report')).snapshot.id, report.snapshot.id);
+    await switchTo('Stories');
+    assert.equal(await p.evaluate(`document.querySelector('.story-draft-fields input').value`), story.title);
+    await switchTo('Reports');
+    await button('Return to map', nav);
+    // Deny only draft writes on this disposable page. Unrelated preferences and
+    // existing stored drafts are untouched, and Retry must save the same text.
+    await p.evaluate(`(() => {
+      const original = Storage.prototype.setItem;
+      window.__denyDraftWrites = true;
+      Storage.prototype.setItem = function(key, value) {
+        if (window.__denyDraftWrites && ['kfm-report-draft-v2','kfm-story-draft-v2'].includes(key)) throw new DOMException('Synthetic quota failure', 'QuotaExceededError');
+        return original.call(this, key, value);
+      };
+    })()`);
+    await p.evaluate(`document.querySelector('.new-from-map-action').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.querySelector('#map-context-card')`, 'explicit composition opened');
+    await p.evaluate(`document.querySelector('.map-context-actions button').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace === 'reports'`, 'fresh report mounted');
+    const freshCapture = await p.evaluate(`document.querySelector('.snapshot-context time').dateTime`);
+    assert.notEqual(freshCapture, report.snapshot.createdAt, 'explicit composition created a fresh snapshot');
+    await fill('.report-title-field input', 'QA recoverable quota edit');
+    await p.wait(`document.querySelector('.draft-state').textContent.includes('Browser storage unavailable')`, 'storage denial is visible');
+    assert.equal((await stored('report')).title, 'QA latest report before exit');
+    await openFromMap('Reports');
+    assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`), 'QA recoverable quota edit');
+    assert.equal(await p.evaluate(`document.querySelector('.snapshot-context time').dateTime`), freshCapture, 'same-mode header action keeps the active unsaved snapshot');
+    await capture('storage-recovery');
+    await p.evaluate(`window.__denyDraftWrites = false`);
+    await button('Retry saving', '.draft-state');
+    await p.wait(`document.querySelector('.draft-state').textContent.includes('Saved on this device')`, 'retry saved editable draft');
+    assert.equal((await stored('report')).title, 'QA recoverable quota edit');
+    assert.equal((await stored('story')).title, story.title, 'saving the report never replaces the story');
+    assert.match(await p.evaluate(`document.querySelector('.draft-state').textContent`), /DRAFT · NOT PUBLISHED/);
+    assert.ok(await p.evaluate(`document.documentElement.scrollWidth <= innerWidth + 1`), 'workspace has no document horizontal overflow');
+  });
 }
