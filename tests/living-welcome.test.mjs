@@ -7,7 +7,7 @@ import { componentHarness, findNode } from './component-harness.mjs';
 import { SCENES, CATEGORY_IDS, HISTORY_ERAS, sceneArt } from '../app/living-welcome/catalog.mjs';
 import { MOTION_CLIPS, motionClip } from '../app/living-welcome/motion-catalog.mjs';
 
-import { capabilityPreviews, capabilityNote } from '../app/living-welcome/capability-catalog.mjs';
+import { capabilityPreviews, capabilityNote, categoryGlimpse } from '../app/living-welcome/capability-catalog.mjs';
 const topicModule={};
 new Function('exports',ts.transpileModule(await readFile('app/layer-workspaces.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(topicModule);
 const {TOPIC_STRUCTURE,TOPIC_GROUPS}=topicModule;
@@ -22,7 +22,7 @@ function environment(reduced=false){
 async function welcome(reduced=false){
  const env=environment(reduced),calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
-  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas'})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
+  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas'})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
@@ -135,7 +135,7 @@ test('each topic links to its actual source workspace and preview selection does
   findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-weather ')).props.onFocus();tree=h.render();
   assert.equal(rootOf(tree).props['data-active'],id,'explicit pin beats passive focus');
   findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();
-  findNode(tree,node=>node.type==='button'&&node.props.className==='welcome-text-action').props.onClick();
+  findNode(tree,node=>node.type==='button'&&[node.props.children].flat(Infinity).filter(x=>typeof x==='string').join('')===`Explore ${TOPIC_STRUCTURE.find(t=>t.id===id).title.toLowerCase()} sources →`).props.onClick();
   assert.deepEqual(h.calls,[['topic',target],['close',false]]);
   h.harness.dispose();
  }
@@ -310,7 +310,7 @@ test('all shared domains expose their facets and actual destination without moun
   const facets=findNode(tree,node=>node.props?.className==='capability-facets');
   assert.equal(facets.props.children.length,topic.facets.length);
   assert.equal(findNode(tree,node=>node.type==='video'),undefined);
-  findNode(tree,node=>node.type==='button'&&node.props.className==='welcome-text-action').props.onClick();
+  findNode(tree,node=>node.type==='button'&&[node.props.children].flat(Infinity).filter(x=>typeof x==='string').join('')===`Explore ${topic.title.toLowerCase()} sources →`).props.onClick();
   assert.deepEqual(h.calls.splice(0),[['topic',topic.id],['close',false]]);
  }
  h.harness.dispose();
