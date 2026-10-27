@@ -68,10 +68,21 @@ function visit(node){if(ts.isVariableDeclaration(node)&&node.name.getText(page)=
 const handlerJs=ts.transpileModule(`return ${handler};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 test('Reports and Stories each restore their own saved snapshot; fresh composition captures the current map',()=>{
  const restored=[],announcements=[],paused=[],report={id:'report-snapshot'},story={id:'story-snapshot'},fresh={id:'fresh-snapshot'};
- const scope={workspaceSnapshot:report,readDraftSnapshot:mode=>mode==='reports'?report:story,captureMapSnapshot:()=>fresh,setWorkspaceSnapshot:x=>restored.push(x),announce:x=>announcements.push(x),persistableResearch:()=>null,persistableSubsurface:()=>null,locationCameraRedacted:false,researchLocationRedacted:false,subsurfacePrivate:false,locationDerivedViewRef:{current:false}};
+ const scope={primaryWorkspace:'map',workspaceSnapshot:report,readDraftSnapshot:mode=>mode==='reports'?report:story,captureMapSnapshot:()=>fresh,setWorkspaceSnapshot:x=>restored.push(x),announce:x=>announcements.push(x),persistableResearch:()=>null,persistableSubsurface:()=>null,locationCameraRedacted:false,researchLocationRedacted:false,subsurfacePrivate:false,locationDerivedViewRef:{current:false}};
  for(const key of ['setFireReportContext','setResearchReportContext','setSubsurfaceReportContext','setPrimaryWorkspace','setMapContextOpen','setHelpOpen','setQwenOpen'])scope[key]=()=>{};
  for(const key of ['setPlaying','setStreamflowPlaying','setNoaaRadarPlaying','setLightningPlaying','setDaylightPlayback'])scope[key]=value=>paused.push(value);
  const open=new Function(...Object.keys(scope),handlerJs)(...Object.values(scope));open('reports');open('stories');open('reports',true);
  assert.deepEqual(restored,[report,story,fresh]);assert.ok(announcements[0].includes('resumed'));assert.ok(announcements[1].includes('saved map snapshot'));assert.ok(announcements[2].includes('current governed map'));
  assert.equal(paused.length,15);assert.ok(paused.every(value=>value===false));
+});
+
+test('reopening an active unsaved workspace never reads stale storage or remounts it; explicit fresh composition still works',()=>{
+ for(const mode of ['reports','stories']){
+  const changes=[],active={id:'unsaved-active-'+mode},fresh={id:'explicit-fresh-'+mode};let captures=0;
+  const scope={primaryWorkspace:mode,workspaceSnapshot:active,readDraftSnapshot(){throw Error('Must not replace the active editor from storage');},captureMapSnapshot(){captures++;return fresh;},setWorkspaceSnapshot:x=>changes.push(x),announce(){},persistableResearch:()=>null,persistableSubsurface:()=>null,locationCameraRedacted:false,researchLocationRedacted:false,subsurfacePrivate:false,locationDerivedViewRef:{current:false}};
+  for(const key of ['setFireReportContext','setResearchReportContext','setSubsurfaceReportContext','setPrimaryWorkspace','setMapContextOpen','setHelpOpen','setQwenOpen','setPlaying','setStreamflowPlaying','setNoaaRadarPlaying','setLightningPlaying','setDaylightPlayback'])scope[key]=()=>{};
+  const open=new Function(...Object.keys(scope),handlerJs)(...Object.values(scope));
+  open(mode);assert.deepEqual(changes,[]);assert.equal(captures,0);
+  open(mode,true);assert.deepEqual(changes,[fresh]);assert.equal(captures,1);
+ }
 });

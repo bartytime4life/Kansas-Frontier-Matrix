@@ -4691,6 +4691,9 @@ export default function Home() {
 
 
   const openPrimaryWorkspace = useCallback((mode: Exclude<PrimaryWorkspace, "map">, freshFromMap = false, fireContext: FireReportContext | null = null, research: ResearchContext | null = null, subsurface: SubsurfaceContext | null = null) => {
+    // A same-mode header action must not replace an unsaved editor with an
+    // older stored snapshot. Explicit fresh composition remains intentional.
+    if (!freshFromMap && primaryWorkspace === mode && workspaceSnapshot) return;
     // Each workspace owns its saved snapshot. Reusing the other mode's ID can
     // initialize a blank draft and overwrite an unrelated saved investigation.
     const savedSnapshot = freshFromMap ? null : readDraftSnapshot(mode);
@@ -4710,7 +4713,7 @@ export default function Home() {
     announce(savedSnapshot
       ? `${mode === "reports" ? "Report" : "Story"} draft resumed with its saved map snapshot`
       : `${mode === "reports" ? "Report" : "Story"} workspace opened from the current governed map state`);
-  }, [announce, captureMapSnapshot, locationCameraRedacted, researchLocationRedacted, setDaylightPlayback, subsurfacePrivate]);
+  }, [announce, captureMapSnapshot, locationCameraRedacted, primaryWorkspace, researchLocationRedacted, setDaylightPlayback, subsurfacePrivate, workspaceSnapshot]);
 
   const returnToPrimaryMap = useCallback(() => {
     setPrimaryWorkspace("map");

@@ -895,6 +895,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     await switchTo('Stories');
     assert.equal(await p.evaluate(`document.querySelector('.story-draft-fields input').value`), story.title);
     await switchTo('Reports');
+    await button('Return to map', nav);
     // Deny only draft writes on this disposable page. Unrelated preferences and
     // existing stored drafts are untouched, and Retry must save the same text.
     await p.evaluate(`(() => {
@@ -905,10 +906,20 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
         return original.call(this, key, value);
       };
     })()`);
+    await p.evaluate(`document.querySelector('.new-from-map-action').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.querySelector('#map-context-card')`, 'explicit composition opened');
+    await p.evaluate(`document.querySelector('.map-context-actions button').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace === 'reports'`, 'fresh report mounted');
+    const freshCapture = await p.evaluate(`document.querySelector('.snapshot-context time').dateTime`);
+    assert.notEqual(freshCapture, report.snapshot.createdAt, 'explicit composition created a fresh snapshot');
     await fill('.report-title-field input', 'QA recoverable quota edit');
     await p.wait(`document.querySelector('.draft-state').textContent.includes('Browser storage unavailable')`, 'storage denial is visible');
     assert.equal((await stored('report')).title, 'QA latest report before exit');
+    await openFromMap('Reports');
     assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`), 'QA recoverable quota edit');
+    assert.equal(await p.evaluate(`document.querySelector('.snapshot-context time').dateTime`), freshCapture, 'same-mode header action keeps the active unsaved snapshot');
     await capture('storage-recovery');
     await p.evaluate(`window.__denyDraftWrites = false`);
     await button('Retry saving', '.draft-state');
