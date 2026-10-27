@@ -4,11 +4,42 @@ import {mkdtemp,mkdir,writeFile,readFile,readdir,rm,symlink} from 'node:fs/promi
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {stagePublicClientAssets} from '../scripts/stage-public-client-assets.mjs';
+import {gunzipSync,brotliDecompressSync} from 'node:zlib';
 async function fixture(){
  const root=await mkdtemp(join(tmpdir(),'kfm-client-assets-'));
  await mkdir(join(root,'dist/client/assets'),{recursive:true});await mkdir(join(root,'public/assets'),{recursive:true});
  return {root,source:join(root,'dist/client/assets'),target:join(root,'public/assets'),close:()=>rm(root,{recursive:true,force:true})};
 }
+test('build compression preserves exact JS/CSS bytes and stages deterministic transport siblings',async t=>{
+ const f=await fixture();t.after(f.close);
+ const originals={'index-a1b2c3d4.js':'export const sample="Kansas atlas";\n'.repeat(200),'style-a1b2c3d4.css':'.atlas{color:#012345}\n'.repeat(200)};
+ for(const [name,value]of Object.entries(originals))await writeFile(join(f.source,name),value);
+ await writeFile(join(f.source,'small-a1b2c3d4.js'),'export{}');
+ const first=await stagePublicClientAssets(f.root,{compress:true});
+ assert.equal(first.files,7);assert.equal(first.compression.files,2);
+ assert.ok(first.compression.brotliBytes<first.compression.originalBytes);
+ assert.ok(first.compression.gzipBytes<first.compression.originalBytes);
+ for(const [name,value]of Object.entries(originals)){
+  const original=Buffer.from(value);
+  assert.deepEqual(await readFile(join(f.source,name)),original);
+  assert.deepEqual(await readFile(join(f.target,name)),original);
+  for(const [suffix,decode]of [['gz',gunzipSync],['br',brotliDecompressSync]]){
+   const bytes=await readFile(join(f.source,name+'.'+suffix));
+   assert.deepEqual(decode(bytes),original,'transport decoding preserves source identity');
+   assert.deepEqual(await readFile(join(f.target,name+'.'+suffix)),bytes);
+  }
+ }
+ const again=await stagePublicClientAssets(f.root,{compress:true});
+ assert.equal(again.added,0);assert.equal(again.retained,7);assert.deepEqual(again.compression,first.compression);
+ assert.equal((await readdir(f.source)).some(name=>name.startsWith('.compress-')),false);
+});
+test('compression refuses conflicting siblings without overwriting them',async t=>{
+ const f=await fixture();t.after(f.close);
+ await writeFile(join(f.source,'index-a1b2c3d4.js'),'export const value=123;\n'.repeat(200));
+ const target=join(f.source,'index-a1b2c3d4.js.br');await writeFile(target,'held bytes');
+ await assert.rejects(stagePublicClientAssets(f.root,{compress:true}),/CLIENT_ASSET_COMPRESSION_CONFLICT/);
+ assert.equal(await readFile(target,'utf8'),'held bytes');
+});
 test('stages exact hashed browser files, keeps previous versions, and reruns deterministically',async()=>{
  const f=await fixture();try{
   await writeFile(join(f.source,'index-Dzf-89L_.js'),'export const value=1;');await writeFile(join(f.source,'style-a1b2c3d4.css'),'body{}');

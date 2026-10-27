@@ -1,5 +1,88 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Preview performance follow-up · 2026-10-27
+
+This follow-up starts from hosted-branch commit
+`d38a574f8ece9cba4fe210f6bec3631a1042d8c0` (tree
+`d65636b0935ed1aecbcb441f750cce86c645d494`), including #5516/#5517.
+The nineteen category glimpses and real-map identity are reused.
+
+A deterministic counterexample confirmed that selecting A, B, then A while A's
+style document is pending rebuilt A twice. A generation check now gives only
+the latest application ownership of the shared promise and style-load callback.
+The new regression fails against the base engine and passes against the fix.
+The welcome retains at most 48 tiles (32 for touch-first, 24 in Battery saver),
+or the existing smaller budget. Selected pixel density stays intact. Battery
+saver uses still category cameras; intentional category navigation still works.
+These are configured limits, not measured RAM savings or production FPS gains.
+The first measurement attempt exposed a 40px expanded Pause control (and the
+Return control was configured at 36px). Both now have 44px minimum hit areas,
+checked by the responsive browser matrix as well as the performance journeys.
+The next rendered journey caught Escape from Pause/Resume removing the focused
+button and leaving focus on the document body. Returning from an expanded view
+now focuses its persistent Expand control in the layout commit; a second Escape
+can dismiss the welcome. Both the component regression and native-key journeys
+cover this exact sequence.
+The same first run also exposed an older source-text assertion coupled to the
+replaced style-key guard. It now checks only the style-loading boundary; the
+existing supersession/retry and new A→B→A tests execute those behaviors instead.
+
+The first slow-network run at `5bdbb193eac9831bc60eff7ed3e562172c1e3b9a`
+observed first content paint near 9.7 seconds and hydration near 15.5 seconds on
+the emulated phone. That journey failed at the undersized Pause control, so it
+is a partial diagnostic, not acceptance. Build inspection found no compressed
+JS/CSS siblings, although the pinned server already negotiates them. The
+existing postbuild asset-staging script now creates deterministic Brotli and
+gzip siblings for hashed JS/CSS of at least 1 KiB, verifies immutable destinations
+and stages those variants with their original files. Only smaller variants are
+kept. Original content and filenames stay unchanged; source datasets, HTML,
+API responses, media and private/reflected content are outside this operation.
+No runtime/dependency replacement or provider/cache-policy change is required.
+Unit checks decode the variants byte-for-byte and exercise repeat/conflict
+handling. The existing real HTTP asset tests now cover Brotli/gzip/identity
+negotiation, exact decoded content, HEAD, Vary and hidden variant URLs. Build-byte
+savings are not substituted for remeasured network, paint or interaction times.
+
+An independent CI job measures the actual built/hydrated application at desktop
+1440×960 and emulated phone 390×844 at 2× density, including 4× CPU slowdown,
+80 ms network latency and 200,000 bytes/second throughput. The phone is also
+tested with reduced motion. JSON reports and screenshots are retained in the
+`welcome-performance` Actions artifact for 14 days. Reports bind to the exact
+checked-out source and browser version. They contain first paint, observed LCP,
+time to hydrated welcome, request bytes, input event delays/durations, automation
+readiness times, long tasks, animation-frame callback gaps, main-thread task,
+script/layout/style time and three post-GC reopen-cycle heap samples. The test
+also verifies one shared preview canvas, no automatic tour decoder, teardown,
+pause/resume, reduced motion and entry into the real aviation category map.
+
+The 15-second readiness and 32 MiB retained-renderer-heap checks are coarse
+failure guards, not production service objectives. Frame callback cadence is
+not rendered FPS. Input observations are not field INP, the short-run LCP is
+not a Core Web Vitals population result, and GC samples exclude workers,
+native/GPU allocation and thermal effects. Empty style documents and unavailable
+provider APIs deliberately isolate UI/resource handling; these measurements
+cannot qualify realistic provider-tile rendering, provider health, physical
+mobile performance or long-session leaks. Live-provider and physical-device
+acceptance remain NEEDS VERIFICATION. The local sandbox denied listeners and
+Chrome execution, so rendered claims must come from CI, not local syntax checks.
+
+The preceding #5517 run
+[40561242835](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/40561242835)
+passed install/build/types, the Node suite, MySQL and fire browser checks, but
+failed one welcome row-position assertion and two workspace navigation cases.
+The row test mixed native focus scrolling with layout movement; it now prevents
+scroll for that assertion, while separate native keyboard/scroll journeys stay
+in place. The workspace failures remain unresolved evidence until a new run;
+they are not declared inherited or passing. No timeout or functional assertion
+is removed to hide these failures.
+
+Placement remains within existing `app/`, build-owning `scripts/`, `tests/`,
+`docs/`, the existing package manifest and platform `.github/workflows/`
+responsibilities under adopted Directory Rules / ADR-0029.
+No new source, release/proof home, storage format, dependency or host setting is
+introduced. Rollback reverts this follow-up commit. Review and exact-head CI are
+separate from merge, deployment and publication authority.
+
 ## Category layer glimpses · 2026-10-27 candidate
 
 **CONFIRMED source behavior and local checks; hosted acceptance is a separate gate.**

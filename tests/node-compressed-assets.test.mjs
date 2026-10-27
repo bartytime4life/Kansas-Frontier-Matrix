@@ -4,7 +4,7 @@ import { mkdtemp, writeFile, mkdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createServer } from "node:http";
-import { gzipSync, gunzipSync } from "node:zlib";
+import { gzipSync, gunzipSync, brotliCompressSync } from "node:zlib";
 import { createHash } from "node:crypto";
 const runtime = new URL(import.meta.resolve("vinext/server/prod-server"));
 const { StaticFileCache } = await import(new URL("./static-file-cache.js", runtime));
@@ -53,6 +53,26 @@ test("real transport variants keep negotiation and do not acquire a separate pub
   const response = await fetch(`${origin}/assets/example.js`, { headers: { "Accept-Encoding": "gzip" } });
   assert.equal(response.headers.get("content-encoding"), "gzip");
   assert.equal((await fetch(`${origin}/assets/example.js.gz`)).status, 404);
+});
+
+test("built JS and CSS negotiate Brotli ahead of gzip with exact decoded content and Vary", async t => {
+  const script = 'export const fixture="Kansas";\n'.repeat(200), css = '.atlas{color:#123456}\n'.repeat(200);
+  const files = {};
+  for (const [name, value] of Object.entries({ "assets/example.js": script, "assets/example.css": css })) {
+    files[name] = value; files[name + ".gz"] = gzipSync(value); files[name + ".br"] = brotliCompressSync(value);
+  }
+  const { origin } = await serverFor(t, files);
+  for (const [name, value] of [["example.js", script], ["example.css", css]]) {
+    const response = await fetch(`${origin}/assets/${name}`, { headers: { "Accept-Encoding": "br, gzip" } });
+    assert.equal(response.headers.get("content-encoding"), "br");
+    assert.match(response.headers.get("vary"), /Accept-Encoding/i);
+    assert.equal(await response.text(), value);
+    const head = await fetch(`${origin}/assets/${name}`, { method: "HEAD", headers: { "Accept-Encoding": "gzip" } });
+    assert.equal(head.headers.get("content-encoding"), "gzip"); assert.equal(await head.text(), "");
+    assert.equal((await fetch(`${origin}/assets/${name}.br`)).status, 404);
+    const plain = await fetch(`${origin}/assets/${name}`, { headers: { "Accept-Encoding": "identity" } });
+    assert.equal(plain.headers.get("content-encoding"), null); assert.equal(await plain.text(), value);
+  }
 });
 
 test("gzip HEAD and conditional reads work; an absent uncompressed sibling stays absent", async t => {
