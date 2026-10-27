@@ -30,7 +30,7 @@ function glow(event){
   glowFrame=requestAnimationFrame(()=>{const r=card.getBoundingClientRect();card.style.setProperty('--mx',`${x-r.left}px`);card.style.setProperty('--my',`${y-r.top}px`);});
 }
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,motionEnabled=true,onMotionChange}){
-  const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null);
+  const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null),wasFullscreen=useRef(false);
   const [remember,setRemember]=useState(initialRemember),[query,setQuery]=useState('');
   const [reduced,setReduced]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [localMotion,setMotion]=useState(motionEnabled),[hidden,setHidden]=useState(()=>typeof document!=='undefined'&&document.hidden);
@@ -78,7 +78,12 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       }
     };document.addEventListener('keydown',keyboard,true);return()=>document.removeEventListener('keydown',keyboard,true);
   },[modal,pinned,fullscreen,remember,onClose]);
-  useLayoutEffect(()=>{if(fullscreen&&!modal)root.current?.querySelector('.welcome-preview-expand')?.focus({preventScroll:true});},[fullscreen,modal]);
+  useLayoutEffect(()=>{
+    const returning=wasFullscreen.current&&!fullscreen;wasFullscreen.current=fullscreen;
+    // Pause disappears on return. Restore the persistent control before the
+    // next key, including when Escape was pressed from Pause/Resume itself.
+    if(!modal&&(fullscreen||returning))root.current?.querySelector('.welcome-preview-expand')?.focus({preventScroll:true});
+  },[fullscreen,modal]);
   const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-labelledby="living-welcome-title" data-renderer="capability" data-active={engaged||null} data-fullscreen={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
     <div className="welcome-map-stage">
       <div className="welcome-wash" aria-hidden="true"/>

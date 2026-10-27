@@ -56,6 +56,25 @@ test('visual welcome owns focus and Escape before passive effects run',async()=>
  assert.equal(h.env.listeners.has('keydown'),false);
 });
 
+test('Escape from expanded Pause restores a persistent control before the next key',async()=>{
+ const h=await welcome();let tree=h.render();
+ const expand={focus(){h.env.document.activeElement=this;}},pause={};
+ rootOf(tree).props.ref.current={contains:node=>node===expand||node===pause,querySelector:selector=>selector==='.welcome-preview-expand'?expand:null};
+ try{
+  findNode(tree,node=>node.props?.className==='welcome-preview-expand').props.onClick();
+  tree=h.harness.render(h.harness.exports.default,h.props);h.harness.commitLayout();
+  assert.equal(h.env.document.activeElement,expand);
+  h.env.document.activeElement=pause;
+  const escape=()=>h.env.listeners.get('keydown')({target:h.env.document.activeElement,key:'Escape',preventDefault(){},stopImmediatePropagation(){}});
+  escape();tree=h.harness.render(h.harness.exports.default,h.props);
+  assert.equal(rootOf(tree).props['data-fullscreen'],false);
+  assert.equal(findNode(tree,node=>node.props?.className==='welcome-preview-pause'),undefined);
+  h.env.document.activeElement=h.env.document.body;h.harness.commitLayout();
+  assert.equal(h.env.document.activeElement,expand,'the removed Pause button cannot strand focus on body');
+  assert.deepEqual(h.calls,[]);escape();assert.deepEqual(h.calls,[['close',false]]);
+ }finally{h.harness.dispose();}
+});
+
 test('nested welcome dialogs own and return keyboard focus in the layout commit',async()=>{
  const h=await welcome();let tree=h.render();
  const trigger={isConnected:true,focus(){h.env.document.activeElement=this;}};

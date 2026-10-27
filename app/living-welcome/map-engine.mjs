@@ -82,7 +82,9 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
     map = new lib.Map({
       container, interactive: false, transformRequest: basemapCacheRequest, attributionControl: { compact: true },
       style: { version: 8, sources: {}, layers: [] }, center: WELCOME_IDLE_VIEW.camera.center, zoom: WELCOME_IDLE_VIEW.camera.zoom,
-      pixelRatio: budget.pixelRatio, maxTileCacheSize: budget.tileCache, maxPitch: 72, renderWorldCopies: false, fadeDuration: 200,
+      // A hover preview needs fewer retained tiles than an investigation map.
+      // Keep the chosen pixel density so cartographic labels remain readable.
+      pixelRatio: budget.pixelRatio, maxTileCacheSize: Math.min(budget.tileCache, budget.efficient ? 24 : budget.coarsePointer ? 32 : 48), maxPitch: 72, renderWorldCopies: false, fadeDuration: 200,
     });
   } catch { onError?.(); return null; }
   map.getCanvas().setAttribute('aria-hidden', 'true');
@@ -91,10 +93,9 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   // is tracked apart from the selected topic, because topics that share a
   // style (Science and Sky, or Evidence and the default map) take turns while
   // it loads, and the loaded style serves whichever of them is selected then.
-  let view = null, styleKey = null, styleLoaded = false, paused = true, reduced = false, leg = 0, settle = 0, disposed = false, ready = false, applying = false, transitioning = false;
   const cameraOf = ({ camera: { center, zoom, pitch, bearing } }) => ({ center: [center[0], center[1]], zoom, pitch, bearing });
   const drift = () => {
-    if (disposed || paused || reduced || applying || !view?.topic) return;
+    if (disposed || paused || reduced || budget.efficient || applying || !view?.topic) return;
     const next = welcomeDriftLeg(view, leg++);
     map.easeTo({ bearing: next.bearing, zoom: next.zoom, duration: next.duration, easing: t => t * t * (3 - 2 * t), essential: true });
   };
@@ -182,22 +183,23 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
     // Stopping the last drift ends a move; it must not start one for the new view.
     applying = true; map.stop(); applying = false;
     if (key !== styleKey) {
+      // A → B → A may reuse A's pending style promise. Only the latest
+      // application owns it; otherwise both A callbacks rebuild the GPU style.
+      const epoch = ++styleEpoch;
       styleKey = key; styleLoaded = false; ready = false;
       onSources?.({ topic: next.topic, mapState: 'loading', sources: [] });
       // Styles are resolved here rather than through setStyle's transformStyle,
       // which waits for the previous style to load and so stalls after one fails.
       void resolveStyle(BASEMAPS[next.basemap].style).then(style => {
-        if (disposed || styleKey !== key) return;
+        if (disposed || styleEpoch !== epoch) return;
         map.setStyle(welcomeStyle(style, view), { diff: false });
         // Jumping ends a move, which starts the drift for the view selected now.
-        map.once('style.load', () => { if (disposed || styleKey !== key) return; styleLoaded = true; drawData(); map.jumpTo(cameraOf(view)); });
-      }, () => { if (!disposed && styleKey === key) { styleKey = null; onSources?.({ topic: view.topic, mapState: 'unavailable', sources: [] }); } });
+        map.once('style.load', () => { if (disposed || styleEpoch !== epoch) return; styleLoaded = true; drawData(); map.jumpTo(cameraOf(view)); });
+      }, () => { if (!disposed && styleEpoch === epoch) { styleKey = null; onSources?.({ topic: view.topic, mapState: 'unavailable', sources: [] }); } });
     } else if (!styleLoaded) {
       // The pending style jumps to this view, and draws its data, when it loads.
     } else {
       drawData();
-      if (reduced || paused) map.jumpTo(cameraOf(next));
-      else { transitioning = true; map.flyTo({ ...cameraOf(next), duration: 2200, essential: true }); }
     }
   };
   return {
