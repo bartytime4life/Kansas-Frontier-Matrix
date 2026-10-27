@@ -30,7 +30,7 @@ test('each topic previews the map it opens with, and the idle view is the defaul
  assert.deepEqual(plain(view.WELCOME_IDLE_VIEW.starters),[],'the default map carries no data');
  assert.deepEqual(plain(view.welcomeView('weather').starters),['nws-alerts','nws-radar'],'the storm preview shows alerts and its newest current radar scan');
  assert.deepEqual(plain(view.welcomeView('geology').starters),['usgs-earthquakes']);
- assert.deepEqual([...view.WELCOME_PREVIEW_SKIPPED_STARTERS].sort(),['noaa-goes-geocolor','usgs-streamflow']);
+ assert.deepEqual([...view.WELCOME_PREVIEW_SKIPPED_STARTERS].sort(),['usgs-streamflow']);
 });
 
 test('terrain looks get their own Terrarium DEM, globe looks the globe projection, flat maps neither',()=>{

@@ -6,6 +6,7 @@ import { componentHarness, findNode } from './component-harness.mjs';
 import { MAP_DEMOS, mapDemos, demoDuration } from '../app/living-welcome/map-demos.mjs';
 import { CATEGORY_IDS } from '../app/living-welcome/catalog.mjs';
 import { bindPlayback } from '../app/living-welcome/motion-playback.mjs';
+import { categoryGlimpse, capabilityPreviews } from '../app/living-welcome/capability-catalog.mjs';
 
 function media() {
   const events = new Map(), pending = [];
@@ -15,6 +16,61 @@ function media() {
     pause() { this.playing = false; }, removeAttribute(name) { if (name === 'src') this.released = true; }, load() {}, pending,
   };
 }
+
+async function capability() {
+ const listeners = new Map(), document = { hidden: false, addEventListener: (name, fn) => listeners.set(name, fn), removeEventListener: name => listeners.delete(name) };
+ const h = await componentHarness('app/living-welcome/CapabilityPreview.jsx', { './motion-playback.mjs': { bindPlayback } }, { document });
+ const props = { demo: capabilityPreviews('weather')[0], paused: false }, video = media();
+ const render = () => {
+  const tree = h.render(h.exports.CapabilityPreview, props), node = findNode(tree, n => n.type === 'video');
+  if (node) node.props.ref.current = video;
+  h.commit(); return tree;
+ };
+ return { h, props, video, document, listeners, render };
+}
+
+test('all nineteen categories have distinct, bounded layer demonstrations', () => {
+ const ids = ['engineering','transport','aviation','weather','disaster','water','groundwater','geology','terrain','ecology','agriculture','history','land','people','government','places','science','sky','evidence'];
+ assert.equal(new Set(ids.map(id => categoryGlimpse(id)?.title)).size, 19);
+ for (const id of ids) for (const field of ['title','summary','try','limit']) assert.ok(categoryGlimpse(id)[field], `${id}: ${field}`);
+ assert.equal(categoryGlimpse('__proto__'), null);
+ assert.deepEqual(capabilityPreviews('science'), [], 'terrain footage must not impersonate a satellite demonstration');
+ assert.deepEqual(capabilityPreviews('geology'), [], 'groundwater footage must not impersonate the earthquake map');
+});
+
+test('opening a category loads a still, then only an explicitly requested tour decoder', async () => {
+ const h = await capability(); let tree = h.render();
+ assert.equal(findNode(tree, n => n.type === 'video'), undefined);
+ assert.equal(findNode(tree, n => n.type === 'img').props.src, h.props.demo.poster);
+ assert.equal(h.video.pending.length, 0);
+ findNode(tree, n => n.type === 'button').props.onClick(); tree = h.render();
+ assert.equal(findNode(tree, n => n.type === 'video').props.preload, 'none');
+ assert.equal(h.video.src, h.props.demo.src);
+ assert.equal(h.video.playing, true);
+ h.props.demo = capabilityPreviews('weather')[1]; tree = h.render();
+ assert.equal(findNode(tree, n => n.type === 'video'), undefined, 'changing tours never auto-downloads the next video');
+ assert.equal(h.video.playing, false); assert.equal(h.video.released, true);
+ h.h.dispose(); assert.equal(h.listeners.size, 0);
+});
+
+test('requested tours stop at the end, honor hidden/global pause, and can recover', async () => {
+ const h = await capability(); let tree = h.render();
+ findNode(tree, n => n.type === 'button').props.onClick(); tree = h.render();
+ h.document.hidden = true; h.listeners.get('visibilitychange')(); tree = h.render();
+ h.video.pending[0].resolve(); await Promise.resolve(); assert.equal(h.video.playing, false);
+ h.document.hidden = false; h.listeners.get('visibilitychange')(); tree = h.render(); assert.equal(h.video.playing, true);
+ h.props.paused = true; tree = h.render(); assert.equal(h.video.playing, false);
+ assert.equal(findNode(tree, n => n.type === 'button').props.disabled, true);
+ h.props.paused = false; tree = h.render();
+ h.video.ended = true; h.video.currentTime = 7;
+ findNode(tree, n => n.type === 'video').props.onEnded(); tree = h.render(); assert.equal(h.video.playing, false);
+ findNode(tree, n => n.type === 'button').props.onClick(); tree = h.render(); assert.equal(h.video.currentTime, 0);
+ findNode(tree, n => n.type === 'video').props.onError(); tree = h.render();
+ assert.equal(findNode(tree, n => n.type === 'video'), undefined); assert.equal(h.video.playing, false);
+ assert.ok(findNode(tree, n => n.props?.role === 'status'));
+ findNode(tree, n => n.type === 'button').props.onClick(); tree = h.render(); assert.equal(h.video.playing, true);
+ h.h.dispose(); assert.equal(h.video.playing, false);
+});
 async function demoPanel(extra = {}) {
   const listeners = new Map(), document = { hidden: false, addEventListener: (name, callback) => listeners.set(name, callback), removeEventListener: name => listeners.delete(name) };
   const calls = [], h = await componentHarness('app/living-welcome/MapDemoPanel.jsx', {

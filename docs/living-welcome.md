@@ -1,5 +1,72 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Category layer glimpses · 2026-10-27 candidate
+
+**CONFIRMED source behavior and local checks; hosted acceptance is a separate gate.**
+The owner selected the existing real-map welcome as the visual direction and
+requested more thoughtful category demonstrations with performance first. The
+shared nineteen-category taxonomy and its map looks stay in place. Each topic
+now has its own short demonstration: what the map previews, something to look
+for, the next available tool, and the relevant source/display limitation.
+A shared desktop brief describes the selected category; phones get the same
+material in the existing category dialog. Preview is presentation only and does
+not activate an investigation layer or admit a source.
+
+The default statewide map is static. Camera drift runs only while a category is
+engaged or explicitly expanded, and stops on ordinary departure, modal opening,
+global pause, hidden tabs or reduced motion. There is still one welcome map,
+loaded after paint, and one selected capture at most. No new renderer, font,
+image, model, dependency or large media asset is added. Existing map-resolution
+preferences are retained rather than reducing cartographic label quality.
+
+Recorded Explorer captures start with a lazy still. A requested native video
+plays once, with pause/replay, hidden-tab/global-pause handling, failure recovery
+and decoder cleanup on replacement or dismissal. Opening a category no longer
+starts an animated WebP decoder. Science no longer reuses a terrain recording
+as a satellite demonstration; Geology no longer reuses groundwater footage as
+an earthquake demonstration. Those categories use the real map glimpse and
+explicitly disclose the absence of a verified matching recorded tour. Other
+reused recordings keep their original context label, time and limitations.
+
+Science's preview now reads the existing fixed NOAA satellite-frame adapter and
+selects one checked current catalog frame. GeoColor and the separately dated
+visible-band fallback remain distinct. The existing 90-minute source freshness
+bound is reapplied before drawing; stale or failed frames stay absent. Radar
+retains its own freshness rule. Held previews do not poll either manifest;
+expiry checks still clear stale frames. Style reads have a 15-second deadline,
+provider JSON/manifest reads 12 seconds, and pending reads are coalesced locally.
+Loaded, empty, unavailable, closer-zoom and provider-tile states are distinct.
+A count describes returned source records, not a claim that every record is
+visible or that a tile loaded successfully. A failed style can be retried by
+reselecting its category. The full River Pulse network remains behind the
+opened map's controls; it is not fetched on hover just to decorate the welcome.
+
+The supplied Living Atlas v0.1 design (a PROPOSED design, not runtime evidence)
+and Google Earth Patterns reference informed the persistent map, purposeful
+views, visible source clocks and bounded motion. Current category/source modules
+govern the actual behavior. Placement reuses this standalone composition's
+existing app/, tests/ and docs/ responsibilities under adopted Directory Rules
+and accepted ADR-0029; no schema, contract, registry, lifecycle or proof home is
+created. The preserved Site and read-only sources/ references are untouched.
+
+Local qualification: 56 focused welcome, map-engine, playback and satellite
+checks passed; production build and TypeScript passed. Changed-file lint has
+zero errors and one inherited unused terrain-destructuring warning. The reused
+local dependency installation is not an exact-lock qualification. A local
+production server could not listen (EPERM), so actual hydration, layout and native
+video acceptance run in the existing isolated CI browser suite. That suite now
+checks category-specific content, poster-only opening, native requested video
+play/pause and source limits, and retains welcome screenshots with the existing
+14-day workspace artifact. Provider APIs are unavailable fixtures and off-origin
+traffic is blocked: this is not hosted provider-health acceptance.
+
+Performance protection is bounded to idle motion, decoder admission, polling,
+request deadlines and source reuse. No production FPS, energy, memory or Core
+Web Vitals gain is claimed without measurement. Exact-head CI, manual rendering,
+physical/other-engine checks, real upstream imagery and long-session behavior
+remain separate evidence. Roll back by reverting this source change; no browser
+storage migration, data reset, host-setting change or publication is included.
+
 ## Chat mode follow-up · 2026-10-24
 
 GoDaddy Preview was independently verified at clean commit

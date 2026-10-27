@@ -9,7 +9,7 @@ import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
 import { isolateBrowserNetwork } from './browser-network.mjs';
 import ts from 'typescript';
-import { capabilityPreviews, capabilityNote } from '../app/living-welcome/capability-catalog.mjs';
+import { capabilityPreviews, capabilityNote, categoryGlimpse } from '../app/living-welcome/capability-catalog.mjs';
 
 // Bind acceptance to the existing navigation contract, not a second tile list.
 const taxonomy = {};
@@ -607,6 +607,15 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
       }
     };
     await checkLayout('initial');
+    if(width===1440){
+      const before=await p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top`);
+      await p.evaluate(`document.querySelector('.topic-weather').focus()`);
+      await p.wait(`document.querySelector('.welcome-preview-brief h2').textContent===${JSON.stringify(categoryGlimpse('weather').title)}`,'shared brief follows keyboard interest');
+      const after=await p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top`);
+      assert.ok(Math.abs(after-before)<2,'changing a glimpse never shifts the category rows under the pointer');
+    }
+
+    if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
     await checkCredits('initial license strip');
     await p.wait(`!!document.querySelector('.living-welcome .domain-stage .maplibregl-ctrl-attrib')`,'the live welcome map carries its own provider credits');
     for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
@@ -630,12 +639,22 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
       const detail=await p.evaluate(`(()=>{const d=document.querySelector('.welcome-dialog');return{role:d.getAttribute('role'),modal:d.getAttribute('aria-modal'),title:d.querySelector('h2')?.textContent,facets:[...d.querySelectorAll('.capability-facets li')].map(n=>n.textContent),notes:[...d.querySelectorAll('.welcome-source-note')].map(n=>n.textContent),video:d.querySelectorAll('video').length};})()`);
       assert.deepEqual({role:detail.role,modal:detail.modal,title:detail.title,facets:detail.facets,video:detail.video},{role:'dialog',modal:'true',title:topic.title,facets:topic.facets,video:0});
       assert.ok(detail.notes.includes(topic.limitation),'source limitations stay attached to '+topic.id);
+      const glimpse=categoryGlimpse(topic.id);
+      const glimpseText=await p.evaluate(`document.querySelector('.welcome-category-glimpse').textContent`);
+      for(const value of Object.values(glimpse))assert.ok(glimpseText.includes(value),'category-specific demonstration and limits: '+topic.id);
       const previews=capabilityPreviews(topic.id);
       if(previews.length){
         const capture=await p.evaluate(`(()=>{const f=document.querySelector('.welcome-dialog .capability-preview');return{id:f?.dataset.demo,caption:f?.querySelector('figcaption')?.textContent,source:f?.querySelector('img')?.getAttribute('src')};})()`);
-        assert.equal(capture.id,previews[0].id);assert.ok([previews[0].animation,previews[0].poster].includes(capture.source));
+        assert.equal(capture.id,previews[0].id);assert.equal(capture.source,previews[0].poster,'opening details requests only the captured still');
         for(const text of [previews[0].title,previews[0].sourceTime,previews[0].limitation,previews[0].context].filter(Boolean))assert.ok(capture.caption.includes(text),'capture keeps its time, scope and context');
-        assert.ok(capture.caption.includes(previews[0].context?'CONTEXT PREVIEW':'EXPLORER CAPTURE'),'context reuse never becomes domain observation coverage');
+        assert.ok(capture.caption.includes(previews[0].context?'CONTEXT CAPTURE':'EXPLORER CAPTURE'),'context reuse never becomes domain observation coverage');
+        if(topic.id==='weather'&&(width===1440||width===320)){
+          await p.evaluate(`document.querySelector('.capability-preview-play').focus()`);await p.key('Enter','Enter',13);
+          await p.wait(`(()=>{const video=document.querySelector('.capability-preview video');return video&&video.readyState>=2&&!video.paused;})()`,'native requested tour decodes and plays');
+          if(process.env.KFM_WORKSPACE_SCREENSHOTS){const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-weather-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
+          await p.key('Enter','Enter',13);
+          await p.wait(`document.querySelector('.capability-preview video')?.paused===true`,'native Pause tour stops the decoder');
+        }
         if(previews.length>1){await p.evaluate(`document.querySelector('.welcome-dialog .topic-options button:nth-child(2)').focus()`);await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.welcome-dialog .capability-preview')?.dataset.demo===${JSON.stringify(previews[1].id)}`,'native choice changes only the selected capture');}
       }else{
         assert.equal(await p.evaluate(`!!document.querySelector('.welcome-dialog .capability-preview')`),false);
