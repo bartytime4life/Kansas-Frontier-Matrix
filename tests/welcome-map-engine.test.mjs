@@ -27,7 +27,7 @@ const stubs = {
     export const isNoaaRadarManifest = value => Array.isArray(value?.frames);
     export const noaaRadarManifestIsFresh = manifest => globalThis.__welcome.fresh(manifest.frames.at(-1));`),
   "'../welcome-map-view'": toUrl(`
-    const view = (topic, basemap, scene, zoom, starters = [], prisms = false) => ({ topic, basemap, scene, camera: { center: [-98, 38], zoom, pitch: 0, bearing: 0 }, starters, prisms });
+    const view = (topic, basemap, scene, zoom, starters = [], prisms = false) => ({ topic, basemap, scene, camera: { center: topic === 'terrain' ? [-99.6, 38.9] : [-98, 38], zoom, pitch: 0, bearing: 0 }, starters, prisms });
     const VIEWS = { satellite: view('satellite', 'standard', '2d', 5.4, ['noaa-goes-geocolor']), evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']), weather: view('weather', 'relief', 'terrain', 5.9, ['nws-alerts', 'nws-radar']), people: view('people', 'relief', 'terrain', 6.3, ['census-counties'], true) };
     export const WELCOME_IDLE_VIEW = view(null, 'standard', '2d', 6.1);
     export const welcomeView = topic => VIEWS[topic] ?? WELCOME_IDLE_VIEW;
@@ -52,7 +52,7 @@ class FakeMap {
   emit(type, event = {}) { const list = this.handlers.get(type) ?? []; this.handlers.set(type, list.filter(h => !h.once)); for (const h of list) h.fn(event); }
   setStyle(style) { this.log.push(['setStyle', style.name ?? style.url, style.scene]); }
   // Camera moves end at once, as a programmatic jump does.
-  jumpTo(camera) { this.log.push(['jumpTo', camera.zoom]); this.emit('moveend'); }
+  jumpTo(camera) { this.camera = camera; this.log.push(['jumpTo', camera.zoom]); this.emit('moveend'); }
   flyTo(camera) { this.log.push(['flyTo', camera.zoom]); }
   easeTo(camera) { this.log.push(['easeTo', camera.bearing]); }
   stop() {}
@@ -237,4 +237,21 @@ test('a failed style is disclosed and the same selected category can retry', asy
  assert.equal(sourceReports.at(-1).mapState, 'ready');
  assert.equal(map.log.filter(([name]) => name === 'setStyle').length, 1);
  engine.dispose();
+});
+
+
+test('pausing an interrupted same-style flight leaves the selected category camera, not an intermediate view', async t => {
+ for (const pause of ['setPaused', 'setReduced']) {
+ const { engine, map } = await start();
+ t.after(() => engine.dispose());
+ engine.setPaused(false); engine.show('geology'); await tick(); await tick(); map.emit('style.load');
+ engine.show('terrain'); await settle();
+ assert.ok(map.log.some(([name]) => name === 'flyTo'));
+ engine[pause](true);
+ assert.deepEqual(map.camera.center, [-99.6, 38.9]);
+ assert.equal(map.camera.zoom, 7.4);
+ engine[pause](false);
+ assert.deepEqual(map.camera.center, [-99.6, 38.9], 'resuming drift cannot keep the previous category center');
+ engine.dispose();
+ }
 });

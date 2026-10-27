@@ -14,7 +14,9 @@ not activate an investigation layer or admit a source.
 
 The default statewide map is static. Camera drift runs only while a category is
 engaged or explicitly expanded, and stops on ordinary departure, modal opening,
-global pause, hidden tabs or reduced motion. There is still one welcome map,
+global pause, hidden tabs or reduced motion. An interrupted category flight lands
+on its intended view before holding, so resuming cannot strand the map between
+category destinations. There is still one welcome map,
 loaded after paint, and one selected capture at most. No new renderer, font,
 image, model, dependency or large media asset is added. Existing map-resolution
 preferences are retained rather than reducing cartographic label quality.
@@ -49,7 +51,7 @@ existing app/, tests/ and docs/ responsibilities under adopted Directory Rules
 and accepted ADR-0029; no schema, contract, registry, lifecycle or proof home is
 created. The preserved Site and read-only sources/ references are untouched.
 
-Local qualification: 60 focused welcome, map-engine, playback and satellite
+Local qualification: 61 focused welcome, map-engine, playback and satellite
 checks passed; production build and TypeScript passed. Changed-file lint has
 zero errors and one inherited unused terrain-destructuring warning. The reused
 local dependency installation is not an exact-lock qualification. A local
