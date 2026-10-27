@@ -93,14 +93,21 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   // is tracked apart from the selected topic, because topics that share a
   // style (Science and Sky, or Evidence and the default map) take turns while
   // it loads, and the loaded style serves whichever of them is selected then.
-  let view = null, styleKey = null, styleEpoch = 0, styleLoaded = false, paused = true, reduced = false, leg = 0, settle = 0, disposed = false, ready = false, applying = false;
   const cameraOf = ({ camera: { center, zoom, pitch, bearing } }) => ({ center: [center[0], center[1]], zoom, pitch, bearing });
   const drift = () => {
     if (disposed || paused || reduced || budget.efficient || applying || !view?.topic) return;
     const next = welcomeDriftLeg(view, leg++);
     map.easeTo({ bearing: next.bearing, zoom: next.zoom, duration: next.duration, easing: t => t * t * (3 - 2 * t), essential: true });
   };
-  map.on('moveend', event => { if (!event.originalEvent && !paused) drift(); });
+  map.on('moveend', event => { transitioning = false; if (!event.originalEvent && !paused) drift(); });
+  const suspend = () => {
+    const finishTransition = transitioning;
+    transitioning = false;
+    map.stop();
+    // Pausing a flight must still leave the selected category's intended view.
+    // Drift can resume bearing/zoom, but cannot repair an interrupted center.
+    if (finishTransition && styleLoaded && view) map.jumpTo(cameraOf(view));
+  };
   // Ready once a real style has drawn with its tiles settled. `idle` would also
   // wait for the camera to stop, which the drift never does.
   map.on('render', () => { if (!ready && !disposed && styleLoaded && map.loaded()) { ready = true; onReady?.(); } });
@@ -193,8 +200,6 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       // The pending style jumps to this view, and draws its data, when it loads.
     } else {
       drawData();
-      if (reduced || paused || budget.efficient) map.jumpTo(cameraOf(next));
-      else map.flyTo({ ...cameraOf(next), duration: 2200, essential: true });
     }
   };
   return {
@@ -206,8 +211,8 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       // The first view applies at once; later ones wait for the pointer to settle.
       if (!view) apply(next); else settle = setTimeout(() => apply(next), SETTLE_MS);
     },
-    setPaused(value) { if (paused === value) return; paused = value; if (paused) map.stop(); else drift(); },
-    setReduced(value) { if (reduced === value) return; reduced = value; if (reduced) map.stop(); else drift(); },
+    setPaused(value) { if (paused === value) return; paused = value; if (paused) suspend(); else drift(); },
+    setReduced(value) { if (reduced === value) return; reduced = value; if (reduced) suspend(); else drift(); },
     dispose() { disposed = true; clearTimeout(settle); clearInterval(radarTimer); try { map.remove(); } catch { /* Already removed. */ } },
   };
 }

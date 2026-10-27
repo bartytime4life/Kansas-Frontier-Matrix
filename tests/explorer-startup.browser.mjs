@@ -736,13 +736,10 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     };
     await checkLayout('initial');
     if(width===1440){
-      const before=await p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top`);
-      // Native focus may scroll the welcome to reveal the card. Isolate layout
-      // movement here; the real-keyboard journeys separately check scrolling.
       await p.evaluate(`document.querySelector('.topic-weather').focus({preventScroll:true})`);
       await p.wait(`document.querySelector('.welcome-preview-brief h2').textContent===${JSON.stringify(categoryGlimpse('weather').title)}`,'shared brief follows keyboard interest');
-      const after=await p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top`);
-      assert.ok(Math.abs(after-before)<2,'changing a glimpse never shifts the category rows under the pointer');
+      const after=await rowTop();
+      assert.ok(Math.abs(after-before)<2,'changing a glimpse never shifts the category rows under the pointer: '+JSON.stringify({before,after}));
     }
 
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
@@ -798,6 +795,11 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     await p.evaluate(`document.querySelector('.welcome-dialog-body>.welcome-preview-action').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.living-welcome')?.dataset.fullscreen==='true'&&document.activeElement?.matches('.welcome-preview-expand')`,'explicit preview hands focus to Return');
     assert.equal(await p.evaluate(`document.querySelector('.domain-stage').dataset.topic`),'history');
+    const expanded=await p.evaluate(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),grid=root.querySelector('.discovery-field--grouped'),stage=root.querySelector('.domain-stage'),r=stage.getBoundingClientRect(),port=root.getBoundingClientRect();return{hidden:getComputedStyle(grid).display==='none',cards:[...grid.querySelectorAll('button')].filter(button=>button.getClientRects().length>0).length,top:r.top,bottom:r.bottom,portTop:port.top,portBottom:port.bottom};})()`);
+    assert.equal(expanded.hidden,true,'expanded map removes the grouped category overlay');
+    assert.equal(expanded.cards,0,'hidden category buttons have no visible or tabbable boxes');
+    assert.ok(Math.abs(expanded.top-expanded.portTop)<1&&Math.abs(expanded.bottom-expanded.portBottom)<1,'expanded map fills the welcome viewport after opening from a scrolled category: '+JSON.stringify(expanded));
+    if(process.env.KFM_WORKSPACE_SCREENSHOTS){const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-expanded-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
     const previewControls=await p.evaluate(`[...document.querySelectorAll('.welcome-preview-expand,.welcome-preview-pause')].map(button=>{const r=button.getBoundingClientRect();return{text:button.textContent,top:r.top,bottom:r.bottom,left:r.left,right:r.right,width:r.width,height:r.height,hit:button.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2))};})`);
     assert.equal(previewControls.length,2);
     for(const box of previewControls)assert.ok(box.width>0&&box.height>=44&&box.top>=0&&box.bottom<=height&&box.left>=0&&box.right<=width&&box.hit,'Return and Pause keep 44px hit areas and stay visible and operable: '+JSON.stringify(box));
@@ -984,6 +986,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
         node.scrollIntoView({block:'center', inline:'nearest', behavior:'instant'}); node.focus();
       })()`);
       await p.key('Enter', 'Enter', 13);
+      if (title === 'Return to map') await p.wait(`!document.querySelector('.primary-workspace-surface')&&document.querySelector('#map-canvas')?.contains(document.activeElement)`, 'map return focus completes before the next menu action');
     };
     const openMore = async () => {
       if (!await p.evaluate(`document.querySelector('.header-overflow-menu').open`)) {
@@ -1068,7 +1071,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     await openMore();
     await p.evaluate(`document.querySelector('.new-from-map-action').focus()`);
     await p.key('Enter', 'Enter', 13);
-    await p.wait(`document.querySelector('#map-context-card')`, 'explicit composition opened');
+    await p.wait(`document.querySelector('#map-context-card')&&document.activeElement?.matches('[aria-label="Close map context composer"]')`, 'explicit composition opened and its initial focus handoff completed');
     await p.evaluate(`document.querySelector('.map-context-actions button').focus()`);
     await p.key('Enter', 'Enter', 13);
     await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace === 'reports'`, 'fresh report mounted');
