@@ -22,6 +22,22 @@ The same first run also exposed an older source-text assertion coupled to the
 replaced style-key guard. It now checks only the style-loading boundary; the
 existing supersession/retry and new A→B→A tests execute those behaviors instead.
 
+The first slow-network run at `5bdbb193eac9831bc60eff7ed3e562172c1e3b9a`
+observed first content paint near 9.7 seconds and hydration near 15.5 seconds on
+the emulated phone. That journey failed at the undersized Pause control, so it
+is a partial diagnostic, not acceptance. Build inspection found no compressed
+JS/CSS siblings, although the pinned server already negotiates them. The
+existing postbuild asset-staging script now creates deterministic Brotli and
+gzip siblings for hashed JS/CSS of at least 1 KiB, verifies immutable destinations
+and stages those variants with their original files. Only smaller variants are
+kept. Original content and filenames stay unchanged; source datasets, HTML,
+API responses, media and private/reflected content are outside this operation.
+No runtime/dependency replacement or provider/cache-policy change is required.
+Unit checks decode the variants byte-for-byte and exercise repeat/conflict
+handling. The existing real HTTP asset tests now cover Brotli/gzip/identity
+negotiation, exact decoded content, HEAD, Vary and hidden variant URLs. Build-byte
+savings are not substituted for remeasured network, paint or interaction times.
+
 An independent CI job measures the actual built/hydrated application at desktop
 1440×960 and emulated phone 390×844 at 2× density, including 4× CPU slowdown,
 80 ms network latency and 200,000 bytes/second throughput. The phone is also
@@ -55,8 +71,9 @@ in place. The workspace failures remain unresolved evidence until a new run;
 they are not declared inherited or passing. No timeout or functional assertion
 is removed to hide these failures.
 
-Placement remains within existing `app/`, `tests/`, `docs/` and platform
-`.github/workflows/` responsibilities under adopted Directory Rules / ADR-0029.
+Placement remains within existing `app/`, build-owning `scripts/`, `tests/`,
+`docs/`, the existing package manifest and platform `.github/workflows/`
+responsibilities under adopted Directory Rules / ADR-0029.
 No new source, release/proof home, storage format, dependency or host setting is
 introduced. Rollback reverts this follow-up commit. Review and exact-head CI are
 separate from merge, deployment and publication authority.
