@@ -14,7 +14,7 @@ publication_effect: none until reviewed source is separately synchronized
 
 **A living atlas of Kansas. An inspectable path from place to source.**
 
-[Open the Explorer](https://kansasfrontiermatrix.com/) · [Take the moving tour](visual-tour.md) · [Run the program](Getting-Started.md) · [Inspect the test record](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/codex/docs-living-showcase-20261027/docs/reports/documentation-showcase-qualification-20261027.md)
+[Open the Explorer](https://kansasfrontiermatrix.com/) · [Take the moving tour](visual-tour.md) · [Run the program](Getting-Started.md) · [Inspect the test record](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a27c45354b461cd2fd5978efe7a7aacfc5f064ac/docs/reports/documentation-showcase-qualification-20261027.md)
 
 <picture><source media="(prefers-reduced-motion: reduce)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-terrain.jpg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-terrain.webp" alt="Recorded Explorer map tour: Flint Hills elevation relief. Attributed October 20 display; seven-second finite playback." width="100%" /></picture>
 

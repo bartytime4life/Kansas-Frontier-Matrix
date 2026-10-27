@@ -136,7 +136,7 @@ change, capture job, host setting or public deployment was performed.
 
 ## Documentation validation
 
-The final validation record is completed alongside the associated source PR. Existing
+The validation record accompanies the associated source PR. Existing
 validators, not a substitute broad test framework, check local links, metadata and
 wiki projection. External URLs are classified by the local checker; only pinned
 source paths separately inspected in the available local trees count as verified.
@@ -156,8 +156,21 @@ source paths separately inspected in the available local trees count as verified
 - Removed root-heading anchors were checked against repository inbound links;
   no existing inbound root anchor was broken. One wiki recovery anchor was restored
   after the link validator identified its existing builder-profile consumer.
-- Final projection, rendered-page and diff results are recorded by the source PR;
-  native publication remains a separate, unperformed transition.
+- Native wiki operator dry run at source `a27c45354b461cd2fd5978efe7a7aacfc5f064ac`:
+  **exit 0, Outcome: PLANNED**; 12 allowlisted native pages staged, no commit/push.
+  Existing extra native pages were preserved. The final source PR records final-head
+  transport/CI readback; native publication remains unperformed.
+- Changed Markdown H1/fence/final-newline checks and `git diff --check` passed.
+  The media operator's wrong-checkout negative case refused before writing output.
+
+### Rendered source review
+
+The pushed README was opened on GitHub in Chrome. All five hero/gallery images
+reported complete loads with natural dimensions of 960×540, and their visible
+layout and source captions were inspected. GitHub retained the reduced-motion
+`picture` source. This checks the observed desktop source rendering; reduced-motion
+OS playback behavior, mobile rendering and the separate native wiki remain
+unqualified. The wiki projection and its transport state are reported by the PR.
 
 ## Placement and governing material
 

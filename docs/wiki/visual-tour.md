@@ -70,7 +70,7 @@ Open-Meteo NCEP GFS 10 m forecast grid valid October 20. Trail motion is illustr
 | Change time or compare | The period of each source; unavailable coverage must remain unavailable |
 | Ask or export | Interpretive/draft labels, citations, redaction and applicable review boundaries |
 
-This table is an exploration agenda. The [qualification record](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/codex/docs-living-showcase-20261027/docs/reports/documentation-showcase-qualification-20261027.md)
+This table is an exploration agenda. The [qualification record](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a27c45354b461cd2fd5978efe7a7aacfc5f064ac/docs/reports/documentation-showcase-qualification-20261027.md)
 separates exercised behavior from unperformed acceptance.
 
 ## How these visuals were checked

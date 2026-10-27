@@ -25,6 +25,9 @@ related:
   - tests/README.md
 [/KFM_META_BLOCK_V2] -->
 
+# `docs/` — Human-Readable Governance and Explanation Root
+
+
 <p align="center">
   <a href="../README.md#take-the-tour"><img src="brand/readme/kfm-hero.svg" alt="Kansas Frontier Matrix — Place. Time. Evidence. An illustrated Kansas outline with rivers and a time sweep." width="100%" /></a>
 </p>
@@ -99,7 +102,7 @@ The encyclopedia links are draft reference aids; they do not alter the formal la
 
 <a id="top"></a>
 
-# `docs/` — Human-Readable Governance and Explanation Root
+
 
 `docs/` is KFM's canonical human-readable governance and explanation surface. It explains doctrine, decisions, architecture, domain guidance, operations, source use, standards, security, drift, and verification without taking over the machine authority of contracts, schemas, policy, evidence, release objects, or lifecycle data.
 

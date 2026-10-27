@@ -26,7 +26,7 @@ node_modules/.bin/tsc --noEmit
 `npm test` runs the production build and the Node test suite. This session observed
 exit zero, **1,934 passing and 19 skipped tests**, with no failures. TypeScript exited
 zero separately. These counts include nested tests and are the runner's totals,
-not a hand count of test files. [Detailed qualification](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/codex/docs-living-showcase-20261027/docs/reports/documentation-showcase-qualification-20261027.md).
+not a hand count of test files. [Detailed qualification](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a27c45354b461cd2fd5978efe7a7aacfc5f064ac/docs/reports/documentation-showcase-qualification-20261027.md).
 
 ## Match the check to the claim
 

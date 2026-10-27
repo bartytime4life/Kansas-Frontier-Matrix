@@ -26,7 +26,7 @@ publication_effect: none until reviewed source is separately synchronized
 | Browser observation | Public category welcome and water-tour selection inspected in Chrome | Session-limited UI observation; complete tour playback/provider health not certified |
 | Native wiki | Source prepared for reviewed synchronization | A draft PR does not publish the separate wiki |
 
-[Detailed commands, skipped coverage and limits](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/codex/docs-living-showcase-20261027/docs/reports/documentation-showcase-qualification-20261027.md) ·
+[Detailed commands, skipped coverage and limits](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a27c45354b461cd2fd5978efe7a7aacfc5f064ac/docs/reports/documentation-showcase-qualification-20261027.md) ·
 [Application source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/bbcec824fe57e6be0409ba1e35d737fa99581560) · [Media provenance](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/showcase-media.json).
 
 ## What those checks cannot establish
