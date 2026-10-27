@@ -553,7 +553,7 @@
 
 /* One shared glimpse, never nineteen media players. The real map stays central. */
 .living-welcome .welcome-heading-row{grid-template-areas:'hero toolbar' 'hero preview';grid-template-rows:auto 1fr}
-.living-welcome .welcome-preview-brief{grid-area:preview;justify-self:end;align-self:start;width:min(420px,100%);min-height:176px;max-height:240px;overflow:auto;margin:10px 32px 0 0;padding:16px 18px;border:1px solid #8db5c03d;border-radius:12px;background:#082635ed;contain:layout paint}
+.living-welcome .welcome-preview-brief{grid-area:preview;justify-self:end;align-self:start;width:min(420px,100%);height:220px;min-height:0;max-height:220px;overflow:auto;margin:10px 32px 0 0;padding:16px 18px;border:1px solid #8db5c03d;border-radius:12px;background:#082635ed;contain:layout paint}
 .living-welcome .welcome-preview-brief h2{font-size:21px;line-height:1.2;margin:6px 0 8px;color:#f0d59c}
 .living-welcome .welcome-preview-brief p{margin:6px 0;font-size:13px;line-height:1.55;color:#d4e3e8}
 .living-welcome .welcome-preview-brief .welcome-preview-try{color:#a8c6d0;font-size:12px}
@@ -570,3 +570,5 @@
 .living-welcome .capability-preview-play{position:absolute;bottom:10px;left:10px;max-width:calc(100% - 20px);min-height:44px;padding:8px 12px;border:1px solid #cbb57e;border-radius:8px;background:#072635ed;color:#f3d69b;font-size:12px}
 .living-welcome .capability-preview-play:focus-visible{outline:3px solid #f3d69b;outline-offset:3px}
 @media(max-width:1100px){.living-welcome .welcome-heading-row{grid-template-areas:'toolbar' 'hero';grid-template-rows:auto auto}.living-welcome .welcome-preview-brief{display:none}}
+
+.living-welcome .domain-stage[data-state=unavailable] .domain-stage-map{visibility:hidden}

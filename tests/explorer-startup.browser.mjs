@@ -607,6 +607,14 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
       }
     };
     await checkLayout('initial');
+    if(width===1440){
+      const before=await p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top`);
+      await p.evaluate(`document.querySelector('.topic-weather').focus()`);
+      await p.wait(`document.querySelector('.welcome-preview-brief h2').textContent===${JSON.stringify(categoryGlimpse('weather').title)}`,'shared brief follows keyboard interest');
+      const after=await p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top`);
+      assert.ok(Math.abs(after-before)<2,'changing a glimpse never shifts the category rows under the pointer');
+    }
+
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
     await checkCredits('initial license strip');
     await p.wait(`!!document.querySelector('.living-welcome .domain-stage .maplibregl-ctrl-attrib')`,'the live welcome map carries its own provider credits');
