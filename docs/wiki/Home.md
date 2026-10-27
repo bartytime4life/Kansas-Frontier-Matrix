@@ -1,60 +1,56 @@
 <!--
 KFM_WIKI_SOURCE
 page_id: Home
-title: Kansas Frontier Matrix — AI-assisted systems portfolio
-status: source-grounded showcase; independent review pending
-updated: 2026-10-09
+title: Kansas Frontier Matrix — place, time, evidence
+status: source-grounded documentation candidate; independent review pending
+updated: 2026-10-27
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Home.md
-publication_effect: native wiki documentation only; no data admission or release
-evidence_checkpoint: main@459ffbe892929cbe994add8665805549694740b6
+evidence_checkpoint: main@17f106d558674ec92a11809bcf3a06c82453777e; hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
+publication_effect: none until reviewed source is separately synchronized
 -->
-
-<p align="center"><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-hero.svg" alt="Kansas Frontier Matrix. Place. Time. Evidence. An illustrative layered landscape." width="100%" /></p>
 
 # Kansas Frontier Matrix
 
-**A place to explore Kansas. A portfolio of how complex systems get built.**
+**A living atlas of Kansas. An inspectable path from place to source.**
 
-Led by [@bartytime4life](https://github.com/bartytime4life), KFM brings geospatial interfaces, public-source research, data engineering, software verification, and AI-assisted development into one ambitious project. It turns a question about a place into a path through maps, time, source records, and the limits of what those records can explain.
+[Open the Explorer](https://kansasfrontiermatrix.com/) · [Take the moving tour](visual-tour.md) · [Run the program](Getting-Started.md) · [Inspect the test record](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a27c45354b461cd2fd5978efe7a7aacfc5f064ac/docs/reports/documentation-showcase-qualification-20261027.md)
 
-**[Meet the builder](builder-profile.md) · [Take the visual tour](visual-tour.md) · [Inspect the engineering](engineering-case-studies.md)**
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-terrain.jpg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-terrain.webp" alt="Recorded Explorer map tour: Flint Hills elevation relief. Attributed October 20 display; seven-second finite playback." width="100%" /></picture>
 
-<sub>Illustrative artwork throughout this tour, not application screenshots or measured data. [Artwork and attribution](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/README.md).</sub>
+*Recorded Flint Hills renderer tour, October 20. Mixed-source DEM at 1.0× display;
+not a survey or real-time speed recording. [Still](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-terrain.jpg) · [Media lineage](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/README.md#recorded-map-tours--october-27-2026).*
 
-## Three minutes to understand the work
+## Choose a way in
 
-| Start with… | What you will see | Why it matters |
-|---|---|---|
-| **01 · Product judgment** | [Builder profile](builder-profile.md): the problem, the decisions, and the human–AI workflow | Turning an open-ended idea into an inspectable product |
-| **02 · Experience design** | [Visual tour](visual-tour.md): surface, subsurface, historical comparison, and evidence | Making a complex domain understandable without concealing uncertainty |
-| **03 · Engineering depth** | [Case studies](engineering-case-studies.md): implementation choices, failure modes, and tests | Connecting a polished interface to behavior that can be checked |
+| You are here to… | Start here |
+|---|---|
+| Experience the map | [Visual Tour](visual-tour.md): terrain, water, aquifers, history and forecast wind |
+| Understand what has been demonstrated | [Project Status](Project-Status.md): exact source, performed tests and remaining checks |
+| Build or contribute | [Getting Started](Getting-Started.md) → [Development and Validation](Development-and-Validation.md) |
+| Evaluate the work | [Builder profile](builder-profile.md) → [Engineering case studies](engineering-case-studies.md) |
+| Inspect the trust model | [Governance and Evidence](Governance-and-Evidence.md) → [Data Lifecycle](Data-Lifecycle.md) |
 
-## One project, several kinds of craft
+## The current experience
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-explorer-walkthrough-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-explorer-walkthrough.svg" alt="Illustrative Explorer journey linking a map investigation to time controls and source evidence." width="100%" /></picture>
+The public welcome was inspected October 27: a real-map starting screen, nineteen
+categories, place search and source-aware category details. The water dialog exposed
+the Kansas River valley and Tuttle Creek tours with their source limits. This is a
+bounded Chrome observation; it does not certify every provider, device or interaction.
 
-**Design for investigation.** Begin with an area or question, reveal the relevant controls, and keep source context close to the visual result. KFM's Explorer includes recorded-column inspection, comparison views, saved investigations, and report workflows in its public source mirror.
+The public Node application is a separate source tree from this monorepo and the
+preserved Sites mirror. This edition built and tested hosted source
+[`bbcec824`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/bbcec824fe57e6be0409ba1e35d737fa99581560): **1,934 passed, 19 skipped, zero failed**;
+TypeScript passed separately. [Read exactly what that covers](Project-Status.md).
 
-**Engineer the boundaries.** Missing years stay missing. A borehole remains a record with its own depth reference. An interrupted request must not repaint a newer investigation. Exported context must respect location privacy. These are product behaviors with corresponding implementation and tests, explored in the [case studies](engineering-case-studies.md).
+## Explore, then inspect
 
-**Use AI with accountability.** Human direction sets the questions and constraints; AI supports research synthesis, design, implementation, documentation, and regression work. Git history, source-linked explanations, and generated-work receipts make the resulting artifacts reviewable. [How the work is organized](builder-profile.md#how-human-direction-and-ai-work-together).
+A compelling display should make the next question easier: Which source? Which time?
+What does this view support? KFM keeps external context, source observations, model
+guidance, AI discussion and governed releases distinct. Maps and language are carriers.
+They cannot perform source admission, policy review or publication by themselves.
 
-## What you can inspect today
+[Architecture](Architecture.md) · [Domains](Domains.md) · [Repository Map](Repository-Map.md) · [Security and Sensitivity](Security-and-Sensitivity.md)
 
-| Surface | What is available | Status boundary |
-|---|---|---|
-| Public engineering portfolio | This wiki, repository source, feature guides, tests, and change history | Publicly inspectable implementation and documentation |
-| Explorer application | React/TypeScript, MapLibre, Three.js, Worker routes, and local operation in [the Site source mirror](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/apps/site/source/README.md) | Runnable source; deployment and device acceptance are separate checks |
-| Hosted Explorer | An owner-private Site; access metadata checked October 9, 2026 | A private demonstration, not an open public demo |
-| Governed evidence services | [Explicit API contracts and scaffold boundaries](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/apps/governed-api/README.md) | The general governed API remains a bounded scaffold; an active real-data release is not claimed |
-
-This edition links implementation evidence to [repository snapshot `459ffbe89292`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/README.md) (October 9, 2026). A source link shows what was present at that revision. It does not certify an entire system, every browser, or a released dataset.
-
-## Go deeper
-
-[Getting started](Getting-Started.md) · [Architecture](Architecture.md) · [Domains](Domains.md) · [Data lifecycle](Data-Lifecycle.md) · [Security and sensitivity](Security-and-Sensitivity.md) · [Project status](Project-Status.md)
-
-**Evaluating the builder?** Start with [three engineering conversations](builder-profile.md#three-conversations-worth-having), then inspect the matching code. The [GitHub profile](https://github.com/bartytime4life) is the public point of reference for the project owner.
-
-> **Evidence standard:** This wiki explains the work. Repository evidence, adopted doctrine, and accountable review remain authoritative. Map display, AI output, tests, deployment, and data release each support different claims.
+This is a reviewable orientation source. The native wiki is updated separately after
+source review; older technical pages retain their stated historical checkpoints.

@@ -1,0 +1,195 @@
+{
+  "receipt_id": "genrec-docs-recorded-showcase-20261027",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md",
+    "docs/README.md",
+    "docs/brand/readme/README.md",
+    "docs/brand/readme/kfm-tour-groundwater.jpg",
+    "docs/brand/readme/kfm-tour-groundwater.webp",
+    "docs/brand/readme/kfm-tour-history.jpg",
+    "docs/brand/readme/kfm-tour-history.webp",
+    "docs/brand/readme/kfm-tour-terrain.jpg",
+    "docs/brand/readme/kfm-tour-terrain.webp",
+    "docs/brand/readme/kfm-tour-water.jpg",
+    "docs/brand/readme/kfm-tour-water.webp",
+    "docs/brand/readme/kfm-tour-wind.jpg",
+    "docs/brand/readme/kfm-tour-wind.webp",
+    "docs/brand/readme/showcase-media.json",
+    "docs/reports/documentation-showcase-qualification-20261027.md",
+    "docs/wiki/Development-and-Validation.md",
+    "docs/wiki/Getting-Started.md",
+    "docs/wiki/Home.md",
+    "docs/wiki/Map-UI-and-AI.md",
+    "docs/wiki/Project-Status.md",
+    "docs/wiki/README.md",
+    "docs/wiki/_Footer.md",
+    "docs/wiki/_Sidebar.md",
+    "docs/wiki/visual-tour.md",
+    "tools/docs/build_showcase_media.py"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:36e600c411b683618c26aa169d3fc4e8f9e1cb764ed2eae2a35c42ee9a52735f",
+    "docs/README.md": "sha256:a97e492b0cfba9a6b5d0e2db2ab6d21f4938136aa9bd93fe0e6a1b1a698c7976",
+    "docs/brand/readme/README.md": "sha256:9a5b0b0c5a4b7abfaf0623dcedfcd4c29966698dfa0577a5a38afbcaf8bde064",
+    "docs/brand/readme/kfm-tour-groundwater.jpg": "sha256:64787a7999f73f759b2d8a589e515ac8f03827db0a0bd5ebe90290c637f79648",
+    "docs/brand/readme/kfm-tour-groundwater.webp": "sha256:a36fcb98ea019fb25c1bce161ae687c11a15f27a8115bf5738c3bbed81f557f7",
+    "docs/brand/readme/kfm-tour-history.jpg": "sha256:23c188ac2cb8d916ace6f5488306ab64135972f2036c35c6a20a24f285d3c46b",
+    "docs/brand/readme/kfm-tour-history.webp": "sha256:6514f88eb3cf4ba11fac00a4e0a6096edd8f29bf1b19c43416e628a70464828a",
+    "docs/brand/readme/kfm-tour-terrain.jpg": "sha256:35e1e46a7c1440e0062617d051db3a4128597c1eeb2c49eea99bd606349fe6ee",
+    "docs/brand/readme/kfm-tour-terrain.webp": "sha256:caa67e17874fb3c234dfb052f64df668eaf0c66ead4e1ffcb27adf8f7291a5d5",
+    "docs/brand/readme/kfm-tour-water.jpg": "sha256:76200186b8448d3be2a9722eb946fa715d523cbb8874efac9d5f78f09c5f6bc3",
+    "docs/brand/readme/kfm-tour-water.webp": "sha256:7b1010c2874df25987de9ea2d893726f11ea6da07987313b16744b7399a07cb5",
+    "docs/brand/readme/kfm-tour-wind.jpg": "sha256:af8626b6203ca0e80c43df282eb01bc7119b025e379715b35f446be4a377c46e",
+    "docs/brand/readme/kfm-tour-wind.webp": "sha256:b521d666fbe17c6f12c6c7752265aa6a07c346330eaa6a39690d8f9b12aa64c2",
+    "docs/brand/readme/showcase-media.json": "sha256:684ff69a8efd0de10461f21f3c7ffff41025f6c181b426c13980552ae053c5fe",
+    "docs/reports/documentation-showcase-qualification-20261027.md": "sha256:f648f7159656dc332c205dcc810893d3e199fea95ec69e07ff4f3c1bf12c1cdf",
+    "docs/wiki/Development-and-Validation.md": "sha256:9dfea345b20e68f2de208cf88f8881c9d381a08787c9e9fa267b65de49f2a8da",
+    "docs/wiki/Getting-Started.md": "sha256:ba16776d1b297dec0192d658cf6d17c8797bdcec34cd2f5de3dda405458c5c80",
+    "docs/wiki/Home.md": "sha256:7dc35cd2d13c4e656e175dc9b04ecb8f03c09fb51b2166631e7b8947f7bcf78b",
+    "docs/wiki/Map-UI-and-AI.md": "sha256:1f04766e5ef18a25f4cd963f8b0af173291408bc4146b9edf928a57704ff68d1",
+    "docs/wiki/Project-Status.md": "sha256:c1cf3a9a883174d417f864082fe81468f5176caf37402503ca9709f87d7f1f12",
+    "docs/wiki/README.md": "sha256:51679e4efb6fbbbb311a041b4f66f358d26a5b1651ce7fb6eb5f978462a21c15",
+    "docs/wiki/_Footer.md": "sha256:56ae5f7aece55ba0cb7a7492d0827eca3dd1ff31712aae9ac3cfa0e03df27c1a",
+    "docs/wiki/_Sidebar.md": "sha256:475014bef7b4731f5fc6ee2f2b9be58b15316ef3289462e0504937e25dbc55e9",
+    "docs/wiki/visual-tour.md": "sha256:cf096635f2b106ce5edeab59ea487c977a7cee632f2b3d6604972f418e93990f",
+    "tools/docs/build_showcase_media.py": "sha256:c8f75b94679bc1786cb793c60cb59719e1a84baa58baa2a8a4e5e2f6f00e2628"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "session model family; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:6606b618c355c997da6a284a6602aad83659a67bfd04263da5c5c5f6c6d68510",
+  "parameters": {
+    "temperature": null,
+    "seed": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:17f106d558674ec92a11809bcf3a06c82453777e",
+      "git:bbcec824fe57e6be0409ba1e35d737fa99581560",
+      "git:974d3b340e619effc91d8da98cf9e67d95119df9",
+      "wiki:8e42e354a2c74bb31a5397d6c06caf81ba545953",
+      "git:a27c45354b461cd2fd5978efe7a7aacfc5f064ac"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "PROPOSED",
+    "docs/README.md": "PROPOSED",
+    "docs/brand/readme/README.md": "PROPOSED",
+    "docs/brand/readme/kfm-tour-groundwater.jpg": "PROPOSED",
+    "docs/brand/readme/kfm-tour-groundwater.webp": "PROPOSED",
+    "docs/brand/readme/kfm-tour-history.jpg": "PROPOSED",
+    "docs/brand/readme/kfm-tour-history.webp": "PROPOSED",
+    "docs/brand/readme/kfm-tour-terrain.jpg": "PROPOSED",
+    "docs/brand/readme/kfm-tour-terrain.webp": "PROPOSED",
+    "docs/brand/readme/kfm-tour-water.jpg": "PROPOSED",
+    "docs/brand/readme/kfm-tour-water.webp": "PROPOSED",
+    "docs/brand/readme/kfm-tour-wind.jpg": "PROPOSED",
+    "docs/brand/readme/kfm-tour-wind.webp": "PROPOSED",
+    "docs/brand/readme/showcase-media.json": "PROPOSED",
+    "docs/reports/documentation-showcase-qualification-20261027.md": "PROPOSED",
+    "docs/wiki/Development-and-Validation.md": "PROPOSED",
+    "docs/wiki/Getting-Started.md": "PROPOSED",
+    "docs/wiki/Home.md": "PROPOSED",
+    "docs/wiki/Map-UI-and-AI.md": "PROPOSED",
+    "docs/wiki/Project-Status.md": "PROPOSED",
+    "docs/wiki/README.md": "PROPOSED",
+    "docs/wiki/_Footer.md": "PROPOSED",
+    "docs/wiki/_Sidebar.md": "PROPOSED",
+    "docs/wiki/visual-tour.md": "PROPOSED",
+    "tools/docs/build_showcase_media.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-application-install-build-tests",
+      "outcome": "PASS",
+      "reason": "bbcec824fe57e6be0409ba1e35d737fa99581560; exact-lock npm ci; npm test exit 0; 1934 pass, 19 skip, 0 fail. No live provider, MySQL or hosted inference certification."
+    },
+    {
+      "gate": "pinned-application-types",
+      "outcome": "PASS",
+      "reason": "bbcec824fe57e6be0409ba1e35d737fa99581560; node_modules/.bin/tsc --noEmit exit 0."
+    },
+    {
+      "gate": "wiki-sync-contract",
+      "outcome": "PASS",
+      "reason": "9 focused tests including executable PowerShell route projection."
+    },
+    {
+      "gate": "local-links",
+      "outcome": "PASS",
+      "reason": "24 documents and 772 local targets; external URLs remain outside the local checker."
+    },
+    {
+      "gate": "metadata",
+      "outcome": "PASS",
+      "reason": "5 valid v2 blocks, zero warnings/failures in profile present; 19 legacy wiki source comments not v2 blocks."
+    },
+    {
+      "gate": "documentation-graph",
+      "outcome": "PASS",
+      "reason": "24 reachable documents; zero orphan/unreachable documents or findings in selected scope."
+    },
+    {
+      "gate": "pinned-path-inspection",
+      "outcome": "PASS",
+      "reason": "31 unique target paths checked in three exact source/media Git trees."
+    },
+    {
+      "gate": "media",
+      "outcome": "PASS",
+      "reason": "5 pinned source hashes, complete capture metadata, output SHA-256, finite one-play motion, 7000ms duration and 960x540 dimensions checked; first/mid/end reviewed."
+    },
+    {
+      "gate": "browser-source-rendering",
+      "outcome": "PASS",
+      "reason": "GitHub README and Visual Tour images loaded at 960x540 in Chrome; source captions/layout inspected and reduced-motion picture source preserved. OS motion preference and mobile not tested."
+    },
+    {
+      "gate": "wiki-native-plan",
+      "outcome": "PASS",
+      "reason": "Operator dry run a27c45354b461cd2fd5978efe7a7aacfc5f064ac exit 0, PLANNED; 12 allowlisted staged pages; no native commit/push."
+    },
+    {
+      "gate": "self-review-and-format",
+      "outcome": "PASS",
+      "reason": "Bounded source/claim/path/media/public-safety self-review and changed Markdown/diff checks; independent review remains pending."
+    },
+    {
+      "gate": "native-wiki-publication",
+      "outcome": "SKIPPED",
+      "reason": "Existing docs/wiki source contract requires source review/merge before separate native synchronization."
+    },
+    {
+      "gate": "security-scan-production-and-scientific-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Security Cloud opened without scan evidence; no new scan, deployment, source admission, live AI, production performance, scientific or release certification."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "placement",
+      "validated": true,
+      "evidence_ref": "git:17f106d558674ec92a11809bcf3a06c82453777e:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "wiki-source",
+      "validated": true,
+      "evidence_ref": "git:17f106d558674ec92a11809bcf3a06c82453777e:docs/wiki/README.md"
+    },
+    {
+      "id": "source-tour-provenance",
+      "validated": true,
+      "evidence_ref": "git:bbcec824fe57e6be0409ba1e35d737fa99581560:scripts/welcome-demos/runtime-assets.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-27T18:42:17.600521+00:00",
+  "emitter": "Codex",
+  "notes": "Reviewable documentation and existing attributed display-media derivatives only. No independent approval, native wiki push, main merge, deployment, settings/access change, source admission, lifecycle promotion or governed publication. Revert source commits to recover. The input request hash normalizes whitespace in the user request and excludes plugin mention markup."
+}

@@ -4,13 +4,15 @@ page_id: _Footer
 title: Kansas Frontier Matrix Wiki Footer
 version: v0.2.0
 status: PROPOSED wiki source; review required
-updated: 2026-10-09
+updated: 2026-10-27
 authority: navigation-and-authority reminder only; canonical repository evidence and adopted KFM authority outrank this page
 source_path: docs/wiki/_Footer.md
 publication_effect: none until separately synchronized to the native GitHub Wiki
 -->
 
 ---
+
+[Open the Explorer](https://kansasfrontiermatrix.com/) · [Recorded visual tour](visual-tour.md)
 
 **Kansas Frontier Matrix** — *Governed spatial evidence for Kansas.*
 

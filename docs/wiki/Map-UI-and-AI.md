@@ -14,6 +14,22 @@ publication_effect: native wiki documentation only; no application deployment or
 
 # Map, UI, and AI
 
+## Current public application · October 27, 2026
+
+Use [the public Node composition](https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/bbcec824fe57e6be0409ba1e35d737fa99581560) for today's Explorer,
+map controls and server-mediated AI. The [moving tour](visual-tour.md) shows dated
+renderer output; [Project Status](Project-Status.md) gives the actual build/test scope.
+The [public AI guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/docs/public-hosted-ai.md) describes anonymous discussion,
+source context, configured inference and explicit unverified interpretation. This
+session did not qualify the current live model, worker or answer quality.
+
+The October 9 material below is historical Sites-lineage orientation. Its private
+Site metadata and local bridge descriptions do not establish today's public Node
+behavior. Keep its original source identities when using it as historical evidence.
+
+<details>
+<summary>Historical October 9 reference</summary>
+
 ## From interaction to evidence
 
 **Design the investigation around place, time, and the selected source.**
@@ -708,5 +724,7 @@ A source-only change to this page:
 For projection and rollback procedure, read [Wiki Maintenance](Wiki-Maintenance.md).
 
 [Back to top](#top)
+
+</details>
 
 </details>

@@ -9,7 +9,7 @@ owners:
   - "@bartytime4life"
 created: 2026-08-08
 created_note: "2026-08-08 identifies the same-path root-README modernization revision recorded under Evidence review and triggers below, not the file's original repository-backed creation provenance, which predates this modernization and is outside this shallow-clone repository's available Git history."
-updated: 2026-10-21
+updated: 2026-10-27
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Define the docs/ responsibility boundary, navigation contract, exposure posture, validation expectations, and relationships to KFM authority roots."
@@ -24,6 +24,9 @@ related:
   - policy/README.md
   - tests/README.md
 [/KFM_META_BLOCK_V2] -->
+
+# `docs/` — Human-Readable Governance and Explanation Root
+
 
 <p align="center">
   <a href="../README.md#take-the-tour"><img src="brand/readme/kfm-hero.svg" alt="Kansas Frontier Matrix — Place. Time. Evidence. An illustrated Kansas outline with rivers and a time sweep." width="100%" /></a>
@@ -50,6 +53,20 @@ related:
 <sub>Illustrations, not screenshots or data products — see <a href="brand/readme/README.md">README artwork</a>.</sub>
 
 <a id="practical-reading-routes--2026-10-08"></a>
+
+## Explore the current program · October 27, 2026
+
+[![Recorded Flint Hills terrain display](brand/readme/kfm-tour-terrain.jpg)](brand/readme/kfm-tour-terrain.webp)
+
+**Start with the map. Follow the source. Check the result.**
+
+[Moving visual tour](wiki/visual-tour.md) · [Public app or monorepo?](../README.md#which-source-should-i-use) ·
+[Performed tests](reports/documentation-showcase-qualification-20261027.md) · [Build and contribute](wiki/Getting-Started.md)
+
+The picture is a dated Explorer renderer capture, with a finite animated version on
+selection. It is not a live view or measured application performance. Public Node,
+monorepo and preserved Sites checks have separate identities; this edition's
+qualification record keeps them separate. Earlier routes below retain their dates.
 
 ## Practical reading routes — 2026-10-21
 
@@ -85,7 +102,7 @@ The encyclopedia links are draft reference aids; they do not alter the formal la
 
 <a id="top"></a>
 
-# `docs/` — Human-Readable Governance and Explanation Root
+
 
 `docs/` is KFM's canonical human-readable governance and explanation surface. It explains doctrine, decisions, architecture, domain guidance, operations, source use, standards, security, drift, and verification without taking over the machine authority of contracts, schemas, policy, evidence, release objects, or lifecycle data.
 

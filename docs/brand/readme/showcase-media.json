@@ -1,0 +1,151 @@
+{
+  "kind": "documentation-display-derivative",
+  "authority": "NONE",
+  "sourceCommit": "bbcec824fe57e6be0409ba1e35d737fa99581560",
+  "live": false,
+  "method": "Existing rendered map tours; rescale and sample only. No new map data or frame interpolation.",
+  "toolVersions": {
+    "pillow": "12.3.0",
+    "ffmpeg": "7.0.2-static"
+  },
+  "files": [
+    {
+      "name": "water",
+      "sourceId": "rivers-2",
+      "sourcePath": "public/welcome/demos/rivers-2.webm",
+      "sourceSha256": "1362f1cd4aae6223058c98dd1fd4677b5ed30e421fada3ab8bdfed510ee11ac3",
+      "capturedAt": "2026-10-20T23:02:22.465Z",
+      "sourceTimes": [
+        "USGS 3D Hydrography Program \u00b7 Mapzen mixed-source display DEM"
+      ],
+      "attribution": [
+        "Tiles \u00a9 Esri",
+        "Terrain Tiles \u00b7 Mapzen \u00b7 AWS Open Data",
+        "USGS The National Map \u00b7 3D Hydrography Program"
+      ],
+      "limitation": "Mixed-date imagery, DEM and mapped waterbodies. 1.0\u00d7 terrain display; not current water level, discharge, flood extent or lake-bed depth.",
+      "captureWallSeconds": 131.103,
+      "animation": "kfm-tour-water.webp",
+      "animationSha256": "7b1010c2874df25987de9ea2d893726f11ea6da07987313b16744b7399a07cb5",
+      "bytes": 3639098,
+      "poster": "kfm-tour-water.jpg",
+      "posterSha256": "76200186b8448d3be2a9722eb946fa715d523cbb8874efac9d5f78f09c5f6bc3",
+      "width": 960,
+      "height": 540,
+      "durationMs": 7000,
+      "playCount": 1,
+      "encodedFrames": 45,
+      "distinctDecodedFrames": 45
+    },
+    {
+      "name": "terrain",
+      "sourceId": "science-1",
+      "sourcePath": "public/welcome/demos/science-1.webm",
+      "sourceSha256": "dd9da6c64ce5b55ae970be943b03ee361f604d8521ea5a0b9ef2f692dfd7635d",
+      "capturedAt": "2026-10-20T22:23:09.344Z",
+      "sourceTimes": [
+        "Mapzen Terrarium \u00b7 mixed-source display DEM"
+      ],
+      "attribution": [
+        "Tiles \u00a9 Esri",
+        "Terrain Tiles \u00b7 Mapzen \u00b7 AWS Open Data"
+      ],
+      "limitation": "Source-dependent elevation mosaic. 1.0\u00d7 vertical display; not a survey or a dated landform change.",
+      "captureWallSeconds": 124.69469999998807,
+      "animation": "kfm-tour-terrain.webp",
+      "animationSha256": "caa67e17874fb3c234dfb052f64df668eaf0c66ead4e1ffcb27adf8f7291a5d5",
+      "bytes": 1843200,
+      "poster": "kfm-tour-terrain.jpg",
+      "posterSha256": "35e1e46a7c1440e0062617d051db3a4128597c1eeb2c49eea99bd606349fe6ee",
+      "width": 960,
+      "height": 540,
+      "durationMs": 7000,
+      "playCount": 1,
+      "encodedFrames": 47,
+      "distinctDecodedFrames": 47
+    },
+    {
+      "name": "groundwater",
+      "sourceId": "underground-2",
+      "sourcePath": "public/welcome/demos/underground-2.webm",
+      "sourceSha256": "acdb51c02098fdeaa4235f49f08fd3047b0ce3f9a559077f536c2ab072de0234",
+      "capturedAt": "2026-10-20T22:42:34.808Z",
+      "sourceTimes": [
+        "KGS High Plains Atlas \u00b7 2022\u20132024 \u00b7 retrieved 2026-10-04"
+      ],
+      "attribution": [
+        "Tiles \u00a9 Esri",
+        "Kansas Geological Survey \u00b7 High Plains Aquifer Atlas",
+        "Kansas Geological Survey \u00b7 High Plains Aquifer Atlas"
+      ],
+      "limitation": "Regional classified estimates, not present conditions or parcel measurements. Monitoring locations do not include water-level readings.",
+      "captureWallSeconds": 122.01469999998808,
+      "animation": "kfm-tour-groundwater.webp",
+      "animationSha256": "a36fcb98ea019fb25c1bce161ae687c11a15f27a8115bf5738c3bbed81f557f7",
+      "bytes": 3161356,
+      "poster": "kfm-tour-groundwater.jpg",
+      "posterSha256": "64787a7999f73f759b2d8a589e515ac8f03827db0a0bd5ebe90290c637f79648",
+      "width": 960,
+      "height": 540,
+      "durationMs": 7000,
+      "playCount": 1,
+      "encodedFrames": 45,
+      "distinctDecodedFrames": 45
+    },
+    {
+      "name": "history",
+      "sourceId": "history-1",
+      "sourcePath": "public/welcome/demos/history-1.webm",
+      "sourceSha256": "a7be2b67e62b357f981e89dfa8efda2fb85bdd43ea173013954f952221ba3a72",
+      "capturedAt": "2026-10-20T23:01:32.520Z",
+      "sourceTimes": [
+        "KDOT \u00b7 digitized 1918 named routes \u00b7 modern imagery background"
+      ],
+      "attribution": [
+        "Tiles \u00a9 Esri",
+        "Kansas Department of Transportation (KDOT)"
+      ],
+      "limitation": "Modern imagery is not the 1918 landscape. Approximate route digitization; not exact alignment, ownership or today\u2019s road conditions.",
+      "captureWallSeconds": 80.20040000000596,
+      "animation": "kfm-tour-history.webp",
+      "animationSha256": "6514f88eb3cf4ba11fac00a4e0a6096edd8f29bf1b19c43416e628a70464828a",
+      "bytes": 2276006,
+      "poster": "kfm-tour-history.jpg",
+      "posterSha256": "23c188ac2cb8d916ace6f5488306ab64135972f2036c35c6a20a24f285d3c46b",
+      "width": 960,
+      "height": 540,
+      "durationMs": 7000,
+      "playCount": 1,
+      "encodedFrames": 48,
+      "distinctDecodedFrames": 48
+    },
+    {
+      "name": "wind",
+      "sourceId": "weather-2",
+      "sourcePath": "public/welcome/demos/weather-2.webm",
+      "sourceSha256": "4ac234c3901a8fb9ff15b6f5c9a3d89348d2160092814d5504884a2ce41d4c37",
+      "capturedAt": "2026-10-20T22:16:47.153Z",
+      "sourceTimes": [
+        "Open-Meteo NCEP GFS \u00b7 10 m forecast \u00b7 valid 2026-10-20T22:00:00.000Z",
+        "Retrieved 2026-10-20T22:16:42.593Z"
+      ],
+      "attribution": [
+        "Tiles \u00a9 Esri",
+        "Open-Meteo \u00b7 NCEP GFS"
+      ],
+      "limitation": "10 m forecast model on a bounded 16-sample grid; trail motion is illustrative, not measured wind parcels.",
+      "captureWallSeconds": 362.25859999999403,
+      "animation": "kfm-tour-wind.webp",
+      "animationSha256": "b521d666fbe17c6f12c6c7752265aa6a07c346330eaa6a39690d8f9b12aa64c2",
+      "bytes": 637296,
+      "poster": "kfm-tour-wind.jpg",
+      "posterSha256": "af8626b6203ca0e80c43df282eb01bc7119b025e379715b35f446be4a377c46e",
+      "width": 960,
+      "height": 540,
+      "durationMs": 7000,
+      "playCount": 1,
+      "encodedFrames": 43,
+      "distinctDecodedFrames": 43
+    }
+  ]
+}

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/wiki-source/readme
 title: docs/wiki — GitHub Wiki Source Set
 type: readme
-version: v0.2.0
+version: v0.3.0
 status: proposed; review-required; not-native-wiki-published
 owners: ["@bartytime4life"]
 created: 2026-08-07
-updated: 2026-10-09
+updated: 2026-10-27
 policy_label: public-documentation
 current_path: docs/wiki/README.md
 owning_root: docs/
@@ -94,6 +94,17 @@ Wiki pages use KFM's core truth labels:
 | `UNKNOWN` | Available evidence is insufficient |
 | `NEEDS VERIFICATION` | A concrete check remains before the claim can be relied upon |
 
+## October 27 reader refresh
+
+Home, Getting Started, Visual Tour, Project Status and Development and Validation
+now distinguish the public Node composition from the preserved Sites lineage.
+Five attributed map-tour derivatives replace illustration-only demonstrations at
+the front door. The root qualification report records the tests performed in this
+session. Older technical pages retain their historical source scopes.
+
+Source must complete its normal repository review before native synchronization.
+This change prepares the source and projection; it does not push the native wiki.
+
 ## October 9 technical reading paths
 
 The portfolio now leads into thirteen refreshed technical-reference introductions.
@@ -113,7 +124,7 @@ unchanged by this documentation edition.
 | Source page | Purpose |
 |---|---|
 | [`builder-profile.md`](builder-profile.md) | Recruiter-facing capabilities and AI-assisted workflow |
-| [`visual-tour.md`](visual-tour.md) | Illustrated product journey, with source links and artwork labels |
+| [`visual-tour.md`](visual-tour.md) | Recorded renderer tours, source hashes, clocks and limitations |
 | [`engineering-case-studies.md`](engineering-case-studies.md) | Implementation decisions and commit-pinned regression evidence |
 
 ### Orientation
