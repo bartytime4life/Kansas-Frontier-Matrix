@@ -2,14 +2,14 @@
 doc_id: kfm://doc/brand/readme-artwork
 title: docs/brand/readme — README artwork
 type: readme
-version: v1.4
+version: v1.5
 status: draft
 owners: ["@bartytime4life"]
 created: 2026-10-08
-updated: 2026-10-08
+updated: 2026-10-27
 policy_label: public
 owning_root: docs/
-responsibility: "Human-facing record of the illustrative SVG artwork used by the root README and docs landing page; not map product, evidence, policy, review, release, or publication authority."
+responsibility: "Human-facing inventory of illustrative SVG artwork and separately attributed recorded map-tour derivatives; not map product, evidence, policy, review, release, or publication authority."
 truth_posture: CONFIRMED asset inventory, counted figures and accessibility treatment in this directory / PROPOSED palette tokens inherited from docs/brand/visual-language.md
 related:
   - README.md
@@ -22,12 +22,57 @@ related:
   - docs/brand/visual-language.md
 [/KFM_META_BLOCK_V2] -->
 
-# README artwork
+# README visuals
 
 Illustrative, animated SVG artwork for the repository's front doors: the [root README](../../../README.md), the [docs landing page](../../README.md), the [Explorer README](../../../apps/site/README.md), the [connectors README](../../../connectors/README.md) and the [contribution guide](../../../CONTRIBUTING.md).
 
 > [!IMPORTANT]
-> **These images are artwork, not data.** They depict the *kind* of experience an Explorer workspace offers. They are not screenshots, map products, data displays, acceptance evidence, or released KFM layers. Kansas outlines and rivers are hand-simplified; grids, echoes, columns and curves are invented for illustration. Numbers that appear (for example the Underground record counts) are quoted from the linked Site guides at the README's evidence commit and are labelled there.
+> **The legacy SVG images below are artwork, not data.** They depict the *kind* of experience an Explorer workspace offers. They are not screenshots, map products, data displays, acceptance evidence, or released KFM layers. Kansas outlines and rivers are hand-simplified; grids, echoes, columns and curves are invented for illustration. Numbers that appear (for example the Underground record counts) are quoted from the linked Site guides at the README's evidence commit and are labelled there.
+
+## Recorded map tours · October 27, 2026
+
+`kfm-tour-*.webp` and their JPEG posters are **derivatives of existing rendered
+Explorer map tours**, recorded October 20, 2026. They retain burned-in attribution,
+source clocks and limitations. They are separate from the illustrative SVG gallery.
+They show actual renderer output, with interpolated camera poses and illustrative
+wind trails, not real-time application speed, live observations or released KFM data.
+
+| Preview | Recorded display | Essential limit |
+|---|---|---|
+| [Terrain](kfm-tour-terrain.webp) · [still](kfm-tour-terrain.jpg) | Flint Hills elevation relief | Mixed-source DEM; 1.0× vertical display; not a survey |
+| [Water](kfm-tour-water.webp) · [still](kfm-tour-water.jpg) | Tuttle Creek terrain and mapped hydrography | No present level, discharge, flood extent or lake-bed depth |
+| [Groundwater](kfm-tour-groundwater.webp) · [still](kfm-tour-groundwater.jpg) | KGS High Plains classified saturated thickness | 2022–2024 regional estimates; no parcel measurement |
+| [History](kfm-tour-history.webp) · [still](kfm-tour-history.jpg) | Digitized 1918 road routes on modern imagery | Modern background; approximate route alignment |
+| [Wind](kfm-tour-wind.webp) · [still](kfm-tour-wind.jpg) | Forecast-grid-driven trails | October 20 forecast; trails are not measured air parcels |
+
+[showcase-media.json](showcase-media.json) records exact source/delivery SHA-256,
+capture timestamps, original attribution, source limitations, dimensions and playback
+checks. Its role is derivative traceability, not a new evidence or proof store.
+Source is pinned to hosted application `bbcec824fe57e6be0409ba1e35d737fa99581560`;
+the [original manifest](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/scripts/welcome-demos/runtime-assets.json)
+and [capture method](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/scripts/welcome-demos/README.md)
+remain inspectable. Data imagery stays under the named providers' terms; Apache-2.0
+for KFM code does not relicense provider pixels. These documentation excerpts reuse
+the existing attributed project tours; broader reuse or rights clearance is not certified.
+
+Each preview is 960×540, sampled at 8 fps, seven seconds and **one play**. No frame
+interpolation or new map values are added. Root and wiki pages use one motion hero,
+JPEG gallery links and a `prefers-reduced-motion` still source. GitHub controls image
+caching and sanitization; a still link is always available. Inline image behavior is
+not a measured page-load or application performance improvement.
+
+To reproduce with Python, Pillow and imageio-ffmpeg installed in an operator environment:
+
+```bash
+python tools/docs/build_showcase_media.py \
+  --app-checkout /path/to/pinned-hosted-checkout \
+  --output docs/brand/readme
+```
+
+The builder refuses a different checkout SHA, mismatched source hash or incomplete
+capture. It reopens every output to check duration, finite playback, native dimensions
+and distinct decoded frames. Encoder/library versions are retained in the manifest;
+byte-identical output across different versions is not claimed.
 
 ## Gallery
 
