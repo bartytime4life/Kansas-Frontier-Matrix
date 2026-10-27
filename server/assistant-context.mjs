@@ -25,8 +25,8 @@ export function validAssistantContext(value){
  if(s.kind==='display')return shape(s,['kind','title','source','description','time'])&&text(s.title,240)&&text(s.source,160)&&text(s.description,600)&&text(s.time,160);
  return false;
 }
-/** @param {{catalog?:(selector:any)=>any,knowledge?:(selector:any)=>any,layers?:(ids:string[])=>string[],publicRoot?:string}} options */
-export function createAssistantContextResolver({catalog=()=>null,knowledge=()=>null,layers=()=>[],publicRoot=resolve('public')}={}){
+/** @param {{catalog?:(selector:any)=>any,knowledge?:(selector:any)=>any,layers?:(ids:string[])=>string[],publicRoot?:string,now?:()=>Date}} options */
+export function createAssistantContextResolver({catalog=()=>null,knowledge=()=>null,layers=()=>[],publicRoot=resolve('public'),now=()=>new Date()}={}){
  const asset=async(path,limit)=>{
   if(!/^\/data\/subsurface\/[a-zA-Z0-9._-]+$/.test(path))fail('CONTEXT_UNAVAILABLE');
   const file=resolve(publicRoot,'.'+path),info=await stat(file);
@@ -37,12 +37,12 @@ export function createAssistantContextResolver({catalog=()=>null,knowledge=()=>n
   if(!validAssistantContext(context))fail('INVALID_CONTEXT');
   const surface=assistantSurface(context.surface??'map');
   const frame=(surface?.id==='map'||['reports','stories'].includes(surface?.id??'')?'':'Page '+surface?.title+'. ')
-   +'Map display year '+context.frame+' (not a collection or drilling date); view '+context.view+'. '
+   +'Server clock date (UTC) '+now().toISOString().slice(0,10)+'. Map display year '+context.frame+' (a selected display frame, not a collection or drilling date); view '+context.view+'. '
    +(context.filters?'Display filters '+JSON.stringify(context.filters)+'. ':'')
    +(context.comparison?'Comparison frames '+context.comparison.frameA+' and '+context.comparison.frameB+'; matching observations are not established. ':'');
   const layerNames=layers(context.layers).slice(0,8).join(', ');
   const s=context.selection;
-  if(!s)return {key:JSON.stringify(context),prompt:frame+'No record selected. Recognized layers: '+(layerNames||'none')+'. Interface guide: '+surface?.guide,label:surface?.title??'Map view',boundary:'Application guide and display context only'};
+  if(!s)return {key:JSON.stringify(context),prompt:frame+'No record selected. Recognized layers: '+(layerNames||'none')+'. An empty selection does not establish that sources are unavailable. Interface guide: '+surface?.guide,label:surface?.title??'Map view',boundary:'Application guide and display context only'};
   if(s.kind==='knowledge'){
    const record=await knowledge(s);
    if(!record||!/^sha256:[a-f0-9]{64}$/.test(record.releaseId??''))fail('CONTEXT_UNAVAILABLE');

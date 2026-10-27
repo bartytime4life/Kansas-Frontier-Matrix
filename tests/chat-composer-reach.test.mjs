@@ -21,7 +21,7 @@ const ready=()=>Response.json({configured:true,online:true,ready:true,evidenceSe
 const children=node=>[node?.props?.children].flat(Infinity).flatMap(child=>child&&typeof child==='object'?(child.type==='fragment'?children(child):[child]):[]);
 async function renderChat(fetch=async()=>ready(),props={focus,place:'Synthetic County'}){
  const classes=new Proxy({},{get:(_,key)=>key});
- const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:classes},'../assistant-surfaces.mjs':surfaces,'../assistant-investigation':investigation},{fetch,Response,TextEncoder,crypto:{randomUUID},FormData:class {get(){return null;}},queueMicrotask,setInterval:()=>1,clearInterval:()=>{}});
+ const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:classes},'../assistant-surfaces.mjs':surfaces,'../assistant-investigation':investigation},{fetch,Response,TextEncoder,crypto:{randomUUID},FormData:class {get(){return null;}},document:{hidden:false,addEventListener(){},removeEventListener(){}},queueMicrotask,setInterval:()=>1,clearInterval:()=>{}});
  const render=(next=props)=>{const tree=h.render(h.exports.default,next);h.commit();return tree;};
  render();await settle();
  return {h,render};

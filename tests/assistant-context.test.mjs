@@ -8,6 +8,16 @@ import {gzipSync} from 'node:zlib';
 import {createAssistantContextResolver,validAssistantContext} from '../server/assistant-context.mjs';
 import {createPublicAiHandler} from '../server/public-ai-handler.mjs';
 const context={version:1,frame:2026,view:'2D',layers:[],selection:{kind:'subsurface',tileId:'tile-160-255',recordId:'synthetic-core-1',intervalIndex:1}};
+test('map-only context supplies calendar orientation without claiming source availability or admission',async()=>{
+ const resolve=createAssistantContextResolver({now:()=>new Date('2026-10-27T23:59:00Z')});
+ const result=await resolve({...context,selection:null});
+ assert.match(result.prompt,/Server clock date \(UTC\) 2026-10-27/);
+ assert.match(result.prompt,/Map display year 2026 \(a selected display frame, not a collection or drilling date\)/);
+ assert.match(result.prompt,/Recognized layers: none/);
+ assert.match(result.prompt,/empty selection does not establish that sources are unavailable/);
+ assert.equal(result.boundary,'Application guide and display context only');
+ assert.equal(result.releaseId,undefined);assert.equal(result.sourceSummary,undefined);
+});
 async function fixture(){
  const root=await mkdtemp(join(tmpdir(),'kfm-ai-context-')),directory=join(root,'data/subsurface');await mkdir(directory,{recursive:true});
  const records=[{id:'synthetic-core-1',name:'Not transmitted name',sourceId:'kgs-core',kind:'core',sourceTime:'2025-05-01',depthUnit:'ft',depthReference:'unknown',totalDepth:40,coordinates:[-99.5,38],intervals:[{top:0,bottom:10,description:'Synthetic sand'},{top:10,bottom:40,description:'Synthetic shale',interpreted:'SH'}]}];

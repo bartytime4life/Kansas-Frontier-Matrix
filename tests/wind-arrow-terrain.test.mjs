@@ -217,6 +217,7 @@ test("wind reloads ignore late success and failure from superseded camera reques
     mapRef: { current: map }, windArrowCanvasRef: { current: canvas }, buildYearCurrent: true,
     windLayerSelected: true, officialVisibility: { "nws-forecast-wind": true }, temporalQuery: { frame: 2026 }, OFFICIAL_CONTEXT_PRESENT_FRAME: 2026,
     styleReady: true, dynamicEffects: false, reducedMotion: true,
+    primaryWorkspace: "map",
     document: { hidden: false, addEventListener() {}, removeEventListener() {} },
     window: { setTimeout: callback => { pendingTimers.push(callback); return pendingTimers.length; }, clearTimeout() {},
       setInterval: () => 1, clearInterval() {}, cancelAnimationFrame() {} },

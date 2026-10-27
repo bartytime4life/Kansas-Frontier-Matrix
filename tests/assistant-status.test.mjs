@@ -9,7 +9,7 @@ const investigation=await import('data:text/javascript;base64,'+Buffer.from(ts.t
 
 async function workspace(fetch,props={},fields={},extra={}){
  const polls=[];
- const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:{}},'../assistant-surfaces.mjs':surfaces,'../assistant-investigation':investigation},{fetch,Response,TextEncoder,crypto:{randomUUID},FormData:class {get(name){return fields[name]??null;}},queueMicrotask,setInterval:fn=>{polls.push(fn);return polls.length;},clearInterval:()=>{},...extra});
+ const h=await componentHarness(new URL('../app/assistant/workspace.tsx',import.meta.url),{'./workspace.module.css':{default:{}},'../assistant-surfaces.mjs':surfaces,'../assistant-investigation':investigation},{fetch,Response,TextEncoder,crypto:{randomUUID},FormData:class {get(name){return fields[name]??null;}},document:{hidden:false,addEventListener(){},removeEventListener(){}},queueMicrotask,setInterval:fn=>{polls.push(fn);return polls.length;},clearInterval:()=>{},...extra});
  const render=(next=props)=>{const tree=h.render(h.exports.default,next);h.commit();return tree;};
  render();await settle();
  return {h,polls,render};
@@ -450,7 +450,7 @@ test('withdrawal at export replaces cached source text and produces a withheld d
 test('JSON download contains only the checked investigation and never resubmits or invokes inference',async()=>{
  const urls=[],anchors=[];let posts=0;
  class DownloadUrl extends URL{static createObjectURL(blob){urls.push(blob);return 'blob:synthetic';}static revokeObjectURL(){}}
- const document={body:{append(){}},createElement(){const anchor={click(){anchors.push(this);},remove(){}};return anchor;}};
+ const document={hidden:false,addEventListener(){},removeEventListener(){},body:{append(){}},createElement(){const anchor={click(){anchors.push(this);},remove(){}};return anchor;}};
  const {h,render}=await workspace(async(url,options)=>{
   if(url.endsWith('/status'))return ready();
   if(options.method==='POST'){posts++;return Response.json({id:'synthetic-export'});}

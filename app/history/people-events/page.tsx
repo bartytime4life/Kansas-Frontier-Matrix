@@ -35,7 +35,7 @@ export default function PeopleEventsResearch() {
   const clear = () => { setQuery(""); setSourceId("all"); setKind("all"); setPage(0); };
   const filtered = !!query || sourceId !== "all" || kind !== "all";
   return <main className={s.page}><div className={`${s.wrap} ${h.wrap}`}>
-    <nav className={h.navigation} aria-label="History navigation"><a href="/downloads#history">← History &amp; archives</a><a href="/knowledge">Reviewed KFM knowledge</a><a href="#research-sources">Source catalogue</a></nav>
+    <nav className={h.navigation} aria-label="History navigation"><a href="/topics#history">← History sources &amp; tools</a><a href="/knowledge">Reviewed KFM knowledge</a><a href="#research-sources">Source catalogue</a></nav>
     <header className={h.intro}><p className={s.eyebrow}>KANSAS HISTORY · SOURCE RESEARCH</p><h1>People, events &amp; historical context</h1>
       <p>Explore entries from the supplied history and biography pages. Each entry preserves source metadata and context; repeated names remain separate source assertions.</p>
     </header>
