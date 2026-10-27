@@ -18,6 +18,11 @@ These are configured limits, not measured RAM savings or production FPS gains.
 The first measurement attempt exposed a 40px expanded Pause control (and the
 Return control was configured at 36px). Both now have 44px minimum hit areas,
 checked by the responsive browser matrix as well as the performance journeys.
+The next rendered journey caught Escape from Pause/Resume removing the focused
+button and leaving focus on the document body. Returning from an expanded view
+now focuses its persistent Expand control in the layout commit; a second Escape
+can dismiss the welcome. Both the component regression and native-key journeys
+cover this exact sequence.
 The same first run also exposed an older source-text assertion coupled to the
 replaced style-key guard. It now checks only the style-loading boundary; the
 existing supersession/retry and new A→B→A tests execute those behaviors instead.
