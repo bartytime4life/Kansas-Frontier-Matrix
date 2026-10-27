@@ -836,10 +836,15 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
       })()`);
       await p.key('Enter', 'Enter', 13);
     };
-    const openFromMap = async mode => {
-      await p.evaluate(`document.querySelector('summary[aria-label="More site actions"]').focus()`);
-      await p.key('Enter', 'Enter', 13);
+    const openMore = async () => {
+      if (!await p.evaluate(`document.querySelector('.header-overflow-menu').open`)) {
+        await p.evaluate(`document.querySelector('summary[aria-label="More site actions"]').focus()`);
+        await p.key('Enter', 'Enter', 13);
+      }
       await p.wait(`document.querySelector('.header-overflow-menu').open`, 'More menu open');
+    };
+    const openFromMap = async mode => {
+      await openMore();
       await button(mode, '.header-overflow-workspaces');
       await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace === ${JSON.stringify(mode.toLowerCase())}`, mode + ' mounted');
     };
@@ -906,6 +911,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
         return original.call(this, key, value);
       };
     })()`);
+    await openMore();
     await p.evaluate(`document.querySelector('.new-from-map-action').focus()`);
     await p.key('Enter', 'Enter', 13);
     await p.wait(`document.querySelector('#map-context-card')`, 'explicit composition opened');
