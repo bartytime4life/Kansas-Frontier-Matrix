@@ -7,7 +7,7 @@ Status: **source fixes prepared; deployment and changed-build browser acceptance
 - **CONFIRMED:** the live About page reported `33076dacaf247cdd7be8f22033fc798fe3a21a1f` during the browser review. Live observations below describe that deployment, not this patch.
 - **CONFIRMED:** authoring initially used hosted branch `a0-hosted-ai-web-20261017` at `9e9f91191543d4dff4d90b1a791efee3c28cef85`. During this session, PR #5512 merged. The final authoring base is `5a036093be79936c1ef9b3ca0b896c05df945c71`, tree `6e777ee287b3735745d077847983c8f3d034e3b0`.
 - **CONFIRMED:** #5512 changed `app/live-context.ts`, `app/noaa-satellite.ts`, `app/subsurface-three.tsx`, `docs/category-maps.md`, and `tests/noaa-satellite.test.mjs`. This patch changes none of those files. The final base was imported and its Git object hashes verified before final checks.
-- Placement follows the responsibility-root rule in the adopted [Directory Rules](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/17f106d558674ec92a11809bcf3a06c82453777e/docs/doctrine/directory-rules.md), checked with the supplied Directory Rules and contributor reliability material. Existing `app/`, `server/`, `tests/`, and `docs/` own the affected responsibilities in this standalone composition. No new lifecycle, schema, registry, policy or release home is introduced. Project `sources/` references remain read-only.
+- Placement follows the responsibility-root rule in the adopted [Directory Rules](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/17f106d558674ec92a11809bcf3a06c82453777e/docs/doctrine/directory-rules.md), checked with the supplied Directory Rules and contributor reliability material. Existing `app/`, `server/`, `tests/`, `docs/`, and `.github/workflows/` own application, server, validation, documentation, and CI responsibilities in this standalone composition. No new lifecycle, schema, registry, policy or release home is introduced. Project `sources/` references remain read-only.
 - Original Sites state, hosted release state, provider data, account settings, database contents, and publication controls are outside this source-authoring change.
 
 ## Browser coverage
@@ -21,7 +21,7 @@ All 17 `app/**/page.tsx` entrypoints were visited, along with Reports, Stories a
 | 3 | Stories via More | **Needs correction:** a new story used four demonstration scenes rather than the captured map. Existing saved stories must remain intact. |
 | 4 | `/about` | Guide and build identity rendered. The deployed revision differs from the final source base; no deployment equivalence is asserted. |
 | 5 | `/privacy` | Privacy content and navigation rendered. Capture: `04-privacy.png`. |
-| 6 | `/topics` | Subject navigation rendered, including 17 subject cards and source limits. Capture: `05-topics.png`. |
+| 6 | `/topics` | Subject navigation and source limits rendered. Capture: `05-topics.png`. |
 | 7 | `/observatory` | **Degraded source:** requested radar failed and the frame was withheld. “Continue without radar” recovered playback availability. This is not proof of upstream radar health. Initial loading capture `06-observatory.png` is excluded as settled-state evidence. |
 | 8 | `/observatory/sources` | Coverage tables and source-time boundaries rendered. Dated research statements were kept as dated statements. Capture: `07-coverage.png`. |
 | 9 | `/knowledge`, including Ellsworth search | **Service unavailable:** reviewed store failed. New recovery UI retains the query, offers an explicit retry, and links to clearly separated source research. Capture: `08-knowledge.png`. No release was created to mask the failure. |
@@ -64,6 +64,12 @@ Internal baseline captures were saved under `/tmp/kfm-site-audit-20261027-shots`
 - A local preview server is blocked by `listen EPERM`, so the changed build has **not** received live browser, physical mobile, keyboard-complete, screen-reader, automated accessibility, or deployment compression/cache acceptance. No WCAG conformance or measured production performance claim is made.
 
 The focused logs and build/type/lint logs are session-local under `/tmp/kfm-site-audit-tests` and `/tmp/kfm-site-audit-*`. PR checks and immutable patch identity must be reviewed separately; local results cannot be presented as hosted CI.
+
+### Qualification follow-up
+
+GitHub Actions [run 40538358031](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/40538358031) at head `6ad5f8202648847b860082258c1393b341a0a7e2` completed exact-lock installation, production build, TypeScript and the two disposable MySQL checks successfully. Its main suite reported **1,952 tests: 1,932 passed, 1 failed, 19 skipped**. The sole failure was the old literal date-context assertion in `assistant-sitewide.test.mjs`, which had not been included in the earlier 195-test final subset after the prompt wording changed. This failure is attributed to this patch; it is not inherited or environmental.
+
+The assertion now checks the selected-display-frame wording and a fixed server UTC date while preserving all surface, private-context and release-withdrawal checks. Its local file passes **11/11**. The existing `explorer-startup.browser.mjs` harness now also exercises independent report/story titles and snapshot IDs, one-scene map-based stories, immediate navigation after edits, page reload, quota-failure recovery and draft labels at **1280×800, 390×844 and 568×320**. Existing CI runs that file against the built loopback application and retains workspace screenshots as a separate 14-day workflow artifact. These are isolated synthetic browser checks, not provider, physical-device or model-quality qualification. The local sandbox still refuses sockets; the added browser cases require a successful CI execution before they can be called passing. See PR #5513 for the latest exact-head result.
 
 ## Open verification, release and rollback
 
