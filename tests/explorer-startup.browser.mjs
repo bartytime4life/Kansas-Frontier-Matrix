@@ -861,7 +861,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     const stored = mode => p.evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify('kfm-' + mode + '-draft-v2')}))`);
     const capture = async name => {
       if (!process.env.KFM_WORKSPACE_SCREENSHOTS) return;
-      await p.evaluate(`document.querySelector('#primary-workspace-title').scrollIntoView({block:'start',behavior:'instant'})`);
+      await p.evaluate(`document.querySelector('#primary-workspace-title')?.scrollIntoView({block:'start',behavior:'instant'})`);
       await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, { recursive: true });
       const shot = await p.call('Page.captureScreenshot', { format: 'png' });
       await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `${width}x${height}-${name}.png`), Buffer.from(shot.data, 'base64'));
@@ -892,9 +892,14 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     assert.equal((await stored('story')).baseSnapshot.id, story.baseSnapshot.id);
     await capture('restored-story');
     await button('Return to map', nav);
+    const previousDocument = await p.evaluate('performance.timeOrigin');
     await p.call('Page.reload');
-    await p.wait(`document.querySelector('.map-chrome-dock') && history.state?.kfmExplorerView && !document.querySelector('.explorer-guide')`, 'reload restored ordinary map');
-    await openFromMap('Reports');
+    // The old document and SSR markup both contain the map dock; history.state
+    // survives reload. Wait for a new document and the real React startup
+    // decision before sending keyboard input to hydrated event handlers.
+    await p.wait(`performance.timeOrigin !== ${previousDocument} && document.querySelector('.atlas-studio')?.dataset.startup === 'ready' && history.state?.kfmExplorerView && !document.querySelector('.explorer-guide')`, 'new document finished startup after reload');
+    try { await openFromMap('Reports'); }
+    catch (error) { await capture('reload-failure'); throw error; }
     assert.equal(await p.evaluate(`document.querySelector('.report-title-field input').value`), 'QA latest report before exit');
     assert.equal((await stored('report')).snapshot.id, report.snapshot.id);
     await switchTo('Stories');
