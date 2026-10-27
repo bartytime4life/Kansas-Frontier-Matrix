@@ -77,3 +77,13 @@ test("malformed or stale satellite catalogs stay explicit", () => {
   assert.throws(() => satellite.noaaSatelliteTileUrl({ kind: "geocolor", objectId: 0, observedAt: retrievedAt, validThrough: retrievedAt }));
   assert.equal(satellite.isNoaaSatelliteManifest({ ...stale, frames: [{ ...stale.frames[0], objectId: -1 }] }), false);
 });
+
+test("satellite tiles carry twice the pixels on high-DPI screens, for both GeoColor and visible frames", () => {
+  const geocolor = { kind: "geocolor", objectId: 7, observedAt: "2026-09-23T23:30:00.000Z", validThrough: "2026-09-23T23:39:00.000Z" };
+  const visible = { kind: "visible", observedAt: "2026-09-23T23:45:00.000Z", validThrough: null };
+  assert.match(satellite.noaaSatelliteTileUrl(geocolor), /size=256%2C256/);
+  assert.match(satellite.noaaSatelliteTileUrl(geocolor, 1.25), /size=256%2C256/);
+  assert.match(satellite.noaaSatelliteTileUrl(geocolor, 2), /size=512%2C512/);
+  assert.match(satellite.noaaSatelliteTileUrl(visible), /width=256&height=256/);
+  assert.match(satellite.noaaSatelliteTileUrl(visible, 2), /width=512&height=512/);
+});

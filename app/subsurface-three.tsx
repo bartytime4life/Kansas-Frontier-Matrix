@@ -40,7 +40,7 @@ export default function SubsurfaceThree({ record, descriptionFilter, depthRange,
       // forceContextLoss releases the context now; dispose alone leaves it live until
       // garbage collection, and rebuilds (record, depth, scale edits) would pile them up.
       cleanup = () => { resources.forEach(r => r.dispose()); renderer.dispose(); renderer.forceContextLoss(); renderer.domElement.remove(); };
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); renderer.localClippingEnabled = true;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); renderer.localClippingEnabled = true;
       renderer.domElement.tabIndex = 0; renderer.domElement.setAttribute("aria-label", "Underground recorded-depth material diagram. Drag to orbit, scroll to zoom. Camera buttons and the layer list offer keyboard alternatives.");
       container.current.append(renderer.domElement);
       const scene = new T.Scene(); scene.background = new T.Color("#09191e");

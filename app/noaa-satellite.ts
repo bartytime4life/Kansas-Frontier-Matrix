@@ -115,13 +115,18 @@ export const isNoaaSatelliteManifest = (value: unknown): value is NoaaSatelliteM
   return true;
 };
 
-/** ArcGIS raster ID locks one exact catalog image, avoiding ambiguous default mosaics. */
-export const noaaSatelliteTileUrl = (frame: NoaaSatelliteFrame): string => {
+/**
+ * ArcGIS raster ID locks one exact catalog image, avoiding ambiguous default mosaics.
+ * On screens of 1.5× or more each tile is asked for at 512 pixels: the imagery
+ * carries no symbols or labels, so it only gains detail.
+ */
+export const noaaSatelliteTileUrl = (frame: NoaaSatelliteFrame, pixelRatio = 1): string => {
+  const pixels = pixelRatio >= 1.5 ? 512 : 256;
   if (frame.kind === "visible") {
     if (!timestamp(frame.observedAt) || frame.validThrough !== null) throw new Error("Choose a checked NOAA visible frame.");
-    return `${NOAA_SATELLITE_VISIBLE_URL}?service=WMS&version=1.3.0&request=GetMap&layers=${NOAA_SATELLITE_VISIBLE_LAYER}&styles=&bbox={bbox-epsg-3857}&width=256&height=256&crs=EPSG:3857&format=image/png&transparent=true&time=${encodeURIComponent(frame.observedAt)}`;
+    return `${NOAA_SATELLITE_VISIBLE_URL}?service=WMS&version=1.3.0&request=GetMap&layers=${NOAA_SATELLITE_VISIBLE_LAYER}&styles=&bbox={bbox-epsg-3857}&width=${pixels}&height=${pixels}&crs=EPSG:3857&format=image/png&transparent=true&time=${encodeURIComponent(frame.observedAt)}`;
   }
   if (!Number.isSafeInteger(frame.objectId) || frame.objectId <= 0 || !timestamp(frame.observedAt) || !timestamp(frame.validThrough)) throw new Error("Choose a checked NOAA GeoColor frame.");
   const mosaicRule = encodeURIComponent(JSON.stringify({ mosaicMethod: "esriMosaicLockRaster", lockRasterIds: [frame.objectId] }));
-  return `${NOAA_SATELLITE_SERVICE_URL}/exportImage?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&transparent=true&mosaicRule=${mosaicRule}&f=image`;
+  return `${NOAA_SATELLITE_SERVICE_URL}/exportImage?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=${pixels}%2C${pixels}&format=png32&transparent=true&mosaicRule=${mosaicRule}&f=image`;
 };
