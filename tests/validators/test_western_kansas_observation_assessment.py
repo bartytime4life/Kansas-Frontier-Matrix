@@ -30,6 +30,18 @@ class WesternKansasObservationAssessmentTests(unittest.TestCase):
         self.assertEqual(result.outcome, "OBSERVED")
         self.assertEqual(result.reason_codes, ())
 
+    def test_direct_support_must_match_claim_support(self) -> None:
+        for field, mismatch in (("support_id", "station-999"), ("support_kind", "GRID_CELL")):
+            with self.subTest(field=field):
+                candidate = copy.deepcopy(self.cases["observed_streamflow"])
+                candidate["claim"][field] = mismatch
+                candidate["outcome"] = "ERROR"
+
+                result = assess(candidate)
+
+                self.assertEqual(result.outcome, "ERROR")
+                self.assertEqual(result.reason_codes, ("SOURCE_SUPPORT_MISMATCH",))
+
     def test_cross_source_derivation(self) -> None:
         result = assess(copy.deepcopy(self.cases["derived_cross_source_stress"]))
         self.assertEqual(result.outcome, "DERIVED")
