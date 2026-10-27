@@ -608,11 +608,12 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     };
     await checkLayout('initial');
     if(width===1440){
-      const before=await p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top`);
-      await p.evaluate(`document.querySelector('.topic-weather').focus()`);
+      const rowTop=()=>p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top+document.querySelector('.explorer-guide.living-welcome').scrollTop`);
+      const before=await rowTop();
+      await p.evaluate(`document.querySelector('.topic-weather').focus({preventScroll:true})`);
       await p.wait(`document.querySelector('.welcome-preview-brief h2').textContent===${JSON.stringify(categoryGlimpse('weather').title)}`,'shared brief follows keyboard interest');
-      const after=await p.evaluate(`document.querySelector('.topic-engineering').getBoundingClientRect().top`);
-      assert.ok(Math.abs(after-before)<2,'changing a glimpse never shifts the category rows under the pointer');
+      const after=await rowTop();
+      assert.ok(Math.abs(after-before)<2,'changing a glimpse never shifts the category rows under the pointer: '+JSON.stringify({before,after}));
     }
 
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
