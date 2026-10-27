@@ -4691,7 +4691,10 @@ export default function Home() {
 
 
   const openPrimaryWorkspace = useCallback((mode: Exclude<PrimaryWorkspace, "map">, freshFromMap = false, fireContext: FireReportContext | null = null, research: ResearchContext | null = null, subsurface: SubsurfaceContext | null = null) => {
-    if (freshFromMap || !workspaceSnapshot) setWorkspaceSnapshot(freshFromMap ? captureMapSnapshot() : readDraftSnapshot(mode) ?? captureMapSnapshot());
+    // Each workspace owns its saved snapshot. Reusing the other mode's ID can
+    // initialize a blank draft and overwrite an unrelated saved investigation.
+    const savedSnapshot = freshFromMap ? null : readDraftSnapshot(mode);
+    setWorkspaceSnapshot(savedSnapshot ?? captureMapSnapshot());
     setFireReportContext(mode === "reports" ? fireContext : null);
     setResearchReportContext(mode === "reports" ? persistableResearch(research && { ...research, capturedAt: new Date().toISOString() }, researchLocationRedacted || locationCameraRedacted || locationDerivedViewRef.current) ?? null : null);
     setSubsurfaceReportContext(mode === "reports" ? persistableSubsurface(subsurface && { ...subsurface, capturedAt: new Date().toISOString() }, subsurfacePrivate || locationCameraRedacted || locationDerivedViewRef.current) ?? null : null);
@@ -4699,8 +4702,15 @@ export default function Home() {
     setMapContextOpen(false);
     setHelpOpen(false);
     setQwenOpen(false);
-    announce(`${mode === "reports" ? "Report" : "Story"} workspace opened from the current governed map state`);
-  }, [announce, captureMapSnapshot, locationCameraRedacted, researchLocationRedacted, subsurfacePrivate, workspaceSnapshot]);
+    setPlaying(false);
+    setStreamflowPlaying(false);
+    setNoaaRadarPlaying(false);
+    setLightningPlaying(false);
+    setDaylightPlayback(false);
+    announce(savedSnapshot
+      ? `${mode === "reports" ? "Report" : "Story"} draft resumed with its saved map snapshot`
+      : `${mode === "reports" ? "Report" : "Story"} workspace opened from the current governed map state`);
+  }, [announce, captureMapSnapshot, locationCameraRedacted, researchLocationRedacted, setDaylightPlayback, subsurfacePrivate]);
 
   const returnToPrimaryMap = useCallback(() => {
     setPrimaryWorkspace("map");
@@ -6087,7 +6097,7 @@ export default function Home() {
   useEffect(() => {
     const map = mapRef.current;
     const canvas = waterMotionCanvasRef.current;
-    if (!map || !canvas || !styleReady || !streamflowSelectedAtPresent || !streamflowFrame) {
+    if (primaryWorkspace !== "map" || !map || !canvas || !styleReady || !streamflowSelectedAtPresent || !streamflowFrame) {
       canvas?.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
       return;
     }
@@ -6123,12 +6133,12 @@ export default function Home() {
       window.cancelAnimationFrame(timer);
       canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
     };
-  }, [streamflowDisplayState, downstreamPaths, dynamicEffects, reducedMotion, selectedWaterCue, streamflowFrame, streamflowPlaying, streamflowSelectedAtPresent, streamflowSelectedStationId, styleReady]);
+  }, [primaryWorkspace, streamflowDisplayState, downstreamPaths, dynamicEffects, reducedMotion, selectedWaterCue, streamflowFrame, streamflowPlaying, streamflowSelectedAtPresent, streamflowSelectedStationId, styleReady]);
 
   useEffect(() => {
     const map = mapRef.current;
     const canvas = windArrowCanvasRef.current;
-    const selected = buildYearCurrent && windLayerSelected
+    const selected = primaryWorkspace === "map" && buildYearCurrent && windLayerSelected
       && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
     if (!map || !canvas || !styleReady || !selected) {
       setWindArrowState("OFF");
@@ -6244,7 +6254,7 @@ export default function Home() {
       resetWindFlowCanvas(canvas);
       canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
     };
-  }, [buildYearCurrent, dynamicEffects, windLayerSelected, reducedMotion, styleReady, temporalQuery.frame, windArrowReloadToken]);
+  }, [primaryWorkspace, buildYearCurrent, dynamicEffects, windLayerSelected, reducedMotion, styleReady, temporalQuery.frame, windArrowReloadToken]);
 
   useEffect(() => {
     const next: OfficialContextState = windArrowState === "READY" ? "ready" : windArrowState === "LOADING" ? "loading" : windArrowState === "ERROR" ? "error" : "idle";
@@ -6301,7 +6311,7 @@ export default function Home() {
     // Paint animation keeps MapLibre from becoming idle. Let the style and
     // source readiness check finish before starting ambient motion, including
     // after a basemap swap.
-    const effectsActive = runtime.kind === "ready" && projection !== "globe" && dynamicEffects && !reducedMotion && !budget.efficient
+    const effectsActive = primaryWorkspace === "map" && runtime.kind === "ready" && projection !== "globe" && dynamicEffects && !reducedMotion && !budget.efficient
       && liveWaterSelected;
 
     // A soft marker halo is presentation only. The provider's observation,
@@ -6335,7 +6345,7 @@ export default function Home() {
       document.removeEventListener("visibilitychange", resume);
       if (styleGenerationReadyRef.current) runMapMutation("Map-effect cleanup", () => { applyDynamicMapEffects(map, 0, opacity, false); emphasizeWaterStations(0, false); });
     };
-  }, [buildYearCurrent, dynamicEffects, officialVisibility, opacity, projection, reducedMotion, renderQuality, runMapMutation, runtime.kind, styleReady, temporalQuery.frame, visibility]);
+  }, [primaryWorkspace, buildYearCurrent, dynamicEffects, officialVisibility, opacity, projection, reducedMotion, renderQuality, runMapMutation, runtime.kind, styleReady, temporalQuery.frame, visibility]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -9485,14 +9495,14 @@ export default function Home() {
       </header>
 
       {primaryWorkspace !== "map" && workspaceSnapshot && <ReportStoryWorkspaces
-        key={workspaceSnapshot.id}
+        key={`${primaryWorkspace}:${workspaceSnapshot.id}`}
         mode={primaryWorkspace}
         snapshot={workspaceSnapshot}
         fireContext={fireReportContext}
         researchContext={researchReportContext}
         subsurfaceContext={subsurfaceReportContext}
         evidenceRecords={allEvidenceRecords}
-        onModeChange={(mode) => setPrimaryWorkspace(mode)}
+        onModeChange={(mode) => { if (mode !== primaryWorkspace) openPrimaryWorkspace(mode); }}
         onReturnToMap={returnToPrimaryMap}
         onInspectEvidence={inspectWorkspaceEvidence}
         onApplyScene={applyStoryScene}

@@ -1,0 +1,74 @@
+# Hosted Explorer UI, UX, performance and functionality audit — 2026-10-27
+
+Status: **source fixes prepared; deployment and changed-build browser acceptance remain unverified**. This audit concerns `https://kansasfrontiermatrix.com/`, the separate GoDaddy Node composition. It is not an audit of every upstream provider, all administrative APIs, or the preserved original Site.
+
+## Identity, ownership and placement
+
+- **CONFIRMED:** the live About page reported `33076dacaf247cdd7be8f22033fc798fe3a21a1f` during the browser review. Live observations below describe that deployment, not this patch.
+- **CONFIRMED:** authoring initially used hosted branch `a0-hosted-ai-web-20261017` at `9e9f91191543d4dff4d90b1a791efee3c28cef85`. During this session, PR #5512 merged. The final authoring base is `5a036093be79936c1ef9b3ca0b896c05df945c71`, tree `6e777ee287b3735745d077847983c8f3d034e3b0`.
+- **CONFIRMED:** #5512 changed `app/live-context.ts`, `app/noaa-satellite.ts`, `app/subsurface-three.tsx`, `docs/category-maps.md`, and `tests/noaa-satellite.test.mjs`. This patch changes none of those files. The final base was imported and its Git object hashes verified before final checks.
+- Placement follows the responsibility-root rule in the adopted [Directory Rules](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/17f106d558674ec92a11809bcf3a06c82453777e/docs/doctrine/directory-rules.md), checked with the supplied Directory Rules and contributor reliability material. Existing `app/`, `server/`, `tests/`, and `docs/` own the affected responsibilities in this standalone composition. No new lifecycle, schema, registry, policy or release home is introduced. Project `sources/` references remain read-only.
+- Original Sites state, hosted release state, provider data, account settings, database contents, and publication controls are outside this source-authoring change.
+
+## Browser coverage
+
+All 17 `app/**/page.tsx` entrypoints were visited, along with Reports, Stories and missing-page recovery. Desktop screenshots and DOM observations were used together; a page was not called healthy merely because a loading screen appeared. Health is limited to the flow described. Screenshots are internal baseline observations, not screenshots of the patched application.
+
+| Step | Surface / action | Observed health and evidence |
+|---|---|---|
+| 1 | `/`: map, provider selection, discovery, time and rendering controls | MapLibre reached ready. Searching Ellsworth produced a county match without AI; selecting it opened dated Census context. Time and rendering controls opened. Catalog evidence and external provider context remained distinct. Baseline capture: `01-map-controls.png`. No physical mobile or frame-time qualification. |
+| 2 | Reports via More | **Needs correction:** resuming a saved snapshot was announced as the current map, and switching workspace modes reused the prior mode's snapshot ID. The overwrite path was confirmed in source and reproduced through the actual callback/component tests. No private draft content is published with this audit. |
+| 3 | Stories via More | **Needs correction:** a new story used four demonstration scenes rather than the captured map. Existing saved stories must remain intact. |
+| 4 | `/about` | Guide and build identity rendered. The deployed revision differs from the final source base; no deployment equivalence is asserted. |
+| 5 | `/privacy` | Privacy content and navigation rendered. Capture: `04-privacy.png`. |
+| 6 | `/topics` | Subject navigation rendered, including 17 subject cards and source limits. Capture: `05-topics.png`. |
+| 7 | `/observatory` | **Degraded source:** requested radar failed and the frame was withheld. “Continue without radar” recovered playback availability. This is not proof of upstream radar health. Initial loading capture `06-observatory.png` is excluded as settled-state evidence. |
+| 8 | `/observatory/sources` | Coverage tables and source-time boundaries rendered. Dated research statements were kept as dated statements. Capture: `07-coverage.png`. |
+| 9 | `/knowledge`, including Ellsworth search | **Service unavailable:** reviewed store failed. New recovery UI retains the query, offers an explicit retry, and links to clearly separated source research. Capture: `08-knowledge.png`. No release was created to mask the failure. |
+| 10 | `/knowledge/record` | **Service unavailable:** record-status page showed the unavailable store and retry control. Capture: `16-record-status.png`. A successful released-record read remains unverified. |
+| 11 | `/civic` | Guide rendered; county choices loaded and subject filtering controls responded. Capture: `09-civic.png`. County choice is context, not ballot eligibility. No claim that all 48 third-party destinations were verified. |
+| 12 | `/history/people-events` | Loaded 2,886 source assertions across 15 supplied sources. Pagination advanced to entries 31–60; Amelia search returned six separately attributed assertions and reset pagination. **Broken return destination:** `/downloads#history` redirects elsewhere; corrected in source. Settled capture: `10-history-loaded.png`. |
+| 13 | `/history/prentis-1909` | Reader loaded 4,338 passages across 272 source pages with navigation. Same history return-link correction. Capture: `11-reader.png`. This does not verify every transcription. |
+| 14 | `/downloads` | Intentional redirect to `/?layers=sources`; legacy section fragments no longer reach history or cache-budget controls. Its old workspace is not restored by this patch. |
+| 15 | `/curated` | Settled at **withheld**, “Published snapshots are not configured yet”; map boundary still rendered. Capture: `13-curated-settled.png`. Withholding is an operational state, not permission to promote candidates. |
+| 16 | `/earth-engine` | Dataset/recipe browser rendered; no-match filtering and clear-filter recovery worked. Capture: `14-earth-engine.png`. No Earth Engine recipe was executed. |
+| 17 | `/earth-engine-downloads/setup` | Confirmed redirect to `/?layers=sources` and loaded Source status panel. No browser-side worker setup is implied. |
+| 18 | `/acquisition` | Receipt and terrain import UI rendered. **Misleading instructions:** public visitors were told they had an owner PC cache and a budget control that the redirect no longer provides. Copy and links corrected; existing file validation stays in place. Capture: `15-acquisition.png`. No personal files were imported. |
+| 19 | `/assistant` | Redirect opened map chat. A public suggested question completed and remained labeled unverified. **Interpretation defect:** reply called 2026 a “fictional future date” and confused selected layers with available data. Calendar/scope context strengthened; model-quality improvement remains unverified. Completed capture: `17-assistant-completed.png`. |
+| 20 | Deliberately missing `/site-audit-missing-page` | Branded recovery page supplied links back to the map, Observatory, knowledge and About. Capture: `18-not-found.png`. |
+
+Internal baseline captures were saved under `/tmp/kfm-site-audit-20261027-shots`. They can expire and are not release evidence. The committed audit, changed source and executable tests are the retained review record. Loading-only captures are not used to support settled-state claims.
+
+## Changes and priorities
+
+| Priority | Issue | Source behavior after this patch | Protection / limits |
+|---|---|---|---|
+| High | Report/Story switching can initialize against the other workspace's snapshot and replace its stored draft | Resolve each mode's validated saved snapshot on entry; remount by mode and snapshot ID. Explicit fresh composition still captures the map. | Actual callback and component persistence tests. Existing v2 storage keys and validators remain. Previously overwritten content cannot be reconstructed by this fix. |
+| High | Default stories introduce demonstration scenes unrelated to the user's map | New stories start with one captured scene. Saved stories and the explicit demonstration fixture remain readable. | Exact snapshot/evidence-reference preservation and withheld-camera test. Provider overlays are explicitly excluded from preview. |
+| Medium | Every edit serializes/writes browser storage; abrupt workspace exit can miss a delayed write | Debounce 300 ms; flush latest pending draft on workspace exit, `pagehide`, or hiding. Quota failure preserves the editable draft, offers retry and advises export. | Coalescing, last-edit exit, pagehide, inactive-draft isolation and quota recovery tests. A force-killed browser may still lose an unflushed edit. |
+| Medium | Map animation continues behind composition | Pause five playback controls on entry and stop water/wind/ambient animation effects while the map workspace is hidden. | Existing navigation/wind tests plus entry callback coverage. No measured FPS, energy or Core Web Vitals improvement is claimed. Other provider refreshes are not claimed to stop. |
+| Medium | Hidden tabs continue assistant readiness polling | Skip hidden-document reads and resume once visible, preserving abort and no-overlap behavior. | Hidden/visible, overlap and cleanup tests; existing assistant lifecycle checks. This affects readiness polling, not inference authorization. |
+| Medium | Old snapshot context looks current | Announce restored drafts accurately; display capture time and distinguish catalog layers from provider overlays. | Snapshot ownership tests. Source time, capture time and release state keep separate meanings. |
+| Medium | History and acquisition links promise removed sections; acquisition copy assumes current private-machine capacity | Route history back to `/topics#history`; use Source status navigation; explain receipt-only inspection and worker-owned configuration. | Existing source route inspected; history/acquisition checks pass. Current remote quotas and private storage remain unknown. |
+| Medium | Knowledge failure is a dead end | Explicit same-query retry and alternative source-context navigation, separately labeled from released knowledge. | Existing knowledge reader/retry checks. Store configuration/health is not repaired by UI copy. |
+| Medium | Assistant invents temporal/source interpretations | Supply server UTC clock date separately from selected year; explicitly distinguish empty selection, unavailable data, fiction and source observations in all discussion profiles. | Prompt/context and public AI policy tests. Prompt text is an exposure control, not proof that model output is true or a replacement for admission/release enforcement. |
+
+## Validation and attribution
+
+**CONFIRMED on the final source base:** production build, TypeScript and focused checks. Dependencies were reused from an existing local installation because network DNS and a cache-only exact-lock installation were unavailable (`zod@4.6.6` was missing). Node was 22.13.1; React 19.2.8 and TypeScript 5.9.3 matched the project. Reused Next 16.3.8 and Vite 8.2.2 differ from locked Next 16.4.2 and Vite 8.2.4. This is useful source validation, not an exact-lock deployment qualification. No dependency or lockfile changes are included.
+
+- Final focused run: **195 tests passed, 0 failed, 0 skipped across 19 files**. Coverage includes acquisition integrity, Earth Engine rendered/download contracts, knowledge read/retry, workspace drafts and navigation, private report handling, assistant polling/status/composer/context, discussion prompt/policy, public AI and merged satellite behavior.
+- Changed-file ESLint: **0 errors, 43 warnings**. The warning messages match the unchanged base; none is presented as resolved by this patch. `git diff --check` passed.
+- The broad exploratory run started all 271 test files as isolated Node processes. It is **not green**. Three changed-area test harnesses initially lacked new document/workspace globals; these were corrected and rechecked. Twenty other files did not complete successfully in this environment. Some were blocked before any TAP summary by `listen EPERM`; `home-inference-inventory` hit its 60-second bound. These are not counted as passing.
+- Same-environment checks against the unchanged `9e9f911…` base reproduced failures in `build-identity`, `daily-archive`, `pc-storage-probe`, `pipeline-lock`, `pipeline-install` and `node-keep-alive`. Their failures are not newly attributed to this UI patch. The other uncompleted broad checks remain environment-limited or unattributed, rather than being declared inherited passes.
+- A local preview server is blocked by `listen EPERM`, so the changed build has **not** received live browser, physical mobile, keyboard-complete, screen-reader, automated accessibility, or deployment compression/cache acceptance. No WCAG conformance or measured production performance claim is made.
+
+The focused logs and build/type/lint logs are session-local under `/tmp/kfm-site-audit-tests` and `/tmp/kfm-site-audit-*`. PR checks and immutable patch identity must be reviewed separately; local results cannot be presented as hosted CI.
+
+## Open verification, release and rollback
+
+1. Run exact-lock installation, build, required CI and changed-build desktop/mobile/keyboard acceptance in a capable environment. Test distinct saved report/story titles, immediate exit after editing, storage quota recovery, return-to-map motion, hidden-tab status checks, and knowledge retry. A failure requires revision.
+2. Re-run the observed assistant question against the proposed build/model, including an earlier year, a future selected frame and no selected layers. A corrected prompt is not a qualified model. Keep unverified labels and independent public-AI policy controls.
+3. Investigate reviewed-store availability, radar provider failure and curated publication configuration with the appropriate operator and governed release process. Do not publish candidates or relax review gates to make a page appear populated.
+
+This change grants no merge, deployment, activation or publication authority. A source revert restores prior UI behavior without a database migration or storage-format conversion. Existing device-local v2 drafts remain the same format; export important drafts before rollout. Reverting code does not recover content overwritten before the fix, or edits lost to an abruptly terminated browser. Keep the preserved Site and current deployment untouched until the owning review and release steps are satisfied.

@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createReportDraft,
-  createTrustStory,
+  createMapStory,
   terrainSnapshotDescription,
   type EvidenceRecord,
   type MapSnapshot,
@@ -169,8 +169,20 @@ export default function ReportStoryWorkspaces({
     readStored<ReportDraft>(REPORT_STORAGE_KEY, snapshot.id) ?? createReportDraft(snapshot, evidenceRecords, fireContext ?? undefined, researchContext ?? undefined, subsurfaceContext ?? undefined),
   );
   const [story, setStory] = useState<StoryDraft>(() =>
-    readStored<StoryDraft>(STORY_STORAGE_KEY, snapshot.id) ?? createTrustStory(snapshot, evidenceRecords),
+    readStored<StoryDraft>(STORY_STORAGE_KEY, snapshot.id) ?? createMapStory(snapshot),
   );
+  const pendingSave = useRef<{ key: string; draft: ReportDraft | StoryDraft } | null>(null);
+  const saveDraft = useCallback((showStatus = true) => {
+    const pending = pendingSave.current;
+    if (!pending) return;
+    try {
+      window.localStorage.setItem(pending.key, JSON.stringify(pending.draft));
+      pendingSave.current = null;
+      if (showStatus) setStorageState("saved");
+    } catch {
+      if (showStatus) setStorageState("unavailable");
+    }
+  }, []);
   const [storyPlaying, setStoryPlaying] = useState(false);
   const [storyPlayIndex, setStoryPlayIndex] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -193,16 +205,25 @@ export default function ReportStoryWorkspaces({
   }, []);
 
   useEffect(() => {
-    let active = true;
-    try {
-      if (mode === "reports") window.localStorage.setItem(REPORT_STORAGE_KEY, JSON.stringify(report));
-      else window.localStorage.setItem(STORY_STORAGE_KEY, JSON.stringify(story));
-      window.setTimeout(() => { if (active) setStorageState("saved"); }, 0);
-    } catch {
-      window.setTimeout(() => { if (active) setStorageState("unavailable"); }, 0);
-    }
-    return () => { active = false; };
-  }, [mode, report, story]);
+    pendingSave.current = mode === "reports"
+      ? { key: REPORT_STORAGE_KEY, draft: report }
+      : { key: STORY_STORAGE_KEY, draft: story };
+    const timer = window.setTimeout(() => saveDraft(), 300);
+    return () => window.clearTimeout(timer);
+  }, [mode, report, story, saveDraft]);
+
+  useEffect(() => {
+    const flush = () => saveDraft(false);
+    const hide = () => { if (document.hidden) saveDraft(); };
+    window.addEventListener("pagehide", flush);
+    document.addEventListener("visibilitychange", hide);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      document.removeEventListener("visibilitychange", hide);
+      // Flush the last edit when switching workspaces or returning to the map.
+      flush();
+    };
+  }, [saveDraft]);
 
   useEffect(() => {
     if (!storyPlaying || story.scenes.length < 2) return;
@@ -329,7 +350,7 @@ export default function ReportStoryWorkspaces({
         <div>
           <span>KANSAS FRONTIER MATRIX · DEVICE-LOCAL WORKSPACE</span>
           <h1 id="primary-workspace-title" ref={headingRef} tabIndex={-1}>{mode === "reports" ? report.fireContext ? "Fire report builder" : "Evidence report builder" : "Guided story builder"}</h1>
-          <p>{mode === "reports" ? report.fireContext ? "Build a source-linked fire brief from the selected record. Add article findings only after checking the article yourself." : "Write from the exact inherited map state and keep evidence limits beside every claim." : "Compose ordered map scenes without turning camera motion into evidence."}</p>
+          <p>{mode === "reports" ? report.fireContext ? "Build a source-linked fire brief from the selected record. Add article findings only after checking the article yourself." : "Write from the saved map snapshot and keep evidence limits beside every claim." : "Compose ordered map scenes without turning camera motion into evidence."}</p>
         </div>
         <nav aria-label="Report and story workspaces">
           <button type="button" aria-haspopup="dialog" aria-expanded={assistantOpen} onClick={()=>setAssistantOpen(true)}>Ask AI about this {mode === "reports" ? "report context" : "story context"}</button>
@@ -337,7 +358,7 @@ export default function ReportStoryWorkspaces({
           <button type="button" aria-current={mode === "stories" ? "page" : undefined} onClick={() => onModeChange("stories")}>Stories</button>
           <button className="return-map" type="button" onClick={onReturnToMap}>Return to map</button>
         </nav>
-        <div className="draft-state" role="status"><strong>DRAFT · NOT PUBLISHED</strong><small>{storageState === "saved" ? "Saved on this device" : storageState === "saving" ? "Saving locally…" : "Browser storage unavailable"}</small></div>
+        <div className="draft-state" role="status"><strong>DRAFT · NOT PUBLISHED</strong><small>{storageState === "saved" ? "Saved on this device" : storageState === "saving" ? "Saving locally…" : "Browser storage unavailable · export to keep your work"}</small>{storageState === "unavailable" && <button type="button" onClick={() => saveDraft()}>Retry saving</button>}</div>
       </header>
 
       {mode === "reports" ? <div className="report-workspace-grid">
@@ -346,8 +367,9 @@ export default function ReportStoryWorkspaces({
           <h2>{report.snapshot.area.label}</h2>
           <SnapshotMap snapshot={report.snapshot} label="Inherited report map" />
           <dl>
+            <div><dt>Captured</dt><dd><time dateTime={report.snapshot.createdAt}>{report.snapshot.createdAt.replace("T", " ").replace(/\.\d+Z$/, " UTC").replace(/Z$/, " UTC")}</time></dd></div>
             <div><dt>Committed time</dt><dd>{report.snapshot.committedTime.label}</dd></div>
-            <div><dt>Layer stack</dt><dd>{report.snapshot.visibleLayers.length} visible</dd></div>
+            <div><dt>Catalog layers</dt><dd>{report.snapshot.visibleLayers.length} captured · provider overlays excluded</dd></div>
             <div><dt>Inspectable</dt><dd>{report.snapshot.inspectableRecordCount} records</dd></div>
             <div><dt>Evidence posture</dt><dd>{report.snapshot.sourceBackedCount} source-backed · {report.snapshot.boundedCount} bounded</dd></div>
             <div><dt>Selection</dt><dd>{report.snapshot.selection?.title ?? "None · viewport scope"}</dd></div>

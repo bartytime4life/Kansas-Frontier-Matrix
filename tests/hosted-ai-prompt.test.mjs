@@ -2,6 +2,15 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { renderDiscussionPrompt,prepareDiscussionPrompt,CONTINUE_REPLY,HOSTED_CONTEXT_TOKENS,discussionSystem } from "../server/hosted-ai-prompt.mjs";
 
+test('every discussion profile separates selected years and empty layers from source facts',()=>{
+ for(const profile of ['context-aware-v2','baseline','legacy']){
+  const system=discussionSystem({profile,style:'plain',depth:'brief',hasContext:true});
+  assert.match(system,/selected map year is not a fictional date or proof of future projections/);
+  assert.match(system,/server clock date only for calendar orientation, never as an observation date/);
+  assert.match(system,/No selected layers means no selected layers; source availability is unknown/);
+ }
+});
+
 test("continuation drops only older turns and refuses an overlong original question or prefix", () => {
   const options={system:"Trusted policy.",question:CONTINUE_REPLY,history:[
     {question:"Old question",reply:"Old reply"},

@@ -264,6 +264,26 @@ const sceneSnapshot = (
   });
 };
 
+/** New user stories retain the captured map, without injecting demonstration scenes. */
+export const createMapStory = (snapshot: MapSnapshot): StoryDraft => ({
+  id: `story-${snapshot.id}`,
+  status: "DRAFT",
+  updatedAt: snapshot.createdAt,
+  baseSnapshot: snapshot,
+  title: snapshot.selection ? `${snapshot.selection.title} map story` : "Kansas map story",
+  researchQuestion: "What does this map view show, and what remains uncertain?",
+  scenes: [{
+    id: `scene-current-${snapshot.id}`,
+    title: snapshot.selection?.title ?? snapshot.area.label,
+    narrative: "This scene preserves the captured map camera, representation, committed time, layer stack, selection, and evidence references.",
+    snapshot,
+    evidenceRefs: [...snapshot.evidenceRefs],
+    caveats: ["Map appearance and spatial overlap are context, not independent evidence. Provider overlays are not replayed in this preview."],
+    motion: "none",
+  }],
+});
+
+/** Retained demonstration fixture; never the default for a user's new story. */
 export const createTrustStory = (snapshot: MapSnapshot, evidence: readonly EvidenceRecord[] = []): StoryDraft => ({
   id: `story-${snapshot.id}`,
   status: "DRAFT",

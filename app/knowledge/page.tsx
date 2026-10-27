@@ -46,7 +46,8 @@ function KnowledgeSearch({ initialTerm }: { initialTerm: string }) {
       {!busy && result?.envelope.reason_code === "RECORD_NOT_FOUND" && <p>No released record matches this search. This does not mean no source record exists.</p>}
       {!busy && result?.envelope.reason_code === "RELEASE_HELD" && <p>The current knowledge release is held or withdrawn.</p>}
       {!busy && result?.envelope.reason_code === "INVALID_QUERY" && <p>The search is invalid. Use at most 80 characters.</p>}
-      {!busy && result?.envelope.outcome === "ERROR" && <p>The reviewed knowledge store is unavailable. Try again later.</p>}
+      {!busy && result?.envelope.outcome === "ERROR" && <><p>The reviewed knowledge store is unavailable. Your search is retained.</p><button type="button" onClick={() => setSubmitted(current => ({ ...current }))}>Retry search</button></>}
+      {!busy && records.length === 0 && <nav aria-label="Other ways to explore Kansas"><p>You can also explore attributed source context.</p><Link href="/topics">Browse map subjects →</Link>{" · "}<Link href="/history/people-events">Historical source research →</Link><p>These sources have their own dates and limits; they are separate from released knowledge.</p></nav>}
       {!busy && result?.envelope.reason_code === "RELEASED" && <><p className={styles.release}>Released {result.data?.released_at?.slice(0, 10)} · {records.length} shown{result.data?.has_more ? " · more results exist; narrow your search" : ""}</p>
         <div className={styles.cards}>{records.map(record => <article key={record.record_id} className={styles.card}>
           <div className={styles.tags}><span>{record.kind}</span><span>{record.geometry_role}</span><span>{record.time_start ? `${record.time_start}${record.time_end && record.time_end !== record.time_start ? `–${record.time_end}` : ""}` : "Time unspecified"}</span></div>

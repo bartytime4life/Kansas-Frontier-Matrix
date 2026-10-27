@@ -111,9 +111,11 @@ export default function AssistantWorkspace({initialMode,place='',focus,active=tr
   const controller=new AbortController();let pending=false;
   // One readiness read at a time: slow connections must not accumulate requests
   // or load the model while the visitor is only finding a place or layer.
-  const poll=async()=>{if(pending||controller.signal.aborted)return;pending=true;try{await refresh(controller.signal);}finally{pending=false;}};
+  const poll=async()=>{if(document.hidden||pending||controller.signal.aborted)return;pending=true;try{await refresh(controller.signal);}finally{pending=false;}};
+  const resume=()=>{if(!document.hidden)void poll();};
   queueMicrotask(()=>{void poll();});const timer=setInterval(poll,5000);
-  return()=>{clearInterval(timer);controller.abort();};
+  document.addEventListener('visibilitychange',resume);
+  return()=>{clearInterval(timer);document.removeEventListener('visibilitychange',resume);controller.abort();};
  },[refresh,active,mode]);
  // The scroll region, not the log, scrolls; bring the end of the latest turn into view above the pinned question bar.
  const conversationEnd=()=>{const body=bodyRef.current,log=logRef.current;return body&&log?log.getBoundingClientRect().bottom-body.getBoundingClientRect().bottom:0;};

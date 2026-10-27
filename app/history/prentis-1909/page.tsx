@@ -11,7 +11,7 @@ export default function HistoryReader() {
   const results = useMemo(() => searchHistory(paragraphs, query), [paragraphs, query]);
   const pages = Math.max(1, Math.ceil(results.length / OCR_PAGE_SIZE)), current = Math.min(page, pages - 1);
   return <main className={s.page}><div className={s.wrap}><div className={h.reader}>
-    <nav aria-label="History navigation"><a href="/downloads#history">← History &amp; archives</a><a href="https://archive.org/details/historyofkansas00pren_0" target="_blank" rel="noreferrer">View scanned pages ↗</a><a href="/history/prentis-1909.txt" download>Save full OCR text · 740 KiB</a></nav>
+    <nav aria-label="History navigation"><a href="/topics#history">← History sources &amp; tools</a><a href="https://archive.org/details/historyofkansas00pren_0" target="_blank" rel="noreferrer">View scanned pages ↗</a><a href="/history/prentis-1909.txt" download>Save full OCR text · 740 KiB</a></nav>
     <p className={s.eyebrow}>KANSAS HISTORICAL REFERENCE · 1909</p><h1>A history of Kansas</h1><p>Noble L. Prentis · edited and revised by Henrietta V. Race · published by Caroline Prentis, Topeka.</p>
     <p className={s.alert}>This is an uncorrected historical text, with period biases, omissions and OCR errors. It is not a modern factual assessment. Verify quotations and printed page numbers against the scan. Paragraph numbers below identify OCR passages, not book pages.</p>
     <label>Search the complete text<input type="search" value={query} onChange={event => { setQuery(event.target.value); setPage(0); }} placeholder="Search a place, person or event…" /></label>
