@@ -800,7 +800,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     assert.equal(await p.evaluate(`document.querySelector('.domain-stage').dataset.topic`),'history');
     const previewControls=await p.evaluate(`[...document.querySelectorAll('.welcome-preview-expand,.welcome-preview-pause')].map(button=>{const r=button.getBoundingClientRect();return{text:button.textContent,top:r.top,bottom:r.bottom,left:r.left,right:r.right,width:r.width,height:r.height,hit:button.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2))};})`);
     assert.equal(previewControls.length,2);
-    for(const box of previewControls)assert.ok(box.width>0&&box.height>0&&box.top>=0&&box.bottom<=height&&box.left>=0&&box.right<=width&&box.hit,'Return and Pause stay visible and operable: '+JSON.stringify(box));
+    for(const box of previewControls)assert.ok(box.width>0&&box.height>=44&&box.top>=0&&box.bottom<=height&&box.left>=0&&box.right<=width&&box.hit,'Return and Pause keep 44px hit areas and stay visible and operable: '+JSON.stringify(box));
     await p.key('Tab','Tab',9);assert.equal(await p.evaluate(`document.activeElement.matches('.welcome-preview-pause')`),true,'native Tab reaches Pause');
     await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.living-welcome').dataset.motion==='paused'`,'Pause stops the live map drift');
     await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.living-welcome').dataset.motion==='playing'`,'Play resumes after explicit input');

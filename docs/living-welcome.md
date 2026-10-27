@@ -15,6 +15,9 @@ The welcome retains at most 48 tiles (32 for touch-first, 24 in Battery saver),
 or the existing smaller budget. Selected pixel density stays intact. Battery
 saver uses still category cameras; intentional category navigation still works.
 These are configured limits, not measured RAM savings or production FPS gains.
+The first measurement attempt exposed a 40px expanded Pause control (and the
+Return control was configured at 36px). Both now have 44px minimum hit areas,
+checked by the responsive browser matrix as well as the performance journeys.
 
 An independent CI job measures the actual built/hydrated application at desktop
 1440×960 and emulated phone 390×844 at 2× density, including 4× CPU slowdown,

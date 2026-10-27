@@ -290,7 +290,7 @@
 .living-welcome .topic-copy small {font-size:11px;line-height:1.5}
 .living-welcome .topic-now {display:none}
 .living-welcome .scene-caption {position:absolute;left:auto;right:32px;bottom:125px;width:310px;z-index:5;background:#082a3df2}
-.living-welcome .welcome-preview-expand {position:absolute;right:32px;bottom:88px;z-index:5;min-height:36px;padding:8px 12px;background:#e8c37c;color:#102c3b;border-radius:6px;font-size:12px;font-weight:650}
+.living-welcome .welcome-preview-expand {position:absolute;right:32px;bottom:88px;z-index:5;min-height:44px;padding:8px 12px;background:#e8c37c;color:#102c3b;border-radius:6px;font-size:12px;font-weight:650}
 .living-welcome .welcome-credits {display:none}
 .living-welcome .welcome-footer {left:32px;right:32px;bottom:16px;z-index:5;padding:14px 18px}
 .living-welcome .capability-facets {display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}
@@ -321,7 +321,7 @@
 .living-welcome[data-fullscreen=true] .welcome-credits {display:none}
 @media(max-width:700px) {.living-welcome:not([data-fullscreen=true]) .scene-caption,.living-welcome:not([data-fullscreen=true]) .welcome-footer,.living-welcome .welcome-credits {margin-inline:18px;width:calc(100% - 36px)}.living-welcome:not([data-fullscreen=true]) .welcome-preview-expand {margin-inline:18px}}
 
-.living-welcome .welcome-preview-pause {position:absolute;bottom:38px;right:32px;z-index:5;min-height:40px;border:1px solid #d9ba78;border-radius:6px;padding:8px 12px;background:#082a3df2;color:#e9d3a0;font-size:12px}
+.living-welcome .welcome-preview-pause {position:absolute;bottom:38px;right:32px;z-index:5;min-height:44px;border:1px solid #d9ba78;border-radius:6px;padding:8px 12px;background:#082a3df2;color:#e9d3a0;font-size:12px}
 
 /* Topic constellation. The chosen card rises into the light while every other
    choice recedes to translucent glass: dimmer, still legible, one move away.
