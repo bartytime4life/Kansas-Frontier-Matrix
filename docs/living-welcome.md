@@ -16,7 +16,9 @@ The default statewide map is static. Camera drift runs only while a category is
 engaged or explicitly expanded, and stops on ordinary departure, modal opening,
 global pause, hidden tabs or reduced motion. An interrupted category flight lands
 on its intended view before holding, so resuming cannot strand the map between
-category destinations. There is still one welcome map,
+category destinations. The expanded map hides the entire grouped category field;
+its later grid rule no longer overrides the fullscreen visibility rule. There is
+still one welcome map,
 loaded after paint, and one selected capture at most. No new renderer, font,
 image, model, dependency or large media asset is added. Existing map-resolution
 preferences are retained rather than reducing cartographic label quality.

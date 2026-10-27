@@ -538,6 +538,7 @@
    three-colour sketch of the map it opens. Scoped to the grouped field so the
    earlier breakpoint rules for the flat grid stay inert. */
 .living-welcome .discovery-field.discovery-field--grouped{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+.living-welcome[data-fullscreen=true] .discovery-field.discovery-field--grouped{display:none}
 .living-welcome .discovery-field--grouped .discovery-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,232px),1fr));gap:10px;align-items:stretch}
 .living-welcome .discovery-field--grouped .discovery-group-title{grid-column:1/-1;margin:0;display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#d8c58f}
 .living-welcome .discovery-field--grouped .discovery-group-title:after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#d8c58f66,transparent)}

@@ -668,6 +668,11 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     await p.evaluate(`document.querySelector('.welcome-dialog-body>.welcome-preview-action').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.living-welcome')?.dataset.fullscreen==='true'&&document.activeElement?.matches('.welcome-preview-expand')`,'explicit preview hands focus to Return');
     assert.equal(await p.evaluate(`document.querySelector('.domain-stage').dataset.topic`),'history');
+    const expanded=await p.evaluate(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),grid=root.querySelector('.discovery-field--grouped'),stage=root.querySelector('.domain-stage'),r=stage.getBoundingClientRect(),port=root.getBoundingClientRect();return{hidden:getComputedStyle(grid).display==='none',cards:[...grid.querySelectorAll('button')].filter(button=>button.getClientRects().length>0).length,top:r.top,bottom:r.bottom,portTop:port.top,portBottom:port.bottom};})()`);
+    assert.equal(expanded.hidden,true,'expanded map removes the grouped category overlay');
+    assert.equal(expanded.cards,0,'hidden category buttons have no visible or tabbable boxes');
+    assert.ok(Math.abs(expanded.top-expanded.portTop)<1&&Math.abs(expanded.bottom-expanded.portBottom)<1,'expanded map fills the welcome viewport after opening from a scrolled category: '+JSON.stringify(expanded));
+    if(process.env.KFM_WORKSPACE_SCREENSHOTS){const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-expanded-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
     const previewControls=await p.evaluate(`[...document.querySelectorAll('.welcome-preview-expand,.welcome-preview-pause')].map(button=>{const r=button.getBoundingClientRect();return{text:button.textContent,top:r.top,bottom:r.bottom,left:r.left,right:r.right,width:r.width,height:r.height,hit:button.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2))};})`);
     assert.equal(previewControls.length,2);
     for(const box of previewControls)assert.ok(box.width>0&&box.height>0&&box.top>=0&&box.bottom<=height&&box.left>=0&&box.right<=width&&box.hit,'Return and Pause stay visible and operable: '+JSON.stringify(box));
