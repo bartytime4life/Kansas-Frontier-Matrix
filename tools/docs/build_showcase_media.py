@@ -6,7 +6,6 @@ This transports recorded display pixels; it neither admits data nor benchmarks i
 """
 import argparse
 import hashlib
-import io
 import json
 from pathlib import Path
 import subprocess
@@ -33,8 +32,13 @@ def main():
     commit = subprocess.check_output(["git", "-C", str(app), "rev-parse", "HEAD"], text=True).strip()
     if commit != SOURCE_COMMIT:
         raise SystemExit(f"Expected {SOURCE_COMMIT}; received {commit}")
-    manifest = json.loads((app / "scripts/welcome-demos/runtime-assets.json").read_text())
-    derivatives = json.loads((app / "public/welcome/animations/provenance.json").read_text())
+    def committed_json(path):
+        # Metadata must come from the pinned tree, even in a dirty operator checkout.
+        return json.loads(subprocess.check_output(
+            ["git", "-C", str(app), "show", f"{SOURCE_COMMIT}:{path}"], text=True))
+
+    manifest = committed_json("scripts/welcome-demos/runtime-assets.json")
+    derivatives = committed_json("public/welcome/animations/provenance.json")
     recorded = {Path(f["source"]).stem: f for f in derivatives["files"]}
     captures = {c["id"]: c for c in manifest["captures"]}
     # Validate every input before producing any output.

@@ -1,64 +1,88 @@
 <!--
 KFM_WIKI_SOURCE
 page_id: Visual-Tour
-title: Visual tour — place, time, and evidence
-status: source-grounded showcase; independent review pending
-updated: 2026-10-09
+title: Visual tour — recorded Explorer map views
+status: source-grounded documentation candidate; independent review pending
+updated: 2026-10-27
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/visual-tour.md
-publication_effect: native wiki documentation only; no data admission or release
-evidence_checkpoint: main@459ffbe892929cbe994add8665805549694740b6
+evidence_checkpoint: main@17f106d558674ec92a11809bcf3a06c82453777e; hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
+publication_effect: none until reviewed source is separately synchronized
 -->
 
 # Visual tour
 
-**From a place on the map to the records behind it.**
+**Five views. Real renderer output. Dates and limits in the frame.**
 
-This is an illustrated product walkthrough. The diagrams are original project artwork, not screenshots, live readings, or an assertion that every proposed capability is accepted. Each stop links to source documentation at the inspected repository revision.
+These are excerpts from the program's existing October 20 rendered map tours,
+rechecked and converted for this documentation edition. Camera poses are assembled
+from source-ready frames; wind trails are illustrative. They are not real-time speed
+recordings, live conditions, or evidence of a released KFM dataset.
 
-[Builder profile](builder-profile.md) · [Engineering case studies](engineering-case-studies.md)
+[Home](Home.md) · [Build and tests](Project-Status.md) · [Engineering cases](engineering-case-studies.md)
 
-## 01 · Start with a place
+## Read the Flint Hills in 3D
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-explorer-walkthrough-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-explorer-walkthrough.svg" alt="Conceptual map workspace with investigation controls, source context, and an evidence panel." width="100%" /></picture>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-terrain.jpg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-terrain.webp" alt="Recorded Explorer map tour: Flint Hills elevation relief. Attributed October 20 display; seven-second finite playback." width="100%" /></picture>
 
-Choose an area, establish the question, then bring the relevant context into view. The Explorer's [map research tools](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/apps/site/source/docs/map-research-tools.md) connect measurement, comparison, saved investigations, and reporting. The design goal is a short path from exploration to an inspectable source.
+Mixed-source terrain at 1.0× vertical display. Imagery and elevation reveal landform
+context; they do not establish survey accuracy or dated landform change.
+[Still](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-terrain.jpg) · [Replay the seven-second tour](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-terrain.webp) · [Terrain guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/docs/terrain-surface.md).
 
-**Design decision:** Reveal detail as the investigation needs it, while keeping the map and its context legible.
+## Follow the water
 
-## 02 · Look beneath the surface
+[![Recorded water map display. Select to watch the seven-second tour.](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-water.jpg)](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-water.webp)
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-feature-underground-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-feature-underground.svg" alt="Illustrative subsurface columns with source-specific depths, separated intervals, and a linked surface context." width="100%" /></picture>
+USGS hydrography above Tuttle Creek terrain. Mapped channels and waterbodies are distinct from station discharge, current lake level, flood extent and lake-bed depth.
 
-The [Underground Explorer](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/apps/site/source/docs/underground-explorer.md) connects location selection to recorded wells, cores, and original intervals. Its cutaway makes depth easier to inspect, while source descriptions, gaps, and units remain available.
+[Watch the motion](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-water.webp) · [Source and controls](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/docs/water-flow-paths.md).
 
-**Design decision:** Use 3D to explain recorded structure. Preserve unknowns and keep illustrative column width distinct from geographic footprint. Record time filters records; it does not reconstruct changing geology.
+## Look beneath the plains
 
-## 03 · Put two moments side by side
+[![Recorded groundwater map display. Select to watch the seven-second tour.](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-groundwater.jpg)](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-groundwater.webp)
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-feature-history-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-feature-history.svg" alt="Illustrative Kansas history comparison showing two time views with retained source context." width="100%" /></picture>
+KGS High Plains saturated-thickness classes for 2022–2024. Regional estimates are not parcel measurements; monitoring locations do not themselves provide water-level readings.
 
-[Historical imagery comparison](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/apps/site/source/docs/history-comparison.md) supports swipe and side-by-side views for compatible approved, installed years of one product. Each side retains its period, attribution, and limitations; unavailable imagery stays unavailable. A bounded image-mosaic fallback supports inspection without WebGL.
+[Watch the motion](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-groundwater.webp) · [Source and controls](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/docs/aquifers-groundwater.md).
 
-**Design decision:** Make the comparison easy to operate without suggesting that color differences alone establish a measured or causal change.
+## Trace an earlier network
 
-## 04 · Keep evidence within reach
+[![Recorded history map display. Select to watch the seven-second tour.](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-history.jpg)](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-history.webp)
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-feature-evidence-drawer-dark.svg" /><img src="https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/kfm-feature-evidence-drawer.svg" alt="Conceptual evidence drawer beside a map, presenting source identity, time, and limitations." width="100%" /></picture>
+KDOT routes digitized from 1918 references, on explicitly modern imagery. Approximate alignment is not a historic landscape reconstruction or proof of public access.
 
-The evidence interface gives the selected result a source and a context. The [reviewed-water implementation](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/apps/site/source/docs/governed-water.md) separates source observations from independently trusted review/release metadata and withholds data when an eligible release cannot be established.
+[Watch the motion](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-history.webp) · [Source and controls](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/docs/transport-construction-history.md).
 
-**Design decision:** A useful application explains absence, expiry, and uncertainty as carefully as it explains a visible result.
+## Read the atmosphere
 
-## What to ask in a demonstration
+[![Recorded wind map display. Select to watch the seven-second tour.](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-wind.jpg)](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-wind.webp)
 
-| Try this | Observe this |
+Open-Meteo NCEP GFS 10 m forecast grid valid October 20. Trail motion is illustrative, not measured parcels, and the displayed forecast is not current.
+
+[Watch the motion](https://raw.githubusercontent.com/bartytime4life/Kansas-Frontier-Matrix/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/kfm-tour-wind.webp) · [Source and controls](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/docs/governed-weather.md).
+
+## From a view to an investigation
+
+| In the program | Look for |
 |---|---|
-| Select a recorded subsurface interval | Original description, unit, depth reference, and source context remain attached |
-| Select an imagery year with no installed data | The previous year's image is not silently reused |
-| Switch areas or stations during a load | A late response cannot be presented as the newly selected result |
-| Inspect a withheld reviewed-water response | The interface distinguishes unavailable release state from absence of a source observation |
+| Choose a category | A map style, relevant layers and honest source/display limits |
+| Open a source or observation | Attribution, dates, units and the distinction between reference, model and observation |
+| Change time or compare | The period of each source; unavailable coverage must remain unavailable |
+| Ask or export | Interpretive/draft labels, citations, redaction and applicable review boundaries |
 
-These are a review agenda, not a claim that this wiki refresh performed application acceptance. The hosted Explorer remains owner-private; the [installation guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/docs/installation.md) and public source provide a separate route for technical evaluation.
+This table is an exploration agenda. The [qualification record](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/codex/docs-living-showcase-20261027/docs/reports/documentation-showcase-qualification-20261027.md)
+separates exercised behavior from unperformed acceptance.
 
-**Next:** [Read the engineering decisions](engineering-case-studies.md). [Artwork inventory and limitations](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/459ffbe892929cbe994add8665805549694740b6/docs/brand/readme/README.md).
+## How these visuals were checked
+
+Five source WebM hashes match the existing derivative provenance at hosted
+[`bbcec824fe57`](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bbcec824fe57e6be0409ba1e35d737fa99581560/scripts/welcome-demos/runtime-assets.json).
+Each input has a complete 120-frame capture record. The new previews preserve source
+captions and attribution, play once for seven seconds and contain multiple distinct
+decoded frames. The hero offers a reduced-motion still; the remaining tours load as
+JPEG gallery links. A still is always available independently of GitHub image behavior.
+
+[Source/delivery hash inventory](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/showcase-media.json) ·
+[Capture method and rights boundary](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/974d3b340e619effc91d8da98cf9e67d95119df9/docs/brand/readme/README.md#recorded-map-tours--october-27-2026).
+The older SVG artwork remains illustrative. Provider imagery remains subject to its
+original terms; this update does not certify broader reuse rights.

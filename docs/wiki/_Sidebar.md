@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: _Sidebar
 title: Kansas Frontier Matrix Wiki Navigation
 status: PROPOSED wiki source; review required
-updated: 2026-10-09
+updated: 2026-10-27
 authority: navigation-only; canonical repository evidence and adopted KFM authority outrank this page
 source_path: docs/wiki/_Sidebar.md
 publication_effect: none until separately synchronized to the native GitHub Wiki
@@ -16,7 +16,7 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 **Portfolio tour**
 
 - [Builder profile](builder-profile.md) — capabilities and human–AI workflow
-- [Visual tour](visual-tour.md) — four illustrated product moments
+- [Visual tour](visual-tour.md) — five recorded map views
 - [Engineering case studies](engineering-case-studies.md) — decisions, code, and tests
 
 **Technical reference**
