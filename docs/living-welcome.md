@@ -49,7 +49,7 @@ existing app/, tests/ and docs/ responsibilities under adopted Directory Rules
 and accepted ADR-0029; no schema, contract, registry, lifecycle or proof home is
 created. The preserved Site and read-only sources/ references are untouched.
 
-Local qualification: 56 focused welcome, map-engine, playback and satellite
+Local qualification: 60 focused welcome, map-engine, playback and satellite
 checks passed; production build and TypeScript passed. Changed-file lint has
 zero errors and one inherited unused terrain-destructuring warning. The reused
 local dependency installation is not an exact-lock qualification. A local
@@ -59,6 +59,18 @@ checks category-specific content, poster-only opening, native requested video
 play/pause and source limits, and retains welcome screenshots with the existing
 14-day workspace artifact. Provider APIs are unavailable fixtures and off-origin
 traffic is blocked: this is not hosted provider-health acceptance.
+
+The first exact-head delivery run, [40559833962](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/40559833962)
+at `9b0dc07f83f231628d696d95a16419b7146c3546`, passed exact-lock install,
+build, types and both MySQL checks. The Node suite reported 1,960 cases:
+1,940 passed, one failed, 19 skipped. The old capability-preview test still
+expected automatic image animation and lacked the new playback-helper import.
+This patch-caused test migration was omitted from the initial focused run; it
+is not attributed to the environment. The follow-up checks poster-only behavior
+across pause, visibility and category changes, retaining archive/provenance and
+uncaptured-domain checks. Explicit native playback/error cleanup remains covered
+by the new demo tests and the required browser cases. Browser stages were skipped
+after the suite failure; only the follow-up exact-head result can qualify them.
 
 Performance protection is bounded to idle motion, decoder admission, polling,
 request deadlines and source reuse. No production FPS, energy, memory or Core

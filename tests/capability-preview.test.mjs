@@ -4,24 +4,30 @@ import {readFile} from 'node:fs/promises';
 import {componentHarness,findNode} from './component-harness.mjs';
 import {capabilityPreviews,capabilityNote} from '../app/living-welcome/capability-catalog.mjs';
 
-test('selected capture stops animation when paused, hidden or failed; no video decoder is mounted',async()=>{
+test('unrequested captures stay still across pause, visibility and selection without a decoder',async()=>{
  const listeners=new Map(),document={hidden:false,addEventListener:(k,v)=>listeners.set(k,v),removeEventListener:k=>listeners.delete(k)};
- const h=await componentHarness('app/living-welcome/CapabilityPreview.jsx',{}, {document});
+ const h=await componentHarness('app/living-welcome/CapabilityPreview.jsx',{
+  './motion-playback.mjs':{bindPlayback:()=>assert.fail('opening or changing a category cannot admit a decoder')},
+ },{document});
  const props={demo:capabilityPreviews('weather')[0]};
  const render=()=>{const t=h.render(h.exports.CapabilityPreview,props);h.commit();return t;};
- let tree=render();assert.equal(findNode(tree,n=>n.type==='video'),undefined);
- assert.equal(findNode(tree,n=>n.type==='img').props.src,props.demo.animation);
- props.paused=true;tree=render();assert.equal(findNode(tree,n=>n.type==='img').props.src,props.demo.poster);
- props.paused=false;document.hidden=true;listeners.get('visibilitychange')();tree=render();assert.equal(findNode(tree,n=>n.type==='img').props.src,props.demo.poster);
- document.hidden=false;listeners.get('visibilitychange')();tree=render();findNode(tree,n=>n.type==='img').props.onError();tree=render();assert.equal(findNode(tree,n=>n.type==='img').props.src,props.demo.poster);
- props.demo=capabilityPreviews('water')[0];tree=render();assert.equal(findNode(tree,n=>n.type==='img').props.src,props.demo.animation,'failure does not contaminate another capture');
+ const still=tree=>{
+  assert.equal(findNode(tree,n=>n.type==='video'),undefined);
+  assert.equal(findNode(tree,n=>n.type==='img').props.src,props.demo.poster);
+  assert.equal(tree.props['data-moving'],false);
+ };
+ still(render());
+ props.paused=true;still(render());
+ props.paused=false;document.hidden=true;listeners.get('visibilitychange')();still(render());
+ document.hidden=false;listeners.get('visibilitychange')();still(render());
+ props.demo=capabilityPreviews('water')[0];still(render());
  h.dispose();assert.equal(listeners.size,0);
 });
 
 test('context reuse and uncaptured workspaces cannot invent observation coverage',()=>{
  assert.match(capabilityPreviews('ecology')[0].context,/no species inventory/);
  assert.match(capabilityPreviews('people')[0].context,/not individual people/);
- for(const id of ['sky','evidence']){assert.deepEqual(capabilityPreviews(id),[]);assert.match(capabilityNote(id),/No verified/);}
+ for(const id of ['sky','evidence','science','geology','aviation']){assert.deepEqual(capabilityPreviews(id),[]);assert.match(capabilityNote(id),/No verified/);}
 });
 
 test('archived hourglass component keeps reduced motion and hidden tabs still',async()=>{
