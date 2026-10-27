@@ -1027,7 +1027,7 @@ export const applyOfficialContextState = (
 /** Select one provider catalog raster. No service-default or undated tile is used. */
 export const setNoaaSatelliteFrame = (map: MapLibreMap, frame: NoaaSatelliteFrame, visible: boolean, opacity: number): void => {
   const satellite = OFFICIAL_CONTEXT_BY_ID["noaa-goes-geocolor"];
-  const tileUrl = noaaSatelliteTileUrl(frame);
+  const tileUrl = noaaSatelliteTileUrl(frame, typeof map.getPixelRatio === "function" ? map.getPixelRatio() : 1);
   let source = map.getSource(satellite.sourceId) as RasterTileSource | undefined;
   if (!source) {
     map.addSource(satellite.sourceId, { type: "raster", tiles: [tileUrl], tileSize: 256, attribution: satellite.attribution,

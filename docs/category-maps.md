@@ -353,8 +353,13 @@ Every map draws at the screen's own density and on real terrain.
   at least 0.38 exaggeration (the storm base's had been 0.18, too faint to
   read on its dark ground). The basemap DEM loads to zoom 12, about 38 m per
   pixel, for crisper valleys and breaks at county and city scales.
+- **Satellite and 3D views.** NOAA GOES GeoColor and visible frames (the
+  Satellite view's subject) are requested at 512 px on those screens; they are
+  imagery without symbols, so they only gain detail. The Explore underground 3D
+  view renders at up to 2× (it was capped at 1.5×), like the aquifer volume.
 - **Not changed.** NOAA radar keeps nearest-neighbour 256-pixel frames, so each
-  radar cell stays an exact cell and the loop's downloads stay bounded.
+  radar cell stays an exact cell and the loop's downloads stay bounded. NOAA
+  lightning density stays at 256 px: its GLM cells are about 8 km.
 
 ## Photo-real 3D (Terrain)
 
