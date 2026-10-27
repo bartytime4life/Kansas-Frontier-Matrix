@@ -1,6 +1,6 @@
 # Hosted Explorer UI, UX, performance and functionality audit — 2026-10-27
 
-Status: **original fixes merged; follow-up corrections prepared; deployment and changed-build browser acceptance remain unverified**. This audit concerns `https://kansasfrontiermatrix.com/`, the separate GoDaddy Node composition. It is not an audit of every upstream provider, all administrative APIs, or the preserved original Site.
+Status: **fixes merged; required source CI passed; preview and public application identity matched on 2026-10-27; bounded hosted workspace checks completed**. Export completion, complete visual/accessibility acceptance, model quality and the operational gaps below remain open. This audit concerns `https://kansasfrontiermatrix.com/`, the separate GoDaddy Node composition. It is not an audit of every upstream provider, all administrative APIs, or the preserved original Site. Earlier observations and failed runs below are retained as historical evidence; the release verification section records the later result.
 
 ## Identity, ownership and placement
 
@@ -77,7 +77,41 @@ Automated review of `6ad5f820…` also identified [a P2 same-mode navigation def
 
 Follow-up [run 40541744935](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/40541744935) at `8062a7d4…` passed exact-lock installation/build/types, **1,953 Node tests (1,934 passed, 0 failed, 19 skipped)**, both MySQL checks, fire rendering, and the preceding HTTP/search/aviation browser checks. The final startup/workspace file reported **51 passed, 1 failed**: desktop and phone persistence scenarios passed; short-landscape stopped when reopening Reports after reload. Its readiness predicate could accept the previous document or server markup because both the dock and history state already existed. The fixture now requires a different navigation time origin and the application's hydrated `data-startup="ready"` marker before interaction, with a failure screenshot if reopening still fails. No application behavior or timeout is changed for this correction. Final execution of all three persistence scenarios remains governed by the latest follow-up PR check.
 
-## Open verification, release and rollback
+## Release verification — 2026-10-27
+
+### Source, CI and hosted identity
+
+- **CONFIRMED:** [PR #5514](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5514) merged as `86cf944b3fedee0c1f232759b27a6ac515782001`. GitHub's Git commit response identifies tree `c7ccf211d5327dbb3e50fae6e1018480629903c6`, identical to tested head `186a88b21d07058951955eb2b8b78fe5d7bccfa4`.
+- **CONFIRMED:** [exact-head run 40544629360](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/40544629360) completed successfully. Its logs report 1,953 Node tests: **1,934 passed, zero failed, 19 skipped**. The separate MySQL checks, production build, types, fire/HTTP/search/aviation checks, 52 startup/workspace checks and assigned-port preview startup passed. All three persistence scenarios passed at 1280×800, 390×844 and 568×320. Skips are not passing tests or proof of Worker/monorepo compatibility.
+- **CONFIRMED:** [workspace screenshots](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/40544629360/artifacts/12752773103) and [fire comparison screenshots](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/40544629360/artifacts/12751658313) are CI artifacts with 14-day retention. Their earlier failed local transfer is not called manual artifact review.
+- **CONFIRMED:** GoDaddy app `urdng3v1vk` showed hosting branch `a0-hosted-ai-web-20261017`, preview commit `86cf944…` and healthy preview infrastructure/site status. An Update Preview interaction was attempted; the interface subsequently showed pull/build progress. The dashboard later reported “Site published successfully!”; this agent did not click Publish to Live. The dashboard's completion and public identity were observed, rather than treated as authorization for another publication.
+- **CONFIRMED at 12:40 p.m. Central (17:40 UTC):** preview and public `/about` both identified source `86cf944b3fedee0c1f232759b27a6ac515782001` and application-input digest `sha256:d74c852dbb0c18c00bd62e224216620d6e9e472ffc7d5ba2780dd8c797256a33`. A clean local checkout of the tested tree returned the same digest and 1,070 source files from `node scripts/build-identity.mjs --print`. This proves the declared application-input identity, not equality of live settings, provider data, model behavior or compiled bytes.
+
+The live-to-candidate comparison is [33076dac… → 86cf944…](https://github.com/bartytime4life/Kansas-Frontier-Matrix/compare/33076dacaf247cdd7be8f22033fc798fe3a21a1f...86cf944b3fedee0c1f232759b27a6ac515782001): ten commits and 28 changed files, including merged PRs #5511–#5514. Thus the hosted update also includes the topographic-label and satellite/subsurface changes; its scope is broader than the six-file #5514 follow-up. No layout redesign was authored in this verification pass.
+
+### Bounded rendered acceptance
+
+| Flow | Result and limit |
+|---|---|
+| Preview map startup | MapLibre reached ready with real basemap tiles. Closing quick start returned to the map. |
+| Reports and Stories | Fresh default drafts were used; distinct synthetic QA titles survived switching and a full reload. The report retained its original capture timestamp. New Stories contained one map scene; unpublished labels and disabled publication remained. These QA edits were device-local on the preview origin. |
+| Responsive inspection | Desktop (1280×800) and phone (390×844) report views were visually inspected. At 568×320, Reports/Stories navigation and keyboard Tab → Return to map → Enter worked. CSS viewport width and document width were both 568; no document-level horizontal overflow was observed. This is a bounded Chrome check, not complete pixel, screen-reader, other-engine or physical-device acceptance. |
+| JSON export | Export report JSON was activated. The browser download observer timed out after 15 seconds and no application console error was captured. Browser security policy blocked inspecting its download-management page. Completion and file contents remain **NEEDS VERIFICATION**; this alone does not establish an application export defect. |
+| Public knowledge recovery | The new live build retained `Ellsworth` after Search and Retry search returned the reviewed-store-unavailable response. Separate map-subject and historical-source links rendered. The recovery UI is confirmed; successful released-record retrieval is not. |
+| Public curated snapshots | The page settled at “withheld — Published snapshots are not configured yet,” with its boundary map ready. Configuration/admission/release closure is still required; this is not a blank-map rendering failure. |
+| Public Observatory | Radar failure again withheld the requested frame. Continue without radar removed the failure overlay and re-enabled Play; the next frame was still buffering at that observation. This does not qualify upstream radar health or temporal pixel accuracy. |
+
+### Remaining release checks and recovery
+
+The earlier open-verification list remains a checklist, not a claim that the source CI or application identity is still unverified. Required exact-tree CI and the bounded hosted checks above are complete. Complete export delivery/content inspection, model-context answer quality, full visual/accessibility acceptance, other engines/devices and production performance measurements remain open. The observed source-store, radar and curated-service states need separate diagnosis; do not create a release or substitute unreviewed records merely to fill the UI.
+
+For an operational regression, stop further rollout, retain the failing flow/build identity and diagnostic times, export important device-local drafts when possible, and use the existing hosting recovery process to restore the previously serving application revision `33076dacaf247cdd7be8f22033fc798fe3a21a1f` without resetting stores, secrets, model files, DNS or the preserved Site. That previous revision contains the defects corrected here; restoration is a containment option, not an assertion that it is a preferred release. Recheck application identity and map/search/workspace recovery after an authorized rollback. No rollback drill was performed in this session.
+
+This status update belongs to the existing `docs/` audit responsibility under accepted ADR-0029 and the adopted Directory Rules. It creates no release authority, parallel proof home, schema or publication decision.
+
+## Earlier open-verification checklist
+
+This checklist records the initial authoring hold. The later source-CI, hosted-identity and bounded browser results above supersede those individual pending items; remaining acceptance gaps stay explicit.
 
 1. Run exact-lock installation, build, required CI and changed-build desktop/mobile/keyboard acceptance in a capable environment. Test distinct saved report/story titles, immediate exit after editing, storage quota recovery, return-to-map motion, hidden-tab status checks, and knowledge retry. A failure requires revision.
 2. Re-run the observed assistant question against the proposed build/model, including an earlier year, a future selected frame and no selected layers. A corrected prompt is not a qualified model. Keep unverified labels and independent public-AI policy controls.
