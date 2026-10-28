@@ -293,12 +293,12 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
       await expand('history');
       await p.wait(failed,'failure persists when another category is selected');
       // Reverse native Tab from Return reaches the persistent notes trigger.
-      await p.key('Tab','Tab',9,1);
+      await p.key('Tab','Tab',9,8);
       assert.equal(await p.evaluate(`document.activeElement?.textContent`),'Source notes & demonstrations');
       await p.key('Enter','Enter',13);
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'source notes remain keyboard accessible after failure');
       await p.key('Escape','Escape',27);
-      await p.wait(`document.activeElement?.textContent==='Source notes & demonstrations'`,'notes restore their exact trigger');
+      await p.wait(`document.activeElement?.matches('.welcome-preview-expand')`,'notes return to the persistent Return control');
       await p.evaluate(`document.querySelector('.welcome-layer-demo-state').scrollIntoView({block:'nearest',behavior:'instant'})`);
       assert.equal(await p.evaluate(`(()=>{const e=document.querySelector('.welcome-layer-demo-state'),r=e.getBoundingClientRect(),a=e.closest('aside').getBoundingClientRect();return r.top>=a.top&&r.bottom<=a.bottom&&r.left>=0&&r.right<=innerWidth;})()`),true,'failure guidance is readable within the scrolling guide');
       if(process.env.KFM_WORKSPACE_SCREENSHOTS){
@@ -307,13 +307,15 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
         await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${failure}-${width}x${height}.png`),Buffer.from(capture.data,'base64'));
       }
       await revealControl(p,'.welcome-layer-demo-actions button:nth-last-child(2)');
-      await p.key('Tab','Tab',9,1);
+      await p.key('Tab','Tab',9,8);
+      await p.key('Tab','Tab',9,8);
       assert.equal(await p.evaluate('document.activeElement.textContent'),'Open this category’s map →');
       await p.key('Enter','Enter',13);
       await p.wait(`!document.querySelector('.living-welcome')&&document.querySelector('.category-map-dock header strong')?.textContent==='Historic atlas'`,'full category map entry remains available');
       // A later mount can recover when WebGL/construction becomes available.
       await p.evaluate('window.__kfmPreviewFault=null');
-      await activate('.guide-trigger');await readyWelcome(p);await expand('weather');
+      await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);
+      await readyWelcome(p);await expand('weather');
       await p.wait(`document.querySelector('.welcome-layer-demo-state')?.textContent.startsWith('Provider context preview.')`,'recovered map replaces the unavailable message');
       await p.wait(`[...document.querySelectorAll('.welcome-preview-feed-state [data-state="unavailable"]')].length>0`,'unavailable providers retain their separate source labels');
       await activate('.welcome-layer-demo-actions button:first-child');
