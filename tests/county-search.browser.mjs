@@ -288,9 +288,12 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       await p.wait(`document.querySelector('#global-search-results button strong')?.textContent === 'Ellsworth County'`, 'county report result available');
       await p.key('ArrowDown', 'ArrowDown', 40); await p.key('Enter', 'Enter', 13);
       await p.wait(`document.querySelector('.evidence-drawer[data-open="true"] h2')?.textContent.includes('Ellsworth')`, 'county report drawer');
+      const drawerTitle = await p.evaluate(`document.querySelector('.evidence-drawer[data-open="true"] h2').textContent.trim()`);
+      assert.equal(drawerTitle, features[0].properties.name, 'drawer retains the provider name; the search label adds County');
       const beforeTime = await p.displayTime();
+      assert.match(beforeTime.year ?? '', /^\d+$/, 'actual displayed map year is observed before report handoff');
       await p.clickButton('.evidence-drawer', 'Create report');
-      await p.wait(`document.querySelector('.report-preview [aria-label="Selected provider source context"]')?.textContent.includes('Ellsworth')`, 'provider context report preview');
+      await p.wait(`document.querySelector('.report-preview [aria-label="Selected provider source context"] h4')?.textContent === ${JSON.stringify(drawerTitle)}`, 'provider context report preview retains drawer title');
       const preview = await p.evaluate(`document.querySelector('.report-preview').innerText`);
       assert.match(preview, /EXTERNAL_CONTEXT_ONLY/); assert.match(preview, /No KFM EvidenceBundle attached/);
       assert.match(preview, /2020 Census/); assert.match(preview, /20053/); assert.match(preview, /6,376/);
@@ -317,17 +320,17 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       const downloads = await p.evaluate('window.__providerReportDownloads');
       const json = JSON.parse(downloads.find(item => item.type === 'application/json').text);
       assert.equal(json.scope, 'SELECTION'); assert.equal(json.selection.role, 'EXTERNAL_CONTEXT_ONLY');
-      assert.equal(json.selection.evidenceBundle, null); assert.equal(json.selection.context.title, 'Ellsworth County');
+      assert.equal(json.selection.evidenceBundle, null); assert.equal(json.selection.context.title, drawerTitle);
       assert.match(json.selection.context.sourceTime, /^2020 Census/);
       assert.equal(json.selection.context.attributes.find(item => item.label === 'Census edition').value, '2020');
       assert.equal(json.selection.context.attributes.find(item => item.label === 'Population count').value, '6,376');
       assert.match(json.selection.context.sourceUrl, /^https:\/\//); assert.deepEqual(json.records, []);
-      assert.ok(json.activeTime.value >= 2026, 'the provider 2020 baseline is not relabeled as the current map frame');
+      assert.equal(json.activeTime.value, Number(beforeTime.year), 'report preserves the observed map frame separately from the provider 2020 baseline');
       const html = downloads.find(item => item.type === 'text/html').text;
-      for (const value of ['Ellsworth County', '2020 Census', '20053', '6,376', 'EXTERNAL_CONTEXT_ONLY', 'No KFM EvidenceBundle']) assert.ok(html.includes(value), `HTML keeps ${value}`);
+      for (const value of [drawerTitle, '2020 Census', '20053', '6,376', 'EXTERNAL_CONTEXT_ONLY', 'No KFM EvidenceBundle']) assert.ok(html.includes(value), `HTML keeps ${value}`);
       assert.ok(html.includes(json.selection.context.sourceUrl.replaceAll('&', '&amp;')), 'HTML keeps the escaped source URL');
       assert.deepEqual(p.errors, []);
-      t.diagnostic(JSON.stringify({width, scenario:'provider-context-report', sourceTime:json.selection.context.sourceTime, activeTime:json.activeTime.label, formats:downloads.map(item=>item.type)}));
+      t.diagnostic(JSON.stringify({width, scenario:'provider-context-report', title:drawerTitle, sourceTime:json.selection.context.sourceTime, activeTime:json.activeTime.label, formats:downloads.map(item=>item.type)}));
     });
     await t.test('failed county response explains coverage and preserves layer/source matches', async () => {
       await p.open(); await p.fill('Ellsworth');
