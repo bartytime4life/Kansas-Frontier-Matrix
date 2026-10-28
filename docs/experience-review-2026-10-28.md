@@ -122,3 +122,56 @@ database migrations, persisted-contract changes, hosting edits or activated
 sources to undo. Re-run the report privacy/handoff, source-status and curated
 tests after reconciliation with future work. Publication requires its own
 identified candidate, validation and release decision.
+
+## Review follow-up: provider source use boundaries (2026-10-28)
+
+A fresh GitHub read found PR #5533 open and ready for review, with head
+`fd1b056477210076cbe1fb675f88bb026effbb16` and hosted target
+`d126c81b80a8c8c1e939aebd29c972fc0ed825d8`. The hosted branch had not advanced.
+The earlier exact-head CI success applies to that reviewed head, not to this
+follow-up. This follow-up has not been merged, deployed or published.
+
+A subsequent native inspection of the authenticated GoDaddy app `urdng3v1vk`
+identified the Published record as `d126c81b80a8c8c1e939aebd29c972fc0ed825d8`,
+with infrastructure and site status OK. The separately selected Preview record
+reported the same revision, infrastructure OK and site Idle, with the provider's
+automatic-pause explanation. The public About page still reported input digest
+`sha256:1c1550ded1cd3a3d456aec82d85a3bee20994660cbfbbfa8f187f8a38c845c5a`,
+matching the independently computed base source-input profile. This supersedes
+the earlier About-only uncertainty about the recorded hosting revisions. These
+are hosting and source-input metadata observations, not an attestation of
+delivered build bytes or runtime configuration. The existing deployed preview
+was subsequently opened from its idle state and rendered the Explorer and KGS
+groundwater preview. No source, hosting configuration or publication was changed.
+
+The [automated P1 review](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5533#discussion_r4403551618)
+identified a reproducible omission: the provider report retained KGS snapshot
+availability caveats but lost the source-specific use boundary. Groundwater
+polygon classes are regional estimates rather than measurements; monitoring
+location membership does not establish a current measurement or continuous
+record. The configured source boundaries state these distinctions, and the
+drawer retained them, but the report projection omitted them.
+
+The follow-up preserves a separate `context.sourceBoundary` from the existing
+allowlisted source plus any distinct selected-feature generalization note.
+Duplicate notes are removed, the source boundary takes priority, and the field
+is bounded to 4,000 characters. Preview, JSON and escaped HTML share that
+projection. The response/availability limitation remains a separate field,
+and the generic external-context disclaimer remains visible. Existing privacy,
+restricted, local, unknown and incompatible-selection gates withhold the source
+fields before projection. No source configuration, admission, geometry,
+persisted report contract or publication authority changes.
+
+Regression tests use the actual four configured KGS groundwater snapshot
+contracts with invented selections and execute the projection, React preview
+and HTML renderer. The suite fails three checks on the reviewed source
+(8 passed, 3 failed) and passes all 11 after the follow-up, including source-note
+bounds, literal HTML replacement tokens and withholding. Both existing custom
+report privacy checks also pass. The production build and TypeScript check pass;
+the page retains its 42 existing lint warning signatures with no new warnings or
+errors, and the changed test has no lint warnings or errors. Independent review
+found no further actionable defect in this follow-up and independently reran the
+11 handoff tests successfully. These are local follow-up results, not a claim
+that the earlier CI run covered this revision. No broad CI rerun or hosting
+mutation was performed for this authoring step. The initial history above remains
+the evidence for its original scope.

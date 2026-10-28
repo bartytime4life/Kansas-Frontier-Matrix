@@ -735,7 +735,7 @@ type ProviderReportSelection = Readonly<{
     sourceOrganization: string; sourceUrl: string | null; sourceTime: string;
     observedAt: string | null; providerUpdatedAt: string | null; retrievedAt: string | null;
     sourceState: string; fieldBasis: string; attributes: readonly DrawerAttribute[];
-    attribution: string; limitation: string;
+    attribution: string; sourceBoundary: string; limitation: string;
   }>;
 }>;
 const buildProviderReportSelection = (input: {
@@ -759,6 +759,9 @@ const buildProviderReportSelection = (input: {
   if (input.timeMismatch) return { ...withheld, status: "INCOMPATIBLE" };
   const text = (value: unknown, maximum: number) => typeof value === "string" ? value.trim().slice(0, maximum) : "";
   const timestamp = (value: unknown) => typeof value === "string" && value.length <= 80 && Number.isFinite(Date.parse(value)) ? value : null;
+  // Source use limits and any distinct selection note survive independently
+  // of feed availability caveats. Prefer the allowlisted source when bounded.
+  const sourceBoundary = [...new Set([text(source.boundary, 4000), text(selected.properties.generalizationNote, 4000)].filter(Boolean))].join(" ").slice(0, 4000);
   return {
     kind: "basemap", role: "EXTERNAL_CONTEXT_ONLY", evidenceBundle: null, status: "AVAILABLE", boundary,
     context: {
@@ -771,7 +774,7 @@ const buildProviderReportSelection = (input: {
       sourceState: text(input.sourceState, 80) || "Not available",
       fieldBasis: input.attributesCurrent ? "Latest loaded matching provider fields; summary and source time retain the selected map snapshot." : "Selected map snapshot; reselect after a feed update to refresh its fields.",
       attributes: input.attributes.slice(0, 32).map((attribute) => ({ label: text(attribute.label, 100), value: text(attribute.value, 240) })).filter((attribute) => attribute.label && attribute.value),
-      attribution: text(source.attribution, 1000), limitation: text(input.limitation ?? selected.properties.uncertainty, 4000),
+      attribution: text(source.attribution, 1000), sourceBoundary, limitation: text(input.limitation ?? selected.properties.uncertainty, 4000),
     },
   };
 };
@@ -786,7 +789,7 @@ const providerReportHtml = (selection: ProviderReportSelection | { kind: "regist
     ["Retrieved", context.retrievedAt ?? "Not available"], ["Response state", context.sourceState], ["Field basis", context.fieldBasis],
     ...context.attributes.map((attribute) => [attribute.label, attribute.value]),
   ];
-  return `${heading}<h3>${escapeReportHtml(context.title)}</h3><p>${escapeReportHtml(context.summary)}</p><p>${escapeReportHtml(context.layer)} · <code>${escapeReportHtml(context.id)}</code></p><dl>${facts.map(([label, value]) => `<dt>${escapeReportHtml(label)}</dt><dd>${escapeReportHtml(value)}</dd>`).join("")}</dl>${context.sourceUrl ? `<p><a href="${escapeReportHtml(context.sourceUrl)}" rel="noreferrer">Open provider source</a></p>` : ""}<p><strong>Limitations:</strong> ${escapeReportHtml(context.limitation)}</p><p><strong>Attribution:</strong> ${escapeReportHtml(context.attribution)}</p></section>`;
+  return `${heading}<h3>${escapeReportHtml(context.title)}</h3><p>${escapeReportHtml(context.summary)}</p><p>${escapeReportHtml(context.layer)} · <code>${escapeReportHtml(context.id)}</code></p><dl>${facts.map(([label, value]) => `<dt>${escapeReportHtml(label)}</dt><dd>${escapeReportHtml(value)}</dd>`).join("")}</dl>${context.sourceUrl ? `<p><a href="${escapeReportHtml(context.sourceUrl)}" rel="noreferrer">Open provider source</a></p>` : ""}<p><strong>Source use boundary:</strong> ${escapeReportHtml(context.sourceBoundary)}</p><p><strong>Response / availability limitation:</strong> ${escapeReportHtml(context.limitation)}</p><p><strong>Attribution:</strong> ${escapeReportHtml(context.attribution)}</p></section>`;
 };
 const validLayerPayload = (value: unknown, feed: OfficialContextFeedId, day?: string): boolean => {
   if (!value || typeof value !== "object") return false;
@@ -10601,7 +10604,7 @@ export default function Home() {
                         </dl>
                         <p>{selectedProviderReport.context.fieldBasis}</p>
                         {selectedProviderReport.context.sourceUrl && <a href={selectedProviderReport.context.sourceUrl} target="_blank" rel="noreferrer">Open provider source ↗</a>}
-                        <p><strong>Limitations:</strong> {selectedProviderReport.context.limitation}</p><p><strong>Attribution:</strong> {selectedProviderReport.context.attribution}</p>
+                        <p><strong>Source use boundary:</strong> {selectedProviderReport.context.sourceBoundary}</p><p><strong>Response / availability limitation:</strong> {selectedProviderReport.context.limitation}</p><p><strong>Attribution:</strong> {selectedProviderReport.context.attribution}</p>
                       </> : <p>{selectedProviderReport.status === "INCOMPATIBLE" ? "Selection is incompatible with the active map time; source details are omitted." : "Selection details are withheld for privacy or unavailable public provenance."}</p>}
                     </section>}
                     {(reportQuery || reportEvidenceFilter !== "ALL") && <div className="report-active-filters"><span>ACTIVE FILTERS</span>{reportQuery && <b>Search: {reportQuery}</b>}{reportEvidenceFilter !== "ALL" && <b>{reportEvidenceFilter.replaceAll("_", " ")}</b>}<button type="button" onClick={() => { setReportQuery(""); setReportEvidenceFilter("ALL"); }}>Clear</button></div>}

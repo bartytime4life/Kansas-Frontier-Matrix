@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import ts from 'typescript';
+import * as jsxRuntime from 'react/jsx-runtime';
+import { renderToStaticMarkup } from 'react-dom/server';
 
 // Execute the owning page's projection/renderers and actual drawer action.
 // Fixtures contain invented provider records; no network or release operation.
@@ -29,7 +31,24 @@ const provider = { id: 'census-counties', organization: 'U.S. Census Bureau', so
 const selection = { kind: 'basemap', featureId: 'official-context:county:20053', layerId: 'official-context-census-counties',
   layer: { title: 'Census counties' }, properties: { title: 'Ellsworth County', summary: '2020 Census population 6,376.', temporalScope: '2020 Census geography, population and housing baseline', year: 2026, evidenceState: 'MISSING_EVIDENCE', releaseState: 'GENERALIZED', uncertainty: 'Selected map snapshot.' }, geometry: { privateSentinel: 'NEVER_COPY_GEOMETRY' } };
 const safeUrl = value => { try { const u = new URL(value); return u.protocol === 'https:' && !u.username && !u.password ? u.href : null; } catch { return null; } };
-const project = () => execute('buildProviderReportSelection', { officialContextIdForSelection: item => item?.layerId === 'official-context-census-counties' && item.featureId.startsWith('official-context:') ? 'census-counties' : null, researchSourceUrl: safeUrl });
+// Use the actual source contracts and identity check, with invented selections.
+const aquifer = {};
+new Function('exports', ts.transpileModule(await readFile(new URL('../app/aquifer-layers.ts', import.meta.url), 'utf8'), {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
+}).outputText)(aquifer);
+const reportSources = [provider, ...aquifer.AQUIFER_RASTER_SOURCES, ...aquifer.GROUNDWATER_SNAPSHOT_SOURCES];
+const project = () => execute('buildProviderReportSelection', { officialContextIdForSelection: execute('officialContextIdForSelection', { OFFICIAL_CONTEXT_SOURCES: reportSources }), researchSourceUrl: safeUrl });
+function providerPreview(selection) {
+  let section;
+  function visit(node) {
+    if (ts.isJsxElement(node) && node.openingElement.tagName.getText(tree) === 'section'
+      && node.openingElement.attributes.properties.some(attribute => attribute.name?.getText(tree) === 'aria-label' && attribute.initializer?.text === 'Selected provider source context')) section = node;
+    ts.forEachChild(node, visit);
+  }
+  visit(tree); assert.ok(section, 'render the actual source-context preview section');
+  const js = ts.transpileModule(`return (${section.getText(tree)});`, { fileName: 'preview.tsx', compilerOptions: { jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText;
+  return renderToStaticMarkup(new Function('require', 'exports', 'selectedProviderReport', js)(() => jsxRuntime, {}, selection));
+}
 const input = overrides => ({ selected: selection, timeMismatch: false, locationPrivate: false, source: provider,
   attributes: [{ label: 'County GEOID', value: '20053' }, { label: 'Census edition', value: '2020' }, { label: 'Population count', value: '6,376' }],
   attributesCurrent: true, sourceState: 'ready', retrievedAt: '2026-10-28T12:00:00Z', providerUpdatedAt: '2026-10-27T00:00:00Z', observedAt: null, limitation: 'Synthetic fixture; no evidence admission.', ...overrides });
@@ -60,6 +79,45 @@ test('county source context retains its own 2020 source axis and bounded attribu
   assert.ok(!JSON.stringify(result).includes('NEVER_COPY_GEOMETRY'));
   assert.equal(result.context.year, undefined, 'map year is not relabeled as provider year');
   assert.equal(result.evidenceReference, undefined);
+});
+
+test('actual KGS polygon and well use boundaries survive preview, JSON and HTML alongside response limitations', () => {
+  const build = project(), html = execute('providerReportHtml', { escapeReportHtml: execute('escapeReportHtml') });
+  for (const source of aquifer.GROUNDWATER_SNAPSHOT_SOURCES) {
+    const selected = { ...selection, featureId: `official-context:${source.id}:fixture`, layerId: `official-context-${source.id}`, layer: { title: source.title },
+      properties: { ...selection.properties, title: source.title, summary: 'Invented selection of the configured public source.', temporalScope: source.freshness, generalizationNote: source.boundary, uncertainty: source.fallback } };
+    const result = build(input({ selected, source, attributes: [], attributesCurrent: false, limitation: source.fallback }));
+    assert.equal(result.context.sourceBoundary, source.boundary, `${source.id} preserves its exact use boundary without duplicate notes`);
+    assert.equal(result.context.limitation, source.fallback, 'response availability remains a separate field');
+    for (const output of [JSON.stringify(result), html(result), providerPreview(result)]) {
+      assert.ok(output.includes(source.boundary), `${source.id} use boundary survives each report surface`);
+      assert.ok(output.includes(source.fallback), 'availability caveat is retained too');
+      assert.ok(output.includes('No KFM EvidenceBundle'), 'generic claim boundary remains');
+    }
+    assert.match(source.boundary, source.id === 'kgs-monitoring-wells' ? /does not establish a current measurement/ : /polygon class codes are not measurements/);
+  }
+});
+
+test('source boundaries retain distinct selection notes, are bounded/escaped and remain withheld by every eligibility gate', () => {
+  const build = project(), escapeReportHtml = execute('escapeReportHtml'), html = execute('providerReportHtml', { escapeReportHtml });
+  const note = 'Additional selected-feature generalization note.';
+  const selected = { ...selection, properties: { ...selection.properties, generalizationNote: note } };
+  const result = build(input({ selected }));
+  assert.equal(result.context.sourceBoundary, provider.boundary + ' ' + note);
+  const malicious = '<script>PRIVATE_BOUNDARY</script> $& $` $\'';
+  const hostile = build(input({ selected, source: { ...provider, boundary: malicious } }));
+  for (const output of [html(hostile), providerPreview(hostile)]) {
+    assert.ok(output.includes('&lt;script&gt;')); assert.ok(!output.includes('<script>'));
+  }
+  assert.equal(build(input({ selected, source: { ...provider, boundary: 'x'.repeat(5000) } })).context.sourceBoundary.length, 4000);
+  for (const override of [{ locationPrivate: true }, { timeMismatch: true }, { source: undefined },
+    { selected: { ...selected, featureId: 'site-local:private', layerId: 'local-file' } },
+    { selected: { ...selected, properties: { ...selected.properties, releaseState: 'RESTRICTED' } } },
+    { selected: { ...selected, properties: { ...selected.properties, evidenceState: 'DENIED_BY_POLICY' } } }]) {
+    const withheld = build(input({ selected, source: { ...provider, boundary: malicious }, ...override }));
+    assert.equal(withheld.context, null);
+    for (const output of [JSON.stringify(withheld), html(withheld), providerPreview(withheld)]) assert.ok(!output.includes('PRIVATE_BOUNDARY') && !output.includes(note));
+  }
 });
 
 test('stale context preserves original clocks with an explicit stale response state; incompatible and missing selections disclose no fields', () => {
@@ -199,7 +257,7 @@ test('ordinary report download serializes the same context in JSON and escaped H
 test('actual HTML download preserves replacement tokens once without expanding them into document fragments', async () => {
   const blobs = [];
   const selected = { ...selection, properties: { ...selection.properties, title: 'TITLE[$&]', summary: 'SUMMARY[$`]' } };
-  const providerSelection = project()(input({ selected, attributes: [{ label: 'Literal token', value: "FIELD[$']" }] }));
+  const providerSelection = project()(input({ selected, source: { ...provider, boundary: "BOUNDARY[$&][$`][$']" }, attributes: [{ label: 'Literal token', value: "FIELD[$']" }] }));
   const report = { title: 'Literal token report', scope: 'SELECTION', activeTime: { label: '2026' }, selection: providerSelection,
     mapContext: { terrain: { heightOverlay: { enabled: false, lockedReading: null } } }, summary: null, records: [], findings: [], limitations: [], attribution: [],
     temporalComparison: { timeA: 2025, timeB: 2026, timeARecordCount: 0, timeBRecordCount: 0, recordDelta: 0, changedLayerCount: 0 } };
@@ -211,6 +269,6 @@ test('actual HTML download preserves replacement tokens once without expanding t
     document: { createElement: () => ({ click() {}, remove() {} }), body: { append() {} } }, window: { setTimeout() {} }, announce() {},
   })('html');
   const html = await blobs[0].text();
-  for (const literal of ['TITLE[$&amp;]', 'SUMMARY[$`]', 'FIELD[$&#039;]']) assert.equal(html.split(literal).length - 1, 1, `${literal} survives exactly once`);
+  for (const literal of ['TITLE[$&amp;]', 'SUMMARY[$`]', 'FIELD[$&#039;]', 'BOUNDARY[$&amp;][$`][$&#039;]']) assert.equal(html.split(literal).length - 1, 1, `${literal} survives exactly once`);
   for (const fragment of ['<!doctype html>', '<body>', '</header>', '</body>']) assert.equal(html.split(fragment).length - 1, 1, `${fragment} is not duplicated`);
 });
