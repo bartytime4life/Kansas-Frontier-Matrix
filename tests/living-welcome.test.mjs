@@ -19,8 +19,8 @@ function environment(reduced=false){
  const listeners=new Map(),media={matches:reduced,addEventListener(){},removeEventListener(){}};
  return {window:{matchMedia:()=>media},document:{hidden:false,body:{},querySelector:()=>null,activeElement:null,addEventListener:(id,fn)=>listeners.set(id,fn),removeEventListener:id=>listeners.delete(id)},listeners};
 }
-async function welcome(reduced=false){
- const env=environment(reduced),calls=[];
+async function welcome(reduced=false,globals={}){
+ const env={...environment(reduced),...globals},calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
   'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas',starters:categoryModule.CATEGORY_MAPS[topic]?.starters??[]})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
@@ -111,6 +111,49 @@ test('DomainStage reports callback and rejected initialization failures to its w
    assert.deepEqual(JSON.parse(JSON.stringify(reports)),[{mapState:'unavailable'}],failure);
   }finally{h.dispose();}
  }
+});
+
+test('a hidden welcome defers its renderer, cancels queued boot and starts only once when visible',async()=>{
+ const listeners=new Map(),queued=new Map();let id=0,starts=0,disposals=0;
+ const document={hidden:true,addEventListener:(event,fn)=>listeners.set(event,fn),removeEventListener:event=>listeners.delete(event)};
+ const h=await componentHarness('app/living-welcome/DomainStage.jsx',{
+  '../map-runtime':{BASEMAPS:{standard:{note:'Credit'}}},'../live-context':{OFFICIAL_CONTEXT_BY_ID:{}},
+  '../welcome-map-view':{welcomeView:()=>({topic:null,name:'Kansas',basemap:'standard',detail:'Context'})},
+  './map-engine.mjs':{createWelcomeMap:async()=>{starts++;return {setReduced(){},setPaused(){},setLayersVisible(){},show(){},dispose(){disposals++;}};}},
+ },{document,window:{requestIdleCallback:fn=>{queued.set(++id,fn);return id;},cancelIdleCallback:key=>queued.delete(key)}});
+ try{
+  const tree=h.render(h.exports.DomainStage,{});findNode(tree,n=>n.props?.className==='domain-stage-map').props.ref.current={};h.commit();
+  assert.equal(queued.size,0,'background tabs do not schedule a second WebGL renderer');
+  assert.equal(starts,0);
+  document.hidden=false;listeners.get('visibilitychange')();assert.equal(queued.size,1);
+  document.hidden=true;listeners.get('visibilitychange')();assert.equal(queued.size,0,'hiding before idle cancels startup');
+  document.hidden=false;listeners.get('visibilitychange')();
+  const boot=[...queued.values()][0];queued.clear();boot();await settle();
+  assert.equal(starts,1);
+  document.hidden=true;listeners.get('visibilitychange')();document.hidden=false;listeners.get('visibilitychange')();
+  assert.equal(queued.size,0);assert.equal(starts,1,'ordinary visibility changes reuse the existing map');
+ }finally{h.dispose();}
+ assert.equal(disposals,1);assert.equal(listeners.size,0);assert.equal(queued.size,0);
+});
+
+test('pointer highlights coalesce and stop on pause, reduced motion and dismissal',async()=>{
+ const frames=new Map();let id=0,rects=0,writes=0;
+ const globals={requestAnimationFrame:fn=>{frames.set(++id,fn);return id;},cancelAnimationFrame:key=>frames.delete(key)};
+ const card={getBoundingClientRect:()=>{rects++;return {left:10,top:20};},style:{setProperty(){writes++;}}};
+ const event={pointerType:'mouse',currentTarget:card,clientX:30,clientY:40};
+ const h=await welcome(false,globals);
+ const move=tree=>findNode(tree,n=>n.props?.className?.includes('topic-weather ')).props.onPointerMove(event);
+ try{
+  let tree=h.render();move(tree);move(tree);
+  assert.equal(frames.size,1);assert.equal(rects,0,'pointer bursts do not force immediate layout');
+  const paint=[...frames.values()][0];frames.clear();paint();assert.equal(rects,1);assert.equal(writes,2);
+  move(tree);findNode(tree,n=>n.props?.['aria-label']==='Pause animation').props.onClick();tree=h.render();
+  assert.equal(frames.size,0,'pausing cancels an already queued highlight');move(tree);assert.equal(frames.size,0);
+  findNode(tree,n=>n.props?.['aria-label']==='Play animation').props.onClick();tree=h.render();move(tree);assert.equal(frames.size,1);
+ }finally{h.harness.dispose();}
+ assert.equal(frames.size,0,'dismissal cancels writes to detached cards');
+ const quiet=await welcome(true,globals);
+ try{move(quiet.render());assert.equal(frames.size,0,'reduced motion performs no highlight layout or paint');}finally{quiet.harness.dispose();}
 });
 
 test('comparison controls retain category identity, work with motion off, and reset for the next glimpse',async()=>{

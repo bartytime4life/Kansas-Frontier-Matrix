@@ -1,5 +1,41 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Start-page rendering repair · 2026-10-28
+
+This follow-up starts from public composition
+`bd562032da270cab2ffc7dfc70ec30a730b7214e`, preserving the nineteen categories,
+their map looks, recordings, source clocks, entry controls and chosen pixel density.
+
+The preview now becomes visible on the first rendered frame after its selected
+style loads. Previously it also waited for `map.loaded()`, which includes
+optional provider and terrain sources: a source that remained pending could
+leave a usable map permanently transparent, including with reduced motion.
+Renderer readiness is not a claim that all tiles or observations have loaded.
+Existing loading, empty, unavailable and dated-source disclosures remain
+independent. A rejected style installation reports unavailable without exposing
+its exception and a deliberate category retry re-reads that style document.
+WebGL context loss hides the preview; a new rendered frame can reveal it again.
+
+A welcome opened in a hidden tab defers its idle renderer startup until visible.
+Queued startup is cancelled on hide/dismissal, visibility changes reuse the same
+engine, and an already-running asynchronous operation retains its cancellation
+guard. This does not suspend or replace the installed Explorer service.
+Pointer highlights retain one owned animation-frame callback, stop during
+pause/reduced motion, and cancel pending writes when the welcome closes.
+
+Deterministic regressions cover a styled frame with unresolved optional sources,
+style rejection/retry, context loss, hidden startup, duplicate visibility events,
+pointer bursts and cleanup. The pending-source regression failed before the
+renderer repair. These are behavior/operation-count checks, not physical GPU,
+FPS, live-provider, field-INP or long-duration memory qualification. Rendered
+browser and exact-head CI results belong to their separately recorded run.
+
+Placement reuses existing `app/living-welcome/`, `tests/` and this `docs/`
+responsibility under accepted ADR-0029 / Directory Rules. No source data,
+geometry, dependency lockfile, AI model/database, account, DNS, access policy or
+release control is changed. Rollback reverts this focused source change; no
+store migration is required. Public publication remains on hold.
+
 ## Preview performance follow-up · 2026-10-27
 
 This follow-up starts from hosted-branch commit

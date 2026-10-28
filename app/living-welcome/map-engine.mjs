@@ -109,9 +109,13 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
     // Drift can resume bearing/zoom, but cannot repair an interrupted center.
     if (finishTransition && styleLoaded && view) map.jumpTo(cameraOf(view));
   };
-  // Ready once a real style has drawn with its tiles settled. `idle` would also
-  // wait for the camera to stop, which the drift never does.
-  map.on('render', () => { if (!ready && !disposed && styleLoaded && map.loaded()) { ready = true; onReady?.(); } });
+  // Reveal the first frame of the installed style. `loaded()` also waits for
+  // optional provider/terrain sources, so one stalled source can hide an
+  // otherwise usable map forever (especially in a still, reduced-motion view).
+  // Renderer readiness does not attest to tile or observation availability;
+  // those retain their independent source states below.
+  map.on('render', () => { if (!ready && !disposed && styleLoaded) { ready = true; onReady?.(); } });
+  map.on('webglcontextlost', () => { if (!disposed) { ready = false; onError?.(); } });
   // The selected topic's starter layers, drawn by the Explorer's own context
   // renderer with every other provider layer hidden. Re-run after each style
   // load (a new style drops them) and as each GeoJSON payload arrives.
@@ -190,14 +194,27 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       const epoch = ++styleEpoch;
       styleKey = key; styleLoaded = false; ready = false;
       onSources?.({ topic: next.topic, mapState: 'loading', sources: [] });
+      const failed = () => {
+        if (disposed || styleEpoch !== epoch) return;
+        styleKey = null; styleLoaded = false;
+        onSources?.({ topic: view.topic, mapState: 'unavailable', sources: [] });
+      };
       // Styles are resolved here rather than through setStyle's transformStyle,
       // which waits for the previous style to load and so stalls after one fails.
-      void resolveStyle(BASEMAPS[next.basemap].style).then(style => {
+      const requestedStyle = BASEMAPS[next.basemap].style;
+      void resolveStyle(requestedStyle).then(style => {
         if (disposed || styleEpoch !== epoch) return;
-        map.setStyle(welcomeStyle(style, view), { diff: false });
-        // Jumping ends a move, which starts the drift for the view selected now.
-        map.once('style.load', () => { if (disposed || styleEpoch !== epoch) return; styleLoaded = true; drawData(); map.jumpTo(cameraOf(view)); });
-      }, () => { if (!disposed && styleEpoch === epoch) { styleKey = null; onSources?.({ topic: view.topic, mapState: 'unavailable', sources: [] }); } });
+        try {
+          map.setStyle(welcomeStyle(style, view), { diff: false });
+          // Jumping ends a move, which starts the drift for the view selected now.
+          map.once('style.load', () => { if (disposed || styleEpoch !== epoch) return; styleLoaded = true; drawData(); map.jumpTo(cameraOf(view)); });
+        } catch {
+          // A fetched document can parse as JSON yet be rejected by MapLibre.
+          // A deliberate retry must re-read it rather than reuse that document.
+          if (typeof requestedStyle === 'string') styleDocuments.delete(requestedStyle);
+          failed();
+        }
+      }, failed);
     } else if (!styleLoaded) {
       // The pending style jumps to this view, and draws its data, when it loads.
     } else {

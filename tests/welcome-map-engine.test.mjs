@@ -192,6 +192,45 @@ test('the preview is ready on its first settled frame even while the camera drif
   engine.dispose();
 });
 
+test('a drawn style stays visible while optional starter sources are pending, including reduced motion', async t => {
+  const { engine, map, ready, sourceReports } = await start();
+  t.after(() => engine.dispose());
+  engine.setReduced(true);
+  engine.show('weather');
+  await tick(); await tick();
+  map.emit('render');
+  assert.equal(ready(), 0, 'a render before the selected style is installed is not readiness');
+  map.emit('style.load');
+  assert.equal(map.isLoaded, false, 'the source/terrain completion gate deliberately remains pending');
+  map.emit('render');
+  assert.equal(ready(), 1, 'a completed styled frame is usable without waiting on optional providers');
+  assert.ok(sourceReports.at(-1).sources.every(source => source.state === 'loading'), 'source loading is still disclosed');
+  assert.ok(!map.log.some(([name]) => name === 'easeTo'), 'reduced motion stays still');
+  map.emit('render');
+  assert.equal(ready(), 1, 'subsequent frames do not announce duplicate readiness');
+});
+
+test('a rejected style installation reports unavailable and remains retryable without leaking its error',async t=>{
+ const {engine,map,fetches,sourceReports}=await start();t.after(()=>engine.dispose());
+ const install=map.setStyle.bind(map);let reject=true;
+ map.setStyle=style=>{if(reject)throw new Error('Private style diagnostic');install(style);};
+ engine.show('evidence');await tick();fetches[0].resolve();await tick();await tick();
+ assert.equal(sourceReports.at(-1).mapState,'unavailable');
+ assert.ok(!JSON.stringify(sourceReports).includes('Private style diagnostic'));
+ reject=false;engine.show('evidence');await settle();await tick();
+ assert.equal(fetches.length,2,'retry re-reads a rejected style document');
+ fetches[1].resolve();await tick();await tick();map.emit('style.load');
+ assert.equal(sourceReports.at(-1).mapState,'ready');
+ assert.equal(map.log.filter(([name])=>name==='setStyle').length,1);
+});
+
+test('context loss hides a rendered preview and a real restored frame recovers it',async t=>{
+ const {engine,map,ready,errors}=await start();t.after(()=>engine.dispose());
+ engine.show('terrain');await tick();map.emit('style.load');map.emit('render');assert.equal(ready(),1);
+ map.emit('webglcontextlost');assert.equal(errors(),1);
+ map.emit('render');assert.equal(ready(),2,'only a new rendered frame restores visibility');
+});
+
 test('a previewed category draws its starter data with the Explorer renderer, and its GeoJSON when it arrives', async () => {
   const { engine, fetches, map } = await start();
   engine.show('geology'); await tick(); await tick();
