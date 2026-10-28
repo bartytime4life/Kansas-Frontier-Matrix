@@ -115,7 +115,7 @@ test('the page reads each day once a quarter-hour, keys and draws only the day s
  assert.match(page,/\}, \[outlookDay, outlookProduct, outlookId, outlooks, outlookFailed, outlookTick, announce\]\);/);
  assert.match(page,/const shownOutlook = outlookId \? outlooks\[outlookId\] \?\? null : null;/);
  assert.match(page,/\.\.\.\(shownOutlook \? \[spcOutlookKey\(shownOutlook\.day, shownOutlook\.product\)\] : \[\]\)/);
- assert.match(page,/setOutlookDay\(null\);\s*setOutlookHazard\("cat"\);\s*\/\/ Each map opens on its own subject/);
+ assert.match(page,/setOutlookDay\(null\);\s*setOutlookHazard\("cat"\);[\s\S]{0,80}\/\/ Each map opens on its own subject/);
  assert.match(page,/if \(outlookDay\) params\.set\("outlook", String\(outlookDay\)\);/);
  assert.match(page,/categoryMap\(restoredTopic\)\?\.tools\?\.includes\("outlook"\) \? restoredOutlook : null/);
 });

@@ -8,6 +8,7 @@ import type { PhotorealLandscape } from "./photoreal-landscapes";
 import type { MapKey } from "./map-keys";
 import type { EarthquakeRecordEvent, YearCount } from "./earthquake-record";
 import type { OutlookDay, OutlookProduct } from "./spc-outlook";
+import type { ReportDay, StormReport } from "./storm-reports";
 
 export type AquiferView = "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-aquifer-high-plains";
 const AQUIFER_VIEWS: readonly (readonly [AquiferView, string, string])[] = [
@@ -64,7 +65,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, outlook, onOutlook, onOutlookProduct, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -150,6 +151,16 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
   outlook?: Readonly<{ day: OutlookDay | null; product?: OutlookProduct; products?: readonly OutlookProduct[]; loading: boolean; failed: boolean; reading: string | null; url: string }>;
   onOutlook?: (day: OutlookDay | null) => void;
   onOutlookProduct?: (product: OutlookProduct) => void;
+  /**
+   * SPC's preliminary storm reports, for looks that offer the reports tool: the
+   * convective day shown (null when off), whether it is being read or failed,
+   * what it says for Kansas, and the report selected on the map with its
+   * magnitude, time and place already worded.
+   */
+  reports?: Readonly<{ day: ReportDay | null; loading: boolean; failed: boolean; reading: string | null; url: string;
+    selected: Readonly<{ report: StormReport; title: string; when: string | null }> | null }>;
+  onReports?: (day: ReportDay | null) => void;
+  onReportClear?: () => void;
   /**
    * NASA SMAP L4 soil moisture, for looks that offer the soil tool: whether it
    * is drawn, at which depth, what the map shows now (the exact day drawn, or
@@ -270,6 +281,25 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
           : outlook.failed ? "The SPC outlook did not answer. Try again, or another day."
           : outlook.reading}</p>
         <p className="category-map-dock-reading"><a href={outlook.url} target="_blank" rel="noreferrer">SPC outlook page ↗</a> · forecast risk, not a warning</p>
+      </>}
+    </>}
+    {look.tools?.includes("reports") && reports && onReports && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={reports.day !== null} onClick={() => onReports(reports.day === null ? "today" : null)}
+        title="Preliminary tornado, wind and hail reports collected by the NOAA Storm Prediction Center for the convective day">{reports.day === null ? "Show SPC storm reports" : "Hide storm reports"}</button>
+      {reports.day !== null && <>
+        <div className="category-map-dock-modes category-map-dock-depth" role="group" aria-label="Report day">
+          {([["today", "Today"], ["yesterday", "Yesterday"]] as const).map(([day, label]) => <button key={day} type="button" aria-pressed={reports.day === day} onClick={() => onReports(day)}>{label}</button>)}
+        </div>
+        <p className="category-map-dock-reading" aria-live="polite">{reports.loading ? "Reading the SPC storm reports…"
+          : reports.failed ? "The SPC storm reports did not answer. Try again, or the other day."
+          : reports.reading}</p>
+        {reports.selected && <div className="category-map-dock-quake-event" aria-live="polite">
+          <p><b>{reports.selected.title}</b>{reports.selected.when ? ` · ${reports.selected.when}` : ""}<br />
+            {[reports.selected.report.location, reports.selected.report.county && `${reports.selected.report.county} Co.`, reports.selected.report.state].filter(Boolean).join(", ")}
+            {reports.selected.report.comments && <><br />{reports.selected.report.comments}</>}</p>
+          <div><button type="button" onClick={onReportClear} aria-label="Clear the selected storm report">Clear</button></div>
+        </div>}
+        <p className="category-map-dock-reading"><a href={reports.url} target="_blank" rel="noreferrer">SPC storm reports ↗</a> · preliminary, unverified</p>
       </>}
     </>}
     {look.tools?.includes("population") && population && onPopulation && <>

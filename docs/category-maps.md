@@ -346,6 +346,37 @@ probability outlooks for Day 1 or 2.
   drawn; a hazard chosen on Day 3 shows the categorical risk until Day 1 or 2
   is chosen. Leaving the map closes the outlook and returns it to Risk.
 
+## SPC storm reports (Storm desk)
+
+The Storm desk dock's **Show SPC storm reports** draws the Storm Prediction
+Center's preliminary local storm reports for **Today** or **Yesterday**
+(`app/storm-reports.ts`, served by `/api/storm-reports?day=`), so the outlook
+and what was reported can be read on one map, as SPC verifies its outlooks.
+
+- **Source.** SPC's `today_filtered.csv` and `yesterday_filtered.csv`: reports
+  to the National Weather Service for one convective day, 12:00 to 11:59 UTC,
+  with duplicates near in time and place removed by SPC. The file has three
+  sections (tornado, wind, hail), each opened by its own header row; columns
+  are time (HHMM UTC), magnitude (EF rating, gust in mph, or hail size in
+  hundredths of an inch), location, county, state, latitude, longitude and
+  comments. Times before 12:00 UTC are placed on the morning that ends the
+  convective day. Coordinates written as hundredths with west longitude
+  positive are read as SPC means them; rows without a position are left out.
+  Today's file is kept five minutes on the server and re-read every five in
+  the browser; yesterday's, thirty.
+- **Symbols.** Points in SPC's report-map colours (tornado red, wind blue, hail
+  green), tornadoes drawn over wind over hail. Significant reports, at SPC's
+  thresholds of EF2 or stronger, 75 mph (65 kt) or more and hail 2 inches or
+  larger, are larger and ringed in white. The points sit above the outlook
+  lines and under the site's labels.
+- **Reading.** Kansas reports by kind with the significant count, the national
+  total and the convective day in UTC. Selecting a report shows its kind,
+  magnitude as SPC states it, time, place and the NWS office's remarks.
+- **Limits.** Preliminary and unverified: reports can be revised, merged or
+  removed, an unknown EF rating or gust speed stays unknown, and positions are
+  where the report was made, not a damage track. Storm Data and NWS damage
+  surveys are the verified record. Leaving the map closes the reports.
+
 ## High-definition rendering and real ground
 
 Every map draws at the screen's own density and on real terrain.

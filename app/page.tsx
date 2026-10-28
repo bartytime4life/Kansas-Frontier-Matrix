@@ -24,6 +24,7 @@ import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulat
 import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots } from "./reviewed-snapshots";
 import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
 import { setReviewedSnapshot } from "./reviewed-snapshot-layers";
+import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
@@ -1584,6 +1585,17 @@ export default function Home() {
   // retrievedAt can be older than the refresh (a cached answer, a skewed clock)
   // and must never make a fresh read look stale.
   const outlookReadAtRef = useRef(new Map<string, number>());
+  // SPC's preliminary storm reports (Storm desk): the convective day shown (null
+  // when off), the days read so far, the day whose read failed, and the report
+  // selected on the map.
+  const [reportsDay, setReportsDay] = useState<ReportDay | null>(null);
+  const [stormReports, setStormReports] = useState<Partial<Record<ReportDay, StormReports>>>({});
+  const [reportsFailed, setReportsFailed] = useState<ReportDay | null>(null);
+  const [reportsTick, setReportsTick] = useState(0);
+  const [reportSelected, setReportSelected] = useState<StormReport | null>(null);
+  const stormReportsRef = useRef<ReadonlyMap<string, StormReport>>(new Map());
+  // When this browser last read each day's reports, by its own clock (as for the outlook).
+  const reportsReadAtRef = useRef(new Map<ReportDay, number>());
   // The landscape the photo-real 3D view last flew to.
   const [photorealPlace, setPhotorealPlace] = useState<string | null>(null);
   // The provider hillshade switched off on entering the photograph, restored on return.
@@ -2718,6 +2730,7 @@ export default function Home() {
     if (quakeRecordOn) params.set("quakes", "record");
     if (outlookDay) params.set("outlook", String(outlookDay));
     if (outlookDay && outlookHazard !== "cat") params.set("outlookHazard", outlookHazard);
+    if (reportsDay) params.set("reports", reportsDay);
     params.set("sunDay", daylightDay);
     params.set("sunThrough", daylightThroughDay);
     params.set("sunAt", new Date(daylightInstant).toISOString());
@@ -2772,7 +2785,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -4042,6 +4055,47 @@ export default function Home() {
     return () => { map.off("styledata", restore); };
   }, [shownOutlook, styleReady]);
 
+  // Today's reports are re-read every five minutes while shown; yesterday's every half hour.
+  const chooseReports = useCallback((day: ReportDay | null) => { setReportsDay(day); setReportsFailed(null); setReportSelected(null); }, []);
+  useEffect(() => {
+    if (!reportsDay || reportsFailed === reportsDay) return;
+    const current = stormReports[reportsDay];
+    const refresh = reportsDay === "today" ? 5 * 60_000 : 30 * 60_000;
+    const readAt = reportsReadAtRef.current.get(reportsDay);
+    const age = current && readAt !== undefined ? Date.now() - readAt : Infinity;
+    if (age < refresh) {
+      const timer = setTimeout(() => setReportsTick(tick => tick + 1), refresh - age);
+      return () => clearTimeout(timer);
+    }
+    const controller = new AbortController();
+    void fetch(`/api/storm-reports?day=${reportsDay}`, { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validStormReports(value) || value.day !== reportsDay) throw new Error("Invalid SPC storm reports.");
+        reportsReadAtRef.current.set(value.day, Date.now());
+        setStormReports(current => ({ ...current, [value.day]: value }));
+        announce(`SPC storm reports on the map: ${stormReportsReading(value)}`);
+      })
+      .catch(() => { if (!controller.signal.aborted) setReportsFailed(reportsDay); });
+    return () => controller.abort();
+  }, [reportsDay, stormReports, reportsFailed, reportsTick, announce]);
+  const shownReports = reportsDay ? stormReports[reportsDay] ?? null : null;
+  useEffect(() => { stormReportsRef.current = new Map((shownReports?.reports ?? []).map(report => [report.id, report])); }, [shownReports]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const sync = () => {
+      try { syncStormReports(map, shownReports, reportSelected?.id ?? null); }
+      catch { /* The style is reloading; its styledata event draws the reports again. */ }
+    };
+    sync();
+    if (!shownReports) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(STORM_REPORTS_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [shownReports, reportSelected, styleReady]);
+
   const refreshVisibleOfficialContext = useCallback(() => {
     if (!buildYearCurrentRef.current) {
       announce("This site build does not match the UTC year; rebuild before refreshing current sources");
@@ -5096,6 +5150,8 @@ export default function Home() {
       setQuakeRecordOn(quakeLiveWasOnRef.current);
       const restoredOutlook = Number(params.get("outlook"));
       setOutlookDay((restoredOutlook === 1 || restoredOutlook === 2 || restoredOutlook === 3) && restoredTopic !== "all" && categoryMap(restoredTopic)?.tools?.includes("outlook") ? restoredOutlook : null);
+      const restoredReports = params.get("reports");
+      setReportsDay((restoredReports === "today" || restoredReports === "yesterday") && restoredTopic !== "all" && categoryMap(restoredTopic)?.tools?.includes("reports") ? restoredReports : null);
       const restoredHazard = params.get("outlookHazard");
       setOutlookHazard(isOutlookProduct(restoredHazard) ? restoredHazard : "cat");
       const officialOpacityPairs = params.get("ctxo")?.split(",").map((pair) => pair.split(":")) ?? [];
@@ -5603,7 +5659,7 @@ export default function Home() {
             const record = findLayerByRenderer(feature.layer.id);
             return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
           });
-          if (renderedHits[0]?.source === LIVING_WATERS_SOURCE || renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID) {
+          if (renderedHits[0]?.source === LIVING_WATERS_SOURCE || renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID || renderedHits[0]?.source === STORM_REPORTS_SOURCE_ID) {
             map.getCanvas().style.cursor = "pointer";
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
@@ -5714,6 +5770,13 @@ export default function Home() {
           // context underneath its schematic as evidence for that schematic.
           if (renderedHits[0]?.source === LIVING_WATERS_SOURCE) {
             setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true);
+            return;
+          }
+          // A storm report owns its selection: the dock shows the report; nothing beneath it is inspected.
+          if (renderedHits[0]?.source === STORM_REPORTS_SOURCE_ID) {
+            const id = renderedHits[0].properties?.id;
+            const report = typeof id === "string" ? stormReportsRef.current.get(id) : undefined;
+            if (report) setReportSelected(report);
             return;
           }
           // The earthquake record owns its selection: the dock shows the event; nothing beneath it is inspected.
@@ -9527,6 +9590,8 @@ export default function Home() {
     setQuakeRecordSelected(null);
     setOutlookDay(null);
     setOutlookHazard("cat");
+    setReportsDay(null);
+    setReportSelected(null);
     // Each map opens on its own subject: only its starters are on, as a starter set does.
     for (const source of OFFICIAL_CONTEXT_SOURCES) {
       const on = look.starters.includes(source.id);
@@ -10493,7 +10558,7 @@ export default function Home() {
             radar={{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME }}
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             layerVisibility={officialVisibility} onLayer={setOfficialContextVisible}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -10520,6 +10585,12 @@ export default function Home() {
               failed: outlookId !== null && outlookFailed === outlookId, reading: shownOutlook ? spcOutlookReading(shownOutlook) : null, url: SPC_OUTLOOK_PAGE } : undefined}
             onOutlook={chooseOutlook}
             onOutlookProduct={chooseOutlookHazard}
+            reports={activeCategoryMap.tools?.includes("reports") ? { day: reportsDay, loading: Boolean(reportsDay && !shownReports && reportsFailed !== reportsDay),
+              failed: reportsDay !== null && reportsFailed === reportsDay, reading: shownReports ? stormReportsReading(shownReports) : null, url: STORM_REPORTS_PAGE,
+              selected: reportSelected ? { report: reportSelected, title: `${REPORT_KINDS.find(kind => kind.id === reportSelected.kind)?.name ?? "Report"} · ${reportMagnitude(reportSelected)}`,
+                when: reportSelected.time ? reportClock(reportSelected.time) : null } : null } : undefined}
+            onReports={chooseReports}
+            onReportClear={() => setReportSelected(null)}
             onQuakeYear={year => { setQuakeRecordYear(year); setQuakeRecordSelected(null); }}
             onQuakeClear={() => setQuakeRecordSelected(null)}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
