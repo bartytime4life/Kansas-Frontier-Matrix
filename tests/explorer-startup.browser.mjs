@@ -811,8 +811,14 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     if(width===1440){
       await p.evaluate(`document.querySelector('.topic-weather').focus({preventScroll:true})`);
       await p.wait(`document.querySelector('.welcome-preview-brief h2').textContent===${JSON.stringify(categoryGlimpse('weather').title)}`,'shared brief follows keyboard interest');
+      // Measure switching between selected glimpses. The initial chooser has
+      // different introductory copy and is checked separately by checkLayout.
+      const rowTop=()=>p.evaluate(`document.querySelector('.discovery-field--grouped').getBoundingClientRect().top`);
+      const before=await rowTop();
+      await p.evaluate(`document.querySelector('.topic-history').focus({preventScroll:true})`);
+      await p.wait(`document.querySelector('.welcome-preview-brief h2').textContent===${JSON.stringify(categoryGlimpse('history').title)}`,'shared brief follows the next category');
       const after=await rowTop();
-      assert.ok(Math.abs(after-before)<2,'changing a glimpse never shifts the category rows under the pointer: '+JSON.stringify({before,after}));
+      assert.ok(Math.abs(after-before)<2,'switching category glimpses never shifts the category rows: '+JSON.stringify({before,after}));
     }
 
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
