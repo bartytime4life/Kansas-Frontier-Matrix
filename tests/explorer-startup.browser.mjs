@@ -253,6 +253,77 @@ async function pageSession(b, width, height, networkOptions = {}) {
   return { call, evaluate, wait, key, open, unobstructed, holdSceneModule, waitForSceneModule, releaseSceneModule };
 }
 
+// Exercise actual DomainStage failures, rather than injecting React state.
+// Provider I/O remains isolated by pageSession; these are UI acceptance checks.
+for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
+  test(`expanded welcome failure and recovery at ${width}x${height}`,{timeout:150000},async t=>{
+    const b=await browser(t),p=await pageSession(b,width,height);
+    const activate=async selector=>{
+      await revealControl(p,selector);
+      await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
+      await p.key('Enter','Enter',13);
+    };
+    const expand=async id=>{
+      await activate('.topic-'+id);
+      await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'category detail owns focus');
+      await activate('.welcome-dialog-body>.welcome-preview-action');
+      await p.wait(`document.querySelector('.living-welcome')?.dataset.fullscreen==='true'&&document.activeElement?.matches('.welcome-preview-expand')`,'expanded category returns focus to Return');
+    };
+    for(const failure of ['webgl','construction']){
+      await p.open('/',null,`(() => {
+        window.__kfmPreviewFault=${JSON.stringify(failure)};window.__kfmPreviewFaultHits=0;
+        const original=HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.getContext=function(type,...args){
+          if(/^webgl/.test(type)&&window.__kfmPreviewFault==='webgl'){window.__kfmPreviewFaultHits++;return null;}
+          if(/^webgl/.test(type)&&window.__kfmPreviewFault==='construction'&&this.closest('.domain-stage')){window.__kfmPreviewFaultHits++;throw new Error('Isolated preview construction failure');}
+          return original.call(this,type,...args);
+        };
+      })();`);
+      await readyWelcome(p);
+      await p.wait(`document.querySelector('.domain-stage')?.dataset.state==='unavailable'`,'actual preview reports '+failure+' failure');
+      assert.ok(await p.evaluate('window.__kfmPreviewFaultHits>0'),'the intended failure path was exercised');
+      await expand('weather');
+      const failed=`document.querySelector('.welcome-layer-demo-state')?.textContent==='Map preview unavailable. Open the map to inspect source status.'`;
+      await p.wait(failed,'failure replaces loading without a topic identifier');
+      assert.equal(await p.evaluate(`document.querySelector('.welcome-layer-demo-state').getAttribute('role')`),'status');
+      await activate('.welcome-layer-demo-actions button:first-child');
+      await p.wait(failed,'hidden overlays do not mask map failure');
+      await p.key('Escape','Escape',27);
+      await p.wait(`document.querySelector('.living-welcome').dataset.fullscreen==='false'&&document.activeElement?.matches('.welcome-preview-expand')`,'Escape restores categories and focus');
+      await expand('history');
+      await p.wait(failed,'failure persists when another category is selected');
+      // Reverse native Tab from Return reaches the persistent notes trigger.
+      await p.key('Tab','Tab',9,1);
+      assert.equal(await p.evaluate(`document.activeElement?.textContent`),'Source notes & demonstrations');
+      await p.key('Enter','Enter',13);
+      await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'source notes remain keyboard accessible after failure');
+      await p.key('Escape','Escape',27);
+      await p.wait(`document.activeElement?.textContent==='Source notes & demonstrations'`,'notes restore their exact trigger');
+      await p.evaluate(`document.querySelector('.welcome-layer-demo-state').scrollIntoView({block:'nearest',behavior:'instant'})`);
+      assert.equal(await p.evaluate(`(()=>{const e=document.querySelector('.welcome-layer-demo-state'),r=e.getBoundingClientRect(),a=e.closest('aside').getBoundingClientRect();return r.top>=a.top&&r.bottom<=a.bottom&&r.left>=0&&r.right<=innerWidth;})()`),true,'failure guidance is readable within the scrolling guide');
+      if(process.env.KFM_WORKSPACE_SCREENSHOTS){
+        await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+        const capture=await p.call('Page.captureScreenshot',{format:'png'});
+        await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${failure}-${width}x${height}.png`),Buffer.from(capture.data,'base64'));
+      }
+      await revealControl(p,'.welcome-layer-demo-actions button:nth-last-child(2)');
+      await p.key('Tab','Tab',9,1);
+      assert.equal(await p.evaluate('document.activeElement.textContent'),'Open this category’s map →');
+      await p.key('Enter','Enter',13);
+      await p.wait(`!document.querySelector('.living-welcome')&&document.querySelector('.category-map-dock header strong')?.textContent==='Historic atlas'`,'full category map entry remains available');
+      // A later mount can recover when WebGL/construction becomes available.
+      await p.evaluate('window.__kfmPreviewFault=null');
+      await activate('.guide-trigger');await readyWelcome(p);await expand('weather');
+      await p.wait(`document.querySelector('.welcome-layer-demo-state')?.textContent.startsWith('Provider context preview.')`,'recovered map replaces the unavailable message');
+      await p.wait(`[...document.querySelectorAll('.welcome-preview-feed-state [data-state="unavailable"]')].length>0`,'unavailable providers retain their separate source labels');
+      await activate('.welcome-layer-demo-actions button:first-child');
+      await p.wait(`document.querySelector('.welcome-layer-demo-state')?.textContent.startsWith('Base context only.')`,'starter comparison still hides overlays');
+      await activate('.welcome-layer-demo-actions button:first-child');
+      await p.wait(`document.querySelector('.welcome-layer-demo-state')?.textContent.startsWith('Provider context preview.')`,'starter comparison restores provider context');
+    }
+  });
+}
+
 // Opt-in measurement pass uses the same hydrated app and network isolation as
 // navigation acceptance. Timings describe this runner's empty-style/failure
 // fixture, never provider cartography, production INP or physical mobile GPUs.

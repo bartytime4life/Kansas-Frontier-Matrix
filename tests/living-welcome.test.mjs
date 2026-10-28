@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import ts from 'typescript';
-import { componentHarness, findNode } from './component-harness.mjs';
+import { componentHarness, findNode, settle } from './component-harness.mjs';
 import { SCENES, CATEGORY_IDS, HISTORY_ERAS, sceneArt } from '../app/living-welcome/catalog.mjs';
 import { MOTION_CLIPS, motionClip } from '../app/living-welcome/motion-catalog.mjs';
 
@@ -31,6 +31,87 @@ async function welcome(reduced=false){
  return {harness,props,calls,render,env};
 }
 const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.children===text);
+
+const expandedStatus=tree=>findNode(tree,node=>node.props?.className==='welcome-layer-demo-state');
+function expandCategory(h,id){
+ let tree=h.render();
+ findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();
+ byText(tree,'Preview in the welcome window →').props.onClick();return h.render();
+}
+function reportPreview(h,tree,value){
+ findNode(tree,node=>node.type==='domain-stage').props.onPreviewState(value);return h.render();
+}
+
+test('expanded map failure beats missing or stale category identity and hidden-layer copy, with working map entry',async()=>{
+ for(const fallback of [false,true]){
+  const h=await welcome();if(fallback)delete h.props.onMap;
+  try{
+   let tree=expandCategory(h,'history');
+   for(const value of [{mapState:'unavailable'},{topic:'weather',mapState:'unavailable'},{topic:'history',mapState:'unavailable'}]){
+    tree=reportPreview(h,tree,value);
+    assert.equal(expandedStatus(tree).props.role,'status');
+    assert.equal(expandedStatus(tree).props.children,'Map preview unavailable. Open the map to inspect source status.');
+   }
+   byText(tree,'Hide starter layers').props.onClick();tree=h.render();
+   assert.match(expandedStatus(tree).props.children,/Map preview unavailable/,'comparison cannot mask a failed map');
+   byText(tree,'Show starter layers').props.onClick();tree=h.render();
+   byText(tree,'Source notes & demonstrations').props.onClick();tree=h.render();
+   byText(tree,'Preview in the welcome window →').props.onClick();tree=h.render();
+   assert.match(expandedStatus(tree).props.children,/Map preview unavailable/,'reopening details preserves failure guidance');
+   byText(tree,'Open this category’s map →').props.onClick();
+   assert.deepEqual(h.calls,[[fallback?'topic':'map','history'],['close',false]]);
+  }finally{h.harness.dispose();}
+ }
+});
+
+test('expanded status preserves loading, provider failures, category switching and recovery',async()=>{
+ const h=await welcome();
+ try{
+  let tree=expandCategory(h,'history');
+  assert.equal(expandedStatus(tree).props.children,'Preparing the category map…');
+  byText(tree,'Hide starter layers').props.onClick();tree=h.render();
+  assert.equal(expandedStatus(tree).props.children,'Preparing the category map…','comparison cannot mask initial loading');
+  for(const value of [{topic:'history',mapState:'loading',sources:[]},{topic:'weather',mapState:'ready',sources:[]}]){
+   tree=reportPreview(h,tree,value);assert.equal(expandedStatus(tree).props.children,'Preparing the category map…');
+  }
+  byText(tree,'Show starter layers').props.onClick();tree=h.render();
+  tree=reportPreview(h,tree,{topic:'history',mapState:'ready',sources:[{id:'nps',label:'Park service',state:'unavailable'}]});
+  assert.match(expandedStatus(tree).props.children,/Provider context preview/,'a provider failure is separate from map availability');
+  assert.ok(findNode(tree,node=>node.type==='span'&&node.props['data-state']==='unavailable'));
+  byText(tree,'Hide starter layers').props.onClick();tree=h.render();
+  assert.match(expandedStatus(tree).props.children,/Base context only/);
+  tree=reportPreview(h,tree,{mapState:'unavailable'});
+  assert.match(expandedStatus(tree).props.children,/Map preview unavailable/);
+  byText(tree,'Return to categories').props.onClick();tree=h.render();
+  tree=expandCategory(h,'groundwater');
+  assert.match(expandedStatus(tree).props.children,/Map preview unavailable/,'global failure survives a category switch');
+  tree=reportPreview(h,tree,{topic:'history',mapState:'ready',sources:[]});
+  assert.equal(expandedStatus(tree).props.children,'Preparing the category map…','late previous-category success is not current readiness');
+  tree=reportPreview(h,tree,{topic:'groundwater',mapState:'loading',sources:[]});
+  assert.equal(expandedStatus(tree).props.children,'Preparing the category map…');
+  tree=reportPreview(h,tree,{topic:'groundwater',mapState:'ready',sources:[]});
+  assert.match(expandedStatus(tree).props.children,/Provider context preview/,'current-category readiness replaces failure');
+  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.layersVisible,true);
+ }finally{h.harness.dispose();}
+});
+
+test('DomainStage reports callback and rejected initialization failures to its welcome owner',async()=>{
+ for(const failure of ['callback','reject']){
+  let boot;const reports=[];
+  const h=await componentHarness('app/living-welcome/DomainStage.jsx',{
+   '../map-runtime':{BASEMAPS:{standard:{note:'Provider credit'}}},'../live-context':{OFFICIAL_CONTEXT_BY_ID:{}},
+   '../welcome-map-view':{welcomeView:topic=>({topic,name:'Map',basemap:'standard',detail:'Context'})},
+   './map-engine.mjs':{createWelcomeMap:async(_host,{onError})=>{if(failure==='reject')throw new Error('Initialization failed');onError();return null;}},
+  },{window:{requestIdleCallback:fn=>{boot=fn;return 1;},cancelIdleCallback(){}}});
+  const props={topic:'history',onPreviewState:value=>reports.push(value)};
+  try{
+   let tree=h.render(h.exports.DomainStage,props);findNode(tree,node=>node.props?.className==='domain-stage-map').props.ref.current={};h.commit();
+   boot();await settle();tree=h.render(h.exports.DomainStage,props);h.commit();
+   assert.equal(tree.props['data-state'],'unavailable');
+   assert.deepEqual(JSON.parse(JSON.stringify(reports)),[{mapState:'unavailable'}],failure);
+  }finally{h.dispose();}
+ }
+});
 
 test('comparison controls retain category identity, work with motion off, and reset for the next glimpse',async()=>{
  const h=await welcome(true);let tree=h.render();
