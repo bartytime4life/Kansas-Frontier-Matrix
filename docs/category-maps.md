@@ -307,26 +307,43 @@ epicentre lies inside Kansas, from 1 January 1973 to now
 ## SPC convective outlook (Storm desk)
 
 The Storm desk dock's **Show the SPC severe outlook** draws the NOAA Storm
-Prediction Center's categorical convective outlook for Day 1, 2 or 3
-(`app/spc-outlook.ts`, served by `/api/spc-outlook?day=`), beside radar and
-alerts.
+Prediction Center's convective outlooks (`app/spc-outlook.ts`, served by
+`/api/spc-outlook?day=&product=`), beside radar and alerts: the categorical
+**Risk** for Day 1, 2 or 3, and the **Tornado**, **Wind** and **Hail**
+probability outlooks for Day 1 or 2.
 
-- **Source.** SPC's own `dayNotlk_cat.lyr.geojson`, kept ten minutes on the
-  server and re-read in the browser once a shown day is a quarter-hour old,
-  since SPC reissues Day 1 several times a day. Only SPC's six categories
-  (TSTM, MRGL, SLGT, ENH, MDT, HIGH) with valid polygons are drawn; provider
-  properties other than the category do not travel.
-- **Symbols.** Outlines, not fills, so radar reflectivity keeps its colours, in
-  SPC's own category fill colours, which stay legible on the dark storm base
-  where SPC's darker stroke colours do not. Higher categories lie inside lower
-  ones, as SPC layers them. The key lists the categories with SPC's numbering,
-  1 Marginal to 5 High.
-- **Reading.** The highest category reaching Kansas (tested every 0.1°, about
-  10 km, inside the Census outline), with the outlook's issue time and valid
-  period in UTC, and a link to SPC's outlook page.
+- **Source.** SPC's own `dayNotlk_cat.lyr.geojson` and, for a hazard,
+  `dayNotlk_{torn,wind,hail}.lyr.geojson` with its conditional-intensity file
+  `dayNotlk_cig{torn,wind,hail}.lyr.geojson`. Each is kept ten minutes on the
+  server and re-read in the browser once shown for a quarter-hour, since SPC
+  reissues Day 1 several times a day. Only SPC's six categories (TSTM, MRGL,
+  SLGT, ENH, MDT, HIGH), SPC's probability bands (tornado 2, 5, 10, 15, 30, 45
+  and 60%; wind and hail 5, 15, 30, 45 and 60%, read from `DN` or the `LABEL`
+  fraction) and the intensity groups CIG1–CIG3 (hail CIG1–CIG2) with valid
+  polygons are drawn; provider properties other than the band do not travel.
+  An empty outlook, which SPC sends as a bare GeometryCollection, reads as
+  below the lowest band. If the intensity file does not answer, the
+  probabilities are drawn without it.
+- **Intensity.** Since March 2026 SPC marks conditional intensity instead of
+  the hatched "significant" areas: level 1 where significant severe weather is
+  possible (EF2+ tornadoes, 65 kt+ gusts, 2 in+ hail), higher levels where
+  storms that form could be more intense. An older `SIGN` area is read as
+  CIG1.
+- **Symbols.** Outlines, not fills, so radar reflectivity keeps its colours.
+  Categories are drawn in SPC's category fill colours; probabilities in SPC's
+  hazard hues (tornado green, brown, yellow, red, magenta, purple, blue; wind
+  and hail brown, yellow, red, magenta, purple), lightened where needed to stay
+  legible on the dark storm base. Intensity areas are dashed white lines,
+  heavier with each level. Higher bands lie inside lower ones, as SPC layers
+  them. The key lists the bands drawn for the product shown.
+- **Reading.** The highest category, or the highest probability within 25
+  miles of a point, reaching Kansas (tested every 0.1°, about 10 km, inside the
+  Census outline), the highest intensity level reaching Kansas, the outlook's
+  issue time and valid period in UTC, and a link to SPC's outlook page.
 - **Limits.** The outlook is a forecast of risk, not an observation, a watch or
-  a warning; probabilistic tornado, wind and hail outlooks are not drawn.
-  Leaving the map closes it.
+  a warning. Day 3's probability of any severe weather and Days 4–8 are not
+  drawn; a hazard chosen on Day 3 shows the categorical risk until Day 1 or 2
+  is chosen. Leaving the map closes the outlook and returns it to Risk.
 
 ## High-definition rendering and real ground
 
