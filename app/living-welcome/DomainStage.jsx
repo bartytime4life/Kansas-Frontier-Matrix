@@ -12,8 +12,8 @@ const RADAR_TIME = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago
  * The map engine loads after the welcome has painted; until then (or without
  * WebGL) the stage stays a quiet backdrop and the caption still names the map.
  */
-export function DomainStage({ topic, paused = false, reduced = false, layersVisible = true, onPreviewState }) {
- const host = useRef(null), engine = useRef(null), latest = useRef({ topic, paused, reduced, layersVisible });
+export function DomainStage({ topic, paused = false, reduced = false, layersVisible = true, aviationMode = '3d', onPreviewState }) {
+ const host = useRef(null), engine = useRef(null), latest = useRef({ topic, paused, reduced, layersVisible, aviationMode });
  const [state, setState] = useState('loading'), [sources, setSources] = useState(null);
  useEffect(() => {
   let cancelled = false, idle = null, started = false;
@@ -35,8 +35,8 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
    if (!instance) return;
    if (cancelled) { instance.dispose(); return; }
    engine.current = instance;
-   const { topic: id, paused: stopped, reduced: still, layersVisible: visible } = latest.current;
-   instance.setReduced(still); instance.setPaused(stopped); instance.setLayersVisible(visible); instance.show(id);
+   const { topic: id, paused: stopped, reduced: still, layersVisible: visible, aviationMode: mode } = latest.current;
+   instance.setAviationMode(mode); instance.setReduced(still); instance.setPaused(stopped); instance.setLayersVisible(visible); instance.show(id);
   }).catch(unavailable);
   };
   const cancelBoot = () => {
@@ -60,9 +60,10 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
   };
  }, [onPreviewState]);
  // The latest props also seed the engine when it finishes loading.
- useEffect(() => { latest.current = { topic, paused, reduced, layersVisible }; }, [topic, paused, reduced, layersVisible]);
+ useEffect(() => { latest.current = { topic, paused, reduced, layersVisible, aviationMode }; }, [topic, paused, reduced, layersVisible, aviationMode]);
  useEffect(() => { engine.current?.show(topic); }, [topic]);
  useEffect(() => { engine.current?.setLayersVisible(layersVisible); }, [layersVisible]);
+ useEffect(() => { engine.current?.setAviationMode(aviationMode); }, [aviationMode]);
  useEffect(() => { engine.current?.setPaused(paused); }, [paused]);
  useEffect(() => { engine.current?.setReduced(reduced); }, [reduced]);
  const view = welcomeView(topic);
@@ -70,6 +71,6 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
   .map(source => `${OFFICIAL_CONTEXT_BY_ID[source.id]?.shortTitle ?? source.id}${source.observedAt ? ` · ${source.product === 'visible' ? 'visible-band' : source.product === 'geocolor' ? 'GeoColor' : 'scan'} ${RADAR_TIME.format(new Date(source.observedAt))}` : ''}`) : [];
  return <div className="domain-stage" data-state={state} data-topic={view.topic ?? 'kansas'}>
   <div ref={host} className="domain-stage-map" />
-  <p className="domain-stage-caption"><span>Map preview · provider context</span><strong key={view.topic ?? 'kansas'}>{view.name}</strong><small>{view.detail}</small>{shown.length>0&&<small className="domain-stage-data">Preview layers: {shown.join(' · ')}</small>}<small className="domain-stage-credit">{BASEMAPS[view.basemap].note}</small></p>
+  <p className="domain-stage-caption"><span>Map preview · provider context</span><strong key={view.topic ?? 'kansas'}>{view.name}</strong><small>{view.topic==='aviation'?`${aviationMode==='3d'?'3D volumes · 1× heights':aviationMode==='slice'?'4,000 ft MSL slice':'2D chart'} · Pinned FAA reference; weather, traffic, drone grids and TFRs are separate.`:view.detail}</small>{shown.length>0&&<small className="domain-stage-data">Preview layers: {shown.join(' · ')}</small>}<small className="domain-stage-credit">{BASEMAPS[view.basemap].note}</small></p>
  </div>;
 }

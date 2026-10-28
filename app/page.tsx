@@ -260,7 +260,7 @@ import {
 import { ACTIVE_TERRAIN_SOURCE, STRUCTURE_3D_SOURCE, TERRAIN_SOURCES, TERRARIUM_RENDER_MAX_ZOOM, terrainSourceFor, type TerrainProvider } from "./terrain-sources";
 import { setWaterFlowMotion, subscribeWaterFlowStatus, syncWaterFlow, waterFlowIsAnimating, waterFlowReading, type WaterFlowStatus } from "./water-flow-sync";
 import { nightSkyIsTwinkling, setNightSkyTwinkle, syncBuildingStyle, syncKansasGlow, syncNightSky, syncNightSkyVisibility, syncRelief2d } from "./scene-overlays";
-import { CURTAIN_MIN_PITCH, DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, SCENE_EFFECT_KEYS, SCENE_EFFECT_OPTIONS, SCENE_LOOK_PRESETS, matchingLookPreset, effectiveSceneLight, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, readSceneEffects, setCurtainShimmer, registerSceneEffects, registerSunInstant, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings, type SceneView } from "./scene-effects";
+import { CURTAIN_MIN_PITCH, DEFAULT_SCENE_EFFECTS, KANSAS_FLYOVER, SCENE_EFFECT_KEYS, SCENE_EFFECT_OPTIONS, SCENE_LOOK_PRESETS, matchingLookPreset, effectiveSceneLight, applySelectionPulse, applyTerrainReliefStyle, curtainIsVisible, sceneEffectsForTopic, readSceneEffects, setCurtainShimmer, registerSceneEffects, registerSunInstant, sunSceneLight, syncBorderCurtain, syncBorderCurtainVisibility, writeSceneEffects, type SceneEffectSettings, type SceneView } from "./scene-effects";
 import { SceneEffectsControls, ScenePanel } from "./scene-effects-controls";
 import { DEFAULT_TERRAIN_DEPTH, terrainDepth, compositionDefaults, applyGroundView, applySceneComposition, sceneRecipePresentation, SCENE_RECIPES, type SceneComposition, type ScenePresentation, type SceneRecipe } from "./scene-studio";
 import { createTerrainDrawing } from "./terrain-drawing-runtime";
@@ -6577,10 +6577,18 @@ export default function Home() {
   }, [atmospherePreset, basemap, fieldOfView, lightAzimuth, runMapMutation, scenePreset, styleReady, terrainState]);
 
   useEffect(() => {
-    const stored = readSceneEffects();
+    const stored = sceneEffectsForTopic(readSceneEffects(), "all");
     sceneEffectsRef.current = stored;
     setSceneEffects(stored);
   }, []);
+
+  useEffect(() => {
+    const next = sceneEffectsForTopic(sceneEffectsRef.current, officialWorkspace);
+    if (next === sceneEffectsRef.current) return;
+    sceneEffectsRef.current = next;
+    setSceneEffects(next);
+    writeSceneEffects(next);
+  }, [officialWorkspace]);
 
   useEffect(() => {
     if (!sceneEffects.sunSync) return;

@@ -595,3 +595,19 @@
  .living-welcome[data-fullscreen=true]:has(.welcome-layer-demo) .domain-stage-caption{top:auto;bottom:76px;left:18px;right:18px;max-width:none;max-height:60px;overflow:auto}
 }
 @media(max-height:450px) and (min-width:701px){.living-welcome .welcome-layer-demo{top:12px;right:12px;max-height:calc(100% - 88px);padding:12px}}
+
+/* Aviation controls use the existing bounded glimpse panels; no extra renderer. */
+.living-welcome .welcome-aviation-modes{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.living-welcome .welcome-aviation-modes button{min-height:44px;padding:8px 10px;border:1px solid #8db5c080;border-radius:8px;background:#0c3443;color:#f1e6c2;font:inherit;font-size:12px;cursor:pointer}
+.living-welcome .welcome-aviation-modes button[aria-pressed=true]{border-color:#f0d59c;background:#284e59}
+.living-welcome .welcome-aviation-modes button:focus-visible{outline:3px solid #f0d59c;outline-offset:2px}
+.living-welcome .welcome-aviation-legend{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11px}
+.living-welcome .welcome-aviation-legend span{border-bottom:2px solid #4b8bce}
+.living-welcome .welcome-aviation-legend span:nth-child(2){border-color:#d278b5}
+.living-welcome .welcome-aviation-legend span:nth-child(3){border-color:#d0aa5e}
+.living-welcome .welcome-aviation-glimpse small{display:block;font-size:11px;line-height:1.5;color:#b7ced7}
+.living-welcome .welcome-aviation-tools{margin:18px 0;padding:14px;border:1px solid #8db5c04d;border-radius:10px}
+
+.living-welcome .welcome-aviation-notes{margin-top:8px;font-size:12px;color:#b7ced7}
+.living-welcome .welcome-aviation-notes summary{min-height:44px;display:list-item;padding:12px 0;cursor:pointer;color:#f1d391}
+.living-welcome .welcome-aviation-notes summary:focus-visible{outline:3px solid #f0d59c;outline-offset:2px}

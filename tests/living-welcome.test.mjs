@@ -119,7 +119,7 @@ test('a hidden welcome defers its renderer, cancels queued boot and starts only 
  const h=await componentHarness('app/living-welcome/DomainStage.jsx',{
   '../map-runtime':{BASEMAPS:{standard:{note:'Credit'}}},'../live-context':{OFFICIAL_CONTEXT_BY_ID:{}},
   '../welcome-map-view':{welcomeView:()=>({topic:null,name:'Kansas',basemap:'standard',detail:'Context'})},
-  './map-engine.mjs':{createWelcomeMap:async()=>{starts++;return {setReduced(){},setPaused(){},setLayersVisible(){},show(){},dispose(){disposals++;}};}},
+  './map-engine.mjs':{createWelcomeMap:async()=>{starts++;return {setAviationMode(){},setReduced(){},setPaused(){},setLayersVisible(){},show(){},dispose(){disposals++;}};}},
  },{document,window:{requestIdleCallback:fn=>{queued.set(++id,fn);return id;},cancelIdleCallback:key=>queued.delete(key)}});
  try{
   const tree=h.render(h.exports.DomainStage,{});findNode(tree,n=>n.props?.className==='domain-stage-map').props.ref.current={};h.commit();
@@ -592,4 +592,20 @@ test('the live map shows the default map until a visitor points at a category, t
  assert.match(JSON.stringify(findNode(tree,node=>node.props?.className==='discovery-scene')),/Aviation chart/);
  assert.deepEqual(h.calls,[],'previewing a map changes nothing in the Explorer');
  h.harness.dispose();
+});
+
+test('aviation glimpse offers three views and truthful unavailable, hidden and edition states',async()=>{
+ const h=await welcome();try{
+  const render=props=>h.harness.exports.AviationGlimpse(props);
+  const calls=[],props={mode:'3d',onMode:value=>calls.push(value),layersVisible:true};
+  let tree=render(props);
+  const group=findNode(tree,n=>n.props?.['aria-label']==='Airspace preview view');
+  assert.deepEqual(Array.from(group.props.children,n=>n.props.children),['3D zones','2D chart','4,000 ft MSL']);
+  group.props.children[2].props.onClick();assert.deepEqual(calls,['slice']);
+  assert.match(findNode(tree,n=>n.props?.role==='status').props.children,/Loading the verified/);
+  tree=render({...props,state:{aviation:{state:'unavailable'}}});assert.match(findNode(tree,n=>n.props?.role==='status').props.children,/unavailable/);
+  tree=render({...props,layersVisible:false});assert.match(findNode(tree,n=>n.props?.role==='status').props.children,/hidden/);
+  tree=render({...props,state:{aviation:{state:'ready',edition:{state:'PREVIEW',text:'Preview edition effective tomorrow.'},cycle:'2026-10-29',volumes:201,airports:533,airways:417}}});
+  assert.match(findNode(tree,n=>n.props?.role==='status').props.children,/PREVIEW edition.*NASR 2026-10-29/);
+ }finally{h.harness.dispose();}
 });

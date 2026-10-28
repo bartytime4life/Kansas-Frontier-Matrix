@@ -47,8 +47,8 @@ export const SCENE_EFFECTS_STORAGE_KEY = "kfm-scene-effects-v1";
 
 export type SceneLookPreset = "cinematic" | "natural" | "plain";
 export const SCENE_LOOK_PRESETS: Readonly<Record<SceneLookPreset, Readonly<{ label: string; detail: string; settings: SceneEffectSettings }>>> = Object.freeze({
-  cinematic: { label: "Cinematic", detail: "Every effect, including 2D relief", settings: Object.freeze({ cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: true, buildings: true, stars: true, waterFlow: true }) },
-  natural: { label: "Natural", detail: "Relief, sky and buildings; no glow", settings: Object.freeze({ cinematic: true, curtain: false, sunSync: true, kansasGlow: false, relief2d: true, buildings: true, stars: true, waterFlow: true }) },
+  cinematic: { label: "Cinematic", detail: "Relief, sky and glow; river flow opt-in", settings: Object.freeze({ cinematic: true, curtain: true, sunSync: false, kansasGlow: true, relief2d: true, buildings: true, stars: true, waterFlow: false }) },
+  natural: { label: "Natural", detail: "Relief, sky and buildings; no glow", settings: Object.freeze({ cinematic: true, curtain: false, sunSync: true, kansasGlow: false, relief2d: true, buildings: true, stars: true, waterFlow: false }) },
   plain: { label: "Plain", detail: "The original flat look", settings: Object.freeze({ cinematic: false, curtain: false, sunSync: false, kansasGlow: false, relief2d: false, buildings: false, stars: false, waterFlow: false }) },
 });
 
@@ -73,6 +73,11 @@ export function parseSceneEffects(raw: unknown): SceneEffectSettings {
   const value = raw as Record<string, unknown>;
   return Object.freeze(Object.fromEntries(SCENE_EFFECT_KEYS.map((key) => [key, typeof value[key] === "boolean" ? value[key] : DEFAULT_SCENE_EFFECTS[key]])) as SceneEffectSettings);
 }
+
+/** Navigation never carries a surface-river effect into an unrelated subject.
+ * Water retains its explicit choice; aquifer context is not surface flow. */
+export const sceneEffectsForTopic = (settings: SceneEffectSettings, topic: string): SceneEffectSettings =>
+  topic === "water" || !settings.waterFlow ? settings : Object.freeze({ ...settings, waterFlow: false });
 
 /** Device-local preference. Blocked storage simply keeps the defaults. */
 export function readSceneEffects(): SceneEffectSettings {

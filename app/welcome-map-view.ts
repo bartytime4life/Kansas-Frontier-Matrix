@@ -70,7 +70,7 @@ export function welcomeStyle(style: StyleSpecification, view: WelcomeView): Styl
   const relief = style.sources?.[BASEMAP_RELIEF_DEM_SOURCE_ID];
   const dem = relief?.type === "raster-dem" ? relief
     : { type: "raster-dem" as const, tiles: [terrarium.requestUrl], tileSize: 256, maxzoom: 11, encoding: "terrarium" as const, attribution: terrarium.attribution };
-  return { ...style, projection, sources: { ...style.sources, [WELCOME_DEM_SOURCE_ID]: { ...dem } }, terrain: { source: WELCOME_DEM_SOURCE_ID, exaggeration: WELCOME_TERRAIN_EXAGGERATION } };
+  return { ...style, projection, sources: { ...style.sources, [WELCOME_DEM_SOURCE_ID]: { ...dem } }, terrain: { source: WELCOME_DEM_SOURCE_ID, exaggeration: view.topic === "aviation" ? 1 : WELCOME_TERRAIN_EXAGGERATION } };
 }
 
 /**

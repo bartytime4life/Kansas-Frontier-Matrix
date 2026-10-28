@@ -241,3 +241,32 @@ the GoDaddy Node application:
 Verification: `tests/aviation-layer.test.mjs`, `tests/aviation-route-cache.test.mjs`,
 `tests/category-maps.test.mjs`, and in the monorepo
 `tests/connectors/test_faa_airspace.py`.
+
+
+## Welcome zone preview and river-motion defaults (2026-10-28)
+
+The Aviation & airspace welcome glimpse now lazily reads the same fixed,
+SHA256-checked NASR context asset as the full aviation map. It offers 3D zones
+at 1× display height, a top-down 2D chart, and mapped volumes intersecting
+4,000 ft MSL. The existing default controlled/surface-E/special-use groups,
+airport/runway references and Victor/T airways use the existing feature
+builders and original geometry. Mode changes reuse the map and cached data;
+comparison hides the owned overlays without refetching. A failed reference
+is named separately from basemap readiness. The cycle's preview/current/expired
+status remains visible; source inventory counts do not promise on-screen
+visibility. No weather, aircraft, TFR or UAS-grid polling starts from a hover.
+Those tools, point inspection and A→B side view remain in the opened map.
+No new capture, source admission or data activation is part of this change.
+
+All visual look presets leave river-flow animation off. Startup retains other
+device-local scene settings but begins with river flow off. Changing the layer
+topic to any non-water subject turns off an inherited river-flow choice;
+entering Water & watersheds preserves the explicit choice, including off.
+The Water dock and Effects still offer a manual toggle. Groundwater context
+does not imply surface-river animation or calculated underground flow.
+
+These edits belong in the existing `app/living-welcome`, `app`, `tests` and
+`docs` responsibility roots under ADR-0029. They do not change data assets,
+AI models/databases, native Site identity or store/hosting bindings. Rollback
+is a source revert of this focused change; no migration or store restore is
+required. Publication remains a separate, owner-held gate.
