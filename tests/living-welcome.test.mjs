@@ -22,7 +22,7 @@ function environment(reduced=false){
 async function welcome(reduced=false){
  const env=environment(reduced),calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
-  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas'})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
+  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas',starters:categoryModule.CATEGORY_MAPS[topic]?.starters??[]})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
@@ -31,6 +31,53 @@ async function welcome(reduced=false){
  return {harness,props,calls,render,env};
 }
 const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.children===text);
+
+test('comparison controls retain category identity, work with motion off, and reset for the next glimpse',async()=>{
+ const h=await welcome(true);let tree=h.render();
+ try{
+  const open=id=>findNode(tree,n=>n.type==='button'&&n.props.className?.includes('topic-callout')&&n.props.className?.includes('topic-'+id)).props.onClick();
+  open('history');tree=h.render();
+  findNode(tree,n=>n.props?.className==='welcome-text-action welcome-preview-action').props.onClick();tree=h.render();
+  const toggle=byText(tree,'Hide starter layers');assert.ok(toggle);assert.equal(toggle.props.disabled,undefined);
+  toggle.props.onClick();tree=h.render();
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,false);
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'history');
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.paused,true);
+  byText(tree,'Show starter layers').props.onClick();tree=h.render();
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,true);
+  byText(tree,'Hide starter layers').props.onClick();tree=h.render();
+  findNode(tree,n=>n.props?.className==='welcome-preview-expand').props.onClick();tree=h.render();
+  open('groundwater');tree=h.render();
+  findNode(tree,n=>n.props?.className==='welcome-text-action welcome-preview-action').props.onClick();tree=h.render();
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,true);
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'groundwater');
+ }finally{h.harness.dispose();}
+});
+
+test('every category advertises its own glimpse and the expanded guide opens that category',async()=>{
+ for(const topic of TOPIC_STRUCTURE){
+  const h=await welcome();let tree=h.render();
+  try{
+   const card=findNode(tree,n=>n.type==='button'&&n.props.className?.includes('topic-callout')&&n.props.className?.includes('topic-'+topic.id));
+   assert.equal(findNode(card,n=>n.props?.className==='topic-glimpse').props.children,categoryGlimpse(topic.id).title);
+   card.props.onClick();tree=h.render();
+   findNode(tree,n=>n.type==='button'&&n.props.className==='welcome-text-action welcome-preview-action').props.onClick();tree=h.render();
+   const guide=findNode(tree,n=>n.props?.['aria-label']==='Category demonstration');
+   assert.ok(guide,topic.id);
+   assert.equal(findNode(guide,n=>n.type==='h2').props.children,categoryGlimpse(topic.id).title);
+   assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,topic.id);
+   if(topic.id==='weather'){
+    const sourceNotes=findNode(guide,n=>n.type==='button'&&n.props.children==='Source notes & demonstrations');
+    sourceNotes.props.onClick();tree=h.render();
+    assert.equal(rootOf(tree).props['data-fullscreen'],true,'the notes trigger remains mounted for focus return');
+    findNode(tree,n=>n.props?.['aria-label']==='Close exploration details').props.onClick();tree=h.render();
+    assert.equal(rootOf(tree).props['data-fullscreen'],true);
+   }
+   findNode(guide,n=>n.type==='button'&&n.props.children==='Open this category’s map →').props.onClick();
+   assert.deepEqual(h.calls,[['map',topic.id],['close',false]]);
+  }finally{h.harness.dispose();}
+ }
+});
 
 test('visual welcome owns focus and Escape before passive effects run',async()=>{
  const h=await welcome(),input={};

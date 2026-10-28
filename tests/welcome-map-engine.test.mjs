@@ -73,6 +73,35 @@ async function start(budget = { pixelRatio: 1, tileCache: 8 }) {
 }
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
 
+test('layer comparison hides late payloads and restores cached data without rebuilding the map', async t => {
+  const { engine, map, fetches, sourceReports } = await start();
+  t.after(() => engine.dispose());
+  engine.show('people'); await tick(); await tick(); map.emit('style.load');
+  const requests = fetches.length, styles = map.log.filter(([name]) => name === 'setStyle').length;
+  engine.setLayersVisible(false);
+  assert.deepEqual(globalThis.__welcome.drawn.at(-1).shown, []);
+  assert.equal(globalThis.__welcome.prisms.at(-1), false);
+  assert.equal(sourceReports.at(-1).sources[0].state, 'hidden');
+  fetches[0].resolve(); await tick();
+  assert.deepEqual(globalThis.__welcome.drawn.at(-1).shown, [], 'a late response never reveals a hidden layer');
+  engine.setLayersVisible(true);
+  assert.deepEqual(globalThis.__welcome.drawn.at(-1).shown, ['census-counties']);
+  assert.equal(globalThis.__welcome.prisms.at(-1), true);
+  assert.equal(fetches.length, requests, 'restoring already fetched data makes no new request');
+  assert.equal(map.log.filter(([name]) => name === 'setStyle').length, styles, 'comparison does not reload the basemap or its tiles');
+});
+
+test('base-only comparison defers provider payloads until starter layers are explicitly restored', async t => {
+  const { engine, map, fetches } = await start();
+  t.after(() => engine.dispose());
+  engine.setLayersVisible(false); engine.show('people'); await tick(); await tick(); map.emit('style.load');
+  assert.equal(fetches.length, 0);
+  engine.setLayersVisible(true);
+  assert.equal(fetches.length, 1);
+  engine.setLayersVisible(true);
+  assert.equal(fetches.length, 1, 'idempotent updates cannot duplicate a pending request');
+});
+
 test('returning to a still-pending style applies it only once', async t => {
   const { engine, fetches, map } = await start();
   t.after(() => engine.dispose());

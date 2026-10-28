@@ -116,20 +116,20 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   // renderer with every other provider layer hidden. Re-run after each style
   // load (a new style drops them) and as each GeoJSON payload arrives.
   const opacity = defaultOfficialContextOpacity();
-  let loaded = {}, radarAt = null, radarShown = null, satellite = null;
+  let loaded = {}, radarAt = null, radarShown = null, satellite = null, layersVisible = true;
   const pending = new Set(), failures = new Set();
   const reportSources = () => onSources?.({ topic: view?.topic, mapState: styleLoaded ? 'ready' : 'loading', sources: (view?.starters ?? []).map(id => {
     const source = OFFICIAL_CONTEXT_BY_ID[id], count = loaded[id]?.data.features.length;
     const frame = id === 'nws-radar' ? radarCurrent(radarAt) && { observedAt: radarAt, kind: 'radar' }
       : id === 'noaa-goes-geocolor' ? satelliteCurrent(satellite) && satellite : null;
-    const state = (source?.minDisplayZoom ?? 0) > view.camera.zoom ? 'zoom-in' : pending.has(id) ? 'loading'
+    const state = !layersVisible ? 'hidden' : (source?.minDisplayZoom ?? 0) > view.camera.zoom ? 'zoom-in' : pending.has(id) ? 'loading'
       : failures.has(id) ? 'unavailable' : id === 'nws-radar' || id === 'noaa-goes-geocolor' ? frame ? 'dated-frame' : 'unavailable'
       : readsPayload(id) ? count === undefined ? 'loading' : count ? 'records' : 'empty' : 'map-layer';
     return { id, label: source?.shortTitle ?? id, state, count, observedAt: frame?.observedAt ?? null, product: frame?.kind ?? null };
   }) });
   const drawData = () => {
     if (disposed || !styleLoaded || !view) return;
-    const shown = new Set(view.starters);
+    const shown = new Set(layersVisible ? view.starters : []);
     const visibility = Object.fromEntries(OFFICIAL_CONTEXT_SOURCES.map(source => [source.id, shown.has(source.id)]));
     const radar = shown.has('nws-radar') && radarCurrent(radarAt) ? radarAt : null;
     visibility['nws-radar'] = Boolean(radar);
@@ -137,7 +137,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
     visibility['noaa-goes-geocolor'] = false;
     try {
       if (radar) setNoaaRadarObservationTime(map, radar);
-      setPopulationPrisms(map, view.prisms);
+      setPopulationPrisms(map, layersVisible && view.prisms);
       applyOfficialContextState(map, visibility, opacity, loaded);
       if (shown.has('noaa-goes-geocolor') && satelliteCurrent(satellite)) setNoaaSatelliteFrame(map, satellite, true, opacity['noaa-goes-geocolor']);
       else clearNoaaSatelliteFrame(map);
@@ -160,12 +160,13 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
     if (disposed || !view) return;
     // Expire old frames even while held, but never poll a hidden/paused welcome.
     if (view.starters.some(id => id === 'nws-radar' || id === 'noaa-goes-geocolor')) drawData();
-    if (!paused && !reduced) {
+    if (layersVisible && !paused && !reduced) {
       if (view.starters.includes('nws-radar')) refreshRadar();
       if (view.starters.includes('noaa-goes-geocolor')) refreshSatellite();
     }
   }, RADAR_RECHECK_MS);
   const requestData = next => {
+    if (!layersVisible) return;
     if (next.starters.includes('nws-radar')) refreshRadar();
     if (next.starters.includes('noaa-goes-geocolor')) refreshSatellite();
     for (const feed of next.starters.filter(readsPayload)) {
@@ -216,6 +217,12 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
     },
     setPaused(value) { if (paused === value) return; paused = value; if (paused) suspend(); else drift(); },
     setReduced(value) { if (reduced === value) return; reduced = value; if (reduced) suspend(); else drift(); },
+    setLayersVisible(value) {
+      if (layersVisible === value) return;
+      layersVisible = value;
+      if (value && view) requestData(view);
+      drawData();
+    },
     dispose() { disposed = true; clearTimeout(settle); clearInterval(radarTimer); try { map.remove(); } catch { /* Already removed. */ } },
   };
 }

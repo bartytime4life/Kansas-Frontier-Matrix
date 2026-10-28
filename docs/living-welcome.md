@@ -478,3 +478,22 @@ are engineering evidence only. A local production preview was attempted on port
 hover/flip smoothness, small-phone geometry or live-provider end-to-end acceptance
 is claimed. Keep delivery a draft pending browser acceptance and independent
 review; no merge, publish, deploy or promotion is authorized here.
+
+
+## Guided category glimpses — 2026-10-27
+
+Status: proposed implementation; changed-build visual and production-performance acceptance remain NEEDS VERIFICATION.
+
+The starting page keeps its single real MapLibre preview and the existing 19-topic taxonomy. Each card now names a category-specific glimpse and indicates whether recorded tours or guided starting points are available. This is presentation of existing provider context, not admission or release of new records. Reused recorded captures retain their context labels and original clocks; no new footage is invented.
+
+The shared glimpse is available below 1,100 pixels instead of disappearing there. Selecting a category still opens its source-aware details. Entering the expanded map adds a compact guide with a look-for prompt, limitations, source-notes access and a direct entry into that category’s map. Categories with starter overlays offer Hide/Show starter layers for a before/after comparison; this hides the starter overlays and population prisms while retaining the basemap and elevation. Categories without previewable starter overlays use their map and guided starting point; the UI does not offer a comparison that would do nothing. River gauges remain excluded from hover previews; aviation volumes and calculated sky tools still require the opened workspace.
+
+Performance constraints: one preview map, no additional media assets, no automatic video download, no style rebuild for comparison. Hidden overlays do not initiate new payload requests or radar/satellite refreshes. A request already in flight may complete into the cache, but cannot reveal a hidden overlay. Restoring loaded data reuses the cache. Motion/pause updates no longer call show(topic); only a topic change selects a new preview. Existing pointer settling, render budget, cache limits, hidden-tab pause and reduced-motion behavior remain in force. These are implementation constraints, not measured production-speed claims.
+
+Placement: existing app/living-welcome owns welcome presentation and preview behavior; tests owns its behavior checks; this existing docs narrative owns explanation and acceptance limits. Directory Rules responsibility-based placement and accepted ADR-0029 apply; no new root, data store, schema, policy or release home is created.
+
+Validation: regression tests exercise every category’s guide and destination, reduced-motion comparison and category resets, late payload completion while hidden, deferred provider requests and cached restore without style rebuild. Production build and TypeScript checking completed locally. Browser acceptance of this candidate remains blocked by local listen EPERM; do not transfer observations of the older public page to this candidate.
+
+Before release: inspect 1280×800, 390×844 and 568×320; keyboard Return/Escape/Tab and nested details; guide scrolling without obscuring map navigation; all 19 correct destinations; unavailable/empty/stale source captions; hiding/restoring overlays while a request resolves; provider attribution. Measure cold/warm startup, long tasks, network bytes, category-switch latency and memory on representative mobile hardware against the exact base. Check that the new card copy and responsive guide do not push essential entry controls out of reach. No universal frame-rate or Core Web Vitals result is claimed.
+
+Rollback: revert this bounded welcome change; no provider, store, hosting configuration, DNS or published data rollback is involved.

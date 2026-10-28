@@ -573,3 +573,25 @@
 @media(max-width:1100px){.living-welcome .welcome-heading-row{grid-template-areas:'toolbar' 'hero';grid-template-rows:auto auto}.living-welcome .welcome-preview-brief{display:none}}
 
 .living-welcome .domain-stage[data-state=unavailable] .domain-stage-map{visibility:hidden}
+
+/* A category demonstrates its purpose before entry, without another map or media request. */
+.living-welcome .topic-glimpse{display:block;margin-top:5px;font-size:12px;line-height:1.4;color:#e7d4a0}
+.living-welcome .topic-demo-label{display:block;font-size:10px;line-height:1.4;color:#abc6ce}
+.living-welcome .welcome-layer-demo{position:absolute;z-index:4;top:24px;right:24px;width:min(380px,calc(100% - 48px));max-height:calc(100% - 120px);overflow:auto;padding:18px;border:1px solid #8db5c066;border-radius:12px;background:#082635f2;contain:layout paint}
+.living-welcome .welcome-layer-demo h2{font-size:23px;line-height:1.2;color:#f0d59c;margin:8px 0}
+.living-welcome .welcome-layer-demo p{font-size:14px;line-height:1.5;margin:9px 0;color:#d4e3e8}
+.living-welcome .welcome-layer-demo small{display:block;font-size:12px;line-height:1.5;color:#b7ced7}
+.living-welcome .welcome-layer-demo-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.living-welcome .welcome-layer-demo-actions button{min-height:44px;padding:9px 12px;border:1px solid #8db5c080;border-radius:8px;background:#0c3443;color:#f1e6c2;font-size:12px;cursor:pointer}
+.living-welcome .welcome-layer-demo-actions button[aria-pressed=true]{border-color:#f0d59c}
+.living-welcome .welcome-layer-demo-actions button:focus-visible{outline:3px solid #f0d59c;outline-offset:2px}
+.living-welcome .welcome-layer-demo .welcome-layer-demo-state{font-size:11px;color:#b7ced7}
+@media(max-width:1100px){
+ .living-welcome:not([data-fullscreen=true]) .welcome-heading-row{grid-template-areas:'toolbar' 'hero' 'preview';grid-template-rows:auto auto auto}
+ .living-welcome .welcome-preview-brief{display:block;justify-self:stretch;width:auto;height:auto;max-height:220px;margin:14px 0 0}
+}
+@media(max-width:700px){
+ .living-welcome .welcome-layer-demo{top:14px;right:14px;width:min(360px,calc(100% - 28px));max-height:calc(100% - 150px);padding:14px}
+ .living-welcome[data-fullscreen=true]:has(.welcome-layer-demo) .domain-stage-caption{top:auto;bottom:76px;left:18px;right:18px;max-width:none;max-height:60px;overflow:auto}
+}
+@media(max-height:450px) and (min-width:701px){.living-welcome .welcome-layer-demo{top:12px;right:12px;max-height:calc(100% - 88px);padding:12px}}
