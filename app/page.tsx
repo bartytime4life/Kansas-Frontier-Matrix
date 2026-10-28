@@ -1196,6 +1196,11 @@ export default function Home() {
   const projectionRef = useRef<"mercator" | "globe">("mercator");
   const scenePresetRef = useRef<ScenePresetId>("overview-2d");
   const terrainProviderRef = useRef<TerrainProvider>("mapzen");
+  // Close 3D views over Kansas move from the display DEM (capped at zoom 11) to the
+  // USGS 3DEP mosaic. `auto` marks that switch, `failed` stops it after 3DEP fails
+  // once, and `byHand` leaves a visitor's own choice of DEM alone.
+  const terrainDetailRef = useRef({ auto: false, failed: false, byHand: false });
+  const terrainDetailFallbackRef = useRef<(() => void) | null>(null);
   const attachedTerrainProviderRef = useRef<TerrainProvider | null>(null);
   const setTerrainPresentation = (map: MapLibreMap, enabled: boolean, scale: number) => {
     const provider = terrainProviderRef.current;
@@ -5830,6 +5835,18 @@ export default function Home() {
             setRuntime({ kind: "degraded", message: degradedReason });
             return;
           }
+          // Handled before the error is recorded, so a fallback that loads leaves no failure behind.
+          const terrainTiles = sourceId === TERRAIN_SOURCE_ID ? (map.getSource(TERRAIN_SOURCE_ID) as { serialize?: () => { tiles?: string[] } } | undefined)?.serialize?.().tiles?.[0] ?? "" : "";
+          if (terrainTiles.includes("/api/3dep-dem-tile")) {
+            // A 3DEP source already replaced by the display DEM can still report tiles in flight.
+            if (terrainProviderRef.current !== "usgs-3dep") return;
+            if (terrainDetailRef.current.auto && !terrainDetailRef.current.failed) {
+              // The automatic 3DEP detail did not load here: back to the display DEM, once.
+              terrainDetailRef.current = { ...terrainDetailRef.current, auto: false, failed: true };
+              terrainDetailFallbackRef.current?.();
+              return;
+            }
+          }
           runtimeError = message;
           if (sourceId) failedSourceIds.add(sourceId);
           if (sourceId === TERRAIN_SOURCE_ID) {
@@ -7836,6 +7853,33 @@ export default function Home() {
     announce(`Loading ${provider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} display DEM`);
   };
 
+  const chooseTerrainProviderByHand = (provider: TerrainProvider) => {
+    terrainDetailRef.current = { ...terrainDetailRef.current, auto: false, byHand: true };
+    chooseTerrainProvider(provider);
+  };
+  useEffect(() => {
+    terrainDetailFallbackRef.current = () => {
+      chooseTerrainProvider("mapzen");
+      announce("USGS 3DEP elevation did not load here; the Mapzen display DEM is back, overzoomed beyond zoom 11");
+    };
+  });
+  // Past zoom 11.5 in 3D over Kansas the display DEM is only overzoomed; the live
+  // USGS 3DEP mosaic carries the finer relief.
+  const wantsTerrainDetail = scenePreset === "elevation-3d" && terrainProvider === "mapzen" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM + 0.5
+    && view.center[0] >= -102.1 && view.center[0] <= -94.5 && view.center[1] >= 36.9 && view.center[1] <= 40.1;
+  useEffect(() => {
+    const detail = terrainDetailRef.current;
+    if (!wantsTerrainDetail || detail.byHand || detail.failed) return;
+    const timer = window.setTimeout(() => {
+      terrainDetailRef.current = { ...terrainDetailRef.current, auto: true };
+      chooseTerrainProvider("usgs-3dep");
+      announce("Close view: loading USGS 3DEP elevation for finer relief");
+    }, 0);
+    return () => window.clearTimeout(timer);
+  // chooseTerrainProvider only sets state and refs; announce is stable.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wantsTerrainDetail, announce]);
+
   const applyTerrainLook = (look: "natural" | "topographic" | "buildings") => {
     const nextBasemap: BasemapKey = look === "natural" ? "imagery" : look === "topographic" ? "topo" : "standard";
     topographicOverlayRef.current = false; setTopographicOverlay(false);
@@ -9410,7 +9454,7 @@ export default function Home() {
               <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "mercator" && scenePreset !== "elevation-3d"} onClick={() => chooseMapMenuRepresentation("2d")}><b>2D</b><span>Map</span></button>
               <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && scenePreset === "elevation-3d"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && scenePreset === "elevation-3d"} onClick={() => chooseMapMenuRepresentation("terrain")}><b>Terrain 3D</b><span>{verticalExaggeration.toFixed(1)}×</span></button>
               {scenePreset === "elevation-3d" && <output className="terrain-mode-source" data-state={terrainState.toLowerCase()} aria-live="polite">{terrainProvider === "usgs-3dep" ? "USGS 3DEP" : "Mapzen"} · {terrainState === "READY" && attachedTerrainProviderRef.current === terrainProvider ? "DEM ready" : terrainState === "ERROR" ? "DEM unavailable" : "DEM loading"}{terrainProvider === "mapzen" && terrainState === "READY" && view.zoom > TERRARIUM_RENDER_MAX_ZOOM ? ` · coarse beyond z${TERRARIUM_RENDER_MAX_ZOOM}` : ""}</output>}
-              {scenePreset === "elevation-3d" && terrainProvider === "usgs-3dep" && terrainState === "ERROR" && <button className="terrain-mode-action" type="button" onClick={() => chooseTerrainProvider("mapzen")}>Use display DEM</button>}
+              {scenePreset === "elevation-3d" && terrainProvider === "usgs-3dep" && terrainState === "ERROR" && <button className="terrain-mode-action" type="button" onClick={() => chooseTerrainProviderByHand("mapzen")}>Use display DEM</button>}
               {scenePreset === "elevation-3d" && terrainState === "READY" && basemap === "topo" && view.pitch < 56 && <button className="terrain-mode-action" type="button" onClick={() => orientSceneCamera(58, view.bearing)}>Oblique view ↗</button>}
               <button type="button" aria-pressed={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "globe"} data-active={!undergroundOpen && !(mapUtilityOpen && mapUtilityView === "compare") && projection === "globe"} onClick={() => chooseMapMenuRepresentation("globe")}><b>Globe</b><span>◎</span></button>
               <button type="button" data-map-panel="compare" aria-pressed={mapUtilityOpen && mapUtilityView === "compare"} data-active={mapUtilityOpen && mapUtilityView === "compare"} onClick={() => { if (primaryWorkspace === "map" && mapUtilityOpen && mapUtilityView === "compare") closeMapUtility(); else { setUndergroundOpen(false); activateMapRepresentation("compare"); } }}><b>Compare</b><span>A/B</span></button>
@@ -10527,7 +10571,7 @@ export default function Home() {
                 <details className="explorer-secondary"><summary>Terrain tools, sources &amp; rendering</summary><div className="explorer-secondary-body">
                 <RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} />
                 <BasemapCacheControls />
-                <label className="appearance-basemap">Terrain elevation source<select aria-label="Terrain elevation source" disabled={scenePreset !== "elevation-3d"} value={terrainProvider} onChange={event => chooseTerrainProvider(event.target.value as "mapzen" | "usgs-3dep")}><option value="mapzen">Mapzen · display DEM</option><option value="usgs-3dep">USGS 3DEP · Kansas detail</option></select></label>
+                <label className="appearance-basemap">Terrain elevation source<select aria-label="Terrain elevation source" disabled={scenePreset !== "elevation-3d"} value={terrainProvider} onChange={event => chooseTerrainProviderByHand(event.target.value as "mapzen" | "usgs-3dep")}><option value="mapzen">Mapzen · display DEM</option><option value="usgs-3dep">USGS 3DEP · Kansas detail</option></select></label>
                 <section className="renderer-capability-list" aria-label="Renderer capability status">
                   <article data-state="ready"><span>WORKS NOW</span><strong>2D, globe, camera, measurement</strong><small>Direct MapLibre state changes</small></article>
                   <article data-state={terrainState === "ERROR" ? "held" : "context"}><span>{terrainState === "READY" ? "DISPLAY ONLY" : terrainState}</span><strong>Terrain relief + profile preview</strong><small>External DEM; not KFM evidence</small></article>

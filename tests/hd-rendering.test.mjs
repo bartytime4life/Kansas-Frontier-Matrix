@@ -49,3 +49,18 @@ test('the local styles carry real shaded relief, so no map sits on an empty colo
  assert.match(runtime,/\.\.\.orientation\.slice\(0, land \+ 1\), relief, \.\.\.orientation\.slice\(land \+ 1\)/,'relief over the land fill, under the state line');
  assert.match(page,/basemapStyle\.sources\[sourceId\]\?\.type === "raster-dem"/,'a missing DEM tile is a basemap gap, not a map failure');
 });
+
+test('close 3D views over Kansas move to the USGS 3DEP mosaic once, fall back once, and never override a choice made by hand',()=>{
+ assert.match(page,/const wantsTerrainDetail = scenePreset === "elevation-3d" && terrainProvider === "mapzen" && view\.zoom > TERRARIUM_RENDER_MAX_ZOOM \+ 0\.5\s*&& view\.center\[0\] >= -102\.1 && view\.center\[0\] <= -94\.5 && view\.center\[1\] >= 36\.9 && view\.center\[1\] <= 40\.1;/,'only past the display DEM cap, only over Kansas');
+ assert.match(page,/if \(!wantsTerrainDetail \|\| detail\.byHand \|\| detail\.failed\) return;/);
+ assert.match(page,/terrainDetailRef\.current = \{ \.\.\.terrainDetailRef\.current, auto: true \};\s*chooseTerrainProvider\("usgs-3dep"\);/);
+ // A failed automatic switch goes back to the display DEM instead of leaving the map degraded.
+ assert.match(page,/if \(terrainDetailRef\.current\.auto && !terrainDetailRef\.current\.failed\) \{[\s\S]{0,140}terrainDetailRef\.current = \{ \.\.\.terrainDetailRef\.current, auto: false, failed: true \};\s*terrainDetailFallbackRef\.current\?\.\(\);/);
+ assert.match(page,/if \(terrainProviderRef\.current !== "usgs-3dep"\) return;/,'errors from a replaced 3DEP source are ignored');
+ const fallback=page.indexOf('if (terrainTiles.includes("/api/3dep-dem-tile"))'),generic=page.indexOf('failedTerrainSourceRef.current = map.getSource(TERRAIN_SOURCE_ID);');
+ assert.ok(fallback>0&&generic>fallback,'the fallback runs before the generic DEM failure');
+ const recorded=page.indexOf('runtimeError = message;\n          if (sourceId) failedSourceIds.add(sourceId);\n          if (sourceId === TERRAIN_SOURCE_ID) {');
+ assert.ok(recorded>fallback,'the handled 3DEP failure is never recorded as a runtime error or failed source');
+ assert.match(page,/onChange=\{event => chooseTerrainProviderByHand\(event\.target\.value as "mapzen" \| "usgs-3dep"\)\}/);
+ assert.match(page,/onClick=\{\(\) => chooseTerrainProviderByHand\("mapzen"\)\}>Use display DEM/);
+});
