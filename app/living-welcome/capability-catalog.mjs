@@ -9,7 +9,7 @@ const selections = {
  land: ['government', 'County and survey reference context; not ownership evidence.'],
  people: ['government', 'Aggregate county geography; not individual people.'], places: ['government'],
  science: [null, 'Preview the newest available dated NOAA satellite frame. No verified satellite capture is available yet.'], disaster: ['weather', 'Weather context only; not a hazard reconstruction or warning.'],
- aviation: [null, 'Open the aviation chart for runways, airport identifiers and terrain relief. No verified aviation capture is available yet.'],
+ aviation: [null, 'Preview the pinned FAA zones, airports and airways in 3D, a flat chart or an altitude slice. No verified aviation capture is available yet.'],
  government: ['government', 'County and city reference geography; not legal boundaries or office records.'],
  sky: [null, 'Use Sky tools for calculated daylight and solar geometry. No verified sky animation is available yet.'],
  evidence: [null, 'Open the source catalogue to inspect provenance, dates and limitations. No verified workflow animation is available yet.'],
@@ -28,7 +28,7 @@ export function capabilityNote(topic) { return selections[topic]?.[1] || ''; }
 const glimpses = {
  engineering: ['Crossings in the landscape', 'Bridge inventory points sit against real river valleys and terrain.', 'Look for crossings near the Big Blue and Kansas rivers.', 'Open the map to inspect a bridge record or draw a terrain profile.'],
  transport: ['Follow roads and rail', 'KDOT highway and active-rail layers meet around Wichita.', 'Compare the road and railway lines as the map settles.', 'Reference networks do not show live vehicles, closures or access.'],
- aviation: ['Read the aviation landscape', 'The sectional-style base places airport symbols against terrain.', 'Look for airports, runway context and relief around Wichita.', 'Open the aviation map for FAA volumes, altitude slices and the cross-section tool. Display only; not for navigation.'],
+ aviation: ['Explore the airspace zones', 'FAA boundary volumes, airports and airways share the aviation chart around Wichita.', 'Compare the stacked zones with the flat chart and an altitude slice.', 'Open the aviation map for point inspection, side views, weather, traffic and separately dated drone/TFR context. Display only; not for navigation.'],
  weather: ['A scan, not a moving illustration', 'Current NOAA radar and NWS alert areas share a dark map.', 'Read the scan time; an unavailable or stale scan stays absent.', 'Open the map for the dated radar loop and individual alert records.'],
  disaster: ['Separate the hazard clocks', 'Alert areas, satellite fire detections and incident reports keep their own sources.', 'Compare the symbols without treating nearby records as the same event.', 'An empty or unavailable feed is not an all-clear; this is not emergency guidance.'],
  water: ['Trace the river network', 'Waterways and lakes stand out on the hydrographic base.', 'Follow a river, then watch a recorded Explorer tour below.', 'Live gauge samples and River Pulse load in the opened map, not on a category hover.'],

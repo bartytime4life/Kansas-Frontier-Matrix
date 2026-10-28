@@ -9,7 +9,7 @@ import { applyOfficialContextState, clearNoaaSatelliteFrame, defaultOfficialCont
 import { isNoaaRadarManifest, NOAA_RADAR_FRAME_API_PATH, noaaRadarManifestIsFresh } from '../noaa-radar';
 import { isNoaaSatelliteManifest, NOAA_SATELLITE_FRAMES_PATH, NOAA_SATELLITE_FRESH_AGE_MS } from '../noaa-satellite';
 import { setPopulationPrisms } from '../population-prisms';
-import { WELCOME_IDLE_VIEW, welcomeDriftLeg, welcomeStyle, welcomeView } from '../welcome-map-view';
+import { WELCOME_DEM_SOURCE_ID, WELCOME_IDLE_VIEW, welcomeDriftLeg, welcomeStyle, welcomeView } from '../welcome-map-view';
 
 const WORKER_URL = '/maplibre/maplibre-gl-worker.mjs';
 // Pointer sweeps across the cards should not restyle the map for every card passed.
@@ -94,9 +94,10 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   // style (Science and Sky, or Evidence and the default map) take turns while
   // it loads, and the loaded style serves whichever of them is selected then.
   let view = null, styleKey = null, styleEpoch = 0, styleLoaded = false, contextLost = false, paused = true, reduced = false, leg = 0, settle = 0, disposed = false, ready = false, applying = false, transitioning = false;
-  const cameraOf = ({ camera: { center, zoom, pitch, bearing } }) => ({ center: [center[0], center[1]], zoom, pitch, bearing });
+  let aviation = null, aviationImport = null, aviationMode = '3d';
+  const cameraOf = ({ topic, camera: { center, zoom, pitch, bearing } }) => ({ center: [center[0], center[1]], zoom, pitch: topic === 'aviation' && aviationMode !== '3d' ? 0 : pitch, bearing: topic === 'aviation' && aviationMode !== '3d' ? 0 : bearing });
   const drift = () => {
-    if (disposed || paused || reduced || budget.efficient || applying || !view?.topic) return;
+    if (disposed || paused || reduced || budget.efficient || applying || !view?.topic || (view.topic === 'aviation' && aviationMode !== '3d')) return;
     const next = welcomeDriftLeg(view, leg++);
     map.easeTo({ bearing: next.bearing, zoom: next.zoom, duration: next.duration, easing: t => t * t * (3 - 2 * t), essential: true });
   };
@@ -122,7 +123,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   const opacity = defaultOfficialContextOpacity();
   let loaded = {}, radarAt = null, radarShown = null, satellite = null, layersVisible = true;
   const pending = new Set(), failures = new Set();
-  const reportSources = () => onSources?.({ topic: view?.topic, mapState: contextLost ? 'unavailable' : styleLoaded ? 'ready' : 'loading', sources: (view?.starters ?? []).map(id => {
+  const reportSources = () => onSources?.({ topic: view?.topic, mapState: contextLost ? 'unavailable' : styleLoaded ? 'ready' : 'loading', aviation: view?.topic === 'aviation' ? aviation?.status(layersVisible) ?? { state: 'loading' } : null, sources: (view?.starters ?? []).map(id => {
     const source = OFFICIAL_CONTEXT_BY_ID[id], count = loaded[id]?.data.features.length;
     const frame = id === 'nws-radar' ? radarCurrent(radarAt) && { observedAt: radarAt, kind: 'radar' }
       : id === 'noaa-goes-geocolor' ? satelliteCurrent(satellite) && satellite : null;
@@ -146,6 +147,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       if (shown.has('noaa-goes-geocolor') && satelliteCurrent(satellite)) setNoaaSatelliteFrame(map, satellite, true, opacity['noaa-goes-geocolor']);
       else clearNoaaSatelliteFrame(map);
     } catch { /* Preview data is optional; the map stays. */ }
+    aviation?.render(layersVisible && view.topic === 'aviation', aviationMode);
     // The caption names the radar scan only while one is drawn.
     if (radar !== radarShown) { radarShown = radar; onRadar?.(radar); }
     reportSources();
@@ -162,6 +164,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   };
   const radarTimer = setInterval(() => {
     if (disposed || !view) return;
+    if (view.topic === 'aviation') reportSources(); // Edition rollover, without polling a provider.
     // Expire old frames even while held, but never poll a hidden/paused welcome.
     if (view.starters.some(id => id === 'nws-radar' || id === 'noaa-goes-geocolor')) drawData();
     if (layersVisible && !paused && !reduced) {
@@ -169,8 +172,22 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       if (view.starters.includes('noaa-goes-geocolor')) refreshSatellite();
     }
   }, RADAR_RECHECK_MS);
+  const prepareAviation = () => {
+    if (aviation) { aviation.prepare(); return; }
+    if (aviationImport) return;
+    aviationImport = import('./aviation-preview').then(({ createWelcomeAviation }) => {
+      if (disposed) return;
+      aviation = createWelcomeAviation(map, () => { if (view?.topic === 'aviation') drawData(); });
+      if (view?.topic === 'aviation' && layersVisible) aviation.prepare();
+    }).catch(() => { if (!disposed && view?.topic === 'aviation') onSources?.({ topic: view.topic, mapState: styleLoaded ? 'ready' : 'loading', sources: [], aviation: { state: 'unavailable' } }); })
+      .finally(() => { aviationImport = null; });
+  };
+  const aviationTerrain = () => {
+    if (view?.topic === 'aviation' && styleLoaded) map.setTerrain(aviationMode === '3d' ? { source: WELCOME_DEM_SOURCE_ID, exaggeration: 1 } : null);
+  };
   const requestData = next => {
     if (!layersVisible) return;
+    if (next.topic === 'aviation') prepareAviation();
     if (next.starters.includes('nws-radar')) refreshRadar();
     if (next.starters.includes('noaa-goes-geocolor')) refreshSatellite();
     for (const feed of next.starters.filter(readsPayload)) {
@@ -207,7 +224,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
         try {
           map.setStyle(welcomeStyle(style, view), { diff: false });
           // Jumping ends a move, which starts the drift for the view selected now.
-          map.once('style.load', () => { if (disposed || styleEpoch !== epoch) return; styleLoaded = true; drawData(); map.jumpTo(cameraOf(view)); });
+          map.once('style.load', () => { if (disposed || styleEpoch !== epoch) return; styleLoaded = true; aviationTerrain(); drawData(); map.jumpTo(cameraOf(view)); });
         } catch {
           // A fetched document can parse as JSON yet be rejected by MapLibre.
           // A deliberate retry must re-read it rather than reuse that document.
@@ -232,6 +249,14 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       // The first view applies at once; later ones wait for the pointer to settle.
       if (!view) apply(next); else settle = setTimeout(() => apply(next), SETTLE_MS);
     },
+    setAviationMode(value) {
+      const next = ['3d', '2d', 'slice'].includes(value) ? value : '3d';
+      if (next === aviationMode) return;
+      aviationMode = next;
+      if (view?.topic !== 'aviation' || !styleLoaded) return;
+      applying = true; map.stop(); applying = false;
+      aviationTerrain(); drawData(); map.jumpTo(cameraOf(view));
+    },
     setPaused(value) { if (paused === value) return; paused = value; if (paused) suspend(); else drift(); },
     setReduced(value) { if (reduced === value) return; reduced = value; if (reduced) suspend(); else drift(); },
     setLayersVisible(value) {
@@ -240,6 +265,6 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       if (value && view) requestData(view);
       drawData();
     },
-    dispose() { disposed = true; clearTimeout(settle); clearInterval(radarTimer); try { map.remove(); } catch { /* Already removed. */ } },
+    dispose() { disposed = true; clearTimeout(settle); clearInterval(radarTimer); aviation?.dispose(); try { map.remove(); } catch { /* Already removed. */ } },
   };
 }

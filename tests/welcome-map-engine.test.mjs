@@ -28,8 +28,8 @@ const stubs = {
     export const noaaRadarManifestIsFresh = manifest => globalThis.__welcome.fresh(manifest.frames.at(-1));`),
   "'../welcome-map-view'": toUrl(`
     const view = (topic, basemap, scene, zoom, starters = [], prisms = false) => ({ topic, basemap, scene, camera: { center: topic === 'terrain' ? [-99.6, 38.9] : [-98, 38], zoom, pitch: 0, bearing: 0 }, starters, prisms });
-    const VIEWS = { satellite: view('satellite', 'standard', '2d', 5.4, ['noaa-goes-geocolor']), evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']), weather: view('weather', 'relief', 'terrain', 5.9, ['nws-alerts', 'nws-radar']), people: view('people', 'relief', 'terrain', 6.3, ['census-counties'], true) };
-    export const WELCOME_IDLE_VIEW = view(null, 'standard', '2d', 6.1);
+    const VIEWS = { aviation: view('aviation', 'relief', 'terrain', 7.9), satellite: view('satellite', 'standard', '2d', 5.4, ['noaa-goes-geocolor']), evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']), weather: view('weather', 'relief', 'terrain', 5.9, ['nws-alerts', 'nws-radar']), people: view('people', 'relief', 'terrain', 6.3, ['census-counties'], true) };
+    export const WELCOME_DEM_SOURCE_ID = 'welcome-terrain-dem'; export const WELCOME_IDLE_VIEW = view(null, 'standard', '2d', 6.1);
     export const welcomeView = topic => VIEWS[topic] ?? WELCOME_IDLE_VIEW;
     export const welcomeStyle = (style, v) => ({ ...style, scene: v.scene });
     export const welcomeDriftLeg = v => ({ bearing: v.camera.bearing + 24, zoom: v.camera.zoom, duration: 30000 });`),
@@ -39,6 +39,7 @@ for (const [from, to] of Object.entries(stubs)) {
   assert.ok(source.includes(`from ${from};`), `engine still imports ${from}`);
   source = source.replace(`from ${from};`, `from '${to}';`);
 }
+source = source.replace("import('./aviation-preview')", `import('${toUrl(`export const createWelcomeAviation = (_map, changed) => ({prepare(){globalThis.__welcome.aviation.push('prepare');globalThis.__welcome.aviationChanged=changed;},status(visible){return {state:visible?'ready':'hidden'};},render(visible,mode){globalThis.__welcome.aviation.push([visible,mode]);},dispose(){globalThis.__welcome.aviation.push('dispose');}});`)}')`);
 // Each test loads its own copy, so the engine's shared style-document cache starts empty.
 let copies = 0;
 const loadEngine = () => import(toUrl(`${source}\n// copy ${++copies}`));
@@ -55,6 +56,7 @@ class FakeMap {
   jumpTo(camera) { this.camera = camera; this.log.push(['jumpTo', camera.zoom]); this.emit('moveend'); }
   flyTo(camera) { this.log.push(['flyTo', camera.zoom]); }
   easeTo(camera) { this.log.push(['easeTo', camera.bearing]); }
+  setTerrain(value) { this.log.push(['terrain', value]); }
   stop() {}
   loaded() { return this.isLoaded; }
   remove() {}
@@ -62,7 +64,7 @@ class FakeMap {
 const settle = () => new Promise(resolve => setTimeout(resolve, SETTLE_MS + 30));
 async function start(budget = { pixelRatio: 1, tileCache: 8 }, overrides = {}) {
   const fetches = [];
-  globalThis.__welcome = { FakeMap, budget, webgl: true, drawn: [], radar: [], satellite: [], prisms: [], fresh: () => true, ...overrides };
+  globalThis.__welcome = { FakeMap, budget, webgl: true, aviation: [], drawn: [], radar: [], satellite: [], prisms: [], fresh: () => true, ...overrides };
   // Style documents and starter payloads each wait until the test releases them.
   globalThis.fetch = url => new Promise((resolve, reject) => fetches.push({ url, fail: () => reject(new Error('style unavailable')), resolve: () => resolve({ ok: true, json: async () => url === '/api/noaa-satellite/frames' ? globalThis.__welcome.satelliteManifest : url === '/api/noaa-radar/frames' ? globalThis.__welcome.radarManifest : url.startsWith('/api/') ? { feed: new URL(url, 'http://x').searchParams.get('feed'), data: { type: 'FeatureCollection', features: [] } } : { version: 8, url, sources: {}, layers: [] } }) }));
   let ready = 0, errors = 0;
@@ -375,4 +377,22 @@ test('pausing an interrupted same-style flight leaves the selected category came
  assert.deepEqual(map.camera.center, [-99.6, 38.9], 'resuming drift cannot keep the previous category center');
  engine.dispose();
  }
+});
+
+test('aviation is lazy, uses one renderer, switches chart/slice without reloading and ignores late category callbacks', async t => {
+ const {engine,map,fetches,sourceReports}=await start(); t.after(()=>engine.dispose());
+ engine.show('evidence'); await tick(); assert.deepEqual(globalThis.__welcome.aviation,[]);
+ fetches[0].resolve(); await tick(); map.emit('style.load');
+ engine.show('aviation'); await settle(); await tick(); map.emit('style.load');
+ assert.ok(globalThis.__welcome.aviation.includes('prepare'));
+ assert.equal(sourceReports.at(-1).aviation.state,'ready');
+ const styles=map.log.filter(([name])=>name==='setStyle').length,requests=fetches.length;
+ engine.setAviationMode('2d'); assert.equal(map.camera.pitch,0); assert.deepEqual(map.log.filter(([name])=>name==='terrain').at(-1),['terrain',null]);
+ engine.setAviationMode('slice'); assert.deepEqual(globalThis.__welcome.aviation.at(-1),[true,'slice']);
+ engine.setLayersVisible(false); assert.deepEqual(globalThis.__welcome.aviation.at(-1),[false,'slice']);
+ assert.equal(sourceReports.at(-1).aviation.state,'hidden'); engine.setLayersVisible(true);
+ assert.equal(map.log.filter(([name])=>name==='setStyle').length,styles); assert.equal(fetches.length,requests);
+ engine.show('terrain'); await settle(); const count=globalThis.__welcome.aviation.length;
+ globalThis.__welcome.aviationChanged(); assert.equal(globalThis.__welcome.aviation.length,count,'late aviation completion cannot redraw another topic');
+ assert.equal(sourceReports.at(-1).aviation,null);
 });

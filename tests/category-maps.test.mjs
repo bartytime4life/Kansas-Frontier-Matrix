@@ -319,7 +319,8 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.match(page,/onSunTime=\{\(fraction\) => \{ setSunPlaying\(false\);/,'moving Time or pressing Now stops playback');
  assert.match(page,/onClose=\{\(\) => setCategoryDockHidden\(true\)\}/,'hiding the dock stops playback through sunControlsShown');
  assert.match(page,/motionAllowed=\{!reducedMotion\}/);
- assert.equal((page.match(/setSceneEffects\(/g)||[]).length,2,'settings change only in updateSceneEffects and the stored-settings restore');
+ assert.equal((page.match(/setSceneEffects\(/g)||[]).length,3,'only explicit controls, stored restore and the narrow river-flow navigation reset write settings');
+ assert.match(page,/sceneEffectsForTopic\(sceneEffectsRef.current, officialWorkspace\)/,'navigation uses the water-only preference reset, not category lighting');
  const reset=page.slice(page.indexOf('  const resetCategoryView = () => {'),page.indexOf('announce(`${activeCategoryMap.name} view reset`)'));
  assert.match(reset,/if \(activeCategoryMap\.light\) applyCategoryLight\(activeCategoryMap\.light\);/,'Reset view restores the look light too');
 });

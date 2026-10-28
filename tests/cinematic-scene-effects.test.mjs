@@ -285,3 +285,19 @@ test("terrain relief uses grazing light while 2D and source elevations keep thei
   assert.equal(effects.reliefPaintFor(map, "general", "dusk", 235)["hillshade-illumination-altitude"], 24);
   assert.deepEqual(terrain, { source: "display-dem", exaggeration: 2.5 }, "light does not rewrite terrain heights");
 });
+
+test("visual presets and topic navigation never implicitly enable surface-river animation", async () => {
+ const effects=await loadSceneEffects();
+ for(const preset of Object.values(effects.SCENE_LOOK_PRESETS)) assert.equal(preset.settings.waterFlow,false);
+ const on=effects.parseSceneEffects({...effects.DEFAULT_SCENE_EFFECTS,waterFlow:true,sunSync:true});
+ assert.equal(effects.sceneEffectsForTopic(on,'water'),on,'water retains its explicit choice');
+ for(const topic of ['all','aviation','groundwater','weather','geology','people']) {
+  const next=effects.sceneEffectsForTopic(on,topic);assert.equal(next.waterFlow,false,topic);
+  assert.deepEqual({...next,waterFlow:true},{...on},'all other settings retained');
+  assert.equal(effects.sceneEffectsForTopic(next,topic),next,'unchanged settings do not rerender');
+ }
+ assert.equal(effects.sceneEffectsForTopic(effects.DEFAULT_SCENE_EFFECTS,'water').waterFlow,false,'entering water does not override a paused choice');
+ const page=await read('app/page.tsx');
+ assert.match(page,/const stored = sceneEffectsForTopic\(readSceneEffects\(\), "all"\)/);
+ assert.match(page,/sceneEffectsForTopic\(sceneEffectsRef.current, officialWorkspace\)[\s\S]*?writeSceneEffects\(next\);[\s\S]*?\[officialWorkspace\]/);
+});

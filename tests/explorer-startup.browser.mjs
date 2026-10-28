@@ -1230,3 +1230,45 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     assert.ok(await p.evaluate(`document.documentElement.scrollWidth <= innerWidth + 1`), 'workspace has no document horizontal overflow');
   });
 }
+
+
+// The welcome reuses the pinned local reference; provider/AI I/O stays isolated.
+for(const [width,height] of [[1440,960],[390,844]]) test(`aviation welcome zones and modes at ${width}x${height}`,{timeout:90000},async t=>{
+ const b=await browser(t),p=await pageSession(b,width,height);
+ await p.open('/?motion=off');await readyWelcome(p);
+ const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
+ await enter('.topic-aviation');await p.wait(`!!document.querySelector('.welcome-aviation-tools')`,'aviation tools have a real destination');
+ await enter('.welcome-aviation-tools button');
+ await p.wait(`document.querySelector('.welcome-layer-demo .welcome-aviation-status')?.textContent.includes('NASR 2026-10-29')`,'digest-checked pinned snapshot ready');
+ assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage-map canvas').length`),1,'one preview map for all modes');
+ for(const index of [1,2,0]){
+  await enter('.welcome-layer-demo .welcome-aviation-modes button:nth-child('+(index+1)+')');
+  assert.equal(await p.evaluate(`document.querySelector('.welcome-layer-demo .welcome-aviation-modes button:nth-child(${index+1})').getAttribute('aria-pressed')`),'true');
+ }
+ await enter('.welcome-layer-demo .welcome-aviation-notes summary');
+ assert.match(await p.evaluate(`document.querySelector('.welcome-layer-demo .welcome-aviation-notes').textContent`),/201 volumes, 533 airports, 417 airway segments; not all are visible/);
+ await enter('.welcome-layer-demo-actions button');
+ await p.wait(`document.querySelector('.welcome-layer-demo .welcome-aviation-status')?.textContent.includes('hidden')`,'comparison hides overlay without claiming unavailable');
+ await enter('.welcome-layer-demo-actions button');
+ assert.equal(await p.evaluate(`document.documentElement.scrollWidth<=innerWidth`),true);
+ await p.key('Escape','Escape',27);await p.wait(`document.querySelector('.living-welcome')?.dataset.fullscreen==='false'`,'Escape returns to categories');
+});
+
+test('water animation stays opt-in and does not follow the visitor into unrelated topics',{timeout:90000},async t=>{
+ const b=await browser(t),p=await pageSession(b,1280,900);
+ const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
+ await p.open('/?topic=water','1',`localStorage.setItem('kfm-scene-effects-v1',JSON.stringify({waterFlow:true,sunSync:false}));`);
+ await p.wait(`!!document.querySelector('.topic-map-look button')`,'Water guide offers its real map');await enter('.topic-map-look button');
+ await p.wait(`[...document.querySelectorAll('.category-map-dock-tool')].some(button=>button.textContent==='Show river flow')`,'old saved flow does not auto-start');
+ await p.evaluate(`[...document.querySelectorAll('.category-map-dock-tool')].find(button=>button.textContent==='Show river flow').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`!![...document.querySelectorAll('.category-map-dock-tool')].some(button=>button.textContent==='Hide river flow')`,'explicit Water toggle still works');
+ await p.evaluate(`[...document.querySelectorAll('.category-map-dock button')].find(button=>button.textContent==='Layers for this map').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`!!document.querySelector('[aria-label="Layer topic"]')`,'layer topic control available');
+ await p.evaluate(`(()=>{const select=document.querySelector('[aria-label="Layer topic"]');select.value='aviation';select.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+ await p.wait(`JSON.parse(localStorage.getItem('kfm-scene-effects-v1')).waterFlow===false`,'leaving Water shuts off inherited animation');
+ await enter('[aria-label="Effects & rendering"]');
+ for(const name of ['Cinematic','Natural']){
+  await p.evaluate(`(()=>{const button=[...document.querySelectorAll('.scene-panel-body button')].find(node=>node.textContent.startsWith(${JSON.stringify(name)}));button.focus();})()`);await p.key('Enter','Enter',13);
+  assert.equal(await p.evaluate(`JSON.parse(localStorage.getItem('kfm-scene-effects-v1')).waterFlow`),false,'visual preset does not enable flow');
+ }
+});
