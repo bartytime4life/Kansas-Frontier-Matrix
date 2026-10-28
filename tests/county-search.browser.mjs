@@ -298,6 +298,9 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       assert.match(preview, /EXTERNAL_CONTEXT_ONLY/); assert.match(preview, /No KFM EvidenceBundle attached/);
       assert.match(preview, /2020 Census/); assert.match(preview, /20053/); assert.match(preview, /6,376/);
       assert.match(preview, /No released KFM records included/);
+      assert.match(preview, /0 KFM RECORDS/);
+      assert.match(preview, /One selected provider record is included as external source context/);
+      assert.doesNotMatch(preview, /widen the map/);
       assert.deepEqual(await p.displayTime(), beforeTime, 'report handoff never changes the active map date');
       assert.equal(await p.evaluate(`document.documentElement.scrollWidth > innerWidth + 1`), false, 'provider preview fits the viewport');
       if (process.env.RUNNER_TEMP) {
@@ -325,10 +328,15 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       assert.equal(json.selection.context.attributes.find(item => item.label === 'Census edition').value, '2020');
       assert.equal(json.selection.context.attributes.find(item => item.label === 'Population count').value, '6,376');
       assert.match(json.selection.context.sourceUrl, /^https:\/\//); assert.deepEqual(json.records, []);
+      assert.equal(json.summary.matchedRecords, 0);
+      assert.equal(json.summary.includedRecords, 0, 'provider context does not inflate KFM totals');
+      assert.ok(json.findings.some(finding => finding.startsWith('One selected provider record is included as external source context')));
       assert.equal(json.activeTime.value, Number(beforeTime.year), 'report preserves the observed map frame separately from the provider 2020 baseline');
       const html = downloads.find(item => item.type === 'text/html').text;
       for (const value of [drawerTitle, '2020 Census', '20053', '6,376', 'EXTERNAL_CONTEXT_ONLY', 'No KFM EvidenceBundle']) assert.ok(html.includes(value), `HTML keeps ${value}`);
       assert.ok(html.includes(json.selection.context.sourceUrl.replaceAll('&', '&amp;')), 'HTML keeps the escaped source URL');
+      assert.ok(html.includes('MATCHED KFM RECORDS'));
+      assert.ok(html.includes('One selected provider record is included as external source context'));
       assert.deepEqual(p.errors, []);
       t.diagnostic(JSON.stringify({width, scenario:'provider-context-report', title:drawerTitle, sourceTime:json.selection.context.sourceTime, activeTime:json.activeTime.label, formats:downloads.map(item=>item.type)}));
     });

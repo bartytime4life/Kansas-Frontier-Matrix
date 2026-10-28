@@ -6,19 +6,22 @@ import ts from "typescript";
 // Execute the actual export builder; no replacement implementation or GPS read.
 const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
 const tree = ts.createSourceFile("page.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
-let builder;
+let builder, emptyFindings;
 const walk = node => {
   if (ts.isVariableDeclaration(node) && node.name.getText(tree) === "buildCustomReportPayload") builder = node.initializer;
+  if (ts.isVariableDeclaration(node) && node.name.getText(tree) === "emptyReportFindings") emptyFindings = node.initializer;
   ts.forEachChild(node, walk);
 };
 walk(tree);
 assert.ok(builder);
 const js = ts.transpileModule(`const build = ${builder.getText(tree)};`, { compilerOptions: {target: ts.ScriptTarget.ES2022} }).outputText;
+const emptyReportFindings = new Function(ts.transpileModule(`return ${emptyFindings.getText(tree)};`, { compilerOptions: {target: ts.ScriptTarget.ES2022} }).outputText)();
 
 const coordinate = [-97.1234567, 38.7654321];
 const bounds = {west: -97.1298765, east: -97.1176543, south: 38.7601234, north: 38.7705678};
 function context({privateState = false, privateRef = false, scope = "VIEWPORT"} = {}) {
   return {
+    LAYER_REGISTRY: [],
     reportDetail: "STANDARD", reportRecords: [], scenePreset: "elevation-3d", terrainState: "READY",
     attachedTerrainProviderRef: {current: "usgs-3dep"}, terrainProvider: "usgs-3dep", topographicOverlay: true,
     reportTitle: "Fixture report", reportScope: scope, reportQuery: "", mapEvidenceFilter: "ALL", reportEvidenceFilter: "ALL", reportLayerIds: [],
@@ -33,7 +36,7 @@ function context({privateState = false, privateRef = false, scope = "VIEWPORT"} 
     reportLayerSummary: [], reportEvidenceCounts: {}, reportFindings: [], terrainSourceFor: () => ({attribution: "USGS display DEM"}),
   };
 }
-const run = values => new Function(...Object.keys(values), `${js}; return build("2026-10-11T20:00:00Z");`)(...Object.values(values));
+const run = values => new Function('emptyReportFindings', ...Object.keys(values), `${js}; return build("2026-10-11T20:00:00Z");`)(emptyReportFindings, ...Object.values(values));
 
 test("private report JSON withholds every geometry carrier and point label for both export scopes", () => {
   for (const scope of ["VIEWPORT", "ANALYSIS_AREA"]) for (const [privateState, privateRef] of [[true,false], [false,true], [true,true]]) {

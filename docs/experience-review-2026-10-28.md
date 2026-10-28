@@ -175,3 +175,54 @@ found no further actionable defect in this follow-up and independently reran the
 that the earlier CI run covered this revision. No broad CI rerun or hosting
 mutation was performed for this authoring step. The initial history above remains
 the evidence for its original scope.
+
+## Follow-up: make provider-context reports understandable
+
+Selecting a provider record can produce a useful source-context report while the
+KFM record total remains zero. The prior Findings text told visitors to widen the
+map or include another layer, even though this composition has no released KFM
+domain records. It also showed undifferentiated record and layer totals.
+
+The candidate labels totals as KFM records/layers and explains available,
+withheld, time-incompatible and absent provider context separately. Empty-report
+findings use the existing provider eligibility projection, never its source
+title or geometry. JSON and HTML recompute the generic finding after the existing
+immediate privacy check, so a pending location-state render cannot retain an
+"included" message when source details must be withheld. Existing numeric counts,
+provider fields, clocks, attribution, use limits and report format remain intact.
+Nonempty KFM findings keep their existing behavior. No source admission or
+publication follows from these explanatory changes.
+
+Base: hosted branch `22027d273f81779d24a5f17538e3da13e908f8c5`, tree
+`e86cd6db574aa14d11e8c9c869d8bb85709b493e`. While the file-review connection was
+stalled, #5536–#5538 merged SPC outlook and preliminary storm-report work. The
+candidate was reconciled without conflicts; its reconstructed upstream tree
+matched that exact GitHub tree before the report diff was reapplied. Local HEAD
+`8f818a4` is a verification-only snapshot of those same tree bytes, not the remote
+commit. Remote delivery uses `22027d…` as its parent. Both the newer Storm Desk
+work and the earlier aviation/water welcome work are preserved. No new paths or
+roots are added: `app/page.tsx` owns presentation and bounded projections,
+`tests/` owns validation, and this existing `docs/` review owns behavior and
+acceptance notes, consistent with Directory Rules v2 responsibility placement and
+accepted ADR-0029. Standalone hosting and original Sites preservation remain.
+
+Validation: the new empty-report regression failed against original source
+(11 existing tests passed, one new test failed), then the candidate's focused
+report/privacy suite passed 15/15 with zero skips. After reconciliation, the
+report/privacy and SPC/storm-report suites passed 35/35 with zero skips. Tests execute the actual
+owning declarations, React provider preview and ordinary download Blob renderer,
+including available/withheld/incompatible/none, export-time privacy, source limits,
+escaping and unchanged KFM totals. Production build and TypeScript passed. The
+page retains the same 42 lint warning signatures as the exact-base tree, zero
+errors; changed Node tests lint clean. The county browser journey additionally
+checks the new wording and export totals; it has not run locally because the
+local HTTP listener was denied with `listen EPERM`. The focused suite ran with `node --experimental-test-isolation=none --test`;
+its results are not browser-acceptance passes.
+
+Risk is explanatory-copy drift if the catalog/release posture changes later;
+nonempty catalogs retain their existing filter guidance. Exact-head CI and
+native desktop/mobile layout and export acceptance remain separate. Historical
+preview identity mismatch, loopback startup EACCES, full-scene performance and
+long-session memory remain open and are not repaired or relabeled by this
+candidate. Rollback is a revert of this presentation/tests/docs change; there
+are no data, schema, dependency, host-setting or storage migrations.
