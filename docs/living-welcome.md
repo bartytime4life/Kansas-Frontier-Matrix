@@ -497,3 +497,23 @@ Validation: regression tests exercise every category’s guide and destination, 
 Before release: inspect 1280×800, 390×844 and 568×320; keyboard Return/Escape/Tab and nested details; guide scrolling without obscuring map navigation; all 19 correct destinations; unavailable/empty/stale source captions; hiding/restoring overlays while a request resolves; provider attribution. Measure cold/warm startup, long tasks, network bytes, category-switch latency and memory on representative mobile hardware against the exact base. Check that the new card copy and responsive guide do not push essential entry controls out of reach. No universal frame-rate or Core Web Vitals result is claimed.
 
 Rollback: revert this bounded welcome change; no provider, store, hosting configuration, DNS or published data rollback is involved.
+
+## Expanded preview failure handling — 2026-10-28
+
+The expanded demonstration checks map unavailability before category identity,
+loading and comparison copy. A failure without a category identifier is global
+preview failure, including when starter overlays are hidden. Initial loading and
+reports from a previous category still show “Preparing the category map…” until
+the selected category reports readiness. A failed provider remains separate from
+a failed map. Both callback failures and rejected engine initialization notify
+the welcome owner. A later successful preview replaces the failure message.
+
+The existing status region, design, source notes and full-category-map action
+are retained. Component and engine regressions cover missing/stale identifiers,
+disabled WebGL, failed initialization, provider failure, switching, recovery,
+comparison and both map-entry callbacks. The hydrated browser suite additionally
+exercises WebGL/construction failure, keyboard notes/return/map entry, readable
+scrolling guidance and comparison recovery at 1280×800, 390×844 and 568×320.
+These isolated provider fixtures establish UI behavior, not live provider health.
+Repository integration targets the existing hosted source branch; production
+publication remains a separate operation. Rollback is a revert of this correction.

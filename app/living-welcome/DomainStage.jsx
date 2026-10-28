@@ -17,11 +17,12 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
  const [state, setState] = useState('loading'), [sources, setSources] = useState(null);
  useEffect(() => {
   let cancelled = false, idle = 0;
+  const unavailable = () => { if (!cancelled) { setState('unavailable'); onPreviewState?.({ mapState: 'unavailable' }); } };
   const boot = () => import('./map-engine.mjs').then(({ createWelcomeMap }) => {
    if (cancelled || !host.current) return null;
    return createWelcomeMap(host.current, {
     onReady: () => { if (!cancelled) setState('ready'); },
-    onError: () => { if (!cancelled) { setState('unavailable'); onPreviewState?.({ mapState: 'unavailable' }); } },
+    onError: unavailable,
     onSources: value => { if (!cancelled) { if (value.mapState === 'unavailable' || value.mapState === 'loading') setState(value.mapState); setSources(value); onPreviewState?.(value); } },
    });
   }).then(instance => {
@@ -30,7 +31,7 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
    engine.current = instance;
    const { topic: id, paused: stopped, reduced: still, layersVisible: visible } = latest.current;
    instance.setReduced(still); instance.setPaused(stopped); instance.setLayersVisible(visible); instance.show(id);
-  }).catch(() => { if (!cancelled) setState('unavailable'); });
+  }).catch(unavailable);
   if (typeof window.requestIdleCallback === 'function') idle = window.requestIdleCallback(boot, { timeout: 900 });
   else idle = setTimeout(boot, 120);
   return () => {

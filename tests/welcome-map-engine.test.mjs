@@ -11,7 +11,7 @@ const stubs = {
   "'../map-runtime'": toUrl(`export const BASEMAPS = { standard: { style: 'https://style.test/standard' }, relief: { style: { version: 8, name: 'relief', sources: {}, layers: [] } } };`),
   "'../basemap-cache'": toUrl(`export const basemapCacheRequest = url => ({ url });`),
   "'../map-performance'": toUrl(`export const browserRenderBudget = () => globalThis.__welcome.budget;`),
-  "'../webgl-support'": toUrl(`export const webgl2Available = () => true;`),
+  "'../webgl-support'": toUrl(`export const webgl2Available = () => globalThis.__welcome.webgl;`),
   "'../live-context'": toUrl(`
     const SOURCES = [{ id: 'noaa-goes-geocolor', kind: 'OPERATIONAL_WMS' }, { id: 'nws-radar', kind: 'OPERATIONAL_WMS' }, { id: 'nws-alerts', kind: 'OPERATIONAL_GEOJSON', apiPath: '/api/live-context?feed=nws-alerts' }, { id: 'usgs-earthquakes', kind: 'OPERATIONAL_GEOJSON', apiPath: '/api/live-context?feed=usgs-earthquakes' }, { id: 'kdot-roads', kind: 'OPERATIONAL_WMS' }, { id: 'census-counties', kind: 'SNAPSHOT_GEOJSON', apiPath: '/api/live-context?feed=census-counties' }];
     export const OFFICIAL_CONTEXT_SOURCES = SOURCES;
@@ -60,18 +60,25 @@ class FakeMap {
   remove() {}
 }
 const settle = () => new Promise(resolve => setTimeout(resolve, SETTLE_MS + 30));
-async function start(budget = { pixelRatio: 1, tileCache: 8 }) {
+async function start(budget = { pixelRatio: 1, tileCache: 8 }, overrides = {}) {
   const fetches = [];
-  globalThis.__welcome = { FakeMap, budget, drawn: [], radar: [], satellite: [], prisms: [], fresh: () => true };
+  globalThis.__welcome = { FakeMap, budget, webgl: true, drawn: [], radar: [], satellite: [], prisms: [], fresh: () => true, ...overrides };
   // Style documents and starter payloads each wait until the test releases them.
   globalThis.fetch = url => new Promise((resolve, reject) => fetches.push({ url, fail: () => reject(new Error('style unavailable')), resolve: () => resolve({ ok: true, json: async () => url === '/api/noaa-satellite/frames' ? globalThis.__welcome.satelliteManifest : url === '/api/noaa-radar/frames' ? globalThis.__welcome.radarManifest : url.startsWith('/api/') ? { feed: new URL(url, 'http://x').searchParams.get('feed'), data: { type: 'FeatureCollection', features: [] } } : { version: 8, url, sources: {}, layers: [] } }) }));
-  let ready = 0;
+  let ready = 0, errors = 0;
   const radarReports = [], sourceReports = [];
   const { createWelcomeMap } = await loadEngine();
-  const engine = await createWelcomeMap({}, { onReady: () => ready++, onRadar: at => radarReports.push(at), onSources: value => sourceReports.push(value) });
-  return { engine, fetches, map: globalThis.__welcome.map, ready: () => ready, radarReports, sourceReports };
+  const engine = await createWelcomeMap({}, { onReady: () => ready++, onError: () => errors++, onRadar: at => radarReports.push(at), onSources: value => sourceReports.push(value) });
+  return { engine, fetches, map: globalThis.__welcome.map, ready: () => ready, errors: () => errors, radarReports, sourceReports };
 }
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
+
+test('disabled WebGL and failed map construction report failure without fetching providers',async()=>{
+ for(const overrides of [{webgl:false},{FakeMap:class{constructor(){throw new Error('Map initialization failed');}}}]){
+  const {engine,map,fetches,errors}=await start(undefined,overrides);
+  assert.equal(engine,null);assert.equal(map,undefined);assert.equal(errors(),1);assert.equal(fetches.length,0);
+ }
+});
 
 test('layer comparison hides late payloads and restores cached data without rebuilding the map', async t => {
   const { engine, map, fetches, sourceReports } = await start();
