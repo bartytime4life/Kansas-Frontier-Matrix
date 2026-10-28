@@ -36,6 +36,7 @@ ERROR_CODES = frozenset(
         "CORRECTION_LINK_REQUIRED",
         "SUPERSESSION_LINK_REQUIRED",
         "SOURCE_SUPPORT_ERASURE_DENIED",
+        "SOURCE_SUPPORT_MISMATCH",
         "MATERIAL_CHANGE_DECLARATION_MISMATCH",
         "GOVERNANCE_BOUNDARY_VIOLATION",
         "TUPLE_EVIDENCE_INCOMPLETE",
@@ -214,6 +215,13 @@ def _claim_reasons(candidate: Mapping[str, Any]) -> list[str]:
         if not families or not families.issubset(supported):
             if not any(code in reasons for code in ABSTAIN_CODES):
                 reasons.append("SOURCE_FAMILY_CANNOT_DIRECTLY_SUPPORT_CLAIM")
+        elif not claim["resampled"] and not claim["county_intersection_only"]:
+            claim_support = (claim["support_kind"], claim["support_id"])
+            if any(
+                (source["support_kind"], source["support_id"]) != claim_support
+                for source in candidate["sources"]
+            ):
+                reasons.append("SOURCE_SUPPORT_MISMATCH")
     return reasons
 
 
