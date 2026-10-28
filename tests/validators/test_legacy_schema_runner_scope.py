@@ -9,15 +9,13 @@ from tools.validators._common import run_all as legacy_runner
 
 
 class LegacySchemaRunnerScopeTests(unittest.TestCase):
-    def test_main_selects_only_reviewed_legacy_core_validators(self) -> None:
+    def test_main_selects_full_profile(self) -> None:
         sentinel_registry = object()
         report = {
             "outcome": "PASS",
             "selection": {
-                "mode": "explicit",
-                "requested_validator_ids": list(
-                    legacy_runner.LEGACY_CORE_VALIDATOR_IDS
-                ),
+                "mode": "profile",
+                "requested_validator_ids": [],
             },
         }
 
@@ -45,13 +43,9 @@ class LegacySchemaRunnerScopeTests(unittest.TestCase):
             sentinel_registry,
             repo_root=legacy_runner.REPO_ROOT,
             profile="full",
-            requested_ids=legacy_runner.LEGACY_CORE_VALIDATOR_IDS,
         )
         rendered = stdout.getvalue()
-        self.assertIn('"mode": "explicit"', rendered)
-        self.assertNotIn("repository-topology", rendered)
-        self.assertNotIn("workflow-security", rendered)
-        self.assertNotIn("catalog-closure-packet", rendered)
+        self.assertIn('"mode": "profile"', rendered)
 
     def test_live_full_profile_keeps_non_legacy_validators_separate(self) -> None:
         registry = legacy_runner.load_registry(

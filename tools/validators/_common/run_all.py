@@ -3,10 +3,9 @@
 New callers should use ``python tools/validate_all.py --profile full``. The
 ``RUNNER_VALIDATORS`` export remains the reviewed legacy core inventory because
 ``schema-validation`` performs additional generic fixture-shape checks over
-those nine families. Executing this module uses the canonical orchestrator with
-an explicit nine-validator selection; catalog and repository guardrail
-validators remain in the canonical ``full`` profile without silently widening
-historical ``make schemas`` semantics.
+those nine families. Executing this module uses the canonical orchestrator's
+``full`` profile so that catalog and repository guardrails remain part of the
+historical ``make schemas`` validation gate.
 """
 from __future__ import annotations
 
@@ -72,7 +71,6 @@ def main() -> int:
         registry,
         repo_root=REPO_ROOT,
         profile="full",
-        requested_ids=LEGACY_CORE_VALIDATOR_IDS,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     return code
