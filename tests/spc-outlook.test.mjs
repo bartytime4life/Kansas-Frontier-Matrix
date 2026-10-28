@@ -164,6 +164,10 @@ test('wind and hail read the fraction when SPC leaves out DN, and an empty outlo
  const wind={type:'FeatureCollection',features:[{type:'Feature',geometry:{type:'Polygon',coordinates:box(-99,36,-95,39)},properties:{LABEL:'0.15'}},{type:'Feature',geometry:{type:'Polygon',coordinates:box(-99,36,-95,39)},properties:{LABEL:'0.10'}}]};
  const outlook=spc.parseSpcOutlook(wind,2,'2026-10-26T17:00:00.000Z','src','wind',{type:'GeometryCollection',geometries:[]});
  assert.deepEqual(outlook.data.features.map(f=>f.properties.category),['15'],'10% is not a wind band');
+ assert.deepEqual(spc.SPC_PROBABILITIES.wind.map(b=>b.id),['5','15','30','45','60','75','90'],'the wind ladder runs to 90% since March 2026');
+ const high=spc.parseSpcOutlook({type:'FeatureCollection',features:[{type:'Feature',geometry:{type:'Polygon',coordinates:box(-99,36,-95,39)},properties:{DN:90,LABEL:'0.90'}},{type:'Feature',geometry:{type:'Polygon',coordinates:box(-100,35,-94,40)},properties:{DN:75,LABEL:'0.75'}}]},1,'2026-10-26T17:00:00.000Z','src','wind');
+ assert.deepEqual(high.data.features.map(f=>f.properties.category),['75','90']);assert.equal(high.kansas,'90');
+ assert.deepEqual(spc.spcOutlookKey(1,'wind').items.slice(5,7).map(i=>[i.label,i.color]),[['75%','#5f9fe0'],['90%','#4fe3e3']]);
  assert.equal(outlook.kansas,'15');assert.equal(outlook.intensity,null);
  const empty=spc.parseSpcOutlook({type:'GeometryCollection',geometries:[]},1,'2026-10-26T17:00:00.000Z','src','hail');
  assert.equal(empty.data.features.length,0);

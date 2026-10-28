@@ -318,7 +318,7 @@ probability outlooks for Day 1 or 2.
   server and re-read in the browser once shown for a quarter-hour, since SPC
   reissues Day 1 several times a day. Only SPC's six categories (TSTM, MRGL,
   SLGT, ENH, MDT, HIGH), SPC's probability bands (tornado 2, 5, 10, 15, 30, 45
-  and 60%; wind and hail 5, 15, 30, 45 and 60%, read from `DN` or the `LABEL`
+  and 60%; wind 5, 15, 30, 45, 60, 75 and 90%; hail 5, 15, 30, 45 and 60%, read from `DN` or the `LABEL`
   fraction) and the intensity groups CIG1–CIG3 (hail CIG1–CIG2) with valid
   polygons are drawn; provider properties other than the band do not travel.
   An empty outlook, which SPC sends as a bare GeometryCollection, reads as
@@ -332,7 +332,8 @@ probability outlooks for Day 1 or 2.
 - **Symbols.** Outlines, not fills, so radar reflectivity keeps its colours.
   Categories are drawn in SPC's category fill colours; probabilities in SPC's
   hazard hues (tornado green, brown, yellow, red, magenta, purple, blue; wind
-  and hail brown, yellow, red, magenta, purple), lightened where needed to stay
+  and hail brown, yellow, red, magenta, purple, with wind's 75% and 90% in blue
+  and cyan), lightened where needed to stay
   legible on the dark storm base. Intensity areas are dashed white lines,
   heavier with each level. Higher bands lie inside lower ones, as SPC layers
   them. The key lists the bands drawn for the product shown.
