@@ -12,8 +12,8 @@ const RADAR_TIME = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago
  * The map engine loads after the welcome has painted; until then (or without
  * WebGL) the stage stays a quiet backdrop and the caption still names the map.
  */
-export function DomainStage({ topic, paused = false, reduced = false, onPreviewState }) {
- const host = useRef(null), engine = useRef(null), latest = useRef({ topic, paused, reduced });
+export function DomainStage({ topic, paused = false, reduced = false, layersVisible = true, onPreviewState }) {
+ const host = useRef(null), engine = useRef(null), latest = useRef({ topic, paused, reduced, layersVisible });
  const [state, setState] = useState('loading'), [sources, setSources] = useState(null);
  useEffect(() => {
   let cancelled = false, idle = 0;
@@ -28,8 +28,8 @@ export function DomainStage({ topic, paused = false, reduced = false, onPreviewS
    if (!instance) return;
    if (cancelled) { instance.dispose(); return; }
    engine.current = instance;
-   const { topic: id, paused: stopped, reduced: still } = latest.current;
-   instance.setReduced(still); instance.setPaused(stopped); instance.show(id);
+   const { topic: id, paused: stopped, reduced: still, layersVisible: visible } = latest.current;
+   instance.setReduced(still); instance.setPaused(stopped); instance.setLayersVisible(visible); instance.show(id);
   }).catch(() => { if (!cancelled) setState('unavailable'); });
   if (typeof window.requestIdleCallback === 'function') idle = window.requestIdleCallback(boot, { timeout: 900 });
   else idle = setTimeout(boot, 120);
@@ -40,7 +40,9 @@ export function DomainStage({ topic, paused = false, reduced = false, onPreviewS
   };
  }, [onPreviewState]);
  // The latest props also seed the engine when it finishes loading.
- useEffect(() => { latest.current = { topic, paused, reduced }; engine.current?.show(topic); }, [topic, paused, reduced]);
+ useEffect(() => { latest.current = { topic, paused, reduced, layersVisible }; }, [topic, paused, reduced, layersVisible]);
+ useEffect(() => { engine.current?.show(topic); }, [topic]);
+ useEffect(() => { engine.current?.setLayersVisible(layersVisible); }, [layersVisible]);
  useEffect(() => { engine.current?.setPaused(paused); }, [paused]);
  useEffect(() => { engine.current?.setReduced(reduced); }, [reduced]);
  const view = welcomeView(topic);
