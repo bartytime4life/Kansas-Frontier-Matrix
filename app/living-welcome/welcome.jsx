@@ -20,17 +20,9 @@ function wake(card){
   const rects=[...cards].map(node=>node.getBoundingClientRect()),a=card.getBoundingClientRect(),ax=a.left+a.width/2,ay=a.top+a.height/2;
   rects.forEach((r,i)=>cards[i].style.setProperty('--wake',`${Math.min(180,Math.round(Math.hypot(r.left+r.width/2-ax,r.top+r.height/2-ay)*.14))}ms`));
 }
-// The card light follows the pointer through CSS variables, at most once per
-// frame and without a React render.
-let glowFrame=0;
-function glow(event){
-  if(event.pointerType==='touch')return;
-  const card=event.currentTarget,x=event.clientX,y=event.clientY;
-  cancelAnimationFrame(glowFrame);
-  glowFrame=requestAnimationFrame(()=>{const r=card.getBoundingClientRect();card.style.setProperty('--mx',`${x-r.left}px`);card.style.setProperty('--my',`${y-r.top}px`);});
-}
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,motionEnabled=true,onMotionChange}){
   const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null),wasFullscreen=useRef(false);
+  const glowFrame=useRef(0);
   const [remember,setRemember]=useState(initialRemember),[query,setQuery]=useState('');
   const [reduced,setReduced]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [localMotion,setMotion]=useState(motionEnabled),[hidden,setHidden]=useState(()=>typeof document!=='undefined'&&document.hidden);
@@ -39,6 +31,15 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const [previewState,setPreviewState]=useState(null),[layersVisible,setLayersVisible]=useState(true);
   const motion=onMotionChange?motionEnabled:localMotion;
   const paused=!motion||reduced||hidden,engaged=pinned||active,control=engaged||last;
+  // One owned frame; held/reduced-motion views do not keep repainting card
+  // highlights, and a dismissed welcome cannot write to a detached card.
+  function glow(event){
+    if(paused||event.pointerType==='touch')return;
+    const card=event.currentTarget,x=event.clientX,y=event.clientY;
+    if(glowFrame.current)cancelAnimationFrame(glowFrame.current);
+    glowFrame.current=requestAnimationFrame(()=>{glowFrame.current=0;const r=card.getBoundingClientRect();card.style.setProperty('--mx',`${x-r.left}px`);card.style.setProperty('--my',`${y-r.top}px`);});
+  }
+  useEffect(()=>()=>{if(glowFrame.current){cancelAnimationFrame(glowFrame.current);glowFrame.current=0;}},[paused]);
   const topic=TOPICS.find(t=>t.id===detail),modal=Boolean(detail||panel),glimpse=categoryGlimpse(control);
   const run=action=>{action?.();onClose(remember);};
   // Leaving the full-window preview clears the engaged card itself: hidden cards can

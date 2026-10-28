@@ -16,10 +16,16 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
  const host = useRef(null), engine = useRef(null), latest = useRef({ topic, paused, reduced, layersVisible });
  const [state, setState] = useState('loading'), [sources, setSources] = useState(null);
  useEffect(() => {
-  let cancelled = false, idle = 0;
+  let cancelled = false, idle = null, started = false;
+  const hidden = () => typeof document !== 'undefined' && document.hidden;
   const unavailable = () => { if (!cancelled) { setState('unavailable'); onPreviewState?.({ mapState: 'unavailable' }); } };
-  const boot = () => import('./map-engine.mjs').then(({ createWelcomeMap }) => {
+  const boot = () => {
+   idle = null;
+   if (cancelled || started || hidden()) return;
+   started = true;
+   return import('./map-engine.mjs').then(({ createWelcomeMap }) => {
    if (cancelled || !host.current) return null;
+   if (hidden()) { started = false; return null; }
    return createWelcomeMap(host.current, {
     onReady: () => { if (!cancelled) setState('ready'); },
     onError: unavailable,
@@ -32,11 +38,24 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
    const { topic: id, paused: stopped, reduced: still, layersVisible: visible } = latest.current;
    instance.setReduced(still); instance.setPaused(stopped); instance.setLayersVisible(visible); instance.show(id);
   }).catch(unavailable);
-  if (typeof window.requestIdleCallback === 'function') idle = window.requestIdleCallback(boot, { timeout: 900 });
-  else idle = setTimeout(boot, 120);
+  };
+  const cancelBoot = () => {
+   if (idle === null) return;
+   if (typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idle); else clearTimeout(idle);
+   idle = null;
+  };
+  const scheduleBoot = () => {
+   if (hidden()) { cancelBoot(); return; }
+   if (cancelled || started || idle !== null) return;
+   if (typeof window.requestIdleCallback === 'function') idle = window.requestIdleCallback(boot, { timeout: 900 });
+   else idle = setTimeout(boot, 120);
+  };
+  if (typeof document !== 'undefined') document.addEventListener('visibilitychange', scheduleBoot);
+  scheduleBoot();
   return () => {
    cancelled = true;
-   if (typeof window.cancelIdleCallback === 'function') window.cancelIdleCallback(idle); else clearTimeout(idle);
+   cancelBoot();
+   if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', scheduleBoot);
    engine.current?.dispose(); engine.current = null;
   };
  }, [onPreviewState]);
