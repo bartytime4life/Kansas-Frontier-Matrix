@@ -59,6 +59,8 @@ test('close 3D views over Kansas move to the USGS 3DEP mosaic once, fall back on
  assert.match(page,/if \(terrainProviderRef\.current !== "usgs-3dep"\) return;/,'errors from a replaced 3DEP source are ignored');
  const fallback=page.indexOf('if (terrainTiles.includes("/api/3dep-dem-tile"))'),generic=page.indexOf('failedTerrainSourceRef.current = map.getSource(TERRAIN_SOURCE_ID);');
  assert.ok(fallback>0&&generic>fallback,'the fallback runs before the generic DEM failure');
+ const recorded=page.indexOf('runtimeError = message;\n          if (sourceId) failedSourceIds.add(sourceId);\n          if (sourceId === TERRAIN_SOURCE_ID) {');
+ assert.ok(recorded>fallback,'the handled 3DEP failure is never recorded as a runtime error or failed source');
  assert.match(page,/onChange=\{event => chooseTerrainProviderByHand\(event\.target\.value as "mapzen" \| "usgs-3dep"\)\}/);
  assert.match(page,/onClick=\{\(\) => chooseTerrainProviderByHand\("mapzen"\)\}>Use display DEM/);
 });

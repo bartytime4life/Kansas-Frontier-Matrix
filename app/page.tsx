@@ -5835,8 +5835,7 @@ export default function Home() {
             setRuntime({ kind: "degraded", message: degradedReason });
             return;
           }
-          runtimeError = message;
-          if (sourceId) failedSourceIds.add(sourceId);
+          // Handled before the error is recorded, so a fallback that loads leaves no failure behind.
           const terrainTiles = sourceId === TERRAIN_SOURCE_ID ? (map.getSource(TERRAIN_SOURCE_ID) as { serialize?: () => { tiles?: string[] } } | undefined)?.serialize?.().tiles?.[0] ?? "" : "";
           if (terrainTiles.includes("/api/3dep-dem-tile")) {
             // A 3DEP source already replaced by the display DEM can still report tiles in flight.
@@ -5848,6 +5847,8 @@ export default function Home() {
               return;
             }
           }
+          runtimeError = message;
+          if (sourceId) failedSourceIds.add(sourceId);
           if (sourceId === TERRAIN_SOURCE_ID) {
             failedTerrainSourceRef.current = map.getSource(TERRAIN_SOURCE_ID);
             setTerrainState("ERROR");
