@@ -357,6 +357,12 @@ Every map draws at the screen's own density and on real terrain.
   Satellite view's subject) are requested at 512 px on those screens; they are
   imagery without symbols, so they only gain detail. The Explore underground 3D
   view renders at up to 2× (it was capped at 1.5×), like the aquifer volume.
+- **Close 3D relief.** The 3D views open on the Mapzen display DEM, capped at
+  zoom 11. Past zoom 11.5 over Kansas, where that DEM is only overzoomed, the
+  map moves to the live USGS 3DEP mosaic (the "Kansas detail" carrier the
+  photo-real view uses) and says so. If 3DEP fails to load there, the map goes
+  back to the display DEM once and says so, instead of staying degraded; a DEM
+  chosen by hand in Appearance is never overridden.
 - **Not changed.** NOAA radar keeps nearest-neighbour 256-pixel frames, so each
   radar cell stays an exact cell and the loop's downloads stay bounded. NOAA
   lightning density stays at 256 px: its GLM cells are about 8 km.
