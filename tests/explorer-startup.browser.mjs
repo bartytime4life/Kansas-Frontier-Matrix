@@ -1258,9 +1258,12 @@ test('water animation stays opt-in and does not follow the visitor into unrelate
  const b=await browser(t),p=await pageSession(b,1280,900);
  const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
  await p.open('/?topic=water','1',`localStorage.setItem('kfm-scene-effects-v1',JSON.stringify({waterFlow:true,sunSync:false}));`);
+ await p.wait(`!!document.querySelector('.topic-map-look button')`,'Water guide offers its real map');await enter('.topic-map-look button');
  await p.wait(`[...document.querySelectorAll('.category-map-dock-tool')].some(button=>button.textContent==='Show river flow')`,'old saved flow does not auto-start');
  await p.evaluate(`[...document.querySelectorAll('.category-map-dock-tool')].find(button=>button.textContent==='Show river flow').focus()`);await p.key('Enter','Enter',13);
  await p.wait(`!![...document.querySelectorAll('.category-map-dock-tool')].some(button=>button.textContent==='Hide river flow')`,'explicit Water toggle still works');
+ await p.evaluate(`[...document.querySelectorAll('.category-map-dock button')].find(button=>button.textContent==='Layers for this map').focus()`);await p.key('Enter','Enter',13);
+ await p.wait(`!!document.querySelector('[aria-label="Layer topic"]')`,'layer topic control available');
  await p.evaluate(`(()=>{const select=document.querySelector('[aria-label="Layer topic"]');select.value='aviation';select.dispatchEvent(new Event('change',{bubbles:true}));})()`);
  await p.wait(`JSON.parse(localStorage.getItem('kfm-scene-effects-v1')).waterFlow===false`,'leaving Water shuts off inherited animation');
  await enter('[aria-label="Effects & rendering"]');
