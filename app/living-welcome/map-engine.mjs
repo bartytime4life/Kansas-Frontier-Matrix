@@ -93,7 +93,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   // is tracked apart from the selected topic, because topics that share a
   // style (Science and Sky, or Evidence and the default map) take turns while
   // it loads, and the loaded style serves whichever of them is selected then.
-  let view = null, styleKey = null, styleEpoch = 0, styleLoaded = false, paused = true, reduced = false, leg = 0, settle = 0, disposed = false, ready = false, applying = false, transitioning = false;
+  let view = null, styleKey = null, styleEpoch = 0, styleLoaded = false, contextLost = false, paused = true, reduced = false, leg = 0, settle = 0, disposed = false, ready = false, applying = false, transitioning = false;
   const cameraOf = ({ camera: { center, zoom, pitch, bearing } }) => ({ center: [center[0], center[1]], zoom, pitch, bearing });
   const drift = () => {
     if (disposed || paused || reduced || budget.efficient || applying || !view?.topic) return;
@@ -114,15 +114,15 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   // otherwise usable map forever (especially in a still, reduced-motion view).
   // Renderer readiness does not attest to tile or observation availability;
   // those retain their independent source states below.
-  map.on('render', () => { if (!ready && !disposed && styleLoaded) { ready = true; onReady?.(); } });
-  map.on('webglcontextlost', () => { if (!disposed) { ready = false; onError?.(); } });
+  map.on('render', () => { if (!ready && !disposed && styleLoaded) { contextLost = false; ready = true; onReady?.(); reportSources(); } });
+  map.on('webglcontextlost', () => { if (!disposed) { contextLost = true; ready = false; onError?.(); reportSources(); } });
   // The selected topic's starter layers, drawn by the Explorer's own context
   // renderer with every other provider layer hidden. Re-run after each style
   // load (a new style drops them) and as each GeoJSON payload arrives.
   const opacity = defaultOfficialContextOpacity();
   let loaded = {}, radarAt = null, radarShown = null, satellite = null, layersVisible = true;
   const pending = new Set(), failures = new Set();
-  const reportSources = () => onSources?.({ topic: view?.topic, mapState: styleLoaded ? 'ready' : 'loading', sources: (view?.starters ?? []).map(id => {
+  const reportSources = () => onSources?.({ topic: view?.topic, mapState: contextLost ? 'unavailable' : styleLoaded ? 'ready' : 'loading', sources: (view?.starters ?? []).map(id => {
     const source = OFFICIAL_CONTEXT_BY_ID[id], count = loaded[id]?.data.features.length;
     const frame = id === 'nws-radar' ? radarCurrent(radarAt) && { observedAt: radarAt, kind: 'radar' }
       : id === 'noaa-goes-geocolor' ? satelliteCurrent(satellite) && satellite : null;

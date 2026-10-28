@@ -225,10 +225,14 @@ test('a rejected style installation reports unavailable and remains retryable wi
 });
 
 test('context loss hides a rendered preview and a real restored frame recovers it',async t=>{
- const {engine,map,ready,errors}=await start();t.after(()=>engine.dispose());
+ const {engine,map,ready,errors,sourceReports}=await start();t.after(()=>engine.dispose());
  engine.show('terrain');await tick();map.emit('style.load');map.emit('render');assert.equal(ready(),1);
  map.emit('webglcontextlost');assert.equal(errors(),1);
+ assert.equal(sourceReports.at(-1).mapState,'unavailable','parent status receives context loss');
+ engine.setLayersVisible(false);
+ assert.equal(sourceReports.at(-1).mapState,'unavailable','source refresh cannot imply a restored renderer');
  map.emit('render');assert.equal(ready(),2,'only a new rendered frame restores visibility');
+ assert.equal(sourceReports.at(-1).mapState,'ready','restored frame clears the parent failure status');
 });
 
 test('a previewed category draws its starter data with the Explorer renderer, and its GeoJSON when it arrives', async () => {

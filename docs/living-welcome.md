@@ -14,7 +14,10 @@ Renderer readiness is not a claim that all tiles or observations have loaded.
 Existing loading, empty, unavailable and dated-source disclosures remain
 independent. A rejected style installation reports unavailable without exposing
 its exception and a deliberate category retry re-reads that style document.
-WebGL context loss hides the preview; a new rendered frame can reveal it again.
+WebGL context loss hides the preview and marks its parent status unavailable;
+source refreshes cannot clear that renderer failure. A new rendered frame
+restores both visibility and parent status. The context/status regression failed
+before that follow-up correction.
 
 A welcome opened in a hidden tab defers its idle renderer startup until visible.
 Queued startup is cancelled on hide/dismissal, visibility changes reuse the same
