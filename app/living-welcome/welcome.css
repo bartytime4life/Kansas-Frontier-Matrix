@@ -611,3 +611,8 @@
 .living-welcome .welcome-aviation-notes{margin-top:8px;font-size:12px;color:#b7ced7}
 .living-welcome .welcome-aviation-notes summary{min-height:44px;display:list-item;padding:12px 0;cursor:pointer;color:#f1d391}
 .living-welcome .welcome-aviation-notes summary:focus-visible{outline:3px solid #f0d59c;outline-offset:2px}
+
+@media(max-width:700px){
+ .living-welcome[data-fullscreen=true][data-active=aviation] .welcome-layer-demo{max-height:38vh}
+ .living-welcome[data-fullscreen=true][data-active=aviation] .welcome-layer-demo>small{display:none}
+}
