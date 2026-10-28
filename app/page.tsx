@@ -4075,6 +4075,8 @@ export default function Home() {
         if (!validStormReports(value) || value.day !== reportsDay) throw new Error("Invalid SPC storm reports.");
         reportsReadAtRef.current.set(value.day, Date.now());
         setStormReports(current => ({ ...current, [value.day]: value }));
+        // A refresh carries the selected report's latest form, or drops it if SPC withdrew it.
+        setReportSelected(selected => selected ? value.reports.find(report => report.id === selected.id) ?? null : null);
         announce(`SPC storm reports on the map: ${stormReportsReading(value)}`);
       })
       .catch(() => { if (!controller.signal.aborted) setReportsFailed(reportsDay); });
