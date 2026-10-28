@@ -24,7 +24,7 @@ import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulat
 import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots } from "./reviewed-snapshots";
 import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
 import { setReviewedSnapshot } from "./reviewed-snapshot-layers";
-import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type SpcOutlook } from "./spc-outlook";
+import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
@@ -1572,10 +1572,12 @@ export default function Home() {
   const quakeRecordEventsRef = useRef<ReadonlyMap<string, EarthquakeRecordEvent>>(new Map());
   const quakeLiveWasOnRef = useRef(false);
   // The SPC convective outlook (Storm desk): the day shown (null when off), the
-  // outlooks read so far by day, and the day whose read failed.
+  // product chosen (categorical, or a hazard's probabilities), the outlooks read
+  // so far by "day-product", and the one whose read failed.
   const [outlookDay, setOutlookDay] = useState<OutlookDay | null>(null);
-  const [outlooks, setOutlooks] = useState<Partial<Record<OutlookDay, SpcOutlook>>>({});
-  const [outlookFailed, setOutlookFailed] = useState<OutlookDay | null>(null);
+  const [outlookHazard, setOutlookHazard] = useState<OutlookProduct>("cat");
+  const [outlooks, setOutlooks] = useState<Partial<Record<string, SpcOutlook>>>({});
+  const [outlookFailed, setOutlookFailed] = useState<string | null>(null);
   // Bumped when a shown outlook reaches its quarter-hour, so the read below runs again.
   const [outlookTick, setOutlookTick] = useState(0);
   // The landscape the photo-real 3D view last flew to.
@@ -2711,6 +2713,7 @@ export default function Home() {
     if (populationPrisms) params.set("prisms", "on");
     if (quakeRecordOn) params.set("quakes", "record");
     if (outlookDay) params.set("outlook", String(outlookDay));
+    if (outlookDay && outlookHazard !== "cat") params.set("outlookHazard", outlookHazard);
     params.set("sunDay", daylightDay);
     params.set("sunThrough", daylightThroughDay);
     params.set("sunAt", new Date(daylightInstant).toISOString());
@@ -2765,7 +2768,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -3993,9 +3996,13 @@ export default function Home() {
   // A day's outlook is read when it is first shown, and again each time it is a quarter-hour old.
   const OUTLOOK_REFRESH_MS = 15 * 60_000;
   const chooseOutlook = useCallback((day: OutlookDay | null) => { setOutlookDay(day); setOutlookFailed(null); }, []);
+  const chooseOutlookHazard = useCallback((product: OutlookProduct) => { setOutlookHazard(product); setOutlookFailed(null); }, []);
+  // Day 3 is categorical only; a hazard chosen there waits for day 1 or 2.
+  const outlookProduct: OutlookProduct = outlookDay && outlookProducts(outlookDay).includes(outlookHazard) ? outlookHazard : "cat";
+  const outlookId = outlookDay ? `${outlookDay}-${outlookProduct}` : null;
   useEffect(() => {
-    if (!outlookDay || outlookFailed === outlookDay) return;
-    const current = outlooks[outlookDay];
+    if (!outlookDay || !outlookId || outlookFailed === outlookId) return;
+    const current = outlooks[outlookId];
     const age = current ? Date.now() - Date.parse(current.retrievedAt) : Infinity;
     if (age < OUTLOOK_REFRESH_MS) {
       // Fresh: come back when it is a quarter-hour old, while this day is still shown.
@@ -4003,18 +4010,18 @@ export default function Home() {
       return () => clearTimeout(timer);
     }
     const controller = new AbortController();
-    void fetch(`/api/spc-outlook?day=${outlookDay}`, { signal: controller.signal })
+    void fetch(`/api/spc-outlook?day=${outlookDay}&product=${outlookProduct}`, { signal: controller.signal })
       .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
       .then(value => {
         if (controller.signal.aborted) return;
-        if (!validSpcOutlook(value) || value.day !== outlookDay) throw new Error("Invalid SPC outlook.");
-        setOutlooks(current => ({ ...current, [value.day]: value }));
-        announce(`SPC day ${value.day} convective outlook on the map: ${spcOutlookReading(value)}`);
+        if (!validSpcOutlook(value) || value.day !== outlookDay || value.product !== outlookProduct) throw new Error("Invalid SPC outlook.");
+        setOutlooks(current => ({ ...current, [outlookId]: value }));
+        announce(`SPC day ${value.day} ${value.product === "cat" ? "convective" : outlookProductName(value.product).toLowerCase()} outlook on the map: ${spcOutlookReading(value)}`);
       })
-      .catch(() => { if (!controller.signal.aborted) setOutlookFailed(outlookDay); });
+      .catch(() => { if (!controller.signal.aborted) setOutlookFailed(outlookId); });
     return () => controller.abort();
-  }, [outlookDay, outlooks, outlookFailed, outlookTick, announce]);
-  const shownOutlook = outlookDay ? outlooks[outlookDay] ?? null : null;
+  }, [outlookDay, outlookProduct, outlookId, outlooks, outlookFailed, outlookTick, announce]);
+  const shownOutlook = outlookId ? outlooks[outlookId] ?? null : null;
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady) return;
@@ -5083,6 +5090,8 @@ export default function Home() {
       setQuakeRecordOn(quakeLiveWasOnRef.current);
       const restoredOutlook = Number(params.get("outlook"));
       setOutlookDay((restoredOutlook === 1 || restoredOutlook === 2 || restoredOutlook === 3) && restoredTopic !== "all" && categoryMap(restoredTopic)?.tools?.includes("outlook") ? restoredOutlook : null);
+      const restoredHazard = params.get("outlookHazard");
+      setOutlookHazard(isOutlookProduct(restoredHazard) ? restoredHazard : "cat");
       const officialOpacityPairs = params.get("ctxo")?.split(",").map((pair) => pair.split(":")) ?? [];
       const restoredOfficialOpacity = Object.fromEntries(officialOpacityPairs
         .filter(([id, value]) => knownOfficialIds.has(id as OfficialContextId) && typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value)))
@@ -9511,6 +9520,7 @@ export default function Home() {
     setQuakeRecordYear(null);
     setQuakeRecordSelected(null);
     setOutlookDay(null);
+    setOutlookHazard("cat");
     // Each map opens on its own subject: only its starters are on, as a starter set does.
     for (const source of OFFICIAL_CONTEXT_SOURCES) {
       const on = look.starters.includes(source.id);
@@ -10477,7 +10487,7 @@ export default function Home() {
             radar={{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME }}
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             layerVisibility={officialVisibility} onLayer={setOfficialContextVisible}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day)] : []), ...withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -10500,9 +10510,10 @@ export default function Home() {
               minMagnitude: quakeRecord?.minMagnitude ?? 2.5, truncated: Boolean(quakeRecord?.truncated), year: quakeRecordYear,
               selected: quakeRecordSelected, selectedUrl: quakeRecordSelected ? earthquakeEventUrl(quakeRecordSelected.id) : null } : undefined}
             onQuakes={showQuakeRecord}
-            outlook={activeCategoryMap.tools?.includes("outlook") ? { day: outlookDay, loading: Boolean(outlookDay && !shownOutlook && outlookFailed !== outlookDay),
-              failed: outlookDay !== null && outlookFailed === outlookDay, reading: shownOutlook ? spcOutlookReading(shownOutlook) : null, url: SPC_OUTLOOK_PAGE } : undefined}
+            outlook={activeCategoryMap.tools?.includes("outlook") ? { day: outlookDay, product: outlookProduct, products: outlookDay ? outlookProducts(outlookDay) : [], loading: Boolean(outlookId && !shownOutlook && outlookFailed !== outlookId),
+              failed: outlookId !== null && outlookFailed === outlookId, reading: shownOutlook ? spcOutlookReading(shownOutlook) : null, url: SPC_OUTLOOK_PAGE } : undefined}
             onOutlook={chooseOutlook}
+            onOutlookProduct={chooseOutlookHazard}
             onQuakeYear={year => { setQuakeRecordYear(year); setQuakeRecordSelected(null); }}
             onQuakeClear={() => setQuakeRecordSelected(null)}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}

@@ -107,13 +107,115 @@ test('the Storm desk dock offers the outlook by day with its reading',async()=>{
 });
 
 test('the page reads each day once a quarter-hour, keys and draws only the day shown, and closes with its map',()=>{
- assert.match(page,/fetch\(`\/api\/spc-outlook\?day=\$\{outlookDay\}`/);
  assert.match(page,/const OUTLOOK_REFRESH_MS = 15 \* 60_000;/);
  assert.match(page,/if \(age < OUTLOOK_REFRESH_MS\) \{[\s\S]{0,160}const timer = setTimeout\(\(\) => setOutlookTick\(tick => tick \+ 1\), OUTLOOK_REFRESH_MS - age\);\s*return \(\) => clearTimeout\(timer\);/,'a shown outlook re-reads itself when it turns a quarter-hour old');
- assert.match(page,/\}, \[outlookDay, outlooks, outlookFailed, outlookTick, announce\]\);/);
- assert.match(page,/const shownOutlook = outlookDay \? outlooks\[outlookDay\] \?\? null : null;/);
- assert.match(page,/\.\.\.\(shownOutlook \? \[spcOutlookKey\(shownOutlook\.day\)\] : \[\]\)/);
- assert.match(page,/setOutlookDay\(null\);\s*\/\/ Each map opens on its own subject/);
+ assert.match(page,/\}, \[outlookDay, outlookProduct, outlookId, outlooks, outlookFailed, outlookTick, announce\]\);/);
+ assert.match(page,/const shownOutlook = outlookId \? outlooks\[outlookId\] \?\? null : null;/);
+ assert.match(page,/\.\.\.\(shownOutlook \? \[spcOutlookKey\(shownOutlook\.day, shownOutlook\.product\)\] : \[\]\)/);
+ assert.match(page,/setOutlookDay\(null\);\s*setOutlookHazard\("cat"\);\s*\/\/ Each map opens on its own subject/);
  assert.match(page,/if \(outlookDay\) params\.set\("outlook", String\(outlookDay\)\);/);
  assert.match(page,/categoryMap\(restoredTopic\)\?\.tools\?\.includes\("outlook"\) \? restoredOutlook : null/);
+});
+
+// The shape SPC publishes in dayNotlk_torn.lyr.geojson: DN is the percent, LABEL the fraction.
+const hazard=(dn,label,geometry)=>({type:'Feature',geometry,properties:{DN:dn,VALID:'202610261200',EXPIRE:'202610271200',ISSUE:'202610261630',ISSUE_ISO:'2026-10-26T16:30:00+00:00',LABEL:label,LABEL2:`${dn}% Tornado Risk`}});
+const tornado={type:'FeatureCollection',features:[
+ {type:'Feature',geometry:{type:'GeometryCollection',geometries:[]},properties:{DN:0,LABEL:'Less Than 2% All Areas'}},
+ hazard(5,'0.05',{type:'Polygon',coordinates:box(-99,36,-95,39)}),// reaches Kansas
+ hazard(2,'0.02',{type:'Polygon',coordinates:box(-101,35,-94,40)}),
+ hazard(10,'0.10',{type:'Polygon',coordinates:box(-96,33,-94,35)}),// Oklahoma and Arkansas, south of Kansas
+ hazard(3,'0.03',{type:'Polygon',coordinates:box(-98,37,-97,38)}),// not an SPC tornado band
+ {type:'Feature',geometry:{type:'Polygon',coordinates:box(-98,37,-97,38)},properties:{DN:10,LABEL:'SIGN'}},// pre-2026 hatching in the hazard file
+]};
+// The shape of dayNotlk_cigtorn.lyr.geojson: one feature per conditional-intensity group.
+const intensity={type:'FeatureCollection',features:[
+ {type:'Feature',geometry:{type:'Polygon',coordinates:box(-96,33,-94,35)},properties:{DN:3,LABEL:'CIG3'}},// south of Kansas
+ {type:'Feature',geometry:{type:'Polygon',coordinates:box(-99,36,-96,38.5)},properties:{DN:2,LABEL:'CIG2'}},
+ {type:'Feature',geometry:{type:'Polygon',coordinates:box(-99,36,-95,39)},properties:{DN:1,LABEL:'CIG1'}},
+]};
+
+test('the hazard outlooks read SPC\'s tornado, wind and hail files with their intensity areas, for days 1 and 2',()=>{
+ assert.equal(spc.spcOutlookProviderUrl(1,'torn'),'https://www.spc.noaa.gov/products/outlook/day1otlk_torn.lyr.geojson');
+ assert.equal(spc.spcIntensityProviderUrl(2,'hail'),'https://www.spc.noaa.gov/products/outlook/day2otlk_cighail.lyr.geojson');
+ assert.deepEqual(JSON.parse(JSON.stringify(spc.outlookProducts(1))),['cat','torn','wind','hail']);
+ assert.deepEqual(JSON.parse(JSON.stringify(spc.outlookProducts(3))),['cat'],'day 3 is categorical');
+ assert.match(route,/!outlookProducts\(day as OutlookDay\)\.includes\(product\)\) return refuse\(/);
+ assert.match(route,/spcIntensityProviderUrl\(day, product\)[\s\S]{0,120}\.catch\(\(\) => undefined\)/,'the probabilities stand without the intensity file');
+ assert.match(route,/const id = `\$\{day\}-\$\{product\}`;/);
+});
+
+test('a tornado outlook keeps SPC\'s bands and intensity groups, and finds the highest of each over Kansas',()=>{
+ const outlook=spc.parseSpcOutlook(tornado,1,'2026-10-26T17:00:00.000Z','src','torn',intensity);
+ assert.deepEqual(outlook.data.features.map(f=>f.properties.category),['2','5','10','CIG1','CIG1','CIG2','CIG3'],'bands lowest to highest, intensity over them; the old SIGN hatching reads as CIG1');
+ assert.equal(outlook.product,'torn');assert.equal(outlook.kansas,'5','10% lies south of Kansas');
+ assert.equal(outlook.intensity,'CIG2','CIG3 lies south of Kansas');
+ assert.equal(outlook.issuedAt,'2026-10-26T16:30:00.000Z');
+ assert.equal(spc.validSpcOutlook(JSON.parse(JSON.stringify(outlook))),true);
+ assert.equal(spc.validSpcOutlook({...outlook,day:3}),false,'no hazard outlook on day 3');
+ assert.equal(spc.validSpcOutlook({...outlook,kansas:'3'}),false);
+ assert.equal(spc.validSpcOutlook({...outlook,intensity:'SIGN'}),false);
+ assert.equal(spc.spcOutlookReading(outlook),'Tornado: 5% chance within 25 miles of a point, highest in Kansas · intensity level 2 of 3 reaches Kansas · issued Oct 26, 16:30 UTC · valid Oct 26, 12:00 UTC to Oct 27, 12:00 UTC');
+ const bare=spc.parseSpcOutlook(tornado,1,'2026-10-26T17:00:00.000Z','src','torn');
+ assert.equal(bare.intensity,'CIG1','without the intensity file, the hazard file\'s own hatching still counts');
+ assert.match(spc.spcOutlookReading({...bare,kansas:null,intensity:null}),/^Tornado: below 2% across Kansas · issued/);
+});
+
+test('wind and hail read the fraction when SPC leaves out DN, and an empty outlook reads as below the lowest band',()=>{
+ const wind={type:'FeatureCollection',features:[{type:'Feature',geometry:{type:'Polygon',coordinates:box(-99,36,-95,39)},properties:{LABEL:'0.15'}},{type:'Feature',geometry:{type:'Polygon',coordinates:box(-99,36,-95,39)},properties:{LABEL:'0.10'}}]};
+ const outlook=spc.parseSpcOutlook(wind,2,'2026-10-26T17:00:00.000Z','src','wind',{type:'GeometryCollection',geometries:[]});
+ assert.deepEqual(outlook.data.features.map(f=>f.properties.category),['15'],'10% is not a wind band');
+ assert.equal(outlook.kansas,'15');assert.equal(outlook.intensity,null);
+ const empty=spc.parseSpcOutlook({type:'GeometryCollection',geometries:[]},1,'2026-10-26T17:00:00.000Z','src','hail');
+ assert.equal(empty.data.features.length,0);
+ assert.equal(spc.spcOutlookReading(empty),'Hail: below 5% everywhere in this outlook');
+});
+
+test('the hazard key pairs SPC\'s probability colours with dashed intensity lines, and a new product redraws on its own scale',async()=>{
+ const key=spc.spcOutlookKey(1,'hail');
+ assert.equal(key.title,'SPC hail outlook · Day 1');
+ assert.deepEqual(key.items.map(i=>i.label),['5%','15%','30%','45%','60%','CIG1 Intensity level 1','CIG2 Intensity level 2'],'hail has two intensity groups');
+ assert.deepEqual(key.items.slice(0,5).map(i=>i.color),['#c08a5e','#ffd84d','#ff5c5c','#ff66ff','#b77cf2'],'SPC\'s wind and hail hues: brown, yellow, red, magenta, purple');
+ assert.ok(key.items.slice(5).every(i=>i.dashed&&i.shape==='line'));
+ assert.match(key.note,/within 25 miles of a point/);assert.match(key.note,/Not an observation or a warning/);
+ assert.deepEqual(spc.spcOutlookKey(1,'torn').items.slice(0,7).map(i=>i.color),['#4fbf4f','#c08a5e','#ffd84d','#ff5c5c','#ff66ff','#b77cf2','#5f9fe0'],'SPC\'s tornado hues: green through blue');
+ const added=[];let source;const layers=[{id:'radar'},{id:'kfm-labels'}];
+ const map={getSource:()=>source,addSource:(id,spec)=>{source={spec,setData(){}};},getLayer:id=>layers.find(l=>l.id===id),addLayer:(spec,before)=>{added.push(spec);layers.splice(layers.findIndex(l=>l.id===before),0,{id:spec.id});},getStyle:()=>({layers}),removeLayer:id=>layers.splice(layers.findIndex(l=>l.id===id),1),removeSource:()=>{source=undefined;}};
+ const torn=spc.parseSpcOutlook(tornado,1,'2026-10-26T17:00:00.000Z','src','torn',intensity);
+ spc.syncSpcOutlook(map,torn);
+ assert.deepEqual(layers.map(l=>l.id),['radar',spc.SPC_OUTLOOK_LAYER_ID,spc.SPC_INTENSITY_LAYER_ID,'kfm-labels']);
+ const [lines,cig]=added;
+ assert.deepEqual(lines.paint['line-color'].slice(2,6),['2','#4fbf4f','5','#c08a5e']);
+ const {validateStyleMin}=await import('@maplibre/maplibre-gl-style-spec');
+ assert.deepEqual(validateStyleMin({version:8,sources:{[spc.SPC_OUTLOOK_SOURCE_ID]:{type:'geojson',data:torn.data}},layers:[lines,cig]}).map(e=>e.message),[]);
+ spc.syncSpcOutlook(map,spc.parseSpcOutlook(fixture,1,'2026-10-26T17:00:00.000Z','src'));
+ assert.deepEqual(layers.map(l=>l.id),['radar',spc.SPC_OUTLOOK_LAYER_ID,'kfm-labels'],'the categorical outlook has no intensity layer');
+ assert.equal(added.at(-1).paint['line-color'][2],'TSTM','redrawn on the categorical scale');
+});
+
+test('the dock offers the outlook products, with hazards only on days 1 and 2',async()=>{
+ const storm=maps.categoryMap('weather');
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const picked=[];
+ const base={look:storm,mode:'2d',depth:1,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onOutlook(){},onOutlookProduct:p=>picked.push(p)};
+ const on={day:1,product:'torn',products:['cat','torn','wind','hail'],loading:false,failed:false,reading:'Tornado: 5% chance',url:'https://www.spc.noaa.gov/products/outlook/'};
+ let tree=h.render(h.exports.CategoryMapDock,{...base,outlook:on});
+ let products=findNode(tree,n=>n.props?.['aria-label']==='Outlook product').props.children;
+ assert.deepEqual(JSON.parse(JSON.stringify(products.map(b=>[b.props.children,b.props['aria-pressed'],b.props.disabled]))),[['Risk',false,false],['Tornado',true,false],['Wind',false,false],['Hail',false,false]]);
+ products[3].props.onClick();
+ tree=h.render(h.exports.CategoryMapDock,{...base,outlook:{...on,day:3,product:'cat',products:['cat']}});
+ products=findNode(tree,n=>n.props?.['aria-label']==='Outlook product').props.children;
+ assert.deepEqual(JSON.parse(JSON.stringify(products.map(b=>[b.props['aria-pressed'],b.props.disabled]))),[[true,false],[false,true],[false,true],[false,true]]);
+ assert.match(products[1].props.title,/days 1 and 2/);
+ assert.deepEqual(picked,['hail']);
+ h.dispose?.();
+});
+
+test('the page reads each day and product on its own, keeps a hazard through day 3 as categorical, and shares the product',()=>{
+ assert.match(page,/const outlookProduct: OutlookProduct = outlookDay && outlookProducts\(outlookDay\)\.includes\(outlookHazard\) \? outlookHazard : "cat";/);
+ assert.match(page,/const outlookId = outlookDay \? `\$\{outlookDay\}-\$\{outlookProduct\}` : null;/);
+ assert.match(page,/fetch\(`\/api\/spc-outlook\?day=\$\{outlookDay\}&product=\$\{outlookProduct\}`/);
+ assert.match(page,/value\.product !== outlookProduct\) throw new Error\("Invalid SPC outlook\."\);/);
+ assert.match(page,/if \(outlookDay && outlookHazard !== "cat"\) params\.set\("outlookHazard", outlookHazard\);/);
+ assert.match(page,/setOutlookHazard\(isOutlookProduct\(restoredHazard\) \? restoredHazard : "cat"\);/);
+ assert.match(page,/onOutlookProduct=\{chooseOutlookHazard\}/);
 });
