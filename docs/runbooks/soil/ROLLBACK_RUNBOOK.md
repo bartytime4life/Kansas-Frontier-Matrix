@@ -449,6 +449,22 @@ parallel release, schema, policy, proof, or receipt home from this runbook.
 
 ### 6. Run bounded validation
 
+Treat the revision under review, including its tests, validators, and imported
+Python modules, as untrusted executable code. Before running any command below,
+use a disposable, unprivileged sandbox that has all of the following controls:
+
+- no credentials or other host secrets in its files or environment;
+- no writable host mounts, and repository inputs mounted read-only;
+- process isolation from the host; and
+- egress denied by the runner or container boundary, not by an environment
+  variable or a test-local socket mock.
+
+If that boundary cannot be established and verified, **stop and do not run the
+validation commands**. `KFM_NO_NETWORK=1` and `PYTHONDONTWRITEBYTECODE=1` are
+advisory process settings, not a security boundary. See the
+[Soil no-network test runbook](NO_NETWORK_TEST_RUNBOOK.md#22-what-the-current-no-network-claim-means)
+for the limits of the repository's test-level network guards.
+
 Run the exact commands in [Validation commands](#validation-commands). Record:
 
 - repository SHA;
@@ -476,7 +492,11 @@ republication, or public communication.
 
 ## Validation commands
 
-Run from the repository root at the exact revision under review.
+Only after establishing the mandatory sandbox in
+[Run bounded validation](#6-run-bounded-validation), run these commands inside
+that sandbox from the read-only repository root at the exact revision under
+review. Never run them directly on an operator workstation or credentialed
+host: the revision controls the Python code that these commands execute.
 
 ### Bounded Soil fixture profiles
 
