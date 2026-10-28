@@ -58,12 +58,63 @@ const providerSelectionValues = () => ({
   selectedArtifactAttributes: input().attributes, selectedAttributesCurrent: true,
 });
 const reportValues = () => ({
+  emptyReportFindings: execute('emptyReportFindings'), LAYER_REGISTRY: [],
   reportDetail: 'STANDARD', reportRecords: [], scenePreset: 'flat', terrainState: 'IDLE', attachedTerrainProviderRef: { current: null }, terrainProvider: 'usgs-3dep', topographicOverlay: false,
   reportTitle: 'Ellsworth source context', reportScope: 'SELECTION', reportQuery: '', mapEvidenceFilter: 'ALL', reportEvidenceFilter: 'ALL', reportLayerIds: [], temporalQuery: { frame: 2026 }, temporalScopeLabel: '2026', temporalMode: 'snapshot', reportTemporalComparison: {},
   locationCameraRedacted: false, locationDerivedViewRef: { current: false }, researchLocationRedacted: false, subsurfacePrivate: false,
   view: { center: [-98, 38], zoom: 6, bearing: 0, pitch: 0 }, mapRepresentationLabel: '2D', verticalExaggeration: 1, lockedTerrainElevation: null, projection: 'mercator', basemap: 'vector', mapViewportBounds: null, analysisArea: null,
   measurementGeometryMode: null, selected: selection, selectedTimeMismatch: false, reportSections: { summary: true, findings: true, records: true, evidence: true, limitations: true }, reportLayerSummary: [], reportEvidenceCounts: {}, reportFindings: [],
   ...providerSelectionValues(),
+});
+
+test('empty KFM findings explain available, withheld, incompatible and absent provider context without filter-chasing advice', () => {
+  const cases = [
+    ['AVAILABLE', /One selected provider record is included as external source context/],
+    ['WITHHELD', /Selected provider context is withheld/],
+    ['INCOMPATIBLE', /Selected provider context is excluded.*active map time/],
+    [null, /Select a provider-backed map feature/],
+  ];
+  for (const [status, expected] of cases) {
+    const findings = execute('reportFindings', {
+      useMemo: callback => callback(), ...reportValues(), compareTimeA: 2025, compareTimeB: 2026,
+      formatTimelineStep: String, LAYER_REGISTRY: [],
+      selectedProviderReport: status ? { status, context: { title: 'NEVER_READ_TITLE' } } : null,
+      ...(optionalDeclaration('emptyReportFindings') ? { emptyReportFindings: execute('emptyReportFindings') } : {}),
+    });
+    const text = findings.join(' ');
+    assert.match(text, expected, `${status} gets its own safe next step`);
+    assert.match(text, /No KFM domain records are currently released/);
+    assert.doesNotMatch(text, /widen|NEVER_READ_TITLE|0 records carry/);
+  }
+});
+
+test('provider findings match the preview in real JSON and HTML exports, including privacy changes before rendering', async () => {
+  for (const override of [{}, { selectedTimeMismatch: true }, { selected: null }, { locationDerivedViewRef: { current: true } }]) {
+    const values = { ...reportValues(), ...override };
+    const report = execute('buildCustomReportPayload', values)('2026-10-28T14:00:00Z');
+    const previewFindings = execute('reportFindings', {
+      ...values, useMemo: callback => callback(), selectedProviderReport: report.selection,
+      compareTimeA: 2025, compareTimeB: 2026, formatTimelineStep: String,
+    });
+    assert.deepEqual(report.findings, previewFindings);
+    assert.equal(report.summary.matchedRecords, 0);
+    assert.equal(report.summary.includedRecords, 0, 'provider context never increments KFM record counts');
+    const blobs = [], escapeReportHtml = execute('escapeReportHtml');
+    execute('downloadCustomReport', {
+      buildCustomReportPayload: () => report, setReportGeneratedAt() {}, reportRecords: [], escapeReportHtml,
+      providerReportHtml: execute('providerReportHtml', { escapeReportHtml }), formatTimelineStep: String,
+      Blob, URL: { createObjectURL(blob) { blobs.push(blob); return 'blob:fixture'; }, revokeObjectURL() {} },
+      document: { createElement: () => ({ click() {}, remove() {} }), body: { append() {} } },
+      window: { setTimeout() {} }, announce() {},
+    })('html');
+    const html = await blobs[0].text();
+    for (const finding of previewFindings) assert.ok(html.includes(escapeReportHtml(finding)), 'HTML carries the same bounded finding');
+    assert.match(html, /MATCHED KFM RECORDS/);
+    assert.match(html, /INCLUDED KFM RECORDS/);
+    assert.match(html, /KFM LAYERS/);
+    assert.doesNotMatch(html, /widen the map/);
+    if (override.locationDerivedViewRef) assert.doesNotMatch(html, /Ellsworth|20053|census\.gov/);
+  }
 });
 
 test('county source context retains its own 2020 source axis and bounded attributes, never geometry or EvidenceRef', () => {
@@ -198,10 +249,13 @@ test('actual JSON builder recomputes immediate-ref privacy and carries the same 
   const result = build();
   assert.equal(result.activeTime.value, 2026); assert.match(result.selection.context.sourceTime, /^2020 Census/);
   assert.equal(result.selection.role, 'EXTERNAL_CONTEXT_ONLY'); assert.deepEqual(result.records, []);
+  assert.match(result.findings.join(' '), /One selected provider record is included as external source context/);
   for (const gate of ['state', 'immediate-ref', 'research-private', 'subsurface-private']) {
     values.locationCameraRedacted = gate === 'state'; values.locationDerivedViewRef.current = gate === 'immediate-ref';
     values.researchLocationRedacted = gate === 'research-private'; values.subsurfacePrivate = gate === 'subsurface-private';
     const privateReport = build(); assert.equal(privateReport.selection.status, 'WITHHELD');
+    assert.match(privateReport.findings.join(' '), /Selected provider context is withheld/);
+    assert.doesNotMatch(privateReport.findings.join(' '), /One selected provider record is included/);
     assert.doesNotMatch(JSON.stringify(privateReport), /Ellsworth|20053|6,376|census\.gov/);
   }
   assert.match(source, /providerReportHtml\(report\.selection/);
