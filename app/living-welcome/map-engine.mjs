@@ -93,6 +93,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   // is tracked apart from the selected topic, because topics that share a
   // style (Science and Sky, or Evidence and the default map) take turns while
   // it loads, and the loaded style serves whichever of them is selected then.
+  let view = null, styleKey = null, styleEpoch = 0, styleLoaded = false, paused = true, reduced = false, leg = 0, settle = 0, disposed = false, ready = false, applying = false, transitioning = false;
   const cameraOf = ({ camera: { center, zoom, pitch, bearing } }) => ({ center: [center[0], center[1]], zoom, pitch, bearing });
   const drift = () => {
     if (disposed || paused || reduced || budget.efficient || applying || !view?.topic) return;
@@ -200,6 +201,8 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       // The pending style jumps to this view, and draws its data, when it loads.
     } else {
       drawData();
+      if (paused || reduced || budget.efficient) map.jumpTo(cameraOf(next));
+      else { transitioning = true; map.flyTo({ ...cameraOf(next), duration: 2200, essential: true }); }
     }
   };
   return {

@@ -57,7 +57,7 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, outlook, onOutlook, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, outlook, onOutlook, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -106,6 +106,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
    */
   radar?: Readonly<{ watching: boolean; available: boolean }>;
   onRadar?: (watch: boolean) => void;
+  layerVisibility?: Readonly<Record<string, boolean>>;
+  onLayer?: (id: CategoryMap["starters"][number], visible: boolean) => void;
   /**
    * The flowing-water effect and its reading, for looks that offer the flow
    * tool. `still` names why the rivers are not moving, if they are not.
@@ -186,6 +188,20 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
       <div><strong>{look.name}</strong><small>{mode === "terrain" ? "3D terrain" : mode === "globe" ? "Globe" : "2D map"} · display context</small></div>
       <button type="button" className="category-map-dock-close" aria-label={`Hide ${look.name} controls`} onClick={onClose}>×</button>
     </header>
+    {look.contextLayers && onLayer && layerVisibility && <div className="category-map-dock-layer-set">
+      <strong>Starting layers</strong>
+      {look.starters.map(id => <button key={id} type="button" className="category-map-dock-tool" aria-pressed={Boolean(layerVisibility[id])}
+        onClick={() => onLayer(id, !layerVisibility[id])}>{id === "nws-radar" ? "Latest NOAA radar" : "Active NWS alerts"}</button>)}
+      <small>Latest scan first · playback on demand. Each source keeps its own clock.</small>
+      <details className="category-map-dock-context"><summary>Add related context</summary>
+        <p>Off at start. Add only what helps this view.</p>
+        {look.contextLayers.map(layer => <div key={layer.id}>
+          <button type="button" className="category-map-dock-tool" aria-pressed={Boolean(layerVisibility[layer.id])}
+            onClick={() => onLayer(layer.id, !layerVisibility[layer.id])}>{layer.title}</button>
+          <small>{layer.note}</small>
+        </div>)}
+      </details>
+    </div>}
     <div className="category-map-dock-modes" role="group" aria-label="View">
       {MODES.map(([value, label, title]) => <button key={value} type="button" aria-pressed={mode === value} title={title}
         disabled={value === "terrain" && !terrainAvailable} onClick={() => onMode(value)}>{label}</button>)}

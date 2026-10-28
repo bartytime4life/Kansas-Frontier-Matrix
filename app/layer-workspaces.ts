@@ -94,7 +94,7 @@ export function officialSourceTopics(id: string): readonly TopicId[] {
   if (DISASTER_SOURCE_IDS.includes(id as OfficialContextId)) topics.add("disaster");
   if (LAND_SOURCE_IDS.includes(id as OfficialContextId)) topics.add("land");
   if (TRANSPORT_SOURCE_IDS.includes(id as OfficialContextId)) { topics.add("transport"); topics.add("engineering"); }
-  if (weatherIds.includes(id)) topics.add("weather");
+  if (weatherIds.includes(id) || ["noaa-hms-smoke", "usgs-streamflow"].includes(id)) topics.add("weather");
   if (waterIds.includes(id)) topics.add("water");
   if (terrainIds.includes(id)) { topics.add("terrain"); topics.add("geology"); topics.add("engineering"); }
   if (id === "usgs-wbd-watersheds" || id === "usgs-3dhp-hydrography") { topics.add("places"); topics.add("ecology"); }
