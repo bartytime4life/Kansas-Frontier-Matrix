@@ -5836,7 +5836,12 @@ export default function Home() {
             return;
           }
           // Handled before the error is recorded, so a fallback that loads leaves no failure behind.
-          const terrainTiles = sourceId === TERRAIN_SOURCE_ID ? (map.getSource(TERRAIN_SOURCE_ID) as { serialize?: () => { tiles?: string[] } } | undefined)?.serialize?.().tiles?.[0] ?? "" : "";
+          // MapLibre includes the originating source specification on the event.
+          // The stable source ID may already belong to its replacement by now.
+          const terrainEventSource = (event as typeof event & { source?: { tiles?: string[] } }).source;
+          const terrainTiles = sourceId === TERRAIN_SOURCE_ID ? terrainEventSource?.tiles?.[0]
+            ?? (map.getSource(TERRAIN_SOURCE_ID) as { serialize?: () => { tiles?: string[] } } | undefined)?.serialize?.().tiles?.[0] ?? "" : "";
+          if (terrainTiles && terrainTiles !== terrainSourceFor(terrainProviderRef.current).tileTemplate) return;
           if (terrainTiles.includes("/api/3dep-dem-tile")) {
             // A 3DEP source already replaced by the display DEM can still report tiles in flight.
             if (terrainProviderRef.current !== "usgs-3dep") return;
