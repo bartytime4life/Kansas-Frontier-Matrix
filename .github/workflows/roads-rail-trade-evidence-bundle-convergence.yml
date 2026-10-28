@@ -41,6 +41,7 @@ jobs:
         run: >-
           python -m unittest discover
           --start-directory tests/validators/domains/roads-rail-trade
+          --top-level-directory .
           --pattern 'test_roads_rail_trade_evidence_bundle_schema_convergence.py'
           --verbose
       - name: Validate shared fixtures through the Roads/Rail/Trade projection
