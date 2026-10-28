@@ -65,6 +65,7 @@ import { HmsSmokePlayback } from "./hms-smoke-playback-control";
 import { HmsFrameTransitions, hmsFade } from "./hms-smoke-playback";
 import { resetHmsSmokeFade, setHmsSmokeFade } from "./live-context";
 import { createSettledMapCommit, geoJSONHasData, waitForGeoJSON } from "./map-performance";
+import { installStormDeskPerformanceProbe, recordStormDeskFrame } from "./storm-desk-performance";
 import { readBoundedJson } from "./bounded-json";
 import { buildAvailabilityBins, timelineLabelSteps } from "./timeline-availability";
 import { deriveMapSignals } from "./map-signals";
@@ -1962,6 +1963,7 @@ export default function Home() {
   const noaaRadarAgeMinutes = noaaRadarActiveFrame ? noaaRadarFrameAgeMinutes(noaaRadarActiveFrame, noaaRadarClock) : null;
   const noaaRadarLatestAgeMinutes = noaaRadarLatestFrame ? noaaRadarFrameAgeMinutes(noaaRadarLatestFrame, noaaRadarClock) : null;
   const noaaRadarSelectedAtPresent = buildYearCurrent && officialVisibility["nws-radar"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const noaaSatelliteSelectedAtPresent = buildYearCurrent && officialVisibility["noaa-goes-geocolor"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
   const lightningSelectedAtPresent = buildYearCurrent && officialVisibility["noaa-lightning-density"] && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
   const glmFlashesAllowed = buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME && projection !== "globe";
   useEffect(() => { if (!glmFlashesAllowed) setGlmFlashesEnabled(false); }, [glmFlashesAllowed]);
@@ -2891,6 +2893,7 @@ export default function Home() {
           setNoaaRadarPendingFrameTime(null);
         }
         setNoaaRadarFrameLoadState(state);
+        recordStormDeskFrame(state === "ready" ? "confirmed" : "failed", observedAt);
         if (state === "ready") {
           commitNoaaRadarObservationTime(map, stagedSourceId, officialVisibilityRef.current["nws-radar"], officialOpacityRef.current["nws-radar"]);
           noaaRadarFrameTimeRef.current = observedAt;
@@ -2931,6 +2934,7 @@ export default function Home() {
       };
       const sourceUpdate = previousConfirmedFrame ? "changed" : setNoaaRadarObservationTime(map, observedAt);
       stagedSourceId = previousConfirmedFrame ? stageNoaaRadarObservationTime(map, observedAt) : OFFICIAL_CONTEXT_BY_ID["nws-radar"].sourceId;
+      recordStormDeskFrame("stage", observedAt);
       if (sourceUpdate === null) throw new Error("The fixed NOAA raster source could not be initialized.");
       if (previousConfirmedFrame || !officialVisibilityRef.current["nws-radar"] || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) {
         applyOfficialContextState(
@@ -3061,7 +3065,7 @@ export default function Home() {
   }, []);
 
   const refreshNoaaSatelliteFrames = useCallback(async (quiet = false) => {
-    if (!buildYearCurrentRef.current || noaaSatelliteRequestRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+    if (document.hidden || !officialVisibilityRef.current["noaa-goes-geocolor"] || !buildYearCurrentRef.current || noaaSatelliteRequestRef.current || temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
     const controller = new AbortController();
     noaaSatelliteRequestRef.current = controller;
     setOfficialStates((current) => ({ ...current, "noaa-goes-geocolor": "loading" }));
@@ -3069,6 +3073,7 @@ export default function Home() {
     try {
       const response = await fetch(NOAA_SATELLITE_FRAMES_PATH, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
       const candidate = await readBoundedJson(response, 512 * 1024) as unknown;
+      if (controller.signal.aborted) return;
       if (!response.ok || !isNoaaSatelliteManifest(candidate)) throw new Error("NOAA did not provide a valid dated satellite frame list.");
       noaaSatelliteManifestRef.current = candidate;
       setNoaaSatelliteManifest(candidate);
@@ -5186,6 +5191,7 @@ export default function Home() {
     let mapResizeFrame: number | undefined;
     let cancelHoverSample = () => {};
     let cancelSettledViewCommit = () => {};
+    let stopStormDeskProbe = () => {};
     const rasterRetryTimers = new Map<OfficialContextId, number>();
     const rasterRetryCounts = new Map<OfficialContextId, number>();
     let terrainRetryTimer: number | null = null;
@@ -5250,6 +5256,7 @@ export default function Home() {
           },
         });
         mapRef.current = map;
+        stopStormDeskProbe = installStormDeskPerformanceProbe(map);
         terrainDrawingRef.current = createTerrainDrawing(map, (status) => {
           if (!disposed && mapRef.current === map) setTerrainDrawingStatus(status);
         }, (probe) => {
@@ -6004,6 +6011,7 @@ export default function Home() {
       if (sceneOrbitTimerRef.current !== null) window.clearTimeout(sceneOrbitTimerRef.current);
       terrainDrawingRef.current?.destroy();
       terrainDrawingRef.current = null;
+      stopStormDeskProbe();
       mapRef.current?.remove();
       mapRef.current = null;
     };
@@ -6914,11 +6922,24 @@ export default function Home() {
   }, [noaaRadarSelectedAtPresent, refreshNoaaRadarManifest, runMapMutation, runtimeOfficialVisibility]);
 
   useEffect(() => {
-    if (!buildYearCurrent || !officialVisibility["noaa-goes-geocolor"] || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME) return;
-    void refreshNoaaSatelliteFrames(true);
-    const timer = window.setInterval(() => { void refreshNoaaSatelliteFrames(true); }, 300_000);
-    return () => window.clearInterval(timer);
-  }, [buildYearCurrent, officialVisibility, refreshNoaaSatelliteFrames, temporalQuery.frame]);
+    const abort = () => {
+      noaaSatelliteRequestRef.current?.abort();
+      noaaSatelliteRequestRef.current = null;
+    };
+    if (!noaaSatelliteSelectedAtPresent) { abort(); return; }
+    const refresh = () => {
+      if (document.hidden) { abort(); return; }
+      void refreshNoaaSatelliteFrames(true);
+    };
+    refresh();
+    const timer = window.setInterval(refresh, 300_000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", refresh);
+      abort();
+    };
+  }, [noaaSatelliteSelectedAtPresent, refreshNoaaSatelliteFrames]);
 
   useEffect(() => {
     if (buildYearCurrent) return;

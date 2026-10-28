@@ -175,3 +175,53 @@ test('radar polling suspends while hidden and unregisters its timer and visibili
   assert.equal(cleared, true); assert.equal(listener, null);
   assert.doesNotMatch(page, /noaaRadarAutoStartRef/, 'page entry and shared views never start radar motion automatically');
 });
+
+test('GOES polling follows its own selection, suspends when hidden and releases in-flight work', () => {
+  let effect;
+  function visit(node) {
+    if (ts.isCallExpression(node) && node.expression.getText(ast) === 'useEffect'
+      && node.arguments[0]?.getText(ast).includes('if (!noaaSatelliteSelectedAtPresent)')) effect = node;
+    ts.forEachChild(node, visit);
+  }
+  visit(ast);
+  assert.ok(effect);
+  assert.equal(effect.arguments[1].getText(ast), '[noaaSatelliteSelectedAtPresent, refreshNoaaSatelliteFrames]', 'unrelated switches do not restart polling');
+  let refreshes = 0, aborts = 0, interval, listener, clears = 0;
+  const request = {current: {abort() {aborts++;}}};
+  const document = {hidden: false, addEventListener: (_, fn) => {listener = fn;}, removeEventListener: (_, fn) => {assert.equal(listener, fn); listener = null;}};
+  const scope = {noaaSatelliteSelectedAtPresent: true, document, noaaSatelliteRequestRef: request,
+    refreshNoaaSatelliteFrames: () => {refreshes++;},
+    window: {setInterval: (fn, delay) => {assert.equal(delay, 300_000); interval = fn; return 3;}, clearInterval: id => {assert.equal(id, 3); clears++;}},
+  };
+  const cleanup = evaluate(effect.arguments[0].getText(ast), scope)();
+  assert.equal(refreshes, 1);
+  document.hidden = true; listener(); interval(); interval();
+  assert.equal(refreshes, 1); assert.equal(aborts, 1); assert.equal(request.current, null);
+  document.hidden = false; listener(); assert.equal(refreshes, 2);
+  request.current = {abort() {aborts++;}};
+  cleanup(); assert.equal(aborts, 2); assert.equal(clears, 1); assert.equal(listener, null);
+  evaluate(effect.arguments[0].getText(ast), {...scope, noaaSatelliteSelectedAtPresent: false})();
+  assert.equal(refreshes, 2, 'deselected GOES schedules nothing');
+});
+
+test('an aborted GOES response cannot select an image after hide or deselection', async () => {
+  let resolveBody, selections = 0, fetches = 0;
+  const request = {current: null};
+  const document = {hidden: true};
+  const selected = {current: {'noaa-goes-geocolor': true}};
+  const scope = {document, officialVisibilityRef: selected, buildYearCurrentRef: {current: true},
+    noaaSatelliteRequestRef: request, temporalQueryRef: {current: {frame: 2026}}, OFFICIAL_CONTEXT_PRESENT_FRAME: 2026,
+    AbortController, setOfficialStates() {}, setOfficialErrors() {}, NOAA_SATELLITE_FRAMES_PATH: '/api/noaa-satellite/frames',
+    fetch: async () => {fetches++; return {ok: true};}, readBoundedJson: () => new Promise(resolve => {resolveBody = resolve;}),
+    isNoaaSatelliteManifest: () => true, selectNoaaSatelliteFrame: () => {selections++;},
+  };
+  const refresh = evaluate(callback('refreshNoaaSatelliteFrames'), scope);
+  await refresh(); assert.equal(fetches, 0, 'hidden callback guard also covers manual refresh');
+  document.hidden = false; selected.current['noaa-goes-geocolor'] = false;
+  await refresh(); assert.equal(fetches, 0);
+  selected.current['noaa-goes-geocolor'] = true;
+  const pending = refresh(); await Promise.resolve();
+  request.current.abort(); resolveBody({frames: [{observedAt: second}]});
+  await pending;
+  assert.equal(selections, 0); assert.equal(request.current, null);
+});

@@ -70,7 +70,7 @@ export const CATEGORY_MAPS: Readonly<Record<TopicId, CategoryMap>> = Object.free
     contextLayers: [
       { id: "noaa-goes-geocolor", title: "GOES satellite", note: "Dated cloud imagery; may cover radar colours." },
       { id: "nws-forecast-wind", title: "Forecast wind", note: "Model guidance, not observed storm motion." },
-      { id: "noaa-lightning-density", title: "Lightning density", note: "15-minute satellite optical density, not ground-strike locations." },
+      { id: "noaa-lightning-density", title: "Lightning density", note: "15-minute ground-network density, not individual strike locations." },
       { id: "noaa-hms-smoke", title: "Smoke footprints", note: "Analyst imagery footprints, not surface air quality." },
       { id: "usgs-streamflow", title: "River gauges", note: "Provisional station discharge, not flood extent." },
     ], tools: ["radar", "outlook", "reviewed"], light: "blue", swatch: ["#12171d", "#3fae6a", "#e0c33a"] },
