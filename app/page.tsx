@@ -1580,6 +1580,10 @@ export default function Home() {
   const [outlookFailed, setOutlookFailed] = useState<string | null>(null);
   // Bumped when a shown outlook reaches its quarter-hour, so the read below runs again.
   const [outlookTick, setOutlookTick] = useState(0);
+  // When this browser last read each outlook, by its own clock: the provider's
+  // retrievedAt can be older than the refresh (a cached answer, a skewed clock)
+  // and must never make a fresh read look stale.
+  const outlookReadAtRef = useRef(new Map<string, number>());
   // The landscape the photo-real 3D view last flew to.
   const [photorealPlace, setPhotorealPlace] = useState<string | null>(null);
   // The provider hillshade switched off on entering the photograph, restored on return.
@@ -4003,7 +4007,8 @@ export default function Home() {
   useEffect(() => {
     if (!outlookDay || !outlookId || outlookFailed === outlookId) return;
     const current = outlooks[outlookId];
-    const age = current ? Date.now() - Date.parse(current.retrievedAt) : Infinity;
+    const readAt = outlookReadAtRef.current.get(outlookId);
+    const age = current && readAt !== undefined ? Date.now() - readAt : Infinity;
     if (age < OUTLOOK_REFRESH_MS) {
       // Fresh: come back when it is a quarter-hour old, while this day is still shown.
       const timer = setTimeout(() => setOutlookTick(tick => tick + 1), OUTLOOK_REFRESH_MS - age);
@@ -4015,6 +4020,7 @@ export default function Home() {
       .then(value => {
         if (controller.signal.aborted) return;
         if (!validSpcOutlook(value) || value.day !== outlookDay || value.product !== outlookProduct) throw new Error("Invalid SPC outlook.");
+        outlookReadAtRef.current.set(outlookId, Date.now());
         setOutlooks(current => ({ ...current, [outlookId]: value }));
         announce(`SPC day ${value.day} ${value.product === "cat" ? "convective" : outlookProductName(value.product).toLowerCase()} outlook on the map: ${spcOutlookReading(value)}`);
       })

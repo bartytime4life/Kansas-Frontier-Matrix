@@ -108,6 +108,9 @@ test('the Storm desk dock offers the outlook by day with its reading',async()=>{
 
 test('the page reads each day once a quarter-hour, keys and draws only the day shown, and closes with its map',()=>{
  assert.match(page,/const OUTLOOK_REFRESH_MS = 15 \* 60_000;/);
+ assert.match(page,/const age = current && readAt !== undefined \? Date\.now\(\) - readAt : Infinity;/,'age is this browser\'s own, never the provider\'s retrievedAt, so an old answer cannot loop the read');
+ assert.match(page,/outlookReadAtRef\.current\.set\(outlookId, Date\.now\(\)\);\s*setOutlooks/);
+ assert.doesNotMatch(page,/Date\.parse\(current\.retrievedAt\)/);
  assert.match(page,/if \(age < OUTLOOK_REFRESH_MS\) \{[\s\S]{0,160}const timer = setTimeout\(\(\) => setOutlookTick\(tick => tick \+ 1\), OUTLOOK_REFRESH_MS - age\);\s*return \(\) => clearTimeout\(timer\);/,'a shown outlook re-reads itself when it turns a quarter-hour old');
  assert.match(page,/\}, \[outlookDay, outlookProduct, outlookId, outlooks, outlookFailed, outlookTick, announce\]\);/);
  assert.match(page,/const shownOutlook = outlookId \? outlooks\[outlookId\] \?\? null : null;/);
