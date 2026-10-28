@@ -107,8 +107,8 @@ holds and limits. They are display context, not admitted evidence.
     with the radar layer card's "Watch live loop"); while they are open it
     reads **Close radar loop** (`closeLiveInstrument`). The live loop plays at
     the present map time, so the button waits until Time is at Present. Opening
-    the Storm desk already starts the loop, so the button is mostly for closing
-    and reopening it. While a radar or lightning loop panel is open the dock
+    the Storm desk shows the latest scan without automatic playback. Press
+    **Restart loop** to animate; closing the panel leaves radar selected. While a radar or lightning loop panel is open the dock
     sits above it; the taller river and satellite-flash panels, and any loop
     panel on a phone, have the bottom of the map to themselves and the dock
     returns when they close;
@@ -563,3 +563,62 @@ case and colour rather than a serif face.
   switches on the separate airspace layer (`overlays: ["aviation"]`, see
   `docs/aviation-layers.md`), which draws FAA NASR airspace as 3D volumes or a
   2D chart, airports, drone ceilings, TFRs, weather and live traffic.
+
+
+## Storm desk startup and resource budget (October 27, 2026)
+
+The starting set is **NOAA radar + active NWS alerts**, in 2D over the existing
+neutral dark base. Radar opens on the latest advertised exact scan, paused and
+following the latest manifest. The user starts playback explicitly. Radar
+reflectivity, an issued alert and forecast risk are different products; they
+retain separate source clocks, limitations and legends. Missing imagery is
+never an all-clear. KFM is not an emergency warning service.
+
+The dock shows separate starting-layer switches and a collapsed **Add related
+context** group. GOES GeoColor, forecast wind, 15-minute optical lightning
+density, HMS smoke footprints and USGS river gauges use existing provider
+handlers. They start off. Smoke and streamflow also appear in the Weather
+catalogue, so they remain discoverable on phones when the radar panel occupies
+the dock's space. SPC Day 1/2/3 outlook and reviewed alert snapshots remain
+separate, optional tools. The historical NASA lightning climatology remains in
+the full catalogue rather than the short current-storm list.
+
+| Layer | Reason for placement | Interpretation limit |
+|---|---|---|
+| Radar, on | Recent observed reflectivity is the map's primary storm view | Not a ground rain gauge, forecast, warning or complete coverage proof |
+| NWS alerts, on | Issued event, severity and expiry complement radar | Inspect the official message; KFM is not the issuing authority |
+| SPC outlook, off | Optional forward risk context | Forecast risk, not a warning |
+| GOES satellite, off | Cloud structure beyond radar echoes | Has its own scan time and may obscure radar |
+| Forecast wind, off | Wind-field context | Modeled guidance, not measured storm motion |
+| Optical lightning density, off | Dated electrical-activity context | Aggregated density, not ground-strike locations |
+| HMS smoke, off | Nearby atmospheric context | Imagery interpretation, not surface air quality |
+| USGS gauges, off | Rainfall's possible river context | Provisional point discharge, not flood extent or a causal attribution |
+
+The two radar raster sources remain bounded to the confirmed image and one
+pending image. Once a frame settles, the inactive layer is **hidden by layout**
+rather than merely transparent, so it is not eligible to acquire new viewport
+tiles. An explicitly staged frame becomes eligible until committed or discarded.
+Reapplying visibility preserves a pending load; failure retains the prior scan.
+An unchanged manifest does not stage the already confirmed timestamp again.
+
+The four-minute manifest scheduler skips hidden tabs, aborts an active manifest
+read when hidden or deselected, and checks on return to visibility through the
+existing one-minute retry guard. Existing hidden-tab playback pause remains.
+Manifest JSON now uses the shared 512 KiB bounded reader. Exact-time URLs,
+nearest-neighbour 256-pixel radar tiles, 15-minute freshness refusal, and the
+no-interpolation/no-untimed-fallback contract are retained.
+
+These are source and deterministic-test properties, not measured FPS, bandwidth
+savings or target-device capacity. Native WebGL2 desktop/mobile, actual provider
+tile traffic, slow network and long-session acceptance remain separate checks.
+
+
+The same review repaired the welcome-map entry path at baseline
+`6180f438d63f1f813a00a4baabe5834bf6edc24b`. Its unmodified engine (SHA-256
+`3e42fa2cec1c88522f2c50aea0a72257d975ffd9e53129201cab6bb956c06a0b`)
+referenced missing state variables (`view`, `paused`, `settle`, and others),
+and the already-loaded-style branch omitted its camera movement. The patch
+restores the prior state initialization and camera handling, retains the newer
+pending-style epoch ownership, and tracks an interrupted flight so pausing
+still lands on the selected category. Existing welcome-engine regressions
+exercise Storm preview freshness, paused polling, camera selection and disposal.

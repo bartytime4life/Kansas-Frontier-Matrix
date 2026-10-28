@@ -1167,7 +1167,6 @@ export default function Home() {
   const noaaRadarPendingFrameTimeRef = useRef<string | null>(null);
   const noaaRadarRequestedTimeRef = useRef<string | null>(null);
   const noaaRadarFollowLatestRef = useRef(true);
-  const noaaRadarAutoStartRef = useRef(true);
   const lightningAutoStartRef = useRef(true);
   const noaaRadarFrameLoadCleanupRef = useRef<(() => void) | null>(null);
   const noaaRadarFrameFailureRef = useRef<((message: string) => void) | null>(null);
@@ -2839,6 +2838,17 @@ export default function Home() {
       return;
     }
     const previousConfirmedFrame = noaaRadarFrameTimeRef.current;
+    const currentMap = mapRef.current;
+    // An unchanged manifest must not restage the confirmed scan into the other
+    // buffer. Style replacement still reloads it because the source is gone.
+    if (previousConfirmedFrame === observedAt && noaaRadarReadyRef.current
+      && !noaaRadarPendingFrameTimeRef.current && currentMap && styleGenerationReadyRef.current
+      && noaaRadarObservationTimeIsApplied(currentMap, observedAt)) {
+      setNoaaRadarFrameLoadState("ready");
+      setOfficialStates(current => current["nws-radar"] === "ready" ? current : { ...current, "nws-radar": "ready" });
+      setOfficialErrors(current => current["nws-radar"] ? { ...current, "nws-radar": undefined } : current);
+      return;
+    }
     noaaRadarPendingFrameTimeRef.current = observedAt;
     setNoaaRadarPendingFrameTime(observedAt);
     noaaRadarFrameLoadCleanupRef.current?.();
@@ -2932,6 +2942,7 @@ export default function Home() {
   }, [announce, runtimeOfficialVisibility]);
 
   const refreshNoaaRadarManifest = useCallback(async (quiet = false) => {
+    if (document.hidden || !officialVisibilityRef.current["nws-radar"]) return;
     if (!buildYearCurrentRef.current) {
       noaaRadarReadyRef.current = false;
       setNoaaRadarPlaying(false);
@@ -2962,7 +2973,8 @@ export default function Home() {
     setOfficialErrors((current) => ({ ...current, "nws-radar": undefined }));
     try {
       const response = await fetch(NOAA_RADAR_FRAME_API_PATH, { cache: "no-store", signal: controller.signal, headers: { Accept: "application/json" } });
-      const candidate = await response.json() as unknown;
+      const candidate = await readBoundedJson(response, 512 * 1024) as unknown;
+      if (controller.signal.aborted) return;
       if (!response.ok || !isNoaaRadarManifest(candidate)) throw new Error("The fixed NOAA frame adapter returned an invalid or unavailable manifest.");
       const manifestCheckedAt = Date.now();
       if (candidate.freshness !== "current" || !noaaRadarManifestIsFresh(candidate, manifestCheckedAt)) throw new Error("The newest NOAA radar observation is more than 15 minutes old.");
@@ -3704,7 +3716,6 @@ export default function Home() {
   const setOfficialContextVisible = useCallback((id: OfficialContextId, visible: boolean) => {
     const terrainRaster = id === "usgs-3dep-hillshade" || id === "usgs-3dep-slope";
     if (id === "nws-radar" && visible) {
-      noaaRadarAutoStartRef.current = true;
       noaaRadarReadyRef.current = Boolean(
         noaaRadarFrameTimeRef.current
         && noaaRadarManifestIsFresh(noaaRadarManifestRef.current, Date.now()),
@@ -3736,7 +3747,7 @@ export default function Home() {
     if (id === "usgs-streamflow" && visible && !streamflowBundleRef.current) void refreshSelectedStreamflow();
     if (id === "noaa-nwps-gauges" && visible && !officialPayloadsRef.current["noaa-nwps-gauges"]) void refreshNoaaHydrologyNetwork();
     if (id === "nws-radar" && visible && temporalQueryRef.current.frame === OFFICIAL_CONTEXT_PRESENT_FRAME) void refreshNoaaRadarManifest();
-    if (id === "nws-radar" && !visible) { noaaRadarAutoStartRef.current = false; setNoaaRadarPlaying(false); }
+    if (id === "nws-radar" && !visible) setNoaaRadarPlaying(false);
     if (id === "noaa-lightning-density") {
       lightningAutoStartRef.current = visible;
       setLightningPlaying(false);
@@ -4975,7 +4986,6 @@ export default function Home() {
       noaaRadarRequestedTimeRef.current = normalizedRadarTime;
       const restoredRadarFollowLatest = params.get("radarFollow") !== "selected";
       noaaRadarFollowLatestRef.current = restoredRadarFollowLatest;
-      noaaRadarAutoStartRef.current = restoredRadarFollowLatest;
       setNoaaRadarFollowLatest(restoredRadarFollowLatest);
       setNoaaRadarPlaying(false);
       const restoredHydroStation = params.get("hydroStation");
@@ -6853,6 +6863,8 @@ export default function Home() {
 
   useEffect(() => {
     if (!noaaRadarSelectedAtPresent) {
+      noaaRadarRequestRef.current?.abort();
+      noaaRadarRequestRef.current = null;
       setNoaaRadarPlaying(false);
       noaaRadarFrameLoadCleanupRef.current?.();
       noaaRadarFrameLoadCleanupRef.current = null;
@@ -6874,9 +6886,14 @@ export default function Home() {
       setNoaaRadarFrameLoadState(noaaRadarFrameTimeRef.current ? "ready" : "idle");
       return;
     }
-    void refreshNoaaRadarManifest(true);
-    const timer = window.setInterval(() => { void refreshNoaaRadarManifest(true); }, 240_000);
-    return () => window.clearInterval(timer);
+    const refresh = () => {
+      if (document.hidden) { noaaRadarRequestRef.current?.abort(); return; }
+      void refreshNoaaRadarManifest(true);
+    };
+    refresh();
+    const timer = window.setInterval(refresh, 240_000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => { window.clearInterval(timer); document.removeEventListener("visibilitychange", refresh); };
   }, [noaaRadarSelectedAtPresent, refreshNoaaRadarManifest, runMapMutation, runtimeOfficialVisibility]);
 
   useEffect(() => {
@@ -6901,15 +6918,6 @@ export default function Home() {
     applyNoaaRadarFrame(next);
   }, [applyNoaaRadarFrame, noaaRadarFollowLatest, noaaRadarFrameIndex, noaaRadarFrameLoadState, noaaRadarFrameTime, noaaRadarLoopFrames, noaaRadarManifest?.frames, noaaRadarPendingFrameTime, noaaRadarSelectedAtPresent]);
 
-  useEffect(() => {
-    if (!noaaRadarAutoStartRef.current || !noaaRadarSelectedAtPresent || !noaaRadarRenderable || noaaRadarFrameLoadState !== "ready" || noaaRadarLoopFrames.length < 2) return;
-    noaaRadarAutoStartRef.current = false;
-    if (reducedMotion) return;
-    const first = noaaRadarLoopFrames[0];
-    setNoaaRadarFollowLatest(false);
-    if (noaaRadarFrameTime !== first) applyNoaaRadarFrame(first);
-    setNoaaRadarPlaying(true);
-  }, [applyNoaaRadarFrame, noaaRadarFrameLoadState, noaaRadarFrameTime, noaaRadarLoopFrames, noaaRadarRenderable, noaaRadarSelectedAtPresent, reducedMotion]);
 
   useEffect(() => {
     if (!noaaRadarPlaying || !noaaRadarRenderable || reducedMotion || noaaRadarFrameLoadState === "loading" || noaaRadarLoopFrames.length < 2) return;
@@ -9270,7 +9278,7 @@ export default function Home() {
   };
   // A category opens on its own map look: basemap, renderer, camera and a few
   // starter context layers. The Layers catalogue follows the same category, and
-  // everything the visitor already switched on stays on.
+  // the category starter set replaces the previous category's official layers.
   // A look's light sets only atmosphere and sun azimuth; the visitor's effect settings stay as they are.
   // It is applied to the map now as well as to state: when state already holds these values (the
   // same look opened again), React skips the light effect after the representation transaction has
@@ -9295,6 +9303,14 @@ export default function Home() {
     setBasemap(look.basemap);
     if (look.light) applyCategoryLight(look.light);
     photorealHidHillshadeRef.current = false;
+    if (look.starters.includes("nws-radar")) {
+      setNoaaRadarPlaying(false);
+      noaaRadarFollowLatestRef.current = true;
+      setNoaaRadarFollowLatest(true);
+      noaaRadarRequestedTimeRef.current = null;
+      const latest = noaaRadarManifestRef.current?.frames.at(-1);
+      if (latest) applyNoaaRadarFrame(latest);
+    }
     // The earthquake record belongs to the map that offers it and closes with it; the
     // starters below decide whether the 30-day catalog is on.
     quakeLiveWasOnRef.current = false;
@@ -10264,6 +10280,7 @@ export default function Home() {
             measuringArea={measureMode === "area"} onMeasureArea={() => beginMapMeasurement("area")}
             radar={{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME }}
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
+            layerVisibility={officialVisibility} onLayer={setOfficialContextVisible}
             keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day)] : []), ...withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
