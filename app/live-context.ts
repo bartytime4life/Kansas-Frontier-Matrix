@@ -70,7 +70,10 @@ const BLM_PLSS_SERVICE = "https://gis.blm.gov/arcgis/rest/services/Cadastral/BLM
 const blmPlssImageUrl = (layer: 1 | 2 | 3, where: string) =>
   `${BLM_PLSS_SERVICE}/export?bbox={bbox-epsg-3857}&bboxSR=3857&imageSR=3857&size=256%2C256&format=png32&transparent=true&layers=show%3A${layer}&layerDefs=${encodeURIComponent(JSON.stringify({ [layer]: where }))}&f=image`;
 
-/** Fixed allowlist of public external context. These sources never enter KFM evidence, reports, exports, or admission state. */
+/** Fixed allowlist of public external context, never claim-bearing KFM evidence or admission/release state.
+ * Explicitly selected eligible public features may retain allowlisted drawer fields in separately
+ * labeled transient source-context reports/exports; per-source boundaries still apply (not raster pixels).
+ */
 export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object.freeze([
   ...KANSAS_REFERENCE_SOURCES,
   ...AQUIFER_RASTER_SOURCES, ...GROUNDWATER_SNAPSHOT_SOURCES,

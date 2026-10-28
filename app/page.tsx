@@ -177,6 +177,7 @@ import {
   type RepositoryUpdateState,
 } from "./repository-updates";
 import { SITE_IDENTITY } from "./site-identity";
+import { PUBLIC_SITE_ORIGIN } from "./crawler-discovery";
 import {
   FEATURE_AREAS,
   FEATURE_CATALOG,
@@ -721,6 +722,75 @@ const escapeReportHtml = (value: unknown) => String(value)
   .replaceAll(">", "&gt;")
   .replaceAll('"', "&quot;")
   .replaceAll("'", "&#039;");
+
+// Transient display projection only: never a ReportDraft, EvidenceRef or release.
+type ProviderReportSelection = Readonly<{
+  kind: "basemap";
+  role: "EXTERNAL_CONTEXT_ONLY";
+  evidenceBundle: null;
+  status: "AVAILABLE" | "WITHHELD" | "INCOMPATIBLE";
+  boundary: string;
+  context: null | Readonly<{
+    id: string; title: string; layer: string; summary: string;
+    sourceOrganization: string; sourceUrl: string | null; sourceTime: string;
+    observedAt: string | null; providerUpdatedAt: string | null; retrievedAt: string | null;
+    sourceState: string; fieldBasis: string; attributes: readonly DrawerAttribute[];
+    attribution: string; sourceBoundary: string; limitation: string;
+  }>;
+}>;
+const buildProviderReportSelection = (input: {
+  selected: SelectedContext | null; timeMismatch: boolean; locationPrivate: boolean;
+  source?: (typeof OFFICIAL_CONTEXT_SOURCES)[number]; attributes: readonly DrawerAttribute[];
+  attributesCurrent: boolean; sourceState?: string; sourceUrl?: string;
+  observedAt?: string | null; providerUpdatedAt?: string | null; retrievedAt?: string | null;
+  limitation?: string | null;
+}): ProviderReportSelection | null => {
+  const { selected } = input;
+  if (!selected || selected.kind !== "basemap") return null;
+  const boundary = "External source context only. No KFM EvidenceBundle attached; this report does not admit, review, release, or publish provider data.";
+  const withheld = { kind: "basemap", role: "EXTERNAL_CONTEXT_ONLY", evidenceBundle: null, status: "WITHHELD", boundary, context: null } as const;
+  // Check privacy before copying identifiers, labels, source URLs or attributes:
+  // each can reconstruct a private/local selection even without its geometry.
+  if (input.locationPrivate) return withheld;
+  const { source } = input;
+  if (!source || source.id !== officialContextIdForSelection(selected)
+    || selected.properties.releaseState === "RESTRICTED"
+    || ["DENIED_BY_POLICY", "RESTRICTED_ACCESS"].includes(selected.properties.evidenceState)) return withheld;
+  if (input.timeMismatch) return { ...withheld, status: "INCOMPATIBLE" };
+  const text = (value: unknown, maximum: number) => typeof value === "string" ? value.trim().slice(0, maximum) : "";
+  const timestamp = (value: unknown) => typeof value === "string" && value.length <= 80 && Number.isFinite(Date.parse(value)) ? value : null;
+  // Source use limits and any distinct selection note survive independently
+  // of feed availability caveats. Prefer the allowlisted source when bounded.
+  const sourceBoundary = [...new Set([text(source.boundary, 4000), text(selected.properties.generalizationNote, 4000)].filter(Boolean))].join(" ").slice(0, 4000);
+  return {
+    kind: "basemap", role: "EXTERNAL_CONTEXT_ONLY", evidenceBundle: null, status: "AVAILABLE", boundary,
+    context: {
+      id: text(selected.featureId, 180), title: text(selected.properties.title, 240), layer: text(selected.layer.title, 240),
+      summary: text(selected.properties.summary, 2000), sourceOrganization: text(source.organization, 240),
+      sourceUrl: researchSourceUrl(input.sourceUrl ?? source.sourceUrl),
+      // Provider source time is separate from the report's active map time.
+      sourceTime: text(selected.properties.temporalScope, 500),
+      observedAt: timestamp(input.observedAt), providerUpdatedAt: timestamp(input.providerUpdatedAt), retrievedAt: timestamp(input.retrievedAt),
+      sourceState: text(input.sourceState, 80) || "Not available",
+      fieldBasis: input.attributesCurrent ? "Latest loaded matching provider fields; summary and source time retain the selected map snapshot." : "Selected map snapshot; reselect after a feed update to refresh its fields.",
+      attributes: input.attributes.slice(0, 32).map((attribute) => ({ label: text(attribute.label, 100), value: text(attribute.value, 240) })).filter((attribute) => attribute.label && attribute.value),
+      attribution: text(source.attribution, 1000), sourceBoundary, limitation: text(input.limitation ?? selected.properties.uncertainty, 4000),
+    },
+  };
+};
+const providerReportHtml = (selection: ProviderReportSelection | { kind: "registry" } | null) => {
+  if (!selection || selection.kind !== "basemap") return "";
+  const context = selection.context;
+  const heading = `<section aria-label="Selected provider source context"><h2>Selected provider source context</h2><p class="boundary"><strong>EXTERNAL_CONTEXT_ONLY · No KFM EvidenceBundle attached</strong><br>${escapeReportHtml(selection.boundary)}</p>`;
+  if (!context) return `${heading}<p>${selection.status === "INCOMPATIBLE" ? "Selection is incompatible with the active map time; source details are omitted." : "Selection details are withheld for privacy or unavailable public provenance."}</p></section>`;
+  const facts = [
+    ["Provider", context.sourceOrganization], ["Source time / edition", context.sourceTime],
+    ["Observation time", context.observedAt ?? "Not available"], ["Provider update time", context.providerUpdatedAt ?? "Not available"],
+    ["Retrieved", context.retrievedAt ?? "Not available"], ["Response state", context.sourceState], ["Field basis", context.fieldBasis],
+    ...context.attributes.map((attribute) => [attribute.label, attribute.value]),
+  ];
+  return `${heading}<h3>${escapeReportHtml(context.title)}</h3><p>${escapeReportHtml(context.summary)}</p><p>${escapeReportHtml(context.layer)} · <code>${escapeReportHtml(context.id)}</code></p><dl>${facts.map(([label, value]) => `<dt>${escapeReportHtml(label)}</dt><dd>${escapeReportHtml(value)}</dd>`).join("")}</dl>${context.sourceUrl ? `<p><a href="${escapeReportHtml(context.sourceUrl)}" rel="noreferrer">Open provider source</a></p>` : ""}<p><strong>Source use boundary:</strong> ${escapeReportHtml(context.sourceBoundary)}</p><p><strong>Response / availability limitation:</strong> ${escapeReportHtml(context.limitation)}</p><p><strong>Attribution:</strong> ${escapeReportHtml(context.attribution)}</p></section>`;
+};
 const validLayerPayload = (value: unknown, feed: OfficialContextFeedId, day?: string): boolean => {
   if (!value || typeof value !== "object") return false;
   const payload = value as Partial<OfficialContextPayload>;
@@ -2504,6 +2574,16 @@ export default function Home() {
       ? drawerArtifactAttributes(selectedOfficialContextId, selectedOfficialFeature.properties)
       : selected?.externalAttributes ?? [];
   const selectedAttributesCurrent = Boolean(selectedOfficialFeature);
+  const selectedProviderReport = buildProviderReportSelection({
+    selected, timeMismatch: selectedTimeMismatch,
+    locationPrivate: locationCameraRedacted || locationDerivedViewRef.current || researchLocationRedacted || subsurfacePrivate,
+    source: selectedOfficialConnection?.source, attributes: selectedArtifactAttributes, attributesCurrent: selectedAttributesCurrent,
+    sourceState: selectedRiverObservation?.status ?? selectedOfficialConnection?.state, sourceUrl: selectedRiverObservation?.sourceUrl,
+    observedAt: selectedRiverObservation?.observedAt, providerUpdatedAt: selectedOfficialPayload?.upstreamUpdatedAt,
+    retrievedAt: selectedRiverObservation?.retrievedAt ?? selectedOfficialConnection?.retrievedAt,
+    limitation: selectedOfficialPayload?.limitation ?? selectedOfficialConnection?.limitation,
+  });
+  const providerReportTitle = selectedProviderReport?.status === "WITHHELD" ? "Withheld source-context report" : reportTitle;
   const selectedFireSourceDay = selectedOfficialContextId === "nasa-gibs-fire-points"
     ? selectedArtifactAttributes.find((attribute) => ["Detection source day · UTC", "NASA image day · UTC"].includes(attribute.label))?.value
     : undefined;
@@ -4475,6 +4555,31 @@ export default function Home() {
     setRightOpen(false);
     if (isCompact) setTimelineOpen(false);
   }, [isCompact]);
+
+  const openSelectedReport = (returnElement?: HTMLElement | null) => {
+    if (selected?.kind === "basemap") {
+      // The retained title must obey the same projection as exported context:
+      // hiding it only during export would leak it after selection changes.
+      const providerSelection = buildProviderReportSelection({
+        selected, timeMismatch: selectedTimeMismatch,
+        locationPrivate: locationCameraRedacted || locationDerivedViewRef.current || researchLocationRedacted || subsurfacePrivate,
+        source: selectedOfficialConnection?.source, attributes: selectedArtifactAttributes, attributesCurrent: selectedAttributesCurrent,
+        sourceState: selectedRiverObservation?.status ?? selectedOfficialConnection?.state, sourceUrl: selectedRiverObservation?.sourceUrl,
+        observedAt: selectedRiverObservation?.observedAt, providerUpdatedAt: selectedOfficialPayload?.upstreamUpdatedAt,
+        retrievedAt: selectedRiverObservation?.retrievedAt ?? selectedOfficialConnection?.retrievedAt,
+        limitation: selectedOfficialPayload?.limitation ?? selectedOfficialConnection?.limitation,
+      });
+      setReportScope("SELECTION");
+      setReportTitle(providerSelection?.status === "AVAILABLE" && providerSelection.context
+        ? `${providerSelection.context.title.slice(0, 65)} · source context`
+        : providerSelection?.status === "INCOMPATIBLE" ? "Incompatible source-context report" : "Withheld source-context report");
+      setReportQuery("");
+      setReportEvidenceFilter("ALL");
+      openMapUtility("report", returnElement);
+      return;
+    }
+    openPrimaryWorkspace("reports", true, null, researchContext);
+  };
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || !mapUtilityOpen) return;
@@ -8977,6 +9082,15 @@ export default function Home() {
     // The ref is immediate: exports must be private even before the GPS state
     // update renders. Bounds and point labels can reconstruct a withheld center.
     const redactReportLocation = locationCameraRedacted || locationDerivedViewRef.current;
+    const providerSelection = selected?.kind === "basemap" ? buildProviderReportSelection({
+      selected, timeMismatch: selectedTimeMismatch,
+      locationPrivate: redactReportLocation || researchLocationRedacted || subsurfacePrivate,
+      source: selectedOfficialConnection?.source, attributes: selectedArtifactAttributes, attributesCurrent: selectedAttributesCurrent,
+      sourceState: selectedRiverObservation?.status ?? selectedOfficialConnection?.state, sourceUrl: selectedRiverObservation?.sourceUrl,
+      observedAt: selectedRiverObservation?.observedAt, providerUpdatedAt: selectedOfficialPayload?.upstreamUpdatedAt,
+      retrievedAt: selectedRiverObservation?.retrievedAt ?? selectedOfficialConnection?.retrievedAt,
+      limitation: selectedOfficialPayload?.limitation ?? selectedOfficialConnection?.limitation,
+    }) : null;
     const recordLimit = reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length;
     const heightOverlayRendered = scenePreset === "elevation-3d" && terrainState === "READY"
       && attachedTerrainProviderRef.current === terrainProvider && topographicOverlay;
@@ -8999,11 +9113,11 @@ export default function Home() {
     }));
     return {
       format: "kfm-custom-map-report-v1",
-      title: reportTitle.trim() || "Kansas map data report",
+      title: providerSelection?.status === "WITHHELD" ? "Withheld source-context report" : reportTitle.trim() || "Kansas map data report",
       generatedAt,
       detail: reportDetail,
       scope: reportScope,
-      filters: { query: reportQuery || null, mapEvidenceState: mapEvidenceFilter, evidenceState: reportEvidenceFilter, layerIds: reportLayerIds },
+      filters: { query: providerSelection?.status === "WITHHELD" ? null : reportQuery || null, mapEvidenceState: mapEvidenceFilter, evidenceState: reportEvidenceFilter, layerIds: reportLayerIds },
       activeTime: {
         value: temporalQuery.frame,
         label: temporalScopeLabel,
@@ -9048,7 +9162,7 @@ export default function Home() {
         coordinates: redactReportLocation ? "WITHHELD_BROWSER_LOCATION" : measureCoordinatesRef.current.map(([longitude, latitude]) => [longitude, latitude] as [number, number]),
         approximation: "Browser-local screen measurement; not survey-grade or evidence.",
       } : null,
-      selection: selected && !selectedTimeMismatch ? { id: selected.featureId, kind: selected.kind, title: selected.properties.title, layer: selected.layer.title, evidenceState: selected.properties.evidenceState, evidenceReference: selected.properties.citation, timeCompatible: true } : null,
+      selection: providerSelection ?? (selected?.kind === "registry" && !selectedTimeMismatch ? { id: selected.featureId, kind: selected.kind, title: selected.properties.title, layer: selected.layer.title, evidenceState: selected.properties.evidenceState, evidenceReference: selected.properties.citation, timeCompatible: true } : null),
       summary: reportSections.summary ? {
         matchedRecords: reportRecords.length,
         includedRecords: records.length,
@@ -9116,6 +9230,7 @@ export default function Home() {
         : "";
       content = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeReportHtml(report.title)}</title><style>body{font:15px/1.55 Inter,system-ui,sans-serif;color:#17201d;max-width:1100px;margin:0 auto;padding:48px}header{border-bottom:3px solid #b88b38;padding-bottom:22px;margin-bottom:28px}h1{font-size:36px;letter-spacing:-.04em;margin:0 0 8px}h2{margin-top:34px}small,.muted{color:#607069}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{border:1px solid #ccd6d1;padding:15px}.metric strong{display:block;font-size:24px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{border-bottom:1px solid #dce3df;padding:10px;text-align:left;vertical-align:top}th{background:#f1f5f2}code{font-size:11px}li{margin:8px 0}.boundary{border-left:4px solid #b88b38;background:#f7f3ea;padding:14px 18px}@media print{body{padding:0}.boundary{break-inside:avoid}}@media(max-width:700px){body{padding:24px}.metrics{grid-template-columns:1fr 1fr}table{display:block;overflow:auto}}</style></head><body><header><small>KANSAS FRONTIER MATRIX · CUSTOM MAP REPORT</small><h1>${escapeReportHtml(report.title)}</h1><p>${escapeReportHtml(report.scope.replaceAll("_", " "))} · active time ${escapeReportHtml(report.activeTime.label)} · generated ${escapeReportHtml(generatedAt)}</p></header>${report.summary ? `<section><h2>Report summary</h2><div class="metrics"><div class="metric"><small>MATCHED RECORDS</small><strong>${report.summary.matchedRecords}</strong></div><div class="metric"><small>INCLUDED RECORDS</small><strong>${report.summary.includedRecords}</strong></div><div class="metric"><small>LAYERS</small><strong>${report.summary.includedLayers}</strong></div><div class="metric"><small>EVIDENCE STATES</small><strong>${Object.keys(report.summary.evidenceStates).length}</strong></div></div></section>` : ""}${findings.length ? `<section><h2>Findings</h2><ol>${findings.map((finding) => `<li>${escapeReportHtml(finding)}</li>`).join("")}</ol></section>` : ""}<section><h2>Time A / Time B catalog availability</h2><div class="metrics"><div class="metric"><small>TIME A</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeA))}</strong><span>${report.temporalComparison.timeARecordCount} records</span></div><div class="metric"><small>TIME B</small><strong>${escapeReportHtml(formatTimelineStep(report.temporalComparison.timeB))}</strong><span>${report.temporalComparison.timeBRecordCount} records</span></div><div class="metric"><small>DELTA</small><strong>${report.temporalComparison.recordDelta >= 0 ? "+" : ""}${report.temporalComparison.recordDelta}</strong><span>catalog records</span></div><div class="metric"><small>CHANGED LAYERS</small><strong>${report.temporalComparison.changedLayerCount}</strong><span>under temporal rules</span></div></div><p class="boundary">Catalog availability only—not observed change, imagery analysis, causation, or proof of an event.</p></section>${records.length ? `<section><h2>Included records</h2><table><thead><tr><th>Record</th><th>Layer / time</th><th>Evidence</th><th>Summary</th></tr></thead><tbody>${records.map((record) => `<tr><td><strong>${escapeReportHtml(record.title)}</strong><br><code>${escapeReportHtml(record.id)}</code></td><td>${escapeReportHtml(record.layer)}<br>${escapeReportHtml(record.year)}</td><td>${escapeReportHtml(record.evidenceState)}<br><code>${escapeReportHtml(record.evidenceReference)}</code></td><td>${escapeReportHtml(record.summary)}</td></tr>`).join("")}</tbody></table></section>` : ""}${limitations.length ? `<section><h2>Limitations</h2><ul>${limitations.map((limitation) => `<li>${escapeReportHtml(limitation)}</li>`).join("")}</ul></section>` : ""}<section><h2>Attribution</h2><ul>${report.attribution.map((item) => `<li><strong>${escapeReportHtml(item.layer)}:</strong> ${escapeReportHtml(item.source)}</li>`).join("")}</ul></section><p class="boundary">This report is a browser-generated public-safe demonstration artifact. It does not release, publish, admit, or authorize KFM data.</p></body></html>`;
       if (heightSection) content = content.replace("<section><h2>Time A / Time B", `${heightSection}<section><h2>Time A / Time B`);
+      content = content.replace("</header>", () => `</header>${providerReportHtml(report.selection)}`);
       mime = "text/html";
     }
     const url = URL.createObjectURL(new Blob([content], { type: mime }));
@@ -9628,19 +9743,22 @@ export default function Home() {
                 <button type="button" onClick={() => window.location.assign("/")} title={`Open a fresh baseline for ${baselineDay} UTC`}><strong>Today’s baseline</strong><small>Reset to the current daily view</small></button>
               </div>
             </section>
-            <div className="site-identity-strip" aria-label="Site identity and domain status">
+            <div className="site-identity-strip" aria-label="Public application and historical references">
               <div>
-                <span>SITES BINDING</span>
+                <span>PUBLIC APPLICATION</span>
+                <strong>GoDaddy Node Explorer</strong>
+                <a href={`${PUBLIC_SITE_ORIGIN}/about#project`}>{PUBLIC_SITE_ORIGIN.replace("https://", "")}</a>
+                <small>Configured public origin. About records this build’s source and input digest; data release remains separate.</small>
+              </div>
+              <div>
+                <span>HISTORICAL SITES REFERENCE</span>
                 <strong>{SITE_IDENTITY.provider}</strong>
                 <small>{SITE_IDENTITY.slug} · {SITE_IDENTITY.projectId}</small>
-              </div>
-              <div>
-                <span>CANONICAL HOST</span>
                 <a href={SITE_IDENTITY.canonicalUrl} target="_blank" rel="noreferrer">{SITE_IDENTITY.canonicalUrl.replace("https://", "")}</a>
-                <small>{SITE_IDENTITY.customDomainStatus.replaceAll("_", " ")} · checked {SITE_IDENTITY.checkedAt}</small>
+                <small>Historical host and domain check: {SITE_IDENTITY.customDomainStatus.replaceAll("_", " ")} · {SITE_IDENTITY.checkedAt}. This is not the public application’s routing or deployment status.</small>
               </div>
               <div data-state="warning">
-                <span>REPOSITORY IDENTITY</span>
+                <span>HISTORICAL REPOSITORY LINEAGE</span>
                 <strong>{SITE_IDENTITY.sourceRelation.replaceAll("_", " ")}</strong>
                 <small>{SITE_IDENTITY.repositoryManifestStatus.replaceAll("_", " ")} · {SITE_IDENTITY.repositoryManifestProjectId}; inspect each source and its storage bindings separately.</small>
               </div>
@@ -10431,7 +10549,7 @@ export default function Home() {
 
                 <div className="report-builder-grid">
                   <div className="report-controls">
-                    <label className="report-title-field"><span>Report title</span><input type="text" value={reportTitle} maxLength={90} onChange={(event) => setReportTitle(event.target.value)} /></label>
+                    <label className="report-title-field"><span>Report title</span><input type="text" value={providerReportTitle} maxLength={90} onChange={(event) => setReportTitle(event.target.value)} /></label>
 
                     <fieldset className="report-control-group"><legend>Record filters</legend><div className="report-filter-grid">
                       <label><span className="sr-only">Search records included in the report</span><i aria-hidden="true">⌕</i><input type="search" value={reportQuery} onChange={(event) => setReportQuery(event.target.value)} placeholder="Record, layer, source, or domain" /></label>
@@ -10442,7 +10560,7 @@ export default function Home() {
                       <button type="button" aria-pressed={reportScope === "VIEWPORT"} onClick={() => setReportScope("VIEWPORT")}><strong>Map extent</strong><small>Records inside the current viewport</small></button>
                       <button type="button" aria-pressed={reportScope === "ANALYSIS_AREA"} disabled={!analysisArea} onClick={() => setReportScope("ANALYSIS_AREA")}><strong>Locked area</strong><small>{analysisArea ? `${analysisAreaRecordCount} compatible records` : "Capture an area from Map controls"}</small></button>
                       <button type="button" aria-pressed={reportScope === "VISIBLE_LAYERS"} onClick={() => setReportScope("VISIBLE_LAYERS")}><strong>Visible layers</strong><small>Statewide records in active layers</small></button>
-                      <button type="button" aria-pressed={reportScope === "SELECTION"} disabled={!selected} onClick={() => setReportScope("SELECTION")}><strong>Selection</strong><small>{selected?.properties.title ?? "Select a map feature first"}</small></button>
+                      <button type="button" aria-pressed={reportScope === "SELECTION"} disabled={!selected} onClick={() => setReportScope("SELECTION")}><strong>Selection</strong><small>{selectedProviderReport?.status === "WITHHELD" ? "Selection details withheld" : selected?.properties.title ?? "Select a map feature first"}</small></button>
                     </div></fieldset>
 
                     <fieldset className="report-control-group"><legend>Detail level</legend><div className="report-detail-grid">
@@ -10469,7 +10587,26 @@ export default function Home() {
                   </div>
 
                   <article className="report-preview" aria-live="polite">
-                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{reportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · {temporalScopeLabel} · {reportDetail}</p></div><strong>{reportRecords.length} RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
+                    <header><div><span>LIVE REPORT PREVIEW</span><h4>{providerReportTitle.trim() || "Kansas map data report"}</h4><p>{reportScope.replaceAll("_", " ")} · active map time {temporalScopeLabel} · {reportDetail}</p></div><strong>{reportRecords.length} RECORD{reportRecords.length === 1 ? "" : "S"}</strong></header>
+                    {selectedProviderReport && <section className="report-preview-section" aria-label="Selected provider source context">
+                      <span>SELECTED PROVIDER SOURCE CONTEXT</span>
+                      <aside className="report-boundary"><strong>EXTERNAL_CONTEXT_ONLY · No KFM EvidenceBundle attached</strong><p>{selectedProviderReport.boundary}</p></aside>
+                      {selectedProviderReport.context ? <>
+                        <h4>{selectedProviderReport.context.title}</h4><p>{selectedProviderReport.context.summary}</p>
+                        <dl className="evidence-facts">
+                          <div><dt>Provider</dt><dd>{selectedProviderReport.context.sourceOrganization}</dd></div>
+                          <div><dt>Source time / edition</dt><dd>{selectedProviderReport.context.sourceTime}</dd></div>
+                          <div><dt>Observation time</dt><dd>{selectedProviderReport.context.observedAt ?? "Not available"}</dd></div>
+                          <div><dt>Provider update time</dt><dd>{selectedProviderReport.context.providerUpdatedAt ?? "Not available"}</dd></div>
+                          <div><dt>Retrieved</dt><dd>{selectedProviderReport.context.retrievedAt ?? "Not available"}</dd></div>
+                          <div><dt>Response state</dt><dd>{selectedProviderReport.context.sourceState}</dd></div>
+                          {selectedProviderReport.context.attributes.map((attribute, index) => <div key={`${attribute.label}:${index}`}><dt>{attribute.label}</dt><dd>{attribute.value}</dd></div>)}
+                        </dl>
+                        <p>{selectedProviderReport.context.fieldBasis}</p>
+                        {selectedProviderReport.context.sourceUrl && <a href={selectedProviderReport.context.sourceUrl} target="_blank" rel="noreferrer">Open provider source ↗</a>}
+                        <p><strong>Source use boundary:</strong> {selectedProviderReport.context.sourceBoundary}</p><p><strong>Response / availability limitation:</strong> {selectedProviderReport.context.limitation}</p><p><strong>Attribution:</strong> {selectedProviderReport.context.attribution}</p>
+                      </> : <p>{selectedProviderReport.status === "INCOMPATIBLE" ? "Selection is incompatible with the active map time; source details are omitted." : "Selection details are withheld for privacy or unavailable public provenance."}</p>}
+                    </section>}
                     {(reportQuery || reportEvidenceFilter !== "ALL") && <div className="report-active-filters"><span>ACTIVE FILTERS</span>{reportQuery && <b>Search: {reportQuery}</b>}{reportEvidenceFilter !== "ALL" && <b>{reportEvidenceFilter.replaceAll("_", " ")}</b>}<button type="button" onClick={() => { setReportQuery(""); setReportEvidenceFilter("ALL"); }}>Clear</button></div>}
                     {reportSections.summary && <div className="report-metrics" aria-label="Report summary metrics"><article><span>Records</span><strong>{reportRecords.length}</strong></article><article><span>Layers</span><strong>{reportLayerSummary.length}</strong></article><article><span>States</span><strong>{Object.keys(reportEvidenceCounts).length}</strong></article><article><span>Selection</span><strong>{selected ? "1" : "0"}</strong></article></div>}
                     {measurementGeometryMode && <section className="report-preview-section"><span>MEASUREMENT INPUT</span><p>{measurement} · {measureUnit === "imperial" ? "miles / square miles" : "kilometers / square kilometers"}. Browser-local approximation is carried into JSON as a report input, not as evidence.</p></section>}
@@ -10477,7 +10614,7 @@ export default function Home() {
                     <section className="report-preview-section report-temporal-comparison"><span>TIME A / TIME B CATALOG AVAILABILITY</span><div className="report-metrics"><article><span>{formatTimelineStep(compareTimeA)}</span><strong>{reportTemporalComparison.timeARecordCount}</strong><small>scoped records</small></article><article><span>{formatTimelineStep(compareTimeB)}</span><strong>{reportTemporalComparison.timeBRecordCount}</strong><small>scoped records</small></article><article><span>DELTA</span><strong>{reportTemporalComparison.recordDelta >= 0 ? "+" : ""}{reportTemporalComparison.recordDelta}</strong><small>catalog records</small></article><article><span>CHANGED</span><strong>{reportTemporalComparison.changedLayerCount}</strong><small>included layers</small></article></div><p>Applies this report’s layer, evidence, query, selection, visibility, viewport, or analysis-area scope to both times. Catalog availability is not observed change or imagery analysis.</p></section>
                     {reportSections.records && <section className="report-preview-section"><span>RECORDS</span><div className="report-record-table" role="table" aria-label="Included report records">
                       {reportRecords.slice(0, reportDetail === "EXECUTIVE" ? 8 : reportDetail === "STANDARD" ? 30 : reportRecords.length).map(({ layer, properties }) => <article key={`${layer.id}:${properties.fid}`} role="row"><div><strong>{properties.title}</strong><small>{layer.title} · {properties.year}</small></div><span data-state={properties.evidenceState}>{properties.evidenceState}</span><p>{properties.summary}</p></article>)}
-                      {reportRecords.length === 0 && <div className="report-empty"><strong>No records match</strong><p>Move or widen the map, change time, choose another scope, or include more layers.</p></div>}
+                      {reportRecords.length === 0 && <div className="report-empty"><strong>{selectedProviderReport ? "No released KFM records included" : "No records match"}</strong><p>{selectedProviderReport ? "The selected provider context is shown separately above and does not count as a released KFM record." : "Move or widen the map, change time, choose another scope, or include more layers."}</p></div>}
                     </div></section>}
                     {reportSections.evidence && reportRecords.length > 0 && <section className="report-preview-section"><span>EVIDENCE DISTRIBUTION</span><div className="report-evidence-grid">{Object.entries(reportEvidenceCounts).sort((left, right) => right[1] - left[1]).map(([state, count]) => <article key={state}><strong>{count}</strong><span>{state}</span></article>)}</div></section>}
                     {reportSections.limitations && <aside className="report-boundary"><strong>Use boundary</strong><p>No KFM domain records are released in this Site. A generated report preserves limitations and cannot admit or release data.</p></aside>}
@@ -10920,7 +11057,7 @@ export default function Home() {
                 <button type="button" disabled={!selectedResearchRecord && !researchAnchor} onClick={event => openResearchDossier(false, event.currentTarget)}>Near here</button>
                 {researchAnchor && selectedResearchRecord && researchIdentity(researchAnchor) !== researchIdentity(selectedResearchRecord) && <button type="button" onClick={event => openResearchDossier(true, event.currentTarget)}>Start new dossier here</button>}
                 <button type="button" onClick={saveCurrentWorkspace}>Save investigation</button>
-                <button type="button" onClick={() => openPrimaryWorkspace("reports", true, null, researchContext)}>Create report</button>
+                <button type="button" onClick={(event) => openSelectedReport(event.currentTarget)}>Create report</button>
               </div>
               {!selectedResearchRecord && !researchAnchor && <p>Near here requires an eligible registry record or loaded provider point. Raster pixels and polygon centroids are not used.</p>}
             </section>
@@ -11005,7 +11142,7 @@ export default function Home() {
                 <div className="notice"><strong>Limitations</strong><p>{selectedRiverObservation?.status === "stale" ? "The source is stale or unavailable. A prior sample is shown only with its original time; no new observation is inferred. " : ""}{selectedOfficialPayload?.limitation ?? selected.properties.uncertainty}</p></div>
                 <div className="notice"><strong>Generalization / rights</strong><p>{selected.properties.generalizationNote} {selected.properties.rights}</p></div>
                 {selected.properties.correctionState !== "NONE" && <div className="notice correction"><strong>Correction state</strong><p>{selected.properties.correctionState}</p></div>}
-                <div className="drawer-actions"><button type="button" onClick={() => activateDrawerView("focus", true)}>Open Focus Mode</button><button type="button" onClick={() => openPrimaryWorkspace("reports", true)}>Add to report</button><button type="button" onClick={() => openPrimaryWorkspace("stories", true)}>Add to story</button><button type="button" onClick={(event) => openMapUtility("export", event.currentTarget)}>Review public-safe export</button></div>
+                <div className="drawer-actions"><button type="button" onClick={() => activateDrawerView("focus", true)}>Open Focus Mode</button><button type="button" onClick={(event) => openSelectedReport(event.currentTarget)}>Add to report</button><button type="button" onClick={() => openPrimaryWorkspace("stories", true)}>Add to story</button><button type="button" onClick={(event) => openMapUtility("export", event.currentTarget)}>Review public-safe export</button></div>
               </section>}
               {drawerView === "metadata" && <section role="tabpanel" id="drawer-panel-metadata" aria-labelledby="drawer-tab-metadata" className="drawer-section">
                 {selectedOfficialConnection ? <><h3>Official source details</h3><dl className="evidence-facts">

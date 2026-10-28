@@ -84,6 +84,15 @@ export default function CuratedWorkspace() {
   }, [product, source, ready]);
   const features = product?.sourceId === source ? product.data?.features ?? [] : [];
   const feature = features.find(f => String(f.id) === selected);
+  const publishedCollection = product?.sourceId === source && product.evidenceRole === 'EXTERNAL_CONTEXT_ONLY'
+    && product.data?.type === 'FeatureCollection' && Array.isArray(product.data.features)
+    && ['available', 'empty', 'partial'].includes(product.state);
+  const emptyRecords = loading || !product ? 'Checking for source records…'
+    : product.reason === 'NO_APPROVED_RELEASE' ? 'No approved snapshot is available to list records.'
+    : product.state === 'withheld' ? 'Source records are withheld. See the publication reason above.'
+    : !publishedCollection ? 'Source records are unavailable. Refresh to check again.'
+    : product.state === 'partial' ? 'This partial snapshot supplies no records; coverage may be incomplete.'
+    : 'No records in this snapshot.';
   return <main className="curated-workspace">
     <Link href="/">← Kansas Frontier Matrix</Link>
     <h1>Curated source snapshots</h1>
@@ -102,6 +111,6 @@ export default function CuratedWorkspace() {
     {product?.limitation && <p>{product.limitation}</p>}
     {feature && <section aria-label="Selected source record"><h2>Selected record</h2><dl>{Object.entries(feature.properties ?? {}).map(([key, value]) => <div key={key}><dt>{key}</dt><dd>{value === null ? 'Missing' : typeof value === 'object' ? JSON.stringify(value) : String(value)}</dd></div>)}</dl></section>}
     <h2>Source records</h2>
-    <ul className="curated-records">{features.map(f => <li key={String(f.id)}><button type="button" aria-pressed={selected === String(f.id)} onClick={() => setSelected(String(f.id))}>{String(f.properties?.headline ?? f.properties?.stationId ?? f.id)}{f.properties?.expired ? ' · expired' : ''}</button><small>{String(f.properties?.observedAt ?? '')}{' '}{f.properties?.value === null ? 'Missing value' : f.properties?.value !== undefined ? String(f.properties.value) + ' ' + String(f.properties.unit ?? 'unit unavailable') : ''}</small></li>)}</ul>
+    {features.length ? <ul className="curated-records">{features.map(f => <li key={String(f.id)}><button type="button" aria-pressed={selected === String(f.id)} onClick={() => setSelected(String(f.id))}>{String(f.properties?.headline ?? f.properties?.stationId ?? f.id)}{f.properties?.expired ? ' · expired' : ''}</button><small>{String(f.properties?.observedAt ?? '')}{' '}{f.properties?.value === null ? 'Missing value' : f.properties?.value !== undefined ? String(f.properties.value) + ' ' + String(f.properties.unit ?? 'unit unavailable') : ''}</small></li>)}</ul> : <p role="status">{emptyRecords}</p>}
   </main>;
 }

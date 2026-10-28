@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { spawn } from 'node:child_process';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
@@ -20,7 +20,7 @@ const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const countyPath = '/api/live-context?feed=census-counties';
 const syntheticFeature = (name, geoid, west) => ({
   type: 'Feature', id: geoid,
-  properties: { name, geoid, featureId: `us-census-county-${geoid}`, vintage: '2020' },
+  properties: { name, geoid, featureId: `us-census-county-${geoid}`, vintage: '2020', population: 6376 },
   geometry: { type: 'Polygon', coordinates: [[[west, 38.5], [west + .2, 38.5], [west + .2, 38.7], [west, 38.7], [west, 38.5]]] },
 });
 const features = [syntheticFeature('Ellsworth', '20053', -98.5), syntheticFeature('Saline', '20169', -97.8)];
@@ -165,6 +165,16 @@ async function pageSession(browser, width, height) {
     const read = label => document.querySelector('select[aria-label="' + label + '"]')?.value ?? null;
     return {year:read('Sweep year or earlier era'),month:read('Sweep month'),day:read('Sweep day')};
   })()`);
+  const clickButton = async (scope, label) => {
+    const point = await evaluate(`(() => {
+      const button = [...document.querySelectorAll(${JSON.stringify(scope)} + ' button')].find(item => item.textContent.trim() === ${JSON.stringify(label)});
+      if (!button) throw new Error('Missing button: ' + ${JSON.stringify(label)});
+      button.scrollIntoView({block:'center'}); const rect = button.getBoundingClientRect();
+      return {x:rect.x+rect.width/2,y:rect.y+rect.height/2};
+    })()`);
+    await call('Input.dispatchMouseEvent', {type:'mousePressed',button:'left',clickCount:1,...point});
+    await call('Input.dispatchMouseEvent', {type:'mouseReleased',button:'left',clickCount:1,...point});
+  };
   const open = async (nextMode = 'held', nextFixture = payload('ready', features), status = 200) => {
     mode = nextMode; fixture = nextFixture; httpStatus = status; held.length = 0;
     await call('Page.navigate', { url: origin.href });
@@ -198,7 +208,7 @@ async function pageSession(browser, width, height) {
     mode = 'respond'; fixture = body; httpStatus = status;
     for (const requestId of held.splice(0)) await fulfill(requestId, body, status);
   };
-  return { call, evaluate, wait, key, fill, snapshot, displayTime, open, release, held, errors,
+  return { call, evaluate, wait, key, fill, snapshot, displayTime, clickButton, open, release, held, errors,
     close: async () => { browser.listeners.delete(listener); await browser.call('Target.closeTarget', { targetId }); },
   };
 }
@@ -271,6 +281,56 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
         await p.wait(`document.querySelector('#qwen-map-panel')?.hidden === true && document.activeElement?.matches('.atlas-scope-control')`, 'a separate Escape closes Chat and returns to Find & ask');
       }
       t.diagnostic(JSON.stringify({ width, scenario: 'investigation', layout, state: investigation.state, time: beforeTime }));
+    });
+    await t.test('county Create report preserves source context in preview and actual JSON/HTML downloads', async () => {
+      await p.open(); await p.release(payload('ready', features));
+      await p.fill('Ellsworth');
+      await p.wait(`document.querySelector('#global-search-results button strong')?.textContent === 'Ellsworth County'`, 'county report result available');
+      await p.key('ArrowDown', 'ArrowDown', 40); await p.key('Enter', 'Enter', 13);
+      await p.wait(`document.querySelector('.evidence-drawer[data-open="true"] h2')?.textContent.includes('Ellsworth')`, 'county report drawer');
+      const drawerTitle = await p.evaluate(`document.querySelector('.evidence-drawer[data-open="true"] h2').textContent.trim()`);
+      assert.equal(drawerTitle, features[0].properties.name, 'drawer retains the provider name; the search label adds County');
+      const beforeTime = await p.displayTime();
+      assert.match(beforeTime.year ?? '', /^\d+$/, 'actual displayed map year is observed before report handoff');
+      await p.clickButton('.evidence-drawer', 'Create report');
+      await p.wait(`document.querySelector('.report-preview [aria-label="Selected provider source context"] h4')?.textContent === ${JSON.stringify(drawerTitle)}`, 'provider context report preview retains drawer title');
+      const preview = await p.evaluate(`document.querySelector('.report-preview').innerText`);
+      assert.match(preview, /EXTERNAL_CONTEXT_ONLY/); assert.match(preview, /No KFM EvidenceBundle attached/);
+      assert.match(preview, /2020 Census/); assert.match(preview, /20053/); assert.match(preview, /6,376/);
+      assert.match(preview, /No released KFM records included/);
+      assert.deepEqual(await p.displayTime(), beforeTime, 'report handoff never changes the active map date');
+      assert.equal(await p.evaluate(`document.documentElement.scrollWidth > innerWidth + 1`), false, 'provider preview fits the viewport');
+      if (process.env.RUNNER_TEMP) {
+        const directory = join(process.env.RUNNER_TEMP, 'workspace-screenshots');
+        const { data } = await p.call('Page.captureScreenshot', { format: 'jpeg', quality: 80, captureBeyondViewport: false });
+        await mkdir(directory, { recursive: true });
+        await writeFile(join(directory, `provider-report-${width}x${height}.jpg`), Buffer.from(data, 'base64'));
+      }
+      // Instrument the standard Blob API, not application state or private hooks:
+      // the ordinary download controls must generate these exact artifacts.
+      await p.evaluate(`(() => {
+        window.__providerReportDownloads = [];
+        const original = URL.createObjectURL.bind(URL);
+        URL.createObjectURL = blob => { void blob.text().then(text => window.__providerReportDownloads.push({type:blob.type,text})); return original(blob); };
+      })()`);
+      await p.clickButton('.report-preview', 'Report data .json');
+      await p.wait(`window.__providerReportDownloads.some(item => item.type === 'application/json')`, 'JSON report generated');
+      await p.clickButton('.report-preview', 'Download report .html');
+      await p.wait(`window.__providerReportDownloads.some(item => item.type === 'text/html')`, 'HTML report generated');
+      const downloads = await p.evaluate('window.__providerReportDownloads');
+      const json = JSON.parse(downloads.find(item => item.type === 'application/json').text);
+      assert.equal(json.scope, 'SELECTION'); assert.equal(json.selection.role, 'EXTERNAL_CONTEXT_ONLY');
+      assert.equal(json.selection.evidenceBundle, null); assert.equal(json.selection.context.title, drawerTitle);
+      assert.match(json.selection.context.sourceTime, /^2020 Census/);
+      assert.equal(json.selection.context.attributes.find(item => item.label === 'Census edition').value, '2020');
+      assert.equal(json.selection.context.attributes.find(item => item.label === 'Population count').value, '6,376');
+      assert.match(json.selection.context.sourceUrl, /^https:\/\//); assert.deepEqual(json.records, []);
+      assert.equal(json.activeTime.value, Number(beforeTime.year), 'report preserves the observed map frame separately from the provider 2020 baseline');
+      const html = downloads.find(item => item.type === 'text/html').text;
+      for (const value of [drawerTitle, '2020 Census', '20053', '6,376', 'EXTERNAL_CONTEXT_ONLY', 'No KFM EvidenceBundle']) assert.ok(html.includes(value), `HTML keeps ${value}`);
+      assert.ok(html.includes(json.selection.context.sourceUrl.replaceAll('&', '&amp;')), 'HTML keeps the escaped source URL');
+      assert.deepEqual(p.errors, []);
+      t.diagnostic(JSON.stringify({width, scenario:'provider-context-report', title:drawerTitle, sourceTime:json.selection.context.sourceTime, activeTime:json.activeTime.label, formats:downloads.map(item=>item.type)}));
     });
     await t.test('failed county response explains coverage and preserves layer/source matches', async () => {
       await p.open(); await p.fill('Ellsworth');
