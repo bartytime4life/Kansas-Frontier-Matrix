@@ -31,7 +31,9 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install repository validation dependencies
-        run: python tools/ci/install_python_ci.py project-test
+        # This lane imports repository modules directly; installing the local
+        # project would execute pull-request-controlled build metadata.
+        run: python tools/ci/install_python_ci.py test-dependencies
       - name: Compile focused validator and tests
         run: >-
           python -m py_compile
