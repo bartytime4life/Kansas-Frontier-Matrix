@@ -997,14 +997,14 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert manifest["overrides"]["fast-uri"] == lock["packages"]["node_modules/fast-uri"]["version"] == "3.1.9"
     assert manifest["overrides"]["miniflare"]["undici"] == lock["packages"]["node_modules/undici"]["version"] == "7.30.1"
     result = TOOL.check()
-    assert result["files"] == len(expected) == len(receipt["comparison"]) == 902
+    assert result["files"] == len(expected) == len(receipt["comparison"]) == 899
     assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
     assert result["authority"] == "CONTENT_PARITY_ONLY"
-    assert result["file_states"]["inherited_repository_overlay"] == 62
+    assert result["file_states"]["inherited_repository_overlay"] == 60
     assert result["file_states"]["repository_only_overlay"] == 37
-    assert result["file_states"]["repository_safety_overlay"] == 8
-    assert result["withheld_files"] == 258
+    assert result["file_states"]["repository_safety_overlay"] == 18
+    assert result["withheld_files"] == 262
     assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
     assert result["review_acceptance"]["source_and_overlay_review"] == "PENDING"
     assert result["hosted_equivalence"] is False
@@ -1673,9 +1673,10 @@ def test_historical_dossier_inspect_receipt_binds_only_the_fix(monkeypatch: pyte
 
 AVIATION_BROWSER_CHANGED = {"app/aviation-airspace.ts", "app/aviation-control.tsx", "app/map-layers.css", "app/page.tsx", "docs/aviation-layers.md", "tests/aviation.test.mjs", "tests/local-atlas.test.mjs", "tests/map-hover-sampler.test.mjs", "tests/scene-surface-integration.test.mjs", "tests/inspection-panel.test.mjs"}
 
-def test_selected_receipt_binds_only_aviation_browser_corrections() -> None:
-    receipt, expected = TOOL.reviewed_receipt()
-    assert TOOL.RECEIPT.name == "site-v268-aviation-browser-qualification-20261025.json"
+def test_historical_receipt_binds_only_aviation_browser_corrections() -> None:
+    path = ROOT / "data/receipts/generated/site-v268-aviation-browser-qualification-20261025.json"
+    receipt = json.loads(path.read_text())
+    expected = {name: "sha256:" + entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
     assert predecessor.name == "site-v268-aviation-dossier-inspect-20261025.json"
     assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
@@ -1694,4 +1695,36 @@ def test_selected_receipt_binds_only_aviation_browser_corrections() -> None:
     assert receipt["review"] == previous["review"] and receipt["overlay"] == previous["overlay"]
     assert receipt["status"] == "REVIEW_ONLY" and receipt["review"]["hosted_equivalence"] is False
     inventory = {n:e["mirror_sha256"] for n,e in receipt["comparison"].items()}
+    assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def test_selected_receipt_withholds_history_carriers_without_restoring_or_releasing_them() -> None:
+    receipt, expected = TOOL.reviewed_receipt()
+    assert TOOL.RECEIPT.name == "site-v268-history-catalogue-hold-20261027.json"
+    predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
+    assert predecessor.name == "site-v268-aviation-browser-qualification-20261025.json"
+    assert hashlib.sha256(predecessor.read_bytes()).hexdigest() == receipt["predecessor_receipt_sha256"]
+    previous = json.loads(predecessor.read_text())
+    removed = {"public/history/people-events.json", "public/history/people-events.csv",
+               "app/history-research-model.ts", "scripts/export-history-research.mjs"}
+    assert set(previous["comparison"]) - set(receipt["comparison"]) == removed
+    assert set(receipt["comparison"]) - set(previous["comparison"]) == {"scripts/validate-history-public.mjs"}
+    for name in removed:
+        assert name not in expected
+        assert not (TOOL.DESTINATION / name).exists()
+        assert {"path": name, "state": "repository_withheld", "site_sha256": previous["comparison"][name]["site_sha256"]} in receipt["overlay"]["withheld_paths"]
+    declarations = {entry["path"]: entry for entry in receipt["repository_reconciliation"]["changes"]}
+    changed = {name for name, entry in receipt["comparison"].items() if entry != previous["comparison"].get(name)}
+    assert set(declarations) == changed | removed
+    for name in changed:
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert declarations[name]["after_sha256"] == receipt["comparison"][name]["mirror_sha256"] == digest
+        assert receipt["comparison"][name]["state"] == "repository_safety_overlay"
+    for name in set(previous["comparison"]) - changed - removed:
+        assert receipt["comparison"][name] == previous["comparison"][name]
+    assert receipt["review"] == previous["review"]
+    assert receipt["counts"]["repository_withheld"] == previous["counts"]["repository_withheld"] + 4
+    assert receipt["repository_reconciliation"]["restored_recorded_paths"] == []
+    assert receipt["history_research_containment"]["hosted_verification"] == "NOT_PERFORMED"
+    inventory = {name: entry["mirror_sha256"] for name, entry in receipt["comparison"].items()}
     assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()

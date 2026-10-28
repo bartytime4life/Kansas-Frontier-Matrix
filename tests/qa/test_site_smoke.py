@@ -119,7 +119,7 @@ class SiteLocalLaunchBoundaryTests(unittest.TestCase):
             scripts = source / "scripts"
             scripts.mkdir(parents=True)
             shutil.copy2(ROOT / "apps/site/serve-local.sh", root / "serve-local.sh")
-            for name in ("serve-local-worker.mjs", "archive-access.mjs", "validate-subsurface-public.mjs"):
+            for name in ("serve-local-worker.mjs", "archive-access.mjs", "validate-subsurface-public.mjs", "validate-history-public.mjs"):
                 shutil.copy2(ROOT / "apps/site/source/scripts" / name, scripts / name)
             if secret_file:
                 (source / secret_file).write_text("PRIVATE_TEST_VALUE=synthetic-only")
