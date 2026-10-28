@@ -365,7 +365,7 @@ Every map draws at the screen's own density and on real terrain.
   chosen by hand in Appearance is never overridden.
 - **Not changed.** NOAA radar keeps nearest-neighbour 256-pixel frames, so each
   radar cell stays an exact cell and the loop's downloads stay bounded. NOAA
-  lightning density stays at 256 px: its GLM cells are about 8 km.
+  lightning density stays at 256 px: its density cells are about 8 km.
 
 ## Photo-real 3D (Terrain)
 
@@ -581,7 +581,7 @@ retain separate source clocks, limitations and legends. Missing imagery is
 never an all-clear. KFM is not an emergency warning service.
 
 The dock shows separate starting-layer switches and a collapsed **Add related
-context** group. GOES GeoColor, forecast wind, 15-minute optical lightning
+context** group. GOES GeoColor, forecast wind, 15-minute ground-network lightning
 density, HMS smoke footprints and USGS river gauges use existing provider
 handlers. They start off. Smoke and streamflow also appear in the Weather
 catalogue, so they remain discoverable on phones when the radar panel occupies
@@ -596,7 +596,7 @@ the full catalogue rather than the short current-storm list.
 | SPC outlook, off | Optional forward risk context | Forecast risk, not a warning |
 | GOES satellite, off | Cloud structure beyond radar echoes | Has its own scan time and may obscure radar |
 | Forecast wind, off | Wind-field context | Modeled guidance, not measured storm motion |
-| Optical lightning density, off | Dated electrical-activity context | Aggregated density, not ground-strike locations |
+| Ground-network lightning density, off | Dated electrical-activity context | Aggregated density, not individual strike locations |
 | HMS smoke, off | Nearby atmospheric context | Imagery interpretation, not surface air quality |
 | USGS gauges, off | Rainfall's possible river context | Provisional point discharge, not flood extent or a causal attribution |
 
