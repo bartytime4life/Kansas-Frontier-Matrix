@@ -61,7 +61,8 @@ test('the drift turns tilted and globe views and eases flat maps, one slow leg a
 test('the engine resolves styles itself, so one failed style never stalls later previews',async()=>{
  const source=await readFile('app/living-welcome/map-engine.mjs','utf8');
  assert.doesNotMatch(source,/transformStyle:/,'setStyle transformStyle waits for the previous style, which never loads after a failure');
- assert.match(source,/void resolveStyle\(BASEMAPS\[next\.basemap\]\.style\)\.then/,'style documents resolve outside MapLibre, so a failed previous style cannot block the request');
+ assert.match(source,/const requestedStyle = BASEMAPS\[next\.basemap\]\.style;/,'the selected registered style is bound explicitly for resolution and rejected-document eviction');
+ assert.match(source,/void resolveStyle\(requestedStyle\)\.then/,'style documents resolve outside MapLibre, so a failed previous style cannot block the request');
  // Supersession, pending-style reuse, A→B→A and retry execute the real engine
  // in welcome-map-engine.test; do not couple them to one guard's spelling.
  assert.match(source,/interactive: false/,'the welcome map is a backdrop, not a second map to operate');
