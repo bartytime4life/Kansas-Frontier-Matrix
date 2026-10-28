@@ -8,6 +8,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
 import { isolateBrowserNetwork } from './browser-network.mjs';
+import { terrainBrowserFixtures } from './terrain-detail-browser-fixtures.mjs';
 import ts from 'typescript';
 import { capabilityPreviews, capabilityNote, categoryGlimpse } from '../app/living-welcome/capability-catalog.mjs';
 
@@ -181,6 +182,7 @@ async function pageSession(b, width, height, networkOptions = {}) {
     const requestNavigation = navigation;
     void (async () => {
       const { requestId, request } = message.params, url = new URL(request.url);
+      if (await networkOptions.intercept?.(message.params, call)) return;
       if (holdScene && url.origin === origin.origin && /\/assets\/map-engine-[^/]+\.js$/.test(url.pathname)) {
         heldSceneRequests.push(requestId);
       } else if (url.origin === origin.origin && url.pathname.startsWith('/api/') && url.pathname !== '/api/build') {
@@ -199,7 +201,8 @@ async function pageSession(b, width, height, networkOptions = {}) {
   await call('Network.enable');
   await call('Network.setCacheDisabled', { cacheDisabled: true });
   await call('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
-  await isolateBrowserNetwork(call, origin, networkOptions);
+  await (networkOptions.isolate ?? isolateBrowserNetwork)(call, origin, networkOptions);
+  await networkOptions.setup?.(call);
   const evaluate = async expression => {
     await interceptions.assertHealthy();
     const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });
@@ -252,6 +255,61 @@ async function pageSession(b, width, height, networkOptions = {}) {
   };
   return { call, evaluate, wait, key, open, unobstructed, holdSceneModule, waitForSceneModule, releaseSceneModule };
 }
+
+for (const width of [1280, 390]) {
+  test(`terrain detail automatic fallback and ready recovery at ${width}px (synthetic DEM transport)`, { timeout: 150000 }, async t => {
+    const fixtures = await terrainBrowserFixtures(origin);
+    const b = await browser(t), p = await pageSession(b, width, 844, fixtures);
+    await p.open('/?base=midnight&scene=elevation-3d&c=-98,38.5&z=10.5&p=58&motion=off&panel=scene');
+    const ready = provider => `document.querySelector('.terrain-mode-source')?.textContent.includes('${provider} · DEM ready') && document.querySelector('.screenreader-status')?.textContent.includes('interactions proven') && !document.querySelector('.runtime-degraded-banner')`;
+    await p.wait(ready('Mapzen'), 'initial Mapzen surface and runtime are ready');
+    assert.equal(fixtures.hits.usgs, 0, 'regional view retains Mapzen');
+    await p.evaluate(`void window.__terrainAcceptanceMap.jumpTo({zoom:12})`);
+    await p.wait(ready('Mapzen'), 'automatic 3DEP outage recovers to Mapzen and runtime ready');
+    await p.wait(`window.__terrainAcceptanceAnnouncements?.some(text=>text.includes('did not load'))`, 'fallback announcement');
+    assert.ok(fixtures.hits.usgs > 0, 'real 3DEP requests hit the failed transport');
+    assert.ok(fixtures.hits.mapzen > 0 && fixtures.hits.instrumented > 0);
+    await p.evaluate(`void window.__terrainAcceptanceMap.fire('error',{sourceId:'kfm-terrain-dem',source:{type:'raster-dem',tiles:['/api/3dep-dem-tile?v=2&z={z}&x={x}&y={y}']},error:new Error('Synthetic late 3DEP failure')})`);
+    await p.evaluate(`void window.__terrainAcceptanceMap.triggerRepaint()`);
+    await p.wait(ready('Mapzen'), 'late replaced-source failure leaves runtime ready');
+    const surface = await p.evaluate(`(()=>{const m=window.__terrainAcceptanceMap;return {source:m.getTerrain()?.source,elevation:m.queryTerrainElevation(m.getCenter()),pitch:m.getPitch(),attribution:document.querySelector('.maplibregl-ctrl-attrib')?.textContent,status:document.querySelector('.terrain-mode-source')?.textContent};})()`);
+    assert.equal(surface.source, 'kfm-terrain-dem'); assert.ok(surface.elevation > 0 && Number.isFinite(surface.elevation), 'loaded elevation still drives the real terrain mesh');
+    assert.ok(surface.pitch > 40); assert.match(surface.attribution, /Mapzen/); assert.doesNotMatch(surface.attribution, /dynamic DEM mosaic/);
+    assert.match(surface.status, /coarse beyond z11/);
+    const before = await p.evaluate(`window.__terrainAcceptanceMap.getCenter().lng`);
+    await p.evaluate(`window.__terrainAcceptanceMap.getCanvas().focus()`); await p.key('ArrowRight', 'ArrowRight', 39);
+    await p.wait(`window.__terrainAcceptanceMap.getCenter().lng !== ${before} && !window.__terrainAcceptanceMap.isMoving()`, 'keyboard pan still works in 3D');
+    await p.key('ArrowRight', 'ArrowRight', 39, 8);
+    await p.wait(`Math.abs(window.__terrainAcceptanceMap.getBearing())>1 && !window.__terrainAcceptanceMap.isMoving()`, 'keyboard 3D rotation still works');
+    await p.wait(ready('Mapzen'), 'navigation settles back to ready');
+    if (process.env.KFM_WORKSPACE_SCREENSHOTS) {
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, { recursive: true });
+      const capture = await p.call('Page.captureScreenshot', { format: 'png' });
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `terrain-fallback-${width}.png`), Buffer.from(capture.data, 'base64'));
+    }
+    t.diagnostic(JSON.stringify({ transport: 'synthetic elevations; no provider I/O', hits: fixtures.hits, surface }));
+  });
+}
+
+test('terrain detail successful 3DEP and manual provider recovery (synthetic DEM transport)', { timeout: 150000 }, async t => {
+  const fixtures = await terrainBrowserFixtures(origin, { fail3dep: false });
+  const b = await browser(t), p = await pageSession(b, 1280, 844, fixtures);
+  await p.open('/?base=midnight&scene=elevation-3d&c=-98,38.5&z=12&p=58&motion=off&panel=scene');
+  const ready = provider => `document.querySelector('.terrain-mode-source')?.textContent.includes('${provider} · DEM ready') && document.querySelector('.screenreader-status')?.textContent.includes('interactions proven') && !document.querySelector('.runtime-degraded-banner')`;
+  await p.wait(ready('USGS 3DEP'), 'automatic successful 3DEP is runtime ready');
+  assert.match(await p.evaluate(`document.querySelector('.maplibregl-ctrl-attrib').textContent`), /3D Elevation Program/);
+  const choose = async provider => p.evaluate(`(()=>{const e=document.querySelector('[aria-label="Terrain elevation source"]');e.value=${JSON.stringify(provider)};e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  await choose('mapzen'); await p.wait(ready('Mapzen'), 'manual Mapzen choice is ready');
+  const requests = fixtures.hits.usgs;
+  await p.evaluate(`void window.__terrainAcceptanceMap.jumpTo({zoom:13})`);
+  await p.wait(ready('Mapzen'), 'manual choice remains Mapzen past threshold');
+  assert.equal(fixtures.hits.usgs, requests, 'manual selection disables automatic detail');
+  fixtures.fail3dep(true); await choose('usgs-3dep');
+  await p.wait(`document.querySelector('.terrain-mode-source')?.textContent.includes('USGS 3DEP · DEM unavailable') && !!document.querySelector('.runtime-degraded-banner')`, 'genuine manual provider failure remains visible');
+  await p.evaluate(`[...document.querySelectorAll('button')].find(e=>e.textContent==='Use display DEM').click()`);
+  await p.wait(ready('Mapzen'), 'explicit display DEM action restores terrain and runtime');
+  assert.match(await p.evaluate(`document.querySelector('.maplibregl-ctrl-attrib').textContent`), /Mapzen/);
+});
 
 // Exercise actual DomainStage failures, rather than injecting React state.
 // Provider I/O remains isolated by pageSession; these are UI acceptance checks.
