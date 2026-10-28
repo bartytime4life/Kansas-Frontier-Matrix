@@ -13,6 +13,13 @@ provider, browser, physical device or publication control.
   `bd562032da270cab2ffc7dfc70ec30a730b7214e` and input digest
   `sha256:ab019850d5928e30a5181abfba7d420a6de271ef8022a8a6ed0ecd0baae28eb4`
   when inspected. A repository head is not evidence of public publication.
+- On the final public recheck, About reported no deployment commit and digest
+  `sha256:1c1550ded1cd3a3d456aec82d85a3bee20994660cbfbbfa8f187f8a38c845c5a`.
+  Recomputing the repository's application-input profile against the verified
+  hosted base produced that same digest (1,073 files). The running Git commit
+  remains unavailable; input parity with the base is confirmed. This candidate
+  has a different digest,
+  `sha256:c8e9477067da48026099eb421d78478896310eff1e2336e9549ab30980ff82a5`.
 - GoDaddy hosting preview identification was blocked by a sign-in screen in
   this session. No hosting configuration or publication was changed.
 - The separate Barta AI Solutions homepage-card review remains a separate
@@ -92,7 +99,7 @@ identified preview. The county browser journey now exercises the real report
 handoff and JSON/HTML download bytes at desktop and mobile fixture sizes; its
 fixture data is not a live-provider or publication test.
 
-The reconciled candidate passed the production build and 317 tests across 32
+The reconciled candidate passed the production build, TypeScript check and 317 tests across 32
 suites: 115 focused tests plus 202 welcome, terrain and Storm Desk integration
 tests, with no failures or skips. The page retained the same 42 baseline lint
 warnings and zero errors; warning signatures matched. Other changed source,
