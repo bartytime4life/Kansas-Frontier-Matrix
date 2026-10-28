@@ -3,6 +3,7 @@ import { lstatSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { gunzipSync } from "node:zlib";
+import { validateHistoryPublic } from "./validate-history-public.mjs";
 
 export const HOLD_MANIFEST = {"version": 1, "status": "PUBLICATION_HELD", "sources": [], "tiles": [], "counties": [], "totals": {"wellCount": 0, "coreCount": 0}, "reason": "Subsurface records withheld pending rights, sensitivity, evidence, policy, review and release closure."};
 function containsRestricted(value) {
@@ -66,8 +67,9 @@ function sort(value) {
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    const errors = validateSubsurfacePublic(path.resolve(process.argv[2] ?? new URL("../public", import.meta.url).pathname));
+    const root = path.resolve(process.argv[2] ?? new URL("../public", import.meta.url).pathname);
+    const errors = [...validateSubsurfacePublic(root), ...validateHistoryPublic(root)];
     if (errors.length) throw new Error(errors.join("\n"));
-    console.log("Subsurface static delivery held; public assets passed containment checks.");
+    console.log("Subsurface and history research delivery held; public assets passed containment checks.");
   } catch (error) { console.error(error.message); process.exitCode = 1; }
 }

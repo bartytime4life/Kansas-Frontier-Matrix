@@ -52,7 +52,7 @@ test("launcher runs static containment before opening runtime or reading private
   const assets = path.join(directory, "dist/client/data/subsurface");
   const state = path.join(directory, "state");
   for (const folder of [scripts, assets, path.join(state, "v3/d1"), path.join(state, "v3/r2")]) mkdirSync(folder, { recursive: true });
-  for (const name of ["serve-local-worker.mjs", "archive-access.mjs", "validate-subsurface-public.mjs"]) {
+  for (const name of ["serve-local-worker.mjs", "archive-access.mjs", "validate-subsurface-public.mjs", "validate-history-public.mjs"]) {
     copyFileSync(new URL(`../scripts/${name}`, import.meta.url), path.join(scripts, name));
   }
   // A synthetic forbidden carrier; no source records or operator stores are copied.
@@ -62,6 +62,12 @@ test("launcher runs static containment before opening runtime or reading private
   assert.equal(result.status, 1);
   assert.equal(result.stdout, "");
   assert.deepEqual(JSON.parse(result.stderr), { event: "local_runtime_failed", reason: "SUBSURFACE_PUBLICATION_HELD" });
+  rmSync(path.join(assets, "unreviewed.json"));
+  const history = path.join(directory, "dist/client/history"); mkdirSync(history);
+  writeFileSync(path.join(history, "people-events.csv"), "synthetic only");
+  const held = spawnSync(process.execPath, [path.join(scripts, "serve-local-worker.mjs"), "--state", state], { encoding: "utf8", timeout: 5000 });
+  assert.equal(held.status, 1); assert.equal(held.stdout, "");
+  assert.deepEqual(JSON.parse(held.stderr), { event: "local_runtime_failed", reason: "HISTORY_RESEARCH_PUBLICATION_HELD" });
 }));
 
 test("direct runtime refuses dotenv and dev-vars configuration without reading secrets", () => withDirectory((directory) => {
@@ -237,6 +243,10 @@ test("built local runtime survives abandoned denials and rejects forged authorit
     for (const query of ["", "?id=11111111-1111-4111-8111-111111111111", "?id=11111111-1111-4111-8111-111111111111&action=download"]) assert.equal(await probe(`/api/daily-archive${query}`), 401);
     for (const action of ["capture&feed=usgs-earthquakes", "review", "settings"]) assert.equal(await probe(`/api/daily-archive?action=${action}`, "POST", { "X-KFM-Archive-Writer": "daily-v1" }), 401);
     assert.equal(await probe("/maplibre/maplibre-gl-worker.mjs"), 200);
+    for (const name of ["people-events.json", "people-events.csv"]) assert.equal(await probe(`/history/${name}`), 404);
+    assert.equal(await probe("/history/people-events"), 200);
+    assert.equal(await probe("/history/sources.json"), 200);
+    assert.equal(await probe("/history/prentis-1909"), 200);
   } finally {
     child.kill("SIGTERM");
     const timer = setTimeout(() => child.kill("SIGKILL"), 5000);
