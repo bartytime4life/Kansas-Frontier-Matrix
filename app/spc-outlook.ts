@@ -52,14 +52,15 @@ export type SpcBand = Readonly<{ id: string; rank: number; name: string; short: 
  * SPC's probability ladders: the chance of the hazard within 25 miles of a
  * point. The colours follow SPC's hazard maps (tornado 2% green through 60%
  * blue; wind and hail 5% brown through 60% purple), lightened to stay legible
- * on the dark storm base.
+ * on the dark storm base. Since March 2026 the wind ladder runs on to 75% and
+ * 90%, drawn in blue and cyan past its purple.
  */
-const P = { 2: "#4fbf4f", 5: "#c08a5e", 10: "#ffd84d", 15: "#ff5c5c", 30: "#ff66ff", 45: "#b77cf2", 60: "#5f9fe0" } as const;
+const P = { 2: "#4fbf4f", 5: "#c08a5e", 10: "#ffd84d", 15: "#ff5c5c", 30: "#ff66ff", 45: "#b77cf2", 60: "#5f9fe0", 90: "#4fe3e3" } as const;
 const ladder = (steps: readonly (readonly [number, string])[]): readonly SpcBand[] => Object.freeze(steps.map(([percent, color], rank) =>
   Object.freeze({ id: String(percent), rank: rank + 1, name: `${percent}%`, short: `${percent}%`, color })));
 export const SPC_PROBABILITIES: Readonly<Record<OutlookHazard, readonly SpcBand[]>> = Object.freeze({
   torn: ladder([[2, P[2]], [5, P[5]], [10, P[10]], [15, P[15]], [30, P[30]], [45, P[45]], [60, P[60]]]),
-  wind: ladder([[5, P[5]], [15, P[10]], [30, P[15]], [45, P[30]], [60, P[45]]]),
+  wind: ladder([[5, P[5]], [15, P[10]], [30, P[15]], [45, P[30]], [60, P[45]], [75, P[60]], [90, P[90]]]),
   hail: ladder([[5, P[5]], [15, P[10]], [30, P[15]], [45, P[30]], [60, P[45]]]),
 });
 /** SPC's conditional-intensity groups: how intense the hazard could be where it occurs. Hail has two. */

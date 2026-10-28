@@ -108,11 +108,14 @@ test('the Storm desk dock offers the outlook by day with its reading',async()=>{
 
 test('the page reads each day once a quarter-hour, keys and draws only the day shown, and closes with its map',()=>{
  assert.match(page,/const OUTLOOK_REFRESH_MS = 15 \* 60_000;/);
+ assert.match(page,/const age = current && readAt !== undefined \? Date\.now\(\) - readAt : Infinity;/,'age is this browser\'s own, never the provider\'s retrievedAt, so an old answer cannot loop the read');
+ assert.match(page,/outlookReadAtRef\.current\.set\(outlookId, Date\.now\(\)\);\s*setOutlooks/);
+ assert.doesNotMatch(page,/Date\.parse\(current\.retrievedAt\)/);
  assert.match(page,/if \(age < OUTLOOK_REFRESH_MS\) \{[\s\S]{0,160}const timer = setTimeout\(\(\) => setOutlookTick\(tick => tick \+ 1\), OUTLOOK_REFRESH_MS - age\);\s*return \(\) => clearTimeout\(timer\);/,'a shown outlook re-reads itself when it turns a quarter-hour old');
  assert.match(page,/\}, \[outlookDay, outlookProduct, outlookId, outlooks, outlookFailed, outlookTick, announce\]\);/);
  assert.match(page,/const shownOutlook = outlookId \? outlooks\[outlookId\] \?\? null : null;/);
  assert.match(page,/\.\.\.\(shownOutlook \? \[spcOutlookKey\(shownOutlook\.day, shownOutlook\.product\)\] : \[\]\)/);
- assert.match(page,/setOutlookDay\(null\);\s*setOutlookHazard\("cat"\);\s*\/\/ Each map opens on its own subject/);
+ assert.match(page,/setOutlookDay\(null\);\s*setOutlookHazard\("cat"\);[\s\S]{0,80}\/\/ Each map opens on its own subject/);
  assert.match(page,/if \(outlookDay\) params\.set\("outlook", String\(outlookDay\)\);/);
  assert.match(page,/categoryMap\(restoredTopic\)\?\.tools\?\.includes\("outlook"\) \? restoredOutlook : null/);
 });
@@ -164,6 +167,10 @@ test('wind and hail read the fraction when SPC leaves out DN, and an empty outlo
  const wind={type:'FeatureCollection',features:[{type:'Feature',geometry:{type:'Polygon',coordinates:box(-99,36,-95,39)},properties:{LABEL:'0.15'}},{type:'Feature',geometry:{type:'Polygon',coordinates:box(-99,36,-95,39)},properties:{LABEL:'0.10'}}]};
  const outlook=spc.parseSpcOutlook(wind,2,'2026-10-26T17:00:00.000Z','src','wind',{type:'GeometryCollection',geometries:[]});
  assert.deepEqual(outlook.data.features.map(f=>f.properties.category),['15'],'10% is not a wind band');
+ assert.deepEqual(spc.SPC_PROBABILITIES.wind.map(b=>b.id),['5','15','30','45','60','75','90'],'the wind ladder runs to 90% since March 2026');
+ const high=spc.parseSpcOutlook({type:'FeatureCollection',features:[{type:'Feature',geometry:{type:'Polygon',coordinates:box(-99,36,-95,39)},properties:{DN:90,LABEL:'0.90'}},{type:'Feature',geometry:{type:'Polygon',coordinates:box(-100,35,-94,40)},properties:{DN:75,LABEL:'0.75'}}]},1,'2026-10-26T17:00:00.000Z','src','wind');
+ assert.deepEqual(high.data.features.map(f=>f.properties.category),['75','90']);assert.equal(high.kansas,'90');
+ assert.deepEqual(spc.spcOutlookKey(1,'wind').items.slice(5,7).map(i=>[i.label,i.color]),[['75%','#5f9fe0'],['90%','#4fe3e3']]);
  assert.equal(outlook.kansas,'15');assert.equal(outlook.intensity,null);
  const empty=spc.parseSpcOutlook({type:'GeometryCollection',geometries:[]},1,'2026-10-26T17:00:00.000Z','src','hail');
  assert.equal(empty.data.features.length,0);
