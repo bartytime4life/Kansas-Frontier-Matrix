@@ -97,6 +97,7 @@ export function parseStormReports(raw: string, day: ReportDay, now: Date, source
   if (typeof raw !== "string") throw new Error("The SPC storm reports were not text.");
   const { from, until } = convectiveDay(day, now);
   const reports: StormReport[] = [];
+  const ids = new Map<string, number>();
   let kind: ReportKind | null = null, sections = 0;
   for (const line of raw.split(/\r?\n/)) {
     if (!line.trim()) continue;
@@ -116,8 +117,12 @@ export function parseStormReports(raw: string, day: ReportDay, now: Date, source
       time = at.toISOString();
     }
     const magnitude = magnitudeOf(kind, cells[1]);
+    // A report's identity is what it is, when and where, not its row: SPC inserts and
+    // removes rows through the day, and a selection must follow its own report.
+    const base = `${kind}-${unquote(cells[0])}-${latitude.toFixed(4)}-${longitude.toFixed(4)}`, seen = ids.get(base) ?? 0;
+    ids.set(base, seen + 1);
     reports.push(Object.freeze({
-      id: `${kind}-${reports.length}`, kind, time, magnitude,
+      id: seen ? `${base}-${seen + 1}` : base, kind, time, magnitude,
       significant: magnitude !== null && magnitude >= SIGNIFICANT[kind],
       location: unquote(cells[2]).slice(0, 120), county: unquote(cells[3]).slice(0, 80), state: unquote(cells[4]).toUpperCase().slice(0, 2),
       longitude, latitude, comments: unquote(cells.slice(7).join(",")).slice(0, 600),

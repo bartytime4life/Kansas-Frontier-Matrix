@@ -48,6 +48,11 @@ test('the parser reads each section, its magnitude, time and place, and SPC\'s s
  assert.equal(r.reports[4].comments,'Golf to tennis ball size, "many" reports (DDC)','a quoted comment reads as written');
  assert.deepEqual([r.reports[5].latitude,r.reports[5].longitude],[37.28,-98.57],'hundredths with west-positive longitude read as SPC means them');
  assert.equal(r.from,'2026-10-28T12:00:00.000Z');
+ assert.equal(ks.id,'torn-2215-38.8900--101.8100','a report is known by kind, time and place');
+ const inserted=sr.parseStormReports(csv.replace('Time,F_Scale,Location,County,State,Lat,Lon,Comments\n','Time,F_Scale,Location,County,State,Lat,Lon,Comments\n2100,EF0,Colby,Thomas,KS,39.4,-101.05,New. (GLD)\n'),'today',now,'src');
+ assert.equal(inserted.reports.find(x=>x.id===ks.id)?.location,'3 W Sharon Springs','a row inserted above keeps every other id on its report');
+ const twice=sr.parseStormReports('Time,Size,Location,County,State,Lat,Lon,Comments\n2245,100,A,B,KS,37.6,-98.7,x\n2245,125,A,B,KS,37.6,-98.7,y\n','today',now,'src');
+ assert.deepEqual(twice.reports.map(x=>x.id),['hail-2245-37.6000--98.7000','hail-2245-37.6000--98.7000-2'],'two reports at one time and place stay distinct');
  assert.equal(sr.validStormReports(JSON.parse(JSON.stringify(r))),true);
  assert.equal(sr.validStormReports({...r,day:'tomorrow'}),false);
  assert.equal(sr.validStormReports({...r,reports:[{...ks,kind:'flood'}]}),false);
@@ -71,11 +76,11 @@ test('the key and the points share SPC\'s report colours, significant reports ri
  const added=[];let source;const filters={};const layers=[{id:'radar'},{id:'kfm-spc-outlook-lines'},{id:'kfm-labels'}];
  const map={getSource:()=>source,addSource:(id,spec)=>{source={spec,setData(d){this.spec.data=d;}};},getLayer:id=>layers.find(l=>l.id===id),addLayer:(spec,before)=>{added.push([spec,before]);layers.splice(layers.findIndex(l=>l.id===before),0,{id:spec.id});},getStyle:()=>({layers}),removeLayer:id=>layers.splice(layers.findIndex(l=>l.id===id),1),removeSource:()=>{source=undefined;},setFilter:(id,f)=>{filters[id]=f;}};
  const r=sr.parseStormReports(csv,'today',now,'src');
- sr.syncStormReports(map,r,'hail-5');
+ sr.syncStormReports(map,r,r.reports[5].id);
  assert.deepEqual(layers.map(l=>l.id),['radar','kfm-spc-outlook-lines',sr.STORM_REPORTS_LAYER_ID,sr.STORM_REPORTS_SELECTED_LAYER_ID,'kfm-labels'],'over the outlook, under the labels');
- assert.deepEqual(filters[sr.STORM_REPORTS_SELECTED_LAYER_ID],['==',['get','id'],'hail-5']);
+ assert.deepEqual(filters[sr.STORM_REPORTS_SELECTED_LAYER_ID],['==',['get','id'],r.reports[5].id]);
  const data=source.spec.data;
- assert.deepEqual(data.features[0].properties,{id:'torn-0',kind:'torn',significant:true,rank:25});
+ assert.deepEqual(data.features[0].properties,{id:'torn-2215-38.8900--101.8100',kind:'torn',significant:true,rank:25});
  const {validateStyleMin}=await import('@maplibre/maplibre-gl-style-spec');
  assert.deepEqual(validateStyleMin({version:8,sources:{[sr.STORM_REPORTS_SOURCE_ID]:{type:'geojson',data}},layers:added.map(([spec])=>spec)}).map(e=>e.message),[]);
  sr.syncStormReports(map,null,null);
@@ -114,6 +119,7 @@ test('the page reads each day on its own clock, selects a report on the map, sha
  assert.match(page,/\}, \[reportsDay, stormReports, reportsFailed, reportsTick, announce\]\);/);
  assert.match(page,/if \(renderedHits\[0\]\?\.source === STORM_REPORTS_SOURCE_ID\) \{[\s\S]{0,200}if \(report\) setReportSelected\(report\);\s*return;/);
  assert.match(page,/if \(reportsDay\) params\.set\("reports", reportsDay\);/);
+ assert.match(page,/setReportSelected\(selected => selected \? value\.reports\.find\(report => report\.id === selected\.id\) \?\? null : null\);/,'a refresh reconciles the selected report');
  assert.match(page,/categoryMap\(restoredTopic\)\?\.tools\?\.includes\("reports"\) \? restoredReports : null/);
  assert.match(page,/setReportsDay\(null\);\s*setReportSelected\(null\);\s*\/\/ Each map opens on its own subject/);
 });
