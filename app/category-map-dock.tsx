@@ -81,7 +81,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -194,6 +194,12 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
     legend: readonly Readonly<{ label: string; image: string }>[] | null;
     legendFailed: boolean;
   }>;
+  /** Kansas Senate or House districts, for looks that offer them, in place of the U.S. House districts while shown. */
+  legislature?: Readonly<{ chamber: "senate" | "house" | null; loading: boolean; failed: boolean; reading: string | null;
+    list: readonly Readonly<{ id: string; label: string }>[]; picked: string | null }>;
+  onLegislature?: (chamber: "senate" | "house" | null) => void;
+  onLegislaturePick?: (id: string) => void;
+  onLegislatureClear?: () => void;
   /** The USDA Cropland Data Layer, for looks that offer it: a year, and the crop at the point last clicked with CropScape's colour for it. */
   crops?: Readonly<{ on: boolean; year: number; years: readonly number[]; reading: string; swatch: string | null }>;
   onCrops?: (on: boolean) => void;
@@ -472,6 +478,19 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
         <ul>{population.groups.map(group => <li key={group.id}><span className="category-map-dock-chip" style={{ background: group.color }} aria-hidden="true" />
           <span>{group.label}<small>{group.range}</small></span><b>{population.counties ? `${group.count} ${group.count === 1 ? "county" : "counties"}` : "…"}</b></li>)}</ul>
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
+      </div>}
+    </>}
+    {look.tools?.includes("legislature") && legislature && onLegislature && <>
+      <div className="category-map-dock-modes" role="group" aria-label="District plan">
+        {([[null, "U.S. House", "Kansas's U.S. House districts, Congress by Congress"], ["senate", "Kansas Senate", "The 40 Kansas Senate districts, 2024 plan"], ["house", "Kansas House", "The 125 Kansas House districts, 2024 plan"]] as const).map(([chamber, label, title]) =>
+          <button key={label} type="button" aria-pressed={legislature.chamber === chamber} title={title} onClick={() => onLegislature(chamber)}>{label}</button>)}
+      </div>
+      {legislature.chamber && <div className="category-map-dock-quakes">
+        <p className="category-map-dock-reading" aria-live="polite">{legislature.loading ? "Reading the Census legislative districts…"
+          : legislature.failed ? "The Census legislative districts did not answer; nothing is drawn from part of a plan." : legislature.reading}</p>
+        {onLegislaturePick && legislature.list.length > 0 && <PickList summary={`Districts (${legislature.list.length})`} label={`${legislature.chamber === "senate" ? "Kansas Senate" : "Kansas House"} districts`}
+          items={legislature.list} selected={legislature.picked} onPick={onLegislaturePick} />}
+        {legislature.picked && <div><button type="button" onClick={onLegislatureClear} aria-label="Clear the selected district">Clear</button></div>}
       </div>}
     </>}
     {look.tools?.includes("crops") && crops && onCrops && <>
