@@ -79,7 +79,7 @@ test('MySQL: restore pre-county backup, preserve populated heads/control/history
     await connection.execute('INSERT INTO unrelated_sentinel VALUES (1,?)', ['unrelated records; quotes \' and Unicode Kansas 🌻']);
     await connection.execute('INSERT INTO kfm_pipeline_nonces VALUES (?,?)', ['f'.repeat(64), 1793298720000]);
     for (const [index, source] of ['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes', 'water', 'weather'].entries()) {
-      const id = String(index + 1).repeat(64), prior = String(index + 6).repeat(64);
+      const id = (index + 1).toString(16).repeat(64), prior = (index + 6).toString(16).repeat(64);
       for (const [release, state] of [[id, 'COMMITTED'], [prior, 'WITHDRAWN']]) {
         await connection.execute('INSERT INTO kfm_pipeline_releases VALUES (?,?,?,?,?,?)',
           [release, source, JSON.stringify({ fixture: true, source, recipe: 'pre-county' }), state, JSON.stringify({ synthetic: source }), 1793298600000]);
