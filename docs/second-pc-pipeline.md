@@ -50,10 +50,11 @@ For the separate read-only hosted SQL connectivity check, use
 receipts, verified TLS acceptance and failure states. This manual command does
 not initialize a data mount, capture feeds or enable publication.
 
-`rehearse` captures only two bounded feeds into an external private directory.
+`rehearse` attempts all three bounded feeds into an external private directory,
+including earthquakes even when the scheduled worker has not opted into them.
 It never schedules, signs approvals, pairs credentials, writes SQL or publishes.
 Its per-source results must be inspected: process success alone is not proof
-that both acquisitions succeeded. Invalid captures remain private for correction.
+that all acquisitions succeeded. Invalid captures remain private for correction.
 
 ## Qualify storage and backup before installing
 
@@ -121,7 +122,9 @@ copy, not a scan racing an active writer.
 
 Preview and Published share MySQL. Before any application of SQL, obtain a
 recoverable backup, inspect the real engine/grants/schema/quota and rehearse in
-a disposable compatible database. The new SQL is additive and starts paused.
+a disposable compatible database. The SQL is additive. A new control row starts
+paused; `INSERT IGNORE` preserves an existing control row's pause/resume state.
+Re-running the migration does not pause an already running pipeline.
 There is no reset, SQLite import, DROP, or replacement of existing capture rows.
 
 `scripts/migrate-pipeline.mjs` prints the SQL and digest by default. `--apply`
@@ -187,20 +190,79 @@ fails closed (`EARTHQUAKE_SCHEMA_CHANGED`, `GEOGRAPHIC_SCOPE_INVALID`,
 
 Owner steps, in order, before earthquakes publish:
 
-1. **Re-sign the existing profiles.** This change edits the three recipe files,
-   so the recipe digest changes. Releases already published stay readable until
-   their profiles expire, but new streamflow and alert releases are refused
-   (`RECIPE_CHANGED` / `APPROVAL_INVALID`) until fresh profiles are approved with
-   `profile-template SOURCE` and `approve`, as above.
-2. **Apply the schema** with `scripts/migrate-pipeline.mjs` (review, then
-   `--apply` with its digest and a verified backup). The only change is the
-   `usgs-earthquakes` head row; every statement is `IF NOT EXISTS` or
-   `INSERT IGNORE`, so re-running it is safe.
-3. **Approve an earthquake profile**: `profile-template usgs-earthquakes`, review,
-   `approve`, and install it in the approval directory.
-4. **Opt the PC in**: add `"usgs-earthquakes"` to the config's `sources` (and to
-   `storagePolicy.priority` if the config sets one). New installs still start
-   with the two original sources.
+1. **Record the current installation and protect the two existing feeds.**
+   Verify the installed worker and deployed server revisions independently.
+   The worker must include the three-source `loadConfig()` correction from
+   PR #5543 before changing its configuration. Record the current active release
+   IDs, approval IDs/expiry times, pause state and scheduler owner. Preserve
+   existing public-key trust, signed profiles, release records and raw captures.
+   Coordinate any maintenance pause through the owner-signed control path;
+   a source merge or this document is not activation authority.
+2. **Renew the existing source profiles for the exact target recipe.** On the
+   original signing PC, run `profile-template usgs-streamflow` and
+   `profile-template nws-alerts` from the reviewed target source, complete the
+   real rights/sensitivity/review references, then use `approve` with the
+   existing owner's private key. Give each source/version a distinct profile
+   ID. Never copy that private key to the unattended PC or hosting. Compare
+   `inventory`'s `recipeSha256` on the signing checkout and installed worker
+   against the reviewed server build before cutover. Recipe identity hashes,
+   in order, `pipeline-contract.mjs`, `pipeline-normalize.mjs` and
+   `ingestion-sources.mjs`; editing any of these requires renewed approvals.
+   Keep old profiles with historical manifests. Public reads validate each
+   release's own signed recipe, integrity, expiry and revocation; they do not
+   require the current recipe digest. A valid old release can remain readable
+   (and become stale), but expired, revoked or withdrawn releases are withheld.
+   New transfers with the old recipe fail `RECIPE_CHANGED`; a current-recipe
+   transfer carrying an old profile fails `APPROVAL_INVALID`.
+3. **Qualify and apply the additive schema.** Verify a recoverable backup of
+   the actual shared MySQL database and restore it into a disposable compatible
+   database. PC data-store backups alone do not establish database recovery.
+   Run `node scripts/migrate-pipeline.mjs` to review SQL and its digest. With
+   the approved database credentials and verified TLS, `--apply` requires the
+   exact `KFM_MIGRATION_SHA256`, the operator assertion
+   `KFM_PIPELINE_DATABASE_BACKUP_VERIFIED=true`, and
+   `KFM_PIPELINE_ENABLED=true` in the migration process so `getPipelineStore()`
+   can open the pool. The assertion does not itself verify a backup. Use
+   process-scoped settings; do not enable Preview or change service settings
+   merely to run this command. The change from the preceding schema is the
+   `usgs-earthquakes` head row; statements use `IF NOT EXISTS`/`INSERT IGNORE`.
+   Existing heads, revisions and pause state must be unchanged after application.
+   DDL is not transactionally reversible; preserve partial results on failure.
+4. **Approve the earthquake profile and qualify all three releases privately.**
+   Use `profile-template usgs-earthquakes`, review, then `approve` on the original
+   signing PC. Install only signed profiles in the protected approval directory.
+   In an isolated compatible environment, verify for every source: normalized
+   payload validation, approval source/recipe binding, staging, chunk hashes,
+   commit, independent release and payload digests, and governed readback.
+   Synthetic signing keys prove mechanics, never owner approval or deployment.
+   Capture-only `rehearse` does not establish a signed release.
+5. **Opt the PC in only after the operational gates and applicable approvals.**
+   Preserve all existing private config fields and `publish` state. Add
+   `"usgs-earthquakes"` to `sources` and, when explicitly set, to
+   `storagePolicy.priority`. Keeping only two priority entries with three
+   configured sources makes `tick()` fail `SOURCE_NOT_ALLOWED` before capture;
+   `loadConfig()`/`plan` alone do not detect this cross-field mismatch. Keep
+   the one-attempt/8 MiB default budget unless separately qualified: all three
+   sources can publish over successive eligible ticks. New installs still
+   default to two sources and `publish:false`. Verify three distinct committed
+   releases, public readback, old-feed continuity and resource acceptance in the
+   authorized environment before considering public earthquake activation.
+
+Profile replacement does not rewrite an already saved transfer. A job's
+`transfer_path` binds its immutable approval and recipe. Such a held job may
+continue to fail after installing a renewed profile, with at most three
+validation attempts; a new hourly job can read the new profile. Inspect local
+status and remote heads, allow the next current slot, and preserve held products,
+transfer receipts and journal history. Do not delete the journal, alter signed
+manifests, reset retry counters or edit immutable transfers to force a retry.
+
+`tests/pipeline-cutover.test.mjs` rehearses three independently identified signed
+releases, old-profile rejection with historical-head preservation, the worker's
+one-attempt budget, incomplete priorities, frozen transfers, installed-kit
+recipe parity and migration preconditions. It uses synthetic keys, an in-memory
+release store and injected acquisition/transport/storage guards. It does not
+qualify actual MySQL execution, physical storage, backups, installed services,
+owner signatures, real provider data or public publication.
 
 The Landform relief dock then offers **Reviewed USGS earthquake snapshots**.
 
