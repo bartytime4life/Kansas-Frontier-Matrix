@@ -192,8 +192,8 @@ test('the page reads the week shown, keeps the last map drawn while the next loa
  assert.match(page,/\}, droughtWeek \? 350 : 0\);/,'a dragged slider settles before a week is read');
  assert.match(page,/fetch\("\/api\/drought-series", \{ signal: controller\.signal \}\)/);
  assert.match(page,/const shownDrought = droughtId \? droughtLoaded \?\? lastDroughtRef\.current : null;/);
- assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty\);/);
- assert.match(page,/\.\.\.\(shownDrought \? \[droughtKey\(shownDrought\.date\)\] : \[\]\)/);
+ assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty, droughtChange \? droughtChangeData : null\);/);
+ assert.match(page,/\.\.\.\(shownDrought \? \[droughtChangeData && droughtSince && droughtLoaded \? droughtChangeKey\(droughtChange, droughtSince\.date, droughtLoaded\.date\) : droughtKey\(shownDrought\.date\)\] : \[\]\)/);
  assert.match(page,/if \(on && map && map\.getZoom\(\) > 7\.5\) map\.easeTo\(\{ center: \[-98\.38, 38\.5\], zoom: 6\.2, duration: motionDuration\(1200\), essential: false \}\);/,'a field-scale view pulls out to the state');
  assert.match(page,/setQuakeRecordSelected\(null\);\s*setDroughtOn\(false\);\s*setDroughtWeek\(null\);\s*setDroughtCounty\(null\);\s*setOutlookDay\(null\);[\s\S]{0,200}\/\/ Each map opens on its own subject/);
  assert.match(page,/if \(droughtOn\) params\.set\("drought", droughtWeek \?\? "newest"\);/);
@@ -295,9 +295,9 @@ test('the dock lists the counties, outlines the one picked, and the page reads t
  assert.ok(!findNode(h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,loading:true}}),n=>n.props?.label==='Kansas counties by drought, most severe first'),'not while a week loads');
  h.dispose?.();
  assert.match(page,/if \(!droughtOn \|\| officialPayloads\["census-counties"\] \|\| droughtCountiesAskedRef\.current\) return;\s*droughtCountiesAskedRef\.current = true;\s*void refreshOfficialContext\("census-counties"\);/,'asked once a showing, so a failed read does not repeat');
- assert.match(page,/setDroughtCounty\(null\);\s*droughtCountiesAskedRef\.current = false;/);
+ assert.match(page,/setDroughtCounty\(null\);\s*setDroughtChange\(0\);\s*setDroughtSinceFailed\(null\);\s*droughtCountiesAskedRef\.current = false;/);
  assert.match(page,/const countyDrought = useMemo\(\(\) => droughtLoaded && droughtCounties \? countyDroughtShares\(droughtLoaded\.data, droughtCounties\) : null, \[droughtLoaded, droughtCounties\]\);/);
- assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty\);/);
+ assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty, droughtChange \? droughtChangeData : null\);/);
  assert.match(page,/setDroughtCounty\(geoid\);\s*mapRef\.current\?\.fitBounds\(geometry\.bounds, \{ padding: 70, maxZoom: 9, duration: motionDuration\(650\) \}\);/);
  assert.match(page,/setDroughtSeriesFailed\(false\);\s*setDroughtCounty\(null\);/);
  assert.match(page,/const clickedCounty = droughtCountyAtClick\(renderedHits, id => availableLayers\.includes\(id\) \|\| OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS\.includes\(id\)\);\s*if \(clickedCounty\) \{\s*setDroughtCounty\(clickedCounty\);\s*setCategoryDockHidden\(false\);\s*return;/,'a click on a county picks it, and a closed dock comes back to show it');
@@ -339,4 +339,70 @@ test('Play steps the weeks forward to the newest, from a year back when the newe
  assert.match(page,/if \(on && droughtWeek === null\) \{\s*const from = droughtNewest \?\? droughtDate;\s*if \(!from\) return;\s*setDroughtWeek\(usdmWeeksBefore\(from, DROUGHT_PLAY_WEEKS\)\);/);
  assert.match(page,/const chooseDroughtWeek = \(date: string \| null\) => \{ setDroughtPlaying\(false\);/,'a week chosen by hand pauses Play');
  assert.match(page,/onDroughtPlay=\{playDrought\}/);assert.match(page,/playing: droughtPlaying, motionAllowed: !reducedMotion,/);
+});
+
+test('a change view shades each county by its change in the Drought Severity and Coverage Index over 4 or 12 weeks',async()=>{
+ assert.equal(dm.dsci([100,100,100,0,0]),300);assert.equal(dm.dsci([0,0,0,0,0]),0);assert.equal(dm.dsci([100,100,100,100,100]),500);assert.equal(dm.dsci([76.6,50.12,20.3,3.2,0]),150);
+ const now=[{geoid:'20055',name:'Finney',shares:[100,100,33.4,0,0],worst:2},{geoid:'20187',name:'Stanton',shares:[100,100,100,0,0],worst:2},{geoid:'20209',name:'Wyandotte',shares:[100,0,0,0,0],worst:0},{geoid:'20999',name:'New',shares:[0,0,0,0,0],worst:-1}];
+ const then=[{geoid:'20055',name:'Finney',shares:[100,60,0,0,0],worst:1},{geoid:'20187',name:'Stanton',shares:[100,100,100,40,0],worst:3},{geoid:'20209',name:'Wyandotte',shares:[95,0,0,0,0],worst:0}];
+ const changes=dm.countyDroughtChange(now,then);
+ assert.deepEqual(plain(changes),[{geoid:'20055',name:'Finney',then:160,now:233,delta:73},{geoid:'20187',name:'Stanton',then:340,now:300,delta:-40},{geoid:'20209',name:'Wyandotte',then:95,now:100,delta:5}],'a county missing from either week is left out');
+ assert.deepEqual([-150,-100,-60,-50,-11,-10,0,9.9,10,49,50,99,100,300].map(dm.dsciChangeColor),['#1b7837','#5aae61','#5aae61','#a6dba0','#a6dba0','#e8e4d8','#e8e4d8','#e8e4d8','#fdb863','#fdb863','#e66101','#e66101','#8c2d04','#8c2d04']);
+ assert.deepEqual(plain(dm.countyChangeList(changes)),[{id:'20055',label:'Finney · +73 (160 → 233)'},{id:'20209',label:'Wyandotte · +5 (95 → 100)'},{id:'20187',label:'Stanton · -40 (340 → 300)'}],'the most worsened first');
+ assert.equal(dm.countyChangeReading(changes[0],4),'DSCI 160 → 233 over 4 weeks (+73, worse)');
+ assert.equal(dm.countyChangeReading(changes[2],12),'DSCI 95 → 100 over 12 weeks (+5, little change)');
+ assert.equal(dm.droughtChangeReading([76.6,50.12,20.3,3.2,0],[90,70,30,5,0],4,'20260922',true),'Kansas DSCI 150 (0–500), -45 from 195 on Sep 22, 2026, 4 weeks before: better');
+ assert.match(dm.droughtChangeReading([90,70,30,5,0],[76.6,50.12,20.3,3.2,0],12,'20260728',false),/\+45 from 150 on Jul 28, 2026, 12 weeks before: worse · measured on the map$/);
+ const key=dm.droughtChangeKey(4,'20260922','20261020');
+ assert.equal(key.title,'Drought change · Sep 22, 2026 to Oct 20, 2026');
+ assert.deepEqual(plain(key.items.map(i=>i.label)),['100+ better','50–100 better','10–50 better','Within 10','10–50 worse','50–100 worse','100+ worse']);
+ assert.match(key.note,/over 4 weeks/);assert.match(key.note,/not a measurement of rain or soil moisture/);
+ const collection=dm.changeCollection(countiesFc,changes);
+ assert.deepEqual(plain(collection.features.map(f=>f.properties)),[{geoid:'20055',delta:73},{geoid:'20187',delta:-40},{geoid:'20209',delta:5}]);
+ // Layers: the change fill sits over the categories and under the county lines; it leaves with the change view.
+ const {validateStyleMin}=await import('@maplibre/maplibre-gl-style-spec');
+ const layers=[{id:'background'},{id:'kfm-roads'}];const sources={};
+ const map={getSource:id=>sources[id],addSource:(id,spec)=>{sources[id]={...spec,setData(){}};},getLayer:id=>layers.find(l=>l.id===id),
+  addLayer:(spec,before)=>layers.splice(layers.findIndex(l=>l.id===before),0,{id:spec.id,spec}),getStyle:()=>({layers}),setFilter(){},
+  removeLayer:id=>layers.splice(layers.findIndex(l=>l.id===id),1),removeSource:id=>{delete sources[id];}};
+ const drought=dm.parseUsdmMap(national,'20261020','t','s');
+ dm.syncDroughtMonitor(map,drought,countiesFc,null,collection);
+ assert.deepEqual(layers.map(l=>l.id),['background',dm.DROUGHT_FILL_LAYER_ID,dm.DROUGHT_LINE_LAYER_ID,dm.DROUGHT_CHANGE_LAYER_ID,dm.DROUGHT_COUNTY_HIT_LAYER_ID,dm.DROUGHT_COUNTY_LAYER_ID,dm.DROUGHT_COUNTY_SELECTED_LAYER_ID,dm.DROUGHT_STATE_LAYER_ID,'kfm-roads']);
+ assert.deepEqual(plain(layers[3].spec.paint['fill-color']),['step',['get','delta'],'#1b7837',-100,'#5aae61',-50,'#a6dba0',-10,'#e8e4d8',10,'#fdb863',50,'#e66101',100,'#8c2d04']);
+ const style={version:8,sources:Object.fromEntries(Object.entries(sources).map(([id,s])=>[id,{type:'geojson',data:s.data}])),layers:layers.slice(1,8).map(l=>l.spec)};
+ assert.deepEqual(validateStyleMin(plain(style)).map(e=>e.message),[]);
+ dm.syncDroughtMonitor(map,drought,countiesFc,null,null);
+ assert.ok(!layers.some(l=>l.id===dm.DROUGHT_CHANGE_LAYER_ID)&&!sources[dm.DROUGHT_CHANGE_SOURCE_ID],'back to the categories');
+ dm.syncDroughtMonitor(map,drought,countiesFc,null,collection);dm.syncDroughtMonitor(map,null);
+ assert.deepEqual(Object.keys(sources),[]);
+ // The dock offers the three views and says what the change view reads.
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];
+ const base={look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:1,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},
+  onDrought(){},onDroughtWeek(){},onDroughtChange:w=>calls.push(w)};
+ const drought2={on:true,loading:false,failed:false,reading:'Valid Oct 20, 2026',url:dm.USDM_PAGE,date:'20261020',label:'Oct 20, 2026',previous:'20261013',next:null,newest:true,categories:dm.USDM_CATEGORIES,weeks:null,seriesFailed:false,
+  change:{weeks:4,reading:'Kansas DSCI 150 (0–500), -45 from 195 on Sep 22, 2026, 4 weeks before: better',loading:false,failed:false}};
+ let tree=h.render(h.exports.CategoryMapDock,{...base,drought:drought2});
+ const group=findNode(tree,n=>n.props?.['aria-label']==='Drought map view');
+ const buttons=group.props.children;
+ assert.deepEqual(JSON.parse(JSON.stringify(buttons.map(b=>[b.props.children,b.props['aria-pressed']]))),[['Categories',false],['4-week change',true],['12-week change',false]]);
+ buttons[2].props.onClick();buttons[0].props.onClick();
+ assert.deepEqual(calls,[12,0]);
+ assert.match(JSON.stringify(tree),/Kansas DSCI 150 \(0–500\), -45 from 195/);
+ const withCounties=h.render(h.exports.CategoryMapDock,{...base,onDroughtCounty(){},drought:{...drought2,counties:{summary:'s',list:[{id:'20055',label:'Finney · +73 (160 → 233)'}],picked:null,reading:null}}});
+ const changeList=findNode(withCounties,n=>n.props?.label==='Kansas counties by drought change over 4 weeks, most worsened first');
+ assert.equal(changeList.props.summary,'Counties, most worsened first (1)','the list says how it is ordered in a change view');
+ tree=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought2,change:{weeks:12,reading:null,loading:true,failed:false}}});
+ assert.match(JSON.stringify(tree),/Reading the week 12 weeks before…/);
+ tree=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought2,change:{weeks:4,reading:null,loading:false,failed:true}}});
+ assert.match(JSON.stringify(tree),/The earlier week did not answer; the categories stay on the map/);
+ tree=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought2,change:{weeks:0,reading:null,loading:false,failed:false}}});
+ assert.doesNotMatch(JSON.stringify(tree),/Reading the week|DSCI/,'the categories view says nothing about change');
+ h.dispose?.();
+ // The page reads the earlier week like any other, and the change view closes with the tool.
+ assert.match(page,/const droughtSinceDate = droughtChange && droughtLoaded \? usdmWeeksBefore\(droughtLoaded\.date, droughtChange\) : null;/);
+ assert.match(page,/fetch\(`\/api\/drought-monitor\?date=\$\{droughtSinceDate\}`, \{ signal: controller\.signal \}\)/);
+ assert.match(page,/setDroughtMaps\(maps => rememberDroughtMap\(maps, droughtSinceDate, value\)\);/);
+ assert.match(page,/setDroughtCounty\(null\);\s*setDroughtChange\(0\);\s*setDroughtSinceFailed\(null\);/);
+ assert.match(page,/list: countyChange \? countyChangeList\(countyChange\) : countyDroughtItems/);
 });

@@ -30,7 +30,7 @@ import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, wi
 import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
 import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
-import { DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
+import { changeCollection, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, recordPlots, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
@@ -1630,6 +1630,9 @@ export default function Home() {
   const [droughtCounty, setDroughtCounty] = useState<string | null>(null);
   const droughtCountiesAskedRef = useRef(false);
   const [droughtPlaying, setDroughtPlaying] = useState(false);
+  // A change view: the week shown against 4 or 12 weeks before it, or 0 for the categories.
+  const [droughtChange, setDroughtChange] = useState<DroughtChangeWeeks>(0);
+  const [droughtSinceFailed, setDroughtSinceFailed] = useState<string | null>(null);
   const [outlookHazard, setOutlookHazard] = useState<OutlookProduct>("cat");
   const [outlooks, setOutlooks] = useState<Partial<Record<string, SpcOutlook>>>({});
   const [outlookFailed, setOutlookFailed] = useState<string | null>(null);
@@ -4204,11 +4207,37 @@ export default function Home() {
   const countyDrought = useMemo(() => droughtLoaded && droughtCounties ? countyDroughtShares(droughtLoaded.data, droughtCounties) : null, [droughtLoaded, droughtCounties]);
   const countyDroughtItems = useMemo(() => countyDrought ? countyDroughtList(countyDrought) : [], [countyDrought]);
   const pickedCountyDrought = droughtCounty ? countyDrought?.find(county => county.geoid === droughtCounty) ?? null : null;
+  // A change view compares the week drawn with 4 or 12 weeks before it, as the USDM's change maps do; that week is read like any other.
+  const droughtSinceDate = droughtChange && droughtLoaded ? usdmWeeksBefore(droughtLoaded.date, droughtChange) : null;
+  useEffect(() => {
+    if (!droughtSinceDate || droughtMaps.has(droughtSinceDate) || droughtSinceFailed === droughtSinceDate) return;
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      void fetch(`/api/drought-monitor?date=${droughtSinceDate}`, { signal: controller.signal })
+        .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+        .then(value => {
+          if (controller.signal.aborted) return;
+          if (!validDroughtMap(value) || value.date !== droughtSinceDate) throw new Error("Invalid Drought Monitor map.");
+          setDroughtMaps(maps => rememberDroughtMap(maps, droughtSinceDate, value));
+        })
+        .catch(() => { if (!controller.signal.aborted) setDroughtSinceFailed(droughtSinceDate); });
+    }, 350);
+    return () => { clearTimeout(timer); controller.abort(); };
+  }, [droughtSinceDate, droughtMaps, droughtSinceFailed]);
+  const droughtSince = droughtSinceDate ? droughtMaps.get(droughtSinceDate) ?? null : null;
+  const countyDroughtSince = useMemo(() => droughtSince && droughtCounties ? countyDroughtShares(droughtSince.data, droughtCounties) : null, [droughtSince, droughtCounties]);
+  const countyChange = useMemo(() => countyDrought && countyDroughtSince ? countyDroughtChange(countyDrought, countyDroughtSince) : null, [countyDrought, countyDroughtSince]);
+  const droughtChangeData = useMemo(() => countyChange && droughtCounties ? changeCollection(droughtCounties, countyChange) : null, [countyChange, droughtCounties]);
+  const pickedCountyChange = droughtCounty ? countyChange?.find(change => change.geoid === droughtCounty) ?? null : null;
+  // Statewide, the USDM's own statistics are used for both weeks when they are in hand.
+  const droughtSeriesShares = (date: string) => droughtSeries?.weeks.find(week => week.date === date)?.shares ?? null;
+  const droughtChangeText = droughtChange && droughtLoaded && droughtSince ? droughtChangeReading(droughtSeriesShares(droughtLoaded.date) ?? droughtLoaded.kansas,
+    droughtSeriesShares(droughtSince.date) ?? droughtSince.kansas, droughtChange, droughtSince.date, Boolean(droughtSeriesShares(droughtLoaded.date) && droughtSeriesShares(droughtSince.date))) : null;
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady) return;
     const sync = () => {
-      try { syncDroughtMonitor(map, shownDrought, droughtCounties, droughtCounty); }
+      try { syncDroughtMonitor(map, shownDrought, droughtCounties, droughtCounty, droughtChange ? droughtChangeData : null); }
       catch { /* The style is reloading; its styledata event draws the map again. */ }
     };
     sync();
@@ -4216,7 +4245,7 @@ export default function Home() {
     const restore = () => { if (map.isStyleLoaded() && !map.getSource(DROUGHT_SOURCE_ID)) sync(); };
     map.on("styledata", restore);
     return () => { map.off("styledata", restore); };
-  }, [shownDrought, droughtCounties, droughtCounty, styleReady]);
+  }, [shownDrought, droughtCounties, droughtCounty, droughtChange, droughtChangeData, styleReady]);
   const pickDroughtCounty = (geoid: string) => {
     const feature = droughtCounties?.features.find(item => String(item.properties?.geoid ?? "") === geoid);
     const geometry = feature && countySearchGeometry(feature);
@@ -4255,6 +4284,8 @@ export default function Home() {
     setDroughtFailed(null);
     setDroughtSeriesFailed(false);
     setDroughtCounty(null);
+    setDroughtChange(0);
+    setDroughtSinceFailed(null);
     droughtCountiesAskedRef.current = false;
     const map = mapRef.current;
     // The Drought Monitor is a statewide picture: a field-scale view pulls out to Kansas.
@@ -10830,7 +10861,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(shownDrought ? [droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(shownDrought ? [droughtChangeData && droughtSince && droughtLoaded ? droughtChangeKey(droughtChange, droughtSince.date, droughtLoaded.date) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -10867,9 +10898,11 @@ export default function Home() {
               previous: droughtDate && droughtDate > USDM_FIRST_DATE ? previousUsdmDate(droughtDate) : null,
               next: droughtWeek === null ? null : droughtNewest && nextUsdmDate(droughtWeek) >= droughtNewest ? droughtNewest : nextUsdmDate(droughtWeek),
               categories: USDM_CATEGORIES, weeks: droughtChartWeeks, seriesFailed: droughtSeriesFailed, playing: droughtPlaying, motionAllowed: !reducedMotion,
-              counties: countyDrought && countyDrought.length ? { summary: countyDroughtSummary(countyDrought), list: countyDroughtItems, picked: droughtCounty,
-                reading: pickedCountyDrought && droughtLoaded ? countyDroughtReading(pickedCountyDrought, droughtLoaded.date) : null } : null } : undefined}
-            onDrought={showDrought} onDroughtWeek={chooseDroughtWeek} onDroughtPlay={playDrought} onDroughtCounty={pickDroughtCounty} onDroughtCountyClear={() => setDroughtCounty(null)}
+              counties: countyDrought && countyDrought.length ? { summary: countyDroughtSummary(countyDrought), list: countyChange ? countyChangeList(countyChange) : countyDroughtItems, picked: droughtCounty,
+                reading: pickedCountyDrought && droughtLoaded ? [countyDroughtReading(pickedCountyDrought, droughtLoaded.date), pickedCountyChange && droughtChange ? countyChangeReading(pickedCountyChange, droughtChange) : null].filter(Boolean).join(" · ") : null } : null,
+              change: { weeks: droughtChange, reading: droughtChangeText, loading: Boolean(droughtSinceDate && !droughtSince && droughtSinceFailed !== droughtSinceDate),
+                failed: droughtSinceDate !== null && droughtSinceFailed === droughtSinceDate } } : undefined}
+            onDrought={showDrought} onDroughtWeek={chooseDroughtWeek} onDroughtPlay={playDrought} onDroughtChange={(weeks) => { setDroughtChange(weeks); setDroughtSinceFailed(null); }} onDroughtCounty={pickDroughtCounty} onDroughtCountyClear={() => setDroughtCounty(null)}
             population={activeCategoryMap.tools?.includes("population") ? { on: populationPrisms, ...densityGroupCounts(officialPayloads["census-counties"]?.data.features ?? []), metresPerPerson: PRISM_METRES_PER_PERSON_PER_SQUARE_MILE } : undefined}
             onPopulation={setPopulationPrismsShown}
             quakes={activeCategoryMap.tools?.includes("quakes") ? { on: quakeRecordOn, loading: quakeRecordOn && !quakeRecord && !quakeRecordFailed, failed: quakeRecordFailed,
