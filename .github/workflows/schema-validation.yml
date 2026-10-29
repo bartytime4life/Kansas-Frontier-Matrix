@@ -2,8 +2,9 @@
 #
 # Responsibility:
 #   Check repository schema JSON structure, canonical v1 schema identity, the
-#   nine configured aggregate-validator fixture families, and the executable
-#   schema/contract test lane without treating shape validity as truth.
+#   nine configured legacy fixture families, the full aggregate validator
+#   profile, and the executable schema/contract test lane without treating
+#   shape validity as truth.
 #
 # Trigger and trust boundary:
 #   Pull requests, pushes to main, and explicit dispatch. Pull-request content
@@ -66,9 +67,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out tested revision without persisted credentials
+      - name: Check out tested revision and history without persisted credentials
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # make schemas replays historical trust-spine and conformance pins.
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Set up repository Python
