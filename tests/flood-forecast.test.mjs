@@ -117,6 +117,13 @@ test('the hydrograph frames a week of observations and the forecast, open to the
  const low=ff.floodHydrograph({...gauge,forecast:[]},NOW);
  assert.ok(low.high>18&&low.high<19.5);assert.deepEqual(low.bands.map(b=>b.id),['action','minor']);
  assert.equal(ff.floodHydrograph({...gauge,observed:[],forecast:[]},NOW),null,'nothing to draw');
+ // A river above its lower stages: their bands are clipped, but each stage keeps its own value.
+ const high=ff.floodHydrograph({...gauge,observed:gauge.observed.map((p,i)=>({time:p.time,value:20+i/217})),forecast:[]},NOW);
+ assert.ok(high.low>19&&high.low<20);
+ assert.deepEqual(plain(high.bands.map(b=>[b.id,b.value,b.from===high.low])),[['minor',18,true],['moderate',23,false]],'no action band above the plot\'s floor; the flood stage keeps 18');
+ assert.ok(high.bands.every(b=>b.to>b.from));
+ // The crest marked is still ahead; an expired forecast marks none.
+ assert.equal(ff.floodHydrograph({...gauge,forecast:gauge.forecast.map(p=>({time:p.time-9*24*HOUR,value:p.value}))},NOW).crest,null);
  assert.deepEqual(plain(ff.floodValueTicks(0.2,1.1)),[0.2,0.4,0.6,0.8,1]);assert.deepEqual(plain(ff.floodValueTicks(1,25)),[5,10,15,20,25]);
 });
 
@@ -127,6 +134,10 @@ test('the reading gives the latest observation, the forecast crest or trend, the
  assert.match(ff.floodReading(falling,NOW),/NWS forecast: falling to 9\.\d ft by Nov 3, 12:00 PM CST \(issued/);
  assert.match(ff.floodReading({...gauge,forecast:[],crests:[]},NOW),/^Observed 12\.0 ft at .* · no flooding · no NWS forecast is issued for this gauge · flood stage 18\.0 ft$/);
  assert.match(ff.floodReading({...gauge,observed:[]},NOW),/^No recent observation · NWS forecast crest 19\.2 ft/);
+ // A forecast whose points have all passed is expired, not ahead, even when the observations stopped earlier still.
+ const stale={...gauge,observed:gauge.observed.filter(p=>p.time<NOW-3*24*HOUR),forecast:[{time:NOW-2.5*24*HOUR,value:15},{time:NOW-24*HOUR,value:17}]};
+ assert.match(ff.floodReading(stale,NOW),/ · the NWS forecast has expired \(last valid Oct 28, 1:00 PM CDT\) · /);
+ assert.doesNotMatch(ff.floodReading(stale,NOW),/forecast crest/);
 });
 
 test('the dock shows flood forecasts with the gauge list, the hydrograph and its reading',async()=>{
@@ -161,6 +172,10 @@ test('the dock shows flood forecasts with the gauge list, the hydrograph and its
  assert.equal((svg.match(/"fill":"#ff9900","fillOpacity":0.16/g)||[]).length,1,'one minor-flood band');
  assert.match(svg,/"children":"Flood 18\.0"/);assert.match(svg,/"children":"Moderate 23\.0"/);assert.match(svg,/"strokeDasharray":"4 2"/,'the forecast dashed');
  assert.match(svg,/Stage, ft · Central time/);
+ const above=ff.floodHydrograph({...gauge,observed:gauge.observed.map((p,i)=>({time:p.time,value:20+i/217})),forecast:[]},NOW);
+ const aboveSvg=JSON.stringify(h.exports.FloodHydrographChart({gauge,plot:above,reading:null}));
+ assert.ok(!aboveSvg.includes('"children":"Flood 18.0"')&&!aboveSvg.includes('Action'),'a stage below the plot draws no line or label');
+ assert.match(aboveSvg,/"children":"Moderate 23\.0"/);
  assert.deepEqual(['Oct 23','Oct 25','Oct 27','Oct 29','Oct 31','Nov 2'].map(d=>svg.includes(`"children":"${d}"`)),[true,true,true,true,true,true]);
  assert.ok(!svg.includes('"children":"Oct 24"'),'every other day labelled over 12 days');
  assert.match(JSON.stringify(tree),/https:\/\/water\.noaa\.gov\/gauges\/WCHK1/);
@@ -174,8 +189,12 @@ test('the dock shows flood forecasts with the gauge list, the hydrograph and its
 
 test('the page reads the picked gauge, refreshes it, rings it, owns its click, and closes it with its map',()=>{
  assert.match(page,/void fetch\(floodGaugeApiPath\(floodLid\), \{ signal: controller\.signal \}\)/);
+ assert.match(page,/const floodLive = buildYearCurrent && temporalQuery\.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;\s*useEffect\(\(\) => \{\s*if \(!floodOn \|\| !floodLid \|\| !floodLive\) return;/,'away from the present map time nothing is read');
+ assert.match(page,/const floodGaugeFeatures = floodOn && floodLive \?/,'nor listed or ringed');
+ assert.match(page,/const shownFloodGauge = floodLive && floodGauge/);
+ assert.match(page,/state: !floodLive \? "held" :/);assert.match(page,/picked: floodLive \? floodLid : null/);
  assert.match(page,/setFloodGauge\(parseFloodGauge\(value, floodLid\)\);/);
- assert.match(page,/const timer = setInterval\(read, FLOOD_GAUGE_REFRESH_MS\);\s*return \(\) => \{ clearInterval\(timer\); controller\.abort\(\); \};\s*\}, \[floodOn, floodLid\]\);/);
+ assert.match(page,/const timer = setInterval\(read, FLOOD_GAUGE_REFRESH_MS\);\s*return \(\) => \{ clearInterval\(timer\); controller\.abort\(\); \};\s*\}, \[floodOn, floodLid, floodLive\]\);/);
  assert.equal(ff.FLOOD_GAUGE_REFRESH_MS,600000);
  assert.match(page,/if \(!floodGaugesWereOnRef\.current\) setOfficialContextVisible\("noaa-nwps-gauges", true\);/,'the tool shows the NWS gauges');
  assert.match(page,/\} else if \(!floodGaugesWereOnRef\.current\) setOfficialContextVisible\("noaa-nwps-gauges", false\);/,'and hides them only if it showed them');

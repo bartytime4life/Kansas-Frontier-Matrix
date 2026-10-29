@@ -182,7 +182,8 @@ export type FloodHydrograph = Readonly<{
   observed: readonly FloodPoint[];
   forecast: readonly FloodPoint[];
   /** Each defined category from its stage up to the next one's, or to the top of the plot. */
-  bands: readonly Readonly<{ id: FloodCategoryId; from: number; to: number; color: string; stage: string; short: string }>[];
+  /** value: the stage itself; from–to: its band, clipped to the plot. */
+  bands: readonly Readonly<{ id: FloodCategoryId; value: number; from: number; to: number; color: string; stage: string; short: string }>[];
   crest: FloodPoint | null;
   /** Central-time midnights and round stage values for the gridlines. */
   days: readonly Readonly<{ time: number; label: string }>[];
@@ -211,10 +212,13 @@ export function floodHydrograph(gauge: FloodGauge, now: number): FloodHydrograph
   if (above && floodStage !== null && highest >= floodStage) high = above.value;
   const pad = Math.max((high - low) * 0.06, 0.25);
   low -= pad; high += pad;
+  // A band is clipped to the plot; its stage keeps its own value, and a stage below the plot draws no line or label.
   const bands = stages.filter(stage => stage.value < high).map((stage, i, shown) => ({
-    id: stage.id, from: Math.max(stage.value, low), to: Math.min(shown[i + 1]?.value ?? high, high), color: stage.color, stage: stage.stage, short: stage.short,
-  }));
-  const crest = forecast.length ? forecast.reduce((best, point) => point.value > best.value ? point : best) : null;
+    id: stage.id, value: stage.value, from: Math.max(stage.value, low), to: Math.min(shown[i + 1]?.value ?? high, high), color: stage.color, stage: stage.stage, short: stage.short,
+  })).filter(band => band.to > band.from);
+  // The crest marked is the forecast's highest point still ahead of now.
+  const ahead = forecast.filter(point => point.time >= now);
+  const crest = ahead.length ? ahead.reduce((best, point) => point.value > best.value ? point : best) : null;
   const start = points[0].time, end = Math.max(points[points.length - 1].time, now);
   return Object.freeze({ start, end, now, low, high, observed, forecast, bands, crest, days: floodDayTicks(start, end), ticks: floodValueTicks(low, high) });
 }
@@ -237,8 +241,9 @@ export function floodReading(gauge: FloodGauge, now: number): string {
     const status = gauge.quantity ? floodCategoryAt(latest.value, gauge.thresholds) : gauge.observedStatus;
     parts.push(`Observed ${amount(latest.value, gauge.units)} at ${floodClock(latest.time)} · ${FLOOD_STATUS[status].label.toLowerCase()}`);
   } else parts.push("No recent observation");
-  const ahead = gauge.forecast.filter(point => point.time > (latest?.time ?? now));
-  if (!ahead.length) parts.push("no NWS forecast is issued for this gauge");
+  // Only forecast points later than both the latest observation and now are ahead; an older forecast has expired.
+  const ahead = gauge.forecast.filter(point => point.time > Math.max(latest?.time ?? now, now));
+  if (!ahead.length) parts.push(gauge.forecast.length ? `the NWS forecast has expired (last valid ${floodClock(gauge.forecast[gauge.forecast.length - 1].time)})` : "no NWS forecast is issued for this gauge");
   else {
     const crest = ahead.reduce((best, point) => point.value > best.value ? point : best);
     const status = gauge.quantity ? floodCategoryAt(crest.value, gauge.thresholds) : gauge.forecastStatus;
