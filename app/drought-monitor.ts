@@ -30,6 +30,9 @@ export const DROUGHT_COUNTY_LAYER_ID = "kfm-drought-monitor-county-lines";
 export const DROUGHT_COUNTY_SELECTED_LAYER_ID = "kfm-drought-monitor-county-selected";
 /** An unpainted fill over each county, so a click on the map picks the county under it. */
 export const DROUGHT_COUNTY_HIT_LAYER_ID = "kfm-drought-monitor-county-hit";
+/** Counties shaded by their change in drought over 4 or 12 weeks, drawn over the categories when a change view is chosen. */
+export const DROUGHT_CHANGE_SOURCE_ID = "kfm-drought-monitor-change";
+export const DROUGHT_CHANGE_LAYER_ID = "kfm-drought-monitor-change-fill";
 /** The first USDM map, valid Tuesday 4 January 2000. */
 export const USDM_FIRST_DATE = "20000104";
 
@@ -291,6 +294,70 @@ export function countyDroughtReading(county: CountyDrought, date: string): strin
   return `${county.name} County · valid ${usdmDateLabel(date)} · ${USDM_CATEGORIES.map((c, i) => `${i === 4 ? c.id : `${c.id}+`} ${percentOf(county.shares[i])}`).join(" · ")} · measured on the map`;
 }
 
+/**
+ * The Drought Severity and Coverage Index (NDMC; Akyüz 2017): the sum of the
+ * cumulative shares in D0 or worse … D4, so 0 with no part abnormally dry
+ * and 500 with all of it in exceptional drought. It weighs each category by
+ * its intensity, so one number can follow an area through time.
+ */
+export const dsci = (shares: readonly number[]): number => Math.round(shares.reduce((sum, share) => sum + share, 0));
+/** The change views: none, or the weeks a change is measured over, as the USDM's own change maps. */
+export type DroughtChangeWeeks = 0 | 4 | 12;
+export const DROUGHT_CHANGE_WEEKS: readonly Exclude<DroughtChangeWeeks, 0>[] = Object.freeze([4, 12]);
+export type CountyChange = Readonly<{ geoid: string; name: string; then: number; now: number; delta: number }>;
+/** Each county's DSCI on the week shown and the earlier week, and the change (positive is worse). Counties missing from either are left out. */
+export function countyDroughtChange(now: readonly CountyDrought[], then: readonly CountyDrought[]): CountyChange[] {
+  const before = new Map(then.map(county => [county.geoid, county]));
+  return now.flatMap(county => {
+    const earlier = before.get(county.geoid);
+    if (!earlier) return [];
+    const a = dsci(earlier.shares), b = dsci(county.shares);
+    return [Object.freeze({ geoid: county.geoid, name: county.name, then: a, now: b, delta: b - a })];
+  });
+}
+/** The change classes, best to worst, on a diverging scale: greens for less drought, browns for more, a pale neutral within 10. */
+export const DSCI_CHANGE_CLASSES = Object.freeze([
+  Object.freeze({ from: -Infinity, label: "100+ better", color: "#1b7837" }),
+  Object.freeze({ from: -100, label: "50–100 better", color: "#5aae61" }),
+  Object.freeze({ from: -50, label: "10–50 better", color: "#a6dba0" }),
+  Object.freeze({ from: -10, label: "Within 10", color: "#e8e4d8" }),
+  Object.freeze({ from: 10, label: "10–50 worse", color: "#fdb863" }),
+  Object.freeze({ from: 50, label: "50–100 worse", color: "#e66101" }),
+  Object.freeze({ from: 100, label: "100+ worse", color: "#8c2d04" }),
+] as const);
+export const dsciChangeColor = (delta: number): string => [...DSCI_CHANGE_CLASSES].reverse().find(c => delta >= c.from)!.color;
+const changeFill = ["step", ["get", "delta"], DSCI_CHANGE_CLASSES[0].color, ...DSCI_CHANGE_CLASSES.slice(1).flatMap(c => [c.from, c.color])];
+/** The counties with their change as a property, for the change layer. */
+export function changeCollection(counties: FeatureCollection, changes: readonly CountyChange[]): FeatureCollection {
+  const delta = new Map(changes.map(change => [change.geoid, change.delta]));
+  return { type: "FeatureCollection", features: counties.features.flatMap(feature => {
+    const geoid = record(feature.properties)?.geoid;
+    return typeof geoid === "string" && delta.has(geoid) ? [{ type: "Feature" as const, geometry: feature.geometry, properties: { geoid, delta: delta.get(geoid)! } }] : [];
+  }) };
+}
+const signed = (value: number) => value > 0 ? `+${value}` : `${value}`;
+const direction = (delta: number) => Math.abs(delta) < 10 ? "little change" : delta > 0 ? "worse" : "better";
+/** Counties for the keyboard list in a change view: the most worsened first. */
+export function countyChangeList(changes: readonly CountyChange[]): readonly Readonly<{ id: string; label: string }>[] {
+  return [...changes].sort((a, b) => b.delta - a.delta || a.name.localeCompare(b.name))
+    .map(change => ({ id: change.geoid, label: `${change.name} · ${signed(change.delta)} (${change.then} → ${change.now})` }));
+}
+/** What a change view says for Kansas: the statewide DSCI then and now. */
+export function droughtChangeReading(now: readonly number[], then: readonly number[], weeks: number, fromDate: string, official: boolean): string {
+  const a = dsci(then), b = dsci(now), delta = b - a;
+  return `Kansas DSCI ${b} (0–500), ${signed(delta)} from ${a} on ${usdmDateLabel(fromDate)}, ${weeks} weeks before: ${direction(delta)}${official ? "" : " · measured on the map"}`;
+}
+/** One county's change, for the picked county. */
+export const countyChangeReading = (change: CountyChange, weeks: number): string => `DSCI ${change.then} → ${change.now} over ${weeks} weeks (${signed(change.delta)}, ${direction(change.delta)})`;
+/** The change view's key. */
+export function droughtChangeKey(weeks: number, fromDate: string, toDate: string): MapKey {
+  return Object.freeze({
+    id: "usdm-change", title: `Drought change · ${usdmDateLabel(fromDate)} to ${usdmDateLabel(toDate)}`,
+    items: Object.freeze(DSCI_CHANGE_CLASSES.map(c => Object.freeze({ label: c.label, color: c.color, shape: "area" as const }))),
+    note: `Each county's change in the Drought Severity and Coverage Index over ${weeks} weeks: the sum of its shares in D0 or worse to D4 (0–500), measured on the two USDM maps. A summary of the categories, not a measurement of rain or soil moisture.`,
+  });
+}
+
 export type DroughtWeek = Readonly<{ date: string; /** Percent of Kansas in D0 or worse … D4. */ shares: readonly number[] }>;
 export type DroughtSeries = Readonly<{ weeks: readonly DroughtWeek[]; retrievedAt: string; source: string }>;
 
@@ -413,8 +480,15 @@ const shownCounties = new WeakMap<MapLibreMap, FeatureCollection>();
  * county lines over them once the counties are in hand and the picked
  * county outlined. Safe to call on every style load.
  */
-export function syncDroughtMonitor(map: MapLibreMap, drought: DroughtMap | null, counties: FeatureCollection | null = null, selected: string | null = null): void {
+const shownChange = new WeakMap<MapLibreMap, FeatureCollection>();
+const removeChange = (map: MapLibreMap) => {
+  if (map.getLayer(DROUGHT_CHANGE_LAYER_ID)) map.removeLayer(DROUGHT_CHANGE_LAYER_ID);
+  if (map.getSource(DROUGHT_CHANGE_SOURCE_ID)) map.removeSource(DROUGHT_CHANGE_SOURCE_ID);
+  shownChange.delete(map);
+};
+export function syncDroughtMonitor(map: MapLibreMap, drought: DroughtMap | null, counties: FeatureCollection | null = null, selected: string | null = null, change: FeatureCollection | null = null): void {
   if (!drought) {
+    removeChange(map);
     for (const id of [DROUGHT_STATE_LAYER_ID, DROUGHT_COUNTY_SELECTED_LAYER_ID, DROUGHT_COUNTY_LAYER_ID, DROUGHT_COUNTY_HIT_LAYER_ID, DROUGHT_LINE_LAYER_ID, DROUGHT_FILL_LAYER_ID]) if (map.getLayer(id)) map.removeLayer(id);
     for (const id of [DROUGHT_STATE_SOURCE_ID, DROUGHT_COUNTY_SOURCE_ID, DROUGHT_SOURCE_ID]) if (map.getSource(id)) map.removeSource(id);
     shown.delete(map);
@@ -436,7 +510,7 @@ export function syncDroughtMonitor(map: MapLibreMap, drought: DroughtMap | null,
     data: { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [[...KANSAS_OUTLINE, KANSAS_OUTLINE[0]] as Position[]] } } });
   if (!map.getLayer(DROUGHT_STATE_LAYER_ID)) map.addLayer({ id: DROUGHT_STATE_LAYER_ID, type: "line", source: DROUGHT_STATE_SOURCE_ID,
     layout: { "line-join": "round" }, paint: { "line-color": "#1d1a14", "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.4, 9, 2.6] as never, "line-opacity": 0.9 } }, before);
-  if (!counties) return;
+  if (!counties) { removeChange(map); return; }
   const countySource = map.getSource(DROUGHT_COUNTY_SOURCE_ID) as GeoJSONSource | undefined;
   if (!countySource) map.addSource(DROUGHT_COUNTY_SOURCE_ID, { type: "geojson", data: counties });
   else if (shownCounties.get(map) !== counties) countySource.setData(counties);
@@ -449,4 +523,12 @@ export function syncDroughtMonitor(map: MapLibreMap, drought: DroughtMap | null,
   if (!map.getLayer(DROUGHT_COUNTY_SELECTED_LAYER_ID)) map.addLayer({ id: DROUGHT_COUNTY_SELECTED_LAYER_ID, type: "line", source: DROUGHT_COUNTY_SOURCE_ID,
     layout: { "line-join": "round" }, paint: { "line-color": "#f7f4ea", "line-width": ["interpolate", ["linear"], ["zoom"], 5, 2.2, 9, 3.6] as never, "line-opacity": 1 } }, DROUGHT_STATE_LAYER_ID);
   map.setFilter(DROUGHT_COUNTY_SELECTED_LAYER_ID, ["==", ["get", "geoid"], selected ?? ""] as never);
+  if (!change) { removeChange(map); return; }
+  // Over the categories, under the county lines: in a change view the counties carry the colour.
+  const changeSource = map.getSource(DROUGHT_CHANGE_SOURCE_ID) as GeoJSONSource | undefined;
+  if (!changeSource) map.addSource(DROUGHT_CHANGE_SOURCE_ID, { type: "geojson", data: change });
+  else if (shownChange.get(map) !== change) changeSource.setData(change);
+  shownChange.set(map, change);
+  if (!map.getLayer(DROUGHT_CHANGE_LAYER_ID)) map.addLayer({ id: DROUGHT_CHANGE_LAYER_ID, type: "fill", source: DROUGHT_CHANGE_SOURCE_ID,
+    paint: { "fill-color": changeFill as never, "fill-opacity": 0.88 } }, DROUGHT_COUNTY_HIT_LAYER_ID);
 }

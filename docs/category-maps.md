@@ -220,6 +220,17 @@ and released that Thursday.
   the county in it); choosing one outlines it, frames it, and gives its shares
   for the week. A click on a county on the map picks it too (without moving
   the map), and brings a closed dock back to show it. The shares are the map's, not the USDM's county statistics.
+- **Change.** **4-week change** and **12-week change** compare the week shown
+  with the week 4 or 12 weeks before it, as the USDM's own change maps do.
+  Each county is shaded by its change in the Drought Severity and Coverage
+  Index (NDMC): the sum of its shares in D0 or worse to D4, 0 to 500, so one
+  number weighs both the area and the intensity of drought. The scale
+  diverges from a pale neutral within 10 points: greens for less drought,
+  browns for more, in steps at 10, 50 and 100. The dock gives the statewide
+  DSCI then and now (from the USDM statistics for both weeks when they are in
+  hand, else measured on the maps), lists the counties most worsened first,
+  and adds the picked county's change to its reading. The earlier week is read
+  like any other; if it does not answer, the categories stay on the map.
 - **Reading.** The valid date, Kansas's share in drought (D1–D4), and in D2,
   D3 and D4 or worse. The USDM's own statistics are used for the week when
   they are in hand. Otherwise the shares are measured on the map at the centres

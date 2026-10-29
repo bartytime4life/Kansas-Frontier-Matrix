@@ -78,7 +78,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -210,10 +210,13 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
     weeks: readonly DroughtChartWeek[] | null; seriesFailed: boolean;
     /** Whether Play is stepping through the weeks, and whether motion is allowed at all. */
     playing?: boolean; motionAllowed?: boolean;
+    /** The change view: 0 for the categories, or the weeks the change is measured over, with what it says for Kansas. */
+    change?: Readonly<{ weeks: 0 | 4 | 12; reading: string | null; loading: boolean; failed: boolean }>;
     /** Kansas counties on the shown week, once the Census counties are in hand: how many each category reaches, the list most severe first, and the picked county's shares. */
     counties?: Readonly<{ summary: string; list: readonly Readonly<{ id: string; label: string }>[]; picked: string | null; reading: string | null }> | null;
   }>;
   onDroughtPlay?: (on: boolean) => void;
+  onDroughtChange?: (weeks: 0 | 4 | 12) => void;
   onDroughtCounty?: (geoid: string) => void;
   onDroughtCountyClear?: () => void;
   onDrought?: (on: boolean) => void;
@@ -472,10 +475,21 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
         <p className="category-map-dock-reading" aria-live={drought.playing ? "off" : "polite"}>{drought.failed ? <>The Drought Monitor did not answer for this week. <a href={drought.url} target="_blank" rel="noreferrer">USDM ↗</a></>
           : drought.loading ? `Reading the Drought Monitor${drought.label ? ` for ${drought.label}` : ""}…` : drought.reading}</p>
         {drought.seriesFailed && <p className="category-map-dock-scale-note">The USDM statistics did not answer; the shares are measured on the map.</p>}
+        {onDroughtChange && drought.change && <>
+          <div className="category-map-dock-modes" role="group" aria-label="Drought map view">
+            {([[0, "Categories", "The USDM categories, D0 to D4"], [4, "4-week change", "Each county's change in drought over the 4 weeks before the week shown"], [12, "12-week change", "Each county's change in drought over the 12 weeks before the week shown"]] as const).map(([weeks, label, title]) =>
+              <button key={weeks} type="button" aria-pressed={drought.change!.weeks === weeks} title={title} onClick={() => onDroughtChange(weeks)}>{label}</button>)}
+          </div>
+          {drought.change.weeks > 0 && <p className="category-map-dock-reading" aria-live={drought.playing ? "off" : "polite"}>{drought.change.failed ? "The earlier week did not answer; the categories stay on the map."
+            : drought.change.loading || !drought.change.reading ? `Reading the week ${drought.change.weeks} weeks before…` : drought.change.reading}</p>}
+        </>}
         {drought.counties && !drought.loading && !drought.failed && <>
           <p className="category-map-dock-scale-note">{drought.counties.summary}</p>
-          {onDroughtCounty && <PickList summary={`Counties, most severe first (${drought.counties.list.length})`} label="Kansas counties by drought, most severe first"
-            items={drought.counties.list} selected={drought.counties.picked} onPick={onDroughtCounty} />}
+          {onDroughtCounty && (drought.change?.weeks ?? 0) > 0 && drought.change?.reading
+            ? <PickList summary={`Counties, most worsened first (${drought.counties.list.length})`} label={`Kansas counties by drought change over ${drought.change.weeks} weeks, most worsened first`}
+              items={drought.counties.list} selected={drought.counties.picked} onPick={onDroughtCounty} />
+            : onDroughtCounty && <PickList summary={`Counties, most severe first (${drought.counties.list.length})`} label="Kansas counties by drought, most severe first"
+              items={drought.counties.list} selected={drought.counties.picked} onPick={onDroughtCounty} />}
           {drought.counties.reading && <div className="category-map-dock-quake-event" aria-live={drought.playing ? "off" : "polite"}>
             <p>{drought.counties.reading}</p>
             <div><button type="button" onClick={onDroughtCountyClear} aria-label="Clear the selected county">Clear</button></div>
