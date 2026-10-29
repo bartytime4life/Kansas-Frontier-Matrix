@@ -459,7 +459,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           <label className="category-map-dock-range"><span>Year</span>
             <select value={fema.year ?? ""} onChange={event => onFemaYear?.(event.target.value ? Number(event.target.value) : null)}>
               <option value="">All years</option>
-              {fema.years.filter(entry => entry.total > 0).map(entry => <option key={entry.year} value={entry.year}>{entry.year} · {entry.total}</option>)}
+              {fema.years.filter(entry => entry.total > 0 || entry.year === fema.year).map(entry => <option key={entry.year} value={entry.year}>{entry.year} · {entry.total}</option>)}
             </select></label>
           <label className="category-map-dock-range"><span>Hazard</span>
             <select value={fema.family ?? ""} onChange={event => onFemaFamily?.(event.target.value ? event.target.value as HazardFamilyId : null)}>

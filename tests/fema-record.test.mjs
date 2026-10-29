@@ -170,6 +170,11 @@ test('the dock offers the record on Hazard watch: chart, filters, county list an
  findNode(tree,n=>n.type==='button'&&n.props['aria-label']==='Clear the selected county').props.onClick();
  assert.deepEqual(calls,[['on',true],['year',2007],['year',1993],['year',null],['family','flood'],['em',true],['county','20045'],['clear']]);
  assert.equal(tool(h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.water,fema:off})),undefined,'only maps that offer it');
+ // A chosen year stays in the select (at 0) when a hazard filter leaves it empty, so the select shows what the map counts.
+ const empty=h.render(h.exports.CategoryMapDock,{...base,fema:{...on,year:2000,family:'fire',years:fema.femaYears(record,{...fema.FEMA_DEFAULT_FILTER,family:'fire'})}});
+ const yearSelect=findNode(empty,n=>n.type==='select');
+ assert.equal(yearSelect.props.value,2000);
+ assert.deepEqual(JSON.parse(JSON.stringify(yearSelect.props.children[1].map(o=>o.props.value))),[2000]);
  h.dispose?.();
  assert.deepEqual(plain(maps.CATEGORY_MAPS.disaster.tools),['fema','reviewed']);
 });
