@@ -262,12 +262,13 @@ test('the county lines draw over the categories and under the state line, with t
  dm.syncDroughtMonitor(map,drought);
  assert.ok(!sources[dm.DROUGHT_COUNTY_SOURCE_ID],'no county lines until the counties are in hand');
  dm.syncDroughtMonitor(map,drought,countiesFc,'20187');
- assert.deepEqual(layers.map(l=>l.id),['background',dm.DROUGHT_FILL_LAYER_ID,dm.DROUGHT_LINE_LAYER_ID,dm.DROUGHT_COUNTY_LAYER_ID,dm.DROUGHT_COUNTY_SELECTED_LAYER_ID,dm.DROUGHT_STATE_LAYER_ID,'kfm-roads']);
+ assert.deepEqual(layers.map(l=>l.id),['background',dm.DROUGHT_FILL_LAYER_ID,dm.DROUGHT_LINE_LAYER_ID,dm.DROUGHT_COUNTY_HIT_LAYER_ID,dm.DROUGHT_COUNTY_LAYER_ID,dm.DROUGHT_COUNTY_SELECTED_LAYER_ID,dm.DROUGHT_STATE_LAYER_ID,'kfm-roads']);
+ assert.deepEqual(plain(layers[3].spec.paint),{'fill-color':'#000000','fill-opacity':0},'the hit area is never painted');
  assert.deepEqual(filters[dm.DROUGHT_COUNTY_SELECTED_LAYER_ID],['==',['get','geoid'],'20187']);
  dm.syncDroughtMonitor(map,drought,countiesFc,null);
  assert.deepEqual(filters[dm.DROUGHT_COUNTY_SELECTED_LAYER_ID],['==',['get','geoid'],'']);
  assert.equal(setData.length,0,'the same counties are not sent again');
- const style={version:8,sources:Object.fromEntries(Object.entries(sources).map(([id,s])=>[id,{type:'geojson',data:s.data}])),layers:layers.slice(1,6).map(l=>({...l.spec,...(l.id===dm.DROUGHT_COUNTY_SELECTED_LAYER_ID?{filter:filters[l.id]}:{})}))};
+ const style={version:8,sources:Object.fromEntries(Object.entries(sources).map(([id,s])=>[id,{type:'geojson',data:s.data}])),layers:layers.slice(1,7).map(l=>({...l.spec,...(l.id===dm.DROUGHT_COUNTY_SELECTED_LAYER_ID?{filter:filters[l.id]}:{})}))};
  assert.deepEqual(validateStyleMin(plain(style)).map(e=>e.message),[]);
  dm.syncDroughtMonitor(map,null);
  assert.deepEqual(layers.map(l=>l.id),['background','kfm-roads']);assert.deepEqual(Object.keys(sources),[]);
@@ -299,6 +300,7 @@ test('the dock lists the counties, outlines the one picked, and the page reads t
  assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty\);/);
  assert.match(page,/setDroughtCounty\(geoid\);\s*mapRef\.current\?\.fitBounds\(geometry\.bounds, \{ padding: 70, maxZoom: 9, duration: motionDuration\(650\) \}\);/);
  assert.match(page,/setDroughtSeriesFailed\(false\);\s*setDroughtCounty\(null\);/);
+ assert.match(page,/const droughtCountyHit = renderedHits\.find\(feature => feature\.source === DROUGHT_COUNTY_SOURCE_ID\);\s*if \(droughtCountyHit\) \{\s*const geoid = droughtCountyHit\.properties\?\.geoid;\s*if \(typeof geoid === "string" && geoid\) \{ setDroughtCounty\(geoid\); setCategoryDockHidden\(false\); \}\s*return;/,'a click on a county picks it, and a closed dock comes back to show it');
 });
 
 test('Play steps the weeks forward to the newest, from a year back when the newest is shown, and only with motion allowed',async()=>{

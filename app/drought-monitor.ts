@@ -28,6 +28,8 @@ export const DROUGHT_STATE_LAYER_ID = "kfm-drought-monitor-state-line";
 export const DROUGHT_COUNTY_SOURCE_ID = "kfm-drought-monitor-counties";
 export const DROUGHT_COUNTY_LAYER_ID = "kfm-drought-monitor-county-lines";
 export const DROUGHT_COUNTY_SELECTED_LAYER_ID = "kfm-drought-monitor-county-selected";
+/** An unpainted fill over each county, so a click on the map picks the county under it. */
+export const DROUGHT_COUNTY_HIT_LAYER_ID = "kfm-drought-monitor-county-hit";
 /** The first USDM map, valid Tuesday 4 January 2000. */
 export const USDM_FIRST_DATE = "20000104";
 
@@ -401,7 +403,7 @@ const shownCounties = new WeakMap<MapLibreMap, FeatureCollection>();
  */
 export function syncDroughtMonitor(map: MapLibreMap, drought: DroughtMap | null, counties: FeatureCollection | null = null, selected: string | null = null): void {
   if (!drought) {
-    for (const id of [DROUGHT_STATE_LAYER_ID, DROUGHT_COUNTY_SELECTED_LAYER_ID, DROUGHT_COUNTY_LAYER_ID, DROUGHT_LINE_LAYER_ID, DROUGHT_FILL_LAYER_ID]) if (map.getLayer(id)) map.removeLayer(id);
+    for (const id of [DROUGHT_STATE_LAYER_ID, DROUGHT_COUNTY_SELECTED_LAYER_ID, DROUGHT_COUNTY_LAYER_ID, DROUGHT_COUNTY_HIT_LAYER_ID, DROUGHT_LINE_LAYER_ID, DROUGHT_FILL_LAYER_ID]) if (map.getLayer(id)) map.removeLayer(id);
     for (const id of [DROUGHT_STATE_SOURCE_ID, DROUGHT_COUNTY_SOURCE_ID, DROUGHT_SOURCE_ID]) if (map.getSource(id)) map.removeSource(id);
     shown.delete(map);
     shownCounties.delete(map);
@@ -428,6 +430,8 @@ export function syncDroughtMonitor(map: MapLibreMap, drought: DroughtMap | null,
   else if (shownCounties.get(map) !== counties) countySource.setData(counties);
   shownCounties.set(map, counties);
   // Under the state line, over the categories.
+  if (!map.getLayer(DROUGHT_COUNTY_HIT_LAYER_ID)) map.addLayer({ id: DROUGHT_COUNTY_HIT_LAYER_ID, type: "fill", source: DROUGHT_COUNTY_SOURCE_ID,
+    paint: { "fill-color": "#000000", "fill-opacity": 0 } }, DROUGHT_STATE_LAYER_ID);
   if (!map.getLayer(DROUGHT_COUNTY_LAYER_ID)) map.addLayer({ id: DROUGHT_COUNTY_LAYER_ID, type: "line", source: DROUGHT_COUNTY_SOURCE_ID,
     layout: { "line-join": "round" }, paint: { "line-color": "#2a2418", "line-width": ["interpolate", ["linear"], ["zoom"], 5, 0.5, 9, 1.2] as never, "line-opacity": 0.6 } }, DROUGHT_STATE_LAYER_ID);
   if (!map.getLayer(DROUGHT_COUNTY_SELECTED_LAYER_ID)) map.addLayer({ id: DROUGHT_COUNTY_SELECTED_LAYER_ID, type: "line", source: DROUGHT_COUNTY_SOURCE_ID,
