@@ -286,6 +286,40 @@ draws it.
   are not a flood-inundation map. Warnings come from the National Weather
   Service.
 
+## Tornado record since 1950 (Storm desk)
+
+**Tornado record since 1950** turns the Storm desk from current alerts and
+radar to the record: every Kansas tornado in the Storm Prediction Center's
+severe weather database. It uses the "actual tornadoes" file, one row per
+tornado covering the whole track. Alerts and radar are hidden while it is
+shown, and only those that were on come back.
+
+- **Source.** `/api/tornado-record` reads the newest yearly file that
+  answers (`1950-YYYY_actual_tornadoes.csv`, released each spring for the
+  year before, trying back four years), cuts it to Kansas on the server, and
+  keeps it for a day.
+  - Columns are read by name, so a reordered file reads the same.
+  - Kansas's rows are kept, together with multi-state tracks that start or
+    end in Kansas.
+  - Unknown values (-9) stay unknown, and an end point of 0,0 means no
+    lift-off was recorded.
+- **Tracks.** Each track is the straight line from touchdown to lift-off,
+  the only path the database records. It is coloured by F/EF rating from
+  light to dark red, is wider for stronger ratings, and the strongest are
+  drawn last. Tornadoes with no lift-off point are drawn as touchdown points.
+- **Ratings.** The F scale was used before February 1, 2007 and EF after,
+  and the labels follow the date.
+- **History.** Tornadoes per year as bars stacked by rating, weakest at the
+  base. Clicking a bar, or choosing a year, narrows the map. A rating filter
+  shows F/EF1 or stronger up to F/EF5.
+- **Strongest and deadliest.** Up to 60, strongest first, then deadliest,
+  then longest. Choosing one, or clicking its track, outlines and frames it.
+  The dock then gives the date and time (CST), deaths and injuries,
+  touchdown and lift-off, length and width, and whether it crossed states.
+- **Limits.** Ratings come from damage, so a tornado over open country may
+  be rated low. Reporting has grown since 1950, so counts of weak tornadoes
+  are not comparable across decades.
+
 ## Kansas Legislature districts (Kansas representation)
 
 The Government map's **District plan** group switches between the U.S.

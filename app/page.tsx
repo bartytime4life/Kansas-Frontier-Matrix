@@ -33,6 +33,7 @@ import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportCl
 import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
+import { TORNADO_DEFAULT_FILTER, TORNADO_RATINGS, TORNADO_SOURCE_ID, UNRATED_COLOR, syncTornadoRecord, tornadoCollection, tornadoDetail, tornadoKey, tornadoList, tornadoReading, tornadoSelect, tornadoYears, validTornadoRecord, type TornadoFilter, type TornadoRecord } from "./tornado-record";
 import { CHAMBERS, LEGISLATURE_SOURCE_ID, legislatureApiPath, legislatureKey, legislatureList, legislatureReading, syncLegislature, validLegislature, type Chamber, type LegislatureDistricts } from "./state-legislature";
 import { CDL_LATEST_YEAR, CDL_SOURCE_ID, CDL_YEARS, cdlKey, cdlPointApiPath, cdlReading, inCdlRegion, syncCropland, type CdlPoint, type CdlValue } from "./cropland";
 import { inLandCoverRegion, LAND_COVER_SOURCE_ID, landCoverKey, landCoverPointApiPath, landCoverReading, syncLandCover, type LandCoverPoint } from "./land-cover";
@@ -1622,6 +1623,12 @@ export default function Home() {
   // so far by "day-product", and the one whose read failed.
   const [outlookDay, setOutlookDay] = useState<OutlookDay | null>(null);
   // The U.S. Drought Monitor on the Field view: the week shown ("YYYYMMDD"), or null for the newest released.
+  const [tornadoOn, setTornadoOn] = useState(false);
+  const [tornadoRecord, setTornadoRecord] = useState<TornadoRecord | null>(null);
+  const [tornadoFailed, setTornadoFailed] = useState(false);
+  const [tornadoFilter, setTornadoFilter] = useState<TornadoFilter>(TORNADO_DEFAULT_FILTER);
+  const [tornadoPicked, setTornadoPicked] = useState<string | null>(null);
+  const tornadoHidRef = useRef<OfficialContextId[]>([]);
   const [legislatureChamber, setLegislatureChamber] = useState<Chamber | null>(null);
   const [legislatureData, setLegislatureData] = useState<Partial<Record<Chamber, LegislatureDistricts>>>({});
   const [legislatureFailed, setLegislatureFailed] = useState<Chamber | null>(null);
@@ -4346,6 +4353,59 @@ export default function Home() {
     if (on && map && map.getZoom() > 7.5) map.easeTo({ center: [-98.38, 38.5], zoom: 6.2, duration: motionDuration(1200), essential: false });
   };
 
+  // The SPC tornado record on the Storm desk: every Kansas tornado since 1950 as a track by rating. It stands in for the
+  // current alerts and radar while shown; those it hid come back when it closes.
+  const showTornadoRecord = (on: boolean) => {
+    setTornadoOn(on);
+    setTornadoFilter(TORNADO_DEFAULT_FILTER);
+    setTornadoPicked(null);
+    if (on) {
+      setTornadoFailed(false);
+      tornadoHidRef.current = (["nws-alerts", "nws-radar"] as const).filter(id => officialVisibilityRef.current[id]);
+      for (const id of tornadoHidRef.current) setOfficialContextVisible(id, false);
+    } else {
+      for (const id of tornadoHidRef.current) setOfficialContextVisible(id, true);
+      tornadoHidRef.current = [];
+    }
+  };
+  useEffect(() => {
+    if (!tornadoOn || tornadoRecord || tornadoFailed) return;
+    const controller = new AbortController();
+    void fetch("/api/tornado-record", { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validTornadoRecord(value)) throw new Error("Invalid tornado record.");
+        setTornadoRecord(value);
+        announce(`${value.tornadoes.length.toLocaleString("en-US")} Kansas tornadoes since ${value.firstYear} are on the map by rating`);
+      })
+      .catch(() => { if (!controller.signal.aborted) setTornadoFailed(true); });
+    return () => controller.abort();
+  }, [tornadoOn, tornadoRecord, tornadoFailed, announce]);
+  const tornadoYearList = useMemo(() => tornadoRecord ? tornadoYears(tornadoRecord, tornadoFilter) : null, [tornadoRecord, tornadoFilter]);
+  const tornadoChosen = useMemo(() => tornadoRecord ? tornadoSelect(tornadoRecord, tornadoFilter) : [], [tornadoRecord, tornadoFilter]);
+  const tornadoTracks = useMemo(() => tornadoRecord ? tornadoCollection(tornadoChosen) : null, [tornadoRecord, tornadoChosen]);
+  const tornadoItems = useMemo(() => tornadoList(tornadoChosen), [tornadoChosen]);
+  const tornadoSelected = tornadoPicked ? tornadoRecord?.tornadoes.find(t => t.id === tornadoPicked) ?? null : null;
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const sync = () => { try { syncTornadoRecord(map, tornadoOn ? tornadoTracks : null, tornadoPicked); } catch { /* The style is reloading; its styledata event draws the tracks again. */ } };
+    sync();
+    if (!tornadoOn || !tornadoTracks) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(TORNADO_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [tornadoOn, tornadoTracks, tornadoPicked, styleReady]);
+  const pickTornado = (id: string) => {
+    const tornado = tornadoRecord?.tornadoes.find(t => t.id === id);
+    if (!tornado) return;
+    setTornadoPicked(id);
+    const end = tornado.end ?? tornado.start;
+    mapRef.current?.fitBounds([[Math.min(tornado.start[0], end[0]), Math.min(tornado.start[1], end[1])], [Math.max(tornado.start[0], end[0]), Math.max(tornado.start[1], end[1])]],
+      { padding: 120, maxZoom: 10, duration: motionDuration(650) });
+  };
+
   // Kansas Legislature districts on Kansas representation: a chamber stands in for the U.S. House districts while shown,
   // and the U.S. House districts come back (if they were on) when it closes.
   const showChamber = (chamber: Chamber | null) => {
@@ -6381,6 +6441,12 @@ export default function Home() {
             const id = renderedHits[0].properties?.id;
             const report = typeof id === "string" ? stormReportsRef.current.get(id) : undefined;
             if (report) { setReportSelected(report); setCategoryDockHidden(false); }
+            return;
+          }
+          // With the tornado record shown, a track under the click is picked; the dock describes it.
+          if (renderedHits[0]?.source === TORNADO_SOURCE_ID) {
+            const id = renderedHits[0].properties?.id;
+            if (typeof id === "string") { setTornadoPicked(id); setCategoryDockHidden(false); }
             return;
           }
           // With a chamber of the Legislature shown, the district under the click is picked.
@@ -10250,6 +10316,9 @@ export default function Home() {
     legislatureHidCivicRef.current = false;
     setLegislatureChamber(null);
     setLegislaturePicked(null);
+    tornadoHidRef.current = [];
+    setTornadoOn(false);
+    setTornadoPicked(null);
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
     setPopulationPrismsShown(Boolean(look.overlays?.includes("population")));
     // Soil moisture belongs to the maps that offer it; it does not follow into the others.
@@ -11243,7 +11312,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(tornadoOn && tornadoRecord ? [tornadoKey(tornadoRecord, tornadoFilter)] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -11263,6 +11332,13 @@ export default function Home() {
               windows: rainfallView.kind === "forecast" ? QPF_WINDOWS.map(hours => ({ hours, label: qpfWindowButton(hours), title: `Forecast for ${qpfWindowLabel(hours)}` }))
                 : RAINFALL_WINDOWS.map(hours => ({ hours, label: `${hours} h`, title: `Rain in the past ${rainfallWindowLabel(hours)}` })),
               reading: rainfallReading(rainfallView), legend: rainfallLegends[rainfallViewKey]?.items ?? null, legendFailed: rainfallLegendFailed === rainfallViewKey } : undefined}
+            tornadoes={activeCategoryMap.tools?.includes("tornadoes") ? { on: tornadoOn, loading: tornadoOn && !tornadoRecord && !tornadoFailed, failed: tornadoFailed,
+              reading: tornadoRecord ? tornadoReading(tornadoRecord, tornadoFilter, tornadoChosen) : null,
+              series: [...TORNADO_RATINGS.map(r => ({ name: r.name, color: r.color })), { name: "Unrated", color: UNRATED_COLOR }],
+              years: tornadoYearList, year: tornadoFilter.year, minRating: tornadoFilter.minRating, list: tornadoItems,
+              picked: tornadoSelected ? { id: tornadoSelected.id, detail: tornadoDetail(tornadoSelected) } : null } : undefined}
+            onTornadoes={showTornadoRecord} onTornadoYear={year => setTornadoFilter(filter => ({ ...filter, year }))} onTornadoRating={minRating => setTornadoFilter(filter => ({ ...filter, minRating }))}
+            onTornadoPick={pickTornado} onTornadoClear={() => setTornadoPicked(null)}
             legislature={activeCategoryMap.tools?.includes("legislature") ? { chamber: legislatureChamber,
               loading: Boolean(legislatureChamber && !shownLegislature && legislatureFailed !== legislatureChamber), failed: legislatureChamber !== null && legislatureFailed === legislatureChamber,
               reading: legislatureChamber ? legislatureReading(legislatureChamber, legislaturePicked) : null, list: shownLegislature ? legislatureList(shownLegislature) : [],
