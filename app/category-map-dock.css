@@ -120,3 +120,6 @@
 .category-map-dock-context summary:focus-visible{outline:2px solid #9fd3e6;outline-offset:2px}
 .category-map-dock-verification{border-left:2px solid #d8c58f;padding-left:8px;color:#e6eff2}
 .category-map-dock-release{color:#9fb3bb;font-size:11.5px}
+.category-map-dock-picklist{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:3px;max-height:220px;overflow:auto}
+.category-map-dock .category-map-dock-picklist button{width:100%;text-align:left;border:1px solid #2c4a57;border-radius:6px;background:#0d2a35;color:#d6e4ea;font-size:12px;line-height:1.35;padding:5px 8px;cursor:pointer}
+.category-map-dock .category-map-dock-picklist button[aria-pressed=true]{border-color:#ffe9a8;color:#fff4d3}

@@ -123,3 +123,28 @@ test('the page reads each day on its own clock, selects a report on the map, sha
  assert.match(page,/categoryMap\(restoredTopic\)\?\.tools\?\.includes\("reports"\) \? restoredReports : null/);
  assert.match(page,/setReportsDay\(null\);\s*setReportSelected\(null\);\s*\/\/ Each map opens on its own subject/);
 });
+
+test('Kansas reports can be picked from a keyboard list, newest first, without the map',async()=>{
+ const r=sr.parseStormReports(csv,'today',now,'src');
+ const list=sr.kansasReportList(r);
+ assert.equal(list.length,5,'the Oklahoma report is not listed');
+ assert.deepEqual(JSON.parse(JSON.stringify(list.map(i=>i.label))),[
+  '23:10 UTC · Wind damage or gust · 80 mph · 5 S Russell','23:00 UTC · Wind damage or gust · speed not measured · Hays',
+  '22:50 UTC · Hail · 2.00 in · 1 E Medicine Lodge','22:45 UTC · Hail · 1.75 in · Pratt','22:15 UTC · Tornado · EF2 · 3 W Sharon Springs']);
+ assert.equal(sr.kansasReportList(r,2).length,2);
+ const storm=maps.categoryMap('weather');
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const picked=[];
+ const base={look:storm,mode:'2d',depth:1,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onReports(){},onReportClear(){},onReportPick:id=>picked.push(id)};
+ const on={day:'today',loading:false,failed:false,reading:'Kansas: 5 reports',url:'u',selected:{report:r.reports[0],title:'Tornado · EF2',when:null},kansas:list};
+ const tree=h.render(h.exports.CategoryMapDock,{...base,reports:on});
+ const items=findNode(tree,n=>n.props?.['aria-label']==='Kansas storm reports, newest first').props.children;
+ assert.equal(items.length,5);
+ const buttons=items.map(li=>li.props.children);
+ assert.deepEqual(JSON.parse(JSON.stringify(buttons.map(b=>b.props['aria-pressed']))),[false,false,false,false,true],'the selected report is marked');
+ buttons[3].props.onClick();
+ assert.deepEqual(picked,[list[3].id]);
+ h.dispose?.();
+ assert.match(page,/kansas: shownReports \? kansasReportList\(shownReports\) : \[\]/);
+ assert.match(page,/onReportPick=\{\(id\) => \{[\s\S]{0,260}setReportSelected\(report\);\s*mapRef\.current\?\.easeTo\(\{ center: \[report\.longitude, report\.latitude\][\s\S]{0,80}duration: motionDuration\(600\) \}\);/);
+});

@@ -387,6 +387,11 @@ and what was reported can be read on one map, as SPC verifies its outlooks.
 - **Reading.** Kansas reports by kind with the significant count, the national
   total and the convective day in UTC. Selecting a report shows its kind,
   magnitude as SPC states it, time, place and the NWS office's remarks.
+  **Kansas reports** in the dock lists the Kansas reports newest first (up to
+  40), each a button with its time, kind, magnitude and place, so a report can
+  be chosen by keyboard or screen reader as well as on the map; choosing one
+  selects it and moves the map to it (without motion when reduced motion is
+  set).
 - **Against the outlook.** With today's reports and the Day 1 outlook both
   on the map, the dock adds how the reports fall against it, as SPC verifies
   its outlooks: only reports made inside the outlook's valid period count; the
