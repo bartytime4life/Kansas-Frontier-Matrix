@@ -7,6 +7,14 @@
 > [!IMPORTANT]
 > **Explanatory, not sovereign.** This folder does not decide doctrine, object meaning, machine shape, admissibility, review, release, or publication. Those responsibilities remain with accepted doctrine and ADRs, `contracts/`, `schemas/`, `policy/`, executable implementation and tests, receipts and proofs, and append-only release records.
 
+## Scientific analysis · October 29, 2026
+
+[Scientific analysis: questions, methods, and validation](scientific-analysis.md)
+connects scientific study design to KFM's existing evidence boundaries. It is an
+explanatory proposal with primary references, a synthetic uncertainty example,
+and four bounded Kansas studies. It creates no new contract, policy, engine,
+or release authority. The inventory below retains its stated historical pin.
+
 ## Current checkpoint
 
 | Field | Current bounded result |
