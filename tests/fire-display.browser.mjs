@@ -42,10 +42,10 @@ async function browser(t, layout) {
       } else for (const listener of listeners) listener(message);
     }
   });
-  const call = (method, params = {}, sessionId) => new Promise((resolve, reject) => {
+  const call = (method, params = {}, sessionId, timeoutMs = 20000) => new Promise((resolve, reject) => {
     if (closed) { reject(new Error(`Chrome unavailable: ${stderr}`)); return; }
     const id = ++sequence;
-    const timer = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}; ${stderr}`)); }, 20000);
+    const timer = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}; ${stderr}`)); }, timeoutMs);
     pending.set(id, { resolve: value => { clearTimeout(timer); resolve(value); }, reject: error => { clearTimeout(timer); reject(error); } });
     child.stdio[3].write(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }) + '\0');
   });
@@ -57,7 +57,8 @@ async function browser(t, layout) {
       await rm(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
     }
   });
-  t.diagnostic(JSON.stringify(await call('Browser.getVersion')));
+  // The first command also waits out Chrome's cold start, which a busy CI runner can stretch past 20 s.
+  t.diagnostic(JSON.stringify(await call('Browser.getVersion', {}, undefined, 90000)));
   return { call, listeners, checks };
 }
 
