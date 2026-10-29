@@ -118,3 +118,4 @@
 .category-map-dock-context>div{margin-bottom:8px}
 .category-map-dock-layer-set button{min-height:44px}
 .category-map-dock-context summary:focus-visible{outline:2px solid #9fd3e6;outline-offset:2px}
+.category-map-dock-verification{border-left:2px solid #d8c58f;padding-left:8px;color:#e6eff2}

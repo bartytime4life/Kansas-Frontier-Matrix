@@ -158,6 +158,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
    * magnitude, time and place already worded.
    */
   reports?: Readonly<{ day: ReportDay | null; loading: boolean; failed: boolean; reading: string | null; url: string;
+    /** Today's reports against the Day 1 outlook shown, when both are on the map. */
+    verification?: string | null;
     selected: Readonly<{ report: StormReport; title: string; when: string | null }> | null }>;
   onReports?: (day: ReportDay | null) => void;
   onReportClear?: () => void;
@@ -293,6 +295,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
         <p className="category-map-dock-reading" aria-live="polite">{reports.loading ? "Reading the SPC storm reports…"
           : reports.failed ? "The SPC storm reports did not answer. Try again, or the other day."
           : reports.reading}</p>
+        {reports.verification && !reports.loading && !reports.failed && <p className="category-map-dock-reading category-map-dock-verification" aria-live="polite"
+          title="Reports made since the outlook's valid start, placed against its areas, as SPC verifies its outlooks; preliminary reports">{reports.verification}</p>}
         {reports.selected && <div className="category-map-dock-quake-event" aria-live="polite">
           <p><b>{reports.selected.title}</b>{reports.selected.when ? ` · ${reports.selected.when}` : ""}<br />
             {[reports.selected.report.location, reports.selected.report.county && `${reports.selected.report.county} Co.`, reports.selected.report.state].filter(Boolean).join(", ")}
