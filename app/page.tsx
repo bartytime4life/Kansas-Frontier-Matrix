@@ -4360,6 +4360,15 @@ export default function Home() {
     }
     setLegislatureChamber(chamber);
   };
+  // One plan at a time, however the U.S. House districts come back on (the Congress select, "Show district areas", the
+  // Layers panel): turning them on returns the District plan group to U.S. House.
+  const civicShown = Boolean(officialVisibility[CIVIC_ID]);
+  useEffect(() => {
+    if (!legislatureChamber || !civicShown) return;
+    legislatureHidCivicRef.current = false;
+    setLegislatureChamber(null);
+    setLegislaturePicked(null);
+  }, [legislatureChamber, civicShown]);
   useEffect(() => {
     if (!legislatureChamber || legislatureData[legislatureChamber] || legislatureFailed === legislatureChamber) return;
     const chamber = legislatureChamber, controller = new AbortController();
