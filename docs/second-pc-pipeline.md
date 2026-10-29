@@ -434,3 +434,7 @@ until the infrastructure and approval qualifications above are independently
 recorded. Preview and Published sharing a database does not qualify its TLS,
 backup or restore. Read-only connection success through a provider-private
 network does not satisfy the publishing store's verified-TLS requirement.
+
+## Historical county context (implementation candidate, 2026-10-29)
+
+The [county publication path](county-history-publication.md) adds manual `prepare-county` / `publish-county` commands and an approved-context map consumer. It changes the shared signed recipe and adds one source-head row. Follow that cutover procedure before deployment: regenerate and review replacement delegations for every configured source, preserve existing transfers/heads/settings, verify backup and migration on a disposable copy, and use the existing owner signing process. County history is not added to the hourly acquisition schedule. No operational approval, migration or activation is performed by the code change.

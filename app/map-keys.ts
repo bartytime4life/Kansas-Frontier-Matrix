@@ -179,7 +179,7 @@ export const mapKeysFor = (starters: readonly string[], visible: (id: string) =>
 /** A map's keys with the key for a drawn reviewed snapshot added, once (alerts share the live key). */
 export const withReviewedKey = (keys: readonly MapKey[], reviewedSourceId: string | null): readonly MapKey[] => {
   const key = reviewedSourceId === "usgs-streamflow" ? REVIEWED_DISCHARGE_KEY : reviewedSourceId === "nws-alerts" ? MAP_KEYS["nws-alerts"]
-    : reviewedSourceId === "usgs-earthquakes" ? REVIEWED_EARTHQUAKE_KEY : null;
+    : reviewedSourceId === "usgs-earthquakes" ? REVIEWED_EARTHQUAKE_KEY : reviewedSourceId === "newberry-county-history" ? { id: "newberry-county-history", title: "Historical source areas", items: [{ label: "County and predecessor outlines", color: "#927347", shape: "area" as const }], note: "Newberry reconstruction for one exact day. Names and source labels do not establish legal or sovereignty authority." } : null;
   return key && !keys.some(k => k.id === key.id) ? [...keys, key] : keys;
 };
 

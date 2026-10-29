@@ -79,7 +79,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -258,7 +258,7 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
    * plain reason none is.
    */
   reviewed?: Readonly<{
-    source: string; on: boolean; loading: boolean; reason: string | null;
+    source: string; on: boolean; loading: boolean; reason: string | null; effectiveDay?: string; historical?: boolean;
     count: number; index: number; publishedAt: string | null; capturedFor: string | null;
     features: number | null; freshness: string | null; playing: boolean; motionAllowed: boolean;
     /** The feature picked on the map, in its source's terms, with the release it belongs to and that release's signed download. */
@@ -268,6 +268,7 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
     /** The id of the picked feature, marked in the list. */
     pick?: string | null;
   }>;
+  onReviewedDate?: (day: string) => void;
   onReviewedPick?: (id: string) => void;
   onReviewed?: (on: boolean) => void;
   onReviewedClear?: () => void;
@@ -476,18 +477,20 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
     </>}
     {look.tools?.includes("reviewed") && reviewed && onReviewed && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={reviewed.on} onClick={() => onReviewed(!reviewed.on)}
-        title="Hourly snapshots the site's publishing pipeline reviewed and stored, each at its own capture time">{reviewed.on ? "Hide reviewed snapshots" : `Reviewed ${reviewed.source} snapshots`}</button>
+        title={reviewed.effectiveDay ? "Approved historical source snapshots, each at its own boundary date" : "Snapshots the site's publishing pipeline reviewed and stored, each at its own source time"}>{reviewed.on ? "Hide reviewed snapshots" : `Reviewed ${reviewed.source} snapshots`}</button>
       {reviewed.on && <div className="category-map-dock-reviewed">
         {reviewed.count > 1 && <div className="category-map-dock-range"><span id="category-map-dock-reviewed">Snapshot</span>
           <input type="range" min={0} max={reviewed.count - 1} step={1} value={Math.max(0, reviewed.index)} aria-labelledby="category-map-dock-reviewed"
-            aria-valuetext={reviewed.publishedAt ?? "no snapshot"} onChange={event => { onReviewedPlay?.(false); onReviewedIndex?.(Number(event.target.value)); }} />
-          <button type="button" aria-pressed={reviewed.playing && reviewed.motionAllowed} disabled={!reviewed.motionAllowed} onClick={() => onReviewedPlay?.(!reviewed.playing)}
+            aria-valuetext={reviewed.effectiveDay ?? reviewed.publishedAt ?? "no snapshot"} onChange={event => { onReviewedPlay?.(false); onReviewedIndex?.(Number(event.target.value)); }} />
+          <button type="button" aria-pressed={reviewed.playing && reviewed.motionAllowed} disabled={!reviewed.motionAllowed || Boolean(reviewed.effectiveDay)} onClick={() => onReviewedPlay?.(!reviewed.playing)}
             title={reviewed.motionAllowed ? "Step through the stored snapshots, oldest to newest" : "Reduced motion is on; move Snapshot by hand"}>{reviewed.playing && reviewed.motionAllowed ? "Pause" : "Play"}</button></div>}
         <p className="category-map-dock-reading" aria-live={reviewed.playing ? "off" : "polite"}>{reviewed.loading ? "Reading the site database…"
           : reviewed.reason ? reviewed.reason
-          : `Snapshot ${reviewed.index + 1} of ${reviewed.count} · captured for ${reviewed.capturedFor} · published ${reviewed.publishedAt} · ${reviewed.features} ${reviewed.features === 1 ? "feature" : "features"}${reviewed.freshness === "stale" ? " · older than two hours" : ""}`}</p>
+          : `Snapshot ${reviewed.index + 1} of ${reviewed.count} · ${reviewed.effectiveDay ? "boundary date " + reviewed.effectiveDay : "captured for " + reviewed.capturedFor} · published ${reviewed.publishedAt} · ${reviewed.features} ${reviewed.features === 1 ? "feature" : "features"}${reviewed.freshness === "stale" ? " · older than two hours" : ""}`}</p>
+        {reviewed.effectiveDay && onReviewedDate && <button type="button" className="category-map-dock-tool" onClick={() => onReviewedDate(reviewed.effectiveDay!)}>Set map to {reviewed.effectiveDay}</button>}
+        {reviewed.historical && <small>Only approved snapshots are listed. Each is one exact date; missing dates and the 1873–1874 disputed coverage stay unavailable. Source areas are not counts of organized counties.</small>}
         {onReviewedPick && reviewed.list && reviewed.list.length > 0 && <PickList summary={`Features in this snapshot (${shownOf(reviewed.list.length, reviewed.features ?? 0)})`}
-          label="Snapshot features, most significant first" items={reviewed.list} selected={reviewed.pick ?? null} onPick={onReviewedPick} />}
+          label={reviewed.effectiveDay ? "Historical source areas, by name" : "Snapshot features, most significant first"} items={reviewed.list} selected={reviewed.pick ?? null} onPick={onReviewedPick} />}
         {reviewed.selected && <div className="category-map-dock-quake-event" aria-live="polite">
           <p><b>{reviewed.selected.title}</b>{reviewed.selected.lines.map(line => <span key={line}><br />{line}</span>)}
             <br /><span className="category-map-dock-release">Release {reviewed.selected.release.slice(0, 12)}… · external context, not evidence</span></p>

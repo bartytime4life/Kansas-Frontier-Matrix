@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 export const ORIGIN = 'https://kansasfrontiermatrix.com';
 export const MAX_PACKAGE = 8 * 1024 * 1024;
 export const CHUNK_SIZE = 256 * 1024;
-export const SOURCES = ['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes', 'water', 'weather'];
+export const SOURCES = ['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes', 'newberry-county-history', 'water', 'weather'];
 export const HASH = /^[a-f0-9]{64}$/;
 export class PipelineError extends Error { constructor(code, status = 409) { super(code); this.status = status; } }
 export const fail = (code, status) => { throw new PipelineError(code, status); };
@@ -43,7 +43,7 @@ export function verifyProfile(signed, publicKey, { now = Date.now(), recipe = ''
   } catch { fail('APPROVAL_INVALID', 403); }
 }
 export async function recipeDigest() {
-  const files = ['pipeline-contract.mjs', 'pipeline-normalize.mjs', 'ingestion-sources.mjs'];
+  const files = ['pipeline-contract.mjs', 'pipeline-normalize.mjs', 'ingestion-sources.mjs', 'county-history-candidate.mjs', 'county-history-release.mjs'];
   const entries = await Promise.all(files.map(async name => [name, sha(await readFile(new URL(name, import.meta.url)))]));
   return sha(canonical(entries));
 }

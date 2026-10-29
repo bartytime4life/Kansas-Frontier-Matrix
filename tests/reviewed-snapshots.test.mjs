@@ -34,7 +34,7 @@ test('a release is shown only when it is the requested source, context-only and 
  assert.ok(snapshots.REVIEWED_REASONS.APPROVAL_EXPIRED);
  const alerts=snapshots.parseReviewedProduct(product({sourceId:'nws-alerts',data:{type:'FeatureCollection',features:[{type:'Feature',properties:{event:'Flood Warning',severity:'Severe',expired:false}},{type:'Feature',properties:{event:'Wind Advisory',severity:'Minor',expired:true}}]}}),'nws-alerts');
  assert.deepEqual(alerts.data.features.map(f=>f.properties.event),['Flood Warning']);
- assert.deepEqual({...snapshots.REVIEWED_SOURCE_BY_TOPIC},{water:'usgs-streamflow',weather:'nws-alerts',disaster:'nws-alerts',geology:'usgs-earthquakes'});
+ assert.deepEqual({...snapshots.REVIEWED_SOURCE_BY_TOPIC},{water:'usgs-streamflow',weather:'nws-alerts',disaster:'nws-alerts',geology:'usgs-earthquakes',government:'newberry-county-history'});
 });
 
 test('gauge circles grow in area with discharge, provisional values ring amber, alert areas take their NWS severity',()=>{
@@ -230,7 +230,7 @@ test('a release\'s features can be picked from a keyboard list, most significant
  assert.equal(findNode(h.render(h.exports.CategoryMapDock,{...base,reviewed:{...reviewed,features:3}}),n=>n.props?.label==='Snapshot features, most significant first').props.summary,'Features in this snapshot (3)');
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/const reviewedList = useMemo\(\(\) => reviewedData && reviewedSource \? reviewedFeatureList\(reviewedSource, reviewedData\) : \[\], \[reviewedData, reviewedSource\]\);/);
+ assert.match(page,/const reviewedList = useMemo\(\(\) => reviewedData && reviewedSource \? reviewedFeatureList\(reviewedSource, reviewedData, reviewedSource === "newberry-county-history" \? 107 : 40\) : \[\], \[reviewedData, reviewedSource\]\);/);
  assert.match(page,/list: reviewedList, pick: reviewedFeature \? reviewedPick : null \} : undefined\}/);
- assert.match(page,/onReviewedPick=\{\(id\) => \{[\s\S]{0,400}if \(!feature\) return;\s*setReviewedPick\(id\);\s*if \(!feature\.geometry\) return;[\s\S]{0,700}easeToPicked\(\[\(Math\.min\(\.\.\.xs\) \+ Math\.max\(\.\.\.xs\)\) \/ 2, \(Math\.min\(\.\.\.ys\) \+ Math\.max\(\.\.\.ys\)\) \/ 2\]\);/,'an alert area is centred on its extent');
+ assert.match(page,/onReviewedPick=\{\(id\) => \{[\s\S]{0,400}if \(!feature\) return;\s*setReviewedPick\(id\);\s*if \(!feature\.geometry\) return;[\s\S]{0,1200}easeToPicked\(\[\(Math\.min\(\.\.\.xs\) \+ Math\.max\(\.\.\.xs\)\) \/ 2, \(Math\.min\(\.\.\.ys\) \+ Math\.max\(\.\.\.ys\)\) \/ 2\]\);/,'an alert area is centred on its extent');
 });

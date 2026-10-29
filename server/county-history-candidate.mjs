@@ -1,3 +1,4 @@
+import { COUNTY_SOURCE_ID, COUNTY_SOURCE_URL, COUNTY_RIGHTS_URL, COUNTY_LIMITATION, COUNTY_ARCHIVE, validateCountyRelease } from './county-history-release.mjs';
 /** Private operator adapter for checked county WORK reports. No public imports,
  * acquisition, database writes, source admission, signing or release transition.
  */
@@ -263,4 +264,22 @@ export function countyHistoryDrawerRecord(packet, recordId, requestedDay) {
     evidenceRefs: structuredClone(record.evidenceRefs), evidenceBundle: structuredClone(packet.evidenceBundle),
     reportSha256: packet.provenance.reportSha256,
     lifecycle: 'WORK', releaseEligible: false, publicClientEligible: false };
+}
+
+export function normalizeCountyCandidate(packet, preparedAt = new Date().toISOString()) {
+  const view = countyHistoryCalendarView(packet,packet.selectedDay);
+  if (view.state !== 'candidate-only') fail('COUNTY_COVERAGE_QUARANTINED');
+  const product = {format:'kfm-curated-county-history-v1',sourceId:COUNTY_SOURCE_ID,sourceUrl:COUNTY_SOURCE_URL,rightsUrl:COUNTY_RIGHTS_URL,
+    archiveSha256:COUNTY_ARCHIVE,qualificationReportSha256:packet.provenance.reportSha256,preparedAt,effectiveDay:packet.selectedDay,
+    partial:false,evidenceRole:'EXTERNAL_CONTEXT_ONLY',evidenceEligible:false,limitation:COUNTY_LIMITATION,
+    coordinateOperation:{id:'EPSG:1188',sourceCrs:'EPSG:4269',targetCrs:'OGC:CRS84',operationAccuracyMetres:4},
+    data:{type:'FeatureCollection',features:view.data.features.map(f=>{
+      const r=f.properties;
+      return {type:'Feature',id:`ahcb-${COUNTY_ARCHIVE.slice(0,12)}-${r.institutionSourceId}-v${r.sourceVersion}-${packet.selectedDay}`,geometry:f.geometry,properties:{name:r.sourceFullName,institutionSourceId:r.institutionSourceId,
+        sourceVersion:r.sourceVersion,sourceState:r.sourceState,fips:r.fips,sourceCountyType:r.sourceCountyType,classificationStatus:r.classificationStatus,
+        validFrom:r.validFrom,validToExclusive:r.validToExclusive,sourceLastDay:r.sourceLastDay,change:r.change,citation:r.citation,sourceDay:packet.selectedDay,
+        sourceLocators:r.evidenceRefs.map(ref=>({memberSha256:ref.artifactId.slice(7),recordNumber:ref.recordNumber,kind:ref.locatorKind}))}};
+    })}};
+  validateCountyRelease(product);
+  const bytes=Buffer.from(canonical(product));return {product,bytes,payloadSha256:sha(bytes)};
 }
