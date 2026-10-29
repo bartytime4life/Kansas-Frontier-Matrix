@@ -34,6 +34,8 @@ import { changeCollection, droughtChangeStart, countyChangeList, countyChangeRea
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationReading, populationChange, populationChangeApiPath, populationChangeCollection, populationChangeKey, populationChangeList, populationChangeReading, syncPopulationChange, validCountyBaseline } from "./population-change";
+import { SURFACE_OBS_API_PATH, SURFACE_OBS_REFRESH_MS, SURFACE_OBS_SOURCE_ID, stationDetail, surfaceCollection, surfaceKey, surfaceList, surfaceReading, syncSurfaceObs, validSurfaceEnvelope } from "./surface-obs";
+import type { MetarObservation } from "./aviation-weather";
 import { WELLS_SNAPSHOT_PATH, WELL_PICK_SOURCE_ID, syncWellPick, validWellLevels, wellKgsPage, wellLevelsApiPath, wellLevelsKey, wellPlot, wellReading, wellSites, wellsNear, wellUsgsPage, type WellLevels, type WellSite } from "./well-levels";
 import { TORNADO_DEFAULT_FILTER, TORNADO_RATINGS, TORNADO_SOURCE_ID, UNRATED_COLOR, syncTornadoRecord, tornadoCollection, tornadoDetail, tornadoKey, tornadoList, tornadoReading, tornadoSelect, tornadoYears, validTornadoRecord, type TornadoFilter, type TornadoRecord } from "./tornado-record";
 import { CHAMBERS, LEGISLATURE_SOURCE_ID, legislatureApiPath, legislatureKey, legislatureList, legislatureReading, syncLegislature, validLegislature, type Chamber, type LegislatureDistricts } from "./state-legislature";
@@ -1683,6 +1685,11 @@ export default function Home() {
   const [wellLevels, setWellLevels] = useState<WellLevels | null>(null);
   const [wellFailed, setWellFailed] = useState<string | null>(null);
   const wellsOnRef = useRef(false);
+  // Surface observations on the Storm desk: shown or not, the latest METARs once read, a failed read, and the station picked.
+  const [surfaceOn, setSurfaceOn] = useState(false);
+  const [surfaceRecords, setSurfaceRecords] = useState<readonly MetarObservation[] | null>(null);
+  const [surfaceFailed, setSurfaceFailed] = useState(false);
+  const [surfacePicked, setSurfacePicked] = useState<string | null>(null);
   const wellsWereOnRef = useRef(false);
   const floodGaugesWereOnRef = useRef(false);
   const [droughtOn, setDroughtOn] = useState(false);
@@ -4731,6 +4738,46 @@ export default function Home() {
     mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
   };
 
+  // Surface observations: current only, so away from the present map time (or with an out-of-date build) they are held;
+  // read again every five minutes while shown. A failed read clears the plots rather than leave old ones standing.
+  const surfaceLive = buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const showSurface = (on: boolean) => { setSurfaceOn(on); setSurfacePicked(null); setSurfaceFailed(false); };
+  useEffect(() => {
+    if (!surfaceOn || !surfaceLive) return;
+    const controller = new AbortController();
+    const read = () => void fetch(SURFACE_OBS_API_PATH, { signal: controller.signal, cache: "no-store" })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validSurfaceEnvelope(value)) throw new Error("Invalid METAR envelope.");
+        setSurfaceRecords(value.records);
+        setSurfaceFailed(false);
+      })
+      .catch(() => { if (!controller.signal.aborted) { setSurfaceRecords(null); setSurfaceFailed(true); } });
+    read();
+    const timer = setInterval(read, SURFACE_OBS_REFRESH_MS);
+    return () => { controller.abort(); clearInterval(timer); };
+  }, [surfaceOn, surfaceLive]);
+  const shownSurface = surfaceOn && surfaceLive ? surfaceRecords : null;
+  const surfaceData = useMemo(() => shownSurface ? surfaceCollection(shownSurface) : null, [shownSurface]);
+  const surfaceStation = shownSurface && surfacePicked ? shownSurface.find(record => record.station === surfacePicked) ?? null : null;
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const sync = () => { try { syncSurfaceObs(map, surfaceData, surfacePicked); } catch { /* The style is reloading; its styledata event plots the stations again. */ } };
+    sync();
+    if (!surfaceData) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(SURFACE_OBS_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [surfaceData, surfacePicked, styleReady]);
+  const pickSurfaceStation = (station: string) => {
+    setSurfacePicked(station);
+    const record = shownSurface?.find(item => item.station === station);
+    const map = mapRef.current;
+    if (record && map) map.easeTo({ center: [record.lon, record.lat], zoom: Math.max(map.getZoom(), 8), duration: motionDuration(650) });
+  };
+
   // Water levels at wells on the Aquifer map: the monitoring wells are shown (and own their click) while it is on;
   // a picked well's measured depth to water is read from USGS Water Data.
   wellsOnRef.current = wellsOn;
@@ -6629,6 +6676,12 @@ export default function Home() {
           if (renderedHits[0]?.source === FEMA_RECORD_SOURCE_ID) {
             const geoid = renderedHits[0].properties?.geoid;
             if (typeof geoid === "string") { setFemaCounty(geoid); setCategoryDockHidden(false); }
+            return;
+          }
+          // A station plot owns its selection: the dock decodes its observation.
+          if (renderedHits[0]?.source === SURFACE_OBS_SOURCE_ID) {
+            const station = renderedHits[0].properties?.station;
+            if (typeof station === "string") { setSurfacePicked(station); setCategoryDockHidden(false); }
             return;
           }
           // With water levels at wells on, a monitoring well owns its selection: the dock draws its measured levels.
@@ -10496,6 +10549,8 @@ export default function Home() {
     setTornadoOn(false);
     setTornadoPicked(null);
     // The change closes with its map; the starters above already decide whether the county outlines are on.
+    setSurfaceOn(false);
+    setSurfacePicked(null);
     // So do water levels at wells; the starters above already decide whether the monitoring wells are on.
     wellsWereOnRef.current = false;
     setWellsOn(false);
@@ -11497,7 +11552,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(tornadoOn && tornadoRecord ? [tornadoKey(tornadoRecord, tornadoFilter)] : []), ...(popChangeOn && popChangeCollection ? [populationChangeKey()] : []), ...(wellsOn ? [wellLevelsKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(tornadoOn && tornadoRecord ? [tornadoKey(tornadoRecord, tornadoFilter)] : []), ...(popChangeOn && popChangeCollection ? [populationChangeKey()] : []), ...(wellsOn ? [wellLevelsKey()] : []), ...(surfaceData ? [surfaceKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -11589,6 +11644,10 @@ export default function Home() {
               reading: shownWellLevels ? wellReading(shownWellLevels) : null, plot: shownWellPlot,
               usgsUrl: wellPicked ? wellUsgsPage(wellPicked) : null, kgsUrl: wellPicked ? wellKgsPage(wellPicked) : null } : undefined}
             onWells={showWells} onWellPick={pickWell} onWellClear={() => setWellPicked(null)}
+            surface={activeCategoryMap.tools?.includes("surface") ? { on: surfaceOn, state: !surfaceLive ? "held" : surfaceFailed ? "failed" : shownSurface ? "ready" : "loading",
+              reading: shownSurface ? surfaceReading(shownSurface) : null, list: shownSurface ? surfaceList(shownSurface) : [], picked: surfaceStation ? surfacePicked : null,
+              detail: surfaceStation ? stationDetail(surfaceStation) : null, raw: surfaceStation?.raw ?? null } : undefined}
+            onSurface={showSurface} onSurfacePick={pickSurfaceStation} onSurfaceClear={() => setSurfacePicked(null)}
             populationChange={activeCategoryMap.tools?.includes("population") ? { on: popChangeOn, loading: popChangeOn && !popChange && !popChangeBroken, failed: popChangeBroken,
               reading: popChange ? populationChangeReading(popChange) : null, bars: popChangeBars, list: popChangeItems, picked: popChangeCounty,
               county: popChange && popChangeCounty ? countyPopulationReading(popChange, popChangeCounty) : null } : undefined}

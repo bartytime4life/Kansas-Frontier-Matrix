@@ -83,7 +83,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -348,6 +348,16 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
   wells?: Readonly<{ on: boolean; list: readonly Readonly<{ id: string; label: string }>[]; picked: string | null; name: string | null;
     loading: boolean; failed: boolean; reading: string | null; plot: WellPlot | null; usgsUrl: string | null; kgsUrl: string | null }>;
   onWells?: (on: boolean) => void;
+  /**
+   * Surface observations on the Storm desk: the station plots' state (held away
+   * from the present map time), the statewide line, the stations as a list,
+   * and the picked station decoded, with its raw METAR.
+   */
+  surface?: Readonly<{ on: boolean; state: "held" | "loading" | "failed" | "ready"; reading: string | null; list: readonly Readonly<{ id: string; label: string }>[];
+    picked: string | null; detail: string | null; raw: string | null }>;
+  onSurface?: (on: boolean) => void;
+  onSurfacePick?: (station: string) => void;
+  onSurfaceClear?: () => void;
   onWellPick?: (site: string) => void;
   onWellClear?: () => void;
   /**
@@ -535,6 +545,21 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           </div>}
         </div>}
       </>}
+    </>}
+    {look.tools?.includes("surface") && surface && onSurface && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={surface.on} onClick={() => onSurface(!surface.on)}
+        title="Kansas airport observations as station plots: sky cover, wind barb, temperature and dew point">{surface.on ? "Hide surface observations" : "Show surface observations"}</button>
+      {surface.on && <div className="category-map-dock-quakes">
+        <p className="category-map-dock-reading" aria-live="polite">{surface.state === "held" ? "Observations are current only: return the map to the present to plot them."
+          : surface.state === "loading" ? "Reading the latest METARs…" : surface.state === "failed" ? "The Aviation Weather Center did not answer; no conditions are inferred. Try again shortly." : surface.reading}</p>
+        {surface.state === "ready" && onSurfacePick && surface.list.length > 0 && <PickList summary={`Stations (${surface.list.length})`} label="Kansas-area weather stations, by identifier"
+          items={surface.list} selected={surface.picked} onPick={onSurfacePick} />}
+        {surface.state === "ready" && surface.detail && <div className="category-map-dock-quake-event" aria-live="polite">
+          <p>{surface.detail}</p>
+          {surface.raw && <p><code>{surface.raw}</code></p>}
+          <div><button type="button" onClick={onSurfaceClear} aria-label="Clear the selected station">Clear</button></div>
+        </div>}
+      </div>}
     </>}
     {look.tools?.includes("tornadoes") && tornadoes && onTornadoes && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={tornadoes.on} onClick={() => onTornadoes(!tornadoes.on)}

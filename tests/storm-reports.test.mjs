@@ -89,7 +89,7 @@ test('the key and the points share SPC\'s report colours, significant reports ri
 
 test('the Storm desk dock offers the reports by day with the selected report',async()=>{
  const storm=maps.categoryMap('weather');
- assert.deepEqual(JSON.parse(JSON.stringify(storm.tools)),['radar','outlook','reports','rainfall','tornadoes','reviewed']);
+ assert.deepEqual(JSON.parse(JSON.stringify(storm.tools)),['radar','surface','outlook','reports','rainfall','tornadoes','reviewed']);
  const h=await componentHarness('app/category-map-dock.tsx',{});
  const calls=[];let cleared=0;
  const base={look:storm,mode:'2d',depth:1,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onReports:d=>calls.push(d),onReportClear:()=>cleared++};

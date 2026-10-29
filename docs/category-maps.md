@@ -315,6 +315,38 @@ draws it.
   are not a flood-inundation map. Warnings come from the National Weather
   Service.
 
+## Surface observations (Storm desk)
+
+**Show surface observations** plots each Kansas-area airport observation
+(METAR) as a meteorologist's station model (`app/surface-obs.ts`). It reuses
+the site's own METAR route, `/api/aviation/metar` (Aviation Weather Center,
+the latest observation per station, under 90 minutes old), so no new source
+is added.
+
+- **Station circle:** sky cover fills it by quarters: open for clear, a quarter
+  for few, half for scattered, three-quarters for broken, full for overcast.
+  An X marks an obscured sky and an M a missing report.
+- **Wind barb:** points into the wind in knots, rounded to 5. Pennants are 50
+  kt, full barbs 10 and half barbs 5. The barbs sit on the staff's clockwise
+  side, toward lower pressure in the Northern Hemisphere. The barbs turn with
+  the map because METAR directions are from true north. Calm and variable
+  winds draw no barb and are labelled.
+- **Text:** temperature (°F) is upper left in red and dew point lower left in
+  green. The first present-weather group sits between them.
+- **Picked station:** picking one, from the plot or a keyboard list, rings it.
+  The dock decodes it:
+  - temperature, dew point and relative humidity (Magnus);
+  - the NWS heat index (Rothfusz with its adjustments, from 80 °F);
+  - the NWS 2001 wind chill (50 °F or colder, wind over 3 mph);
+  - wind, visibility, altimeter, ceiling or sky, and weather, followed by the
+    raw METAR.
+- **Current only:** away from the present map time the plots are held. While
+  shown they are read again every five minutes, and a failed read clears
+  them rather than leave old plots standing.
+
+A station describes its own airfield; nothing is interpolated between
+stations.
+
 ## Tornado record since 1950 (Storm desk)
 
 **Tornado record since 1950** turns the Storm desk from current alerts and
