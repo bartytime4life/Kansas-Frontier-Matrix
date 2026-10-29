@@ -373,7 +373,7 @@ test('the Field view shows NASA soil moisture at a chosen depth, names the day d
 
 test('the Aquifer map opens on saturated thickness and switches one KGS view at a time, with its classes as the legend',async()=>{
  const look=maps.CATEGORY_MAPS.groundwater;
- assert.deepEqual([...look.starters],['kgs-saturated-thickness']);assert.deepEqual([...look.tools],['aquifer','underground']);
+ assert.deepEqual([...look.starters],['kgs-saturated-thickness']);assert.deepEqual([...look.tools],['aquifer','wells','underground']);
  const h=await componentHarness('app/category-map-dock.tsx',{});
  const calls=[];
  const base={look,mode:'2d',depth:2.5,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onUnderground(){},onAquiferView:v=>calls.push(v)};

@@ -11,6 +11,7 @@ import type { FloodGauge, FloodHydrograph } from "./flood-forecast";
 import type { FemaYear, HAZARD_FAMILIES, HazardFamilyId } from "./fema-record";
 import type { RainfallKind } from "./mrms-rainfall";
 import type { TornadoYear } from "./tornado-record";
+import type { WellPlot } from "./well-levels";
 import type { OutlookDay, OutlookProduct } from "./spc-outlook";
 import type { ReportDay, StormReport } from "./storm-reports";
 
@@ -82,7 +83,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -339,6 +340,16 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    */
   aquifer?: Readonly<{ view: AquiferView | null; legend: readonly Readonly<{ label: string; color: string }>[] | null }>;
   onAquiferView?: (view: AquiferView) => void;
+  /**
+   * Measured depth to water at the KGS monitoring wells: whether picking is on,
+   * the wells nearest the map centre, and the picked well's name, links, line
+   * and hydrograph (null until read, or with too few measurements to plot).
+   */
+  wells?: Readonly<{ on: boolean; list: readonly Readonly<{ id: string; label: string }>[]; picked: string | null; name: string | null;
+    loading: boolean; failed: boolean; reading: string | null; plot: WellPlot | null; usgsUrl: string | null; kgsUrl: string | null }>;
+  onWells?: (on: boolean) => void;
+  onWellPick?: (site: string) => void;
+  onWellClear?: () => void;
   /**
    * Reviewed snapshots from the site database, for looks that offer them:
    * which source, whether shown, the release list and the one drawn, or the
@@ -764,6 +775,25 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
         <p className="category-map-dock-reading">{aquifer.view === "kgs-depth-to-water" ? "Depth to water" : "Saturated thickness"}, feet · KGS High Plains Atlas, 2022–2024 classes, not well measurements</p>
       </div>}
     </>}
+    {look.tools?.includes("wells") && wells && onWells && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={wells.on} onClick={() => onWells(!wells.on)}
+        title="The KGS monitoring wells: pick one for its measured depth to water over the years, from USGS Water Data">{wells.on ? "Hide well water levels" : "Water levels at wells"}</button>
+      {wells.on && <div className="category-map-dock-quakes">
+        {!wells.picked && <p className="category-map-dock-reading" aria-live="polite">Pick a monitoring well on the map, or from the list, for its measured depth to water over the years.</p>}
+        {onWellPick && wells.list.length > 0 && <PickList summary={`Wells nearest the map centre (${wells.list.length})`} label="KGS monitoring wells nearest the map centre"
+          items={wells.list} selected={wells.picked} onPick={onWellPick} />}
+        {wells.picked && <div className="category-map-dock-quake-event" aria-live="polite">
+          <p>{`${wells.name ?? wells.picked} · USGS ${wells.picked}`}</p>
+          <p>{wells.loading ? "Reading the USGS measurements…" : wells.failed ? "USGS Water Data did not answer for this well; no level is inferred. Try it again, or open its KGS record." : wells.reading}</p>
+          {wells.plot && <WellHydrographChart plot={wells.plot} name={wells.name ?? wells.picked} />}
+          <div>
+            {wells.usgsUrl && <a href={wells.usgsUrl} target="_blank" rel="noreferrer">USGS record ↗</a>}
+            {wells.kgsUrl && <a href={wells.kgsUrl} target="_blank" rel="noreferrer">KGS WIZARD ↗</a>}
+            <button type="button" onClick={onWellClear} aria-label="Clear the selected well">Clear</button>
+          </div>
+        </div>}
+      </div>}
+    </>}
     {look.tools?.includes("soil") && soil && onSoil && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={soil.on} onClick={() => onSoil(!soil.on)}
         title="NASA SMAP L4 modelled soil moisture in 9 km cells; a field-scale view pulls out to the region the cells describe">{soil.on ? "Hide soil moisture" : "Show soil moisture"}</button>
@@ -886,6 +916,37 @@ export function FloodHydrographChart({ gauge, plot, reading }: Readonly<{ gauge:
       {plot.crest && <circle cx={x(plot.crest.time).toFixed(1)} cy={y(plot.crest.value).toFixed(1)} r={3.2} fill="none" stroke="#ffffff" strokeWidth={1} />}
     </svg>
     <figcaption><span>{`${gauge.label}${gauge.units ? `, ${gauge.units}` : ""} · Central time`}</span><span><span style={{ color: "#5cc8ff" }}>━ observed</span> <span style={{ color: "#d58cff" }}>╍ forecast</span></span></figcaption>
+  </figure>;
+}
+
+/**
+ * A well's hydrograph as hydrogeologists draw it: depth to water increasing
+ * downward, so a falling water level runs down the chart. Each measurement is
+ * a dot (hollow while provisional), joined in time, with the record's
+ * least-squares trend dashed across it.
+ */
+export function WellHydrographChart({ plot, name }: Readonly<{ plot: WellPlot; name: string }>) {
+  const width = 260, height = 150, left = 26, right = 4, top = 4, bottom = 14;
+  const x = (time: number) => left + (time - plot.start) / Math.max(1, plot.end - plot.start) * (width - left - right);
+  const y = (depth: number) => top + (depth - plot.low) / Math.max(1e-6, plot.high - plot.low) * (height - top - bottom);
+  const line = plot.points.map((p, i) => `${i ? "L" : "M"}${x(p.time).toFixed(1)},${y(p.depth).toFixed(1)}`).join(" ");
+  const first = plot.points[0], last = plot.points[plot.points.length - 1];
+  return <figure className="category-map-dock-section category-map-dock-hydrograph" aria-label={`Depth to water at ${name}, ${plot.points.length} measurements from ${first.date} to ${last.date}, ${first.depth.toFixed(1)} to ${last.depth.toFixed(1)} feet below land surface`}>
+    <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+      {plot.ticks.map(value => <g key={value}>
+        <line x1={left} x2={width - right} y1={y(value).toFixed(1)} y2={y(value).toFixed(1)} stroke="#e6eff2" strokeOpacity={0.12} strokeWidth={0.5} />
+        <text x={left - 3} y={(y(value) + 2.8).toFixed(1)} fontSize={8} fill="#cfe2ea" textAnchor="end">{value}</text>
+      </g>)}
+      {plot.years.map(tick => <g key={tick.time}>
+        <line x1={x(tick.time).toFixed(1)} x2={x(tick.time).toFixed(1)} y1={top} y2={height - bottom} stroke="#e6eff2" strokeOpacity={0.1} strokeWidth={0.5} />
+        <text x={x(tick.time).toFixed(1)} y={height - 3} fontSize={8} fill="#cfe2ea" textAnchor="middle">{tick.label}</text>
+      </g>)}
+      {plot.trend && <line x1={x(plot.trend.from.time).toFixed(1)} y1={y(plot.trend.from.depth).toFixed(1)} x2={x(plot.trend.to.time).toFixed(1)} y2={y(plot.trend.to.depth).toFixed(1)}
+        stroke="#f2b86b" strokeWidth={1.1} strokeDasharray="4 2" />}
+      <path d={line} fill="none" stroke="#5cc8ff" strokeOpacity={0.7} strokeWidth={1} strokeLinejoin="round" />
+      {plot.points.map(p => <circle key={p.time} cx={x(p.time).toFixed(1)} cy={y(p.depth).toFixed(1)} r={1.7} fill={p.provisional ? "none" : "#5cc8ff"} stroke="#5cc8ff" strokeWidth={0.7} />)}
+    </svg>
+    <figcaption><span>Depth to water, ft below land surface</span><span><span style={{ color: "#5cc8ff" }}>● measured</span> <span style={{ color: "#f2b86b" }}>╍ trend</span></span></figcaption>
   </figure>;
 }
 
