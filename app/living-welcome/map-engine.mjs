@@ -265,6 +265,20 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       if (value && view) requestData(view);
       drawData();
     },
+    // Geology spotlight: a DOM element held at a real location (it rides the
+    // drift and terrain), and where a location falls in the map's own pixels.
+    pin(element, coordinates, anchor = 'bottom') {
+      if (disposed) return () => {};
+      // Terrain occlusion tests fade low-relief pins at random; the card must stay legible.
+      const marker = new lib.Marker({ element, anchor, pitchAlignment: 'viewport', rotationAlignment: 'viewport', opacity: '1', opacityWhenCovered: '1' }).setLngLat(coordinates).addTo(map);
+      return () => marker.remove();
+    },
+    project(coordinates, topic) {
+      // Only a settled view of the asking topic: never mid-flight or mid-style.
+      if (disposed || !styleLoaded || !ready || transitioning || view?.topic !== topic) return null;
+      const point = map.project(coordinates);
+      return Number.isFinite(point.x) && Number.isFinite(point.y) ? { x: point.x, y: point.y } : null;
+    },
     dispose() { disposed = true; clearTimeout(settle); clearInterval(radarTimer); aviation?.dispose(); try { map.remove(); } catch { /* Already removed. */ } },
   };
 }

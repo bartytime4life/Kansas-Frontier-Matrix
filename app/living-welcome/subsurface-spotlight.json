@@ -1,0 +1,715 @@
+{
+ "version": 1,
+ "generatedAt": "2026-10-29T16:18:21Z",
+ "sources": [
+  {
+   "id": "kgs-wwc5",
+   "title": "KGS WWC5 well records",
+   "url": "https://www.kgs.ku.edu/PRS/Ora_Archive/wwc5_wells.zip",
+   "retrievedAt": "2026-10-06T02:23:24.686123+00:00",
+   "sourceTime": "2026-09-11",
+   "sha256": "f08e1b808691ec19cd08afd644a565e13e7279f062aac6ab27d47c1adf9ee23f",
+   "limitation": "Recorded water-well logs as written by the driller. Depths are below local land surface; one log does not describe the ground between wells."
+  },
+  {
+   "id": "kgs-core",
+   "title": "KGS Core Library inventory",
+   "url": "https://www.kgs.ku.edu/PRS/Ora_Archive/coreLib.zip",
+   "retrievedAt": "2026-10-06T02:23:15.997130+00:00",
+   "sourceTime": "2026-09-11",
+   "sha256": "f087d0bbd88597fb88189bdbb16f91b29471343db5fda42d0d8d1558ce6ea2b0",
+   "limitation": "Inventory start/end spans in drilled depth; recovery gaps are possible and the hole may deviate from vertical."
+  },
+  {
+   "id": "kgs-core-boxes",
+   "title": "KGS Core Library inventory (box counts and lease names)",
+   "url": "https://www.kgs.ku.edu/PRS/Ora_Archive/coreLib.zip",
+   "retrievedAt": "2026-10-29T16:18:18Z",
+   "sha256": "3deb7a488b33243dbc41df96d9e6a9136c91f97e51e89a468d73c17958fedfe9",
+   "limitation": "Joined only where the inventory start/end depths equal the pinned core range. Box counts describe stored boxes, not recovered length."
+  },
+  {
+   "id": "kgs-mines",
+   "title": "KGS Quarries and Mines inventory",
+   "url": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Quarries_and_Mines/FeatureServer/0",
+   "retrievedAt": "2026-10-29T16:18:19Z",
+   "sha256": "a60d5db1013f455b91cb444cbb3d509a063ac0e5c18373dd7255669c8526ab3b",
+   "limitation": "KGS/KDHE historical inventory, largely circa 2000. Status is historical, not a present-day operating assessment. Points are PLSS-based and do not describe underground workings, depths or reserves."
+  }
+ ],
+ "records": [
+  {
+   "kind": "well",
+   "id": "wwc5-1056646013",
+   "label": "WWC5 1056646013",
+   "coordinates": [
+    -101.675539,
+    39.762112
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/wwc5.wwc5d2.well_details?well_id=1056646013",
+   "recordDate": "2025-04-29",
+   "locationMethod": "GPS",
+   "depthUnit": "ft",
+   "totalDepth": 260.0,
+   "intervals": [
+    {
+     "top": 0.0,
+     "bottom": 5.0,
+     "description": "top soil"
+    },
+    {
+     "top": 5.0,
+     "bottom": 89.0,
+     "description": "fat clay"
+    },
+    {
+     "top": 89.0,
+     "bottom": 108.0,
+     "description": "fine to coarse sand and gravel"
+    },
+    {
+     "top": 108.0,
+     "bottom": 117.0,
+     "description": "limestone, moderately weathered"
+    },
+    {
+     "top": 117.0,
+     "bottom": 173.0,
+     "description": "medium to coarse sand and gravel"
+    },
+    {
+     "top": 173.0,
+     "bottom": 177.0,
+     "description": "limestone, moderately weathered"
+    },
+    {
+     "top": 177.0,
+     "bottom": 221.0,
+     "description": "sandstone, moderately weathered"
+    },
+    {
+     "top": 221.0,
+     "bottom": 259.0,
+     "description": "medium to coarse gravel"
+    },
+    {
+     "top": 259.0,
+     "bottom": 260.0,
+     "description": "shale, completely weathered"
+    }
+   ]
+  },
+  {
+   "kind": "core",
+   "id": "core-1006030866",
+   "label": "Beaumeister 1",
+   "operator": "Guy F. Atkinson Co.",
+   "kid": "1006030866",
+   "coordinates": [
+    -101.730378,
+    39.836999
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/qualified.well_page.DisplayWell?f_kid=1006030866",
+   "photosUrl": "https://chasm.kgs.ku.edu/ords/qualified.cimg2.CoreImages?f_well=1006030866",
+   "depthUnit": "ft",
+   "depthReference": "drilled-depth",
+   "top": 1997.0,
+   "bottom": 2827.0,
+   "boxes": 77
+  },
+  {
+   "kind": "mine",
+   "id": "mine-5095",
+   "label": "Hutchinson Salt Company",
+   "kid": "1007698764",
+   "coordinates": [
+    -97.87117,
+    38.04663
+   ],
+   "county": "Reno",
+   "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Quarries_and_Mines/FeatureServer/0/query?where=OBJECTID%3D5095&outFields=%2A&f=json",
+   "category": "Salt",
+   "product": null,
+   "operation": "Subsurface",
+   "status": "Active",
+   "abandonedDuring": null,
+   "operator": "Hutchinson Salt Company",
+   "lease": "FORMERLY CAREY ROCK SALT",
+   "acres": "640",
+   "note": "THICKNESS OF UNIT VARIES FROM 300 - 325 FT. PLANT IN NW 17-23S-05W. FORMERLY CAREY SALT OPERATION.",
+   "inventorySource": "PRODUCERS 100",
+   "updated": "2000-02-28"
+  },
+  {
+   "kind": "well",
+   "id": "wwc5-509325",
+   "label": "WWC5 509325",
+   "coordinates": [
+    -99.3649,
+    38.9146
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/wwc5.wwc5d2.well_details?well_id=509325",
+   "recordDate": "2017-07-18",
+   "locationMethod": "GPS",
+   "depthUnit": "ft",
+   "totalDepth": 95.0,
+   "intervals": [
+    {
+     "top": 0.0,
+     "bottom": 2.0,
+     "description": "top soil"
+    },
+    {
+     "top": 2.0,
+     "bottom": 22.0,
+     "description": "brown clay"
+    },
+    {
+     "top": 22.0,
+     "bottom": 28.0,
+     "description": "limestone"
+    },
+    {
+     "top": 28.0,
+     "bottom": 37.0,
+     "description": "clay"
+    },
+    {
+     "top": 37.0,
+     "bottom": 43.0,
+     "description": "limestone with clay"
+    },
+    {
+     "top": 43.0,
+     "bottom": 51.0,
+     "description": "gray clay"
+    },
+    {
+     "top": 51.0,
+     "bottom": 59.0,
+     "description": "limestone and gravel"
+    },
+    {
+     "top": 59.0,
+     "bottom": 70.0,
+     "description": "gray clay"
+    },
+    {
+     "top": 70.0,
+     "bottom": 80.0,
+     "description": "sand"
+    },
+    {
+     "top": 80.0,
+     "bottom": 91.0,
+     "description": "dark gray clay"
+    },
+    {
+     "top": 91.0,
+     "bottom": 95.0,
+     "description": "shale"
+    }
+   ]
+  },
+  {
+   "kind": "core",
+   "id": "core-1005425761",
+   "label": "KENYON 1",
+   "operator": "KANSAS GEOLOGICAL SURVEY",
+   "kid": "1005425761",
+   "coordinates": [
+    -97.709147,
+    39.683577
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/qualified.well_page.DisplayWell?f_kid=1005425761",
+   "photosUrl": "https://chasm.kgs.ku.edu/ords/qualified.cimg2.CoreImages?f_well=1005425761",
+   "depthUnit": "ft",
+   "depthReference": "drilled-depth",
+   "top": 14.25,
+   "bottom": 511.1,
+   "boxes": 59
+  },
+  {
+   "kind": "mine",
+   "id": "mine-5162",
+   "label": "Lyons Rock Salt Mine",
+   "kid": "1007698781",
+   "coordinates": [
+    -98.19221,
+    38.32591
+   ],
+   "county": "Rice",
+   "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Quarries_and_Mines/FeatureServer/0/query?where=OBJECTID%3D5162&outFields=%2A&f=json",
+   "category": "Salt",
+   "product": null,
+   "operation": "Subsurface",
+   "status": "Active",
+   "abandonedDuring": null,
+   "operator": "Lyons Salt Company",
+   "lease": "LYONS ROCK SALT MINE",
+   "acres": "430",
+   "note": null,
+   "inventorySource": "PRODUCERS 98",
+   "updated": "2000-02-28"
+  },
+  {
+   "kind": "well",
+   "id": "wwc5-1056970867",
+   "label": "WWC5 1056970867",
+   "coordinates": [
+    -94.949437,
+    39.200567
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/wwc5.wwc5d2.well_details?well_id=1056970867",
+   "recordDate": "2025-09-08",
+   "locationMethod": "GPS",
+   "depthUnit": "ft",
+   "totalDepth": 170.0,
+   "intervals": [
+    {
+     "top": 0.0,
+     "bottom": 6.0,
+     "description": "top soil"
+    },
+    {
+     "top": 6.0,
+     "bottom": 18.0,
+     "description": "clay, tan"
+    },
+    {
+     "top": 18.0,
+     "bottom": 44.0,
+     "description": "medium to coarse sand, slightly moist"
+    },
+    {
+     "top": 44.0,
+     "bottom": 55.0,
+     "description": "coarse gravel, gravelly, saturated"
+    },
+    {
+     "top": 55.0,
+     "bottom": 85.0,
+     "description": "limestone, unweathered"
+    },
+    {
+     "top": 85.0,
+     "bottom": 124.0,
+     "description": "sandy shale, unweathered"
+    },
+    {
+     "top": 124.0,
+     "bottom": 162.0,
+     "description": "sandstone, unweathered, sandy, gray"
+    },
+    {
+     "top": 162.0,
+     "bottom": 170.0,
+     "description": "limestone, unweathered, very hard"
+    }
+   ]
+  },
+  {
+   "kind": "core",
+   "id": "core-1031881223",
+   "label": "Deffenbaugh Quarry 2",
+   "operator": "Kansas Geological Survey",
+   "kid": "1031881223",
+   "coordinates": [
+    -94.805641,
+    39.039109
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/qualified.well_page.DisplayWell?f_kid=1031881223",
+   "photosUrl": "https://chasm.kgs.ku.edu/ords/qualified.cimg2.CoreImages?f_well=1031881223",
+   "depthUnit": "ft",
+   "depthReference": "drilled-depth",
+   "top": 20.0,
+   "bottom": 876.2,
+   "boxes": 75
+  },
+  {
+   "kind": "mine",
+   "id": "mine-127",
+   "label": "Independent Salt Company",
+   "kid": "1007690563",
+   "coordinates": [
+    -98.12735,
+    38.72154
+   ],
+   "county": "Ellsworth",
+   "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Quarries_and_Mines/FeatureServer/0/query?where=OBJECTID%3D127&outFields=%2A&f=json",
+   "category": "Salt",
+   "product": null,
+   "operation": "Underground",
+   "status": "Active",
+   "abandonedDuring": null,
+   "operator": "Independent Salt Company",
+   "lease": null,
+   "acres": null,
+   "note": null,
+   "inventorySource": "QUARRIES 268",
+   "updated": "1998-10-16"
+  },
+  {
+   "kind": "well",
+   "id": "wwc5-480993",
+   "label": "WWC5 480993",
+   "coordinates": [
+    -99.91444,
+    38.09119
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/wwc5.wwc5d2.well_details?well_id=480993",
+   "recordDate": "2014-07-07",
+   "locationMethod": "GPS",
+   "depthUnit": "ft",
+   "totalDepth": 385.0,
+   "intervals": [
+    {
+     "top": 0.0,
+     "bottom": 5.0,
+     "description": "top soil"
+    },
+    {
+     "top": 5.0,
+     "bottom": 15.0,
+     "description": "limestone"
+    },
+    {
+     "top": 15.0,
+     "bottom": 20.0,
+     "description": "fine medium sand and large gravel"
+    },
+    {
+     "top": 20.0,
+     "bottom": 30.0,
+     "description": "tan clay"
+    },
+    {
+     "top": 30.0,
+     "bottom": 110.0,
+     "description": "blue shale"
+    },
+    {
+     "top": 110.0,
+     "bottom": 130.0,
+     "description": "blue clay"
+    },
+    {
+     "top": 130.0,
+     "bottom": 140.0,
+     "description": "blue shale"
+    },
+    {
+     "top": 140.0,
+     "bottom": 145.0,
+     "description": "gray clay"
+    },
+    {
+     "top": 145.0,
+     "bottom": 220.0,
+     "description": "gray sandstone"
+    },
+    {
+     "top": 220.0,
+     "bottom": 280.0,
+     "description": "gray clay with gray sandstone layers"
+    },
+    {
+     "top": 280.0,
+     "bottom": 385.0,
+     "description": "gray sandstone"
+    }
+   ]
+  },
+  {
+   "kind": "core",
+   "id": "core-1006154451",
+   "label": "Glenn Gas Unit 'A' 2",
+   "operator": "Amoco Production Co.",
+   "kid": "1006154451",
+   "coordinates": [
+    -101.566879,
+    37.613077
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/qualified.well_page.DisplayWell?f_kid=1006154451",
+   "photosUrl": "https://chasm.kgs.ku.edu/ords/qualified.cimg2.CoreImages?f_well=1006154451",
+   "depthUnit": "ft",
+   "depthReference": "drilled-depth",
+   "top": 2044.0,
+   "bottom": 3657.0,
+   "boxes": 76
+  },
+  {
+   "kind": "mine",
+   "id": "mine-6078",
+   "label": "Blue Rapids Mine",
+   "kid": "1007698519",
+   "coordinates": [
+    -96.6518,
+    39.70785
+   ],
+   "county": "Marshall",
+   "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Quarries_and_Mines/FeatureServer/0/query?where=OBJECTID%3D6078&outFields=%2A&f=json",
+   "category": "Gypsum",
+   "product": null,
+   "operation": "Subsurface",
+   "status": "Active",
+   "abandonedDuring": null,
+   "operator": "Georgia Pacific Corporation",
+   "lease": "BLUE RAPIDS MINE",
+   "acres": null,
+   "note": null,
+   "inventorySource": "PRODUCERS 89",
+   "updated": "2000-02-28"
+  },
+  {
+   "kind": "well",
+   "id": "wwc5-506704",
+   "label": "WWC5 506704",
+   "coordinates": [
+    -98.9924,
+    38.5845
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/wwc5.wwc5d2.well_details?well_id=506704",
+   "recordDate": "2017-01-15",
+   "locationMethod": "GPS",
+   "depthUnit": "ft",
+   "totalDepth": 230.0,
+   "intervals": [
+    {
+     "top": 0.0,
+     "bottom": 3.0,
+     "description": "top soil"
+    },
+    {
+     "top": 3.0,
+     "bottom": 9.0,
+     "description": "tan clay"
+    },
+    {
+     "top": 9.0,
+     "bottom": 14.0,
+     "description": "sand and gravel, small, medium, clean, loose, coarse"
+    },
+    {
+     "top": 14.0,
+     "bottom": 25.0,
+     "description": "dark gray shale with caliche"
+    },
+    {
+     "top": 25.0,
+     "bottom": 115.0,
+     "description": "soft dark gray shale with limestone"
+    },
+    {
+     "top": 115.0,
+     "bottom": 162.0,
+     "description": "dark gray and light blue shale"
+    },
+    {
+     "top": 162.0,
+     "bottom": 198.0,
+     "description": "soft gray shale with sandstone streaks"
+    },
+    {
+     "top": 198.0,
+     "bottom": 218.0,
+     "description": "gray shale, coal, and sandstone"
+    },
+    {
+     "top": 218.0,
+     "bottom": 230.0,
+     "description": "red bed"
+    }
+   ]
+  },
+  {
+   "kind": "core",
+   "id": "core-1044833286",
+   "label": "Allen 1-34",
+   "operator": "Murfin Drilling Co., Inc.",
+   "kid": "1044833286",
+   "coordinates": [
+    -98.636538,
+    38.087779
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/qualified.well_page.DisplayWell?f_kid=1044833286",
+   "photosUrl": "https://chasm.kgs.ku.edu/ords/qualified.cimg2.CoreImages?f_well=1044833286",
+   "depthUnit": "ft",
+   "depthReference": "drilled-depth",
+   "top": 3594.0,
+   "bottom": 4060.0,
+   "boxes": 65
+  },
+  {
+   "kind": "mine",
+   "id": "mine-8682",
+   "label": "National Gypsum Mine",
+   "kid": "1007697615",
+   "coordinates": [
+    -98.97495,
+    37.34769
+   ],
+   "county": "Barber",
+   "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Quarries_and_Mines/FeatureServer/0/query?where=OBJECTID%3D8682&outFields=%2A&f=json",
+   "category": "Gypsum",
+   "product": null,
+   "operation": "Subsurface",
+   "status": "Active",
+   "abandonedDuring": null,
+   "operator": "National Gypsum Company",
+   "lease": "NATIONAL GYPSUM MINE",
+   "acres": null,
+   "note": null,
+   "inventorySource": "PRODUCERS 96",
+   "updated": "2000-02-28"
+  },
+  {
+   "kind": "well",
+   "id": "wwc5-476439",
+   "label": "WWC5 476439",
+   "coordinates": [
+    -95.36002,
+    38.6234
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/wwc5.wwc5d2.well_details?well_id=476439",
+   "recordDate": "2014-04-07",
+   "locationMethod": "GPS",
+   "depthUnit": "ft",
+   "totalDepth": 140.0,
+   "intervals": [
+    {
+     "top": 0.0,
+     "bottom": 3.0,
+     "description": "topsoil"
+    },
+    {
+     "top": 3.0,
+     "bottom": 18.0,
+     "description": "tan clay"
+    },
+    {
+     "top": 18.0,
+     "bottom": 20.0,
+     "description": "big gravel"
+    },
+    {
+     "top": 20.0,
+     "bottom": 28.0,
+     "description": "tan clay"
+    },
+    {
+     "top": 28.0,
+     "bottom": 40.0,
+     "description": "sandy tan shale"
+    },
+    {
+     "top": 40.0,
+     "bottom": 42.0,
+     "description": "broken limestone"
+    },
+    {
+     "top": 42.0,
+     "bottom": 50.0,
+     "description": "sandstone"
+    },
+    {
+     "top": 50.0,
+     "bottom": 90.0,
+     "description": "gray shale"
+    },
+    {
+     "top": 90.0,
+     "bottom": 140.0,
+     "description": "sandstone"
+    }
+   ]
+  },
+  {
+   "kind": "core",
+   "id": "core-1025810230",
+   "label": "PITTSBURG-MIDWAY PM-12",
+   "operator": "Gulf Pittsburg-Midway",
+   "kid": "1025810230",
+   "coordinates": [
+    -95.033737,
+    37.250316
+   ],
+   "sourceUrl": "https://chasm.kgs.ku.edu/ords/qualified.well_page.DisplayWell?f_kid=1025810230",
+   "photosUrl": "https://chasm.kgs.ku.edu/ords/qualified.cimg2.CoreImages?f_well=1025810230",
+   "depthUnit": "ft",
+   "depthReference": "drilled-depth",
+   "top": 25.0,
+   "bottom": 775.0,
+   "boxes": 76
+  },
+  {
+   "kind": "mine",
+   "id": "mine-5043",
+   "label": "Calvert Corp. · Miller pit",
+   "kid": "1007698638",
+   "coordinates": [
+    -99.75523,
+    39.84608
+   ],
+   "county": "Norton",
+   "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Quarries_and_Mines/FeatureServer/0/query?where=OBJECTID%3D5043&outFields=%2A&f=json",
+   "category": "Volcanic Ash",
+   "product": null,
+   "operation": "Surface",
+   "status": "Active",
+   "abandonedDuring": null,
+   "operator": "Calvert Corporation",
+   "lease": "MILLER",
+   "acres": "30",
+   "note": null,
+   "inventorySource": "PRODUCERS 104",
+   "updated": "2000-02-28"
+  },
+  {
+   "kind": "mine",
+   "id": "mine-635",
+   "label": "Inland Quarries",
+   "kid": "1007691179",
+   "coordinates": [
+    -94.7377,
+    39.0621
+   ],
+   "county": "Wyandotte",
+   "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Quarries_and_Mines/FeatureServer/0/query?where=OBJECTID%3D635&outFields=%2A&f=json",
+   "category": "Limestone",
+   "product": null,
+   "operation": "Underground",
+   "status": "Active",
+   "abandonedDuring": null,
+   "operator": "Inland Quarries",
+   "lease": null,
+   "acres": null,
+   "note": null,
+   "inventorySource": "QUARRIES 872",
+   "updated": "1998-10-16"
+  },
+  {
+   "kind": "mine",
+   "id": "mine-3721",
+   "label": "Linn County lead workings",
+   "kid": "1007694318",
+   "coordinates": [
+    -94.68134,
+    38.15711
+   ],
+   "county": "Linn",
+   "sourceUrl": "https://services2.arcgis.com/ZOdjAzAQ2B0f85zi/arcgis/rest/services/Quarries_and_Mines/FeatureServer/0/query?where=OBJECTID%3D3721&outFields=%2A&f=json",
+   "category": "Lead",
+   "product": "Lead (As Galena)",
+   "operation": null,
+   "status": "Abandoned",
+   "abandonedDuring": "1952",
+   "operator": null,
+   "lease": null,
+   "acres": null,
+   "note": null,
+   "inventorySource": "ABANDONED 6332 CODE= ID=",
+   "updated": "1999-12-07"
+  }
+ ]
+}
