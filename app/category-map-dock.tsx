@@ -7,6 +7,7 @@ import type { KansasDensityGroup } from "./population-prisms";
 import type { PhotorealLandscape } from "./photoreal-landscapes";
 import type { MapKey } from "./map-keys";
 import type { DepthSection, EarthquakeRecordEvent, MagnitudeFrequency, YearCount } from "./earthquake-record";
+import type { FloodGauge, FloodHydrograph } from "./flood-forecast";
 import type { OutlookDay, OutlookProduct } from "./spc-outlook";
 import type { ReportDay, StormReport } from "./storm-reports";
 
@@ -78,7 +79,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -139,6 +140,28 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
    * tool. `still` names why the rivers are not moving, if they are not.
    */
   flow?: Readonly<{ on: boolean; reading: string | null; still: string | null }>;
+  /**
+   * NWS river flood forecasts, for looks that offer the flood tool: the NOAA
+   * NWPS gauges by flood category, a list most severe first, and the picked
+   * gauge's stage hydrograph (observed, then the official forecast).
+   */
+  flood?: Readonly<{
+    on: boolean;
+    /** The network: loading, failed, or held outside the present map time. */
+    state: "loading" | "failed" | "held" | "ready";
+    summary: string | null;
+    list: readonly Readonly<{ id: string; label: string }>[];
+    picked: string | null;
+    gauge: FloodGauge | null;
+    plot: FloodHydrograph | null;
+    reading: string | null;
+    gaugeLoading: boolean;
+    gaugeFailed: boolean;
+    url: string | null;
+  }>;
+  onFlood?: (on: boolean) => void;
+  onFloodPick?: (lid: string) => void;
+  onFloodClear?: () => void;
   onFlow?: (on: boolean) => void;
   /**
    * The county population prisms, for looks that offer the population tool:
@@ -399,6 +422,26 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
       </div>}
     </>}
+    {look.tools?.includes("flood") && flood && onFlood && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={flood.on} onClick={() => onFlood(!flood.on)}
+        title="NOAA NWPS river gauges coloured by NWS flood category, each with its stage hydrograph and the official NWS forecast">{flood.on ? "Hide flood forecasts" : "Show flood forecasts"}</button>
+      {flood.on && <div className="category-map-dock-quakes">
+        <p className="category-map-dock-reading" aria-live="polite">{flood.state === "loading" ? "Reading the NWS river gauges…"
+          : flood.state === "failed" ? "The NWS gauge network did not answer; no flood state is inferred. Try again from Layers."
+          : flood.state === "held" ? "NWS gauges show only at the present map time." : flood.summary}</p>
+        {onFloodPick && flood.list.length > 0 && <PickList summary={`Gauges, most severe first (${flood.list.length})`} label="Kansas NWS river gauges, most severe flood category first"
+          items={flood.list} selected={flood.picked} onPick={onFloodPick} />}
+        {flood.picked && <div className="category-map-dock-quake-event" aria-live="polite">
+          {flood.gauge ? <>
+            <p><b>{flood.gauge.name}</b> · {flood.gauge.lid}{flood.gauge.usgsId ? ` · USGS ${flood.gauge.usgsId}` : ""}</p>
+            {flood.plot && <FloodHydrographChart gauge={flood.gauge} plot={flood.plot} reading={flood.reading} />}
+            <p>{flood.reading}</p>
+          </> : <p>{flood.gaugeFailed ? "The NWS did not answer for this gauge; its category on the map stands." : flood.gaugeLoading ? "Reading the NWS hydrograph…" : null}</p>}
+          <div>{flood.url && <a href={flood.url} target="_blank" rel="noreferrer">NWS gauge page ↗</a>}
+            <button type="button" onClick={onFloodClear} aria-label="Clear the selected gauge">Clear</button></div>
+        </div>}
+      </div>}
+    </>}
     {look.tools?.includes("quakes") && quakes && onQuakes && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={quakes.on} onClick={() => onQuakes(!quakes.on)}
         title={`Every USGS-catalogued Kansas earthquake of magnitude ${quakes.minMagnitude} or more since ${quakes.startYear}, coloured by year`}>{quakes.on ? "Back to the past 30 days" : `Earthquake record since ${quakes.startYear}`}</button>
@@ -590,6 +633,44 @@ export function DroughtChart({ weeks, date, categories, onWeek }: Readonly<{ wee
       {index >= 0 && <line x1={index} x2={index} y1={0} y2={height} stroke="#e6eff2" strokeWidth={1.4} vectorEffect="non-scaling-stroke" />}
     </svg>
     <figcaption><span>{first}</span><span>% of Kansas · gridlines 25, 50, 75</span><span>{end}</span></figcaption>
+  </figure>;
+}
+
+/**
+ * A stage hydrograph as the NWS draws it: the gauge's flood categories as
+ * coloured bands from each stage up, the observed stage as a solid line, the
+ * official forecast dashed with its points, and a line at now.
+ */
+export function FloodHydrographChart({ gauge, plot, reading }: Readonly<{ gauge: FloodGauge; plot: FloodHydrograph; reading: string | null }>) {
+  const width = 260, height = 150, left = 22, right = 3, top = 4, bottom = 14;
+  const x = (time: number) => left + (time - plot.start) / Math.max(1, plot.end - plot.start) * (width - left - right);
+  const y = (value: number) => top + (plot.high - value) / Math.max(1e-6, plot.high - plot.low) * (height - top - bottom);
+  const path = (points: FloodHydrograph["observed"]) => points.map((point, i) => `${i ? "L" : "M"}${x(point.time).toFixed(1)},${y(point.value).toFixed(1)}`).join(" ");
+  const joined = plot.observed.length && plot.forecast.length ? [plot.observed[plot.observed.length - 1], ...plot.forecast] : plot.forecast;
+  // A day label every day for a short plot, every other (or third) day for a long one.
+  const stride = Math.max(1, Math.ceil(plot.days.length / 6));
+  return <figure className="category-map-dock-section category-map-dock-hydrograph" aria-label={`${gauge.label} hydrograph for ${gauge.name}${reading ? `: ${reading}` : ""}`}>
+    <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+      {plot.bands.map(band => <g key={band.id}>
+        <rect x={left} width={width - left - right} y={y(band.to).toFixed(1)} height={Math.max(0, y(band.from) - y(band.to)).toFixed(1)} fill={band.color} fillOpacity={0.16} />
+        <line x1={left} x2={width - right} y1={y(band.from).toFixed(1)} y2={y(band.from).toFixed(1)} stroke={band.color} strokeWidth={1} />
+        <text x={left + 3} y={(y(band.from) - 2.5).toFixed(1)} fontSize={8} fill={band.color}>{`${band.short} ${band.from.toFixed(1)}`}</text>
+      </g>)}
+      {plot.ticks.map(value => <g key={value}>
+        <line x1={left} x2={width - right} y1={y(value).toFixed(1)} y2={y(value).toFixed(1)} stroke="#e6eff2" strokeOpacity={0.12} strokeWidth={0.5} />
+        <text x={left - 3} y={(y(value) + 2.8).toFixed(1)} fontSize={8} fill="#cfe2ea" textAnchor="end">{value}</text>
+      </g>)}
+      {plot.days.map((day, i) => <g key={day.time}>
+        <line x1={x(day.time).toFixed(1)} x2={x(day.time).toFixed(1)} y1={top} y2={height - bottom} stroke="#e6eff2" strokeOpacity={0.1} strokeWidth={0.5} />
+        {i % stride === 0 && <text x={x(day.time).toFixed(1)} y={height - 3} fontSize={8} fill="#cfe2ea" textAnchor="middle">{day.label}</text>}
+      </g>)}
+      {plot.now >= plot.start && plot.now <= plot.end && <line x1={x(plot.now).toFixed(1)} x2={x(plot.now).toFixed(1)} y1={top} y2={height - bottom} stroke="#ffffff" strokeOpacity={0.7} strokeWidth={0.8} strokeDasharray="2 2" />}
+      {plot.observed.length > 1 && <path d={path(plot.observed)} fill="none" stroke="#5cc8ff" strokeWidth={1.6} strokeLinejoin="round" />}
+      {joined.length > 1 && <path d={path(joined)} fill="none" stroke="#d58cff" strokeWidth={1.5} strokeDasharray="4 2" strokeLinejoin="round" />}
+      {plot.forecast.map(point => <circle key={point.time} cx={x(point.time).toFixed(1)} cy={y(point.value).toFixed(1)} r={1.4} fill="#d58cff" />)}
+      {plot.crest && <circle cx={x(plot.crest.time).toFixed(1)} cy={y(plot.crest.value).toFixed(1)} r={3.2} fill="none" stroke="#ffffff" strokeWidth={1} />}
+    </svg>
+    <figcaption><span>{`${gauge.label}${gauge.units ? `, ${gauge.units}` : ""} · Central time`}</span><span><span style={{ color: "#5cc8ff" }}>━ observed</span> <span style={{ color: "#d58cff" }}>╍ forecast</span></span></figcaption>
   </figure>;
 }
 

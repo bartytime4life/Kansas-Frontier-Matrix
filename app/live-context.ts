@@ -13,7 +13,7 @@ import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacit
 import { BUILD_UTC_YEAR } from "./build-clock";
 import { POPULATION_PRISM_LAYER_ID, PRISM_OPACITY, populationPrismLayer, populationPrismsOn } from "./population-prisms";
 import { drawReviewedSnapshot } from "./reviewed-snapshot-layers";
-import { civicDistrictColor, earthquakeColor, earthquakeRadius, nwsSeverityColor } from "./map-keys";
+import { civicDistrictColor, earthquakeColor, earthquakeRadius, FLOOD_STATUS, nwsSeverityColor } from "./map-keys";
 import { globeOverviewPaintSize } from "./globe-context";
 // Only exports the CI fire baseline (a pinned earlier renderer) also has, so its comparison build still links.
 import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay } from "./fire-detection-style";
@@ -882,7 +882,7 @@ export const applyOfficialContextState = (
     "circle-color": nwps.color, "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 8, 10, 18], "circle-blur": 0.82, "circle-opacity": 0.24,
   } });
   ensureLayer(map, { id: nwps.layerIds[1], type: "circle", source: nwps.sourceId, paint: {
-    "circle-color": ["match", ["downcase", ["coalesce", ["get", "floodCategory"], ""]], "major", "#d9364f", "moderate", "#ef6b45", "minor", "#f2a65a", "action", "#f2c14e", nwps.color],
+    "circle-color": ["match", ["get", "floodStatus"], ...(["major", "moderate", "minor", "action", "none", "not_defined", "low_water", "not_current", "out_of_service"] as const).flatMap(status => [status, FLOOD_STATUS[status].color]), nwps.color] as unknown as ExpressionSpecification,
     "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3.4, 10, 7.5, 14, 10], "circle-opacity": 0.9, "circle-stroke-color": ["case", ["==", ["get", "hasForecast"], true], "#e7d9ff", "#172e36"], "circle-stroke-width": ["case", ["==", ["get", "hasForecast"], true], 2.2, 1.2],
   } });
 
