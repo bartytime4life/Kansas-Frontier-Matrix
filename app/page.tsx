@@ -5797,24 +5797,25 @@ export default function Home() {
             setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true);
             return;
           }
+          // These selections are shown only in the category dock, so picking one brings a closed dock back.
           // A reviewed-snapshot feature is a released record, not basemap context: the dock shows it with its release.
           if (renderedHits[0]?.source === REVIEWED_SOURCE_ID) {
             const id = renderedHits[0].properties?.[REVIEWED_FEATURE_ID];
-            if (typeof id === "string" && id) setReviewedPick(id);
+            if (typeof id === "string" && id) { setReviewedPick(id); setCategoryDockHidden(false); }
             return;
           }
           // A storm report owns its selection: the dock shows the report; nothing beneath it is inspected.
           if (renderedHits[0]?.source === STORM_REPORTS_SOURCE_ID) {
             const id = renderedHits[0].properties?.id;
             const report = typeof id === "string" ? stormReportsRef.current.get(id) : undefined;
-            if (report) setReportSelected(report);
+            if (report) { setReportSelected(report); setCategoryDockHidden(false); }
             return;
           }
           // The earthquake record owns its selection: the dock shows the event; nothing beneath it is inspected.
           if (renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID) {
             const id = renderedHits[0].properties?.id;
             const event = typeof id === "string" ? quakeRecordEventsRef.current.get(id) : undefined;
-            if (event) setQuakeRecordSelected(event);
+            if (event) { setQuakeRecordSelected(event); setCategoryDockHidden(false); }
             return;
           }
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));
