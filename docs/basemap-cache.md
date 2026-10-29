@@ -8,7 +8,7 @@ stored or evicted by this service.
 ## Location and operation
 
 The existing initialized external KFM data root on this PC is
-`/home/bartytime/Projects/KFM-data`. The disposable namespace is
+`$HOME/Projects/KFM-data`. The disposable namespace is
 `data/work/basemap-cache/` beneath that root. It contains hashed provider bytes
 and an SQLite index with original URL, retrieval/expiry times, SHA-256, size,
 ETag and provider Last-Modified. Retrieval time is never an observation time.
