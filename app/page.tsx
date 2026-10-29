@@ -34,6 +34,7 @@ import { changeCollection, droughtChangeStart, countyChangeList, countyChangeRea
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationReading, populationChange, populationChangeApiPath, populationChangeCollection, populationChangeKey, populationChangeList, populationChangeReading, syncPopulationChange, validCountyBaseline } from "./population-change";
+import { WELLS_SNAPSHOT_PATH, WELL_PICK_SOURCE_ID, syncWellPick, validWellLevels, wellKgsPage, wellLevelsApiPath, wellLevelsKey, wellPlot, wellReading, wellSites, wellsNear, wellUsgsPage, type WellLevels, type WellSite } from "./well-levels";
 import { TORNADO_DEFAULT_FILTER, TORNADO_RATINGS, TORNADO_SOURCE_ID, UNRATED_COLOR, syncTornadoRecord, tornadoCollection, tornadoDetail, tornadoKey, tornadoList, tornadoReading, tornadoSelect, tornadoYears, validTornadoRecord, type TornadoFilter, type TornadoRecord } from "./tornado-record";
 import { CHAMBERS, LEGISLATURE_SOURCE_ID, legislatureApiPath, legislatureKey, legislatureList, legislatureReading, syncLegislature, validLegislature, type Chamber, type LegislatureDistricts } from "./state-legislature";
 import { CDL_LATEST_YEAR, CDL_SOURCE_ID, CDL_YEARS, cdlKey, cdlPointApiPath, cdlReading, inCdlRegion, syncCropland, type CdlPoint, type CdlValue } from "./cropland";
@@ -1673,6 +1674,16 @@ export default function Home() {
   const [floodFailed, setFloodFailed] = useState<string | null>(null);
   const [floodClock, setFloodClock] = useState(() => Date.now());
   const floodOnRef = useRef(false);
+  // Measured water levels at the KGS monitoring wells (Aquifer map): picking on or off, the wells of the snapshot,
+  // the map centre their list is ordered from, the well picked and its measurements, and a failed read.
+  const [wellsOn, setWellsOn] = useState(false);
+  const [wellList, setWellList] = useState<WellSite[] | null>(null);
+  const [wellsCentre, setWellsCentre] = useState<{ lon: number; lat: number } | null>(null);
+  const [wellPicked, setWellPicked] = useState<string | null>(null);
+  const [wellLevels, setWellLevels] = useState<WellLevels | null>(null);
+  const [wellFailed, setWellFailed] = useState<string | null>(null);
+  const wellsOnRef = useRef(false);
+  const wellsWereOnRef = useRef(false);
   const floodGaugesWereOnRef = useRef(false);
   const [droughtOn, setDroughtOn] = useState(false);
   const [droughtWeek, setDroughtWeek] = useState<string | null>(null);
@@ -4720,6 +4731,73 @@ export default function Home() {
     mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
   };
 
+  // Water levels at wells on the Aquifer map: the monitoring wells are shown (and own their click) while it is on;
+  // a picked well's measured depth to water is read from USGS Water Data.
+  wellsOnRef.current = wellsOn;
+  const showWells = (on: boolean) => {
+    setWellsOn(on);
+    setWellPicked(null);
+    setWellFailed(null);
+    if (on) {
+      wellsWereOnRef.current = Boolean(officialVisibilityRef.current["kgs-monitoring-wells"]);
+      if (!wellsWereOnRef.current) setOfficialContextVisible("kgs-monitoring-wells", true);
+      const centre = mapRef.current?.getCenter();
+      if (centre) setWellsCentre({ lon: centre.lng, lat: centre.lat });
+    } else if (!wellsWereOnRef.current) setOfficialContextVisible("kgs-monitoring-wells", false);
+  };
+  useEffect(() => {
+    if (!wellsOn || wellList) return;
+    const controller = new AbortController();
+    void fetch(WELLS_SNAPSHOT_PATH, { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => { if (!controller.signal.aborted) setWellList(wellSites(value)); })
+      .catch(() => { /* The wells still draw from the map's own copy; only the keyboard list is missing. */ });
+    return () => controller.abort();
+  }, [wellsOn, wellList]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !wellsOn) return;
+    const moved = () => { const centre = map.getCenter(); setWellsCentre({ lon: centre.lng, lat: centre.lat }); };
+    map.on("moveend", moved);
+    return () => { map.off("moveend", moved); };
+  }, [wellsOn]);
+  useEffect(() => {
+    if (!wellsOn || !wellPicked || wellLevels?.site === wellPicked || wellFailed === wellPicked) return;
+    const controller = new AbortController();
+    const site = wellPicked;
+    void fetch(wellLevelsApiPath(site), { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validWellLevels(value, site)) throw new Error("Invalid well levels.");
+        setWellLevels(value);
+      })
+      .catch(() => { if (!controller.signal.aborted) setWellFailed(site); });
+    return () => controller.abort();
+  }, [wellsOn, wellPicked, wellLevels, wellFailed]);
+  const wellItems = useMemo(() => wellList && wellsCentre ? wellsNear(wellList, wellsCentre) : [], [wellList, wellsCentre]);
+  const pickedWell = useMemo(() => wellPicked ? wellList?.find(well => well.site === wellPicked) ?? null : null, [wellList, wellPicked]);
+  const shownWellLevels = wellPicked && wellLevels?.site === wellPicked ? wellLevels : null;
+  const shownWellPlot = useMemo(() => shownWellLevels ? wellPlot(shownWellLevels) : null, [shownWellLevels]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const ring = wellsOn ? pickedWell : null;
+    const sync = () => { try { syncWellPick(map, ring); } catch { /* The style is reloading; its styledata event rings the well again. */ } };
+    sync();
+    if (!ring) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(WELL_PICK_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [wellsOn, pickedWell, styleReady]);
+  const pickWell = (site: string) => {
+    setWellPicked(site);
+    setWellFailed(null);
+    const well = wellList?.find(item => item.site === site);
+    const map = mapRef.current;
+    if (well && map) map.easeTo({ center: [well.lon, well.lat], zoom: Math.max(map.getZoom(), 9), duration: motionDuration(650) });
+  };
+
   // NWS flood forecasts on the River network: the NWPS gauges by flood category, and one gauge's hydrograph,
   // read again every ten minutes while it is shown (observations every 15–60 minutes, forecasts a few times a day).
   floodOnRef.current = floodOn;
@@ -6396,7 +6474,10 @@ export default function Home() {
             const record = findLayerByRenderer(feature.layer.id);
             return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
           });
-          if (renderedHits[0]?.source === LIVING_WATERS_SOURCE || renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID || renderedHits[0]?.source === STORM_REPORTS_SOURCE_ID || renderedHits[0]?.source === REVIEWED_SOURCE_ID) {
+          // Features whose selection the category dock owns point the cursor without opening a hover preview;
+          // so do the monitoring wells while water levels at wells is on.
+          if (renderedHits[0]?.source === LIVING_WATERS_SOURCE || renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID || renderedHits[0]?.source === STORM_REPORTS_SOURCE_ID || renderedHits[0]?.source === REVIEWED_SOURCE_ID
+            || (wellsOnRef.current && renderedHits[0]?.source === OFFICIAL_CONTEXT_BY_ID["kgs-monitoring-wells"].sourceId)) {
             map.getCanvas().style.cursor = "pointer";
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
@@ -6548,6 +6629,12 @@ export default function Home() {
           if (renderedHits[0]?.source === FEMA_RECORD_SOURCE_ID) {
             const geoid = renderedHits[0].properties?.geoid;
             if (typeof geoid === "string") { setFemaCounty(geoid); setCategoryDockHidden(false); }
+            return;
+          }
+          // With water levels at wells on, a monitoring well owns its selection: the dock draws its measured levels.
+          if (wellsOnRef.current && renderedHits[0]?.source === OFFICIAL_CONTEXT_BY_ID["kgs-monitoring-wells"].sourceId) {
+            const site = renderedHits[0].properties?.USGS_ID;
+            if (typeof site === "string") { setWellPicked(site); setWellFailed(null); setCategoryDockHidden(false); }
             return;
           }
           // With flood forecasts shown, an NWS gauge owns its selection: the dock draws its hydrograph.
@@ -10409,6 +10496,10 @@ export default function Home() {
     setTornadoOn(false);
     setTornadoPicked(null);
     // The change closes with its map; the starters above already decide whether the county outlines are on.
+    // So do water levels at wells; the starters above already decide whether the monitoring wells are on.
+    wellsWereOnRef.current = false;
+    setWellsOn(false);
+    setWellPicked(null);
     popChangePrismsRef.current = false;
     popChangeHidCountiesRef.current = false;
     setPopChangeOn(false);
@@ -11406,7 +11497,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(tornadoOn && tornadoRecord ? [tornadoKey(tornadoRecord, tornadoFilter)] : []), ...(popChangeOn && popChangeCollection ? [populationChangeKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(tornadoOn && tornadoRecord ? [tornadoKey(tornadoRecord, tornadoFilter)] : []), ...(popChangeOn && popChangeCollection ? [populationChangeKey()] : []), ...(wellsOn ? [wellLevelsKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -11493,6 +11584,11 @@ export default function Home() {
             onDrought={showDrought} onDroughtWeek={chooseDroughtWeek} onDroughtPlay={playDrought} onDroughtChange={(weeks) => { setDroughtChange(weeks); setDroughtSinceFailed(null); }} onDroughtCounty={pickDroughtCounty} onDroughtCountyClear={() => setDroughtCounty(null)}
             population={activeCategoryMap.tools?.includes("population") ? { on: populationPrisms, ...densityGroupCounts(officialPayloads["census-counties"]?.data.features ?? []), metresPerPerson: PRISM_METRES_PER_PERSON_PER_SQUARE_MILE } : undefined}
             onPopulation={showPopulationPrisms}
+            wells={activeCategoryMap.tools?.includes("wells") ? { on: wellsOn, list: wellItems, picked: wellPicked, name: pickedWell?.name ?? null,
+              loading: Boolean(wellPicked && !shownWellLevels && wellFailed !== wellPicked), failed: wellPicked !== null && wellFailed === wellPicked && !shownWellLevels,
+              reading: shownWellLevels ? wellReading(shownWellLevels) : null, plot: shownWellPlot,
+              usgsUrl: wellPicked ? wellUsgsPage(wellPicked) : null, kgsUrl: wellPicked ? wellKgsPage(wellPicked) : null } : undefined}
+            onWells={showWells} onWellPick={pickWell} onWellClear={() => setWellPicked(null)}
             populationChange={activeCategoryMap.tools?.includes("population") ? { on: popChangeOn, loading: popChangeOn && !popChange && !popChangeBroken, failed: popChangeBroken,
               reading: popChange ? populationChangeReading(popChange) : null, bars: popChangeBars, list: popChangeItems, picked: popChangeCounty,
               county: popChange && popChangeCounty ? countyPopulationReading(popChange, popChangeCounty) : null } : undefined}

@@ -525,6 +525,39 @@ the snapshot files in `public/data/groundwater/`. These are regional classified
 estimates, not well measurements; Explore underground opens the recorded well
 logs and cores.
 
+### Water levels at wells
+
+**Water levels at wells** shows the 2026 KGS monitoring network
+(`kgs-monitoring-wells`) and makes each well pickable, by click or from a
+keyboard list of the 40 wells nearest the map centre (refreshed when the map
+stops moving). A picked well is ringed. The dock then reads its measured depth
+to water from the USGS Water Data `field-measurements` collection
+(`app/well-levels.ts`, served by `/api/well-levels?site=`). The measurements
+are parameter 72019, in feet below land surface, and most are the January
+readings KGS and USGS take while irrigation pumps are off.
+
+- **Route:** follows the collection's `next` pages (same host and collection
+  only, at most five pages of 1,000) and keeps a well six hours.
+- **Missing values:** a measurement without a value (a dry, obstructed or
+  pumping well), another parameter or another unit is left out, never read as
+  zero.
+- **Reading:** gives the latest depth (marked provisional when it is), the
+  number of measurements and their years, and the net change in water level
+  since the first measurement. It also gives the least-squares trend in feet
+  per year over the whole record. Separately, it gives the trend over the
+  last ten calendar years, when the record reaches further back and holds at
+  least three measurements over five years.
+- **Hydrograph:** plots depth increasing downward, as hydrogeologists draw
+  it, so a falling water level runs down the chart. Each measurement is a
+  dot, hollow while provisional, and the record's trend is dashed across it.
+- **Links:** the dock links the well's USGS and KGS WIZARD records.
+- **Failure:** if USGS does not answer, the dock says so and infers no
+  level.
+
+The wells the tool showed are hidden again when it closes. Wells that were
+already on stay on. One well is one point in the aquifer: neighbouring wells
+can differ by tens of feet.
+
 ## Reviewed snapshots from the site database
 
 The River network, Storm desk, Hazard watch and Landform relief docks offer
