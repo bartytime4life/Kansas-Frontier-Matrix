@@ -196,8 +196,9 @@ logs and cores.
 
 ## Reviewed snapshots from the site database
 
-The River network, Storm desk and Hazard watch docks offer **Reviewed …
-snapshots**: the hourly USGS discharge and NWS alert captures that the site's
+The River network, Storm desk, Hazard watch and Landform relief docks offer
+**Reviewed … snapshots**: the hourly USGS discharge, NWS alert and USGS
+earthquake captures that the site's
 publishing pipeline normalized, checked against their signed manifest and
 committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
 `/api/curated/{source}` and its `/history` (up to 20 releases).
@@ -211,6 +212,11 @@ committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
   layer also reads). Reviewed alert snapshots share the live NWS severity key.
 - Alert areas take their NWS severity colour; alerts that have expired leave
   the display, as on `/curated`.
+- Earthquakes draw as the live catalog does (colour and size by magnitude),
+  ringed amber for an automatic USGS solution and white once an analyst has
+  reviewed it (`REVIEWED_EARTHQUAKE_KEY`). Retracted events are not published.
+  See `docs/second-pc-pipeline.md` for what the release keeps and the owner
+  steps before it publishes.
 - The scrubber runs oldest to newest; each step names the hour the capture is
   for, when it was published and how many features it holds, and says when it
   is older than two hours. Play steps forward and stops at the newest.

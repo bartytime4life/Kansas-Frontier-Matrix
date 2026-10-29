@@ -25,11 +25,24 @@ function geometry(value) {
   if (value.type === 'Point' ? !point(value.coordinates) : value.type === 'Polygon' ? !polygon(value.coordinates) : !value.coordinates.every(polygon)) fail('GEOMETRY_INVALID');
   return { type: value.type, coordinates: value.coordinates };
 }
+// The capture window both point sources are requested with (ingestion-sources.mjs).
+const outsideWindow = shape => shape.type !== 'Point' || shape.coordinates[0] < -102.1 || shape.coordinates[0] > -94.5 || shape.coordinates[1] < 36.9 || shape.coordinates[1] > 40.1;
 function sourceGeometry(sourceId, value) {
   const shape = geometry(value);
-  if (sourceId === 'usgs-streamflow' && shape !== null && (shape.type !== 'Point' || shape.coordinates[0] < -102.1 || shape.coordinates[0] > -94.5 || shape.coordinates[1] < 36.9 || shape.coordinates[1] > 40.1)) fail('GEOGRAPHIC_SCOPE_INVALID');
+  if (sourceId === 'usgs-streamflow' && shape !== null && outsideWindow(shape)) fail('GEOGRAPHIC_SCOPE_INVALID');
+  if (sourceId === 'usgs-earthquakes' && (shape === null || outsideWindow(shape))) fail('GEOGRAPHIC_SCOPE_INVALID');
   return shape;
 }
+const EARTHQUAKE_ID = /^[a-z0-9]{2,40}$/;
+const EARTHQUAKE_PAGE = 'https://earthquake.usgs.gov/earthquakes/eventpage/';
+const EARTHQUAKE_WINDOW_MS = 30 * 86400000;
+/** A finite number inside [min, max], or null for a source null; anything else is a schema change. */
+function bounded(value, min, max) {
+  if (value === null || value === undefined) return null;
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < min || value > max) fail('EARTHQUAKE_SCHEMA_CHANGED');
+  return value;
+}
+const epoch = value => { if (typeof value !== 'number' || !Number.isInteger(value) || !Number.isFinite(new Date(value).getTime())) fail('SOURCE_TIME_INVALID'); return new Date(value).toISOString(); };
 function amount(value) {
   if (value === null) return null;
   if (!((typeof value === 'number' || typeof value === 'string' && value.length <= 64 && /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(value)) && Number.isFinite(Number(value)) && Math.abs(Number(value)) <= 1e9)) fail('STREAMFLOW_VALUE_INVALID');
@@ -39,17 +52,33 @@ function amount(value) {
 export function normalizeCapture(request, capture) {
   const r = capture.receipt; const value = parse(capture.bytes);
   const fixed = captureRequest(request.sourceId, request.slot);
-  if (!['usgs-streamflow', 'nws-alerts'].includes(request.sourceId) || fixed.id !== request.id || r.captureId !== request.id || r.sourceId !== request.sourceId
+  if (!['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes'].includes(request.sourceId) || fixed.id !== request.id || r.captureId !== request.id || r.sourceId !== request.sourceId
     || r.sha256 !== sha(capture.bytes) || r.byteLength !== capture.bytes.length || r.sourceUrl !== fixed.url
     || r.validation !== 'structure-valid' || value.type !== 'FeatureCollection' || !Array.isArray(value.features) || value.features.length > 1000) fail('CAPTURE_INVALID');
   timestamp(r.retrievedAt);
   const ids = new Set();
-  const features = value.features.map(feature => {
+  const features = value.features.flatMap(feature => {
     const p = feature.properties;
     const id = text(String(feature.id ?? p.id ?? ''), 512);
     if (!id || ids.has(id)) fail('FEATURE_ID_INVALID'); ids.add(id);
-    let properties;
-    if (request.sourceId === 'nws-alerts') {
+    let properties, shape = feature.geometry;
+    if (request.sourceId === 'usgs-earthquakes') {
+      if (p.type !== 'earthquake' || !['automatic', 'reviewed', 'deleted'].includes(p.status) || !EARTHQUAKE_ID.test(id)) fail('EARTHQUAKE_SCHEMA_CHANGED');
+      // USGS marks a retracted event deleted; it is not an earthquake to show.
+      if (p.status === 'deleted') return [];
+      const c = feature.geometry?.coordinates;
+      if (feature.geometry?.type !== 'Point' || !Array.isArray(c) || c.length !== 3) fail('GEOMETRY_INVALID');
+      const observedAt = epoch(p.time);
+      if (timestamp(observedAt) > request.slot || timestamp(observedAt) < request.slot - EARTHQUAKE_WINDOW_MS) fail('OBSERVATION_OUTSIDE_WINDOW');
+      // Depth leaves the coordinates (published points are two-dimensional) and keeps its kilometres.
+      shape = { type: 'Point', coordinates: [c[0], c[1]] };
+      properties = { magnitude: bounded(p.mag, -2, 10), magnitudeType: p.magType === null || p.magType === undefined ? null : text(p.magType, 16),
+        place: p.place === null || p.place === undefined ? null : text(p.place, 256), depthKm: bounded(c[2], -10, 800), observedAt,
+        updatedAt: p.updated === null || p.updated === undefined ? null : epoch(p.updated), status: p.status,
+        // Built from the checked id, never taken from the provider's url field.
+        eventUrl: EARTHQUAKE_PAGE + id, sourceFeatureId: id };
+      if ((p.magType != null && properties.magnitudeType === null) || (p.place != null && properties.place === null)) fail('EARTHQUAKE_SCHEMA_CHANGED');
+    } else if (request.sourceId === 'nws-alerts') {
       const times = Object.fromEntries(['sent', 'effective', 'expires', 'onset', 'ends'].map(k => [k, p[k] === null || p[k] === undefined ? null : providerTime(p[k])]));
       for (const field of ['sent', 'effective', 'expires']) timestamp(times[field]);
       if (timestamp(times.expires) < timestamp(times.effective) || timestamp(times.sent) > timestamp(r.retrievedAt) + 60000) fail('ALERT_TIME_INVALID');
@@ -67,8 +96,7 @@ export function normalizeCapture(request, capture) {
         qualifiers: p.qualifier === null || p.qualifier === undefined ? [] : [text(p.qualifier, 128)],
         provisional: ['Provisional','P'].includes(p.approval_status) };
     }
-    const shape = sourceGeometry(request.sourceId, feature.geometry);
-    return { type: 'Feature', id, geometry: shape, properties };
+    return [{ type: 'Feature', id, geometry: sourceGeometry(request.sourceId, shape), properties }];
   });
   features.sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
   const product = { format: 'kfm-curated-context-v1', sourceId: request.sourceId, captureId: request.id, captureSha256: r.sha256,
@@ -81,14 +109,21 @@ export function validateContext(product) {
   const keys = ['format','sourceId','captureId','captureSha256','sourceUrl','retrievedAt','bucketAt','partial','evidenceRole','evidenceEligible','rightsUrl','limitation','data'];
   if (product?.format !== 'kfm-curated-context-v1' || Object.keys(product).sort().join(',') !== keys.sort().join(',') || product.evidenceRole !== 'EXTERNAL_CONTEXT_ONLY' || product.evidenceEligible !== false) fail('CONTEXT_INVALID');
   const req = captureRequest(product.sourceId, timestamp(product.bucketAt));
-  if (!['usgs-streamflow', 'nws-alerts'].includes(product.sourceId) || product.captureId !== req.id || product.sourceUrl !== req.url || product.rightsUrl !== req.rightsUrl || product.limitation !== req.limitation
+  if (!['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes'].includes(product.sourceId) || product.captureId !== req.id || product.sourceUrl !== req.url || product.rightsUrl !== req.rightsUrl || product.limitation !== req.limitation
     || !/^[a-f0-9]{64}$/.test(product.captureSha256) || typeof product.partial !== 'boolean' || product.data?.type !== 'FeatureCollection' || !Array.isArray(product.data.features) || product.data.features.length > 1000) fail('CONTEXT_INVALID');
   timestamp(product.retrievedAt);
   const ids = new Set();
   for (const f of product.data.features) {
     if (f?.type !== 'Feature' || Object.keys(f).sort().join(',') !== 'geometry,id,properties,type' || !text(f.id) || ids.has(f.id) || !f.properties || typeof f.properties !== 'object') fail('CONTEXT_INVALID');
     ids.add(f.id); sourceGeometry(product.sourceId, f.geometry); const p = f.properties;
-    if (product.sourceId === 'nws-alerts') {
+    if (product.sourceId === 'usgs-earthquakes') {
+      const allowed = ['magnitude','magnitudeType','place','depthKm','observedAt','updatedAt','status','eventUrl','sourceFeatureId'];
+      if (Object.keys(p).sort().join(',') !== allowed.sort().join(',') || p.sourceFeatureId !== f.id || !EARTHQUAKE_ID.test(f.id) || p.eventUrl !== EARTHQUAKE_PAGE + f.id
+        || !['automatic', 'reviewed'].includes(p.status) || (p.magnitudeType !== null && text(p.magnitudeType, 16) === null) || (p.place !== null && text(p.place, 256) === null)) fail('CONTEXT_INVALID');
+      try { bounded(p.magnitude, -2, 10); bounded(p.depthKm, -10, 800); } catch { fail('CONTEXT_INVALID'); }
+      if (timestamp(p.observedAt) > req.slot || timestamp(p.observedAt) < req.slot - EARTHQUAKE_WINDOW_MS) fail('CONTEXT_INVALID');
+      if (p.updatedAt !== null) timestamp(p.updatedAt);
+    } else if (product.sourceId === 'nws-alerts') {
       const allowed = ['event','headline','severity','certainty','urgency','areaDesc','status','messageType','sent','effective','onset','ends','expires','description','instruction','observedAt'];
       if (Object.keys(p).sort().join(',') !== allowed.sort().join(',') || allowed.some(k => p[k] !== null && text(p[k], ['description','instruction'].includes(k) ? 12000 : 1000) === null)
         || p.observedAt !== p.sent || timestamp(p.expires) < timestamp(p.effective)) fail('CONTEXT_INVALID');

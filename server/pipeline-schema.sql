@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS kfm_pipeline_heads (
  source_id VARCHAR(32) PRIMARY KEY, release_id CHAR(64) NULL,
  previous_id CHAR(64) NULL, revision BIGINT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB;
-INSERT IGNORE INTO kfm_pipeline_heads (source_id) VALUES ('usgs-streamflow'),('nws-alerts'),('water'),('weather');
+INSERT IGNORE INTO kfm_pipeline_heads (source_id) VALUES ('usgs-streamflow'),('nws-alerts'),('usgs-earthquakes'),('water'),('weather');
 CREATE TABLE IF NOT EXISTS kfm_pipeline_events (
  event_id VARCHAR(64) PRIMARY KEY, source_id VARCHAR(32) NOT NULL,
  release_id CHAR(64) NOT NULL, previous_id CHAR(64) NULL,

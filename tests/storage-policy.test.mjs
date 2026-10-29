@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { storagePolicy, storagePlan } from '../scripts/pc-pipeline/storage-policy.mjs';
 test('defaults reserve hosting for one compact release; settings cannot remove hard bounds', () => {
-  assert.deepEqual(storagePolicy({}), { priority: ['nws-alerts','usgs-streamflow'], maxPublicationsPerTick: 1, maxBytesPerTick: 8388608 });
-  for (const storagePolicyValue of [null, [], { priority: ['nws-alerts','nws-alerts'] }, { maxBytesPerTick: Infinity }, { maxBytesPerTick: 1 }, { maxPublicationsPerTick: 3 }, { uploadRaw: true }]) {
+  assert.deepEqual(storagePolicy({}), { priority: ['nws-alerts','usgs-streamflow','usgs-earthquakes'], maxPublicationsPerTick: 1, maxBytesPerTick: 8388608 });
+  for (const storagePolicyValue of [null, [], { priority: ['nws-alerts','nws-alerts'] }, { priority: ['nws-alerts'] }, { maxBytesPerTick: Infinity }, { maxBytesPerTick: 1 }, { maxPublicationsPerTick: 4 }, { uploadRaw: true }]) {
     assert.throws(() => storagePolicy({ storagePolicy: storagePolicyValue }), /STORAGE_POLICY_INVALID/);
   }
   const policy = storagePolicy({ storagePolicy: { priority: ['usgs-streamflow','nws-alerts'], maxPublicationsPerTick: 2, maxBytesPerTick: 16777216 } });
@@ -22,7 +22,7 @@ test('planner edits produce valid bounded policy without network writes', async 
     tree = h.render(h.exports.default);
     const field = findNode(tree, n => n.type === 'textarea');
     const config = JSON.parse(field.props.value);
-    assert.equal(storagePolicy(config).priority[0], 'usgs-streamflow');
+    assert.deepEqual(storagePolicy(config).priority, ['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes'], 'earthquakes stay third, published only when named in sources');
     assert.equal(field.props.readOnly, true); assert.equal(calls, 0);
   } finally { h.dispose(); }
 });

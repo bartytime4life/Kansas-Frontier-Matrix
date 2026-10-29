@@ -7,7 +7,8 @@ export const CAPTURE_SOURCES = Object.freeze([
   { id: "nws-alerts", name: "NWS Kansas alerts", intervalMs: 3_600_000, limitBytes: 8 * 1024 * 1024,
     rightsUrl: "https://www.weather.gov/disclaimer",
     limitation: "Active Kansas alert payload at retrieval time; no zone geometry expansion. Expired or missing alerts are not an all-clear. Not an emergency notification service." },
-  { id: "usgs-earthquakes", name: "USGS earthquake catalog", intervalMs: 21_600_000, limitBytes: 8 * 1024 * 1024,
+  // Hourly, like the other sources, so a published snapshot stays inside the release profiles' two-hour freshness.
+  { id: "usgs-earthquakes", name: "USGS earthquake catalog", intervalMs: 3_600_000, limitBytes: 8 * 1024 * 1024,
     rightsUrl: "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
     limitation: "Kansas bounding window, rolling 30 days, at most 250 events. Catalog locations, magnitude, depth and review state can be revised. At the row cap the capture is partial." },
 ]);

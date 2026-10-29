@@ -3,15 +3,15 @@ import type { FeatureCollection } from "geojson";
 import { readBoundedJson } from "./bounded-json";
 
 /**
- * Reviewed snapshots from the site's own database: hourly USGS streamflow and
- * NWS alert captures that the publishing pipeline normalized, signed and
+ * Reviewed snapshots from the site's own database: hourly USGS streamflow, NWS
+ * alert and USGS earthquake captures that the publishing pipeline normalized, signed and
  * committed to MySQL (server/pipeline-*.mjs), read through /api/curated. They
  * are approved context releases, not admitted evidence, and each keeps its own
  * capture time.
  */
-export type ReviewedSourceId = "usgs-streamflow" | "nws-alerts";
-export const REVIEWED_SOURCE_BY_TOPIC: Readonly<Record<string, ReviewedSourceId>> = Object.freeze({ water: "usgs-streamflow", weather: "nws-alerts", disaster: "nws-alerts" });
-export const REVIEWED_SOURCE_LABEL: Readonly<Record<ReviewedSourceId, string>> = Object.freeze({ "usgs-streamflow": "USGS discharge", "nws-alerts": "NWS alerts" });
+export type ReviewedSourceId = "usgs-streamflow" | "nws-alerts" | "usgs-earthquakes";
+export const REVIEWED_SOURCE_BY_TOPIC: Readonly<Record<string, ReviewedSourceId>> = Object.freeze({ water: "usgs-streamflow", weather: "nws-alerts", disaster: "nws-alerts", geology: "usgs-earthquakes" });
+export const REVIEWED_SOURCE_LABEL: Readonly<Record<ReviewedSourceId, string>> = Object.freeze({ "usgs-streamflow": "USGS discharge", "nws-alerts": "NWS alerts", "usgs-earthquakes": "USGS earthquake" });
 
 export type ReviewedRelease = Readonly<{ releaseId: string; publishedAt: string }>;
 export type ReviewedProduct = Readonly<{

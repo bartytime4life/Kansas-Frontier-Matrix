@@ -170,6 +170,40 @@ artifact qualification and service/resource acceptance. Disable any overlapping
 hosted/GitHub capture schedule for the transferred sources. One scheduler owns
 each source/product. The original hosted archive remains separate and intact.
 
+## USGS earthquakes as a third released source (2026-10-29)
+
+`usgs-earthquakes` is now a released external-context source beside streamflow
+and alerts. The capture is the existing fixed request (USGS FDSN, Kansas window
+-102.1 to -94.5, 36.9 to 40.1, rolling 30 days, at most 250 events), now hourly
+so a release stays within the profiles' two-hour freshness. The normalizer
+(`server/pipeline-normalize.mjs`) keeps only magnitude, magnitude type, place,
+depth in km (moved out of the coordinates, so published points stay 2D), event
+time, update time, USGS review status, the event page built from the checked
+event id, and that id. Events USGS marks `deleted` are left out; any other
+status or event type, an id outside `[a-z0-9]`, a magnitude outside −2 to 10, a
+depth outside −10 to 800 km, an event outside the window or older than 30 days
+fails closed (`EARTHQUAKE_SCHEMA_CHANGED`, `GEOGRAPHIC_SCOPE_INVALID`,
+`OBSERVATION_OUTSIDE_WINDOW`), as streamflow does.
+
+Owner steps, in order, before earthquakes publish:
+
+1. **Re-sign the existing profiles.** This change edits the three recipe files,
+   so the recipe digest changes. Releases already published stay readable until
+   their profiles expire, but new streamflow and alert releases are refused
+   (`RECIPE_CHANGED` / `APPROVAL_INVALID`) until fresh profiles are approved with
+   `profile-template SOURCE` and `approve`, as above.
+2. **Apply the schema** with `scripts/migrate-pipeline.mjs` (review, then
+   `--apply` with its digest and a verified backup). The only change is the
+   `usgs-earthquakes` head row; every statement is `IF NOT EXISTS` or
+   `INSERT IGNORE`, so re-running it is safe.
+3. **Approve an earthquake profile**: `profile-template usgs-earthquakes`, review,
+   `approve`, and install it in the approval directory.
+4. **Opt the PC in**: add `"usgs-earthquakes"` to the config's `sources` (and to
+   `storagePolicy.priority` if the config sets one). New installs still start
+   with the two original sources.
+
+The Landform relief dock then offers **Reviewed USGS earthquake snapshots**.
+
 ## Transfer, website and recovery
 
 `POST /api/pipeline/v1/{heartbeat,stage,chunk,release,commit}` accepts signed,
@@ -257,7 +291,8 @@ other properties and do not turn on `publish` merely to edit priorities):
 }
 ```
 
-Priority must contain both sources once. Attempts may be 1–2; byte budget may
+Priority must name each source once: the two original sources, optionally
+with `usgs-earthquakes` as a third. Attempts may be 1–3; byte budget may
 be 256 KiB–16 MiB. The existing per-product ceiling stays 8 MiB. Failed attempts
 also consume the run's budget. A product larger than the chosen budget remains
 private and deferred; increase the budget within bounds or prepare a smaller
