@@ -53,7 +53,9 @@ export default defineConfig(async () => {
       __KFM_BUILD_UTC_YEAR__: JSON.stringify(Math.max(2026, new Date().getUTCFullYear())),
     },
     server: {
-      host: "0.0.0.0",
+      // Development requests do not pass through the hosted Sites identity
+      // boundary. Keep caller-supplied identity headers on this machine only.
+      host: "127.0.0.1",
       allowedHosts: ["terminal.local"],
       ...(isCodexSeatbeltSandbox
         ? { watch: { useFsEvents: false, usePolling: true } }

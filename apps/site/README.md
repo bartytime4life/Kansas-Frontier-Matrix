@@ -330,7 +330,10 @@ documentation. Neither operation changes hosted versions or releases.
 | `source/scripts/qwen-local-contract.mjs` | Versioned, non-secret owner-local Qwen configuration shared by the UI, loopback companion, installer, and tests: `qwen3:8b`, bridge `127.0.0.1:8768`, and Ollama `127.0.0.1:11434`. The browser contacts only the companion. Hosted `/api/qwen` is dormant and fail-closed; endpoint/model environment aliases do not enable it and there is no hosted fallback. |
 | `.wrangler/local-state/`, `.sites-runtime/` | Ignored local simulator state and install cache; neither contains hosted data. |
 
-The local launcher uses the built Worker and binds to loopback by default. The source's `npm run dev` uses Vite's separate development configuration, which currently binds to `0.0.0.0`; choose the launcher for a loopback-only check. Changing a template environment variable does not change a hosted Site setting.
+The local launcher and the source's separate Vite `npm run dev` workflow both
+bind to loopback by default. Use the launcher when checking the built Worker and
+its additional local identity-header rejection boundary. Changing a template
+environment variable does not change a hosted Site setting.
 
 The snapshot includes checked-in static assets and the D1 schema migrations.
 Live provider responses, private D1 submission and review records, private R2
