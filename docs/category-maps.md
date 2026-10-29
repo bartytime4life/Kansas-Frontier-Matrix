@@ -204,7 +204,12 @@ and released that Thursday.
   statistics, as the USDM draws its time series. A click on the chart, the
   Week slider, or Week before / Week after shows that week's map; Newest
   follows the newest release. A dragged slider settles before a week is read,
-  and the last map drawn stays on screen while the next loads.
+  and the last map drawn stays on screen while the next loads. **Play** steps
+  forward a week at a time, holding each week 1.2 s once it is drawn, to the
+  newest; from the newest it starts a year back. It stops on a week that does
+  not answer, and choosing a week by hand pauses it. With reduced motion set,
+  Play is off and the weeks are stepped by hand; the reading is not announced
+  every week while it plays.
 - **Counties.** With the map shown, the site reads the Census 2020 Kansas
   counties it already uses for search and People, and draws their lines over
   the categories, under the state line, as the USDM's state maps do. Each

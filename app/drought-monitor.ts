@@ -60,6 +60,14 @@ export function latestUsdmDate(now: Date): string {
 }
 export const previousUsdmDate = (date: string): string => compact((compactMs(date) ?? 0) - 7 * DAY_MS);
 export const nextUsdmDate = (date: string): string => compact((compactMs(date) ?? 0) + 7 * DAY_MS);
+/** The week `weeks` before `date`, no earlier than the first map. */
+export const usdmWeeksBefore = (date: string, weeks: number): string => {
+  const back = compact((compactMs(date) ?? 0) - weeks * 7 * DAY_MS);
+  return back < USDM_FIRST_DATE ? USDM_FIRST_DATE : back;
+};
+/** Play holds each week this long once it is drawn; from the newest it starts a year back. */
+export const DROUGHT_PLAY_STEP_MS = 1200;
+export const DROUGHT_PLAY_WEEKS = 52;
 const LONG = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric", year: "numeric" });
 /** "Oct 20, 2026" for "20261020". */
 export const usdmDateLabel = (date: string): string => { const ms = compactMs(date); return ms === null ? date : LONG.format(new Date(ms)); };
