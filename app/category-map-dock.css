@@ -129,3 +129,7 @@
 .category-map-dock-drought-chart figcaption{display:flex;justify-content:space-between;font-size:11px;font-variant-numeric:tabular-nums;color:#cfe2ea}
 .category-map-dock-drought-steps{grid-template-columns:repeat(4,1fr)}
 .category-map-dock-drought-steps button:disabled{opacity:.45;cursor:default}
+.category-map-dock-section{margin:0;display:grid;gap:2px}
+.category-map-dock-section svg{display:block;width:100%;height:auto;background:#0d2a35;border-radius:6px}
+.category-map-dock-section circle{cursor:pointer}
+.category-map-dock-section figcaption{display:flex;justify-content:space-between;gap:6px;font-size:11px;line-height:1.35;font-variant-numeric:tabular-nums;color:#cfe2ea}

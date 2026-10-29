@@ -103,6 +103,79 @@ export function recordEventList(record: Pick<EarthquakeRecord, "events">, year: 
   return events.slice(0, limit).map(event => ({ id: event.id, label: [event.time.slice(0, 10), `M ${event.magnitude.toFixed(1)}`, event.place].filter(Boolean).join(" · ") }));
 }
 
+/** The record's events for a chosen year, or all of them. */
+const ofYear = (events: readonly EarthquakeRecordEvent[], year: number | null) => year === null ? events : events.filter(event => event.year === year);
+
+export type SectionPoint = Readonly<{ id: string; longitude: number; depth: number; magnitude: number; color: string }>;
+export type DepthSection = Readonly<{
+  /** Events with a depth, smallest first so the largest draw on top. */
+  points: readonly SectionPoint[];
+  /** The plotted depth range, at least 15 km, rounded up to 5 km. */
+  maxDepth: number;
+  /** Events without a reported depth, and those at exactly 5 or 10 km (often a depth held fixed, not resolved). */
+  withoutDepth: number; atSetDepth: number;
+}>;
+/**
+ * The record as a west–east cross-section: each event at its longitude and
+ * USGS hypocentre depth, sized by magnitude and coloured by year as on the
+ * map. Depth is the least certain coordinate of a Kansas earthquake; where
+ * USGS could not resolve it, it is often held at a set value.
+ */
+export function depthSection(record: Pick<EarthquakeRecord, "events" | "endYear">, year: number | null): DepthSection {
+  const events = ofYear(record.events, year);
+  const located = events.filter(event => event.depthKilometers !== null && event.depthKilometers >= 0);
+  const deepest = Math.max(0, ...located.map(event => event.depthKilometers!));
+  return Object.freeze({
+    points: Object.freeze(located.map(event => Object.freeze({ id: event.id, longitude: event.longitude, depth: event.depthKilometers!, magnitude: event.magnitude, color: recordYearColor(event.year, record.endYear) }))
+      .sort((a, b) => a.magnitude - b.magnitude)),
+    maxDepth: Math.max(15, Math.ceil(deepest / 5) * 5),
+    withoutDepth: events.length - located.length,
+    atSetDepth: located.filter(event => event.depthKilometers === 5 || event.depthKilometers === 10).length,
+  });
+}
+
+export type MagnitudeFrequency = Readonly<{
+  /** The number of events of each magnitude or larger, in 0.1 steps from the completeness magnitude. */
+  bins: readonly Readonly<{ magnitude: number; count: number }>[];
+  /** Gutenberg–Richter b and its standard error, and a in log10 N = a − bM; null with fewer than 50 events. */
+  b: number | null; bError: number | null; a: number | null;
+  count: number; completeness: number;
+}>;
+/**
+ * The magnitude–frequency distribution of the record (or a year of it),
+ * with the Gutenberg–Richter b-value by the Aki–Utsu maximum-likelihood
+ * estimate for magnitudes binned to 0.1, and its Shi & Bolt (1982) standard
+ * error. Completeness is taken as the record's floor, M2.5; it was higher
+ * before seismometers were added after 2013, which flattens b.
+ */
+export function magnitudeFrequency(events: readonly Pick<EarthquakeRecordEvent, "magnitude">[], completeness = EARTHQUAKE_RECORD_MIN_MAGNITUDE, step = 0.1): MagnitudeFrequency {
+  const magnitudes = events.map(event => Math.round(event.magnitude / step) * step).filter(m => m >= completeness - 1e-9);
+  const count = magnitudes.length;
+  const bins: { magnitude: number; count: number }[] = [];
+  if (count) {
+    const top = Math.max(...magnitudes);
+    for (let m = completeness; m <= top + 1e-9; m += step) {
+      const at = Math.round(m * 10) / 10;
+      bins.push({ magnitude: at, count: magnitudes.filter(value => value >= at - 1e-9).length });
+    }
+  }
+  let b: number | null = null, bError: number | null = null, a: number | null = null;
+  if (count >= 50) {
+    const mean = magnitudes.reduce((sum, m) => sum + m, 0) / count;
+    const spread = mean - (completeness - step / 2);
+    if (spread > 0) {
+      b = Math.LOG10E / spread;
+      const variance = magnitudes.reduce((sum, m) => sum + (m - mean) ** 2, 0) / (count * (count - 1));
+      bError = 2.3 * b * b * Math.sqrt(variance);
+      a = Math.log10(count) + b * completeness;
+    }
+  }
+  return Object.freeze({ bins: Object.freeze(bins.map(bin => Object.freeze(bin))), b, bError, a, count, completeness });
+}
+/** The section and the distribution for the record or a chosen year. */
+export const recordPlots = (record: Pick<EarthquakeRecord, "events" | "endYear">, year: number | null) =>
+  Object.freeze({ section: depthSection(record, year), frequency: magnitudeFrequency(ofYear(record.events, year)) });
+
 export type YearCount = Readonly<{ year: number; count: number }>;
 /** Events per calendar year (UTC), every year of the record, empty years included. */
 export function annualCounts(record: Pick<EarthquakeRecord, "events" | "startYear" | "endYear">): readonly YearCount[] {

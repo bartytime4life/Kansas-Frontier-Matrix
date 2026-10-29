@@ -202,3 +202,46 @@ test('record events can be picked from a keyboard list: a year newest first, or 
  assert.match(page,/const quakeEventList = useMemo\(\(\) => quakeRecord \? recordEventList\(quakeRecord, quakeRecordYear\) : \[\], \[quakeRecord, quakeRecordYear\]\);/);
  assert.match(page,/onQuakePick=\{\(id\) => \{\s*const event = quakeRecordEventsRef\.current\.get\(id\);\s*if \(!event\) return;\s*setQuakeRecordSelected\(event\);\s*easeToPicked\(\[event\.longitude, event\.latitude\]\);/);
 });
+
+test('the record draws as a west–east depth section and a magnitude–frequency plot with the Aki–Utsu b-value',async()=>{
+ const ev=(id,year,magnitude,depthKilometers,longitude)=>({id,time:`${year}-06-01T00:00:00.000Z`,year,magnitude,magnitudeType:'ml',depthKilometers,place:null,status:'reviewed',longitude,latitude:37.2});
+ const record={endYear:2026,events:[ev('a',2015,3.4,5,-97.9),ev('b',2016,2.6,7.3,-98.1),ev('c',2015,4.9,22.1,-97.3),ev('d',2001,2.8,null,-100.2),ev('e',2015,2.5,10,-96.5)]};
+ const all=quakes.depthSection(record,null);
+ assert.deepEqual(all.points.map(p=>p.id),['e','b','a','c'],'events with a depth, the largest drawn last');
+ assert.equal(all.maxDepth,25,'deepest 22.1 km rounds up to 25');
+ assert.equal(all.withoutDepth,1);assert.equal(all.atSetDepth,2,'5 and 10 km are often held, not resolved');
+ assert.equal(all.points[3].color,quakes.recordYearColor(2015,2026),'coloured by year as on the map');
+ const y2016=quakes.depthSection(record,2016);
+ assert.deepEqual(y2016.points.map(p=>p.id),['b']);assert.equal(y2016.maxDepth,15,'never shallower than 15 km');
+ // A synthetic Gutenberg–Richter sample: 10^(4 − M) events per 0.1 bin above M2.5, so b should come out near 1.
+ const sample=[];for(let m=2.5;m<=5.01;m+=0.1){const n=Math.round(10**(4-m)*2.3);for(let i=0;i<n;i++)sample.push({magnitude:Math.round(m*10)/10});}
+ const mf=quakes.magnitudeFrequency(sample);
+ assert.equal(mf.bins[0].magnitude,2.5);assert.equal(mf.bins[0].count,sample.length);
+ assert.ok(mf.bins.every((bin,i,a)=>i===0||bin.count<=a[i-1].count),'cumulative counts never rise');
+ assert.ok(Math.abs(mf.b-1)<0.08,`b near 1 (${mf.b})`);
+ assert.ok(mf.bError>0&&mf.bError<0.1);
+ assert.ok(Math.abs(mf.a-(Math.log10(sample.length)+mf.b*2.5))<1e-9);
+ const few=quakes.magnitudeFrequency(sample.slice(0,30));
+ assert.equal(few.b,null,'no b-value from fewer than 50 events');
+ assert.deepEqual(JSON.parse(JSON.stringify(quakes.magnitudeFrequency([{magnitude:2.3}]).bins)),[],'below the record floor nothing is counted');
+ const plots=quakes.recordPlots(record,2015);
+ assert.deepEqual(plots.section.points.map(p=>p.id),['e','a','c']);assert.equal(plots.frequency.count,3);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const picked=[];
+ const section=h.exports.QuakeDepthSection({section:all,selected:'a',onPick:id=>picked.push(id)});
+ assert.match(section.props['aria-label'],/4 events with a USGS depth, to 25 km; 2 at exactly 5 or 10 km, often a set depth · 1 without a depth/);
+ const circles=findNode(section,n=>n.type==='svg').props.children[1];
+ assert.deepEqual(JSON.parse(JSON.stringify(circles.map(c=>c.props['data-id']))),['e','b','c','a'],'the selected event is drawn last');
+ assert.equal(circles[3].props.stroke,'#ffffff');
+ assert.equal(circles[0].props.cx,'223.2','longitude runs west to east: 96.5°W is 5.55 of the 7.46 degrees across');
+ circles[1].props.onClick();assert.deepEqual(picked,['b']);
+ assert.equal(h.exports.bValueReading(mf),`b = ${mf.b.toFixed(2)} ± ${mf.bError.toFixed(2)} (Aki–Utsu, M ≥ 2.5, n = ${sample.length.toLocaleString('en-US')}) · magnitude types mixed`);
+ assert.equal(h.exports.bValueReading(few),'30 events of M2.5+; a b-value needs at least 50');
+ const chart=h.exports.QuakeMagnitudeFrequency({frequency:mf});
+ const fit=findNode(chart,n=>n.type==='line'&&n.props.stroke==='#f89540');
+ assert.ok(fit,'the fitted line is drawn');assert.ok(fit.props.y2>fit.props.y1,'it falls with magnitude');
+ assert.equal(h.exports.QuakeMagnitudeFrequency({frequency:quakes.magnitudeFrequency([{magnitude:2.5}])}),null,'one bin is no plot');
+ h.dispose?.();
+ assert.match(page,/const quakePlots = useMemo\(\(\) => quakeRecord \? recordPlots\(quakeRecord, quakeRecordYear\) : null, \[quakeRecord, quakeRecordYear\]\);/);
+ assert.match(page,/list: quakeEventList, plots: quakePlots \} : undefined\}/);
+});
