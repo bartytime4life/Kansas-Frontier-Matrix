@@ -6,7 +6,7 @@ version: v0.2.1
 status: draft; fixture-first executable confirmed; no-network; non-authoritative
 owners: OWNER_TBD — Fauna steward · Schema steward · Validation steward · Sensitivity reviewer
 created: 2026-08-08
-updated: 2026-08-14
+updated: 2026-10-29
 policy_label: repository-facing; fauna; occurrence-evidence; geoprivacy; fail-closed; no-publication-authority
 owning_root: tools/
 current_path: tools/validators/domains/fauna/occurrence/README.md
@@ -23,7 +23,7 @@ related:
   - ../../../../../tests/domains/fauna/test_occurrence_evidence.py
   - ../../../../../packages/hashing/
   - ../../../../../.github/workflows/fauna-occurrence-evidence.yml
-  - ../../../../../data/receipts/generated/genrec-fauna-occurrence-evidence-readme-20260814.json
+  - ../../../../../data/receipts/generated/genrec-fauna-components-20261029.json
   - ../../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../../docs/doctrine/directory-rules.md
 tags: [kfm, fauna, occurrence-evidence, validator, source-role, rights, sensitivity, geoprivacy, spec-hash, no-network]
@@ -49,6 +49,18 @@ notes:
 
 > [!IMPORTANT]
 > A CLI `PASS` means only that the supplied record is internally consistent with this draft schema and validator profile. It is not source admission, `EvidenceBundle` closure, policy or steward approval, geoprivacy transformation, release readiness, promotion, deployment, or publication.
+
+
+## Shared offline engine (2026-10-29)
+
+The existing CLI now delegates identity and occurrence checks to the reusable
+Fauna package. Repository schema loading, strict input handling, fixture replay,
+CLI fields, digest subjects, and exact fixture polarity remain compatible.
+The same library supports held normalization and snapshot-bound matching;
+see the [implementation guide](../../../../../docs/domains/fauna/normalization.md).
+The focused workflow additionally runs the new no-network component tests and
+local rehearsal. Its active authoring receipt is the `20261029` successor;
+all earlier receipts retain their historical byte bindings.
 
 ## Quick navigation
 
@@ -278,10 +290,10 @@ These fixtures are synthetic. They are not occurrence evidence, source rights, t
 1. checks out the tested revision without persisted credentials;
 2. installs `.[test]` under Python 3.11;
 3. runs the focused unit suite and exact fixture replay with no-network environment flags;
-4. validates `data/receipts/generated/genrec-fauna-occurrence-evidence-readme-20260814.json` against final repository bytes; and
+4. validates `data/receipts/generated/genrec-fauna-components-20261029.json` against final repository bytes; and
 5. records the authority boundary in the job summary.
 
-The earlier `genrec-fauna-occurrence-evidence-20260808.json` and `genrec-fauna-occurrence-evidence-readme-20260808.json` receipts remain immutable historical process memory. The `20260814` successor binds the current parent index, this lane README, and the repaired workflow pointer; it does not rewrite either earlier record.
+The earlier `genrec-fauna-occurrence-evidence-20260808.json` and `genrec-fauna-occurrence-evidence-readme-20260808.json` receipts remain immutable historical process memory. The `20260814` successor remains historical. The `20261029` successor binds the current offline Fauna component slice, including this README and workflow; it does not rewrite any earlier receipt.
 
 A green workflow proves only the declared schema/semantic profile, synthetic fixture polarity, and current receipt integrity at the tested commit. It does not authenticate source rights or reviewers, create proof, evaluate binding policy, approve release, deploy, or publish.
 

@@ -1,0 +1,42 @@
+{
+  "object_type": "fauna_taxonomy_snapshot",
+  "schema_version": "v1",
+  "state": "candidate",
+  "authority": "fixture:taxonomy:fauna",
+  "snapshot_ref": "fixture:snapshot:fauna:taxonomy:001",
+  "concepts": [
+    {
+      "concept_id": "fixture:taxon:fauna:001",
+      "accepted_scientific_name": "Specimen fictivus",
+      "taxon_rank": "species",
+      "synonyms": [
+        "Specimen antiquus"
+      ],
+      "evidence_refs": [
+        "fixture:evidence:fauna:taxonomy:001"
+      ]
+    },
+    {
+      "concept_id": "fixture:taxon:fauna:002",
+      "accepted_scientific_name": "Specimen imaginarius",
+      "taxon_rank": "species",
+      "synonyms": [
+        "Specimen ambiguus"
+      ],
+      "evidence_refs": [
+        "fixture:evidence:fauna:taxonomy:002"
+      ]
+    },
+    {
+      "concept_id": "fixture:taxon:fauna:003",
+      "accepted_scientific_name": "Specimen alter",
+      "taxon_rank": "species",
+      "synonyms": [
+        "Specimen ambiguus"
+      ],
+      "evidence_refs": [
+        "fixture:evidence:fauna:taxonomy:003"
+      ]
+    }
+  ]
+}

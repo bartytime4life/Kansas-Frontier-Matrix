@@ -1,0 +1,193 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/fauna-occurrence-evidence.yml": "sha256:9c402925567d0cb52e9e27958619dc7f99c311fa8a0570696f0ea436a41359e8",
+    "contracts/domains/fauna/taxon_crosswalk.md": "sha256:a29ad0f5d82d53ed496e3466b5f42804c14f62d28022a6431dd2df6a811ac8f8",
+    "docs/domains/fauna/README.md": "sha256:923c844217f9c2eabc61f221fea8a96fadf6da38a6578ff3d9d6836e313e616d",
+    "docs/domains/fauna/normalization.md": "sha256:4a57a38242ca61be4b94c341080212cb5d0d972896f3aeba29420a9ab4c7f5e7",
+    "fixtures/domains/fauna/normalization/README.md": "sha256:465ed6458ec5758d0ef47e1a7ceeb87b841981ed601b2da4bb30bb4ae80ffed5",
+    "fixtures/domains/fauna/normalization/taxonomy_snapshot.json": "sha256:0658b8c4fe8ca7c375955c3cdae56c28bc3bb883b54d895f32365fb8fee72e93",
+    "packages/domains/fauna/README.md": "sha256:a6f99fdbe16abe7cd47d5b9ae5da000bb5285059b5920df589c0269eaaa35318",
+    "packages/domains/fauna/pyproject.toml": "sha256:0f183813f148dd18219212a6c389bec75baef11eeec27087ec73a897c1ad4b3e",
+    "packages/domains/fauna/src/fauna/__init__.py": "sha256:b6ef51a33dfeede0d397432f6ad46de3b8f8f5454b18ef1cf5fa351f6071726d",
+    "packages/domains/fauna/src/fauna/identity.py": "sha256:5c5a0b078ecf0980ddcec2c3d5db6945be0d489655cad5705e3507557a9d59ea",
+    "packages/domains/fauna/src/fauna/normalize.py": "sha256:9d9d58b67f4f8cc66dd7e183e49cdcf834b983ac1f292d846dbfa49a1e8b94b4",
+    "packages/domains/fauna/src/fauna/public_safe.py": "sha256:93c2b2ac15490195406df10cfbe5842f52639193d331c6ce1fa8614a180c0c5b",
+    "packages/domains/fauna/src/fauna/taxonomy.py": "sha256:50928868fbdb604210e0517aab915bd62583206fd30b201ed9fec2e99e0cef81",
+    "packages/domains/fauna/src/fauna/validation.py": "sha256:aac1ffac571083746b0918892890e6a164c7dc11c4efed834f2be951bc0c158b",
+    "pipelines/domains/fauna/README.md": "sha256:a7426861da8ffccaa05519ba4ec3435d97aec8b6ce9cfc82b8d01464270769ee",
+    "pipelines/domains/fauna/normalize.py": "sha256:efb742e613bab07740320455043dc6c743e7b863c9e0421e18fa0657c39023dc",
+    "schemas/contracts/v1/domains/fauna/taxonomy_snapshot.schema.json": "sha256:ec44c51dc220937e2b165802a8972b82822510898faf132d54205313af509444",
+    "tests/domains/__init__.py": "sha256:7727bc3f85aa16e96590eae731b77f6d30401f8920b77ca952bab032e9d09901",
+    "tests/domains/fauna/test_normalization_pipeline.py": "sha256:201cfd14e56ca3663dd2ebcfb75bae0a2f3c4ed3d28440f6cf5ab5dd113d307d",
+    "tests/domains/fauna/test_occurrence_split.py": "sha256:0b87560a144518c11fbc65728ac3b7b5025bc025c9803f30dbf8cb043f314bcd",
+    "tests/domains/fauna/test_taxonomy_resolution.py": "sha256:4629814a1e4ea1c7f2fe5d584f9f37b6d2f526870af33ea8354223d8cc49d7d5",
+    "tools/validators/domains/fauna/occurrence/README.md": "sha256:d3d6c53040e3fd767ee78cabc9dea64f9116986cef91235ddc687fc06075ce28",
+    "tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py": "sha256:914001bb096df8a19370ed601f1e66112fc4364feb25c1595d9549093bf97463"
+  },
+  "artifact_paths": [
+    ".github/workflows/fauna-occurrence-evidence.yml",
+    "contracts/domains/fauna/taxon_crosswalk.md",
+    "docs/domains/fauna/README.md",
+    "docs/domains/fauna/normalization.md",
+    "fixtures/domains/fauna/normalization/README.md",
+    "fixtures/domains/fauna/normalization/taxonomy_snapshot.json",
+    "packages/domains/fauna/README.md",
+    "packages/domains/fauna/pyproject.toml",
+    "packages/domains/fauna/src/fauna/__init__.py",
+    "packages/domains/fauna/src/fauna/identity.py",
+    "packages/domains/fauna/src/fauna/normalize.py",
+    "packages/domains/fauna/src/fauna/public_safe.py",
+    "packages/domains/fauna/src/fauna/taxonomy.py",
+    "packages/domains/fauna/src/fauna/validation.py",
+    "pipelines/domains/fauna/README.md",
+    "pipelines/domains/fauna/normalize.py",
+    "schemas/contracts/v1/domains/fauna/taxonomy_snapshot.schema.json",
+    "tests/domains/__init__.py",
+    "tests/domains/fauna/test_normalization_pipeline.py",
+    "tests/domains/fauna/test_occurrence_split.py",
+    "tests/domains/fauna/test_taxonomy_resolution.py",
+    "tools/validators/domains/fauna/occurrence/README.md",
+    "tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@fe50cdbf7eb91f3fcc236fcbe3a8a882bd9972b4",
+      "id": "repository:authority-and-compatibility:0",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@fe50cdbf7eb91f3fcc236fcbe3a8a882bd9972b4",
+      "id": "repository:authority-and-compatibility:1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/domains/fauna/occurrence_evidence.md@fe50cdbf7eb91f3fcc236fcbe3a8a882bd9972b4",
+      "id": "repository:authority-and-compatibility:2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/receipts/generated/genrec-fauna-occurrence-evidence-readme-20260814.json@fe50cdbf7eb91f3fcc236fcbe3a8a882bd9972b4",
+      "id": "repository:authority-and-compatibility:3",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-10-29T22:45:00Z",
+  "emitter": "OpenAI Codex local authoring",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent.md",
+      "KFM_Full_Atlas_seed_cards.md"
+    ],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:25c0c9ee1f3f072ae92401b20d8bc174bfccc717754f9bee9364964943cf0abb",
+      "sha256:18e0338996969ed134b1a817d7c7446696c3dc06705a73f43eb70b39da161472"
+    ],
+    "evidence_refs": [
+      "repo:docs/doctrine/directory-rules.md@fe50cdbf7eb91f3fcc236fcbe3a8a882bd9972b4",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@fe50cdbf7eb91f3fcc236fcbe3a8a882bd9972b4",
+      "repo:contracts/domains/fauna/occurrence_evidence.md@fe50cdbf7eb91f3fcc236fcbe3a8a882bd9972b4",
+      "repo:data/receipts/generated/genrec-fauna-occurrence-evidence-readme-20260814.json@fe50cdbf7eb91f3fcc236fcbe3a8a882bd9972b4"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex GPT-6",
+    "provider": "OpenAI",
+    "version": "exact-serving-version-unknown"
+  },
+  "notes": "Successor binding for the offline Fauna component implementation and focused workflow. Historical receipts remain unchanged. The policy_decisions reference records the accepted directory-governance decision consulted, not an executed Fauna PolicyDecision. Draft schemas remain proposed; local conformance is not biological truth, source admission, public-path approval, review, release or publication. No lifecycle data was written. Rollback is a reviewed revert of this scoped authoring change.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "local shell",
+      "GitHub",
+      "Google Drive",
+      "SciSpace",
+      "NCBI Entrez",
+      "web research"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:f7bd07da447eb8f692b21f15590d4c03178723cd4502aa71caa7c1fd4758d412",
+  "receipt_id": "genrec-fauna-components-20261029",
+  "truth_labels": {
+    ".github/workflows/fauna-occurrence-evidence.yml": "CONFIRMED",
+    "contracts/domains/fauna/taxon_crosswalk.md": "PROPOSED",
+    "docs/domains/fauna/README.md": "CONFIRMED",
+    "docs/domains/fauna/normalization.md": "CONFIRMED",
+    "fixtures/domains/fauna/normalization/README.md": "CONFIRMED",
+    "fixtures/domains/fauna/normalization/taxonomy_snapshot.json": "CONFIRMED",
+    "packages/domains/fauna/README.md": "CONFIRMED",
+    "packages/domains/fauna/pyproject.toml": "CONFIRMED",
+    "packages/domains/fauna/src/fauna/__init__.py": "CONFIRMED",
+    "packages/domains/fauna/src/fauna/identity.py": "CONFIRMED",
+    "packages/domains/fauna/src/fauna/normalize.py": "CONFIRMED",
+    "packages/domains/fauna/src/fauna/public_safe.py": "CONFIRMED",
+    "packages/domains/fauna/src/fauna/taxonomy.py": "CONFIRMED",
+    "packages/domains/fauna/src/fauna/validation.py": "CONFIRMED",
+    "pipelines/domains/fauna/README.md": "CONFIRMED",
+    "pipelines/domains/fauna/normalize.py": "CONFIRMED",
+    "schemas/contracts/v1/domains/fauna/taxonomy_snapshot.schema.json": "PROPOSED",
+    "tests/domains/__init__.py": "CONFIRMED",
+    "tests/domains/fauna/test_normalization_pipeline.py": "CONFIRMED",
+    "tests/domains/fauna/test_occurrence_split.py": "CONFIRMED",
+    "tests/domains/fauna/test_taxonomy_resolution.py": "CONFIRMED",
+    "tools/validators/domains/fauna/occurrence/README.md": "CONFIRMED",
+    "tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-changed-area-tests",
+      "outcome": "PASS",
+      "reason": "157 tests and 165 subtests passed across Fauna, adjacent Habitat/join, and hashing suites; synthetic/local evidence only."
+    },
+    {
+      "gate": "package-wheel-isolation",
+      "outcome": "PASS",
+      "reason": "Built and installed local Fauna/hashing wheels into isolated target; supplied-schema APIs ran without source-tree package imports."
+    },
+    {
+      "gate": "markdown-local-links",
+      "outcome": "PASS",
+      "reason": "Seven changed Markdown documents: 158 local targets resolved; external URLs classified separately."
+    },
+    {
+      "gate": "historical-receipt-replay",
+      "outcome": "PASS",
+      "reason": "Unchanged 20260814 receipt verified against exact ancestor fe50cdbf7eb91f3fcc236fcbe3a8a882bd9972b4; current bytes require this successor."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; no override."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Not yet run for this branch head at emission."
+    },
+    {
+      "gate": "source-policy-release",
+      "outcome": "SKIPPED",
+      "reason": "No source admission, live rights verification, policy evaluation, EvidenceBundle closure, release, deployment, promotion or publication."
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 doc_id: kfm://doc/pipelines-domains-fauna-readme
 title: Fauna Domain Pipeline README
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners:
   - <fauna-pipeline-owner>
@@ -14,7 +14,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-10-29
 policy_label: public
 path: pipelines/domains/fauna/README.md
 related:
@@ -66,6 +66,17 @@ notes:
 <a id="top"></a>
 
 # 🐾 Fauna Domain Pipeline
+
+## Implemented local rehearsal (2026-10-29)
+
+[`normalize.py`](normalize.py) now orchestrates bounded local records through
+the shared Fauna package. It emits aggregate `HELD`, `EMPTY`, `DENIED`, or
+`ERROR` status with `public_ready: false`; it does not write lifecycle data or
+print normalized occurrence payloads. See the
+[implementation guide](../../../docs/domains/fauna/normalization.md) for the
+explicit-input command and negative-test coverage. Earlier implementation
+unknowns remain applicable outside this local rehearsal.
+
 
 > Executable Fauna-domain pipeline lane for converting admitted animal taxonomy, occurrence, monitoring, range, seasonal, mortality, disease, and invasive-species source material into governed candidates, quarantine records, processed records, catalog/triplet handoffs, receipts, and release-review packages — without bypassing geoprivacy, evidence, policy, review, or release gates.
 
