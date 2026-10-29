@@ -93,6 +93,11 @@ export const MAP_KEYS: Readonly<Record<string, MapKey>> = Object.freeze({
     }))),
     note: "USGS magnitude: colour and circle size both rise with it. Circles grow as you zoom in.",
   }),
+  "deflock-alpr": Object.freeze({
+    id: "deflock-alpr", title: "DeFlock · reported ALPR areas",
+    items: Object.freeze([{ label: "0.05° report cell", color: "#9b72cf", shape: "area" as const }]),
+    note: "Numbers count community reports, not verified devices. Cells are generalized areas, not camera coverage; blank does not mean camera-free.",
+  }),
   "nws-alerts": Object.freeze({
     id: "nws-alerts", title: "NWS alert severity",
     items: Object.freeze([...NWS_SEVERITY_COLORS.map(([label, color]) => Object.freeze({ label, color, shape: "area" as const })),
