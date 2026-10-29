@@ -36,6 +36,7 @@ async function harness({ search = false, upload = false } = {}) {
   const ref = current => ({ current }), state = {}, writes = [], reads = [], fetched = deferred(), response = deferred(), uploading = deferred(), uploaded = deferred();
   const transitions = new smoke.HmsFrameTransitions(), source = { type: 'geojson' }, current = frame(false), prior = frame(true, 'prior');
   const context = {
+    CIVIC_ID: "census-congress-119", civicCongressForDay: () => null,
     useCallback: fn => fn, useEffect() {}, announce() {},
     currentUtcDay: () => '2026-10-21', readCalendarSweep: text => JSON.parse(text), calendarFrameDay: value => value.day,
     calendarArchiveFeeds: () => [feed], calendarSweep: null, officialVisibility: {}, activeLayers: [],

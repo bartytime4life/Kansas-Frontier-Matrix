@@ -8,6 +8,7 @@ export type CalendarFrameOutcome = Readonly<{
   message: string;
 }>;
 export const CALENDAR_ARCHIVE_BOUNDS = Object.freeze({
+  "census-congress-119": "1861-01-29",
   "usgs-earthquakes": "1800-01-01",
   "noaa-hms-smoke": "2005-08-05",
   "nasa-gibs-fire-points": "2018-01-01",

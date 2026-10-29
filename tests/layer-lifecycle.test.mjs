@@ -86,7 +86,7 @@ function callback(name,end,ctx){const code=ts.transpileModule(page.slice(page.in
 const feed='usgs-earthquakes',ref=current=>({current});
 function archiveContext(){
   const requests=[],states=[];
-  const ctx={useCallback:fn=>fn,cancelSmokePlayback(){},announce:()=>{},currentUtcDay:()=>'2026-10-11',readFireDay:async()=>null,
+  const ctx={CIVIC_ID:"census-congress-119",civicCongressForDay:()=>null,useCallback:fn=>fn,cancelSmokePlayback(){},announce:()=>{},currentUtcDay:()=>'2026-10-11',readFireDay:async()=>null,
     calendarArchiveLoads:ref(new Map()),officialRequestsRef:ref(new Map()),officialArchiveDaysRef:ref({}),officialArchivePayloadsRef:ref({}),officialPayloadsRef:ref({}),
     setOfficialArchiveDays:()=>{},setOfficialPayloads:()=>{},setOfficialStates:fn=>states.push(fn({})[feed]),setOfficialErrors:()=>{},setOfficialReadPhases:()=>{},setEarthquakeArchiveFrameIndex:()=>{},setSmokeArchiveFrameIndex:()=>{},
     OFFICIAL_CONTEXT_BY_ID:{[feed]:{apiPath:'/api/live-context?feed=usgs-earthquakes',shortTitle:'Earthquakes'}},

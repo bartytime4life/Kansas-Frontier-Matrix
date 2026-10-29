@@ -65,12 +65,12 @@ test('redirects and declared or streamed excessive responses never reach the par
 test('the route rejects visitor SQL, coordinates, dates and duplicate parameters; successful responses are no-store', async () => {
   let calls=0;
   const route=await compile('app/api/live-context/route.ts',{
-    './civic-districts':{readCivicDistricts:async()=>{calls++;return civic.parseCivicDistricts(raw(),now);}}, './deflock':{},
+    './civic-history':{readCivicHistory:async()=>{throw new Error('No historical fixture');}},'../../civic-history':{civicCongressForDay:day=>day>='1861-01-29'&&day<'2027-01-03'?119:null},'./civic-districts':{readCivicDistricts:async()=>{calls++;return civic.parseCivicDistricts(raw(),now);}}, './deflock':{},
     'cloudflare:workers':{env:{}},'next/server':{NextResponse:Response},'../../bounded-json':bounded,
     '../../event-atlas':{eventDay:v=>/^\d{4}-\d{2}-\d{2}$/.test(v)},'../event-atlas/upstream':{},'../../county-baseline':{},'../../fema-declarations':{},'@mapbox/vector-tile':{},pbf:{},
   });
   const req=q=>({nextUrl:new URL(`https://kfm.invalid/api/live-context?${q}`),signal:new AbortController().signal});
-  for(const extra of ['&url=https://evil.invalid','&where=1%3D1','&longitude=-99','&day=2025-01-01','&feed=census-congress-119']) assert.equal((await route.GET(req(`feed=census-congress-119${extra}`))).status,400);
+  for(const extra of ['&url=https://evil.invalid','&where=1%3D1','&longitude=-99','&day=1860-01-01','&feed=census-congress-119']) assert.equal((await route.GET(req(`feed=census-congress-119${extra}`))).status,400);
   assert.equal(calls,0);const response=await route.GET(req('feed=census-congress-119'));assert.equal(response.status,200);assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(calls,1);
 });
 const urls=new Map();
@@ -92,7 +92,7 @@ test('Government starts with real districts only; other topics leave them off, w
   assert.equal(context.officialContextVisibilityForFrame(shown,context.OFFICIAL_CONTEXT_PRESENT_FRAME)[civic.CIVIC_ID],true);
   assert.equal(context.officialContextVisibilityForFrame(shown,1900)[civic.CIVIC_ID],false);
   assert.equal(context.officialContextVisibilityForFrame(shown,context.OFFICIAL_CONTEXT_PRESENT_FRAME,false)[civic.CIVIC_ID],false);
-  assert.deepEqual(keys.MAP_KEYS[civic.CIVIC_ID].items.map(item=>item.color),keys.CIVIC_COLORS.map(([,color])=>color));
+  assert.deepEqual(keys.MAP_KEYS[civic.CIVIC_ID].items.map(item=>item.color),keys.CIVIC_COLORS.slice(0,4).map(([,color])=>color));
 });
 test('four keyboard buttons select current records and pass the originating button for focus restoration; hidden/error/held states offer no stale picks',async()=>{
   const h=await componentHarness('app/category-map-dock.tsx',{}),picked=[],toggles=[];
@@ -116,7 +116,7 @@ test('district fill, lines and labels restore after style replacement, share the
   visibility[civic.CIVIC_ID]=true;opacity[civic.CIVIC_ID]=0.4;const {validateStyleMin}=await import('@maplibre/maplibre-gl-style-spec');
   for(const h of[first,make()]){
     context.applyOfficialContextState(h.map,visibility,opacity,{[civic.CIVIC_ID]:payload});
-    const layers=[...h.layers.values()].filter(l=>l.source===civic.CIVIC_SOURCE.sourceId);assert.equal(layers.length,3);
+    const layers=[...h.layers.values()].filter(l=>l.source===civic.CIVIC_SOURCE.sourceId);assert.equal(layers.length,4);
     assert.deepEqual(layers.find(l=>l.type==='fill').paint['fill-color'],keys.civicDistrictColor());
     assert.equal(layers.find(l=>l.type==='fill').paint['fill-opacity'],0.4);
     assert.deepEqual(validateStyleMin({version:8,glyphs:'https://example.invalid/{fontstack}/{range}.pbf',sources:{[civic.CIVIC_SOURCE.sourceId]:{type:'geojson',data:payload.data}},layers}).map(e=>e.message),[]);

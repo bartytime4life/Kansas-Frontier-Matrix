@@ -3,7 +3,7 @@ import type { OfficialContextId } from "./live-context";
 export type DrawerAttribute = Readonly<{ label: string; value: string }>;
 
 const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readonly (readonly [string, string])[]>> = {
-  "census-congress-119": [["district", "U.S. House district"], ["geoid", "Census GEOID"], ["congress", "Congress"], ["vintage", "Boundary vintage"], ["displayScale", "Display scale"], ["retrievedAt", "Retrieved · UTC"]],
+  "census-congress-119": [["district", "District number · 0 means at-large"], ["geoid", "Census GEOID"], ["congress", "Congress"], ["sourceDay", "Selected calendar day"], ["termStart", "Term start · calendar day"], ["termEndExclusive", "Term end · exclusive"], ["basis", "Boundary basis"], ["sourceRevision", "Historical source revision"], ["sourceSha256", "Source SHA-256"], ["sourceDatum", "Source datum"], ["vintage", "Boundary vintage"], ["displayScale", "Display scale"], ["retrievedAt", "Retrieved · UTC"]],
   "deflock-alpr": [["reportCount", "Mapped reports in cell"], ["gridDegrees", "Generalized cell size · degrees"], ["upstreamUpdatedAt", "OSM database time · not observation time"], ["retrievedAt", "Retrieved · UTC"], ["license", "Data license"]],
   "kgs-aquifer-alluvial": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
   "kgs-aquifer-dakota": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],

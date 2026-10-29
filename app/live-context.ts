@@ -29,6 +29,7 @@ export type OfficialContextPayload = Readonly<{
   retrievedAt: string;
   upstreamUpdatedAt: string | null;
   sourceDay?: string;
+  license?: string;
   featureCount: number;
   data: FeatureCollection;
   source: string;
@@ -649,7 +650,7 @@ export type OfficialContextTemporalSupport = Readonly<{
  * the operational-present UI frame; it is not asserted as every source's
  * observation, publication, or acquisition year. */
 export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextId, OfficialContextTemporalSupport>> = Object.freeze({
-  "census-congress-119": Object.freeze({ axis: "joined-source-snapshot", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Fixed 119th Congress reference (2025–2027), January 1, 2025 vintage; not a historical reconstruction or current officeholder feed." }),
+  "census-congress-119": Object.freeze({ axis: "joined-source-snapshot", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Present uses Census 119th Congress geography. Dated history from 1861-01-29 uses an exact checked Congress plan; annual frames select January 1, with gaps withheld. No officeholder feed." }),
   "deflock-alpr": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current community reports only. OSM database time is not camera installation or observation time; historical playback is unavailable." }),
   "kgs-aquifer-alluvial": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
   "kgs-aquifer-dakota": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
@@ -888,9 +889,11 @@ export const applyOfficialContextState = (
   const civic = CIVIC_SOURCE;
   if (visibility[civic.id] || map.getSource(civic.sourceId)) {
     ensureGeoJsonSource(map, civic, payloads["census-congress-119"]?.data ?? emptyCollection());
-    ensureLayer(map, { id: civic.layerIds[0], source: civic.sourceId, type: "fill", paint: { "fill-color": civicDistrictColor(), "fill-opacity": civic.defaultOpacity } });
-    ensureLayer(map, { id: civic.layerIds[1], source: civic.sourceId, type: "line", paint: { "line-color": civicDistrictColor(), "line-width": 2 } });
-    ensureLayer(map, { id: civic.layerIds[2], source: civic.sourceId, type: "symbol", layout: { "text-field": ["concat", "District ", ["to-string", ["get", "district"]]], "text-size": 14, "text-font": ["Noto Sans Regular"] },
+    const numberedOrSole = ["any", ["!=", ["get", "district"], 0], ["==", ["get", "atLargeOnly"], true]] as const;
+    ensureLayer(map, { id: civic.layerIds[0], source: civic.sourceId, type: "fill", filter: numberedOrSole as unknown as ExpressionSpecification, paint: { "fill-color": civicDistrictColor(), "fill-opacity": civic.defaultOpacity } });
+    ensureLayer(map, { id: civic.layerIds[1], source: civic.sourceId, type: "line", filter: ["!=", ["get", "district"], 0], paint: { "line-color": civicDistrictColor(), "line-width": 2 } });
+    ensureLayer(map, { id: civic.layerIds[3], source: civic.sourceId, type: "line", filter: ["==", ["get", "district"], 0], paint: { "line-color": "#4b5666", "line-width": 3, "line-dasharray": [3, 2] } });
+    ensureLayer(map, { id: civic.layerIds[2], source: civic.sourceId, type: "symbol", filter: numberedOrSole as unknown as ExpressionSpecification, layout: { "text-field": ["case", ["==", ["get", "district"], 0], "Statewide at-large", ["concat", "District ", ["to-string", ["get", "district"]]]], "text-size": 14, "text-font": ["Noto Sans Regular"] },
       paint: { "text-color": "#2d3040", "text-halo-color": "#ffffff", "text-halo-width": 2 } });
   }
 

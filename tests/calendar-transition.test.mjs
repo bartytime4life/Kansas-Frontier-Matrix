@@ -14,6 +14,7 @@ const payload = (name = "archive") => ({ feed, state: "ready", featureCount: 1, 
 function harness() {
   const ref = current => ({ current }), state = {}, reads = [], cleared = [];
   const context = {
+    CIVIC_ID: "census-congress-119", civicCongressForDay: () => null,
     useCallback: fn => fn, cancelSmokePlayback() {}, announce() {}, temporalMode: "snapshot", OFFICIAL_CONTEXT_PRESENT_FRAME: 2026,
     CALENDAR_ARCHIVE_BOUNDS: { [feed]: "1800-01-01", [hidden]: "1800-01-01" },
     OFFICIAL_CONTEXT_BY_ID: { [feed]: { apiPath: "/source", shortTitle: "Quakes" } },
@@ -96,4 +97,11 @@ test("leaving history never bypasses the build-year or non-Present current-sourc
     assert.equal(h.context.officialPayloadsRef.current[feed], undefined);
     assert.equal(h.state.OfficialStates[feed], 'idle');
   }
+});
+
+test('leaving a present congressional selection clears its drawer even before it has archive state',()=>{
+ const h=harness();h.context.selectedRef.current={feed:'census-congress-119'};
+ h.context.mapRef.current.isStyleLoaded=()=>true;
+ h.commitTemporalFrame(1900);
+ assert.equal(h.context.selectedRef.current,null);assert.equal(h.state.Selected,null);assert.equal(h.state.RightOpen,false);
 });
