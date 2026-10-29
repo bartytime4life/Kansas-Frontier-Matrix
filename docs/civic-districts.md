@@ -1,5 +1,7 @@
 # Kansas congressional districts through time
 
+Next proposed civic slice: [historical county source qualification](county-history-qualification.md). Real archive checks passed; public reuse and integration remain held. This does not add a county-history layer or extend the congressional coverage below.
+
 ## Behavior and evidence status
 
 Government & civic opens **Kansas representation**. Present shows Census 119th Congress geography. A Congress selector covers **36–119**; calendar dates and year controls select the applicable term. Historical plans reach back to **Kansas statehood, January 29, 1861**. The welcome glimpse retains the four present districts and points to history in the full map.
