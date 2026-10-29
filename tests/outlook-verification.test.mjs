@@ -75,3 +75,29 @@ test('the dock shows the check under the reports reading, and the page computes 
  assert.match(page,/const check = shownOutlook && shownReports \? verifyOutlook\(shownOutlook, shownReports\) : null;/);
  assert.match(page,/url: STORM_REPORTS_PAGE, verification: outlookCheck,/);
 });
+
+
+test('high-wind report comparison retains 75% and 90% while respecting forecast clocks and hazard identity',()=>{
+ const wind=spc.parseSpcOutlook({type:'FeatureCollection',features:[
+  {type:'Feature',geometry:{type:'Polygon',coordinates:box(-103,37.2,-99,39)},properties:props('0.75',{DN:75})},
+  {type:'Feature',geometry:{type:'Polygon',coordinates:box(-103,38.2,-99,38.8)},properties:props('0.90',{DN:90})},
+ ]},1,'2026-10-28T17:00:00.000Z','synthetic-wind','wind');
+ const raw=['Time,F_Scale,Location,County,State,Lat,Lon,Comments',
+  '1700,EF1,Test,Test,KS,38.5,-100,tornado is a different hazard',
+  'Time,Speed,Location,County,State,Lat,Lon,Comments',
+  '1629,70,Test,Test,KS,38.5,-100,before the forecast valid start',
+  '1630,70,Test,Test,KS,38.5,-100,at valid start in 90 percent',
+  '2300,70,Test,Test,KS,37.5,-100,in 75 percent only',''].join('\n');
+ const parsed=sr.parseStormReports(raw,'today',now,'synthetic-reports');
+ const afterExpiry={...parsed.reports.find(r=>r.kind==='wind'),id:'after-expiry',time:'2026-10-29T12:00:01.000Z'};
+ const observed={...parsed,reports:[...parsed.reports,afterExpiry]};
+ const check=ver.verifyOutlook(wind,observed);
+ assert.equal(check.total,2,'only wind reports within the forecast period count');
+ assert.deepEqual(check.bands.map(b=>[b.id,b.count]),[['5',2],['15',2],['30',2],['45',2],['60',2],['75',2],['90',1]]);
+ assert.equal(ver.verificationReading(check,'wind'),"2 wind reports since the outlook's 16:30 UTC start: 2 in 5%+, 2 in 15%+, 2 in 30%+, 2 in 45%+, 2 in 60%+, 2 in 75%+, 1 in 90%+");
+ assert.equal(wind.kansas,'90','observations do not replace the forecast maximum');
+ assert.equal(wind.data.features.length,2,'report comparison leaves forecast geometry unchanged');
+ assert.equal(ver.verifyOutlook({...wind,validFrom:null},observed),null);
+ assert.equal(ver.verifyOutlook({...wind,validUntil:'invalid'},observed),null);
+ assert.equal(ver.verifyOutlook({...wind,day:2},observed),null);
+});
