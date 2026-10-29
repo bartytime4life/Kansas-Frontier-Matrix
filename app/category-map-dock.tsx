@@ -472,7 +472,7 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
           <p className="category-map-dock-scale-note">{drought.counties.summary}</p>
           {onDroughtCounty && <PickList summary={`Counties, most severe first (${drought.counties.list.length})`} label="Kansas counties by drought, most severe first"
             items={drought.counties.list} selected={drought.counties.picked} onPick={onDroughtCounty} />}
-          {drought.counties.reading && <div className="category-map-dock-quake-event" aria-live="polite">
+          {drought.counties.reading && <div className="category-map-dock-quake-event" aria-live={drought.playing ? "off" : "polite"}>
             <p>{drought.counties.reading}</p>
             <div><button type="button" onClick={onDroughtCountyClear} aria-label="Clear the selected county">Clear</button></div>
           </div>}
