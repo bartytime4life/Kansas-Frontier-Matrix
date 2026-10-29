@@ -45,7 +45,7 @@ function placement(engine, host, record, expanded, only = null) {
 /** Next kind in turn, preferring a record not seen recently and that fits on screen now. */
 function nextRecord(place, memory) {
  for (let step = 0; step < KINDS.length; step++) {
-  const kind = KINDS[(memory.turn + step) % KINDS.length], ofKind = SPOTLIGHT_RECORDS.filter(r => r.kind === kind).map(record => ({ record, side: place(record) })).filter(o => o.side);
+  const kind = KINDS[(memory.turn + step) % KINDS.length], ofKind = SPOTLIGHT_RECORDS.filter(r => r.kind === kind).map(record => ({ record, ...place(record) })).filter(o => o.side);
   const fresh = ofKind.filter(o => !memory.recent.includes(o.record.id));
   const options = fresh.length ? fresh : ofKind.filter(o => o.record.id !== memory.recent.at(-1));
   if (options.length) return { ...options[Math.floor(Math.random() * options.length)], turn: memory.turn + step + 1 };
@@ -142,7 +142,7 @@ function MiniStrip({ record }) {
  if (record.kind === 'core') { const deepest = record.bottom * 1.08; return <svg className="welcome-spot-mini" viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="6" fill="#0a1f28"/><rect className="welcome-spot-span" x={record.top / deepest * 100} width={Math.max((record.bottom - record.top) / deepest * 100, 1)} height="6"/></svg>; }
  return <svg className="welcome-spot-mini" viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="6" fill={productColor(record.category)}/></svg>;
 }
-function Chip({ record }) {
+function Chip({ record, onNext }) {
  const kicker = record.kind === 'well' ? 'Water well' : record.kind === 'core' ? 'Core sample' : `Mine · ${record.county} County`;
  const fact = record.kind === 'well' ? `${ft(record.totalDepth)} driller's log · ${record.recordDate.slice(0, 4)}`
   : record.kind === 'core' ? `${ft(record.top)}–${ft(record.bottom)} cored · ${record.boxes} boxes`
@@ -152,12 +152,13 @@ function Chip({ record }) {
   <strong className="welcome-spot-title">{record.label}</strong>
   <span className="welcome-spot-fact">{fact}</span>
   <MiniStrip record={record}/>
+  {onNext && <button type="button" className="welcome-spot-chip-next" onClick={onNext}>Next <span aria-hidden="true">→</span></button>}
   <i className="welcome-spot-timer" aria-hidden="true"/>
  </article>;
 }
 
-function Card({ record, expanded, onNext }) {
- if (!expanded) return <Chip record={record}/>;
+function Card({ record, expanded, compact, onNext }) {
+ if (compact) return <Chip record={record} onNext={expanded ? onNext : null}/>;
  const fields = record.kind === 'well'
   ? [['Logged', record.recordDate], ['Total depth', ft(record.totalDepth)], ['Location', record.locationMethod], ['Intervals', record.intervals.length]]
   : record.kind === 'core'
@@ -183,7 +184,7 @@ function Card({ record, expanded, onNext }) {
  </article>;
 }
 
-export function SubsurfaceSpotlight({ engine, host, paused = false, reduced = false, expanded = false }) {
+export function SubsurfaceSpotlight({ engine, host, paused = false, reduced = false, expanded = false, onPlaced }) {
  const [current, setCurrent] = useState(null), [leaving, setLeaving] = useState(false), [trail, setTrail] = useState([]);
  const [hidden, setHidden] = useState(() => typeof document !== 'undefined' && document.hidden);
  const memory = useRef({ turn: 0, recent: [] }), shown = useRef(null);
@@ -197,13 +198,19 @@ export function SubsurfaceSpotlight({ engine, host, paused = false, reduced = fa
   let timer = 0, alive = true;
   const show = () => {
    if (!alive) return;
-   const pick = nextRecord(record => placement(engine, host, record, expanded), memory.current);
+   // The opened preview prefers the full card; a short window falls back to the chip.
+   const pick = nextRecord(record => {
+    const side = placement(engine, host, record, expanded);
+    if (side) return { side, compact: !expanded };
+    const small = expanded && placement(engine, host, record, false);
+    return small ? { side: small, compact: true } : null;
+   }, memory.current);
    if (!pick) { timer = setTimeout(show, RETRY_MS); return; }
    const previous = shown.current;
    memory.current = { turn: pick.turn, recent: [...memory.current.recent, pick.record.id].slice(-9) };
    // The last few spots stay as faint markers, so the wander reads across the map.
    if (previous) setTrail(list => [...list.filter(item => item.record.id !== previous.record.id && item.record.id !== pick.record.id), { record: previous.record, element: pinElement(previous.record.kind, 'welcome-spot--trail') }].slice(-5));
-   shown.current = { record: pick.record, side: pick.side, element: pinElement(pick.record.kind) };
+   shown.current = { record: pick.record, side: pick.side, compact: pick.compact, element: pinElement(pick.record.kind) };
    setCurrent(shown.current); setLeaving(false);
   };
   if (!shown.current) show();
@@ -211,10 +218,12 @@ export function SubsurfaceSpotlight({ engine, host, paused = false, reduced = fa
   else if (!paused && !reduced && !hidden) timer = setTimeout(() => setLeaving(true), DWELL_MS);
   return () => { alive = false; clearTimeout(timer); };
  }, [engine, host, current, leaving, paused, reduced, hidden, expanded]);
+ useEffect(() => { onPlaced?.(Boolean(current)); }, [current, onPlaced]);
+ useEffect(() => () => onPlaced?.(false), [onPlaced]);
  // Scrolled category cards, an opened panel or the drift can cover a card; it then gives way early.
  useEffect(() => {
   if (!engine || !host || !current || leaving) return;
-  const check = setInterval(() => { if (!placement(engine, host, current.record, expanded, current.side)) setLeaving(true); }, 1500);
+  const check = setInterval(() => { if (!placement(engine, host, current.record, expanded && !current.compact, current.side)) setLeaving(true); }, 1500);
   return () => clearInterval(check);
  }, [engine, host, current, leaving, expanded]);
  if (!engine || !current) return null;
@@ -222,8 +231,8 @@ export function SubsurfaceSpotlight({ engine, host, paused = false, reduced = fa
  return <>
   {trail.map(item => <Pinned key={item.record.id} engine={engine} element={item.element} coordinates={item.record.coordinates}><span className="welcome-spot-pin" title={item.record.label}/></Pinned>)}
   <Pinned key={current.record.id} engine={engine} element={current.element} coordinates={current.record.coordinates} anchor={current.side === 'below' ? 'top' : 'bottom'}>
-   <div className="welcome-spot-inner" data-kind={current.record.kind} data-side={current.side} data-phase={leaving ? 'out' : 'in'} data-still={still} data-reduced={reduced} data-expanded={expanded} style={{ '--dwell': `${DWELL_MS}ms` }}>
-    <Card record={current.record} expanded={expanded} onNext={() => setLeaving(true)}/>
+   <div className="welcome-spot-inner" data-kind={current.record.kind} data-side={current.side} data-phase={leaving ? 'out' : 'in'} data-still={still} data-reduced={reduced} data-expanded={expanded && !current.compact} style={{ '--dwell': `${DWELL_MS}ms` }}>
+    <Card record={current.record} expanded={expanded} compact={current.compact} onNext={() => setLeaving(true)}/>
     <span className="welcome-spot-stem" aria-hidden="true"/>
     <span className="welcome-spot-pin" aria-hidden="true"><i/><i/></span>
    </div>
