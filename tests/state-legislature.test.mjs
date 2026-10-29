@@ -102,6 +102,7 @@ test('the dock offers U.S. House, Kansas Senate and Kansas House; the page swaps
  assert.match(page,/legislatureHidCivicRef\.current = false;\s*setOfficialContextVisible\(CIVIC_ID, true\);/,'the U.S. House districts come back only if they were on');
  assert.match(page,/if \(renderedHits\[0\]\?\.source === LEGISLATURE_SOURCE_ID\) \{\s*const district = renderedHits\[0\]\.properties\?\.district;\s*if \(typeof district === "number"\) \{ setLegislaturePicked\(district\); setCategoryDockHidden\(false\); \}/);
  assert.match(page,/syncLegislature\(map, shownLegislature, legislaturePicked\)/);
+ assert.match(page,/const civicShown = Boolean\(officialVisibility\[CIVIC_ID\]\);\s*useEffect\(\(\) => \{\s*if \(!legislatureChamber \|\| !civicShown\) return;\s*legislatureHidCivicRef\.current = false;\s*setLegislatureChamber\(null\);\s*setLegislaturePicked\(null\);\s*\}, \[legislatureChamber, civicShown\]\);/,'turning the U.S. House districts on by any control returns to U.S. House: one plan at a time');
  assert.match(page,/legislatureHidCivicRef\.current = false;\s*setLegislatureChamber\(null\);\s*setLegislaturePicked\(null\);/,'closes with its map');
  assert.match(page,/\.\.\.\(shownLegislature \? \[legislatureKey\(shownLegislature\.chamber\)\] : \[\]\)/);
 });
