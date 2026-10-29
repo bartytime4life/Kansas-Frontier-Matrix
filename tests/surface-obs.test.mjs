@@ -36,6 +36,13 @@ test('a barb rounds to 5 kt and draws pennants, full and half barbs from the tip
  const b10=sfc.barbShapes(10);assert.equal(b10.lines[1][1],tipOf(b10),'a full barb starts at the tip');
  assert.equal(sfc.barbShapes(100).triangles.length,2);
  assert.equal(sfc.BARB_ICONS.length,30);assert.equal(sfc.BARB_ICONS[29],150);
+ // Every barb, feathers and stroke included, stays inside the icon canvas: a clipped feather would misstate the speed.
+ const pad=sfc.ICON_STROKE/2;
+ for(const knots of sfc.BARB_ICONS){
+  const {lines,triangles}=sfc.barbShapes(knots);
+  const points=[...lines.flatMap(([a,b,c,d])=>[[a,b],[c,d]]),...triangles.flatMap(([a,b,c,d,e,f])=>[[a,b],[c,d],[e,f]])];
+  for(const [x,y] of points)assert.ok(x>=pad&&y>=pad&&x<=sfc.ICON_SIZE-pad&&y<=sfc.ICON_SIZE-pad,`${knots} kt: (${x.toFixed(2)}, ${y.toFixed(2)}) is outside the ${sfc.ICON_SIZE} px canvas`);
+ }
 });
 
 test('sky cover is the greatest layer reported, in the station circle\'s terms',()=>{
