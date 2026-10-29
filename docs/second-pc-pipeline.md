@@ -405,43 +405,44 @@ change, the fast check is:
 node --test tests/pc-pipeline.test.mjs tests/pipeline-domain.test.mjs tests/pipeline-lock.test.mjs
 ```
 
-Before pushing, reproduce the CI workflow `.github/workflows/public-core-repair.yml`
-(job `verify-core-delivery`). It runs on every pull request and on pushes to
+Before pushing, run the local mirror of the CI workflow
+`.github/workflows/public-core-repair.yml` (job `verify-core-delivery`). That
+workflow runs on every pull request and on pushes to
 `a0-hosted-ai-web-20261017` and `codex/fix-public-core-visibility-20261014`.
-`npm` is not on this PC's system `PATH`; use the pinned copy:
 
 ```sh
 cd ~/Documents/ChatGPT/Kansas-Frontier-Matrix/pipeline-hosted
-export PATH="$HOME/Documents/ChatGPT/Kansas-Frontier-Matrix/development-tools/bin:$PATH"
-npm ci
-npm run build
-npx tsc --noEmit
-node --test --test-concurrency=4 tests/*.test.mjs
+bash scripts/ci-local.sh
 ```
 
-The HTTP boundary step serves the build and runs the server and browser suites
-against it. The browser suites drive headless `google-chrome`; set
-`KFM_TEST_CHROME` to use another binary.
+`scripts/ci-local.sh` runs the workflow's steps in order: `npm ci`, build,
+typecheck, the Node suite, the MySQL checks when a disposable server listens on
+127.0.0.1:13317, the HTTP boundary and browser suites on port 5182, and the
+preview on port 5183. Unlike CI it continues after a failure, so one run reports
+every broken step, and it stops the servers it starts. It prints a summary and
+keeps per-step logs in `.sites-runtime/ci-local/<UTC time>/`, or in the
+directory given as its argument. If `npm` is not on `PATH`, it uses the pinned
+copy in `../development-tools/bin`. Exit status 0 means every step that ran
+passed; 69 means a required tool is missing; 75 means another run holds
+`.sites-runtime/ci-local.lock` or port 5182 or 5183 is taken. When the workflow
+changes, update the script to match.
 
-```sh
-NODE_ENV=production PORT=5182 node server/start.mjs > .sites-runtime/node-runtime.log 2>&1 &
-for t in godaddy-node-runtime.test.mjs pipeline-http.test.mjs county-search.browser.mjs \
-  aviation-layout.browser.mjs explorer-startup.browser.mjs; do
-  KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test "tests/$t"
-done
-kill %1
-```
+The browser suites drive headless `google-chrome`; set `KFM_TEST_CHROME` to
+use another binary.
 
-The workflow then checks the `KFM_NODE_STARTUP` line in that log and runs
-`PORT=5183 npm run dev` with the `anonymous map|hosted AI endpoint` tests. Copy
-those two steps from the workflow file rather than from here.
+`tests/second-pc-pipeline-doc.test.mjs` runs in the Node suite, locally and in
+CI. It fails if this runbook skips a heading level, links to a missing section,
+or cites a `scripts/`, `server/`, `tests/`, `docs/` or `.github/` path that no
+longer exists. On the pipeline PC it also checks the cited `tools/` and
+`pc-pipeline-data/` paths. Update the runbook in the same change that moves or
+renames a file it cites.
 
 Results on this PC, 2026-10-29 (Node 22.22.1; CI pins 22.23.3):
 
 | Workflow step | Local result | Time |
 | --- | --- | --- |
 | `npm ci`, build, typecheck | Pass | about 45 s |
-| Node suite, `tests/*.test.mjs` | Pass | about 2 min |
+| Node suite, `tests/*.test.mjs` | Pass: 1,686 tests, 0 failed, 19 skipped | about 2 min |
 | Disposable MySQL checks | **Not run**: no Docker or MySQL on this PC | none |
 | HTTP boundary and browser suites | Pass | about 9 min |
 | Preview on port 5183 | Pass | about 25 s |
