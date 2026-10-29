@@ -192,10 +192,10 @@ test('the page reads the week shown, keeps the last map drawn while the next loa
  assert.match(page,/\}, droughtWeek \? 350 : 0\);/,'a dragged slider settles before a week is read');
  assert.match(page,/fetch\("\/api\/drought-series", \{ signal: controller\.signal \}\)/);
  assert.match(page,/const shownDrought = droughtId \? droughtLoaded \?\? lastDroughtRef\.current : null;/);
- assert.match(page,/syncDroughtMonitor\(map, shownDrought\);/);
+ assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty\);/);
  assert.match(page,/\.\.\.\(shownDrought \? \[droughtKey\(shownDrought\.date\)\] : \[\]\)/);
  assert.match(page,/if \(on && map && map\.getZoom\(\) > 7\.5\) map\.easeTo\(\{ center: \[-98\.38, 38\.5\], zoom: 6\.2, duration: motionDuration\(1200\), essential: false \}\);/,'a field-scale view pulls out to the state');
- assert.match(page,/setQuakeRecordSelected\(null\);\s*setDroughtOn\(false\);\s*setDroughtWeek\(null\);\s*setOutlookDay\(null\);[\s\S]{0,200}\/\/ Each map opens on its own subject/);
+ assert.match(page,/setQuakeRecordSelected\(null\);\s*setDroughtOn\(false\);\s*setDroughtWeek\(null\);\s*setDroughtCounty\(null\);\s*setOutlookDay\(null\);[\s\S]{0,200}\/\/ Each map opens on its own subject/);
  assert.match(page,/if \(droughtOn\) params\.set\("drought", droughtWeek \?\? "newest"\);/);
  assert.match(page,/setDroughtOn\(droughtOffered && \(restoredDrought === "newest" \|\| isUsdmDate\(restoredDrought\)\)\);/);
  assert.match(page,/const chooseDroughtWeek = \(date: string \| null\) => \{ setDroughtWeek\(date && date !== droughtNewest \? date : null\); setDroughtFailed\(null\); \};/,'the newest week is followed, not pinned');
@@ -228,4 +228,75 @@ test('while shown, the newest map and the Kansas series are read again as they a
  assert.match(page,/setDroughtMaps\(maps => rememberDroughtMap\(maps, droughtId, value\)\);/);
  assert.match(page,/if \(current\) \{ droughtReadAtRef\.current\.set\(droughtId, Date\.now\(\)\); setDroughtTick\(tick => tick \+ 1\); \}\s*else setDroughtFailed\(droughtId\);/,'a failed re-read keeps the newest map shown');
  assert.match(page,/setDroughtFailed\(null\);\s*setDroughtSeriesFailed\(false\);/,'showing it again retries the series');
+});
+
+const county=(geoid,name,w,s,e,n)=>({type:'Feature',id:geoid,properties:{geoid,name},geometry:{type:'Polygon',coordinates:box(w,s,e,n)}});
+const countiesFc={type:'FeatureCollection',features:[county('20055','Finney',-101.1,37.7,-100.2,38.3),county('20187','Stanton',-102.05,37.4,-101.55,37.75),county('20209','Wyandotte',-94.95,39.0,-94.6,39.2),
+ {type:'Feature',properties:{name:'No id'},geometry:{type:'Polygon',coordinates:box(-99,38,-98.5,38.5)}}]};
+
+test('each county\'s share in each category is measured on the map, and the counties list most severe first',()=>{
+ const map=dm.parseUsdmMap(national,'20261020','t','s');
+ const counties=dm.countyDroughtShares(map.data,countiesFc);
+ assert.deepEqual(counties.map(c=>c.geoid),['20055','20187','20209'],'a county without a GEOID is left out');
+ const [finney,stanton,wyandotte]=counties;
+ assert.deepEqual(plain(stanton.shares),[100,100,100,0,0]);assert.equal(stanton.worst,2,'inside the D2 corner');
+ assert.equal(finney.shares[1],100);assert.ok(finney.shares[2]>31&&finney.shares[2]<36,`the D2 corner covers two-thirds of Finney's width and half its height, a third of it (${finney.shares[2]})`);assert.equal(finney.worst,2);
+ assert.deepEqual(plain(wyandotte.shares),[100,0,0,0,0]);assert.equal(wyandotte.worst,0);
+ assert.deepEqual(plain(dm.countyDroughtList(counties)),[
+  {id:'20187',label:'Stanton · D2 on all · drought on all'},{id:'20055',label:`Finney · D2 on ${Math.round(finney.shares[2])}% · drought on all`},{id:'20209',label:'Wyandotte · D0 on all'}]);
+ assert.equal(dm.countyDroughtSummary(counties),'Counties reached: D1–D4 2 · D2+ 2 · D3+ 0 · D4 0 of 3 · measured on the map');
+ assert.equal(dm.countyDroughtReading(stanton,'20261020'),'Stanton County · valid Oct 20, 2026 · D0+ all · D1+ all · D2+ all · D3+ none · D4 none · measured on the map');
+ const none=dm.countyDroughtShares({type:'FeatureCollection',features:[]},countiesFc);
+ assert.deepEqual(none.map(c=>c.worst),[-1,-1,-1]);
+ assert.equal(dm.countyDroughtList(none)[0].label,'Finney · none','with nothing reaching them, counties list by name');
+ assert.deepEqual(dm.countyDroughtShares(map.data,{type:'FeatureCollection',features:[]}),[]);
+});
+
+test('the county lines draw over the categories and under the state line, with the picked county outlined',async()=>{
+ const {validateStyleMin}=await import('@maplibre/maplibre-gl-style-spec');
+ const layers=[{id:'background'},{id:'kfm-roads'}];const sources={};const filters={};const setData=[];
+ const map={getSource:id=>sources[id],addSource:(id,spec)=>{sources[id]={...spec,setData:d=>setData.push([id,d])};},getLayer:id=>layers.find(l=>l.id===id),
+  addLayer:(spec,before)=>layers.splice(layers.findIndex(l=>l.id===before),0,{id:spec.id,spec}),getStyle:()=>({layers}),setFilter:(id,f)=>{filters[id]=f;},
+  removeLayer:id=>layers.splice(layers.findIndex(l=>l.id===id),1),removeSource:id=>{delete sources[id];}};
+ const drought=dm.parseUsdmMap(national,'20261020','t','s');
+ dm.syncDroughtMonitor(map,drought);
+ assert.ok(!sources[dm.DROUGHT_COUNTY_SOURCE_ID],'no county lines until the counties are in hand');
+ dm.syncDroughtMonitor(map,drought,countiesFc,'20187');
+ assert.deepEqual(layers.map(l=>l.id),['background',dm.DROUGHT_FILL_LAYER_ID,dm.DROUGHT_LINE_LAYER_ID,dm.DROUGHT_COUNTY_LAYER_ID,dm.DROUGHT_COUNTY_SELECTED_LAYER_ID,dm.DROUGHT_STATE_LAYER_ID,'kfm-roads']);
+ assert.deepEqual(filters[dm.DROUGHT_COUNTY_SELECTED_LAYER_ID],['==',['get','geoid'],'20187']);
+ dm.syncDroughtMonitor(map,drought,countiesFc,null);
+ assert.deepEqual(filters[dm.DROUGHT_COUNTY_SELECTED_LAYER_ID],['==',['get','geoid'],'']);
+ assert.equal(setData.length,0,'the same counties are not sent again');
+ const style={version:8,sources:Object.fromEntries(Object.entries(sources).map(([id,s])=>[id,{type:'geojson',data:s.data}])),layers:layers.slice(1,6).map(l=>({...l.spec,...(l.id===dm.DROUGHT_COUNTY_SELECTED_LAYER_ID?{filter:filters[l.id]}:{})}))};
+ assert.deepEqual(validateStyleMin(plain(style)).map(e=>e.message),[]);
+ dm.syncDroughtMonitor(map,null);
+ assert.deepEqual(layers.map(l=>l.id),['background','kfm-roads']);assert.deepEqual(Object.keys(sources),[]);
+});
+
+test('the dock lists the counties, outlines the one picked, and the page reads the Census counties with the Drought Monitor',async()=>{
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];
+ const base={look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:1,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},
+  onDrought(){},onDroughtWeek(){},onDroughtCounty:id=>calls.push(['county',id]),onDroughtCountyClear:()=>calls.push(['clear'])};
+ const list=[{id:'20187',label:'Stanton · D2 on all · drought on all'},{id:'20209',label:'Wyandotte · D0 on all'}];
+ const drought={on:true,loading:false,failed:false,reading:'Valid Oct 20, 2026',url:dm.USDM_PAGE,date:'20261020',label:'Oct 20, 2026',previous:'20261013',next:null,newest:true,categories:dm.USDM_CATEGORIES,weeks:null,seriesFailed:false,
+  counties:{summary:'Counties reached: D1–D4 1 · D2+ 1 · D3+ 0 · D4 0 of 2 · measured on the map',list,picked:'20187',reading:'Stanton County · valid Oct 20, 2026 · D0+ all'}};
+ const tree=h.render(h.exports.CategoryMapDock,{...base,drought});
+ const text=JSON.stringify(tree);
+ assert.match(text,/Counties reached: D1–D4 1/);assert.match(text,/Stanton County · valid Oct 20, 2026/);
+ const pick=findNode(tree,n=>n.props?.label==='Kansas counties by drought, most severe first');
+ assert.equal(pick.props.summary,'Counties, most severe first (2)');
+ const buttons=findNode(pick.type(pick.props),n=>n.props?.['aria-label']==='Kansas counties by drought, most severe first').props.children.map(li=>li.props.children);
+ assert.deepEqual(buttons.map(b=>b.props['aria-pressed']),[true,false]);
+ buttons[1].props.onClick();
+ findNode(tree,n=>n.props?.['aria-label']==='Clear the selected county').props.onClick();
+ assert.deepEqual(calls,[['county','20209'],['clear']]);
+ assert.ok(!findNode(h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,loading:true}}),n=>n.props?.label==='Kansas counties by drought, most severe first'),'not while a week loads');
+ h.dispose?.();
+ assert.match(page,/if \(!droughtOn \|\| officialPayloads\["census-counties"\] \|\| droughtCountiesAskedRef\.current\) return;\s*droughtCountiesAskedRef\.current = true;\s*void refreshOfficialContext\("census-counties"\);/,'asked once a showing, so a failed read does not repeat');
+ assert.match(page,/setDroughtCounty\(null\);\s*droughtCountiesAskedRef\.current = false;/);
+ assert.match(page,/const countyDrought = useMemo\(\(\) => droughtLoaded && droughtCounties \? countyDroughtShares\(droughtLoaded\.data, droughtCounties\) : null, \[droughtLoaded, droughtCounties\]\);/);
+ assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty\);/);
+ assert.match(page,/setDroughtCounty\(geoid\);\s*mapRef\.current\?\.fitBounds\(geometry\.bounds, \{ padding: 70, maxZoom: 9, duration: motionDuration\(650\) \}\);/);
+ assert.match(page,/setDroughtSeriesFailed\(false\);\s*setDroughtCounty\(null\);/);
 });

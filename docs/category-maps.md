@@ -205,6 +205,15 @@ and released that Thursday.
   Week slider, or Week before / Week after shows that week's map; Newest
   follows the newest release. A dragged slider settles before a week is read,
   and the last map drawn stays on screen while the next loads.
+- **Counties.** With the map shown, the site reads the Census 2020 Kansas
+  counties it already uses for search and People, and draws their lines over
+  the categories, under the state line, as the USDM's state maps do. Each
+  county's share in each category or worse is measured on the map at the
+  centres of a 0.02° grid (about 200 points a county), weighted by area. The
+  dock says how many counties each category reaches (any part of the county)
+  and lists the counties most severe first (highest category, then the most of
+  the county in it); choosing one outlines it, frames it, and gives its shares
+  for the week. The shares are the map's, not the USDM's county statistics.
 - **Reading.** The valid date, Kansas's share in drought (D1–D4), and in D2,
   D3 and D4 or worse. The USDM's own statistics are used for the week when
   they are in hand. Otherwise the shares are measured on the map at the centres
