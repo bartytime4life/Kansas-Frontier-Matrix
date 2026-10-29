@@ -246,6 +246,46 @@ and released that Thursday.
   beneath. The statistics are read whether the service answers JSON or CSV,
   cumulative or categorical; a categorical answer is accumulated.
 
+## NWS flood forecasts on the River network (Water)
+
+**Show flood forecasts** puts the NOAA National Water Prediction Service
+(NWPS) river gauges for Kansas on the River network, read through the site's
+hydrology adapter (`/api/hydrology/noaa`). It is the river forecast the
+National Weather Service issues for each forecast point, drawn as the NWS
+draws it.
+
+- **Gauges.** Each gauge is coloured by its NWS flood category at the latest
+  observation: major (purple), moderate (red), minor (orange), action or near
+  flood stage (yellow), no flooding (green), and grey or blue where the data
+  are not current or no category is defined. A ring marks a gauge with an
+  official forecast. The key says this is gauge status, not a flood warning.
+- **List.** The dock sums the network up (in flood, near flood stage,
+  forecast to flood) and lists every gauge with the worst of its observed and
+  forecast categories first. Choosing one, or clicking it on the map while
+  the view is on, rings it and draws its hydrograph.
+- **Hydrograph.** The past week of observed stage as a solid line, the
+  official NWS forecast dashed with its points, and a line at now, over the
+  gauge's own action, flood, moderate and major stages as coloured bands.
+  The vertical range always reaches the flood stage, so the distance to
+  flooding is read off the plot. Once the water reaches flood stage, the
+  range opens to the next stage above. Days are marked at Central-time
+  midnight and times are given in CST or CDT.
+- **Reading.** The latest observation and its category, then the forecast:
+  its crest, time and category, and when the forecast was issued (or that it
+  falls or holds steady, or that no forecast is issued). It ends with the
+  flood stage and the gauge's record crest, flagged when NWS lists it on an
+  old datum.
+- **Units.** Stages and crests are taken in the units of the plotted series.
+  A gauge forecast in flow takes the flow thresholds. Units that match neither
+  draw no flood stages.
+- **Refresh.** The gauge picked is read again every ten minutes while shown.
+  Observations arrive every 15 to 60 minutes and forecasts a few times a day.
+  The network shows only at the present map time.
+- **Limits.** NWPS is an operational service, not an archive. Values may be
+  provisional or revised. The categories are the gauge's, at the gauge: they
+  are not a flood-inundation map. Warnings come from the National Weather
+  Service.
+
 ## Saturated thickness on the Aquifer map (Groundwater)
 
 The Aquifer map opens on the Kansas Geological Survey's 2022–2024 saturated

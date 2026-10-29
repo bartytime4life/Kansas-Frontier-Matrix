@@ -1,4 +1,5 @@
 import type { Feature, FeatureCollection, Point } from "geojson";
+import { floodStatus, type FloodStatus } from "./flood-forecast";
 
 export const NOAA_HYDROLOGY_NETWORK_API_PATH = "/api/hydrology/noaa?mode=network";
 
@@ -123,6 +124,10 @@ export type NoaaGaugeFeatureProperties = Readonly<{
   forecastValue: number | null;
   forecastUnit: string | null;
   floodCategory: string | null;
+  observedCategory: string | null;
+  forecastCategory: string | null;
+  /** The category the map colours by: the observation's, or the forecast's when the observation gives none. */
+  floodStatus: FloodStatus;
   hasForecast: boolean;
   displayValue: string;
   retrievedAt: string;
@@ -151,6 +156,9 @@ export const noaaGaugeNetworkGeoJson = (network: NoaaGaugeNetwork): FeatureColle
       forecastValue: gauge.forecast.primary.value,
       forecastUnit: gauge.forecast.primary.unit,
       floodCategory: gauge.observed.floodCategory ?? gauge.forecast.floodCategory,
+      observedCategory: gauge.observed.floodCategory,
+      forecastCategory: gauge.forecast.floodCategory,
+      floodStatus: floodStatus(gauge.observed.floodCategory) !== "unknown" ? floodStatus(gauge.observed.floodCategory) : floodStatus(gauge.forecast.floodCategory),
       hasForecast: gauge.forecast.validTime !== null && gauge.forecast.primary.value !== null,
       displayValue: displayMeasurement(gauge.observed.primary.value, gauge.observed.primary.unit),
       retrievedAt: network.retrievedAt,

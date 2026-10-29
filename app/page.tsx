@@ -33,6 +33,7 @@ import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportCl
 import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
+import { FLOOD_GAUGE_REFRESH_MS, floodGaugeApiPath, floodGaugeList, floodGaugePage, floodGaugeSummaries, floodHydrograph, floodKey, floodNetworkSummary, floodReading, parseFloodGauge, syncFloodSelection, FLOOD_SELECTED_SOURCE_ID, type FloodGauge } from "./flood-forecast";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, recordPlots, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
 import { AVIATION_TINT_BANDS, CATEGORY_BASEMAPS, RELIEF_RAMP } from "./category-basemaps";
@@ -1616,6 +1617,13 @@ export default function Home() {
   // so far by "day-product", and the one whose read failed.
   const [outlookDay, setOutlookDay] = useState<OutlookDay | null>(null);
   // The U.S. Drought Monitor on the Field view: the week shown ("YYYYMMDD"), or null for the newest released.
+  const [floodOn, setFloodOn] = useState(false);
+  const [floodLid, setFloodLid] = useState<string | null>(null);
+  const [floodGauge, setFloodGauge] = useState<FloodGauge | null>(null);
+  const [floodFailed, setFloodFailed] = useState<string | null>(null);
+  const [floodClock, setFloodClock] = useState(() => Date.now());
+  const floodOnRef = useRef(false);
+  const floodGaugesWereOnRef = useRef(false);
   const [droughtOn, setDroughtOn] = useState(false);
   const [droughtWeek, setDroughtWeek] = useState<string | null>(null);
   const [droughtMaps, setDroughtMaps] = useState<ReadonlyMap<string, DroughtMap>>(() => new Map());
@@ -4305,6 +4313,63 @@ export default function Home() {
     if (on && map && map.getZoom() > 7.5) map.easeTo({ center: [-98.38, 38.5], zoom: 6.2, duration: motionDuration(1200), essential: false });
   };
 
+  // NWS flood forecasts on the River network: the NWPS gauges by flood category, and one gauge's hydrograph,
+  // read again every ten minutes while it is shown (observations every 15–60 minutes, forecasts a few times a day).
+  floodOnRef.current = floodOn;
+  const showFlood = (on: boolean) => {
+    setFloodOn(on);
+    setFloodLid(null);
+    setFloodFailed(null);
+    if (on) {
+      floodGaugesWereOnRef.current = Boolean(officialVisibilityRef.current["noaa-nwps-gauges"]);
+      if (!floodGaugesWereOnRef.current) setOfficialContextVisible("noaa-nwps-gauges", true);
+    } else if (!floodGaugesWereOnRef.current) setOfficialContextVisible("noaa-nwps-gauges", false);
+  };
+  useEffect(() => {
+    if (!floodOn || !floodLid) return;
+    const controller = new AbortController();
+    const read = () => {
+      setFloodClock(Date.now());
+      void fetch(floodGaugeApiPath(floodLid), { signal: controller.signal })
+        .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+        .then(value => {
+          if (controller.signal.aborted) return;
+          setFloodGauge(parseFloodGauge(value, floodLid));
+          setFloodFailed(null);
+        })
+        .catch(() => { if (!controller.signal.aborted) setFloodFailed(floodLid); });
+    };
+    read();
+    const timer = setInterval(read, FLOOD_GAUGE_REFRESH_MS);
+    return () => { clearInterval(timer); controller.abort(); };
+  }, [floodOn, floodLid]);
+  const floodGaugeFeatures = floodOn ? officialPayloads["noaa-nwps-gauges"]?.data.features ?? null : null;
+  const floodSummaries = useMemo(() => floodGaugeFeatures ? floodGaugeSummaries(floodGaugeFeatures) : [], [floodGaugeFeatures]);
+  const floodItems = useMemo(() => floodGaugeList(floodSummaries), [floodSummaries]);
+  const shownFloodGauge = floodGauge && floodGauge.lid === floodLid ? floodGauge : null;
+  const floodPlot = useMemo(() => shownFloodGauge ? floodHydrograph(shownFloodGauge, floodClock) : null, [shownFloodGauge, floodClock]);
+  const floodPoint = useMemo(() => {
+    const feature = floodLid ? floodGaugeFeatures?.find(item => item.properties?.lid === floodLid) : undefined;
+    return feature?.geometry?.type === "Point" ? feature.geometry.coordinates as [number, number] : null;
+  }, [floodGaugeFeatures, floodLid]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const point = floodOn ? floodPoint : null;
+    const sync = () => { try { syncFloodSelection(map, point); } catch { /* The style is reloading; its styledata event draws the ring again. */ } };
+    sync();
+    if (!point) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(FLOOD_SELECTED_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [floodOn, floodPoint, styleReady]);
+  const pickFloodGauge = (lid: string) => {
+    setFloodLid(lid);
+    setFloodFailed(null);
+    const feature = floodGaugeFeatures?.find(item => item.properties?.lid === lid);
+    if (feature?.geometry?.type === "Point") easeToPicked(feature.geometry.coordinates as [number, number]);
+  };
+
   // Today's reports are re-read every five minutes while shown; yesterday's every half hour.
   const chooseReports = useCallback((day: ReportDay | null) => { setReportsDay(day); setReportsFailed(null); setReportSelected(null); }, []);
   useEffect(() => {
@@ -6047,6 +6112,12 @@ export default function Home() {
             const id = renderedHits[0].properties?.id;
             const report = typeof id === "string" ? stormReportsRef.current.get(id) : undefined;
             if (report) { setReportSelected(report); setCategoryDockHidden(false); }
+            return;
+          }
+          // With flood forecasts shown, an NWS gauge owns its selection: the dock draws its hydrograph.
+          if (floodOnRef.current && renderedHits[0]?.source === OFFICIAL_CONTEXT_BY_ID["noaa-nwps-gauges"].sourceId) {
+            const lid = renderedHits[0].properties?.lid;
+            if (typeof lid === "string") { setFloodLid(lid); setFloodFailed(null); setCategoryDockHidden(false); }
             return;
           }
           // The earthquake record owns its selection: the dock shows the event; nothing beneath it is inspected.
@@ -9882,6 +9953,10 @@ export default function Home() {
       const on = look.starters.includes(source.id);
       if (on || officialVisibilityRef.current[source.id]) setOfficialContextVisible(source.id, on);
     }
+    // Flood forecasts close with their map; the loop above has already set the NWS gauges to this map's starters.
+    floodGaugesWereOnRef.current = false;
+    setFloodOn(false);
+    setFloodLid(null);
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
     setPopulationPrismsShown(Boolean(look.overlays?.includes("population")));
     // Soil moisture belongs to the maps that offer it; it does not follow into the others.
@@ -10874,10 +10949,16 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
+            flood={activeCategoryMap.tools?.includes("flood") ? { on: floodOn,
+              state: !buildYearCurrent || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME ? "held" : officialStates["noaa-nwps-gauges"] === "error" ? "failed" : floodGaugeFeatures ? "ready" : "loading",
+              summary: floodGaugeFeatures ? floodNetworkSummary(floodSummaries) : null, list: floodItems, picked: floodLid, gauge: shownFloodGauge, plot: floodPlot,
+              reading: shownFloodGauge ? floodReading(shownFloodGauge, floodClock) : null, gaugeLoading: Boolean(floodLid && !shownFloodGauge && floodFailed !== floodLid),
+              gaugeFailed: floodLid !== null && floodFailed === floodLid && !shownFloodGauge, url: floodLid ? floodGaugePage(floodLid) : null } : undefined}
+            onFlood={showFlood} onFloodPick={pickFloodGauge} onFloodClear={() => setFloodLid(null)}
             photoreal={activeCategoryMap.tools?.includes("photoreal") ? { on: basemap === "photoreal", landscapes: PHOTOREAL_LANDSCAPES, place: photorealPlace, depth: verticalExaggeration } : undefined}
             onPhotoreal={showPhotoreal}
             reviewed={reviewedSource ? { source: REVIEWED_SOURCE_LABEL[reviewedSource], on: reviewed.on, loading: reviewed.status === "loading",

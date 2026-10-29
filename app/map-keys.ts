@@ -223,3 +223,18 @@ export const chartElevationKey = (bands: Stops): MapKey => {
 
 /** A map's keys with its basemap's elevation key first, when the basemap colours the ground by height. */
 export const withElevationKey = (keys: readonly MapKey[], key: MapKey | null): readonly MapKey[] => key ? [key, ...keys] : keys;
+
+/** NWS flood categories as NOAA NWPS reports them at a gauge, in the NWS colours (major purple … no flooding green). */
+export type FloodStatus = "major" | "moderate" | "minor" | "action" | "none" | "not_defined" | "low_water" | "not_current" | "out_of_service" | "unknown";
+export const FLOOD_STATUS: Readonly<Record<FloodStatus, Readonly<{ label: string; color: string }>>> = Object.freeze({
+  major: { label: "Major flooding", color: "#cc33ff" },
+  moderate: { label: "Moderate flooding", color: "#ff0000" },
+  minor: { label: "Minor flooding", color: "#ff9900" },
+  action: { label: "Near flood stage (action)", color: "#ffff00" },
+  none: { label: "No flooding", color: "#00ff00" },
+  not_defined: { label: "Flood category not defined", color: "#72afe9" },
+  low_water: { label: "At or below low-water threshold", color: "#906320" },
+  not_current: { label: "Data not current", color: "#bdc2bb" },
+  out_of_service: { label: "Out of service", color: "#6b6b6b" },
+  unknown: { label: "No category given", color: "#8fb5c2" },
+});
