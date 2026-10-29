@@ -6,7 +6,7 @@ version: v0.18
 status: draft; repository-grounded workflow governance reference; exact filename inventory; static and hosted behavior bounded
 owners: ["@bartytime4life"]
 created: 2026-07-08
-updated: 2026-09-25
+updated: 2026-10-29
 policy_label: public; github-actions; workflow-governance; fail-closed; non-publisher
 owning_root: .github/
 responsibility: GitHub Actions orchestration, trigger and permission boundaries, check-name stability, CI maturity disclosure, and workflow inventory accountability
@@ -320,6 +320,14 @@ make test
 ```
 
 Inspect each target before relying on it. A Make target that only echoes a hold, a skipped job, or a non-enforcing readiness check is not substantive validation.
+
+The [`schema-validation`](schema-validation.yml) checkout fetches complete Git
+history because `make schemas` delegates to the full validator profile. Its
+trust-spine fixture and CI conformance checks replay pinned historical blobs;
+a depth-one checkout cannot resolve those inputs. The workflow separately
+checks generic fixture coverage for the nine legacy families. Fetching history
+supplies validation inputs and retains read-only permissions and non-persisted
+credentials; it grants no release or publication authority.
 
 ### Documentation and inventory checks
 
