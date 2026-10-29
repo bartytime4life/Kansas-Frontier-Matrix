@@ -2,7 +2,7 @@
 doc_id: kfm://doc/packages-domains-fauna-readme
 title: Fauna Domain Package README
 type: readme
-version: v0.1
+version: v0.2
 status: draft
 owners:
   - <package-owner>
@@ -13,7 +13,7 @@ owners:
   - <policy-steward>
   - <docs-steward>
 created: 2026-06-13
-updated: 2026-06-13
+updated: 2026-10-29
 policy_label: public
 path: packages/domains/fauna/README.md
 related:
@@ -46,6 +46,20 @@ notes:
 <a id="top"></a>
 
 # Fauna Domain Package
+
+## Implemented offline slice (2026-10-29)
+
+Python 3.11+ package `kfm-domain-fauna` now exports deterministic occurrence
+identity and validation, snapshot-bound taxonomy matching, held normalization,
+and allowlisted internal review projection from `src/fauna/`. The existing
+repository occurrence validator delegates to this shared engine.
+
+See the [implementation guide](../../../docs/domains/fauna/normalization.md)
+for inputs, installation, rehearsal commands, boundaries, validation, and
+rollback. This bounded implementation supersedes earlier unknown-runtime
+statements only for these helpers. Live source admission, evidence closure,
+policy/release decisions, and public API/map behavior remain unverified.
+
 
 > Shared helper-code lane for the Fauna domain: taxonomy helpers, occurrence and monitoring parsers, range and seasonal-range adapters, status crosswalks, geoprivacy helper utilities, sensitivity-aware DTO adapters, and fixture utilities. This package supports governed apps, pipelines, workers, tests, and tools, but it does not define Fauna truth, own schemas/contracts/policy, write lifecycle data, close EvidenceBundles, expose restricted occurrence detail, or approve public release.
 

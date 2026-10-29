@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/fauna/taxonomy_snapshot.schema.json",
+  "title": "Fauna Candidate Taxonomy Snapshot",
+  "description": "Closed draft local transport for matching names within one caller-supplied snapshot. It neither equates concepts across authorities nor admits an authority, evidence, or publication.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "state",
+    "authority",
+    "snapshot_ref",
+    "concepts"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "fauna_taxonomy_snapshot"
+    },
+    "schema_version": {
+      "const": "v1"
+    },
+    "state": {
+      "const": "candidate"
+    },
+    "authority": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+    },
+    "snapshot_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+    },
+    "concepts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "concept_id",
+          "accepted_scientific_name",
+          "taxon_rank",
+          "synonyms",
+          "evidence_refs"
+        ],
+        "properties": {
+          "concept_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          },
+          "accepted_scientific_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "\\S",
+            "allOf": [
+              {
+                "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+              }
+            ]
+          },
+          "taxon_rank": {
+            "enum": [
+              "kingdom",
+              "phylum",
+              "class",
+              "order",
+              "family",
+              "genus",
+              "species",
+              "subspecies",
+              "variety",
+              "other"
+            ]
+          },
+          "synonyms": {
+            "type": "array",
+            "maxItems": 128,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "pattern": "\\S",
+              "allOf": [
+                {
+                  "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+                }
+              ]
+            }
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 16,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024,
+              "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "DRAFT_SCHEMA",
+    "contract_doc": "contracts/domains/fauna/taxon_crosswalk.md",
+    "authority_boundary": "Internal matching input only; not a TaxonCrosswalk decision, source admission or release."
+  }
+}

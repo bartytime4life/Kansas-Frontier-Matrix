@@ -1,4 +1,20 @@
-# packages/domains/fauna pyproject — greenfield placeholder
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "kfm-domain-fauna"
-version = "0.0.0"
+version = "0.1.0"
+description = "Offline, source-bound Fauna normalization and review helpers."
+requires-python = ">=3.11"
+dependencies = [
+    "kfm-hashing==0.1.0",
+    "jsonschema>=4.26.0,<5",
+    "rfc3339-validator==0.1.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fauna"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/pyproject.toml", "/src/fauna"]

@@ -2,11 +2,11 @@
 doc_id: kfm://doc/domains/fauna/readme
 title: KFM Fauna Domain Lane
 type: standard
-version: v1.2.3
+version: v1.3.0
 status: draft
 owners: ["@bartytime4life — CODEOWNERS review route", "NEEDS VERIFICATION — fauna domain steward; docs steward; independent reviewer"]
 created: 2026-05-16
-updated: 2026-08-29
+updated: 2026-10-29
 policy_label: public
 owning_root: docs/
 responsibility: Human-readable scope, boundaries, maturity, sensitivity posture, and navigation for the Fauna domain lane
@@ -36,6 +36,16 @@ notes:
 <a id="top"></a>
 
 # KFM Fauna Domain Lane
+
+## Implemented normalization slice (2026-10-29)
+
+The [offline normalization guide](normalization.md) records the new reusable
+Python helpers, candidate taxonomy snapshot schema, aggregate-only local
+rehearsal, and focused no-network tests. New normalized records remain in
+quarantine with public geometry withheld. This verifies local source behavior
+only; admission, evidence closure, policy/review, public map/API integration,
+release, deployment, and publication remain separate open work.
+
 
 > Governance, evidence, and publication doctrine for animal taxonomy, occurrences, ranges, monitoring, and sensitive-site records inside the Kansas Frontier Matrix.
 

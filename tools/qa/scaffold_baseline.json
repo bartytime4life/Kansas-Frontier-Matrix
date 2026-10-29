@@ -2,23 +2,23 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 715,
-   "STUB_MODULE": 150,
+   "PLACEHOLDER_MARKER": 710,
+   "STUB_MODULE": 146,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
    "connectors": 68,
    "contracts": 3,
-   "packages": 31,
-   "pipelines": 76,
+   "packages": 28,
+   "pipelines": 74,
    "policy": 112,
    "schemas": 386,
    "scripts": 1,
-   "tests": 176,
+   "tests": 172,
    "tools": 24
   },
-  "files": 716,
-  "total": 877
+  "files": 711,
+  "total": 868
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
@@ -98,9 +98,6 @@
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/archaeology/src/archaeology/identity.py"},
   {"kind": "STUB_MODULE", "path": "packages/domains/archaeology/src/archaeology/identity.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/atmosphere/pyproject.toml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/fauna/pyproject.toml"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/fauna/src/fauna/identity.py"},
-  {"kind": "STUB_MODULE", "path": "packages/domains/fauna/src/fauna/identity.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/flora/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/geology/pyproject.toml"},
   {"kind": "PLACEHOLDER_MARKER", "path": "packages/domains/habitat/pyproject.toml"},
@@ -135,8 +132,6 @@
   {"kind": "STUB_MODULE", "path": "pipelines/domains/agriculture/triplets.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/agriculture/validate.py"},
   {"kind": "STUB_MODULE", "path": "pipelines/domains/agriculture/validate.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/fauna/normalize.py"},
-  {"kind": "STUB_MODULE", "path": "pipelines/domains/fauna/normalize.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/habitat/build_habitat_patch.py"},
   {"kind": "STUB_MODULE", "path": "pipelines/domains/habitat/build_habitat_patch.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "pipelines/domains/habitat/ingest_nlcd.py"},
@@ -752,8 +747,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_ai_no_leak.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_evidence_closure.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_evidence_closure.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_occurrence_split.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_occurrence_split.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_publication_gate.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_publication_gate.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_redaction_receipt.py"},
@@ -766,8 +759,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_runtime_envelope_negative.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_source_role_authority.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_source_role_authority.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_taxonomy_resolution.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_taxonomy_resolution.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/flora/test_api_envelopes.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/flora/test_api_envelopes.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/flora/test_catalog_closure.py"},

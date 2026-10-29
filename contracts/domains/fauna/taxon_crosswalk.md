@@ -2,11 +2,11 @@
 doc_id: kfm://doc/contracts-domains-fauna-taxon-crosswalk
 title: Taxon Crosswalk Contract
 type: semantic-contract
-version: v0.2
+version: v0.3
 status: draft; PROPOSED; NEEDS VERIFICATION before promotion
 owners: OWNER_TBD — Fauna steward · Taxonomy steward · Crosswalk steward · Contract steward · Source steward · Schema steward · Validation steward · Policy steward · Release steward · Docs steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-10-29
 policy_label: public; semantic-contract; fauna; taxon-crosswalk; taxonomy-mapping; source-role-aware; evidence-aware; time-aware
 tags: [kfm, contracts, fauna, taxon-crosswalk, taxonomy, mapping, authority-taxonomy, source-role, evidence, temporal-scope, correction, rollback]
 related:
@@ -36,6 +36,20 @@ notes:
 <a id="top"></a>
 
 # Taxon Crosswalk
+
+## Bounded snapshot matching input (2026-10-29)
+
+The [candidate taxonomy snapshot schema](../../../schemas/contracts/v1/domains/fauna/taxonomy_snapshot.schema.json)
+now defines the internal input to the Fauna package's offline matcher. It
+contains one named authority/snapshot reference and concepts with accepted
+names, explicit synonyms, ranks, and evidence references. It accepts only
+`state: candidate`. Duplicate concept identities are rejected; ambiguous names
+abstain. It neither equates concepts across authorities nor realizes the full
+TaxonCrosswalk object; the existing paired `taxon_crosswalk.schema.json` remains
+a proposed scaffold. Snapshot labels and evidence references require upstream
+verification and never confer source admission or release authority. See the
+[normalization guide](../../../docs/domains/fauna/normalization.md).
+
 
 > Semantic contract for Fauna taxonomic mapping: how KFM records relationships between source-native taxon concepts, authority taxonomies, reviewed KFM taxon concepts, and downstream claims without erasing uncertainty, source role, or time scope.
 
