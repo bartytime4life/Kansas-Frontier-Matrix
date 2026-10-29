@@ -16,6 +16,7 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
  const host = useRef(null), engine = useRef(null), latest = useRef({ topic, paused, reduced, layersVisible, aviationMode });
  const [state, setState] = useState('loading'), [sources, setSources] = useState(null);
  const [Geology, setGeology] = useState(null), [geologyReady, setGeologyReady] = useState(false), [geologyFailed, setGeologyFailed] = useState(false);
+ const [Spotlight, setSpotlight] = useState(null), [map, setMap] = useState(null);
  // A category hint owns no second map or Underground worker. Its source and
  // diagram chunk are requested only after a settled Geology selection.
  useEffect(() => {
@@ -25,6 +26,8 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
    import('./GeologyGlimpse.jsx').then(module => {
     if (current) { setGeology(() => module.GeologyGlimpse); setGeologyReady(true); setGeologyFailed(false); onGeologyModule?.({ Component: module.GeologyGlimpse }); }
    }).catch(() => { if (current) { setGeologyReady(false); setGeologyFailed(true); onGeologyModule?.({ failed: true }); } });
+   // Real wells, cores and mines popping up on the map; optional, so a failure only leaves the map.
+   import('./SubsurfaceSpotlight.jsx').then(module => { if (current) setSpotlight(() => module.SubsurfaceSpotlight); }).catch(() => {});
   }, 220);
   return () => { current = false; clearTimeout(timer); };
  }, [topic, onGeologyModule]);
@@ -47,7 +50,7 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
   }).then(instance => {
    if (!instance) return;
    if (cancelled) { instance.dispose(); return; }
-   engine.current = instance;
+   engine.current = instance; setMap({ engine: instance, host: host.current });
    const { topic: id, paused: stopped, reduced: still, layersVisible: visible, aviationMode: mode } = latest.current;
    instance.setAviationMode(mode); instance.setReduced(still); instance.setPaused(stopped); instance.setLayersVisible(visible); instance.show(id);
   }).catch(unavailable);
@@ -69,7 +72,7 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
    cancelled = true;
    cancelBoot();
    if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', scheduleBoot);
-   engine.current?.dispose(); engine.current = null;
+   engine.current?.dispose(); engine.current = null; setMap(null);
   };
  }, [onPreviewState]);
  // The latest props also seed the engine when it finishes loading.
@@ -84,7 +87,8 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
   .map(source => `${OFFICIAL_CONTEXT_BY_ID[source.id]?.shortTitle ?? source.id}${source.observedAt ? ` · ${source.product === 'visible' ? 'visible-band' : source.product === 'geocolor' ? 'GeoColor' : 'scan'} ${RADAR_TIME.format(new Date(source.observedAt))}` : ''}`) : [];
  return <div className="domain-stage" data-state={state} data-topic={view.topic ?? 'kansas'}>
   <div ref={host} className="domain-stage-map" />
-  {expanded&&topic==='geology'&&geologyReady&&Geology&&<Geology paused={paused} reduced={reduced} expanded={expanded}/>}
+  {topic==='geology'&&Spotlight&&map&&<Spotlight engine={map.engine} host={map.host} paused={paused} reduced={reduced} expanded={expanded}/>}
+  {expanded&&topic==='geology'&&!(Spotlight&&map)&&geologyReady&&Geology&&<Geology paused={paused} reduced={reduced} expanded={expanded}/>}
   {expanded&&topic==='geology'&&geologyFailed&&<p className="welcome-geology-module-failure" role="status">Recorded log preview unavailable. Open Underground to check source status.</p>}
   <p className="domain-stage-caption"><span>Map preview · provider context</span><strong key={view.topic ?? 'kansas'}>{view.name}</strong><small>{view.topic==='aviation'?`${aviationMode==='3d'?'3D volumes · 1× heights':aviationMode==='slice'?'4,000 ft MSL slice':'2D chart'} · Pinned FAA reference; weather, traffic, drone grids and TFRs are separate.`:view.detail}</small>{shown.length>0&&<small className="domain-stage-data">Preview layers: {shown.join(' · ')}</small>}<small className="domain-stage-credit">{BASEMAPS[view.basemap].note}</small></p>
  </div>;

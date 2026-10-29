@@ -479,3 +479,48 @@ The presentation adds no source admission, dataset carrier, source capture,
 store/account transfer, migration, model change or public publication. Existing
 source geometry, source hashes and governed-data holds are unchanged; the held
 Kansas River sediment-model cutaway is not used.
+
+## Welcome: real wells, cores and mines across the map — 2026-10-29
+
+While Geology is previewed, the welcome map now takes turns showing one real
+record at its own location: a **KGS WWC5 water well**, a **KGS Core Library
+core**, then an **inventoried mine**, each landing at a different spot. A pin
+drops and ripples, and a card rises from it (or hangs below it when there is no
+room above). Every nine seconds the card sinks and the next kind appears. The
+last five spots stay as faint coloured dots, so the wander reads across the
+state. Cards are MapLibre markers on the existing welcome map, so they follow
+its drift and terrain; nothing adds a second map, worker or WebGL context.
+
+- **Well**: the driller's log drills down as a column of description-coloured
+  intervals (the shared material classifier), labelled at its thickest bands,
+  with log date, total depth, location method and a KGS record link.
+- **Core**: the cored span drawn on a drilled-depth bar beside a tray with one
+  box for each box the Core Library stores, plus operator, KGS ID and core
+  photo link. Ranges stay drilled depth; recovery gaps are possible.
+- **Mine**: the mine's name is the card title, with product, county, operation
+  type, inventory status and acreage when recorded. The cutaway is chosen by the
+  recorded operation type (headframe and room-and-pillar for underground or
+  subsurface, injection and brine wells for solution mines, benches for surface
+  pits, a dashed "not recorded" outline otherwise). It is labelled as a
+  schematic: the inventory gives no depths or workings.
+
+Behind the category cards there is only room for a labelled **chip** (name, one
+recorded fact and a one-line strip). The opened ("Preview in the welcome
+window") view shows the full card with **KGS record**, **Core photos** and
+**Next** controls and takes the place of the single-log specimen there; the
+compact category brief keeps that specimen. A card is placed only where it
+clears the header, hero, brief, category cards, layer panel and caption, and it
+gives way early when scrolling or the drift covers it. Pause and hidden
+documents hold the current card (it finishes rising once; looping motion
+stops); reduced motion shows it static and advances only on **Next**.
+
+The 20 records live in `app/living-welcome/subsurface-spotlight.json`, built by
+`scripts/build-welcome-spotlight.py`. Wells and core ranges are copied
+unchanged from the pinned subsurface tiles (contiguous logs from 0 ft to total
+depth only). Core box counts and lease/operator names come from the KGS Core
+Library inventory retrieved 2026-10-29, joined only where its start/end depths
+equal the tile range exactly. Mines are eight named OBJECTIDs from the KGS
+Quarries and Mines inventory (KGS/KDHE, largely circa 2000; status is
+historical); inventory notes about reserves or production are dropped. Each
+source's retrieval time and SHA-256 are kept in the file. No geology is
+interpolated between records and no current operating condition is claimed.
