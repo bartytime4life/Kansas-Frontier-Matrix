@@ -1,8 +1,8 @@
-# Kansas county history: source qualification
+# Kansas county history: source qualification and dated queries
 
-Checked **2026-10-29**. **HOLD for public integration; offline structural qualification passed.** This is a development qualification record, not source admission, a release receipt, or a legal determination about KFM's intended use.
+Checked **2026-10-29**. **Source reuse notice confirmed; offline structural qualification and dated queries passed. Public map integration is not implemented.** This is a development qualification record, not source admission or a release receipt.
 
-The next useful civic slice is a dated county-history layer. The actual Newberry Kansas archive was acquired and checked. Public redistribution rights, topology, interpretation and the modern continuation remain open. This change supplies an offline checker and tests; it adds no route, map layer, download endpoint, source approval or runtime dependency.
+The next useful civic slice is a dated county-history layer. The actual Newberry Kansas archive was acquired and checked. The offline checker now selects mapped versions for an exact day, with citations and record-level source locators. Topology, datum conversion, interpretation and the modern continuation remain open. This change adds no route, map layer, download endpoint, source approval or runtime dependency.
 
 ## Evidence and exact source
 
@@ -71,47 +71,69 @@ The extent is approximately **113.938°W–89.099°W, 33.004°N–48.151°N**. H
 
 These are observed version gaps, not automatically data defects. The next interpretation check must reconcile dissolution/re-creation and name history against the cited chronology. An empty interval for one institution does not mean the place had no other jurisdiction or inhabitants.
 
-## Rights decision remains open
+## Rights evidence and correction
 
-**CONFIRMED:** both the Kansas download page and bundled deed specify [CC BY-NC-SA 2.5](https://creativecommons.org/licenses/by-nc-sa/2.5/). The site's general footer refers to broader use without permission fees. Newberry's [current policy](https://www.newberry.org/policies) retains the user's responsibility to determine copyright and other restrictions. The general footer does not establish that the source-specific license was replaced.
+**CONFIRMED:** the [Atlas state download page](https://publications.newberry.org/ahcb/downloads/states.html), which links this exact Kansas ZIP, permits lawful commercial and noncommercial reuse without library permission fees. It explicitly identifies the old bundled licenses as outdated and says they can be ignored. The [Atlas download overview](https://publications.newberry.org/ahcb/downloads/index.html) carries the same dataset-specific notice. The [Library of Congress catalog record 2018487899](https://www.loc.gov/item/2018487899/) separately identifies the Atlas collection, including state GIS packages, with a **CC0** Rights Advisory.
 
-**NEEDS VERIFICATION:** a recorded determination that KFM's intended display, transformations and downloadable derivatives comply with the applicable terms, or source-specific permission covering that use. Free access to KFM does not by itself settle that question. Keep the source separate from permissively licensed application code; do not relabel it MIT, CC0 or unrestricted government data. Mirroring or reformatting cannot remove the original terms.
+Both the provider's state download notice and the Library of Congress Rights Advisory were directly inspected in Chrome on **2026-10-29**, after research fetches returned 403. The catalog's initial automatic verification page resolved normally; no challenge was solved or bypassed. These are recorded observations as of that date, not network checks performed each time the offline script runs.
 
-The offline checker always returns `status: HOLD` and `releaseEligible: false`, even when its structural checks succeed. This is a bounded development safeguard, not a new policy authority. It has no approval flag. The existing governance process owns any future rights and release decision.
+**Correction to the initial qualification in [PR #5557](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5557):** its rights hold relied on the bundled [CC BY-NC-SA 2.5](https://creativecommons.org/licenses/by-nc-sa/2.5/) deed and older state page, while overlooking the explicit supersession notice. The earlier conclusion was incomplete. This follow-up removes that rights blocker. It does not claim the notice changed on the verification date. The original deed and its digest remain part of the preserved archive; the current provider notice and catalog advisory are recorded alongside it. The draft clarification message is superseded and was never sent.
 
-Prepared clarification text, **not sent**:
+Reuse permission does not turn this scholarly reconstruction into government-issued or legally authoritative boundary data. This finding applies to the Atlas dataset, not all third-party material cited in its bibliography, and does not make a KFM candidate a released artifact.
 
-> We are evaluating the Kansas Atlas of Historical County Boundaries archive for Kansas Frontier Matrix, a public historical map. The Kansas page and ZIP contain CC BY-NC-SA 2.5, while the general footer links an open-access policy. Please confirm the current terms for this exact dataset, including public map display, reprojection/generalization and downloadable derived geometry, and whether commercial use has separately been authorized. Please identify required attribution, license notices and any scope limits. Archive SHA-256: a233b4b3bcf3f3d7a52a4c18de76017f0d4f1f421086f95312df4c59a0aa5f02.
+The offline checker continues to return `status: HOLD` and `releaseEligible: false`: those fields describe the absent release decision, not an unresolved provider license. It has no approval flag. The existing governance process owns source admission and any future release.
+
+## Exact-day query implemented
+
+`--date YYYY-MM-DD` adds a deterministic `snapshot` to the qualification output. It first checks the complete pinned archive. The query accepts only a calendar day inside the mapped coverage, 1804-10-01–2000-12-31. It rejects compact dates, timestamps, malformed days and unsupported years before opening the archive. It never carries a version across a source gap or beyond 2000.
+
+The snapshot separates three kinds of information:
+
+- `boundaryVersions`: source versions covering the selected day using inclusive source ends normalized to exclusive KFM ends. Source names, FIPS when present, state/type labels, change descriptions and citations are retained. The type remains an unreviewed source label; it is not promoted into a legal county classification.
+- `eventOnlyRecordsOnDay`: chronology-only events occurring on that exact day. An absent institutional ID remains null. Events do not create open-ended polygons or imply that every event of the selected day is listed here; mapped changes remain in the boundary records.
+- `undatedNameCrossReferences`: all 16 source cross-references, explicitly marked with unknown temporal applicability. These are dataset context, not a list of names valid on the selected day.
+
+Each record carries `evidenceRefs` resolving to a local WORK `evidenceBundle`: the exact source URL/archive digest, member digest and one-based member record number. TSV record numbers exclude the header and mean parsed data records, not physical text lines. Boundary references identify the matching SHP, DBF and chronology records. Identities include the archive revision; version identities also include the institutional ID, version and date interval. Event and cross-reference identities use the member digest and source record locator, so missing institutional IDs are not fabricated.
+
+This is a bounded offline query format, not a new canonical contract, source registry, public DTO or release proof. Its only output is JSON on stdout; it performs no writes, acquisition or publication. Coordinates are deliberately absent while datum conversion and topology remain unchecked. The cited geometry locators enable that next processing step without mislabeling NAD83 coordinates as WGS84. The 1803 chronology evidence remains in the qualification and source; the geometry date query does not claim to cover it.
 
 ## Proposed implementation after qualification
 
 1. Preserve the raw ZIP and member identities through the existing RAW → WORK/QUARANTINE lifecycle. Use the existing source-registry and evidence responsibilities after an exact-tree placement review; this hosted checker creates neither.
-2. Keep institutional identity (`ID`) separate from version identity (source digest plus ID/version/date interval). FIPS is optional. Give event-only and alias rows distinct roles; neither becomes an inferred polygon.
-3. Convert each source interval to `[start, end + one day)`. Preserve the original dates. A day outside 1804-10-01–2000-12-31 must abstain for this geometry source. Treat post-2000 official vintages as a separately qualified continuation, not a carry-forward.
+2. Reuse the tested temporal identities, evidence references and distinct event/cross-reference roles when building the geometry adapter. FIPS remains optional. Reconcile the WORK format with the existing canonical evidence contracts at source admission.
+3. Preserve the tested `[start, end + one day)` semantics and original dates. Treat post-2000 official vintages as a separately qualified continuation, not a carry-forward.
 4. Resolve territory, non-county area, proposed/unrecognized jurisdiction and renamed/re-created county semantics from evidence. Do not use the catch-all `County` field alone. State/county administrative claims do not establish Indigenous sovereignty, land ownership or absence of communities.
-5. Qualify datum conversion, topology and any display simplification before rendering. Preserve correction lineage and unmapped chronology events. Reuse the existing map/calendar/source drawer only after a bounded adapter exists and the rights/review gates are met.
+5. Qualify datum conversion, topology and any display simplification before rendering. Preserve correction lineage and unmapped chronology events. Reuse the existing map/calendar/source drawer after a bounded adapter and source/release review exist; the old bundled license is no longer a blocker.
 6. Start the future UI with a selected date, explicit reconstruction attribution, source details and a keyboard list. Then-versus-now comparison needs a separately dated modern source. No officeholder, election-result or population crosswalk is inferred by this slice.
 
 ## Reproduce the checks
 
-Use a separate development Python environment with **pyshp 2.3.1**. This is an offline-tool dependency, not a hosted application dependency. The unit tests use only the Python standard library. The acquisition step is intentional and external to the checker.
+Use a separate development Python environment with **pyshp 2.3.1**. This is an offline-tool dependency, not a hosted application dependency. The 18 synthetic tests use only the Python standard library. Three additional tests are opt-in real-archive checks and need pyshp. The acquisition step is intentional and external to the checker.
 
 ```sh
 python3 -m unittest discover -s tests -p test_county_history_qualification.py -v
 python3 scripts/qualify-county-history.py /absolute/path/to/KS_AtlasHCB.zip
+python3 scripts/qualify-county-history.py /absolute/path/to/KS_AtlasHCB.zip --date 1861-01-29
+KFM_COUNTY_ARCHIVE=/absolute/path/to/KS_AtlasHCB.zip python3 -m unittest discover -s tests -p test_county_history_qualification.py -v
 ```
 
 In this session the package installer could not resolve pyshp. The exact [official 2.3.1 source module](https://github.com/GeospatialPython/pyshp/blob/2.3.1/shapefile.py) was retrieved through GitHub into a temporary dependency directory, outside the repository. Its SHA-256 is `9c749d73e31cc332e4683130a808258b407d2ba8cf33a5e1d5ea190c0eaae73f`. Running the checker with that directory on `PYTHONPATH` passed on the acquired ZIP. No third-party module is vendored by this change.
 
-**Passed:** 13 synthetic regression tests and the real-archive structural qualification. Tests cover inclusive end dates, gaps, earlier event-only history, aliases, missing FIPS, overlapping identity, malformed dates/geometry, digest rejection, symlink rejection and bounded ZIP handling. An initial run correctly exposed a distinction missed by the first draft: the chronology begins in 1803 while polygon coverage begins in 1804. The checker now keeps those scopes separate and tests the distinction.
+**Passed:** 21 tests with the exact source archive supplied: 18 synthetic regression tests and three real-source checks. They cover inclusive ends, gaps, event-only history, aliases, missing FIPS/IDs, overlapping identity, strict dates, malformed geometry, digest/symlink rejection, bounded ZIP handling, evidence-reference resolution and stable identities. The real-source transition check compares every version start/end and its adjacent days against the original numeric source intervals; no historical counts are inferred from today's counties. It also verifies the seven frame counts above, Clark County's 1883 disappearance/1885 return and deterministic repeated full qualification. Without `KFM_COUNTY_ARCHIVE`, the three real-source tests are explicitly skipped, not counted as passing.
 
-**Not established:** polygon topology or overlap between different institutions, independent verification of every legal boundary, provider-declared text encoding (CP1252 was used successfully), datum-transform accuracy, publication rights, full application tests, independent security review, browser map performance, or release readiness. The JSON output is deterministic qualification evidence, not a governed release proof. Exit zero means checks ran successfully; it does not change HOLD.
+The exact CLI query for **1861-01-29** produced **50 mapped versions, 52 event-only records and 16 undated cross-references**, 122,118 JSON bytes with SHA-256 `3a58068a837a1dd53e455e931ff9c1648785c1c5d83c117e127d9fff7df558ab`. A CLI smoke check caught a development defect where the report's frame loop overwrote the requested day. The loop variable is now separate, and the real-source regression checks the requested date, expected count, CLI/API equality and absence of a snapshot when no date is supplied. The final 21-test run passed after that correction.
+
+**Not established:** polygon topology or overlap between different institutions, independent verification of every legal boundary, provider-declared text encoding (CP1252 was used successfully), datum-transform accuracy, full application tests, independent security review, browser map performance, or release readiness. The JSON output is deterministic qualification evidence, not a governed release proof. Exit zero means checks ran successfully; it does not change HOLD.
 
 ## Congressional and hosted status
 
 [PR #5553](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5553) is **merged**, verified this session. The hosted branch subsequently reached `cdbe5d7b66ba431f1bb373201c316fe7048a4509` (tree `fe0a3c737704cae4fad46bcf3949906fc90128cf`). Its source tree was reconstructed and checked before this patch.
 
-A read-only Chrome visit to [the public site](https://kansasfrontiermatrix.com/) still showed the earlier “Civic map” category and its county-oriented full-map controls, rather than the congressional-history selector. This establishes a visible acceptance gap, not the exact deployed commit. No live build identity, historical request, mobile acceptance or publication of #5553 is claimed. Deployment remains a separate authorized action.
+The initial county qualification [PR #5557](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5557) was subsequently merged at `8f5407fcfb5a258b1c0c56e9aaa7c71676109049` (tree `4ecbc6aa26affcc874919b1ff2ebae4c2e6f0ac2`). This rights/query follow-up is based on that exact tree. Twelve intervening drought-related files were reconciled without overlap with the four county qualification files. These merge observations are not deployment evidence.
+
+A later read-only Chrome check on **2026-10-29** supersedes the earlier deployment observation: [the public site](https://kansasfrontiermatrix.com/) now shows “Kansas representation” and Congress 36–119 controls. Selecting Congress 36 loaded the **1861-01-29 statewide at-large plan**, with visible geometry, a selected-plan download link and source record revision `a72f5836d0de4ad5aa94a18b6b725b46bf71b39e` / SHA-256 `8953c719b3f71c374e6dfc797d9740b70b593a52932b1cbb5fa18beac4f6eea3`. This confirms that desktop path, not every Congress, mobile acceptance or the exact deployed application commit. No deployment was performed in this follow-up.
+
+The same inspection exposed inherited drawer inconsistencies: a scholarly source appears under “OFFICIAL SOURCE”, and the loaded 1861 record also receives a current-2026 time warning and hidden-layer warning. The source details correctly identify the scholarly reconstruction and absence of a KFM EvidenceBundle. These conflicting drawer labels remain a follow-up defect; this offline query patch does not silently claim to fix them.
 
 ## Placement and rollback
 

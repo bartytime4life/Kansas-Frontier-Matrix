@@ -1,7 +1,7 @@
-"""Qualify one exact Newberry Kansas archive offline; never publish or export geometry.
+"""Qualify and query one exact Newberry Kansas archive offline; never publish geometry.
 
 Requires Python 3.10+ and pyshp==2.3.1. See docs/county-history-qualification.md.
-A successful check still reports HOLD: neither source rights nor release are approved.
+A successful check still reports HOLD: source reuse is documented, release is not approved.
 """
 import argparse
 import collections
@@ -59,6 +59,13 @@ def interval(row):
 def select_rows(rows, day):
     require(type(day) is dt.date and FIRST <= day <= LAST, "DATE_COVERAGE")
     return [row for row in rows if interval(row)[0] <= day < interval(row)[1]]
+
+
+def query_date(value):
+    require(isinstance(value, str) and bool(re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", value)), "QUERY_DATE_FORMAT")
+    day = dt.date.fromisoformat(value)
+    require(FIRST <= day <= LAST, "DATE_COVERAGE")
+    return day
 
 
 def version_key(row):
@@ -152,7 +159,81 @@ def read_pinned_archive(path):
     return raw
 
 
-def qualify(path):
+def dated_snapshot(rows, events, member_receipts, day):
+    """Return a WORK candidate with resolvable source locators, never a public DTO.
+
+    Call only after qualify has checked the exact archive and the chronology join.
+    Record numbers are one-based; TSV numbers exclude the header and are not lines.
+    """
+    selected_keys = {version_key(row) for row in select_rows(rows, day)}
+    artifacts = {item["path"]: item for item in member_receipts}
+    required = [SHAPE + "shp", SHAPE + "dbf", EVENTS]
+    require(all(path in artifacts and re.fullmatch(r"[0-9a-f]{64}", artifacts[path]["sha256"])
+                for path in required), "SNAPSHOT_EVIDENCE")
+    artifact_ids = {path: "sha256:" + artifacts[path]["sha256"] for path in required}
+
+    def reference(path, record):
+        return {"artifactId": artifact_ids[path], "recordNumber": record,
+                "locatorKind": "tsv_data_record_1_based" if path == EVENTS else "shape_dbf_record_1_based"}
+
+    def identity(kind, *values):
+        encoded = json.dumps([ARCHIVE_SHA256, kind, *values], separators=(",", ":"), ensure_ascii=True).encode("utf-8")
+        return "urn:kfm:work:county-history:" + hashlib.sha256(encoded).hexdigest()
+
+    mapped_events = {version_key(row): number for number, row in enumerate(events, 1)
+                     if chronology_kind(row) == "mapped_version"}
+    versions = []
+    for number, row in enumerate(rows, 1):
+        key = version_key(row)
+        if key not in selected_keys:
+            continue
+        require(key in mapped_events, "SNAPSHOT_VERSION_JOIN")
+        start, end = interval(row)
+        versions.append({
+            "id": identity("boundary_version", row["ID"], int(row["VERSION"]), start.isoformat(), end.isoformat()),
+            "institutionSourceId": row["ID"], "sourceVersion": int(row["VERSION"]),
+            "sourceName": row["NAME"], "sourceFullName": row["FULL_NAME"],
+            "sourceState": row["STATE"] or None, "fips": row["FIPS"] or None,
+            "sourceCountyType": row["CNTY_TYPE"], "classificationStatus": "unreviewed_source_label",
+            "validFrom": start.isoformat(), "validToExclusive": end.isoformat(),
+            "sourceLastDay": (end - dt.timedelta(days=1)).isoformat(),
+            "change": row["CHANGE"], "citation": row["CITATION"],
+            "evidenceRefs": [reference(SHAPE + "shp", number), reference(SHAPE + "dbf", number),
+                             reference(EVENTS, mapped_events[key])],
+        })
+    events_on_day, aliases = [], []
+    for number, row in enumerate(events, 1):
+        kind = chronology_kind(row)
+        if kind == "event_only" and source_date(row["START_N"]) == day:
+            events_on_day.append({
+                "id": identity("event_only", artifacts[EVENTS]["sha256"], number),
+                "institutionSourceId": row["ID"] or None, "sourceName": row["NAME"],
+                "eventDate": day.isoformat(), "change": row["CREATION_OR_CHANGE"],
+                "citation": row["CITATION"], "evidenceRefs": [reference(EVENTS, number)],
+            })
+        elif kind == "name_cross_reference":
+            aliases.append({
+                "id": identity("name_cross_reference", artifacts[EVENTS]["sha256"], number),
+                "targetInstitutionSourceId": row["ID"], "sourceText": row["NAME"],
+                "temporalApplicability": "unknown", "evidenceRefs": [reference(EVENTS, number)],
+            })
+    return {
+        "format": "county_history_date_query_v1", "lifecycle": "WORK", "releaseEligible": False,
+        "selectedDay": day.isoformat(), "geometryIncluded": False,
+        "countMeaning": "Mapped source versions, including predecessor and non-county jurisdictions; not a legal county count.",
+        "boundaryVersions": sorted(versions, key=lambda item: (item["institutionSourceId"], item["sourceVersion"])),
+        "eventOnlyRecordsOnDay": events_on_day,
+        # These are dataset context, NOT names asserted valid on the selected day.
+        "undatedNameCrossReferences": aliases,
+        "evidenceBundle": {
+            "lifecycle": "WORK", "sourceUrl": SOURCE_URL, "archiveSha256": ARCHIVE_SHA256,
+            "artifacts": {artifact_ids[path]: {"member": path, "sha256": artifacts[path]["sha256"],
+                                               "bytes": artifacts[path]["bytes"]} for path in required},
+        },
+    }
+
+
+def qualify(path, day=None):
     raw = read_pinned_archive(path)
     try:
         import shapefile
@@ -198,16 +279,21 @@ def qualify(path):
     gaps = continuity(rows)
     frames = {}
     for value in (18041001, 18540530, 18550825, 18610129, 18800101, 19000101, 20001231):
-        day = source_date(value)
-        frames[day.isoformat()] = len(select_rows(rows, day))
-    return {
+        frame_day = source_date(value)
+        frames[frame_day.isoformat()] = len(select_rows(rows, frame_day))
+    result = {
         "status": "HOLD", "qualification": "offline_structure_passed", "releaseEligible": False,
         "source": {"url": SOURCE_URL, "archiveSha256": ARCHIVE_SHA256, "bytes": len(raw),
                    "coverageStart": FIRST.isoformat(), "coverageLastDay": LAST.isoformat(),
                    "sourceKind": "historical_reconstruction", "libraryVersion": shapefile.__version__,
                    "decodingUsed": "cp1252", "projectionWkt": content[SHAPE+"prj"].decode("ascii")},
-        "rights": {"bundledLicense": "CC-BY-NC-SA-2.5", "publicReuseDecision": "unresolved",
-                   "reason": "Source-specific terms and general open-access footer need a recorded reuse determination."},
+        "rights": {"bundledLicense": "CC-BY-NC-SA-2.5", "bundledLicenseStatus": "outdated_per_provider_notice",
+                   "sourceReuseStatus": "confirmed", "noticeVerifiedOn": "2026-10-29",
+                   "providerNoticeUrl": "https://publications.newberry.org/ahcb/downloads/states.html",
+                   "catalogUrl": "https://www.loc.gov/item/2018487899/", "catalogRightsAdvisory": "CC0",
+                   "verificationMethod": "direct_browser_inspection_of_provider_notice_and_catalog",
+                   "scope": "Atlas dataset reuse; not KFM source admission or release approval.",
+                   "reason": "The provider permits lawful commercial and noncommercial reuse and explicitly supersedes old bundled licenses."},
         "counts": {"boundaryVersions": len(rows), "institutions": len({r["ID"] for r in rows}),
                    "versionsWithoutFips": sum(not r["FIPS"] for r in rows), "chronologyRows": len(events),
                    "chronologyKinds": dict(sorted(kinds.items())), "parts": sum(len(s.parts) for s in shapes),
@@ -218,17 +304,22 @@ def qualify(path):
         "sourceExtentNad83": bbox, "selectedDateFeatureCounts": frames, "institutionGaps": gaps,
         "notEstablished": ["topology", "legal_or_sovereignty_authority", "current_boundaries_after_2000",
                            "encoding_declared_by_provider", "datum_transformation", "source_admission",
-                           "public_redistribution_rights", "browser_rendering", "performance"],
+                           "release_approval", "browser_rendering", "performance"],
         "members": member_receipts,
     }
+    if day is not None:
+        result["snapshot"] = dated_snapshot(rows, events, member_receipts, day)
+    return result
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("archive", help="Path to the exact local KS_AtlasHCB.zip; no network acquisition")
+    parser.add_argument("--date", help="Optional exact YYYY-MM-DD query; emits cited records and geometry locators, not coordinates")
     args = parser.parse_args()
     try:
-        result = qualify(args.archive)
+        day = query_date(args.date) if args.date is not None else None
+        result = qualify(args.archive, day)
     except (ValueError, OSError, zipfile.BadZipFile, csv.Error) as error:
         print(json.dumps({"status": "ERROR", "releaseEligible": False, "error": str(error)}))
         return 1
