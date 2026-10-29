@@ -514,7 +514,7 @@ the Mapzen relief and the default depth.
 County boundaries, USGS river gauges, the USGS 3DHP stream network and the fire
 layers (NOAA-20 fire detections and NIFC fire reports) are **off by default**;
 the plain Explorer starts with no provider layer. They appear on the maps whose
-subject they are (the civic, community and reference maps start with counties;
+subject they are (the civic map starts with 119th Congress districts, community and reference maps with counties;
 the water map with its gauges; Hazard watch with alert areas, fire detections
 and fire reports) or when a visitor turns them on. The county payload still loads once
 in the background so **Find a county** works; loaded but hidden layers are not
@@ -601,9 +601,9 @@ A light reference map:
 - land, water and roads recede, with a faint hillshade;
 - place labels are sized by rank, and state capitals carry a star.
 
-At statewide zoom the vector tiles thin out county lines, so the Government,
-People and Places looks also switch on the Census county layer as a starter.
-Boundaries are display geography, not legal descriptions.
+Government & civic opens **Kansas representation** with four labeled U.S. House districts from the Census’s generalized ACS 2025 / 119th Congress edition. The welcome preview reads the same fixed adapter and draws the same layers. District colors identify numbers, not parties. Map selection and four keyboard buttons open the source details; the dock links to official Kansas maps and offers county comparison off by default. People and Places retain their Census county starter.
+
+The district source is a fixed January 1, 2025 reference for the 119th Congress (2025–2027), not a live officeholder feed or ballot lookup. Missing or changed-edition geometry fails closed. See [source, request bounds and verification limits](civic-districts.md). Boundaries are display geography, not legal descriptions.
 
 ### River network (`hydro`)
 

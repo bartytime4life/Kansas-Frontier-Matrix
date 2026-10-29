@@ -1,5 +1,9 @@
 import type { ExpressionSpecification } from "./maplibre-seam";
 
+// Categorical district identity only; colors never encode a party or result.
+export const CIVIC_COLORS = Object.freeze([[1, "#397f7a"], [2, "#a77530"], [3, "#7762a5"], [4, "#bf7161"]] as const);
+export const civicDistrictColor = (): ExpressionSpecification => ["match", ["get", "district"], ...CIVIC_COLORS.flat(), "#777777"] as unknown as ExpressionSpecification;
+
 /**
  * Map keys: how the starter data layers encode their values, defined once so
  * the layer styles and the keys shown beside the map cannot drift apart.
@@ -92,6 +96,11 @@ export const MAP_KEYS: Readonly<Record<string, MapKey>> = Object.freeze({
       size: Math.round(2 * along(EARTHQUAKE_RADIUS_Z4, m)),
     }))),
     note: "USGS magnitude: colour and circle size both rise with it. Circles grow as you zoom in.",
+  }),
+  "census-congress-119": Object.freeze({
+    id: "census-congress-119", title: "Kansas U.S. House · 119th Congress",
+    items: Object.freeze(CIVIC_COLORS.map(([district, color]) => Object.freeze({ label: `District ${district}`, color, shape: "area" as const }))),
+    note: "2025 Census generalized boundaries. Colors identify districts, not parties. Select an area or choose a district in the controls.",
   }),
   "deflock-alpr": Object.freeze({
     id: "deflock-alpr", title: "DeFlock · reported ALPR areas",

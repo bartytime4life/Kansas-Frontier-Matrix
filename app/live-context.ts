@@ -1,3 +1,4 @@
+import { CIVIC_SOURCE } from "./civic-districts";
 import { DEFLOCK_SOURCE, DEFLOCK_COLOR } from "./deflock";
 import { AQUIFER_RASTER_SOURCES, GROUNDWATER_SNAPSHOT_SOURCES } from "./aquifer-layers";
 import { hiDpiExportUrl } from "./hd-rasters";
@@ -12,13 +13,13 @@ import { balanceMapFills, balanceMapRasters, composeMapLayers, requestFillOpacit
 import { BUILD_UTC_YEAR } from "./build-clock";
 import { POPULATION_PRISM_LAYER_ID, PRISM_OPACITY, populationPrismLayer, populationPrismsOn } from "./population-prisms";
 import { drawReviewedSnapshot } from "./reviewed-snapshot-layers";
-import { earthquakeColor, earthquakeRadius, nwsSeverityColor } from "./map-keys";
+import { civicDistrictColor, earthquakeColor, earthquakeRadius, nwsSeverityColor } from "./map-keys";
 import { globeOverviewPaintSize } from "./globe-context";
 // Only exports the CI fire baseline (a pinned earlier renderer) also has, so its comparison build still links.
 import { FIRE_HIT_RADIUS, refreshFireFootprints, syncFireDetectionDisplay, syncFireReportDisplay } from "./fire-detection-style";
 
-export type OfficialContextId = "deflock-alpr" | "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones";
-export type OfficialContextFeedId = "deflock-alpr" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
+export type OfficialContextId = "census-congress-119" | "deflock-alpr" | "kgs-aquifer-alluvial" | "kgs-aquifer-dakota" | "kgs-aquifer-glacial-drift" | "kgs-aquifer-high-plains" | "kgs-aquifer-ozark" | "kgs-aquifer-osage" | "kgs-aquifer-flint-hills" | "kgs-water-table" | "kgs-saturated-thickness" | "kgs-depth-to-water" | "kgs-monitoring-wells" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-3dhp-hydrography" | "usgs-wbd-watersheds" | "noaa-nwm-analysis" | "noaa-nwm-short-range" | "usgs-earthquakes" | "noaa-hms-smoke" | "nasa-firms-active-fire" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "noaa-goes-geocolor" | "raspberry-shake-stations" | "usgs-3dep-hillshade" | "usgs-3dep-slope" | "nws-alerts" | "nws-radar" | "nws-forecast-wind" | "nasa-lightning-climatology" | "noaa-lightning-density" | "blm-plss-townships" | "blm-plss-sections" | "blm-plss-intersected" | "blm-mlrs-leases-authorized" | "blm-mlrs-leases-closed" | "fema-disaster-declarations" | "kdot-roads" | "kdot-rail-active" | "kdot-rail-abandoned" | "kdot-bridges-state" | "kdot-bridges-local" | "kdot-bridges-historic" | "kdot-bridges-old" | "kdot-bridges-closed" | "kdot-roads-1918" | "fema-flood-zones";
+export type OfficialContextFeedId = "census-congress-119" | "deflock-alpr" | "census-counties" | "usgs-streamflow" | "noaa-nwps-gauges" | "usgs-earthquakes" | "nws-alerts" | "noaa-hms-smoke" | "nasa-gibs-fire-points" | "nifc-fire-reports" | "raspberry-shake-stations" | "fema-disaster-declarations";
 export type OfficialContextState = "idle" | "loading" | "ready" | "empty" | "partial" | "error";
 
 export type OfficialContextPayload = Readonly<{
@@ -76,6 +77,7 @@ const blmPlssImageUrl = (layer: 1 | 2 | 3, where: string) =>
  * labeled transient source-context reports/exports; per-source boundaries still apply (not raster pixels).
  */
 export const OFFICIAL_CONTEXT_SOURCES: readonly OfficialContextSource[] = Object.freeze([
+  CIVIC_SOURCE,
   DEFLOCK_SOURCE,
   ...KANSAS_REFERENCE_SOURCES,
   ...AQUIFER_RASTER_SOURCES, ...GROUNDWATER_SNAPSHOT_SOURCES,
@@ -647,6 +649,7 @@ export type OfficialContextTemporalSupport = Readonly<{
  * the operational-present UI frame; it is not asserted as every source's
  * observation, publication, or acquisition year. */
 export const OFFICIAL_CONTEXT_TEMPORAL_SUPPORT: Readonly<Record<OfficialContextId, OfficialContextTemporalSupport>> = Object.freeze({
+  "census-congress-119": Object.freeze({ axis: "joined-source-snapshot", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Fixed 119th Congress reference (2025–2027), January 1, 2025 vintage; not a historical reconstruction or current officeholder feed." }),
   "deflock-alpr": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Current community reports only. OSM database time is not camera installation or observation time; historical playback is unavailable." }),
   "kgs-aquifer-alluvial": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
   "kgs-aquifer-dakota": Object.freeze({ axis: "provider-current-mosaic", supportedFrames: Object.freeze([OFFICIAL_CONTEXT_PRESENT_FRAME]), limitation: "Reference aquifer extent; source vintage not supplied. No groundwater measurement time axis." }),
@@ -881,6 +884,15 @@ export const applyOfficialContextState = (
     "circle-color": ["match", ["downcase", ["coalesce", ["get", "floodCategory"], ""]], "major", "#d9364f", "moderate", "#ef6b45", "minor", "#f2a65a", "action", "#f2c14e", nwps.color],
     "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 3.4, 10, 7.5, 14, 10], "circle-opacity": 0.9, "circle-stroke-color": ["case", ["==", ["get", "hasForecast"], true], "#e7d9ff", "#172e36"], "circle-stroke-width": ["case", ["==", ["get", "hasForecast"], true], 2.2, 1.2],
   } });
+
+  const civic = CIVIC_SOURCE;
+  if (visibility[civic.id] || map.getSource(civic.sourceId)) {
+    ensureGeoJsonSource(map, civic, payloads["census-congress-119"]?.data ?? emptyCollection());
+    ensureLayer(map, { id: civic.layerIds[0], source: civic.sourceId, type: "fill", paint: { "fill-color": civicDistrictColor(), "fill-opacity": civic.defaultOpacity } });
+    ensureLayer(map, { id: civic.layerIds[1], source: civic.sourceId, type: "line", paint: { "line-color": civicDistrictColor(), "line-width": 2 } });
+    ensureLayer(map, { id: civic.layerIds[2], source: civic.sourceId, type: "symbol", layout: { "text-field": ["concat", "District ", ["to-string", ["get", "district"]]], "text-size": 14, "text-font": ["Noto Sans Regular"] },
+      paint: { "text-color": "#2d3040", "text-halo-color": "#ffffff", "text-halo-width": 2 } });
+  }
 
   // Generalized report cells, never exact camera points or field-of-view cones.
   const deflock = DEFLOCK_SOURCE;

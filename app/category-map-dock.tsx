@@ -78,7 +78,9 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ civic, onCivicPick, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+  civic?: Readonly<{ visible: boolean; state: string; items: readonly Readonly<{ id: string; label: string }>[] }>;
+  onCivicPick?: (id: string, returnElement: HTMLElement) => void;
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -237,6 +239,18 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
       <div><strong>{look.name}</strong><small>{mode === "terrain" ? "3D terrain" : mode === "globe" ? "Globe" : "2D map"} · display context</small></div>
       <button type="button" className="category-map-dock-close" aria-label={`Hide ${look.name} controls`} onClick={onClose}>×</button>
     </header>
+    {look.topic === "government" && civic && <section className="category-map-dock-layer-set" aria-label="Kansas congressional districts">
+      <strong>U.S. House · 119th Congress</strong>
+      <small>2025–2027 Congress · January 2025 Census geography</small>
+      {onLayer && <button type="button" className="category-map-dock-tool" aria-pressed={civic.visible} onClick={() => onLayer("census-congress-119", !civic.visible)}>Show district areas</button>}
+      <p className="category-map-dock-reading" role="status">{!civic.visible ? "District layer hidden." : civic.state === "held" ? "District reference held at this map time. Choose Present to inspect it." : civic.state === "ready" ? "Four source districts loaded. Choose a district to inspect its Census record." : civic.state === "error" ? "Census districts unavailable. Open Layers for this map to retry." : "Loading the Census district reference…"}</p>
+      {civic.visible && civic.state === "ready" && onCivicPick && <ul className="category-map-dock-picklist" aria-label="Inspect a Kansas U.S. House district">
+        {civic.items.map(item => <li key={item.id}><button type="button" onClick={event => onCivicPick(item.id, event.currentTarget)}>{item.label}</button></li>)}
+      </ul>}
+      <small>Colors identify districts, not parties. Generalized boundaries do not determine your ballot or polling place.</small>
+      <a href="https://www.sos.ks.gov/elections/district-maps.html" target="_blank" rel="noreferrer">Official Kansas district maps ↗</a>
+      {onLayer && layerVisibility && <button type="button" className="category-map-dock-tool" aria-pressed={Boolean(layerVisibility["census-counties"])} onClick={() => onLayer("census-counties", !layerVisibility["census-counties"])}>Compare Census counties</button>}
+    </section>}
     {look.contextLayers && onLayer && layerVisibility && <div className="category-map-dock-layer-set">
       <strong>Starting layers</strong>
       {look.starters.map(id => <button key={id} type="button" className="category-map-dock-tool" aria-pressed={Boolean(layerVisibility[id])}

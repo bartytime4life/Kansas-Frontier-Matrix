@@ -2,6 +2,7 @@ import type { OfficialContextId } from "./live-context";
 
 const nationalMap = "https://apps.nationalmap.gov/downloader/";
 export const SOURCE_DOWNLOADS: Record<OfficialContextId, { href: string; label: string }> = {
+  "census-congress-119": { href: "/api/live-context?feed=census-congress-119", label: "Kansas districts · Census 119th Congress GeoJSON" },
   "deflock-alpr": { href: "/api/live-context?feed=deflock-alpr", label: "Generalized report cells · ODbL 1.0" },
 "kgs-aquifer-alluvial": { href: "https://services.kansasgis.org/arcgis8/rest/services/wwc5/wwc5_v2/MapServer/4", label: "KGS boundary service" },
 "kgs-aquifer-dakota": { href: "https://services.kansasgis.org/arcgis8/rest/services/wwc5/wwc5_v2/MapServer/5", label: "KGS boundary service" },

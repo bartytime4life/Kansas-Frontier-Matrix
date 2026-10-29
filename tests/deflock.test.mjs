@@ -77,6 +77,7 @@ test('redirects, failed status, declared oversize and streamed oversize response
 test('the existing route exposes only the fixed current feed, with no coordinates, arbitrary queries or historical dates', async () => {
   let calls = 0;
   const route = await compile('app/api/live-context/route.ts', {
+    './civic-districts': { readCivicDistricts: async () => { throw new Error('Unexpected civic read'); } },
     './deflock': { readDeflock: async () => { calls++; return d.parseDeflock(raw(), now); } },
     'cloudflare:workers': { env: {} }, 'next/server': { NextResponse: Response }, '../../bounded-json': bounded,
     '../../event-atlas': { eventDay: value => /^\d{4}-\d{2}-\d{2}$/.test(value) }, '../event-atlas/upstream': {}, '../../county-baseline': {}, '../../fema-declarations': {}, '@mapbox/vector-tile': {}, pbf: {},
