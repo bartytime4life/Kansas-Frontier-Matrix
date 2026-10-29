@@ -616,3 +616,53 @@
  .living-welcome[data-fullscreen=true][data-active=aviation] .welcome-layer-demo{max-height:38vh}
  .living-welcome[data-fullscreen=true][data-active=aviation] .welcome-layer-demo>small{display:none}
 }
+
+/* A source-backed specimen window, not a geographic volume. One SVG over the
+   existing map; only the finite reveal and the surface comparison can move. */
+.living-welcome .welcome-geology-specimen{position:absolute;z-index:2;left:43%;top:26%;width:min(350px,38vw);margin:0;transform:translateX(-50%);padding:14px 14px 12px;border:1px solid #bba66d80;border-radius:14px;background:#082b37f2;color:#e3e8da;box-shadow:0 15px 45px #00171c55;pointer-events:auto;isolation:isolate;max-height:70%;overflow:auto;scrollbar-width:thin}
+.living-welcome .welcome-geology-specimen figcaption{position:relative;z-index:1;display:grid;gap:5px;padding:0 4px}.living-welcome .welcome-geology-specimen figcaption strong{font-size:22px;line-height:1.12;font-weight:500;letter-spacing:-.025em;color:#f4ead1}.living-welcome .welcome-geology-specimen figcaption em{font-style:normal;color:#ebc77d}.living-welcome .welcome-geology-specimen .welcome-kicker{font-size:8px;letter-spacing:.16em;color:#abc4c3}
+.living-welcome .welcome-geology-diagram{display:block;width:100%;height:auto;max-height:260px;overflow:visible;margin-top:-12px}.welcome-geology-ruler{font:11px sans-serif;fill:#e4dfc8;color:#c1c6ad}.welcome-geology-materials{font:10px sans-serif;fill:#d6dbc9}.welcome-geology-plate text{font:7px sans-serif;fill:#d6e0cf;letter-spacing:1.1px}
+.welcome-geology-column{opacity:1;clip-path:inset(0 0 0 0);transition:opacity .6s,clip-path .6s}.welcome-geology-plate{transform:translateY(0);transition:transform .8s cubic-bezier(.22,.7,.25,1)}.welcome-geology-specimen[data-lifted=false] .welcome-geology-column{opacity:0;clip-path:inset(100% 0 0 0)}.welcome-geology-specimen[data-lifted=false] .welcome-geology-plate{transform:translateY(164px)}
+.welcome-geology-specimen[data-auto=true] .welcome-geology-plate{animation:welcome-log-lift 7s cubic-bezier(.2,.7,.25,1) both}.welcome-geology-specimen[data-auto=true] .welcome-geology-column{animation:welcome-log-reveal 7s cubic-bezier(.2,.7,.25,1) both}.welcome-geology-specimen[data-paused=true] :is(.welcome-geology-plate,.welcome-geology-column){animation-play-state:paused;transition:none}
+@keyframes welcome-log-lift{0%,9%{transform:translateY(164px)}80%,100%{transform:translateY(0)}}@keyframes welcome-log-reveal{0%,9%{opacity:0;clip-path:inset(100% 0 0 0)}22%{opacity:1}80%,100%{opacity:1;clip-path:inset(0 0 0 0)}}
+.living-welcome .welcome-geology-source{margin:0;text-align:center;color:#edcf8b;font-size:11px;line-height:1.5}.living-welcome .welcome-geology-source span{display:block;font-size:10px;color:#ceddd5}.living-welcome .welcome-geology-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:7px 0 4px}.living-welcome .welcome-geology-controls button{min-height:36px;padding:5px 10px;border:1px solid #c0a667;border-radius:6px;background:#183e45;color:#f2d79d;font-size:11px}.living-welcome .welcome-geology-controls button span{margin-left:8px}.living-welcome .welcome-geology-controls a{display:flex;align-items:center;min-height:36px;font-size:10px;color:#edcf8b;text-decoration:underline;text-underline-offset:3px}.living-welcome .welcome-geology-limit{display:block;font-size:9px;text-align:center;line-height:1.5;color:#c0d0c8}.living-welcome .welcome-geology-details{margin-top:8px;border-top:1px solid #8aa69a4d;padding-top:5px;font-size:10px;line-height:1.55;color:#cedad2}.living-welcome .welcome-geology-details summary{cursor:pointer;color:#e2c991;min-height:30px;padding-top:5px}.living-welcome .welcome-geology-details p{font-size:10px;line-height:1.55;margin:7px 0}.living-welcome .welcome-geology-details ol{margin:8px 0;padding-left:20px}.living-welcome .welcome-geology-details li{margin:3px 0}.living-welcome .welcome-geology-details li b{color:#edcf8b;margin-right:4px}.living-welcome .welcome-geology-status{font-size:12px;line-height:1.6;margin:15px 4px;color:#d2ded5}.living-welcome .welcome-geology-module-failure{position:absolute;left:30%;top:30%;max-width:320px;border:1px solid #bfa96e;padding:15px;border-radius:10px;background:#0b2f3b;color:#edd7a9;font-size:12px}
+.living-welcome .welcome-geology-specimen :is(button,a,summary):focus-visible{outline:2px solid #f1d18b;outline-offset:3px}
+.living-welcome[data-fullscreen=true] .welcome-geology-specimen{left:36%;top:14%;width:min(460px,45vw);max-height:calc(100% - 135px);padding:20px}.living-welcome[data-fullscreen=true] .welcome-geology-diagram{max-height:350px}.living-welcome[data-fullscreen=true] .welcome-geology-specimen figcaption strong{font-size:28px}
+@media(max-width:1100px){.living-welcome:not([data-fullscreen=true]) .welcome-geology-specimen{left:auto;right:22px;top:140px;transform:none;width:300px;max-height:440px}}
+@media(max-width:700px){.living-welcome:not([data-fullscreen=true]) .welcome-geology-specimen{position:relative;left:auto;right:auto;top:auto;width:min(330px,calc(100% - 28px));margin:210px auto 20px;transform:none;max-height:430px}.living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo{max-height:28vh}.living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo>small{display:none}.living-welcome[data-fullscreen=true] .welcome-geology-specimen{left:14px;right:14px;top:31%;width:auto;max-width:360px;max-height:calc(69% - 105px);padding:12px;transform:none}.living-welcome[data-fullscreen=true] .welcome-geology-diagram{max-height:220px}.living-welcome[data-fullscreen=true] .welcome-geology-specimen figcaption strong{font-size:20px}.living-welcome .welcome-geology-controls :is(a,button){min-height:44px}.living-welcome .welcome-geology-specimen .welcome-kicker{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.welcome-geology-specimen :is(.welcome-geology-column,.welcome-geology-plate){animation:none!important;transition:none!important}}.welcome-geology-specimen[data-reduced=true] :is(.welcome-geology-column,.welcome-geology-plate){animation:none!important;transition:none!important}
+.living-welcome .welcome-capability-stage .welcome-geology-specimen figcaption{position:relative;display:grid;bottom:auto;left:auto;max-width:none;padding:0 4px;background:transparent}
+/* The startup hint belongs to the existing brief, so it cannot cover search or
+   category cards on a narrow screen. The detailed specimen is expanded only. */
+.living-welcome .welcome-preview-brief[data-geology=true]{height:auto;max-height:360px}
+.living-welcome .welcome-preview-brief[data-geology=true]>.welcome-preview-try,.living-welcome .welcome-preview-brief[data-geology=true]>.welcome-preview-feed-state{display:none}
+.living-welcome .welcome-preview-brief .welcome-geology-specimen{position:relative;left:auto;right:auto;top:auto;width:100%;max-height:none;overflow:visible;transform:none;padding:0;margin:4px 0 0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.living-welcome .welcome-preview-brief .welcome-geology-specimen figcaption{display:none}
+.living-welcome .welcome-preview-brief .welcome-geology-diagram{max-height:170px;margin:-8px 0 0}
+.living-welcome .welcome-preview-brief .welcome-geology-source{font-size:10px;margin:0}
+.living-welcome .welcome-preview-brief .welcome-geology-source span{font-size:9px}
+.living-welcome .welcome-preview-brief .welcome-geology-limit{font-size:9px;margin-top:3px}
+.living-welcome .welcome-preview-brief[data-geology=true] h2{font-size:19px;margin-bottom:5px}
+.living-welcome .welcome-preview-brief[data-geology=true]>p{font-size:11px;line-height:1.45;margin:5px 0}
+.living-welcome .welcome-geology-controls :is(button,a){min-height:44px}
+
+/* Expanded phone: a short fixed introduction, then one specimen scroll owner.
+   The log's source disclosure stays inside that rectangle, above map credits
+   and Return controls. Desktop and the compact startup brief are unchanged. */
+@media(max-width:700px){
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo{left:14px;right:14px;top:14px;width:auto;height:112px;max-height:none;overflow:visible;display:flex;flex-direction:column;justify-content:center;padding:12px;contain:layout}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo>h2{font-size:18px;line-height:1.2;margin:0}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo>:is(.welcome-kicker,p,small,.welcome-layer-demo-actions){display:none}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo>.welcome-text-action{display:flex;min-height:44px;flex:none;margin:5px 0 0;padding:6px 0;font-size:12px}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-specimen{top:140px;bottom:156px;left:14px;right:14px;width:auto;max-width:none;height:auto;max-height:none;overflow:auto;overscroll-behavior:contain;padding:12px}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-specimen figcaption{display:none}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-diagram{max-height:280px;margin-top:0}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-ruler{font-size:16px}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-materials{font-size:15px}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-plate text{font-size:9px;letter-spacing:.7px}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-source{font-size:12px}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-source span{font-size:11px}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-details,.living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-details p{font-size:12px}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-details summary{min-height:44px;padding-top:12px}
+ .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-controls :is(button,a){font-size:12px}
+}

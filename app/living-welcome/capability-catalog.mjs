@@ -2,7 +2,7 @@ import { MAP_DEMOS } from './map-demos.mjs';
 // Presentation references only; each reused capture keeps its original scope.
 const selections = {
  weather: ['weather'], water: ['rivers'], groundwater: ['underground'],
- geology: [null, 'Preview the USGS earthquake layer on real terrain. No verified earthquake capture is available yet.'],
+ geology: [null, 'Lift a symbolic surface plate to read one original KGS well log. The full map retains earthquake context and Underground tools; no earthquake footage or continuous geology is claimed.'],
  terrain: ['science'], ecology: ['farming', 'Aerial land-cover context; no species inventory.'],
  agriculture: ['farming'], history: ['history'], transport: ['transport'],
  engineering: ['transport', 'Bridge inventory and transport context; not engineering analysis.'],
@@ -33,7 +33,7 @@ const glimpses = {
  disaster: ['Separate the hazard clocks', 'Alert areas, satellite fire detections and incident reports keep their own sources.', 'Compare the symbols without treating nearby records as the same event.', 'An empty or unavailable feed is not an all-clear; this is not emergency guidance.'],
  water: ['Trace the river network', 'Waterways and lakes stand out on the hydrographic base.', 'Follow a river, then watch a recorded Explorer tour below.', 'Live gauge samples and River Pulse load in the opened map, not on a category hover.'],
  groundwater: ['See aquifer thickness', 'KGS regional saturated-thickness classes appear over western Kansas.', 'Compare the mapped colour classes across the High Plains.', '2022–2024 estimates are regional context, not a present-day well or parcel measurement.'],
- geology: ['Earthquakes over real relief', 'USGS recent earthquake points sit on a three-dimensional land surface.', 'Read location against terrain; inspect magnitude and time in the opened map.', 'Earthquake depth is a source measurement, not a continuous model of underground rock.'],
+ geology: ['Lift the map. Read one real log.', 'A surface-reference plate opens onto one recorded KGS well column, from soil through clay to shale.', 'Lift or return the surface; open Underground to inspect original intervals and other recorded wells.', 'One 2024 log, 0–60 ft below local land surface. Width is illustrative; unknown between observations. Earthquakes and terrain remain separate context in the opened map.'],
  terrain: ['Read light across the land', 'A real elevation model reveals slopes and valleys as the view turns.', 'Look at the western Kansas relief rather than decorative mountains.', 'Welcome terrain is displayed at 1.5× vertical scale; open a profile for unexaggerated display elevations.'],
  ecology: ['Landscape and drainage', 'Satellite imagery supplies landscape context; watershed boundaries appear at closer scales.', 'Look for vegetation, fields and water corridors by eye.', 'Imagery is not a classified habitat map or a species inventory.'],
  agriculture: ['Fields at aerial scale', 'Kansas 2024 aerial imagery reveals actual field and pivot patterns.', 'Look at field geometry, then open the map to outline an area.', 'NASA soil moisture is a separate 9 km model layer, not a measurement of the pictured field.'],
