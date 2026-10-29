@@ -9,6 +9,7 @@ import type { MapKey } from "./map-keys";
 import type { DepthSection, EarthquakeRecordEvent, MagnitudeFrequency, YearCount } from "./earthquake-record";
 import type { FloodGauge, FloodHydrograph } from "./flood-forecast";
 import type { FemaYear, HAZARD_FAMILIES, HazardFamilyId } from "./fema-record";
+import type { RainfallHours } from "./mrms-rainfall";
 import type { OutlookDay, OutlookProduct } from "./spc-outlook";
 import type { ReportDay, StormReport } from "./storm-reports";
 
@@ -80,7 +81,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallHours, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -178,6 +179,21 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
     counties: Readonly<{ list: readonly Readonly<{ id: string; label: string }>[]; picked: string | null; reading: string | null;
       declarations: readonly Readonly<{ id: string; label: string }>[] }> | null;
   }>;
+  /**
+   * NWS MRMS rainfall, for looks that offer it: the radar estimate of the rain
+   * of the past 1–72 hours as the NWS renders it, with the service's own key.
+   */
+  rainfall?: Readonly<{
+    on: boolean;
+    held: boolean;
+    hours: RainfallHours;
+    windows: readonly RainfallHours[];
+    reading: string;
+    legend: readonly Readonly<{ label: string; image: string }>[] | null;
+    legendFailed: boolean;
+  }>;
+  onRainfall?: (on: boolean) => void;
+  onRainfallHours?: (hours: RainfallHours) => void;
   onFema?: (on: boolean) => void;
   onFemaYear?: (year: number | null) => void;
   onFemaFamily?: (family: HazardFamilyId | null) => void;
@@ -446,6 +462,22 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
         <ul>{population.groups.map(group => <li key={group.id}><span className="category-map-dock-chip" style={{ background: group.color }} aria-hidden="true" />
           <span>{group.label}<small>{group.range}</small></span><b>{population.counties ? `${group.count} ${group.count === 1 ? "county" : "counties"}` : "…"}</b></li>)}</ul>
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
+      </div>}
+    </>}
+    {look.tools?.includes("rainfall") && rainfall && onRainfall && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={rainfall.on} onClick={() => onRainfall(!rainfall.on)}
+        title="The NWS Multi-Radar Multi-Sensor estimate of the rain of the past 1 to 72 hours, on a 1 km grid">{rainfall.on ? "Hide rainfall" : "Show rainfall (MRMS)"}</button>
+      {rainfall.on && <div className="category-map-dock-quakes">
+        {rainfall.held ? <p className="category-map-dock-reading" aria-live="polite">The MRMS rainfall shows only at the present map time.</p> : <>
+          <div className="category-map-dock-modes category-map-dock-rain-windows" role="group" aria-label="Rainfall window">
+            {rainfall.windows.map(hours => <button key={hours} type="button" aria-pressed={rainfall.hours === hours} title={`Rain in the past ${hours === 1 ? "hour" : `${hours} hours`}`}
+              onClick={() => onRainfallHours?.(hours)}>{hours} h</button>)}
+          </div>
+          <p className="category-map-dock-reading" aria-live="polite">{rainfall.reading}</p>
+          {rainfall.legend ? <ul className="category-map-dock-rain-key" aria-label={`Rain in the past ${rainfall.hours} hours, inches`}>
+            {rainfall.legend.map(item => <li key={item.label}><i style={{ backgroundImage: `url("${item.image}")` }} aria-hidden="true" />{item.label}</li>)}
+          </ul> : <p className="category-map-dock-scale-note">{rainfall.legendFailed ? "The NWS legend did not answer; the colours on the map are the NWS's own." : "Reading the NWS legend…"}</p>}
+        </>}
       </div>}
     </>}
     {look.tools?.includes("fema") && fema && onFema && <>

@@ -286,6 +286,31 @@ draws it.
   are not a flood-inundation map. Warnings come from the National Weather
   Service.
 
+## MRMS rainfall (River network, Field view, Storm desk)
+
+**Show rainfall (MRMS)** puts on the map the NWS Multi-Radar Multi-Sensor
+quantitative precipitation estimate. It is the rain of the past 1, 3, 6,
+12, 24, 48 or 72 hours on a 1 km grid, in inches, as the NWS map service
+(`mapservices.weather.noaa.gov`, `obs/mrms_qpe`) renders it.
+
+- **Map.** Tiles come from the service's `exportImage`, 512 pixels at a time
+  in Web Mercator, drawn with the service's own raster function for the
+  window (`rft_1hr` … `rft_72hr`).
+  - Cells are drawn sharp (nearest neighbour) at 82% opacity, under the
+    site's overlays.
+  - Tiles are asked for again every quarter hour while shown, so the hourly
+    update is picked up soon after it lands.
+- **Key.** It is the service's own legend for the window, read through
+  `/api/mrms-rainfall/legend` and kept for a day. Each class shows its label
+  and the swatch the service drew, so the key and the map share colours
+  exactly.
+- **Present only.** The service keeps no history. Away from the present map
+  time the rainfall is held, and the dock says so.
+- **Limits.** This is a radar-only estimate, not corrected to rain gauges.
+  It can be wrong under the melting layer, where the beam is blocked or
+  overshoots, and in snow. It is an estimate of rain that fell, not a
+  forecast or a measurement at a point.
+
 ## FEMA disaster record on Hazard watch (Disaster)
 
 **FEMA disaster record since 1953** turns Hazard watch from current hazards

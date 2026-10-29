@@ -184,7 +184,7 @@ test('the dock shows flood forecasts with the gauge list, the hydrograph and its
  const other=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.geology,flood});
  assert.equal(tool(other),undefined,'only maps that offer it');
  h.dispose?.();
- assert.deepEqual(plain(maps.CATEGORY_MAPS.water.tools),['flow','flood','reviewed']);
+ assert.deepEqual(plain(maps.CATEGORY_MAPS.water.tools),['flow','flood','rainfall','reviewed']);
 });
 
 test('the page reads the picked gauge, refreshes it, rings it, owns its click, and closes it with its map',()=>{
