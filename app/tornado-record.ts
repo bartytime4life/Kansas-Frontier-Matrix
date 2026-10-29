@@ -36,8 +36,9 @@ export type Tornado = Readonly<{
   date: string;
   time: string | null;
   rating: number | null;
-  injuries: number;
-  fatalities: number;
+  /** null where the SPC records the count as unknown (-9). */
+  injuries: number | null;
+  fatalities: number | null;
   start: readonly [number, number];
   end: readonly [number, number] | null;
   lengthMiles: number | null;
@@ -77,12 +78,14 @@ export function parseTornadoCsv(text: string, retrievedAt: string, source: strin
     if (!Number.isInteger(year) || year < SPC_TORNADO_FIRST_YEAR || !Number.isInteger(month) || month < 1 || month > 12 || !Number.isInteger(day) || day < 1 || day > 31
       || !Number.isFinite(start[0]) || !Number.isFinite(start[1]) || start[0] > -60 || start[1] < 20) { skipped++; continue; }
     const mag = num("mag"), len = num("len"), wid = num("wid");
+    // A casualty count of -9 (or none) is unknown, not zero.
+    const count = (v: number) => Number.isInteger(v) && v >= 0 ? v : null;
     const om = get("om");
     tornadoes.push(Object.freeze({
       id: `${year}-${om || tornadoes.length}`,
       year, date: `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`, time: /^\d{1,2}:\d\d(:\d\d)?$/.test(get("time")) ? get("time").slice(0, 5) : null,
       rating: Number.isInteger(mag) && mag >= 0 && mag <= 5 ? mag : null,
-      injuries: Math.max(0, num("inj") || 0), fatalities: Math.max(0, num("fat") || 0),
+      injuries: count(num("inj")), fatalities: count(num("fat")),
       start: Object.freeze(start), end: end ? Object.freeze(end) : null,
       lengthMiles: len > 0 ? len : null, widthYards: wid > 0 ? wid : null, states,
     }));
@@ -120,7 +123,7 @@ const DATE = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short",
 export const tornadoDate = (t: Tornado) => DATE.format(Date.parse(`${t.date}T00:00:00Z`));
 /** The record's notable tornadoes: strongest first, then deadliest, then longest; at most 60. */
 export function tornadoList(tornadoes: readonly Tornado[]): { id: string; label: string }[] {
-  return [...tornadoes].sort((a, b) => (b.rating ?? -1) - (a.rating ?? -1) || b.fatalities - a.fatalities || (b.lengthMiles ?? 0) - (a.lengthMiles ?? 0) || a.date.localeCompare(b.date))
+  return [...tornadoes].sort((a, b) => (b.rating ?? -1) - (a.rating ?? -1) || (b.fatalities ?? 0) - (a.fatalities ?? 0) || (b.lengthMiles ?? 0) - (a.lengthMiles ?? 0) || a.date.localeCompare(b.date))
     .slice(0, 60).map(t => ({ id: t.id, label: `${ratingName(t.rating, t.date)} · ${tornadoDate(t)}${t.fatalities ? ` · ${t.fatalities} killed` : ""}${t.lengthMiles ? ` · ${t.lengthMiles.toFixed(1)} mi` : ""}` }));
 }
 
@@ -129,15 +132,18 @@ const plural = (n: number, one: string, many: string) => `${n.toLocaleString("en
 export function tornadoReading(record: TornadoRecord, filter: TornadoFilter, chosen: readonly Tornado[]): string {
   const rating = filter.minRating ? ` of F/EF${filter.minRating} or stronger` : "";
   const span = filter.year !== null ? `in ${filter.year}` : `${record.firstYear}–${record.lastYear}`;
-  const killed = chosen.reduce((sum, t) => sum + t.fatalities, 0);
-  return `${plural(chosen.length, "tornado", "tornadoes")}${rating} in Kansas, ${span}${killed ? ` · ${plural(killed, "death", "deaths")}` : ""}`;
+  const killed = chosen.reduce((sum, t) => sum + (t.fatalities ?? 0), 0);
+  const unknown = chosen.filter(t => t.fatalities === null).length;
+  return `${plural(chosen.length, "tornado", "tornadoes")}${rating} in Kansas, ${span}${killed ? ` · ${plural(killed, "death", "deaths")}` : ""}${unknown ? ` · ${unknown} with deaths unknown` : ""}`;
 }
 
 const coordinate = (p: readonly [number, number]) => `${Math.abs(p[1]).toFixed(2)}°N, ${Math.abs(p[0]).toFixed(2)}°W`;
 /** One tornado in words: rating, date and time, casualties, and the track. */
 export function tornadoDetail(t: Tornado): string {
   return [`${ratingName(t.rating, t.date)} · ${tornadoDate(t)}${t.time ? ` ${t.time} CST` : ""}`,
-    t.fatalities || t.injuries ? `${plural(t.fatalities, "death", "deaths")}, ${plural(t.injuries, "injury", "injuries")}` : "no casualties recorded",
+    t.fatalities === null && t.injuries === null ? "casualties unknown"
+      : t.fatalities || t.injuries ? `${t.fatalities === null ? "deaths unknown" : plural(t.fatalities, "death", "deaths")}, ${t.injuries === null ? "injuries unknown" : plural(t.injuries, "injury", "injuries")}`
+      : "no casualties recorded",
     `touchdown ${coordinate(t.start)}${t.end ? ` · lift-off ${coordinate(t.end)}` : ""}`,
     [t.lengthMiles ? `${t.lengthMiles.toFixed(1)} mi long` : null, t.widthYards ? `${t.widthYards.toLocaleString("en-US")} yd wide` : null].filter(Boolean).join(", ") || null,
     t.states > 1 ? `crossed ${t.states} states` : null].filter(Boolean).join(" · ");
@@ -157,6 +163,7 @@ export const TORNADO_SOURCE_ID = "kfm-spc-tornadoes";
 export const TORNADO_LINE_LAYER_ID = "kfm-spc-tornadoes-track";
 export const TORNADO_POINT_LAYER_ID = "kfm-spc-tornadoes-touchdown";
 export const TORNADO_SELECTED_LAYER_ID = "kfm-spc-tornadoes-selected";
+export const TORNADO_SELECTED_POINT_LAYER_ID = "kfm-spc-tornadoes-selected-touchdown";
 
 /** Tracks (or touchdown points where no lift-off was recorded), strongest drawn last. */
 export function tornadoCollection(tornadoes: readonly Tornado[]): FeatureCollection<LineString | Point> {
@@ -171,7 +178,7 @@ const shown = new WeakMap<MapLibreMap, FeatureCollection>();
 /** The tornado tracks (or nothing, for null) under the site's overlays, wider for stronger ratings, with the picked one outlined. */
 export function syncTornadoRecord(map: MapLibreMap, collection: FeatureCollection | null, selected: string | null = null): void {
   if (!collection) {
-    for (const id of [TORNADO_SELECTED_LAYER_ID, TORNADO_POINT_LAYER_ID, TORNADO_LINE_LAYER_ID]) if (map.getLayer(id)) map.removeLayer(id);
+    for (const id of [TORNADO_SELECTED_POINT_LAYER_ID, TORNADO_SELECTED_LAYER_ID, TORNADO_POINT_LAYER_ID, TORNADO_LINE_LAYER_ID]) if (map.getLayer(id)) map.removeLayer(id);
     if (map.getSource(TORNADO_SOURCE_ID)) map.removeSource(TORNADO_SOURCE_ID);
     shown.delete(map);
     return;
@@ -188,5 +195,9 @@ export function syncTornadoRecord(map: MapLibreMap, collection: FeatureCollectio
     paint: { "circle-color": ["get", "color"] as never, "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 2, 10, 4] as never, "circle-stroke-color": "#1b1b1b", "circle-stroke-width": 0.5 } }, before);
   if (!map.getLayer(TORNADO_SELECTED_LAYER_ID)) map.addLayer({ id: TORNADO_SELECTED_LAYER_ID, type: "line", source: TORNADO_SOURCE_ID,
     layout: { "line-cap": "round" }, paint: { "line-color": "#ffffff", "line-width": ["interpolate", ["linear"], ["zoom"], 5, 7, 10, 16] as never, "line-opacity": 0.95 } }, TORNADO_LINE_LAYER_ID);
+  // A tornado with no lift-off point is a touchdown dot; picked, it gets a ring.
+  if (!map.getLayer(TORNADO_SELECTED_POINT_LAYER_ID)) map.addLayer({ id: TORNADO_SELECTED_POINT_LAYER_ID, type: "circle", source: TORNADO_SOURCE_ID,
+    paint: { "circle-color": "rgba(0,0,0,0)", "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 6, 10, 10] as never, "circle-stroke-color": "#ffffff", "circle-stroke-width": 2.2 } }, before);
   map.setFilter(TORNADO_SELECTED_LAYER_ID, ["all", ["==", ["geometry-type"], "LineString"], ["==", ["get", "id"], selected ?? ""]] as never);
+  map.setFilter(TORNADO_SELECTED_POINT_LAYER_ID, ["all", ["==", ["geometry-type"], "Point"], ["==", ["get", "id"], selected ?? ""]] as never);
 }
