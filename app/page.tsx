@@ -25,7 +25,7 @@ import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useR
 import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
 import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
-import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
+import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
@@ -10626,8 +10626,15 @@ export default function Home() {
             reports={activeCategoryMap.tools?.includes("reports") ? { day: reportsDay, loading: Boolean(reportsDay && !shownReports && reportsFailed !== reportsDay),
               failed: reportsDay !== null && reportsFailed === reportsDay, reading: shownReports ? stormReportsReading(shownReports) : null, url: STORM_REPORTS_PAGE, verification: outlookCheck,
               selected: reportSelected ? { report: reportSelected, title: `${REPORT_KINDS.find(kind => kind.id === reportSelected.kind)?.name ?? "Report"} · ${reportMagnitude(reportSelected)}`,
-                when: reportSelected.time ? reportClock(reportSelected.time) : null } : null } : undefined}
+                when: reportSelected.time ? reportClock(reportSelected.time) : null } : null, kansas: shownReports ? kansasReportList(shownReports) : [] } : undefined}
             onReports={chooseReports}
+            onReportPick={(id) => {
+              // The same selection a map click makes, then the map moves to it (no motion when reduced motion is asked for).
+              const report = stormReportsRef.current.get(id);
+              if (!report) return;
+              setReportSelected(report);
+              mapRef.current?.easeTo({ center: [report.longitude, report.latitude], zoom: Math.max(mapRef.current.getZoom(), 8), duration: motionDuration(600) });
+            }}
             onReportClear={() => setReportSelected(null)}
             onQuakeYear={year => { setQuakeRecordYear(year); setQuakeRecordSelected(null); }}
             onQuakeClear={() => setQuakeRecordSelected(null)}

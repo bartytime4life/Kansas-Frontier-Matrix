@@ -65,7 +65,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -160,8 +160,11 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
   reports?: Readonly<{ day: ReportDay | null; loading: boolean; failed: boolean; reading: string | null; url: string;
     /** Today's reports against the Day 1 outlook shown, when both are on the map. */
     verification?: string | null;
-    selected: Readonly<{ report: StormReport; title: string; when: string | null }> | null }>;
+    selected: Readonly<{ report: StormReport; title: string; when: string | null }> | null;
+    /** Kansas reports, newest first, so a report can be picked without the map. */
+    kansas?: readonly Readonly<{ id: string; label: string }>[] }>;
   onReports?: (day: ReportDay | null) => void;
+  onReportPick?: (id: string) => void;
   onReportClear?: () => void;
   /**
    * NASA SMAP L4 soil moisture, for looks that offer the soil tool: whether it
@@ -300,6 +303,12 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
           : reports.reading}</p>
         {reports.verification && !reports.loading && !reports.failed && <p className="category-map-dock-reading category-map-dock-verification" aria-live="polite"
           title="Reports made since the outlook's valid start, placed against its areas, as SPC verifies its outlooks; preliminary reports">{reports.verification}</p>}
+        {onReportPick && reports.kansas && reports.kansas.length > 0 && <details className="category-map-dock-context">
+          <summary>Kansas reports ({reports.kansas.length})</summary>
+          <ul className="category-map-dock-picklist" aria-label="Kansas storm reports, newest first">
+            {reports.kansas.map(item => <li key={item.id}><button type="button" aria-pressed={reports.selected?.report.id === item.id} onClick={() => onReportPick(item.id)}>{item.label}</button></li>)}
+          </ul>
+        </details>}
         {reports.selected && <div className="category-map-dock-quake-event" aria-live="polite">
           <p><b>{reports.selected.title}</b>{reports.selected.when ? ` · ${reports.selected.when}` : ""}<br />
             {[reports.selected.report.location, reports.selected.report.county && `${reports.selected.report.county} Co.`, reports.selected.report.state].filter(Boolean).join(", ")}

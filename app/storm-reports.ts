@@ -155,6 +155,15 @@ export function reportMagnitude(report: StormReport): string {
 const CLOCK = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
 export const reportClock = (iso: string): string => `${CLOCK.format(new Date(iso))} UTC`;
 
+/** Kansas reports for a keyboard list, newest first: id and a one-line label of time, kind, magnitude and place. */
+export function kansasReportList(reports: StormReports, limit = 40): readonly Readonly<{ id: string; label: string }>[] {
+  const kind = (id: ReportKind) => KIND.get(id)?.name ?? "Report";
+  return reports.reports.filter(report => report.state === "KS")
+    .sort((a, b) => (b.time ?? "").localeCompare(a.time ?? ""))
+    .slice(0, limit)
+    .map(report => ({ id: report.id, label: [report.time ? report.time.slice(11, 16) + " UTC" : null, kind(report.kind), reportMagnitude(report), report.location || report.county].filter(Boolean).join(" · ") }));
+}
+
 /** The reports for Kansas by kind, with the national total and the convective day. */
 export function stormReportsReading(reports: StormReports): string {
   const kansas = reports.reports.filter(report => report.state === "KS");
