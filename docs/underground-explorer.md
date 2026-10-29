@@ -436,3 +436,46 @@ to a local area and explicitly chooses **Show this area**; switching to another
 Underground tool and back keeps the moved selector position. The High Plains
 example remains optional. This changes display navigation only, with no new
 source, admission, storage or depth interpretation.
+
+## Welcome: lift the surface, read one real log — 2026-10-29
+
+The **Geology & subsurface** startup glimpse now pairs its unchanged landform/
+earthquake map with one small recorded-column specimen. After Geology settles
+for 220 ms, a welcome-only module reads the existing local KGS WWC5 tile and
+selects **WWC5 1054515520**, recorded **2024-04-09**. Nothing is fetched for this
+specimen on another category. The compact hint stays inside the existing category
+brief, including narrow screens. Its larger demonstration provides **Lift
+surface / Return surface**, the original eight descriptions, the KGS record
+link, source limits and a working **Open Underground Explorer** action. Merely
+previewing never changes the map workspace or its selected layers.
+
+The symbolic Kansas-shaped plate lifts once over seven seconds, then holds. The
+column retains all original intervals in order: 0–2, 2–6, 6–18, 18–20, 20–25,
+25–35, 35–50 and 50–60 **ft below local land surface**. The shared material
+classifier supplies description-only colours; qualified/mixed descriptions
+remain neutral. Neither the plate nor column width has a geographic footprint
+or measured ground elevation. This one GPS-labelled, non-surveyed well does not
+establish continuous seams, aquifer occupancy, neighbouring geology or change
+through geological time. The visible log date is not an archive or retrieval
+time. The full Geology map retains earthquakes, transects and its existing
+Underground controls; groundwater tour recordings are not earthquake footage.
+
+The fixed tile `/data/subsurface/tile-164-257311.json.gz` remains the original
+manifest carrier: 5,681 compressed bytes and 60,440 decoded bytes, compressed
+SHA256 `1d120cea755356d06bc6995d78a4fea7aff9f177847bce2715eb98f32c8d18e8`,
+decoded SHA256 `ea306c13f6df8e64fe706d578873b3585b65e1c72b06b4aa50f8add0493dd502`.
+The small reader rejects redirects, failed responses, over-limit declared or
+streamed bytes, mismatching raw/decoded hashes, invalid schema and wrong record
+identity/date/units/reference/order. It accepts HTTP-transparent decompression
+only against that separately pinned decoded digest. Abort/unmount cancels the
+owned reader, ten seconds bounds a stalled read, and obsolete completion cannot
+appear under another category. No alternate/fixture geology is drawn after a
+failure. Pause, document hiding and reduced motion stop the reveal; reduced
+motion initially presents the fully revealed static specimen. Manual comparison
+reuses the mounted record without a new request. This is DOM/SVG over the existing
+map, not another MapLibre, WebGL, Three.js context or Underground worker.
+
+The presentation adds no source admission, dataset carrier, source capture,
+store/account transfer, migration, model change or public publication. Existing
+source geometry, source hashes and governed-data holds are unchanged; the held
+Kansas River sediment-model cutaway is not used.

@@ -610,3 +610,23 @@ test('aviation glimpse offers three views and truthful unavailable, hidden and e
   assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='welcome-aviation-notes')),/201.*airspace volumes.*Only zones are previewed here/);
  }finally{h.harness.dispose();}
 });
+
+test('Geology offers a compact source specimen without changing the workspace, and Underground opens only explicitly',async()=>{
+ for(const entry of ['details','expanded']){
+  const h=await welcome();try{
+   let tree=h.render();const geology=findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-geology '));
+   geology.props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();
+   assert.deepEqual(h.calls,[],'a keyboard glimpse never selects workspace layers');
+   findNode(tree,node=>node.type==='domain-stage').props.onGeologyModule({Component:'geology-glimpse'});tree=h.render();
+   const hint=findNode(tree,node=>node.type==='geology-glimpse');assert.ok(hint);assert.equal(hint.props.expanded,undefined,'startup stays compact');
+   findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-geology ')).props.onClick();tree=h.render();
+   if(entry==='expanded'){
+    byText(tree,'Preview in the welcome window →').props.onClick();tree=h.render();
+    assert.equal(findNode(tree,node=>node.type==='geology-glimpse'),undefined,'compact owner unmounts when expanded owner takes over');
+    assert.equal(findNode(tree,node=>node.type==='domain-stage').props.expanded,true);
+   }
+   byText(tree,'Open Underground Explorer →').props.onClick();
+   assert.deepEqual(h.calls,[['action','underground'],['close',false]]);
+  }finally{h.harness.dispose();}
+ }
+});
