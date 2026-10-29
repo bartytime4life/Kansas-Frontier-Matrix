@@ -85,6 +85,9 @@ const CONTROL_OWNED_SOURCE_PREFIXES = [
   "kfm-device-geopdf-source",
   "kfm-local-atlas-",
   "kfm-synthetic-living-waters",
+  // Rainfall and land cover say in their own dock section what they show; a failed tile is not a map failure.
+  "tool-mrms-rainfall",
+  "tool-nlcd-land-cover",
   // Decorative scene-effect overlays (Kansas glow, 2D relief DEM, value
   // columns): a failed tile only leaves that effect blank.
   "scene-",

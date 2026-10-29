@@ -86,8 +86,9 @@ export function landCoverKey(): MapKey {
   });
 }
 
-export const LAND_COVER_SOURCE_ID = "kfm-nlcd-land-cover";
-export const LAND_COVER_LAYER_ID = "kfm-nlcd-land-cover-raster";
+// Not "kfm-": other overlays (the Drought Monitor, storm reports) insert themselves under the first kfm- layer, and must stay above this raster.
+export const LAND_COVER_SOURCE_ID = "tool-nlcd-land-cover";
+export const LAND_COVER_LAYER_ID = "tool-nlcd-land-cover-raster";
 
 /** The NLCD raster (or nothing, for false): over the base and other rasters, under every overlay; cells drawn sharp. */
 export function syncLandCover(map: MapLibreMap, on: boolean): void {
