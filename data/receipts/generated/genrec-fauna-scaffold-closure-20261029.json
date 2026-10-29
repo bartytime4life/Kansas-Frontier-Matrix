@@ -1,0 +1,102 @@
+{
+  "artifact_hashes": {
+    "tools/qa/scaffold_baseline.json": "sha256:b0125ac71a528354244c990aed76846eaf19862eca7b764df7cebf415b7cb2b6"
+  },
+  "artifact_paths": [
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:tools/qa/scaffold_baseline.json@54c447e4b28e5842bd7afeb525d45960a11e1b7a",
+      "id": "repository:scaffold-closure:0",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/qa/scaffold_inventory.py@54c447e4b28e5842bd7afeb525d45960a11e1b7a",
+      "id": "repository:scaffold-closure:1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/receipts/generated/genrec-fauna-components-20261029.json@54c447e4b28e5842bd7afeb525d45960a11e1b7a",
+      "id": "repository:scaffold-closure:2",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-10-29T22:52:51Z",
+  "emitter": "OpenAI Codex local authoring",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_hashes": [
+      "sha256:3cc010a7dd1e1a80895131bf3fd24d05a9119643cd442ad1138447a152d26093",
+      "sha256:99c93021d024fb67f61074353f8ba1d42f96a18ea931f8a86fc18fb83b5b0d4d",
+      "sha256:e7df263ecea6059eeb49e3e17b05216a4e0c438e91fe1c7dea4249b62cc9c40e"
+    ],
+    "evidence_refs": [
+      "repo:tools/qa/scaffold_baseline.json@54c447e4b28e5842bd7afeb525d45960a11e1b7a",
+      "repo:tools/qa/scaffold_inventory.py@54c447e4b28e5842bd7afeb525d45960a11e1b7a",
+      "repo:data/receipts/generated/genrec-fauna-components-20261029.json@54c447e4b28e5842bd7afeb525d45960a11e1b7a"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": 5595
+  },
+  "model_identity": {
+    "model": "Codex GPT-6",
+    "provider": "OpenAI",
+    "version": "exact-serving-version-unknown"
+  },
+  "notes": "Generated follow-up for PR #5595 scaffold-ratchet closure. The canonical inventory tool removed only the nine entries resolved by the Fauna implementation; no finding was added and no gate was weakened. The prior component and historical receipts remain immutable. Policy reference is consulted directory governance, not an executed domain PolicyDecision. No source, schema, policy, data lifecycle, release, deployment or publication behavior changes.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "local shell",
+      "GitHub",
+      "Google Drive",
+      "SciSpace",
+      "NCBI Entrez",
+      "web research"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:f7bd07da447eb8f692b21f15590d4c03178723cd4502aa71caa7c1fd4758d412",
+  "receipt_id": "genrec-fauna-scaffold-closure-20261029",
+  "truth_labels": {
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "strict-scaffold-reduction",
+      "outcome": "PASS",
+      "reason": "Canonical tool regenerated baseline: 877 -> 868, exactly nine resolved Fauna placeholder/stub entries removed, zero additions."
+    },
+    {
+      "gate": "scaffold-inventory-check",
+      "outcome": "PASS",
+      "reason": "Canonical --check reports no new or stale scaffold entries."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review pending; no override."
+    },
+    {
+      "gate": "runtime-regression",
+      "outcome": "SKIPPED",
+      "reason": "No source/runtime behavior changes in this follow-up; 157 tests and 165 subtests previously passed on unchanged implementation source."
+    }
+  ]
+}
