@@ -38,6 +38,11 @@ async function walk(path, prefix = '') {
 }
 export async function cli(argv, connectionDependencies) {
   const [command, ...args] = argv;
+  if (command === 'county-history') {
+    if (args.length !== 2) fail('COUNTY_HISTORY_USAGE_INVALID');
+    const { readCountyHistoryReport } = await import('../../server/county-history-candidate.mjs');
+    return readCountyHistoryReport(args[0], args[1]);
+  }
   if (command === 'connection') {
     if (args.length > 1 || args[0]?.startsWith('-')) fail('CONNECTION_USAGE_INVALID');
     const root = await rootPath(args[0] ?? resolve(homedir(), '.local/state/kfm-data'));
@@ -197,6 +202,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     const result = await cli(process.argv.slice(2));
     console.log(canonical(result));
     if (process.argv[2] === 'connection' && result.state !== 'connected') process.exitCode = 1;
+    if (process.argv[2] === 'county-history' && result.geometryState === 'quarantine') process.exitCode = 2;
   }
   catch (e) { console.error(canonical({ state: 'held', reason: /^[A-Z_]{1,64}$/.test(e.message) ? e.message : 'PIPELINE_OPERATION_FAILED' })); process.exitCode = 1; }
 }

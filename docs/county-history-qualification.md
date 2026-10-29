@@ -2,7 +2,7 @@
 
 Checked **2026-10-29**. **Source reuse notice confirmed; offline structural queries and geometry checks passed for the 1861-01-29 WORK candidate. The 1873–1874 disputed coverage is withheld. Public map integration is not implemented.** This is a development qualification record, not source admission or a release receipt.
 
-The next useful civic slice is a dated county-history layer. The actual Newberry Kansas archive was acquired and checked. The original offline checker selects mapped versions for an exact day, with citations and record-level source locators. A separate offline geometry investigation now checks all versions and dated coverage epochs, applies a named NAD83-to-WGS84 display operation, and emits a WORK candidate only for a passing selected date. Historical interpretation and the modern continuation remain open. This work adds no route, map layer, download endpoint, source approval or hosted runtime dependency.
+The next useful civic slice is a dated county-history layer. The actual Newberry Kansas archive was acquired and checked. The original offline checker selects mapped versions for an exact day, with citations and record-level source locators. A separate offline geometry investigation now checks all versions and dated coverage epochs, applies a named NAD83-to-WGS84 display operation, and emits a WORK candidate only for a passing selected date. Historical interpretation and the modern continuation remain open. The private Node handoff below now carries those checked records into calendar and source-drawer rehearsals. This work adds no public route, map layer, download endpoint, source approval or hosted runtime dependency.
 
 ## Evidence and exact source
 
@@ -139,6 +139,58 @@ The current host could not resolve PyPI. The actual checks used already-cached G
 The 1861-01-29 candidate includes **50 mapped source versions**, with the separate query retaining **52 event-only records** and **16 undated cross-references**. These are whole-source counts, not counts of organized Kansas counties. The complete JSON report is **1,824,097 bytes**, SHA-256 `3e9da16b1379239e6f231e58ad6e2167bb1f7b6b627fcb349ce13133b644ed6a`; its compact, sorted-key geometry candidate digest is `17955a7d60e690775b9dc3e90cf7202ce8d216958bfac71973c6e3c926bb5e32`. These measurements describe the tested toolchain above.
 
 **Still open:** interpretation of source labels and disputed claims, independent legal/source accuracy, provider-declared encoding, geographic completeness, post-2000 continuation, canonical source/evidence admission, release review, browser rendering and performance. The parent output remains `status: HOLD` and `releaseEligible: false` even for a passing geometry candidate.
+
+## Private calendar and source-drawer handoff implemented
+
+**CONFIRMED, 2026-10-29:** [PR #5566](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5566) merged at `5204194904fac8df3d550e4890a79429aa5260fd`. Its exact head `7c39c86790fa2c228fb416b83ecc95592ce866c1` has successful `welcome-performance` and `verify-core-delivery` checks. The recorded Codex review summary reports completed code review with no findings; it does not establish an independent security review or source admission.
+
+The next implementation adds the private `server/county-history-candidate.mjs` adapter and the operator command:
+
+```sh
+node scripts/pc-pipeline/cli.mjs county-history /absolute/path/to/qualification.json 3e9da16b1379239e6f231e58ad6e2167bb1f7b6b627fcb349ce13133b644ed6a
+```
+
+That digest identifies the **1861-01-29 report above**. For another date, first run the Python geometry investigation and independently record that report's byte digest. Do not reuse this date's digest or treat a digest copied from inside an untrusted report as external validation.
+
+The command reads one explicit absolute regular-file path, rejects symlinks and symlinked parent directories, limits the read to 8 MiB, checks file stability and SHA-256 before JSON parsing, and writes its result only to stdout. It performs no network acquisition, database writes, key access, schedule installation or publication. CLI exit 0 means a checked **research candidate** was adapted; 2 means its coverage is quarantined; 1 means failure. The existing kit copier includes the new adapter and its dependency chain.
+
+| Handoff element | Implemented behavior |
+| --- | --- |
+| Source binding | Exact archive URL/digest/size, pinned SHP/DBF/SHX/PRJ/chronology identities and WORK lifecycle |
+| Version records | Recomputed deterministic identities; original names, optional FIPS/state, source type and unreviewed classification retained |
+| Geometry | Bounded Polygon/MultiPolygon structure; matching feature/record identities and SHP/DBF record locators; no clipping, rounding or new transform |
+| Chronology | Date-specific events remain distinct from polygons; null institution IDs remain null; all 16 aliases retain unknown temporal applicability |
+| Calendar rehearsal | Exact selected day only; absent snapshots and dates outside 1804-10-01–2000-12-31 return empty held views; no carry-forward across an interval |
+| Source-drawer rehearsal | Original citation/change, validity dates, institution ID, source labels and resolvable WORK EvidenceRefs; stale-day or unknown-ID selection returns null |
+| Disputed coverage | Private source records remain inspectable, but map geometry is empty and the CLI returns 2 |
+| Release boundary | `lifecycle: WORK`, `releaseEligible: false`, `publicClientEligible: false`; the public pipeline rejects this packet/source |
+
+These functions are **private rehearsals for the eventual calendar and drawer integration**. The public Explorer does not import this adapter and gains no route, layer, client-side import control, or release capability from this patch. Approval and released-read integration remain required before a public map can consume county history. The adapter neither decides those approvals nor changes the current signed recipe to make this source publishable.
+
+### Cross-language integrity and verification scope
+
+The adapter verifies the original UTF-8 report bytes against the separately supplied digest. Python and JavaScript can encode equivalent JSON numbers differently, for example `-110.0` and `-110`. It therefore preserves the upstream candidate and geometry digests with their Python encoding label instead of making a false comparison against JavaScript reserialization. A separate SHA-256 binds the normalized JavaScript research packet. Byte integrity and a correctly shaped report do **not** prove source approval, truthful upstream computation or legal authority. GEOS topology checks remain evidence in the referenced qualification; this adapter rechecks transport structure and references without pretending to repeat GEOS.
+
+The real statehood report produced **50 unchanged geometries**, **52 dated events**, and **16 undated references**. Every source identity, coordinate array, citation and record-level EvidenceRef was compared with the original Python output. The derived private CLI output is 747,797 bytes (including its final newline), SHA-256 `546f4709cb167396ea861aedafa2b3fba5b7dfbda66ee9d1897dbd670870e7ed`; its adapter-content digest is `620eabd35b971b15dbc015647521ad64d334d4d6000fff4be39a681d381594fc`. A separately generated real **1873-03-20** report was also adapted: its report digest is `469cff70b71135a2cdd9c6667450f147cda019fea9f08bb3bc896e8af36351ef`, and the CLI returned 2 with zero map features.
+
+**Passed:** 17 adapter tests with the real report supplied, including 16 synthetic transport/negative/installation cases and one actual-report integration case. Without the real-report environment variables the integration case is explicitly skipped. Changed-file ESLint passed with no diagnostics. Five focused test files passed: the new adapter, civic intake, PC pipeline, pipeline cutover and pipeline domain. The new tests exercise wrong source and self-asserted release claims, changed digests and members, dangling references, duplicate/missing/substituted records, strict dates, malformed geometry, quarantine, exact-day projections, unsafe paths, mutation checks and isolated kit imports. Synthetic boxes and citations are test data, never historical evidence.
+
+The existing `pipeline-install.test.mjs` subprocess test **fails on both exact base and head** at its first JSON parse because child stdout is empty. A direct child-process probe additionally reported `EPERM`. This is recorded as an environment-limited inherited failure, not a passing installed-worker qualification. The new in-process test successfully loads the CLI and county adapter from a fresh copied kit. Direct CLI smoke checks ran separately on the real reports. Full application build, browser acceptance, full repository suite and independent security review were not run for this private operator-only scope.
+
+Reproduce the actual-report test with the report created above:
+
+```sh
+KFM_COUNTY_REPORT=/absolute/path/to/qualification.json KFM_COUNTY_REPORT_SHA256=3e9da16b1379239e6f231e58ad6e2167bb1f7b6b627fcb349ce13133b644ed6a node tests/county-history-candidate.test.mjs
+node --test tests/county-history-candidate.test.mjs tests/civic-intake.test.mjs tests/pc-pipeline.test.mjs tests/pipeline-cutover.test.mjs tests/pipeline-domain.test.mjs
+```
+
+### Handoff placement, compatibility and rollback
+
+This patch starts from hosted commit `45df10bf46e5e066f06f1080a2b635894bb2779d`, tree `325d11ed9c45bb7c8109efcc221b5ebc1e09829d`. The earlier geometry work and intervening changes were reconciled to that exact tree. The final five-file drought update was preserved and does not overlap these five handoff files; the focused tests were repeated after reconciliation.
+
+Under accepted Directory Rules v2/ADR-0029, the existing hosted `server/` responsibility owns reusable operator adapter logic, following the private `server/aviation-candidates.mjs` precedent. `scripts/pc-pipeline/cli.mjs` remains a thin invocation wrapper; `bundle.mjs` owns installed-kit assembly; tests and this document retain their existing roots. This carries forward the DIR-EXEC-007 migration boundary: it creates no canonical schema, source registry, policy or release authority. The member pins are bounded compatibility checks for this previously qualified report format. Future canonical source admission must reconcile them with the existing source registry rather than treating this file as a parallel registry.
+
+The three files used by `recipeDigest()` are byte-unchanged. Both base and head compute `e8b85ea8ff6414e9dc46030835d2102ce7439cf7811615512b422b2386d5fab3`; this patch therefore does not itself change the recipe binding of existing source approvals. Their other validity conditions remain independent. No credentials, approvals, database, deployment, public data or second PC were changed. Rollback is a revert of the adapter, test, CLI/kit changes and this documentation update; there is no persistent migration to reverse.
 
 ## Proposed implementation after qualification
 
