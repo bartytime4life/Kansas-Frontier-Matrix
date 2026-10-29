@@ -76,22 +76,19 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
   },
   "domains": [
     {
-      "name": "Land records & survey",
+      "name": "Government & civic",
       "sourceIds": [
-        "blm-mlrs-leases-authorized",
-        "blm-mlrs-leases-closed",
-        "blm-plss-townships",
-        "blm-plss-sections",
-        "blm-plss-intersected"
+        "census-congress-119"
       ],
       "ideas": [
-        "Use PLSS townships and sections to explain how the survey grid organizes Kansas land description.",
-        "Compare authorized and closed BLM mineral leases as context for subsurface resource history."
+        "Compare the 119th Congress district lines with county boundaries to see which counties a district splits, keeping the Census 1:500,000 generalization in mind.",
+        "Relate each district's land area to 2020 Census county populations to discuss why western districts cover more ground, without inferring officeholders or election results."
       ]
     },
     {
       "name": "Roads, rail & movement",
       "sourceIds": [
+        "deflock-alpr",
         "kdot-bridges-state",
         "kdot-bridges-local",
         "kdot-bridges-historic",
@@ -106,6 +103,20 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
         "Compare the 1918 KDOT road map with today's network to discuss which corridors persisted.",
         "Relate abandoned rail lines to historic towns and present roads as a settlement-history question.",
         "Contrast historic, old, and closed bridge records along one river crossing."
+      ]
+    },
+    {
+      "name": "Land records & survey",
+      "sourceIds": [
+        "blm-mlrs-leases-authorized",
+        "blm-mlrs-leases-closed",
+        "blm-plss-townships",
+        "blm-plss-sections",
+        "blm-plss-intersected"
+      ],
+      "ideas": [
+        "Use PLSS townships and sections to explain how the survey grid organizes Kansas land description.",
+        "Compare authorized and closed BLM mineral leases as context for subsurface resource history."
       ]
     },
     {
@@ -226,6 +237,36 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
     "Collect user questions the companion abstained on, and turn the most common ones into evidence-admission priorities."
   ],
   "officialSources": [
+    {
+      "id": "census-congress-119",
+      "title": "Kansas U.S. House districts · 119th Congress",
+      "shortTitle": "U.S. House districts · 119th",
+      "organization": "U.S. Census Bureau",
+      "domain": "Government & civic",
+      "kind": "SNAPSHOT_GEOJSON",
+      "cadence": "On selection or refresh; shared server cache up to 24 hours",
+      "freshness": "January 1, 2025 boundary vintage · fixed 119th Congress edition, not a live officeholder feed",
+      "boundary": "U.S. Census Bureau generalized 1:500,000 congressional district geography, January 1, 2025 vintage, for the 119th Congress (2025–2027). Colors identify districts, not parties or election results. Boundaries are display reference, not an address-level voting determination. No officeholders, polling places or current ballot eligibility are inferred. Confirm election geography with Kansas election officials. External context only; no KFM evidence release.",
+      "fallback": "Missing, incomplete or changed-edition responses leave the layer unavailable. No boundaries are invented or replaced with another Congress.",
+      "attribution": "<a href=\"https://www.census.gov/\">U.S. Census Bureau</a> · ACS 2025 generalized districts · 119th Congress",
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2025/Legislative/MapServer/5",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
+    {
+      "id": "deflock-alpr",
+      "title": "DeFlock · community-reported ALPR areas",
+      "shortTitle": "DeFlock · reported ALPR areas",
+      "organization": "OpenStreetMap contributors · DeFlock tagging",
+      "domain": "Roads, rail & movement",
+      "kind": "OPERATIONAL_GEOJSON",
+      "cadence": "On selection or refresh; shared server cache up to one hour",
+      "freshness": "OSM database snapshot; each report's observation date and current operation are unknown",
+      "boundary": "Community-reported ALPR nodes from OpenStreetMap using DeFlock's tagging convention. Counts describe mapped reports, not verified cameras or current operation. Locations are generalized to 0.05° cells (about 4.3 × 5.6 km in Kansas); cells are not camera coverage or jurisdiction boundaries. Exact locations and identifying tags are withheld pending sensitivity review. Missing reports never establish that an area is camera-free. Database time is not installation, observation or verification time. External context only; no KFM evidence release.",
+      "fallback": "Unavailable, malformed or over-budget source responses leave the layer unavailable; no substitute locations or camera-free inference.",
+      "attribution": "DeFlock tagging · © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap contributors</a> · <a href=\"https://opendatacommons.org/licenses/odbl/1-0/\">ODbL</a>",
+      "sourceUrl": "https://deflock.org/",
+      "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
+    },
     {
       "id": "blm-mlrs-leases-authorized",
       "title": "BLM Kansas oil and gas leases · authorized",

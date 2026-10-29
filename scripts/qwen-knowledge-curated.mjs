@@ -100,6 +100,10 @@ export const QWEN_KNOWLEDGE_DOMAIN_IDEAS = Object.freeze({
     "Relate abandoned rail lines to historic towns and present roads as a settlement-history question.",
     "Contrast historic, old, and closed bridge records along one river crossing.",
   ]),
+  "Government & civic": Object.freeze([
+    "Compare the 119th Congress district lines with county boundaries to see which counties a district splits, keeping the Census 1:500,000 generalization in mind.",
+    "Relate each district's land area to 2020 Census county populations to discuss why western districts cover more ground, without inferring officeholders or election results.",
+  ]),
   "Land records & survey": Object.freeze([
     "Use PLSS townships and sections to explain how the survey grid organizes Kansas land description.",
     "Compare authorized and closed BLM mineral leases as context for subsurface resource history.",
