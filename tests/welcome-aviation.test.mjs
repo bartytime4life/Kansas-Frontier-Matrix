@@ -46,7 +46,10 @@ test('rendered zones preserve existing geometry, group selection and 1× heights
  const zone=map.getSource('welcome-aviation-zones');
  const expected=airspace.airspaceFeatures(context,new Set(Object.keys(airspace.AIRSPACE_GROUPS).filter(id=>airspace.AIRSPACE_GROUPS[id].defaultOn)),1);
  assert.equal(JSON.stringify(zone.data),JSON.stringify(expected));
- assert.equal(map.getSource('welcome-aviation-airports').data.features.length,533);
+ assert.deepEqual([...map.sources.keys()],['welcome-aviation-zones'],'startup uploads only the zone collection');
+ assert.ok([...map.layers.keys()].every(id=>id.startsWith('welcome-aviation-zones-')),'startup draws no airport, runway or airway overlays');
+ assert.equal(adapter.status().volumes,201);
+ assert.equal('airports' in adapter.status(),false,'zone status does not imply other previewed layers');
  assert.equal(map.getLayer('welcome-aviation-zones-3d').layout.visibility,'visible');
  const updates=map.updates;adapter.render(true,'3d');assert.equal(map.updates,updates,'no geometry upload for unchanged view');
  adapter.render(true,'slice');assert.ok(zone.data.features.length>0&&zone.data.features.length<expected.features.length);
@@ -54,7 +57,7 @@ test('rendered zones preserve existing geometry, group selection and 1× heights
  assert.equal(map.getLayer('welcome-aviation-zones-3d').layout.visibility,'none');
  adapter.render(false,'slice');assert.ok([...map.layers.values()].every(layer=>layer.layout.visibility==='none'));
  assert.equal(adapter.status(false).state,'hidden');adapter.render(true,'2d');assert.equal(JSON.stringify(zone.data),JSON.stringify(expected));
- map.sources.clear();map.layers.clear();adapter.render(true,'3d');assert.equal(map.layers.size,9,'style replacement recreates only owned layers');
+ map.sources.clear();map.layers.clear();adapter.render(true,'3d');assert.equal(map.layers.size,4,'style replacement recreates only zone layers');assert.equal(map.sources.size,1);
  adapter.dispose();assert.equal(map.layers.size,0);assert.equal(map.sources.size,0);assert.equal(calls,1);
 });
 test('late completion and failures cannot reveal disposed or unavailable overlays',async()=>{

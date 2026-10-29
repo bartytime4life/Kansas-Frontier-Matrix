@@ -248,9 +248,12 @@ Verification: `tests/aviation-layer.test.mjs`, `tests/aviation-route-cache.test.
 The Aviation & airspace welcome glimpse now lazily reads the same fixed,
 SHA256-checked NASR context asset as the full aviation map. It offers 3D zones
 at 1× display height, a top-down 2D chart, and mapped volumes intersecting
-4,000 ft MSL. The existing default controlled/surface-E/special-use groups,
-airport/runway references and Victor/T airways use the existing feature
-builders and original geometry. Mode changes reuse the map and cached data;
+4,000 ft MSL. The startup hint draws only the existing default
+controlled/surface-E/special-use zone groups using the existing feature builder
+and original geometry. Airport, runway and airway overlays remain available
+in the full Aviation layer; they are not built or uploaded by the welcome.
+Hovering or keyboard-focusing the Aviation card shows the zones directly
+behind the startup categories without opening a demonstration. Mode changes reuse the map and cached data;
 comparison hides the owned overlays without refetching. A failed reference
 is named separately from basemap readiness. The cycle's preview/current/expired
 status remains visible; source inventory counts do not promise on-screen

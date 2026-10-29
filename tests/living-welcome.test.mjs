@@ -605,7 +605,8 @@ test('aviation glimpse offers three views and truthful unavailable, hidden and e
   assert.match(findNode(tree,n=>n.props?.role==='status').props.children,/Loading the verified/);
   tree=render({...props,state:{aviation:{state:'unavailable'}}});assert.match(findNode(tree,n=>n.props?.role==='status').props.children,/unavailable/);
   tree=render({...props,layersVisible:false});assert.match(findNode(tree,n=>n.props?.role==='status').props.children,/hidden/);
-  tree=render({...props,state:{aviation:{state:'ready',edition:{state:'PREVIEW',text:'Preview edition effective tomorrow.'},cycle:'2026-10-29',volumes:201,airports:533,airways:417}}});
+  tree=render({...props,state:{aviation:{state:'ready',edition:{state:'PREVIEW',text:'Preview edition effective tomorrow.'},cycle:'2026-10-29',volumes:201}}});
   assert.match(findNode(tree,n=>n.props?.role==='status').props.children,/PREVIEW edition.*NASR 2026-10-29/);
+  assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='welcome-aviation-notes')),/201.*airspace volumes.*Only zones are previewed here/);
  }finally{h.harness.dispose();}
 });

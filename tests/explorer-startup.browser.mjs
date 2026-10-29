@@ -1236,6 +1236,10 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
 for(const [width,height] of [[1440,960],[390,844]]) test(`aviation welcome zones and modes at ${width}x${height}`,{timeout:90000},async t=>{
  const b=await browser(t),p=await pageSession(b,width,height);
  await p.open('/?motion=off');await readyWelcome(p);
+ await p.evaluate(`document.querySelector('.topic-aviation').focus()`);
+ await p.wait(`document.querySelector('.welcome-preview-brief .welcome-aviation-status')?.textContent.includes('NASR 2026-10-29')`,'startup focus alone shows the zone hint without opening a demonstration');
+ assert.equal(await p.evaluate(`document.querySelectorAll('.welcome-dialog-backdrop,.welcome-layer-demo').length`),0,'the zones are available in the startup view itself');
+ assert.equal(await p.evaluate(`document.querySelector('.living-welcome').dataset.fullscreen`),'false');
  const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
  await enter('.topic-aviation');await p.wait(`!!document.querySelector('.welcome-aviation-tools')`,'aviation tools have a real destination');
  await enter('.welcome-aviation-tools button');
@@ -1246,7 +1250,7 @@ for(const [width,height] of [[1440,960],[390,844]]) test(`aviation welcome zones
   assert.equal(await p.evaluate(`document.querySelector('.welcome-layer-demo .welcome-aviation-modes button:nth-child(${index+1})').getAttribute('aria-pressed')`),'true');
  }
  await enter('.welcome-layer-demo .welcome-aviation-notes summary');
- assert.match(await p.evaluate(`document.querySelector('.welcome-layer-demo .welcome-aviation-notes').textContent`),/201 volumes, 533 airports, 417 airway segments; not all are visible/);
+ assert.match(await p.evaluate(`document.querySelector('.welcome-layer-demo .welcome-aviation-notes').textContent`),/201 airspace volumes; not all are visible.*Only zones are previewed here/);
  await enter('.welcome-layer-demo-actions button');
  await p.wait(`document.querySelector('.welcome-layer-demo .welcome-aviation-status')?.textContent.includes('hidden')`,'comparison hides overlay without claiming unavailable');
  await enter('.welcome-layer-demo-actions button');
