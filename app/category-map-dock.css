@@ -148,3 +148,4 @@
 .category-map-dock-rain-key{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 10px;font-size:11px;font-variant-numeric:tabular-nums;color:#cfe2ea}
 .category-map-dock-rain-key li{display:flex;align-items:center;gap:6px}
 .category-map-dock-rain-key i{flex:none;width:14px;height:14px;border-radius:2px;background-size:cover;background-repeat:no-repeat}
+.category-map-dock-crop-swatch{display:inline-block;width:11px;height:11px;margin-right:6px;border-radius:2px;vertical-align:-1px;box-shadow:0 0 0 1px #0006}
