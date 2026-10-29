@@ -33,7 +33,7 @@ import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportCl
 import { DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
-import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
+import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, recordPlots, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
 import { AVIATION_TINT_BANDS, CATEGORY_BASEMAPS, RELIEF_RAMP } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
@@ -9867,6 +9867,7 @@ export default function Home() {
   const reviewedData = reviewed.on && reviewed.product ? reviewed.product.data : null;
   // A pick that the shown release does not hold (another snapshot, or none) is no selection.
   const reviewedFeature = reviewedPick && reviewedData ? reviewedData.features.find(feature => String(feature.id ?? "") === reviewedPick) ?? null : null;
+  const quakePlots = useMemo(() => quakeRecord ? recordPlots(quakeRecord, quakeRecordYear) : null, [quakeRecord, quakeRecordYear]);
   const quakeCounts = useMemo(() => quakeRecord ? annualCounts(quakeRecord).map(entry => ({ ...entry, color: recordYearColor(entry.year, quakeRecord.endYear) })) : null, [quakeRecord]);
   // Keyboard lists for the selections otherwise made only by clicking the map.
   const quakeEventList = useMemo(() => quakeRecord ? recordEventList(quakeRecord, quakeRecordYear) : [], [quakeRecord, quakeRecordYear]);
@@ -10874,7 +10875,7 @@ export default function Home() {
             quakes={activeCategoryMap.tools?.includes("quakes") ? { on: quakeRecordOn, loading: quakeRecordOn && !quakeRecord && !quakeRecordFailed, failed: quakeRecordFailed,
               counts: quakeCounts, total: quakeRecord?.events.length ?? 0, startYear: quakeRecord?.startYear ?? 1973, endYear: quakeRecord?.endYear ?? new Date().getUTCFullYear(),
               minMagnitude: quakeRecord?.minMagnitude ?? 2.5, truncated: Boolean(quakeRecord?.truncated), year: quakeRecordYear,
-              selected: quakeRecordSelected, selectedUrl: quakeRecordSelected ? earthquakeEventUrl(quakeRecordSelected.id) : null, list: quakeEventList } : undefined}
+              selected: quakeRecordSelected, selectedUrl: quakeRecordSelected ? earthquakeEventUrl(quakeRecordSelected.id) : null, list: quakeEventList, plots: quakePlots } : undefined}
             onQuakes={showQuakeRecord}
             outlook={activeCategoryMap.tools?.includes("outlook") ? { day: outlookDay, product: outlookProduct, products: outlookDay ? outlookProducts(outlookDay) : [], loading: Boolean(outlookId && !shownOutlook && outlookFailed !== outlookId),
               failed: outlookId !== null && outlookFailed === outlookId, reading: shownOutlook ? spcOutlookReading(shownOutlook) : null, url: SPC_OUTLOOK_PAGE } : undefined}

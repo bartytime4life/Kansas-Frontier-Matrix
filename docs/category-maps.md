@@ -377,6 +377,20 @@ epicentre lies inside Kansas, from 1 January 1973 to now
   year shown, that year's events newest first; across all years, the 40
   largest. The list says when it holds fewer than all ("40 of 89"). Choosing one selects it and moves the map to it (without motion when
   reduced motion is set).
+- **Depth section.** Under the histogram the dock draws the record (or the
+  chosen year) as a west–east cross-section of Kansas: each event at its
+  longitude and USGS depth, sized by magnitude and coloured by year as on the
+  map, with the selected event ringed; a click on an event selects it. Depth
+  is the least certain coordinate of a Kansas earthquake: where USGS could not
+  resolve it, it is often held at a set value, so the caption counts events at
+  exactly 5 or 10 km and those without a depth.
+- **Magnitude–frequency.** A Gutenberg–Richter plot of how many events were of
+  each magnitude or larger (log scale), with the maximum-likelihood line
+  log10 N = a − bM. b is the Aki–Utsu estimate for magnitudes binned to 0.1
+  above the record's M2.5 floor, with the Shi & Bolt (1982) standard error,
+  given only from 50 events. The record mixes magnitude types (mb_lg, ml,
+  Mw), and M2.5 was not complete before the post-2013 stations, which flattens
+  b for the whole record; the plot says the types are mixed.
 - **Limits.** Detection improved as seismometers were added after 2013, so early
   decades miss some small events and counts across decades are not directly
   comparable. Locations, magnitudes and review status can be revised by USGS.

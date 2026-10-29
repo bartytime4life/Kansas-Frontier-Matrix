@@ -6,7 +6,7 @@ import type { SceneLight } from "./scene-effects";
 import type { KansasDensityGroup } from "./population-prisms";
 import type { PhotorealLandscape } from "./photoreal-landscapes";
 import type { MapKey } from "./map-keys";
-import type { EarthquakeRecordEvent, YearCount } from "./earthquake-record";
+import type { DepthSection, EarthquakeRecordEvent, MagnitudeFrequency, YearCount } from "./earthquake-record";
 import type { OutlookDay, OutlookProduct } from "./spc-outlook";
 import type { ReportDay, StormReport } from "./storm-reports";
 
@@ -158,6 +158,8 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
     minMagnitude: number; truncated: boolean; year: number | null; selected: EarthquakeRecordEvent | null; selectedUrl: string | null;
     /** The chosen year's events newest first, or the largest across all years, so an event can be picked without the map. */
     list?: readonly Readonly<{ id: string; label: string }>[];
+    /** The record (or the chosen year) as a west–east depth section and a magnitude–frequency distribution. */
+    plots?: Readonly<{ section: DepthSection; frequency: MagnitudeFrequency }> | null;
   }>;
   onQuakePick?: (id: string) => void;
   onQuakes?: (on: boolean) => void;
@@ -404,6 +406,8 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
             {quakes.counts.filter(entry => entry.count > 0).map(entry => <option key={entry.year} value={entry.year}>{entry.year} · {entry.count}</option>)}
           </select></label>}
         <p className="category-map-dock-reading" aria-live="polite">{quakeReading(quakes)}</p>
+        {quakes.plots && quakes.plots.section.points.length > 0 && <QuakeDepthSection section={quakes.plots.section} selected={quakes.selected?.id ?? null} onPick={onQuakePick} />}
+        {quakes.plots && <QuakeMagnitudeFrequency frequency={quakes.plots.frequency} />}
         {onQuakePick && quakes.list && quakes.list.length > 0 && <PickList summary={`${quakes.year === null ? "Largest events" : `Events in ${quakes.year}`} (${shownOf(quakes.list.length, quakes.year === null ? quakes.total : quakes.counts?.find(entry => entry.year === quakes.year)?.count ?? 0)})`}
           label={quakes.year === null ? "Largest earthquakes in the record" : `Earthquakes in ${quakes.year}, newest first`} items={quakes.list} selected={quakes.selected?.id ?? null} onPick={onQuakePick} />}
         {quakes.selected && <div className="category-map-dock-quake-event" aria-live="polite">
@@ -570,6 +574,68 @@ export function DroughtChart({ weeks, date, categories, onWeek }: Readonly<{ wee
       {index >= 0 && <line x1={index} x2={index} y1={0} y2={height} stroke="#e6eff2" strokeWidth={1.4} vectorEffect="non-scaling-stroke" />}
     </svg>
     <figcaption><span>{first}</span><span>% of Kansas · gridlines 25, 50, 75</span><span>{end}</span></figcaption>
+  </figure>;
+}
+
+const SECTION_WEST = -102.05, SECTION_EAST = -94.59;
+/**
+ * The record as a west–east cross-section of Kansas: each event at its
+ * longitude and depth, sized by magnitude and coloured by year as on the
+ * map; the selected event is ringed and drawn last. A click picks an event.
+ */
+export function QuakeDepthSection({ section, selected, onPick }: Readonly<{ section: DepthSection; selected: string | null; onPick?: (id: string) => void }>) {
+  const width = 300, height = 112, top = 6, bottom = 4;
+  const x = (longitude: number) => (longitude - SECTION_WEST) / (SECTION_EAST - SECTION_WEST) * width;
+  const y = (depth: number) => top + depth / section.maxDepth * (height - top - bottom);
+  const ticks = Array.from({ length: section.maxDepth / 5 + 1 }, (_, i) => i * 5);
+  const points = [...section.points.filter(point => point.id !== selected), ...section.points.filter(point => point.id === selected)];
+  const notes = [section.atSetDepth ? `${section.atSetDepth} at exactly 5 or 10 km, often a set depth` : null, section.withoutDepth ? `${section.withoutDepth} without a depth` : null].filter(Boolean).join(" · ");
+  return <figure className="category-map-dock-section" aria-label={`Depth section west to east across Kansas: ${section.points.length} events with a USGS depth, to ${section.maxDepth} km${notes ? `; ${notes}` : ""}`}>
+    <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+      {ticks.map(depth => <g key={depth}>
+        <line x1={0} x2={width} y1={y(depth)} y2={y(depth)} stroke="#e6eff2" strokeOpacity={depth === 0 ? 0.55 : 0.16} strokeWidth={0.6} />
+        {depth > 0 && <text x={2} y={y(depth) - 1.5} fontSize={7} fill="#cfe2ea">{depth} km</text>}
+      </g>)}
+      {points.map(point => <circle key={point.id} data-id={point.id} cx={x(point.longitude).toFixed(1)} cy={y(point.depth).toFixed(1)} r={(1.2 + (point.magnitude - 2.5) * 1.3).toFixed(2)}
+        fill={point.color} fillOpacity={0.82} stroke={point.id === selected ? "#ffffff" : "#140a1c"} strokeWidth={point.id === selected ? 1.4 : 0.4} onClick={() => onPick?.(point.id)} />)}
+    </svg>
+    <figcaption><span>102.05°W</span><span>west → east · depth below the surface</span><span>94.59°W</span></figcaption>
+    {notes && <p className="category-map-dock-scale-note">{notes}</p>}
+  </figure>;
+}
+
+/** The b-value line for the dock: the estimate and its error, or why there is none. */
+export function bValueReading(frequency: MagnitudeFrequency): string {
+  if (frequency.b === null || frequency.bError === null) return `${frequency.count} events of M${frequency.completeness}+; a b-value needs at least 50`;
+  return `b = ${frequency.b.toFixed(2)} ± ${frequency.bError.toFixed(2)} (Aki–Utsu, M ≥ ${frequency.completeness}, n = ${frequency.count.toLocaleString("en-US")}) · magnitude types mixed`;
+}
+/**
+ * The Gutenberg–Richter plot: how many events were of each magnitude or
+ * larger, on a log scale, with the maximum-likelihood line log10 N = a − bM.
+ */
+export function QuakeMagnitudeFrequency({ frequency }: Readonly<{ frequency: MagnitudeFrequency }>) {
+  const bins = frequency.bins.filter(bin => bin.count > 0);
+  if (bins.length < 2) return null;
+  const width = 300, height = 112, left = 22, right = 6, top = 6, bottom = 12;
+  const low = frequency.completeness, high = Math.max(low + 0.5, bins[bins.length - 1].magnitude);
+  const decades = Math.max(1, Math.ceil(Math.log10(bins[0].count)));
+  const x = (m: number) => left + (m - low) / (high - low) * (width - left - right);
+  const y = (n: number) => top + (1 - Math.log10(n) / decades) * (height - top - bottom);
+  const fit = frequency.a !== null && frequency.b !== null ? (() => {
+    const end = Math.min(high, frequency.a / frequency.b);
+    return { x1: x(low), y1: y(10 ** (frequency.a - frequency.b * low)), x2: x(end), y2: y(10 ** (frequency.a - frequency.b * end)) };
+  })() : null;
+  return <figure className="category-map-dock-section" aria-label={`Magnitude–frequency: ${bValueReading(frequency)}`}>
+    <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+      {Array.from({ length: decades + 1 }, (_, k) => <g key={k}>
+        <line x1={left} x2={width - right} y1={y(10 ** k)} y2={y(10 ** k)} stroke="#e6eff2" strokeOpacity={0.16} strokeWidth={0.6} />
+        <text x={left - 3} y={y(10 ** k) + 2.5} fontSize={7} fill="#cfe2ea" textAnchor="end">{(10 ** k).toLocaleString("en-US")}</text>
+      </g>)}
+      {fit && <line {...fit} stroke="#f89540" strokeWidth={1.2} strokeDasharray="4 2" />}
+      {bins.map(bin => <rect key={bin.magnitude} x={(x(bin.magnitude) - 1.6).toFixed(1)} y={(y(bin.count) - 1.6).toFixed(1)} width={3.2} height={3.2} fill="#e6eff2" />)}
+      {[low, high].map(m => <text key={m} x={x(m)} y={height - 2} fontSize={7} fill="#cfe2ea" textAnchor={m === low ? "start" : "end"}>M {m.toFixed(1)}</text>)}
+    </svg>
+    <figcaption><span>{bValueReading(frequency)}</span></figcaption>
   </figure>;
 }
 
