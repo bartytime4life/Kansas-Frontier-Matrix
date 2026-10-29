@@ -192,8 +192,9 @@ test('the page reads the week shown, keeps the last map drawn while the next loa
  assert.match(page,/\}, droughtWeek \? 350 : 0\);/,'a dragged slider settles before a week is read');
  assert.match(page,/fetch\("\/api\/drought-series", \{ signal: controller\.signal \}\)/);
  assert.match(page,/const shownDrought = droughtId \? droughtLoaded \?\? lastDroughtRef\.current : null;/);
- assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty, droughtChange \? droughtChangeData : null\);/);
- assert.match(page,/\.\.\.\(shownDrought \? \[droughtChangeData && droughtSince && droughtLoaded \? droughtChangeKey\(droughtChange, droughtSince\.date, droughtLoaded\.date\) : droughtKey\(shownDrought\.date\)\] : \[\]\)/);
+ assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty, shownDroughtChange\?\.data \?\? null\);/);
+ assert.match(page,/\.\.\.\(shownDrought \? \[shownDroughtChange \? droughtChangeKey\(shownDroughtChange\.weeks, shownDroughtChange\.from, shownDroughtChange\.to\) : droughtKey\(shownDrought\.date\)\] : \[\]\)/);
+ assert.match(page,/if \(freshDroughtChange\) lastDroughtChangeRef\.current = freshDroughtChange;\s*else if \(!droughtOn \|\| droughtChange !== lastDroughtChangeRef\.current\?\.weeks \|\| droughtChangeTooEarly \|\| \(droughtId !== null && droughtFailed === droughtId\)\s*\|\| \(droughtSinceDate !== null && droughtSinceFailed === droughtSinceDate\)\) lastDroughtChangeRef\.current = null;/,'the change last drawn holds while the next loads, and goes with a failure or another view');
  assert.match(page,/if \(on && map && map\.getZoom\(\) > 7\.5\) map\.easeTo\(\{ center: \[-98\.38, 38\.5\], zoom: 6\.2, duration: motionDuration\(1200\), essential: false \}\);/,'a field-scale view pulls out to the state');
  assert.match(page,/setQuakeRecordSelected\(null\);\s*setDroughtOn\(false\);\s*setDroughtWeek\(null\);\s*setDroughtCounty\(null\);\s*setOutlookDay\(null\);[\s\S]{0,200}\/\/ Each map opens on its own subject/);
  assert.match(page,/if \(droughtOn\) params\.set\("drought", droughtWeek \?\? "newest"\);/);
@@ -297,7 +298,7 @@ test('the dock lists the counties, outlines the one picked, and the page reads t
  assert.match(page,/if \(!droughtOn \|\| officialPayloads\["census-counties"\] \|\| droughtCountiesAskedRef\.current\) return;\s*droughtCountiesAskedRef\.current = true;\s*void refreshOfficialContext\("census-counties"\);/,'asked once a showing, so a failed read does not repeat');
  assert.match(page,/setDroughtCounty\(null\);\s*setDroughtChange\(0\);\s*setDroughtSinceFailed\(null\);\s*droughtCountiesAskedRef\.current = false;/);
  assert.match(page,/const countyDrought = useMemo\(\(\) => droughtLoaded && droughtCounties \? countyDroughtShares\(droughtLoaded\.data, droughtCounties\) : null, \[droughtLoaded, droughtCounties\]\);/);
- assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty, droughtChange \? droughtChangeData : null\);/);
+ assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty, shownDroughtChange\?\.data \?\? null\);/);
  assert.match(page,/setDroughtCounty\(geoid\);\s*mapRef\.current\?\.fitBounds\(geometry\.bounds, \{ padding: 70, maxZoom: 9, duration: motionDuration\(650\) \}\);/);
  assert.match(page,/setDroughtSeriesFailed\(false\);\s*setDroughtCounty\(null\);/);
  assert.match(page,/const clickedCounty = droughtCountyAtClick\(renderedHits, id => availableLayers\.includes\(id\) \|\| OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS\.includes\(id\)\);\s*if \(clickedCounty\) \{\s*setDroughtCounty\(clickedCounty\);\s*setCategoryDockHidden\(false\);\s*return;/,'a click on a county picks it, and a closed dock comes back to show it');
@@ -335,13 +336,16 @@ test('Play steps the weeks forward to the newest, from a year back when the newe
  assert.equal(play(tree).props.disabled,true);assert.equal(play(tree).props.children,'Play');assert.match(play(tree).props.title,/Reduced motion is on/);
  h.dispose?.();
  assert.match(page,/const droughtPlayStops = droughtPlaying && \(!droughtOn \|\| reducedMotion \|\| droughtWeek === null \|\| \(droughtId !== null && droughtFailed === droughtId\)\);\s*if \(droughtPlayStops\) setDroughtPlaying\(false\);/,'stops at the newest, on a failed week, without motion, or when the map closes');
- assert.match(page,/if \(!droughtPlaying \|\| droughtPlayStops \|\| !droughtWeek \|\| !droughtLoaded\) return;\s*const timer = setTimeout\(\(\) => \{\s*const next = nextUsdmDate\(droughtWeek\);\s*setDroughtWeek\(droughtNewest && next >= droughtNewest \? null : next\);\s*\}, DROUGHT_PLAY_STEP_MS\);/,'each week is held once it is drawn');
+ assert.match(page,/const droughtSinceWaiting = droughtSinceDate !== null && !droughtSince && droughtSinceFailed !== droughtSinceDate;/,'in a change view a step waits for its earlier week, or that week\'s failure');
+ assert.match(page,/if \(!droughtPlaying \|\| droughtPlayStops \|\| !droughtWeek \|\| !droughtLoaded \|\| droughtSinceWaiting\) return;\s*const timer = setTimeout\(\(\) => \{\s*const next = nextUsdmDate\(droughtWeek\);\s*setDroughtWeek\(droughtNewest && next >= droughtNewest \? null : next\);\s*\}, DROUGHT_PLAY_STEP_MS\);/,'each week is held once it is drawn');
  assert.match(page,/if \(on && droughtWeek === null\) \{\s*const from = droughtNewest \?\? droughtDate;\s*if \(!from\) return;\s*setDroughtWeek\(usdmWeeksBefore\(from, DROUGHT_PLAY_WEEKS\)\);/);
  assert.match(page,/const chooseDroughtWeek = \(date: string \| null\) => \{ setDroughtPlaying\(false\);/,'a week chosen by hand pauses Play');
  assert.match(page,/onDroughtPlay=\{playDrought\}/);assert.match(page,/playing: droughtPlaying, motionAllowed: !reducedMotion,/);
 });
 
 test('a change view shades each county by its change in the Drought Severity and Coverage Index over 4 or 12 weeks',async()=>{
+ assert.equal(dm.droughtChangeStart(4),'20000201');assert.equal(dm.droughtChangeStart(12),'20000328');
+ assert.ok(dm.isUsdmDate(dm.droughtChangeStart(12)),'a Drought Monitor week');
  assert.equal(dm.dsci([100,100,100,0,0]),300);assert.equal(dm.dsci([0,0,0,0,0]),0);assert.equal(dm.dsci([100,100,100,100,100]),500);assert.equal(dm.dsci([76.6,50.12,20.3,3.2,0]),150);
  const now=[{geoid:'20055',name:'Finney',shares:[100,100,33.4,0,0],worst:2},{geoid:'20187',name:'Stanton',shares:[100,100,100,0,0],worst:2},{geoid:'20209',name:'Wyandotte',shares:[100,0,0,0,0],worst:0},{geoid:'20999',name:'New',shares:[0,0,0,0,0],worst:-1}];
  const then=[{geoid:'20055',name:'Finney',shares:[100,60,0,0,0],worst:1},{geoid:'20187',name:'Stanton',shares:[100,100,100,40,0],worst:3},{geoid:'20209',name:'Wyandotte',shares:[95,0,0,0,0],worst:0}];
@@ -396,11 +400,14 @@ test('a change view shades each county by its change in the Drought Severity and
  assert.match(JSON.stringify(tree),/Reading the week 12 weeks before…/);
  tree=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought2,change:{weeks:4,reading:null,loading:false,failed:true}}});
  assert.match(JSON.stringify(tree),/The earlier week did not answer; the categories stay on the map/);
+ tree=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought2,date:'20000111',change:{weeks:12,reading:null,start:'Mar 28, 2000',loading:false,failed:false}}});
+ assert.match(JSON.stringify(tree),/The Drought Monitor begins Jan 4, 2000, so a 12-week change starts with the week of Mar 28, 2000; the categories stay on the map/,'a week too near the first map says why it has no change');
  tree=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought2,change:{weeks:0,reading:null,loading:false,failed:false}}});
  assert.doesNotMatch(JSON.stringify(tree),/Reading the week|DSCI/,'the categories view says nothing about change');
  h.dispose?.();
  // The page reads the earlier week like any other, and the change view closes with the tool.
- assert.match(page,/const droughtSinceDate = droughtChange && droughtLoaded \? usdmWeeksBefore\(droughtLoaded\.date, droughtChange\) : null;/);
+ assert.match(page,/const droughtChangeTooEarly = Boolean\(droughtChangeFrom && droughtLoaded && droughtLoaded\.date < droughtChangeFrom\);\s*const droughtSinceDate = droughtChange && droughtLoaded && !droughtChangeTooEarly \? usdmWeeksBefore\(droughtLoaded\.date, droughtChange\) : null;/,'no change is drawn without a whole interval behind the week');
+ assert.match(page,/start: droughtChangeTooEarly && droughtChangeFrom \? usdmDateLabel\(droughtChangeFrom\) : null/);
  assert.match(page,/fetch\(`\/api\/drought-monitor\?date=\$\{droughtSinceDate\}`, \{ signal: controller\.signal \}\)/);
  assert.match(page,/setDroughtMaps\(maps => rememberDroughtMap\(maps, droughtSinceDate, value\)\);/);
  assert.match(page,/setDroughtCounty\(null\);\s*setDroughtChange\(0\);\s*setDroughtSinceFailed\(null\);/);

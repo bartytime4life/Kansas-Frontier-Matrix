@@ -70,6 +70,8 @@ export const usdmWeeksBefore = (date: string, weeks: number): string => {
   const back = compact((compactMs(date) ?? 0) - weeks * 7 * DAY_MS);
   return back < USDM_FIRST_DATE ? USDM_FIRST_DATE : back;
 };
+/** The first week with a whole change interval behind it: the archive begins 2000-01-04. */
+export const droughtChangeStart = (weeks: number): string => compact((compactMs(USDM_FIRST_DATE) ?? 0) + weeks * 7 * DAY_MS);
 /** Play holds each week this long once it is drawn; from the newest it starts a year back. */
 export const DROUGHT_PLAY_STEP_MS = 1200;
 export const DROUGHT_PLAY_WEEKS = 52;
