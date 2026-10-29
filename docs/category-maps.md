@@ -286,6 +286,30 @@ draws it.
   are not a flood-inundation map. Warnings come from the National Weather
   Service.
 
+## NLCD 2021 land cover (Landscape imagery, Field view)
+
+**Show land cover (NLCD 2021)** draws the USGS National Land Cover
+Database 2021. It is land cover classified from Landsat at 30 m, served by
+the MRLC consortium's GeoServer (`mrlc_display:NLCD_2021_Land_Cover_L48`)
+and drawn in NLCD's own colours.
+
+- **Map.** 512-pixel Web Mercator WMS tiles. Cells are drawn sharp at 85%,
+  over the base and other rasters and under every overlay, so watershed
+  lines stay on top.
+- **Key.** The 15 NLCD classes that occur in Kansas, each with its official
+  code, name and colour. Perennial ice/snow (12) is left out.
+- **At a point.** While land cover is shown, every click also reads the
+  class of the 30 m cell under it, and whatever the click selects still
+  selects. For example: "At 37.980°N, 100.870°W: Cultivated crops (82) ·
+  planted/cultivated".
+  - The lookup is MRLC's GetFeatureInfo through `/api/land-cover/point`, in
+    or near Kansas only. Answers are kept for a day, since NLCD is a fixed
+    product.
+  - A new click replaces the last.
+- **Limits.** NLCD gives a mapped class for each 30 m cell, not a field
+  survey. Single cells can be wrong, field edges blur across cells, and it
+  shows 2021.
+
 ## Rainfall, observed and forecast (River network, Field view, Storm desk)
 
 **Show rainfall** has two views, as the NWS map services
