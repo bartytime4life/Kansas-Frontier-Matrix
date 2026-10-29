@@ -113,6 +113,60 @@ remain in memory for separately governed callers. Exit 0 means the rehearsal
 completed with held/empty results; 1 means record errors/denial; 2 means invalid
 input. None means release readiness. Empty inventory reports `EMPTY`.
 
+## Optional local EvidenceBundle binding check
+
+`EvidenceCatalog.from_candidates(bundles, schema=..., resources=...)` validates
+an explicit local bundle inventory against the existing
+[shared EvidenceBundle schema](../../../schemas/contracts/v1/evidence/evidence_bundle.schema.json).
+The [Fauna projection](../../../schemas/contracts/v1/domains/fauna/evidence_bundle.schema.json)
+already references that shared shape. This increment creates no parallel
+EvidenceBundle schema, evidence store, registry, policy or release authority.
+The helper belongs in `packages/`; the opt-in rehearsal stays in `pipelines/`;
+synthetic inputs and executable evidence remain in `fixtures/` and `tests/`,
+under the same Directory Rules sections 7.2 and 12 basis as the initial slice.
+
+```bash
+python pipelines/domains/fauna/normalize.py \
+  --input fixtures/domains/fauna/occurrence_evidence/valid/valid_observed_open.json \
+  --taxonomy fixtures/domains/fauna/normalization/taxonomy_snapshot.json \
+  --validated-at 2026-10-29T00:00:00Z \
+  --evidence-bundles fixtures/domains/fauna/evidence_bindings/bundles.json
+python -m unittest -v tests.domains.fauna.test_evidence_closure
+```
+
+The CLI accepts an array of at most 128 candidate bundles, each with at most
+256 constituent refs. The library accepts at most 16 explicitly supplied
+schema resources; the CLI supplies the three existing shared leaf schemas.
+Its reference registry cannot fetch missing schemas. Duplicate bundle IDs,
+duplicate constituents, blank scope/source/citation metadata, invalid schema
+fields and dangling `bundle_ref` declarations reject the inventory. When
+present, a constituent `bundle_ref` must equal its containing `bundle_id`;
+URI aliases require separate governed resolution and are not inferred here.
+
+`catalog.assess(occurrence, schema=...)` checks the occurrence first and matches
+every occurrence and taxonomy reference exactly. Missing or multiply matched
+refs abstain. At least one linked bundle must declare the source record;
+when a raw artifact is present, a bundle supporting that source record must
+also declare its checksum. This checks literal metadata membership, not whether
+claim scope, source attribution or a declared checksum is factually correct.
+The immutable index retains reference/support sets rather than bundle payloads.
+Input order cannot choose a winner between colliding bundles.
+
+The result is `linked`, `abstain`, `error`, or a preserved upstream `deny`.
+Even `linked` reports `public_ready: false` and `integrity_verified: false`.
+It does not interpret claims, authenticate rights, verify source admission,
+recompute bundle/spec/artifact hashes, retrieve raw files, or close evidence.
+The normalized record keeps `quarantine`, `unreviewed`, withheld geometry and
+`prov.evidence_closure_unverified`; the assessment never mutates it.
+
+With the flag, aggregate stdout adds `evidence_bindings` counts for checked,
+linked, abstained, failed and skipped records. A failed normalization is
+skipped, never counted as evidence checked. An empty inventory abstains on
+each normalized record; an empty input batch remains `EMPTY`. Metadata
+abstention remains `HELD` with exit 0; malformed inventory exits 2. Without
+the flag, the existing summary and behavior are unchanged. Both input modes
+avoid outputting refs, source IDs, paths, bundle text or occurrence payloads.
+
 ## Source basis and limits
 
 The local Repository Build-Out & Markdown Modernization Implementation Agent

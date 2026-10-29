@@ -41,7 +41,9 @@ notes:
 
 The [offline normalization guide](normalization.md) records the new reusable
 Python helpers, candidate taxonomy snapshot schema, aggregate-only local
-rehearsal, and focused no-network tests. New normalized records remain in
+rehearsal, optional local EvidenceBundle metadata-link checks, and focused
+no-network tests. Linked metadata does not close evidence or verify artifact
+bytes. New normalized records remain in
 quarantine with public geometry withheld. This verifies local source behavior
 only; admission, evidence closure, policy/review, public map/API integration,
 release, deployment, and publication remain separate open work.

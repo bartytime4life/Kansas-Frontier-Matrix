@@ -23,7 +23,7 @@ related:
   - ../../../../../tests/domains/fauna/test_occurrence_evidence.py
   - ../../../../../packages/hashing/
   - ../../../../../.github/workflows/fauna-occurrence-evidence.yml
-  - ../../../../../data/receipts/generated/genrec-fauna-components-20261029.json
+  - ../../../../../data/receipts/generated/genrec-fauna-evidence-bindings-20261029.json
   - ../../../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
   - ../../../../../docs/doctrine/directory-rules.md
 tags: [kfm, fauna, occurrence-evidence, validator, source-role, rights, sensitivity, geoprivacy, spec-hash, no-network]
@@ -290,7 +290,7 @@ These fixtures are synthetic. They are not occurrence evidence, source rights, t
 1. checks out the tested revision without persisted credentials;
 2. installs `.[test]` under Python 3.11;
 3. runs the focused unit suite and exact fixture replay with no-network environment flags;
-4. validates `data/receipts/generated/genrec-fauna-components-20261029.json` against final repository bytes; and
+4. validates `data/receipts/generated/genrec-fauna-evidence-bindings-20261029.json` against final repository bytes; and
 5. records the authority boundary in the job summary.
 
 The earlier `genrec-fauna-occurrence-evidence-20260808.json` and `genrec-fauna-occurrence-evidence-readme-20260808.json` receipts remain immutable historical process memory. The `20260814` successor remains historical. The `20261029` successor binds the current offline Fauna component slice, including this README and workflow; it does not rewrite any earlier receipt.

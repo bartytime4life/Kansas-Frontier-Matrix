@@ -74,7 +74,10 @@ the shared Fauna package. It emits aggregate `HELD`, `EMPTY`, `DENIED`, or
 `ERROR` status with `public_ready: false`; it does not write lifecycle data or
 print normalized occurrence payloads. See the
 [implementation guide](../../../docs/domains/fauna/normalization.md) for the
-explicit-input command and negative-test coverage. Earlier implementation
+explicit-input command and negative-test coverage. Optional `--evidence-bundles`
+checks declared links against a local candidate inventory, adds aggregate
+binding counts, and keeps `integrity_verified: false` and every normalized
+record quarantined. Earlier implementation
 unknowns remain applicable outside this local rehearsal.
 
 

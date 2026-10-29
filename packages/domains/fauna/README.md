@@ -51,7 +51,10 @@ notes:
 
 Python 3.11+ package `kfm-domain-fauna` now exports deterministic occurrence
 identity and validation, snapshot-bound taxonomy matching, held normalization,
-and allowlisted internal review projection from `src/fauna/`. The existing
+allowlisted internal review projection, and an explicit local EvidenceBundle
+reference index from `src/fauna/`. `EvidenceCatalog` checks declared metadata
+links without authenticating claims, verifying artifact bytes or closing
+evidence. The existing
 repository occurrence validator delegates to this shared engine.
 
 See the [implementation guide](../../../docs/domains/fauna/normalization.md)

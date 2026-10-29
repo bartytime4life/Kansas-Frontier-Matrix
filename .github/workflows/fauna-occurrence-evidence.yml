@@ -16,6 +16,12 @@ name: fauna-occurrence-evidence
       - "pipelines/domains/fauna/**"
       - "schemas/contracts/v1/domains/fauna/taxonomy_snapshot.schema.json"
       - "fixtures/domains/fauna/normalization/**"
+      - "fixtures/domains/fauna/evidence_bindings/**"
+      - "schemas/contracts/v1/evidence/evidence_bundle.schema.json"
+      - "schemas/contracts/v1/evidence/evidence_ref.schema.json"
+      - "schemas/contracts/v1/policy/sensitivity_label.schema.json"
+      - "schemas/contracts/v1/common/spec_hash.schema.json"
+      - "tests/domains/fauna/test_evidence_closure.py"
       - "tests/domains/fauna/test_taxonomy_resolution.py"
       - "tests/domains/fauna/test_occurrence_split.py"
       - "tests/domains/fauna/test_normalization_pipeline.py"
@@ -35,6 +41,12 @@ name: fauna-occurrence-evidence
       - "pipelines/domains/fauna/**"
       - "schemas/contracts/v1/domains/fauna/taxonomy_snapshot.schema.json"
       - "fixtures/domains/fauna/normalization/**"
+      - "fixtures/domains/fauna/evidence_bindings/**"
+      - "schemas/contracts/v1/evidence/evidence_bundle.schema.json"
+      - "schemas/contracts/v1/evidence/evidence_ref.schema.json"
+      - "schemas/contracts/v1/policy/sensitivity_label.schema.json"
+      - "schemas/contracts/v1/common/spec_hash.schema.json"
+      - "tests/domains/fauna/test_evidence_closure.py"
       - "tests/domains/fauna/test_taxonomy_resolution.py"
       - "tests/domains/fauna/test_occurrence_split.py"
       - "tests/domains/fauna/test_normalization_pipeline.py"
@@ -90,17 +102,19 @@ jobs:
           python -m unittest --verbose \
             tests.domains.fauna.test_taxonomy_resolution \
             tests.domains.fauna.test_occurrence_split \
-            tests.domains.fauna.test_normalization_pipeline
+            tests.domains.fauna.test_normalization_pipeline \
+            tests.domains.fauna.test_evidence_closure
           python pipelines/domains/fauna/normalize.py \
             --input fixtures/domains/fauna/occurrence_evidence/valid/valid_observed_open.json \
             --taxonomy fixtures/domains/fauna/normalization/taxonomy_snapshot.json \
-            --validated-at 2026-10-29T00:00:00Z
+            --validated-at 2026-10-29T00:00:00Z \
+            --evidence-bundles fixtures/domains/fauna/evidence_bindings/bundles.json
 
       - name: Validate current generated authoring receipt
         run: |
           set -euo pipefail
           python tools/validators/validate_generated_receipt.py \
-            data/receipts/generated/genrec-fauna-components-20261029.json \
+            data/receipts/generated/genrec-fauna-evidence-bindings-20261029.json \
             --repo-root .
 
       - name: Record trust boundary
@@ -110,6 +124,6 @@ jobs:
             echo "### Fauna OccurrenceEvidence draft profile"
             echo
             echo "- Result: ${{ job.status }}."
-            echo "- Scope: closed draft schemas, snapshot-bound taxonomy matching, deterministic identity, held normalization, withheld review projection, source-role anti-collapse, exact fixture polarity, and current authoring-receipt integrity."
+            echo "- Scope: closed draft schemas, snapshot-bound taxonomy matching, deterministic identity, held normalization, local bundle metadata linking, withheld review projection, source-role anti-collapse, exact fixture polarity, and current authoring-receipt integrity."
             echo "- Boundary: PASS does not admit a live source, resolve taxonomic or stewardship authority, create an EvidenceBundle, perform geoprivacy transformation, release, promote, deploy, or publish."
           } >> "$GITHUB_STEP_SUMMARY"
