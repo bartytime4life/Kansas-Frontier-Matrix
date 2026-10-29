@@ -1,7 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync, sign } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile, mkdtemp } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { loadConfig } from '../scripts/pc-pipeline/worker.mjs';
 import { canonical, recipeDigest, verifyProfile, MAX_PACKAGE, SOURCES } from '../server/pipeline-contract.mjs';
 import { captureRequest, fetchCapture, CAPTURE_SOURCES } from '../server/ingestion-sources.mjs';
 import { normalizeCapture, validateContext } from '../server/pipeline-normalize.mjs';
@@ -78,4 +81,15 @@ test('the PC worker publishes earthquakes only when its config names them; the s
   assert.match(worker, /for \(const sourceId of policy\.priority\.filter\(id => config\.sources\.includes\(id\)\)\)/, 'opt-in through config.sources');
   assert.match(cli, /sources: \['usgs-streamflow','nws-alerts'\], publish: false/, 'new installs start with the original two');
   assert.match(schema, /\('usgs-earthquakes'\)/);
+});
+
+test('a worker config that opts into earthquakes loads; one naming a source twice or a fourth does not', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'kfm-quake-config-'));
+  const base = { format: 'kfm-pc-pipeline-config-v1', root: '/srv/kfm', mount: '/srv', device: 2049, storeId: 'a'.repeat(32), publish: false, approvalDirectory: '/etc/kfm-pipeline/approvals' };
+  const write = async (name, sources) => { const path = join(dir, name); await writeFile(path, JSON.stringify({ ...base, sources })); return path; };
+  assert.deepEqual((await loadConfig(await write('two.json', ['usgs-streamflow', 'nws-alerts']))).sources, ['usgs-streamflow', 'nws-alerts']);
+  assert.deepEqual((await loadConfig(await write('three.json', ['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes']))).sources, ['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes'],
+    'the documented opt-in adds a third source');
+  await assert.rejects(loadConfig(await write('twice.json', ['usgs-streamflow', 'usgs-earthquakes', 'usgs-earthquakes'])), /CONFIG_INVALID/);
+  await assert.rejects(loadConfig(await write('four.json', ['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes', 'water'])), /CONFIG_INVALID/);
 });

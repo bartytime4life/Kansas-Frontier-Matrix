@@ -88,7 +88,7 @@ export async function tick(config, { fetcher = fetch, now = Date.now(), acquire 
 export async function loadConfig(path) {
   const config = parse(await readRegular(path, 16384));
   if (config.format !== 'kfm-pc-pipeline-config-v1' || typeof config.root !== 'string' || typeof config.mount !== 'string' || typeof config.storeId !== 'string'
-    || !/^[a-f0-9]{32}$/.test(config.storeId) || !Array.isArray(config.sources) || config.sources.length > 2 || new Set(config.sources).size !== config.sources.length
+    || !/^[a-f0-9]{32}$/.test(config.storeId) || !Array.isArray(config.sources) || config.sources.length > 3 || new Set(config.sources).size !== config.sources.length
     || config.sources.some(s => !['usgs-streamflow','nws-alerts','usgs-earthquakes'].includes(s)) || typeof config.publish !== 'boolean' || !/^\d+$/.test(String(config.device))
     || !config.approvalDirectory?.startsWith('/')) fail('CONFIG_INVALID');
   storagePolicy(config);
