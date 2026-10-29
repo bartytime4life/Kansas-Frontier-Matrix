@@ -1,6 +1,6 @@
 # Kansas congressional districts through time
 
-Next proposed civic slice: [historical county source qualification](county-history-qualification.md). Real archive checks passed; public reuse and integration remain held. This does not add a county-history layer or extend the congressional coverage below.
+Next civic slice: [historical county source qualification and dated queries](county-history-qualification.md). Real archive checks and offline dated queries passed; Newberry's current reuse notice supersedes the old bundled license. Map integration and release remain pending. This does not add a county-history map layer or extend the congressional coverage below.
 
 ## Behavior and evidence status
 
@@ -10,7 +10,9 @@ Colors identify district numbers, not parties or continuous identities. An at-la
 
 **CONFIRMED this session:** all 18 pinned historical files were retrieved through GitHub; exact Git blob identities and SHA-256 digests were checked; their real geometries passed the structural parser. Offline qualification exercised **83 Congresses, 36–118**, with 12 concurrent calls per term and only 18 acquisitions. Congress 119 uses the existing direct Census adapter separately.
 
-**NEEDS VERIFICATION:** successful live Census query, deployed raw-GitHub acquisition, desktop/mobile rendering, label collisions, frame rate and deployment. Connector retrieval and offline qualification do not prove these. No independent security review or full-repository test run is claimed.
+**Additional live observation, 2026-10-29:** the public desktop view now exposes Congress 36–119 controls. Congress 36 loaded the 1861-01-29 statewide at-large geometry and its pinned source record. The drawer also showed conflicting generic official/current-context/hidden-layer labels; see the [county follow-up record](county-history-qualification.md#congressional-and-hosted-status). That path is verified, with those limitations.
+
+**NEEDS VERIFICATION:** successful live Census query, remaining deployed historical plans, mobile rendering, label collisions, frame rate and exact deployed application identity. Connector retrieval and offline qualification do not prove these. No independent security review or full-repository test run is claimed.
 
 ## Sources and historical interpretation
 
