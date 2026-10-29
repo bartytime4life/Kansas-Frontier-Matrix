@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: Development-and-Validation
 title: Development and Validation
 status: source-grounded documentation candidate; independent review pending
-updated: 2026-10-27
+updated: 2026-10-29
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Development-and-Validation.md
 evidence_checkpoint: main@17f106d558674ec92a11809bcf3a06c82453777e; hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
@@ -23,7 +23,7 @@ npm test
 node_modules/.bin/tsc --noEmit
 ```
 
-`npm test` runs the production build and the Node test suite. This session observed
+`npm test` runs the production build and the Node test suite. The October 27 qualification observed
 exit zero, **1,934 passing and 19 skipped tests**, with no failures. TypeScript exited
 zero separately. These counts include nested tests and are the runner's totals,
 not a hand count of test files. [Detailed qualification](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a27c45354b461cd2fd5978efe7a7aacfc5f064ac/docs/reports/documentation-showcase-qualification-20261027.md).
@@ -38,6 +38,27 @@ not a hand count of test files. [Detailed qualification](https://github.com/bart
 | Media validation | The selected source and derivative bytes match their record; decoded motion is finite | Real-time FPS, live observations or scientific validity |
 | Chrome observation | The inspected welcome/category states appeared in this session | A full browser/device/accessibility matrix |
 | Markdown/link/wiki checks | Navigation, source structure and projection behavior | Truth, policy authority or native publication |
+
+## Scientific qualification
+
+Software tests and scientific evaluation answer different questions. A schema
+can validate shape while a model remains uncalibrated or unsuitable for its
+intended population, support, and prediction horizon.
+
+For a proposed [scientific investigation](scientific-methods.md), declare the
+target quantity, units, support, baseline, evaluation split, metrics, and rejection
+criteria before final scoring. Keep spatial neighbors, repeated stations, and
+future information from leaking into a holdout in ways incompatible with the
+intended prediction task. Fit preprocessing and tuning within the training
+process; keep the final evaluation separate from model selection.
+
+Inspect error and bias, interval behavior where applicable, coverage gaps, and
+sensitivity to assumptions and aggregation. Include negative results and
+deviations from the plan. A declaration validator, one attractive score, or
+reproducible code does not establish scientific validity, qualified review,
+source admission, or release eligibility. The
+[detailed guide](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/496a97280e72b22a5c83d48725e51828ab9c7237/docs/architecture/scientific-analysis.md)
+maps existing repository candidates to their narrower responsibilities.
 
 ## Documentation checks
 

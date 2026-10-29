@@ -6,7 +6,7 @@ version: v0.3.0
 status: proposed; review-required; not-native-wiki-published
 owners: ["@bartytime4life"]
 created: 2026-08-07
-updated: 2026-10-27
+updated: 2026-10-29
 policy_label: public-documentation
 current_path: docs/wiki/README.md
 owning_root: docs/
@@ -43,6 +43,7 @@ notes:
 | Public reader entry point | [`Home.md`](Home.md) |
 | First-time orientation | [`Getting-Started.md`](Getting-Started.md) |
 | Evidence-bounded project state | [`Project-Status.md`](Project-Status.md) |
+| Scientific investigation design | [`scientific-methods.md`](scientific-methods.md) and the [repository guide](../architecture/scientific-analysis.md) |
 | Source/projection maintenance contract | [`Wiki-Maintenance.md`](Wiki-Maintenance.md) |
 | Native-wiki synchronization helper | [`tools/docs/wiki/`](../../tools/docs/wiki/README.md) |
 | Native page navigation | [`_Sidebar.md`](_Sidebar.md) and [`_Footer.md`](_Footer.md) |
@@ -93,6 +94,19 @@ Wiki pages use KFM's core truth labels:
 | `PROPOSED` | A recommended design or future state, not verified as current implementation |
 | `UNKNOWN` | Available evidence is insufficient |
 | `NEEDS VERIFICATION` | A concrete check remains before the claim can be relied upon |
+
+## October 29 scientific reading path
+
+The [Scientific Methods](scientific-methods.md) orientation page summarizes the
+repository's [scientific-analysis guide](../architecture/scientific-analysis.md).
+It adds seven method directions, four proposed Kansas studies, and a synthetic
+uncertainty example. Home, Domains, Development and Validation, the glossary,
+sidebar, and footer connect readers to that path. Scientific ideas remain
+proposals until their implementation, validation, review, and use are evidenced.
+
+The new lowercase source `scientific-methods.md` projects to the native
+`Scientific-Methods` page through the publisher's explicit mapping. The complete
+packet now has 20 publishable pages plus this source-only README.
 
 ## October 27 reader refresh
 
@@ -149,6 +163,7 @@ unchanged by this documentation edition.
 | Source page | Purpose |
 |---|---|
 | [`Domains.md`](Domains.md) | Domain lanes and cross-domain seams |
+| [`scientific-methods.md`](scientific-methods.md) | Scientific study design, methodological references, and proposed Kansas investigations |
 | [`Map-UI-and-AI.md`](Map-UI-and-AI.md) | MapLibre, Explorer Web, Evidence Drawer, and governed AI |
 | [`Security-and-Sensitivity.md`](Security-and-Sensitivity.md) | Fail-closed public-safety and sensitive-data posture |
 

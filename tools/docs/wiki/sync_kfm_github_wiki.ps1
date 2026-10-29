@@ -58,6 +58,7 @@ $Pages = @(
     "Governance-and-Evidence.md",
     "Data-Lifecycle.md",
     "Domains.md",
+    "Scientific-Methods.md",
     "Map-UI-and-AI.md",
     "Security-and-Sensitivity.md",
     "Development-and-Validation.md",
@@ -73,6 +74,7 @@ $SourcePageNames = @{
     "Builder-Profile.md" = "builder-profile.md"
     "Visual-Tour.md" = "visual-tour.md"
     "Engineering-Case-Studies.md" = "engineering-case-studies.md"
+    "Scientific-Methods.md" = "scientific-methods.md"
 }
 
 function Convert-WikiLinks {

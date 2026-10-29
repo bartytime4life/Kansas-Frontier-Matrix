@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: Home
 title: Kansas Frontier Matrix — place, time, evidence
 status: source-grounded documentation candidate; independent review pending
-updated: 2026-10-27
+updated: 2026-10-29
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Home.md
 evidence_checkpoint: main@17f106d558674ec92a11809bcf3a06c82453777e; hosted@bbcec824fe57e6be0409ba1e35d737fa99581560
@@ -30,6 +30,15 @@ not a survey or real-time speed recording. [Still](https://raw.githubusercontent
 | Build or contribute | [Getting Started](Getting-Started.md) → [Development and Validation](Development-and-Validation.md) |
 | Evaluate the work | [Builder profile](builder-profile.md) → [Engineering case studies](engineering-case-studies.md) |
 | Inspect the trust model | [Governance and Evidence](Governance-and-Evidence.md) → [Data Lifecycle](Data-Lifecycle.md) |
+| Design a scientific investigation | [Scientific Methods](scientific-methods.md): uncertainty, validation, causal questions, and four proposed Kansas studies |
+
+## Scientific questions behind the map
+
+The new [Scientific Methods](scientific-methods.md) reading path develops seven
+analytical directions with primary references and explicit failure tests. Begin
+with a defined quantity and support, compare against a baseline, and test on
+held-out evidence. These are proposed studies, not newly implemented engines
+or claims that the Science Pack has been scientifically qualified.
 
 ## The current experience
 

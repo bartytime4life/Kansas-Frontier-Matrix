@@ -1,0 +1,235 @@
+{
+  "receipt_id": "genrec-scientific-docs-wiki-20261029",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md",
+    "docs/README.md",
+    "docs/architecture/README.md",
+    "docs/architecture/scientific-analysis.md",
+    "docs/wiki/Development-and-Validation.md",
+    "docs/wiki/Domains.md",
+    "docs/wiki/Glossary.md",
+    "docs/wiki/Home.md",
+    "docs/wiki/README.md",
+    "docs/wiki/_Footer.md",
+    "docs/wiki/_Sidebar.md",
+    "docs/wiki/scientific-methods.md",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py",
+    "tools/docs/wiki/README.md",
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:cb847360e652c2386a49c7e98718d344006ec29eb2d5d4263e5a4a8234f0df22",
+    "docs/README.md": "sha256:9a7db0403bab5d44aa6f3004ed7c13ac4c516a4dfd1aadff158889fb5aaa5763",
+    "docs/architecture/README.md": "sha256:0b4b413d185f6107482c5038f37ae5b5efb5e6c78ab66c0b74dac39cc094403b",
+    "docs/architecture/scientific-analysis.md": "sha256:124568cc76473912ef6366309df4a9abd901fd079580598576af88c1371b00c8",
+    "docs/wiki/Development-and-Validation.md": "sha256:3c5d3354067682c328f120bb206febddc9bc974dfbe20135bfb17df59cf17814",
+    "docs/wiki/Domains.md": "sha256:3387499000dd974425f655cdee22334947176494a9290eba33fdef14a5983281",
+    "docs/wiki/Glossary.md": "sha256:481033065258e18f23eb6e16a5160c0258155bbc2a5789e4c1fffab0108417e1",
+    "docs/wiki/Home.md": "sha256:499822df98088a2f8829590dd43e088e4670a8f1ba942af3264a5e7afcd26ae2",
+    "docs/wiki/README.md": "sha256:679c12d32762dd3488e762c7af89187a57ae33e6d91d10573d0e2b49f57fc71a",
+    "docs/wiki/_Footer.md": "sha256:3448369bb443e81d79d253ea07609495a3c2899992245fa2d30340f15f2ab831",
+    "docs/wiki/_Sidebar.md": "sha256:4e7342db6007465a7f1a06967be449a7827f7c430fb80f45b69f642092f285f3",
+    "docs/wiki/scientific-methods.md": "sha256:1de165bf10c2a8e074efbb6091806e9303a792587214e6cf72176ea91e316709",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py": "sha256:4a54b250eab83260ddbe34ace5cbf61fc2de0d619e1958f108cfe5d15dae5ed2",
+    "tools/docs/wiki/README.md": "sha256:1f1216723ebc18c0eb40b9e2cf110f7f79ab47e29b1901a30999f688fea71156",
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1": "sha256:6f3655b2e2003ae52789f9225ed63dabdbaffdd85758f956ddf3eda4ef7fc640"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-6 family)",
+    "version": "UNKNOWN - exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:401b035b52c49cf6bed374ee24b374bba5cba2e7a79bb5ef720be1a278293197",
+  "parameters": {
+    "temperature": null,
+    "seed": null,
+    "tools_enabled": [
+      "local Git and documentation validators",
+      "PowerShell wiki projection",
+      "primary-source web research"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:docs/doctrine/directory-rules.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "repo:docs/wiki/README.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "repo:contracts/validation/precommitted_evaluation_record.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "repo:contracts/evidence/planning_proxy_uncertainty_assessment.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "repo:contracts/governance/model_card_envelope.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "repo:contracts/domains/habitat/suitability_model.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "https://www.ogc.org/standards/om/",
+      "https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf",
+      "https://www.bipm.org/documents/20126/2071204/JCGM_101_2008_E.pdf",
+      "https://onlinelibrary.wiley.com/doi/full/10.1111/ecog.02881",
+      "https://arxiv.org/abs/2011.01808",
+      "https://miguelhernan.org/whatifbook",
+      "https://www.usgs.gov/publications/approaches-highly-parameterized-inversion-a-guide-using-pest-model-parameter-and",
+      "https://www.itl.nist.gov/div898/handbook/pri/section1/pri11.htm"
+    ],
+    "evidence_hashes": [
+      "sha256:79df35dc15e18ab80061aa5553e330b49c822c270650dab5b4aaaab61c7c22dd"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "PROPOSED",
+    "docs/README.md": "PROPOSED",
+    "docs/architecture/README.md": "PROPOSED",
+    "docs/architecture/scientific-analysis.md": "PROPOSED",
+    "docs/wiki/Development-and-Validation.md": "PROPOSED",
+    "docs/wiki/Domains.md": "PROPOSED",
+    "docs/wiki/Glossary.md": "PROPOSED",
+    "docs/wiki/Home.md": "PROPOSED",
+    "docs/wiki/README.md": "PROPOSED",
+    "docs/wiki/_Footer.md": "PROPOSED",
+    "docs/wiki/_Sidebar.md": "PROPOSED",
+    "docs/wiki/scientific-methods.md": "PROPOSED",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py": "PROPOSED",
+    "tools/docs/wiki/README.md": "PROPOSED",
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority-placement-overlap-and-public-safety",
+      "outcome": "PASS",
+      "reason": "Inspected adopted Directory Rules, source Wiki contract, primary references, repository candidates, current native Wiki revision and open PRs. Changes use existing owning roots and introduce no private source data."
+    },
+    {
+      "gate": "wiki-transport-contract-tests",
+      "outcome": "PASS",
+      "reason": "Python 3.12.14 / pytest 9.1.1: nine focused tests passed, including executable PowerShell projection, exact allowlist, mapped source resolution, fragment retention, external/nested-link preservation and no-force/readback controls."
+    },
+    {
+      "gate": "documentation-link-closure",
+      "outcome": "PASS",
+      "reason": "26 documents, 861 local targets, no local-link findings. The offline checker classified 397 external targets as unverified; eight scientific reference sources were separately inspected."
+    },
+    {
+      "gate": "new-document-required-metadata",
+      "outcome": "PASS",
+      "reason": "Both new pages passed required metadata with warnings promoted to errors; no warnings or failures."
+    },
+    {
+      "gate": "topology-ratchet",
+      "outcome": "PASS",
+      "reason": "20-rule scan: zero invariant failures and zero new drift; 89 inherited warning groups remain baselined, not fixed by this change."
+    },
+    {
+      "gate": "scientific-example-arithmetic",
+      "outcome": "PASS",
+      "reason": "Decimal recomputation verified the synthetic -0.5 m change, variance 0.02 m^2, correlated standard uncertainty 0.141421... m and independent value 0.282843... m."
+    },
+    {
+      "gate": "wiki-page-structure-navigation-and-privacy",
+      "outcome": "PASS",
+      "reason": "20 managed pages / 21 source files; one H1 per ordinary page, sidebar coverage, balanced fences, source existence and no operator-home/private-key markers in the page set."
+    },
+    {
+      "gate": "application-and-scientific-qualification",
+      "outcome": "SKIPPED",
+      "reason": "No application behavior or model engine changed; no scientific experiment, live-source acquisition, model fit, calibration or deployment was performed."
+    },
+    {
+      "gate": "native-wiki-dry-run-and-publication",
+      "outcome": "SKIPPED",
+      "reason": "Not executed at authoring-receipt creation. Use an immutable source commit, inspect the staged projection and follow the source merge/publication boundary before native synchronization."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Not run at receipt creation; report actual GitHub results independently."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "science-docs-reference-1",
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-2",
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-3",
+      "evidence_ref": "repo:docs/wiki/README.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-4",
+      "evidence_ref": "repo:contracts/validation/precommitted_evaluation_record.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-5",
+      "evidence_ref": "repo:contracts/evidence/planning_proxy_uncertainty_assessment.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-6",
+      "evidence_ref": "repo:contracts/governance/model_card_envelope.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-7",
+      "evidence_ref": "repo:contracts/domains/habitat/suitability_model.md@01bf54386be6d4c727373726587e32a24a73e6af",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-8",
+      "evidence_ref": "https://www.ogc.org/standards/om/",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-9",
+      "evidence_ref": "https://www.bipm.org/documents/20126/2071204/JCGM_100_2008_E.pdf",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-10",
+      "evidence_ref": "https://www.bipm.org/documents/20126/2071204/JCGM_101_2008_E.pdf",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-11",
+      "evidence_ref": "https://onlinelibrary.wiley.com/doi/full/10.1111/ecog.02881",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-12",
+      "evidence_ref": "https://arxiv.org/abs/2011.01808",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-13",
+      "evidence_ref": "https://miguelhernan.org/whatifbook",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-14",
+      "evidence_ref": "https://www.usgs.gov/publications/approaches-highly-parameterized-inversion-a-guide-using-pest-model-parameter-and",
+      "validated": true
+    },
+    {
+      "id": "science-docs-reference-15",
+      "evidence_ref": "https://www.itl.nist.gov/div898/handbook/pri/section1/pri11.htm",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-29T19:22:21Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "pr_number": null,
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance only. Literature-derived method explanations and proposed Kansas study designs are distinct from implemented capabilities. This receipt preserves pending human review, original implementation evidence pins and historical Wiki material. No contract, schema, policy, source admission, application runtime, release state, private store or primary checkout was changed. Native Wiki publication and source integration are separate later events and are not authorized by this receipt."
+}

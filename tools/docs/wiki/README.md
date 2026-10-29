@@ -6,7 +6,7 @@ version: v0.1.0
 status: proposed; review-required; manual-operator-tool; derived-mirror-only
 owners: OWNER_TBD — Docs steward · Documentation tooling steward · Repository owner
 created: 2026-08-07
-updated: 2026-10-09
+updated: 2026-10-29
 policy_label: public-documentation-tooling; explicit-remote-write; dry-run-first
 current_path: tools/docs/wiki/README.md
 owning_root: tools/
@@ -68,19 +68,23 @@ Change that input only to another immutable commit whose `docs/wiki/` source set
 
 ## Native navigation projection
 
-The finite page set includes the Builder Profile, Visual Tour, and Engineering Case Studies.
+The finite page set includes the Builder Profile, Visual Tour, Engineering Case
+Studies, and Scientific Methods.
 Source links retain `.md` filenames for repository browsing. At synchronization,
 `Convert-WikiLinks` maps exact allowlisted local Markdown and HTML links to the
 native Wiki's extensionless routes, retaining fragments. External URLs and unknown
 paths stay unchanged. The source-only README link points to the selected immutable
 repository commit. Existing extra native pages are preserved.
 
-The three newer source files use lowercase paths: `builder-profile.md`,
-`visual-tour.md`, and `engineering-case-studies.md`. The explicit source-name
-map projects them to the existing `Builder-Profile`, `Visual-Tour`, and
-`Engineering-Case-Studies` native pages, so published URLs remain stable.
-Historical source commits with the former filenames remain replayable. Both
-old and current local link destinations resolve to the same native URLs.
+Four mapped source files use lowercase paths: `builder-profile.md`,
+`visual-tour.md`, `engineering-case-studies.md`, and `scientific-methods.md`.
+The explicit source-name map projects them to `Builder-Profile`, `Visual-Tour`,
+`Engineering-Case-Studies`, and `Scientific-Methods`. The three existing native
+URLs remain stable; Scientific Methods is an additive page.
+For the three renamed portfolio pages, the former source filenames remain
+supported. Old and current local link destinations resolve to the same native
+URLs. The selected source commit must contain the complete requested page set;
+the historical default pin is not a target for publishing this 20-page edition.
 
 Single-line Git outputs are captured as arrays before indexing so a commit SHA
 cannot be truncated to its first character by PowerShell scalar enumeration.
@@ -122,6 +126,9 @@ pwsh -File tools/docs/wiki/sync_kfm_github_wiki.ps1 `
 The helper synchronizes exactly these native-wiki pages:
 
 - `Home.md`
+- `Builder-Profile.md`
+- `Visual-Tour.md`
+- `Engineering-Case-Studies.md`
 - `Getting-Started.md`
 - `Project-Status.md`
 - `Architecture.md`
@@ -129,6 +136,7 @@ The helper synchronizes exactly these native-wiki pages:
 - `Governance-and-Evidence.md`
 - `Data-Lifecycle.md`
 - `Domains.md`
+- `Scientific-Methods.md`
 - `Map-UI-and-AI.md`
 - `Security-and-Sensitivity.md`
 - `Development-and-Validation.md`

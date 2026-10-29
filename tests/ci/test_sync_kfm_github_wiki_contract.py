@@ -19,6 +19,7 @@ EXPECTED_PAGES = [
     "Governance-and-Evidence.md",
     "Data-Lifecycle.md",
     "Domains.md",
+    "Scientific-Methods.md",
     "Map-UI-and-AI.md",
     "Security-and-Sensitivity.md",
     "Development-and-Validation.md",
@@ -132,7 +133,7 @@ def test_renamed_sources_keep_native_routes_and_historical_replay(tmp_path) -> N
     new_dir = tmp_path / "current"
     old_dir.mkdir()
     new_dir.mkdir()
-    native_pages = ["Builder-Profile.md", "Visual-Tour.md", "Engineering-Case-Studies.md"]
+    native_pages = ["Builder-Profile.md", "Visual-Tour.md", "Engineering-Case-Studies.md", "Scientific-Methods.md"]
     for name in native_pages:
         (old_dir / name).write_text("historical", encoding="utf-8")
         # Prefer the canonical file even if both exist in a checkout.
@@ -141,7 +142,7 @@ def test_renamed_sources_keep_native_routes_and_historical_replay(tmp_path) -> N
     probe = tmp_path / "renamed-sources.ps1"
     probe.write_text(r'''param([string]$OldDir, [string]$NewDir)
 ''' + functions + r'''
-$Results = foreach ($Page in @("Builder-Profile.md", "Visual-Tour.md", "Engineering-Case-Studies.md")) {
+$Results = foreach ($Page in @("Builder-Profile.md", "Visual-Tour.md", "Engineering-Case-Studies.md", "Scientific-Methods.md")) {
     $OldPath = Resolve-WikiSourcePage -SourceWikiDir $OldDir -Page $Page -SourcePageNames $SourcePageNames
     $NewPath = Resolve-WikiSourcePage -SourceWikiDir $NewDir -Page $Page -SourcePageNames $SourcePageNames
     $Name = $SourcePageNames[$Page]
@@ -160,7 +161,7 @@ ConvertTo-Json -InputObject @($Results)
         capture_output=True, text=True, check=True,
     )
     rows = json.loads(result.stdout)
-    assert len(rows) == 3
+    assert len(rows) == 4
     for row in rows:
         name = row["page"]
         assert row["old"] == "historical"
