@@ -34,6 +34,7 @@ import { changeCollection, droughtChangeStart, countyChangeList, countyChangeRea
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationReading, populationChange, populationChangeApiPath, populationChangeCollection, populationChangeKey, populationChangeList, populationChangeReading, syncPopulationChange, validCountyBaseline } from "./population-change";
+import { KANSAS_CENTRE, SUN_PLACE_SOURCE_ID, coordinateLabel, inKansasBox, mayKeepMountainTime, sunChart, sunReading, sunYear as sunYearDays, syncSunPlace } from "./sun-chart";
 import { SURFACE_OBS_API_PATH, SURFACE_OBS_REFRESH_MS, SURFACE_OBS_SOURCE_ID, stationDetail, surfaceCollection, surfaceKey, surfaceList, surfaceReading, syncSurfaceObs, validSurfaceEnvelope } from "./surface-obs";
 import type { MetarObservation } from "./aviation-weather";
 import { WELLS_SNAPSHOT_PATH, WELL_PICK_SOURCE_ID, syncWellPick, validWellLevels, wellKgsPage, wellLevelsApiPath, wellLevelsKey, wellPlot, wellReading, wellSites, wellsNear, wellUsgsPage, type WellLevels, type WellSite } from "./well-levels";
@@ -1687,6 +1688,11 @@ export default function Home() {
   const wellsOnRef = useRef(false);
   // Surface observations on the Storm desk: shown or not, the latest METARs once read, a failed read, and the station picked.
   const [surfaceOn, setSurfaceOn] = useState(false);
+  // Daylight through the year (Sky globe): shown or not, the charted place (null for the centre of Kansas), and a click outside Kansas.
+  const [sunYearOn, setSunYearOn] = useState(false);
+  const [sunPlace, setSunPlace] = useState<{ lon: number; lat: number } | null>(null);
+  const [sunOutside, setSunOutside] = useState(false);
+  const sunYearOnRef = useRef(false);
   const [surfaceRecords, setSurfaceRecords] = useState<readonly MetarObservation[] | null>(null);
   const [surfaceFailed, setSurfaceFailed] = useState(false);
   const [surfacePicked, setSurfacePicked] = useState<string | null>(null);
@@ -4738,6 +4744,25 @@ export default function Home() {
     mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
   };
 
+  // Daylight through the year: calculated, so it needs no source; the year and "today" are Kansas's.
+  sunYearOnRef.current = sunYearOn;
+  const showSunYear = (on: boolean) => { setSunYearOn(on); setSunPlace(null); setSunOutside(false); };
+  const sunToday = sunYearOn ? currentKansasCalendarDay() : null;
+  const sunYearPlace = sunPlace ?? KANSAS_CENTRE;
+  const sunDays = useMemo(() => sunToday ? sunYearDays(Number(sunToday.slice(0, 4)), sunYearPlace.lat, sunYearPlace.lon) : null, [sunToday, sunYearPlace.lat, sunYearPlace.lon]);
+  const sunYearChart = useMemo(() => sunDays ? sunChart(sunDays, sunToday) : null, [sunDays, sunToday]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const place = sunYearOn ? sunYearPlace : null;
+    const sync = () => { try { syncSunPlace(map, place); } catch { /* The style is reloading; its styledata event marks the place again. */ } };
+    sync();
+    if (!place) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(SUN_PLACE_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [sunYearOn, sunYearPlace, styleReady]);
+
   // Surface observations: current only, so away from the present map time (or with an out-of-date build) they are held;
   // read again every five minutes while shown. A failed read clears the plots rather than leave old ones standing.
   const surfaceLive = buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
@@ -6634,6 +6659,13 @@ export default function Home() {
           // With land cover shown, every click also reads the NLCD class under it; whatever the click selects still selects.
           if (landCoverOnRef.current) readLandCoverAtRef.current(event.lngLat.lng, event.lngLat.lat);
           if (cropsRef.current !== null) readCropAtRef.current(cropsRef.current, event.lngLat.lng, event.lngLat.lat);
+          // With daylight through the year shown, a click in Kansas charts that place.
+          if (sunYearOnRef.current) {
+            const { lng, lat } = event.lngLat;
+            if (inKansasBox(lng, lat)) { setSunPlace({ lon: lng, lat }); setSunOutside(false); } else setSunOutside(true);
+            setCategoryDockHidden(false);
+            return;
+          }
           // The fixture control owns synthetic selection; never select provider
           // context underneath its schematic as evidence for that schematic.
           if (renderedHits[0]?.source === LIVING_WATERS_SOURCE) {
@@ -10551,6 +10583,8 @@ export default function Home() {
     // The change closes with its map; the starters above already decide whether the county outlines are on.
     setSurfaceOn(false);
     setSurfacePicked(null);
+    setSunYearOn(false);
+    setSunPlace(null);
     // So do water levels at wells; the starters above already decide whether the monitoring wells are on.
     wellsWereOnRef.current = false;
     setWellsOn(false);
@@ -11647,6 +11681,10 @@ export default function Home() {
             surface={activeCategoryMap.tools?.includes("surface") ? { on: surfaceOn, state: !surfaceLive ? "held" : surfaceFailed ? "failed" : shownSurface ? "ready" : "loading",
               reading: shownSurface ? surfaceReading(shownSurface) : null, list: shownSurface ? surfaceList(shownSurface) : [], picked: surfaceStation ? surfacePicked : null,
               detail: surfaceStation ? stationDetail(surfaceStation) : null, raw: surfaceStation?.raw ?? null } : undefined}
+            sunYear={activeCategoryMap.tools?.includes("sunyear") ? { on: sunYearOn, outside: sunOutside, chart: sunYearChart, atCentre: !sunPlace,
+              place: sunPlace ? coordinateLabel(sunPlace.lon, sunPlace.lat) : KANSAS_CENTRE.name, reading: sunDays && sunToday ? sunReading(sunDays, sunToday) : null,
+              note: sunPlace && mayKeepMountainTime(sunPlace.lon) ? "Sherman, Wallace, Greeley and Hamilton counties keep Mountain time: there, clocks read an hour earlier." : null } : undefined}
+            onSunYear={showSunYear} onSunYearCentre={() => { setSunPlace(null); setSunOutside(false); }}
             onSurface={showSurface} onSurfacePick={pickSurfaceStation} onSurfaceClear={() => setSurfacePicked(null)}
             populationChange={activeCategoryMap.tools?.includes("population") ? { on: popChangeOn, loading: popChangeOn && !popChange && !popChangeBroken, failed: popChangeBroken,
               reading: popChange ? populationChangeReading(popChange) : null, bars: popChangeBars, list: popChangeItems, picked: popChangeCounty,
