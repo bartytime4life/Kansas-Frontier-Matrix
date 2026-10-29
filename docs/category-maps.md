@@ -286,12 +286,24 @@ draws it.
   are not a flood-inundation map. Warnings come from the National Weather
   Service.
 
-## MRMS rainfall (River network, Field view, Storm desk)
+## Rainfall, observed and forecast (River network, Field view, Storm desk)
 
-**Show rainfall (MRMS)** puts on the map the NWS Multi-Radar Multi-Sensor
-quantitative precipitation estimate. It is the rain of the past 1, 3, 6,
-12, 24, 48 or 72 hours on a 1 km grid, in inches, as the NWS map service
-(`mapservices.weather.noaa.gov`, `obs/mrms_qpe`) renders it.
+**Show rainfall** has two views, as the NWS map services
+(`mapservices.weather.noaa.gov`) render them:
+
+- **Observed (MRMS).** The NWS Multi-Radar Multi-Sensor quantitative
+  precipitation estimate (`obs/mrms_qpe`). It is the rain of the past 1, 3,
+  6, 12, 24, 48 or 72 hours on a 1 km grid, in inches.
+- **Forecast (WPC).** The Weather Prediction Center's quantitative
+  precipitation forecast (`precip/wpc_qpf`). It is the liquid precipitation
+  expected over the next 6 hours, Day 1, or 2, 3, 5 or 7 days from Day 1, in
+  inches, issued twice a day.
+  - Each window is one layer of the service: 7, 1, 8, 9, 10 and 11, drawn
+    with the service's own symbols through its `export`.
+  - The forecast areas are smooth polygons, so they are drawn with linear
+    resampling.
+  - The key is the window's layer from the service's legend.
+  - Each view keeps its own window when you switch between them.
 
 - **Map.** Tiles come from the service's `exportImage`, 512 pixels at a time
   in Web Mercator, drawn with the service's own raster function for the
@@ -306,7 +318,8 @@ quantitative precipitation estimate. It is the rain of the past 1, 3, 6,
   exactly.
 - **Present only.** The service keeps no history. Away from the present map
   time the rainfall is held, and the dock says so.
-- **Limits.** This is a radar-only estimate, not corrected to rain gauges.
+- **Limits.** The forecast is a forecast, not a measurement. The observed
+  rain is a radar-only estimate, not corrected to rain gauges.
   It can be wrong under the melting layer, where the beam is blocked or
   overshoots, and in snow. It is an estimate of rain that fell, not a
   forecast or a measurement at a point.
