@@ -2,7 +2,7 @@ import { MAP_DEMOS } from './map-demos.mjs';
 // Presentation references only; each reused capture keeps its original scope.
 const selections = {
  weather: ['weather'], water: ['rivers'], groundwater: ['underground'],
- geology: [null, 'Lift a symbolic surface plate to read one original KGS well log. The full map retains earthquake context and Underground tools; no earthquake footage or continuous geology is claimed.'],
+ geology: [null, 'No verified earthquake footage is available. Lift a symbolic surface plate to read one original KGS well log. The full map retains earthquake context and Underground tools; no continuous geology is claimed.'],
  terrain: ['science'], ecology: ['farming', 'Aerial land-cover context; no species inventory.'],
  agriculture: ['farming'], history: ['history'], transport: ['transport'],
  engineering: ['transport', 'Bridge inventory and transport context; not engineering analysis.'],
