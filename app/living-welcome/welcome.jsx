@@ -20,7 +20,7 @@ function wake(card){
   const rects=[...cards].map(node=>node.getBoundingClientRect()),a=card.getBoundingClientRect(),ax=a.left+a.width/2,ay=a.top+a.height/2;
   rects.forEach((r,i)=>cards[i].style.setProperty('--wake',`${Math.min(180,Math.round(Math.hypot(r.left+r.width/2-ax,r.top+r.height/2-ay)*.14))}ms`));
 }
-// The overview uses the same pinned snapshot and feature builders as Aviation.
+// The overview hints at the zones using the same pinned snapshot as Aviation.
 // Weather, aircraft, temporary restrictions and UAS grids stay in the opened map.
 export function AviationGlimpse({mode,onMode,state,layersVisible}){
  const data=state?.aviation;
@@ -29,7 +29,7 @@ export function AviationGlimpse({mode,onMode,state,layersVisible}){
   <p className="welcome-aviation-legend"><span>Blue · B / D</span><span>Magenta · C / surface E</span><span>Ochre / red · special use</span></p>
   <p className="welcome-aviation-status" role="status">{!layersVisible?'Zone overlays hidden for comparison.':data?.state==='unavailable'?'Aviation reference unavailable; the basemap alone does not show these zones.':data?.state!=='ready'?'Loading the verified FAA reference…':`${data.edition.state} edition · NASR ${data.cycle}.`}</p>
   <small>Display only; not for navigation or authorization.</small>
-  <details className="welcome-aviation-notes"><summary>Source edition &amp; display limits</summary>{data?.edition&&<p>{data.edition.text} Source inventory: {data.volumes} volumes, {data.airports} airports, {data.airways} airway segments; not all are visible in this view.</p>}<small>{mode==='slice'?'Only mapped volumes intersecting 4,000 ft MSL; airport and airway references remain. ':mode==='3d'?'1× display heights above reference airport ground; not a terrain-clearance model. ':''}Not for navigation or authorization. Unshaded areas are not an all-clear; temporary restrictions and drone grids are separate.</small></details>
+  <details className="welcome-aviation-notes"><summary>Source edition &amp; display limits</summary>{data?.edition&&<p>{data.edition.text} Source inventory: {data.volumes} airspace volumes; not all are visible in this view. Only zones are previewed here; airports, airways and other tools are in the opened map.</p>}<small>{mode==='slice'?'Only mapped volumes intersecting 4,000 ft MSL. ':mode==='3d'?'1× display heights above reference airport ground; not a terrain-clearance model. ':''}Not for navigation or authorization. Unshaded areas are not an all-clear; temporary restrictions and drone grids are separate.</small></details>
  </div>;
 }
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,motionEnabled=true,onMotionChange}){
