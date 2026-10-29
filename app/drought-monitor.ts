@@ -263,6 +263,18 @@ export function countyDroughtShares(data: DroughtMap["data"], counties: FeatureC
     return Object.freeze({ geoid: shape.geoid, name: shape.name, shares: Object.freeze(shares), worst });
   });
 }
+/**
+ * The county a map click picks, from the rendered hits topmost first: the
+ * first county hit, unless an interactive feature (`interactive` names its
+ * layers) is drawn above it, which keeps its own selection.
+ */
+export function droughtCountyAtClick(hits: readonly Readonly<{ source?: unknown; layer: Readonly<{ id: string }>; properties?: Record<string, unknown> | null }>[], interactive: (layerId: string) => boolean): string | null {
+  for (const hit of hits) {
+    if (hit.source === DROUGHT_COUNTY_SOURCE_ID) { const geoid = hit.properties?.geoid; return typeof geoid === "string" && geoid ? geoid : null; }
+    if (interactive(hit.layer.id)) return null;
+  }
+  return null;
+}
 const percentOf = (value: number) => value >= 99.95 ? "all" : value < 0.05 ? "none" : `${value < 10 ? value.toFixed(1) : Math.round(value)}%`;
 /** Counties for a keyboard list: the most severe first (highest category, then the most of the county in it), each with its worst category and its share in drought. */
 export function countyDroughtList(counties: readonly CountyDrought[]): readonly Readonly<{ id: string; label: string }>[] {
