@@ -154,7 +154,7 @@ test('the Landform relief dock offers the record, with the histogram, a year, an
 test('the page hides the 30-day catalog while the record is shown, and the record leaves with its map',()=>{
  assert.match(page,/quakeLiveWasOnRef\.current = Boolean\(officialVisibilityRef\.current\["usgs-earthquakes"\]\);\s*if \(quakeLiveWasOnRef\.current\) setOfficialContextVisible\("usgs-earthquakes", false\);/);
  assert.match(page,/else if \(quakeLiveWasOnRef\.current\) \{\s*quakeLiveWasOnRef\.current = false;\s*setOfficialContextVisible\("usgs-earthquakes", true\);/);
- assert.match(page,/quakeLiveWasOnRef\.current = false;\s*setQuakeRecordOn\(false\);[\s\S]{0,240}\/\/ Each map opens on its own subject/);
+ assert.match(page,/quakeLiveWasOnRef\.current = false;\s*setQuakeRecordOn\(false\);[\s\S]{0,320}\/\/ Each map opens on its own subject/);
  assert.match(page,/if \(quakeRecordOn\) params\.set\("quakes", "record"\);/);
  assert.match(page,/renderedHits\[0\]\?\.source === EARTHQUAKE_RECORD_SOURCE_ID\) \{\s*const id = renderedHits\[0\]\.properties\?\.id;/,'a click selects the event, not the basemap beneath it');
  assert.match(page,/fetch\("\/api\/earthquake-record", \{ signal: controller\.signal \}\)/);

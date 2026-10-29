@@ -24,6 +24,10 @@ export const DROUGHT_LINE_LAYER_ID = "kfm-drought-monitor-lines";
 /** The state line, drawn over the categories as the USDM's state maps draw it; the base's own outline lies beneath them. */
 export const DROUGHT_STATE_SOURCE_ID = "kfm-drought-monitor-state";
 export const DROUGHT_STATE_LAYER_ID = "kfm-drought-monitor-state-line";
+/** County lines over the categories, as on the USDM's state maps, and the county picked in the dock. */
+export const DROUGHT_COUNTY_SOURCE_ID = "kfm-drought-monitor-counties";
+export const DROUGHT_COUNTY_LAYER_ID = "kfm-drought-monitor-county-lines";
+export const DROUGHT_COUNTY_SELECTED_LAYER_ID = "kfm-drought-monitor-county-selected";
 /** The first USDM map, valid Tuesday 4 January 2000. */
 export const USDM_FIRST_DATE = "20000104";
 
@@ -195,6 +199,76 @@ export function kansasShares(data: DroughtMap["data"]): number[] {
   return totals.map(total => all ? Math.round(total / all * 1000) / 10 : 0);
 }
 
+export type CountyDrought = Readonly<{
+  geoid: string; name: string;
+  /** Percent of the county in D0 or worse, D1 or worse … D4. */
+  shares: readonly number[];
+  /** The highest category reaching any part of the county, 0–4, or -1 for none. */
+  worst: number;
+}>;
+const COUNTY_STEP = 0.02;
+type CountyShape = { geoid: string; name: string; rings: Position[][]; south: number; north: number; weights: number[]; total: number };
+/**
+ * Each Kansas county's share in each category or worse, measured on the map
+ * at the centres of a 0.02° grid (about 2.2 by 1.8 km, some 200 points a
+ * county), weighted by area. Counties are the Census 2020 polygons the site
+ * already reads; a county without a GEOID or polygon geometry is left out.
+ */
+export function countyDroughtShares(data: DroughtMap["data"], counties: FeatureCollection): CountyDrought[] {
+  const shapes: CountyShape[] = [];
+  for (const feature of counties.features) {
+    const p = record(feature.properties), g = feature.geometry;
+    const geoid = typeof p?.geoid === "string" ? p.geoid : null;
+    if (!geoid || !g || (g.type !== "Polygon" && g.type !== "MultiPolygon")) continue;
+    const rings = (g.type === "Polygon" ? g.coordinates : g.coordinates.flat()) as Position[][];
+    const ys = rings.flat().map(point => point[1]);
+    shapes.push({ geoid, name: typeof p?.name === "string" && p.name.trim() ? p.name.trim() : geoid, rings, south: Math.min(...ys), north: Math.max(...ys), weights: [0, 0, 0, 0, 0], total: 0 });
+  }
+  if (!shapes.length) return [];
+  const categories = data.features.map(feature => ({ dm: feature.properties.dm,
+    rings: feature.geometry.type === "Polygon" ? feature.geometry.coordinates : feature.geometry.coordinates.flat() }));
+  const south = Math.min(...shapes.map(s => s.south)), north = Math.max(...shapes.map(s => s.north));
+  const x0 = -103;
+  for (let y = Math.floor(south / COUNTY_STEP) * COUNTY_STEP + COUNTY_STEP / 2; y < north; y += COUNTY_STEP) {
+    const weight = Math.cos(y * Math.PI / 180);
+    const rows = categories.map(category => ({ dm: category.dm, xs: crossings(category.rings, y) }));
+    for (const shape of shapes) {
+      if (y < shape.south || y > shape.north) continue;
+      const xs = crossings(shape.rings, y);
+      for (let i = 0; i + 1 < xs.length; i += 2) {
+        for (let k = Math.ceil((xs[i] - x0) / COUNTY_STEP - 0.5); x0 + (k + 0.5) * COUNTY_STEP < xs[i + 1]; k++) {
+          const x = x0 + (k + 0.5) * COUNTY_STEP;
+          shape.total += weight;
+          let worst = -1;
+          for (const row of rows) if (row.dm > worst && row.xs.filter(cross => cross < x).length % 2 === 1) worst = row.dm;
+          for (let c = 0; c <= worst; c++) shape.weights[c] += weight;
+        }
+      }
+    }
+  }
+  return shapes.filter(shape => shape.total > 0).map(shape => {
+    const shares = shape.weights.map(w => Math.round(w / shape.total * 1000) / 10);
+    let worst = -1;
+    for (let c = 0; c < 5; c++) if (shape.weights[c] > 0) worst = c;
+    return Object.freeze({ geoid: shape.geoid, name: shape.name, shares: Object.freeze(shares), worst });
+  });
+}
+const percentOf = (value: number) => value >= 99.95 ? "all" : value < 0.05 ? "none" : `${value < 10 ? value.toFixed(1) : Math.round(value)}%`;
+/** Counties for a keyboard list: the most severe first (highest category, then the most of the county in it), each with its worst category and its share in drought. */
+export function countyDroughtList(counties: readonly CountyDrought[]): readonly Readonly<{ id: string; label: string }>[] {
+  return [...counties].sort((a, b) => b.worst - a.worst || (b.worst >= 0 ? b.shares[b.worst] - a.shares[a.worst] : 0) || b.shares[1] - a.shares[1] || a.name.localeCompare(b.name))
+    .map(county => ({ id: county.geoid, label: county.worst < 0 ? `${county.name} · none` : `${county.name} · ${USDM_CATEGORIES[county.worst].id} on ${percentOf(county.shares[county.worst])}${county.worst >= 1 ? ` · drought on ${percentOf(county.shares[1])}` : ""}` }));
+}
+/** How many counties each category reaches (any part of the county). */
+export function countyDroughtSummary(counties: readonly CountyDrought[]): string {
+  const reach = (c: number) => counties.filter(county => county.worst >= c).length;
+  return `Counties reached: D1–D4 ${reach(1)} · D2+ ${reach(2)} · D3+ ${reach(3)} · D4 ${reach(4)} of ${counties.length} · measured on the map`;
+}
+/** One county's shares, in the order of the key. */
+export function countyDroughtReading(county: CountyDrought, date: string): string {
+  return `${county.name} County · valid ${usdmDateLabel(date)} · ${USDM_CATEGORIES.map((c, i) => `${i === 4 ? c.id : `${c.id}+`} ${percentOf(county.shares[i])}`).join(" · ")} · measured on the map`;
+}
+
 export type DroughtWeek = Readonly<{ date: string; /** Percent of Kansas in D0 or worse … D4. */ shares: readonly number[] }>;
 export type DroughtSeries = Readonly<{ weeks: readonly DroughtWeek[]; retrievedAt: string; source: string }>;
 
@@ -311,11 +385,18 @@ export function droughtKey(date: string): MapKey {
 const fillColor = ["match", ["get", "dm"], ...USDM_CATEGORIES.flatMap(c => [c.dm, c.color]), "#9aa5ad"];
 const shown = new WeakMap<MapLibreMap, DroughtMap["data"]>();
 /** Draws the map's category areas (or removes them, for null). Safe to call on every style load. */
-export function syncDroughtMonitor(map: MapLibreMap, drought: DroughtMap | null): void {
+const shownCounties = new WeakMap<MapLibreMap, FeatureCollection>();
+/**
+ * Draws the map's category areas (or removes them, for null), with the
+ * county lines over them once the counties are in hand and the picked
+ * county outlined. Safe to call on every style load.
+ */
+export function syncDroughtMonitor(map: MapLibreMap, drought: DroughtMap | null, counties: FeatureCollection | null = null, selected: string | null = null): void {
   if (!drought) {
-    for (const id of [DROUGHT_STATE_LAYER_ID, DROUGHT_LINE_LAYER_ID, DROUGHT_FILL_LAYER_ID]) if (map.getLayer(id)) map.removeLayer(id);
-    for (const id of [DROUGHT_STATE_SOURCE_ID, DROUGHT_SOURCE_ID]) if (map.getSource(id)) map.removeSource(id);
+    for (const id of [DROUGHT_STATE_LAYER_ID, DROUGHT_COUNTY_SELECTED_LAYER_ID, DROUGHT_COUNTY_LAYER_ID, DROUGHT_LINE_LAYER_ID, DROUGHT_FILL_LAYER_ID]) if (map.getLayer(id)) map.removeLayer(id);
+    for (const id of [DROUGHT_STATE_SOURCE_ID, DROUGHT_COUNTY_SOURCE_ID, DROUGHT_SOURCE_ID]) if (map.getSource(id)) map.removeSource(id);
     shown.delete(map);
+    shownCounties.delete(map);
     return;
   }
   const source = map.getSource(DROUGHT_SOURCE_ID) as GeoJSONSource | undefined;
@@ -333,4 +414,15 @@ export function syncDroughtMonitor(map: MapLibreMap, drought: DroughtMap | null)
     data: { type: "Feature", properties: {}, geometry: { type: "Polygon", coordinates: [[...KANSAS_OUTLINE, KANSAS_OUTLINE[0]] as Position[]] } } });
   if (!map.getLayer(DROUGHT_STATE_LAYER_ID)) map.addLayer({ id: DROUGHT_STATE_LAYER_ID, type: "line", source: DROUGHT_STATE_SOURCE_ID,
     layout: { "line-join": "round" }, paint: { "line-color": "#1d1a14", "line-width": ["interpolate", ["linear"], ["zoom"], 4, 1.4, 9, 2.6] as never, "line-opacity": 0.9 } }, before);
+  if (!counties) return;
+  const countySource = map.getSource(DROUGHT_COUNTY_SOURCE_ID) as GeoJSONSource | undefined;
+  if (!countySource) map.addSource(DROUGHT_COUNTY_SOURCE_ID, { type: "geojson", data: counties });
+  else if (shownCounties.get(map) !== counties) countySource.setData(counties);
+  shownCounties.set(map, counties);
+  // Under the state line, over the categories.
+  if (!map.getLayer(DROUGHT_COUNTY_LAYER_ID)) map.addLayer({ id: DROUGHT_COUNTY_LAYER_ID, type: "line", source: DROUGHT_COUNTY_SOURCE_ID,
+    layout: { "line-join": "round" }, paint: { "line-color": "#2a2418", "line-width": ["interpolate", ["linear"], ["zoom"], 5, 0.5, 9, 1.2] as never, "line-opacity": 0.6 } }, DROUGHT_STATE_LAYER_ID);
+  if (!map.getLayer(DROUGHT_COUNTY_SELECTED_LAYER_ID)) map.addLayer({ id: DROUGHT_COUNTY_SELECTED_LAYER_ID, type: "line", source: DROUGHT_COUNTY_SOURCE_ID,
+    layout: { "line-join": "round" }, paint: { "line-color": "#f7f4ea", "line-width": ["interpolate", ["linear"], ["zoom"], 5, 2.2, 9, 3.6] as never, "line-opacity": 1 } }, DROUGHT_STATE_LAYER_ID);
+  map.setFilter(DROUGHT_COUNTY_SELECTED_LAYER_ID, ["==", ["get", "geoid"], selected ?? ""] as never);
 }
