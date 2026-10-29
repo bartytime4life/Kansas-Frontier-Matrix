@@ -33,6 +33,7 @@ import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportCl
 import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
+import { RAINFALL_REFRESH_MS, RAINFALL_SOURCE_ID, RAINFALL_WINDOWS, rainfallLegendApiPath, rainfallReading, rainfallStamp, syncRainfall, validRainfallLegend, type RainfallHours, type RainfallLegend } from "./mrms-rainfall";
 import { FEMA_DEFAULT_FILTER, FEMA_RECORD_SOURCE_ID, HAZARD_FAMILIES, femaClasses, femaCountyCollection, femaCountyCounts, femaCountyDisasters, femaCountyList, femaCountyReading, femaKey, femaReading, femaSelect, femaYears, syncFemaRecord, validFemaRecord, type FemaFilter, type FemaRecord } from "./fema-record";
 import { FLOOD_GAUGE_REFRESH_MS, floodGaugeApiPath, floodGaugeList, floodGaugePage, floodGaugeSummaries, floodHydrograph, floodKey, floodNetworkSummary, floodReading, parseFloodGauge, syncFloodSelection, FLOOD_SELECTED_SOURCE_ID, type FloodGauge } from "./flood-forecast";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, recordPlots, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
@@ -1618,6 +1619,11 @@ export default function Home() {
   // so far by "day-product", and the one whose read failed.
   const [outlookDay, setOutlookDay] = useState<OutlookDay | null>(null);
   // The U.S. Drought Monitor on the Field view: the week shown ("YYYYMMDD"), or null for the newest released.
+  const [rainfallOn, setRainfallOn] = useState(false);
+  const [rainfallHours, setRainfallHours] = useState<RainfallHours>(24);
+  const [rainfallLegends, setRainfallLegends] = useState<Partial<Record<RainfallHours, RainfallLegend>>>({});
+  const [rainfallLegendFailed, setRainfallLegendFailed] = useState<RainfallHours | null>(null);
+  const [rainfallClock, setRainfallClock] = useState(() => Date.now());
   const [femaOn, setFemaOn] = useState(false);
   const [femaRecord, setFemaRecord] = useState<FemaRecord | null>(null);
   const [femaFailed, setFemaFailed] = useState(false);
@@ -4320,6 +4326,40 @@ export default function Home() {
     // The Drought Monitor is a statewide picture: a field-scale view pulls out to Kansas.
     if (on && map && map.getZoom() > 7.5) map.easeTo({ center: [-98.38, 38.5], zoom: 6.2, duration: motionDuration(1200), essential: false });
   };
+
+  // MRMS rainfall: the NWS radar estimate of the past 1–72 hours, drawn as the NWS renders it and asked for again every quarter
+  // hour while shown. It is current only, so away from the present map time it is held.
+  const rainfallLive = buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
+  const rainfallShown = rainfallOn && rainfallLive ? rainfallHours : null;
+  useEffect(() => {
+    if (rainfallShown === null) return;
+    const timer = setInterval(() => setRainfallClock(Date.now()), RAINFALL_REFRESH_MS);
+    return () => clearInterval(timer);
+  }, [rainfallShown]);
+  const rainfallTileStamp = rainfallStamp(rainfallClock);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const sync = () => { try { syncRainfall(map, rainfallShown, rainfallTileStamp); } catch { /* The style is reloading; its styledata event draws the rainfall again. */ } };
+    sync();
+    if (rainfallShown === null) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(RAINFALL_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [rainfallShown, rainfallTileStamp, styleReady]);
+  useEffect(() => {
+    if (rainfallShown === null || rainfallLegends[rainfallShown] || rainfallLegendFailed === rainfallShown) return;
+    const hours = rainfallShown, controller = new AbortController();
+    void fetch(rainfallLegendApiPath(hours), { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validRainfallLegend(value, hours)) throw new Error("Invalid MRMS legend.");
+        setRainfallLegends(legends => ({ ...legends, [hours]: value }));
+      })
+      .catch(() => { if (!controller.signal.aborted) setRainfallLegendFailed(hours); });
+    return () => controller.abort();
+  }, [rainfallShown, rainfallLegends, rainfallLegendFailed]);
 
   // The FEMA disaster record on Hazard watch: every Kansas declaration since 1953, counties shaded by how many designated them.
   // It stands in for the current hazards while shown; those it hid come back when it closes.
@@ -10038,6 +10078,7 @@ export default function Home() {
     femaHidRef.current = [];
     setFemaOn(false);
     setFemaCounty(null);
+    setRainfallOn(false);
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
     setPopulationPrismsShown(Boolean(look.overlays?.includes("population")));
     // Soil moisture belongs to the maps that offer it; it does not follow into the others.
@@ -11047,6 +11088,9 @@ export default function Home() {
               counties: femaCounts ? { list: femaCountyList(femaCounts, femaNames), picked: femaCounty,
                 reading: femaCounty && femaRecord ? femaCountyReading(femaNames.get(femaCounty) ?? femaCounty, femaCounty, femaChosen, femaFilter, femaRecord.firstYear) : null,
                 declarations: femaCounty ? femaCountyDisasters(femaChosen, femaCounty) : [] } : null } : undefined}
+            rainfall={activeCategoryMap.tools?.includes("rainfall") ? { on: rainfallOn, held: !rainfallLive, hours: rainfallHours, windows: RAINFALL_WINDOWS,
+              reading: rainfallReading(rainfallHours), legend: rainfallLegends[rainfallHours]?.items ?? null, legendFailed: rainfallLegendFailed === rainfallHours } : undefined}
+            onRainfall={on => { setRainfallOn(on); setRainfallLegendFailed(null); setRainfallClock(Date.now()); }} onRainfallHours={setRainfallHours}
             onFema={showFemaRecord} onFemaYear={year => setFemaFilter(filter => ({ ...filter, year }))} onFemaFamily={family => setFemaFilter(filter => ({ ...filter, family }))}
             onFemaEmergencies={emergencies => setFemaFilter(filter => ({ ...filter, emergencies }))} onFemaCounty={pickFemaCounty} onFemaCountyClear={() => setFemaCounty(null)}
             photoreal={activeCategoryMap.tools?.includes("photoreal") ? { on: basemap === "photoreal", landscapes: PHOTOREAL_LANDSCAPES, place: photorealPlace, depth: verticalExaggeration } : undefined}
