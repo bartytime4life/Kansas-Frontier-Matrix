@@ -5,6 +5,15 @@
 > directory preserves the original Sites mirror and its review history; its
 > historical Site checkpoints do not establish the public Node version.
 
+> **Development boundary verification — 2026-10-29:** merged PR #5560 restricts
+> Vite's default listener to loopback. The [successor content receipt](../../data/receipts/generated/site-v268-dev-loopback-boundary-20261029.json)
+> records its two mirror changes without altering the Site source identity,
+> withheld files, or pending source/overlay review. Runtime HTTP checks confirmed
+> default development and preview loopback binding and the built launcher's
+> additional identity-header rejection. Local callers and explicit host overrides
+> remain outside the transport guarantee; hosted authentication and deployment
+> were not changed or verified by these local checks.
+
 > **Repository dependency safety candidate — 2026-10-22:** the [successor receipt](../../data/receipts/generated/site-v268-next-security-overlay-20261022.json)
 > records Next.js and `eslint-config-next` 16.4.2 with an npm-regenerated lock as
 > two repository safety overlays. Local checks pass: 48 mirror regressions,

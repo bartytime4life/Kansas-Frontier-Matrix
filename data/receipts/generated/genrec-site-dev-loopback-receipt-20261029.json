@@ -1,0 +1,87 @@
+{
+  "receipt_id": "genrec-site-dev-loopback-receipt-20261029",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/README.md",
+    "tools/qa/site_mirror.py",
+    "tests/qa/test_site_mirror.py",
+    "data/receipts/generated/site-v268-dev-loopback-boundary-20261029.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/README.md": "sha256:c12b71f5c78468f13c976fcb1d5bd92a34580fcd4dae1bce653831d2b12df27f",
+    "tools/qa/site_mirror.py": "sha256:ad5347d481058e376a3bf8c311579477e3189066ad1a6064bd824718df25eaaa",
+    "tests/qa/test_site_mirror.py": "sha256:c844f964ae2244419af2995378cbfd725e68424bc3b7e9955507beb64f25a811",
+    "data/receipts/generated/site-v268-dev-loopback-boundary-20261029.json": "sha256:2375c9e23a7d37705b0227e20daf640425b89521120f217982a2a745810a3d0b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6.1",
+    "version": "gpt-6.1-sol-wm"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@36298642e845274d2d32ebf4a50fe60cd00385cf",
+      "PR #5560 head a9e1af06c5718b92a0640f73c7f4e79ec1ff6416",
+      "data/receipts/generated/site-v268-history-catalogue-hold-20261027.json",
+      "Codex Security scan de0983cb-79fc-47b7-94e8-50638dfc2ff1; original three-file diff completed with no confirmed security findings"
+    ],
+    "evidence_hashes": [
+      "sha256:d2045f07d743262f6ad18d5c904e91479f533df7f94b87631bcdb3536c95abb4"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/README.md": "CONFIRMED",
+    "tools/qa/site_mirror.py": "CONFIRMED",
+    "tests/qa/test_site_mirror.py": "CONFIRMED",
+    "data/receipts/generated/site-v268-dev-loopback-boundary-20261029.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "mirror parity and regression tests",
+      "outcome": "PASS",
+      "reason": "900 paths match; 262 withheld paths absent; 65 tests passed. Review acceptance not evaluated."
+    },
+    {
+      "gate": "water-pilot tests with locked dependencies",
+      "outcome": "PASS",
+      "reason": "366 tests passed; synthetic fixture regeneration passed without changing tracked files."
+    },
+    {
+      "gate": "application boundary and compatibility at merged PR #5560",
+      "outcome": "PASS",
+      "reason": "Build, typecheck, changed lint, 1446 Node tests; full lint zero errors77warnings;110 smoke checks79routes; actual loopback/Host/HMR/header probes. Follow-up changes no app source."
+    },
+    {
+      "gate": "independent follow-up review and exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending review of this follow-up; GitHub state is authoritative. Original #5560 independent security review completed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-governance",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "mirror-governance",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-29T17:14:39.557827+00:00",
+  "emitter": "Codex",
+  "notes": "Reconciles the two source changes already merged by #5560 as repository-only overlays. Predecessor, upstream Site identity and digests, withheld paths, review and hosted-equivalence declarations are preserved. No source admission, policy approval, deployment, release or publication. Revert only this follow-up to roll back bookkeeping, retaining the loopback fix. This receipt does not bind itself."
+}
