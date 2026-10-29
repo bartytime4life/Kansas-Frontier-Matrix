@@ -82,7 +82,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -247,6 +247,17 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    */
   population?: Readonly<{ on: boolean; groups: readonly (KansasDensityGroup & { count: number })[]; counties: number; statewide: number | null; metresPerPerson: number }>;
   onPopulation?: (on: boolean) => void;
+  /**
+   * Population change by county between the 2010 and 2020 Census counts: the
+   * statewide line, every county as a bar from largest gain to largest loss in
+   * its class colour, the same counties as a list, and the picked county.
+   */
+  populationChange?: Readonly<{ on: boolean; loading: boolean; failed: boolean; reading: string | null;
+    bars: readonly Readonly<{ id: string; name: string; percent: number; color: string }>[] | null;
+    list: readonly Readonly<{ id: string; label: string }>[]; picked: string | null; county: string | null }>;
+  onPopulationChange?: (on: boolean) => void;
+  onPopulationChangePick?: (geoid: string) => void;
+  onPopulationChangeClear?: () => void;
   /**
    * The Kansas earthquake record since 1973, for looks that offer the quakes
    * tool: whether it is shown and read, the events per year, the one year
@@ -498,6 +509,21 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           <span>{group.label}<small>{group.range}</small></span><b>{population.counties ? `${group.count} ${group.count === 1 ? "county" : "counties"}` : "…"}</b></li>)}</ul>
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
       </div>}
+      {populationChange && onPopulationChange && <>
+        <button type="button" className="category-map-dock-tool" aria-pressed={populationChange.on} onClick={() => onPopulationChange(!populationChange.on)}
+          title="Shade each county by its change in people between the 2010 and 2020 Census counts">{populationChange.on ? "Hide the 2010–2020 change" : "Show change since 2010"}</button>
+        {populationChange.on && <div className="category-map-dock-quakes">
+          <p className="category-map-dock-reading" aria-live="polite">{populationChange.loading ? "Reading the 2010 and 2020 Census counts…"
+            : populationChange.failed ? "The Census Bureau did not answer for both years; no change is shown. Try again." : populationChange.reading}</p>
+          {populationChange.bars && <PopulationChangeChart bars={populationChange.bars} picked={populationChange.picked} onPick={onPopulationChangePick} />}
+          {onPopulationChangePick && populationChange.list.length > 0 && <PickList summary={`Counties, largest gain first (${populationChange.list.length})`}
+            label="Kansas counties by percent change in people, 2010–2020, largest gain first" items={populationChange.list} selected={populationChange.picked} onPick={onPopulationChangePick} />}
+          {populationChange.county && <div className="category-map-dock-quake-event" aria-live="polite">
+            <p>{populationChange.county}</p>
+            <div><button type="button" onClick={onPopulationChangeClear} aria-label="Clear the selected county">Clear</button></div>
+          </div>}
+        </div>}
+      </>}
     </>}
     {look.tools?.includes("tornadoes") && tornadoes && onTornadoes && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={tornadoes.on} onClick={() => onTornadoes(!tornadoes.on)}
@@ -920,6 +946,34 @@ export function FemaHistory({ years, year, families, onYear }: Readonly<{ years:
   </figure>;
 }
 
+const signedShare = (p: number) => `${p > 0 ? "+" : p < 0 ? "−" : ""}${Math.abs(p).toFixed(1)}%`;
+
+/**
+ * Every county's percent change as a bar from the zero line, largest gain on
+ * the left to largest loss on the right, in its class colour: the shape of the
+ * decade at a glance. A bar picks its county; the list does the same by keyboard.
+ */
+export function PopulationChangeChart({ bars, picked, onPick }: Readonly<{ bars: readonly Readonly<{ id: string; name: string; percent: number; color: string }>[]; picked: string | null; onPick?: (geoid: string) => void }>) {
+  const up = Math.max(0, ...bars.map(bar => bar.percent)), down = Math.max(0, ...bars.map(bar => -bar.percent));
+  const width = bars.length * 4, height = 64, span = up + down || 1, zero = height * up / span;
+  const first = bars[0], last = bars[bars.length - 1];
+  const losing = bars.filter(bar => bar.percent < 0).length;
+  const at = picked === null ? -1 : bars.findIndex(bar => bar.id === picked);
+  return <figure className="category-map-dock-histogram" aria-label={`Percent change in people, 2010–2020, for ${bars.length} Kansas counties from ${first?.name} (${signedShare(first?.percent ?? 0)}) to ${last?.name} (${signedShare(last?.percent ?? 0)}); ${losing} below zero`}>
+    <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" aria-hidden="true">
+      {bars.map((bar, i) => {
+        const h = Math.abs(bar.percent) / span * height;
+        return <g key={bar.id} data-county={bar.id} onClick={() => onPick?.(bar.id)} opacity={picked === null || picked === bar.id ? 1 : 0.5}>
+          <rect x={i * 4} y={0} width={4} height={height} fill="transparent" />
+          <rect x={i * 4 + 0.4} y={bar.percent >= 0 ? zero - h : zero} width={3.2} height={Math.max(h, 0.6)} fill={bar.color} stroke={picked === bar.id ? "#111111" : "none"} strokeWidth={0.6} />
+        </g>;
+      })}
+      <line x1={0} x2={width} y1={zero} y2={zero} stroke="#5b5650" strokeWidth={0.5} />
+      {at >= 0 && <line data-picked={picked} x1={at * 4 + 2} x2={at * 4 + 2} y1={0} y2={height} stroke="#f0e6c8" strokeWidth={0.8} strokeDasharray="2 1.5" />}
+    </svg>
+    <figcaption><span>{`${first?.name} ${signedShare(first?.percent ?? 0)}`}</span><span>{`0% line · ${bars.length} counties`}</span><span>{`${last?.name} ${signedShare(last?.percent ?? 0)}`}</span></figcaption>
+  </figure>;
+}
 const SECTION_WEST = -102.05, SECTION_EAST = -94.59;
 /**
  * The record as a west–east cross-section of Kansas: each event at its
