@@ -370,6 +370,38 @@ probability outlooks for Day 1 or 2.
   drawn; a hazard chosen on Day 3 shows the categorical risk until Day 1 or 2
   is chosen. Leaving the map closes the outlook and returns it to Risk.
 
+### High wind probability regression coverage
+
+The missing 75% and 90% wind bands in PR #5536 were corrected by
+[PR #5537](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5537),
+merged as `ddafc3d1410bc7e2d23ed9ae6164f71a3e07ba38` on October 28, 2026.
+The follow-up inspection at hosted-branch source revision
+`b09a9b5fa2c62999d4c228573a69fcfbdbbecbb1` confirmed that correction.
+[NOAA's wind renderer](https://mapservices.weather.noaa.gov/vector/rest/services/outlooks/SPC_wx_outlks/MapServer/15)
+lists both bands, blue then cyan; the application's lightened colors are
+`#5f9fe0` and `#4fe3e3`.
+
+Deterministic synthetic tests in `tests/spc-outlook.test.mjs` cover each
+band through DN and LABEL-only parsing for Days 1 and 2, compact and ISO forecast
+clocks, Kansas-crossing Polygon/MultiPolygon contours, out-of-state maxima,
+polygon holes, feature ordering, client validation, evaluated MapLibre paint,
+legend agreement, intensity separation and unchanged tornado/hail ladders.
+`tests/outlook-verification.test.mjs` checks high-band report counts and
+excludes other hazards and reports outside the forecast's valid period.
+
+Run both with:
+
+```sh
+node --test tests/spc-outlook.test.mjs tests/outlook-verification.test.mjs
+```
+
+These fixtures establish behavior for those inputs. They are not a current
+Kansas forecast, a live SPC acquisition check, native GPU/browser acceptance,
+or proof of public deployment. Kansas-wide maxima retain the 0.1° sampling
+limit above: a contour narrower than that spacing can be missed. This follow-up
+adds tests and documentation only; it does not change runtime behavior or
+publish an application.
+
 ## SPC storm reports (Storm desk)
 
 The Storm desk dock's **Show SPC storm reports** draws the Storm Prediction

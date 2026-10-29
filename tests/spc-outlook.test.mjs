@@ -226,3 +226,97 @@ test('the page reads each day and product on its own, keeps a hazard through day
  assert.match(page,/setOutlookHazard\(isOutlookProduct\(restoredHazard\) \? restoredHazard : "cat"\);/);
  assert.match(page,/onOutlookProduct=\{chooseOutlookHazard\}/);
 });
+
+
+// Synthetic forecasts, never observations. Both contours cross Kansas's western
+// border; this exercises a crossing rather than just a polygon wholly in-state.
+const highWindFeature = (percent, encoding = 'DN', geometry = {type:'Polygon', coordinates:box(-103,37.2,-99,38.2)}, iso = false) => ({
+ type:'Feature', geometry,
+ properties:{LABEL:String(percent / 100), ...(encoding === 'DN' ? {DN:percent} : {}),
+  ...(iso ? {ISSUE_ISO:'2026-10-28T16:30:00+00:00',VALID_ISO:'2026-10-28T16:30:00Z',EXPIRE_ISO:'2026-10-29T12:00:00+00:00'}
+   : {ISSUE:'202610281630',VALID:'202610281630',EXPIRE:'202610291200'})},
+});
+const highWind = (features, day = 1, intensityRaw) => spc.parseSpcOutlook({type:'FeatureCollection',features},day,'2026-10-28T17:05:00.000Z','synthetic-wind','wind',intensityRaw);
+
+test('high-wind 75% and 90% survive DN and LABEL parsing on both forecast days with valid clocks',()=>{
+ for (const day of [1,2]) for (const percent of [75,90]) for (const encoding of ['DN','LABEL']) for (const iso of [false,true]) {
+  const outlook=highWind([highWindFeature(percent,encoding,undefined,iso)],day);
+  assert.deepEqual(outlook.data.features.map(f=>f.properties.category),[String(percent)],JSON.stringify({day,percent,encoding,iso}));
+  assert.equal(outlook.kansas,String(percent));
+  assert.equal(outlook.issuedAt,'2026-10-28T16:30:00.000Z');
+  assert.equal(outlook.validFrom,'2026-10-28T16:30:00.000Z');
+  assert.equal(outlook.validUntil,'2026-10-29T12:00:00.000Z');
+  assert.ok(Date.parse(outlook.issuedAt) <= Date.parse(outlook.validFrom));
+  assert.ok(Date.parse(outlook.validFrom) < Date.parse(outlook.validUntil));
+  assert.ok(Date.parse(outlook.validFrom) <= Date.parse(outlook.retrievedAt) && Date.parse(outlook.retrievedAt) < Date.parse(outlook.validUntil));
+  assert.equal(spc.validSpcOutlook(JSON.parse(JSON.stringify(outlook))),true,'both bands survive the client envelope validator');
+  assert.equal(spc.spcOutlookReading(outlook),'Wind: '+percent+'% chance within 25 miles of a point, highest in Kansas · issued Oct 28, 16:30 UTC · valid Oct 28, 16:30 UTC to Oct 29, 12:00 UTC');
+ }
+});
+
+test('high-wind Kansas maximum ignores a higher out-of-state contour and is independent of feature order',()=>{
+ const seventyFive=highWindFeature(75);
+ const ninetyElsewhere=highWindFeature(90,'DN',{type:'Polygon',coordinates:box(-92,33,-90,35)});
+ for (const features of [[ninetyElsewhere,seventyFive],[seventyFive,ninetyElsewhere]]) {
+  const outlook=highWind(features);
+  assert.deepEqual(outlook.data.features.map(f=>f.properties.category),['75','90'],'retain national contours while summarizing Kansas');
+  assert.equal(outlook.kansas,'75');
+  assert.equal(spc.outlookBandAt(outlook,-100,37.7).id,'75');
+  assert.equal(spc.outlookBandAt(outlook,-91,34).id,'90');
+  assert.match(spc.spcOutlookReading(outlook),/^Wind: 75% chance/);
+ }
+ // A band crossing the entire state has all vertices outside Kansas.
+ const ninetyCrossing=highWindFeature(90,'LABEL',{type:'MultiPolygon',coordinates:[box(-103,38.3,-93,38.7),box(-90,32,-89,33)]});
+ for (const features of [[ninetyCrossing,seventyFive],[seventyFive,ninetyCrossing]]) {
+  const outlook=highWind(features,2);
+  assert.equal(outlook.kansas,'90');
+  assert.equal(spc.outlookBandAt(outlook,-100,38.5).id,'90');
+  assert.match(spc.spcOutlookReading(outlook),/^Wind: 90% chance/);
+ }
+ const lower=highWindFeature(60,'DN',{type:'Polygon',coordinates:box(-103,36,-93,41)});
+ const hole=highWindFeature(90,'DN',{type:'Polygon',coordinates:[...box(-104,34,-90,43),...box(-103,36,-93,41)]});
+ const withHole=highWind([hole,lower]);
+ assert.equal(withHole.kansas,'60','an enclosing 90% polygon with Kansas in its hole must not raise the state maximum');
+ assert.equal(spc.outlookBandAt(withHole,-98,38).id,'60');
+});
+
+test('high-wind map paint and key agree for 75% blue and 90% cyan while intensity stays separate',async()=>{
+ const added=[];let source;const layers=[{id:'radar'},{id:'kfm-labels'}];
+ const map={getSource:()=>source,addSource:(id,spec)=>{source={spec,setData(data){this.spec.data=data;}};},getLayer:id=>layers.find(l=>l.id===id),addLayer:(spec,before)=>{added.push(spec);layers.splice(layers.findIndex(l=>l.id===before),0,spec);},getStyle:()=>({layers}),removeLayer:id=>layers.splice(layers.findIndex(l=>l.id===id),1),removeSource:()=>{source=undefined;}};
+ const cig={type:'FeatureCollection',features:[{type:'Feature',geometry:{type:'Polygon',coordinates:box(-103,37.2,-99,38.2)},properties:{LABEL:'CIG3',DN:3}}]};
+ const outlook=highWind([highWindFeature(90),highWindFeature(75)],1,cig);
+ spc.syncSpcOutlook(map,outlook);
+ assert.deepEqual(source.spec.data.features.map(f=>f.properties.category),['75','90','CIG3']);
+ assert.equal(outlook.kansas,'90');assert.equal(outlook.intensity,'CIG3');
+ assert.match(spc.spcOutlookReading(outlook),/90% chance.*intensity level 3 of 3 reaches Kansas/);
+ const key=spc.spcOutlookKey(1,'wind'), line=layers.find(l=>l.id===spc.SPC_OUTLOOK_LAYER_ID), intensityLine=layers.find(l=>l.id===spc.SPC_INTENSITY_LAYER_ID);
+ const {validateStyleMin,expression}=await import('@maplibre/maplibre-gl-style-spec');
+ assert.deepEqual(validateStyleMin({version:8,sources:{[spc.SPC_OUTLOOK_SOURCE_ID]:{type:'geojson',data:outlook.data}},layers:[line,intensityLine]}).map(e=>e.message),[]);
+ const paint=expression.createExpression(line.paint['line-color'], 'layers[0].paint.line-color');
+ assert.equal(paint.result,'success');
+ for (const [id,color] of [['75','#5f9fe0'],['90','#4fe3e3']]) {
+  assert.equal(paint.value.evaluate({zoom:5},{type:3,properties:{category:id}}),color,'evaluate actual MapLibre paint for '+id);
+  assert.equal(key.items.find(i=>i.label===id+'%').color,color);
+ }
+ assert.deepEqual(key.items.slice(0,7).map(i=>i.label),['5%','15%','30%','45%','60%','75%','90%']);
+ assert.ok(key.items.slice(7).every(i=>i.dashed&&i.color===spc.SPC_INTENSITY_COLOR));
+ assert.match(key.note,/forecast probability/);assert.match(key.note,/Not an observation or a warning/);
+ assert.deepEqual(intensityLine.paint['line-dasharray'],[2.5,1.8]);
+ assert.deepEqual(layers.map(l=>l.id),['radar',spc.SPC_OUTLOOK_LAYER_ID,spc.SPC_INTENSITY_LAYER_ID,'kfm-labels']);
+ // A product switch must replace the extended wind scale with hail's scale.
+ const hail=spc.parseSpcOutlook({type:'FeatureCollection',features:[highWindFeature(60)]},1,outlook.retrievedAt,'synthetic-hail','hail');
+ spc.syncSpcOutlook(map,hail);
+ assert.equal(added.at(-2).paint['line-color'].includes('90'),false);
+ assert.equal(source.spec.data,hail.data);
+});
+
+test('high-wind additions preserve tornado and hail ladders and reject their unsupported 75% and 90%',()=>{
+ assert.deepEqual(spc.SPC_PROBABILITIES.torn.map(b=>b.id),['2','5','10','15','30','45','60']);
+ assert.deepEqual(spc.SPC_PROBABILITIES.hail.map(b=>b.id),['5','15','30','45','60']);
+ for (const product of ['torn','hail']) {
+  const outlook=spc.parseSpcOutlook({type:'FeatureCollection',features:[highWindFeature(60),highWindFeature(75),highWindFeature(90)]},1,'2026-10-28T17:05:00.000Z','synthetic-'+product,product);
+  assert.deepEqual(outlook.data.features.map(f=>f.properties.category),['60']);
+  assert.equal(outlook.kansas,'60');
+  assert.equal(spc.validSpcOutlook({...outlook,kansas:'90'}),false);
+ }
+});
