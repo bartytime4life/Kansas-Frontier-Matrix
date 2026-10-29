@@ -244,9 +244,12 @@ Owner steps, in order, before earthquakes publish:
    `loadConfig()`/`plan` alone do not detect this cross-field mismatch. Keep
    the one-attempt/8 MiB default budget unless separately qualified: all three
    sources can publish over successive eligible ticks. New installs still
-   default to two sources and `publish:false`. Verify three distinct committed
-   releases, public readback, old-feed continuity and resource acceptance in the
-   authorized environment before considering public earthquake activation.
+   default to two sources and `publish:false`. When the existing config has
+   `publish:true`, adding earthquakes is itself publication activation: obtain
+   explicit activation authority before applying it. Qualify all three signed
+   releases in an isolated environment without public exposure first. After
+   the authorized cutover, verify three distinct committed releases, public
+   readback, old-feed continuity and resource acceptance.
 
 Profile replacement does not rewrite an already saved transfer. A job's
 `transfer_path` binds its immutable approval and recipe. Such a held job may
