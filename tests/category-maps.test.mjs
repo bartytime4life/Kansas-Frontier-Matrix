@@ -37,7 +37,7 @@ test('aviation and government are categories with their own specialized basemaps
  assert.match(aviation.limitation,/not for navigation/i);
  assert.equal(government.resources[0].href,'/civic');
  assert.equal(maps.CATEGORY_MAPS.aviation.basemap,'aviation-chart');assert.equal(maps.CATEGORY_MAPS.aviation.scene,'terrain');
- assert.equal(maps.CATEGORY_MAPS.government.basemap,'civic');assert.deepEqual([...maps.CATEGORY_MAPS.government.starters],['census-counties']);
+ assert.equal(maps.CATEGORY_MAPS.government.basemap,'civic');assert.deepEqual([...maps.CATEGORY_MAPS.government.starters],['census-congress-119']);
  assert.ok(topics.officialSourceTopics('census-counties').includes('government'));
  // A lede promises only what the map draws: county lines come from the civic base or the Census starter.
  for(const [id,look] of Object.entries(maps.CATEGORY_MAPS))if(look.basemap!=='civic'&&!look.starters.includes('census-counties'))assert.doesNotMatch(look.lede,/count(y|ies)/i,`${id}: no county lines on this map`);

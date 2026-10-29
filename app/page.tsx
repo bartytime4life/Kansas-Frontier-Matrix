@@ -1,4 +1,5 @@
 "use client";
+import { CIVIC_ID, CIVIC_LIMITATION, CIVIC_SOURCE } from "./civic-districts";
 import { DEFLOCK_LIMITATION } from "./deflock";
 import { TransportHistoryControl } from "./transport-history-control";
 import "./transport-history.css";
@@ -916,6 +917,7 @@ const numberContextProperty = (properties: Record<string, unknown>, key: string)
 };
 
 const officialContextSummary = (source: OfficialContextId, title: string, properties: Record<string, unknown>) => {
+  if (source === CIVIC_ID) return `${title}. ${CIVIC_LIMITATION}`;
   if (source === "deflock-alpr") return `${title}. ${DEFLOCK_LIMITATION}`;
   if (source.startsWith("kgs-")) return source === "kgs-monitoring-wells" ? `${title}: 2026 monitoring location. Open the KGS well record for dated observations; no water-level measurement is attached to this point.` : `${title} feet · regional 2022–2024 classified estimate. Unclassified areas are blank. This is not a present measurement or a groundwater-flow calculation.`;
   if (source === "nifc-fire-reports") {
@@ -985,6 +987,7 @@ const officialContextSummary = (source: OfficialContextId, title: string, proper
 };
 
 const officialContextTime = (source: OfficialContextId, properties: Record<string, unknown>, fallback: string) => {
+  if (source === CIVIC_ID) return "Boundary vintage: January 1, 2025 · 119th Congress (2025–2027). Retrieval is not a boundary-change date.";
   if (source === "deflock-alpr") return `OSM database snapshot: ${stringContextProperty(properties, "upstreamUpdatedAt") ?? "unknown"}; camera observation and installation dates unknown.`;
   if (source === "census-counties") return "2020 Census geography, population and housing baseline";
   if (source === "usgs-streamflow" || source === "usgs-earthquakes") return stringContextProperty(properties, "observedAt") ?? fallback;
@@ -1033,7 +1036,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     title: officialSource.title,
     description: officialSource.boundary,
     domain: officialSource.domain,
-    category: officialSource.id === "deflock-alpr" ? "Roads, rail & movement" : officialSource.id === "census-counties" ? "Reference boundaries & locators"
+    category: officialSource.id === CIVIC_ID ? "Reference boundaries & locators" : officialSource.id === "deflock-alpr" ? "Roads, rail & movement" : officialSource.id === "census-counties" ? "Reference boundaries & locators"
       : ["kgs-monitoring-wells", "kgs-water-table", "kgs-depth-to-water", "kgs-saturated-thickness", "usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"].includes(officialSource.id) ? "Hydrology & water"
         : officialSource.id === "usgs-3dep-hillshade" || officialSource.id === "usgs-earthquakes" ? "Geology & landforms"
           : "Weather & hazards",
@@ -10602,6 +10605,18 @@ export default function Home() {
             radar={{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME }}
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             layerVisibility={officialVisibility} onLayer={setOfficialContextVisible}
+            civic={activeCategoryMap.topic === "government" ? { visible: Boolean(officialVisibility[CIVIC_ID]), state: officialVisibility[CIVIC_ID] && !effectiveOfficialVisibility[CIVIC_ID] ? "held" : officialStates[CIVIC_ID],
+              items: effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => ({ id: String(feature.id), label: String(feature.properties?.name) })) : [] } : undefined}
+            onCivicPick={(id, returnElement) => {
+              if (!effectiveOfficialVisibility[CIVIC_ID] || officialStates[CIVIC_ID] !== "ready") return;
+              const feature = officialPayloads[CIVIC_ID]?.data.features.find(item => String(item.id) === id);
+              const geometry = feature && countySearchGeometry(feature);
+              if (!feature || !geometry) return;
+              const context = buildBasemapContext({ ...feature, source: CIVIC_SOURCE.sourceId }, ...geometry.focus);
+              if (!context) return;
+              openSelection(context, returnElement);
+              mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
+            }}
             keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}

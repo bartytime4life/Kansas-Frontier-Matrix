@@ -24,6 +24,7 @@ export type SiteConnectionRecord = Readonly<{
 }>;
 
 const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
+  "census-congress-119": ["app/civic-districts.ts", "app/api/live-context/civic-districts.ts", "app/api/live-context/route.ts", "app/live-context.ts", "app/page.tsx"],
   "deflock-alpr": ["app/deflock.ts", "app/api/live-context/deflock.ts", "app/api/live-context/route.ts", "app/live-context.ts", "app/page.tsx"],
 "kgs-aquifer-alluvial": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
 "kgs-aquifer-dakota": ["app/aquifer-layers.ts", "app/live-context.ts", "app/page.tsx"],
@@ -78,6 +79,7 @@ const CONNECTION_CODE_PATHS: Record<OfficialContextId, readonly string[]> = {
 };
 
 const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>> = {
+  "census-congress-119": "census-congress-119",
   "deflock-alpr": "deflock-alpr",
   "fema-disaster-declarations": "fema-disaster-declarations",
   "census-counties": "census-counties",
@@ -92,6 +94,7 @@ const CONNECTION_FEEDS: Partial<Record<OfficialContextId, OfficialContextFeedId>
 };
 
 const CONNECTION_ACTIONS: Record<OfficialContextId, readonly SiteActionId[]> = {
+  "census-congress-119": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
   "deflock-alpr": ["toggle-context-connection", "refresh-visible-context", "set-context-opacity", "open-provider-source"],
 "kgs-aquifer-alluvial": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
 "kgs-aquifer-dakota": ["toggle-context-connection", "set-context-opacity", "open-provider-source"],
