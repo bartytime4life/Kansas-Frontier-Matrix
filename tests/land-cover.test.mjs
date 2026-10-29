@@ -6,6 +6,9 @@ import {componentHarness, findNode} from './component-harness.mjs';
 
 const compile=async(path,modules={})=>{const exports={};new Function('exports','require',ts.transpileModule(await readFile(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(exports,name=>{if(name in modules)return modules[name];throw new Error(`Unexpected import: ${name}`);});return exports;};
 const lc=await compile('app/land-cover.ts');
+const rain=await compile('app/mrms-rainfall.ts');
+const dm=await compile('app/drought-monitor.ts',{'./kansas-orientation':await compile('app/kansas-orientation.ts')});
+const perf=await readFile('app/map-performance.ts','utf8');
 const maps=await compile('app/category-maps.ts');
 const page=await readFile('app/page.tsx','utf8');
 const plain=v=>JSON.parse(JSON.stringify(v));
@@ -72,6 +75,25 @@ test('the raster sits over the base and other rasters, under the overlays, and i
  assert.equal(layers[2].spec.paint['raster-resampling'],'nearest','30 m cells stay sharp');
  lc.syncLandCover(map,false);
  assert.deepEqual(layers.map(l=>l.id),['background','external-usgs-3dep-hillshade','external-usgs-wbd-watersheds-line','kfm-roads']);assert.deepEqual(Object.keys(sources),[]);
+});
+
+test('the Drought Monitor and other kfm- overlays stay above land cover and rainfall, whichever is turned on first',()=>{
+ assert.ok(!lc.LAND_COVER_LAYER_ID.startsWith('kfm-')&&!rain.RAINFALL_LAYER_ID.startsWith('kfm-'),'overlays anchor under the first kfm- layer; these rasters must not be it');
+ const fakeMap=()=>{const layers=[{id:'background',type:'background'},{id:'external-usgs-wbd-watersheds-line',type:'line'},{id:'kfm-roads',type:'line'}],sources={};
+  return {layers,getSource:id=>sources[id]&&{setData(){}},addSource:(id,s)=>{sources[id]=s;},removeSource:id=>{delete sources[id];},setFilter(){},
+   getLayer:id=>layers.find(l=>l.id===id),removeLayer:id=>{layers.splice(layers.findIndex(l=>l.id===id),1);},
+   addLayer:(spec,before)=>{const i=before?layers.findIndex(l=>l.id===before):-1;layers.splice(i<0?layers.length:i,0,{id:spec.id,type:spec.type,spec});},getStyle:()=>({layers})};};
+ const drought={date:'20261020',data:{type:'FeatureCollection',features:[]}};
+ const below=(map,a,b)=>map.layers.findIndex(l=>l.id===a)<map.layers.findIndex(l=>l.id===b);
+ for(const order of ['land cover first','drought first']){
+  const map=fakeMap();
+  if(order==='land cover first'){lc.syncLandCover(map,true);rain.syncRainfall(map,{kind:'observed',hours:24},'1');dm.syncDroughtMonitor(map,drought);}
+  else{dm.syncDroughtMonitor(map,drought);lc.syncLandCover(map,true);rain.syncRainfall(map,{kind:'observed',hours:24},'1');}
+  assert.ok(below(map,lc.LAND_COVER_LAYER_ID,dm.DROUGHT_FILL_LAYER_ID),`${order}: land cover under the drought fill`);
+  assert.ok(below(map,rain.RAINFALL_LAYER_ID,dm.DROUGHT_FILL_LAYER_ID),`${order}: rainfall under the drought fill`);
+  assert.ok(below(map,dm.DROUGHT_STATE_LAYER_ID,'kfm-roads'));
+ }
+ assert.match(perf,/"tool-mrms-rainfall",\s*"tool-nlcd-land-cover",/,'a failed rainfall or land-cover tile does not fail the map');
 });
 
 test('the dock offers land cover on Landscape imagery and the Field view; the page reads the class on each click and closes it with its map',async()=>{

@@ -84,8 +84,9 @@ export function rainfallReading(view: RainfallView): string {
   return `Rain in the past ${rainfallWindowLabel(view.hours)}, in inches, from the NWS MRMS radar estimate on a 1 km grid · the latest hourly update · radar-only, not corrected to rain gauges`;
 }
 
-export const RAINFALL_SOURCE_ID = "kfm-mrms-rainfall";
-export const RAINFALL_LAYER_ID = "kfm-mrms-rainfall-raster";
+// Not "kfm-": other overlays insert themselves under the first kfm- layer, and must stay above this raster.
+export const RAINFALL_SOURCE_ID = "tool-mrms-rainfall";
+export const RAINFALL_LAYER_ID = "tool-mrms-rainfall-raster";
 const shown = new WeakMap<MapLibreMap, string>();
 
 /** The rendered rainfall raster (or nothing, for null), over the base and other rasters, under every overlay. */
