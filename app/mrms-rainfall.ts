@@ -64,7 +64,7 @@ export const RAINFALL_SOURCE_ID = "kfm-mrms-rainfall";
 export const RAINFALL_LAYER_ID = "kfm-mrms-rainfall-raster";
 const shown = new WeakMap<MapLibreMap, string>();
 
-/** The rendered rainfall raster (or nothing, for null), under the site's own overlays and labels. */
+/** The rendered rainfall raster (or nothing, for null), over the base and other rasters, under every overlay. */
 export function syncRainfall(map: MapLibreMap, hours: RainfallHours | null, stamp: string): void {
   const url = hours ? rainfallTileUrl(hours, stamp) : null;
   if (!url || shown.get(map) !== url) {
@@ -78,7 +78,9 @@ export function syncRainfall(map: MapLibreMap, hours: RainfallHours | null, stam
       attribution: "NWS MRMS QPE · NOAA mapservices" } as never);
     shown.set(map, url);
   }
-  const before = map.getStyle().layers?.find(layer => layer.id.startsWith("kfm-") && layer.id !== "kfm-background" && !layer.id.startsWith(RAINFALL_SOURCE_ID))?.id;
+  // Over the base and other rasters, under every overlay drawn on top of them (gauges, alerts, the site's own lines and labels).
+  const before = map.getStyle().layers?.find(layer => (layer.id.startsWith("kfm-") || layer.id.startsWith("external-")) && layer.id !== "kfm-background"
+    && !layer.id.startsWith(RAINFALL_SOURCE_ID) && layer.type !== "raster" && layer.type !== "hillshade" && layer.type !== "background")?.id;
   if (!map.getLayer(RAINFALL_LAYER_ID)) map.addLayer({ id: RAINFALL_LAYER_ID, type: "raster", source: RAINFALL_SOURCE_ID,
     paint: { "raster-opacity": 0.82, "raster-resampling": "nearest", "raster-fade-duration": 0 } }, before);
 }

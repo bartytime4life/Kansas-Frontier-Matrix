@@ -66,20 +66,22 @@ test('the legend route checks the window, reads the service once a day, and fail
 });
 
 test('the raster sits under the site\'s overlays, is replaced when the window or stamp changes, and is removed',()=>{
- const layers=[{id:'background'},{id:'external-usgs-streamflow-points'},{id:'kfm-roads'}],sources={};
+ const layers=[{id:'background',type:'background'},{id:'external-usgs-3dep-hillshade',type:'raster'},{id:'external-usgs-streamflow-points',type:'circle'},{id:'kfm-roads',type:'line'}],sources={};
  const map={getSource:id=>sources[id],addSource:(id,s)=>{sources[id]=s;},removeSource:id=>{delete sources[id];},
   getLayer:id=>layers.find(l=>l.id===id),removeLayer:id=>{layers.splice(layers.findIndex(l=>l.id===id),1);},
-  addLayer:(spec,before)=>{const i=before?layers.findIndex(l=>l.id===before):-1;layers.splice(i<0?layers.length:i,0,{id:spec.id,spec});},
+  addLayer:(spec,before)=>{const i=before?layers.findIndex(l=>l.id===before):-1;layers.splice(i<0?layers.length:i,0,{id:spec.id,type:spec.type,spec});},
   getStyle:()=>({layers})};
  rain.syncRainfall(map,24,'1');
- assert.deepEqual(layers.map(l=>l.id),['background','external-usgs-streamflow-points',rain.RAINFALL_LAYER_ID,'kfm-roads']);
+ assert.deepEqual(layers.map(l=>l.id),['background','external-usgs-3dep-hillshade',rain.RAINFALL_LAYER_ID,'external-usgs-streamflow-points','kfm-roads'],'over the hillshade, under the gauges');
+ rain.syncRainfall(map,24,'2');
+ assert.equal(layers.findIndex(l=>l.id===rain.RAINFALL_LAYER_ID),2,'a quarter-hour refresh keeps it under the gauges');
  assert.equal(sources[rain.RAINFALL_SOURCE_ID].type,'raster');assert.equal(sources[rain.RAINFALL_SOURCE_ID].tileSize,512);
- assert.deepEqual(plain(sources[rain.RAINFALL_SOURCE_ID].tiles),[rain.rainfallTileUrl(24,'1')]);
- assert.equal(layers[2].spec.paint['raster-resampling'],'nearest','the 1 km cells stay sharp');
- rain.syncRainfall(map,24,'1');assert.equal(layers.filter(l=>l.id===rain.RAINFALL_LAYER_ID).length,1,'idempotent');
+ assert.deepEqual(plain(sources[rain.RAINFALL_SOURCE_ID].tiles),[rain.rainfallTileUrl(24,'2')],'the refresh asks for the new stamp');
+ assert.equal(layers.find(l=>l.id===rain.RAINFALL_LAYER_ID).spec.paint['raster-resampling'],'nearest','the 1 km cells stay sharp');
+ rain.syncRainfall(map,24,'2');assert.equal(layers.filter(l=>l.id===rain.RAINFALL_LAYER_ID).length,1,'idempotent');
  rain.syncRainfall(map,72,'2');assert.deepEqual(plain(sources[rain.RAINFALL_SOURCE_ID].tiles),[rain.rainfallTileUrl(72,'2')]);
  rain.syncRainfall(map,null,'2');
- assert.deepEqual(layers.map(l=>l.id),['background','external-usgs-streamflow-points','kfm-roads']);assert.deepEqual(Object.keys(sources),[]);
+ assert.deepEqual(layers.map(l=>l.id),['background','external-usgs-3dep-hillshade','external-usgs-streamflow-points','kfm-roads']);assert.deepEqual(Object.keys(sources),[]);
 });
 
 test('the dock offers rainfall on the River network, Field view and Storm desk: windows, reading and the NWS key',async()=>{
