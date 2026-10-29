@@ -78,7 +78,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -195,6 +195,21 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
   soil?: Readonly<{ on: boolean; depth: "surface" | "root"; reading: string; legendUrl: string }>;
   onSoil?: (on: boolean) => void;
   onSoilDepth?: (depth: "surface" | "root") => void;
+  /**
+   * The U.S. Drought Monitor, for looks that offer the drought tool: the week
+   * shown (its label, and the weeks before and after it, `next` null at the
+   * newest), what it says for Kansas, the categories in the colours drawn,
+   * and Kansas's weekly shares since 2000 when the USDM statistics answered.
+   */
+  drought?: Readonly<{
+    on: boolean; loading: boolean; failed: boolean; reading: string | null; url: string;
+    date: string | null; label: string | null; previous: string | null; next: string | null; newest: boolean;
+    categories: readonly Readonly<{ id: string; name: string; color: string }>[];
+    weeks: readonly DroughtChartWeek[] | null; seriesFailed: boolean;
+  }>;
+  onDrought?: (on: boolean) => void;
+  /** A week to show ("YYYYMMDD"), or null for the newest. */
+  onDroughtWeek?: (date: string | null) => void;
   /**
    * The High Plains aquifer view, for looks that offer the aquifer tool: which
    * KGS map is drawn (or none), and that map's classes in feet, in order.
@@ -424,6 +439,28 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
         </div>}
       </div>}
     </>}
+    {look.tools?.includes("drought") && drought && onDrought && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={drought.on} onClick={() => onDrought(!drought.on)}
+        title="The weekly U.S. Drought Monitor over Kansas, D0 abnormally dry to D4 exceptional drought, with Kansas's share in each since 2000">{drought.on ? "Hide the Drought Monitor" : "Show the Drought Monitor"}</button>
+      {drought.on && <div className="category-map-dock-drought">
+        {drought.weeks && drought.weeks.length > 1 && <DroughtChart weeks={drought.weeks} date={drought.date} categories={drought.categories} onWeek={onDroughtWeek} />}
+        {drought.weeks && drought.weeks.length > 1 && (() => {
+          const weeks = drought.weeks, index = drought.date ? weeks.findIndex(week => week.date === drought.date) : weeks.length - 1;
+          return <div className="category-map-dock-range"><span id="category-map-dock-drought-week">Week</span>
+            <input type="range" min={0} max={weeks.length - 1} step={1} value={index < 0 ? weeks.length - 1 : index} aria-labelledby="category-map-dock-drought-week"
+              aria-valuetext={drought.label ?? weeks[weeks.length - 1].label} onChange={event => onDroughtWeek?.(Number(event.target.value) === weeks.length - 1 ? null : weeks[Number(event.target.value)].date)} />
+          </div>;
+        })()}
+        <div className="category-map-dock-modes category-map-dock-drought-steps" role="group" aria-label="Drought Monitor week">
+          <button type="button" aria-label="Week before" disabled={!drought.previous} onClick={() => drought.previous && onDroughtWeek?.(drought.previous)}>◀ Week</button>
+          <button type="button" aria-pressed={drought.newest} onClick={() => onDroughtWeek?.(null)}>Newest</button>
+          <button type="button" aria-label="Week after" disabled={!drought.next} onClick={() => drought.next && onDroughtWeek?.(drought.next)}>Week ▶</button>
+        </div>
+        <p className="category-map-dock-reading" aria-live="polite">{drought.failed ? <>The Drought Monitor did not answer for this week. <a href={drought.url} target="_blank" rel="noreferrer">USDM ↗</a></>
+          : drought.loading ? `Reading the Drought Monitor${drought.label ? ` for ${drought.label}` : ""}…` : drought.reading}</p>
+        {drought.seriesFailed && <p className="category-map-dock-scale-note">The USDM statistics did not answer; the shares are measured on the map.</p>}
+      </div>}
+    </>}
     {look.tools?.includes("aquifer") && aquifer && onAquiferView && <>
       <div className="category-map-dock-modes" role="group" aria-label="Aquifer map">
         {AQUIFER_VIEWS.map(([view, label, title]) => <button key={view} type="button" aria-pressed={aquifer.view === view} title={title} onClick={() => onAquiferView(view)}>{label}</button>)}
@@ -490,6 +527,34 @@ export function quakeReading(quakes: Pick<QuakeDockState, "loading" | "failed" |
  * colour key. A bar selects its year; the select beside it does the same from
  * the keyboard.
  */
+export type DroughtChartWeek = Readonly<{ date: string; label: string; /** Percent of Kansas in D0 or worse … D4. */ shares: readonly number[] }>;
+/**
+ * Kansas's weekly share of area in each Drought Monitor category or worse,
+ * drawn as the USDM draws its time series: each category's area over the
+ * milder ones, 0–100% of the state. A click picks the week under it.
+ */
+export function DroughtChart({ weeks, date, categories, onWeek }: Readonly<{ weeks: readonly DroughtChartWeek[]; date: string | null; categories: readonly Readonly<{ id: string; color: string }>[]; onWeek?: (date: string | null) => void }>) {
+  const height = 50, last = weeks.length - 1;
+  const y = (share: number) => (height - share / 100 * height).toFixed(2);
+  const index = date ? weeks.findIndex(week => week.date === date) : last;
+  let peak = weeks[0];
+  for (const week of weeks) if (week.shares[1] > peak.shares[1]) peak = week;
+  const first = weeks[0].date.slice(0, 4), end = weeks[last].date.slice(0, 4);
+  return <figure className="category-map-dock-drought-chart" aria-label={`Share of Kansas in each Drought Monitor category, weekly, ${first}–${end}; drought (D1–D4) peaked at ${Math.round(peak.shares[1])}% in the week of ${peak.label}`}>
+    <svg viewBox={`0 0 ${Math.max(1, last)} ${height}`} preserveAspectRatio="none" aria-hidden="true"
+      onClick={event => {
+        const box = event.currentTarget.getBoundingClientRect();
+        const i = Math.min(last, Math.max(0, Math.round((event.clientX - box.left) / Math.max(1, box.width) * last)));
+        onWeek?.(i === last ? null : weeks[i].date);
+      }}>
+      {categories.map((category, k) => <path key={category.id} fill={category.color} d={`M0,${height} ${weeks.map((week, i) => `L${i},${y(week.shares[k])}`).join(" ")} L${last},${height} Z`} />)}
+      {[25, 50, 75].map(share => <line key={share} x1={0} x2={last} y1={y(share)} y2={y(share)} stroke="#e6eff2" strokeOpacity={0.25} strokeWidth={0.6} vectorEffect="non-scaling-stroke" />)}
+      {index >= 0 && <line x1={index} x2={index} y1={0} y2={height} stroke="#e6eff2" strokeWidth={1.4} vectorEffect="non-scaling-stroke" />}
+    </svg>
+    <figcaption><span>{first}</span><span>% of Kansas · gridlines 25, 50, 75</span><span>{end}</span></figcaption>
+  </figure>;
+}
+
 function QuakeHistogram({ counts, year, onYear }: Readonly<{ counts: readonly (YearCount & { color: string })[]; year: number | null; onYear?: (year: number | null) => void }>) {
   const max = Math.max(1, ...counts.map(entry => entry.count));
   const width = counts.length * 4, height = 44;

@@ -30,6 +30,7 @@ import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, wi
 import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
 import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
+import { DROUGHT_SOURCE_ID, USDM_CATEGORIES, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
@@ -1601,6 +1602,14 @@ export default function Home() {
   // product chosen (categorical, or a hazard's probabilities), the outlooks read
   // so far by "day-product", and the one whose read failed.
   const [outlookDay, setOutlookDay] = useState<OutlookDay | null>(null);
+  // The U.S. Drought Monitor on the Field view: the week shown ("YYYYMMDD"), or null for the newest released.
+  const [droughtOn, setDroughtOn] = useState(false);
+  const [droughtWeek, setDroughtWeek] = useState<string | null>(null);
+  const [droughtMaps, setDroughtMaps] = useState<Partial<Record<string, DroughtMap>>>({});
+  const [droughtFailed, setDroughtFailed] = useState<string | null>(null);
+  const [droughtSeries, setDroughtSeries] = useState<DroughtSeries | null>(null);
+  const [droughtSeriesFailed, setDroughtSeriesFailed] = useState(false);
+  const lastDroughtRef = useRef<DroughtMap | null>(null);
   const [outlookHazard, setOutlookHazard] = useState<OutlookProduct>("cat");
   const [outlooks, setOutlooks] = useState<Partial<Record<string, SpcOutlook>>>({});
   const [outlookFailed, setOutlookFailed] = useState<string | null>(null);
@@ -2761,6 +2770,7 @@ export default function Home() {
     if (outlookDay) params.set("outlook", String(outlookDay));
     if (outlookDay && outlookHazard !== "cat") params.set("outlookHazard", outlookHazard);
     if (reportsDay) params.set("reports", reportsDay);
+    if (droughtOn) params.set("drought", droughtWeek ?? "newest");
     params.set("sunDay", daylightDay);
     params.set("sunThrough", daylightThroughDay);
     params.set("sunAt", new Date(daylightInstant).toISOString());
@@ -2815,7 +2825,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, droughtOn, droughtWeek, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -4097,6 +4107,75 @@ export default function Home() {
     return () => { map.off("styledata", restore); };
   }, [shownOutlook, styleReady]);
 
+  // Kansas's weekly drought shares since 2000 are read once, when the Drought Monitor is first shown.
+  useEffect(() => {
+    if (!droughtOn || droughtSeries || droughtSeriesFailed) return;
+    const controller = new AbortController();
+    void fetch("/api/drought-series", { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validDroughtSeries(value)) throw new Error("Invalid Drought Monitor statistics.");
+        setDroughtSeries(value);
+      })
+      .catch(() => { if (!controller.signal.aborted) setDroughtSeriesFailed(true); });
+    return () => controller.abort();
+  }, [droughtOn, droughtSeries, droughtSeriesFailed]);
+  const droughtId = droughtOn ? droughtWeek ?? "newest" : null;
+  useEffect(() => {
+    if (!droughtId || droughtMaps[droughtId] || droughtFailed === droughtId) return;
+    const controller = new AbortController();
+    // A dragged week slider settles before its map is read.
+    const timer = setTimeout(() => {
+      void fetch(`/api/drought-monitor${droughtWeek ? `?date=${droughtWeek}` : ""}`, { signal: controller.signal })
+        .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+        .then(value => {
+          if (controller.signal.aborted) return;
+          if (!validDroughtMap(value) || (droughtWeek !== null && value.date !== droughtWeek)) throw new Error("Invalid Drought Monitor map.");
+          // A dozen weeks are kept for stepping back and forth; older ones are read again.
+          setDroughtMaps(current => {
+            const next: Partial<Record<string, DroughtMap>> = { ...current, [droughtId]: value };
+            const ids = Object.keys(next).filter(id => id !== "newest");
+            for (const id of ids.slice(0, Math.max(0, ids.length - 12))) delete next[id];
+            return next;
+          });
+          if (droughtWeek === null) announce(`U.S. Drought Monitor on the map: ${droughtReading(value, null)}`);
+        })
+        .catch(() => { if (!controller.signal.aborted) setDroughtFailed(droughtId); });
+    }, droughtWeek ? 350 : 0);
+    return () => { clearTimeout(timer); controller.abort(); };
+  }, [droughtId, droughtWeek, droughtMaps, droughtFailed, announce]);
+  // While the next week loads, the last one drawn stays on the map, and its key with it.
+  const droughtLoaded = droughtId ? droughtMaps[droughtId] ?? null : null;
+  if (droughtLoaded) lastDroughtRef.current = droughtLoaded;
+  else if (!droughtId || droughtFailed === droughtId) lastDroughtRef.current = null;
+  const shownDrought = droughtId ? droughtLoaded ?? lastDroughtRef.current : null;
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const sync = () => {
+      try { syncDroughtMonitor(map, shownDrought); }
+      catch { /* The style is reloading; its styledata event draws the map again. */ }
+    };
+    sync();
+    if (!shownDrought) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(DROUGHT_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [shownDrought, styleReady]);
+  const droughtNewest = droughtMaps.newest?.date ?? droughtSeries?.weeks.at(-1)?.date ?? null;
+  const droughtDate = droughtWeek ?? droughtMaps.newest?.date ?? null;
+  const droughtChartWeeks = useMemo(() => droughtSeries?.weeks.map(week => ({ date: week.date, label: usdmDateLabel(week.date), shares: week.shares })) ?? null, [droughtSeries]);
+  const chooseDroughtWeek = (date: string | null) => { setDroughtWeek(date && date !== droughtNewest ? date : null); setDroughtFailed(null); };
+  const showDrought = (on: boolean) => {
+    setDroughtOn(on);
+    setDroughtWeek(null);
+    setDroughtFailed(null);
+    const map = mapRef.current;
+    // The Drought Monitor is a statewide picture: a field-scale view pulls out to Kansas.
+    if (on && map && map.getZoom() > 7.5) map.easeTo({ center: [-98.38, 38.5], zoom: 6.2, duration: motionDuration(1200), essential: false });
+  };
+
   // Today's reports are re-read every five minutes while shown; yesterday's every half hour.
   const chooseReports = useCallback((day: ReportDay | null) => { setReportsDay(day); setReportsFailed(null); setReportSelected(null); }, []);
   useEffect(() => {
@@ -5201,6 +5280,10 @@ export default function Home() {
       setOutlookDay((restoredOutlook === 1 || restoredOutlook === 2 || restoredOutlook === 3) && restoredTopic !== "all" && categoryMap(restoredTopic)?.tools?.includes("outlook") ? restoredOutlook : null);
       const restoredReports = params.get("reports");
       setReportsDay((restoredReports === "today" || restoredReports === "yesterday") && restoredTopic !== "all" && categoryMap(restoredTopic)?.tools?.includes("reports") ? restoredReports : null);
+      const restoredDrought = params.get("drought");
+      const droughtOffered = restoredTopic !== "all" && Boolean(categoryMap(restoredTopic)?.tools?.includes("drought"));
+      setDroughtOn(droughtOffered && (restoredDrought === "newest" || isUsdmDate(restoredDrought)));
+      setDroughtWeek(droughtOffered && isUsdmDate(restoredDrought) ? restoredDrought : null);
       const restoredHazard = params.get("outlookHazard");
       setOutlookHazard(isOutlookProduct(restoredHazard) ? restoredHazard : "cat");
       const officialOpacityPairs = params.get("ctxo")?.split(",").map((pair) => pair.split(":")) ?? [];
@@ -9646,6 +9729,8 @@ export default function Home() {
     setQuakeRecordOn(false);
     setQuakeRecordYear(null);
     setQuakeRecordSelected(null);
+    setDroughtOn(false);
+    setDroughtWeek(null);
     setOutlookDay(null);
     setOutlookHazard("cat");
     setReportsDay(null);
@@ -10646,7 +10731,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(shownDrought ? [droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -10677,6 +10762,13 @@ export default function Home() {
             onAquiferView={showAquiferView}
             soil={activeCategoryMap.tools?.includes("soil") ? { on: soilMapState.visible, depth: soilMapState.view === "root" ? "root" : "surface", reading: soilReading, legendUrl: soilLegendUrl(soilMapState.view === "root" ? "root" : "surface") } : undefined}
             onSoil={showCategorySoil} onSoilDepth={(depth) => changeSoilMapState({ view: depth })}
+            drought={activeCategoryMap.tools?.includes("drought") ? { on: droughtOn, loading: Boolean(droughtId && !droughtLoaded && droughtFailed !== droughtId),
+              failed: droughtId !== null && droughtFailed === droughtId, reading: droughtLoaded ? droughtReading(droughtLoaded, droughtSeries) : null, url: USDM_PAGE,
+              date: droughtDate, label: droughtDate ? usdmDateLabel(droughtDate) : null, newest: droughtWeek === null,
+              previous: droughtDate && droughtDate > USDM_FIRST_DATE ? previousUsdmDate(droughtDate) : null,
+              next: droughtWeek === null ? null : droughtNewest && nextUsdmDate(droughtWeek) >= droughtNewest ? droughtNewest : nextUsdmDate(droughtWeek),
+              categories: USDM_CATEGORIES, weeks: droughtChartWeeks, seriesFailed: droughtSeriesFailed } : undefined}
+            onDrought={showDrought} onDroughtWeek={chooseDroughtWeek}
             population={activeCategoryMap.tools?.includes("population") ? { on: populationPrisms, ...densityGroupCounts(officialPayloads["census-counties"]?.data.features ?? []), metresPerPerson: PRISM_METRES_PER_PERSON_PER_SQUARE_MILE } : undefined}
             onPopulation={setPopulationPrismsShown}
             quakes={activeCategoryMap.tools?.includes("quakes") ? { on: quakeRecordOn, loading: quakeRecordOn && !quakeRecord && !quakeRecordFailed, failed: quakeRecordFailed,

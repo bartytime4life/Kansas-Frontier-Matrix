@@ -177,6 +177,45 @@ moisture, through the Explorer's own soil-moisture control
   outside its own row (the dock, or a shared link that restores `soil=1`), not
   only from its switch.
 
+## U.S. Drought Monitor on the Field view (Agriculture)
+
+The Field view dock's **Show the Drought Monitor** draws the weekly U.S.
+Drought Monitor (`app/drought-monitor.ts`, served by `/api/drought-monitor`
+and `/api/drought-series`). The USDM is the drought assessment the National
+Drought Mitigation Center, USDA and NOAA authors draw each week from many
+indicators and local reports. Each map is valid for a Tuesday (8 a.m. Eastern)
+and released that Thursday.
+
+- **Source.** The week's national GeoJSON from droughtmonitor.unl.edu
+  (`usdm_YYYYMMDD.json`), read through the bounded, allowlisted fetch and cut
+  on the server to Kansas with about a degree around it (103.2–93.6°W,
+  36.2–40.8°N) before it is sent. Only the five categories (`DM` 0–4) are kept.
+  The newest map is the one released by Thursday 8:30 a.m. Eastern; when a
+  release is late (a holiday), the week before is answered. A past week is
+  kept as published, and the newest is read again hourly.
+- **Symbols.** The USDM's own colours, nearly opaque, as the USDM draws its
+  map: D0 abnormally dry (yellow), D1 moderate, D2 severe, D3 extreme and D4
+  exceptional drought (dark red), worse categories over milder ones, with thin
+  dark edges. The areas sit above the base and under the site's labels and
+  overlays. Showing it from the field-scale view pulls the map out to the
+  state.
+- **Kansas over time.** The dock charts Kansas's weekly share of area in each
+  category or worse since January 2000, from the USDM data services' state
+  statistics, as the USDM draws its time series. A click on the chart, the
+  Week slider, or Week before / Week after shows that week's map; Newest
+  follows the newest release. A dragged slider settles before a week is read,
+  and the last map drawn stays on screen while the next loads.
+- **Reading.** The valid date, Kansas's share in drought (D1–D4), and in D2,
+  D3 and D4 or worse. The USDM's own statistics are used for the week when
+  they are in hand. Otherwise the shares are measured on the map at the centres
+  of a 0.05° grid inside the state outline, weighted by area, marked "≈", and
+  the reading says so.
+- **Limits.** The USDM is a weekly expert assessment at a broad scale, not a
+  forecast or a measurement at a field. D0 is abnormally dry, not drought.
+  The USDM does not draw its polygons to the field scale of the Kansas aerial
+  beneath. The statistics are read whether the service answers JSON or CSV,
+  cumulative or categorical; a categorical answer is accumulated.
+
 ## Saturated thickness on the Aquifer map (Groundwater)
 
 The Aquifer map opens on the Kansas Geological Survey's 2022–2024 saturated
