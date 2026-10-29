@@ -211,7 +211,8 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
     /** Whether Play is stepping through the weeks, and whether motion is allowed at all. */
     playing?: boolean; motionAllowed?: boolean;
     /** The change view: 0 for the categories, or the weeks the change is measured over, with what it says for Kansas. */
-    change?: Readonly<{ weeks: 0 | 4 | 12; reading: string | null; loading: boolean; failed: boolean }>;
+    /** start: the first week with a whole interval behind it, when the week shown comes before it. */
+    change?: Readonly<{ weeks: 0 | 4 | 12; reading: string | null; start?: string | null; loading: boolean; failed: boolean }>;
     /** Kansas counties on the shown week, once the Census counties are in hand: how many each category reaches, the list most severe first, and the picked county's shares. */
     counties?: Readonly<{ summary: string; list: readonly Readonly<{ id: string; label: string }>[]; picked: string | null; reading: string | null }> | null;
   }>;
@@ -480,7 +481,8 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
             {([[0, "Categories", "The USDM categories, D0 to D4"], [4, "4-week change", "Each county's change in drought over the 4 weeks before the week shown"], [12, "12-week change", "Each county's change in drought over the 12 weeks before the week shown"]] as const).map(([weeks, label, title]) =>
               <button key={weeks} type="button" aria-pressed={drought.change!.weeks === weeks} title={title} onClick={() => onDroughtChange(weeks)}>{label}</button>)}
           </div>
-          {drought.change.weeks > 0 && <p className="category-map-dock-reading" aria-live={drought.playing ? "off" : "polite"}>{drought.change.failed ? "The earlier week did not answer; the categories stay on the map."
+          {drought.change.weeks > 0 && <p className="category-map-dock-reading" aria-live={drought.playing ? "off" : "polite"}>{drought.change.start ? `The Drought Monitor begins Jan 4, 2000, so a ${drought.change.weeks}-week change starts with the week of ${drought.change.start}; the categories stay on the map.`
+            : drought.change.failed ? "The earlier week did not answer; the categories stay on the map."
             : drought.change.loading || !drought.change.reading ? `Reading the week ${drought.change.weeks} weeks before…` : drought.change.reading}</p>}
         </>}
         {drought.counties && !drought.loading && !drought.failed && <>

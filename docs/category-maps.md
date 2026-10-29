@@ -230,7 +230,11 @@ and released that Thursday.
   DSCI then and now (from the USDM statistics for both weeks when they are in
   hand, else measured on the maps), lists the counties most worsened first,
   and adds the picked county's change to its reading. The earlier week is read
-  like any other; if it does not answer, the categories stay on the map.
+  like any other; if it does not answer, the categories stay on the map. A
+  week with no whole interval behind it (before 1 Feb 2000 for 4 weeks, 28 Mar
+  2000 for 12) has no change drawn, and the dock says so. During Play each
+  week waits for its earlier week, and the change last drawn stays on the map
+  while the next one loads.
 - **Reading.** The valid date, Kansas's share in drought (D1–D4), and in D2,
   D3 and D4 or worse. The USDM's own statistics are used for the week when
   they are in hand. Otherwise the shares are measured on the map at the centres
