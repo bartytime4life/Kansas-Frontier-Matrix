@@ -8,6 +8,7 @@ import type { PhotorealLandscape } from "./photoreal-landscapes";
 import type { MapKey } from "./map-keys";
 import type { DepthSection, EarthquakeRecordEvent, MagnitudeFrequency, YearCount } from "./earthquake-record";
 import type { FloodGauge, FloodHydrograph } from "./flood-forecast";
+import type { FemaYear, HAZARD_FAMILIES, HazardFamilyId } from "./fema-record";
 import type { OutlookDay, OutlookProduct } from "./spc-outlook";
 import type { ReportDay, StormReport } from "./storm-reports";
 
@@ -79,7 +80,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -159,6 +160,30 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
     gaugeFailed: boolean;
     url: string | null;
   }>;
+  /**
+   * The FEMA disaster record since 1953, for looks that offer it: declarations
+   * per year by hazard family, counties shaded by how many designated them,
+   * and the picked county's declarations.
+   */
+  fema?: Readonly<{
+    on: boolean;
+    loading: boolean;
+    failed: boolean;
+    reading: string | null;
+    families: typeof HAZARD_FAMILIES;
+    years: readonly FemaYear[] | null;
+    year: number | null;
+    family: HazardFamilyId | null;
+    emergencies: boolean;
+    counties: Readonly<{ list: readonly Readonly<{ id: string; label: string }>[]; picked: string | null; reading: string | null;
+      declarations: readonly Readonly<{ id: string; label: string }>[] }> | null;
+  }>;
+  onFema?: (on: boolean) => void;
+  onFemaYear?: (year: number | null) => void;
+  onFemaFamily?: (family: HazardFamilyId | null) => void;
+  onFemaEmergencies?: (on: boolean) => void;
+  onFemaCounty?: (geoid: string) => void;
+  onFemaCountyClear?: () => void;
   onFlood?: (on: boolean) => void;
   onFloodPick?: (lid: string) => void;
   onFloodClear?: () => void;
@@ -423,6 +448,38 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
       </div>}
     </>}
+    {look.tools?.includes("fema") && fema && onFema && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={fema.on} onClick={() => onFema(!fema.on)}
+        title="Every FEMA disaster declaration for Kansas since 1953: counties shaded by how many designated them, and the record year by year">{fema.on ? "Back to current hazards" : "FEMA disaster record since 1953"}</button>
+      {fema.on && <div className="category-map-dock-quakes">
+        <p className="category-map-dock-reading" aria-live="polite">{fema.loading ? "Reading the OpenFEMA declarations…"
+          : fema.failed ? "OpenFEMA did not answer. Try the record again, or go back to current hazards." : fema.reading}</p>
+        {fema.years && <FemaHistory years={fema.years} year={fema.year} families={fema.families} onYear={onFemaYear} />}
+        {fema.years && <div className="category-map-dock-fema-filters">
+          <label className="category-map-dock-range"><span>Year</span>
+            <select value={fema.year ?? ""} onChange={event => onFemaYear?.(event.target.value ? Number(event.target.value) : null)}>
+              <option value="">All years</option>
+              {fema.years.filter(entry => entry.total > 0).map(entry => <option key={entry.year} value={entry.year}>{entry.year} · {entry.total}</option>)}
+            </select></label>
+          <label className="category-map-dock-range"><span>Hazard</span>
+            <select value={fema.family ?? ""} onChange={event => onFemaFamily?.(event.target.value ? event.target.value as HazardFamilyId : null)}>
+              <option value="">All hazards</option>
+              {fema.families.map(family => <option key={family.id} value={family.id}>{family.name}</option>)}
+            </select></label>
+          <label className="category-map-dock-check"><input type="checkbox" checked={fema.emergencies} onChange={event => onFemaEmergencies?.(event.target.checked)} />
+            <span>Include emergency and fire-management declarations</span></label>
+        </div>}
+        {onFemaCounty && fema.counties && <PickList summary={`Counties, most declarations first (${fema.counties.list.length})`} label="Kansas counties by FEMA declarations, most first"
+          items={fema.counties.list} selected={fema.counties.picked} onPick={onFemaCounty} />}
+        {fema.counties?.picked && <div className="category-map-dock-quake-event" aria-live="polite">
+          <p>{fema.counties.reading}</p>
+          {fema.counties.declarations.length > 0 && <ul className="category-map-dock-fema-list" aria-label="Declarations designating this county, newest first">
+            {fema.counties.declarations.map(item => <li key={item.id}><a href={`https://www.fema.gov/disaster/${item.id}`} target="_blank" rel="noreferrer">{item.label}</a></li>)}
+          </ul>}
+          <div><button type="button" onClick={onFemaCountyClear} aria-label="Clear the selected county">Clear</button></div>
+        </div>}
+      </div>}
+    </>}
     {look.tools?.includes("flood") && flood && onFlood && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={flood.on} onClick={() => onFlood(!flood.on)}
         title="NOAA NWPS river gauges coloured by NWS flood category, each with its stage hydrograph and the official NWS forecast">{flood.on ? "Hide flood forecasts" : "Show flood forecasts"}</button>
@@ -676,6 +733,36 @@ export function FloodHydrographChart({ gauge, plot, reading }: Readonly<{ gauge:
       {plot.crest && <circle cx={x(plot.crest.time).toFixed(1)} cy={y(plot.crest.value).toFixed(1)} r={3.2} fill="none" stroke="#ffffff" strokeWidth={1} />}
     </svg>
     <figcaption><span>{`${gauge.label}${gauge.units ? `, ${gauge.units}` : ""} · Central time`}</span><span><span style={{ color: "#5cc8ff" }}>━ observed</span> <span style={{ color: "#d58cff" }}>╍ forecast</span></span></figcaption>
+  </figure>;
+}
+
+/**
+ * Declarations per year as bars stacked by hazard family, in the families'
+ * colours, so the chart is also their key. A bar picks its year; the year
+ * select does the same from the keyboard.
+ */
+export function FemaHistory({ years, year, families, onYear }: Readonly<{ years: readonly FemaYear[]; year: number | null; families: typeof HAZARD_FAMILIES; onYear?: (year: number | null) => void }>) {
+  const max = Math.max(1, ...years.map(entry => entry.total));
+  const width = years.length * 4, height = 48;
+  const shown = families.filter((_, k) => years.some(entry => entry.byFamily[k] > 0));
+  return <figure className="category-map-dock-histogram" aria-label={`FEMA declarations per year, ${years[0]?.year}–${years[years.length - 1]?.year}, by hazard; the most in one year is ${max}`}>
+    <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" aria-hidden="true">
+      {years.map((entry, i) => {
+        let base = height;
+        return <g key={entry.year} data-year={entry.year} onClick={() => entry.total && onYear?.(year === entry.year ? null : entry.year)} opacity={year === null || year === entry.year ? 1 : 0.3}>
+          <rect x={i * 4} y={0} width={4} height={height} fill="transparent" />
+          {families.map((family, k) => {
+            const n = entry.byFamily[k];
+            if (!n) return null;
+            const h = n / max * (height - 2);
+            base -= h;
+            return <rect key={family.id} x={i * 4 + 0.4} y={base} width={3.2} height={h} fill={family.color} />;
+          })}
+        </g>;
+      })}
+    </svg>
+    <figcaption><span>{years[0]?.year}</span><span>{max} in the busiest year</span><span>{years[years.length - 1]?.year}</span></figcaption>
+    <p className="category-map-dock-fema-families">{shown.map(family => <span key={family.id}><i style={{ background: family.color }} aria-hidden="true" />{family.name}</span>)}</p>
   </figure>;
 }
 

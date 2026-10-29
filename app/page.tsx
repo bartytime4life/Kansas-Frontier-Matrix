@@ -33,6 +33,7 @@ import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportCl
 import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
+import { FEMA_DEFAULT_FILTER, FEMA_RECORD_SOURCE_ID, HAZARD_FAMILIES, femaClasses, femaCountyCollection, femaCountyCounts, femaCountyDisasters, femaCountyList, femaCountyReading, femaKey, femaReading, femaSelect, femaYears, syncFemaRecord, validFemaRecord, type FemaFilter, type FemaRecord } from "./fema-record";
 import { FLOOD_GAUGE_REFRESH_MS, floodGaugeApiPath, floodGaugeList, floodGaugePage, floodGaugeSummaries, floodHydrograph, floodKey, floodNetworkSummary, floodReading, parseFloodGauge, syncFloodSelection, FLOOD_SELECTED_SOURCE_ID, type FloodGauge } from "./flood-forecast";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, recordPlots, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
@@ -1617,6 +1618,13 @@ export default function Home() {
   // so far by "day-product", and the one whose read failed.
   const [outlookDay, setOutlookDay] = useState<OutlookDay | null>(null);
   // The U.S. Drought Monitor on the Field view: the week shown ("YYYYMMDD"), or null for the newest released.
+  const [femaOn, setFemaOn] = useState(false);
+  const [femaRecord, setFemaRecord] = useState<FemaRecord | null>(null);
+  const [femaFailed, setFemaFailed] = useState(false);
+  const [femaFilter, setFemaFilter] = useState<FemaFilter>(FEMA_DEFAULT_FILTER);
+  const [femaCounty, setFemaCounty] = useState<string | null>(null);
+  const femaCountiesAskedRef = useRef(false);
+  const femaHidRef = useRef<OfficialContextId[]>([]);
   const [floodOn, setFloodOn] = useState(false);
   const [floodLid, setFloodLid] = useState<string | null>(null);
   const [floodGauge, setFloodGauge] = useState<FloodGauge | null>(null);
@@ -4313,6 +4321,67 @@ export default function Home() {
     if (on && map && map.getZoom() > 7.5) map.easeTo({ center: [-98.38, 38.5], zoom: 6.2, duration: motionDuration(1200), essential: false });
   };
 
+  // The FEMA disaster record on Hazard watch: every Kansas declaration since 1953, counties shaded by how many designated them.
+  // It stands in for the current hazards while shown; those it hid come back when it closes.
+  const showFemaRecord = (on: boolean) => {
+    setFemaOn(on);
+    setFemaFilter(FEMA_DEFAULT_FILTER);
+    setFemaCounty(null);
+    if (on) {
+      setFemaFailed(false);
+      femaCountiesAskedRef.current = false;
+      femaHidRef.current = (["nws-alerts", "nasa-gibs-fire-points", "nifc-fire-reports"] as const).filter(id => officialVisibilityRef.current[id]);
+      for (const id of femaHidRef.current) setOfficialContextVisible(id, false);
+    } else {
+      for (const id of femaHidRef.current) setOfficialContextVisible(id, true);
+      femaHidRef.current = [];
+    }
+  };
+  useEffect(() => {
+    if (!femaOn || femaRecord || femaFailed) return;
+    const controller = new AbortController();
+    void fetch("/api/fema-record", { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validFemaRecord(value)) throw new Error("Invalid FEMA record.");
+        setFemaRecord(value);
+        announce(`${value.disasters.length.toLocaleString("en-US")} Kansas FEMA declarations since ${value.firstYear} are on the map by county`);
+      })
+      .catch(() => { if (!controller.signal.aborted) setFemaFailed(true); });
+    return () => controller.abort();
+  }, [femaOn, femaRecord, femaFailed, announce]);
+  useEffect(() => {
+    if (!femaOn || officialPayloads["census-counties"] || femaCountiesAskedRef.current) return;
+    femaCountiesAskedRef.current = true;
+    void refreshOfficialContext("census-counties");
+  }, [femaOn, officialPayloads, refreshOfficialContext]);
+  const femaCounties = femaOn ? officialPayloads["census-counties"]?.data ?? null : null;
+  const femaGeoids = useMemo(() => femaCounties?.features.map(feature => String(feature.properties?.geoid ?? "")).filter(Boolean) ?? [], [femaCounties]);
+  const femaNames = useMemo(() => new Map(femaCounties?.features.map(feature => [String(feature.properties?.geoid ?? ""), String(feature.properties?.name ?? "")]) ?? []), [femaCounties]);
+  const femaYearList = useMemo(() => femaRecord ? femaYears(femaRecord, femaFilter) : null, [femaRecord, femaFilter]);
+  const femaChosen = useMemo(() => femaRecord ? femaSelect(femaRecord, femaFilter) : [], [femaRecord, femaFilter]);
+  const femaCounts = useMemo(() => femaRecord && femaGeoids.length ? femaCountyCounts(femaChosen, femaGeoids) : null, [femaRecord, femaChosen, femaGeoids]);
+  const femaCollection = useMemo(() => femaCounts && femaCounties ? femaCountyCollection(femaCounties, femaCounts) : null, [femaCounts, femaCounties]);
+  const femaClassList = useMemo(() => femaCounts ? femaClasses(Math.max(0, ...femaCounts.values())) : [], [femaCounts]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const sync = () => { try { syncFemaRecord(map, femaOn ? femaCollection : null, femaCounty); } catch { /* The style is reloading; its styledata event draws the record again. */ } };
+    sync();
+    if (!femaOn || !femaCollection) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(FEMA_RECORD_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [femaOn, femaCollection, femaCounty, styleReady]);
+  const pickFemaCounty = (geoid: string) => {
+    const feature = femaCounties?.features.find(item => String(item.properties?.geoid ?? "") === geoid);
+    const geometry = feature && countySearchGeometry(feature);
+    if (!geometry) return;
+    setFemaCounty(geoid);
+    mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
+  };
+
   // NWS flood forecasts on the River network: the NWPS gauges by flood category, and one gauge's hydrograph,
   // read again every ten minutes while it is shown (observations every 15–60 minutes, forecasts a few times a day).
   floodOnRef.current = floodOn;
@@ -6114,6 +6183,12 @@ export default function Home() {
             const id = renderedHits[0].properties?.id;
             const report = typeof id === "string" ? stormReportsRef.current.get(id) : undefined;
             if (report) { setReportSelected(report); setCategoryDockHidden(false); }
+            return;
+          }
+          // With the FEMA record shown, a county under the click is picked; the dock lists its declarations.
+          if (renderedHits[0]?.source === FEMA_RECORD_SOURCE_ID) {
+            const geoid = renderedHits[0].properties?.geoid;
+            if (typeof geoid === "string") { setFemaCounty(geoid); setCategoryDockHidden(false); }
             return;
           }
           // With flood forecasts shown, an NWS gauge owns its selection: the dock draws its hydrograph.
@@ -9959,6 +10034,10 @@ export default function Home() {
     floodGaugesWereOnRef.current = false;
     setFloodOn(false);
     setFloodLid(null);
+    // So does the FEMA record; the starters above already decide which current hazards are on.
+    femaHidRef.current = [];
+    setFemaOn(false);
+    setFemaCounty(null);
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
     setPopulationPrismsShown(Boolean(look.overlays?.includes("population")));
     // Soil moisture belongs to the maps that offer it; it does not follow into the others.
@@ -10952,7 +11031,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -10962,6 +11041,14 @@ export default function Home() {
               reading: shownFloodGauge ? floodReading(shownFloodGauge, floodClock) : null, gaugeLoading: Boolean(floodLid && !shownFloodGauge && floodFailed !== floodLid),
               gaugeFailed: floodLid !== null && floodFailed === floodLid && !shownFloodGauge, url: floodLid ? floodGaugePage(floodLid) : null } : undefined}
             onFlood={showFlood} onFloodPick={pickFloodGauge} onFloodClear={() => setFloodLid(null)}
+            fema={activeCategoryMap.tools?.includes("fema") ? { on: femaOn, loading: femaOn && !femaRecord && !femaFailed, failed: femaFailed,
+              reading: femaRecord && femaYearList ? femaReading(femaRecord, femaFilter, femaYearList) : null, families: HAZARD_FAMILIES,
+              years: femaYearList, year: femaFilter.year, family: femaFilter.family, emergencies: femaFilter.emergencies,
+              counties: femaCounts ? { list: femaCountyList(femaCounts, femaNames), picked: femaCounty,
+                reading: femaCounty && femaRecord ? femaCountyReading(femaNames.get(femaCounty) ?? femaCounty, femaCounty, femaChosen, femaFilter, femaRecord.firstYear) : null,
+                declarations: femaCounty ? femaCountyDisasters(femaChosen, femaCounty) : [] } : null } : undefined}
+            onFema={showFemaRecord} onFemaYear={year => setFemaFilter(filter => ({ ...filter, year }))} onFemaFamily={family => setFemaFilter(filter => ({ ...filter, family }))}
+            onFemaEmergencies={emergencies => setFemaFilter(filter => ({ ...filter, emergencies }))} onFemaCounty={pickFemaCounty} onFemaCountyClear={() => setFemaCounty(null)}
             photoreal={activeCategoryMap.tools?.includes("photoreal") ? { on: basemap === "photoreal", landscapes: PHOTOREAL_LANDSCAPES, place: photorealPlace, depth: verticalExaggeration } : undefined}
             onPhotoreal={showPhotoreal}
             reviewed={reviewedSource ? { source: REVIEWED_SOURCE_LABEL[reviewedSource], on: reviewed.on, loading: reviewed.status === "loading",

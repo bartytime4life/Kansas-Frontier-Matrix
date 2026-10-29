@@ -286,6 +286,43 @@ draws it.
   are not a flood-inundation map. Warnings come from the National Weather
   Service.
 
+## FEMA disaster record on Hazard watch (Disaster)
+
+**FEMA disaster record since 1953** turns Hazard watch from current hazards
+to the record: every Kansas declaration in OpenFEMA's Disaster Declarations
+Summaries, read through `/api/fema-record`. The route reads OpenFEMA a page
+at a time and keeps the record for 12 hours.
+
+- **Declarations.** Rows are gathered by disaster number. A declaration's
+  date is its earliest row's, and its counties are all its rows'.
+  - A Kansas county code designates that county.
+  - A statewide designation counts for every county.
+  - Tribal designations are counted as skipped and not drawn.
+- **Hazard families.** OpenFEMA incident types are gathered into severe
+  storms and tornadoes, floods, winter storms, fire, drought, biological,
+  and other. Each family has one colour.
+- **Counties.** Each county is shaded by how many of the declarations in the
+  view designated it. There are five equal classes of a round width, from
+  one to the most, and none in a pale colour. The key gives the classes.
+- **History.** Declarations per year are shown as bars stacked by family,
+  which is also the family key. Clicking a bar, or choosing a year in the
+  select, narrows the map to that year.
+- **Filters.**
+  - Major disasters (DR) only by default; a checkbox adds emergency (EM)
+    and fire-management (FM) declarations.
+  - A hazard select narrows to one family.
+- **Counties list.** Counties are listed with the most declarations first.
+  Choosing one, or clicking it on the map, outlines it. Its reading gives the
+  count, the most frequent family and the latest declaration, and lists its
+  declarations, newest first, each linked to its FEMA page.
+- **Current hazards.** The alerts, fire detections and fire reports that
+  were on are hidden while the record is shown, and only those come back
+  when it closes.
+- **Limits.** A county designation names a county as eligible for
+  assistance. It is not a footprint of the damage. Declarations reflect
+  federal policy as well as hazards: more counties are designated in recent
+  decades.
+
 ## Saturated thickness on the Aquifer map (Groundwater)
 
 The Aquifer map opens on the Kansas Geological Survey's 2022–2024 saturated
