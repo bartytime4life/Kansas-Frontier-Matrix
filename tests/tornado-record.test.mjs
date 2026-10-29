@@ -63,6 +63,11 @@ test('the view filters by year and rating, stacks the years by rating, and lists
  assert.match(tor.tornadoDetail(record.tornadoes[3]),/crossed 2 states$/);
  assert.match(tor.tornadoDetail(record.tornadoes[2]),/no casualties recorded · touchdown 38\.50°N, 98\.20°W · 0\.1 mi long, 10 yd wide$/);
  assert.match(tor.tornadoDetail(record.tornadoes.find(t=>t.id==='1953-90')),/^F1 · Apr 1, 1953 12:00 CST · casualties unknown · touchdown/);
+ // One count unknown and the other a recorded zero is not "no casualties".
+ const mixed=(inj,fat)=>tor.tornadoDetail({...record.tornadoes[2],injuries:inj,fatalities:fat});
+ assert.match(mixed(0,null),/ · deaths unknown, 0 injuries · /);
+ assert.match(mixed(null,0),/ · 0 deaths, injuries unknown · /);
+ assert.match(mixed(0,0),/ · no casualties recorded · /);
  const key=tor.tornadoKey(record,tor.TORNADO_DEFAULT_FILTER);
  assert.equal(key.title,'Kansas tornadoes · 1950–2007');assert.equal(key.items.length,7);assert.match(key.note,/not the path on the ground/);
 });

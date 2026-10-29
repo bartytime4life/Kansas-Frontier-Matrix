@@ -141,9 +141,10 @@ const coordinate = (p: readonly [number, number]) => `${Math.abs(p[1]).toFixed(2
 /** One tornado in words: rating, date and time, casualties, and the track. */
 export function tornadoDetail(t: Tornado): string {
   return [`${ratingName(t.rating, t.date)} · ${tornadoDate(t)}${t.time ? ` ${t.time} CST` : ""}`,
+    // "No casualties" only when both counts are a recorded zero; an unknown count is named, beside the other.
     t.fatalities === null && t.injuries === null ? "casualties unknown"
-      : t.fatalities || t.injuries ? `${t.fatalities === null ? "deaths unknown" : plural(t.fatalities, "death", "deaths")}, ${t.injuries === null ? "injuries unknown" : plural(t.injuries, "injury", "injuries")}`
-      : "no casualties recorded",
+      : t.fatalities === 0 && t.injuries === 0 ? "no casualties recorded"
+      : `${t.fatalities === null ? "deaths unknown" : plural(t.fatalities, "death", "deaths")}, ${t.injuries === null ? "injuries unknown" : plural(t.injuries, "injury", "injuries")}`,
     `touchdown ${coordinate(t.start)}${t.end ? ` · lift-off ${coordinate(t.end)}` : ""}`,
     [t.lengthMiles ? `${t.lengthMiles.toFixed(1)} mi long` : null, t.widthYards ? `${t.widthYards.toLocaleString("en-US")} yd wide` : null].filter(Boolean).join(", ") || null,
     t.states > 1 ? `crossed ${t.states} states` : null].filter(Boolean).join(" · ");
