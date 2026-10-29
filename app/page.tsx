@@ -30,7 +30,7 @@ import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, wi
 import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
 import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
-import { DROUGHT_NEWEST_REFRESH_MS, DROUGHT_SERIES_REFRESH_MS, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
+import { DROUGHT_NEWEST_REFRESH_MS, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
@@ -1616,6 +1616,7 @@ export default function Home() {
   // The county picked in the Drought Monitor's county list, by GEOID.
   const [droughtCounty, setDroughtCounty] = useState<string | null>(null);
   const droughtCountiesAskedRef = useRef(false);
+  const [droughtPlaying, setDroughtPlaying] = useState(false);
   const [outlookHazard, setOutlookHazard] = useState<OutlookProduct>("cat");
   const [outlooks, setOutlooks] = useState<Partial<Record<string, SpcOutlook>>>({});
   const [outlookFailed, setOutlookFailed] = useState<string | null>(null);
@@ -4212,7 +4213,28 @@ export default function Home() {
   const droughtNewest = droughtMaps.get("newest")?.date ?? droughtSeries?.weeks.at(-1)?.date ?? null;
   const droughtDate = droughtWeek ?? droughtMaps.get("newest")?.date ?? null;
   const droughtChartWeeks = useMemo(() => droughtSeries?.weeks.map(week => ({ date: week.date, label: usdmDateLabel(week.date), shares: week.shares })) ?? null, [droughtSeries]);
-  const chooseDroughtWeek = (date: string | null) => { setDroughtWeek(date && date !== droughtNewest ? date : null); setDroughtFailed(null); };
+  const chooseDroughtWeek = (date: string | null) => { setDroughtPlaying(false); setDroughtWeek(date && date !== droughtNewest ? date : null); setDroughtFailed(null); };
+  // Play steps forward a week at a time, each week once it is drawn, and stops at the newest, on a failed week, or when the map closes.
+  const droughtPlayStops = droughtPlaying && (!droughtOn || reducedMotion || droughtWeek === null || (droughtId !== null && droughtFailed === droughtId));
+  if (droughtPlayStops) setDroughtPlaying(false);
+  useEffect(() => {
+    if (!droughtPlaying || droughtPlayStops || !droughtWeek || !droughtLoaded) return;
+    const timer = setTimeout(() => {
+      const next = nextUsdmDate(droughtWeek);
+      setDroughtWeek(droughtNewest && next >= droughtNewest ? null : next);
+    }, DROUGHT_PLAY_STEP_MS);
+    return () => clearTimeout(timer);
+  }, [droughtPlaying, droughtPlayStops, droughtWeek, droughtLoaded, droughtNewest]);
+  const playDrought = (on: boolean) => {
+    // From the newest, Play starts a year back.
+    if (on && droughtWeek === null) {
+      const from = droughtNewest ?? droughtDate;
+      if (!from) return;
+      setDroughtWeek(usdmWeeksBefore(from, DROUGHT_PLAY_WEEKS));
+    }
+    setDroughtFailed(null);
+    setDroughtPlaying(on);
+  };
   const showDrought = (on: boolean) => {
     setDroughtOn(on);
     setDroughtWeek(null);
@@ -10817,10 +10839,10 @@ export default function Home() {
               date: droughtDate, label: droughtDate ? usdmDateLabel(droughtDate) : null, newest: droughtWeek === null,
               previous: droughtDate && droughtDate > USDM_FIRST_DATE ? previousUsdmDate(droughtDate) : null,
               next: droughtWeek === null ? null : droughtNewest && nextUsdmDate(droughtWeek) >= droughtNewest ? droughtNewest : nextUsdmDate(droughtWeek),
-              categories: USDM_CATEGORIES, weeks: droughtChartWeeks, seriesFailed: droughtSeriesFailed,
+              categories: USDM_CATEGORIES, weeks: droughtChartWeeks, seriesFailed: droughtSeriesFailed, playing: droughtPlaying, motionAllowed: !reducedMotion,
               counties: countyDrought && countyDrought.length ? { summary: countyDroughtSummary(countyDrought), list: countyDroughtItems, picked: droughtCounty,
                 reading: pickedCountyDrought && droughtLoaded ? countyDroughtReading(pickedCountyDrought, droughtLoaded.date) : null } : null } : undefined}
-            onDrought={showDrought} onDroughtWeek={chooseDroughtWeek} onDroughtCounty={pickDroughtCounty} onDroughtCountyClear={() => setDroughtCounty(null)}
+            onDrought={showDrought} onDroughtWeek={chooseDroughtWeek} onDroughtPlay={playDrought} onDroughtCounty={pickDroughtCounty} onDroughtCountyClear={() => setDroughtCounty(null)}
             population={activeCategoryMap.tools?.includes("population") ? { on: populationPrisms, ...densityGroupCounts(officialPayloads["census-counties"]?.data.features ?? []), metresPerPerson: PRISM_METRES_PER_PERSON_PER_SQUARE_MILE } : undefined}
             onPopulation={setPopulationPrismsShown}
             quakes={activeCategoryMap.tools?.includes("quakes") ? { on: quakeRecordOn, loading: quakeRecordOn && !quakeRecord && !quakeRecordFailed, failed: quakeRecordFailed,

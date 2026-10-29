@@ -78,7 +78,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -206,9 +206,12 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
     date: string | null; label: string | null; previous: string | null; next: string | null; newest: boolean;
     categories: readonly Readonly<{ id: string; name: string; color: string }>[];
     weeks: readonly DroughtChartWeek[] | null; seriesFailed: boolean;
+    /** Whether Play is stepping through the weeks, and whether motion is allowed at all. */
+    playing?: boolean; motionAllowed?: boolean;
     /** Kansas counties on the shown week, once the Census counties are in hand: how many each category reaches, the list most severe first, and the picked county's shares. */
     counties?: Readonly<{ summary: string; list: readonly Readonly<{ id: string; label: string }>[]; picked: string | null; reading: string | null }> | null;
   }>;
+  onDroughtPlay?: (on: boolean) => void;
   onDroughtCounty?: (geoid: string) => void;
   onDroughtCountyClear?: () => void;
   onDrought?: (on: boolean) => void;
@@ -459,8 +462,10 @@ export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPr
           <button type="button" aria-label="Week before" disabled={!drought.previous} onClick={() => drought.previous && onDroughtWeek?.(drought.previous)}>◀ Week</button>
           <button type="button" aria-pressed={drought.newest} onClick={() => onDroughtWeek?.(null)}>Newest</button>
           <button type="button" aria-label="Week after" disabled={!drought.next} onClick={() => drought.next && onDroughtWeek?.(drought.next)}>Week ▶</button>
+          {onDroughtPlay && <button type="button" aria-pressed={Boolean(drought.playing && drought.motionAllowed)} disabled={drought.motionAllowed === false} onClick={() => onDroughtPlay(!drought.playing)}
+            title={drought.motionAllowed === false ? "Reduced motion is on; step the weeks by hand" : drought.newest ? "Play the past year, a week at a time" : "Play forward a week at a time to the newest"}>{drought.playing && drought.motionAllowed !== false ? "Pause" : "Play"}</button>}
         </div>
-        <p className="category-map-dock-reading" aria-live="polite">{drought.failed ? <>The Drought Monitor did not answer for this week. <a href={drought.url} target="_blank" rel="noreferrer">USDM ↗</a></>
+        <p className="category-map-dock-reading" aria-live={drought.playing ? "off" : "polite"}>{drought.failed ? <>The Drought Monitor did not answer for this week. <a href={drought.url} target="_blank" rel="noreferrer">USDM ↗</a></>
           : drought.loading ? `Reading the Drought Monitor${drought.label ? ` for ${drought.label}` : ""}…` : drought.reading}</p>
         {drought.seriesFailed && <p className="category-map-dock-scale-note">The USDM statistics did not answer; the shares are measured on the map.</p>}
         {drought.counties && !drought.loading && !drought.failed && <>

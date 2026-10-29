@@ -198,7 +198,7 @@ test('the page reads the week shown, keeps the last map drawn while the next loa
  assert.match(page,/setQuakeRecordSelected\(null\);\s*setDroughtOn\(false\);\s*setDroughtWeek\(null\);\s*setDroughtCounty\(null\);\s*setOutlookDay\(null\);[\s\S]{0,200}\/\/ Each map opens on its own subject/);
  assert.match(page,/if \(droughtOn\) params\.set\("drought", droughtWeek \?\? "newest"\);/);
  assert.match(page,/setDroughtOn\(droughtOffered && \(restoredDrought === "newest" \|\| isUsdmDate\(restoredDrought\)\)\);/);
- assert.match(page,/const chooseDroughtWeek = \(date: string \| null\) => \{ setDroughtWeek\(date && date !== droughtNewest \? date : null\); setDroughtFailed\(null\); \};/,'the newest week is followed, not pinned');
+ assert.match(page,/const chooseDroughtWeek = \(date: string \| null\) => \{ setDroughtPlaying\(false\); setDroughtWeek\(date && date !== droughtNewest \? date : null\); setDroughtFailed\(null\); \};/,'the newest week is followed, not pinned');
 });
 
 test('the page keeps the newest and the dozen weeks read most recently, the week just read always among them',()=>{
@@ -299,4 +299,32 @@ test('the dock lists the counties, outlines the one picked, and the page reads t
  assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty\);/);
  assert.match(page,/setDroughtCounty\(geoid\);\s*mapRef\.current\?\.fitBounds\(geometry\.bounds, \{ padding: 70, maxZoom: 9, duration: motionDuration\(650\) \}\);/);
  assert.match(page,/setDroughtSeriesFailed\(false\);\s*setDroughtCounty\(null\);/);
+});
+
+test('Play steps the weeks forward to the newest, from a year back when the newest is shown, and only with motion allowed',async()=>{
+ assert.equal(dm.usdmWeeksBefore('20261020',52),'20251021');
+ assert.equal(dm.usdmWeeksBefore('20000111',5),'20000104','never before the first map');
+ assert.equal(dm.DROUGHT_PLAY_STEP_MS,1200);assert.equal(dm.DROUGHT_PLAY_WEEKS,52);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];
+ const base={look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:1,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},
+  onDrought(){},onDroughtWeek(){},onDroughtPlay:v=>calls.push(v)};
+ const drought={on:true,loading:false,failed:false,reading:'Valid Oct 20, 2026',url:dm.USDM_PAGE,date:'20261020',label:'Oct 20, 2026',previous:'20261013',next:null,newest:true,categories:dm.USDM_CATEGORIES,weeks:null,seriesFailed:false,playing:false,motionAllowed:true};
+ const play=tree=>findNode(tree,n=>n.type==='button'&&(n.props.children==='Play'||n.props.children==='Pause'));
+ let tree=h.render(h.exports.CategoryMapDock,{...base,drought});
+ assert.equal(play(tree).props.title,'Play the past year, a week at a time');
+ play(tree).props.onClick();
+ tree=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,newest:false,playing:true}});
+ assert.equal(play(tree).props.children,'Pause');assert.equal(play(tree).props['aria-pressed'],true);
+ assert.equal(findNode(tree,n=>n.type==='p'&&n.props.className==='category-map-dock-reading').props['aria-live'],'off','the reading is not announced every week while playing');
+ play(tree).props.onClick();
+ assert.deepEqual(calls,[true,false]);
+ tree=h.render(h.exports.CategoryMapDock,{...base,drought:{...drought,motionAllowed:false,playing:true}});
+ assert.equal(play(tree).props.disabled,true);assert.equal(play(tree).props.children,'Play');assert.match(play(tree).props.title,/Reduced motion is on/);
+ h.dispose?.();
+ assert.match(page,/const droughtPlayStops = droughtPlaying && \(!droughtOn \|\| reducedMotion \|\| droughtWeek === null \|\| \(droughtId !== null && droughtFailed === droughtId\)\);\s*if \(droughtPlayStops\) setDroughtPlaying\(false\);/,'stops at the newest, on a failed week, without motion, or when the map closes');
+ assert.match(page,/if \(!droughtPlaying \|\| droughtPlayStops \|\| !droughtWeek \|\| !droughtLoaded\) return;\s*const timer = setTimeout\(\(\) => \{\s*const next = nextUsdmDate\(droughtWeek\);\s*setDroughtWeek\(droughtNewest && next >= droughtNewest \? null : next\);\s*\}, DROUGHT_PLAY_STEP_MS\);/,'each week is held once it is drawn');
+ assert.match(page,/if \(on && droughtWeek === null\) \{\s*const from = droughtNewest \?\? droughtDate;\s*if \(!from\) return;\s*setDroughtWeek\(usdmWeeksBefore\(from, DROUGHT_PLAY_WEEKS\)\);/);
+ assert.match(page,/const chooseDroughtWeek = \(date: string \| null\) => \{ setDroughtPlaying\(false\);/,'a week chosen by hand pauses Play');
+ assert.match(page,/onDroughtPlay=\{playDrought\}/);assert.match(page,/playing: droughtPlaying, motionAllowed: !reducedMotion,/);
 });
