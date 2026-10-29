@@ -55,6 +55,15 @@ export function civicFrameVisible(selected: boolean, frame: number, present: num
   const day = civicDayForFrame(frame, present, today, calendarDay);
   return Boolean(day && (checkedDay === day || !checkedDay && !calendarDay && frame === present && civicCongressForDay(day) === 119));
 }
+/** Historical selections belong to one checked day; the undated Census edition covers only its declared term. */
+export function civicRecordMatchesDay(properties: Record<string, unknown> | null | undefined, day: string | null): boolean {
+  const congress = day ? civicCongressForDay(day) : null;
+  if (congress === null || properties?.congressNumber !== congress) return false;
+  if (properties.sourceDay === day) return true;
+  // Existing Census responses put an optional query day on the payload, not each feature.
+  return congress === 119 && properties.sourceDay == null
+    && properties.termStart === civicTermStart(119) && properties.termEndExclusive === civicTermStart(120);
+}
 /** Select source credit from the checked edition, never from arbitrary upstream text. */
 export function civicSourceForRecord(properties: Record<string, unknown> | null | undefined): OfficialContextSource {
   const congress = properties?.congressNumber;

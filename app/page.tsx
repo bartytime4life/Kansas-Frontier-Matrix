@@ -1,6 +1,6 @@
 "use client";
 import { withCivicKey } from "./map-keys";
-import { civicCongressForDay, civicCongressLabel, civicDayForFrame, civicFrameVisible, civicTermStart, civicSourceForRecord, CIVIC_HISTORY_LIMITATION } from "./civic-history";
+import { civicCongressForDay, civicCongressLabel, civicDayForFrame, civicFrameVisible, civicRecordMatchesDay, civicTermStart, civicSourceForRecord, CIVIC_HISTORY_LIMITATION } from "./civic-history";
 import { CIVIC_ID, CIVIC_LIMITATION, CIVIC_SOURCE } from "./civic-districts";
 import { DEFLOCK_LIMITATION } from "./deflock";
 import { TransportHistoryControl } from "./transport-history-control";
@@ -501,6 +501,7 @@ type SelectedContext = {
   externalStationId?: string | null;
   externalFeatureId?: string | null;
   externalAttributes?: readonly DrawerAttribute[];
+  civicRecord?: { sourceDay: string | null; congressNumber: number | null; termStart: string | null; termEndExclusive: string | null };
 };
 
 type StageDrawerLoad = { stationId: string; status: "loading" | "ready" | "error"; detail?: UsgsStageDetail };
@@ -510,17 +511,23 @@ const officialContextIdForSelection = (selection: SelectedContext | null): Offic
   return OFFICIAL_CONTEXT_SOURCES.find((source) => selection.layerId === `official-context-${source.id}`)?.id ?? null;
 };
 
+const officialSelectionIsHeld = (selection: SelectedContext | null, frame: number, buildCurrent: boolean, civicDay: string | null) => Boolean(
+  selection?.featureId.startsWith("official-context:")
+  && (!buildCurrent || (officialContextIdForSelection(selection) === CIVIC_ID
+    ? !civicRecordMatchesDay(selection?.civicRecord, civicDay)
+    : frame !== OFFICIAL_CONTEXT_PRESENT_FRAME)),
+);
+
 const selectionCarrierIsVisible = (
   selection: SelectedContext | null,
   registryVisibility: Record<string, boolean>,
-  officialVisibility: Record<OfficialContextId, boolean>,
-  frame: number,
+  effectiveOfficialVisibility: Record<OfficialContextId, boolean>,
 ) => {
   if (!selection) return false;
   if (selection.kind === "registry") return registryVisibility[selection.layerId] === true;
   const officialContextId = officialContextIdForSelection(selection);
   return officialContextId
-    ? officialContextVisibilityForFrame(officialVisibility, frame)[officialContextId] === true
+    ? effectiveOfficialVisibility[officialContextId] === true
     : true;
 };
 
@@ -1066,6 +1073,12 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
       : null,
     externalFeatureId: typeof properties.featureId === "string" ? properties.featureId : officialSource && candidate.id !== undefined ? String(candidate.id) : null,
     externalAttributes: drawerArtifactAttributes(officialSource?.id ?? "basemap", properties),
+    ...(officialSource?.id === CIVIC_ID ? { civicRecord: {
+      sourceDay: stringContextProperty(properties, "sourceDay"),
+      congressNumber: typeof properties.congressNumber === "number" ? properties.congressNumber : null,
+      termStart: stringContextProperty(properties, "termStart"),
+      termEndExclusive: stringContextProperty(properties, "termEndExclusive"),
+    } } : {}),
     properties: {
       fid: featureId,
       title,
@@ -2021,11 +2034,8 @@ export default function Home() {
     + visibleOfficialSources.filter((source) => effectiveOfficialVisibility[source.id] && (source.kind === "OPERATIONAL_WMS" || source.layerIds.some((id) => id.endsWith("-fill")))).length
     + selectedEarthEngineCount;
   const withheldOfficialCount = visibleOfficialSources.filter((source) => !effectiveOfficialVisibility[source.id]).length;
-  const selectedIsHeldOfficialContext = Boolean(
-    selected
-    && selected.featureId.startsWith("official-context:")
-    && (!buildYearCurrent || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME),
-  );
+  const selectedOfficialContextId = officialContextIdForSelection(selected);
+  const selectedIsHeldOfficialContext = officialSelectionIsHeld(selected, temporalQuery.frame, buildYearCurrent, civicFrameDay);
   const selectedTimeMismatch = Boolean(
     selected
     && (selectedIsHeldOfficialContext || !isFeatureAvailableForTemporalQuery(selected.layer, selected.properties.year, temporalQuery)),
@@ -2603,7 +2613,6 @@ export default function Home() {
   const governedRouteResult = useMemo(() => inspectGovernedRoute(governedMethod, governedRoute), [governedMethod, governedRoute]);
   const planningScenarioReview = PLANNING_SCENARIO_REVIEWS[scenarioReviewMode];
 
-  const selectedOfficialContextId = officialContextIdForSelection(selected);
   const selectedOfficialConnection = officialContextConnections.find((connection) => connection.source.id === selectedOfficialContextId);
   const selectedOfficialPayload = selectedOfficialContextId ? officialPayloads[selectedOfficialContextId as OfficialContextFeedId] : undefined;
   const selectedRiverObservation = useMemo(() => selectedOfficialContextId === "usgs-streamflow"
@@ -2613,7 +2622,12 @@ export default function Home() {
   const selectedSummary = useMemo(() => selected ? evidenceSummary({ ...selected.properties, kind: selected.kind, officialId: selectedOfficialContextId,
     layerDomain: selected.layer.domain, observedAt: selectedRiverObservation?.observedAt ?? null }) : null, [selected, selectedOfficialContextId, selectedRiverObservation]);
   const selectedOfficialFeature = selected?.externalFeatureId && selectedOfficialPayload?.data.features.find((feature) =>
-    feature.properties?.featureId === selected.externalFeatureId);
+    feature.properties?.featureId === selected.externalFeatureId
+    && (selectedOfficialContextId !== CIVIC_ID || (
+      civicRecordMatchesDay(selected.civicRecord, civicFrameDay)
+      && civicRecordMatchesDay(feature.properties, civicFrameDay)
+      && (selectedOfficialPayload.sourceDay === civicFrameDay || selectedOfficialPayload.sourceDay === undefined && selected.civicRecord?.congressNumber === 119)
+    )));
   const selectedFireComparisonId = selectedOfficialContextId === "nifc-fire-reports" ? "nasa-gibs-fire-points" : selectedOfficialContextId === "nasa-gibs-fire-points" ? "nifc-fire-reports" : null;
   const selectedFireComparisonPayload = selectedFireComparisonId ? officialPayloads[selectedFireComparisonId] : undefined;
   const selectedFireNeighbors = selectedFireComparisonId && selectedOfficialFeature && selectedFireComparisonPayload
@@ -2679,7 +2693,7 @@ export default function Home() {
   }, [rightOpen, selected?.externalStationId, selectedOfficialContextId]);
   const selectedLabel = selected?.properties.title ?? "Statewide Kansas";
   const selectedEvidence = selected ? evidenceLabels[selected.properties.evidenceState] : null;
-  const selectedLayerHidden = Boolean(selected && !selectionCarrierIsVisible(selected, visibility, officialVisibility, temporalQuery.frame));
+  const selectedLayerHidden = Boolean(selected && !selectionCarrierIsVisible(selected, visibility, effectiveOfficialVisibility));
   const selectedEvidenceFiltered = Boolean(selected && !selectionPassesEvidenceFilter(selected, mapEvidenceFilter));
   const activeFocus = focusResultForState(selected?.properties.evidenceState ?? "MISSING_EVIDENCE", selectedTimeMismatch);
   const focusGates = useMemo(() => buildFocusGateTrace({
@@ -5770,9 +5784,11 @@ export default function Home() {
             styleStep = "SELECTION";
             const currentSelection = selectedRef.current;
             if (currentSelection) {
-              const mismatch = (currentSelection.featureId.startsWith("official-context:") && temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME)
+              const mismatch = officialSelectionIsHeld(currentSelection, temporalQueryRef.current.frame, buildYearCurrentRef.current,
+                civicDayForFrame(temporalQueryRef.current.frame, OFFICIAL_CONTEXT_PRESENT_FRAME, currentUtcDay(), calendarSweepRef.current ? calendarFrameDay(calendarSweepRef.current) : null))
                 || !isFeatureAvailableForTemporalQuery(currentSelection.layer, currentSelection.properties.year, temporalQueryRef.current);
-              const layerVisible = selectionCarrierIsVisible(currentSelection, visibilityRef.current, officialVisibilityRef.current, temporalQueryRef.current.frame);
+              const layerVisible = selectionCarrierIsVisible(currentSelection, visibilityRef.current,
+                runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current));
               const filtered = !selectionPassesEvidenceFilter(currentSelection, mapEvidenceFilterRef.current);
               updateSelectionSource(map, mismatch || !layerVisible || filtered ? null : currentSelection.geometry);
             }
@@ -8927,8 +8943,10 @@ export default function Home() {
       map.setVerticalFieldOfView(fieldOfViewRef.current);
       const currentSelection = selectedRef.current;
       const selectionAvailable = currentSelection
-        && selectionCarrierIsVisible(currentSelection, visibilityRef.current, officialVisibilityRef.current, temporalQueryRef.current.frame)
-        && !(currentSelection.featureId.startsWith("official-context:") && temporalQueryRef.current.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME)
+        && selectionCarrierIsVisible(currentSelection, visibilityRef.current,
+          runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current))
+        && !officialSelectionIsHeld(currentSelection, temporalQueryRef.current.frame, buildYearCurrentRef.current,
+          civicDayForFrame(temporalQueryRef.current.frame, OFFICIAL_CONTEXT_PRESENT_FRAME, currentUtcDay(), calendarSweepRef.current ? calendarFrameDay(calendarSweepRef.current) : null))
         && isFeatureAvailableForTemporalQuery(currentSelection.layer, currentSelection.properties.year, temporalQueryRef.current)
         && selectionPassesEvidenceFilter(currentSelection, mapEvidenceFilterRef.current);
       updateSelectionSource(map, selectionAvailable ? currentSelection.geometry : null);
@@ -11441,7 +11459,7 @@ export default function Home() {
             </section>
 
             {selectedOfficialConnection && <section className="drawer-live-source" data-state={selectedRiverObservation?.status ?? selectedOfficialConnection.state} aria-label="Selected external source and telemetry">
-              <header><span>OFFICIAL SOURCE · {selectedOfficialConnection.source.shortTitle}</span><strong>{selectedRiverObservation?.status === "observation" ? "OBSERVATION LOADED" : selectedRiverObservation?.status === "gap" ? "NO SAMPLE AT FRAME" : selectedRiverObservation?.status === "stale" ? "LAST RESPONSE · CHECK SOURCE" : selectedRiverObservation?.status === "error" ? "SOURCE UNAVAILABLE" : selectedRiverObservation?.status === "loading" ? "REFRESHING" : selectedOfficialConnection.state.toUpperCase()}</strong></header>
+              <header><span>SOURCE CONTEXT · {selectedOfficialConnection.source.shortTitle}</span><strong>{selectedRiverObservation?.status === "observation" ? "OBSERVATION LOADED" : selectedRiverObservation?.status === "gap" ? "NO SAMPLE AT FRAME" : selectedRiverObservation?.status === "stale" ? "LAST RESPONSE · CHECK SOURCE" : selectedRiverObservation?.status === "error" ? "SOURCE UNAVAILABLE" : selectedRiverObservation?.status === "loading" ? "REFRESHING" : selectedOfficialConnection.state.toUpperCase()}</strong></header>
               {selectedRiverObservation ? <>
                 <div className="drawer-live-reading"><span>Discharge · USGS station {selectedRiverObservation.stationId.slice(5)}</span><strong>{selectedRiverObservation.displayValue ?? "No sample at this frame"}</strong><small>{selectedRiverObservation.observedAt ? `Observed ${drawerTimestamp(selectedRiverObservation.observedAt)}` : "The selected frame has no usable discharge observation."}</small></div>
                 {!selectedRiverObservation.displayValue && latestLoadedDischarge && <p className="drawer-prior-reading">Latest loaded discharge: {latestLoadedDischarge.value?.toLocaleString("en-US")} {latestLoadedDischarge.unit} · {drawerTimestamp(latestLoadedDischarge.observedAt)}. This is not the selected frame.</p>}
@@ -11449,11 +11467,11 @@ export default function Home() {
                 <a href={selectedRiverObservation.sourceUrl} target="_blank" rel="noreferrer">Open this gauge at USGS ↗</a>
               </> : <>
                 <p>{selectedOfficialConnection.source.organization} · {selectedOfficialConnection.featureCount ?? "Unknown"} features in response · Retrieved {drawerTimestamp(selectedOfficialConnection.retrievedAt)}</p>
-                <a href={selectedOfficialConnection.source.sourceUrl} target="_blank" rel="noreferrer">Open official source ↗</a>
+                <a href={selectedOfficialConnection.source.sourceUrl} target="_blank" rel="noreferrer">Open source ↗</a>
               </>}
             </section>}
             {selected.kind === "basemap" ? <div className="drawer-claim-boundary"><span>CLAIM EVIDENCE</span><strong>No KFM EvidenceBundle attached</strong><p>{selectedOfficialConnection ? "Provider data is source context. KFM admission, review, and release have not occurred." : "This basemap feature is orientation context from an external display provider, not KFM evidence."}</p></div> : <><div className="drawer-state"><span className="state-icon" aria-hidden="true">{["ANSWER", "CORRECTED"].includes(selected.properties.evidenceState) ? "✓" : ["DENIED_BY_POLICY", "RESTRICTED_ACCESS", "ERROR"].includes(selected.properties.evidenceState) ? "!" : "○"}</span><span><small>{selected.properties.evidenceState}</small><strong>{selectedEvidence?.label}</strong></span></div><p className="state-explanation">{selectedEvidence?.explanation}</p></>}
-            {selectedTimeMismatch && <div className="drawer-time-warning" role="status"><strong>Selection is outside active time</strong><span>{selectedIsHeldOfficialContext ? `Current official context is held outside ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : `Source ${formatTimelineStep(selected.properties.year)} · active ${temporalScopeLabel}`}. The normal map halo is hidden while the record stays available for inspection.</span></div>}
+            {selectedTimeMismatch && <div className="drawer-time-warning" role="status"><strong>Selection is outside active time</strong><span>{selectedOfficialContextId === CIVIC_ID ? `Selected congressional record: ${selected.civicRecord?.sourceDay ?? "date unknown"} · active day: ${civicFrameDay ?? "unsupported"}. Only records compatible with the active congressional view can be used` : selectedIsHeldOfficialContext ? `Current official context is held outside ${formatTimelineStep(OFFICIAL_CONTEXT_PRESENT_FRAME)}` : `Source ${formatTimelineStep(selected.properties.year)} · active ${temporalScopeLabel}`}. The normal map halo is hidden while the record stays available for inspection.</span></div>}
             {selectedOfficialContextId === "nasa-gibs-fire-points" && !selectedAttributesCurrent && <div className="drawer-time-warning" role="status"><strong>Detection is not on the active map</strong><span>This captured NASA detection is from {selectedFireSourceDay ?? "an earlier source day"} UTC. The map is checking {officialArchiveDays["nasa-gibs-fire-points"] ?? currentUtcDay()} UTC; this record remains available only for review.</span></div>}
             {selectedLayerHidden && <div className="drawer-time-warning" role="status"><strong>Selected layer is hidden</strong><span>{selected.layer.title} remains available for inspection, but its normal map halo is hidden until the layer is visible again.</span></div>}
             {selectedEvidenceFiltered && <div className="drawer-time-warning" role="status"><strong>Selection is outside the map evidence filter</strong><span>The record remains available for inspection, but its map geometry and halo stay hidden until the {mapEvidenceFilter.replaceAll("_", " ")} filter is cleared or changed.</span></div>}
