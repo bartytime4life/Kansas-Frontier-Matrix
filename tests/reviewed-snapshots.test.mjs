@@ -232,5 +232,5 @@ test('a release\'s features can be picked from a keyboard list, most significant
  const page=await readFile('app/page.tsx','utf8');
  assert.match(page,/const reviewedList = useMemo\(\(\) => reviewedData && reviewedSource \? reviewedFeatureList\(reviewedSource, reviewedData\) : \[\], \[reviewedData, reviewedSource\]\);/);
  assert.match(page,/list: reviewedList, pick: reviewedFeature \? reviewedPick : null \} : undefined\}/);
- assert.match(page,/onReviewedPick=\{\(id\) => \{[\s\S]{0,400}setReviewedPick\(id\);[\s\S]{0,700}easeToPicked\(\[\(Math\.min\(\.\.\.xs\) \+ Math\.max\(\.\.\.xs\)\) \/ 2, \(Math\.min\(\.\.\.ys\) \+ Math\.max\(\.\.\.ys\)\) \/ 2\]\);/,'an alert area is centred on its extent');
+ assert.match(page,/onReviewedPick=\{\(id\) => \{[\s\S]{0,400}if \(!feature\) return;\s*setReviewedPick\(id\);\s*if \(!feature\.geometry\) return;[\s\S]{0,700}easeToPicked\(\[\(Math\.min\(\.\.\.xs\) \+ Math\.max\(\.\.\.xs\)\) \/ 2, \(Math\.min\(\.\.\.ys\) \+ Math\.max\(\.\.\.ys\)\) \/ 2\]\);/,'an alert area is centred on its extent');
 });

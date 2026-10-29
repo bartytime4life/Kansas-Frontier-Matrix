@@ -10614,9 +10614,11 @@ export default function Home() {
             onReviewed={(on) => { setReviewedPick(null); reviewed.setOn(on); }} onReviewedIndex={reviewed.setIndex} onReviewedClear={() => setReviewedPick(null)}
             onReviewedPick={(id) => {
               // The same pick a map click makes; the map moves to the point, or to the middle of an alert area's extent.
+              // A feature released without geometry is still selected, so its details and release show; the map stays put.
               const feature = reviewedData?.features.find(item => String(item.id ?? "") === id);
-              if (!feature?.geometry) return;
+              if (!feature) return;
               setReviewedPick(id);
+              if (!feature.geometry) return;
               const points = feature.geometry.type === "Point" ? [feature.geometry.coordinates] : feature.geometry.type === "Polygon" ? feature.geometry.coordinates.flat()
                 : feature.geometry.type === "MultiPolygon" ? feature.geometry.coordinates.flat(2) : [];
               if (!points.length) return;
