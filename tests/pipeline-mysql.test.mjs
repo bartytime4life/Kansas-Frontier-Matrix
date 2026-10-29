@@ -58,6 +58,7 @@ test('MySQL: restore pre-county backup, preserve populated heads/control/history
     const db = 'kfm_county_restore_' + process.pid + '_' + suffix;
     await connection.query('CREATE DATABASE ' + db); databases.push(db); return db;
   };
+  // Use text-protocol queries below: prepared statements can retain the previous default database.
   const use = async db => connection.query('USE ' + db);
   const apply = async text => { for (const q of text.replace(/--[^\n]*/g, '').split(';').map(s => s.trim()).filter(Boolean)) await connection.query(q); };
   const snapshot = async () => {
@@ -74,18 +75,18 @@ test('MySQL: restore pre-county backup, preserve populated heads/control/history
   const backup = db => docker('mysqldump', ['--single-transaction', '--skip-lock-tables', '--no-tablespaces', '--set-gtid-purged=OFF', '--hex-blob', db]);
   for (const paused of [false, true]) {
     const original = await create('original_' + Number(paused)); await use(original); await apply(oldSql);
-    await connection.execute('UPDATE kfm_pipeline_control SET paused=?,worker_seen=?,worker_state=? WHERE id=1', [paused, 1793298600000, 'idle']);
+    await connection.query('UPDATE kfm_pipeline_control SET paused=?,worker_seen=?,worker_state=? WHERE id=1', [paused, 1793298600000, 'idle']);
     await connection.query('CREATE TABLE unrelated_sentinel (id INT PRIMARY KEY, value TEXT) ENGINE=InnoDB');
-    await connection.execute('INSERT INTO unrelated_sentinel VALUES (1,?)', ['unrelated records; quotes \' and Unicode Kansas 🌻']);
-    await connection.execute('INSERT INTO kfm_pipeline_nonces VALUES (?,?)', ['f'.repeat(64), 1793298720000]);
+    await connection.query('INSERT INTO unrelated_sentinel VALUES (1,?)', ['unrelated records; quotes \' and Unicode Kansas 🌻']);
+    await connection.query('INSERT INTO kfm_pipeline_nonces VALUES (?,?)', ['f'.repeat(64), 1793298720000]);
     for (const [index, source] of ['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes', 'water', 'weather'].entries()) {
       const id = (index + 1).toString(16).repeat(64), prior = (index + 6).toString(16).repeat(64);
       for (const [release, state] of [[id, 'COMMITTED'], [prior, 'WITHDRAWN']]) {
-        await connection.execute('INSERT INTO kfm_pipeline_releases VALUES (?,?,?,?,?,?)',
+        await connection.query('INSERT INTO kfm_pipeline_releases VALUES (?,?,?,?,?,?)',
           [release, source, JSON.stringify({ fixture: true, source, recipe: 'pre-county' }), state, JSON.stringify({ synthetic: source }), 1793298600000]);
       }
-      await connection.execute('UPDATE kfm_pipeline_heads SET release_id=?,previous_id=?,revision=? WHERE source_id=?', [id, prior, index + 10, source]);
-      await connection.execute('INSERT INTO kfm_pipeline_events VALUES (?,?,?,?,?,?)', [id, source, id, prior, 'ACTIVATE', 1793298600000]);
+      await connection.query('UPDATE kfm_pipeline_heads SET release_id=?,previous_id=?,revision=? WHERE source_id=?', [id, prior, index + 10, source]);
+      await connection.query('INSERT INTO kfm_pipeline_events VALUES (?,?,?,?,?,?)', [id, source, id, prior, 'ACTIVATE', 1793298600000]);
     }
     const before = await snapshot(), dump = backup(original); assert.ok(dump.includes('unrelated_sentinel'));
     const restored = await create('restored_' + Number(paused)); docker('mysql', [restored], dump); await use(restored);
