@@ -115,5 +115,5 @@ test('the Storm desk offers surface observations: held away from the present, th
  assert.match(page,/\.catch\(\(\) => \{ if \(!controller\.signal\.aborted\) \{ setSurfaceRecords\(null\); setSurfaceFailed\(true\); \} \}\);/);
  assert.match(page,/if \(renderedHits\[0\]\?\.source === SURFACE_OBS_SOURCE_ID\) \{\s*const station = renderedHits\[0\]\.properties\?\.station;/);
  assert.match(page,/\.\.\.\(surfaceData \? \[surfaceKey\(\)\] : \[\]\)/);
- assert.match(page,/setSurfaceOn\(false\);\s*setSurfacePicked\(null\);\s*\/\/ So do water levels at wells/,'closes with its map');
+ assert.match(page,/\/\/ Surface observations and the daylight chart close with their map too\.\s*setSurfaceOn\(false\);\s*setSurfacePicked\(null\);/,'closes with its map');
 });

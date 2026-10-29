@@ -10580,7 +10580,7 @@ export default function Home() {
     tornadoHidRef.current = [];
     setTornadoOn(false);
     setTornadoPicked(null);
-    // The change closes with its map; the starters above already decide whether the county outlines are on.
+    // Surface observations and the daylight chart close with their map too.
     setSurfaceOn(false);
     setSurfacePicked(null);
     setSunYearOn(false);
@@ -10589,6 +10589,7 @@ export default function Home() {
     wellsWereOnRef.current = false;
     setWellsOn(false);
     setWellPicked(null);
+    // The population change closes with its map; the starters above already decide whether the county outlines are on.
     popChangePrismsRef.current = false;
     popChangeHidCountiesRef.current = false;
     setPopChangeOn(false);
