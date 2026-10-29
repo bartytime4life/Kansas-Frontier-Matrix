@@ -233,7 +233,7 @@ test("the bounded official-source contract accepts the complete registry and rej
       (_, index) => ({ ...context.officialSources[0], id: `source-${index}` }),
     ),
   };
-  assert.equal(QWEN_LOCAL_MAX_OFFICIAL_SOURCES, 48);
+  assert.equal(QWEN_LOCAL_MAX_OFFICIAL_SOURCES, 50);
   assert.equal(hasSafeQwenContextShape(complete), true);
   assert.equal(hasRequiredLocalQwenContext(complete), true);
   const overflow = {

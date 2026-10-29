@@ -37,7 +37,7 @@ export const QWEN_LOCAL_ASK_TIMEOUT_MS = 95_000;
 export const QWEN_LOCAL_SITE_ORIGIN = "https://kansas-frontier-matrix-explorer.blackbart-55.chatgpt.site";
 export const QWEN_LOCAL_PREVIEW_ORIGIN = "http://127.0.0.1:5173";
 export const QWEN_LOCAL_EXPLORER_ORIGIN = "http://127.0.0.1:4173";
-export const QWEN_LOCAL_MAX_OFFICIAL_SOURCES = 48;
+export const QWEN_LOCAL_MAX_OFFICIAL_SOURCES = 50;
 export const QWEN_LOCAL_ACCEPTED_REVIEW_STATE = "ACCEPTED";
 export const QWEN_LOCAL_ALLOWED_ORIGINS = Object.freeze([
   QWEN_LOCAL_SITE_ORIGIN,
