@@ -60,7 +60,7 @@ export async function cli(argv, connectionDependencies) {
     return { state: 'created', privateKeyRemainsLocal: true, note: 'Run on the original PC; install only the public key on GoDaddy and the worker.' };
   }
   if (command === 'profile-template') {
-    if (!['usgs-streamflow','nws-alerts','water','weather'].includes(args[0])) fail('SOURCE_NOT_ALLOWED');
+    if (!['usgs-streamflow','nws-alerts','usgs-earthquakes','water','weather'].includes(args[0])) fail('SOURCE_NOT_ALLOWED');
     return { format: 'kfm-pc-release-delegation-v1', id: 'owner-selected-profile-id', sourceId: args[0], recipeSha256: await recipeDigest(), approver: '',
       validFrom: new Date().toISOString(), expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
       rights: 'REVIEW_REQUIRED', sensitivity: 'REVIEW_REQUIRED', sourceRef: '', rightsRef: '', reviewRef: '', releaseProfileRef: '',
@@ -83,7 +83,7 @@ export async function cli(argv, connectionDependencies) {
     const root = await rootPath(args[0]); const results = [];
     // Bounded manual acquisition on the system disk; never enables a schedule or publication.
     const fs = await statfs(root); if (fs.bavail * fs.bsize < 30 * 1024 ** 3 + 64 * 1024 ** 2) fail('DISK_RESERVE_REQUIRED');
-    for (const id of ['usgs-streamflow','nws-alerts']) {
+    for (const id of ['usgs-streamflow','nws-alerts','usgs-earthquakes']) {
       try {
         const request = captureRequest(id); const capture = await fetchCapture(request, { apiKey: process.env.USGS_WATER_API_KEY });
         const raw = resolve(root, 'data/quarantine', id, 'objects/sha256', sha(capture.bytes), 'payload');

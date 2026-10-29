@@ -126,7 +126,7 @@ export async function handlePipeline(request, { store, environment = process.env
 /** @param {string} sourceId @param {{store: any, environment?: any, now?: number}} options @param {string|null} [releaseId] */
 export async function publicContext(sourceId, { store, environment = process.env, now = Date.now() }, releaseId = null) {
   source(sourceId);
-  if (!['usgs-streamflow','nws-alerts'].includes(sourceId)) fail('SOURCE_NOT_ALLOWED', 400);
+  if (!['usgs-streamflow','nws-alerts','usgs-earthquakes'].includes(sourceId)) fail('SOURCE_NOT_ALLOWED', 400);
   const r = releaseId ? await store.release(digest(releaseId)) : await store.active(sourceId);
   if (!r || r.state !== 'COMMITTED' || r.sourceId !== sourceId || !r.projection) return { state: 'withheld', reason: 'NO_APPROVED_RELEASE', sourceId };
   approval(r.manifest, environment, now);

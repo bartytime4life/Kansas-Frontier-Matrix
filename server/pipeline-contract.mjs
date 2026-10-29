@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 export const ORIGIN = 'https://kansasfrontiermatrix.com';
 export const MAX_PACKAGE = 8 * 1024 * 1024;
 export const CHUNK_SIZE = 256 * 1024;
-export const SOURCES = ['usgs-streamflow', 'nws-alerts', 'water', 'weather'];
+export const SOURCES = ['usgs-streamflow', 'nws-alerts', 'usgs-earthquakes', 'water', 'weather'];
 export const HASH = /^[a-f0-9]{64}$/;
 export class PipelineError extends Error { constructor(code, status = 409) { super(code); this.status = status; } }
 export const fail = (code, status) => { throw new PipelineError(code, status); };

@@ -34,7 +34,7 @@ test('a release is shown only when it is the requested source, context-only and 
  assert.ok(snapshots.REVIEWED_REASONS.APPROVAL_EXPIRED);
  const alerts=snapshots.parseReviewedProduct(product({sourceId:'nws-alerts',data:{type:'FeatureCollection',features:[{type:'Feature',properties:{event:'Flood Warning',severity:'Severe',expired:false}},{type:'Feature',properties:{event:'Wind Advisory',severity:'Minor',expired:true}}]}}),'nws-alerts');
  assert.deepEqual(alerts.data.features.map(f=>f.properties.event),['Flood Warning']);
- assert.deepEqual({...snapshots.REVIEWED_SOURCE_BY_TOPIC},{water:'usgs-streamflow',weather:'nws-alerts',disaster:'nws-alerts'});
+ assert.deepEqual({...snapshots.REVIEWED_SOURCE_BY_TOPIC},{water:'usgs-streamflow',weather:'nws-alerts',disaster:'nws-alerts',geology:'usgs-earthquakes'});
 });
 
 test('gauge circles grow in area with discharge, provisional values ring amber, alert areas take their NWS severity',()=>{
@@ -137,4 +137,19 @@ test('the snapshot player waits for each release, withholds one whose approval e
   await flush();s=view();await flush();s=view();
   assert.equal(s.history.length,2);assert.equal(s.product.releaseId,id('c'));
  }finally{mock.timers.reset();delete globalThis.window;}
+});
+
+test('released earthquakes draw as the live catalog does, ringed by USGS review state, and validate',async()=>{
+ const quakes=layers.reviewedLayers()[3];
+ assert.equal(quakes.id,'external-reviewed-snapshot-earthquakes');
+ assert.match(JSON.stringify(quakes.filter),/"has","eventUrl"/,'only released earthquakes, never a gauge');
+ assert.deepEqual(quakes.paint['circle-color'],mapKeys.earthquakeColor());assert.deepEqual(quakes.paint['circle-radius'],mapKeys.earthquakeRadius());
+ assert.deepEqual(quakes.paint['circle-stroke-color'],['case',['==',['get','status'],'reviewed'],'#f4fbfb','#f2b84b']);
+ const {validateStyleMin}=await import('@maplibre/maplibre-gl-style-spec');
+ const data={type:'FeatureCollection',features:[{type:'Feature',id:'us7000abcd',geometry:{type:'Point',coordinates:[-97.6,37.2]},properties:{magnitude:2.7,status:'reviewed',eventUrl:'https://earthquake.usgs.gov/earthquakes/eventpage/us7000abcd'}}]};
+ assert.deepEqual(validateStyleMin({version:8,sources:{'external-reviewed-snapshot':{type:'geojson',data}},layers:layers.reviewedLayers()}).map(e=>e.message),[]);
+ const key=mapKeys.withReviewedKey([],'usgs-earthquakes')[0];
+ assert.equal(key.title,'Reviewed earthquakes (USGS)');
+ assert.deepEqual(key.items.slice(-2).map(i=>[i.label,i.stroke]),[['Automatic solution','#f2b84b'],['Reviewed by USGS','#f4fbfb']]);
+ assert.equal(snapshots.REVIEWED_SOURCE_LABEL['usgs-earthquakes'],'USGS earthquake');
 });

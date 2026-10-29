@@ -129,6 +129,16 @@ export const REVIEWED_DISCHARGE_KEY: MapKey = Object.freeze({
   ]),
   note: "Circle area grows with discharge from a 3 px floor; flows above 62,500 ft³/s draw at the largest size. Amber ring: provisional USGS value; white: approved.",
 });
+/** Released earthquakes: the live catalog's magnitude colours, with the review ring the gauges use. */
+export const REVIEWED_EARTHQUAKE_KEY: MapKey = Object.freeze({
+  id: "reviewed-earthquakes", title: "Reviewed earthquakes (USGS)",
+  items: Object.freeze([
+    ...EARTHQUAKE_MAGNITUDE_COLORS.map(([m, color], i) => Object.freeze({ label: i === EARTHQUAKE_MAGNITUDE_COLORS.length - 1 ? `M ${m}+` : `M ${m}`, color, shape: "dot" as const })),
+    Object.freeze({ label: "Automatic solution", color: EARTHQUAKE_MAGNITUDE_COLORS[1][1], shape: "dot" as const, size: 12, stroke: GAUGE_PROVISIONAL_RING }),
+    Object.freeze({ label: "Reviewed by USGS", color: EARTHQUAKE_MAGNITUDE_COLORS[1][1], shape: "dot" as const, size: 12, stroke: GAUGE_APPROVED_RING }),
+  ]),
+  note: "A stored hourly capture of the USGS catalog for the Kansas window, past 30 days. Amber ring: automatic solution that USGS may still revise; white: reviewed by an analyst.",
+});
 
 /** The keys for the starter layers a map shows, in the map's own order; keys of one group are merged. */
 export const mapKeysFor = (starters: readonly string[], visible: (id: string) => boolean): readonly MapKey[] => {
@@ -146,7 +156,8 @@ export const mapKeysFor = (starters: readonly string[], visible: (id: string) =>
 
 /** A map's keys with the key for a drawn reviewed snapshot added, once (alerts share the live key). */
 export const withReviewedKey = (keys: readonly MapKey[], reviewedSourceId: string | null): readonly MapKey[] => {
-  const key = reviewedSourceId === "usgs-streamflow" ? REVIEWED_DISCHARGE_KEY : reviewedSourceId === "nws-alerts" ? MAP_KEYS["nws-alerts"] : null;
+  const key = reviewedSourceId === "usgs-streamflow" ? REVIEWED_DISCHARGE_KEY : reviewedSourceId === "nws-alerts" ? MAP_KEYS["nws-alerts"]
+    : reviewedSourceId === "usgs-earthquakes" ? REVIEWED_EARTHQUAKE_KEY : null;
   return key && !keys.some(k => k.id === key.id) ? [...keys, key] : keys;
 };
 

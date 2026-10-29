@@ -30,7 +30,7 @@ export async function tick(config, { fetcher = fetch, now = Date.now(), acquire 
     if (config.publish === true) try { await pipelineCall('heartbeat', { state: 'running' }, secret, { fetcher }); }
     catch (error) { remoteAvailable = false; heartbeatFailure = errorCode(error); }
     for (const sourceId of policy.priority.filter(id => config.sources.includes(id))) {
-      if (!['usgs-streamflow','nws-alerts'].includes(sourceId)) fail('SOURCE_NOT_ALLOWED');
+      if (!['usgs-streamflow','nws-alerts','usgs-earthquakes'].includes(sourceId)) fail('SOURCE_NOT_ALLOWED');
       await guard(config, { reserve: 64 * 1024 ** 2 });
       if (memory() < 3 * 1024 ** 3) fail('MEMORY_RESERVE_REQUIRED');
       const request = captureRequest(sourceId, now); const job = journal.claim(sourceId, request.slot, now, Boolean(secret));
@@ -89,7 +89,7 @@ export async function loadConfig(path) {
   const config = parse(await readRegular(path, 16384));
   if (config.format !== 'kfm-pc-pipeline-config-v1' || typeof config.root !== 'string' || typeof config.mount !== 'string' || typeof config.storeId !== 'string'
     || !/^[a-f0-9]{32}$/.test(config.storeId) || !Array.isArray(config.sources) || config.sources.length > 2 || new Set(config.sources).size !== config.sources.length
-    || config.sources.some(s => !['usgs-streamflow','nws-alerts'].includes(s)) || typeof config.publish !== 'boolean' || !/^\d+$/.test(String(config.device))
+    || config.sources.some(s => !['usgs-streamflow','nws-alerts','usgs-earthquakes'].includes(s)) || typeof config.publish !== 'boolean' || !/^\d+$/.test(String(config.device))
     || !config.approvalDirectory?.startsWith('/')) fail('CONFIG_INVALID');
   storagePolicy(config);
   return config;
