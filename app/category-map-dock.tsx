@@ -10,6 +10,7 @@ import type { DepthSection, EarthquakeRecordEvent, MagnitudeFrequency, YearCount
 import type { FloodGauge, FloodHydrograph } from "./flood-forecast";
 import type { FemaYear, HAZARD_FAMILIES, HazardFamilyId } from "./fema-record";
 import type { RainfallKind } from "./mrms-rainfall";
+import type { TornadoYear } from "./tornado-record";
 import type { OutlookDay, OutlookProduct } from "./spc-outlook";
 import type { ReportDay, StormReport } from "./storm-reports";
 
@@ -81,7 +82,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -194,6 +195,24 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
     legend: readonly Readonly<{ label: string; image: string }>[] | null;
     legendFailed: boolean;
   }>;
+  /** The SPC tornado record since 1950, for looks that offer it: tracks by rating, the years stacked by rating, and the strongest and deadliest. */
+  tornadoes?: Readonly<{
+    on: boolean;
+    loading: boolean;
+    failed: boolean;
+    reading: string | null;
+    series: readonly Readonly<{ name: string; color: string }>[];
+    years: readonly TornadoYear[] | null;
+    year: number | null;
+    minRating: number;
+    list: readonly Readonly<{ id: string; label: string }>[];
+    picked: Readonly<{ id: string; detail: string }> | null;
+  }>;
+  onTornadoes?: (on: boolean) => void;
+  onTornadoYear?: (year: number | null) => void;
+  onTornadoRating?: (minRating: number) => void;
+  onTornadoPick?: (id: string) => void;
+  onTornadoClear?: () => void;
   /** Kansas Senate or House districts, for looks that offer them, in place of the U.S. House districts while shown. */
   legislature?: Readonly<{ chamber: "senate" | "house" | null; loading: boolean; failed: boolean; reading: string | null;
     list: readonly Readonly<{ id: string; label: string }>[]; picked: string | null }>;
@@ -478,6 +497,33 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
         <ul>{population.groups.map(group => <li key={group.id}><span className="category-map-dock-chip" style={{ background: group.color }} aria-hidden="true" />
           <span>{group.label}<small>{group.range}</small></span><b>{population.counties ? `${group.count} ${group.count === 1 ? "county" : "counties"}` : "…"}</b></li>)}</ul>
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
+      </div>}
+    </>}
+    {look.tools?.includes("tornadoes") && tornadoes && onTornadoes && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={tornadoes.on} onClick={() => onTornadoes(!tornadoes.on)}
+        title="Every Kansas tornado in the SPC severe weather database since 1950, as tracks coloured by F/EF rating">{tornadoes.on ? "Hide the tornado record" : "Tornado record since 1950"}</button>
+      {tornadoes.on && <div className="category-map-dock-quakes">
+        <p className="category-map-dock-reading" aria-live="polite">{tornadoes.loading ? "Reading the SPC tornado database…"
+          : tornadoes.failed ? "The SPC tornado database did not answer. Try the record again." : tornadoes.reading}</p>
+        {tornadoes.years && <TornadoHistory years={tornadoes.years} year={tornadoes.year} series={tornadoes.series} onYear={onTornadoYear} />}
+        {tornadoes.years && <div className="category-map-dock-fema-filters">
+          <label className="category-map-dock-range"><span>Year</span>
+            <select value={tornadoes.year ?? ""} onChange={event => onTornadoYear?.(event.target.value ? Number(event.target.value) : null)}>
+              <option value="">All years</option>
+              {tornadoes.years.filter(entry => entry.total > 0 || entry.year === tornadoes.year).map(entry => <option key={entry.year} value={entry.year}>{entry.year} · {entry.total}</option>)}
+            </select></label>
+          <label className="category-map-dock-range"><span>Rating</span>
+            <select value={tornadoes.minRating} onChange={event => onTornadoRating?.(Number(event.target.value))}>
+              <option value={0}>All tornadoes</option>
+              {[1, 2, 3, 4, 5].map(r => <option key={r} value={r}>F/EF{r} or stronger</option>)}
+            </select></label>
+        </div>}
+        {onTornadoPick && tornadoes.list.length > 0 && <PickList summary={`Strongest and deadliest (${tornadoes.list.length})`} label="Kansas tornadoes, strongest first, then deadliest"
+          items={tornadoes.list} selected={tornadoes.picked?.id ?? null} onPick={onTornadoPick} />}
+        {tornadoes.picked && <div className="category-map-dock-quake-event" aria-live="polite">
+          <p>{tornadoes.picked.detail}</p>
+          <div><button type="button" onClick={onTornadoClear} aria-label="Clear the selected tornado">Clear</button></div>
+        </div>}
       </div>}
     </>}
     {look.tools?.includes("legislature") && legislature && onLegislature && <>
@@ -814,6 +860,33 @@ export function FloodHydrographChart({ gauge, plot, reading }: Readonly<{ gauge:
       {plot.crest && <circle cx={x(plot.crest.time).toFixed(1)} cy={y(plot.crest.value).toFixed(1)} r={3.2} fill="none" stroke="#ffffff" strokeWidth={1} />}
     </svg>
     <figcaption><span>{`${gauge.label}${gauge.units ? `, ${gauge.units}` : ""} · Central time`}</span><span><span style={{ color: "#5cc8ff" }}>━ observed</span> <span style={{ color: "#d58cff" }}>╍ forecast</span></span></figcaption>
+  </figure>;
+}
+
+/**
+ * Tornadoes per year as bars stacked by rating, weakest at the base, in the
+ * ratings' colours. A bar picks its year; the year select does the same.
+ */
+export function TornadoHistory({ years, year, series, onYear }: Readonly<{ years: readonly TornadoYear[]; year: number | null; series: readonly Readonly<{ name: string; color: string }>[]; onYear?: (year: number | null) => void }>) {
+  const max = Math.max(1, ...years.map(entry => entry.total));
+  const width = years.length * 4, height = 48;
+  return <figure className="category-map-dock-histogram" aria-label={`Kansas tornadoes per year, ${years[0]?.year}–${years[years.length - 1]?.year}, by rating; the most in one year is ${max}`}>
+    <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" aria-hidden="true">
+      {years.map((entry, i) => {
+        let base = height;
+        return <g key={entry.year} data-year={entry.year} onClick={() => entry.total && onYear?.(year === entry.year ? null : entry.year)} opacity={year === null || year === entry.year ? 1 : 0.3}>
+          <rect x={i * 4} y={0} width={4} height={height} fill="transparent" />
+          {series.map((part, k) => {
+            const n = entry.byRating[k];
+            if (!n) return null;
+            const h = n / max * (height - 2);
+            base -= h;
+            return <rect key={part.name} x={i * 4 + 0.4} y={base} width={3.2} height={h} fill={part.color} />;
+          })}
+        </g>;
+      })}
+    </svg>
+    <figcaption><span>{years[0]?.year}</span><span>{max} in the busiest year</span><span>{years[years.length - 1]?.year}</span></figcaption>
   </figure>;
 }
 
