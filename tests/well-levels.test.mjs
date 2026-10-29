@@ -42,10 +42,27 @@ test('measurements are read as feet below land surface, oldest first; a missing 
   {type:'Feature',properties:null},
  ]),SITE,'2026-10-29T22:00:00Z','x');
  assert.equal(levels.measurements.length,60,'no dry, other-parameter, other-unit or repeated reading');
- assert.deepEqual(plain(levels.measurements[0]),{date:'1966-01-10',time:Date.parse('1966-01-10T17:00:00Z'),depth:80,provisional:false});
+ assert.deepEqual(plain(levels.measurements[0]),{date:'1966-01-10',precision:'day',time:Date.parse('1966-01-10T17:00:00Z'),span:null,depth:80,provisional:false});
  assert.equal(levels.measurements[59].provisional,true);assert.equal(levels.measurements[59].depth,139);
  assert.equal(wl.validWellLevels(levels,SITE),true);assert.equal(wl.validWellLevels(levels,'370012101070902'),false);
  assert.throws(()=>wl.pageFeatures({type:'nope'}),/Not a USGS field-measurements answer/);
+});
+
+test('a date USGS knows only to the month or year stays that vague: labelled honestly, placed mid-period, its whole period kept',()=>{
+ const levels=wl.parseWellLevels([
+  feature('1958-01-01T00:00:00+00:00',41,{month:null,day:null}),
+  feature('1962-03-01T00:00:00+00:00',47,{month:3,day:null}),
+  ...yearly.slice(0,10),
+ ],SITE,'x','x');
+ const [y,m]=levels.measurements;
+ assert.deepEqual(plain([y.precision,y.span,y.time]),['year',[Date.UTC(1958,0,1),Date.UTC(1959,0,1)],(Date.UTC(1958,0,1)+Date.UTC(1959,0,1))/2]);
+ assert.deepEqual(plain([m.precision,m.span]),['month',[Date.UTC(1962,2,1),Date.UTC(1962,3,1)]]);
+ assert.deepEqual([y,m,levels.measurements[2]].map(wl.measurementDate),['1958','Mar 1962','Jan 10, 1966']);
+ assert.match(wl.wellReading(levels),/ · 2 dated only to the month or year, placed mid-period in the trend$/);
+ assert.doesNotMatch(wl.wellReading(levels),/Jan 1, 1958/,'no placeholder day is shown as a date');
+ const plot=wl.wellPlot(levels);assert.equal(plot.firstLabel,'1958');assert.equal(plot.lastLabel,'Jan 10, 1975');
+ // The latest measurement, if vague, says "in", not "on".
+ assert.match(wl.wellReading(wl.parseWellLevels([feature('1958-01-01T00:00:00Z',41,{month:null,day:null})],SITE,'x','x')),/^Depth to water 41\.0 ft in 1958 · /);
 });
 
 test('the reading gives the latest depth, the change since the first measurement, and the trend over the record and the last ten years',()=>{
@@ -133,8 +150,12 @@ test('the Aquifer dock offers water levels at wells: the nearest wells, the pick
  assert.match(text,/water level down 59\.0 ft since 1966/);assert.match(text,/"href":"https:\/\/waterdata\.usgs\.gov\/monitoring-location\/USGS-370012101070901\/"/);assert.match(text,/KGS WIZARD/);
  const chart=findNode(tree,n=>n.type===h.exports.WellHydrographChart);
  const figure=chart.type(chart.props);
- assert.equal(figure.props['aria-label'],'Depth to water at 35S 35W 15BCC 01, 60 measurements from 1966-01-10 to 2025-01-10, 80.0 to 139.0 feet below land surface');
+ assert.equal(figure.props['aria-label'],'Depth to water at 35S 35W 15BCC 01, 60 measurements from Jan 10, 1966 to Jan 10, 2025, 80.0 to 139.0 feet below land surface');
  const svg=JSON.stringify(figure);assert.match(svg,/"strokeDasharray":"4 2"/);assert.match(svg,/"fill":"none","stroke":"#5cc8ff"/,'the provisional measurement is hollow');
+ assert.doesNotMatch(svg,/data-span/,'exact dates have no period bar');
+ const vague=wl.parseWellLevels([feature('1958-01-01T00:00:00Z',41,{month:null,day:null}),...yearly],SITE,'x','x');
+ const vagueFigure=h.exports.WellHydrographChart({plot:wl.wellPlot(vague),name:'x'});
+ assert.match(JSON.stringify(vagueFigure),/"data-span":"year"/);assert.match(JSON.stringify(vagueFigure),/bar: month or year only/);assert.match(vagueFigure.props['aria-label'],/from 1958 to/);
  findNode(tree,n=>n.type==='button'&&n.props['aria-label']==='Clear the selected well').props.onClick();
  assert.deepEqual(calls,[['on',true],['pick',SITE],['clear']]);
  assert.equal(tool(h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.water,wells:off})),undefined,'only maps that offer it');

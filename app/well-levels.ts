@@ -40,7 +40,14 @@ export function nextPageUrl(value: unknown): string | null {
   } catch { return null; }
 }
 
-export type WellMeasurement = Readonly<{ date: string; time: number; depth: number; provisional: boolean }>;
+/**
+ * One measurement. `date` is the provider's date and `precision` how much of it
+ * is known: USGS writes 01 placeholders for an unknown month or day and gives
+ * null `month` or `day` fields. A measurement known only to the month or year
+ * is placed at the middle of that period (`time`) for plotting and trends, and
+ * `span` holds the whole period it could fall in.
+ */
+export type WellMeasurement = Readonly<{ date: string; precision: "day" | "month" | "year"; time: number; span: readonly [number, number] | null; depth: number; provisional: boolean }>;
 export type WellLevels = Readonly<{ site: string; retrievedAt: string; source: string; measurements: readonly WellMeasurement[]; truncated: boolean }>;
 
 type Row = Record<string, unknown>;
@@ -70,10 +77,14 @@ export function parseWellLevels(features: readonly unknown[], site: string, retr
     // Negative depths are water above the land surface (a flowing well); deeper than 2,000 ft is not a High Plains water level.
     if (!Number.isFinite(depth) || depth < -100 || depth > 2000 || !Number.isFinite(time)) continue;
     const date = new Date(time).toISOString().slice(0, 10);
-    const key = `${date}|${depth}`;
+    const precision = p.month === null ? "year" as const : p.day === null ? "month" as const : "day" as const;
+    const key = `${date}|${precision}|${depth}`;
     if (seen.has(key)) continue;
     seen.add(key);
-    measurements.push(Object.freeze({ date, time, depth, provisional: typeof p.approval_status === "string" && /provisional/i.test(p.approval_status) }));
+    const y = Number(date.slice(0, 4)), mo = Number(date.slice(5, 7)) - 1;
+    const span = precision === "year" ? [Date.UTC(y, 0, 1), Date.UTC(y + 1, 0, 1)] as const : precision === "month" ? [Date.UTC(y, mo, 1), Date.UTC(y, mo + 1, 1)] as const : null;
+    measurements.push(Object.freeze({ date, precision, time: span ? (span[0] + span[1]) / 2 : time, span, depth,
+      provisional: typeof p.approval_status === "string" && /provisional/i.test(p.approval_status) }));
   }
   measurements.sort((a, b) => a.time - b.time);
   return Object.freeze({ site, retrievedAt, source, measurements: Object.freeze(measurements), truncated });
@@ -104,8 +115,13 @@ export function recentMeasurements(measurements: readonly WellMeasurement[]): We
 }
 
 const DATE = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric", year: "numeric" });
-const dateLabel = (m: WellMeasurement) => DATE.format(m.time);
-const year = (m: WellMeasurement) => new Date(m.time).getUTCFullYear();
+const MONTH = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", year: "numeric" });
+/** A measurement's date as precisely as the provider knows it: "Jan 10, 1966", "Jan 1966" or "1966". */
+export const measurementDate = (m: WellMeasurement) => {
+  const at = Date.parse(`${m.date}T00:00:00Z`);
+  return m.precision === "year" ? m.date.slice(0, 4) : m.precision === "month" ? MONTH.format(at) : DATE.format(at);
+};
+const year = (m: WellMeasurement) => Number(m.date.slice(0, 4));
 const rate = (slope: number) => Math.abs(slope) < 0.005 ? "level" : `${slope > 0 ? "falling" : "rising"} ${Math.abs(slope).toFixed(2)} ft/yr`;
 
 /** The picked well's line: the latest depth, the change over the record, and the trend over it and over the last ten years. */
@@ -113,15 +129,17 @@ export function wellReading(levels: WellLevels): string {
   const m = levels.measurements;
   if (!m.length) return "USGS holds no depth-to-water measurements for this well; open its KGS record for what is known.";
   const last = m[m.length - 1], first = m[0];
-  const latest = `Depth to water ${last.depth.toFixed(1)} ft on ${dateLabel(last)}${last.provisional ? " (provisional)" : ""}`;
+  const latest = `Depth to water ${last.depth.toFixed(1)} ft ${last.precision === "day" ? "on" : "in"} ${measurementDate(last)}${last.provisional ? " (provisional)" : ""}`;
   if (m.length === 1) return `${latest} · the only measurement on record`;
   const change = last.depth - first.depth;
   const moved = Math.abs(change) < 0.05 ? `no net change since ${year(first)}` : `water level ${change > 0 ? "down" : "up"} ${Math.abs(change).toFixed(1)} ft since ${year(first)}`;
   // The last ten years are given apart only when the record reaches further back.
   const trend = depthTrend(m), recent = recentMeasurements(m), recentTrend = recent && recent.length < m.length ? depthTrend(recent) : null;
+  const vague = m.filter(p => p.precision !== "day").length;
   return `${latest} · ${m.length} measurements, ${year(first)}–${year(last)} · ${moved}`
     + (trend !== null ? ` · trend ${rate(trend)} over the record` : "")
     + (recentTrend !== null && recent ? `, ${rate(recentTrend)} over ${year(recent[0])}–${year(last)}` : "")
+    + (vague ? ` · ${vague} dated only to the month or year, placed mid-period in the trend` : "")
     + (levels.truncated ? " · the USGS answer was cut short" : "");
 }
 
@@ -129,6 +147,8 @@ export type WellPlot = Readonly<{
   start: number; end: number; low: number; high: number; ticks: readonly number[];
   years: readonly Readonly<{ time: number; label: string }>[];
   points: readonly WellMeasurement[];
+  /** The first and last measurements' dates, as precisely as they are known. */
+  firstLabel: string; lastLabel: string;
   trend: Readonly<{ from: Readonly<{ time: number; depth: number }>; to: Readonly<{ time: number; depth: number }> }> | null;
 }>;
 
@@ -153,7 +173,7 @@ export function wellPlot(levels: WellLevels): WellPlot | null {
     const at = (time: number) => my + slope * (time - mx) / YEAR_MS;
     trend = { from: { time: m[0].time, depth: at(m[0].time) }, to: { time: m[m.length - 1].time, depth: at(m[m.length - 1].time) } };
   }
-  return Object.freeze({ start, end, low, high, ticks, years, points: m, trend });
+  return Object.freeze({ start, end, low, high, ticks, years, points: m, firstLabel: measurementDate(m[0]), lastLabel: measurementDate(m[m.length - 1]), trend });
 }
 
 export type WellSite = Readonly<{ site: string; name: string; lon: number; lat: number }>;

@@ -550,6 +550,12 @@ readings KGS and USGS take while irrigation pumps are off.
 - **Hydrograph:** plots depth increasing downward, as hydrogeologists draw
   it, so a falling water level runs down the chart. Each measurement is a
   dot, hollow while provisional, and the record's trend is dashed across it.
+- **Dates known only to the month or year:** USGS writes `01` placeholders
+  for an unknown month or day and gives null `month` or `day` fields. Such a
+  measurement keeps that precision. It is labelled "1958" or "Mar 1962",
+  never as a placeholder day. It is placed at the middle of its period for
+  the trend, and the hydrograph draws a bar across the whole period. The
+  reading says how many there are.
 - **Links:** the dock links the well's USGS and KGS WIZARD records.
 - **Failure:** if USGS does not answer, the dock says so and infers no
   level.
