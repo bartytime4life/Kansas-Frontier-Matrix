@@ -83,6 +83,7 @@ jobs:
         if: ${{ !cancelled() && steps.pipeline_dependencies.outcome == 'success' }}
         env:
           KFM_PIPELINE_MYSQL_TEST: "1"
+          KFM_PIPELINE_MYSQL_CONTAINER: ${{ job.services.pipeline-mysql.id }}
           KFM_MYSQL_TEST: "1"
         run: node --test tests/pipeline-mysql.test.mjs tests/hosted-ingestion-mysql.test.mjs
       - name: Fire renderer browser acceptance
