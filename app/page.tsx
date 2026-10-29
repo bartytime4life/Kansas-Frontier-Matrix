@@ -33,7 +33,7 @@ import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportCl
 import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
-import { RAINFALL_REFRESH_MS, RAINFALL_SOURCE_ID, RAINFALL_WINDOWS, rainfallLegendApiPath, rainfallReading, rainfallStamp, syncRainfall, validRainfallLegend, type RainfallHours, type RainfallLegend } from "./mrms-rainfall";
+import { isQpfHours, isRainfallHours, QPF_WINDOWS, qpfWindowButton, qpfWindowLabel, RAINFALL_REFRESH_MS, RAINFALL_SOURCE_ID, RAINFALL_WINDOWS, rainfallLegendApiPath, rainfallReading, rainfallStamp, rainfallWindowLabel, syncRainfall, validRainfallLegend, type QpfHours, type RainfallHours, type RainfallKind, type RainfallLegend, type RainfallView } from "./mrms-rainfall";
 import { FEMA_DEFAULT_FILTER, FEMA_RECORD_SOURCE_ID, HAZARD_FAMILIES, femaClasses, femaCountyCollection, femaCountyCounts, femaCountyDisasters, femaCountyList, femaCountyReading, femaKey, femaReading, femaSelect, femaYears, syncFemaRecord, validFemaRecord, type FemaFilter, type FemaRecord } from "./fema-record";
 import { FLOOD_GAUGE_REFRESH_MS, floodGaugeApiPath, floodGaugeList, floodGaugePage, floodGaugeSummaries, floodHydrograph, floodKey, floodNetworkSummary, floodReading, parseFloodGauge, syncFloodSelection, FLOOD_SELECTED_SOURCE_ID, type FloodGauge } from "./flood-forecast";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, recordPlots, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
@@ -1620,9 +1620,11 @@ export default function Home() {
   const [outlookDay, setOutlookDay] = useState<OutlookDay | null>(null);
   // The U.S. Drought Monitor on the Field view: the week shown ("YYYYMMDD"), or null for the newest released.
   const [rainfallOn, setRainfallOn] = useState(false);
+  const [rainfallKind, setRainfallKind] = useState<RainfallKind>("observed");
   const [rainfallHours, setRainfallHours] = useState<RainfallHours>(24);
-  const [rainfallLegends, setRainfallLegends] = useState<Partial<Record<RainfallHours, RainfallLegend>>>({});
-  const [rainfallLegendFailed, setRainfallLegendFailed] = useState<RainfallHours | null>(null);
+  const [qpfHours, setQpfHours] = useState<QpfHours>(24);
+  const [rainfallLegends, setRainfallLegends] = useState<Record<string, RainfallLegend>>({});
+  const [rainfallLegendFailed, setRainfallLegendFailed] = useState<string | null>(null);
   const [rainfallClock, setRainfallClock] = useState(() => Date.now());
   const [femaOn, setFemaOn] = useState(false);
   const [femaRecord, setFemaRecord] = useState<FemaRecord | null>(null);
@@ -4330,7 +4332,10 @@ export default function Home() {
   // MRMS rainfall: the NWS radar estimate of the past 1–72 hours, drawn as the NWS renders it and asked for again every quarter
   // hour while shown. It is current only, so away from the present map time it is held.
   const rainfallLive = buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
-  const rainfallShown = rainfallOn && rainfallLive ? rainfallHours : null;
+  // Each view keeps its own window: observed rain of the past hours, or the WPC forecast of the days ahead.
+  const rainfallView = useMemo<RainfallView>(() => rainfallKind === "forecast" ? { kind: "forecast", hours: qpfHours } : { kind: "observed", hours: rainfallHours }, [rainfallKind, qpfHours, rainfallHours]);
+  const rainfallViewKey = `${rainfallView.kind}:${rainfallView.hours}`;
+  const rainfallShown = rainfallOn && rainfallLive ? rainfallView : null;
   useEffect(() => {
     if (rainfallShown === null) return;
     const timer = setInterval(() => setRainfallClock(Date.now()), RAINFALL_REFRESH_MS);
@@ -4348,18 +4353,18 @@ export default function Home() {
     return () => { map.off("styledata", restore); };
   }, [rainfallShown, rainfallTileStamp, styleReady]);
   useEffect(() => {
-    if (rainfallShown === null || rainfallLegends[rainfallShown] || rainfallLegendFailed === rainfallShown) return;
-    const hours = rainfallShown, controller = new AbortController();
-    void fetch(rainfallLegendApiPath(hours), { signal: controller.signal })
+    if (rainfallShown === null || rainfallLegends[rainfallViewKey] || rainfallLegendFailed === rainfallViewKey) return;
+    const view = rainfallShown, key = rainfallViewKey, controller = new AbortController();
+    void fetch(rainfallLegendApiPath(view), { signal: controller.signal })
       .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
       .then(value => {
         if (controller.signal.aborted) return;
-        if (!validRainfallLegend(value, hours)) throw new Error("Invalid MRMS legend.");
-        setRainfallLegends(legends => ({ ...legends, [hours]: value }));
+        if (!validRainfallLegend(value, view)) throw new Error("Invalid rainfall legend.");
+        setRainfallLegends(legends => ({ ...legends, [key]: value }));
       })
-      .catch(() => { if (!controller.signal.aborted) setRainfallLegendFailed(hours); });
+      .catch(() => { if (!controller.signal.aborted) setRainfallLegendFailed(key); });
     return () => controller.abort();
-  }, [rainfallShown, rainfallLegends, rainfallLegendFailed]);
+  }, [rainfallShown, rainfallViewKey, rainfallLegends, rainfallLegendFailed]);
 
   // The FEMA disaster record on Hazard watch: every Kansas declaration since 1953, counties shaded by how many designated them.
   // It stands in for the current hazards while shown; those it hid come back when it closes.
@@ -11088,9 +11093,12 @@ export default function Home() {
               counties: femaCounts ? { list: femaCountyList(femaCounts, femaNames), picked: femaCounty,
                 reading: femaCounty && femaRecord ? femaCountyReading(femaNames.get(femaCounty) ?? femaCounty, femaCounty, femaChosen, femaFilter, femaRecord.firstYear) : null,
                 declarations: femaCounty ? femaCountyDisasters(femaChosen, femaCounty) : [] } : null } : undefined}
-            rainfall={activeCategoryMap.tools?.includes("rainfall") ? { on: rainfallOn, held: !rainfallLive, hours: rainfallHours, windows: RAINFALL_WINDOWS,
-              reading: rainfallReading(rainfallHours), legend: rainfallLegends[rainfallHours]?.items ?? null, legendFailed: rainfallLegendFailed === rainfallHours } : undefined}
-            onRainfall={on => { setRainfallOn(on); setRainfallLegendFailed(null); setRainfallClock(Date.now()); }} onRainfallHours={setRainfallHours}
+            rainfall={activeCategoryMap.tools?.includes("rainfall") ? { on: rainfallOn, held: !rainfallLive, kind: rainfallView.kind, hours: rainfallView.hours,
+              windows: rainfallView.kind === "forecast" ? QPF_WINDOWS.map(hours => ({ hours, label: qpfWindowButton(hours), title: `Forecast for ${qpfWindowLabel(hours)}` }))
+                : RAINFALL_WINDOWS.map(hours => ({ hours, label: `${hours} h`, title: `Rain in the past ${rainfallWindowLabel(hours)}` })),
+              reading: rainfallReading(rainfallView), legend: rainfallLegends[rainfallViewKey]?.items ?? null, legendFailed: rainfallLegendFailed === rainfallViewKey } : undefined}
+            onRainfall={on => { setRainfallOn(on); setRainfallLegendFailed(null); setRainfallClock(Date.now()); }} onRainfallKind={setRainfallKind}
+            onRainfallHours={hours => { if (rainfallKind === "forecast") { if (isQpfHours(hours)) setQpfHours(hours); } else if (isRainfallHours(hours)) setRainfallHours(hours); }}
             onFema={showFemaRecord} onFemaYear={year => setFemaFilter(filter => ({ ...filter, year }))} onFemaFamily={family => setFemaFilter(filter => ({ ...filter, family }))}
             onFemaEmergencies={emergencies => setFemaFilter(filter => ({ ...filter, emergencies }))} onFemaCounty={pickFemaCounty} onFemaCountyClear={() => setFemaCounty(null)}
             photoreal={activeCategoryMap.tools?.includes("photoreal") ? { on: basemap === "photoreal", landscapes: PHOTOREAL_LANDSCAPES, place: photorealPlace, depth: verticalExaggeration } : undefined}
