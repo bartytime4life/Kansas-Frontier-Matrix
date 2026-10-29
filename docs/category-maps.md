@@ -226,6 +226,11 @@ committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
   built only from identifiers the pipeline checked (the USGS station page from
   a `USGS-` site number, the event page from the event id). The selection lapses
   when the shown snapshot no longer holds the feature.
+  **Features in this snapshot** lists up to 40 of the shown release's features,
+  most significant first (earthquakes by magnitude, gauges by discharge, alerts
+  by NWS severity), and says when the release holds more; choosing one selects
+  it as a map click does and moves the map to it, or to the middle of an alert
+  area's extent.
 - The scrubber runs oldest to newest; each step names the hour the capture is
   for, when it was published and how many features it holds, and says when it
   is older than two hours. Play steps forward and stops at the newest.
@@ -313,7 +318,11 @@ epicentre lies inside Kansas, from 1 January 1973 to now
   the map; the reading gives the count and the busiest year.
 - **Selection.** Selecting an event shows its magnitude and magnitude type,
   UTC time, USGS place, depth and review status in the dock, with a link to the
-  USGS event page. The basemap beneath is not inspected.
+  USGS event page. The basemap beneath is not inspected. The dock also lists
+  events as buttons, so one can be chosen by keyboard or screen reader: with a
+  year shown, that year's events newest first; across all years, the 40
+  largest. The list says when it holds fewer than all ("40 of 89"). Choosing one selects it and moves the map to it (without motion when
+  reduced motion is set).
 - **Limits.** Detection improved as seismometers were added after 2013, so early
   decades miss some small events and counts across decades are not directly
   comparable. Locations, magnitudes and review status can be revised by USGS.

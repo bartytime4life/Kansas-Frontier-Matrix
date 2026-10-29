@@ -187,6 +187,25 @@ export function useReviewedSnapshots(sourceId: ReviewedSourceId | null, motionAl
   return { on, setOn, status, reason, history, index, setIndex, playing, setPlaying, product: status === "idle" || status === "withheld" ? null : product };
 }
 
+const SEVERITY_RANK: Readonly<Record<string, number>> = Object.freeze({ Extreme: 4, Severe: 3, Moderate: 2, Minor: 1 });
+/**
+ * A shown release's features for a keyboard list, most significant first:
+ * earthquakes by magnitude, gauges by discharge, alerts by NWS severity. Each
+ * carries its release feature id and a one-line label from its summary.
+ */
+export function reviewedFeatureList(sourceId: ReviewedSourceId, data: FeatureCollection, limit = 40): readonly Readonly<{ id: string; label: string }>[] {
+  const weight = (p: Record<string, unknown>) => sourceId === "usgs-earthquakes" ? num(p.magnitude) ?? -Infinity
+    : sourceId === "usgs-streamflow" ? num(p.value) ?? -Infinity : SEVERITY_RANK[String(p.severity)] ?? 0;
+  return data.features.filter(feature => feature.id !== undefined && feature.id !== null)
+    .map(feature => ({ feature, w: weight(feature.properties ?? {}) }))
+    .sort((a, b) => b.w - a.w)
+    .slice(0, limit)
+    .map(({ feature }) => {
+      const summary = reviewedFeatureSummary(sourceId, feature.properties);
+      return { id: String(feature.id), label: [summary.title, summary.lines[0]].filter(Boolean).join(" · ") };
+    });
+}
+
 /** What the dock shows for a feature selected in a reviewed snapshot: its own details, in its source's terms. */
 export type ReviewedFeatureSummary = Readonly<{ title: string; lines: readonly string[]; link: Readonly<{ href: string; label: string }> | null }>;
 const str = (value: unknown, max = 200): string | null => typeof value === "string" && value.trim() ? value.trim().slice(0, max) : null;

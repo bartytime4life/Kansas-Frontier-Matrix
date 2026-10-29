@@ -204,3 +204,33 @@ test('the dock shows the picked feature with its release and signed download; th
  assert.match(page,/setReviewedSnapshot\(map, reviewedData, reviewedFeature \? reviewedPick : null\);/);
  assert.match(page,/onReviewed=\{\(on\) => \{ setReviewedPick\(null\); reviewed\.setOn\(on\); \}\}/);
 });
+
+test('a release\'s features can be picked from a keyboard list, most significant first',async()=>{
+ const f=(id,properties,geometry={type:'Point',coordinates:[-97,37]})=>({type:'Feature',id,geometry,properties});
+ const quakes={type:'FeatureCollection',features:[f('ks1',{magnitude:2.7,magnitudeType:'ml',place:'8 km S of Anthony, Kansas'}),f('ks2',{magnitude:3.9,magnitudeType:'mb_lg',place:'Milan, Kansas'}),f('ks3',{magnitude:null}),f(undefined,{magnitude:5})]};
+ assert.deepEqual(JSON.parse(JSON.stringify(snapshots.reviewedFeatureList('usgs-earthquakes',quakes))),[
+  {id:'ks2',label:'M 3.9 mb_lg · Milan, Kansas'},{id:'ks1',label:'M 2.7 ml · 8 km S of Anthony, Kansas'},{id:'ks3',label:'Earthquake, magnitude not given'}],'a feature without an id cannot be picked, so it is left out');
+ const gauges={type:'FeatureCollection',features:[f('g1',{stationId:'USGS-06887500',value:1520,unit:'ft^3/s'}),f('g2',{stationId:'USGS-07144100',value:15200,unit:'ft^3/s'})]};
+ assert.deepEqual(snapshots.reviewedFeatureList('usgs-streamflow',gauges).map(i=>i.label),['Gauge 07144100 · 15,200 ft^3/s','Gauge 06887500 · 1,520 ft^3/s']);
+ const alerts={type:'FeatureCollection',features:[f('a1',{event:'Wind Advisory',severity:'Minor'}),f('a2',{event:'Tornado Warning',severity:'Extreme',urgency:'Immediate'}),f('a3',{event:'Special Weather Statement'})]};
+ assert.deepEqual(snapshots.reviewedFeatureList('nws-alerts',alerts).map(i=>i.id),['a2','a1','a3']);
+ assert.equal(snapshots.reviewedFeatureList('usgs-earthquakes',quakes,1).length,1);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const maps=await (async()=>{const exports={};new Function('exports','require',ts.transpileModule(await readFile('app/category-maps.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(exports,()=>({}));return exports;})();
+ const picked=[];
+ const base={look:maps.categoryMap('geology'),mode:'2d',depth:1,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onReviewed(){},onReviewedClear(){},onReviewedPick:id=>picked.push(id)};
+ const reviewed={source:'USGS earthquake',on:true,loading:false,reason:null,count:1,index:0,publishedAt:'2026-10-29 00:06 UTC',capturedFor:'2026-10-29 00:00 UTC',features:50,freshness:'current',playing:false,motionAllowed:true,selected:null,
+  list:snapshots.reviewedFeatureList('usgs-earthquakes',quakes),pick:'ks1'};
+ const pick=findNode(h.render(h.exports.CategoryMapDock,{...base,reviewed}),n=>n.props?.label==='Snapshot features, most significant first');
+ assert.equal(pick.props.summary,'Features in this snapshot (3 of 50)','says when the list is cut short');
+ const buttons=findNode(pick.type(pick.props),n=>n.props?.['aria-label']==='Snapshot features, most significant first').props.children.map(li=>li.props.children);
+ assert.deepEqual(buttons.map(b=>b.props['aria-pressed']),[false,true,false]);
+ buttons[0].props.onClick();
+ assert.deepEqual(picked,['ks2']);
+ assert.equal(findNode(h.render(h.exports.CategoryMapDock,{...base,reviewed:{...reviewed,features:3}}),n=>n.props?.label==='Snapshot features, most significant first').props.summary,'Features in this snapshot (3)');
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/const reviewedList = useMemo\(\(\) => reviewedData && reviewedSource \? reviewedFeatureList\(reviewedSource, reviewedData\) : \[\], \[reviewedData, reviewedSource\]\);/);
+ assert.match(page,/list: reviewedList, pick: reviewedFeature \? reviewedPick : null \} : undefined\}/);
+ assert.match(page,/onReviewedPick=\{\(id\) => \{[\s\S]{0,400}setReviewedPick\(id\);[\s\S]{0,700}easeToPicked\(\[\(Math\.min\(\.\.\.xs\) \+ Math\.max\(\.\.\.xs\)\) \/ 2, \(Math\.min\(\.\.\.ys\) \+ Math\.max\(\.\.\.ys\)\) \/ 2\]\);/,'an alert area is centred on its extent');
+});

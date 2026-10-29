@@ -21,14 +21,14 @@ import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
 import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulationPrisms } from "./population-prisms";
-import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots, reviewedFeatureSummary } from "./reviewed-snapshots";
+import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots, reviewedFeatureList, reviewedFeatureSummary } from "./reviewed-snapshots";
 import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
 import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
 import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
-import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
+import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
 import { AVIATION_TINT_BANDS, CATEGORY_BASEMAPS, RELIEF_RAMP } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
@@ -9661,6 +9661,11 @@ export default function Home() {
   // A pick that the shown release does not hold (another snapshot, or none) is no selection.
   const reviewedFeature = reviewedPick && reviewedData ? reviewedData.features.find(feature => String(feature.id ?? "") === reviewedPick) ?? null : null;
   const quakeCounts = useMemo(() => quakeRecord ? annualCounts(quakeRecord).map(entry => ({ ...entry, color: recordYearColor(entry.year, quakeRecord.endYear) })) : null, [quakeRecord]);
+  // Keyboard lists for the selections otherwise made only by clicking the map.
+  const quakeEventList = useMemo(() => quakeRecord ? recordEventList(quakeRecord, quakeRecordYear) : [], [quakeRecord, quakeRecordYear]);
+  const reviewedList = useMemo(() => reviewedData && reviewedSource ? reviewedFeatureList(reviewedSource, reviewedData) : [], [reviewedData, reviewedSource]);
+  /** Moves the map to a picked feature without motion when reduced motion is asked for. */
+  const easeToPicked = (center: [number, number]) => mapRef.current?.easeTo({ center, zoom: Math.max(mapRef.current.getZoom(), 8), duration: motionDuration(600) });
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -10605,8 +10610,19 @@ export default function Home() {
               count: reviewed.history.length, index: reviewed.index, publishedAt: reviewedTime(reviewed.history[reviewed.index]?.publishedAt), capturedFor: reviewedTime(reviewed.product?.bucketAt),
               features: reviewed.product?.data.features.length ?? null, freshness: reviewed.product?.freshness ?? null, playing: reviewed.playing, motionAllowed: !reducedMotion,
               selected: reviewedFeature && reviewed.product ? { ...reviewedFeatureSummary(reviewedSource, reviewedFeature.properties), release: reviewed.product.releaseId,
-                download: `/api/curated/${reviewedSource}?release=${reviewed.product.releaseId}&download=1` } : null } : undefined}
+                download: `/api/curated/${reviewedSource}?release=${reviewed.product.releaseId}&download=1` } : null, list: reviewedList, pick: reviewedFeature ? reviewedPick : null } : undefined}
             onReviewed={(on) => { setReviewedPick(null); reviewed.setOn(on); }} onReviewedIndex={reviewed.setIndex} onReviewedClear={() => setReviewedPick(null)}
+            onReviewedPick={(id) => {
+              // The same pick a map click makes; the map moves to the point, or to the middle of an alert area's extent.
+              const feature = reviewedData?.features.find(item => String(item.id ?? "") === id);
+              if (!feature?.geometry) return;
+              setReviewedPick(id);
+              const points = feature.geometry.type === "Point" ? [feature.geometry.coordinates] : feature.geometry.type === "Polygon" ? feature.geometry.coordinates.flat()
+                : feature.geometry.type === "MultiPolygon" ? feature.geometry.coordinates.flat(2) : [];
+              if (!points.length) return;
+              const xs = points.map(point => point[0]), ys = points.map(point => point[1]);
+              easeToPicked([(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2]);
+            }}
             onReviewedPlay={(on) => { if (on && reviewed.index >= reviewed.history.length - 1) reviewed.setIndex(0); reviewed.setPlaying(on); }}
             aquifer={activeCategoryMap.tools?.includes("aquifer") ? { view: aquiferView, legend: aquiferView && aquiferView !== "kgs-aquifer-high-plains" ? GROUNDWATER_CLASS_LEGENDS[aquiferView] : null } : undefined}
             onAquiferView={showAquiferView}
@@ -10617,7 +10633,7 @@ export default function Home() {
             quakes={activeCategoryMap.tools?.includes("quakes") ? { on: quakeRecordOn, loading: quakeRecordOn && !quakeRecord && !quakeRecordFailed, failed: quakeRecordFailed,
               counts: quakeCounts, total: quakeRecord?.events.length ?? 0, startYear: quakeRecord?.startYear ?? 1973, endYear: quakeRecord?.endYear ?? new Date().getUTCFullYear(),
               minMagnitude: quakeRecord?.minMagnitude ?? 2.5, truncated: Boolean(quakeRecord?.truncated), year: quakeRecordYear,
-              selected: quakeRecordSelected, selectedUrl: quakeRecordSelected ? earthquakeEventUrl(quakeRecordSelected.id) : null } : undefined}
+              selected: quakeRecordSelected, selectedUrl: quakeRecordSelected ? earthquakeEventUrl(quakeRecordSelected.id) : null, list: quakeEventList } : undefined}
             onQuakes={showQuakeRecord}
             outlook={activeCategoryMap.tools?.includes("outlook") ? { day: outlookDay, product: outlookProduct, products: outlookDay ? outlookProducts(outlookDay) : [], loading: Boolean(outlookId && !shownOutlook && outlookFailed !== outlookId),
               failed: outlookId !== null && outlookFailed === outlookId, reading: shownOutlook ? spcOutlookReading(shownOutlook) : null, url: SPC_OUTLOOK_PAGE } : undefined}
@@ -10633,11 +10649,17 @@ export default function Home() {
               const report = stormReportsRef.current.get(id);
               if (!report) return;
               setReportSelected(report);
-              mapRef.current?.easeTo({ center: [report.longitude, report.latitude], zoom: Math.max(mapRef.current.getZoom(), 8), duration: motionDuration(600) });
+              easeToPicked([report.longitude, report.latitude]);
             }}
             onReportClear={() => setReportSelected(null)}
             onQuakeYear={year => { setQuakeRecordYear(year); setQuakeRecordSelected(null); }}
             onQuakeClear={() => setQuakeRecordSelected(null)}
+            onQuakePick={(id) => {
+              const event = quakeRecordEventsRef.current.get(id);
+              if (!event) return;
+              setQuakeRecordSelected(event);
+              easeToPicked([event.longitude, event.latitude]);
+            }}
             onLayers={() => { setLayerCatalogView("official"); openAtlasPanel("layers"); }} onClose={() => setCategoryDockHidden(true)} />}
           {flyoverStopIndex !== null && KANSAS_FLYOVER[flyoverStopIndex] && <div className="flyover-caption" role="status" aria-live="polite">
             <span>FLYOVER · {flyoverStopIndex + 1}/{KANSAS_FLYOVER.length}</span>

@@ -167,3 +167,38 @@ test('picking a record event brings a closed category dock back to show it',asyn
  const page=await readFile('app/page.tsx','utf8');
  assert.match(page,/if \(event\) \{ setQuakeRecordSelected\(event\); setCategoryDockHidden\(false\); \}\s*return;/);
 });
+
+test('record events can be picked from a keyboard list: a year newest first, or the largest across all years',async()=>{
+ const record={events:[
+  {id:'a',time:'2014-05-01T02:00:00.000Z',year:2014,magnitude:3.1,place:'Harper County, Kansas'},
+  {id:'b',time:'2015-03-01T10:00:00.000Z',year:2015,magnitude:3.4,place:'8 km SW of Anthony, Kansas'},
+  {id:'c',time:'2015-11-12T18:00:00.000Z',year:2015,magnitude:4.9,place:'Milan, Kansas'},
+  {id:'d',time:'2015-07-04T00:00:00.000Z',year:2015,magnitude:3.4,place:null}]};
+ assert.deepEqual(JSON.parse(JSON.stringify(quakes.recordEventList(record,2015))),[
+  {id:'c',label:'2015-11-12 · M 4.9 · Milan, Kansas'},{id:'d',label:'2015-07-04 · M 3.4'},{id:'b',label:'2015-03-01 · M 3.4 · 8 km SW of Anthony, Kansas'}]);
+ assert.deepEqual(quakes.recordEventList(record,null).map(e=>e.id),['c','d','b','a'],'largest first; a tie goes to the newer event');
+ assert.deepEqual(quakes.recordEventList(record,null,2).map(e=>e.id),['c','d']);
+ assert.equal(quakes.recordEventList(record,2016).length,0);
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const picked=[];
+ const base={look:maps.categoryMap('geology'),mode:'terrain',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},
+  onQuakes(){},onQuakeYear(){},onQuakeClear(){},onQuakePick:id=>picked.push(id)};
+ const counts=[{year:2014,count:1,color:'#7e03a8'},{year:2015,count:3,color:'#cc4778'}];
+ const state={on:true,loading:false,failed:false,counts,total:4,startYear:1973,endYear:2026,minMagnitude:2.5,truncated:false,year:2015,selected:{id:'d',time:'2015-07-04T00:00:00.000Z',year:2015,magnitude:3.4,magnitudeType:null,depthKilometers:null,place:null,status:null,longitude:-97,latitude:37},selectedUrl:null,
+  list:quakes.recordEventList(record,2015)};
+ const tree=h.render(h.exports.CategoryMapDock,{...base,quakes:state});
+ const pick=findNode(tree,n=>n.props?.label==='Earthquakes in 2015, newest first');
+ assert.equal(pick.props.summary,'Events in 2015 (3)');
+ assert.equal(findNode(h.render(h.exports.CategoryMapDock,{...base,quakes:{...state,counts:[{year:2015,count:89,color:'#cc4778'}]}}),n=>n.props?.label==='Earthquakes in 2015, newest first').props.summary,'Events in 2015 (3 of 89)','says when the year holds more than the list');
+ const buttons=findNode(pick.type(pick.props),n=>n.props?.['aria-label']==='Earthquakes in 2015, newest first').props.children.map(li=>li.props.children);
+ assert.deepEqual(buttons.map(b=>b.props['aria-pressed']),[false,true,false],'the selected event is marked');
+ buttons[0].props.onClick();
+ assert.deepEqual(picked,['c']);
+ const all=findNode(h.render(h.exports.CategoryMapDock,{...base,quakes:{...state,year:null,list:quakes.recordEventList(record,null)}}),n=>n.props?.label==='Largest earthquakes in the record');
+ assert.equal(all.props.summary,'Largest events (4)');
+ assert.equal(findNode(h.render(h.exports.CategoryMapDock,{...base,quakes:{...state,year:null,total:1234,list:quakes.recordEventList(record,null)}}),n=>n.props?.label==='Largest earthquakes in the record').props.summary,'Largest events (4 of 1,234)');
+ assert.ok(!findNode(h.render(h.exports.CategoryMapDock,{...base,quakes:{...state,list:[]}}),n=>n.props?.label==='Earthquakes in 2015, newest first'),'no list when the year has no events');
+ h.dispose?.();
+ assert.match(page,/const quakeEventList = useMemo\(\(\) => quakeRecord \? recordEventList\(quakeRecord, quakeRecordYear\) : \[\], \[quakeRecord, quakeRecordYear\]\);/);
+ assert.match(page,/onQuakePick=\{\(id\) => \{\s*const event = quakeRecordEventsRef\.current\.get\(id\);\s*if \(!event\) return;\s*setQuakeRecordSelected\(event\);\s*easeToPicked\(\[event\.longitude, event\.latitude\]\);/);
+});
