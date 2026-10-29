@@ -3,6 +3,7 @@ import type { OfficialContextId } from "./live-context";
 export type DrawerAttribute = Readonly<{ label: string; value: string }>;
 
 const FIELDS: Readonly<Record<OfficialContextId | "registry" | "basemap", readonly (readonly [string, string])[]>> = {
+  "deflock-alpr": [["reportCount", "Mapped reports in cell"], ["gridDegrees", "Generalized cell size · degrees"], ["upstreamUpdatedAt", "OSM database time · not observation time"], ["retrievedAt", "Retrieved · UTC"], ["license", "Data license"]],
   "kgs-aquifer-alluvial": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
   "kgs-aquifer-dakota": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],
   "kgs-aquifer-glacial-drift": [["classLabel", "Provider range \u00b7 feet"], ["period", "Source period"]],

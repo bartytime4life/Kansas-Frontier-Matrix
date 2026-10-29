@@ -1,4 +1,5 @@
 "use client";
+import { DEFLOCK_LIMITATION } from "./deflock";
 import { TransportHistoryControl } from "./transport-history-control";
 import "./transport-history.css";
 import { CompactTimeSweep, type CalendarSourceRow } from "./compact-time-sweep";
@@ -915,6 +916,7 @@ const numberContextProperty = (properties: Record<string, unknown>, key: string)
 };
 
 const officialContextSummary = (source: OfficialContextId, title: string, properties: Record<string, unknown>) => {
+  if (source === "deflock-alpr") return `${title}. ${DEFLOCK_LIMITATION}`;
   if (source.startsWith("kgs-")) return source === "kgs-monitoring-wells" ? `${title}: 2026 monitoring location. Open the KGS well record for dated observations; no water-level measurement is attached to this point.` : `${title} feet · regional 2022–2024 classified estimate. Unclassified areas are blank. This is not a present measurement or a groundwater-flow calculation.`;
   if (source === "nifc-fire-reports") {
     const type = stringContextProperty(properties, "incidentType") ?? "incident";
@@ -983,6 +985,7 @@ const officialContextSummary = (source: OfficialContextId, title: string, proper
 };
 
 const officialContextTime = (source: OfficialContextId, properties: Record<string, unknown>, fallback: string) => {
+  if (source === "deflock-alpr") return `OSM database snapshot: ${stringContextProperty(properties, "upstreamUpdatedAt") ?? "unknown"}; camera observation and installation dates unknown.`;
   if (source === "census-counties") return "2020 Census geography, population and housing baseline";
   if (source === "usgs-streamflow" || source === "usgs-earthquakes") return stringContextProperty(properties, "observedAt") ?? fallback;
   if (source === "noaa-nwps-gauges") {
@@ -1030,7 +1033,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
     title: officialSource.title,
     description: officialSource.boundary,
     domain: officialSource.domain,
-    category: officialSource.id === "census-counties" ? "Reference boundaries & locators"
+    category: officialSource.id === "deflock-alpr" ? "Roads, rail & movement" : officialSource.id === "census-counties" ? "Reference boundaries & locators"
       : ["kgs-monitoring-wells", "kgs-water-table", "kgs-depth-to-water", "kgs-saturated-thickness", "usgs-streamflow", "noaa-nwps-gauges", "usgs-3dhp-hydrography", "usgs-wbd-watersheds", "noaa-nwm-analysis", "noaa-nwm-short-range"].includes(officialSource.id) ? "Hydrology & water"
         : officialSource.id === "usgs-3dep-hillshade" || officialSource.id === "usgs-earthquakes" ? "Geology & landforms"
           : "Weather & hazards",
@@ -3579,7 +3582,7 @@ export default function Home() {
       if (map && styleGenerationReadyRef.current) applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
       announce(payload.featureCount === 0
         ? `${source.shortTitle}: zero mapped features at ${new Date(payload.retrievedAt).toLocaleTimeString()}—not an all-clear`
-        : `${source.shortTitle}: ${payload.featureCount} official context features refreshed`);
+        : `${source.shortTitle}: ${payload.featureCount} ${feed === "deflock-alpr" ? "community report areas" : "official context features"} refreshed`);
     } catch (error) {
       if (controller.signal.aborted || officialRequestsRef.current.get(feed) !== controller) return;
       const message = error instanceof Error ? error.message : "Official context request failed.";
@@ -10435,7 +10438,7 @@ export default function Home() {
               <details><summary>{DISASTER_COVERAGE_HOLDS.length} source families held for verification</summary>{DISASTER_COVERAGE_HOLDS.map(item => <p key={item.title}><b>{item.title} · HELD</b><br />{item.detail} <a href={item.sourceUrl} target="_blank" rel="noreferrer">Source ↗</a></p>)}</details>
             </section>}
             {officialWorkspace === "groundwater" && <section className="official-workspace-ledger" aria-label="Aquifers and groundwater guide"><h3>Beneath Kansas</h3><p>Start with an aquifer extent, then select one High Plains map to explore depth to water, saturated thickness, or water-table elevation. Each overlay has independent opacity. Click a region for its range, or a monitoring point for its KGS well record.</p><p>High Plains maps: <strong>2022–2024</strong>. Monitoring locations: <strong>2026</strong>. Snapshots checked October 4, 2026. Overlapping aquifers may occupy different depths. These maps do not calculate underground flow.</p><button type="button" onClick={() => { setOfficialContextVisible("kgs-aquifer-high-plains", true); mapRef.current?.fitBounds([[-102.06, 36.99], [-97.1, 40.01]], { padding: 70, duration: reducedMotion ? 0 : 700 }); }}>Explore the High Plains aquifer</button><a href="https://www.kgs.ku.edu/HighPlains/HPA_Atlas/index.html" target="_blank" rel="noreferrer">KGS High Plains Atlas ↗</a></section>}
-            {officialWorkspace === "transport" && <p className="official-workspace-land-note">Kansas roads and active or abandoned railroad references from KDOT. Each overlay has its own visibility and opacity, over your chosen basemap. Source designations are not live traffic, train movement, public access, or historical reconstruction.</p>}
+            {officialWorkspace === "transport" && <p className="official-workspace-land-note">Kansas roads and active or abandoned railroad references from KDOT, plus optional DeFlock community-reported ALPR areas. Each overlay has its own visibility and opacity, over your chosen basemap. Source designations are not live traffic, train movement, public access, or historical reconstruction.</p>}
             {officialWorkspace === "land" && <p className="official-workspace-land-note">BLM PLSS images are provider-current Kansas survey reference; inspect identifiers at the map center from a layer’s Options. The separate MLRS oil-and-gas lease overlays show only authorized or closed Kansas cases with direct PLSS match scores 0–3. They omit generalized and unmapped cases and are not exact lease boundaries, ownership, drilling, or production. <a href="https://glorecords.blm.gov/" target="_blank" rel="noreferrer">Search official GLO patents, plats, and field notes ↗</a> Reviewed GLO overlays and KFM land releases remain pending.</p>}
             {officialWorkspace === "transport" && <p className="layer-journey-intro">Bridge age, historic designation, and recorded closure are separate filters. Historical roads are KDOT’s 1918 map, not proof of present abandonment. A verified statewide closed-road history and demolished-bridge inventory are not connected yet; no missing route is inferred closed.</p>}
             <p>{!buildYearCurrent ? `Current sources are held because this site was built for ${OFFICIAL_CONTEXT_PRESENT_FRAME}. NASA’s fixed lightning climatology remains available as historical context.` : year === OFFICIAL_CONTEXT_PRESENT_FRAME ? "Operational sources have their own observation clocks. NASA lightning climatology is a separate 1995–2014 historical composite. Both are map context only." : `Operational sources selected for the map are held at ${temporalScopeLabel}; choose Present to display them. NASA’s fixed climate field is independent of this atlas year.`}</p>
