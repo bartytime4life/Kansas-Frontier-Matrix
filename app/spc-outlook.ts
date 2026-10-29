@@ -202,6 +202,19 @@ export function validSpcOutlook(value: unknown): value is SpcOutlook {
 
 export const spcCategory = (id: string | null): SpcCategory | null => id ? CATEGORY.get(id) ?? null : null;
 
+/** The highest band (category or probability) whose area holds a point, or null; intensity areas are not bands. */
+export function outlookBandAt(outlook: SpcOutlook, longitude: number, latitude: number): SpcBand | null {
+  const product = outlook.product ?? "cat";
+  let best: SpcBand | null = null;
+  for (const feature of outlook.data.features) {
+    const found = band(product, feature.properties.category);
+    if (!found || (best && found.rank <= best.rank)) continue;
+    const polygons = feature.geometry.type === "Polygon" ? [feature.geometry.coordinates] : feature.geometry.coordinates;
+    if (polygons.some(rings => inPolygon([longitude, latitude], rings))) best = found;
+  }
+  return best;
+}
+
 const HAZARD_PHRASE: Readonly<Record<OutlookHazard, string>> = Object.freeze({ torn: "a tornado", wind: "damaging wind gusts (50 kt+)", hail: "hail 1 inch or larger" });
 const INTENSITY_NOTE = "Dashed white lines are SPC's conditional-intensity areas: level 1 where significant severe weather is possible (EF2+ tornadoes, 65 kt+ gusts, 2 in+ hail), higher levels where storms that form could be more intense.";
 

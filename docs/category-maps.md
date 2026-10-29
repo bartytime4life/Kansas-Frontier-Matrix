@@ -372,6 +372,14 @@ and what was reported can be read on one map, as SPC verifies its outlooks.
 - **Reading.** Kansas reports by kind with the significant count, the national
   total and the convective day in UTC. Selecting a report shows its kind,
   magnitude as SPC states it, time, place and the NWS office's remarks.
+- **Against the outlook.** With today's reports and the Day 1 outlook both
+  on the map, the dock adds how the reports fall against it, as SPC verifies
+  its outlooks: only reports made inside the outlook's valid period count; the
+  categorical outlook is checked against every report and a tornado, wind or
+  hail outlook against reports of its own hazard; each band counts the reports
+  inside it or a higher band, since SPC's areas nest, with the rest counted
+  outside every area (`app/outlook-verification.ts`). Day 2 and 3 outlooks and
+  yesterday's reports are not compared: they do not cover the same period.
 - **Limits.** Preliminary and unverified: reports can be revised, merged or
   removed, an unknown EF rating or gust speed stays unknown, and positions are
   where the report was made, not a damage track. Storm Data and NWS damage

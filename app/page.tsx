@@ -24,6 +24,7 @@ import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulat
 import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots } from "./reviewed-snapshots";
 import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
 import { setReviewedSnapshot } from "./reviewed-snapshot-layers";
+import { verificationReading, verifyOutlook } from "./outlook-verification";
 import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
@@ -4098,6 +4099,11 @@ export default function Home() {
     return () => controller.abort();
   }, [reportsDay, stormReports, reportsFailed, reportsTick, announce]);
   const shownReports = reportsDay ? stormReports[reportsDay] ?? null : null;
+  // Today's reports against the Day 1 outlook shown, as SPC verifies it; null when the two do not cover the same day.
+  const outlookCheck = useMemo(() => {
+    const check = shownOutlook && shownReports ? verifyOutlook(shownOutlook, shownReports) : null;
+    return check && shownOutlook ? verificationReading(check, shownOutlook.product) : null;
+  }, [shownOutlook, shownReports]);
   useEffect(() => { stormReportsRef.current = new Map((shownReports?.reports ?? []).map(report => [report.id, report])); }, [shownReports]);
   useEffect(() => {
     const map = mapRef.current;
@@ -10605,7 +10611,7 @@ export default function Home() {
             onOutlook={chooseOutlook}
             onOutlookProduct={chooseOutlookHazard}
             reports={activeCategoryMap.tools?.includes("reports") ? { day: reportsDay, loading: Boolean(reportsDay && !shownReports && reportsFailed !== reportsDay),
-              failed: reportsDay !== null && reportsFailed === reportsDay, reading: shownReports ? stormReportsReading(shownReports) : null, url: STORM_REPORTS_PAGE,
+              failed: reportsDay !== null && reportsFailed === reportsDay, reading: shownReports ? stormReportsReading(shownReports) : null, url: STORM_REPORTS_PAGE, verification: outlookCheck,
               selected: reportSelected ? { report: reportSelected, title: `${REPORT_KINDS.find(kind => kind.id === reportSelected.kind)?.name ?? "Report"} · ${reportMagnitude(reportSelected)}`,
                 when: reportSelected.time ? reportClock(reportSelected.time) : null } : null } : undefined}
             onReports={chooseReports}
