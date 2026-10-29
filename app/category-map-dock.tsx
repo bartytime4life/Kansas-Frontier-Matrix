@@ -65,7 +65,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -186,8 +186,11 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
     source: string; on: boolean; loading: boolean; reason: string | null;
     count: number; index: number; publishedAt: string | null; capturedFor: string | null;
     features: number | null; freshness: string | null; playing: boolean; motionAllowed: boolean;
+    /** The feature picked on the map, in its source's terms, with the release it belongs to and that release's signed download. */
+    selected?: Readonly<{ title: string; lines: readonly string[]; link: Readonly<{ href: string; label: string }> | null; release: string; download: string }> | null;
   }>;
   onReviewed?: (on: boolean) => void;
+  onReviewedClear?: () => void;
   onReviewedIndex?: (index: number) => void;
   onReviewedPlay?: (on: boolean) => void;
   /**
@@ -355,6 +358,13 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
         <p className="category-map-dock-reading" aria-live={reviewed.playing ? "off" : "polite"}>{reviewed.loading ? "Reading the site database…"
           : reviewed.reason ? reviewed.reason
           : `Snapshot ${reviewed.index + 1} of ${reviewed.count} · captured for ${reviewed.capturedFor} · published ${reviewed.publishedAt} · ${reviewed.features} ${reviewed.features === 1 ? "feature" : "features"}${reviewed.freshness === "stale" ? " · older than two hours" : ""}`}</p>
+        {reviewed.selected && <div className="category-map-dock-quake-event" aria-live="polite">
+          <p><b>{reviewed.selected.title}</b>{reviewed.selected.lines.map(line => <span key={line}><br />{line}</span>)}
+            <br /><span className="category-map-dock-release">Release {reviewed.selected.release.slice(0, 12)}… · external context, not evidence</span></p>
+          <div>{reviewed.selected.link && <a href={reviewed.selected.link.href} target="_blank" rel="noreferrer">{reviewed.selected.link.label}</a>}
+            <a href={reviewed.selected.download} download>Release JSON</a>
+            <button type="button" onClick={onReviewedClear} aria-label="Clear the selected snapshot feature">Clear</button></div>
+        </div>}
       </div>}
     </>}
     {look.tools?.includes("aquifer") && aquifer && onAquiferView && <>

@@ -21,9 +21,9 @@ import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
 import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulationPrisms } from "./population-prisms";
-import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots } from "./reviewed-snapshots";
+import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots, reviewedFeatureSummary } from "./reviewed-snapshots";
 import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
-import { setReviewedSnapshot } from "./reviewed-snapshot-layers";
+import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
 import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
@@ -1608,6 +1608,8 @@ export default function Home() {
   const [reportsFailed, setReportsFailed] = useState<ReportDay | null>(null);
   const [reportsTick, setReportsTick] = useState(0);
   const [reportSelected, setReportSelected] = useState<StormReport | null>(null);
+  // The feature picked in a shown reviewed snapshot, by its release feature id; it lapses with the release.
+  const [reviewedPick, setReviewedPick] = useState<string | null>(null);
   const stormReportsRef = useRef<ReadonlyMap<string, StormReport>>(new Map());
   // When this browser last read each day's reports, by its own clock (as for the outlook).
   const reportsReadAtRef = useRef(new Map<ReportDay, number>());
@@ -5682,7 +5684,7 @@ export default function Home() {
             const record = findLayerByRenderer(feature.layer.id);
             return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
           });
-          if (renderedHits[0]?.source === LIVING_WATERS_SOURCE || renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID || renderedHits[0]?.source === STORM_REPORTS_SOURCE_ID) {
+          if (renderedHits[0]?.source === LIVING_WATERS_SOURCE || renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID || renderedHits[0]?.source === STORM_REPORTS_SOURCE_ID || renderedHits[0]?.source === REVIEWED_SOURCE_ID) {
             map.getCanvas().style.cursor = "pointer";
             if (hoveredRef.current) map.setFeatureState(hoveredRef.current, { hover: false });
             hoveredRef.current = null;
@@ -5793,6 +5795,12 @@ export default function Home() {
           // context underneath its schematic as evidence for that schematic.
           if (renderedHits[0]?.source === LIVING_WATERS_SOURCE) {
             setLeftPanelMode("views"); setAtlasViewQuery(""); setLeftOpen(true);
+            return;
+          }
+          // A reviewed-snapshot feature is a released record, not basemap context: the dock shows it with its release.
+          if (renderedHits[0]?.source === REVIEWED_SOURCE_ID) {
+            const id = renderedHits[0].properties?.[REVIEWED_FEATURE_ID];
+            if (typeof id === "string" && id) setReviewedPick(id);
             return;
           }
           // A storm report owns its selection: the dock shows the report; nothing beneath it is inspected.
@@ -9649,13 +9657,15 @@ export default function Home() {
   const reviewedSource = categoryMapOnScreen?.tools?.includes("reviewed") ? REVIEWED_SOURCE_BY_TOPIC[categoryMapOnScreen.topic] ?? null : null;
   const reviewed = useReviewedSnapshots(reviewedSource, !reducedMotion);
   const reviewedData = reviewed.on && reviewed.product ? reviewed.product.data : null;
+  // A pick that the shown release does not hold (another snapshot, or none) is no selection.
+  const reviewedFeature = reviewedPick && reviewedData ? reviewedData.features.find(feature => String(feature.id ?? "") === reviewedPick) ?? null : null;
   const quakeCounts = useMemo(() => quakeRecord ? annualCounts(quakeRecord).map(entry => ({ ...entry, color: recordYearColor(entry.year, quakeRecord.endYear) })) : null, [quakeRecord]);
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    setReviewedSnapshot(map, reviewedData);
+    setReviewedSnapshot(map, reviewedData, reviewedFeature ? reviewedPick : null);
     if (styleReady && styleGenerationReadyRef.current) applyOfficialContextState(map, runtimeOfficialVisibility(officialVisibilityRef.current, temporalQueryRef.current.frame, noaaRadarReadyRef.current, noaaRadarFrameTimeRef.current), officialOpacityRef.current, officialPayloadsRef.current);
-  }, [reviewedData, styleReady, runtimeOfficialVisibility]);
+  }, [reviewedData, reviewedFeature, reviewedPick, styleReady, runtimeOfficialVisibility]);
   const reviewedTime = (value: string | undefined) => value ? new Date(value).toISOString().slice(0, 16).replace("T", " ") + " UTC" : null;
   // The light changes the map in 3D terrain and on category basemaps, whose shaded relief follows it.
   const categorySunAvailable = categoryMode === "terrain" || isCategoryBasemapKey(basemap);
@@ -10592,8 +10602,10 @@ export default function Home() {
             reviewed={reviewedSource ? { source: REVIEWED_SOURCE_LABEL[reviewedSource], on: reviewed.on, loading: reviewed.status === "loading",
               reason: reviewed.status === "withheld" && reviewed.reason ? REVIEWED_REASONS[reviewed.reason] ?? "No reviewed snapshot can be shown." : null,
               count: reviewed.history.length, index: reviewed.index, publishedAt: reviewedTime(reviewed.history[reviewed.index]?.publishedAt), capturedFor: reviewedTime(reviewed.product?.bucketAt),
-              features: reviewed.product?.data.features.length ?? null, freshness: reviewed.product?.freshness ?? null, playing: reviewed.playing, motionAllowed: !reducedMotion } : undefined}
-            onReviewed={reviewed.setOn} onReviewedIndex={reviewed.setIndex}
+              features: reviewed.product?.data.features.length ?? null, freshness: reviewed.product?.freshness ?? null, playing: reviewed.playing, motionAllowed: !reducedMotion,
+              selected: reviewedFeature && reviewed.product ? { ...reviewedFeatureSummary(reviewedSource, reviewedFeature.properties), release: reviewed.product.releaseId,
+                download: `/api/curated/${reviewedSource}?release=${reviewed.product.releaseId}&download=1` } : null } : undefined}
+            onReviewed={(on) => { setReviewedPick(null); reviewed.setOn(on); }} onReviewedIndex={reviewed.setIndex} onReviewedClear={() => setReviewedPick(null)}
             onReviewedPlay={(on) => { if (on && reviewed.index >= reviewed.history.length - 1) reviewed.setIndex(0); reviewed.setPlaying(on); }}
             aquifer={activeCategoryMap.tools?.includes("aquifer") ? { view: aquiferView, legend: aquiferView && aquiferView !== "kgs-aquifer-high-plains" ? GROUNDWATER_CLASS_LEGENDS[aquiferView] : null } : undefined}
             onAquiferView={showAquiferView}
