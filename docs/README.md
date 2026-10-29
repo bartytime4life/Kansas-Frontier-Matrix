@@ -9,7 +9,7 @@ owners:
   - "@bartytime4life"
 created: 2026-08-08
 created_note: "2026-08-08 identifies the same-path root-README modernization revision recorded under Evidence review and triggers below, not the file's original repository-backed creation provenance, which predates this modernization and is outside this shallow-clone repository's available Git history."
-updated: 2026-10-27
+updated: 2026-10-29
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Define the docs/ responsibility boundary, navigation contract, exposure posture, validation expectations, and relationships to KFM authority roots."
@@ -67,6 +67,15 @@ The picture is a dated Explorer renderer capture, with a finite animated version
 selection. It is not a live view or measured application performance. Public Node,
 monorepo and preserved Sites checks have separate identities; this edition's
 qualification record keeps them separate. Earlier routes below retain their dates.
+
+## Scientific investigations · October 29, 2026
+
+Use the [scientific-analysis guide](architecture/scientific-analysis.md) to turn a
+map question into a testable study. It connects measurement support, correlated
+uncertainty, spatial and temporal holdouts, Bayesian checking, causal reasoning,
+inverse problems, and experimental design to four proposed Kansas investigations.
+Primary references and existing repository interfaces are identified separately
+from proposed analytical capabilities.
 
 ## Practical reading routes — 2026-10-21
 

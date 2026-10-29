@@ -6,7 +6,7 @@ version: v3.6.0
 status: source-grounded documentation candidate; independent review pending
 owners: ["@bartytime4life"]
 created: 2026-05-11
-updated: 2026-10-27
+updated: 2026-10-29
 policy_label: public
 current_path: README.md
 owning_root: repository-root
@@ -249,6 +249,13 @@ supersession and rollback remain traceable. [KFM doctrine](docs/doctrine/README.
 **PROPOSED north-star:** a versioned, governed cross-domain science workbench.
 There is no claim here that a single installable, admitted, scientifically qualified
 Science Pack exists. [Verification backlog](docs/registers/VERIFICATION_BACKLOG.md).
+
+The [scientific-analysis guide](docs/architecture/scientific-analysis.md) develops
+seven directions for that program: measurement support, uncertainty propagation,
+spatial and temporal validation, Bayesian model checking, causal study design,
+inverse problems, and experimental design. Four Kansas study proposals show how
+to test an idea before treating it as a capability. These are research designs,
+not newly implemented analytical services.
 
 ## Current edges and non-goals
 

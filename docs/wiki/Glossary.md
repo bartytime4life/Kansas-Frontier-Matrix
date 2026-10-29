@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: Glossary
 title: Glossary
 status: source-grounded orientation; independent review pending
-updated: 2026-10-09
+updated: 2026-10-29
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Glossary.md
 evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
@@ -38,13 +38,29 @@ publication_effect: native wiki documentation only; no application deployment or
 
 These are reading aids. Exact object shapes and normative meanings remain in the relevant [contracts](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/contracts/README.md), [schemas](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/9666e026682c514c0086155a8754cbe58abed0eb/schemas/README.md) and adopted doctrine.
 
+### Scientific reading vocabulary · October 29, 2026
+
+These are explanatory terms for the [Scientific Methods](scientific-methods.md)
+guide, not new KFM object types or adopted contract definitions.
+
+| Term | Meaning in a study |
+|---|---|
+| Target quantity / estimand | The precisely stated quantity or contrast the investigation seeks to estimate |
+| Measurement support | The feature, area, volume, population, and interval represented by an observation |
+| Covariance | How uncertainties vary together; shared errors can matter when values are combined |
+| Holdout leakage | Evaluation information entering training, tuning, or preprocessing in a way that invalidates the intended test |
+| Baseline | A declared simple comparator evaluated on the same target and evidence |
+| Calibration | Agreement between stated predictive probabilities or intervals and observed behavior under a declared evaluation; distinct from instrument calibration |
+| Posterior predictive check | Comparing model-generated data with observations to probe model inadequacy; passing a check is not proof of truth |
+| Identifiability | Whether the available evidence and assumptions can distinguish competing parameter values or explanations |
+
 ### Three easy mistakes to avoid
 
 A new download is not necessarily a new observation. A green check is not necessarily independent approval. A successful deployment is not necessarily an accepted investigation flow.
 
 **Next:** [Apply the vocabulary to project status](Project-Status.md) or [follow the lifecycle](Data-Lifecycle.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
+<sub>Original KFM vocabulary retains repository `9666e026682c`; the scientific reading vocabulary was added October 29 with the referenced method guide. Historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 

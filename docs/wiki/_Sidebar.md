@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: _Sidebar
 title: Kansas Frontier Matrix Wiki Navigation
 status: PROPOSED wiki source; review required
-updated: 2026-10-27
+updated: 2026-10-29
 authority: navigation-only; canonical repository evidence and adopted KFM authority outrank this page
 source_path: docs/wiki/_Sidebar.md
 publication_effect: none until separately synchronized to the native GitHub Wiki
@@ -35,6 +35,7 @@ publication_effect: none until separately synchronized to the native GitHub Wiki
 **Go deeper · product and trust**
 
 - [Domains](Domains.md) — Kansas knowledge lanes and cross-domain seams
+- [Scientific Methods](scientific-methods.md) — study design, uncertainty, and proposed Kansas investigations
 - [Map, UI, and AI](Map-UI-and-AI.md) — MapLibre, Evidence Drawer, and Focus Mode
 - [Security and Sensitivity](Security-and-Sensitivity.md) — fail-closed public-safety posture
 

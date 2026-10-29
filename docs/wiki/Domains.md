@@ -3,7 +3,7 @@ KFM_WIKI_SOURCE
 page_id: Domains
 title: Domains
 status: source-grounded orientation; independent review pending
-updated: 2026-10-09
+updated: 2026-10-29
 authority: orientation-only; repository evidence and adopted authority outrank this page
 source_path: docs/wiki/Domains.md
 evidence_checkpoint: main@9666e026682c514c0086155a8754cbe58abed0eb
@@ -30,6 +30,15 @@ publication_effect: native wiki documentation only; no application deployment or
 | Roads and settlement | Mapped infrastructure, historical records and administrative context | A contemporary map does not reconstruct every historical state |
 | Habitat and heritage | Ecological or historical records with access and sensitivity constraints | Available information is not automatically safe at exact precision |
 
+### Proposed scientific investigations · October 29, 2026
+
+The [Scientific Methods](scientific-methods.md) guide connects these lanes to
+four proposed studies: rainfall/flow prediction, seasonal vegetation-proxy
+comparison, alternative groundwater/geology models, and historical-map feature
+comparison. Each starts with a defined quantity, support, baseline, and a way
+the result could fail. None establishes an admitted dataset, a fitted model,
+causal attribution, or a released analytical product.
+
 ### Work one seam deeply
 
 For a water-and-land investigation, start with a bounded question and time window. Identify which observations are available, how their dates differ, which spatial associations are justified, and which transformations were performed. Treat the resulting relationship as an interpretation that needs support, not as a fact created by layering two maps.
@@ -38,7 +47,7 @@ The [domain documentation index](https://github.com/bartytime4life/Kansas-Fronti
 
 **Next:** [Follow an investigation](Map-UI-and-AI.md) → [inspect source and lifecycle boundaries](Data-Lifecycle.md) → [read the evidence vocabulary](Glossary.md).
 
-<sub>Current introduction grounded in repository `9666e026682c`; historical details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
+<sub>Domain orientation retains repository `9666e026682c`; the October 29 scientific study proposals use `01bf54386be6`. Historical implementation details retain their own dates. [Portfolio home](Home.md) · [Builder profile](builder-profile.md).</sub>
 
 ---
 
