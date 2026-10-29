@@ -47,7 +47,7 @@ export type CategoryMap = Readonly<{
    * drapes the 2024 one-foot Kansas aerial on the USGS 3DEP DEM at true
    * vertical scale, with OSM building heights, and flies to real landscapes.
    */
-  tools?: readonly ("transect" | "flow" | "underground" | "daylight" | "area" | "radar" | "population" | "soil" | "aquifer" | "reviewed" | "photoreal" | "quakes" | "outlook" | "reports" | "drought" | "flood" | "fema" | "rainfall" | "landcover" | "crops" | "legislature" | "tornadoes" | "wells")[];
+  tools?: readonly ("transect" | "flow" | "underground" | "daylight" | "area" | "radar" | "population" | "soil" | "aquifer" | "reviewed" | "photoreal" | "quakes" | "outlook" | "reports" | "drought" | "flood" | "fema" | "rainfall" | "landcover" | "crops" | "legislature" | "tornadoes" | "wells" | "surface")[];
   /**
    * The light this look opens under, by scene recipe: only its atmosphere and
    * sun azimuth are applied, never its effect settings. Relief reads best under
@@ -73,7 +73,7 @@ export const CATEGORY_MAPS: Readonly<Record<TopicId, CategoryMap>> = Object.free
       { id: "noaa-lightning-density", title: "Lightning density", note: "15-minute ground-network density, not individual strike locations." },
       { id: "noaa-hms-smoke", title: "Smoke footprints", note: "Analyst imagery footprints, not surface air quality." },
       { id: "usgs-streamflow", title: "River gauges", note: "Provisional station discharge, not flood extent." },
-    ], tools: ["radar", "outlook", "reports", "rainfall", "tornadoes", "reviewed"], light: "blue", swatch: ["#12171d", "#3fae6a", "#e0c33a"] },
+    ], tools: ["radar", "surface", "outlook", "reports", "rainfall", "tornadoes", "reviewed"], light: "blue", swatch: ["#12171d", "#3fae6a", "#e0c33a"] },
   disaster: { topic: "disaster", name: "Hazard watch", lede: "Alerts, satellite fire detections and fire reports on a dark base, and every FEMA disaster declaration for Kansas since 1953.", tip: "Select a fire detection to compare with fire reports; the FEMA record shades counties by declarations.", basemap: "storm", scene: "2d", camera: STATEWIDE, starters: ["nws-alerts", "nasa-gibs-fire-points", "nifc-fire-reports"], tools: ["fema", "reviewed"], light: "blue", swatch: ["#12171d", "#e8622c", "#f2c14e"] },
   water: { topic: "water", name: "River network", lede: "Stream gauges along glowing rivers, streams and lakes on a deep-water base, with NWS flood stages and river forecasts.", tip: "Select a gauge for its USGS discharge; Show flood forecasts gives NWS stage hydrographs.", basemap: "hydro", scene: "2d", camera: STATEWIDE, starters: ["usgs-streamflow"], tools: ["flow", "flood", "rainfall", "reviewed"], light: "blue", swatch: ["#0b1d2c", "#1c6a99", "#7fd3f7"] },
   groundwater: { topic: "groundwater", name: "Aquifer map", lede: "How much water-bearing High Plains aquifer is left: KGS 2022–2024 saturated thickness and depth to water, and measured levels at wells.", tip: "Switch views, pick a well for its measured water levels, or explore underground for well logs and cores.", basemap: "prairie", scene: "2d", camera: Object.freeze({ center: [-100.0, 38.45] as const, zoom: 6.2, pitch: 0, bearing: 0 }), starters: ["kgs-saturated-thickness"], tools: ["aquifer", "wells", "underground"], light: "survey", swatch: ["#17231f", "#7fb3b0", "#c9a466"] },
