@@ -4325,8 +4325,10 @@ export default function Home() {
       if (!floodGaugesWereOnRef.current) setOfficialContextVisible("noaa-nwps-gauges", true);
     } else if (!floodGaugesWereOnRef.current) setOfficialContextVisible("noaa-nwps-gauges", false);
   };
+  // NWPS is current only: away from the present map time (or with an out-of-date build) the gauges, list, ring and reads are held.
+  const floodLive = buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
   useEffect(() => {
-    if (!floodOn || !floodLid) return;
+    if (!floodOn || !floodLid || !floodLive) return;
     const controller = new AbortController();
     const read = () => {
       setFloodClock(Date.now());
@@ -4342,11 +4344,11 @@ export default function Home() {
     read();
     const timer = setInterval(read, FLOOD_GAUGE_REFRESH_MS);
     return () => { clearInterval(timer); controller.abort(); };
-  }, [floodOn, floodLid]);
-  const floodGaugeFeatures = floodOn ? officialPayloads["noaa-nwps-gauges"]?.data.features ?? null : null;
+  }, [floodOn, floodLid, floodLive]);
+  const floodGaugeFeatures = floodOn && floodLive ? officialPayloads["noaa-nwps-gauges"]?.data.features ?? null : null;
   const floodSummaries = useMemo(() => floodGaugeFeatures ? floodGaugeSummaries(floodGaugeFeatures) : [], [floodGaugeFeatures]);
   const floodItems = useMemo(() => floodGaugeList(floodSummaries), [floodSummaries]);
-  const shownFloodGauge = floodGauge && floodGauge.lid === floodLid ? floodGauge : null;
+  const shownFloodGauge = floodLive && floodGauge && floodGauge.lid === floodLid ? floodGauge : null;
   const floodPlot = useMemo(() => shownFloodGauge ? floodHydrograph(shownFloodGauge, floodClock) : null, [shownFloodGauge, floodClock]);
   const floodPoint = useMemo(() => {
     const feature = floodLid ? floodGaugeFeatures?.find(item => item.properties?.lid === floodLid) : undefined;
@@ -10954,8 +10956,8 @@ export default function Home() {
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
             flood={activeCategoryMap.tools?.includes("flood") ? { on: floodOn,
-              state: !buildYearCurrent || temporalQuery.frame !== OFFICIAL_CONTEXT_PRESENT_FRAME ? "held" : officialStates["noaa-nwps-gauges"] === "error" ? "failed" : floodGaugeFeatures ? "ready" : "loading",
-              summary: floodGaugeFeatures ? floodNetworkSummary(floodSummaries) : null, list: floodItems, picked: floodLid, gauge: shownFloodGauge, plot: floodPlot,
+              state: !floodLive ? "held" : officialStates["noaa-nwps-gauges"] === "error" ? "failed" : floodGaugeFeatures ? "ready" : "loading",
+              summary: floodGaugeFeatures ? floodNetworkSummary(floodSummaries) : null, list: floodItems, picked: floodLive ? floodLid : null, gauge: shownFloodGauge, plot: floodPlot,
               reading: shownFloodGauge ? floodReading(shownFloodGauge, floodClock) : null, gaugeLoading: Boolean(floodLid && !shownFloodGauge && floodFailed !== floodLid),
               gaugeFailed: floodLid !== null && floodFailed === floodLid && !shownFloodGauge, url: floodLid ? floodGaugePage(floodLid) : null } : undefined}
             onFlood={showFlood} onFloodPick={pickFloodGauge} onFloodClear={() => setFloodLid(null)}

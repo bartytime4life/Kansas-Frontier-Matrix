@@ -653,8 +653,10 @@ export function FloodHydrographChart({ gauge, plot, reading }: Readonly<{ gauge:
     <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
       {plot.bands.map(band => <g key={band.id}>
         <rect x={left} width={width - left - right} y={y(band.to).toFixed(1)} height={Math.max(0, y(band.from) - y(band.to)).toFixed(1)} fill={band.color} fillOpacity={0.16} />
-        <line x1={left} x2={width - right} y1={y(band.from).toFixed(1)} y2={y(band.from).toFixed(1)} stroke={band.color} strokeWidth={1} />
-        <text x={left + 3} y={(y(band.from) - 2.5).toFixed(1)} fontSize={8} fill={band.color}>{`${band.short} ${band.from.toFixed(1)}`}</text>
+        {band.value >= plot.low && <>
+          <line x1={left} x2={width - right} y1={y(band.value).toFixed(1)} y2={y(band.value).toFixed(1)} stroke={band.color} strokeWidth={1} />
+          <text x={left + 3} y={(y(band.value) - 2.5).toFixed(1)} fontSize={8} fill={band.color}>{`${band.short} ${band.value.toFixed(1)}`}</text>
+        </>}
       </g>)}
       {plot.ticks.map(value => <g key={value}>
         <line x1={left} x2={width - right} y1={y(value).toFixed(1)} y2={y(value).toFixed(1)} stroke="#e6eff2" strokeOpacity={0.12} strokeWidth={0.5} />
