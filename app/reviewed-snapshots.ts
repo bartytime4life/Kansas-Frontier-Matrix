@@ -186,3 +186,50 @@ export function useReviewedSnapshots(sourceId: ReviewedSourceId | null, motionAl
   // While a newly selected release loads, the last one drawn stays on the map.
   return { on, setOn, status, reason, history, index, setIndex, playing, setPlaying, product: status === "idle" || status === "withheld" ? null : product };
 }
+
+/** What the dock shows for a feature selected in a reviewed snapshot: its own details, in its source's terms. */
+export type ReviewedFeatureSummary = Readonly<{ title: string; lines: readonly string[]; link: Readonly<{ href: string; label: string }> | null }>;
+const str = (value: unknown, max = 200): string | null => typeof value === "string" && value.trim() ? value.trim().slice(0, max) : null;
+const num = (value: unknown): number | null => typeof value === "number" && Number.isFinite(value) ? value : null;
+const utc = (value: unknown): string | null => isTime(value) ? new Date(value).toISOString().slice(0, 16).replace("T", " ") + " UTC" : null;
+const USGS_STATION = /^USGS-(\d{8,15})$/;
+const USGS_EVENT_PAGE = "https://earthquake.usgs.gov/earthquakes/eventpage/";
+
+export function reviewedFeatureSummary(sourceId: ReviewedSourceId, properties: Readonly<Record<string, unknown>> | null | undefined): ReviewedFeatureSummary {
+  const p = properties ?? {};
+  if (sourceId === "usgs-streamflow") {
+    const station = str(p.stationId, 40), value = num(p.value), unit = str(p.unit, 32), observed = utc(p.observedAt);
+    const site = station ? USGS_STATION.exec(station)?.[1] ?? null : null;
+    return {
+      title: station ? `Gauge ${station.replace(/^USGS-/, "")}` : "USGS gauge",
+      lines: [
+        value === null ? "No discharge value in this capture" : `${value.toLocaleString("en-US")}${unit ? ` ${unit}` : ""}`,
+        [p.provisional === true ? "Provisional USGS value" : p.provisional === false ? "Approved USGS value" : null, observed ? `observed ${observed}` : null].filter(Boolean).join(" · "),
+      ].filter(Boolean),
+      link: site ? { href: `https://waterdata.usgs.gov/monitoring-location/${site}/`, label: "USGS station page ↗" } : null,
+    };
+  }
+  if (sourceId === "nws-alerts") {
+    const effective = utc(p.effective), expires = utc(p.expires);
+    return {
+      title: str(p.event, 120) ?? "NWS alert",
+      lines: [
+        [str(p.severity, 32), str(p.urgency, 32), str(p.certainty, 32)].filter(Boolean).join(" · "),
+        [effective ? `effective ${effective}` : null, expires ? `expires ${expires}` : null].filter(Boolean).join(" · "),
+        str(p.areaDesc, 240), str(p.headline, 240),
+      ].filter((line): line is string => Boolean(line)),
+      link: null,
+    };
+  }
+  const magnitude = num(p.magnitude), type = str(p.magnitudeType, 16), depth = num(p.depthKm), when = utc(p.observedAt), id = str(p.sourceFeatureId, 40);
+  return {
+    title: magnitude === null ? "Earthquake, magnitude not given" : `M ${magnitude.toFixed(1)}${type ? ` ${type}` : ""}`,
+    lines: [
+      str(p.place, 240),
+      [depth === null ? null : `depth ${depth.toFixed(1)} km`, when].filter(Boolean).join(" · "),
+      p.status === "reviewed" ? "Reviewed by a USGS analyst" : p.status === "automatic" ? "Automatic USGS solution; may still be revised" : null,
+    ].filter((line): line is string => Boolean(line)),
+    // Built from the id the pipeline checked, the same way the release builds it.
+    link: id && /^[a-z0-9]{2,40}$/.test(id) ? { href: USGS_EVENT_PAGE + id, label: "USGS event page ↗" } : null,
+  };
+}

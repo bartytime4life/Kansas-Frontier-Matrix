@@ -73,7 +73,7 @@ test('the dock steps through the stored snapshots and says plainly when there ar
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
  assert.match(page,/const reviewedSource = categoryMapOnScreen\?\.tools\?\.includes\("reviewed"\) \? REVIEWED_SOURCE_BY_TOPIC\[categoryMapOnScreen\.topic\] \?\? null : null;/);
- assert.match(page,/setReviewedSnapshot\(map, reviewedData\);/);
+ assert.match(page,/setReviewedSnapshot\(map, reviewedData, reviewedFeature \? reviewedPick : null\);/);
  const live=await readFile('app/live-context.ts','utf8');
  assert.match(live,/drawReviewedSnapshot\(map\);/,'drawn by the context renderer, so a style reload keeps it');
 });
@@ -152,4 +152,55 @@ test('released earthquakes draw as the live catalog does, ringed by USGS review 
  assert.equal(key.title,'Reviewed earthquakes (USGS)');
  assert.deepEqual(key.items.slice(-2).map(i=>[i.label,i.stroke]),[['Automatic solution','#f2b84b'],['Reviewed by USGS','#f4fbfb']]);
  assert.equal(snapshots.REVIEWED_SOURCE_LABEL['usgs-earthquakes'],'USGS earthquake');
+});
+
+test('a selected snapshot feature reads in its own source\'s terms, and links only to pages built from checked ids',()=>{
+ const gauge=snapshots.reviewedFeatureSummary('usgs-streamflow',{stationId:'USGS-06887500',value:1520,unit:'ft^3/s',provisional:true,observedAt:'2026-10-26T16:45:00Z'});
+ assert.deepEqual(JSON.parse(JSON.stringify(gauge)),{title:'Gauge 06887500',lines:['1,520 ft^3/s','Provisional USGS value · observed 2026-10-26 16:45 UTC'],link:{href:'https://waterdata.usgs.gov/monitoring-location/06887500/',label:'USGS station page ↗'}});
+ assert.equal(snapshots.reviewedFeatureSummary('usgs-streamflow',{stationId:'USGS-06887500',value:null,provisional:false}).lines[0],'No discharge value in this capture');
+ assert.equal(snapshots.reviewedFeatureSummary('usgs-streamflow',{stationId:'javascript:alert(1)'}).link,null);
+ const alert=snapshots.reviewedFeatureSummary('nws-alerts',{event:'Tornado Warning',severity:'Extreme',urgency:'Immediate',certainty:'Observed',effective:'2026-10-26T22:10:00Z',expires:'2026-10-26T22:45:00Z',areaDesc:'Harper, KS; Sumner, KS'});
+ assert.deepEqual(JSON.parse(JSON.stringify(alert.lines)),['Extreme · Immediate · Observed','effective 2026-10-26 22:10 UTC · expires 2026-10-26 22:45 UTC','Harper, KS; Sumner, KS']);
+ assert.equal(alert.link,null);
+ const quake=snapshots.reviewedFeatureSummary('usgs-earthquakes',{magnitude:2.7,magnitudeType:'ml',place:'8 km S of Anthony, Kansas',depthKm:5.1,observedAt:'2026-10-20T03:00:00Z',status:'automatic',sourceFeatureId:'ks2026abcd'});
+ assert.deepEqual(JSON.parse(JSON.stringify(quake)),{title:'M 2.7 ml',lines:['8 km S of Anthony, Kansas','depth 5.1 km · 2026-10-20 03:00 UTC','Automatic USGS solution; may still be revised'],link:{href:'https://earthquake.usgs.gov/earthquakes/eventpage/ks2026abcd',label:'USGS event page ↗'}});
+ assert.equal(snapshots.reviewedFeatureSummary('usgs-earthquakes',{magnitude:null,sourceFeatureId:'../evil'}).link,null);
+ assert.equal(snapshots.reviewedFeatureSummary('usgs-earthquakes',{magnitude:null}).title,'Earthquake, magnitude not given');
+});
+
+test('the drawn release carries each feature id, and the selection outlines only the picked feature',()=>{
+ const data={type:'FeatureCollection',features:[{type:'Feature',id:'ks1',geometry:{type:'Point',coordinates:[-97.6,37.2]},properties:{magnitude:2.7,eventUrl:'x'}},{type:'Feature',id:'alert-1',geometry:{type:'Polygon',coordinates:[[[-98,37],[-97,37],[-97,38],[-98,37]]]},properties:{severity:'Severe'}}]};
+ const tagged=layers.taggedSnapshot(data);
+ assert.deepEqual(tagged.features.map(f=>f.properties.kfmFeatureId),['ks1','alert-1']);
+ assert.equal(layers.taggedSnapshot(data),tagged,'computed once per release');
+ assert.equal(data.features[0].properties.kfmFeatureId,undefined,'the release itself is not changed');
+ const filters={},added=[];let source;
+ const map={getSource:()=>source,addSource:(id,spec)=>{source={setData(){} };},getLayer:id=>added.includes(id),addLayer:l=>added.push(l.id),setLayoutProperty(){},setFilter:(id,f)=>{filters[id]=f;}};
+ layers.setReviewedSnapshot(map,data,'ks1');layers.drawReviewedSnapshot(map);
+ assert.deepEqual(filters['external-reviewed-snapshot-selected-point'],['all',['==',['geometry-type'],'Point'],['==',['get','kfmFeatureId'],'ks1']]);
+ assert.deepEqual(filters['external-reviewed-snapshot-selected-area'][2],['==',['get','kfmFeatureId'],'ks1']);
+ layers.setReviewedSnapshot(map,data,null);layers.drawReviewedSnapshot(map);
+ assert.deepEqual(filters['external-reviewed-snapshot-selected-point'][2],['==',['get','kfmFeatureId'],'']);
+});
+
+test('the dock shows the picked feature with its release and signed download; the page picks on click and lets a pick lapse with its release',async()=>{
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const maps=await (async()=>{const exports={};new Function('exports','require',ts.transpileModule(await readFile('app/category-maps.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(exports,()=>({}));return exports;})();
+ let cleared=0;
+ const base={look:maps.categoryMap('geology'),mode:'2d',depth:1,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onReviewed(){},onReviewedClear:()=>cleared++};
+ const reviewed={source:'USGS earthquake',on:true,loading:false,reason:null,count:1,index:0,publishedAt:'2026-10-29 00:06 UTC',capturedFor:'2026-10-29 00:00 UTC',features:5,freshness:'current',playing:false,motionAllowed:true,
+  selected:{title:'M 2.7 ml',lines:['8 km S of Anthony, Kansas'],link:{href:'https://earthquake.usgs.gov/earthquakes/eventpage/ks1',label:'USGS event page ↗'},release:'a'.repeat(64),download:'/api/curated/usgs-earthquakes?release='+'a'.repeat(64)+'&download=1'}};
+ const tree=h.render(h.exports.CategoryMapDock,{...base,reviewed});
+ const text=JSON.stringify(tree);
+ assert.match(text,/M 2\.7 ml/);assert.match(text,/"Release ","a{12}","… · external context, not evidence"/);
+ assert.equal(findNode(tree,n=>n.type==='a'&&n.props.download!==undefined).props.href,'/api/curated/usgs-earthquakes?release='+'a'.repeat(64)+'&download=1');
+ findNode(tree,n=>n.props?.['aria-label']==='Clear the selected snapshot feature').props.onClick();
+ assert.equal(cleared,1);
+ assert.doesNotMatch(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,reviewed:{...reviewed,selected:null}})),/external context, not evidence/);
+ h.dispose?.();
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/if \(renderedHits\[0\]\?\.source === REVIEWED_SOURCE_ID\) \{\s*const id = renderedHits\[0\]\.properties\?\.\[REVIEWED_FEATURE_ID\];\s*if \(typeof id === "string" && id\) setReviewedPick\(id\);\s*return;/,'a released record is not opened as basemap context');
+ assert.match(page,/const reviewedFeature = reviewedPick && reviewedData \? reviewedData\.features\.find\(feature => String\(feature\.id \?\? ""\) === reviewedPick\) \?\? null : null;/);
+ assert.match(page,/setReviewedSnapshot\(map, reviewedData, reviewedFeature \? reviewedPick : null\);/);
+ assert.match(page,/onReviewed=\{\(on\) => \{ setReviewedPick\(null\); reviewed\.setOn\(on\); \}\}/);
 });

@@ -217,6 +217,15 @@ committed to the site's MySQL database (`server/pipeline-*.mjs`), read through
   reviewed it (`REVIEWED_EARTHQUAKE_KEY`). Retracted events are not published.
   See `docs/second-pc-pipeline.md` for what the release keeps and the owner
   steps before it publishes.
+- Selecting a gauge, alert area or earthquake in a shown snapshot shows it in
+  the dock in its own source's terms (discharge with unit and approval status;
+  alert severity, urgency, certainty, effective and expiry times and areas;
+  magnitude, place, depth, time and USGS review state), outlines it on the map,
+  and names the release it belongs to with that release's signed JSON download.
+  It is a released record, so it is not opened as basemap context. Links are
+  built only from identifiers the pipeline checked (the USGS station page from
+  a `USGS-` site number, the event page from the event id). The selection lapses
+  when the shown snapshot no longer holds the feature.
 - The scrubber runs oldest to newest; each step names the hour the capture is
   for, when it was published and how many features it holds, and says when it
   is older than two hours. Play steps forward and stops at the newest.
