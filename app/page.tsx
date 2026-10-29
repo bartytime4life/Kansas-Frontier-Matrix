@@ -33,6 +33,7 @@ import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportCl
 import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
+import { inLandCoverRegion, LAND_COVER_SOURCE_ID, landCoverKey, landCoverPointApiPath, landCoverReading, syncLandCover, type LandCoverPoint } from "./land-cover";
 import { isQpfHours, isRainfallHours, QPF_WINDOWS, qpfWindowButton, qpfWindowLabel, RAINFALL_REFRESH_MS, RAINFALL_SOURCE_ID, RAINFALL_WINDOWS, rainfallLegendApiPath, rainfallReading, rainfallStamp, rainfallWindowLabel, syncRainfall, validRainfallLegend, type QpfHours, type RainfallHours, type RainfallKind, type RainfallLegend, type RainfallView } from "./mrms-rainfall";
 import { FEMA_DEFAULT_FILTER, FEMA_RECORD_SOURCE_ID, HAZARD_FAMILIES, femaClasses, femaCountyCollection, femaCountyCounts, femaCountyDisasters, femaCountyList, femaCountyReading, femaKey, femaReading, femaSelect, femaYears, syncFemaRecord, validFemaRecord, type FemaFilter, type FemaRecord } from "./fema-record";
 import { FLOOD_GAUGE_REFRESH_MS, floodGaugeApiPath, floodGaugeList, floodGaugePage, floodGaugeSummaries, floodHydrograph, floodKey, floodNetworkSummary, floodReading, parseFloodGauge, syncFloodSelection, FLOOD_SELECTED_SOURCE_ID, type FloodGauge } from "./flood-forecast";
@@ -1619,6 +1620,10 @@ export default function Home() {
   // so far by "day-product", and the one whose read failed.
   const [outlookDay, setOutlookDay] = useState<OutlookDay | null>(null);
   // The U.S. Drought Monitor on the Field view: the week shown ("YYYYMMDD"), or null for the newest released.
+  const [landCoverOn, setLandCoverOn] = useState(false);
+  const [landCoverPoint, setLandCoverPoint] = useState<LandCoverPoint | null>(null);
+  const landCoverOnRef = useRef(false);
+  const landCoverRequestRef = useRef<AbortController | null>(null);
   const [rainfallOn, setRainfallOn] = useState(false);
   const [rainfallKind, setRainfallKind] = useState<RainfallKind>("observed");
   const [rainfallHours, setRainfallHours] = useState<RainfallHours>(24);
@@ -4329,6 +4334,41 @@ export default function Home() {
     if (on && map && map.getZoom() > 7.5) map.easeTo({ center: [-98.38, 38.5], zoom: 6.2, duration: motionDuration(1200), essential: false });
   };
 
+  // NLCD 2021 land cover: the classified 30 m map, and the class of the cell under the last click.
+  landCoverOnRef.current = landCoverOn;
+  const readLandCoverAt = useCallback((lon: number, lat: number) => {
+    landCoverRequestRef.current?.abort();
+    if (!inLandCoverRegion(lon, lat)) { setLandCoverPoint({ lon, lat, state: "none", code: null }); return; }
+    const controller = new AbortController();
+    landCoverRequestRef.current = controller;
+    setLandCoverPoint({ lon, lat, state: "loading", code: null });
+    void fetch(landCoverPointApiPath(lon, lat), { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<{ code?: unknown }> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        const code = typeof value.code === "number" ? value.code : null;
+        setLandCoverPoint({ lon, lat, state: code === null ? "none" : "ready", code: code as LandCoverPoint["code"] });
+      })
+      .catch(() => { if (!controller.signal.aborted) setLandCoverPoint({ lon, lat, state: "failed", code: null }); });
+  }, []);
+  const readLandCoverAtRef = useRef(readLandCoverAt);
+  readLandCoverAtRef.current = readLandCoverAt;
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const sync = () => { try { syncLandCover(map, landCoverOn); } catch { /* The style is reloading; its styledata event draws the land cover again. */ } };
+    sync();
+    if (!landCoverOn) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(LAND_COVER_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [landCoverOn, styleReady]);
+  const showLandCover = (on: boolean) => {
+    setLandCoverOn(on);
+    landCoverRequestRef.current?.abort();
+    setLandCoverPoint(null);
+  };
+
   // MRMS rainfall: the NWS radar estimate of the past 1–72 hours, drawn as the NWS renders it and asked for again every quarter
   // hour while shown. It is current only, so away from the present map time it is held.
   const rainfallLive = buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME;
@@ -6210,6 +6250,8 @@ export default function Home() {
           });
           // Local previews own their selection; never inspect official features beneath them.
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
+          // With land cover shown, every click also reads the NLCD class under it; whatever the click selects still selects.
+          if (landCoverOnRef.current) readLandCoverAtRef.current(event.lngLat.lng, event.lngLat.lat);
           // The fixture control owns synthetic selection; never select provider
           // context underneath its schematic as evidence for that schematic.
           if (renderedHits[0]?.source === LIVING_WATERS_SOURCE) {
@@ -10084,6 +10126,8 @@ export default function Home() {
     setFemaOn(false);
     setFemaCounty(null);
     setRainfallOn(false);
+    setLandCoverOn(false);
+    setLandCoverPoint(null);
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
     setPopulationPrismsShown(Boolean(look.overlays?.includes("population")));
     // Soil moisture belongs to the maps that offer it; it does not follow into the others.
@@ -11077,7 +11121,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -11097,6 +11141,7 @@ export default function Home() {
               windows: rainfallView.kind === "forecast" ? QPF_WINDOWS.map(hours => ({ hours, label: qpfWindowButton(hours), title: `Forecast for ${qpfWindowLabel(hours)}` }))
                 : RAINFALL_WINDOWS.map(hours => ({ hours, label: `${hours} h`, title: `Rain in the past ${rainfallWindowLabel(hours)}` })),
               reading: rainfallReading(rainfallView), legend: rainfallLegends[rainfallViewKey]?.items ?? null, legendFailed: rainfallLegendFailed === rainfallViewKey } : undefined}
+            landCover={activeCategoryMap.tools?.includes("landcover") ? { on: landCoverOn, reading: landCoverReading(landCoverPoint) } : undefined} onLandCover={showLandCover}
             onRainfall={on => { setRainfallOn(on); setRainfallLegendFailed(null); setRainfallClock(Date.now()); }} onRainfallKind={setRainfallKind}
             onRainfallHours={hours => { if (rainfallKind === "forecast") { if (isQpfHours(hours)) setQpfHours(hours); } else if (isRainfallHours(hours)) setRainfallHours(hours); }}
             onFema={showFemaRecord} onFemaYear={year => setFemaFilter(filter => ({ ...filter, year }))} onFemaFamily={family => setFemaFilter(filter => ({ ...filter, family }))}

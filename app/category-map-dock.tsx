@@ -81,7 +81,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -194,6 +194,9 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
     legend: readonly Readonly<{ label: string; image: string }>[] | null;
     legendFailed: boolean;
   }>;
+  /** USGS NLCD 2021 land cover, for looks that offer it, with the class at the point last clicked. */
+  landCover?: Readonly<{ on: boolean; reading: string }>;
+  onLandCover?: (on: boolean) => void;
   onRainfall?: (on: boolean) => void;
   onRainfallKind?: (kind: RainfallKind) => void;
   onRainfallHours?: (hours: number) => void;
@@ -466,6 +469,11 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           <span>{group.label}<small>{group.range}</small></span><b>{population.counties ? `${group.count} ${group.count === 1 ? "county" : "counties"}` : "…"}</b></li>)}</ul>
         <p className="category-map-dock-reading">Height: {population.metresPerPerson} m per person per sq mi of land{population.statewide !== null ? ` · Kansas overall ${population.statewide.toFixed(1)}` : ""} · 2020 Census</p>
       </div>}
+    </>}
+    {look.tools?.includes("landcover") && landCover && onLandCover && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={landCover.on} onClick={() => onLandCover(!landCover.on)}
+        title="USGS National Land Cover Database 2021: land cover classified from Landsat at 30 m, in NLCD's own colours">{landCover.on ? "Hide land cover" : "Show land cover (NLCD 2021)"}</button>
+      {landCover.on && <p className="category-map-dock-reading" aria-live="polite">{landCover.reading}</p>}
     </>}
     {look.tools?.includes("rainfall") && rainfall && onRainfall && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={rainfall.on} onClick={() => onRainfall(!rainfall.on)}
