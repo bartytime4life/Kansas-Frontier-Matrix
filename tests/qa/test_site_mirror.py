@@ -983,6 +983,28 @@ def test_historical_next_receipt_binds_only_the_dependency_safety_overlay(
     assert predecessor.name in receipt["rollback"]["mirror"]
 
 
+def test_dev_loopback_successor_records_only_the_reviewed_boundary_delta() -> None:
+    directory = ROOT / "data/receipts/generated"
+    previous_path = directory / "site-v268-history-catalogue-hold-20261027.json"
+    successor_path = directory / "site-v268-dev-loopback-boundary-20261029.json"
+    previous = json.loads(previous_path.read_text())
+    successor = json.loads(successor_path.read_text())
+    assert successor["predecessor_receipt_sha256"] == hashlib.sha256(previous_path.read_bytes()).hexdigest()
+    before, after = previous["comparison"], successor["comparison"]
+    assert set(after) - set(before) == {"tests/vite-security.test.mjs"}
+    assert set(before) - set(after) == set()
+    assert {name for name in before if before[name] != after[name]} == {"vite.config.ts"}
+    assert after["vite.config.ts"]["site_sha256"] == before["vite.config.ts"]["site_sha256"]
+    assert after["vite.config.ts"]["state"] == "repository_safety_overlay"
+    assert after["tests/vite-security.test.mjs"]["site_sha256"] is None
+    for name in ("site_candidate_commit", "authoritative_site_source_paths", "overlay", "review", "status"):
+        assert successor[name] == previous[name]
+    inventory = {name: entry["mirror_sha256"] for name, entry in after.items()}
+    assert successor["inventory_sha256"] == hashlib.sha256(
+        json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+
+
 def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None:
     receipt, expected = TOOL.reviewed_receipt()
     manifest = json.loads((TOOL.DESTINATION / "package.json").read_text())
@@ -997,13 +1019,13 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert manifest["overrides"]["fast-uri"] == lock["packages"]["node_modules/fast-uri"]["version"] == "3.1.9"
     assert manifest["overrides"]["miniflare"]["undici"] == lock["packages"]["node_modules/undici"]["version"] == "7.30.1"
     result = TOOL.check()
-    assert result["files"] == len(expected) == len(receipt["comparison"]) == 899
+    assert result["files"] == len(expected) == len(receipt["comparison"]) == 900
     assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
     assert result["authority"] == "CONTENT_PARITY_ONLY"
     assert result["file_states"]["inherited_repository_overlay"] == 60
-    assert result["file_states"]["repository_only_overlay"] == 37
-    assert result["file_states"]["repository_safety_overlay"] == 18
+    assert result["file_states"]["repository_only_overlay"] == 38
+    assert result["file_states"]["repository_safety_overlay"] == 19
     assert result["withheld_files"] == 262
     assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
     assert result["review_acceptance"]["source_and_overlay_review"] == "PENDING"
@@ -1698,7 +1720,8 @@ def test_historical_receipt_binds_only_aviation_browser_corrections() -> None:
     assert receipt["inventory_sha256"] == hashlib.sha256(json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def test_selected_receipt_withholds_history_carriers_without_restoring_or_releasing_them() -> None:
+def test_history_hold_receipt_withholds_carriers_without_restoring_or_releasing_them(monkeypatch) -> None:
+    monkeypatch.setattr(TOOL, "RECEIPT", ROOT / "data/receipts/generated/site-v268-history-catalogue-hold-20261027.json")
     receipt, expected = TOOL.reviewed_receipt()
     assert TOOL.RECEIPT.name == "site-v268-history-catalogue-hold-20261027.json"
     predecessor = ROOT / "data/receipts/generated" / receipt["predecessor_receipt"]
