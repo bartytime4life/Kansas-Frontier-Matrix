@@ -33,6 +33,7 @@ import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportCl
 import { changeCollection, droughtChangeStart, countyChangeList, countyChangeReading, countyDroughtChange, droughtChangeKey, droughtChangeReading, type DroughtChangeWeeks, DROUGHT_NEWEST_REFRESH_MS, droughtCountyAtClick, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
+import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationReading, populationChange, populationChangeApiPath, populationChangeCollection, populationChangeKey, populationChangeList, populationChangeReading, syncPopulationChange, validCountyBaseline } from "./population-change";
 import { TORNADO_DEFAULT_FILTER, TORNADO_RATINGS, TORNADO_SOURCE_ID, UNRATED_COLOR, syncTornadoRecord, tornadoCollection, tornadoDetail, tornadoKey, tornadoList, tornadoReading, tornadoSelect, tornadoYears, validTornadoRecord, type TornadoFilter, type TornadoRecord } from "./tornado-record";
 import { CHAMBERS, LEGISLATURE_SOURCE_ID, legislatureApiPath, legislatureKey, legislatureList, legislatureReading, syncLegislature, validLegislature, type Chamber, type LegislatureDistricts } from "./state-legislature";
 import { CDL_LATEST_YEAR, CDL_SOURCE_ID, CDL_YEARS, cdlKey, cdlPointApiPath, cdlReading, inCdlRegion, syncCropland, type CdlPoint, type CdlValue } from "./cropland";
@@ -1608,6 +1609,15 @@ export default function Home() {
   const [categoryDockTopic, setCategoryDockTopic] = useState<TopicId | null>(null);
   // County population prisms: on with the People map, toggled from its dock.
   const [populationPrisms, setPopulationPrismsShown] = useState(false);
+  // Population change 2010–2020 (People): shown or not, the 2010 counts once read, whether that read failed,
+  // the county picked, and whether the prisms were up when it opened (they come back when it closes).
+  const [popChangeOn, setPopChangeOn] = useState(false);
+  const [popChange2010, setPopChange2010] = useState<FeatureCollection | null>(null);
+  const [popChangeFailed, setPopChangeFailed] = useState(false);
+  const [popChangeCounty, setPopChangeCounty] = useState<string | null>(null);
+  const popChangePrismsRef = useRef(false);
+  const popChangeHidCountiesRef = useRef(false);
+  const popChangeCountiesAskedRef = useRef(false);
   // The Kansas earthquake record since 1973 (Landform relief): shown or not, the
   // served record once read, whether the read failed, one year or all, and the
   // event a visitor selected. While it is shown the 30-day catalog is hidden.
@@ -4637,6 +4647,79 @@ export default function Home() {
     mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
   };
 
+  // Population change on the People map: counties shaded by 2010→2020 change in place of the density prisms.
+  // The county outlines it covers are hidden (their record stays loaded) so a click picks the change; they come back with it.
+  const closePopulationChange = () => {
+    setPopChangeOn(false);
+    setPopChangeCounty(null);
+    if (popChangeHidCountiesRef.current) setOfficialContextVisible("census-counties", true);
+    popChangeHidCountiesRef.current = false;
+  };
+  const showPopulationChange = (on: boolean) => {
+    if (!on) {
+      closePopulationChange();
+      if (popChangePrismsRef.current) setPopulationPrismsShown(true);
+      popChangePrismsRef.current = false;
+      return;
+    }
+    setPopChangeOn(true);
+    setPopChangeCounty(null);
+    setPopChangeFailed(false);
+    popChangeCountiesAskedRef.current = false;
+    popChangePrismsRef.current = populationPrisms;
+    setPopulationPrismsShown(false);
+    popChangeHidCountiesRef.current = Boolean(officialVisibilityRef.current["census-counties"]);
+    if (popChangeHidCountiesRef.current) setOfficialContextVisible("census-counties", false);
+  };
+  // Raising the prisms closes the change map: one county encoding at a time.
+  const showPopulationPrisms = (on: boolean) => {
+    if (on && popChangeOn) closePopulationChange();
+    popChangePrismsRef.current = false;
+    setPopulationPrismsShown(on);
+  };
+  useEffect(() => {
+    if (!popChangeOn || popChange2010 || popChangeFailed) return;
+    const controller = new AbortController();
+    void fetch(populationChangeApiPath, { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validCountyBaseline(value)) throw new Error("Invalid 2010 county counts.");
+        setPopChange2010(value.data);
+      })
+      .catch(() => { if (!controller.signal.aborted) setPopChangeFailed(true); });
+    return () => controller.abort();
+  }, [popChangeOn, popChange2010, popChangeFailed]);
+  useEffect(() => {
+    if (!popChangeOn || officialPayloads["census-counties"] || popChangeCountiesAskedRef.current) return;
+    popChangeCountiesAskedRef.current = true;
+    void refreshOfficialContext("census-counties");
+  }, [popChangeOn, officialPayloads, refreshOfficialContext]);
+  const popChangeCounties = popChangeOn ? officialPayloads["census-counties"]?.data ?? null : null;
+  const popChange = useMemo(() => popChangeCounties && popChange2010 ? populationChange(popChangeCounties, popChange2010) : null, [popChangeCounties, popChange2010]);
+  // Both years read but not every county joined, or the 2020 counties failed: nothing is drawn from part of the state.
+  const popChangeBroken = popChangeOn && (popChangeFailed || officialStates["census-counties"] === "error" || Boolean(popChangeCounties && popChange2010 && !popChange));
+  const popChangeCollection = useMemo(() => popChange && popChangeCounties ? populationChangeCollection(popChangeCounties, popChange) : null, [popChange, popChangeCounties]);
+  const popChangeBars = useMemo(() => popChange ? byPercent(popChange).map(c => ({ id: c.geoid, name: c.name, percent: c.percent, color: changeColor(c.percent) })) : null, [popChange]);
+  const popChangeItems = useMemo(() => popChange ? populationChangeList(popChange) : [], [popChange]);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    const sync = () => { try { syncPopulationChange(map, popChangeOn ? popChangeCollection : null, popChangeCounty); } catch { /* The style is reloading; its styledata event draws the change again. */ } };
+    sync();
+    if (!popChangeOn || !popChangeCollection) return;
+    const restore = () => { if (map.isStyleLoaded() && !map.getSource(POPULATION_CHANGE_SOURCE_ID)) sync(); };
+    map.on("styledata", restore);
+    return () => { map.off("styledata", restore); };
+  }, [popChangeOn, popChangeCollection, popChangeCounty, styleReady]);
+  const pickPopChangeCounty = (geoid: string) => {
+    const feature = popChangeCounties?.features.find(item => String(item.properties?.geoid ?? "") === geoid);
+    const geometry = feature && countySearchGeometry(feature);
+    if (!geometry) return;
+    setPopChangeCounty(geoid);
+    mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
+  };
+
   // NWS flood forecasts on the River network: the NWPS gauges by flood category, and one gauge's hydrograph,
   // read again every ten minutes while it is shown (observations every 15–60 minutes, forecasts a few times a day).
   floodOnRef.current = floodOn;
@@ -6453,6 +6536,12 @@ export default function Home() {
           if (renderedHits[0]?.source === LEGISLATURE_SOURCE_ID) {
             const district = renderedHits[0].properties?.district;
             if (typeof district === "number") { setLegislaturePicked(district); setCategoryDockHidden(false); }
+            return;
+          }
+          // With population change shown, the county under the click is picked; the dock gives its two counts.
+          if (renderedHits[0]?.source === POPULATION_CHANGE_SOURCE_ID) {
+            const geoid = renderedHits[0].properties?.geoid;
+            if (typeof geoid === "string") { setPopChangeCounty(geoid); setCategoryDockHidden(false); }
             return;
           }
           // With the FEMA record shown, a county under the click is picked; the dock lists its declarations.
@@ -10319,6 +10408,11 @@ export default function Home() {
     tornadoHidRef.current = [];
     setTornadoOn(false);
     setTornadoPicked(null);
+    // The change closes with its map; the starters above already decide whether the county outlines are on.
+    popChangePrismsRef.current = false;
+    popChangeHidCountiesRef.current = false;
+    setPopChangeOn(false);
+    setPopChangeCounty(null);
     if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
     setPopulationPrismsShown(Boolean(look.overlays?.includes("population")));
     // Soil moisture belongs to the maps that offer it; it does not follow into the others.
@@ -11312,7 +11406,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(tornadoOn && tornadoRecord ? [tornadoKey(tornadoRecord, tornadoFilter)] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(tornadoOn && tornadoRecord ? [tornadoKey(tornadoRecord, tornadoFilter)] : []), ...(popChangeOn && popChangeCollection ? [populationChangeKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -11398,7 +11492,11 @@ export default function Home() {
                 failed: droughtSinceDate !== null && droughtSinceFailed === droughtSinceDate } } : undefined}
             onDrought={showDrought} onDroughtWeek={chooseDroughtWeek} onDroughtPlay={playDrought} onDroughtChange={(weeks) => { setDroughtChange(weeks); setDroughtSinceFailed(null); }} onDroughtCounty={pickDroughtCounty} onDroughtCountyClear={() => setDroughtCounty(null)}
             population={activeCategoryMap.tools?.includes("population") ? { on: populationPrisms, ...densityGroupCounts(officialPayloads["census-counties"]?.data.features ?? []), metresPerPerson: PRISM_METRES_PER_PERSON_PER_SQUARE_MILE } : undefined}
-            onPopulation={setPopulationPrismsShown}
+            onPopulation={showPopulationPrisms}
+            populationChange={activeCategoryMap.tools?.includes("population") ? { on: popChangeOn, loading: popChangeOn && !popChange && !popChangeBroken, failed: popChangeBroken,
+              reading: popChange ? populationChangeReading(popChange) : null, bars: popChangeBars, list: popChangeItems, picked: popChangeCounty,
+              county: popChange && popChangeCounty ? countyPopulationReading(popChange, popChangeCounty) : null } : undefined}
+            onPopulationChange={showPopulationChange} onPopulationChangePick={pickPopChangeCounty} onPopulationChangeClear={() => setPopChangeCounty(null)}
             quakes={activeCategoryMap.tools?.includes("quakes") ? { on: quakeRecordOn, loading: quakeRecordOn && !quakeRecord && !quakeRecordFailed, failed: quakeRecordFailed,
               counts: quakeCounts, total: quakeRecord?.events.length ?? 0, startYear: quakeRecord?.startYear ?? 1973, endYear: quakeRecord?.endYear ?? new Date().getUTCFullYear(),
               minMagnitude: quakeRecord?.minMagnitude ?? 2.5, truncated: Boolean(quakeRecord?.truncated), year: quakeRecordYear,

@@ -157,6 +157,35 @@ globe, and appear in the start-page preview of the People map. Counts describe
 areas, not people; a county's column says nothing about where in the county
 people live.
 
+### Change since 2010
+
+**Show change since 2010** shades each county by its percent change in people
+between the 2010 and 2020 Census counts (`app/population-change.ts`). The 2010
+counts come from the existing `/api/event-atlas/counties?edition=2010` route,
+the 2020 counts from the loaded county record, and the two are joined by
+GEOID. Kansas's 105 counties kept their boundaries through the decade, so each
+county is compared with itself.
+
+- Six classes diverge at zero in ColorBrewer BrBG: losses brown (10% or more,
+  5–10%, under 5%), gains blue-green (under 5%, 5–10%, 10% or more). Each lower
+  bound is inclusive, so a county with no change counts as "grew under 5%".
+- The dock gives both state totals, the net change, how many counties lost
+  people, and the largest gain and loss in people. A bar chart sets all 105
+  counties from largest gain to largest loss around the zero line, in their
+  class colours. A keyboard list holds the same ranking.
+- A county picked on the map, in the chart or in the list is outlined, and the
+  dock gives both counts, the change and the county's rank.
+- The change is drawn only when every county joins, with a count in both years
+  and a non-zero 2010 count. A partial join would understate the state and
+  misplace counties, so it is refused.
+- One county encoding at a time: the change replaces the density columns. If
+  the columns were up, they come back when the change closes. Raising the
+  columns closes the change.
+
+Both years are decennial counts, not estimates. The 2020 count carries the
+Census Bureau's disclosure-avoidance noise, which matters little at county
+totals.
+
 ## Soil moisture on the Field view (Agriculture)
 
 The Field view opens on the 2024 Kansas aerial imagery at field scale. Its dock
