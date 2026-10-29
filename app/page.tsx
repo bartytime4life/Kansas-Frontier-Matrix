@@ -30,7 +30,7 @@ import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, wi
 import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
 import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
-import { DROUGHT_SOURCE_ID, USDM_CATEGORIES, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
+import { DROUGHT_NEWEST_REFRESH_MS, DROUGHT_SERIES_REFRESH_MS, DROUGHT_SOURCE_ID, USDM_CATEGORIES, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
@@ -1605,11 +1605,14 @@ export default function Home() {
   // The U.S. Drought Monitor on the Field view: the week shown ("YYYYMMDD"), or null for the newest released.
   const [droughtOn, setDroughtOn] = useState(false);
   const [droughtWeek, setDroughtWeek] = useState<string | null>(null);
-  const [droughtMaps, setDroughtMaps] = useState<Partial<Record<string, DroughtMap>>>({});
+  const [droughtMaps, setDroughtMaps] = useState<ReadonlyMap<string, DroughtMap>>(() => new Map());
   const [droughtFailed, setDroughtFailed] = useState<string | null>(null);
   const [droughtSeries, setDroughtSeries] = useState<DroughtSeries | null>(null);
   const [droughtSeriesFailed, setDroughtSeriesFailed] = useState(false);
   const lastDroughtRef = useRef<DroughtMap | null>(null);
+  const droughtReadAtRef = useRef(new Map<string, number>());
+  const droughtSeriesReadAtRef = useRef(0);
+  const [droughtTick, setDroughtTick] = useState(0);
   const [outlookHazard, setOutlookHazard] = useState<OutlookProduct>("cat");
   const [outlooks, setOutlooks] = useState<Partial<Record<string, SpcOutlook>>>({});
   const [outlookFailed, setOutlookFailed] = useState<string | null>(null);
@@ -4107,23 +4110,44 @@ export default function Home() {
     return () => { map.off("styledata", restore); };
   }, [shownOutlook, styleReady]);
 
-  // Kansas's weekly drought shares since 2000 are read once, when the Drought Monitor is first shown.
+  // Kansas's weekly drought shares since 2000: read when the Drought Monitor is shown, and again while it stays shown once they are six hours old.
   useEffect(() => {
-    if (!droughtOn || droughtSeries || droughtSeriesFailed) return;
+    if (!droughtOn || droughtSeriesFailed) return;
+    const age = droughtSeries ? Date.now() - droughtSeriesReadAtRef.current : Infinity;
+    if (age < DROUGHT_SERIES_REFRESH_MS) {
+      const timer = setTimeout(() => setDroughtTick(tick => tick + 1), DROUGHT_SERIES_REFRESH_MS - age);
+      return () => clearTimeout(timer);
+    }
     const controller = new AbortController();
     void fetch("/api/drought-series", { signal: controller.signal })
       .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
       .then(value => {
         if (controller.signal.aborted) return;
         if (!validDroughtSeries(value)) throw new Error("Invalid Drought Monitor statistics.");
+        droughtSeriesReadAtRef.current = Date.now();
         setDroughtSeries(value);
       })
-      .catch(() => { if (!controller.signal.aborted) setDroughtSeriesFailed(true); });
+      .catch(() => {
+        if (controller.signal.aborted) return;
+        // A failed re-read keeps the series in hand and tries again after the same interval.
+        if (droughtSeries) { droughtSeriesReadAtRef.current = Date.now(); setDroughtTick(tick => tick + 1); }
+        else setDroughtSeriesFailed(true);
+      });
     return () => controller.abort();
-  }, [droughtOn, droughtSeries, droughtSeriesFailed]);
+  }, [droughtOn, droughtSeries, droughtSeriesFailed, droughtTick]);
   const droughtId = droughtOn ? droughtWeek ?? "newest" : null;
   useEffect(() => {
-    if (!droughtId || droughtMaps[droughtId] || droughtFailed === droughtId) return;
+    if (!droughtId || droughtFailed === droughtId) return;
+    const current = droughtMaps.get(droughtId);
+    if (current) {
+      // A past week is kept as published; the newest is read again once it is an hour old, while it is shown.
+      if (droughtId !== "newest") return;
+      const age = Date.now() - (droughtReadAtRef.current.get(droughtId) ?? 0);
+      if (age < DROUGHT_NEWEST_REFRESH_MS) {
+        const timer = setTimeout(() => setDroughtTick(tick => tick + 1), DROUGHT_NEWEST_REFRESH_MS - age);
+        return () => clearTimeout(timer);
+      }
+    }
     const controller = new AbortController();
     // A dragged week slider settles before its map is read.
     const timer = setTimeout(() => {
@@ -4132,21 +4156,22 @@ export default function Home() {
         .then(value => {
           if (controller.signal.aborted) return;
           if (!validDroughtMap(value) || (droughtWeek !== null && value.date !== droughtWeek)) throw new Error("Invalid Drought Monitor map.");
+          droughtReadAtRef.current.set(droughtId, Date.now());
           // A dozen weeks are kept for stepping back and forth; older ones are read again.
-          setDroughtMaps(current => {
-            const next: Partial<Record<string, DroughtMap>> = { ...current, [droughtId]: value };
-            const ids = Object.keys(next).filter(id => id !== "newest");
-            for (const id of ids.slice(0, Math.max(0, ids.length - 12))) delete next[id];
-            return next;
-          });
-          if (droughtWeek === null) announce(`U.S. Drought Monitor on the map: ${droughtReading(value, null)}`);
+          setDroughtMaps(maps => rememberDroughtMap(maps, droughtId, value));
+          if (droughtWeek === null && current?.date !== value.date) announce(`U.S. Drought Monitor on the map: ${droughtReading(value, null)}`);
         })
-        .catch(() => { if (!controller.signal.aborted) setDroughtFailed(droughtId); });
+        .catch(() => {
+          if (controller.signal.aborted) return;
+          // A failed re-read of the newest keeps the map shown and tries again after the same interval.
+          if (current) { droughtReadAtRef.current.set(droughtId, Date.now()); setDroughtTick(tick => tick + 1); }
+          else setDroughtFailed(droughtId);
+        });
     }, droughtWeek ? 350 : 0);
     return () => { clearTimeout(timer); controller.abort(); };
-  }, [droughtId, droughtWeek, droughtMaps, droughtFailed, announce]);
+  }, [droughtId, droughtWeek, droughtMaps, droughtFailed, droughtTick, announce]);
   // While the next week loads, the last one drawn stays on the map, and its key with it.
-  const droughtLoaded = droughtId ? droughtMaps[droughtId] ?? null : null;
+  const droughtLoaded = droughtId ? droughtMaps.get(droughtId) ?? null : null;
   if (droughtLoaded) lastDroughtRef.current = droughtLoaded;
   else if (!droughtId || droughtFailed === droughtId) lastDroughtRef.current = null;
   const shownDrought = droughtId ? droughtLoaded ?? lastDroughtRef.current : null;
@@ -4163,14 +4188,15 @@ export default function Home() {
     map.on("styledata", restore);
     return () => { map.off("styledata", restore); };
   }, [shownDrought, styleReady]);
-  const droughtNewest = droughtMaps.newest?.date ?? droughtSeries?.weeks.at(-1)?.date ?? null;
-  const droughtDate = droughtWeek ?? droughtMaps.newest?.date ?? null;
+  const droughtNewest = droughtMaps.get("newest")?.date ?? droughtSeries?.weeks.at(-1)?.date ?? null;
+  const droughtDate = droughtWeek ?? droughtMaps.get("newest")?.date ?? null;
   const droughtChartWeeks = useMemo(() => droughtSeries?.weeks.map(week => ({ date: week.date, label: usdmDateLabel(week.date), shares: week.shares })) ?? null, [droughtSeries]);
   const chooseDroughtWeek = (date: string | null) => { setDroughtWeek(date && date !== droughtNewest ? date : null); setDroughtFailed(null); };
   const showDrought = (on: boolean) => {
     setDroughtOn(on);
     setDroughtWeek(null);
     setDroughtFailed(null);
+    setDroughtSeriesFailed(false);
     const map = mapRef.current;
     // The Drought Monitor is a statewide picture: a field-scale view pulls out to Kansas.
     if (on && map && map.getZoom() > 7.5) map.easeTo({ center: [-98.38, 38.5], zoom: 6.2, duration: motionDuration(1200), essential: false });

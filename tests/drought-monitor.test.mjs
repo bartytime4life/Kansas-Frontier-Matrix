@@ -200,3 +200,32 @@ test('the page reads the week shown, keeps the last map drawn while the next loa
  assert.match(page,/setDroughtOn\(droughtOffered && \(restoredDrought === "newest" \|\| isUsdmDate\(restoredDrought\)\)\);/);
  assert.match(page,/const chooseDroughtWeek = \(date: string \| null\) => \{ setDroughtWeek\(date && date !== droughtNewest \? date : null\); setDroughtFailed\(null\); \};/,'the newest week is followed, not pinned');
 });
+
+test('the page keeps the newest and the dozen weeks read most recently, the week just read always among them',()=>{
+ const week=date=>({date,data:{type:'FeatureCollection',features:[]},kansas:[0,0,0,0,0],retrievedAt:'t',source:'s'});
+ // Twelve recent weeks read first, then an older one: as object keys, "YYYYMMDD" would list numerically and evict it at once.
+ let maps=new Map([['newest',week('20261020')]]);
+ let date='20261013';
+ for(let i=0;i<12;i++){maps=dm.rememberDroughtMap(maps,date,week(date));date=dm.previousUsdmDate(date);}
+ assert.equal(maps.size,13);
+ const older='20240102';
+ maps=dm.rememberDroughtMap(maps,older,week(older));
+ assert.ok(maps.has(older),'the week just read is kept');
+ assert.ok(maps.has('newest'));
+ assert.ok(!maps.has('20261013'),'the week read longest ago goes');
+ assert.equal([...maps.keys()].filter(k=>k!=='newest').length,12);
+ const reread=dm.rememberDroughtMap(maps,'20261006',week('20261006'));
+ assert.equal([...reread.keys()].at(-1),'20261006','a week read again moves to the end');
+ const plain={};for(const k of ['20261013','20261006','20240102'])plain[k]=1;
+ assert.deepEqual(Object.keys(plain),['20240102','20261006','20261013'],'why a Map: object keys of this shape are ordered numerically');
+ assert.equal(dm.rememberDroughtMap(new Map(),'newest',week('20261020')).size,1);
+});
+
+test('while shown, the newest map and the Kansas series are read again as they age; past weeks are not',()=>{
+ assert.equal(dm.DROUGHT_NEWEST_REFRESH_MS,3600000);assert.equal(dm.DROUGHT_SERIES_REFRESH_MS,21600000);
+ assert.match(page,/if \(current\) \{\s*\/\/[^\n]*\n\s*if \(droughtId !== "newest"\) return;\s*const age = Date\.now\(\) - \(droughtReadAtRef\.current\.get\(droughtId\) \?\? 0\);\s*if \(age < DROUGHT_NEWEST_REFRESH_MS\) \{\s*const timer = setTimeout\(\(\) => setDroughtTick\(tick => tick \+ 1\), DROUGHT_NEWEST_REFRESH_MS - age\);/);
+ assert.match(page,/const age = droughtSeries \? Date\.now\(\) - droughtSeriesReadAtRef\.current : Infinity;\s*if \(age < DROUGHT_SERIES_REFRESH_MS\)/);
+ assert.match(page,/setDroughtMaps\(maps => rememberDroughtMap\(maps, droughtId, value\)\);/);
+ assert.match(page,/if \(current\) \{ droughtReadAtRef\.current\.set\(droughtId, Date\.now\(\)\); setDroughtTick\(tick => tick \+ 1\); \}\s*else setDroughtFailed\(droughtId\);/,'a failed re-read keeps the newest map shown');
+ assert.match(page,/setDroughtFailed\(null\);\s*setDroughtSeriesFailed\(false\);/,'showing it again retries the series');
+});

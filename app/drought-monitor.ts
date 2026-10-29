@@ -263,6 +263,23 @@ export function validDroughtSeries(value: unknown): value is DroughtSeries {
     && candidate!.weeks.every(week => { const w = record(week); return isUsdmDate(w?.date) && shareList(w?.shares); });
 }
 
+/** While shown, the newest map is read again once it is an hour old, and the Kansas series once it is six hours old; past weeks are kept as published. */
+export const DROUGHT_NEWEST_REFRESH_MS = 60 * 60 * 1000;
+export const DROUGHT_SERIES_REFRESH_MS = 6 * 60 * 60 * 1000;
+/**
+ * The maps kept in the page after `id` is read: the newest, and the `limit`
+ * dated weeks read most recently, `id` among them. A Map keeps the order the
+ * weeks were read in (an object would list "YYYYMMDD" keys numerically).
+ */
+export function rememberDroughtMap(current: ReadonlyMap<string, DroughtMap>, id: string, map: DroughtMap, limit = 12): Map<string, DroughtMap> {
+  const next = new Map(current);
+  next.delete(id);
+  next.set(id, map);
+  const older = [...next.keys()].filter(key => key !== "newest" && key !== id);
+  for (const key of older.slice(0, Math.max(0, older.length - (id === "newest" ? limit : limit - 1)))) next.delete(key);
+  return next;
+}
+
 const weekOf = (series: DroughtSeries | null, date: string) => series?.weeks.find(week => week.date === date) ?? null;
 const pct = (value: number) => value < 0.05 ? "none" : `${value < 10 ? value.toFixed(1) : Math.round(value)}%`;
 
