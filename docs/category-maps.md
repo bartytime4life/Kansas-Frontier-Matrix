@@ -286,6 +286,32 @@ draws it.
   are not a flood-inundation map. Warnings come from the National Weather
   Service.
 
+## Kansas Legislature districts (Kansas representation)
+
+The Government map's **District plan** group switches between the U.S.
+House districts (Congress by Congress, as before), the 40 **Kansas Senate**
+districts, and the 125 **Kansas House** districts.
+
+- **Source.** The chambers are layers 8 (upper) and 9 (lower) of TIGERweb's
+  `Generalized_ACS2025/Legislative` service. This is the same service and
+  vintage as the 119th Congress districts: the 2024 plans, January 1, 2025
+  geography, generalized to 1:500,000. They are read through
+  `/api/state-legislature?chamber=senate|house` and kept for a day.
+- **Complete edition or none.** Every district must arrive once, with
+  Kansas's state code, and as a valid Kansas polygon, checked with the same
+  rules as the congressional districts. A missing, repeated or extra
+  district refuses the whole answer rather than drawing part of a plan.
+  Areas in no district ("ZZZ") are dropped.
+- **Map.** A faint fill to click, district outlines, the picked district in
+  orange with a stronger fill, and district numbers. All of it sits under
+  the site's own overlays. While a chamber is shown, the U.S. House
+  districts are hidden, and they come back only if they were on.
+- **Districts.** They are listed by number. Choosing one, or clicking it,
+  outlines it and frames it.
+- **Limits.** This is generalized display geography, not for deciding which
+  district an address is in. Officeholders and elections are not shown.
+  The Kansas Secretary of State publishes the official maps.
+
 ## USDA Cropland Data Layer (Field view)
 
 **Show crops (USDA CDL)** draws the USDA NASS Cropland Data Layer: what was
