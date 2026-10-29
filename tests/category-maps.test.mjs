@@ -346,7 +346,7 @@ test('the review fixes: a hint per map, sun controls only where the light shows,
 });
 
 test('the Field view shows NASA soil moisture at a chosen depth, names the day drawn, and keeps it to the maps that offer it',async()=>{
- assert.deepEqual([...maps.CATEGORY_MAPS.agriculture.tools],['area','soil']);
+ assert.deepEqual([...maps.CATEGORY_MAPS.agriculture.tools],['area','soil','drought']);
  const h=await componentHarness('app/category-map-dock.tsx',{});
  const calls=[];
  const base={look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:2.5,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},onSoil:v=>calls.push(['soil',v]),onSoilDepth:v=>calls.push(['depth',v])};

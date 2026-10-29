@@ -239,16 +239,16 @@ export const QWEN_KNOWLEDGE_PACK = deepFreeze({
   "officialSources": [
     {
       "id": "census-congress-119",
-      "title": "Kansas U.S. House districts · 119th Congress",
-      "shortTitle": "U.S. House districts · 119th",
-      "organization": "U.S. Census Bureau",
+      "title": "Kansas U.S. House districts through time",
+      "shortTitle": "U.S. House district history",
+      "organization": "U.S. Census Bureau · Lewis, DeVine, Pitcher and Martis",
       "domain": "Government & civic",
       "kind": "SNAPSHOT_GEOJSON",
       "cadence": "On selection or refresh; shared server cache up to 24 hours",
-      "freshness": "January 1, 2025 boundary vintage · fixed 119th Congress edition, not a live officeholder feed",
-      "boundary": "U.S. Census Bureau generalized 1:500,000 congressional district geography, January 1, 2025 vintage, for the 119th Congress (2025–2027). Colors identify districts, not parties or election results. Boundaries are display reference, not an address-level voting determination. No officeholders, polling places or current ballot eligibility are inferred. Confirm election geography with Kansas election officials. External context only; no KFM evidence release.",
+      "freshness": "1861 statehood through the 119th Congress · exact selected Congress and source edition shown on each record",
+      "boundary": "Kansas congressional history from statehood, with Census geometry for the 119th Congress and scholarly reconstructed earlier plans. Dates select Congress terms, not election dates. At-large constituencies may overlap numbered districts and elect multiple representatives. External context only; inspect each record for source and limitations.",
       "fallback": "Missing, incomplete or changed-edition responses leave the layer unavailable. No boundaries are invented or replaced with another Congress.",
-      "attribution": "<a href=\"https://www.census.gov/\">U.S. Census Bureau</a> · ACS 2025 generalized districts · 119th Congress",
+      "attribution": "<a href=\"https://www.census.gov/\">U.S. Census Bureau</a> · ACS 2025 generalized districts · <a href=\"https://cdmaps.polisci.ucla.edu/\">Lewis et al. historical districts</a> · <a href=\"/civic-history-license.txt\">MIT license</a>",
       "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2025/Legislative/MapServer/5",
       "evidenceRole": "EXTERNAL_CONTEXT_ONLY"
     },
