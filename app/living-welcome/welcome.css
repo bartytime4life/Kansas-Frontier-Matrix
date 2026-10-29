@@ -684,6 +684,8 @@
 .welcome-spot-fact{display:block;font-size:10px;line-height:1.35;color:#d4e0d8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .welcome-spot-mini{display:block;width:100%;height:5px;margin-top:5px;border-radius:3px;overflow:hidden;transform-origin:0 50%;animation:welcome-spot-drill-x .9s .8s cubic-bezier(.45,.05,.3,1) both}
 .welcome-spot-inner[data-expanded=false] .welcome-spot-stem{height:14px}
+.welcome-spot-chip-next{position:absolute;right:8px;top:7px;min-height:24px;padding:2px 8px;border:1px solid #c0a667;border-radius:5px;background:#183e45;color:#f2d79d;font-size:10px;cursor:pointer;pointer-events:auto}
+.welcome-spot-chip-next:focus-visible{outline:2px solid #f1d18b;outline-offset:2px}
 .welcome-spot-kicker{display:block;font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
 .welcome-spot-title{display:block;margin:2px 0 1px;font-size:16px;line-height:1.2;font-weight:600;letter-spacing:-.01em;color:#f4e3b9}
 .welcome-spot-inner[data-kind=mine] .welcome-spot-title{font-size:18px}

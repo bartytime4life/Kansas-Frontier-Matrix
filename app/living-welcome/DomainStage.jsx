@@ -16,7 +16,7 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
  const host = useRef(null), engine = useRef(null), latest = useRef({ topic, paused, reduced, layersVisible, aviationMode });
  const [state, setState] = useState('loading'), [sources, setSources] = useState(null);
  const [Geology, setGeology] = useState(null), [geologyReady, setGeologyReady] = useState(false), [geologyFailed, setGeologyFailed] = useState(false);
- const [Spotlight, setSpotlight] = useState(null), [map, setMap] = useState(null);
+ const [Spotlight, setSpotlight] = useState(null), [map, setMap] = useState(null), [spotPlaced, setSpotPlaced] = useState(false);
  // A category hint owns no second map or Underground worker. Its source and
  // diagram chunk are requested only after a settled Geology selection.
  useEffect(() => {
@@ -87,8 +87,9 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
   .map(source => `${OFFICIAL_CONTEXT_BY_ID[source.id]?.shortTitle ?? source.id}${source.observedAt ? ` · ${source.product === 'visible' ? 'visible-band' : source.product === 'geocolor' ? 'GeoColor' : 'scan'} ${RADAR_TIME.format(new Date(source.observedAt))}` : ''}`) : [];
  return <div className="domain-stage" data-state={state} data-topic={view.topic ?? 'kansas'}>
   <div ref={host} className="domain-stage-map" />
-  {topic==='geology'&&Spotlight&&map&&<Spotlight engine={map.engine} host={map.host} paused={paused} reduced={reduced} expanded={expanded}/>}
-  {expanded&&topic==='geology'&&!(Spotlight&&map)&&geologyReady&&Geology&&<Geology paused={paused} reduced={reduced} expanded={expanded}/>}
+  {topic==='geology'&&Spotlight&&map&&<Spotlight engine={map.engine} host={map.host} paused={paused} reduced={reduced} expanded={expanded} onPlaced={setSpotPlaced}/>}
+  {/* The single-log specimen stays until a spotlight record actually fits on screen. */}
+  {expanded&&topic==='geology'&&!(Spotlight&&map&&spotPlaced)&&geologyReady&&Geology&&<Geology paused={paused} reduced={reduced} expanded={expanded}/>}
   {expanded&&topic==='geology'&&geologyFailed&&<p className="welcome-geology-module-failure" role="status">Recorded log preview unavailable. Open Underground to check source status.</p>}
   <p className="domain-stage-caption"><span>Map preview · provider context</span><strong key={view.topic ?? 'kansas'}>{view.name}</strong><small>{view.topic==='aviation'?`${aviationMode==='3d'?'3D volumes · 1× heights':aviationMode==='slice'?'4,000 ft MSL slice':'2D chart'} · Pinned FAA reference; weather, traffic, drone grids and TFRs are separate.`:view.detail}</small>{shown.length>0&&<small className="domain-stage-data">Preview layers: {shown.join(' · ')}</small>}<small className="domain-stage-credit">{BASEMAPS[view.basemap].note}</small></p>
  </div>;
