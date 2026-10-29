@@ -286,6 +286,40 @@ draws it.
   are not a flood-inundation map. Warnings come from the National Weather
   Service.
 
+## USDA Cropland Data Layer (Field view)
+
+**Show crops (USDA CDL)** draws the USDA NASS Cropland Data Layer: what was
+planted in each 30 m cell, year by year from 2008 to the newest released
+(`CDL_LATEST_YEAR`, raised once NASS releases a year, about February). It
+is served by CropScape (`nassgeodata.gmu.edu`).
+
+- **Map.** CropScape's WMS offers EPSG:4326 and Albers, not Web Mercator.
+  `/api/cropland/tile` therefore takes a Web Mercator tile, asks CropScape
+  for its corners in longitude and latitude, and passes the PNG through.
+  - It draws from zoom 8 only: at that scale the two projections agree to
+    under a pixel across a tile at Kansas's latitude, and the CDL is a
+    field-scale map.
+  - Tiles outside Kansas and its margin are answered empty without asking
+    CropScape. A year's tiles are kept, since a released CDL does not
+    change.
+  - Cells are drawn sharp at 88%, under every overlay. The Drought Monitor
+    stays on top.
+- **Key.** Kansas's main classes in CropScape's colours: corn, sorghum,
+  soybeans, sunflower, winter wheat, double-crop wheat/soybeans, alfalfa,
+  fallow/idle cropland, and grassland/pasture. The note says the CDL has
+  more than a hundred classes.
+- **At a point.** While crops are shown, every click also reads the class
+  of the field under it from CropScape's GetCDLValue, with CropScape's own
+  colour as a swatch. For example: "At 37.980°N, 100.870°W, 2024: Winter
+  Wheat (24)".
+  - GetCDLValue takes NAD83 Conus Albers (EPSG:5070) coordinates. The site
+    converts with the ellipsoidal Albers equal-area formulas and is tested
+    against PROJ to the centimetre.
+  - Choosing another year reads the last point again for that year.
+- **Limits.** The CDL is classified from satellite imagery each season and
+  checked against USDA farm records. It is accurate for the main crops and
+  less so for minor ones, and single cells can be wrong.
+
 ## NLCD 2021 land cover (Landscape imagery, Field view)
 
 **Show land cover (NLCD 2021)** draws the USGS National Land Cover
