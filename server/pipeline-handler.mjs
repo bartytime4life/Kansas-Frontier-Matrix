@@ -1,3 +1,4 @@
+import { COUNTY_SOURCE_ID, validateCountyRelease } from './county-history-release.mjs';
 import { createPublicKey, verify } from 'node:crypto';
 import { ArtifactFiles } from './pipeline-files.mjs';
 import { authorize } from './pipeline-auth.mjs';
@@ -59,7 +60,8 @@ export async function handlePipeline(request, { store, environment = process.env
         if (['water','weather'].includes(r.sourceId)) {
           if (!validateGoverned) fail('GOVERNED_VALIDATOR_REQUIRED');
           await validateGoverned(r.sourceId, r.projection, now);
-        } else validateContext(r.projection);
+        } else if (r.sourceId === COUNTY_SOURCE_ID) validateCountyRelease(r.projection);
+        else validateContext(r.projection);
         return reply(await store.rollback(r.id, digest(command.expectedActive), sha(canonical(command)), now));
       }
       fail('CONTROL_INVALID', 400);
@@ -112,6 +114,10 @@ export async function handlePipeline(request, { store, environment = process.env
       if (['water','weather'].includes(r.sourceId)) {
         if (!validateGoverned) fail('GOVERNED_VALIDATOR_REQUIRED');
         await validateGoverned(r.sourceId, product, committedAt);
+      } else if (r.sourceId === COUNTY_SOURCE_ID) {
+        validateCountyRelease(product);
+        const prepared = timestamp(product.preparedAt);
+        if (prepared > committedAt + 60000 || committedAt - prepared > 7200000) fail('PREPARATION_TIME_INVALID');
       } else {
         validateContext(product);
         if (product.sourceId !== r.sourceId || timestamp(product.retrievedAt) > committedAt + 60000 || committedAt - timestamp(product.retrievedAt) > 7200_000) fail('CAPTURE_TIME_INVALID');
@@ -126,22 +132,25 @@ export async function handlePipeline(request, { store, environment = process.env
 /** @param {string} sourceId @param {{store: any, environment?: any, now?: number}} options @param {string|null} [releaseId] */
 export async function publicContext(sourceId, { store, environment = process.env, now = Date.now() }, releaseId = null) {
   source(sourceId);
-  if (!['usgs-streamflow','nws-alerts','usgs-earthquakes'].includes(sourceId)) fail('SOURCE_NOT_ALLOWED', 400);
+  if (!['usgs-streamflow','nws-alerts','usgs-earthquakes',COUNTY_SOURCE_ID].includes(sourceId)) fail('SOURCE_NOT_ALLOWED', 400);
   const r = releaseId ? await store.release(digest(releaseId)) : await store.active(sourceId);
   if (!r || r.state !== 'COMMITTED' || r.sourceId !== sourceId || !r.projection) return { state: 'withheld', reason: 'NO_APPROVED_RELEASE', sourceId };
+  if (r.manifest.sourceId !== sourceId) fail('RELEASE_SOURCE_MISMATCH');
   approval(r.manifest, environment, now);
   if (sha(canonical(r.projection)) !== r.manifest.payloadSha256) fail('PROJECTION_INTEGRITY_FAILED');
-  const p = validateContext(r.projection);
+  const p = sourceId === COUNTY_SOURCE_ID ? validateCountyRelease(r.projection) : validateContext(r.projection);
+  if (p.sourceId !== sourceId) fail('RELEASE_SOURCE_MISMATCH');
   const features = p.data.features.map(f => sourceId === 'nws-alerts' ? { ...f, properties: { ...f.properties, expired: timestamp(f.properties.expires) <= now } } : f);
   const measured = sourceId === 'usgs-streamflow' ? features.filter(f => f.properties.value !== null).map(f => now - timestamp(f.properties.observedAt) <= 7200000) : [];
   return { ...p, data: { ...p.data, features }, releaseId: r.id, state: p.partial ? 'partial' : features.length ? 'available' : 'empty',
     approvalExpiresAt: r.manifest.approval.profile.expiresAt, payloadSha256: r.manifest.payloadSha256,
     measurementFreshness: !measured.length ? 'unknown' : measured.every(Boolean) ? 'current' : measured.some(Boolean) ? 'mixed' : 'stale',
-    freshness: now - timestamp(p.retrievedAt) > 7200000 ? 'stale' : 'current' };
+    freshness: sourceId === COUNTY_SOURCE_ID ? 'historical' : now - timestamp(p.retrievedAt) > 7200000 ? 'stale' : 'current' };
 }
 export async function publicArtifact(sourceId, options, releaseId) {
   // Check the same current rights/revocation/withdrawal gates as the rendered read.
-  await publicContext(sourceId, options, releaseId);
+  const visible = await publicContext(sourceId, options, releaseId);
+  if (visible.state === 'withheld') fail('RELEASE_WITHHELD', 404);
   const r = await options.store.release(digest(releaseId));
   if (!r || r.state !== 'COMMITTED' || r.sourceId !== sourceId) fail('RELEASE_WITHHELD', 404);
   approval(r.manifest, options.environment ?? process.env, options.now ?? Date.now());
@@ -152,7 +161,17 @@ export async function publicArtifact(sourceId, options, releaseId) {
 export async function publicHistory(sourceId, { store, environment = process.env, now = Date.now() }) {
   source(sourceId); const items = [];
   for (const r of await store.history(sourceId)) {
-    try { approval(r.manifest, environment, now); items.push({ releaseId: r.releaseId, publishedAt: new Date(r.publishedAt).toISOString() }); }
+    try {
+      if (r.manifest.sourceId !== sourceId) continue;
+      approval(r.manifest, environment, now);
+      let effectiveDay;
+      if (sourceId === COUNTY_SOURCE_ID) {
+        const row = await store.release(r.releaseId);
+        if (!row || row.state !== 'COMMITTED' || row.sourceId !== sourceId || !row.projection || sha(canonical(row.projection)) !== row.manifest.payloadSha256) continue;
+        effectiveDay = validateCountyRelease(row.projection).effectiveDay;
+      }
+      items.push({ releaseId: r.releaseId, publishedAt: new Date(r.publishedAt).toISOString(), ...(effectiveDay ? { effectiveDay } : {}) });
+    }
     catch { /* Expired/revoked profiles cannot advertise downloadable history. */ }
   }
   return { sourceId, items, limit: 20 };

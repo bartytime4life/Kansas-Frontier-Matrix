@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 export async function copyKit(destination) {
   const root = fileURLToPath(new URL('../..', import.meta.url));
-  const files = ['server/ingestion-sources.mjs','server/pipeline-contract.mjs','server/pipeline-normalize.mjs','server/pipeline-files.mjs','server/pipeline-auth.mjs','server/county-history-candidate.mjs',
+  const files = ['server/ingestion-sources.mjs','server/pipeline-contract.mjs','server/pipeline-normalize.mjs','server/pipeline-files.mjs','server/pipeline-auth.mjs','server/county-history-candidate.mjs','server/county-history-release.mjs',
     'scripts/pc-pipeline/journal.mjs','scripts/pc-pipeline/publisher.mjs','scripts/pc-pipeline/worker.mjs','scripts/pc-pipeline/cli.mjs','scripts/pc-pipeline/connection.mjs',
     'scripts/pc-pipeline/copy.mjs','scripts/pc-pipeline/ftps.mjs','scripts/pc-pipeline/storage-policy.mjs'];
   for (const name of files) {

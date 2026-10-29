@@ -11,7 +11,7 @@ import { dischargeRadius, earthquakeColor, earthquakeRadius, GAUGE_APPROVED_RING
  */
 export const REVIEWED_SOURCE_ID = "external-reviewed-snapshot";
 export const REVIEWED_LAYER_IDS = Object.freeze(["external-reviewed-snapshot-areas", "external-reviewed-snapshot-edges", "external-reviewed-snapshot-gauges", "external-reviewed-snapshot-earthquakes",
-  "external-reviewed-snapshot-selected-area", "external-reviewed-snapshot-selected-point"]);
+  "external-reviewed-snapshot-selected-area", "external-reviewed-snapshot-selected-point", "external-reviewed-snapshot-counties", "external-reviewed-snapshot-county-edges"]);
 /** Each drawn feature carries its release feature id here, so a click and the highlight agree on it. */
 export const REVIEWED_FEATURE_ID = "kfmFeatureId";
 const SELECTED_COLOR = "#ffe9a8";
@@ -23,8 +23,8 @@ const severityColor = nwsSeverityColor();
 // Circle area grows with discharge: radius by the square root of the value, from a floor (map-keys.ts, which the dock keys).
 
 export const reviewedLayers = (): LayerSpecification[] => [
-  { id: REVIEWED_LAYER_IDS[0], type: "fill", source: REVIEWED_SOURCE_ID, filter: ["==", ["geometry-type"], "Polygon"], paint: { "fill-color": severityColor, "fill-opacity": 0.32 } },
-  { id: REVIEWED_LAYER_IDS[1], type: "line", source: REVIEWED_SOURCE_ID, filter: ["==", ["geometry-type"], "Polygon"], paint: { "line-color": severityColor, "line-width": 1.6 } },
+  { id: REVIEWED_LAYER_IDS[0], type: "fill", source: REVIEWED_SOURCE_ID, filter: ["all", ["==", ["geometry-type"], "Polygon"], ["!", ["has", "institutionSourceId"]]], paint: { "fill-color": severityColor, "fill-opacity": 0.32 } },
+  { id: REVIEWED_LAYER_IDS[1], type: "line", source: REVIEWED_SOURCE_ID, filter: ["all", ["==", ["geometry-type"], "Polygon"], ["!", ["has", "institutionSourceId"]]], paint: { "line-color": severityColor, "line-width": 1.6 } },
   { id: REVIEWED_LAYER_IDS[2], type: "circle", source: REVIEWED_SOURCE_ID, filter: ["all", ["==", ["geometry-type"], "Point"], ["==", ["typeof", ["get", "value"]], "number"]], paint: {
     "circle-radius": dischargeRadius(), "circle-color": GAUGE_FILL_COLOR, "circle-opacity": 0.72,
     // Provisional USGS values carry an amber ring; approved values a white one.
@@ -35,6 +35,8 @@ export const reviewedLayers = (): LayerSpecification[] => [
     "circle-radius": earthquakeRadius(), "circle-color": earthquakeColor(), "circle-opacity": 0.85,
     "circle-stroke-color": ["case", ["==", ["get", "status"], "reviewed"], GAUGE_APPROVED_RING, GAUGE_PROVISIONAL_RING], "circle-stroke-width": 1.4,
   } },
+  { id: REVIEWED_LAYER_IDS[6], type: "fill", source: REVIEWED_SOURCE_ID, filter: ["all", ["==", ["geometry-type"], "Polygon"], ["has", "institutionSourceId"]], paint: { "fill-color": "#927347", "fill-opacity": 0.14 } },
+  { id: REVIEWED_LAYER_IDS[7], type: "line", source: REVIEWED_SOURCE_ID, filter: ["all", ["==", ["geometry-type"], "Polygon"], ["has", "institutionSourceId"]], paint: { "line-color": "#927347", "line-width": 1.6 } },
   // The feature selected in the dock: a pale outline for an alert area, a halo for a gauge or an earthquake.
   { id: REVIEWED_LAYER_IDS[4], type: "line", source: REVIEWED_SOURCE_ID, filter: ["all", ["==", ["geometry-type"], "Polygon"], selectedFilter(null)] as never, paint: { "line-color": SELECTED_COLOR, "line-width": 3.4 } },
   { id: REVIEWED_LAYER_IDS[5], type: "circle", source: REVIEWED_SOURCE_ID, filter: ["all", ["==", ["geometry-type"], "Point"], selectedFilter(null)] as never, paint: {

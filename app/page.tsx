@@ -25,7 +25,7 @@ import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
 import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
 import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulationPrisms } from "./population-prisms";
-import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots, reviewedFeatureList, reviewedFeatureSummary } from "./reviewed-snapshots";
+import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots, reviewedFeatureList, reviewedFeatureSummary, reviewedDataForDay, isCountyDay } from "./reviewed-snapshots";
 import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
 import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
@@ -9984,15 +9984,16 @@ export default function Home() {
   const showCategoryDock = Boolean(categoryMapOnScreen && !categoryDockHidden && guideOpen === false && primaryWorkspace === "map" && !undergroundOpen);
   // Reviewed snapshots from the site database, for the maps that offer them.
   const reviewedSource = categoryMapOnScreen?.tools?.includes("reviewed") ? REVIEWED_SOURCE_BY_TOPIC[categoryMapOnScreen.topic] ?? null : null;
-  const reviewed = useReviewedSnapshots(reviewedSource, !reducedMotion);
-  const reviewedData = reviewed.on && reviewed.product ? reviewed.product.data : null;
+  const reviewedMapDay = calendarSweep ? calendarFrameDay(calendarSweep) : temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME ? currentUtcDay() : `${temporalQuery.frame}-01-01`;
+  const reviewed = useReviewedSnapshots(reviewedSource, !reducedMotion, reviewedMapDay);
+  const reviewedData = reviewed.on ? reviewedDataForDay(reviewed.product, reviewedMapDay, buildYearCurrent) : null;
   // A pick that the shown release does not hold (another snapshot, or none) is no selection.
   const reviewedFeature = reviewedPick && reviewedData ? reviewedData.features.find(feature => String(feature.id ?? "") === reviewedPick) ?? null : null;
   const quakePlots = useMemo(() => quakeRecord ? recordPlots(quakeRecord, quakeRecordYear) : null, [quakeRecord, quakeRecordYear]);
   const quakeCounts = useMemo(() => quakeRecord ? annualCounts(quakeRecord).map(entry => ({ ...entry, color: recordYearColor(entry.year, quakeRecord.endYear) })) : null, [quakeRecord]);
   // Keyboard lists for the selections otherwise made only by clicking the map.
   const quakeEventList = useMemo(() => quakeRecord ? recordEventList(quakeRecord, quakeRecordYear) : [], [quakeRecord, quakeRecordYear]);
-  const reviewedList = useMemo(() => reviewedData && reviewedSource ? reviewedFeatureList(reviewedSource, reviewedData) : [], [reviewedData, reviewedSource]);
+  const reviewedList = useMemo(() => reviewedData && reviewedSource ? reviewedFeatureList(reviewedSource, reviewedData, reviewedSource === "newberry-county-history" ? 107 : 40) : [], [reviewedData, reviewedSource]);
   /** Moves the map to a picked feature without motion when reduced motion is asked for. */
   const easeToPicked = (center: [number, number]) => mapRef.current?.easeTo({ center, zoom: Math.max(mapRef.current.getZoom(), 8), duration: motionDuration(600) });
   useEffect(() => {
@@ -10964,12 +10965,13 @@ export default function Home() {
             photoreal={activeCategoryMap.tools?.includes("photoreal") ? { on: basemap === "photoreal", landscapes: PHOTOREAL_LANDSCAPES, place: photorealPlace, depth: verticalExaggeration } : undefined}
             onPhotoreal={showPhotoreal}
             reviewed={reviewedSource ? { source: REVIEWED_SOURCE_LABEL[reviewedSource], on: reviewed.on, loading: reviewed.status === "loading",
-              reason: reviewed.status === "withheld" && reviewed.reason ? REVIEWED_REASONS[reviewed.reason] ?? "No reviewed snapshot can be shown." : null,
+              reason: reviewed.status === "withheld" && reviewed.reason ? REVIEWED_REASONS[reviewed.reason] ?? "No reviewed snapshot can be shown." : reviewedSource === "newberry-county-history" && reviewed.product && !reviewedData ? `This snapshot belongs to ${reviewed.product.effectiveDay}. Set the map to that boundary date to show it.` : null,
+              effectiveDay: reviewed.product?.effectiveDay, historical: reviewedSource === "newberry-county-history",
               count: reviewed.history.length, index: reviewed.index, publishedAt: reviewedTime(reviewed.history[reviewed.index]?.publishedAt), capturedFor: reviewedTime(reviewed.product?.bucketAt),
-              features: reviewed.product?.data.features.length ?? null, freshness: reviewed.product?.freshness ?? null, playing: reviewed.playing, motionAllowed: !reducedMotion,
+              features: reviewed.product?.data.features.length ?? null, freshness: reviewed.product?.freshness ?? null, playing: reviewed.playing, motionAllowed: !reducedMotion && reviewedSource !== "newberry-county-history",
               selected: reviewedFeature && reviewed.product ? { ...reviewedFeatureSummary(reviewedSource, reviewedFeature.properties), release: reviewed.product.releaseId,
                 download: `/api/curated/${reviewedSource}?release=${reviewed.product.releaseId}&download=1` } : null, list: reviewedList, pick: reviewedFeature ? reviewedPick : null } : undefined}
-            onReviewed={(on) => { setReviewedPick(null); reviewed.setOn(on); }} onReviewedIndex={reviewed.setIndex} onReviewedClear={() => setReviewedPick(null)}
+            onReviewed={(on) => { setReviewedPick(null); reviewed.setOn(on); }} onReviewedIndex={index => { reviewed.setIndex(index); const day = reviewed.history[index]?.effectiveDay; if (isCountyDay(day)) { setReviewedPick(null); void seekCalendarFrame({ day, start: "1804-10-01", end: "2000-12-31", step: "years", before: null, showing: "B" }); } }} onReviewedClear={() => setReviewedPick(null)}
             onReviewedPick={(id) => {
               // The same pick a map click makes; the map moves to the point, or to the middle of an alert area's extent.
               // A feature released without geometry is still selected, so its details and release show; the map stays put.
@@ -10977,13 +10979,19 @@ export default function Home() {
               if (!feature) return;
               setReviewedPick(id);
               if (!feature.geometry) return;
+              if (reviewedSource === "newberry-county-history") {
+                const extent = countySearchGeometry(feature);
+                if (extent) mapRef.current?.fitBounds(extent.bounds, { padding: 64, maxZoom: 8, duration: motionDuration(600) });
+                return;
+              }
               const points = feature.geometry.type === "Point" ? [feature.geometry.coordinates] : feature.geometry.type === "Polygon" ? feature.geometry.coordinates.flat()
                 : feature.geometry.type === "MultiPolygon" ? feature.geometry.coordinates.flat(2) : [];
               if (!points.length) return;
               const xs = points.map(point => point[0]), ys = points.map(point => point[1]);
               easeToPicked([(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2]);
             }}
-            onReviewedPlay={(on) => { if (on && reviewed.index >= reviewed.history.length - 1) reviewed.setIndex(0); reviewed.setPlaying(on); }}
+            onReviewedDate={day => { if (!isCountyDay(day)) return; setReviewedPick(null); void seekCalendarFrame({ day, start: "1804-10-01", end: "2000-12-31", step: "years", before: null, showing: "B" }); }}
+            onReviewedPlay={(on) => { if (reviewedSource === "newberry-county-history") return; if (on && reviewed.index >= reviewed.history.length - 1) reviewed.setIndex(0); reviewed.setPlaying(on); }}
             aquifer={activeCategoryMap.tools?.includes("aquifer") ? { view: aquiferView, legend: aquiferView && aquiferView !== "kgs-aquifer-high-plains" ? GROUNDWATER_CLASS_LEGENDS[aquiferView] : null } : undefined}
             onAquiferView={showAquiferView}
             soil={activeCategoryMap.tools?.includes("soil") ? { on: soilMapState.visible, depth: soilMapState.view === "root" ? "root" : "surface", reading: soilReading, legendUrl: soilLegendUrl(soilMapState.view === "root" ? "root" : "surface") } : undefined}

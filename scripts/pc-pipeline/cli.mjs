@@ -43,6 +43,25 @@ export async function cli(argv, connectionDependencies) {
     const { readCountyHistoryReport } = await import('../../server/county-history-candidate.mjs');
     return readCountyHistoryReport(args[0], args[1]);
   }
+  if (command === 'prepare-county' || command === 'publish-county') {
+    if (args.length !== (command === 'prepare-county' ? 2 : 3)) fail('COUNTY_RELEASE_USAGE_INVALID');
+    const { readCountyHistoryReport, normalizeCountyCandidate } = await import('../../server/county-history-candidate.mjs');
+    const { COUNTY_SOURCE_ID } = await import('../../server/county-history-release.mjs');
+    const offset = command === 'prepare-county' ? 0 : 1;
+    const packet = await readCountyHistoryReport(args[offset], args[offset+1]);
+    const normalized = normalizeCountyCandidate(packet);
+    if (command === 'prepare-county') return { state: 'candidate-only', releaseEligible: false, recipeSha256: await recipeDigest(),
+      payloadSha256: normalized.payloadSha256, product: normalized.product };
+    const config = await loadConfig(resolve(args[0])); await storageGuard(config);
+    const approval = parse(await readRegular(resolve(config.approvalDirectory, COUNTY_SOURCE_ID + '.json'), 32768));
+    const secret = (await readRegular(resolve(process.env.CREDENTIALS_DIRECTORY ?? '/nonexistent', 'pipeline-worker-key'), 128)).toString().trim();
+    const active = await pipelineCall('release', { sourceId: COUNTY_SOURCE_ID }, secret);
+    const manifest = { format: 'kfm-pc-release-transfer-v1', sourceId: COUNTY_SOURCE_ID, recipeSha256: await recipeDigest(), byteLength: normalized.bytes.length,
+      payloadSha256: normalized.payloadSha256, approval, expectedActive: active.releaseId };
+    const receipt = await publish(manifest, normalized.bytes, secret);
+    await immutable(resolve(config.root, 'data/receipts/pipeline/published', receipt.releaseId + '.json'), bytes(receipt));
+    return receipt;
+  }
   if (command === 'connection') {
     if (args.length > 1 || args[0]?.startsWith('-')) fail('CONNECTION_USAGE_INVALID');
     const root = await rootPath(args[0] ?? resolve(homedir(), '.local/state/kfm-data'));
@@ -65,7 +84,7 @@ export async function cli(argv, connectionDependencies) {
     return { state: 'created', privateKeyRemainsLocal: true, note: 'Run on the original PC; install only the public key on GoDaddy and the worker.' };
   }
   if (command === 'profile-template') {
-    if (!['usgs-streamflow','nws-alerts','usgs-earthquakes','water','weather'].includes(args[0])) fail('SOURCE_NOT_ALLOWED');
+    if (!['usgs-streamflow','nws-alerts','usgs-earthquakes','newberry-county-history','water','weather'].includes(args[0])) fail('SOURCE_NOT_ALLOWED');
     return { format: 'kfm-pc-release-delegation-v1', id: 'owner-selected-profile-id', sourceId: args[0], recipeSha256: await recipeDigest(), approver: '',
       validFrom: new Date().toISOString(), expiresAt: new Date(Date.now() + 7 * 86400000).toISOString(),
       rights: 'REVIEW_REQUIRED', sensitivity: 'REVIEW_REQUIRED', sourceRef: '', rightsRef: '', reviewRef: '', releaseProfileRef: '',
