@@ -1,8 +1,8 @@
 # Kansas county history: source qualification and dated queries
 
-Checked **2026-10-29**. **Source reuse notice confirmed; offline structural qualification and dated queries passed. Public map integration is not implemented.** This is a development qualification record, not source admission or a release receipt.
+Checked **2026-10-29**. **Source reuse notice confirmed; offline structural queries and geometry checks passed for the 1861-01-29 WORK candidate. The 1873–1874 disputed coverage is withheld. Public map integration is not implemented.** This is a development qualification record, not source admission or a release receipt.
 
-The next useful civic slice is a dated county-history layer. The actual Newberry Kansas archive was acquired and checked. The offline checker now selects mapped versions for an exact day, with citations and record-level source locators. Topology, datum conversion, interpretation and the modern continuation remain open. This change adds no route, map layer, download endpoint, source approval or runtime dependency.
+The next useful civic slice is a dated county-history layer. The actual Newberry Kansas archive was acquired and checked. The original offline checker selects mapped versions for an exact day, with citations and record-level source locators. A separate offline geometry investigation now checks all versions and dated coverage epochs, applies a named NAD83-to-WGS84 display operation, and emits a WORK candidate only for a passing selected date. Historical interpretation and the modern continuation remain open. This work adds no route, map layer, download endpoint, source approval or hosted runtime dependency.
 
 ## Evidence and exact source
 
@@ -40,7 +40,7 @@ The URL is mutable; the checker accepts only these exact bytes. A later revision
 | Structure | Polygon types, finite geographic coordinates, closed nondegenerate rings, version uniqueness and same-institution non-overlap pass |
 | Gaps between versions of the same institution | **8**, retained; no interpolation or forward fill |
 | Source classification | All 341 `CNTY_TYPE` values are `County`, including records whose names/IDs describe non-county areas |
-| Source projection | NAD83 geographic coordinates per bundled `.prj`; no WGS84 transformation performed |
+| Source projection | NAD83 geographic coordinates per bundled `.prj`; the original structural checker does not transform coordinates. The geometry follow-up below records its explicit display operation. |
 
 The 16 undated rows are name cross-references such as an old spelling or renamed county, not missing-date boundary events. All 929 dated chronology rows have citations and change descriptions. Three event-only rows lack an institutional ID; any future event identity must therefore include the exact member digest and row locator rather than inventing a county.
 
@@ -97,13 +97,56 @@ Each record carries `evidenceRefs` resolving to a local WORK `evidenceBundle`: t
 
 This is a bounded offline query format, not a new canonical contract, source registry, public DTO or release proof. Its only output is JSON on stdout; it performs no writes, acquisition or publication. Coordinates are deliberately absent while datum conversion and topology remain unchecked. The cited geometry locators enable that next processing step without mislabeling NAD83 coordinates as WGS84. The 1803 chronology evidence remains in the qualification and source; the geometry date query does not claim to cover it.
 
+## Offline geometry candidate implemented
+
+`python3 scripts/qualify-county-geometry.py /absolute/path/to/KS_AtlasHCB.zip --date 1861-01-29` reuses the complete pinned-archive qualification and adds `geometryQualification` and `geometryCandidate`. The existing coordinate-free `snapshot` remains unchanged. Output is JSON on stdout; there is no acquisition, file write, publication flag or public consumer. Exit **0** means a WORK geometry candidate was produced, **2** means the selected coverage was quarantined without a geometry candidate, and **1** means input, dependency or processing failure. None means release approval.
+
+**CONFIRMED on the exact archive:** all **341** source polygons and all 341 transformed polygons pass individual GEOS validity checks. The full **71** membership epochs were checked in source and target coordinates, with identical results: **69** pass coverage validation and **2** contain overlaps. Epoch boundaries include every source start and exclusive end, including an end without an incoming version. Shared edges are permitted; polygon interior intersections, containment and duplicate polygons are detected. The [Shapely coverage check](https://shapely.readthedocs.io/en/2.1.2/reference/shapely.coverage_is_valid.html) uses `gap_width=0`: holes are permitted, so a passing result does **not** establish complete coverage of Kansas or the absence of historical gaps.
+
+| Coverage interval, end excluded | Result |
+| --- | --- |
+| 1873-03-20 to 1874-02-25 | Withheld: five intersecting record pairs |
+| 1874-02-25 to 1874-03-18 | Withheld: the same five pairs |
+| 1861-01-29 selected snapshot | WORK candidate: 50 source versions |
+
+The overlapping source records are **268 Disputed Area**, **269 Stafford**, **271 Pawnee** and **276 Barton** (one-based SHP/DBF records). The five pairs are 268/269, 268/271, 268/276, 269/276 and 271/276. Their change descriptions explicitly report conflicting 1873 laws, citing *Kansas Laws 1873*, chapter 57, pages 112–113, and chapter 72, sections 27 and 29, pages 152–154. These are the Atlas's citations; this session did not independently inspect the underlying statutes. The observations support preserving a documented source dispute, not assuming digitization damage or deciding which jurisdiction prevailed.
+
+The report retains those source descriptions, citations and digest-backed record locators. It never dissolves overlaps, snaps edges, fills gaps, clips to modern Kansas, simplifies, or runs automatic polygon repair. All dates from **1873-03-20 through 1874-03-17 inclusive** produce `geometryCandidate: null` and `candidateState: QUARANTINE`. A separately checked 1874-03-18 snapshot passes the geometry gate. **PROPOSED:** a future disputed-claims display can expose the competing source claims after interpretation review; this script does not authorize that display.
+
+### Coordinate operation and provenance
+
+The `.prj` must be equivalent to **EPSG:4269**, allowing the source WKT's different axis declaration. [pyproj TransformerGroup](https://pyproj4.github.io/pyproj/3.7.2/api/transformer.html) runs with network access disabled, `allow_ballpark=False`, and explicit longitude/latitude order. The tool selects only **EPSG:1188, NAD83 to WGS 84 (1)**, checking its method, zero translation parameters, reported 4-metre operation accuracy and area of use against the entire source extent. It refuses a missing or ambiguous named operation rather than accepting another transformation. PROJ's axis-normalized `DERIVED_FROM(EPSG)` representation is accepted only with the same operation code, method and parameters.
+
+This is a documented **zero-translation display approximation**, represented by PROJ as a no-op. The reported 4 metres describe the coordinate operation; they are **not** a measured accuracy for these historical reconstructions, an epoch-specific datum solution, or a survey guarantee. Output is **OGC:CRS84 longitude/latitude**, with RFC 7946 ring orientation. All vertex counts are preserved and coordinates are checked for finite values and geographic ranges. No extra precision is inferred from the number of decimal places.
+
+Each candidate feature retains its existing version identity and source EvidenceRefs. Its geometry has a deterministic SHA-256. The candidate includes the local WORK EvidenceBundle, extended with the exact SHX and PRJ member identities, and a projection EvidenceRef. The processing report records the complete operation PROJJSON, Python/library versions and PROJ database digest. The complete candidate has its own digest. These are inspectable development provenance, not signed release receipts or a replacement for canonical evidence contracts.
+
+### Validation and reproduction
+
+Use an isolated development **Python 3.11+** environment; no hosted Node dependency changes are needed:
+
+```sh
+python3 -m pip install pyshp==2.3.1 shapely==2.1.2 pyproj==3.7.2 numpy==2.4.6
+KFM_COUNTY_ARCHIVE=/absolute/path/to/KS_AtlasHCB.zip python3 -m unittest discover -s tests -p 'test_county*.py' -v
+python3 scripts/qualify-county-geometry.py /absolute/path/to/KS_AtlasHCB.zip --date 1861-01-29
+python3 scripts/qualify-county-geometry.py /absolute/path/to/KS_AtlasHCB.zip --date 1873-03-20
+```
+
+The current host could not resolve PyPI. The actual checks used already-cached GIS packages and the previously pinned official pyshp module, outside the repository: **Python 3.11.15, pyshp 2.3.1, Shapely 2.1.2 / GEOS 3.13.1, pyproj 3.7.2 / PROJ 9.5.1, NumPy 2.4.6**. PROJ database SHA-256: `a25d85a2ebfc4584eba65186b7c41743b084ce5d391941cbb41c805947b77109`. GEOS 3.12+ is required for coverage checks; the report records the actual engine and database, so another toolchain must be checked rather than assumed byte-identical.
+
+**Passed:** all **34 county tests**, comprising the prior 21 and 13 geometry tests. The new cases cover invalid/empty/non-polygon inputs, shared edges and holes, overlap/containment/duplicates, time-disjoint geometries, end-only transitions, wrong CRS/extent, unavailable operations, strict dates, all real coverage epochs, dispute withholding, ring orientation, source-reference resolution, unchanged temporal identities and CLI/API determinism. Source integration tests require the exact archive; missing dependencies or source bytes produce explicit test skips, not passing evidence. Application build, full repository tests and independent security review were not run for this offline-only change.
+
+The 1861-01-29 candidate includes **50 mapped source versions**, with the separate query retaining **52 event-only records** and **16 undated cross-references**. These are whole-source counts, not counts of organized Kansas counties. The complete JSON report is **1,824,097 bytes**, SHA-256 `3e9da16b1379239e6f231e58ad6e2167bb1f7b6b627fcb349ce13133b644ed6a`; its compact, sorted-key geometry candidate digest is `17955a7d60e690775b9dc3e90cf7202ce8d216958bfac71973c6e3c926bb5e32`. These measurements describe the tested toolchain above.
+
+**Still open:** interpretation of source labels and disputed claims, independent legal/source accuracy, provider-declared encoding, geographic completeness, post-2000 continuation, canonical source/evidence admission, release review, browser rendering and performance. The parent output remains `status: HOLD` and `releaseEligible: false` even for a passing geometry candidate.
+
 ## Proposed implementation after qualification
 
 1. Preserve the raw ZIP and member identities through the existing RAW → WORK/QUARANTINE lifecycle. Use the existing source-registry and evidence responsibilities after an exact-tree placement review; this hosted checker creates neither.
 2. Reuse the tested temporal identities, evidence references and distinct event/cross-reference roles when building the geometry adapter. FIPS remains optional. Reconcile the WORK format with the existing canonical evidence contracts at source admission.
 3. Preserve the tested `[start, end + one day)` semantics and original dates. Treat post-2000 official vintages as a separately qualified continuation, not a carry-forward.
 4. Resolve territory, non-county area, proposed/unrecognized jurisdiction and renamed/re-created county semantics from evidence. Do not use the catch-all `County` field alone. State/county administrative claims do not establish Indigenous sovereignty, land ownership or absence of communities.
-5. Qualify datum conversion, topology and any display simplification before rendering. Preserve correction lineage and unmapped chronology events. Reuse the existing map/calendar/source drawer after a bounded adapter and source/release review exist; the old bundled license is no longer a blocker.
+5. Use the checked geometry candidate and retain the disputed-coverage hold. Qualify any later simplification separately. Preserve correction lineage and unmapped chronology events. Reuse the existing map/calendar/source drawer after a bounded adapter and source/release review exist; the old bundled license is no longer a blocker.
 6. Start the future UI with a selected date, explicit reconstruction attribution, source details and a keyboard list. Then-versus-now comparison needs a separately dated modern source. No officeholder, election-result or population crosswalk is inferred by this slice.
 
 ## Reproduce the checks
@@ -123,7 +166,7 @@ In this session the package installer could not resolve pyshp. The exact [offici
 
 The exact CLI query for **1861-01-29** produced **50 mapped versions, 52 event-only records and 16 undated cross-references**, 122,118 JSON bytes with SHA-256 `3a58068a837a1dd53e455e931ff9c1648785c1c5d83c117e127d9fff7df558ab`. A CLI smoke check caught a development defect where the report's frame loop overwrote the requested day. The loop variable is now separate, and the real-source regression checks the requested date, expected count, CLI/API equality and absence of a snapshot when no date is supplied. The final 21-test run passed after that correction.
 
-**Not established:** polygon topology or overlap between different institutions, independent verification of every legal boundary, provider-declared text encoding (CP1252 was used successfully), datum-transform accuracy, full application tests, independent security review, browser map performance, or release readiness. The JSON output is deterministic qualification evidence, not a governed release proof. Exit zero means checks ran successfully; it does not change HOLD.
+**Limits of the original structural-only checks:** topology and datum conversion were unchecked at that stage; the geometry follow-up above now provides bounded results. Independent verification of every legal boundary, provider-declared text encoding (CP1252 was used successfully), historical positional accuracy, full application tests, independent security review, browser map performance and release readiness remain unestablished. The JSON output is deterministic qualification evidence, not a governed release proof. Exit zero means checks ran successfully; it does not change HOLD.
 
 ## Congressional and hosted status
 
@@ -133,7 +176,7 @@ The initial county qualification [PR #5557](https://github.com/bartytime4life/Ka
 
 A later read-only Chrome check on **2026-10-29** supersedes the earlier deployment observation: [the public site](https://kansasfrontiermatrix.com/) now shows “Kansas representation” and Congress 36–119 controls. Selecting Congress 36 loaded the **1861-01-29 statewide at-large plan**, with visible geometry, a selected-plan download link and source record revision `a72f5836d0de4ad5aa94a18b6b725b46bf71b39e` / SHA-256 `8953c719b3f71c374e6dfc797d9740b70b593a52932b1cbb5fa18beac4f6eea3`. This confirms that desktop path, not every Congress, mobile acceptance or the exact deployed application commit. No deployment was performed in this follow-up.
 
-The same inspection exposed inherited drawer inconsistencies: a scholarly source appears under “OFFICIAL SOURCE”, and the loaded 1861 record also receives a current-2026 time warning and hidden-layer warning. The source details correctly identify the scholarly reconstruction and absence of a KFM EvidenceBundle. The subsequent [selected-record correction](civic-districts.md#selected-record-time-and-visibility) adds exact historical date/Congress matching, shared map/drawer visibility and neutral source-card labels. Its build and focused tests passed, but local browser startup was blocked by `listen EPERM`; deployed acceptance remains pending. The county query itself does not publish a map layer.
+The same inspection exposed inherited drawer inconsistencies: a scholarly source appears under “OFFICIAL SOURCE”, and the loaded 1861 record also receives a current-2026 time warning and hidden-layer warning. The source details correctly identify the scholarly reconstruction and absence of a KFM EvidenceBundle. The subsequent [selected-record correction](civic-districts.md#selected-record-time-and-visibility) adds exact historical date/Congress matching, shared map/drawer visibility and neutral source-card labels. Its build and focused tests passed, but local browser startup was blocked by `listen EPERM`; deployed acceptance remains pending. A fresh live-site check at approximately **09:29 CDT on 2026-10-29**, after PR #5561 merged, still showed “OFFICIAL SOURCE”, the current-2026 warning and the hidden-layer warning for the loaded Congress 36 record. This is evidence that the corrected behavior was not yet present on that inspected page, not proof of the deployed commit. No deployment was attempted. The county query itself does not publish a map layer.
 
 ## Placement and rollback
 
@@ -142,3 +185,11 @@ Directory Rules v2, adopted by ADR-0029, governs placement by responsibility. It
 Within the existing standalone hosted composition, `scripts/qualify-county-history.py` follows the offline-verifier responsibility, `tests/test_county_history_qualification.py` owns synthetic checks, and this document belongs to the existing human documentation root. The link in `docs/civic-districts.md` makes the next slice discoverable. These placements do not establish new monorepo schema, source-registry, policy or release homes. DIR-PLACE-001/002/003/005, DIR-DATA-004 and DIR-SOURCE-003 remain intact.
 
 Raw source bytes, generated qualifications and temporary dependencies are not committed or copied into public assets. There is no public route to candidate data. No signed recipe, source approval, database, worker, deployment or second PC is changed. Rollback is a revert of these four authoring files; no persistent-data migration or released artifact cleanup is needed.
+
+### Geometry follow-up placement and migration boundary
+
+The geometry investigation adds `scripts/qualify-county-geometry.py` beside the existing offline checker, `tests/test_county_geometry.py` under existing verification ownership, and this documentation update. These are non-authoritative development investigations in the standalone hosted composition. **DIR-EXEC-007 migration note:** these scripts must not become production imports or unique release/admission authorities. Any reusable production adapter must move through the existing canonical pipeline/tool/package responsibilities after an exact-tree placement and consumer review; a public API must not read these WORK outputs. No new schema, registry, policy, evidence or release root is created.
+
+The supplied *KFM Baseline Geospatial Data and Tile Production Architecture* (pages 1–3, inspected this session) also calls for native-source preservation, normalization of working data and reproducible display derivatives. The raw ZIP, temporary environment and generated JSON stay outside public assets and this Git patch. Rollback of this geometry follow-up is removal/revert of its two authoring files and documentation changes; no database, source admission, released data or deployment is affected.
+
+The geometry patch was prepared against hosted base `466495fb156d47ea5ff614ce778ddbe354697868`, tree `76c61c660438647846aa830775b74ec207b3fbbd`. Intervening drought-map changes were preserved, with no overlap in these three authoring files. The complete county tests were rerun on that reconciled base.
