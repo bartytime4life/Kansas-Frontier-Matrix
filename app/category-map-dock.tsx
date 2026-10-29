@@ -599,7 +599,7 @@ export function QuakeDepthSection({ section, selected, onPick }: Readonly<{ sect
       {points.map(point => <circle key={point.id} data-id={point.id} cx={x(point.longitude).toFixed(1)} cy={y(point.depth).toFixed(1)} r={(1.2 + (point.magnitude - 2.5) * 1.3).toFixed(2)}
         fill={point.color} fillOpacity={0.82} stroke={point.id === selected ? "#ffffff" : "#140a1c"} strokeWidth={point.id === selected ? 1.4 : 0.4} onClick={() => onPick?.(point.id)} />)}
     </svg>
-    <figcaption><span>W 102°</span><span>depth below the surface</span><span>94.6° E</span></figcaption>
+    <figcaption><span>102.05°W</span><span>west → east · depth below the surface</span><span>94.59°W</span></figcaption>
     {notes && <p className="category-map-dock-scale-note">{notes}</p>}
   </figure>;
 }

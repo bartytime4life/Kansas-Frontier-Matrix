@@ -235,6 +235,8 @@ test('the record draws as a west–east depth section and a magnitude–frequenc
  assert.equal(circles[3].props.stroke,'#ffffff');
  assert.equal(circles[0].props.cx,'223.2','longitude runs west to east: 96.5°W is 5.55 of the 7.46 degrees across');
  circles[1].props.onClick();assert.deepEqual(picked,['b']);
+ const axis=JSON.stringify(findNode(section,n=>n.type==='figcaption'));
+ assert.match(axis,/"102\.05°W".*"west → east · depth below the surface".*"94\.59°W"/,'both ends are west longitudes');assert.doesNotMatch(axis,/° ?E/);
  assert.equal(h.exports.bValueReading(mf),`b = ${mf.b.toFixed(2)} ± ${mf.bError.toFixed(2)} (Aki–Utsu, M ≥ 2.5, n = ${sample.length.toLocaleString('en-US')}) · magnitude types mixed`);
  assert.equal(h.exports.bValueReading(few),'30 events of M2.5+; a b-value needs at least 50');
  const chart=h.exports.QuakeMagnitudeFrequency({frequency:mf});
