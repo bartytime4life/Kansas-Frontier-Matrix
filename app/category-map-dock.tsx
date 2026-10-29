@@ -931,7 +931,7 @@ export function WellHydrographChart({ plot, name }: Readonly<{ plot: WellPlot; n
   const y = (depth: number) => top + (depth - plot.low) / Math.max(1e-6, plot.high - plot.low) * (height - top - bottom);
   const line = plot.points.map((p, i) => `${i ? "L" : "M"}${x(p.time).toFixed(1)},${y(p.depth).toFixed(1)}`).join(" ");
   const first = plot.points[0], last = plot.points[plot.points.length - 1];
-  return <figure className="category-map-dock-section category-map-dock-hydrograph" aria-label={`Depth to water at ${name}, ${plot.points.length} measurements from ${first.date} to ${last.date}, ${first.depth.toFixed(1)} to ${last.depth.toFixed(1)} feet below land surface`}>
+  return <figure className="category-map-dock-section category-map-dock-hydrograph" aria-label={`Depth to water at ${name}, ${plot.points.length} measurements from ${plot.firstLabel} to ${plot.lastLabel}, ${first.depth.toFixed(1)} to ${last.depth.toFixed(1)} feet below land surface`}>
     <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
       {plot.ticks.map(value => <g key={value}>
         <line x1={left} x2={width - right} y1={y(value).toFixed(1)} y2={y(value).toFixed(1)} stroke="#e6eff2" strokeOpacity={0.12} strokeWidth={0.5} />
@@ -944,9 +944,12 @@ export function WellHydrographChart({ plot, name }: Readonly<{ plot: WellPlot; n
       {plot.trend && <line x1={x(plot.trend.from.time).toFixed(1)} y1={y(plot.trend.from.depth).toFixed(1)} x2={x(plot.trend.to.time).toFixed(1)} y2={y(plot.trend.to.depth).toFixed(1)}
         stroke="#f2b86b" strokeWidth={1.1} strokeDasharray="4 2" />}
       <path d={line} fill="none" stroke="#5cc8ff" strokeOpacity={0.7} strokeWidth={1} strokeLinejoin="round" />
-      {plot.points.map(p => <circle key={p.time} cx={x(p.time).toFixed(1)} cy={y(p.depth).toFixed(1)} r={1.7} fill={p.provisional ? "none" : "#5cc8ff"} stroke="#5cc8ff" strokeWidth={0.7} />)}
+      {plot.points.map(p => <g key={`${p.time}-${p.depth}`}>
+        {p.span && <line data-span={p.precision} x1={x(p.span[0]).toFixed(1)} x2={x(p.span[1]).toFixed(1)} y1={y(p.depth).toFixed(1)} y2={y(p.depth).toFixed(1)} stroke="#5cc8ff" strokeOpacity={0.8} strokeWidth={0.8} />}
+        <circle cx={x(p.time).toFixed(1)} cy={y(p.depth).toFixed(1)} r={1.7} fill={p.provisional ? "none" : "#5cc8ff"} stroke="#5cc8ff" strokeWidth={0.7} />
+      </g>)}
     </svg>
-    <figcaption><span>Depth to water, ft below land surface</span><span><span style={{ color: "#5cc8ff" }}>● measured</span> <span style={{ color: "#f2b86b" }}>╍ trend</span></span></figcaption>
+    <figcaption><span>Depth to water, ft below land surface</span><span><span style={{ color: "#5cc8ff" }}>● measured{plot.points.some(p => p.span) ? " (bar: month or year only)" : ""}</span> <span style={{ color: "#f2b86b" }}>╍ trend</span></span></figcaption>
   </figure>;
 }
 
