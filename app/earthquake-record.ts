@@ -93,6 +93,16 @@ export function validEarthquakeRecord(value: unknown): value is EarthquakeRecord
       && finite(e.magnitude) !== null && finite(e.longitude) !== null && finite(e.latitude) !== null; }));
 }
 
+/**
+ * Record events for a keyboard list: a chosen year's events newest first, or,
+ * across all years, the largest first, so the list stays short over thousands.
+ */
+export function recordEventList(record: Pick<EarthquakeRecord, "events">, year: number | null, limit = 40): readonly Readonly<{ id: string; label: string }>[] {
+  const events = year === null ? [...record.events].sort((a, b) => b.magnitude - a.magnitude || b.time.localeCompare(a.time))
+    : record.events.filter(event => event.year === year).sort((a, b) => b.time.localeCompare(a.time));
+  return events.slice(0, limit).map(event => ({ id: event.id, label: [event.time.slice(0, 10), `M ${event.magnitude.toFixed(1)}`, event.place].filter(Boolean).join(" · ") }));
+}
+
 export type YearCount = Readonly<{ year: number; count: number }>;
 /** Events per calendar year (UTC), every year of the record, empty years included. */
 export function annualCounts(record: Pick<EarthquakeRecord, "events" | "startYear" | "endYear">): readonly YearCount[] {

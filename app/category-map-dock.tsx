@@ -58,6 +58,19 @@ export function sunReading(light: SceneLight, at: number): string {
  * controls most explorations need. Every action reuses an existing Explorer
  * handler; the dock holds no map state of its own.
  */
+/** A collapsible list of map features as buttons, for picking one by keyboard or screen reader. */
+/** "40 of 89" when a list holds fewer than all, else just the count. */
+const shownOf = (shown: number, total: number) => total > shown ? `${shown} of ${total.toLocaleString("en-US")}` : String(shown);
+
+function PickList({ summary, label, items, selected, onPick }: Readonly<{ summary: string; label: string; items: readonly Readonly<{ id: string; label: string }>[]; selected: string | null; onPick: (id: string) => void }>) {
+  return <details className="category-map-dock-context">
+    <summary>{summary}</summary>
+    <ul className="category-map-dock-picklist" aria-label={label}>
+      {items.map(item => <li key={item.id}><button type="button" aria-pressed={selected === item.id} onClick={() => onPick(item.id)}>{item.label}</button></li>)}
+    </ul>
+  </details>;
+}
+
 const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, string])[] = [
   ["cat", "Risk", "SPC's categorical risk, General thunderstorms to 5 High"],
   ["torn", "Tornado", "Probability of a tornado within 25 miles of a point, with SPC's intensity areas"],
@@ -65,7 +78,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   look: CategoryMap;
   mode: CategoryScene;
   depth: number;
@@ -138,7 +151,10 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
   quakes?: Readonly<{
     on: boolean; loading: boolean; failed: boolean; counts: readonly (YearCount & { color: string })[] | null; total: number; startYear: number; endYear: number;
     minMagnitude: number; truncated: boolean; year: number | null; selected: EarthquakeRecordEvent | null; selectedUrl: string | null;
+    /** The chosen year's events newest first, or the largest across all years, so an event can be picked without the map. */
+    list?: readonly Readonly<{ id: string; label: string }>[];
   }>;
+  onQuakePick?: (id: string) => void;
   onQuakes?: (on: boolean) => void;
   onQuakeYear?: (year: number | null) => void;
   onQuakeClear?: () => void;
@@ -191,7 +207,12 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
     features: number | null; freshness: string | null; playing: boolean; motionAllowed: boolean;
     /** The feature picked on the map, in its source's terms, with the release it belongs to and that release's signed download. */
     selected?: Readonly<{ title: string; lines: readonly string[]; link: Readonly<{ href: string; label: string }> | null; release: string; download: string }> | null;
+    /** The shown release's most significant features, so one can be picked without the map. */
+    list?: readonly Readonly<{ id: string; label: string }>[];
+    /** The id of the picked feature, marked in the list. */
+    pick?: string | null;
   }>;
+  onReviewedPick?: (id: string) => void;
   onReviewed?: (on: boolean) => void;
   onReviewedClear?: () => void;
   onReviewedIndex?: (index: number) => void;
@@ -303,12 +324,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
           : reports.reading}</p>
         {reports.verification && !reports.loading && !reports.failed && <p className="category-map-dock-reading category-map-dock-verification" aria-live="polite"
           title="Reports made since the outlook's valid start, placed against its areas, as SPC verifies its outlooks; preliminary reports">{reports.verification}</p>}
-        {onReportPick && reports.kansas && reports.kansas.length > 0 && <details className="category-map-dock-context">
-          <summary>Kansas reports ({reports.kansas.length})</summary>
-          <ul className="category-map-dock-picklist" aria-label="Kansas storm reports, newest first">
-            {reports.kansas.map(item => <li key={item.id}><button type="button" aria-pressed={reports.selected?.report.id === item.id} onClick={() => onReportPick(item.id)}>{item.label}</button></li>)}
-          </ul>
-        </details>}
+        {onReportPick && reports.kansas && reports.kansas.length > 0 && <PickList summary={`Kansas reports (${reports.kansas.length})`} label="Kansas storm reports, newest first"
+          items={reports.kansas} selected={reports.selected?.report.id ?? null} onPick={onReportPick} />}
         {reports.selected && <div className="category-map-dock-quake-event" aria-live="polite">
           <p><b>{reports.selected.title}</b>{reports.selected.when ? ` · ${reports.selected.when}` : ""}<br />
             {[reports.selected.report.location, reports.selected.report.county && `${reports.selected.report.county} Co.`, reports.selected.report.state].filter(Boolean).join(", ")}
@@ -338,6 +355,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
             {quakes.counts.filter(entry => entry.count > 0).map(entry => <option key={entry.year} value={entry.year}>{entry.year} · {entry.count}</option>)}
           </select></label>}
         <p className="category-map-dock-reading" aria-live="polite">{quakeReading(quakes)}</p>
+        {onQuakePick && quakes.list && quakes.list.length > 0 && <PickList summary={`${quakes.year === null ? "Largest events" : `Events in ${quakes.year}`} (${shownOf(quakes.list.length, quakes.year === null ? quakes.total : quakes.counts?.find(entry => entry.year === quakes.year)?.count ?? 0)})`}
+          label={quakes.year === null ? "Largest earthquakes in the record" : `Earthquakes in ${quakes.year}, newest first`} items={quakes.list} selected={quakes.selected?.id ?? null} onPick={onQuakePick} />}
         {quakes.selected && <div className="category-map-dock-quake-event" aria-live="polite">
           <p><b>M {quakes.selected.magnitude.toFixed(1)}{quakes.selected.magnitudeType ? ` ${quakes.selected.magnitudeType}` : ""}</b> · {quakes.selected.time.slice(0, 16).replace("T", " ")} UTC<br />
             {quakes.selected.place ?? "Kansas"}{quakes.selected.depthKilometers !== null ? ` · depth ${quakes.selected.depthKilometers} km` : ""}{quakes.selected.status ? ` · ${quakes.selected.status}` : ""}</p>
@@ -367,6 +386,8 @@ export function CategoryMapDock({ look, mode, depth, azimuth, sun, sunAvailable 
         <p className="category-map-dock-reading" aria-live={reviewed.playing ? "off" : "polite"}>{reviewed.loading ? "Reading the site database…"
           : reviewed.reason ? reviewed.reason
           : `Snapshot ${reviewed.index + 1} of ${reviewed.count} · captured for ${reviewed.capturedFor} · published ${reviewed.publishedAt} · ${reviewed.features} ${reviewed.features === 1 ? "feature" : "features"}${reviewed.freshness === "stale" ? " · older than two hours" : ""}`}</p>
+        {onReviewedPick && reviewed.list && reviewed.list.length > 0 && <PickList summary={`Features in this snapshot (${shownOf(reviewed.list.length, reviewed.features ?? 0)})`}
+          label="Snapshot features, most significant first" items={reviewed.list} selected={reviewed.pick ?? null} onPick={onReviewedPick} />}
         {reviewed.selected && <div className="category-map-dock-quake-event" aria-live="polite">
           <p><b>{reviewed.selected.title}</b>{reviewed.selected.lines.map(line => <span key={line}><br />{line}</span>)}
             <br /><span className="category-map-dock-release">Release {reviewed.selected.release.slice(0, 12)}… · external context, not evidence</span></p>
