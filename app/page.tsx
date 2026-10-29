@@ -30,7 +30,7 @@ import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, wi
 import { REVIEWED_FEATURE_ID, REVIEWED_SOURCE_ID, setReviewedSnapshot } from "./reviewed-snapshot-layers";
 import { verificationReading, verifyOutlook } from "./outlook-verification";
 import { STORM_REPORTS_PAGE, STORM_REPORTS_SOURCE_ID, kansasReportList, reportClock, reportMagnitude, REPORT_KINDS, stormReportsKey, stormReportsReading, syncStormReports, validStormReports, type ReportDay, type StormReport, type StormReports } from "./storm-reports";
-import { DROUGHT_NEWEST_REFRESH_MS, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
+import { DROUGHT_COUNTY_SOURCE_ID, DROUGHT_NEWEST_REFRESH_MS, DROUGHT_PLAY_STEP_MS, DROUGHT_PLAY_WEEKS, DROUGHT_SERIES_REFRESH_MS, usdmWeeksBefore, DROUGHT_SOURCE_ID, USDM_CATEGORIES, countyDroughtList, countyDroughtReading, countyDroughtShares, countyDroughtSummary, rememberDroughtMap, USDM_FIRST_DATE, USDM_PAGE, droughtKey, droughtReading, isUsdmDate, nextUsdmDate, previousUsdmDate, syncDroughtMonitor, usdmDateLabel, validDroughtMap, validDroughtSeries, type DroughtMap, type DroughtSeries } from "./drought-monitor";
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, earthquakeEventUrl, earthquakeRecordKey, recordYearColor, syncEarthquakeRecord, validEarthquakeRecord, type EarthquakeRecord, type EarthquakeRecordEvent } from "./earthquake-record";
@@ -6010,6 +6010,13 @@ export default function Home() {
             const id = renderedHits[0].properties?.id;
             const event = typeof id === "string" ? quakeRecordEventsRef.current.get(id) : undefined;
             if (event) { setQuakeRecordSelected(event); setCategoryDockHidden(false); }
+            return;
+          }
+          // With the Drought Monitor's counties on the map, a click picks the county under it; the dock gives its shares.
+          const droughtCountyHit = renderedHits.find(feature => feature.source === DROUGHT_COUNTY_SOURCE_ID);
+          if (droughtCountyHit) {
+            const geoid = droughtCountyHit.properties?.geoid;
+            if (typeof geoid === "string" && geoid) { setDroughtCounty(geoid); setCategoryDockHidden(false); }
             return;
           }
           const availableOfficialLayers = OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS.filter((id) => map.getLayer(id));

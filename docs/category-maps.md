@@ -218,7 +218,8 @@ and released that Thursday.
   dock says how many counties each category reaches (any part of the county)
   and lists the counties most severe first (highest category, then the most of
   the county in it); choosing one outlines it, frames it, and gives its shares
-  for the week. The shares are the map's, not the USDM's county statistics.
+  for the week. A click on a county on the map picks it too (without moving
+  the map), and brings a closed dock back to show it. The shares are the map's, not the USDM's county statistics.
 - **Reading.** The valid date, Kansas's share in drought (D1–D4), and in D2,
   D3 and D4 or worse. The USDM's own statistics are used for the week when
   they are in hand. Otherwise the shares are measured on the map at the centres
