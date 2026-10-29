@@ -300,7 +300,13 @@ test('the dock lists the counties, outlines the one picked, and the page reads t
  assert.match(page,/syncDroughtMonitor\(map, shownDrought, droughtCounties, droughtCounty\);/);
  assert.match(page,/setDroughtCounty\(geoid\);\s*mapRef\.current\?\.fitBounds\(geometry\.bounds, \{ padding: 70, maxZoom: 9, duration: motionDuration\(650\) \}\);/);
  assert.match(page,/setDroughtSeriesFailed\(false\);\s*setDroughtCounty\(null\);/);
- assert.match(page,/const droughtCountyHit = renderedHits\.find\(feature => feature\.source === DROUGHT_COUNTY_SOURCE_ID\);\s*if \(droughtCountyHit\) \{\s*const geoid = droughtCountyHit\.properties\?\.geoid;\s*if \(typeof geoid === "string" && geoid\) \{ setDroughtCounty\(geoid\); setCategoryDockHidden\(false\); \}\s*return;/,'a click on a county picks it, and a closed dock comes back to show it');
+ assert.match(page,/const clickedCounty = droughtCountyAtClick\(renderedHits, id => availableLayers\.includes\(id\) \|\| OFFICIAL_CONTEXT_INTERACTIVE_LAYER_IDS\.includes\(id\)\);\s*if \(clickedCounty\) \{\s*setDroughtCounty\(clickedCounty\);\s*setCategoryDockHidden\(false\);\s*return;/,'a click on a county picks it, and a closed dock comes back to show it');
+ const hit=(source,layer,properties={})=>({source,layer:{id:layer},properties});
+ const interactive=id=>id==='kfm-overlay-points';
+ assert.equal(dm.droughtCountyAtClick([hit('kfm-roads','kfm-roads'),hit(dm.DROUGHT_COUNTY_SOURCE_ID,dm.DROUGHT_COUNTY_HIT_LAYER_ID,{geoid:'20055'}),hit(dm.DROUGHT_SOURCE_ID,dm.DROUGHT_FILL_LAYER_ID)],interactive),'20055','labels and roads above a county do not stop the pick');
+ assert.equal(dm.droughtCountyAtClick([hit('overlay','kfm-overlay-points'),hit(dm.DROUGHT_COUNTY_SOURCE_ID,dm.DROUGHT_COUNTY_HIT_LAYER_ID,{geoid:'20055'})],interactive),null,'an interactive feature above the county keeps its own selection');
+ assert.equal(dm.droughtCountyAtClick([hit(dm.DROUGHT_COUNTY_SOURCE_ID,dm.DROUGHT_COUNTY_HIT_LAYER_ID,{geoid:'20055'}),hit('overlay','kfm-overlay-points')],interactive),'20055','one beneath it does not');
+ assert.equal(dm.droughtCountyAtClick([hit(dm.DROUGHT_SOURCE_ID,dm.DROUGHT_FILL_LAYER_ID)],interactive),null,'outside the counties nothing is picked');
 });
 
 test('Play steps the weeks forward to the newest, from a year back when the newest is shown, and only with motion allowed',async()=>{
