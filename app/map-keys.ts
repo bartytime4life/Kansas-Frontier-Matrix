@@ -1,7 +1,7 @@
 import type { ExpressionSpecification } from "./maplibre-seam";
 
 // Categorical district identity only; colors never encode a party or result.
-export const CIVIC_COLORS = Object.freeze([[1, "#397f7a"], [2, "#a77530"], [3, "#7762a5"], [4, "#bf7161"]] as const);
+export const CIVIC_COLORS = Object.freeze([[1, "#397f7a"], [2, "#a77530"], [3, "#7762a5"], [4, "#bf7161"], [5, "#617b43"], [6, "#44638c"], [7, "#98638c"], [8, "#78664f"], [0, "#4b5666"]] as const);
 export const civicDistrictColor = (): ExpressionSpecification => ["match", ["get", "district"], ...CIVIC_COLORS.flat(), "#777777"] as unknown as ExpressionSpecification;
 
 /**
@@ -87,6 +87,14 @@ const HISTORIC_LINES = Object.freeze({ id: "kdot-historic", title: "1918 roads a
   note: "The 1918 State Highway Commission map as KDOT digitized it, and lines KDOT designates abandoned. Today's railroads are the inked lines with ties." });
 
 /** Keys for the starter layers whose symbols encode a value, by source id. */
+/** Only validated constituencies for the selected term receive a historical key. */
+export function withCivicKey(keys: readonly MapKey[], districts: readonly number[], congress: number | null): readonly MapKey[] {
+  return keys.flatMap(key => key.id !== "census-congress-119" ? [key] : !districts.length || congress === null ? [] : [{ ...key,
+    title: `Kansas U.S. House · Congress ${congress}`,
+    items: CIVIC_COLORS.filter(([district]) => districts.includes(district)).map(([district, color]) => ({ label: district === 0 ? "Statewide at-large" : `District ${district}`, color, shape: district === 0 ? "line" as const : "area" as const, dashed: district === 0 })),
+  }]);
+}
+
 export const MAP_KEYS: Readonly<Record<string, MapKey>> = Object.freeze({
   "usgs-earthquakes": Object.freeze({
     id: "usgs-earthquakes", title: "Earthquake magnitude",
@@ -98,9 +106,9 @@ export const MAP_KEYS: Readonly<Record<string, MapKey>> = Object.freeze({
     note: "USGS magnitude: colour and circle size both rise with it. Circles grow as you zoom in.",
   }),
   "census-congress-119": Object.freeze({
-    id: "census-congress-119", title: "Kansas U.S. House · 119th Congress",
-    items: Object.freeze(CIVIC_COLORS.map(([district, color]) => Object.freeze({ label: `District ${district}`, color, shape: "area" as const }))),
-    note: "2025 Census generalized boundaries. Colors identify districts, not parties. Select an area or choose a district in the controls.",
+    id: "census-congress-119", title: "Kansas U.S. House · districts through time",
+    items: Object.freeze(CIVIC_COLORS.slice(0, 4).map(([district, color]) => Object.freeze({ label: district === 0 ? "At-large · dashed outline" : `District ${district}`, color, shape: "area" as const }))),
+    note: "Colors identify district numbers, not parties or persistent territory. Only the selected Congress is shown; at-large constituencies may overlap numbered districts.",
   }),
   "deflock-alpr": Object.freeze({
     id: "deflock-alpr", title: "DeFlock · reported ALPR areas",

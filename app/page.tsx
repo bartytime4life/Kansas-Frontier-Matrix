@@ -1,4 +1,6 @@
 "use client";
+import { withCivicKey } from "./map-keys";
+import { civicCongressForDay, civicCongressLabel, civicDayForFrame, civicFrameVisible, civicTermStart, civicSourceForRecord, CIVIC_HISTORY_LIMITATION } from "./civic-history";
 import { CIVIC_ID, CIVIC_LIMITATION, CIVIC_SOURCE } from "./civic-districts";
 import { DEFLOCK_LIMITATION } from "./deflock";
 import { TransportHistoryControl } from "./transport-history-control";
@@ -638,13 +640,14 @@ const officialContextRuntimeVisibility = (
     return frames.length === 1 && frames[0] === OFFICIAL_CONTEXT_PRESENT_FRAME;
   }).map(source => source.id);
   const next = calendarVisibility(base, visibility, calendarDay, frame, currentUtcDay(), checkedDays, currentOnly, buildYearCurrent);
+  next[CIVIC_ID] = civicFrameVisible(visibility[CIVIC_ID], frame, OFFICIAL_CONTEXT_PRESENT_FRAME, currentUtcDay(), calendarDay, checkedDays[CIVIC_ID], buildYearCurrent);
   next["nws-radar"] = next["nws-radar"] && noaaRadarReady && Boolean(noaaRadarFrameTime);
   return next;
 };
 const checkedCalendarDays = (days: Partial<Record<OfficialContextFeedId, string>>, payloads: Partial<Record<OfficialContextFeedId, OfficialContextPayload>>): Partial<Record<OfficialContextId, string>> =>
   Object.fromEntries((Object.keys(CALENDAR_ARCHIVE_BOUNDS) as CalendarArchiveFeed[]).flatMap(feed => {
     const payload = payloads[feed], day = days[feed];
-    return day && payload?.feed === feed && ["ready", "partial", "empty"].includes(payload.state) ? [[feed, day]] : [];
+    return day && payload?.feed === feed && (feed !== CIVIC_ID || payload.sourceDay === day) && ["ready", "partial", "empty"].includes(payload.state) ? [[feed, day]] : [];
   }));
 const defaultOrder = LAYER_REGISTRY.map((layer) => layer.id);
 const interactiveLayerIds = LAYER_REGISTRY.flatMap((layer) => layer.renderers.filter((renderer) => renderer.interactive).map((renderer) => renderer.id));
@@ -812,7 +815,7 @@ const providerReportHtml = (selection: ProviderReportSelection | { kind: "regist
 const validLayerPayload = (value: unknown, feed: OfficialContextFeedId, day?: string): boolean => {
   if (!value || typeof value !== "object") return false;
   const payload = value as Partial<OfficialContextPayload>;
-  return payload.feed === feed && (!day || (payload.sourceDay === undefined && feed !== "nasa-gibs-fire-points") || payload.sourceDay === day)
+  return payload.feed === feed && (!day || (payload.sourceDay === undefined && feed !== "nasa-gibs-fire-points" && feed !== CIVIC_ID) || payload.sourceDay === day)
     && ["ready", "empty", "partial"].includes(payload.state ?? "")
     && payload.data?.type === "FeatureCollection" && Array.isArray(payload.data.features)
     && payload.featureCount === payload.data.features.length
@@ -917,7 +920,7 @@ const numberContextProperty = (properties: Record<string, unknown>, key: string)
 };
 
 const officialContextSummary = (source: OfficialContextId, title: string, properties: Record<string, unknown>) => {
-  if (source === CIVIC_ID) return `${title}. ${CIVIC_LIMITATION}`;
+  if (source === CIVIC_ID) return `${title}. ${stringContextProperty(properties, "congress") ?? "Congress unknown"}. ${Number(properties.congressNumber) < 119 ? CIVIC_HISTORY_LIMITATION : CIVIC_LIMITATION}`;
   if (source === "deflock-alpr") return `${title}. ${DEFLOCK_LIMITATION}`;
   if (source.startsWith("kgs-")) return source === "kgs-monitoring-wells" ? `${title}: 2026 monitoring location. Open the KGS well record for dated observations; no water-level measurement is attached to this point.` : `${title} feet · regional 2022–2024 classified estimate. Unclassified areas are blank. This is not a present measurement or a groundwater-flow calculation.`;
   if (source === "nifc-fire-reports") {
@@ -987,7 +990,7 @@ const officialContextSummary = (source: OfficialContextId, title: string, proper
 };
 
 const officialContextTime = (source: OfficialContextId, properties: Record<string, unknown>, fallback: string) => {
-  if (source === CIVIC_ID) return "Boundary vintage: January 1, 2025 · 119th Congress (2025–2027). Retrieval is not a boundary-change date.";
+  if (source === CIVIC_ID) return `${stringContextProperty(properties, "congress") ?? "Congress unknown"} · applicable ${stringContextProperty(properties, "termStart") ?? "unknown"} to ${stringContextProperty(properties, "termEndExclusive") ?? "unknown"} (end exclusive; calendar-day resolution). ${Number(properties.congressNumber) === 119 ? "Census boundary vintage: January 1, 2025." : "Reconstructed historical plan; source revision is not its effective date."} Retrieval is separate.`;
   if (source === "deflock-alpr") return `OSM database snapshot: ${stringContextProperty(properties, "upstreamUpdatedAt") ?? "unknown"}; camera observation and installation dates unknown.`;
   if (source === "census-counties") return "2020 Census geography, population and housing baseline";
   if (source === "usgs-streamflow" || source === "usgs-earthquakes") return stringContextProperty(properties, "observedAt") ?? fallback;
@@ -1022,7 +1025,8 @@ const drawerTimestamp = (value: string | null | undefined) => {
 const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: number, latitude: number): SelectedContext | null => {
   if (!candidate.geometry) return null;
   const properties = candidate.properties ?? {};
-  const officialSource = typeof candidate.source === "string" ? OFFICIAL_CONTEXT_BY_SOURCE_ID[candidate.source] : undefined;
+  const registeredSource = typeof candidate.source === "string" ? OFFICIAL_CONTEXT_BY_SOURCE_ID[candidate.source] : undefined;
+  const officialSource = registeredSource?.id === CIVIC_ID ? civicSourceForRecord(properties) : registeredSource;
   const sourceLayer = typeof candidate.sourceLayer === "string" && candidate.sourceLayer.trim() !== ""
     ? candidate.sourceLayer
     : officialSource?.shortTitle ?? "vector layer";
@@ -1080,7 +1084,7 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
       uncertainty: officialSource?.fallback ?? "The Site does not resolve provider lineage, update time, completeness, or claim support for this feature.",
       correctionState: "EXTERNAL_PROVIDER_STATE_UNKNOWN",
       relatedLayers: "",
-      year: 2026,
+      year: officialSource?.id === CIVIC_ID ? Number(String(properties.sourceDay ?? properties.termStart ?? "2026").slice(0, 4)) : 2026,
       focusLng: longitude,
       focusLat: latitude,
       displayLabel: title,
@@ -1991,6 +1995,8 @@ export default function Home() {
     () => officialContextRuntimeVisibility(officialVisibility, temporalQuery.frame, noaaRadarRenderable, noaaRadarFrameTime, buildYearCurrent, calendarSweep ? calendarFrameDay(calendarSweep) : null, checkedCalendarDays(officialArchiveDays, officialPayloads)),
     [buildYearCurrent, calendarSweep, noaaRadarFrameTime, noaaRadarRenderable, officialArchiveDays, officialPayloads, officialVisibility, temporalQuery.frame],
   );
+  const civicFrameDay = civicDayForFrame(temporalQuery.frame, OFFICIAL_CONTEXT_PRESENT_FRAME, currentUtcDay(), calendarSweep ? calendarFrameDay(calendarSweep) : null);
+  const civicFrameCongress = civicCongressForDay(civicFrameDay ?? "");
   const lightningSelected = effectiveOfficialVisibility["noaa-lightning-density"] && projection !== "globe";
   const lightningFrameIndex = lightningManifest?.frames.indexOf(lightningFrame ?? "") ?? -1;
   const lightningPlaybackReady = (lightningPreview === "signal" || lightningPreview === "none")
@@ -2266,7 +2272,7 @@ export default function Home() {
     const payload = source.apiPath || source.managedAdapterPath ? officialPayloads[source.id as OfficialContextFeedId] : undefined;
     const snapshot = GROUNDWATER_MANIFEST.find(item => item.id === source.id);
     return {
-      source,
+      source: source.id === CIVIC_ID ? civicSourceForRecord(payload?.data.features[0]?.properties) : source,
       visible: officialVisibility[source.id],
       activeAtFrame: effectiveOfficialVisibility[source.id],
       state: officialStates[source.id],
@@ -2874,6 +2880,10 @@ export default function Home() {
   }, [setDaylightPlayback]);
 
   const commitTemporalFrame = useCallback((next: number, message?: string, keepCalendar = false) => {
+    if (officialContextIdForSelection(selectedRef.current) === CIVIC_ID) {
+      selectedRef.current = null; setSelected(null); setRightOpen(false);
+      if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, null);
+    }
     if (!keepCalendar) {
       cancelSmokePlayback();
       calendarSeekGeneration.current++;
@@ -3682,13 +3692,14 @@ export default function Home() {
     const prior = calendarArchiveLoads.current.get(feed);
     if (!force && prior?.day === day) return prior.promise;
     const promise = (async () => {
-    if (!["usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed)
+    if (![CIVIC_ID, "usgs-earthquakes", "noaa-hms-smoke", "nasa-gibs-fire-points", "raspberry-shake-stations"].includes(feed)
       || !/^\d{4}-\d{2}-\d{2}$/.test(day)
       || !Number.isFinite(Date.parse(`${day}T00:00:00.000Z`))
       || new Date(`${day}T00:00:00.000Z`).toISOString().slice(0, 10) !== day
       || day > currentUtcDay()
       || (feed === "nasa-gibs-fire-points" && day < "2018-01-01")
-      || (feed === "noaa-hms-smoke" && day < "2005-08-05")) return;
+      || (feed === "noaa-hms-smoke" && day < "2005-08-05")
+      || (feed === CIVIC_ID && civicCongressForDay(day) === null)) return;
     if (feed === "noaa-hms-smoke") cancelSmokePlayback();
     if (officialArchiveDaysRef.current[feed] === day && !officialRequestsRef.current.get(feed)?.signal.aborted && officialRequestsRef.current.has(feed)) return;
     officialRequestsRef.current.get(feed)?.abort();
@@ -3804,7 +3815,7 @@ export default function Home() {
     if (generation !== calendarSeekGeneration.current) return { state: "reference", message: "A newer date replaced this request." };
     if (!feeds.length) {
       const annual = next.step === "years" && activeLayers.some(layer => Boolean(layer.temporal));
-      return { state: annual ? "empty" : "reference", message: annual ? "Annual catalog frame selected. No daily source follows this date; catalog availability is not observed change." : "No selected source can follow this date. Open Layers to select earthquake, smoke, thermal-detection, or station-inventory history. Other source clocks remain separate." };
+      return { state: annual ? "empty" : "reference", message: annual ? "Annual catalog frame selected. No daily source follows this date; catalog availability is not observed change." : "No selected source can follow this date. Open Layers to select earthquake, smoke, thermal-detection, station-inventory, or congressional history. Other source clocks remain separate." };
     }
     const partial = checked.some(payload => !payload || payload.state === "partial" || payload.truncated);
     const count = checked.reduce((sum, payload) => sum + (payload?.featureCount ?? 0), 0);
@@ -3825,6 +3836,13 @@ export default function Home() {
   const returnCalendarToPresent = useCallback(() => {
     setPlaying(false); setTemporalMode("snapshot"); commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME);
   }, [commitTemporalFrame]);
+
+  // Year-only frames resolve to January 1; exact Congress selections use the shared calendar.
+  useEffect(() => {
+    if (calendarSweep || !officialVisibility[CIVIC_ID] || !buildYearCurrent || temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME) return;
+    const day = civicDayForFrame(temporalQuery.frame, OFFICIAL_CONTEXT_PRESENT_FRAME, currentUtcDay(), null);
+    if (day && (officialArchiveDaysRef.current[CIVIC_ID] !== day || !officialArchivePayloadsRef.current[CIVIC_ID] && !officialRequestsRef.current.has(CIVIC_ID))) void loadOfficialArchiveDay(CIVIC_ID, day);
+  }, [calendarSweep, officialVisibility, buildYearCurrent, temporalQuery.frame, loadOfficialArchiveDay]);
 
   const seekEarthquakeArchiveFrame = useCallback((index: number) => {
     const day = officialArchiveDaysRef.current["usgs-earthquakes"];
@@ -10605,8 +10623,19 @@ export default function Home() {
             radar={{ watching: liveDockVisible && showRadarDock, available: buildYearCurrent && temporalQuery.frame === OFFICIAL_CONTEXT_PRESENT_FRAME }}
             onRadar={(watch) => watch ? watchRadarLoop() : closeLiveInstrument()}
             layerVisibility={officialVisibility} onLayer={setOfficialContextVisible}
-            civic={activeCategoryMap.topic === "government" ? { visible: Boolean(officialVisibility[CIVIC_ID]), state: officialVisibility[CIVIC_ID] && !effectiveOfficialVisibility[CIVIC_ID] ? "held" : officialStates[CIVIC_ID],
+            civic={activeCategoryMap.topic === "government" ? { visible: Boolean(officialVisibility[CIVIC_ID]),
+              state: officialStates[CIVIC_ID] === "error" ? "error" : effectiveOfficialVisibility[CIVIC_ID] ? officialStates[CIVIC_ID] : officialStates[CIVIC_ID] === "loading" ? "loading" : "held",
+              day: civicFrameDay,
+              congress: civicFrameCongress,
+              options: Array.from({ length: 84 }, (_, index) => ({ value: index + 36, label: civicCongressLabel(index + 36) })),
               items: effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => ({ id: String(feature.id), label: String(feature.properties?.name) })) : [] } : undefined}
+            onCivicCongress={congress => {
+              const day = civicTermStart(congress);
+              setOfficialContextVisible(CIVIC_ID, true);
+              void seekCalendarFrame({ day, start: "1861-01-29", end: currentUtcDay(), step: "years", before: null, showing: "B" });
+            }}
+            onCivicPresent={returnCalendarToPresent}
+            onCivicRetry={() => retryOfficialLayer(CIVIC_ID)}
             onCivicPick={(id, returnElement) => {
               if (!effectiveOfficialVisibility[CIVIC_ID] || officialStates[CIVIC_ID] !== "ready") return;
               const feature = officialPayloads[CIVIC_ID]?.data.features.find(item => String(item.id) === id);
@@ -10617,7 +10646,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...withReviewedKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}

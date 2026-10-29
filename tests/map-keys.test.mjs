@@ -59,7 +59,8 @@ test('the dock draws each key as the map draws it, and the page passes the keys 
  assert.doesNotMatch(JSON.stringify(tree),/category-map-dock-key/,'no keys, no section');
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/keys=\{withElevationKey\(\[\.\.\.\(quakeRecordOn && quakeRecord \? \[earthquakeRecordKey\(quakeRecord\.endYear\)\] : \[\]\), \.\.\.\(shownOutlook \? \[spcOutlookKey\(shownOutlook\.day, shownOutlook\.product\)\] : \[\]\), \.\.\.\(shownReports \? \[stormReportsKey\(shownReports\.day\)\] : \[\]\), \.\.\.withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\)\],/);
+ assert.match(page,/withReviewedKey\(withCivicKey\(mapKeysFor\(activeCategoryMap\.starters/);
+ assert.match(page,/civicFrameCongress\), reviewedData \? reviewedSource : null/);
 });
 
 const luminance=hex=>{const c=rgb(hex).map(v=>v/255).map(v=>v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4);return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2];};
@@ -129,7 +130,8 @@ test('a drawn reviewed snapshot adds its key once, and alerts share the live sev
  assert.deepEqual(keys.withReviewedKey(storm,'nws-alerts').map(k=>k.id),['nws-alerts'],'not shown twice');
  assert.deepEqual(keys.withReviewedKey([],'nws-alerts').map(k=>k.id),['nws-alerts'],'shown when the live alerts are off');
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/keys=\{withElevationKey\(\[\.\.\.\(quakeRecordOn && quakeRecord \? \[earthquakeRecordKey\(quakeRecord\.endYear\)\] : \[\]\), \.\.\.\(shownOutlook \? \[spcOutlookKey\(shownOutlook\.day, shownOutlook\.product\)\] : \[\]\), \.\.\.\(shownReports \? \[stormReportsKey\(shownReports\.day\)\] : \[\]\), \.\.\.withReviewedKey\(mapKeysFor\(activeCategoryMap\.starters, id => Boolean\(officialVisibility\[id as OfficialContextId\]\)\), reviewedData \? reviewedSource : null\)\],/);
+ assert.match(page,/withReviewedKey\(withCivicKey\(mapKeysFor\(activeCategoryMap\.starters/);
+ assert.match(page,/civicFrameCongress\), reviewedData \? reviewedSource : null/);
 });
 
 test('the relief and chart bases key their elevation colours from the ramps the styles draw',async()=>{
@@ -158,4 +160,13 @@ test('the relief and chart bases key their elevation colours from the ramps the 
  assert.equal(bar.props.style.background,relief.ramp.css);
  assert.match(JSON.stringify(tree),/"left":"36\.4%"[\s\S]*600/);
  h.dispose?.();
+});
+
+test('historical keys contain only checked constituencies, including a dashed statewide at-large key',()=>{
+ const other=keys.MAP_KEYS['nws-alerts'],civic=keys.MAP_KEYS['census-congress-119'];
+ assert.deepEqual(keys.withCivicKey([other,civic],[],null),[other]);
+ const result=keys.withCivicKey([other,civic],[0,1,2,3],48);
+ assert.equal(result[0],other);assert.equal(result[1].title,'Kansas U.S. House · Congress 48');
+ assert.deepEqual(result[1].items.map(i=>i.label),['District 1','District 2','District 3','Statewide at-large']);
+ assert.equal(result[1].items.at(-1).shape,'line');assert.equal(result[1].items.at(-1).dashed,true);
 });

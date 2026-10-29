@@ -78,8 +78,11 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ civic, onCivicPick, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
-  civic?: Readonly<{ visible: boolean; state: string; items: readonly Readonly<{ id: string; label: string }>[] }>;
+export function CategoryMapDock({ civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, aquifer, onAquiferView, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+  civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
+  onCivicCongress?: (congress: number) => void;
+  onCivicPresent?: () => void;
+  onCivicRetry?: () => void;
   onCivicPick?: (id: string, returnElement: HTMLElement) => void;
   look: CategoryMap;
   mode: CategoryScene;
@@ -240,14 +243,24 @@ export function CategoryMapDock({ civic, onCivicPick, look, mode, depth, azimuth
       <button type="button" className="category-map-dock-close" aria-label={`Hide ${look.name} controls`} onClick={onClose}>×</button>
     </header>
     {look.topic === "government" && civic && <section className="category-map-dock-layer-set" aria-label="Kansas congressional districts">
-      <strong>U.S. House · 119th Congress</strong>
-      <small>2025–2027 Congress · January 2025 Census geography</small>
+      <strong>U.S. House · {civic.congress ? `Congress ${civic.congress}` : "history"}</strong>
+      <small>{civic.day ? `${civic.day} · congressional term, not election date` : "Choose a Congress or a supported calendar date"}</small>
+      {civic.options && onCivicCongress && <label>Congress<select aria-label="Choose Congress" value={civic.congress ?? ""} onChange={event => { const value = Number(event.target.value); if (civic.options?.some(option => option.value === value)) onCivicCongress(value); }}>
+        <option value="" disabled>Choose a Congress</option>{civic.options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+      </select></label>}
+      {onCivicPresent && <button type="button" className="category-map-dock-tool" onClick={onCivicPresent}>Return to Present</button>}
       {onLayer && <button type="button" className="category-map-dock-tool" aria-pressed={civic.visible} onClick={() => onLayer("census-congress-119", !civic.visible)}>Show district areas</button>}
-      <p className="category-map-dock-reading" role="status">{!civic.visible ? "District layer hidden." : civic.state === "held" ? "District reference held at this map time. Choose Present to inspect it." : civic.state === "ready" ? "Four source districts loaded. Choose a district to inspect its Census record." : civic.state === "error" ? "Census districts unavailable. Open Layers for this map to retry." : "Loading the Census district reference…"}</p>
+      <p className="category-map-dock-reading" role="status">{!civic.visible ? "District layer hidden." : civic.state === "held" ? "No checked plan for this map date. Choose a Congress; year-only frames use January 1." : civic.state === "ready" ? `${civic.items.length} source constituencies loaded. Choose one to inspect its source record; shapes do not count seats.` : civic.state === "error" ? "District source unavailable. Open Layers for this map to retry." : "Loading the selected congressional plan…"}</p>
+      {civic.visible && civic.state === "error" && onCivicRetry && <button type="button" className="category-map-dock-tool" onClick={onCivicRetry}>Retry selected plan</button>}
       {civic.visible && civic.state === "ready" && onCivicPick && <ul className="category-map-dock-picklist" aria-label="Inspect a Kansas U.S. House district">
         {civic.items.map(item => <li key={item.id}><button type="button" onClick={event => onCivicPick(item.id, event.currentTarget)}>{item.label}</button></li>)}
       </ul>}
-      <small>Colors identify districts, not parties. Generalized boundaries do not determine your ballot or polling place.</small>
+      <small>Colors identify district numbers, not parties. At-large constituencies can overlap numbered districts and elect multiple members. Boundaries do not determine your ballot.</small>
+      {civic.visible && civic.state === "ready" && civic.day && <a href={`/api/live-context?feed=census-congress-119&day=${encodeURIComponent(civic.day)}`} download>Download selected plan (GeoJSON)</a>}
+      <small>Coverage: statehood, January 29, 1861, through the 119th Congress. Earlier territorial delegate geometry is unverified. Historical plans are scholarly reconstructions; Present uses Census geography.</small>
+      <a href="https://www.archives.gov/legislative/features/kansas" target="_blank" rel="noreferrer">Kansas statehood record ↗</a>
+      <a href="https://cdmaps.polisci.ucla.edu/" target="_blank" rel="noreferrer">Historical boundary sources ↗</a>
+      <a href="/civic-history-license.txt" target="_blank" rel="noreferrer">Historical data license ↗</a>
       <a href="https://www.sos.ks.gov/elections/district-maps.html" target="_blank" rel="noreferrer">Official Kansas district maps ↗</a>
       {onLayer && layerVisibility && <button type="button" className="category-map-dock-tool" aria-pressed={Boolean(layerVisibility["census-counties"])} onClick={() => onLayer("census-counties", !layerVisibility["census-counties"])}>Compare Census counties</button>}
     </section>}
