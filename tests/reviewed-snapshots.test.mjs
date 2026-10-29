@@ -199,7 +199,7 @@ test('the dock shows the picked feature with its release and signed download; th
  assert.doesNotMatch(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,reviewed:{...reviewed,selected:null}})),/external context, not evidence/);
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/if \(renderedHits\[0\]\?\.source === REVIEWED_SOURCE_ID\) \{\s*const id = renderedHits\[0\]\.properties\?\.\[REVIEWED_FEATURE_ID\];\s*if \(typeof id === "string" && id\) setReviewedPick\(id\);\s*return;/,'a released record is not opened as basemap context');
+ assert.match(page,/if \(renderedHits\[0\]\?\.source === REVIEWED_SOURCE_ID\) \{\s*const id = renderedHits\[0\]\.properties\?\.\[REVIEWED_FEATURE_ID\];\s*if \(typeof id === "string" && id\) \{ setReviewedPick\(id\); setCategoryDockHidden\(false\); \}\s*return;/,'a released record is not opened as basemap context, and a closed dock comes back to show it');
  assert.match(page,/const reviewedFeature = reviewedPick && reviewedData \? reviewedData\.features\.find\(feature => String\(feature\.id \?\? ""\) === reviewedPick\) \?\? null : null;/);
  assert.match(page,/setReviewedSnapshot\(map, reviewedData, reviewedFeature \? reviewedPick : null\);/);
  assert.match(page,/onReviewed=\{\(on\) => \{ setReviewedPick\(null\); reviewed\.setOn\(on\); \}\}/);

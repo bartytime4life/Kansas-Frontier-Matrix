@@ -162,3 +162,8 @@ test('the page hides the 30-day catalog while the record is shown, and the recor
  assert.match(page,/params\.get\("quakes"\) === "record" && restoredTopic !== "all" && Boolean\(categoryMap\(restoredTopic\)\?\.tools\?\.includes\("quakes"\)\)/,'a shared record view opens only on a map that offers it');
  assert.match(route,/body \? JSON\.parse\(body\) as unknown : \{ features: \[\] \}/,'an empty FDSN answer (204) is an empty record');
 });
+
+test('picking a record event brings a closed category dock back to show it',async()=>{
+ const page=await readFile('app/page.tsx','utf8');
+ assert.match(page,/if \(event\) \{ setQuakeRecordSelected\(event\); setCategoryDockHidden\(false\); \}\s*return;/);
+});

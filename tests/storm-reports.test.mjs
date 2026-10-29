@@ -117,7 +117,7 @@ test('the page reads each day on its own clock, selects a report on the map, sha
  assert.match(page,/const refresh = reportsDay === "today" \? 5 \* 60_000 : 30 \* 60_000;/);
  assert.match(page,/const readAt = reportsReadAtRef\.current\.get\(reportsDay\);\s*const age = current && readAt !== undefined \? Date\.now\(\) - readAt : Infinity;/,'aged by this browser\'s clock, so an old answer cannot loop the read');
  assert.match(page,/\}, \[reportsDay, stormReports, reportsFailed, reportsTick, announce\]\);/);
- assert.match(page,/if \(renderedHits\[0\]\?\.source === STORM_REPORTS_SOURCE_ID\) \{[\s\S]{0,200}if \(report\) setReportSelected\(report\);\s*return;/);
+ assert.match(page,/if \(renderedHits\[0\]\?\.source === STORM_REPORTS_SOURCE_ID\) \{[\s\S]{0,200}if \(report\) \{ setReportSelected\(report\); setCategoryDockHidden\(false\); \}\s*return;/,'a closed dock comes back to show the report');
  assert.match(page,/if \(reportsDay\) params\.set\("reports", reportsDay\);/);
  assert.match(page,/setReportSelected\(selected => selected \? value\.reports\.find\(report => report\.id === selected\.id\) \?\? null : null\);/,'a refresh reconciles the selected report');
  assert.match(page,/categoryMap\(restoredTopic\)\?\.tools\?\.includes\("reports"\) \? restoredReports : null/);
