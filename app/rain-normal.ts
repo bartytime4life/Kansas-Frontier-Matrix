@@ -66,5 +66,10 @@ export function validRainNormal(value: unknown, lon: number, lat: number, year: 
 
 /** The season against normal as the dock says it, or null when there is no season reading. */
 export function rainNormalLine(reading: RainNormalReading): string | null {
+  if (reading.state !== "ready" || reading.station === null || reading.seasonInches === null) return null;
+  const season = `${reading.seasonDaysMissing || reading.seasonDaysPending ? "Partial: " : ""}${reading.seasonInches.toFixed(2)} in precipitation${reading.seasonTraceDays ? ` + trace on ${reading.seasonTraceDays} days` : ""}, Apr 1–Oct 31 ${reading.year}`;
+  const days = `${reading.seasonDaysMissing ? ` (${reading.seasonDaysMissing} days missing)` : ""}${reading.seasonDaysPending ? ` (${reading.seasonDaysPending} days not yet due)` : ""}`;
+  if (reading.normal.average === null) return `${season}${days} · no earlier-year average: ${reading.normal.years} of ${NORMAL_YEARS} earlier years are complete, and ${NORMAL_MIN_YEARS} are needed`;
+  const share = reading.percentOfNormal === null || reading.seasonDaysMissing > 0 || (reading.seasonDaysPending ?? 0) > 0 ? "" : ` · ${reading.percentOfNormal}% of earlier-year average`;
   return `${season}${days} · ${reading.normal.years}-year average ${reading.normal.average.toFixed(2)} in${share} · from ${reading.station.name}, ${Math.round(reading.station.km)} km away`;
 }
