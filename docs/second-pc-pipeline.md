@@ -31,7 +31,8 @@ The active units run code straight from Git working trees, not from an
 installed copy:
 
 - `kfm-source-pipeline`, `kfm-working-backup` and `kfm-working-restore` run
-  `scripts/pc-pipeline/cli.mjs` from the `pipeline-hosted` checkout.
+  the `scripts/pc-pipeline/` kit (the capture wrapper and `cli.mjs`) from the
+  `pipeline-hosted` checkout.
 - `kfm-intake-analyze`, `kfm-intake` and `kfm-library` run
   `tools/local_data/intake.py` and `tools/local_data/intake_service.py` from the
   `pipeline-implementation` checkout.
@@ -42,11 +43,34 @@ pick it up at their next run. Before touching those files,
 [pause the timers](#pause-and-resume), make the change,
 [verify it locally](#verify-a-change-locally), then resume.
 
+### Live checkout versus this branch
+
+The `pipeline-hosted` working tree that the units execute carries uncommitted
+changes on an older base, so the running code and this branch differ. Read back
+on 2026-10-29:
+
+- **Connection-only refusals.** The live worker, `stage-package` and
+  `ftps-mirror` refuse uploads with `CONNECTION_ONLY_UPLOADS_DISABLED` when the
+  config has `remoteMode: "connection-only"`. This branch ignores `remoteMode`;
+  here only `publish: false` and the absent worker credential prevent uploads.
+- **Backup format v2.** Live backups store content-addressed objects
+  (`kfm-pc-data-backup-v2`), and 9 of the 10 manifests on the working backup,
+  including the latest, are v2. This branch reads and writes only format v1:
+  its `verify-backup` and `restore-test` reject a v2 manifest with
+  `BACKUP_MANIFEST_INVALID`. Merge v2 support before this branch's kit replaces
+  the live code, or the nightly verification and monthly restore will fail.
+- **Capture wrapper.** `run.sh capture` runs a live-only `capture.mjs`. It runs
+  the same tick, then writes a private `data/work/pipeline-health.json` report
+  that `kfm-data pipelines` prints.
+- **Only in this branch:** the opt-in `usgs-earthquakes` source, the publication
+  budget and its deferrals, and the county commands. The live config still names
+  the two original sources and has no `storagePolicy`.
+
 ### Active units
 
 | Unit | Schedule (America/Chicago) | `run.sh` task | What it runs |
 | --- | --- | --- | --- |
-| `kfm-source-pipeline.timer` | every 5 minutes | `capture` | `cli.mjs tick`. Takes the lock without waiting; exit 75 (busy) counts as success. |
+| `kfm-source-pipeline.timer` | every 5 minutes | `capture` | The live `capture.mjs` wrapper: one tick, then the health report. Takes the lock without waiting; exit 75 (busy) counts as success. |
 | `kfm-intake-analyze.timer` | hourly at :10 | `analyze` | `intake.py analyze` on `KFM-pipeline`. Waits up to 600 s for the lock. |
 | `kfm-working-backup.timer` | daily 02:30 | `backup` | `cli.mjs backup`, then `cli.mjs verify-backup`. |
 | `kfm-working-restore.timer` | 1st of the month, 03:30 | `restore` | `cli.mjs restore-test` into a new `KFM-restore-tests/<UTC time>/` on the SSD. |
@@ -84,6 +108,7 @@ the latest restore receipt (`state: "verified"`).
 | Command | Effect |
 | --- | --- |
 | `kfm-data status` | Unit states, last results and next timer runs. |
+| `kfm-data pipelines` | Prints the private capture, retry, storage and backup health report (live checkout only). |
 | `kfm-data refresh` | Starts one capture and one analysis now. |
 | `kfm-data backup` | Starts one working-store backup now. |
 | `kfm-data library`, `kfm-data intake` | Print the current private connection link. Do not share it. |
@@ -93,7 +118,9 @@ the latest restore receipt (`state: "verified"`).
 | `kfm-data files` | Prints the preserved import path. |
 
 Reopen the working desk link after any restart of `kfm-intake.service`,
-including the automatic restart after backup and restore.
+including the automatic restart after backup and restore. This host helper is
+unrelated to the repository's `npm run kfm-data -- COMMAND`, which is an alias
+for `node scripts/pc-pipeline/cli.mjs COMMAND`.
 
 ### Pause and resume
 
@@ -131,10 +158,14 @@ Failures surface at two levels:
   tick and again before each source. A failure there prints
   `{"reason":"CODE","state":"held"}`, exits 1 and fails the unit. The source
   that was about to run gets no journal entry.
-- **One source.** An acquisition or normalization failure is recorded on that
-  source's journal row as `held` with its reason. The tick still exits 0 and
-  reports `{"reason":"CODE","sourceId":"…","state":"held"}`. See
-  [Job journal](#job-journal) for retries.
+- **One source.** An acquisition, normalization or validation failure is
+  recorded on that source's journal row as `held` with its reason. The tick
+  still exits 0 and reports `{"reason":"CODE","sourceId":"…","state":"held"}`.
+- **Deferred publication.** With `publish: true` only, a source whose capture is
+  saved but cannot publish this tick reports `state: "deferred"` with
+  `HOSTING_UNAVAILABLE` or `PUBLICATION_BUDGET`. That is not a failure.
+
+See [Job journal](#job-journal) for retries and deferrals.
 
 Reasons are fixed codes; unexpected errors print `PIPELINE_OPERATION_FAILED`
 and deliberately omit details. Common codes:
@@ -146,8 +177,10 @@ and deliberately omit details. Common codes:
 | `MEMORY_RESERVE_REQUIRED` | Under 3 GiB of free RAM, usually from inference load. The whole tick defers. | None; the next tick retries. Persistent holds mean the host is overcommitted. |
 | `DURABLE_FILESYSTEM_REQUIRED` | The store is on tmpfs, overlay or another filesystem outside the allowlist. | Use the qualified disk. |
 | `DEDICATED_DATA_MOUNT_REQUIRED` | The root is not strictly inside the mount, or the mount is not a separate device. | Fix the mount or config. |
-| `CONFIG_INVALID` | The config fails validation (format, 32-hex `storeId`, sources, `publish`, `remoteMode`). | Compare with the active config. Do not hand-edit `storeId` or `device`. |
-| `CONNECTION_ONLY_UPLOADS_DISABLED` | Expected under the current scope. Upload commands refuse, and `tick` refuses `publish: true` combined with connection-only mode. | None while the connection-only scope applies. |
+| `CONFIG_INVALID` | The config fails validation (format, 32-hex `storeId`, up to three known sources, `publish`, `device`, `approvalDirectory`). | Compare with the active config. Do not hand-edit `storeId` or `device`. |
+| `STORAGE_POLICY_INVALID` | `storagePolicy` has an unknown key, a priority list that is not 2–3 distinct known sources, or attempts or bytes out of range. | Fix the policy; see [Storage priorities and publication budget](#storage-priorities-and-publication-budget-2026-10-23). |
+| `SOURCE_NOT_ALLOWED` | A configured source is missing from the priority list, or a command was given an unknown source. | Name every configured source in `storagePolicy.priority`, or remove the policy to use the defaults. |
+| `CONNECTION_ONLY_UPLOADS_DISABLED` | Live checkout only (see above): an upload command or a `publish: true` tick met `remoteMode: "connection-only"`. | None while the connection-only scope applies. |
 | `INDEPENDENT_BACKUP_REQUIRED` | The backup root is on the same device as the store. | Point the backup config at the separate SSD. |
 | `BACKUP_INPUT_CHANGED` | A source file changed while it was being copied. | A writer ran outside the lock. Check that manual commands hold it, then rerun. |
 | `BACKUP_CONFLICT`, `IMMUTABLE_CONFLICT` | An existing content-addressed file holds different bytes than expected. | Investigate. Never delete or overwrite the existing file. |
@@ -245,6 +278,8 @@ Backup format v2 uses SHA-256 object storage so successive versions of mutable
 working files can coexist. Verification/restoration still read format v1. Journal
 snapshots and their receipts now use stable digest-based identities, preventing
 repeat-backup collisions. No previous backup or archive object was overwritten.
+Format v2 exists only in the live checkout so far; see
+[Live checkout versus this branch](#live-checkout-versus-this-branch).
 
 ### Connection-only owner scope, October 23
 
@@ -254,6 +289,7 @@ costs. The active PC config now has `remoteMode: "connection-only"` as well as
 config before any storage or network access. Package publication and FTPS mirror
 commands reject connection-only or disabled-publishing configs before reading
 payloads or credentials. No import, migration or FTP transfer is enabled.
+These refusals are in the live checkout's code, not yet in this branch.
 
 `kfm-data connection` performs one small on-demand HTTPS connection check and
 saves a local receipt; it never reads a dataset or sends an upload body. The
@@ -268,7 +304,8 @@ connectivity can be reported. Its reviewed source is PR #5438, commit
 ## Implemented path and authority
 
 `scripts/pc-pipeline/worker.mjs` checks a qualified data filesystem, claims
-durable SQLite jobs, acquires the existing bounded Kansas USGS/NWS feeds,
+durable SQLite jobs, acquires the existing bounded Kansas USGS/NWS feeds (plus
+`usgs-earthquakes` when configured; see its section below),
 preserves exact decoded entities and receipts, and builds deterministic,
 allowlisted GeoJSON products. One transform runs at a time. The timer checks
 every five minutes; adapters remain hourly. Missed buckets are not fabricated.
@@ -301,24 +338,31 @@ No new npm runtime dependency is required for the PC kit.
 `node scripts/pc-pipeline/cli.mjs COMMAND ARGS` prints one canonical JSON
 result on stdout. On failure it prints `{"reason":"CODE","state":"held"}` on
 stderr and exits 1; see [Troubleshoot a held run](#troubleshoot-a-held-run).
-Running it with no command prints the usage line.
 
 | Command | Arguments | Effect | Under the current scope |
 | --- | --- | --- | --- |
 | `inventory` | none | Reports Node version, system-disk free bytes and recipe digest. Writes nothing. | Safe |
-| `status` | `CONFIG` | Verifies storage and lists the latest 100 job rows. | Safe; hold the lock |
+| `plan` | `CONFIG` | Validates the config and explains source priority and publication budget. No network or writes. | Safe |
+| `status` | `CONFIG` | Verifies storage, then prints the plan and the latest 100 job rows. | Safe; hold the lock |
 | `tick` | `CONFIG` | One scheduled capture pass, the same as `worker.mjs CONFIG`. | Scheduled; use `kfm-data refresh` |
-| `rehearse` | `PRIVATE_ROOT` | Captures both feeds into a mode-0700 directory outside the checkout. | Safe; needs 30 GiB + 64 MiB free there |
-| `init` | `ROOT MOUNT CONFIG_OUTPUT` | Writes a store marker and config for a new store on a dedicated mount. | New stores only |
+| `rehearse` | `PRIVATE_ROOT` | Captures all three feeds into a mode-0700 directory outside the checkout. | Safe; needs 30 GiB + 64 MiB free there |
+| `init` | `ROOT MOUNT CONFIG_OUTPUT` | Writes a store marker and a two-source, `publish: false` config for a new store on a dedicated mount. | New stores only |
 | `backup` | `CONFIG BACKUP_CONFIG` | Journal snapshot, then a verified copy of every file under `data/`. | Scheduled; use `kfm-data backup` |
-| `verify-backup` | `MANIFEST BACKUP_ROOT` | Re-hashes every object a backup manifest lists. Writes nothing. | Safe |
-| `restore-test` | `MANIFEST BACKUP_ROOT EMPTY_RESTORE_ROOT` | Restores into an empty private directory and writes a restore receipt. | Monthly timer, or by hand |
-| `profile-template` | `SOURCE` | Prints an unapproved delegation draft. | Safe |
+| `verify-backup` | `MANIFEST BACKUP_ROOT` | Re-hashes every object a v1 backup manifest lists. Writes nothing. | Safe for v1 manifests |
+| `restore-test` | `MANIFEST BACKUP_ROOT EMPTY_RESTORE_ROOT` | Restores a v1 backup into an empty private directory and writes a restore receipt. | Monthly timer, or by hand |
+| `connection` | `[ROOT]` | One read-only hosted connection check; writes a receipt under `ROOT` (default `~/.local/state/kfm-data`). Exits 1 unless connected. | Safe |
+| `county-history` | `REPORT SHA256` | Reads a county history report pinned by its SHA-256. Exits 2 if its geometry is quarantined. | Safe |
+| `prepare-county` | `REPORT SHA256` | Prints the normalized `candidate-only` county product. No writes. | Safe |
+| `publish-county` | `CONFIG REPORT SHA256` | Publishes an approved county release. | Not activated; see [Historical county context](#historical-county-context-implementation-candidate-2026-10-29) |
+| `profile-template` | `SOURCE` | Prints an unapproved delegation draft for a stream, alert, earthquake, county, water or weather source. | Safe |
 | `keys` | `PRIVATE_DIRECTORY` | Creates the owner Ed25519 key pair. | Owner signing environment only; not provisioned |
 | `approve` | `PROFILE PRIVATE_KEY SIGNED_OUTPUT` | Signs a delegation. | Owner signing environment only |
 | `control` | `COMMAND_JSON PRIVATE_KEY` | Sends a signed pause, resume, withdrawal or rollback command to the site. | Owner only; needs the deployed pipeline API |
-| `stage-package` | `CONFIG water\|weather SNAPSHOT DECISION` | Publishes a governed water or weather package. | Rejected with `CONNECTION_ONLY_UPLOADS_DISABLED` |
-| `ftps-mirror` | `CONFIG RELEASE_ID PUBLIC_PRODUCT` | Mirrors a committed release over FTPS. | Rejected with `CONNECTION_ONLY_UPLOADS_DISABLED` |
+| `stage-package` | `CONFIG water\|weather SNAPSHOT DECISION` | Publishes a governed water or weather package. | Not activated: needs a paired worker credential |
+| `ftps-mirror` | `CONFIG RELEASE_ID PUBLIC_PRODUCT` | Mirrors a committed release over FTPS. | Not activated: needs systemd credentials |
+
+The live checkout also refuses `stage-package` and `ftps-mirror` with
+`CONNECTION_ONLY_UPLOADS_DISABLED` under its connection-only config.
 
 Other entry points:
 
@@ -358,15 +402,17 @@ KFM-pipeline/                                    config "root"
     processed/SOURCE/DIGEST.json                      normalized product
     receipts/ingest/pc-pipeline/DIGEST.json           acquisition receipt
     receipts/pipeline/configs/DIGEST.json             config copy taken by each backup
-    receipts/pipeline/journal-snapshots/DIGEST.sqlite journal snapshot (VACUUM INTO)
-    receipts/pipeline/journal-backups-v2/DIGEST.json  snapshot receipt
-    receipts/pipeline/{transfers,published,ftps}/     publication receipts; unused while connection-only
+    receipts/pipeline/journal-snapshots/ID.sqlite     journal snapshot (VACUUM INTO)
+    receipts/pipeline/journal-backups/DIGEST.json     snapshot receipt naming that file
+    receipts/pipeline/{transfers,published,ftps}/     publication receipts; unused while publish is false
 ```
 
 The same `data/` tree also holds the `tools/local_data` lifecycle store
 (`catalog/`, `raw/`, `work/`, `registry/` and others) that `intake.py analyze`
-maintains, so backups include its working index. Backups made before the v2
-change left their journal receipts in `receipts/pipeline/journal-backups/`.
+maintains, so backups include its working index. The live checkout's v2 backup
+code names snapshots by digest and writes their receipts to
+`receipts/pipeline/journal-backups-v2/`; both directories exist on the live
+store.
 
 ### Job journal
 
@@ -379,21 +425,32 @@ third failure the slot stays held. The next hourly slot starts fresh, and
 missed hours are never back-filled. A retry reuses an already-saved product
 rather than acquiring again.
 
+With `publish: true`, a deferral (`HOSTING_UNAVAILABLE` or
+`PUBLICATION_BUDGET`) returns the row to `pending` for at least 5 minutes and
+gives back the attempt it used, so outages and budget limits never exhaust
+the three tries. A row whose product was saved but never released is claimed
+again while publishing is on, even if it was marked complete.
+
 ### Backup format
 
 ```text
 KFM-pipeline-backup/
-  objects/sha256/DIGEST/payload           format v2: one object per distinct content
-  data/PATH                               format v1: path-named copies, read-only legacy
-  backup-manifests/MANIFEST_DIGEST.json   one manifest per backup run
+  data/PATH                               format v1: copy of each file at its store path
+  objects/sha256/DIGEST/payload           format v2 (live checkout only): one object per distinct content
+  backup-manifests/DIGEST.json            one manifest per backup run
 ```
 
-A v2 manifest lists every file as `{path, sha256, bytes}` together with
-`storeId`, `sourceDevice`, `backupDevice` and `inventorySha256`. Its file name
-is the SHA-256 of the canonical `{format, files}`, which `backup` returns as
-`manifestSha256`; v1 manifests are named by `inventorySha256`. Because v2
-stores objects by content, successive versions of a mutable file, such as the
-intake index, coexist. `verify-backup` and `restore-test` read both formats.
+A manifest lists every file as `{path, sha256, bytes}` together with
+`storeId`, `sourceDevice`, `backupDevice` and `inventorySha256`, the SHA-256 of
+the canonical file list. In this branch the format is `kfm-pc-data-backup-v1`,
+the manifest is named by `inventorySha256`, and a backup refuses to overwrite a
+path-named copy whose bytes changed (`BACKUP_CONFLICT`).
+
+The live checkout's v2 format stores objects by content, so successive versions
+of a mutable file such as the intake index coexist. It names each manifest by
+the SHA-256 of the canonical `{format, files}`, returned as `manifestSha256`,
+and its `verify-backup` and `restore-test` read both formats. This branch reads
+v1 only.
 
 ## Verify a change locally
 
@@ -402,28 +459,29 @@ Pause the timers first if the change touches live code (see
 change, the fast check is:
 
 ```sh
-node --test tests/pc-pipeline.test.mjs tests/pipeline-domain.test.mjs tests/pipeline-lock.test.mjs
+node --test tests/pc-pipeline.test.mjs tests/pipeline-*.test.mjs tests/storage-policy.test.mjs
 ```
 
 Before pushing, run the local mirror of the CI workflow
-`.github/workflows/public-core-repair.yml` (job `verify-core-delivery`). That
-workflow runs on every pull request and on pushes to
-`a0-hosted-ai-web-20261017` and `codex/fix-public-core-visibility-20261014`.
+`.github/workflows/public-core-repair.yml`. That workflow runs on every pull
+request and on pushes to `a0-hosted-ai-web-20261017` and
+`codex/fix-public-core-visibility-20261014`. From the checkout being changed:
 
 ```sh
-cd ~/Documents/ChatGPT/Kansas-Frontier-Matrix/pipeline-hosted
 bash scripts/ci-local.sh
 ```
 
-`scripts/ci-local.sh` runs the workflow's steps in order: `npm ci`, build,
-typecheck, the Node suite, the MySQL checks when a disposable server listens on
-127.0.0.1:13317, the HTTP boundary and browser suites on port 5182, and the
-preview on port 5183. Unlike CI it continues after a failure, so one run reports
-every broken step, and it stops the servers it starts. It prints a summary and
-keeps per-step logs in `.sites-runtime/ci-local/<UTC time>/`, or in the
-directory given as its argument. If `npm` is not on `PATH`, it uses the pinned
-copy in `../development-tools/bin`. Exit status 0 means every step that ran
-passed; 69 means a required tool is missing; 75 means another run holds
+`scripts/ci-local.sh` runs the `verify-core-delivery` job's steps in order:
+`npm ci`, build, typecheck, the Node suite, the MySQL checks when a disposable
+server listens on 127.0.0.1:13317, the fire-renderer browser comparison, the
+HTTP boundary and browser suites on port 5182, and the preview on port 5183.
+It then runs the separate `welcome-performance` job against the same build.
+Unlike CI it continues after a failure, so one run reports every broken step,
+and it stops the servers it starts. It prints a summary and keeps per-step
+logs, screenshots and measurements in `.sites-runtime/ci-local/<UTC time>/`, or
+in the directory given as its argument. If `npm` is not on `PATH`, it uses the
+pinned copy in `../development-tools/bin`. Exit status 0 means every step that
+ran passed; 69 means a required tool is missing; 75 means another run holds
 `.sites-runtime/ci-local.lock` or port 5182 or 5183 is taken. When the workflow
 changes, update the script to match.
 
@@ -441,11 +499,13 @@ Results on this PC, 2026-10-29 (Node 22.22.1; CI pins 22.23.3):
 
 | Workflow step | Local result | Time |
 | --- | --- | --- |
-| `npm ci`, build, typecheck | Pass | about 45 s |
-| Node suite, `tests/*.test.mjs` | Pass: 1,686 tests, 0 failed, 19 skipped | about 2 min |
+| `npm ci`, build, typecheck | Pass | about 2 min |
+| Node suite, `tests/*.test.mjs` | Pass: 2,282 tests, 0 failed, 22 skipped | about 3 min |
 | Disposable MySQL checks | **Not run**: no Docker or MySQL on this PC | none |
-| HTTP boundary and browser suites | Pass | about 9 min |
-| Preview on port 5183 | Pass | about 25 s |
+| Fire renderer comparison | Pass | about 75 s |
+| HTTP boundary and browser suites | Pass | about 13 min |
+| Preview on port 5183 | Pass | about 30 s |
+| `welcome-performance` job | Pass | about 2 min |
 
 CI provides the MySQL check through a `mysql:8.4.13` service container on
 127.0.0.1:13317. Without `KFM_PIPELINE_MYSQL_TEST=1` and `KFM_MYSQL_TEST=1`,

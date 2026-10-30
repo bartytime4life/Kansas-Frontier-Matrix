@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# Local mirror of .github/workflows/public-core-repair.yml (job verify-core-delivery).
-# Keep the steps below in step with that workflow. Unlike CI it runs every step after
-# a failure, so one run reports all breakages, and it cleans up the servers it starts.
+# Local mirror of .github/workflows/public-core-repair.yml (jobs verify-core-delivery and
+# welcome-performance, run one after the other on a single build). Keep the steps below in
+# step with that workflow. Unlike CI it runs every step after a failure, so one run reports
+# all breakages, and it cleans up the servers it starts. Screenshots and measurements that
+# CI uploads as artifacts stay in the log directory.
 # Usage: bash scripts/ci-local.sh [LOG_DIR]
 set -uo pipefail
 
@@ -38,19 +40,35 @@ step() {
   printf '%-22s %-9s %4ss\n' "${name}" "${status}" "$((SECONDS - start))" | tee -a "${summary}"
 }
 
-http_boundary() {
-  set -euo pipefail
-  NODE_ENV=production PORT=5182 node server/start.mjs > "${RUNNER_TEMP}/node-runtime.log" 2>&1 &
+serve_build() {
+  NODE_ENV=production PORT=5182 node server/start.mjs > "${RUNNER_TEMP}/$1" 2>&1 &
   site_pid=$!
   trap 'kill "${site_pid}" 2>/dev/null || true' EXIT
   for attempt in $(seq 1 30); do
     if curl --fail --silent http://127.0.0.1:5182/ > /dev/null; then break; fi
     sleep 1
   done
-  for suite in godaddy-node-runtime.test.mjs pipeline-http.test.mjs county-search.browser.mjs \
-    aviation-layout.browser.mjs explorer-startup.browser.mjs; do
+}
+
+fire_renderer() {
+  set -euo pipefail
+  serve_build fire-runtime.log
+  local baseline=1000a5c4521bb3055e3863110754e924cdda801e
+  git cat-file -e "${baseline}^{commit}" 2>/dev/null || git fetch --no-tags --depth=1 origin "${baseline}"
+  git show "${baseline}:app/fire-detection-style.ts" > "${RUNNER_TEMP}/fire-before.ts"
+  KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_FIRE_BASELINE_FILE="${RUNNER_TEMP}/fire-before.ts" \
+    KFM_FIRE_SCREENSHOTS="${RUNNER_TEMP}/fire-screenshots" node --test tests/fire-display.browser.mjs
+}
+
+http_boundary() {
+  set -euo pipefail
+  serve_build node-runtime.log
+  for suite in godaddy-node-runtime.test.mjs pipeline-http.test.mjs river-pulse.browser.mjs \
+    county-search.browser.mjs aviation-layout.browser.mjs; do
     KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test "tests/${suite}"
   done
+  KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WORKSPACE_SCREENSHOTS="${RUNNER_TEMP}/workspace-screenshots" \
+    node --test tests/explorer-startup.browser.mjs
   node --input-type=module - "${RUNNER_TEMP}/node-runtime.log" <<'NODE'
 import { readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
@@ -78,6 +96,14 @@ preview_port() {
   KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5183 node --test --test-name-pattern='anonymous map|hosted AI endpoint' tests/godaddy-node-runtime.test.mjs
 }
 
+# Separate job in CI; here it reuses the build above.
+welcome_performance() {
+  set -euo pipefail
+  serve_build welcome-runtime.log
+  KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WELCOME_PERFORMANCE=1 KFM_WELCOME_PERFORMANCE_ARTIFACTS="${RUNNER_TEMP}/welcome-performance" \
+    KFM_PERFORMANCE_SOURCE="$(git rev-parse HEAD)" node --test --test-name-pattern='welcome performance' tests/explorer-startup.browser.mjs
+}
+
 echo "node $(node --version) | npm $(npm --version) | $(git rev-parse --short HEAD) | $(git status --porcelain | wc -l) uncommitted | logs ${logs}" | tee -a "${summary}"
 step 01-npm-ci       npm ci
 step 02-build        npm run build
@@ -89,7 +115,9 @@ if (exec 3<>/dev/tcp/127.0.0.1/13317) 2>/dev/null; then
 else
   printf '%-22s %-9s %s\n' 05-mysql SKIPPED "no disposable MySQL on 127.0.0.1:13317" | tee -a "${summary}"
 fi
-step 06-http-boundary http_boundary
-step 07-preview-port  preview_port
+step 06-fire-renderer      fire_renderer
+step 07-http-boundary      http_boundary
+step 08-preview-port       preview_port
+step 09-welcome-performance welcome_performance
 echo "overall: $([[ ${overall} -eq 0 ]] && echo PASS || echo FAIL)" | tee -a "${summary}"
 exit "${overall}"
