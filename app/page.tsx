@@ -36,8 +36,6 @@ import { hiDpiBasemapStyle } from "./hd-rasters";
 import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationReading, populationChange, populationChangeApiPath, populationChangeCollection, populationChangeKey, populationChangeList, populationChangeReading, syncPopulationChange, validCountyBaseline } from "./population-change";
 import { moonReading, moonStrip, phaseList } from "./moon";
 import { CROP_HISTORY_API_PATH, cropHistoryKey, cropHistoryReading, historyBars, rotationPattern, validCropHistory, type CropHistory } from "./crop-history";
-import { SOIL_API_PATH, soilLine, soilWater, validSoil, type SoilReading } from "./crop-soil";
-import { KANSAS_CENTRE, SUN_PLACE_SOURCE_ID, coordinateLabel, inKansasBox, mayKeepMountainTime, sunChart, sunReading, sunYear as sunYearDays, syncSunPlace } from "./sun-chart";
 import { SURFACE_OBS_API_PATH, SURFACE_OBS_REFRESH_MS, SURFACE_OBS_SOURCE_ID, stationDetail, surfaceCollection, surfaceKey, surfaceList, surfaceReading, syncSurfaceObs, validSurfaceEnvelope } from "./surface-obs";
 import type { MetarObservation } from "./aviation-weather";
 import { WELLS_SNAPSHOT_PATH, WELL_PICK_SOURCE_ID, syncWellPick, validWellLevels, wellKgsPage, wellLevelsApiPath, wellLevelsKey, wellPlot, wellReading, wellSites, wellsNear, wellUsgsPage, type WellLevels, type WellSite } from "./well-levels";
@@ -6746,7 +6744,7 @@ export default function Home() {
           // With daylight through the year shown, a click in Kansas charts that place.
           if (sunYearOnRef.current) {
             const { lng, lat } = event.lngLat;
-            if (inKansasBox(lng, lat)) { setSunPlace({ lon: lng, lat }); setSunOutside(false); } else setSunOutside(true);
+            if (inKansas(lng, lat)) { setSunPlace({ lon: lng, lat }); setSunOutside(false); } else setSunOutside(true);
             setCategoryDockHidden(false);
             return;
           }
@@ -11783,9 +11781,10 @@ export default function Home() {
             surface={activeCategoryMap.tools?.includes("surface") ? { on: surfaceOn, state: !surfaceLive ? "held" : surfaceFailed ? "failed" : shownSurface ? "ready" : "loading",
               reading: shownSurface ? surfaceReading(shownSurface) : null, list: shownSurface ? surfaceList(shownSurface) : [], picked: surfaceStation ? surfacePicked : null,
               detail: surfaceStation ? stationDetail(surfaceStation) : null, raw: surfaceStation?.raw ?? null } : undefined}
-            sunYear={activeCategoryMap.tools?.includes("sunyear") ? { on: sunYearOn, outside: sunOutside, chart: sunYearChart, atCentre: !sunPlace, moon: sunYearMoon,
+            sunYear={activeCategoryMap.tools?.includes("sunyear") ? { on: sunYearOn, outside: sunOutside, chart: sunYearChart, atCentre: !sunPlace, moon: sunYearMoon, coordinates: sunYearPlace,
               place: sunPlace ? coordinateLabel(sunPlace.lon, sunPlace.lat) : KANSAS_CENTRE.name, reading: sunDays && sunToday ? sunReading(sunDays, sunToday) : null,
-              note: sunPlace && mayKeepMountainTime(sunPlace.lon) ? "Sherman, Wallace, Greeley and Hamilton counties keep Mountain time: there, clocks read an hour earlier." : null } : undefined}
+              note: SUN_TIME_NOTE } : undefined}
+            onSunYearPlace={(lon, lat) => { if (inKansas(lon, lat)) { setSunPlace({ lon, lat }); setSunOutside(false); } else setSunOutside(true); }}
             onSunYear={showSunYear} onSunYearCentre={() => { setSunPlace(null); setSunOutside(false); }}
             onSurface={showSurface} onSurfacePick={pickSurfaceStation} onSurfaceClear={() => setSurfacePicked(null)}
             populationChange={activeCategoryMap.tools?.includes("population") ? { on: popChangeOn, loading: popChangeOn && !popChange && !popChangeBroken, failed: popChangeBroken,

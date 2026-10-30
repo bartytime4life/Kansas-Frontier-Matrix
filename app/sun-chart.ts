@@ -1,5 +1,6 @@
 import type { FeatureCollection, Point } from "geojson";
 import type { GeoJSONSource, Map as MapLibreMap } from "./maplibre-seam";
+import { KANSAS_OUTLINE } from "./kansas-orientation";
 
 /**
  * Daylight through the year at one Kansas place: sunrise and sunset, and the
@@ -14,10 +15,24 @@ import type { GeoJSONSource, Map as MapLibreMap } from "./maplibre-seam";
 export const SUN_EVENTS = Object.freeze({ sun: -0.833, civil: -6, nautical: -12, astronomical: -18 } as const);
 export type SunLimit = keyof typeof SUN_EVENTS;
 export const KANSAS_CENTRE = Object.freeze({ lon: -98.698, lat: 38.498, name: "the geographic centre of Kansas, Barton County" });
-const KANSAS = { west: -102.0517, east: -94.5884, south: 36.993, north: 40.003 };
-export const inKansasBox = (lon: number, lat: number) => lon >= KANSAS.west && lon <= KANSAS.east && lat >= KANSAS.south && lat <= KANSAS.north;
-/** Sherman, Wallace, Greeley and Hamilton counties keep Mountain time; their eastern lines run near 101.4°–101.6° W. */
-export const mayKeepMountainTime = (lon: number) => lon < -101.39;
+/**
+ * Selection follows the same simplified Census outline the map displays,
+ * including the Missouri River edge. Display scope only, not a legal boundary.
+ */
+export function inKansas(lon: number, lat: number): boolean {
+  if (!Number.isFinite(lon) || !Number.isFinite(lat)) return false;
+  let inside = false;
+  for (let i = 0, j = KANSAS_OUTLINE.length - 1; i < KANSAS_OUTLINE.length; j = i++) {
+    const [ax, ay] = KANSAS_OUTLINE[j], [bx, by] = KANSAS_OUTLINE[i];
+    const cross = (lon - ax) * (by - ay) - (lat - ay) * (bx - ax);
+    if (Math.abs(cross) < 1e-12 && lon >= Math.min(ax, bx) && lon <= Math.max(ax, bx)
+      && lat >= Math.min(ay, by) && lat <= Math.max(ay, by)) return true;
+    if ((ay > lat) !== (by > lat) && lon < (bx - ax) * (lat - ay) / (by - ay) + ax) inside = !inside;
+  }
+  return inside;
+}
+
+export const SUN_TIME_NOTE = "All Sun and Moon times use Central time (CDT/CST). In Sherman, Wallace, Greeley and Hamilton counties, local Mountain clocks read one hour earlier. The panel does not determine a location's time zone.";
 
 const RAD = Math.PI / 180;
 const mod = (v: number, d: number) => ((v % d) + d) % d;
@@ -98,11 +113,14 @@ export function sunYear(year: number, lat: number, lon: number): SunDay[] {
 }
 
 export const clock = (minutes: number, offset?: number) => {
-  const m = Math.round(mod(minutes, 1440));
+  const m = mod(Math.round(minutes), 1440);
   const h = Math.floor(m / 60), mm = m % 60;
   return `${h % 12 === 0 ? 12 : h % 12}:${String(mm).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}${offset === undefined ? "" : offset === -300 ? " CDT" : " CST"}`;
 };
-const span = (minutes: number) => `${Math.floor(minutes / 60)} h ${String(Math.round(minutes % 60)).padStart(2, "0")} min`;
+const span = (minutes: number) => {
+  const rounded = Math.round(minutes);
+  return `${Math.floor(rounded / 60)} h ${String(rounded % 60).padStart(2, "0")} min`;
+};
 const DAY = new Intl.DateTimeFormat("en-US", { timeZone: "UTC", month: "short", day: "numeric" });
 const dayLabel = (date: string) => DAY.format(Date.parse(`${date}T12:00:00Z`));
 export const coordinateLabel = (lon: number, lat: number) => `${Math.abs(lat).toFixed(2)}°${lat >= 0 ? "N" : "S"}, ${Math.abs(lon).toFixed(2)}°${lon >= 0 ? "E" : "W"}`;
