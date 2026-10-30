@@ -18,7 +18,7 @@ new Function('exports', ts.transpileModule(await readFile('app/layer-workspaces.
   compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
 }).outputText)(taxonomy);
 const welcomeTopics = taxonomy.TOPIC_STRUCTURE.map(({ id, title, facets, limitation }) => ({ id, title, facets, limitation }));
-assert.equal(welcomeTopics.length, 21, 'the shared taxonomy includes Fauna and crime, justice & public safety');
+assert.equal(welcomeTopics.length, 22, 'the shared taxonomy includes Flora, Fauna and crime, justice & public safety');
 
 async function readyWelcome(p) {
   await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.dataset.renderer === 'capability' && ${JSON.stringify(welcomeTopics.map(topic => '.living-welcome .topic-' + topic.id))}.every(selector=>document.querySelector(selector))`, 'all shared domain cards hydrated');

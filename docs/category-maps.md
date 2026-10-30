@@ -20,7 +20,7 @@ holds and limits. They are display context, not admitted evidence.
 
 ## Fauna and crime, justice & public safety
 
-The shared taxonomy now has 21 categories. **Fauna & wildlife** belongs to
+The shared taxonomy has 22 categories, including Flora (see below). **Fauna & wildlife** belongs to
 Earth & environment; **Crime & justice** belongs to People &
 place. The welcome, Layers topic selector, Topics index and restored `topic`
 URLs use the same `fauna` and `public-safety` identifiers.
@@ -1283,3 +1283,11 @@ restores the prior state initialization and camera handling, retains the newer
 pending-style epoch ownership, and tracks an interrupted flight so pausing
 still lands on the selected category. Existing welcome-engine regressions
 exercise Storm preview freshness, paused polling, camera selection and disposal.
+
+
+## Flora and vegetation
+
+The 22-category starting page includes **Flora & vegetation**. Its map opens
+NLCD 2021 land cover, offers annual GBIF plant-record hexagons and USDA crop
+layers, and keeps source dates, rights and occurrence limits explicit. See
+[Flora data, controls and boundaries](flora-map.md).

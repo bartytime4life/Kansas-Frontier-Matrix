@@ -130,6 +130,6 @@ test('the dock offers crops on the Field view with a year and the crop clicked; 
  assert.match(page,/void fetch\(cdlPointApiPath\(year, lon, lat\), \{ signal: controller\.signal \}\)/);
  assert.match(page,/setCropsYear\(year\);\s*if \(cropPoint\) readCropAt\(year, cropPoint\.lon, cropPoint\.lat\);/,'a new year reads the last point again');
  assert.match(page,/syncCropland\(map, year\)/);
- assert.match(page,/setLandCoverPoint\(null\);\s*setCropsOn\(false\);\s*setCropPoint\(null\);/,'closes with its map');
+ assert.match(page,/setFloraOpacity\(0.75\);\s*setCropsOn\(false\);\s*setCropPoint\(null\);/,'closes with its map');
  assert.match(page,/\.\.\.\(cropsOn \? \[cdlKey\(cropsYear\)\] : \[\]\)/);
 });
