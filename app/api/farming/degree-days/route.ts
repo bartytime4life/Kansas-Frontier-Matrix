@@ -1,32 +1,13 @@
 import { boundedFetch } from "../../event-atlas/upstream";
 import { inCdlRegion } from "../../../cropland";
-import { nearestStation, parseDailyCsv, seasonDegreeDays, seasonRainfall, type Station } from "../../../growing-degree-days";
+import { kansasStations } from "../../../kansas-stations";
+import { nearestStation, parseDailyCsv, seasonDegreeDays, seasonRainfall } from "../../../growing-degree-days";
 
 export const dynamic = "force-dynamic";
-const STATIONS_URL = "https://mesonet.agron.iastate.edu/geojson/network/KS_ASOS.geojson";
 const DAILY_URL = (station: string, year: number) => `https://mesonet.agron.iastate.edu/cgi-bin/request/daily.py?network=KS_ASOS&stations=${station}&year1=${year}&month1=4&day1=1&year2=${year}&month2=10&day2=31&format=csv`;
 const MAX_BYTES = 512 * 1024;
-const DAY_MS = 24 * 60 * 60 * 1000;
 const noStore = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
 const cacheable = { "Cache-Control": "public, max-age=86400, s-maxage=604800", "X-Content-Type-Options": "nosniff" };
-let stationList: { at: number; stations: Station[] } | null = null;
-
-/** The Kansas ASOS stations with their identifiers and positions, kept a day. */
-async function kansasStations(): Promise<Station[]> {
-  if (stationList && Date.now() - stationList.at < DAY_MS) return stationList.stations;
-  const data = JSON.parse((await boundedFetch(STATIONS_URL, MAX_BYTES, { timeoutMs: 15_000 })).text()) as { features?: unknown };
-  const stations: Station[] = [];
-  for (const feature of Array.isArray(data.features) ? data.features : []) {
-    const f = feature as { properties?: { sid?: unknown; sname?: unknown }; geometry?: { coordinates?: unknown } };
-    const [lon, lat] = Array.isArray(f.geometry?.coordinates) ? f.geometry.coordinates : [];
-    const id = f.properties?.sid;
-    if (typeof id !== "string" || !/^[A-Za-z0-9]{3,5}$/.test(id) || typeof lon !== "number" || typeof lat !== "number") continue;
-    stations.push({ id, name: typeof f.properties?.sname === "string" ? f.properties.sname : id, lon, lat });
-  }
-  if (stations.length === 0) throw new Error("No stations in the network.");
-  stationList = { at: Date.now(), stations };
-  return stations;
-}
 
 /**
  * Growing degree days for the season (April 1 to October 31) at the nearest Kansas ASOS airport station to a point in or
