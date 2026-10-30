@@ -123,5 +123,3 @@ test('the page reads the season against normal with each click, for the crop yea
  assert.match(page,/import \{ RAIN_NORMAL_API_PATH, rainNormalLine, validRainNormal/);
  assert.match(dockSource,/seasonRain\?: Readonly</);
 });
-
-});

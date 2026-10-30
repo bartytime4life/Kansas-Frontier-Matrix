@@ -10,10 +10,25 @@ const DAILY_URL = (station: string, year: number, end: string) => `https://meson
 const READ_AT_ONCE = 1;
 const KEPT_SEASONS = 500;
 const noStore = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
+/** A season as read: its rain in inches (null when no day had a reading), the days with no reading yet due, and the days with none. */
+type Season = Readonly<{ inches: number | null; daysMissing: number; daysPending: number; traceDays: number }>;
+const seasons = new Map<string, { at: number; season: Season }>();
+
+/**
+ * The season's rain at a station. Days after the last complete station day are pending, not missing. A season is kept only when
+ * every day in it has been read.
+ */
 async function seasonFor(station: Station, year: number): Promise<Season> {
-  const stationId = station.id;
-  const key = `${stationId}:${year}`;
+  const key = `${station.id}:${year}`;
   const kept = seasons.get(key);
+  if (kept) return kept.season;
+  const end = [`${year}-10-31`, lastCompleteStationDate(new Date(), station.tzname ?? "America/Chicago")].sort()[0];
+  const pending = seasonDates(year).filter(date => date > end).length;
+  if (end < `${year}-04-01`) return { inches: null, daysMissing: 0, daysPending: pending, traceDays: 0 };
+  const days = parseDailyCsv(await fetchDailySummary(DAILY_URL(station.id, year, end)), { station: station.id, start: `${year}-04-01`, end });
+  const rain = seasonRainfall(days, year, end);
+  const season: Season = { inches: rain.daysRead > 0 ? rain.inches : null, daysMissing: rain.daysMissing, daysPending: pending, traceDays: rain.traceDays };
+  if (season.daysMissing === 0 && season.daysPending === 0) {
     if (seasons.size >= KEPT_SEASONS) seasons.delete(seasons.keys().next().value!);
     seasons.set(key, { at: Date.now(), season });
   }
@@ -54,6 +69,8 @@ export async function GET(request: Request) {
     return Response.json({
       lon, lat, year, retrievedAt, state: "ready",
       station: { id: station.id, name: station.name, km: Math.round(station.km * 10) / 10 },
+      seasonInches: current.inches, seasonDaysMissing: current.daysMissing, seasonDaysPending: current.daysPending, seasonTraceDays: current.traceDays, normal,
+      percentOfNormal: current.inches !== null && current.daysMissing === 0 && current.daysPending === 0 ? percentOfNormal(current.inches, normal.average) : null,
     }, { headers: noStore });
   } catch {
     return Response.json({ state: "unavailable", message: "The Iowa Environmental Mesonet did not answer for this point. No rain normal is inferred." }, { status: 502, headers: noStore });
