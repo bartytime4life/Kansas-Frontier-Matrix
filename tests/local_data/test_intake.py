@@ -553,6 +553,24 @@ class BindingIsolationTests(unittest.TestCase):
         self.assertEqual(intake.cards(self.root), [])
         self.assertEqual(intake.release_plan(self.root, self.budget)["selected"], [])
 
+    def test_classifier_refresh_reuses_payload_analysis(self):
+        identity, _ = self.capture("source")
+        intake.analyze(self.root, budget=self.budget)
+        with intake.open_index(self.root) as conn:
+            row = conn.execute('SELECT profile_json FROM items WHERE id=?', (identity,)).fetchone()
+            cached = json.loads(row[0])
+            cached['hints'].pop('classifier_version')
+            cached['hints']['domain_candidates'] = [{'domain': 'geology', 'matches': ['kgs']}]
+            conn.execute('UPDATE items SET profile_json=? WHERE id=?', (json.dumps(cached), identity))
+        with patch.object(intake, 'profile_file', side_effect=AssertionError('payload reread')):
+            result = intake.analyze(self.root, budget=self.budget)
+        updated = intake.get_item(self.root, identity)['profile']
+        self.assertEqual((result['analyzed'], result['reused']), (0, 1))
+        self.assertEqual(updated['profiled_at'], cached['profiled_at'])
+        self.assertEqual(updated['hints']['classifier_version'], '2')
+        self.assertEqual(updated['hints']['domain'], 'hydrology')
+        self.assertNotEqual(updated['hints']['domain_candidates'], cached['hints']['domain_candidates'])
+
     def test_different_digests_within_one_source_keep_separate_declarations(self):
         public_id, _ = self.capture("source", dataset_id="a-public")
         restricted_id, _ = self.capture("source", dataset_id="z-restricted", content=samples.GEOJSON + b"\n",
