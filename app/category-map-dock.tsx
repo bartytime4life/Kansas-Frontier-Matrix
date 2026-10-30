@@ -86,7 +86,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -133,11 +133,12 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    * Daylight through the year at one Kansas place: shown or not, the place,
    * a click outside Kansas, the day's line, the year chart and a time-zone note.
    */
-  sunYear?: Readonly<{ on: boolean; place: string | null; outside: boolean; reading: string | null; chart: SunChart | null; note: string | null; atCentre: boolean;
+  sunYear?: Readonly<{ on: boolean; place: string | null; outside: boolean; reading: string | null; chart: SunChart | null; note: string | null; atCentre: boolean; coordinates?: Readonly<{ lon: number; lat: number }>;
     /** The Moon at the same place: tonight's line, the next principal phases, and the next 30 evenings as discs. */
     moon?: Readonly<{ reading: string; phases: string; strip: MoonStrip }> | null }>;
   onSunYear?: (on: boolean) => void;
   onSunYearCentre?: () => void;
+  onSunYearPlace?: (lon: number, lat: number) => void;
   onDaylight?: (on: boolean) => void;
   onDaylightPlay?: (on: boolean) => void;
   /** Whether a polygon measurement is taking points, and the handler that starts or cancels one. */
@@ -497,7 +498,17 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       <button type="button" className="category-map-dock-tool" aria-pressed={sunYear.on} onClick={() => onSunYear(!sunYear.on)}
         title="Sunrise, sunset and twilight for every day of the year at a Kansas place, with the Moon's phases, rising and setting, all calculated">{sunYear.on ? "Hide daylight through the year" : "Daylight through the year"}</button>
       {sunYear.on && <div className="category-map-dock-quakes">
-        <p className="category-map-dock-reading" aria-live="polite">{`At ${sunYear.place ?? "–"} · ${sunYear.outside ? "the chart is for places in Kansas: click inside the state" : "click the map in Kansas for another place"}`}</p>
+        <p className="category-map-dock-reading" aria-live="polite">{`At ${sunYear.place ?? "–"} · ${sunYear.outside ? "the chart is for places in Kansas: choose coordinates or click inside the state" : "click the map in Kansas for another place"}`}</p>
+        {sunYear.coordinates && onSunYearPlace && <form className="category-map-dock-sun-location" key={`${sunYear.coordinates.lon},${sunYear.coordinates.lat}`} onSubmit={event => {
+          event.preventDefault();
+          const fields = event.currentTarget.elements;
+          onSunYearPlace((fields.namedItem("longitude") as HTMLInputElement).valueAsNumber, (fields.namedItem("latitude") as HTMLInputElement).valueAsNumber);
+        }}>
+          <label>Latitude<input name="latitude" type="number" min={-90} max={90} step="any" required defaultValue={sunYear.coordinates.lat} /></label>
+          <label>Longitude<input name="longitude" type="number" min={-180} max={180} step="any" required defaultValue={sunYear.coordinates.lon} /></label>
+          <button type="submit">Chart location</button>
+          <small>Decimal degrees; Kansas longitudes are negative. Or click the map.</small>
+        </form>}
         {sunYear.chart && <SunYearChart chart={sunYear.chart} place={sunYear.place ?? ""} />}
         {sunYear.reading && <p className="category-map-dock-reading">{sunYear.reading}</p>}
         {sunYear.note && <p className="category-map-dock-reading">{sunYear.note}</p>}

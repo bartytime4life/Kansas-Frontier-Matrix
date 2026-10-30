@@ -256,6 +256,60 @@ async function pageSession(b, width, height, networkOptions = {}) {
   return { call, evaluate, wait, key, open, unobstructed, holdSceneModule, waitForSceneModule, releaseSceneModule };
 }
 
+for (const width of [320, 390, 768, 1280]) {
+  test(`Sky daylight keyboard selection and readable chart at ${width}px`, { timeout: 90000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, width, 844);
+    await p.call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+    await p.open('/?motion=off'); await readyWelcome(p);
+    const enter = async selector => { await revealControl(p, selector); await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`); await p.key('Enter', 'Enter', 13); };
+    await enter('.topic-sky');
+    await p.wait(`!!document.querySelector('.welcome-open-map')`, 'Sky map action');
+    await enter('.welcome-open-map');
+    await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('.category-map-dock header strong')?.textContent==='Sky globe'`, 'real Sky workspace');
+    await p.evaluate(`[...document.querySelectorAll('.category-map-dock-tool')].find(b=>b.textContent==='Daylight through the year').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`!!document.querySelector('.category-map-dock-sun-location') && !!document.querySelector('[data-band="day"]')`, 'daylight chart');
+    const location = async (lat, lon) => {
+      await p.evaluate(`document.querySelector('.category-map-dock-sun-location input[name="latitude"]').focus()`);
+      await p.key('a', 'KeyA', 65, 2); await p.call('Input.insertText', { text: String(lat) });
+      await p.key('Tab', 'Tab', 9);
+      assert.equal(await p.evaluate(`document.activeElement.name`), 'longitude');
+      await p.key('a', 'KeyA', 65, 2); await p.call('Input.insertText', { text: String(lon) });
+      await p.key('Tab', 'Tab', 9);
+      assert.equal(await p.evaluate(`document.activeElement.textContent`), 'Chart location');
+      await p.key('Enter', 'Enter', 13);
+    };
+    await location(39.35, -101.71); // Goodland: Mountain local time, explicitly displayed as Central here.
+    await p.wait(`document.querySelector('.category-map-dock').textContent.includes('At 39.35°N, 101.71°W')`, 'keyboard-selected Kansas location');
+    assert.equal(await p.evaluate(`document.querySelector('.category-map-dock').textContent.includes('All Sun and Moon times use Central time (CDT/CST)')`), true);
+    assert.equal(await p.evaluate(`document.querySelector('.category-map-dock').textContent.includes('Mountain clocks read one hour earlier')`), true);
+    const before = await p.evaluate(`document.querySelector('[data-band="day"]').getAttribute('d')`);
+    await location(39.95, -94.85); // Inside the old rectangle, across the Missouri River from Kansas.
+    await p.wait(`document.querySelector('.category-map-dock').textContent.includes('choose coordinates or click inside the state')`, 'outside selection message');
+    assert.equal(await p.evaluate(`document.querySelector('[data-band="day"]').getAttribute('d')`), before, 'outside selection preserves the chart');
+    const geometry = await p.evaluate(`(() => {const form=document.querySelector('.category-map-dock-sun-location'),figure=document.querySelector('.category-map-dock-hydrograph');return {overflow:document.documentElement.scrollWidth>innerWidth+1,chart:figure.getBoundingClientRect().width,background:getComputedStyle(document.querySelector('.category-map-dock')).backgroundColor,controls:[...form.querySelectorAll('input,button')].map(e=>({w:e.getBoundingClientRect().width,h:e.getBoundingClientRect().height})),legend:[...figure.querySelectorAll('.category-map-dock-fema-families span')].map(e=>({text:e.textContent,color:getComputedStyle(e).color,width:e.getBoundingClientRect().width}))};})()`);
+    assert.equal(geometry.overflow, false); assert.ok(geometry.chart > 150 && geometry.chart <= width);
+    assert.ok(geometry.controls.every(r=>r.w>30 && r.h>=32));
+    assert.deepEqual(geometry.legend.map(e=>e.text), ['Day','Civil twilight','Nautical','Astronomical','Night']);
+    const luminance = color => color.match(/[\d.]+/g).slice(0,3).map(Number).map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((sum,v,i)=>sum+v*[.2126,.7152,.0722][i],0);
+    const [red,green,blue,alpha=1]=geometry.background.match(/[\d.]+/g).map(Number);
+    const background=luminance(`rgb(${[red,green,blue].map(v=>v*alpha+255*(1-alpha)).join(',')})`);
+    assert.ok(geometry.legend.every(e=>(luminance(e.color)+.05)/(background+.05)>=4.5), 'legend uses light text, independently of its dark color chips');
+    await p.evaluate(`document.querySelector('.category-map-dock-hydrograph').scrollIntoView({block:'center'})`);
+    if (process.env.KFM_WORKSPACE_SCREENSHOTS) {
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, { recursive: true });
+      const shot=await p.call('Page.captureScreenshot', { format:'png' });
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `sky-daylight-${width}.png`), Buffer.from(shot.data,'base64'));
+    }
+    await p.evaluate(`[...document.querySelectorAll('.category-map-dock button')].find(b=>b.textContent==='Back to the centre of Kansas').focus()`);
+    await p.key('Enter','Enter',13);
+    await p.wait(`document.querySelector('.category-map-dock').textContent.includes('At the geographic centre of Kansas, Barton County')`, 'keyboard reset');
+    await p.evaluate(`[...document.querySelectorAll('.category-map-dock-tool')].find(b=>b.textContent==='Hide daylight through the year').focus()`);
+    await p.key('Enter','Enter',13);
+    await p.wait(`!document.querySelector('[data-band="day"]')`, 'keyboard hides the chart');
+  });
+}
+
 for (const width of [1280, 390]) {
   test(`terrain detail automatic fallback and ready recovery at ${width}px (synthetic DEM transport)`, { timeout: 150000 }, async t => {
     const fixtures = await terrainBrowserFixtures(origin);

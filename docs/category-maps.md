@@ -382,8 +382,9 @@ request, so the answer matches the point it was asked for.
 
 **Daylight through the year** charts every day of the current year at one
 Kansas place (`app/sun-chart.ts`). It starts at the geographic centre of Kansas
-in Barton County, and a click anywhere in Kansas charts that place instead. It
-is pure calculation: no source is read.
+in Barton County. Click the map or enter latitude and longitude with the keyboard
+and submit **Chart location** to select another place. Coordinates use decimal
+degrees, with negative longitude in Kansas. It is pure calculation: no source is read.
 
 - **Method:** the NOAA solar equations (after Meeus) give the Sun's
   declination and the equation of time. Each event is solved from the hour
@@ -405,10 +406,15 @@ is pure calculation: no source is read.
   light, the day's length and its change from yesterday, and the year's
   longest and shortest days.
 - **Mountain time:** Sherman, Wallace, Greeley and Hamilton counties keep
-  Mountain time. A place west of 101.39° W gets a note that clocks there read
-  an hour earlier.
-- **Outside Kansas:** a click outside the state is not charted, and the dock
-  says so.
+  Mountain time. All solar and Moon displays deliberately use Central time
+  (CDT/CST), including for these counties: their local clocks read an hour
+  earlier. The panel states this for every selection and does not infer a time
+  zone from longitude. Central DST follows `America/Chicago`.
+- **Outside Kansas:** map clicks and coordinate submissions use the existing
+  simplified Census display outline in `app/kansas-orientation.ts`, including
+  the Missouri River edge. Outside selections preserve the prior chart and
+  marker and show a message. This is display scope, with the outline's stated
+  simplification limits; it is not a legal boundary determination.
 
 ### The Moon
 
