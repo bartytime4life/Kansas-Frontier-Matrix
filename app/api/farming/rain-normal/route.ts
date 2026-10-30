@@ -11,7 +11,7 @@ const MAX_BYTES = 512 * 1024;
 const READ_AT_ONCE = 3;
 const KEPT_SEASONS = 500;
 const noStore = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
-type Season = Readonly<{ inches: number; daysMissing: number }>;
+type Season = Readonly<{ inches: number | null; daysMissing: number }>;
 /** Only a season with every day read is kept: it does not change once the season is over. */
 const seasons = new Map<string, Season>();
 
@@ -21,7 +21,8 @@ async function seasonFor(stationId: string, year: number): Promise<Season> {
   if (kept) return kept;
   const daily = parseDailyCsv(await boundedFetch(DAILY_URL(stationId, year), MAX_BYTES, { timeoutMs: 15_000 }).then(response => response.text()));
   const rain = seasonRainfall(daily, year);
-  const season = { inches: rain.inches, daysMissing: rain.daysMissing };
+  // A season with no rain read at all is no total, not a total of zero.
+  const season = { inches: rain.daysRead > 0 ? rain.inches : null, daysMissing: rain.daysMissing };
   if (rain.daysMissing === 0) {
     if (seasons.size >= KEPT_SEASONS) seasons.delete(seasons.keys().next().value!);
     seasons.set(key, season);
@@ -62,7 +63,7 @@ export async function GET(request: Request) {
       lon, lat, year, retrievedAt, state: "ready",
       station: { id: station.id, name: station.name, km: Math.round(station.km * 10) / 10 },
       seasonInches: current.inches, seasonDaysMissing: current.daysMissing, normal,
-      percentOfNormal: current.daysMissing === 0 ? percentOfNormal(current.inches, normal.average) : null,
+      percentOfNormal: current.inches !== null && current.daysMissing === 0 ? percentOfNormal(current.inches, normal.average) : null,
     }, { headers: noStore });
   } catch {
     return Response.json({ state: "unavailable", message: "The Iowa Environmental Mesonet did not answer for this point. No rain normal is inferred." }, { status: 502, headers: noStore });

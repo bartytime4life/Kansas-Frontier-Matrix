@@ -57,7 +57,8 @@ export function validRainNormal(value: unknown, lon: number, lat: number, year: 
 
 /** The season against normal as the dock says it, or null when there is no season reading. */
 export function rainNormalLine(reading: RainNormalReading): string | null {
-  if (reading.state !== "ready" || reading.station === null || reading.seasonInches === null) return null;
+  if (reading.state !== "ready" || reading.station === null) return null;
+  if (reading.seasonInches === null) return `No rain was read at this station for the season, Apr 1–Oct 31 ${reading.year}.`;
   const season = `${reading.seasonInches.toFixed(2)} in of rain, Apr 1–Oct 31 ${reading.year}`;
   const days = reading.seasonDaysMissing === 0 ? "" : ` (${reading.seasonDaysMissing} days missing)`;
   if (reading.normal.average === null) return `${season}${days} · no normal: ${reading.normal.years} of ${NORMAL_YEARS} earlier years are complete, and ${NORMAL_MIN_YEARS} are needed`;
