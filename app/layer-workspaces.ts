@@ -1,7 +1,7 @@
 import type { OfficialContextId, OfficialContextSource } from "./live-context";
 
 export type LayerWorkspace = "groundwater" | "all" | "disaster" | "land" | "transport" | "water" | "terrain" | "places"
-  | "engineering" | "aviation" | "science" | "weather" | "history" | "people" | "government" | "geology" | "ecology" | "agriculture" | "sky" | "evidence";
+  | "engineering" | "aviation" | "science" | "weather" | "history" | "people" | "government" | "public-safety" | "geology" | "ecology" | "fauna" | "agriculture" | "sky" | "evidence";
 export type TopicId = Exclude<LayerWorkspace, "all">;
 export type TopicGroup = "Built systems" | "Earth & environment" | "People & place" | "Research & reference";
 export type TopicDefinition = Readonly<{
@@ -32,6 +32,8 @@ export const TOPIC_STRUCTURE: readonly TopicDefinition[] = Object.freeze(([
   { id: "science", title: "Science & observations", group: "Research & reference", description: "Browse measurements, remote sensing, calculated context and model products across disciplines.", facets: ["Observations & monitoring", "Remote sensing", "Models & methods"], limitation: "Grouping observations and models does not make them equivalent. Check method, units, time, uncertainty and evidence support before drawing a conclusion.", resources: [{ title: "Event Observatory", href: "/observatory" }, { title: "Source catalogue", href: "/observatory/sources" }] },
   { id: "sky", title: "Sky & solar context", group: "Research & reference", description: "Explore calculated daylight and the map’s astronomical presentation tools.", facets: ["Daylight & twilight", "Sun geometry", "Night-sky presentation"], limitation: "Daylight is calculated geometry, not observed cloud cover. Sky appearance is presentation and does not establish visibility or weather conditions.", resources: [{ title: "Sky appearance", href: "/?maptab=scene&mapui=open" }] },
   { id: "evidence", title: "Evidence & research tools", group: "Research & reference", description: "Organize source inspection, citations, comparison, reports and governance workflows.", facets: ["Sources & citations", "Time & comparison", "Rights & review", "Reports & correction"], limitation: "A tool’s presence or repository maturity label does not prove a live evidence service, approved dataset, release or publication.", resources: [{ title: "Released knowledge search", href: "/knowledge" }, { title: "Source catalogue", href: "/observatory/sources" }] },
+  { id: "fauna", title: "Fauna & wildlife", group: "Earth & environment", description: "Explore animal taxonomy, occurrence evidence and wildlife context, with source dates and location safeguards.", facets: ["Animal taxonomy", "Occurrence evidence", "Sensitive-species safeguards"], limitation: "No reviewed animal-occurrence layer is connected to this map. Landscape context does not establish presence, abundance or absence; sensitive sites stay withheld.", resources: [{ title: "Occurrence context in the Observatory", href: "/observatory" }, { title: "Sources & limitations", href: "/observatory/sources" }] },
+  { id: "public-safety", title: "Crime, justice & public safety", group: "People & place", description: "Explore reported crime, justice-system records and public-safety context as distinct, source-bounded subjects.", facets: ["Crime reports", "Courts & justice", "Public-safety context"], limitation: "Crime and justice feeds are not connected. Reports are not findings of guilt; mapped gaps do not establish safety. Personal and precise incident details stay withheld.", resources: [{ title: "Source catalogue", href: "/observatory/sources" }, { title: "Government context", href: "/civic" }] },
 ] satisfies TopicDefinition[]).map(topic => Object.freeze({ ...topic, facets: Object.freeze(topic.facets), resources: Object.freeze(topic.resources) })));
 
 export const topicDefinition = (id: LayerWorkspace) => TOPIC_STRUCTURE.find(topic => topic.id === id);
@@ -94,6 +96,7 @@ export function officialSourceTopics(id: string): readonly TopicId[] {
   if (DISASTER_SOURCE_IDS.includes(id as OfficialContextId)) topics.add("disaster");
   if (LAND_SOURCE_IDS.includes(id as OfficialContextId)) topics.add("land");
   if (TRANSPORT_SOURCE_IDS.includes(id as OfficialContextId)) { topics.add("transport"); topics.add("engineering"); }
+  if (id === "deflock-alpr") topics.add("public-safety");
   if (weatherIds.includes(id) || ["noaa-hms-smoke", "usgs-streamflow"].includes(id)) topics.add("weather");
   if (waterIds.includes(id)) topics.add("water");
   if (terrainIds.includes(id)) { topics.add("terrain"); topics.add("geology"); topics.add("engineering"); }
@@ -136,6 +139,8 @@ export function registryLayerTopics(domain: string): readonly TopicId[] {
   if (/land|soil/i.test(domain)) topics.add("land");
   if (/geolog|subsurface/i.test(domain)) topics.add("geology");
   if (/flora|fauna|habitat|ecolog/i.test(domain)) topics.add("ecology");
+  if (/fauna/i.test(domain)) topics.add("fauna");
+  if (/crime|justice|public[ _/-]?safety/i.test(domain)) topics.add("public-safety");
   if (/agricultur/i.test(domain)) topics.add("agriculture");
   if (/road|rail|transport/i.test(domain)) topics.add("transport");
   if (/infrastruct|engineer/i.test(domain)) topics.add("engineering");

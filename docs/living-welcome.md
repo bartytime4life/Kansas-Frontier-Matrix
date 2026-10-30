@@ -1,5 +1,26 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Fauna and public-safety entries · 2026-10-29
+
+The welcome now derives 21 entries from the existing shared topic taxonomy.
+**Fauna & wildlife** appears in Earth & environment and **Crime, justice &
+public safety** in People & place. Both reuse the existing card, dialog,
+keyboard navigation, category-map entry and Layers catalogue controls.
+
+The two previews use landscape and civic reference geography with no provider
+starters or verified footage. Their dedicated glimpses and source limitations
+explain that animal observations, crime reports, court records and live
+emergency incidents are not connected. Existing Observatory occurrence context
+is linked separately; optional DeFlock plate-reader reports retain their own
+meaning and are never automatically switched on. Neither a wildlife inventory
+nor a crime/safety score is inferred from these maps.
+
+The welcome count says to explore each map's coverage and source limits so a
+category's presence does not promise a connected feed. Details, classification,
+placement and rollback are recorded in [Category maps](category-maps.md#fauna-and-crime-justice--public-safety).
+These entries change navigation and presentation; governed Fauna evidence,
+source admission and publication require their existing separate checks.
+
 ## Start-page rendering repair · 2026-10-28
 
 This follow-up starts from public composition

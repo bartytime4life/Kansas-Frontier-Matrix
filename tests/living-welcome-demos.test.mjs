@@ -29,9 +29,9 @@ async function capability() {
  return { h, props, video, document, listeners, render };
 }
 
-test('all nineteen categories have distinct, bounded layer demonstrations', () => {
- const ids = ['engineering','transport','aviation','weather','disaster','water','groundwater','geology','terrain','ecology','agriculture','history','land','people','government','places','science','sky','evidence'];
- assert.equal(new Set(ids.map(id => categoryGlimpse(id)?.title)).size, 19);
+test('all twenty-one categories have distinct, bounded layer demonstrations', () => {
+ const ids = ['engineering','transport','aviation','weather','disaster','water','groundwater','geology','terrain','ecology','fauna','agriculture','history','land','people','government','public-safety','places','science','sky','evidence'];
+ assert.equal(new Set(ids.map(id => categoryGlimpse(id)?.title)).size, 21);
  for (const id of ids) for (const field of ['title','summary','try','limit']) assert.ok(categoryGlimpse(id)[field], `${id}: ${field}`);
  assert.equal(categoryGlimpse('__proto__'), null);
  assert.deepEqual(capabilityPreviews('science'), [], 'terrain footage must not impersonate a satellite demonstration');
