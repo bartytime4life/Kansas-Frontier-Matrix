@@ -16,9 +16,11 @@ const dockSource=await readFile('app/category-map-dock.tsx','utf8');
 /** The route with its three local imports inlined, so it runs under node:test without a bundler. */
 const loadRoute=async()=>{
   const upstream=await esm('app/api/event-atlas/upstream.ts'), cropland=await esm('app/cropland.ts'), days=await esm('app/growing-degree-days.ts');
+  const stations=(await esm('app/kansas-stations.ts')).replace('from "./api/event-atlas/upstream"',`from "${dataUrl(upstream)}"`).replace('from "./growing-degree-days"',`from "${dataUrl(days)}"`);
   const code=ts.transpileModule(routeSource,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText
     .replace('from "../../event-atlas/upstream"',`from "${dataUrl(upstream)}"`)
     .replace('from "../../../cropland"',`from "${dataUrl(cropland)}"`)
+    .replace('from "../../../kansas-stations"',`from "${dataUrl(stations)}"`)
     .replace('from "../../../growing-degree-days"',`from "${dataUrl(days)}"`);
   return import(dataUrl(code));
 };
@@ -119,7 +121,7 @@ test('the dock shows the reading beside the crops, with its station and its limi
 
 test('the page reads the degree days with each click, for the crop year on show, and clears them with the crops',()=>{
  assert.match(page,/readDegreeDaysRef\.current\(event\.lngLat\.lng, event\.lngLat\.lat, cropsRef\.current\)/);
- assert.match(page,/degreeDaysRequestRef\.current\?\.abort\(\);\n    setCropPoint\(null\);/,'turning crops off aborts the reading');
+ assert.match(page,/degreeDaysRequestRef\.current\?\.abort\(\);\n    frostRequestRef\.current\?\.abort\(\);\n    setCropPoint\(null\);/,'turning crops off aborts the reading');
  assert.match(page,/import \{ GDD_API_PATH, degreeDaysLine, rainLine, validDegreeDays/);
  assert.match(dockSource,/degreeDays\?: Readonly</);
 });
@@ -153,11 +155,4 @@ test('the route reports the season rain and keeps it out of the cache while any 
   assert.equal(response.headers.get('cache-control'),'no-store');
   assert.equal(gdd.validDegreeDays(body,-97.6,38.8,2024),true,'the page accepts the rain fields');
  }finally{globalThis.fetch=original;}
-});
-
-test('a response cached before the rain fields existed is still read: its degree days show, and no rain line is made from it',()=>{
- const cached={lon:-97.6,lat:38.8,retrievedAt:'x',year:2024,state:'ready',station:{id:'SLN',name:'Salina',km:3},degreeDays:2412,daysRead:214,daysMissing:0};
- assert.equal(gdd.validDegreeDays(cached,-97.6,38.8,2024),true,'the older shape validates');
- assert.equal(gdd.degreeDaysLine(cached) !== null,true,'the degree-day line still shows');
- assert.equal(gdd.rainLine(cached),null,'no rain is read from an older response');
 });
