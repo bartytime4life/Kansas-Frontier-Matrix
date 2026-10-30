@@ -115,6 +115,6 @@ test('the dock offers land cover on Landscape imagery and the Field view; the pa
  assert.match(page,/void fetch\(landCoverPointApiPath\(lon, lat\), \{ signal: controller\.signal \}\)/);
  assert.match(page,/landCoverRequestRef\.current\?\.abort\(\);\s*if \(!inLandCoverRegion\(lon, lat\)\)/,'a new click replaces the last');
  assert.match(page,/syncLandCover\(map, landCoverOn\)/);
- assert.match(page,/setRainfallOn\(false\);\s*setLandCoverOn\(false\);\s*setLandCoverPoint\(null\);/,'closes with its map');
+ assert.match(page,/showLandCover\(topic === "flora"\);/,'Flora starts the dated land-cover map; other categories clear it');
  assert.match(page,/\.\.\.\(landCoverOn \? \[landCoverKey\(\)\] : \[\]\)/);
 });

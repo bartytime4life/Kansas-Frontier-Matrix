@@ -4,6 +4,7 @@ const selections = {
  weather: ['weather'], water: ['rivers'], groundwater: ['underground'],
  geology: [null, 'No verified earthquake footage is available. Lift a symbolic surface plate to read one original KGS well log. The full map retains earthquake context and Underground tools; no continuous geology is claimed.'],
  terrain: ['science'], ecology: ['farming', 'Aerial land-cover context; no species inventory.'],
+ flora: [null, 'The preview shows landscape context. Open the map for NLCD 2021, annual plant-record hexagons and crop layers; no verified Flora recording is connected.'],
  fauna: [null, 'No verified wildlife capture is connected. The preview shows landscape context; animal observations and sensitive sites are not displayed.'],
  'public-safety': [null, 'No crime, court or emergency-response capture is connected. The preview shows civic reference geography, not incidents or a safety score.'],
  agriculture: ['farming'], history: ['history'], transport: ['transport'],
@@ -28,6 +29,7 @@ export function capabilityNote(topic) { return selections[topic]?.[1] || ''; }
 // Welcome presentation only. The category map and its source controls still own
 // layer selection, source clocks and availability; these descriptions admit nothing.
 const glimpses = {
+ flora: ['Read plants at two scales', 'A prairie basemap introduces the landscape; the full map adds classified land cover and optional plant records.', 'Open the map, inspect a land-cover cell, then compare annual GBIF plant-record hexagons.', 'Cover classes do not identify species. Record density is not abundance or absence; exact plant sites are withheld.'],
  fauna: ['A landscape for wildlife questions', 'A prairie basemap supplies geographic context without adding animal observations.', 'Read the landscape, then use the source catalogue or Observatory for separately scoped occurrence context.', 'This is not a species inventory, habitat model, animal-movement track or evidence release. Sensitive locations remain withheld.'],
  'public-safety': ['Place before interpretation', 'A civic reference map provides orientation for crime, justice and public-safety questions.', 'Read the coverage limits before following a source or government-context link.', 'Crime reports, court records and live emergency incidents are not connected. A blank map is not evidence of safety or absence of crime.'],
  engineering: ['Crossings in the landscape', 'Bridge inventory points sit against real river valleys and terrain.', 'Look for crossings near the Big Blue and Kansas rivers.', 'Open the map to inspect a bridge record or draw a terrain profile.'],

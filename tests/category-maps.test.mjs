@@ -64,7 +64,7 @@ test('Fauna and public safety open reference looks without enabling unreleased o
  assert.ok(!topics.officialSourceTopics('nws-alerts').includes('public-safety'),'weather alerts retain their own subject');
  assert.deepEqual(topics.registryLayerTopics('Fauna'),['ecology','fauna']);
  assert.deepEqual(topics.registryLayerTopics('Crime & justice'),['public-safety']);
- assert.deepEqual(topics.registryLayerTopics('Flora'),['ecology'],'plants are not reassigned to animal evidence');
+ assert.deepEqual(topics.registryLayerTopics('Flora'),['ecology','flora'],'plants are not reassigned to animal evidence');
 });
 
 test('opening a category map opens on its own subject and follows the same category in Layers',async()=>{
@@ -257,7 +257,7 @@ test('Sky and Science show the calculated day and night from their dock, at the 
 
 test('the field and survey maps start a polygon measurement from their dock',async()=>{
  const withArea=Object.entries(maps.CATEGORY_MAPS).filter(([,look])=>look.tools?.includes('area')).map(([id])=>id).sort();
- assert.deepEqual(withArea,['agriculture','land']);
+ assert.deepEqual(withArea,['agriculture','flora','land']);
  const h=await componentHarness('app/category-map-dock.tsx',{});
  let calls=0;const base={look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:2.5,azimuth:315,sun:null,terrainAvailable:true,onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onMeasureArea:()=>calls++,onReset(){},onLayers(){},onClose(){}};
  const tool=tree=>findNode(tree,n=>n.type==='button'&&n.props.className==='category-map-dock-tool');
