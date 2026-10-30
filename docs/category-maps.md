@@ -315,6 +315,38 @@ draws it.
   are not a flood-inundation map. Warnings come from the National Weather
   Service.
 
+## Daylight through the year (Sky globe)
+
+**Daylight through the year** charts every day of the current year at one
+Kansas place (`app/sun-chart.ts`). It starts at the geographic centre of Kansas
+in Barton County, and a click anywhere in Kansas charts that place instead. It
+is pure calculation: no source is read.
+
+- **Method:** the NOAA solar equations (after Meeus) give the Sun's
+  declination and the equation of time. Each event is solved from the hour
+  angle and refined twice at its own time.
+- **Altitudes:** sunrise and sunset are the Sun's centre 0.833° below a
+  sea-level horizon (refraction and the Sun's radius). Civil, nautical and
+  astronomical twilight end at 6°, 12° and 18° below it.
+- **Check:** `tests/sun-chart.test.mjs` places NREL's Solar Position Algorithm
+  Sun at every event within 0.01° of the intended altitude, which is a few
+  seconds of time.
+- **Chart:**
+  - Days run across and Central clock time runs up, with midnight at the
+    foot.
+  - Daylight is gold between the sunrise and sunset curves. Civil, nautical
+    and astronomical twilight are deepening blues, and solar noon is dashed.
+  - Today is marked.
+  - The steps in March and November are the clock changing, not the Sun.
+- **Reading:** gives today's first light, sunrise, solar noon, sunset and last
+  light, the day's length and its change from yesterday, and the year's
+  longest and shortest days.
+- **Mountain time:** Sherman, Wallace, Greeley and Hamilton counties keep
+  Mountain time. A place west of 101.39° W gets a note that clocks there read
+  an hour earlier.
+- **Outside Kansas:** a click outside the state is not charted, and the dock
+  says so.
+
 ## Surface observations (Storm desk)
 
 **Show surface observations** plots each Kansas-area airport observation

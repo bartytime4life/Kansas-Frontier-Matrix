@@ -63,8 +63,13 @@ export function skyCover(record: Pick<MetarObservation, "clouds" | "ceilingCover
 /** Wind speed rounded to the 5 kt the barb can show; under 2.5 kt is calm. */
 export const barbKnots = (kt: number) => Math.round(kt / 5) * 5;
 
-/** The icon frame, in image pixels (drawn at pixel ratio 2, so 48 CSS px across: a staff of about three station circles). */
-export const ICON_SIZE = 96;
+/**
+ * The icon frame, in image pixels (drawn at pixel ratio 2, so 56 CSS px across).
+ * The station sits at its centre, where the map rotates it; the frame leaves
+ * room past the staff's tip for the outermost feather and its stroke.
+ */
+export const ICON_SIZE = 112;
+export const ICON_STROKE = 3;
 const C = ICON_SIZE / 2, RING = 7, STAFF = 40, FEATHER = 16, SPACING = 6.2, ANGLE = 65 * Math.PI / 180;
 export type Shapes = Readonly<{ lines: readonly (readonly [number, number, number, number])[]; triangles: readonly (readonly [number, number, number, number, number, number])[] }>;
 
@@ -101,7 +106,7 @@ const INK = "#eef3f6";
 /** Paints a barb or a sky-cover circle into the icon frame. */
 export function paintStationIcon(ctx: PaintContext, icon: Readonly<{ kind: "barb"; knots: number } | { kind: "sky"; cover: SkyCover }>): void {
   ctx.clearRect(0, 0, ICON_SIZE, ICON_SIZE);
-  ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineWidth = 3; ctx.lineCap = "round";
+  ctx.strokeStyle = INK; ctx.fillStyle = INK; ctx.lineWidth = ICON_STROKE; ctx.lineCap = "round";
   if (icon.kind === "barb") {
     const shapes = barbShapes(icon.knots);
     for (const [x1, y1, x2, y2] of shapes.lines) { ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }

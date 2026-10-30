@@ -12,6 +12,7 @@ import type { FemaYear, HAZARD_FAMILIES, HazardFamilyId } from "./fema-record";
 import type { RainfallKind } from "./mrms-rainfall";
 import type { TornadoYear } from "./tornado-record";
 import type { WellPlot } from "./well-levels";
+import type { SunChart } from "./sun-chart";
 import type { OutlookDay, OutlookProduct } from "./spc-outlook";
 import type { ReportDay, StormReport } from "./storm-reports";
 
@@ -83,7 +84,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -126,6 +127,13 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    * means at the look's center.
    */
   daylight?: Readonly<{ on: boolean; playing: boolean; time: string; reading: string }>;
+  /**
+   * Daylight through the year at one Kansas place: shown or not, the place,
+   * a click outside Kansas, the day's line, the year chart and a time-zone note.
+   */
+  sunYear?: Readonly<{ on: boolean; place: string | null; outside: boolean; reading: string | null; chart: SunChart | null; note: string | null; atCentre: boolean }>;
+  onSunYear?: (on: boolean) => void;
+  onSunYearCentre?: () => void;
   onDaylight?: (on: boolean) => void;
   onDaylightPlay?: (on: boolean) => void;
   /** Whether a polygon measurement is taking points, and the handler that starts or cancels one. */
@@ -467,6 +475,17 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       <button type="button" className="category-map-dock-tool" aria-pressed={flow.on} onClick={() => onFlow(!flow.on)}
         title="Rivers flow downstream where USGS 3DHP maps a direction; a USGS gauge reading lights its own reach">{flow.on ? "Hide river flow" : "Show river flow"}</button>
       {flow.on && <p className="category-map-dock-reading" aria-live="polite">{flow.reading ?? "Starting river flow…"}{flow.still ? ` · drawn still: ${flow.still}` : ""}</p>}
+    </>}
+    {look.tools?.includes("sunyear") && sunYear && onSunYear && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={sunYear.on} onClick={() => onSunYear(!sunYear.on)}
+        title="Sunrise, sunset and twilight for every day of the year at a Kansas place, calculated from the Sun's position">{sunYear.on ? "Hide daylight through the year" : "Daylight through the year"}</button>
+      {sunYear.on && <div className="category-map-dock-quakes">
+        <p className="category-map-dock-reading" aria-live="polite">{`At ${sunYear.place ?? "–"} · ${sunYear.outside ? "the chart is for places in Kansas: click inside the state" : "click the map in Kansas for another place"}`}</p>
+        {sunYear.chart && <SunYearChart chart={sunYear.chart} place={sunYear.place ?? ""} />}
+        {sunYear.reading && <p className="category-map-dock-reading">{sunYear.reading}</p>}
+        {sunYear.note && <p className="category-map-dock-reading">{sunYear.note}</p>}
+        {!sunYear.atCentre && onSunYearCentre && <div><button type="button" onClick={onSunYearCentre}>Back to the centre of Kansas</button></div>}
+      </div>}
     </>}
     {look.tools?.includes("daylight") && daylight && onDaylight && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={daylight.on} onClick={() => onDaylight(!daylight.on)}
@@ -941,6 +960,32 @@ export function FloodHydrographChart({ gauge, plot, reading }: Readonly<{ gauge:
       {plot.crest && <circle cx={x(plot.crest.time).toFixed(1)} cy={y(plot.crest.value).toFixed(1)} r={3.2} fill="none" stroke="#ffffff" strokeWidth={1} />}
     </svg>
     <figcaption><span>{`${gauge.label}${gauge.units ? `, ${gauge.units}` : ""} · Central time`}</span><span><span style={{ color: "#5cc8ff" }}>━ observed</span> <span style={{ color: "#d58cff" }}>╍ forecast</span></span></figcaption>
+  </figure>;
+}
+
+/**
+ * The year's daylight at a place: days across, Central clock time up, gold
+ * between sunrise and sunset, twilights in deepening blues, solar noon dashed,
+ * and today marked.
+ */
+export function SunYearChart({ chart, place }: Readonly<{ chart: SunChart; place: string }>) {
+  const { width, height, left, top, plotWidth, plotHeight } = chart;
+  const names: Record<string, string> = { day: "Day", civil: "Civil twilight", nautical: "Nautical", astronomical: "Astronomical", night: "Night" };
+  return <figure className="category-map-dock-section category-map-dock-hydrograph" aria-label={`Sunrise, sunset and twilight through the year at ${place}, in Central clock time`}>
+    <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+      <rect x={left} y={top} width={plotWidth} height={plotHeight} fill={chart.night} />
+      {chart.bands.map(band => <path key={band.id} data-band={band.id} d={band.d} fill={band.color} />)}
+      <path d={chart.noon} fill="none" stroke="#7a5a12" strokeWidth={0.8} strokeDasharray="3 2" />
+      {chart.hours.map(h => <g key={h.y}>
+        <line x1={left} x2={left + plotWidth} y1={h.y.toFixed(1)} y2={h.y.toFixed(1)} stroke="#e6eff2" strokeOpacity={0.15} strokeWidth={0.5} />
+        <text x={left - 3} y={(h.y + 2.8).toFixed(1)} fontSize={8} fill="#cfe2ea" textAnchor="end">{h.label}</text>
+      </g>)}
+      {chart.months.map(m => <text key={m.x} x={m.x.toFixed(1)} y={height - 3} fontSize={7} fill="#cfe2ea">{m.label}</text>)}
+      {chart.today !== null && <line data-today="" x1={chart.today.toFixed(1)} x2={chart.today.toFixed(1)} y1={top} y2={top + plotHeight} stroke="#ffffff" strokeWidth={0.9} />}
+    </svg>
+    <figcaption><span>Central clock time; the steps are the clock changing</span></figcaption>
+    <p className="category-map-dock-fema-families">{[...chart.bands].reverse().map(band => <span key={band.id}><i style={{ background: band.color }} aria-hidden="true" />{names[band.id]}</span>)}
+      <span><i style={{ background: chart.night, outline: "1px solid #3b4f8f" }} aria-hidden="true" />{names.night}</span></p>
   </figure>;
 }
 
