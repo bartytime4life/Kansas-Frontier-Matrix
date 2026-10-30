@@ -10,7 +10,7 @@ bindings, the installed inference services, DNS, or existing archive tables.
 
 ## Current state
 
-Read back on 2026-10-29 from `systemctl --user`, the unit files and the active
+Read back on 2026-10-30 from `systemctl --user`, the unit files and the active
 config. Re-verify before relying on it. Relative paths in this section are
 under `/home/dev/Documents/ChatGPT/Kansas-Frontier-Matrix/`.
 
@@ -25,46 +25,44 @@ under `/home/dev/Documents/ChatGPT/Kansas-Frontier-Matrix/`.
 | Active config | `pc-pipeline-data/transfer-access/local-pipeline-config.json` (backup: `pc-pipeline-data/backup-config.json`) |
 | Kernel lock | `pc-pipeline-data/run/pipeline.lock`, shared by capture, analysis, backup and restore |
 
-### Live code: edits take effect at the next tick
+### Deployed code: pinned releases
 
-The active units run code straight from Git working trees, not from an
-installed copy:
+Capture, backup and restore run a commit-named copy of the kit, not a Git
+working tree:
 
-- `kfm-source-pipeline`, `kfm-working-backup` and `kfm-working-restore` run
-  the `scripts/pc-pipeline/` kit (the capture wrapper and `cli.mjs`) from the
-  `pipeline-hosted` checkout.
-- `kfm-intake-analyze`, `kfm-intake` and `kfm-library` run
+- `kfm-source-pipeline` runs `capture.mjs`, and `kfm-working-backup` and
+  `kfm-working-restore` run `cli.mjs` through `runtime/backup.sh`, from one
+  directory under `pc-pipeline-data/runtime/releases/` named by its source
+  commit. `run.sh` names that directory as `hosted=`, `backup.sh` names its
+  `cli.mjs` as `cli=`, and the `pipelines` case of the `kfm-data` helper names
+  its `health.mjs`. Each `release.json` records the source commit and the
+  SHA-256 of every kit file.
+- `kfm-intake-analyze`, `kfm-intake` and `kfm-library` still run
   `tools/local_data/intake.py` and `tools/local_data/intake_service.py` from the
-  `pipeline-implementation` checkout.
+  `pipeline-implementation` checkout. An edit, `git switch`, `git stash`, rebase
+  or pull there changes those services at their next run or restart.
 
-An edit, `git switch`, `git checkout`, `git stash`, rebase or pull in either
-checkout changes the running pipeline within five minutes; backup and restore
-pick it up at their next run. Before touching those files,
-[pause the timers](#pause-and-resume), make the change,
-[verify it locally](#verify-a-change-locally), then resume.
+Editing a kit checkout does not change the running pipeline. To deploy a kit
+change:
 
-### Live checkout versus this branch
+1. Commit it and run the [local checks](#verify-a-change-locally).
+2. [Pause the timers](#pause-and-resume) and wait for the lock as in
+   [Run a CLI command by hand](#run-a-cli-command-by-hand).
+3. From a clean checkout at that commit, build the release:
+   `node scripts/pc-pipeline/release.mjs /home/dev/Documents/ChatGPT/Kansas-Frontier-Matrix/pc-pipeline-data/runtime/releases`.
+   It refuses a modified or untracked kit file and an existing release.
+4. Point `run.sh`, `backup.sh` and `kfm-data` at the new directory, run
+   `verify-backup` on the latest manifest and one capture by hand under the
+   lock, then resume the timers.
 
-The `pipeline-hosted` working tree that the units execute carries uncommitted
-changes on an older base, so the running code and this branch differ. Read back
-on 2026-10-29:
+Keep earlier release directories. A rollback points the three scripts back at
+the previous commit; captures, backups and journal rows are never rewritten.
 
-- **Connection-only refusals.** The live worker, `stage-package` and
-  `ftps-mirror` refuse uploads with `CONNECTION_ONLY_UPLOADS_DISABLED` when the
-  config has `remoteMode: "connection-only"`. This branch ignores `remoteMode`;
-  here only `publish: false` and the absent worker credential prevent uploads.
-- **Backup format v2.** Live backups store content-addressed objects
-  (`kfm-pc-data-backup-v2`), and 9 of the 10 manifests on the working backup,
-  including the latest, are v2. This branch reads and writes only format v1:
-  its `verify-backup` and `restore-test` reject a v2 manifest with
-  `BACKUP_MANIFEST_INVALID`. Merge v2 support before this branch's kit replaces
-  the live code, or the nightly verification and monthly restore will fail.
-- **Capture wrapper.** `run.sh capture` runs a live-only `capture.mjs`. It runs
-  the same tick, then writes a private `data/work/pipeline-health.json` report
-  that `kfm-data pipelines` prints.
-- **Only in this branch:** the opt-in `usgs-earthquakes` source, the publication
-  budget and its deferrals, and the county commands. The live config still names
-  the two original sources and has no `storagePolicy`.
+Until October 30 the backup and restore units ran `cli.mjs` from the
+`pipeline-hosted` working tree. Its backup format v2 and connection-only
+refusals existed only as uncommitted changes there. That state is preserved as
+commit `7f337349c7` on that checkout's runbook branch, and this branch now
+carries both.
 
 ### Active units
 
@@ -108,7 +106,7 @@ the latest restore receipt (`state: "verified"`).
 | Command | Effect |
 | --- | --- |
 | `kfm-data status` | Unit states, last results and next timer runs. |
-| `kfm-data pipelines` | Prints the private capture, retry, storage and backup health report (live checkout only). |
+| `kfm-data pipelines` | Prints the private capture, retry, storage and backup health report. |
 | `kfm-data refresh` | Starts one capture and one analysis now. |
 | `kfm-data backup` | Starts one working-store backup now. |
 | `kfm-data library`, `kfm-data intake` | Print the current private connection link. Do not share it. |
@@ -141,23 +139,26 @@ changing.
 ### Run a CLI command by hand
 
 Manual commands must hold the same lock as the scheduled units, or a backup can
-race a capture. Mount the drives first, as `run.sh` does:
+race a capture. Mount the drives first, as `run.sh` does, and use the deployed
+release rather than a checkout:
 
 ```sh
 cd ~/Documents/ChatGPT/Kansas-Frontier-Matrix/pc-pipeline-data
 runtime/mounts.sh all
+kit="$(sed -n 's/^hosted=//p' runtime/run.sh)"
 flock --exclusive --wait 900 run/pipeline.lock \
-  node ../pipeline-hosted/scripts/pc-pipeline/cli.mjs status transfer-access/local-pipeline-config.json
+  node "$kit/scripts/pc-pipeline/cli.mjs" status transfer-access/local-pipeline-config.json
 ```
 
 ### Troubleshoot a held run
 
 Failures surface at two levels:
 
-- **Whole tick or command.** Config, storage and memory checks run before the
-  tick and again before each source. A failure there prints
-  `{"reason":"CODE","state":"held"}`, exits 1 and fails the unit. The source
-  that was about to run gets no journal entry.
+- **Whole tick or command.** Config and storage checks run before the tick and
+  again before each source; the memory check runs only before a source whose
+  slot still needs work, so a tick with nothing to do never needs it. A failure
+  prints `{"reason":"CODE","state":"held"}`, exits 1 and fails the unit. The
+  source that was about to run is not claimed and keeps its attempts.
 - **One source.** An acquisition, normalization or validation failure is
   recorded on that source's journal row as `held` with its reason. The tick
   still exits 0 and reports `{"reason":"CODE","sourceId":"…","state":"held"}`.
@@ -174,13 +175,13 @@ and deliberately omit details. Common codes:
 | --- | --- | --- |
 | `STORAGE_IDENTITY_CHANGED` | The mount is missing or is not the device recorded in the config, or `.kfm-pipeline-store` does not match `storeId`. | Run `runtime/mounts.sh all` and check `findmnt`. A replaced drive needs deliberate requalification, never a config edit. |
 | `DISK_RESERVE_REQUIRED` | The data disk would drop below 20% free after the job's reserve, or the system disk has under 30 GiB free. | Free space. Nothing is deleted automatically. |
-| `MEMORY_RESERVE_REQUIRED` | Under 3 GiB of free RAM, usually from inference load. The whole tick defers. | None; the next tick retries. Persistent holds mean the host is overcommitted. |
+| `MEMORY_RESERVE_REQUIRED` | Under 3 GiB of free RAM when a source's slot still needs work, usually from inference or desktop load. The tick stops before claiming. | None; the next tick retries. An hour that stays below the reserve throughout is lost, because missed hours are not back-filled. Repeated holds mean the host is overcommitted. |
 | `DURABLE_FILESYSTEM_REQUIRED` | The store is on tmpfs, overlay or another filesystem outside the allowlist. | Use the qualified disk. |
 | `DEDICATED_DATA_MOUNT_REQUIRED` | The root is not strictly inside the mount, or the mount is not a separate device. | Fix the mount or config. |
 | `CONFIG_INVALID` | The config fails validation (format, 32-hex `storeId`, up to three known sources, `publish`, `device`, `approvalDirectory`). | Compare with the active config. Do not hand-edit `storeId` or `device`. |
 | `STORAGE_POLICY_INVALID` | `storagePolicy` has an unknown key, a priority list that is not 2–3 distinct known sources, or attempts or bytes out of range. | Fix the policy; see [Storage priorities and publication budget](#storage-priorities-and-publication-budget-2026-10-23). |
 | `SOURCE_NOT_ALLOWED` | A configured source is missing from the priority list, or a command was given an unknown source. | Name every configured source in `storagePolicy.priority`, or remove the policy to use the defaults. |
-| `CONNECTION_ONLY_UPLOADS_DISABLED` | Live checkout only (see above): an upload command or a `publish: true` tick met `remoteMode: "connection-only"`. | None while the connection-only scope applies. |
+| `CONNECTION_ONLY_UPLOADS_DISABLED` | A `publish: true` tick met `remoteMode: "connection-only"`, or `stage-package`, `ftps-mirror` or `publish-county` ran under connection-only mode or `publish: false`. | None while the connection-only scope applies. |
 | `INDEPENDENT_BACKUP_REQUIRED` | The backup root is on the same device as the store. | Point the backup config at the separate SSD. |
 | `BACKUP_INPUT_CHANGED` | A source file changed while it was being copied. | A writer ran outside the lock. Check that manual commands hold it, then rerun. |
 | `BACKUP_CONFLICT`, `IMMUTABLE_CONFLICT` | An existing content-addressed file holds different bytes than expected. | Investigate. Never delete or overwrite the existing file. |
@@ -278,8 +279,8 @@ Backup format v2 uses SHA-256 object storage so successive versions of mutable
 working files can coexist. Verification/restoration still read format v1. Journal
 snapshots and their receipts now use stable digest-based identities, preventing
 repeat-backup collisions. No previous backup or archive object was overwritten.
-Format v2 exists only in the live checkout so far; see
-[Live checkout versus this branch](#live-checkout-versus-this-branch).
+Format v2 ran only from an uncommitted checkout until October 30; see
+[Deployed code: pinned releases](#deployed-code-pinned-releases).
 
 ### Connection-only owner scope, October 23
 
@@ -289,7 +290,7 @@ costs. The active PC config now has `remoteMode: "connection-only"` as well as
 config before any storage or network access. Package publication and FTPS mirror
 commands reject connection-only or disabled-publishing configs before reading
 payloads or credentials. No import, migration or FTP transfer is enabled.
-These refusals are in the live checkout's code, not yet in this branch.
+The later `publish-county` command refuses the same way.
 
 `kfm-data connection` performs one small on-demand HTTPS connection check and
 saves a local receipt; it never reads a dataset or sends an upload body. The
@@ -347,27 +348,25 @@ stderr and exits 1; see [Troubleshoot a held run](#troubleshoot-a-held-run).
 | `tick` | `CONFIG` | One scheduled capture pass, the same as `worker.mjs CONFIG`. | Scheduled; use `kfm-data refresh` |
 | `rehearse` | `PRIVATE_ROOT` | Captures all three feeds into a mode-0700 directory outside the checkout. | Safe; needs 30 GiB + 64 MiB free there |
 | `init` | `ROOT MOUNT CONFIG_OUTPUT` | Writes a store marker and a two-source, `publish: false` config for a new store on a dedicated mount. | New stores only |
-| `backup` | `CONFIG BACKUP_CONFIG` | Journal snapshot, then a verified copy of every file under `data/`. | Scheduled; use `kfm-data backup` |
-| `verify-backup` | `MANIFEST BACKUP_ROOT` | Re-hashes every object a v1 backup manifest lists. Writes nothing. | Safe for v1 manifests |
-| `restore-test` | `MANIFEST BACKUP_ROOT EMPTY_RESTORE_ROOT` | Restores a v1 backup into an empty private directory and writes a restore receipt. | Monthly timer, or by hand |
+| `backup` | `CONFIG BACKUP_CONFIG` | Journal snapshot, then a verified v2 copy of every file under `data/`. Its result includes `manifestSha256` and `completedAt`. | Scheduled; use `kfm-data backup` |
+| `verify-backup` | `MANIFEST BACKUP_ROOT` | Re-hashes every object a v1 or v2 backup manifest lists. Writes nothing. | Safe |
+| `restore-test` | `MANIFEST BACKUP_ROOT EMPTY_RESTORE_ROOT` | Restores a v1 or v2 backup into an empty private directory and writes a restore receipt. | Monthly timer, or by hand |
 | `connection` | `[ROOT]` | One read-only hosted connection check; writes a receipt under `ROOT` (default `~/.local/state/kfm-data`). Exits 1 unless connected. | Safe |
 | `county-history` | `REPORT SHA256` | Reads a county history report pinned by its SHA-256. Exits 2 if its geometry is quarantined. | Safe |
 | `prepare-county` | `REPORT SHA256` | Prints the normalized `candidate-only` county product. No writes. | Safe |
-| `publish-county` | `CONFIG REPORT SHA256` | Publishes an approved county release. | Not activated; see [Historical county context](#historical-county-context-implementation-candidate-2026-10-29) |
+| `publish-county` | `CONFIG REPORT SHA256` | Publishes an approved county release. | Rejected with `CONNECTION_ONLY_UPLOADS_DISABLED`; see [Historical county context](#historical-county-context-implementation-candidate-2026-10-29) |
 | `profile-template` | `SOURCE` | Prints an unapproved delegation draft for a stream, alert, earthquake, county, water or weather source. | Safe |
 | `keys` | `PRIVATE_DIRECTORY` | Creates the owner Ed25519 key pair. | Owner signing environment only; not provisioned |
 | `approve` | `PROFILE PRIVATE_KEY SIGNED_OUTPUT` | Signs a delegation. | Owner signing environment only |
 | `control` | `COMMAND_JSON PRIVATE_KEY` | Sends a signed pause, resume, withdrawal or rollback command to the site. | Owner only; needs the deployed pipeline API |
-| `stage-package` | `CONFIG water\|weather SNAPSHOT DECISION` | Publishes a governed water or weather package. | Not activated: needs a paired worker credential |
-| `ftps-mirror` | `CONFIG RELEASE_ID PUBLIC_PRODUCT` | Mirrors a committed release over FTPS. | Not activated: needs systemd credentials |
-
-The live checkout also refuses `stage-package` and `ftps-mirror` with
-`CONNECTION_ONLY_UPLOADS_DISABLED` under its connection-only config.
+| `stage-package` | `CONFIG water\|weather SNAPSHOT DECISION` | Publishes a governed water or weather package. | Rejected with `CONNECTION_ONLY_UPLOADS_DISABLED` |
+| `ftps-mirror` | `CONFIG RELEASE_ID PUBLIC_PRODUCT` | Mirrors a committed release over FTPS. | Rejected with `CONNECTION_ONLY_UPLOADS_DISABLED` |
 
 Other entry points:
 
 ```sh
 node scripts/pc-pipeline/cli.mjs rehearse /absolute/private/pilot-store
+node scripts/pc-pipeline/release.mjs /absolute/releases   # pinned kit copy from a clean checkout
 node scripts/pc-pipeline/install.mjs   # review-only report unless --apply
 node scripts/migrate-pipeline.mjs      # prints SQL and digest unless --apply
 node --test tests/pc-pipeline.test.mjs
@@ -402,17 +401,16 @@ KFM-pipeline/                                    config "root"
     processed/SOURCE/DIGEST.json                      normalized product
     receipts/ingest/pc-pipeline/DIGEST.json           acquisition receipt
     receipts/pipeline/configs/DIGEST.json             config copy taken by each backup
-    receipts/pipeline/journal-snapshots/ID.sqlite     journal snapshot (VACUUM INTO)
-    receipts/pipeline/journal-backups/DIGEST.json     snapshot receipt naming that file
+    receipts/pipeline/journal-snapshots/DIGEST.sqlite journal snapshot (VACUUM INTO)
+    receipts/pipeline/journal-backups-v2/DIGEST.json  snapshot receipt naming that file
     receipts/pipeline/{transfers,published,ftps}/     publication receipts; unused while publish is false
 ```
 
 The same `data/` tree also holds the `tools/local_data` lifecycle store
 (`catalog/`, `raw/`, `work/`, `registry/` and others) that `intake.py analyze`
-maintains, so backups include its working index. The live checkout's v2 backup
-code names snapshots by digest and writes their receipts to
-`receipts/pipeline/journal-backups-v2/`; both directories exist on the live
-store.
+maintains, so backups include its working index. Older backups named snapshots
+by a random ID and left their receipts in `receipts/pipeline/journal-backups/`;
+both directories remain on the live store.
 
 ### Job journal
 
@@ -435,28 +433,31 @@ again while publishing is on, even if it was marked complete.
 
 ```text
 KFM-pipeline-backup/
-  data/PATH                               format v1: copy of each file at its store path
-  objects/sha256/DIGEST/payload           format v2 (live checkout only): one object per distinct content
+  objects/sha256/DIGEST/payload           format v2: one object per distinct content
+  data/PATH                               format v1: path-named copies, read-only legacy
   backup-manifests/DIGEST.json            one manifest per backup run
 ```
 
 A manifest lists every file as `{path, sha256, bytes}` together with
 `storeId`, `sourceDevice`, `backupDevice` and `inventorySha256`, the SHA-256 of
-the canonical file list. In this branch the format is `kfm-pc-data-backup-v1`,
-the manifest is named by `inventorySha256`, and a backup refuses to overwrite a
-path-named copy whose bytes changed (`BACKUP_CONFLICT`).
+the canonical file list. `backup` writes format `kfm-pc-data-backup-v2`: objects
+are stored by content, so successive versions of a mutable file such as the
+intake index coexist, and the manifest is named by the SHA-256 of the canonical
+`{format, files}`, returned as `manifestSha256`. Format v1 manifests are named
+by `inventorySha256`; their path-named copies refuse changed bytes
+(`BACKUP_CONFLICT`), which is why v1 is no longer written. `verify-backup` and
+`restore-test` read both formats and reject a duplicate, absolute or `..` path.
 
-The live checkout's v2 format stores objects by content, so successive versions
-of a mutable file such as the intake index coexist. It names each manifest by
-the SHA-256 of the canonical `{format, files}`, returned as `manifestSha256`,
-and its `verify-backup` and `restore-test` read both formats. This branch reads
-v1 only.
+`backup-last.json` carries the backup's `completedAt`, which the health report
+uses as its age; receipts written before October 30 lack it, so the report
+falls back to the file's modification time and shows `receiptTime: null`.
 
 ## Verify a change locally
 
-Pause the timers first if the change touches live code (see
-[Live code](#live-code-edits-take-effect-at-the-next-tick)). For a pipeline-only
-change, the fast check is:
+Kit changes reach the units only through a new release (see
+[Deployed code: pinned releases](#deployed-code-pinned-releases)); intake and
+library changes in `pipeline-implementation` still need the timers paused. For a
+pipeline-only change, the fast check is:
 
 ```sh
 node --test tests/pc-pipeline.test.mjs tests/pipeline-*.test.mjs tests/storage-policy.test.mjs

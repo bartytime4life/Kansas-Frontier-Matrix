@@ -65,8 +65,8 @@ async function receipt(path, now, maxAge) {
     const value = parse(await readRegular(path, 65536));
     const info = await lstat(path);
     const verified = ['verified-copy', 'verified'].includes(value.state);
-    // Legacy backup receipts have no source timestamp: label the filesystem clock separately.
-    const at = typeof value.restoredAt === 'string' && Number.isFinite(Date.parse(value.restoredAt)) ? value.restoredAt : null;
+    // Legacy backup receipts have no operation clock: label the filesystem clock separately.
+    const at = [value.completedAt, value.restoredAt].find(time => typeof time === 'string' && Number.isFinite(Date.parse(time))) ?? null;
     const ageFrom = at ? Date.parse(at) : info.mtimeMs;
     return { state: verified ? now - ageFrom > maxAge ? 'overdue' : value.state : 'unverified',
       receiptTime: at, receiptFileModifiedAt: iso(info.mtimeMs), files: Number.isSafeInteger(value.files) ? value.files : null,

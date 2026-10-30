@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { generateKeyPairSync, createPublicKey, sign, randomBytes } from 'node:crypto';
-import { lstat, statfs, readdir } from 'node:fs/promises';
+import { lstat, statfs, readdir, unlink } from 'node:fs/promises';
 import { resolve, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { homedir } from 'node:os';
@@ -13,9 +13,12 @@ import { Journal } from './journal.mjs';
 import { loadConfig, tick } from './worker.mjs';
 import { pipelineCall, publish } from './publisher.mjs';
 import { connectionCheck } from './connection.mjs';
+import { validateBackup, backupObjectPath } from './backup-layout.mjs';
 
 const checkout = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const bytes = value => Buffer.from(canonical(value));
+// Upload commands refuse connection-only or disabled publication before reading approvals, credentials or payloads.
+const uploadsAllowed = config => { if (config.remoteMode === 'connection-only' || !config.publish) fail('CONNECTION_ONLY_UPLOADS_DISABLED'); return config; };
 async function rootPath(value) {
   if (!value?.startsWith('/')) fail('ABSOLUTE_ROOT_REQUIRED');
   const path = resolve(value);
@@ -52,7 +55,7 @@ export async function cli(argv, connectionDependencies) {
     const normalized = normalizeCountyCandidate(packet);
     if (command === 'prepare-county') return { state: 'candidate-only', releaseEligible: false, recipeSha256: await recipeDigest(),
       payloadSha256: normalized.payloadSha256, product: normalized.product };
-    const config = await loadConfig(resolve(args[0])); await storageGuard(config);
+    const config = uploadsAllowed(await loadConfig(resolve(args[0]))); await storageGuard(config);
     const approval = parse(await readRegular(resolve(config.approvalDirectory, COUNTY_SOURCE_ID + '.json'), 32768));
     const secret = (await readRegular(resolve(process.env.CREDENTIALS_DIRECTORY ?? '/nonexistent', 'pipeline-worker-key'), 128)).toString().trim();
     const active = await pipelineCall('release', { sourceId: COUNTY_SOURCE_ID }, secret);
@@ -138,7 +141,7 @@ export async function cli(argv, connectionDependencies) {
     try { return { format: 'kfm-storage-status-v1', capturedAt: new Date().toISOString(), storage: 'verified', plan: storagePlan(config), jobs: j.status() }; } finally { j.close(); }
   }
   if (command === 'stage-package') {
-    const config = await loadConfig(resolve(args[0])); await storageGuard(config);
+    const config = uploadsAllowed(await loadConfig(resolve(args[0]))); await storageGuard(config);
     const sourceId = args[1]; if (!['water','weather'].includes(sourceId)) fail('SOURCE_NOT_ALLOWED');
     const snapshot = parse(await readRegular(resolve(args[2]), MAX_PACKAGE)); const decision = parse(await readRegular(resolve(args[3]), 8192));
     const payload = bytes({ snapshot, decision }); if (payload.length > MAX_PACKAGE) fail('BYTE_LIMIT');
@@ -150,7 +153,7 @@ export async function cli(argv, connectionDependencies) {
     await immutable(resolve(config.root, 'data/receipts/pipeline/published', receipt.releaseId + '.json'), bytes(receipt)); return receipt;
   }
   if (command === 'ftps-mirror') {
-    const config = await loadConfig(resolve(args[0])); await storageGuard(config);
+    const config = uploadsAllowed(await loadConfig(resolve(args[0]))); await storageGuard(config);
     const id = args[1]; if (!/^[a-f0-9]{64}$/.test(id)) fail('DIGEST_INVALID');
     const manifest = parse(await readRegular(resolve(config.root, 'data/receipts/pipeline/transfers', id + '.json'), 65536));
     const payload = await readRegular(resolve(args[2]), MAX_PACKAGE);
@@ -176,39 +179,44 @@ export async function cli(argv, connectionDependencies) {
       const snapshot = resolve(snapshots, randomBytes(16).toString('hex') + '.sqlite');
       try { j.db.prepare('VACUUM INTO ?').run(snapshot); } finally { j.close(); }
       const check = await hashFile(snapshot);
-      await immutable(resolve(config.root, 'data/receipts/pipeline/journal-backups', check.sha256 + '.json'), bytes({ ...check, file: snapshot.split('/').at(-1) }));
+      // A digest-named snapshot keeps repeat backups of an unchanged journal from colliding.
+      const stableSnapshot = resolve(snapshots, check.sha256 + '.sqlite');
+      const { captureFile } = await import('./copy.mjs');
+      await captureFile(snapshot, stableSnapshot, check);
+      await unlink(snapshot);
+      await immutable(resolve(config.root, 'data/receipts/pipeline/journal-backups-v2', check.sha256 + '.json'), bytes({ ...check, file: check.sha256 + '.sqlite' }));
     } catch (e) { if (e.code !== 'ENOENT') throw e; }
     const inventory = await walk(resolve(config.root, 'data'));
     await storageGuard(backupConfig, { reserve: inventory.reduce((n, item) => n + item.bytes, 0) });
     for (const item of inventory) {
-      const input = resolve(config.root, 'data', item.path); const output = resolve(destination, 'data', item.path);
+      const input = resolve(config.root, 'data', item.path); const output = backupObjectPath(destination, item);
       // Stream large originals in bounded memory; immutable capture code owns this copy.
       const { captureFile } = await import('./copy.mjs'); await captureFile(input, output, item);
     }
-    const id = sha(bytes(inventory));
-    await immutable(resolve(destination, 'backup-manifests', id + '.json'), bytes({ format: 'kfm-pc-data-backup-v1', files: inventory,
-      storeId: config.storeId, sourceDevice: String((await lstat(config.root)).dev), backupDevice: String((await lstat(destination)).dev), inventorySha256: id }));
-    return { state: 'verified-copy', files: inventory.length, inventorySha256: id, restoreTestRequired: true };
+    const inventorySha256 = sha(bytes(inventory));
+    const format = 'kfm-pc-data-backup-v2';
+    const manifestSha256 = sha(bytes({ format, files: inventory }));
+    await immutable(resolve(destination, 'backup-manifests', manifestSha256 + '.json'), bytes({ format, files: inventory,
+      storeId: config.storeId, sourceDevice: String((await lstat(config.root)).dev), backupDevice: String((await lstat(destination)).dev), inventorySha256 }));
+    return { state: 'verified-copy', files: inventory.length, inventorySha256, manifestSha256, completedAt: new Date().toISOString(), restoreTestRequired: true };
   }
   if (command === 'verify-backup') {
     const manifest = parse(await readRegular(resolve(args[0]), 64 * 1024 ** 2), 64 * 1024 ** 2);
-    if (manifest.format !== 'kfm-pc-data-backup-v1' || !Array.isArray(manifest.files) || manifest.files.length > 1000000) fail('BACKUP_MANIFEST_INVALID');
+    validateBackup(manifest);
     for (const item of manifest.files) {
-      if (typeof item.path !== 'string' || item.path.startsWith('/') || item.path.split('/').some(p => !p || p === '..' || p === '.') || item.path.includes('\\')) fail('BACKUP_PATH_INVALID');
-      const observed = await hashFile(resolve(args[1], 'data', item.path));
+      const observed = await hashFile(backupObjectPath(resolve(args[1]), item, manifest.format));
       if (observed.bytes !== item.bytes || observed.sha256 !== item.sha256) fail('BACKUP_INTEGRITY_FAILED');
     }
     return { state: 'verified', files: manifest.files.length };
   }
   if (command === 'restore-test') {
     const manifest = parse(await readRegular(resolve(args[0]), 64 * 1024 ** 2), 64 * 1024 ** 2);
-    if (manifest.format !== 'kfm-pc-data-backup-v1' || !Array.isArray(manifest.files) || manifest.files.length > 1000000 || sha(bytes(manifest.files)) !== manifest.inventorySha256
-      || String((await lstat(resolve(args[1]))).dev) !== manifest.backupDevice || manifest.backupDevice === manifest.sourceDevice) fail('BACKUP_MANIFEST_INVALID');
+    validateBackup(manifest);
+    if (String((await lstat(resolve(args[1]))).dev) !== manifest.backupDevice || manifest.backupDevice === manifest.sourceDevice) fail('BACKUP_MANIFEST_INVALID');
     const restored = await rootPath(args[2]); if ((await readdir(restored)).length) fail('RESTORE_TARGET_MUST_BE_EMPTY');
     const { captureFile } = await import('./copy.mjs');
     for (const item of manifest.files) {
-      if (typeof item.path !== 'string' || item.path.startsWith('/') || item.path.split('/').some(p => !p || p === '..' || p === '.') || item.path.includes('\\')) fail('BACKUP_PATH_INVALID');
-      await captureFile(resolve(args[1], 'data', item.path), resolve(restored, 'data', item.path), item);
+      await captureFile(backupObjectPath(resolve(args[1]), item, manifest.format), resolve(restored, 'data', item.path), item);
     }
     const receipt = { format: 'kfm-pipeline-restore-receipt-v1', state: 'verified', storeId: manifest.storeId, sourceDevice: manifest.sourceDevice,
       backupDevice: manifest.backupDevice, inventorySha256: manifest.inventorySha256, files: manifest.files.length,

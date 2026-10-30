@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { generateKeyPairSync, sign, randomBytes } from 'node:crypto';
-import { mkdtemp, writeFile, readFile, readdir, symlink, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, readFile, readdir, symlink, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import { canonical, sha, verifyProfile, recipeDigest, ORIGIN, MAX_PACKAGE, CHUNK_SIZE, PipelineError } from '../server/pipeline-contract.mjs';
@@ -15,6 +15,9 @@ import { tick } from '../scripts/pc-pipeline/worker.mjs';
 import { publish } from '../scripts/pc-pipeline/publisher.mjs';
 import { captureFile } from '../scripts/pc-pipeline/copy.mjs';
 import { mirrorFtps } from '../scripts/pc-pipeline/ftps.mjs';
+import { validateBackup, backupObjectPath } from '../scripts/pc-pipeline/backup-layout.mjs';
+import { cli } from '../scripts/pc-pipeline/cli.mjs';
+import { operatorHealth } from '../scripts/pc-pipeline/health.mjs';
 
 const now = Date.now();
 const keys = generateKeyPairSync('ed25519');
@@ -148,6 +151,31 @@ test('PC worker retains failed raw input and avoids repeating completed hourly w
   const bad = await tick({ ...config, root: other }, { ...options, acquire: req => fetchCapture(req, { fetcher: async () => Response.json({ unexpected: true }) }) });
   assert.equal(bad.outcomes[0].state, 'held'); assert.ok((await readdir(resolve(other, 'data/quarantine/nws-alerts/objects/sha256'))).length);
 });
+test('low memory defers only claimable work and leaves an idle tick successful', async () => {
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-worker-memory-')); const config = { root, sources: ['nws-alerts'], publish: false };
+  const acquire = req => fetchCapture(req, { fetcher: async () => Response.json({ type: 'FeatureCollection', features: [] }) });
+  const low = { now, acquire, memory: () => 1024 ** 3, guard: async () => ({}) };
+  await assert.rejects(tick(config, low), /MEMORY_RESERVE_REQUIRED/);
+  let j = await Journal.open(resolve(root, 'pipeline-journal.sqlite'));
+  assert.equal(j.status().length, 0, 'a memory deferral neither creates a slot nor consumes an attempt'); j.close();
+  assert.equal((await tick(config, { ...low, memory: () => 8 * 1024 ** 3 })).outcomes[0].state, 'candidate-only');
+  const idle = await tick(config, { ...low, acquire: () => assert.fail('a completed slot must not reacquire') });
+  assert.deepEqual(idle.outcomes, [{ sourceId: 'nws-alerts', state: 'already-complete-or-held' }]);
+  j = await Journal.open(resolve(root, 'pipeline-journal.sqlite'));
+  assert.equal(j.status()[0].attempts, 1); assert.equal(j.claimable('nws-alerts', captureRequest('nws-alerts', now).slot, now), false); j.close();
+});
+test('connection-only mode blocks scheduled, package and FTPS uploads before data or credentials are read', async () => {
+  await assert.rejects(tick({ remoteMode: 'connection-only', publish: true }, {
+    guard: () => assert.fail('must reject before storage or network access'),
+  }), /CONNECTION_ONLY_UPLOADS_DISABLED/);
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-connection-policy-'));
+  const path = resolve(root, 'config.json');
+  const config = { format: 'kfm-pc-pipeline-config-v1', root: '/unmounted/store', mount: '/unmounted', storeId: 'a'.repeat(32),
+    device: 1, sources: [], publish: false, remoteMode: 'connection-only', approvalDirectory: '/nonexistent' };
+  await writeFile(path, JSON.stringify(config));
+  await assert.rejects(cli(['stage-package', path, 'water', '/nonexistent', '/nonexistent']), /CONNECTION_ONLY_UPLOADS_DISABLED/);
+  await assert.rejects(cli(['ftps-mirror', path, 'a'.repeat(64), '/nonexistent']), /CONNECTION_ONLY_UPLOADS_DISABLED/);
+});
 test('storage guards reject the root filesystem and immutable writes reject symlinks', async () => {
   await assert.rejects(storageGuard({ root: '/tmp/test', mount: '/', device: '0', storeId: 'x' }), /DEDICATED_DATA_MOUNT_REQUIRED/);
   const root = await mkdtemp(resolve(tmpdir(), 'kfm-files-test-')); const file = resolve(root, 'object');
@@ -161,6 +189,43 @@ test('backup streams multi-megabyte originals, verifies bytes and refuses confli
   await captureFile(source, destination, expected); assert.deepEqual(await readFile(destination), content);
   await captureFile(source, destination, expected); await writeFile(destination, 'corrupt');
   await assert.rejects(captureFile(source, destination, expected), /BACKUP_CONFLICT/);
+});
+test('successive backups preserve both versions of a mutable working file', async () => {
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-backup-versions-'));
+  const source = resolve(root, 'index.sqlite');
+  const objects = resolve(root, 'store');
+  await writeFile(source, 'first committed version');
+  const first = { path: 'work/intake/index.sqlite', ...await hashFile(source) };
+  await captureFile(source, backupObjectPath(objects, first), first);
+  await writeFile(source, 'second committed version');
+  const second = { path: first.path, ...await hashFile(source) };
+  await captureFile(source, backupObjectPath(objects, second), second);
+  await captureFile(source, backupObjectPath(objects, second), second);
+  assert.equal((await readFile(backupObjectPath(objects, first))).toString(), 'first committed version');
+  assert.equal((await readFile(backupObjectPath(objects, second))).toString(), 'second committed version');
+  const manifest = { format: 'kfm-pc-data-backup-v2', files: [second], inventorySha256: sha(Buffer.from(canonical([second]))) };
+  assert.equal(validateBackup(manifest), manifest);
+  assert.equal(backupObjectPath(objects, first, 'kfm-pc-data-backup-v1'), resolve(objects, 'data', first.path));
+  const invalid = { ...manifest, files: [{ ...second, path: '../escape' }] };
+  invalid.inventorySha256 = sha(Buffer.from(canonical(invalid.files)));
+  assert.throws(() => validateBackup(invalid), /BACKUP_PATH_INVALID/);
+});
+test('operator health ages a backup by its completion clock and keeps legacy receipts explicit', async () => {
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-health-clock-')); const run = resolve(root, 'run'); await mkdir(run);
+  const configPath = resolve(root, 'config.json');
+  await writeFile(configPath, JSON.stringify({ format: 'kfm-pc-pipeline-config-v1', root: resolve(root, 'store'), mount: root, storeId: 'a'.repeat(32),
+    device: 1, sources: ['nws-alerts'], publish: false, remoteMode: 'connection-only', approvalDirectory: '/nonexistent' }));
+  const options = { now, guard: async () => ({}) };
+  const receipt = completedAt => writeFile(resolve(run, 'backup-last.json'), JSON.stringify({ state: 'verified-copy', files: 3, inventorySha256: 'b'.repeat(64), completedAt }));
+  const recent = new Date(now - 3600000).toISOString();
+  await receipt(recent);
+  const fresh = (await operatorHealth(configPath, run, options)).backup;
+  assert.equal(fresh.state, 'verified-copy'); assert.equal(fresh.receiptTime, recent);
+  await receipt(new Date(now - 40 * 3600000).toISOString());
+  assert.equal((await operatorHealth(configPath, run, options)).backup.state, 'overdue', 'a fresh file time must not hide an old backup');
+  await receipt(undefined);
+  const legacy = (await operatorHealth(configPath, run, options)).backup;
+  assert.equal(legacy.receiptTime, null); assert.equal(typeof legacy.receiptFileModifiedAt, 'string');
 });
 test('real provider formats preserve decimal source values and RFC3339 offset/subsecond clocks', async () => {
   assert.equal(providerTime('2026-10-22T20:06:29.034006+00:00'), '2026-10-22T20:06:29.034Z');
