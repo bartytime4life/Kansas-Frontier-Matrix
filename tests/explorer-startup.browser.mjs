@@ -34,6 +34,21 @@ async function revealControl(p, selector) {
   return p.evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
 }
 
+// Cards now enter the map stage first; notes remain a separate, explicit action.
+async function openStageNotes(p) {
+  await p.wait(`document.querySelector('.living-welcome')?.dataset.cinematic==='true'`, 'category takes the stage');
+  const selector='.welcome-layer-demo-actions button:last-child';
+  await revealControl(p,selector);
+  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
+  await p.key('Enter','Enter',13);
+  await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'source notes own focus');
+}
+async function returnStage(p) {
+  await p.evaluate(`document.querySelector('.welcome-preview-expand').focus()`);
+  await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('.living-welcome')?.dataset.cinematic==='false'`, 'category grid restored');
+}
+
 const origin = new URL(process.env.KFM_NODE_TEST_ORIGIN ?? 'http://127.0.0.1:5182');
 assert.equal(origin.protocol, 'http:');
 assert.ok(['127.0.0.1', 'localhost', '[::1]'].includes(origin.hostname), 'fixtures must never target a hosted service');
@@ -262,7 +277,7 @@ for (const width of [320, 390, 768, 1280]) {
     await p.call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
     await p.open('/?motion=off'); await readyWelcome(p);
     const enter = async selector => { await revealControl(p, selector); await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`); await p.key('Enter', 'Enter', 13); };
-    await enter('.topic-sky');
+    await enter('.topic-sky'); await openStageNotes(p);
     await p.wait(`!!document.querySelector('.welcome-open-map')`, 'Sky map action');
     await enter('.welcome-open-map');
     await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('.category-map-dock header strong')?.textContent==='Sky globe'`, 'real Sky workspace');
@@ -376,7 +391,7 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
       await p.key('Enter','Enter',13);
     };
     const expand=async id=>{
-      await activate('.topic-'+id);
+      await activate('.topic-'+id); await openStageNotes(p);
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'category detail owns focus');
       await activate('.welcome-dialog-body>.welcome-preview-action');
       await p.wait(`document.querySelector('.living-welcome')?.dataset.fullscreen==='true'&&document.activeElement?.matches('.welcome-preview-expand')`,'expanded category returns focus to Return');
@@ -401,11 +416,11 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
       await activate('.welcome-layer-demo-actions button:first-child');
       await p.wait(failed,'hidden overlays do not mask map failure');
       await p.key('Escape','Escape',27);
-      await p.wait(`document.querySelector('.living-welcome').dataset.fullscreen==='false'&&document.activeElement?.matches('.welcome-preview-expand')`,'Escape restores categories and focus');
+      await p.wait(`document.querySelector('.living-welcome').dataset.fullscreen==='false'&&document.activeElement?.matches('.topic-weather')`,'Escape restores categories and focus');
       await expand('history');
       await p.wait(failed,'failure persists when another category is selected');
-      // Reverse native Tab from Return reaches the persistent notes trigger.
-      await p.key('Tab','Tab',9,8);
+      await revealControl(p,'.welcome-layer-demo-actions button:last-child');
+      await p.evaluate(`document.querySelector('.welcome-layer-demo-actions button:last-child').focus()`);
       assert.equal(await p.evaluate(`document.activeElement?.textContent`),'Source notes & demonstrations');
       await p.key('Enter','Enter',13);
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'source notes remain keyboard accessible after failure');
@@ -522,7 +537,8 @@ for (const profile of [
         await p.key('Enter', 'Enter', 13);
         await readyWelcome(p);
       }
-      await keyAction('.topic-weather', 'weather-detail-' + cycle, `document.activeElement?.matches('.welcome-dialog-close')`);
+      await keyAction('.topic-weather', 'weather-stage-' + cycle, `document.querySelector('.living-welcome')?.dataset.cinematic==='true'`);
+      await openStageNotes(p);
       assert.equal(await p.evaluate(`document.querySelectorAll('.welcome-dialog video').length`), 0, 'opening a category does not admit a decoder');
       await keyAction('.welcome-dialog-body > .welcome-preview-action', 'expand-map-' + cycle, `document.querySelector('.living-welcome')?.dataset.fullscreen==='true'`);
       await p.wait(`document.querySelector('.domain-stage')?.dataset.topic==='weather'`, 'selected map preview');
@@ -555,7 +571,8 @@ for (const profile of [
     report.retainedGrowthBytes = report.memory.at(-1).usedBytes - report.memory[0].usedBytes;
     assert.ok(report.retainedGrowthBytes < 32 * 1024 * 1024, 'three short reopen cycles do not retain another 32 MiB of renderer JS heap');
     await p.key('Enter', 'Enter', 13); await readyWelcome(p);
-    await keyAction('.topic-aviation', 'aviation-detail', `document.activeElement?.matches('.welcome-dialog-close')`);
+    await keyAction('.topic-aviation', 'aviation-stage', `document.querySelector('.living-welcome')?.dataset.cinematic==='true'`);
+    await openStageNotes(p);
     const destination = await p.evaluate(`document.querySelector('.welcome-map-look strong').textContent`);
     await keyAction('.welcome-open-map', 'open-category-map', `!document.querySelector('.living-welcome')&&document.querySelector('.category-map-dock header strong')?.textContent===${JSON.stringify(destination)}`);
     assert.equal(await p.evaluate(`document.querySelector('[aria-label="Layer topic"]').value`), 'aviation', 'preview enters the real category workspace');
@@ -762,6 +779,7 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
     for (const selector of ['.topic-weather', '.topic-history', '.discovery-hint button']) {
       await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
       await p.key('Enter', 'Enter', 13);
+      if(selector.startsWith('.topic-'))await openStageNotes(p);
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'detail close receives focus');
       const before = await closeGeometry();
       assert.ok(before.top >= 0 && before.bottom <= height && before.left >= 0 && before.right <= width, JSON.stringify(before));
@@ -785,14 +803,18 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
       await p.call('Input.dispatchMouseEvent', {type:'mousePressed', x, y, button:'left', clickCount:1});
       await p.call('Input.dispatchMouseEvent', {type:'mouseReleased', x, y, button:'left', clickCount:1});
       await p.wait(`!document.querySelector('.welcome-dialog')`, 'visible close dismisses detail');
+      if(selector.startsWith('.topic-'))await returnStage(p);
       assert.equal(await p.evaluate(`document.activeElement === document.querySelector(${JSON.stringify(selector)})`), true, 'focus returns to opening control');
       assert.equal(await p.evaluate(`document.querySelector('header.topbar').inert`), false, 'background state restored');
     }
     await p.evaluate(`document.querySelector('.topic-weather').focus()`);
     await p.key('Enter', 'Enter', 13);
+    await openStageNotes(p);
     await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'detail reopened');
     await p.key('Escape', 'Escape', 27);
-    await p.wait(`!document.querySelector('.welcome-dialog') && document.activeElement?.matches('.topic-weather')`, 'Escape closes only detail and restores its trigger');
+    await p.wait(`!document.querySelector('.welcome-dialog') && document.activeElement?.matches('.welcome-preview-expand')`, 'Escape returns from notes to the stage');
+    await p.key('Escape','Escape',27);
+    await p.wait(`document.activeElement?.matches('.topic-weather')`, 'Escape returns to the original card');
     await p.key('Escape', 'Escape', 27);
     await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement?.matches('.guide-trigger')`, 'next Escape closes welcome and returns focus to the guide trigger');
   });
@@ -820,57 +842,42 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
     for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
     const center = selector => revealControl(p,selector);
     const move = point => p.call('Input.dispatchMouseEvent',{type:'mouseMoved',...point,button:'none',buttons:0});
-    const isolated = (topic, retainedFocus=null) => `(() => {
-      const root=document.querySelector('.explorer-guide.living-welcome'),active=root?.querySelector('.topic-${topic}');
-      const map=document.querySelector('.map-stage > .map-canvas'),retained=${retainedFocus?`root?.querySelector('.topic-${retainedFocus}')`:'null'};
-      const showRetained=retained?.matches(':focus-visible');
-      return root?.dataset.immersive==='true'&&root.dataset.active==='${topic}'&&active?.classList.contains('is-active')
-        &&root.querySelector('.domain-stage')?.dataset.topic==='${topic}'&&Number(getComputedStyle(active).opacity)>=.98
-        &&[...root.querySelectorAll('.topic-callout')].filter(card=>card!==active&&!(card===retained&&showRetained)).every(card=>{const o=Number(getComputedStyle(card).opacity);return o>=.98&&getComputedStyle(card).pointerEvents!=='none';})
-        &&(!retained||document.activeElement===retained)&&(!showRetained||Number(getComputedStyle(retained).opacity)>=.98)
-        &&Number(getComputedStyle(root.querySelector('h1')).opacity)>=.98
-        &&map&&Number(getComputedStyle(map).opacity)<=.02;
-    })()`;
-    const restored = `(() => {
-      const root=document.querySelector('.explorer-guide.living-welcome'),map=document.querySelector('.map-stage > .map-canvas');
-      return root?.dataset.immersive==='false'&&[...root.querySelectorAll('.topic-callout')].every(card=>Number(getComputedStyle(card).opacity)>=.98&&getComputedStyle(card).pointerEvents!=='none')
-        &&map&&Number(getComputedStyle(map).opacity)>=.98;
-    })()`;
-    await p.evaluate(`document.querySelector('.welcome-hero input').focus()`);
-    if(width>600) {
-      const blank=await center('.welcome-hero input');await move(blank);await p.wait(restored,'all shared topics start available');
-      for(const topic of ['weather','water','science']) {
-        await move(await center('.topic-'+topic));
-        await p.wait(isolated(topic),'ordinary pointer selects actual '+topic+' scene');
-      }
-      await move(await center('.welcome-hero input'));await p.wait(restored,'leaving restores every card and the map');
-      await move(await center('.topic-weather'));await p.wait(isolated('weather'),'restored card accepts another ordinary hover');
-      await move(await center('.welcome-hero input'));await p.wait(restored,'repeated exit does not retain mouse focus');
-      await p.key('Tab','Tab',9);await p.evaluate(`document.querySelector('.topic-weather').focus()`);
-      await p.wait(isolated('weather'),'keyboard focus selects its scene');
-      await p.wait(`document.activeElement?.matches('.topic-weather:focus-visible')`,'Weather has visible keyboard focus');
-      for(const topic of ['water','science']) {
-        await move(await center('.topic-'+topic));await p.wait(isolated(topic,'weather'),'pointer changes scene while keyboard focus remains');
-        assert.equal(await p.evaluate(`document.activeElement===document.querySelector('.topic-weather')`),true,'unpressed mouse entry never steals DOM focus');
-      }
-      await p.evaluate(`document.querySelector('.welcome-hero input').focus()`);await move(await center('.welcome-hero input'));
-      await p.wait(restored,'clearing keyboard focus and hover restores the map');
-    } else {
-      assert.equal(await p.evaluate(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome');return root.scrollWidth<=root.clientWidth;})()`),true,'narrow welcome has no horizontal overflow');
+    const stage=id=>`document.querySelector('.living-welcome')?.dataset.cinematic==='true'&&document.querySelector('.domain-stage')?.dataset.topic==='${id}'`;
+    // Native hover settles into a stable stage; moving into the map cannot
+    // reveal the grid again or steal a click intended for another category.
+    if(width>600){
+      await move(await center('.topic-weather'));
+      await p.wait(stage('weather'),'settled pointer opens the map stage');
+      await move({x:width*.65,y:height*.45});
+      await p.wait(stage('weather'),'leaving the former card retains the stage');
+    }else{
       await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
-      for(const id of ['weather','evidence']) {
-        const point=await center('.topic-'+id);
-        await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:2,radiusY:2,force:1}]});
-        await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-        await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'touch opens '+id+' without a hover prerequisite');
-        assert.equal(await p.evaluate(`document.querySelector('.welcome-dialog-body h2').textContent`),welcomeTopics.find(topic=>topic.id===id).title);
-        const close=await p.evaluate(`(()=>{const b=document.querySelector('.welcome-dialog-close'),r=b.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2,top:r.top,bottom:r.bottom,hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)===b};})()`);
-        assert.ok(close.top>=0&&close.bottom<=height&&close.hit,'persistent close stays unobstructed after scrolling to '+id);
-        await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:close.x,y:close.y,id:1,radiusX:2,radiusY:2,force:1}]});
-        await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-        await p.wait(`!document.querySelector('.welcome-dialog')`,'touch closes '+id+' details');
-      }
+      const point=await center('.topic-weather');
+      await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:2,radiusY:2,force:1}]});
+      await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      await p.wait(stage('weather'),'a single tap opens the map stage');
     }
+    assert.equal(await p.evaluate(`document.querySelectorAll('.welcome-rail-card').length`),welcomeTopics.length,'every other category retains a place');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.discovery-field')).display`),'none','large cards clear the map');
+    const geometry=await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome').getBoundingClientRect(),rail=document.querySelector('.welcome-category-rail').getBoundingClientRect(),panel=document.querySelector('.welcome-layer-demo').getBoundingClientRect(),deck=document.querySelector('.welcome-scene-deck').getBoundingClientRect();return {root:{top:root.top,bottom:root.bottom},rail:{top:rail.top,bottom:rail.bottom},panel:{top:panel.top,bottom:panel.bottom},deck:{top:deck.top,bottom:deck.bottom},overflow:document.querySelector('.living-welcome').scrollWidth>innerWidth};})()`);
+    assert.equal(geometry.overflow,false,'stage does not overflow horizontally');
+    assert.ok(geometry.deck.bottom<=geometry.panel.top,'top controls do not cover the active category');
+    assert.ok(geometry.panel.bottom<geometry.rail.top,'active category leaves space above category rail');
+    assert.ok(geometry.rail.bottom<=geometry.root.bottom-24,'rail leaves provider credits clear');
+    for(const id of ['water','geology','aviation','evidence']){
+      const selector=`.welcome-rail-card[data-topic="${id}"]`;
+      await revealControl(p,selector);await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);
+      await p.wait(stage(id),'rail selects '+id+' without reopening the grid');
+      assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage').length`),1,'one shared stage');
+    }
+    await p.key('Home','Home',36);await p.wait(stage(welcomeTopics[0].id),'Home selects the first story');
+    await p.key('End','End',35);await p.wait(stage(welcomeTopics.at(-1).id),'End selects the last story');
+    await p.key('ArrowRight','ArrowRight',39);await p.wait(stage(welcomeTopics[0].id),'Right wraps the rail');
+    if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-cinematic-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
+    await returnStage(p);
+    assert.equal(await p.evaluate(`document.activeElement.matches('.topic-weather')`),true,'Return restores the original card');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.discovery-field')).display`),'grid');
+
   });
 }
 
@@ -953,6 +960,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     const detailTopics=(width===1440||width===320)?welcomeTopics:welcomeTopics.filter(topic=>['history','evidence'].includes(topic.id));
     for(const topic of detailTopics){
       await revealControl(p,'.topic-'+topic.id);await p.evaluate(`document.querySelector('.topic-${topic.id}').focus()`);await p.key('Enter','Enter',13);
+      await openStageNotes(p);
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'detail takes focus for '+topic.id);
       const detail=await p.evaluate(`(()=>{const d=document.querySelector('.welcome-dialog');return{role:d.getAttribute('role'),modal:d.getAttribute('aria-modal'),title:d.querySelector('h2')?.textContent,facets:[...d.querySelectorAll('.capability-facets li')].map(n=>n.textContent),notes:[...d.querySelectorAll('.welcome-source-note')].map(n=>n.textContent),video:d.querySelectorAll('video').length};})()`);
       assert.deepEqual({role:detail.role,modal:detail.modal,title:detail.title,facets:detail.facets,video:detail.video},{role:'dialog',modal:'true',title:topic.title,facets:topic.facets,video:0});
@@ -979,9 +987,10 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
         assert.ok(detail.notes.includes(capabilityNote(topic.id)),'uncaptured domain discloses the missing verified animation');
       }
       assert.deepEqual(await p.evaluate(`({search:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`),before,'preview choices do not navigate or activate source workspaces');
-      await p.key('Escape','Escape',27);await p.wait(`!document.querySelector('.welcome-dialog')&&document.activeElement?.matches('.topic-${topic.id}')`,'Escape restores the exact opening domain');
+      await p.key('Escape','Escape',27);await returnStage(p);await p.wait(`!document.querySelector('.welcome-dialog')&&document.activeElement?.matches('.topic-${topic.id}')`,'Escape restores the exact opening domain');
     }
     await revealControl(p,'.topic-history');await p.evaluate(`document.querySelector('.topic-history').focus()`);await p.key('Enter','Enter',13);
+    await openStageNotes(p);
     await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'history detail reopened');
     await p.evaluate(`document.querySelector('.welcome-dialog-body>.welcome-preview-action').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.living-welcome')?.dataset.fullscreen==='true'&&document.activeElement?.matches('.welcome-preview-expand')`,'explicit preview hands focus to Return');
@@ -1295,7 +1304,7 @@ for(const [width,height] of [[1440,960],[390,844]]) test(`aviation welcome zones
  assert.equal(await p.evaluate(`document.querySelectorAll('.welcome-dialog-backdrop,.welcome-layer-demo').length`),0,'the zones are available in the startup view itself');
  assert.equal(await p.evaluate(`document.querySelector('.living-welcome').dataset.fullscreen`),'false');
  const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
- await enter('.topic-aviation');await p.wait(`!!document.querySelector('.welcome-aviation-tools')`,'aviation tools have a real destination');
+ await enter('.topic-aviation');await openStageNotes(p);await p.wait(`!!document.querySelector('.welcome-aviation-tools')`,'aviation tools have a real destination');
  await enter('.welcome-aviation-tools button');
  await p.wait(`document.querySelector('.welcome-layer-demo .welcome-aviation-status')?.textContent.includes('NASR 2026-10-29')`,'digest-checked pinned snapshot ready');
  assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage-map canvas').length`),1,'one preview map for all modes');

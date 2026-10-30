@@ -17,7 +17,7 @@ const DWELL_MS = 9000, EXIT_MS = 520, RETRY_MS = 1600;
 // opened preview has room for the full card (a mine's KGS note adds a few lines).
 const CHIP = [232, 66, 18], CARD = { well: [276, 340, 36], core: [276, 348, 36], mine: [276, 340, 36] };
 const footprint = (record, expanded) => expanded ? [CARD[record.kind][0], CARD[record.kind][1] + (record.note ? 70 : 0), CARD[record.kind][2]] : CHIP;
-const OBSTACLES = ['.welcome-hero', '.welcome-toolbar', '.welcome-preview-brief', '.discovery-hint', '.discovery-field', '.welcome-layer-demo', '.welcome-scene-deck', '.domain-stage-caption'].map(s => `.living-welcome ${s}`).concat('header.topbar').join(',');
+const OBSTACLES = ['.welcome-hero', '.welcome-toolbar', '.welcome-preview-brief', '.discovery-hint', '.discovery-field', '.welcome-layer-demo', '.welcome-scene-deck', '.welcome-category-rail', '.domain-stage-caption'].map(s => `.living-welcome ${s}`).concat('header.topbar').join(',');
 const SPOTLIGHT_RECORDS = spotlight.records;
 const SOURCE = Object.fromEntries(spotlight.sources.map(source => [source.id, source]));
 const ft = n => `${Math.round(n).toLocaleString('en-US')} ft`;

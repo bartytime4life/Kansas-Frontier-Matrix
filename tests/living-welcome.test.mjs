@@ -32,10 +32,11 @@ async function welcome(reduced=false,globals={}){
 }
 const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.children===text);
 
+function openDetails(h,tree){byText(tree,'Source notes & demonstrations').props.onClick();return h.render();}
 const expandedStatus=tree=>findNode(tree,node=>node.props?.className==='welcome-layer-demo-state');
 function expandCategory(h,id){
  let tree=h.render();
- findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();
+ findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();tree=openDetails(h,tree);
  byText(tree,'Preview in the welcome window →').props.onClick();return h.render();
 }
 function reportPreview(h,tree,value){
@@ -160,7 +161,7 @@ test('comparison controls retain category identity, work with motion off, and re
  const h=await welcome(true);let tree=h.render();
  try{
   const open=id=>findNode(tree,n=>n.type==='button'&&n.props.className?.includes('topic-callout')&&n.props.className?.includes('topic-'+id)).props.onClick();
-  open('history');tree=h.render();
+  open('history');tree=h.render();tree=openDetails(h,tree);
   findNode(tree,n=>n.props?.className==='welcome-text-action welcome-preview-action').props.onClick();tree=h.render();
   const toggle=byText(tree,'Hide starter layers');assert.ok(toggle);assert.equal(toggle.props.disabled,undefined);
   toggle.props.onClick();tree=h.render();
@@ -171,7 +172,7 @@ test('comparison controls retain category identity, work with motion off, and re
   assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,true);
   byText(tree,'Hide starter layers').props.onClick();tree=h.render();
   findNode(tree,n=>n.props?.className==='welcome-preview-expand').props.onClick();tree=h.render();
-  open('groundwater');tree=h.render();
+  open('groundwater');tree=h.render();tree=openDetails(h,tree);
   findNode(tree,n=>n.props?.className==='welcome-text-action welcome-preview-action').props.onClick();tree=h.render();
   assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,true);
   assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'groundwater');
@@ -184,7 +185,7 @@ test('every category advertises its own glimpse and the expanded guide opens tha
   try{
    const card=findNode(tree,n=>n.type==='button'&&n.props.className?.includes('topic-callout')&&n.props.className?.includes('topic-'+topic.id));
    assert.equal(findNode(card,n=>n.props?.className==='topic-glimpse').props.children,categoryGlimpse(topic.id).title);
-   card.props.onClick();tree=h.render();
+   card.props.onClick();tree=h.render();tree=openDetails(h,tree);
    findNode(tree,n=>n.type==='button'&&n.props.className==='welcome-text-action welcome-preview-action').props.onClick();tree=h.render();
    const guide=findNode(tree,n=>n.props?.['aria-label']==='Category demonstration');
    assert.ok(guide,topic.id);
@@ -315,7 +316,7 @@ test('welcome uses real search and draft actions without requests or implicit di
 test('each topic links to its actual source workspace and preview selection does not activate layers',async()=>{
  for(const [id,target] of TOPIC_STRUCTURE.filter(t=>capabilityPreviews(t.id).length).map(t=>[t.id,t.id])){
   const h=await welcome();let tree=h.render();
-  findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();
+  findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();tree=openDetails(h,tree);
   const options=findNode(tree,node=>node.props?.className==='topic-options');
   options.props.children[1].props.onClick();tree=h.render();
   assert.equal(findNode(tree,node=>node.type==='capability-preview'&&node.props.demo?.id===capabilityPreviews(id)[1].id).props.demo.id,capabilityPreviews(id)[1].id);
@@ -324,7 +325,7 @@ test('each topic links to its actual source workspace and preview selection does
   assert.equal(rootOf(tree).props['data-active'],id);assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,id,'the pinned domain scene plays behind the cards');
   findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-weather ')).props.onFocus();tree=h.render();
   assert.equal(rootOf(tree).props['data-active'],id,'explicit pin beats passive focus');
-  findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();
+  findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onClick();tree=h.render();tree=openDetails(h,tree);
   findNode(tree,node=>node.type==='button'&&[node.props.children].flat(Infinity).filter(x=>typeof x==='string').join('')===`Explore ${TOPIC_STRUCTURE.find(t=>t.id===id).title.toLowerCase()} sources →`).props.onClick();
   assert.deepEqual(h.calls,[['topic',target],['close',false]]);
   h.harness.dispose();
@@ -496,7 +497,7 @@ test('hover focus isolates one topic and restores the scene after pointer focus 
 test('all shared domains expose their facets and actual destination without mounting a video',async()=>{
  const h=await welcome();let tree=h.render();
  for(const topic of TOPIC_STRUCTURE){
-  findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${topic.id} `)).props.onClick();tree=h.render();
+  findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${topic.id} `)).props.onClick();tree=h.render();tree=openDetails(h,tree);
   const facets=findNode(tree,node=>node.props?.className==='capability-facets');
   assert.equal(facets.props.children.length,topic.facets.length);
   assert.equal(findNode(tree,node=>node.type==='video'),undefined);
@@ -571,7 +572,7 @@ test('keyboard focus and direct mouse topic changes coexist until focus and hove
 
 test('leaving a pinned full-window preview ends the preview and restores hover and the hero',async()=>{
  const h=await welcome();let tree=h.render();
- findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-water ')).props.onClick();tree=h.render();
+ findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-water ')).props.onClick();tree=h.render();tree=openDetails(h,tree);
  byText(tree,'Preview in the welcome window →').props.onClick();tree=h.render();
  assert.equal(rootOf(tree).props['data-fullscreen'],true);assert.equal(rootOf(tree).props['data-active'],'water');
  byText(tree,'Return to categories').props.onClick();tree=h.render();
@@ -619,7 +620,7 @@ test('Geology offers a compact source specimen without changing the workspace, a
    assert.deepEqual(h.calls,[],'a keyboard glimpse never selects workspace layers');
    findNode(tree,node=>node.type==='domain-stage').props.onGeologyModule({Component:'geology-glimpse'});tree=h.render();
    const hint=findNode(tree,node=>node.type==='geology-glimpse');assert.ok(hint);assert.equal(hint.props.expanded,undefined,'startup stays compact');
-   findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-geology ')).props.onClick();tree=h.render();
+   findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-geology ')).props.onClick();tree=h.render();tree=openDetails(h,tree);
    if(entry==='expanded'){
     byText(tree,'Preview in the welcome window →').props.onClick();tree=h.render();
     assert.equal(findNode(tree,node=>node.type==='geology-glimpse'),undefined,'compact owner unmounts when expanded owner takes over');
@@ -629,4 +630,109 @@ test('Geology offers a compact source specimen without changing the workspace, a
    assert.deepEqual(h.calls,[['action','underground'],['close',false]]);
   }finally{h.harness.dispose();}
  }
+});
+
+function intentClock(){
+ let next=0;const jobs=new Map();
+ return {jobs,setTimeout(fn,delay){const id=++next;jobs.set(id,{fn,delay});return id;},clearTimeout(id){jobs.delete(id);},fire(delay){for(const [id,job] of [...jobs])if(job.delay===delay){jobs.delete(id);job.fn();}}};
+}
+const gridCard=(tree,id)=>findNode(tree,n=>n.type==='button'&&n.props.className?.includes(`topic-${id} `));
+const railCard=(tree,id)=>findNode(tree,n=>n.props?.className==='welcome-rail-card'&&n.props['data-topic']===id);
+
+test('settled hover opens a stable stage, brief crossings cancel, and rail keeps every category',async()=>{
+ const clock=intentClock(),h=await welcome(false,clock);
+ try{
+  let tree=h.render();gridCard(tree,'water').props.onPointerEnter({pointerType:'mouse'});tree=h.render();
+  assert.equal(rootOf(tree).props['data-cinematic'],false,'hover immediately previews without moving the hit target');
+  gridCard(tree,'water').props.onPointerLeave();clock.fire(650);tree=h.render();
+  assert.equal(rootOf(tree).props['data-cinematic'],false,'crossing a card does not open the stage');
+  gridCard(tree,'weather').props.onPointerEnter({pointerType:'mouse'});clock.fire(650);tree=h.render();
+  assert.equal(rootOf(tree).props['data-cinematic'],true);
+  gridCard(tree,'weather').props.onPointerLeave();clock.fire(180);tree=h.render();
+  assert.equal(rootOf(tree).props['data-active'],'weather','grid disappearing cannot close or clear the chosen stage');
+  const rail=findNode(tree,n=>n.props?.className==='welcome-rail-items');
+  assert.equal(rail.props.children.length,TOPIC_STRUCTURE.length);
+  for(const topic of TOPIC_STRUCTURE){
+   railCard(tree,topic.id).props.onClick();tree=h.render();
+   assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,topic.id);
+   assert.equal(railCard(tree,topic.id).props['aria-pressed'],true);
+  }
+  assert.deepEqual(h.calls,[],'choosing a preview does not enter a workspace or change published layers');
+ }finally{h.harness.dispose();assert.equal(clock.jobs.size,0);}
+});
+
+test('touch click opens immediately, keyboard focus does not collapse the grid, and reduced motion stays paused',async()=>{
+ const clock=intentClock(),h=await welcome(true,clock);
+ try{
+  let tree=h.render();gridCard(tree,'aviation').props.onPointerEnter({pointerType:'touch'});tree=h.render();
+  assert.equal(clock.jobs.size,0);assert.equal(rootOf(tree).props['data-cinematic'],false);
+  gridCard(tree,'aviation').props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();
+  assert.equal(rootOf(tree).props['data-cinematic'],false,'Tab keeps the navigation layout stable');
+  gridCard(tree,'aviation').props.onClick();tree=h.render();
+  assert.equal(rootOf(tree).props['data-cinematic'],true);assert.equal(rootOf(tree).props['data-active'],'aviation');
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.paused,true);
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-preview-pause').props.disabled,true);
+ }finally{h.harness.dispose();}
+});
+
+test('pending hover is cancelled by notes, hidden tab, and component disposal',async()=>{
+ for(const reason of ['notes','hidden','dispose']){
+  const clock=intentClock(),h=await welcome(false,clock);let disposed=false;
+  try{
+   let tree=h.render();gridCard(tree,'weather').props.onPointerEnter({pointerType:'mouse'});tree=h.render();
+   assert.equal([...clock.jobs.values()].filter(j=>j.delay===650).length,1);
+   if(reason==='notes')byText(tree,'Map notes').props.onClick();
+   if(reason==='hidden'){h.env.document.hidden=true;h.env.listeners.get('visibilitychange')();}
+   if(reason==='dispose'){h.harness.dispose();disposed=true;}
+   assert.equal([...clock.jobs.values()].filter(j=>j.delay===650).length,0,reason);
+   clock.fire(650);
+   if(!disposed){tree=h.render();assert.equal(rootOf(tree).props['data-cinematic'],false);}
+  }finally{if(!disposed)h.harness.dispose();}
+ }
+});
+
+test('rail keyboard wraps and scroll controls honour paused motion',async()=>{
+ const h=await welcome(true),focused=[],scrolled=[];
+ try{
+  let tree=h.render();gridCard(tree,'water').props.onClick();tree=h.render();
+  const rail=findNode(tree,n=>n.props?.className==='welcome-rail-items');
+  rail.props.ref.current={clientWidth:400,scrollBy:o=>scrolled.push(o),querySelector:selector=>({focus:()=>focused.push(selector),scrollIntoView(){}})};
+  let prevented=0;
+  const key=(id,key)=>{railCard(tree,id).props.onKeyDown({key,preventDefault(){prevented++;}});tree=h.render();};
+  key('water','Home');assert.equal(rootOf(tree).props['data-active'],TOPIC_STRUCTURE[0].id);
+  key(TOPIC_STRUCTURE[0].id,'ArrowLeft');assert.equal(rootOf(tree).props['data-active'],TOPIC_STRUCTURE.at(-1).id);
+  key(TOPIC_STRUCTURE.at(-1).id,'ArrowRight');assert.equal(rootOf(tree).props['data-active'],TOPIC_STRUCTURE[0].id);
+  key(TOPIC_STRUCTURE[0].id,'End');assert.equal(rootOf(tree).props['data-active'],TOPIC_STRUCTURE.at(-1).id);
+  assert.equal(prevented,4);assert.equal(focused.length,4);
+  findNode(tree,n=>n.props?.['aria-label']==='Scroll categories right').props.onClick();
+  findNode(tree,n=>n.props?.['aria-label']==='Scroll categories left').props.onClick();
+  assert.deepEqual(scrolled.map(o=>[o.left,o.behavior]),[[300,'instant'],[-300,'instant']]);
+ }finally{h.harness.dispose();}
+});
+
+test('Return restores the original card and grid scroll before another Escape dismisses welcome',async()=>{
+ const h=await welcome(),focus=[];let tree=h.render();
+ const card={focus(){focus.push('card');h.env.document.activeElement=card;}},back={focus(){focus.push('return');h.env.document.activeElement=back;}};
+ const root={scrollTop:680,contains:()=>true,querySelector:selector=>selector==='.topic-water'?card:selector==='.welcome-preview-expand'?back:null};
+ rootOf(tree).props.ref.current=root;
+ try{
+  gridCard(tree,'water').props.onClick();tree=h.render();assert.equal(root.scrollTop,0);assert.equal(focus.at(-1),'return');
+  railCard(tree,'sky').props.onClick();tree=h.render();
+  byText(tree,'Return to categories').props.onClick();tree=h.render();
+  assert.equal(focus.at(-1),'card');assert.equal(root.scrollTop,680);assert.equal(rootOf(tree).props['data-active'],null);
+  h.env.listeners.get('keydown')({target:card,key:'Escape',preventDefault(){},stopImmediatePropagation(){}});
+  assert.deepEqual(h.calls,[['close',false]]);
+ }finally{h.harness.dispose();}
+});
+
+test('keyboard interest cancels a pending pointer takeover and selecting the current rail item preserves comparison',async()=>{
+ const clock=intentClock(),h=await welcome(false,clock);
+ try{
+  let tree=h.render();gridCard(tree,'weather').props.onPointerEnter({pointerType:'mouse'});
+  gridCard(tree,'history').props.onFocus({currentTarget:{matches:()=>true}});clock.fire(650);tree=h.render();
+  assert.equal(rootOf(tree).props['data-cinematic'],false);assert.equal(rootOf(tree).props['data-active'],'history');
+  gridCard(tree,'history').props.onClick();tree=h.render();byText(tree,'Hide starter layers').props.onClick();tree=h.render();
+  railCard(tree,'history').props.onClick();tree=h.render();assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,false);
+  railCard(tree,'water').props.onClick();tree=h.render();assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,true);
+ }finally{h.harness.dispose();}
 });
