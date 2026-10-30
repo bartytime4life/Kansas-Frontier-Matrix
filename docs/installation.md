@@ -176,11 +176,10 @@ To check the Site the same way the `explorer-site` workflow does, run `make site
 
 ## Local data and configuration
 
-For a populated source-data baseline, use the
-[curated GitHub data download](runbooks/github-data-baseline.md). Its offline
-plan shows exact collection sizes before an explicit download into a new local
-directory. Large data assets are separate from GitHub's source-code ZIP and
-retain their source dates and unadmitted context status.
+The [curated baseline runbook](runbooks/github-data-baseline.md) documents the
+historical source-data snapshot. Its GitHub data archives have been retired;
+the offline plan and manifest remain available for provenance. An existing local
+copy retains its source dates and unadmitted context status.
 
 Keep private files outside the Git checkout. The local data tools need no third-party Python packages:
 

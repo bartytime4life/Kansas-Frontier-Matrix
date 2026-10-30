@@ -136,23 +136,26 @@ This includes Site source in Git history, release assets and recorded CI
 artifacts/caches. It does not cap local PC storage and is not a GitHub platform
 quota. The policy file keeps
 **20 GB permanently reserved for code, interface and feature work**, leaving an
-80 GB data ceiling — the same ceiling the
-[curated baseline release](github-data-baseline.md) already uses.
+80 GB data ceiling. The archives from the
+[curated baseline release](github-data-baseline.md) have been retired; its retained metadata remains accounted for.
 
 ```bash
 python3 tools/local_data/intake.py budget
 ```
 
-The October 11, 2026 snapshot records 244,829,184 provider-reported repository
-bytes, 36,710,792,263 bytes across all 40 baseline release assets, 6,150,059
-artifact bytes and 7,064,414,678 cache bytes. The reported total is
-44,026,186,184 bytes, leaving about 35.97 GB beneath the conservative 80 GB
-working ceiling. Repository size is approximate; CI storage is mutable and
-LFS needs separate accounting if used. Re-read the ledger before an upload.
-The loader compares the release's separate data-archive portion against the
-preserved baseline manifest and reports `baseline_check: match` or `mismatch`. After
-publishing a new release, add a `committed` entry with its exact asset bytes.
-The desk warns at 85% of the data ceiling and denies candidates that would exceed it.
+The ledger records 244,829,184 provider-reported repository bytes, 42,312 bytes
+for the baseline release's three retained metadata assets, 6,150,059 artifact
+bytes and 7,064,414,678 cache bytes. The total is 7,315,436,233 bytes, leaving
+about 72.68 GB beneath the 80 GB working ceiling. The repository and CI entries
+are historical estimates; CI storage is mutable and LFS needs separate
+accounting if used. Re-read the ledger before an upload.
+
+The loader checks the retired release's historical archive size against the
+preserved baseline manifest and reports `baseline_check: retired` when they
+match. A discrepancy reports `mismatch`; active releases continue to report
+`match` or `mismatch`. After publishing a new release, add a `committed` entry
+with its exact asset bytes. The desk warns at 85% of the data ceiling and denies
+candidates that would exceed it.
 
 `release-plan` selects candidates greedily in domain/path order until the budget
 is spent and lists the rest as deferred. It is a plan for owner review; nothing

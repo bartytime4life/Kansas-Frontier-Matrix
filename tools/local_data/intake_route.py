@@ -53,14 +53,22 @@ def load_budget(path: Path = BUDGET_PATH, baseline: Path | None = BASELINE_PATH)
         if "data_archive_bytes" in row and (not isinstance(row["data_archive_bytes"], int)
                 or isinstance(row["data_archive_bytes"], bool) or not 0 <= row["data_archive_bytes"] <= row["bytes"]):
             raise BudgetError("BUDGET_COMMITTED_INVALID")
+        if "archive_status" in row and row["archive_status"] != "retired":
+            raise BudgetError("BUDGET_COMMITTED_INVALID")
+        if row.get("archive_status") == "retired" and (row.get("data_archive_bytes") != 0
+                or type(row.get("historical_data_archive_bytes")) is not int
+                or row["historical_data_archive_bytes"] <= 0):
+            raise BudgetError("BUDGET_COMMITTED_INVALID")
         ids.add(row["id"])
     value["baseline_check"] = "not-checked"
     if baseline is not None and baseline.is_file():
         manifest = json.loads(baseline.read_text("utf-8"))
         release = next((r for r in value["committed"] if r["id"] == "release:" + str(manifest.get("release_tag"))), None)
-        # Total hosted asset bytes include manifests/checksums as well as data.
-        # Cross-check the data portion separately without undercounting storage.
-        value["baseline_check"] = "match" if release and release.get("data_archive_bytes", release["bytes"]) == manifest.get("data_archive_bytes") else "mismatch"
+        # The manifest describes historical archive bytes, not their current availability.
+        if release and release.get("archive_status") == "retired":
+            value["baseline_check"] = ("retired" if release["historical_data_archive_bytes"] == manifest.get("data_archive_bytes") else "mismatch")
+        else:
+            value["baseline_check"] = "match" if release and release.get("data_archive_bytes", release["bytes"]) == manifest.get("data_archive_bytes") else "mismatch"
     return value
 
 
