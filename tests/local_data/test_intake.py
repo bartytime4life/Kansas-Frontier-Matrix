@@ -662,6 +662,44 @@ class ServiceTests(unittest.TestCase):
             time.sleep(0.02)
         self.fail("analysis did not finish")
 
+    def test_catalog_snapshot_browses_searches_and_locates_without_writes(self):
+        intake.analyze(self.root, budget=self.desk.budget)
+        path = intake.intake_dir(self.root) / "index.sqlite"
+        with sqlite3.connect(path) as conn:
+            conn.execute("PRAGMA journal_mode=DELETE")
+            conn.execute("CREATE VIRTUAL TABLE library_search USING fts5(relative_path,declared_json,content='items',content_rowid='rowid',tokenize='trigram')")
+            conn.execute("INSERT INTO library_search(library_search) VALUES('rebuild')")
+        conn.close()
+        before = path.read_bytes()
+        self.desk.catalog_only = True
+        self.desk.archive_root = self.root
+        status = self.request("GET", "/api/status")[1]
+        self.assertFalse(status["analysisAllowed"])
+        self.assertTrue(status["catalogBrowsingAllowed"])
+        self.assertEqual(self.request("GET", "/api/overview")[0], 200)
+        response, listing, _ = self.request("GET", "/api/items?text=gauges")
+        self.assertEqual(response, 200)
+        self.assertEqual(listing["total"], 1)
+        self.assertEqual(self.request("GET", "/api/items?text=ga")[0], 400)
+        identity = listing["items"][0]["id"]
+        detail = self.request("GET", f"/api/items/{identity}")[1]
+        self.assertEqual(detail["local_file"], str(self.root / "data/raw/misc/gauges.geojson"))
+        self.assertEqual(self.request("GET", "/api/extents")[0], 200)
+        self.assertEqual(self.request("GET", "/api/release-plan")[0], 200)
+        self.assertEqual(self.request("POST", "/api/analyze", {})[0], 403)
+        self.assertEqual(self.request("POST", "/api/apply", {"id": identity, "action": "stage"})[0], 403)
+        self.assertEqual(self.request("GET", "/api/atlas/catalog")[0], 403)
+        self.assertEqual(path.read_bytes(), before)
+        self.assertFalse(path.with_name(path.name + "-wal").exists())
+        self.assertFalse(path.with_name(path.name + "-shm").exists())
+
+    def test_catalog_reader_rejects_live_database_journals(self):
+        intake.analyze(self.root, budget=self.desk.budget)
+        wal = intake.intake_dir(self.root) / "index.sqlite-wal"
+        wal.write_bytes(b"pending data")
+        with self.assertRaisesRegex(ValueError, "IMMUTABLE_INDEX_SNAPSHOT_REQUIRED"):
+            intake.list_items(self.root, read_only=True)
+
     def test_desk_page_has_no_session_and_keeps_strict_headers(self):
         status, body, headers = self.request("GET", "/", headers={"Origin": None}, raw=True)
         self.assertEqual(status, 200)

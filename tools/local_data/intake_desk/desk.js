@@ -37,7 +37,7 @@ const HOLD_TEXT = {
 };
 
 const $ = (id) => document.getElementById(id);
-const state = { offset: 0, total: 0, bbox: null, selected: null, items: [], timer: null, running: false };
+const state = { offset: 0, total: 0, bbox: null, selected: null, items: [], timer: null, running: false, catalogOnly: false, itemsRequest: 0, mapRequest: 0 };
 
 function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
@@ -73,7 +73,7 @@ async function api(path, body) {
     : { method: "POST", cache: "no-store", credentials: "omit", redirect: "error", headers: { "Content-Type": "application/json", "X-KFM-Session": TOKEN }, body: JSON.stringify(body) };
   const response = await fetch(path, options);
   const value = await response.json().catch(() => ({ error: "INVALID_RESPONSE" }));
-  if (!response.ok) throw new Error(value.error || `HTTP_${response.status}`);
+  if (!response.ok) throw new Error(value.error === "LIBRARY_SEARCH_MINIMUM_3_CHARACTERS" ? "Type at least 3 characters to search the imported library." : value.error || `HTTP_${response.status}`);
   return value;
 }
 const project = ([lon, lat]) => [((lon - VIEW.lon0) / (VIEW.lon1 - VIEW.lon0)) * VIEW.w, ((VIEW.lat1 - lat) / (VIEW.lat1 - VIEW.lat0)) * VIEW.h];
@@ -131,7 +131,7 @@ function renderJob(status) {
   $("include-inbox").parentElement.title = status.inboxConfigured ? "" : "Start the service with --inbox to analyze downloads";
   const counts = `${job.discovered} found · ${job.analyzed} analyzed · ${job.reused} unchanged${job.failed ? ` · ${job.failed} failed` : ""}`;
   $("job").textContent = state.running ? `Analyzing… ${counts}` : job.state === "idle" ? "" : `Last run ${job.state}: ${counts}${job.error ? ` (${job.error})` : ""}`;
-  if (status.analysisAllowed === false) $("job").textContent = "Private review · analysis is disabled";
+  if (status.analysisAllowed === false) $("job").textContent = status.catalogBrowsingAllowed ? "Imported library · browse and inspect" : "Private review · analysis is disabled";
 }
 async function poll() {
   try {
@@ -160,7 +160,10 @@ function query(extra = {}) {
   return params.toString();
 }
 async function loadItems() {
-  const listing = await api(`/api/items?${query({ limit: PAGE, offset: state.offset })}`);
+  const sequence = ++state.itemsRequest;
+  const requested = query({ limit: PAGE, offset: state.offset });
+  const listing = await api(`/api/items?${requested}`);
+  if (sequence !== state.itemsRequest || requested !== query({ limit: PAGE, offset: state.offset })) return;
   state.items = listing.items;
   state.total = listing.total;
   const rows = $("rows");
@@ -182,7 +185,10 @@ async function loadItems() {
   $("next").disabled = last >= state.total;
 }
 async function loadMap() {
-  const collection = await api(`/api/extents?${query()}`);
+  const sequence = ++state.mapRequest;
+  const requested = query();
+  const collection = await api(`/api/extents?${requested}`);
+  if (sequence !== state.mapRequest || requested !== query()) return;
   const map = $("map");
   map.replaceChildren();
   for (let lon = -102; lon <= -94; lon += 2) {
@@ -279,6 +285,7 @@ async function openItem(id) {
   state.selected = id;
   let item;
   try { item = await api(`/api/items/${id}`); } catch (error) { toast(`Could not load item: ${error.message}`); return; }
+  if (state.selected !== id) return;
   const p = item.profile;
   const d = item.decision;
   const s = p.spatial;
@@ -296,12 +303,13 @@ async function openItem(id) {
   body.append(el("h3", { text: "Where it goes" }));
   const placements = el("ul", { class: "placements" });
   for (const placement of d.placements) {
-    const button = placement.tier === "work_lane" && placement.action === "stage" ? applyButton(id, "stage", "Stage copy")
-      : placement.tier === "git_repo" && placement.action === "metadata_card" ? applyButton(id, "card", "Write card") : el("span", { class: "muted", text: ACTION_LABELS[placement.action] || placement.action });
+    const button = !state.catalogOnly && placement.tier === "work_lane" && placement.action === "stage" ? applyButton(id, "stage", "Stage copy")
+      : !state.catalogOnly && placement.tier === "git_repo" && placement.action === "metadata_card" ? applyButton(id, "card", "Write card") : el("span", { class: "muted", text: ACTION_LABELS[placement.action] || placement.action });
     const why = [placement.reason, placement.target || placement.path, placement.bytes != null ? bytes(placement.bytes) : null, placement.asset_parts > 1 ? `${placement.asset_parts} release parts` : null].filter(Boolean).join(" · ");
     placements.append(el("li", {}, el("span", { class: "tier", text: TIER_LABELS[placement.tier] || placement.tier }), button, el("span", { class: "why", text: why })));
   }
   body.append(placements);
+  if (item.local_file) body.append(el("h3", { text: "File on this PC" }), el("pre", { text: item.local_file }));
   body.append(el("h3", { text: "What is in it" }), kv([
     ["Format", `${p.format.kind} (${p.format.family})`], ["Media type", p.format.media_type], ["CRS", s.crs], ["Extent (WGS84)", s.bbox_wgs84?.map((v) => v.toFixed(4)).join(", ")],
     ["Kansas", s.kansas], ["Geometry", Object.keys(s.geometry_types || {}).join(", ")], ["Rows", p.structure.rows], ["Features", p.structure.features], ["Points", p.structure.points],
@@ -377,7 +385,24 @@ async function loadPlan() {
 async function reload() {
   try { await Promise.all([loadItems(), loadMap()]); } catch (error) { toast(`Could not load files: ${error.message}`); }
 }
+async function loadPipelineHealth() {
+  if (state.catalogOnly) return;
+  const box = $("pipeline-health");
+  if (!box) return;
+  box.hidden = false;
+  try {
+    const health = await api("/api/pipeline-health");
+    $("pipeline-health-state").textContent = health.state === "unavailable" ? "Pipeline report unavailable. Check the capture service." : `${health.stale ? "Report is out of date" : "Last checked"}: ${health.checkedAt}. Publication: ${health.publication}. Last tick: ${health.lastTick?.state || "unknown"}${health.lastTick?.reason ? " (" + health.lastTick.reason + ")" : ""}.`;
+    $("pipeline-health-jobs").replaceChildren(...health.jobs.map(job => el("article", {},
+      el("strong", { text: `${job.sourceId}: ${job.state}${job.exhausted ? " · retries exhausted" : ""}` }),
+      el("p", { text: `Candidate validation: ${job.candidateState || "not checked"}${job.candidateReason ? " (" + job.candidateReason + ")" : ""}.` }),
+      el("p", { text: `Last attempt: ${job.lastAttemptAt || "unknown for older jobs"}. Last successful capture: ${job.lastSuccessfulCaptureAt || "unknown for older jobs"}. Next eligible: ${job.nextEligibleAt || "unknown"}.` }),
+      ...(job.reason ? [el("p", { text: `Hold: ${job.reason}` })] : []))));
+    $("pipeline-health-backup").textContent = `Storage: ${health.storage?.state || "unknown"} (${bytes(health.storage?.freeBytes)} free). Working backup: ${health.backup?.state || "unknown"}. Restore: ${health.restore?.state || "unknown"}${health.restore?.matchesLatestBackup === false ? " (does not test the latest backup)" : ""}. Preserved archive: ${health.preservedArchiveBackup?.state || "unknown"}.`;
+  } catch { $("pipeline-health-state").textContent = "Pipeline report could not be read. Check the capture service."; }
+}
 async function refresh() {
+  void loadPipelineHealth();
   try { renderOverview(await api("/api/overview")); } catch (error) { toast(`Could not load summary: ${error.message}`); }
   await reload();
   loadPlan().catch((error) => toast(`Could not load plan: ${error.message}`));
@@ -403,7 +428,13 @@ async function boot() {
   try {
     const status = await api("/api/status");
     renderJob(status);
-    if (status.analysisAllowed === false) {
+    state.catalogOnly = status.catalogBrowsingAllowed === true;
+    if (state.catalogOnly) {
+      document.title = "KFM Data Library";
+      document.querySelector(".brand strong").textContent = "KFM Data Library";
+      $("desk-subtitle").textContent = "Imported KFM library · browse files, source metadata, geography and review holds";
+    }
+    if (status.analysisAllowed === false && !state.catalogOnly) {
       for (const id of ["indexing-summary", "indexing-workspace", "indexing-release-plan"]) $(id).hidden = true;
       $("desk-subtitle").textContent = "Inspect selected local collections, their source evidence and pending review.";
       return;
@@ -412,3 +443,4 @@ async function boot() {
   } catch (error) { $("job").textContent = `Service unavailable (${error.message})`; }
 }
 boot();
+setInterval(() => { if (document.visibilityState === "visible" && !state.catalogOnly) void loadPipelineHealth(); }, 60000);

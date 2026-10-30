@@ -206,23 +206,30 @@ CREATE TABLE IF NOT EXISTS applications (
 
 
 @contextmanager
-def open_index(root: Path, *, allow_stale_bindings: bool = False):
+def open_index(root: Path, *, allow_stale_bindings: bool = False, read_only: bool = False):
     """Open (and create) the private intake index inside the validated store."""
     base = intake_dir(root)
-    check_directory(base, create=True)
+    check_directory(base, create=not read_only)
     path = base / "index.sqlite"
     for name in ("index.sqlite", "index.sqlite-wal", "index.sqlite-shm", "index.sqlite-journal"):
         if (base / name).is_symlink():
             raise IntakeError("INDEX_SYMLINK_REJECTED")
     created = not path.exists()
-    conn = sqlite3.connect(path, timeout=10, check_same_thread=False)
+    if read_only and (not path.is_file() or any((base / ("index.sqlite" + suffix)).exists() and (base / ("index.sqlite" + suffix)).stat().st_size for suffix in ("-wal", "-journal"))):
+        raise IntakeError("IMMUTABLE_INDEX_SNAPSHOT_REQUIRED")
+    conn = sqlite3.connect(path.as_uri() + "?mode=ro&immutable=1" if read_only else path,
+                           uri=read_only, timeout=10, check_same_thread=False)
     try:
         if created and os.name == "posix":
             os.chmod(path, 0o600)
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("PRAGMA foreign_keys=ON")
-        conn.executescript(SCHEMA_SQL)
-        conn.execute("INSERT OR IGNORE INTO meta(key, value) VALUES ('schema_version', ?)", (INDEX_SCHEMA_VERSION,))
+        if read_only:
+            conn.execute("PRAGMA query_only=ON")
+            conn.execute("PRAGMA trusted_schema=OFF")
+        else:
+            conn.execute("PRAGMA journal_mode=WAL")
+            conn.execute("PRAGMA foreign_keys=ON")
+            conn.executescript(SCHEMA_SQL)
+            conn.execute("INSERT OR IGNORE INTO meta(key, value) VALUES ('schema_version', ?)", (INDEX_SCHEMA_VERSION,))
         version = conn.execute("SELECT value FROM meta WHERE key='schema_version'").fetchone()[0]
         if version != INDEX_SCHEMA_VERSION:
             raise IntakeError("INDEX_SCHEMA_UNSUPPORTED")
@@ -233,7 +240,8 @@ def open_index(root: Path, *, allow_stale_bindings: bool = False):
             # Only a complete analysis can make their decisions usable again.
             raise IntakeError("INTAKE_REANALYSIS_REQUIRED")
         yield conn
-        conn.commit()
+        if not read_only:
+            conn.commit()
     finally:
         conn.close()
 
@@ -394,9 +402,11 @@ def _upsert(conn, item, info, profile, decision, run_id):
 # --- queries --------------------------------------------------------------
 
 def list_items(root: Path, *, status=None, domain=None, family=None, lane=None, bbox=None, text=None,
-               include_missing=False, limit=100, offset=0) -> dict:
+               include_missing=False, limit=100, offset=0, read_only=False) -> dict:
     """Filter indexed items; ``bbox`` is a WGS84 [min_x, min_y, max_x, max_y] intersection."""
     limit = max(1, min(int(limit), LIST_LIMIT))
+    if read_only and text and len(str(text)) < 3:
+        raise IntakeError("LIBRARY_SEARCH_MINIMUM_3_CHARACTERS")
     offset = max(0, int(offset))
     where, args = [], []
     for column, value in (("status", status), ("domain", domain), ("family", family), ("lane", lane)):
@@ -406,9 +416,13 @@ def list_items(root: Path, *, status=None, domain=None, family=None, lane=None, 
     if not include_missing:
         where.append("items.present=1")
     if text:
-        where.append("(items.relative_path LIKE ? ESCAPE '\\' OR items.declared_json LIKE ? ESCAPE '\\')")
-        pattern = "%" + str(text)[:100].replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
-        args += [pattern, pattern]
+        if read_only and len(str(text)) >= 3:
+            where.append("items.rowid IN (SELECT rowid FROM library_search WHERE library_search MATCH ?)")
+            args.append('"' + str(text)[:100].replace('"', '""') + '"')
+        else:
+            where.append("(items.relative_path LIKE ? ESCAPE '\\' OR items.declared_json LIKE ? ESCAPE '\\')")
+            pattern = "%" + str(text)[:100].replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
+            args += [pattern, pattern]
     join = ""
     if bbox:
         x0, y0, x1, y1 = (float(v) for v in bbox)
@@ -416,7 +430,9 @@ def list_items(root: Path, *, status=None, domain=None, family=None, lane=None, 
         where.append("item_extent.max_x >= ? AND item_extent.min_x <= ? AND item_extent.max_y >= ? AND item_extent.min_y <= ?")
         args += [x0, x1, y0, y1]
     clause = (" WHERE " + " AND ".join(where)) if where else ""
-    with open_index(root) as conn:
+    with open_index(root, read_only=read_only) as conn:
+        if read_only and text and len(str(text)) >= 3 and not conn.execute("SELECT 1 FROM sqlite_master WHERE name='library_search' AND type='table'").fetchone():
+            raise IntakeError("LIBRARY_SEARCH_INDEX_REQUIRED")
         total = conn.execute(f"SELECT COUNT(*) FROM items {join}{clause}", args).fetchone()[0]
         rows = conn.execute(f"SELECT {', '.join('items.' + c for c in ITEM_COLUMNS)} FROM items {join}{clause} "
                             "ORDER BY items.status, items.domain, items.relative_path LIMIT ? OFFSET ?", args + [limit, offset]).fetchall()
@@ -436,10 +452,10 @@ def _summary(item: dict) -> dict:
             "declared_label": "/".join(str((item["declared"] or {}).get(k)) for k in ("source_id", "dataset_id", "version")) if item["declared"] else None}
 
 
-def get_item(root: Path, identity: str) -> dict:
+def get_item(root: Path, identity: str, *, read_only=False) -> dict:
     if not isinstance(identity, str) or len(identity) != 32 or any(c not in "0123456789abcdef" for c in identity):
         raise IntakeError("ITEM_ID_INVALID")
-    with open_index(root) as conn:
+    with open_index(root, read_only=read_only) as conn:
         row = conn.execute(f"SELECT {', '.join(ITEM_COLUMNS)} FROM items WHERE id=?", (identity,)).fetchone()
         if row is None:
             raise IntakeError("ITEM_NOT_FOUND")
@@ -450,12 +466,16 @@ def get_item(root: Path, identity: str) -> dict:
     return value
 
 
-def overview(root: Path, budget: dict | None = None) -> dict:
+def overview(root: Path, budget: dict | None = None, *, read_only=False) -> dict:
     budget = budget or intake_route.load_budget()
-    with open_index(root) as conn:
+    with open_index(root, read_only=read_only) as conn:
+        # Frozen multi-million-row catalogs must not fetch full profile rows just
+        # to group metadata. The derived covering index keeps this bounded by the
+        # compact metadata pages; ordinary writable stores retain their planner.
+        summary_hint = " INDEXED BY library_summary" if read_only and conn.execute("SELECT 1 FROM sqlite_master WHERE type='index' AND name='library_summary'").fetchone() else ""
         def grouped(column):
             return {str(k): {"files": n, "bytes": b or 0} for k, n, b in
-                    conn.execute(f"SELECT {column}, COUNT(*), SUM(size_bytes) FROM items WHERE present=1 GROUP BY {column} ORDER BY {column}")}
+                    conn.execute(f"SELECT {column}, COUNT(*), SUM(size_bytes) FROM items{summary_hint} WHERE present=1 GROUP BY {column} ORDER BY {column}")}
         last = conn.execute("SELECT summary_json FROM runs WHERE state != 'running' ORDER BY started_at DESC LIMIT 1").fetchone()
         running = conn.execute("SELECT run_id FROM runs WHERE state='running' ORDER BY started_at DESC LIMIT 1").fetchone()
         totals = conn.execute("SELECT COUNT(*), COALESCE(SUM(size_bytes),0) FROM items WHERE present=1").fetchone()
@@ -491,9 +511,9 @@ def release_plan_from(conn, budget: dict) -> dict:
             "budget_before_plan": state, "budget_after_plan": intake_route.budget_state(budget, total)}
 
 
-def release_plan(root: Path, budget: dict | None = None) -> dict:
+def release_plan(root: Path, budget: dict | None = None, *, read_only=False) -> dict:
     budget = budget or intake_route.load_budget()
-    with open_index(root) as conn:
+    with open_index(root, read_only=read_only) as conn:
         return release_plan_from(conn, budget)
 
 

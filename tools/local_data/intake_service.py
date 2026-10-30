@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import secrets
 import sys
@@ -22,7 +23,7 @@ from urllib.parse import parse_qs, urlsplit
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
-from tools.local_data import intake, intake_route, atlas, review_packages  # noqa: E402
+from tools.local_data import intake, intake_route, atlas, review_packages, pipeline_health  # noqa: E402
 from tools.local_data.loopback_session import session_matches, print_connection_links  # noqa: E402
 
 PORT = 8771
@@ -43,11 +44,14 @@ MAX_MAP_FEATURES = 5000
 class Desk:
     """Holds the store, the configured inbox and the single background analysis job."""
 
-    def __init__(self, root: Path, inbox: Path | None = None, budget: dict | None = None, raster_python: Path | None = None, *, max_files: int = intake.MAX_FILES, review_bindings=(), read_only=False):
+    def __init__(self, root: Path, inbox: Path | None = None, budget: dict | None = None, raster_python: Path | None = None, *, max_files: int = intake.MAX_FILES, review_bindings=(), read_only=False, catalog_only=False, archive_root=None):
         self.root = root
         self.atlas = atlas.Atlas(root, raster_python=raster_python)
-        self.reviews = review_packages.ReviewPackages(root, review_bindings)
+        self.reviews = review_packages.ReviewPackages(archive_root if catalog_only and archive_root else root, review_bindings)
         self.read_only = read_only
+        self.catalog_only = catalog_only
+        self.archive_root = archive_root
+        self.overview_cache = None
         self.inbox = inbox
         self.budget = budget or intake_route.load_budget()
         self.max_files = intake.file_limit(max_files)
@@ -61,10 +65,10 @@ class Desk:
         with self.lock:
             job = dict(self.job)
         return {"schema": "kfm-intake-desk/v1", "analyzerVersion": intake.ANALYZER_VERSION, "inboxConfigured": self.inbox is not None,
-                "maxFiles": self.max_files, "analysisAllowed": not self.read_only, "job": job, "authority": {"network": False, "source_admission": False, "promotion": False, "release": False, "publication": False}}
+                "maxFiles": self.max_files, "analysisAllowed": not (self.read_only or self.catalog_only), "catalogBrowsingAllowed": self.catalog_only, "job": job, "authority": {"network": False, "source_admission": False, "promotion": False, "release": False, "publication": False}}
 
     def start(self, value: dict) -> dict:
-        if self.read_only:
+        if self.read_only or self.catalog_only:
             raise ValueError("READ_ONLY_DESK")
         if not isinstance(value, dict) or set(value) - {"includeInbox"} or not isinstance(value.get("includeInbox", False), bool):
             raise ValueError("ANALYZE_REQUEST_INVALID")
@@ -109,7 +113,7 @@ class Desk:
                 self.job.update(state="failed", error=str(error) if ERROR.fullmatch(str(error)) else "ANALYSIS_FAILED")
 
     def extents(self, query: dict) -> dict:
-        listing = intake.list_items(self.root, **query)
+        listing = intake.list_items(self.root, read_only=self.catalog_only, **query)
         features = []
         for item in listing["items"][:MAX_MAP_FEATURES]:
             b = item["bbox_wgs84"]
@@ -261,25 +265,52 @@ def handler(desk: Desk, *, port=PORT):
                     if self.origin() in SITE_ORIGINS:
                         body["sessionToken"] = desk.token
                     return self.answer(200, body)
+                if path == "/api/pipeline-health":
+                    if desk.catalog_only or parsed.query:
+                        return self.answer(400, {"error": "PIPELINE_HEALTH_UNAVAILABLE"})
+                    if "Origin" in self.headers and self.origin() != self_origin:
+                        return self.answer(403, {"error": "PRIVATE_REVIEW_ORIGIN_REQUIRED"})
+                    return self.answer(200, pipeline_health.read_health(desk.root))
                 if path == "/api/overview":
-                    return self.answer(200, intake.overview(desk.root, desk.budget))
+                    if desk.catalog_only:
+                        with desk.lock:
+                            if desk.overview_cache is None:
+                                desk.overview_cache = intake.overview(desk.root, desk.budget, read_only=True)
+                            value = desk.overview_cache
+                    else:
+                        value = intake.overview(desk.root, desk.budget)
+                    return self.answer(200, value)
                 if path == "/api/items":
-                    return self.answer(200, intake.list_items(desk.root, **_query(parsed.query)))
+                    return self.answer(200, intake.list_items(desk.root, read_only=desk.catalog_only, **_query(parsed.query)))
                 if path.startswith("/api/items/"):
                     identity = path.rsplit("/", 1)[-1]
                     if not ID.fullmatch(identity):
                         raise ValueError("ITEM_ID_INVALID")
-                    return self.answer(200, intake.get_item(desk.root, identity))
+                    value = intake.get_item(desk.root, identity, read_only=desk.catalog_only)
+                    if desk.catalog_only and desk.archive_root:
+                        relative = value.get("store_path")
+                        if isinstance(relative, str) and not relative.startswith("/") and ".." not in Path(relative).parts:
+                            target = desk.archive_root / relative
+                            # A locator only, never a file-serving route or symlink traversal.
+                            if all(not p.is_symlink() for p in [target, *target.parents]) and target.is_file():
+                                value["local_file"] = str(target)
+                    return self.answer(200, value)
                 if path == "/api/extents":
                     query = _query(parsed.query)
                     return self.answer(200, desk.extents(query), content_type="application/geo+json")
                 if path == "/api/atlas/catalog":
+                    if desk.catalog_only:
+                        return self.answer(403, {"error": "CATALOG_ONLY_DESK"})
                     return self.answer(200, desk.atlas.catalog(**_query(parsed.query)))
                 if path == "/api/atlas/prism/groups":
+                    if desk.catalog_only:
+                        return self.answer(403, {"error": "CATALOG_ONLY_DESK"})
                     if parsed.query:
                         raise ValueError("ATLAS_QUERY_INVALID")
                     return self.answer(200, desk.atlas.groups())
                 if path == "/api/atlas/prism/frames":
+                    if desk.catalog_only:
+                        return self.answer(403, {"error": "CATALOG_ONLY_DESK"})
                     params = parse_qs(parsed.query, max_num_fields=5)
                     if set(params) - {"group", "year", "offset", "limit"} or any(len(v) != 1 for v in params.values()):
                         raise ValueError("ATLAS_QUERY_INVALID")
@@ -288,7 +319,7 @@ def handler(desk: Desk, *, port=PORT):
                 if path == "/api/budget":
                     return self.answer(200, intake_route.budget_state(desk.budget))
                 if path == "/api/release-plan":
-                    return self.answer(200, intake.release_plan(desk.root, desk.budget))
+                    return self.answer(200, intake.release_plan(desk.root, desk.budget, read_only=desk.catalog_only))
             except ValueError as error:
                 code = str(error)
                 status = 404 if code == "ITEM_NOT_FOUND" else 400
@@ -300,7 +331,7 @@ def handler(desk: Desk, *, port=PORT):
         def do_POST(self):
             if not self.host_ok() or self.origin() is None or not session_matches(self.headers, desk.token):
                 return self.answer(403, {"error": "SESSION_REJECTED"})
-            if desk.read_only:
+            if desk.read_only or desk.catalog_only:
                 return self.answer(403, {"error": "READ_ONLY_DESK"})
             if self.headers.get("Content-Type") != "application/json" or self.headers.get("Transfer-Encoding"):
                 return self.answer(415, {"error": "JSON_REQUIRED"})
@@ -342,6 +373,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", help="initialized private store (default: KFM_DATA_ROOT)")
     parser.add_argument("--port", type=int, default=PORT, help="loopback port, 1024–65535; default 8771")
     parser.add_argument("--read-only", action="store_true", help="disable all POST operations and analysis; suitable for a parallel private review desk")
+    parser.add_argument("--catalog-only", action="store_true", help="browse an immutable index snapshot without analysis, writes or previews")
+    parser.add_argument("--archive-root", type=Path, help="private imported archive for local-file locators in catalog-only mode")
+    parser.add_argument("--connection-file", type=Path, help="private operator JSON connection link; parent must already be private")
     parser.add_argument("--inbox", type=Path, help="read-only downloads directory the desk may analyze (e.g. ~/Downloads/KFM)")
     parser.add_argument("--max-files", type=int, default=intake.MAX_FILES, help="explicit discovery ceiling, at most 5,000,000 files")
     parser.add_argument("--refresh-seconds", type=int, default=0, help="0 disables automatic analysis; otherwise repeat on a 300 to 86400 second interval")
@@ -349,7 +383,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--review-package", action="append", default=[], metavar="WORK_MANIFEST@SHA256",
                         help="explicit relative WORK review-manifest.json and exact digest; private desk only, at most 16")
     args = parser.parse_args(argv)
-    if not 1024 <= args.port <= 65535 or (args.read_only and args.refresh_seconds):
+    if not 1024 <= args.port <= 65535 or ((args.read_only or args.catalog_only) and args.refresh_seconds) or (args.read_only and args.catalog_only):
         parser.error("--port must be 1024–65535; --read-only requires --refresh-seconds 0")
     if args.refresh_seconds != 0 and not 300 <= args.refresh_seconds <= 86400:
         parser.error("--refresh-seconds must be 0 or between 300 and 86400")
@@ -359,13 +393,32 @@ def main(argv: list[str] | None = None) -> int:
         inbox = args.inbox.expanduser().resolve()
         if not inbox.is_dir() or inbox == root or root in inbox.parents or inbox in root.parents:
             parser.error("--inbox must be an existing directory separate from the store")
-    desk = Desk(root, inbox, raster_python=args.raster_python, max_files=args.max_files, review_bindings=args.review_package, read_only=args.read_only)
+    archive_root = None
+    if args.archive_root:
+        if not args.catalog_only:
+            parser.error("--archive-root requires --catalog-only")
+        archive_root = intake.external_root(str(args.archive_root))
+        if not archive_root.is_dir():
+            parser.error("--archive-root must exist")
+    desk = Desk(root, inbox, raster_python=args.raster_python, max_files=args.max_files, review_bindings=args.review_package, read_only=args.read_only, catalog_only=args.catalog_only, archive_root=archive_root)
     server = ThreadingHTTPServer(("127.0.0.1", args.port), handler(desk, port=args.port))
     stop_refresh = threading.Event()
     if args.refresh_seconds:
         desk.start({})
         threading.Thread(target=desk.refresh_periodically, args=(args.refresh_seconds, stop_refresh), daemon=True, name="kfm-intake-refresh").start()
     self_origin = f"http://127.0.0.1:{args.port}"
+    if args.connection_file:
+        path = args.connection_file.absolute()
+        from tools.local_data.file_io import check_directory
+        check_directory(path.parent)
+        if path.parent.stat().st_mode & 0o077 or path.is_symlink():
+            parser.error("--connection-file requires a private parent and a regular target")
+        temp = path.with_name(path.name + "." + secrets.token_hex(8))
+        fd = os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+        with os.fdopen(fd, "w") as stream:
+            json.dump({"url": f"{self_origin}/#kfm-intake={desk.token}", "token": desk.token, "port": args.port}, stream)
+            stream.flush(); os.fsync(stream.fileno())
+        os.replace(temp, path)
     print(f"KFM Intake Desk: {self_origin}/  (store {root}; Ctrl+C to stop)", flush=True)
     print_connection_links(desk.token, "intake", SITE_ORIGINS | {self_origin})
     try:
