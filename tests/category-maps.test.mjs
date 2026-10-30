@@ -63,7 +63,7 @@ test('Fauna and public safety open reference looks without enabling unreleased o
  assert.ok(!topics.officialSourceTopics('census-counties').includes('public-safety'),'population is not a crime metric');
  assert.ok(!topics.officialSourceTopics('nws-alerts').includes('public-safety'),'weather alerts retain their own subject');
  assert.deepEqual(topics.registryLayerTopics('Fauna'),['ecology','fauna']);
- assert.deepEqual(topics.registryLayerTopics('Crime, justice & public safety'),['public-safety']);
+ assert.deepEqual(topics.registryLayerTopics('Crime & justice'),['public-safety']);
  assert.deepEqual(topics.registryLayerTopics('Flora'),['ecology'],'plants are not reassigned to animal evidence');
 });
 

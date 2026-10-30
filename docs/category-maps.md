@@ -21,7 +21,7 @@ holds and limits. They are display context, not admitted evidence.
 ## Fauna and crime, justice & public safety
 
 The shared taxonomy now has 21 categories. **Fauna & wildlife** belongs to
-Earth & environment; **Crime, justice & public safety** belongs to People &
+Earth & environment; **Crime & justice** belongs to People &
 place. The welcome, Layers topic selector, Topics index and restored `topic`
 URLs use the same `fauna` and `public-safety` identifiers.
 
@@ -32,7 +32,7 @@ and its source catalogue, whose occurrence context has its own scope and
 limitations. Landscape appearance does not establish species presence,
 abundance or absence. The category does not expose sensitive wildlife sites.
 
-Crime, justice & public safety opens **Public-safety context**, a statewide
+Crime & justice opens **Public-safety context**, a statewide
 2D civic basemap, also with no provider starters. The existing DeFlock reported
 plate-reader areas can be enabled explicitly from the context controls or
 Layers; they remain classified under Transport and Engineering too. Those

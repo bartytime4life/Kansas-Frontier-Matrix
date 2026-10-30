@@ -3,7 +3,7 @@
 ## Fauna and public-safety entries · 2026-10-29
 
 The welcome now derives 21 entries from the existing shared topic taxonomy.
-**Fauna & wildlife** appears in Earth & environment and **Crime, justice &
+**Fauna & wildlife** appears in Earth & environment and **Crime &
 public safety** in People & place. Both reuse the existing card, dialog,
 keyboard navigation, category-map entry and Layers catalogue controls.
 
