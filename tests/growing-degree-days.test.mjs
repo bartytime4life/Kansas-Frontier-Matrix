@@ -47,7 +47,7 @@ test('a season covers every date from April 1 to October 31: an absent date and 
 
 test('the daily CSV is read by its headers, a missing reading is M or blank, and an unexpected header is refused',()=>{
  const rows=gdd.parseDailyCsv(`${DAILY_HEADER}\nSLN,2024-04-01,90,60\nSLN,2024-04-02,M,40\nSLN,2024-04-03,70,\n`);
- assert.deepEqual(rows,[{day:'2024-04-01',maxF:90,minF:60},{day:'2024-04-02',maxF:null,minF:40},{day:'2024-04-03',maxF:70,minF:null}]);
+ assert.deepEqual(rows,[{day:'2024-04-01',maxF:90,minF:60,precipIn:null},{day:'2024-04-02',maxF:null,minF:40,precipIn:null},{day:'2024-04-03',maxF:70,minF:null,precipIn:null}]);
  assert.throws(()=>gdd.parseDailyCsv('station,date,high\nSLN,2024-04-01,90'),/Unrecognised daily summary columns/);
  assert.throws(()=>gdd.parseDailyCsv(''),/Empty daily summary/);
 });
@@ -76,8 +76,8 @@ test('the route reads the nearest station\'s season, reports the days it could n
   assert.equal(partial.headers.get('cache-control'),'no-store','a season with a missing day is not kept');
   assert.equal(gdd.validDegreeDays(body,-97.6,38.8,2024),true,'the page accepts what the route sends');
 
-  const everyDay=gdd.seasonDates(2024).map(date=>`SLN,${date},80,60`).join('\n');
-  globalThis.fetch=async input=>String(input).includes('geojson')?json(STATIONS):text(`${DAILY_HEADER}\n${everyDay}\n`);
+  const everyDay=gdd.seasonDates(2024).map(date=>`SLN,${date},80,60,0.1`).join('\n');
+  globalThis.fetch=async input=>String(input).includes('geojson')?json(STATIONS):text(`${DAILY_HEADER},precip_in\n${everyDay}\n`);
   const complete=await route.GET(new Request('https://kfm.test/api/farming/degree-days?lon=-97.6&lat=38.8&year=2024'));
   assert.equal(complete.headers.get('cache-control'),'public, max-age=86400, s-maxage=604800','a season with every day read is kept a day');
  }finally{globalThis.fetch=original;}
@@ -112,14 +112,45 @@ test('the dock shows the reading beside the crops, with its station and its limi
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:{state:'loading',year:2024,line:null}})),/Reading the season at the nearest Kansas station/);
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:{state:'failed',year:2024,line:null}})),/No growing degree days are inferred/);
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:{state:'none',year:2024,line:null}})),/No Kansas airport station is within 150 km/);
- const ready=JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:{state:'ready',year:2024,line:'33 growing degree days, base 50 °F, capped at 86 °F, Apr 1–Oct 31 2024 · from Salina, 3 km away · 2 days read, 1 missing'}}));
- assert.match(ready,/33 growing degree days/);assert.match(ready,/A station reading, not the field/);
+ const ready=JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:{state:'ready',year:2024,line:'33 growing degree days, base 50 °F, capped at 86 °F, Apr 1–Oct 31 2024 · from Salina, 3 km away · 2 days read, 1 missing',rain:'0.75 in of rain, Apr 1–Oct 31 2024 · 212 days missing'}}));
+ assert.match(ready,/33 growing degree days/);assert.match(ready,/0\.75 in of rain/);assert.match(ready,/A station reading, not the field/);
  assert.doesNotMatch(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:null})),/Growing degree days, 2024/,'nothing without a click');
 });
 
 test('the page reads the degree days with each click, for the crop year on show, and clears them with the crops',()=>{
  assert.match(page,/readDegreeDaysRef\.current\(event\.lngLat\.lng, event\.lngLat\.lat, cropsRef\.current\)/);
  assert.match(page,/degreeDaysRequestRef\.current\?\.abort\(\);\n    setCropPoint\(null\);/,'turning crops off aborts the reading');
- assert.match(page,/import \{ GDD_API_PATH, degreeDaysLine, validDegreeDays/);
+ assert.match(page,/import \{ GDD_API_PATH, degreeDaysLine, rainLine, validDegreeDays/);
  assert.match(dockSource,/degreeDays\?: Readonly</);
+});
+
+test('season rainfall totals the inches over every date of the season, and counts an absent or blank day as missing',()=>{
+ const rain=gdd.seasonRainfall([{day:'2024-04-01',maxF:80,minF:60,precipIn:0.5},{day:'2024-04-02',maxF:80,minF:60,precipIn:0.25},{day:'2024-04-03',maxF:80,minF:60,precipIn:null}],2024);
+ assert.deepEqual(rain,{inches:0.75,daysRead:2,daysMissing:212});
+ assert.equal(gdd.seasonRainfall([],2024).daysMissing,214,'no precipitation column reads as every day missing');
+});
+
+test('the daily CSV reads precipitation when the column is there, and reads none when it is not',()=>{
+ const withRain=gdd.parseDailyCsv(`${DAILY_HEADER},precip_in\nSLN,2024-04-01,90,60,M\nSLN,2024-04-02,70,40,0.3\n`);
+ assert.deepEqual(withRain.map(d=>d.precipIn),[null,0.3]);
+ assert.deepEqual(gdd.parseDailyCsv(`${DAILY_HEADER}\nSLN,2024-04-01,90,60\n`).map(d=>d.precipIn),[null]);
+});
+
+test('the rain line says the inches and whether every day was read',()=>{
+ const reading={lon:-97.6,lat:38.8,retrievedAt:'x',year:2024,state:'ready',station:{id:'SLN',name:'Salina',km:3},degreeDays:33,daysRead:2,daysMissing:212,rainInches:0.75,rainDaysMissing:212};
+ assert.equal(gdd.rainLine(reading),'0.75 in of rain, Apr 1–Oct 31 2024 · 212 days missing');
+ assert.equal(gdd.rainLine({...reading,rainInches:null}),null,'no rain read, no line');
+});
+
+test('the route reports the season rain and keeps it out of the cache while any day is missing',async()=>{
+ const route=await loadRoute();
+ const original=globalThis.fetch;
+ try{
+  globalThis.fetch=async input=>String(input).includes('geojson')?json(STATIONS):text(`${DAILY_HEADER},precip_in\nSLN,2024-04-01,90,60,0.5\nSLN,2024-04-02,70,40,0.25\n`);
+  const response=await route.GET(new Request('https://kfm.test/api/farming/degree-days?lon=-97.6&lat=38.8&year=2024'));
+  const body=await response.json();
+  assert.equal(body.rainInches,0.75);assert.equal(body.rainDaysMissing,212);
+  assert.equal(response.headers.get('cache-control'),'no-store');
+  assert.equal(gdd.validDegreeDays(body,-97.6,38.8,2024),true,'the page accepts the rain fields');
+ }finally{globalThis.fetch=original;}
 });
