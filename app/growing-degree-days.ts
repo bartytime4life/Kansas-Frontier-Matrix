@@ -120,12 +120,14 @@ export function validDegreeDays(value: unknown, lon: number, lat: number, year: 
   return v.lon === lon && v.lat === lat && v.year === year && (v.state === "ready" || v.state === "none")
     && (station === null || (typeof station === "object" && typeof station.id === "string" && typeof station.name === "string" && typeof station.km === "number"))
     && (v.degreeDays === null || typeof v.degreeDays === "number") && typeof v.daysRead === "number" && typeof v.daysMissing === "number"
-    && (v.rainInches === null || typeof v.rainInches === "number") && typeof v.rainDaysMissing === "number";
+    // A response cached before the rain fields existed has neither; it is read as no rain, not as a failure.
+    && (v.rainInches === undefined || v.rainInches === null || typeof v.rainInches === "number")
+    && (v.rainDaysMissing === undefined || typeof v.rainDaysMissing === "number");
 }
 
 /** The season's rain as the dock says it, or null when no rain was read. */
 export function rainLine(reading: DegreeDaysReading): string | null {
-  if (reading.state !== "ready" || reading.rainInches === null) return null;
+  if (reading.state !== "ready" || typeof reading.rainInches !== "number") return null;
   const days = reading.rainDaysMissing === 0 ? "every day read" : `${reading.rainDaysMissing} days missing`;
   return `${reading.rainInches.toFixed(2)} in of rain, ${GDD_SEASON_LABEL} ${reading.year} · ${days}`;
 }
