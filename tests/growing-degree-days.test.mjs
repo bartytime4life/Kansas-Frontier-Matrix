@@ -16,9 +16,11 @@ const dockSource=await readFile('app/category-map-dock.tsx','utf8');
 /** The route with its three local imports inlined, so it runs under node:test without a bundler. */
 const loadRoute=async()=>{
   const upstream=await esm('app/api/event-atlas/upstream.ts'), cropland=await esm('app/cropland.ts'), days=await esm('app/growing-degree-days.ts');
+  const stations=(await esm('app/kansas-stations.ts')).replace('from "./api/event-atlas/upstream"',`from "${dataUrl(upstream)}"`).replace('from "./growing-degree-days"',`from "${dataUrl(days)}"`);
   const code=ts.transpileModule(routeSource,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText
     .replace('from "../../event-atlas/upstream"',`from "${dataUrl(upstream)}"`)
     .replace('from "../../../cropland"',`from "${dataUrl(cropland)}"`)
+    .replace('from "../../../kansas-stations"',`from "${dataUrl(stations)}"`)
     .replace('from "../../../growing-degree-days"',`from "${dataUrl(days)}"`);
   return import(dataUrl(code));
 };
@@ -119,7 +121,7 @@ test('the dock shows the reading beside the crops, with its station and its limi
 
 test('the page reads the degree days with each click, for the crop year on show, and clears them with the crops',()=>{
  assert.match(page,/readDegreeDaysRef\.current\(event\.lngLat\.lng, event\.lngLat\.lat, cropsRef\.current\)/);
- assert.match(page,/degreeDaysRequestRef\.current\?\.abort\(\);\n    setCropPoint\(null\);/,'turning crops off aborts the reading');
+ assert.match(page,/degreeDaysRequestRef\.current\?\.abort\(\);\n    frostRequestRef\.current\?\.abort\(\);\n    setCropPoint\(null\);/,'turning crops off aborts the reading');
  assert.match(page,/import \{ GDD_API_PATH, degreeDaysLine, rainLine, validDegreeDays/);
  assert.match(dockSource,/degreeDays\?: Readonly</);
 });

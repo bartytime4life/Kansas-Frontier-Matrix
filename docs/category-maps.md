@@ -424,6 +424,26 @@ point (`app/growing-degree-days.ts`, `/api/farming/degree-days`).
 The route keeps a complete season a day. A failed answer is sent no-store, and no
 degree days are inferred.
 
+## Frost dates at a point (Field view)
+
+With **Show crops (USDA CDL)** on, a click also reads the frost dates for the crop
+year on show, at the nearest Kansas airport weather station (ASOS)
+(`app/frost-dates.ts`, `/api/farming/frost-dates`).
+
+- **Freeze:** a daily low at or below 32 °F. The reading gives the last spring
+  freeze before July 1 and the first fall freeze from July 1 on, and the days
+  between them.
+- **Missing days:** a day with no reading could hide a freeze. A spring date is
+  certain only when no day after it is missing; a fall date only when no day
+  before it is missing. Otherwise the dock says that the freeze is not certain.
+- **Days not yet due:** days after today are not counted as missing.
+- **Source:** the Iowa Environmental Mesonet's daily summary for the station, for
+  the whole year, and its network list of Kansas stations, which the degree-day
+  reading now shares.
+- **Limit:** a station's low, not the field's. A freeze can differ across a county.
+
+A finished year with both freezes certain is kept a day; anything else is sent no-store.
+
 ## Daylight through the year (Sky globe)
 
 **Daylight through the year** charts every day of the current year at one
