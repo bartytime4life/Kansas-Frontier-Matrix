@@ -85,7 +85,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -236,6 +236,11 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
   onCrops?: (on: boolean) => void;
   onCropsYear?: (year: number) => void;
   /** USGS NLCD 2021 land cover, for looks that offer it, with the class at the point last clicked. */
+  flora?: Readonly<{ on: boolean; year: number; years: readonly number[]; opacity: number; failed: boolean; reading: string }>;
+  onFlora?: (on: boolean) => void;
+  onFloraYear?: (year: number) => void;
+  onFloraOpacity?: (opacity: number) => void;
+  onFloraRetry?: () => void;
   landCover?: Readonly<{ on: boolean; reading: string }>;
   onLandCover?: (on: boolean) => void;
   onRainfall?: (on: boolean) => void;
@@ -640,6 +645,27 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           </select></label>
         <p className="category-map-dock-reading" aria-live="polite">{crops.swatch && <i className="category-map-dock-crop-swatch" style={{ background: crops.swatch }} aria-hidden="true" />}{crops.reading}</p>
       </div>}
+    </>}
+    {look.tools?.includes("plants") && flora && onFlora && <>
+      <button type="button" className="category-map-dock-tool" aria-pressed={flora.on} onClick={() => onFlora(!flora.on)}>{flora.on ? "Hide plant records" : "Show plant records (GBIF)"}</button>
+      {flora.on && <div className="category-map-dock-quakes">
+        <label className="category-map-dock-flora-control">Plant record year
+          <select value={flora.year} onChange={event => onFloraYear?.(Number(event.target.value))}>
+            {flora.years.map(year => <option key={year} value={year}>{year}</option>)}
+          </select>
+        </label>
+        <label className="category-map-dock-flora-control">Plant layer opacity · {Math.round(flora.opacity * 100)}%
+          <input type="range" min="0.1" max="1" step="0.05" value={flora.opacity} onChange={event => onFloraOpacity?.(Number(event.target.value))} />
+        </label>
+        <p className="category-map-dock-reading" aria-live="polite">{flora.reading}</p>
+        {flora.failed && <button type="button" className="category-map-dock-tool" onClick={onFloraRetry}>Retry plant records</button>}
+        <p className="category-map-dock-reading">Annual records, including specimens, in coarse hexagons. This year is independent of the map calendar; NLCD stays at 2021. Shading is not plant abundance or a species inventory.</p>
+      </div>}
+      <details className="category-map-dock-context"><summary>Flora data &amp; limits</summary>
+        <p>NLCD 2021 classifies 30 m land-cover cells. GBIF summarizes Plantae records by event year, 1995–2025; this is the selector range, not a guarantee of coverage. Crop classes use their own USDA year. Border hexagons can include records from neighboring states.</p>
+        <p>Exact plant locations are not requested. These are external context layers; reviewed Flora evidence, species checklists and conservation status are not connected. Empty records do not prove absence.</p>
+        <p><a href="https://www.usgs.gov/centers/eros/science/national-land-cover-database" target="_blank" rel="noreferrer">USGS land cover</a> · <a href="/observatory/sources#ecology">GBIF source notes</a> · <a href="https://www.gbif.org/terms/data-user" target="_blank" rel="noreferrer">GBIF data terms</a></p>
+      </details>
     </>}
     {look.tools?.includes("landcover") && landCover && onLandCover && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={landCover.on} onClick={() => onLandCover(!landCover.on)}

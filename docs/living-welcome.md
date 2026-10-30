@@ -577,3 +577,11 @@ scrolling guidance and comparison recovery at 1280×800, 390×844 and 568×320.
 These isolated provider fixtures establish UI behavior, not live provider health.
 Repository integration targets the existing hosted source branch; production
 publication remains a separate operation. Rollback is a revert of this correction.
+
+
+## Flora and vegetation
+
+The 22-category starting page includes **Flora & vegetation**. Its map opens
+NLCD 2021 land cover, offers annual GBIF plant-record hexagons and USDA crop
+layers, and keeps source dates, rights and occurrence limits explicit. See
+[Flora data, controls and boundaries](flora-map.md).

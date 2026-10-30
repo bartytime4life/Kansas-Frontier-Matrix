@@ -157,6 +157,12 @@ test("tile adapter rejects time snapping and converts 204 into truly transparent
     assert.equal(empty.status,200);assert.equal(empty.headers.get("x-aggregate-state"),"no-records");
     const png=Buffer.from(await empty.arrayBuffer());const length=png.readUInt32BE(33);
     assert.deepEqual([...inflateSync(png.subarray(41,41+length))],[0,0,0,0,0]);
+    let extraCalls = 0;
+    globalThis.fetch=async () => { extraCalls++; return new Response(null,{status:204}); };
+    for (const query of ['kind=flora&date=2021-01-01&z=7&x=28&y=48', 'kind=flora&date=2021-01-01&z=6&x=14&y=24&taxonKey=123', 'kind=flora&date=2021-01-01&z=6&x=14&y=24&bin=point']) {
+      assert.equal((await GET(new Request(`https://app.test/api/event-atlas/tile?${query}`))).status,502);
+    }
+    assert.equal(extraCalls,0,'no precise, taxon-specific or arbitrary query can reach the provider');
     const precise=await GET(new Request("https://app.test/api/event-atlas/tile?kind=fauna&date=2023-06-07&z=12&x=900&y=1500"));assert.equal(precise.status,502);
   } finally {globalThis.fetch=previous;}
 });

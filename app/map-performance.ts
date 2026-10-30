@@ -89,6 +89,7 @@ const CONTROL_OWNED_SOURCE_PREFIXES = [
   "tool-mrms-rainfall",
   "tool-nlcd-land-cover",
   "tool-usda-cdl",
+  "tool-flora-records-",
   // Decorative scene-effect overlays (Kansas glow, 2D relief DEM, value
   // columns): a failed tile only leaves that effect blank.
   "scene-",

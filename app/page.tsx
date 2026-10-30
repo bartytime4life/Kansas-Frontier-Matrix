@@ -42,6 +42,7 @@ import { WELLS_SNAPSHOT_PATH, WELL_PICK_SOURCE_ID, syncWellPick, validWellLevels
 import { TORNADO_DEFAULT_FILTER, TORNADO_RATINGS, TORNADO_SOURCE_ID, UNRATED_COLOR, syncTornadoRecord, tornadoCollection, tornadoDetail, tornadoKey, tornadoList, tornadoReading, tornadoSelect, tornadoYears, validTornadoRecord, type TornadoFilter, type TornadoRecord } from "./tornado-record";
 import { CHAMBERS, LEGISLATURE_SOURCE_ID, legislatureApiPath, legislatureKey, legislatureList, legislatureReading, syncLegislature, validLegislature, type Chamber, type LegislatureDistricts } from "./state-legislature";
 import { CDL_LATEST_YEAR, CDL_SOURCE_ID, CDL_YEARS, cdlKey, cdlPointApiPath, cdlReading, inCdlRegion, syncCropland, type CdlPoint, type CdlValue } from "./cropland";
+import { FLORA_DEFAULT_YEAR, FLORA_YEARS, floraKey, floraReading, floraSourceId, watchFloraContext, type FloraTileState } from "./flora-context";
 import { inLandCoverRegion, LAND_COVER_SOURCE_ID, landCoverKey, landCoverPointApiPath, landCoverReading, syncLandCover, type LandCoverPoint } from "./land-cover";
 import { isQpfHours, isRainfallHours, QPF_WINDOWS, qpfWindowButton, qpfWindowLabel, RAINFALL_REFRESH_MS, RAINFALL_SOURCE_ID, RAINFALL_WINDOWS, rainfallLegendApiPath, rainfallReading, rainfallStamp, rainfallWindowLabel, syncRainfall, validRainfallLegend, type QpfHours, type RainfallHours, type RainfallKind, type RainfallLegend, type RainfallView } from "./mrms-rainfall";
 import { FEMA_DEFAULT_FILTER, FEMA_RECORD_SOURCE_ID, HAZARD_FAMILIES, femaClasses, femaCountyCollection, femaCountyCounts, femaCountyDisasters, femaCountyList, femaCountyReading, femaKey, femaReading, femaSelect, femaYears, syncFemaRecord, validFemaRecord, type FemaFilter, type FemaRecord } from "./fema-record";
@@ -1654,6 +1655,13 @@ export default function Home() {
   const [cropPoint, setCropPoint] = useState<CdlPoint | null>(null);
   const cropsRef = useRef<number | null>(null);
   const cropRequestRef = useRef<AbortController | null>(null);
+  const [floraOn, setFloraOn] = useState(false);
+  const [floraYear, setFloraYear] = useState(FLORA_DEFAULT_YEAR);
+  const [floraOpacity, setFloraOpacity] = useState(0.75);
+  const [floraRevision, setFloraRevision] = useState(0);
+  const [floraState, setFloraState] = useState<FloraTileState>("loading");
+  const floraOpacityRef = useRef(floraOpacity);
+  floraOpacityRef.current = floraOpacity;
   const [landCoverOn, setLandCoverOn] = useState(false);
   const [landCoverPoint, setLandCoverPoint] = useState<LandCoverPoint | null>(null);
   const landCoverOnRef = useRef(false);
@@ -4573,6 +4581,20 @@ export default function Home() {
     landCoverRequestRef.current?.abort();
     setLandCoverPoint(null);
   };
+
+  // Plant records reuse the Observatory's coarse, annual raster proxy. Source identity
+  // includes year/retry so a late event can never settle a replacement year's status.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleReady) return;
+    return watchFloraContext(map, floraOn ? floraYear : null, floraRevision, () => floraOpacityRef.current, setFloraState);
+  }, [floraOn, floraYear, floraRevision, styleReady]);
+  useEffect(() => {
+    const map = mapRef.current, id = floraSourceId(floraYear, floraRevision);
+    if (map?.getLayer(id)) map.setPaintProperty(id, "raster-opacity", floraOpacity);
+  }, [floraOpacity, floraYear, floraRevision]);
+  const changeFloraYear = (year: number) => { if (FLORA_YEARS.includes(year)) { setFloraState("loading"); setFloraYear(year); } };
+  const retryFlora = () => { setFloraState("loading"); setFloraRevision(value => value + 1); };
 
   // MRMS rainfall: the NWS radar estimate of the past 1–72 hours, drawn as the NWS renders it and asked for again every quarter
   // hour while shown. It is current only, so away from the present map time it is held.
@@ -10574,8 +10596,10 @@ export default function Home() {
     setFemaOn(false);
     setFemaCounty(null);
     setRainfallOn(false);
-    setLandCoverOn(false);
-    setLandCoverPoint(null);
+    showLandCover(topic === "flora");
+    setFloraOn(false);
+    setFloraYear(FLORA_DEFAULT_YEAR);
+    setFloraOpacity(0.75);
     setCropsOn(false);
     setCropPoint(null);
     legislatureHidCivicRef.current = false;
@@ -11251,7 +11275,11 @@ export default function Home() {
             onOpenMap={activeCategoryMap ? () => openCategoryMap(activeCategoryMap.topic) : undefined} />
           {officialWorkspace === "transport" && <TransportHistoryControl map={mapRef.current} mapReady={styleReady} date={calendarSweep ? calendarFrameDay(calendarSweep) : temporalQuery.frame >= 1000 && temporalQuery.frame <= 9999 ? `${temporalQuery.frame}-01-01` : null} reducedMotion={reducedMotion} animate={dynamicEffects} />}
           {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
-          {matchingCatalogEntries.length === 0 && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
+          {officialWorkspace === "flora" && !officialSourceQuery.trim() && <div className="catalog-empty">
+            <strong>Flora map layers</strong><p>Land cover, annual plant records and crop classes are available in Plants &amp; vegetation controls. The catalogue count below covers separate record layers.</p>
+            <button type="button" onClick={() => { if (categoryMapOnScreen?.topic === "flora") setCategoryDockHidden(false); else openCategoryMap("flora"); setLeftOpen(false); }}>Open Flora layer controls</button>
+          </div>}
+          {matchingCatalogEntries.length === 0 && !(officialWorkspace === "flora" && !officialSourceQuery.trim()) && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
 
           <div className="layer-map-time" data-historical={!buildYearCurrent || year !== OFFICIAL_CONTEXT_PRESENT_FRAME}>
             <span><span aria-hidden="true">◷</span> Map time · <strong>{temporalScopeLabel}</strong>{!buildYearCurrent ? " · build year differs from UTC year" : ""}{withheldOfficialCount > 0 ? ` · ${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : ""}</span>
@@ -11591,7 +11619,7 @@ export default function Home() {
               openSelection(context, returnElement);
               mapRef.current?.fitBounds(geometry.bounds, { padding: 70, maxZoom: 9, duration: motionDuration(650) });
             }}
-            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(tornadoOn && tornadoRecord ? [tornadoKey(tornadoRecord, tornadoFilter)] : []), ...(popChangeOn && popChangeCollection ? [populationChangeKey()] : []), ...(wellsOn ? [wellLevelsKey()] : []), ...(surfaceData ? [surfaceKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
+            keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(floraOn && floraState !== "failed" ? [floraKey(floraYear)] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(tornadoOn && tornadoRecord ? [tornadoKey(tornadoRecord, tornadoFilter)] : []), ...(popChangeOn && popChangeCollection ? [populationChangeKey()] : []), ...(wellsOn ? [wellLevelsKey()] : []), ...(surfaceData ? [surfaceKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
             onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={resetCategoryView}
@@ -11626,6 +11654,8 @@ export default function Home() {
             crops={activeCategoryMap.tools?.includes("crops") ? { on: cropsOn, year: cropsYear, years: CDL_YEARS, reading: cdlReading(cropsYear, cropPoint, view.zoom),
               swatch: cropPoint?.state === "ready" ? cropPoint.crop?.color ?? null : null } : undefined}
             onCrops={showCrops} onCropsYear={chooseCropsYear}
+            flora={activeCategoryMap.tools?.includes("plants") ? { on: floraOn, year: floraYear, years: FLORA_YEARS, opacity: floraOpacity, failed: floraState === "failed", reading: floraReading(floraYear, floraState) } : undefined}
+            onFlora={on => { setFloraOn(on); if (on) setFloraRevision(value => value + 1); setFloraState("loading"); }} onFloraYear={changeFloraYear} onFloraOpacity={setFloraOpacity} onFloraRetry={retryFlora}
             landCover={activeCategoryMap.tools?.includes("landcover") ? { on: landCoverOn, reading: landCoverReading(landCoverPoint) } : undefined} onLandCover={showLandCover}
             onRainfall={on => { setRainfallOn(on); setRainfallLegendFailed(null); setRainfallClock(Date.now()); }} onRainfallKind={setRainfallKind}
             onRainfallHours={hours => { if (rainfallKind === "forecast") { if (isQpfHours(hours)) setQpfHours(hours); } else if (isRainfallHours(hours)) setRainfallHours(hours); }}
