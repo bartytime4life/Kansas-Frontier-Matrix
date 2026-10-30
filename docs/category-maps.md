@@ -350,6 +350,34 @@ draws it.
   are not a flood-inundation map. Warnings come from the National Weather
   Service.
 
+## Crop history at a point (Field view)
+
+With **Show crops (USDA CDL)** on, a click in Kansas reads that point's
+Cropland Data Layer class for every year from 2008 to 2024, not only the year on
+show (`app/crop-history.ts`, `/api/cropland/history`).
+
+- **Timeline:** one bar a year, coloured by crop family: corn, sorghum,
+  soybeans, sunflower, winter wheat, double crop, alfalfa or hay, fallow, grass
+  or pasture, other. An unanswered year is dashed; a year with no class is a tick.
+- **Pattern:** read only when at least five years are classified, in this order:
+  - **Continuous corn:** corn in at least 80% of years.
+  - **Grassland or pasture:** grass in at least 80% of years. This is the
+    persistent-pasture reading for ranching.
+  - **Corn–soybean rotation:** corn and soybeans each in at least 25% of years,
+    and at least 60% of back-to-back corn or soybean years alternate.
+  - **Mostly {family}:** one family in at least 60% of years.
+  - **Mixed cropping:** none of the above.
+- **Partial histories:** a year CropScape does not answer for is shown dashed and
+  counted, never read as an absence, and no pattern is claimed from a partial
+  history. Click the point again to retry.
+- **Limits:** the pattern describes what the CDL recorded at one 30 m cell. It is
+  not agronomic advice, and the CDL is less certain for minor crops and small
+  fields.
+
+The route reads the years a few at a time and keeps a complete answer a day per
+point. The map's point is rounded to five decimals, the same precision as the
+request, so the answer matches the point it was asked for.
+
 ## Daylight through the year (Sky globe)
 
 **Daylight through the year** charts every day of the current year at one

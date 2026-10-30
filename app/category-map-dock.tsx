@@ -14,6 +14,7 @@ import type { TornadoYear } from "./tornado-record";
 import type { WellPlot } from "./well-levels";
 import type { SunChart } from "./sun-chart";
 import type { MoonStrip } from "./moon";
+import type { CropFamily, RotationPattern } from "./crop-history";
 import type { OutlookDay, OutlookProduct } from "./spc-outlook";
 import type { ReportDay, StormReport } from "./storm-reports";
 
@@ -85,7 +86,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -233,6 +234,12 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
   onLegislatureClear?: () => void;
   /** The USDA Cropland Data Layer, for looks that offer it: a year, and the crop at the point last clicked with CropScape's colour for it. */
   crops?: Readonly<{ on: boolean; year: number; years: readonly number[]; reading: string; swatch: string | null }>;
+  /**
+   * The crop history at the point last clicked: loading or failed, or the
+   * year-by-year bars, the pattern read from them and its line.
+   */
+  history?: Readonly<{ state: "loading" | "partial" | "failed" | "ready"; bars: readonly Readonly<{ year: number; family: CropFamily | null; state: "ready" | "none" | "failed"; label: string }>[];
+    pattern: RotationPattern | null; reading: string | null }> | null;
   onCrops?: (on: boolean) => void;
   onCropsYear?: (year: number) => void;
   /** USGS NLCD 2021 land cover, for looks that offer it, with the class at the point last clicked. */
@@ -639,6 +646,15 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
             {crops.years.map(year => <option key={year} value={year}>{year}</option>)}
           </select></label>
         <p className="category-map-dock-reading" aria-live="polite">{crops.swatch && <i className="category-map-dock-crop-swatch" style={{ background: crops.swatch }} aria-hidden="true" />}{crops.reading}</p>
+        {history && <div className="category-map-dock-crop-history" aria-live="polite">
+          {history.state === "loading" && <p className="category-map-dock-reading">Reading every CDL year at this point…</p>}
+          {history.state === "failed" && <p className="category-map-dock-reading">CropScape did not answer for this point. No pattern is read; click the point again to retry.</p>}
+          {(history.state === "ready" || history.state === "partial") && history.bars.length > 0 && <>
+            <CropHistoryTimeline bars={history.bars} />
+            {history.state === "partial" && <p className="category-map-dock-reading">CropScape did not answer for {history.bars.filter(b => b.state === "failed").length} year{history.bars.filter(b => b.state === "failed").length === 1 ? "" : "s"} (dashed). No pattern is read from a partial history; click the point again to retry.</p>}
+            {history.reading && <p className="category-map-dock-reading">{history.reading}</p>}
+          </>}
+        </div>}
       </div>}
     </>}
     {look.tools?.includes("landcover") && landCover && onLandCover && <>
@@ -998,6 +1014,32 @@ export function SunYearChart({ chart, place }: Readonly<{ chart: SunChart; place
       <span><i style={{ background: chart.night, outline: "1px solid #3b4f8f" }} aria-hidden="true" />{names.night}</span></p>
   </figure>;
 }
+
+/**
+ * A point's crop history as one bar a year, coloured by crop family; a grey
+ * outline marks a year CropScape did not answer for, and a faint tick a year with no class.
+ */
+export function CropHistoryTimeline({ bars }: Readonly<{ bars: readonly Readonly<{ year: number; family: CropFamily | null; state: "ready" | "none" | "failed"; label: string }>[] }>) {
+  const width = 260, height = 56, top = 4, bottom = 14, plot = height - top - bottom, step = width / bars.length;
+  const families = [...new Set(bars.map(b => b.family).filter((f): f is CropFamily => f !== null))];
+  return <figure className="category-map-dock-section category-map-dock-hydrograph" aria-label={`Crop history, ${bars[0]?.year} to ${bars[bars.length - 1]?.year}: ${bars.map(b => `${b.year} ${b.label}`).join('; ')}`}>
+    <svg viewBox={`0 0 ${width} ${height}`} aria-hidden="true">
+      {bars.map((bar, i) => <g key={bar.year} data-year={bar.year}>
+        {bar.family && <rect x={(i * step + 0.6).toFixed(2)} y={top} width={(step - 1.2).toFixed(2)} height={plot} fill={CROP_FAMILY_COLORS[bar.family]} />}
+        {bar.state === "failed" && <rect x={(i * step + 0.6).toFixed(2)} y={top} width={(step - 1.2).toFixed(2)} height={plot} fill="none" stroke="#9aa3ab" strokeWidth={0.6} strokeDasharray="2 1.5" />}
+        {bar.state === "none" && <line x1={(i * step + step / 2).toFixed(2)} x2={(i * step + step / 2).toFixed(2)} y1={top + plot - 3} y2={top + plot} stroke="#5b6670" strokeWidth={0.8} />}
+      </g>)}
+      {bars.length > 0 && <>
+        <text x={0} y={height - 3} fontSize={8} fill="#cfe2ea">{bars[0].year}</text>
+        <text x={width} y={height - 3} fontSize={8} fill="#cfe2ea" textAnchor="end">{bars[bars.length - 1].year}</text>
+      </>}
+    </svg>
+    <figcaption><span>Crop family by year</span></figcaption>
+    <p className="category-map-dock-fema-families">{families.map(f => <span key={f}><i style={{ background: CROP_FAMILY_COLORS[f] }} aria-hidden="true" />{CROP_FAMILY_LABELS[f]}</span>)}</p>
+  </figure>;
+}
+const CROP_FAMILY_COLORS: Readonly<Record<CropFamily, string>> = { corn: "#ffd300", sorghum: "#ff9e0b", soybeans: "#267000", sunflower: "#ffff00", wheat: "#a87000", "double-crop": "#707000", hay: "#ffa5e2", fallow: "#bfbf77", grass: "#e8ffbf", other: "#8a8a8a" };
+const CROP_FAMILY_LABELS: Readonly<Record<CropFamily, string>> = { corn: "Corn", sorghum: "Sorghum", soybeans: "Soybeans", sunflower: "Sunflower", wheat: "Winter wheat", "double-crop": "Double crop", hay: "Alfalfa or hay", fallow: "Fallow", grass: "Grass or pasture", other: "Other" };
 
 /**
  * The next 30 evenings' Moon, each a disc lit as it will be at 9 PM (the lit
