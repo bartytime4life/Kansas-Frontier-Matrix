@@ -1,5 +1,67 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Cinematic category stage · 2026-10-30 candidate
+
+**PROPOSED release; implemented candidate, not published.** Starting evidence:
+hosted branch `a0-hosted-ai-web-20261017` at
+`372c052a97a975b8b3401f9230e97da522cffda3`, tree
+`e390e2bde30ed60799d6e39ad2e9c8575f70736f`. The local validation snapshot was
+reconstructed from the connector's exact commit files and verified to that
+entire Git tree; its local snapshot commit is not the upstream commit.
+
+A single click/tap or Enter on a category now opens its existing map preview
+across the welcome window. A fine-pointer hover previews immediately and enters
+the same stage after 650 ms of continued interest. Leaving before that deadline
+cancels it. Tab focus alone keeps the grid in place. Once the stage opens, moving
+into the map does not make the cards reappear underneath the pointer.
+
+The active category has a compact edge panel. All 22 categories remain in a
+horizontal bottom rail, derived from the existing shared taxonomy. Click/tap,
+Left/Right (wrapping), Home and End select another category. The rail scrolls
+without creating a second renderer or loading unselected category scenes.
+Selecting the current rail item preserves the layer-comparison setting.
+Return/Escape restores the original card and grid scroll position; another
+Escape dismisses the welcome. Source notes remain a separately dismissible
+modal, recorded tours remain opt-in, and the category-map action still enters
+the existing Explorer workspace. Pause and reduced motion retain still scenes.
+
+The rail is included in geology spotlight obstruction measurements. Controls
+remain at least 44px; short landscape layouts use two independently scrollable
+edge panels. Provider attribution keeps its reserved bottom strip. Source clocks,
+missing/unavailable states, limits, and publication status are unchanged.
+
+### Placement, validation and rollback
+
+This edits only existing presentation files in `app/living-welcome/`, existing
+`tests/`, and this `docs/` file in the separately governed hosted composition.
+The placement basis is accepted [ADR-0029](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md)
+and the [adopted Directory Rules](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/doctrine/directory-rules.md): responsibility before subject,
+no parallel authority home, no lifecycle or compatibility-root migration.
+The supplied unversioned Directory Rules PDF was not available locally; the ADR
+identifies it as a superseded lineage artifact, not the current placement authority.
+The supplied Living Atlas interface PDF was consulted as proposed design lineage,
+particularly persistent-map, source-clock and presentation-versus-evidence boundaries.
+
+The component suite exercises settled/cancelled hover, touch and keyboard entry,
+all category choices, modal/visibility/disposal cancellation, rail wrapping,
+paused scrolling and restored focus/scroll. The existing browser journeys are
+updated for the new explicit stage-to-notes flow and include rail geometry,
+actual pointer/touch input and screenshots. Deterministic tests and build checks
+do not establish rendered browser acceptance, GPU performance or live-provider
+correctness. This session's sandbox refused a loopback listener (`EPERM`), so
+local Chrome candidate acceptance remains **NEEDS VERIFICATION**. Exact-head CI
+results and visual review must be attached separately; no unrun browser check is
+claimed passing.
+
+Risk: an incorrect responsive layout could obscure a control or map feature;
+a hover/focus race could move a visitor unexpectedly. The deadlines, explicit
+exit, modal handling and focused regressions constrain those risks. Performance
+savings and frame rates are not claimed. Rollback is a focused revert of this
+presentation change; no data, credentials, schemas, release recipes, dependencies,
+stores, hosting settings or migrations change. Merge and publication are separate
+owner-controlled steps.
+
+
 ## Fauna and public-safety entries · 2026-10-29
 
 The welcome now derives 21 entries from the existing shared topic taxonomy.
