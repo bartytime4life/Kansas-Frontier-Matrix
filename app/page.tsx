@@ -34,6 +34,7 @@ import { changeCollection, droughtChangeStart, countyChangeList, countyChangeRea
 import { SPC_OUTLOOK_PAGE, SPC_OUTLOOK_SOURCE_ID, isOutlookProduct, outlookProductName, outlookProducts, spcOutlookKey, spcOutlookReading, syncSpcOutlook, validSpcOutlook, type OutlookDay, type OutlookProduct, type SpcOutlook } from "./spc-outlook";
 import { hiDpiBasemapStyle } from "./hd-rasters";
 import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationReading, populationChange, populationChangeApiPath, populationChangeCollection, populationChangeKey, populationChangeList, populationChangeReading, syncPopulationChange, validCountyBaseline } from "./population-change";
+import { moonReading, moonStrip, phaseList } from "./moon";
 import { KANSAS_CENTRE, SUN_PLACE_SOURCE_ID, coordinateLabel, inKansasBox, mayKeepMountainTime, sunChart, sunReading, sunYear as sunYearDays, syncSunPlace } from "./sun-chart";
 import { SURFACE_OBS_API_PATH, SURFACE_OBS_REFRESH_MS, SURFACE_OBS_SOURCE_ID, stationDetail, surfaceCollection, surfaceKey, surfaceList, surfaceReading, syncSurfaceObs, validSurfaceEnvelope } from "./surface-obs";
 import type { MetarObservation } from "./aviation-weather";
@@ -4751,6 +4752,9 @@ export default function Home() {
   const sunYearPlace = sunPlace ?? KANSAS_CENTRE;
   const sunDays = useMemo(() => sunToday ? sunYearDays(Number(sunToday.slice(0, 4)), sunYearPlace.lat, sunYearPlace.lon) : null, [sunToday, sunYearPlace.lat, sunYearPlace.lon]);
   const sunYearChart = useMemo(() => sunDays ? sunChart(sunDays, sunToday) : null, [sunDays, sunToday]);
+  // The Moon over the same place: tonight, the next four phases from now, and the next 30 evenings.
+  const sunYearMoon = useMemo(() => sunToday ? { reading: moonReading(sunToday, sunYearPlace.lat, sunYearPlace.lon), phases: phaseList(Date.now()), strip: moonStrip(sunToday) } : null,
+    [sunToday, sunYearPlace.lat, sunYearPlace.lon]);
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !styleReady) return;
@@ -11682,7 +11686,7 @@ export default function Home() {
             surface={activeCategoryMap.tools?.includes("surface") ? { on: surfaceOn, state: !surfaceLive ? "held" : surfaceFailed ? "failed" : shownSurface ? "ready" : "loading",
               reading: shownSurface ? surfaceReading(shownSurface) : null, list: shownSurface ? surfaceList(shownSurface) : [], picked: surfaceStation ? surfacePicked : null,
               detail: surfaceStation ? stationDetail(surfaceStation) : null, raw: surfaceStation?.raw ?? null } : undefined}
-            sunYear={activeCategoryMap.tools?.includes("sunyear") ? { on: sunYearOn, outside: sunOutside, chart: sunYearChart, atCentre: !sunPlace,
+            sunYear={activeCategoryMap.tools?.includes("sunyear") ? { on: sunYearOn, outside: sunOutside, chart: sunYearChart, atCentre: !sunPlace, moon: sunYearMoon,
               place: sunPlace ? coordinateLabel(sunPlace.lon, sunPlace.lat) : KANSAS_CENTRE.name, reading: sunDays && sunToday ? sunReading(sunDays, sunToday) : null,
               note: sunPlace && mayKeepMountainTime(sunPlace.lon) ? "Sherman, Wallace, Greeley and Hamilton counties keep Mountain time: there, clocks read an hour earlier." : null } : undefined}
             onSunYear={showSunYear} onSunYearCentre={() => { setSunPlace(null); setSunOutside(false); }}
