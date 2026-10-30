@@ -154,3 +154,10 @@ test('the route reports the season rain and keeps it out of the cache while any 
   assert.equal(gdd.validDegreeDays(body,-97.6,38.8,2024),true,'the page accepts the rain fields');
  }finally{globalThis.fetch=original;}
 });
+
+test('a response cached before the rain fields existed is still read: its degree days show, and no rain line is made from it',()=>{
+ const cached={lon:-97.6,lat:38.8,retrievedAt:'x',year:2024,state:'ready',station:{id:'SLN',name:'Salina',km:3},degreeDays:2412,daysRead:214,daysMissing:0};
+ assert.equal(gdd.validDegreeDays(cached,-97.6,38.8,2024),true,'the older shape validates');
+ assert.equal(gdd.degreeDaysLine(cached) !== null,true,'the degree-day line still shows');
+ assert.equal(gdd.rainLine(cached),null,'no rain is read from an older response');
+});
