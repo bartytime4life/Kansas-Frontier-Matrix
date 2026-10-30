@@ -142,3 +142,20 @@ test('preseason makes no daily request; no eligible station and wholly missing o
  const r=await route.GET(request('lon=-101.5&lat=37&year=2024&v=2')),body=await r.json();
  assert.equal(body.station,null);assert.equal(body.state,'none');assert.equal(body.degreeDays,null);assert.equal(calls.length,0);assert.equal(r.headers.get('cache-control'),'no-store');
 });
+
+test('concurrent rain-comparison feature uses the verified source boundary and never turns all-missing observations into zero',async()=>{
+ const urls=[];
+ const route=load('app/api/farming/rain-normal/route.ts',{
+  './api/event-atlas/upstream':{boundedFetch:async()=>({text:()=>JSON.stringify(catalog)})},
+  '../../../iem-daily-source':{fetchDailySummary:async url=>{urls.push(url);return new URL(url).searchParams.get('year1')==='2024'?fixture('sln-2024.csv'):'station,day,max_temp_f,min_temp_f,precip_in,network\n';}}
+ });
+ const response=await route.GET(new Request('https://kfm.test/api/farming/rain-normal?lon=-97.6522&lat=38.791&year=2024'));
+ const body=await response.json();assert.equal(body.seasonInches,15.81);assert.equal(body.seasonTraceDays,28);assert.equal(body.normal.average,null);assert.equal(body.percentOfNormal,null);
+ assert.ok(urls.every(url=>new URL(url).searchParams.get('na')==='M'));
+ const empty=load('app/api/farming/rain-normal/route.ts',{
+  './api/event-atlas/upstream':{boundedFetch:async()=>({text:()=>JSON.stringify(catalog)})},
+  '../../../iem-daily-source':{fetchDailySummary:async()=>'station,day,max_temp_f,min_temp_f,precip_in,network\n'}
+ });
+ const none=await(await empty.GET(new Request('https://kfm.test/api/farming/rain-normal?lon=-97.6522&lat=38.791&year=2024'))).json();
+ assert.equal(none.state,'none');assert.equal(none.seasonInches,null);assert.equal(none.percentOfNormal,null);
+});

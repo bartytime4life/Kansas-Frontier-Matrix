@@ -84,7 +84,7 @@ are rounded only after summation. Trace counts are not added to measured inches.
 5. Cache only complete elapsed seasons, for one day in browser and shared caches.
    `v=2` avoids older cached calculations; old responses without rainfall remain
    readable and say precipitation is unavailable. Validate response consistency.
-6. Share a bounded sequential daily-request queue between GDD and frost routes,
+6. Share a bounded sequential daily-request queue between GDD, frost and precipitation-comparison routes,
    coalescing identical in-flight requests and recovering after errors. This is
    per-process protection; multiple processes behind one egress address require
    an egress-wide rate limiter. No distributed-rate compliance is claimed.
@@ -108,11 +108,14 @@ unrun browser/hosted checks must not be inferred from unit or component tests.
 On 2026-10-30, GoDaddy app `urdng3v1vk` separately reported **Preview** and
 **Published** at `7b27ffaaf66b29d4ba0761f335135855109d8f9e` (PR #5619), with
 Preview out of sync with GitHub. Preview startup and its Explorer homepage were
-observed. Direct Preview API navigation was blocked by the browser client, so
-its real-source Field result was not established. The public Salina API request
+observed. Direct Preview API navigation was blocked by the browser client. A
+subsequent normal Field-view click at 38.073 N, 98.537 W for 2024 displayed
+4,321 GDD from Lyons, 40 km away, with 214 days read and no precipitation line.
+That live rendered result was observed but not independently recomputed; it
+confirms the older interface, not acceptance of this candidate. The public Salina API request
 returned HTTP 200, 4426 degree days, 214 read and zero missing, with **no rainfall
 fields**. This confirms the earlier published implementation, not this candidate.
-No merge, Preview update or public publication was performed.
+The verification agent performed no merge, Preview update or public publication.
 
 ## Placement, risk and rollback
 
@@ -131,3 +134,48 @@ Revert the bounded application/test/docs commit to roll back; retain the evidenc
 record. Reverting `v=2` can expose prior cached results until their TTL expires,
 so a rollback should use a new cache generation if calculations change again.
 Deployment requires separate owner authorization and exact deployed-head checks.
+
+## Concurrent branch advance and reconciliation
+
+PR #5624 landed as `a4ed9d23660717fe610f3c343a44d9109a7353c2` while this
+candidate was being opened for review. It adds a ten-year precipitation
+comparison and another consumer of the shared helpers. Its station mocks,
+parallel requests and indefinite station-year cache conflicted with the verified
+contract. The follow-up incorporates that change and routes its requests
+through the same station eligibility, CSV identity checks, day cutoff and
+sequential queue. Complete cache entries expire after a day; all-missing
+observations produce no value, and trace counts remain separate. The interface
+calls the comparison an earlier-year average and explicitly distinguishes it
+from a standard 30-year climate normal. This dependency reconciliation does not
+claim live acceptance of an eleven-year historical comparison; that remains a
+separate scientific sampling requirement. Original-snapshot results above are
+not evidence that the later merge candidate passed; see the PR for the final
+integration checks and any environment limits.
+
+
+PR #5626 was merged externally as `439f5d4de3a9b462ddcf6d92af11eea3cea01d00`
+before reconciliation finished. The follow-up is based on that exact commit,
+including the intervening unrelated welcome-screen PR #5627. It changes only
+precipitation-comparison integration, its shared-source description, tests and
+behavior-linked documentation. The earlier candidate's review does not approve
+these new changes.
+
+The initial `512f16c` candidate passed 2,328 tests with 24 skipped and no failures.
+The subsequent full-suite attempt in a newly restricted executor was not green:
+2,232 passes, 72 reported failures, 24 skips, plus files that could not start or
+timed out. A frost-message regression found in that attempt was corrected and
+its nine tests passed; two built-route failures disappeared after the concurrent
+build completed. Socket-based failures explicitly report `listen EPERM`.
+Seven other process-related failing/timed-out files were replayed against the
+unmodified #5624 content and reproduced the same failures/timeouts. This does
+not establish a passing full suite on the follow-up. Its final changed-area,
+build, type and lint results are recorded in the accompanying PR. Hosted
+integration and multi-process request limiting remain open verification.
+
+
+Final follow-up changed-area verification on source based on `439f5d4`:
+46 weather tests, 14 crop tests and 37 welcome-screen tests passed (97 total,
+zero failures/skips); production build and TypeScript check passed; changed
+application-file ESLint had zero errors and one existing image warning. The
+independent Decimal reference passed again. These bounded results do not
+supersede the full-suite and hosted limitations above.

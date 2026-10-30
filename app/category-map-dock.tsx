@@ -708,9 +708,9 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           <p className="category-map-dock-reading">Season rain, {seasonRain.year} (click the point again for another year)</p>
           {seasonRain.state === "loading" && <p className="category-map-dock-reading">Reading the season and the ten years before it at the nearest Kansas station…</p>}
           {seasonRain.state === "failed" && <p className="category-map-dock-reading">The Iowa Environmental Mesonet did not answer for this point. No rain normal is inferred; click the point again to retry.</p>}
-          {seasonRain.state === "none" && <p className="category-map-dock-reading">No Kansas airport station is within 150 km of this point.</p>}
+          {seasonRain.state === "none" && <p className="category-map-dock-reading">No eligible Kansas airport station is within 150 km, or precipitation readings are unavailable for the season.</p>}
           {seasonRain.state === "ready" && seasonRain.line && <p className="category-map-dock-reading">{seasonRain.line}</p>}
-          {seasonRain.state === "ready" && <p className="category-map-dock-reading">A station's rain, not the field. Rain varies across a county, and a normal needs at least five complete earlier years.</p>}
+          {seasonRain.state === "ready" && <p className="category-map-dock-reading">A station&apos;s precipitation, not the field. This is an average of available complete years among the previous ten, not a standard 30-year climate normal. Trace days are excluded from measured inches. At least five complete earlier years are required.</p>}
         </div>}
       </div>}
     </>}
