@@ -124,4 +124,9 @@ test('the page reads the season against normal with each click, for the crop yea
  assert.match(dockSource,/seasonRain\?: Readonly</);
 });
 
+
+test('comparison validation refuses nonfinite, inconsistent and incomplete percentages',()=>{
+ const r={lon:-97.6,lat:38.8,retrievedAt:'2026-10-30T00:00:00Z',year:2024,state:'ready',station:{id:'SLN',name:'Salina',km:3},seasonInches:10,seasonDaysMissing:0,normal:{average:20,years:10},percentOfNormal:50};
+ for(const change of [{seasonInches:Infinity},{seasonInches:-1},{seasonDaysMissing:215},{seasonDaysMissing:1},{seasonDaysPending:1},{seasonTraceDays:215},{normal:{average:20,years:4}},{station:null},{retrievedAt:'invalid'}]) assert.equal(rn.validRainNormal({...r,...change},r.lon,r.lat,r.year),false,JSON.stringify(change));
+ assert.equal(rn.validRainNormal({...r,seasonDaysPending:1,percentOfNormal:null},r.lon,r.lat,r.year),true);
 });
