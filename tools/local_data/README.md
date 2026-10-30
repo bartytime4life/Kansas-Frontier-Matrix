@@ -294,6 +294,13 @@ The local tests exercise corruption, safe retry, multi-source backup restore,
 resource limits, explicit-file selection and filesystem boundaries. They do not
 prove a production downloader, governed map integration, or Windows acceptance.
 
+## Historical archive enrichment
+
+Historical enrichment can reuse preserved source bytes without another live
+capture. The [historical water procedure](../../docs/runbooks/historical-water-enrichment.md)
+replays and validates a pinned two-station USGS collection into a separate private
+WORK package, with original dates, provenance, provisional flags and release holds.
+
 ## Private pipeline health
 
 The working intake desk reads a bounded `data/work/pipeline-health.json` report
