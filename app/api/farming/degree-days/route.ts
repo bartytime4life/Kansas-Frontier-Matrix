@@ -42,7 +42,7 @@ export async function GET(request: Request) {
   try {
     const station = nearestStation(await kansasStations(), lon, lat);
     if (station === null) return Response.json({ lon, lat, year, retrievedAt: new Date().toISOString(), state: "none", station: null, degreeDays: null, daysRead: 0, daysMissing: 0 }, { headers: noStore });
-    const season = seasonDegreeDays(parseDailyCsv(await boundedFetch(DAILY_URL(station.id, year), MAX_BYTES, { timeoutMs: 15_000 }).then(response => response.text())));
+    const season = seasonDegreeDays(parseDailyCsv(await boundedFetch(DAILY_URL(station.id, year), MAX_BYTES, { timeoutMs: 15_000 }).then(response => response.text())), year);
     const body = {
       lon, lat, year, retrievedAt: new Date().toISOString(),
       state: season.daysRead > 0 ? "ready" : "none",

@@ -38,9 +38,11 @@ test('a day\'s degree days cap the high at 86 °F, floor the low at 50 °F, and 
  assert.equal(gdd.dailyDegreeDays(null,60),null,'a missing reading is not a zero');
 });
 
-test('a season totals the days it read, and counts a missing day rather than guessing it',()=>{
- const season=gdd.seasonDegreeDays([{day:'a',maxF:90,minF:60},{day:'b',maxF:null,minF:60},{day:'c',maxF:70,minF:40}]);
- assert.deepEqual(season,{degreeDays:33,daysRead:2,daysMissing:1});
+test('a season covers every date from April 1 to October 31: an absent date and a blank reading are both missing, never guessed',()=>{
+ const dates=gdd.seasonDates(2024);
+ assert.equal(dates.length,214);assert.equal(dates[0],'2024-04-01');assert.equal(dates.at(-1),'2024-10-31');
+ const season=gdd.seasonDegreeDays([{day:'2024-04-01',maxF:90,minF:60},{day:'2024-04-02',maxF:null,minF:60},{day:'2024-04-03',maxF:70,minF:40}],2024);
+ assert.deepEqual(season,{degreeDays:33,daysRead:2,daysMissing:212},'211 absent dates and one blank reading');
 });
 
 test('the daily CSV is read by its headers, a missing reading is M or blank, and an unexpected header is refused',()=>{
@@ -70,11 +72,12 @@ test('the route reads the nearest station\'s season, reports the days it could n
   const body=await partial.json();
   assert.match(asked.at(-1),/stations=SLN&year1=2024&month1=4&day1=1&year2=2024&month2=10&day2=31/,'the nearest station, for April to October');
   assert.equal(body.station.id,'SLN');assert.equal(body.state,'ready');
-  assert.equal(body.degreeDays,33);assert.equal(body.daysRead,2);assert.equal(body.daysMissing,1);
+  assert.equal(body.degreeDays,33);assert.equal(body.daysRead,2);assert.equal(body.daysMissing,212,'the absent dates are counted, not read as a complete season');
   assert.equal(partial.headers.get('cache-control'),'no-store','a season with a missing day is not kept');
   assert.equal(gdd.validDegreeDays(body,-97.6,38.8,2024),true,'the page accepts what the route sends');
 
-  globalThis.fetch=async input=>String(input).includes('geojson')?json(STATIONS):text(`${DAILY_HEADER}\nSLN,2024-04-01,90,60\n`);
+  const everyDay=gdd.seasonDates(2024).map(date=>`SLN,${date},80,60`).join('\n');
+  globalThis.fetch=async input=>String(input).includes('geojson')?json(STATIONS):text(`${DAILY_HEADER}\n${everyDay}\n`);
   const complete=await route.GET(new Request('https://kfm.test/api/farming/degree-days?lon=-97.6&lat=38.8&year=2024'));
   assert.equal(complete.headers.get('cache-control'),'public, max-age=86400, s-maxage=604800','a season with every day read is kept a day');
  }finally{globalThis.fetch=original;}
