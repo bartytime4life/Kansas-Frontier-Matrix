@@ -10,20 +10,10 @@ const DAILY_URL = (station: string, year: number, end: string) => `https://meson
 const READ_AT_ONCE = 1;
 const KEPT_SEASONS = 500;
 const noStore = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
-type Season = Readonly<{ inches: number | null; daysMissing: number; traceDays: number; daysPending: number }>;
-/** Historical summaries can be revised; expire even complete seasons after one day. */
-const seasons = new Map<string, { at: number; season: Season }>();
-
 async function seasonFor(station: Station, year: number): Promise<Season> {
   const stationId = station.id;
   const key = `${stationId}:${year}`;
   const kept = seasons.get(key);
-  if (kept && Date.now() - kept.at < 86_400_000) return kept.season;
-  const end = [lastCompleteStationDate(new Date(), station.tzname!), `${year}-10-31`].sort()[0];
-  const daily = end < `${year}-04-01` ? [] : parseDailyCsv(await fetchDailySummary(DAILY_URL(stationId, year, end)), { station: stationId, start: `${year}-04-01`, end });
-  const rain = seasonRainfall(daily, year, end);
-  const season = { inches: rain.daysRead ? rain.inches : null, daysMissing: rain.daysMissing, traceDays: rain.traceDays, daysPending: seasonDates(year).filter(date => date > end).length };
-  if (rain.daysMissing === 0 && season.daysPending === 0 && rain.daysRead > 0) {
     if (seasons.size >= KEPT_SEASONS) seasons.delete(seasons.keys().next().value!);
     seasons.set(key, { at: Date.now(), season });
   }
@@ -64,8 +54,6 @@ export async function GET(request: Request) {
     return Response.json({
       lon, lat, year, retrievedAt, state: "ready",
       station: { id: station.id, name: station.name, km: Math.round(station.km * 10) / 10 },
-      seasonInches: current.inches, seasonDaysMissing: current.daysMissing, seasonDaysPending: current.daysPending, seasonTraceDays: current.traceDays, normal,
-      percentOfNormal: current.daysMissing === 0 && current.daysPending === 0 ? percentOfNormal(current.inches, normal.average) : null,
     }, { headers: noStore });
   } catch {
     return Response.json({ state: "unavailable", message: "The Iowa Environmental Mesonet did not answer for this point. No rain normal is inferred." }, { status: 502, headers: noStore });
