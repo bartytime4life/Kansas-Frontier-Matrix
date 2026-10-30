@@ -20,7 +20,8 @@ export async function GET(request: Request) {
   const lon = Number(params.get("lon")), lat = Number(params.get("lat"));
   if ([...params.keys()].some(key => key !== "lon" && key !== "lat") || params.get("lon") === null || params.get("lat") === null || !inCdlRegion(lon, lat))
     return Response.json({ state: "error", message: "Choose a point in or near Kansas." }, { status: 400, headers: noStore });
-  const key = `${lon.toFixed(4)},${lat.toFixed(4)}`;
+  // The key is the precision the answer echoes, so two clicks a metre apart never share a body that names the other's coordinates.
+  const key = `${lon.toFixed(5)},${lat.toFixed(5)}`;
   const hit = kept.get(key);
   if (hit && Date.now() - hit.at < FRESH_MS) return Response.json(hit.body, { headers });
   const years: { year: number; state: "ready" | "none" | "failed"; crop: CdlValue | null }[] = [];

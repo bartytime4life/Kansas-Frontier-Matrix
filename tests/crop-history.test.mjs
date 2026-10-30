@@ -90,6 +90,8 @@ test('the route reads every CDL year at a point, a few at a time, and keeps a co
  }finally{globalThis.fetch=original;}
  assert.match(route,/CONCURRENCY = 4/);
  assert.match(route,/Only a complete answer is kept/);
+ // Codex on #5603: a key at four decimals served one click's body to a nearby click, which the page then rejected.
+ assert.match(route,/const key = `\$\{lon\.toFixed\(5\)\},\$\{lat\.toFixed\(5\)\}`/);
 });
 
 test('the dock draws the history beside the year: loading, failed, and the timeline with its pattern and key',async()=>{
