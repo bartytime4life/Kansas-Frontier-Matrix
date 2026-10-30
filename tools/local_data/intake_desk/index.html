@@ -21,6 +21,13 @@
 </header>
 
 <main>
+  <section id="pipeline-health" class="plan" aria-labelledby="pipeline-health-title" hidden>
+    <h2 id="pipeline-health-title">Source pipeline health</h2>
+    <p id="pipeline-health-state" role="status"></p>
+    <div id="pipeline-health-jobs"></div>
+    <p id="pipeline-health-backup" class="muted"></p>
+    <p class="fine">Private operating status only. Capture completion does not approve source evidence or publication.</p>
+  </section>
   <section id="indexing-summary" class="cards" aria-label="Summary">
     <article class="card"><h2>Files indexed</h2><p id="sum-files" class="big">–</p><p id="sum-bytes" class="muted"></p></article>
     <article class="card"><h2>Ready</h2><p id="sum-ready" class="big ok">–</p><p class="muted">public rights, no review flags</p></article>

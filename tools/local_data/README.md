@@ -294,6 +294,21 @@ The local tests exercise corruption, safe retry, multi-source backup restore,
 resource limits, explicit-file selection and filesystem boundaries. They do not
 prove a production downloader, governed map integration, or Windows acceptance.
 
+## Private pipeline health
+
+The working intake desk reads a bounded `data/work/pipeline-health.json` report
+written by the standalone capture wrapper. `GET /api/pipeline-health` requires
+the existing per-process session and the desk's own loopback origin, rejects
+query parameters, and is unavailable in catalog-only library mode. The response
+contains sanitized status and clocks, never raw captures or private file paths.
+Missing, oversized, invalid or symlinked reports are unavailable; reports older
+than 15 minutes or more than one minute in the future are marked stale.
+
+The report can describe streamflow, alerts and earthquakes when configured;
+reading it does not schedule, capture, approve or publish a source. Refresh the
+desk to read the latest report. Backup/restore status covers the working store;
+it does not establish a full independent backup of the preserved archive.
+
 <!-- kfm-showcase:start -->
 <p align="center">
   <img src="../../docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
