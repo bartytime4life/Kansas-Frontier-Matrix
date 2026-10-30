@@ -433,8 +433,9 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
         const capture=await p.call('Page.captureScreenshot',{format:'png'});
         await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${failure}-${width}x${height}.png`),Buffer.from(capture.data,'base64'));
       }
-      await revealControl(p,'.welcome-layer-demo-actions button:nth-last-child(2)');
-      await p.key('Tab','Tab',9,8);
+      // Shift+Tab from the last demo action reaches the map action. The category rail sits before Return, so Return itself is not the start.
+      await revealControl(p,'.welcome-layer-demo-actions button:last-child');
+      await p.evaluate(`document.querySelector('.welcome-layer-demo-actions button:last-child').focus()`);
       await p.key('Tab','Tab',9,8);
       assert.equal(await p.evaluate('document.activeElement.textContent'),'Open this category’s map →');
       await p.key('Enter','Enter',13);

@@ -777,7 +777,7 @@
 .living-welcome[data-cinematic=true] .welcome-layer-demo-actions button{width:100%;text-align:left;justify-content:flex-start}
 .living-welcome[data-cinematic=true] .welcome-layer-demo-actions button:not([aria-pressed]):first-of-type{border-color:#d6bc7f}
 .living-welcome[data-cinematic=true] .domain-stage-caption{top:auto;bottom:162px;left:auto;right:24px;max-width:min(360px,calc(100% - 400px));justify-items:end;text-align:right;padding:12px 14px;border-radius:8px;background:#082635e8;max-height:150px;overflow:auto;pointer-events:auto}
-.living-welcome .welcome-category-rail{position:absolute;bottom:38px;left:24px;right:24px;z-index:5;max-width:1600px;margin-inline:auto;padding:12px 10px 10px;background:linear-gradient(145deg,#0a2937f5,#071f2cf5);border:1px solid #c1d3ce40;border-radius:14px;box-shadow:0 16px 48px #00121a66;animation:welcome-rail-in .55s .06s cubic-bezier(.16,1,.3,1) both}
+.living-welcome .welcome-category-rail{position:absolute;bottom:52px;left:24px;right:24px;z-index:5;max-width:1600px;margin-inline:auto;padding:12px 10px 10px;background:linear-gradient(145deg,#0a2937f5,#071f2cf5);border:1px solid #c1d3ce40;border-radius:14px;box-shadow:0 16px 48px #00121a66;animation:welcome-rail-in .55s .06s cubic-bezier(.16,1,.3,1) both}
 .living-welcome .welcome-rail-heading{display:flex;justify-content:space-between;gap:14px;padding:0 7px 8px;font-size:9px;letter-spacing:.17em;color:#b2cbd0}
 .living-welcome .welcome-rail-heading>span:last-child{font-variant-numeric:tabular-nums;color:#e8cb8d}
 .living-welcome .welcome-rail-track{display:flex;align-items:stretch;gap:6px;min-width:0}
@@ -815,7 +815,7 @@
  .living-welcome[data-cinematic=true] .welcome-layer-demo-actions button{width:auto;flex:1 1 130px;font-size:11px;padding:8px}
  .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo>:is(.welcome-kicker,p,small,.welcome-layer-demo-actions){display:revert}
  .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo>.welcome-layer-demo-actions{display:flex}
- .living-welcome .welcome-category-rail{left:12px;right:12px;bottom:32px;padding:9px 6px 5px;border-radius:10px}
+ .living-welcome .welcome-category-rail{left:12px;right:12px;bottom:48px;padding:9px 6px 5px;border-radius:10px}
  .living-welcome .welcome-rail-heading{font-size:8px;padding-bottom:4px}
  .living-welcome .welcome-rail-track{gap:2px}
  .living-welcome .welcome-rail-card{flex-basis:174px;min-height:58px;padding:8px}
