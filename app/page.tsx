@@ -36,7 +36,6 @@ import { hiDpiBasemapStyle } from "./hd-rasters";
 import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationReading, populationChange, populationChangeApiPath, populationChangeCollection, populationChangeKey, populationChangeList, populationChangeReading, syncPopulationChange, validCountyBaseline } from "./population-change";
 import { moonReading, moonStrip, phaseList } from "./moon";
 import { CROP_HISTORY_API_PATH, cropHistoryKey, cropHistoryReading, historyBars, rotationPattern, validCropHistory, type CropHistory } from "./crop-history";
-import { KANSAS_CENTRE, SUN_PLACE_SOURCE_ID, coordinateLabel, inKansas, SUN_TIME_NOTE, sunChart, sunReading, sunYear as sunYearDays, syncSunPlace } from "./sun-chart";
 import { SURFACE_OBS_API_PATH, SURFACE_OBS_REFRESH_MS, SURFACE_OBS_SOURCE_ID, stationDetail, surfaceCollection, surfaceKey, surfaceList, surfaceReading, syncSurfaceObs, validSurfaceEnvelope } from "./surface-obs";
 import type { MetarObservation } from "./aviation-weather";
 import { WELLS_SNAPSHOT_PATH, WELL_PICK_SOURCE_ID, syncWellPick, validWellLevels, wellKgsPage, wellLevelsApiPath, wellLevelsKey, wellPlot, wellReading, wellSites, wellsNear, wellUsgsPage, type WellLevels, type WellSite } from "./well-levels";
@@ -1659,6 +1658,9 @@ export default function Home() {
   // The crop history at the last point clicked: the point, its state, and the years once every one is read.
   const [cropHistory, setCropHistory] = useState<Readonly<{ lon: number; lat: number; state: "loading" | "partial" | "ready" | "failed"; data: CropHistory | null }> | null>(null);
   const cropHistoryRequestRef = useRef<AbortController | null>(null);
+  // The SSURGO soil-map unit at the same point as the crop history.
+  const [surveySoil, setSurveySoil] = useState<Readonly<{ lon: number; lat: number; state: "loading" | "failed" | "ready" | "none"; data: SoilReading | null }> | null>(null);
+  const surveySoilRequestRef = useRef<AbortController | null>(null);
   const [floraOn, setFloraOn] = useState(false);
   const [floraYear, setFloraYear] = useState(FLORA_DEFAULT_YEAR);
   const [floraOpacity, setFloraOpacity] = useState(0.75);
@@ -4544,8 +4546,10 @@ export default function Home() {
     setCropsOn(on);
     cropRequestRef.current?.abort();
     cropHistoryRequestRef.current?.abort();
+    surveySoilRequestRef.current?.abort();
     setCropPoint(null);
     setCropHistory(null);
+    setSurveySoil(null);
   };
   // A click in Kansas reads the point's whole crop history: every CDL year, not just the one on show. Years do not change it.
   const readCropHistory = useCallback((clickLon: number, clickLat: number) => {
@@ -4569,6 +4573,25 @@ export default function Home() {
   }, []);
   const readCropHistoryRef = useRef(readCropHistory);
   readCropHistoryRef.current = readCropHistory;
+  // The SSURGO soil-map unit at the same point, beside its crop history.
+  const readSurveySoil = useCallback((clickLon: number, clickLat: number) => {
+    const lon = Number(clickLon.toFixed(5)), lat = Number(clickLat.toFixed(5));
+    surveySoilRequestRef.current?.abort();
+    if (!inCdlRegion(lon, lat)) { setSurveySoil(null); return; }
+    const controller = new AbortController();
+    surveySoilRequestRef.current = controller;
+    setSurveySoil({ lon, lat, state: "loading", data: null });
+    void fetch(SOIL_API_PATH(lon, lat), { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validSoil(value, lon, lat)) throw new Error("Invalid soil reading.");
+        setSurveySoil({ lon, lat, state: value.state, data: value });
+      })
+      .catch(() => { if (!controller.signal.aborted) setSurveySoil({ lon, lat, state: "failed", data: null }); });
+  }, []);
+  const readSurveySoilRef = useRef(readSurveySoil);
+  readSurveySoilRef.current = readSurveySoil;
   const cropHistoryPattern = useMemo(() => cropHistory?.data && cropHistory.state === "ready" ? rotationPattern(cropHistory.data.years) : null, [cropHistory]);
   // A new year reads the last point clicked again, for that year.
   const chooseCropsYear = (year: number) => {
@@ -6716,6 +6739,7 @@ export default function Home() {
           if (cropsRef.current !== null) {
             readCropAtRef.current(cropsRef.current, event.lngLat.lng, event.lngLat.lat);
             readCropHistoryRef.current(event.lngLat.lng, event.lngLat.lat);
+            readSurveySoilRef.current(event.lngLat.lng, event.lngLat.lat);
           }
           // With daylight through the year shown, a click in Kansas charts that place.
           if (sunYearOnRef.current) {
@@ -10636,6 +10660,8 @@ export default function Home() {
     setCropPoint(null);
     cropHistoryRequestRef.current?.abort();
     setCropHistory(null);
+    surveySoilRequestRef.current?.abort();
+    setSurveySoil(null);
     legislatureHidCivicRef.current = false;
     setLegislatureChamber(null);
     setLegislaturePicked(null);
@@ -11688,6 +11714,8 @@ export default function Home() {
             history={activeCategoryMap.tools?.includes("crops") && cropHistory ? { state: cropHistory.state === "failed" ? "failed" : cropHistory.state === "loading" ? "loading" : cropHistory.state,
               bars: cropHistory.data ? historyBars(cropHistory.data) : [], pattern: cropHistoryPattern,
               reading: cropHistory.data && cropHistoryPattern ? cropHistoryReading(cropHistory.data, cropHistoryPattern) : null } : null}
+            surveySoil={activeCategoryMap.tools?.includes("crops") && surveySoil ? { state: surveySoil.state, mapUnit: surveySoil.data?.mapUnit?.name ?? null, water: soilWater(surveySoil.data?.mapUnit ?? null),
+              lines: surveySoil.data?.components.map(component => ({ name: component.name, detail: soilLine(component) })) ?? [] } : null}
             crops={activeCategoryMap.tools?.includes("crops") ? { on: cropsOn, year: cropsYear, years: CDL_YEARS, reading: cdlReading(cropsYear, cropPoint, view.zoom),
               swatch: cropPoint?.state === "ready" ? cropPoint.crop?.color ?? null : null } : undefined}
             onCrops={showCrops} onCropsYear={chooseCropsYear}

@@ -378,6 +378,27 @@ The route reads the years a few at a time and keeps a complete answer a day per
 point. The map's point is rounded to five decimals, the same precision as the
 request, so the answer matches the point it was asked for.
 
+## Soil survey at a point (Field view)
+
+With **Show crops (USDA CDL)** on, a click also reads the SSURGO soil-map unit at
+that point from USDA Soil Data Access (`app/crop-soil.ts`,
+`/api/cropland/soil`), shown under the crop history.
+
+- **Components:** the map unit's components, most of the unit first (at most
+  eight). Each reads with its share of the map unit, drainage class, hydrologic
+  group, and non-irrigated capability class (1 has the fewest limitations, 8 the
+  most).
+- **Water storage:** the map unit's water to 150 cm, a weighted average over all
+  its components. It is shown once for the unit, not for each component.
+- **No coverage:** a point with no SSURGO map unit says so; nothing is inferred.
+- **Source unavailable:** the dock says so and no soil is inferred. Click the
+  point again to retry; a failure is not kept.
+- **Limits:** components are alternatives within the mapped area, not the soil at
+  the point. Survey editions vary, and this reading carries no field history.
+
+The route queries the point to five decimals, the same precision the page uses,
+and marks an answer cacheable for a day; a failed answer is sent no-store.
+
 ## Daylight through the year (Sky globe)
 
 **Daylight through the year** charts every day of the current year at one
