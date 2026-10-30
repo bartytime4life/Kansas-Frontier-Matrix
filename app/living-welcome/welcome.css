@@ -807,7 +807,7 @@
  .living-welcome[data-cinematic=true] .welcome-stage-close{width:44px}
  .living-welcome[data-cinematic=true] .welcome-layer-demo,
  .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo,
- .living-welcome[data-cinematic=true][data-active=aviation] .welcome-layer-demo{display:block;top:68px;left:12px;right:12px;width:auto;height:auto;max-height:clamp(144px,27vh,230px);overflow:auto;padding:12px 14px}
+ .living-welcome[data-cinematic=true][data-active=aviation] .welcome-layer-demo{display:block;top:68px;left:12px;right:12px;width:auto;height:auto;max-height:clamp(104px,27%,220px);overflow:auto;padding:12px 14px}
  .living-welcome[data-cinematic=true] .welcome-layer-demo h2{font-size:21px;margin:5px 0 8px}
  .living-welcome[data-cinematic=true] .welcome-layer-demo>p{font-size:12px}
  .living-welcome[data-cinematic=true] .welcome-layer-demo>small{font-size:11px}
@@ -823,7 +823,7 @@
  .living-welcome[data-cinematic=true]:has(.welcome-layer-demo) .domain-stage-caption{left:12px;right:12px;top:auto;bottom:151px;max-width:none;max-height:50px;padding:7px 10px;text-align:left;justify-items:start}
  .living-welcome[data-cinematic=true] .domain-stage-caption>span,.living-welcome[data-cinematic=true] .domain-stage-caption>strong{display:none}
  .living-welcome[data-cinematic=true] .domain-stage-caption small{font-size:10px}
- .living-welcome[data-cinematic=true][data-active=geology] .welcome-geology-specimen{top:calc(68px + clamp(144px,27vh,230px) + 12px);bottom:210px;left:12px;right:12px;width:auto;max-width:none;height:auto;max-height:none;transform:none}
+ .living-welcome[data-cinematic=true][data-active=geology] .welcome-geology-specimen{top:calc(80px + clamp(104px,27%,220px));bottom:210px;left:12px;right:12px;width:auto;max-width:none;height:auto;max-height:none;transform:none}
 }
 @media(max-height:520px) and (min-width:701px){
  .living-welcome[data-cinematic=true] .welcome-layer-demo{top:70px;max-height:calc(100% - 224px)}
@@ -837,7 +837,7 @@
 .living-welcome[data-motion=paused] .welcome-rail-card{transition:none}
 /* A short landscape phone uses two edge panels, with independent scrolling,
    rather than stacking controls across an already shallow map. */
-@media(max-height:600px) and (max-width:700px){
+@media(max-height:600px) and (max-width:700px) and (orientation:landscape){
  .living-welcome[data-cinematic=true] .welcome-layer-demo,
  .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo,
  .living-welcome[data-cinematic=true][data-active=aviation] .welcome-layer-demo{top:64px;right:auto;left:12px;width:calc(50% - 20px);max-height:calc(100% - 96px)}
@@ -846,3 +846,5 @@
  .living-welcome[data-cinematic=true] .welcome-rail-scroll{display:none}
  .living-welcome[data-cinematic=true]:has(.welcome-layer-demo) .domain-stage-caption{display:none}
 }
+
+@media(max-height:600px) and (max-width:700px) and (orientation:portrait){.living-welcome[data-cinematic=true] .welcome-geology-specimen{display:none}}
