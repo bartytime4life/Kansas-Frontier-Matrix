@@ -1,6 +1,6 @@
 # Category maps
 
-Each start-page category opens on a map built for its data. The category map
+Each start-page category opens on a map with stated coverage and source limits. The category map
 registry, `app/category-maps.ts`, gives every topic in `app/layer-workspaces.ts`
 one map look:
 
@@ -17,6 +17,41 @@ one map look:
 Choosing a look is presentation and navigation only. Starters are the same
 provider-context switches the Layers panel offers, with their own source clocks,
 holds and limits. They are display context, not admitted evidence.
+
+## Fauna and crime, justice & public safety
+
+The shared taxonomy now has 21 categories. **Fauna & wildlife** belongs to
+Earth & environment; **Crime, justice & public safety** belongs to People &
+place. The welcome, Layers topic selector, Topics index and restored `topic`
+URLs use the same `fauna` and `public-safety` identifiers.
+
+Fauna opens **Wildlife landscape**, a statewide 2D prairie basemap with no
+provider starters. No reviewed animal-occurrence layer or governed Fauna
+EvidenceBundle is connected to this map. Links lead to the existing Observatory
+and its source catalogue, whose occurrence context has its own scope and
+limitations. Landscape appearance does not establish species presence,
+abundance or absence. The category does not expose sensitive wildlife sites.
+
+Crime, justice & public safety opens **Public-safety context**, a statewide
+2D civic basemap, also with no provider starters. The existing DeFlock reported
+plate-reader areas can be enabled explicitly from the context controls or
+Layers; they remain classified under Transport and Engineering too. Those
+community reports are not crime reports, live camera activity or emergency
+coverage. Crime, court and live incident feeds are not connected. Reports do
+not establish guilt, and missing records do not establish safety.
+
+Neither category has a verified recording, so both display an explicit capture
+limitation and their own map glimpse. Source inventory, admission, rights,
+sensitivity, review and release controls are unchanged. Domain classification
+does not admit a registry record: Fauna rows can appear in both Ecology and
+Fauna, and crime/justice/public-safety rows can appear in the new category only
+through the existing registry path.
+
+Placement uses the existing hosted composition's `app/` presentation and
+navigation responsibilities, `tests/` regressions and this `docs/` explanation,
+consistent with accepted Directory Rules / ADR-0029. No parallel domain,
+schema, policy, source or release home is created. Rollback is a revert of the
+category change; no data migration is needed.
 
 ## How a visitor gets there
 

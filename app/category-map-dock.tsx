@@ -436,10 +436,12 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       {onLayer && layerVisibility && <button type="button" className="category-map-dock-tool" aria-pressed={Boolean(layerVisibility["census-counties"])} onClick={() => onLayer("census-counties", !layerVisibility["census-counties"])}>Compare Census counties</button>}
     </section>}
     {look.contextLayers && onLayer && layerVisibility && <div className="category-map-dock-layer-set">
+      {look.starters.length > 0 && <>
       <strong>Starting layers</strong>
       {look.starters.map(id => <button key={id} type="button" className="category-map-dock-tool" aria-pressed={Boolean(layerVisibility[id])}
         onClick={() => onLayer(id, !layerVisibility[id])}>{id === "nws-radar" ? "Latest NOAA radar" : "Active NWS alerts"}</button>)}
       <small>Latest scan first · playback on demand. Each source keeps its own clock.</small>
+      </>}
       <details className="category-map-dock-context"><summary>Add related context</summary>
         <p>Off at start. Add only what helps this view.</p>
         {look.contextLayers.map(layer => <div key={layer.id}>

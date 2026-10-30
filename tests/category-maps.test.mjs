@@ -47,6 +47,26 @@ test('aviation and government are categories with their own specialized basemaps
  assert.equal(topics.restoreTopic('aviation'),'aviation');assert.equal(topics.restoreTopic('government'),'government');
 });
 
+test('Fauna and public safety open reference looks without enabling unreleased or unrelated records',()=>{
+ for(const id of ['fauna','public-safety']){
+  assert.equal(topics.restoreTopic(id),id);
+  assert.deepEqual([...maps.CATEGORY_MAPS[id].starters],[],'neither category starts an observation or incident feed');
+  assert.equal(maps.CATEGORY_MAPS[id].scene,'2d');
+  assert.equal(maps.CATEGORY_MAPS[id].overlays,undefined,'population prisms and aviation are unrelated');
+ }
+ assert.equal(topics.topicDefinition('fauna').group,'Earth & environment');
+ assert.equal(topics.topicDefinition('public-safety').group,'People & place');
+ assert.match(topics.topicDefinition('fauna').limitation,/sensitive sites stay withheld/);
+ assert.match(topics.topicDefinition('public-safety').limitation,/Crime and justice feeds are not connected/);
+ assert.deepEqual(topics.officialSourceTopics('deflock-alpr'),['transport','engineering','public-safety']);
+ assert.equal(maps.CATEGORY_MAPS['public-safety'].contextLayers[0].id,'deflock-alpr','the existing source stays optional');
+ assert.ok(!topics.officialSourceTopics('census-counties').includes('public-safety'),'population is not a crime metric');
+ assert.ok(!topics.officialSourceTopics('nws-alerts').includes('public-safety'),'weather alerts retain their own subject');
+ assert.deepEqual(topics.registryLayerTopics('Fauna'),['ecology','fauna']);
+ assert.deepEqual(topics.registryLayerTopics('Crime, justice & public safety'),['public-safety']);
+ assert.deepEqual(topics.registryLayerTopics('Flora'),['ecology'],'plants are not reassigned to animal evidence');
+});
+
 test('opening a category map opens on its own subject and follows the same category in Layers',async()=>{
  const page=await readFile('app/page.tsx','utf8');
  const body=page.slice(page.indexOf('  const openCategoryMap = (topic: TopicId) => {'),page.indexOf('  const runWelcomeMap ='));
@@ -56,6 +76,23 @@ test('opening a category map opens on its own subject and follows the same categ
  assert.match(body,/motionDuration\(1800\)/,'camera flight honours reduced motion');
  assert.match(page,/onTopic=\{runWelcomeTopic\} onMap=\{runWelcomeMap\}/);
  assert.match(page,/<CategoryMapDock look=\{activeCategoryMap\} mode=\{categoryMode\}/);
+});
+
+test('public-safety dock keeps optional context off and does not promise a radar scan',async()=>{
+ const h=await componentHarness('app/category-map-dock.tsx',{});
+ const calls=[];
+ const props={look:maps.CATEGORY_MAPS['public-safety'],mode:'2d',depth:1,azimuth:315,sun:null,terrainAvailable:true,layerVisibility:{},onLayer:(id,on)=>calls.push([id,on])};
+ let tree=h.render(h.exports.CategoryMapDock,props);
+ const report=()=>findNode(tree,n=>n.type==='button'&&n.props.children==='Reported plate-reader areas');
+ assert.equal(report().props['aria-pressed'],false);
+ assert.equal(findNode(tree,n=>n.type==='strong'&&n.props.children==='Starting layers'),undefined);
+ assert.equal(findNode(tree,n=>n.type==='small'&&String(n.props.children).includes('Latest scan first')),undefined);
+ report().props.onClick();assert.deepEqual(calls,[['deflock-alpr',true]]);
+ tree=h.render(h.exports.CategoryMapDock,{...props,layerVisibility:{'deflock-alpr':true}});
+ assert.equal(report().props['aria-pressed'],true);
+ report().props.onClick();assert.deepEqual(calls.at(-1),['deflock-alpr',false]);
+ tree=h.render(h.exports.CategoryMapDock,{...props,look:maps.CATEGORY_MAPS.weather});
+ assert.ok(findNode(tree,n=>n.type==='strong'&&n.props.children==='Starting layers'),'weather keeps its real starter controls');
 });
 
 test('the dock reflects the view and routes every control to an existing handler',async()=>{

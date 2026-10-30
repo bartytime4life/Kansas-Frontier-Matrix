@@ -4,6 +4,8 @@ const selections = {
  weather: ['weather'], water: ['rivers'], groundwater: ['underground'],
  geology: [null, 'No verified earthquake footage is available. Lift a symbolic surface plate to read one original KGS well log. The full map retains earthquake context and Underground tools; no continuous geology is claimed.'],
  terrain: ['science'], ecology: ['farming', 'Aerial land-cover context; no species inventory.'],
+ fauna: [null, 'No verified wildlife capture is connected. The preview shows landscape context; animal observations and sensitive sites are not displayed.'],
+ 'public-safety': [null, 'No crime, court or emergency-response capture is connected. The preview shows civic reference geography, not incidents or a safety score.'],
  agriculture: ['farming'], history: ['history'], transport: ['transport'],
  engineering: ['transport', 'Bridge inventory and transport context; not engineering analysis.'],
  land: ['government', 'County and survey reference context; not ownership evidence.'],
@@ -26,6 +28,8 @@ export function capabilityNote(topic) { return selections[topic]?.[1] || ''; }
 // Welcome presentation only. The category map and its source controls still own
 // layer selection, source clocks and availability; these descriptions admit nothing.
 const glimpses = {
+ fauna: ['A landscape for wildlife questions', 'A prairie basemap supplies geographic context without adding animal observations.', 'Read the landscape, then use the source catalogue or Observatory for separately scoped occurrence context.', 'This is not a species inventory, habitat model, animal-movement track or evidence release. Sensitive locations remain withheld.'],
+ 'public-safety': ['Place before interpretation', 'A civic reference map provides orientation for crime, justice and public-safety questions.', 'Read the coverage limits before following a source or government-context link.', 'Crime reports, court records and live emergency incidents are not connected. A blank map is not evidence of safety or absence of crime.'],
  engineering: ['Crossings in the landscape', 'Bridge inventory points sit against real river valleys and terrain.', 'Look for crossings near the Big Blue and Kansas rivers.', 'Open the map to inspect a bridge record or draw a terrain profile.'],
  transport: ['Follow roads and rail', 'KDOT highway and active-rail layers meet around Wichita.', 'Compare the road and railway lines as the map settles.', 'Reference networks do not show live vehicles, closures or access.'],
  aviation: ['Explore the airspace zones', 'See the FAA airspace zones around Wichita, without the extra airport and airway overlays.', 'Compare the stacked zones with the flat chart and an altitude slice.', 'Open the aviation map for point inspection, side views, weather, traffic and separately dated drone/TFR context. Display only; not for navigation.'],
