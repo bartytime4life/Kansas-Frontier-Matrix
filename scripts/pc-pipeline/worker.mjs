@@ -10,10 +10,14 @@ import { storagePolicy } from './storage-policy.mjs';
 import { Journal } from './journal.mjs';
 import { pipelineCall, publish } from './publisher.mjs';
 
+import { readConfig, validateConfig } from './config.mjs';
+
 const SAFE = /^[A-Z][A-Z_]{1,63}$/;
 const remoteDeferral = code => ['REMOTE_UNAVAILABLE','PIPELINE_PAUSED','PROJECTION_BUDGET_REACHED','REMOTE_BUSY'].includes(code);
 const errorCode = error => SAFE.test(error.message ?? '') ? error.message : 'PIPELINE_OPERATION_FAILED';
 export async function tick(config, { fetcher = fetch, now = Date.now(), acquire = fetchCapture, memory = freemem, guard = storageGuard } = {}) {
+  if (config.remoteMode === 'connection-only' && config.publish) fail('CONNECTION_ONLY_UPLOADS_DISABLED');
+  if (config.format === 'kfm-pc-pipeline-config-v2') config = validateConfig(config);
   const policy = storagePolicy(config);
   if (!Array.isArray(config.sources) || config.sources.some(id => !policy.priority.includes(id))) fail('SOURCE_NOT_ALLOWED');
   await guard(config, { reserve: 64 * 1024 ** 2 });
@@ -47,7 +51,7 @@ export async function tick(config, { fetcher = fetch, now = Date.now(), acquire 
           const normalized = normalizeCapture(request, capture); const id = sha(normalized.bytes);
           productPath = 'data/processed/' + sourceId + '/' + id + '.json';
           await immutable(resolve(config.root, productPath), normalized.bytes);
-          journal.update(job, { product_path: productPath });
+          journal.update(job, { product_path: productPath, captured_at: Date.now() });
         }
         const payload = await readRegular(resolve(config.root, productPath), 8 * 1024 ** 2);
         if (config.publish === true) {
@@ -85,15 +89,8 @@ export async function tick(config, { fetcher = fetch, now = Date.now(), acquire 
     return { format: 'kfm-pc-pipeline-tick-v1', at: new Date(now).toISOString(), outcomes, publication: { enabled: Boolean(secret), remoteAvailable: secret ? remoteAvailable : null, attempted: publications, payloadBytes: publishedBytes, policy }, authority: 'APPROVED_PROFILE_REQUIRED_FOR_PUBLICATION' };
   } finally { journal.close(); }
 }
-export async function loadConfig(path) {
-  const config = parse(await readRegular(path, 16384));
-  if (config.format !== 'kfm-pc-pipeline-config-v1' || typeof config.root !== 'string' || typeof config.mount !== 'string' || typeof config.storeId !== 'string'
-    || !/^[a-f0-9]{32}$/.test(config.storeId) || !Array.isArray(config.sources) || config.sources.length > 3 || new Set(config.sources).size !== config.sources.length
-    || config.sources.some(s => !['usgs-streamflow','nws-alerts','usgs-earthquakes'].includes(s)) || typeof config.publish !== 'boolean' || !/^\d+$/.test(String(config.device))
-    || !config.approvalDirectory?.startsWith('/')) fail('CONFIG_INVALID');
-  storagePolicy(config);
-  return config;
-}
+export async function loadConfig(path) { return readConfig(path); }
+
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try { console.log(canonical(await tick(await loadConfig(process.argv[2] ?? '/etc/kfm-pipeline/config.json')))); }
   catch (e) { console.error(canonical({ state: 'held', reason: SAFE.test(e.message ?? '') ? e.message : 'PIPELINE_OPERATION_FAILED' })); process.exitCode = 1; }
