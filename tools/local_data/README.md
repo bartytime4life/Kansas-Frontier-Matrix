@@ -301,6 +301,10 @@ capture. The [historical water procedure](../../docs/runbooks/historical-water-e
 replays and validates a pinned two-station USGS collection into a separate private
 WORK package, with original dates, provenance, provisional flags and release holds.
 
+The [historical road-map procedure](../../docs/runbooks/historical-road-map-enrichment.md)
+replays a qualified 1918 document rendering and retains its source PDF for private
+review and backup, with explicit map-date, rights and location-accuracy limits.
+
 ## Private pipeline health
 
 The working intake desk reads a bounded `data/work/pipeline-health.json` report
