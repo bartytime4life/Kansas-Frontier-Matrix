@@ -121,7 +121,7 @@ test('the dock shows the reading beside the crops, with its station and its limi
 
 test('the page reads the degree days with each click, for the crop year on show, and clears them with the crops',()=>{
  assert.match(page,/readDegreeDaysRef\.current\(event\.lngLat\.lng, event\.lngLat\.lat, cropsRef\.current\)/);
- assert.match(page,/degreeDaysRequestRef\.current\?\.abort\(\);\n    frostRequestRef\.current\?\.abort\(\);\n    setCropPoint\(null\);/,'turning crops off aborts the reading');
+ assert.match(page,/degreeDaysRequestRef\.current\?\.abort\(\);\n    frostRequestRef\.current\?\.abort\(\);\n    seasonRainRequestRef\.current\?\.abort\(\);\n    setCropPoint\(null\);/,'turning crops off aborts the reading');
  assert.match(page,/import \{ GDD_API_PATH, degreeDaysLine, rainLine, validDegreeDays/);
  assert.match(dockSource,/degreeDays\?: Readonly</);
 });

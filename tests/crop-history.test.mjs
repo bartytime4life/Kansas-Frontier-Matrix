@@ -121,7 +121,7 @@ test('the dock draws the history beside the year: loading, failed, and the timel
  assert.match(page,/const lon = Number\(clickLon\.toFixed\(5\)\), lat = Number\(clickLat\.toFixed\(5\)\);/);
  assert.equal(ch.validCropHistory({lon:Number((-98.1234567).toFixed(5)),lat:38.2,years:[]},Number((-98.1234567).toFixed(5)),38.2),true);
 
- assert.match(page,/cropHistoryRequestRef\.current\?\.abort\(\);\s*surveySoilRequestRef\.current\?\.abort\(\);\s*degreeDaysRequestRef\.current\?\.abort\(\);\s*frostRequestRef\.current\?\.abort\(\);\s*setCropPoint\(null\);\s*setCropHistory\(null\);\s*setSurveySoil\(null\);\s*setDegreeDays\(null\);\s*setFrostDates\(null\);\s*\};/,'turning crops off clears it');
+ assert.match(page,/cropHistoryRequestRef\.current\?\.abort\(\);\s*surveySoilRequestRef\.current\?\.abort\(\);\s*degreeDaysRequestRef\.current\?\.abort\(\);\s*frostRequestRef\.current\?\.abort\(\);\s*seasonRainRequestRef\.current\?\.abort\(\);\s*setCropPoint\(null\);\s*setCropHistory\(null\);\s*setSurveySoil\(null\);\s*setDegreeDays\(null\);\s*setFrostDates\(null\);\s*setSeasonRain\(null\);\s*\};/,'turning crops off clears it');
  assert.match(page,/\.\.\.\(cropsOn && cropHistory\?\.data \? \[cropHistoryKey\(\)\] : \[\]\)/);
  assert.doesNotMatch(page,/readCropHistory\(\w+, \w+\); \/\/ years/,'years do not refetch the history');
 });

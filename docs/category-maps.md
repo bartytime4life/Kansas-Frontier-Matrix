@@ -444,6 +444,21 @@ year on show, at the nearest Kansas airport weather station (ASOS)
 
 A finished year with both freezes certain is kept a day; anything else is sent no-store.
 
+## Season rain against normal at a point (Field view)
+
+With **Show crops (USDA CDL)** on, a click also reads the season's rain for the crop
+year on show against the normal at the nearest Kansas airport station
+(`app/rain-normal.ts`, `/api/farming/rain-normal`).
+
+- **Season:** the rain from April 1 to October 31 of the year on show, totalled in inches.
+- **Normal:** the average of the ten years before it. A year counts only when every
+  day in it was read, and a normal needs at least five such years.
+- **Share:** the season as a percentage of the normal, shown only when the season
+  has every day read.
+- **Caching:** each complete station-year is kept on the server, so repeat clicks
+  read only the years that could not be read before.
+- **Limit:** a station's rain, not the field's. Rain varies across a county.
+
 ## Daylight through the year (Sky globe)
 
 **Daylight through the year** charts every day of the current year at one

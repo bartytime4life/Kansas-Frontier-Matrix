@@ -86,7 +86,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, seasonRain, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -239,6 +239,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    * The crop history at the point last clicked: loading or failed, or the
    * year-by-year bars, the pattern read from them and its line.
    */
+  seasonRain?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; year: number; line: string | null }> | null;
   frost?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; year: number; line: string | null }> | null;
   degreeDays?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; year: number; line: string | null; rain: string | null }> | null;
   surveySoil?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; mapUnit: string | null; water: string | null; lines: readonly Readonly<{ name: string; detail: string }>[] }> | null;
@@ -701,6 +702,14 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           {frost.state === "none" && <p className="category-map-dock-reading">No Kansas airport station is within 150 km of this point.</p>}
           {frost.state === "ready" && frost.line && <p className="category-map-dock-reading">{frost.line}</p>}
           {frost.state === "ready" && <p className="category-map-dock-reading">A low at an airport station, not the field: a freeze can differ across a county.</p>}
+        </div>}
+        {seasonRain && <div className="category-map-dock-crop-history" aria-live="polite">
+          <p className="category-map-dock-reading">Season rain, {seasonRain.year} (click the point again for another year)</p>
+          {seasonRain.state === "loading" && <p className="category-map-dock-reading">Reading the season and the ten years before it at the nearest Kansas station…</p>}
+          {seasonRain.state === "failed" && <p className="category-map-dock-reading">The Iowa Environmental Mesonet did not answer for this point. No rain normal is inferred; click the point again to retry.</p>}
+          {seasonRain.state === "none" && <p className="category-map-dock-reading">No Kansas airport station is within 150 km of this point.</p>}
+          {seasonRain.state === "ready" && seasonRain.line && <p className="category-map-dock-reading">{seasonRain.line}</p>}
+          {seasonRain.state === "ready" && <p className="category-map-dock-reading">A station's rain, not the field. Rain varies across a county, and a normal needs at least five complete earlier years.</p>}
         </div>}
       </div>}
     </>}
