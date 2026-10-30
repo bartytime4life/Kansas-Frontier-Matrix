@@ -23,11 +23,23 @@ export function dailyDegreeDays(maxF: number | null, minF: number | null): numbe
   return Math.max(0, (high + low) / 2 - GDD_BASE_F);
 }
 
-/** The season's total, over the days with both readings; a day with a missing reading is counted, not guessed. */
-export function seasonDegreeDays(days: readonly DailyTemperature[]) {
+/** Every date of the season, April 1 to October 31 of a year, as YYYY-MM-DD. */
+export function seasonDates(year: number): string[] {
+  const dates: string[] = [];
+  for (let t = Date.UTC(year, 3, 1); t <= Date.UTC(year, 9, 31); t += 86_400_000) dates.push(new Date(t).toISOString().slice(0, 10));
+  return dates;
+}
+
+/**
+ * The season's total. Every date of the season is counted: a date with no row, or a row with a missing reading, is missing and
+ * not guessed. A season is complete only when no date is missing.
+ */
+export function seasonDegreeDays(days: readonly DailyTemperature[], year: number) {
+  const byDay = new Map(days.map(day => [day.day, day]));
   let total = 0, daysRead = 0, daysMissing = 0;
-  for (const day of days) {
-    const value = dailyDegreeDays(day.maxF, day.minF);
+  for (const date of seasonDates(year)) {
+    const day = byDay.get(date);
+    const value = day ? dailyDegreeDays(day.maxF, day.minF) : null;
     if (value === null) { daysMissing++; continue; }
     total += value; daysRead++;
   }
