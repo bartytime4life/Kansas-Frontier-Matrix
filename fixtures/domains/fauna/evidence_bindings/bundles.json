@@ -1,0 +1,71 @@
+[
+  {
+    "bundle_id": "fixture:bundle:fauna:occurrence",
+    "claim_scope": "Synthetic offline reference-link rehearsal only; no biological claim.",
+    "evidence_refs": [
+      {
+        "ref": "fixture:evidence:fauna:occurrence:001",
+        "kind": "record",
+        "bundle_ref": "fixture:bundle:fauna:occurrence"
+      }
+    ],
+    "source_records": [
+      "fixture:fauna:observed-open-001"
+    ],
+    "citations": [
+      "urn:kfm:fixture:fauna:evidence-binding"
+    ],
+    "rights": {
+      "license": "CC0-1.0"
+    },
+    "sensitivity": {
+      "level": "quarantine",
+      "reason": "Invented fixture; internal rehearsal only.",
+      "applied_at": "2026-10-29T00:00:00Z"
+    },
+    "transforms": [],
+    "checksums": {
+      "fixture:raw:fauna:occurrence:001": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "spec_hash": {
+      "value": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  },
+  {
+    "bundle_id": "fixture:bundle:fauna:taxonomy",
+    "claim_scope": "Synthetic offline reference-link rehearsal only; no biological claim.",
+    "evidence_refs": [
+      {
+        "ref": "fixture:snapshot:fauna:taxonomy:001",
+        "kind": "dataset",
+        "bundle_ref": "fixture:bundle:fauna:taxonomy"
+      },
+      {
+        "ref": "fixture:evidence:fauna:taxonomy:001",
+        "kind": "record",
+        "bundle_ref": "fixture:bundle:fauna:taxonomy"
+      }
+    ],
+    "source_records": [
+      "fixture:taxonomy:fauna:001"
+    ],
+    "citations": [
+      "urn:kfm:fixture:fauna:evidence-binding"
+    ],
+    "rights": {
+      "license": "CC0-1.0"
+    },
+    "sensitivity": {
+      "level": "quarantine",
+      "reason": "Invented fixture; internal rehearsal only.",
+      "applied_at": "2026-10-29T00:00:00Z"
+    },
+    "transforms": [],
+    "checksums": {
+      "fixture:taxonomy:fauna:001": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "spec_hash": {
+      "value": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  }
+]

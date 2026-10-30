@@ -1,0 +1,168 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/fauna-occurrence-evidence.yml": "sha256:335279149b16dd8e2d521b0b861dfc16709b731dbfe1c5258aec519f39a6738e",
+    "docs/domains/fauna/README.md": "sha256:e2584b9f3a468d013c16bf122936802efb90a081722f7927c6fb22aa0d5a6f6c",
+    "docs/domains/fauna/normalization.md": "sha256:94fd6e0e0f983ad60f56473125ba63557b365da2c8c841b17112ac5dca9a7fd6",
+    "fixtures/domains/fauna/evidence_bindings/README.md": "sha256:d980c0262876c6cb100b68f34f18032d725a6f85d09d3b6692532f9477f79299",
+    "fixtures/domains/fauna/evidence_bindings/bundles.json": "sha256:330666491e00bad1070a89e7a3b84a43a65745dfc210045e834d0dfa3699920d",
+    "packages/domains/fauna/README.md": "sha256:b57f3912f3e61cf627e8272989dedc1299807049cd8f88eb935db25fca1d1939",
+    "packages/domains/fauna/src/fauna/__init__.py": "sha256:bad41a62cb2d385012a773008650899da729ffde4d37a2fbb7eb333e8ee6f268",
+    "packages/domains/fauna/src/fauna/evidence.py": "sha256:49bfd6189b4cdf7fa440047455ada41c0a57e919fa4b1fc4d721c190a311bcd3",
+    "pipelines/domains/fauna/README.md": "sha256:5de952bc5158e929790ec14edebfc7e884a245718e83ee59b7c2411423c80425",
+    "pipelines/domains/fauna/normalize.py": "sha256:ced26a8a890975dfc8ad4730475aaecb5849adf9c50ca9c561d2efd3d36f372e",
+    "tests/domains/fauna/test_evidence_closure.py": "sha256:8302540835185e2c7b3545c819305b7cd29969951b68a8aac924d40fa8a2e880",
+    "tests/domains/fauna/test_normalization_pipeline.py": "sha256:65d6b175a84e637279aa80e7bc41988bb38c17145542ae4f3a6a6e0f5fdeb80d",
+    "tools/qa/scaffold_baseline.json": "sha256:3371fb220503f118dfb06ff5a82ee6de6d7d9ab35ed4fd9144f3f8f920f638b5",
+    "tools/validators/domains/fauna/occurrence/README.md": "sha256:17339cbfa29f2f8590121194d9701a33e0505f821368b20240ff0ffa2a021ebb"
+  },
+  "artifact_paths": [
+    ".github/workflows/fauna-occurrence-evidence.yml",
+    "docs/domains/fauna/README.md",
+    "docs/domains/fauna/normalization.md",
+    "fixtures/domains/fauna/evidence_bindings/README.md",
+    "fixtures/domains/fauna/evidence_bindings/bundles.json",
+    "packages/domains/fauna/README.md",
+    "packages/domains/fauna/src/fauna/__init__.py",
+    "packages/domains/fauna/src/fauna/evidence.py",
+    "pipelines/domains/fauna/README.md",
+    "pipelines/domains/fauna/normalize.py",
+    "tests/domains/fauna/test_evidence_closure.py",
+    "tests/domains/fauna/test_normalization_pipeline.py",
+    "tools/qa/scaffold_baseline.json",
+    "tools/validators/domains/fauna/occurrence/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@38ac9f8b07a9d989f58bf9991c1617dc005ef00c",
+      "id": "repository:evidence-binding-basis:0",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@38ac9f8b07a9d989f58bf9991c1617dc005ef00c",
+      "id": "repository:evidence-binding-basis:1",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/evidence/evidence_bundle.md@38ac9f8b07a9d989f58bf9991c1617dc005ef00c",
+      "id": "repository:evidence-binding-basis:2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/evidence/evidence_bundle.schema.json@38ac9f8b07a9d989f58bf9991c1617dc005ef00c",
+      "id": "repository:evidence-binding-basis:3",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/receipts/generated/genrec-fauna-components-20261029.json@38ac9f8b07a9d989f58bf9991c1617dc005ef00c",
+      "id": "repository:evidence-binding-basis:4",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-10-29T23:06:43Z",
+  "emitter": "OpenAI Codex local authoring",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:fb708355e17f0c4f459f2add9103f39246b6a231234a71ca0522a860c91df292",
+      "sha256:9123c01698646b563cf09ce8df4f8507d0ab651a007f8cfe308819a5b49d469b",
+      "sha256:3242efaa3f15940438195b1b0133e1a5710b9f2c505ee21629dec09d1cdda952",
+      "sha256:e7df263ecea6059eeb49e3e17b05216a4e0c438e91fe1c7dea4249b62cc9c40e"
+    ],
+    "evidence_refs": [
+      "repo:docs/doctrine/directory-rules.md@38ac9f8b07a9d989f58bf9991c1617dc005ef00c",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@38ac9f8b07a9d989f58bf9991c1617dc005ef00c",
+      "repo:contracts/evidence/evidence_bundle.md@38ac9f8b07a9d989f58bf9991c1617dc005ef00c",
+      "repo:schemas/contracts/v1/evidence/evidence_bundle.schema.json@38ac9f8b07a9d989f58bf9991c1617dc005ef00c",
+      "repo:data/receipts/generated/genrec-fauna-components-20261029.json@38ac9f8b07a9d989f58bf9991c1617dc005ef00c"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex GPT-6",
+    "provider": "OpenAI",
+    "version": "exact-serving-version-unknown"
+  },
+  "notes": "Generated authoring successor for opt-in offline Fauna EvidenceBundle metadata binding. Uses shared canonical schemas; creates no new evidence semantics, admission or release authority. Original receipts remain immutable. The policy_decisions entry identifies consulted accepted directory governance, not an executed Fauna PolicyDecision. Matching leaves records quarantined and evidence closure unverified; declared hashes are never verified bytes. Rollback is a reviewed revert of this scoped authoring change.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "local shell",
+      "GitHub",
+      "Code Review",
+      "Codex Security"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:f328805e972a92a7eac5c9bdba00ec5f767faab32942394aea8b91e11fe1935d",
+  "receipt_id": "genrec-fauna-evidence-bindings-20261029",
+  "truth_labels": {
+    ".github/workflows/fauna-occurrence-evidence.yml": "CONFIRMED",
+    "docs/domains/fauna/README.md": "CONFIRMED",
+    "docs/domains/fauna/normalization.md": "CONFIRMED",
+    "fixtures/domains/fauna/evidence_bindings/README.md": "CONFIRMED",
+    "fixtures/domains/fauna/evidence_bindings/bundles.json": "CONFIRMED",
+    "packages/domains/fauna/README.md": "CONFIRMED",
+    "packages/domains/fauna/src/fauna/__init__.py": "CONFIRMED",
+    "packages/domains/fauna/src/fauna/evidence.py": "CONFIRMED",
+    "pipelines/domains/fauna/README.md": "CONFIRMED",
+    "pipelines/domains/fauna/normalize.py": "CONFIRMED",
+    "tests/domains/fauna/test_evidence_closure.py": "CONFIRMED",
+    "tests/domains/fauna/test_normalization_pipeline.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED",
+    "tools/validators/domains/fauna/occurrence/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-changed-area-tests",
+      "outcome": "PASS",
+      "reason": "180 tests and 172 subtests passed across Fauna, adjacent Habitat/join, validator and hashing selections; synthetic and offline only."
+    },
+    {
+      "gate": "package-wheel-isolation",
+      "outcome": "PASS",
+      "reason": "Built and installed local Fauna wheel into an isolated target; EvidenceCatalog ran with no source-tree package imports."
+    },
+    {
+      "gate": "markdown-local-links",
+      "outcome": "PASS",
+      "reason": "Six changed Markdown documents: 145 local targets passed; 31 external targets remain unverified."
+    },
+    {
+      "gate": "scaffold-and-topology",
+      "outcome": "PASS",
+      "reason": "Canonical scaffold baseline strictly reduced from 868 to 866 with no additions; topology has no invariant or new drift, with 89 inherited warnings."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; no override."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Not run at receipt emission; inspect the pushed head separately."
+    },
+    {
+      "gate": "source-policy-release",
+      "outcome": "SKIPPED",
+      "reason": "Declared metadata linking does not authenticate claims, verify raw bytes, close evidence, admit sources, execute policy, release, deploy or publish."
+    }
+  ]
+}

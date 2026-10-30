@@ -2,8 +2,8 @@
  "schema_version": "kfm.scaffold-inventory/v1",
  "summary": {
   "by_kind": {
-   "PLACEHOLDER_MARKER": 710,
-   "STUB_MODULE": 146,
+   "PLACEHOLDER_MARKER": 709,
+   "STUB_MODULE": 145,
    "UNRESOLVED_DESCRIPTOR": 12
   },
   "by_surface": {
@@ -14,11 +14,11 @@
    "policy": 112,
    "schemas": 386,
    "scripts": 1,
-   "tests": 172,
+   "tests": 170,
    "tools": 24
   },
-  "files": 711,
-  "total": 868
+  "files": 710,
+  "total": 866
  },
  "findings": [
   {"kind": "PLACEHOLDER_MARKER", "path": "connectors/ahgp/pyproject.toml"},
@@ -745,8 +745,6 @@
   {"kind": "STUB_MODULE", "path": "tests/domains/atmosphere/test_unit_normalization.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_ai_no_leak.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_ai_no_leak.py"},
-  {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_evidence_closure.py"},
-  {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_evidence_closure.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_publication_gate.py"},
   {"kind": "STUB_MODULE", "path": "tests/domains/fauna/test_publication_gate.py"},
   {"kind": "PLACEHOLDER_MARKER", "path": "tests/domains/fauna/test_redaction_receipt.py"},
