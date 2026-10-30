@@ -1,0 +1,38 @@
+[
+  {
+    "key": "stations",
+    "url": "https://mesonet.agron.iastate.edu/geojson/network/KS_ASOS.geojson",
+    "status": 200,
+    "bytes": 43086,
+    "retrievedAt": "2026-10-30T17:37:52.695Z",
+    "file": "ks-asos.geojson",
+    "sha256": "c0da686eb4a3e143041cc163fbdb9e947be5ac70c7a8f14251f6ec99834b6433"
+  },
+  {
+    "key": "daily",
+    "url": "https://mesonet.agron.iastate.edu/cgi-bin/request/daily.py?network=KS_ASOS&stations=SLN&year1=2024&month1=4&day1=1&year2=2024&month2=10&day2=31&format=csv",
+    "status": 200,
+    "bytes": 34738,
+    "retrievedAt": "2026-10-30T17:37:52.716Z",
+    "file": "sln-2024.csv",
+    "sha256": "71d0b4a51ccaa26d2d95efcf23e10ec6f63cc694dbde15139179144f79f7689c"
+  },
+  {
+    "key": "GLD",
+    "url": "https://mesonet.agron.iastate.edu/cgi-bin/request/daily.py?network=KS_ASOS&stations=GLD&year1=2024&month1=4&day1=1&year2=2024&month2=10&day2=31&format=csv&var=max_temp_f,min_temp_f,precip_in&na=M",
+    "status": 200,
+    "bytes": 8081,
+    "retrievedAt": "2026-10-30T17:38:59.765Z",
+    "file": "gld-2024.csv",
+    "sha256": "8e5365e5fb75af3f245bb24a0de6c81d039bb618c2af0a1b991528848dfcf35d"
+  },
+  {
+    "key": "closed",
+    "url": "https://mesonet.agron.iastate.edu/cgi-bin/request/daily.py?network=KS_ASOS&stations=1K1&sts=2024-04-01&ets=2024-04-03&format=csv&var=max_temp_f,min_temp_f,precip_in&na=M",
+    "status": 200,
+    "bytes": 139,
+    "retrievedAt": "2026-10-30T17:39:01.998Z",
+    "file": "closed-1k1-2024.csv",
+    "sha256": "95448f26f9f726dd92dbd061dc0e81f4ef3b5a148286c4cbf792c6916673ffde"
+  }
+]

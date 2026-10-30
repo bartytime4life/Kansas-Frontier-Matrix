@@ -693,7 +693,8 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           {degreeDays.state === "none" && <p className="category-map-dock-reading">No Kansas airport station is within 150 km of this point, or it has no readings for the season.</p>}
           {degreeDays.state === "ready" && degreeDays.line && <p className="category-map-dock-reading">{degreeDays.line}</p>}
           {degreeDays.state === "ready" && degreeDays.rain && <p className="category-map-dock-reading">{degreeDays.rain}</p>}
-          {degreeDays.state === "ready" && <p className="category-map-dock-reading">A station reading, not the field. Degree days vary across a county, and an airport station records its own weather.</p>}
+          {degreeDays.state === "ready" && <p className="category-map-dock-reading">A station reading, not the field. This fixed-season corn-method heat index is not a planting-date or crop-maturity estimate. Precipitation includes liquid-equivalent snow. IEM uses station-local daily summaries; airport reports commonly use local standard time (01:00–01:00 during daylight time). Missing days are not estimated.</p>}
+          <a href="https://mesonet.agron.iastate.edu/request/daily.phtml?network=KS_ASOS" target="_blank" rel="noreferrer">IEM daily-summary source and methods</a>
         </div>}
         {frost && <div className="category-map-dock-crop-history" aria-live="polite">
           <p className="category-map-dock-reading">Frost dates, {frost.year} (click the point again for another year)</p>

@@ -1,0 +1,4 @@
+station,day,max_temp_f,min_temp_f,precip_in,network
+1K1,2024-04-01,M,M,M,KS_ASOS
+1K1,2024-04-02,M,M,M,KS_ASOS
+1K1,2024-04-03,M,M,M,KS_ASOS
