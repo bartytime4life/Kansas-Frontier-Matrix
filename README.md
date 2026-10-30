@@ -55,6 +55,8 @@ version-68 preservation record remains historical evidence in
 Site copy.
 
 For an Ubuntu PC, follow the [Site file layout and private data handoff](docs/LOCAL_PC_SITE_FILES.md).
+To operate or change the source pipeline on the `dev` PC, start with the
+[second-PC pipeline runbook](docs/second-pc-pipeline.md).
 
 ## Compact explorer chrome and owner-local Qwen — October 6, 2026
 
