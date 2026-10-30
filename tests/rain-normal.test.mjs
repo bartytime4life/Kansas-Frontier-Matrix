@@ -121,3 +121,19 @@ test('the page reads the season against normal with each click, for the crop yea
  assert.match(page,/import \{ RAIN_NORMAL_API_PATH, rainNormalLine, validRainNormal/);
  assert.match(dockSource,/seasonRain\?: Readonly</);
 });
+
+test('a season with no rain read at all is no total, and the dock says no rain was read rather than zero',async()=>{
+ const route=await loadRoute();
+ const original=globalThis.fetch;
+ try{
+  globalThis.fetch=async input=>{const url=String(input);
+   if(url.includes('geojson'))return json(STATIONS);
+   return text('station,day,max_temp_f,min_temp_f,precip_in\n');};
+  const body=await(await route.GET(new Request('https://kfm.test/api/farming/rain-normal?lon=-97.6&lat=38.8&year=2002'))).json();
+  assert.equal(body.state,'ready');
+  assert.equal(body.seasonInches,null,'a season with no rain read is not a total of zero');
+  assert.equal(body.percentOfNormal,null);
+  assert.equal(rn.validRainNormal(body,-97.6,38.8,2002),true);
+  assert.equal(rn.rainNormalLine(body),'No rain was read at this station for the season, Apr 1–Oct 31 2002.');
+ }finally{globalThis.fetch=original;}
+});
