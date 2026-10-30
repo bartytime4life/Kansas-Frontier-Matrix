@@ -48,21 +48,6 @@ they are not Explorer or public data endpoints. See the
 > objects. Captures remain unreleased; this
 > helper does not implement source admission or package activation.
 
-## Private pipeline health
-
-The working intake desk reads a bounded `data/work/pipeline-health.json` report
-written by the standalone capture wrapper. `GET /api/pipeline-health` requires
-the existing per-process session and the desk's own loopback origin, rejects
-query parameters, and is unavailable in catalog-only library mode. The response
-contains sanitized status and clocks, never raw captures or private file paths.
-Missing, oversized, invalid or symlinked reports are unavailable; reports older
-than 15 minutes or more than one minute in the future are marked stale.
-
-The report can describe streamflow, alerts and earthquakes when configured;
-reading it does not schedule, capture, approve or publish a source. Refresh the
-desk to read the latest report. Backup/restore status covers the working store;
-it does not establish a full independent backup of the preserved archive.
-
 <!-- kfm-showcase:start -->
 <p align="center">
   <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../../docs/brand/readme/kfm-banner-local-data-tools-dark.svg" /><img src="../../docs/brand/readme/kfm-banner-local-data-tools.svg" alt="Tools banner: capture exact bytes, prove them later." width="100%" /></picture></a>
@@ -70,21 +55,6 @@ it does not establish a full independent backup of the preserved archive.
 <!-- kfm-showcase:end -->
 
 # Local PC data tools
-
-## Private pipeline health
-
-The working intake desk reads a bounded `data/work/pipeline-health.json` report
-written by the standalone capture wrapper. `GET /api/pipeline-health` requires
-the existing per-process session and the desk's own loopback origin, rejects
-query parameters, and is unavailable in catalog-only library mode. The response
-contains sanitized status and clocks, never raw captures or private file paths.
-Missing, oversized, invalid or symlinked reports are unavailable; reports older
-than 15 minutes or more than one minute in the future are marked stale.
-
-The report can describe streamflow, alerts and earthquakes when configured;
-reading it does not schedule, capture, approve or publish a source. Refresh the
-desk to read the latest report. Backup/restore status covers the working store;
-it does not establish a full independent backup of the preserved archive.
 
 <!-- kfm-showcase:start -->
 <p>
@@ -156,21 +126,6 @@ rather than the connector output lane. Placement follows accepted
 [Directory Rules](../../docs/doctrine/directory-rules.md), especially DIR-EXEC-007,
 DIR-STORAGE-001 and source-first DIR-SOURCE-001. The local-upload connector
 remains unimplemented; its DIR-PLACE-003 output allowlist is unchanged.
-
-## Private pipeline health
-
-The working intake desk reads a bounded `data/work/pipeline-health.json` report
-written by the standalone capture wrapper. `GET /api/pipeline-health` requires
-the existing per-process session and the desk's own loopback origin, rejects
-query parameters, and is unavailable in catalog-only library mode. The response
-contains sanitized status and clocks, never raw captures or private file paths.
-Missing, oversized, invalid or symlinked reports are unavailable; reports older
-than 15 minutes or more than one minute in the future are marked stale.
-
-The report can describe streamflow, alerts and earthquakes when configured;
-reading it does not schedule, capture, approve or publish a source. Refresh the
-desk to read the latest report. Backup/restore status covers the working store;
-it does not establish a full independent backup of the preserved archive.
 
 <!-- kfm-showcase:start -->
 <p align="center">
