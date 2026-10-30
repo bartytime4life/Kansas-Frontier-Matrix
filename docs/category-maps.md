@@ -440,7 +440,7 @@ or a maturity prediction for the crop classified by USDA.
   `no-store`. The client uses `v=2` to avoid prior cached calculations. Legacy
   responses without rainfall fields remain readable and explicitly say precipitation
   is unavailable; partially present or inconsistent fields are rejected.
-- **Provider load:** GDD and frost daily requests share a bounded per-process queue,
+- **Provider load:** GDD, frost and earlier-year comparison requests share a bounded per-process queue,
   in-flight deduplication and a 2.1-second gap after each request. Multiple runtime
   processes still require a shared egress limiter to meet IEM's per-IP policy.
 - **Year:** change the crop year, then click again. Source retrieval time is not
@@ -476,12 +476,12 @@ year on show against the normal at the nearest Kansas airport station
 (`app/rain-normal.ts`, `/api/farming/rain-normal`).
 
 - **Season:** the rain from April 1 to October 31 of the year on show, totalled in inches.
-- **Normal:** the average of the ten years before it. A year counts only when every
+- **Comparison:** the mean of available complete years among the ten years before it, not a standard 30-year climate normal. A year counts only when every
   day in it was read, and a normal needs at least five such years.
 - **Share:** the season as a percentage of the normal, shown only when the season
   has every day read.
 - **Caching:** each complete station-year is kept on the server, so repeat clicks
-  read only the years that could not be read before.
+  read only the years that could not be read before. Complete entries expire after one day because upstream history can be revised. This route uses the shared sequential IEM queue and station/date validation; current incomplete dates are not yet due and prevent a percentage comparison. Trace days are separate from measured precipitation.
 - **Limit:** a station's rain, not the field's. Rain varies across a county.
 
 ## Daylight through the year (Sky globe)

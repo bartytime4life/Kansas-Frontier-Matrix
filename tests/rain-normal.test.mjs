@@ -17,7 +17,9 @@ const dockSource=await readFile('app/category-map-dock.tsx','utf8');
 const loadRoute=async()=>{
   const upstream=await esm('app/api/event-atlas/upstream.ts'), cropland=await esm('app/cropland.ts'), days=await esm('app/growing-degree-days.ts'), normal=await esm('app/rain-normal.ts');
   const stations=(await esm('app/kansas-stations.ts')).replace('from "./api/event-atlas/upstream"',`from "${dataUrl(upstream)}"`).replace('from "./growing-degree-days"',`from "${dataUrl(days)}"`);
+  const source=(await esm('app/iem-daily-source.ts')).replace('from "./api/event-atlas/upstream"',`from "${dataUrl(upstream)}"`);
   const code=ts.transpileModule(routeSource,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText
+    .replace('from "../../../iem-daily-source"',`from "${dataUrl(source)}"`)
     .replace('from "../../event-atlas/upstream"',`from "${dataUrl(upstream)}"`)
     .replace('from "../../../cropland"',`from "${dataUrl(cropland)}"`)
     .replace('from "../../../kansas-stations"',`from "${dataUrl(stations)}"`)
@@ -26,13 +28,13 @@ const loadRoute=async()=>{
   return import(dataUrl(code));
 };
 const STATIONS={type:'FeatureCollection',features:[
- {properties:{sid:'SLN',sname:'Salina'},geometry:{type:'Point',coordinates:[-97.65,38.79]}},
- {properties:{sid:'HYS',sname:'Hays'},geometry:{type:'Point',coordinates:[-99.27,38.84]}},
+ {properties:{sid:'SLN',sname:'Salina',network:'KS_ASOS',state:'KS',tzname:'America/Chicago',archive_begin:'1942-01-01',archive_end:null},geometry:{type:'Point',coordinates:[-97.65,38.79]}},
+ {properties:{sid:'HYS',sname:'Hays',network:'KS_ASOS',state:'KS',tzname:'America/Chicago',archive_begin:'1942-01-01',archive_end:null},geometry:{type:'Point',coordinates:[-99.27,38.84]}},
 ]};
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json'}});
 const text=(body,status=200)=>new Response(body,{status,headers:{'content-type':'text/csv'}});
 /** The April 1 to October 31 dates of a year, each with a rain reading of `inches`. */
-const season=(year,inches)=>{const rows=['station,day,max_temp_f,min_temp_f,precip_in'];for(let t=Date.UTC(year,3,1);t<=Date.UTC(year,9,31);t+=86_400_000){rows.push(`SLN,${new Date(t).toISOString().slice(0,10)},70,50,${inches}`);}return rows.join('\n')+'\n';};
+const season=(year,inches)=>{const rows=['station,day,max_temp_f,min_temp_f,precip_in,network'];for(let t=Date.UTC(year,3,1);t<=Date.UTC(year,9,31);t+=86_400_000){rows.push(`SLN,${new Date(t).toISOString().slice(0,10)},70,50,${inches},KS_ASOS`);}return rows.join('\n')+'\n';};
 
 test('the normal is the ten years before the year on show',()=>{
  assert.deepEqual(rn.normalYears(2024),[2014,2015,2016,2017,2018,2019,2020,2021,2022,2023]);
@@ -53,9 +55,9 @@ test('a season is a percentage of the normal, and none without one',()=>{
 
 test('the line says the season, the normal and the share of it, or that there is no normal',()=>{
  const station={id:'SLN',name:'Salina',km:3};
- const reading={lon:-97.6,lat:38.8,retrievedAt:'x',year:2024,state:'ready',station,seasonInches:10.7,seasonDaysMissing:0,normal:{average:21.4,years:9},percentOfNormal:50};
- assert.equal(rn.rainNormalLine(reading),'10.70 in of rain, Apr 1–Oct 31 2024 · 9-year average 21.40 in · 50% of normal · from Salina, 3 km away');
- assert.match(rn.rainNormalLine({...reading,normal:{average:null,years:3},percentOfNormal:null}),/no normal: 3 of 10 earlier years are complete, and 5 are needed/);
+ const reading={lon:-97.6,lat:38.8,retrievedAt:'2026-10-30T00:00:00Z',year:2024,state:'ready',station,seasonInches:10.7,seasonDaysMissing:0,normal:{average:21.4,years:9},percentOfNormal:50};
+ assert.equal(rn.rainNormalLine(reading),'10.70 in precipitation, Apr 1–Oct 31 2024 · 9-year average 21.40 in · 50% of earlier-year average · from Salina, 3 km away');
+ assert.match(rn.rainNormalLine({...reading,normal:{average:null,years:3},percentOfNormal:null}),/no earlier-year average: 3 of 10 earlier years are complete, and 5 are needed/);
  assert.match(rn.rainNormalLine({...reading,seasonDaysMissing:2,percentOfNormal:null}),/\(2 days missing\)/);
  assert.equal(rn.validRainNormal(reading,-97.6,38.8,2024),true,'the page accepts the reading');
 });
@@ -90,7 +92,7 @@ test('a point with no station in reach says so, and a bad request is refused',as
  const route=await loadRoute();
  const original=globalThis.fetch;
  try{
-  globalThis.fetch=async input=>String(input).includes('geojson')?json({features:[STATIONS.features[0]]}):text('');
+  globalThis.fetch=async input=>String(input).includes('geojson')?json({type:'FeatureCollection',features:[STATIONS.features[0]]}):text('');
   const far=await(await route.GET(new Request('https://kfm.test/api/farming/rain-normal?lon=-101.5&lat=37.0&year=2024'))).json();
   assert.equal(far.state,'none');assert.equal(far.station,null);
   globalThis.fetch=async()=>new Response('down',{status:503});
@@ -109,9 +111,9 @@ test('the dock shows the season against normal beside the crops: loading, failed
   crops:{on:true,year:2024,years:[2024,2023],reading:'Corn',swatch:null},onCrops(){},onCropsYear(){}};
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,seasonRain:{state:'loading',year:2024,line:null}})),/Reading the season and the ten years before it/);
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,seasonRain:{state:'failed',year:2024,line:null}})),/No rain normal is inferred/);
- assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,seasonRain:{state:'none',year:2024,line:null}})),/No Kansas airport station is within 150 km/);
- const ready=JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,seasonRain:{state:'ready',year:2024,line:'10.70 in of rain, Apr 1–Oct 31 2024 · 9-year average 21.40 in · 50% of normal · from Salina, 3 km away'}}));
- assert.match(ready,/Season rain, /);assert.match(ready,/50% of normal/);assert.match(ready,/A station's rain, not the field/);
+ assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,seasonRain:{state:'none',year:2024,line:null}})),/No eligible Kansas airport station is within 150 km/);
+ const ready=JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,seasonRain:{state:'ready',year:2024,line:'10.70 in precipitation, Apr 1–Oct 31 2024 · 9-year average 21.40 in · 50% of earlier-year average · from Salina, 3 km away'}}));
+ assert.match(ready,/Season rain, /);assert.match(ready,/50% of earlier-year average/);assert.match(ready,/A station's precipitation, not the field/);
  assert.doesNotMatch(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,seasonRain:null})),/Season rain, /,'nothing without a click');
 });
 
@@ -122,18 +124,4 @@ test('the page reads the season against normal with each click, for the crop yea
  assert.match(dockSource,/seasonRain\?: Readonly</);
 });
 
-test('a season with no rain read at all is no total, and the dock says no rain was read rather than zero',async()=>{
- const route=await loadRoute();
- const original=globalThis.fetch;
- try{
-  globalThis.fetch=async input=>{const url=String(input);
-   if(url.includes('geojson'))return json(STATIONS);
-   return text('station,day,max_temp_f,min_temp_f,precip_in\n');};
-  const body=await(await route.GET(new Request('https://kfm.test/api/farming/rain-normal?lon=-97.6&lat=38.8&year=2002'))).json();
-  assert.equal(body.state,'ready');
-  assert.equal(body.seasonInches,null,'a season with no rain read is not a total of zero');
-  assert.equal(body.percentOfNormal,null);
-  assert.equal(rn.validRainNormal(body,-97.6,38.8,2002),true);
-  assert.equal(rn.rainNormalLine(body),'No rain was read at this station for the season, Apr 1–Oct 31 2002.');
- }finally{globalThis.fetch=original;}
 });

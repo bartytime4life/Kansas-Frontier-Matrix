@@ -39,6 +39,8 @@ export type RainNormalReading = Readonly<{
   station: Readonly<{ id: string; name: string; km: number }> | null;
   seasonInches: number | null;
   seasonDaysMissing: number;
+  seasonDaysPending?: number;
+  seasonTraceDays?: number;
   normal: Readonly<{ average: number | null; years: number }>;
   percentOfNormal: number | null;
 }>;
@@ -48,20 +50,21 @@ export function validRainNormal(value: unknown, lon: number, lat: number, year: 
   const v = value as Partial<RainNormalReading>;
   const station = v.station;
   const normal = v.normal;
-  return v.lon === lon && v.lat === lat && v.year === year && (v.state === "ready" || v.state === "none")
-    && (station === null || (typeof station === "object" && typeof station.id === "string" && typeof station.name === "string" && typeof station.km === "number"))
-    && (v.seasonInches === null || typeof v.seasonInches === "number") && typeof v.seasonDaysMissing === "number"
-    && typeof normal === "object" && normal !== null && (normal.average === null || typeof normal.average === "number") && typeof normal.years === "number"
-    && (v.percentOfNormal === null || typeof v.percentOfNormal === "number");
+  const count = (n: unknown, max: number): n is number => typeof n === "number" && Number.isInteger(n) && n >= 0 && n <= max;
+  const amount = (n: unknown): n is number => typeof n === "number" && Number.isFinite(n) && n >= 0;
+  const pending = v.seasonDaysPending ?? 0, traces = v.seasonTraceDays ?? 0;
+  if (v.lon !== lon || v.lat !== lat || v.year !== year || !["ready", "none"].includes(v.state ?? "")
+    || typeof v.retrievedAt !== "string" || !Number.isFinite(Date.parse(v.retrievedAt))
+    || !count(v.seasonDaysMissing, 214) || !count(pending, 214) || !count(traces, 214)
+    || v.seasonDaysMissing + pending + traces > 214
+    || (station !== null && (!station || !/^[A-Z0-9]{2,5}$/.test(station.id) || typeof station.name !== "string" || !station.name.trim() || !amount(station.km) || station.km > 150))
+    || (v.seasonInches !== null && !amount(v.seasonInches)) || !normal || !count(normal.years, NORMAL_YEARS)
+    || (normal.average !== null && (!amount(normal.average) || normal.years < NORMAL_MIN_YEARS))
+    || (v.percentOfNormal !== null && (!count(v.percentOfNormal, Number.MAX_SAFE_INTEGER) || !normal.average || v.seasonDaysMissing > 0 || pending > 0))) return false;
+  return v.state === "ready" ? station !== null && v.seasonInches !== null : v.seasonInches === null && v.percentOfNormal === null;
 }
 
 /** The season against normal as the dock says it, or null when there is no season reading. */
 export function rainNormalLine(reading: RainNormalReading): string | null {
-  if (reading.state !== "ready" || reading.station === null) return null;
-  if (reading.seasonInches === null) return `No rain was read at this station for the season, Apr 1–Oct 31 ${reading.year}.`;
-  const season = `${reading.seasonInches.toFixed(2)} in of rain, Apr 1–Oct 31 ${reading.year}`;
-  const days = reading.seasonDaysMissing === 0 ? "" : ` (${reading.seasonDaysMissing} days missing)`;
-  if (reading.normal.average === null) return `${season}${days} · no normal: ${reading.normal.years} of ${NORMAL_YEARS} earlier years are complete, and ${NORMAL_MIN_YEARS} are needed`;
-  const share = reading.percentOfNormal === null || reading.seasonDaysMissing > 0 ? "" : ` · ${reading.percentOfNormal}% of normal`;
   return `${season}${days} · ${reading.normal.years}-year average ${reading.normal.average.toFixed(2)} in${share} · from ${reading.station.name}, ${Math.round(reading.station.km)} km away`;
 }

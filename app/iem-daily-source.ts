@@ -1,6 +1,6 @@
 import { boundedFetch } from "./api/event-atlas/upstream";
 
-/** IEM requests sequential access and a two-second gap. Shared by GDD and frost
+/** IEM requests sequential access and a two-second gap. Shared by Field weather
  * routes in this process. Multiple processes still need an egress-wide limiter.
  * Equal in-flight requests share bytes; failed responses are never cached.
  */
