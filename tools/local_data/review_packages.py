@@ -10,10 +10,10 @@ import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import re
-import struct
 import threading
 
 from tools.local_data.file_io import read_regular
+from tools.local_data.review_images import image_metadata
 
 ID = re.compile(r"[a-f0-9]{64}\Z")
 MANIFEST_LIMIT = 256 * 1024
@@ -22,12 +22,13 @@ PACKAGE_LIMIT = 256 * 1024 * 1024
 TEXT_LIMIT = 64 * 1024
 ROW_LIMIT = 40
 PROFILES = {
+    "kfm-historical-geology-review/v1": "Historical Kansas geology map",
     "kfm-historical-climate-normals-review/v1": "Historical NOAA climate normals",
     "kfm-historical-water-review/v1": "Historical USGS water observations",
     "kfm-map-document-review/v1": "Historical map document review",
     "kfm-water-metadata-availability-review/v1": "Water series availability",
 }
-SUFFIXES = {".md", ".txt", ".csv", ".tsv", ".json", ".geojson", ".png"}
+SUFFIXES = {".md", ".txt", ".csv", ".tsv", ".json", ".geojson", ".png", ".jpg", ".jpeg"}
 AUTHORITY = {"admission": False, "activation": False, "release": False, "publication": False}
 
 
@@ -130,7 +131,7 @@ class ReviewPackages:
                 "sourceRole": str(manifest.get("source_role", "Private review"))[:600],
                 "rights": str(manifest.get("rights", "UNKNOWN"))[:200],
                 "members": [{"id": member_id(r), "name": r["file"], "label": labels.get(r["file"], r["file"]),
-                             "bytes": r["bytes"], "kind": "image" if r["file"].endswith(".png") else "text"}
+                             "bytes": r["bytes"], "kind": "image" if Path(r["file"]).suffix in {".png", ".jpg", ".jpeg"} else "text"}
                             for r in manifest["outputs"]],
             })
         return {"schema": "kfm-private-review-packages/v1", "packages": packages, "authority": dict(AUTHORITY),
@@ -147,14 +148,11 @@ class ReviewPackages:
             if row is None:
                 raise ValueError("REVIEW_MEMBER_UNKNOWN")
             raw = self._read(directory, row)
-            if row["file"].endswith(".png"):
-                # Bounded local PNG only; neither SVG/HTML nor raw PDFs are served.
-                if text or len(raw) < 33 or raw[:16] != b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR":
+            if Path(row["file"]).suffix in {".png", ".jpg", ".jpeg"}:
+                if text:
                     raise ValueError("REVIEW_IMAGE_INVALID")
-                width, height = struct.unpack(">II", raw[16:24])
-                if not 1 <= width <= 4096 or not 1 <= height <= 4096 or width * height > 16_000_000:
-                    raise ValueError("REVIEW_IMAGE_LIMIT")
-                return raw, "image/png"
+                metadata = image_metadata(raw, Path(row["file"]).suffix)
+                return raw, metadata["media_type"]
             content = raw.decode("utf-8", errors="strict")
             matched, shown = None, None
             if text:

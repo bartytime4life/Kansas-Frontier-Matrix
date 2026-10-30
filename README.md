@@ -132,9 +132,10 @@ Promotion is a governed transition. `EvidenceRef` resolves through an
 `EvidenceBundle`; maps, tiles, graphs, summaries and AI remain carriers.
 The governed outcome vocabulary is **ANSWER / ABSTAIN / DENY / ERROR**.
 
-Historical private enrichment: [USGS water](docs/runbooks/historical-water-enrichment.md) and
-[NOAA monthly climate normals](docs/runbooks/historical-climate-normals-enrichment.md)
-replay preserved captures into pinned WORK review packages with release authority disabled.
+Historical private enrichment: [USGS water](docs/runbooks/historical-water-enrichment.md),
+[NOAA monthly climate normals](docs/runbooks/historical-climate-normals-enrichment.md) and
+[the KGS 2008 geology map](docs/runbooks/historical-geology-enrichment.md) reuse preserved
+captures in pinned WORK review packages with release authority disabled.
 
 ## Build status at a glance
 

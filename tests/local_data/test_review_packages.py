@@ -108,6 +108,18 @@ class ReviewPackageTests(unittest.TestCase):
         self.pin(outputs=[png])
         with self.assertRaisesRegex(ValueError, "IMAGE_LIMIT"): self.model.preview(self.digest, self.member)
 
+    def test_jpeg_is_a_bounded_image_preview_and_rejects_search_and_bad_headers(self):
+        from tests.local_data.test_review_images import jpeg
+        photo = self.package / "map.jpg"; photo.write_bytes(jpeg())
+        self.pin(outputs=[photo])
+        self.assertEqual(self.model.catalog()["packages"][0]["members"][0]["kind"], "image")
+        self.assertEqual(self.model.preview(self.digest, self.member), (photo.read_bytes(), "image/jpeg"))
+        with self.assertRaisesRegex(ValueError, "IMAGE_INVALID"):
+            self.model.preview(self.digest, self.member, text="Kansas")
+        photo.write_bytes(b"<svg>not a JPEG</svg>"); self.pin(outputs=[photo])
+        with self.assertRaisesRegex(ValueError, "IMAGE_INVALID"):
+            self.model.preview(self.digest, self.member)
+
     def test_busy_preview_recovers_after_capacity_is_released(self):
         self.model.slots.acquire(); self.model.slots.acquire()
         with self.assertRaisesRegex(ValueError, "BUSY"): self.model.preview(self.digest, self.member)
@@ -131,6 +143,17 @@ class ReviewServiceTests(unittest.TestCase):
             self.assertEqual(self.request("GET", request, headers={"Origin": "http://127.0.0.1:4173"})[0], 403)
             self.assertEqual(self.request("GET", request, headers={"Origin": None})[0], 200)
         self.assertFalse(any(self.request("GET", path)[1]["authority"].values()))
+
+    def test_jpeg_route_preserves_mime_and_requires_the_owner_session(self):
+        from tests.local_data.test_review_images import jpeg
+        photo = self.package / "map.jpg"; photo.write_bytes(jpeg())
+        self.pin(outputs=[photo]); self.desk.reviews = self.model
+        path = f"/api/reviews/{self.digest}/{self.member}"
+        status, body, headers = self.request("GET", path, raw=True)
+        self.assertEqual((status, body, headers["Content-Type"]), (200, photo.read_bytes(), "image/jpeg"))
+        self.assertEqual(headers["X-Content-Type-Options"], "nosniff")
+        self.assertEqual(self.request("GET", path, headers={"X-KFM-Session": None})[0], 403)
+        self.assertEqual(self.request("GET", path, headers={"Origin": "http://127.0.0.1:5194"})[0], 403)
 
     def test_queries_do_not_accept_paths_unknown_fields_or_duplicate_filters(self):
         path = f"/api/reviews/{self.digest}/{self.member}"
