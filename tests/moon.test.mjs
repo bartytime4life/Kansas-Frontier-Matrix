@@ -39,7 +39,7 @@ test('the Moon\'s low-precision position agrees with Meeus\'s full theory, and e
 test('moonrise and moonset are where the Moon\'s centre stands at its horizon altitude, rising and falling',()=>{
  const midnight=moon.centralMidnight('2026-10-30');
  assert.equal(new Date(midnight).toISOString(),'2026-10-30T05:00:00.000Z');
- const {rise,set}=moon.moonEvents(midnight,CENTRE.lat,CENTRE.lon);
+ const {rise,set}=moon.moonEvents(midnight,moon.centralMidnight('2026-10-31'),CENTRE.lat,CENTRE.lon);
  for(const [t,dir] of [[rise,1],[set,-1]]){
   const a=moon.moonAltitude(t,CENTRE.lat,CENTRE.lon),later=moon.moonAltitude(t+60000,CENTRE.lat,CENTRE.lon);
   assert.ok(Math.abs(a.altitude-a.horizon)<1e-4);assert.ok(Math.sign(later.altitude-a.altitude)===dir);
@@ -47,6 +47,24 @@ test('moonrise and moonset are where the Moon\'s centre stands at its horizon al
  assert.equal(moon.moonReading('2026-10-30',CENTRE.lat,CENTRE.lon),'Moon tonight: waning gibbous, 70% lit · sets 1:15 PM CDT, rises 10:34 PM CDT');
  assert.equal(moon.phaseList(Date.parse('2026-10-30T12:00:00Z')),'Last quarter Nov 1, 2:28 PM CST · New moon Nov 9, 1:02 AM CST · First quarter Nov 17, 5:48 AM CST · Full moon Nov 24, 8:53 AM CST');
  assert.equal(moon.phaseName(Date.parse('2026-10-26T04:11:00Z')),'Full moon');
+});
+
+test('a clock-change day starts and ends at its own local midnight, and lunar events stay within it',()=>{
+ // Clocks spring forward on 2026-03-08 (2 AM CST to 3 AM CDT) and fall back on 2026-11-01 (2 AM CDT to 1 AM CST).
+ assert.equal(new Date(moon.centralMidnight('2026-03-08')).toISOString(),'2026-03-08T06:00:00.000Z','CST still at midnight');
+ assert.equal(new Date(moon.centralMidnight('2026-03-09')).toISOString(),'2026-03-09T05:00:00.000Z','CDT after the change');
+ assert.equal(new Date(moon.centralMidnight('2026-11-01')).toISOString(),'2026-11-01T05:00:00.000Z','CDT at midnight before the fall-back');
+ assert.equal(new Date(moon.localInstant('2026-03-08',21)).toISOString(),'2026-03-09T02:00:00.000Z','9 PM CDT on the spring-forward day');
+ for(const day of ['2026-03-07','2026-03-08','2026-03-09','2026-10-31','2026-11-01','2026-11-02']){
+  const from=moon.centralMidnight(day),until=moon.centralMidnight(moon.addDays(day,1));
+  const {rise,set}=moon.moonEvents(from,until,CENTRE.lat,CENTRE.lon);
+  for(const t of [rise,set].filter(x=>x!==null))assert.ok(t>=from&&t<until,`${day}: event ${new Date(t).toISOString()} is outside its own day`);
+ }
+ // Codex on #5600: the previous day's 11:15 PM CST moonrise was reported as 2026-03-08's.
+ assert.doesNotMatch(moon.moonReading('2026-03-08',CENTRE.lat,CENTRE.lon),/11:15 PM/);
+ assert.match(moon.moonReading('2026-03-07',CENTRE.lat,CENTRE.lon),/rises 11:15 PM CST/,'the rise belongs to March 7');
+ const strip=moon.moonStrip('2026-03-07');
+ assert.deepEqual([strip.discs[0].date,strip.discs[1].date,strip.discs[29].date],['2026-03-07','2026-03-08','2026-04-05'],'a date per evening, no doubled or skipped day across the change');
 });
 
 test('a disc is lit on the right while waxing and on the left while waning, its terminator bowing the right way',()=>{
@@ -61,7 +79,7 @@ test('a disc is lit on the right while waxing and on the left while waning, its 
  assert.equal(strip.discs.length,30);assert.equal(strip.discs[0].date,'2026-10-30');assert.equal(strip.discs[29].date,'2026-11-28');
  assert.equal(strip.discs[0].percent,70);
  assert.deepEqual([strip.height,strip.discs[0].cy,strip.discs[15].cy,strip.discs[15].cx],[32,8,24,strip.discs[0].cx],'two rows of fifteen');
- const fullest=strip.discs.reduce((a,b)=>b.percent>a.percent?b:a);assert.equal(fullest.date,'2026-11-24');
+ const fullest=strip.discs.reduce((a,b)=>b.fraction>a.fraction?b:a);assert.equal(fullest.date,'2026-11-24','99.47% at 9 PM, against 99.43% the evening before');
 });
 
 test('the daylight panel adds the Moon: tonight, the strip of evenings, and the next phases',async()=>{
@@ -72,7 +90,7 @@ test('the daylight panel adds the Moon: tonight, the strip of evenings, and the 
   moon:{reading:moon.moonReading('2026-10-30',CENTRE.lat,CENTRE.lon),phases:moon.phaseList(Date.parse('2026-10-30T12:00:00Z')),strip}}});
  const text=JSON.stringify(tree);assert.match(text,/Moon tonight: waning gibbous, 70% lit/);assert.match(text,/Full moon Nov 24, 8:53 AM CST/);
  const node=findNode(tree,n=>n.type===h.exports.MoonPhaseStrip);const figure=node.type(node.props);
- assert.equal(figure.props['aria-label'],'The Moon over the next 30 evenings, from 70% lit tonight; fullest 2026-11-24, 100% lit');
+ assert.equal(figure.props['aria-label'],'The Moon over the next 30 evenings, from 70% lit tonight; fullest 2026-11-24, 99% lit');
  assert.equal((JSON.stringify(figure).match(/"data-date"/g)||[]).length,30);
  assert.match(page,/moon: sunYearMoon,/);assert.match(page,/reading: moonReading\(sunToday, sunYearPlace\.lat, sunYearPlace\.lon\)/);
 });

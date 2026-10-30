@@ -1002,7 +1002,8 @@ export function SunYearChart({ chart, place }: Readonly<{ chart: SunChart; place
  * limb on the right while waxing, as seen from Kansas), today first.
  */
 export function MoonPhaseStrip({ strip }: Readonly<{ strip: MoonStrip }>) {
-  const first = strip.discs[0], full = strip.discs.reduce((a, b) => b.percent > a.percent ? b : a);
+  // The fullest evening is picked on the unrounded fraction: two evenings can both round to the same percentage.
+  const first = strip.discs[0], full = strip.discs.reduce((a, b) => b.fraction > a.fraction ? b : a);
   return <figure className="category-map-dock-section" aria-label={`The Moon over the next ${strip.discs.length} evenings, from ${first?.percent}% lit tonight; fullest ${full?.date}, ${full?.percent}% lit`}>
     <svg viewBox={`0 0 ${strip.width} ${strip.height}`} aria-hidden="true">
       {strip.discs.map(disc => <g key={disc.date} data-date={disc.date}>
