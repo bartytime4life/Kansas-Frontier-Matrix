@@ -399,6 +399,28 @@ that point from USDA Soil Data Access (`app/crop-soil.ts`,
 The route queries the point to five decimals, the same precision the page uses,
 and marks an answer cacheable for a day; a failed answer is sent no-store.
 
+## Growing degree days at a point (Field view)
+
+With **Show crops (USDA CDL)** on, a click also reads the growing degree days for
+the crop year on show, at the nearest Kansas airport weather station (ASOS) to the
+point (`app/growing-degree-days.ts`, `/api/farming/degree-days`).
+
+- **Formula:** each day's high is capped at 86 °F and its low floored at 50 °F, the
+  two averaged, less 50 °F, and never below zero. The season totals the days from
+  April 1 to October 31.
+- **Source:** the Iowa Environmental Mesonet's daily summary for the station, and
+  its network list of Kansas stations.
+- **Reach:** a point more than 150 km from every station gets no reading.
+- **Missing days:** a day with a missing high or low is counted and shown, never
+  guessed. A season with missing days is not kept for a day.
+- **Year:** the reading follows the crop year on show when you click. Changing the
+  year needs a new click.
+- **Limit:** a station records its own airport weather. Degree days vary across a
+  county, so the reading is the station's, not the field's.
+
+The route keeps a complete season a day. A failed answer is sent no-store, and no
+degree days are inferred.
+
 ## Daylight through the year (Sky globe)
 
 **Daylight through the year** charts every day of the current year at one

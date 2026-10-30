@@ -86,7 +86,7 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
@@ -239,6 +239,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    * The crop history at the point last clicked: loading or failed, or the
    * year-by-year bars, the pattern read from them and its line.
    */
+  degreeDays?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; year: number; line: string | null }> | null;
   surveySoil?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; mapUnit: string | null; water: string | null; lines: readonly Readonly<{ name: string; detail: string }>[] }> | null;
   history?: Readonly<{ state: "loading" | "partial" | "failed" | "ready"; bars: readonly Readonly<{ year: number; family: CropFamily | null; state: "ready" | "none" | "failed"; label: string }>[];
     pattern: RotationPattern | null; reading: string | null }> | null;
@@ -682,6 +683,14 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
             <ul className="category-map-dock-reading">{surveySoil.lines.map((line, index) => <li key={`${index}-${line.name}`}><strong>{line.name}</strong>: {line.detail}</li>)}</ul>
             <p className="category-map-dock-reading">Components are alternatives within the mapped area, each with its share of it. They are not the soil at the point.</p>
           </>}
+        </div>}
+        {degreeDays && <div className="category-map-dock-crop-history" aria-live="polite">
+          <p className="category-map-dock-reading">Growing degree days, {degreeDays.year} (click the point again for another year)</p>
+          {degreeDays.state === "loading" && <p className="category-map-dock-reading">Reading the season at the nearest Kansas station…</p>}
+          {degreeDays.state === "failed" && <p className="category-map-dock-reading">The Iowa Environmental Mesonet did not answer for this point. No growing degree days are inferred; click the point again to retry.</p>}
+          {degreeDays.state === "none" && <p className="category-map-dock-reading">No Kansas airport station is within 150 km of this point, or it has no readings for the season.</p>}
+          {degreeDays.state === "ready" && degreeDays.line && <p className="category-map-dock-reading">{degreeDays.line}</p>}
+          {degreeDays.state === "ready" && <p className="category-map-dock-reading">A station reading, not the field. Degree days vary across a county, and an airport station records its own weather.</p>}
         </div>}
       </div>}
     </>}

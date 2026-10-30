@@ -37,6 +37,7 @@ import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationRe
 import { moonReading, moonStrip, phaseList } from "./moon";
 import { CROP_HISTORY_API_PATH, cropHistoryKey, cropHistoryReading, historyBars, rotationPattern, validCropHistory, type CropHistory } from "./crop-history";
 import { SOIL_API_PATH, soilLine, soilWater, validSoil, type SoilReading } from "./crop-soil";
+import { GDD_API_PATH, degreeDaysLine, validDegreeDays, type DegreeDaysReading } from "./growing-degree-days";
 import { KANSAS_CENTRE, SUN_PLACE_SOURCE_ID, SUN_TIME_NOTE, coordinateLabel, inKansas, sunChart, sunReading, sunYear as sunYearDays, syncSunPlace } from "./sun-chart";
 import { SURFACE_OBS_API_PATH, SURFACE_OBS_REFRESH_MS, SURFACE_OBS_SOURCE_ID, stationDetail, surfaceCollection, surfaceKey, surfaceList, surfaceReading, syncSurfaceObs, validSurfaceEnvelope } from "./surface-obs";
 import type { MetarObservation } from "./aviation-weather";
@@ -1663,6 +1664,9 @@ export default function Home() {
   // The SSURGO soil-map unit at the same point as the crop history.
   const [surveySoil, setSurveySoil] = useState<Readonly<{ lon: number; lat: number; state: "loading" | "failed" | "ready" | "none"; data: SoilReading | null }> | null>(null);
   const surveySoilRequestRef = useRef<AbortController | null>(null);
+  // Growing degree days for the season of the crop year on show, at the same point.
+  const [degreeDays, setDegreeDays] = useState<Readonly<{ lon: number; lat: number; year: number; state: "loading" | "failed" | "ready" | "none"; data: DegreeDaysReading | null }> | null>(null);
+  const degreeDaysRequestRef = useRef<AbortController | null>(null);
   const [floraOn, setFloraOn] = useState(false);
   const [floraYear, setFloraYear] = useState(FLORA_DEFAULT_YEAR);
   const [floraOpacity, setFloraOpacity] = useState(0.75);
@@ -4549,9 +4553,11 @@ export default function Home() {
     cropRequestRef.current?.abort();
     cropHistoryRequestRef.current?.abort();
     surveySoilRequestRef.current?.abort();
+    degreeDaysRequestRef.current?.abort();
     setCropPoint(null);
     setCropHistory(null);
     setSurveySoil(null);
+    setDegreeDays(null);
   };
   // A click in Kansas reads the point's whole crop history: every CDL year, not just the one on show. Years do not change it.
   const readCropHistory = useCallback((clickLon: number, clickLat: number) => {
@@ -4594,6 +4600,25 @@ export default function Home() {
   }, []);
   const readSurveySoilRef = useRef(readSurveySoil);
   readSurveySoilRef.current = readSurveySoil;
+  // Growing degree days for the season of the crop year on show, at the same point. Changing the year needs a new click.
+  const readDegreeDays = useCallback((clickLon: number, clickLat: number, year: number) => {
+    const lon = Number(clickLon.toFixed(5)), lat = Number(clickLat.toFixed(5));
+    degreeDaysRequestRef.current?.abort();
+    if (!inCdlRegion(lon, lat)) { setDegreeDays(null); return; }
+    const controller = new AbortController();
+    degreeDaysRequestRef.current = controller;
+    setDegreeDays({ lon, lat, year, state: "loading", data: null });
+    void fetch(GDD_API_PATH(lon, lat, year), { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validDegreeDays(value, lon, lat, year)) throw new Error("Invalid degree-day reading.");
+        setDegreeDays({ lon, lat, year, state: value.state, data: value });
+      })
+      .catch(() => { if (!controller.signal.aborted) setDegreeDays({ lon, lat, year, state: "failed", data: null }); });
+  }, []);
+  const readDegreeDaysRef = useRef(readDegreeDays);
+  readDegreeDaysRef.current = readDegreeDays;
   const cropHistoryPattern = useMemo(() => cropHistory?.data && cropHistory.state === "ready" ? rotationPattern(cropHistory.data.years) : null, [cropHistory]);
   // A new year reads the last point clicked again, for that year.
   const chooseCropsYear = (year: number) => {
@@ -6742,6 +6767,7 @@ export default function Home() {
             readCropAtRef.current(cropsRef.current, event.lngLat.lng, event.lngLat.lat);
             readCropHistoryRef.current(event.lngLat.lng, event.lngLat.lat);
             readSurveySoilRef.current(event.lngLat.lng, event.lngLat.lat);
+            readDegreeDaysRef.current(event.lngLat.lng, event.lngLat.lat, cropsRef.current);
           }
           // With daylight through the year shown, a click in Kansas charts that place.
           if (sunYearOnRef.current) {
@@ -10664,6 +10690,8 @@ export default function Home() {
     setCropHistory(null);
     surveySoilRequestRef.current?.abort();
     setSurveySoil(null);
+    degreeDaysRequestRef.current?.abort();
+    setDegreeDays(null);
     legislatureHidCivicRef.current = false;
     setLegislatureChamber(null);
     setLegislaturePicked(null);
@@ -11718,6 +11746,7 @@ export default function Home() {
               reading: cropHistory.data && cropHistoryPattern ? cropHistoryReading(cropHistory.data, cropHistoryPattern) : null } : null}
             surveySoil={activeCategoryMap.tools?.includes("crops") && surveySoil ? { state: surveySoil.state, mapUnit: surveySoil.data?.mapUnit?.name ?? null, water: soilWater(surveySoil.data?.mapUnit ?? null),
               lines: surveySoil.data?.components.map(component => ({ name: component.name, detail: soilLine(component) })) ?? [] } : null}
+            degreeDays={activeCategoryMap.tools?.includes("crops") && degreeDays ? { state: degreeDays.state, year: degreeDays.year, line: degreeDays.data ? degreeDaysLine(degreeDays.data) : null } : null}
             crops={activeCategoryMap.tools?.includes("crops") ? { on: cropsOn, year: cropsYear, years: CDL_YEARS, reading: cdlReading(cropsYear, cropPoint, view.zoom),
               swatch: cropPoint?.state === "ready" ? cropPoint.crop?.color ?? null : null } : undefined}
             onCrops={showCrops} onCropsYear={chooseCropsYear}
