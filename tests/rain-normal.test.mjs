@@ -59,6 +59,7 @@ test('the line says the season, the normal and the share of it, or that there is
  assert.equal(rn.rainNormalLine(reading),'10.70 in precipitation, Apr 1–Oct 31 2024 · 9-year average 21.40 in · 50% of earlier-year average · from Salina, 3 km away');
  assert.match(rn.rainNormalLine({...reading,normal:{average:null,years:3},percentOfNormal:null}),/no earlier-year average: 3 of 10 earlier years are complete, and 5 are needed/);
  assert.match(rn.rainNormalLine({...reading,seasonDaysMissing:2,percentOfNormal:null}),/\(2 days missing\)/);
+ assert.match(rn.rainNormalLine({...reading,seasonDaysPending:31,percentOfNormal:null}),/^10\.70 in precipitation.*\(partial: 31 days not yet read\) · 9-year average/);
  assert.equal(rn.validRainNormal(reading,-97.6,38.8,2024),true,'the page accepts the reading');
 });
 

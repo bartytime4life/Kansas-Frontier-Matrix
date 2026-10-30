@@ -69,8 +69,9 @@ export function rainNormalLine(reading: RainNormalReading): string | null {
   if (reading.state !== "ready" || reading.station === null) return null;
   if (reading.seasonInches === null) return `No precipitation was read at this station for the season, Apr 1–Oct 31 ${reading.year}.`;
   const season = `${reading.seasonInches.toFixed(2)} in precipitation, Apr 1–Oct 31 ${reading.year}`;
-  const days = reading.seasonDaysMissing === 0 ? "" : ` (${reading.seasonDaysMissing} days missing)`;
+  const pending = reading.seasonDaysPending ?? 0;
+  const days = (reading.seasonDaysMissing === 0 ? "" : ` (${reading.seasonDaysMissing} days missing)`) + (pending === 0 ? "" : ` (partial: ${pending} days not yet read)`);
   if (reading.normal.average === null) return `${season}${days} · no earlier-year average: ${reading.normal.years} of ${NORMAL_YEARS} earlier years are complete, and ${NORMAL_MIN_YEARS} are needed`;
-  const share = reading.percentOfNormal === null || reading.seasonDaysMissing > 0 ? "" : ` · ${reading.percentOfNormal}% of earlier-year average`;
+  const share = reading.percentOfNormal === null || reading.seasonDaysMissing > 0 || pending > 0 ? "" : ` · ${reading.percentOfNormal}% of earlier-year average`;
   return `${season}${days} · ${reading.normal.years}-year average ${reading.normal.average.toFixed(2)} in${share} · from ${reading.station.name}, ${Math.round(reading.station.km)} km away`;
 }
