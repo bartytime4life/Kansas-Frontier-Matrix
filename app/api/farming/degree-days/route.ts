@@ -1,6 +1,6 @@
 import { boundedFetch } from "../../event-atlas/upstream";
 import { inCdlRegion } from "../../../cropland";
-import { nearestStation, parseDailyCsv, seasonDegreeDays, type Station } from "../../../growing-degree-days";
+import { nearestStation, parseDailyCsv, seasonDegreeDays, seasonRainfall, type Station } from "../../../growing-degree-days";
 
 export const dynamic = "force-dynamic";
 const STATIONS_URL = "https://mesonet.agron.iastate.edu/geojson/network/KS_ASOS.geojson";
@@ -41,16 +41,19 @@ export async function GET(request: Request) {
     return Response.json({ state: "error", message: `Choose a point in or near Kansas and a year from 2000 to ${latestYear}.` }, { status: 400, headers: noStore });
   try {
     const station = nearestStation(await kansasStations(), lon, lat);
-    if (station === null) return Response.json({ lon, lat, year, retrievedAt: new Date().toISOString(), state: "none", station: null, degreeDays: null, daysRead: 0, daysMissing: 0 }, { headers: noStore });
-    const season = seasonDegreeDays(parseDailyCsv(await boundedFetch(DAILY_URL(station.id, year), MAX_BYTES, { timeoutMs: 15_000 }).then(response => response.text())), year);
+    if (station === null) return Response.json({ lon, lat, year, retrievedAt: new Date().toISOString(), state: "none", station: null, degreeDays: null, daysRead: 0, daysMissing: 0, rainInches: null, rainDaysMissing: 0 }, { headers: noStore });
+    const daily = parseDailyCsv(await boundedFetch(DAILY_URL(station.id, year), MAX_BYTES, { timeoutMs: 15_000 }).then(response => response.text()));
+    const season = seasonDegreeDays(daily, year);
+    const rain = seasonRainfall(daily, year);
     const body = {
       lon, lat, year, retrievedAt: new Date().toISOString(),
       state: season.daysRead > 0 ? "ready" : "none",
       station: { id: station.id, name: station.name, km: Math.round(station.km * 10) / 10 },
       degreeDays: season.daysRead > 0 ? season.degreeDays : null,
       daysRead: season.daysRead, daysMissing: season.daysMissing,
+      rainInches: rain.daysRead > 0 ? rain.inches : null, rainDaysMissing: rain.daysMissing,
     };
-    const complete = season.daysRead > 0 && season.daysMissing === 0;
+    const complete = season.daysRead > 0 && season.daysMissing === 0 && rain.daysMissing === 0;
     return Response.json(body, { headers: complete ? cacheable : noStore });
   } catch {
     return Response.json({ state: "unavailable", message: "The Iowa Environmental Mesonet did not answer for this point. No growing degree days are inferred." }, { status: 502, headers: noStore });

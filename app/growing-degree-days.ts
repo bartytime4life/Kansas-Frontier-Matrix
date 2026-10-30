@@ -13,7 +13,7 @@ export const GDD_MAX_KM = 150;
 
 export const GDD_API_PATH = (lon: number, lat: number, year: number) => `/api/farming/degree-days?lon=${lon.toFixed(5)}&lat=${lat.toFixed(5)}&year=${year}`;
 
-export type DailyTemperature = Readonly<{ day: string; maxF: number | null; minF: number | null }>;
+export type DailyTemperature = Readonly<{ day: string; maxF: number | null; minF: number | null; precipIn?: number | null }>;
 export type Station = Readonly<{ id: string; name: string; lon: number; lat: number }>;
 
 /** One day's degree days: the high capped and the low floored at the base, averaged, less the base, never negative. */
@@ -47,14 +47,29 @@ export function seasonDegreeDays(days: readonly DailyTemperature[], year: number
 }
 
 /**
+ * The season's rainfall in inches. Every date of the season is counted: a date with no row, or a blank reading, is missing.
+ * The rain is read only when the summary has a precipitation column; without one every date is missing.
+ */
+export function seasonRainfall(days: readonly DailyTemperature[], year: number) {
+  const byDay = new Map(days.map(day => [day.day, day]));
+  let inches = 0, daysRead = 0, daysMissing = 0;
+  for (const date of seasonDates(year)) {
+    const value = byDay.get(date)?.precipIn ?? null;
+    if (value === null) { daysMissing++; continue; }
+    inches += value; daysRead++;
+  }
+  return { inches: Math.round(inches * 100) / 100, daysRead, daysMissing };
+}
+
+/**
  * The daily summary CSV from the Iowa Environmental Mesonet, read by its header names. A missing reading is "M" or blank.
- * Throws when the columns the reading needs are absent, so an unexpected answer is not read as an empty season.
+ * Throws when the temperature columns are absent, so an unexpected answer is not read as an empty season.
  */
 export function parseDailyCsv(text: string): DailyTemperature[] {
   const lines = text.split(/\r?\n/).filter(line => line.trim() !== "");
   if (lines.length === 0) throw new Error("Empty daily summary.");
   const header = lines[0].split(",").map(name => name.trim());
-  const day = header.indexOf("day"), max = header.indexOf("max_temp_f"), min = header.indexOf("min_temp_f");
+  const day = header.indexOf("day"), max = header.indexOf("max_temp_f"), min = header.indexOf("min_temp_f"), precip = header.indexOf("precip_in");
   if (day < 0 || max < 0 || min < 0) throw new Error("Unrecognised daily summary columns.");
   const number = (cell: string | undefined) => {
     if (cell === undefined || cell.trim() === "" || cell.trim() === "M") return null;
@@ -63,7 +78,7 @@ export function parseDailyCsv(text: string): DailyTemperature[] {
   };
   return lines.slice(1).map(line => {
     const cells = line.split(",");
-    return { day: (cells[day] ?? "").trim(), maxF: number(cells[max]), minF: number(cells[min]) };
+    return { day: (cells[day] ?? "").trim(), maxF: number(cells[max]), minF: number(cells[min]), precipIn: precip < 0 ? null : number(cells[precip]) };
   });
 }
 
@@ -94,6 +109,8 @@ export type DegreeDaysReading = Readonly<{
   degreeDays: number | null;
   daysRead: number;
   daysMissing: number;
+  rainInches: number | null;
+  rainDaysMissing: number;
 }>;
 
 export function validDegreeDays(value: unknown, lon: number, lat: number, year: number): value is DegreeDaysReading {
@@ -102,7 +119,15 @@ export function validDegreeDays(value: unknown, lon: number, lat: number, year: 
   const station = v.station;
   return v.lon === lon && v.lat === lat && v.year === year && (v.state === "ready" || v.state === "none")
     && (station === null || (typeof station === "object" && typeof station.id === "string" && typeof station.name === "string" && typeof station.km === "number"))
-    && (v.degreeDays === null || typeof v.degreeDays === "number") && typeof v.daysRead === "number" && typeof v.daysMissing === "number";
+    && (v.degreeDays === null || typeof v.degreeDays === "number") && typeof v.daysRead === "number" && typeof v.daysMissing === "number"
+    && (v.rainInches === null || typeof v.rainInches === "number") && typeof v.rainDaysMissing === "number";
+}
+
+/** The season's rain as the dock says it, or null when no rain was read. */
+export function rainLine(reading: DegreeDaysReading): string | null {
+  if (reading.state !== "ready" || reading.rainInches === null) return null;
+  const days = reading.rainDaysMissing === 0 ? "every day read" : `${reading.rainDaysMissing} days missing`;
+  return `${reading.rainInches.toFixed(2)} in of rain, ${GDD_SEASON_LABEL} ${reading.year} · ${days}`;
 }
 
 /** The reading as the dock says it: the total, the season, the station, and how many days were read. */

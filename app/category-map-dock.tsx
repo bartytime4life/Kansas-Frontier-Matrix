@@ -239,7 +239,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    * The crop history at the point last clicked: loading or failed, or the
    * year-by-year bars, the pattern read from them and its line.
    */
-  degreeDays?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; year: number; line: string | null }> | null;
+  degreeDays?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; year: number; line: string | null; rain: string | null }> | null;
   surveySoil?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; mapUnit: string | null; water: string | null; lines: readonly Readonly<{ name: string; detail: string }>[] }> | null;
   history?: Readonly<{ state: "loading" | "partial" | "failed" | "ready"; bars: readonly Readonly<{ year: number; family: CropFamily | null; state: "ready" | "none" | "failed"; label: string }>[];
     pattern: RotationPattern | null; reading: string | null }> | null;
@@ -690,6 +690,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           {degreeDays.state === "failed" && <p className="category-map-dock-reading">The Iowa Environmental Mesonet did not answer for this point. No growing degree days are inferred; click the point again to retry.</p>}
           {degreeDays.state === "none" && <p className="category-map-dock-reading">No Kansas airport station is within 150 km of this point, or it has no readings for the season.</p>}
           {degreeDays.state === "ready" && degreeDays.line && <p className="category-map-dock-reading">{degreeDays.line}</p>}
+          {degreeDays.state === "ready" && degreeDays.rain && <p className="category-map-dock-reading">{degreeDays.rain}</p>}
           {degreeDays.state === "ready" && <p className="category-map-dock-reading">A station reading, not the field. Degree days vary across a county, and an airport station records its own weather.</p>}
         </div>}
       </div>}
