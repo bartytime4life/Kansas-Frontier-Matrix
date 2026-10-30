@@ -145,7 +145,7 @@ A changed normalizer changes the recipe digest and requires a new source review.
 ## Reconciliation with the current repository
 
 The integration candidate starts from hosted branch `a0-hosted-ai-web-20261017`
-at `05bd00f2ca`, including the October 29 Flora work. The live build readback was
+at `8dcc13cf95`, including the October 29 Flora and crop-history work. The live build readback was
 `5baefffe96`. The former 22-question guide was removed upstream; the registry
 now follows the current 22 topics and six recipes. Category starter layers,
 optional context and every category-specific map control are included directly

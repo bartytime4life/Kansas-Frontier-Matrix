@@ -22,10 +22,11 @@ const unique = (ids: readonly string[]) => Object.freeze([...new Set(ids)]);
 const topicGaps = TOPIC_PIPELINES as Readonly<Record<string, readonly string[]>>;
 const categoryMaps = CATEGORY_MAPS as Readonly<Record<string, CategoryMap>>;
 const toolTitles: Readonly<Record<string, string>> = {
-  landcover: 'NLCD land-cover classes', plants: 'Annual GBIF plant-record density', crops: 'USDA crop classes',
+  landcover: 'NLCD land-cover classes', plants: 'Annual GBIF plant-record density', crops: 'USDA crop classes and point history',
   radar: 'Dated radar frames', surface: 'Surface weather stations', outlook: 'SPC outlook', reports: 'Storm reports',
   rainfall: 'MRMS rainfall', tornadoes: 'Historical tornado records', reviewed: 'Approved source projections',
   fema: 'FEMA disaster declarations', flow: 'Terrain flow display', flood: 'NWS flood forecasts',
+  population: 'Dated Census county population', legislature: 'State legislative reference',
   aquifer: 'Aquifer display editions', wells: 'Measured well levels', underground: 'Recorded subsurface context',
   quakes: 'Historical earthquake records', transect: 'Display elevation profile', photoreal: 'Photoreal terrain',
   area: 'Calculated map area', soil: 'Modelled soil moisture', drought: 'Drought Monitor editions',

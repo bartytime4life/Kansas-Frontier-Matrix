@@ -2,13 +2,13 @@
 
 ## Reconciled integration candidate
 
-The candidate is reconciled onto hosted source `05bd00f2ca`, preserving newer
+The candidate is reconciled onto hosted source `8dcc13cf95`, preserving newer
 Flora, Fauna, aviation, civic/public-safety, earthquake and manual county-history
 work. It maps the current 22 topic cards and six recipes, including every
 category-map control. The older question guide is not reintroduced.
 
 The candidate production build, TypeScript and changed-file lint passed.
-Focused regression checks including the built HTTP routes: 126 passed, zero
+Focused regression checks including the built HTTP routes: 140 passed, zero
 failures, three skipped (two live-MySQL tests and one real county source packet).
 The separate private-health candidate passes 59 Python tests after reconciliation
 onto main. Installed-kit loading, earthquake behavior, outage recovery, source
