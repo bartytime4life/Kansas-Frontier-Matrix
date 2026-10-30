@@ -238,7 +238,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    * The crop history at the point last clicked: loading or failed, or the
    * year-by-year bars, the pattern read from them and its line.
    */
-  surveySoil?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; mapUnit: string | null; lines: readonly Readonly<{ name: string; detail: string }>[] }> | null;
+  surveySoil?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; mapUnit: string | null; water: string | null; lines: readonly Readonly<{ name: string; detail: string }>[] }> | null;
   history?: Readonly<{ state: "loading" | "partial" | "failed" | "ready"; bars: readonly Readonly<{ year: number; family: CropFamily | null; state: "ready" | "none" | "failed"; label: string }>[];
     pattern: RotationPattern | null; reading: string | null }> | null;
   onCrops?: (on: boolean) => void;
@@ -667,6 +667,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           {surveySoil.state === "failed" && <p className="category-map-dock-reading">USDA Soil Data Access did not answer for this point. No soil is inferred; click the point again to retry.</p>}
           {surveySoil.state === "none" && <p className="category-map-dock-reading">No SSURGO soil-map unit covers this point.</p>}
           {surveySoil.state === "ready" && <>
+            {surveySoil.water && <p className="category-map-dock-reading">Map-unit average: {surveySoil.water}</p>}
             <ul className="category-map-dock-reading">{surveySoil.lines.map((line, index) => <li key={`${index}-${line.name}`}><strong>{line.name}</strong>: {line.detail}</li>)}</ul>
             <p className="category-map-dock-reading">Components are alternatives within the mapped area, each with its share of it. They are not the soil at the point.</p>
           </>}

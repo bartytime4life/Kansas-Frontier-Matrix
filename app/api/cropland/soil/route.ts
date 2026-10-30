@@ -6,12 +6,20 @@ const SDA_URL = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest";
 const MAX_COMPONENTS = 8;
 /** The columns the query selects, in order. The response is read by position. */
 const COLUMNS = ["mukey", "muname", "compname", "comppct_r", "majcompflag", "drainagecl", "hydgrp", "nirrcapcl", "aws0150wta"] as const;
+/** SDA sends its numbers as text; a blank cell is null. */
+const numeric = (cell: string | number | null) => {
+  if (cell === null || cell === "") return null;
+  const value = Number(cell);
+  if (!Number.isFinite(value)) throw new Error("Unrecognized USDA number");
+  return value;
+};
+const text = (cell: string | number | null) => cell === null ? null : String(cell);
 const noStore = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
 const headers = { "Cache-Control": "public, max-age=86400, s-maxage=604800", "X-Content-Type-Options": "nosniff" };
 
 /**
  * The SSURGO soil-map unit at a point in or near Kansas, from USDA Soil Data Access: its components with their
- * drainage, hydrologic group, non-irrigated capability class and water storage to 150 cm. Map components are
+ * drainage, hydrologic group and non-irrigated capability class, and the map unit's water storage to 150 cm. Map components are
  * alternatives within the mapped area, not the soil at the point.
  */
 export async function GET(request: Request) {
@@ -36,10 +44,11 @@ export async function GET(request: Request) {
     const body = {
       lon, lat, retrievedAt: new Date().toISOString(),
       state: dominant ? "ready" : "none",
-      mapUnit: dominant ? { key: dominant.mukey, name: dominant.muname } : null,
+      // The water storage is a weighted average over every component of the map unit, so it belongs to the unit, not to each component.
+      mapUnit: dominant ? { key: String(dominant.mukey), name: String(dominant.muname), waterStorageCm: numeric(dominant.aws0150wta) } : null,
       components: rows.filter(row => row.mukey === dominant?.mukey).slice(0, MAX_COMPONENTS).map(row => ({
-        name: row.compname, percent: row.comppct_r, major: row.majcompflag === "Yes", drainage: row.drainagecl,
-        hydrologicGroup: row.hydgrp, capability: row.nirrcapcl, waterStorageCm: row.aws0150wta,
+        name: String(row.compname ?? "Unnamed component"), percent: numeric(row.comppct_r), major: row.majcompflag === "Yes", drainage: text(row.drainagecl),
+        hydrologicGroup: text(row.hydgrp), capability: numeric(row.nirrcapcl),
       })),
     };
     return Response.json(body, { headers });

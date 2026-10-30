@@ -25,8 +25,8 @@ const sda=rows=>new Response(JSON.stringify({Table:[NAMES,...rows]}),{status:200
 const component=(mukey,muname,compname,pct,major,drainage,hg,cap,aws)=>[mukey,muname,compname,pct,major,drainage,hg,cap,aws];
 
 test('a soil reading is checked against its point, and each component against its fields',()=>{
- const reading={lon:-98.1,lat:38.2,retrievedAt:'x',state:'ready',mapUnit:{key:'1',name:'Ellsworth silt loam'},components:[
-  {name:'Ellsworth',percent:85,major:true,drainage:'Moderately well drained',hydrologicGroup:'C',capability:2,waterStorageCm:18.4}]};
+ const reading={lon:-98.1,lat:38.2,retrievedAt:'x',state:'ready',mapUnit:{key:'1',name:'Ellsworth silt loam',waterStorageCm:18.4},components:[
+  {name:'Ellsworth',percent:85,major:true,drainage:'Moderately well drained',hydrologicGroup:'C',capability:2}]};
  assert.equal(soil.validSoil(reading,-98.1,38.2),true);
  assert.equal(soil.validSoil(reading,-98.2,38.2),false,'another point');
  assert.equal(soil.validSoil({...reading,components:[{...reading.components[0],percent:'85'}]},-98.1,38.2),false,'a percentage that is text');
@@ -34,10 +34,13 @@ test('a soil reading is checked against its point, and each component against it
  assert.equal(soil.SOIL_API_PATH(-98.1234567,38.2),'/api/cropland/soil?lon=-98.12346&lat=38.20000','the path carries the point at the page\'s precision');
 });
 
-test('a component reads as its share, drainage, hydrologic group, capability and water to 150 cm, and a missing field is left out',()=>{
- const full={name:'Ellsworth',percent:84.6,major:true,drainage:'Moderately well drained',hydrologicGroup:'C',capability:2,waterStorageCm:18.44};
- assert.equal(soil.soilLine(full),'85% of the map unit · moderately well drained drainage · hydrologic group C · non-irrigated capability class 2 of 8 · 18.4 cm of water to 150 cm');
- assert.equal(soil.soilLine({...full,drainage:null,hydrologicGroup:null,capability:null,waterStorageCm:null}),'85% of the map unit');
+test('a component reads as its share, drainage, hydrologic group and capability, a missing field is left out, and the map unit\'s water is said once for the unit',()=>{
+ const full={name:'Ellsworth',percent:84.6,major:true,drainage:'Moderately well drained',hydrologicGroup:'C',capability:2};
+ assert.equal(soil.soilLine(full),'85% of the map unit · moderately well drained drainage · hydrologic group C · non-irrigated capability class 2 of 8');
+ assert.equal(soil.soilLine({...full,drainage:null,hydrologicGroup:null,capability:null}),'85% of the map unit');
+ assert.equal(soil.soilWater({waterStorageCm:18.44}),'18.4 cm of water to 150 cm, averaged over the map unit');
+ assert.equal(soil.soilWater({waterStorageCm:null}),null);
+ assert.equal(soil.soilWater(null),null);
 });
 
 test('the route reads the dominant map unit\'s components, most of it first, and leaves out other map units at the point',async()=>{
@@ -46,19 +49,32 @@ test('the route reads the dominant map unit\'s components, most of it first, and
  try{
   let sent=null;
   globalThis.fetch=async(url,init)=>{sent=JSON.parse(init.body);return sda([
-   component('100','Ellsworth silt loam','Ellsworth',60,'Yes','Moderately well drained','C',2,18.4),
-   component('100','Ellsworth silt loam','Lorain',25,'No','Well drained','B',3,16.9),
-   component('200','Other map unit','Other',40,'Yes','Poorly drained','D',5,9),
+   component('100','Ellsworth silt loam','Ellsworth','60','Yes','Moderately well drained','C','2','18.4'),
+   component('100','Ellsworth silt loam','Lorain','25','No','Well drained','B','3','16.9'),
+   component('200','Other map unit','Other','40','Yes','Poorly drained','D','5','9'),
   ]);};
   const response=await route.GET(new Request('https://kfm.test/api/cropland/soil?lon=-98.1&lat=38.2'));
   assert.equal(response.status,200);
   assert.match(sent.query,/SDA_Get_Mukey_from_intersection_with_WktWgs84\('POINT\(-98\.10000 38\.20000\)'\)/,'the query names the point');
   const body=await response.json();
-  assert.equal(body.state,'ready');assert.deepEqual(body.mapUnit,{key:'100',name:'Ellsworth silt loam'});
+  assert.equal(body.state,'ready');assert.deepEqual(body.mapUnit,{key:'100',name:'Ellsworth silt loam',waterStorageCm:18.4});
   assert.deepEqual(body.components.map(c=>c.name),['Ellsworth','Lorain'],'the other map unit is not read');
   assert.equal(body.components[0].major,true);assert.equal(body.components[0].capability,2);
+  assert.equal(body.components[0].percent,60,'SDA text becomes a number');assert.equal(body.components[0].waterStorageCm,undefined,'storage belongs to the map unit');
   assert.equal(response.headers.get('cache-control'),'public, max-age=86400, s-maxage=604800');
   assert.equal(soil.validSoil(body,-98.1,38.2),true,'the page accepts what the route sends');
+ }finally{globalThis.fetch=original;}
+});
+
+test('SDA text numbers become numbers, and a blank cell stays null, so a populated reading still passes the page\'s check',async()=>{
+ const route=await loadRoute();
+ const original=globalThis.fetch;
+ try{
+  globalThis.fetch=async()=>sda([component('100','Ellsworth silt loam','Ellsworth','60','Yes','Moderately well drained','C',null,'18.4')]);
+  const body=await(await route.GET(new Request('https://kfm.test/api/cropland/soil?lon=-98.1&lat=38.2'))).json();
+  assert.equal(typeof body.components[0].percent,'number');assert.equal(body.components[0].capability,null);
+  assert.equal(body.mapUnit.waterStorageCm,18.4);
+  assert.equal(soil.validSoil(body,-98.1,38.2),true);
  }finally{globalThis.fetch=original;}
 });
 
@@ -89,9 +105,9 @@ test('the dock shows the soil beside the crop history: loading, failed, none, an
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,surveySoil:{state:'loading',mapUnit:null,lines:[]}})),/Reading the soil-map unit/);
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,surveySoil:{state:'failed',mapUnit:null,lines:[]}})),/did not answer for this point\. No soil is inferred/);
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,surveySoil:{state:'none',mapUnit:null,lines:[]}})),/No SSURGO soil-map unit covers this point/);
- const ready=JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,surveySoil:{state:'ready',mapUnit:'Ellsworth silt loam',lines:[{name:'Ellsworth',detail:'85% of the map unit · hydrologic group C'}]}}));
+ const ready=JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,surveySoil:{state:'ready',mapUnit:'Ellsworth silt loam',water:'18.4 cm of water to 150 cm, averaged over the map unit',lines:[{name:'Ellsworth',detail:'85% of the map unit · hydrologic group C'}]}}));
  assert.match(ready,/Soil survey at this point \(SSURGO\)"/);assert.match(ready,/ · Ellsworth silt loam"/,'the map unit is named in the heading');
- assert.match(ready,/hydrologic group C/);
+ assert.match(ready,/hydrologic group C/);assert.match(ready,/Map-unit average/);assert.match(ready,/18\.4 cm of water to 150 cm, averaged over the map unit/);
  assert.match(ready,/They are not the soil at the point/,'the limit is stated');
  assert.doesNotMatch(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,surveySoil:null})),/Soil survey at this point/,'nothing without a click');
 });

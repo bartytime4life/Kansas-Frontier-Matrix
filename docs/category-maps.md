@@ -386,8 +386,10 @@ that point from USDA Soil Data Access (`app/crop-soil.ts`,
 
 - **Components:** the map unit's components, most of the unit first (at most
   eight). Each reads with its share of the map unit, drainage class, hydrologic
-  group, non-irrigated capability class (1 has the fewest limitations, 8 the
-  most), and water storage to 150 cm.
+  group, and non-irrigated capability class (1 has the fewest limitations, 8 the
+  most).
+- **Water storage:** the map unit's water to 150 cm, a weighted average over all
+  its components. It is shown once for the unit, not for each component.
 - **No coverage:** a point with no SSURGO map unit says so; nothing is inferred.
 - **Source unavailable:** the dock says so and no soil is inferred. Click the
   point again to retry; a failure is not kept.

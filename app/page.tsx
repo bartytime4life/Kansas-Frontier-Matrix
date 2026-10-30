@@ -36,7 +36,7 @@ import { hiDpiBasemapStyle } from "./hd-rasters";
 import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationReading, populationChange, populationChangeApiPath, populationChangeCollection, populationChangeKey, populationChangeList, populationChangeReading, syncPopulationChange, validCountyBaseline } from "./population-change";
 import { moonReading, moonStrip, phaseList } from "./moon";
 import { CROP_HISTORY_API_PATH, cropHistoryKey, cropHistoryReading, historyBars, rotationPattern, validCropHistory, type CropHistory } from "./crop-history";
-import { SOIL_API_PATH, soilLine, validSoil, type SoilReading } from "./crop-soil";
+import { SOIL_API_PATH, soilLine, soilWater, validSoil, type SoilReading } from "./crop-soil";
 import { KANSAS_CENTRE, SUN_PLACE_SOURCE_ID, coordinateLabel, inKansasBox, mayKeepMountainTime, sunChart, sunReading, sunYear as sunYearDays, syncSunPlace } from "./sun-chart";
 import { SURFACE_OBS_API_PATH, SURFACE_OBS_REFRESH_MS, SURFACE_OBS_SOURCE_ID, stationDetail, surfaceCollection, surfaceKey, surfaceList, surfaceReading, syncSurfaceObs, validSurfaceEnvelope } from "./surface-obs";
 import type { MetarObservation } from "./aviation-weather";
@@ -11716,7 +11716,7 @@ export default function Home() {
             history={activeCategoryMap.tools?.includes("crops") && cropHistory ? { state: cropHistory.state === "failed" ? "failed" : cropHistory.state === "loading" ? "loading" : cropHistory.state,
               bars: cropHistory.data ? historyBars(cropHistory.data) : [], pattern: cropHistoryPattern,
               reading: cropHistory.data && cropHistoryPattern ? cropHistoryReading(cropHistory.data, cropHistoryPattern) : null } : null}
-            surveySoil={activeCategoryMap.tools?.includes("crops") && surveySoil ? { state: surveySoil.state, mapUnit: surveySoil.data?.mapUnit?.name ?? null,
+            surveySoil={activeCategoryMap.tools?.includes("crops") && surveySoil ? { state: surveySoil.state, mapUnit: surveySoil.data?.mapUnit?.name ?? null, water: soilWater(surveySoil.data?.mapUnit ?? null),
               lines: surveySoil.data?.components.map(component => ({ name: component.name, detail: soilLine(component) })) ?? [] } : null}
             crops={activeCategoryMap.tools?.includes("crops") ? { on: cropsOn, year: cropsYear, years: CDL_YEARS, reading: cdlReading(cropsYear, cropPoint, view.zoom),
               swatch: cropPoint?.state === "ready" ? cropPoint.crop?.color ?? null : null } : undefined}
