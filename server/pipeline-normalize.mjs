@@ -48,6 +48,11 @@ function amount(value) {
   if (!((typeof value === 'number' || typeof value === 'string' && value.length <= 64 && /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(value)) && Number.isFinite(Number(value)) && Math.abs(Number(value)) <= 1e9)) fail('STREAMFLOW_VALUE_INVALID');
   return Number(value);
 }
+function qualifiers(value) {
+  const values = value === null || value === undefined ? [] : Array.isArray(value) ? value : [value];
+  if (values.length > 16 || values.some(item => text(item, 128) === null)) fail('STREAMFLOW_SCHEMA_CHANGED');
+  return [...values];
+}
 // Public context is deliberately allowlisted; raw provider properties remain private.
 export function normalizeCapture(request, capture) {
   const r = capture.receipt; const value = parse(capture.bytes);
@@ -93,7 +98,7 @@ export function normalizeCapture(request, capture) {
       if (!text(p.unit_of_measure, 32) || !['Provisional','Approved','P','A'].includes(p.approval_status)) fail('STREAMFLOW_SCHEMA_CHANGED');
       properties = { stationId: text(p.monitoring_location_id), parameterCode: '00060', value, originalValue: p.value,
         unit: text(p.unit_of_measure), observedAt, originalTime: p.time, sourceFeatureId: id,
-        qualifiers: p.qualifier === null || p.qualifier === undefined ? [] : [text(p.qualifier, 128)],
+        qualifiers: qualifiers(p.qualifier),
         provisional: ['Provisional','P'].includes(p.approval_status) };
     }
     return [{ type: 'Feature', id, geometry: sourceGeometry(request.sourceId, shape), properties }];
@@ -103,6 +108,7 @@ export function normalizeCapture(request, capture) {
     sourceUrl: fixed.url, retrievedAt: r.retrievedAt, bucketAt: new Date(request.slot).toISOString(),
     partial: r.partial === true, evidenceRole: 'EXTERNAL_CONTEXT_ONLY', evidenceEligible: false,
     rightsUrl: fixed.rightsUrl, limitation: fixed.limitation, data: { type: 'FeatureCollection', features } };
+  validateContext(product);
   return { product, bytes: Buffer.from(canonical(product)) };
 }
 export function validateContext(product) {
@@ -132,7 +138,7 @@ export function validateContext(product) {
     } else {
       const allowed = ['stationId','parameterCode','value','originalValue','unit','observedAt','originalTime','sourceFeatureId','qualifiers','provisional'];
       if (Object.keys(p).sort().join(',') !== allowed.sort().join(',') || !text(p.stationId)?.startsWith('USGS-') || p.parameterCode !== '00060' || !text(p.unit, 32)
-        || !text(p.sourceFeatureId) || providerTime(p.originalTime) !== p.observedAt || typeof p.provisional !== 'boolean' || !Array.isArray(p.qualifiers) || p.qualifiers.length > 1 || p.qualifiers.some(q => text(q, 128) === null)
+        || !text(p.sourceFeatureId) || providerTime(p.originalTime) !== p.observedAt || typeof p.provisional !== 'boolean' || !Array.isArray(p.qualifiers) || p.qualifiers.length > 16 || p.qualifiers.some(q => text(q, 128) === null)
         || p.value !== amount(p.originalValue)) fail('CONTEXT_INVALID');
       if (timestamp(p.observedAt) < req.slot - 86400000 || timestamp(p.observedAt) > req.slot) fail('CONTEXT_INVALID');
     }

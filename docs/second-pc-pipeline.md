@@ -438,3 +438,23 @@ network does not satisfy the publishing store's verified-TLS requirement.
 ## Historical county context (implementation candidate, 2026-10-29)
 
 The [county publication path](county-history-publication.md) adds manual `prepare-county` / `publish-county` commands and an approved-context map consumer. It changes the shared signed recipe and adds one source-head row. Follow that cutover procedure before deployment: regenerate and review replacement delegations for every configured source, preserve existing transfers/heads/settings, verify backup and migration on a disposable copy, and use the existing owner signing process. County history is not added to the hourly acquisition schedule. No operational approval, migration or activation is performed by the code change.
+## Card coverage and private pipeline health — October 29
+
+The additive card registry maps the current 22 welcome topics and six recipes. `/pipelines` and `GET /api/pipeline/v1/cards` expose public-safe
+coverage metadata and check existing release gates; they do not expose the
+local journal or intake inventory. See [card pipeline operations](explorer-card-pipelines.md)
+and [the generated dependency map](explorer-card-pipeline-map.md).
+
+The active user capture wrapper now invokes `scripts/pc-pipeline/capture.mjs`
+under the same kernel lock. After the existing tick it writes an atomic private
+`data/work/pipeline-health.json` report. **KFM Working Data** shows its capture,
+retry, storage and working-backup/restore status. Reopen its current connection
+link after the service restart. The imported **KFM Data Library** remains
+catalog-only and does not expose the operator report.
+
+`kfm-data pipelines` prints the same read-only diagnostics directly. Historical
+job clocks remain unknown until actual new attempts/captures occur. The current
+v1 source configuration, hourly slots, five-minute timer, disabled publication,
+connection-only policy, backup/restore schedules, mounts and inference services
+are retained. V2 configuration support does not activate candidate sources.
+Source profiles and hosted publication acceptance remain pending owner review.

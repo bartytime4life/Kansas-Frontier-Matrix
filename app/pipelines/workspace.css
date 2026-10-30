@@ -1,0 +1,16 @@
+.pipeline-workspace { color: #e9f1ed; background: #10242a; min-height: 100vh; padding: clamp(20px, 4vw, 56px); font: 16px/1.6 system-ui, sans-serif; }
+.pipeline-workspace > p { max-width: 80ch; }
+.pipeline-workspace a { color: #a6e7db; text-underline-offset: 3px; }
+.pipeline-toolbar { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin: 24px 0; }
+.pipeline-workspace button, .pipeline-workspace select { min-height: 44px; border: 1px solid #8cb8b3; border-radius: 6px; background: #18363b; color: #fff; padding: 8px 14px; font: inherit; }
+.pipeline-workspace button:disabled { opacity: .7; }
+.pipeline-workspace :focus-visible { outline: 3px solid #ffdc91; outline-offset: 3px; }
+.pipeline-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 20px; }
+.pipeline-cards article { padding: 22px; border: 1px solid #5c807d; border-radius: 10px; background: #173138; min-width: 0; overflow-wrap: anywhere; }
+.pipeline-cards h2 { font-size: 1.25rem; margin-top: 0; }
+.pipeline-cards h3 { font-size: 1rem; margin-bottom: 8px; }
+.pipeline-cards ul { padding-left: 20px; }
+.pipeline-cards li { margin-bottom: 16px; }
+.pipeline-cards li span { display: block; font-size: .9rem; color: #c2d8d4; }
+.pipeline-status { color: #ffe1a0; font-weight: 600; }
+.pipeline-workspace h1 { font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.2; margin: 24px 0 16px; font-weight: 650; }
