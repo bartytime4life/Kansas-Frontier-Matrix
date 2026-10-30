@@ -109,3 +109,14 @@ test('a short opened preview falls back to the chip, with Next, and reports plac
  assert.equal(placed.at(-1),false,'unmounting returns the stage to its specimen');
  const none=[];const blocked=await spotlight({expanded:true,onPlaced:value=>none.push(value)});blocked.setVisible(()=>false);try{assert.equal(blocked.render(),null);assert.ok(!none.includes(true),'nothing placed keeps the specimen');}finally{blocked.harness.dispose();}
 });
+test('opening or closing the preview re-fits the record already on screen',async()=>{
+ const h=await spotlight({paused:true});try{
+  let tree=h.render();const first=card(tree);assert.equal(first.props['data-expanded'],false);assert.ok(findNode(tree,node=>node.props?.className?.includes('welcome-spot-chip')));
+  const label=data.records.find(r=>r.kind==='well').label;
+  h.state.expanded=true;tree=h.render();assert.equal(card(tree).props['data-expanded'],true,'the opened preview shows the full card');assert.ok(text(tree).includes(label),'for the same record');
+  assert.ok(findNode(tree,node=>node.type==='a'&&/KGS record/.test(text(node))));assert.equal(card(tree).props['data-phase'],'in');
+  h.state.expanded=false;tree=h.render();assert.equal(card(tree).props['data-expanded'],false);assert.ok(findNode(tree,node=>node.props?.className?.includes('welcome-spot-chip')),'closing returns to the chip');assert.ok(text(tree).includes(label));
+  h.view.height=300;h.view.y=150;h.state.expanded=true;tree=h.render();assert.equal(card(tree).props['data-expanded'],false,'a short opened preview keeps the chip');assert.ok(findNode(tree,node=>node.type==='button'),'with Next');
+  h.setVisible(()=>false);h.state.expanded=false;tree=h.render();assert.equal(card(tree).props['data-phase'],'out','a record that no longer fits gives way');
+ }finally{h.harness.dispose();}
+});
