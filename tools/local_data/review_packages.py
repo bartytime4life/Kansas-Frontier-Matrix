@@ -22,6 +22,7 @@ PACKAGE_LIMIT = 256 * 1024 * 1024
 TEXT_LIMIT = 64 * 1024
 ROW_LIMIT = 40
 PROFILES = {
+    "kfm-historical-climate-normals-review/v1": "Historical NOAA climate normals",
     "kfm-historical-water-review/v1": "Historical USGS water observations",
     "kfm-map-document-review/v1": "Historical map document review",
     "kfm-water-metadata-availability-review/v1": "Water series availability",
