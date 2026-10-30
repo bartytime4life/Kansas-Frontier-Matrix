@@ -21,7 +21,6 @@ export async function tick(config, { fetcher = fetch, now = Date.now(), acquire 
   const policy = storagePolicy(config);
   if (!Array.isArray(config.sources) || config.sources.some(id => !policy.priority.includes(id))) fail('SOURCE_NOT_ALLOWED');
   await guard(config, { reserve: 64 * 1024 ** 2 });
-  if (memory() < 3 * 1024 ** 3) fail('MEMORY_RESERVE_REQUIRED');
   const journal = await Journal.open(resolve(config.root, 'pipeline-journal.sqlite'));
   const outcomes = [];
   let secret; let heartbeatFailure; let remoteAvailable = true; let publications = 0; let publishedBytes = 0;
@@ -36,8 +35,11 @@ export async function tick(config, { fetcher = fetch, now = Date.now(), acquire 
     for (const sourceId of policy.priority.filter(id => config.sources.includes(id))) {
       if (!['usgs-streamflow','nws-alerts','usgs-earthquakes'].includes(sourceId)) fail('SOURCE_NOT_ALLOWED');
       await guard(config, { reserve: 64 * 1024 ** 2 });
+      const request = captureRequest(sourceId, now);
+      // Only work that will run needs the memory reserve; an idle tick must not fail the unit.
+      if (!journal.claimable(sourceId, request.slot, now, Boolean(secret))) { outcomes.push({ sourceId, state: 'already-complete-or-held' }); continue; }
       if (memory() < 3 * 1024 ** 3) fail('MEMORY_RESERVE_REQUIRED');
-      const request = captureRequest(sourceId, now); const job = journal.claim(sourceId, request.slot, now, Boolean(secret));
+      const job = journal.claim(sourceId, request.slot, now, Boolean(secret));
       if (!job) { outcomes.push({ sourceId, state: 'already-complete-or-held' }); continue; }
       try {
         let productPath = job.product_path;

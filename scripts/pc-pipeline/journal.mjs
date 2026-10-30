@@ -22,12 +22,20 @@ export class Journal {
     const columns = new Set(db.prepare('PRAGMA table_info(jobs)').all().map(column => column.name));
     for (const column of ['started_at', 'finished_at', 'captured_at']) if (!columns.has(column)) db.exec(`ALTER TABLE jobs ADD COLUMN ${column} INTEGER`);
   }
+  static ineligible(row, now, publish) {
+    return (row.state === 'complete' && !(publish && row.product_path && !row.release_id)) || row.lease_until > now || row.retry_at > now || row.attempts >= 3;
+  }
+  // Read-only probe: lets a tick skip resource checks when no slot needs work.
+  claimable(source, slot, now = Date.now(), publish = false) {
+    const row = this.db.prepare('SELECT * FROM jobs WHERE source=? AND slot=?').get(source, slot);
+    return !row || !Journal.ineligible(row, now, publish);
+  }
   claim(source, slot, now = Date.now(), publish = false) {
     this.db.exec('BEGIN IMMEDIATE');
     try {
       this.db.prepare('INSERT OR IGNORE INTO jobs(source,slot) VALUES (?,?)').run(source, slot);
       const row = this.db.prepare('SELECT * FROM jobs WHERE source=? AND slot=?').get(source, slot);
-      if ((row.state === 'complete' && !(publish && row.product_path && !row.release_id)) || row.lease_until > now || row.retry_at > now || row.attempts >= 3) { this.db.exec('COMMIT'); return null; }
+      if (Journal.ineligible(row, now, publish)) { this.db.exec('COMMIT'); return null; }
       const token = randomUUID();
       this.db.prepare("UPDATE jobs SET state='running',attempts=attempts+1,lease_token=?,lease_until=?,started_at=?,finished_at=NULL WHERE source=? AND slot=?").run(token, now + 600000, now, source, slot);
       this.db.exec('COMMIT'); return { ...row, token, source, slot };
