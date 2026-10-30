@@ -129,7 +129,7 @@ test('the dock shows the frost dates beside the crops: loading, failed, none, an
 
 test('the page reads the frost dates with each click, for the crop year on show, and clears them with the crops',()=>{
  assert.match(page,/readFrostRef\.current\(event\.lngLat\.lng, event\.lngLat\.lat, cropsRef\.current\)/);
- assert.match(page,/frostRequestRef\.current\?\.abort\(\);\s*setCropPoint\(null\);/,'turning crops off aborts the reading');
+ assert.match(page,/frostRequestRef\.current\?\.abort\(\);\s*seasonRainRequestRef\.current\?\.abort\(\);\s*setCropPoint\(null\);/,'turning crops off aborts the reading');
  assert.match(page,/import \{ FROST_API_PATH, frostLine, validFrostDates/);
  assert.match(dockSource,/frost\?: Readonly</);
 });

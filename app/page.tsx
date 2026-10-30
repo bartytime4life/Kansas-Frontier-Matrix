@@ -39,6 +39,7 @@ import { CROP_HISTORY_API_PATH, cropHistoryKey, cropHistoryReading, historyBars,
 import { SOIL_API_PATH, soilLine, soilWater, validSoil, type SoilReading } from "./crop-soil";
 import { GDD_API_PATH, degreeDaysLine, rainLine, validDegreeDays, type DegreeDaysReading } from "./growing-degree-days";
 import { FROST_API_PATH, frostLine, validFrostDates, type FrostDates } from "./frost-dates";
+import { RAIN_NORMAL_API_PATH, rainNormalLine, validRainNormal, type RainNormalReading } from "./rain-normal";
 import { KANSAS_CENTRE, SUN_PLACE_SOURCE_ID, SUN_TIME_NOTE, coordinateLabel, inKansas, sunChart, sunReading, sunYear as sunYearDays, syncSunPlace } from "./sun-chart";
 import { SURFACE_OBS_API_PATH, SURFACE_OBS_REFRESH_MS, SURFACE_OBS_SOURCE_ID, stationDetail, surfaceCollection, surfaceKey, surfaceList, surfaceReading, syncSurfaceObs, validSurfaceEnvelope } from "./surface-obs";
 import type { MetarObservation } from "./aviation-weather";
@@ -1671,6 +1672,9 @@ export default function Home() {
   // Frost dates for the crop year on show, at the same point.
   const [frostDates, setFrostDates] = useState<Readonly<{ lon: number; lat: number; year: number; state: "loading" | "failed" | "ready" | "none"; data: FrostDates | null }> | null>(null);
   const frostRequestRef = useRef<AbortController | null>(null);
+  // Season rain against normal for the crop year on show, at the same point.
+  const [seasonRain, setSeasonRain] = useState<Readonly<{ lon: number; lat: number; year: number; state: "loading" | "failed" | "ready" | "none"; data: RainNormalReading | null }> | null>(null);
+  const seasonRainRequestRef = useRef<AbortController | null>(null);
   const [floraOn, setFloraOn] = useState(false);
   const [floraYear, setFloraYear] = useState(FLORA_DEFAULT_YEAR);
   const [floraOpacity, setFloraOpacity] = useState(0.75);
@@ -4559,11 +4563,13 @@ export default function Home() {
     surveySoilRequestRef.current?.abort();
     degreeDaysRequestRef.current?.abort();
     frostRequestRef.current?.abort();
+    seasonRainRequestRef.current?.abort();
     setCropPoint(null);
     setCropHistory(null);
     setSurveySoil(null);
     setDegreeDays(null);
     setFrostDates(null);
+    setSeasonRain(null);
   };
   // A click in Kansas reads the point's whole crop history: every CDL year, not just the one on show. Years do not change it.
   const readCropHistory = useCallback((clickLon: number, clickLat: number) => {
@@ -4644,6 +4650,25 @@ export default function Home() {
   }, []);
   const readFrostRef = useRef(readFrost);
   readFrostRef.current = readFrost;
+  // Season rain against normal for the crop year on show, at the same point. Changing the year needs a new click.
+  const readSeasonRain = useCallback((clickLon: number, clickLat: number, year: number) => {
+    const lon = Number(clickLon.toFixed(5)), lat = Number(clickLat.toFixed(5));
+    seasonRainRequestRef.current?.abort();
+    if (!inCdlRegion(lon, lat)) { setSeasonRain(null); return; }
+    const controller = new AbortController();
+    seasonRainRequestRef.current = controller;
+    setSeasonRain({ lon, lat, year, state: "loading", data: null });
+    void fetch(RAIN_NORMAL_API_PATH(lon, lat, year), { signal: controller.signal })
+      .then(response => response.ok ? response.json() as Promise<unknown> : Promise.reject(new Error(`HTTP ${response.status}`)))
+      .then(value => {
+        if (controller.signal.aborted) return;
+        if (!validRainNormal(value, lon, lat, year)) throw new Error("Invalid rain reading.");
+        setSeasonRain({ lon, lat, year, state: value.state, data: value });
+      })
+      .catch(() => { if (!controller.signal.aborted) setSeasonRain({ lon, lat, year, state: "failed", data: null }); });
+  }, []);
+  const readSeasonRainRef = useRef(readSeasonRain);
+  readSeasonRainRef.current = readSeasonRain;
   const cropHistoryPattern = useMemo(() => cropHistory?.data && cropHistory.state === "ready" ? rotationPattern(cropHistory.data.years) : null, [cropHistory]);
   // A new year reads the last point clicked again, for that year.
   const chooseCropsYear = (year: number) => {
@@ -6794,6 +6819,7 @@ export default function Home() {
             readSurveySoilRef.current(event.lngLat.lng, event.lngLat.lat);
             readDegreeDaysRef.current(event.lngLat.lng, event.lngLat.lat, cropsRef.current);
             readFrostRef.current(event.lngLat.lng, event.lngLat.lat, cropsRef.current);
+            readSeasonRainRef.current(event.lngLat.lng, event.lngLat.lat, cropsRef.current);
           }
           // With daylight through the year shown, a click in Kansas charts that place.
           if (sunYearOnRef.current) {
@@ -10720,6 +10746,8 @@ export default function Home() {
     setDegreeDays(null);
     frostRequestRef.current?.abort();
     setFrostDates(null);
+    seasonRainRequestRef.current?.abort();
+    setSeasonRain(null);
     legislatureHidCivicRef.current = false;
     setLegislatureChamber(null);
     setLegislaturePicked(null);
@@ -11776,6 +11804,7 @@ export default function Home() {
               lines: surveySoil.data?.components.map(component => ({ name: component.name, detail: soilLine(component) })) ?? [] } : null}
             degreeDays={activeCategoryMap.tools?.includes("crops") && degreeDays ? { state: degreeDays.state, year: degreeDays.year, line: degreeDays.data ? degreeDaysLine(degreeDays.data) : null, rain: degreeDays.data ? rainLine(degreeDays.data) : null } : null}
             frost={activeCategoryMap.tools?.includes("crops") && frostDates ? { state: frostDates.state, year: frostDates.year, line: frostDates.data ? frostLine(frostDates.data) : null } : null}
+            seasonRain={activeCategoryMap.tools?.includes("crops") && seasonRain ? { state: seasonRain.state, year: seasonRain.year, line: seasonRain.data ? rainNormalLine(seasonRain.data) : null } : null}
             crops={activeCategoryMap.tools?.includes("crops") ? { on: cropsOn, year: cropsYear, years: CDL_YEARS, reading: cdlReading(cropsYear, cropPoint, view.zoom),
               swatch: cropPoint?.state === "ready" ? cropPoint.crop?.color ?? null : null } : undefined}
             onCrops={showCrops} onCropsYear={chooseCropsYear}
