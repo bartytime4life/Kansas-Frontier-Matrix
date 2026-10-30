@@ -108,12 +108,12 @@ export function moonIllumination(ms: number): { fraction: number; waxing: boolea
   return { fraction: (1 - cos(psi)) / 2, waxing: elongation < 180, elongation };
 }
 
-/** Moonrise and moonset within [from, from + 24 h), found on a 10-minute grid and refined by bisection. */
-export function moonEvents(fromMs: number, lat: number, lon: number): { rise: number | null; set: number | null } {
+/** Moonrise and moonset within [fromMs, untilMs), found on a 10-minute grid and refined by bisection. */
+export function moonEvents(fromMs: number, untilMs: number, lat: number, lon: number): { rise: number | null; set: number | null } {
   const f = (t: number) => { const a = moonAltitude(t, lat, lon); return a.altitude - a.horizon; };
   const step = 10 * 60_000;
   let rise: number | null = null, set: number | null = null, prev = f(fromMs);
-  for (let t = fromMs + step; t <= fromMs + DAY_MS; t += step) {
+  for (let t = fromMs + step; t <= untilMs; t += step) {
     const cur = f(t);
     if ((prev < 0) !== (cur < 0)) {
       let lo = t - step, hi = t;
@@ -135,15 +135,27 @@ export function phaseName(ms: number): string {
 
 const DAY = new Intl.DateTimeFormat("en-US", { timeZone: "America/Chicago", month: "short", day: "numeric" });
 const at = (ms: number) => { const offset = centralOffset(ms); return clock(new Date(ms).getUTCHours() * 60 + new Date(ms).getUTCMinutes() + new Date(ms).getUTCSeconds() / 60 + offset, offset); };
+export const addDays = (date: string, n: number) => new Date(Date.parse(`${date}T00:00:00Z`) + n * DAY_MS).toISOString().slice(0, 10);
+/**
+ * The instant of a Kansas wall-clock time on a calendar date (hours past local
+ * midnight). The Central offset is taken at the instant itself, so a day with
+ * a clock change resolves correctly; two passes settle the offset.
+ */
+export function localInstant(date: string, hours: number): number {
+  const wall = Date.parse(`${date}T00:00:00Z`) + hours * 3_600_000;
+  let t = wall;
+  for (let pass = 0; pass < 2; pass++) t = wall - centralOffset(t) * 60_000;
+  return t;
+}
 /** Local midnight (Central) of a Kansas calendar date, as an instant. */
-export const centralMidnight = (date: string) => { const noon = Date.parse(`${date}T18:00:00Z`); return Date.parse(`${date}T00:00:00Z`) - centralOffset(noon) * 60_000; };
+export const centralMidnight = (date: string) => localInstant(date, 0);
 
-/** Tonight's line: the Moon's name and lit fraction at 9 PM, and its rising and setting on the day. */
+/** Tonight's line: the Moon's name and lit fraction at 9 PM, and its rising and setting on the day (local midnight to the next). */
 export function moonReading(date: string, lat: number, lon: number): string {
   const midnight = centralMidnight(date);
-  const evening = midnight + 21 * 3_600_000;
+  const evening = localInstant(date, 21);
   const { fraction } = moonIllumination(evening);
-  const { rise, set } = moonEvents(midnight, lat, lon);
+  const { rise, set } = moonEvents(midnight, centralMidnight(addDays(date, 1)), lat, lon);
   const events = [rise === null ? null : { t: rise, text: `rises ${at(rise)}` }, set === null ? null : { t: set, text: `sets ${at(set)}` }]
     .filter((e): e is { t: number; text: string } => e !== null).sort((a, b) => a.t - b.t).map(e => e.text);
   return `Moon tonight: ${phaseName(evening).toLowerCase()}, ${Math.round(fraction * 100)}% lit · ${events.length ? events.join(", ") : "neither rises nor sets today"}`
@@ -166,14 +178,13 @@ export function moonDiscPath(cx: number, cy: number, r: number, fraction: number
   const f = (v: number) => v.toFixed(2);
   return `M${f(cx)},${f(cy - r)}A${f(r)},${f(r)} 0 0 ${limb} ${f(cx)},${f(cy + r)}A${f(a)},${f(r)} 0 0 ${terminator} ${f(cx)},${f(cy - r)}Z`;
 }
-export type MoonStrip = Readonly<{ width: number; height: number; r: number; discs: readonly Readonly<{ cx: number; cy: number; d: string; date: string; percent: number }>[] }>;
+export type MoonStrip = Readonly<{ width: number; height: number; r: number; discs: readonly Readonly<{ cx: number; cy: number; d: string; date: string; fraction: number; percent: number }>[] }>;
 /** The next 30 evenings (9 PM Central) as discs, lit as they will be: two rows of fifteen. */
 export function moonStrip(date: string, days = 30): MoonStrip {
   const perRow = 15, width = 260, gap = width / perRow, r = 6.2, rowHeight = 16;
-  const start = centralMidnight(date) + 21 * 3_600_000;
   const discs = Array.from({ length: days }, (_, i) => {
-    const t = start + i * DAY_MS, { fraction, waxing } = moonIllumination(t), cx = gap * (i % perRow + 0.5), cy = rowHeight * Math.floor(i / perRow) + rowHeight / 2;
-    return { cx, cy, d: moonDiscPath(cx, cy, r, fraction, waxing), date: new Date(t - 6 * 3_600_000).toISOString().slice(0, 10), percent: Math.round(fraction * 100) };
+    const day = addDays(date, i), t = localInstant(day, 21), { fraction, waxing } = moonIllumination(t), cx = gap * (i % perRow + 0.5), cy = rowHeight * Math.floor(i / perRow) + rowHeight / 2;
+    return { cx, cy, d: moonDiscPath(cx, cy, r, fraction, waxing), date: day, fraction, percent: Math.round(fraction * 100) };
   });
   return Object.freeze({ width, height: rowHeight * Math.ceil(days / perRow), r, discs });
 }
