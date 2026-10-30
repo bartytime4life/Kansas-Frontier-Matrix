@@ -154,3 +154,10 @@
 .category-map-dock-flora-control{display:grid;gap:5px;font-size:12px;color:#cfe2ea}
 .category-map-dock-flora-control select{width:100%;min-height:44px;border:1px solid #2c4a57;border-radius:7px;background:#0d2a35;color:#e6eff2;padding:6px 8px}
 .category-map-dock-flora-control input[type="range"]{width:100%;min-height:32px;accent-color:#e0c786}
+
+/* The daylight location can be selected with a keyboard as well as the map. */
+.category-map-dock-sun-location{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:0;margin:8px 0}
+.category-map-dock-sun-location label{display:grid;gap:4px;min-width:0;color:#cfe2ea;font-size:12px}
+.category-map-dock-sun-location input{box-sizing:border-box;width:100%;min-width:0;min-height:44px;border:1px solid #2c4a57;border-radius:7px;background:#0d2a35;color:#e6eff2;padding:6px;font:inherit}
+.category-map-dock-sun-location button,.category-map-dock-sun-location small{grid-column:1/-1}
+.category-map-dock-sun-location small{color:#cfe2ea;font-size:12px}

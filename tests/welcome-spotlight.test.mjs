@@ -37,12 +37,12 @@ test('spotlight records are the pinned tile records, unchanged, with a turn for 
 
 const json=Object.freeze(data);
 function stage(){
- const timers=new Map(),intervals=new Map(),pins=[],listeners=new Map();let next=0,visible=()=>true;
+ const timers=new Map(),intervals=new Map(),pins=[],listeners=new Map(),view={width:1000,height:800,y:500};let next=0,visible=()=>true;
  const document={hidden:false,addEventListener:(id,fn)=>listeners.set(id,fn),removeEventListener:id=>listeners.delete(id),createElement:()=>({className:'',dataset:{}})};
- const engine={pin(element,coordinates){const pin={element,coordinates,removed:false};pins.push(pin);return()=>{pin.removed=true;};},project:(coordinates,topic)=>topic==='geology'&&visible(coordinates)?{x:500,y:500}:null};
- const host={getBoundingClientRect:()=>({left:0,top:0,width:1000,height:800}),ownerDocument:{querySelectorAll:()=>[]}};
+ const engine={pin(element,coordinates){const pin={element,coordinates,removed:false};pins.push(pin);return()=>{pin.removed=true;};},project:(coordinates,topic)=>topic==='geology'&&visible(coordinates)?{x:500,y:view.y}:null};
+ const host={getBoundingClientRect:()=>({left:0,top:0,width:view.width,height:view.height}),ownerDocument:{querySelectorAll:()=>[]}};
  const globals={document,getComputedStyle:()=>({visibility:'visible',opacity:'1'}),setTimeout:(fn,ms)=>{const id=++next;timers.set(id,{fn,ms});return id;},clearTimeout:id=>timers.delete(id),setInterval:(fn,ms)=>{const id=++next;intervals.set(id,{fn,ms});return id;},clearInterval:id=>intervals.delete(id),Math:Object.assign(Object.create(Math),{random:()=>0})};
- return {timers,intervals,pins,listeners,document,engine,host,globals,setVisible:fn=>visible=fn};
+ return {view,timers,intervals,pins,listeners,document,engine,host,globals,setVisible:fn=>visible=fn};
 }
 async function spotlight(props={}){
  const s=stage();
@@ -98,5 +98,25 @@ test('records that cannot be placed clear of the welcome panels wait; another ki
   const pinned=h.pins.at(-1);assert.ok(pinned.coordinates[0]>-97);
   assert.equal(h.intervals.size,1);[...h.intervals.values()][0].fn();assert.equal(card(h.render()).props['data-phase'],'in','a card still clear of the panels stays');
   h.setVisible(()=>false);[...h.intervals.values()][0].fn();assert.equal(card(h.render()).props['data-phase'],'out','a covered card gives way early');assert.equal(h.intervals.size,0);
+ }finally{h.harness.dispose();}
+});
+test('a short opened preview falls back to the chip, with Next, and reports placement for the stage specimen',async()=>{
+ const placed=[];const h=await spotlight({expanded:true,onPlaced:value=>placed.push(value)});h.view.height=300;h.view.y=150;try{
+  const tree=h.render();const shown=card(tree);assert.ok(shown,'a record still appears');assert.equal(shown.props['data-expanded'],false);
+  assert.ok(findNode(tree,node=>node.props?.className?.includes('welcome-spot-chip')));const next=findNode(tree,node=>node.type==='button');assert.ok(next);
+  assert.equal(placed.at(-1),true);next.props.onClick();assert.equal(card(h.render()).props['data-phase'],'out');
+ }finally{h.harness.dispose();}
+ assert.equal(placed.at(-1),false,'unmounting returns the stage to its specimen');
+ const none=[];const blocked=await spotlight({expanded:true,onPlaced:value=>none.push(value)});blocked.setVisible(()=>false);try{assert.equal(blocked.render(),null);assert.ok(!none.includes(true),'nothing placed keeps the specimen');}finally{blocked.harness.dispose();}
+});
+test('opening or closing the preview re-fits the record already on screen',async()=>{
+ const h=await spotlight({paused:true});try{
+  let tree=h.render();const first=card(tree);assert.equal(first.props['data-expanded'],false);assert.ok(findNode(tree,node=>node.props?.className?.includes('welcome-spot-chip')));
+  const label=data.records.find(r=>r.kind==='well').label;
+  h.state.expanded=true;tree=h.render();assert.equal(card(tree).props['data-expanded'],true,'the opened preview shows the full card');assert.ok(text(tree).includes(label),'for the same record');
+  assert.ok(findNode(tree,node=>node.type==='a'&&/KGS record/.test(text(node))));assert.equal(card(tree).props['data-phase'],'in');
+  h.state.expanded=false;tree=h.render();assert.equal(card(tree).props['data-expanded'],false);assert.ok(findNode(tree,node=>node.props?.className?.includes('welcome-spot-chip')),'closing returns to the chip');assert.ok(text(tree).includes(label));
+  h.view.height=300;h.view.y=150;h.state.expanded=true;tree=h.render();assert.equal(card(tree).props['data-expanded'],false,'a short opened preview keeps the chip');assert.ok(findNode(tree,node=>node.type==='button'),'with Next');
+  h.setVisible(()=>false);h.state.expanded=false;tree=h.render();assert.equal(card(tree).props['data-phase'],'out','a record that no longer fits gives way');
  }finally{h.harness.dispose();}
 });

@@ -5,7 +5,8 @@ import ts from 'typescript';
 import {componentHarness, findNode} from './component-harness.mjs';
 
 const compile=async(path,modules={})=>{const exports={};new Function('exports','require',ts.transpileModule(await readFile(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(exports,name=>{if(name in modules)return modules[name];throw new Error(`Unexpected import: ${name}`);});return exports;};
-const sun=await compile('app/sun-chart.ts');
+const orientation=await compile('app/kansas-orientation.ts');
+const sun=await compile('app/sun-chart.ts',{'./kansas-orientation':orientation});
 const moon=await compile('app/moon.ts',{'./sun-chart':sun});
 const maps=await compile('app/category-maps.ts');
 const page=await readFile('app/page.tsx','utf8');

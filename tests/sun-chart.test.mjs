@@ -6,24 +6,58 @@ import {getSolarPosition} from 'sunrise-sunset-js';
 import {componentHarness, findNode} from './component-harness.mjs';
 
 const compile=async(path,modules={})=>{const exports={};new Function('exports','require',ts.transpileModule(await readFile(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(exports,name=>{if(name in modules)return modules[name];throw new Error(`Unexpected import: ${name}`);});return exports;};
-const sun=await compile('app/sun-chart.ts');
+const orientation=await compile('app/kansas-orientation.ts');
+const sun=await compile('app/sun-chart.ts',{'./kansas-orientation':orientation});
 const maps=await compile('app/category-maps.ts');
 const page=await readFile('app/page.tsx','utf8');
 const plain=v=>JSON.parse(JSON.stringify(v));
 const WICHITA={lat:37.69,lon:-97.34};
 
+test('Kansas selection follows the bundled display outline, including the Missouri River edge',()=>{
+ for(const [lon,lat] of [[-98.698,38.498],[-97.34,37.69],[-101.71,39.35],[-101.80,39.77],[-94.72,39.12]])assert.equal(sun.inKansas(lon,lat),true);
+ for(const [lon,lat] of [[-94.6,40],[-94.85,39.95],[-94.6,38],[-104.9,39.7],[-98,40.1],[-98,36.9],[NaN,38],[Infinity,38]])assert.equal(sun.inKansas(lon,lat),false,`${lon}, ${lat}`);
+});
+
+test('rounded day lengths carry minutes into hours',()=>{
+ const days=sun.sunYear(2026,WICHITA.lat,WICHITA.lon);
+ for(const day of days)assert.doesNotMatch(sun.sunReading(days,day.date),/h 60 min/);
+ assert.equal(sun.clock(1439.9),'12:00 AM');
+ const rounded=[{...days[0],length:599.9}];
+ assert.match(sun.sunReading(rounded,rounded[0].date),/10 h 00 min of daylight/);
+});
+
 test('every event lands where NREL\'s Solar Position Algorithm puts the Sun at that altitude, to a few seconds of time',()=>{
+ for(const place of [WICHITA,{lat:39.05,lon:-95.68},{lat:39.35,lon:-101.71},{lat:38.35,lon:-101.75},{lat:37.98,lon:-101.75},{lat:38.498,lon:-98.698}]){
  for(const day of ['2026-01-15','2026-03-20','2026-06-21','2026-09-22','2026-12-21']){
   const t=Date.parse(`${day}T00:00:00Z`);
   for(const [limit,altitude] of Object.entries(sun.SUN_EVENTS))for(const morning of [true,false]){
-   const at=sun.sunEvent(t,WICHITA.lat,WICHITA.lon,altitude,morning);
+   const at=sun.sunEvent(t,place.lat,place.lon,altitude,morning);
    // Pressure 0 turns refraction off: the SPA's geometric altitude of the Sun's centre.
-   const spa=getSolarPosition(WICHITA.lat,WICHITA.lon,new Date(at),{pressure:0}).elevation;
+   const spa=getSolarPosition(place.lat,place.lon,new Date(at),{pressure:0}).elevation;
    assert.ok(Math.abs(spa-altitude)<0.01,`${day} ${limit} ${morning?'dawn':'dusk'}: SPA ${spa.toFixed(4)}° against ${altitude}°`);
   }
-  const noon=sun.sunEvent(t,WICHITA.lat,WICHITA.lon,'noon');
-  const [before,at,after]=[-60e3,0,60e3].map(d=>getSolarPosition(WICHITA.lat,WICHITA.lon,new Date(noon+d),{pressure:0}).elevation);
+  const noon=sun.sunEvent(t,place.lat,place.lon,'noon');
+  const [before,at,after]=[-60e3,0,60e3].map(d=>getSolarPosition(place.lat,place.lon,new Date(noon+d),{pressure:0}).elevation);
   assert.ok(at>=before&&at>=after,`${day}: solar noon is the Sun's highest`);
+ }
+ }
+});
+
+test('Central display stays explicit at Mountain locations and leap-year DST changes preserve solar duration',()=>{
+ const days=sun.sunYear(2028,39.35,-101.71);
+ assert.equal(days.length,366);assert.ok(days.some(d=>d.date==='2028-02-29'));
+ for(const day of ['2028-03-11','2028-03-12','2028-11-04','2028-11-05']){
+  const d=days.find(d=>d.date===day), t=Date.parse(day+'T00:00:00Z');
+  const at=sun.sunEvent(t,39.35,-101.71,sun.SUN_EVENTS.sun,true);
+  const ct=new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',hour:'numeric',minute:'numeric',hourCycle:'h23'}).formatToParts(at);
+  const mt=new Intl.DateTimeFormat('en-US',{timeZone:'America/Denver',hour:'numeric',minute:'numeric',hourCycle:'h23'}).formatToParts(at);
+  const minutes=parts=>Number(parts.find(p=>p.type==='hour').value)*60+Number(parts.find(p=>p.type==='minute').value);
+  assert.equal(minutes(ct)-minutes(mt),60);
+  assert.ok(Math.abs(d.sunrise-minutes(ct))<1,'the chart uses Central clock time at Goodland too');
+ }
+ for(const date of ['2028-03-12','2028-11-05']){
+  const i=days.findIndex(d=>d.date===date);assert.ok(Math.abs(days[i].length-days[i-1].length)<3);
+  assert.equal(days[i].offset-days[i-1].offset,date.includes('03-')?60:-60);
  }
 });
 
@@ -57,8 +91,8 @@ test('the day\'s line and the chart',()=>{
  assert.ok(chart.hours[0].y>chart.hours[2].y,'time runs up: midnight at the foot');
  assert.ok(Math.abs(chart.today-(chart.left+(days.findIndex(d=>d.date==='2026-10-29')+0.5)/365*chart.plotWidth))<1e-9);
  assert.equal(sun.sunChart(days,null).today,null);
- assert.equal(sun.inKansasBox(-98.7,38.5),true);assert.equal(sun.inKansasBox(-104.9,39.7),false);
- assert.equal(sun.mayKeepMountainTime(-101.8),true);assert.equal(sun.mayKeepMountainTime(-100),false);
+ assert.equal(sun.inKansas(-98.7,38.5),true);assert.equal(sun.inKansas(-104.9,39.7),false);
+ assert.match(sun.SUN_TIME_NOTE,/All Sun and Moon times use Central time/);assert.match(sun.SUN_TIME_NOTE,/Mountain clocks read one hour earlier/);
  assert.equal(sun.coordinateLabel(-98.698,38.498),'38.50°N, 98.70°W');
 });
 
@@ -81,18 +115,22 @@ test('the Sky globe offers daylight through the year; a click in Kansas charts t
  const tool=tree=>findNode(tree,n=>n.type==='button'&&/daylight through the year/i.test(String(n.props.children)));
  let tree=h.render(h.exports.CategoryMapDock,{...base,sunYear:off});
  assert.equal(tool(tree).props.children,'Daylight through the year');tool(tree).props.onClick();
- const on={on:true,place:'37.69°N, 97.34°W',outside:false,reading:sun.sunReading(days,'2026-10-29'),chart:sun.sunChart(days,'2026-10-29'),note:null,atCentre:false};
+ const on={on:true,place:'37.69°N, 97.34°W',outside:false,reading:sun.sunReading(days,'2026-10-29'),chart:sun.sunChart(days,'2026-10-29'),note:sun.SUN_TIME_NOTE,atCentre:false,coordinates:WICHITA};
+ base.onSunYearPlace=(lon,lat)=>calls.push(['place',lon,lat]);
  tree=h.render(h.exports.CategoryMapDock,{...base,sunYear:on});
  assert.equal(tool(tree).props.children,'Hide daylight through the year');
  assert.match(JSON.stringify(tree),/At 37\.69°N, 97\.34°W · click the map in Kansas for another place/);
+ const form=findNode(tree,n=>n.type==='form');let prevented=false;
+ form.props.onSubmit({preventDefault(){prevented=true;},currentTarget:{elements:{namedItem(name){return {valueAsNumber:name==='longitude'?-101.71:39.35};}}}});
+ assert.equal(prevented,true);assert.match(JSON.stringify(tree),/All Sun and Moon times use Central time/);
  const chart=findNode(tree,n=>n.type===h.exports.SunYearChart);const figure=chart.type(chart.props);
  assert.equal(figure.props['aria-label'],'Sunrise, sunset and twilight through the year at 37.69°N, 97.34°W, in Central clock time');
  const svg=JSON.stringify(figure);assert.match(svg,/"data-band":"day"/);assert.match(svg,/"data-today"/);assert.match(svg,/the steps are the clock changing/);
  findNode(tree,n=>n.type==='button'&&n.props.children==='Back to the centre of Kansas').props.onClick();
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,sunYear:{...on,outside:true}})),/the chart is for places in Kansas/);
  assert.equal(findNode(h.render(h.exports.CategoryMapDock,{...base,sunYear:{...on,atCentre:true}}),n=>n.type==='button'&&n.props.children==='Back to the centre of Kansas'),undefined);
- assert.deepEqual(calls,[['on',true],['centre']]);
+ assert.deepEqual(calls,[['on',true],['place',-101.71,39.35],['centre']]);
  assert.equal(tool(h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.water,sunYear:off})),undefined,'only maps that offer it');
- assert.match(page,/if \(sunYearOnRef\.current\) \{\s*const \{ lng, lat \} = event\.lngLat;\s*if \(inKansasBox\(lng, lat\)\) \{ setSunPlace\(\{ lon: lng, lat \}\); setSunOutside\(false\); \} else setSunOutside\(true\);/);
+ assert.match(page,/if \(sunYearOnRef\.current\) \{\s*const \{ lng, lat \} = event\.lngLat;\s*if \(inKansas\(lng, lat\)\) \{ setSunPlace\(\{ lon: lng, lat \}\); setSunOutside\(false\); \} else setSunOutside\(true\);/);
  assert.match(page,/setSunYearOn\(false\);\s*setSunPlace\(null\);/,'closes with its map');
 });
