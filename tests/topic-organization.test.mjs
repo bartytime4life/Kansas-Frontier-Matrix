@@ -38,6 +38,7 @@ test("requested subjects have grouped subtopics, inspectable limits and real int
   assert.equal(new Set(ids).size, ids.length);
   assert.ok(required.every(id => ids.includes(id)));
   assert.deepEqual(topics.LAYER_WORKSPACES.map(([id]) => id), ["all", ...ids]);
+  assert.deepEqual(topics.TOPIC_GROUPS.flatMap(group => topics.TOPIC_STRUCTURE.filter(topic => topic.group === group).map(topic => topic.id)), ids, "topic order stays consistent across grouped welcome, index and selector");
   for (const topic of topics.TOPIC_STRUCTURE) {
     assert.ok(topics.TOPIC_GROUPS.includes(topic.group));
     assert.ok(topic.facets.length >= 3 && topic.description && topic.limitation);
