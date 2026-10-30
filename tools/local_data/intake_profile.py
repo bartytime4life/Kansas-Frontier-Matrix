@@ -26,6 +26,7 @@ from tools.local_data.file_io import open_regular, read_regular
 
 PROFILE_SCHEMA = "kfm-intake-profile/v1"
 ANALYZER_VERSION = "2"
+CLASSIFIER_VERSION = "2"
 SNIFF_BYTES = 64 * 1024
 MAX_PRJ_BYTES = 64 * 1024
 MAX_TEXT_PARSE_BYTES = 64 * 1024 * 1024
@@ -38,12 +39,12 @@ MAX_PDF_SCAN = 2 * 1024 * 1024
 # Domains match pipeline_specs/ lanes. Rules are hints from names only.
 DOMAIN_RULES = [
     ("hydrology", r"stream|gauge|gage|discharge|flow(line)?|river|hydro|watershed|huc\d*|nwm|nhd|flood|reservoir|lake|water[-_ ]?(level|use|right)"),
-    ("geology", r"geolog|well|wwc5|aquifer|bedrock|strat|lithol|core|borehole|kgs|fault|seism|quake|oil|gas"),
+    ("geology", r"geolog|(?<![a-z0-9])(?:wells?|wwc5|cores?|kgs|oil|gas)(?![a-z0-9])|aquifer|bedrock|strat|lithol|borehole|fault|seism|quake"),
     ("soil", r"soil|ssurgo|gssurgo|statsgo|horizon|isric|soilgrids"),
     ("atmosphere", r"prism|precip|temperat|climate|weather|ghcn|radar|nexrad|smoke|hms|aerosol|aod|goes|wind|normals"),
     ("air", r"airnow|aqs|ozone|pm2\.?5|pm10|air[-_ ]?quality"),
     ("hazards", r"hazard|tornado|storm|hail|fire|burn|drought|fema|nfhl|disaster"),
-    ("agriculture", r"crop|cdl|casma|yield|agri|farm|irrigat|nass|cropland"),
+    ("agriculture", r"crop|(?<![a-z0-9])(?:cdl|casma|nass)(?![a-z0-9])|yield|agri|farm|irrigat|cropland"),
     ("roads-rail-trade", r"road|highway|rail|route|trail|kdot|hpms|freight|bridge|airport"),
     ("settlements-infrastructure", r"county|city|town|place|census|tiger|boundary|parcel|plss|township|building|infrastructure|hifld|school"),
     ("habitat", r"habitat|landcover|land[-_ ]?cover|nlcd|vegetation|wetland|ndvi|prairie|ecoregion"),
@@ -719,22 +720,34 @@ def _profile_zip(handle, p: _Profile, size):
 
 # --- entry point ----------------------------------------------------------
 
-def _hints(path_text: str, p: _Profile, declared_domain: str | None):
-    fields = " ".join(p.structure.get("fields", []) if isinstance(p.structure.get("fields"), list) else [])
+def classification_hints(path_text: str, structure: dict, issues, declared_domain: str | None = None):
+    """Recompute discovery hints from saved metadata without opening source bytes.
+
+    Source-family names remain hints, not verified provenance or Kansas coverage.
+    Keep this version separate from the payload analyzer to avoid archive rereads.
+    """
+    fields = " ".join(str(f) for f in structure.get("fields", []) if isinstance(f, str)) if isinstance(structure.get("fields"), list) else ""
     haystack = (path_text + " " + fields).lower()
     scores = []
     for domain, pattern in DOMAIN_RULES:
-        hits = re.findall(pattern, haystack)
+        hits = [m.group() for m in re.finditer(pattern, haystack)]
         if hits:
-            scores.append((len(hits), domain, sorted({h if isinstance(h, str) else h[0] for h in hits})[:5]))
+            scores.append((len(hits), domain, sorted(set(hits))[:5]))
     scores.sort(key=lambda s: (-s[0], s[1]))
     flags = sorted({flag for flag, pattern in REVIEW_RULES if re.search(pattern, haystack)})
-    if "photo_exact_location" in p.issues:
+    if "photo_exact_location" in issues:
         flags.append("exact_location")
     guess = declared_domain or (scores[0][1] if scores else None)
     basis = "declared" if declared_domain else ("name-and-field-keywords" if scores else "none")
-    return {"domain": guess, "domain_basis": basis,
-            "domain_candidates": [{"domain": d, "matches": m} for _n, d, m in scores[:3]],
+    # Match an actual archive path component, not a station ID or arbitrary host.
+    source = re.search(r"(?:^|/)ftp\.ncdc\.noaa\.gov/(?:data/asos-fivemin/|download/ghcndex-stn-[^/]+/)", path_text.lower())
+    if source and not declared_domain:
+        guess, basis = "atmosphere", "source-family-path-hint"
+    candidates = [{"domain": d, "matches": m} for _n, d, m in scores[:3]]
+    if source:
+        candidates = [{"domain": "atmosphere", "matches": [source.group().lstrip('/')]}] + [c for c in candidates if c["domain"] != "atmosphere"]
+    return {"domain": guess, "domain_basis": basis, "classifier_version": CLASSIFIER_VERSION,
+            "domain_candidates": candidates[:3],
             "review_flags": sorted(set(flags))}
 
 
@@ -830,7 +843,7 @@ def profile_file(path: Path, *, display_path: str | None = None, declared: dict 
         "spatial": p.spatial,
         "temporal": p.temporal,
         "structure": p.structure,
-        "hints": _hints(shown, p, (declared or {}).get("domain")),
+        "hints": classification_hints(shown, p.structure, p.issues, (declared or {}).get("domain")),
         "issues": sorted(p.issues),
         "profiled_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }

@@ -13,7 +13,8 @@ station identifiers containing `CDL` appeared under agriculture, and `KGS` airpo
 identifiers appeared under geology. Those labels do not establish dataset topic
 or Kansas coverage. The selected document instead has explicit KGS source
 metadata, its title/year on the visible sheet, and a completed capture receipt.
-Classifier correction and bounded catalog refresh remain separate follow-up work.
+The [bounded catalog repair](catalog-domain-repair.md) addresses these known
+keyword collisions without re-reading archive payloads or changing review holds.
 
 `tools.local_data.historical_geology` accepts an explicit capture job identifier
 and SHA-256 pins for the receipt and source record. It checks:

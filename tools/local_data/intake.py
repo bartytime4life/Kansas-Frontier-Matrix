@@ -38,7 +38,7 @@ sys.path.insert(0, str(REPO))
 from tools.local_data import intake_route  # noqa: E402
 from tools.local_data.acquisition import validate_root  # noqa: E402
 from tools.local_data.file_io import capture_file, check_directory, hash_regular, read_regular, write_new  # noqa: E402
-from tools.local_data.intake_profile import ANALYZER_VERSION, profile_file  # noqa: E402
+from tools.local_data.intake_profile import ANALYZER_VERSION, CLASSIFIER_VERSION, classification_hints, profile_file  # noqa: E402
 from tools.local_data.library import EXCLUDED_DIRECTORIES, EXCLUDED_FILES  # noqa: E402
 from tools.local_data.manage import canonical, external_root, utc_now  # noqa: E402
 
@@ -321,6 +321,10 @@ def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None
                         and "format_reader_failed" not in json.loads(previous[3]).get("issues", [])
                         and (json.loads(previous[5]) if previous[5] else None) == found["declared"]):
                     profile = json.loads(previous[3])
+                    if profile.get("hints", {}).get("classifier_version") != CLASSIFIER_VERSION:
+                        declaration = found["declared"] or {}
+                        profile["hints"] = classification_hints(declaration.get("relative_path") or found["relative_path"],
+                            profile.get("structure", {}), profile.get("issues", []), declaration.get("domain"))
                     sha256 = sha256 or previous[4]
                     summary["reused"] += 1
                 else:
