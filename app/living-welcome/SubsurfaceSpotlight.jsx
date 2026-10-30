@@ -42,6 +42,14 @@ function placement(engine, host, record, expanded, only = null) {
  return only !== 'above' && clear({ left, right, top: point.y - 12, bottom: point.y + h + stem }) ? 'below' : null;
 }
 
+/** The opened preview prefers the full card; a short window, or the category view, gets the chip. */
+function fit(engine, host, record, expanded) {
+ const side = placement(engine, host, record, expanded);
+ if (side) return { side, compact: !expanded };
+ const small = expanded && placement(engine, host, record, false);
+ return small ? { side: small, compact: true } : null;
+}
+
 /** Next kind in turn, preferring a record not seen recently and that fits on screen now. */
 function nextRecord(place, memory) {
  for (let step = 0; step < KINDS.length; step++) {
@@ -187,7 +195,7 @@ function Card({ record, expanded, compact, onNext }) {
 export function SubsurfaceSpotlight({ engine, host, paused = false, reduced = false, expanded = false, onPlaced }) {
  const [current, setCurrent] = useState(null), [leaving, setLeaving] = useState(false), [trail, setTrail] = useState([]);
  const [hidden, setHidden] = useState(() => typeof document !== 'undefined' && document.hidden);
- const memory = useRef({ turn: 0, recent: [] }), shown = useRef(null);
+ const memory = useRef({ turn: 0, recent: [] }), shown = useRef(null), layout = useRef(expanded);
  useEffect(() => {
   const change = () => setHidden(document.hidden);
   document.addEventListener('visibilitychange', change);
@@ -198,13 +206,7 @@ export function SubsurfaceSpotlight({ engine, host, paused = false, reduced = fa
   let timer = 0, alive = true;
   const show = () => {
    if (!alive) return;
-   // The opened preview prefers the full card; a short window falls back to the chip.
-   const pick = nextRecord(record => {
-    const side = placement(engine, host, record, expanded);
-    if (side) return { side, compact: !expanded };
-    const small = expanded && placement(engine, host, record, false);
-    return small ? { side: small, compact: true } : null;
-   }, memory.current);
+   const pick = nextRecord(record => fit(engine, host, record, expanded), memory.current);
    if (!pick) { timer = setTimeout(show, RETRY_MS); return; }
    const previous = shown.current;
    memory.current = { turn: pick.turn, recent: [...memory.current.recent, pick.record.id].slice(-9) };
@@ -218,6 +220,18 @@ export function SubsurfaceSpotlight({ engine, host, paused = false, reduced = fa
   else if (!paused && !reduced && !hidden) timer = setTimeout(() => setLeaving(true), DWELL_MS);
   return () => { alive = false; clearTimeout(timer); };
  }, [engine, host, current, leaving, paused, reduced, hidden, expanded]);
+ // Opening or closing the preview re-fits the record on screen now, not the next one.
+ useEffect(() => {
+  if (layout.current === expanded) return;
+  layout.current = expanded;
+  const now = shown.current;
+  if (!engine || !host || !now || leaving) return;
+  const next = fit(engine, host, now.record, expanded);
+  if (!next) { setLeaving(true); return; }
+  if (next.side === now.side && next.compact === now.compact) return;
+  shown.current = { ...now, ...next };
+  setCurrent(shown.current);
+ }, [engine, host, expanded, leaving]);
  useEffect(() => { onPlaced?.(Boolean(current)); }, [current, onPlaced]);
  useEffect(() => () => onPlaced?.(false), [onPlaced]);
  // Scrolled category cards, an opened panel or the drift can cover a card; it then gives way early.
