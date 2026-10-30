@@ -37,7 +37,7 @@ import { POPULATION_CHANGE_SOURCE_ID, byPercent, changeColor, countyPopulationRe
 import { moonReading, moonStrip, phaseList } from "./moon";
 import { CROP_HISTORY_API_PATH, cropHistoryKey, cropHistoryReading, historyBars, rotationPattern, validCropHistory, type CropHistory } from "./crop-history";
 import { SOIL_API_PATH, soilLine, soilWater, validSoil, type SoilReading } from "./crop-soil";
-import { GDD_API_PATH, degreeDaysLine, validDegreeDays, type DegreeDaysReading } from "./growing-degree-days";
+import { GDD_API_PATH, degreeDaysLine, rainLine, validDegreeDays, type DegreeDaysReading } from "./growing-degree-days";
 import { KANSAS_CENTRE, SUN_PLACE_SOURCE_ID, SUN_TIME_NOTE, coordinateLabel, inKansas, sunChart, sunReading, sunYear as sunYearDays, syncSunPlace } from "./sun-chart";
 import { SURFACE_OBS_API_PATH, SURFACE_OBS_REFRESH_MS, SURFACE_OBS_SOURCE_ID, stationDetail, surfaceCollection, surfaceKey, surfaceList, surfaceReading, syncSurfaceObs, validSurfaceEnvelope } from "./surface-obs";
 import type { MetarObservation } from "./aviation-weather";
@@ -11746,7 +11746,7 @@ export default function Home() {
               reading: cropHistory.data && cropHistoryPattern ? cropHistoryReading(cropHistory.data, cropHistoryPattern) : null } : null}
             surveySoil={activeCategoryMap.tools?.includes("crops") && surveySoil ? { state: surveySoil.state, mapUnit: surveySoil.data?.mapUnit?.name ?? null, water: soilWater(surveySoil.data?.mapUnit ?? null),
               lines: surveySoil.data?.components.map(component => ({ name: component.name, detail: soilLine(component) })) ?? [] } : null}
-            degreeDays={activeCategoryMap.tools?.includes("crops") && degreeDays ? { state: degreeDays.state, year: degreeDays.year, line: degreeDays.data ? degreeDaysLine(degreeDays.data) : null } : null}
+            degreeDays={activeCategoryMap.tools?.includes("crops") && degreeDays ? { state: degreeDays.state, year: degreeDays.year, line: degreeDays.data ? degreeDaysLine(degreeDays.data) : null, rain: degreeDays.data ? rainLine(degreeDays.data) : null } : null}
             crops={activeCategoryMap.tools?.includes("crops") ? { on: cropsOn, year: cropsYear, years: CDL_YEARS, reading: cdlReading(cropsYear, cropPoint, view.zoom),
               swatch: cropPoint?.state === "ready" ? cropPoint.crop?.color ?? null : null } : undefined}
             onCrops={showCrops} onCropsYear={chooseCropsYear}

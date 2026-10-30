@@ -410,6 +410,9 @@ point (`app/growing-degree-days.ts`, `/api/farming/degree-days`).
   April 1 to October 31.
 - **Source:** the Iowa Environmental Mesonet's daily summary for the station, and
   its network list of Kansas stations.
+- **Season rain:** the same station's precipitation, totalled in inches over the
+  same April 1 to October 31 dates. A missing day is counted, as for degree days.
+  The total is shown only when the station's summary has a precipitation column.
 - **Reach:** a point more than 150 km from every station gets no reading.
 - **Missing days:** a day with a missing high or low is counted and shown, never
   guessed. A season with missing days is not kept for a day.
