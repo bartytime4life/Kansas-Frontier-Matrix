@@ -44,7 +44,7 @@
         controller = new AbortController();
         const response = await fetch(base, { cache: "no-store", credentials: "omit", redirect: "error",
           headers: { "X-KFM-Session": TOKEN }, signal: controller.signal });
-        if (!response.ok || response.headers.get("Content-Type") !== "image/png") throw new Error("Image could not be verified.");
+        if (!response.ok || !["image/png", "image/jpeg"].includes(response.headers.get("Content-Type"))) throw new Error("Image could not be verified.");
         const blob = await response.blob();
         if (sequence !== request) return;
         imageUrl = URL.createObjectURL(blob);
