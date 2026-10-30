@@ -17,7 +17,9 @@ const dockSource=await readFile('app/category-map-dock.tsx','utf8');
 const loadRoute=async()=>{
   const upstream=await esm('app/api/event-atlas/upstream.ts'), cropland=await esm('app/cropland.ts'), days=await esm('app/growing-degree-days.ts');
   const stations=(await esm('app/kansas-stations.ts')).replace('from "./api/event-atlas/upstream"',`from "${dataUrl(upstream)}"`).replace('from "./growing-degree-days"',`from "${dataUrl(days)}"`);
+  const source=(await esm('app/iem-daily-source.ts')).replace('from "./api/event-atlas/upstream"',`from "${dataUrl(upstream)}"`);
   const code=ts.transpileModule(routeSource,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText
+    .replace('from "../../../iem-daily-source"',`from "${dataUrl(source)}"`)
     .replace('from "../../event-atlas/upstream"',`from "${dataUrl(upstream)}"`)
     .replace('from "../../../cropland"',`from "${dataUrl(cropland)}"`)
     .replace('from "../../../kansas-stations"',`from "${dataUrl(stations)}"`)
@@ -25,12 +27,12 @@ const loadRoute=async()=>{
   return import(dataUrl(code));
 };
 const STATIONS={type:'FeatureCollection',features:[
- {properties:{sid:'SLN',sname:'Salina'},geometry:{type:'Point',coordinates:[-97.65,38.79]}},
- {properties:{sid:'HYS',sname:'Hays'},geometry:{type:'Point',coordinates:[-99.27,38.84]}},
+ {properties:{sid:'SLN',sname:'Salina',network:'KS_ASOS',state:'KS',tzname:'America/Chicago',archive_begin:'1942-11-06',archive_end:null},geometry:{type:'Point',coordinates:[-97.65,38.79]}},
+ {properties:{sid:'HYS',sname:'Hays',network:'KS_ASOS',state:'KS',tzname:'America/Chicago',archive_begin:'1948-01-01',archive_end:null},geometry:{type:'Point',coordinates:[-99.27,38.84]}},
 ]};
 const DAILY_HEADER='station,day,max_temp_f,min_temp_f';
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json'}});
-const text=(body,status=200)=>new Response(body,{status,headers:{'content-type':'text/csv'}});
+const text=(body,status=200)=>{const lines=body.trimEnd().split('\n'); if(lines[0].startsWith('station,day,')){if(!lines[0].includes('precip_in')){lines[0]+=',precip_in';for(let i=1;i<lines.length;i++)lines[i]+=',M';}lines[0]+=',network';for(let i=1;i<lines.length;i++)lines[i]+=',KS_ASOS';}return new Response(lines.join('\n')+'\n',{status,headers:{'content-type':'text/csv'}});};
 
 test('a day\'s degree days cap the high at 86 °F, floor the low at 50 °F, and never go below zero',()=>{
  assert.equal(gdd.dailyDegreeDays(90,60),23,'capped high 86, low 60: (86+60)/2 − 50');
@@ -81,7 +83,7 @@ test('the route reads the nearest station\'s season, reports the days it could n
   const everyDay=gdd.seasonDates(2024).map(date=>`SLN,${date},80,60,0.1`).join('\n');
   globalThis.fetch=async input=>String(input).includes('geojson')?json(STATIONS):text(`${DAILY_HEADER},precip_in\n${everyDay}\n`);
   const complete=await route.GET(new Request('https://kfm.test/api/farming/degree-days?lon=-97.6&lat=38.8&year=2024'));
-  assert.equal(complete.headers.get('cache-control'),'public, max-age=86400, s-maxage=604800','a season with every day read is kept a day');
+  assert.equal(complete.headers.get('cache-control'),'public, max-age=86400, s-maxage=86400','a season with every day read is kept a day');
  }finally{globalThis.fetch=original;}
 });
 
@@ -114,8 +116,8 @@ test('the dock shows the reading beside the crops, with its station and its limi
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:{state:'loading',year:2024,line:null}})),/Reading the season at the nearest Kansas station/);
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:{state:'failed',year:2024,line:null}})),/No growing degree days are inferred/);
  assert.match(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:{state:'none',year:2024,line:null}})),/No Kansas airport station is within 150 km/);
- const ready=JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:{state:'ready',year:2024,line:'33 growing degree days, base 50 °F, capped at 86 °F, Apr 1–Oct 31 2024 · from Salina, 3 km away · 2 days read, 1 missing',rain:'0.75 in of rain, Apr 1–Oct 31 2024 · 212 days missing'}}));
- assert.match(ready,/33 growing degree days/);assert.match(ready,/0\.75 in of rain/);assert.match(ready,/A station reading, not the field/);
+ const ready=JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:{state:'ready',year:2024,line:'33 growing degree days, base 50 °F, capped at 86 °F, Apr 1–Oct 31 2024 · from Salina, 3 km away · 2 days read, 1 missing',rain:'Partial: 0.75 in precipitation, Apr 1–Oct 31 2024 · 212 days missing'}}));
+ assert.match(ready,/33 growing degree days/);assert.match(ready,/0\.75 in precipitation/);assert.match(ready,/A station reading, not the field/);
  assert.doesNotMatch(JSON.stringify(h.render(h.exports.CategoryMapDock,{...base,degreeDays:null})),/Growing degree days, 2024/,'nothing without a click');
 });
 
@@ -128,7 +130,7 @@ test('the page reads the degree days with each click, for the crop year on show,
 
 test('season rainfall totals the inches over every date of the season, and counts an absent or blank day as missing',()=>{
  const rain=gdd.seasonRainfall([{day:'2024-04-01',maxF:80,minF:60,precipIn:0.5},{day:'2024-04-02',maxF:80,minF:60,precipIn:0.25},{day:'2024-04-03',maxF:80,minF:60,precipIn:null}],2024);
- assert.deepEqual(rain,{inches:0.75,daysRead:2,daysMissing:212});
+ assert.deepEqual(rain,{inches:0.75,daysRead:2,daysMissing:212,traceDays:0});
  assert.equal(gdd.seasonRainfall([],2024).daysMissing,214,'no precipitation column reads as every day missing');
 });
 
@@ -139,9 +141,9 @@ test('the daily CSV reads precipitation when the column is there, and reads none
 });
 
 test('the rain line says the inches and whether every day was read',()=>{
- const reading={lon:-97.6,lat:38.8,retrievedAt:'x',year:2024,state:'ready',station:{id:'SLN',name:'Salina',km:3},degreeDays:33,daysRead:2,daysMissing:212,rainInches:0.75,rainDaysMissing:212};
- assert.equal(gdd.rainLine(reading),'0.75 in of rain, Apr 1–Oct 31 2024 · 212 days missing');
- assert.equal(gdd.rainLine({...reading,rainInches:null}),null,'no rain read, no line');
+ const reading={lon:-97.6,lat:38.8,retrievedAt:'2026-10-30T18:00:00Z',year:2024,state:'ready',station:{id:'SLN',name:'Salina',km:3},degreeDays:33,daysRead:2,daysMissing:212,rainInches:0.75,rainDaysMissing:212};
+ assert.equal(gdd.rainLine(reading),'Partial: 0.75 in precipitation, Apr 1–Oct 31 2024 · 212 days missing');
+ assert.match(gdd.rainLine({...reading,rainInches:null}),/unavailable/,'no rain read is not zero');
 });
 
 test('the route reports the season rain and keeps it out of the cache while any day is missing',async()=>{

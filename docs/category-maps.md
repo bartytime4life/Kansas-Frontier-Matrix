@@ -401,28 +401,53 @@ and marks an answer cacheable for a day; a failed answer is sent no-store.
 
 ## Growing degree days at a point (Field view)
 
-With **Show crops (USDA CDL)** on, a click also reads the growing degree days for
-the crop year on show, at the nearest Kansas airport weather station (ASOS) to the
-point (`app/growing-degree-days.ts`, `/api/farming/degree-days`).
+With **Show crops (USDA CDL)** on, a click reads a fixed April 1–October 31
+corn-method heat index at the nearest eligible Kansas ASOS airport station.
+This is station context, not field conditions, a planting-date accumulation,
+or a maturity prediction for the crop classified by USDA.
 
-- **Formula:** each day's high is capped at 86 °F and its low floored at 50 °F, the
-  two averaged, less 50 °F, and never below zero. The season totals the days from
-  April 1 to October 31.
-- **Source:** the Iowa Environmental Mesonet's daily summary for the station, and
-  its network list of Kansas stations.
-- **Season rain:** the same station's precipitation, totalled in inches over the
-  same April 1 to October 31 dates. A missing day is counted, as for degree days.
-  The total is shown only when the station's summary has a precipitation column.
-- **Reach:** a point more than 150 km from every station gets no reading.
-- **Missing days:** a day with a missing high or low is counted and shown, never
-  guessed. A season with missing days is not kept for a day.
-- **Year:** the reading follows the crop year on show when you click. Changing the
-  year needs a new click.
-- **Limit:** a station records its own airport weather. Degree days vary across a
-  county, so the reading is the station's, not the field's.
+- **Method:** Fahrenheit daily high capped at 86, low floored at 50, average
+  minus 50, floored at zero. Sum before rounding to whole °F-days for display.
+  [Purdue Extension](https://www.agry.purdue.edu/ext/corn/news/timeless/HeatUnits.html)
+  describes the modified corn method. Other crops require different methods.
+- **Provider contract:** [IEM daily summary](https://mesonet.agron.iastate.edu/cgi-bin/request/daily.py?help)
+  with `network=KS_ASOS`, the catalog's `sid`, inclusive dates,
+  `var=max_temp_f,min_temp_f,precip_in`, `format=csv`, and `na=M`.
+  Responses must identify the requested station/network/dates. Duplicate or
+  invalid dates, malformed rows and identity mismatches fail closed.
+- **Station discovery:** the [Kansas network GeoJSON](https://mesonet.agron.iastate.edu/geojson/network/KS_ASOS.geojson)
+  supplies `sid`, `sname`, point coordinates, `tzname`, `archive_begin` and
+  `archive_end`. Selection is within 150 km among archives overlapping the
+  requested interval. Closed stations remain eligible for historical years.
+  Archive overlap does not prove observation availability or coverage quality;
+  the route does not silently substitute a farther station after missing data.
+- **Precipitation:** `precip_in` is liquid-equivalent precipitation, including
+  frozen precipitation. The IEM sentinel `0.0001` means trace: count trace days
+  separately, never add it as measured depth. Missing values are never zero.
+  A precipitation-only response can still be shown when temperatures are absent.
+- **Day boundaries:** IEM combines local-calendar summaries and reported totals;
+  airport summaries typically use local standard time (01:00–01:00 during DST).
+  KFM preserves provider date labels. It conservatively waits until 02:00 in
+  the catalog's Central or Mountain timezone to include the previous day.
+  This time guard cannot prove source arrival or quality control. Due dates with
+  absent observations remain missing; current/future dates are not yet due.
+- **Uncertainty:** incomplete totals say **Partial**, with separate missing and
+  pending counts. No-station, all-missing and provider-error states infer no value.
+  Neither 214 returned rows nor zero missing fields proves full subdaily coverage,
+  certified climate quality, uniform field weather, or suitability for decisions.
+- **Caching:** only a fully elapsed season with every temperature and precipitation
+  day is cached for one day in both browser and shared caches. Other results are
+  `no-store`. The client uses `v=2` to avoid prior cached calculations. Legacy
+  responses without rainfall fields remain readable and explicitly say precipitation
+  is unavailable; partially present or inconsistent fields are rejected.
+- **Provider load:** GDD and frost daily requests share a bounded per-process queue,
+  in-flight deduplication and a 2.1-second gap after each request. Multiple runtime
+  processes still require a shared egress limiter to meet IEM's per-IP policy.
+- **Year:** change the crop year, then click again. Source retrieval time is not
+  an observation time or evidence that a historical series will never be revised.
 
-The route keeps a complete season a day. A failed answer is sent no-store, and no
-degree days are inferred.
+See [the source verification record](iem-field-verification-2026-10-30.md) for
+captured source-format fixtures, independent totals, checks and deployment limits.
 
 ## Frost dates at a point (Field view)
 

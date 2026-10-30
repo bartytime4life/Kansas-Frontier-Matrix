@@ -22,7 +22,9 @@ const year2024=({blank=[],today='2024-12-31'}={})=>frost.yearDates(2024).filter(
 const loadRoute=async()=>{
   const upstream=await esm('app/api/event-atlas/upstream.ts'), cropland=await esm('app/cropland.ts'), days=await esm('app/growing-degree-days.ts'), dates=await esm('app/frost-dates.ts');
   const stations=(await esm('app/kansas-stations.ts')).replace('from "./api/event-atlas/upstream"',`from "${dataUrl(upstream)}"`).replace('from "./growing-degree-days"',`from "${dataUrl(days)}"`);
+  const source=(await esm('app/iem-daily-source.ts')).replace('from "./api/event-atlas/upstream"',`from "${dataUrl(upstream)}"`);
   const code=ts.transpileModule(routeSource,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText
+    .replace('from "../../../iem-daily-source"',`from "${dataUrl(source)}"`)
     .replace('from "../../event-atlas/upstream"',`from "${dataUrl(upstream)}"`)
     .replace('from "../../../cropland"',`from "${dataUrl(cropland)}"`)
     .replace('from "../../../kansas-stations"',`from "${dataUrl(stations)}"`)
@@ -31,12 +33,12 @@ const loadRoute=async()=>{
   return import(dataUrl(code));
 };
 const STATIONS={type:'FeatureCollection',features:[
- {properties:{sid:'SLN',sname:'Salina'},geometry:{type:'Point',coordinates:[-97.65,38.79]}},
- {properties:{sid:'HYS',sname:'Hays'},geometry:{type:'Point',coordinates:[-99.27,38.84]}},
+ {properties:{sid:'SLN',sname:'Salina',network:'KS_ASOS',state:'KS',tzname:'America/Chicago',archive_begin:'1942-11-06',archive_end:null},geometry:{type:'Point',coordinates:[-97.65,38.79]}},
+ {properties:{sid:'HYS',sname:'Hays',network:'KS_ASOS',state:'KS',tzname:'America/Chicago',archive_begin:'1948-01-01',archive_end:null},geometry:{type:'Point',coordinates:[-99.27,38.84]}},
 ]};
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'content-type':'application/json'}});
 const text=(body,status=200)=>new Response(body,{status,headers:{'content-type':'text/csv'}});
-const csvOf=days=>`station,day,max_temp_f,min_temp_f\n${days.map(d=>`SLN,${d.day},${d.maxF??'M'},${d.minF??'M'}`).join('\n')}\n`;
+const csvOf=days=>`station,day,max_temp_f,min_temp_f,precip_in,network\n${days.map(d=>`SLN,${d.day},${d.maxF??'M'},${d.minF??'M'},M,KS_ASOS`).join('\n')}\n`;
 
 test('a year runs from January 1 to December 31, every date of it',()=>{
  const dates=frost.yearDates(2024);
