@@ -347,6 +347,32 @@ is pure calculation: no source is read.
 - **Outside Kansas:** a click outside the state is not charted, and the dock
   says so.
 
+### The Moon
+
+The same panel gives the Moon at the same place (`app/moon.ts`).
+
+- **Tonight:** its phase name and lit fraction at 9 PM, and when it rises and
+  sets that day.
+- **Strip:** the next 30 evenings as discs, each lit as it will be. The lit
+  limb is on the right while waxing, as seen from Kansas. The terminator is an
+  ellipse of half-width r·|1 − 2f|.
+- **Phases:** the next four principal phases, in Central clock time.
+
+How it is calculated:
+
+- **Phases:** Meeus, *Astronomical Algorithms*, ch. 49, with its periodic and
+  planetary terms, converted to UT with the Espenak–Meeus ΔT. The tests
+  reproduce his examples 49.a (new moon, February 1977) and 49.b (first
+  quarter, January 2044) to a second.
+- **Position:** the Astronomical Almanac's low-precision series gives the
+  Moon's position for rising, setting and illumination. It agrees with
+  Meeus's example 47.a to within 0.1°, and it puts every phase of a hundred at
+  its 0°, 90°, 180° or 270° elongation within 0.5°.
+- **Rising and setting:** these are the Moon's centre at 0.7275 π − 0.5667°,
+  for parallax, refraction and the Moon's radius. They are found on a
+  10-minute grid and refined by bisection, which puts them within a few
+  minutes.
+
 ## Surface observations (Storm desk)
 
 **Show surface observations** plots each Kansas-area airport observation

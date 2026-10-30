@@ -13,6 +13,7 @@ import type { RainfallKind } from "./mrms-rainfall";
 import type { TornadoYear } from "./tornado-record";
 import type { WellPlot } from "./well-levels";
 import type { SunChart } from "./sun-chart";
+import type { MoonStrip } from "./moon";
 import type { OutlookDay, OutlookProduct } from "./spc-outlook";
 import type { ReportDay, StormReport } from "./storm-reports";
 
@@ -131,7 +132,9 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    * Daylight through the year at one Kansas place: shown or not, the place,
    * a click outside Kansas, the day's line, the year chart and a time-zone note.
    */
-  sunYear?: Readonly<{ on: boolean; place: string | null; outside: boolean; reading: string | null; chart: SunChart | null; note: string | null; atCentre: boolean }>;
+  sunYear?: Readonly<{ on: boolean; place: string | null; outside: boolean; reading: string | null; chart: SunChart | null; note: string | null; atCentre: boolean;
+    /** The Moon at the same place: tonight's line, the next principal phases, and the next 30 evenings as discs. */
+    moon?: Readonly<{ reading: string; phases: string; strip: MoonStrip }> | null }>;
   onSunYear?: (on: boolean) => void;
   onSunYearCentre?: () => void;
   onDaylight?: (on: boolean) => void;
@@ -478,12 +481,17 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
     </>}
     {look.tools?.includes("sunyear") && sunYear && onSunYear && <>
       <button type="button" className="category-map-dock-tool" aria-pressed={sunYear.on} onClick={() => onSunYear(!sunYear.on)}
-        title="Sunrise, sunset and twilight for every day of the year at a Kansas place, calculated from the Sun's position">{sunYear.on ? "Hide daylight through the year" : "Daylight through the year"}</button>
+        title="Sunrise, sunset and twilight for every day of the year at a Kansas place, with the Moon's phases, rising and setting, all calculated">{sunYear.on ? "Hide daylight through the year" : "Daylight through the year"}</button>
       {sunYear.on && <div className="category-map-dock-quakes">
         <p className="category-map-dock-reading" aria-live="polite">{`At ${sunYear.place ?? "–"} · ${sunYear.outside ? "the chart is for places in Kansas: click inside the state" : "click the map in Kansas for another place"}`}</p>
         {sunYear.chart && <SunYearChart chart={sunYear.chart} place={sunYear.place ?? ""} />}
         {sunYear.reading && <p className="category-map-dock-reading">{sunYear.reading}</p>}
         {sunYear.note && <p className="category-map-dock-reading">{sunYear.note}</p>}
+        {sunYear.moon && <>
+          <p className="category-map-dock-reading">{sunYear.moon.reading}</p>
+          <MoonPhaseStrip strip={sunYear.moon.strip} />
+          <p className="category-map-dock-reading">{sunYear.moon.phases}</p>
+        </>}
         {!sunYear.atCentre && onSunYearCentre && <div><button type="button" onClick={onSunYearCentre}>Back to the centre of Kansas</button></div>}
       </div>}
     </>}
@@ -986,6 +994,23 @@ export function SunYearChart({ chart, place }: Readonly<{ chart: SunChart; place
     <figcaption><span>Central clock time; the steps are the clock changing</span></figcaption>
     <p className="category-map-dock-fema-families">{[...chart.bands].reverse().map(band => <span key={band.id}><i style={{ background: band.color }} aria-hidden="true" />{names[band.id]}</span>)}
       <span><i style={{ background: chart.night, outline: "1px solid #3b4f8f" }} aria-hidden="true" />{names.night}</span></p>
+  </figure>;
+}
+
+/**
+ * The next 30 evenings' Moon, each a disc lit as it will be at 9 PM (the lit
+ * limb on the right while waxing, as seen from Kansas), today first.
+ */
+export function MoonPhaseStrip({ strip }: Readonly<{ strip: MoonStrip }>) {
+  const first = strip.discs[0], full = strip.discs.reduce((a, b) => b.percent > a.percent ? b : a);
+  return <figure className="category-map-dock-section" aria-label={`The Moon over the next ${strip.discs.length} evenings, from ${first?.percent}% lit tonight; fullest ${full?.date}, ${full?.percent}% lit`}>
+    <svg viewBox={`0 0 ${strip.width} ${strip.height}`} aria-hidden="true">
+      {strip.discs.map(disc => <g key={disc.date} data-date={disc.date}>
+        <circle cx={disc.cx.toFixed(2)} cy={disc.cy} r={strip.r} fill="#1a2238" stroke="#3b4f8f" strokeWidth={0.6} />
+        {disc.d && <path d={disc.d} fill="#f0ead6" />}
+      </g>)}
+    </svg>
+    <figcaption><span>{`Tonight first, ${strip.discs.length} evenings at 9 PM, left to right`}</span></figcaption>
   </figure>;
 }
 
