@@ -4,6 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readdir, lstat } from 'node:fs/promises';
 import { resolve, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { PC_CAPTURE_IDS } from '../../app/pipeline-catalog.mjs';
 import { readConfig } from './config.mjs';
 import { captureRequest } from '../../server/ingestion-sources.mjs';
 import { normalizeCapture, validateContext } from '../../server/pipeline-normalize.mjs';
@@ -45,11 +46,11 @@ export async function revalidateCandidates(config, { repair = false, guard = sto
   }
   const result = { format: 'kfm-candidate-revalidation-v1', state: 'checked', repair, valid: 0, invalid: 0, repaired: 0, held: 0, items: [] };
   try {
-    const rows = db.prepare("SELECT source,slot,state,product_path FROM jobs WHERE product_path IS NOT NULL AND release_id IS NULL AND lease_token IS NULL AND state IN ('complete','held') ORDER BY source,slot LIMIT 1001").all();
+    const rows = db.prepare("SELECT source,slot,state,product_path,transfer_path FROM jobs WHERE product_path IS NOT NULL AND release_id IS NULL AND lease_token IS NULL AND state IN ('complete','held') ORDER BY source,slot LIMIT 1001").all();
     if (rows.length > 1000) fail('REVALIDATION_JOB_LIMIT');
     for (const row of rows) {
       try {
-        if (!['usgs-streamflow','nws-alerts'].includes(row.source) || !new RegExp('^data/processed/' + row.source + '/[a-f0-9]{64}\\.json$').test(row.product_path)) fail('PRODUCT_PATH_INVALID');
+        if (!PC_CAPTURE_IDS.includes(row.source) || !new RegExp('^data/processed/' + row.source + '/[a-f0-9]{64}\\.json$').test(row.product_path)) fail('PRODUCT_PATH_INVALID');
         const bytes = await readRegular(resolve(config.root, row.product_path), 8 * 1024 ** 2);
         totalBytes += bytes.length; if (totalBytes > 512 * 1024 ** 2) fail('REVALIDATION_BYTE_LIMIT');
         if (sha(bytes) !== basename(row.product_path, '.json')) fail('PRODUCT_INTEGRITY_FAILED');
@@ -71,8 +72,8 @@ export async function revalidateCandidates(config, { repair = false, guard = sto
             captureSha256: product.captureSha256, originalRetrievedAt: product.retrievedAt, recipeSha256: await recipeDigest(),
             revalidatedAt: new Date().toISOString(), authority: 'PRIVATE_CANDIDATE_ONLY' }));
           await immutable(resolve(config.root, 'data/receipts/pipeline/revalidated', sha(record) + '.json'), record);
-          const updated = db.prepare("UPDATE jobs SET product_path=? WHERE source=? AND slot=? AND product_path=? AND state=? AND release_id IS NULL AND lease_token IS NULL")
-            .run(productPath, row.source, row.slot, row.product_path, row.state);
+          const updated = db.prepare("UPDATE jobs SET product_path=?,transfer_path=NULL WHERE source=? AND slot=? AND product_path=? AND state=? AND transfer_path IS ? AND release_id IS NULL AND lease_token IS NULL")
+            .run(productPath, row.source, row.slot, row.product_path, row.state, row.transfer_path);
           if (updated.changes !== 1) fail('REVALIDATION_JOB_CHANGED');
           result.repaired++;
         }
