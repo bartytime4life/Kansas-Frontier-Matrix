@@ -6,7 +6,7 @@ version: v0.4
 status: repository-integrated; private offline quarantine only
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-10-09
+updated: 2026-10-30
 policy_label: public-documentation
 owning_root: docs/
 responsibility: Guide private local setup, offline quarantine capture, verification, backup, and update without granting downstream authority.
@@ -337,15 +337,64 @@ To see what the store holds and where each file belongs, run the
 [raw-data intake pipeline](raw-data-intake.md). It profiles stored files and
 recommends placements without promoting or publishing anything.
 
+## On the KFM pipeline host
+
+On the `dev` PC that hosts the KFM source pipeline, user-level systemd units run
+these tools straight from a `pipeline-implementation` checkout of this
+repository, not from an installed copy:
+
+| Unit | Runs |
+|---|---|
+| `kfm-intake-analyze.timer`, hourly at :10 | `tools/local_data/intake.py analyze` on the pipeline's working store, under the pipeline's shared kernel lock |
+| `kfm-intake.service` | `tools/local_data/intake_service.py` as the working desk on 127.0.0.1:8772 |
+| `kfm-library.service` | `tools/local_data/intake_service.py --catalog-only` over the imported library catalog on 127.0.0.1:8771 |
+
+So an edit, branch switch, stash or pull in that checkout reaches the host
+without a deployment step: analysis picks it up at its next hourly run, and the
+desk and library when their services restart. Read back on 2026-10-30, that
+checkout was 93 commits behind `main` with uncommitted changes, so the running
+code can differ from this revision. Stop the timer and services before changing
+it, run `make local-data-check`, then restart them. Capture, backup, restore,
+mounts and the shared lock are documented with the rest of the host in the
+[second-PC pipeline runbook](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a0-hosted-ai-web-20261017/docs/second-pc-pipeline.md)
+on the hosted composition's branch.
+
 ## Validation and placement
 
-Run `make local-data-check` after installing the repository's declared test
-dependencies. The dedicated `local-data-store` workflow runs the same target on
-pull requests affecting its declared paths, matching pushes to `main`, and manual
-dispatch. Its configuration also retains the historical review-branch trigger.
-The job has a read-only token, uses temporary test directories, and transfers
-no provider data.
-Hosted results and independent acceptance remain separate from local test output.
+`make local-data-check` runs the offline `tests/local_data` suite with the
+fail-closed network guard in `tools/ci/kfm_no_network`. First install the same
+hash-locked dependency profiles as CI, into a virtual environment rather than
+the system Python:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python tools/ci/install_python_ci.py project-test
+python tools/ci/install_python_ci.py connectors-core
+python tools/ci/install_python_ci.py nwm-netcdf   # optional NWM binary reader
+make local-data-check
+```
+
+`.venv/` is ignored by Git. On Ubuntu without the `python3.X-venv` package,
+`python3 -m venv` fails because `ensurepip` is missing. Create the environment
+with `python3 -m venv --without-pip .venv`, then run
+`python3 -m pip --python .venv/bin/python install pip`. The `connectors-core`
+profile provides the `connectors_core` package that the historical water tests
+import. The NWM profile pins the Python 3.11 wheel hashes that CI uses; on any
+other Python its install stops with a hash mismatch and the three NWM
+binary-fixture tests skip. Everything else runs on Python 3.11 or newer.
+
+The dedicated `local-data-store` workflow runs these steps on Python 3.11. It
+runs on every pull request, with no path filter. Pushes to `main` and to the
+historical review branch run it only when a listed path changes, and manual
+dispatch is available. Despite the workflow's own comment, `local-data-check`
+was not a required status check on `main` at the 2026-10-30 ruleset readback,
+so a failing result does not block a merge; check it before merging. The job has a read-only token, uses temporary test directories, and
+transfers no provider data. Hosted results and independent acceptance remain
+separate from local test output.
+
+Results on the `dev` PC, 2026-10-30, with Python 3.14.4: 447 passed, and the
+three NWM binary-fixture tests skipped.
 
 Accepted [ADR-0029](../adr/ADR-0029-adopt-directory-governance-standard-v2.md) and
 [Directory Rules](../doctrine/directory-rules.md) §§10.1, 11.4, and 12.3 place

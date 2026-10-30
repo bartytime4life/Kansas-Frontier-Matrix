@@ -16,6 +16,9 @@ name: local-data-store
       - "tools/local_data/**"
       - "connectors/local_upload/**"
       - "connectors/noaa/src/noaa/nwm.py"
+      - "connectors/usgs/water_data/**"
+      - "packages/connectors-core/**"
+      - "pipelines/domains/hydrology/normalize.py"
       - "pipelines/domains/hydrology/nwm_subset.py"
       - "tests/local_data/**"
       - "schemas/contracts/v1/source/local_data_manifest.schema.json"
@@ -55,6 +58,9 @@ jobs:
           python-version: "3.11"
       - name: Install declared test dependencies
         run: python tools/ci/install_python_ci.py project-test
+      # Historical water tests import connectors_core from packages/connectors-core.
+      - name: Install connectors-core package
+        run: python tools/ci/install_python_ci.py connectors-core
       - name: Install hash-locked optional NWM binary reader
         run: python tools/ci/install_python_ci.py nwm-netcdf
       - name: Check local capture and operator contracts without network
