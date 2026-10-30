@@ -25,7 +25,7 @@ class BaselineTests(unittest.TestCase):
         self.destination = self.parent / "baseline"
         self.manifest_path = self.parent / "baseline-manifest.json"
         self.payloads = {}
-        self.manifest = {"schema_version": 1, "release_tag": "curated-data-20261008",
+        self.manifest = {"schema_version": 1, "release_tag": "synthetic-test-release",
                          "snapshot_utc": "2026-10-08T23:00:00Z", "status": baseline.STATUS,
                          "storage_cap_bytes": baseline.STORAGE_CAP, "datasets": [], "exclusions": ["backups"]}
         self.add_dataset("maps", [("maps/provider.csv", b"year,value\n2024,12\n")])
@@ -82,6 +82,22 @@ class BaselineTests(unittest.TestCase):
         self.assertFalse(result["writes"])
         self.assertEqual(result["expanded_bytes"], len(b"year,value\n2024,12\n"))
         self.assertIn("source_urls", result["datasets"][0])
+        self.assertFalse(self.destination.exists())
+
+    def test_retired_release_plans_as_historical_and_refuses_download_before_network(self):
+        self.manifest["release_tag"] = "curated-data-20261008"
+        for dataset in self.manifest["datasets"]:
+            for asset in dataset["assets"]:
+                asset["url"] = baseline.asset_url(self.manifest["release_tag"], asset["name"])
+        self.save()
+        output, errors = io.StringIO(), io.StringIO()
+        with patch.object(baseline, "fetch_asset", side_effect=AssertionError("network")), contextlib.redirect_stdout(output):
+            self.assertEqual(baseline.main(["--manifest", str(self.manifest_path)]), 0)
+        self.assertEqual(json.loads(output.getvalue())["archive_availability"], "retired")
+        with patch.object(baseline, "fetch_asset", side_effect=AssertionError("network")), contextlib.redirect_stderr(errors):
+            self.assertEqual(baseline.main(["download", "--manifest", str(self.manifest_path), "--all",
+                                            "--max-bytes", "100000", "--directory", str(self.destination)]), 1)
+        self.assertIn("retired", json.loads(errors.getvalue())["error"])
         self.assertFalse(self.destination.exists())
 
     def test_download_requires_selection_and_budget_before_network(self):

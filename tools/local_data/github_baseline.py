@@ -27,6 +27,7 @@ REPOSITORY = "bartytime4life/Kansas-Frontier-Matrix"
 STORAGE_CAP = 80_000_000_000
 MAX_ASSET_BYTES = 1_800_000_000
 MAX_MANIFEST_BYTES = 8_000_000
+RETIRED_RELEASES = {"curated-data-20261008"}
 MAX_FILES = 1_000_000
 CHUNK = 1024 * 1024
 STATUS = "source-context-unadmitted"
@@ -159,6 +160,7 @@ def plan(manifest, datasets):
     join_space = max((item["bytes"] for row in datasets for item in row.get("reassemble", [])), default=0)
     return {"operation": "plan", "release_tag": manifest["release_tag"], "snapshot_utc": manifest["snapshot_utc"],
             "status": STATUS, "network": False, "writes": False,
+            "archive_availability": "retired" if manifest["release_tag"] in RETIRED_RELEASES else "not-verified",
             "download_bytes": compressed, "expanded_bytes": expanded,
             "reassembly_temporary_bytes": join_space,
             "minimum_free_bytes": compressed + expanded + join_space + 16 * 1024 * 1024,
@@ -316,6 +318,8 @@ def reassemble(dataset, root_descriptor):
 
 
 def download(manifest, manifest_digest, datasets, destination, max_bytes):
+    require(manifest["release_tag"] not in RETIRED_RELEASES,
+            "This release's data archives have been retired from GitHub; the manifest is historical provenance")
     integer(max_bytes, "download budget", STORAGE_CAP, 1)
     summary = plan(manifest, datasets)
     require(summary["download_bytes"] <= max_bytes, "Selected archives exceed --max-bytes")

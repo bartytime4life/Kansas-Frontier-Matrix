@@ -20,9 +20,11 @@
     },
     {
       "id": "release:curated-data-20261008",
-      "bytes": 36710792263,
-      "data_archive_bytes": 36710723546,
-      "basis": "GitHub REST release 407361168: all 40 assets, including metadata; 2026-10-12 UTC snapshot"
+      "bytes": 42312,
+      "data_archive_bytes": 0,
+      "archive_status": "retired",
+      "historical_data_archive_bytes": 36710723546,
+      "basis": "Release 407361168: retained baseline-manifest.json, SHA256SUMS and TRANSFER-REPORT.json after archive retirement; historical archive bytes retained for provenance"
     },
     {
       "id": "actions-artifacts",

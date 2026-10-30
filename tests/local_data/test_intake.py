@@ -260,9 +260,9 @@ def tiers(decision):
 
 
 class RouteTests(unittest.TestCase):
-    def test_repository_budget_reserves_interface_room_and_matches_the_baseline_release(self):
+    def test_repository_budget_reserves_interface_room_and_marks_retired_baseline(self):
         real = intake_route.load_budget()
-        self.assertEqual(real["baseline_check"], "match")
+        self.assertEqual(real["baseline_check"], "retired")
         state = intake_route.budget_state(real)
         self.assertEqual(state["data_ceiling_bytes"] + state["reserved_for_code_and_interface_bytes"], 100_000_000_000)
         self.assertEqual(state["reserved_for_code_and_interface_bytes"], 20_000_000_000)
@@ -330,6 +330,25 @@ class RouteTests(unittest.TestCase):
             self.assertEqual(loaded["baseline_check"], "match")
             self.assertEqual(intake_route.budget_state(loaded)["committed_bytes"], 1100)
             path.write_text(json.dumps(budget(committed=[{"id": "release:sample", "bytes": 900, "data_archive_bytes": 1000}])))
+            with self.assertRaises(intake_route.BudgetError):
+                intake_route.load_budget(path, manifest)
+
+    def test_retired_baseline_accounting_preserves_historical_cross_check(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "b.json"
+            manifest = Path(directory) / "manifest.json"
+            manifest.write_text(json.dumps({"release_tag": "sample", "data_archive_bytes": 1000}))
+            row = {"id": "release:sample", "bytes": 100, "data_archive_bytes": 0,
+                   "archive_status": "retired", "historical_data_archive_bytes": 1000}
+            path.write_text(json.dumps(budget(committed=[row])))
+            loaded = intake_route.load_budget(path, manifest)
+            self.assertEqual(loaded["baseline_check"], "retired")
+            self.assertEqual(intake_route.budget_state(loaded)["committed_bytes"], 100)
+            row["historical_data_archive_bytes"] = 999
+            path.write_text(json.dumps(budget(committed=[row])))
+            self.assertEqual(intake_route.load_budget(path, manifest)["baseline_check"], "mismatch")
+            row["data_archive_bytes"] = 1
+            path.write_text(json.dumps(budget(committed=[row])))
             with self.assertRaises(intake_route.BudgetError):
                 intake_route.load_budget(path, manifest)
 
