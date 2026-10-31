@@ -294,6 +294,9 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
         await p.call('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point, button: 'none', buttons: 0 });
         await pause(850);
         assert.equal(await p.evaluate(`document.querySelector('.living-welcome').dataset.cinematic`), 'false', 'hover keeps the chooser available');
+        // A glimpse may lift the card slightly, but it must not reflow another target under the pointer.
+        const under = await p.evaluate(`(()=>{const hit=document.elementFromPoint(${point.x},${point.y});return hit?.closest('.topic-callout')===document.querySelector(${JSON.stringify(selector)})?'card':String(hit?.closest('button')?.className||hit?.className);})()`);
+        assert.equal(under, 'card', `a ${topic} hover glimpse leaves its card under the pointer`);
         // Revalidate the intended hit target after the deliberately slow hover;
         // the welcome may have scrolled/reflowed since its first coordinate read.
         point = await revealControl(p, selector);

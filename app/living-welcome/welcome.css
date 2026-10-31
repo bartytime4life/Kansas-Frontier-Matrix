@@ -633,8 +633,9 @@
 @media(prefers-reduced-motion:reduce){.welcome-geology-specimen :is(.welcome-geology-column,.welcome-geology-plate){animation:none!important;transition:none!important}}.welcome-geology-specimen[data-reduced=true] :is(.welcome-geology-column,.welcome-geology-plate){animation:none!important;transition:none!important}
 .living-welcome .welcome-capability-stage .welcome-geology-specimen figcaption{position:relative;display:grid;bottom:auto;left:auto;max-width:none;padding:0 4px;background:transparent}
 /* The startup hint belongs to the existing brief, so it cannot cover search or
-   category cards on a narrow screen. The detailed specimen is expanded only. */
-.living-welcome .welcome-preview-brief[data-geology=true]{height:auto;max-height:360px}
+   category cards on a narrow screen. The detailed specimen is expanded only.
+   It keeps the brief's fixed height and scrolls inside it: a hover glimpse
+   that grew would move the category cards under the pointer. */
 .living-welcome .welcome-preview-brief[data-geology=true]>.welcome-preview-try,.living-welcome .welcome-preview-brief[data-geology=true]>.welcome-preview-feed-state{display:none}
 .living-welcome .welcome-preview-brief .welcome-geology-specimen{position:relative;left:auto;right:auto;top:auto;width:100%;max-height:none;overflow:visible;transform:none;padding:0;margin:4px 0 0;border:0;border-radius:0;background:transparent;box-shadow:none}
 .living-welcome .welcome-preview-brief .welcome-geology-specimen figcaption{display:none}
