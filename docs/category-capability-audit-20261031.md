@@ -130,3 +130,11 @@ tolerance or a jump to the top.
 No application, provider, data, runtime or access behavior changes in that
 test-only reconciliation. Local before/after and exact-head CI results are
 recorded in the follow-up PR; they do not qualify every startup timing case.
+
+The first scroll-follow-up CI also exposed an unchanged water-flow test waiting
+five milliseconds for an animation frame: it observed `loading`, not `ready`.
+That one test now uses its existing controlled-frame fixture, proves resolved
+cells remain loading before the single scheduled frame, and explicitly advances
+the frame before asserting ready geometry, gauge emphasis and cached reuse.
+All prior off/zoom/visibility assertions remain; no runtime or water default is
+changed, and no provider is contacted by this synthetic test.

@@ -232,7 +232,8 @@ test("removal and switching the effect off invalidate a pending camera commit", 
   }
 });
 
-test("flowing water stays off, waits for river zoom, and draws provider reaches above the basemap", async () => {
+test("flowing water stays off, waits for river zoom, and draws provider reaches above the basemap", async (t) => {
+  const frames = displayFrames(t);
   const flow = await loadSync();
   const requested = [];
   flow.setWaterFlowFetcher(async (key) => {
@@ -263,7 +264,10 @@ test("flowing water stays off, waits for river zoom, and draws provider reaches 
   assert.equal(map.getLayoutProperty(flow.WATER_FLOW_LAYER_ID, "visibility"), "visible");
   assert.ok(requested.length > 0 && requested.length <= 9);
   assert.equal(flow.waterFlowStatus(map).state, "loading");
-  await settle();
+  await drain();
+  assert.equal(flow.waterFlowStatus(map).state, "loading", "resolved cells wait for the display frame");
+  assert.equal(frames.pending.size, 1, "provider completions share one scheduled frame");
+  frames.flush();
   const status = flow.waterFlowStatus(map);
   assert.equal(status.state, "ready");
   assert.equal(status.reaches, 1);
@@ -275,13 +279,13 @@ test("flowing water stays off, waits for river zoom, and draws provider reaches 
   // Panning back over loaded cells reuses the cache.
   const before = requested.length;
   map.fire("moveend");
-  await settle();
+  await drain(); frames.flush();
   assert.equal(requested.length, before, "cached cells are not fetched again");
   const gaugeStatuses = [];
   const stopGaugeStatus = flow.subscribeWaterFlowStatus(status => gaugeStatuses.push(status.gaugedReaches));
   map.layout.set(`${GAUGE_LAYER}:visibility`, "none");
   map.fire("sourcedata", { sourceId: GAUGE_SOURCE });
-  await settle();
+  await drain(); frames.flush();
   assert.equal(flow.waterFlowStatus(map).gaugedReaches, 0);
   assert.deepEqual(gaugeStatuses, [0], "changed gauge counts notify the panel even when cell and ready state stay the same");
   stopGaugeStatus();
