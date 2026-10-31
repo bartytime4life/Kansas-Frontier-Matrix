@@ -8,7 +8,7 @@ prior_version: unversioned
 status: tracked; documentation-only; generated-report lane proposed; admission and writers held
 owner: "NEEDS VERIFICATION — the default CODEOWNERS route is @bartytime4life; no report-lane steward, generator owner, or independent reviewer assignment was verified"
 created: 2026-05-08
-updated: 2026-10-09
+updated: 2026-10-31
 policy_label: repository-facing
 current_path: docs/reports/README.md
 owning_root: docs/
@@ -88,6 +88,8 @@ notes:
 **Quick navigation:** [Purpose](#purpose) · [Authority](#authority-level) · [Status](#status) · [Belongs](#what-belongs-here) · [Exclusions](#what-does-not-belong-here) · [Inputs](#inputs) · [Outputs](#outputs) · [Validation](#validation) · [Review](#review-burden) · [Related](#related-folders) · [ADRs](#adrs) · [Last reviewed](#last-reviewed) · [Current tree](#current-direct-child-map) · [Boundary](#responsibility-boundary) · [Generation](#writer-and-generation-contract) · [Identity](#report-identity-and-minimum-shape) · [Exposure](#sensitivity-and-exposure) · [Correction](#correction-withdrawal-and-rollback) · [Reader workflow](#reader-workflow) · [Risks](#risks-and-anti-patterns) · [FAQ](#faq) · [Verification](#open-verification-register) · [No-loss](#no-loss-ledger)
 
 ## Authored synchronization checkpoint
+
+The [2026-10-31 repository shape assessment](repository-shape-assessment-20261031.md) measures the tracked tree at one pinned commit, audits every gap-census placeholder against the control that pins it, and lists the data and structure optimizations that remain blocked on owner decisions. It is review-only observation; it moves, deletes and re-encodes nothing.
 
 The [2026-10-18 runtime reconciliation](runtime-reconciliation-20261018.md) records the owner-requested local, GoDaddy preview, active GPT staging and repository comparison. It is review-only observation, with publication held and no new generated writer.
 
