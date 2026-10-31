@@ -52,3 +52,8 @@ Opening a report checks its format and internal totals, with a 64 KiB file limit
 The browser retains it only in page memory and sends no upload. The displayed
 date belongs to the supplied report; opening it does not refresh the PC or
 authenticate its contents. Reloading or clearing the report removes it.
+
+The [October 31 local library review](library-coverage-review-20261031.md)
+records the scope of completed checks, the TIGER bundle reconciliation, and
+remaining coverage gaps. Those local findings do not describe the hosted
+database's contents or establish a live connection between the two stores.
