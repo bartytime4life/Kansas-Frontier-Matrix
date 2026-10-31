@@ -28,6 +28,18 @@ async function readyWelcome(p) {
   await p.wait(`[...document.querySelectorAll('.living-welcome .topic-callout')].every(card=>Number(getComputedStyle(card).opacity)>=.98)`, 'card arrival completes before geometry checks');
 }
 
+// A category card enters Layers. On compact screens that is a real modal:
+// leave through its visible control before operating the background map or
+// header, rather than trying to focus an intentionally inert element.
+async function leaveCompactLayers(p) {
+  if (!await p.evaluate(`!!document.querySelector('[aria-label="Map layers"][aria-modal="true"]')`)) return;
+  await p.evaluate(`document.querySelector('[aria-label="Close Explorer navigation"]').focus()`);
+  assert.equal(await p.evaluate(`document.activeElement?.getAttribute('aria-label')`), 'Close Explorer navigation', 'the visible Layers close control owns keyboard focus');
+  await p.key('Enter', 'Enter', 13);
+  await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='true' && !!document.querySelector('.guide-trigger') && !document.querySelector('.guide-trigger').closest('[inert], [aria-hidden="true"]')`, 'Layers closes and releases background controls');
+  await p.wait(`!!document.activeElement?.closest('#map-canvas')`, 'the completed Layers close handoff restores map focus');
+}
+
 async function revealControl(p, selector) {
   await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',inline:'nearest',behavior:'instant'})`);
   await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome')?.getBoundingClientRect();return r&&root&&r.width>0&&r.height>=44&&r.left>=root.left-.5&&r.right<=root.right+.5&&r.top>=root.top-.5&&r.bottom<=root.bottom+.5&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`, 'real control is visible, full-sized and hit-testable: '+selector);
@@ -277,11 +289,14 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
     await p.open('/?motion=off'); await readyWelcome(p);
     for (const topic of ['aviation', 'geology']) {
       const selector = '.topic-' + topic;
-      const point = await revealControl(p, selector);
+      let point = await revealControl(p, selector);
       if (width > 600) {
         await p.call('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point, button: 'none', buttons: 0 });
         await pause(850);
         assert.equal(await p.evaluate(`document.querySelector('.living-welcome').dataset.cinematic`), 'false', 'hover keeps the chooser available');
+        // Revalidate the intended hit target after the deliberately slow hover;
+        // the welcome may have scrolled/reflowed since its first coordinate read.
+        point = await revealControl(p, selector);
         await p.call('Input.dispatchMouseEvent', { type: 'mousePressed', ...point, button: 'left', clickCount: 1 });
         await p.call('Input.dispatchMouseEvent', { type: 'mouseReleased', ...point, button: 'left', clickCount: 1 });
       } else {
@@ -290,14 +305,11 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
         await p.call('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
       }
       await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('[aria-label="Layer topic"]')?.value==='${topic}' && document.activeElement?.closest('[aria-label="Map layers"]')`, 'one activation opens the selected workspace and focuses Layers');
-      const workspace = await p.evaluate(`(() => { const topic = document.querySelector('[aria-label="Layer topic"]'), panel = topic.closest('aside'), input = panel?.querySelector('input[type="search"]'); return { inert: !!topic.closest('[inert], [aria-hidden="true"]'), search: !!input && input.getBoundingClientRect().width > 0, dock: !!document.querySelector('.category-map-dock'), overflow: document.documentElement.scrollWidth > innerWidth + 1 }; })()`);
+      const workspace = await p.evaluate(`(() => { const topic = document.querySelector('[aria-label="Layer topic"]'), panel = topic.closest('aside'), input = panel?.querySelector('input[aria-label="Search map layers"]'); return { inert: !!topic.closest('[inert], [aria-hidden="true"]'), search: !!input && input.getBoundingClientRect().width > 0, dock: !!document.querySelector('.category-map-dock'), overflow: document.documentElement.scrollWidth > innerWidth + 1 }; })()`);
       assert.deepEqual(workspace, { inert: false, search: true, dock: true, overflow: false }, 'real controls are available without another preview step');
       // On compact screens Layers is modal, so leave it through its own control.
       // Desktop keeps the panel open; both retain the panel for the next choice.
-      if (width < 600) {
-        await p.evaluate(`document.querySelector('[aria-label="Close Explorer navigation"]').focus()`);
-        await p.key('Enter', 'Enter', 13);
-      }
+      await leaveCompactLayers(p);
       await p.evaluate(`document.querySelector('.guide-trigger').focus()`);
       await p.key('Enter', 'Enter', 13); await readyWelcome(p);
     }
@@ -314,6 +326,7 @@ for (const width of [320, 390, 768, 1280]) {
     await p.wait(`!!document.querySelector('.welcome-open-map')`, 'Sky map action');
     await enter('.welcome-open-map');
     await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('.category-map-dock header strong')?.textContent==='Sky globe'`, 'real Sky workspace');
+    await leaveCompactLayers(p);
     await p.evaluate(`[...document.querySelectorAll('.category-map-dock-tool')].find(b=>b.textContent==='Daylight through the year').focus()`);
     await p.key('Enter', 'Enter', 13);
     await p.wait(`!!document.querySelector('.category-map-dock-sun-location') && !!document.querySelector('[data-band="day"]')`, 'daylight chart');
@@ -475,6 +488,7 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
       assert.equal(await p.evaluate('document.activeElement.textContent'),'Open this category’s map →');
       await p.key('Enter','Enter',13);
       await p.wait(`!document.querySelector('.living-welcome')&&document.querySelector('.category-map-dock header strong')?.textContent==='Historic atlas'`,'full category map entry remains available');
+      await leaveCompactLayers(p);
       // A later mount can recover when WebGL/construction becomes available.
       await p.evaluate('window.__kfmPreviewFault=null');
       await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);

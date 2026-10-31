@@ -103,3 +103,26 @@ values and executes every category opener, requiring each value to reset.
 Removing a reset fails that behavioral check; no assertion about population
 ownership is waived. Dock binding checks inspect JSX attributes independently
 of prop order and also require the retained-map presentation flag.
+
+## Browser journey follow-up
+
+The final #5643 head passed ordinary tests and welcome performance, but its
+delivery job failed seven startup-browser cases. Existing exact-base CI at
+`9bed7041691731459503e827622435c9d7e150dd` fails the same seven cases: two
+direct-card search checks, three compact Sky keyboard journeys, and two compact
+welcome failure/recovery journeys. The test selector chose the first search
+input in the panel (the hidden Living Atlas input), rather than the visible
+**Search map layers** field. The compact journeys then attempted to focus
+background map/header controls while the newly opened Layers modal owned focus.
+
+The follow-up scopes the search assertion by its accessible name and exits
+compact Layers through its visible close control before the next background
+action. It verifies close-button focus, panel closure and release of inert
+background controls, then waits for the existing map-focus return to complete.
+Pointer targets are hit-tested again after the intentional slow-hover interval;
+the earlier pre-hover coordinate is not reused after a scroll/reflow. The
+original direct-entry, search visibility, daylight
+geometry/contrast, failure/recovery and exact focus-return assertions remain.
+No application, provider, data, runtime or access behavior changes in that
+test-only reconciliation. Local before/after and exact-head CI results are
+recorded in the follow-up PR; they do not qualify every startup timing case.
