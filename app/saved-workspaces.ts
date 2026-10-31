@@ -23,6 +23,8 @@ export const validSavedWorkspaceRecord = (value: unknown): value is Record<strin
     || Math.abs(value.view.center[1]) > 90
     || !finite(value.view.zoom) || !finite(value.view.bearing) || !finite(value.view.pitch)) return false;
   if (!scalarMap(value.visibility, "boolean") || !scalarMap(value.opacity, "number") || !stringList(value.layerOrder, 100) || !finite(value.year)) return false;
+  if (value.officialContext !== undefined && (!record(value.officialContext)
+    || !scalarMap(value.officialContext.visibility, "boolean") || !scalarMap(value.officialContext.opacity, "number"))) return false;
   if (!["standard", ...CATEGORY_BASEMAP_KEYS, "imagery", "kansas-aerial", "photoreal", "midnight", "prairie", "streets", "topo"].includes(String(value.basemap)) || !["mercator", "globe"].includes(String(value.projection))) return false;
   if (!record(value.report) || !text(value.report.title, 180) || !["VIEWPORT", "ANALYSIS_AREA", "VISIBLE_LAYERS", "SELECTION"].includes(String(value.report.scope))
     || !["EXECUTIVE", "STANDARD", "TECHNICAL"].includes(String(value.report.detail)) || !stringList(value.report.layerIds, 100)

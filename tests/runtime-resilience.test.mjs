@@ -63,6 +63,24 @@ test("saved places exclude latitudes the map cannot restore while preserving val
   assert.deepEqual(saved.parseSavedWorkspaceList(writes[0][1], 24), { records: valid, rejected: false });
 });
 
+test("saved official source settings round-trip while malformed additions cannot overwrite places", () => {
+  const officialContext = { visibility: { 'usgs-streamflow': true }, opacity: { 'usgs-streamflow': .37 } };
+  const current = { ...workspace, officialContext }, writes = [];
+  const storage = { setItem: (...args) => writes.push(args) };
+  assert.equal(saved.writeSavedWorkspaceList(storage, 'places', [workspace, current]), true);
+  assert.deepEqual(saved.parseSavedWorkspaceList(writes[0][1], 24), { records: [workspace, current], rejected: false });
+  for (const malformed of [null, [], {}, { visibility: {}, opacity: [] },
+    { visibility: { source: 'true' }, opacity: {} }, { visibility: {}, opacity: { source: '0.5' } },
+    { visibility: {}, opacity: { source: NaN } }, { visibility: {}, opacity: { source: Infinity } },
+    { visibility: Object.fromEntries(Array.from({ length: 101 }, (_, i) => ['source-' + i, true])), opacity: {} },
+  ]) {
+    assert.equal(saved.writeSavedWorkspaceList(storage, 'places', [{ ...workspace, officialContext: malformed }]), false);
+    const parsed = saved.parseSavedWorkspaceList(JSON.stringify([workspace, { ...workspace, officialContext: malformed }]), 24);
+    assert.deepEqual(parsed, { records: [workspace], rejected: true });
+  }
+  assert.equal(writes.length, 1);
+});
+
 test("embedded panels do not rewrite host-controlled history and history failures stay contained", () => {
   let writes = 0;
   const history = { replaceState: () => { writes++; } };
