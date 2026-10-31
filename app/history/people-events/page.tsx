@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   filterHistoryResearch, historyResearchKnowledgeLink, loadHistoryResearchCatalog,
-  HISTORY_RESEARCH_KINDS, HISTORY_RESEARCH_PAGE_SIZE, type HistoryResearchCatalog,
+  HISTORY_RESEARCH_KINDS, HISTORY_RESEARCH_PAGE_SIZE, type HistoryResearchCatalog, type HistoryResearchRecord,
 } from "../../history-research-model";
+import { SCIENTIFIC_REPORT_CSS, historyReportMarkup, downloadScientificReport } from "../../scientific-report";
 import s from "../../downloads/workspace.module.css";
 import h from "../../history-research.module.css";
 
@@ -17,7 +18,10 @@ export default function PeopleEventsResearch() {
   const [query, setQuery] = useState("");
   const [sourceId, setSourceId] = useState("all");
   const [kind, setKind] = useState("all");
+  const reportHeading = useRef<HTMLHeadingElement>(null);
+  const [report, setReport] = useState<{ records: readonly HistoryResearchRecord[]; scope: string } | null>(null);
   const [page, setPage] = useState(0);
+  useEffect(() => { if (report) reportHeading.current?.focus(); }, [report]);
   useEffect(() => {
     const controller = new AbortController();
     void loadHistoryResearchCatalog(controller.signal).then(value => {
@@ -34,6 +38,8 @@ export default function PeopleEventsResearch() {
   const first = current * HISTORY_RESEARCH_PAGE_SIZE;
   const clear = () => { setQuery(""); setSourceId("all"); setKind("all"); setPage(0); };
   const filtered = !!query || sourceId !== "all" || kind !== "all";
+  const reportMarkup = useMemo(() => catalog && report ? historyReportMarkup(catalog, report.records, report.scope) : "", [catalog, report]);
+  const reportScope = `Entries ${first + 1}–${Math.min(first + HISTORY_RESEARCH_PAGE_SIZE, records.length)} of ${records.length} matches · page ${current + 1} of ${pages}. Search: ${query || "all entries"}. Source: ${sources.get(sourceId)?.title ?? "all sources"}. Kind: ${kindLabels[kind as keyof typeof kindLabels] ?? "all kinds"}.`;
   return <main className={s.page}><div className={`${s.wrap} ${h.wrap}`}>
     <nav className={h.navigation} aria-label="History navigation"><a href="/topics#history">← History sources &amp; tools</a><a href="/knowledge">Reviewed KFM knowledge</a><a href="#research-sources">Source catalogue</a></nav>
     <header className={h.intro}><p className={s.eyebrow}>KANSAS HISTORY · SOURCE RESEARCH</p><h1>People, events &amp; historical context</h1>
@@ -46,7 +52,12 @@ export default function PeopleEventsResearch() {
     {catalog && <>
       <div className={h.summary}><p><strong>{catalog.records.length.toLocaleString("en-US")}</strong> source entries</p><p><strong>{catalog.sources.length}</strong> supplied sources</p><p><strong>{catalog.sources.filter(source => source.access === "blocked").length}</strong> blocked sources</p></div>
       <p className={s.muted}>{catalog.scope}</p><p className={s.snapshot}>Catalogue checked {catalog.checkedAt} · entry counts are not counts of unique people or verified facts.</p>
-      <section aria-labelledby="research-results-title">
+      {report ? <section aria-label="People and events report preview">
+        <style>{SCIENTIFIC_REPORT_CSS}</style>
+        <h2 ref={reportHeading} tabIndex={-1}>Visual research report</h2>
+        <div className={h.reportActions}><button type="button" onClick={() => setReport(null)}>Back to entries</button><button type="button" onClick={() => downloadScientificReport(report.records.length === 1 ? report.records[0].title : "People and events research", reportMarkup)}>Download visual HTML</button><p>Free, self-contained report · open the download in a browser to print or save as PDF. This selection stays fixed while you preview it.</p></div>
+        <div dangerouslySetInnerHTML={{ __html: reportMarkup }} />
+      </section> : <section aria-labelledby="research-results-title">
         <h2 id="research-results-title">Browse source entries</h2>
         <div className={h.filters}>
           <label htmlFor="history-research-query">Search entries<input id="history-research-query" type="search" value={query} maxLength={300} onChange={event => { setQuery(event.target.value); setPage(0); }} placeholder="Name, date, place or topic…" /></label>
@@ -54,6 +65,7 @@ export default function PeopleEventsResearch() {
           <label htmlFor="history-research-kind">Entry kind<select id="history-research-kind" value={kind} onChange={event => { setKind(event.target.value); setPage(0); }}><option value="all">All kinds</option>{HISTORY_RESEARCH_KINDS.map(value => <option key={value} value={value}>{kindLabels[value]}</option>)}</select></label>
         </div>
         <div className={h.resultHeading}><output className={h.status} aria-live="polite">{records.length.toLocaleString("en-US")} matching entries{records.length > 0 ? ` · showing ${first + 1}–${Math.min(first + HISTORY_RESEARCH_PAGE_SIZE, records.length)} · page ${current + 1} of ${pages}` : ""}</output>{filtered && <button type="button" onClick={clear}>Clear filters</button>}</div>
+        <div className={h.reportActions}><button type="button" disabled={!records.length} onClick={() => setReport({ records: records.slice(first, first + HISTORY_RESEARCH_PAGE_SIZE), scope: reportScope })}>Build report for this page</button><p>Includes the {Math.min(HISTORY_RESEARCH_PAGE_SIZE, Math.max(0, records.length - first))} entries currently shown. Filter by a person, event, source or topic to choose the report scope.</p></div>
         <p className={s.muted}>“Search reviewed KFM” searches released knowledge by the entry title. A matching released record may be absent; the search does not establish identity or a geographic link.</p>
         {!records.length && <p className={s.empty}>No entries match these filters. Try another term or choose all sources and kinds. Blocked sources remain listed below even when no records were acquired.</p>}
         {records.length > 0 && <><nav className={h.pagination} aria-label="Research entry pages"><button type="button" disabled={current === 0} onClick={() => setPage(value => Math.max(0, value - 1))}>Previous entries</button><span>Page {current + 1} of {pages}</span><button type="button" disabled={current + 1 >= pages} onClick={() => setPage(value => Math.min(pages - 1, value + 1))}>Next entries</button></nav>
@@ -66,11 +78,11 @@ export default function PeopleEventsResearch() {
               <dl className={h.context}><div><dt>Date stated by source</dt><dd>{record.date ?? "Not specified in this entry"}</dd></div><div><dt>Place context stated by source</dt><dd>{record.place ?? "Not specified in this entry"}</dd></div></dl>
               <p className={h.review}>{record.reviewNote}</p>
               {record.themes.length > 0 && <p className={h.themes}>Topics: {record.themes.join(" · ")}</p>}
-              <div className={h.actions}><a href={record.sourceUrl} target="_blank" rel="noopener noreferrer">Source page ↗</a>{record.targetUrl !== record.sourceUrl && <a href={record.targetUrl} target="_blank" rel="noopener noreferrer">Linked source entry ↗</a>}<a href={historyResearchKnowledgeLink(record.title)}>Search reviewed KFM →</a></div>
+              <div className={h.actions}><button type="button" onClick={() => setReport({ records: [record], scope: `Single source entry: ${record.title}. Source: ${source.title}.` })}>Build entry report</button><a href={record.sourceUrl} target="_blank" rel="noopener noreferrer">Source page ↗</a>{record.targetUrl !== record.sourceUrl && <a href={record.targetUrl} target="_blank" rel="noopener noreferrer">Linked source entry ↗</a>}<a href={historyResearchKnowledgeLink(record.title)}>Search reviewed KFM →</a></div>
             </article></li>;
           })}</ul>
         </>}
-      </section>
+      </section>}
       <section id="research-sources" className={h.sourceSection} aria-labelledby="research-sources-title"><h2 id="research-sources-title">Source catalogue</h2><p className={s.muted}>All supplied sources remain visible here. Access and completeness describe this curation check, not the entire publisher’s holdings.</p>
         <ul className={h.sources} aria-label="Supplied research sources">{catalog.sources.map(source => <li key={source.id} id={`research-source-${source.id}`}><article>
           <p className={s.eyebrow}>{source.publisher}</p><h3><a href={source.url} target="_blank" rel="noopener noreferrer">{source.title} ↗</a></h3>

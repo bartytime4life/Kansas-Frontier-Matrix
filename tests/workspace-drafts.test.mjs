@@ -1,3 +1,4 @@
+import {scientific} from './scientific-report-harness.mjs';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
@@ -26,7 +27,7 @@ async function harness(mode='reports',saved=new Map()){
  const timers=new Map(),events=new Map(),writes=[];let next=0,fail=false;
  const save=(key,value)=>{if(fail)throw new Error('quota');saved.set(key,JSON.parse(value));writes.push({key,value:JSON.parse(value)});};
  const h=await componentHarness(new URL('../app/report-story-workspaces.tsx',import.meta.url),{
-  './workspace-model':model,'./snapshot-map':{default:()=>null},'./assistant-panel':{default:()=>null},
+  './scientific-report':scientific,'./workspace-model':model,'./snapshot-map':{default:()=>null},'./assistant-panel':{default:()=>null},
   './assistant-context':{snapshotAssistantFocus:()=>({})},
   './workspace-storage':{REPORT_STORAGE_KEY:'report',STORY_STORAGE_KEY:'story',readDraft:key=>saved.get(key)??null},
   './fire-report-analysis':{FIRE_REPORT_SOURCES:[]},'./subsurface-model':{},'./research-context':{},'./category-basemap-keys':{isCategoryBasemapKey:()=>false},
@@ -36,7 +37,7 @@ async function harness(mode='reports',saved=new Map()){
  });
  const props={mode,snapshot,evidenceRecords:[],onModeChange(){},onReturnToMap(){},onInspectEvidence(){},onApplyScene(){},getCurrentSnapshot:()=>snapshot};
  const render=()=>{const tree=h.render(h.exports.default,props);h.commit();return tree;};
- const edit=value=>{findNode(render(),n=>n.type==='input'&&n.props.maxLength===120).props.onChange({target:{value}});render();};
+ const edit=value=>{const tree=render();const toggle=findNode(tree,n=>n.type==='button'&&n.props.children==='Edit report');toggle?.props.onClick();findNode(render(),n=>n.type==='input'&&n.props.maxLength===120).props.onChange({target:{value}});render();};
  const flush=()=>{for(const [id,fn] of [...timers]){timers.delete(id);fn();}};
  return {h,props,render,edit,flush,writes,saved,events,timers,fail(value){fail=value;}};
 }
@@ -85,4 +86,15 @@ test('reopening an active unsaved workspace never reads stale storage or remount
   open(mode);assert.deepEqual(changes,[]);assert.equal(captures,0);
   open(mode,true);assert.deepEqual(changes,[fresh]);assert.equal(captures,1);
  }
+});
+
+test('dashboard and editor share the latest draft across layout changes',async()=>{
+ const p=await harness();let tree=p.render();
+ assert.ok(findNode(tree,n=>n.props?.['aria-label']==='Scientific report preview'));
+ p.edit('Edited visual report');
+ findNode(p.render(),n=>n.type==='button'&&n.props.children==='Dashboard').props.onClick();
+ tree=p.render();assert.match(findNode(tree,n=>n.props?.['aria-label']==='Scientific report preview').props.dangerouslySetInnerHTML.__html,/Edited visual report/);
+ findNode(tree,n=>n.type==='select'&&n.props.value==='overview').props.onChange({target:{value:'sources'}});
+ tree=p.render();assert.match(findNode(tree,n=>n.props?.['aria-label']==='Scientific report preview').props.dangerouslySetInnerHTML.__html,/Edited visual report/);
+ p.flush();assert.equal(p.saved.get('report').title,'Edited visual report');p.h.dispose();
 });
