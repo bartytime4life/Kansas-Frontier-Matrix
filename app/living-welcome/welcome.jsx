@@ -16,7 +16,7 @@ const swatch=look=>look?{'--m0':look.swatch[0],'--m1':look.swatch[1],'--m2':look
 // Siblings recede in a wave that starts at the chosen card. All rects are read
 // before any write so one pointer entry costs a single layout for the grid.
 function wake(card){
-  const cards=card?.parentElement?.children;if(!cards?.length||!card.getBoundingClientRect)return;
+  const cards=card?.closest?.('.discovery-group')?.querySelectorAll('.topic-callout');if(!cards?.length||!card.getBoundingClientRect)return;
   const rects=[...cards].map(node=>node.getBoundingClientRect()),a=card.getBoundingClientRect(),ax=a.left+a.width/2,ay=a.top+a.height/2;
   rects.forEach((r,i)=>cards[i].style.setProperty('--wake',`${Math.min(180,Math.round(Math.hypot(r.left+r.width/2-ax,r.top+r.height/2-ay)*.14))}ms`));
 }
@@ -34,7 +34,7 @@ export function AviationGlimpse({mode,onMode,state,layersVisible}){
 }
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,motionEnabled=true,onMotionChange}){
   const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null),wasFullscreen=useRef(false);
-  const glowFrame=useRef(0),hoverIntent=useRef(null),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0),suppressHover=useRef(null);
+  const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0);
   const [remember,setRemember]=useState(initialRemember),[query,setQuery]=useState('');
   const [reduced,setReduced]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [localMotion,setMotion]=useState(motionEnabled),[hidden,setHidden]=useState(()=>typeof document!=='undefined'&&document.hidden);
@@ -57,14 +57,14 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const run=action=>{action?.();onClose(remember);};
   // Leaving the full-window preview clears the engaged card itself: hidden cards can
   // lose focus without a blur event, so release() alone may never run.
-  function engage(id){clearTimeout(hoverIntent.current);clearTimeout(leave.current);setActive(id);setLast(id);setTouched(true);setLayersVisible(true);if(id!==control)setGeologyModule(null);}
-  function release(){suppressHover.current=null;clearTimeout(hoverIntent.current);clearTimeout(leave.current);leave.current=setTimeout(()=>{const keyboardFocus=root.current?.querySelector('.topic-callout:focus-visible');const pointerHover=window.matchMedia('(hover: hover) and (pointer: fine)').matches&&root.current?.querySelector('.topic-callout:hover');if(!keyboardFocus&&!pointerHover)setActive(null);},180);}
-  function openTopic(id,keepPreview=fullscreen){clearTimeout(hoverIntent.current);trigger.current=document.activeElement;setItem(0);setDetail(id);setPanel(null);if(!keepPreview)setFullscreen(false);}
-  function openPanel(name){clearTimeout(hoverIntent.current);trigger.current=document.activeElement;setDetail(null);setPanel(name);}
+  function engage(id){clearTimeout(leave.current);setActive(id);setLast(id);setTouched(true);setLayersVisible(true);if(id!==control)setGeologyModule(null);}
+  function release(){clearTimeout(leave.current);leave.current=setTimeout(()=>{const keyboardFocus=root.current?.querySelector('.topic-callout:focus-visible');const pointerHover=window.matchMedia('(hover: hover) and (pointer: fine)').matches&&root.current?.querySelector('.topic-callout:hover');if(!keyboardFocus&&!pointerHover)setActive(null);},180);}
+  function openTopic(id,keepPreview=fullscreen){trigger.current=document.activeElement;setItem(0);setDetail(id);setPanel(null);if(!keepPreview)setFullscreen(false);}
+  function openPanel(name){trigger.current=document.activeElement;setDetail(null);setPanel(name);}
   function closePanel(){setDetail(null);setPanel(null);}
-  function pin(id){clearTimeout(hoverIntent.current);clearTimeout(leave.current);setLayersVisible(true);setPinned(id);setActive(null);setLast(id);setTouched(true);closePanel();}
-  // A settled hover enters a stable stage. Moving off the now-hidden grid must
-  // not close it again; only Return/Escape exits. Touch and Enter act immediately.
+  function pin(id){clearTimeout(leave.current);setLayersVisible(true);setPinned(id);setActive(null);setLast(id);setTouched(true);closePanel();}
+  // Only an explicit Preview action enters the demonstration stage. Hover and
+  // keyboard focus update the backdrop without moving the working-map targets.
   function showStage(id){
     // An explicit preview action leaves notes for Return, even on the same stage.
     if(modal)trigger.current=root.current?.querySelector('.welcome-preview-expand');
@@ -74,13 +74,11 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     pin(id);setFullscreen(true);
   }
   function hoverStage(id,event){
-    if(event.pointerType==='touch'||suppressHover.current===id)return;
-    wake(event.currentTarget);engage(id);clearTimeout(hoverIntent.current);
-    hoverIntent.current=setTimeout(()=>showStage(id),650);
+    if(event.pointerType==='touch')return;
+    wake(event.currentTarget);engage(id);
   }
   function returnToCategories(){
-    clearTimeout(hoverIntent.current);clearTimeout(leave.current);
-    suppressHover.current=returnCard.current;
+    clearTimeout(leave.current);
     setFullscreen(false);setPinned(null);setActive(null);
   }
   function railKey(event,index){
@@ -92,9 +90,9 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   function scrollRail(direction){rail.current?.scrollBy({left:direction*(rail.current.clientWidth*.75),behavior:paused?'instant':'smooth'});}
 
   useEffect(()=>{
-    const media=window.matchMedia('(prefers-reduced-motion: reduce)'),change=()=>setReduced(media.matches),visibility=()=>{setHidden(document.hidden);if(document.hidden)clearTimeout(hoverIntent.current);};
+    const media=window.matchMedia('(prefers-reduced-motion: reduce)'),change=()=>setReduced(media.matches),visibility=()=>{setHidden(document.hidden);};
     media.addEventListener('change',change);document.addEventListener('visibilitychange',visibility);
-    return()=>{media.removeEventListener('change',change);document.removeEventListener('visibilitychange',visibility);clearTimeout(leave.current);clearTimeout(hoverIntent.current);};
+    return()=>{media.removeEventListener('change',change);document.removeEventListener('visibilitychange',visibility);clearTimeout(leave.current);};
   },[]);
   // Install focus and keyboard ownership before paint.
   useLayoutEffect(()=>{root.current?.querySelector('[data-guide-autofocus]')?.focus({preventScroll:true});},[]);
@@ -128,7 +126,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     // Closing notes restores their trigger above; only stage entry owns Return.
     if(entering){if(root.current)root.current.scrollTop=0;root.current?.querySelector('.welcome-preview-expand')?.focus({preventScroll:true});}
     else if(returning){
-      const card=returnCard.current&&root.current?.querySelector(`.topic-${returnCard.current}`);
+      const card=returnCard.current&&root.current?.querySelector(`.topic-preview-${returnCard.current}`);
       (card||root.current?.querySelector('.welcome-preview-expand'))?.focus({preventScroll:true});
       // Focus previews a card; returning itself must not restart the stage.
       setActive(null);
@@ -152,15 +150,15 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       <aside className="welcome-preview-brief" data-geology={touched&&control==='geology'} aria-label="Category layer glimpse">
         <span className="welcome-kicker">{touched?'INSIDE THIS MAP':'A REAL MAP, READY TO EXPLORE'}</span>
         <h2>{touched?glimpse?.title:'Choose your first glimpse.'}</h2>
-        <p>{touched?glimpse?.summary:'Linger over a card or select it to let its map take the stage. Every category stays within reach below the scene.'}</p>
+        <p>{touched?glimpse?.summary:'Choose a card to open its map and layer controls. Hover for a glimpse, or choose Preview for a closer look.'}</p>
         {touched&&control==='geology'&&!fullscreen&&geologyModule?.Component&&<geologyModule.Component paused={paused||modal||!engaged} reduced={reduced}/>}
         {touched&&control==='geology'&&geologyModule?.failed&&<p role="status">Recorded log preview unavailable; open Underground to inspect source status.</p>}
         {touched&&control==='aviation'&&<AviationGlimpse mode={aviationMode} onMode={setAviationMode} state={previewState?.topic===control?previewState:null} layersVisible={layersVisible}/>}
         {touched&&<><p className="welcome-preview-try">{glimpse?.try}</p><div className="welcome-preview-feed-state">{previewState?.mapState==='unavailable'?<span>Map preview unavailable. Open the map to check its source controls.</span>:previewState?.topic!==control?<span>Preparing this category’s map…</span>:previewState.sources.map(source=><span key={source.id} data-state={source.state}><i aria-hidden="true"/>{source.label}: {source.state==='dated-frame'?`${source.product==='visible'?'visible band · ':source.product==='geocolor'?'GeoColor · ':''}${new Date(source.observedAt).toLocaleTimeString('en-US',{timeZone:'America/Chicago',hour:'numeric',minute:'2-digit',timeZoneName:'short'})}`:source.state==='records'?`${source.count} source records`:source.state==='empty'?'No records returned':source.state==='map-layer'?'Provider tile layer':source.state==='hidden'?'Hidden for comparison':source.state==='zoom-in'?'Closer zoom in the opened map':source.state==='unavailable'?'Unavailable':'Loading…'}</span>)}</div><button type="button" className="welcome-text-action" onClick={()=>openTopic(control)}>See this category’s demonstrations <span aria-hidden="true">↗</span></button></>}
       </aside>
       </div>
-      <p className="discovery-hint"><strong>Choose a story. Give its map the stage.</strong> <span>{TOPICS.length} categories · explore each map’s coverage and source limits.</span> <button type="button" onClick={()=>openPanel('credits')}>Map notes</button><span className="discovery-scene"><small>Map preview</small><b key={touched?control:'kansas'}>{welcomeView(touched?control:null).name}</b></span></p>
-      <section className="discovery-field discovery-field--grouped" aria-label="Choose an exploration topic">{TOPIC_GROUPS.map(group=><div className="discovery-group" role="group" aria-label={group} key={group}><h2 className="discovery-group-title">{group}</h2>{TOPICS.map((t,i)=>[t,i]).filter(([t])=>t.group===group).map(([t,i])=><button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} key={t.id} style={{'--i':i}} data-color={t.group==='Earth & environment'?'green':'sky'} aria-label={`${t.title}: ${t.short}`} onPointerEnter={e=>hoverStage(t.id,e)} onPointerMove={glow} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false){wake(e?.currentTarget);engage(t.id);}}} onBlur={release} onClick={()=>showStage(t.id)}><span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.short}</small><span className="topic-glimpse">{categoryGlimpse(t.id)?.title}</span><span className="topic-demo-label">{capabilityPreviews(t.id).length?'Map glimpse + recorded tours':'Map glimpse + guided starting point'}</span>{t.look&&<span className="topic-map" style={swatch(t.look)}><i aria-hidden="true"/>{t.look.name}</span>}</span><span className="topic-arrow" aria-hidden="true">→</span></button>)}</div>)}</section>
+      <p className="discovery-hint"><strong>Choose a map. Start exploring its layers.</strong> <span>{TOPICS.length} categories · explore each map’s coverage and source limits.</span> <button type="button" onClick={()=>openPanel('credits')}>Map notes</button><span className="discovery-scene"><small>Map preview</small><b key={touched?control:'kansas'}>{welcomeView(touched?control:null).name}</b></span></p>
+      <section className="discovery-field discovery-field--grouped" aria-label="Choose an exploration topic">{TOPIC_GROUPS.map(group=><div className="discovery-group" role="group" aria-label={group} key={group}><h2 className="discovery-group-title">{group}</h2>{TOPICS.map((t,i)=>[t,i]).filter(([t])=>t.group===group).map(([t,i])=><div className="topic-choice" key={t.id}><button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} style={{'--i':i}} data-color={t.group==='Earth & environment'?'green':'sky'} aria-label={`${t.title}: ${t.short}`} onPointerEnter={e=>hoverStage(t.id,e)} onPointerMove={glow} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false){wake(e?.currentTarget);engage(t.id);}}} onBlur={release} onClick={()=>run(()=>(onMap||onTopic)(t.target))}><span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.short}</small><span className="topic-glimpse">{categoryGlimpse(t.id)?.title}</span><span className="topic-demo-label">Open map &amp; layers</span>{t.look&&<span className="topic-map" style={swatch(t.look)}><i aria-hidden="true"/>{t.look.name}</span>}</span><span className="topic-arrow" aria-hidden="true">→</span></button><button type="button" className={`topic-preview topic-preview-${t.id}`} aria-label={`Preview ${t.title}`} onClick={()=>showStage(t.id)}>Preview <span aria-hidden="true">↗</span></button></div>)}</div>)}</section>
       {fullscreen&&touched&&<aside className="welcome-layer-demo" aria-label="Category demonstration"><span className="welcome-kicker">{TOPICS[selectedIndex]?.title}</span><h2>{glimpse?.title}</h2><p>{glimpse?.try}</p><small>{glimpse?.limit}</small>{control==='geology'&&<button type="button" className="welcome-text-action" onClick={()=>run(()=>onAction('underground'))}>Open Underground Explorer →</button>}{control==='aviation'&&<AviationGlimpse mode={aviationMode} onMode={setAviationMode} state={previewState?.topic===control?previewState:null} layersVisible={layersVisible}/>}<div className="welcome-layer-demo-actions">{(control==='aviation'||welcomeView(control).starters?.length>0)&&<button type="button" aria-pressed={layersVisible} onClick={()=>setLayersVisible(!layersVisible)}>{layersVisible?'Hide starter layers':'Show starter layers'}</button>}<button type="button" onClick={()=>run(()=>(onMap||onTopic)(control))}>Open this category’s map →</button><button type="button" onClick={()=>openTopic(control,true)}>Source notes &amp; demonstrations</button></div><p className="welcome-layer-demo-state" role="status">{previewState?.mapState==='unavailable'?'Map preview unavailable. Open the map to inspect source status.':previewState?.topic!==control||previewState?.mapState==='loading'?'Preparing the category map…':!layersVisible?'Base context only. Starter overlays are hidden; the basemap and elevation remain.':'Provider context preview. Source clocks and availability remain separate.'}</p></aside>}<div className="welcome-scene-deck"><button type="button" className="welcome-preview-expand" aria-pressed={fullscreen} onClick={()=>{if(fullscreen)returnToCategories();else showStage(control);}}>{fullscreen?'Return to categories':'Expand animation'}</button>{fullscreen&&<><span className="welcome-stage-title">KANSAS FRONTIER MATRIX <span> / {welcomeView(control).name}</span></span><button type="button" className="welcome-preview-pause" disabled={reduced} aria-pressed={!paused} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{paused?'Play animation':'Pause animation'}</button><button type="button" className="welcome-stage-close" aria-label="Close quick start" onClick={()=>onClose(remember)}>×</button></>}</div>
       {fullscreen&&<nav className="welcome-category-rail" aria-label="Explore other categories">
         <div className="welcome-rail-heading"><span>CHOOSE YOUR NEXT STORY</span><span id="welcome-rail-keys" className="sr-only">Use Left and Right arrow keys to choose a category; Home and End choose the first and last.</span><span>{String(selectedIndex+1).padStart(2,'0')} / {TOPICS.length}</span></div>

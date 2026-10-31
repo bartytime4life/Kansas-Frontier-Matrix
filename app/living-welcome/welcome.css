@@ -848,3 +848,11 @@
 }
 
 @media(max-height:600px) and (max-width:700px) and (orientation:portrait){.living-welcome[data-cinematic=true] .welcome-geology-specimen{display:none}}
+
+/* Cards enter the working map. Demonstrations are a separate, explicit action;
+   neither hover nor a slow pointer crossing moves the navigation targets. */
+.living-welcome .topic-choice{position:relative;display:flex;min-width:0}
+.living-welcome .topic-choice .topic-callout{width:100%!important;min-height:100%;padding-bottom:68px}
+.living-welcome .topic-preview{position:absolute;z-index:4;left:16px;right:16px;bottom:10px;display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:8px 12px;border:1px solid #8db5c052;border-radius:7px;background:#0a2d3d;color:#c5dde6;font-size:12px;pointer-events:auto}
+.living-welcome .topic-preview:hover{background:#173e4d;border-color:#e8c37c;color:#f5ddb0}
+.living-welcome .topic-preview:focus-visible{outline:2px solid #f0d28f;outline-offset:3px}
