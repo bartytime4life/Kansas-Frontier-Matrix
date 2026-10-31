@@ -8552,6 +8552,9 @@ export default function Home() {
       return;
     }
     if (item.kind === "source") {
+      // The catalog owns the next focus target. Dismiss discovery without
+      // scheduling a return to its trigger or leaving its modal trap active.
+      setQwenOpen(false);
       sourceSearchFocusPendingRef.current = true;
       openAtlasPanel("layers");
       setStarterPanelOpen(false);
