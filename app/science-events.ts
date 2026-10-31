@@ -257,3 +257,11 @@ export function scienceExplorerHref(id: string, cursor: string | null): string |
   } else return null;
   return `/?${params}`;
 }
+
+/** Open discovery only. A link never changes the enabled tracks or starts playback. */
+export function scienceWorkbenchLocation(search: string): { query: string } | null {
+  const params = new URLSearchParams(search);
+  if (params.get("panel") !== "science") return null;
+  const query = (params.get("q") ?? "").slice(0, 200);
+  return { query: SCIENCE_EVENTS.find(event => event.id === query)?.title ?? query };
+}

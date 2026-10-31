@@ -10,7 +10,7 @@ import { gaugeStates, gaugeStations, reuseUnchanged } from "./frame-data";
 import type { FeatureCollection } from "geojson";
 import { loadMapLibre, type ExpressionSpecification, type Map as GLMap, type GeoJSONSource } from "../maplibre-seam";
 import { BASEMAPS } from "../map-runtime";
-import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, filterScienceEvents, scienceEventSummary, scienceExplorerHref, scienceMeasurement, scienceProbeGeoJSON, type ScienceTrackId } from "../science-events";
+import { SCIENCE_EVENTS, SCIENCE_SUPPORT_LABELS, scienceWorkbenchLocation, filterScienceEvents, scienceEventSummary, scienceExplorerHref, scienceMeasurement, scienceProbeGeoJSON, type ScienceTrackId } from "../science-events";
 import {
   EVENT_BOUNDS,
   EVENT_EARLIEST_DAY,
@@ -229,6 +229,8 @@ export default function EventObservatory() {
     queueMicrotask(() => {
       if (disposed) return;
       const p = new URLSearchParams(window.location.search);
+      const scienceEntry = scienceWorkbenchLocation(window.location.search);
+      if (scienceEntry) { setScienceOpen(true); setScienceQuery(scienceEntry.query); }
       if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(p.get("start") ?? "")) { updateStart(p.get("start")!); setCalendarAnchor(p.get("start")!.slice(0,10)); followTodayRef.current = false; setFollowToday(false); }
       if ([1,6,24].includes(Number(p.get("hours")))) setHours(Number(p.get("hours")));
       if (/^USGS-\d{8,15}$/.test(p.get("station") ?? "")) updateStation(p.get("station")!);

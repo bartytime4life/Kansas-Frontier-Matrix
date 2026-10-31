@@ -59,7 +59,12 @@ test("every explicit setup open clears previous layers and evidence, including r
     ...Object.keys(mapsExports.CATEGORY_MAPS)];
   for (const [index, topic] of sequence.entries()) {
     h.values.selected = "old-earthquake"; h.values.drawerOpen = true;
+    h.values.setCategoryToolsOnCurrentMap = true;
+    h.values.setPopChangeOn = true; h.values.setPopChangeCounty = "20141";
+    h.refs.popChangePrismsRef = { current: true };
+    h.refs.popChangeHidCountiesRef = { current: true };
     h.open(topic);
+    assert.equal(h.values.setCategoryToolsOnCurrentMap, false, `${topic}: an explicit preset replaces tool-only presentation`);
     assert.equal(h.values.setCategoryMapSession, index + 1, `${topic}: starts a fresh owner lifecycle`);
     assert.equal(h.values.setAviationShowRequest > 0, topic === "aviation", `${topic}: aviation opens only when requested`);
     assert.equal(h.values.setCropSelected, false); assert.equal(h.values.setReviewedWaterSelected, false);
@@ -71,6 +76,10 @@ test("every explicit setup open clears previous layers and evidence, including r
     assert.equal(h.values.setEarthEngineDisplay.opacity["ee-naip"], .5, "hiding imagery preserves slider preferences");
     assert.equal(h.values.setImportPreviewVisible, false);
     assert.equal(h.values.setPlaying, false); assert.equal(h.values.setNoaaRadarPlaying, false);
+    assert.equal(h.values.setPopChangeOn, false, `${topic}: closes population change`);
+    assert.equal(h.values.setPopChangeCounty, null, `${topic}: clears the previous county`);
+    assert.equal(h.refs.popChangePrismsRef.current, false, `${topic}: releases population prisms`);
+    assert.equal(h.refs.popChangeHidCountiesRef.current, false, `${topic}: releases hidden county ownership`);
     assert.deepEqual(Object.entries(h.refs.officialVisibilityRef.current).filter(([,on]) => on).map(([id]) => id).sort(),
       [...mapsExports.CATEGORY_MAPS[topic].starters].sort(), `${topic}: only the requested starter set remains`);
   }

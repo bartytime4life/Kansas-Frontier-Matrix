@@ -23,7 +23,7 @@ export const TOPIC_STRUCTURE: readonly TopicDefinition[] = Object.freeze(([
   { id: "geology", title: "Geology & subsurface", group: "Earth & environment", description: "Inspect source-bounded aquifers, seismic observations and elevation context.", facets: ["Subsurface context", "Seismic monitoring", "Landforms"], limitation: "These sources do not supply a continuous rock, cave or resource model. Unobserved subsurface space remains unknown.", resources: [{ title: "Inspect mapped records", href: "/?maptab=inspect&mapui=open" }] },
   { id: "terrain", title: "Terrain & elevation", group: "Earth & environment", description: "Read elevation mosaics, hillshade, slope and calculated daylight together.", facets: ["Elevation", "Slope & hillshade", "Light & shadow"], limitation: "Mixed acquisition dates and display exaggeration must remain visible. Hillshade and slope colors are not survey measurements.", resources: [{ title: "Terrain appearance", href: "/?maptab=scene&mapui=open" }] },
   { id: "ecology", title: "Ecology & land cover", group: "Earth & environment", description: "Use land-cover imagery and water networks as context for ecological questions.", facets: ["Vegetation & land cover", "Water corridors", "Landscape change"], limitation: "Land-cover classes and satellite composites do not prove species presence, habitat condition or critical-habitat status. No species inventory is connected here.", resources: [{ title: "Imagery catalogue", href: "/earth-engine" }] },
-  { id: "agriculture", title: "Agriculture & soils", group: "Earth & environment", description: "Compare crop classes, soil-moisture context and rainfall products.", facets: ["Crops & land use", "Soil moisture", "Rainfall & drought"], limitation: "Crop classes do not establish ownership or current farming activity. Modeled soil moisture is separate from sampled soil and agronomic advice.", resources: [{ title: "Imagery catalogue", href: "/earth-engine" }] },
+  { id: "agriculture", title: "Agriculture & soils", group: "Earth & environment", description: "Compare crop classes, soil-moisture context and rainfall products.", facets: ["Crop history & soils", "Growing season & frost", "Rainfall & drought"], limitation: "Crop classes do not establish ownership or current farming activity. Modeled soil moisture is separate from sampled soil and agronomic advice.", resources: [{ title: "Imagery catalogue", href: "/earth-engine" }] },
   { id: "flora", title: "Flora & vegetation", group: "Earth & environment", description: "Explore mapped vegetation cover, annual plant-record density and crop context with their separate dates and methods.", facets: ["Vegetation & wetlands", "Plant-record density", "Crop context"], limitation: "Land cover is a classification, not a species inventory. GBIF hexagons summarize records, not abundance or absence. Exact plant sites and reviewed Flora evidence are not connected.", resources: [{ title: "Plant sources & limitations", href: "/observatory/sources#ecology" }, { title: "Imagery catalogue", href: "/earth-engine" }] },
   { id: "fauna", title: "Fauna & wildlife", group: "Earth & environment", description: "Explore animal taxonomy, occurrence evidence and wildlife context, with source dates and location safeguards.", facets: ["Animal taxonomy", "Occurrence evidence", "Sensitive-species safeguards"], limitation: "No reviewed animal-occurrence layer is connected to this map. Landscape context does not establish presence, abundance or absence; sensitive sites stay withheld.", resources: [{ title: "Occurrence context in the Observatory", href: "/observatory" }, { title: "Sources & limitations", href: "/observatory/sources" }] },
   { id: "history", title: "History & cultural context", group: "People & place", description: "Explore dated transportation maps, Census editions and attributed historical research.", facets: ["Historic maps & routes", "People & events", "Archives & accounts"], limitation: "A historical account or current survey overlay does not establish past ownership, identity or exact archaeological locations. Research entries remain distinct from released evidence.", resources: [{ title: "People & events research", href: "/history/people-events" }, { title: "Kansas history · 1909", href: "/history/prentis-1909" }, { title: "Historic map sheets", href: "/?maptab=history&mapui=open" }] },
@@ -109,6 +109,7 @@ export function officialSourceTopics(id: string): readonly TopicId[] {
   if (id === "census-congress-119") topics.add("government");
   if (id === "census-counties") { topics.add("places"); topics.add("people"); topics.add("history"); topics.add("government"); }
   if (historicalTransportIds.includes(id) || id === "fema-disaster-declarations" || id === "nasa-lightning-climatology" || id === "blm-mlrs-leases-closed") topics.add("history");
+  if (["nws-alerts", "nws-radar", "nws-forecast-wind", "noaa-goes-geocolor"].includes(id)) topics.add("agriculture");
   if (weatherIds.includes(id) || waterIds.includes(id) || terrainIds.includes(id) || seismicIds.includes(id) || groundwaterIds.includes(id) || ["noaa-hms-smoke", "nasa-firms-active-fire", "nasa-gibs-fire-points"].includes(id)) topics.add("science");
   return Array.from(topics);
 }
@@ -117,7 +118,7 @@ export function specialtyLayerTopics(id: string): readonly TopicId[] {
   if (id === "daylight") return ["terrain", "disaster", "science", "sky"];
   if (id === "soil" || id === "crop") return ["water", "land", "agriculture", "science"];
   if (id === "reviewed-water") return ["water", "science"];
-  if (id === "reviewed-weather") return ["weather", "disaster", "water", "science"];
+  if (id === "reviewed-weather") return ["weather", "disaster", "water", "agriculture", "science"];
   if (id === "reviewed-soil") return ["agriculture", "water", "land", "science"];
   if (id === "reviewed-storm-events") return ["weather", "disaster", "history", "science"];
   if (id === "reviewed-earthquakes") return ["geology", "disaster", "science"];
@@ -225,6 +226,6 @@ export function imageryTopics(id: string): readonly LayerWorkspace[] {
   if (id === "ee-3dep") return ["terrain", "geology", "engineering", "science"];
   if (/^ee-(chirps|prism-monthly|prism-daily|terraclimate)$/.test(id)) return ["water", "weather", "disaster", "agriculture", "science"];
   if (id === "ee-cdl") return ["land", "agriculture", "ecology", "science"];
-  if (/^ee-(sentinel2|landsat[45789])$/.test(id)) return ["land", "ecology", "science", "history"];
+  if (/^ee-(sentinel2|landsat[45789])$/.test(id)) return ["land", "ecology", "agriculture", "flora", "science", "history"];
   return [];
 }

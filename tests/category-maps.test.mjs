@@ -75,7 +75,28 @@ test('opening a category map opens on its own subject and follows the same categ
  assert.match(body,/for \(const source of OFFICIAL_CONTEXT_SOURCES\) \{\s*const on = look\.starters\.includes\(source\.id\);\s*if \(on \|\| officialVisibilityRef\.current\[source\.id\]\) setOfficialContextVisible\(source\.id, on\);/,'only the look\'s starters are on, as a starter set does; untouched layers are not toggled');
  assert.match(body,/motionDuration\(1800\)/,'camera flight honours reduced motion');
  assert.match(page,/onTopic=\{runWelcomeTopic\} onMap=\{runWelcomeMap\}/);
- assert.match(page,/<CategoryMapDock look=\{activeCategoryMap\} mode=\{categoryMode\}/);
+ const ast=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
+ const docks=[];
+ const visit=node=>{if(ts.isJsxSelfClosingElement(node)&&node.tagName.getText(ast)==='CategoryMapDock')docks.push(node);ts.forEachChild(node,visit);};
+ visit(ast);
+ assert.equal(docks.length,1,'one shared dock owns the category controls');
+ const props=new Map(docks[0].attributes.properties.map(prop=>[prop.name?.getText(ast),prop.initializer?.getText(ast)]));
+ assert.equal(props.get('look'),'{activeCategoryMap}');
+ assert.equal(props.get('mode'),'{categoryMode}');
+ const retainedMap=props.get('currentMapOnly');
+ assert.equal(retainedMap,'{categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap}');
+ const presentation=new Function('categoryToolsOnCurrentMap','activeCategoryMap','basemap',`return ${retainedMap.slice(1,-1)};`);
+ assert.equal(presentation(true,{basemap:'standard'},'standard'),true,'matching basemaps do not imply that the category layers were enabled');
+ assert.equal(presentation(false,{basemap:'standard'},'standard'),false,'an explicit matching preset may use its own description');
+ assert.equal(presentation(false,{basemap:'standard'},'relief'),true,'a different retained basemap never claims the preset');
+ const resetBinding=props.get('onReset');
+ const selectReset=new Function('categoryToolsOnCurrentMap','activeCategoryMap','basemap','openCategoryMap','resetCategoryView',`return ${resetBinding.slice(1,-1)};`);
+ const calls=[];
+ const open=topic=>calls.push(['preset',topic]), reset=()=>calls.push(['camera']);
+ selectReset(true,{basemap:'standard',topic:'science'},'standard',open,reset)();
+ selectReset(false,{basemap:'standard',topic:'science'},'relief',open,reset)();
+ selectReset(false,{basemap:'standard',topic:'science'},'standard',open,reset)();
+ assert.deepEqual(calls,[['preset','science'],['preset','science'],['camera']],'Open default view must apply the actual setup; Reset view retains its camera-only behavior');
 });
 
 test('public-safety dock keeps optional context off and does not promise a radar scan',async()=>{
@@ -304,7 +325,7 @@ test('the storm desk opens and closes the live radar loop from its dock, clear o
  assert.match(css,/\.category-map-dock-modes button\[aria-pressed=true\]:disabled\{color:#f1e6c2;/,'a requested but unavailable mode keeps a readable label');
 });
 
-test('the Layers topic guide shows the category map look and opens it only when it is not on',async()=>{
+test('the Layers topic guide keeps the category setup reachable when its basemap already matches',async()=>{
  const h=await componentHarness('app/topic-navigation.tsx',{'next/link':{default:'a'},'./layer-workspaces':topics},{URLSearchParams});
  const look=maps.CATEGORY_MAPS.aviation;let opened=0;
  const mapLook={name:look.name,lede:look.lede,sceneLabel:maps.categorySceneLabel(look.scene),swatch:look.swatch,active:false};
@@ -313,8 +334,10 @@ test('the Layers topic guide shows the category map look and opens it only when 
  assert.ok(card);assert.match(JSON.stringify(card),/Aviation chart/);assert.match(JSON.stringify(card),/3D terrain/);
  findNode(tree,n=>n.type==='button'&&n.props.children==='Open this map').props.onClick();assert.equal(opened,1);
  tree=h.render(h.exports.TopicGuide,{value:'aviation',mapLook:{...mapLook,active:true},onOpenMap:()=>opened++});
- assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Open this map'),undefined,'no button once the look is on');
- assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='topic-map-look')),/on the map now/);
+ assert.equal(opened,1,'changing the topic display does not activate data');
+ findNode(tree,n=>n.type==='button'&&n.props.children==='Open this map').props.onClick();assert.equal(opened,2);
+ assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='topic-map-look')),/map style in use/);
+ assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='topic-map-look')),/Default view:/);
  tree=h.render(h.exports.TopicGuide,{value:'aviation'});
  assert.equal(findNode(tree,n=>n.props?.className==='topic-map-look'),undefined,'callers without a look render the guide as before');
  h.dispose?.();
