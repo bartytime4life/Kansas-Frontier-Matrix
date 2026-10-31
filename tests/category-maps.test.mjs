@@ -75,7 +75,15 @@ test('opening a category map opens on its own subject and follows the same categ
  assert.match(body,/for \(const source of OFFICIAL_CONTEXT_SOURCES\) \{\s*const on = look\.starters\.includes\(source\.id\);\s*if \(on \|\| officialVisibilityRef\.current\[source\.id\]\) setOfficialContextVisible\(source\.id, on\);/,'only the look\'s starters are on, as a starter set does; untouched layers are not toggled');
  assert.match(body,/motionDuration\(1800\)/,'camera flight honours reduced motion');
  assert.match(page,/onTopic=\{runWelcomeTopic\} onMap=\{runWelcomeMap\}/);
- assert.match(page,/<CategoryMapDock look=\{activeCategoryMap\} mode=\{categoryMode\}/);
+ const ast=ts.createSourceFile('page.tsx',page,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);
+ const docks=[];
+ const visit=node=>{if(ts.isJsxSelfClosingElement(node)&&node.tagName.getText(ast)==='CategoryMapDock')docks.push(node);ts.forEachChild(node,visit);};
+ visit(ast);
+ assert.equal(docks.length,1,'one shared dock owns the category controls');
+ const props=new Map(docks[0].attributes.properties.map(prop=>[prop.name?.getText(ast),prop.initializer?.getText(ast)]));
+ assert.equal(props.get('look'),'{activeCategoryMap}');
+ assert.equal(props.get('mode'),'{categoryMode}');
+ assert.equal(props.get('currentMapOnly'),'{activeCategoryMap.basemap !== basemap}','preserved maps must not claim the default preset is displayed');
 });
 
 test('public-safety dock keeps optional context off and does not promise a radar scan',async()=>{
