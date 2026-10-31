@@ -454,6 +454,10 @@ type WorkspaceSnapshot = Readonly<{
   subsurfaceContext?: SubsurfaceContext;
   visibility: Record<string, boolean>;
   opacity: Record<string, number>;
+  officialContext?: {
+    visibility: Record<string, boolean>;
+    opacity: Record<string, number>;
+  };
   layerOrder: string[];
   year: number;
   mapEvidenceFilter?: RegistryEvidenceFilter;
@@ -9497,6 +9501,7 @@ export default function Home() {
       subsurfaceContext: persistableSubsurface(subsurfaceContext && { ...subsurfaceContext, capturedAt: savedAt }, redactWorkspaceCamera, true),
       visibility: { ...visibility },
       opacity: { ...opacity },
+      officialContext: { visibility: { ...officialVisibility }, opacity: { ...officialOpacity } },
       layerOrder: [...layerOrder],
       year,
       mapEvidenceFilter,
@@ -9671,15 +9676,23 @@ export default function Home() {
     setNearbyRadiusMiles(savedResearch?.radiusMiles ?? 25);
     setResearchOpen(Boolean(savedResearch));
     setRightOpen(Boolean(savedResearch));
-    if (savedResearch) {
-      const sourceIds = new Set(savedResearch.coverage.map(item => item.sourceId));
-      if (savedResearch.county) sourceIds.add("census-counties");
+    const savedOfficialContext = snapshot.officialContext;
+    if (savedOfficialContext || savedResearch) {
+      const sourceIds = new Set(savedResearch?.coverage.map(item => item.sourceId) ?? []);
+      if (savedResearch?.county) sourceIds.add("census-counties");
       for (const source of OFFICIAL_CONTEXT_SOURCES) {
-        const visible = sourceIds.has(source.id);
+        // Legacy places have no explicit source settings; retain their research-coverage behavior.
+        const visible = savedOfficialContext ? savedOfficialContext.visibility[source.id] === true : sourceIds.has(source.id);
+        if (savedOfficialContext) {
+          const savedOpacity = savedOfficialContext.opacity[source.id] ?? source.defaultOpacity;
+          if (officialOpacityRef.current[source.id] !== savedOpacity) setOfficialContextOpacity(source.id, savedOpacity);
+        }
         if (officialVisibilityRef.current[source.id] !== visible) setOfficialContextVisible(source.id, visible);
         // An explicit reopen refreshes existing eligible feeds as well as loading missing ones.
-        if (visible && officialPayloadsRef.current[source.id as OfficialContextFeedId]) retryOfficialLayer(source.id);
+        if (savedResearch && visible && officialPayloadsRef.current[source.id as OfficialContextFeedId]) retryOfficialLayer(source.id);
       }
+    }
+    if (savedResearch) {
       setResearchMissingSources(savedResearch.coverage.filter(item => !OFFICIAL_CONTEXT_SOURCES.some(source => source.id === item.sourceId) && !knownLayerIds.has(item.sourceId))
         .map(item => ({ ...item, state: "unavailable", limitation: "This saved source is no longer available in this Site. Its old response is not restored." })));
       if (isCompact) { setLeftOpen(false); setTimelineOpen(false); }
@@ -11386,7 +11399,7 @@ export default function Home() {
             <p>Places stores camera, time, layers, comparison, report setup, and selected evidence on this device only.</p>
             <div className="panel-stat-grid"><article><span>SAVED PLACES</span><strong>{savedWorkspaces.length}</strong></article><article><span>ACTIVE PLACE</span><strong>{activePlaceId ? "YES" : "NONE"}</strong></article></div>
             <article className="place-capture-card">
-                  <header><div><span>CURRENT MAP STATE</span><strong>{temporalScopeLabel} · {visibleCount} visible layers</strong></div><small>{selected ? `Selected: ${selected.properties.title}` : "No selected feature"}</small></header>
+                  <header><div><span>CURRENT MAP STATE</span><strong>{temporalScopeLabel} · Layers to save: {Object.values(visibility).filter(Boolean).length + visibleOfficialCount}</strong></div><small>{selected ? `Selected: ${selected.properties.title}` : "No selected feature"}</small></header>
                   <div className="workspace-save-row"><input type="text" value={workspaceName} maxLength={50} onChange={(event) => setWorkspaceName(event.target.value)} placeholder="Place or investigation step name" /><button type="button" onClick={saveCurrentWorkspace}>Add place</button></div>
                 </article>
                 <div className="place-trail-controls" aria-label="Places trail controls">
@@ -11398,7 +11411,7 @@ export default function Home() {
                   {savedWorkspaces.map((snapshot, index) => <article key={snapshot.id} data-active={activePlaceId === snapshot.id}>
                     <span className="place-stop-number">{String(index + 1).padStart(2, "0")}</span>
                     <button className="place-stop-main" type="button" onClick={() => { stopPlaceTour(false); loadSavedWorkspace(snapshot); }} aria-pressed={activePlaceId === snapshot.id}>
-                      <strong>{snapshot.name}</strong><small>{formatTimelineStep(snapshot.year)} · {Object.values(snapshot.visibility ?? {}).filter(Boolean).length} layers · {snapshot.projection === "globe" ? "globe" : "2D"}</small><em>{snapshot.locationCameraRedacted !== false ? "Generalized camera" : snapshot.selection ? `Selection: ${snapshot.selection.featureId}` : "Map context"}</em>
+                      <strong>{snapshot.name}</strong><small>{formatTimelineStep(snapshot.year)} · Layers: {Object.values(snapshot.visibility ?? {}).filter(Boolean).length + Object.values(snapshot.officialContext?.visibility ?? {}).filter(Boolean).length} · {snapshot.projection === "globe" ? "globe" : "2D"}</small><em>{snapshot.locationCameraRedacted !== false ? "Generalized camera" : snapshot.selection ? `Selection: ${snapshot.selection.featureId}` : "Map context"}</em>
                     </button>
                     <div className="place-stop-actions"><button type="button" onClick={() => reorderSavedWorkspace(snapshot, -1)} disabled={index === 0} aria-label={`Move ${snapshot.name} earlier`}>↑</button><button type="button" onClick={() => reorderSavedWorkspace(snapshot, 1)} disabled={index === savedWorkspaces.length - 1} aria-label={`Move ${snapshot.name} later`}>↓</button><button type="button" onClick={() => deleteSavedWorkspace(snapshot)} aria-label={`Delete ${snapshot.name}`}>×</button></div>
                   </article>)}
