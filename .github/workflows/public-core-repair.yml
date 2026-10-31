@@ -48,7 +48,9 @@ jobs:
           retention-days: 14
   verify-core-delivery:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # The full serial browser matrix reached case 55/61 at the former 20m
+    # job limit. Keep all acceptance groups and their individual deadlines.
+    timeout-minutes: 30
     services:
       pipeline-mysql:
         image: mysql:8.4.13

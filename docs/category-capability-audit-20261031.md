@@ -123,6 +123,23 @@ Pointer targets are hit-tested again after the intentional slow-hover interval;
 the earlier pre-hover coordinate is not reused after a scroll/reflow. The
 original direct-entry, search visibility, daylight
 geometry/contrast, failure/recovery and exact focus-return assertions remain.
+The wider local matrix also measured an impossible scroll expectation: saved
+position 1650, current maximum 1630. Return now asserts the exact native-clamped
+position and visibility of the original category action, not an arbitrary
+tolerance or a jump to the top.
 No application, provider, data, runtime or access behavior changes in that
 test-only reconciliation. Local before/after and exact-head CI results are
 recorded in the follow-up PR; they do not qualify every startup timing case.
+
+The first scroll-follow-up CI also exposed an unchanged water-flow test waiting
+five milliseconds for an animation frame: it observed `loading`, not `ready`.
+That one test now uses its existing controlled-frame fixture, proves resolved
+cells remain loading before the single scheduled frame, and explicitly advances
+the frame before asserting ready geometry, gauge emphasis and cached reuse.
+All prior off/zoom/visibility assertions remain; no runtime or water default is
+changed, and no provider is contacted by this synthetic test.
+
+The complete serial delivery workflow reached passing startup case 55 of 61
+before the former 20-minute job budget cancelled it. Its outer budget is now
+30 minutes; every acceptance group and individual test timeout is retained.
+This is CI execution headroom, not a new application-performance qualification.
