@@ -325,7 +325,7 @@ test('the storm desk opens and closes the live radar loop from its dock, clear o
  assert.match(css,/\.category-map-dock-modes button\[aria-pressed=true\]:disabled\{color:#f1e6c2;/,'a requested but unavailable mode keeps a readable label');
 });
 
-test('the Layers topic guide shows the category map look and opens it only when it is not on',async()=>{
+test('the Layers topic guide keeps the category setup reachable when its basemap already matches',async()=>{
  const h=await componentHarness('app/topic-navigation.tsx',{'next/link':{default:'a'},'./layer-workspaces':topics},{URLSearchParams});
  const look=maps.CATEGORY_MAPS.aviation;let opened=0;
  const mapLook={name:look.name,lede:look.lede,sceneLabel:maps.categorySceneLabel(look.scene),swatch:look.swatch,active:false};
@@ -334,8 +334,10 @@ test('the Layers topic guide shows the category map look and opens it only when 
  assert.ok(card);assert.match(JSON.stringify(card),/Aviation chart/);assert.match(JSON.stringify(card),/3D terrain/);
  findNode(tree,n=>n.type==='button'&&n.props.children==='Open this map').props.onClick();assert.equal(opened,1);
  tree=h.render(h.exports.TopicGuide,{value:'aviation',mapLook:{...mapLook,active:true},onOpenMap:()=>opened++});
- assert.equal(findNode(tree,n=>n.type==='button'&&n.props.children==='Open this map'),undefined,'no button once the look is on');
- assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='topic-map-look')),/on the map now/);
+ assert.equal(opened,1,'changing the topic display does not activate data');
+ findNode(tree,n=>n.type==='button'&&n.props.children==='Open this map').props.onClick();assert.equal(opened,2);
+ assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='topic-map-look')),/map style in use/);
+ assert.match(JSON.stringify(findNode(tree,n=>n.props?.className==='topic-map-look')),/Default view:/);
  tree=h.render(h.exports.TopicGuide,{value:'aviation'});
  assert.equal(findNode(tree,n=>n.props?.className==='topic-map-look'),undefined,'callers without a look render the guide as before');
  h.dispose?.();

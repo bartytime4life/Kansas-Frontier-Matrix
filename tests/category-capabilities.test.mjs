@@ -119,3 +119,17 @@ test('Science deep links are bounded navigation, including malformed and unknown
   assert.deepEqual(Object.keys(science.scienceWorkbenchLocation('?panel=science&track=fauna&play=true')), ['query']);
   assert.equal(science.scienceWorkbenchLocation('?panel=science&q=%E0%A4%A').query.includes('%'), true);
 });
+
+test('a matching map style never hides the category setup or claims its source layers are on', async () => {
+  const h = await componentHarness('app/topic-navigation.tsx', { 'next/link': { default: 'a' }, './layer-workspaces': topics });
+  let calls = 0;
+  const props = { value: 'science', mapLook: { name: 'Satellite view', sceneLabel: '2D', lede: 'GOES source context', swatch: ['#000', '#111', '#222'], active: true }, onOpenMap: () => calls++ };
+  const tree = h.render(h.exports.TopicGuide, props);
+  const open = findNode(tree, node => node.type === 'button' && node.props.onClick === props.onOpenMap);
+  assert.ok(open, 'the map setup remains reachable with matching styles and no selected sources');
+  assert.equal(calls, 0, 'browsing a category must not apply its setup');
+  open.props.onClick();
+  assert.equal(calls, 1);
+  assert.match(JSON.stringify(tree), /Default view:/);
+  assert.ok(!JSON.stringify(tree).includes('on the map now'));
+});
