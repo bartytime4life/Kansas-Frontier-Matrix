@@ -1783,6 +1783,9 @@ export default function Home() {
   }, []);
   const [aviationSelected, setAviationSelected] = useState(false);
   const [aviationShowRequest, setAviationShowRequest] = useState(0);
+  // Explicit category opens start a new display session. Catalogue filtering
+  // and 2D/3D switches keep the current session and its manual layer choices.
+  const [categoryMapSession, setCategoryMapSession] = useState(0);
   const [aviationResearch, setAviationResearch] = useState<readonly ResearchRecord[] | null>(null);
   const [aviationInspect, setAviationInspect] = useState<Readonly<{ lon: number; lat: number; label: string; nonce: number }> | null>(null);
   const { inspectionPanel, rightOpen, qwenOpen, setRightOpen, setQwenOpen, previewEvidence } = useInspectionPanel();
@@ -10691,6 +10694,29 @@ export default function Home() {
   const openCategoryMap = (topic: TopicId) => {
     const look = categoryMap(topic);
     if (!look) { runWelcomeTopic(topic); return; }
+    // These controls own sources and pending reads outside officialVisibility.
+    // A new key unmounts their old owners (cleanup/abort) before fresh owners
+    // mount with their layers off. This also handles reopening the same look.
+    setCategoryMapSession(session => session + 1);
+    setCropSelected(false);
+    setReviewedWaterSelected(false);
+    setReviewedWeatherSelected(false);
+    setAviationInspect(null);
+    setAviationResearch(null);
+    setResearchOpen(false);
+    clearSelectionState();
+    setMapQueryCandidates([]);
+    setPlaying(false);
+    setNoaaRadarPlaying(false);
+    toggleDaylightVisibility(false);
+    const hiddenRegistry = Object.fromEntries(LAYER_REGISTRY.map(layer => [layer.id, false]));
+    visibilityRef.current = hiddenRegistry;
+    setVisibility(hiddenRegistry);
+    // Retain imported bytes for later use, but detach their map preview.
+    importPreviewVisibleRef.current = false;
+    setImportPreviewVisible(false);
+    if (mapRef.current?.isStyleLoaded()) updateImportPreviewSource(mapRef.current, null);
+    setEarthEngineDisplay(current => ({ ...current, visible: {} }));
     setUndergroundOpen(false);
     activateMapRepresentation(look.scene);
     basemapRef.current = look.basemap;
@@ -10768,10 +10794,10 @@ export default function Home() {
     popChangeHidCountiesRef.current = false;
     setPopChangeOn(false);
     setPopChangeCounty(null);
-    if (look.overlays?.includes("aviation")) setAviationShowRequest(request => request + 1);
+    setAviationShowRequest(request => look.overlays?.includes("aviation") ? request + 1 : 0);
     setPopulationPrismsShown(Boolean(look.overlays?.includes("population")));
     // Soil moisture belongs to the maps that offer it; it does not follow into the others.
-    if (!look.tools?.includes("soil")) setSoilMapState(current => current.visible ? hideSoilContext(current) : current);
+    setSoilMapState(current => current.visible ? hideSoilContext(current) : current);
     setStarterPanelOpen(false);
     setLayerCatalogView("official");
     setOfficialWorkspace(topic);
@@ -11569,11 +11595,11 @@ export default function Home() {
               <small className="daylight-band-key"><i aria-hidden="true" /> Night <i aria-hidden="true" /> Astronomical twilight <i aria-hidden="true" /> Nautical twilight <i aria-hidden="true" /> Civil twilight · apparent sunrise/sunset</small>
               </div></details>
             </section>
-            <div hidden={!shownCatalogIds.has("reviewed-water")}><GovernedWaterControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWaterSelected} /></div>
-            <div hidden={!shownCatalogIds.has("reviewed-weather")}><GovernedWeatherControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWeatherSelected} /></div>
+            <div hidden={!shownCatalogIds.has("reviewed-water")}><GovernedWaterControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWaterSelected} /></div>
+            <div hidden={!shownCatalogIds.has("reviewed-weather")}><GovernedWeatherControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWeatherSelected} /></div>
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
-            <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
-            <div hidden={!shownCatalogIds.has("aviation")}><AviationLayerControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} inspectRequest={aviationInspect} showRequest={aviationShowRequest} onPickingChange={setAviationPicking} /></div>
+            <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
+            <div hidden={!shownCatalogIds.has("aviation")}><AviationLayerControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} inspectRequest={aviationInspect} showRequest={aviationShowRequest} onPickingChange={setAviationPicking} /></div>
             {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}
             <details className="layer-source-diagnostics"><summary>Source status &amp; coverage</summary>
 {composedSurfaceCount > 1 && <p className="layer-balance-note">Multiple surfaces are active. The map balances their opacity so boundaries and points stay readable; each slider keeps your selected value.</p>}
@@ -11598,7 +11624,7 @@ export default function Home() {
           <div className="local-layer-settings" hidden={!earthEngineContext.enabled || layerCatalogView === "official" || layerCatalogView === "selected" && !matchingCatalogEntries.some(entry => entry.imagery)}>
             <p className="layer-journey-intro">Reviewed Kansas imagery appears here when an approved display set is installed. Each layer has its own visibility, opacity, source period, and limits. <Link href="/earth-engine">Explore all source recipes ↗</Link></p>
             <section className="reviewed-imagery-section" aria-label="Earth Engine imagery layers">
-              {earthEngineContext.enabled && <EarthEngineDisplayControls catalogView={layerCatalogView} catalogTopic={officialWorkspace} catalogQuery={officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />}
+              {earthEngineContext.enabled && <EarthEngineDisplayControls key={categoryMapSession} catalogView={layerCatalogView} catalogTopic={officialWorkspace} catalogQuery={officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />}
             </section>
           </div>
             <nav className="layer-task-links" aria-label="Related map tools"><button type="button" onClick={event => openMapUtility("scene", event.currentTarget)}><span>Appearance</span><small>Basemap, terrain &amp; lighting</small><b aria-hidden="true">↗</b></button><button type="button" onClick={event => openSourceStatus(event.currentTarget)}><span>Source status</span><small>Connections &amp; coverage</small><b aria-hidden="true">↗</b></button></nav>
