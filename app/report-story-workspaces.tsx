@@ -1,5 +1,6 @@
 "use client";
 
+import { SCIENTIFIC_REPORT_CSS, scientificReportMarkup, downloadScientificReport, type ScientificReportLayout } from "./scientific-report";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createReportDraft,
@@ -88,8 +89,8 @@ const reportMarkdown = (draft: ReportDraft, evidence: readonly EvidenceRecord[])
     `**Basemap:** ${draft.snapshot.basemap} (display context)` ,
     "**Map attribution:** " + (draft.snapshot.basemap === "standard" || isCategoryBasemapKey(draft.snapshot.basemap) ? "OpenFreeMap · OpenMapTiles · © OpenStreetMap contributors" : draft.snapshot.basemap === "imagery" ? "Tiles © Esri" : draft.snapshot.basemap === "streets" ? "© OpenStreetMap contributors" : "KFM local background style"),
     ...(terrainDescription ? [`**Display terrain:** ${terrainDescription}`] : []),
-    ...(draft.subsurfaceContext ? ["", subsurfaceMarkdown(draft.subsurfaceContext), ""] : []),
-    ...(draft.researchContext ? ["", researchMarkdown(draft.researchContext), ""] : []),
+    ...(draft.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && draft.subsurfaceContext ? ["", subsurfaceMarkdown(draft.subsurfaceContext), ""] : []),
+    ...(draft.snapshot.camera.center !== "WITHHELD_BROWSER_LOCATION" && draft.researchContext ? ["", researchMarkdown(draft.researchContext), ""] : []),
     ...(draft.fireContext ? [
       "",
       "## Fire source context · not claim evidence",
@@ -161,6 +162,8 @@ export default function ReportStoryWorkspaces({
   onApplyScene,
   getCurrentSnapshot,
 }: ReportStoryWorkspacesProps) {
+  const [reportView, setReportView] = useState<"dashboard" | "edit">("dashboard");
+  const [reportLayout, setReportLayout] = useState<ScientificReportLayout>("overview");
   const [assistantOpen,setAssistantOpen] = useState(false);
   const assistantFocus = useMemo(()=>snapshotAssistantFocus(snapshot,mode),[snapshot,mode]);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -247,6 +250,7 @@ export default function ReportStoryWorkspaces({
     () => snapshotEvidence.filter((record) => report.includedEvidenceIds.includes(record.id)),
     [report.includedEvidenceIds, snapshotEvidence],
   );
+  const reportMarkup = useMemo(() => scientificReportMarkup(report, snapshotEvidence, reportLayout, reportMarkdown(report, snapshotEvidence)), [report, snapshotEvidence, reportLayout]);
   const readinessItems = [
     Boolean(report.title.trim()),
     Boolean(report.researchQuestion.trim()),
@@ -344,7 +348,7 @@ export default function ReportStoryWorkspaces({
   };
 
   return (
-    <section className="primary-workspace-surface" data-workspace={mode} aria-labelledby="primary-workspace-title">
+    <section className="primary-workspace-surface" data-workspace={mode} data-report-view={mode === "reports" ? reportView : undefined} aria-labelledby="primary-workspace-title">
       {assistantOpen&&<AssistantPanel focus={assistantFocus} onClose={()=>setAssistantOpen(false)}/>}
       <header className="primary-workspace-header">
         <div>
@@ -361,7 +365,17 @@ export default function ReportStoryWorkspaces({
         <div className="draft-state" role="status"><strong>DRAFT · NOT PUBLISHED</strong><small>{storageState === "saved" ? "Saved on this device" : storageState === "saving" ? "Saving locally…" : "Browser storage unavailable · export to keep your work"}</small>{storageState === "unavailable" && <button type="button" onClick={() => saveDraft()}>Retry saving</button>}</div>
       </header>
 
-      {mode === "reports" ? <div className="report-workspace-grid">
+      {mode === "reports" && <>
+        <style>{SCIENTIFIC_REPORT_CSS}</style>
+        <div className="report-dashboard-toolbar" aria-label="Report presentation">
+          <div className="report-view-switch"><button type="button" aria-pressed={reportView === "dashboard"} onClick={() => setReportView("dashboard")}>Dashboard</button><button type="button" aria-pressed={reportView === "edit"} onClick={() => setReportView("edit")}>Edit report</button></div>
+          <label>Report layout<select value={reportLayout} onChange={event => setReportLayout(event.target.value as ScientificReportLayout)}><option value="overview">Scientific overview</option><option value="place">Place brief</option><option value="sources">Source comparison</option></select></label>
+          <button type="button" onClick={() => downloadScientificReport(report.title, reportMarkup)}>Download visual HTML</button>
+          <a href="/history/people-events">People &amp; events reports ↗</a>
+          <p>Free, self-contained download · open it in a browser to print or save as PDF. Layouts use the same captured data; missing observations remain explicit.</p>
+        </div>
+      </>}
+      {mode === "reports" ? reportView === "dashboard" ? <div className="report-dashboard-preview" role="region" aria-label="Scientific report preview" tabIndex={0} dangerouslySetInnerHTML={{ __html: reportMarkup }} /> : <div className="report-workspace-grid">
         <aside className="snapshot-context" aria-label="Inherited map snapshot">
           <span className="workspace-eyebrow">MAP SNAPSHOT</span>
           <h2>{report.snapshot.area.label}</h2>
@@ -487,8 +501,7 @@ export default function ReportStoryWorkspaces({
         </aside>
       </div>}
       {mode === "reports" && <article className="report-print-document" aria-label="Print report">
-        <h1>{report.title}</h1><strong>DRAFT · NOT PUBLISHED</strong>
-        <pre>{reportMarkdown(report, snapshotEvidence)}</pre>
+        <div dangerouslySetInnerHTML={{ __html: reportMarkup }} />
       </article>}
     </section>
   );

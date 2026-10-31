@@ -38,3 +38,7 @@
 .sources>li { scroll-margin-top:20px; }
 @media(max-width:800px) { .records,.sources { grid-template-columns:1fr; }.filters { grid-template-columns:1fr; }.filters input,.filters select { font-size:16px; }.intro { padding-top:24px; } }
 @media(max-width:450px) { .context { grid-template-columns:1fr; }.pagination { gap:8px; }.pagination span { order:3; width:100%; text-align:center; }.records>li,.sources>li { padding:18px; } }
+
+.reportActions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:20px 0;padding:16px;border:1px solid #b8ced9;border-radius:8px;background:#eef5f8;color:#19394c}.wrap .reportActions button,.wrap .actions button{font:inherit;min-height:40px;padding:8px 14px;border:1px solid #a3bfce;border-radius:5px;background:white;color:#17465a;cursor:pointer}.reportActions p{flex-basis:100%;font-size:13px;margin:0}.reportActions button:disabled{opacity:.55;cursor:default}
+
+.wrap .reportActions button:hover:not(:disabled),.wrap .actions button:hover:not(:disabled){background:#dcebf0;color:#153b4b;border-color:#47798e}

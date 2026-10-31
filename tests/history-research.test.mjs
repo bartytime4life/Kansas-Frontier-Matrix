@@ -1,3 +1,4 @@
+import {scientific} from './scientific-report-harness.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
@@ -27,7 +28,7 @@ async function harness(fetcher = async () => new Response(JSON.stringify(catalog
   const calls = [];
   const modelHarness = await componentHarness('app/history-research-model.ts', { './bounded-json': bounded }, { fetch: (...args) => { calls.push(args); return fetcher(...args); } });
   const h = await componentHarness('app/history/people-events/page.tsx', {
-    '../../history-research-model': modelHarness.exports, '../../downloads/workspace.module.css': { default: css }, '../../history-research.module.css': { default: css },
+    '../../scientific-report':scientific,'../../history-research-model': modelHarness.exports, '../../downloads/workspace.module.css': { default: css }, '../../history-research.module.css': { default: css },
   });
   return { calls, h, render: () => { const tree = h.render(h.exports.default, {}); h.commit(); return tree; }, dispose: () => { h.dispose(); modelHarness.dispose(); } };
 }
@@ -164,4 +165,18 @@ test('unmounted page aborts its request and ignores a late response', async () =
   assert.equal(p.calls[0][1].signal.aborted, true);
   respond(new Response(JSON.stringify(catalog()))); await settle();
   assert.equal(entries(p.render()).length, 0);
+});
+
+test('visual report scopes the current filtered page and Back preserves navigation',async()=>{
+ const p=await harness();p.render();await settle();let tree=p.render();
+ button(tree,'Next entries').props.onClick();tree=p.render();
+ button(tree,'Build report for this page').props.onClick();tree=p.render();
+ let preview=findNode(tree,n=>n.props?.dangerouslySetInnerHTML);
+ assert.match(preview.props.dangerouslySetInnerHTML.__html,/Entries 31–60 of 67 matches/);
+ assert.match(preview.props.dangerouslySetInnerHTML.__html,/Record|Kansas entry 30/);
+ assert.doesNotMatch(preview.props.dangerouslySetInnerHTML.__html,/Kansas entry 60<|Kansas entry 0</);
+ button(tree,'Back to entries').props.onClick();tree=p.render();assert.match(content(entries(tree)[0]),/Kansas entry 30/);
+ button(entries(tree)[0],'Build entry report').props.onClick();tree=p.render();
+ assert.match(findNode(tree,n=>n.props?.dangerouslySetInnerHTML).props.dangerouslySetInnerHTML.__html,/1<\/strong><span>Source entries in report/);
+ p.dispose();
 });

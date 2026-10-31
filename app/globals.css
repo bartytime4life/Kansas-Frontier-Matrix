@@ -4866,3 +4866,13 @@ input[type="file"]:not(:disabled)::file-selector-button{cursor:pointer}
  .atlas-studio .scene-panel-toolbar .scene-panel-trigger strong{display:none}
  .atlas-studio .map-dock-menu>summary{min-width:44px;padding-inline:4px}
 }
+
+/* One visual report surface drives preview, standalone download, and print. */
+.report-dashboard-toolbar{flex-shrink:0;display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 24px;background:#f7fafb;color:#19394c;border-bottom:1px solid #cbdbe4}
+.report-dashboard-toolbar button,.report-dashboard-toolbar select,.report-dashboard-toolbar a{font:inherit;font-size:12px;min-height:36px;border:1px solid #b8ced9;border-radius:5px;padding:7px 12px;background:white;color:#17465a}
+.report-dashboard-toolbar button{cursor:pointer}.report-dashboard-toolbar button[aria-pressed="true"]{background:#17465a;color:white}.report-dashboard-toolbar label{display:flex;align-items:center;gap:8px;font-size:12px}.report-dashboard-toolbar p{flex-basis:100%;font-size:11px;margin:0;color:#537080}.report-view-switch{display:flex;gap:4px}
+.report-dashboard-preview{min-height:0;overflow:auto;flex:1;background:#e5edf2;padding:24px;overscroll-behavior:contain}
+@media(max-width:700px){.report-dashboard-toolbar{padding:10px;gap:8px}.report-dashboard-toolbar label{flex:1}.report-dashboard-toolbar select{min-width:0;max-width:100%}.report-dashboard-toolbar p{font-size:10px}.report-dashboard-preview{padding:0}}
+@media print{.report-print-document{padding:0!important}.report-print-document .scientific-report pre{font:9pt/1.6 Arial,sans-serif}}
+
+@media screen and (max-width:700px){.primary-workspace-surface[data-report-view="dashboard"] .primary-workspace-header{position:static;max-height:none;overflow:visible;flex-shrink:0}.report-dashboard-preview{flex:0 0 auto;overflow:visible}}
