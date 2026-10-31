@@ -1415,3 +1415,28 @@ test('water animation stays opt-in and does not follow the visitor into unrelate
   assert.equal(await p.evaluate(`JSON.parse(localStorage.getItem('kfm-scene-effects-v1')).waterFlow`),false,'visual preset does not enable flow');
  }
 });
+
+// Reviewed imagery is restricted to this local preview origin; never activate a hosted set.
+const elevationManifest = {schema:'kfm-earth-engine-context/v1',setId:'ks-2024-testfixture',boundary:'Kansas · TIGER/2018/States · STATEFP 20',reviewState:'APPROVED_VISUAL_CONTEXT',admission:'NOT_ADMITTED',evidence:'NOT_CLAIM_EVIDENCE',approvedAt:'2026-10-31T00:00:00Z',layers:[{id:'ee-3dep',status:'approved',source:'USGS/3DEP/10m_collection',period:'Mixed acquisition dates · source mosaic',attribution:'USGS 3D Elevation Program',resolutionMeters:30,limits:'Synthetic browser fixture only',legend:'Elevation',geotiffSha256:'a'.repeat(64),reviewSha256:'b'.repeat(64),tileIndexes:{6:{sha256:'c'.repeat(64),count:1,minX:14,maxX:14,minY:24,maxY:24}}}]};
+for (const renderer of ['unsupported', 'supported']) test(`local preview ${renderer} renderer preserves elevation off through category navigation`, {timeout:90000, skip: origin.origin !== 'http://127.0.0.1:4173'}, async t=>{
+ const b=await browser(t);
+ const p=await pageSession(b,1280,900,{intercept:async ({requestId,request},call)=>{
+  if(new URL(request.url).pathname!=='/api/earth-engine-context/catalog') return false;
+  await call('Fetch.fulfillRequest',{requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(JSON.stringify({manifests:[elevationManifest]})).toString('base64')});return true;
+ }});
+ await p.open('/?topic=geology',null,renderer === 'unsupported' ? `const oldContext=HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext=function(kind,...args){return /webgl/.test(kind)?null:oldContext.call(this,kind,...args)};` : '');
+ await p.wait(`document.querySelector('#earth-engine-context-controls')`, 'local imagery controls');
+ const box=`[...document.querySelectorAll('#earth-engine-context-controls label')].find(n=>n.textContent==='Elevation mosaic')?.querySelector('input')`;
+ await p.wait(`${box} && !${box}.disabled`, 'approved elevation is available');
+ assert.equal(await p.evaluate(`Boolean(${box}.checked)`), renderer === 'unsupported', 'only unsupported startup auto-selects');
+ if (renderer === 'supported') await p.evaluate(`${box}.click()`);
+ await p.evaluate(`${box}.click()`);
+ await p.wait(`!${box}?.checked`, 'visitor switches elevation off');
+ for(const topic of ['water','aviation','geology','water']){
+  await p.evaluate(`(()=>{const s=document.querySelector('[aria-label="Layer topic"]');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(s,${JSON.stringify(topic)});s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  await p.wait(`[...document.querySelectorAll('button')].some(b=>/^Open .*map$/.test(b.textContent))`, 'open category button');
+  await p.evaluate(`[...document.querySelectorAll('button')].find(b=>/^Open .*map$/.test(b.textContent)).click()`);
+  await pause(300);
+  assert.equal(await p.evaluate(`Boolean(${box}?.checked)`),false,`${topic} preserves off`);
+ }
+});

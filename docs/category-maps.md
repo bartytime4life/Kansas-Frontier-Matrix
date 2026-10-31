@@ -33,6 +33,11 @@ the explicit map session so leaving a setup unmounts the old owners, removes
 their sources/listeners and cancels their pending reads. Aviation's show request
 is also cleared outside Aviation; an old request cannot turn it back on.
 The Flora setup retains its specified land-cover default.
+The local reviewed-imagery viewer may initially select approved elevation when
+WebGL2 is unavailable. That startup default applies only before the first
+explicit category open: remounting the imagery control must not select elevation
+again after clearing the old setup or after a visitor turns it off. Explicit
+imagery toggles remain available in every category.
 
 Browsing or filtering the Layers catalogue and switching 2D/3D/Globe within a
 setup retain manual layer choices. Only explicitly opening a setup resets them.

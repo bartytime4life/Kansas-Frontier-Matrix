@@ -21,10 +21,12 @@ const isSourceYear = (id: EarthEngineContextLayerId, year: number | undefined): 
   return year !== undefined && Number.isInteger(year) && Boolean(bounds && year >= bounds[0] && year <= bounds[1]);
 };
 
-export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, error, onReload, onDisplayChange, rendererState, catalogView = "local", catalogTopic = "all", catalogQuery = "" }: {
+export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, error, onReload, onDisplayChange, rendererState, allowStartupFallback = true, catalogView = "local", catalogTopic = "all", catalogQuery = "" }: {
   map: MapLibreMap | null; mapYear: number; manifests: EarthEngineContextManifest[];
   loading: boolean; error: string | null; onReload: () => void;
   onDisplayChange: (display: EarthEngineDisplayState) => void; rendererState: string;
+  // Category owners remount to clear their layers; startup defaults must not replay.
+  allowStartupFallback?: boolean;
   catalogView?: LayerBrowseView; catalogTopic?: LayerWorkspace; catalogQuery?: string;
 }) {
   const [visible, setVisible] = useState<Partial<Record<EarthEngineContextLayerId, boolean>>>({});
@@ -48,9 +50,9 @@ export function EarthEngineDisplayControls({ map, mapYear, manifests, loading, e
     const choice = yearChoice[item.id];
     return [item.id, isSourceYear(item.id, choice) ? choice : installed[0] ?? Math.max(bounds[0], Math.min(bounds[1], 2024))];
   })) as Partial<Record<EarthEngineContextLayerId, number>>, [manifests, yearChoice]);
-  const selectedVisible = useMemo(() => !visibilityTouched && rendererState === "unsupported"
+  const selectedVisible = useMemo(() => allowStartupFallback && !visibilityTouched && rendererState === "unsupported"
     && baseline?.layers.some((layer) => layer.id === "ee-3dep" && layer.status === "approved")
-    ? { ...visible, "ee-3dep": true } : visible, [baseline, rendererState, visibilityTouched, visible]);
+    ? { ...visible, "ee-3dep": true } : visible, [allowStartupFallback, baseline, rendererState, visibilityTouched, visible]);
 
   useEffect(() => { onDisplayChange({ visible: selectedVisible, opacity, years: selectedYears }); }, [onDisplayChange, opacity, selectedVisible, selectedYears]);
 

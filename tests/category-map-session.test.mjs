@@ -59,11 +59,15 @@ test("every explicit setup open clears previous layers and evidence, including r
     ...Object.keys(mapsExports.CATEGORY_MAPS)];
   for (const [index, topic] of sequence.entries()) {
     h.values.selected = "old-earthquake"; h.values.drawerOpen = true;
+    h.values.setPopChangeOn = true; h.values.setPopChangeCounty = "20141";
+    h.refs.popChangePrismsRef = { current: true }; h.refs.popChangeHidCountiesRef = { current: true };
     h.open(topic);
     assert.equal(h.values.setCategoryMapSession, index + 1, `${topic}: starts a fresh owner lifecycle`);
     assert.equal(h.values.setAviationShowRequest > 0, topic === "aviation", `${topic}: aviation opens only when requested`);
     assert.equal(h.values.setCropSelected, false); assert.equal(h.values.setReviewedWaterSelected, false);
     assert.equal(h.values.setReviewedWeatherSelected, false); assert.equal(h.values.setSoilMapState.visible, false);
+    assert.equal(h.values.setPopChangeOn, false); assert.equal(h.values.setPopChangeCounty, null);
+    assert.equal(h.refs.popChangePrismsRef.current, false); assert.equal(h.refs.popChangeHidCountiesRef.current, false);
     assert.equal(h.values.selected, null); assert.equal(h.values.drawerOpen, false);
     assert.equal(h.values.setResearchOpen, false); assert.equal(h.values.setAviationInspect, null);
     assert.deepEqual(h.values.setVisibility, { "old-historical-layer": false });
