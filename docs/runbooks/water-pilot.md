@@ -1,5 +1,7 @@
 # Water pilot: acquisition, candidate review and governed reads
 
+> **2026-10-31 endpoint checkpoint:** See [USGS API readiness and station 07146500 verification](hydrology/USGS_API_READINESS_20261031.md) for the announced WaterServices retirement schedule, exact-source modern API findings, and remaining read-only acceptance checks. Older implementation and deployment checkpoints below retain their original dates.
+
 Status: implemented delivery candidate. On 2026-10-10 the owner admitted the USGS
 discharge source and accepted ADR-0044; see [Releasing the discharge layer](#releasing-the-discharge-layer).
 No real package has been released, activated or published yet.

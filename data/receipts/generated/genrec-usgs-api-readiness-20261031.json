@@ -1,0 +1,98 @@
+{
+  "receipt_id": "genrec-usgs-api-readiness-20261031",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/hydrology/USGS_API_READINESS_20261031.md",
+    "docs/runbooks/water-pilot.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/hydrology/USGS_API_READINESS_20261031.md": "sha256:9b6cfbf83983781f89171f3f1f03ef3a8424046e3a627099d6c5deafdbd9ecef",
+    "docs/runbooks/water-pilot.md": "sha256:c73fff5d552e60c3eb9ae521a824edc3edefbb85766b97a7423bc41188cfdf3d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:227567f50538e42b40d2d0376dd8826fabaf986e1b23649961badbba74214c21",
+  "parameters": {},
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf (read-only lineage; accepted ADR-0029 governs current placement)"
+    ],
+    "evidence_refs": [
+      "main@5af905d8bd94773ab43fcf7a137b0484c450edf2",
+      "a0-hosted-ai-web-20261017@8cf26ab5fceed437652641f6091cd9ea4b28a045",
+      "https://waterdata.usgs.gov/blog/wdfn-waterservices-degradation/",
+      "https://api.waterdata.usgs.gov/docs/ogcapi/migration/",
+      "https://api.waterdata.usgs.gov/docs/ogcapi/keys/"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/hydrology/USGS_API_READINESS_20261031.md": "PROPOSED",
+    "docs/runbooks/water-pilot.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused Markdown structure and changed navigation",
+      "outcome": "PASS",
+      "reason": "Checked one H1, heading uniqueness, table column consistency, whitespace, local targets and new navigation."
+    },
+    {
+      "gate": "original water-pilot source identity",
+      "outcome": "PASS",
+      "reason": "Git blob digest checked against pinned main tree before adding only the dated navigation paragraph."
+    },
+    {
+      "gate": "authoring receipt JSON Schema and artifact SHA-256",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator with FormatChecker against the fetched repository schema; exact local artifact hashes verified."
+    },
+    {
+      "gate": "live station responses and installed-reader baseline replay",
+      "outcome": "SKIPPED",
+      "reason": "Provider endpoint retrieval unavailable; actual installed/deployed consumer and prior baseline not inspected."
+    },
+    {
+      "gate": "repository-wide pre-commit, runtime tests and native receipt validator",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only patch workspace; no complete current checkout. Bounded schema and hash checks used; full-suite/runtime/deployment claims not made."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "usgs-degradation-notice-20261027",
+      "validated": true,
+      "evidence_ref": "https://waterdata.usgs.gov/blog/wdfn-waterservices-degradation/"
+    },
+    {
+      "id": "usgs-migration-guide",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/docs/ogcapi/migration/"
+    },
+    {
+      "id": "usgs-api-key-guidance",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/docs/ogcapi/keys/"
+    },
+    {
+      "id": "main-source-snapshot",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/5af905d8bd94773ab43fcf7a137b0484c450edf2"
+    },
+    {
+      "id": "hosted-source-snapshot",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/8cf26ab5fceed437652641f6091cd9ea4b28a045"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-10-31T23:53:53.405686Z",
+  "emitter": "Codex",
+  "notes": "Documentation-only authoring provenance. Bounded source findings do not prove deployed behavior or full repository absence of legacy consumers. No provider observations retrieved; no new watch baseline, no-gap or no-change claim. No source/approval/release/runtime edits. Revert the three-file documentation/receipt change for rollback. Human review remains pending."
+}
