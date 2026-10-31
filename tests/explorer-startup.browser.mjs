@@ -932,7 +932,11 @@ for (const [width,height] of [[1280,800],[768,1024],[390,844],[320,568],[568,320
     if(pauseEnabled)await tab('.welcome-preview-pause',true);
     await tab(back,true);await enter();
     await p.wait(`document.querySelector('.living-welcome')?.dataset.cinematic==='false'&&document.activeElement?.matches('.topic-preview-${opening}')`,'Return restores the original category after rail switching');
-    assert.ok(Math.abs(await p.evaluate(`document.querySelector('.living-welcome').scrollTop`)-scroll)<=1,'Return restores chooser scroll');
+    const returned = await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome'),card=document.querySelector('.topic-preview-${opening}'),r=root.getBoundingClientRect(),c=card.getBoundingClientRect();return {scroll:root.scrollTop,max:Math.max(0,root.scrollHeight-root.clientHeight),cardVisible:c.width>0&&c.height>=44&&c.top>=r.top-.5&&c.bottom<=r.bottom+.5&&c.left>=r.left-.5&&c.right<=r.right+.5};})()`);
+    // Reflow can shorten the chooser while previewing. Native scroll restoration
+    // clamps at its current maximum; retain exact restoration within that range.
+    assert.ok(Math.abs(returned.scroll-Math.min(scroll,returned.max))<=1,'Return restores chooser scroll within the current native scroll range');
+    assert.equal(returned.cardVisible,true,'Return keeps the original category action visible');
     // Escape from a stage control restores that same card before the next key.
     await enter();await focused(back);
     if(pauseEnabled)await tab('.welcome-preview-pause');
