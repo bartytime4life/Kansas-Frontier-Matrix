@@ -139,6 +139,33 @@ test('source-search handoff keeps its dedicated search-focus effect',()=>{
   const h=harness();h.scope.sourceSearchFocusPendingRef.current=true;
   execute('openAtlasPanel',h.scope)('layers');h.flush();assert.equal(h.state.primary,'map');assert.deepEqual(h.focus,[]);
 });
+test('choosing an official source leaves discovery and opens its filtered catalog without competing focus restoration',()=>{
+  for(const compact of [false,true]){
+    const h=harness('map'),enabled=[];
+    h.state.inspector='qwen';h.scope.isCompact=compact;
+    Object.assign(h.scope,{
+      setQwenOpen:open=>{h.state.inspector=open?'qwen':h.state.inspector==='qwen'?null:h.state.inspector;},
+      setRightOpen:open=>{h.state.inspector=open?'evidence':h.state.inspector==='evidence'?null:h.state.inspector;},
+      closeQwenCompanion(){throw Error('the destination owns focus; do not schedule a return to the chat trigger');},
+      setGlobalQuery:value=>{h.state.query=value;},
+      setStarterPanelOpen:value=>{h.state.starter=value;},
+      setLayerCatalogView:value=>{h.state.catalog=value;},
+      setOfficialWorkspace:value=>{h.state.officialWorkspace=value;},
+      setOfficialCatalogFilter:value=>{h.state.filter=value;},
+      setOfficialSourceQuery:value=>{h.state.sourceQuery=value;},
+      setOfficialContextVisible:(...args)=>enabled.push(args),
+    });
+    h.scope.openAtlasPanel=execute('openAtlasPanel',h.scope);
+    execute('chooseSearchResult',h.scope)({id:'source:usgs-streamflow',kind:'source',title:'River Pulse',subtitle:'USGS · Hydrology',officialContextId:'usgs-streamflow'});
+    assert.equal(h.state.inspector,null,'the search modal must release the foreground before the catalog can receive input');
+    assert.equal(h.state.left,true);assert.equal(h.state.mode,'layers');assert.equal(h.state.catalog,'official');
+    assert.equal(h.state.starter,false);assert.equal(h.state.officialWorkspace,'all');assert.equal(h.state.filter,'all');
+    assert.equal(h.state.sourceQuery,'River Pulse');assert.equal(h.state.query,'');
+    assert.deepEqual(enabled,[['usgs-streamflow',true]]);
+    assert.equal(h.scope.sourceSearchFocusPendingRef.current,true,'the committed catalog effect owns initial focus');
+    h.flush();assert.deepEqual(h.focus,[],'no delayed generic focus can override the source search');
+  }
+});
 test('Time reopens a retained open panel from Reports or Stories, while Map still toggles',()=>{
   for(const workspace of ['reports','stories','map']) {
     const h=harness(workspace);execute('toggleTimelinePanel',h.scope)();
