@@ -86,13 +86,15 @@ const OUTLOOK_PRODUCT_CHOICES: readonly (readonly [OutlookProduct, string, strin
   ["hail", "Hail", "Probability of hail 1 inch or larger within 25 miles of a point, with SPC's intensity areas"],
 ];
 
-export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, seasonRain, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
+export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCongress, onCivicPresent, onCivicRetry, look, currentMapOnly = false, mode, depth, azimuth, sun, sunAvailable = true, terrainAvailable, onMode, onDepth, onAzimuth, onRealSun, onSunTime, sunPlaying, motionAllowed, onSunPlay, onTransect, onUnderground, daylight, onDaylight, onDaylightPlay, sunYear, onSunYear, onSunYearCentre, onSunYearPlace, measuringArea, onMeasureArea, population, onPopulation, populationChange, onPopulationChange, onPopulationChangePick, onPopulationChangeClear, quakes, onQuakes, onQuakeYear, onQuakeClear, onQuakePick, outlook, onOutlook, onOutlookProduct, reports, onReports, onReportPick, onReportClear, soil, onSoil, onSoilDepth, drought, onDrought, onDroughtWeek, onDroughtPlay, onDroughtChange, onDroughtCounty, onDroughtCountyClear, aquifer, onAquiferView, surface, onSurface, onSurfacePick, onSurfaceClear, history, surveySoil, degreeDays, frost, seasonRain, wells, onWells, onWellPick, onWellClear, reviewed, onReviewed, onReviewedClear, onReviewedPick, onReviewedIndex, onReviewedPlay, photoreal, onPhotoreal, radar, onRadar, flow, onFlow, flood, onFlood, onFloodPick, onFloodClear, fema, onFema, onFemaYear, onFemaFamily, onFemaEmergencies, onFemaCounty, onFemaCountyClear, rainfall, onRainfall, onRainfallKind, onRainfallHours, flora, onFlora, onFloraYear, onFloraOpacity, onFloraRetry, landCover, onLandCover, crops, onCrops, onCropsYear, onCropCentre, legislature, onLegislature, onLegislaturePick, onLegislatureClear, tornadoes, onTornadoes, onTornadoYear, onTornadoRating, onTornadoPick, onTornadoClear, layerVisibility, onLayer, keys, onReset, onLayers, onClose }: Readonly<{
   civic?: Readonly<{ visible: boolean; state: string; day?: string | null; congress?: number | null; options?: readonly Readonly<{ value: number; label: string }>[]; items: readonly Readonly<{ id: string; label: string }>[] }>;
   onCivicCongress?: (congress: number) => void;
   onCivicPresent?: () => void;
   onCivicRetry?: () => void;
   onCivicPick?: (id: string, returnElement: HTMLElement) => void;
   look: CategoryMap;
+  /** Tool navigation keeps a different existing basemap instead of claiming this preset is displayed. */
+  currentMapOnly?: boolean;
   mode: CategoryScene;
   depth: number;
   azimuth: number;
@@ -239,6 +241,8 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
    * The crop history at the point last clicked: loading or failed, or the
    * year-by-year bars, the pattern read from them and its line.
    */
+  /** Explicit keyboard equivalent of choosing a crop point on the map. */
+  onCropCentre?: () => void;
   seasonRain?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; year: number; line: string | null }> | null;
   frost?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; year: number; line: string | null }> | null;
   degreeDays?: Readonly<{ state: "loading" | "failed" | "ready" | "none"; year: number; line: string | null; rain: string | null }> | null;
@@ -424,10 +428,10 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
   onClose: () => void;
 }>) {
   const swatch = { "--m0": look.swatch[0], "--m1": look.swatch[1], "--m2": look.swatch[2] } as CSSProperties;
-  return <section className="category-map-dock" aria-label={`${look.name} controls`} data-mode={mode} style={swatch}>
+  return <section className="category-map-dock" aria-label={`${look.name} controls`} tabIndex={-1} data-mode={mode} style={swatch}>
     <header>
       <span className="category-map-dock-swatch" aria-hidden="true" />
-      <div><strong>{look.name}</strong><small>{mode === "terrain" ? "3D terrain" : mode === "globe" ? "Globe" : "2D map"} · display context</small></div>
+      <div><strong>{look.name}{currentMapOnly ? " tools" : ""}</strong><small>{mode === "terrain" ? "3D terrain" : mode === "globe" ? "Globe" : "2D map"} · display context</small></div>
       <button type="button" className="category-map-dock-close" aria-label={`Hide ${look.name} controls`} onClick={onClose}>×</button>
     </header>
     {look.topic === "government" && civic && <section className="category-map-dock-layer-set" aria-label="Kansas congressional districts">
@@ -494,12 +498,12 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>
       : <button type="button" className="category-map-dock-sun" aria-pressed={false} onClick={() => onRealSun(true)} title="Light the map from where the sun is now over the map center">Use the real sun now</button>)}
     {look.tools?.includes("flow") && flow && onFlow && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={flow.on} onClick={() => onFlow(!flow.on)}
+      <button type="button" data-category-tool="flow" className="category-map-dock-tool" aria-pressed={flow.on} onClick={() => onFlow(!flow.on)}
         title="Rivers flow downstream where USGS 3DHP maps a direction; a USGS gauge reading lights its own reach">{flow.on ? "Hide river flow" : "Show river flow"}</button>
       {flow.on && <p className="category-map-dock-reading" aria-live="polite">{flow.reading ?? "Starting river flow…"}{flow.still ? ` · drawn still: ${flow.still}` : ""}</p>}
     </>}
     {look.tools?.includes("sunyear") && sunYear && onSunYear && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={sunYear.on} onClick={() => onSunYear(!sunYear.on)}
+      <button type="button" data-category-tool="sunyear" className="category-map-dock-tool" aria-pressed={sunYear.on} onClick={() => onSunYear(!sunYear.on)}
         title="Sunrise, sunset and twilight for every day of the year at a Kansas place, with the Moon's phases, rising and setting, all calculated">{sunYear.on ? "Hide daylight through the year" : "Daylight through the year"}</button>
       {sunYear.on && <div className="category-map-dock-quakes">
         <p className="category-map-dock-reading" aria-live="polite">{`At ${sunYear.place ?? "–"} · ${sunYear.outside ? "the chart is for places in Kansas: choose coordinates or click inside the state" : "click the map in Kansas for another place"}`}</p>
@@ -525,7 +529,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("daylight") && daylight && onDaylight && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={daylight.on} onClick={() => onDaylight(!daylight.on)}
+      <button type="button" data-category-tool="daylight" className="category-map-dock-tool" aria-pressed={daylight.on} onClick={() => onDaylight(!daylight.on)}
         title="Shade the night side of the Earth and its civil, nautical and astronomical twilight, calculated from the Sun's position">{daylight.on ? "Hide day and night" : "Show day and night"}</button>
       {daylight.on && <>
         <p className="category-map-dock-reading" aria-live={daylight.playing ? "off" : "polite"}>{daylight.time}<br />{daylight.reading}</p>
@@ -533,10 +537,10 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
           title={motionAllowed ? "Run the calculated day through 24 hours in a 60-second loop" : "Reduced motion is on; set the time in the Daylight & twilight layer"}>{daylight.playing && motionAllowed ? "Pause day and night" : "Play day and night"}</button>}
       </>}
     </>}
-    {look.tools?.includes("radar") && radar && onRadar && <button type="button" className="category-map-dock-tool" aria-pressed={radar.watching} disabled={!radar.watching && !radar.available} onClick={() => onRadar(!radar.watching)}
+    {look.tools?.includes("radar") && radar && onRadar && <button type="button" data-category-tool="radar" className="category-map-dock-tool" aria-pressed={radar.watching} disabled={!radar.watching && !radar.available} onClick={() => onRadar(!radar.watching)}
       title={radar.watching ? "Close the radar loop controls" : radar.available ? "Play the latest NOAA radar scans on the map at their observation times" : "The live loop plays at the present map time; return to Present in Time"}>{radar.watching ? "Close radar loop" : "Watch the radar loop"}</button>}
     {look.tools?.includes("outlook") && outlook && onOutlook && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={outlook.day !== null} onClick={() => onOutlook(outlook.day === null ? 1 : null)}
+      <button type="button" data-category-tool="outlook" className="category-map-dock-tool" aria-pressed={outlook.day !== null} onClick={() => onOutlook(outlook.day === null ? 1 : null)}
         title="NOAA Storm Prediction Center convective outlooks: the categorical severe risk, and tornado, wind and hail probabilities, drawn as outlines">{outlook.day === null ? "Show the SPC severe outlook" : "Hide the SPC outlook"}</button>
       {outlook.day !== null && <>
         <div className="category-map-dock-modes" role="group" aria-label="Outlook day">
@@ -556,7 +560,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </>}
     </>}
     {look.tools?.includes("reports") && reports && onReports && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={reports.day !== null} onClick={() => onReports(reports.day === null ? "today" : null)}
+      <button type="button" data-category-tool="reports" className="category-map-dock-tool" aria-pressed={reports.day !== null} onClick={() => onReports(reports.day === null ? "today" : null)}
         title="Preliminary tornado, wind and hail reports collected by the NOAA Storm Prediction Center for the convective day">{reports.day === null ? "Show SPC storm reports" : "Hide storm reports"}</button>
       {reports.day !== null && <>
         <div className="category-map-dock-modes category-map-dock-depth" role="group" aria-label="Report day">
@@ -579,7 +583,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </>}
     </>}
     {look.tools?.includes("population") && population && onPopulation && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={population.on} onClick={() => onPopulation(!population.on)}
+      <button type="button" data-category-tool="population" className="category-map-dock-tool" aria-pressed={population.on} onClick={() => onPopulation(!population.on)}
         title="Raise each county by its 2020 Census people per square mile of land">{population.on ? "Flatten the counties" : "Show population in 3D"}</button>
       {population.on && <div className="category-map-dock-legend" aria-label="Kansas density groups, people per square mile of land">
         <ul>{population.groups.map(group => <li key={group.id}><span className="category-map-dock-chip" style={{ background: group.color }} aria-hidden="true" />
@@ -603,7 +607,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </>}
     </>}
     {look.tools?.includes("surface") && surface && onSurface && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={surface.on} onClick={() => onSurface(!surface.on)}
+      <button type="button" data-category-tool="surface" className="category-map-dock-tool" aria-pressed={surface.on} onClick={() => onSurface(!surface.on)}
         title="Kansas airport observations as station plots: sky cover, wind barb, temperature and dew point">{surface.on ? "Hide surface observations" : "Show surface observations"}</button>
       {surface.on && <div className="category-map-dock-quakes">
         <p className="category-map-dock-reading" aria-live="polite">{surface.state === "held" ? "Observations are current only: return the map to the present to plot them."
@@ -618,7 +622,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("tornadoes") && tornadoes && onTornadoes && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={tornadoes.on} onClick={() => onTornadoes(!tornadoes.on)}
+      <button type="button" data-category-tool="tornadoes" className="category-map-dock-tool" aria-pressed={tornadoes.on} onClick={() => onTornadoes(!tornadoes.on)}
         title="Every Kansas tornado in the SPC severe weather database since 1950, as tracks coloured by F/EF rating">{tornadoes.on ? "Hide the tornado record" : "Tornado record since 1950"}</button>
       {tornadoes.on && <div className="category-map-dock-quakes">
         <p className="category-map-dock-reading" aria-live="polite">{tornadoes.loading ? "Reading the SPC tornado database…"
@@ -647,7 +651,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
     {look.tools?.includes("legislature") && legislature && onLegislature && <>
       <div className="category-map-dock-modes" role="group" aria-label="District plan">
         {([[null, "U.S. House", "Kansas's U.S. House districts, Congress by Congress"], ["senate", "Kansas Senate", "The 40 Kansas Senate districts, 2024 plan"], ["house", "Kansas House", "The 125 Kansas House districts, 2024 plan"]] as const).map(([chamber, label, title]) =>
-          <button key={label} type="button" aria-pressed={legislature.chamber === chamber} title={title} onClick={() => onLegislature(chamber)}>{label}</button>)}
+          <button data-category-tool="legislature" key={label} type="button" aria-pressed={legislature.chamber === chamber} title={title} onClick={() => onLegislature(chamber)}>{label}</button>)}
       </div>
       {legislature.chamber && <div className="category-map-dock-quakes">
         <p className="category-map-dock-reading" aria-live="polite">{legislature.loading ? "Reading the Census legislative districts…"
@@ -658,9 +662,11 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("crops") && crops && onCrops && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={crops.on} onClick={() => onCrops(!crops.on)}
+      <p className="category-map-dock-reading">Farming tools: show crops, then choose a point for crop history, SSURGO soil, growing degree days, frost dates and seasonal rain. Each source keeps its own scale and dates.</p>
+      <button type="button" data-category-tool="crops" className="category-map-dock-tool" aria-pressed={crops.on} onClick={() => onCrops(!crops.on)}
         title="USDA NASS Cropland Data Layer: what was planted in each 30 m cell, year by year since 2008">{crops.on ? "Hide crops" : "Show crops (USDA CDL)"}</button>
       {crops.on && <div className="category-map-dock-quakes">
+        {onCropCentre && <button type="button" className="category-map-dock-tool" onClick={onCropCentre}>Inspect crops &amp; season at map center</button>}
         <label className="category-map-dock-range category-map-dock-quake-year"><span>Year</span>
           <select value={crops.year} onChange={event => onCropsYear?.(Number(event.target.value))}>
             {crops.years.map(year => <option key={year} value={year}>{year}</option>)}
@@ -715,7 +721,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("plants") && flora && onFlora && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={flora.on} onClick={() => onFlora(!flora.on)}>{flora.on ? "Hide plant records" : "Show plant records (GBIF)"}</button>
+      <button type="button" data-category-tool="plants" className="category-map-dock-tool" aria-pressed={flora.on} onClick={() => onFlora(!flora.on)}>{flora.on ? "Hide plant records" : "Show plant records (GBIF)"}</button>
       {flora.on && <div className="category-map-dock-quakes">
         <label className="category-map-dock-flora-control">Plant record year
           <select value={flora.year} onChange={event => onFloraYear?.(Number(event.target.value))}>
@@ -736,12 +742,12 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </details>
     </>}
     {look.tools?.includes("landcover") && landCover && onLandCover && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={landCover.on} onClick={() => onLandCover(!landCover.on)}
+      <button type="button" data-category-tool="landcover" className="category-map-dock-tool" aria-pressed={landCover.on} onClick={() => onLandCover(!landCover.on)}
         title="USGS National Land Cover Database 2021: land cover classified from Landsat at 30 m, in NLCD's own colours">{landCover.on ? "Hide land cover" : "Show land cover (NLCD 2021)"}</button>
       {landCover.on && <p className="category-map-dock-reading" aria-live="polite">{landCover.reading}</p>}
     </>}
     {look.tools?.includes("rainfall") && rainfall && onRainfall && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={rainfall.on} onClick={() => onRainfall(!rainfall.on)}
+      <button type="button" data-category-tool="rainfall" className="category-map-dock-tool" aria-pressed={rainfall.on} onClick={() => onRainfall(!rainfall.on)}
         title="Observed rain (the NWS MRMS radar estimate of the past 1 to 72 hours) and forecast rain (the NWS WPC forecast for the next 6 hours to 7 days)">{rainfall.on ? "Hide rainfall" : "Show rainfall"}</button>
       {rainfall.on && <div className="category-map-dock-quakes">
         {rainfall.held ? <p className="category-map-dock-reading" aria-live="polite">Rainfall shows only at the present map time.</p> : <>
@@ -761,7 +767,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("fema") && fema && onFema && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={fema.on} onClick={() => onFema(!fema.on)}
+      <button type="button" data-category-tool="fema" className="category-map-dock-tool" aria-pressed={fema.on} onClick={() => onFema(!fema.on)}
         title="Every FEMA disaster declaration for Kansas since 1953: counties shaded by how many designated them, and the record year by year">{fema.on ? "Back to current hazards" : "FEMA disaster record since 1953"}</button>
       {fema.on && <div className="category-map-dock-quakes">
         <p className="category-map-dock-reading" aria-live="polite">{fema.loading ? "Reading the OpenFEMA declarations…"
@@ -793,7 +799,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("flood") && flood && onFlood && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={flood.on} onClick={() => onFlood(!flood.on)}
+      <button type="button" data-category-tool="flood" className="category-map-dock-tool" aria-pressed={flood.on} onClick={() => onFlood(!flood.on)}
         title="NOAA NWPS river gauges coloured by NWS flood category, each with its stage hydrograph and the official NWS forecast">{flood.on ? "Hide flood forecasts" : "Show flood forecasts"}</button>
       {flood.on && <div className="category-map-dock-quakes">
         <p className="category-map-dock-reading" aria-live="polite">{flood.state === "loading" ? "Reading the NWS river gauges…"
@@ -813,7 +819,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("quakes") && quakes && onQuakes && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={quakes.on} onClick={() => onQuakes(!quakes.on)}
+      <button type="button" data-category-tool="quakes" className="category-map-dock-tool" aria-pressed={quakes.on} onClick={() => onQuakes(!quakes.on)}
         title={`Every USGS-catalogued Kansas earthquake of magnitude ${quakes.minMagnitude} or more since ${quakes.startYear}, coloured by year`}>{quakes.on ? "Back to the past 30 days" : `Earthquake record since ${quakes.startYear}`}</button>
       {quakes.on && <div className="category-map-dock-quakes">
         {quakes.counts && <QuakeHistogram counts={quakes.counts} year={quakes.year} onYear={onQuakeYear} />}
@@ -836,7 +842,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("photoreal") && photoreal && onPhotoreal && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={photoreal.on} onClick={() => onPhotoreal(photoreal.on ? null : photoreal.place ?? photoreal.landscapes[0].id)}
+      <button type="button" data-category-tool="photoreal" className="category-map-dock-tool" aria-pressed={photoreal.on} onClick={() => onPhotoreal(photoreal.on ? null : photoreal.place ?? photoreal.landscapes[0].id)}
         title="The 2024 one-foot Kansas aerial on the USGS 3DEP bare-earth DEM at true vertical scale, lit by the real sun">{photoreal.on ? "Back to relief colours" : "Photo-real 3D"}</button>
       {photoreal.on && <div className="category-map-dock-places" role="group" aria-label="Kansas landscapes">
         {photoreal.landscapes.map(landscape => <button key={landscape.id} type="button" aria-pressed={photoreal.place === landscape.id} onClick={() => onPhotoreal(landscape.id)}>{landscape.name}</button>)}
@@ -845,7 +851,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
         <span className="category-map-dock-scale-note">{Math.abs(photoreal.depth - 1) < 0.05 ? "True vertical scale (1×)" : `Vertical ×${photoreal.depth.toFixed(1)}`} · USGS 3DEP bare earth · Kansas aerial 2024, 1 ft</span></p>}
     </>}
     {look.tools?.includes("reviewed") && reviewed && onReviewed && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={reviewed.on} onClick={() => onReviewed(!reviewed.on)}
+      <button type="button" data-category-tool="reviewed" className="category-map-dock-tool" aria-pressed={reviewed.on} onClick={() => onReviewed(!reviewed.on)}
         title={reviewed.effectiveDay ? "Approved historical source snapshots, each at its own boundary date" : "Snapshots the site's publishing pipeline reviewed and stored, each at its own source time"}>{reviewed.on ? "Hide reviewed snapshots" : `Reviewed ${reviewed.source} snapshots`}</button>
       {reviewed.on && <div className="category-map-dock-reviewed">
         {reviewed.count > 1 && <div className="category-map-dock-range"><span id="category-map-dock-reviewed">Snapshot</span>
@@ -870,7 +876,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("drought") && drought && onDrought && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={drought.on} onClick={() => onDrought(!drought.on)}
+      <button type="button" data-category-tool="drought" className="category-map-dock-tool" aria-pressed={drought.on} onClick={() => onDrought(!drought.on)}
         title="The weekly U.S. Drought Monitor over Kansas, D0 abnormally dry to D4 exceptional drought, with Kansas's share in each since 2000">{drought.on ? "Hide the Drought Monitor" : "Show the Drought Monitor"}</button>
       {drought.on && <div className="category-map-dock-drought">
         {drought.weeks && drought.weeks.length > 1 && <DroughtChart weeks={drought.weeks} date={drought.date} categories={drought.categories} onWeek={onDroughtWeek} />}
@@ -916,7 +922,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
     </>}
     {look.tools?.includes("aquifer") && aquifer && onAquiferView && <>
       <div className="category-map-dock-modes" role="group" aria-label="Aquifer map">
-        {AQUIFER_VIEWS.map(([view, label, title]) => <button key={view} type="button" aria-pressed={aquifer.view === view} title={title} onClick={() => onAquiferView(view)}>{label}</button>)}
+        {AQUIFER_VIEWS.map(([view, label, title]) => <button key={view} type="button" data-category-tool="aquifer" aria-pressed={aquifer.view === view} title={title} onClick={() => onAquiferView(view)}>{label}</button>)}
       </div>
       {aquifer.legend && <div className="category-map-dock-legend" aria-label={aquifer.view === "kgs-depth-to-water" ? "Depth to water, feet" : "Saturated thickness, feet"}>
         <ul className="category-map-dock-ramp">{aquifer.legend.map(entry => <li key={entry.label}><span className="category-map-dock-chip" style={{ background: entry.color }} aria-hidden="true" /><span>{entry.label}</span></li>)}</ul>
@@ -924,7 +930,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("wells") && wells && onWells && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={wells.on} onClick={() => onWells(!wells.on)}
+      <button type="button" data-category-tool="wells" className="category-map-dock-tool" aria-pressed={wells.on} onClick={() => onWells(!wells.on)}
         title="The KGS monitoring wells: pick one for its measured depth to water over the years, from USGS Water Data">{wells.on ? "Hide well water levels" : "Water levels at wells"}</button>
       {wells.on && <div className="category-map-dock-quakes">
         {!wells.picked && <p className="category-map-dock-reading" aria-live="polite">Pick a monitoring well on the map, or from the list, for its measured depth to water over the years.</p>}
@@ -943,7 +949,7 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       </div>}
     </>}
     {look.tools?.includes("soil") && soil && onSoil && <>
-      <button type="button" className="category-map-dock-tool" aria-pressed={soil.on} onClick={() => onSoil(!soil.on)}
+      <button type="button" data-category-tool="soil" className="category-map-dock-tool" aria-pressed={soil.on} onClick={() => onSoil(!soil.on)}
         title="NASA SMAP L4 modelled soil moisture in 9 km cells; a field-scale view pulls out to the region the cells describe">{soil.on ? "Hide soil moisture" : "Show soil moisture"}</button>
       {soil.on && <>
         <div className="category-map-dock-modes category-map-dock-depth" role="group" aria-label="Soil depth">
@@ -954,11 +960,11 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
         <img className="category-map-dock-scale" src={soil.legendUrl} alt="NASA colour scale for soil moisture" loading="lazy" />
       </>}
     </>}
-    {look.tools?.includes("area") && onMeasureArea && <button type="button" className="category-map-dock-tool" aria-pressed={Boolean(measuringArea)} onClick={onMeasureArea}
+    {look.tools?.includes("area") && onMeasureArea && <button type="button" data-category-tool="area" className="category-map-dock-tool" aria-pressed={Boolean(measuringArea)} onClick={onMeasureArea}
       title={measuringArea ? "Cancel the outline in progress" : "Click around a field or parcel, then Finish, for its approximate area; not a survey"}>{measuringArea ? "Cancel area" : "Measure an area"}</button>}
-    {look.tools?.includes("transect") && onTransect && <button type="button" className="category-map-dock-tool" disabled={!terrainAvailable} onClick={onTransect}
+    {look.tools?.includes("transect") && onTransect && <button type="button" data-category-tool="transect" className="category-map-dock-tool" disabled={!terrainAvailable} onClick={onTransect}
       title="Draw a line across the relief, then preview its elevation profile without the 3D exaggeration">Draw a cross-section</button>}
-    {look.tools?.includes("underground") && onUnderground && <button type="button" className="category-map-dock-tool" onClick={onUnderground}
+    {look.tools?.includes("underground") && onUnderground && <button type="button" data-category-tool="underground" className="category-map-dock-tool" onClick={onUnderground}
       title="Open recorded well logs, cores and aquifer sections beneath the map, on the 2D map">Explore underground</button>}
     {keys?.map(key => <section className="category-map-dock-legend category-map-dock-key" key={key.id} aria-label={`Key: ${key.title}`}>
       <strong>{key.title}</strong>
@@ -971,9 +977,9 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
         style={{ "--key": item.color, ...(item.size ? { "--size": `${item.size}px` } : {}), ...(item.stroke ? { "--stroke": item.stroke } : {}) } as CSSProperties} /><span>{item.label}</span></li>)}</ul>}
       <small>{key.note}</small>
     </section>)}
-    <p className="category-map-dock-lede">{look.lede}</p>
+    <p className="category-map-dock-lede">{currentMapOnly ? "These controls work on your current map. Open the category’s default view only if you want to replace its map setup." : look.lede}</p>
     <div className="category-map-dock-actions">
-      <button type="button" onClick={onReset}>Reset view</button>
+      <button type="button" onClick={onReset}>{currentMapOnly ? "Open default view" : "Reset view"}</button>
       <button type="button" onClick={onLayers}>Layers for this map</button>
     </div>
   </section>;

@@ -58,6 +58,8 @@ export type CategoryMap = Readonly<{
   swatch: readonly [string, string, string];
 }>;
 
+export type CategoryTool = NonNullable<CategoryMap["tools"]>[number];
+
 const STATEWIDE = Object.freeze({ center: [-98.38, 38.48] as const, zoom: 5.9, pitch: 0, bearing: 0 });
 const tilted = (pitch: number, bearing: number, zoom = 6.1, center: readonly [number, number] = STATEWIDE.center): CategoryCamera =>
   Object.freeze({ center, zoom, pitch, bearing });

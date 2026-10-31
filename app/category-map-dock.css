@@ -161,3 +161,18 @@
 .category-map-dock-sun-location input{box-sizing:border-box;width:100%;min-width:0;min-height:44px;border:1px solid #2c4a57;border-radius:7px;background:#0d2a35;color:#e6eff2;padding:6px;font:inherit}
 .category-map-dock-sun-location button,.category-map-dock-sun-location small{grid-column:1/-1}
 .category-map-dock-sun-location small{color:#cfe2ea;font-size:12px}
+
+/* The layer catalogue also indexes tools owned by map docks and workbenches. */
+.category-capabilities{margin:12px 0;border:1px solid #6f9da455;border-radius:10px;padding:0 10px;background:#092633}
+.category-capabilities>summary{min-height:44px;align-content:center;cursor:pointer;color:#f1e6c2;font-size:13px;font-weight:700}
+.category-capabilities>summary span{float:right;color:#99cbd0;font-variant-numeric:tabular-nums}
+.category-capabilities p{margin:0 0 10px;font-size:12px;line-height:1.45;color:#b9cdd6}
+.category-capabilities h3{font-size:12px;color:#9fd3e6;margin:12px 0 6px}
+.category-capabilities ul{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:6px}
+.category-capabilities li{min-width:0}
+.category-capabilities li button,.category-capabilities li a{box-sizing:border-box;width:100%;min-height:44px;display:grid;gap:3px;text-align:left;padding:9px 10px;border:1px solid #749bac55;border-radius:7px;background:#0c303d;color:#e6eff2;text-decoration:none;cursor:pointer;overflow-wrap:anywhere}
+.category-capabilities li strong{font-size:12px}
+.category-capabilities li small{font-size:11px;line-height:1.4;color:#bdd0d8}
+.category-capabilities li span{font-size:10px;color:#ddc785}
+.category-capabilities :is(button,a):hover{background:#17424c;border-color:#a9c4b9}
+.category-capabilities :focus-visible{outline:2px solid #e3c675;outline-offset:2px}

@@ -56,6 +56,9 @@ import { annualCounts, EARTHQUAKE_RECORD_SOURCE_ID, recordEventList, recordPlots
 import { PHOTOREAL_LANDSCAPES } from "./photoreal-landscapes";
 import { AVIATION_TINT_BANDS, CATEGORY_BASEMAPS, RELIEF_RAMP } from "./category-basemaps";
 import { isCategoryBasemapKey } from "./category-basemap-keys";
+import { CategoryCapabilityPanel } from "./category-capability-panel";
+import { categoryCapabilityGroups } from "./category-capabilities";
+import type { CategoryTool } from "./category-maps";
 import { CategoryMapDock, nextSunStep, SUN_PLAY_RESTART_STEP, SUN_TIME_STEPS, type AquiferView } from "./category-map-dock";
 import { evidenceSummary } from "./evidence-summary";
 import "./evidence-summary.css";
@@ -10815,6 +10818,27 @@ export default function Home() {
     // Layers action's after-dismissal focus handoff, including retained panels.
     runWelcomeTopic(topic);
   };
+  // Opening a tool is navigation, not opening a fresh category setup. Preserve
+  // the camera, source selections, time and imported data. Existing topic-driven
+  // water-animation restrictions still apply.
+  const revealCategoryTool = (topic: TopicId, tool: CategoryTool) => {
+    if (!categoryMap(topic)?.tools?.includes(tool)) return;
+    setPrimaryWorkspace("map");
+    setGuideOpen(false);
+    setUndergroundOpen(false);
+    setOfficialWorkspace(topic);
+    setCategoryDockTopic(topic);
+    setCategoryDockHidden(false);
+    setLeftOpen(false);
+    setRightOpen(false);
+    dismissMapUtilityWithoutFocus();
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+      const dock = document.querySelector<HTMLElement>(".category-map-dock");
+      const target = dock?.querySelector<HTMLElement>(`[data-category-tool="${tool}"]:not(:disabled)`) ?? dock;
+      target?.scrollIntoView({ block: "nearest" });
+      target?.focus({ preventScroll: true });
+    }));
+  };
   // The dock follows the catalogue's category while its map look is on screen,
   // including after a shared URL restores that basemap.
   const activeCategoryMap = officialWorkspace === "all" ? undefined : categoryMap(officialWorkspace);
@@ -11452,11 +11476,8 @@ export default function Home() {
             onOpenMap={activeCategoryMap ? () => openCategoryMap(activeCategoryMap.topic) : undefined} />
           {officialWorkspace === "transport" && <TransportHistoryControl map={mapRef.current} mapReady={styleReady} date={calendarSweep ? calendarFrameDay(calendarSweep) : temporalQuery.frame >= 1000 && temporalQuery.frame <= 9999 ? `${temporalQuery.frame}-01-01` : null} reducedMotion={reducedMotion} animate={dynamicEffects} />}
           {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
-          {officialWorkspace === "flora" && !officialSourceQuery.trim() && <div className="catalog-empty">
-            <strong>Flora map layers</strong><p>Land cover, annual plant records and crop classes are available in Plants &amp; vegetation controls. The catalogue count below covers separate record layers.</p>
-            <button type="button" onClick={() => { if (categoryMapOnScreen?.topic === "flora") setCategoryDockHidden(false); else openCategoryMap("flora"); setLeftOpen(false); }}>Open Flora layer controls</button>
-          </div>}
-          {matchingCatalogEntries.length === 0 && !(officialWorkspace === "flora" && !officialSourceQuery.trim()) && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
+          {layerCatalogView === "official" && <CategoryCapabilityPanel topic={officialWorkspace} query={officialSourceQuery} onTool={revealCategoryTool} />}
+          {matchingCatalogEntries.length === 0 && !(layerCatalogView === "official" && categoryCapabilityGroups(officialWorkspace, officialSourceQuery).length) && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
 
           <div className="layer-map-time" data-historical={!buildYearCurrent || year !== OFFICIAL_CONTEXT_PRESENT_FRAME}>
             <span><span aria-hidden="true">◷</span> Map time · <strong>{temporalScopeLabel}</strong>{!buildYearCurrent ? " · build year differs from UTC year" : ""}{withheldOfficialCount > 0 ? ` · ${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : ""}</span>
@@ -11760,7 +11781,7 @@ export default function Home() {
 
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
-          {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth} sunAvailable={categorySunAvailable}
+          {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} currentMapOnly={activeCategoryMap.basemap !== basemap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth} sunAvailable={categorySunAvailable}
             terrainAvailable={runtime.kind !== "unsupported" && runtime.kind !== "error" && terrainState !== "ERROR"} onMode={chooseCategoryMode} onDepth={changeTerrainDepth}
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
             onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => updateSceneEffects({ ...sceneEffectsRef.current, sunSync })}
@@ -11833,6 +11854,16 @@ export default function Home() {
               reading: cropHistory.data && cropHistoryPattern ? cropHistoryReading(cropHistory.data, cropHistoryPattern) : null } : null}
             surveySoil={activeCategoryMap.tools?.includes("crops") && surveySoil ? { state: surveySoil.state, mapUnit: surveySoil.data?.mapUnit?.name ?? null, water: soilWater(surveySoil.data?.mapUnit ?? null),
               lines: surveySoil.data?.components.map(component => ({ name: component.name, detail: soilLine(component) })) ?? [] } : null}
+            onCropCentre={() => {
+              const center = mapRef.current?.getCenter();
+              if (!center || !cropsOn) return;
+              readCropAt(cropsYear, center.lng, center.lat);
+              readCropHistory(center.lng, center.lat);
+              readSurveySoil(center.lng, center.lat);
+              readDegreeDays(center.lng, center.lat, cropsYear);
+              readFrost(center.lng, center.lat, cropsYear);
+              readSeasonRain(center.lng, center.lat, cropsYear);
+            }}
             degreeDays={activeCategoryMap.tools?.includes("crops") && degreeDays ? { state: degreeDays.state, year: degreeDays.year, line: degreeDays.data ? degreeDaysLine(degreeDays.data) : null, rain: degreeDays.data ? rainLine(degreeDays.data) : null } : null}
             frost={activeCategoryMap.tools?.includes("crops") && frostDates ? { state: frostDates.state, year: frostDates.year, line: frostDates.data ? frostLine(frostDates.data) : null } : null}
             seasonRain={activeCategoryMap.tools?.includes("crops") && seasonRain ? { state: seasonRain.state, year: seasonRain.year, line: seasonRain.data ? rainNormalLine(seasonRain.data) : null } : null}
