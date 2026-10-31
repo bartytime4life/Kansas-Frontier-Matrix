@@ -5820,6 +5820,13 @@ export default function Home() {
   }, [isCompact, surfaceInspectionOpen, setRightOpen]);
   useEffect(() => { openSelectionRef.current = openSelection; }, [openSelection]);
 
+  useEffect(() => {
+    // Discovery hides its focused result when it opens Evidence. Move into the
+    // committed summary; compact dialogs already manage their own entry focus.
+    if (!rightOpen || isCompact || !assistantEvidenceReturnRef.current) return;
+    rightPanelRef.current?.querySelector<HTMLElement>("[data-selection-summary]")?.focus({ preventScroll: true });
+  }, [rightOpen, isCompact]);
+
   const selectStoredFeature = useCallback((layerId: string, featureId: string, returnElement?: HTMLElement | null) => {
     const layer = LAYER_REGISTRY.find((candidate) => candidate.id === layerId);
     if (!layer) return;
