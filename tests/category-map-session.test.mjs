@@ -59,10 +59,12 @@ test("every explicit setup open clears previous layers and evidence, including r
     ...Object.keys(mapsExports.CATEGORY_MAPS)];
   for (const [index, topic] of sequence.entries()) {
     h.values.selected = "old-earthquake"; h.values.drawerOpen = true;
+    h.values.setCategoryToolsOnCurrentMap = true;
     h.values.setPopChangeOn = true; h.values.setPopChangeCounty = "20141";
     h.refs.popChangePrismsRef = { current: true };
     h.refs.popChangeHidCountiesRef = { current: true };
     h.open(topic);
+    assert.equal(h.values.setCategoryToolsOnCurrentMap, false, `${topic}: an explicit preset replaces tool-only presentation`);
     assert.equal(h.values.setCategoryMapSession, index + 1, `${topic}: starts a fresh owner lifecycle`);
     assert.equal(h.values.setAviationShowRequest > 0, topic === "aviation", `${topic}: aviation opens only when requested`);
     assert.equal(h.values.setCropSelected, false); assert.equal(h.values.setReviewedWaterSelected, false);

@@ -73,7 +73,7 @@ test('tool shortcuts route to controls without executing a tool or leaving the c
 
 test('reveal action preserves source, camera and stored state, validates the destination and focuses after commit', () => {
   const body = page.slice(page.indexOf('  const revealCategoryTool ='), page.indexOf('  // The dock follows'));
-  const names = ['setPrimaryWorkspace', 'setGuideOpen', 'setUndergroundOpen', 'setOfficialWorkspace', 'setCategoryDockTopic', 'setCategoryDockHidden', 'setLeftOpen', 'setRightOpen', 'dismissMapUtilityWithoutFocus'];
+  const names = ['setCategoryToolsOnCurrentMap', 'setPrimaryWorkspace', 'setGuideOpen', 'setUndergroundOpen', 'setOfficialWorkspace', 'setCategoryDockTopic', 'setCategoryDockHidden', 'setLeftOpen', 'setRightOpen', 'dismissMapUtilityWithoutFocus'];
   const calls = [], frames = [];
   const target = { scrollIntoView: () => calls.push(['scroll']), focus: () => calls.push(['focus']) };
   const js = ts.transpileModule(`${body}; return revealCategoryTool;`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
@@ -82,6 +82,7 @@ test('reveal action preserves source, camera and stored state, validates the des
     ...names.map(name => (...args) => calls.push([name, ...args])),
   );
   action('agriculture', 'crops');
+  assert.ok(calls.some(([name, value]) => name === 'setCategoryToolsOnCurrentMap' && value === true), 'tool-only presentation does not depend on whether basemap names happen to match');
   assert.ok(calls.some(([name, value]) => name === 'setCategoryDockTopic' && value === 'agriculture'));
   assert.equal(calls.some(([name]) => name === 'focus'), false);
   while (frames.length) frames.shift()();

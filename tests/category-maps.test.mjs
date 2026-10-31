@@ -83,7 +83,12 @@ test('opening a category map opens on its own subject and follows the same categ
  const props=new Map(docks[0].attributes.properties.map(prop=>[prop.name?.getText(ast),prop.initializer?.getText(ast)]));
  assert.equal(props.get('look'),'{activeCategoryMap}');
  assert.equal(props.get('mode'),'{categoryMode}');
- assert.equal(props.get('currentMapOnly'),'{activeCategoryMap.basemap !== basemap}','preserved maps must not claim the default preset is displayed');
+ const retainedMap=props.get('currentMapOnly');
+ assert.equal(retainedMap,'{categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap}');
+ const presentation=new Function('categoryToolsOnCurrentMap','activeCategoryMap','basemap',`return ${retainedMap.slice(1,-1)};`);
+ assert.equal(presentation(true,{basemap:'standard'},'standard'),true,'matching basemaps do not imply that the category layers were enabled');
+ assert.equal(presentation(false,{basemap:'standard'},'standard'),false,'an explicit matching preset may use its own description');
+ assert.equal(presentation(false,{basemap:'standard'},'relief'),true,'a different retained basemap never claims the preset');
 });
 
 test('public-safety dock keeps optional context off and does not promise a radar scan',async()=>{

@@ -25,6 +25,8 @@ of all private databases, source rights, physical caches or installed runtimes.
   focus there. They do not invoke `openCategoryMap`, replace starter layers,
   change camera/basemap, reset stores, or turn a tool on. Existing topic-driven
   water-animation restrictions remain in force.
+  Tool-only presentation is explicit even when the retained map happens to use
+  the category's basemap; that match does not imply its source layers are on.
 - Science Lab links open its existing panel and optionally filter a phenomenon.
   Workbenches open in a separate tab so the current map remains available.
   Navigation does not enable additional tracks or authorize data capture.

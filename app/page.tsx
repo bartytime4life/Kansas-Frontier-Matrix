@@ -1621,6 +1621,7 @@ export default function Home() {
   const [officialWorkspace, setOfficialWorkspace] = useState<LayerWorkspace>("all");
   // The category whose map look was opened, and whether its dock was hidden.
   const [categoryDockTopic, setCategoryDockTopic] = useState<TopicId | null>(null);
+  const [categoryToolsOnCurrentMap, setCategoryToolsOnCurrentMap] = useState(false);
   // County population prisms: on with the People map, toggled from its dock.
   const [populationPrisms, setPopulationPrismsShown] = useState(false);
   // Population change 2010–2020 (People): shown or not, the 2010 counts once read, whether that read failed,
@@ -10695,6 +10696,7 @@ export default function Home() {
     });
   };
   const openCategoryMap = (topic: TopicId) => {
+    setCategoryToolsOnCurrentMap(false);
     const look = categoryMap(topic);
     if (!look) { runWelcomeTopic(topic); return; }
     // These controls own sources and pending reads outside officialVisibility.
@@ -10823,6 +10825,7 @@ export default function Home() {
   // water-animation restrictions still apply.
   const revealCategoryTool = (topic: TopicId, tool: CategoryTool) => {
     if (!categoryMap(topic)?.tools?.includes(tool)) return;
+    setCategoryToolsOnCurrentMap(true);
     setPrimaryWorkspace("map");
     setGuideOpen(false);
     setUndergroundOpen(false);
@@ -11781,7 +11784,7 @@ export default function Home() {
 
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
-          {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} currentMapOnly={activeCategoryMap.basemap !== basemap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth} sunAvailable={categorySunAvailable}
+          {showCategoryDock && activeCategoryMap && <CategoryMapDock look={activeCategoryMap} currentMapOnly={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap} mode={categoryMode} depth={verticalExaggeration} azimuth={lightAzimuth} sunAvailable={categorySunAvailable}
             terrainAvailable={runtime.kind !== "unsupported" && runtime.kind !== "error" && terrainState !== "ERROR"} onMode={chooseCategoryMode} onDepth={changeTerrainDepth}
             sun={sceneEffects.sunSync ? { light: sunSceneLight(sunAt, view.center[0], view.center[1]), at: sunAt, dayFraction: intervalFractionAtInstant(sunAt, kansasLocalDayInterval(currentKansasCalendarDay(new Date(sunAt)))), live: sunStudyAt === null } : null}
             onAzimuth={(azimuth) => changeStudioLight({ atmosphere: atmospherePreset, azimuth })} onRealSun={(sunSync) => updateSceneEffects({ ...sceneEffectsRef.current, sunSync })}
