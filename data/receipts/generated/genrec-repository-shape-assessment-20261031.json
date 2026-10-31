@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec-repository-shape-assessment-20261031",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/reports/repository-shape-assessment-20261031.md",
+    "docs/reports/README.md",
+    ".gitignore"
+  ],
+  "artifact_hashes": {
+    "docs/reports/repository-shape-assessment-20261031.md": "sha256:6c9db49d34f9ba2b42747a57aad5f62bd58dcf2aca7a62e974fed7b9352abc65",
+    "docs/reports/README.md": "sha256:3c548888e2b8e3314e55214fc803deb4c9de7beb4e275de3a0fcca2a1f9ee820",
+    ".gitignore": "sha256:333ed1a7c95016b67c7bc4acb8f9552e31cff5498a47e707e769b9f0411dd486"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude (Claude Code)",
+    "version": "2026-10-31"
+  },
+  "prompt_or_contract": "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local git and shell inspection of the checkout",
+      "GitHub REST and CLI readback of issues, alerts and workflow runs",
+      "repository QA validators run with the project-test profile"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0ac842de649b31cdc3af75a9696d0f9d39019b40d0efe3319183b733653225be",
+      "sha256:3371fb220503f118dfb06ff5a82ee6de6d7d9ab35ed4fd9144f3f8f920f638b5",
+      "sha256:6e31ed0f02cca7c523f3c7e974039c48810c618f43eb1b877d2ffa3491a3e324",
+      "sha256:3427cbe06ebcb3d86d3ea08bae5d124b8d07f0231fec369e5ed250932e206b01"
+    ],
+    "attached_docs": [
+      "No attached documents; every input is a tracked repository file at main@511cf4373060c1492abf73133fa393bb42bca36c or a GitHub readback"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/511cf4373060c1492abf73133fa393bb42bca36c/tools/qa/gap_scan.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/511cf4373060c1492abf73133fa393bb42bca36c/tools/qa/scaffold_inventory.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/511cf4373060c1492abf73133fa393bb42bca36c/.github/workflows/domain-soil.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/511cf4373060c1492abf73133fa393bb42bca36c/data/registry/datasets/water_planning/kwo_rac_regions_2026-06-24.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/511cf4373060c1492abf73133fa393bb42bca36c/docs/atlases/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2906#issuecomment-6548904516"
+    ]
+  },
+  "truth_labels": {
+    "docs/reports/repository-shape-assessment-20261031.md": "CONFIRMED",
+    "docs/reports/README.md": "CONFIRMED",
+    ".gitignore": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "gap-scan-check",
+      "outcome": "PASS",
+      "reason": "Census equals tools/qa/gap_scan_baseline.json: 7 Markdown and 8 unratcheted placeholders, 0 broken links."
+    },
+    {
+      "gate": "scaffold-inventory-check",
+      "outcome": "PASS",
+      "reason": "866 findings in 710 files; no new or resolved entries against the baseline."
+    },
+    {
+      "gate": "maplibre-readiness-native-scan",
+      "outcome": "PASS",
+      "reason": "Returned HOLD with the single reason RUNTIME_PROBES_PENDING at selected and target version 6.9.0; a HOLD is the expected fail-closed outcome."
+    },
+    {
+      "gate": "documentation-meta-block-present-profile",
+      "outcome": "PASS",
+      "reason": "The new report's KFM_META_BLOCK_V2 validated; pre-existing register findings are outside this change."
+    },
+    {
+      "gate": "documentation-link-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-validation",
+      "outcome": "PASS",
+      "reason": "tools/validators/validate_generated_receipt.py bound this receipt to the final artifact bytes."
+    },
+    {
+      "gate": "gitignore-rule-removal-scope",
+      "outcome": "PASS",
+      "reason": "After deleting the unanchored receipts/ rule, git check-ignore still ignores new data/receipts and data/proofs JSON via the governed rules, no longer ignores new files under contracts, schemas, fixtures, tests and tools receipts folders, and git status shows no tracked file changing state."
+    },
+    {
+      "gate": "file-mutation-scope",
+      "outcome": "PASS",
+      "reason": "git status shows only the report, the reports README, the .gitignore line removal and this receipt."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "gap-census-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/511cf4373060c1492abf73133fa393bb42bca36c/tools/qa/gap_scan_baseline.json"
+    },
+    {
+      "id": "soil-release-index-pinned-digest",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/511cf4373060c1492abf73133fa393bb42bca36c/.github/workflows/domain-soil.yml"
+    },
+    {
+      "id": "rac-regions-registry-record",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/511cf4373060c1492abf73133fa393bb42bca36c/data/registry/datasets/water_planning/kwo_rac_regions_2026-06-24.json"
+    },
+    {
+      "id": "topology-baseline-kfm-topo-008",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/511cf4373060c1492abf73133fa393bb42bca36c/tools/validators/directory_governance/repository_topology_baseline.json"
+    },
+    {
+      "id": "maplibre-issue-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/2906#issuecomment-6548904516"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-31T21:30:00Z",
+  "emitter": "authored repository assessment via Claude Code on the owner's workstation; local validators and GitHub readback only",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Observation record for a review-only report. It removes one redundant .gitignore line and changes no data, baseline, hold, registry or policy and grants no admission, review, release or publication authority. Local-checkout housekeeping performed in the same session (stale worktree records and merged local branches) is not a repository change and is not recorded here."
+}
