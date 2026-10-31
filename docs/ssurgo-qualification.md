@@ -32,7 +32,7 @@ through USDA Soil Data Access, using five fixed, read-only queries:
 | `mapunits` (`mapunit` via `legend`) | Map units exist and their keys are unique. Acres and kinds are recorded. |
 | `components` (`component`) | Every map unit has components. Representative percentages total 100, and each map unit has a major component. |
 | `polygons` (`mupolygon`) | Every map unit has polygons, and no polygon names a map unit outside the area. |
-| `units` (`sdvattribute`) | SSURGO publishes a unit for each core horizon property: `awc_r`, `claytotal_r`, `dbthirdbar_r`, `ksat_r`, `om_r`, `ph1to1h2o_r` and `sandtotal_r`. |
+| `units` (`sdvattribute`) | SSURGO publishes each core horizon property: `awc_r`, `claytotal_r`, `dbthirdbar_r`, `ksat_r`, `om_r`, `ph1to1h2o_r` and `sandtotal_r`. Every property except pH, which has no unit, needs a non-empty published unit. A missing or empty unit is a hold. |
 
 Anything missing or inconsistent is a **hold**, and the report's `state` is then
 `held`. Facts a later product must handle are **findings**.

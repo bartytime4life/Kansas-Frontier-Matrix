@@ -64,6 +64,18 @@ test('an unknown survey area and an unpublished unit are holds, not empty succes
   assert.equal(report.survey, null);
 });
 
+test('a dimensional property published without a unit is a hold; unitless pH is not', async () => {
+  const blank = units.map(([column, name, unit]) => [column, name, column === 'ksat_r' ? null : column === 'dbthirdbar_r' ? '' : unit]);
+  const { fetcher } = sda('KS996', { units: table(['attributecolumnname', 'attributename', 'attributeuomabbrev'], blank) });
+  const report = await qualifySsurgo('KS996', { fetcher });
+  assert.equal(report.state, 'held'); assert.deepEqual(report.holds, ['HORIZON_UNITS_UNPUBLISHED']);
+  assert.deepEqual(report.findings.find(f => f.code === 'HORIZON_UNITS_UNPUBLISHED'), { code: 'HORIZON_UNITS_UNPUBLISHED', columns: ['dbthirdbar_r', 'ksat_r'] });
+  assert.deepEqual(report.horizonUnits.find(u => u.column === 'dbthirdbar_r').units, [null], 'an empty unit is no unit');
+  const none = units.map(([column, name]) => [column, name, null]);
+  const all = await qualifySsurgo('KS996', { fetcher: sda('KS996', { units: table(['attributecolumnname', 'attributename', 'attributeuomabbrev'], none) }).fetcher });
+  assert.deepEqual(all.findings.find(f => f.code === 'HORIZON_UNITS_UNPUBLISHED').columns, HORIZON_COLUMNS.filter(c => c !== 'ph1to1h2o_r'));
+});
+
 test('only a Kansas survey area symbol reaches a query, and a failed query fails closed', async () => {
   let calls = 0; const counting = async () => { calls++; return new Response('{}'); };
   for (const area of ['NE001', 'KS16', "KS169' OR 1=1 --", undefined]) await assert.rejects(qualifySsurgo(area, { fetcher: counting }), /AREA_SYMBOL_INVALID/);

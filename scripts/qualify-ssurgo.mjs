@@ -15,6 +15,8 @@ export const SDA_URL = 'https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest
 const MAX_RESPONSE = 4 * 1024 ** 2;
 // Core horizon properties a soil lane would carry; units come from SSURGO's own attribute table.
 export const HORIZON_COLUMNS = Object.freeze(['awc_r', 'claytotal_r', 'dbthirdbar_r', 'ksat_r', 'om_r', 'ph1to1h2o_r', 'sandtotal_r']);
+// pH is dimensionless; every other property needs a published unit to be read at all.
+const UNITLESS = new Set(['ph1to1h2o_r']);
 // A survey area symbol is the only interpolated value, so it is checked before any query is built.
 const AREA = /^KS[0-9]{3}$/;
 
@@ -77,11 +79,11 @@ export async function qualifySsurgo(area, { fetcher = fetch, now = Date.now } = 
   // (awc_r is cm/cm per horizon and cm as depth-summed storage), so units bind to the attribute.
   const units = HORIZON_COLUMNS.map(column => {
     const rows = results.units.rows.filter(u => u.attributecolumnname === column);
-    const published = [...new Set(rows.map(u => u.attributeuomabbrev ?? null))];
-    return { column, units: published, attributes: rows.map(u => ({ name: u.attributename, unit: u.attributeuomabbrev ?? null })) };
+    const published = [...new Set(rows.map(u => u.attributeuomabbrev || null))];
+    return { column, units: published, attributes: rows.map(u => ({ name: u.attributename, unit: u.attributeuomabbrev || null })) };
   });
-  const missingUnits = units.filter(u => !u.attributes.length).map(u => u.column);
-  if (missingUnits.length) holds.push('HORIZON_UNITS_UNPUBLISHED');
+  const missingUnits = units.filter(u => !u.attributes.length || !UNITLESS.has(u.column) && !u.units.some(Boolean)).map(u => u.column);
+  if (missingUnits.length) { holds.push('HORIZON_UNITS_UNPUBLISHED'); findings.push({ code: 'HORIZON_UNITS_UNPUBLISHED', columns: missingUnits }); }
   const ambiguous = units.filter(u => u.units.filter(Boolean).length > 1).map(u => ({ column: u.column, units: u.units }));
   if (ambiguous.length) findings.push({ code: 'UNIT_DEPENDS_ON_ATTRIBUTE', columns: ambiguous });
   return {
