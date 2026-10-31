@@ -159,12 +159,14 @@
   .compact-time-popover header { position: sticky; top: -16px; z-index: 1; margin: -16px -16px 0; padding: 16px 16px 4px; background: #102330; border-bottom: 1px solid #ffffff10; }
   .compact-time-popover header button { width: 44px; min-width: 44px; min-height: 44px; }
 }
-/* Phones: the evidence drawer is a bottom sheet over the same area as the time
+/* Compact layouts: the evidence drawer is a bottom sheet over the same area as the time
    bar, which stacks above the whole map stage and so floated its hourglass and
    playback row over the drawer's text and buttons. Step aside while the drawer
    is open; closing the drawer brings the time bar back. */
-@media (max-width: 760px) {
-  .explorer-shell[data-right="true"] > .timeline-panel.timeline-calendar { visibility: hidden; pointer-events: none; }
+@media (max-width: 1100px) {
+  /* Descendants explicitly restore visibility and pointer events, so hide the
+     whole time surface while Evidence owns the bottom sheet. */
+  .explorer-shell[data-right="true"] > .timeline-panel.timeline-calendar { display: none; }
 }
 
 /* A single stationary clock is the time menu's explicit open/close control. */
