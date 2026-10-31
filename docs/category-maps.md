@@ -18,6 +18,29 @@ Choosing a look is presentation and navigation only. Starters are the same
 provider-context switches the Layers panel offers, with their own source clocks,
 holds and limits. They are display context, not admitted evidence.
 
+## Switching map setups
+
+An explicit **Open the map** starts a fresh display session, including when
+reopening the same category. It clears the selected record and Evidence drawer,
+stops atlas/radar/daylight playback, hides historical registry layers and the
+import preview, and applies only the new category's starters and named overlays.
+Imported bytes remain available; this does not delete saved places or datasets.
+Optional NASA soil moisture starts off, including in Field view.
+
+Crop-CASMA, Aviation, reviewed water/weather, and Earth Engine imagery own their
+visibility and MapLibre sources inside their controls. Their React keys follow
+the explicit map session so leaving a setup unmounts the old owners, removes
+their sources/listeners and cancels their pending reads. Aviation's show request
+is also cleared outside Aviation; an old request cannot turn it back on.
+The Flora setup retains its specified land-cover default.
+
+Browsing or filtering the Layers catalogue and switching 2D/3D/Globe within a
+setup retain manual layer choices. Only explicitly opening a setup resets them.
+Existing `app/`, `tests/`, and this `docs/` explanation retain their established
+responsibilities under Directory Rules v2 / accepted ADR-0029. No data lifecycle,
+source admission, rights, release policy or stored dataset changes are involved.
+Rollback is a revert of this display-session change.
+
 ## Fauna and crime, justice & public safety
 
 The shared taxonomy has 22 categories, including Flora (see below). **Fauna & wildlife** belongs to

@@ -402,7 +402,7 @@ test('the Field view shows NASA soil moisture at a chosen depth, names the day d
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
  assert.match(page,/if \(on && map && map\.getZoom\(\) > SOIL_REGIONAL_ZOOM \+ 0\.5\) map\.easeTo\(\{ zoom: SOIL_REGIONAL_ZOOM/,'a field-scale view pulls out to the region the 9 km cells describe');
- assert.match(page,/if \(!look\.tools\?\.includes\("soil"\)\) setSoilMapState\(current => current\.visible \? hideSoilContext\(current\) : current\);/,'soil moisture does not follow into other maps');
+ assert.match(page,/setSoilMapState\(current => current\.visible \? hideSoilContext\(current\) : current\);/,'each fresh map starts with optional soil moisture off');
  assert.match(page,/soilMoistureContext\?\.renderedFrameTimeUtc \? `\$\{SOIL_VIEWS\[soilMapState\.view\]\.label\}/,'the reading names the frame actually rendered');
  const control=await readFile('app/soil-moisture-control.tsx','utf8');
  assert.match(control,/if \(enabled && availability === null && !checking\) void checkAvailability\(\);/,'switched on from outside the row, it still checks NASA\'s days');

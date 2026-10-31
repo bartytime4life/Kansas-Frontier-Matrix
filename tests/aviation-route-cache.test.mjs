@@ -44,7 +44,7 @@ test('every aviation route uses the cache with a provider-respecting window',asy
 test('opening the aviation category map switches the airspace layer on without a second toggle',async()=>{
  const page=await readFile('app/page.tsx','utf8'),maps=await readFile('app/category-maps.ts','utf8');
  assert.match(maps,/topic: "aviation"[^\n]*overlays: \["aviation"\]/);
- assert.match(page,/if \(look\.overlays\?\.includes\("aviation"\)\) setAviationShowRequest\(request => request \+ 1\);/);
+ assert.match(page,/setAviationShowRequest\(request => look\.overlays\?\.includes\("aviation"\) \? request \+ 1 : 0\);/,'leaving Aviation clears its show request');
  assert.match(page,/<AviationLayerControl [^>]*showRequest=\{aviationShowRequest\}/);
  const control=await readFile('app/aviation-layer-control.tsx','utf8');
  assert.match(control,/if \(showRequest && !visible\) \{ setVisible\(true\); setRender\("Waiting for map frame"\); \}/);

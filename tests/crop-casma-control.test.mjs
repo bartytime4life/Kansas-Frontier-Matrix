@@ -10,7 +10,7 @@ const checkbox = tree => findNode(tree, node => node.type === "input" && node.pr
 const recheck = tree => findNode(tree, node => node.type === "button" && node.props.children === "Recheck release");
 const badge = tree => findNode(tree, node => node.type === "b");
 
-async function harness(mode = "reviewed") {
+async function harness(mode = "reviewed", loadPreview = async () => ({ width: 1024, height: 512 })) {
   const sources = new Map(), layers = new Map(), events = new Map(), calls = [];
   const map = {
     getSource: id => sources.get(id), removeSource: id => sources.delete(id), addSource: (id, value) => sources.set(id, value),
@@ -20,7 +20,7 @@ async function harness(mode = "reviewed") {
     off(name, callback) { events.get(name)?.delete(callback); },
   };
   const h = await componentHarness("app/crop-casma-control.tsx", {
-    "./crop-casma-preview": { loadCropPreview: async () => ({ width: 1024, height: 512 }) },
+    "./crop-casma-preview": { loadCropPreview: loadPreview },
     "./map-layer-composition": { balanceMapRasters() {}, syncMercatorRaster() {} },
     "./browser-json-request": { browserJsonRequest(url, options) { const request = deferred(); calls.push({ url, options, ...request }); return request.promise; } },
   });
@@ -30,8 +30,24 @@ async function harness(mode = "reviewed") {
   const loaded = () => { for (const fn of events.get("sourcedata") ?? []) fn({ sourceId, isSourceLoaded: true }); return render(); };
   const first = render();
   if (mode === "reviewed") { findNode(first, n => n.type === "select").props.onChange({target:{value:"reviewed"}}); render(); calls.shift(); }
-  return { ...h, render, respond, loaded, props, calls, sources, layers };
+  return { ...h, render, respond, loaded, props, calls, sources, layers, events };
 }
+
+test("leaving a setup removes Crop-CASMA and late provider images cannot redraw it", async () => {
+  for (const pending of [false, true]) {
+    const image = deferred();
+    let signal;
+    const h = await harness("preview", (_day, requestSignal) => { signal = requestSignal; return image.promise; });
+    const tree = await h.respond({ state: "available", mode: "preview", role: "EXTERNAL_CONTEXT_ONLY", day: "2026-09-28" });
+    checkbox(tree).props.onChange({ target: { checked: true } }); h.render();
+    if (!pending) { image.resolve({ width: 1024, height: 512 }); await settle(); h.render(); assert.ok(h.layers.has(layerId)); }
+    h.dispose();
+    assert.equal(signal.aborted, true, "the old image read loses its setup owner");
+    image.resolve({ width: 1024, height: 512 }); await settle();
+    assert.equal(h.layers.size, 0); assert.equal(h.sources.size, 0);
+    for (const listeners of h.events.values()) assert.equal(listeners.size, 0, "old source/render listeners are removed");
+  }
+});
 
 test("soil release checks have a body budget/deadline and errors permit a retry", async () => {
   const h = await harness();
