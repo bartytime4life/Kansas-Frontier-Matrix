@@ -138,3 +138,8 @@ cells remain loading before the single scheduled frame, and explicitly advances
 the frame before asserting ready geometry, gauge emphasis and cached reuse.
 All prior off/zoom/visibility assertions remain; no runtime or water default is
 changed, and no provider is contacted by this synthetic test.
+
+The complete serial delivery workflow reached passing startup case 55 of 61
+before the former 20-minute job budget cancelled it. Its outer budget is now
+30 minutes; every acceptance group and individual test timeout is retained.
+This is CI execution headroom, not a new application-performance qualification.
