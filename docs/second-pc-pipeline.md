@@ -930,3 +930,15 @@ v1 source configuration, hourly slots, five-minute timer, disabled publication,
 connection-only policy, backup/restore schedules, mounts and inference services
 are retained. V2 configuration support does not activate candidate sources.
 Source profiles and hosted publication acceptance remain pending owner review.
+
+The report's `intake` block counts this pipeline's own captures apart from
+other intake items. `intake.pipelineCaptures` (`state: "held-for-source-profile"`)
+covers the undeclared quarantine payloads of `usgs-streamflow`, `nws-alerts` and
+`usgs-earthquakes`. They carry no intake rights declaration, so the intake router
+holds each for unknown rights and sensitivity, and each configured source adds
+one an hour. They need no file-by-file review: each source's rights and
+sensitivity are decided once, when its profile is signed (see
+[Approvals and cutover](#approvals-and-cutover)). `intake.byStatus` counts
+everything else, including declared captures, other sources' quarantine
+payloads and raw files. The **KFM Working Data** desk's own intake overview
+still lists the captures under review.

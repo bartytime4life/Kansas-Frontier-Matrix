@@ -4,6 +4,7 @@ import { generateKeyPairSync, sign, randomBytes } from 'node:crypto';
 import { mkdtemp, mkdir, writeFile, readFile, readdir, symlink, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
+import { DatabaseSync } from 'node:sqlite';
 import { canonical, sha, verifyProfile, recipeDigest, ORIGIN, MAX_PACKAGE, CHUNK_SIZE, PipelineError } from '../server/pipeline-contract.mjs';
 import { signRequest } from '../server/pipeline-auth.mjs';
 import { handlePipeline, publicContext } from '../server/pipeline-handler.mjs';
@@ -226,6 +227,28 @@ test('operator health ages a backup by its completion clock and keeps legacy rec
   await receipt(undefined);
   const legacy = (await operatorHealth(configPath, run, options)).backup;
   assert.equal(legacy.receiptTime, null); assert.equal(typeof legacy.receiptFileModifiedAt, 'string');
+});
+test('operator health counts its own undeclared captures apart from intake files awaiting review', async () => {
+  const root = await mkdtemp(resolve(tmpdir(), 'kfm-health-intake-')); const run = resolve(root, 'run'); await mkdir(run);
+  const store = resolve(root, 'store'); await mkdir(resolve(store, 'data/work/intake'), { recursive: true });
+  const configPath = resolve(root, 'config.json');
+  await writeFile(configPath, JSON.stringify({ format: 'kfm-pc-pipeline-config-v1', root: store, mount: root, storeId: 'a'.repeat(32),
+    device: 1, sources: ['nws-alerts'], publish: false, remoteMode: 'connection-only', approvalDirectory: '/nonexistent' }));
+  const db = new DatabaseSync(resolve(store, 'data/work/intake/index.sqlite'));
+  db.exec('CREATE TABLE items(lane TEXT, relative_path TEXT, declared_json TEXT, status TEXT, present INTEGER)');
+  const add = db.prepare('INSERT INTO items VALUES (?,?,?,?,?)');
+  const payload = source => `${source}/objects/sha256/${'c'.repeat(64)}/payload`;
+  add.run('quarantine', payload('usgs-streamflow'), null, 'review', 1);
+  add.run('quarantine', payload('nws-alerts'), null, 'review', 1);
+  add.run('quarantine', payload('usgs-streamflow'), null, 'review', 0);
+  add.run('quarantine', payload('usgs-streamflow'), '{"source_id":"usgs-streamflow"}', 'ready', 1);
+  add.run('quarantine', payload('kgs-wells'), null, 'review', 1);
+  add.run('raw', 'usgs-streamflow/gauges.csv', null, 'review', 1);
+  db.close();
+  const { intake } = await operatorHealth(configPath, run, { now, guard: async () => ({}) });
+  assert.deepEqual(intake.pipelineCaptures, { state: 'held-for-source-profile', byStatus: [{ status: 'review', files: 2 }] });
+  // A declared capture, another source's quarantine payload and a raw file still await their own decisions.
+  assert.deepEqual([...intake.byStatus].sort((a, b) => a.status.localeCompare(b.status)), [{ status: 'ready', files: 1 }, { status: 'review', files: 2 }]);
 });
 test('real provider formats preserve decimal source values and RFC3339 offset/subsecond clocks', async () => {
   assert.equal(providerTime('2026-10-22T20:06:29.034006+00:00'), '2026-10-22T20:06:29.034Z');
