@@ -1,11 +1,11 @@
 /* Evidence Drawer summary: the category a record belongs to, then the same
    three questions for every selection. */
-.drawer-category{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding:9px 10px;border:1px solid #d8c58f44;border-radius:10px;background:#0a2533}
-.drawer-category>div{display:grid;gap:1px;min-width:0;flex:1}
+.drawer-category{display:grid;grid-template-columns:28px minmax(0,1fr);align-items:center;gap:10px;margin:0 0 10px;padding:9px 10px;border:1px solid #d8c58f44;border-radius:10px;background:#0a2533}
+.drawer-category>div{display:grid;gap:1px;min-width:0}
 .drawer-category small{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#9fc6d4}
 .drawer-category strong{font-size:13px;color:#f1e6c2;overflow-wrap:anywhere}
 .drawer-category-swatch{flex:none;width:28px;height:28px;border-radius:6px;border:1px solid #ffffff38;background:radial-gradient(circle at 68% 34%,var(--m2,#d8c58f) 0 10%,transparent 11%),linear-gradient(160deg,transparent 0 52%,var(--m1,#749bac) 52% 60%,transparent 60%),linear-gradient(135deg,var(--m0,#0a2d3d),color-mix(in srgb,var(--m0,#0a2d3d) 70%,var(--m1,#749bac)))}
-.drawer-category button{flex:none;min-height:44px;padding:0 12px;border:1px solid #d8c58f88;border-radius:8px;background:transparent;color:#f1e6c2;font-size:12px;font-weight:600;cursor:pointer}
+.drawer-category button{grid-column:1/-1;min-width:0;min-height:44px;padding:8px 12px;border:1px solid #d8c58f88;border-radius:8px;background:transparent;color:#f1e6c2;font-size:12px;font-weight:600;cursor:pointer}
 .drawer-category button:hover{background:#d8c58f1a}
 .drawer-facts{display:grid;gap:8px;margin:8px 0 12px}
 .drawer-facts>div{display:grid;grid-template-columns:minmax(84px,28%) 1fr;gap:10px;align-items:start;padding-bottom:8px;border-bottom:1px solid #ffffff14}
