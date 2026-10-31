@@ -59,7 +59,8 @@ export async function browserJsonRequest(
         // Successful malformed/oversized responses remain errors. A gateway's
         // non-JSON error page may be retried, but never accepted as source data.
         const temporary = attempt.signal.aborted || (!response && error instanceof TypeError)
-          || (response && transientStatuses.has(response.status) && error instanceof SyntaxError);
+          || (response && error instanceof SyntaxError && (transientStatuses.has(response.status)
+            || (response.status === 429 && retryAfter(response) !== null)));
         if (!recovery || !temporary) throw error;
         failure = error;
       } finally { clearTimeout(attemptTimer); }

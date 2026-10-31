@@ -101,6 +101,49 @@ test("provider cooldowns are never shortened and short Retry-After dates are hon
   assert.ok(requestedAt[1] - requestedAt[0] >= 10_000);
 });
 
+test("public source reads recover from HTML rate-limit pages after the provider's numeric or dated cooldown", async t => {
+  clock(t);
+  for (const [url, recovery, dated] of [[census, "census", false], [river, "river-network", true]]) {
+    const calls = [], started = Date.now();
+    t.mock.method(globalThis, "fetch", async () => {
+      calls.push(Date.now());
+      return calls.length === 1
+        ? new Response("<html>Too many requests</html>", { status: 429, headers: { "Retry-After": dated ? new Date(started + 10_000).toUTCString() : "10" } })
+        : Response.json(snapshot);
+    });
+    const result = await drive(t, transport.browserJsonRequest(url, options(recovery)));
+    assert.deepEqual(result.body, snapshot); assert.equal(calls.length, 2);
+    assert.ok(calls[1] - calls[0] >= 10_000, "a non-JSON response must not shorten the provider cooldown");
+  }
+});
+
+test("HTML rate-limit pages require a usable cooldown within the recovery budget and cannot bypass byte limits", async t => {
+  clock(t);
+  for (const headers of [{}, { "Retry-After": "invalid" }, { "Retry-After": "300" }, { "Retry-After": "1", "content-length": "4097" }]) {
+    let calls = 0;
+    t.mock.method(globalThis, "fetch", async () => {
+      calls++; return new Response("<html>Too many requests</html>", { status: 429, headers });
+    });
+    await assert.rejects(transport.browserJsonRequest(census, options()));
+    assert.equal(calls, 1); assert.equal(Date.now(), originTime);
+  }
+});
+
+test("HTML rate-limit recovery stops after three attempts or caller cancellation", async t => {
+  clock(t); let calls = 0;
+  t.mock.method(globalThis, "fetch", async () => {
+    calls++; return new Response("<html>Too many requests</html>", { status: 429, headers: { "Retry-After": "2" } });
+  });
+  await assert.rejects(drive(t, transport.browserJsonRequest(census, options())), SyntaxError);
+  assert.equal(calls, 3);
+  calls = 0;
+  const controller = new AbortController();
+  const pending = transport.browserJsonRequest(river, options("river-network", { signal: controller.signal }));
+  const rejected = assert.rejects(pending, { name: "AbortError" });
+  await nextTurn(); controller.abort(); await rejected;
+  t.mock.timers.tick(150_000); await nextTurn(); assert.equal(calls, 1);
+});
+
 test("repeated failures and busy responses have finite attempt and elapsed-time limits", async t => {
   clock(t); let calls = 0;
   t.mock.method(globalThis, "fetch", async () => { calls++; return Response.json({}, { status: 502 }); });
