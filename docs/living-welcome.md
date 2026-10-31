@@ -647,3 +647,41 @@ The 22-category starting page includes **Flora & vegetation**. Its map opens
 NLCD 2021 land cover, offers annual GBIF plant-record hexagons and USDA crop
 layers, and keeps source dates, rights and occurrence limits explicit. See
 [Flora data, controls and boundaries](flora-map.md).
+
+## Cinematic keyboard navigation — 2026-10-30
+
+The demonstration actions immediately precede Return in native DOM focus order.
+From Return, Shift+Tab reaches Source notes & demonstrations, then the category's
+map action. Tab follows the same path forward. The category rail follows the
+scene controls in DOM order; its existing absolute positioning preserves the
+visual composition. No positive tabindex, page-wide Tab handler or focus trap
+is introduced for the non-modal welcome.
+
+The category buttons form a named horizontal toolbar with one Tab stop: the
+currently selected category. Left/Right select and focus adjacent categories,
+wrapping at either end; Home/End select the first/last. An accessible description
+explains these keys. The two scroll buttons remain independently tabbable, and
+mouse selection, settled hover and touch use their existing handlers.
+
+Only entering the cinematic stage moves focus to Return. Closing source notes
+restores their exact opening action before paint. Return and Escape still restore
+the original chooser card and scroll position, even after selecting another
+category in the rail. Reduced motion can disable Pause without adding a dead
+keyboard stop.
+
+Placement follows the inspected Directory Rules.pdf responsibility rule and
+ADR-0029: the existing standalone hosted composition owns presentation in
+`app/`, regression checks in `tests/`, and this behavior record in `docs/`.
+No root or lifecycle boundary changes. The authoring baseline is hosted commit
+`7a4ea2c4a9cc20903214fd8a6f6a0215f69a67c1`; its complete tree was matched locally
+to `f1ffd0fd2822c5c7255e03efc816f069a6495512` before editing.
+
+Regression coverage includes native forward/backward navigation, rail re-entry,
+arrow/Home/End selection, nested-dialog focus restoration by Escape and pointer,
+Return/Escape restoration, primary map entry, and desktop, tablet, narrow phone
+and landscape reduced-motion layouts. Local and CI acceptance results belong
+to the pull request's exact-head evidence. Isolated provider fixtures establish
+UI behavior, not live source availability, physical-device or screen-reader
+qualification. GitHub review, source integration, hosted Preview acceptance and
+public publication remain separate. Rollback is a revert of the correction;
+no provider, data, hosting configuration or stored preference migration occurs.

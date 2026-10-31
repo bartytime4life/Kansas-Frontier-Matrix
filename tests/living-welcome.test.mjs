@@ -698,7 +698,15 @@ test('rail keyboard wraps and scroll controls honour paused motion',async()=>{
   const rail=findNode(tree,n=>n.props?.className==='welcome-rail-items');
   rail.props.ref.current={clientWidth:400,scrollBy:o=>scrolled.push(o),querySelector:selector=>({focus:()=>focused.push(selector),scrollIntoView(){}})};
   let prevented=0;
-  const key=(id,key)=>{railCard(tree,id).props.onKeyDown({key,preventDefault(){prevented++;}});tree=h.render();};
+  const key=(id,key)=>{
+   railCard(tree,id).props.onKeyDown({key,preventDefault(){prevented++;}});tree=h.render();
+   const cards=findNode(tree,n=>n.props?.className==='welcome-rail-items').props.children;
+   assert.equal(cards.filter(n=>n.props.tabIndex===0).length,1,'only the selected category is a Tab stop');
+   for(const card of cards)assert.equal(card.props.tabIndex,card.props['aria-pressed']?0:-1);
+  };
+  assert.equal(rail.props.role,'toolbar');assert.equal(rail.props['aria-label'],'Category maps');
+  assert.match(findNode(tree,n=>n.props?.id===rail.props['aria-describedby']).props.children,/arrow keys/);
+  key('water','Tab');assert.equal(prevented,0,'Tab uses native focus order');
   key('water','Home');assert.equal(rootOf(tree).props['data-active'],TOPIC_STRUCTURE[0].id);
   key(TOPIC_STRUCTURE[0].id,'ArrowLeft');assert.equal(rootOf(tree).props['data-active'],TOPIC_STRUCTURE.at(-1).id);
   key(TOPIC_STRUCTURE.at(-1).id,'ArrowRight');assert.equal(rootOf(tree).props['data-active'],TOPIC_STRUCTURE[0].id);
@@ -707,6 +715,30 @@ test('rail keyboard wraps and scroll controls honour paused motion',async()=>{
   findNode(tree,n=>n.props?.['aria-label']==='Scroll categories right').props.onClick();
   findNode(tree,n=>n.props?.['aria-label']==='Scroll categories left').props.onClick();
   assert.deepEqual(scrolled.map(o=>[o.left,o.behavior]),[[300,'instant'],[-300,'instant']]);
+ }finally{h.harness.dispose();}
+});
+
+test('closing stage notes restores their exact trigger before paint without refocusing Return',async()=>{
+ const h=await welcome();let tree=h.render();
+ const focus=name=>({isConnected:true,focus(){h.env.document.activeElement=this;focused.push(name);}});
+ const focused=[],back=focus('return'),notes=focus('notes'),close=focus('close');
+ rootOf(tree).props.ref.current={contains:node=>node===back||node===notes,querySelector:selector=>selector==='.welcome-preview-expand'?back:null};
+ try{
+  gridCard(tree,'water').props.onClick();tree=h.render();assert.equal(h.env.document.activeElement,back);
+  h.env.document.activeElement=notes;
+  byText(tree,'Source notes & demonstrations').props.onClick();
+  tree=h.harness.render(h.harness.exports.default,h.props);
+  findNode(tree,n=>n.props?.className==='welcome-dialog').props.ref.current={contains:node=>node===close,querySelector:()=>close};
+  h.harness.commit();assert.equal(h.env.document.activeElement,close);
+  h.env.listeners.get('keydown')({target:close,key:'Escape',preventDefault(){},stopImmediatePropagation(){}});
+  tree=h.harness.render(h.harness.exports.default,h.props);
+  h.env.document.activeElement=h.env.document.body;h.harness.commitLayout();
+  assert.equal(h.env.document.activeElement,notes);
+  assert.equal(focused.at(-1),'notes');assert.equal(focused.filter(name=>name==='return').length,1);
+  assert.equal(rootOf(tree).props['data-fullscreen'],true);assert.deepEqual(h.calls,[]);
+  byText(tree,'Source notes & demonstrations').props.onClick();tree=h.render();
+  byText(tree,'Preview in the welcome window →').props.onClick();tree=h.render();
+  assert.equal(h.env.document.activeElement,back,'explicitly returning to the preview still focuses Return');
  }finally{h.harness.dispose();}
 });
 

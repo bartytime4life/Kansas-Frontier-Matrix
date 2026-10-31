@@ -425,7 +425,7 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
       await p.key('Enter','Enter',13);
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'source notes remain keyboard accessible after failure');
       await p.key('Escape','Escape',27);
-      await p.wait(`document.activeElement?.matches('.welcome-preview-expand')`,'notes return to the persistent Return control');
+      await p.wait(`document.activeElement?.matches('.welcome-layer-demo-actions button:last-child')`,'notes restore their exact opening action');
       await p.evaluate(`document.querySelector('.welcome-layer-demo-state').scrollIntoView({block:'nearest',behavior:'instant'})`);
       assert.equal(await p.evaluate(`(()=>{const e=document.querySelector('.welcome-layer-demo-state'),r=e.getBoundingClientRect(),a=e.closest('aside').getBoundingClientRect();return r.top>=a.top&&r.bottom<=a.bottom&&r.left>=0&&r.right<=innerWidth;})()`),true,'failure guidance is readable within the scrolling guide');
       if(process.env.KFM_WORKSPACE_SCREENSHOTS){
@@ -433,9 +433,11 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
         const capture=await p.call('Page.captureScreenshot',{format:'png'});
         await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${failure}-${width}x${height}.png`),Buffer.from(capture.data,'base64'));
       }
-      // Shift+Tab from the last demo action reaches the map action. The category rail sits before Return, so Return itself is not the start.
-      await revealControl(p,'.welcome-layer-demo-actions button:last-child');
-      await p.evaluate(`document.querySelector('.welcome-layer-demo-actions button:last-child').focus()`);
+      // The complete reverse route from Return bypasses the category rail.
+      await p.key('Tab','Tab',9);
+      assert.equal(await p.evaluate(`document.activeElement.matches('.welcome-preview-expand')`),true);
+      await p.key('Tab','Tab',9,8);
+      assert.equal(await p.evaluate('document.activeElement.textContent'),'Source notes & demonstrations');
       await p.key('Tab','Tab',9,8);
       assert.equal(await p.evaluate('document.activeElement.textContent'),'Open this category’s map →');
       await p.key('Enter','Enter',13);
@@ -813,11 +815,84 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
     await openStageNotes(p);
     await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'detail reopened');
     await p.key('Escape', 'Escape', 27);
-    await p.wait(`!document.querySelector('.welcome-dialog') && document.activeElement?.matches('.welcome-preview-expand')`, 'Escape returns from notes to the stage');
+    await p.wait(`!document.querySelector('.welcome-dialog') && document.activeElement?.matches('.welcome-layer-demo-actions button:last-child')`, 'Escape restores the source-notes action');
     await p.key('Escape','Escape',27);
     await p.wait(`document.activeElement?.matches('.topic-weather')`, 'Escape returns to the original card');
     await p.key('Escape', 'Escape', 27);
     await p.wait(`!document.querySelector('.explorer-guide') && document.activeElement?.matches('.guide-trigger')`, 'next Escape closes welcome and returns focus to the guide trigger');
+  });
+}
+
+// Only initial category setup uses focus(). Every subsequent hop is native
+// Tab/Shift+Tab, so the complete journey can detect an intervening rail again.
+for (const [width,height] of [[1280,800],[768,1024],[390,844],[320,568],[568,320]]) {
+  test(`welcome primary keyboard journey at ${width}x${height}`, {timeout:120000}, async t => {
+    const b=await browser(t),p=await pageSession(b,width,height);
+    const reduced=height<400;
+    if(reduced)await p.call('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+    await p.open('/');await readyWelcome(p);
+    const opening=welcomeTopics.at(-1).id;
+    await revealControl(p,'.topic-'+opening);
+    await p.evaluate(`document.querySelector('.topic-${opening}').focus()`);
+    const scroll=await p.evaluate(`document.querySelector('.living-welcome').scrollTop`);
+    const focused=async selector=>{
+      await p.wait(`document.activeElement?.matches(${JSON.stringify(selector)})`,'native focus reaches '+selector);
+      if(selector==='.welcome-dialog-close'){
+        // The portalled dialog owns the viewport, independently of the welcome
+        // rectangle below the application header.
+        await p.wait(`(()=>{const e=document.activeElement,r=e.getBoundingClientRect();return r.height>=44&&r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&e.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`,'dialog close is visible and hit-testable');
+      }else await revealControl(p,selector);
+      assert.equal(await p.evaluate(`document.activeElement.matches(':focus-visible')`),true,'keyboard focus remains visible');
+    };
+    const tab=async(selector,reverse=false)=>{await p.key('Tab','Tab',9,reverse?8:0);await focused(selector);};
+    const notes='.welcome-layer-demo-actions button:last-child',map='.welcome-layer-demo-actions button:nth-last-child(2)',back='.welcome-preview-expand';
+    const enter=()=>p.key('Enter','Enter',13);
+    await enter();await focused(back);
+    await tab(notes,true);await tab(map,true);
+    await tab(notes);await tab(back);
+    // Nested notes return to their exact trigger, by Escape and a real click.
+    for(const close of ['Escape','pointer']){
+      await tab(notes,true);await enter();await focused('.welcome-dialog-close');
+      if(close==='Escape')await p.key('Escape','Escape',27);
+      else{
+        const point=await p.evaluate(`(()=>{const r=document.querySelector('.welcome-dialog-close').getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+        await p.call('Input.dispatchMouseEvent',{type:'mousePressed',...point,button:'left',clickCount:1});
+        await p.call('Input.dispatchMouseEvent',{type:'mouseReleased',...point,button:'left',clickCount:1});
+      }
+      await p.wait(`!document.querySelector('.welcome-dialog')&&document.activeElement?.matches(${JSON.stringify(notes)})`,'notes restore their trigger');
+      await tab(back);
+    }
+    const pauseEnabled=await p.evaluate(`!document.querySelector('.welcome-preview-pause').disabled`);
+    const scrollVisible=await p.evaluate(`document.querySelector('.welcome-rail-scroll').getClientRects().length>0`);
+    if(pauseEnabled)await tab('.welcome-preview-pause');
+    await tab('.welcome-stage-close');
+    if(scrollVisible)await tab('[aria-label="Scroll categories left"]');
+    await tab('.welcome-rail-card[aria-pressed="true"]');
+    assert.equal(await p.evaluate(`document.activeElement.parentElement.getAttribute('role')`),'toolbar');
+    assert.match(await p.evaluate(`document.getElementById(document.activeElement.parentElement.getAttribute('aria-describedby')).textContent`),/arrow keys/);
+    for(const [key,code,id] of [['End',35,welcomeTopics.at(-1).id],['ArrowRight',39,welcomeTopics[0].id],['ArrowLeft',37,welcomeTopics.at(-1).id],['Home',36,welcomeTopics[0].id]]){
+      await p.key(key,key,code);
+      await p.wait(`document.activeElement?.dataset.topic==='${id}'&&document.activeElement.getAttribute('aria-pressed')==='true'`,'arrow/Home/End selects and focuses '+id);
+      assert.deepEqual(await p.evaluate(`Array.from(document.querySelectorAll('.welcome-rail-card')).filter(e=>e.tabIndex===0).map(e=>e.dataset.topic)`),[id]);
+      await focused('.welcome-rail-card[aria-pressed="true"]');
+    }
+    if(scrollVisible){
+      await tab('[aria-label="Scroll categories right"]');
+      await tab('.welcome-rail-card[aria-pressed="true"]',true);
+      await tab('[aria-label="Scroll categories left"]',true);
+    }
+    await tab('.welcome-stage-close',true);
+    if(pauseEnabled)await tab('.welcome-preview-pause',true);
+    await tab(back,true);await enter();
+    await p.wait(`document.querySelector('.living-welcome')?.dataset.cinematic==='false'&&document.activeElement?.matches('.topic-${opening}')`,'Return restores the original category after rail switching');
+    assert.ok(Math.abs(await p.evaluate(`document.querySelector('.living-welcome').scrollTop`)-scroll)<=1,'Return restores chooser scroll');
+    // Escape from a stage control restores that same card before the next key.
+    await enter();await focused(back);
+    if(pauseEnabled)await tab('.welcome-preview-pause');
+    await p.key('Escape','Escape',27);
+    await p.wait(`document.activeElement?.matches('.topic-${opening}')&&document.querySelector('.living-welcome')?.dataset.cinematic==='false'`,'Escape restores the original category');
+    await enter();await focused(back);await tab(notes,true);await tab(map,true);await enter();
+    await p.wait(`!document.querySelector('.living-welcome')&&document.querySelector('[aria-label="Layer topic"]')?.value==='${opening}'&&document.querySelector('.category-map-dock')`,'native map action opens the selected primary map');
   });
 }
 
