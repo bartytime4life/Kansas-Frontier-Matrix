@@ -18,6 +18,7 @@ under `/home/dev/Documents/ChatGPT/Kansas-Frontier-Matrix/`.
 | --- | --- |
 | Pipeline host | `dev` PC. `devil` is a test PC with no production role. |
 | Deployment | User-level systemd units that run `pc-pipeline-data/runtime/run.sh`. The system install (`install.mjs`, `/opt/kfm-pipeline`, `/srv/kfm-data`, `kfm-pipeline.timer`) has **not** been applied. |
+| Sources | `usgs-streamflow`, `nws-alerts` and, since 2026-10-31 (first capture 18:30 UTC), `usgs-earthquakes`. All three are capture-only. |
 | Publication | `publish: false` and `remoteMode: "connection-only"`. Nothing is uploaded. |
 | Normal tick output | The first tick in each hour records `candidate-only` for each source; later ticks in that hour report `already-complete-or-held`. |
 | Data store | `KFM-pipeline/` on the 1.4 TiB HDD at `/run/media/dev/f975f1e2-a926-4040-8bc5-cbea4335d8bf` |
@@ -722,6 +723,16 @@ Owner steps, in order, before earthquakes publish:
    releases in an isolated environment without public exposure first. After
    the authorized cutover, verify three distinct committed releases, public
    readback, old-feed continuity and resource acceptance.
+
+On 2026-10-31 the owner opted the `dev` PC in to capture only, with `publish`
+still false, so steps 1–4 did not apply. A private `rehearse` first captured all
+three feeds outside the store. `"usgs-earthquakes"` was then added to `sources`;
+the config has no `storagePolicy`, so the default three-source priority applies.
+The prior config is kept under
+`pc-pipeline-data/implementation-recovery/20261031T182916Z-earthquakes-optin/`.
+The 18:30 UTC tick recorded the first `candidate-only` earthquake product, and
+the operator report shows it `valid`. Steps 1–4 still come before any earthquake
+publication.
 
 Profile replacement does not rewrite an already saved transfer. A job's
 `transfer_path` binds its immutable approval and recipe. Such a held job may
