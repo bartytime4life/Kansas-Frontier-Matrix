@@ -89,6 +89,14 @@ test('opening a category map opens on its own subject and follows the same categ
  assert.equal(presentation(true,{basemap:'standard'},'standard'),true,'matching basemaps do not imply that the category layers were enabled');
  assert.equal(presentation(false,{basemap:'standard'},'standard'),false,'an explicit matching preset may use its own description');
  assert.equal(presentation(false,{basemap:'standard'},'relief'),true,'a different retained basemap never claims the preset');
+ const resetBinding=props.get('onReset');
+ const selectReset=new Function('categoryToolsOnCurrentMap','activeCategoryMap','basemap','openCategoryMap','resetCategoryView',`return ${resetBinding.slice(1,-1)};`);
+ const calls=[];
+ const open=topic=>calls.push(['preset',topic]), reset=()=>calls.push(['camera']);
+ selectReset(true,{basemap:'standard',topic:'science'},'standard',open,reset)();
+ selectReset(false,{basemap:'standard',topic:'science'},'relief',open,reset)();
+ selectReset(false,{basemap:'standard',topic:'science'},'standard',open,reset)();
+ assert.deepEqual(calls,[['preset','science'],['preset','science'],['camera']],'Open default view must apply the actual setup; Reset view retains its camera-only behavior');
 });
 
 test('public-safety dock keeps optional context off and does not promise a radar scan',async()=>{

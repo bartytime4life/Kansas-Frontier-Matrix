@@ -27,6 +27,8 @@ of all private databases, source rights, physical caches or installed runtimes.
   water-animation restrictions remain in force.
   Tool-only presentation is explicit even when the retained map happens to use
   the category's basemap; that match does not imply its source layers are on.
+  The separate **Open default view** action applies the actual category setup;
+  the existing preset's **Reset view** remains a camera reset.
 - Science Lab links open its existing panel and optionally filter a phenomenon.
   Workbenches open in a separate tab so the current map remains available.
   Navigation does not enable additional tracks or authorize data capture.
