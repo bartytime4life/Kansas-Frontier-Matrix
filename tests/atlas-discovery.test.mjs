@@ -63,6 +63,24 @@ test('official sources match every existing search field and retain provider con
   }
 });
 
+test('official sources are discoverable by dataset identifier and combined provider terms', () => {
+  for (const term of ['streamflow', 'usgs-streamflow', 'USGS streamflow', 'streamflow usgs', 'stream flow', 'Streams\t geological   survey']) {
+    assert.deepEqual(ids(atlasDiscoveryResults(term, term, [], [sourceItem], undefined, 'idle')), ['source:usgs-streamflow'], term);
+  }
+});
+
+test('every source query term must match the same source and only discovery metadata is indexed', () => {
+  const sources = [
+    { ...sourceItem, boundary: 'Not a flood forecast', fallback: 'No radar substitute' },
+    { ...sourceItem, id: 'nws-radar', title: 'Radar', shortTitle: 'Reflectivity', organization: 'National Weather Service', domain: 'Weather', endpointLabel: 'Radar tiles' },
+  ];
+  for (const term of ['streamflow radar', 'streamflow forecast', 'streamflow unknown', 'flood forecast']) {
+    assert.deepEqual(ids(atlasDiscoveryResults(term, term, [], sources, undefined, 'ready')), [], term);
+  }
+  assert.deepEqual(ids(atlasDiscoveryResults('radar weather', 'radar weather', [], sources, undefined, 'ready')), ['source:nws-radar']);
+  assert.deepEqual(ids(atlasDiscoveryResults('streamflow unknown', 'streamflow', [], sources, undefined, 'ready')), []);
+});
+
 test('current ready or partial Census counties are discoverable by name and FIPS with source edition', () => {
   for (const state of ['ready', 'partial']) {
     for (const term of ['Ellsworth', 'ellsworth county', '20053']) {

@@ -25,8 +25,14 @@ export function atlasDiscoveryResults(
   const term = settledQuery.trim().toLowerCase();
   if (!term || term !== query.trim().toLowerCase()) return [];
   const mapResults: GlobalSearchItem[] = index.filter((item) => `${item.title} ${item.subtitle}`.toLowerCase().includes(term));
+  const sourceTerms = term.split(/\s+/);
   const sourceResults: GlobalSearchItem[] = sources
-    .filter((source) => `${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${source.endpointLabel}`.toLowerCase().includes(term))
+    .filter((source) => {
+      // Match provider and dataset terms in either order, as in the Layers catalog.
+      // Keep limitations and fallback copy out of the discovery index.
+      const searchable = `${source.id} ${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${source.endpointLabel}`.toLowerCase();
+      return sourceTerms.every((word) => searchable.includes(word));
+    })
     .map((source) => ({ id: `source:${source.id}`, kind: "source", title: source.shortTitle, subtitle: `${source.organization} · ${source.domain}`, officialContextId: source.id }));
   const counties = countySearchResults(payload, state, term);
   return [...counties, ...sourceResults, ...mapResults].slice(0, 7);
