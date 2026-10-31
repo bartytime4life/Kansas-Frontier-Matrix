@@ -123,6 +123,10 @@ Pointer targets are hit-tested again after the intentional slow-hover interval;
 the earlier pre-hover coordinate is not reused after a scroll/reflow. The
 original direct-entry, search visibility, daylight
 geometry/contrast, failure/recovery and exact focus-return assertions remain.
+The wider local matrix also measured an impossible scroll expectation: saved
+position 1650, current maximum 1630. Return now asserts the exact native-clamped
+position and visibility of the original category action, not an arbitrary
+tolerance or a jump to the top.
 No application, provider, data, runtime or access behavior changes in that
 test-only reconciliation. Local before/after and exact-head CI results are
 recorded in the follow-up PR; they do not qualify every startup timing case.
