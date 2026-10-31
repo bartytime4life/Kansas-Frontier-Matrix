@@ -91,7 +91,9 @@ deployment and publication are separate actions.
 
 The inherited population-change test assumed its reset statements immediately
 preceded the aviation branch; the existing aviation reset broke that adjacency.
-The wiring check is now scoped to the actual category opener. The category-session
-regression additionally seeds all four population state/ref values and executes
-every category opener, requiring each value to reset. Removing a reset must fail
-that behavioral check; no assertion about population ownership is waived.
+Concurrent owner-merged #5642 repaired that anchor and is preserved here. Our
+category-session regression additionally seeds all four population state/ref
+values and executes every category opener, requiring each value to reset.
+Removing a reset fails that behavioral check; no assertion about population
+ownership is waived. Dock binding checks inspect JSX attributes independently
+of prop order and also require the retained-map presentation flag.
