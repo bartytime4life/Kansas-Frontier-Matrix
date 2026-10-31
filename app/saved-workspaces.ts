@@ -18,7 +18,9 @@ const scalarMap = (value: unknown, kind: "boolean" | "number") => record(value)
 /** Validate the minimum complete device-local workspace shape before React sees it. */
 export const validSavedWorkspaceRecord = (value: unknown): value is Record<string, unknown> => {
   if (!record(value) || !text(value.id) || !text(value.name) || !text(value.savedAt) || !Number.isFinite(Date.parse(value.savedAt))) return false;
+  // MapLibre accepts wrapped longitudes, but throws on latitudes beyond the poles.
   if (!record(value.view) || !Array.isArray(value.view.center) || value.view.center.length !== 2 || !value.view.center.every(finite)
+    || Math.abs(value.view.center[1]) > 90
     || !finite(value.view.zoom) || !finite(value.view.bearing) || !finite(value.view.pitch)) return false;
   if (!scalarMap(value.visibility, "boolean") || !scalarMap(value.opacity, "number") || !stringList(value.layerOrder, 100) || !finite(value.year)) return false;
   if (!["standard", ...CATEGORY_BASEMAP_KEYS, "imagery", "kansas-aerial", "photoreal", "midnight", "prairie", "streets", "topo"].includes(String(value.basemap)) || !["mercator", "globe"].includes(String(value.projection))) return false;

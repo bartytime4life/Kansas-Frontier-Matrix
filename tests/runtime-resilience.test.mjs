@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
 import ts from "typescript";
+import { LngLat } from "maplibre-gl";
 
 const modules = new Map();
 const moduleUrl = async (file) => {
@@ -39,6 +40,27 @@ test("corrupt device-local workspaces cannot replace the Explorer with a blank r
   assert.equal(mixed.records.length, 1);
   assert.equal(mixed.records[0].id, "workspace-1");
   assert.equal(mixed.rejected, true);
+});
+
+test("saved places exclude latitudes the map cannot restore while preserving valid and wrapped views", () => {
+  const invalid = [-91, 91].map((latitude, index) => ({
+    ...workspace, id: `invalid-${index}`, view: { ...workspace.view, center: [-98, latitude] },
+  }));
+  for (const place of invalid) assert.throws(() => LngLat.convert(place.view.center), /latitude/);
+  const valid = [workspace, ...[-90, 90].map((latitude, index) => ({
+    ...workspace, id: `wrapped-${index}`, projection: "globe", view: { ...workspace.view, center: [index ? 540 : -540, latitude] },
+  }))];
+  const parsed = saved.parseSavedWorkspaceList(JSON.stringify([...invalid, ...valid]), 24);
+  assert.deepEqual(parsed.records, valid);
+  assert.equal(parsed.rejected, true);
+  for (const place of parsed.records) assert.doesNotThrow(() => LngLat.convert(place.view.center));
+
+  const writes = [];
+  const storage = { setItem: (...args) => writes.push(args) };
+  assert.equal(saved.writeSavedWorkspaceList(storage, "places", invalid), false);
+  assert.equal(writes.length, 0, "invalid coordinates cannot overwrite the saved list");
+  assert.equal(saved.writeSavedWorkspaceList(storage, "places", valid), true);
+  assert.deepEqual(saved.parseSavedWorkspaceList(writes[0][1], 24), { records: valid, rejected: false });
 });
 
 test("embedded panels do not rewrite host-controlled history and history failures stay contained", () => {
