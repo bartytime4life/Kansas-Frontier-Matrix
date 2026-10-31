@@ -10809,7 +10809,12 @@ export default function Home() {
     else pendingViewRef.current = camera;
     announce(`${look.name} opened · ${categorySceneLabel(look.scene)} · display context, not evidence`);
   };
-  const runWelcomeMap = (topic: TopicId) => openCategoryMap(topic);
+  const runWelcomeMap = (topic: TopicId) => {
+    openCategoryMap(topic);
+    // A welcome choice enters the editable workspace in one step. Reuse the
+    // Layers action's after-dismissal focus handoff, including retained panels.
+    runWelcomeTopic(topic);
+  };
   // The dock follows the catalogue's category while its map look is on screen,
   // including after a shared URL restores that basemap.
   const activeCategoryMap = officialWorkspace === "all" ? undefined : categoryMap(officialWorkspace);

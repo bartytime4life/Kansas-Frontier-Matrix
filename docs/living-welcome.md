@@ -1,5 +1,9 @@
 # Capability welcome · 2026-10-21 candidate
 
+Current navigation is described in [Direct workspace entry · 2026-10-31](#direct-workspace-entry--2026-10-31).
+It supersedes the historical click-to-preview and automatic hover transition
+described below. Earlier implementation and validation records are retained.
+
 ## Cinematic category stage · 2026-10-30 candidate
 
 **PROPOSED release; implemented candidate, not published.** Starting evidence:
@@ -685,3 +689,26 @@ UI behavior, not live source availability, physical-device or screen-reader
 qualification. GitHub review, source integration, hosted Preview acceptance and
 public publication remain separate. Rollback is a revert of the correction;
 no provider, data, hosting configuration or stored preference migration occurs.
+
+
+## Direct workspace entry · 2026-10-31
+
+Selecting a category card now opens its actual map and its category-filtered
+Layers panel in one action. Keyboard focus enters that panel after welcome
+dismissal; users can toggle sources, change opacity, inspect data and clear the
+topic filter immediately. Existing category starter sets and source boundaries
+remain authoritative. Water animation defaults are unchanged.
+
+Hover and keyboard focus retain the map glimpse and card highlight while the
+card grid stays in place. They never schedule the former 650 ms transition into
+a full-window demonstration. Each card has a separate **Preview** action for
+that optional stage, preserving Aviation zone modes, the Geology recorded log,
+source notes, comparison controls, pause/reduced-motion behavior and the category
+rail. Return/Escape restores the Preview button and chooser scroll position.
+
+Placement stays in the existing standalone `app/`, `tests/` and `docs/` roots
+under the accepted Directory Rules / ADR-0029 responsibility boundaries. This is
+navigation and focus behavior, with no dataset, dependency, model, database or
+release-policy change. Revert the source commit to roll back; no store operation
+is needed. Public publication remains on hold. Browser and CI results are
+recorded separately from authoring and do not establish release authority.
