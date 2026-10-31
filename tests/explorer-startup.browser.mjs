@@ -1472,8 +1472,11 @@ for (const renderer of ['unsupported', 'supported']) test(`local preview ${rende
  await p.wait(`!${box}?.checked`, 'visitor switches elevation off');
  for(const topic of ['water','aviation','geology','water']){
   await p.evaluate(`(()=>{const s=document.querySelector('[aria-label="Layer topic"]');Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype,'value').set.call(s,${JSON.stringify(topic)});s.dispatchEvent(new Event('change',{bubbles:true}));})()`);
-  await p.wait(`[...document.querySelectorAll('button')].some(b=>/^Open .*map$/.test(b.textContent))`, 'open category button');
-  await p.evaluate(`[...document.querySelectorAll('button')].find(b=>/^Open .*map$/.test(b.textContent)).click()`);
+  await p.wait(`document.querySelector('.topic-map-look button')`, 'open category button');
+  const destination = await p.evaluate(`document.querySelector('.topic-map-look strong').textContent`);
+  await p.evaluate(`document.querySelector('.topic-map-look button').click()`);
+  await p.wait(`document.querySelector('.category-map-dock header strong')?.textContent === ${JSON.stringify(destination)} && ${box}`, 'category actually opens and imagery remounts');
+  if (renderer === 'unsupported') await p.wait(`document.querySelector('#earth-engine-context-controls').textContent.includes('WebGL2 is unavailable here')`, 'unsupported renderer remains active');
   await pause(300);
   assert.equal(await p.evaluate(`Boolean(${box}?.checked)`),false,`${topic} preserves off`);
  }
