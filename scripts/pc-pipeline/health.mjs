@@ -94,8 +94,14 @@ export async function operatorHealth(configPath, runDirectory, { now = Date.now(
   catch { /* No earlier report is a normal first-run state. */ }
   try { jobs = await journalHealth(config.root, config.sources, now); } catch (error) { jobs = { state: 'unavailable', reason: code(error) }; }
   try {
-    intake = await reader(resolve(config.root, 'data/work/intake/index.sqlite'), db => ({ state: 'indexed',
-      byStatus: db.prepare('SELECT status,COUNT(*) AS files FROM items WHERE present=1 GROUP BY status').all() }));
+    // This pipeline's own captures carry no intake rights declaration: each source's signed profile decides
+    // rights and sensitivity once, so they are counted apart from files that await review.
+    const capture = `lane='quarantine' AND declared_json IS NULL AND substr(relative_path,1,instr(relative_path,'/')-1) IN (${PC_CAPTURE_IDS.map(() => '?').join(',')})`;
+    intake = await reader(resolve(config.root, 'data/work/intake/index.sqlite'), db => {
+      const rows = db.prepare(`SELECT (${capture}) AS capture,status,COUNT(*) AS files FROM items WHERE present=1 GROUP BY capture,status`).all(...PC_CAPTURE_IDS);
+      const counts = own => rows.filter(row => Boolean(row.capture) === own).map(({ status, files }) => ({ status, files }));
+      return { state: 'indexed', byStatus: counts(false), pipelineCaptures: { state: 'held-for-source-profile', byStatus: counts(true) } };
+    });
   } catch (error) { intake = { state: 'unavailable', reason: code(error) }; }
   const backup = await receipt(resolve(runDirectory, 'backup-last.json'), now, 36 * 3600000);
   const restore = await receipt(resolve(runDirectory, 'restore-last.json'), now, 35 * 86400000);
