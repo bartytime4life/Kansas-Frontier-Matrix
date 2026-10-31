@@ -1,8 +1,15 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from 'next/link';
-type CaptureStatus = { state: string; configured: boolean; limitBytes: number; usedBytes: number | null; captures: number | null; lastTick: number | null; sources: { id: string; name: string; intervalMs: number; state: string; checkedAt?: number | null }[] };
+type CaptureStatus = { state: string; configured: boolean; limitBytes: number; usedBytes: number | null; captures: number | null; lastTick: number | null; sources: { id: string; name: string; intervalMs: number; state: string; checkedAt?: number | null; retryAt?: number | null; attempts?: number; lastError?: string | null }[] };
 const STATUS_LABELS: Record<string, string> = { "storage-not-configured": "Archive setup pending", "configuration-required": "Archive setup pending", "storage-unavailable": "Archive unavailable", paused: "Capture paused", "awaiting-scheduled-tick": "Waiting for scheduled capture" };
+const HOLD_REASONS: Record<string, string> = {
+  UPSTREAM_UNAVAILABLE: 'The source did not respond successfully.', UPSTREAM_TIMEOUT: 'The source response timed out.',
+  CONTENT_TYPE_REJECTED: 'The source returned an unexpected file type.', RESPONSE_TOO_LARGE: 'The source response exceeded its allowed size.',
+  ARCHIVE_LIMIT_REACHED: 'The hosted archive reached its storage limit.', CAPTURE_INTEGRITY_FAILED: 'The capture failed its integrity check.',
+  LEASE_LOST: 'The capture worker lost ownership of this attempt.', PIPELINE_PAUSED: 'The capture pipeline is paused.',
+  STORAGE_UNAVAILABLE: 'Hosted archive storage is unavailable.',
+};
 const count = (value: unknown): value is number => typeof value === "number" && Number.isSafeInteger(value) && value >= 0;
 const nullableCount = (value: unknown): value is number | null => value === null || count(value);
 const timestamp = (value: unknown): value is number | null => value === null || count(value) && value <= 8_640_000_000_000_000;
@@ -20,9 +27,14 @@ function parseCaptureStatus(value: unknown): CaptureStatus {
     const row = source as Record<string, unknown>;
     if (!boundedText(row.id, 80) || !/^[a-z0-9][a-z0-9-]*$/.test(row.id) || ids.has(row.id)
       || !boundedText(row.name, 160) || !count(row.intervalMs) || row.intervalMs === 0 || !boundedText(row.state, 32)
-      || row.checkedAt !== undefined && !timestamp(row.checkedAt)) throw new Error("Invalid archive source");
+      || row.checkedAt !== undefined && !timestamp(row.checkedAt)
+      || row.retryAt !== undefined && !timestamp(row.retryAt) || row.attempts !== undefined && !count(row.attempts)) throw new Error("Invalid archive source");
     ids.add(row.id);
-    return { id: row.id, name: row.name, intervalMs: row.intervalMs, state: row.state, ...(row.checkedAt !== undefined ? { checkedAt: row.checkedAt as number | null } : {}) };
+    return { id: row.id, name: row.name, intervalMs: row.intervalMs, state: row.state,
+      ...(row.checkedAt !== undefined ? { checkedAt: row.checkedAt as number | null } : {}),
+      ...(row.retryAt !== undefined ? { retryAt: row.retryAt as number | null } : {}),
+      ...(row.attempts !== undefined ? { attempts: row.attempts as number } : {}),
+      lastError: typeof row.lastError === 'string' && Object.hasOwn(HOLD_REASONS, row.lastError) ? row.lastError : null };
   });
   // Project only the bounded public status fields; capture bodies remain private.
   return { state: record.state, configured: record.configured, limitBytes: record.limitBytes, usedBytes: record.usedBytes, captures: record.captures, lastTick: record.lastTick, sources };
@@ -47,10 +59,15 @@ export function HostedSourceStatus() {
   return <section className="hosted-source-status" aria-label="Hosted source archive" aria-busy={loading}>
     <header><strong>Hosted source archive</strong><span>{failed ? "Status unavailable" : loading ? "Checking…" : status ? STATUS_LABELS[status.state] : "Status unavailable"}</span></header>
     <p>Scheduled captures preserve original source data for review. Archived captures remain private and do not change the map’s live layers.</p>
-    <p><Link href="/curated">Curated source snapshots, map and downloads</Link></p>
+    <p><Link href="/curated">Curated source snapshots, map and downloads</Link> · <Link href="/data-status">Database &amp; intake status</Link></p>
     {failed && <p role="status">Archive status could not be verified. {status ? "Showing the last verified response; refresh to check again." : "No archive totals or capture state are confirmed."}</p>}
     {status && <><dl><div><dt>Archive limit</dt><dd>{status.limitBytes / 1e9} GB</dd></div><div><dt>Stored</dt><dd>{status.usedBytes === null ? "Not verified" : `${(status.usedBytes / 1e9).toFixed(3)} GB`}</dd></div><div><dt>Captures</dt><dd>{status.captures ?? "Not verified"}</dd></div><div><dt>Last capture check</dt><dd>{status.lastTick !== null ? new Date(status.lastTick).toISOString().replace("T", " ").slice(0, 19) + " UTC" : "Not yet recorded"}</dd></div></dl>
-      <ul>{status.sources.map(source => <li key={source.id}><strong>{source.name}</strong><span>{source.state === "quarantined" ? "Captured · awaiting review" : source.state === "quarantined-invalid" ? "Captured · validation needs attention" : source.state === "retry-held" ? "Retry held" : "No verified capture"}</span></li>)}</ul></>}
+      <ul>{status.sources.map(source => <li key={source.id}><strong>{source.name}</strong><span>{source.state === "quarantined" ? "Captured · awaiting review" : source.state === "quarantined-invalid" ? "Captured · validation needs attention" : source.state === "retry-held" ? "Retry held" : "No verified capture"}</span>
+        {source.state === 'quarantined' && <span>Source review and an approved release are still required before public display.</span>}
+        {source.state === 'quarantined-invalid' && <span>Resolve the capture’s validation issue before review.</span>}
+        {source.state === 'retry-held' && <><span>{source.lastError ? HOLD_REASONS[source.lastError] : 'The latest capture attempt needs attention; no specific reason was verified.'}</span>
+          <span>{source.attempts !== undefined && source.attempts >= 3 ? 'This capture has exhausted its three attempts. Check the next scheduled capture.' : source.retryAt ? `Retry eligible after ${new Date(source.retryAt).toISOString()}; it runs only when scheduling and storage permit.` : 'A retry time has not been verified.'}</span></>}
+      </li>)}</ul></>}
     <div><button type="button" disabled={loading} onClick={() => { setLoading(true); setFailed(false); void refresh(); }}>{loading ? "Checking…" : "Refresh archive status"}</button></div>
     <p className="source-archive-limitation">Only the listed feeds have a capture adapter. Provider archives and map tiles keep their separate coverage.</p>
   </section>;
