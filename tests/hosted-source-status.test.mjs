@@ -13,6 +13,29 @@ const text = node => node === null || node === undefined || typeof node === "boo
   : typeof node !== "object" ? String(node)
     : [node.props?.children].flat(Infinity).map(text).join(" ").replace(/\s+/g, " ").trim();
 
+test("capture holds explain review, eligible retries and exhausted attempts without exposing provider text", async t => {
+  const f = await fixture(t);
+  const source = status().sources[0];
+  const sources = [
+    { ...source, id: 'review', state: 'quarantined' },
+    { ...source, id: 'invalid', state: 'quarantined-invalid' },
+    { ...source, id: 'retry', state: 'retry-held', attempts: 1, retryAt: 1_800_000_000_000, lastError: 'UPSTREAM_TIMEOUT' },
+    { ...source, id: 'exhausted', state: 'retry-held', attempts: 3, retryAt: 1_900_000_000_000, lastError: 'private-provider-text' },
+    { ...source, id: 'unknown', state: 'retry-held' },
+  ];
+  await f.reply(f.requests[0], status({ sources }));
+  const output = text(f.render());
+  assert.match(output, /approved release are still required/);
+  assert.match(output, /validation issue before review/);
+  assert.match(output, /source response timed out/);
+  assert.match(output, /Retry eligible after 2027-01-15T08:00:00.000Z/);
+  assert.match(output, /only when scheduling and storage permit/);
+  assert.match(output, /exhausted its three attempts/);
+  assert.match(output, /no specific reason was verified/);
+  assert.match(output, /retry time has not been verified/);
+  assert.doesNotMatch(output, /private-provider-text|2030-03/);
+});
+
 async function fixture(t) {
   const requests = [];
   const h = await componentHarness("app/hosted-source-status.tsx", { "next/link": { default: "a" } }, {
@@ -116,6 +139,8 @@ for (const [name, change] of [
   ["oversized source list", { sources: Array.from({ length: 33 }, (_, i) => ({ id: `source-${i}`, name: "Source", intervalMs: 1000, state: "not-captured" })) }],
   ["duplicate source identity", { sources: [status().sources[0], status().sources[0]] }],
   ["invalid source clock", { sources: [{ ...status().sources[0], checkedAt: -1 }] }],
+  ["invalid retry clock", { sources: [{ ...status().sources[0], retryAt: -1 }] }],
+  ["fractional attempts", { sources: [{ ...status().sources[0], attempts: 1.5 }] }],
   ["unbounded source name", { sources: [{ ...status().sources[0], name: "x".repeat(161) }] }],
 ]) {
   test(`status read rejects ${name} without turning it into archive evidence`, async t => {

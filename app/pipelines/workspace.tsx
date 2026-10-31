@@ -67,6 +67,6 @@ export default function PipelineDashboard({ initial }: { initial: Snapshot }) {
       })}
       <small>{card.expansion === 'review-required' ? 'Some requested domain data still needs qualification.' : 'Source context does not establish admitted evidence.'}</small>
     </article>)}</div>
-    <p><Link href="/curated">Inspect approved snapshots</Link> · <Link href="/observatory/sources">Source observatory</Link></p>
+    <p><Link href="/data-status">Database &amp; intake status</Link> · <Link href="/curated">Inspect approved snapshots</Link> · <Link href="/observatory/sources">Source observatory</Link></p>
   </main>;
 }
