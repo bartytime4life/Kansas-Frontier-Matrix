@@ -111,5 +111,5 @@ test('the People dock offers the change beside the prisms: chart, list and the p
  assert.match(page,/void fetch\(populationChangeApiPath, \{ signal: controller\.signal \}\)/);
  assert.match(page,/if \(renderedHits\[0\]\?\.source === POPULATION_CHANGE_SOURCE_ID\) \{\s*const geoid = renderedHits\[0\]\.properties\?\.geoid;\s*if \(typeof geoid === "string"\) \{ setPopChangeCounty\(geoid\); setCategoryDockHidden\(false\); \}/);
  assert.match(page,/\.\.\.\(popChangeOn && popChangeCollection \? \[populationChangeKey\(\)\] : \[\]\)/);
- assert.match(page,/popChangePrismsRef\.current = false;\s*popChangeHidCountiesRef\.current = false;\s*setPopChangeOn\(false\);\s*setPopChangeCounty\(null\);\s*if \(look\.overlays\?\.includes\("aviation"\)\)/,'closes with its map');
+ assert.match(page,/popChangePrismsRef\.current = false;\s*popChangeHidCountiesRef\.current = false;\s*setPopChangeOn\(false\);\s*setPopChangeCounty\(null\);\s*setAviationShowRequest\(request => look\.overlays\?\.includes\("aviation"\)/,'closes with its map');
 });
