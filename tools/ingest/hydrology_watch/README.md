@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-ingest-hydrology-watch-readme
 title: tools/ingest/hydrology_watch README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-hydrology-steward-plus-source-steward
 created: 2026-07-07
-updated: 2026-07-07
+updated: 2026-10-31
 policy_label: public; watcher-only; no-publication; not-for-life-safety
 owning_root: tools/
 responsibility: proposed hydrology watcher helper boundary for source-change detection and review-signal reports
@@ -29,7 +29,7 @@ related:
   - ../../../data/proofs/hydrology/README.md
   - ../../../release/candidates/hydrology/README.md
 notes:
-  - "This README defines a proposed hydrology watcher tooling boundary, not a confirmed implementation."
+  - "The broad watcher design remains proposed; the NHDPlus synthetic comparator and fixed-station USGS captured-page diagnostic are bounded offline implementations."
   - "Hydrology watcher helpers may detect source-surface or sidecar changes and emit review signals; they do not fetch sources of record, normalize pipeline data, publish, promote, or decide hydrologic truth."
   - "Observed gauge readings, aggregate values, modeled hydrographs, regulatory context, official-source context, derived terrain/topology, and generated summaries must remain separate truth classes."
 [/KFM_META_BLOCK_V2] -->
@@ -83,13 +83,19 @@ The answer should be a review signal. It should never be a connector run, public
 
 ---
 
+## Captured-discharge diagnostic
+
+`usgs_observation_compare.py` compares two local USGS `07146500` discharge pages or retained watch exports without fetching or writing files. It checks identical query scope, source identity, record identity, quality fields, paging and bounded inputs before reporting field differences and captured-coverage holes. An export's summary is not evidence authority: its original page and receipt binding are checked. Source admission and policy remain unevaluated; diagnostic `ANSWER` means only that the captured-field comparison completed.
+
+Use the [operator procedure](../../../docs/runbooks/hydrology/usgs-api-readiness-20261031.md#offline-comparison-of-retained-pages) for the exact interface, capture example, limits, refusal outcomes and rollback. Regressions live in [the existing watcher test lane](../../../tests/ingest/hydrology_watch/test_usgs_observation_compare.py). The broader generic watcher and its source-descriptor/release requirements below remain proposed; this diagnostic cannot satisfy those operational gates.
+
 ## Status
 
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/ingest/hydrology_watch/README.md` | **CONFIRMED** | This README defines the watcher tooling boundary. |
-| Hydrology watcher executable | **PROPOSED-to-create** | No script name is claimed as implemented by this README. |
-| Parent `tools/ingest/README.md` | **NEEDS VERIFICATION / absent in recent checks** | Parent lane README should be added before expanding ingest tooling broadly. |
+| Bounded offline comparators | **CONFIRMED implementation; broader watcher PROPOSED** | `nhdplus_network_revision.py` handles synthetic network snapshots; `usgs_observation_compare.py` handles captured discharge pages for one station. Neither is a live watcher, source-admission gate or publisher. |
+| Parent `tools/ingest/README.md` | **CONFIRMED path in the inspected tree** | Its presence does not establish live watcher maturity. |
 | `tools/ingest/hydrology/README.md` | **CONFIRMED in repo evidence** | Nearby helper lane is preflight/report tooling, not watcher cadence logic. |
 | Hydrology domain README | **CONFIRMED in repo evidence** | Domain docs define Hydrology as evidence-bound and time-aware. |
 | Hydrology ingest pipeline README | **CONFIRMED in repo evidence / draft** | Pipeline lane owns executable ingest normalization after source admission. |

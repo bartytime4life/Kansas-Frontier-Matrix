@@ -1,0 +1,106 @@
+{
+  "receipt_id": "genrec-usgs-offline-comparison-20261031",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/hydrology-usgs-observation-compare.yml",
+    "docs/runbooks/hydrology/usgs-api-readiness-20261031.md",
+    "tools/ingest/hydrology_watch/README.md",
+    "tools/ingest/hydrology_watch/usgs_observation_compare.py",
+    "tests/ingest/hydrology_watch/test_usgs_observation_compare.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/hydrology-usgs-observation-compare.yml": "sha256:2be996e4a65856b1cd90113235e2b9445809007ff6b910f5fc24b47266259f8e",
+    "docs/runbooks/hydrology/usgs-api-readiness-20261031.md": "sha256:fd6d371271ba24652a37f393a451b27849a223fbb4b0d1f1d858b7fa56aa9f07",
+    "tools/ingest/hydrology_watch/README.md": "sha256:5f9ea41414ea15f477551e2de037bdca3646579a31dbcef47700dd7b2510be88",
+    "tools/ingest/hydrology_watch/usgs_observation_compare.py": "sha256:7c4ee9391285ff9d2f76d661059f6f752baa3d45d2770185f20941400fb06da2",
+    "tests/ingest/hydrology_watch/test_usgs_observation_compare.py": "sha256:8811668c563e9b58f06e6a7adf89428d8dc231c2fa93a4a0dee53c3fc6f3dd99"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:227567f50538e42b40d2d0376dd8826fabaf986e1b23649961badbba74214c21",
+  "parameters": {},
+  "inputs": {
+    "attached_docs": [
+      "USGS-07146500-watch-baseline-2026-10-31.json (selected original entity pages and receipts; not committed)"
+    ],
+    "evidence_hashes": [
+      "sha256:40c638bbb982678eecfabac6d27259abac0534adfb65fb4f8d68e42cfffafea0",
+      "sha256:3c65a4fb58d787dde37329c5a239c1fe14bf7e8c2d884eb8a72d04fd9485a9c8"
+    ],
+    "evidence_refs": [
+      "main@5aeeadf64f35aedc3467b15b38e546cbf9645804",
+      "tools/ingest/hydrology_watch/nhdplus_network_revision.py",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://api.waterdata.usgs.gov/docs/ogcapi/migration/"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/hydrology-usgs-observation-compare.yml": "PROPOSED",
+    "docs/runbooks/hydrology/usgs-api-readiness-20261031.md": "PROPOSED",
+    "tools/ingest/hydrology_watch/README.md": "PROPOSED",
+    "tools/ingest/hydrology_watch/usgs_observation_compare.py": "CONFIRMED",
+    "tests/ingest/hydrology_watch/test_usgs_observation_compare.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused offline tests",
+      "outcome": "PASS",
+      "reason": "33 stdlib unittest cases pass on both local Python interpreters, including subprocess CLI, network denial, changed values/units/quality, nulls, query mismatch, paging, duplicate identity, bounded detail and capture integrity refusals."
+    },
+    {
+      "gate": "retained source-page replay",
+      "outcome": "PASS",
+      "reason": "Matched original entity SHA-256s and replayed 2,871 continuous and 400 daily observations through a receipt-bound retained-export adapter. Approval counts preserved; same-page replay is not a fresh provider comparison."
+    },
+    {
+      "gate": "operator recipe",
+      "outcome": "PASS",
+      "reason": "All three Bash examples syntax-checked; no-network mock transfers exercise accepted HTTP-200 GeoJSON, rejected HTTP-302 and rejected HTML."
+    },
+    {
+      "gate": "workflow security and changed paths",
+      "outcome": "PASS",
+      "reason": "Repository-native workflow security scan of the new workflow passes without baseline: zero invariant/new drift. Focused path grammar, YAML wiring, new references and authoring-receipt integrity checked."
+    },
+    {
+      "gate": "native generated receipt validator",
+      "outcome": "PASS",
+      "reason": "Exact local authored artifact hashes are bound, with human review pending."
+    },
+    {
+      "gate": "full local suite, pre-commit and live/installed acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Isolated patch workspace. No new live provider acquisition, authenticated transport, station-notice or installed-reader verification. New-head hosted CI is a separate result."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-implementation-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/5aeeadf64f35aedc3467b15b38e546cbf9645804"
+    },
+    {
+      "id": "usgs-migration",
+      "validated": true,
+      "evidence_ref": "https://api.waterdata.usgs.gov/docs/ogcapi/migration/"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5aeeadf64f35aedc3467b15b38e546cbf9645804/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-01T00:35:14.008195Z",
+  "emitter": "Codex",
+  "notes": "One bounded offline diagnostic in the existing helper lane; broader watcher-sublane ownership remains unresolved. No new canonical schema/contract/policy/source registry or production dependency. Diagnostic ANSWER covers captured-field comparison only; no source, policy or release approval. No observations or private replay files are committed. Earlier generated receipts remain immutable and replayable against their respective ancestors. Rollback removes this additive helper/tests/workflow and restores the prior two Markdown files; no data migration or runtime rollback."
+}
