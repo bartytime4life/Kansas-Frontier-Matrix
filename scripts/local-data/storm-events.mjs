@@ -6,7 +6,7 @@ const fail=()=>Object.assign(new Error('QUERY_INVALID'),{code:'QUERY_INVALID'});
 const DATE=/^(\d{4})-(\d{2})-(\d{2})$/;
 export const STORM_EVENTS_SOURCE=Object.freeze({
  provider:'NOAA NCEI Storm Events Database',url:'https://www.ncei.noaa.gov/stormevents/',
- coverage:'Kansas, 1950-2026, as archived from the NCEI Storm Events CSV files (v1.0)',
+ coverage:'Kansas, 1950 onward, from the NCEI Storm Events CSV files (v1.0); a newer NCEI file for a year replaces that year, checked weekly',
  notes:'Damage amounts are NOAA estimates as published (for example 10.00K). Times are local standard time for the listed time zone.',
 });
 export const STORM_EVENTS_MAX_LIMIT=200;

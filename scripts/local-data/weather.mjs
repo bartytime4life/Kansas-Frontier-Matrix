@@ -14,7 +14,7 @@ const isoDay=n=>{const s=String(n);return /^\d{8}$/.test(s)?`${s.slice(0,4)}-${s
 const ymd=s=>+s.replaceAll('-','');
 
 const GHCN_SOURCE=Object.freeze({provider:'NOAA NCEI Global Historical Climatology Network - Daily (GHCN-Daily)',url:'https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily',
- coverage:'2,519 Kansas stations as archived on 2026-10-07',notes:'Values are converted from GHCN native units where the unit is listed; raw holds the value as delivered. Flags are GHCN measurement, quality and source flags.'});
+ coverage:'Kansas stations: station files archived on 2026-10-07, kept current since by NOAA\'s daily GHCN-Daily update files',notes:'Values are converted from GHCN native units where the unit is listed; raw holds the value as delivered. Flags are GHCN measurement, quality and source flags. updated marks a value that comes from a daily update file rather than the archived station file.'});
 
 export const ghcnStations={
  id:'ghcn-stations',db:'observations',title:'GHCN-Daily stations',indexes:[],source:GHCN_SOURCE,
@@ -49,17 +49,29 @@ export const ghcnDaily={
    element:list(input.element,/^[A-Z0-9]{4}$/,10),...page(input,{max:2000,fallback:500})};
   ordered(q.from,q.to);return q;
  },
- run(db,q){
+ run(db,q,{cache}){
+  // The station's archived file, overlaid by NOAA's daily update files (kfm_ghcnd_daily_revisions,
+  // written by the PC's ghcnd feed): the latest insert or update for a day and element replaces
+  // the archived value, and a delete removes it.
   const file=db.prepare("SELECT file_id FROM kfm_sql_sources WHERE source_id='noaa-ghcnd' AND source_url=?").get(GHCN_URL+q.station+'.csv.gz');
-  if(!file)return {total:0,rows:[]};
-  const where=['file_id=?','observation_day BETWEEN ? AND ?'],params=[file.file_id,ymd(q.from),ymd(q.to)];
-  if(q.element){where.push(`element IN (${q.element.map(()=>'?').join(',')})`);params.push(...q.element);}
-  const clause=' FROM kfm_ghcnd_daily WHERE '+where.join(' AND ');
-  const total=db.prepare('SELECT COUNT(*) AS n'+clause).get(...params).n;
-  const rows=db.prepare('SELECT observation_day,element,raw_value,measurement_flag,quality_flag,source_flag,observation_time'+clause+' ORDER BY observation_day,element LIMIT ? OFFSET ?').all(...params,q.limit,q.offset).map(r=>{
+  // Only a positive answer is remembered: the feed creates the table on its first run.
+  if(!cache.get('ghcnd-revisions'))cache.set('ghcnd-revisions',!!db.prepare("SELECT 1 FROM sqlite_master WHERE name='kfm_ghcnd_daily_revisions'").get());
+  const revisions=cache.get('ghcnd-revisions');
+  if(!file&&!revisions)return {total:0,rows:[]};
+  const elements=q.element?` AND element IN (${q.element.map(()=>'?').join(',')})`:'';
+  const range=[ymd(q.from),ymd(q.to),...(q.element??[])];
+  const cols='observation_day,element,raw_value,measurement_flag,quality_flag,source_flag,observation_time';
+  const base=`SELECT ${cols},0 AS updated FROM kfm_ghcnd_daily d WHERE file_id=? AND observation_day BETWEEN ? AND ?${elements}`;
+  const sql=revisions?`WITH rev AS (SELECT ${cols},action,ROW_NUMBER() OVER (PARTITION BY observation_day,element ORDER BY file_id DESC,row_number DESC) AS rn
+    FROM kfm_ghcnd_daily_revisions WHERE station_id=? AND observation_day BETWEEN ? AND ?${elements}),
+   merged AS (${base} AND NOT EXISTS (SELECT 1 FROM rev WHERE rev.observation_day=d.observation_day AND rev.element=d.element)
+    UNION ALL SELECT ${cols},1 FROM rev WHERE rn=1 AND action<>'delete')`:`WITH merged AS (${base})`;
+  const params=revisions?[q.station,...range,file?.file_id??-1,...range]:[file.file_id,...range];
+  const total=db.prepare(sql+' SELECT COUNT(*) AS n FROM merged').get(...params).n;
+  const rows=db.prepare(sql+` SELECT ${cols},updated FROM merged ORDER BY observation_day,element LIMIT ? OFFSET ?`).all(...params,q.limit,q.offset).map(r=>{
    const unit=GHCN_UNITS[r.element],raw=num(r.raw_value),missing=raw===-9999||raw===null;
    return {date:isoDay(r.observation_day),element:r.element,value:missing?null:unit?Math.round(raw*unit[0]*10)/10:raw,unit:unit?.[1]??null,raw,
-    flags:{measurement:str(r.measurement_flag),quality:str(r.quality_flag),source:str(r.source_flag)},time:str(r.observation_time)};
+    flags:{measurement:str(r.measurement_flag),quality:str(r.quality_flag),source:str(r.source_flag)},time:str(r.observation_time),updated:r.updated===1};
   });
   return {total,station:q.station,rows};
  },
@@ -102,7 +114,7 @@ const ASOS_STATIONS=Object.freeze(['KCNK','KDDC','KGLD','KICT','KTOP']);
 export const asosFiveMinute={
  id:'asos-5min',db:'observations',title:'ASOS 5-minute airport observations',
  source:Object.freeze({provider:'NOAA NCEI ASOS 5-minute data (TD-6401)',url:'https://www.ncei.noaa.gov/pub/data/asos-fivemin/',
-  coverage:'Concordia KCNK, Dodge City KDDC, Goodland KGLD, Wichita KICT and Topeka KTOP, year 2000',
+  coverage:'Concordia KCNK, Dodge City KDDC, Goodland KGLD, Wichita KICT and Topeka KTOP, 2000 onward as backfilled; NCEI\'s TD-6401 archive ends in 2022',
   notes:'time is the TD-6401 local standard time stamp. Decoded values come only from unambiguous METAR tokens, otherwise null; raw is the line as delivered.'}),
  indexes:[{name:'kfm_asos_fivemin_station_time',sql:'CREATE INDEX IF NOT EXISTS kfm_asos_fivemin_station_time ON kfm_asos_fivemin(icao, local_time)'}],
  params:{station:'KCNK, KDDC, KGLD, KICT or KTOP (required)',from:'YYYY-MM-DDTHH:MM local standard time',to:'YYYY-MM-DDTHH:MM',limit:'1-2000 (288)',offset:'0-100000'},
@@ -126,7 +138,7 @@ export const asosFiveMinute={
 };
 
 const WIND_SOURCE=Object.freeze({provider:'Iowa Environmental Mesonet (IEM) ASOS/AWOS archive',url:'https://mesonet.agron.iastate.edu/request/download.phtml',
- coverage:'68 Kansas airport stations, 1932-2026',notes:'Speeds in knots, directions in degrees. IEM missing markers (M, None) are null, not zero. Identical readings captured in more than one export appear once.'});
+ coverage:'68 Kansas airport stations, 1932 onward, updated daily (readings for 2003-2026 are being backfilled a year at a time)',notes:'Speeds in knots, directions in degrees. IEM missing markers (M, None) are null, not zero. Identical readings captured in more than one export appear once.'});
 const WIND_STATION=/^[A-Z0-9]{3,4}$/;
 
 export const windStations={

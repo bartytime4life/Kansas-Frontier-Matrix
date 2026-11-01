@@ -4,7 +4,7 @@ import {only,text,oneOf,minute,ordered,bbox,flag,int,page,num,str,fail} from './
 import {gpkgToGeoJSON} from './gpkg.mjs';
 
 const NWM_SOURCE=Object.freeze({provider:'NOAA Office of Water Prediction, National Water Model v3.1',url:'https://water.noaa.gov/about/nwm',
- coverage:'101,599 NWM v3.0 reaches in the Kansas envelope; channel output from the 2026-10-07 16Z analysis and short-range run',
+ coverage:'101,599 NWM v3.0 reaches in the Kansas envelope; the 2026-10-07 16Z analysis and short-range run, then one 12Z analysis a day',
  notes:'Model output, not gauge observations. The pipeline has not admitted this source, and the review of v3.0 reach geometry against v3.1 model output is pending; the owner approved public release on 2026-11-01 with these limitations. Streamflow and nudge in m3/s, velocity in m/s; values whose status is not valid are null. Reach geometry is WGS84 (EPSG:4326).'});
 
 export const nwmReaches={
@@ -38,13 +38,15 @@ export const nwmReaches={
 export const nwmStreamflow={
  id:'nwm-streamflow',db:'observations',title:'National Water Model streamflow',source:NWM_SOURCE,
  indexes:[{name:'kfm_nwm_channel_rt_feature',sql:'CREATE INDEX IF NOT EXISTS kfm_nwm_channel_rt_feature ON kfm_nwm_channel_rt(feature_id, valid_time)'}],
- params:{feature:'NWM feature id (required)',product:'analysis_assim or short_range (both by default)',limit:'1-100 (100)',offset:'0-1000'},
+ params:{feature:'NWM feature id (required)',product:'analysis_assim or short_range (both by default)',from:'YYYY-MM-DDTHH:MM UTC (valid time)',to:'YYYY-MM-DDTHH:MM UTC',limit:'1-1000 (100)',offset:'0-100000'},
  parse(input){
-  only(input,['feature','product','limit','offset']);
-  return {feature:text(input.feature,/^\d{1,12}$/,{required:true}),product:oneOf(input.product,['analysis_assim','short_range']),...page(input,{max:100,fallback:100,maxOffset:1000})};
+  only(input,['feature','product','from','to','limit','offset']);
+  const q={feature:text(input.feature,/^\d{1,12}$/,{required:true}),product:oneOf(input.product,['analysis_assim','short_range']),
+   from:minute(input.from,'1700-01-01T00:00'),to:minute(input.to,'2100-12-31T23:59',{end:true}),...page(input,{max:1000,fallback:100})};
+  ordered(q.from,q.to);return q;
  },
  run(db,q){
-  const where=['feature_id=?'],params=[+q.feature];
+  const where=['feature_id=?','substr(valid_time,1,16) BETWEEN ? AND ?'],params=[+q.feature,q.from,q.to];
   if(q.product){where.push('product=?');params.push(q.product);}
   const clause=' FROM kfm_nwm_channel_rt WHERE '+where.join(' AND ');
   const total=db.prepare('SELECT COUNT(*) AS n'+clause).get(...params).n;
@@ -63,7 +65,7 @@ const CAPTURE=" FROM kfm_environmental_features WHERE source_id=?";
 
 export const nwsAlerts={
  id:'nws-alerts',db:'observations',title:'Captured NWS alerts for Kansas',indexes:[],
- source:Object.freeze({provider:'NOAA National Weather Service API',url:'https://api.weather.gov/alerts',coverage:'Kansas alerts captured by the pipeline, October 2026',notes:'Properties as published by the NWS when captured; this is not a live alert feed.'}),
+ source:Object.freeze({provider:'NOAA National Weather Service API',url:'https://api.weather.gov/alerts',coverage:'Kansas alerts captured hourly by the pipeline since October 2026',notes:'Properties as published by the NWS when captured; loaded hourly, so this is not a live alert feed.'}),
  params:{event:'part of the event name, e.g. Fog',area:'part of the area description, e.g. Sedgwick',limit:'1-50 (20)',offset:'0-1000'},
  parse(input){only(input,['event','area','limit','offset']);const pattern=/^[A-Z0-9][A-Z0-9 .,'&/()-]{1,39}$/;return {event:text(input.event,pattern),area:text(input.area,pattern),...page(input,{max:50,fallback:20,maxOffset:1000})};},
  run(db,q){
@@ -79,7 +81,7 @@ export const nwsAlerts={
 
 export const usgsEarthquakes={
  id:'usgs-earthquakes',db:'observations',title:'Captured USGS earthquakes in Kansas',indexes:[],
- source:Object.freeze({provider:'USGS Earthquake Hazards Program',url:'https://earthquake.usgs.gov/fdsnws/event/1/',coverage:'Kansas events captured by the pipeline, October 2026',notes:'Properties as published by the USGS when captured; time and updated are milliseconds since 1970.'}),
+ source:Object.freeze({provider:'USGS Earthquake Hazards Program',url:'https://earthquake.usgs.gov/fdsnws/event/1/',coverage:'Kansas events captured hourly by the pipeline since October 2026',notes:'Properties as published by the USGS when captured; time and updated are milliseconds since 1970.'}),
  params:{limit:'1-50 (50)',offset:'0-1000'},
  parse(input){only(input,['limit','offset']);return page(input,{max:50,fallback:50,maxOffset:1000});},
  run(db,q){
@@ -89,7 +91,7 @@ export const usgsEarthquakes={
  },
 };
 
-const USGS_SOURCE=Object.freeze({provider:'USGS Water Data API (continuous values)',url:'https://api.waterdata.usgs.gov/',coverage:'Kansas monitoring locations captured by the pipeline, October 2026',
+const USGS_SOURCE=Object.freeze({provider:'USGS Water Data API (continuous values)',url:'https://api.waterdata.usgs.gov/',coverage:'Kansas monitoring locations captured hourly by the pipeline since October 2026',
  notes:'Most values are provisional (approval_status) and may be revised by the USGS. Times are UTC.'});
 const SITE=/^USGS-\d{8,15}$/;
 

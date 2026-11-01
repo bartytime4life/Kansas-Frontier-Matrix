@@ -168,8 +168,8 @@ test('datasets that need an index are refused until it exists, then answer throu
  const daily=ask('ghcn-daily',{station:'USW00003928',from:'2024-01-01',to:'2024-01-02'});
  assert.equal(daily.status,200);assert.equal(daily.format,'kfm-local-data-v1');assert.equal(daily.total,4);
  assert.deepEqual(daily.rows.slice(0,2),[
-  {date:'2024-01-01',element:'PRCP',value:12.7,unit:'mm',raw:127,flags:{measurement:null,quality:null,source:'W'},time:'2400'},
-  {date:'2024-01-01',element:'TMAX',value:5.6,unit:'degC',raw:56,flags:{measurement:null,quality:null,source:'W'},time:'2400'}]);
+  {date:'2024-01-01',element:'PRCP',value:12.7,unit:'mm',raw:127,flags:{measurement:null,quality:null,source:'W'},time:'2400',updated:false},
+  {date:'2024-01-01',element:'TMAX',value:5.6,unit:'degC',raw:56,flags:{measurement:null,quality:null,source:'W'},time:'2400',updated:false}]);
  assert.deepEqual(daily.rows.slice(2).map(r=>[r.element,r.value,r.unit]),[['TMAX',null,'degC'],['WT01',1,null]]);
  assert.equal(ask('ghcn-daily',{station:'USW00003928',element:'tmax'}).total,2);
  assert.equal(ask('ghcn-daily',{station:'USC00140010'}).total,0);
@@ -253,4 +253,38 @@ test('the website serves the catalog itself and maps PC answers for any dataset'
  const missing=await get('tiger-features','layer=county');
  assert.equal(missing.status,503);assert.equal((await missing.json()).reasonCode,'LOCAL_DATA_UNAVAILABLE');
  assert.equal(trips.length,2);
+});
+
+test('daily feeds show through: GHCN revisions overlay the archive, a revised PRISM grid replaces its period, NWM takes a time range',async t=>{
+ const databases=await fixtures(t);addIndexes(databases);
+ const ask=gatewayFor(databases);
+ // Without the feed's table the archive is served as before.
+ assert.deepEqual(ask('ghcn-daily',{station:'USW00003928',from:'2024-01-01',to:'2024-01-02'}).rows.map(r=>[r.element,r.raw,r.updated]),
+  [['PRCP',127,false],['TMAX',56,false],['TMAX',-9999,false],['WT01',1,false]]);
+ const db=new DatabaseSync(databases.observations);
+ db.exec(`CREATE TABLE kfm_ghcnd_daily_revisions(station_id TEXT NOT NULL,observation_day INTEGER NOT NULL,element TEXT NOT NULL,file_id INTEGER NOT NULL,
+  row_number INTEGER NOT NULL,action TEXT NOT NULL,raw_value INTEGER NOT NULL,measurement_flag TEXT NOT NULL,quality_flag TEXT NOT NULL,source_flag TEXT NOT NULL,
+  observation_time TEXT NOT NULL,PRIMARY KEY(station_id,observation_day,element,file_id,row_number)) WITHOUT ROWID;
+  INSERT INTO kfm_ghcnd_daily_revisions VALUES
+   ('USW00003928',20240101,'PRCP',90,1,'update',130,'','','W','2400'),
+   ('USW00003928',20240101,'PRCP',91,1,'update',140,'','','W','2400'),
+   ('USW00003928',20240102,'WT01',91,2,'delete',1,'','','W',''),
+   ('USW00003928',20240103,'TMAX',91,3,'insert',61,'','','W','2400'),
+   ('US1KSNE0001',20240103,'PRCP',91,4,'insert',5,'','','N','');
+  INSERT INTO kfm_prism_grids(grid_id,source_path,unit,state) VALUES (7,'time_series/us/an/4km/ppt/monthly/2023/prism_ppt_us_25m_202301.zip#sha256=0123456789ab','Millimeters','complete');
+  INSERT INTO kfm_prism_county_stats VALUES (7,'20173','Sedgwick',21.5,10,31,75,'');
+  INSERT INTO kfm_nwm_channel_rt VALUES (744183,'analysis_assim','c','2026-10-31T09:00:00Z','2026-10-31T12:00:00Z',2.5,250,'valid',0.4,40,'valid',0,0,'valid');`);
+ db.close();
+ const fresh=gatewayFor(databases);
+ const daily=fresh('ghcn-daily',{station:'USW00003928',from:'2024-01-01',to:'2024-01-03'});
+ // The newest update wins, a delete removes, an insert adds; the archive fills the rest.
+ assert.deepEqual(daily.rows.map(r=>[r.date,r.element,r.raw,r.updated]),
+  [['2024-01-01','PRCP',140,true],['2024-01-01','TMAX',56,false],['2024-01-02','TMAX',-9999,false],['2024-01-03','TMAX',61,true]]);
+ assert.equal(daily.total,4);
+ assert.deepEqual(fresh('ghcn-daily',{station:'US1KSNE0001'}).rows.map(r=>[r.date,r.value]),[['2024-01-03',0.5]]);
+ assert.deepEqual(fresh('prism-county',{variable:'ppt',county:'173',from:'2023-01',to:'2023-02'}).rows.map(r=>[r.period,r.mean]),[['2023-01',21.5],['2023-02',25]]);
+ const flow=fresh('nwm-streamflow',{feature:'744183',from:'2026-10-31',to:'2026-10-31'});
+ assert.deepEqual(flow.rows.map(r=>[r.validTime,r.streamflowM3s]),[['2026-10-31T12:00:00Z',2.5]]);
+ assert.equal(fresh('nwm-streamflow',{feature:'744183'}).total,3);
+ assert.throws(()=>DATASETS.get('nwm-streamflow').parse({feature:'1',limit:'1001'}),{code:'QUERY_INVALID'});
 });

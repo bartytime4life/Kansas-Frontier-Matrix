@@ -6,7 +6,8 @@ import {only,text,oneOf,page,num,str,fail} from './query.mjs';
 
 const VARIABLES=Object.freeze(['ppt','tmax','tmin','tmean','tdmean','vpdmin','vpdmax','soltotal','solslope','solclear','soltrans']);
 const PRODUCTS=Object.freeze(['an','lt','normals','stable-201506']);
-const SERIES=/^time_series\/us\/(an|lt)\/(4km|800m)\/([a-z]+)\/(daily|monthly)\/\d{4}\/prism_\3_us_(?:25m|30s)_(\d{8}|\d{6}|\d{4})\.zip$/;
+// A grid PRISM revised later is loaded again with a #sha256= suffix; the newest version is served.
+const SERIES=/^time_series\/us\/(an|lt)\/(4km|800m)\/([a-z]+)\/(daily|monthly)\/\d{4}\/prism_\3_us_(?:25m|30s)_(\d{8}|\d{6}|\d{4})\.zip(?:#sha256=[0-9a-f]{12})?$/;
 const NORMALS=/^normals\/us\/(4km|800m)\/([a-z]+)\/(daily|monthly)\/prism_\2_us_(?:25m|30s)_2020(\d{4}|\d{2}|)_avg_30y\.zip$/;
 const STABLE=/^prior_versions\/ppt\/daily_D1_201506\/\d{4}\/PRISM_ppt_stable_4kmD1_(\d{8})_bil\.zip$/;
 
@@ -32,7 +33,9 @@ function bound(v,step,end){
 }
 
 function catalog(db,cache){
- if(cache.has('prism'))return cache.get('prism');
+ // Rebuilt when the PC's prism feed has added grids since the last build.
+ const newest=db.prepare('SELECT MAX(grid_id) AS id FROM kfm_prism_grids').get().id;
+ if(cache.get('prism')?.newest===newest)return cache.get('prism');
  const series=new Map(),units=new Map();
  for(const r of db.prepare('SELECT grid_id,source_path,unit FROM kfm_prism_grids').iterate()){
   const g=prismGrid(r.source_path);if(!g)continue;
@@ -40,17 +43,21 @@ function catalog(db,cache){
   if(!series.has(key)){series.set(key,[]);units.set(key,r.unit);}
   series.get(key).push([g.period,r.grid_id]);
  }
- for(const list of series.values())list.sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:a[1]-b[1]);
+ for(const [key,list] of series){
+  list.sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:a[1]-b[1]);
+  // Several versions of one period: keep the newest (highest grid id).
+  series.set(key,list.filter((entry,i)=>i===list.length-1||list[i+1][0]!==entry[0]));
+ }
  const first=db.prepare('SELECT MIN(grid_id) AS id FROM kfm_prism_grids').get().id;
  const counties=db.prepare('SELECT DISTINCT county_geoid,county_name FROM kfm_prism_county_stats WHERE grid_id=? ORDER BY county_geoid').all(first).map(r=>({geoid:r.county_geoid,name:r.county_name}));
- const value={series,units,counties};cache.set('prism',value);return value;
+ const value={series,units,counties,newest};cache.set('prism',value);return value;
 }
 
 export const prismCounty={
  id:'prism-county',db:'observations',title:'PRISM county climate summaries',
  source:Object.freeze({provider:'PRISM Group, Oregon State University',url:'https://prism.oregonstate.edu/',
-  coverage:'Kansas counties (2025 TIGER), PRISM AN/LT time series 1895-2026, 1991-2020 normals and the 2015-06 stable precipitation version',
-  notes:'Modeled values summarized over the PRISM cells whose centers fall in each county: not station observations or area-weighted statistics. Cite as: PRISM Group, Oregon State University, https://prism.oregonstate.edu. Per-file acquisition dates are not yet verified.'}),
+  coverage:'Kansas counties (2025 TIGER), PRISM AN/LT time series 1895 onward (new 4 km and 800 m grids added daily), 1991-2020 normals and the 2015-06 stable precipitation version',
+  notes:'Modeled values summarized over the PRISM cells whose centers fall in each county: not station observations or area-weighted statistics. Recent grids are provisional; when PRISM revises one, the newest version is served. Cite as: PRISM Group, Oregon State University, https://prism.oregonstate.edu. Per-file acquisition dates are not yet verified.'}),
  indexes:[{name:'kfm_prism_county_stats_grid',sql:'CREATE INDEX IF NOT EXISTS kfm_prism_county_stats_grid ON kfm_prism_county_stats(grid_id, county_geoid)'}],
  params:{variable:VARIABLES.join(', ')+' (required)',county:'county FIPS (e.g. 173 or 20173) or name; leave out for every county in one period',
   step:'daily, monthly (default) or annual',resolution:'4km (default) or 800m',product:'an (default), lt, normals or stable-201506',
