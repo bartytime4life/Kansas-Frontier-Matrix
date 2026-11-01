@@ -1005,6 +1005,51 @@ def test_dev_loopback_successor_records_only_the_reviewed_boundary_delta() -> No
     ).hexdigest()
 
 
+def test_minimatch_successor_preserves_history_and_only_binds_the_security_delta() -> None:
+    directory = ROOT / "data/receipts/generated"
+    predecessor = directory / "site-v268-dev-loopback-boundary-20261029.json"
+    successor = directory / "site-v268-minimatch-security-overlay-20261101.json"
+    previous, current = json.loads(predecessor.read_text()), json.loads(successor.read_text())
+    assert current["predecessor_receipt"] == predecessor.name
+    assert current["predecessor_receipt_sha256"] == hashlib.sha256(predecessor.read_bytes()).hexdigest()
+    added = {"tests/minimatch-security.test.mjs"}
+    changed = {"package.json", "package-lock.json"}
+    before, after = previous["comparison"], current["comparison"]
+    assert set(after) - set(before) == added
+    assert set(before) - set(after) == set()
+    assert {name for name in before if before[name] != after[name]} == changed
+    declarations = {entry["path"]: entry for entry in current["repository_reconciliation"]["changes"]}
+    assert set(declarations) == changed | added
+    assert len(current["repository_reconciliation"]["changes"]) == 3
+    for name in changed | added:
+        old, entry = before.get(name), after[name]
+        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        assert entry["mirror_sha256"] == digest
+        assert entry["site_sha256"] == (old["site_sha256"] if old else None)
+        assert entry["state"] == (old["state"] if old else "repository_only_overlay")
+        assert declarations[name] == {
+            "path": name, "previous_receipt_sha256": old["mirror_sha256"] if old else None,
+            "repository_base_sha256": old["mirror_sha256"] if old else None,
+            "mirror_sha256": digest, "state": entry["state"], "proposed_in_this_change": True,
+        }
+    administrative = {
+        "comparison", "counts", "inventory_sha256", "predecessor_receipt", "predecessor_receipt_sha256",
+        "recorded_at", "repository_reconciled_base", "repository_reconciliation", "rollback", "security", "validation",
+    }
+    assert set(current) == set(previous)
+    for key in previous.keys() - administrative:
+        assert current[key] == previous[key], key
+    for key, count in previous["counts"].items():
+        assert current["counts"][key] == count + {"repository_only_overlay": 1}.get(key, 0), key
+    assert current["repository_reconciled_base"] == current["repository_reconciliation"]["base_commit"] == "c0a48781957e7e3e952cf72a6c19d06ff52d352a"
+    assert current["repository_reconciliation"]["authority"] == "CONTENT_PARITY_ONLY"
+    assert current["repository_reconciliation"]["restored_recorded_paths"] == []
+    inventory = {name: entry["mirror_sha256"] for name, entry in after.items()}
+    assert current["inventory_sha256"] == hashlib.sha256(
+        json.dumps(inventory, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+
+
 def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None:
     receipt, expected = TOOL.reviewed_receipt()
     manifest = json.loads((TOOL.DESTINATION / "package.json").read_text())
@@ -1018,13 +1063,19 @@ def test_selected_receipt_verifies_current_dependency_files_and_mirror() -> None
     assert {entry["version"] for entry in next_packages.values()} == {"16.4.2"}
     assert manifest["overrides"]["fast-uri"] == lock["packages"]["node_modules/fast-uri"]["version"] == "3.1.9"
     assert manifest["overrides"]["miniflare"]["undici"] == lock["packages"]["node_modules/undici"]["version"] == "7.30.1"
+    parser_matcher = "node_modules/@typescript-eslint/typescript-estree/node_modules/minimatch"
+    assert manifest["overrides"]["@typescript-eslint/typescript-estree"]["minimatch"] == "11.0.1"
+    assert lock["packages"][parser_matcher]["version"] == "11.0.1"
+    assert lock["packages"][parser_matcher]["dev"] is True
+    assert lock["packages"]["node_modules/minimatch"]["version"] == "3.1.5"
+    assert "minimatch" not in manifest["overrides"]  # Legacy ESLint plugins need the callable API.
     result = TOOL.check()
-    assert result["files"] == len(expected) == len(receipt["comparison"]) == 900
+    assert result["files"] == len(expected) == len(receipt["comparison"]) == 901
     assert result["receipt_file"] == TOOL.RECEIPT.name
     assert result["outcome"] == "PASS"
     assert result["authority"] == "CONTENT_PARITY_ONLY"
     assert result["file_states"]["inherited_repository_overlay"] == 60
-    assert result["file_states"]["repository_only_overlay"] == 38
+    assert result["file_states"]["repository_only_overlay"] == 39
     assert result["file_states"]["repository_safety_overlay"] == 19
     assert result["withheld_files"] == 262
     assert result["review_acceptance"]["outcome"] == "NOT_EVALUATED"
@@ -1302,9 +1353,15 @@ def test_historical_dependency_override_receipt_binds_only_the_two_dependency_fi
     assert delta == DEPENDENCY_OVERRIDE_CHANGED
     declarations = {entry["path"]: entry for entry in receipt["repository_reconciliation"]["changes"]}
     assert set(declarations) == delta and len(receipt["repository_reconciliation"]["changes"]) == len(delta)
+    # The minimatch successor changes today's bytes. Keep this immutable receipt
+    # bound to its original dependency hashes; the selected test checks current bytes.
+    digests = {
+        "package.json": "174e94477576b1a38cc6c6af92fbe3a46cc1aff961e8b94756015f414d5359b3",
+        "package-lock.json": "07123ab5bb8fcb52649740f37848fe786b24b54d27d18ba10c06c87fdab14011",
+    }
     for name in delta:
         entry, before = receipt["comparison"][name], previous["comparison"][name]
-        digest = hashlib.sha256((TOOL.DESTINATION / name).read_bytes()).hexdigest()
+        digest = digests[name]
         assert entry["mirror_sha256"] == digest and expected[name] == "sha256:" + digest
         assert entry["state"] == before["state"] == "repository_safety_overlay"
         assert entry["site_sha256"] == before["site_sha256"]

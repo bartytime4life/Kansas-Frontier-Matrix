@@ -5,6 +5,18 @@
 > directory preserves the original Sites mirror and its review history; its
 > historical Site checkpoints do not establish the public Node version.
 
+> **Minimatch dependency candidate — 2026-11-01:** Dependabot alert #141 is
+> addressed in this mirror by pinning only `@typescript-eslint/typescript-estree`'s
+> `minimatch` dependency to 11.0.1. Bounded regression tests exercise globparts
+> amplification and large-set preprocessing, plus ordinary matching and legacy
+> plugin compatibility. ESLint's callable 3.1.5 dependency remains separate;
+> this is not a claim that all dependencies or deployments are vulnerability-free.
+> The [append-only receipt](../../data/receipts/generated/site-v268-minimatch-security-overlay-20261101.json)
+> records the two package files and one test while preserving source identity,
+> withheld data and pending review. Exact-candidate validation belongs in the PR.
+> Rollback must revert these files with their receipt, selector and regression;
+> it restores vulnerable 10.2.5. No hosted deployment or database change follows.
+
 > **Development boundary verification — 2026-10-29:** merged PR #5560 restricts
 > Vite's default listener to loopback. The [successor content receipt](../../data/receipts/generated/site-v268-dev-loopback-boundary-20261029.json)
 > records its two mirror changes without altering the Site source identity,
