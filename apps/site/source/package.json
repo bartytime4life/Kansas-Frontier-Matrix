@@ -57,6 +57,9 @@
   "type": "module",
   "displayName": "Kansas Frontier Matrix",
   "overrides": {
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.1"
+    },
     "fast-uri": "3.1.9",
     "sharp": "0.35.5",
     "vinext": {
