@@ -16,13 +16,15 @@ under `/home/dev/Documents/ChatGPT/Kansas-Frontier-Matrix/`.
 
 | Item | State |
 | --- | --- |
-| Pipeline host | `dev` PC. `devil` is a test PC with no production role. |
+| Pipeline host | `dev` PC. `devil` runs no pipeline service; on 2026-11-01 the owner approved it for tests and as the owner's signing PC. |
 | Deployment | User-level systemd units that run `pc-pipeline-data/runtime/run.sh`. The system install (`install.mjs`, `/opt/kfm-pipeline`, `/srv/kfm-data`, `kfm-pipeline.timer`) has **not** been applied. |
 | Sources | `usgs-streamflow`, `nws-alerts` and, since 2026-10-31 (first capture 18:30 UTC), `usgs-earthquakes`. All three are capture-only. |
 | Publication | `publish: false` and `remoteMode: "connection-only"`. Nothing is uploaded. |
 | Normal tick output | The first tick in each hour records `candidate-only` for each source; later ticks in that hour report `already-complete-or-held`. |
 | Data store | `KFM-pipeline/` on the 1.4 TiB HDD at `/run/media/dev/f975f1e2-a926-4040-8bc5-cbea4335d8bf` |
-| Working backup | `KFM-pipeline-backup/` on the 180 GB SSD at `/run/media/dev/55568f6e-e770-4dcd-9c96-2060157e850e` |
+| Backup volume | LVM `kfm-backup/store` across three SSDs, about 559 GiB, at `/run/media/dev/b34cab7d-b16b-494f-8e12-2f20db736ec4`, since 2026-11-01 (see [Backup volume, November 1](#backup-volume-november-1)) |
+| Working backup | `KFM-pipeline-backup/` on the backup volume |
+| Archive backup | `KFM-archive-backup/devil-20261022/` on the backup volume, with a SHA-256 manifest of every file |
 | Active config | `pc-pipeline-data/transfer-access/local-pipeline-config.json` (backup: `pc-pipeline-data/backup-config.json`) |
 | Kernel lock | `pc-pipeline-data/run/pipeline.lock`, shared by capture, analysis, backup and restore |
 
@@ -41,7 +43,12 @@ working tree:
 - `kfm-intake-analyze`, `kfm-intake` and `kfm-library` still run
   `tools/local_data/intake.py` and `tools/local_data/intake_service.py` from the
   `pipeline-implementation` checkout. An edit, `git switch`, `git stash`, rebase
-  or pull there changes those services at their next run or restart.
+  or pull there changes those services at their next run or restart. Since
+  2026-11-01 that checkout is on local branch `pc-live-main`, tracking `main`,
+  with no local changes. To update it, pause `kfm-intake-analyze.timer`, stop
+  `kfm-intake` and `kfm-library`, run `git pull --ff-only`, then restart them.
+  The earlier uncommitted live state is kept on local branch
+  `pc-live/snapshot-20261101`.
 
 Editing a kit checkout does not change the running pipeline. To deploy a kit
 change:
@@ -72,7 +79,7 @@ carries both.
 | `kfm-source-pipeline.timer` | every 5 minutes | `capture` | The live `capture.mjs` wrapper: one tick, then the health report. Takes the lock without waiting; exit 75 (busy) counts as success. |
 | `kfm-intake-analyze.timer` | hourly at :10 | `analyze` | `intake.py analyze` on `KFM-pipeline`. Waits up to 600 s for the lock. |
 | `kfm-working-backup.timer` | daily 02:30 | `backup` | `cli.mjs backup`, then `cli.mjs verify-backup`. |
-| `kfm-working-restore.timer` | 1st of the month, 03:30 | `restore` | `cli.mjs restore-test` into a new `KFM-restore-tests/<UTC time>/` on the SSD. |
+| `kfm-working-restore.timer` | 1st of the month, 03:30 | `restore` | `cli.mjs restore-test` into a new `KFM-restore-tests/<UTC time>/` on the backup volume. |
 | `kfm-intake.service` | always on | `intake` | Working desk on 127.0.0.1:8772. |
 | `kfm-library.service` | always on | `library` | Catalog-only library on 127.0.0.1:8771. |
 
@@ -183,7 +190,7 @@ and deliberately omit details. Common codes:
 | `STORAGE_POLICY_INVALID` | `storagePolicy` has an unknown key, a priority list that is not 2–3 distinct known sources, or attempts or bytes out of range. | Fix the policy; see [Storage priorities and publication budget](#storage-priorities-and-publication-budget-2026-10-23). |
 | `SOURCE_NOT_ALLOWED` | A configured source is missing from the priority list, or a command was given an unknown source. | Name every configured source in `storagePolicy.priority`, or remove the policy to use the defaults. |
 | `CONNECTION_ONLY_UPLOADS_DISABLED` | A `publish: true` tick met `remoteMode: "connection-only"`, or `stage-package`, `ftps-mirror` or `publish-county` ran under connection-only mode or `publish: false`. | None while the connection-only scope applies. |
-| `INDEPENDENT_BACKUP_REQUIRED` | The backup root is on the same device as the store. | Point the backup config at the separate SSD. |
+| `INDEPENDENT_BACKUP_REQUIRED` | The backup root is on the same device as the store. | Point the backup config at the backup volume. |
 | `BACKUP_INPUT_CHANGED` | A source file changed while it was being copied. | A writer ran outside the lock. Check that manual commands hold it, then rerun. |
 | `BACKUP_CONFLICT`, `IMMUTABLE_CONFLICT` | An existing content-addressed file holds different bytes than expected. | Investigate. Never delete or overwrite the existing file. |
 | `BACKUP_INTEGRITY_FAILED` | Copied or stored bytes do not match the manifest hash. | Treat that backup as suspect, keep the originals, run `verify-backup`. |
@@ -240,7 +247,9 @@ publication, or independent backup qualification follows from this copy.
 
 The owner applied and readback verified UUID-based `/etc/fstab` entries for the
 large data drive and the separate 180 GB backup SSD. Both keep `nosuid,nodev,noexec`
-and use systemd automounts at their existing `/run/media/dev/<UUID>` paths.
+and use systemd automounts at their existing `/run/media/dev/<UUID>` paths. On
+2026-11-01 the backup volume replaced that SSD and its `/etc/fstab` entry; see
+[Backup volume, November 1](#backup-volume-november-1).
 The `dev` user manager has lingering enabled. No inference units were changed.
 
 Private stores below the data mount are:
@@ -250,7 +259,7 @@ Private stores below the data mount are:
 - `KFM-pipeline`: new bounded USGS/NWS captures, originals, products, receipts,
   the operational intake index and SQLite job journal. `publish` remains false.
 
-`KFM-library` lives on the separate SSD beside the working-backup store, keeping
+`KFM-library` lives on the backup volume beside the working-backup store, keeping
 metadata queries off the older HDD. It is a searchable working copy of the
 existing intake index. Its catalog-only service uses SQLite immutable/query-only
 reads and disables all mutations. Local-file locators point back to the preserved
@@ -268,10 +277,12 @@ index is ready. Both require the owner's private connection capability.
 The `kfm-data` helper installed alongside these units is described in
 [Operate the active deployment](#operate-the-active-deployment).
 
-The SSD backup covers the new `KFM-pipeline` working store, not the full imported
-archive or library metadata copy. Originals on the test PC are preserved as the
-one-time migration source; there is no scheduled access to that PC. A full-size
-independent archive backup is still outstanding. Do not delete the source copies.
+The working backup covers the new `KFM-pipeline` working store, not the full
+imported archive or library metadata copy. Originals on the test PC are preserved
+as the one-time migration source; there is no scheduled access to that PC. Since
+2026-11-01 the imported archive also has an independent, verified copy on the
+backup volume (see [Backup volume, November 1](#backup-volume-november-1)). Do
+not delete the source copies.
 Initial and repeated working-store backups, hash checks and actual restores passed.
 Capture, analysis and backup operations share a kernel lock; the working desk is
 paused during backup to close its SQLite writers, then restarted automatically.
@@ -282,6 +293,48 @@ snapshots and their receipts now use stable digest-based identities, preventing
 repeat-backup collisions. No previous backup or archive object was overwritten.
 Format v2 ran only from an uncommitted checkout until October 30; see
 [Deployed code: pinned releases](#deployed-code-pinned-releases).
+
+### Backup volume, November 1
+
+The working backup, `KFM-library`, the restore tests and the archive backup now
+share one LVM logical volume, `kfm-backup/store`:
+
+- **Drives:** three Intel SATA SSDs: the 180 GB `sda1`, the 240 GB `sdc1`, and
+  the former 180 GB backup SSD `sdd1`. That's about 559 GiB of ext4.
+- **Mount:** UUID `b34cab7d-b16b-494f-8e12-2f20db736ec4`, through a UUID-based
+  `/etc/fstab` automount at the same `/run/media/dev/<UUID>` path style, with
+  `nosuid,nodev,noexec,nofail`. `runtime/mounts.sh all` mounts it.
+- **Device number:** `backup-config.json` records the volume's device number
+  (64512, `dm-0`). If a reboot ever assigns a different device-mapper number,
+  backups hold with `STORAGE_IDENTITY_CHANGED`. Compare `stat -c %d` of the mount
+  with the config before requalifying.
+- **Risk:** the volume is linear, so losing any one of the three drives loses
+  the whole volume. The nightly `verify-backup` and the monthly restore test would
+  detect corruption, and the primary data stays on the HDD.
+
+How it was qualified and filled:
+
+1. The owner ran `pc-pipeline-data/owner-steps/join-backup-ssds.sh`, which
+   joined the two empty spare SSDs.
+2. A full surface test wrote 399 GB of random data to the new volume and read it
+   all back with matching SHA-256 hashes, with no I/O errors.
+   - The 240 GB drive's lifetime SMART counters (376 retired blocks, 1,722
+     reported uncorrectable errors) did not change.
+   - The 180 GB `sda` retired 5 more blocks (1 to 6) with no data loss. Watch its
+     attribute 5.
+3. Everything on the old backup SSD was copied and compared file by file:
+   256,826 files, 62.3 GB, 0 differences.
+   - The backup, restore and library settings were then switched, and one backup
+     and one restore test passed on the volume.
+   - The receipt `.kfm-moved-from-55568f6e-e770-4dcd-9c96-2060157e850e.json` is
+     on the volume. The previous settings are in
+     `pc-pipeline-data/implementation-recovery/20261101T063259Z-backup-volume`.
+4. Only then did `pc-pipeline-data/owner-steps/add-third-ssd.sh` erase the old
+   SSD and grow the volume onto it. That script refuses unless the receipt
+   exists and the old SSD still holds exactly the files it records.
+5. After the owner's update reboot, `after-reboot-check.sh` in that recovery
+   folder passed: drives, volume, device number, store identity, timers and
+   services.
 
 ### Connection-only owner scope, October 23
 
