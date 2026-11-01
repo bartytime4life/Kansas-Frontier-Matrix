@@ -19,7 +19,9 @@ test('Quick start reveals the map and reopens retained help from either draft wo
   for(const primaryWorkspace of ['reports','stories','map'])for(const initial of [false,true]){
     const state={primary:primaryWorkspace,open:initial,sources:false},draft={title:'Keep this draft'},snapshot={id:'keep-this-snapshot'};
     const welcomeShowing=initial&&primaryWorkspace==='map';
-    evaluate(callbacks.get('toggleExplorerGuide'),{primaryWorkspace,welcomeShowing,setPrimaryWorkspace:v=>state.primary=v,setGuideOpen:v=>state.open=typeof v==='function'?v(state.open):v,setWelcomeSourcesOpen:v=>state.sources=typeof v==='function'?v(state.sources):v,draft,snapshot})();
+    evaluate(callbacks.get('toggleExplorerGuide'),{primaryWorkspace,welcomeShowing,setPrimaryWorkspace:v=>state.primary=v,setGuideOpen:v=>state.open=typeof v==='function'?v(state.open):v,setWelcomeSourcesOpen:v=>state.sources=typeof v==='function'?v(state.sources):v,draft,snapshot,
+      leftPanelReturnRef:{current:null},setLeftOpen(){},setRightOpen(){},setTimelineOpen(){},setQwenOpen(){},dismissMapUtilityWithoutFocus(){},setSourceStatusOpen(){},setHelpOpen(){},setRepositoryOpen(){},setMapContextOpen(){},
+    })();
     assert.equal(state.primary,'map');assert.equal(state.open,true,'the guide opens, or stays open while it is showing');
     // While the welcome covers the map, `?` reveals the map sources instead of closing it.
     assert.equal(state.sources,welcomeShowing);
@@ -43,7 +45,7 @@ test('source status reveals the map before frame focus and retains the supplied 
 // Execute the actual guide click callback so dismissal's synchronous focus return
 // is part of the regression, rather than calling the destination in isolation.
 const guideAst=ts.createSourceFile('welcome.jsx',await readFile('app/living-welcome/welcome.jsx','utf8'),ts.ScriptTarget.ES2022,true,ts.ScriptKind.JSX);
-let guideActionClick,helpOpenEffect;
+let guideActionClick,helpOpenEffect,leftPanelFocusEffect;
 function guideVisit(node){
   if(ts.isVariableDeclaration(node)&&node.name.getText(guideAst)==='run')guideActionClick=node.initializer.getText(guideAst);
   ts.forEachChild(node,guideVisit);
@@ -51,6 +53,7 @@ function guideVisit(node){
 guideVisit(guideAst);
 function effectVisit(node){
   if(ts.isCallExpression(node)&&node.expression.getText(ast)==='useEffect'&&node.arguments[0]?.getText(ast).includes('if (!helpOpen) return;'))helpOpenEffect=node.arguments[0].getText(ast);
+  if(ts.isCallExpression(node)&&node.expression.getText(ast)==='useEffect'&&node.arguments[0]?.getText(ast).includes('!leftPanelFocusRequest'))leftPanelFocusEffect=node.arguments[0].getText(ast);
   ts.forEachChild(node,effectVisit);
 }
 effectVisit(ast);
@@ -63,6 +66,7 @@ test('guide Layers and Time enter committed destinations after dismissal, even w
       setSourceStatusOpen:v=>state.status=v,setStarterPanelOpen:v=>state.starter=v,
       primaryWorkspace:'map',undergroundOpen:false,toggleUnderground:()=>{},openQwenCompanion:()=>{},
       window:{requestAnimationFrame:fn=>frames.push(fn)},leftPanelRef,timelineRef,
+      document:{querySelector:()=>state.open?{}:null},
       visibleFocusableElements:panel=>{assert.equal(panel,action==='layers'?leftPanelRef.current:timelineRef.current);return [target];},
     });
     const close=evaluate(callbacks.get('closeExplorerGuide'),{
@@ -70,14 +74,28 @@ test('guide Layers and Time enter committed destinations after dismissal, even w
       document:{activeElement:{closest:()=>({})},querySelector:()=>({focus:()=>focus.push('guide-trigger')})},
     });
     assert.ok(guideActionClick,'the graphical welcome owns the action and dismissal callback');
-    evaluate(guideActionClick,{onClose:close,remember:true})(()=>route(action));
+    evaluate(guideActionClick,{onClose:close,remember:true,departed:{current:false}})(()=>route(action));
     assert.equal(state.open,false);assert.deepEqual(focus,['guide-trigger']);
+    if(action==='layers')evaluate(leftPanelFocusEffect,{
+      primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,sourceSearchFocusPendingRef:{current:false},leftPanelRef,
+      window:{requestAnimationFrame:fn=>frames.push(fn),cancelAnimationFrame(){}},visibleFocusableElements:()=>[target],
+    })();
     assert.equal(frames.length,1,'focus must be scheduled after guide dismissal and panel commit');
-    leftPanelRef.current={};timelineRef.current={};frames[0]();
+    leftPanelRef.current={};timelineRef.current={};
+    while(frames.length)frames.shift()();
     assert.deepEqual(focus,['guide-trigger',action]);
     assert.equal(action==='layers'?state.layers:state.time,true);
     if(action==='layers'){assert.equal(state.status,false);assert.equal(state.starter,true);}
   }
+});
+test('obsolete Layers focus frames are revoked before they can steal a newer welcome opening',()=>{
+  const frames=new Map(),focused=[];let id=0;
+  const scope={primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,sourceSearchFocusPendingRef:{current:false},leftPanelRef:{current:{}},
+    window:{requestAnimationFrame:fn=>{frames.set(++id,fn);return id;},cancelAnimationFrame:key=>frames.delete(key)},visibleFocusableElements:()=>[{focus:()=>focused.push('layers')}]};
+  const cleanup=evaluate(leftPanelFocusEffect,scope)();
+  const first=[...frames.values()][0];frames.clear();first();assert.equal(frames.size,1);
+  cleanup();assert.equal(frames.size,0);assert.deepEqual(focused,[]);
+  assert.equal(evaluate(leftPanelFocusEffect,{...scope,guideOpen:true})(),undefined,'welcome owns focus until deliberately dismissed');
 });
 test('detailed map help takes focus after mount and returns it on close without stealing outside focus',()=>{
   assert.ok(helpOpenEffect,'map help needs a committed focus effect');

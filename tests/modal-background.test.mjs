@@ -67,6 +67,16 @@ test("modal close returns to visible trigger, closed-menu summary or map fallbac
   trigger.inert = false; trigger.boxes = []; assert.equal(modalReturnTarget(trigger, fallback), fallback);
   trigger.boxes = [{}]; trigger.isConnected = false; assert.equal(modalReturnTarget(trigger, fallback), fallback);
 });
+test("a nested modal does not restore a stale hold over an already excluded workspace", () => {
+  const f = fixture();
+  f.map.inert = true; f.map.setAttribute("aria-hidden", "true");
+  const cleanup = isolateModalBackground(f.panel, f.root);
+  // The owning render releases welcome and opens Layers in the same commit.
+  f.map.inert = false; f.map.removeAttribute("aria-hidden");
+  cleanup();
+  assert.equal(f.map.inert, false);
+  assert.equal(f.map.getAttribute("aria-hidden"), null);
+});
 test("modal tab candidates preserve native controls and scrolled content in DOM order", () => {
   const panel = new Element(), button = new Element("button"), input = new Element("input"), select = new Element("select"), textarea = new Element("textarea"), summary = new Element("summary"), link = new Element("a"), custom = new Element(), plain = new Element();
   link.setAttribute("href", "#help"); link.tabIndex = 0;
@@ -117,9 +127,9 @@ function visit(node) {
 }
 visit(ast); assert.ok(effect);
 test("actual Layers effect owns external focus and releases it when another tool or workspace takes over", () => {
-  for (const overrides of [{}, { isCompact: false }, { primaryWorkspace: "reports" }, { leftOpen: false }, { rightOpen: true }, { mapUtilityOpen: true }, { qwenOpen: true }]) {
+  for (const overrides of [{}, { guideOpen: null }, { guideOpen: true }, { isCompact: false }, { primaryWorkspace: "reports" }, { leftOpen: false }, { rightOpen: true }, { mapUtilityOpen: true }, { qwenOpen: true }]) {
     const f = fixture(), listeners = new Map(), focused = [];
-    const scope = { primaryWorkspace: "map", isCompact: true, leftOpen: true, rightOpen: false, mapUtilityOpen: false, qwenOpen: false,
+    const scope = { primaryWorkspace: "map", guideOpen: false, isCompact: true, leftOpen: true, rightOpen: false, mapUtilityOpen: false, qwenOpen: false,
       ...overrides, leftPanelRef: { current: f.panel }, isolateModalBackground, Node: Element,
       visibleFocusableElements: () => [{ focus: () => focused.push("close") }],
       document: { addEventListener: (name, callback, capture) => { assert.equal(capture, true); listeners.set(name, callback); }, removeEventListener: (name, callback, capture) => { assert.equal(capture, true); assert.equal(listeners.get(name), callback); listeners.delete(name); } } };
@@ -127,6 +137,11 @@ test("actual Layers effect owns external focus and releases it when another tool
     if (Object.keys(overrides).length) { assert.equal(cleanup, undefined); assert.equal(f.map.inert, false); continue; }
     listeners.get("focusin")({ target: f.map }); assert.deepEqual(focused, ["close"]);
     listeners.get("focusin")({ target: f.panel }); assert.deepEqual(focused, ["close"]);
+    let prevented=0,stopped=0;
+    listeners.get("pointerdown")({target:f.map,preventDefault:()=>prevented++,stopPropagation:()=>stopped++});
+    assert.equal(prevented,1);assert.equal(stopped,1);assert.deepEqual(focused,["close","close"]);
+    listeners.get("pointerdown")({target:f.panel,preventDefault:()=>prevented++,stopPropagation:()=>stopped++});
+    assert.equal(prevented,1,'inside pointer input remains native');
     cleanup(); assert.equal(listeners.size, 0); assert.equal(f.header.inert, false); assert.equal(f.map.inert, false);
   }
 });

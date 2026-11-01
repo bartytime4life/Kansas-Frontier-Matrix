@@ -7,6 +7,9 @@ export function isolateModalBackground(panel: HTMLElement, root: HTMLElement | n
   for (let parent = panel.parentElement; parent; parent = parent.parentElement) {
     for (const sibling of parent.children) {
       if (sibling === branch || !(sibling instanceof HTMLElement)) continue;
+      // An existing owner already excludes this branch. Do not acquire a hold
+      // or later restore its stale attributes over that owner's next render.
+      if (sibling.inert && sibling.getAttribute("aria-hidden") === "true") continue;
       prior.push({ element: sibling, inert: sibling.inert, ariaHidden: sibling.getAttribute("aria-hidden") });
       sibling.inert = true;
       sibling.setAttribute("aria-hidden", "true");

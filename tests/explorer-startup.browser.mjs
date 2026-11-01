@@ -376,6 +376,132 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
   });
 }
 
+for (const [width, height] of [[1280, 800], [390, 844]]) {
+  test(`startup Layers handoff excludes welcome and restores focus at ${width}x${height}`, { timeout: 90000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, width, height);
+    await p.holdSceneModule();
+    await p.open('/?motion=off');
+    await p.wait(`!!document.querySelector('.living-welcome')`, 'welcome is opening');
+    await p.waitForSceneModule();
+    // No readyWelcome/arrival wait: use the header during welcome startup.
+    const click = async selector => {
+      const at = await p.evaluate(`(()=>{const e=document.querySelector(${JSON.stringify(selector)}),r=e.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+      for (const type of ['mousePressed', 'mouseReleased']) await p.call('Input.dispatchMouseEvent', { type, ...at, button: 'left', clickCount: 1 });
+    };
+    const trigger = width <= 1100 ? '.map-dock-menu-quick button:nth-child(2)' : '.map-dock-actions > button:nth-child(2)';
+    if (width <= 1100) await click('.map-dock-map-menu > summary');
+    await click(trigger);
+    await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`, 'Layers replaces welcome rather than overlapping it');
+    await p.wait(`document.activeElement?.closest('.layer-panel')`, 'Layers takes focus');
+    await p.releaseSceneModule();
+    await pause(350);
+    assert.equal(await p.evaluate(`!!document.querySelector('.living-welcome')`), false, 'late preview initialization cannot reopen welcome');
+    assert.equal(await p.evaluate(`localStorage.getItem('kfm.explorer.guide.dismissed.v2')`), null, 'navigation does not save an opt-out');
+    if (width <= 1100) {
+      await p.key('Tab','Tab',9,8);
+      assert.equal(await p.evaluate(`!!document.activeElement?.closest('.layer-panel')`),true,'Shift+Tab wraps within Layers');
+      await p.key('Tab','Tab',9);
+      assert.equal(await p.evaluate(`document.activeElement?.getAttribute('aria-label')`),'Close Explorer navigation','Tab wraps back to the first Layers control');
+      assert.equal(await p.evaluate(`!!document.querySelector('.guide-trigger').closest('[inert]')`), true, 'modal Layers disables header input');
+      await p.evaluate(`document.querySelector('.guide-trigger').focus()`);
+      assert.equal(await p.evaluate(`!!document.activeElement?.closest('.layer-panel')`), true, 'background focus cannot escape the modal');
+      // A trusted touch on the obscured header cannot reopen welcome either.
+      await p.call('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 });
+      const at = await p.evaluate(`(()=>{const r=document.querySelector('.guide-trigger').getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};})()`);
+      await p.call('Input.dispatchTouchEvent', { type:'touchStart', touchPoints:[{...at,id:1,radiusX:2,radiusY:2,force:1}] });
+      await p.call('Input.dispatchTouchEvent', { type:'touchEnd', touchPoints:[] });
+      assert.equal(await p.evaluate(`!!document.querySelector('.living-welcome')`), false);
+    }
+    await p.key('Escape', 'Escape', 27);
+    await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='true'`, 'one Escape closes Layers');
+    await p.wait(width <= 1100 ? `document.activeElement?.matches('.map-dock-map-menu > summary')` : `document.activeElement===document.querySelector(${JSON.stringify(trigger)})`, 'focus returns to the visible Layers trigger');
+    assert.equal(await p.evaluate(`!!document.activeElement.closest('[inert]')`), false, 'closing releases background input');
+    // Settled startup: reopen welcome, then immediately choose an actual card.
+    await click('.guide-trigger');
+    await readyWelcome(p);
+    const card = await revealControl(p, '.topic-science');
+    if (width < 600) {
+      await p.call('Input.dispatchTouchEvent', { type:'touchStart', touchPoints:[{...card,id:1,radiusX:2,radiusY:2,force:1}] });
+      await p.call('Input.dispatchTouchEvent', { type:'touchEnd', touchPoints:[] });
+    } else for (const type of ['mousePressed','mouseReleased']) await p.call('Input.dispatchMouseEvent',{type,...card,button:'left',clickCount:1});
+    await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('[aria-label="Layer topic"]')?.value==='science' && document.activeElement?.closest('.layer-panel')`, 'rapid selection keeps one Science Layers owner');
+    if (process.env.KFM_WORKSPACE_SCREENSHOTS) {
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, {recursive:true});
+      const shot=await p.call('Page.captureScreenshot',{format:'png'});
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`startup-handoff-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
+    }
+  });
+}
+
+for (const [width, height] of [[1280, 800], [390, 844]]) {
+  test(`delayed startup category handoff and saved map state at ${width}x${height}`, { timeout: 90000 }, async t => {
+    const b=await browser(t),p=await pageSession(b,width,height);
+    // Delay zero-delay startup work, rather than waiting out the race. The
+    // fixture is installed before hydration and released explicitly below.
+    const {identifier}=await p.call('Page.addScriptToEvaluateOnNewDocument',{source:`
+      history.replaceState({},'');
+      window.__startupTasks=[];
+      (()=>{const later=window.setTimeout;let hold=true;
+        window.setTimeout=(fn,ms,...args)=>later(()=>{
+          if(hold&&ms===0&&document.querySelector('.atlas-studio[data-startup="pending"]'))window.__startupTasks.push(()=>fn(...args));
+          else fn(...args);
+        },ms);
+        window.__releaseStartup=()=>{hold=false;for(const fn of window.__startupTasks.splice(0))fn();};
+      })();
+    `});
+    await p.call('Page.navigate',{url:origin.href});
+    await p.wait(`document.querySelector('.atlas-studio')?.dataset.startup==='pending' && window.__startupTasks?.length>0`, 'restoration is deliberately held');
+    assert.equal(await p.evaluate(`document.querySelector('.topbar').inert && document.querySelector('.explorer-shell').inert && document.querySelector('.skip-link').inert`),true,'pending startup disables every map entry point');
+    await p.key('Tab','Tab',9);
+    assert.equal(await p.evaluate(`!!document.activeElement?.closest('.topbar,.explorer-shell,.skip-link')`),false,'Tab cannot enter unresolved controls');
+    // A slow entrance makes the in-transition activation deterministic even
+    // when software WebGL work occupies the renderer between browser calls.
+    await p.call('Animation.enable');
+    await p.call('Animation.setPlaybackRate',{playbackRate:0.05});
+    await p.evaluate(`window.__releaseStartup()`);
+    await p.call('Page.removeScriptToEvaluateOnNewDocument',{identifier});
+    await p.wait(`!!document.querySelector('.topic-engineering')`, 'first category arrives');
+    assert.equal(await p.evaluate(`document.querySelector('.explorer-shell').inert`),true,'the welcome excludes covered map controls');
+    // Activate a card at its first hydrated frame, while arrival is running.
+    const at=await revealControl(p,'.topic-engineering');
+    assert.equal(await p.evaluate(`document.querySelector('.topic-engineering').getAnimations().some(a=>a.playState==='running'||a.pending)`),true,'this activation exercises the entrance transition');
+    if(width<600){
+      await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+      await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...at,id:1,radiusX:2,radiusY:2,force:1}]});
+      await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    }else for(const type of ['mousePressed','mouseReleased'])await p.call('Input.dispatchMouseEvent',{type,...at,button:'left',clickCount:1});
+    await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('[aria-label="Layer topic"]')?.value==='engineering' && document.activeElement?.closest('.layer-panel')`, 'first-frame category selection owns Layers');
+    await p.call('Animation.setPlaybackRate',{playbackRate:1});
+    await p.key('Escape','Escape',27);
+    await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='true' && document.activeElement?.closest('#map-canvas')`, 'a vanished category trigger falls back to the map');
+
+    // Exercise the inverse handoff with an explicit layer stack and camera.
+    await p.open('/?topic=science&base=midnight&ctx=noaa-goes-geocolor&c=-99,38.4&z=7&motion=off','1',`localStorage.setItem('kfm-scene-effects-v1',JSON.stringify({sunSync:false,waterFlow:false}));`);
+    await leaveCompactLayers(p);
+    const snapshot=()=>p.evaluate(`(()=>{const params=new URLSearchParams(history.state.kfmExplorerView);return{view:Object.fromEntries(['topic','base','ctx','ctxo','c','z','p','b','scene','motion','l','o'].map(key=>[key,params.get(key)])),settings:localStorage.getItem('kfm-scene-effects-v1'),dismissed:localStorage.getItem('kfm.explorer.guide.dismissed.v2')};})()`);
+    const before=await snapshot();
+    assert.equal(before.view.ctx,'noaa-goes-geocolor','the visitor explicitly enabled the satellite layer');
+    await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);
+    await readyWelcome(p);
+    assert.equal(await p.evaluate(`document.querySelector('.layer-panel').getAttribute('aria-hidden')`),'true','reopening welcome revokes retained Layers');
+    // Source notes are a nested modal. Its cleanup must not reapply welcome's
+    // former inert hold over the newly active Layers workspace.
+    await p.evaluate(`document.querySelector('.topic-preview-science').click()`);
+    await openStageNotes(p);
+    await p.evaluate(`document.querySelector('.welcome-open-map').focus()`);
+    await p.key('Tab','Tab',9);
+    // Use the sources action to preserve this map; opening the default map is
+    // a separate, explicitly state-changing action.
+    await p.evaluate(`(()=>{const button=[...document.querySelectorAll('.welcome-dialog button')].find(b=>b.textContent==='Explore science & observations sources →');button.focus();button.click();button.click();button.click();})()`);
+    await p.wait(`!document.querySelector('.living-welcome') && document.activeElement?.closest('.layer-panel') && !document.querySelector('.explorer-shell').inert`, 'nested notes release to a single usable Layers owner');
+    await p.wait(`document.querySelector('[aria-label="Layer topic"]')?.value==='science'`, 'the selected category survives');
+    assert.deepEqual(await snapshot(),before,'Layers navigation preserves selected layers, camera, category and saved device settings');
+    await p.key('Escape','Escape',27);
+    await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='true'`, 'Escape releases the nested handoff');
+    assert.equal(await p.evaluate(`!!document.querySelector('.living-welcome')`),false,'no late callback resurrects welcome');
+  });
+}
+
 for (const width of [320, 390, 768, 1280]) {
   test(`Sky daylight keyboard selection and readable chart at ${width}px`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, 844);
@@ -1081,13 +1207,13 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     const b=await browser(t),p=await pageSession(b,width,height,{attribution:'Isolated browser layout fixture attribution — empty geometry; no observations, rights claims or accepted data. <a href="https://openmaptiles.org/">Fixture OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">Fixture OpenStreetMap</a>'});
     if(label==='200 percent layout equivalent')await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:2,mobile:false});
     await p.open('/');await readyWelcome(p);
-    await p.wait(`(()=>{const r=document.querySelector('#map-canvas .maplibregl-ctrl-bottom-right .maplibregl-ctrl-attrib')?.getBoundingClientRect();return r&&r.width>0&&r.height>0;})()`,'real MapLibre attribution mounted in its welcome strip from the bounded local style fixture');
+    await p.wait(`(()=>{const r=document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib')?.getBoundingClientRect();return r&&r.width>0&&r.height>0;})()`,'real MapLibre attribution mounted in its welcome strip from the bounded local style fixture');
     const checkLayout=async state=>{
       const result=await p.evaluate(`(()=>{
         const root=document.querySelector('.explorer-guide.living-welcome');
         const selectors=['.welcome-hero','.welcome-toolbar','.discovery-hint','.topic-callout','.welcome-preview-expand'];
         const boxes=selectors.flatMap(selector=>[...root.querySelectorAll(selector)].map((node,index)=>{const r=node.getBoundingClientRect();return{name:selector+':'+index,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};}));
-        const r=root.getBoundingClientRect(),header=document.querySelector('header.topbar').getBoundingClientRect(),a=document.querySelector('#map-canvas .maplibregl-ctrl-attrib')?.getBoundingClientRect();
+        const r=root.getBoundingClientRect(),header=document.querySelector('header.topbar').getBoundingClientRect(),a=document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib')?.getBoundingClientRect();
         return {boxes,root:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,scrollWidth:root.scrollWidth,clientWidth:root.clientWidth},headerBottom:header.bottom,attribution:a?{left:a.left,right:a.right,top:a.top,bottom:a.bottom,width:a.width,height:a.height}:null};
       })()`);
       assert.ok(result.root.top>=result.headerBottom-.5,`${state}: header has its own space ${JSON.stringify(result)}`);
@@ -1107,15 +1233,17 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
       }
     };
     const checkCredits=async state=>{
-      const count=await p.evaluate(`[...document.querySelectorAll('#map-canvas .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture ')).length`);
+      const count=await p.evaluate(`[...document.querySelectorAll('.welcome-map-attribution .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture ')).length`);
       assert.equal(count,2,'both explicit fixture credits remain in the real attribution control');
       for(let index=0;index<count;index++){
-        await p.evaluate(`[...document.querySelectorAll('#map-canvas .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}].scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})`);
-        const credit=await p.evaluate(`(()=>{const a=[...document.querySelectorAll('#map-canvas .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}],r=a.getBoundingClientRect(),strip=document.querySelector('#map-canvas .maplibregl-ctrl-attrib').getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome').getBoundingClientRect(),style=getComputedStyle(a);return{text:a.textContent,width:r.width,height:r.height,top:r.top,bottom:r.bottom,left:r.left,right:r.right,strip:{top:strip.top,bottom:strip.bottom,left:strip.left,right:strip.right},welcomeBottom:root.bottom,font:parseFloat(style.fontSize),lines:new Set([...a.getClientRects()].map(box=>Math.round(box.top))).size,display:style.display,visibility:style.visibility,hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)?.closest('a')===a,hitBy:(e=>e?e.tagName+'.'+String(e.className||'')+'#'+e.id+' in '+String(e.parentElement?.className||''):'none')(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2))};})()`);
+        await p.evaluate(`[...document.querySelectorAll('.welcome-map-attribution .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}].scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})`);
+        const credit=await p.evaluate(`(()=>{const a=[...document.querySelectorAll('.welcome-map-attribution .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}],r=a.getBoundingClientRect(),strip=document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib').getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome').getBoundingClientRect(),style=getComputedStyle(a);return{text:a.textContent,width:r.width,height:r.height,top:r.top,bottom:r.bottom,left:r.left,right:r.right,strip:{top:strip.top,bottom:strip.bottom,left:strip.left,right:strip.right},welcomeBottom:root.bottom,font:parseFloat(style.fontSize),lines:new Set([...a.getClientRects()].map(box=>Math.round(box.top))).size,display:style.display,visibility:style.visibility,hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)?.closest('a')===a,hitBy:(e=>e?e.tagName+'.'+String(e.className||'')+'#'+e.id+' in '+String(e.parentElement?.className||''):'none')(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2))};})()`);
         assert.ok(credit.width>0&&credit.height>0&&credit.font>0&&credit.display!=='none'&&credit.visibility==='visible',`${state}: credit text has actual visible geometry ${JSON.stringify(credit)}`);
         assert.equal(credit.lines,1,`${state}: a credit never wraps inside a provider's name ${JSON.stringify(credit)}`);
         assert.ok(credit.top>=credit.welcomeBottom-.5&&credit.top>=credit.strip.top-.5&&credit.bottom<=credit.strip.bottom+.5&&credit.bottom<=height+.5&&credit.left>=credit.strip.left-.5&&credit.right<=credit.strip.right+.5,`${state}: credit fits its reserved viewport strip ${JSON.stringify(credit)}`);
         assert.equal(credit.hit,true,`${state}: the credit is reachable above clip and background layers ${JSON.stringify(credit)}`);
+        await p.evaluate(`[...document.querySelectorAll('.welcome-map-attribution .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}].focus()`);
+        assert.equal(await p.evaluate(`!!document.activeElement?.closest('.welcome-map-attribution') && !document.activeElement.closest('[inert],[aria-hidden="true"]')`),true,'real credits stay keyboard accessible while the background map is inert');
       }
     };
     await checkLayout('initial');
@@ -1139,14 +1267,14 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('header.topbar')).visibility`),'visible','global header remains available');
     for(const selector of ['.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'hidden','background map chrome does not peek through welcome');
-    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('#map-canvas .maplibregl-ctrl-attrib')).visibility`),'visible','real attribution remains available');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib')).visibility`),'visible','real attribution remains available');
     await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.site-root').dataset.welcomeSources==='open'`,'Map sources opens the current attribution strip');
-    await p.wait(`(()=>{const bar=document.querySelector('#map-canvas .maplibregl-ctrl-bottom-right'),strip=document.querySelector('#map-canvas .maplibregl-ctrl-attrib'),root=document.querySelector('.explorer-guide.living-welcome'),r=strip?.getBoundingClientRect(),port=root?.getBoundingClientRect();return bar&&r&&port&&!bar.getAnimations({subtree:true}).some(animation=>animation.pending||animation.playState==='running')&&r.top>=port.bottom-.5&&r.bottom<=innerHeight+.5;})()`,'source-strip entrance finishes inside its reserved viewport');
+    await p.wait(`(()=>{const bar=document.querySelector('.welcome-map-attribution'),strip=document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib'),root=document.querySelector('.explorer-guide.living-welcome'),r=strip?.getBoundingClientRect(),port=root?.getBoundingClientRect();return bar&&r&&port&&!bar.getAnimations({subtree:true}).some(animation=>animation.pending||animation.playState==='running')&&r.top>=port.bottom-.5&&r.bottom<=innerHeight+.5;})()`,'source-strip entrance finishes inside its reserved viewport');
     await checkLayout('source strip open');
     await checkCredits('expanded source strip');
-    assert.match(await p.evaluate(`document.querySelector('#map-canvas .maplibregl-ctrl-attrib').textContent`),/Isolated browser layout fixture attribution/,'source text remains a labeled empty fixture, not accepted observations');
-    assert.ok(await p.evaluate(`parseFloat(getComputedStyle(document.querySelector('#map-canvas .maplibregl-ctrl-attrib-inner')).fontSize)>0`),'expanded sources expose readable attribution text');
+    assert.match(await p.evaluate(`document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib').textContent`),/Isolated browser layout fixture attribution/,'source text remains a labeled empty fixture, not accepted observations');
+    assert.ok(await p.evaluate(`parseFloat(getComputedStyle(document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib-inner')).fontSize)>0`),'expanded sources expose readable attribution text');
     const before=await p.evaluate(`({search:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`);
     // All domains get a real native-keyboard detail journey on desktop and the
     // smallest phone. Other viewports retain captured and uncaptured examples.

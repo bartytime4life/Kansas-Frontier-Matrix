@@ -35,6 +35,7 @@ export function AviationGlimpse({mode,onMode,state,layersVisible}){
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,motionEnabled=true,onMotionChange}){
   const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null),wasFullscreen=useRef(false);
   const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0);
+  const departed=useRef(false);
   const [remember,setRemember]=useState(initialRemember),[query,setQuery]=useState('');
   const [reduced,setReduced]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [localMotion,setMotion]=useState(motionEnabled),[hidden,setHidden]=useState(()=>typeof document!=='undefined'&&document.hidden);
@@ -54,7 +55,9 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   }
   useEffect(()=>()=>{if(glowFrame.current){cancelAnimationFrame(glowFrame.current);glowFrame.current=0;}},[paused]);
   const topic=TOPICS.find(t=>t.id===detail),modal=Boolean(detail||panel),glimpse=categoryGlimpse(control);
-  const run=action=>{action?.();onClose(remember);};
+  // One departure owns the handoff, even if repeated activations are batched
+  // before React unmounts the chooser and its retained event handlers.
+  const run=action=>{if(departed.current)return;departed.current=true;action?.();onClose(remember);};
   // Leaving the full-window preview clears the engaged card itself: hidden cards can
   // lose focus without a blur event, so release() alone may never run.
   function engage(id){clearTimeout(leave.current);setActive(id);setLast(id);setTouched(true);setLayersVisible(true);if(id!==control)setGeologyModule(null);}
