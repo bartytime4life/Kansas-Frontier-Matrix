@@ -35,12 +35,12 @@ test('actual restoration decision reads incoming state once, closes on history a
   const page = await readFile('app/page.tsx', 'utf8');
   const source = page.slice(page.indexOf('      const hasDestination = hasExplorerDestination('), page.indexOf('      setStarterPanelOpen(', page.indexOf('  const restoreExplorerFromUrl')));
   assert.ok(source.includes('setGuideOpen'), 'execute the production decision, not a copied model');
-  const decide = (search, restored, dismissed, current = false, focused = false) => {
+  const decide = (search, restored, dismissed, current = null, focused = false) => {
     let open = current, focusReturns = 0, preferenceReads = 0;
     vm.runInNewContext(ts.transpile(source), {
       params: new URLSearchParams(search), hasExplorerDestination: startup.exports.hasExplorerDestination,
       URLSearchParams, window: { location: { search } },
-      explorerRestoredRef: { current: restored }, setGuideOpen: value => { open = value; }, setWelcomeSourcesOpen: () => {},
+      explorerRestoredRef: { current: restored }, setGuideOpen: value => { open = typeof value === 'function' ? value(open) : value; }, setWelcomeSourcesOpen: () => {},
       readExplorerGuideDismissed: () => { preferenceReads++; return dismissed; },
       document: { activeElement: { closest: () => focused }, querySelector: () => ({ focus: () => { focusReturns++; } }) },
     });
@@ -50,7 +50,9 @@ test('actual restoration decision reads incoming state once, closes on history a
   assert.equal(decide('', false, true).open, false);
   assert.deepEqual(decide('topic=water', false, false), { open: false, focusReturns: 0, preferenceReads: 0 });
   assert.deepEqual(decide('mapui=open', true, false, true, true), { open: false, focusReturns: 1, preferenceReads: 0 });
-  assert.equal(decide('', true, false).open, false, 'history never automatically reopens welcome');
+  assert.equal(decide('', false, false, false).open, false, 'late initial restoration cannot reopen a dismissed welcome');
+  assert.equal(decide('', false, true, true).open, true, 'late initial restoration cannot override a deliberate reopening');
+  assert.equal(decide('', true, false, false).open, false, 'history never automatically reopens welcome');
   assert.equal(decide('', true, false, true).open, true, 'plain history does not close manual help');
 });
 

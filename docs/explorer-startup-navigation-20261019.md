@@ -122,3 +122,89 @@ not alter the user's persisted preference. The change has no schema migration.
 Rollback is a focused revert of this navigation commit/PR while retaining
 subsequent unrelated work, followed by the same tests. Do not revert PR #5299,
 reset private data, change DNS, or deploy as an incidental part of rollback.
+
+## Welcome and Layers ownership repair - October 31, 2026
+
+**CONFIRMED reproduction before application edits.** The GoDaddy preview for
+`urdng3v1vk` allowed Layers to become active while welcome remained visible.
+At mobile size, opening Map controls could leave their menu behind welcome,
+and focus could fall to the page body. The local unmodified development source
+`9bdf1e972223964e16ff88f5c8c7a994b300579b` reproduced the failing handoff
+regressions at 1280 x 800 and 390 x 844. This is separate from the navigation
+capabilities in [#5643](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5643)
+and the Geology hover change in
+[#5647](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5647).
+
+The preview's `/api/build` read reported application-input digest
+`sha256:38f4a86d8f6e13e698d65bf4750169b58f58e81080922c6d4d66a4e02cc35e15`,
+1,158 source files, `sourceCommit: null`, and `WORKTREE_MODIFIED`. Its exact
+Git revision is **UNKNOWN**. The browser observation does not establish parity
+with the checkout. Subsequent authoring rebased onto development source
+`022f43a5ceac8e00fb9d994396da147335b468bb`, preserving its independent
+welcome-scroll repair and test changes.
+
+### Behavior and ownership
+
+- Layers, its keyboard shortcut, and Skip to map dismiss welcome in the same state change.
+  Compact Map-menu entry also leaves welcome, so its controls are reachable.
+  Reopening welcome revokes the previous panels without resetting map content.
+- Pending restoration holds the header, skip link, and map inert. Welcome
+  then holds the covered map inert while its own controls and header navigation
+  remain available. Nested source notes retain their existing modal ownership.
+- Layers focus is scheduled after its committed opening paint and canceled
+  when another opening or dismissal supersedes it. Escape closes Layers on
+  desktop and compact layouts; focus returns to a visible trigger, a closed
+  menu's summary, or the map when the category trigger has disappeared.
+- Compact Layers excludes background focus and pointer input. A tap on inert
+  background cannot blur the panel to body and strand the next Escape.
+- Initial restoration can decide only an undecided welcome. Late preview
+  initialization cannot resurrect a departed welcome, and repeated retained
+  category handlers perform one departure before unmount.
+- The renderer's actual attribution control moves to the welcome's independent
+  source strip while the map is inert, then returns to the normal map or
+  fullscreen host. Attribution text and provider links are not copied. Modal
+  cleanup does not restore stale attributes over an already excluded branch
+  whose owning render has since released it.
+
+### Regression coverage and acceptance boundary
+
+`tests/explorer-startup.browser.mjs` exercises both 1280 x 800 and 390 x 844:
+early Layers entry with its real lazy renderer held, late renderer release,
+Escape, visible-trigger/map focus restoration, compact Tab wrapping, inert
+background focus and touch, and settled Science-card mouse/touch entry.
+Another case delays zero-delay startup tasks before hydration restoration and
+slows the real entrance animation to 5% speed, then selects a category during
+that transition. It also leaves nested source notes through repeated source
+actions and compares the selected category, explicit GOES layer, camera,
+opacity state, motion setting, and stored device preferences before and after.
+Existing welcome layout journeys now verify real provider credits remain
+hit-testable and keyboard accessible outside the inert map.
+
+These browser cases use disposable profiles, loopback builds, empty map-style
+fixtures and unavailable provider/AI responses. They establish UI ownership,
+focus and state preservation, not scientific accuracy, provider availability,
+physical-device qualification, source admission or release. Ordinary tests
+execute the production restoration and focus callbacks, test obsolete-frame
+cancellation, and verify one departure for rapid retained category handlers.
+Final test counts, exact review head and CI results belong in the associated
+pull request; failed or skipped checks must remain separately attributed.
+
+The unchanged-base inventory-redaction test also fails on this macOS host:
+its synthetic IPv4 line is not redacted by the existing shell pipeline.
+This repair changes no inventory code. Canonical `TMPDIR=/private/tmp` is used
+for the full suite because macOS's usual temporary-directory alias causes
+unrelated strict-path and Git-identity fixture failures. A test run during a
+rebuild is not final acceptance; build first, then test the sealed candidate.
+
+Placement retains the existing `app/`, `tests/` and `docs/` owners described
+above. The source-lineage Directory Rules PDF remains unavailable in this
+workspace; the canonical successor and accepted ADR-0029 were inspected.
+There is no new root, contract, schema, policy or data lifecycle authority.
+Rollback is a focused application/test/documentation revert followed by the
+same startup matrix; saved settings and data require no migration or reset.
+
+**Source review and hosted publication are separate acceptance steps.** This
+repair does not authorize a merge, GoDaddy update/publication, original Sites
+synchronization, private-store operation or data promotion. Hosted acceptance
+must separately bind the reviewed application inputs to a deployed identity
+and repeat the startup, keyboard and mobile journeys on that deployment.

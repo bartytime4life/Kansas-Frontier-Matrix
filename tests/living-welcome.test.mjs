@@ -33,6 +33,15 @@ async function welcome(reduced=false,globals={}){
 const previewCard=(tree,id)=>findNode(tree,n=>n.props?.className===`topic-preview topic-preview-${id}`);
 const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.children===text);
 
+test('rapid retained category handlers perform only one departure before unmount',async()=>{
+ const h=await welcome();
+ try{
+  const tree=h.render(),first=findNode(tree,n=>n.props?.className?.includes('topic-science ')),next=findNode(tree,n=>n.props?.className?.includes('topic-agriculture '));
+  first.props.onClick();first.props.onClick();next.props.onClick();
+  assert.deepEqual(h.calls,[['map','science'],['close',false]]);
+ }finally{h.harness.dispose();}
+});
+
 function openDetails(h,tree){byText(tree,'Source notes & demonstrations').props.onClick();return h.render();}
 const expandedStatus=tree=>findNode(tree,node=>node.props?.className==='welcome-layer-demo-state');
 function expandCategory(h,id){
@@ -308,10 +317,12 @@ test('welcome uses real search and draft actions without requests or implicit di
  input.props.onChange({target:{value:'Douglas County'}});tree=h.render();
  findNode(tree,node=>node.type==='form').props.onSubmit({preventDefault(){}});
  assert.deepEqual(h.calls.splice(0),[['search','Douglas County'],['close',false]]);
- tree=h.render();findNode(tree,node=>node.type==='input'&&node.props.type==='checkbox').props.onChange({target:{checked:true}});tree=h.render();
- const ask=findNode(tree,node=>node.type==='button'&&node.props.className==='welcome-ask');ask.props.onClick();
- assert.deepEqual(h.calls.splice(0),[['action','qwen'],['close',true]]);
  h.harness.dispose();
+ const next=await welcome();tree=next.render();
+ findNode(tree,node=>node.type==='input'&&node.props.type==='checkbox').props.onChange({target:{checked:true}});tree=next.render();
+ const ask=findNode(tree,node=>node.type==='button'&&node.props.className==='welcome-ask');ask.props.onClick();
+ assert.deepEqual(next.calls,[['action','qwen'],['close',true]]);
+ next.harness.dispose();
 });
 
 test('each topic links to its actual source workspace and preview selection does not activate layers',async()=>{
@@ -496,16 +507,16 @@ test('hover focus isolates one topic and restores the scene after pointer focus 
 });
 
 test('all shared domains expose their facets and actual destination without mounting a video',async()=>{
- const h=await welcome();let tree=h.render();
  for(const topic of TOPIC_STRUCTURE){
+  const h=await welcome();let tree=h.render();
   previewCard(tree,topic.id).props.onClick();tree=h.render();tree=openDetails(h,tree);
   const facets=findNode(tree,node=>node.props?.className==='capability-facets');
   assert.equal(facets.props.children.length,topic.facets.length);
   assert.equal(findNode(tree,node=>node.type==='video'),undefined);
   findNode(tree,node=>node.type==='button'&&[node.props.children].flat(Infinity).filter(x=>typeof x==='string').join('')===`Explore ${topic.title.toLowerCase()} sources →`).props.onClick();
   assert.deepEqual(h.calls.splice(0),[['topic',topic.id],['close',false]]);
+  h.harness.dispose();
  }
- h.harness.dispose();
 });
 
 test('Return from the full-window preview clears an engaged card even when no blur arrives',async()=>{

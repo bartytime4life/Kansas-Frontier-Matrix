@@ -229,7 +229,7 @@ test("compact evidence autofocus waits for active surface inspection and preserv
     const focus = [], closed = [], listeners = new Map();
     const first = { focus() { focus.push("first"); } }, last = { focus() { focus.push("last"); } };
     const drawer = { addEventListener(type, fn) { listeners.set(type, fn); }, removeEventListener(type, fn) { assert.equal(listeners.get(type), fn); listeners.delete(type); } };
-    const context = { primaryWorkspace: "map", isCompact: true, surfaceInspectionOpen: active && surface !== "off", terrainSurfaceMode: surface, mapUtilityOpen: false, rightOpen: true, leftOpen: false, timelineOpen: false, rightPanelRef: { current: drawer }, visibleFocusableElements: () => [first, last], document: { activeElement: new Element(true) }, Element, closeRightPanel() { closed.push(true); } };
+    const context = { primaryWorkspace: "map", guideOpen: false, isCompact: true, surfaceInspectionOpen: active && surface !== "off", terrainSurfaceMode: surface, mapUtilityOpen: false, rightOpen: true, leftOpen: false, timelineOpen: false, rightPanelRef: { current: drawer }, visibleFocusableElements: () => [first, last], document: { activeElement: new Element(true) }, Element, closeRightPanel() { closed.push(true); } };
     const cleanup = evaluate(effect.arguments[0], context)();
     if (context.surfaceInspectionOpen) {
       assert.equal(listeners.size, 0); assert.deepEqual(focus, [], "tapped evidence does not steal focus behind Scene");

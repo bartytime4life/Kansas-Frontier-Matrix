@@ -1258,6 +1258,7 @@ export default function Home() {
   const daylightPlayingRef = useRef(false);
   const mapRef = useRef<MapLibreMap | null>(null);
   const mapInformationHostRef = useRef<HTMLDivElement>(null);
+  const welcomeAttributionHostRef = useRef<HTMLDivElement>(null);
   const localCapturePixelRatioRef = useRef<number | null>(null);
   const localCaptureWindFrameRef = useRef<WindArrowFrame | null>(null);
   const earthEngineContext = useEarthEngineContext();
@@ -1390,6 +1391,7 @@ export default function Home() {
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const leftPanelRef = useRef<HTMLElement>(null);
   const leftPanelReturnRef = useRef<HTMLElement | null>(null);
+  const [leftPanelFocusRequest, setLeftPanelFocusRequest] = useState(0);
   const sourceSearchFocusPendingRef = useRef(false);
   const rightPanelRef = useRef<HTMLElement>(null);
   const timelineRef = useRef<HTMLElement>(null);
@@ -5598,11 +5600,16 @@ export default function Home() {
     setCurrentWorkspace("explore");
     const returnTarget = leftPanelReturnRef.current;
     leftPanelReturnRef.current = null;
-    window.setTimeout(() => modalReturnTarget(returnTarget, mapContainerRef.current)?.focus({ preventScroll: true }), 0);
+    window.setTimeout(() => {
+      // A newer Layers/welcome opening owns focus by the time this runs.
+      if (leftPanelRef.current?.getAttribute("aria-hidden") !== "true" || document.querySelector(".living-welcome")) return;
+      modalReturnTarget(returnTarget, mapContainerRef.current)?.focus({ preventScroll: true });
+    }, 0);
   }, []);
 
   const toggleTimelinePanel = useCallback(() => {
     setPrimaryWorkspace("map");
+    setGuideOpen(false);
     setTimelineOpen((open) => primaryWorkspace !== "map" || !open);
   }, [primaryWorkspace]);
 
@@ -5654,6 +5661,7 @@ export default function Home() {
 
   const openMapUtility = useCallback((nextView: MapUtilityView, returnElement?: HTMLElement | null) => {
     setPrimaryWorkspace("map");
+    setGuideOpen(false);
     mapUtilityReturnRef.current = returnElement ?? null;
     setScenePanelOpen(false);
     setMapUtilityView(nextView === "navigate" ? "scene" : nextView);
@@ -5715,10 +5723,9 @@ export default function Home() {
   const openAtlasPanel = useCallback((mode: LeftPanelMode, returnElement?: HTMLElement | null) => {
     leftPanelReturnRef.current = returnElement ?? null;
     setPrimaryWorkspace("map");
-    if (primaryWorkspace !== "map" && !sourceSearchFocusPendingRef.current) window.setTimeout(() => {
-      const panel = leftPanelRef.current;
-      if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
-    }, 0);
+    setGuideOpen(false);
+    setWelcomeSourcesOpen(false);
+    setLeftPanelFocusRequest(request => request + 1);
     setMapContextOpen(false);
     setCurrentWorkspace("knowledge");
     setLeftPanelMode(mode);
@@ -5726,7 +5733,25 @@ export default function Home() {
     setRightOpen(false);
     dismissMapUtilityWithoutFocus();
     if (isCompact) setTimelineOpen(false);
-  }, [dismissMapUtilityWithoutFocus, isCompact, primaryWorkspace]);
+  }, [dismissMapUtilityWithoutFocus, isCompact]);
+
+  useEffect(() => {
+    if (primaryWorkspace !== "map" || guideOpen !== false || !leftOpen || !leftPanelFocusRequest || sourceSearchFocusPendingRef.current) return;
+    // Welcome (including nested source notes) releases its background holds
+    // before the committed Layers panel receives focus. Cleanup revokes an
+    // obsolete opening on Escape, another request, or a return to welcome.
+    let focusFrame: number | undefined;
+    const commitFrame = window.requestAnimationFrame(() => {
+      focusFrame = window.requestAnimationFrame(() => {
+        const panel = leftPanelRef.current;
+        if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
+      });
+    });
+    return () => {
+      window.cancelAnimationFrame(commitFrame);
+      if (focusFrame !== undefined) window.cancelAnimationFrame(focusFrame);
+    };
+  }, [primaryWorkspace, guideOpen, leftOpen, leftPanelMode, leftPanelFocusRequest]);
 
   const openMapSettings = useCallback(() => {
     openMapUtility("scene");
@@ -5770,16 +5795,13 @@ export default function Home() {
       }
       if (event.key.toLowerCase() === "l") {
         event.preventDefault();
-        setPrimaryWorkspace("map");
-        dismissMapUtilityWithoutFocus();
-        setLeftPanelMode("layers");
-        setLeftOpen((current) => primaryWorkspace !== "map" || !current);
-        if (isCompact) { setRightOpen(false); setTimelineOpen(false); }
+        if (primaryWorkspace === "map" && guideOpen === false && leftOpen) closeLeftPanel();
+        else openAtlasPanel("layers");
       }
     };
     document.addEventListener("keydown", handleWorkspaceShortcut);
     return () => document.removeEventListener("keydown", handleWorkspaceShortcut);
-  }, [dismissMapUtilityWithoutFocus, isCompact, openMapUtility, openAtlasComposer, primaryWorkspace]);
+  }, [closeLeftPanel, guideOpen, leftOpen, openAtlasPanel, openMapUtility, openAtlasComposer, primaryWorkspace]);
 
   const openLayerCatalogFromUtility = useCallback(() => {
     mapUtilityReturnRef.current = null;
@@ -5964,6 +5986,8 @@ export default function Home() {
 
   const returnToPrimaryMap = useCallback(() => {
     setPrimaryWorkspace("map");
+    setGuideOpen(false);
+    setWelcomeSourcesOpen(false);
     window.setTimeout(() => mapContainerRef.current?.focus(), 0);
   }, []);
 
@@ -6095,7 +6119,9 @@ export default function Home() {
       if (!explorerRestoredRef.current) {
         // Decide from the same incoming URL/saved view that owns restoration,
         // before view serialization can add default camera parameters.
-        setGuideOpen(!hasDestination && !readExplorerGuideDismissed());
+        // A late initial restore may decide only an undecided welcome. An
+        // explicit navigation/dismissal must not be reopened by startup work.
+        setGuideOpen(current => current === null ? !hasDestination && !readExplorerGuideDismissed() : current);
         setWelcomeSourcesOpen(false);
       } else if (hasDestination) {
         // Back/Forward can restore a destination while manual help is open.
@@ -8453,22 +8479,33 @@ export default function Home() {
   }, [repositoryOpen, closeRepository]);
 
   useEffect(() => {
-    if (primaryWorkspace !== "map" || !isCompact || !leftOpen || rightOpen || mapUtilityOpen || qwenOpen) return;
+    if (primaryWorkspace !== "map" || guideOpen !== false || !isCompact || !leftOpen || rightOpen || mapUtilityOpen || qwenOpen) return;
     const panel = leftPanelRef.current;
     if (!panel) return;
     const restoreBackground = isolateModalBackground(panel, panel.closest<HTMLElement>(".site-root"));
     const keepFocusInside = (event: FocusEvent) => {
       if (event.target instanceof Node && !panel.contains(event.target)) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
     };
+    const keepPointerInside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !panel.contains(event.target)) {
+        // Inert targets retarget a tap to the page; browsers can otherwise
+        // blur the modal to body without dispatching a new focusin event.
+        event.preventDefault();
+        event.stopPropagation();
+        if (!panel.contains(document.activeElement)) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
+      }
+    };
     document.addEventListener("focusin", keepFocusInside, true);
+    document.addEventListener("pointerdown", keepPointerInside, true);
     return () => {
       document.removeEventListener("focusin", keepFocusInside, true);
+      document.removeEventListener("pointerdown", keepPointerInside, true);
       restoreBackground();
     };
-  }, [primaryWorkspace, isCompact, leftOpen, rightOpen, mapUtilityOpen, qwenOpen]);
+  }, [primaryWorkspace, guideOpen, isCompact, leftOpen, rightOpen, mapUtilityOpen, qwenOpen]);
 
   useEffect(() => {
-    if (primaryWorkspace !== "map" || !isCompact || (surfaceInspectionOpen && !mapUtilityOpen)) return;
+    if (primaryWorkspace !== "map" || guideOpen !== false || !isCompact || (surfaceInspectionOpen && !mapUtilityOpen)) return;
     const openPanel = mapUtilityOpen ? mapUtilityPanelRef.current : rightOpen ? rightPanelRef.current : leftOpen ? leftPanelRef.current : null;
     if (!openPanel) return;
     const focusable = () => visibleFocusableElements(openPanel);
@@ -8496,7 +8533,7 @@ export default function Home() {
     };
     openPanel.addEventListener("keydown", handleKey);
     return () => openPanel.removeEventListener("keydown", handleKey);
-  }, [primaryWorkspace, isCompact, leftOpen, mapUtilityOpen, mapUtilityView, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
+  }, [primaryWorkspace, guideOpen, isCompact, leftOpen, mapUtilityOpen, mapUtilityView, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || !sourceSearchFocusPendingRef.current || !leftOpen || leftPanelMode !== "layers") return;
@@ -8528,10 +8565,11 @@ export default function Home() {
       }
       else if (liveDockVisible && !glmFlashesEnabled) closeLiveInstrument();
       else if (!isCompact && rightOpen) closeRightPanel();
+      else if (!isCompact && leftOpen && guideOpen === false) closeLeftPanel();
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [sourceStatusOpen, helpOpen, isCompact, mapContextOpen, mapUtilityOpen, qwenOpen, repositoryOpen, rightOpen, liveDockVisible, glmFlashesEnabled, closeLiveInstrument, closeMapUtility, closeQwenCompanion, closeRightPanel, closeSourceStatus, closeMapGuide]);
+  }, [sourceStatusOpen, helpOpen, isCompact, mapContextOpen, mapUtilityOpen, qwenOpen, repositoryOpen, rightOpen, leftOpen, guideOpen, liveDockVisible, glmFlashesEnabled, closeLeftPanel, closeLiveInstrument, closeMapUtility, closeQwenCompanion, closeRightPanel, closeSourceStatus, closeMapGuide]);
 
   const chooseSearchResult = (item: GlobalSearchItem) => {
     setPrimaryWorkspace("map");
@@ -10632,21 +10670,33 @@ export default function Home() {
     if (welcomeShowing) { setWelcomeSourcesOpen((open) => !open); return; }
     setWelcomeSourcesOpen(false); // every welcome opens with the sources hidden
     setPrimaryWorkspace("map");
+    leftPanelReturnRef.current = null;
+    setLeftOpen(false);
+    setRightOpen(false);
+    setTimelineOpen(false);
+    setQwenOpen(false);
+    dismissMapUtilityWithoutFocus();
+    setSourceStatusOpen(false);
+    setHelpOpen(false);
+    setRepositoryOpen(false);
+    setMapContextOpen(false);
     setGuideOpen(true);
   };
   // Keep the native provider-credit control in the visible ownership subtree:
   // the welcome strip, native fullscreen map, or ordinary map information host.
   useEffect(() => {
-    const container = mapContainerRef.current, host = mapInformationHostRef.current;
-    if (!container || !host || !styleReady) return;
+    const container = mapContainerRef.current, host = mapInformationHostRef.current, welcomeHost = welcomeAttributionHostRef.current;
+    if (!container || !host || !welcomeHost || !styleReady) return;
     const owner = container.ownerDocument;
     const synchronize = () => {
       const attribution = host.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib")
+        ?? welcomeHost.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib")
         ?? container.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib");
       const fullscreen = owner.fullscreenElement
         ?? (owner as Document & { webkitFullscreenElement?: Element | null }).webkitFullscreenElement;
-      const position = welcomeShowing ? ".maplibregl-ctrl-bottom-right" : ".maplibregl-ctrl-top-right";
-      const destination = welcomeShowing || fullscreen === container || container.classList.contains("maplibregl-pseudo-fullscreen") ? container.querySelector(position) : host;
+      // The covered map is inert. Move its actual credit control (never a
+      // copied attribution) to the welcome's independent interactive strip.
+      const destination = welcomeShowing ? welcomeHost : fullscreen === container || container.classList.contains("maplibregl-pseudo-fullscreen") ? container.querySelector(".maplibregl-ctrl-top-right") : host;
       if (!attribution || !destination) return;
       destination.appendChild(attribution);
       attribution.open = welcomeShowing;
@@ -10687,11 +10737,11 @@ export default function Home() {
     else if (action === "time") { setPrimaryWorkspace("map"); setTimelineOpen(true); }
     else if (action === "underground") enterUnderground();
     else if (action === "qwen") openQwenCompanion(null);
-    if (action === "layers" || action === "time") window.requestAnimationFrame(() => {
+    if (action === "time") window.requestAnimationFrame(() => {
       // Guide dismissal restores its trigger synchronously. Enter the destination
       // after the requested panel has committed, including retained open panels.
-      const panel = action === "layers" ? leftPanelRef.current : timelineRef.current;
-      if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
+      const panel = timelineRef.current;
+      if (panel && !document.querySelector(".living-welcome")) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
     });
   };
   const runWelcomeTopic = (topic: LayerWorkspace) => {
@@ -10954,8 +11004,9 @@ export default function Home() {
   return (
     <div className="site-root atlas-studio" data-startup={guideOpen === null ? "pending" : "ready"} data-welcome-sources={welcomeShowing && welcomeSourcesOpen ? "open" : undefined}>
       {guideOpen === null && <div className="explorer-startup-cover" role="status"><span>Opening the atlas…</span></div>}
-      <a className="skip-link" href="#map-canvas" onClick={returnToPrimaryMap}>Skip to the map</a>
-      <header ref={explorerHeaderRef} className="topbar">
+      <div ref={welcomeAttributionHostRef} className="welcome-map-attribution maplibregl-ctrl-bottom-right" role="group" aria-label="Welcome map sources" hidden={!welcomeShowing} />
+      <a className="skip-link" href="#map-canvas" inert={guideOpen === null} onClick={returnToPrimaryMap}>Skip to the map</a>
+      <header ref={explorerHeaderRef} inert={guideOpen === null} className="topbar">
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong className="atlas-title">Kansas Frontier Matrix</strong><small className="atlas-subtitle">Atlas Studio · Prairie Field Desk</small></span>
@@ -10974,7 +11025,7 @@ export default function Home() {
         {runtime.kind !== "unsupported" && !undergroundOpen && <ScenePanel toolbar rendering={<><RenderQualityControl value={renderQuality} onChange={chooseRenderQuality} /><label className="effects-ambient"><input type="checkbox" checked={dynamicEffects && !reducedMotion} disabled={reducedMotion} onChange={event => setDynamicEffects(event.target.checked)} /> Ambient motion{reducedMotion ? " · reduced motion" : ""}</label></>} onOpenChange={setScenePanelOpen} readings={sceneReadings} view={sceneView} terrain={{ scale: verticalExaggeration, available: runtime.kind === "ready" && terrainState !== "ERROR", onScale: changeTerrainDepth, onGroundView: exploreGround }} drawing={{ mode: terrainDrawingMode, detail: terrainDrawingDetail, status: terrainDrawingStatus, source: terrainSourceFor(terrainProvider), onMode: chooseTerrainDrawingMode, onDetail: chooseTerrainDrawingDetail }} surface={{ mode: terrainSurfaceMode, opacity: terrainSurfaceOpacity, probe: terrainSurfaceProbe, probeEnabled: !measureMode, onMode: chooseTerrainSurfaceMode, onOpacity: chooseTerrainSurfaceOpacity, onProbeCenter: sampleTerrainSurfaceCenter }} exploration={{ orbiting: sceneOrbiting, onOrbit: () => sceneOrbiting ? stopSceneOrbit() : startSceneOrbit(), onLandscape: chooseLandscape }} presentation={{ atmosphere: atmospherePreset, azimuth: lightAzimuth }} camera={{ pitch: view.pitch, bearing: view.bearing, fieldOfView }} cameraReady={runtime.kind === "ready"} onRecipe={chooseSceneRecipe} onLight={changeStudioLight} onCamera={composeSceneCamera} settings={sceneEffects} light={sceneEffects.sunSync ? sunSceneLight(sunAt, view.center[0], view.center[1]) : null} efficient={renderEfficient} reducedMotion={reducedMotion} flyoverActive={flyoverStopIndex !== null} onChange={updateSceneEffects} onFlyover={() => flyoverStopIndex !== null ? stopFlyover() : startFlyover()} onRepresentation={chooseSceneView} />}
               <button className="map-dock-action" type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)} aria-pressed={leftOpen && leftPanelMode === "places"}><strong>Places</strong><b>{savedWorkspaces.length}</b></button>
               <details className="map-dock-menu map-dock-map-menu" name="map-dock-menu" onKeyDown={(event) => { if (event.key === "Escape") { event.stopPropagation(); event.currentTarget.open = false; event.currentTarget.querySelector<HTMLElement>("summary")?.focus(); } }}>
-                <summary aria-label="Map views and controls">Map <small className="map-dock-current-view">{undergroundOpen ? "Underground" : mapUtilityOpen && mapUtilityView === "compare" ? "Compare A/B" : mapRepresentationLabel}</small><span aria-hidden="true">⌄</span></summary>
+                <summary aria-label="Map views and controls" onClick={() => setGuideOpen(false)}>Map <small className="map-dock-current-view">{undergroundOpen ? "Underground" : mapUtilityOpen && mapUtilityView === "compare" ? "Compare A/B" : mapRepresentationLabel}</small><span aria-hidden="true">⌄</span></summary>
                 <div className="map-dock-menu-panel">
                   <div className="map-dock-menu-representations" role="group" aria-label="Map representation" onClick={(event) => { const button = (event.target as HTMLElement).closest("button"); if (button) closeHeaderOverflow(event.currentTarget, !button.hasAttribute("data-map-panel")); }}>
                     {mapRepresentationControls()}
@@ -11360,7 +11411,7 @@ export default function Home() {
         </aside>
       </div>
 
-      <main inert={primaryWorkspace !== "map"} className="explorer-shell" data-inspector={inspectionPanel ?? "closed"} data-left={leftOpen} data-right={rightOpen} data-timeline={timelineOpen}>
+      <main inert={primaryWorkspace !== "map" || guideOpen !== false} aria-hidden={primaryWorkspace !== "map" || guideOpen !== false || undefined} className="explorer-shell" data-inspector={inspectionPanel ?? "closed"} data-left={leftOpen} data-right={rightOpen} data-timeline={timelineOpen}>
         <aside ref={leftPanelRef} className="layer-panel" data-panel-mode={leftPanelMode} aria-label={leftPanelMode === "layers" || leftPanelMode === "live" ? "Map layers" : "Living Atlas navigation"} aria-hidden={!leftOpen} inert={!leftOpen} aria-modal={isCompact && leftOpen || undefined} role={isCompact && leftOpen ? "dialog" : undefined}>
           <div className="panel-heading">
             <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "live" || leftPanelMode === "layers" ? "KANSAS FRONTIER MATRIX" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "live" || leftPanelMode === "layers" ? <>Map layers <span className="layer-panel-count">{selectedMapLayerCount} selected</span></> : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>

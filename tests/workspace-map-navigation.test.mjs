@@ -5,12 +5,14 @@ import ts from 'typescript';
 
 const ast = ts.createSourceFile('page.tsx', await readFile(process.env.KFM_PAGE_PATH ?? 'app/page.tsx', 'utf8'), ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
 const callbacks = new Map();
+let layersFocusEffect;
 function visit(node) {
   if (ts.isVariableDeclaration(node) && node.initializer) {
     const init = node.initializer;
     if (ts.isArrowFunction(init)) callbacks.set(node.name.getText(ast), init.getText(ast));
     else if (ts.isCallExpression(init) && init.expression.getText(ast) === 'useCallback') callbacks.set(node.name.getText(ast), init.arguments[0].getText(ast));
   }
+  if(ts.isCallExpression(node)&&node.expression.getText(ast)==='useEffect'&&node.arguments[0]?.getText(ast).includes('!leftPanelFocusRequest'))layersFocusEffect=node.arguments[0].getText(ast);
   ts.forEachChild(node, visit);
 }
 visit(ast);
@@ -108,11 +110,12 @@ test('phone drawing controls reveal the map and defer its focus without changing
   }
 });
 function harness(workspace = 'reports') {
-  const state = {primary:workspace, timeline:true, left:true, utility:false, draft:{title:'Preserved owner draft'}, snapshot:{id:'existing-snapshot'}};
+  const state = {primary:workspace, guide:false, focusRequest:0, timeline:true, left:true, utility:false, draft:{title:'Preserved owner draft'}, snapshot:{id:'existing-snapshot'}};
   const timers = [], focus = [], calls = [];
   const scope = {
     primaryWorkspace:workspace, isCompact:true,
     setPrimaryWorkspace:v=>{state.primary=v;},
+    setGuideOpen:v=>{state.guide=v;},setWelcomeSourcesOpen(){},setLeftPanelFocusRequest:update=>{state.focusRequest=update(state.focusRequest);},
     setTimelineOpen:v=>{state.timeline=typeof v==='function'?v(state.timeline):v;},
     setLeftOpen:v=>{state.left=v;}, setLeftPanelMode:v=>{state.mode=v;},
     setMapUtilityOpen:v=>{state.utility=v;}, setMapUtilityView:v=>{state.view=v;},
@@ -121,10 +124,15 @@ function harness(workspace = 'reports') {
     setScenePanelOpen:()=>{}, setLocalAtlasPeek:()=>{}, setHelpOpen:()=>{}, setSourceStatusOpen:()=>{},
     mapUtilityReturnRef:{current:null}, sourceSearchFocusPendingRef:{current:false},
     leftPanelReturnRef:{current:null}, leftPanelRef:{current:{}}, visibleFocusableElements:()=>[{focus:()=>focus.push(state.primary)}],
-    window:{setTimeout(fn){timers.push(fn);}},
+    window:{setTimeout(fn){timers.push(fn);},requestAnimationFrame(fn){timers.push(fn);return timers.length;},cancelAnimationFrame(){}},
     openMapUtility:v=>{calls.push(v);state.primary='map';}, announce:()=>{},
   };
-  return {state,scope,focus,calls,flush:()=>timers.splice(0).forEach(fn=>fn())};
+  return {state,scope,focus,calls,flush:()=>{
+    const effectScope={...scope,primaryWorkspace:state.primary,guideOpen:state.guide,leftOpen:state.left,leftPanelFocusRequest:state.focusRequest};
+    const code=ts.transpileModule(`return ${layersFocusEffect};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+    new Function(...Object.keys(effectScope),code)(...Object.values(effectScope))();
+    while(timers.length)timers.shift()();
+  }};
 }
 test('Layers and Places reveal the map before deferred panel focus without replacing the draft or snapshot',()=>{
   for(const workspace of ['reports','stories']) for(const mode of ['layers','places']) {
