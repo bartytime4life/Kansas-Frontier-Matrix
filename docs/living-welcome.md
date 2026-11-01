@@ -15,7 +15,9 @@ of eight focused journeys, including two new settling timeouts; it was rejected.
 All three draft-persistence journeys passed in that focused run.
 
 The scroll journeys now complete each mouse-scroll gesture before starting the
-next boundary check, using the protocol's mouse gesture source. The original
+next boundary check, using the protocol's mouse gesture source. They reach the
+brief's upper and lower boundaries through real wheel input before asserting
+handoff, rather than treating a scripted scroll jump as a completed gesture. The original
 handoff assertions remain in place, and diagnostics record root and inner scroll
 positions, overscroll policy and the pointer's target. Exact-head acceptance
 remains NEEDS VERIFICATION until its own focused CI result completes. The

@@ -310,14 +310,20 @@ for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823], [390, 844]
 
     // A long Aviation brief scrolls internally, then hands the gesture to the
     // chooser at either boundary rather than trapping the visitor there.
-    await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome'),brief=root.querySelector('.welcome-preview-brief');root.scrollTop=(root.scrollHeight-root.clientHeight)*.5;brief.scrollTop=brief.scrollHeight;})()`);
+    await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome'),brief=root.querySelector('.welcome-preview-brief');root.scrollTop=(root.scrollHeight-root.clientHeight)*.5;brief.scrollTop=0;})()`);
     state=await read();
     assert.ok(state.inside>0, 'the long source brief exercises nested scrolling');
     const boxX=state.brief.left+(state.brief.right-state.brief.left)*.5,boxY=state.brief.top+36;
+    // Reach the boundary through the browser's scroll node, as a visitor does.
+    await wheel(boxX,boxY,Math.ceil(state.inside+100));
+    await p.wait(`(()=>{const brief=document.querySelector('.welcome-preview-brief');return brief.scrollTop>=brief.scrollHeight-brief.clientHeight-1;})()`, 'real wheel input reaches the brief end');
+    state=await read();
     await wheel(boxX,boxY,140);
     try { await p.wait(`document.querySelector('.living-welcome').scrollTop>${state.top+20}`, 'brief end hands downward scrolling to the chooser'); }
     finally { t.diagnostic("nested-scroll-end: "+JSON.stringify(await read())); }
-    await p.evaluate(`document.querySelector('.welcome-preview-brief').scrollTop=0`);
+    state=await read();
+    await wheel(boxX,Math.max(state.root.top+20,state.brief.top+36),-Math.ceil(state.inside+100));
+    await p.wait(`document.querySelector('.welcome-preview-brief').scrollTop<=1`, 'real wheel input reaches the brief start');
     state=await read();
     await wheel(boxX,Math.max(state.root.top+20,state.brief.top+36),-140);
     try { await p.wait(`document.querySelector('.living-welcome').scrollTop<${state.top-20}`, 'brief start hands upward scrolling to the chooser'); }
