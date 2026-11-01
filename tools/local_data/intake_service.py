@@ -23,7 +23,7 @@ from urllib.parse import parse_qs, urlsplit
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
-from tools.local_data import intake, intake_route, atlas, review_packages, pipeline_health  # noqa: E402
+from tools.local_data import intake, intake_route, intake_review, atlas, review_packages, pipeline_health  # noqa: E402
 from tools.local_data.loopback_session import session_matches, print_connection_links  # noqa: E402
 
 PORT = 8771
@@ -65,7 +65,9 @@ class Desk:
         with self.lock:
             job = dict(self.job)
         return {"schema": "kfm-intake-desk/v1", "analyzerVersion": intake.ANALYZER_VERSION, "inboxConfigured": self.inbox is not None,
-                "maxFiles": self.max_files, "analysisAllowed": not (self.read_only or self.catalog_only), "catalogBrowsingAllowed": self.catalog_only, "job": job, "authority": {"network": False, "source_admission": False, "promotion": False, "release": False, "publication": False}}
+                "maxFiles": self.max_files, "analysisAllowed": not (self.read_only or self.catalog_only), "catalogBrowsingAllowed": self.catalog_only,
+                "reviewAllowed": not (self.read_only or self.catalog_only), "reviewDomains": list(intake_review.DOMAINS),
+                "job": job, "authority": {"network": False, "source_admission": False, "promotion": False, "release": False, "publication": False}}
 
     def start(self, value: dict) -> dict:
         if self.read_only or self.catalog_only:
@@ -337,11 +339,18 @@ def handler(desk: Desk, *, port=PORT):
                 return self.answer(415, {"error": "JSON_REQUIRED"})
             try:
                 length = int(self.headers.get("Content-Length", "0"))
-                if not 0 < length <= 4096:
+                if not 0 < length <= (16384 if self.path == "/api/review" else 4096):
                     raise ValueError("REQUEST_BYTE_LIMIT")
                 self.connection.settimeout(5)
                 value = json.loads(self.rfile.read(length))
-                if self.path == "/api/atlas/preview":
+                if self.path == "/api/review":
+                    if self.origin() != self_origin:
+                        return self.answer(403, {"error": "PRIVATE_REVIEW_ORIGIN_REQUIRED"})
+                    with desk.lock:
+                        if desk.job["state"] == "running":
+                            raise ValueError("ANALYSIS_ALREADY_RUNNING")
+                        result = intake_review.save(desk.root, value, desk.budget)
+                elif self.path == "/api/atlas/preview":
                     result = desk.atlas.preview(value)
                 elif self.path == "/api/analyze":
                     result = desk.start(value)

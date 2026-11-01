@@ -118,16 +118,39 @@ Every file receives one decision with five placements:
 | **GitHub release** | *Candidate* only for public, redistributable, Kansas-relevant files that fit the budget. Files under 1 MiB are *bundled* with their collection; files over 1.8 GB are split into parts. |
 
 The decision **status** is `ready` (nothing held), `review` (rights,
-sensitivity, review flags, domain or capture to settle) or `blocked` (unsafe zip
+sensitivity, review flags, domain or capture to settle), `reviewed` (operator
+accepted this file for local use; sharing remains held), or `blocked` (unsafe zip
 paths or unreadable content). Review flags come from names and fields that
 suggest cultural sites, living persons, rare species, critical infrastructure or
 exact photo locations. They hold sharing; they do not delete anything.
 
-Raw files have no declared rights, so they stay in `review` until captured.
-Capture them with `manage.py describe`, set `rights` and `sensitivity` in the
-reviewed manifest, then `plan` and `sync`, as in the
+Raw files have no declared rights, so they initially stay in `review`. For a
+capture declaration, use `manage.py describe`, set `rights` and `sensitivity` in
+the reviewed manifest, then `plan` and `sync`, as in the
 [local-PC runbook](local-pc-data-store.md). The next analysis picks up the
 declarations from the quarantine bindings.
+
+### Complete a review in the Working Data desk
+
+Select a file and use **Review this file** in its details drawer. Enter your name
+and a review note, choose a decision, confirm the file, and click **Save review**:
+
+- **Reviewed — keep on this PC** removes it from the pending review queue and
+  increments **Reviewed · local**. Unknown rights or sensitivity may remain
+  unknown; Git and release routing stay on hold.
+- **Approve for public routing** requires a domain, allowed redistribution,
+  public sensitivity, and a rights reference or license. File blockers, sensitive
+  content flags, explicit capture restrictions and routing holds still apply.
+  This enables eligible metadata/routing plans; it does not upload or publish.
+- **Reopen — needs review again**, under **Change or reopen review**, restores
+  the original analyzer decision. Previous decisions remain in **Review history**.
+
+Decisions apply to one indexed file and SHA-256, not a whole source or future
+captures. They persist through reanalysis, but become inactive if file bytes or
+the captured context/profile changes. The original capture declaration is not
+rewritten. Each decision creates a private receipt in
+`data/receipts/intake/<item_id>/review-<uuid>.json` and an append-only index history.
+The imported archive catalog and read-only desks cannot save decisions.
 
 ## GitHub storage budget
 
@@ -187,17 +210,18 @@ All commands print JSON. Errors go to standard error as
 | `GET /api/status` | Authenticated job state; adds `sessionToken` only for authenticated Explorer origins |
 | `GET /api/overview` | Totals by status, domain, format and lane; GitHub budget |
 | `GET /api/items?status=&lane=&domain=&family=&text=&bbox=&limit=&offset=` | Filtered list (max 500 per page) |
-| `GET /api/items/{id}` | Full profile, decision and applied actions |
+| `GET /api/items/{id}` | Full profile, decision, applied actions and review history |
 | `GET /api/extents?…` | GeoJSON boxes of matching files for the desk map |
 | `GET /api/budget`, `GET /api/release-plan` | Storage state and plan |
 | `POST /api/analyze {"includeInbox": bool}` | Start the background analysis |
 | `POST /api/cancel {}` | Stop it after the current file |
 | `POST /api/apply {"id", "action": "stage" or "card"}` | Apply one recommended placement |
+| `POST /api/review` | Save a digest-bound operator decision with expected review revision, domain, rights, sensitivity, reference, reviewer, note and explicit confirmation; desk origin only |
 
 The service binds `127.0.0.1` only and requires `Host: 127.0.0.1:8771`. A request
 carrying an `Origin` must come from the desk itself, the local Explorer
 (`http://127.0.0.1:4173`) or the owner's hosted Explorer. Every `POST` also needs
-the per-process `X-KFM-Session` token, a JSON body under 4 KiB, and no chunked
+the per-process `X-KFM-Session` token, a JSON body under 4 KiB (16 KiB for review notes), and no chunked
 encoding. The browser never chooses a file-system path; the inbox is fixed when
 the service starts.
 
