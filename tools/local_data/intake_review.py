@@ -146,6 +146,10 @@ def save(root: Path, value: dict, budget):
             relative = f"data/receipts/intake/{identity}/review-{uuid.uuid4().hex}.json"
             review["receipt"] = relative
             review_basis = basis(item, item["profile"])
+            # The receipt is the durable record of the decision. identity is already validated against
+            # IDENTITY_RE; write_new also confines the path to the receipt folder and refuses symlinks.
+            receipts_root = Path(root).absolute() / "data/receipts/intake"
+            write_new(receipts_root / identity / Path(relative).name, canonical({**review, "basis": review_basis}), root=receipts_root)
             cursor = conn.execute("INSERT INTO item_reviews(item_id, sha256, basis, review_json) VALUES (?,?,?,?)",
                                   (identity, digest, review_basis, json.dumps(review, sort_keys=True)))
             review["revision"] = cursor.lastrowid

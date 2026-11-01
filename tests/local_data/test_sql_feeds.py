@@ -244,6 +244,12 @@ class StormTests(FeedCase):
         self.assertEqual(self.q("SELECT fatality_id, event_yearmonth FROM kfm_storm_event_fatalities"), [("6", "202605")])
         self.assertEqual(self.q("SELECT state FROM kfm_sql_sources WHERE file_id=1"), [("superseded",)])
         self.assertEqual(feeds.storm_events(self.ctx)["years"], [])
+        # NCEI re-publishes with no Kansas change: the date is recorded and the year stops being due.
+        newer = listing.replace(b"c20261026", b"c20261101")
+        self.web.routes = {**{k.replace("c20261026", "c20261101"): v for k, v in routes.items()}, **routes, feeds.STORM: newer}
+        self.assertEqual(feeds.storm_events(self.ctx)["years"], ["2026"])
+        self.assertEqual(self.q("SELECT event_id FROM kfm_storm_event_details ORDER BY event_id"), [("900",), ("901",)])
+        self.assertEqual(feeds.storm_events(self.ctx)["years"], [])
 
 
 class AsosTests(FeedCase):
@@ -304,6 +310,30 @@ class PrismTests(FeedCase):
         marked = prism._mark(state, "daily", "20260930", "month", date(2026, 11, 4))
         self.assertNotIn("20260930", marked["daily_checks"])
 
+    def test_an_incomplete_target_is_retried_and_an_incomplete_revision_stays_due(self):
+        grid = _bil_zip([1.0] * (14 * 24), 14, 24, -104.75, 41.75, 0.5)
+        self.web.routes = {"https://services.nacse.org/prism/data/get/us/4km/ppt/20261103": grid,
+                           "https://services.nacse.org/prism/data/get/us/4km/ppt/": None}
+        self.ctx.pause = 0
+        db = core.open_db(self.ctx)
+        core.set_state(db, self.ctx, "prism", {"daily_through": "2026-11-01", "monthly_through": "2026-10",
+                                               "annual_checks": {"2025": ["new", "revision"]}, "daily_checks": {"20261027": ["new"]}})
+        db.close()
+        with patch.object(prism, "VARIABLES", ("ppt",)):
+            result = prism.prism(self.ctx, resolutions=("4km",))
+        self.assertEqual((result["grids_loaded"], result["unavailable"], result["daily_through"]), (1, 2, "2026-11-03"))
+        db = core.open_db(self.ctx)
+        state = core.get_state(db, "prism")
+        db.close()
+        # November 2 was not posted yet: it is kept for retry though November 3 moved the watermark on.
+        self.assertEqual(list(state["retry"]), ["daily|20261102"])
+        self.assertEqual(state["daily_checks"]["20261027"], ["new"])
+        self.assertEqual(prism.due_targets(state, date(2026, 11, 4))[:2], [("daily", "20261102", "new"), ("daily", "20261027", "week")])
+
+    def test_the_kept_clip_is_byte_identical_for_the_same_grid(self):
+        parsed = prism.read_bil(_bil_zip([2.0] * (14 * 24), 14, 24, -104.75, 41.75, 0.5))
+        self.assertEqual(prism._clip_tar(parsed, "x"), prism._clip_tar(parsed, "x"))
+
     def test_grids_become_kansas_county_rows_and_revisions_are_new_versions(self):
         d, x0, y0, ncols, nrows = 0.5, -104.75, 41.75, 24, 14
         values = [float(c) if not (r == 7 and c == 10) else -9999.0 for r in range(nrows) for c in range(ncols)]
@@ -333,6 +363,24 @@ class PrismTests(FeedCase):
         with tarfile.open(kept) as tar:
             self.assertIn("Version: early", tar.extractfile([m for m in tar.getmembers() if m.name.endswith(".info.txt")][0]).read().decode())
         self.assertLess(kept.stat().st_size, len(first))
+
+
+class NwmCursorTests(FeedCase):
+    def test_missing_days_advance_and_save_the_cursor(self):
+        from tools.local_data import sql_feed_nwm as nwm
+
+        self.ctx.nwm_gpkg = self.root / "nwm.gpkg"
+        db = sqlite3.connect(self.ctx.nwm_gpkg)
+        db.execute("CREATE TABLE nwm_v30_flowlines (fid INTEGER PRIMARY KEY, feature_id TEXT)")
+        db.execute("INSERT INTO nwm_v30_flowlines VALUES (1, '744183')")
+        db.commit()
+        db.close()
+        self.web.routes = {}
+        first = nwm.nwm(self.ctx)
+        self.assertEqual((first["runs"], first["next_day"], len(first["missing_days"])), (0, "2026-10-15", 7))
+        second = nwm.nwm(self.ctx)
+        self.assertEqual(second["next_day"], "2026-10-22")
+        self.assertFalse(any("nwm.20261008" in url for url in self.web.calls[7:]))
 
 
 @unittest.skipUnless(importlib.util.find_spec("netCDF4") and importlib.util.find_spec("numpy"), "NWM reader environment not installed")

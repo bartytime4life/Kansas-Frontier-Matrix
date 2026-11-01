@@ -343,28 +343,34 @@ STORM_KINDS = ("details", "locations", "fatalities")
 
 
 def _storm_loaded(db, year: str, kind: str):
-    rows = db.execute("SELECT file_id, source_path FROM kfm_sql_sources WHERE source_id=? AND state='complete' AND source_path LIKE ?",
+    """[(file_id, created, sha256)] of the loaded versions of one year's file."""
+    rows = db.execute("SELECT file_id, source_path, sha256 FROM kfm_sql_sources WHERE source_id=? AND state='complete' AND source_path LIKE ?",
                       (f"noaa-storm-events-{kind}", f"%_d{year}_c%")).fetchall()
-    return [(fid, STORM_NAME.search(p).group(3)) for fid, p in rows if STORM_NAME.search(p)]
+    return [(fid, STORM_NAME.search(p).group(3), sha) for fid, p, sha in rows if STORM_NAME.search(p)]
+
+
+def _storm_current(db, state: dict, year: str, kind: str) -> str:
+    """The newest NCEI publication date handled: loaded, or seen with Kansas rows already loaded."""
+    return max([c for _, c, _ in _storm_loaded(db, year, kind)] + [state.get("seen", {}).get(f"{year}|{kind}", "")], default="")
 
 
 def storm_events(ctx, max_years: int = 6) -> dict:
     db = core.open_db(ctx)
     try:
+        state = core.get_state(db, "storm-events")
         listing = ctx.fetch(STORM, limit=2_000_000).body.decode("latin-1")
         newest = {}
         for m in STORM_NAME.finditer(listing):
             key = (m.group(2), m.group(1))
             newest[key] = max(newest.get(key, ""), m.group(3))
         # A year is due when any of its three files is newer than the version loaded.
-        years = sorted({y for (y, kind), c in newest.items() if int(y) >= 1950
-                        and c > max((c0 for _, c0 in _storm_loaded(db, y, kind)), default="")})
+        years = sorted({y for (y, kind), c in newest.items() if int(y) >= 1950 and c > _storm_current(db, state, y, kind)})
         summary = {"years": [], "rows": 0}
         for year in years[:max_years]:
             for kind in STORM_KINDS:
                 created = newest.get((year, kind))
                 previous = _storm_loaded(db, year, kind)
-                if not created or created <= max((c for _, c in previous), default=""):
+                if not created or created <= _storm_current(db, state, year, kind):
                     continue
                 name = f"StormEvents_{kind}-ftp_v1.0_d{year}_c{created}.csv.gz"
                 fetched = ctx.fetch(STORM + name, limit=256_000_000, timeout=900)
@@ -389,16 +395,29 @@ def storm_events(ctx, max_years: int = 6) -> dict:
                 out = io.StringIO()
                 csv.writer(out, lineterminator="\n").writerows([header, *keep])
                 path, digest = core.store_raw(ctx, "storm-events", f"{year}/kansas-{name}", core.gz(out.getvalue().encode()), url=fetched.url,
-                                              fetched=fetched, original=fetched.body, extra={"kansas_rows": len(keep), "supersedes": [c for _, c in previous]})
+                                              fetched=fetched, original=fetched.body, extra={"kansas_rows": len(keep), "supersedes": [c for _, c, _ in previous]})
                 with core.pipeline_lock(ctx):
                     file_id = core.begin_source(db, ctx, f"noaa-storm-events-{kind}", path, digest, fetched.url, core.receipt_for(ctx, path))
                     if file_id is None:
+                        # These exact Kansas rows are already loaded (an NCEI re-release with no Kansas change,
+                        # or a header-only subset shared with another year). Record the publication date so
+                        # the year stops being due; if this year's loaded version differed, it is now empty.
+                        if keep and digest not in {sha for _, _, sha in previous}:
+                            raise FeedError(f"STORM_CONTENT_SHARED {name}")
+                        db.execute("BEGIN IMMEDIATE")
+                        if digest not in {sha for _, _, sha in previous}:
+                            for old, _, _ in previous:
+                                db.execute(f"DELETE FROM kfm_storm_event_{kind} WHERE file_id=?", (old,))
+                                db.execute("UPDATE kfm_sql_sources SET state='superseded' WHERE file_id=?", (old,))
+                        state = {**state, "seen": {**state.get("seen", {}), f"{year}|{kind}": created}}
+                        core.set_state(db, ctx, "storm-events", state)
+                        db.execute("COMMIT")
                         continue
                     try:
                         for column in added:
                             db.execute(f'ALTER TABLE kfm_storm_event_{kind} ADD COLUMN "{column}" TEXT')
                         # A newer NCEI file is a full replacement of that year's rows.
-                        for old, _ in previous:
+                        for old, _, _ in previous:
                             db.execute(f"DELETE FROM kfm_storm_event_{kind} WHERE file_id=?", (old,))
                             db.execute("UPDATE kfm_sql_sources SET state='superseded' WHERE file_id=?", (old,))
                         db.executemany(f"INSERT INTO kfm_storm_event_{kind} VALUES ({','.join('?' * (len(header) + 2))})",

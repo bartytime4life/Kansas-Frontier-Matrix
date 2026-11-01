@@ -118,8 +118,19 @@ next timer run retries. Common reasons:
 - `RAW_OBJECT_CHANGED`: a provider's bytes changed under a name already kept.
 - `PIPELINE_LOCK_BUSY`: the lock was held for more than 15 minutes.
 
-Raw copies and receipts are immutable. A load can be repeated from them by
-deleting its `kfm_sql_sources` row and its data rows in one transaction.
+Partial runs recover without stalling or skipping:
+
+- **PRISM:** a grid not yet posted keeps its target in `retry`, and the next
+  runs fetch it first. After 60 days it is given up and listed in `given_up`. An
+  incomplete revision check is not marked, so it stays due.
+- **NWM:** days gone from the bucket are recorded in `missing_days`, and the
+  cursor moves past them.
+- **Storm Events:** an NCEI re-release whose Kansas rows are unchanged is
+  recorded in `seen`, so the year stops being due.
+
+Raw copies and receipts are immutable, and a kept copy is byte-identical when
+rebuilt from the same download. A load can be repeated from them by deleting its
+`kfm_sql_sources` row and its data rows in one transaction.
 
 ## Verification
 

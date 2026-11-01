@@ -94,9 +94,13 @@ def nwm(ctx) -> dict:
             fetched = ctx.fetch(url, limit=64_000_000, timeout=600, missing_ok=True)
             if fetched is None:
                 if day < today - timedelta(days=2):
-                    # Gone from the bucket: record the gap and move on rather than stall.
+                    # Gone from the bucket: record the gap and move on rather than stall, saving the
+                    # cursor so the next run does not ask for the same missing days again.
                     summary.setdefault("missing_days", []).append(str(day))
                     day += timedelta(days=1)
+                    with core.pipeline_lock(ctx):
+                        state = {**state, "next_day": str(day), "missing_days": (state.get("missing_days", []) + [str(day - timedelta(days=1))])[-100:]}
+                        core.set_state(db, ctx, "nwm", state)
                     continue
                 break
             with tempfile.NamedTemporaryFile(suffix=".nc") as temp:

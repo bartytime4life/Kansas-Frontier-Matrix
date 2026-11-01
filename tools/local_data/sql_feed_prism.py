@@ -147,15 +147,16 @@ def summarize(values, cells: dict, nodata: float):
 
 
 def _clip_tar(parsed: dict, stem: str) -> bytes:
+    """The kept raw copy: byte-identical for the same grid, so an interrupted load can be retried."""
     out = io.BytesIO()
-    with tarfile.open(fileobj=out, mode="w:gz", format=tarfile.PAX_FORMAT) as tar:
+    with tarfile.open(fileobj=out, mode="w", format=tarfile.PAX_FORMAT) as tar:
         files = {f"{stem}.bil": parsed["values"].tobytes() if sys.byteorder == "little" else _swapped(parsed["values"]),
                  f"{stem}.hdr": parsed["clip_header"].encode(), **{name.split("/")[-1]: body for name, body in parsed["info"].items()}}
         for name, body in sorted(files.items()):
             item = tarfile.TarInfo(name)
             item.size, item.mtime, item.mode = len(body), 0, 0o600
             tar.addfile(item, io.BytesIO(body))
-    return out.getvalue()
+    return core.gz(out.getvalue())
 
 
 def _swapped(values):
@@ -173,7 +174,8 @@ def _logical_path(res: str, var: str, step: str, key: str) -> str:
 
 def due_targets(state: dict, today: date) -> list[tuple[str, str, str]]:
     """[(step, key, check)] to fetch this run, oldest first."""
-    targets = []
+    # Targets a run left incomplete (a grid not yet posted) come first, until they complete.
+    targets = [(step, key, "new") for step, key in (k.split("|") for k in sorted(state.get("retry", {})))]
     checks = state.get("daily_checks", {})
     through = date.fromisoformat(state.get("daily_through", str(DAILY_THROUGH)))
     new_days = 0
@@ -213,6 +215,7 @@ def due_targets(state: dict, today: date) -> list[tuple[str, str, str]]:
 
 def _mark(state: dict, step: str, key: str, check: str, today: date) -> dict:
     state = json.loads(json.dumps(state))
+    state.get("retry", {}).pop(f"{step}|{key}", None)
     if step == "daily":
         checks = state.setdefault("daily_checks", {})
         age = (today - date(int(key[:4]), int(key[4:6]), int(key[6:]))).days
@@ -233,6 +236,17 @@ def _mark(state: dict, step: str, key: str, check: str, today: date) -> dict:
     else:
         checks = state.setdefault("annual_checks", {})
         checks[key] = sorted(set(checks.get(key, [])) | {check})
+    return state
+
+
+def _retry(state: dict, step: str, key: str, today: date, keep_days: int = 60) -> dict:
+    """Remember an incomplete new target; give it up (recorded) after keep_days."""
+    state = json.loads(json.dumps(state))
+    retry = state.setdefault("retry", {})
+    first = retry.setdefault(f"{step}|{key}", str(today))
+    if (today - date.fromisoformat(first)).days > keep_days:
+        del retry[f"{step}|{key}"]
+        state["given_up"] = (state.get("given_up", []) + [f"{step}|{key}"])[-50:]
     return state
 
 
@@ -299,10 +313,13 @@ def prism(ctx, resolutions=("4km", "800m")) -> dict:
                             db.execute("ROLLBACK")
                             raise
                     summary["grids_loaded"] += 1
-            if complete or check != "new":
-                with core.pipeline_lock(ctx):
+            with core.pipeline_lock(ctx):
+                if complete:
                     state = _mark(state, step, key, check, today)
-                    core.set_state(db, ctx, "prism", state)
+                elif check == "new":
+                    state = _retry(state, step, key, today)
+                # An incomplete revision check is simply not marked, so it stays due.
+                core.set_state(db, ctx, "prism", state)
         return {**summary, "daily_through": state.get("daily_through"), "monthly_through": state.get("monthly_through")}
     finally:
         db.close()
