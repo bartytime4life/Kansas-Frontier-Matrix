@@ -1,0 +1,81 @@
+{
+  "receipt_id": "genrec-usgs-api-path-correction-20261031",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/hydrology/usgs-api-readiness-20261031.md",
+    "docs/runbooks/water-pilot.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/hydrology/usgs-api-readiness-20261031.md": "sha256:1f3e701904772fd46ade987b980137b35f2b90fe6bfe88b4f6a54ac4dcb4e4cd",
+    "docs/runbooks/water-pilot.md": "sha256:3e22cba533526724836a35a7b4f0194c69c075ee09f8886a87ed5922cbdf3657"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:227567f50538e42b40d2d0376dd8826fabaf986e1b23649961badbba74214c21",
+  "parameters": {},
+  "inputs": {
+    "evidence_refs": [
+      "main@1bdf9c56fc561f637fb7cd54dd17344df62e6d08",
+      "PR #5660 head@1b1e38f07ad810fa384f373af26d4eb9ba97b8a9",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/41254481566/job/124694634340",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/41254481379/job/124694633532",
+      "docs/doctrine/directory-rules.md \u00a713.2",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/hydrology/usgs-api-readiness-20261031.md": "PROPOSED",
+    "docs/runbooks/water-pilot.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "native KFM-TOPO-001 affected path grammar and fingerprint replay",
+      "outcome": "PASS",
+      "reason": "Reproduced the exact failing uppercase-group fingerprint from CI; lowercase candidate restores the unchanged reviewed fingerprint across the 815 existing group members."
+    },
+    {
+      "gate": "focused Markdown, navigation, and artifact identity",
+      "outcome": "PASS",
+      "reason": "Verified changed links and original blob identities; the old runbook's content is preserved apart from an explicit filename/provenance correction note."
+    },
+    {
+      "gate": "native generated-receipt schema and SHA-256 validation",
+      "outcome": "PASS",
+      "reason": "Repository validator executed against this receipt and its exact local artifact bytes; review remains pending."
+    },
+    {
+      "gate": "full local repository topology, runtime and provider baseline replay",
+      "outcome": "SKIPPED",
+      "reason": "Isolated patch workspace; full repository CI is a separate result. Live API probe unavailable: shell DNS failure and connected-browser ERR_BLOCKED_BY_CLIENT."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/1bdf9c56fc561f637fb7cd54dd17344df62e6d08/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "ci-failure-attribution",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/41254481566/job/124694634340"
+    },
+    {
+      "id": "merged-source",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/1bdf9c56fc561f637fb7cd54dd17344df62e6d08"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-01T00:07:21.708258Z",
+  "emitter": "Codex",
+  "notes": "Corrects an introduced uppercase runbook path; does not change or expand the topology baseline or validator. Original authoring receipt remains immutable; its artifact bytes are available at merged ancestor 1bdf9c56fc561f637fb7cd54dd17344df62e6d08 for historical replay. No software, provider observations, approvals or releases change. No independent review or live-data parity is claimed. Rollback is a reviewed forward correction or revert of this spelling change; a revert reintroduces the known uppercase drift."
+}
