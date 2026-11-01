@@ -384,10 +384,19 @@ repository, not from an installed copy:
 
 So an edit, branch switch, stash or pull in that checkout reaches the host
 without a deployment step: analysis picks it up at its next hourly run, and the
-desk and library when their services restart. Read back on 2026-10-30, that
-checkout was 93 commits behind `main` with uncommitted changes, so the running
-code can differ from this revision. Stop the timer and services before changing
-it, run `make local-data-check`, then restart them. Capture, backup, restore,
+desk and library when their services restart. Since 2026-11-01 that checkout
+is on local branch `pc-live-main`, which tracks `main`, with no uncommitted
+changes, so it runs this revision until it's updated. Earlier, it ran
+uncommitted local code (the intake review step, now on `main`), which is kept on
+local branch `pc-live/snapshot-20261101`.
+
+To update it:
+
+1. Pause `kfm-intake-analyze.timer` and stop `kfm-intake` and `kfm-library`.
+2. Run `git pull --ff-only`, then `make local-data-check`.
+3. Restart them.
+
+Don't edit that checkout in place; change `main` and pull. Capture, backup, restore,
 mounts and the shared lock are documented with the rest of the host in the
 [second-PC pipeline runbook](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a0-hosted-ai-web-20261017/docs/second-pc-pipeline.md)
 on the hosted composition's branch.
