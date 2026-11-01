@@ -11,7 +11,7 @@ import {LOCAL_DATA_ROUTES,LOCAL_DATA_LIMITS} from '../scripts/local-data/protoco
 import {parseStormQuery,stormEvent} from '../scripts/local-data/storm-events.mjs';
 import {createGateway,startGateway} from '../scripts/local-data/gateway.mjs';
 import {createLocalDataWorker} from '../scripts/local-data/worker.mjs';
-import {localDataConfig,createLocalDataService,localDataStormEventsRuntime,localDataWorkerRuntime,LOCAL_DATA_CACHE,LOCAL_DATA_RELAY_LIMITS,LOCAL_DATA_WORKER_PREFIX} from '../server/local-data.mjs';
+import {localDataConfig,createLocalDataService,localDataRuntime,localDataWorkerRuntime,LOCAL_DATA_CACHE,LOCAL_DATA_RELAY_LIMITS,LOCAL_DATA_WORKER_PREFIX} from '../server/local-data.mjs';
 
 const SITE='https://kansasfrontiermatrix.com';
 const gatewaySecret=newSecret(),workerSecret=newSecret();
@@ -66,7 +66,12 @@ test('the gateway answers signed questions read-only and signs every reply',asyn
  const dbPath=await fixtureDb(t),handle=createGateway({keyId:'data-gw-1',secret:gatewaySecret,dbPath});
  const health=signed('/v1/health'),healthy=handle(health);
  assert.equal(healthy.status,200);assert.ok(verified(health,healthy));
- assert.deepEqual(parse(healthy),{gateway:'kfm-local-data/1',ok:true,datasets:['storm-events'],stormEvents:4});
+ const status=parse(healthy);
+ assert.equal(status.ok,true);assert.equal(status.stormEvents,4);
+ assert.deepEqual(status.datasets.find(d=>d.id==='storm-events'),{id:'storm-events',ready:true});
+ // A dataset whose database is not configured, or whose indexes are missing, is reported, not scanned.
+ assert.deepEqual(status.datasets.find(d=>d.id==='tiger-features'),{id:'tiger-features',ready:false,reason:'DATABASE_NOT_CONFIGURED'});
+ assert.deepEqual(status.datasets.find(d=>d.id==='ghcn-daily'),{id:'ghcn-daily',ready:false,reason:'INDEX_MISSING'});
 
  const byFips=signed('/v1/data/storm-events',JSON.stringify({county:173})),fips=handle(byFips),fipsBody=parse(fips);
  assert.equal(fips.status,200);assert.ok(verified(byFips,fips));
@@ -110,7 +115,7 @@ test('site configuration needs the flag, an exact https origin and two different
 });
 
 test('routes stay off unless configured, and the worker route answers only on the configured origin',async()=>{
- const off=await (localDataStormEventsRuntime({}))(new Request(SITE+'/api/local-data/storm-events'));
+ const off=await (localDataRuntime({}))(new Request(SITE+'/api/local-data/storm-events'));
  assert.equal(off.status,404);assert.equal((await off.json()).reasonCode,'LOCAL_DATA_OFF');
  assert.equal((await (localDataWorkerRuntime({}))(new Request(SITE+LOCAL_DATA_WORKER_PREFIX+'/lease',{method:'POST'}))).status,404);
  const env={KFM_LOCAL_DATA:'1',KFM_LOCAL_DATA_ORIGIN:SITE,KFM_LOCAL_DATA_GATEWAY_KEY_ID:'data-gw-1',KFM_LOCAL_DATA_GATEWAY_SECRET:gatewaySecret,KFM_LOCAL_DATA_WORKER_KEY_ID:'data-worker-1',KFM_LOCAL_DATA_WORKER_SECRET:workerSecret};
@@ -143,7 +148,7 @@ async function link(t,{dbPath,tamper=false}){
  const halt=async()=>{if(stop.signal.aborted)return;stop.abort();await running;};
  t.after(async()=>{await halt();server.closeAllConnections?.();await new Promise(resolve=>server.close(resolve));});
  while(relay.lastSeen===0)await new Promise(resolve=>setTimeout(resolve,10));
- const get=query=>service.stormEvents(new Request(SITE+'/api/local-data/storm-events?'+query));
+ const get=query=>service.query(new Request(SITE+'/api/local-data/storm-events?'+query),'storm-events');
  return {service,relay,trips,get,halt,advance:ms=>{now+=ms;}};
 }
 
@@ -163,7 +168,7 @@ test('a public storm-events request travels to the PC and back, then is served f
  assert.equal((await get('county=1%3BDROP')).status,400);
  assert.equal((await get('state=KS')).status,400);
  assert.equal((await get('limit=500')).status,400);
- assert.equal((await service.stormEvents(new Request(SITE+'/api/local-data/storm-events',{method:'POST',body:'{}'}))).status,405);
+ assert.equal((await service.query(new Request(SITE+'/api/local-data/storm-events',{method:'POST',body:'{}'}),'storm-events')).status,405);
  assert.equal(trips.length,2);
 });
 

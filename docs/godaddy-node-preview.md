@@ -7,13 +7,14 @@ and their navigation links are removed. `login-removal-20261019.md` supersedes t
 account/access descriptions below. No previous account or session cookie grants
 access. The original private Sites project is unchanged.
 
-# Local SQL data relay (phase 1) — 2026-11-01
+# Local SQL data relay — 2026-11-01
 
 Pipeline data stays on the PC; the hosting SQL database is not used for it. The
-public, read-only `/api/local-data/storm-events` route answers from the PC's local
-database through a second outbound-only relay (`/api/local-data-worker/v1/*`),
+public, read-only `/api/local-data/{dataset}` routes answer from the PC's local
+databases through a second outbound-only relay (`/api/local-data-worker/v1/*`),
 separate from home inference and off unless `KFM_LOCAL_DATA=1` and its keys are
-set. No checkout or payment is involved; answers are free and public. See
+set. Phase 1, Storm Events, has been live since 21:02 UTC. Phase 2 adds 16
+owner-approved datasets, listed at `/api/local-data`. No checkout or payment is involved; answers are free and public. See
 `docs/local-data-relay.md` for settings, the publication allow-list (approved by
 the owner on 2026-11-01), PC services and verification limits.
 
