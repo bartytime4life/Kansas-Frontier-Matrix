@@ -26,14 +26,24 @@ export function atlasDiscoveryResults(
   if (!term || term !== query.trim().toLowerCase()) return [];
   const mapResults: GlobalSearchItem[] = index.filter((item) => `${item.title} ${item.subtitle}`.toLowerCase().includes(term));
   const sourceTerms = term.split(/\s+/);
+  const matchesWordPrefixes = (value: string) => {
+    const words = value.match(/[\p{L}\p{N}]+/gu) ?? [];
+    return sourceTerms.every((term) => words.some((word) => word.startsWith(term)));
+  };
   const sourceResults: GlobalSearchItem[] = sources
-    .filter((source) => {
+    .flatMap((source, position) => {
       // Match provider and dataset terms in either order, as in the Layers catalog.
       // Keep limitations and fallback copy out of the discovery index.
       const searchable = `${source.id} ${source.title} ${source.shortTitle} ${source.organization} ${source.domain} ${source.endpointLabel}`.toLowerCase();
-      return sourceTerms.every((word) => searchable.includes(word));
+      if (!sourceTerms.every((word) => searchable.includes(word))) return [];
+      const names = [source.id, source.title, source.shortTitle].map((name) => name.toLowerCase());
+      // Display relevance only: a match inside "groundwater" must not hide
+      // explicit water datasets or river context behind the seven-row cap.
+      const rank = names.includes(term) ? 0 : matchesWordPrefixes(names.join(" ")) ? 1 : matchesWordPrefixes(searchable) ? 2 : 3;
+      return [{ source, position, rank }];
     })
-    .map((source) => ({ id: `source:${source.id}`, kind: "source", title: source.shortTitle, subtitle: `${source.organization} · ${source.domain}`, officialContextId: source.id }));
+    .sort((a, b) => a.rank - b.rank || a.position - b.position)
+    .map(({ source }) => ({ id: `source:${source.id}`, kind: "source", title: source.shortTitle, subtitle: `${source.organization} · ${source.domain}`, officialContextId: source.id }));
   const counties = countySearchResults(payload, state, term);
   return [...counties, ...sourceResults, ...mapResults].slice(0, 7);
 }
