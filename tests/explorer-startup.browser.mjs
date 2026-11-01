@@ -430,6 +430,14 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
       const shot=await p.call('Page.captureScreenshot',{format:'png'});
       await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`startup-handoff-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
     }
+    await p.key('Escape','Escape',27);
+    await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='true'`, 'leave Layers before keyboard-only map entry');
+    await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`!!document.querySelector('.living-welcome')`, 'welcome reopened for skip-link entry');
+    await p.evaluate(`document.querySelector('.skip-link').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`!document.querySelector('.living-welcome') && !document.querySelector('.explorer-shell').inert && document.activeElement?.closest('#map-canvas')`, 'Skip to map releases welcome and focuses the usable map');
+    assert.equal(await p.evaluate(`document.querySelector('[aria-label="Layer topic"]').value`),'science','skip navigation preserves the selected category');
+    assert.equal(await p.evaluate(`localStorage.getItem('kfm.explorer.guide.dismissed.v2')`),null,'skip navigation does not save an opt-out');
   });
 }
 

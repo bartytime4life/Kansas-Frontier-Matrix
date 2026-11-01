@@ -15,6 +15,15 @@ function visit(node){
 }
 visit(ast);
 function evaluate(code,scope){const js=ts.transpileModule(`return ${code};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;return new Function(...Object.keys(scope),js)(...Object.values(scope));}
+test('Skip to map dismisses welcome before focusing the uncovered map without changing saved preferences',()=>{
+  const state={workspace:'map',guide:true,sources:true},timers=[],focused=[];
+  evaluate(callbacks.get('returnToPrimaryMap'),{
+    setPrimaryWorkspace:value=>state.workspace=value,setGuideOpen:value=>state.guide=value,setWelcomeSourcesOpen:value=>state.sources=value,
+    window:{setTimeout:fn=>timers.push(fn)},mapContainerRef:{current:{focus:()=>focused.push({...state})}},
+  })();
+  assert.deepEqual(state,{workspace:'map',guide:false,sources:false});assert.deepEqual(focused,[]);
+  timers[0]();assert.deepEqual(focused,[state]);
+});
 test('Quick start reveals the map and reopens retained help from either draft workspace',()=>{
   for(const primaryWorkspace of ['reports','stories','map'])for(const initial of [false,true]){
     const state={primary:primaryWorkspace,open:initial,sources:false},draft={title:'Keep this draft'},snapshot={id:'keep-this-snapshot'};

@@ -5986,6 +5986,8 @@ export default function Home() {
 
   const returnToPrimaryMap = useCallback(() => {
     setPrimaryWorkspace("map");
+    setGuideOpen(false);
+    setWelcomeSourcesOpen(false);
     window.setTimeout(() => mapContainerRef.current?.focus(), 0);
   }, []);
 

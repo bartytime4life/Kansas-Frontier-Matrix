@@ -145,7 +145,7 @@ welcome-scroll repair and test changes.
 
 ### Behavior and ownership
 
-- Layers and its keyboard shortcut dismiss welcome in the same state change.
+- Layers, its keyboard shortcut, and Skip to map dismiss welcome in the same state change.
   Compact Map-menu entry also leaves welcome, so its controls are reachable.
   Reopening welcome revokes the previous panels without resetting map content.
 - Pending restoration holds the header, skip link, and map inert. Welcome
