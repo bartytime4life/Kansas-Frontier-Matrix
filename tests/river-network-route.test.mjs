@@ -13,7 +13,7 @@ const time=new Date(Date.now()-600000).toISOString();
 const ids=Array.from({length:100},(_,i)=>`USGS-${String(6800000+i).padStart(8,'0')}`);
 const observation=(id,value=10)=>({type:'Feature',id,geometry:{type:'Point',coordinates:[-98,38]},properties:{time_series_id:id,monitoring_location_id:id,parameter_code:'00060',statistic_id:'00011',time,value,unit_of_measure:'ft^3/s',approval_status:'Provisional',qualifier:null,last_modified:time}});
 const metadata=id=>({type:'Feature',id,geometry:{type:'Point',coordinates:[-98,38]},properties:{id,agency_code:'USGS',monitoring_location_number:id.slice(5),monitoring_location_name:id,site_type_code:'ST',hydrologic_unit_code:null,county_name:null,drainage_area:null,contributing_drainage_area:null}});
-const collection=features=>Response.json({type:'FeatureCollection',features,numberReturned:features.length,links:[],timeStamp:time});
+const collection=(features,status=200)=>Response.json({type:'FeatureCollection',features,numberReturned:features.length,links:[],timeStamp:time},{status});
 const request=()=>({nextUrl:new URL('https://local/api/hydrology/streamflow?mode=network&range=24h')});
 async function run(failed=false){
  ({GET}=await import(`data:text/javascript;base64,${Buffer.from(js+`\n//${Math.random()}`).toString("base64")}`));
@@ -80,15 +80,15 @@ test('invalid, duplicate and station-mode encoding cannot alter provider query b
 
 let stationIdentitySequence = 0;
 const stationRequest = () => ({ nextUrl: new URL(`https://local/api/hydrology/streamflow?mode=station&range=24h&station=${ids[0]}&parameter=00060`) });
-async function stationIdentityRun(features) {
+async function stationIdentityRun(features, status=200, statusCollection='continuous') {
  const { GET: stationGet } = await import(`data:text/javascript;base64,${Buffer.from(js + `\n//station-identity-${stationIdentitySequence++}`).toString('base64')}`);
  const original = globalThis.fetch;
  globalThis.fetch = async (input, options) => {
   assert.equal(options.redirect, 'manual');
   const url = new URL(input);
-  if (url.pathname.includes('monitoring-locations')) return collection([metadata(ids[0])]);
+  if (url.pathname.includes('monitoring-locations')) return collection([metadata(ids[0])], statusCollection === 'stations' ? status : 200);
   assert.equal(url.pathname, '/ogcapi/v1/collections/continuous/items');
-  return collection(features);
+  return collection(features, statusCollection === 'continuous' ? status : 200);
  };
  try {
   const response = await stationGet(stationRequest());
@@ -106,6 +106,18 @@ const assertSeriesRefused = result => {
  assert.equal(result.body.interpolation, false);
  assert.equal(Object.hasOwn(result.body, 'observations'), false);
 };
+
+test('station refuses non-200 success statuses for metadata and observations', async () => {
+ for (const statusCollection of ['stations', 'continuous']) {
+  for (const status of [201, 206]) {
+   const result = await stationIdentityRun([observation(ids[0])], status, statusCollection);
+   assert.equal(result.status, 502, `${statusCollection} HTTP ${status} must not become a complete bundle`);
+   assert.equal(result.body.code, 'USGS_STREAMFLOW_UNAVAILABLE');
+   assert.equal(result.body.evidenceRole, 'EXTERNAL_CONTEXT_ONLY');
+   assert.equal(Object.hasOwn(result.body, 'observations'), false);
+  }
+ }
+});
 
 test('station refuses different provider series at the same station and time in either input order', async () => {
  const first = withSeries(observation(ids[0], 10), 'series-a');

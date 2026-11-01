@@ -571,6 +571,12 @@ views provide 7-day and 30-day continuous series; the 1-year view uses daily
 mean statistic `00003`. These ranges are bounded displays, not an all-stations
 inventory or a permanent local archive.
 
+The adapter requires HTTP 200 for each upstream collection. Other success
+statuses, including HTTP 206 Partial Content, fail acquisition even if the
+body is valid GeoJSON; they cannot certify a complete observation bundle.
+An HTTP-200 collection with a next-page link remains explicitly partial and
+truncated under the existing bounded display contract.
+
 The display sequence is sampled from actual returned observation timestamps;
 it inserts no synthetic frame times. At a frame cursor, a station's most recent
 sample is usable only within the declared tolerance, with its true observation

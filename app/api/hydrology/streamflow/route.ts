@@ -317,7 +317,7 @@ const fetchCollection = async (url: URL, budget?: NetworkBudget): Promise<Collec
       upstreamRetryAt = Date.now() + Math.min(86400, Math.max(300, Number.isFinite(seconds) ? seconds : 300)) * 1000;
       throw new UsgsRateLimitError();
     }
-    if (!response.ok) throw new UsgsUpstreamError(`USGS Water Data returned HTTP ${response.status}.`);
+    if (response.status !== 200) throw new UsgsUpstreamError(`USGS Water Data returned HTTP ${response.status}.`);
     const contentType = response.headers.get("content-type")?.toLowerCase() ?? "";
     if (!contentType.includes("json")) throw new UsgsUpstreamError("USGS Water Data returned an unexpected media type.");
     const body = await readBoundedBody(response, controller, budget);
