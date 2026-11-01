@@ -190,7 +190,7 @@ and deliberately omit details. Common codes:
 | `STORAGE_POLICY_INVALID` | `storagePolicy` has an unknown key, a priority list that is not 2–3 distinct known sources, or attempts or bytes out of range. | Fix the policy; see [Storage priorities and publication budget](#storage-priorities-and-publication-budget-2026-10-23). |
 | `SOURCE_NOT_ALLOWED` | A configured source is missing from the priority list, or a command was given an unknown source. | Name every configured source in `storagePolicy.priority`, or remove the policy to use the defaults. |
 | `CONNECTION_ONLY_UPLOADS_DISABLED` | A `publish: true` tick met `remoteMode: "connection-only"`, or `stage-package`, `ftps-mirror` or `publish-county` ran under connection-only mode or `publish: false`. | None while the connection-only scope applies. |
-| `INDEPENDENT_BACKUP_REQUIRED` | The backup root is on the same device as the store. | Point the backup config at the backup volume. |
+| `INDEPENDENT_BACKUP_REQUIRED` | The backup root has the same filesystem device number as the store. This check does not establish separate physical disks. | Inspect backing disks with the private storage diagnostic below before qualifying a destination. |
 | `BACKUP_INPUT_CHANGED` | A source file changed while it was being copied. | A writer ran outside the lock. Check that manual commands hold it, then rerun. |
 | `BACKUP_CONFLICT`, `IMMUTABLE_CONFLICT` | An existing content-addressed file holds different bytes than expected. | Investigate. Never delete or overwrite the existing file. |
 | `BACKUP_INTEGRITY_FAILED` | Copied or stored bytes do not match the manifest hash. | Treat that backup as suspect, keep the originals, run `verify-backup`. |
@@ -280,7 +280,7 @@ The `kfm-data` helper installed alongside these units is described in
 The working backup covers the new `KFM-pipeline` working store, not the full
 imported archive or library metadata copy. Originals on the test PC are preserved
 as the one-time migration source; there is no scheduled access to that PC. Since
-2026-11-01 the imported archive also has an independent, verified copy on the
+2026-11-01 the imported archive also has a separately verified copy on the
 backup volume (see [Backup volume, November 1](#backup-volume-november-1)). Do
 not delete the source copies.
 Initial and repeated working-store backups, hash checks and actual restores passed.
@@ -338,7 +338,7 @@ How it was qualified and filled:
 6. The first scheduled runs on the volume passed: the 02:30 backup (2,444 files)
    and the 03:30 monthly restore test, which matched it.
 
-The imported archive `kfm-imports/devil-20261022` now has an independent copy at
+The imported archive `kfm-imports/devil-20261022` now has a separately verified copy at
 `KFM-archive-backup/devil-20261022/` on the volume:
 
 - `pc-pipeline-data/archive-backup/archive-backup.py` read each source file once,
@@ -368,6 +368,137 @@ archive untouched:
   read-only.
 - It is backed up as `KFM-archive-backup/devil-20261029-update`, with its own
   manifest.
+
+### Backup failure domains and recovery checks
+
+Repository candidate, 2026-11-01. The device and restore observations above
+are historical runbook evidence, not fresh measurements by this change.
+The new diagnostic has not been qualified on the installed `dev` PC.
+
+| Evidence | What it establishes | What remains unproved |
+| --- | --- | --- |
+| File hashes match a preserved manifest | The checked bytes match that inventory | Physical separation, current drive health, application recovery |
+| `restore-test` receipt says `verified` | Manifest files were copied and hash-checked into that test destination | Bootable recovery, service restart, all SQLite databases opening correctly |
+| Different filesystem device numbers | Different mounted filesystem identities at that time | Different partitions/LVs can still share a disk |
+| Distinct backing disks observed | No overlap in the observed local block dependency graph | Shared host, power, controller, theft, fire, credentials, offline protection |
+
+The working backup and archive copy share `kfm-backup/store`. They are different
+backup sets, **not additional physical failure domains**. Their restore-test
+directories on that volume share its risk too. The primary HDD is a separate
+reported disk; re-observe its actual dependencies before relying on that claim.
+The linear three-SSD volume has no reported redundancy: preserve all manifests,
+objects, source archives, older releases and recovery receipts. The earlier
+retired-block increases and uncorrectable-error counters warrant current SMART
+readback and trend comparison; a passing old surface test does not clear them.
+
+#### Read-only diagnostic
+
+From the reviewed checkout (or a newly built, reviewed kit release), as the
+pipeline operator on `dev`, pass existing absolute directories. These paths
+come from the current-state table and must be checked against active config:
+
+```sh
+node scripts/pc-pipeline/storage-health.mjs \
+  /run/media/dev/f975f1e2-a926-4040-8bc5-cbea4335d8bf/KFM-pipeline \
+  /run/media/dev/b34cab7d-b16b-494f-8e12-2f20db736ec4/KFM-pipeline-backup \
+  /run/media/dev/b34cab7d-b16b-494f-8e12-2f20db736ec4/KFM-archive-backup/devil-20261022
+```
+
+Repeat with `--smart` immediately before the three paths for SMART readback.
+The helper uses `findmnt`, inverse-tree `lsblk`, read-only `lvs` for LVM, and
+optional `smartctl --json --all --nocheck=standby,2`. It never invokes mount,
+repair, format, LVM mutation, deletion or SMART self-tests. Standby skipping is
+best effort; controller probing can still wake some devices. Missing commands,
+permissions, sleeping drives and unsupported topologies stay **unknown**;
+it does not escalate privilege. Btrfs/ZFS/NAS, RAID and other unsupported layouts
+remain unknown; external filesystem journals/log devices and controller-hidden
+members need separate inventory. An authorized administrator can separately
+collect the same read-only commands if device access is restricted. Never grant
+a service blanket privilege to make a diagnostic green.
+
+The JSON report identifies shared filesystems/disks, multi-disk dependencies,
+missing/partial LVM devices, read-only or non-running storage, free space below
+20%, and SMART failure/history/counter warnings. Counters are review signals,
+not a failure prediction. It does not identify every possible hardware fault.
+Exit codes: 0 = checks observed without warnings, 1 = invalid usage, 2 = degraded
+or shared storage risk, 3 = incomplete checks. Even exit 0 sets
+`physicalIndependenceQualified: false`, `copyIntegrity: "not-checked"` and
+`recovery: "not-tested"`. No backup eligibility or publication decision follows.
+Keep reports private: they contain device paths and capacity. If saving one,
+use a new mode-0600 file under the existing private operational area; never
+overwrite `backup-last.json`, `restore-last.json`, manifests or old receipts.
+
+For expected installed acceptance, source/backup should have disjoint observed
+disk dependencies, backup/archive should report `shared-filesystem`, and the
+backup should identify three physical dependencies. Verify their exact identities
+privately with UUIDs/serials and current `lvs` segments. Any discrepancy is a
+hold for investigation. This helper is not wired into timers or the existing
+`operatorHealth`; its older `preservedArchiveBackup` field remains conservative
+and is not fresh archive verification.
+
+#### Non-destructive verification and recovery rehearsal
+
+1. Read current mount/config identity, active release hashes, timer/unit results,
+   lock ownership and last receipts. Reuse the existing mount and storage guards;
+   this path-only diagnostic does not replace them. If storage is missing,
+   read-only, failing or showing new errors, stop the rehearsal, preserve source
+   media and seek a recovery plan before adding a full-disk workload. No repair
+   or repeated surface tests are part of this procedure.
+2. Under the existing kernel lock, use the pinned CLI's `verify-backup` with an
+   explicitly selected existing manifest and backup root. Record manifest hash,
+   source commit, time, inventory digest and result in a new private receipt.
+   A read of every object costs I/O; do not run concurrently with capture or a
+   backup. The archive JSONL gzip manifest is a different format from the working
+   backup v1/v2 manifest: do not pass it to this CLI or rewrite it to fit.
+3. Check required restored bytes plus reserve against available capacity before
+   `restore-test`; it does not provide a full restore-space guard. Use a new
+   empty private directory outside every source, backup object tree and release
+   tree. Do not restore over live data. A test on the same backup volume proves
+   file restoration there, not recovery from loss of that volume. Insufficient
+   space means hold; no automatic deletion or retention pruning.
+4. The legacy restore guard compares recorded device numbers. After a reboot or
+   replacement it can refuse a valid copy. Do not edit old manifests/receipts or
+   weaken that guard. Reverify hashes and actual device identities and obtain a
+   separately reviewed recovery/requalification procedure before restoring to
+   replacement storage. This candidate does not implement that migration.
+5. On isolated restored copies only, open restored SQLite snapshots with a
+   read-only connection and run `PRAGMA integrity_check`; require `ok`. Preserve
+   related WAL/SHM files and never open original archived databases in place.
+   Test the application on a copied working database with writes, timers,
+   external access and publication disabled. Record results separately from
+   the file restore receipt. This application rehearsal remains unperformed.
+
+#### Practical options (PROPOSED; no storage changes authorized)
+
+| Option | Value and limits | Preconditions |
+| --- | --- | --- |
+| Keep current HDD + SSD volume; add private health trends and periodic verification | Improves fault visibility and validates recovery bytes; does not add redundancy or offline protection | Installed command acceptance, bounded I/O schedule, preserve earlier reports |
+| Retain the original import on `devil` as a historical recovery source | May preserve older imported bytes if still present and freshly verified; does not cover newer captures/SQL work | Read-only inventory and hashes; existing owner prohibition on using it as a production backup target remains |
+| Use an already available, separately identified disk with sufficient measured free capacity | Can add a separate backup failure domain; unplugged storage can also reduce shared online risk | Hardware inventory, rights/privacy review, capacity and full restore evidence, explicit owner authorization before reconfiguration or transfer |
+| Restic on a qualified independent destination | Open-source encrypted snapshots, repository checks and restored-file verification; deduplication/compression savings are unmeasured | Do not initialize inside existing KFM backup trees; protect keys offline; check and restore before qualifying; no prune/forget in this scope |
+| Rebuild the SSD layout with mirroring/RAID | Availability tradeoff, not another backup; effective size and endurance constrained by smallest members | Not safe in place here: the roughly 180 GB smallest SSD cannot hold a full mirror of the recorded 243.8 GB archive, let alone all holdings. Requires verified external copies, measured capacity and a separately approved migration/rollback plan |
+
+No installed storage inventory was available to this repository session. Do not
+assume spare capacity, surviving source copies, RAID feasibility or permission
+to repurpose `devil`. Do not move bulk data to GoDaddy. For failing media,
+GNU ddrescue to separately qualified storage is a possible administrator-led
+recovery option; never image onto the source or attempt it without verified
+device identities, capacity and explicit authorization.
+
+Primary references: [util-linux lsblk](https://kernel.googlesource.com/pub/scm/utils/util-linux/util-linux/+/master/misc-utils/lsblk.8.adoc),
+[smartctl manual](https://github.com/smartmontools/smartmontools/blob/main/src/smartctl.8.in),
+[Restic checks](https://restic.readthedocs.io/en/stable/045_working_with_repos.html),
+[Restic restore](https://restic.readthedocs.io/en/stable/050_restore.html).
+
+Repository validation: `node --test tests/pc-pipeline-storage-health.test.mjs`.
+In restricted runtimes that cannot spawn test workers, use Node 22's
+`--experimental-test-isolation=none` as an explicit environment workaround.
+The suite includes real temporary-file copies/restores through the existing
+v1/v2 copy primitives, corruption/conflict refusal and preserved-source checks;
+it does not run the full installed CLI, hardware failure or application recovery.
+The diagnostic is included in `KIT_FILES`; building a kit does not deploy it.
+Rollback: revert the candidate source change or use the prior pinned release;
+no data migration or cleanup is required. Keep all resulting private reports.
 
 ### Local SQL database
 
@@ -1107,3 +1238,4 @@ sensitivity are decided once, when its profile is signed (see
 everything else, including declared captures, other sources' quarantine
 payloads and raw files. The **KFM Working Data** desk's own intake overview
 still lists the captures under review.
+
