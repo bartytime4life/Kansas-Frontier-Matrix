@@ -11005,7 +11005,7 @@ export default function Home() {
     <div className="site-root atlas-studio" data-startup={guideOpen === null ? "pending" : "ready"} data-welcome-sources={welcomeShowing && welcomeSourcesOpen ? "open" : undefined}>
       {guideOpen === null && <div className="explorer-startup-cover" role="status"><span>Opening the atlas…</span></div>}
       <div ref={welcomeAttributionHostRef} className="welcome-map-attribution maplibregl-ctrl-bottom-right" role="group" aria-label="Welcome map sources" hidden={!welcomeShowing} />
-      <a className="skip-link" href="#map-canvas" inert={guideOpen === null} onClick={returnToPrimaryMap}>Skip to the map</a>
+      <a className="skip-link" href="#map-canvas" inert={guideOpen === null} onClick={(event) => { event.preventDefault(); returnToPrimaryMap(); }}>Skip to the map</a>
       <header ref={explorerHeaderRef} inert={guideOpen === null} className="topbar">
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
