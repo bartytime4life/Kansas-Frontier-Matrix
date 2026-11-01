@@ -6,7 +6,7 @@ version: v0.4
 status: repository-integrated; private offline quarantine only
 owners: ["@bartytime4life"]
 created: 2026-09-17
-updated: 2026-10-30
+updated: 2026-11-01
 policy_label: public-documentation
 owning_root: docs/
 responsibility: Guide private local setup, offline quarantine capture, verification, backup, and update without granting downstream authority.
@@ -21,6 +21,39 @@ notes: ["Directory Rules ADR-0029 and the bounded owner decision in issue #4613 
 <!-- kfm-showcase:end -->
 
 # Prepare a local PC and maintain its data store
+
+## Active dev workstation, October 23, 2026
+
+The owner's active PC has imported the verified `KFM-data/data` collection from
+the test PC. The preserved archive stays on the large HDD; a derived searchable
+index runs from the spare SSD. The test PC has no production service or backup
+role. New captures and review work use a separate private `KFM-pipeline` store.
+
+Open **KFM Data Library** from the application menu to browse the imported
+catalog, filter by domain/format/geography/time, inspect provenance and pending
+review holds, and find each file's local path. Catalog-only mode uses an immutable
+SQLite snapshot and rejects analysis, apply and preview writes. Exact-hash-bound
+prepared water/map packages retain their private review interface.
+
+Open **KFM Working Data** for new bounded USGS/NWS captures and ordinary local
+intake analysis. Use `kfm-data status`, `kfm-data refresh` or `kfm-data backup` in a
+new terminal. `kfm-data library` and `kfm-data intake` print current private
+connection links if a browser needs reconnecting after a service restart.
+The command also exists at
+`/home/dev/Documents/ChatGPT/Kansas-Frontier-Matrix/kfm-data`.
+
+Local user timers check hourly source slots every five minutes, analyze new
+captures hourly, back up the working store nightly, and perform a monthly restore
+test. Actual acquisition, repeated backup verification and restoration have been
+exercised. UUID boot mounts and user lingering are configured. The backup SSD
+covers the new working store; a full-size independent backup of the preserved
+archive remains outstanding. Existing source copies must be retained.
+The working backup runs at 02:30 America/Chicago each night; the restore test
+runs at 03:30 on the first day of each month. Boot configuration has been read
+back successfully; a reboot has not yet been exercised. A private dated setup
+receipt is saved at the workspace's `pc-pipeline-data/setup-state.json`.
+GoDaddy SQL/FTP publication remains separately gated and unpaired; local setup
+does not approve imported data for public release or factual evidence.
 
 <!-- kfm-showcase:start -->
 <p>

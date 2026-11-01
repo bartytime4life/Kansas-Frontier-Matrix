@@ -32,6 +32,7 @@
     <article class="card"><h2>Files indexed</h2><p id="sum-files" class="big">–</p><p id="sum-bytes" class="muted"></p></article>
     <article class="card"><h2>Ready</h2><p id="sum-ready" class="big ok">–</p><p class="muted">public rights, no review flags</p></article>
     <article class="card"><h2>Needs review</h2><p id="sum-review" class="big warn">–</p><p class="muted">rights, sensitivity or domain to settle</p></article>
+    <article class="card" id="reviewed-summary"><h2>Reviewed · local</h2><p id="sum-reviewed" class="big ok">–</p><p class="muted">accepted for use on this PC</p></article>
     <article class="card"><h2>Blocked</h2><p id="sum-blocked" class="big bad">–</p><p class="muted">unsafe or unreadable content</p></article>
     <article class="card wide">
       <h2>GitHub storage <span id="budget-level" class="chip"></span></h2>
@@ -55,7 +56,7 @@
     <div class="list-panel">
       <form id="filters" class="filters" autocomplete="off">
         <input id="f-text" type="search" placeholder="Search path or source…" aria-label="Search">
-        <select id="f-status" aria-label="Status"><option value="">Any status</option><option>ready</option><option>review</option><option>blocked</option></select>
+        <select id="f-status" aria-label="Status"><option value="">Any status</option><option>ready</option><option>review</option><option value="reviewed">reviewed · local</option><option>blocked</option></select>
         <select id="f-lane" aria-label="Lane"><option value="">Any lane</option><option>raw</option><option>quarantine</option><option>inbox</option></select>
         <select id="f-family" aria-label="Format family"><option value="">Any format</option></select>
         <select id="f-domain" aria-label="Domain"><option value="">Any domain</option></select>

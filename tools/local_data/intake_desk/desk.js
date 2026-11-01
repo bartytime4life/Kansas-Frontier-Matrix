@@ -27,17 +27,18 @@ const TIER_LABELS = { local_store: "Local PC store", database: "Intake database"
 const ACTION_LABELS = { keep: "Bytes stay here", index: "Indexed", stage: "Stage review copy", capture_first: "Capture into quarantine first", hold: "On hold",
   metadata_card: "Metadata card eligible", candidate: "Release candidate", bundle: "Bundle with its collection", deny: "Not for GitHub" };
 const HOLD_TEXT = {
-  RIGHTS_UNKNOWN: "Redistribution rights are unknown. Capture the file with manage.py and declare rights.",
+  RIGHTS_UNKNOWN: "Redistribution rights are unknown. Record the rights basis in the review below, or keep this file local.",
   RIGHTS_RESTRICTED: "Rights restrict redistribution; keep local only.", RIGHTS_DENIED: "Rights deny redistribution; keep local only.",
   SENSITIVITY_UNKNOWN: "Sensitivity has not been declared.", SENSITIVITY_RESTRICTED: "Restricted sensitivity; keep local only.",
   SENSITIVITY_CONTROLLED: "Controlled sensitivity; keep local only.", REVIEW_FLAGS: "Names or content suggest sensitive material; review before sharing.",
-  DOMAIN_UNRESOLVED: "No domain could be inferred; declare one when capturing.", FORMAT_UNRECOGNIZED: "The file format was not recognized.",
+  DOMAIN_UNRESOLVED: "No domain could be inferred. Choose a domain in the review below.", FORMAT_UNRECOGNIZED: "The file format was not recognized.",
+  REVIEWED_LOCAL_ONLY: "Reviewed for local use. Sharing and release remain on hold.",
   CAPTURE_REQUIRED: "This inbox file is not in the store yet.", OUTSIDE_KANSAS: "The extent lies outside Kansas.",
   GITHUB_BUDGET_EXCEEDED: "It would not fit in the remaining GitHub data budget.",
 };
 
 const $ = (id) => document.getElementById(id);
-const state = { offset: 0, total: 0, bbox: null, selected: null, items: [], timer: null, running: false, catalogOnly: false, itemsRequest: 0, mapRequest: 0 };
+const state = { offset: 0, total: 0, bbox: null, selected: null, items: [], timer: null, running: false, catalogOnly: false, reviewAllowed: false, reviewDomains: [], itemsRequest: 0, mapRequest: 0 };
 
 function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
@@ -84,7 +85,7 @@ const unproject = (x, y) => [VIEW.lon0 + (x / VIEW.w) * (VIEW.lon1 - VIEW.lon0),
 function renderOverview(o) {
   $("sum-files").textContent = o.files.toLocaleString();
   $("sum-bytes").textContent = bytes(o.bytes);
-  for (const status of ["ready", "review", "blocked"]) $(`sum-${status}`).textContent = (o.by_status[status]?.files ?? 0).toLocaleString();
+  for (const status of ["ready", "review", "reviewed", "blocked"]) $(`sum-${status}`).textContent = (o.by_status[status]?.files ?? 0).toLocaleString();
   const b = o.budget;
   const level = $("budget-level");
   level.textContent = b.level === "ok" ? "within budget" : b.level === "warn" ? "nearing ceiling" : "over ceiling";
@@ -295,11 +296,12 @@ async function openItem(id) {
   body.replaceChildren();
   body.append(el("p", {}, el("span", { class: `chip ${d.status}`, text: d.status }), " ", el("span", { class: "muted", text: `${item.lane} · ${bytes(item.size_bytes)}` })));
   if (d.holds.length) {
-    body.append(el("h3", { text: "What needs attention" }));
+    body.append(el("h3", { text: d.status === "reviewed" ? "Remaining sharing holds" : "What needs attention" }));
     const holds = el("ul");
     for (const hold of d.holds) holds.append(el("li", { text: HOLD_TEXT[hold] || hold }));
     body.append(holds);
   }
+  body.append(reviewForm(item));
   body.append(el("h3", { text: "Where it goes" }));
   const placements = el("ul", { class: "placements" });
   for (const placement of d.placements) {
@@ -339,10 +341,80 @@ async function openItem(id) {
     for (const a of item.applications) applied.append(el("li", { text: `${a.applied_at} · ${a.action} → ${a.target}` }));
     body.append(applied);
   }
+  if (item.review_history?.length) {
+    const history = el("details", { class: "review-history" }, el("summary", { text: "Review history" }));
+    const list = el("ul");
+    for (const entry of item.review_history) list.append(el("li", {},
+      el("strong", { text: `${entry.reviewed_at} · ${entry.reviewer} · ${entry.decision === "local" ? "Reviewed, keep local" : entry.decision === "public" ? "Public routing approved" : "Reopened"}` }),
+      el("p", { text: entry.note }), el("small", { text: `File SHA-256: ${entry.sha256}` })));
+    history.append(list); body.append(history);
+  }
   body.append(el("details", {}, el("summary", { text: "Full record (JSON)" }), el("pre", { text: JSON.stringify(item, null, 2) })));
   $("drawer").hidden = false;
   for (const row of document.querySelectorAll("#rows tr")) row.classList.toggle("selected", row.dataset.id === id);
   loadMap().catch(() => {});
+}
+function reviewForm(item) {
+  const current = item.decision.operator_review;
+  const section = el("section", { class: "operator-review", "aria-label": "Review this file" });
+  section.append(el("h3", { text: "Review this file" }));
+  if (!state.reviewAllowed) {
+    section.append(el("p", { class: "fine", text: "This library is read-only. Review captured files in the Working Data desk." }),
+      el("a", { href: "http://127.0.0.1:8770/", text: "Open KFM Dashboard →" }));
+    return section;
+  }
+  if (!item.sha256 || item.lane === "inbox" || !item.present || item.decision.blocking_issues.length) {
+    section.append(el("p", { class: "fine", text: item.decision.blocking_issues.length ? "Resolve the blocking file issues and analyze again before completing review." : "Capture and hash this file, then analyze it before completing review." }));
+    return section;
+  }
+  if (current) section.append(el("p", { class: "review-saved", text: `${current.decision === "local" ? "✓ Reviewed — keep local" : "✓ Approved for public routing"} · ${current.reviewer} · ${current.reviewed_at}` }));
+  else if (item.review_history?.length) section.append(el("p", { class: "fine", text: "The previous decision is no longer active. The file or its metadata changed, or review was reopened." }));
+  const details = el("details", {}, el("summary", { text: current ? "Change or reopen review" : "Record a review decision" }));
+  if (!current) details.open = true;
+  const form = el("form", { class: "review-form" });
+  const field = (name, label, control) => {
+    control.id = `review-${name}`; control.name = name;
+    form.append(el("label", { for: control.id, text: label }), control);
+    return control;
+  };
+  const select = (pairs, value) => {
+    const control = el("select");
+    for (const [id, label] of pairs) control.append(el("option", { value: id, text: label }));
+    control.value = value; return control;
+  };
+  const decision = field("decision", "Decision", select([["local", "Reviewed — keep on this PC"], ["public", "Approve for public routing"], ...(current ? [["reopen", "Reopen — needs review again"]] : [])], current?.decision || "local"));
+  const domain = field("domain", "Domain", select([["", "Unassigned"], ...state.reviewDomains.map(value => [value, value.replaceAll("-", " ")])], current?.domain || item.decision.domain || ""));
+  const rights = field("rights", "Redistribution rights", select([["unknown", "Unknown — keep local"], ["allowed", "Allowed"], ["restricted", "Restricted"], ["denied", "Denied"]], current?.rights || item.declared?.rights?.redistribution || "unknown"));
+  const sensitivity = field("sensitivity", "Sensitivity", select([["unknown", "Not determined — keep local"], ["public", "Public"], ["restricted", "Restricted"], ["controlled", "Controlled"]], current?.sensitivity || item.declared?.sensitivity || "unknown"));
+  const reference = field("reference", "Rights reference or license", el("input", { type: "text", maxlength: "512", placeholder: "License, provider policy URL, or rights reference", value: current?.reference || item.declared?.rights?.license_id || "" }));
+  const reviewer = field("reviewer", "Reviewed by", el("input", { type: "text", required: "", maxlength: "80", autocomplete: "name", placeholder: "Your name", value: current?.reviewer || "" }));
+  const note = field("note", "Review note", el("textarea", { required: "", minlength: "8", maxlength: "1600", rows: "3", placeholder: "What you checked and the basis for your decision" }));
+  note.value = current?.note || "";
+  const confirm = el("input", { type: "checkbox", required: "" });
+  const confirmLabel = el("label", { class: "review-confirm" }, confirm, " I reviewed this exact file and the details above.");
+  const explanation = el("p", { class: "fine" });
+  const message = el("p", { class: "review-message", role: "status", "aria-live": "polite" });
+  const submit = el("button", { type: "submit", class: "primary", text: "Save review" });
+  form.append(explanation, confirmLabel, submit, message);
+  const explain = () => {
+    const publicReview = decision.value === "public";
+    reference.required = publicReview; domain.required = publicReview;
+    explanation.textContent = publicReview ? "Public routing requires an assigned domain, allowed redistribution, public sensitivity, a rights reference, and no remaining file or review flags. Saving does not upload or publish the file." : decision.value === "reopen" ? "This restores the analyzer's original decision and keeps the review history." : "Marks review complete for local use. Unknown rights and sensitivity can stay unknown; sharing remains on hold. Applies only to this file, not future captures.";
+  };
+  decision.addEventListener("change", explain); explain();
+  form.addEventListener("submit", async event => {
+    event.preventDefault(); submit.disabled = true; message.textContent = "Saving review…";
+    const errors = { REVIEW_PUBLIC_DETAILS_REQUIRED: "Public routing needs a domain, allowed rights, public sensitivity, and a rights reference.", REVIEW_PUBLIC_HOLDS_REMAIN: "File or sensitivity flags still need resolution. Use ‘Reviewed — keep on this PC’ while those holds remain.", REVIEW_CAPTURE_RESTRICTION_REMAINS: "The capture explicitly restricts sharing. Keep it local until the original restriction is resolved.", REVIEW_CONTENT_CHANGED_REANALYZE: "The file changed. Analyze the store again before reviewing it.", REVIEW_STALE_FILE: "The file changed. Reopen it and review the current version.", REVIEW_STALE_DECISION: "Another decision was saved. Reopen the file before changing it.", INTAKE_BUSY: "Analysis or another write is running. Try again when it finishes.", ANALYSIS_ALREADY_RUNNING: "Wait for analysis to finish before saving a review." };
+    try {
+      await api("/api/review", { id: item.id, sha256: item.sha256, revision: item.review_history?.[0]?.revision || 0,
+        decision: decision.value, domain: domain.value, rights: rights.value, sensitivity: sensitivity.value,
+        reference: reference.value, reviewer: reviewer.value, note: note.value, confirmed: confirm.checked });
+      await refresh();
+      if (state.selected === item.id) await openItem(item.id);
+      toast("Review saved. Status and routing have been updated.");
+    } catch (error) { message.textContent = errors[error.message] || `Review not saved: ${error.message}`; submit.disabled = false; }
+  });
+  details.append(form); section.append(details); return section;
 }
 function applyButton(id, action, label) {
   return el("button", { type: "button", class: "primary", text: label, onclick: async (event) => {
@@ -429,10 +501,14 @@ async function boot() {
     const status = await api("/api/status");
     renderJob(status);
     state.catalogOnly = status.catalogBrowsingAllowed === true;
+    state.reviewAllowed = status.reviewAllowed === true;
+    state.reviewDomains = status.reviewDomains || [];
     if (state.catalogOnly) {
       document.title = "KFM Data Library";
       document.querySelector(".brand strong").textContent = "KFM Data Library";
       $("desk-subtitle").textContent = "Imported KFM library · browse files, source metadata, geography and review holds";
+      $("reviewed-summary").hidden = true;
+      document.querySelector(".cards").classList.add("catalog-cards");
     }
     if (status.analysisAllowed === false && !state.catalogOnly) {
       for (const id of ["indexing-summary", "indexing-workspace", "indexing-release-plan"]) $(id).hidden = true;

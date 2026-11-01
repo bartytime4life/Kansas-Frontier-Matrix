@@ -26,7 +26,7 @@ DECISION_SCHEMA = "kfm-intake-decision/v1"
 SAFE_SEGMENT = re.compile(r"[^A-Za-z0-9._-]+")
 
 # Copying a highly compressed archive is harmless; only extraction is not, so that ratio is informational.
-BLOCKING_ISSUES = {"zip_unsafe_member_paths", "format_reader_failed"}
+BLOCKING_ISSUES = {"zip_unsafe_member_paths", "format_reader_failed", "capture_digest_mismatch"}
 REVIEW_DOMAINS = {"archaeology", "people", "people-dna-land"}
 
 
@@ -233,4 +233,7 @@ def metadata_card(item: dict, profile: dict, decision: dict) -> dict:
         "fields": (profile.get("structure", {}).get("fields") or [])[:60],
         "status": "candidate-metadata; not-admitted; not-released",
     }
+    if decision.get("operator_review"):
+        review = decision["operator_review"]
+        card["operator_review"] = {key: review[key] for key in ("decision", "reference", "reviewed_at", "receipt")}
     return card

@@ -35,7 +35,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
-from tools.local_data import intake_route  # noqa: E402
+from tools.local_data import intake_route, intake_review  # noqa: E402
 from tools.local_data.acquisition import validate_root  # noqa: E402
 from tools.local_data.file_io import capture_file, check_directory, hash_regular, read_regular, write_new  # noqa: E402
 from tools.local_data.intake_profile import ANALYZER_VERSION, CLASSIFIER_VERSION, classification_hints, profile_file  # noqa: E402
@@ -203,6 +203,7 @@ CREATE TABLE IF NOT EXISTS applications (
   sha256 TEXT, applied_at TEXT NOT NULL, receipt_path TEXT NOT NULL
 );
 """
+SCHEMA_SQL += intake_review.SCHEMA_SQL
 
 
 @contextmanager
@@ -307,6 +308,7 @@ def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None
                 summary["discovered"] += 1
                 info = found["stat"]
                 identity = item_id(found["lane"], found["relative_path"])
+                reviewed_before = intake_review.has_review(conn, identity)
                 seen.add(identity)
                 previous = conn.execute("SELECT size_bytes, mtime_ns, analyzer_version, profile_json, sha256, declared_json FROM items WHERE id=?", (identity,)).fetchone()
                 sha256 = found["sha256"]
@@ -314,7 +316,7 @@ def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None
                 # declaration, even when the payload bytes have not changed.
                 # Legacy profiles may already be stale relative to their saved
                 # declaration, so refresh all quarantine profiles on upgrade.
-                if (previous and previous[0] == info.st_size and previous[1] == info.st_mtime_ns
+                if (previous and not reviewed_before and previous[0] == info.st_size and previous[1] == info.st_mtime_ns
                         and previous[2] == ANALYZER_VERSION
                         and (found["lane"] != "quarantine" or current_bindings)
                         and (previous[4] is not None or sha256 is not None or info.st_size > hash_limit)
@@ -335,6 +337,11 @@ def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None
                             sha256, _size = hash_regular(found["path"], hash_limit, expected_size=info.st_size)
                         elif sha256 is None:
                             profile["issues"] = sorted(set(profile["issues"]) | {"not_hashed_size_limit"})
+                        if reviewed_before:
+                            actual_digest, _ = hash_regular(found["path"], hash_limit, expected_size=info.st_size)
+                            if sha256 is not None and found["lane"] == "quarantine" and actual_digest != sha256:
+                                profile["issues"] = sorted(set(profile["issues"]) | {"capture_digest_mismatch"})
+                            sha256 = actual_digest
                         after = found["path"].stat(follow_symlinks=False)
                         if (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns) != (
                                 after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns, after.st_ctime_ns):
@@ -351,7 +358,7 @@ def analyze(root: Path, *, inbox: Path | None = None, budget: dict | None = None
                                    "profiled_at": utc_now()}
                 item = {"id": identity, "lane": found["lane"], "relative_path": found["relative_path"], "store_path": found["store_path"],
                         "size_bytes": info.st_size, "sha256": sha256, "declared": found["declared"]}
-                decision = intake_route.decide(item, profile, budget)
+                decision = intake_review.decision(conn, item, profile, budget)
                 _upsert(conn, item, info, profile, decision, run_id)
                 for key, value in (("by_status", decision["status"]), ("by_family", profile["format"]["family"]), ("by_lane", found["lane"])):
                     summary[key][value] = summary[key].get(value, 0) + 1
@@ -465,8 +472,10 @@ def get_item(root: Path, identity: str, *, read_only=False) -> dict:
             raise IntakeError("ITEM_NOT_FOUND")
         applications = [dict(zip(("action", "target", "sha256", "applied_at", "receipt_path"), r)) for r in
                         conn.execute("SELECT action, target, sha256, applied_at, receipt_path FROM applications WHERE item_id=? ORDER BY seq", (identity,))]
+        review_history = intake_review.history(conn, identity)
     value = _row_item(row, ITEM_COLUMNS)
     value["applications"] = applications
+    value["review_history"] = review_history
     return value
 
 
