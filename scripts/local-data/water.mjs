@@ -65,7 +65,7 @@ const CAPTURE=" FROM kfm_environmental_features WHERE source_id=?";
 
 export const nwsAlerts={
  id:'nws-alerts',db:'observations',title:'Captured NWS alerts for Kansas',indexes:[],
- source:Object.freeze({provider:'NOAA National Weather Service API',url:'https://api.weather.gov/alerts',coverage:'Kansas alerts captured hourly by the pipeline since October 2026',notes:'Properties as published by the NWS when captured; loaded hourly, so this is not a live alert feed.'}),
+ source:Object.freeze({temporalMode:'historical-capture',provider:'NOAA National Weather Service API',url:'https://api.weather.gov/alerts',coverage:'Kansas alerts captured hourly by the pipeline since October 2026',notes:'Properties as published by the NWS when captured; this is not a live alert feed. Cache state describes relay delivery, not alert validity; use the provider timestamps and current official warnings.'}),
  params:{event:'part of the event name, e.g. Fog',area:'part of the area description, e.g. Sedgwick',limit:'1-50 (20)',offset:'0-1000'},
  parse(input){only(input,['event','area','limit','offset']);const pattern=/^[A-Z0-9][A-Z0-9 .,'&/()-]{1,39}$/;return {event:text(input.event,pattern),area:text(input.area,pattern),...page(input,{max:50,fallback:20,maxOffset:1000})};},
  run(db,q){
@@ -81,7 +81,7 @@ export const nwsAlerts={
 
 export const usgsEarthquakes={
  id:'usgs-earthquakes',db:'observations',title:'Captured USGS earthquakes in Kansas',indexes:[],
- source:Object.freeze({provider:'USGS Earthquake Hazards Program',url:'https://earthquake.usgs.gov/fdsnws/event/1/',coverage:'Kansas events captured hourly by the pipeline since October 2026',notes:'Properties as published by the USGS when captured; time and updated are milliseconds since 1970.'}),
+ source:Object.freeze({temporalMode:'historical-capture',provider:'USGS Earthquake Hazards Program',url:'https://earthquake.usgs.gov/fdsnws/event/1/',coverage:'Kansas events captured hourly by the pipeline since October 2026',notes:'Properties as published by the USGS when captured; time and updated are milliseconds since 1970. This is not a live earthquake feed; generatedAt and cache state describe relay delivery, not event freshness.'}),
  params:{limit:'1-50 (50)',offset:'0-1000'},
  parse(input){only(input,['limit','offset']);return page(input,{max:50,fallback:50,maxOffset:1000});},
  run(db,q){
@@ -91,8 +91,8 @@ export const usgsEarthquakes={
  },
 };
 
-const USGS_SOURCE=Object.freeze({provider:'USGS Water Data API (continuous values)',url:'https://api.waterdata.usgs.gov/',coverage:'Kansas monitoring locations captured hourly by the pipeline since October 2026',
- notes:'Most values are provisional (approval_status) and may be revised by the USGS. Times are UTC.'});
+const USGS_SOURCE=Object.freeze({temporalMode:'historical-capture',provider:'USGS Water Data API (continuous values)',url:'https://api.waterdata.usgs.gov/',coverage:'Kansas monitoring locations captured hourly by the pipeline since October 2026',
+ notes:'Historical captures, not a live gauge feed. Most values are provisional (approval_status) and may be revised by the USGS. Times are UTC; generatedAt and cache state describe relay delivery, not observation freshness.'});
 const SITE=/^USGS-\d{8,15}$/;
 
 export const usgsStreamflowSites={

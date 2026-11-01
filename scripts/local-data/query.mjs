@@ -38,7 +38,7 @@ export function day(v,fallback,{required=false}={}){
  if(empty(v)){if(required)throw fail();return fallback;}
  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(v).trim());if(!m)throw fail();
  const [y,mo,d]=[+m[1],+m[2],+m[3]];
- if(y<1700||y>2100||mo<1||mo>12||d<1||d>31)throw fail();
+ if(y<1700||y>2100||mo<1||mo>12||d<1||d>new Date(Date.UTC(y,mo,0)).getUTCDate())throw fail();
  return m[0];
 }
 

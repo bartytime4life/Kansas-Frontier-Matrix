@@ -2,7 +2,7 @@
 // period) is identified only by its source path, so the gateway reads the 361k grid paths once into
 // an in-memory catalog and asks SQLite only for the chosen grids' county rows, through an index.
 // Owner approval for public release: 2026-11-01; per-file acquisition dates are not yet verified.
-import {only,text,oneOf,page,num,str,fail} from './query.mjs';
+import {only,text,oneOf,page,num,str,fail,day} from './query.mjs';
 
 const VARIABLES=Object.freeze(['ppt','tmax','tmin','tmean','tdmean','vpdmin','vpdmax','soltotal','solslope','solclear','soltrans']);
 const PRODUCTS=Object.freeze(['an','lt','normals','stable-201506']);
@@ -26,10 +26,11 @@ function bound(v,step,end){
  if(v===undefined||v===null||v==='')return null;
  const m=/^(\d{4})(?:-(\d{2})(?:-(\d{2}))?)?$/.exec(String(v).trim());if(!m)throw fail();
  if(+m[1]<1700||+m[1]>2100||m[2]&&(+m[2]<1||+m[2]>12)||m[3]&&(+m[3]<1||+m[3]>31))throw fail();
+ if(m[3])day(m[0]);
  if(step==='annual')return m[1];
  const month=m[2]??(end?'12':'01');
  if(step==='monthly')return `${m[1]}-${month}`;
- return `${m[1]}-${month}-${m[3]??(end?'31':'01')}`;
+ return `${m[1]}-${month}-${m[3]??(end?String(new Date(Date.UTC(+m[1],+month,0)).getUTCDate()):'01')}`;
 }
 
 function catalog(db,cache){

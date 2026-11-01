@@ -76,7 +76,7 @@ whether the PC is connected (`online`). It is answered by the site alone.
 | `usgs-streamflow-sites` | captured USGS gauges, 181 | — | — | 1–500 (500) |
 | `usgs-streamflow` | captured USGS readings, 35k | `site` | `parameter`, `from`, `to` (UTC) | 1–1000 (500) |
 
-All take `limit` and `offset`. `GET /api/local-data` gives each parameter's exact
+Except for `ghcndex-indices` (a fixed 26-entry dictionary), all take `limit` and `offset`. `GET /api/local-data` gives each parameter's exact
 form. Notes that travel with each dataset's `source`:
 
 - **GHCN-Daily:** values are converted from native units where the unit is
@@ -281,3 +281,29 @@ refused by a phase 1 worker.
 - **CI:** two of the three checks on `59dae87` passed. `verify-core-delivery`
   was still running when Live was published and at the 22:02 UTC check. It had
   passed for phase 1 (#5688).
+
+
+### Focused acceptance follow-up — 2026-11-01
+
+See [the acceptance report](local-data-acceptance-2026-11-01.md) for exact
+production requests, application digest, limitations and controlled failure tests.
+Reproduce the public check with `node scripts/verify-local-data.mjs`; it issues
+sequential GET requests with small pages and exits nonzero for discrepancies.
+
+The follow-up candidate rejects repeated URL parameters and impossible calendar
+dates, and measures the final public reply (including cache metadata) against
+the 1,000,000-byte ceiling. Captured-feed source metadata adds
+`temporalMode: historical-capture`. `cache.state: live` means a fresh relay
+exchange; it never establishes a current observation, forecast or warning.
+`generatedAt` is reply-generation time; use row observation, valid, sent and
+expiry timestamps for the scientific time. No numerical uncertainty interval is
+implied by a null quality flag or a successful response.
+
+Deployment remains a separate owner-controlled step. Update PC gateway modules
+first using the existing release installer, then verify Preview and obtain the
+owner's publication decision. In-memory site caches can retain old signed source
+notes until refreshed or restarted; acceptance must confirm the new temporalMode
+on both the catalog and actual dataset responses. No database migration, index
+change, source-admission decision or broader publication approval is included.
+Rollback: restore the prior PC runtime release and site application together;
+retain all databases and existing records.
