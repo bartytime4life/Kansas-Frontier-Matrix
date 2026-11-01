@@ -148,6 +148,8 @@ welcome-scroll repair and test changes.
 - Layers, its keyboard shortcut, and Skip to map dismiss welcome in the same state change.
   Compact Map-menu entry also leaves welcome, so its controls are reachable.
   Reopening welcome revokes the previous panels without resetting map content.
+  Skip entry uses the existing focus handoff without native hash navigation,
+  which would otherwise create a history entry that restores All topics.
 - Pending restoration holds the header, skip link, and map inert. Welcome
   then holds the covered map inert while its own controls and header navigation
   remain available. Nested source notes retain their existing modal ownership.
