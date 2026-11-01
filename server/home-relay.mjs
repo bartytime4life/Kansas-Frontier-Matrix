@@ -33,17 +33,21 @@ export function homeWorkerKey(env,gatewaySecret){
  return Object.freeze({keyId,secret});
 }
 
-async function readBody(request){
+// A worker's /result carries the reply base64-encoded, so requestBytes must cover replyBytes*4/3.
+async function readBody(request,limits){
  const reader=request.body?.getReader();if(!reader)return '';
  const chunks=[];let bytes=0,timer;
- const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>reject(error('BODY_TIMEOUT')),RELAY_LIMITS.bodyMs);});
- try{while(true){const part=await Promise.race([reader.read(),timeout]);if(part.done)break;bytes+=part.value.length;if(bytes>RELAY_LIMITS.requestBytes)throw error('REQUEST_TOO_LARGE');chunks.push(Buffer.from(part.value));}}
+ const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>reject(error('BODY_TIMEOUT')),limits.bodyMs);});
+ try{while(true){const part=await Promise.race([reader.read(),timeout]);if(part.done)break;bytes+=part.value.length;if(bytes>limits.requestBytes)throw error('REQUEST_TOO_LARGE');chunks.push(Buffer.from(part.value));}}
  finally{clearTimeout(timer);await reader.cancel().catch(()=>{});}
  return Buffer.concat(chunks).toString('utf8');
 }
 
-export function createHomeRelay({keyId,secret,worker,clock=Date.now,limits=RELAY_LIMITS,diagnostic=code=>console.warn('[KFM home relay] '+code)}){
+// routes and workerPrefix default to the home-inference gateway; the local-data
+// relay (server/local-data.mjs) runs a second, independent instance with its own.
+export function createHomeRelay({keyId,secret,worker,clock=Date.now,limits=RELAY_LIMITS,routes=ROUTES,workerPrefix='/api/home-worker/v1',diagnostic=code=>console.warn('[KFM home relay] '+code)}){
  const queue=[],leased=new Map(),nonces=createNonceCache({clock}),workerKeys=new Map([[worker.keyId,{id:worker.keyId,secret:worker.secret}]]);
+ const workerRoute=new RegExp('^'+workerPrefix.replace(/[.*+?^${}()|[\]\\/]/g,'\\$&')+'/(?:lease|status|result)$');
  let waiter=null,lastSeen=0;const noted=new Map();
  // Fixed codes only, and each at most once a minute so refused traffic cannot flood logs.
  const note=code=>{const now=clock();if(now-(noted.get(code)??-Infinity)<60000)return;noted.set(code,now);try{diagnostic(code);}catch{}};
@@ -65,7 +69,7 @@ export function createHomeRelay({keyId,secret,worker,clock=Date.now,limits=RELAY
 
  // Server side: one gateway call, resolved with the raw signed reply for the caller to verify.
  const submit=({method,path,body='',signal,timeoutMs})=>new Promise((resolve,reject)=>{
-  if(ROUTES.get(path)!==method)return reject(error('GATEWAY_RESPONSE_INVALID'));
+  if(routes.get(path)!==method)return reject(error('GATEWAY_RESPONSE_INVALID'));
   if(signal?.aborted)return reject(error('MODEL_CANCELLED'));
   if(queue.length>=limits.queue)return reject(error('GATEWAY_BUSY'));
   const job={id:randomBytes(18).toString('base64url'),method,path,body,state:'queued',deadline:clock()+timeoutMs,resolve,reject,signal,done:false};
@@ -107,12 +111,12 @@ export function createHomeRelay({keyId,secret,worker,clock=Date.now,limits=RELAY
   return json({accepted:true});
  };
 
- // Worker side: signed POST /api/home-worker/v1/{lease,status,result}.
+ // Worker side: signed POST {workerPrefix}/{lease,status,result}.
  const handler=async request=>{
   const url=new URL(request.url),path=url.pathname;
   if(request.method!=='POST')return json({reasonCode:'METHOD_DENIED'},405);
-  if(url.search||!/^\/api\/home-worker\/v1\/(?:lease|status|result)$/.test(path))return json({reasonCode:'ROUTE_NOT_FOUND'},404);
-  let body;try{body=await readBody(request);}catch(failure){return json({reasonCode:failure.code==='REQUEST_TOO_LARGE'?'REQUEST_TOO_LARGE':'INVALID_REQUEST'},failure.code==='REQUEST_TOO_LARGE'?413:400);}
+  if(url.search||!workerRoute.test(path))return json({reasonCode:'ROUTE_NOT_FOUND'},404);
+  let body;try{body=await readBody(request,limits);}catch(failure){return json({reasonCode:failure.code==='REQUEST_TOO_LARGE'?'REQUEST_TOO_LARGE':'INVALID_REQUEST'},failure.code==='REQUEST_TOO_LARGE'?413:400);}
   const auth=verifyRequest({headers:request.headers,method:'POST',path,body,keys:workerKeys,nonces,now:clock()});
   if(!auth.ok){note('WORKER_UNAUTHORIZED:'+auth.reason);return json({reasonCode:'UNAUTHORIZED'},401);}
   if(clock()-lastSeen>60000)note('WORKER_CONNECTED');
