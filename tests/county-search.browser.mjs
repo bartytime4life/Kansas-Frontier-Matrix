@@ -221,6 +221,7 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
       await p.open();
       await p.fill('water');
       await p.wait(`document.querySelectorAll('#global-search-results button').length > 1`, 'multiple current source matches while counties load');
+      await p.wait(`[...document.querySelectorAll('#global-search-results button strong')].some(row => row.textContent === 'River Pulse')`, 'word-prefix relevance keeps river context in the bounded water matches');
       const current = index => `document.activeElement === document.querySelectorAll('#global-search-results button')[${index}]`;
       const beforeTime = await p.displayTime();
       await p.key('Enter', 'Enter', 13);

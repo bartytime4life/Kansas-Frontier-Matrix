@@ -69,6 +69,48 @@ test('official sources are discoverable by dataset identifier and combined provi
   }
 });
 
+test('water keeps River Pulse discoverable ahead of substring-only groundwater context in the actual source metadata', async () => {
+  const aquifers = await import('data:text/javascript;base64,' + Buffer.from(ts.transpileModule(await readFile(new URL('../app/aquifer-layers.ts', import.meta.url), 'utf8'), {
+    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+  }).outputText).toString('base64'));
+  // Read the six existing discovery fields from the real USGS catalogue entry.
+  // No provider, renderer, source payload or synthetic source decision is invoked.
+  const catalogue = ts.createSourceFile('live-context.ts', await readFile(new URL('../app/live-context.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  let river;
+  const visit = node => {
+    if (ts.isObjectLiteralExpression(node) && node.properties.some(property => ts.isPropertyAssignment(property) && property.name.getText(catalogue) === 'id' && ts.isStringLiteral(property.initializer) && property.initializer.text === 'usgs-streamflow')) {
+      river = Object.fromEntries(['id', 'title', 'shortTitle', 'organization', 'domain', 'endpointLabel'].map(name => {
+        const property = node.properties.find(property => ts.isPropertyAssignment(property) && property.name.getText(catalogue) === name);
+        assert.ok(property && ts.isStringLiteral(property.initializer), name + ' is an observed literal discovery field');
+        return [name, property.initializer.text];
+      }));
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(catalogue);assert.ok(river, 'the actual River Pulse source was inspected');
+  const sources = Object.freeze([...aquifers.AQUIFER_RASTER_SOURCES, ...aquifers.GROUNDWATER_SNAPSHOT_SOURCES, river]);
+  const before = JSON.stringify(sources);
+  const results = atlasDiscoveryResults('water', 'water', [], sources, undefined, 'loading');
+  assert.equal(results.length, 7, 'the display remains bounded');
+  assert.ok(ids(results).includes('source:usgs-streamflow'), 'river context is not hidden behind seven groundwater substring matches');
+  assert.deepEqual(ids(results).slice(0, 3), ['source:kgs-water-table', 'source:kgs-depth-to-water', 'source:usgs-streamflow']);
+  assert.equal(results[2].title, river.shortTitle);assert.equal(results[2].subtitle, `${river.organization} · ${river.domain}`);
+  assert.equal(JSON.stringify(sources), before, 'ranking never mutates the source catalogue');
+});
+
+test('exact dataset names and identifiers precede word-prefix and broad context matches', () => {
+  const sources = [
+    { ...sourceItem, id: 'prefix-water', title: 'Water measurements', shortTitle: 'Water measurements' },
+    { ...sourceItem, id: 'context-only', title: 'Other measurements', shortTitle: 'Other measurements', domain: 'Water' },
+    { ...sourceItem, id: 'exact-water', title: 'Water', shortTitle: 'Water' },
+  ];
+  assert.deepEqual(ids(atlasDiscoveryResults('  WATER  ', 'water', [], sources, undefined, 'ready')), ['source:exact-water', 'source:prefix-water', 'source:context-only']);
+  const identifiers = [{ ...sourceItem, id: 'other-source', title: 'USGS-streamflow observations' }, sourceItem];
+  assert.deepEqual(ids(atlasDiscoveryResults('usgs-streamflow', 'usgs-streamflow', [], identifiers, undefined, 'ready')), ['source:usgs-streamflow', 'source:other-source']);
+  const unicode = [{ ...sourceItem, id: 'context', title: 'Other measurements', shortTitle: 'Other', domain: 'Águas region' }, { ...sourceItem, id: 'exact', title: 'Água', shortTitle: 'Água' }];
+  assert.deepEqual(ids(atlasDiscoveryResults('ÁGUA', 'água', [], unicode, undefined, 'ready')), ['source:exact', 'source:context']);
+});
+
 test('every source query term must match the same source and only discovery metadata is indexed', () => {
   const sources = [
     { ...sourceItem, boundary: 'Not a flood forecast', fallback: 'No radar substitute' },
@@ -103,7 +145,7 @@ test('unsearchable county feeds cannot hide available local and provider matches
   }
 });
 
-test('results are bounded at seven, counties are alphabetized first, and provider/index order is stable', () => {
+test('results are bounded at seven, counties are alphabetized first, and equal-rank provider/index order is stable', () => {
   const counties = { feed: 'census-counties', data: { features: [countyFeature('Water Zebra', '001'), countyFeature('Water Alpha', '003')] } };
   const sources = [sourceItem, { ...sourceItem, id: 'noaa-nwps-gauges', shortTitle: 'Water gauges' }];
   const index = Array.from({ length: 8 }, (_, i) => ({ ...layer, id: `layer:water-${i}` }));

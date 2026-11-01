@@ -108,3 +108,48 @@ unless a separately documented confirmed defect is fixed by this follow-up.
 Review route: repository owner; no independent approval or publication is
 implied. Rollback reverts the bounded test, invocation, note and generation
 receipt through review. It requires no store/model/configuration migration.
+
+## Source search relevance — October 31, 2026 Central
+
+The public `water` query returned seven aquifer-reference sources because
+`water` occurs inside their `groundwater` category and catalogue order filled
+the seven-row cap before River Pulse. This reproduced against the reviewed
+source metadata. Availability of a match did not make it reachable within
+that bounded result list.
+
+The candidate keeps the existing eligibility filter: every query term must
+match the same source's six discovery fields. It changes only source display
+order, before the existing cap:
+
+1. Exact dataset identifier, full title or short title.
+2. Every query term matches the start of a word in those dataset names.
+3. Every query term matches the start of a word in the existing discovery fields.
+4. Remaining substring matches, which remain eligible.
+
+Word tokens retain Unicode letters and numbers; no query becomes a regular
+expression. Equal-rank sources retain catalogue order. Counties still come
+first, map-index order is unchanged, and no input catalogue is mutated.
+Limitations/fallback wording stays outside the index. These are text relevance
+tiers, not scientific confidence, evidence quality, source admission or release
+decisions. Some previously visible broad matches can move below the cap;
+narrower dataset/provider queries remain available.
+
+Two new regressions fail before the application change and pass afterward,
+including actual aquifer/snapshot metadata and the actual River Pulse discovery
+fields. A separate no-provider-I/O probe of the full source catalogue places
+River Pulse in the first seven `water` results. The existing three-viewport
+browser journey now also requires River Pulse in those current water matches,
+while retaining its keyboard, draft, explicit-selection and visibility checks.
+New-head browser acceptance remains a separate execution result recorded in
+the PR; authored coverage is not a passing claim.
+
+Four existing files own the change: `app/atlas-discovery.ts` for interaction
+support, its existing ordinary and browser tests under `tests/`, and this
+guidance under `docs/`. This follows the standalone AGENTS profile and accepted
+ADR-0029/adopted Directory Rules consulted for the preceding changes; no new
+responsibility root or parallel authority is created. There is no new data,
+schema, dependency, provider request or persistence contract.
+
+Rollback reverts this four-file change and restores catalogue-order results;
+stored settings and datasets need no migration. Independent review and any
+subsequent publication remain separate from authoring and self-review.
