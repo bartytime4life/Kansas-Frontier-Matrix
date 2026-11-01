@@ -146,10 +146,6 @@ def save(root: Path, value: dict, budget):
             relative = f"data/receipts/intake/{identity}/review-{uuid.uuid4().hex}.json"
             review["receipt"] = relative
             review_basis = basis(item, item["profile"])
-            receipts = os.path.normpath(os.path.join(os.path.abspath(root), "data", "receipts", "intake"))
-            target = os.path.normpath(os.path.join(os.path.abspath(root), relative))
-            if not target.startswith(receipts + os.sep):
-                raise ValueError("REVIEW_RECEIPT_PATH_UNSAFE")
             write_new(Path(target), canonical({**review, "basis": review_basis}))
             cursor = conn.execute("INSERT INTO item_reviews(item_id, sha256, basis, review_json) VALUES (?,?,?,?)",
                                   (identity, digest, review_basis, json.dumps(review, sort_keys=True)))
