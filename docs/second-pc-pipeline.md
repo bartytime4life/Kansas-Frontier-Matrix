@@ -335,6 +335,28 @@ How it was qualified and filled:
 5. After the owner's update reboot, `after-reboot-check.sh` in that recovery
    folder passed: drives, volume, device number, store identity, timers and
    services.
+6. The first scheduled runs on the volume passed: the 02:30 backup (2,444 files)
+   and the 03:30 monthly restore test, which matched it.
+
+The imported archive `kfm-imports/devil-20261022` now has an independent copy at
+`KFM-archive-backup/devil-20261022/` on the volume:
+
+- `pc-pipeline-data/archive-backup/archive-backup.py` read each source file once,
+  in inode order to spare the old HDD, and hashed it as it copied.
+- It then re-read every copied file from the SSDs, with cached pages dropped,
+  and checked it against the manifest. It also checked that the file, link and
+  folder counts match.
+- Result: 2,756,467 files, 3 symlinks and 8,822 directories (243.8 GB) verified,
+  with 0 errors.
+- The manifest `devil-20261022.manifest.jsonl.gz` has SHA-256
+  `ae5c90cb7117993c825ae081d3022649d6b7d14a7d67cd6b4b650dd478336da6`. It
+  records each file's SHA-256, size, mode and mtime. Copies sit beside the backup
+  and beside the original in `kfm-imports/`, so either can be checked later
+  without reading the other.
+- Since its 2026-10-23 migration the archive had gained two SQLite sidecar files
+  (`catalog.sqlite-wal`, `catalog.sqlite-shm` under `PRISM data/Kansas/`),
+  created when something opened that catalog in place on 2026-10-31. They are
+  included. Open archived SQLite files from a copy, not in place.
 
 ### Connection-only owner scope, October 23
 
