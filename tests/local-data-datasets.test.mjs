@@ -120,6 +120,11 @@ test('every dataset has a relay route, a bounded parse and a public description'
  assert.equal(DATASETS.size,17);
  for(const id of DATASETS.keys())assert.equal(LOCAL_DATA_ROUTES.get('/v1/data/'+id),'POST');
  for(const d of datasetCatalog()){assert.match(d.path,/^\/api\/local-data\/[a-z0-9-]+$/);assert.ok(d.source.provider&&d.source.url&&d.title);}
+ // Each dataset's recorded release limitation travels with its public source notes.
+ const notes=id=>datasetCatalog().find(d=>d.id===id).source.notes;
+ for(const id of ['nwm-reaches','nwm-streamflow'])assert.match(notes(id),/not admitted.*pending/);
+ assert.match(notes('ghcndex'),/Beta product/);
+ assert.match(notes('prism-county'),/acquisition dates are not yet verified/);
  // Unknown parameters are refused everywhere; so is a whole-state scan of a large layer.
  for(const d of DATASETS.values())assert.throws(()=>d.parse({nope:'1'}),{code:'QUERY_INVALID'},d.id);
  assert.throws(()=>DATASETS.get('tiger-features').parse({layer:'roads'}),{code:'QUERY_INVALID'});

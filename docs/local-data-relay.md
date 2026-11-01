@@ -91,7 +91,9 @@ form. Notes that travel with each dataset's `source`:
   layers (`block`, `block-suffix`, `roads`, `area-water`, `linear-water`,
   `address-ranges`, `edges`, `faces`) need `id`, `county` or `bbox`.
 - **NWM:** model output, not gauge observations; values with a non-valid status
-  are null.
+  are null. The pipeline has not admitted the source, and the review of v3.0
+  reach geometry against v3.1 output is pending. Both caveats travel in the
+  public source notes.
 - **Captures:** provider properties as captured in October 2026; not live feeds.
   USGS values are mostly provisional.
 

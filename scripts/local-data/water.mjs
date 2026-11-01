@@ -5,7 +5,7 @@ import {gpkgToGeoJSON} from './gpkg.mjs';
 
 const NWM_SOURCE=Object.freeze({provider:'NOAA Office of Water Prediction, National Water Model v3.1',url:'https://water.noaa.gov/about/nwm',
  coverage:'101,599 NWM v3.0 reaches in the Kansas envelope; channel output from the 2026-10-07 16Z analysis and short-range run',
- notes:'Model output, not gauge observations. Streamflow and nudge in m3/s, velocity in m/s; values whose status is not valid are null. Reach geometry is WGS84 (EPSG:4326).'});
+ notes:'Model output, not gauge observations. The pipeline has not admitted this source, and the review of v3.0 reach geometry against v3.1 model output is pending; the owner approved public release on 2026-11-01 with these limitations. Streamflow and nudge in m3/s, velocity in m/s; values whose status is not valid are null. Reach geometry is WGS84 (EPSG:4326).'});
 
 export const nwmReaches={
  id:'nwm-reaches',db:'nwm',title:'National Water Model reaches',source:NWM_SOURCE,
