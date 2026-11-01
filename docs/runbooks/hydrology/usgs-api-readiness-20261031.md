@@ -85,4 +85,6 @@ Owning root: `docs/`. Accepted [ADR-0029](../../adr/ADR-0029-adopt-directory-gov
 
 Validation for a documentation change is limited to Markdown structure, tracked-path/navigation checks, pinned-source review, and authoring-receipt shape and artifact hashes. Runtime, provider, full-suite, pre-commit, and deployment checks are separate and must not be reported as passing unless run.
 
+Filename correction: the first checkpoint used `USGS_API_READINESS_20261031.md`. Its uppercase spelling introduced `KFM-TOPO-001` drift in PR #5660. The canonical spelling is now `usgs-api-readiness-20261031.md`, under Directory Rules §13.2. The water-pilot navigation is updated with the rename. The original generated receipt is preserved unchanged and binds the original artifacts in merged ancestor `1bdf9c56fc561f637fb7cd54dd17344df62e6d08`; replay it against that ancestor with the native validator's `--artifact-git-ref` option. This spelling correction does not expand the topology baseline or grant operational authority.
+
 Rollback: revert this documentation change and its navigation/authoring receipt. Preserve all earlier data, baseline receipts, approval records, and release artifacts. A documentation rollback does not undo any operator action.
