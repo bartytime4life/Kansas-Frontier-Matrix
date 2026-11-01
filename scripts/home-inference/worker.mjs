@@ -60,17 +60,20 @@ async function boundedBytes(response,limit){
 }
 
 // The lease is site content, so it is checked before anything is sent to the gateway.
-export function validLease(value){
+export function validLease(value,routes=ROUTES){
  if(!value||typeof value!=='object'||!LEASE_ID.test(value.leaseId??''))return false;
  const request=value.request;
- if(!request||typeof request!=='object'||ROUTES.get(request.path)!==request.method)return false;
+ if(!request||typeof request!=='object'||routes.get(request.path)!==request.method)return false;
  if(typeof request.body!=='string'||Buffer.byteLength(request.body)>32768||request.method==='GET'&&request.body)return false;
  const headers=request.headers;
  if(!headers||typeof headers!=='object'||Array.isArray(headers))return false;
  return Object.entries(headers).every(([name,header])=>FORWARD.includes(name)&&typeof header==='string'&&header.length<=200&&!/[\r\n]/.test(header));
 }
 
-export function createWorker({site,gateway,keyId,secret,fetchImpl=fetch,clock=Date.now,log=line=>console.log(JSON.stringify(line))}){
+// routes, sitePrefix, version and limits default to home inference; scripts/local-data/worker.mjs
+// runs the same loop for the local-data gateway with its own.
+export function createWorker({site,gateway,keyId,secret,fetchImpl=fetch,clock=Date.now,log=line=>console.log(JSON.stringify(line)),
+ routes=ROUTES,sitePrefix='/api/home-worker/v1',version=WORKER_VERSION,limits=WORKER_LIMITS}){
  // Keep the website's existing fetch behavior; only the long loopback gateway
  // call needs a larger headers allowance. Injected test transports cover both.
  const gatewayFetch=fetchImpl===fetch?deadlineFetch:fetchImpl;
@@ -80,24 +83,24 @@ export function createWorker({site,gateway,keyId,secret,fetchImpl=fetch,clock=Da
   const headers={...signRequest({keyId,secret,method:'POST',path,body,now:clock()}),'Content-Type':'application/json'};
   return fetchImpl(site+path,{method:'POST',headers,body,redirect:'error',cache:'no-store',signal:signal?AbortSignal.any([signal,AbortSignal.timeout(timeoutMs)]):AbortSignal.timeout(timeoutMs)});
  };
- const report=async(payload)=>{const response=await post('/api/home-worker/v1/result',payload,WORKER_LIMITS.siteMs);await response.body?.cancel().catch(()=>{});return response.status;};
+ const report=async(payload)=>{const response=await post(sitePrefix+'/result',payload,limits.siteMs);await response.body?.cancel().catch(()=>{});return response.status;};
 
  // One lease: relay it, and stop early if the site cancels it.
  const relay=async lease=>{
   const {request}=lease,started=clock(),controller=new AbortController();
   const watch=setInterval(async()=>{
-   try{const response=await post('/api/home-worker/v1/status',{leaseId:lease.leaseId},WORKER_LIMITS.siteMs);const state=response.ok?await response.json():null;if(state&&state.active===false)controller.abort();}catch{}
-  },WORKER_LIMITS.statusEveryMs);watch.unref?.();
+   try{const response=await post(sitePrefix+'/status',{leaseId:lease.leaseId},limits.siteMs);const state=response.ok?await response.json():null;if(state&&state.active===false)controller.abort();}catch{}
+  },limits.statusEveryMs);watch.unref?.();
   try{
    let response;
-   try{response=await gatewayFetch(gateway+request.path,{method:request.method,headers:Object.fromEntries(Object.entries(request.headers).filter(([name])=>FORWARD.includes(name))),body:request.body||undefined,redirect:'manual',cache:'no-store',signal:AbortSignal.any([controller.signal,AbortSignal.timeout(WORKER_LIMITS.relayMs)])});}
+   try{response=await gatewayFetch(gateway+request.path,{method:request.method,headers:Object.fromEntries(Object.entries(request.headers).filter(([name])=>FORWARD.includes(name))),body:request.body||undefined,redirect:'manual',cache:'no-store',signal:AbortSignal.any([controller.signal,AbortSignal.timeout(limits.relayMs)])});}
    catch{
     if(controller.signal.aborted){record('relay_cancelled',{path:request.path,ms:clock()-started});return;}
     record('relay_failed',{path:request.path,code:'GATEWAY_UNREACHABLE'});await report({leaseId:lease.leaseId,error:'GATEWAY_UNREACHABLE'});return;
    }
    if(response.status>=300&&response.status<400){await response.body?.cancel().catch(()=>{});await report({leaseId:lease.leaseId,error:'GATEWAY_REDIRECT'});return;}
    let bytes;
-   try{bytes=await boundedBytes(response,WORKER_LIMITS.replyBytes);}
+   try{bytes=await boundedBytes(response,limits.replyBytes);}
    catch{if(controller.signal.aborted)return;await report({leaseId:lease.leaseId,error:'GATEWAY_RESPONSE_INVALID'});return;}
    const status=await report({leaseId:lease.leaseId,status:response.status,contentType:response.headers.get('content-type')??'',signature:response.headers.get(RESPONSE_SIGNATURE_HEADER)??'',body:bytes.toString('base64')});
    // Operational metadata only: never prompts, replies or keys.
@@ -107,11 +110,11 @@ export function createWorker({site,gateway,keyId,secret,fetchImpl=fetch,clock=Da
 
  // One poll. Returns 'idle', 'relayed' or throws a fixed code for back-off.
  const once=async signal=>{
-  const response=await post('/api/home-worker/v1/lease',{worker:WORKER_VERSION},WORKER_LIMITS.leaseMs,signal);
+  const response=await post(sitePrefix+'/lease',{worker:version},limits.leaseMs,signal);
   if(response.status===204){await response.body?.cancel().catch(()=>{});return 'idle';}
   if(response.status!==200){await response.body?.cancel().catch(()=>{});throw fail('SITE_HTTP_'+response.status);}
-  let lease;try{lease=JSON.parse((await boundedBytes(response,WORKER_LIMITS.leaseBytes)).toString('utf8'));}catch{throw fail('LEASE_INVALID');}
-  if(!validLease(lease)){
+  let lease;try{lease=JSON.parse((await boundedBytes(response,limits.leaseBytes)).toString('utf8'));}catch{throw fail('LEASE_INVALID');}
+  if(!validLease(lease,routes)){
    if(LEASE_ID.test(lease?.leaseId??''))await report({leaseId:lease.leaseId,error:'GATEWAY_RESPONSE_INVALID'}).catch(()=>{});
    throw fail('LEASE_INVALID');
   }
@@ -121,7 +124,7 @@ export function createWorker({site,gateway,keyId,secret,fetchImpl=fetch,clock=Da
 
  const run=async signal=>{
   let backoff=0,lastCode=null;
-  record('started',{worker:WORKER_VERSION,site:new URL(site).host,gateway:new URL(gateway).host});
+  record('started',{worker:version,site:new URL(site).host,gateway:new URL(gateway).host});
   while(!signal?.aborted){
    try{await once(signal);if(lastCode){record('reconnected');lastCode=null;}backoff=0;}
    catch(error){
@@ -129,7 +132,7 @@ export function createWorker({site,gateway,keyId,secret,fetchImpl=fetch,clock=Da
     const code=error?.code??(error?.name==='TimeoutError'?'SITE_TIMEOUT':'SITE_UNREACHABLE');
     if(code!==lastCode){record('poll_failed',{code});lastCode=code;}
     // Exponential back-off with jitter, so an outage at either end does not hammer the site.
-    backoff=Math.min(WORKER_LIMITS.backoffMaxMs,Math.max(WORKER_LIMITS.backoffMinMs,backoff*2));
+    backoff=Math.min(limits.backoffMaxMs,Math.max(limits.backoffMinMs,backoff*2));
     await sleep(backoff/2+Math.random()*backoff/2,undefined,{signal}).catch(()=>{});
    }
   }
