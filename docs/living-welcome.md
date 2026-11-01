@@ -25,6 +25,15 @@ independent focused job runs the five scroll and three draft journeys alongside
 the full suite, with the same isolated providers and disposable browser profiles.
 It does not replace full acceptance or confer release authority.
 
+The complete-gesture journey with real boundary setup passed seven of eight
+focused cases, leaving only 829×823. That failure recorded a 197.515625px compact
+panel with a valid pointer target and an unchanged parent scroll position.
+The candidate now rounds the compact maximum height down to a whole CSS pixel,
+retaining the previous height as a fallback where CSS rounding is unsupported.
+This removes the measured fractional scrollport; exact-head CI must establish
+whether it resolves the remaining handoff failure. The manual viewport-height
+budget and short-landscape flow fallback retain their existing behavior.
+
 **CONFIRMED CI finding; PROPOSED correction.** The browser job for hosted commit
 `3b1b41b81a0622cb5c685a24a2250f542cb04556` passed all four new wheel/scroll
 journeys but failed full-card reachability at 320×568 and 640×360. Compact panels
