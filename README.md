@@ -443,7 +443,22 @@ can check one selected-station UTC day on the main map and exposes every returne
 observation timestamp for that day, while its ordinary rolling playback remains
 bounded. A station-specific coverage query reports provider-declared continuous
 and daily extents; those spans can contain gaps, and older daily means are not
-intraday observations. The main-map NOAA radar slider uses its fresh rolling
+intraday observations.
+
+Before projecting USGS observations into one hydrograph per station, the adapter
+requires one provider `time_series_id` and statistic per station in each response.
+Different series or statistics are refused rather than merged at matching times
+or spliced across disjoint times. A selected-station refusal returns the existing
+upstream-unavailable response with no observations. A refused statewide batch
+retains its station locations as unavailable; separate successful batches remain
+visible with an explicit partial-result limitation. This can withhold other gauges
+in the same bounded batch. Explicit revisions within the same series still use
+provider `last_modified`; zero, null and quality fields retain their existing
+meaning. These observations remain external context, without source-admission or
+release authority. Regression coverage is in
+`tests/river-network-route.test.mjs`.
+
+The main-map NOAA radar slider uses its fresh rolling
 manifest; an older radar calendar date opens the separate Observatory map.
 Older-day sliders stay synced with those calendars for a selected River Pulse
 station with complete continuous coverage, radar from its 1995 query bound,

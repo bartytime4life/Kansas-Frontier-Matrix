@@ -77,3 +77,101 @@ test('invalid, duplicate and station-mode encoding cannot alter provider query b
   assert.equal(calls, 0);
  } finally { globalThis.fetch = original; }
 });
+
+let stationIdentitySequence = 0;
+const stationRequest = () => ({ nextUrl: new URL(`https://local/api/hydrology/streamflow?mode=station&range=24h&station=${ids[0]}&parameter=00060`) });
+async function stationIdentityRun(features) {
+ const { GET: stationGet } = await import(`data:text/javascript;base64,${Buffer.from(js + `\n//station-identity-${stationIdentitySequence++}`).toString('base64')}`);
+ const original = globalThis.fetch;
+ globalThis.fetch = async (input, options) => {
+  assert.equal(options.redirect, 'manual');
+  const url = new URL(input);
+  if (url.pathname.includes('monitoring-locations')) return collection([metadata(ids[0])]);
+  assert.equal(url.pathname, '/ogcapi/v1/collections/continuous/items');
+  return collection(features);
+ };
+ try {
+  const response = await stationGet(stationRequest());
+  return { status: response.status, body: await response.json() };
+ } finally { globalThis.fetch = original; }
+}
+const withSeries = (feature, series, patch = {}) => ({
+ ...feature,
+ properties: { ...feature.properties, time_series_id: series, ...patch },
+});
+const assertSeriesRefused = result => {
+ assert.equal(result.status, 502);
+ assert.equal(result.body.code, 'USGS_STREAMFLOW_UNAVAILABLE');
+ assert.equal(result.body.evidenceRole, 'EXTERNAL_CONTEXT_ONLY');
+ assert.equal(result.body.interpolation, false);
+ assert.equal(Object.hasOwn(result.body, 'observations'), false);
+};
+
+test('station refuses different provider series at the same station and time in either input order', async () => {
+ const first = withSeries(observation(ids[0], 10), 'series-a');
+ const second = withSeries(observation(ids[0], 999), 'series-b', { last_modified: new Date(Date.parse(time) + 1000).toISOString() });
+ for (const features of [[first, second], [second, first]]) assertSeriesRefused(await stationIdentityRun(features));
+});
+
+test('station refuses disjoint provider series rather than splicing them into one hydrograph', async () => {
+ const first = withSeries(observation(ids[0], 10), 'series-a');
+ const second = withSeries(observation(ids[0], 999), 'series-b', { time: new Date(Date.parse(time) + 1000).toISOString() });
+ for (const features of [[first, second], [second, first]]) assertSeriesRefused(await stationIdentityRun(features));
+});
+
+test('station refuses mixed statistics within a claimed provider series', async () => {
+ const first = withSeries(observation(ids[0], 10), 'series-a');
+ const second = withSeries(observation(ids[0], 999), 'series-a', { statistic_id: '00003', time: new Date(Date.parse(time) + 1000).toISOString() });
+ assertSeriesRefused(await stationIdentityRun([first, second]));
+});
+
+test('station refuses known and unknown statistics being combined within one series', async () => {
+ const first = withSeries(observation(ids[0], 10), 'series-a');
+ const second = withSeries(observation(ids[0], 999), 'series-a', { statistic_id: null, time: new Date(Date.parse(time) + 1000).toISOString() });
+ assertSeriesRefused(await stationIdentityRun([first, second]));
+});
+
+test('one provider series retains explicit revisions, zero, null and quality fields', async () => {
+ const first = withSeries(observation(ids[0], 10), 'series-a');
+ const revised = withSeries(observation(ids[0], 0), 'series-a', { approval_status: 'Approved', qualifier: ['e'], last_modified: new Date(Date.parse(time) + 1000).toISOString() });
+ const missing = withSeries(observation(ids[0], null), 'series-a', { time: new Date(Date.parse(time) + 2000).toISOString(), qualifier: null });
+ for (const features of [[first, revised, missing], [missing, revised, first]]) {
+  const result = await stationIdentityRun(features);
+  assert.equal(result.status, 200);
+  assert.equal(result.body.observations.length, 2);
+  const [zero, empty] = result.body.observations;
+  assert.equal(zero.value, 0);
+  assert.equal(zero.approvalStatus, 'Approved');
+  assert.deepEqual(zero.qualifier, ['e']);
+  assert.deepEqual(zero.qualifiers, ['e']);
+  assert.equal(zero.statisticId, '00011');
+  assert.equal(zero.lastModified, revised.properties.last_modified);
+  assert.equal(empty.value, null);
+  assert.equal(empty.qualifier, null);
+  assert.deepEqual(empty.qualifiers, []);
+ }
+});
+
+test('an ambiguous network batch stays unavailable while separate healthy batches survive', async () => {
+ const { GET: networkGet } = await import(`data:text/javascript;base64,${Buffer.from(js + '\n//ambiguous-network-series').toString('base64')}`);
+ const original = globalThis.fetch;
+ globalThis.fetch = async input => {
+  const url = new URL(input);
+  if (url.pathname.includes('latest-continuous')) return collection(ids.map(id => observation(id)));
+  if (url.pathname.includes('monitoring-locations')) return collection(url.searchParams.get('monitoring_location_number').split(',').map(number => metadata('USGS-' + number)));
+  const requested = url.searchParams.get('monitoring_location_id').split(',');
+  const features = requested.map(id => observation(id));
+  if (requested.includes(ids[50])) features.push(withSeries(observation(ids[50], 999), 'second-series'));
+  return collection(features);
+ };
+ try {
+  const response = await networkGet(request()), body = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(body.stations.length, 100);
+  assert.equal(body.observations.length, 52);
+  assert.equal(body.observations.some(row => row.stationId === ids[50]), false);
+  assert.equal(body.observations.find(row => row.stationId === ids[0]).value, 10);
+  assert.equal(body.partial, true);
+  assert.match(body.limitation, /batches failed/);
+ } finally { globalThis.fetch = original; }
+});

@@ -83,6 +83,7 @@ type Observation = Readonly<{
 }>;
 
 type ParsedObservation = Readonly<{
+  timeSeriesId: string;
   observation: Observation;
   revisionTime: number;
   revisionSource: string;
@@ -385,7 +386,7 @@ const parseObservationFeature = (
   expectedStatistic: string | null,
 ): ParsedObservation => {
   const properties = featureProperties(feature);
-  requiredString(properties.time_series_id, "time_series_id", 80);
+  const timeSeriesId = requiredString(properties.time_series_id, "time_series_id", 80);
   const stationId = requiredString(properties.monitoring_location_id, "monitoring_location_id", 32);
   if (!STATION_ID_PATTERN.test(stationId) || expectedIds && !expectedIds.has(stationId)) {
     throw new UsgsUpstreamError("USGS observation response contained an unexpected station identifier.");
@@ -410,6 +411,7 @@ const parseObservationFeature = (
   const qualifier = qualifierValues(properties);
   const revision = nullableTimestamp(properties, "last_modified");
   return {
+    timeSeriesId,
     observation: {
       stationId,
       observedAt,
@@ -435,7 +437,16 @@ const newerObservation = (candidate: ParsedObservation, current: ParsedObservati
 
 const dedupeObservations = (observations: readonly ParsedObservation[]): Observation[] => {
   const deduped = new Map<string, ParsedObservation>();
+  const seriesByStation = new Map<string, string>();
   for (const candidate of observations) {
+    // The public projection has one hydrograph per station, not a series selector.
+    // Refuse ambiguous source series before their identities are projected away.
+    const series = JSON.stringify([candidate.timeSeriesId, candidate.observation.statisticId]);
+    const priorSeries = seriesByStation.get(candidate.observation.stationId);
+    if (priorSeries !== undefined && priorSeries !== series) {
+      throw new UsgsUpstreamError("USGS returned multiple time series or statistics for one station; explicit series selection is required.");
+    }
+    seriesByStation.set(candidate.observation.stationId, series);
     const key = `${candidate.observation.stationId}\u0000${candidate.observation.observedAt}`;
     const current = deduped.get(key);
     if (!current || newerObservation(candidate, current)) deduped.set(key, candidate);
