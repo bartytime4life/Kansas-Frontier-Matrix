@@ -1465,6 +1465,7 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
     await p.evaluate(`document.querySelector('.map-context-actions button').focus()`);
     await p.key('Enter', 'Enter', 13);
     await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace === 'reports'`, 'fresh report mounted');
+    await editReport();
     const freshCapture = await p.evaluate(`document.querySelector('.snapshot-context time').dateTime`);
     assert.notEqual(freshCapture, report.snapshot.createdAt, 'explicit composition created a fresh snapshot');
     await fill('.report-title-field input', 'QA recoverable quota edit');
