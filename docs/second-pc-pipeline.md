@@ -358,6 +358,56 @@ The imported archive `kfm-imports/devil-20261022` now has an independent copy at
   created when something opened that catalog in place on 2026-10-31. They are
   included. Open archived SQLite files from a copy, not in place.
 
+On 2026-11-01, devil's newer files were imported into
+`kfm-imports/devil-20261029-update` (46 files, 18.2 GB), leaving the original
+archive untouched:
+
+- They are the files that were new on devil (mostly PRISM curation
+  `work/*.zip`), plus the five files that had changed there since the import.
+- Every file was checked against devil's own SHA-256 checksum, and the folder is
+  read-only.
+- It is backed up as `KFM-archive-backup/devil-20261029-update`, with its own
+  manifest.
+
+### Local SQL database
+
+Raw archive data that suits a database is loaded into private local databases on
+the data drive, under `KFM-pipeline/data/work/sql-enrichment/20261031/`. None of
+it is published, and GoDaddy's database is not involved.
+
+| File | Contents |
+| --- | --- |
+| `observations.sqlite` (5.3 GB on 2026-11-01) | IEM wind, GHCND daily, NOAA normals, USGS water history, current PRISM county statistics and the PC captures (2026-10-31). Added 2026-11-01: Kansas NOAA Storm Events 1950–2026, Kansas ASOS 5-minute 2000–2001, GHCNDEX climate-extremes indices for Kansas stations, and the NWM 2026-10-07T16Z streamflow snapshot. |
+| `kansas-tiger-2025.gpkg` | Census TIGER/Line 2025 for Kansas: 34 layers, 3.3 million features, NAD83 as delivered. |
+| `kansas-nwm-20261007.gpkg` | 101,599 NWM v3.0 river reaches, WGS84 as delivered. The run was model v3.1, and that geometry-version pairing is still under review. |
+
+The loaders are private scripts in `pc-pipeline-data/run/`:
+
+- `load-storm-events.py`
+- `load-asos-fivemin.py`
+- `load-ghcndex.py`
+- `load-tiger-2025.py` and `load-nwm-20261007.py`, which run with the private
+  GDAL environment `~/.cache/kfm-geo-venv`
+
+Each loader:
+
+- adds tables only, and runs one transaction per source;
+- records each source's SHA-256 in `kfm_sql_sources` with state `complete`, so a
+  rerun skips finished sources;
+- keeps values as delivered;
+- writes `observations.sqlite` only under `run/pipeline.lock`;
+- stops at an 85 GB ceiling (counting the intake catalogs) or when the data drive
+  falls below 100 GB free.
+
+`additions-report-20261101.json` beside the database records the run.
+
+Not loaded: superseded PRISM `prior_versions/` grids (96,634, including 40
+multi-month bundles that the PRISM processor rejects), and the nationwide NWM
+NetCDF files. The Kansas subset of the NWM files is loaded. Neither GeoPackage
+indexes its attribute columns, so look up features one at a time by ID. A full
+join against them can run for a very long time, and it holds the pipeline lock
+while it does.
+
 ### Connection-only owner scope, October 23
 
 The owner explicitly prohibited moving the bulk collection to GoDaddy or adding
