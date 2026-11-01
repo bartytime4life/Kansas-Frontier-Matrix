@@ -6,8 +6,9 @@ site answer fixed, read-only questions from the PC's local SQL databases without
 copying them to hosting and without any inbound route to the PC.
 
 - **Phase 1** (PR #5688, live since 2026-11-01 21:02 UTC): Kansas Storm Events.
-- **Phase 2**: every other dataset the owner approved for public release on
-  2026-11-01, listed below, through one shared query engine.
+- **Phase 2** (PR #5691, live since about 2026-11-01 22:00 UTC): every other
+  dataset the owner approved for public release on 2026-11-01, listed below,
+  through one shared query engine.
 
 ## How it works
 
@@ -221,3 +222,39 @@ refused by a phase 1 worker.
   - a repeated question was served from cache in 18 ms;
   - a whole-state query of the roads layer, an unknown dataset and an
     over-limit page were refused.
+- **Rollout, PC first:**
+  1. Dev's services were reinstalled from the merged commit `59dae87` at
+     21:53 UTC: release `local-data-06e549a9b1fade9b`, no uncommitted source,
+     17/17 datasets ready.
+  2. The phase 1 site, still on Live, answered a new Storm Events question
+     through it in 0.7 s.
+  3. Preview was updated to `59dae87`.
+  4. The owner published Live at about 22:00 UTC.
+- **Live, 2026-11-01 22:02 UTC** (`59dae87`):
+  - `/api/local-data` listed 17 datasets with `online: true`.
+  - Every dataset answered live from dev, most in 0.4–1.1 s, and PRISM's first
+    question, which loads its catalog, in 5.0 s:
+
+    | Question | Answer |
+    |---|---|
+    | Riley County storm events | 852 |
+    | Wichita GHCN-Daily since 2025-07-01 | 500 of 1,377 values |
+    | Wichita yearly TXx | 72 |
+    | Topeka ASOS, 2000-12-25 | 288 readings |
+    | Wichita wind, June 2025 | 287 readings, 30 daily summaries |
+    | Riley County 2024 monthly maximum temperature | 12 months |
+    | May 2024 precipitation | 105 counties |
+    | Lawrence | outline, 56 KB |
+    | Riley County | TIGER attributes |
+    | Smoky Hill reaches | 608 |
+    | One reach's NWM flow | 19 values |
+    | NWS warnings | 20 |
+    | Earthquakes | 3 |
+    | USGS gauges | 181 |
+    | One gauge's readings | 194 |
+
+  - A whole-state roads query and an unknown dataset were refused.
+  - The dev worker relayed every question successfully.
+- **CI:** two of the three checks on `59dae87` passed. `verify-core-delivery`
+  was still running when Live was published and at the 22:02 UTC check. It had
+  passed for phase 1 (#5688).
