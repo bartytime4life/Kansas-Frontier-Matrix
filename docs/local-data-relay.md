@@ -49,7 +49,7 @@ Anything else is `400 QUERY_INVALID`. Events are newest first. The answer carrie
 `total`, `count`, `events`, `source` (provider, URL, coverage, notes), `generatedAt`
 and `cache` (`live`, `fresh` or `stale`, with its time).
 
-**Publication allow-list (phase 1, needs owner approval before Live):** each event's
+**Publication allow-list (phase 1, approved by the owner on 2026-11-01):** each event's
 NCEI identifiers, type, county/zone, office, begin/end date and time with time
 zone, direct/indirect injuries and deaths, property/crop damage strings as
 published, magnitude, flood cause, category, tornado scale/length/width, begin/end

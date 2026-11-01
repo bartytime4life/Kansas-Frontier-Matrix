@@ -14,8 +14,8 @@ public, read-only `/api/local-data/storm-events` route answers from the PC's loc
 database through a second outbound-only relay (`/api/local-data-worker/v1/*`),
 separate from home inference and off unless `KFM_LOCAL_DATA=1` and its keys are
 set. No checkout or payment is involved; answers are free and public. See
-`docs/local-data-relay.md` for settings, the publication allow-list awaiting owner
-approval, PC services and verification limits.
+`docs/local-data-relay.md` for settings, the publication allow-list (approved by
+the owner on 2026-11-01), PC services and verification limits.
 
 # Build dependency maintenance — 2026-10-20
 
