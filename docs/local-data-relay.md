@@ -111,6 +111,29 @@ form. Notes that travel with each dataset's `source`:
   (acquisition dates unverified), and the captured alerts, earthquakes and
   streamflow. Approved knowing those notes.
 
+## Kept current
+
+Since 2026-11-01 the PC's SQL feeds add new data on timers. They are documented
+in the pipeline repo's `docs/runbooks/sql-feeds.md`.
+
+| Data | How it's kept current |
+|---|---|
+| Captures | reviewed by an automatic policy and loaded hourly |
+| IEM wind | readings and daily summaries daily, with readings 2003–2026 backfilled a year at a time |
+| GHCN-Daily | NOAA's daily update files, as a revision overlay |
+| PRISM | new and revised 4 km and 800 m grids, as Kansas county summaries |
+| NWM | one 12Z analysis a day, Kansas reaches only |
+| Storm Events | newer NCEI yearly files, checked weekly |
+| ASOS 5-minute | backfilled a year at a time to 2022, where NCEI's archive ends |
+
+The gateway shows each update as follows:
+
+- **GHCN-Daily:** `ghcn-daily` overlays the revisions on the archived station
+  file. The newest insert or update wins, a delete removes the value, and
+  `updated` marks a value from an update.
+- **PRISM:** `prism-county` serves the newest version of a revised grid.
+- **NWM:** `nwm-streamflow` takes `from`/`to` on valid time.
+
 ## Indexes
 
 `scripts/local-data/indexes.mjs check|apply [INDEX]` lists or adds the indexes the
