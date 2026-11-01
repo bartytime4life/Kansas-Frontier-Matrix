@@ -75,7 +75,7 @@ jobs:
             if curl --fail --silent http://127.0.0.1:5182/ > /dev/null; then break; fi
             sleep 1
           done
-          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WORKSPACE_SCREENSHOTS="$RUNNER_TEMP/focused-workspace-screenshots" node --test --test-name-pattern='welcome glimpse stays visible|draft workspaces preserve independent investigations' tests/explorer-startup.browser.mjs
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WORKSPACE_SCREENSHOTS="$RUNNER_TEMP/focused-workspace-screenshots" node --test --test-name-pattern='welcome glimpse stays visible|welcome glimpse chains|draft workspaces preserve independent investigations' tests/explorer-startup.browser.mjs
       - name: Focused workflow diagnostics
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
