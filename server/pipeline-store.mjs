@@ -91,17 +91,37 @@ export class PipelineStore {
     return { configured: true, paused: Boolean(rows[0]?.paused), workerSeen: rows[0]?.worker_seen ? Number(rows[0].worker_seen) : null, sources: heads.map(r => ({ sourceId: r.source_id, releaseId: r.release_id, revision: Number(r.revision) })) };
   }
 }
+const LOOKUP_TIMEOUT_MS = 5000;
+/** Pool options: certificate-verified TLS, or the owner-approved provider private network. */
+export async function pipelinePoolOptions(environment = process.env, lookup) {
+  const shared = { database: environment.DB_NAME, user: environment.DB_USER, password: environment.DB_PASSWORD,
+    connectionLimit: 3, queueLimit: 8, connectTimeout: 8000, multipleStatements: false, supportBigNumbers: true, bigNumberStrings: true };
+  if (environment.KFM_DATABASE_CONNECTION_TRANSPORT === 'provider-private-network') {
+    // On 2026-11-01 the owner extended the health check's approved private-network leg to pipeline
+    // writes (the provider's certificate fails hostname verification). Same guard as that check: every
+    // DNS answer must be private IPv4, the pool is pinned to the validated address, and there is no TLS
+    // fallback. A changed provider address takes effect at the next process start.
+    const { connectionOptions } = await import('./database-connection.mjs');
+    const resolve = lookup ?? (await import('node:dns/promises')).lookup;
+    const bounded = (host, options) => Promise.race([resolve(host, options), new Promise((_, reject) => setTimeout(() => reject(new Error('DNS_TIMEOUT')), LOOKUP_TIMEOUT_MS).unref())]);
+    let selected;
+    try { selected = await connectionOptions(environment, bounded); }
+    catch (e) { fail(e?.message === 'DATABASE_CONFIGURATION_MISSING' ? e.message : 'DATABASE_PRIVATE_NETWORK_REQUIRED'); }
+    if (selected.transport !== 'provider-private-network') fail('DATABASE_PRIVATE_NETWORK_REQUIRED');
+    return { ...shared, host: selected.options.host, port: selected.options.port };
+  }
+  const { isIP } = await import('node:net');
+  if (!['DB_HOST','DB_NAME','DB_USER','DB_PASSWORD','KFM_DB_CA_PEM'].every(k => environment[k]) || isIP(environment.DB_HOST) || environment.KFM_DB_TLS !== 'verified') fail('DATABASE_TLS_REQUIRED');
+  const port = Number(environment.DB_PORT ?? 3306); if (!Number.isInteger(port) || port < 1 || port > 65535) fail('DATABASE_PORT_INVALID');
+  return { ...shared, host: environment.DB_HOST, port, ssl: { ca: environment.KFM_DB_CA_PEM, rejectUnauthorized: true, verifyIdentity: true } };
+}
 let pool;
 export async function getPipelineStore(environment = process.env) {
   if (environment.KFM_PIPELINE_ENABLED !== 'true') fail('PIPELINE_DISABLED', 404);
   if (!pool) {
-    const { isIP } = await import('node:net');
-    if (!['DB_HOST','DB_NAME','DB_USER','DB_PASSWORD','KFM_DB_CA_PEM'].every(k => environment[k]) || isIP(environment.DB_HOST) || environment.KFM_DB_TLS !== 'verified') fail('DATABASE_TLS_REQUIRED');
-    const port = Number(environment.DB_PORT ?? 3306); if (!Number.isInteger(port) || port < 1 || port > 65535) fail('DATABASE_PORT_INVALID');
+    const options = await pipelinePoolOptions(environment);
     const mysql = await import('mysql2/promise');
-    pool = mysql.createPool({ host: environment.DB_HOST, database: environment.DB_NAME, user: environment.DB_USER, password: environment.DB_PASSWORD, port,
-      ssl: { ca: environment.KFM_DB_CA_PEM, rejectUnauthorized: true, verifyIdentity: true }, connectionLimit: 3, queueLimit: 8, connectTimeout: 8000, multipleStatements: false,
-      supportBigNumbers: true, bigNumberStrings: true });
+    pool ??= mysql.createPool(options);
   }
   return new PipelineStore(pool);
 }
