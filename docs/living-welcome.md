@@ -4,6 +4,37 @@ Current navigation is described in [Direct workspace entry · 2026-10-31](#direc
 It supersedes the historical click-to-preview and automatic hover transition
 described below. Earlier implementation and validation records are retained.
 
+## Welcome scrolling repair · 2026-10-31 candidate
+
+**PROPOSED release; not published.** The ordinary chooser now keeps its category
+information beside the scrolling cards. Desktop uses a reserved sticky column;
+tablets and phones use a compact sticky panel above the cards. The panel's own
+long content remains scrollable, with normal gesture handoff at its boundaries.
+Responsive scroll padding leaves room for keyboard-focused cards below it.
+
+The fixed decorative map no longer takes pointer input while browsing categories.
+Previously, scrolling the heading away exposed a fixed map canvas outside the
+normal scroll chain: wheel gestures there could stop moving the chooser. The
+panel also left the viewport with that heading. The single renderer, category
+selection, source clocks and attribution remain separate from these layout rules.
+Expanded previews retain their own controls and hide the chooser's context panel.
+
+Validation records must distinguish the public reproduction from the candidate:
+real browser wheel input reproduced the disappearing panel and the exposed-map
+scroll trap. The candidate's production build, project TypeScript check and 39
+existing welcome-component cases pass locally. Added hydrated browser regressions
+cover desktop, tablet and phone geometry, wheel input below the panel, and nested
+scroll handoff. Local rendered candidate acceptance is NEEDS VERIFICATION because
+the executor refused its preview listener with EPERM; hosted CI and independent
+visual review remain separate. No live correction or provider-data claim follows
+from those source checks.
+
+Placement follows the adopted Directory Rules/ADR-0029 and this standalone
+composition's AGENTS instructions: existing application presentation, conformance
+and human-guidance files only. Rollback reverts the two presentation files,
+browser regressions and this note together; no data or settings migration is
+involved. Merge and publication remain separate owner-controlled transitions.
+
 ## Cinematic category stage · 2026-10-30 candidate
 
 **PROPOSED release; implemented candidate, not published.** Starting evidence:

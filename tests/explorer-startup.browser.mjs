@@ -283,6 +283,54 @@ async function pageSession(b, width, height, networkOptions = {}) {
   return { call, evaluate, wait, key, open, unobstructed, holdSceneModule, waitForSceneModule, releaseSceneModule };
 }
 
+for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823], [390, 844]]) {
+  test(`welcome glimpse stays visible and wheel scrolling chains at ${width}x${height}`, { timeout: 90000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, width, height);
+    await p.open('/?motion=off'); await readyWelcome(p);
+    await p.evaluate(`document.querySelector('.topic-aviation').focus()`);
+    await p.wait(`document.querySelector('.welcome-preview-brief h2')?.textContent===${JSON.stringify(categoryGlimpse('aviation').title)}`, 'focused category owns the glimpse');
+    await p.wait(`document.querySelector('.domain-stage')?.dataset.state!=='loading'`, 'the real fixed backdrop has settled');
+    const read = () => p.evaluate(`(() => {
+      const root=document.querySelector('.living-welcome'), brief=root.querySelector('.welcome-preview-brief'), r=root.getBoundingClientRect(), a=brief.getBoundingClientRect();
+      return { top:root.scrollTop,max:root.scrollHeight-root.clientHeight,brief:{top:a.top,bottom:a.bottom,left:a.left,right:a.right},root:{top:r.top,bottom:r.bottom},inside:brief.scrollHeight-brief.clientHeight,overflow:document.documentElement.scrollWidth>innerWidth+1 };
+    })()`);
+    // Setup reaches the same lower part of the chooser as normal scrolling;
+    // acceptance below uses trusted wheel input, not a scripted scroll substitute.
+    await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome');root.scrollTop=(root.scrollHeight-root.clientHeight)*.6;})()`);
+    let state=await read();
+    assert.ok(state.max>50, 'the category list has a real scroll range');
+    assert.equal(state.overflow,false);
+    assert.ok(state.brief.top>=state.root.top-1 && state.brief.bottom<=state.root.bottom+1, 'Inside this map remains visible after scrolling through categories');
+    const wheel=async (x,y,deltaY) => p.call('Input.dispatchMouseEvent',{type:'mouseWheel',x,y,deltaX:0,deltaY});
+    const x=Math.min(width-24,state.brief.right-20), y=Math.min(state.root.bottom-30,state.brief.bottom+36);
+    const before=state.top;
+    await wheel(x,y,-180);
+    await p.wait(`document.querySelector('.living-welcome').scrollTop<${before-20}`, 'exposed map below the box scrolls back up');
+
+    // A long Aviation brief scrolls internally, then hands the gesture to the
+    // chooser at either boundary rather than trapping the visitor there.
+    await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome'),brief=root.querySelector('.welcome-preview-brief');root.scrollTop=(root.scrollHeight-root.clientHeight)*.5;brief.scrollTop=brief.scrollHeight;})()`);
+    state=await read();
+    assert.ok(state.inside>0, 'the long source brief exercises nested scrolling');
+    const boxX=state.brief.left+(state.brief.right-state.brief.left)*.5,boxY=state.brief.top+36;
+    await wheel(boxX,boxY,140);
+    await p.wait(`document.querySelector('.living-welcome').scrollTop>${state.top+20}`, 'brief end hands downward scrolling to the chooser');
+    await p.evaluate(`document.querySelector('.welcome-preview-brief').scrollTop=0`);
+    state=await read();
+    await wheel(boxX,Math.max(state.root.top+20,state.brief.top+36),-140);
+    await p.wait(`document.querySelector('.living-welcome').scrollTop<${state.top-20}`, 'brief start hands upward scrolling to the chooser');
+    await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome');root.scrollTop=root.scrollHeight;})()`);
+    state=await read();
+    assert.ok(state.brief.top>=state.root.top-1 && state.brief.bottom<=state.root.bottom+1, 'the last categories do not lose their context panel');
+
+    if(process.env.KFM_WORKSPACE_SCREENSHOTS){
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+      const capture=await p.call('Page.captureScreenshot',{format:'png'});
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-scroll-${width}x${height}.png`),Buffer.from(capture.data,'base64'));
+    }
+  });
+}
+
 for (const [width, height] of [[1280, 800], [390, 844]]) {
   test(`welcome cards enter editable map layers directly at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
