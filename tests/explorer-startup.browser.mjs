@@ -1017,7 +1017,6 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
         assert.ok(x<=.5||y<=.5,`topic hit areas must not overlap: ${JSON.stringify({a,other,x,y})}`);
       }
     }
-    if(width<=1100&&height<=480)assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.welcome-preview-brief')).position`),'static','short landscape keeps the panel in flow so full cards remain reachable');
     for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
     const center = selector => revealControl(p,selector);
     const move = point => p.call('Input.dispatchMouseEvent',{type:'mouseMoved',...point,button:'none',buttons:0});
@@ -1127,6 +1126,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
     await checkCredits('initial license strip');
     await p.wait(`!!document.querySelector('.living-welcome .domain-stage .maplibregl-ctrl-attrib')`,'the live welcome map carries its own provider credits');
+    if(width<=1100&&height<=480)assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.welcome-preview-brief')).position`),'static','short landscape keeps the panel in flow so full cards remain reachable');
     for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('header.topbar')).visibility`),'visible','global header remains available');
     for(const selector of ['.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'hidden','background map chrome does not peek through welcome');
