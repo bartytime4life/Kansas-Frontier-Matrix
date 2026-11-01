@@ -857,3 +857,23 @@
 .living-welcome .topic-preview{position:absolute;z-index:4;left:16px;right:16px;bottom:10px;display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:8px 12px;border:1px solid #8db5c052;border-radius:7px;background:#0a2d3d;color:#c5dde6;font-size:12px;pointer-events:auto}
 .living-welcome .topic-preview:hover{background:#173e4d;border-color:#e8c37c;color:#f5ddb0}
 .living-welcome .topic-preview:focus-visible{outline:2px solid #f0d28f;outline-offset:3px}
+
+/* The chooser has one scroll owner. Its fixed decorative map must not become
+   the wheel target when content moves away and exposes the canvas. */
+.living-welcome:not([data-fullscreen=true]) .welcome-capability-stage{pointer-events:none}
+.living-welcome:not([data-fullscreen=true]) .welcome-capability-stage .domain-stage-map{pointer-events:none}
+.living-welcome:not([data-fullscreen=true]) .welcome-map-stage{overflow:visible;grid-template-rows:auto minmax(0,1fr) auto}
+.living-welcome:not([data-fullscreen=true]) .welcome-heading-row{grid-template-areas:'hero toolbar';grid-template-rows:auto}
+.living-welcome .welcome-discovery-layout{position:relative;z-index:4;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,420px);gap:24px;align-items:start;min-width:0}
+.living-welcome .welcome-discovery-content{grid-column:1;grid-row:1;min-width:0}
+.living-welcome .welcome-discovery-layout>.welcome-preview-brief{grid-column:2;grid-row:1;position:sticky;top:16px;align-self:start;justify-self:stretch;width:auto;margin:0 32px 0 0;z-index:5;overscroll-behavior:auto}
+.living-welcome[data-fullscreen=true] .welcome-discovery-layout{display:none}
+@media(max-width:1100px){
+ .living-welcome:not([data-fullscreen=true]) .welcome-heading-row{grid-template-areas:'toolbar' 'hero';grid-template-rows:auto auto}
+ .living-welcome:not([data-fullscreen=true]){scroll-padding-top:calc(min(220px,35dvh) + 28px)}
+ .living-welcome .welcome-discovery-layout{display:block}
+ .living-welcome .welcome-discovery-layout>.welcome-preview-brief{top:12px;height:220px;max-height:min(220px,35dvh);margin:0 32px 16px}
+}
+@media(max-width:700px){
+ .living-welcome .welcome-discovery-layout>.welcome-preview-brief{margin-inline:18px}
+}
