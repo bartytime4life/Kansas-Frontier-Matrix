@@ -124,6 +124,19 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(self.save()["status"], "reviewed")
         self.assertIn("REVIEW_FLAGS", self.item()["decision"]["holds"])
 
+    def test_choosing_another_domain_does_not_clear_a_sensitive_domain_flag(self):
+        profile = self.item()["profile"]
+        with intake.open_index(self.root) as conn:
+            profile["hints"]["domain"], profile["hints"]["review_flags"] = "archaeology", []
+            conn.execute("UPDATE items SET profile_json=? WHERE id=?", (json.dumps(profile), self.identity))
+        with self.assertRaisesRegex(ValueError, "REVIEW_PUBLIC_HOLDS_REMAIN"):
+            self.save(decision="public", domain="hydrology", rights="allowed", sensitivity="public", reference="Test provider policy")
+        self.assertEqual(self.save(domain="hydrology")["status"], "reviewed")
+        decision = self.item()["decision"]
+        self.assertIn("sensitive_domain", decision["review_flags"])
+        self.assertIn("REVIEW_FLAGS", decision["holds"])
+        self.assertEqual(intake.release_plan(self.root, self.budget)["selected"], [])
+
     def test_confirmation_and_a_meaningful_note_are_required(self):
         for patch in ({"confirmed": False}, {"note": "ok"}, {"reviewer": ""}, {"domain": "../../outside"}, {"decision": []}):
             with self.subTest(patch=patch), self.assertRaises(ValueError):

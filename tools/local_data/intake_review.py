@@ -57,7 +57,12 @@ def route(item, profile, budget, review):
     if review is None:
         return intake_route.decide(item, profile, budget)
     p, effective = deepcopy(profile), dict(item)
-    p.setdefault("hints", {})["domain"] = review["domain"] or None
+    hints = p.setdefault("hints", {})
+    # decide() derives sensitive_domain from the routing domain, so carry the analyzed domain's flag
+    # forward: choosing another domain must not clear a sensitivity restriction.
+    if hints.get("domain") in intake_route.REVIEW_DOMAINS:
+        hints["review_flags"] = sorted(set(hints.get("review_flags", [])) | {"sensitive_domain"})
+    hints["domain"] = review["domain"] or None
     declared = deepcopy(item.get("declared") or {})
     declared["rights"] = {"redistribution": review["rights"], "license_id": review["reference"] or None}
     declared["sensitivity"] = review["sensitivity"]
