@@ -870,10 +870,16 @@
 .living-welcome[data-fullscreen=true] .welcome-discovery-layout{display:none}
 @media(max-width:1100px){
  .living-welcome:not([data-fullscreen=true]) .welcome-heading-row{grid-template-areas:'toolbar' 'hero';grid-template-rows:auto auto}
- .living-welcome:not([data-fullscreen=true]){scroll-padding-top:calc(min(220px,35dvh) + 28px)}
+ .living-welcome:not([data-fullscreen=true]){scroll-padding-top:calc(min(220px,24dvh) + 28px)}
  .living-welcome .welcome-discovery-layout{display:block}
- .living-welcome .welcome-discovery-layout>.welcome-preview-brief{top:12px;height:220px;max-height:min(220px,35dvh);margin:0 32px 16px}
+ .living-welcome .welcome-discovery-layout>.welcome-preview-brief{top:12px;height:220px;max-height:min(220px,24dvh);margin:0 32px 16px}
 }
 @media(max-width:700px){
  .living-welcome .welcome-discovery-layout>.welcome-preview-brief{margin-inline:18px}
+}
+/* Short landscape windows cannot fit a complete card below a pinned panel.
+   Keep both in the same scroll flow so pointer and keyboard access agree. */
+@media(max-width:1100px) and (max-height:480px){
+ .living-welcome:not([data-fullscreen=true]){scroll-padding-top:0}
+ .living-welcome .welcome-discovery-layout>.welcome-preview-brief{position:static}
 }

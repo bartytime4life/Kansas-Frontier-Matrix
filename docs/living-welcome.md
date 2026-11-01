@@ -4,6 +4,30 @@ Current navigation is described in [Direct workspace entry · 2026-10-31](#direc
 It supersedes the historical click-to-preview and automatic hover transition
 described below. Earlier implementation and validation records are retained.
 
+## Responsive quality follow-up · 2026-10-31 candidate
+
+**CONFIRMED CI finding; PROPOSED correction.** The browser job for hosted commit
+`3b1b41b81a0622cb5c685a24a2250f542cb04556` passed all four new wheel/scroll
+journeys but failed full-card reachability at 320×568 and 640×360. Compact panels
+now use at most 24% of the viewport height. At widths up to 1100px and heights up
+to 480px, the panel follows the page's normal scroll flow: this deliberately
+trades persistent context for enough room to operate a complete category card.
+Desktop and taller compact windows retain the sticky context panel. The existing
+all-category geometry checks remain strict; a 320×568 wheel journey is added.
+
+The same CI run found three draft-persistence journeys selecting a title field
+while Reports was in its current default dashboard view. Those journeys now
+activate the visible **Edit report** control before editing. The assertions for
+independent report/story storage, immediate navigation and reload remain intact.
+This corrects the acceptance journey, not the report persistence implementation.
+
+Evidence: [browser job 124719634568](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/41262905561/job/124719634568).
+Rendered acceptance of this follow-up remains NEEDS VERIFICATION until its own
+browser job completes. Local build/type checks cannot establish browser geometry.
+Placement uses the same existing presentation, test and documentation roots
+described below. Rollback reverts this three-file follow-up together; no data,
+provider, settings or publication change is involved.
+
 ## Welcome scrolling repair · 2026-10-31 candidate
 
 **PROPOSED release; not published.** The ordinary chooser now keeps its category
