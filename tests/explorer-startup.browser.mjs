@@ -340,6 +340,62 @@ for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823], [390, 844]
   });
 }
 
+
+for (const { width, height, input } of [
+  { width: 829, height: 823, input: 'small wheel deltas' },
+  { width: 390, height: 844, input: 'touch swipe' },
+  { width: 320, height: 568, input: 'touch swipe' },
+]) {
+  test(`welcome glimpse chains ${input} at ${width}x${height}`, { timeout: 90000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, width, height);
+    await p.open('/?motion=off'); await readyWelcome(p);
+    await p.evaluate("document.querySelector('.topic-aviation').focus()");
+    await p.wait("document.querySelector('.welcome-preview-brief h2')?.textContent===" + JSON.stringify(categoryGlimpse('aviation').title), 'aviation owns the long context');
+    await p.wait("document.querySelector('.domain-stage')?.dataset.state!=='loading'", 'preview settles before gestures');
+    await p.evaluate("(()=>{const r=document.querySelector('.living-welcome'),b=document.querySelector('.welcome-preview-brief');r.scrollTop=(r.scrollHeight-r.clientHeight)*.5;b.scrollTop=0;})()");
+    const read = () => p.evaluate("(()=>{const r=document.querySelector('.living-welcome'),b=document.querySelector('.welcome-preview-brief'),a=b.getBoundingClientRect(),q=r.getBoundingClientRect();return {outer:r.scrollTop,inner:b.scrollTop,max:b.scrollHeight-b.clientHeight,top:a.top,bottom:a.bottom,x:a.left+a.width/2,rootTop:q.top,rootBottom:q.bottom,overflow:document.documentElement.scrollWidth>innerWidth+1};})()");
+    const initial = await read();
+    assert.ok(initial.max > 80, 'fixture exercises internal context scrolling');
+    if (input === 'touch swipe') await p.call('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 });
+    const gesture = async direction => {
+      const s = await read();
+      const x = s.x, start = direction > 0 ? s.bottom - 12 : s.top + 12;
+      const end = direction > 0 ? s.top + 12 : s.bottom - 12;
+      if (input === 'touch swipe') {
+        await p.call('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y: start }] });
+        for (let i = 1; i <= 8; i++) {
+          await p.call('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: start + (end - start) * i / 8 }] });
+          await pause(20);
+        }
+        await p.call('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      } else {
+        for (let i = 0; i < 8; i++) {
+          await p.call('Input.dispatchMouseEvent', { type: 'mouseWheel', x, y: s.top + 36, deltaX: 0, deltaY: direction * 12 });
+          await pause(20);
+        }
+      }
+      // End the input stream before measuring the next native scroll chain.
+      await pause(200);
+    };
+    await gesture(1);
+    assert.ok((await read()).inner > 20, 'trusted input scrolls the panel itself');
+    for (let attempt = 0; attempt < 12 && (await read()).inner < (await read()).max - 1; attempt++) await gesture(1);
+    let state = await read();
+    assert.ok(state.inner >= state.max - 1, 'trusted input reaches the lower boundary');
+    await gesture(1);
+    assert.ok((await read()).outer > state.outer + 20, 'a new downward gesture transfers to the chooser');
+    for (let attempt = 0; attempt < 12 && (await read()).inner > 1; attempt++) await gesture(-1);
+    state = await read();
+    assert.ok(state.inner <= 1, 'trusted input reaches the upper boundary');
+    await gesture(-1);
+    const final = await read();
+    assert.ok(final.outer < state.outer - 20, 'a new upward gesture transfers to the chooser');
+    assert.ok(final.top >= final.rootTop - 1 && final.bottom <= final.rootBottom + 1, 'context stays visible');
+    assert.equal(final.overflow, false, 'no horizontal overflow');
+    t.diagnostic(JSON.stringify({ input, initial, final }));
+  });
+}
+
 for (const [width, height] of [[1280, 800], [390, 844]]) {
   test(`welcome cards enter editable map layers directly at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);

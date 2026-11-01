@@ -4,6 +4,69 @@ Current navigation is described in [Direct workspace entry · 2026-10-31](#direc
 It supersedes the historical click-to-preview and automatic hover transition
 described below. Earlier implementation and validation records are retained.
 
+## Scrolling acceptance checkpoint · 2026-11-01
+
+**CONFIRMED published application inputs; bounded browser acceptance.** This
+checkpoint supersedes the pending scrolling-verification statements in the
+historical records below. It does not qualify every Explorer feature or provider.
+
+GoDaddy's Published tab identified `2e69221653da540598901779b1cbd71a2a317079`.
+The public `https://kansasfrontiermatrix.com/api/build` response at approximately
+20:06 UTC returned application `urdng3v1vk`, 1,162 source files and
+`sha256:ae52c7f86fb2243022881d153d6ddc5ff68e175accdb201fc280486b19ed8802`.
+That digest and count exactly matched an independently checked-out clean tree
+of the published commit. The endpoint itself reported `WORKTREE_MODIFIED` and
+no commit; the digest comparison, rather than that missing commit field, binds
+the application inputs. This identity excludes built bytes, live data, settings,
+models and release authority.
+
+GitHub comparison established that the published commit is five commits ahead
+of #5669's merge `022f43a5ceac8e00fb9d994396da147335b468bb`, with no divergence.
+Both #5664 and #5669 are therefore included. #5669's final-head workflow
+[41268210532](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/41268210532)
+has now completed successfully: focused welcome/draft, core delivery and
+performance jobs. The formerly pending core-delivery result is historical CI
+evidence, not a fresh run against today's newer source.
+
+Live Chrome checks used measured CSS viewports of 2732×1463, 1280×800, 829×823,
+390×844 and 320×569. Existing browser zoom required calibrating emulation
+dimensions; requested dimensions were not treated as measured CSS dimensions.
+The context remained visible while browsing; wide-desktop wheel input reached
+the panel end and then advanced the chooser. At 829×823 the 197px panel handed
+separate downward and upward wheel gestures to the chooser. At 390×844,
+protocol-dispatched touch swipes scrolled the panel and handed subsequent swipes
+to the chooser at both boundaries. A narrow-phone swipe also moved the panel's
+content. Source-note Escape restored its opener, Return restored the original
+Preview action, and eight consecutive rail arrow selections left one selected
+category and one preview canvas. No new scroll trap was demonstrated in these
+bounded checks.
+
+Fresh source verification used hosted base
+`db7e87f98ffc2f4c299fa300ae35d185cb863a71`: production build and TypeScript passed;
+the ordinary Node suite passed 2,442 cases with 25 explicit skips and no failures.
+Twenty-five adjacent browser cases passed, covering direct map entry, delayed
+startup state, Layers focus handoff, keyboard journeys, dialog close reachability
+and responsive composition. The original focused browser command passed 8/8.
+Three additional browser cases
+passed: small wheel-delta streams at 829×823 and touch swipes at 390×844 and
+320×568. They reach both inner boundaries using trusted input, then require a
+new gesture to move the chooser in each direction. The focused CI selector now
+includes these cases. Fixture transport and disposable browser profiles preserve
+live stores and settings.
+
+**Limits:** browser-generated touch and small wheel streams do not establish
+physical-phone touch, physical-trackpad inertia, Safari/Firefox or screen-reader
+acceptance. Local Chromium 156 fixture results, historical CI, and live-provider
+observations remain distinct. No deployment or publication was performed in
+this verification session. No application, layer selection, stored preference,
+dataset, provider or hosting configuration is changed by this review increment.
+
+Placement retains existing `tests/` conformance, `.github/workflows/` execution
+wiring and `docs/` guidance under the inspected hosted AGENTS and accepted
+ADR-0029/adopted Directory Rules. The superseded unversioned PDF was unavailable
+in this checkout. Rollback reverts these three review files; no store migration
+or published-application rollback is required. Independent review remains open.
+
 ## Responsive quality follow-up · 2026-10-31 candidate
 
 Follow-up verification found all compact full-card geometry checks passing in
