@@ -602,9 +602,17 @@ requires both `KFM_MIGRATION_SHA256` and
 `KFM_PIPELINE_DATABASE_BACKUP_VERIFIED=true`. DDL is not transactionally
 reversible; preserve partially created tables on failure.
 
-Server setup requires the existing DB_* values, a certificate-matching DNS host,
-`KFM_DB_TLS=verified` and `KFM_DB_CA_PEM`. Verification is never disabled.
-Configure a **new** `KFM_PIPELINE_WORKER_SECRET` (32 random bytes, hex), the
+By default the publishing store requires the existing DB_* values, a
+certificate-matching DNS host, `KFM_DB_TLS=verified` and `KFM_DB_CA_PEM`.
+GoDaddy's managed MySQL certificate fails hostname verification, so on
+2026-11-01 the owner extended the health check's approved private-network leg
+to pipeline writes. With `KFM_DATABASE_CONNECTION_TRANSPORT=provider-private-network`,
+`getPipelineStore()` resolves `DB_HOST` within 5 s, requires every answer to be
+a private IPv4 address, pins the pool to that address and connects without TLS.
+A public, mixed or loopback answer is refused before any credential is sent.
+Nothing falls back from verified TLS to the private network; the setting
+chooses one or the other. A changed provider address takes effect at the next
+app start. Configure a **new** `KFM_PIPELINE_WORKER_SECRET` (32 random bytes, hex), the
 approver public PEM in `KFM_PIPELINE_APPROVER_PUBLIC_KEY`, and explicitly scoped
 `KFM_PIPELINE_ENABLED=true`, `KFM_RUNTIME_ROLE=published`. Preview must remain
 disabled. Never reuse gateway/polling keys or print secret values.
@@ -690,8 +698,13 @@ Owner steps, in order, before earthquakes publish:
 3. **Qualify and apply the additive schema.** Verify a recoverable backup of
    the actual shared MySQL database and restore it into a disposable compatible
    database. PC data-store backups alone do not establish database recovery.
-   Run `node scripts/migrate-pipeline.mjs` to review SQL and its digest. With
-   the approved database credentials and verified TLS, `--apply` requires the
+   Run `node scripts/migrate-pipeline.mjs` to review SQL and its digest. On
+   GoDaddy the database is reachable only from the app, so the hosting
+   dashboard's Settings, Hosted Database page does both steps: **Export SQL**
+   downloads the backup, and **Import SQL** applies `server/pipeline-schema.sql`
+   after its SHA-256 is checked against the reviewed digest. Elsewhere, with
+   the approved database credentials and either verified TLS or the approved
+   private-network setting, `--apply` requires the
    exact `KFM_MIGRATION_SHA256`, the operator assertion
    `KFM_PIPELINE_DATABASE_BACKUP_VERIFIED=true`, and
    `KFM_PIPELINE_ENABLED=true` in the migration process so `getPipelineStore()`
@@ -916,7 +929,10 @@ Keep `publish:false`, both timers disabled, and hosting publication disabled
 until the infrastructure and approval qualifications above are independently
 recorded. Preview and Published sharing a database does not qualify its TLS,
 backup or restore. Read-only connection success through a provider-private
-network does not satisfy the publishing store's verified-TLS requirement.
+network shows only that the app reaches the database. The publishing store uses
+that network only when `KFM_DATABASE_CONNECTION_TRANSPORT=provider-private-network`
+is set, as described in
+[GoDaddy database and artifact qualification](#godaddy-database-and-artifact-qualification).
 
 ## Historical county context (implementation candidate, 2026-10-29)
 
