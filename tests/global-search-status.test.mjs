@@ -47,7 +47,12 @@ function actualMarkup(query, settledQuery, state, results) {
   const discoveryCurrent = query.trim().toLowerCase() === settledQuery.trim().toLowerCase();
   const element = vm.runInNewContext(ts.transpileModule('(<>{' + searchMarkup + '}' + inputMarkup + '</>)', {
     compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022 },
-  }).outputText, { React, mode:'find', question:query, discovery:{query,items:results,status:searchStatus.message,busy:searchStatus.busy,onChoose(){}}, discoveryCurrent, discoveryBusy:searchStatus.busy, styles:{searchResults:'searchResults',searchResult:'searchResult'}, inputRef:{current:null},messageRef:{current:null},resultListRef:{current:null},setQuestion(){},composingRef:{current:false} });
+  }).outputText, {
+    React, mode:'find', question:query, discovery:{query,items:results,status:searchStatus.message,busy:searchStatus.busy,onChoose(){}}, discoveryCurrent, discoveryBusy:searchStatus.busy, styles:{searchResults:'searchResults',searchResult:'searchResult'}, inputRef:{current:null},messageRef:{current:null},resultListRef:{current:null},setQuestion(){},composingRef:{current:false},
+    // Static markup does not dispatch events. The full-component interaction
+    // harness exercises the real handler in chat-composer-reach.test.mjs.
+    handleDiscoveryResultKeyDown(){throw new Error('Keyboard events require the full-component interaction harness.');},
+  });
   return renderToStaticMarkup(element);
 }
 

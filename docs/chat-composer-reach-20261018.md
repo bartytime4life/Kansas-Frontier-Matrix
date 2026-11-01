@@ -330,3 +330,26 @@ candidate acceptance remain NEEDS VERIFICATION until separately established.
 Rollback is a reviewed revert of these four files; drafts and stored settings
 need no migration. Authoring and self-review do not constitute independent review,
 merge, deployment or publication approval.
+
+### Isolated markup harness correction
+
+PR #5674 was merged outside this agent as
+`2e69221653da540598901779b1cbd71a2a317079`. Its exact-head core-delivery job
+reported 2,425 passing, three failing and 24 skipped ordinary tests. All three
+failures were `ReferenceError: handleDiscoveryResultKeyDown is not defined` in
+the isolated `global-search-status.test.mjs` markup VM. They reproduced locally
+against the merged source before this correction. That early test failure
+prevented the broader job from reaching the new county-search browser journeys;
+the separate welcome/draft and performance jobs passed.
+
+The markup VM now supplies an explicit callback binding which throws if invoked.
+Static rendering must not dispatch keyboard events; the existing full-component
+tests execute the real handler. Source-state, stale-result, empty-query,
+polite-status, escaping and markup assertions are unchanged. No application
+behavior, assertion, skip or provider fixture is changed to clear the failure.
+
+The correction uses the existing `tests/` conformance and `docs/` guidance homes
+under the same Directory Rules basis above. Validation belongs to its new PR's
+exact head; preceding results are not reused as new-head CI. Revert this two-file
+follow-up to roll back the harness change, which restores the three known errors.
+No stored-data migration or deployment is involved.
