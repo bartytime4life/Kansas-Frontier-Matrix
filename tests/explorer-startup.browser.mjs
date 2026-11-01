@@ -294,9 +294,24 @@ for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823], [390, 844]
       const root=document.querySelector('.living-welcome'), brief=root.querySelector('.welcome-preview-brief'), r=root.getBoundingClientRect(), a=brief.getBoundingClientRect();
       return { top:root.scrollTop,max:root.scrollHeight-root.clientHeight,brief:{top:a.top,bottom:a.bottom,left:a.left,right:a.right},root:{top:r.top,bottom:r.bottom},inside:brief.scrollHeight-brief.clientHeight,overflow:document.documentElement.scrollWidth>innerWidth+1 };
     })()`);
+    // Wheel scrolling is composited. A main-thread scrollTop assignment can
+    // race the previous wheel animation or its commit to the compositor.
+    const settleScroll = () => p.evaluate(`new Promise((resolve,reject)=>{
+      const root=document.querySelector('.living-welcome'),brief=root.querySelector('.welcome-preview-brief'),deadline=performance.now()+4000;
+      let previous='',stable=0;
+      const sample=()=>{
+        const current=JSON.stringify([root.scrollTop,brief.scrollTop,brief.scrollHeight,brief.clientHeight,brief.getBoundingClientRect().top]);
+        stable=current===previous?stable+1:0;previous=current;
+        if(stable>=6)return resolve(true);
+        if(performance.now()>deadline)return reject(new Error('Welcome scrolling did not settle: '+current));
+        requestAnimationFrame(sample);
+      };
+      requestAnimationFrame(sample);
+    })`);
     // Setup reaches the same lower part of the chooser as normal scrolling;
     // acceptance below uses trusted wheel input, not a scripted scroll substitute.
     await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome');root.scrollTop=(root.scrollHeight-root.clientHeight)*.6;})()`);
+    await settleScroll();
     let state=await read();
     assert.ok(state.max>50, 'the category list has a real scroll range');
     assert.equal(state.overflow,false);
@@ -306,20 +321,26 @@ for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823], [390, 844]
     const before=state.top;
     await wheel(x,y,-180);
     await p.wait(`document.querySelector('.living-welcome').scrollTop<${before-20}`, 'exposed map below the box scrolls back up');
+    await settleScroll();
 
     // A long Aviation brief scrolls internally, then hands the gesture to the
     // chooser at either boundary rather than trapping the visitor there.
     await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome'),brief=root.querySelector('.welcome-preview-brief');root.scrollTop=(root.scrollHeight-root.clientHeight)*.5;brief.scrollTop=brief.scrollHeight;})()`);
+    await settleScroll();
     state=await read();
     assert.ok(state.inside>0, 'the long source brief exercises nested scrolling');
     const boxX=state.brief.left+(state.brief.right-state.brief.left)*.5,boxY=state.brief.top+36;
     await wheel(boxX,boxY,140);
     await p.wait(`document.querySelector('.living-welcome').scrollTop>${state.top+20}`, 'brief end hands downward scrolling to the chooser');
+    await settleScroll();
     await p.evaluate(`document.querySelector('.welcome-preview-brief').scrollTop=0`);
+    await settleScroll();
     state=await read();
     await wheel(boxX,Math.max(state.root.top+20,state.brief.top+36),-140);
     await p.wait(`document.querySelector('.living-welcome').scrollTop<${state.top-20}`, 'brief start hands upward scrolling to the chooser');
+    await settleScroll();
     await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome');root.scrollTop=root.scrollHeight;})()`);
+    await settleScroll();
     state=await read();
     assert.ok(state.brief.top>=state.root.top-1 && state.brief.bottom<=state.root.bottom+1, 'the last categories do not lose their context panel');
 

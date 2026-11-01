@@ -6,6 +6,18 @@ described below. Earlier implementation and validation records are retained.
 
 ## Responsive quality follow-up · 2026-10-31 candidate
 
+Follow-up verification found all compact full-card geometry checks passing in
+[job 124725773917](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/41264974617/job/124725773917),
+but nested wheel handoff still failed at 829×823 and 320×568 after scripted
+scroll jumps. Real wheel input handed off successfully in the temporary browser
+check at 829×823. The acceptance setup now waits for stable scroll positions and
+panel dimensions across animation frames before sending the next gesture. This
+is a test-timing hypothesis, pending its own CI result; the handoff assertions
+remain unchanged. An independent focused job runs the five scroll journeys and
+three draft journeys alongside the full suite, using the same isolated providers
+and disposable browser profiles. It does not replace full acceptance or confer
+release authority.
+
 **CONFIRMED CI finding; PROPOSED correction.** The browser job for hosted commit
 `3b1b41b81a0622cb5c685a24a2250f542cb04556` passed all four new wheel/scroll
 journeys but failed full-card reachability at 320×568 and 640×360. Compact panels
