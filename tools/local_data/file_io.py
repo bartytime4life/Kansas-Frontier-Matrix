@@ -106,8 +106,6 @@ def write_new(path: Path, content: bytes, *, root: Path | None = None) -> None:
     """Write an immutable metadata object; never replace an existing path."""
     # Lexical only: resolve() would follow symlinks and hide them from the
     # real-directory chain check below.
-    if path.is_absolute() or path.anchor:
-        raise ValueError("UNSAFE_PATH")
     if any(part in {".", ".."} for part in path.parts):
         raise ValueError("UNSAFE_PATH")
     target = path.absolute()
