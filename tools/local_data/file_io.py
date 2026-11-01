@@ -102,13 +102,19 @@ def fsync_directory(path: Path) -> None:
         os.close(fd)
 
 
-def write_new(path: Path, content: bytes) -> None:
+def write_new(path: Path, content: bytes, *, root: Path | None = None) -> None:
     """Write an immutable metadata object; never replace an existing path."""
     # Lexical only: resolve() would follow symlinks and hide them from the
     # real-directory chain check below.
     if any(part in {".", ".."} for part in path.parts):
         raise ValueError("UNSAFE_PATH")
     target = path.absolute()
+    if root is not None:
+        base = root.absolute()
+        try:
+            target.relative_to(base)
+        except ValueError:
+            raise ValueError("UNSAFE_PATH") from None
     if target.parent == target:
         raise ValueError("UNSAFE_PATH")
     check_directory(target.parent, create=True)
