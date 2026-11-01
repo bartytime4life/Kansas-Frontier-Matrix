@@ -238,3 +238,84 @@ test('discussion formatting keeps model HTML as text and renders headings and li
   assert.equal(findNode(tree,n=>n.props?.dangerouslySetInnerHTML),undefined);
  }finally{h.dispose();}
 });
+
+async function discoveryKeyboardHarness(){
+ const queries=[],chosen=[],items=['Alluvial aquifer','Dakota aquifer','Glacial Drift aquifer'].map((title,index)=>({id:String(index),kind:'source',title,subtitle:'Synthetic source context'}));
+ const props={focus,discovery:{query:'water',items,status:'3 available matches.',busy:false,onQuery:value=>queries.push(value),onChoose:id=>chosen.push(id)}};
+ const chat=await renderChat(async()=>{throw new Error('Find must not call AI');},props);
+ let tree=chat.render();findNode(tree,node=>node.type==='textarea').props.onChange({target:{value:'water'}});tree=chat.render();
+ let focused='input',submissions=0;
+ const buttons=items.map((_,index)=>({focus(){focused=index;}}));
+ const container={querySelector:()=>buttons[0],querySelectorAll:()=>buttons,contains:target=>buttons.includes(target)};
+ const input={value:'water',selectionStart:5,selectionEnd:5,focus(){focused='input';},form:{requestSubmit(){submissions++;}}};
+ const attach=next=>{
+  const field=findNode(next,node=>node.type==='textarea'),list=findNode(next,node=>node.props?.id==='global-search-results');
+  field.props.ref.current=input;if(list)list.props.ref.current=container;
+  return {tree:next,field,list};
+ };
+ const keys=(key,overrides={})=>{let prevented=false;const event={key,shiftKey:false,ctrlKey:false,altKey:false,metaKey:false,defaultPrevented:false,nativeEvent:{isComposing:false,keyCode:0},preventDefault(){prevented=true;},...overrides};return {event,prevented:()=>prevented};};
+ return {...chat,queries,chosen,buttons,container,input,attach,keys,initial:attach(tree),focused:()=>focused,submissions:()=>submissions};
+}
+
+test('Find supports arrow and boundary keys between results, then returns to the draft without choosing',async()=>{
+ const h=await discoveryKeyboardHarness();
+ try{
+  const {field,list}=h.initial;
+  const enter=h.keys('ArrowDown',{currentTarget:h.input});field.props.onKeyDown(enter.event);
+  assert.equal(h.focused(),0);assert.equal(enter.prevented(),true);
+  const navigate=(key,index,overrides={})=>{
+   h.buttons[index].focus();
+   const next=h.keys(key,{currentTarget:h.container,target:{closest:()=>h.buttons[index]},...overrides});
+   list.props.onKeyDown?.(next.event);return next;
+  };
+  assert.equal(navigate('ArrowDown',0).prevented(),true);assert.equal(h.focused(),1);
+  navigate('ArrowDown',1);assert.equal(h.focused(),2);
+  navigate('ArrowDown',2);assert.equal(h.focused(),2,'last result is bounded');
+  navigate('Home',2);assert.equal(h.focused(),0);
+  navigate('End',0);assert.equal(h.focused(),2);
+  navigate('ArrowUp',2);assert.equal(h.focused(),1);
+  navigate('ArrowUp',0);assert.equal(h.focused(),'input','first result returns to the unchanged draft');
+  for(const key of ['Enter',' ','Escape','Tab'])assert.equal(navigate(key,1).prevented(),false,'native activation and parent dismissal keep '+key);
+  for(const overrides of [{shiftKey:true},{ctrlKey:true},{altKey:true},{metaKey:true},{defaultPrevented:true},{nativeEvent:{isComposing:true}},{nativeEvent:{keyCode:229}}]){
+   assert.equal(navigate('ArrowDown',0,overrides).prevented(),false);assert.equal(h.focused(),0,'modified/composing navigation stays native');
+  }
+  assert.deepEqual(h.chosen,[],'navigation never selects a source');
+  assert.equal(field.props.value,'water');assert.equal(h.submissions(),0);
+ }finally{h.h.dispose();}
+});
+
+test('Find leaves composition, modifier keys, selections and multiline cursor movement in the message field',async()=>{
+ const h=await discoveryKeyboardHarness();
+ try{
+  const {field}=h.initial;
+  const ignored=[{nativeEvent:{isComposing:true}},{nativeEvent:{keyCode:229}},{defaultPrevented:true},{shiftKey:true},{ctrlKey:true},{altKey:true},{metaKey:true}];
+  for(const overrides of ignored){const key=h.keys('ArrowDown',{currentTarget:h.input,...overrides});field.props.onKeyDown(key.event);assert.equal(key.prevented(),false);assert.equal(h.focused(),'input');}
+  field.props.onCompositionStart();
+  const composing=h.keys('ArrowDown',{currentTarget:h.input});field.props.onKeyDown(composing.event);assert.equal(composing.prevented(),false);field.props.onCompositionEnd();
+  for(const [selectionStart,selectionEnd,value] of [[1,1,'water'],[0,5,'water'],[2,2,'wa\nter']]){
+   Object.assign(h.input,{selectionStart,selectionEnd,value});const key=h.keys('ArrowDown',{currentTarget:h.input});field.props.onKeyDown(key.event);assert.equal(key.prevented(),false);assert.equal(h.focused(),'input');
+  }
+  const modifiedEnter=h.keys('Enter',{currentTarget:h.input,shiftKey:true});field.props.onKeyDown(modifiedEnter.event);assert.equal(modifiedEnter.prevented(),false);assert.equal(h.submissions(),0);
+  for(const overrides of ignored){const key=h.keys('Enter',{currentTarget:h.input,...overrides});field.props.onKeyDown(key.event);assert.equal(key.prevented(),false);}
+  const enter=h.keys('Enter',{currentTarget:h.input});field.props.onKeyDown(enter.event);assert.equal(enter.prevented(),true);assert.equal(h.submissions(),1,'ordinary Enter still submits the current mode');
+ }finally{h.h.dispose();}
+});
+
+test('Find submit focuses an available match and ignores stale or empty result lists',async()=>{
+ const h=await discoveryKeyboardHarness();
+ try{
+  await findNode(h.initial.tree,node=>node.type==='form').props.onSubmit({preventDefault(){},currentTarget:{}});
+  assert.equal(h.focused(),0,'Find enters the available matches');assert.deepEqual(h.chosen,[]);
+  h.input.focus();
+  for(const discovery of [
+   {query:'old query',items:[{id:'old',title:'Old result'}]},
+   {query:'water',items:[]},
+  ]){
+   const state=h.attach(h.render({focus,discovery:{...discovery,status:'Updating',busy:true,onQuery:value=>h.queries.push(value),onChoose:id=>h.chosen.push(id)}}));
+   await findNode(state.tree,node=>node.type==='form').props.onSubmit({preventDefault(){},currentTarget:{}});
+   const key=h.keys('ArrowDown',{currentTarget:h.input});state.field.props.onKeyDown(key.event);
+   assert.equal(h.focused(),'input');assert.equal(key.prevented(),false,'no handoff to unavailable results');
+  }
+  assert.deepEqual(h.chosen,[]);
+ }finally{h.h.dispose();}
+});

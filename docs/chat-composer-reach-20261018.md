@@ -2,7 +2,7 @@
 doc_id: kfm://doc/site/chat-composer-reach-20261018
 title: Keep the Chat with KFM question box reachable at every viewport
 type: implementation-verification-record
-version: v0.1
+version: v0.2
 status: draft
 owning_root: docs/
 responsibility: Record this standalone application's bounded chat-layout repair, its evidence, limits and rollback.
@@ -291,3 +291,42 @@ recheck. No release authorization is requested or implied.
 ## Rollback
 
 Revert this commit. No database, model, data, DNS or audience change.
+
+## Find keyboard navigation — October 31, 2026 Central
+
+CONFIRMED source gap at hosted branch `9db5be500c6e48ec83b9b4ab377e0f77118f9b6a`:
+Arrow Down could enter the first result, but result buttons had no arrow-key
+navigation. Find submit only repeated the query. The public Explorer reproduced
+the first-result focus stall using `water`; its deployed source identity was not
+established by that UI check.
+
+The candidate uses the existing native buttons. Find or Enter in the field
+focuses the first current match. Arrow Down/Up moves between matches; Arrow Up
+from the first returns to the unchanged draft. Home/End reaches the first/last
+match. The last result stays bounded. Enter, Space, Tab and Escape retain native
+activation or the enclosing panel's behavior. Focusing never chooses a source.
+
+In the field, Arrow Down hands off only at a collapsed caret at the end of the
+draft. Composition, key-code 229, modified keys, consumed events and selections
+retain native text editing. Stale/empty results never receive focus. No AI call,
+provider request, result ordering, evidence state or map change is added by
+keyboard navigation. When results have not arrived, Find keeps the existing
+query-update behavior and does not arrange a delayed focus jump.
+
+Placement follows this standalone composition's `AGENTS.md` and accepted main
+ADR-0029/adopted Directory Rules: the existing `app/` component owns interaction,
+`tests/` owns conformance and `docs/` owns this guidance. The supplied Directory
+Rules PDF was also consulted; the accepted ADR's pinned v2 text governs where
+older wording differs. Four existing files change, with no new responsibility
+root, dependency, schema, policy, store or release lane.
+
+Validation status is reported in the PR against its exact head. Three new
+component regressions failed before the application change and passed afterward.
+The browser matrix adds a native-key/Find-button journey at 1366×768, 390×844 and
+375×667, including focus visibility in the result scroll region. Authored browser
+coverage is not an execution claim. Physical-device, screen-reader and deployed
+candidate acceptance remain NEEDS VERIFICATION until separately established.
+
+Rollback is a reviewed revert of these four files; drafts and stored settings
+need no migration. Authoring and self-review do not constitute independent review,
+merge, deployment or publication approval.
