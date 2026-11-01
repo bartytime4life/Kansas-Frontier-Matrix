@@ -19,7 +19,7 @@ under `/home/dev/Documents/ChatGPT/Kansas-Frontier-Matrix/`.
 | Pipeline host | `dev` PC. `devil` runs no pipeline service; on 2026-11-01 the owner approved it for tests and as the owner's signing PC. |
 | Deployment | User-level systemd units that run `pc-pipeline-data/runtime/run.sh`. The system install (`install.mjs`, `/opt/kfm-pipeline`, `/srv/kfm-data`, `kfm-pipeline.timer`) has **not** been applied. |
 | Sources | `usgs-streamflow`, `nws-alerts` and, since 2026-10-31 (first capture 18:30 UTC), `usgs-earthquakes`. All three are capture-only. |
-| Publication | `publish: false` and `remoteMode: "connection-only"`. Nothing is uploaded. |
+| Publication | `publish: false` and `remoteMode: "connection-only"`. Nothing is uploaded. On 2026-11-01 the owner decided to keep pipeline data on the PC: no hosted publication is planned, and GoDaddy's database (capped at 100 MB) is not used for it. The hosted pipeline code stays inert without `KFM_PIPELINE_ENABLED`. The website's only runtime link to this PC is the outbound AI chat relay (`kfm-inference-worker`). |
 | Normal tick output | The first tick in each hour records `candidate-only` for each source; later ticks in that hour report `already-complete-or-held`. |
 | Data store | `KFM-pipeline/` on the 1.4 TiB HDD at `/run/media/dev/f975f1e2-a926-4040-8bc5-cbea4335d8bf` |
 | Backup volume | LVM `kfm-backup/store` across three SSDs, about 559 GiB, at `/run/media/dev/b34cab7d-b16b-494f-8e12-2f20db736ec4`, since 2026-11-01 (see [Backup volume, November 1](#backup-volume-november-1)) |
