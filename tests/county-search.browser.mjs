@@ -217,6 +217,30 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
   test(`hydrated county search at ${width}x${height}`, { timeout: 240000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
     t.after(async () => { try { await p.close(); } catch { /* Browser cleanup may already have closed its targets. */ } });
+    await t.test('Find and arrow keys navigate current results without changing the draft or map', async () => {
+      await p.open();
+      await p.fill('water');
+      await p.wait(`document.querySelectorAll('#global-search-results button').length > 1`, 'multiple current source matches while counties load');
+      const current = index => `document.activeElement === document.querySelectorAll('#global-search-results button')[${index}]`;
+      const beforeTime = await p.displayTime();
+      await p.key('Enter', 'Enter', 13);
+      await p.wait(current(0), 'Find submit enters current matches');
+      await p.key('ArrowDown', 'ArrowDown', 40);
+      await p.wait(current(1), 'ArrowDown advances to the second match');
+      await p.key('End', 'End', 35);
+      await p.wait(`document.activeElement === [...document.querySelectorAll('#global-search-results button')].at(-1)`, 'End reaches the last match');
+      const visible = await p.evaluate(`(() => {const r=document.activeElement.getBoundingClientRect(), b=document.activeElement.closest('[aria-label="Place and layer discovery"]').getBoundingClientRect();return r.top>=b.top-1 && r.bottom<=b.bottom+1;})()`);
+      assert.equal(visible, true, 'native focus reveals the last match in its scroll region');
+      await p.key('Home', 'Home', 36);
+      await p.wait(current(0), 'Home returns to the first match');
+      await p.key('ArrowUp', 'ArrowUp', 38);
+      await p.wait(`document.activeElement === document.querySelector('#qwen-map-panel textarea')`, 'ArrowUp returns to the draft');
+      assert.equal((await p.snapshot()).query, 'water');
+      await p.clickButton('#qwen-map-panel form > div:last-child', 'Find');
+      await p.wait(current(0), 'Find button also enters matches');
+      assert.deepEqual(await p.displayTime(), beforeTime, 'focus navigation leaves the displayed date unchanged');
+      assert.equal(await p.evaluate(`document.querySelector('.evidence-drawer')?.dataset.open === 'true'`), false, 'navigation does not choose a source');
+    });
     await t.test('slow feed, rapid edits and current-query arrival retain usable non-county results', async () => {
       await p.open();
       await p.wait(`document.querySelector('#qwen-map-panel textarea')?.getAttribute('aria-busy') === 'false'`, 'blank search quiet');

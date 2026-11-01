@@ -50,6 +50,24 @@ export default function AssistantWorkspace({initialMode,place='',focus,active=tr
  const messageRef=useRef<HTMLTextAreaElement>(null),composingRef=useRef(false),investigationRef=useRef(investigationId),draftSeenRef=useRef<number|null>(null);
  const queryChanged=discovery?.onQuery;
  const discoveryCurrent=!discovery||discovery.query.trim().toLowerCase()===question.trim().toLowerCase(),discoveryBusy=Boolean(discovery?.busy)||!discoveryCurrent;
+ const focusDiscoveryResult=()=>{
+  if(mode!=='find'||!question.trim()||!discoveryCurrent||!discovery?.items.length)return false;
+  const first=resultListRef.current?.querySelector<HTMLButtonElement>('button');
+  if(!first)return false;
+  first.focus();return true;
+ };
+ const handleDiscoveryResultKeyDown=(event:React.KeyboardEvent<HTMLDivElement>)=>{
+  if(event.defaultPrevented||event.shiftKey||event.ctrlKey||event.altKey||event.metaKey||composingRef.current||event.nativeEvent.isComposing||event.nativeEvent.keyCode===229)return;
+  if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key)||!discoveryCurrent)return;
+  const target=(event.target as HTMLElement).closest<HTMLButtonElement>('button');
+  if(!target||!event.currentTarget.contains(target))return;
+  const buttons=Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('button')),index=buttons.indexOf(target);
+  if(index<0)return;
+  event.preventDefault();
+  if(event.key==='ArrowUp'&&index===0){(inputRef??messageRef).current?.focus();return;}
+  const next=event.key==='Home'?0:event.key==='End'?buttons.length-1:Math.max(0,Math.min(buttons.length-1,index+(event.key==='ArrowDown'?1:-1)));
+  buttons[next]?.focus();
+ };
  useEffect(()=>{queryChanged?.(mode==='find'?question:'');},[queryChanged,mode,question]);
  // Apply a requested draft before paint: a passive opening effect can otherwise
  // replace text the visitor has already entered into the newly visible input.
@@ -138,7 +156,7 @@ export default function AssistantWorkspace({initialMode,place='',focus,active=tr
   void poll();return()=>{controller.abort();clearTimeout(timer);if(run.poll===controller)run.poll=null;};
  },[id,state,jobRetry,active,contextKey,ownsRequest]);
  const ask=async(event:React.FormEvent<HTMLFormElement>)=>{
-  event.preventDefault();if(mode==='find'){discovery?.onQuery(question);return;}
+  event.preventDefault();if(mode==='find'){if(!focusDiscoveryResult())discovery?.onQuery(question);return;}
   const values=new FormData(event.currentTarget),submittedDraft=question,prompt=submittedDraft.trim();if(prompt.length<2||busy||requestRef.current||!active||running(job??undefined))return;
   if(!investigationRef.current){setError('A secure investigation session is unavailable in this browser. Place and layer discovery remains available.');return;}
   const run:RequestRun={generation:scopeRef.current.generation,id:null,stopped:false,poll:null,noticeGeneration:scopeRef.current.generation};requestRef.current=run;
@@ -201,7 +219,7 @@ export default function AssistantWorkspace({initialMode,place='',focus,active=tr
  return <div className={styles.chat} data-mode={mode}>
   <div className={styles.toolbar}><div className={styles.identity}><strong>KFM <span className={styles.aiBadge}>AI assistant</span></strong><span role='status' className={styles.status}>{statusText}</span></div><button type='button' className={styles.secondaryButton} disabled={!investigationId||requestPhase==='stopping'} onClick={newInvestigation} title={investigationId?'Start a separate temporary conversation; preserve the map':'Fresh conversation isolation requires a supported secure browser'}>New chat</button></div>
   {mode==='find'&&<div ref={discoveryBodyRef} className={styles.body} aria-label='Place and layer discovery'>
-   {mode==='find'&&discovery&&question.trim()&&<div ref={resultListRef} id='global-search-results' className={styles.searchResults} aria-label='Places and layers'>
+   {mode==='find'&&discovery&&question.trim()&&<div ref={resultListRef} id='global-search-results' className={styles.searchResults} aria-label='Places and layers' onKeyDown={handleDiscoveryResultKeyDown}>
     {(discoveryCurrent?discovery.items:[]).map(item=><button type='button' className={styles.searchResult} key={item.id} onClick={()=>{discovery.onChoose(item.id);setQuestion('');}}><small className={styles.searchMeta}>{item.kind}</small><strong>{item.title}</strong><span>{item.subtitle}</span></button>)}
     <p role='status' aria-live='polite' aria-atomic='true'>{discoveryCurrent?(discovery.status||`${discovery.items.length} available matches.`):'Updating search…'}</p>
    </div>}
@@ -257,8 +275,14 @@ export default function AssistantWorkspace({initialMode,place='',focus,active=tr
   <footer className={styles.footer}>History stays in this tab. Queued questions have up to 35 minutes under load; finished server results expire after 15 minutes. Downloads are separate drafts.</footer>
    </div></details>
 
-   <label className={styles.composerField}><span className={styles.srOnly}>Message KFM</span><textarea ref={inputRef??messageRef} value={question} onChange={event=>setQuestion(event.target.value)} onCompositionStart={()=>{composingRef.current=true;}} onCompositionEnd={()=>{composingRef.current=false;}} onKeyDown={event=>{if(event.key==='ArrowDown'&&mode==='find'&&discoveryCurrent&&discovery?.items.length){event.preventDefault();resultListRef.current?.querySelector<HTMLButtonElement>('button')?.focus();return;}if(event.key==='Enter'&&!event.shiftKey&&!event.ctrlKey&&!event.altKey&&!event.metaKey&&!composingRef.current&&!event.nativeEvent.isComposing&&event.nativeEvent.keyCode!==229){event.preventDefault();event.currentTarget.form?.requestSubmit();}}} rows={2} maxLength={4096} placeholder={mode==='find'?'Find a county, city or layer…':'Ask KFM AI about anything…'} aria-describedby='kfm-composer-help' aria-busy={mode==='find'&&discoveryBusy}/></label>
-   <div className={styles.actions}><small id='kfm-composer-help'>{mode==='find'?'Local discovery · choose a result to inspect':mode==='evidence'?'Released records · no model required · unsupported answers withheld':sourceContext?'Source summary · no model required · not admitted evidence':'AI can make mistakes · check sources'}<span className={styles.keyboardHint}> · Enter sends · Shift+Enter adds a line</span></small>
+   <label className={styles.composerField}><span className={styles.srOnly}>Message KFM</span><textarea ref={inputRef??messageRef} value={question} onChange={event=>setQuestion(event.target.value)} onCompositionStart={()=>{composingRef.current=true;}} onCompositionEnd={()=>{composingRef.current=false;}} onKeyDown={event=>{
+    if(event.defaultPrevented||event.shiftKey||event.ctrlKey||event.altKey||event.metaKey||composingRef.current||event.nativeEvent.isComposing||event.nativeEvent.keyCode===229)return;
+    // Keep arrow keys native while editing or selecting text inside the draft.
+    const field=event.currentTarget;
+    if(event.key==='ArrowDown'&&field.selectionStart===field.value.length&&field.selectionEnd===field.value.length&&focusDiscoveryResult()){event.preventDefault();return;}
+    if(event.key==='Enter'){event.preventDefault();field.form?.requestSubmit();}
+   }} rows={2} maxLength={4096} placeholder={mode==='find'?'Find a county, city or layer…':'Ask KFM AI about anything…'} aria-describedby='kfm-composer-help' aria-busy={mode==='find'&&discoveryBusy}/></label>
+   <div className={styles.actions}><small id='kfm-composer-help'>{mode==='find'?'Local discovery · choose a result to inspect':mode==='evidence'?'Released records · no model required · unsupported answers withheld':sourceContext?'Source summary · no model required · not admitted evidence':'AI can make mistakes · check sources'}<span className={styles.keyboardHint}>{mode==='find'?' · Find or Arrow Down for matches · Arrow keys move · Enter chooses':' · Enter sends'} · Shift+Enter adds a line</span></small>
     {requestPhase!=='idle'?<>{running(job??undefined)&&<button type='button' disabled={busy} onClick={()=>setJobRetry(value=>value+1)}>Retry status</button>}<button type='button' className={styles.secondaryButton} disabled={requestPhase==='stopping'} onClick={()=>stopRequest()}>Stop</button></>:<button className={styles.sendButton} disabled={busy||!canSubmit||question.trim().length<(mode==='find'?1:2)}>{busy?'Sending…':mode==='find'?'Find':mode==='evidence'?'Search':'Send'}</button>}
    </div>
   </form>
