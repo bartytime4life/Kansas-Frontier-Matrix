@@ -62,16 +62,25 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   return {value,bytes:bytes.length};
  };
 
+ const answer=(value,state,at,maxAge)=>{
+  const body={...value,cache:{state,at:new Date(at).toISOString()}};
+  // The public envelope is larger than the signed gateway reply after cache metadata is added.
+  if(Buffer.byteLength(JSON.stringify(body))>LOCAL_DATA_LIMITS.replyBytes)return json({reasonCode:'REPLY_TOO_LARGE',hint:'Ask for fewer rows (limit) or a shorter range.'},413);
+  return json(body,200,'public, max-age='+maxAge);
+ };
  /** GET /api/local-data/{id}: one dataset question, answered from cache or the PC. */
  const query=async(request,id)=>{
   if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
   const dataset=DATASETS.get(id);
   if(!dataset)return json({reasonCode:'DATASET_NOT_FOUND'},404);
-  const input=Object.fromEntries(new URL(request.url).searchParams);
+  const search=new URL(request.url).searchParams;
+  // A parameter has one meaning; never silently select the last repeated value.
+  if([...search.keys()].some(key=>search.getAll(key).length!==1))return json({reasonCode:'QUERY_INVALID'},400);
+  const input=Object.fromEntries(search);
   let normalized;
   try{normalized=dataset.parse(input);}catch{return json({reasonCode:'QUERY_INVALID'},400);}
   const key=id+'\n'+JSON.stringify(normalized),hit=cache.get(key),age=hit?clock()-hit.at:Infinity;
-  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return json({...hit.value,cache:{state:'fresh',at:new Date(hit.at).toISOString()}},200,'public, max-age=300');
+  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return answer(hit.value,'fresh',hit.at,300);
   try{
    // Identical questions arriving together share one trip to the PC. The PC re-validates the
    // visitor's own parameters, which parse() has just accepted.
@@ -82,12 +91,12 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
     pending.set(key,trip);
    }
    const value=await trip;
-   return json({...value,cache:{state:'live',at:new Date(cache.get(key)?.at??clock()).toISOString()}},200,'public, max-age=300');
+   return answer(value,'live',cache.get(key)?.at??clock(),300);
   }catch(failure){
    if(failure.code==='QUERY_INVALID')return json({reasonCode:'QUERY_INVALID'},400);
    if(failure.code==='REPLY_TOO_LARGE')return json({reasonCode:'REPLY_TOO_LARGE',hint:'Ask for fewer rows (limit) or a shorter range.'},413);
    // The PC is off, busy, not ready or unreachable: the last answer, clearly marked, or a plain offline state.
-   if(hit&&age<LOCAL_DATA_CACHE.staleMs)return json({...hit.value,cache:{state:'stale',at:new Date(hit.at).toISOString()}},200,'public, max-age=60');
+   if(hit&&age<LOCAL_DATA_CACHE.staleMs)return answer(hit.value,'stale',hit.at,60);
    if(failure.code==='DATASET_NOT_READY')return json({state:'local-data-preparing',reasonCode:'DATASET_NOT_READY'},503);
    return json({state:'local-data-offline',reasonCode:'LOCAL_DATA_UNAVAILABLE'},503);
   }

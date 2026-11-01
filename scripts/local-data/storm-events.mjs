@@ -3,7 +3,7 @@
 // Validation is shared by the website and the gateway. Publication allow-list (phase 1): the
 // event details NOAA publishes; the fatalities table (age, sex) is not exposed. No dependencies.
 const fail=()=>Object.assign(new Error('QUERY_INVALID'),{code:'QUERY_INVALID'});
-const DATE=/^(\d{4})-(\d{2})-(\d{2})$/;
+import {day as calendarDay} from './query.mjs';
 export const STORM_EVENTS_SOURCE=Object.freeze({
  provider:'NOAA NCEI Storm Events Database',url:'https://www.ncei.noaa.gov/stormevents/',
  coverage:'Kansas, 1950-2026, as archived from the NCEI Storm Events CSV files (v1.0)',
@@ -13,10 +13,9 @@ export const STORM_EVENTS_MAX_LIMIT=200;
 
 function day(value,fallback){
  if(value===undefined||value===null||value==='')return fallback;
- const m=DATE.exec(String(value));if(!m)throw fail();
- const [y,mo,d]=[+m[1],+m[2],+m[3]];
- if(y<1950||y>2100||mo<1||mo>12||d<1||d>31)throw fail();
- return `${m[1]}-${m[2]}-${m[3]}`;
+ const normalized=calendarDay(value);
+ if(normalized<'1950-01-01')throw fail();
+ return normalized;
 }
 
 /** Normalize a query from URL parameters or a gateway request body. Throws QUERY_INVALID. */
