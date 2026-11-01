@@ -872,7 +872,7 @@
  .living-welcome:not([data-fullscreen=true]) .welcome-heading-row{grid-template-areas:'toolbar' 'hero';grid-template-rows:auto auto}
  .living-welcome:not([data-fullscreen=true]){scroll-padding-top:calc(min(220px,24dvh) + 28px)}
  .living-welcome .welcome-discovery-layout{display:block}
- .living-welcome .welcome-discovery-layout>.welcome-preview-brief{top:12px;height:220px;max-height:min(220px,24dvh);margin:0 32px 16px}
+ .living-welcome .welcome-discovery-layout>.welcome-preview-brief{top:12px;height:220px;max-height:min(220px,24dvh);max-height:min(220px,round(down,24dvh,1px));margin:0 32px 16px}
 }
 @media(max-width:700px){
  .living-welcome .welcome-discovery-layout>.welcome-preview-brief{margin-inline:18px}
