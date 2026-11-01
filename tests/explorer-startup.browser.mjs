@@ -283,7 +283,7 @@ async function pageSession(b, width, height, networkOptions = {}) {
   return { call, evaluate, wait, key, open, unobstructed, holdSceneModule, waitForSceneModule, releaseSceneModule };
 }
 
-for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823], [390, 844]]) {
+for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823], [390, 844], [320, 568]]) {
   test(`welcome glimpse stays visible and wheel scrolling chains at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
     await p.open('/?motion=off'); await readyWelcome(p);
@@ -1126,6 +1126,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
     await checkCredits('initial license strip');
     await p.wait(`!!document.querySelector('.living-welcome .domain-stage .maplibregl-ctrl-attrib')`,'the live welcome map carries its own provider credits');
+    if(width<=1100&&height<=480)assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.welcome-preview-brief')).position`),'static','short landscape keeps the panel in flow so full cards remain reachable');
     for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('header.topbar')).visibility`),'visible','global header remains available');
     for(const selector of ['.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'hidden','background map chrome does not peek through welcome');
@@ -1382,10 +1383,16 @@ for (const [width, height] of [[1280, 800], [390, 844], [568, 320]]) {
       await openMore();
       await button(mode, '.header-overflow-workspaces');
       await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace === ${JSON.stringify(mode.toLowerCase())}`, mode + ' mounted');
+      if (mode === 'Reports') await editReport();
     };
     const switchTo = async mode => {
       await button(mode, '[aria-label="Report and story workspaces"]');
       await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.workspace === ${JSON.stringify(mode.toLowerCase())}`, mode + ' mounted');
+      if (mode === 'Reports') await editReport();
+    };
+    const editReport = async () => {
+      await button('Edit report', '.report-view-switch');
+      await p.wait(`document.querySelector('.primary-workspace-surface')?.dataset.reportView === 'edit' && !!document.querySelector('.report-title-field input')`, 'the visible Edit report control opens editable fields');
     };
     const fill = async (selector, value) => {
       await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
