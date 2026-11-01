@@ -9,14 +9,19 @@ described below. Earlier implementation and validation records are retained.
 Follow-up verification found all compact full-card geometry checks passing in
 [job 124725773917](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/41264974617/job/124725773917),
 but nested wheel handoff still failed at 829×823 and 320×568 after scripted
-scroll jumps. Real wheel input handed off successfully in the temporary browser
-check at 829×823. The acceptance setup now waits for stable scroll positions and
-panel dimensions across animation frames before sending the next gesture. This
-is a test-timing hypothesis, pending its own CI result; the handoff assertions
-remain unchanged. An independent focused job runs the five scroll journeys and
-three draft journeys alongside the full suite, using the same isolated providers
-and disposable browser profiles. It does not replace full acceptance or confer
-release authority.
+scroll jumps. Real wheel input handed off successfully in temporary browser
+checks at 829×823 and 320×569. A frame-based settling hypothesis then failed four
+of eight focused journeys, including two new settling timeouts; it was rejected.
+All three draft-persistence journeys passed in that focused run.
+
+The scroll journeys now complete each mouse-scroll gesture before starting the
+next boundary check, using the protocol's mouse gesture source. The original
+handoff assertions remain in place, and diagnostics record root and inner scroll
+positions, overscroll policy and the pointer's target. Exact-head acceptance
+remains NEEDS VERIFICATION until its own focused CI result completes. The
+independent focused job runs the five scroll and three draft journeys alongside
+the full suite, with the same isolated providers and disposable browser profiles.
+It does not replace full acceptance or confer release authority.
 
 **CONFIRMED CI finding; PROPOSED correction.** The browser job for hosted commit
 `3b1b41b81a0622cb5c685a24a2250f542cb04556` passed all four new wheel/scroll
