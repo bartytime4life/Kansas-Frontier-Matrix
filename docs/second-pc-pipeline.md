@@ -698,13 +698,26 @@ Owner steps, in order, before earthquakes publish:
 3. **Qualify and apply the additive schema.** Verify a recoverable backup of
    the actual shared MySQL database and restore it into a disposable compatible
    database. PC data-store backups alone do not establish database recovery.
-   Run `node scripts/migrate-pipeline.mjs` to review SQL and its digest. On
-   GoDaddy the database is reachable only from the app, so the hosting
-   dashboard's Settings, Hosted Database page does both steps: **Export SQL**
-   downloads the backup, and **Import SQL** applies `server/pipeline-schema.sql`
-   after its SHA-256 is checked against the reviewed digest. Elsewhere, with
-   the approved database credentials and either verified TLS or the approved
-   private-network setting, `--apply` requires the
+   Run `node scripts/migrate-pipeline.mjs` to review SQL and its digest.
+   On GoDaddy the database is reachable only from the app. The dashboard's
+   Hosted Database tools (Browse tables, Export SQL, Import SQL) report on
+   2026-11-01 that they cannot reach this app's agent, so the app applies the
+   schema itself:
+   - Set `KFM_PIPELINE_SCHEMA_APPLY_SHA256` to the reviewed digest on Publish.
+     At the next start, after the server listens, `server/start.mjs` runs
+     `server/pipeline-schema-apply.mjs` once. It uses the same transport rule as
+     pipeline writes and never stops the server.
+   - It refuses a different digest (`SCHEMA_DIGEST_MISMATCH`).
+   - If the database holds any table other than the five `kfm_pipeline_`
+     tables, it also requires `KFM_PIPELINE_DATABASE_BACKUP_VERIFIED=true`
+     (`DATABASE_BACKUP_REQUIRED`). An empty database has nothing to back up.
+   - It logs one `KFM_PIPELINE_SCHEMA` line in the app's runtime logs, with
+     counts and codes only: `applied` or `already-applied` with the table
+     count, schema version, `paused` and head rows, or `held` with a reason.
+     Remove the setting afterwards; repeating it is harmless.
+
+   Elsewhere, with the approved database credentials and either verified TLS
+   or the approved private-network setting, `--apply` requires the
    exact `KFM_MIGRATION_SHA256`, the operator assertion
    `KFM_PIPELINE_DATABASE_BACKUP_VERIFIED=true`, and
    `KFM_PIPELINE_ENABLED=true` in the migration process so `getPipelineStore()`

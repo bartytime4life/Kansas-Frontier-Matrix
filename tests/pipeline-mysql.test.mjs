@@ -6,6 +6,27 @@ import mysql from 'mysql2/promise';
 import { PipelineStore } from '../server/pipeline-store.mjs';
 import { execFileSync } from 'node:child_process';
 import { sha } from '../server/pipeline-contract.mjs';
+import { applyPipelineSchema } from '../server/pipeline-schema-apply.mjs';
+
+test('MySQL: the start-time schema step holds other tables until a backup assertion, then applies once and repeats safely', { skip: process.env.KFM_PIPELINE_MYSQL_TEST !== '1' }, async t => {
+  const port = Number(process.env.KFM_PIPELINE_MYSQL_PORT ?? 13317); assert.ok(Number.isInteger(port) && port > 1024 && port <= 65535);
+  const options = { host: '127.0.0.1', port, user: 'root', password: 'kfm-disposable-test-only' };
+  const bootstrap = await mysql.createConnection(options); const database = 'kfm_schema_apply_' + process.pid;
+  await bootstrap.query('CREATE DATABASE ' + database);
+  t.after(async () => { await bootstrap.query('DROP DATABASE ' + database); await bootstrap.end(); });
+  await bootstrap.query(`CREATE TABLE ${database}.unrelated_sentinel (value INT)`); await bootstrap.query(`INSERT INTO ${database}.unrelated_sentinel VALUES (42)`);
+  const poolOptions = async () => ({ ...options, database, connectionLimit: 3, queueLimit: 8 });
+  const environment = { KFM_PIPELINE_SCHEMA_APPLY_SHA256: sha(await readFile(new URL('../server/pipeline-schema.sql', import.meta.url), 'utf8')) };
+  const held = await applyPipelineSchema({ environment, poolOptions });
+  assert.deepEqual([held.state, held.reason, held.otherTables, held.pipelineTablesBefore], ['held', 'DATABASE_BACKUP_REQUIRED', 1, 0]);
+  const [[{ n }]] = await bootstrap.query(`SELECT COUNT(*) AS n FROM information_schema.tables WHERE table_schema = '${database}' AND table_name LIKE 'kfm\\_pipeline\\_%'`);
+  assert.equal(Number(n), 0, 'a held run creates nothing');
+  const backed = { ...environment, KFM_PIPELINE_DATABASE_BACKUP_VERIFIED: 'true' };
+  const applied = await applyPipelineSchema({ environment: backed, poolOptions });
+  assert.deepEqual([applied.state, applied.pipelineTables, applied.schemaVersion, applied.paused, applied.heads], ['applied', 5, 1, true, 6]);
+  assert.equal((await applyPipelineSchema({ environment: backed, poolOptions })).state, 'already-applied');
+  assert.equal((await bootstrap.query(`SELECT value FROM ${database}.unrelated_sentinel`))[0][0].value, 42);
+});
 
 test('MySQL: additive migration, persistent replay, atomic activation/CAS and withdrawal', { skip: process.env.KFM_PIPELINE_MYSQL_TEST !== '1' }, async t => {
   const port = Number(process.env.KFM_PIPELINE_MYSQL_PORT ?? 13317); assert.ok(Number.isInteger(port) && port > 1024 && port <= 65535);

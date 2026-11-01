@@ -21,6 +21,13 @@ void reportNodeStartup(server);
 // Inference runs only on the paired home PC. Retired embedded-model probe and
 // acceptance flags deliberately have no effect on this web-server process.
 
+// Owner-only, one-time additive pipeline tables. The hosting dashboard's SQL import cannot reach
+// this app, so it applies the reviewed schema itself when that schema's exact digest is configured.
+if (process.env.KFM_PIPELINE_SCHEMA_APPLY_SHA256) {
+  const { applyPipelineSchemaOnStart } = await import("./pipeline-schema-apply.mjs");
+  void applyPipelineSchemaOnStart().catch(() => {});
+}
+
 // Owner-only opt-in memory observation. No model is loaded by this check.
 if (process.env.KFM_HOSTED_AI_RESOURCE_PROBE === "1") {
   const { reportHostedResources } = await import("./hosted-ai-resources.mjs");
