@@ -300,6 +300,10 @@ def main(argv=None) -> int:
             ctx.note("snapshot_failed", command=args.command, reason=str(error))
             return 1
         print(json.dumps(result, sort_keys=True))
+        if "retained_mismatch" in result:
+            # A kept copy no longer has its recorded bytes: the new copy is published, but the backup volume needs a look.
+            ctx.note("snapshot_failed", command=args.command, reason="SNAPSHOT_RETAINED_MISMATCH " + result["retained_mismatch"])
+            return 1
         return 0
     started = time.monotonic()
     try:

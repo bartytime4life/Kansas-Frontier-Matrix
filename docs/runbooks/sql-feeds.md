@@ -127,9 +127,16 @@ chose a separate nightly copy of the database, keeping the newest two:
   `observations-<UTC time>-<first 12 hex of its SHA-256>.sqlite`, with a receipt
   in `DEST/receipts/`.
 - Only then are copies older than the newest two deleted. Their receipts stay.
-- A failed or interrupted copy deletes nothing, an unchanged database is not
-  copied twice, and the copy refuses to leave the backup volume under 20% free
-  (`SNAPSHOT_SPACE_FLOOR`).
+- A failed or interrupted copy deletes nothing, and the copy refuses to leave
+  the backup volume under 20% free (`SNAPSHOT_SPACE_FLOOR`).
+- An unchanged database is not copied twice, but only if the kept copy still
+  has the bytes its receipt records. If it doesn't, the new copy is published
+  and the command exits 1 with `SNAPSHOT_RETAINED_MISMATCH`, since the backup
+  volume changed a kept copy.
+- One snapshot or check runs at a time per destination (`.snapshot.lock`, held
+  from cleanup to pruning); another gets `SNAPSHOT_BUSY`. Each run first removes
+  what an interrupted one left: partial copies, and a renamed copy whose
+  receipt was never published. Files with other names are never touched.
 
 The 02:30 backup runs it with `--lock-held`, since `runtime/backup.sh` already
 holds the lock; run by hand, it takes the lock itself.

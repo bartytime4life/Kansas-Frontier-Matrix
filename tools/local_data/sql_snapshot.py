@@ -6,7 +6,8 @@ one page-level copy a night (SQLite's backup API, taken while the pipeline lock 
 out), checked with ``PRAGMA quick_check`` and its row counts, renamed into place with its
 SHA-256 in the name, and recorded by a receipt. Only after a new copy passes are copies older
 than the newest ``keep`` deleted; their receipts stay. ``check`` re-reads the newest copy for the
-monthly restore test without copying it anywhere.
+monthly restore test without copying it anywhere. One snapshot or check runs at a time per
+destination (``.snapshot.lock``), from cleanup to pruning; the pipeline lock covers only the copy.
 
 The copy is a standalone rollback-journal file. To restore, copy it over ``observations.sqlite``
 with the feeds and the local-data gateway stopped; the feeds switch it back to WAL on their next
@@ -14,7 +15,8 @@ open.
 """
 from __future__ import annotations
 
-from contextlib import closing, nullcontext
+from contextlib import closing, contextmanager, nullcontext
+import fcntl
 import hashlib
 import json
 import os
@@ -52,15 +54,48 @@ def _counts(db: sqlite3.Connection) -> dict:
             "page_count": db.execute("PRAGMA page_count").fetchone()[0], "page_size": db.execute("PRAGMA page_size").fetchone()[0]}
 
 
+def _named(dest: Path, stem: str) -> list[Path]:
+    """Copies this job named (STEM-TIME-HEX12.sqlite), oldest first. Other files are never touched."""
+    pattern = re.compile(rf"{re.escape(stem)}-\d{{8}}T\d{{6}}Z-[0-9a-f]{{12}}\.sqlite")
+    return [p for p in sorted(dest.glob(f"{stem}-*.sqlite")) if pattern.fullmatch(p.name)]
+
+
 def _kept(dest: Path, stem: str) -> list[tuple[Path, dict]]:
     """Verified copies (file and receipt both present), oldest first."""
-    pattern = re.compile(rf"{re.escape(stem)}-\d{{8}}T\d{{6}}Z-[0-9a-f]{{12}}\.sqlite")
     out = []
-    for path in sorted(dest.glob(f"{stem}-*.sqlite")):
+    for path in _named(dest, stem):
         receipt = dest / "receipts" / (path.name + ".json")
-        if pattern.fullmatch(path.name) and receipt.is_file():
+        if receipt.is_file():
             out.append((path, json.loads(receipt.read_text())))
     return out
+
+
+@contextmanager
+def _exclusive(dest: Path):
+    """Held across a whole snapshot or check, so one run never removes or prunes another's files."""
+    with open(dest / ".snapshot.lock", "a") as handle:
+        try:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise FeedError("SNAPSHOT_BUSY") from None
+        try:
+            yield
+        finally:
+            fcntl.flock(handle, fcntl.LOCK_UN)
+
+
+def _clean_leftovers(dest: Path, stem: str) -> list[str]:
+    """Remove what an interrupted run left: partial copies and their journals, a copy renamed into place
+    whose receipt was never published, and that unpublished receipt. None of them is a kept copy."""
+    names = {p.name for p, _ in _kept(dest, stem)}
+    partial = re.compile(rf"{re.escape(stem)}-\d{{8}}T\d{{6}}Z\.sqlite\.partial(?:-journal)?")
+    receipt = re.compile(rf"{re.escape(stem)}-\d{{8}}T\d{{6}}Z-[0-9a-f]{{12}}\.sqlite\.json\.part")
+    leftovers = [*(p for p in dest.glob(f"{stem}-*.partial*") if partial.fullmatch(p.name)),
+                 *(p for p in (dest / "receipts").glob(f"{stem}-*.part") if receipt.fullmatch(p.name)),
+                 *(p for p in _named(dest, stem) if p.name not in names)]
+    for path in leftovers:
+        path.unlink()
+    return sorted(p.name for p in leftovers)
 
 
 def _destination(ctx, dest: Path, device_check: bool) -> Path:
@@ -83,9 +118,13 @@ def snapshot(ctx, dest: Path, *, keep: int = 2, lock_held: bool = False, device_
     if not ctx.db_path.is_file():
         raise FeedError("DATABASE_MISSING")
     dest = _destination(ctx, dest, device_check)
+    with _exclusive(dest):
+        return _snapshot(ctx, dest, keep, lock_held, floor_fraction)
+
+
+def _snapshot(ctx, dest: Path, keep: int, lock_held: bool, floor_fraction: float) -> dict:
     stem = ctx.db_path.stem
-    for leftover in dest.glob(f"{stem}-*.sqlite.partial*"):   # an interrupted copy (and its journal) never passed its check
-        leftover.unlink()
+    removed = _clean_leftovers(dest, stem)
     wal = ctx.db_path.with_name(ctx.db_path.name + "-wal")
     needed = ctx.db_path.stat().st_size + (wal.stat().st_size if wal.exists() else 0)
     space = os.statvfs(dest)
@@ -113,9 +152,15 @@ def snapshot(ctx, dest: Path, *, keep: int = 2, lock_held: bool = False, device_
         raise FeedError("SNAPSHOT_CHECK_FAILED")
     digest, size = _hash(partial), partial.stat().st_size
     kept = _kept(dest, stem)
+    mismatch = {}
     if kept and kept[-1][1]["sha256"] == digest:
-        partial.unlink()
-        return {"state": "unchanged", "snapshot": kept[-1][0].name, "sha256": digest, "kept": [p.name for p, _ in kept]}
+        newest, recorded = kept[-1]
+        # Skip the new copy only if the kept one still has the bytes its receipt records.
+        if newest.stat().st_size == recorded["bytes"] and _hash(newest) == digest:
+            partial.unlink()
+            return {"state": "unchanged", "snapshot": newest.name, "sha256": digest, "kept": [p.name for p, _ in kept],
+                    "removed_leftovers": removed}
+        mismatch = {"retained_mismatch": newest.name}
     final = dest / f"{stem}-{stamp}-{digest[:12]}.sqlite"
     receipt = {"format": FORMAT, "state": "verified", "file": final.name, "sha256": digest, "bytes": size,
                "source": str(ctx.db_path), "created_at": stamp, "quick_check": "ok", **counts}
@@ -140,13 +185,20 @@ def snapshot(ctx, dest: Path, *, keep: int = 2, lock_held: bool = False, device_
     if pruned:
         _fsync(dest)
     return {"state": "verified", "snapshot": final.name, "sha256": digest, "bytes": size, **counts,
-            "kept": [p.name for p, _ in kept[-keep:]], "pruned": pruned}
+            "kept": [p.name for p, _ in kept[-keep:]], "pruned": pruned, "removed_leftovers": removed, **mismatch}
 
 
 def check(ctx, dest: Path) -> dict:
     """Re-read the newest kept copy: bytes and SHA-256 against its receipt, integrity_check, row counts."""
     dest = dest.absolute()
-    kept = _kept(dest, ctx.db_path.stem) if dest.is_dir() else []
+    if not (dest / "receipts").is_dir():
+        raise FeedError("SNAPSHOT_MISSING")
+    with _exclusive(dest):
+        return _check(ctx, dest)
+
+
+def _check(ctx, dest: Path) -> dict:
+    kept = _kept(dest, ctx.db_path.stem)
     if not kept:
         raise FeedError("SNAPSHOT_MISSING")
     path, receipt = kept[-1]

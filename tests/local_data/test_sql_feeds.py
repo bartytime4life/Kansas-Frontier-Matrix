@@ -182,13 +182,49 @@ class SnapshotTests(FeedCase):
         with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_SPACE_FLOOR"):
             self.hour += 1
             snapshot.snapshot(self.ctx, self.dest, device_check=False, floor_fraction=1.0)
-        self.assertEqual([p.name for p in self.dest.iterdir() if p.is_file()], [first["snapshot"]])
+        self.assertEqual([p.name for p in self.dest.glob("observations-*")], [first["snapshot"]])
         with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_SAME_DEVICE"):
             snapshot.snapshot(self.ctx, self.dest)
         with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_DESTINATION_MISSING"):
             snapshot.snapshot(self.ctx, Path(self.temp.name) / "unmounted/KFM-pipeline-backup/sql-snapshots", device_check=False)
         with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_KEEP_INVALID"):
             self.take(keep=0)
+
+    def test_a_publication_interrupted_between_renames_is_cleaned_up(self):
+        self.add_source("a.txt")
+        self.take()
+        orphan = self.dest / "observations-20261102T050000Z-0123456789ab.sqlite"
+        orphan.write_bytes(b"renamed into place, receipt never published")
+        (self.dest / "receipts" / (orphan.name + ".json.part")).write_text("{}")
+        unrelated = self.dest / "observations-kept-by-hand.sqlite"
+        unrelated.write_bytes(b"not this job's")
+        self.add_source("b.txt")
+        result = self.take(keep=1)
+        self.assertEqual(result["removed_leftovers"], [orphan.name, orphan.name + ".json.part"])
+        self.assertEqual(sorted(p.name for p in self.dest.glob("*.sqlite")), sorted([result["snapshot"], unrelated.name]))
+        self.assertEqual(list((self.dest / "receipts").glob("*.part")), [])
+
+    def test_one_run_at_a_time_per_destination(self):
+        self.add_source("a.txt")
+        self.take()
+        with snapshot._exclusive(self.dest):
+            with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_BUSY"):
+                self.take()
+            with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_BUSY"):
+                snapshot.check(self.ctx, self.dest)
+        self.assertEqual(snapshot.check(self.ctx, self.dest)["state"], "verified")
+
+    def test_an_unchanged_database_replaces_a_kept_copy_whose_bytes_changed(self):
+        self.add_source("a.txt")
+        first = self.take()
+        with open(self.dest / first["snapshot"], "r+b") as handle:
+            handle.seek(200)
+            handle.write(b"\xff")
+        second = self.take()
+        self.assertEqual((second["state"], second["retained_mismatch"]), ("verified", first["snapshot"]))
+        self.assertEqual(second["sha256"], first["sha256"])
+        self.assertEqual(snapshot.check(self.ctx, self.dest)["snapshot"], second["snapshot"])
+        self.assertEqual(self.take()["state"], "unchanged", "the healthy replacement is now the one compared")
 
     def test_the_restore_check_rereads_the_newest_copy(self):
         with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_MISSING"):
