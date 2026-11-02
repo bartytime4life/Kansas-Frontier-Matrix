@@ -2,6 +2,7 @@
 from datetime import date, datetime, timezone
 import gzip
 import hashlib
+import http.client
 import importlib.util
 import io
 import json
@@ -165,6 +166,30 @@ class CoreTests(FeedCase):
         with core.pipeline_lock(self.ctx), self.assertRaisesRegex(core.FeedError, "RECEIPT_KEY_MISMATCH"):
             core.load_version(db, self.ctx, source_id="demo", key="year/2001", path=path, digest=digest, url="u", table="demo_rows", rows=[], width=2)
         db.close()
+
+    def test_a_connection_dropped_mid_transfer_is_retried_then_reported(self):
+        class Dropped:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_):
+                return False
+
+            def read(self, *_):
+                raise http.client.IncompleteRead(b"partial")
+
+        class Answer(Dropped):
+            headers = {}
+
+            def read(self, *_):
+                return b""
+
+        with patch("urllib.request.urlopen", side_effect=[Dropped(), Answer()]) as opened, patch("time.sleep"):
+            self.assertEqual(core.http_fetch("https://x/file", limit=10).body, b"")
+        self.assertEqual(opened.call_count, 2)
+        with patch("urllib.request.urlopen", side_effect=lambda *a, **k: Dropped()), patch("time.sleep"), \
+                self.assertRaisesRegex(core.FeedError, "FETCH_FAILED https://x/file"):
+            core.http_fetch("https://x/file", limit=10)
 
     def test_the_pipeline_lock_is_reentrant_within_a_run(self):
         with core.pipeline_lock(self.ctx):
