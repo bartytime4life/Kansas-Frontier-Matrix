@@ -71,7 +71,7 @@ cell counts for all 105 counties.
 
     pc-pipeline-data/run/install-sql-feeds.sh SOURCE_CHECKOUT
 
-This copies the 13 modules and 2 budget catalogs the feeds need into
+This copies the 14 modules and 2 budget catalogs the feeds need into
 `pc-pipeline-data/runtime/releases/sql-feeds-<digest>/`, writes
 `runtime/sql-feeds.env`, and enables these timers (local time):
 
@@ -107,6 +107,47 @@ has binary wheels only:
 - `numpy` 2.5.4.
 
 Every other feed uses only the standard library.
+
+## Backup
+
+The per-file nightly backup would store a new full copy of a database that
+changes every hour, and it never deletes old copies. So on 2026-11-01 the owner
+chose a separate nightly copy of the database, keeping the newest two:
+
+    pc-pipeline-data/runtime/sql-feed.sh snapshot DEST [--lock-held]
+    pc-pipeline-data/runtime/sql-feed.sh snapshot-check DEST
+
+`snapshot` (`tools/local_data/sql_snapshot.py`) works like this:
+
+- It copies the database page by page with SQLite's backup API, while the
+  pipeline lock keeps writers out, to `DEST` on another device. The copy is a
+  standalone rollback-journal file.
+- The copy must pass `PRAGMA quick_check` and match the source's
+  `kfm_sql_sources` counts and page count. It is then renamed to
+  `observations-<UTC time>-<first 12 hex of its SHA-256>.sqlite`, with a receipt
+  in `DEST/receipts/`.
+- Only then are copies older than the newest two deleted. Their receipts stay.
+- A failed or interrupted copy deletes nothing, and the copy refuses to leave
+  the backup volume under 20% free (`SNAPSHOT_SPACE_FLOOR`).
+- An unchanged database is not copied twice, but only if the kept copy still
+  has the bytes its receipt records. If it doesn't, the new copy is published
+  and the command exits 1 with `SNAPSHOT_RETAINED_MISMATCH`, since the backup
+  volume changed a kept copy.
+- One snapshot or check runs at a time per destination (`.snapshot.lock`, held
+  from cleanup to pruning); another gets `SNAPSHOT_BUSY`. Each run first removes
+  what an interrupted one left: partial copies, and a renamed copy whose
+  receipt was never published. Files with other names are never touched.
+
+The 02:30 backup runs it with `--lock-held`, since `runtime/backup.sh` already
+holds the lock; run by hand, it takes the lock itself.
+
+The monthly restore test runs `snapshot-check`. It re-hashes the newest copy
+against its receipt, runs `PRAGMA integrity_check`, and compares the counts.
+
+The per-file backup leaves the database out because it is listed in the
+pipeline config's `separateBackup`. That list, and the steps to restore from a
+copy, are in the pipeline runbook, `docs/second-pc-pipeline.md` on the hosted
+branch.
 
 ## Failure and recovery
 

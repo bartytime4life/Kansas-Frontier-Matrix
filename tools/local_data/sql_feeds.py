@@ -9,9 +9,10 @@ run outside the pipeline lock; only database writes take it. The 85 GB aggregate
 
     python -m tools.local_data.sql_feeds --root STORE --db observations.sqlite \
         [--tiger kansas-tiger-2025.gpkg] [--nwm-gpkg kansas-nwm.gpkg] [--lock pipeline.lock] \
-        run FEED | status
+        run FEED | status | snapshot --dest DIR [--keep 2] [--lock-held] | snapshot-check --dest DIR
 
-Feeds: captures, iem-wind, ghcnd, storm-events, asos-5min, prism, nwm.
+Feeds: captures, iem-wind, ghcnd, storm-events, asos-5min, prism, nwm. ``snapshot`` and
+``snapshot-check`` back up the database itself (``sql_snapshot.py``).
 """
 from __future__ import annotations
 
@@ -277,11 +278,32 @@ def main(argv=None) -> int:
     run = sub.add_parser("run")
     run.add_argument("feed", choices=sorted(FEEDS))
     sub.add_parser("status")
+    snap = sub.add_parser("snapshot", help="Verified copy of the database on the backup volume, keeping the newest --keep")
+    snap.add_argument("--dest", type=Path, required=True)
+    snap.add_argument("--keep", type=int, default=2)
+    snap.add_argument("--lock-held", action="store_true", help="The caller already holds --lock (runtime/backup.sh)")
+    check = sub.add_parser("snapshot-check", help="Re-read the newest copy for the monthly restore test")
+    check.add_argument("--dest", type=Path, required=True)
     args = parser.parse_args(argv)
     os.umask(0o077)
     ctx = Context(root=args.root, db_path=args.db, tiger=args.tiger, nwm_gpkg=args.nwm_gpkg, lock=args.lock, catalogs=args.catalog)
     if args.command == "status":
         print(json.dumps(status(ctx), indent=1, sort_keys=True))
+        return 0
+    if args.command in ("snapshot", "snapshot-check"):
+        from tools.local_data import sql_snapshot
+
+        try:
+            result = (sql_snapshot.snapshot(ctx, args.dest, keep=args.keep, lock_held=args.lock_held)
+                      if args.command == "snapshot" else sql_snapshot.check(ctx, args.dest))
+        except FeedError as error:
+            ctx.note("snapshot_failed", command=args.command, reason=str(error))
+            return 1
+        print(json.dumps(result, sort_keys=True))
+        if "retained_mismatch" in result:
+            # A kept copy no longer has its recorded bytes: the new copy is published, but the backup volume needs a look.
+            ctx.note("snapshot_failed", command=args.command, reason="SNAPSHOT_RETAINED_MISMATCH " + result["retained_mismatch"])
+            return 1
         return 0
     started = time.monotonic()
     try:
