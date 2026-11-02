@@ -15,7 +15,7 @@ from unittest.mock import patch
 import zipfile
 
 from tests.local_data import test_intake as fixtures
-from tools.local_data import intake, intake_route, sql_feed_prism as prism, sql_feed_sources as feeds, sql_feeds as core
+from tools.local_data import intake, intake_route, sql_feed_prism as prism, sql_feed_sources as feeds, sql_feeds as core, sql_snapshot as snapshot
 from tools.local_data.manage import init_store
 
 BASE_SCHEMA = """
@@ -134,6 +134,91 @@ class CoreTests(FeedCase):
         core.set_state(db, self.ctx, "demo", {"through": "2026-11-03"})
         db.close()
         self.assertEqual(core.status(self.ctx)["feeds"]["demo"]["through"], "2026-11-03")
+
+
+class SnapshotTests(FeedCase):
+    def setUp(self):
+        super().setUp()
+        self.dest = Path(self.temp.name) / "backup/sql-snapshots"
+        self.dest.parent.mkdir()
+        self.hour = 8
+
+    def take(self, **options):
+        self.hour += 1
+        self.ctx.now = lambda hour=self.hour: datetime(2026, 11, 2, hour, 30, tzinfo=timezone.utc)
+        return snapshot.snapshot(self.ctx, self.dest, device_check=False, floor_fraction=0, **options)
+
+    def add_source(self, name):
+        db = core.open_db(self.ctx)
+        path, digest = core.store_raw(self.ctx, "demo", name, name.encode(), url="u")
+        core.finish_source(db, core.begin_source(db, self.ctx, "demo", path, digest, "u", {}), 7)
+        db.close()
+
+    def test_a_nightly_copy_is_verified_and_only_the_newest_two_are_kept(self):
+        self.add_source("a.txt")
+        first = self.take()
+        self.assertEqual((first["state"], first["source_files"], first["source_rows"], first["pruned"]), ("verified", 1, 7, []))
+        copy = self.dest / first["snapshot"]
+        self.assertTrue(copy.name.endswith(first["sha256"][:12] + ".sqlite"))
+        self.assertEqual(hashlib.sha256(copy.read_bytes()).hexdigest(), first["sha256"])
+        self.assertEqual(oct(copy.stat().st_mode & 0o777), "0o600")
+        with sqlite3.connect(f"file:{copy}?mode=ro", uri=True) as db:
+            self.assertEqual(db.execute("PRAGMA journal_mode").fetchone()[0], "delete")
+        self.assertEqual(self.take()["state"], "unchanged", "an unchanged database is not copied twice")
+        self.add_source("b.txt")
+        second = self.take()
+        self.add_source("c.txt")
+        third = self.take()
+        self.assertEqual(third["pruned"], [first["snapshot"]])
+        self.assertEqual(sorted(p.name for p in self.dest.glob("*.sqlite")), [second["snapshot"], third["snapshot"]])
+        self.assertEqual(len(list((self.dest / "receipts").glob("*.json"))), 3, "a pruned copy's receipt stays")
+        self.assertEqual(snapshot.check(self.ctx, self.dest)["snapshot"], third["snapshot"])
+
+    def test_a_failed_copy_deletes_nothing_and_leaves_no_partial(self):
+        self.add_source("a.txt")
+        first = self.take()
+        (self.dest / "observations-20261102T000000Z.sqlite.partial").write_bytes(b"interrupted")
+        (self.dest / "observations-20261102T000000Z.sqlite.partial-journal").write_bytes(b"interrupted")
+        with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_SPACE_FLOOR"):
+            self.hour += 1
+            snapshot.snapshot(self.ctx, self.dest, device_check=False, floor_fraction=1.0)
+        self.assertEqual([p.name for p in self.dest.iterdir() if p.is_file()], [first["snapshot"]])
+        with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_SAME_DEVICE"):
+            snapshot.snapshot(self.ctx, self.dest)
+        with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_DESTINATION_MISSING"):
+            snapshot.snapshot(self.ctx, Path(self.temp.name) / "unmounted/KFM-pipeline-backup/sql-snapshots", device_check=False)
+        with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_KEEP_INVALID"):
+            self.take(keep=0)
+
+    def test_the_restore_check_rereads_the_newest_copy(self):
+        with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_MISSING"):
+            snapshot.check(self.ctx, self.dest)
+        self.add_source("a.txt")
+        copy = self.dest / self.take()["snapshot"]
+        result = snapshot.check(self.ctx, self.dest)
+        self.assertEqual((result["state"], result["integrity_check"]), ("verified", "ok"))
+        with open(copy, "r+b") as handle:
+            handle.seek(200)
+            handle.write(b"\xff")
+        with self.assertRaisesRegex(core.FeedError, "SNAPSHOT_DIGEST_MISMATCH"):
+            snapshot.check(self.ctx, self.dest)
+
+    def test_the_command_takes_the_lock_unless_the_caller_holds_it(self):
+        self.add_source("a.txt")
+        out = io.StringIO()
+        args = ["--root", str(self.root), "--db", str(self.db_path), "--lock", str(self.ctx.lock), "snapshot", "--dest", str(self.dest)]
+        with patch("sys.stdout", out):
+            self.assertEqual(core.main(args), 1)
+        self.assertIn('"reason": "SNAPSHOT_SAME_DEVICE"', out.getvalue())
+        taken = []
+        real = core.pipeline_lock
+        with patch.object(core, "pipeline_lock", lambda ctx: (taken.append(1), real(ctx))[1]):
+            self.take()
+            self.assertEqual(len(taken), 1)
+            self.add_source("b.txt")
+            taken.clear()
+            self.assertEqual(self.take(lock_held=True)["state"], "verified")
+            self.assertEqual(taken, [], "the backup's own lock covers a held run")
 
 
 class CaptureTests(FeedCase):
