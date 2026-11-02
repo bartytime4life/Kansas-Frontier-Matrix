@@ -595,9 +595,14 @@ To restore the database from a copy:
 
 1. Stop `kfm-local-data-gateway`, `kfm-local-data-worker` and the
    `kfm-sql-feed-*` timers.
-2. Take the pipeline lock and copy the newest
-   `sql-snapshots/observations-*.sqlite` over `observations.sqlite`.
-3. Check its SHA-256 against its receipt, then start everything again.
+2. Take the pipeline lock. Move `observations.sqlite` and any
+   `observations.sqlite-wal`, `-shm` or `-journal` beside it into a new dated
+   folder, and keep them there. SQLite would otherwise replay a leftover WAL or
+   journal onto the restored copy when it next opens it.
+3. Copy the newest `sql-snapshots/observations-*.sqlite` to `observations.sqlite`
+   and check its SHA-256 against its receipt.
+4. Confirm that no `-wal`, `-shm` or `-journal` file sits beside it, then start
+   everything again.
 
 The feeds switch the restored file back to WAL on their next run. Their state is
 in the database too, so they resume from the copy's state and fetch again

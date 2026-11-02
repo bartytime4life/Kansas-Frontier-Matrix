@@ -32,7 +32,8 @@ export async function walk(path, prefix = '', skip = () => false) {
   for (const entry of await readdir(path, { withFileTypes: true })) {
     if (entry.isSymbolicLink()) fail('BACKUP_SYMLINK_REJECTED');
     const name = prefix + entry.name; const full = resolve(path, entry.name);
-    if (skip(name)) continue;
+    // The separate snapshot job covers one file; a listed directory would silently drop a whole subtree.
+    if (skip(name)) { if (!entry.isFile()) fail('SEPARATE_BACKUP_NOT_A_FILE'); continue; }
     if (entry.isDirectory()) results.push(...await walk(full, name + '/', skip));
     else if (entry.isFile()) results.push({ path: name, ...await hashFile(full) });
     else fail('BACKUP_SPECIAL_FILE_REJECTED');

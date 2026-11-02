@@ -221,6 +221,8 @@ test('a working database with its own snapshot job is left out of the per-file b
   assert.deepEqual(paths(await walk(data, '', separatelyBackedUp([db]))),
     ['raw/feed/observations.sqlite', 'work/sql-enrichment/20261031/kansas-tiger-2025.gpkg']);
   assert.equal((await walk(data)).length, 6, 'without a list every file is still backed up');
+  await assert.rejects(walk(data, '', separatelyBackedUp(['work/sql-enrichment/20261031'])), /SEPARATE_BACKUP_NOT_A_FILE/,
+    'a listed directory must not drop the files beside the database');
   const config = { format: 'kfm-pc-pipeline-config-v1', root: '/srv/kfm', mount: '/srv', approvalDirectory: '/etc/kfm', storeId: 'a'.repeat(32),
     device: 1, sources: ['nws-alerts'], publish: false, remoteMode: 'connection-only' };
   assert.deepEqual(validateConfig({ ...config, separateBackup: [db] }).separateBackup, [db]);
