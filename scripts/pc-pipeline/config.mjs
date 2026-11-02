@@ -23,6 +23,11 @@ export function validateConfig(input) {
     || config.sources.some(source => !PC_CAPTURE_IDS.includes(source)) || typeof config.publish !== 'boolean'
     || (config.remoteMode !== undefined && config.remoteMode !== 'connection-only')) fail('CONFIG_INVALID');
   if (config.remoteMode === 'connection-only' && config.publish) fail('CONNECTION_ONLY_UPLOADS_DISABLED');
+  // Only working files under data/work/ may leave the per-file backup; captures, raw files and receipts never do.
+  if (config.separateBackup !== undefined && (!Array.isArray(config.separateBackup) || !config.separateBackup.length
+    || config.separateBackup.length > 8 || new Set(config.separateBackup).size !== config.separateBackup.length
+    || config.separateBackup.some(p => typeof p !== 'string' || p.length > 256
+      || !/^work(?:\/[A-Za-z0-9_-][A-Za-z0-9._-]*)+$/.test(p)))) fail('CONFIG_INVALID');
   storagePolicy(config);
   return config;
 }

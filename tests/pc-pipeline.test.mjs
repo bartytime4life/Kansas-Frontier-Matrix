@@ -16,8 +16,9 @@ import { tick } from '../scripts/pc-pipeline/worker.mjs';
 import { publish } from '../scripts/pc-pipeline/publisher.mjs';
 import { captureFile } from '../scripts/pc-pipeline/copy.mjs';
 import { mirrorFtps } from '../scripts/pc-pipeline/ftps.mjs';
-import { validateBackup, backupObjectPath } from '../scripts/pc-pipeline/backup-layout.mjs';
-import { cli } from '../scripts/pc-pipeline/cli.mjs';
+import { validateBackup, backupObjectPath, separatelyBackedUp } from '../scripts/pc-pipeline/backup-layout.mjs';
+import { cli, walk } from '../scripts/pc-pipeline/cli.mjs';
+import { validateConfig } from '../scripts/pc-pipeline/config.mjs';
 import { operatorHealth } from '../scripts/pc-pipeline/health.mjs';
 
 const now = Date.now();
@@ -210,6 +211,25 @@ test('successive backups preserve both versions of a mutable working file', asyn
   const invalid = { ...manifest, files: [{ ...second, path: '../escape' }] };
   invalid.inventorySha256 = sha(Buffer.from(canonical(invalid.files)));
   assert.throws(() => validateBackup(invalid), /BACKUP_PATH_INVALID/);
+});
+test('a working database with its own snapshot job is left out of the per-file backup with its sidecars', async () => {
+  const data = await mkdtemp(resolve(tmpdir(), 'kfm-backup-separate-'));
+  const db = 'work/sql-enrichment/20261031/observations.sqlite';
+  await mkdir(resolve(data, 'work/sql-enrichment/20261031'), { recursive: true }); await mkdir(resolve(data, 'raw/feed'), { recursive: true });
+  for (const name of [db, db + '-journal', db + '-wal', db + '-shm', 'work/sql-enrichment/20261031/kansas-tiger-2025.gpkg', 'raw/feed/observations.sqlite']) await writeFile(resolve(data, name), name);
+  const paths = items => items.map(item => item.path).sort();
+  assert.deepEqual(paths(await walk(data, '', separatelyBackedUp([db]))),
+    ['raw/feed/observations.sqlite', 'work/sql-enrichment/20261031/kansas-tiger-2025.gpkg']);
+  assert.equal((await walk(data)).length, 6, 'without a list every file is still backed up');
+  const config = { format: 'kfm-pc-pipeline-config-v1', root: '/srv/kfm', mount: '/srv', approvalDirectory: '/etc/kfm', storeId: 'a'.repeat(32),
+    device: 1, sources: ['nws-alerts'], publish: false, remoteMode: 'connection-only' };
+  assert.deepEqual(validateConfig({ ...config, separateBackup: [db] }).separateBackup, [db]);
+  for (const separateBackup of [[], [db, db], ['raw/feed/observations.sqlite'], ['quarantine/x'], ['work/../raw/x'], ['work/.hidden'], ['work'], ['/work/x'], db])
+    assert.throws(() => validateConfig({ ...config, separateBackup }), /CONFIG_INVALID/, JSON.stringify(separateBackup));
+  const files = [{ path: 'raw/feed/a', sha256: 'b'.repeat(64), bytes: 1 }];
+  const manifest = { format: 'kfm-pc-data-backup-v2', files, separateBackup: [db], inventorySha256: sha(Buffer.from(canonical(files))) };
+  assert.equal(validateBackup(manifest), manifest);
+  assert.throws(() => validateBackup({ ...manifest, separateBackup: db }), /BACKUP_MANIFEST_INVALID/);
 });
 test('operator health ages a backup by its completion clock and keeps legacy receipts explicit', async () => {
   const root = await mkdtemp(resolve(tmpdir(), 'kfm-health-clock-')); const run = resolve(root, 'run'); await mkdir(run);
