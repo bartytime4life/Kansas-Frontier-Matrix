@@ -6,10 +6,10 @@ November 2026 to February 2027. WaterServices shuts down on 2027-02-22, with int
 outages from January 2027 (https://waterservices.usgs.gov, https://waterdata.usgs.gov/blog/nwisweb-decommission-summary/).
 So the USGS feeds use only the Water Data OGC APIs (``OGC``). That is version 1, the one the API's own
 documentation and queryables link to; v0 still answers, with older formatting. The APIs include an
-annual ``peaks`` collection. No key is needed. USGS limits anonymous use per IP address per hour, but
-publishes no figure and sends anonymous callers no X-RateLimit headers. A 403 or 429 stops a run with
-``USGS_RATE_LIMITED``, and what the run loaded stays. Requests go one at a time, with a pause between
-them, and a run makes a few hundred at most. A page holds at most 50,000 rows, and a CSV page has no
+annual ``peaks`` collection. No key is needed. Anonymous use is limited per IP address to 1,000
+requests an hour: the 429 answer says so in X-RateLimit-Limit, with a Retry-After. A 403 or 429 stops a
+run with ``USGS_RATE_LIMITED``, and what the run loaded stays. Requests go one at a time, with a pause
+between them, and a run makes a few hundred at most. A page holds at most 50,000 rows, and a CSV page has no
 next-page link, so each request is shaped to fit one page: one time series, one year, or one
 modification window. A full page is split, never loaded.
 
@@ -21,7 +21,7 @@ Steps in each run:
    window that overlaps the last window by a day. A full page is cut at the sample's modification-time
    quartiles; a page full at one instant is cut by day. These windows bring new days, provisional
    edits, and approvals and corrections of any age, since each of them changes ``last_modified``.
-2. Backfill the full records of up to ``max_records`` series: 1,810 series, so about 13 runs.
+2. Backfill the full records of up to ``max_records`` series: 1,810 series, so about 6 runs (300 a run).
 3. After the backfill, re-read ``ROTATION_PER_RUN`` records a run, so values USGS deleted go within a
    year.
 A value is one row per (time_series_id, time), the API's own identity. Each load replaces the row
@@ -378,7 +378,7 @@ def _record(ctx, db, series: str, today: date) -> dict:
     return {"state": "unchanged", "rows": 0} if dropped is None else {"state": "loaded", "rows": len(rows), "dropped": dropped}
 
 
-def usgs_daily(ctx, max_records: int = 150, max_modified_requests: int = 40) -> dict:
+def usgs_daily(ctx, max_records: int = 300, max_modified_requests: int = 40) -> dict:
     db = core.open_db(ctx)
     try:
         _schema(ctx, db, DAILY_SCHEMA)
@@ -494,7 +494,7 @@ def _gw_year(ctx, db, year: int, today: date) -> dict:
                        len(GW_FIELDS) + 3), "rows_in_file": len(rows)}
 
 
-def usgs_groundwater(ctx, max_years: int = 40, row_budget: int = 400_000) -> dict:
+def usgs_groundwater(ctx, max_years: int = 80, row_budget: int = 400_000) -> dict:
     db = core.open_db(ctx)
     try:
         _schema(ctx, db, GW_SCHEMA)
@@ -650,7 +650,7 @@ def _wqp_file(ctx, db, url: str, *, key: str, stem: str, table: str, columns, so
         kept.unlink(missing_ok=True)
 
 
-def water_quality(ctx, max_years: int = 25, row_budget: int = WQP_ROW_BUDGET) -> dict:
+def water_quality(ctx, max_years: int = 60, row_budget: int = WQP_ROW_BUDGET) -> dict:
     db = core.open_db(ctx)
     try:
         _schema(ctx, db, WQP_SCHEMA)

@@ -90,7 +90,7 @@ They follow the rules above. Two core helpers in `sql_feeds.py` serve them:
 
 | Feed | Source | Tables | Each run, and revisions |
 |---|---|---|---|
-| `usgs-daily` | USGS Water Data OGC API (`api.waterdata.usgs.gov/ogcapi/v1`): `combined-metadata`, `daily` | `kfm_usgs_series`, `kfm_usgs_sites`, `kfm_usgs_daily_values` | Backfills up to 150 series records a run. A statewide "modified since" window picks up new and revised values; there is one row per series and day, and a revision replaces it. Six records are re-read in full each run |
+| `usgs-daily` | USGS Water Data OGC API (`api.waterdata.usgs.gov/ogcapi/v1`): `combined-metadata`, `daily` | `kfm_usgs_series`, `kfm_usgs_sites`, `kfm_usgs_daily_values` | Backfills up to 300 series records a run, within USGS's 1,000 requests an hour without a key. A statewide "modified since" window picks up new and revised values; there is one row per series and day, and a revision replaces it. Six records are re-read in full each run |
 | `usgs-peaks` | OGC `peaks` | `kfm_usgs_peaks` | The statewide answer every 30 days, replacing the last |
 | `usgs-groundwater` | OGC `field-measurements` | `kfm_usgs_field_measurements` | Year files, backfilled from 1860. Years with changed rows are fetched again, and every year once a year |
 | `water-quality` | Water Quality Portal `Result` and `Station` | `kfm_wqp_results` (47 columns; the kept copy has all of them), `kfm_wqp_stations` | Year files, backfilled from 1901. The current and previous year are fetched weekly, the three before monthly, older years yearly |
@@ -125,9 +125,9 @@ API.
 
 | Feed | Runs |
 |---|---|
-| `usgs-daily` | about 13 |
-| `usgs-groundwater` | about 8 |
-| `water-quality` | about 7 |
+| `usgs-daily` | about 6 |
+| `usgs-groundwater` | about 3 |
+| `water-quality` | about 5 |
 | `air-quality` | about 6 |
 | `kgs-oil-gas` | 4 |
 | `nws-warnings` | 4 |
