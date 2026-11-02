@@ -125,6 +125,20 @@ class DailyTests(FeedCase):
         self.assertEqual((third["modified_files"], third["records"], third["records_unchanged"]), (0, 2, 2))
         self.assertEqual(len(self.values()), 5)
 
+    def test_a_record_a_modification_window_already_loaded_still_counts_as_read(self):
+        w.usgs_daily(self.ctx, max_records=1)   # metadata, then DeSoto's record
+        row = value(H_SEDGWICK, SEDGWICK, "2026-11-03", "3.10", approval="Provisional", qualifier="ICE", parameter="00065",
+                    modified="2026-11-04 05:00:00.000000+00:00")
+        self.records[H_SEDGWICK], self.modified = [row], [row]
+        # The window brings Sedgwick's only value, so its full record is the same bytes and registers no source.
+        second = w.usgs_daily(self.ctx, max_records=1)
+        self.assertEqual((second["modified_files"], second["records"], second["records_unchanged"]), (1, 1, 1))
+        third = w.usgs_daily(self.ctx, max_records=1)
+        self.assertEqual((third["backfill_pending"], third["records_unchanged"]), (0, 1))
+        state = json.loads(self.q("SELECT state_json FROM kfm_feed_state WHERE feed='usgs-daily'")[0][0])
+        self.assertIn("rotation_after", state, "the backfill ended, so the third run rotates instead of reading Sedgwick again")
+        self.assertEqual((state.get("records_read"), state["rotation_after"]), ([H_SEDGWICK], min(Q_DESOTO, H_SEDGWICK)))
+
     def test_a_reread_record_replaces_its_series_and_drops_days_usgs_removed(self):
         w.usgs_daily(self.ctx)
         self.records[Q_DESOTO] = [value(Q_DESOTO, DESOTO, "1917-07-08", "2240"),

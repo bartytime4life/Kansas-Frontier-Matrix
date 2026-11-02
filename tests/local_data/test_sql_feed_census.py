@@ -342,6 +342,17 @@ class DecennialTests(FeedCase):
         self.assertEqual(self.q("SELECT product, COUNT(*) FROM kfm_census_decennial_values GROUP BY 1 ORDER BY 1"), [("dhc", 18), ("pl", 12)])
         self.assertEqual(self.q("SELECT COUNT(*) FROM kfm_sql_sources WHERE state='superseded'"), [(1,)])
 
+    def test_a_narrower_selection_retires_the_tables_it_no_longer_has(self):
+        census.census_decennial(self.ctx)
+        with patch.object(census, "DEC_ITERATIONS", ""):
+            result = census.census_decennial(self.ctx)
+        self.assertEqual(self.q("SELECT DISTINCT table_id FROM kfm_census_decennial_values WHERE product='dhc' ORDER BY 1"),
+                         [("P1",), ("P12",), ("P13",)])
+        self.assertEqual((result["complete"], result.get("retired")), (["pl", "dhc"], ["dhc2020/segment-02"]))
+        self.assertEqual(self.q("SELECT COUNT(*) FROM kfm_sql_sources WHERE state='superseded' AND receipt_json LIKE '%dhc2020/segment-02%'"), [(1,)])
+        with patch.object(census, "DEC_ITERATIONS", ""):
+            self.assertEqual(census.census_decennial(self.ctx)["retired"], [], "nothing is left to retire")
+
     def test_the_first_load_stops_at_its_segment_cap_and_resumes(self):
         dhc_url = census.DEC_SOURCES["dhc"][0]
         first = census.census_decennial(self.ctx, max_segments=2)

@@ -392,8 +392,9 @@ def usgs_daily(ctx, max_records: int = 300, max_modified_requests: int = 40) -> 
         summary.update(modified)
         series = [r[0] for r in db.execute("SELECT DISTINCT time_series_id FROM kfm_usgs_series WHERE data_type='Daily values' ORDER BY 1")]
         have = {r[0] for r in db.execute("SELECT DISTINCT json_extract(receipt_json,'$.key') FROM kfm_sql_sources WHERE source_id='usgs-daily-record'")}
-        empty = set(state.get("empty_records", []))
-        backfill = [s for s in series if f"record/{s}" not in have and s not in empty]
+        # A record whose bytes a modification window already loaded registers no source of its own: state records it.
+        empty, read = set(state.get("empty_records", [])), set(state.get("records_read", []))
+        backfill = [s for s in series if f"record/{s}" not in have and s not in empty and s not in read]
         if backfill:
             chosen, rotation = backfill[:max_records], None
         else:
@@ -408,6 +409,9 @@ def usgs_daily(ctx, max_records: int = 300, max_modified_requests: int = 40) -> 
             counts["record_rows"] += result["rows"]
             counts["rows_dropped"] += result.get("dropped", 0)
             counts["records_unchanged"] += result["state"] == "unchanged"
+            if result["state"] == "unchanged" and f"record/{s}" not in have:
+                read.add(s)
+                state = _save(ctx, db, "usgs-daily", {**state, "records_read": sorted(read)})
             if result["state"] == "empty":
                 counts["records_empty"] += 1
                 empty.add(s)

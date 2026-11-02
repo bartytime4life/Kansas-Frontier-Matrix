@@ -199,6 +199,23 @@ def _replace(db, ctx, *, source_id, key, path, digest, url, tables) -> dict:
     return {"state": "loaded", "rows": total, "superseded": len(previous)}
 
 
+def _retire(db, *, source_id: str, key: str, table: str) -> int:
+    """Remove the loaded version of key: its rows go and its source is superseded. Call with the pipeline lock held."""
+    old = [fid for (fid,) in db.execute("SELECT file_id FROM kfm_sql_sources WHERE source_id=? AND state='complete' "
+                                        "AND json_extract(receipt_json,'$.key')=?", (source_id, key))]
+    if old:
+        db.execute("BEGIN IMMEDIATE")
+        try:
+            for fid in old:
+                db.execute(f"DELETE FROM {table} WHERE file_id=?", (fid,))
+                db.execute("UPDATE kfm_sql_sources SET state='superseded' WHERE file_id=?", (fid,))
+            db.execute("COMMIT")
+        except BaseException:
+            db.execute("ROLLBACK")
+            raise
+    return len(old)
+
+
 # --- ACS 5-year table-based summary files -----------------------------------------------------------------------
 
 ACS = "https://www2.census.gov/programs-surveys/acs/summary_file/{vintage}/table-based-SF/"
@@ -684,11 +701,11 @@ def _dec_product(ctx, db, state: dict, product: str, summary: dict, budget: dict
                     continue
                 cells = segments[seg]
                 keep = [i for i, (table, _) in enumerate(cells) if _dec_selected(table)]
+                member, key, kept = f"ks{seg:05d}2020.{product}", f"{stem}/segment-{seg:02d}", 0
                 if keep:
                     if budget["segments"] <= 0:
                         break
                     budget["segments"] -= 1
-                    member, key = f"ks{seg:05d}2020.{product}", f"{stem}/segment-{seg:02d}"
                     kept = _dec_segment_cut(z, member, fileid, seg, [n for _, n in cells], keep, logrecnos, work)
                     if kept:
                         path, digest = core.store_raw(ctx, "census-decennial", f"{stem}/kansas-{member}-{core.file_sha256(work)[:12]}.txt.gz",
@@ -701,6 +718,11 @@ def _dec_product(ctx, db, state: dict, product: str, summary: dict, budget: dict
                                                        rows=_dec_value_rows(product, geo, tables)(path), width=6)
                         summary["segments" if result["state"] == "loaded" else "unchanged"].append(key)
                         summary["rows"] += result["rows"]
+                if not kept:
+                    # Nothing of this segment is selected now: values an earlier selection loaded go with it.
+                    with core.pipeline_lock(ctx):
+                        if _retire(db, source_id=f"census-{stem}-segment", key=key, table="kfm_census_decennial_values"):
+                            summary["retired"].append(key)
                 ps["segments_done"].append(seg)
                 state = _save(ctx, db, "census-decennial", state)
         if set(segments) <= set(ps["segments_done"]):
@@ -719,7 +741,7 @@ def census_decennial(ctx, max_segments: int = 24) -> dict:
         with core.pipeline_lock(ctx):
             db.executescript(DEC_SCHEMA)
         state = core.get_state(db, "census-decennial")
-        summary = {"segments": [], "unchanged": [], "pending": [], "rows": 0, "geographies": 0, "variables": 0}
+        summary = {"segments": [], "unchanged": [], "retired": [], "pending": [], "rows": 0, "geographies": 0, "variables": 0}
         budget = {"segments": max_segments}
         for product in DEC_SOURCES:
             state = _dec_product(ctx, db, state, product, summary, budget)
