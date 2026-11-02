@@ -26,6 +26,7 @@ from datetime import datetime, timezone
 import fcntl
 import gzip
 import hashlib
+import http.client
 import importlib
 import json
 import os
@@ -98,7 +99,9 @@ def _get(url: str, read: Callable, *, timeout: int, missing_ok: bool, attempts: 
                 return None
             if error.code < 500 or attempt == attempts - 1:
                 raise FeedError(f"HTTP_{error.code} {url}") from None
-        except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
+        # IncompleteRead (a connection dropped mid-transfer, as IEM did on 2026-11-02) is an HTTPException,
+        # not a ConnectionError: retried like the others.
+        except (urllib.error.URLError, TimeoutError, ConnectionError, http.client.HTTPException) as error:
             if attempt == attempts - 1:
                 raise FeedError(f"FETCH_FAILED {url}: {error}") from None
         time.sleep(5 * 4 ** attempt)
