@@ -13,7 +13,7 @@ import { Journal } from './journal.mjs';
 import { loadConfig, tick } from './worker.mjs';
 import { pipelineCall, publish } from './publisher.mjs';
 import { connectionCheck } from './connection.mjs';
-import { validateBackup, backupObjectPath } from './backup-layout.mjs';
+import { validateBackup, backupObjectPath, separatelyBackedUp } from './backup-layout.mjs';
 
 const checkout = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const bytes = value => Buffer.from(canonical(value));
@@ -27,12 +27,14 @@ async function rootPath(value) {
   if ((await lstat(path)).mode & 0o077) fail('PRIVATE_ROOT_REQUIRED');
   return path;
 }
-async function walk(path, prefix = '') {
+export async function walk(path, prefix = '', skip = () => false) {
   const results = [];
   for (const entry of await readdir(path, { withFileTypes: true })) {
     if (entry.isSymbolicLink()) fail('BACKUP_SYMLINK_REJECTED');
     const name = prefix + entry.name; const full = resolve(path, entry.name);
-    if (entry.isDirectory()) results.push(...await walk(full, name + '/'));
+    // The separate snapshot job covers one file; a listed directory would silently drop a whole subtree.
+    if (skip(name)) { if (!entry.isFile()) fail('SEPARATE_BACKUP_NOT_A_FILE'); continue; }
+    if (entry.isDirectory()) results.push(...await walk(full, name + '/', skip));
     else if (entry.isFile()) results.push({ path: name, ...await hashFile(full) });
     else fail('BACKUP_SPECIAL_FILE_REJECTED');
     if (results.length > 1000000) fail('INVENTORY_FILE_LIMIT');
@@ -186,7 +188,10 @@ export async function cli(argv, connectionDependencies) {
       await unlink(snapshot);
       await immutable(resolve(config.root, 'data/receipts/pipeline/journal-backups-v2', check.sha256 + '.json'), bytes({ ...check, file: check.sha256 + '.sqlite' }));
     } catch (e) { if (e.code !== 'ENOENT') throw e; }
-    const inventory = await walk(resolve(config.root, 'data'));
+    // A growing database would add a full copy every night; its own snapshot job keeps two instead.
+    const separateBackup = [...(config.separateBackup ?? [])].sort();
+    const separate = separateBackup.length ? { separateBackup } : {};
+    const inventory = await walk(resolve(config.root, 'data'), '', separatelyBackedUp(separateBackup));
     await storageGuard(backupConfig, { reserve: inventory.reduce((n, item) => n + item.bytes, 0) });
     for (const item of inventory) {
       const input = resolve(config.root, 'data', item.path); const output = backupObjectPath(destination, item);
@@ -196,9 +201,9 @@ export async function cli(argv, connectionDependencies) {
     const inventorySha256 = sha(bytes(inventory));
     const format = 'kfm-pc-data-backup-v2';
     const manifestSha256 = sha(bytes({ format, files: inventory }));
-    await immutable(resolve(destination, 'backup-manifests', manifestSha256 + '.json'), bytes({ format, files: inventory,
+    await immutable(resolve(destination, 'backup-manifests', manifestSha256 + '.json'), bytes({ format, files: inventory, ...separate,
       storeId: config.storeId, sourceDevice: String((await lstat(config.root)).dev), backupDevice: String((await lstat(destination)).dev), inventorySha256 }));
-    return { state: 'verified-copy', files: inventory.length, inventorySha256, manifestSha256, completedAt: new Date().toISOString(), restoreTestRequired: true };
+    return { state: 'verified-copy', files: inventory.length, inventorySha256, manifestSha256, ...separate, completedAt: new Date().toISOString(), restoreTestRequired: true };
   }
   if (command === 'verify-backup') {
     const manifest = parse(await readRegular(resolve(args[0]), 64 * 1024 ** 2), 64 * 1024 ** 2);
@@ -220,7 +225,8 @@ export async function cli(argv, connectionDependencies) {
     }
     const receipt = { format: 'kfm-pipeline-restore-receipt-v1', state: 'verified', storeId: manifest.storeId, sourceDevice: manifest.sourceDevice,
       backupDevice: manifest.backupDevice, inventorySha256: manifest.inventorySha256, files: manifest.files.length,
-      payloadObjects: manifest.files.filter(f => /^(?:quarantine|raw)\//.test(f.path) && f.bytes > 0).length, restoredAt: new Date().toISOString() };
+      payloadObjects: manifest.files.filter(f => /^(?:quarantine|raw)\//.test(f.path) && f.bytes > 0).length,
+      ...(manifest.separateBackup ? { separateBackup: manifest.separateBackup } : {}), restoredAt: new Date().toISOString() };
     await immutable(resolve(restored, 'restore-receipt.json'), bytes(receipt)); return receipt;
   }
 }

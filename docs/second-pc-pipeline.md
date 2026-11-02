@@ -19,7 +19,7 @@ under `/home/dev/Documents/ChatGPT/Kansas-Frontier-Matrix/`.
 | Pipeline host | `dev` PC. `devil` runs no pipeline service; on 2026-11-01 the owner approved it for tests and as the owner's signing PC. |
 | Deployment | User-level systemd units that run `pc-pipeline-data/runtime/run.sh`. The system install (`install.mjs`, `/opt/kfm-pipeline`, `/srv/kfm-data`, `kfm-pipeline.timer`) has **not** been applied. |
 | Sources | `usgs-streamflow`, `nws-alerts` and, since 2026-10-31 (first capture 18:30 UTC), `usgs-earthquakes`. All three are capture-only. |
-| Publication | `publish: false` and `remoteMode: "connection-only"`. Nothing is uploaded. On 2026-11-01 the owner decided to keep pipeline data on the PC: no hosted publication is planned, and GoDaddy's database (capped at 100 MB) is not used for it. The hosted pipeline code stays inert without `KFM_PIPELINE_ENABLED`. The website's only runtime link to this PC is the outbound AI chat relay (`kfm-inference-worker`). |
+| Publication | `publish: false` and `remoteMode: "connection-only"`. Nothing is uploaded. On 2026-11-01 the owner decided to keep pipeline data on the PC: no hosted publication is planned, and GoDaddy's database (capped at 100 MB) is not used for it. The hosted pipeline code stays inert without `KFM_PIPELINE_ENABLED`. The website reaches this PC only through outbound relays: the AI chat relay (`kfm-inference-worker`) and, since 2026-11-01, the read-only local-data relay, which answers queries on the owner-approved SQL datasets (`docs/local-data-relay.md`). |
 | Normal tick output | The first tick in each hour records `candidate-only` for each source; later ticks in that hour report `already-complete-or-held`. |
 | Data store | `KFM-pipeline/` on the 1.4 TiB HDD at `/run/media/dev/f975f1e2-a926-4040-8bc5-cbea4335d8bf` |
 | Backup volume | LVM `kfm-backup/store` across three SSDs, about 559 GiB, at `/run/media/dev/b34cab7d-b16b-494f-8e12-2f20db736ec4`, since 2026-11-01 (see [Backup volume, November 1](#backup-volume-november-1)) |
@@ -82,6 +82,13 @@ carries both.
 | `kfm-working-restore.timer` | 1st of the month, 03:30 | `restore` | `cli.mjs restore-test` into a new `KFM-restore-tests/<UTC time>/` on the backup volume. |
 | `kfm-intake.service` | always on | `intake` | Working desk on 127.0.0.1:8772. |
 | `kfm-library.service` | always on | `library` | Catalog-only library on 127.0.0.1:8771. |
+| `kfm-sql-feed-<feed>.timer` (seven) | `captures` hourly at :25; the others daily, `storm-events` on Mondays | — | `pc-pipeline-data/runtime/sql-feed.sh FEED`: the SQL feeds that add new source data to the [local SQL database](#local-sql-database). |
+| `kfm-local-data-gateway.service` | always on | — | Read-only SQL gateway on 127.0.0.1:8788 for the local-data relay. |
+| `kfm-local-data-worker.service` | always on | — | Outbound-only worker that takes the website's local-data queries to the gateway. |
+
+The SQL feeds have their own runbook on `main`,
+[SQL feeds on the pipeline PC](https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/main/docs/runbooks/sql-feeds.md),
+which lists each timer. The relay is described in `docs/local-data-relay.md`.
 
 Timers are `Persistent=true` with up to 20 s of randomized delay. Every task
 first runs `runtime/mounts.sh`, which mounts the drives by UUID and refuses a
@@ -503,8 +510,12 @@ no data migration or cleanup is required. Keep all resulting private reports.
 ### Local SQL database
 
 Raw archive data that suits a database is loaded into private local databases on
-the data drive, under `KFM-pipeline/data/work/sql-enrichment/20261031/`. None of
-it is published, and GoDaddy's database is not involved.
+the data drive, under `KFM-pipeline/data/work/sql-enrichment/20261031/`. The
+databases stay on this PC, and GoDaddy's database is not involved. Since
+2026-11-01 the live site reads the owner-approved datasets from them through the
+read-only local-data relay, and the SQL feeds add new source data to
+`observations.sqlite` every day; it was 7.7 GB that evening. It is backed up
+separately; see [SQL database backup, November 1](#sql-database-backup-november-1).
 
 | File | Contents |
 | --- | --- |
@@ -538,6 +549,64 @@ NetCDF files. The Kansas subset of the NWM files is loaded. Neither GeoPackage
 indexes its attribute columns, so look up features one at a time by ID. A full
 join against them can run for a very long time, and it holds the pipeline lock
 while it does.
+
+### SQL database backup, November 1
+
+The per-file backup keeps every version of every file it copies. Once the SQL
+feeds began changing `observations.sqlite` every hour, each nightly backup would
+have stored another full copy (7.7 GB and growing) and never removed one. The
+backup refuses to run once the backup volume would fall below 20% free, and at
+that rate it would have reached that point around November 12.
+
+On 2026-11-01 the owner chose a separate nightly copy that keeps the newest two,
+and chose to keep every monthly restore test. The database is now backed up
+like this:
+
+- The active config's `separateBackup` lists
+  `work/sql-enrichment/20261031/observations.sqlite`. `backup` leaves that file
+  and its `-journal`, `-wal` and `-shm` files out of the per-file copy, and
+  records the list in the manifest, in `backup-last.json` and in each restore
+  receipt. Only paths under `data/work/` may be listed; captures, raw files and
+  receipts always go through the per-file backup.
+- In the same 02:30 run, still under the pipeline lock,
+  `runtime/backup.sh` runs `pc-pipeline-data/runtime/sql-feed.sh snapshot`. It
+  copies the database page by page with SQLite's backup API into
+  `KFM-pipeline-backup/sql-snapshots/`, as a standalone rollback-journal file.
+- The copy must pass `PRAGMA quick_check` and match the source's
+  `kfm_sql_sources` counts and page count. It is then renamed to
+  `observations-<UTC time>-<first 12 hex of its SHA-256>.sqlite`, and a receipt
+  goes into `sql-snapshots/receipts/`.
+- Only then are copies older than the newest two deleted. Their receipts stay.
+  A failed copy deletes nothing, and an unchanged database is not copied
+  again.
+- The snapshot runs even when the per-file backup fails, and the unit fails if
+  either one fails. Its result is in `run/sql-snapshot-last.json`.
+- The monthly restore test also runs `sql-feed.sh snapshot-check`. It re-hashes
+  the newest copy against its receipt, runs `PRAGMA integrity_check`, compares
+  the counts, and writes `run/sql-snapshot-check-last.json`. The copy is read in
+  place; nothing is restored from it.
+- The two GeoPackages beside the database don't change, so the per-file backup
+  still stores them once.
+
+Earlier full copies of the database stay in `objects/` as part of the manifests
+that list them.
+
+To restore the database from a copy:
+
+1. Stop `kfm-local-data-gateway`, `kfm-local-data-worker` and the
+   `kfm-sql-feed-*` timers.
+2. Take the pipeline lock. Move `observations.sqlite` and any
+   `observations.sqlite-wal`, `-shm` or `-journal` beside it into a new dated
+   folder, and keep them there. SQLite would otherwise replay a leftover WAL or
+   journal onto the restored copy when it next opens it.
+3. Copy the newest `sql-snapshots/observations-*.sqlite` to `observations.sqlite`
+   and check its SHA-256 against its receipt.
+4. Confirm that no `-wal`, `-shm` or `-journal` file sits beside it, then start
+   everything again.
+
+The feeds switch the restored file back to WAL on their next run. Their state is
+in the database too, so they resume from the copy's state and fetch again
+whatever came after it.
 
 ### Connection-only owner scope, October 23
 
@@ -693,7 +762,13 @@ KFM-pipeline-backup/
   objects/sha256/DIGEST/payload           format v2: one object per distinct content
   data/PATH                               format v1: path-named copies, read-only legacy
   backup-manifests/DIGEST.json            one manifest per backup run
+  sql-snapshots/observations-TIME-HEX.sqlite   the SQL database, newest two copies
+  sql-snapshots/receipts/NAME.json        one receipt per copy, kept after pruning
 ```
+
+A file in the config's `separateBackup` is not in the manifest's `files`; the
+manifest lists it under `separateBackup` instead. See
+[SQL database backup, November 1](#sql-database-backup-november-1).
 
 A manifest lists every file as `{path, sha256, bytes}` together with
 `storeId`, `sourceDevice`, `backupDevice` and `inventorySha256`, the SHA-256 of
