@@ -11,8 +11,10 @@ run outside the pipeline lock; only database writes take it. The 85 GB aggregate
         [--tiger kansas-tiger-2025.gpkg] [--nwm-gpkg kansas-nwm.gpkg] [--lock pipeline.lock] \
         run FEED | status | snapshot --dest DIR [--keep 2] [--lock-held] | snapshot-check --dest DIR
 
-Feeds: captures, iem-wind, ghcnd, storm-events, asos-5min, prism, nwm. ``snapshot`` and
-``snapshot-check`` back up the database itself (``sql_snapshot.py``).
+Feeds: captures, iem-wind, ghcnd, storm-events, asos-5min, prism, nwm; and, from 2026-11-02,
+usgs-daily, usgs-peaks, water-quality, climdiv, drought, air-quality, nass, kgs-oil-gas, fema,
+earthquakes, tornadoes, nws-warnings, cdc-places. ``snapshot`` and ``snapshot-check`` back up the
+database itself (``sql_snapshot.py``).
 """
 from __future__ import annotations
 
@@ -46,6 +48,20 @@ FEEDS = {
     "asos-5min": "tools.local_data.sql_feed_sources:asos_fivemin",
     "prism": "tools.local_data.sql_feed_prism:prism",
     "nwm": "tools.local_data.sql_feed_nwm:nwm",
+    # Kansas sources the owner added on 2026-11-02, for the local database only.
+    "usgs-daily": "tools.local_data.sql_feed_water:usgs_daily",
+    "usgs-peaks": "tools.local_data.sql_feed_water:usgs_peaks",
+    "water-quality": "tools.local_data.sql_feed_water:water_quality",
+    "climdiv": "tools.local_data.sql_feed_climate:climdiv",
+    "drought": "tools.local_data.sql_feed_climate:drought",
+    "air-quality": "tools.local_data.sql_feed_air:air_quality",
+    "nass": "tools.local_data.sql_feed_nass:nass",
+    "kgs-oil-gas": "tools.local_data.sql_feed_kgs:kgs_oil_gas",
+    "fema": "tools.local_data.sql_feed_fema:fema",
+    "earthquakes": "tools.local_data.sql_feed_hazards:earthquakes",
+    "tornadoes": "tools.local_data.sql_feed_hazards:tornadoes",
+    "nws-warnings": "tools.local_data.sql_feed_hazards:nws_warnings",
+    "cdc-places": "tools.local_data.sql_feed_hazards:cdc_places",
 }
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS kfm_feed_state (
@@ -65,16 +81,13 @@ class Fetched:
     etag: str | None = None
 
 
-def http_fetch(url: str, *, limit: int, timeout: int = 120, missing_ok: bool = False, attempts: int = 3) -> Fetched | None:
-    """GET url with a byte ceiling. A 404 is None when missing_ok; other failures retry, then raise."""
+def _get(url: str, read: Callable, *, timeout: int, missing_ok: bool, attempts: int):
+    """GET url and pass the response to read. A 404 is None when missing_ok; other failures retry, then raise."""
     for attempt in range(attempts):
         try:
             request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
             with urllib.request.urlopen(request, timeout=timeout) as response:
-                body = response.read(limit + 1)
-                if len(body) > limit:
-                    raise FeedError(f"RESPONSE_TOO_LARGE {url}")
-                return Fetched(url, body, response.headers.get("Last-Modified"), response.headers.get("ETag"))
+                return read(response)
         except urllib.error.HTTPError as error:
             if error.code == 404 and missing_ok:
                 return None
@@ -87,12 +100,45 @@ def http_fetch(url: str, *, limit: int, timeout: int = 120, missing_ok: bool = F
     raise FeedError(f"FETCH_FAILED {url}")
 
 
+def http_fetch(url: str, *, limit: int, timeout: int = 120, missing_ok: bool = False, attempts: int = 3) -> Fetched | None:
+    """GET url into memory with a byte ceiling."""
+    def read(response):
+        body = response.read(limit + 1)
+        if len(body) > limit:
+            raise FeedError(f"RESPONSE_TOO_LARGE {url}")
+        return Fetched(url, body, response.headers.get("Last-Modified"), response.headers.get("ETag"))
+    return _get(url, read, timeout=timeout, missing_ok=missing_ok, attempts=attempts)
+
+
+def http_download(url: str, dest: Path, *, limit: int, timeout: int = 600, missing_ok: bool = False, attempts: int = 3) -> Fetched | None:
+    """GET url into the file dest (replaced), with a byte ceiling, for downloads too large to hold in memory.
+    The returned Fetched has an empty body."""
+    def read(response):
+        total = 0
+        with open(dest, "wb") as out:
+            while chunk := response.read(1 << 20):
+                total += len(chunk)
+                if total > limit:
+                    raise FeedError(f"RESPONSE_TOO_LARGE {url}")
+                out.write(chunk)
+        return Fetched(url, b"", response.headers.get("Last-Modified"), response.headers.get("ETag"))
+    return _get(url, read, timeout=timeout, missing_ok=missing_ok, attempts=attempts)
+
+
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
 
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        while chunk := handle.read(1 << 20):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def canonical(value) -> str:
@@ -107,6 +153,7 @@ class Context:
     nwm_gpkg: Path | None = None
     lock: Path | None = None
     fetch: Callable[..., Fetched | None] = http_fetch
+    download: Callable[..., Fetched | None] | None = None   # None: http_download, or ctx.fetch when that is replaced
     now: Callable[[], datetime] = utc_now
     log: Callable[[dict], None] = lambda line: print(json.dumps(line, sort_keys=True), flush=True)
     catalogs: list[Path] = field(default_factory=list)
@@ -117,34 +164,68 @@ class Context:
         self.log({"at": self.now().strftime("%Y-%m-%dT%H:%M:%SZ"), "event": event, **fields})
 
 
-def store_raw(ctx: Context, feed: str, name: str, body: bytes, *, url: str, fetched: Fetched | None = None,
-              original: bytes | None = None, extra: dict | None = None) -> tuple[Path, str]:
+def download(ctx: Context, url: str, dest: Path, *, limit: int, timeout: int = 600, missing_ok: bool = False) -> Fetched | None:
+    """Stream url into dest (see http_download). Where a test replaced ctx.fetch, the download goes through it."""
+    if ctx.download is not None:
+        return ctx.download(url, dest, limit=limit, timeout=timeout, missing_ok=missing_ok)
+    if ctx.fetch is http_fetch:
+        return http_download(url, dest, limit=limit, timeout=timeout, missing_ok=missing_ok)
+    fetched = ctx.fetch(url, limit=limit, timeout=timeout, missing_ok=missing_ok)
+    if fetched is None:
+        return None
+    Path(dest).write_bytes(fetched.body)
+    return Fetched(fetched.url, b"", fetched.last_modified, fetched.etag)
+
+
+def temp_path(ctx: Context, name: str) -> Path:
+    """A scratch file on the store's filesystem but outside data/, so the per-file backup never sees it."""
+    if "/" in name or name.startswith("."):
+        raise FeedError("TEMP_NAME_UNSAFE")
+    folder = ctx.root / "tmp-sql-feeds"
+    folder.mkdir(mode=0o700, exist_ok=True)
+    return folder / f"{os.getpid()}-{name}"
+
+
+def store_raw(ctx: Context, feed: str, name: str, body: bytes | Path, *, url: str, fetched: Fetched | None = None,
+              original: bytes | Path | None = None, extra: dict | None = None) -> tuple[Path, str]:
     """Write one immutable raw object and its receipt under data/raw/sql-feeds/<feed>/.
 
-    body is what is kept (for curated sources, the Kansas-only subset); original, when given,
-    is the full download, recorded only by size and SHA-256.
+    body is what is kept (for curated sources, the Kansas-only subset): bytes, or a file from
+    temp_path() that is moved into place. original, when given, is the full download (bytes or a
+    file, left where it is), recorded only by size and SHA-256.
     """
     if "/" in feed or ".." in Path(name).parts or name.startswith("/"):
         raise FeedError("RAW_NAME_UNSAFE")
     path = ctx.root / "data/raw/sql-feeds" / feed / name
     receipt_path = ctx.root / "data/receipts/ingest/sql-feeds" / feed / (name + ".json")
-    digest = sha256(body)
+    is_file = isinstance(body, Path)
+    digest, size = (file_sha256(body), body.stat().st_size) if is_file else (sha256(body), len(body))
     if path.exists():
-        if sha256(path.read_bytes()) != digest:
+        if (file_sha256(path) if is_file else sha256(path.read_bytes())) != digest:
             raise FeedError(f"RAW_OBJECT_CHANGED {name}")
+        if is_file:
+            body.unlink()
         return path, digest
+    if original is not None:
+        original = ({"sha256": file_sha256(original), "bytes": original.stat().st_size} if isinstance(original, Path)
+                    else {"sha256": sha256(original), "bytes": len(original)})
     receipt = {"format": "kfm-sql-feed-receipt-v1", "feed": feed, "path": str(path.relative_to(ctx.root)), "sha256": digest,
-               "bytes": len(body), "source_url": url, "retrieved_at": ctx.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+               "bytes": size, "source_url": url, "retrieved_at": ctx.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
                "last_modified": fetched.last_modified if fetched else None, "etag": fetched.etag if fetched else None,
-               **({"original": {"sha256": sha256(original), "bytes": len(original), "kept": False}} if original is not None else {}),
+               **({"original": {**original, "kept": False}} if original is not None else {}),
                **(extra or {})}
     for target, data in ((path, body), (receipt_path, (json.dumps(receipt, indent=1, sort_keys=True) + "\n").encode())):
         target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         temp = target.with_name(target.name + ".part")
-        with open(temp, "wb") as handle:
-            handle.write(data)
-            handle.flush()
-            os.fsync(handle.fileno())
+        if isinstance(data, Path):
+            os.replace(data, temp)
+            with open(temp, "rb") as handle:
+                os.fsync(handle.fileno())
+        else:
+            with open(temp, "wb") as handle:
+                handle.write(data)
+                handle.flush()
+                os.fsync(handle.fileno())
         os.chmod(temp, 0o600)
         os.replace(temp, target)
     return path, digest
@@ -214,6 +295,47 @@ def begin_source(db: sqlite3.Connection, ctx: Context, source_id: str, path: Pat
 def finish_source(db: sqlite3.Connection, file_id: int, rows: int) -> None:
     db.execute("UPDATE kfm_sql_sources SET imported_rows=?, state='complete' WHERE file_id=?", (rows, file_id))
     db.execute("COMMIT")
+
+
+def load_version(db: sqlite3.Connection, ctx: Context, *, source_id: str, key: str, path: Path, digest: str, url: str,
+                 table: str, rows, width: int) -> dict:
+    """Load one version of a provider file that is published again over time (a year's file, a bulk
+    export), replacing the version loaded before: in one transaction its rows are deleted and its
+    source record is marked superseded. key names the file across versions and is recorded in the
+    receipt (store_raw extra={"key": key}). rows yields tuples of width values; each is stored as
+    (file_id, row_number, *values), so table needs file_id as the first column of an index.
+    Call with the pipeline lock held."""
+    receipt = receipt_for(ctx, path)
+    if receipt.get("key") != key:
+        raise FeedError(f"RECEIPT_KEY_MISMATCH {key}")
+    previous = db.execute("SELECT file_id, sha256 FROM kfm_sql_sources WHERE source_id=? AND state='complete' "
+                          "AND json_extract(receipt_json,'$.key')=?", (source_id, key)).fetchall()
+    if digest in {sha for _, sha in previous}:
+        return {"state": "unchanged", "rows": 0, "superseded": 0}
+    if loaded(db, digest):
+        # The same bytes are already recorded for another key, or for an older version of this one.
+        raise FeedError(f"SOURCE_CONTENT_SHARED {key}")
+    file_id = begin_source(db, ctx, source_id, path, digest, url, receipt)
+    try:
+        for old, _ in previous:
+            db.execute(f"DELETE FROM {table} WHERE file_id=?", (old,))
+            db.execute("UPDATE kfm_sql_sources SET state='superseded' WHERE file_id=?", (old,))
+        sql, batch, count = f"INSERT INTO {table} VALUES ({','.join('?' * (width + 2))})", [], 0
+        for row in rows:
+            if len(row) != width:
+                raise FeedError(f"ROW_SHAPE {key} {count + len(batch) + 1}")
+            batch.append((file_id, count + len(batch) + 1, *row))
+            if len(batch) == 20000:
+                db.executemany(sql, batch)
+                count += len(batch)
+                batch = []
+        db.executemany(sql, batch)
+        count += len(batch)
+        finish_source(db, file_id, count)
+    except BaseException:
+        db.execute("ROLLBACK")
+        raise
+    return {"state": "loaded", "rows": count, "superseded": len(previous)}
 
 
 @contextmanager

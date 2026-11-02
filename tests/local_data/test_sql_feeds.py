@@ -123,6 +123,49 @@ class CoreTests(FeedCase):
         self.assertEqual(self.q("SELECT imported_rows, state FROM kfm_sql_sources"), [(3, "complete")])
         db.close()
 
+    def test_a_large_download_is_kept_from_a_file_outside_the_backed_up_data(self):
+        self.web.routes["https://x/"] = b"full national file"
+        full = core.temp_path(self.ctx, "full.bin")
+        fetched = core.download(self.ctx, "https://x/full", full, limit=100)
+        self.assertEqual((fetched.body, full.read_bytes()), (b"", b"full national file"))
+        self.assertNotIn("data", full.relative_to(self.root).parts)
+        cut = core.temp_path(self.ctx, "cut.bin")
+        cut.write_bytes(b"kansas")
+        path, digest = core.store_raw(self.ctx, "demo", "cut.bin", cut, url="https://x/full", fetched=fetched, original=full)
+        receipt = core.receipt_for(self.ctx, path)
+        self.assertEqual((path.read_bytes(), digest, cut.exists(), full.exists()), (b"kansas", core.sha256(b"kansas"), False, True))
+        self.assertEqual(receipt["original"], {"sha256": core.sha256(b"full national file"), "bytes": 18, "kept": False})
+        again = core.temp_path(self.ctx, "cut.bin")
+        again.write_bytes(b"kansas")
+        self.assertEqual(core.store_raw(self.ctx, "demo", "cut.bin", again, url="u")[1], digest)
+        self.assertFalse(again.exists())
+        self.assertIsNone(core.download(self.ctx, "https://missing/", full, limit=100, missing_ok=True))
+
+    def test_a_new_version_of_a_file_replaces_the_one_loaded_before(self):
+        db = core.open_db(self.ctx)
+        db.execute("CREATE TABLE demo_rows (file_id INTEGER NOT NULL, row_number INTEGER NOT NULL, a TEXT, b TEXT, PRIMARY KEY(file_id,row_number))")
+
+        def load(name, body, key="year/2001"):
+            path, digest = core.store_raw(self.ctx, "demo", name, body, url="u", extra={"key": key})
+            with core.pipeline_lock(self.ctx):
+                return core.load_version(db, self.ctx, source_id="demo", key=key, path=path, digest=digest, url="u", table="demo_rows",
+                                         rows=[tuple(line.split(",")) for line in body.decode().split()], width=2)
+
+        self.assertEqual(load("v1.csv", b"1,a 2,b"), {"state": "loaded", "rows": 2, "superseded": 0})
+        self.assertEqual(load("v1-again.csv", b"1,a 2,b")["state"], "unchanged")
+        self.assertEqual(load("v2.csv", b"1,a 2,b 3,c"), {"state": "loaded", "rows": 3, "superseded": 1})
+        self.assertEqual(self.q("SELECT COUNT(*), COUNT(DISTINCT file_id) FROM demo_rows"), [(3, 1)])
+        self.assertEqual(self.q("SELECT state FROM kfm_sql_sources ORDER BY file_id"), [("superseded",), ("complete",)])
+        with self.assertRaisesRegex(core.FeedError, "SOURCE_CONTENT_SHARED"):
+            load("other.csv", b"1,a 2,b 3,c", key="year/2002")
+        with self.assertRaisesRegex(core.FeedError, "ROW_SHAPE"):
+            load("bad.csv", b"1,a 2,b,x")
+        self.assertEqual(self.q("SELECT COUNT(*) FROM demo_rows"), [(3,)])
+        path, digest = core.store_raw(self.ctx, "demo", "nokey.csv", b"9,z", url="u")
+        with core.pipeline_lock(self.ctx), self.assertRaisesRegex(core.FeedError, "RECEIPT_KEY_MISMATCH"):
+            core.load_version(db, self.ctx, source_id="demo", key="year/2001", path=path, digest=digest, url="u", table="demo_rows", rows=[], width=2)
+        db.close()
+
     def test_the_pipeline_lock_is_reentrant_within_a_run(self):
         with core.pipeline_lock(self.ctx):
             with core.pipeline_lock(self.ctx):
