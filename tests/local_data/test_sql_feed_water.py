@@ -42,6 +42,11 @@ def table(header, rows) -> bytes:
     return out.getvalue().encode()
 
 
+def ogc(header, rows) -> bytes:
+    """An OGC API CSV answer: a query with no rows is an empty body, without a header (as the real API answers)."""
+    return table(header, rows) if rows else b""
+
+
 def meta_row(site, series, parameter, statistic, data_type, name, x, y):
     row = dict.fromkeys(META_HEADER, "")
     row.update(x=x, y=y, monitoring_location_id=site, agency_code="USGS", agency_name="U.S. Geological Survey", monitoring_location_number=site[5:],
@@ -82,14 +87,14 @@ class DailyTests(FeedCase):
         q = qs(url)
         if "time_series_id" in q:
             first, last = q["time"].split("/")
-            return table(DAILY_HEADER, [r for r in self.records[q["time_series_id"]] if first <= r[6] <= last][:w.PAGE])
+            return ogc(DAILY_HEADER, [r for r in self.records[q["time_series_id"]] if first <= r[6] <= last][:w.PAGE])
         self.assertEqual(q["state_code"], "20")
         lo, hi = (datetime.strptime(t, w.STAMP).replace(tzinfo=timezone.utc) for t in q["last_modified"].split("/"))
         first, _, last = q.get("time", "../..").partition("/")
         rows = [r for r in self.modified if lo <= datetime.fromisoformat(r[11]) <= hi
                 and (first in ("..", "") or r[6] >= first) and (last in ("..", "") or r[6] <= last)]
         # The API pages rows in record-UUID order, which is unrelated to time.
-        return table(DAILY_HEADER, sorted(rows, key=lambda r: core.sha256((r[2] + r[6]).encode()))[:w.PAGE])
+        return ogc(DAILY_HEADER, sorted(rows, key=lambda r: core.sha256((r[2] + r[6]).encode()))[:w.PAGE])
 
     def values(self):
         return self.q("SELECT time_series_id, time, value, approval_status, qualifier FROM kfm_usgs_daily_values ORDER BY 1, 2")
@@ -191,7 +196,7 @@ class PeaksTests(FeedCase):
     def peaks(self, url):
         q = qs(url)
         self.assertEqual((q["state_code"], q["time"]), ("20", f"1800-01-01/{self.ctx.now().date()}"))
-        return table(PEAK_HEADER, self.rows)
+        return ogc(PEAK_HEADER, self.rows)
 
     def test_statewide_peaks_load_monthly_and_a_changed_answer_replaces_the_last(self):
         first = w.usgs_peaks(self.ctx)
@@ -240,10 +245,10 @@ class GroundwaterTests(FeedCase):
         q = qs(url)
         self.assertEqual(q["state_code"], "20")
         if "last_modified" in q:
-            return table(["x", "y", "time", "last_modified"], [["", "", t, "2026-11-04 10:00:00+00:00"] for t in self.modified])
+            return ogc(["x", "y", "time", "last_modified"], [["", "", t, "2026-11-04 10:00:00+00:00"] for t in self.modified])
         first, last = q["time"].split("/")
         rows = [r for rows in self.years.values() for r in rows if first <= r[11] <= last]
-        return table(GW_HEADER, rows[:w.PAGE])
+        return ogc(GW_HEADER, rows[:w.PAGE])
 
     def test_years_backfill_at_the_cap_and_changed_years_are_fetched_again(self):
         with patch.object(w, "GW_FIRST_YEAR", 2023):
@@ -273,7 +278,7 @@ class GroundwaterTests(FeedCase):
             result = w.usgs_groundwater(self.ctx, max_years=1)
         self.assertEqual(result["rows"], 9)
         receipt = json.loads(next((self.root / "data/receipts/ingest/sql-feeds/usgs-groundwater").rglob("*.json")).read_text())
-        self.assertEqual((receipt["rows"], receipt["requests"]), (9, 2))
+        self.assertEqual((receipt["rows"], receipt["requests"]), (9, 3))   # the full page, then its two halves
 
     def test_a_changed_header_stops_and_a_failed_load_leaves_nothing(self):
         self.web.routes[w.OGC + "field-measurements/items?"] = table([c for c in GW_HEADER if c != "field_visit_id"], [])

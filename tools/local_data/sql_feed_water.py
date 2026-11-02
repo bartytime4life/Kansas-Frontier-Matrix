@@ -110,11 +110,15 @@ def _page(ctx, collection: str, params: dict, needed, reason: str):
         raise
     finally:
         time.sleep(getattr(ctx, "pause", 1.0))
-    reader = csv.reader(io.StringIO(fetched.body.decode("utf-8"), newline=""))
+    text = fetched.body.decode("utf-8")
+    if not text.strip():
+        # A query with no rows is answered with an empty body, without even a header.
+        return fetched, [], []
+    reader = csv.reader(io.StringIO(text, newline=""))
     header = next(reader, None) or []
     missing = [c for c in needed if c not in header]
     if missing:
-        raise FeedError(f"{reason} missing {','.join(missing)}")
+        raise FeedError(f"{reason} missing {','.join(missing)}; the answer began {text[:80]!r}")
     rows = [r for r in reader if r]
     if any(len(r) != len(header) for r in rows):
         raise FeedError(f"USGS_ROW_SHAPE {collection}")
@@ -125,10 +129,13 @@ def _dated(ctx, collection: str, params: dict, start: date, end: date, needed, r
     """Every row with ``time`` in start..end (inclusive dates), halving a window whose answer fills a page.
 
     Returns (body, header, rows, fetched, requests): body is the provider's bytes when one page held all."""
-    windows, pages = [(start, end)], []
+    windows, pages, requests, fetched = [(start, end)], [], 0, None
     while windows:
         a, b = windows.pop(0)
         fetched, header, rows = _page(ctx, collection, {**params, "time": f"{a}/{b}"}, needed, reason)
+        requests += 1
+        if not rows:
+            continue
         if len(rows) >= PAGE:
             if a == b:
                 raise FeedError(f"USGS_PAGE_FULL {collection} {a}")
@@ -138,8 +145,10 @@ def _dated(ctx, collection: str, params: dict, start: date, end: date, needed, r
         if pages and header != pages[0][1]:
             raise FeedError(f"{reason} header changed between pages")
         pages.append((fetched, header, rows))
+    if not pages:
+        return b"", [], [], fetched, requests
     header, rows = pages[0][1], [r for _, _, page in pages for r in page]
-    return (pages[0][0].body if len(pages) == 1 else _csv(header, rows)), header, rows, pages[0][0], len(pages)
+    return (pages[0][0].body if len(pages) == 1 else _csv(header, rows)), header, rows, pages[0][0], requests
 
 
 def _csv(header, rows) -> bytes:
@@ -499,7 +508,7 @@ def usgs_groundwater(ctx, max_years: int = 40, row_budget: int = 400_000) -> dic
             a = _stamp(_moment(state["modified_through"]) - MODIFIED_OVERLAP)
             _, header, rows = _page(ctx, "field-measurements", {"state_code": KANSAS, "skipGeometry": "true", "properties": "time,last_modified",
                                                                  "last_modified": f"{a}/{_stamp(now)}"}, ("time",), "USGS_GW_COLUMNS_CHANGED")
-            column = header.index("time")
+            column = header.index("time") if rows else 0
             changed = set(range(GW_FIRST_YEAR, next_year)) if len(rows) >= PAGE else {int(r[column][:4]) for r in rows if r[column][:4].isdigit()}
             summary["changed_years"] = sorted(y for y in changed if y < next_year)
             due |= set(summary["changed_years"])
