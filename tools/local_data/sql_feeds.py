@@ -12,8 +12,9 @@ run outside the pipeline lock; only database writes take it. The 85 GB aggregate
         run FEED | status | snapshot --dest DIR [--keep 2] [--lock-held] | snapshot-check --dest DIR
 
 Feeds: captures, iem-wind, ghcnd, storm-events, asos-5min, prism, nwm; and, from 2026-11-02,
-usgs-daily, usgs-peaks, water-quality, climdiv, drought, air-quality, nass, kgs-oil-gas, fema,
-earthquakes, tornadoes, nws-warnings, cdc-places. ``snapshot`` and ``snapshot-check`` back up the
+usgs-daily, usgs-peaks, usgs-groundwater, water-quality, climdiv, drought, air-quality, nass,
+kgs-oil-gas, fema, earthquakes, tornadoes, nws-warnings, cdc-places, census-acs, census-decennial,
+eia-seds. ``snapshot`` and ``snapshot-check`` back up the
 database itself (``sql_snapshot.py``).
 """
 from __future__ import annotations
@@ -51,6 +52,7 @@ FEEDS = {
     # Kansas sources the owner added on 2026-11-02, for the local database only.
     "usgs-daily": "tools.local_data.sql_feed_water:usgs_daily",
     "usgs-peaks": "tools.local_data.sql_feed_water:usgs_peaks",
+    "usgs-groundwater": "tools.local_data.sql_feed_water:usgs_groundwater",
     "water-quality": "tools.local_data.sql_feed_water:water_quality",
     "climdiv": "tools.local_data.sql_feed_climate:climdiv",
     "drought": "tools.local_data.sql_feed_climate:drought",
@@ -62,6 +64,9 @@ FEEDS = {
     "tornadoes": "tools.local_data.sql_feed_hazards:tornadoes",
     "nws-warnings": "tools.local_data.sql_feed_hazards:nws_warnings",
     "cdc-places": "tools.local_data.sql_feed_hazards:cdc_places",
+    "census-acs": "tools.local_data.sql_feed_census:census_acs",
+    "census-decennial": "tools.local_data.sql_feed_census:census_decennial",
+    "eia-seds": "tools.local_data.sql_feed_census:eia_seds",
 }
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS kfm_feed_state (
