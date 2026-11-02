@@ -65,13 +65,84 @@ check stays in review, and the feed reports why.
 2025 TIGER county, with NODATA excluded. This reproduces the archived summaries'
 cell counts for all 105 counties.
 
+## Kansas sources added 2026-11-02
+
+On 2026-11-02 the owner asked to "fatten the database with usable data on
+Kansas" and chose these sources. They go into this database only; publishing
+any of them on the website is a separate decision.
+
+The same day the owner set the rule for them: "if it is public knowledge do not
+stop from adding it to the KFM database." Public records are kept whole, names
+included. For example, the KGS files keep lease names, operators and water-well
+owners.
+
+They follow the rules above. Two core helpers in `sql_feeds.py` serve them:
+
+- **`download` and `temp_path`.** A file too large to hold in memory, such as
+  NASS crops at 1.1 GB, is streamed to `tmp-sql-feeds/` in the store. That
+  folder is outside `data/`, so the per-file backup never sees a half-written
+  download. Temp files are deleted after each load.
+- **`load_version`.** Some providers publish the same file again over time: a
+  year's file, or a bulk export. Each new version loads under a stable key
+  (`results/2024`, `qs.crops`). The version before is deleted and marked
+  `superseded` in the same transaction. A new download with unchanged content
+  keeps no second copy.
+
+| Feed | Source | Tables | Each run, and revisions |
+|---|---|---|---|
+| `usgs-daily` | USGS Water Data OGC API (`api.waterdata.usgs.gov/ogcapi/v1`): `combined-metadata`, `daily` | `kfm_usgs_series`, `kfm_usgs_sites`, `kfm_usgs_daily_values` | Backfills up to 300 series records a run, within USGS's 1,000 requests an hour without a key. A statewide "modified since" window picks up new and revised values; there is one row per series and day, and a revision replaces it. Six records are re-read in full each run |
+| `usgs-peaks` | OGC `peaks` | `kfm_usgs_peaks` | The statewide answer every 30 days, replacing the last |
+| `usgs-groundwater` | OGC `field-measurements` | `kfm_usgs_field_measurements` | Year files, backfilled from 1860. Years with changed rows are fetched again, and every year once a year |
+| `water-quality` | Water Quality Portal `Result` and `Station` | `kfm_wqp_results` (47 columns; the kept copy has all of them), `kfm_wqp_stations` | Year files, backfilled from 1901. The current and previous year are fetched weekly, the three before monthly, older years yearly |
+| `climdiv` | NCEI nClimDiv | `kfm_climdiv_monthly`, `kfm_climdiv_normals`, `kfm_climdiv_county_divisions` | Each newer dated release of a file replaces it. Kansas is NCEI state 14; counties are stored by GEOID |
+| `drought` | U.S. Drought Monitor statistics service | `kfm_usdm_county_stats`, `kfm_usdm_state_stats` | A key per year, fetched again when a weekly map is due |
+| `air-quality` | EPA AirData daily files and `file_list.csv` | `kfm_aqs_daily`, `kfm_aqs_daily_aqi_county`, `kfm_aqs_sites`, `kfm_aqs_monitors` | A key per pollutant and year. The recent three years are fetched again when EPA's Created date advances; older years at most yearly |
+| `nass` | USDA NASS Quick Stats bulk files | `kfm_nass_quickstats` | A kind is reloaded when NASS publishes a newer file, at most every 30 days. At most two kinds a run; crops runs alone |
+| `kgs-oil-gas` | Kansas Geological Survey `PRS/Ora_Archive` | `kfm_kgs_wells`, `kfm_kgs_leases`, `kfm_kgs_tops`, `kfm_kgs_lease_production`, `kfm_kgs_wwc5_wells`, `kfm_kgs_wwc5_lithology` | Each file again when its listed time changes, at most every 28 days. Four files a run |
+| `fema` | OpenFEMA | `kfm_fema_disaster_declarations`, `kfm_fema_nfip_claims`, `kfm_fema_nfip_policies`, `kfm_fema_pa_projects`, `kfm_fema_hma_subapplications` | The whole Kansas extract of a dataset when FEMA's refresh date changes. Pages by record id |
+| `earthquakes` | USGS ComCat, the Kansas box | `kfm_usgs_earthquakes` (`county_geoid`, `in_kansas`) | One small "updated since" request. When anything changed, and every 30 days, the whole box is fetched and the changed years are replaced. Events just over the state line are kept with `in_kansas=0` |
+| `tornadoes` | SPC `1950-YYYY_all_tornadoes.csv` | `kfm_spc_tornadoes` | When the file name changes or every 28 days. The "all" file is used because it includes state segments |
+| `nws-warnings` | IEM VTEC events by state | `kfm_iem_vtec_events` | A key per year from 1986. The current year is fetched every run |
+| `cdc-places` | CDC PLACES county and tract datasets | `kfm_cdc_places_county`, `kfm_cdc_places_tract` | Every 28 days. Each release is keyed by dataset id and year |
+| `census-acs` | ACS 5-year table-based summary files on `www2.census.gov` | `kfm_census_acs_values`, `kfm_census_acs_geographies`, `kfm_census_acs_variables` | Each table's national file is cut to the 9,944 Kansas geographies, plus 704 ZCTAs with ZIP prefix 66 or 67. A file is loaded again when its listed time changes. At most 40 tables or 2 GB a run. `ACS_TABLES` holds 76 curated tables (`None` loads all 1,198); `ACS_VINTAGES` holds 2024 |
+| `census-decennial` | 2020 Census: P.L. 94-171 and DHC Kansas files | `kfm_census_decennial_values`, `kfm_census_decennial_geographies`, `kfm_census_decennial_variables` | Loads state through block group, places and districts, 24 segments a run. Block values are left out, but the PL block rows are kept in the geography table. After loading it rechecks yearly |
+| `eia-seds` | EIA State Energy Data System bulk file | `kfm_eia_seds_series`, `kfm_eia_seds_values`, `kfm_eia_seds_categories`, `kfm_eia_seds_category_series` | Loaded again when SEDS's `last_updated` changes, at most every 30 days. One key replaces all four tables at once |
+
+**USGS services.** USGS retires all remaining legacy WaterServices and NWISWeb
+pages between November 2026 and February 2027, so these feeds use only the OGC
+API.
+
+**Not available:**
+
+- The Census API needs a key, so the census feeds use the Bureau's bulk files
+  instead.
+- BLS refuses requests that carry no contact email, and the owner chose to skip
+  BLS.
+- The Water Quality Portal's legacy profile has no USGS samples after March
+  2024, when USGS moved to WQX 3.0.
+
+**Backfill:** most feeds finish in one run.
+
+| Feed | Runs |
+|---|---|
+| `usgs-daily` | about 6 |
+| `usgs-groundwater` | about 3 |
+| `water-quality` | about 5 |
+| `air-quality` | about 6 |
+| `kgs-oil-gas` | 4 |
+| `nws-warnings` | 4 |
+| `nass` | 3 |
+| `drought` | 3 |
+| `census-acs` | 3 |
+| `census-decennial` | 2 |
+
 ## Install and run
 
 **Install:**
 
     pc-pipeline-data/run/install-sql-feeds.sh SOURCE_CHECKOUT
 
-This copies the 14 modules and 2 budget catalogs the feeds need into
+This copies the 22 modules and 2 budget catalogs the feeds need into
 `pc-pipeline-data/runtime/releases/sql-feeds-<digest>/`, writes
 `runtime/sql-feeds.env`, and enables these timers (local time):
 
@@ -79,13 +150,33 @@ This copies the 14 modules and 2 budget catalogs the feeds need into
 |---|---|
 | `captures` | hourly at :25 |
 | `iem-wind` | 01:05 |
+| `usgs-groundwater` | 01:35 |
 | `ghcnd` | 04:05 |
 | `asos-5min` | 05:05 |
+| `climdiv` | 05:35 |
+| `usgs-daily` | 06:05 |
+| `earthquakes` | 06:35 |
+| `nws-warnings` | 06:50 |
+| `air-quality` | 07:05 |
+| `water-quality` | 08:05 |
 | `nwm` | 09:35 |
+| `fema` | 10:05 |
+| `drought` | 10:35 |
 | `prism` | 13:05 |
+| `nass` | 14:05 |
+| `kgs-oil-gas` | 15:05 |
+| `census-acs` | 16:05 |
+| `census-decennial` | 16:35 |
 | `storm-events` | Mondays at 04:35 |
+| `tornadoes` | Wednesdays at 11:05 |
+| `cdc-places` | Thursdays at 11:35 |
+| `eia-seds` | Fridays at 12:05 |
+| `census-decennial` | 16:35 |
+| `usgs-peaks` | Sundays at 17:05 |
 
-None runs during the 02:30 backup.
+None runs during the 02:30 backup. The large loads are spaced so that two
+rarely overlap. On most days most feeds only read a listing; each feed decides
+for itself what is due.
 
 **Run one feed by hand:**
 
