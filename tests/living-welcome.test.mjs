@@ -47,6 +47,21 @@ test('cards can combine topics and a rapid open performs only one departure',asy
  }finally{h.harness.dispose();}
 });
 
+test('opening a map from source notes releases modal isolation before navigation commits',async()=>{
+ const h=await welcome();
+ h.props.onMaps=topics=>{assert.equal(h.env.isolated,false,'destination must inherit usable controls');h.calls.push(['maps',Array.from(topics)]);};
+ try{
+  let tree=h.render();previewCard(tree,'aviation').props.onClick();tree=h.render();
+  tree=openDetails(h,tree);
+  assert.equal(h.env.isolated,true);
+  const open=findNode(tree,n=>n.props?.className==='welcome-primary welcome-open-map');
+  open.props.onClick();
+  assert.deepEqual(h.calls,[['maps',['aviation']],['close',false]]);
+  assert.equal(h.env.isolated,false);
+ }finally{h.harness.dispose();}
+ assert.equal(h.env.isolated,false,'unmount must not reapply the old isolation');
+});
+
 function openDetails(h,tree){byText(tree,'Source notes & demonstrations').props.onClick();return h.render();}
 const expandedStatus=tree=>findNode(tree,node=>node.props?.className==='welcome-layer-demo-state');
 function expandCategory(h,id){
