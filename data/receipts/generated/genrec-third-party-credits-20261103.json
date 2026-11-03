@@ -1,0 +1,136 @@
+{
+  "receipt_id": "genrec-third-party-credits-20261103",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "LICENSE",
+    "README.md",
+    "docs/governance/data_license.md",
+    "docs/governance/third_party_credits.md"
+  ],
+  "artifact_hashes": {
+    "LICENSE": "sha256:9569234cc36db39813aeda1404465c2015c8d89dd6cc792c1cfa744f878da9bd",
+    "README.md": "sha256:151440bec27a2ae18247dd47db9123bd55a4e8c0396e94e548ac959eb74d0676",
+    "docs/governance/data_license.md": "sha256:a672156cf0ba84f79346bbb9a212b0247b8b35abc0b371e474cc204ddb64e920",
+    "docs/governance/third_party_credits.md": "sha256:9dc2a7b3072acb2d4184947f5394b434a0cf0db67477330add25b48523196568"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 / Codex",
+    "version": "Exact runtime model build not exposed"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/f5bf5d04a89fa13c3207efb9ec5844b77461b9c5",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4a9ef7871003964f8be802c3435b2f86f2fbcd43",
+      "https://www.apache.org/licenses/LICENSE-2.0",
+      "https://www.openstreetmap.org/copyright",
+      "https://prism.oregonstate.edu/terms/",
+      "https://www.kgs.ku.edu/General/copyright.html",
+      "https://open-meteo.com/en/terms",
+      "https://location.arcgis.com/help/licensing-and-attribution/",
+      "https://registry.opendata.aws/terrain-tiles/",
+      "https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1"
+    ]
+  },
+  "truth_labels": {
+    "LICENSE": "CONFIRMED",
+    "README.md": "CONFIRMED",
+    "docs/governance/data_license.md": "CONFIRMED",
+    "docs/governance/third_party_credits.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Original legal text integrity",
+      "outcome": "PASS",
+      "reason": "Original Apache-2.0 file is an exact byte prefix; the existing CC BY 4.0 legal code is unchanged."
+    },
+    {
+      "gate": "Documentation links and metadata",
+      "outcome": "PASS",
+      "reason": "Existing focused check_links.py and check_meta_blocks.py pass for the three changed Markdown documents; external links are separately researched, not certified by the local link checker."
+    },
+    {
+      "gate": "Root distribution regression tests",
+      "outcome": "PASS",
+      "reason": "tests/ci/test_root_python_distribution.py: 62 passed, 1 opt-in real build skipped. pytest/jsonschema were unavailable initially and installed in an isolated uv environment; rerun passed."
+    },
+    {
+      "gate": "Repository topology",
+      "outcome": "PASS",
+      "reason": "Bounded root allowlist preserved; 0 invariant findings and 0 new drift. Existing 89 baseline warnings remain."
+    },
+    {
+      "gate": "Hosted CI, human review and deployed compliance",
+      "outcome": "SKIPPED",
+      "reason": "Pending GitHub readback and human review. No exhaustive legal, transitive-license or deployed-display audit is claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "source-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/f5bf5d04a89fa13c3207efb9ec5844b77461b9c5"
+    },
+    {
+      "id": "source-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/4a9ef7871003964f8be802c3435b2f86f2fbcd43"
+    },
+    {
+      "id": "source-3",
+      "validated": true,
+      "evidence_ref": "https://www.apache.org/licenses/LICENSE-2.0"
+    },
+    {
+      "id": "source-4",
+      "validated": true,
+      "evidence_ref": "https://www.openstreetmap.org/copyright"
+    },
+    {
+      "id": "source-5",
+      "validated": true,
+      "evidence_ref": "https://prism.oregonstate.edu/terms/"
+    },
+    {
+      "id": "source-6",
+      "validated": true,
+      "evidence_ref": "https://www.kgs.ku.edu/General/copyright.html"
+    },
+    {
+      "id": "source-7",
+      "validated": true,
+      "evidence_ref": "https://open-meteo.com/en/terms"
+    },
+    {
+      "id": "source-8",
+      "validated": true,
+      "evidence_ref": "https://location.arcgis.com/help/licensing-and-attribution/"
+    },
+    {
+      "id": "source-9",
+      "validated": true,
+      "evidence_ref": "https://registry.opendata.aws/terrain-tiles/"
+    },
+    {
+      "id": "source-10",
+      "validated": true,
+      "evidence_ref": "https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-11-03T22:24:25.303816Z",
+  "emitter": "OpenAI Codex repository attribution update",
+  "notes": "Informational source/software/service credits requested by the repository owner. No license selection, source-rights hold, admission, deployment or data-release decision is changed. The new credits page is documentation under the existing docs/governance responsibility. No new root notice file is added because of the bounded root allowlist and license-file packaging contract. Human review is not inferred from generation or passing checks."
+}

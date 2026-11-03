@@ -2,12 +2,12 @@
 doc_id: kfm://doc/governance-data-license
 title: Data and documentation license
 type: governance-license-notice
-version: v1.0
+version: v1.1
 status: adopted
 owners:
   - "@bartytime4life"
 created: 2026-09-29
-updated: 2026-09-29
+updated: 2026-11-03
 policy_label: public-doc
 owning_root: docs/
 responsibility: "States which license covers code, project-authored documentation and data, and third-party material in this repository."
@@ -15,6 +15,7 @@ truth_posture: CONFIRMED license selection by the repository owner on 2026-09-29
 related:
   - ../../LICENSE
   - ../../AUTHORS.md
+  - third_party_credits.md
 [/KFM_META_BLOCK_V2] -->
 
 # Data and documentation license
@@ -33,6 +34,12 @@ Kansas Frontier Matrix uses two licenses, plus the original terms of any third-p
 Kansas Frontier Matrix works with data and records from outside providers, including federal and state agencies, archives, and community science platforms. That material stays under its provider's terms. Nothing in this repository relicenses it.
 
 Each source's rights, attribution, and sensitivity terms are tracked in its source descriptor and registry entry (see [`data/registry/sources/`](../../data/registry/sources/README.md)). Check those terms before reusing any third-party material, and give the attribution the source requires.
+
+The [third-party credits](third_party_credits.md) identify source providers,
+software projects, apps and media credits, and link to their specific terms.
+Those acknowledgments supplement the original notices; they do not replace
+upstream licenses, grant redistribution permission, or clear a source whose
+rights are unresolved. Derived material retains applicable upstream conditions.
 
 ## Attributing this project
 

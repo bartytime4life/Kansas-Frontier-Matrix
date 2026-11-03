@@ -112,6 +112,10 @@ USGS, KGS, KDOT, Mapzen, Esri and Open-Meteo/GFS roles for these particular view
 Provider rights and attribution remain attached; KFM's code license does not
 relicense provider data. [Connectors](connectors/README.md) · [Curated-source installer](docs/runbooks/github-data-baseline.md).
 
+[Licenses and third-party credits](docs/governance/third_party_credits.md)
+recognizes the data providers, open-source projects, apps and media creators
+behind KFM, with links to their terms and existing attribution records.
+
 ## How KFM protects meaning
 
 This is the **governed lifecycle**, not a claim that every public provider overlay
