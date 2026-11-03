@@ -1,13 +1,14 @@
 // Every question the website may ask the pipeline PC, one entry per dataset. Each entry names its
 // database, the indexes it relies on (the gateway refuses the dataset until they exist, so no
 // question ever scans a large table), a shared parse() for the website and the gateway, and a
-// gateway-only run(). Publication: Storm Events approved 2026-11-01 (fatalities table excluded);
-// every other dataset here approved by the owner on 2026-11-01. No dependencies.
+// gateway-only run(). The owner authorized all recovered public data on 2026-11-03,
+// including supporting records that do not have a defensible map representation.
 import {parseStormQuery,stormEventsSql,stormEvent,STORM_EVENTS_SOURCE} from './storm-events.mjs';
 import {ghcnStations,ghcnDaily,ghcndexIndices,ghcndex,asosFiveMinute,windStations,windObservations,windDaily} from './weather.mjs';
 import {prismCounty} from './prism.mjs';
 import {tigerFeatures} from './tiger.mjs';
 import {nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow} from './water.mjs';
+import {recoveredObservations,recoveredBulk} from './recovered.mjs';
 
 const stormEvents={
  id:'storm-events',db:'observations',title:'NOAA Storm Events (Kansas)',indexes:[],source:STORM_EVENTS_SOURCE,
@@ -19,8 +20,8 @@ const stormEvents={
 };
 
 export const DATASETS=new Map([stormEvents,ghcnStations,ghcnDaily,ghcndexIndices,ghcndex,asosFiveMinute,windStations,windObservations,windDaily,
- prismCounty,tigerFeatures,nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow].map(d=>[d.id,d]));
-export const DATABASES=Object.freeze(['observations','tiger','nwm']);
+ prismCounty,tigerFeatures,nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow,recoveredObservations,recoveredBulk].map(d=>[d.id,d]));
+export const DATABASES=Object.freeze(['observations','tiger','nwm','bulk']);
 
 /** Public description of every dataset, for the website's catalog. */
 export function datasetCatalog(){

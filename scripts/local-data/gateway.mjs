@@ -39,7 +39,7 @@ export function missingIndexes(db,dataset){
 
 /**
  * The gateway as a function of one request, so it can be tested without a socket.
- * databases: {observations, tiger, nwm} file paths (tiger and nwm optional). dbPath is the
+ * databases: {observations, tiger, nwm, bulk} file paths (all but observations optional). dbPath is the
  * phase 1 name for databases.observations.
  */
 export function createGateway({keyId,secret:rawSecret,dbPath,databases={observations:dbPath},clock=Date.now,open=path=>new DatabaseSync(path,{readOnly:true})}){
@@ -118,11 +118,11 @@ export function startGateway({host='127.0.0.1',port=8788,...options}){
  return new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,()=>resolve(server));});
 }
 
-/** Database paths from the environment; observations is required, the GeoPackages optional. */
+/** Database paths from the environment; observations is required, GeoPackages and bulk optional. */
 export function databasesFromEnv(env=process.env){
  const file=path=>{if(!path)return undefined;if(!statSync(path).isFile())throw fail('DATABASE_NOT_CONFIGURED');return path;};
  if(!env.KFM_LOCAL_DATA_DB)throw fail('DATABASE_NOT_CONFIGURED');
- return {observations:file(env.KFM_LOCAL_DATA_DB),tiger:file(env.KFM_LOCAL_DATA_TIGER_DB),nwm:file(env.KFM_LOCAL_DATA_NWM_DB)};
+ return {observations:file(env.KFM_LOCAL_DATA_DB),tiger:file(env.KFM_LOCAL_DATA_TIGER_DB),nwm:file(env.KFM_LOCAL_DATA_NWM_DB),bulk:file(env.KFM_LOCAL_DATA_BULK_DB)};
 }
 
 async function main(){
