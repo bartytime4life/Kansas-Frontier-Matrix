@@ -42,7 +42,6 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const [active,setActive]=useState(null),[pinned,setPinned]=useState(null),[last,setLast]=useState('weather');
   const [touched,setTouched]=useState(false),[detail,setDetail]=useState(null),[panel,setPanel]=useState(null),[item,setItem]=useState(0),[fullscreen,setFullscreen]=useState(false);
   const [previewState,setPreviewState]=useState(null),[layersVisible,setLayersVisible]=useState(true),[aviationMode,setAviationMode]=useState('3d');
-  const [geologyModule,setGeologyModule]=useState(null);
   const motion=onMotionChange?motionEnabled:localMotion;
   const paused=!motion||reduced||hidden,engaged=pinned||active,control=engaged||last;
   // One owned frame; held/reduced-motion views do not keep repainting card
@@ -60,7 +59,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const run=action=>{if(departed.current)return;departed.current=true;action?.();onClose(remember);};
   // Leaving the full-window preview clears the engaged card itself: hidden cards can
   // lose focus without a blur event, so release() alone may never run.
-  function engage(id){clearTimeout(leave.current);setActive(id);setLast(id);setTouched(true);setLayersVisible(true);if(id!==control)setGeologyModule(null);}
+  function engage(id){clearTimeout(leave.current);setActive(id);setLast(id);setTouched(true);setLayersVisible(true);}
   function release(){clearTimeout(leave.current);leave.current=setTimeout(()=>{const keyboardFocus=root.current?.querySelector('.topic-callout:focus-visible');const pointerHover=window.matchMedia('(hover: hover) and (pointer: fine)').matches&&root.current?.querySelector('.topic-callout:hover');if(!keyboardFocus&&!pointerHover)setActive(null);},180);}
   function openTopic(id,keepPreview=fullscreen){trigger.current=document.activeElement;setItem(0);setDetail(id);setPanel(null);if(!keepPreview)setFullscreen(false);}
   function openPanel(name){trigger.current=document.activeElement;setDetail(null);setPanel(name);}
@@ -73,7 +72,6 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     if(modal)trigger.current=root.current?.querySelector('.welcome-preview-expand');
     if(fullscreen&&id===control){closePanel();return;}
     if(!fullscreen){returnCard.current=id;returnScroll.current=root.current?.scrollTop||0;}
-    if(id!==control)setGeologyModule(null);
     pin(id);setFullscreen(true);
   }
   function hoverStage(id,event){
@@ -143,7 +141,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-label={fullscreen?`${TOPICS[selectedIndex]?.title||'Kansas'} map preview`:undefined} aria-labelledby={fullscreen?undefined:'living-welcome-title'} data-renderer="capability" data-active={engaged||null} data-fullscreen={fullscreen} data-cinematic={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
     <div className="welcome-map-stage">
       <div className="welcome-wash" aria-hidden="true"/>
-      <div className="welcome-capability-stage"><DomainStage topic={touched?control:null} onGeologyModule={setGeologyModule} expanded={fullscreen} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||(!engaged&&!fullscreen)} reduced={reduced} onPreviewState={setPreviewState}/></div>
+      <div className="welcome-capability-stage"><DomainStage topic={touched?control:null} expanded={fullscreen} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||(!engaged&&!fullscreen)} reduced={reduced} onPreviewState={setPreviewState}/></div>
       <div className="welcome-heading-row"><div className="welcome-toolbar" role="group" aria-label="Welcome options"><button type="button" className="welcome-tool" aria-label={reduced?'Animations off: reduced motion preference':paused?'Play animation':'Pause animation'} disabled={reduced} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}><span aria-hidden="true">{paused?'▶':'❚❚'}</span>{reduced?'Reduced motion':paused?'Play animation':'Pause animation'}</button><label className="welcome-tool"><input type="checkbox" checked={remember} onChange={e=>{setRemember(e.target.checked);}}/> Don’t show on start</label><button type="button" className="welcome-primary" onClick={()=>onClose(remember)}>Explore freely <span aria-hidden="true">→</span></button><button type="button" className="welcome-skip" aria-label="Close quick start" onClick={()=>onClose(remember)}>Skip welcome <span aria-hidden="true">×</span></button></div><div className="welcome-hero">
         <span className="welcome-kicker">KANSAS FRONTIER MATRIX</span>
         <h1 id="living-welcome-title">Kansas is full of <em>stories.</em></h1>
@@ -152,15 +150,6 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       </div>
       </div>
       <div className="welcome-discovery-layout">
-      <aside className="welcome-preview-brief" data-geology={touched&&control==='geology'} aria-label="Category layer glimpse">
-        <span className="welcome-kicker">{touched?'INSIDE THIS MAP':'A REAL MAP, READY TO EXPLORE'}</span>
-        <h2>{touched?glimpse?.title:'Choose your first glimpse.'}</h2>
-        <p>{touched?glimpse?.summary:'Choose a card to open its map and layer controls. Hover for a glimpse, or choose Preview for a closer look.'}</p>
-        {touched&&control==='geology'&&!fullscreen&&geologyModule?.Component&&<geologyModule.Component paused={paused||modal||!engaged} reduced={reduced}/>}
-        {touched&&control==='geology'&&geologyModule?.failed&&<p role="status">Recorded log preview unavailable; open Underground to inspect source status.</p>}
-        {touched&&control==='aviation'&&<AviationGlimpse mode={aviationMode} onMode={setAviationMode} state={previewState?.topic===control?previewState:null} layersVisible={layersVisible}/>}
-        {touched&&<><p className="welcome-preview-try">{glimpse?.try}</p><div className="welcome-preview-feed-state">{previewState?.mapState==='unavailable'?<span>Map preview unavailable. Open the map to check its source controls.</span>:previewState?.topic!==control?<span>Preparing this category’s map…</span>:previewState.sources.map(source=><span key={source.id} data-state={source.state}><i aria-hidden="true"/>{source.label}: {source.state==='dated-frame'?`${source.product==='visible'?'visible band · ':source.product==='geocolor'?'GeoColor · ':''}${new Date(source.observedAt).toLocaleTimeString('en-US',{timeZone:'America/Chicago',hour:'numeric',minute:'2-digit',timeZoneName:'short'})}`:source.state==='records'?`${source.count} source records`:source.state==='empty'?'No records returned':source.state==='map-layer'?'Provider tile layer':source.state==='hidden'?'Hidden for comparison':source.state==='zoom-in'?'Closer zoom in the opened map':source.state==='unavailable'?'Unavailable':'Loading…'}</span>)}</div><button type="button" className="welcome-text-action" onClick={()=>openTopic(control)}>See this category’s demonstrations <span aria-hidden="true">↗</span></button></>}
-      </aside>
       <div className="welcome-discovery-content">
       <p className="discovery-hint"><strong>Choose a map. Start exploring its layers.</strong> <span>{TOPICS.length} categories · explore each map’s coverage and source limits.</span> <button type="button" onClick={()=>openPanel('credits')}>Map notes</button><span className="discovery-scene"><small>Map preview</small><b key={touched?control:'kansas'}>{welcomeView(touched?control:null).name}</b></span></p>
       <section className="discovery-field discovery-field--grouped" aria-label="Choose an exploration topic">{TOPIC_GROUPS.map(group=><div className="discovery-group" role="group" aria-label={group} key={group}><h2 className="discovery-group-title">{group}</h2>{TOPICS.map((t,i)=>[t,i]).filter(([t])=>t.group===group).map(([t,i])=><div className="topic-choice" key={t.id}><button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} style={{'--i':i}} data-color={t.group==='Earth & environment'?'green':'sky'} aria-label={`${t.title}: ${t.short}`} onPointerEnter={e=>hoverStage(t.id,e)} onPointerMove={glow} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false){wake(e?.currentTarget);engage(t.id);}}} onBlur={release} onClick={()=>run(()=>(onMap||onTopic)(t.target))}><span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.short}</small><span className="topic-glimpse">{categoryGlimpse(t.id)?.title}</span><span className="topic-demo-label">Open map &amp; layers</span>{t.look&&<span className="topic-map" style={swatch(t.look)}><i aria-hidden="true"/>{t.look.name}</span>}</span><span className="topic-arrow" aria-hidden="true">→</span></button><button type="button" className={`topic-preview topic-preview-${t.id}`} aria-label={`Preview ${t.title}`} onClick={()=>showStage(t.id)}>Preview <span aria-hidden="true">↗</span></button></div>)}</div>)}</section>

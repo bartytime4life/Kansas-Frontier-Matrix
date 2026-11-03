@@ -88,7 +88,6 @@ test('expanded status preserves loading, provider failures, category switching a
   byText(tree,'Show starter layers').props.onClick();tree=h.render();
   tree=reportPreview(h,tree,{topic:'history',mapState:'ready',sources:[{id:'nps',label:'Park service',state:'unavailable'}]});
   assert.match(expandedStatus(tree).props.children,/Provider context preview/,'a provider failure is separate from map availability');
-  assert.ok(findNode(tree,node=>node.type==='span'&&node.props['data-state']==='unavailable'));
   byText(tree,'Hide starter layers').props.onClick();tree=h.render();
   assert.match(expandedStatus(tree).props.children,/Base context only/);
   tree=reportPreview(h,tree,{mapState:'unavailable'});
@@ -624,18 +623,18 @@ test('aviation glimpse offers three views and truthful unavailable, hidden and e
  }finally{h.harness.dispose();}
 });
 
-test('Geology offers a compact source specimen without changing the workspace, and Underground opens only explicitly',async()=>{
+test('Geology keeps its specimen in the explicit preview, and Underground opens only explicitly',async()=>{
  for(const entry of ['details','expanded']){
   const h=await welcome();try{
    let tree=h.render();const geology=findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-geology '));
    geology.props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();
    assert.deepEqual(h.calls,[],'a keyboard glimpse never selects workspace layers');
-   findNode(tree,node=>node.type==='domain-stage').props.onGeologyModule({Component:'geology-glimpse'});tree=h.render();
-   const hint=findNode(tree,node=>node.type==='geology-glimpse');assert.ok(hint);assert.equal(hint.props.expanded,undefined,'startup stays compact');
+   assert.equal(findNode(tree,node=>node.props?.className==='welcome-preview-brief'),undefined,'no floating context card while browsing');
+   assert.equal(findNode(tree,node=>node.type==='geology-glimpse'),undefined,'the chooser mounts no compact specimen');
    previewCard(tree,'geology').props.onClick();tree=h.render();tree=openDetails(h,tree);
    if(entry==='expanded'){
     byText(tree,'Preview in the welcome window →').props.onClick();tree=h.render();
-    assert.equal(findNode(tree,node=>node.type==='geology-glimpse'),undefined,'compact owner unmounts when expanded owner takes over');
+    assert.equal(findNode(tree,node=>node.type==='geology-glimpse'),undefined,'the stage owns the specimen');
     assert.equal(findNode(tree,node=>node.type==='domain-stage').props.expanded,true);
    }
    byText(tree,'Open Underground Explorer →').props.onClick();
