@@ -884,3 +884,5 @@
  .living-welcome[data-builder=true] .discovery-hint { margin-block:8px 12px; }
  .living-welcome[data-builder=true] .discovery-hint > span { display:none; }
 }
+
+.archive-map-notice { grid-column:1/-1; display:block; padding:4px 8px; color:#e8d6a8; font-size:11px; line-height:1.4; }

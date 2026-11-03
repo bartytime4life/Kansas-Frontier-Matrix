@@ -69,6 +69,6 @@ test('dock exposes annual, opacity and retry controls with source limits, and op
  findNode(tree,n=>n.type==='button'&&n.props.children==='Retry plant records').props.onClick();assert.deepEqual(calls,[false,2020,0.4,'retry']);
  assert.match(JSON.stringify(tree),/independent of the map calendar/);assert.match(JSON.stringify(tree),/not a guarantee of coverage/);
  const other=h.render(h.exports.CategoryMapDock,{...base,look:maps.CATEGORY_MAPS.fauna});assert.doesNotMatch(JSON.stringify(other),/Plant record year/);
- const page=await readFile('app/page.tsx','utf8');assert.match(page,/showLandCover\(topic === "flora"\);\s*setFloraOn\(false\);\s*setFloraYear\(FLORA_DEFAULT_YEAR\)/);
+ const page=await readFile('app/page.tsx','utf8');assert.match(page,/showLandCover\(combined.topics.some\(id => \["flora", "ecology", "fauna"\].includes\(id\)\)\);\s*setFloraOn\(false\);\s*setFloraYear\(FLORA_DEFAULT_YEAR\)/);
  h.dispose();
 });

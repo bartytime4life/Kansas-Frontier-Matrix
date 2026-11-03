@@ -1,3 +1,4 @@
+import { ARCHIVE_LAYERS } from './archive-layer-catalog';
 import { CATEGORY_MAPS } from './category-maps';
 import type { CategoryMap } from './category-maps';
 import { MAP_STARTERS } from './map-starters';
@@ -41,11 +42,13 @@ export const CARD_PIPELINE_BINDINGS: readonly CardPipelineBinding[] = Object.fre
     required: Object.freeze([]), optional: unique([...(categoryMaps[topic.id]?.starters ?? []), ...(categoryMaps[topic.id]?.contextLayers ?? []).map(layer => layer.id),
       ...(categoryMaps[topic.id]?.tools ?? []).map(tool => `map-tool:${tool}`),
       ...OFFICIAL_CONTEXT_SOURCES.filter(source => officialSourceTopics(source.id).includes(topic.id)).map(source => source.id),
+      ...ARCHIVE_LAYERS.filter(layer => layer.topics.includes(topic.id)).map(layer => layer.id),
       ...SPECIALTY_LAYER_CATALOG.filter(layer => specialtyLayerTopics(layer.id).includes(topic.id)).map(layer => `specialty:${layer.id}`),
       ...(['evidence', 'history', 'people', 'land', 'places', 'science'].includes(topic.id) ? ['knowledge-index'] : [])]),
     gaps: unique(topicGaps[topic.id] ?? []), demo: false })),
 ]);
 export const PIPELINE_DEFINITIONS: readonly PipelineDefinition[] = Object.freeze([
+  ...ARCHIVE_LAYERS.map(layer => Object.freeze({ id:layer.id, title:layer.title, mode:"display" as const, wave:1, owner:"Read-only local SQL archive adapter", sourceRef:`local-data:${layer.dataset}`, cadence:"On demand; original source dates and archive coverage remain explicit", nextGate:"Existing public dataset allowlist; inspect query coverage, missing geometry and cache status. No new capture schedule or release approval is implied." })),
   ...OFFICIAL_CONTEXT_SOURCES.map(source => Object.freeze({ id: source.id, title: source.title,
     mode: PC_CAPTURE_IDS.includes(source.id) ? 'pc-capture' as const : 'display' as const, wave: 1,
     owner: PC_CAPTURE_IDS.includes(source.id) ? 'PC capture worker and Explorer adapter' : 'Explorer official-context adapter',
