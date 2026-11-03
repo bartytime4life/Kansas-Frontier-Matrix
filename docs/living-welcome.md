@@ -1,5 +1,19 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Glimpse card removal · 2026-11-03 candidate
+
+The category chooser no longer renders the sticky “Choose your first glimpse” /
+“Inside this map” card. Its reserved desktop column and compact scroll padding
+are removed, giving the category grid the available width and mobile viewport.
+Category buttons still open their maps; explicit Preview actions retain the
+expanded demonstrations, aviation controls, source notes and Return behavior.
+The scrolling checkpoints below describe the earlier panel layout.
+
+Local validation: production build, TypeScript, 40 welcome component cases and
+15 isolated Chromium browser cases passed. Browser coverage includes desktop,
+tablet, 320px/390px phone scrolling, touch swipes, direct map entry and explicit
+previews. This change has not been published.
+
 Current navigation is described in [Direct workspace entry · 2026-10-31](#direct-workspace-entry--2026-10-31).
 It supersedes the historical click-to-preview and automatic hover transition
 described below. Earlier implementation and validation records are retained.

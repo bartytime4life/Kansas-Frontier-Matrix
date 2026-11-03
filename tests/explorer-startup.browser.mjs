@@ -25,6 +25,7 @@ async function readyWelcome(p) {
   const actual = await p.evaluate(`Array.from(document.querySelectorAll('.living-welcome .topic-callout'),card=>({id:[...card.classList].find(name=>name.startsWith('topic-')&&name!=='topic-callout')?.slice(6),title:card.querySelector('strong')?.textContent,facets:card.querySelector('small')?.textContent,label:card.getAttribute('aria-label')}))`);
   assert.deepEqual(actual, welcomeTopics.map(topic => ({ id:topic.id, title:topic.title, facets:topic.facets.join(' · '), label:topic.title+': '+topic.facets.join(' · ') })), 'every shared domain appears once, in order, with its actual facets and accessible name');
   assert.equal(await p.evaluate(`document.querySelectorAll('.living-welcome video,.living-welcome .motion-portal').length`), 0, 'the welcome does not mount retired footage players');
+  assert.equal(await p.evaluate(`document.querySelector('.welcome-preview-brief')`), null, 'category browsing has no floating glimpse card');
   await p.wait(`[...document.querySelectorAll('.living-welcome .topic-callout')].every(card=>Number(getComputedStyle(card).opacity)>=.98)`, 'card arrival completes before geometry checks');
 }
 
@@ -284,53 +285,29 @@ async function pageSession(b, width, height, networkOptions = {}) {
 }
 
 for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823], [390, 844], [320, 568]]) {
-  test(`welcome glimpse stays visible and wheel scrolling chains at ${width}x${height}`, { timeout: 90000 }, async t => {
+  test(`welcome categories scroll without a floating glimpse at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
     await p.open('/?motion=off'); await readyWelcome(p);
     await p.evaluate(`document.querySelector('.topic-aviation').focus()`);
-    await p.wait(`document.querySelector('.welcome-preview-brief h2')?.textContent===${JSON.stringify(categoryGlimpse('aviation').title)}`, 'focused category owns the glimpse');
+    await p.wait(`document.querySelector('.living-welcome')?.dataset.active==='aviation'`, 'category focus updates the backdrop');
     await p.wait(`document.querySelector('.domain-stage')?.dataset.state!=='loading'`, 'the real fixed backdrop has settled');
     const read = () => p.evaluate(`(() => {
-      const root=document.querySelector('.living-welcome'), brief=root.querySelector('.welcome-preview-brief'), r=root.getBoundingClientRect(), a=brief.getBoundingClientRect();
-      return { top:root.scrollTop,max:root.scrollHeight-root.clientHeight,brief:{top:a.top,bottom:a.bottom,left:a.left,right:a.right},root:{top:r.top,bottom:r.bottom},inside:brief.scrollHeight-brief.clientHeight,insideTop:brief.scrollTop,overscroll:getComputedStyle(brief).overscrollBehaviorY,hit:document.elementFromPoint(a.left+a.width/2,a.top+36)?.outerHTML.slice(0,220),overflow:document.documentElement.scrollWidth>innerWidth+1 };
+      const root=document.querySelector('.living-welcome'), r=root.getBoundingClientRect();
+      return { top:root.scrollTop,max:root.scrollHeight-root.clientHeight,left:r.left,right:r.right,bottom:r.bottom,viewportTop:r.top,overflow:document.documentElement.scrollWidth>innerWidth+1,padding:getComputedStyle(root).scrollPaddingTop };
     })()`);
-    // Setup reaches the same lower part of the chooser as normal scrolling;
-    // acceptance below uses trusted wheel input, not a scripted scroll substitute.
-    await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome');root.scrollTop=(root.scrollHeight-root.clientHeight)*.6;})()`);
+    await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome');root.scrollTop=(root.scrollHeight-root.clientHeight)*.5;})()`);
     let state=await read();
     assert.ok(state.max>50, 'the category list has a real scroll range');
     assert.equal(state.overflow,false);
-    assert.ok(state.brief.top>=state.root.top-1 && state.brief.bottom<=state.root.bottom+1, 'Inside this map remains visible after scrolling through categories');
-    // Complete each mouse-scroll gesture before starting the next boundary check.
-    const wheel=async (x,y,deltaY) => p.call('Input.synthesizeScrollGesture',{x,y,xDistance:0,yDistance:-deltaY,speed:800,gestureSourceType:'mouse',preventFling:true});
-    const x=Math.min(width-24,state.brief.right-20), y=Math.min(state.root.bottom-30,state.brief.bottom+36);
-    const before=state.top;
-    await wheel(x,y,-180);
-    await p.wait(`document.querySelector('.living-welcome').scrollTop<${before-20}`, 'exposed map below the box scrolls back up');
-
-    // A long Aviation brief scrolls internally, then hands the gesture to the
-    // chooser at either boundary rather than trapping the visitor there.
-    await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome'),brief=root.querySelector('.welcome-preview-brief');root.scrollTop=(root.scrollHeight-root.clientHeight)*.5;brief.scrollTop=0;})()`);
+    assert.ok(['auto','0px'].includes(state.padding), 'no scroll space is reserved for the removed card');
+    const wheel=async deltaY => p.call('Input.synthesizeScrollGesture',{x:state.right-20,y:state.viewportTop+(state.bottom-state.viewportTop)*.5,xDistance:0,yDistance:-deltaY,speed:800,gestureSourceType:'mouse',preventFling:true});
+    await wheel(180);
+    await p.wait(`document.querySelector('.living-welcome').scrollTop>${state.top+20}`, 'wheel input scrolls the category chooser down');
     state=await read();
-    assert.ok(state.inside>0, 'the long source brief exercises nested scrolling');
-    const boxX=state.brief.left+(state.brief.right-state.brief.left)*.5,boxY=state.brief.top+36;
-    // Reach the boundary through the browser's scroll node, as a visitor does.
-    await wheel(boxX,boxY,Math.ceil(state.inside+100));
-    await p.wait(`(()=>{const brief=document.querySelector('.welcome-preview-brief');return brief.scrollTop>=brief.scrollHeight-brief.clientHeight-1;})()`, 'real wheel input reaches the brief end');
-    state=await read();
-    await wheel(boxX,boxY,140);
-    try { await p.wait(`document.querySelector('.living-welcome').scrollTop>${state.top+20}`, 'brief end hands downward scrolling to the chooser'); }
-    finally { t.diagnostic("nested-scroll-end: "+JSON.stringify(await read())); }
-    state=await read();
-    await wheel(boxX,Math.max(state.root.top+20,state.brief.top+36),-Math.ceil(state.inside+100));
-    await p.wait(`document.querySelector('.welcome-preview-brief').scrollTop<=1`, 'real wheel input reaches the brief start');
-    state=await read();
-    await wheel(boxX,Math.max(state.root.top+20,state.brief.top+36),-140);
-    try { await p.wait(`document.querySelector('.living-welcome').scrollTop<${state.top-20}`, 'brief start hands upward scrolling to the chooser'); }
-    finally { t.diagnostic("nested-scroll-start: "+JSON.stringify(await read())); }
-    await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome');root.scrollTop=root.scrollHeight;})()`);
-    state=await read();
-    assert.ok(state.brief.top>=state.root.top-1 && state.brief.bottom<=state.root.bottom+1, 'the last categories do not lose their context panel');
+    await wheel(-180);
+    await p.wait(`document.querySelector('.living-welcome').scrollTop<${state.top-20}`, 'wheel input scrolls the category chooser up');
+    await revealControl(p,'.topic-'+welcomeTopics.at(-1).id);
+    assert.equal(await p.evaluate(`!!document.querySelector('.welcome-preview-brief')`),false,'the last categories remain clear of the retired card');
 
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){
       await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
@@ -346,21 +323,21 @@ for (const { width, height, input } of [
   { width: 390, height: 844, input: 'touch swipe' },
   { width: 320, height: 568, input: 'touch swipe' },
 ]) {
-  test(`welcome glimpse chains ${input} at ${width}x${height}`, { timeout: 90000 }, async t => {
+  test(`welcome categories scroll with ${input} at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
     await p.open('/?motion=off'); await readyWelcome(p);
     await p.evaluate("document.querySelector('.topic-aviation').focus()");
-    await p.wait("document.querySelector('.welcome-preview-brief h2')?.textContent===" + JSON.stringify(categoryGlimpse('aviation').title), 'aviation owns the long context');
+    await p.wait("document.querySelector('.living-welcome')?.dataset.active==='aviation'", 'category focus updates the backdrop');
     await p.wait("document.querySelector('.domain-stage')?.dataset.state!=='loading'", 'preview settles before gestures');
-    await p.evaluate("(()=>{const r=document.querySelector('.living-welcome'),b=document.querySelector('.welcome-preview-brief');r.scrollTop=(r.scrollHeight-r.clientHeight)*.5;b.scrollTop=0;})()");
-    const read = () => p.evaluate("(()=>{const r=document.querySelector('.living-welcome'),b=document.querySelector('.welcome-preview-brief'),a=b.getBoundingClientRect(),q=r.getBoundingClientRect();return {outer:r.scrollTop,inner:b.scrollTop,max:b.scrollHeight-b.clientHeight,top:a.top,bottom:a.bottom,x:a.left+a.width/2,rootTop:q.top,rootBottom:q.bottom,overflow:document.documentElement.scrollWidth>innerWidth+1};})()");
+    await p.evaluate("(()=>{const r=document.querySelector('.living-welcome');r.scrollTop=(r.scrollHeight-r.clientHeight)*.5;})()");
+    const read = () => p.evaluate("(()=>{const r=document.querySelector('.living-welcome'),a=r.getBoundingClientRect();return {outer:r.scrollTop,max:r.scrollHeight-r.clientHeight,top:a.top,bottom:a.bottom,x:a.right-20,overflow:document.documentElement.scrollWidth>innerWidth+1};})()");
     const initial = await read();
-    assert.ok(initial.max > 80, 'fixture exercises internal context scrolling');
+    assert.ok(initial.max > 80, 'the chooser has scrollable categories');
     if (input === 'touch swipe') await p.call('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 });
     const gesture = async direction => {
       const s = await read();
-      const x = s.x, start = direction > 0 ? s.bottom - 12 : s.top + 12;
-      const end = direction > 0 ? s.top + 12 : s.bottom - 12;
+      const middle = s.top + (s.bottom - s.top) / 2;
+      const x = s.x, start = middle + direction * 60, end = middle - direction * 60;
       if (input === 'touch swipe') {
         await p.call('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y: start }] });
         for (let i = 1; i <= 8; i++) {
@@ -378,19 +355,11 @@ for (const { width, height, input } of [
       await pause(200);
     };
     await gesture(1);
-    assert.ok((await read()).inner > 20, 'trusted input scrolls the panel itself');
-    for (let attempt = 0; attempt < 12 && (await read()).inner < (await read()).max - 1; attempt++) await gesture(1);
-    let state = await read();
-    assert.ok(state.inner >= state.max - 1, 'trusted input reaches the lower boundary');
-    await gesture(1);
-    assert.ok((await read()).outer > state.outer + 20, 'a new downward gesture transfers to the chooser');
-    for (let attempt = 0; attempt < 12 && (await read()).inner > 1; attempt++) await gesture(-1);
-    state = await read();
-    assert.ok(state.inner <= 1, 'trusted input reaches the upper boundary');
+    await p.wait(`document.querySelector('.living-welcome').scrollTop>${initial.outer+20}`, 'trusted input scrolls the chooser down directly');
+    const state = await read();
     await gesture(-1);
+    await p.wait(`document.querySelector('.living-welcome').scrollTop<${state.outer-20}`, 'trusted input scrolls the chooser up directly');
     const final = await read();
-    assert.ok(final.outer < state.outer - 20, 'a new upward gesture transfers to the chooser');
-    assert.ok(final.top >= final.rootTop - 1 && final.bottom <= final.rootBottom + 1, 'context stays visible');
     assert.equal(final.overflow, false, 'no horizontal overflow');
     t.diagnostic(JSON.stringify({ input, initial, final }));
   });
@@ -744,7 +713,6 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
       await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);
       await readyWelcome(p);await expand('weather');
       await p.wait(`document.querySelector('.welcome-layer-demo-state')?.textContent.startsWith('Provider context preview.')`,'recovered map replaces the unavailable message');
-      await p.wait(`[...document.querySelectorAll('.welcome-preview-feed-state [data-state="unavailable"]')].length>0`,'unavailable providers retain their separate source labels');
       await activate('.welcome-layer-demo-actions button:first-child');
       await p.wait(`document.querySelector('.welcome-layer-demo-state')?.textContent.startsWith('Base context only.')`,'starter comparison still hides overlays');
       await activate('.welcome-layer-demo-actions button:first-child');
@@ -1313,13 +1281,12 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     await checkLayout('initial');
     if(width===1440){
       await p.evaluate(`document.querySelector('.topic-weather').focus({preventScroll:true})`);
-      await p.wait(`document.querySelector('.welcome-preview-brief h2').textContent===${JSON.stringify(categoryGlimpse('weather').title)}`,'shared brief follows keyboard interest');
-      // Measure switching between selected glimpses. The initial chooser has
-      // different introductory copy and is checked separately by checkLayout.
+      await p.wait(`document.querySelector('.living-welcome').dataset.active==='weather'`,'backdrop follows keyboard interest');
+      // Keyboard interest changes the backdrop without moving category targets.
       const rowTop=()=>p.evaluate(`document.querySelector('.discovery-field--grouped').getBoundingClientRect().top`);
       const before=await rowTop();
       await p.evaluate(`document.querySelector('.topic-history').focus({preventScroll:true})`);
-      await p.wait(`document.querySelector('.welcome-preview-brief h2').textContent===${JSON.stringify(categoryGlimpse('history').title)}`,'shared brief follows the next category');
+      await p.wait(`document.querySelector('.living-welcome').dataset.active==='history'`,'backdrop follows the next category');
       const after=await rowTop();
       assert.ok(Math.abs(after-before)<2,'switching category glimpses never shifts the category rows: '+JSON.stringify({before,after}));
     }
@@ -1327,7 +1294,6 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
     await checkCredits('initial license strip');
     await p.wait(`!!document.querySelector('.living-welcome .domain-stage .maplibregl-ctrl-attrib')`,'the live welcome map carries its own provider credits');
-    if(width<=1100&&height<=480)assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.welcome-preview-brief')).position`),'static','short landscape keeps the panel in flow so full cards remain reachable');
     for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('header.topbar')).visibility`),'visible','global header remains available');
     for(const selector of ['.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'hidden','background map chrome does not peek through welcome');
@@ -1692,8 +1658,9 @@ for(const [width,height] of [[1440,960],[390,844]]) test(`aviation welcome zones
  const b=await browser(t),p=await pageSession(b,width,height);
  await p.open('/?motion=off');await readyWelcome(p);
  await p.evaluate(`document.querySelector('.topic-aviation').focus()`);
- await p.wait(`document.querySelector('.welcome-preview-brief .welcome-aviation-status')?.textContent.includes('NASR 2026-10-29')`,'startup focus alone shows the zone hint without opening a demonstration');
- assert.equal(await p.evaluate(`document.querySelectorAll('.welcome-dialog-backdrop,.welcome-layer-demo').length`),0,'the zones are available in the startup view itself');
+ await p.wait(`document.querySelector('.living-welcome').dataset.active==='aviation'`,'startup focus selects the aviation backdrop');
+ assert.equal(await p.evaluate(`!!document.querySelector('.welcome-preview-brief')`),false,'aviation controls stay in the explicit preview');
+ assert.equal(await p.evaluate(`document.querySelectorAll('.welcome-dialog-backdrop,.welcome-layer-demo').length`),0,'focus alone does not open a demonstration');
  assert.equal(await p.evaluate(`document.querySelector('.living-welcome').dataset.fullscreen`),'false');
  const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
  await enter('.topic-preview-aviation');await openStageNotes(p);await p.wait(`!!document.querySelector('.welcome-aviation-tools')`,'aviation tools have a real destination');

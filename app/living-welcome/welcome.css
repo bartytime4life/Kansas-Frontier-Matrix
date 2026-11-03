@@ -553,16 +553,6 @@
 .living-welcome .welcome-open-map{margin-top:4px}
 @media(max-width:560px){.living-welcome .discovery-field--grouped .discovery-group{grid-template-columns:minmax(0,1fr)}.living-welcome .welcome-map-look-swatch{width:48px;height:48px}}
 
-/* One shared glimpse, never nineteen media players. The real map stays central. */
-.living-welcome .welcome-heading-row{grid-template-areas:'hero toolbar' 'hero preview';grid-template-rows:auto 1fr}
-.living-welcome .welcome-preview-brief{grid-area:preview;justify-self:end;align-self:start;width:min(420px,100%);height:220px;min-height:0;max-height:220px;overflow:auto;margin:10px 32px 0 0;padding:16px 18px;border:1px solid #8db5c03d;border-radius:12px;background:#082635ed;contain:layout paint}
-.living-welcome .welcome-preview-brief h2{font-size:21px;line-height:1.2;margin:6px 0 8px;color:#f0d59c}
-.living-welcome .welcome-preview-brief p{margin:6px 0;font-size:13px;line-height:1.55;color:#d4e3e8}
-.living-welcome .welcome-preview-brief .welcome-preview-try{color:#a8c6d0;font-size:12px}
-.living-welcome .welcome-preview-feed-state{display:grid;gap:5px;margin-top:10px;font-size:11px;color:#bad5df}
-.living-welcome .welcome-preview-feed-state i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#83c5b0;margin-right:7px}
-.living-welcome .welcome-preview-feed-state [data-state=unavailable]{color:#efc38d}
-.living-welcome .welcome-preview-feed-state [data-state=unavailable] i{background:#efc38d}
 .living-welcome .welcome-category-glimpse{padding:16px;border:1px solid #7db5bb55;border-radius:12px;background:#082431;margin:16px 0}
 .living-welcome .welcome-category-glimpse h3{font-size:20px;line-height:1.25;margin:7px 0 10px;color:#f0d59c}
 .living-welcome .welcome-category-glimpse p{font-size:13px;line-height:1.6;margin:10px 0;color:#d0e1e7}
@@ -571,7 +561,6 @@
 .living-welcome .capability-preview-screen :is(img,video){display:block;width:100%;height:100%;object-fit:contain}
 .living-welcome .capability-preview-play{position:absolute;bottom:10px;left:10px;max-width:calc(100% - 20px);min-height:44px;padding:8px 12px;border:1px solid #cbb57e;border-radius:8px;background:#072635ed;color:#f3d69b;font-size:12px}
 .living-welcome .capability-preview-play:focus-visible{outline:3px solid #f3d69b;outline-offset:3px}
-@media(max-width:1100px){.living-welcome .welcome-heading-row{grid-template-areas:'toolbar' 'hero';grid-template-rows:auto auto}.living-welcome .welcome-preview-brief{display:none}}
 
 .living-welcome .domain-stage[data-state=unavailable] .domain-stage-map{visibility:hidden}
 
@@ -587,10 +576,6 @@
 .living-welcome .welcome-layer-demo-actions button[aria-pressed=true]{border-color:#f0d59c}
 .living-welcome .welcome-layer-demo-actions button:focus-visible{outline:3px solid #f0d59c;outline-offset:2px}
 .living-welcome .welcome-layer-demo .welcome-layer-demo-state{font-size:11px;color:#b7ced7}
-@media(max-width:1100px){
- .living-welcome:not([data-fullscreen=true]) .welcome-heading-row{grid-template-areas:'toolbar' 'hero' 'preview';grid-template-rows:auto auto auto}
- .living-welcome .welcome-preview-brief{display:block;justify-self:stretch;width:auto;height:auto;max-height:220px;margin:14px 0 0}
-}
 @media(max-width:700px){
  .living-welcome .welcome-layer-demo{top:14px;right:14px;width:min(360px,calc(100% - 28px));max-height:calc(100% - 150px);padding:14px}
  .living-welcome[data-fullscreen=true]:has(.welcome-layer-demo) .domain-stage-caption{top:auto;bottom:76px;left:18px;right:18px;max-width:none;max-height:60px;overflow:auto}
@@ -633,24 +618,11 @@
 @media(max-width:700px){.living-welcome:not([data-fullscreen=true]) .welcome-geology-specimen{position:relative;left:auto;right:auto;top:auto;width:min(330px,calc(100% - 28px));margin:210px auto 20px;transform:none;max-height:430px}.living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo{max-height:28vh}.living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo>small{display:none}.living-welcome[data-fullscreen=true] .welcome-geology-specimen{left:14px;right:14px;top:31%;width:auto;max-width:360px;max-height:calc(69% - 105px);padding:12px;transform:none}.living-welcome[data-fullscreen=true] .welcome-geology-diagram{max-height:220px}.living-welcome[data-fullscreen=true] .welcome-geology-specimen figcaption strong{font-size:20px}.living-welcome .welcome-geology-controls :is(a,button){min-height:44px}.living-welcome .welcome-geology-specimen .welcome-kicker{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.welcome-geology-specimen :is(.welcome-geology-column,.welcome-geology-plate){animation:none!important;transition:none!important}}.welcome-geology-specimen[data-reduced=true] :is(.welcome-geology-column,.welcome-geology-plate){animation:none!important;transition:none!important}
 .living-welcome .welcome-capability-stage .welcome-geology-specimen figcaption{position:relative;display:grid;bottom:auto;left:auto;max-width:none;padding:0 4px;background:transparent}
-/* The startup hint belongs to the existing brief, so it cannot cover search or
-   category cards on a narrow screen. The detailed specimen is expanded only.
-   It keeps the brief's fixed height and scrolls inside it: a hover glimpse
-   that grew would move the category cards under the pointer. */
-.living-welcome .welcome-preview-brief[data-geology=true]>.welcome-preview-try,.living-welcome .welcome-preview-brief[data-geology=true]>.welcome-preview-feed-state{display:none}
-.living-welcome .welcome-preview-brief .welcome-geology-specimen{position:relative;left:auto;right:auto;top:auto;width:100%;max-height:none;overflow:visible;transform:none;padding:0;margin:4px 0 0;border:0;border-radius:0;background:transparent;box-shadow:none}
-.living-welcome .welcome-preview-brief .welcome-geology-specimen figcaption{display:none}
-.living-welcome .welcome-preview-brief .welcome-geology-diagram{max-height:170px;margin:-8px 0 0}
-.living-welcome .welcome-preview-brief .welcome-geology-source{font-size:10px;margin:0}
-.living-welcome .welcome-preview-brief .welcome-geology-source span{font-size:9px}
-.living-welcome .welcome-preview-brief .welcome-geology-limit{font-size:9px;margin-top:3px}
-.living-welcome .welcome-preview-brief[data-geology=true] h2{font-size:19px;margin-bottom:5px}
-.living-welcome .welcome-preview-brief[data-geology=true]>p{font-size:11px;line-height:1.45;margin:5px 0}
 .living-welcome .welcome-geology-controls :is(button,a){min-height:44px}
 
 /* Expanded phone: a short fixed introduction, then one specimen scroll owner.
    The log's source disclosure stays inside that rectangle, above map credits
-   and Return controls. Desktop and the compact startup brief are unchanged. */
+   and Return controls. Desktop keeps its existing layout. */
 @media(max-width:700px){
  .living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo{left:14px;right:14px;top:14px;width:auto;height:112px;max-height:none;overflow:visible;display:flex;flex-direction:column;justify-content:center;padding:12px;contain:layout}
  .living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo>h2{font-size:18px;line-height:1.2;margin:0}
@@ -865,22 +837,9 @@
 .living-welcome:not([data-fullscreen=true]) .welcome-capability-stage .domain-stage-map{pointer-events:none}
 .living-welcome:not([data-fullscreen=true]) .welcome-map-stage{overflow:visible;grid-template-rows:auto minmax(0,1fr) auto}
 .living-welcome:not([data-fullscreen=true]) .welcome-heading-row{grid-template-areas:'hero toolbar';grid-template-rows:auto}
-.living-welcome .welcome-discovery-layout{position:relative;z-index:4;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,420px);gap:24px;align-items:start;min-width:0}
-.living-welcome .welcome-discovery-content{grid-column:1;grid-row:1;min-width:0}
-.living-welcome .welcome-discovery-layout>.welcome-preview-brief{grid-column:2;grid-row:1;position:sticky;top:16px;align-self:start;justify-self:stretch;width:auto;margin:0 32px 0 0;z-index:5;overscroll-behavior:auto}
+.living-welcome .welcome-discovery-layout{position:relative;z-index:4;min-width:0}
+.living-welcome .welcome-discovery-content{min-width:0}
 .living-welcome[data-fullscreen=true] .welcome-discovery-layout{display:none}
 @media(max-width:1100px){
  .living-welcome:not([data-fullscreen=true]) .welcome-heading-row{grid-template-areas:'toolbar' 'hero';grid-template-rows:auto auto}
- .living-welcome:not([data-fullscreen=true]){scroll-padding-top:calc(min(220px,24dvh) + 28px)}
- .living-welcome .welcome-discovery-layout{display:block}
- .living-welcome .welcome-discovery-layout>.welcome-preview-brief{top:12px;height:220px;max-height:min(220px,24dvh);max-height:min(220px,round(down,24dvh,1px));margin:0 32px 16px}
-}
-@media(max-width:700px){
- .living-welcome .welcome-discovery-layout>.welcome-preview-brief{margin-inline:18px}
-}
-/* Short landscape windows cannot fit a complete card below a pinned panel.
-   Keep both in the same scroll flow so pointer and keyboard access agree. */
-@media(max-width:1100px) and (max-height:480px){
- .living-welcome:not([data-fullscreen=true]){scroll-padding-top:0}
- .living-welcome .welcome-discovery-layout>.welcome-preview-brief{position:static}
 }
