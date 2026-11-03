@@ -83,6 +83,45 @@ test('owner profiles and keys refuse cloud models, unpinned weights and caller-c
  assert.equal(profiles().profiles.get('kfm-default-chat').digest,DIGEST);
 });
 
+test('owner reference text is bounded and reserves advertised input space',()=>{
+ const referenceText='Checked background facts.';
+ const configured=profiles({profiles:[profile({referenceText})]}).profiles.get('kfm-default-chat');
+ assert.ok(configured.maxInputChars<12000-referenceText.length);
+ assert.equal(configured.referenceText,referenceText);
+ for(const value of [null,42,{},'a'.repeat(4097),'bad\u0000reference']){
+  assert.throws(()=>profiles({profiles:[profile({referenceText:value})]}),/PROFILE_INVALID/);
+ }
+ assert.throws(()=>profiles({profiles:[profile({maxInputChars:1100,referenceText:'a'.repeat(100)})]}),/PROFILE_INVALID/);
+});
+
+test('signed requests receive only their profile reference without extending input or message limits',async()=>{
+ const referenceText='Owner-checked reference. Missing measurements are unknown.';
+ const configured=profiles({profiles:[profile({referenceText}),profile({id:'staging-chat',scopes:['staging']})]});
+ const g=await gateway({},configured);
+ try{
+  const health=await g.signed('GET','/v1/health');
+  const limit=health.body.profiles[0].maxInputChars;
+  assert.equal(limit,configured.profiles.get('kfm-default-chat').maxInputChars);
+  assert.doesNotMatch(JSON.stringify(health.body),/Owner-checked reference/);
+  const original=chatBody();
+  assert.equal((await g.signed('POST','/v1/chat',original)).status,200);
+  let sent=g.ollama.calls.filter(call=>call.path==='/api/chat').at(-1).body;
+  assert.ok(sent.messages[0].content.startsWith(original.messages[0].content));
+  assert.ok(sent.messages[0].content.endsWith(referenceText));
+  assert.equal(original.messages[0].content,'You are KFM.');
+  assert.equal((await g.signed('POST','/v1/chat',chatBody({messages:[{role:'user',content:'x'.repeat(limit)}]}))).status,200);
+  sent=g.ollama.calls.filter(call=>call.path==='/api/chat').at(-1).body;
+  assert.equal(sent.messages[0].role,'system');
+  assert.equal(sent.messages.reduce((n,m)=>n+m.content.length,0),12000);
+  assert.equal((await g.signed('POST','/v1/chat',chatBody({messages:[{role:'user',content:'x'.repeat(limit+1)}]}))).status,422);
+  assert.equal((await g.signed('POST','/v1/chat',chatBody({messages:Array.from({length:16},()=>({role:'user',content:'x'}))}))).status,422);
+  assert.equal((await g.signed('POST','/v1/chat',chatBody({referenceText:'visitor override'}))).status,400);
+  assert.equal((await g.signed('POST','/v1/chat',chatBody({profile:'staging-chat'}),{keyId:'staging-1',secret:stagingSecret})).status,200);
+  sent=g.ollama.calls.filter(call=>call.path==='/api/chat').at(-1).body;
+  assert.deepEqual(sent.messages,chatBody().messages);
+ }finally{await g.close();}
+});
+
 test('gateway configuration stays on loopback and refuses a shared-readable key file',async()=>{
  const dir=await mkdtemp(join(tmpdir(),'kfm-gateway-'));
  try{

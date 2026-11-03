@@ -16,6 +16,7 @@ export const GATEWAY_LIMITS=Object.freeze({requestBytes:32768,bodyMs:5000,messag
 const DEPTHS=['brief','expanded'];
 const ROLES=['system','user','assistant'];
 const OPTION_KEYS=['temperature','top_p','top_k','min_p','repeat_penalty','presence_penalty','frequency_penalty','seed'];
+const REFERENCE_PREFIX='\n\nReference context from the server owner:\n';
 const PROFILE_ID=/^[a-z0-9][a-z0-9-]{0,47}$/;
 const SCOPE=/^[a-z][a-z0-9-]{0,31}$/;
 const MODEL_TAG=/^[a-z0-9][a-z0-9._/-]{0,95}:[A-Za-z0-9._-]{1,64}$/;
@@ -49,7 +50,13 @@ export function parseProfiles(value){
   if(typeof options!=='object'||Object.keys(options).some(key=>!OPTION_KEYS.includes(key)||!Number.isFinite(options[key])))throw invalid();
   if(p.think!==undefined&&typeof p.think!=='boolean')throw invalid();
   if(p.keepAlive!==undefined&&!/^(?:0|-1|[1-9][0-9]{0,4}[smh])$/.test(p.keepAlive))throw invalid();
-  profiles.set(p.id,Object.freeze({...p,digest:digestHex(p.digest),scopes:[...p.scopes],options:{...options}}));
+  const referenceText=p.referenceText===undefined?'':p.referenceText;
+  if(typeof referenceText!=='string'||referenceText&&!safeText(referenceText,4096))throw invalid();
+  // Advertise only the space left for the hosted application's messages. The
+  // owner reference must fit inside the original limit, not extend that limit.
+  const referenceChars=referenceText?REFERENCE_PREFIX.length+referenceText.length:0;
+  if(referenceChars&&p.maxInputChars-referenceChars<1024)throw invalid();
+  profiles.set(p.id,Object.freeze({...p,digest:digestHex(p.digest),scopes:[...p.scopes],options:{...options},referenceText,maxInputChars:p.maxInputChars-referenceChars}));
  }
  return {profiles,concurrency,maxQueue};
 }
@@ -273,7 +280,16 @@ function validateChat(value,profiles,scope){
  });
  if(messages.at(-1).role!=='user')throw fail('INVALID_REQUEST',400);
  if(chars>profile.maxInputChars)throw fail('MODEL_CONTEXT_LIMIT',422);
- return {profile,depth:value.depth,requestId:value.requestId,messages:messages.map(({role,content})=>({role,content:role==='system'?content:neutralizeTemplate(content)}))};
+ const prepared=messages.map(({role,content})=>({role,content:role==='system'?content:neutralizeTemplate(content)}));
+ if(profile.referenceText){
+  const reference=REFERENCE_PREFIX+profile.referenceText;
+  if(prepared[0].role==='system')prepared[0]={role:'system',content:prepared[0].content+reference};
+  else{
+   if(prepared.length>=GATEWAY_LIMITS.messages)throw fail('MODEL_CONTEXT_LIMIT',422);
+   prepared.unshift({role:'system',content:reference});
+  }
+ }
+ return {profile,depth:value.depth,requestId:value.requestId,messages:prepared};
 }
 
 function readBody(req){

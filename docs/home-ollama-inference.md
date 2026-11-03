@@ -147,6 +147,31 @@ full-path tests. It is not part of this change.
 | No private data in logs | Gateway and server log fixed codes and timings only; no prompts, replies, headers or secrets |
 | Browser boundary | `/api/ai/status` exposes provider, model tag and label only, never the home URL, key ID or digest |
 
+## Owner reference context
+
+A local profile may set `referenceText` to up to 4096 characters of
+owner-reviewed facts and answer guidance. The gateway appends it to the existing
+system message (or creates one when absent), only for that profile. Keep source
+URLs and the date/revision of the review in the owner's configuration record;
+refresh factual guidance when the underlying source changes. Reference text is
+model input, not a place for credentials or confidential information.
+
+The reference and its separator count inside the profile's original
+`maxInputChars`. Signed health responses advertise the remaining caller budget,
+so hosted applications can trim history before sending a request. At least 1024
+characters must remain for callers. The 16-message limit still applies, including
+any inserted system message. A caller cannot supply or replace `referenceText`
+in the chat request, and health responses do not return its contents.
+
+Profiles that omit the field keep their previous behavior. This is a local
+gateway/configuration change; it does not require a website secret change when
+the profile and model identity stay the same. Before activation, test the exact
+candidate with signed requests, each site's real system prompt, false premises,
+missing data, corrections of earlier errors and unrelated tasks. Review the
+answer content as well as transport success. Reference context and sampling
+changes can reduce observed errors; they do not certify general factual accuracy
+or supply live observations.
+
 ## Server activation (GoDaddy, owner action, after phases 0–2)
 
 The existing master switch and origin rules are unchanged: `KFM_HOSTED_AI=1`,
