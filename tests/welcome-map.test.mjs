@@ -22,15 +22,30 @@ test('each topic previews the map it opens with, and the idle view is the defaul
   const v=view.welcomeView(topic);
   assert.equal(v.topic,topic);assert.equal(v.basemap,look.basemap,`${topic}: the base map choice decides the preview`);
   assert.equal(v.scene,look.scene);assert.deepEqual(plain(v.camera),plain(look.camera));assert.equal(v.name,look.name);
-  assert.deepEqual(plain(v.starters),plain(look.starters.filter(id=>!view.WELCOME_PREVIEW_SKIPPED_STARTERS.has(id))),`${topic}: the preview draws the category's own starters`);
+  for(const id of look.starters.filter(id=>!view.WELCOME_PREVIEW_SKIPPED_STARTERS.has(id)))assert.ok(v.starters.includes(id),`${topic}: the preview retains its own starters`);
+  assert.ok(v.starters.length||v.scientificLayers.length||v.scene==='terrain',`${topic}: a scientific layer or real terrain, beyond a plain basemap`);
  }
  for(const topic of [null,'unknown','__proto__'])assert.equal(view.welcomeView(topic),view.WELCOME_IDLE_VIEW);
  assert.equal(view.WELCOME_IDLE_VIEW.basemap,'standard','before a topic is chosen only the default-network vector map is requested');
  assert.equal(view.WELCOME_IDLE_VIEW.scene,'2d');
  assert.deepEqual(plain(view.WELCOME_IDLE_VIEW.starters),[],'the default map carries no data');
+ assert.deepEqual(plain(view.WELCOME_IDLE_VIEW.scientificLayers),[],'tools stay off before a choice');
  assert.deepEqual(plain(view.welcomeView('weather').starters),['nws-alerts','nws-radar'],'the storm preview shows alerts and its newest current radar scan');
  assert.deepEqual(plain(view.welcomeView('geology').starters),['usgs-earthquakes']);
  assert.deepEqual([...view.WELCOME_PREVIEW_SKIPPED_STARTERS].sort(),['usgs-streamflow']);
+});
+
+test('basemap-only cards gain appropriate existing science without changing working-map defaults',()=>{
+ for(const topic of ['ecology','flora','fauna'])assert.deepEqual(plain(view.welcomeView(topic).scientificLayers),['land-cover']);
+ assert.deepEqual(plain(view.welcomeView('agriculture').scientificLayers),['cropland']);
+ assert.deepEqual(plain(view.welcomeView('sky').scientificLayers),['daylight']);
+ assert.deepEqual(plain(view.welcomeView('water').starters),['usgs-wbd-watersheds'],'no managed gauge network on hover');
+ for(const topic of ['evidence','public-safety']){
+  assert.deepEqual(plain(view.welcomeView(topic).starters),['census-counties']);
+  assert.deepEqual(plain(maps.CATEGORY_MAPS[topic].starters),[],'a preview never enables the opened map\'s layers');
+ }
+ assert.match(view.welcomeView('fauna').detail,/no animal observations/);
+ assert.match(view.welcomeView('public-safety').detail,/no crime, court or live emergency/);
 });
 
 test('terrain looks get their own Terrarium DEM, globe looks the globe projection, flat maps neither',()=>{

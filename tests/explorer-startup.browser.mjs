@@ -9,6 +9,7 @@ import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
 import { isolateBrowserNetwork } from './browser-network.mjs';
 import { terrainBrowserFixtures } from './terrain-detail-browser-fixtures.mjs';
+import { welcomeScientificBrowserFixtures } from './welcome-scientific-browser-fixtures.mjs';
 import ts from 'typescript';
 import { capabilityPreviews, capabilityNote, categoryGlimpse } from '../app/living-welcome/capability-catalog.mjs';
 
@@ -362,6 +363,60 @@ for (const { width, height, input } of [
     const final = await read();
     assert.equal(final.overflow, false, 'no horizontal overflow');
     t.diagnostic(JSON.stringify({ input, initial, final }));
+  });
+}
+
+for (const [width, height] of [[1440, 960], [390, 844]]) {
+  test(`welcome scientific layers fill preview gaps at ${width}x${height}`, { timeout: 150000 }, async t => {
+    const fixtures = await welcomeScientificBrowserFixtures(origin);
+    const b = await browser(t), p = await pageSession(b, width, height, fixtures);
+    await p.open('/?motion=off'); await readyWelcome(p);
+    const before = await p.evaluate(`({url:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`);
+    const select = async topic => {
+      const point = await revealControl(p, '.topic-' + topic);
+      if (width > 600) await p.call('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point, button: 'none', buttons: 0 });
+      else await p.evaluate(`document.querySelector('.topic-${topic}').focus()`);
+      await p.wait(`document.querySelector('.domain-stage').dataset.topic===${JSON.stringify(topic)} && document.querySelector('.domain-stage-data') && window.__welcomeScientificMap?.isStyleLoaded()`, topic + ' has a settled preview');
+      assert.equal(await p.evaluate(`document.querySelector('.living-welcome').dataset.fullscreen`), 'false', 'interest never takes over the chooser');
+      assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage-map canvas').length`), 1, 'one existing renderer');
+      assert.equal(await p.evaluate(`!!document.querySelector('.welcome-preview-brief')`), false, 'the removed floating card stays absent');
+    };
+    for (const [topic, layer, source] of [
+      ['agriculture', 'tool-usda-cdl-raster', 'tool-usda-cdl'],
+      ['flora', 'tool-nlcd-land-cover-raster', 'tool-nlcd-land-cover'],
+      ['ecology', 'tool-nlcd-land-cover-raster', 'tool-nlcd-land-cover'],
+      ['fauna', 'tool-nlcd-land-cover-raster', 'tool-nlcd-land-cover'],
+      ['sky', 'kfm-daylight-context-fill', null],
+      ['water', 'external-usgs-wbd-watersheds-raster', null],
+      ['evidence', 'external-census-counties-line', null],
+      ['public-safety', 'external-census-counties-line', null],
+    ]) {
+      await select(topic);
+      await p.wait(`(()=>{const m=window.__welcomeScientificMap;return m.getLayer(${JSON.stringify(layer)}) && m.getLayoutProperty(${JSON.stringify(layer)},'visibility')!=='none';})()`, topic + ' draws its actual layer');
+      if (source) {
+        await p.wait(`window.__welcomeScientificMap.isSourceLoaded(${JSON.stringify(source)})`, 'synthetic classification pixels reach the real renderer');
+        const info = await p.evaluate(`window.__welcomeScientificMap.getStyle().sources[${JSON.stringify(source)}]`);
+        assert.match(info.tiles[0], topic === 'agriculture' ? /^\/api\/cropland\/tile\?year=2024/ : /NLCD_2021_Land_Cover_L48/);
+        await p.wait(`!document.querySelector('.domain-stage-data')?.textContent.includes('loading')`, 'classification reports its loaded state');
+        assert.doesNotMatch(await p.evaluate(`document.querySelector('.domain-stage-data').textContent`), /unavailable/);
+      }
+      if (topic === 'sky') {
+        assert.match(await p.evaluate(`document.querySelector('.domain-stage-data').textContent`), /Calculated daylight.*calculated for/);
+        assert.equal(await p.evaluate(`window.__welcomeScientificMap.getLayer('kfm-daylight-context-fill').type`), 'custom', 'the existing solar shader draws on the globe');
+      }
+      if (topic !== 'agriculture') assert.equal(await p.evaluate(`!!window.__welcomeScientificMap.getSource('tool-usda-cdl')`), false, 'crop classes leave with their category');
+    }
+    assert.ok(fixtures.hits.land > 0 && fixtures.hits.crops > 0, 'both registered classification carriers were requested');
+    assert.deepEqual(await p.evaluate(`({url:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`), before, 'previewing never selects working-map layers');
+    assert.equal(await p.evaluate(`document.documentElement.scrollWidth<=innerWidth+1`), true);
+    // A provider failure must be labeled rather than left looking like a successful classification.
+    fixtures.failLand(); await select('flora');
+    await p.wait(`document.querySelector('.domain-stage-data')?.textContent.includes('NLCD 2021') && document.querySelector('.domain-stage-data').textContent.includes('unavailable')`, 'classification outage is disclosed');
+    if (process.env.KFM_WORKSPACE_SCREENSHOTS) {
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, { recursive: true });
+      const shot = await p.call('Page.captureScreenshot', { format: 'png' });
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `welcome-scientific-${width}x${height}.png`), Buffer.from(shot.data, 'base64'));
+    }
   });
 }
 

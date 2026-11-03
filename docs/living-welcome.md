@@ -1,5 +1,56 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Scientific background previews · 2026-11-03 candidate
+
+All 22 categories retain their existing layout, hover/focus interaction, map
+camera, projection and slow drift. Basemap-only gaps now use existing Explorer
+renderers inside the same preview map; they do not change working-map defaults.
+The removed floating glimpse card remains absent.
+
+| Cards | Scientific or dated reference layers in the background |
+| --- | --- |
+| Engineering | KDOT state bridges over the real 3D display DEM |
+| Transportation | KDOT roads and active rail |
+| Aviation | Pinned FAA airspace volumes over the chart and terrain |
+| Weather | Current dated NOAA radar and NWS alert areas |
+| Hazards | Separately sourced alerts, satellite fire detections and fire reports |
+| Water | Published USGS/NRCS WBD boundaries over rivers and lakes |
+| Groundwater | KGS regional saturated-thickness classes |
+| Geology | USGS earthquakes, terrain and the existing recorded-log spotlight |
+| Terrain | Real display DEM, elevation tint and hillshade at the existing 1.5× scale |
+| Ecology | NLCD 2021 land cover and published watershed boundaries |
+| Agriculture | The supported USDA NASS CDL 2024 crop classification at field scale |
+| History | KDOT 1918 roads and abandoned rail references |
+| Land | BLM PLSS township references |
+| People | 2020 Census county population-density prisms |
+| Government | Census reference districts for the 119th Congress |
+| Places | County and watershed reference boundaries |
+| Science | A current dated NOAA satellite frame, when available |
+| Sky | Current calculated daylight and twilight on the globe |
+| Flora / Fauna | NLCD 2021 classified landscape context at 30 m |
+| Evidence / Public Safety | 2020 Census county source geography |
+
+Wildlife context does not imply animal observations or habitat suitability.
+Public-safety geography does not imply crime, court or live incident coverage.
+River Pulse remains an opened-map operation; hover does not start the managed
+gauge network. Dates, calculated solar time, loading, empty and unavailable
+states remain in the existing map caption. Classification readiness waits for
+tile loading to finish; successful tiles cannot mask another failed tile.
+Comparison and category changes remove the additional rasters or hide solar
+context. Reduced motion, pause, hidden-tab behavior and one renderer are retained.
+
+Bounded live checks on 2026-11-03 returned valid 512×512 PNGs for the existing
+NLCD 2021 and CDL 2024 services over a Kansas sample. These are individual
+availability checks, not proof of complete statewide coverage or current-year
+conditions. This candidate has not been published.
+
+Local validation passed: production build, TypeScript, 134 focused/adjacent Node
+cases and seven Chromium browser journeys. The two new desktop/phone journeys
+exercise the actual classification and solar renderers with isolated synthetic
+tile transport, category cleanup, unchanged working-map selection and a provider
+outage. Existing hover geometry, explicit Preview and aviation journeys also pass.
+Those fixtures establish rendering/lifecycle behavior separately from live data.
+
 ## Glimpse card removal · 2026-11-03 candidate
 
 The category chooser no longer renders the sticky “Choose your first glimpse” /
