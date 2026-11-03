@@ -23,7 +23,6 @@ async function welcome(reduced=false,globals={}){
  const env={...environment(reduced),...globals},calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
   'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas',starters:categoryModule.CATEGORY_MAPS[topic]?.starters??[]})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
-  './MotionAtlas.jsx':{MotionAtlas:'motion-atlas'},'./ScenePreview.jsx':{ScenePreview:'scene-preview'},'./MapDemoPanel.jsx':{MapDemoPanel:'map-demo-panel'},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
  const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value]),onMap:value=>calls.push(['map',value])};
@@ -33,12 +32,18 @@ async function welcome(reduced=false,globals={}){
 const previewCard=(tree,id)=>findNode(tree,n=>n.props?.className===`topic-preview topic-preview-${id}`);
 const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.children===text);
 
-test('rapid retained category handlers perform only one departure before unmount',async()=>{
- const h=await welcome();
+test('cards can combine topics and a rapid open performs only one departure',async()=>{
+ const h=await welcome();h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
  try{
-  const tree=h.render(),first=findNode(tree,n=>n.props?.className?.includes('topic-science ')),next=findNode(tree,n=>n.props?.className?.includes('topic-agriculture '));
-  first.props.onClick();first.props.onClick();next.props.onClick();
-  assert.deepEqual(h.calls,[['map','science'],['close',false]]);
+  let tree=h.render();
+  gridCard(tree,'science').props.onClick();tree=h.render();
+  gridCard(tree,'agriculture').props.onClick();tree=h.render();
+  assert.deepEqual(h.calls,[],'selection never navigates');
+  assert.equal(gridCard(tree,'science').props['aria-pressed'],true);
+  assert.equal(gridCard(tree,'agriculture').props['aria-pressed'],true);
+  const open=findNode(tree,n=>n.props?.className==='welcome-primary selection-open');
+  open.props.onClick();open.props.onClick();
+  assert.deepEqual(h.calls,[['maps',['science','agriculture']],['close',false]]);
  }finally{h.harness.dispose();}
 });
 
@@ -193,7 +198,8 @@ test('every category advertises its own glimpse and the expanded guide opens tha
   const h=await welcome();let tree=h.render();
   try{
    const card=findNode(tree,n=>n.type==='button'&&n.props.className?.includes('topic-callout')&&n.props.className?.includes('topic-'+topic.id));
-   assert.equal(findNode(card,n=>n.props?.className==='topic-glimpse').props.children,categoryGlimpse(topic.id).title);
+   assert.equal(card.props['aria-pressed'],false);
+   assert.match(card.props['aria-label'],new RegExp(topic.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
    previewCard(tree,topic.id).props.onClick();tree=h.render();tree=openDetails(h,tree);
    findNode(tree,n=>n.type==='button'&&n.props.className==='welcome-text-action welcome-preview-action').props.onClick();tree=h.render();
    const guide=findNode(tree,n=>n.props?.['aria-label']==='Category demonstration');
@@ -242,7 +248,7 @@ test('Escape from expanded Pause restores a persistent control before the next k
  const expand={focus(){h.env.document.activeElement=this;}},pause={};
  rootOf(tree).props.ref.current={contains:node=>node===expand||node===pause,querySelector:selector=>selector==='.welcome-preview-expand'?expand:null};
  try{
-  findNode(tree,node=>node.props?.className==='welcome-preview-expand').props.onClick();
+  previewCard(tree,'weather').props.onClick();
   tree=h.harness.render(h.harness.exports.default,h.props);h.harness.commitLayout();
   assert.equal(h.env.document.activeElement,expand);
   h.env.document.activeElement=pause;
@@ -319,7 +325,7 @@ test('welcome uses real search and draft actions without requests or implicit di
  h.harness.dispose();
  const next=await welcome();tree=next.render();
  findNode(tree,node=>node.type==='input'&&node.props.type==='checkbox').props.onChange({target:{checked:true}});tree=next.render();
- const ask=findNode(tree,node=>node.type==='button'&&node.props.className==='welcome-ask');ask.props.onClick();
+ const ask=byText(tree,'Ask the atlas');ask.props.onClick();
  assert.deepEqual(next.calls,[['action','qwen'],['close',true]]);
  next.harness.dispose();
 });
@@ -524,7 +530,7 @@ test('Return from the full-window preview clears an engaged card even when no bl
  card().props.onFocus({currentTarget:{matches:()=>true}});tree=h.render();
  assert.equal(rootOf(tree).props['data-active'],'history');
  // Expanding hides the cards; Chrome can drop their focus without firing blur, so onBlur/release never runs.
- byText(tree,'Expand animation').props.onClick();tree=h.render();
+ previewCard(tree,'weather').props.onClick();tree=h.render();
  byText(tree,'Return to categories').props.onClick();tree=h.render();
  assert.equal(rootOf(tree).props['data-fullscreen'],false);
  assert.equal(rootOf(tree).props['data-active'],null,'Return leaves no card engaged');
@@ -533,7 +539,7 @@ test('Return from the full-window preview clears an engaged card even when no bl
 
 test('full-window preview returns to the same categories and uncaptured domains still get their own scene',async()=>{
  const h=await welcome();let tree=h.render();
- byText(tree,'Expand animation').props.onClick();tree=h.render();assert.equal(rootOf(tree).props['data-fullscreen'],true);
+ previewCard(tree,'weather').props.onClick();tree=h.render();assert.equal(rootOf(tree).props['data-fullscreen'],true);
  byText(tree,'Return to categories').props.onClick();tree=h.render();assert.equal(rootOf(tree).props['data-fullscreen'],false);
  for(const id of ['sky','evidence']){
   findNode(tree,node=>node.type==='button'&&node.props.className?.includes(`topic-${id} `)).props.onPointerEnter({pointerType:'mouse'});tree=h.render();
@@ -598,10 +604,10 @@ test('leaving a pinned full-window preview ends the preview and restores hover a
 test('the live map shows the default map until a visitor points at a category, then that category\'s map',async()=>{
  const h=await welcome();let tree=h.render();
  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,null,'no topic preview, and no opt-in provider, before a choice');
- assert.match(JSON.stringify(findNode(tree,node=>node.props?.className==='discovery-scene')),/Kansas/);
+ assert.equal(gridCard(tree,'aviation').props['aria-pressed'],false);
  findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-aviation ')).props.onPointerEnter({pointerType:'mouse',currentTarget:{}});tree=h.render();
  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,'aviation');
- assert.match(JSON.stringify(findNode(tree,node=>node.props?.className==='discovery-scene')),/Aviation chart/);
+ assert.equal(gridCard(tree,'aviation').props['aria-pressed'],false,'hover never selects a topic');
  assert.deepEqual(h.calls,[],'previewing a map changes nothing in the Explorer');
  h.harness.dispose();
 });
@@ -783,7 +789,7 @@ test('keyboard interest cancels a pending pointer takeover and selecting the cur
 });
 
 
-test('primary cards enter their working map directly and hover never captures the workspace', async()=>{
+test('every primary card selects its topic and opens the working map only on confirmation', async()=>{
  for(const reduced of [false,true]) for(const topic of TOPIC_STRUCTURE){
   const clock=intentClock(),h=await welcome(reduced,clock);
   try{
@@ -791,7 +797,33 @@ test('primary cards enter their working map directly and hover never captures th
    gridCard(tree,topic.id).props.onPointerEnter({pointerType:'mouse'});clock.fire(650);tree=h.render();
    assert.equal(rootOf(tree).props['data-fullscreen'],false,'hover must leave every card in place');
    gridCard(tree,topic.id).props.onClick();
-   assert.deepEqual(h.calls,[['map',topic.id],['close',false]],'one click enters the real category and dismisses welcome');
+   tree=h.render();assert.deepEqual(h.calls,[]);
+   assert.equal(gridCard(tree,topic.id).props['aria-pressed'],true);
+   findNode(tree,n=>n.props?.className==='welcome-primary selection-open').props.onClick();
+   assert.deepEqual(h.calls,[['map',topic.id],['close',false]],'the map action applies the choice once');
   }finally{h.harness.dispose();}
  }
+});
+
+
+test('selection survives filtering and preview; removal, clear and empty search recover',async()=>{
+ const h=await welcome();h.props.initialTopics=['water','invalid','water','weather'];
+ h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
+ try{
+  let tree=h.render();assert.equal(gridCard(tree,'water').props['aria-pressed'],true);
+  findNode(tree,n=>n.type==='input'&&n.props.type==='search').props.onChange({target:{value:'no matching topic'}});tree=h.render();
+  assert.ok(findNode(tree,n=>n.props?.className==='topic-empty'));
+  assert.ok(findNode(tree,n=>n.props?.['aria-label']==='Remove Water & watersheds'));
+  byText(tree,'Show all topics').props.onClick();tree=h.render();
+  previewCard(tree,'weather').props.onClick();tree=h.render();
+  byText(tree,'Return to categories').props.onClick();tree=h.render();
+  assert.equal(gridCard(tree,'water').props['aria-pressed'],true);
+  findNode(tree,n=>n.props?.['aria-label']==='Map style from selected topics').props.onChange({target:{value:'weather'}});tree=h.render();
+  assert.equal(findNode(tree,n=>n.props?.['aria-label']==='Map style from selected topics').props.value,'weather');
+  findNode(tree,n=>n.props?.['aria-label']==='Remove Water & watersheds').props.onClick();tree=h.render();
+  assert.equal(gridCard(tree,'water').props['aria-pressed'],false);
+  byText(tree,'Clear all').props.onClick();tree=h.render();
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-primary selection-open').props.disabled,true);
+  assert.deepEqual(h.calls,[]);
+ }finally{h.harness.dispose();}
 });

@@ -69,8 +69,8 @@ test('Fauna and public safety open reference looks without enabling unreleased o
 
 test('opening a category map opens on its own subject and follows the same category in Layers',async()=>{
  const page=await readFile('app/page.tsx','utf8');
- const body=page.slice(page.indexOf('  const openCategoryMap = (topic: TopicId) => {'),page.indexOf('  const runWelcomeMap ='));
- const order=['activateMapRepresentation(look.scene)','basemapRef.current = look.basemap','setBasemap(look.basemap)','setOfficialContextVisible(source.id, on)','setOfficialWorkspace(topic)','map.flyTo('];
+ const body=page.slice(page.indexOf('  const openCategoryMap ='),page.indexOf('  const runWelcomeMap ='));
+ const order=['activateMapRepresentation(look.scene)','basemapRef.current = look.basemap','setBasemap(look.basemap)','setOfficialContextVisible(source.id, on)','setOfficialWorkspace(combined.topics.length > 1 ? "all" : topic)','map.flyTo('];
  let at=-1;for(const step of order){const next=body.indexOf(step);assert.ok(next>at,`${step} follows the previous step`);at=next;}
  assert.match(body,/for \(const source of OFFICIAL_CONTEXT_SOURCES\) \{\s*const on = look\.starters\.includes\(source\.id\);\s*if \(on \|\| officialVisibilityRef\.current\[source\.id\]\) setOfficialContextVisible\(source\.id, on\);/,'only the look\'s starters are on, as a starter set does; untouched layers are not toggled');
  assert.match(body,/motionDuration\(1800\)/,'camera flight honours reduced motion');
@@ -90,13 +90,16 @@ test('opening a category map opens on its own subject and follows the same categ
  assert.equal(presentation(false,{basemap:'standard'},'standard'),false,'an explicit matching preset may use its own description');
  assert.equal(presentation(false,{basemap:'standard'},'relief'),true,'a different retained basemap never claims the preset');
  const resetBinding=props.get('onReset');
- const selectReset=new Function('categoryToolsOnCurrentMap','activeCategoryMap','basemap','openCategoryMap','resetCategoryView',`return ${resetBinding.slice(1,-1)};`);
+ const selectReset=new Function('categoryToolsOnCurrentMap','activeCategoryMap','basemap','openCategoryMap','resetCategoryView','officialWorkspace','welcomeTopics',`return ${resetBinding.slice(1,-1)};`);
  const calls=[];
  const open=topic=>calls.push(['preset',topic]), reset=()=>calls.push(['camera']);
  selectReset(true,{basemap:'standard',topic:'science'},'standard',open,reset)();
  selectReset(false,{basemap:'standard',topic:'science'},'relief',open,reset)();
  selectReset(false,{basemap:'standard',topic:'science'},'standard',open,reset)();
  assert.deepEqual(calls,[['preset','science'],['preset','science'],['camera']],'Open default view must apply the actual setup; Reset view retains its camera-only behavior');
+ const combinedCalls=[];
+ selectReset(false,{basemap:'standard',topic:'water'},'relief',(...args)=>combinedCalls.push(args),reset,'all',['water','weather'])();
+ assert.deepEqual(combinedCalls,[['water',['water','weather']]],'restoring a combined default view retains every selected topic');
 });
 
 test('public-safety dock keeps optional context off and does not promise a radar scan',async()=>{
@@ -355,11 +358,11 @@ test('each look can open under its own light, applied as atmosphere and sun only
  assert.deepEqual([...maps.CATEGORY_MAPS.terrain.starters],[],'the relief basemap is lit by the scene sun; no fixed-light provider hillshade over it');
  assert.equal(maps.CATEGORY_MAPS.weather.light,'blue','weather on a dark sky');
  const page=await readFile('app/page.tsx','utf8');
- const open=page.slice(page.indexOf('  const openCategoryMap = (topic: TopicId) => {'),page.indexOf('  const runWelcomeMap ='));
+ const open=page.slice(page.indexOf('  const openCategoryMap ='),page.indexOf('  const runWelcomeMap ='));
  assert.match(open,/if \(look\.light\) applyCategoryLight\(look\.light\);/);
  assert.ok(open.indexOf('applyCategoryLight')>open.indexOf('activateMapRepresentation(look.scene)')&&open.indexOf('applyCategoryLight')>open.indexOf('basemapRef.current = look.basemap'),'the look light wins over the representation default and sees the new basemap');
  assert.doesNotMatch(open,/updateSceneEffects|chooseSceneRecipe|sceneRecipePresentation/,'effect settings the visitor chose are never rewritten');
- const helper=page.slice(page.indexOf('  const applyCategoryLight = (recipe: SceneRecipe) => {'),page.indexOf('  const openCategoryMap = (topic: TopicId) => {'));
+ const helper=page.slice(page.indexOf('  const applyCategoryLight = (recipe: SceneRecipe) => {'),page.indexOf('  const openCategoryMap ='));
  assert.match(helper,/changeStudioLight\(\{ atmosphere, azimuth \}\);/,'state follows the look');
  assert.match(helper,/runMapMutation\("Category light", \(\) => \{\s*applySceneEnvironment\(map, atmosphere, azimuth\);/,'and the map is lit now, even when state was already equal');
  assert.match(helper,/syncSceneOverlays\(map, atmosphere, azimuth, renderEfficientRef\.current\)/,'basemap hillshade re-aims too');
@@ -449,4 +452,21 @@ test('the Aquifer map opens on saturated thickness and switches one KGS view at 
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
  assert.match(page,/for \(const id of AQUIFER_VIEW_IDS\) if \(id === view \|\| officialVisibilityRef\.current\[id\]\) setOfficialContextVisible\(id, id === view\);/,'one view at a time');
+});
+
+
+test('multiple cards produce an ordered, deduplicated union with one explicit map style',()=>{
+ const combined=maps.combineCategoryMaps(['weather','water','weather','unknown','people']);
+ assert.deepEqual(combined.topics,['weather','water','people']);
+ assert.equal(combined.look.basemap,maps.CATEGORY_MAPS.weather.basemap);
+ assert.deepEqual(combined.look.starters,[...new Set(['weather','water','people'].flatMap(id=>maps.CATEGORY_MAPS[id].starters))]);
+ assert.ok(combined.look.overlays.includes('population'));
+ const changed=maps.combineCategoryMaps(combined.topics,'people');
+ assert.equal(changed.topics[0],'people');assert.equal(changed.look.scene,maps.CATEGORY_MAPS.people.scene);
+ assert.deepEqual(new Set(changed.look.starters),new Set(combined.look.starters));
+ assert.equal(maps.combineCategoryMaps(['unknown','__proto__']),null);
+ assert.equal(maps.combineCategoryMaps(['sky']).look,maps.CATEGORY_MAPS.sky,'single card preserves its canonical definition');
+ const all=maps.combineCategoryMaps(Object.keys(maps.CATEGORY_MAPS));
+ assert.equal(new Set(all.look.starters).size,all.look.starters.length);
+ assert.ok(all.look.tools.includes('daylight'));assert.ok(all.look.overlays.includes('aviation'));
 });

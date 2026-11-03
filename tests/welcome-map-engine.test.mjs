@@ -22,13 +22,15 @@ const stubs = {
     export const setNoaaSatelliteFrame = (map, frame) => globalThis.__welcome.satellite.push(frame);
     export const setNoaaRadarObservationTime = (map, at) => globalThis.__welcome.radar.push(at);`),
   "'../population-prisms'": toUrl(`export const setPopulationPrisms = (map, on) => globalThis.__welcome.prisms.push(on);`),
+  "'./scientific-layers'": toUrl(`export const createWelcomeScientificLayers = () => { let selected=[],visible=true; return {sync(layers,show){selected=layers;visible=show;globalThis.__welcome.scientific.push({layers,show});},status(){return selected.map(id=>({id,label:id,state:visible?'map-layer':'hidden'}));},dispose(){globalThis.__welcome.scientificDisposed=true;}}; };`),
   "'../noaa-radar'": toUrl(`
     export const NOAA_RADAR_FRAME_API_PATH = '/api/noaa-radar/frames';
     export const isNoaaRadarManifest = value => Array.isArray(value?.frames);
     export const noaaRadarManifestIsFresh = manifest => globalThis.__welcome.fresh(manifest.frames.at(-1));`),
   "'../welcome-map-view'": toUrl(`
-    const view = (topic, basemap, scene, zoom, starters = [], prisms = false) => ({ topic, basemap, scene, camera: { center: topic === 'terrain' ? [-99.6, 38.9] : [-98, 38], zoom, pitch: 0, bearing: 0 }, starters, prisms });
+    const view = (topic, basemap, scene, zoom, starters = [], prisms = false, scientificLayers = []) => ({ topic, basemap, scene, camera: { center: topic === 'terrain' ? [-99.6, 38.9] : [-98, 38], zoom, pitch: 0, bearing: 0 }, starters, prisms, scientificLayers });
     const VIEWS = { aviation: view('aviation', 'relief', 'terrain', 7.9), satellite: view('satellite', 'standard', '2d', 5.4, ['noaa-goes-geocolor']), evidence: view('evidence', 'standard', '2d', 6.4), science: view('science', 'standard', 'globe', 3.2), sky: view('sky', 'standard', 'globe', 2.6), terrain: view('terrain', 'relief', 'terrain', 7.4), geology: view('geology', 'relief', 'terrain', 6.1, ['usgs-earthquakes']), transport: view('transport', 'relief', 'terrain', 6.1, ['kdot-roads']), weather: view('weather', 'relief', 'terrain', 5.9, ['nws-alerts', 'nws-radar']), people: view('people', 'relief', 'terrain', 6.3, ['census-counties'], true) };
+    VIEWS.flora=view('flora','relief','2d',5.9,[],false,['land-cover']); VIEWS.agriculture=view('agriculture','relief','2d',10.5,[],false,['cropland']); VIEWS.sky.scientificLayers=['daylight'];
     export const WELCOME_DEM_SOURCE_ID = 'welcome-terrain-dem'; export const WELCOME_IDLE_VIEW = view(null, 'standard', '2d', 6.1);
     export const welcomeView = topic => VIEWS[topic] ?? WELCOME_IDLE_VIEW;
     export const welcomeStyle = (style, v) => ({ ...style, scene: v.scene });
@@ -64,7 +66,7 @@ class FakeMap {
 const settle = () => new Promise(resolve => setTimeout(resolve, SETTLE_MS + 30));
 async function start(budget = { pixelRatio: 1, tileCache: 8 }, overrides = {}) {
   const fetches = [];
-  globalThis.__welcome = { FakeMap, budget, webgl: true, aviation: [], drawn: [], radar: [], satellite: [], prisms: [], fresh: () => true, ...overrides };
+  globalThis.__welcome = { FakeMap, budget, webgl: true, aviation: [], drawn: [], radar: [], satellite: [], prisms: [], scientific: [], fresh: () => true, ...overrides };
   // Style documents and starter payloads each wait until the test releases them.
   globalThis.fetch = url => new Promise((resolve, reject) => fetches.push({ url, fail: () => reject(new Error('style unavailable')), resolve: () => resolve({ ok: true, json: async () => url === '/api/noaa-satellite/frames' ? globalThis.__welcome.satelliteManifest : url === '/api/noaa-radar/frames' ? globalThis.__welcome.radarManifest : url.startsWith('/api/') ? { feed: new URL(url, 'http://x').searchParams.get('feed'), data: { type: 'FeatureCollection', features: [] } } : { version: 8, url, sources: {}, layers: [] } }) }));
   let ready = 0, errors = 0;
@@ -74,6 +76,23 @@ async function start(budget = { pixelRatio: 1, tileCache: 8 }, overrides = {}) {
   return { engine, fetches, map: globalThis.__welcome.map, ready: () => ready, errors: () => errors, radarReports, sourceReports };
 }
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
+
+test('scientific previews follow selection and comparison on the same map, then dispose with it',async()=>{
+ const {engine,map,sourceReports}=await start();
+ try{
+  engine.show('flora');await tick();await tick();map.emit('style.load');
+  assert.deepEqual(globalThis.__welcome.scientific.at(-1),{layers:['land-cover'],show:true});
+  assert.equal(sourceReports.at(-1).sources[0].id,'land-cover');
+  engine.setLayersVisible(false);assert.equal(sourceReports.at(-1).sources[0].state,'hidden');
+  engine.show('agriculture');await settle();
+  assert.deepEqual(globalThis.__welcome.scientific.at(-1),{layers:['cropland'],show:false});
+  engine.setLayersVisible(true);assert.equal(sourceReports.at(-1).sources[0].id,'cropland');
+  assert.equal(map.log.filter(([name])=>name==='setStyle').length,1,'same basemap/scene reuses its renderer');
+  engine.show('geology');await settle();await tick();map.emit('style.load');
+  assert.deepEqual(globalThis.__welcome.scientific.at(-1),{layers:[],show:true},'no crop layer left behind');
+ }finally{engine.dispose();}
+ assert.equal(globalThis.__welcome.scientificDisposed,true);
+});
 
 test('disabled WebGL and failed map construction report failure without fetching providers',async()=>{
  for(const overrides of [{webgl:false},{FakeMap:class{constructor(){throw new Error('Map initialization failed');}}}]){

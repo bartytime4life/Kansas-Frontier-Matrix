@@ -36,7 +36,7 @@
 .living-welcome .welcome-dialog h2 { font-size: 30px; line-height: 1.15; letter-spacing: -.035em; margin: 12px 0 16px; font-weight: 650; color: #edf5f8; }
 .living-welcome .welcome-dialog-body>p { font-size: 14px; line-height: 1.65; color: #c6dae4; }
 .living-welcome .welcome-dialog-body>.welcome-primary { width: 100%; font-size: 13px; }
-.living-welcome .welcome-text-action{display:flex;min-height:44px;align-items:center;justify-content:space-between;color:#edcf8b;font-size:12px;text-decoration:none;margin-top:7px}.living-welcome .welcome-dialog .welcome-source-note{font-size:12px;color:#b0cbd7;line-height:1.6;margin:20px 0 24px}.living-welcome .scene-preview-caption a{font-size:10px;line-height:1.5;text-underline-offset:3px}.living-welcome .scene-preview-caption>button{flex:none;border:1px solid #6f8e9b;border-radius:50%;width:38px;height:38px}.living-welcome .welcome-footage-credits{display:grid;gap:12px}.living-welcome .welcome-footage-credits article{display:grid;gap:7px;border:1px solid #426373;border-radius:8px;padding:12px;font-size:12px;line-height:1.5}.living-welcome .welcome-footage-credits small{color:#b6cdd7}
+.living-welcome .welcome-text-action{display:flex;min-height:44px;align-items:center;justify-content:space-between;color:#edcf8b;font-size:12px;text-decoration:none;margin-top:7px}.living-welcome .welcome-dialog .welcome-source-note{font-size:12px;color:#b0cbd7;line-height:1.6;margin:20px 0 24px}.living-welcome .welcome-footage-credits{display:grid;gap:12px}.living-welcome .welcome-footage-credits article{display:grid;gap:7px;border:1px solid #426373;border-radius:8px;padding:12px;font-size:12px;line-height:1.5}.living-welcome .welcome-footage-credits small{color:#b6cdd7}
 /* Readable, paused-on-interest feature guide. Only the current item is focusable. */
 .welcome-feature-guide{--feature-height:56px;position:relative;display:flex;align-items:center;gap:16px;min-width:0;width:100%;color:#c7dce4;font-size:13px}
 .welcome-feature-window{overflow:hidden;height:var(--feature-height);flex:1;min-width:0}
@@ -64,53 +64,25 @@
 @media(prefers-reduced-motion:reduce){.welcome-feature-strip,.welcome-feature-item,.living-welcome .topic-callout{animation:none!important;transition:none!important}.welcome-feature-strip.is-sliding{transform:translateY(0)}}
 
 /* Photographed action keeps its own edges and perspective. No UV warping. */
-.living-welcome .motion-atlas{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:clip;isolation:isolate}
-.living-welcome .motion-portal{position:absolute;opacity:.84;transition:left .7s cubic-bezier(.2,.8,.2,1),top .7s cubic-bezier(.2,.8,.2,1),width .7s cubic-bezier(.2,.8,.2,1),height .7s cubic-bezier(.2,.8,.2,1),opacity .65s ease;will-change:opacity}
-.living-welcome .motion-portal .motion-clip{mask-image:radial-gradient(ellipse farthest-side,#000 74%,#000d 88%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse farthest-side,#000 74%,#000d 88%,transparent 100%)}
-.living-welcome .motion-portal.is-immersive{opacity:.96;z-index:2}
-.living-welcome .motion-portal.is-immersive .motion-clip{mask-image:linear-gradient(transparent 0%,#000 2%,#000 98%,transparent 100%);-webkit-mask-image:linear-gradient(transparent 0%,#000 2%,#000 98%,transparent 100%)}
-.living-welcome .motion-portal.is-immersive:after{content:'';position:absolute;inset:0;background:linear-gradient(#031c2a80,transparent 30%,transparent 80%,#031c2a55);pointer-events:none}
-.living-welcome .motion-portal.is-muted{opacity:0}
-.living-welcome .motion-clip{position:relative;width:100%;height:100%;overflow:hidden;background:transparent;contain:layout paint}
-.living-welcome .motion-incoming,.living-welcome .motion-outgoing,.living-welcome .motion-poster,.living-welcome .motion-video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.living-welcome .motion-incoming{animation:welcome-scene-arrival .65s ease both}
-.living-welcome .motion-outgoing{animation:welcome-scene-departure .65s ease both;z-index:2;pointer-events:none}
-.living-welcome .motion-video{opacity:0;transition:opacity .22s ease}
-.living-welcome .motion-video.is-decoded{opacity:1}
-.living-welcome .motion-loading{position:absolute;bottom:12px;left:12px;padding:5px 8px;border-radius:5px;background:#051c2be6;color:#d7e7ec;font-size:11px;animation:welcome-loading-delay .7s both}
 .living-welcome .motion-retry{position:absolute;inset:auto 12px 12px;padding:8px;background:#072a3b;border:1px solid #ccaf76;border-radius:7px;color:#f5d595;pointer-events:auto}
 @keyframes welcome-scene-arrival{from{opacity:0}to{opacity:1}}
 @keyframes welcome-scene-departure{from{opacity:1}to{opacity:0}}
 @keyframes welcome-loading-delay{0%,85%{opacity:0}100%{opacity:1}}
-.living-welcome .scene-preview{margin:18px 0 16px;border:1px solid #426373;border-radius:12px;overflow:hidden;background:#041622}
-.living-welcome .scene-preview-visual{position:relative;height:245px;background:#03121a}
-.living-welcome .scene-preview-visual .motion-clip{width:100%;height:100%}
-.living-welcome .scene-preview-caption{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 14px;background:#0a2939}
-.living-welcome .scene-preview-caption>div{display:grid;gap:5px;min-width:0}
-.living-welcome .scene-preview-caption strong{font-size:13px;color:#e4c784;line-height:1.45;font-weight:550}
-.living-welcome .scene-preview-caption small{font-size:11px;color:#afcad5;line-height:1.45}
-.living-welcome .scene-preview-pause{display:grid;place-items:center;flex:none;width:38px;height:38px;border:1px solid #527282;border-radius:50%;color:#f1d398}
-.living-welcome .scene-preview-pause:disabled{opacity:.4}
 .living-welcome .scene-source{font-size:10px;color:#a5c6d5;text-underline-offset:3px;flex:none}
 .living-welcome .footage-credits{margin-top:18px;display:grid;gap:12px;max-height:55vh;overflow:auto}
 .living-welcome .footage-credits article{padding:12px;border:1px solid #3b5967;border-radius:8px;display:grid;gap:5px;font-size:12px;line-height:1.5}
 .living-welcome .footage-credits article a{color:#ecd197}.living-welcome .footage-credits small{color:#abc6d1}
 .living-welcome[data-renderer=native] .scene-anchor img,.living-welcome[data-renderer=native] .full-scene-fallback{visibility:hidden}
-@media(max-width:560px){.living-welcome .scene-preview-visual{height:190px}.living-welcome .scene-preview-caption{padding:10px;gap:8px}.living-welcome .scene-preview-caption strong{font-size:12px}.living-welcome .scene-preview-caption small{font-size:10px}}
-@media(prefers-reduced-motion:reduce){.living-welcome .motion-portal,.living-welcome .motion-video{transition:none}.living-welcome .motion-incoming,.living-welcome .motion-outgoing,.living-welcome .motion-loading{animation:none}}
-.living-welcome[data-motion=paused] .motion-incoming,.living-welcome[data-motion=paused] .motion-outgoing{animation:none}
 .living-welcome .topic-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;max-height:none;overflow:visible}
 .living-welcome .topic-options button{border:1px solid #3a5868;border-radius:7px;padding:10px 11px;font-size:12px;line-height:1.45;min-height:46px;gap:9px}
 .living-welcome .topic-options button svg{flex:none;width:17px;height:17px}
 .living-welcome .topic-options button[aria-pressed=true]{background:#d3af6423;border-color:#d6b36a;color:#f4d598}
-@media(max-width:560px){.living-welcome .topic-options button{font-size:11px;padding:9px}.living-welcome .discovery-dialog .dialog-topic-icon{display:none}.living-welcome .discovery-dialog h2{margin-top:18px}.living-welcome .scene-preview{margin-top:12px}}
+@media(max-width:560px){.living-welcome .topic-options button{font-size:11px;padding:9px}.living-welcome .discovery-dialog .dialog-topic-icon{display:none}.living-welcome .discovery-dialog h2{margin-top:18px}}
 .living-welcome .map-credit button{font-size:inherit;padding:0;color:inherit;text-decoration:underline;text-underline-offset:2px;pointer-events:auto}
 .living-welcome .scene-caption-copy .scene-context{font-size:10px;color:#a9c5d1;line-height:1.4;max-width:260px;letter-spacing:0}
 /* The old cloud/column keyframes also changed invisible layout anchors,
    replacing their centering transform and pushing previews off the map. */
 .living-welcome .scene-anchor{animation:none;clip-path:none;opacity:1}
-.living-welcome .scene-preview .scene-preview-visual{height:auto;aspect-ratio:var(--scene-aspect,1.7777778);max-height:245px}
-.living-welcome[data-motion=paused] .motion-portal,.living-welcome[data-motion=paused] .motion-video{transition:none}
 
 
 .living-welcome .topic-options button{display:flex;align-items:center;justify-content:space-between;text-align:left}
@@ -127,46 +99,13 @@
 .living-welcome[data-immersive=true] .welcome-map-stage:before{opacity:1}
 
 /* Recorded tool demonstrations: two editorial thumbnails, one opt-in player. */
-.living-welcome .map-demo-panel{margin:25px 0 22px;padding-top:24px;border-top:1px solid #466675}
-.living-welcome .map-demo-heading .welcome-kicker{font-size:9px;color:#b7d1d9}
-.living-welcome .map-demo-heading h3{font-size:21px;font-weight:600;line-height:1.25;letter-spacing:-.025em;margin:8px 0;color:#edf6fa}
-.living-welcome .map-demo-heading p{font-size:12px;line-height:1.5;color:#b8d0db;margin:0 0 16px}
-.living-welcome .map-demo-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.living-welcome .map-demo-choice{display:flex;flex-direction:column;min-width:0;padding:0;overflow:hidden;text-align:left;border:1px solid #547380;border-radius:8px;background:#062332;transition:border-color .2s,background .2s}
-.living-welcome .map-demo-choice:hover,.living-welcome .map-demo-choice[aria-pressed=true]{border-color:#e8c87e;background:#173541}
-.living-welcome .map-demo-thumbnail{position:relative;display:block;width:100%;aspect-ratio:16/9;overflow:hidden;background:#031722;border-bottom:1px solid #47626d}
-.living-welcome .map-demo-thumbnail img{display:block;width:100%;height:100%;object-fit:cover;opacity:.85}
-.living-welcome .map-demo-play{position:absolute;left:11px;top:11px;display:grid;place-items:center;width:28px;height:28px;border:1px solid #e6d6a4;border-radius:50%;background:#072637e8;color:#f5d88c;font-size:10px;padding-left:2px}
-.living-welcome .map-demo-runtime{position:absolute;right:6px;bottom:6px;padding:3px 5px;background:#031a28e8;border-radius:3px;font-size:10px;font-variant-numeric:tabular-nums;color:#e9f3f7}
-.living-welcome .map-demo-choice-copy{display:grid;gap:6px;padding:12px 11px 13px}
-.living-welcome .map-demo-choice-copy small{font-size:8px;letter-spacing:.1em;line-height:1.4;color:#b7d1da}
-.living-welcome .map-demo-choice-copy strong{font-size:12px;font-weight:600;line-height:1.4;color:#f1f5f6}
-.living-welcome .map-demo-choice-copy>span{font-size:10px;line-height:1.4;color:#edcf89}
-.living-welcome .map-demo-screen{margin-top:12px;border:1px solid #6f8d98;border-radius:8px;overflow:hidden;background:#02111b}
-.living-welcome .map-demo-video-frame{position:relative;aspect-ratio:16/9;display:grid;place-items:center;background:#02111b}
-.living-welcome .map-demo-video-frame video{display:block;width:100%;height:100%;min-width:0;object-fit:contain}
-.living-welcome .map-demo-loading{position:absolute;left:10px;bottom:10px;padding:5px 8px;font-size:11px;background:#042433ed;border:1px solid #537381;border-radius:4px;color:#d8e8ec;pointer-events:none}
-.living-welcome .map-demo-transport{display:flex;gap:12px;align-items:center;padding:7px 10px;background:#082b3b;border-top:1px solid #426575;flex-wrap:wrap}
-.living-welcome .map-demo-transport>span{flex:1;font-size:10px;color:#bdd3dd}
-.living-welcome .map-demo-transport button{display:flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:4px 3px;font-size:11px;color:#f0d28f}
-.living-welcome .map-demo-failure{display:grid;justify-items:center;gap:8px;padding:22px;text-align:center;font-size:12px;line-height:1.5;color:#d6e4ea}
-.living-welcome .map-demo-failure span{font-size:11px;color:#b4cdd6}
-.living-welcome .map-demo-failure button{min-height:44px;padding:9px 14px;margin-top:4px;border:1px solid #d4b77c;border-radius:6px;color:#f3d697;font-size:12px}
-.living-welcome .map-demo-context p{margin:13px 0 8px;font-size:11px;line-height:1.65;color:#adc9d5}
-.living-welcome .map-demo-context>small{display:block;font-size:11px;line-height:1.5;color:#edce89}
-.living-welcome .map-demo-context .welcome-text-action{width:100%;padding:7px 0;font-size:12px}
-@media(max-width:560px){.living-welcome .map-demo-choices{gap:8px}.living-welcome .map-demo-choice-copy{padding:10px 9px}.living-welcome .map-demo-heading h3{font-size:20px}.living-welcome .map-demo-choice-copy strong{font-size:11px}.living-welcome .map-demo-transport{gap:8px}}
-@media(prefers-reduced-motion:reduce){.atlas-studio .map-stage>.map-canvas,.living-welcome .welcome-map-stage:before,.living-welcome .map-demo-choice{transition:none}}
+@media(prefers-reduced-motion:reduce){.atlas-studio .map-stage>.map-canvas,.living-welcome .welcome-map-stage:before{transition:none}}
 .living-welcome[data-motion=paused] .welcome-map-stage:before{transition:none}
 .atlas-studio:has(> .explorer-guide.living-welcome[data-motion=paused]) .map-stage>.map-canvas{transition:none}
 .living-welcome .welcome-hero>:is(.welcome-kicker,h1,p){transition:opacity .55s ease}
 
 @media(prefers-reduced-motion:reduce){.living-welcome .welcome-hero>:is(.welcome-kicker,h1,p){transition:none}}
 .living-welcome[data-motion=paused] .welcome-hero>:is(.welcome-kicker,h1,p){transition:none}
-.living-welcome .map-demo-source-time{display:block;margin-top:15px;color:#d6cfaf;font-size:10px;line-height:1.6;font-weight:550}
-.living-welcome .map-demo-source-time+p{margin-top:6px}
-
-.living-welcome .map-demo-full-size{display:flex;align-items:center;justify-content:center;min-height:36px;padding:4px 0;color:#f0d28f;font-size:10px;text-underline-offset:3px}
 
 /* Keep the tablet/phone feature ticker readable over every footage frame. */
 
@@ -823,23 +762,125 @@
 
 @media(max-height:600px) and (max-width:700px) and (orientation:portrait){.living-welcome[data-cinematic=true] .welcome-geology-specimen{display:none}}
 
-/* Cards enter the working map. Demonstrations are a separate, explicit action;
-   neither hover nor a slow pointer crossing moves the navigation targets. */
-.living-welcome .topic-choice{position:relative;display:flex;min-width:0}
-.living-welcome .topic-choice .topic-callout{width:100%!important;min-height:100%;padding-bottom:68px}
-.living-welcome .topic-preview{position:absolute;z-index:4;left:16px;right:16px;bottom:10px;display:flex;align-items:center;justify-content:space-between;min-height:44px;padding:8px 12px;border:1px solid #8db5c052;border-radius:7px;background:#0a2d3d;color:#c5dde6;font-size:12px;pointer-events:auto}
-.living-welcome .topic-preview:hover{background:#173e4d;border-color:#e8c37c;color:#f5ddb0}
-.living-welcome .topic-preview:focus-visible{outline:2px solid #f0d28f;outline-offset:3px}
+/* Topic builder: one scroll surface, selectable cards and a persistent handoff.
+   Cinematic previews retain their existing layout and source controls. */
+.atlas-studio:has(> .living-welcome[data-builder=true]) > .topbar { visibility:hidden; }
+.atlas-studio .explorer-guide.living-welcome[data-builder=true] { inset:0; background:#0b202a; scroll-padding-block:20px 210px; }
+.living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-map-stage { display:block; height:auto; min-height:100%; max-width:1240px; margin:auto; padding:24px 32px 240px; overflow:visible; }
+.living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-capability-stage { position:fixed; inset:0; opacity:.16; pointer-events:none; }
+.living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-capability-stage :is(.domain-stage-map,.domain-stage-caption) { pointer-events:none; }
+.living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-capability-stage .domain-stage-caption { display:none; }
+.living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-wash { position:fixed; background:linear-gradient(110deg,#0b202a,#0b202ac9); }
+.living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-heading-row { display:flex; flex-direction:column; padding:0; margin:0; position:relative; z-index:6; }
+.living-welcome[data-builder=true] .welcome-toolbar { position:relative; inset:auto; display:flex; justify-content:flex-end; align-items:center; gap:8px; flex-wrap:nowrap; margin:0 0 20px; padding:0; border:0; background:none; box-shadow:none; width:100%; }
+.living-welcome[data-builder=true] .welcome-toolbar > .welcome-primary { margin:0 auto 0 0; flex:0 1 auto; width:auto; background:none; border:1px solid #58717b; color:#d8e8ea; min-height:44px; padding:8px 14px; font-size:13px; }
+.living-welcome[data-builder=true] .welcome-skip { flex:none; position:static; display:grid; place-items:center; width:44px; min-height:44px; padding:0; border:1px solid #58717b; border-radius:8px; font-size:23px; }
+.living-welcome[data-builder=true] .welcome-preferences { position:relative; }
+.living-welcome[data-builder=true] summary { cursor:pointer; min-height:44px; align-content:center; font-size:13px; color:#c6d9dd; }
+.living-welcome[data-builder=true] .welcome-preferences summary { padding:10px 14px; }
+.living-welcome[data-builder=true] .welcome-preferences > div { position:absolute; top:100%; right:0; z-index:20; width:250px; display:grid; padding:10px; background:#153440; border:1px solid #6a858b; border-radius:12px; box-shadow:0 16px 40px #0008; }
+.living-welcome[data-builder=true] .welcome-preferences :is(button,label) { min-height:44px; padding:10px; text-align:left; font-size:13px; }
+.living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-hero { margin:0; max-width:650px; pointer-events:auto; }
+.living-welcome[data-builder=true] .welcome-hero h1 { font-size:clamp(34px,5vw,58px); margin:12px 0; line-height:1.04; }
+.living-welcome[data-builder=true] .welcome-hero h1:focus { outline:none!important; box-shadow:none!important; }
+.living-welcome[data-builder=true] .welcome-hero > p { font-size:16px; line-height:1.5; margin:0; color:#c8d9dd; max-width:38ch; }
+.living-welcome[data-builder=true] .welcome-place-search { margin-top:4px; max-width:540px; }
+.living-welcome[data-builder=true] .welcome-place-search form { margin:0 0 12px; display:flex; gap:6px; }
+.living-welcome[data-builder=true] .welcome-discovery-layout { position:relative; z-index:4; margin-top:16px; min-width:0; display:block; }
+.living-welcome[data-builder=true] .welcome-discovery-content { min-width:0; }
+.living-welcome[data-fullscreen=true] .welcome-discovery-layout { display:none; }
+.living-welcome[data-builder=true] .topic-finder { display:grid; grid-template-columns:1fr 210px; gap:10px; }
+.living-welcome[data-builder=true] .topic-finder label { min-width:0; }
+.living-welcome[data-builder=true] :is(.topic-finder input,.topic-finder select,.selection-basemap select) { width:100%; min-height:46px; border:1px solid #5d7780; border-radius:9px; background:#142f3b; color:#edf5f5; font:inherit; font-size:14px; padding:10px 12px; }
+.living-welcome[data-builder=true] input::placeholder { color:#adc4cd; opacity:1; }
+.living-welcome[data-builder=true] :is(select,summary):focus-visible { outline:3px solid #f3d38e; outline-offset:3px; }
+.living-welcome[data-builder=true] .discovery-hint { display:flex; flex-wrap:wrap; justify-content:space-between; gap:6px; margin:16px 0 20px; padding:0; font-size:13px; }
+.living-welcome[data-builder=true] .discovery-hint span { font-size:12px; color:#b3cbd2; }
+.living-welcome[data-builder=true] .discovery-field--grouped { position:static; display:grid; grid-template-columns:1fr; gap:26px; margin:0; padding:0; width:100%; }
+.living-welcome[data-builder=true] .discovery-group { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+.living-welcome[data-builder=true] .discovery-group-title { color:#a8c4cc; letter-spacing:.1em; font-size:11px; margin:0 0 2px; }
+.living-welcome[data-builder=true] .topic-choice { display:flex; flex-direction:column; min-width:0; position:relative; pointer-events:auto; border:1px solid #56717a; background:#102d39f5; border-radius:12px; overflow:hidden; }
+.living-welcome[data-builder=true] .topic-choice[data-selected=true] { border-color:#eed094; background:#244444; box-shadow:inset 0 0 0 1px #eed094; }
+.living-welcome[data-builder=true] .topic-choice .topic-callout { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; position:static; min-height:140px; flex:1; width:100%; max-width:none; padding:16px; margin:0; transform:none!important; opacity:1!important; filter:none!important; border:0; border-radius:0; background:none; box-shadow:none; text-align:left; animation:none; }
+.living-welcome[data-builder=true] .topic-callout::before,.living-welcome[data-builder=true] .topic-callout::after { display:none; }
+.living-welcome[data-builder=true] .topic-copy { display:flex; flex-direction:column; gap:10px; flex:1; }
+.living-welcome[data-builder=true] .topic-copy strong { font-size:16px; line-height:1.3; color:#edf5f5; font-weight:650; }
+.living-welcome[data-builder=true] .topic-copy small { font-size:12px; line-height:1.5; color:#b9cfd7; }
+.living-welcome[data-builder=true] .topic-selection-label { font-size:12px; color:#efd49c; margin-top:auto; }
+.living-welcome[data-builder=true] .topic-check { flex:none; display:grid; place-items:center; width:23px; height:23px; border:1px solid #839b9f; border-radius:50%; font-size:17px; color:#d5e5e6; }
+.living-welcome[data-builder=true] [aria-pressed=true] .topic-check { color:#112a32; background:#eed094; border-color:#eed094; }
+.living-welcome[data-builder=true] .topic-preview { position:static; display:flex; align-items:center; justify-content:space-between; width:100%; min-height:44px; padding:10px 16px; border:0; border-top:1px solid #66828b55; border-radius:0; background:#081f2933; font-size:12px; color:#bcd2d9; }
+.living-welcome[data-builder=true] .topic-choice button:hover { background:#ffffff08; }
+.living-welcome[data-builder=true] .topic-choice button:focus-visible { outline-offset:-4px; }
+.living-welcome[data-builder=true] .topic-empty { padding:32px 0; color:#c6d9dd; }
+.living-welcome[data-builder=true] .topic-empty button { min-height:44px; text-decoration:underline; }
+.living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-preview-controls { display:none; }
+.living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-preview-expand { display:none; }
+.living-welcome[data-builder=true] .welcome-selection-tray { position:fixed; z-index:12; bottom:24px; left:50%; transform:translateX(-50%); width:min(100%,1240px); padding:12px 32px max(16px,env(safe-area-inset-bottom)); background:#09212df5; border-top:1px solid #77949b; box-shadow:0 -8px 32px #00101966; backdrop-filter:blur(16px); }
+.living-welcome[data-builder=true] .selection-summary { display:flex; justify-content:space-between; align-items:center; gap:12px; font-size:13px; color:#e5eeed; min-height:32px; }
+.living-welcome[data-builder=true] .selection-clear { min-height:44px; padding:8px 0 8px 12px; color:#cedde0; text-decoration:underline; }
+.living-welcome[data-builder=true] .selection-chips { display:flex; gap:8px; overflow-x:auto; max-width:100%; padding:4px 2px 10px; scrollbar-width:thin; }
+.living-welcome[data-builder=true] .selection-chips button { flex:none; display:flex; align-items:center; gap:12px; min-height:44px; border:1px solid #718d90; border-radius:99px; padding:8px 14px; font-size:12px; color:#e2eeee; }
+.living-welcome[data-builder=true] .selection-chips button span { font-size:20px; }
+.living-welcome[data-builder=true] .selection-actions { display:flex; justify-content:space-between; align-items:center; gap:16px; }
+.living-welcome[data-builder=true] .selection-actions > p { color:#adc5ce; font-size:12px; line-height:1.4; margin:0; max-width:42ch; }
+.living-welcome[data-builder=true] .selection-open { min-height:48px; width:auto; flex:0 0 auto; display:flex; white-space:nowrap; min-width:180px; justify-content:space-between; gap:18px; font-size:15px; }
+.living-welcome[data-builder=true] .selection-basemap { display:flex; align-items:center; gap:10px; color:#bad0d7; font-size:12px; min-width:0; }
+.living-welcome[data-builder=true] .selection-basemap select { min-width:0; max-width:270px; }
+.map-topic-bar { grid-column:1 / -1; display:flex; align-items:center; justify-content:space-between; gap:8px; width:100%; min-width:0; }
+.map-topic-bar button { min-height:44px; border:1px solid #5a7880; border-radius:9px; padding:8px 12px; color:#dcebea; background:#15323b; font-size:13px; }
+.map-topic-bar .map-topic-edit { flex:1; display:flex; justify-content:space-between; align-items:center; gap:12px; min-width:0; text-align:left; }
+.map-topic-edit strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; }
+.map-topic-edit span { flex:none; color:#eed094; font-size:12px; }
+@media(max-width:900px) {
+ .living-welcome[data-builder=true] .discovery-group { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media(max-width:700px) {
+ .living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-map-stage { padding:16px 16px 260px; }
+ .living-welcome[data-builder=true] .welcome-toolbar { margin-bottom:20px; }
+ .living-welcome[data-builder=true] .welcome-hero h1 { font-size:28px; }
+ .living-welcome[data-builder=true] .welcome-hero h1 br { display:none; }
+ .living-welcome[data-builder=true] .welcome-hero h1 em { margin-left:.25em; }
+ .living-welcome[data-builder=true] .welcome-hero > p { font-size:14px; }
+ .living-welcome[data-builder=true] .welcome-kicker { font-size:10px; }
+ .living-welcome[data-builder=true] .topic-finder { grid-template-columns:minmax(0,1fr) 112px; gap:8px; }
+ .living-welcome[data-builder=true] .topic-finder :is(input,select) { font-size:13px; padding:10px 8px; }
+ .living-welcome[data-builder=true] .discovery-hint { margin:12px 0 18px; }
+ .living-welcome[data-builder=true] .discovery-group { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+ .living-welcome[data-builder=true] .topic-choice .topic-callout { min-height:158px; padding:12px; gap:5px; }
+ .living-welcome[data-builder=true] .topic-copy strong { font-size:14px; }
+ .living-welcome[data-builder=true] .topic-copy small { font-size:12px; }
+ .living-welcome[data-builder=true] .topic-check { width:20px; height:20px; font-size:15px; }
+ .living-welcome[data-builder=true] .topic-preview { padding:10px 12px; font-size:11px; }
+ .living-welcome[data-builder=true] .welcome-selection-tray { padding:8px 16px max(12px,env(safe-area-inset-bottom)); }
+ .living-welcome[data-builder=true] .selection-actions { gap:12px; }
+ .living-welcome[data-builder=true] .selection-open { min-width:150px; font-size:14px; }
+ .living-welcome[data-builder=true] .selection-basemap { display:grid; gap:3px; font-size:11px; }
+ .living-welcome[data-builder=true] .selection-basemap select { font-size:12px; padding:8px; min-height:44px; }
+}
+@media(max-width:350px) {
+ .living-welcome[data-builder=true] .welcome-toolbar > .welcome-primary { white-space:nowrap; padding-inline:10px; font-size:12px; }
+ .living-welcome[data-builder=true] .discovery-group { grid-template-columns:1fr; }
+ .living-welcome[data-builder=true] .topic-choice .topic-callout { min-height:110px; }
+ .living-welcome[data-builder=true] .selection-open { min-width:130px; padding-inline:10px; }
+}
+@media(max-height:500px) and (orientation:landscape) {
+ .living-welcome[data-builder=true] .welcome-selection-tray { padding:6px 18px; }
+ .living-welcome[data-builder=true] .selection-summary { position:absolute; top:14px; left:18px; }
+ .living-welcome[data-builder=true] .selection-clear { margin-left:8px; }
+ .living-welcome[data-builder=true] .selection-chips { display:none; }
+ .living-welcome[data-builder=true] .selection-actions { justify-content:flex-end; padding-left:190px; }
+ .living-welcome[data-builder=true] .selection-actions > p { display:none; }
+}
 
-/* The chooser has one scroll owner. Its fixed decorative map must not become
-   the wheel target when content moves away and exposes the canvas. */
-.living-welcome:not([data-fullscreen=true]) .welcome-capability-stage{pointer-events:none}
-.living-welcome:not([data-fullscreen=true]) .welcome-capability-stage .domain-stage-map{pointer-events:none}
-.living-welcome:not([data-fullscreen=true]) .welcome-map-stage{overflow:visible;grid-template-rows:auto minmax(0,1fr) auto}
-.living-welcome:not([data-fullscreen=true]) .welcome-heading-row{grid-template-areas:'hero toolbar';grid-template-rows:auto}
-.living-welcome .welcome-discovery-layout{position:relative;z-index:4;min-width:0}
-.living-welcome .welcome-discovery-content{min-width:0}
-.living-welcome[data-fullscreen=true] .welcome-discovery-layout{display:none}
-@media(max-width:1100px){
- .living-welcome:not([data-fullscreen=true]) .welcome-heading-row{grid-template-areas:'toolbar' 'hero';grid-template-rows:auto auto}
+@media(max-height:650px) and (max-width:700px) {
+ .living-welcome[data-builder=true] .selection-chips { display:none; }
+ .living-welcome[data-builder=true] .welcome-selection-tray { padding-block:6px 10px; }
+ .living-welcome[data-builder=true] .welcome-toolbar { margin-bottom:10px; }
+ .living-welcome[data-builder=true] .welcome-hero h1 { font-size:24px; margin-block:4px; }
+ .living-welcome[data-builder=true] .welcome-hero h1 br { display:none; }
+ .living-welcome[data-builder=true] .welcome-hero h1 em { margin-left:.25em; }
+ .living-welcome[data-builder=true] .welcome-hero > :is(.welcome-kicker,p) { display:none; }
+ .living-welcome[data-builder=true] .discovery-hint { margin-block:8px 12px; }
+ .living-welcome[data-builder=true] .discovery-hint > span { display:none; }
 }

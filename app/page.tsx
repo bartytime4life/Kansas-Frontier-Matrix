@@ -23,7 +23,7 @@ import { MapStartersControl } from "./map-starters-control";
 import { contextSelectionChanges, preferredContextIds, readContextPreference, starterPlan, type StarterAccessMap } from "./map-starters";
 import type { MapMouseEvent } from "./maplibre-seam";
 import { BasemapCacheControls } from "./basemap-cache-controls";
-import { categoryMap, categorySceneLabel, type CategoryScene } from "./category-maps";
+import { categoryMap, categorySceneLabel, combineCategoryMaps, normalizeCategoryTopics, type CategoryScene } from "./category-maps";
 import { densityGroupCounts, PRISM_METRES_PER_PERSON_PER_SQUARE_MILE, setPopulationPrisms } from "./population-prisms";
 import { REVIEWED_REASONS, REVIEWED_SOURCE_BY_TOPIC, REVIEWED_SOURCE_LABEL, useReviewedSnapshots, reviewedFeatureList, reviewedFeatureSummary, reviewedDataForDay, isCountyDay } from "./reviewed-snapshots";
 import { chartElevationKey, mapKeysFor, reliefElevationKey, withElevationKey, withReviewedKey } from "./map-keys";
@@ -1624,6 +1624,7 @@ export default function Home() {
   const [layerPreferencesReady, setLayerPreferencesReady] = useState(false);
   const [officialSourceQuery, setOfficialSourceQuery] = useState("");
   const [officialCatalogFilter, setOfficialCatalogFilter] = useState<CatalogFilter>("all");
+  const [welcomeTopics, setWelcomeTopics] = useState<TopicId[]>([]);
   const [officialWorkspace, setOfficialWorkspace] = useState<LayerWorkspace>("all");
   // The category whose map look was opened, and whether its dock was hidden.
   const [categoryDockTopic, setCategoryDockTopic] = useState<TopicId | null>(null);
@@ -2901,6 +2902,7 @@ export default function Home() {
   const buildExplorerParams = useCallback(() => {
     const params = new URLSearchParams();
     serializeTopicSelection(params, officialWorkspace, layerCatalogView);
+    if (welcomeTopics.length) params.set("topics", welcomeTopics.join(","));
     const redactLocationCamera = locationCameraRedacted || locationDerivedViewRef.current;
     const serializedView = redactLocationCamera ? KANSAS_VIEW : view;
     params.set("c", `${serializedView.center[0].toFixed(5)},${serializedView.center[1].toFixed(5)}`);
@@ -2974,7 +2976,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [calendarSweep, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, droughtOn, droughtWeek, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [calendarSweep, welcomeTopics, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, droughtOn, droughtWeek, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -6134,8 +6136,10 @@ export default function Home() {
       setStarterPanelOpen(!params.has("layerView") && !params.has("topic"));
       const restoredTopic = restoreTopic(params.get("topic"));
       setOfficialWorkspace(restoredTopic);
+      const restoredTopics = normalizeCategoryTopics((params.get("topics") ?? "").split(","));
+      setWelcomeTopics(restoredTopics);
       setLayerCatalogView(params.get("layerView") === "imagery" ? "local" : params.get("layerView") === "selected" ? "selected" : "official");
-      if (restoredTopic !== "all") { setLeftPanelMode("layers"); setLeftOpen(true); }
+      if (restoredTopic !== "all" && !restoredTopics.length) { setLeftPanelMode("layers"); setLeftOpen(true); }
       const restoredSolar = restoreDaylightView(params.get("sunDay"), params.get("sunAt"), params.get("sun") === "on", currentKansasCalendarDay(), params.get("sunThrough"));
       daylightDayRef.current = restoredSolar.day;
       daylightThroughDayRef.current = restoredSolar.throughDay;
@@ -10768,10 +10772,12 @@ export default function Home() {
       syncSceneOverlays(map, atmosphere, azimuth, renderEfficientRef.current);
     });
   };
-  const openCategoryMap = (topic: TopicId) => {
+  const openCategoryMap = (topic: TopicId, selectedTopics: readonly TopicId[] = [topic]) => {
     setCategoryToolsOnCurrentMap(false);
-    const look = categoryMap(topic);
+    const combined = combineCategoryMaps(selectedTopics, topic);
+    const look = combined?.look;
     if (!look) { runWelcomeTopic(topic); return; }
+    setWelcomeTopics(combined.topics);
     // These controls own sources and pending reads outside officialVisibility.
     // A new key unmounts their old owners (cleanup/abort) before fresh owners
     // mount with their layers off. This also handles reopening the same look.
@@ -10786,7 +10792,7 @@ export default function Home() {
     setMapQueryCandidates([]);
     setPlaying(false);
     setNoaaRadarPlaying(false);
-    toggleDaylightVisibility(false);
+    toggleDaylightVisibility(combined.topics.includes("sky"));
     const hiddenRegistry = Object.fromEntries(LAYER_REGISTRY.map(layer => [layer.id, false]));
     visibilityRef.current = hiddenRegistry;
     setVisibility(hiddenRegistry);
@@ -10836,11 +10842,11 @@ export default function Home() {
     setFemaOn(false);
     setFemaCounty(null);
     setRainfallOn(false);
-    showLandCover(topic === "flora");
+    showLandCover(combined.topics.some(id => ["flora", "ecology", "fauna"].includes(id)));
     setFloraOn(false);
     setFloraYear(FLORA_DEFAULT_YEAR);
     setFloraOpacity(0.75);
-    setCropsOn(false);
+    setCropsOn(combined.topics.includes("agriculture"));
     setCropPoint(null);
     cropHistoryRequestRef.current?.abort();
     setCropHistory(null);
@@ -10878,7 +10884,7 @@ export default function Home() {
     setSoilMapState(current => current.visible ? hideSoilContext(current) : current);
     setStarterPanelOpen(false);
     setLayerCatalogView("official");
-    setOfficialWorkspace(topic);
+    setOfficialWorkspace(combined.topics.length > 1 ? "all" : topic);
     setCategoryDockTopic(topic);
     setCategoryDockHidden(false);
     const camera: ViewState = { center: [look.camera.center[0], look.camera.center[1]], zoom: look.camera.zoom, bearing: look.camera.bearing, pitch: look.camera.pitch };
@@ -10887,12 +10893,25 @@ export default function Home() {
     else pendingViewRef.current = camera;
     announce(`${look.name} opened · ${categorySceneLabel(look.scene)} · display context, not evidence`);
   };
-  const runWelcomeMap = (topic: TopicId) => {
-    openCategoryMap(topic);
-    // A welcome choice enters the editable workspace in one step. Reuse the
-    // Layers action's after-dismissal focus handoff, including retained panels.
-    runWelcomeTopic(topic);
+  const runWelcomeMaps = (values: readonly TopicId[]) => {
+    const topics = normalizeCategoryTopics(values);
+    if (!topics.length) return;
+    openCategoryMap(topics[0], topics);
+    setPrimaryWorkspace("map");
+    setLeftOpen(false); setRightOpen(false); setTimelineOpen(false);
+    setCategoryDockHidden(true);
+    setInstrumentOpen(false);
+    setLayerCatalogView("selected");
+    // Opening a map should reveal the map, not a full-screen layer catalogue.
+    // Current layers keep their own source dates; historical time remains editable.
+    setPlaying(false); setTemporalMode("snapshot");
+    commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME);
+    dismissMapUtilityWithoutFocus();
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+      document.querySelector<HTMLButtonElement>(".map-topic-edit")?.focus({ preventScroll: true });
+    }));
   };
+  const runWelcomeMap = (topic: TopicId) => runWelcomeMaps([topic]);
   // Opening a tool is navigation, not opening a fresh category setup. Preserve
   // the camera, source selections, time and imported data. Existing topic-driven
   // water-animation restrictions still apply.
@@ -10917,7 +10936,7 @@ export default function Home() {
   };
   // The dock follows the catalogue's category while its map look is on screen,
   // including after a shared URL restores that basemap.
-  const activeCategoryMap = officialWorkspace === "all" ? undefined : categoryMap(officialWorkspace);
+  const activeCategoryMap = officialWorkspace === "all" && welcomeTopics.length > 1 ? combineCategoryMaps(welcomeTopics)?.look : officialWorkspace === "all" ? undefined : categoryMap(officialWorkspace);
   const categoryMode: CategoryScene = projection === "globe" ? "globe" : scenePreset === "elevation-3d" ? "terrain" : "2d";
   // The category map on screen: its look's basemap is on, or it was opened and not left since.
   const categoryMapOnScreen = activeCategoryMap && (activeCategoryMap.basemap === basemap || categoryDockTopic === activeCategoryMap.topic) ? activeCategoryMap : undefined;
@@ -11006,7 +11025,7 @@ export default function Home() {
       {guideOpen === null && <div className="explorer-startup-cover" role="status"><span>Opening the atlas…</span></div>}
       <div ref={welcomeAttributionHostRef} className="welcome-map-attribution maplibregl-ctrl-bottom-right" role="group" aria-label="Welcome map sources" hidden={!welcomeShowing} />
       <a className="skip-link" href="#map-canvas" inert={guideOpen === null} onClick={(event) => { event.preventDefault(); returnToPrimaryMap(); }}>Skip to the map</a>
-      <header ref={explorerHeaderRef} inert={guideOpen === null} className="topbar">
+      <header ref={explorerHeaderRef} inert={guideOpen !== false} className="topbar">
         <div className="brand-lockup">
           <span className="mark" aria-hidden="true">KFM</span>
           <span><strong className="atlas-title">Kansas Frontier Matrix</strong><small className="atlas-subtitle">Atlas Studio · Prairie Field Desk</small></span>
@@ -11096,7 +11115,7 @@ export default function Home() {
           <p><strong>Shift + drag</strong> uses MapLibre box zoom. Map controls support coordinate navigation and camera orientation; Inspect has a keyboard-accessible feature list. Terrain uses an external display DEM when available. The comparison tool accepts browser-local road-year linework; display context is not an admitted KFM source.</p>
           <button className="map-guide-start" type="button" onClick={openMapGuideDiagnostics}>Map diagnostics</button>
         </aside>}
-        <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} />
+        {!welcomeShowing && primaryWorkspace === "map" && welcomeTopics.length > 0 ? <div className="map-topic-bar"><button type="button" className="map-topic-edit" onClick={toggleExplorerGuide}><strong>{welcomeTopics.length === 1 ? topicDefinition(welcomeTopics[0])?.title : `${welcomeTopics.length} topics together`}</strong><span>Edit topics</span></button><button type="button" onClick={() => { setOfficialWorkspace("all"); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); }}>Layers · {selectedMapLayerCount}</button></div> : <WelcomeFeatureGuide onNavigate={runWelcomeFeature} paused={reducedMotion || !dynamicEffects} hint={categoryMapOnScreen && primaryWorkspace === "map" ? { title: categoryMapOnScreen.name, text: categoryMapOnScreen.tip } : null} />}
       </header>
 
       {primaryWorkspace !== "map" && workspaceSnapshot && <ReportStoryWorkspaces
@@ -11854,7 +11873,7 @@ export default function Home() {
             <footer>Situational display only · not an emergency warning service · time remains separate from the atlas year</footer>
           </aside>}
           <LightningFlashLoop key={glmFlashesEnabled && glmFlashesAllowed ? "enabled" : "disabled"} map={styleReady ? mapRef.current : null} enabled={glmFlashesEnabled && glmFlashesAllowed} reducedMotion={reducedMotion} onClose={() => setGlmFlashesEnabled(false)} />
-          <ExplorerGuide open={guideOpen === true && primaryWorkspace === "map"} motionEnabled={dynamicEffects} onMotionChange={setDynamicEffects} onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onMap={runWelcomeMap} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
+          <ExplorerGuide open={guideOpen === true && primaryWorkspace === "map"} motionEnabled={dynamicEffects} onMotionChange={setDynamicEffects} onSearch={runWelcomeSearch} onTopic={runWelcomeTopic} onMap={runWelcomeMap} onMaps={runWelcomeMaps} initialTopics={welcomeTopics} onClose={closeExplorerGuide} onAction={runExplorerGuideAction} onMore={() => setHelpOpen(true)} />
 
           {frameCheckEnabled && <FrameCheck selectedLayers={selectedMapLayerCount} map={runtime.kind === "ready" ? mapRef.current : null} />}
           <div id="map-canvas" ref={mapContainerRef} className="map-canvas" data-projection={projection} data-cinematic={sceneEffects.cinematic && scenePreset === "elevation-3d" ? "3d" : undefined} data-night-sky={sceneEffects.stars && !renderEfficient ? "on" : undefined} tabIndex={-1} role="application" aria-hidden={runtime.kind === "unsupported"} aria-label="Interactive map of real Kansas baselines and dated source layers. Use arrow keys to pan and plus or minus to zoom; use Inspect or Map layers for a keyboard feature alternative." onFocus={(event) => { if (event.target === event.currentTarget) mapRef.current?.getCanvas().focus({ preventScroll: true }); }} />
@@ -11897,7 +11916,7 @@ export default function Home() {
             keys={withElevationKey([...(quakeRecordOn && quakeRecord ? [earthquakeRecordKey(quakeRecord.endYear)] : []), ...(shownOutlook ? [spcOutlookKey(shownOutlook.day, shownOutlook.product)] : []), ...(shownReports ? [stormReportsKey(shownReports.day)] : []), ...(floodOn && officialVisibility["noaa-nwps-gauges"] ? [floodKey()] : []), ...(floraOn && floraState !== "failed" ? [floraKey(floraYear)] : []), ...(landCoverOn ? [landCoverKey()] : []), ...(cropsOn ? [cdlKey(cropsYear)] : []), ...(cropsOn && cropHistory?.data ? [cropHistoryKey()] : []), ...(shownLegislature ? [legislatureKey(shownLegislature.chamber)] : []), ...(tornadoOn && tornadoRecord ? [tornadoKey(tornadoRecord, tornadoFilter)] : []), ...(popChangeOn && popChangeCollection ? [populationChangeKey()] : []), ...(wellsOn ? [wellLevelsKey()] : []), ...(surfaceData ? [surfaceKey()] : []), ...(femaOn && femaRecord && femaCounts ? [femaKey(femaClassList, femaFilter, femaRecord.firstYear, femaRecord.lastYear)] : []), ...(shownDrought ? [shownDroughtChange ? droughtChangeKey(shownDroughtChange.weeks, shownDroughtChange.from, shownDroughtChange.to) : droughtKey(shownDrought.date)] : []), ...withReviewedKey(withCivicKey(mapKeysFor(activeCategoryMap.starters, id => Boolean(officialVisibility[id as OfficialContextId])), effectiveOfficialVisibility[CIVIC_ID] && officialStates[CIVIC_ID] === "ready" ? (officialPayloads[CIVIC_ID]?.data.features ?? []).map(feature => Number(feature.properties?.district)) : [], civicFrameCongress), reviewedData ? reviewedSource : null)],
               basemap === "relief" ? reliefElevationKey(RELIEF_RAMP) : basemap === "aviation-chart" ? chartElevationKey(AVIATION_TINT_BANDS) : null)}
             flow={{ on: sceneEffects.waterFlow, reading: sceneReadings.waterFlow, still: runtime.kind === "degraded" ? "the map is degraded" : runtime.kind !== "ready" ? "the map is still starting" : reducedMotion ? "reduced motion" : !dynamicEffects ? "ambient motion is off" : browserRenderBudget(renderQuality).efficient ? "efficient rendering" : null }}
-            onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap ? () => openCategoryMap(activeCategoryMap.topic) : resetCategoryView}
+            onFlow={(waterFlow) => updateSceneEffects({ ...sceneEffectsRef.current, waterFlow })} onReset={categoryToolsOnCurrentMap || activeCategoryMap.basemap !== basemap ? () => openCategoryMap(activeCategoryMap.topic, officialWorkspace === "all" && welcomeTopics.length > 1 ? welcomeTopics : [activeCategoryMap.topic]) : resetCategoryView}
             flood={activeCategoryMap.tools?.includes("flood") ? { on: floodOn,
               state: !floodLive ? "held" : officialStates["noaa-nwps-gauges"] === "error" ? "failed" : floodGaugeFeatures ? "ready" : "loading",
               summary: floodGaugeFeatures ? floodNetworkSummary(floodSummaries) : null, list: floodItems, picked: floodLive ? floodLid : null, gauge: shownFloodGauge, plot: floodPlot,
