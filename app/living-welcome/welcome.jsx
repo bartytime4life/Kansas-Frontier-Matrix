@@ -35,7 +35,7 @@ export function AviationGlimpse({mode,onMode,state,layersVisible}){
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,initialTopics=/** @type {readonly string[]} */ ([]),onMaps=/** @type {((topics: readonly import('../layer-workspaces').TopicId[]) => void) | undefined} */ (undefined),motionEnabled=true,onMotionChange}){
   const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null),wasFullscreen=useRef(false);
   const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0);
-  const departed=useRef(false);
+  const departed=useRef(false),modalRestore=useRef(null);
   const [selectedTopics,setSelectedTopics]=useState(()=>normalizeCategoryTopics(initialTopics));
   const [topicQuery,setTopicQuery]=useState(''),[topicGroup,setTopicGroup]=useState('All');
   const selection=combineCategoryMaps(selectedTopics);
@@ -60,7 +60,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const topic=TOPICS.find(t=>t.id===detail),modal=Boolean(detail||panel),glimpse=categoryGlimpse(control);
   // One departure owns the handoff, even if repeated activations are batched
   // before React unmounts the chooser and its retained event handlers.
-  const run=action=>{if(departed.current)return;departed.current=true;action?.();onClose(remember);};
+  const run=action=>{if(departed.current)return;departed.current=true;modalRestore.current?.();modalRestore.current=null;action?.();onClose(remember);};
   // Leaving the full-window preview clears the engaged card itself: hidden cards can
   // lose focus without a blur event, so release() alone may never run.
   function engage(id){clearTimeout(leave.current);setActive(id);setLast(id);setTouched(true);setLayersVisible(true);}
@@ -106,8 +106,11 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   useLayoutEffect(()=>{
     if(!modal){const target=trigger.current;trigger.current=null;if(target?.isConnected)target.focus({preventScroll:true});return;}
     const node=dialog.current,restore=isolateModalBackground(node,document.body);
+    modalRestore.current=restore;
     node?.querySelector('button,a,input')?.focus({preventScroll:true});
-    return restore;
+    // Navigation releases isolation before the parent commits its own inert
+    // state. A later unmount must not restore the covered map's stale state.
+    return()=>{if(modalRestore.current===restore){modalRestore.current=null;restore();}};
   },[modal]);
   useLayoutEffect(()=>{
     const keyboard=event=>{

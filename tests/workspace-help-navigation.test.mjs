@@ -51,7 +51,7 @@ test('source status reveals the map before frame focus and retains the supplied 
   assert.deepEqual(focus,[]);frames[0]();assert.deepEqual(focus,['map']);
 });
 
-// Execute the actual guide click callback so dismissal's synchronous focus return
+// Execute the actual guide click callback so dismissal's deferred focus return
 // is part of the regression, rather than calling the destination in isolation.
 const guideAst=ts.createSourceFile('welcome.jsx',await readFile('app/living-welcome/welcome.jsx','utf8'),ts.ScriptTarget.ES2022,true,ts.ScriptKind.JSX);
 let guideActionClick,helpOpenEffect,leftPanelFocusEffect;
@@ -68,7 +68,9 @@ function effectVisit(node){
 effectVisit(ast);
 test('guide Layers and Time enter committed destinations after dismissal, even when the panel was retained',()=>{
   for(const action of ['layers','time'])for(const retained of [false,true]){
-    const frames=[],focus=[],state={open:true,time:retained,status:true,starter:false},target={focus:()=>focus.push(action)};
+    const frames=[],focus=[],state={open:true,time:retained,status:true,starter:false};
+    const body={},document={body,activeElement:{closest:()=>({})},querySelector:selector=>selector==='.living-welcome'?(state.open?{}:null):{focus(){document.activeElement={closest:()=>null};focus.push('guide-trigger');}}};
+    const target={focus(){document.activeElement={closest:()=>null};focus.push(action);}};
     const leftPanelRef={current:retained?{}:null},timelineRef={current:retained?{}:null};
     const route=evaluate(callbacks.get('runExplorerGuideAction'),{
       openAtlasPanel:()=>{state.layers=true;},setPrimaryWorkspace:()=>{},setTimelineOpen:v=>state.time=v,
@@ -80,19 +82,20 @@ test('guide Layers and Time enter committed destinations after dismissal, even w
     });
     const close=evaluate(callbacks.get('closeExplorerGuide'),{
       setGuideOpen:v=>state.open=v,setWelcomeSourcesOpen:v=>state.sources=v,writeExplorerGuideDismissed:()=>{},
-      document:{activeElement:{closest:()=>({})},querySelector:()=>({focus:()=>focus.push('guide-trigger')})},
+      document,window:{requestAnimationFrame:fn=>frames.push(fn)},
     });
     assert.ok(guideActionClick,'the graphical welcome owns the action and dismissal callback');
-    evaluate(guideActionClick,{onClose:close,remember:true,departed:{current:false}})(()=>route(action));
-    assert.equal(state.open,false);assert.deepEqual(focus,['guide-trigger']);
+    evaluate(guideActionClick,{onClose:close,remember:true,departed:{current:false},modalRestore:{current:null}})(()=>route(action));
+    assert.equal(state.open,false);assert.deepEqual(focus,[]);
     if(action==='layers')evaluate(leftPanelFocusEffect,{
       primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,sourceSearchFocusPendingRef:{current:false},leftPanelRef,
       window:{requestAnimationFrame:fn=>frames.push(fn),cancelAnimationFrame(){}},visibleFocusableElements:()=>[target],
     })();
-    assert.equal(frames.length,1,'focus must be scheduled after guide dismissal and panel commit');
+    assert.equal(frames.length,2,'destination and fallback focus wait until dismissal commits');
+    document.activeElement=body;
     leftPanelRef.current={};timelineRef.current={};
     while(frames.length)frames.shift()();
-    assert.deepEqual(focus,['guide-trigger',action]);
+    assert.deepEqual(focus,action==='layers'?['guide-trigger',action]:[action],'a committed destination retains focus over the fallback');
     assert.equal(action==='layers'?state.layers:state.time,true);
     if(action==='layers'){assert.equal(state.status,false);assert.equal(state.starter,true);}
   }
