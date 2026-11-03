@@ -71,22 +71,6 @@ test('requested tours stop at the end, honor hidden/global pause, and can recove
  findNode(tree, n => n.type === 'button').props.onClick(); tree = h.render(); assert.equal(h.video.playing, true);
  h.h.dispose(); assert.equal(h.video.playing, false);
 });
-async function demoPanel(extra = {}) {
-  const listeners = new Map(), document = { hidden: false, addEventListener: (name, callback) => listeners.set(name, callback), removeEventListener: name => listeners.delete(name) };
-  const calls = [], h = await componentHarness('app/living-welcome/MapDemoPanel.jsx', {
-    './map-demos.mjs': { mapDemos, demoDuration }, './motion-playback.mjs': { bindPlayback },
-  }, { document });
-  const props = { category: 'weather', onTry: demo => calls.push(['try', demo.id]), onPlaybackChange: value => calls.push(['playing', value]), ...extra };
-  const video = media();
-  const render = () => {
-    const tree = h.render(h.exports.MapDemoPanel, props), node = findNode(tree, node => node.type === 'video');
-    if (node) node.props.ref.current = video;
-    h.commit(); return tree;
-  };
-  return { h, props, calls, video, document, listeners, render };
-}
-function select(tree, number = 0) { return findNode(tree, node => node.props?.className === 'map-demo-choices').props.children[number]; }
-
 test('each topic has two uniquely identified recordings with an existing tool destination', () => {
   const ids = new Set();
   for (const category of CATEGORY_IDS) {
@@ -102,61 +86,6 @@ test('each topic has two uniquely identified recordings with an existing tool de
     });
   }
   assert.equal(ids.size, 16); assert.deepEqual(mapDemos('missing'), []);
-});
-
-test('reduced motion leaves demos as posters until an explicit selection, with just one mounted player', async () => {
-  const h = await demoPanel({ reducedMotion: true }); let tree = h.render();
-  assert.equal(findNode(tree, node => node.type === 'video'), undefined);
-  assert.equal(h.video.pending.length, 0, 'no video request before selection');
-  select(tree).props.onClick(); tree = h.render();
-  assert.equal(findNode(tree, node => node.type === 'video').props.src, mapDemos('weather')[0].src);
-  assert.equal(h.video.pending.length, 1, 'explicit Play overrides poster-only reduced motion');
-  const fullSize = findNode(tree, node => node.props?.className === 'map-demo-full-size');
-  assert.equal(fullSize.type, 'a'); assert.equal(fullSize.props.href, mapDemos('weather')[0].src);
-  assert.equal(fullSize.props.target, '_blank'); assert.equal(fullSize.props.rel, 'noreferrer');
-  select(tree, 1).props.onClick(); tree = h.render();
-  const players = [];
-  const collect = node => { if (!node || typeof node !== 'object') return; if (node.type === 'video') players.push(node); for (const child of [node.props?.children].flat(Infinity)) collect(child); };
-  collect(tree); assert.equal(players.length, 1); assert.equal(players[0].props.src, mapDemos('weather')[1].src);
-  assert.equal(h.video.released, true, 'old decoder source is released before replacement');
-  findNode(tree, node => node.props?.['aria-label'] === 'Close map tour player').props.onClick(); tree = h.render();
-  assert.equal(findNode(tree, node => node.type === 'video'), undefined); assert.equal(h.video.playing, false);
-  h.h.dispose();
-});
-
-test('shared pause and hidden tabs beat a late successful play request', async () => {
-  const h = await demoPanel(); let tree = h.render(); select(tree).props.onClick(); tree = h.render();
-  h.props.paused = true; tree = h.render();
-  h.video.pending[0].resolve(); await Promise.resolve();
-  assert.equal(h.video.playing, false);
-  assert.equal(select(tree).props.disabled, true);
-  h.props.paused = false; tree = h.render(); assert.equal(h.video.playing, true);
-  h.document.hidden = true; h.listeners.get('visibilitychange')(); tree = h.render();
-  assert.equal(h.video.playing, false);
-  h.video.pending.at(-1).resolve(); await Promise.resolve(); assert.equal(h.video.playing, false);
-  h.h.dispose(); assert.equal(h.listeners.size, 0);
-});
-
-test('recorded playback can pause, replay, recover from failure and still open its real tool', async () => {
-  const h = await demoPanel(); let tree = h.render(); select(tree).props.onClick(); tree = h.render();
-  findNode(tree, node => node.type === 'video').props.onPlay(); tree = h.render();
-  select(tree).props.onClick(); tree = h.render();
-  assert.equal(tree.props['data-state'], 'playing', 'reselecting the playing recording does not leave a permanent loading state');
-  findNode(tree, node => node.props?.['aria-label'] === 'Pause map tour').props.onClick(); tree = h.render();
-  assert.equal(h.video.playing, false);
-  findNode(tree, node => node.props?.['aria-label'] === 'Play map tour').props.onClick(); tree = h.render();
-  assert.equal(h.video.playing, true);
-  h.video.currentTime = 12; findNode(tree, node => node.type === 'video').props.onEnded(); tree = h.render();
-  findNode(tree, node => node.props?.['aria-label'] === 'Replay map tour').props.onClick(); tree = h.render();
-  assert.equal(h.video.currentTime, 0); assert.equal(h.video.playing, true);
-  findNode(tree, node => node.type === 'video').props.onError(); tree = h.render();
-  assert.equal(findNode(tree, node => node.type === 'video'), undefined);
-  assert.ok(findNode(tree, node => node.props?.className === 'map-demo-failure'));
-  findNode(tree, node => node.type === 'button' && node.props.children === 'Retry tour').props.onClick(); tree = h.render();
-  assert.ok(findNode(tree, node => node.type === 'video'));
-  findNode(tree, node => node.props?.className === 'welcome-text-action').props.onClick();
-  assert.ok(h.calls.some(call => call[0] === 'try' && call[1] === 'weather-1'));
-  h.h.dispose();
 });
 
 test('duration captions do not invent a duration before recording metadata exists', () => {

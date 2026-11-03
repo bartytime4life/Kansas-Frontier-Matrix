@@ -30,7 +30,7 @@ function session() {
   const official = [...new Set(Object.values(mapsExports.CATEGORY_MAPS).flatMap(look => look.starters))].map(id => ({ id }));
   refs.officialVisibilityRef = { current: Object.fromEntries(official.map(({id}) => [id, true])) };
   const functions = {
-    categoryMap: mapsExports.categoryMap, OFFICIAL_CONTEXT_SOURCES: official, LAYER_REGISTRY: registry,
+    categoryMap: mapsExports.categoryMap, combineCategoryMaps: mapsExports.combineCategoryMaps, OFFICIAL_CONTEXT_SOURCES: official, LAYER_REGISTRY: registry,
     clearSelectionState() { values.selected = null; values.drawerOpen = false; },
     setOfficialContextVisible(id, on) { refs.officialVisibilityRef.current[id] = on; },
     hideSoilContext: current => ({ ...current, visible: false }),
@@ -89,4 +89,25 @@ test("internally owned layers share the explicit setup lifecycle, independently 
   for (const name of ["CropCasmaControl", "AviationLayerControl", "GovernedWaterControl", "GovernedWeatherControl", "EarthEngineDisplayControls"])
     assert.equal(owners.get(name), "{categoryMapSession}", `${name}: category change unmounts its old source owner`);
   assert.equal((page.match(/setCategoryMapSession\(/g) ?? []).length, 1, "only opening a setup resets these owners; filtering and 2D/3D controls do not");
+});
+
+
+test("combined card setup enables the union and removes deselected topic layers", () => {
+  const h = session();
+  h.open("weather", ["weather", "water", "people", "weather"]);
+  const expected = mapsExports.combineCategoryMaps(["weather", "water", "people"]).look;
+  assert.deepEqual(Object.entries(h.refs.officialVisibilityRef.current).filter(([,on]) => on).map(([id]) => id).sort(), [...expected.starters].sort());
+  assert.equal(h.values.setPopulationPrismsShown, true);
+  assert.equal(h.values.setOfficialWorkspace, "all");
+  assert.deepEqual(h.values.setWelcomeTopics, ["weather", "water", "people"]);
+  h.open("water", ["water"]);
+  assert.equal(h.values.setPopulationPrismsShown, false);
+  assert.equal(h.refs.officialVisibilityRef.current["nws-radar"], false);
+  assert.equal(h.refs.officialVisibilityRef.current["usgs-streamflow"], true);
+  assert.equal(h.values.setCategoryMapSession, 2, "one reset per complete selection, not one per card");
+  h.open("agriculture", ["agriculture", "flora", "sky", "aviation"]);
+  assert.equal(h.values.setCropsOn, true);
+  assert.equal(h.values.setAviationShowRequest > 0, true);
+  assert.ok(h.calls.some(([name, on]) => name === "showLandCover" && on === true));
+  assert.ok(h.calls.some(([name, on]) => name === "toggleDaylightVisibility" && on === true));
 });

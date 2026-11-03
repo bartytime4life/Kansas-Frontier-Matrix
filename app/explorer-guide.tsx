@@ -33,6 +33,8 @@ export function ExplorerGuide({ open, ...props }: Readonly<{
   onSearch: (query: string) => void;
   onTopic: (topic: import("./layer-workspaces").LayerWorkspace) => void;
   /** Open the category's own map look (basemap, scene, camera and starter layers). */
+  initialTopics?: readonly import("./layer-workspaces").TopicId[];
+  onMaps?: (topics: readonly import("./layer-workspaces").TopicId[]) => void;
   onMap?: (topic: import("./layer-workspaces").TopicId) => void;
   onClose: (rememberDismissal: boolean) => void;
   onAction: (action: ExplorerGuideAction) => void;

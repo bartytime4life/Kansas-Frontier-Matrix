@@ -102,3 +102,31 @@ export const categoryMap = (topic: string): CategoryMap | undefined =>
 /** Renderer-facing values for a category scene, matching activateMapRepresentation's modes. */
 export const categorySceneLabel = (scene: CategoryScene): string =>
   scene === "terrain" ? "3D terrain" : scene === "globe" ? "Globe" : "2D map";
+
+
+/** Card selections are ordered: the first topic owns the single basemap/camera.
+ * Layer and tool unions never duplicate sources or admit additional data. */
+export function normalizeCategoryTopics(values: readonly string[]): TopicId[] {
+  return [...new Set(values.filter((id): id is TopicId => Object.hasOwn(CATEGORY_MAPS, id)))];
+}
+export function combineCategoryMaps(values: readonly string[], primary?: string) {
+  const topics = normalizeCategoryTopics(values);
+  if (!topics.length) return null;
+  if (primary && topics.includes(primary as TopicId)) {
+    topics.splice(topics.indexOf(primary as TopicId), 1);
+    topics.unshift(primary as TopicId);
+  }
+  const first = CATEGORY_MAPS[topics[0]];
+  const maps = topics.map(id => CATEGORY_MAPS[id]);
+  const look: CategoryMap = topics.length === 1 ? first : {
+    ...first,
+    name: 'Your combined map',
+    lede: `Starter layers from ${topics.length} topics, using the ${first.name.toLowerCase()} view.`,
+    tip: 'Your selected topics share one map. Adjust individual layers or change your topics.',
+    starters: [...new Set(maps.flatMap(map => [...map.starters]))],
+    overlays: [...new Set(maps.flatMap(map => [...(map.overlays ?? [])]))],
+    tools: [...new Set(maps.flatMap(map => [...(map.tools ?? [])]))],
+    contextLayers: maps.flatMap(map => [...(map.contextLayers ?? [])]).filter((layer, index, all) => all.findIndex(item => item.id === layer.id) === index),
+  };
+  return { topics, look };
+}
