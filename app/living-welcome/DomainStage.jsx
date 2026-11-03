@@ -83,8 +83,8 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
  useEffect(() => { engine.current?.setPaused(paused); }, [paused]);
  useEffect(() => { engine.current?.setReduced(reduced); }, [reduced]);
  const view = welcomeView(topic);
- const shown = sources?.topic === view.topic ? sources.sources.filter(source => ['records', 'dated-frame', 'map-layer'].includes(source.state))
-  .map(source => `${OFFICIAL_CONTEXT_BY_ID[source.id]?.shortTitle ?? source.id}${source.observedAt ? ` · ${source.product === 'visible' ? 'visible-band' : source.product === 'geocolor' ? 'GeoColor' : 'scan'} ${RADAR_TIME.format(new Date(source.observedAt))}` : ''}`) : [];
+ const shown = sources?.topic === view.topic ? sources.sources.filter(source => source.state !== 'hidden')
+  .map(source => `${source.label ?? OFFICIAL_CONTEXT_BY_ID[source.id]?.shortTitle ?? source.id}${source.observedAt ? ` · ${source.product === 'calculated' ? 'calculated for' : source.product === 'visible' ? 'visible-band' : source.product === 'geocolor' ? 'GeoColor' : 'scan'} ${RADAR_TIME.format(new Date(source.observedAt))}` : ''}${source.state === 'unavailable' ? ' · unavailable' : source.state === 'loading' ? ' · loading' : source.state === 'empty' ? ' · no records returned' : source.state === 'zoom-in' ? ' · closer zoom needed' : ''}`) : [];
  return <div className="domain-stage" data-state={state} data-topic={view.topic ?? 'kansas'}>
   <div ref={host} className="domain-stage-map" />
   {topic==='geology'&&Spotlight&&map&&<Spotlight engine={map.engine} host={map.host} paused={paused} reduced={reduced} expanded={expanded} onPlaced={setSpotPlaced}/>}

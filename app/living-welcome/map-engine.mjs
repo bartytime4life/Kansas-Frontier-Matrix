@@ -10,6 +10,7 @@ import { isNoaaRadarManifest, NOAA_RADAR_FRAME_API_PATH, noaaRadarManifestIsFres
 import { isNoaaSatelliteManifest, NOAA_SATELLITE_FRAMES_PATH, NOAA_SATELLITE_FRESH_AGE_MS } from '../noaa-satellite';
 import { setPopulationPrisms } from '../population-prisms';
 import { WELCOME_DEM_SOURCE_ID, WELCOME_IDLE_VIEW, welcomeDriftLeg, welcomeStyle, welcomeView } from '../welcome-map-view';
+import { createWelcomeScientificLayers } from './scientific-layers';
 
 const WORKER_URL = '/maplibre/maplibre-gl-worker.mjs';
 // Pointer sweeps across the cards should not restyle the map for every card passed.
@@ -123,7 +124,8 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   const opacity = defaultOfficialContextOpacity();
   let loaded = {}, radarAt = null, radarShown = null, satellite = null, layersVisible = true;
   const pending = new Set(), failures = new Set();
-  const reportSources = () => onSources?.({ topic: view?.topic, mapState: contextLost ? 'unavailable' : styleLoaded ? 'ready' : 'loading', aviation: view?.topic === 'aviation' ? aviation?.status(layersVisible) ?? { state: 'loading' } : null, sources: (view?.starters ?? []).map(id => {
+  const scientific = createWelcomeScientificLayers(map, () => reportSources());
+  const reportSources = () => onSources?.({ topic: view?.topic, mapState: contextLost ? 'unavailable' : styleLoaded ? 'ready' : 'loading', aviation: view?.topic === 'aviation' ? aviation?.status(layersVisible) ?? { state: 'loading' } : null, sources: [...(view?.starters ?? []).map(id => {
     const source = OFFICIAL_CONTEXT_BY_ID[id], count = loaded[id]?.data.features.length;
     const frame = id === 'nws-radar' ? radarCurrent(radarAt) && { observedAt: radarAt, kind: 'radar' }
       : id === 'noaa-goes-geocolor' ? satelliteCurrent(satellite) && satellite : null;
@@ -131,7 +133,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       : failures.has(id) ? 'unavailable' : id === 'nws-radar' || id === 'noaa-goes-geocolor' ? frame ? 'dated-frame' : 'unavailable'
       : readsPayload(id) ? count === undefined ? 'loading' : count ? 'records' : 'empty' : 'map-layer';
     return { id, label: source?.shortTitle ?? id, state, count, observedAt: frame?.observedAt ?? null, product: frame?.kind ?? null };
-  }) });
+  }), ...scientific.status()] });
   const drawData = () => {
     if (disposed || !styleLoaded || !view) return;
     const shown = new Set(layersVisible ? view.starters : []);
@@ -147,6 +149,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       if (shown.has('noaa-goes-geocolor') && satelliteCurrent(satellite)) setNoaaSatelliteFrame(map, satellite, true, opacity['noaa-goes-geocolor']);
       else clearNoaaSatelliteFrame(map);
     } catch { /* Preview data is optional; the map stays. */ }
+    scientific.sync(view.scientificLayers, layersVisible);
     aviation?.render(layersVisible && view.topic === 'aviation', aviationMode);
     // The caption names the radar scan only while one is drawn.
     if (radar !== radarShown) { radarShown = radar; onRadar?.(radar); }
@@ -168,6 +171,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
     // Expire old frames even while held, but never poll a hidden/paused welcome.
     if (view.starters.some(id => id === 'nws-radar' || id === 'noaa-goes-geocolor')) drawData();
     if (layersVisible && !paused && !reduced) {
+      if (view.scientificLayers.includes('daylight')) drawData();
       if (view.starters.includes('nws-radar')) refreshRadar();
       if (view.starters.includes('noaa-goes-geocolor')) refreshSatellite();
     }
@@ -279,6 +283,6 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       const point = map.project(coordinates);
       return Number.isFinite(point.x) && Number.isFinite(point.y) ? { x: point.x, y: point.y } : null;
     },
-    dispose() { disposed = true; clearTimeout(settle); clearInterval(radarTimer); aviation?.dispose(); try { map.remove(); } catch { /* Already removed. */ } },
+    dispose() { disposed = true; clearTimeout(settle); clearInterval(radarTimer); scientific.dispose(); aviation?.dispose(); try { map.remove(); } catch { /* Already removed. */ } },
   };
 }
