@@ -10726,10 +10726,17 @@ export default function Home() {
     };
   }, [welcomeShowing, styleReady]);
   const closeExplorerGuide = (rememberDismissal: boolean) => {
+    const returnFocus = Boolean(document.activeElement?.closest(".explorer-guide"));
     setGuideOpen(false);
     setWelcomeSourcesOpen(false);
     writeExplorerGuideDismissed(rememberDismissal);
-    if (document.activeElement?.closest(".explorer-guide")) document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
+    // The header remains inert until React commits dismissal. Wait for that
+    // commit, and preserve focus if a destination action already claimed it.
+    if (returnFocus) window.requestAnimationFrame(() => {
+      if (!document.querySelector(".living-welcome") && (document.activeElement === document.body || document.activeElement?.closest(".explorer-guide"))) {
+        document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
+      }
+    });
   };
   // Opens Underground (or keeps it open) and moves focus into it.
   const enterUnderground = () => {
