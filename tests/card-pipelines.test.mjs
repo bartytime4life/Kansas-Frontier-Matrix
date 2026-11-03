@@ -145,3 +145,13 @@ test('diagnostic report requires the qualified mount and atomically replaces onl
   await assert.rejects(writeOperatorReport({ root }, 'config', 'run', options), /HEALTH_TARGET_UNSAFE/);
   await assert.rejects(lstat(resolve(root, 'outside')), { code: 'ENOENT' });
 });
+
+test('each SQL archive display has a topic entry and does not create a capture job', () => {
+  const archive = model.PIPELINE_DEFINITIONS.filter(p => p.id.startsWith('archive-'));
+  assert.equal(archive.length, 98);
+  for (const layer of archive) {
+    assert.equal(layer.mode, 'display');
+    assert.ok(model.CARD_PIPELINE_BINDINGS.some(card => card.kind === 'topic' && card.optional.includes(layer.id)), layer.id);
+    assert.ok(!PC_CAPTURE_IDS.includes(layer.id));
+  }
+});

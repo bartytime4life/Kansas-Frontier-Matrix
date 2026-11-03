@@ -75,6 +75,9 @@ import { GROUNDWATER_CLASS_LEGENDS, GROUNDWATER_MANIFEST, safeKgsWellUrl } from 
 import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serializeSoilMapState, SOIL_VIEWS, soilLegendUrl, visibleExternalContextCount, type SoilMapState } from "./soil-moisture";
 import { GovernedWaterControl } from "./governed-water-control";
 import { GovernedWeatherControl } from "./governed-weather-control";
+import { ArchiveLayerControl } from "./archive-layer-control";
+import { parseArchiveViews, serializeArchiveViews, type ArchiveView, type ArchiveViews } from "./archive-layer-view";
+import { ARCHIVE_LAYERS, normalizeArchiveSelection } from "./archive-layer-catalog";
 import { LivingWatersControl } from "./living-waters-control";
 import { LIVING_WATERS_SOURCE } from "./living-waters-fixture";
 import { resizeMapAfterLayout } from "./cutaway-locator";
@@ -1625,6 +1628,9 @@ export default function Home() {
   const [officialSourceQuery, setOfficialSourceQuery] = useState("");
   const [officialCatalogFilter, setOfficialCatalogFilter] = useState<CatalogFilter>("all");
   const [welcomeTopics, setWelcomeTopics] = useState<TopicId[]>([]);
+  const [archiveSelection, setArchiveSelection] = useState<string[]>([]);
+  const [archiveViews, setArchiveViews] = useState<ArchiveViews>({});
+  const saveArchiveView = useCallback((id: string, value: ArchiveView) => setArchiveViews(previous => ({...previous, [id]:value})), []);
   const [officialWorkspace, setOfficialWorkspace] = useState<LayerWorkspace>("all");
   // The category whose map look was opened, and whether its dock was hidden.
   const [categoryDockTopic, setCategoryDockTopic] = useState<TopicId | null>(null);
@@ -2130,6 +2136,7 @@ export default function Home() {
   const visibleOfficialCount = visibleExternalContextCount(visibleOfficialSources.length, soilMapState.visible);
   const selectedEarthEngineCount = Object.values(earthEngineDisplay.visible).filter(Boolean).length;
   const catalogEntries: LayerCatalogEntry[] = [
+    ...ARCHIVE_LAYERS.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.provider} ${layer.note} archive SQL`, topics: layer.topics, selected: archiveSelection.includes(layer.id) })),
     ...OFFICIAL_CONTEXT_SOURCES.map(source => ({ id: source.id, title: source.title, keywords: `${source.shortTitle} ${source.organization} ${source.domain}`, selected: officialVisibility[source.id], topics: officialSourceTopics(source.id) })),
     { id: "daylight", title: "Daylight & twilight", keywords: "sun solar geometry calculated light", topics: specialtyLayerTopics("daylight"), selected: daylightEnabled },
     { id: "soil", title: "Soil moisture", keywords: "NASA SMAP modeled surface root water", topics: specialtyLayerTopics("soil"), selected: soilMapState.visible },
@@ -2903,7 +2910,9 @@ export default function Home() {
     const params = new URLSearchParams();
     serializeTopicSelection(params, officialWorkspace, layerCatalogView);
     if (welcomeTopics.length) params.set("topics", welcomeTopics.join(","));
+    if (archiveSelection.length) params.set("archive", archiveSelection.join(","));
     const redactLocationCamera = locationCameraRedacted || locationDerivedViewRef.current;
+    if (archiveSelection.length) params.set("archiveView", serializeArchiveViews(archiveSelection, archiveViews, redactLocationCamera));
     const serializedView = redactLocationCamera ? KANSAS_VIEW : view;
     params.set("c", `${serializedView.center[0].toFixed(5)},${serializedView.center[1].toFixed(5)}`);
     params.set("z", serializedView.zoom.toFixed(2));
@@ -2976,7 +2985,7 @@ export default function Home() {
       params.set("focusIntent", focusIntent);
     }
     return params;
-  }, [calendarSweep, welcomeTopics, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, droughtOn, droughtWeek, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [calendarSweep, welcomeTopics, archiveSelection, archiveViews, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, droughtOn, droughtWeek, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -6138,6 +6147,8 @@ export default function Home() {
       setOfficialWorkspace(restoredTopic);
       const restoredTopics = normalizeCategoryTopics((params.get("topics") ?? "").split(","));
       setWelcomeTopics(restoredTopics);
+      setArchiveSelection(normalizeArchiveSelection((params.get("archive") ?? "").split(",")));
+      setArchiveViews(parseArchiveViews(params.get("archiveView")));
       setLayerCatalogView(params.get("layerView") === "imagery" ? "local" : params.get("layerView") === "selected" ? "selected" : "official");
       if (restoredTopic !== "all" && !restoredTopics.length) { setLeftPanelMode("layers"); setLeftOpen(true); }
       const restoredSolar = restoreDaylightView(params.get("sunDay"), params.get("sunAt"), params.get("sun") === "on", currentKansasCalendarDay(), params.get("sunThrough"));
@@ -6749,6 +6760,7 @@ export default function Home() {
             const record = findLayerByRenderer(feature.layer.id);
             return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
           });
+          if (renderedHits[0]?.layer.id.startsWith("kfm-archive-")) return;
           // Features whose selection the category dock owns point the cursor without opening a hover preview;
           // so do the monitoring wells while water levels at wells is on.
           if (renderedHits[0]?.source === LIVING_WATERS_SOURCE || renderedHits[0]?.source === EARTHQUAKE_RECORD_SOURCE_ID || renderedHits[0]?.source === STORM_REPORTS_SOURCE_ID || renderedHits[0]?.source === REVIEWED_SOURCE_ID
@@ -6857,6 +6869,8 @@ export default function Home() {
             const record = findLayerByRenderer(feature.layer.id);
             return source ? officialOpacityRef.current[source.id] > 0 : record ? (opacityRef.current[record.id] ?? record.defaultOpacity) > 0 : true;
           });
+          // The topmost archive feature owns this click.
+          if (renderedHits[0]?.layer.id.startsWith("kfm-archive-")) return;
           // Local previews own their selection; never inspect official features beneath them.
           const availableLayers = interactiveLayerIds.filter((id) => map.getLayer(id));
           // With land cover shown, every click also reads the NLCD class under it; whatever the click selects still selects.
@@ -10726,10 +10740,17 @@ export default function Home() {
     };
   }, [welcomeShowing, styleReady]);
   const closeExplorerGuide = (rememberDismissal: boolean) => {
+    const returnFocus = Boolean(document.activeElement?.closest(".explorer-guide"));
     setGuideOpen(false);
     setWelcomeSourcesOpen(false);
     writeExplorerGuideDismissed(rememberDismissal);
-    if (document.activeElement?.closest(".explorer-guide")) document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
+    // The header remains inert until React commits dismissal. Wait for that
+    // commit, and preserve focus if a destination action already claimed it.
+    if (returnFocus) window.requestAnimationFrame(() => {
+      if (!document.querySelector(".living-welcome") && (document.activeElement === document.body || document.activeElement?.closest(".explorer-guide"))) {
+        document.querySelector<HTMLButtonElement>(".guide-trigger")?.focus({ preventScroll: true });
+      }
+    });
   };
   // Opens Underground (or keeps it open) and moves focus into it.
   const enterUnderground = () => {
@@ -10778,6 +10799,8 @@ export default function Home() {
     const look = combined?.look;
     if (!look) { runWelcomeTopic(topic); return; }
     setWelcomeTopics(combined.topics);
+    setArchiveSelection([]);
+    setArchiveViews({});
     // These controls own sources and pending reads outside officialVisibility.
     // A new key unmounts their old owners (cleanup/abort) before fresh owners
     // mount with their layers off. This also handles reopening the same look.
@@ -11585,6 +11608,8 @@ export default function Home() {
 
           <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={layerCatalogView === "local"} aria-labelledby="official-context-title">
             <h2 id="official-context-title" className="sr-only">Map layers</h2>
+            <p className="archive-map-notice"><Link href="/data-library">Browse all recovered public data →</Link></p>
+            {archiveSelection.length > 0 && <p className="archive-map-notice">Archive layers use their own dates. Changing map time does not change archive queries.</p>}
 
             <div className="official-context-list">{filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, "all", "").map((source) => {
               const state = officialStates[source.id];
@@ -11719,6 +11744,7 @@ export default function Home() {
             </section>
             <div hidden={!shownCatalogIds.has("reviewed-water")}><GovernedWaterControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWaterSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-weather")}><GovernedWeatherControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWeatherSelected} /></div>
+            <ArchiveLayerControl key={`archive-${categoryMapSession}`} mapRef={mapRef} styleReady={styleReady} selected={archiveSelection} views={archiveViews} onView={saveArchiveView} shown={shownCatalogIds} onChange={setArchiveSelection} pickingEnabled={() => !measureModeRef.current && !aviationPickingRef.current && !undergroundOpenRef.current} onInspect={id => { setOfficialWorkspace("all"); setOfficialSourceQuery(""); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); window.requestAnimationFrame(() => document.querySelector(`[data-archive-layer="${id}"]`)?.scrollIntoView({block:"start"})); }} />
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
             <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
             <div hidden={!shownCatalogIds.has("aviation")}><AviationLayerControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} inspectRequest={aviationInspect} showRequest={aviationShowRequest} onPickingChange={setAviationPicking} /></div>
@@ -11758,6 +11784,7 @@ export default function Home() {
               <button type="button" onClick={() => setLeftPanelMode("views")}>Views</button>
               <button type="button" onClick={() => setLeftPanelMode("places")}>Places</button>
               <Link href="/observatory">Event Observatory</Link>
+              <Link href="/data-library">Public data library</Link>
               <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("history"); }}>Kansas historic maps</button>
               <button type="button" onClick={() => { setLeftOpen(false); openMapUtility("navigate"); }}>Map controls</button>
             </nav>
