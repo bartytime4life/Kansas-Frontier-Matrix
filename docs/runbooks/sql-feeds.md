@@ -136,6 +136,54 @@ API.
 | `census-acs` | 3 |
 | `census-decennial` | 2 |
 
+## Feeds recovered after the November 3 PC rebuild
+
+The 31 feeds below were reconstructed from the surviving kept downloads, receipt
+keys, feed state and database schemas. They use the same source identities and
+version keys, so an unchanged download does not reload existing rows. The
+`newspaper-text-rebuild` command also restores retained OCR extracts without
+network access; it is a repair command, not another scheduled feed.
+
+| Feeds | Providers | Main table families |
+|---|---|---|
+| `airports`, `obstacles`, `dams`, `mines`, `grade-crossings`, `rail-lines` | FAA NASR/DOF, USACE NID, USGS/MSHA, FRA/BTS | `kfm_nasr_*`, `kfm_faa_*`, `kfm_nid_*`, `kfm_mrds_*`, `kfm_usmin_*`, `kfm_msha_*`, `kfm_fra_*`, `kfm_narn_*` |
+| `gnis-names`, `post-offices`, `county-boundaries`, `ceded-lands`, `railroads-history`, `congress-kansas`, `nps-places`, `nrhp` | USGS GNIS, historical post-office and railroad collections, Newberry AHCB, USFS, unitedstates/congress-legislators, NPS | `kfm_gnis_*`, `kfm_post_*`, `kfm_ahcb_*`, `kfm_usfs_*`, `kfm_atack_*`, `kfm_congress_*`, `kfm_nps_*`, `kfm_nrhp_*` |
+| `pbdb`, `macrostrat`, `radiocarbon`, `neotoma`, `idigbio-fossils` | Paleobiology Database, Macrostrat, p3k14c, Neotoma, iDigBio | `kfm_pbdb_*`, `kfm_macrostrat_*`, radiocarbon, `kfm_neotoma_*`, `kfm_idigbio_*` |
+| `banks`, `exempt-orgs`, `museums-libraries`, `schools`, `historical-topo-maps`, `usgs-samples` | FDIC, IRS, IMLS, NCES/IPEDS, USGS topoView and Samples Data | `kfm_fdic_*`, IRS, `kfm_imls_*`, `kfm_nces_*`, `kfm_ipeds_*`, USGS maps and samples |
+| `wikidata-kansas`, `plss-grid` | Wikidata Query Service and BLM public ArcGIS layers | `kfm_wikidata_*`, `kfm_blm_plss_*` |
+| `bridges`, `epa-facilities`, `newspaper-text`, `osm-kansas` | FHWA NBI, EPA FRS, Library of Congress, Geofabrik/OpenStreetMap | `kfm_nbi_*`, `kfm_frs_*`, `kfm_newspaper_*`, `kfm_osm_*` in the separate bulk database |
+
+The six `sql_feed_structures`, `sql_feed_places`, `sql_feed_deeptime`,
+`sql_feed_institutions`, `sql_feed_wikidata_plss` and `sql_feed_bulk` module
+headers describe each provider URL, refresh interval, pagination limit, license,
+kept-file format and receipt key. A daily timer invokes each feed; its saved
+state determines whether any download is due. Provider throttling or a schema
+change stops the affected run and retains the previous completed version.
+
+Bulk feeds require **both** `--db observations.sqlite` and
+`--bulk-db bulk-sql/kfm-bulk.sqlite`, pointing to different files. Both databases
+and the supplied catalogs count against the same 85 GB ceiling, with overlapping
+paths counted once. Both databases need their own verified SQLite snapshots.
+The full-copy snapshot implementation still reads and verifies the entire file;
+this rebuild does not implement the previously proposed changed-chunk backup.
+
+Recovery compatibility checks are in `test_sql_feed_rebuild.py` and the
+schema-only `fixtures/recovered-feed-schema.json`. They cover 122 existing tables,
+indexes, revision rollback, multi-table retirement, bulk routing, resumable
+Wikidata groups, PLSS point widths, full-text indexes and quoted CSV newlines.
+They contain no production rows. On the owner's PC, the separate recovery audit
+also replays preserved raw files and compares counts and sampled values against
+the read-only databases. It must pass before activating the rebuilt schedules.
+
+The retained OSM layer manifests do not contain their geometries; they cannot be
+used alone to rebuild the derived layer tables. The first approved refresh
+re-downloads the monthly shapefile archive and may supersede these layers once
+because the original manifest hash convention was not recovered. The retained
+PBF remains independently replayable. Wikidata scalar coordinates use the first
+provider coordinate; the full geometry preserves every point and county matching
+can use another point. Date precision remains explicit: a year is not expanded
+to an invented January 1 observation.
+
 ## Install and run
 
 **Install:**

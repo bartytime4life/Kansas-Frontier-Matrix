@@ -9,12 +9,14 @@ run outside the pipeline lock; only database writes take it. The 85 GB aggregate
 
     python -m tools.local_data.sql_feeds --root STORE --db observations.sqlite \
         [--tiger kansas-tiger-2025.gpkg] [--nwm-gpkg kansas-nwm.gpkg] [--lock pipeline.lock] \
-        run FEED | status | snapshot --dest DIR [--keep 2] [--lock-held] | snapshot-check --dest DIR
+        [--bulk-db kfm-bulk.sqlite] run FEED | status | snapshot --dest DIR [--keep 2] [--lock-held] \
+        | snapshot-check --dest DIR
 
 Feeds: captures, iem-wind, ghcnd, storm-events, asos-5min, prism, nwm; and, from 2026-11-02,
 usgs-daily, usgs-peaks, usgs-groundwater, water-quality, climdiv, drought, air-quality, nass,
 kgs-oil-gas, fema, earthquakes, tornadoes, nws-warnings, cdc-places, census-acs, census-decennial,
-eia-seds. ``snapshot`` and ``snapshot-check`` back up the
+eia-seds. ``BULK_FEEDS`` load a second database, ``--bulk-db``, kept outside the per-file
+backup; both count against the ceiling. ``snapshot`` and ``snapshot-check`` back up the
 database itself (``sql_snapshot.py``).
 """
 from __future__ import annotations
@@ -68,7 +70,50 @@ FEEDS = {
     "census-acs": "tools.local_data.sql_feed_census:census_acs",
     "census-decennial": "tools.local_data.sql_feed_census:census_decennial",
     "eia-seds": "tools.local_data.sql_feed_census:eia_seds",
+    # Recovered feeds: preserve the tables and receipt identities from the existing store.
+    "airports": "tools.local_data.sql_feed_structures:airports",
+    "obstacles": "tools.local_data.sql_feed_structures:obstacles",
+    "dams": "tools.local_data.sql_feed_structures:dams",
+    "mines": "tools.local_data.sql_feed_structures:mines",
+    "grade-crossings": "tools.local_data.sql_feed_structures:grade_crossings",
+    "rail-lines": "tools.local_data.sql_feed_structures:rail_lines",
+    "gnis-names": "tools.local_data.sql_feed_places:gnis_names",
+    "post-offices": "tools.local_data.sql_feed_places:post_offices",
+    "county-boundaries": "tools.local_data.sql_feed_places:county_boundaries",
+    "ceded-lands": "tools.local_data.sql_feed_places:ceded_lands",
+    "railroads-history": "tools.local_data.sql_feed_places:railroads_history",
+    "congress-kansas": "tools.local_data.sql_feed_places:congress_kansas",
+    "nps-places": "tools.local_data.sql_feed_places:nps_places",
+    "nrhp": "tools.local_data.sql_feed_places:nrhp",
+    "pbdb": "tools.local_data.sql_feed_deeptime:pbdb",
+    "macrostrat": "tools.local_data.sql_feed_deeptime:macrostrat",
+    "radiocarbon": "tools.local_data.sql_feed_deeptime:radiocarbon",
+    "neotoma": "tools.local_data.sql_feed_deeptime:neotoma",
+    "idigbio-fossils": "tools.local_data.sql_feed_deeptime:idigbio_fossils",
+    "banks": "tools.local_data.sql_feed_institutions:banks",
+    "exempt-orgs": "tools.local_data.sql_feed_institutions:exempt_orgs",
+    "museums-libraries": "tools.local_data.sql_feed_institutions:museums_libraries",
+    "schools": "tools.local_data.sql_feed_institutions:schools",
+    "historical-topo-maps": "tools.local_data.sql_feed_institutions:historical_topo_maps",
+    "usgs-samples": "tools.local_data.sql_feed_institutions:usgs_samples",
+    "wikidata-kansas": "tools.local_data.sql_feed_wikidata_plss:wikidata_kansas",
+    "plss-grid": "tools.local_data.sql_feed_wikidata_plss:plss_grid",
+    "bridges": "tools.local_data.sql_feed_bulk:bridges",
+    "epa-facilities": "tools.local_data.sql_feed_bulk:epa_facilities",
+    "newspaper-text": "tools.local_data.sql_feed_bulk:newspaper_text",
+    "newspaper-text-rebuild": "tools.local_data.sql_feed_bulk:newspaper_text_rebuild",
+    "osm-kansas": "tools.local_data.sql_feed_bulk:osm_kansas",
 }
+# Large feeds load a separately snapshotted database (--bulk-db).
+BULK_FEEDS: frozenset[str] = frozenset({"bridges", "epa-facilities", "newspaper-text", "newspaper-text-rebuild", "osm-kansas"})
+BULK_SCHEMA = """
+CREATE TABLE IF NOT EXISTS kfm_sql_sources (
+ file_id INTEGER PRIMARY KEY, source_id TEXT NOT NULL, source_path TEXT NOT NULL,
+ sha256 TEXT NOT NULL UNIQUE, source_bytes INTEGER NOT NULL, source_url TEXT NOT NULL,
+ receipt_json TEXT NOT NULL, imported_rows INTEGER NOT NULL DEFAULT 0, state TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS kfm_sql_build (
+ name TEXT PRIMARY KEY, value TEXT NOT NULL) WITHOUT ROWID;
+"""
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS kfm_feed_state (
   feed TEXT PRIMARY KEY, state_json TEXT NOT NULL, updated_at TEXT NOT NULL) WITHOUT ROWID;
@@ -166,6 +211,8 @@ class Context:
     log: Callable[[dict], None] = lambda line: print(json.dumps(line, sort_keys=True), flush=True)
     catalogs: list[Path] = field(default_factory=list)
     floor: int = FREE_FLOOR
+    shared_dirs: list[Path] = field(default_factory=list)   # the other database's folder, counted against the ceiling
+    bulk_db: Path | None = None
     lock_depth: int = 0
 
     def note(self, event: str, **fields) -> None:
@@ -250,12 +297,32 @@ def gz(data: bytes) -> bytes:
 
 def guard(ctx: Context) -> None:
     out = ctx.db_path.parent
-    used = sum(p.stat().st_size for p in out.glob("*") if p.is_file()) + sum(p.stat().st_size for p in ctx.catalogs if p.exists())
+    files = {p.resolve() for d in [out, *ctx.shared_dirs] for p in d.glob("*") if p.is_file()}
+    files.update(p.resolve() for p in ctx.catalogs if p.is_file())
+    used = sum(p.stat().st_size for p in files)
     if used >= CAP - RESERVE:
         raise FeedError("CEILING_85GB_HEADROOM_STOP")
     stat = os.statvfs(out)
     if stat.f_bavail * stat.f_frsize < ctx.floor:
         raise FeedError("FREE_SPACE_FLOOR_REACHED")
+
+
+def init_bulk(ctx: Context) -> None:
+    """Create the bulk database (outside the per-file backup) with the base tables the feeds expect."""
+    if ctx.db_path.is_file():
+        return
+    ctx.db_path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    with pipeline_lock(ctx):
+        db = sqlite3.connect(ctx.db_path, isolation_level=None)
+        try:
+            db.executescript(BULK_SCHEMA)
+            db.execute("INSERT OR IGNORE INTO kfm_sql_build VALUES ('bulk-policy', ?)", (canonical({
+                "created_at": ctx.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "scope": "Large Kansas feeds kept apart from observations.sqlite; same receipts and ceilings",
+                "backup": "Separate verified SQLite snapshot (sql_snapshot.py)"}),))
+        finally:
+            db.close()
+    os.chmod(ctx.db_path, 0o600)
 
 
 def open_db(ctx: Context) -> sqlite3.Connection:
@@ -404,6 +471,7 @@ def main(argv=None) -> int:
     parser.add_argument("--nwm-gpkg", type=Path)
     parser.add_argument("--lock", type=Path)
     parser.add_argument("--catalog", type=Path, action="append", default=[], help="Other databases counted against the 85 GB ceiling")
+    parser.add_argument("--bulk-db", type=Path, help="Database for the BULK_FEEDS, also counted against the ceiling")
     sub = parser.add_subparsers(dest="command", required=True)
     run = sub.add_parser("run")
     run.add_argument("feed", choices=sorted(FEEDS))
@@ -416,9 +484,19 @@ def main(argv=None) -> int:
     check.add_argument("--dest", type=Path, required=True)
     args = parser.parse_args(argv)
     os.umask(0o077)
-    ctx = Context(root=args.root, db_path=args.db, tiger=args.tiger, nwm_gpkg=args.nwm_gpkg, lock=args.lock, catalogs=args.catalog)
+    bulk = args.command == "run" and args.feed in BULK_FEEDS
+    if bulk and not args.bulk_db:
+        parser.error(f"{args.feed} loads the bulk database: pass --bulk-db")
+    if args.bulk_db and args.bulk_db.resolve() == args.db.resolve():
+        parser.error("--bulk-db must be different from --db")
+    shared = [p.parent for p in ([args.db] if bulk else [args.bulk_db] if args.bulk_db else [])]
+    ctx = Context(root=args.root, db_path=args.bulk_db if bulk else args.db, tiger=args.tiger, nwm_gpkg=args.nwm_gpkg,
+                  lock=args.lock, catalogs=args.catalog, shared_dirs=shared, bulk_db=args.bulk_db)
     if args.command == "status":
-        print(json.dumps(status(ctx), indent=1, sort_keys=True))
+        result = status(ctx)
+        if ctx.bulk_db and ctx.bulk_db.is_file():
+            result["bulk"] = status(Context(root=ctx.root, db_path=ctx.bulk_db))
+        print(json.dumps(result, indent=1, sort_keys=True))
         return 0
     if args.command in ("snapshot", "snapshot-check"):
         from tools.local_data import sql_snapshot
@@ -437,6 +515,8 @@ def main(argv=None) -> int:
         return 0
     started = time.monotonic()
     try:
+        if bulk:
+            init_bulk(ctx)
         summary = resolve(args.feed)(ctx)
     except FeedError as error:
         ctx.note("feed_failed", feed=args.feed, reason=str(error), seconds=round(time.monotonic() - started))
