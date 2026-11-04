@@ -75,12 +75,11 @@ up to that many distinct titles, or the spool is dropped and the run stops with 
 ``towers``: FCC Antenna Structure Registration, the weekly full file ``r_tower.zip`` (37.9 MB, built Sundays; public
 record), described at https://www.fcc.gov/uls/transactions/daily-weekly. On 2026-11-03 FCC's web servers, behind
 Akamai, answer 403 "Access Denied" to this pipeline's honest User-Agent on www.fcc.gov, data.fcc.gov,
-wireless.fcc.gov and wireless2.fcc.gov. FCC's own anonymous FTP server, ftp://wirelessftp.fcc.gov/pub/uls/complete/,
-holds the same files and is tried first; FTP sends no User-Agent and the client is not disguised. opendata.fcc.gov
-has no ASR dataset. When every route in ``ASR_ROUTES`` refuses or answers something other than a zip, the feed records
+wireless.fcc.gov and wireless2.fcc.gov. An anonymous FTP server still holds the file, but no FCC page we could read
+names it as a route, so the owner's rule against working around blocks keeps it out. opendata.fcc.gov has no ASR
+dataset. When every route in ``ASR_ROUTES`` refuses or answers something other than a zip, the feed records
 ``"blocked": "FCC_BLOCKED"`` and each route's reason in its state and stops with that reason (``FCC_UNAVAILABLE`` if
 none refused and all simply failed); it does not try to get around a block, and tries again after ``recheck_days``.
-To stop using FTP, remove its entry from ``ASR_ROUTES``.
 
 Kansas is an RA record with structure state KS. The CO, EN, HS, RE and SC records are matched to those by unique
 system identifier, the key that joins the file's records. Each member's line count must match the zip's
@@ -705,8 +704,7 @@ def newspaper_directory(ctx, recheck_days: int = LOC_RECHECK_DAYS, page_size: in
 
 # --- Towers: the FCC ASR weekly file, one version per record type ----------------------------------
 
-ASR_ROUTES = ("ftp://wirelessftp.fcc.gov/pub/uls/complete/r_tower.zip",     # FCC's anonymous FTP; first since FCC's web servers refuse us
-              "https://data.fcc.gov/download/pub/uls/complete/r_tower.zip",
+ASR_ROUTES = ("https://data.fcc.gov/download/pub/uls/complete/r_tower.zip",
               "https://wireless.fcc.gov/uls/data/complete/r_tower.zip")
 ASR_PAGE = "https://www.fcc.gov/uls/transactions/daily-weekly"
 ASR_CITATION = "Federal Communications Commission, Antenna Structure Registration, weekly public access file r_tower.zip"

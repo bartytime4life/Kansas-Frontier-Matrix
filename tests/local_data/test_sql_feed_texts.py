@@ -35,7 +35,7 @@ ASR_SCHEMA = {
     "kfm_asr_special_conditions": 'CREATE TABLE kfm_asr_special_conditions (file_id INTEGER NOT NULL, row_number INTEGER NOT NULL, "record_type" TEXT, "content_indicator" TEXT, "file_number" TEXT, "registration_number" TEXT, "unique_system_identifier" TEXT, "date_keyed" TEXT, "sequence_number" TEXT, "special_condition_text" TEXT, PRIMARY KEY(file_id, row_number))',
     "kfm_asr_special_conditions_registration_number": 'CREATE INDEX kfm_asr_special_conditions_registration_number ON kfm_asr_special_conditions("registration_number")',
 }
-FTP, HTTPS = texts.ASR_ROUTES[0], texts.ASR_ROUTES[1]
+FIRST_ROUTE, SECOND_ROUTE = texts.ASR_ROUTES[0], texts.ASR_ROUTES[1]
 
 
 def ra(usi: str, reg: str, state: str = "KS", city: str = "RUSSELL", height: str = "122.2") -> str:
@@ -75,11 +75,14 @@ class TowerTests(FeedCase):
         db.executescript(texts.ASR_DDL)
         self.assertEqual(dict(db.execute("SELECT name, sql FROM sqlite_master WHERE name LIKE 'kfm_asr%' AND sql IS NOT NULL").fetchall()), ASR_SCHEMA)
 
+    def test_only_the_web_routes_fcc_documents_are_tried(self):
+        self.assertTrue(all(route.startswith("https://") and "fcc.gov/" in route for route in texts.ASR_ROUTES))
+
     def test_loads_kansas_registrations_and_their_records_from_the_first_route(self):
-        self.web.routes = {FTP: asr_zip()}
+        self.web.routes = {FIRST_ROUTE: asr_zip()}
         result = texts.towers(self.ctx)
-        self.assertEqual((result["state"], result["route"], result["registrations"]), ("loaded", FTP, 1))
-        self.assertEqual(self.web.calls, [FTP])
+        self.assertEqual((result["state"], result["route"], result["registrations"]), ("loaded", FIRST_ROUTE, 1))
+        self.assertEqual(self.web.calls, [FIRST_ROUTE])
         self.assertEqual(self.q("SELECT registration_number, structure_city, county_code, height_of_structure, structure_state_code FROM kfm_asr_registrations"),
                          [("1000", "RUSSELL", "20167", 122.2, "KS")])
         self.assertEqual(self.q("SELECT registration_number, coordinate_type, latitude, longitude, geometry_geojson FROM kfm_asr_locations WHERE coordinate_type='T'"),
@@ -93,24 +96,24 @@ class TowerTests(FeedCase):
                          "json_extract(receipt_json,'$.kansas_records'), json_extract(receipt_json,'$.file_creation_date'), source_url FROM kfm_sql_sources WHERE source_id='fcc-asr-ra'")
         self.assertEqual(sources[0][:2], ("fcc-asr-ra", "RA"))
         self.assertIn("public domain", sources[0][2])
-        self.assertEqual((sources[0][3], sources[0][4], sources[0][5], sources[0][6]), (len(self.web.routes[FTP]), 1, "Sun Nov  1 06:22:48 EST 2026", FTP))
+        self.assertEqual((sources[0][3], sources[0][4], sources[0][5], sources[0][6]), (len(self.web.routes[FIRST_ROUTE]), 1, "Sun Nov  1 06:22:48 EST 2026", FIRST_ROUTE))
         kept = list((self.root / "data/raw/sql-feeds/towers").glob("RA-KS-*.dat.gz"))
         self.assertEqual(len(kept), 1)
         self.assertEqual(gzip.open(kept[0], "rt", newline="").read(), ra("11", "1000"))
 
     def test_only_rechecked_after_seven_days_and_a_changed_cut_replaces_only_its_member(self):
-        self.web.routes = {FTP: asr_zip()}
+        self.web.routes = {FIRST_ROUTE: asr_zip()}
         texts.towers(self.ctx)
         self.assertEqual(texts.towers(self.ctx)["state"], "not_due")
         self.assertEqual(len(self.web.calls), 1)
         self.ctx.now = lambda: START + timedelta(days=7)
-        self.web.routes = {FTP: asr_zip([ra("11", "1000", height="150.0"), ra("22", "2000", state="NE")])}
+        self.web.routes = {FIRST_ROUTE: asr_zip([ra("11", "1000", height="150.0"), ra("22", "2000", state="NE")])}
         result = texts.towers(self.ctx)
         self.assertEqual(result["members"], {"RA": "loaded", "CO": "unchanged", "EN": "unchanged", "HS": "unchanged", "RE": "unchanged", "SC": "unchanged"})
         self.assertEqual(self.q("SELECT height_of_structure FROM kfm_asr_registrations"), [(150.0,)])
         self.assertEqual(self.q("SELECT state, count(*) FROM kfm_sql_sources WHERE source_id='fcc-asr-ra' GROUP BY state"), [("complete", 1), ("superseded", 1)])
         self.ctx.now = lambda: START + timedelta(days=14)
-        self.web.routes = {FTP: asr_zip([ra("11", "1000", height="150.0"), ra("22", "2000", state="NE")])}
+        self.web.routes = {FIRST_ROUTE: asr_zip([ra("11", "1000", height="150.0"), ra("22", "2000", state="NE")])}
         self.assertEqual(texts.towers(self.ctx)["state"], "unchanged")
 
     def test_every_route_refused_records_fcc_blocked_and_tries_nothing_clever(self):
@@ -125,14 +128,14 @@ class TowerTests(FeedCase):
             texts.towers(self.ctx)
         self.assertEqual([url for url, _ in calls], list(texts.ASR_ROUTES))
         state = json.loads(self.q("SELECT state_json FROM kfm_feed_state WHERE feed='towers'")[0][0])
-        self.assertEqual((state["blocked"], state["routes"][HTTPS]), ("FCC_BLOCKED", "HTTP_403"))
+        self.assertEqual((state["blocked"], state["routes"][SECOND_ROUTE]), ("FCC_BLOCKED", "HTTP_403"))
         self.assertEqual(self.q("SELECT count(*) FROM kfm_sql_sources"), [(0,)])
         self.assertEqual(texts.towers(self.ctx), {"state": "not_due", "blocked": "FCC_BLOCKED", "registrations": None})
         self.assertEqual(len(calls), len(texts.ASR_ROUTES))
         self.ctx.now = lambda: START + timedelta(days=7)
         self.ctx.fetch = self.web
-        self.web.routes = {HTTPS: asr_zip()}
-        self.assertEqual(texts.towers(self.ctx)["route"], HTTPS)
+        self.web.routes = {SECOND_ROUTE: asr_zip()}
+        self.assertEqual(texts.towers(self.ctx)["route"], SECOND_ROUTE)
         state = json.loads(self.q("SELECT state_json FROM kfm_feed_state WHERE feed='towers'")[0][0])
         self.assertIsNone(state["blocked"])
         self.assertNotIn("routes", state)
@@ -152,22 +155,22 @@ class TowerTests(FeedCase):
             texts.towers(self.ctx)
 
     def test_counts_file_and_field_widths_are_checked(self):
-        self.web.routes = {FTP: asr_zip(counts={"HS": 99})}
+        self.web.routes = {FIRST_ROUTE: asr_zip(counts={"HS": 99})}
         with self.assertRaisesRegex(core.FeedError, "ASR_COUNTS_MISMATCH HS 2 lines, counts says 99"):
             texts.towers(self.ctx)
-        self.web.routes = {FTP: asr_zip(others={"HS": ["HS|REG|A1|1000|11|07/30/1999\r\n"]})}
+        self.web.routes = {FIRST_ROUTE: asr_zip(others={"HS": ["HS|REG|A1|1000|11|07/30/1999\r\n"]})}
         with self.assertRaisesRegex(core.FeedError, "ASR_COLUMNS_CHANGED HS"):
             texts.towers(self.ctx)
         self.assertEqual(self.q("SELECT count(*) FROM kfm_sql_sources"), [(0,)])
 
     def test_no_kansas_registrations_stops_and_a_member_left_empty_is_retired(self):
-        self.web.routes = {FTP: asr_zip([ra("22", "2000", state="NE")])}
+        self.web.routes = {FIRST_ROUTE: asr_zip([ra("22", "2000", state="NE")])}
         with self.assertRaisesRegex(core.FeedError, "ASR_KANSAS_EMPTY"):
             texts.towers(self.ctx)
-        self.web.routes = {FTP: asr_zip()}
+        self.web.routes = {FIRST_ROUTE: asr_zip()}
         texts.towers(self.ctx)
         self.ctx.now = lambda: START + timedelta(days=7)
-        self.web.routes = {FTP: asr_zip(others={"SC": []})}
+        self.web.routes = {FIRST_ROUTE: asr_zip(others={"SC": []})}
         self.assertEqual(texts.towers(self.ctx)["members"]["SC"], "empty")
         self.assertEqual(self.q("SELECT count(*) FROM kfm_asr_special_conditions"), [(0,)])
 
