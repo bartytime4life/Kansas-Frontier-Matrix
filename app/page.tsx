@@ -1396,6 +1396,7 @@ export default function Home() {
   const leftPanelRef = useRef<HTMLElement>(null);
   const leftPanelReturnRef = useRef<HTMLElement | null>(null);
   const [leftPanelFocusRequest, setLeftPanelFocusRequest] = useState(0);
+  const leftPanelFocusSelectorRef = useRef<string | null>(null);
   const sourceSearchFocusPendingRef = useRef(false);
   const rightPanelRef = useRef<HTMLElement>(null);
   const timelineRef = useRef<HTMLElement>(null);
@@ -5733,8 +5734,9 @@ export default function Home() {
     };
   }, [primaryWorkspace, mapUtilityOpen, mapUtilityView, mapUtilityFocusRequest]);
 
-  const openAtlasPanel = useCallback((mode: LeftPanelMode, returnElement?: HTMLElement | null) => {
+  const openAtlasPanel = useCallback((mode: LeftPanelMode, returnElement?: HTMLElement | null, focusSelector?: string) => {
     leftPanelReturnRef.current = returnElement ?? null;
+    leftPanelFocusSelectorRef.current = focusSelector ?? null;
     setPrimaryWorkspace("map");
     setGuideOpen(false);
     setWelcomeSourcesOpen(false);
@@ -5757,7 +5759,14 @@ export default function Home() {
     const commitFrame = window.requestAnimationFrame(() => {
       focusFrame = window.requestAnimationFrame(() => {
         const panel = leftPanelRef.current;
-        if (panel) visibleFocusableElements(panel)[0]?.focus({ preventScroll: true });
+        if (!panel) return;
+        // Map feature inspection shares this committed focus handoff instead of
+        // racing the normal panel-opening focus with a second animation frame.
+        const inspectionTarget = leftPanelFocusSelectorRef.current
+          ? panel.querySelector<HTMLElement>(leftPanelFocusSelectorRef.current) : null;
+        if (inspectionTarget) inspectionTarget.scrollIntoView({ block: "center", behavior: "instant" });
+        (inspectionTarget ?? visibleFocusableElements(panel)[0])?.focus({ preventScroll: true });
+        leftPanelFocusSelectorRef.current = null;
       });
     });
     return () => {
@@ -11731,7 +11740,7 @@ export default function Home() {
             <ArchiveLayerControl key={`archive-${categoryMapSession}`} mapRef={mapRef} styleReady={styleReady} selected={archiveSelection} views={archiveViews} onView={saveArchiveView} shown={shownCatalogIds} onChange={setArchiveSelection} pickingEnabled={() => !measureModeRef.current && !aviationPickingRef.current && !undergroundOpenRef.current} onInspect={id => { setOfficialWorkspace("all"); setOfficialSourceQuery(""); setLayerCatalogView("selected"); setStarterPanelOpen(false); openAtlasPanel("layers"); window.requestAnimationFrame(() => document.querySelector(`[data-archive-layer="${id}"]`)?.scrollIntoView({block:"start"})); }} />
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
             <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
-            <div hidden={!shownCatalogIds.has("aviation")}><AviationLayerControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} inspectRequest={aviationInspect} showRequest={aviationShowRequest} onPickingChange={setAviationPicking} /></div>
+            <div hidden={!shownCatalogIds.has("aviation")}><AviationLayerControl key={categoryMapSession} mapRef={mapRef} styleReady={styleReady} onSelectionChange={setAviationSelected} onResearchRecords={setAviationResearch} inspectRequest={aviationInspect} showRequest={aviationShowRequest} onPickingChange={setAviationPicking} onAircraftInspect={() => { setOfficialWorkspace("all"); setOfficialSourceQuery(""); setOfficialCatalogFilter("all"); setSourceStatusOpen(false); setStarterPanelOpen(false); setLayerCatalogView("selected"); openAtlasPanel("layers", null, '[aria-label="Kansas Sky aircraft"]'); }} /></div>
             {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}
             <details className="layer-source-diagnostics"><summary>Source status &amp; coverage</summary>
 {composedSurfaceCount > 1 && <p className="layer-balance-note">Multiple surfaces are active. The map balances their opacity so boundaries and points stay readable; each slider keeps your selected value.</p>}
