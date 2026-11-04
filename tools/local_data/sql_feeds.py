@@ -108,9 +108,11 @@ FEEDS = {
     "towers": "tools.local_data.sql_feed_texts:towers",
     "census-acs-full": "tools.local_data.sql_feed_census:census_acs_full",
     "census-decennial-full": "tools.local_data.sql_feed_census:census_decennial_full",
+    "gbif": "tools.local_data.sql_feed_biodiversity:gbif",
+    "loc-kansas": "tools.local_data.sql_feed_heritage:loc_kansas",
 }
 # Large feeds load a separately snapshotted database (--bulk-db).
-BULK_FEEDS: frozenset[str] = frozenset({"archive-texts", "bridges", "census-acs-full", "census-decennial-full", "epa-facilities", "newspaper-text", "newspaper-text-rebuild", "osm-kansas"})
+BULK_FEEDS: frozenset[str] = frozenset({"archive-texts", "bridges", "census-acs-full", "census-decennial-full", "epa-facilities", "gbif", "newspaper-text", "newspaper-text-rebuild", "osm-kansas"})
 BULK_SCHEMA = """
 CREATE TABLE IF NOT EXISTS kfm_sql_sources (
  file_id INTEGER PRIMARY KEY, source_id TEXT NOT NULL, source_path TEXT NOT NULL,

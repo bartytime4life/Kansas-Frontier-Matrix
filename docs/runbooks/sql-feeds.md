@@ -195,12 +195,21 @@ header records the provider details.
 | `census-acs-full` | ACS 5-year table-based summary files on `www2.census.gov`, 2021-2024, every table (bulk database) | `kfm_census_acs_values`, `kfm_census_acs_geographies`, `kfm_census_acs_variables` | Each table's national file is cut to Kansas and loaded in transactions of at most 1M rows or 60 seconds, with the lock free between them. A run lasts about 45 minutes and resumes where the last stopped; about 40-70 runs. A file is loaded again when its listed time changes. Firewall-rejected tables are listed under `rejected` and retried |
 | `census-decennial-full` | 2020 Census: P.L. 94-171 and DHC Kansas files, every table and iteration with block values (bulk database) | `kfm_census_decennial_values`, `kfm_census_decennial_geographies`, `kfm_census_decennial_variables` | Same short transactions and resume. About 20-60 runs. Continues the bulk database's `census-decennial` state; afterwards it rechecks yearly, and a changed zip reloads what changed |
 
+| `gbif` | GBIF occurrence search and dataset registry (bulk database) | `kfm_gbif_occurrences`, `kfm_gbif_datasets`, `kfm_gbif_segments`, `kfm_gbif_dataset_queue` | Up to 400 requests and 30 minutes a run, 1 s apart. Plans segments of at most 10,000 records, then loads the smallest first, one `load_version` key each. Stops with `GBIF_RATE_LIMITED` on 429/403 and `GBIF_UNAVAILABLE` on 5xx, HTML or connection failure, keeping finished segments. After the backfill, segments with recent years are checked every 28 days and older ones every 365, re-fetched only if `lastInterpreted` shows changes; dataset records every 182 days |
+| `loc-kansas` | loc.gov JSON API: photos, maps, HABS/HAER/HALS, Chronicling America titles and issues | `kfm_loc_items`, `kfm_loc_newspaper_titles` | Up to 50 pages a run, 6 s apart. Buckets every 28 days, title list every 7, a title's issues when its listing changes and every 182 days. Stops with `LOC_RATE_LIMITED` on 429, 403 or HTML; a segment that keeps failing waits for the next run (`LOC_UNAVAILABLE`). No images or OCR text |
+
 `towers` has no timer. FCC's web servers refuse this pipeline, and whether its
 FTP server is an acceptable route is the owner's decision. To drop FTP, remove
 its entry from `ASR_ROUTES`.
 
 `archive-texts` runs daily at 23:45, with a second slot at 12:10 during the
 backfill of about 30 to 40 runs. `newspaper-directory` runs on Thursdays at 17:15.
+`gbif` runs at 00:10 and 12:30 and `loc-kansas` at 17:20. GBIF advises its
+download API for long scripted pulls, but that needs a registered account, which
+this feed does not use; a registered download could replace the search backfill.
+About 364,000 GBIF records are CC BY-NC. Each row keeps its license, so check it
+before publishing any of them.
+
 During their backfills `census-decennial-full` runs at 05:15, 09:15, 13:15, 17:15
 and 21:15, and `census-acs-full` at 07:15, 11:15, 15:15, 19:15 and 23:15. Drop each
 to one daily run once its backfill finishes.
