@@ -103,9 +103,12 @@ FEEDS = {
     "newspaper-text": "tools.local_data.sql_feed_bulk:newspaper_text",
     "newspaper-text-rebuild": "tools.local_data.sql_feed_bulk:newspaper_text_rebuild",
     "osm-kansas": "tools.local_data.sql_feed_bulk:osm_kansas",
+    "archive-texts": "tools.local_data.sql_feed_texts:archive_texts",
+    "newspaper-directory": "tools.local_data.sql_feed_texts:newspaper_directory",
+    "towers": "tools.local_data.sql_feed_texts:towers",
 }
 # Large feeds load a separately snapshotted database (--bulk-db).
-BULK_FEEDS: frozenset[str] = frozenset({"bridges", "epa-facilities", "newspaper-text", "newspaper-text-rebuild", "osm-kansas"})
+BULK_FEEDS: frozenset[str] = frozenset({"archive-texts", "bridges", "epa-facilities", "newspaper-text", "newspaper-text-rebuild", "osm-kansas"})
 BULK_SCHEMA = """
 CREATE TABLE IF NOT EXISTS kfm_sql_sources (
  file_id INTEGER PRIMARY KEY, source_id TEXT NOT NULL, source_path TEXT NOT NULL,

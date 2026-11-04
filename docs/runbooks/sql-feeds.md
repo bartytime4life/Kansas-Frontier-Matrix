@@ -34,10 +34,9 @@ The public local-data API serves these tables. The feeds only add data.
 - **The lock covers writes only.** Downloads run outside `run/pipeline.lock`;
   only database writes take it. Captures and backups are held for seconds, not
   for a download.
-- **The ceilings still apply.** These are the original SQL build's 85 GB
-  aggregate ceiling, less a 5 GB reserve, and its 100 GB free-space floor.
-  Reaching one stops the feed with `CEILING_85GB_HEADROOM_STOP` or
-  `FREE_SPACE_FLOOR_REACHED`.
+- **No size ceiling and no free-space floor.** The owner asked on 2026-11-02 to
+  ignore all data caps and floors. A full disk surfaces as an ordinary write
+  failure, so watch the volume's free space.
 
 ## Feeds
 
@@ -161,9 +160,7 @@ state determines whether any download is due. Provider throttling or a schema
 change stops the affected run and retains the previous completed version.
 
 Bulk feeds require **both** `--db observations.sqlite` and
-`--bulk-db bulk-sql/kfm-bulk.sqlite`, pointing to different files. Both databases
-and the supplied catalogs count against the same 85 GB ceiling, with overlapping
-paths counted once. Both databases need their own verified SQLite snapshots.
+`--bulk-db bulk-sql/kfm-bulk.sqlite`, pointing to different files. Both databases need their own verified SQLite snapshots.
 The full-copy snapshot implementation still reads and verifies the entire file;
 this rebuild does not implement the previously proposed changed-chunk backup.
 
@@ -183,6 +180,24 @@ PBF remains independently replayable. Wikidata scalar coordinates use the first
 provider coordinate; the full geometry preserves every point and county matching
 can use another point. Date precision remains explicit: a year is not expanded
 to an invented January 1 observation.
+
+## Feeds added after the recovery
+
+These three feeds are new designs. They live in `sql_feed_texts.py`, whose
+header records the provider details.
+
+| Feed | Source | Tables | Each run and revisions |
+|---|---|---|---|
+| `archive-texts` | Internet Archive Scrape, metadata and `_djvu.txt` (bulk database) | `kfm_ia_items`, `kfm_ia_texts`, `kfm_ia_texts_fts`, `kfm_ia_text_status` | Listing every 28 days; about 300 items a run, at least 1 s between requests; re-downloaded when the MD5 changes; items that stop qualifying are retired; 429/503 stops with `IA_RATE_LIMITED` |
+| `newspaper-directory` | LOC Directory of U.S. Newspapers, Kansas facet | `kfm_loc_newspaper_directory` | Every 28 days; 70 pages at least 6 s apart; resumes from a spool; a changed directory replaces the old one |
+| `towers` | FCC ASR weekly `r_tower.zip`, via FCC anonymous FTP because its web servers answer 403 | `kfm_asr_registrations`, `_locations`, `_entities`, `_history`, `_remarks`, `_special_conditions` | Every 7 days; Kansas cut per record type; `FCC_BLOCKED` in state if no route serves it |
+
+`towers` has no timer. FCC's web servers refuse this pipeline, and whether its
+FTP server is an acceptable route is the owner's decision. To drop FTP, remove
+its entry from `ASR_ROUTES`.
+
+`archive-texts` runs daily at 23:45, with a second slot at 12:10 during the
+backfill of about 30 to 40 runs. `newspaper-directory` runs on Thursdays at 17:15.
 
 ## Install and run
 
