@@ -268,6 +268,8 @@ for (const layout of [{width:1440,height:900,touch:false,motion:'no-preference'}
   await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='true' && !window.__skyMap.isMoving() && document.querySelector('.toast')?.dataset.visible!=='true'`,'unobstructed replay map ready');
   // Wait for the close transition to release the whole map, using rendered geometry.
   await p.wait(`document.querySelector('.layer-panel').getAnimations().every(animation=>animation.playState!=='running')`,'closed Layers no longer covers flight view');
+  await p.wait(`document.querySelector('.kansas-sky-map-status')?.dataset.state==='REPLAY' && document.querySelector('.kansas-sky-map-status time')?.dateTime===${JSON.stringify(new Date(at+30000).toISOString())}`,'closed-panel map still labels replay and its synchronized UTC instant');
+  assert.equal(await p.evaluate(`(()=>{const badge=document.querySelector('.kansas-sky-map-status'),r=badge.getBoundingClientRect();return !badge.closest('.layer-panel')&&badge.checkVisibility()&&r.left>=0&&r.right<=innerWidth&&r.top>=0&&r.bottom<=innerHeight&&getComputedStyle(badge).pointerEvents==='none'&&document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.classList.contains('maplibregl-canvas')&&![...document.querySelectorAll('.maplibregl-ctrl button')].some(button=>{const b=button.getBoundingClientRect();return b.width>0&&b.height>0&&b.left<r.right&&b.right>r.left&&b.top<r.bottom&&b.bottom>r.top;});})()`),true,'replay date is visible without intercepting map input or covering map navigation controls');
   if(process.env.KFM_SKY_SCREENSHOTS){
     const capture=await p.call('Page.captureScreenshot',{format:'png'});
     await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,`sky-synthetic-aircraft-trail-${layout.width}.png`),Buffer.from(capture.data,'base64'));
@@ -281,15 +283,15 @@ for (const layout of [{width:1440,height:900,touch:false,motion:'no-preference'}
   await p.evaluate(`(()=>{const e=document.querySelector('[aria-label="Flight timeline"]');const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;setter.call(e,${at+60000});e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
   await p.wait(`document.querySelector('.kansas-sky').textContent.includes('No observation for this aircraft') && window.__skyRender.aircraftVertices===0`,'gap refuses fabricated positions');
   await p.evaluate(`document.querySelector('.kansas-sky-transport button:last-child').click()`);
-  await p.wait(`document.querySelector('.kansas-sky-badge').textContent==='LIVE FEED'`,'return live');
+  await p.wait(`document.querySelector('.kansas-sky-badge').textContent==='LIVE FEED' && document.querySelector('.kansas-sky-map-status')?.dataset.state==='LIVE FEED'`,'return live updates both panel and persistent map status');
   p.failFeed();
   // Re-enable the real traffic toggle to request the synthetic outage immediately,
   // preserving normal production polling cadence rather than overriding timers.
   await p.evaluate(`(()=>{const e=[...document.querySelectorAll('.official-context-row label')].find(e=>e.textContent.includes('Kansas Sky · observed aircraft')).querySelector('input');e.click();})()`);
   await p.wait(`!document.querySelector('.kansas-sky')`,'traffic toggle off');
   await p.evaluate(`(()=>{const e=[...document.querySelectorAll('.official-context-row label')].find(e=>e.textContent.includes('Kansas Sky · observed aircraft')).querySelector('input');e.click();})()`);
-  await p.wait(`document.querySelector('.kansas-sky-badge')?.textContent==='UNAVAILABLE' && window.__skyRender.aircraftVertices===0`,'provider failure removes current positions and live badge');
+  await p.wait(`document.querySelector('.kansas-sky-badge')?.textContent==='UNAVAILABLE' && document.querySelector('.kansas-sky-map-status')?.dataset.state==='UNAVAILABLE' && window.__skyRender.aircraftVertices===0`,'provider failure removes current positions and live badge');
 
   await p.evaluate(`document.querySelector('input[aria-label="Hide airspace and aviation layers"]').click()`);
-  await p.wait(`!document.querySelector('.kansas-sky')`,'hidden layer tears down control');
+  await p.wait(`!document.querySelector('.kansas-sky') && !document.querySelector('.kansas-sky-map-status')`,'hidden layer tears down control and map status');
 });
