@@ -96,6 +96,21 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     rail.current?.querySelector(`[data-topic="${TOPICS[next].id}"]`)?.focus({preventScroll:true});
   }
   function scrollRail(direction){rail.current?.scrollBy({left:direction*(rail.current.clientWidth*.75),behavior:paused?'instant':'smooth'});}
+  // Keep source captions and long panels above the rail even when labels wrap
+  // or browser text sizing changes its height.
+  useLayoutEffect(()=>{
+    if(!fullscreen)return;
+    const node=rail.current?.closest?.('.welcome-category-rail'),host=root.current;
+    if(!node||!host)return;
+    const measure=()=>{
+      host.style.setProperty('--welcome-rail-height',`${node.getBoundingClientRect().height}px`);
+      rail.current?.querySelector('[aria-pressed="true"]')?.scrollIntoView?.({block:'nearest',inline:'nearest',behavior:'instant'});
+    };
+    measure();
+    if(typeof ResizeObserver==='undefined')return;
+    const observer=new ResizeObserver(measure);observer.observe(node);
+    return()=>observer.disconnect();
+  },[fullscreen]);
 
   function centerTopic(id, behavior='smooth'){
     const list=carouselList.current,card=list?.querySelector(`[data-carousel-topic="${id}"]`);
@@ -226,7 +241,19 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
         </div>)}</div>)}</section>
         {!filteredTopics.length&&<div className="topic-empty" role="status"><strong>No matching topics</strong><p>Try a broader term, or see every topic.</p><button type="button" onClick={()=>{setTopicQuery('');setTopicGroup('All');}}>Show all topics</button></div>}
       </div></div>
-      {fullscreen&&touched&&<aside className="welcome-layer-demo" aria-label="Category demonstration"><span className="welcome-kicker">{TOPICS[selectedIndex]?.title}</span><h2>{glimpse?.title}</h2><p>{glimpse?.try}</p><small>{glimpse?.limit}</small>{control==='geology'&&<button type="button" className="welcome-text-action" onClick={()=>run(()=>onAction('underground'))}>Open Underground Explorer →</button>}{control==='aviation'&&<AviationGlimpse mode={aviationMode} onMode={setAviationMode} state={previewState?.topic===control?previewState:null} layersVisible={layersVisible}/>}<div className="welcome-layer-demo-actions">{(control==='aviation'||welcomeView(control).starters?.length>0)&&<button type="button" aria-pressed={layersVisible} onClick={()=>setLayersVisible(!layersVisible)}>{layersVisible?'Hide starter layers':'Show starter layers'}</button>}<button type="button" onClick={()=>run(()=>onMaps?onMaps(normalizeCategoryTopics([...selectedTopics,control])):(onMap||onTopic)(control))}>Open this category’s map →</button><button type="button" onClick={()=>openTopic(control,true)}>Source notes &amp; demonstrations</button></div><p className="welcome-layer-demo-state" role="status">{previewState?.mapState==='unavailable'?'Map preview unavailable. Open the map to inspect source status.':previewState?.topic!==control||previewState?.mapState==='loading'?'Preparing the category map…':!layersVisible?'Base context only. Starter overlays are hidden; the basemap and elevation remain.':'Provider context preview. Source clocks and availability remain separate.'}</p></aside>}<div className="welcome-scene-deck">{fullscreen&&<button type="button" className="welcome-preview-expand" aria-pressed={true} onClick={returnToCategories}>Return to categories</button>}{fullscreen&&<><span className="welcome-stage-title">KANSAS FRONTIER MATRIX <span> / {welcomeView(control).name}</span></span><button type="button" className="welcome-preview-pause" disabled={reduced} aria-pressed={!paused} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{paused?'Play animation':'Pause animation'}</button><button type="button" className="welcome-stage-close" aria-label="Close quick start" onClick={()=>onClose(remember)}>×</button></>}</div>
+      {fullscreen&&touched&&<aside className="welcome-layer-demo" aria-label="Category demonstration">
+        <span className="welcome-kicker">{TOPICS[selectedIndex]?.title}</span>
+        <h2>{glimpse?.title}</h2>
+        <div className="welcome-layer-demo-actions">
+          <button type="button" className="welcome-open-category" onClick={()=>run(()=>onMaps?onMaps(normalizeCategoryTopics([...selectedTopics,control])):(onMap||onTopic)(control))}>Open this category’s map →</button>
+          {(control==='aviation'||welcomeView(control).starters?.length>0||welcomeView(control).scientificLayers?.length>0)&&<button type="button" aria-pressed={layersVisible} onClick={()=>setLayersVisible(!layersVisible)}>{layersVisible?'Hide starter layers':'Show starter layers'}</button>}
+          <button type="button" onClick={()=>openTopic(control,true)}>Source notes &amp; demonstrations</button>
+        </div>
+        <p>{glimpse?.try}</p><small>{glimpse?.limit}</small>
+        {control==='geology'&&<button type="button" className="welcome-text-action" onClick={()=>run(()=>onAction('underground'))}>Open Underground Explorer →</button>}
+        {control==='aviation'&&<AviationGlimpse mode={aviationMode} onMode={setAviationMode} state={previewState?.topic===control?previewState:null} layersVisible={layersVisible}/>}
+        <p className="welcome-layer-demo-state" role="status">{previewState?.mapState==='unavailable'?'Map preview unavailable. Open the map to inspect source status.':previewState?.topic!==control||previewState?.mapState==='loading'?'Preparing the category map…':!layersVisible?'Base context only. Starter overlays are hidden; the basemap and elevation remain.':'Provider context preview. Source clocks and availability remain separate.'}</p>
+      </aside>}<div className="welcome-scene-deck">{fullscreen&&<button type="button" className="welcome-preview-expand" aria-pressed={true} onClick={returnToCategories}>Return to categories</button>}{fullscreen&&<><span className="welcome-stage-title">KANSAS FRONTIER MATRIX <span> / {welcomeView(control).name}</span></span><button type="button" className="welcome-preview-pause" disabled={reduced} aria-pressed={!paused} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{paused?'Play animation':'Pause animation'}</button><button type="button" className="welcome-stage-close" aria-label="Close quick start" onClick={()=>onClose(remember)}>×</button></>}</div>
       {fullscreen&&<nav className="welcome-category-rail" aria-label="Explore other categories">
         <div className="welcome-rail-heading"><span>CHOOSE YOUR NEXT STORY</span><span id="welcome-rail-keys" className="sr-only">Use Left and Right arrow keys to choose a category; Home and End choose the first and last.</span><span>{String(selectedIndex+1).padStart(2,'0')} / {TOPICS.length}</span></div>
         <div className="welcome-rail-track"><button type="button" className="welcome-rail-scroll" aria-label="Scroll categories left" onClick={()=>scrollRail(-1)}>←</button>

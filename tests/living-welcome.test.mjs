@@ -14,6 +14,8 @@ new Function('exports',ts.transpileModule(await readFile('app/layer-workspaces.t
 const {TOPIC_STRUCTURE,TOPIC_GROUPS}=topicModule;
 const categoryModule={};
 new Function('exports',ts.transpileModule(await readFile('app/category-maps.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(categoryModule);
+const welcomeViewModule={};
+new Function('exports','require',ts.transpileModule(await readFile('app/welcome-map-view.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(welcomeViewModule,id=>id==='./category-maps'?categoryModule:{});
 const rootOf=tree=>findNode(tree,node=>node.props?.className==='explorer-guide living-welcome');
 const features=[{id:'roads',status:'Explore',description:'Roads',destination:'transport'},{id:'farms',status:'Explore',description:'Farms',destination:'agriculture'}];
 function environment(reduced=false){
@@ -23,7 +25,7 @@ function environment(reduced=false){
 async function welcome(reduced=false,globals={}){
  const env={...environment(reduced),...globals},calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
-  './card-carousel.mjs':carouselGeometry,'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas',starters:categoryModule.CATEGORY_MAPS[topic]?.starters??[]})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
+  './card-carousel.mjs':carouselGeometry,'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':welcomeViewModule,'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
  const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value]),onMap:value=>calls.push(['map',value])};
@@ -74,6 +76,23 @@ function expandCategory(h,id){
 function reportPreview(h,tree,value){
  findNode(tree,node=>node.type==='domain-stage').props.onPreviewState(value);return h.render();
 }
+
+test('scientific-only previews can compare their overlays and still open the same category',async()=>{
+ for(const id of ['agriculture','flora','fauna','sky']){
+  const h=await welcome();
+  try{
+   let tree=h.render();previewCard(tree,id).props.onClick();tree=h.render();
+   assert.equal(welcomeViewModule.welcomeView(id).starters.length,0);
+   const toggle=byText(tree,'Hide starter layers');assert.ok(toggle,`${id} exposes comparison`);
+   toggle.props.onClick();tree=h.render();
+   assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,false);
+   byText(tree,'Show starter layers').props.onClick();tree=h.render();
+   assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,true);
+   byText(tree,'Open this category’s map →').props.onClick();
+   assert.deepEqual(h.calls,[['map',id],['close',false]]);
+  }finally{h.harness.dispose();}
+ }
+});
 
 test('expanded map failure beats missing or stale category identity and hidden-layer copy, with working map entry',async()=>{
  for(const fallback of [false,true]){

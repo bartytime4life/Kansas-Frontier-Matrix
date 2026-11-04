@@ -673,7 +673,7 @@
 
 /* Cinematic category stage. The existing renderer stays mounted; navigation
    occupies the edges and source attribution retains its own bottom strip. */
-.atlas-studio .living-welcome[data-cinematic=true]{overflow:hidden}
+.atlas-studio .living-welcome[data-cinematic=true]{--welcome-rail-bottom:52px;--welcome-rail-height:137px;--welcome-rail-clearance:calc(var(--welcome-rail-bottom) + var(--welcome-rail-height) + 12px);overflow:hidden}
 .living-welcome[data-cinematic=true] .welcome-map-stage{display:block;height:100%;min-height:0;padding:0;overflow:hidden}
 .living-welcome[data-cinematic=true] .welcome-wash{position:absolute;inset:0;background:linear-gradient(180deg,#031923b8 0,transparent 23%,transparent 70%,#031923a6);pointer-events:none}
 .living-welcome[data-cinematic=true] .welcome-scene-deck{position:absolute;inset:16px 24px auto;z-index:6;display:flex;align-items:center;gap:12px;margin:0;padding:0;min-height:48px}
@@ -683,13 +683,13 @@
 .living-welcome .welcome-stage-title span{font-weight:450;letter-spacing:.03em;color:#d4e3e8}
 .living-welcome[data-cinematic=true] .welcome-preview-pause{padding:10px 14px;background:#082635ed;border:1px solid #b7d4d05c}
 .living-welcome .welcome-stage-close{width:44px;border:1px solid #b7d4d05c;background:#082635ed;font-size:24px!important}
-.living-welcome[data-cinematic=true] .welcome-layer-demo{top:88px;right:auto;left:24px;width:320px;height:auto;max-height:calc(100% - 254px);padding:20px;border-color:#b6d1d059;background:linear-gradient(145deg,#0b303ff5,#08232ff2);box-shadow:0 16px 52px #00131e4d;animation:welcome-stage-in .55s cubic-bezier(.16,1,.3,1) both}
+.living-welcome[data-cinematic=true] .welcome-layer-demo{top:88px;right:auto;left:24px;width:320px;height:auto;max-height:calc(100% - 88px - var(--welcome-rail-clearance));padding:20px;border-color:#b6d1d059;background:linear-gradient(145deg,#0b303ff5,#08232ff2);box-shadow:0 16px 52px #00131e4d;animation:welcome-stage-in .55s cubic-bezier(.16,1,.3,1) both}
 .living-welcome[data-cinematic=true] .welcome-layer-demo>.welcome-kicker{font-size:10px;letter-spacing:.12em;color:#afcbd1}
 .living-welcome[data-cinematic=true] .welcome-layer-demo h2{font-size:27px;font-weight:500;line-height:1.1;letter-spacing:-.025em;margin:10px 0 14px}
 .living-welcome[data-cinematic=true] .welcome-layer-demo-actions{gap:6px}
 .living-welcome[data-cinematic=true] .welcome-layer-demo-actions button{width:100%;text-align:left;justify-content:flex-start}
-.living-welcome[data-cinematic=true] .welcome-layer-demo-actions button:not([aria-pressed]):first-of-type{border-color:#d6bc7f}
-.living-welcome[data-cinematic=true] .domain-stage-caption{top:auto;bottom:162px;left:auto;right:24px;max-width:min(360px,calc(100% - 400px));justify-items:end;text-align:right;padding:12px 14px;border-radius:8px;background:#082635e8;max-height:150px;overflow:auto;pointer-events:auto}
+.living-welcome[data-cinematic=true] .welcome-layer-demo-actions button.welcome-open-category{border-color:#d6bc7f}
+.living-welcome[data-cinematic=true] .domain-stage-caption{top:auto;bottom:var(--welcome-rail-clearance);left:auto;right:24px;max-width:min(360px,calc(100% - 400px));justify-items:end;text-align:right;padding:12px 14px;border-radius:8px;background:#082635e8;max-height:150px;overflow:auto;pointer-events:auto}
 .living-welcome .welcome-category-rail{position:absolute;bottom:52px;left:24px;right:24px;z-index:5;max-width:1600px;margin-inline:auto;padding:12px 10px 10px;background:linear-gradient(145deg,#0a2937f5,#071f2cf5);border:1px solid #c1d3ce40;border-radius:14px;box-shadow:0 16px 48px #00121a66;animation:welcome-rail-in .55s .06s cubic-bezier(.16,1,.3,1) both}
 .living-welcome .welcome-rail-heading{display:flex;justify-content:space-between;gap:14px;padding:0 7px 8px;font-size:9px;letter-spacing:.17em;color:#b2cbd0}
 .living-welcome .welcome-rail-heading>span:last-child{font-variant-numeric:tabular-nums;color:#e8cb8d}
@@ -704,7 +704,7 @@
 .living-welcome .welcome-rail-card[aria-pressed=true]{border-color:#ebca85;background:#355052;box-shadow:inset 0 -2px #ebca85}
 .living-welcome .welcome-rail-card[aria-pressed=true] strong{color:#ffe4ae}
 .living-welcome .welcome-rail-scroll{align-self:center;flex:none;width:44px;min-height:52px;border:1px solid #8db5c04d;border-radius:7px;background:#0c303e;font-size:20px}
-.living-welcome[data-cinematic=true] .welcome-geology-specimen{left:calc(50% + 110px);top:92px;max-height:calc(100% - 258px)}
+.living-welcome[data-cinematic=true] .welcome-geology-specimen{left:calc(50% + 110px);top:92px;max-height:calc(100% - 92px - var(--welcome-rail-clearance))}
 @keyframes welcome-stage-in{from{opacity:0;transform:translate3d(-16px,0,0)}to{opacity:1;transform:none}}
 @keyframes welcome-rail-in{from{opacity:0;transform:translate3d(0,18px,0)}to{opacity:1;transform:none}}
 @media(max-width:1100px){
@@ -713,6 +713,7 @@
  .living-welcome .welcome-stage-title span{display:none}
 }
 @media(max-width:700px){
+ .atlas-studio .living-welcome[data-cinematic=true]{--welcome-rail-bottom:48px;--welcome-rail-height:122px}
  .living-welcome[data-cinematic=true] .welcome-scene-deck{inset:10px 12px auto;gap:8px}
  .living-welcome .welcome-stage-title{display:none}
  .living-welcome[data-cinematic=true] .welcome-preview-pause{margin-left:auto;padding-inline:9px;font-size:11px}
@@ -720,26 +721,27 @@
  .living-welcome[data-cinematic=true] .welcome-stage-close{width:44px}
  .living-welcome[data-cinematic=true] .welcome-layer-demo,
  .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo,
- .living-welcome[data-cinematic=true][data-active=aviation] .welcome-layer-demo{display:block;top:68px;left:12px;right:12px;width:auto;height:auto;max-height:clamp(104px,27%,220px);overflow:auto;padding:12px 14px}
- .living-welcome[data-cinematic=true] .welcome-layer-demo h2{font-size:21px;margin:5px 0 8px}
+ .living-welcome[data-cinematic=true][data-active=aviation] .welcome-layer-demo{display:block;top:68px;left:12px;right:12px;width:auto;height:auto;max-height:180px;overflow:auto;padding:12px 14px}
+ .living-welcome[data-cinematic=true] .welcome-layer-demo h2{font-size:18px;margin:0 0 8px}
  .living-welcome[data-cinematic=true] .welcome-layer-demo>p{font-size:12px}
  .living-welcome[data-cinematic=true] .welcome-layer-demo>small{font-size:11px}
  .living-welcome[data-cinematic=true] .welcome-layer-demo-actions{display:flex;margin-top:8px}
- .living-welcome[data-cinematic=true] .welcome-layer-demo-actions button{width:auto;flex:1 1 130px;font-size:11px;padding:8px}
- .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo>:is(.welcome-kicker,p,small,.welcome-layer-demo-actions){display:revert}
+ .living-welcome[data-cinematic=true] .welcome-layer-demo-actions button{width:auto;flex:1 1 120px;font-size:11px;padding:8px}
+ .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo>:is(p,small,.welcome-layer-demo-actions){display:revert}
  .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo>.welcome-layer-demo-actions{display:flex}
+ .living-welcome[data-cinematic=true] .welcome-layer-demo>.welcome-kicker{display:none}
  .living-welcome .welcome-category-rail{left:12px;right:12px;bottom:48px;padding:9px 6px 5px;border-radius:10px}
  .living-welcome .welcome-rail-heading{font-size:8px;padding-bottom:4px}
  .living-welcome .welcome-rail-track{gap:2px}
  .living-welcome .welcome-rail-card{flex-basis:174px;min-height:58px;padding:8px}
  .living-welcome .welcome-rail-scroll{width:44px;font-size:16px}
- .living-welcome[data-cinematic=true]:has(.welcome-layer-demo) .domain-stage-caption{left:12px;right:12px;top:auto;bottom:151px;max-width:none;max-height:50px;padding:7px 10px;text-align:left;justify-items:start}
+ .living-welcome[data-cinematic=true]:has(.welcome-layer-demo) .domain-stage-caption{left:12px;right:12px;top:auto;bottom:var(--welcome-rail-clearance);max-width:none;max-height:50px;padding:7px 10px;text-align:left;justify-items:start}
  .living-welcome[data-cinematic=true] .domain-stage-caption>span,.living-welcome[data-cinematic=true] .domain-stage-caption>strong{display:none}
  .living-welcome[data-cinematic=true] .domain-stage-caption small{font-size:10px}
- .living-welcome[data-cinematic=true][data-active=geology] .welcome-geology-specimen{top:calc(80px + clamp(104px,27%,220px));bottom:210px;left:12px;right:12px;width:auto;max-width:none;height:auto;max-height:none;transform:none}
+ .living-welcome[data-cinematic=true][data-active=geology] .welcome-geology-specimen{top:260px;bottom:calc(var(--welcome-rail-clearance) + 62px);left:12px;right:12px;width:auto;max-width:none;height:auto;max-height:none;transform:none}
 }
 @media(max-height:520px) and (min-width:701px){
- .living-welcome[data-cinematic=true] .welcome-layer-demo{top:70px;max-height:calc(100% - 224px)}
+ .living-welcome[data-cinematic=true] .welcome-layer-demo{top:70px;max-height:calc(100% - 70px - var(--welcome-rail-clearance))}
  .living-welcome[data-cinematic=true] .domain-stage-caption{max-height:64px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -760,7 +762,7 @@
  .living-welcome[data-cinematic=true]:has(.welcome-layer-demo) .domain-stage-caption{display:none}
 }
 
-@media(max-height:600px) and (max-width:700px) and (orientation:portrait){.living-welcome[data-cinematic=true] .welcome-geology-specimen{display:none}}
+@media(max-height:600px) and (max-width:700px){.living-welcome[data-cinematic=true] .welcome-geology-specimen{display:none}}
 
 /* Retain the original map-backed cards. Selection is an optional card action. */
 .atlas-studio:has(> .living-welcome[data-builder=true]) > .topbar { visibility:hidden; }

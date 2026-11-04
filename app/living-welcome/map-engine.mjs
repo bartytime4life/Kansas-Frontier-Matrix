@@ -94,16 +94,23 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   // is tracked apart from the selected topic, because topics that share a
   // style (Science and Sky, or Evidence and the default map) take turns while
   // it loads, and the loaded style serves whichever of them is selected then.
-  let view = null, styleKey = null, styleEpoch = 0, styleLoaded = false, contextLost = false, paused = true, reduced = false, leg = 0, settle = 0, disposed = false, ready = false, applying = false, transitioning = false;
+  let view = null, styleKey = null, styleEpoch = 0, styleLoaded = false, contextLost = false, paused = true, reduced = false, leg = 0, settle = 0, driftTimer = 0, disposed = false, ready = false, applying = false, transitioning = false;
   let aviation = null, aviationImport = null, aviationMode = '3d';
   const cameraOf = ({ topic, camera: { center, zoom, pitch, bearing } }) => ({ center: [center[0], center[1]], zoom, pitch: topic === 'aviation' && aviationMode !== '3d' ? 0 : pitch, bearing: topic === 'aviation' && aviationMode !== '3d' ? 0 : bearing });
   const drift = () => {
-    if (disposed || paused || reduced || budget.efficient || applying || !view?.topic || (view.topic === 'aviation' && aviationMode !== '3d')) return;
+    if (disposed || paused || reduced || budget.efficient || applying || transitioning || !styleLoaded || !view?.topic || (view.topic === 'aviation' && aviationMode !== '3d')) return;
     const next = welcomeDriftLeg(view, leg++);
-    map.easeTo({ bearing: next.bearing, zoom: next.zoom, duration: next.duration, easing: t => t * t * (3 - 2 * t), essential: true });
+    applying = true;
+    try { map.easeTo({ bearing: next.bearing, zoom: next.zoom, duration: next.duration, easing: t => t * t * (3 - 2 * t), essential: true }); }
+    finally { applying = false; }
   };
-  map.on('moveend', event => { transitioning = false; if (!event.originalEvent && !paused) drift(); });
+  // A resize or camera stop can emit moveend from inside MapLibre's current
+  // animation. Starting another ease synchronously leaves competing frame
+  // callbacks. Defer and coalesce the next leg until that camera call finishes.
+  const queueDrift = () => { clearTimeout(driftTimer); driftTimer = setTimeout(drift, 0); };
+  map.on('moveend', event => { transitioning = false; if (!disposed && !event.originalEvent && !paused && !applying) queueDrift(); });
   const suspend = () => {
+    clearTimeout(driftTimer);
     const finishTransition = transitioning;
     transitioning = false;
     map.stop();
@@ -204,6 +211,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
   };
   const apply = next => {
     if (disposed) return;
+    clearTimeout(driftTimer);
     view = next; leg = 0;
     requestData(next);
     const key = `${next.basemap}|${next.scene}`;
@@ -261,8 +269,8 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       applying = true; map.stop(); applying = false;
       aviationTerrain(); drawData(); map.jumpTo(cameraOf(view));
     },
-    setPaused(value) { if (paused === value) return; paused = value; if (paused) suspend(); else drift(); },
-    setReduced(value) { if (reduced === value) return; reduced = value; if (reduced) suspend(); else drift(); },
+    setPaused(value) { if (paused === value) return; paused = value; if (paused) suspend(); else queueDrift(); },
+    setReduced(value) { if (reduced === value) return; reduced = value; if (reduced) suspend(); else queueDrift(); },
     setLayersVisible(value) {
       if (layersVisible === value) return;
       layersVisible = value;
@@ -283,6 +291,6 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       const point = map.project(coordinates);
       return Number.isFinite(point.x) && Number.isFinite(point.y) ? { x: point.x, y: point.y } : null;
     },
-    dispose() { disposed = true; clearTimeout(settle); clearInterval(radarTimer); scientific.dispose(); aviation?.dispose(); try { map.remove(); } catch { /* Already removed. */ } },
+    dispose() { disposed = true; clearTimeout(settle); clearTimeout(driftTimer); clearInterval(radarTimer); scientific.dispose(); aviation?.dispose(); try { map.remove(); } catch { /* Already removed. */ } },
   };
 }
