@@ -13,10 +13,12 @@ export async function trafficResponse(): Promise<NextResponse> {
   let last: unknown = null;
   for (const provider of TRAFFIC_PROVIDERS) {
     try {
-      const parsed = parseTraffic(await fetchJson(provider.url, 6 * 1024 * 1024, 10_000));
-      return NextResponse.json({ retrievedAt: new Date().toISOString(), provider, evidenceRole: "EXTERNAL_CONTEXT_ONLY", records: parsed.records, dropped: parsed.dropped,
+      const raw = await fetchJson(provider.url, 6 * 1024 * 1024, 10_000);
+      const retrievedAt = Date.now();
+      const parsed = parseTraffic(raw, retrievedAt);
+      return NextResponse.json({ retrievedAt: new Date(retrievedAt).toISOString(), provider, evidenceRole: "EXTERNAL_CONTEXT_ONLY", records: parsed.records, dropped: parsed.dropped, truncated: parsed.truncated,
         limitation: "Positions reported by volunteer ADS-B/Mode S receivers within 60 seconds. Coverage depends on receivers: low-altitude and some aircraft are missing, and an empty area is not evidence of no traffic." },
-      // Providers allow about one request per second per client; a 15-second shared cache keeps every viewer far below that.
+      // The route coalesces concurrent requests and caches for 15 seconds per Node instance; this is not a cross-instance quota.
       { status: 200, headers: { ...HEADERS, "Cache-Control": "public, max-age=15, stale-while-revalidate=15" } });
     } catch (error) {
       last = error;

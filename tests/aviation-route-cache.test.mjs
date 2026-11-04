@@ -22,9 +22,9 @@ test('concurrent viewers share one upstream request; failures are never cached',
  cache.clearAviationRouteCache();
  let calls=0,release;const gate=new Promise(resolve=>{release=resolve;});
  const slow=async()=>{calls++;await gate;return json({ok:true});};
- const pending=[1,2,3].map(()=>cache.cachedAviationRoute('shared',60_000,slow));
+ const pending=Array.from({length:24}).map(()=>cache.cachedAviationRoute('shared',60_000,slow));
  release();const bodies=await Promise.all(pending.map(async p=>(await p).json()));
- assert.equal(calls,1);assert.deepEqual(bodies,[{ok:true},{ok:true},{ok:true}]);
+ assert.equal(calls,1);assert.deepEqual(bodies,Array.from({length:24},()=>({ok:true})));
  let failures=0;const failing=async()=>{failures++;return json({state:'error'},502);};
  assert.equal((await cache.cachedAviationRoute('bad',60_000,failing)).status,502);
  assert.equal((await cache.cachedAviationRoute('bad',60_000,failing)).status,502);
@@ -49,4 +49,16 @@ test('opening the aviation category map switches the airspace layer on without a
  const control=await readFile('app/aviation-layer-control.tsx','utf8');
  assert.match(control,/if \(showRequest && !visible\) \{ setVisible\(true\); setRender\("Waiting for map frame"\); \}/);
  assert.doesNotMatch(control,/setVisible\(false\)[^\n]*showRequest/,'a request only ever shows the layer');
+});
+
+
+test('cache rejects oversized bodies, evicts oldest keys and refuses backward-clock cache hits',async()=>{
+ cache.clearAviationRouteCache();
+ let calls=0;const build=async()=>json({n:++calls});
+ for(let i=0;i<cache.AVIATION_CACHE_MAX_ENTRIES+1;i++)await cache.cachedAviationRoute('bounded-'+i,60000,build,()=>1000);
+ await cache.cachedAviationRoute('bounded-0',60000,build,()=>1000);
+ assert.equal(calls,cache.AVIATION_CACHE_MAX_ENTRIES+2);
+ await cache.cachedAviationRoute('bounded-0',60000,build,()=>900);assert.equal(calls,cache.AVIATION_CACHE_MAX_ENTRIES+3);
+ let bigCalls=0;const big=async()=>{bigCalls++;return new Response('x'.repeat(cache.AVIATION_CACHE_MAX_BYTES+1));};
+ await cache.cachedAviationRoute('oversized',60000,big);await cache.cachedAviationRoute('oversized',60000,big);assert.equal(bigCalls,2);
 });

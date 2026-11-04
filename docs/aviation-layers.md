@@ -203,9 +203,9 @@ Cloud bases never substitute for an aircraft's missing altitude. See the
   without ADS-B and anything out of receiver range are missing, so an empty sky
   is not evidence of no traffic. Positions older than 60 seconds are dropped,
   not extrapolated. The browser keeps applying that limit between refreshes
-  (counting up to 30 seconds of server-cache age), so a stalled refresh empties the
+  (counting the full server-cache age), so a stalled refresh empties the
   sky instead of freezing it, and turning traffic off discards the last
-  positions rather than redrawing them later as current. Nothing identifies owners, missions or intent. OpenSky is
+  positions rather than redrawing them later as current. Kansas Sky retains a bounded session replay separately; it never relabels that history as live. Nothing identifies owners, missions or intent. OpenSky is
   not used: its terms require a written licence for this kind of display.
 - The traffic route tries adsb.lol, then adsb.fi, with fixed URLs, no caller
   input, no redirects, a 10-second timeout and a 6 MB read limit. If both fail
@@ -273,3 +273,11 @@ These edits belong in the existing `app/living-welcome`, `app`, `tests` and
 AI models/databases, native Site identity or store/hosting bindings. Rollback
 is a source revert of this focused change; no migration or store restore is
 required. Publication remains a separate, owner-held gate.
+
+## Kansas Sky
+
+[Aircraft, trails and dated replay](kansas-sky.md) extend this working layer with
+bounded session memory and two provenance-bound open archive flights. Geometric
+height is WGS84, pressure altitude is separate, and vertical placement remains
+approximate. The former traffic-only extrusions are replaced by schematic
+aircraft and trails; airspace tools and the zones-only welcome remain intact.
