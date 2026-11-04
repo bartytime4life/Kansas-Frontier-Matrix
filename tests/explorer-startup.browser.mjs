@@ -1823,7 +1823,7 @@ for (const [width, height] of [[1440, 960], [390, 844], [320, 568], [568, 320]])
    }
    if(topic==='land'){assert.ok(state.zoom>=11);assert.match(state.key,/not property lines/);}
    if(topic==='evidence'){
-    const source=await p.evaluate(`window.__welcomeScientificMap.getSource('welcome-census-record-focus')._data`);
+    const source=await p.evaluate(`window.__welcomeScientificMap.getSource('welcome-census-record-focus').getData()`);
     assert.equal(source.features[0].properties.geoid,'20177');assert.equal(source.features[0].properties.population,1234,'labels use the test provider record, not an invented production count');
    }
    if(topic!=='fauna')assert.equal(await p.evaluate(`!!window.__welcomeScientificMap.getSource('welcome-gbif-animal-records-2025')`),false,'animal records leave their subject');
