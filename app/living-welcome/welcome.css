@@ -875,7 +875,9 @@
 @media(max-height:500px) and (orientation:landscape) {
  .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .welcome-capability-stage { inset:64px 48% 0 0; }
  .living-welcome[data-builder=true][data-carousel=true] .welcome-discovery-layout { left:52%; right:0; bottom:18px; height:140px; }
- .living-welcome[data-builder=true][data-carousel=true] .discovery-field--grouped { --card-width:88%; }
+ /* The deck occupies 48vw. A viewport length keeps the card basis and snap
+    padding on the same scale; percentages use different containing boxes. */
+ .living-welcome[data-builder=true][data-carousel=true] .discovery-field--grouped { --card-width:42.24vw; }
  .living-welcome[data-builder=true][data-carousel=true] .topic-filters { right:10px; }
  .living-welcome[data-builder=true][data-carousel=true] .topic-filters > summary { font-size:11px; padding-inline:6px; }
  .living-welcome[data-builder=true][data-carousel=true] .welcome-carousel-nav { margin-left:8px; gap:0; }

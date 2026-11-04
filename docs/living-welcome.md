@@ -1,5 +1,37 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Scientific systems treatment · 2026-11-04 revision
+
+Seven selected previews add scientific studies over the existing provider map.
+Flora, Fauna and Ecology use original photorealistic, AI-generated specimen or
+terrain studies. Land uses a fine surface mesh with survey axes; History
+separates dated reference planes for registration; Evidence traces a provenance
+graph; Public Safety separates reference geography from unconnected coverage.
+The current live mobile carousel and its map-first layout are retained.
+
+The presentation uses instrument frames, restrained cyan annotations, neutral
+type, slow inspection passes and technical depth cues. It contains no invented
+measurements, confidence scores, incident locations or analytical results. AI
+specimens and procedural geometry are explicitly identified as illustrative;
+the background map keeps its actual sources, dates and limits. The study status
+receives the selected map's real source state, including loading, hidden, empty,
+unavailable and closer-scale conditions. A provider outage cannot become a
+successful or "live" scientific readout.
+
+Three WebP assets total 459,446 bytes, and only the selected asset loads.
+They are stored in `public/welcome/scientific/` as `flora-study.webp`,
+`fauna-study.webp` and `ecology-study.webp`. The built-in image-generation tool
+created the originals; their full prompts, paths, byte counts and SHA-256s are
+recorded in [the asset manifest](../scripts/welcome-demos/scientific-assets.json).
+The local recovery archive retains the generated PNGs. These images are not
+photogrammetry, satellite imagery, collected specimens or measured models.
+
+One map renderer, deferred study loading, pause, hidden-tab behavior and the
+OS reduced-motion preference are retained. The previous responsive stage
+reservations still separate the study from the guide, source captions, credits
+and category rail. This remains a local candidate, without hosting publication.
+
+
 ## Mobile topic builder · 2026-11-03 candidate
 
 Current navigation is described in [Mobile topic builder](mobile-topic-builder.md).

@@ -42,7 +42,7 @@ async function leaveCompactLayers(p) {
 }
 
 async function revealControl(p, selector) {
-  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',inline:'nearest',behavior:'instant'})`);
+  await p.evaluate(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),root=node.closest('.living-welcome'),card=node.closest('.topic-choice');if(root?.dataset.carousel==='true'&&root.dataset.fullscreen!=='true'&&card)card.scrollIntoView({block:'nearest',inline:'center',behavior:'instant'});else node.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});})()`);
   await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome')?.getBoundingClientRect();return r&&root&&r.width>0&&r.height>=44&&r.left>=root.left-.5&&r.right<=root.right+.5&&r.top>=root.top-.5&&r.bottom<=root.bottom+.5&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`, 'real control is visible, full-sized and hit-testable: '+selector);
   return p.evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
 }
@@ -382,6 +382,7 @@ for(const [width,height] of [[320,568],[390,690],[640,360]]){
   assert.equal(await p.evaluate(`document.querySelector('.welcome-selection-tray')===null`),true,'swiping is not selection');
   await swipe(-1);
   await p.wait(`document.querySelector('.living-welcome')?.dataset.centeredTopic==='engineering'`,'reverse swipe restores the first preview');
+  await p.wait(`(()=>{const card=document.querySelector('.topic-choice[data-centered="true"]').getBoundingClientRect(),rail=document.querySelector('.discovery-field--grouped').getBoundingClientRect();return Math.abs(card.x+card.width/2-rail.x-rail.width/2)<=1;})()`,'native scroll snap reaches its final position');
   const geometry=await p.evaluate(`(()=>{const card=document.querySelector('.topic-choice[data-centered="true"]').getBoundingClientRect(),rail=document.querySelector('.discovery-field--grouped').getBoundingClientRect(),stage=document.querySelector('.welcome-capability-stage').getBoundingClientRect();return {offset:Math.abs(card.x+card.width/2-rail.x-rail.width/2),stageBottom:stage.bottom,railTop:rail.top,overflow:document.documentElement.scrollWidth>innerWidth+1};})()`);
   assert.ok(geometry.offset<=1,'card snaps to the actual viewport center');assert.equal(geometry.overflow,false);
   if(height>500)assert.ok(geometry.stageBottom<=geometry.railTop,'demo sits above the cards');
@@ -1793,3 +1794,76 @@ test('water animation stays opt-in and does not follow the visitor into unrelate
   assert.equal(await p.evaluate(`JSON.parse(localStorage.getItem('kfm-scene-effects-v1')).waterFlow`),false,'visual preset does not enable flow');
  }
 });
+
+
+for (const [width, height] of [[1440, 960], [390, 844], [320, 568], [568, 320]]) {
+ test(`scientific studies render, pause and respect reduced motion at ${width}x${height}`, {timeout:120000}, async t => {
+  const b=await browser(t),p=await pageSession(b,width,height);
+  const requestedSpecimens=new Set(),specimenResponses=new Map();
+  b.listeners.add(message=>{
+   if(message.method==='Network.requestWillBeSent'&&message.params.request.url.includes('/welcome/scientific/'))requestedSpecimens.add(new URL(message.params.request.url).pathname);
+   if(message.method==='Network.responseReceived'&&message.params.response.url.includes('/welcome/scientific/'))specimenResponses.set(new URL(message.params.response.url).pathname,message.params.response.status);
+  });
+  await p.open('/?motion=off');await readyWelcome(p);
+  assert.equal(await p.evaluate(`!!document.querySelector('.topic-illustration')`),false,'no illustration before a topic is chosen');
+  assert.equal(requestedSpecimens.size,0,'opening the chooser downloads no specimen assets');
+  const before=await p.evaluate(`({url:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`);
+  if(width<=700){
+   await p.evaluate(`document.querySelector('.topic-flora').closest('.topic-choice').scrollIntoView({block:'nearest',inline:'center',behavior:'instant'})`);
+   await p.wait(`document.querySelector('.living-welcome').dataset.centeredTopic==='flora'&&document.querySelector('.topic-illustration')?.dataset.topic==='flora'`,'the centered mobile card owns its scientific study');
+   const compact=await p.evaluate(`(()=>{const f=document.querySelector('.topic-illustration'),r=f.getBoundingClientRect(),caption=f.querySelector('small').getBoundingClientRect(),svg=f.querySelector('svg').getBoundingClientRect(),source=document.querySelector('.domain-stage-caption').getBoundingClientRect(),stage=document.querySelector('.welcome-capability-stage').getBoundingClientRect();return{expanded:document.querySelector('.living-welcome').dataset.fullscreen,left:r.left,right:r.right,top:r.top,bottom:r.bottom,scopeTop:caption.top,scopeBottom:caption.bottom,scopeHeight:caption.height,svgHeight:svg.height,sourceBottom:source.bottom,stageBottom:stage.bottom};})()`);
+   assert.equal(compact.expanded,'false','centering stays in the card chooser');
+   assert.ok(compact.left>=0&&compact.right<=width&&compact.svgHeight>35,'the scientific study fills the compact map viewport');
+   assert.ok(compact.scopeHeight>0&&compact.scopeBottom<=compact.stageBottom&&compact.scopeTop>compact.sourceBottom,'illustrative scope stays visible separately from the map caption');
+   if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`scientific-carousel-${width}x${height}.png`),Buffer.from(shot.data,'base64'));}
+  }
+  const selector='.topic-preview-flora';await revealControl(p,selector);
+  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);
+  for(const topic of ['flora','fauna','ecology','land','history','evidence','public-safety']){
+   if(topic!=='flora'){
+    await p.evaluate(`document.querySelector('.welcome-rail-card[data-topic="${topic}"]').focus()`);await p.key('Enter','Enter',13);
+   }
+   await p.wait(`document.querySelector('.topic-illustration')?.dataset.topic==='${topic}'`,topic+' illustration loads');
+   if(['flora','fauna','ecology'].includes(topic)){
+    await p.wait(`document.querySelector('.topic-illustration image')?.href.baseVal==='/welcome/scientific/${topic}-study.webp'`,'the selected photorealistic specimen is mounted');
+    assert.deepEqual([...requestedSpecimens].filter(path=>!['flora','fauna','ecology'].slice(0,['flora','fauna','ecology'].indexOf(topic)+1).some(id=>path.endsWith(id+'-study.webp'))),[],'unselected specimen assets stay unloaded');
+   }else assert.equal(await p.evaluate(`document.querySelectorAll('.topic-illustration image').length`),0,'method studies need no additional bitmap');
+   const state=await p.evaluate(`(()=>{const f=document.querySelector('.topic-illustration'),s=f.querySelector('svg').getBoundingClientRect(),c=f.querySelector('figcaption').getBoundingClientRect(),guide=document.querySelector('.welcome-layer-demo').getBoundingClientRect(),rail=document.querySelector('.welcome-category-rail').getBoundingClientRect(),source=document.querySelector('.domain-stage-caption').getBoundingClientRect(),credits=[...document.querySelectorAll('.domain-stage .maplibregl-ctrl-attrib')].map(e=>e.getBoundingClientRect()).filter(r=>r.width&&r.height);return{sourceTop:source.height?source.top:innerHeight,creditTop:Math.min(innerHeight,...credits.map(r=>r.top)),count:document.querySelectorAll('.topic-illustration').length,paused:f.dataset.paused,scope:f.querySelector('small').textContent,svg:[s.x,s.y,s.width,s.height],caption:[c.x,c.y,c.width,c.height],guide:[guide.right,guide.bottom],railTop:rail.top,animations:f.getAnimations({subtree:true}).map(a=>a.playState),width:document.documentElement.scrollWidth};})()`);
+   if(process.env.KFM_WORKSPACE_SCREENSHOTS){
+    // A representative, deterministic point in each real CSS animation.
+    await p.evaluate(`document.querySelector('.topic-illustration').getAnimations({subtree:true}).forEach(a=>{a.currentTime=4200;})`);
+    await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});
+    await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`field-note-${topic}-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
+   }
+   assert.equal(state.count,1);assert.equal(state.paused,'true');assert.match(state.scope,/illustration|concept/);
+   assert.ok(state.svg[2]>100&&state.svg[3]>45,topic+' has a visible drawing');
+   assert.ok(state.caption[0]>=0&&state.caption[0]+state.caption[2]<=width+1&&state.caption[1]+state.caption[3]<state.railTop,topic+' caption is inside the stage above the rail: '+JSON.stringify(state));
+   assert.ok(width>700?state.svg[0]>=state.guide[0]:height<500?state.svg[0]>=state.guide[0]:state.svg[1]>=state.guide[1],topic+' drawing is separate from the guide');
+   assert.ok(state.caption[1]+state.caption[3]<=Math.min(state.sourceTop,state.creditTop),topic+' scope remains readable above source captions and credits: '+JSON.stringify(state));
+   assert.ok(state.animations.every(s=>s==='paused'));assert.ok(state.width<=width+1);
+  }
+  assert.equal(requestedSpecimens.size,3,'only the three selected specimen assets download');
+  assert.deepEqual([...specimenResponses.values()],[200,200,200],'all selected specimen assets are served successfully');
+  await p.wait(`document.querySelector('.topic-illustration').dataset.sourceState==='unavailable'`,'the isolated provider outage reaches the scientific study');
+  assert.match(await p.evaluate(`document.querySelector('.topic-illustration .ti-status').textContent`),/UNAVAILABLE/,'the display cannot invent operational source availability');
+  await p.evaluate(`document.querySelector('.welcome-layer-demo-actions button[aria-pressed]').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('.topic-illustration').dataset.sourceState==='hidden'`,'comparison reports hidden overlays');
+  await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('.topic-illustration').dataset.sourceState==='unavailable'`,'restoring overlays preserves provider failure');
+  await p.evaluate(`document.querySelector('.welcome-preview-pause').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('.topic-illustration')?.dataset.paused==='false'`,'manual Play starts the drawing');
+  const clocks=()=>p.evaluate(`document.querySelector('.topic-illustration').getAnimations({subtree:true}).map(a=>a.currentTime)`);
+  const moving=await clocks();
+  await p.wait(`document.querySelector('.topic-illustration').getAnimations({subtree:true}).some((a,i)=>a.currentTime>(${JSON.stringify(moving)})[i]+10)`,'animation clocks advance after the compositor resumes');
+  await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.topic-illustration')?.dataset.paused==='true'`,'Pause holds the drawing');
+  await p.wait(`document.querySelector('.topic-illustration').getAnimations({subtree:true}).every(a=>a.playState==='paused'&&!a.pending)`,'the compositor commits the paused frame');
+  const held=await clocks();await pause(130);assert.deepEqual(await clocks(),held,'paused clocks hold exactly');
+  await p.call('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
+  await p.wait(`document.querySelector('.topic-illustration')?.dataset.reduced==='true'`,'OS preference reaches the scene');
+  assert.deepEqual(await clocks(),[],'reduced motion renders the complete static artwork');
+  assert.deepEqual(await p.evaluate(`({url:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`),before,'illustrations never activate the working map');
+  assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage-map canvas').length`),1,'one map renderer');
+  await p.evaluate(`document.querySelector('.welcome-rail-card[data-topic="transport"]').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`!document.querySelector('.topic-illustration')`,'leaving an illustrated subject removes its animation');
+ });
+}

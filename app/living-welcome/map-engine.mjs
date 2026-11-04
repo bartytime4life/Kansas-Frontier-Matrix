@@ -101,7 +101,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
     if (disposed || paused || reduced || budget.efficient || applying || transitioning || !styleLoaded || !view?.topic || (view.topic === 'aviation' && aviationMode !== '3d')) return;
     const next = welcomeDriftLeg(view, leg++);
     applying = true;
-    try { map.easeTo({ bearing: next.bearing, zoom: next.zoom, duration: next.duration, easing: t => t * t * (3 - 2 * t), essential: true }); }
+    try { map.easeTo({ ...next, easing: t => t * t * (3 - 2 * t), essential: true }); }
     finally { applying = false; }
   };
   // A resize or camera stop can emit moveend from inside MapLibre's current
