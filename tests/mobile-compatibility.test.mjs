@@ -13,7 +13,11 @@ test("mobile map keeps one header row with named menus and reachable map actions
   assert.match(page, /<div className="map-dock-menu-representations" role="group" aria-label="Map representation"/);
   assert.doesNotMatch(page, /className="map-dock-representations"/);
   assert.match(page, /<nav className="map-mobile-actions" aria-label="Mobile map actions">/);
-  for (const label of ["Map layers", "Places", "Sources", "Time", "Style"]) assert.match(page, new RegExp(`>${label}(?:\\s|<)`));
+  const mobileActions = page.match(/<nav className="map-mobile-actions"[^>]*>[\s\S]*?<\/nav>/)?.[0];
+  assert.ok(mobileActions, "the compact action bar is present");
+  for (const label of ["Map layers", "Topics", "Time", "Style"]) assert.match(mobileActions, new RegExp(`>${label}(?:\\s|<|\\{)`));
+  assert.match(page, /openAtlasPanel\("places"/);
+  assert.match(page, /aria-label="Source status and data quality"/);
   assert.match(page, /onClick=\{openMapSettings\}>Style<\/button>/);
   assert.match(page, /const openMapSettings = useCallback\(\(\) => \{\s*openMapUtility\("scene"\)/);
   assert.match(page, /<RenderQualityControl value=\{renderQuality\} onChange=\{chooseRenderQuality\} \/>/);

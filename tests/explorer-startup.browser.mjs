@@ -42,7 +42,7 @@ async function leaveCompactLayers(p) {
 }
 
 async function revealControl(p, selector) {
-  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',inline:'nearest',behavior:'instant'})`);
+  await p.evaluate(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),root=node.closest('.living-welcome'),card=node.closest('.topic-choice');if(root?.dataset.carousel==='true'&&root.dataset.fullscreen!=='true'&&card)card.scrollIntoView({block:'nearest',inline:'center',behavior:'instant'});else node.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});})()`);
   await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome')?.getBoundingClientRect();return r&&root&&r.width>0&&r.height>=44&&r.left>=root.left-.5&&r.right<=root.right+.5&&r.top>=root.top-.5&&r.bottom<=root.bottom+.5&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`, 'real control is visible, full-sized and hit-testable: '+selector);
   return p.evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
 }
