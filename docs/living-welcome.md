@@ -10,7 +10,7 @@ layers, with geographic camera motion rather than animated illustrations.
 | Preview | Real mapped content |
 | --- | --- |
 | Flora | Flint Hills aerial imagery, 1.5× display terrain and NLCD 2021 30 m vegetation classes |
-| Fauna | GBIF Animalia 2025 occurrence density, coarse source zoom ≤6, on Kansas imagery |
+| Fauna | GBIF Animalia 2025 occurrence density, coarse source zoom ≤6, on a labelled Kansas vector map |
 | Ecology | Big Blue River / Tuttle Creek imagery and terrain, NLCD and published WBD boundaries |
 | Land | BLM township and section reference lines over Kansas 2024 aerial imagery, zoom 11.3 |
 | History | KDOT 1918 roads and abandoned rail near Abilene–Salina |

@@ -30,7 +30,7 @@ function syncAnimalRecords(map: MapLibreMap, on: boolean) {
   if (!map.getSource(id)) map.addSource(id, { type: 'raster', tiles: [ANIMAL_RECORDS_TILE_URL], tileSize: 512, minzoom: 0, maxzoom: 6,
     bounds: [-102.1, 36.9, -94.5, 40.1], attribution: 'GBIF occurrence contributors · Animalia · 2025 generalized records' });
   if (!map.getLayer(id)) map.addLayer({ id, type: 'raster', source: id,
-    paint: { 'raster-opacity': 0.88, 'raster-resampling': 'nearest', 'raster-fade-duration': 0 } }, map.getStyle().layers?.find(layer => layer.type === 'symbol')?.id);
+    paint: { 'raster-opacity': 0.52, 'raster-resampling': 'nearest', 'raster-fade-duration': 0 } }, map.getStyle().layers?.find(layer => layer.type === 'symbol')?.id);
 }
 
 /** Existing scientific renderers, owned only by the welcome's one map. */

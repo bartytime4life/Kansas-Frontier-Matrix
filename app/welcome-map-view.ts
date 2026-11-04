@@ -67,7 +67,7 @@ const PREVIEW_DETAIL: Partial<Record<TopicId, string>> = {
   agriculture: "USDA NASS crop classes over Kansas aerial imagery; crop classification is separate from soil-moisture measurements.",
   ecology: "Tuttle Creek and the Big Blue River: NLCD 2021 classes and published watershed boundaries on real imagery and 1.5× terrain.",
   flora: "Flint Hills near Tallgrass Prairie: NLCD 2021 grassland, forest and water classes at 30 m over aerial imagery and 1.5× terrain. Cover is not a species inventory.",
-  fauna: "GBIF Animalia occurrence records from 2025 in coarse hexagons over Kansas imagery. Includes observations and specimens; shading is not abundance, absence, tracks or habitat.",
+  fauna: "GBIF Animalia occurrence records from 2025 in coarse hexagons over a labelled Kansas map. Includes observations and specimens; shading is not abundance, absence, tracks or habitat.",
   sky: "Calculated current daylight and twilight on the globe; solar geometry, not observed clouds or stars.",
   land: "BLM township and section survey lines over Kansas 2024 aerial imagery near the Sixth Principal Meridian; survey references, not ownership or access.",
   evidence: "Shawnee County's actual 2020 Census boundary and population record, highlighted on the map. Provider context, not released KFM evidence.",
@@ -79,7 +79,7 @@ const PREVIEW_DETAIL: Partial<Record<TopicId, string>> = {
 // coarse aggregate remains at regional scale and source zoom never exceeds six.
 const GEOGRAPHIC_VIEWS: Partial<Record<TopicId, Partial<Pick<WelcomeView, "basemap" | "scene" | "camera" | "name" | "key">>>> = {
   flora: { basemap: "kansas-aerial", scene: "terrain", camera: { center: [-96.56, 38.43], zoom: 10.1, pitch: 52, bearing: -16 }, name: "Flint Hills vegetation", key: "NLCD 2021 · 30 m · grassland / forest / water" },
-  fauna: { basemap: "imagery", scene: "2d", camera: { center: [-98.38, 38.48], zoom: 6.5, pitch: 0, bearing: 0 }, name: "Kansas animal records", key: "GBIF · 2025 · coarse record density, not animal abundance" },
+  fauna: { basemap: "standard", scene: "2d", camera: { center: [-98.38, 38.48], zoom: 6.5, pitch: 0, bearing: 0 }, name: "Kansas animal records", key: "GBIF · 2025 · coarse record density, not animal abundance" },
   ecology: { basemap: "imagery", scene: "terrain", camera: { center: [-96.64, 39.32], zoom: 9.1, pitch: 48, bearing: -24 }, name: "Big Blue River landscape", key: "NLCD 2021 · 30 m + USGS watershed boundaries" },
   land: { basemap: "kansas-aerial", scene: "2d", camera: { center: [-97.37, 39.62], zoom: 11.3, pitch: 0, bearing: 0 }, name: "Survey sections on the land", key: "BLM PLSS · townships + sections · not property lines" },
   history: { camera: { center: [-97.45, 38.86], zoom: 8.8, pitch: 0, bearing: 0 }, name: "Abilene–Salina routes", key: "KDOT · 1918 roads + abandoned rail reference" },
