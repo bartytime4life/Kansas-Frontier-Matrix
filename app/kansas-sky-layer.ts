@@ -1,6 +1,13 @@
-import type { CustomLayerInterface, CustomRenderMethodInput, Map as MapLibreMap, MapMouseEvent } from "./maplibre-seam";
+import type { CustomLayerInterface, CustomRenderMethodInput, Map as MapLibreMap } from "./maplibre-seam";
 import { TRAFFIC_ALTITUDE_COLORS, type Aircraft } from "./aviation-traffic";
 import { bankHeightOffset, type SkyPoint } from "./kansas-sky";
+
+type SkyPickPoint = Readonly<{ x: number; y: number }>;
+const aircraftPickers = new WeakMap<MapLibreMap, (point: SkyPickPoint) => boolean>();
+/** Called by the map's click owner after measuring/point-picking priority guards. */
+export function pickKansasSkyAircraft(map: MapLibreMap, point: SkyPickPoint): boolean {
+  return aircraftPickers.get(map)?.(point) ?? false;
+}
 
 const ID = "kfm-kansas-sky";
 const LIMIT = 3000, TRAIL_VERTICES = 60000;
@@ -103,9 +110,10 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
     hits=[];
     if(!globe) {const m=input.modelViewProjectionMatrix;for(const a of planes){const [xx,yy]=xy(a.lon,a.lat),x=xx*world,y=yy*world,z=markerAltitude(a),w=m[3]*x+m[7]*y+m[11]*z+m[15];if(w<=0)continue;hits.push({hex:a.hex,x:((m[0]*x+m[4]*y+m[8]*z+m[12])/w+1)*map.getCanvas().clientWidth/2,y:(1-(m[1]*x+m[5]*y+m[9]*z+m[13])/w)*map.getCanvas().clientHeight/2});}}
   },onRemove(){if(gl){for(const b of bundles.values()){gl.deleteProgram(b.program);gl.deleteVertexArray(b.vao);}if(buffer)gl.deleteBuffer(buffer);}bundles.clear();failed.clear();buffer=null;gl=null;hits=[];}};
-  const click=(event:MapMouseEvent)=>{const hit=hits.map(h=>({...h,d:Math.hypot(h.x-event.point.x,h.y-event.point.y)})).filter(h=>h.d<18).sort((a,b)=>a.d-b.d)[0];if(hit)select(hit.hex);};
+  const pick=(point:SkyPickPoint)=>{if(!active)return false;const hit=hits.map(h=>({...h,d:Math.hypot(h.x-point.x,h.y-point.y)})).filter(h=>h.d<18).sort((a,b)=>a.d-b.d)[0];if(!hit)return false;select(hit.hex);return true;};
+  aircraftPickers.set(map,pick);
   const install=()=>{if(active&&map.isStyleLoaded()&&!map.getLayer(ID))map.addLayer(layer);};
   const zoom=()=>{dirty=true;groundMarkers.clear();};
-  map.on("style.load",install);map.on("click",click);map.on("zoom",zoom);install();
-  return { update(next:readonly Aircraft[], nextTrails:readonly SkyTrail[], id:string|null, flatView=false){flat=flatView;planes=next;trails=nextTrails;selected=id;dirty=true;map.triggerRepaint();}, dispose(){active=false;map.off("style.load",install);map.off("click",click);map.off("zoom",zoom);if(map.getLayer(ID))map.removeLayer(ID);} };
+  map.on("style.load",install);map.on("zoom",zoom);install();
+  return { update(next:readonly Aircraft[], nextTrails:readonly SkyTrail[], id:string|null, flatView=false){flat=flatView;planes=next;trails=nextTrails;selected=id;dirty=true;map.triggerRepaint();}, dispose(){active=false;map.off("style.load",install);if(aircraftPickers.get(map)===pick)aircraftPickers.delete(map);map.off("zoom",zoom);if(map.getLayer(ID))map.removeLayer(ID);} };
 }
