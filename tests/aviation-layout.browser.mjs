@@ -164,15 +164,19 @@ for (const layout of layouts) test(`aviation disclosures remain reachable at ${l
   // busy runner a fixed pause can still catch it moving, so wait for the transition itself.
   await p.wait(`(() => { const e=document.querySelector('.layer-panel'),r=e.getBoundingClientRect(); return e.getAnimations().length===0 && r.x>=0 && r.right<=innerWidth+1 && r.bottom<=innerHeight+1; })()`, 'panel animation settled');
   await pause(300);
+  // A fresh workspace opens Start here. Enter the actual catalogue through its
+  // visible tab; never force the hidden research DOM open from the test.
+  await p.activate('[data-layer-view="selected"]');
+  await p.wait(`document.querySelector('.layer-catalog-body:not(.starter-panel-body)').checkVisibility()`, 'On map catalogue visible');
   const mapBefore = await p.rect('.map-stage'), panelBefore = await p.rect('.layer-panel');
   await p.activate(explore + ' > summary');
   await p.wait(`document.querySelector('${explore}').open`, 'Explore open');
   // Critical structural assertion: no expandable element is treated as a grid tile.
   assert.equal(await p.evaluate(`document.querySelector('${aviation}').closest('nav') === null`), true, 'expandable aviation content stays outside the compact tool grid');
-  assert.equal(await p.evaluate(`document.querySelector('${explore} > nav').children.length`), 5);
+  assert.equal(await p.evaluate(`document.querySelector('${explore} > nav').children.length`), 7);
   assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('${explore} > nav')).gridTemplateColumns.split(' ').length`), 2);
   await p.evaluate(`document.querySelector('${explore} > summary').focus()`);
-  for (const label of ['Views','Places','Event Observatory','Kansas historic maps','Map controls','Aviation research']) {
+  for (const label of ['Start here','Views','Places','Event Observatory','Public data library','Kansas historic maps','Map controls','Aviation research']) {
     await p.key('Tab','Tab',9);
     await pause(100);
     const focus=await p.visibleFocus();
