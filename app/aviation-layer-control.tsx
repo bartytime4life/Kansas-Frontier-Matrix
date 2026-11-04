@@ -106,9 +106,11 @@ function ProfileChart({ points, bands, aircraft }: Readonly<{ points: readonly P
   </svg>;
 }
 
-export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, onResearchRecords, inspectRequest, onPickingChange, showRequest }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void;
+export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, onResearchRecords, inspectRequest, onPickingChange, showRequest, onAircraftInspect }: { mapRef: RefObject<MapLibreMap | null>; styleReady: boolean; onSelectionChange?: (selected: boolean) => void;
   /** A category map asks to show this layer; it never hides it. */
   showRequest?: number;
+  /** A map aircraft click reveals its instruments without changing selected layers. */
+  onAircraftInspect?: () => void;
   /** Points this layer offers the "Near here" dossier while shown; null while hidden or loading. */
   onResearchRecords?: (records: readonly ResearchRecord[] | null) => void; onPickingChange?: (active: boolean) => void;
   /** A dossier "Inspect" on an aviation record: open this layer's point inspector there (a new nonce each time). */
@@ -382,6 +384,16 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   // Dossier "Inspect" on an airport or weather station: the airspace column, drone rule and weather at that point.
   const inspectorRef = useRef<HTMLDivElement | null>(null);
   const detailsRef = useRef<HTMLDetailsElement | null>(null);
+  const inspectAircraft = useCallback(() => {
+    if (detailsRef.current) detailsRef.current.open = true;
+    onAircraftInspect?.();
+    // Parent filters/panel visibility commit before focusing the selected aircraft.
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+      const selector = detailsRef.current?.querySelector<HTMLSelectElement>('[aria-label="Kansas Sky aircraft"]');
+      selector?.scrollIntoView({ block: "center", behavior: "instant" });
+      selector?.focus({ preventScroll: true });
+    }));
+  }, [onAircraftInspect]);
   const focusInspector = useRef(false);
   useEffect(() => {
     if (!inspectRequest || !context) return;
@@ -516,7 +528,7 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
           <label><input type="checkbox" checked={showTraffic} onChange={event => setShowTraffic(event.target.checked)} /> Kansas Sky · observed aircraft, trails and recorded replay</label>
           <ul className="aviation-legend">{TRAFFIC_ALTITUDE_COLORS.map(([value, color]) => <li key={value}><i style={{ background: color }} /> {value === 0 ? "Below 1,000 ft / reported surface / unknown height" : `${value.toLocaleString("en-US")} reported ft and above (approximate)`}</li>)}<li><i style={{ background: "#e0301e" }} /> Emergency squawk (7500/7600/7700)</li><li><i style={{ background: "#ffd66b" }} /> Selected aircraft and trail (overrides altitude color)</li></ul>
           {showTraffic && <small role="status">Traffic: {traffic.state === "ready" && traffic.value ? <>{trafficRecords.length} aircraft · retrieved {minutesAgo(traffic.value.retrievedAt, clock) < 1 ? "just now" : `${minutesAgo(traffic.value.retrievedAt, clock)} min ago`} · data <a href={traffic.value.provider.homepage} target="_blank" rel="noreferrer">{traffic.value.provider.title}</a> ({traffic.value.provider.terms}){trafficRecords.some(record => record.emergency) ? " · EMERGENCY squawk present" : ""}</> : traffic.state === "error" ? "Unavailable from every listed receiver network. No cached positions are shown." : "Checking…"}</small>}
-          <KansasSkyControl mapRef={mapRef} styleReady={styleReady} enabled={visible && showTraffic} flat={view === "2d"} onReplayMode={setSkyReplay} envelope={traffic.value} feedState={traffic.state} />
+          <KansasSkyControl mapRef={mapRef} styleReady={styleReady} enabled={visible && showTraffic} flat={view === "2d"} onReplayMode={setSkyReplay} onAircraftInspect={inspectAircraft} envelope={traffic.value} feedState={traffic.state} />
           {skyReplay && <small>Flight replay active: current aircraft are omitted from the side profile and nearby-point inspection. Use Kansas Sky for the selected historical aircraft.</small>}
           <small>Volunteer receiver coverage: some aircraft, especially low or on the ground, are missing. An empty sky on the map is not evidence of no traffic.</small>
         </fieldset>

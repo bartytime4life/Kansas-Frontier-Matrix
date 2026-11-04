@@ -115,10 +115,14 @@ async function pageSession(b, { width, height, touch, motion }) {
   await call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: motion }] });
   await call('Page.addScriptToEvaluateOnNewDocument', { source: "localStorage.setItem('kfm.explorer.guide.dismissed.v2','1');window.__skyErrors=[];window.addEventListener('error',e=>window.__skyErrors.push(e.message));" });
   const evaluate = async expression => {
-    const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });
-    if (result.exceptionDetails) throw new Error(JSON.stringify(result.exceptionDetails));
-    await interceptions.assertHealthy();
-    return result.result.value;
+    try {
+      const result = await call('Runtime.evaluate', { expression, awaitPromise: true, returnByValue: true });
+      if (result.exceptionDetails) throw new Error(JSON.stringify(result.exceptionDetails));
+      await interceptions.assertHealthy();
+      return result.result.value;
+    } catch (error) {
+      throw new Error(`Runtime.evaluate failed for ${expression.slice(0,1200)}: ${error.message}`, {cause:error});
+    }
   };
   const wait = async (expression, label) => {
     const deadline = Date.now() + 15000;
@@ -173,13 +177,24 @@ for (const layout of [{width:1440,height:900,touch:false,motion:'no-preference'}
   await p.evaluate(`(() => {for(const e of document.querySelectorAll('details')) if(e.querySelector('input[aria-label="Show airspace and aviation layers"]'))e.open=true; document.querySelector('input[aria-label="Show airspace and aviation layers"]').click();})()`);
   await p.wait(`document.querySelector('.kansas-sky')`,'sky control loaded from real NASR context');
   await p.wait(`window.__skyMap?.getLayer('kfm-kansas-sky') && window.__skyRender?.aircraftVertices>0`,'real custom aircraft layer issues GPU triangle draws');
-  await p.evaluate(`window.__skyMap.jumpTo({center:[-98.35,38.5],zoom:7,pitch:55})`);
+  await p.evaluate(`void window.__skyMap.jumpTo({center:[-98.35,38.5],zoom:7,pitch:55})`);
   await p.wait(`document.querySelector('.kansas-sky select[aria-label="Kansas Sky aircraft"] option[value="abc123"]')`,'observed synthetic aircraft');
   await p.evaluate(`(() => {const e=document.querySelector('.kansas-sky');for(let p=e.parentElement;p;p=p.parentElement){if(p.tagName==='DETAILS')p.open=true;}const panel=document.querySelector('.layer-panel');if(panel?.getAttribute('aria-hidden')==='true'){const button=[...document.querySelectorAll('button')].find(b=>b.textContent.trim()==='Layers');button?.click();}})()`);
   await pause(500);
-  // Real DOM event selection, followed by native keyboard and pointer playback.
-  await p.evaluate(`(() => {const e=document.querySelector('[aria-label="Kansas Sky aircraft"]');e.value='abc123';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
-  await p.wait(`document.querySelector('.kansas-sky h5')?.textContent.includes('TEST123')`,'aircraft instruments');
+  // A real map silhouette click must reveal its inspector from the inert, closed panel.
+  await p.evaluate(`(()=>{window.__skyMap.jumpTo({center:[-98.35,38.5],zoom:7,pitch:0,bearing:0});document.querySelector('.kansas-sky').closest('details').open=false;})()`);
+  await p.activate('[aria-label="Close Explorer navigation"]');
+  await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='true'`,'Layers closed before map inspection');
+  assert.equal(await p.evaluate(`document.querySelector('[aria-label="Kansas Sky aircraft"]').value`),'','aircraft not selected before click');
+  await pause(500);
+  await p.activate('.maplibregl-canvas');
+  await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='false' && document.querySelector('.kansas-sky h5')?.textContent.includes('TEST123')`,'map click opens aircraft instruments');
+  await p.wait(`document.activeElement===document.querySelector('[aria-label="Kansas Sky aircraft"]')`,'aircraft selector receives focus after panel opens');
+  assert.equal(await p.evaluate(`document.querySelector('[data-layer-view="selected"]').getAttribute('aria-pressed')`),'true','On map view reveals aircraft controls');
+  assert.equal(await p.evaluate(`document.querySelector('.kansas-sky').closest('details').open`),true,'Aviation disclosure opened');
+  assert.equal(await p.evaluate(`document.querySelector('input[aria-label="Hide airspace and aviation layers"]').checked`),true,'inspection keeps Aviation enabled');
+  await p.wait(`(()=>{const e=document.querySelector('[aria-label="Kansas Sky aircraft"]'),r=e.getBoundingClientRect(),h=document.querySelector('.kansas-sky h5').getBoundingClientRect();return r.width>0&&r.top>=0&&r.bottom<=innerHeight&&!e.closest('[inert]')&&e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))&&h.top>=0&&h.bottom<=innerHeight;})()`,'selected aircraft and instruments heading are visible and interactive');
+  await p.evaluate(`void window.__skyMap.jumpTo({pitch:55})`);
   assert.match(await p.evaluate(`document.querySelector('.kansas-sky').textContent`),/Pressure altitude[\s\S]*Geometric · WGS84/);
   assert.match(await p.evaluate(`document.querySelector('.kansas-sky').textContent`),/Reported rollUnavailable/);
   await p.evaluate(`document.querySelector('.kansas-sky-modes button:nth-child(3)').click()`);
@@ -227,7 +242,7 @@ for (const layout of [{width:1440,height:900,touch:false,motion:'no-preference'}
   await p.evaluate(`(${airportToggle}).click()`);
 
   // Reload the actual style, not a fake event; the custom layer reinstalls.
-  await p.evaluate(`window.__skyMap.setStyle({version:8,sources:{},layers:[{id:'synthetic-style-reload',type:'background',paint:{'background-color':'#172832'}}]})`);
+  await p.evaluate(`void window.__skyMap.setStyle({version:8,sources:{},layers:[{id:'synthetic-style-reload',type:'background',paint:{'background-color':'#172832'}}]})`);
   await p.wait(`window.__skyMap.getLayer('kfm-kansas-sky') && window.__skyRender.aircraftVertices>0`,'style reload restores GPU aircraft');
   await p.evaluate(`document.querySelector('.kansas-sky-clock').scrollIntoView({block:'center',behavior:'instant'})`);
   if(process.env.KFM_SKY_SCREENSHOTS){

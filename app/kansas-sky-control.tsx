@@ -45,7 +45,9 @@ function sessionStore() {
   return {buffer,read:()=>snapshot,subscribe:(fn:()=>void)=>{listeners.add(fn);return()=>{listeners.delete(fn);};},ingest:(value:TrafficEnvelope)=>{buffer.ingest(value);notify();},select:(hex:string|null)=>{buffer.select(hex);notify();}};
 }
 
-export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,flat=false,onReplayMode}:{mapRef:RefObject<MapLibreMap|null>;styleReady:boolean;enabled:boolean;envelope:(TrafficEnvelope&{receivedAt:number})|null;feedState:string;flat?:boolean;onReplayMode?:(replaying:boolean)=>void}){
+export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,flat=false,onReplayMode,onAircraftInspect}:{mapRef:RefObject<MapLibreMap|null>;styleReady:boolean;enabled:boolean;envelope:(TrafficEnvelope&{receivedAt:number})|null;feedState:string;flat?:boolean;onReplayMode?:(replaying:boolean)=>void;onAircraftInspect?:()=>void}){
+  const inspectCallback=useRef(onAircraftInspect);
+  useEffect(()=>{inspectCallback.current=onAircraftInspect;},[onAircraftInspect]);
   const [store]=useState(sessionStore);
   const snapshot=useSyncExternalStore(store.subscribe,store.read,store.read);
   const [mode,setMode]=useState<Mode>("live"),[selected,setSelected]=useState<string|null>(null);
@@ -76,7 +78,7 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
   useEffect(()=>{latestPicked.current=picked;},[picked]);
   const selectedSource=useMemo(()=>{const points=selected?tracks.get(selected):undefined;return points?.findLast(point=>point.observedAt<=effectiveCursor)?.providerId??null;},[tracks,selected,effectiveCursor]);
   const sourceIds=useMemo(()=>[...new Set([...tracks.values()].flatMap(points=>points.map(point=>point.providerId)))].join(", "),[tracks]);
-  useEffect(()=>{const map=mapRef.current;if(!map||!styleReady||!enabled||hidden)return;try{layer.current=attachKansasSky(map,setSelected,setRenderError);}catch{queueMicrotask(()=>setRenderError("Aircraft renderer unavailable; use the aircraft list."));}return()=>{layer.current?.dispose();layer.current=null;};},[mapRef,styleReady,enabled,hidden]);
+  useEffect(()=>{const map=mapRef.current;if(!map||!styleReady||!enabled||hidden)return;try{layer.current=attachKansasSky(map,hex=>{setSelected(hex);setCamera("free");inspectCallback.current?.();},setRenderError);}catch{queueMicrotask(()=>setRenderError("Aircraft renderer unavailable; use the aircraft list."));}return()=>{layer.current?.dispose();layer.current=null;};},[mapRef,styleReady,enabled,hidden]);
   useEffect(()=>{layer.current?.update(aircraft,trails,selected,flat);},[aircraft,trails,selected,enabled,hidden,styleReady,flat]);
   useEffect(()=>{const map=mapRef.current;if(!map||!enabled)return;const release=()=>setCamera("free");const move=()=>{if(!ownCameraMove.current)release();};map.on("movestart",move);const canvas=map.getCanvas();canvas.addEventListener("pointerdown",release);canvas.addEventListener("wheel",release,{passive:true});canvas.addEventListener("keydown",release);return()=>{map.off("movestart",move);canvas.removeEventListener("pointerdown",release);canvas.removeEventListener("wheel",release);canvas.removeEventListener("keydown",release);};},[mapRef,enabled]);
   useEffect(()=>{const map=mapRef.current;if(!map||!picked||camera!=="follow"||reduced||flat||hidden||!enabled)return;ownCameraMove.current=true;try{map.jumpTo({center:[picked.lon,picked.lat],pitch:55,bearing:picked.trackDeg??map.getBearing()});}finally{ownCameraMove.current=false;}},[mapRef,picked,camera,reduced,flat,hidden,enabled]);
