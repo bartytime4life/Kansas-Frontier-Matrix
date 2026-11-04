@@ -42,6 +42,16 @@ test('3000-aircraft bounded history reduces trail detail without dropping curren
  assert.ok([...b.tracks().values()].reduce((n,p)=>n+p.length,0)<=sky.SKY_MAX_REGIONAL_POINTS);assert.equal(b.truncated,true);assert.equal(b.at(epoch+790000).length,3000);
  const trails=sky.trailSegments(b.tracks(),epoch+790000);assert.ok(trails.reduce((n,t)=>n+t.points.length,0)<=sky.SKY_MAX_TRAIL_POINTS);
 });
+test('equal-time identity churn cannot exceed the hard history cap or evict the current snapshot',()=>{
+ const b=new sky.SkyBuffer();let current=[];
+ for(let batch=0;batch<35;batch++){
+  current=Array.from({length:3000},(_,i)=>point(0,{hex:(batch*3000+i+1).toString(16).padStart(6,'0')}));
+  b.ingest(envelope(0,current));
+ }
+ assert.ok([...b.tracks().values()].reduce((n,p)=>n+p.length,0)<=sky.SKY_MAX_REGIONAL_POINTS);
+ for(const p of current)assert.equal(b.tracks().has(p.hex),true);
+ assert.equal(b.truncated,true);
+});
 test('live parser preserves UTC observations, position method and optional instruments without confusing height datums',()=>{
  const raw={hex:'a00001',lat:38,lon:-98,seen_pos:2,alt_baro:30000,alt_geom:31000,type:'mlat',roll:8,ias:250,mach:0.7};
  const {records}=traffic.parseTraffic({now:epoch/1000,ac:[raw]},epoch+1000);

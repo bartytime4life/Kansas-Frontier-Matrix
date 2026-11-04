@@ -92,8 +92,9 @@ export class SkyBuffer {
   private data = new Map<string, SkyPoint[]>();
   private selected: string | null = null;
   private latest = 0;
+  private current = new Set<string>();
   truncated = false;
-  clear(): void { this.data.clear(); this.latest = 0; this.truncated = false; }
+  clear(): void { this.data.clear(); this.current.clear(); this.latest = 0; this.truncated = false; }
   select(hex: string | null): void { this.selected = hex; this.prune(); }
   tracks(): SkyTracks { return this.data; }
   range(hex?: string): readonly [number, number] | null {
@@ -105,6 +106,8 @@ export class SkyBuffer {
   ingest(envelope: TrafficEnvelope): void {
     const retrieved = Date.parse(envelope.retrievedAt);
     if (!Number.isFinite(retrieved) || !envelope.provider?.id || !Array.isArray(envelope.records)) return;
+    const currentSnapshot = retrieved >= this.latest;
+    if (currentSnapshot) this.current.clear();
     this.latest = Math.max(this.latest, retrieved);
     this.truncated ||= Boolean(envelope.truncated || envelope.records.length > 3000);
     for (const record of envelope.records.slice(0, 3000)) {
@@ -112,6 +115,7 @@ export class SkyBuffer {
       const observedAt = record.observedAt ? Date.parse(record.observedAt) : retrieved - record.positionAgeS * 1000;
       const point: SkyPoint = { ...record, observedAt, providerId: envelope.provider.id };
       if (!validSkyPoint(point) || observedAt > retrieved + 5000 || observedAt < retrieved - SKY_MAX_GAP_MS) continue;
+      if (currentSnapshot) this.current.add(record.hex);
       let points = this.data.get(record.hex);
       if (!points) { points = []; this.data.set(record.hex, points); }
       const index = lowerBound(points, observedAt);
@@ -144,6 +148,14 @@ export class SkyBuffer {
     // Resolve equal timestamps deterministically while retaining newest samples per aircraft.
     for (const [hex, points] of this.data) if (hex !== this.selected && regionalCount > SKY_MAX_REGIONAL_POINTS) {
       const cut = Math.min(lowerBound(points, threshold + 1), Math.max(0, points.length - 1), regionalCount - SKY_MAX_REGIONAL_POINTS);
+      points.splice(0, cut); regionalCount -= cut;
+      if (!points.length) this.data.delete(hex);
+    }
+    // Adversarial identity churn can leave more than the cap in one-point,
+    // same-time historical tracks. Preserve the latest feed (at most 3,000)
+    // and selected aircraft; retire historical ties in stable insertion order.
+    for (const [hex, points] of this.data) if (hex !== this.selected && !this.current.has(hex) && regionalCount > SKY_MAX_REGIONAL_POINTS) {
+      const cut = Math.min(points.length, regionalCount - SKY_MAX_REGIONAL_POINTS);
       points.splice(0, cut); regionalCount -= cut;
       if (!points.length) this.data.delete(hex);
     }

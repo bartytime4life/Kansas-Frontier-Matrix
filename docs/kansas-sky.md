@@ -3,6 +3,8 @@
 Kansas Sky lives inside the working Aviation layer. It is not a separate demo:
 Layers, Find, airspace and ordinary map controls remain available. The welcome
 Aviation glimpse remains zones-only. Water-animation defaults are unchanged.
+Clicking a map aircraft opens Layers → On map and focuses its instruments;
+the aircraft list provides the same selection without requiring a pointer.
 
 ## Observation and time contract
 
@@ -47,6 +49,8 @@ History expires with the page; toggling the layer off stops drawing/polling.
 Trails use at most 20,000 retained display points; visual detail is thinned before
 current aircraft are removed. The live feed still caps 3,000 aircraft and reports
 omitted/truncated records. The custom layer uses persistent bounded GPU buffers.
+Equal-time identity churn also obeys the history cap, preserving the latest
+accepted feed snapshot before retiring historical one-point tracks.
 The aircraft list supplies keyboard selection, including globe views where
 precise elevated click picking is unavailable. Manual map movement releases
 Follow/Orbit; reduced motion disables automatic camera movement.

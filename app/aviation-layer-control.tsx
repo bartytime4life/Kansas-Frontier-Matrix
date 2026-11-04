@@ -386,13 +386,8 @@ export function AviationLayerControl({ mapRef, styleReady, onSelectionChange, on
   const detailsRef = useRef<HTMLDetailsElement | null>(null);
   const inspectAircraft = useCallback(() => {
     if (detailsRef.current) detailsRef.current.open = true;
+    // The parent owns focus after its panel and catalog filters commit.
     onAircraftInspect?.();
-    // Parent filters/panel visibility commit before focusing the selected aircraft.
-    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
-      const selector = detailsRef.current?.querySelector<HTMLSelectElement>('[aria-label="Kansas Sky aircraft"]');
-      selector?.scrollIntoView({ block: "center", behavior: "instant" });
-      selector?.focus({ preventScroll: true });
-    }));
   }, [onAircraftInspect]);
   const focusInspector = useRef(false);
   useEffect(() => {
