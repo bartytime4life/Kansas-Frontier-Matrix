@@ -75,6 +75,8 @@ whether the PC is connected (`online`). It is answered by the site alone.
 | `usgs-earthquakes` | captured USGS earthquakes | — | — | 1–50 (50) |
 | `usgs-streamflow-sites` | captured USGS gauges, 181 | — | — | 1–500 (500) |
 | `usgs-streamflow` | captured USGS readings, 35k | `site` | `parameter`, `from`, `to` (UTC) | 1–1000 (500) |
+| `recovered-observations`, `recovered-bulk` | 189 recovered collections (`scripts/local-data/recovered-catalog.json`) | `collection` | `after` (cursor), `record` + `field` + `start` (one long field in parts) | 1–50 (20) |
+| `archive-search` | Chronicling America Kansas pages (OCR, 39,700 at first release) and Internet Archive Kansas texts, through the feeds' FTS5 indexes | `q`, `source` (`newspapers` or `texts`) | `from`, `to` (YYYY or YYYY-MM-DD), `title` (LCCN or IA identifier), `facets` | 1–50 (20); offset to 1,000 |
 
 Except for `ghcndex-indices` (a fixed 26-entry dictionary), all take `limit` and `offset`. `GET /api/local-data` gives each parameter's exact
 form. Notes that travel with each dataset's `source`:
@@ -97,6 +99,15 @@ form. Notes that travel with each dataset's `source`:
   public source notes.
 - **Captures:** provider properties as captured in October 2026; not live feeds.
   USGS values are mostly provisional.
+- **Archive search:** `q` is words, `"quoted phrases"`, `word*` prefixes (three
+  or more letters) and `AND`/`OR`/`NOT` between terms, at most 8 terms; the
+  gateway builds the FTS5 expression itself, so column filters, `NEAR` and
+  parentheses are refused as `QUERY_INVALID`. Results are ranked by bm25 over
+  uncorrected OCR; each snippet marks matched terms between `⟦` and `⟧`.
+  `total` stops at 10,000 (`totalCapped`). `facets=1` adds hits by year and by
+  title. Newspaper coordinates are each title's place of publication from the
+  newspaper directory, not an event location. The pages and texts are the same
+  rows `recovered-bulk` already serves (`bulk-newspaper-pages`, `bulk-ia-texts`).
 
 **Publication approvals (owner, 2026-11-01):**
 
