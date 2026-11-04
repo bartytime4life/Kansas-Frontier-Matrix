@@ -192,12 +192,23 @@ header records the provider details.
 | `newspaper-directory` | LOC Directory of U.S. Newspapers, Kansas facet | `kfm_loc_newspaper_directory` | Every 28 days; 70 pages at least 6 s apart; resumes from a spool; a changed directory replaces the old one |
 | `towers` | FCC ASR weekly `r_tower.zip`, via FCC anonymous FTP because its web servers answer 403 | `kfm_asr_registrations`, `_locations`, `_entities`, `_history`, `_remarks`, `_special_conditions` | Every 7 days; Kansas cut per record type; `FCC_BLOCKED` in state if no route serves it |
 
+| `census-acs-full` | ACS 5-year table-based summary files on `www2.census.gov`, 2021-2024, every table (bulk database) | `kfm_census_acs_values`, `kfm_census_acs_geographies`, `kfm_census_acs_variables` | Each table's national file is cut to Kansas and loaded in transactions of at most 1M rows or 60 seconds, with the lock free between them. A run lasts about 45 minutes and resumes where the last stopped; about 40-70 runs. A file is loaded again when its listed time changes. Firewall-rejected tables are listed under `rejected` and retried |
+| `census-decennial-full` | 2020 Census: P.L. 94-171 and DHC Kansas files, every table and iteration with block values (bulk database) | `kfm_census_decennial_values`, `kfm_census_decennial_geographies`, `kfm_census_decennial_variables` | Same short transactions and resume. About 20-60 runs. Continues the bulk database's `census-decennial` state; afterwards it rechecks yearly, and a changed zip reloads what changed |
+
 `towers` has no timer. FCC's web servers refuse this pipeline, and whether its
 FTP server is an acceptable route is the owner's decision. To drop FTP, remove
 its entry from `ASR_ROUTES`.
 
 `archive-texts` runs daily at 23:45, with a second slot at 12:10 during the
 backfill of about 30 to 40 runs. `newspaper-directory` runs on Thursdays at 17:15.
+During their backfills `census-decennial-full` runs at 05:15, 09:15, 13:15, 17:15
+and 21:15, and `census-acs-full` at 07:15, 11:15, 15:15, 19:15 and 23:15. Drop each
+to one daily run once its backfill finishes.
+
+The two Census backfills take the bulk database to about 112 GB, so its full
+snapshot would take 4.5 to 6.5 hours. On this PC it runs weekly, on Sundays at
+03:15, through a `kfm-bulk-snapshot.timer.d` override. The raw-file backup stays
+nightly.
 
 ## Install and run
 

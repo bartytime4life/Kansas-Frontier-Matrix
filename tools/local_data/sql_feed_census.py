@@ -63,6 +63,32 @@ Tables: ``kfm_census_decennial_values`` (product, vintage, table_id, geoid, vari
 as INTEGER) and ``kfm_census_decennial_variables`` (product, vintage, table_id, variable, segment, position, label,
 title, universe).
 
+census-acs-full and census-decennial-full: every table, for the bulk database (``--bulk-db``, ``BULK_DATABASE_REQUIRED``
+otherwise, because observations.sqlite has tables and state rows of the same names). They share the curated feeds' providers,
+files, table layouts, keys, source ids and kept-file names, so a cut with the same bytes is kept once, and their state is the
+bulk database's own ``census-acs`` and ``census-decennial`` rows. census-acs-full reads every listed table of 2024, 2023, 2022
+and 2021 (1,198, 1,193, 1,182 and 1,145 tables; 192 GB of national files). The allocation tables (B98…, B99…) publish estimates
+without margins, so their margin_of_error is NULL. PR tables and national-only tables have no Kansas rows. Sized 2026-11-03 from
+the listings and a stratified sample of 32 tables: about 415 million values, 43 GB. census-decennial-full reads every table and
+iteration of both products at DEC_FULL_LEVELS. The geography selection is the recovered state's: DEC_LEVELS and the blocks, which
+are summary level 750 in the PL and 100 in the DHC. So PL's 6 tables are 53.8 million values and the DHC's 249 are 580.0 million
+(counted from the real zip; 533.8 million are block values; 30 of the 44 segments have no block rows), at 104 bytes a row with
+its index as measured in the bulk database: 66 GB in all, 5.4 GB of it loaded before this feed existed.
+Short transactions: on the PC's spinning disk one segment held the pipeline lock for most of an hour, because each (geography,
+table) pair lands somewhere else in the values index: 26.3 million rows took 35 minutes, and 1.8 million with one table per
+block had not finished after 17. Here a source's record is committed as 'loading', its rows commit in chunks of at most
+``FULL_CHUNK_ROWS`` or ``FULL_CHUNK_SECONDS``, and it turns 'complete' only when every row is in and counted. The pipeline lock
+is released between chunks and stays free for ``FULL_CHUNK_PAUSE``, longer than a waiter's poll; the WAL is checkpointed in
+that gap. Rows are numbered in the kept cut's order, so an interrupted load, even a killed process, resumes after the highest
+row_number, and (file_id, row_number) makes a duplicate impossible. While a file loads, its rows are visible with its source
+'loading': a reader that needs finished data joins kfm_sql_sources on state='complete'. A changed file marks the old version
+superseded, removes its rows in chunks, then loads.
+Schedule: a run starts nothing after ``FULL_RUN_SECONDS`` (45 minutes) and reports ``longest_transaction_seconds``. National file
+requests are at least ``FULL_REQUEST_SPACING`` apart, and an HTTP 429 ends the run, which the next one resumes. A table that
+www2.census.gov's firewall answers with its "Request Rejected" page (2024 B18101F and 2023 B19053 and B19066, seen 2026-11-03) is
+listed under ``rejected`` and asked for again each run; it does not hold back the others. After the backfill census-acs-full reads
+two listings per vintage and census-decennial-full makes no request until its yearly recheck.
+
 eia-seds: the State Energy Data System bulk file, https://www.eia.gov/opendata/bulk/SEDS.zip (9.5 MB; 63 MB of
 JSON lines, one object per line: 48,046 series, 970 categories, and geoset and relation lines, documented at
 https://www.eia.gov/opendata/bulkfiles.php). Kansas is the series with geography USA-KS, whose ids are
@@ -75,13 +101,16 @@ tables. Tables: ``kfm_eia_seds_series`` (the 13 series fields), ``kfm_eia_seds_v
 """
 from __future__ import annotations
 
+from collections import deque
 from contextlib import contextmanager
 from datetime import date
 import gzip
 import io
+from itertools import islice
 import json
 from pathlib import Path
 import re
+import time
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -139,9 +168,10 @@ def _days_since(ctx, day: str | None) -> int | None:
     return None if not day else (ctx.now().date() - date.fromisoformat(day)).days
 
 
-def _load_cut(ctx, db, *, feed, url, temp, limit, cut, raw_name, key, source_id, table, rows, width, extra, summary):
+def _load_cut(ctx, db, *, feed, url, temp, limit, cut, raw_name, key, source_id, table, rows, width, extra, summary, loader=None):
     """Stream url to a temp file, cut it to Kansas with cut(full, kept) -> rows kept, keep the cut and load it.
-    None when the provider no longer has the file; {"state": "empty"} when nothing in it is Kansas."""
+    None when the provider no longer has the file; {"state": "empty"} when nothing in it is Kansas.
+    loader replaces the one-transaction load_version, and takes the pipeline lock itself."""
     full, kept_path = core.temp_path(ctx, temp), core.temp_path(ctx, temp + ".kansas.gz")
     try:
         fetched = core.download(ctx, url, full, limit=limit, timeout=1800, missing_ok=True)
@@ -153,6 +183,9 @@ def _load_cut(ctx, db, *, feed, url, temp, limit, cut, raw_name, key, source_id,
             return {"state": "empty", "rows": 0}
         path, digest = core.store_raw(ctx, feed, raw_name(core.file_sha256(kept_path)[:12]), kept_path, url=fetched.url, fetched=fetched,
                                       original=full, extra={"key": key, "kansas_rows": kept, **extra})
+        if loader is not None:
+            return loader(db, ctx, source_id=source_id, key=key, path=path, digest=digest, url=fetched.url, table=table,
+                          rows=rows(path), width=width)
         with core.pipeline_lock(ctx):
             return core.load_version(db, ctx, source_id=source_id, key=key, path=path, digest=digest, url=fetched.url, table=table,
                                      rows=rows(path), width=width)
@@ -295,12 +328,12 @@ def _acs_geos_rows(vintage: int):
     return rows
 
 
-def _acs_table_cut(name: str, table: str, kansas: set[bytes]):
+def _acs_table_cut(name: str, table: str, kansas: set[bytes], check=_acs_variables):
     def cut(full: Path, kept_path: Path) -> int:
         with open(full, "rb") as src, _gz_out(kept_path) as out:
             head = src.readline()
             columns = _text(head).split("|")
-            _acs_variables(columns, table, name)
+            check(columns, table, name)
             out.write(head)
             kept = 0
             for line in src:
@@ -559,10 +592,12 @@ def _dec_signature() -> str:
     return core.sha256(core.canonical([DEC_LEVELS, DEC_GEOGRAPHY_ONLY, DEC_ITERATIONS, DEC_ITERATIONS_SKIP]).encode())[:16]
 
 
-def _dec_geo_cut(z, product: str, fileid: bytes, kept_path: Path) -> tuple[int, dict]:
-    """Kept geography lines, with a header row; returns (lines kept, LOGRECNO -> GEOID of the geographies with values)."""
+def _dec_geo_cut(z, product: str, fileid: bytes, kept_path: Path, levels=None, geography_only=None) -> tuple[int, dict]:
+    """Kept geography lines, with a header row; returns (lines kept, LOGRECNO -> GEOID of the geographies with values).
+    levels and geography_only default to the curated DEC_LEVELS and DEC_GEOGRAPHY_ONLY."""
     member, kept, with_values = f"ksgeo2020.{product}", 0, {}
-    extra = DEC_GEOGRAPHY_ONLY.get(product, ())
+    levels = DEC_LEVELS if levels is None else levels
+    extra = DEC_GEOGRAPHY_ONLY.get(product, ()) if geography_only is None else geography_only
     try:
         src = z.open(member)
     except KeyError:
@@ -574,9 +609,9 @@ def _dec_geo_cut(z, product: str, fileid: bytes, kept_path: Path) -> tuple[int, 
             if len(p) != len(DEC_GEO_COLUMNS) or p[0] != fileid or p[1] != b"KS":
                 raise FeedError(f"DEC_GEO_COLUMNS_CHANGED {member}")
             level = p[2].decode("latin-1")
-            if p[4] != b"00" or (level not in DEC_LEVELS and level not in extra):
+            if p[4] != b"00" or (level not in levels and level not in extra):
                 continue
-            if level in DEC_LEVELS:
+            if level in levels:
                 with_values[p[7].decode("latin-1")] = _text(p[8])
             out.write(line)
             kept += 1
@@ -724,6 +759,408 @@ def census_decennial(ctx, max_segments: int = 24) -> dict:
         for product in DEC_SOURCES:
             state = _dec_product(ctx, db, state, product, summary, budget)
         return {**summary, "complete": [p for p in DEC_SOURCES if state.get(p, {}).get("complete")]}
+    finally:
+        db.close()
+
+
+# --- Full loads for the bulk database: every table, in short transactions ----------------------------------------
+
+ACS_FULL_VINTAGES = (2024, 2023, 2022, 2021)   # newest first, so an interrupted backfill has the current release
+# The recovered PL selection (753a2c663a66adb5) added 750 to DEC_LEVELS, the PL's block level. The DHC's block level is 100.
+DEC_FULL_LEVELS = {"pl": (*DEC_LEVELS, "750"), "dhc": (*DEC_LEVELS, "100")}
+FULL_CHUNK_ROWS = 1_000_000     # at most this many rows in one transaction...
+FULL_CHUNK_SECONDS = 60         # ...and no more writes after this long holding the pipeline lock
+FULL_BATCH_ROWS = 10_000        # how often a transaction looks at those two limits
+FULL_CHUNK_PAUSE = 6            # seconds the lock stays free between chunks: pipeline_lock's waiters look every 5 seconds
+FULL_RUN_SECONDS = 2700         # a run starts no chunk or file after this long, so it ends in about 45 minutes
+FULL_REQUEST_SPACING = 2        # seconds between national file requests: a faster header scan drew 429s, this pace none
+FULL_CACHE_KIB = 262_144        # page cache of a full load, because 2 MB means rereading index pages from the spinning disk
+
+
+class _Shared(FeedError):
+    """These exact bytes are already recorded under another key, and kfm_sql_sources.sha256 is unique."""
+
+
+def _open_bulk(ctx):
+    """The bulk database, set up for short transactions. A context not routed there is refused: observations.sqlite has
+    tables and a census-decennial state row of the same names, and they must never be mixed. Its WAL is checkpointed
+    between chunks (_between_chunks), not inside a commit, because that is the slow part and needs no pipeline lock."""
+    if ctx.bulk_db is None or Path(ctx.db_path) != Path(ctx.bulk_db):
+        raise FeedError("BULK_DATABASE_REQUIRED")
+    db = core.open_db(ctx)
+    db.execute(f"PRAGMA cache_size=-{FULL_CACHE_KIB}")
+    db.execute("PRAGMA wal_autocheckpoint=0")
+    return db
+
+
+def _full_budget(run_seconds: float, run_rows, chunk_rows: int) -> dict:
+    return {"deadline": time.monotonic() + run_seconds, "rows": float("inf") if run_rows is None else run_rows, "chunk_rows": chunk_rows,
+            "chunks": 0, "longest": 0.0}
+
+
+def _full_spent(budget: dict) -> bool:
+    return budget["rows"] <= 0 or time.monotonic() >= budget["deadline"]
+
+
+def _full_summary(budget: dict) -> dict:
+    return {"transactions": budget["chunks"], "longest_transaction_seconds": round(budget["longest"], 1)}
+
+
+def _between_chunks(db, pause: bool) -> None:
+    """With the pipeline lock released: move the WAL into the database file (a passive checkpoint neither waits for
+    nor blocks anyone), then, with more of the same file to come, leave the lock free for longer than a waiter's
+    5-second poll. flock is not fair, so taking it straight back would starve the waiters however short the chunks."""
+    db.execute("PRAGMA wal_checkpoint(PASSIVE)").fetchall()
+    if pause:
+        time.sleep(FULL_CHUNK_PAUSE)
+
+
+def _chunks(ctx, db, budget: dict, write) -> bool:
+    """Repeat write() -> rows written, 0 when nothing is left, in short transactions, taking the pipeline lock for each
+    one. True when write() finished, False when the run's budget ended first; what was committed stays committed."""
+    while not _full_spent(budget):
+        core.guard(ctx)
+        written, finished = 0, False
+        with core.pipeline_lock(ctx):
+            started = time.monotonic()
+            db.execute("BEGIN IMMEDIATE")
+            try:
+                while True:   # at least one batch, so a slow disk still moves forward
+                    step = write()
+                    written += step
+                    finished = not step
+                    if finished or written >= budget["chunk_rows"] or time.monotonic() - started >= FULL_CHUNK_SECONDS:
+                        break
+                db.execute("COMMIT")
+            except BaseException:
+                if db.in_transaction:
+                    db.execute("ROLLBACK")
+                raise
+            held = time.monotonic() - started
+        budget.update(rows=budget["rows"] - written, chunks=budget["chunks"] + 1, longest=max(budget["longest"], held))
+        _between_chunks(db, not finished or held >= FULL_CHUNK_PAUSE)
+        if finished:
+            return True
+    return False
+
+
+def _load_chunked(db, ctx, *, source_id, key, path, digest, url, table, rows, width, budget) -> dict:
+    """``load_version`` for a file too large for one transaction, with the same keys and the same rule: a source is
+    'complete' only when every row is in. Here its 'loading' record is committed, and its rows commit in chunks numbered
+    from 1 in file order, so the highest row_number says exactly where to resume, and (file_id, row_number) makes a
+    duplicate impossible. A changed file marks the older version 'superseded' as it starts, removes those rows in chunks
+    too, and only then loads. Returns state "pending" when the run's budget ended first. Readers wanting finished data
+    join kfm_sql_sources on state='complete'; the snapshot's counts already do."""
+    receipt = core.receipt_for(ctx, path)
+    if receipt.get("key") != key:
+        raise FeedError(f"RECEIPT_KEY_MISMATCH {key}")
+    with core.pipeline_lock(ctx):
+        records = db.execute("SELECT file_id, sha256, state FROM kfm_sql_sources WHERE source_id=? AND json_extract(receipt_json,'$.key')=?",
+                             (source_id, key)).fetchall()
+        if (digest, "complete") in {(sha, state) for _, sha, state in records}:
+            return {"state": "unchanged", "rows": 0, "superseded": 0}
+        file_id = next((f for f, sha, state in records if sha == digest and state == "loading"), None)
+        replaced = [f for f, _, state in records if state != "superseded" and f != file_id]
+        if file_id is None and core.loaded(db, digest):
+            raise _Shared(f"SOURCE_CONTENT_SHARED {key}")   # as in load_version
+        if file_id is None:
+            file_id = core.begin_source(db, ctx, source_id, path, digest, url, receipt)
+        else:
+            db.execute("BEGIN IMMEDIATE")
+        try:
+            db.executemany("UPDATE kfm_sql_sources SET state='superseded' WHERE file_id=?", [(f,) for f in replaced])
+            db.execute("COMMIT")
+        except BaseException:
+            if db.in_transaction:
+                db.execute("ROLLBACK")
+            raise
+
+    def removal(old: int):
+        def write() -> int:
+            top = db.execute(f"SELECT MAX(row_number) FROM {table} WHERE file_id=?", (old,)).fetchone()[0]
+            if top is None:
+                return 0
+            return db.execute(f"DELETE FROM {table} WHERE file_id=? AND row_number>?", (old, top - FULL_BATCH_ROWS)).rowcount
+        return write
+
+    for old in [f for f, _, _ in records if f != file_id]:
+        if not _chunks(ctx, db, budget, removal(old)):
+            return {"state": "pending", "rows": 0, "superseded": len(replaced)}
+    done = db.execute(f"SELECT COALESCE(MAX(row_number),0) FROM {table} WHERE file_id=?", (file_id,)).fetchone()[0]
+    source = iter(rows)
+    deque(islice(source, done), maxlen=0)   # outside the lock: the kept cut is immutable, so its order is the row order
+    sql, count = f"INSERT INTO {table} VALUES ({','.join('?' * (width + 2))})", done
+
+    def write() -> int:
+        nonlocal count
+        batch = []
+        for row in islice(source, FULL_BATCH_ROWS):
+            if len(row) != width:
+                raise FeedError(f"ROW_SHAPE {key} {count + len(batch) + 1}")
+            batch.append((file_id, count + len(batch) + 1, *row))
+        db.executemany(sql, batch)
+        count += len(batch)
+        return len(batch)
+
+    if not _chunks(ctx, db, budget, write):
+        return {"state": "pending", "rows": count - done, "superseded": len(replaced)}
+    stored = db.execute(f"SELECT COUNT(*) FROM {table} WHERE file_id=?", (file_id,)).fetchone()[0]
+    if stored != count:
+        raise FeedError(f"FULL_LOAD_COUNT_MISMATCH {key} {stored} {count}")
+    with core.pipeline_lock(ctx):
+        db.execute("BEGIN IMMEDIATE")
+        core.finish_source(db, file_id, count)
+    return {"state": "loaded", "rows": count - done, "superseded": len(replaced)}
+
+
+class _Rejected(FeedError):
+    """www2.census.gov's firewall answered 200 with a short "Request Rejected" page instead of this table."""
+
+
+def _acs_full_variables(columns: list[str], table: str, name: str) -> tuple[list[str], int]:
+    """(variables, columns per variable). Most tables pair estimate and margin. The 2021-2024 allocation tables (B98…, B99…)
+    publish estimates alone, GEO_ID|B992705_E001|B992705_E002, so they have no margins. Any other header stops the feed,
+    except the firewall's page (_Rejected), which must not hold back every table after it."""
+    if "<title>Request Rejected</title>" in columns[0]:
+        raise _Rejected(f"ACS_REQUEST_REJECTED {name}")
+    estimates = [re.fullmatch(re.escape(table) + r"_E(\d+)", c) for c in columns[1:]]
+    if columns[0] == "GEO_ID" and estimates and all(estimates):
+        return [f"{table}_{m.group(1)}" for m in estimates], 1
+    return _acs_variables(columns, table, name), 2
+
+
+def _acs_full_rows(vintage: int, table: str):
+    def rows(path: Path):
+        lines = _cut_rows(path)
+        variables, step = _acs_full_variables(next(lines), table, path.name)
+        for p in lines:
+            for i, variable in enumerate(variables):
+                yield (vintage, table, p[0], variable, _num(p[step * i + 1]), _num(p[2 * i + 2]) if step == 2 else None)
+    return rows
+
+
+def _pace(budget: dict) -> None:
+    """Keep FULL_REQUEST_SPACING between the starts of national file downloads: the many tiny tables come back at once."""
+    wait = budget.get("next_request", 0) - time.monotonic()
+    if wait > 0:
+        time.sleep(wait)
+    budget["next_request"] = time.monotonic() + FULL_REQUEST_SPACING
+
+
+def _acs_full_vintage(ctx, db, state: dict, vintage: int, summary: dict, budget: dict) -> dict:
+    base = ACS.format(vintage=vintage)
+    docs, data = (ctx.fetch(base + folder, limit=ACS_LISTING_LIMIT, missing_ok=True) for folder in ("documentation/", "data/5YRData/"))
+    if docs is None or data is None:
+        summary["unpublished"].append(vintage)
+        return state
+    docs, data = _listing(docs.body), _listing(data.body)
+    geos, shells = f"Geos{vintage}5YR.txt", f"ACS{vintage}5YR_Table_Shells.txt"
+    if geos not in docs or shells not in docs:
+        if state.get("vintages", {}).get(str(vintage)):
+            raise FeedError(f"ACS_LISTING_CHANGED {vintage}")
+        summary["unpublished"].append(vintage)
+        return state
+    vs = state.setdefault("vintages", {}).setdefault(str(vintage), {})
+    vs.setdefault("tables", {})
+
+    def loader(db, ctx, **fields):
+        return _load_chunked(db, ctx, budget=budget, **fields)
+
+    if vs.get("geos") != docs[geos]:
+        result = _load_cut(ctx, db, feed="census-acs", url=base + "documentation/" + geos, temp=f"acs-full-{geos}", limit=ACS_GEOS_LIMIT,
+                           cut=_acs_geos_cut(geos), raw_name=lambda h: f"acs5/{vintage}/kansas-{geos[:-4]}-{h}.txt.gz", key=f"acs5/{vintage}/geos",
+                           source_id="census-acs5-geos", table="kfm_census_acs_geographies", rows=_acs_geos_rows(vintage),
+                           width=len(ACS_GEOS_COLUMNS) + 1, extra={"vintage": vintage, "listed": docs[geos]}, summary=summary, loader=loader)
+        if result is None or result["state"] == "empty":
+            raise FeedError(f"ACS_GEOS_MISSING {geos}")
+        summary["geographies"] += result["rows"]
+        if result["state"] == "pending":   # the cuts below need every Kansas geography
+            summary["pending_vintages"].append(vintage)
+            return state
+        vs["geos"] = docs[geos]
+        state = _save(ctx, db, "census-acs", state)
+    if vs.get("shells") != docs[shells]:
+        fetched = ctx.fetch(base + "documentation/" + shells, limit=ACS_SHELLS_LIMIT, timeout=600)
+        rows, key = _acs_shells(fetched.body, vintage, shells), f"acs5/{vintage}/shells"
+        path, digest = core.store_raw(ctx, "census-acs", f"acs5/{vintage}/{shells[:-4]}-{core.sha256(fetched.body)[:12]}.txt.gz",
+                                      core.gz(fetched.body), url=fetched.url, fetched=fetched,
+                                      extra={"key": key, "vintage": vintage, "listed": docs[shells]})
+        result = loader(db, ctx, source_id="census-acs5-shells", key=key, path=path, digest=digest, url=fetched.url,
+                        table="kfm_census_acs_variables", rows=rows, width=9)
+        summary["variables"] += result["rows"]
+        if result["state"] == "pending":
+            summary["pending_vintages"].append(vintage)
+            return state
+        vs["shells"] = docs[shells]
+        state = _save(ctx, db, "census-acs", state)
+    kansas = {g.encode() for (g,) in db.execute("SELECT geo_id FROM kfm_census_acs_geographies WHERE vintage=?", (vintage,))}
+    if not kansas:
+        raise FeedError(f"ACS_GEOS_MISSING {vintage}")
+    prefix = f"acsdt5y{vintage}-"
+    listed = {n[len(prefix):-4].upper(): t for n, t in data.items() if n.startswith(prefix) and n.endswith(".dat")}
+    for table in [t for t in sorted(listed) if vs["tables"].get(t) != listed[t]]:
+        if _full_spent(budget):
+            break
+        _pace(budget)
+        name, key = f"{prefix}{table.lower()}.dat", f"acs5/{vintage}/{table}"
+        try:
+            result = _load_cut(ctx, db, feed="census-acs", url=base + "data/5YRData/" + name, temp="acs-full-" + name, limit=ACS_TABLE_LIMIT,
+                               cut=_acs_table_cut(name, table, kansas, check=_acs_full_variables),
+                               raw_name=lambda h: f"acs5/{vintage}/kansas-{name[:-4]}-{h}.dat.gz",
+                               key=key, source_id="census-acs5", table="kfm_census_acs_values", rows=_acs_full_rows(vintage, table),
+                               width=6, extra={"vintage": vintage, "table_id": table, "listed": listed[table]}, summary=summary, loader=loader)
+        except _Rejected:
+            summary["rejected"].append(key)   # left due, so every run asks for it again
+            continue
+        except _Shared:
+            summary["shared"].append(key)     # a small table the same in two releases must not hold back the rest
+            continue
+        if result is None:
+            summary["missing"].append(key)
+            continue
+        summary["rows"] += result["rows"]
+        if result["state"] == "pending":
+            summary["partial"].append(key)
+            break
+        summary[{"loaded": "tables", "unchanged": "unchanged", "empty": "empty"}[result["state"]]].append(key)
+        vs["tables"][table] = listed[table]
+        state = _save(ctx, db, "census-acs", state)
+    summary["pending"] += sum(1 for t in listed if vs["tables"].get(t) != listed[t])
+    return state
+
+
+def census_acs_full(ctx, vintages=ACS_FULL_VINTAGES, run_seconds: float = FULL_RUN_SECONDS, run_rows=None,
+                    chunk_rows: int = FULL_CHUNK_ROWS) -> dict:
+    """Every table of the ACS 5-year table-based summary files, 2021-2024, into the bulk database, resuming each run where
+    the last one stopped. Provider, terms, files and revisions are as for census-acs (module docstring), and it shares that
+    feed's receipts, kept files and table layout; its state is the bulk database's own census-acs row."""
+    db = _open_bulk(ctx)
+    try:
+        with core.pipeline_lock(ctx):
+            db.executescript(ACS_SCHEMA)
+        state = core.get_state(db, "census-acs")
+        summary = {"tables": [], "partial": [], "unchanged": [], "empty": [], "missing": [], "rejected": [], "shared": [], "unpublished": [],
+                   "pending_vintages": [],
+                   "rows": 0, "geographies": 0, "variables": 0, "downloaded_bytes": 0, "pending": 0}
+        budget = _full_budget(run_seconds, run_rows, chunk_rows)
+        for vintage in vintages:
+            if _full_spent(budget):
+                summary["pending_vintages"].append(vintage)
+                continue
+            state = _acs_full_vintage(ctx, db, state, vintage, summary, budget)
+        return {**summary, "tables_loaded": len(summary["tables"]), **_full_summary(budget)}
+    finally:
+        db.close()
+
+
+def _dec_full_signature(product: str) -> str:
+    """The same hash as _dec_signature over the full selection: for PL, the recovered state's 753a2c663a66adb5."""
+    return core.sha256(core.canonical([DEC_FULL_LEVELS[product], {}, None, ()]).encode())[:16]
+
+
+def _dec_full_product(ctx, db, state: dict, product: str, summary: dict, budget: dict) -> dict:
+    zip_url, layout_url, fileid = DEC_SOURCES[product]
+    ps, signature, levels = state.setdefault(product, {}), _dec_full_signature(product), DEC_FULL_LEVELS[product]
+    recheck = _days_since(ctx, ps.get("checked"))
+    if ps.get("complete") and ps.get("selection") == signature and recheck is not None and recheck < DEC_RECHECK_DAYS:
+        return state
+    if _full_spent(budget):
+        summary["pending"].append(product)
+        return state
+    meta = ctx.fetch(layout_url, limit=DEC_META_LIMIT, timeout=300)
+    try:
+        fields = (_pl_fields if product == "pl" else _dhc_fields)(_xlsx(meta.body, layout_url.rsplit("/", 1)[1]))
+    except (KeyError, ValueError, IndexError) as error:
+        raise FeedError(f"DEC_LAYOUT_CHANGED {product}: {error}") from None
+    archive, work = core.temp_path(ctx, f"census-full-{product}2020.zip"), core.temp_path(ctx, f"census-full-{product}2020-cut.gz")
+    try:
+        fetched = core.download(ctx, zip_url, archive, limit=DEC_ZIP_LIMIT, timeout=1800)
+        zip_sha = core.file_sha256(archive)
+        if not zipfile.is_zipfile(archive):
+            raise FeedError(f"DEC_ZIP_UNREADABLE {product}")
+        if ps.get("zip_sha256") != zip_sha or ps.get("selection") != signature:
+            ps.update(zip_sha256=zip_sha, selection=signature, segments_done=[], complete=False, last_modified=fetched.last_modified)
+        if ps["complete"]:
+            ps["checked"] = str(ctx.now().date())
+            summary["unchanged"].append(product)
+            return _save(ctx, db, "census-decennial", state)
+        stem, segments, position, labels = f"{product}2020", {}, {}, []
+        for seg, table, name, label, title, universe in fields:
+            segments.setdefault(seg, []).append((table, name))
+            position[seg] = position.get(seg, 0) + 1
+            labels.append((product, 2020, table, name, seg, position[seg], label or None, title, universe))
+        key = f"{stem}/labels"
+        path, digest = core.store_raw(ctx, "census-decennial", f"{stem}/{layout_url.rsplit('/', 1)[1][:-5]}-{core.sha256(meta.body)[:12]}.xlsx",
+                                      meta.body, url=meta.url, fetched=meta, extra={"key": key, "fields": len(labels)})
+        result = _load_chunked(db, ctx, source_id=f"census-{stem}-labels", key=key, path=path, digest=digest, url=meta.url,
+                               table="kfm_census_decennial_variables", rows=labels, width=9, budget=budget)
+        summary["variables"] += result["rows"]
+        if result["state"] == "pending":
+            summary["pending"].append(product)
+            return _save(ctx, db, "census-decennial", state)
+        with zipfile.ZipFile(archive) as z:
+            kept, geo = _dec_geo_cut(z, product, fileid, work, levels=levels, geography_only=())
+            if not geo:
+                raise FeedError(f"DEC_KANSAS_EMPTY {stem}")
+            key = f"{stem}/geo"
+            path, digest = core.store_raw(ctx, "census-decennial", f"{stem}/kansas-ksgeo2020.{product}-{core.file_sha256(work)[:12]}.txt.gz",
+                                          work, url=fetched.url, fetched=fetched, original=archive,
+                                          extra={"key": key, "member": f"ksgeo2020.{product}", "kansas_rows": kept, "levels": levels})
+            result = _load_chunked(db, ctx, source_id=f"census-{stem}-geo", key=key, path=path, digest=digest, url=fetched.url,
+                                   table="kfm_census_decennial_geographies", rows=_dec_geo_rows(product)(path),
+                                   width=len(DEC_GEO_COLUMNS) + 2, budget=budget)
+            summary["geographies"] += result["rows"]
+            if result["state"] == "pending":
+                summary["pending"].append(product)
+                return _save(ctx, db, "census-decennial", state)
+            logrecnos, tables = {g.encode() for g in geo}, {name: table for _, table, name, *_ in fields}
+            for seg in sorted(segments):
+                if seg in ps["segments_done"]:
+                    continue
+                if _full_spent(budget):
+                    break
+                cells = segments[seg]
+                member, key = f"ks{seg:05d}2020.{product}", f"{stem}/segment-{seg:02d}"
+                kept = _dec_segment_cut(z, member, fileid, seg, [n for _, n in cells], list(range(len(cells))), logrecnos, work)
+                if kept:
+                    path, digest = core.store_raw(ctx, "census-decennial", f"{stem}/kansas-{member}-{core.file_sha256(work)[:12]}.txt.gz",
+                                                  work, url=fetched.url, fetched=fetched, original=archive,
+                                                  extra={"key": key, "member": member, "kansas_rows": kept,
+                                                         "tables": sorted({table for table, _ in cells})})
+                    result = _load_chunked(db, ctx, source_id=f"census-{stem}-segment", key=key, path=path, digest=digest, url=fetched.url,
+                                           table="kfm_census_decennial_values", rows=_dec_value_rows(product, geo, tables)(path),
+                                           width=6, budget=budget)
+                    summary["rows"] += result["rows"]
+                    if result["state"] == "pending":
+                        summary["partial"].append(key)
+                        break
+                    summary["segments" if result["state"] == "loaded" else "unchanged"].append(key)
+                ps["segments_done"].append(seg)
+                state = _save(ctx, db, "census-decennial", state)
+        if set(segments) <= set(ps["segments_done"]):
+            ps.update(complete=True, checked=str(ctx.now().date()))
+        else:
+            summary["pending"].append(product)
+        return _save(ctx, db, "census-decennial", state)
+    finally:
+        archive.unlink(missing_ok=True)
+        work.unlink(missing_ok=True)
+
+
+def census_decennial_full(ctx, run_seconds: float = FULL_RUN_SECONDS, run_rows=None, chunk_rows: int = FULL_CHUNK_ROWS) -> dict:
+    """Every 2020 PL and DHC table and iteration, block cell values included, into the bulk database, resuming each run
+    where the last one stopped. Provider, terms, files and revisions are as for census-decennial (module docstring), and it
+    shares that feed's receipts, kept files and table layout; its state is the bulk database's own census-decennial row."""
+    db = _open_bulk(ctx)
+    try:
+        with core.pipeline_lock(ctx):
+            db.executescript(DEC_SCHEMA)
+        state = core.get_state(db, "census-decennial")
+        summary = {"segments": [], "partial": [], "unchanged": [], "pending": [], "rows": 0, "geographies": 0, "variables": 0}
+        budget = _full_budget(run_seconds, run_rows, chunk_rows)
+        for product in DEC_SOURCES:
+            state = _dec_full_product(ctx, db, state, product, summary, budget)
+        return {**summary, "complete": [p for p in DEC_SOURCES if state.get(p, {}).get("complete")], **_full_summary(budget)}
     finally:
         db.close()
 
