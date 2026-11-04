@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import ts from 'typescript';
+import * as carouselGeometry from '../app/living-welcome/card-carousel.mjs';
 import { componentHarness, findNode, settle } from './component-harness.mjs';
 import { SCENES, CATEGORY_IDS, HISTORY_ERAS, sceneArt } from '../app/living-welcome/catalog.mjs';
 import { MOTION_CLIPS, motionClip } from '../app/living-welcome/motion-catalog.mjs';
@@ -13,22 +14,25 @@ new Function('exports',ts.transpileModule(await readFile('app/layer-workspaces.t
 const {TOPIC_STRUCTURE,TOPIC_GROUPS}=topicModule;
 const categoryModule={};
 new Function('exports',ts.transpileModule(await readFile('app/category-maps.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(categoryModule);
+const welcomeViewModule={};
+new Function('exports','require',ts.transpileModule(await readFile('app/welcome-map-view.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(welcomeViewModule,id=>id==='./category-maps'?categoryModule:{});
 const rootOf=tree=>findNode(tree,node=>node.props?.className==='explorer-guide living-welcome');
 const features=[{id:'roads',status:'Explore',description:'Roads',destination:'transport'},{id:'farms',status:'Explore',description:'Farms',destination:'agriculture'}];
 function environment(reduced=false){
  const listeners=new Map(),media={matches:reduced,addEventListener(){},removeEventListener(){}};
- return {window:{matchMedia:()=>media},document:{hidden:false,body:{},querySelector:()=>null,activeElement:null,addEventListener:(id,fn)=>listeners.set(id,fn),removeEventListener:id=>listeners.delete(id)},listeners};
+ return {window:{matchMedia:query=>query.includes('prefers-reduced-motion')?media:{...media,matches:false}},document:{hidden:false,body:{},querySelector:()=>null,activeElement:null,addEventListener:(id,fn)=>listeners.set(id,fn),removeEventListener:id=>listeners.delete(id)},listeners};
 }
 async function welcome(reduced=false,globals={}){
  const env={...environment(reduced),...globals},calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
-  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas',starters:categoryModule.CATEGORY_MAPS[topic]?.starters??[]})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
+  './card-carousel.mjs':carouselGeometry,'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':welcomeViewModule,'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
  const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value]),onMap:value=>calls.push(['map',value])};
  const render=()=>{const tree=harness.render(harness.exports.default,props);harness.commit();return tree;};
  return {harness,props,calls,render,env};
 }
+const addCard=(tree,id)=>findNode(tree,n=>n.props?.className==='topic-add'&&n.props['data-topic']===id);
 const previewCard=(tree,id)=>findNode(tree,n=>n.props?.className===`topic-preview topic-preview-${id}`);
 const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.children===text);
 
@@ -36,11 +40,11 @@ test('cards can combine topics and a rapid open performs only one departure',asy
  const h=await welcome();h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
  try{
   let tree=h.render();
-  gridCard(tree,'science').props.onClick();tree=h.render();
-  gridCard(tree,'agriculture').props.onClick();tree=h.render();
+  addCard(tree,'science').props.onClick();tree=h.render();
+  addCard(tree,'agriculture').props.onClick();tree=h.render();
   assert.deepEqual(h.calls,[],'selection never navigates');
-  assert.equal(gridCard(tree,'science').props['aria-pressed'],true);
-  assert.equal(gridCard(tree,'agriculture').props['aria-pressed'],true);
+  assert.equal(addCard(tree,'science').props['aria-pressed'],true);
+  assert.equal(addCard(tree,'agriculture').props['aria-pressed'],true);
   const open=findNode(tree,n=>n.props?.className==='welcome-primary selection-open');
   open.props.onClick();open.props.onClick();
   assert.deepEqual(h.calls,[['maps',['science','agriculture']],['close',false]]);
@@ -72,6 +76,23 @@ function expandCategory(h,id){
 function reportPreview(h,tree,value){
  findNode(tree,node=>node.type==='domain-stage').props.onPreviewState(value);return h.render();
 }
+
+test('scientific-only previews can compare their overlays and still open the same category',async()=>{
+ for(const id of ['agriculture','flora','fauna','sky']){
+  const h=await welcome();
+  try{
+   let tree=h.render();previewCard(tree,id).props.onClick();tree=h.render();
+   assert.equal(welcomeViewModule.welcomeView(id).starters.length,0);
+   const toggle=byText(tree,'Hide starter layers');assert.ok(toggle,`${id} exposes comparison`);
+   toggle.props.onClick();tree=h.render();
+   assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,false);
+   byText(tree,'Show starter layers').props.onClick();tree=h.render();
+   assert.equal(findNode(tree,n=>n.type==='domain-stage').props.layersVisible,true);
+   byText(tree,'Open this category’s map →').props.onClick();
+   assert.deepEqual(h.calls,[['map',id],['close',false]]);
+  }finally{h.harness.dispose();}
+ }
+});
 
 test('expanded map failure beats missing or stale category identity and hidden-layer copy, with working map entry',async()=>{
  for(const fallback of [false,true]){
@@ -213,7 +234,8 @@ test('every category advertises its own glimpse and the expanded guide opens tha
   const h=await welcome();let tree=h.render();
   try{
    const card=findNode(tree,n=>n.type==='button'&&n.props.className?.includes('topic-callout')&&n.props.className?.includes('topic-'+topic.id));
-   assert.equal(card.props['aria-pressed'],false);
+   assert.equal(addCard(tree,topic.id).props['aria-pressed'],false);
+   assert.equal(card.props['aria-pressed'],undefined,'primary action opens rather than toggles');
    assert.match(card.props['aria-label'],new RegExp(topic.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
    previewCard(tree,topic.id).props.onClick();tree=h.render();tree=openDetails(h,tree);
    findNode(tree,n=>n.type==='button'&&n.props.className==='welcome-text-action welcome-preview-action').props.onClick();tree=h.render();
@@ -619,10 +641,10 @@ test('leaving a pinned full-window preview ends the preview and restores hover a
 test('the live map shows the default map until a visitor points at a category, then that category\'s map',async()=>{
  const h=await welcome();let tree=h.render();
  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,null,'no topic preview, and no opt-in provider, before a choice');
- assert.equal(gridCard(tree,'aviation').props['aria-pressed'],false);
+ assert.equal(addCard(tree,'aviation').props['aria-pressed'],false);
  findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-aviation ')).props.onPointerEnter({pointerType:'mouse',currentTarget:{}});tree=h.render();
  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,'aviation');
- assert.equal(gridCard(tree,'aviation').props['aria-pressed'],false,'hover never selects a topic');
+ assert.equal(addCard(tree,'aviation').props['aria-pressed'],false,'hover never selects a topic');
  assert.deepEqual(h.calls,[],'previewing a map changes nothing in the Explorer');
  h.harness.dispose();
 });
@@ -779,13 +801,15 @@ test('closing stage notes restores their exact trigger before paint without refo
 test('Return restores the original card and grid scroll before another Escape dismisses welcome',async()=>{
  const h=await welcome(),focus=[];let tree=h.render();
  const card={focus(){focus.push('card');h.env.document.activeElement=card;}},back={focus(){focus.push('return');h.env.document.activeElement=back;}};
- const root={scrollTop:680,contains:()=>true,querySelector:selector=>selector==='.topic-preview-water'?card:selector==='.welcome-preview-expand'?back:null};
+ const scroller={scrollTop:420};
+ const root={scrollTop:680,contains:()=>true,querySelector:selector=>selector==='.discovery-field--grouped'?scroller:selector==='.topic-preview-water'?card:selector==='.welcome-preview-expand'?back:null};
  rootOf(tree).props.ref.current=root;
  try{
   previewCard(tree,'water').props.onClick();tree=h.render();assert.equal(root.scrollTop,0);assert.equal(focus.at(-1),'return');
+  scroller.scrollTop=0;
   railCard(tree,'sky').props.onClick();tree=h.render();
   byText(tree,'Return to categories').props.onClick();tree=h.render();
-  assert.equal(focus.at(-1),'card');assert.equal(root.scrollTop,680);assert.equal(rootOf(tree).props['data-active'],null);
+  assert.equal(focus.at(-1),'card');assert.equal(root.scrollTop,680);assert.equal(scroller.scrollTop,420);assert.equal(rootOf(tree).props['data-active'],null);
   h.env.listeners.get('keydown')({target:card,key:'Escape',preventDefault(){},stopImmediatePropagation(){}});
   assert.deepEqual(h.calls,[['close',false]]);
  }finally{h.harness.dispose();}
@@ -804,7 +828,7 @@ test('keyboard interest cancels a pending pointer takeover and selecting the cur
 });
 
 
-test('every primary card selects its topic and opens the working map only on confirmation', async()=>{
+test('every primary card opens its working map immediately and only once', async()=>{
  for(const reduced of [false,true]) for(const topic of TOPIC_STRUCTURE){
   const clock=intentClock(),h=await welcome(reduced,clock);
   try{
@@ -812,9 +836,8 @@ test('every primary card selects its topic and opens the working map only on con
    gridCard(tree,topic.id).props.onPointerEnter({pointerType:'mouse'});clock.fire(650);tree=h.render();
    assert.equal(rootOf(tree).props['data-fullscreen'],false,'hover must leave every card in place');
    gridCard(tree,topic.id).props.onClick();
-   tree=h.render();assert.deepEqual(h.calls,[]);
-   assert.equal(gridCard(tree,topic.id).props['aria-pressed'],true);
-   findNode(tree,n=>n.props?.className==='welcome-primary selection-open').props.onClick();
+   gridCard(tree,topic.id).props.onClick();
+   tree=h.render();
    assert.deepEqual(h.calls,[['map',topic.id],['close',false]],'the map action applies the choice once');
   }finally{h.harness.dispose();}
  }
@@ -825,20 +848,62 @@ test('selection survives filtering and preview; removal, clear and empty search 
  const h=await welcome();h.props.initialTopics=['water','invalid','water','weather'];
  h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
  try{
-  let tree=h.render();assert.equal(gridCard(tree,'water').props['aria-pressed'],true);
+  let tree=h.render();assert.equal(addCard(tree,'water').props['aria-pressed'],true);
   findNode(tree,n=>n.type==='input'&&n.props.type==='search').props.onChange({target:{value:'no matching topic'}});tree=h.render();
   assert.ok(findNode(tree,n=>n.props?.className==='topic-empty'));
   assert.ok(findNode(tree,n=>n.props?.['aria-label']==='Remove Water & watersheds'));
   byText(tree,'Show all topics').props.onClick();tree=h.render();
   previewCard(tree,'weather').props.onClick();tree=h.render();
   byText(tree,'Return to categories').props.onClick();tree=h.render();
-  assert.equal(gridCard(tree,'water').props['aria-pressed'],true);
+  assert.equal(addCard(tree,'water').props['aria-pressed'],true);
   findNode(tree,n=>n.props?.['aria-label']==='Map style from selected topics').props.onChange({target:{value:'weather'}});tree=h.render();
   assert.equal(findNode(tree,n=>n.props?.['aria-label']==='Map style from selected topics').props.value,'weather');
   findNode(tree,n=>n.props?.['aria-label']==='Remove Water & watersheds').props.onClick();tree=h.render();
-  assert.equal(gridCard(tree,'water').props['aria-pressed'],false);
+  assert.equal(addCard(tree,'water').props['aria-pressed'],false);
   byText(tree,'Clear all').props.onClick();tree=h.render();
-  assert.equal(findNode(tree,n=>n.props?.className==='welcome-primary selection-open').props.disabled,true);
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-primary selection-open'),undefined,'empty selection has no permanent tray');
   assert.deepEqual(h.calls,[]);
+ }finally{h.harness.dispose();}
+});
+
+
+test('tapping a primary card carries existing choices into that card’s map',async()=>{
+ const h=await welcome();h.props.initialTopics=['water','weather'];
+ h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
+ try{
+  const tree=h.render();gridCard(tree,'engineering').props.onClick();
+  assert.deepEqual(h.calls,[['maps',['engineering','water','weather']],['close',false]]);
+ }finally{h.harness.dispose();}
+});
+
+
+test('mobile carousel previews the settled center, supports arrows, and does not navigate on a swipe',async()=>{
+ const clock=intentClock(),h=await welcome(false,{...clock,window:{matchMedia:query=>({matches:query.includes('max-width'),addEventListener(){},removeEventListener(){}})}});
+ let left=0;
+ const cards=['engineering','transport','aviation'].map((id,index)=>({dataset:{carouselTopic:id},getBoundingClientRect:()=>({left:39+index*324-left,width:312}),focus(){}}));
+ const list={get scrollLeft(){return left;},set scrollLeft(value){left=value;},scrollWidth:1038,clientWidth:390,getBoundingClientRect:()=>({left:0,width:390}),querySelectorAll:()=>cards,querySelector:selector=>cards.find(c=>selector.includes(c.dataset.carouselTopic)),scrollTo:options=>{left=options.left;}};
+ const track=tree=>findNode(tree,n=>n.props?.className==='discovery-field discovery-field--grouped');
+ try{
+  let tree=h.render();track(tree).props.ref.current=list;tree=h.render();
+  assert.equal(rootOf(tree).props['data-carousel'],true);
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'engineering');
+  assert.equal(findNode(tree,n=>n.props?.['aria-label']==='Previous map preview').props.disabled,true);
+  left=324;track(tree).props.onScroll();tree=h.render();
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'engineering','a moving track does not cycle providers');
+  clock.fire(120);tree=h.render();
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'transport');
+  assert.deepEqual(h.calls,[],'centering a card only previews');
+  findNode(tree,n=>n.props?.['aria-label']==='Next map preview').props.onClick();tree=h.render();
+  assert.equal(left,648);assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'aviation');
+  let prevented=0;
+  track(tree).props.onPointerDown({clientX:250,clientY:550});
+  track(tree).props.onPointerMove({clientX:90,clientY:552});
+  track(tree).props.onPointerUp();
+  track(tree).props.onClickCapture({detail:1,preventDefault(){prevented++;},stopPropagation(){prevented++;}});
+  assert.equal(prevented,2,'the swipe release cannot also open the card');
+  track(tree).props.onPointerDown({clientX:150,clientY:550});track(tree).props.onPointerUp();
+  track(tree).props.onClickCapture({detail:1,preventDefault(){prevented++;},stopPropagation(){prevented++;}});
+  assert.equal(prevented,2,'a new intentional tap is allowed');
+  gridCard(tree,'aviation').props.onClick();assert.deepEqual(h.calls,[['map','aviation'],['close',false]]);
  }finally{h.harness.dispose();}
 });

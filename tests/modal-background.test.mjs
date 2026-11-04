@@ -126,15 +126,15 @@ function visit(node) {
   ts.forEachChild(node, visit);
 }
 visit(ast); assert.ok(effect);
-test("actual Layers effect owns external focus and releases it when another tool or workspace takes over", () => {
-  for (const overrides of [{}, { guideOpen: null }, { guideOpen: true }, { isCompact: false }, { primaryWorkspace: "reports" }, { leftOpen: false }, { rightOpen: true }, { mapUtilityOpen: true }, { qwenOpen: true }]) {
+test("modal navigation owns focus while the layer sheet keeps the map interactive", () => {
+  for (const overrides of [{}, { layerPanelIsModal: false }, { guideOpen: null }, { guideOpen: true }, { isCompact: false }, { primaryWorkspace: "reports" }, { leftOpen: false }, { rightOpen: true }, { mapUtilityOpen: true }, { qwenOpen: true }]) {
     const f = fixture(), listeners = new Map(), focused = [];
-    const scope = { primaryWorkspace: "map", guideOpen: false, isCompact: true, leftOpen: true, rightOpen: false, mapUtilityOpen: false, qwenOpen: false,
+    const scope = { primaryWorkspace: "map", guideOpen: false, isCompact: true, leftOpen: true, layerPanelIsModal: true, rightOpen: false, mapUtilityOpen: false, qwenOpen: false,
       ...overrides, leftPanelRef: { current: f.panel }, isolateModalBackground, Node: Element,
       visibleFocusableElements: () => [{ focus: () => focused.push("close") }],
       document: { addEventListener: (name, callback, capture) => { assert.equal(capture, true); listeners.set(name, callback); }, removeEventListener: (name, callback, capture) => { assert.equal(capture, true); assert.equal(listeners.get(name), callback); listeners.delete(name); } } };
     const cleanup = new Function(...Object.keys(scope), compile(`return ${effect};`))(...Object.values(scope))();
-    if (Object.keys(overrides).length) { assert.equal(cleanup, undefined); assert.equal(f.map.inert, false); continue; }
+    if (Object.keys(overrides).length) { assert.equal(cleanup, undefined); assert.equal(f.map.inert, false); assert.equal(listeners.size,0,"nonmodal layers install no background focus or pointer trap"); continue; }
     listeners.get("focusin")({ target: f.map }); assert.deepEqual(focused, ["close"]);
     listeners.get("focusin")({ target: f.panel }); assert.deepEqual(focused, ["close"]);
     let prevented=0,stopped=0;

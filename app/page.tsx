@@ -88,6 +88,7 @@ import "./inspection-panel.css";
 import "./explorer-controls.css";
 import "./category-map-dock.css";
 import "./atlas-studio.css";
+import "./mobile-map-first.css";
 import Link from "next/link";
 import { BridgeRecordInspector } from "./bridge-record-inspector";
 import { isBridgeLayer } from "./kansas-bridge-records";
@@ -1622,6 +1623,7 @@ export default function Home() {
   // On phones the radar dock opens on its reading and transport; loop, speed, opacity and the legend fold behind Settings.
   const [radarDetailsOpen, setRadarDetailsOpen] = useState(false);
   const [leftPanelMode, setLeftPanelMode] = useState<LeftPanelMode>("layers");
+  const layerPanelIsModal = leftPanelMode !== "layers" && leftPanelMode !== "live";
   const [layerCatalogView, setLayerCatalogView] = useState<LayerBrowseView>("official");
   const [starterPanelOpen, setStarterPanelOpen] = useState(true);
   const [layerPreferencesReady, setLayerPreferencesReady] = useState(false);
@@ -1788,7 +1790,7 @@ export default function Home() {
   const [photorealPlace, setPhotorealPlace] = useState<string | null>(null);
   // The provider hillshade switched off on entering the photograph, restored on return.
   const photorealHidHillshadeRef = useRef(false);
-  const [categoryDockHidden, setCategoryDockHidden] = useState(false);
+  const [categoryDockHidden, setCategoryDockHidden] = useState(true);
   const aviationPickingRef = useRef(false);
   const setAviationPicking = useCallback((active: boolean) => {
     aviationPickingRef.current = active;
@@ -2148,7 +2150,7 @@ export default function Home() {
     ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: registryLayerTopics(layer.domain), selected: Boolean(visibility[layer.id]) })),
   ];
   const selectedMapLayerCount = selectedCatalogCount(catalogEntries);
-  const matchingCatalogEntries = catalogEntries.filter(entry => layerEntryMatches(entry, layerCatalogView, officialWorkspace, officialSourceQuery));
+  const matchingCatalogEntries = catalogEntries.filter(entry => layerEntryMatches(entry, layerCatalogView, layerCatalogView === "selected" ? "all" : officialWorkspace, layerCatalogView === "selected" ? "" : officialSourceQuery));
   const shownCatalogIds = new Set(matchingCatalogEntries.map(entry => entry.id));
   const noaaRadarManifestFresh = noaaRadarManifestIsFresh(noaaRadarManifest, noaaRadarClock);
   const noaaRadarRenderable = Boolean(noaaRadarFrameTime && noaaRadarManifestFresh);
@@ -2701,8 +2703,8 @@ export default function Home() {
       return matchesQuery;
     }).map((layer) => layer.id));
   }, [debouncedLayerQuery]);
-  const listedOfficialSources = filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, officialWorkspace, "")
-    .filter(source => shownCatalogIds.has(source.id) && catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id]));
+  const listedOfficialSources = filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, layerCatalogView === "selected" ? "all" : officialWorkspace, "")
+    .filter(source => shownCatalogIds.has(source.id) && (layerCatalogView === "selected" || catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id])));
   const searchResults = useMemo(() => atlasDiscoveryResults(globalQuery, debouncedGlobalQuery, SEARCH_INDEX, OFFICIAL_CONTEXT_SOURCES, officialPayloads["census-counties"], officialStates["census-counties"]), [debouncedGlobalQuery, globalQuery, officialPayloads, officialStates]);
   const searchStatus = globalSearchStatus(globalQuery, debouncedGlobalQuery, officialStates["census-counties"], searchResults.length);
   const filteredRepositoryUpdates = useMemo(() => {
@@ -8497,7 +8499,7 @@ export default function Home() {
   }, [repositoryOpen, closeRepository]);
 
   useEffect(() => {
-    if (primaryWorkspace !== "map" || guideOpen !== false || !isCompact || !leftOpen || rightOpen || mapUtilityOpen || qwenOpen) return;
+    if (primaryWorkspace !== "map" || guideOpen !== false || !isCompact || !leftOpen || !layerPanelIsModal || rightOpen || mapUtilityOpen || qwenOpen) return;
     const panel = leftPanelRef.current;
     if (!panel) return;
     const restoreBackground = isolateModalBackground(panel, panel.closest<HTMLElement>(".site-root"));
@@ -8520,7 +8522,7 @@ export default function Home() {
       document.removeEventListener("pointerdown", keepPointerInside, true);
       restoreBackground();
     };
-  }, [primaryWorkspace, guideOpen, isCompact, leftOpen, rightOpen, mapUtilityOpen, qwenOpen]);
+  }, [primaryWorkspace, guideOpen, isCompact, leftOpen, layerPanelIsModal, rightOpen, mapUtilityOpen, qwenOpen]);
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || guideOpen !== false || !isCompact || (surfaceInspectionOpen && !mapUtilityOpen)) return;
@@ -8541,7 +8543,7 @@ export default function Home() {
         if (mapUtilityOpen) closeMapUtility(); else if (rightOpen) closeRightPanel(); else if (leftOpen) closeLeftPanel(); else closeTimelinePanel();
         return;
       }
-      if (event.key !== "Tab") return;
+      if (event.key !== "Tab" || (openPanel === leftPanelRef.current && !layerPanelIsModal)) return;
       const currentItems = focusable();
       if (!currentItems.length) return;
       const first = currentItems[0];
@@ -8551,7 +8553,7 @@ export default function Home() {
     };
     openPanel.addEventListener("keydown", handleKey);
     return () => openPanel.removeEventListener("keydown", handleKey);
-  }, [primaryWorkspace, guideOpen, isCompact, leftOpen, mapUtilityOpen, mapUtilityView, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
+  }, [primaryWorkspace, guideOpen, isCompact, leftOpen, layerPanelIsModal, mapUtilityOpen, mapUtilityView, rightOpen, surfaceInspectionOpen, terrainSurfaceMode, timelineOpen, closeLeftPanel, closeMapUtility, closeRightPanel, closeTimelinePanel]);
 
   useEffect(() => {
     if (primaryWorkspace !== "map" || !sourceSearchFocusPendingRef.current || !leftOpen || leftPanelMode !== "layers") return;
@@ -8583,11 +8585,11 @@ export default function Home() {
       }
       else if (liveDockVisible && !glmFlashesEnabled) closeLiveInstrument();
       else if (!isCompact && rightOpen) closeRightPanel();
-      else if (!isCompact && leftOpen && guideOpen === false) closeLeftPanel();
+      else if ((!isCompact || !layerPanelIsModal) && leftOpen && guideOpen === false) closeLeftPanel();
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [sourceStatusOpen, helpOpen, isCompact, mapContextOpen, mapUtilityOpen, qwenOpen, repositoryOpen, rightOpen, leftOpen, guideOpen, liveDockVisible, glmFlashesEnabled, closeLeftPanel, closeLiveInstrument, closeMapUtility, closeQwenCompanion, closeRightPanel, closeSourceStatus, closeMapGuide]);
+  }, [sourceStatusOpen, helpOpen, isCompact, layerPanelIsModal, mapContextOpen, mapUtilityOpen, qwenOpen, repositoryOpen, rightOpen, leftOpen, guideOpen, liveDockVisible, glmFlashesEnabled, closeLeftPanel, closeLiveInstrument, closeMapUtility, closeQwenCompanion, closeRightPanel, closeSourceStatus, closeMapGuide]);
 
   const chooseSearchResult = (item: GlobalSearchItem) => {
     setPrimaryWorkspace("map");
@@ -10931,7 +10933,7 @@ export default function Home() {
     commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME);
     dismissMapUtilityWithoutFocus();
     window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
-      document.querySelector<HTMLButtonElement>(".map-topic-edit")?.focus({ preventScroll: true });
+      Array.from(document.querySelectorAll<HTMLButtonElement>(".map-topic-edit, .map-topics-button")).find(button => button.getClientRects().length > 0)?.focus({ preventScroll: true });
     }));
   };
   const runWelcomeMap = (topic: TopicId) => runWelcomeMaps([topic]);
@@ -11454,7 +11456,7 @@ export default function Home() {
       </div>
 
       <main inert={primaryWorkspace !== "map" || guideOpen !== false} aria-hidden={primaryWorkspace !== "map" || guideOpen !== false || undefined} className="explorer-shell" data-inspector={inspectionPanel ?? "closed"} data-left={leftOpen} data-right={rightOpen} data-timeline={timelineOpen}>
-        <aside ref={leftPanelRef} className="layer-panel" data-panel-mode={leftPanelMode} aria-label={leftPanelMode === "layers" || leftPanelMode === "live" ? "Map layers" : "Living Atlas navigation"} aria-hidden={!leftOpen} inert={!leftOpen} aria-modal={isCompact && leftOpen || undefined} role={isCompact && leftOpen ? "dialog" : undefined}>
+        <aside ref={leftPanelRef} className="layer-panel" data-panel-mode={leftPanelMode} data-catalog-view={layerCatalogView} aria-label={leftPanelMode === "layers" || leftPanelMode === "live" ? "Map layers" : "Living Atlas navigation"} aria-hidden={!leftOpen} inert={!leftOpen} aria-modal={isCompact && leftOpen ? layerPanelIsModal : undefined} role={isCompact && leftOpen ? "dialog" : undefined}>
           <div className="panel-heading">
             <div><p className="panel-kicker">{leftPanelMode === "views" ? "LIVING ATLAS" : leftPanelMode === "live" || leftPanelMode === "layers" ? "KANSAS FRONTIER MATRIX" : leftPanelMode === "places" ? "PLACES" : "STORY ATLAS"}</p><h1>{leftPanelMode === "views" ? "Investigate Kansas" : leftPanelMode === "live" || leftPanelMode === "layers" ? <>Map layers <span className="layer-panel-count">{selectedMapLayerCount} selected</span></> : leftPanelMode === "places" ? "Places + trails" : "Guided stories"}</h1></div>
             <button className="icon-close" type="button" onClick={closeLeftPanel} aria-label="Close Explorer navigation">×</button>
@@ -11516,11 +11518,10 @@ export default function Home() {
 
           <div className="layer-panel-controls" hidden={leftPanelMode !== "layers" && leftPanelMode !== "live"}>
             <nav className="layer-source-switch" aria-label="Layer views">
-              <button type="button" aria-pressed={!sourceStatusOpen && starterPanelOpen} data-active={!sourceStatusOpen && starterPanelOpen} onClick={() => { setSourceStatusOpen(false); setStarterPanelOpen(true); }}>Start here</button>
-              {([["official", "Browse"], ["selected", "On map"], ["local", "Imagery"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={!sourceStatusOpen && !starterPanelOpen && layerCatalogView === id} data-active={!sourceStatusOpen && !starterPanelOpen && layerCatalogView === id} data-layer-view={id} onClick={() => { setSourceStatusOpen(false); setStarterPanelOpen(false); setLayerCatalogView(id); setOfficialCatalogFilter("all"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body:not([hidden])")?.scrollTo(0, 0); }}>{label}{id === "selected" && <span>{selectedMapLayerCount}</span>}</button>)}
-              <button type="button" aria-pressed={sourceStatusOpen} data-active={sourceStatusOpen} onClick={event => openSourceStatus(event.currentTarget)}>Source status{sourceIssues.length > 0 && <span>{sourceIssues.length}</span>}</button>
+              {([["selected", "On map"], ["official", "Browse"], ["local", "Imagery"]] as const).map(([id, label]) => <button key={id} type="button" aria-pressed={!sourceStatusOpen && !starterPanelOpen && layerCatalogView === id} data-active={!sourceStatusOpen && !starterPanelOpen && layerCatalogView === id} data-layer-view={id} onClick={() => { setSourceStatusOpen(false); setStarterPanelOpen(false); setLayerCatalogView(id); setOfficialCatalogFilter("all"); leftPanelRef.current?.querySelector<HTMLElement>(".layer-catalog-body:not([hidden])")?.scrollTo(0, 0); }}>{label}{id === "selected" && <span>{selectedMapLayerCount}</span>}</button>)}
+              <button type="button" aria-pressed={sourceStatusOpen} data-active={sourceStatusOpen} onClick={event => openSourceStatus(event.currentTarget)}>Status{sourceIssues.length > 0 && <span>{sourceIssues.length}</span>}</button>
             </nav>
-            <label className="catalog-search" hidden={sourceStatusOpen || starterPanelOpen}><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" aria-label="Search map layers" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
+            <label className="catalog-search" hidden={sourceStatusOpen || starterPanelOpen || layerCatalogView === "selected"}><span aria-hidden="true">⌕</span><span className="sr-only">Search map layers</span><input type="search" aria-label="Search map layers" value={officialSourceQuery} onChange={event => setOfficialSourceQuery(event.target.value)} placeholder="Search layers, places, providers…" />{officialSourceQuery && <button type="button" aria-label="Clear layer search" onClick={() => setOfficialSourceQuery("")}>×</button>}</label>
 
           </div>
 
@@ -11588,24 +11589,7 @@ export default function Home() {
               onBrowse={() => { setStarterPanelOpen(false); setLayerCatalogView("selected"); window.requestAnimationFrame(() => leftPanelRef.current?.querySelector<HTMLButtonElement>('[data-layer-view="selected"]')?.focus()); }} />
           </div>
           <div className="layer-catalog-body" hidden={starterPanelOpen || sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
-          <div className="layer-browse-context"><TopicSelect label="Layer topic" value={officialWorkspace} onChange={topic => { setOfficialWorkspace(topic); setOfficialCatalogFilter("all"); }} /><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
-          <div className="layer-topic-index"><Link href="/topics">Explore subjects &amp; coverage ↗</Link>{officialWorkspace !== "all" && <button type="button" onClick={() => setOfficialWorkspace("all")}>Clear topic</button>}</div>
-          <TopicGuide value={officialWorkspace} onTool={(view, element) => openMapUtility(view, element)}
-            mapLook={activeCategoryMap ? { name: activeCategoryMap.name, lede: activeCategoryMap.lede, sceneLabel: categorySceneLabel(activeCategoryMap.scene), swatch: activeCategoryMap.swatch, active: activeCategoryMap.basemap === basemap } : null}
-            onOpenMap={activeCategoryMap ? () => openCategoryMap(activeCategoryMap.topic) : undefined} />
-          {officialWorkspace === "transport" && <TransportHistoryControl map={mapRef.current} mapReady={styleReady} date={calendarSweep ? calendarFrameDay(calendarSweep) : temporalQuery.frame >= 1000 && temporalQuery.frame <= 9999 ? `${temporalQuery.frame}-01-01` : null} reducedMotion={reducedMotion} animate={dynamicEffects} />}
-          {layerCatalogView === "selected" && <p className="layer-selection-note">Availability is shown on each layer.</p>}
-          {layerCatalogView === "official" && <CategoryCapabilityPanel topic={officialWorkspace} query={officialSourceQuery} onTool={revealCategoryTool} />}
-          {matchingCatalogEntries.length === 0 && !(layerCatalogView === "official" && categoryCapabilityGroups(officialWorkspace, officialSourceQuery).length) && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
-
-          <div className="layer-map-time" data-historical={!buildYearCurrent || year !== OFFICIAL_CONTEXT_PRESENT_FRAME}>
-            <span><span aria-hidden="true">◷</span> Map time · <strong>{temporalScopeLabel}</strong>{!buildYearCurrent ? " · build year differs from UTC year" : ""}{withheldOfficialCount > 0 ? ` · ${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : ""}</span>
-            <button type="button" onClick={() => { setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); dismissMapUtilityWithoutFocus(); announce(`Opened the map timeline at ${temporalScopeLabel}`); }}>Change time</button>
-          </div>
-
-
-
-
+          <div className="layer-browse-context" hidden={layerCatalogView === "selected"}><TopicSelect label="Layer topic" value={officialWorkspace} onChange={topic => { setOfficialWorkspace(topic); setOfficialCatalogFilter("all"); }} /><span role="status">{layerCatalogView === "selected" ? `${matchingCatalogEntries.length} of ${selectedMapLayerCount} selected` : `${matchingCatalogEntries.length} ${matchingCatalogEntries.length === 1 ? "layer" : "layers"}`}</span></div>
           <section className="official-context-catalog" id="official-context-catalog" tabIndex={-1} hidden={layerCatalogView === "local"} aria-labelledby="official-context-title">
             <h2 id="official-context-title" className="sr-only">Map layers</h2>
             <p className="archive-map-notice"><Link href="/data-library">Browse all recovered public data →</Link></p>
@@ -11772,15 +11756,30 @@ export default function Home() {
           <div className="local-layer-settings" hidden={!earthEngineContext.enabled || layerCatalogView === "official" || layerCatalogView === "selected" && !matchingCatalogEntries.some(entry => entry.imagery)}>
             <p className="layer-journey-intro">Reviewed Kansas imagery appears here when an approved display set is installed. Each layer has its own visibility, opacity, source period, and limits. <Link href="/earth-engine">Explore all source recipes ↗</Link></p>
             <section className="reviewed-imagery-section" aria-label="Earth Engine imagery layers">
-              {earthEngineContext.enabled && <EarthEngineDisplayControls key={categoryMapSession} catalogView={layerCatalogView} catalogTopic={officialWorkspace} catalogQuery={officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />}
+              {earthEngineContext.enabled && <EarthEngineDisplayControls key={categoryMapSession} catalogView={layerCatalogView} catalogTopic={layerCatalogView === "selected" ? "all" : officialWorkspace} catalogQuery={layerCatalogView === "selected" ? "" : officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />}
             </section>
           </div>
-            <nav className="layer-task-links" aria-label="Related map tools"><button type="button" onClick={event => openMapUtility("scene", event.currentTarget)}><span>Appearance</span><small>Basemap, terrain &amp; lighting</small><b aria-hidden="true">↗</b></button><button type="button" onClick={event => openSourceStatus(event.currentTarget)}><span>Source status</span><small>Connections &amp; coverage</small><b aria-hidden="true">↗</b></button></nav>
+          <details className="layer-topic-details" hidden={layerCatalogView === "selected"}><summary>About this topic &amp; map tools</summary>
+          <div className="layer-topic-index"><Link href="/topics">Explore subjects &amp; coverage ↗</Link>{officialWorkspace !== "all" && <button type="button" onClick={() => setOfficialWorkspace("all")}>Clear topic</button>}</div>
+          <TopicGuide value={officialWorkspace} onTool={(view, element) => openMapUtility(view, element)}
+            mapLook={activeCategoryMap ? { name: activeCategoryMap.name, lede: activeCategoryMap.lede, sceneLabel: categorySceneLabel(activeCategoryMap.scene), swatch: activeCategoryMap.swatch, active: activeCategoryMap.basemap === basemap } : null}
+            onOpenMap={activeCategoryMap ? () => openCategoryMap(activeCategoryMap.topic) : undefined} />
+          {officialWorkspace === "transport" && <TransportHistoryControl map={mapRef.current} mapReady={styleReady} date={calendarSweep ? calendarFrameDay(calendarSweep) : temporalQuery.frame >= 1000 && temporalQuery.frame <= 9999 ? `${temporalQuery.frame}-01-01` : null} reducedMotion={reducedMotion} animate={dynamicEffects} />}
+          {layerCatalogView === "official" && <CategoryCapabilityPanel topic={officialWorkspace} query={officialSourceQuery} onTool={revealCategoryTool} />}
+          </details>
+          {matchingCatalogEntries.length === 0 && !(layerCatalogView === "official" && categoryCapabilityGroups(officialWorkspace, officialSourceQuery).length) && <div className="catalog-empty" role="status"><strong>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Start with a layer" : "No matching layers"}</strong><p>{layerCatalogView === "selected" && selectedMapLayerCount === 0 ? "Browse topics and switch on a layer to build your map." : "Try another topic or search. Your map selections are unchanged."}</p><button type="button" onClick={() => { setOfficialSourceQuery(""); setOfficialWorkspace("all"); setOfficialCatalogFilter("all"); if (layerCatalogView === "selected" && selectedMapLayerCount === 0) setLayerCatalogView("official"); }}>{selectedMapLayerCount === 0 && layerCatalogView === "selected" ? "Browse layers" : "Reset filters"}</button></div>}
 
+          <div className="layer-map-time" hidden={layerCatalogView === "selected" && buildYearCurrent && year === OFFICIAL_CONTEXT_PRESENT_FRAME && withheldOfficialCount === 0} data-historical={!buildYearCurrent || year !== OFFICIAL_CONTEXT_PRESENT_FRAME}>
+            <span><span aria-hidden="true">◷</span> Map time · <strong>{temporalScopeLabel}</strong>{!buildYearCurrent ? " · build year differs from UTC year" : ""}{withheldOfficialCount > 0 ? ` · ${withheldOfficialCount} current source${withheldOfficialCount === 1 ? "" : "s"} held` : ""}</span>
+            <button type="button" onClick={() => { setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); dismissMapUtilityWithoutFocus(); announce(`Opened the map timeline at ${temporalScopeLabel}`); }}>Change time</button>
           </div>
+
+          <nav className="layer-task-links" aria-label="Related map tools"><button type="button" onClick={event => openMapUtility("scene", event.currentTarget)}><span>Appearance</span><small>Basemap, terrain &amp; lighting</small><b aria-hidden="true">↗</b></button><button type="button" onClick={event => openSourceStatus(event.currentTarget)}><span>Source status</span><small>Connections &amp; coverage</small><b aria-hidden="true">↗</b></button></nav>
+
           <details className="layer-panel-explore" hidden={sourceStatusOpen || leftPanelMode !== "layers" && leftPanelMode !== "live"}>
             <summary>Explore <span>Other map tools</span></summary>
             <nav aria-label="Other map tools">
+              <button type="button" aria-pressed={!sourceStatusOpen && starterPanelOpen} data-active={!sourceStatusOpen && starterPanelOpen} onClick={() => { setSourceStatusOpen(false); setStarterPanelOpen(true); }}>Start here</button>
               <button type="button" onClick={() => setLeftPanelMode("views")}>Views</button>
               <button type="button" onClick={() => setLeftPanelMode("places")}>Places</button>
               <Link href="/observatory">Event Observatory</Link>
@@ -11790,6 +11789,7 @@ export default function Home() {
             </nav>
             <AviationControl contextKey={JSON.stringify([year, calendarSweep, selected?.featureId ?? null, visibility, officialVisibility])} />
           </details>
+          </div>
         </aside>
 
         <section className="map-stage" data-underground={undergroundOpen ? "true" : undefined} data-live-dock={liveDockVisible || glmFlashesEnabled} data-radar-loop={showRadarDock} data-raster-fallback={runtime.kind === "unsupported" && earthEngineContext.manifests.length > 0} aria-label="Kansas MapLibre Explorer">
@@ -12579,8 +12579,7 @@ export default function Home() {
 
           <nav className="map-mobile-actions" aria-label="Mobile map actions">
             <button type="button" onClick={(event) => openAtlasPanel("layers", event.currentTarget)}>Map layers <b>{selectedMapLayerCount}</b></button>
-            <button type="button" onClick={(event) => openAtlasPanel("places", event.currentTarget)}>Places <b>{savedWorkspaces.length}</b></button>
-            <button type="button" onClick={(event) => { openSourceStatus(event.currentTarget); setRightOpen(false); setTimelineOpen(false); }}>Sources</button>
+            <button type="button" className="map-topics-button" onClick={toggleExplorerGuide}>Topics{welcomeTopics.length > 0 && <b>{welcomeTopics.length}</b>}</button>
             <button type="button" onClick={() => { setCurrentWorkspace("explore"); dismissMapUtilityWithoutFocus(); setTimelineOpen(true); setLeftOpen(false); setRightOpen(false); }}>Time <b>{temporalScopeLabel}</b></button>
             <button type="button" onClick={openMapSettings}>Style</button>
           </nav>

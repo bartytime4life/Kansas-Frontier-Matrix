@@ -415,3 +415,25 @@ test('aviation is lazy, uses one renderer, switches chart/slice without reloadin
  globalThis.__welcome.aviationChanged(); assert.equal(globalThis.__welcome.aviation.length,count,'late aviation completion cannot redraw another topic');
  assert.equal(sourceReports.at(-1).aviation,null);
 });
+
+
+test('camera completion defers and coalesces drift without reentering a resize or stop', async () => {
+ const {engine,map}=await start();
+ try {
+  engine.setPaused(false); engine.show('terrain'); await tick(); await tick();
+  map.emit('style.load');
+  assert.equal(map.log.filter(([name])=>name==='easeTo').length,0,'style jump finishes before the next camera animation');
+  await tick();
+  const count=()=>map.log.filter(([name])=>name==='easeTo').length;
+  assert.equal(count(),1);
+  map.emit('moveend'); map.emit('moveend');
+  assert.equal(count(),1,'no new ease runs within the old camera callback');
+  await tick(); assert.equal(count(),2,'one continuation owns both end events');
+  map.emit('moveend'); engine.setPaused(true); await tick();
+  assert.equal(count(),2,'pause cancels a pending continuation');
+  engine.setPaused(false); engine.setReduced(true); await tick();
+  assert.equal(count(),2,'reduced motion cancels a pending continuation');
+  engine.setReduced(false); engine.dispose(); await tick();
+  assert.equal(count(),2,'unmounted maps cannot resume queued motion');
+ } finally { engine.dispose(); }
+});
