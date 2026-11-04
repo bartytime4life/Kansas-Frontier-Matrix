@@ -772,7 +772,7 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
       const failed=`document.querySelector('.welcome-layer-demo-state')?.textContent==='Map preview unavailable. Open the map to inspect source status.'`;
       await p.wait(failed,'failure replaces loading without a topic identifier');
       assert.equal(await p.evaluate(`document.querySelector('.welcome-layer-demo-state').getAttribute('role')`),'status');
-      await activate('.welcome-layer-demo-actions button:first-child');
+      await activate('.welcome-layer-demo-actions button[aria-pressed]');
       await p.wait(failed,'hidden overlays do not mask map failure');
       await p.key('Escape','Escape',27);
       await p.wait(`document.querySelector('.living-welcome').dataset.fullscreen==='false'&&document.activeElement?.matches('.topic-preview-weather')`,'Escape restores categories and focus');
@@ -780,7 +780,7 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
       await p.wait(failed,'failure persists when another category is selected');
       await revealControl(p,'.welcome-layer-demo-actions button:last-child');
       await p.evaluate(`document.querySelector('.welcome-layer-demo-actions button:last-child').focus()`);
-      assert.equal(await p.evaluate(`document.activeElement?.textContent`),'Source notes & demonstrations');
+      assert.equal(await p.evaluate(`document.activeElement?.matches('.welcome-layer-demo-actions button:last-child')`),true);
       await p.key('Enter','Enter',13);
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`,'source notes remain keyboard accessible after failure');
       await p.key('Escape','Escape',27);
@@ -796,9 +796,11 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
       await p.key('Tab','Tab',9);
       assert.equal(await p.evaluate(`document.activeElement.matches('.welcome-preview-expand')`),true);
       await p.key('Tab','Tab',9,8);
-      assert.equal(await p.evaluate('document.activeElement.textContent'),'Source notes & demonstrations');
+      assert.equal(await p.evaluate(`document.activeElement.matches('.welcome-layer-demo-actions button:last-child')`),true);
       await p.key('Tab','Tab',9,8);
-      assert.equal(await p.evaluate('document.activeElement.textContent'),'Open this category’s map →');
+      assert.equal(await p.evaluate(`document.activeElement.matches('.welcome-layer-demo-actions button[aria-pressed]')`),true);
+      await p.key('Tab','Tab',9,8);
+      assert.equal(await p.evaluate(`document.activeElement.matches('.welcome-open-category')`),true);
       await p.key('Enter','Enter',13);
       await p.wait(`!document.querySelector('.living-welcome')&&document.activeElement?.matches('.map-topic-edit, .map-topics-button')&&document.querySelector('[aria-label="Layer topic"]')?.value==='history'`,'full category map entry remains available');
       await leaveCompactLayers(p);
@@ -807,9 +809,9 @@ for (const [width,height] of [[1280,800],[390,844],[568,320]]) {
       await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);
       await readyWelcome(p);await expand('weather');
       await p.wait(`document.querySelector('.welcome-layer-demo-state')?.textContent.startsWith('Provider context preview.')`,'recovered map replaces the unavailable message');
-      await activate('.welcome-layer-demo-actions button:first-child');
+      await activate('.welcome-layer-demo-actions button[aria-pressed]');
       await p.wait(`document.querySelector('.welcome-layer-demo-state')?.textContent.startsWith('Base context only.')`,'starter comparison still hides overlays');
-      await activate('.welcome-layer-demo-actions button:first-child');
+      await activate('.welcome-layer-demo-actions button[aria-pressed]');
       await p.wait(`document.querySelector('.welcome-layer-demo-state')?.textContent.startsWith('Provider context preview.')`,'starter comparison restores provider context');
     }
   });
@@ -1204,11 +1206,11 @@ for (const [width,height] of [[1280,800],[768,1024],[390,844],[320,568],[568,320
       assert.equal(await p.evaluate(`document.activeElement.matches(':focus-visible')`),true,'keyboard focus remains visible');
     };
     const tab=async(selector,reverse=false)=>{await p.key('Tab','Tab',9,reverse?8:0);await focused(selector);};
-    const notes='.welcome-layer-demo-actions button:last-child',map='.welcome-layer-demo-actions button:nth-last-child(2)',back='.welcome-preview-expand';
+    const notes='.welcome-layer-demo-actions button:last-child',toggle='.welcome-layer-demo-actions button[aria-pressed]',map='.welcome-open-category',back='.welcome-preview-expand';
     const enter=()=>p.key('Enter','Enter',13);
     await enter();await focused(back);
-    await tab(notes,true);await tab(map,true);
-    await tab(notes);await tab(back);
+    await tab(notes,true);await tab(toggle,true);await tab(map,true);
+    await tab(toggle);await tab(notes);await tab(back);
     // Nested notes return to their exact trigger, by Escape and a real click.
     for(const close of ['Escape','pointer']){
       await tab(notes,true);await enter();await focused('.welcome-dialog-close');
@@ -1254,7 +1256,7 @@ for (const [width,height] of [[1280,800],[768,1024],[390,844],[320,568],[568,320
     if(pauseEnabled)await tab('.welcome-preview-pause');
     await p.key('Escape','Escape',27);
     await p.wait(`document.activeElement?.matches('.topic-preview-${opening}')&&document.querySelector('.living-welcome')?.dataset.cinematic==='false'`,'Escape restores the original category');
-    await enter();await focused(back);await tab(notes,true);await tab(map,true);await enter();
+    await enter();await focused(back);await tab(notes,true);await tab(toggle,true);await tab(map,true);await enter();
     await p.wait(`!document.querySelector('.living-welcome')&&document.querySelector('[aria-label="Layer topic"]')?.value==='${opening}'&&document.activeElement?.matches('.map-topic-edit, .map-topics-button')`,'native map action opens the selected primary map');
   });
 }
@@ -1759,15 +1761,16 @@ for(const [width,height] of [[1440,960],[390,844]]) test(`aviation welcome zones
  await enter('.welcome-aviation-tools button');
  await p.wait(`document.querySelector('.welcome-layer-demo .welcome-aviation-status')?.textContent.includes('NASR 2026-10-29')`,'digest-checked pinned snapshot ready');
  assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage-map canvas').length`),1,'one preview map for all modes');
+ if(!await p.evaluate(`document.querySelector('.welcome-aviation-disclosure').open`))await enter('.welcome-aviation-disclosure summary');
  for(const index of [1,2,0]){
   await enter('.welcome-layer-demo .welcome-aviation-modes button:nth-child('+(index+1)+')');
   assert.equal(await p.evaluate(`document.querySelector('.welcome-layer-demo .welcome-aviation-modes button:nth-child(${index+1})').getAttribute('aria-pressed')`),'true');
  }
  await enter('.welcome-layer-demo .welcome-aviation-notes summary');
  assert.match(await p.evaluate(`document.querySelector('.welcome-layer-demo .welcome-aviation-notes').textContent`),/201 airspace volumes; not all are visible.*Only zones are previewed here/);
- await enter('.welcome-layer-demo-actions button');
+ await enter('.welcome-layer-demo-actions button[aria-pressed]');
  await p.wait(`document.querySelector('.welcome-layer-demo .welcome-aviation-status')?.textContent.includes('hidden')`,'comparison hides overlay without claiming unavailable');
- await enter('.welcome-layer-demo-actions button');
+ await enter('.welcome-layer-demo-actions button[aria-pressed]');
  assert.equal(await p.evaluate(`document.documentElement.scrollWidth<=innerWidth`),true);
  await p.key('Escape','Escape',27);await p.wait(`document.querySelector('.living-welcome')?.dataset.fullscreen==='false'`,'Escape returns to categories');
 });

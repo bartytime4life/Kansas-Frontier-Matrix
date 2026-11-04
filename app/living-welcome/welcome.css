@@ -554,19 +554,14 @@
 .living-welcome .welcome-geology-specimen :is(button,a,summary):focus-visible{outline:2px solid #f1d18b;outline-offset:3px}
 .living-welcome[data-fullscreen=true] .welcome-geology-specimen{left:36%;top:14%;width:min(460px,45vw);max-height:calc(100% - 135px);padding:20px}.living-welcome[data-fullscreen=true] .welcome-geology-diagram{max-height:350px}.living-welcome[data-fullscreen=true] .welcome-geology-specimen figcaption strong{font-size:28px}
 @media(max-width:1100px){.living-welcome:not([data-fullscreen=true]) .welcome-geology-specimen{left:auto;right:22px;top:140px;transform:none;width:300px;max-height:440px}}
-@media(max-width:700px){.living-welcome:not([data-fullscreen=true]) .welcome-geology-specimen{position:relative;left:auto;right:auto;top:auto;width:min(330px,calc(100% - 28px));margin:210px auto 20px;transform:none;max-height:430px}.living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo{max-height:28vh}.living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo>small{display:none}.living-welcome[data-fullscreen=true] .welcome-geology-specimen{left:14px;right:14px;top:31%;width:auto;max-width:360px;max-height:calc(69% - 105px);padding:12px;transform:none}.living-welcome[data-fullscreen=true] .welcome-geology-diagram{max-height:220px}.living-welcome[data-fullscreen=true] .welcome-geology-specimen figcaption strong{font-size:20px}.living-welcome .welcome-geology-controls :is(a,button){min-height:44px}.living-welcome .welcome-geology-specimen .welcome-kicker{font-size:8px}}
+@media(max-width:700px){.living-welcome:not([data-fullscreen=true]) .welcome-geology-specimen{position:relative;left:auto;right:auto;top:auto;width:min(330px,calc(100% - 28px));margin:210px auto 20px;transform:none;max-height:430px}.living-welcome[data-fullscreen=true] .welcome-geology-specimen{left:14px;right:14px;top:31%;width:auto;max-width:360px;max-height:calc(69% - 105px);padding:12px;transform:none}.living-welcome[data-fullscreen=true] .welcome-geology-diagram{max-height:220px}.living-welcome[data-fullscreen=true] .welcome-geology-specimen figcaption strong{font-size:20px}.living-welcome .welcome-geology-controls :is(a,button){min-height:44px}.living-welcome .welcome-geology-specimen .welcome-kicker{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.welcome-geology-specimen :is(.welcome-geology-column,.welcome-geology-plate){animation:none!important;transition:none!important}}.welcome-geology-specimen[data-reduced=true] :is(.welcome-geology-column,.welcome-geology-plate){animation:none!important;transition:none!important}
 .living-welcome .welcome-capability-stage .welcome-geology-specimen figcaption{position:relative;display:grid;bottom:auto;left:auto;max-width:none;padding:0 4px;background:transparent}
 .living-welcome .welcome-geology-controls :is(button,a){min-height:44px}
 
-/* Expanded phone: a short fixed introduction, then one specimen scroll owner.
-   The log's source disclosure stays inside that rectangle, above map credits
-   and Return controls. Desktop keeps its existing layout. */
+/* The fallback recorded log keeps one scroll owner on expanded phones.
+   Shared preview controls below own the introduction and actions. */
 @media(max-width:700px){
- .living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo{left:14px;right:14px;top:14px;width:auto;height:112px;max-height:none;overflow:visible;display:flex;flex-direction:column;justify-content:center;padding:12px;contain:layout}
- .living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo>h2{font-size:18px;line-height:1.2;margin:0}
- .living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo>:is(.welcome-kicker,p,small,.welcome-layer-demo-actions){display:none}
- .living-welcome[data-fullscreen=true][data-active=geology] .welcome-layer-demo>.welcome-text-action{display:flex;min-height:44px;flex:none;margin:5px 0 0;padding:6px 0;font-size:12px}
  .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-specimen{top:140px;bottom:156px;left:14px;right:14px;width:auto;max-width:none;height:auto;max-height:none;overflow:auto;overscroll-behavior:contain;padding:12px}
  .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-specimen figcaption{display:none}
  .living-welcome[data-fullscreen=true][data-active=geology] .welcome-geology-diagram{max-height:280px;margin-top:0}
@@ -673,6 +668,8 @@
 
 /* Cinematic category stage. The existing renderer stays mounted; navigation
    occupies the edges and source attribution retains its own bottom strip. */
+.atlas-studio:not([data-welcome-sources=open]):has(> .explorer-guide.living-welcome) .explorer-guide.living-welcome[data-cinematic=true]{bottom:0}
+.atlas-studio .living-welcome[data-cinematic=true] .welcome-capability-stage{inset:0}
 .atlas-studio .living-welcome[data-cinematic=true]{--welcome-rail-bottom:52px;--welcome-rail-height:137px;--welcome-rail-clearance:calc(var(--welcome-rail-bottom) + var(--welcome-rail-height) + 12px);overflow:hidden}
 .living-welcome[data-cinematic=true] .welcome-map-stage{display:block;height:100%;min-height:0;padding:0;overflow:hidden}
 .living-welcome[data-cinematic=true] .welcome-wash{position:absolute;inset:0;background:linear-gradient(180deg,#031923b8 0,transparent 23%,transparent 70%,#031923a6);pointer-events:none}
@@ -687,6 +684,7 @@
 .living-welcome[data-cinematic=true] .welcome-layer-demo>.welcome-kicker{font-size:10px;letter-spacing:.12em;color:#afcbd1}
 .living-welcome[data-cinematic=true] .welcome-layer-demo h2{font-size:27px;font-weight:500;line-height:1.1;letter-spacing:-.025em;margin:10px 0 14px}
 .living-welcome[data-cinematic=true] .welcome-layer-demo-actions{gap:6px}
+.living-welcome .welcome-aviation-disclosure>summary{display:none}
 .living-welcome[data-cinematic=true] .welcome-layer-demo-actions button{width:100%;text-align:left;justify-content:flex-start}
 .living-welcome[data-cinematic=true] .welcome-layer-demo-actions button.welcome-open-category{border-color:#d6bc7f}
 .living-welcome[data-cinematic=true] .domain-stage-caption{top:auto;bottom:var(--welcome-rail-clearance);left:auto;right:24px;max-width:min(360px,calc(100% - 400px));justify-items:end;text-align:right;padding:12px 14px;border-radius:8px;background:#082635e8;max-height:150px;overflow:auto;pointer-events:auto}
@@ -713,32 +711,40 @@
  .living-welcome .welcome-stage-title span{display:none}
 }
 @media(max-width:700px){
- .atlas-studio .living-welcome[data-cinematic=true]{--welcome-rail-bottom:48px;--welcome-rail-height:122px}
- .living-welcome[data-cinematic=true] .welcome-scene-deck{inset:10px 12px auto;gap:8px}
+ .atlas-studio .living-welcome[data-cinematic=true]{--welcome-rail-bottom:calc(60px + env(safe-area-inset-bottom,0px));--welcome-rail-height:72px}
+ .living-welcome[data-cinematic=true] .welcome-scene-deck{inset:max(10px,env(safe-area-inset-top,0px)) 12px auto;gap:8px}
  .living-welcome .welcome-stage-title{display:none}
  .living-welcome[data-cinematic=true] .welcome-preview-pause{margin-left:auto;padding-inline:9px;font-size:11px}
  .living-welcome[data-cinematic=true] .welcome-preview-expand{padding-inline:10px;font-size:11px}
  .living-welcome[data-cinematic=true] .welcome-stage-close{width:44px}
  .living-welcome[data-cinematic=true] .welcome-layer-demo,
  .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo,
- .living-welcome[data-cinematic=true][data-active=aviation] .welcome-layer-demo{display:block;top:68px;left:12px;right:12px;width:auto;height:auto;max-height:180px;overflow:auto;padding:12px 14px}
- .living-welcome[data-cinematic=true] .welcome-layer-demo h2{font-size:18px;margin:0 0 8px}
- .living-welcome[data-cinematic=true] .welcome-layer-demo>p{font-size:12px}
- .living-welcome[data-cinematic=true] .welcome-layer-demo>small{font-size:11px}
- .living-welcome[data-cinematic=true] .welcome-layer-demo-actions{display:flex;margin-top:8px}
- .living-welcome[data-cinematic=true] .welcome-layer-demo-actions button{width:auto;flex:1 1 120px;font-size:11px;padding:8px}
- .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo>:is(p,small,.welcome-layer-demo-actions){display:revert}
- .living-welcome[data-cinematic=true][data-active=geology] .welcome-layer-demo>.welcome-layer-demo-actions{display:flex}
- .living-welcome[data-cinematic=true] .welcome-layer-demo>.welcome-kicker{display:none}
- .living-welcome .welcome-category-rail{left:12px;right:12px;bottom:48px;padding:9px 6px 5px;border-radius:10px}
- .living-welcome .welcome-rail-heading{font-size:8px;padding-bottom:4px}
- .living-welcome .welcome-rail-track{gap:2px}
+ .living-welcome[data-cinematic=true][data-active=aviation] .welcome-layer-demo{display:block;top:calc(max(10px,env(safe-area-inset-top,0px)) + 58px);left:12px;right:12px;width:auto;height:auto;max-height:min(240px,40dvh);overflow:auto;padding:10px 12px}
+ .living-welcome[data-cinematic=true] .welcome-layer-demo h2{font-size:16px;line-height:1.25;margin:0 0 8px}
+ /* Longer explanations are available through Details; the default is a map
+    title and one row of touch-sized actions, without a clipped text preview. */
+ .living-welcome[data-cinematic=true] .welcome-layer-demo>:is(.welcome-kicker,p,small,.welcome-text-action){display:none}
+ .living-welcome[data-cinematic=true] .welcome-layer-demo>.welcome-layer-demo-state[data-attention=true]{display:block;font-size:11px;margin:8px 0 0}
+ .living-welcome[data-cinematic=true] .welcome-layer-demo-actions{display:flex;flex-wrap:nowrap;margin:0;gap:6px}
+ .living-welcome[data-cinematic=true] .welcome-layer-demo-actions button{width:auto;min-width:0;flex:1 1 0;font-size:11px;padding:8px 4px;text-align:center;justify-content:center}
+ .living-welcome .welcome-aviation-disclosure{margin-top:6px}
+ .living-welcome .welcome-aviation-disclosure>summary{display:list-item;min-height:44px;align-content:center;font-size:12px;cursor:pointer}
+ .living-welcome .welcome-category-rail{left:12px;right:12px;bottom:var(--welcome-rail-bottom);padding:6px;border-radius:10px}
+ .living-welcome .welcome-rail-heading{display:none}
+ .living-welcome .welcome-rail-track{gap:4px}
+ .living-welcome .welcome-rail-items{padding:0;scrollbar-width:none}
+ .living-welcome .welcome-rail-items::-webkit-scrollbar{display:none}
  .living-welcome .welcome-rail-card{flex-basis:174px;min-height:58px;padding:8px}
- .living-welcome .welcome-rail-scroll{width:44px;font-size:16px}
- .living-welcome[data-cinematic=true]:has(.welcome-layer-demo) .domain-stage-caption{left:12px;right:12px;top:auto;bottom:var(--welcome-rail-clearance);max-width:none;max-height:50px;padding:7px 10px;text-align:left;justify-items:start}
- .living-welcome[data-cinematic=true] .domain-stage-caption>span,.living-welcome[data-cinematic=true] .domain-stage-caption>strong{display:none}
+ .living-welcome .welcome-rail-card small{display:none}
+ .living-welcome .welcome-rail-scroll{width:44px;min-height:44px;font-size:16px}
+ .living-welcome[data-cinematic=true]:has(.welcome-layer-demo) .domain-stage-caption{left:12px;right:12px;top:auto;bottom:var(--welcome-rail-clearance);max-width:none;max-height:84px;padding:6px 10px;text-align:left;justify-items:start}
+ .living-welcome[data-cinematic=true] .domain-stage-caption:not(:has(.domain-stage-data)){display:none}
+ .living-welcome[data-cinematic=true] .domain-stage-caption>:not(.domain-stage-data){display:none}
  .living-welcome[data-cinematic=true] .domain-stage-caption small{font-size:10px}
- .living-welcome[data-cinematic=true][data-active=geology] .welcome-geology-specimen{top:260px;bottom:calc(var(--welcome-rail-clearance) + 62px);left:12px;right:12px;width:auto;max-width:none;height:auto;max-height:none;transform:none}
+ .living-welcome[data-cinematic=true] .domain-stage .maplibregl-ctrl-bottom-right{bottom:env(safe-area-inset-bottom,0px);right:0}
+ .living-welcome[data-cinematic=true] .domain-stage .maplibregl-ctrl-attrib{box-sizing:border-box;max-height:52px;overflow:auto;margin:0 8px 4px;font-size:10px;line-height:1.3}
+ .living-welcome[data-cinematic=true][data-active=geology] .welcome-geology-specimen{top:180px;bottom:calc(var(--welcome-rail-clearance) + 62px);left:12px;right:12px;width:auto;max-width:none;height:auto;max-height:none;transform:none}
+
 }
 @media(max-height:520px) and (min-width:701px){
  .living-welcome[data-cinematic=true] .welcome-layer-demo{top:70px;max-height:calc(100% - 70px - var(--welcome-rail-clearance))}
