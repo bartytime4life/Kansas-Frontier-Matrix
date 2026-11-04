@@ -413,18 +413,18 @@ for (const [width, height] of [[1440, 960], [390, 844]]) {
       ['agriculture', 'tool-usda-cdl-raster', 'tool-usda-cdl'],
       ['flora', 'tool-nlcd-land-cover-raster', 'tool-nlcd-land-cover'],
       ['ecology', 'tool-nlcd-land-cover-raster', 'tool-nlcd-land-cover'],
-      ['fauna', 'tool-nlcd-land-cover-raster', 'tool-nlcd-land-cover'],
+      ['fauna', 'welcome-gbif-animal-records-2025', 'welcome-gbif-animal-records-2025'],
       ['sky', 'kfm-daylight-context-fill', null],
       ['water', 'external-usgs-wbd-watersheds-raster', null],
       ['evidence', 'external-census-counties-line', null],
-      ['public-safety', 'external-census-counties-line', null],
+      ['public-safety', 'external-deflock-alpr-fill', null],
     ]) {
       await select(topic);
       await p.wait(`(()=>{const m=window.__welcomeScientificMap;return m.getLayer(${JSON.stringify(layer)}) && m.getLayoutProperty(${JSON.stringify(layer)},'visibility')!=='none';})()`, topic + ' draws its actual layer');
       if (source) {
         await p.wait(`window.__welcomeScientificMap.isSourceLoaded(${JSON.stringify(source)})`, 'synthetic classification pixels reach the real renderer');
         const info = await p.evaluate(`window.__welcomeScientificMap.getStyle().sources[${JSON.stringify(source)}]`);
-        assert.match(info.tiles[0], topic === 'agriculture' ? /^\/api\/cropland\/tile\?year=2024/ : /NLCD_2021_Land_Cover_L48/);
+        assert.match(info.tiles[0], topic === 'agriculture' ? /^\/api\/cropland\/tile\?year=2024/ : topic === 'fauna' ? /kind=fauna&date=2025-01-01/ : /NLCD_2021_Land_Cover_L48/);
         await p.wait(`!document.querySelector('.domain-stage-data')?.textContent.includes('loading')`, 'classification reports its loaded state');
         assert.doesNotMatch(await p.evaluate(`document.querySelector('.domain-stage-data').textContent`), /unavailable/);
       }
@@ -1797,73 +1797,48 @@ test('water animation stays opt-in and does not follow the visitor into unrelate
 
 
 for (const [width, height] of [[1440, 960], [390, 844], [320, 568], [568, 320]]) {
- test(`scientific studies render, pause and respect reduced motion at ${width}x${height}`, {timeout:120000}, async t => {
-  const b=await browser(t),p=await pageSession(b,width,height);
-  const requestedSpecimens=new Set(),specimenResponses=new Map();
-  b.listeners.add(message=>{
-   if(message.method==='Network.requestWillBeSent'&&message.params.request.url.includes('/welcome/scientific/'))requestedSpecimens.add(new URL(message.params.request.url).pathname);
-   if(message.method==='Network.responseReceived'&&message.params.response.url.includes('/welcome/scientific/'))specimenResponses.set(new URL(message.params.response.url).pathname,message.params.response.status);
-  });
+ test(`geographic previews render real layers and respect motion controls at ${width}x${height}`, {timeout:150000}, async t => {
+  const fixtures=await welcomeScientificBrowserFixtures(origin);
+  const b=await browser(t),p=await pageSession(b,width,height,fixtures);
+  const specimenRequests=[];
+  b.listeners.add(message=>{if(message.method==='Network.requestWillBeSent'&&message.params.request.url.includes('/welcome/scientific/'))specimenRequests.push(message.params.request.url);});
   await p.open('/?motion=off');await readyWelcome(p);
-  assert.equal(await p.evaluate(`!!document.querySelector('.topic-illustration')`),false,'no illustration before a topic is chosen');
-  assert.equal(requestedSpecimens.size,0,'opening the chooser downloads no specimen assets');
   const before=await p.evaluate(`({url:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`);
   if(width<=700){
-   await p.evaluate(`document.querySelector('.topic-flora').closest('.topic-choice').scrollIntoView({block:'nearest',inline:'center',behavior:'instant'})`);
-   await p.wait(`document.querySelector('.living-welcome').dataset.centeredTopic==='flora'&&document.querySelector('.topic-illustration')?.dataset.topic==='flora'`,'the centered mobile card owns its scientific study');
-   const compact=await p.evaluate(`(()=>{const f=document.querySelector('.topic-illustration'),r=f.getBoundingClientRect(),caption=f.querySelector('small').getBoundingClientRect(),svg=f.querySelector('svg').getBoundingClientRect(),source=document.querySelector('.domain-stage-caption').getBoundingClientRect(),stage=document.querySelector('.welcome-capability-stage').getBoundingClientRect();return{expanded:document.querySelector('.living-welcome').dataset.fullscreen,left:r.left,right:r.right,top:r.top,bottom:r.bottom,scopeTop:caption.top,scopeBottom:caption.bottom,scopeHeight:caption.height,svgHeight:svg.height,sourceBottom:source.bottom,stageBottom:stage.bottom};})()`);
-   assert.equal(compact.expanded,'false','centering stays in the card chooser');
-   assert.ok(compact.left>=0&&compact.right<=width&&compact.svgHeight>35,'the scientific study fills the compact map viewport');
-   assert.ok(compact.scopeHeight>0&&compact.scopeBottom<=compact.stageBottom&&compact.scopeTop>compact.sourceBottom,'illustrative scope stays visible separately from the map caption');
-   if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`scientific-carousel-${width}x${height}.png`),Buffer.from(shot.data,'base64'));}
+   await revealControl(p,'.topic-flora');
+   await p.wait(`document.querySelector('.domain-stage')?.dataset.topic==='flora'&&window.__welcomeScientificMap?.getSource('tool-nlcd-land-cover')`,'the centered card previews actual mapped vegetation');
+   const key=await p.evaluate(`(()=>{const e=document.querySelector('.domain-stage-map-key'),r=e.getBoundingClientRect(),stage=document.querySelector('.welcome-capability-stage').getBoundingClientRect();return{text:e.textContent,width:r.width,height:r.height,top:r.top,bottom:r.bottom,stageBottom:stage.bottom};})()`);
+   assert.match(key.text,/NLCD 2021/);assert.ok(key.width>0&&key.height>0&&key.bottom<=key.stageBottom,'a visible dated source key stays inside the compact map: '+JSON.stringify(key));
   }
-  const selector='.topic-preview-flora';await revealControl(p,selector);
-  await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);
-  for(const topic of ['flora','fauna','ecology','land','history','evidence','public-safety']){
-   if(topic!=='flora'){
-    await p.evaluate(`document.querySelector('.welcome-rail-card[data-topic="${topic}"]').focus()`);await p.key('Enter','Enter',13);
+  await revealControl(p,'.topic-preview-flora');await p.evaluate(`document.querySelector('.topic-preview-flora').focus()`);await p.key('Enter','Enter',13);
+  for(const [topic,layer] of [['flora','tool-nlcd-land-cover-raster'],['fauna','welcome-gbif-animal-records-2025'],['ecology','tool-nlcd-land-cover-raster'],['land','external-blm-plss-sections-raster'],['history','external-kdot-roads-1918-raster'],['evidence','welcome-census-record-focus-line'],['public-safety','external-deflock-alpr-count']]){
+   if(topic!=='flora'){await p.evaluate(`document.querySelector('.welcome-rail-card[data-topic="${topic}"]').focus()`);await p.key('Enter','Enter',13);}
+   await p.wait(`document.querySelector('.domain-stage')?.dataset.topic==='${topic}'&&window.__welcomeScientificMap?.getLayer('${layer}')`,'the '+topic+' source is installed on the single geographic map');
+   const state=await p.evaluate(`(()=>{const m=window.__welcomeScientificMap;return{key:document.querySelector('.domain-stage-map-key').textContent,center:m.getCenter().toArray(),zoom:m.getZoom(),terrain:m.getTerrain(),canvases:document.querySelectorAll('.domain-stage-map canvas').length,art:!!document.querySelector('.topic-illustration'),width:document.documentElement.scrollWidth,moving:m.isMoving()};})()`);
+   assert.equal(state.canvases,1);assert.equal(state.art,false);assert.equal(state.moving,false,'motion-off holds the geographic camera');assert.ok(state.width<=width+1);
+   if(topic==='flora'){assert.ok(state.zoom>=10&&state.terrain);assert.match(state.key,/30 m/);}
+   if(topic==='fauna'){
+    const source=await p.evaluate(`window.__welcomeScientificMap.getStyle().sources['welcome-gbif-animal-records-2025']`);
+    assert.equal(source.maxzoom,6);assert.match(source.tiles[0],/kind=fauna&date=2025-01-01/);assert.match(state.key,/not animal abundance/);
    }
-   await p.wait(`document.querySelector('.topic-illustration')?.dataset.topic==='${topic}'`,topic+' illustration loads');
-   if(['flora','fauna','ecology'].includes(topic)){
-    await p.wait(`document.querySelector('.topic-illustration image')?.href.baseVal==='/welcome/scientific/${topic}-study.webp'`,'the selected photorealistic specimen is mounted');
-    assert.deepEqual([...requestedSpecimens].filter(path=>!['flora','fauna','ecology'].slice(0,['flora','fauna','ecology'].indexOf(topic)+1).some(id=>path.endsWith(id+'-study.webp'))),[],'unselected specimen assets stay unloaded');
-   }else assert.equal(await p.evaluate(`document.querySelectorAll('.topic-illustration image').length`),0,'method studies need no additional bitmap');
-   const state=await p.evaluate(`(()=>{const f=document.querySelector('.topic-illustration'),s=f.querySelector('svg').getBoundingClientRect(),c=f.querySelector('figcaption').getBoundingClientRect(),guide=document.querySelector('.welcome-layer-demo').getBoundingClientRect(),rail=document.querySelector('.welcome-category-rail').getBoundingClientRect(),source=document.querySelector('.domain-stage-caption').getBoundingClientRect(),credits=[...document.querySelectorAll('.domain-stage .maplibregl-ctrl-attrib')].map(e=>e.getBoundingClientRect()).filter(r=>r.width&&r.height);return{sourceTop:source.height?source.top:innerHeight,creditTop:Math.min(innerHeight,...credits.map(r=>r.top)),count:document.querySelectorAll('.topic-illustration').length,paused:f.dataset.paused,scope:f.querySelector('small').textContent,svg:[s.x,s.y,s.width,s.height],caption:[c.x,c.y,c.width,c.height],guide:[guide.right,guide.bottom],railTop:rail.top,animations:f.getAnimations({subtree:true}).map(a=>a.playState),width:document.documentElement.scrollWidth};})()`);
-   if(process.env.KFM_WORKSPACE_SCREENSHOTS){
-    // A representative, deterministic point in each real CSS animation.
-    await p.evaluate(`document.querySelector('.topic-illustration').getAnimations({subtree:true}).forEach(a=>{a.currentTime=4200;})`);
-    await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});
-    await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`field-note-${topic}-${width}x${height}.png`),Buffer.from(shot.data,'base64'));
+   if(topic==='land'){assert.ok(state.zoom>=11);assert.match(state.key,/not property lines/);}
+   if(topic==='evidence'){
+    const source=await p.evaluate(`window.__welcomeScientificMap.getSource('welcome-census-record-focus')._data`);
+    assert.equal(source.features[0].properties.geoid,'20177');assert.equal(source.features[0].properties.population,1234,'labels use the test provider record, not an invented production count');
    }
-   assert.equal(state.count,1);assert.equal(state.paused,'true');assert.match(state.scope,/illustration|concept/);
-   assert.ok(state.svg[2]>100&&state.svg[3]>45,topic+' has a visible drawing');
-   assert.ok(state.caption[0]>=0&&state.caption[0]+state.caption[2]<=width+1&&state.caption[1]+state.caption[3]<state.railTop,topic+' caption is inside the stage above the rail: '+JSON.stringify(state));
-   assert.ok(width>700?state.svg[0]>=state.guide[0]:height<500?state.svg[0]>=state.guide[0]:state.svg[1]>=state.guide[1],topic+' drawing is separate from the guide');
-   assert.ok(state.caption[1]+state.caption[3]<=Math.min(state.sourceTop,state.creditTop),topic+' scope remains readable above source captions and credits: '+JSON.stringify(state));
-   assert.ok(state.animations.every(s=>s==='paused'));assert.ok(state.width<=width+1);
+   if(topic!=='fauna')assert.equal(await p.evaluate(`!!window.__welcomeScientificMap.getSource('welcome-gbif-animal-records-2025')`),false,'animal records leave their subject');
   }
-  assert.equal(requestedSpecimens.size,3,'only the three selected specimen assets download');
-  assert.deepEqual([...specimenResponses.values()],[200,200,200],'all selected specimen assets are served successfully');
-  await p.wait(`document.querySelector('.topic-illustration').dataset.sourceState==='unavailable'`,'the isolated provider outage reaches the scientific study');
-  assert.match(await p.evaluate(`document.querySelector('.topic-illustration .ti-status').textContent`),/UNAVAILABLE/,'the display cannot invent operational source availability');
+  assert.equal(specimenRequests.length,0,'no generated specimen imagery remains');
   await p.evaluate(`document.querySelector('.welcome-layer-demo-actions button[aria-pressed]').focus()`);await p.key('Enter','Enter',13);
-  await p.wait(`document.querySelector('.topic-illustration').dataset.sourceState==='hidden'`,'comparison reports hidden overlays');
-  await p.key('Enter','Enter',13);
-  await p.wait(`document.querySelector('.topic-illustration').dataset.sourceState==='unavailable'`,'restoring overlays preserves provider failure');
+  await p.wait(`window.__welcomeScientificMap.getLayoutProperty('external-deflock-alpr-fill','visibility')==='none'`,'comparison hides the real report cells');
+  await p.key('Enter','Enter',13);await p.wait(`window.__welcomeScientificMap.getLayoutProperty('external-deflock-alpr-fill','visibility')!=='none'`,'comparison restores the source cells');
   await p.evaluate(`document.querySelector('.welcome-preview-pause').focus()`);await p.key('Enter','Enter',13);
-  await p.wait(`document.querySelector('.topic-illustration')?.dataset.paused==='false'`,'manual Play starts the drawing');
-  const clocks=()=>p.evaluate(`document.querySelector('.topic-illustration').getAnimations({subtree:true}).map(a=>a.currentTime)`);
-  const moving=await clocks();
-  await p.wait(`document.querySelector('.topic-illustration').getAnimations({subtree:true}).some((a,i)=>a.currentTime>(${JSON.stringify(moving)})[i]+10)`,'animation clocks advance after the compositor resumes');
-  await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.topic-illustration')?.dataset.paused==='true'`,'Pause holds the drawing');
-  await p.wait(`document.querySelector('.topic-illustration').getAnimations({subtree:true}).every(a=>a.playState==='paused'&&!a.pending)`,'the compositor commits the paused frame');
-  const held=await clocks();await pause(130);assert.deepEqual(await clocks(),held,'paused clocks hold exactly');
+  if(width>700)await p.wait(`window.__welcomeScientificMap.isMoving()`,'Play moves through the real geographic view');
+  await p.key('Enter','Enter',13);await p.wait(`!window.__welcomeScientificMap.isMoving()`,'Pause holds the actual map');
+  const held=await p.evaluate(`window.__welcomeScientificMap.getCenter().toArray()`);await pause(180);assert.deepEqual(await p.evaluate(`window.__welcomeScientificMap.getCenter().toArray()`),held);
   await p.call('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});
-  await p.wait(`document.querySelector('.topic-illustration')?.dataset.reduced==='true'`,'OS preference reaches the scene');
-  assert.deepEqual(await clocks(),[],'reduced motion renders the complete static artwork');
-  assert.deepEqual(await p.evaluate(`({url:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`),before,'illustrations never activate the working map');
-  assert.equal(await p.evaluate(`document.querySelectorAll('.domain-stage-map canvas').length`),1,'one map renderer');
-  await p.evaluate(`document.querySelector('.welcome-rail-card[data-topic="transport"]').focus()`);await p.key('Enter','Enter',13);
-  await p.wait(`!document.querySelector('.topic-illustration')`,'leaving an illustrated subject removes its animation');
+  await p.wait(`document.querySelector('.living-welcome').dataset.reduced==='true'||document.querySelector('.welcome-preview-pause')?.disabled`,'OS motion preference is applied');
+  assert.equal(await p.evaluate(`window.__welcomeScientificMap.isMoving()`),false);
+  assert.deepEqual(await p.evaluate(`({url:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`),before,'preview cameras and layers never mutate the working map');
  });
 }

@@ -6,6 +6,7 @@ import { readFile } from 'node:fs/promises';
 // style fetch: these tests are about which style and camera apply when, not rendering.
 const toUrl = source => `data:text/javascript;base64,${Buffer.from(source).toString('base64')}`;
 const stubs = {
+  "'./geographic-focus'": toUrl(`export const syncGeographicFocus = () => {};`),
   "'../noaa-satellite'": toUrl(`export const NOAA_SATELLITE_FRAMES_PATH = '/api/noaa-satellite/frames'; export const NOAA_SATELLITE_FRESH_AGE_MS = 5400000; export const isNoaaSatelliteManifest = value => Array.isArray(value?.frames);`),
   "'../maplibre-seam'": toUrl(`export const loadMapLibre = async () => ({ setWorkerUrl() {}, Map: globalThis.__welcome.FakeMap });`),
   "'../map-runtime'": toUrl(`export const BASEMAPS = { standard: { style: 'https://style.test/standard' }, relief: { style: { version: 8, name: 'relief', sources: {}, layers: [] } } };`),

@@ -845,6 +845,9 @@
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > span { font-size:9px; letter-spacing:.12em; }
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > strong { font-size:22px; text-shadow:0 1px 12px #00121c; }
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > small { display:none; }
+.living-welcome .domain-stage-caption .domain-stage-map-key { color:#f0d99f; font-size:11px; }
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > .domain-stage-map-key { display:block; max-width:270px; font-size:10px; line-height:1.4; }
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage-caption > .domain-stage-data { display:block; max-width:270px; font-size:9px; line-height:1.35; }
 .living-welcome[data-builder=true][data-carousel=true] .welcome-discovery-layout { position:absolute; left:0; right:0; top:auto; bottom:calc(18px + var(--welcome-selection)); height:140px; margin:0; }
 .living-welcome[data-builder=true][data-carousel=true] .welcome-discovery-content { position:relative; }
 .living-welcome[data-builder=true][data-carousel=true] .discovery-hint { display:none; }

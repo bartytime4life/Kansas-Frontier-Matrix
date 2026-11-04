@@ -11,6 +11,7 @@ import { isNoaaSatelliteManifest, NOAA_SATELLITE_FRAMES_PATH, NOAA_SATELLITE_FRE
 import { setPopulationPrisms } from '../population-prisms';
 import { WELCOME_DEM_SOURCE_ID, WELCOME_IDLE_VIEW, welcomeDriftLeg, welcomeStyle, welcomeView } from '../welcome-map-view';
 import { createWelcomeScientificLayers } from './scientific-layers';
+import { syncGeographicFocus } from './geographic-focus';
 
 const WORKER_URL = '/maplibre/maplibre-gl-worker.mjs';
 // Pointer sweeps across the cards should not restyle the map for every card passed.
@@ -153,6 +154,7 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       if (radar) setNoaaRadarObservationTime(map, radar);
       setPopulationPrisms(map, layersVisible && view.prisms);
       applyOfficialContextState(map, visibility, opacity, loaded);
+      syncGeographicFocus(map, view.topic, layersVisible, loaded['census-counties']);
       if (shown.has('noaa-goes-geocolor') && satelliteCurrent(satellite)) setNoaaSatelliteFrame(map, satellite, true, opacity['noaa-goes-geocolor']);
       else clearNoaaSatelliteFrame(map);
     } catch { /* Preview data is optional; the map stays. */ }

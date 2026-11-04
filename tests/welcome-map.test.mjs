@@ -17,11 +17,13 @@ function load(id){
 const view=load('./welcome-map-view'),maps=load('./category-maps'),basemaps=load('./category-basemaps');
 const plain=value=>JSON.parse(JSON.stringify(value));
 
-test('each topic previews the map it opens with, and the idle view is the default map of Kansas',()=>{
+test('each topic previews real map renderers and starters, and the idle view is the default map of Kansas',()=>{
  for(const [topic,look] of Object.entries(maps.CATEGORY_MAPS)){
   const v=view.welcomeView(topic);
-  assert.equal(v.topic,topic);assert.equal(v.basemap,look.basemap,`${topic}: the base map choice decides the preview`);
-  assert.equal(v.scene,look.scene);assert.deepEqual(plain(v.camera),plain(look.camera));assert.equal(v.name,look.name);
+  assert.equal(v.topic,topic);
+  if(!['flora','fauna','ecology','land','history','evidence','public-safety'].includes(topic)){
+   assert.equal(v.basemap,look.basemap);assert.equal(v.scene,look.scene);assert.deepEqual(plain(v.camera),plain(look.camera));assert.equal(v.name,look.name);
+  }else assert.ok(v.key,'the geographic preview retains its short source key');
   for(const id of look.starters.filter(id=>!view.WELCOME_PREVIEW_SKIPPED_STARTERS.has(id)))assert.ok(v.starters.includes(id),`${topic}: the preview retains its own starters`);
   assert.ok(v.starters.length||v.scientificLayers.length||v.scene==='terrain',`${topic}: a scientific layer or real terrain, beyond a plain basemap`);
  }
@@ -36,15 +38,23 @@ test('each topic previews the map it opens with, and the idle view is the defaul
 });
 
 test('basemap-only cards gain appropriate existing science without changing working-map defaults',()=>{
- for(const topic of ['ecology','flora','fauna'])assert.deepEqual(plain(view.welcomeView(topic).scientificLayers),['land-cover']);
+ for(const topic of ['ecology','flora'])assert.deepEqual(plain(view.welcomeView(topic).scientificLayers),['land-cover']);
  assert.deepEqual(plain(view.welcomeView('agriculture').scientificLayers),['cropland']);
  assert.deepEqual(plain(view.welcomeView('sky').scientificLayers),['daylight']);
  assert.deepEqual(plain(view.welcomeView('water').starters),['usgs-wbd-watersheds'],'no managed gauge network on hover');
- for(const topic of ['evidence','public-safety']){
+ assert.deepEqual(plain(view.welcomeView('fauna').scientificLayers),['animal-records']);
+ assert.deepEqual(plain(view.welcomeView('public-safety').starters),['deflock-alpr']);
+ for(const topic of ['evidence']){
   assert.deepEqual(plain(view.welcomeView(topic).starters),['census-counties']);
   assert.deepEqual(plain(maps.CATEGORY_MAPS[topic].starters),[],'a preview never enables the opened map\'s layers');
  }
- assert.match(view.welcomeView('fauna').detail,/no animal observations/);
+ assert.match(view.welcomeView('fauna').detail,/2025.*coarse hexagons/);
+ assert.match(view.welcomeView('fauna').detail,/not abundance/);
+ assert.deepEqual(plain(view.welcomeView('land').starters),['blm-plss-townships','blm-plss-sections']);
+ assert.ok(view.welcomeView('land').camera.zoom>=11);
+ assert.equal(maps.CATEGORY_MAPS.land.camera.zoom,8.4,'the closer preview leaves working-map defaults intact');
+ assert.equal(view.welcomeView('flora').scene,'terrain');
+ assert.ok(view.welcomeView('flora').camera.zoom>=10);
  assert.match(view.welcomeView('public-safety').detail,/no crime, court or live emergency/);
 });
 

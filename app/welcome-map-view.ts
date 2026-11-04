@@ -7,16 +7,17 @@ import type { BasemapKey } from "./map-runtime";
 import type { StyleSpecification } from "./maplibre-seam";
 
 /**
- * What the welcome's background map shows: the real map each topic opens
- * with (its basemap, scene and camera from CATEGORY_MAPS), never an
- * illustration. Until a visitor points at a topic it shows the Explorer's
+ * Real geography, using the Explorer's renderers and source adapters. Selected
+ * topics visit a useful geographic scale instead of repeating the statewide
+ * view. These preview cameras and layers do not change the working map.
+ * Until a visitor points at a topic it shows the Explorer's
  * default vector map over the whole state, so opt-in providers (imagery,
  * aerials, topo, the Terrarium DEM) are requested only for a topic the
  * visitor chose to preview. A previewed topic also shows its starter data
  * layers and a few lightweight scientific tools, drawn as the Explorer draws
  * them. Preview-only additions do not change the working map's defaults.
  */
-export type WelcomeScientificLayer = "land-cover" | "cropland" | "daylight";
+export type WelcomeScientificLayer = "land-cover" | "animal-records" | "cropland" | "daylight";
 export type WelcomeView = Readonly<{
   /** The topic, or null for the statewide default. */
   topic: string | null;
@@ -31,6 +32,8 @@ export type WelcomeView = Readonly<{
   /** Caption: the map's name and what it shows. */
   name: string;
   detail: string;
+  /** Short map key, retained in the phone's compact preview. */
+  key?: string;
 }>;
 
 /**
@@ -44,28 +47,44 @@ export const WELCOME_TERRAIN_EXAGGERATION = 1.5;
 
 // Fill the basemap-only previews with tools already available in the Explorer.
 // Water uses published basin geography; a hover never starts River Pulse.
-// Wildlife and safety stay at landscape/reference scale, without invented feeds.
+// Animal records reuse the Observatory's coarse GBIF carrier. ALPR reports
+// retain the adapter's generalized cells, never exact camera locations.
 const PREVIEW_CONTEXT: Partial<Record<TopicId, readonly OfficialContextId[]>> = {
   water: ["usgs-wbd-watersheds"],
   evidence: ["census-counties"],
-  "public-safety": ["census-counties"],
+  land: ["blm-plss-sections"],
+  "public-safety": ["deflock-alpr"],
 };
 const SCIENTIFIC_LAYERS: Partial<Record<TopicId, readonly WelcomeScientificLayer[]>> = {
   agriculture: ["cropland"],
   ecology: ["land-cover"],
   flora: ["land-cover"],
-  fauna: ["land-cover"],
+  fauna: ["animal-records"],
   sky: ["daylight"],
 };
 const PREVIEW_DETAIL: Partial<Record<TopicId, string>> = {
   water: "Published USGS/NRCS watershed boundaries over rivers and lakes; live gauge samples load in the opened map.",
   agriculture: "USDA NASS crop classes over Kansas aerial imagery; crop classification is separate from soil-moisture measurements.",
-  ecology: "NLCD 2021 land-cover classes and published watershed boundaries; landscape context, not a habitat model.",
-  flora: "NLCD 2021 vegetation and land-cover classes at 30 m; cover classes do not identify plant species.",
-  fauna: "NLCD 2021 land-cover context at 30 m; no animal observations, tracks or habitat predictions.",
+  ecology: "Tuttle Creek and the Big Blue River: NLCD 2021 classes and published watershed boundaries on real imagery and 1.5× terrain.",
+  flora: "Flint Hills near Tallgrass Prairie: NLCD 2021 grassland, forest and water classes at 30 m over aerial imagery and 1.5× terrain. Cover is not a species inventory.",
+  fauna: "GBIF Animalia occurrence records from 2025 in coarse hexagons over Kansas imagery. Includes observations and specimens; shading is not abundance, absence, tracks or habitat.",
   sky: "Calculated current daylight and twilight on the globe; solar geometry, not observed clouds or stars.",
-  evidence: "2020 Census county source geography; provider context, not released KFM evidence.",
-  "public-safety": "2020 Census county reference geography; no crime, court or live emergency-incident feed.",
+  land: "BLM township and section survey lines over Kansas 2024 aerial imagery near the Sixth Principal Meridian; survey references, not ownership or access.",
+  evidence: "Shawnee County's actual 2020 Census boundary and population record, highlighted on the map. Provider context, not released KFM evidence.",
+  "public-safety": "Community-reported ALPR areas around Wichita, generalized to 0.05° cells. Counts are mapped reports, not verified devices or live activity; no crime, court or live emergency feed.",
+};
+
+// Named geographic views, not an invented surface or a second map renderer.
+// Fine land-cover cells and survey sections need local-scale cameras; GBIF's
+// coarse aggregate remains at regional scale and source zoom never exceeds six.
+const GEOGRAPHIC_VIEWS: Partial<Record<TopicId, Partial<Pick<WelcomeView, "basemap" | "scene" | "camera" | "name" | "key">>>> = {
+  flora: { basemap: "kansas-aerial", scene: "terrain", camera: { center: [-96.56, 38.43], zoom: 10.1, pitch: 52, bearing: -16 }, name: "Flint Hills vegetation", key: "NLCD 2021 · 30 m · grassland / forest / water" },
+  fauna: { basemap: "imagery", scene: "2d", camera: { center: [-98.38, 38.48], zoom: 6.5, pitch: 0, bearing: 0 }, name: "Kansas animal records", key: "GBIF · 2025 · coarse record density, not animal abundance" },
+  ecology: { basemap: "imagery", scene: "terrain", camera: { center: [-96.64, 39.32], zoom: 9.1, pitch: 48, bearing: -24 }, name: "Big Blue River landscape", key: "NLCD 2021 · 30 m + USGS watershed boundaries" },
+  land: { basemap: "kansas-aerial", scene: "2d", camera: { center: [-97.37, 39.62], zoom: 11.3, pitch: 0, bearing: 0 }, name: "Survey sections on the land", key: "BLM PLSS · townships + sections · not property lines" },
+  history: { camera: { center: [-97.45, 38.86], zoom: 8.8, pitch: 0, bearing: 0 }, name: "Abilene–Salina routes", key: "KDOT · 1918 roads + abandoned rail reference" },
+  evidence: { basemap: "civic", camera: { center: [-95.76, 39.04], zoom: 8.6, pitch: 0, bearing: 0 }, name: "Shawnee County source record", key: "Census 2020 · actual boundary + population record" },
+  "public-safety": { basemap: "storm", camera: { center: [-97.34, 37.69], zoom: 9.1, pitch: 0, bearing: 0 }, name: "Wichita reported ALPR areas", key: "DeFlock / OSM · 0.05° report cells · not live activity" },
 };
 
 export const WELCOME_IDLE_VIEW: WelcomeView = Object.freeze({
@@ -84,7 +103,8 @@ export function welcomeView(topic: string | null): WelcomeView {
   const look = topic && Object.hasOwn(CATEGORY_MAPS, topic) ? CATEGORY_MAPS[topic as keyof typeof CATEGORY_MAPS] : null;
   if (!look) return WELCOME_IDLE_VIEW;
   const starters = [...new Set([...look.starters, ...(PREVIEW_CONTEXT[look.topic] ?? [])])].filter(id => !WELCOME_PREVIEW_SKIPPED_STARTERS.has(id));
-  return { topic: look.topic, basemap: look.basemap, scene: look.scene, camera: look.camera, starters, scientificLayers: SCIENTIFIC_LAYERS[look.topic] ?? [], prisms: Boolean(look.overlays?.includes("population")), name: look.name, detail: `${categorySceneLabel(look.scene)} · ${PREVIEW_DETAIL[look.topic] ?? look.lede}` };
+  const geography = GEOGRAPHIC_VIEWS[look.topic] ?? {};
+  return { topic: look.topic, basemap: look.basemap, scene: look.scene, camera: look.camera, ...geography, starters, scientificLayers: SCIENTIFIC_LAYERS[look.topic] ?? [], prisms: Boolean(look.overlays?.includes("population")), name: geography.name ?? look.name, detail: `${categorySceneLabel(geography.scene ?? look.scene)} · ${PREVIEW_DETAIL[look.topic] ?? look.lede}` };
 }
 
 /**
