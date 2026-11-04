@@ -58,7 +58,7 @@ class NassTests(FeedCase):
                 rows = [line(SECTOR_DESC=kind.upper(), YEAR=str(2000 + n)) for n in range(len(nass.KINDS))] if kind != "crops" else KANSAS
                 self.files[(kind, dated)] = national(rows)
         self.files.update(changes or {})
-        self.web.routes = {**{nass.NASS + f"qs.{k}_{d}.txt.gz": body for (k, d), body in self.files.items()}, nass.NASS: listing(dates)}
+        self.web.routes = {**{nass.NASS_FILES + f"qs.{k}_{d}.txt.gz": body for (k, d), body in self.files.items()}, nass.NASS: listing(dates)}
 
     def at(self, day):
         self.ctx.now = lambda: datetime(2026, 11, 4, 15, 0, tzinfo=timezone.utc).replace(**day)
@@ -99,7 +99,7 @@ class NassTests(FeedCase):
         self.serve({"crops": "20261105"}, {("crops", "20261105"): national(revised)})
         self.web.calls.clear()
         self.assertEqual(nass.nass(self.ctx, max_kinds=1)["kinds"], [], "a newer file within 30 days of the last download waits")
-        self.assertNotIn(nass.NASS + "qs.crops_20261105.txt.gz", self.web.calls)
+        self.assertNotIn(nass.NASS_FILES + "qs.crops_20261105.txt.gz", self.web.calls)
         self.at({"month": 12, "day": 5})
         result = nass.nass(self.ctx, max_kinds=1)
         self.assertEqual((result["kinds"], result["rows"]), (["crops"], 3))
@@ -119,7 +119,7 @@ class NassTests(FeedCase):
         db.close()
 
     def test_a_file_replaced_before_its_download_waits_for_the_next_listing(self):
-        self.web.routes[nass.NASS + "qs.crops_20261031.txt.gz"] = None
+        self.web.routes[nass.NASS_FILES + "qs.crops_20261031.txt.gz"] = None
         result = nass.nass(self.ctx, max_kinds=1)
         self.assertEqual((result["kinds"], result["replaced"]), ([], ["crops"]))
         self.assertEqual(self.q("SELECT COUNT(*) FROM kfm_sql_sources"), [(0,)])

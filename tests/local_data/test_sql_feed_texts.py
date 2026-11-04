@@ -76,7 +76,10 @@ class TowerTests(FeedCase):
         self.assertEqual(dict(db.execute("SELECT name, sql FROM sqlite_master WHERE name LIKE 'kfm_asr%' AND sql IS NOT NULL").fetchall()), ASR_SCHEMA)
 
     def test_only_the_web_routes_fcc_documents_are_tried(self):
-        self.assertTrue(all(route.startswith("https://") and "fcc.gov/" in route for route in texts.ASR_ROUTES))
+        for route in texts.ASR_ROUTES:
+            parts = urllib.parse.urlsplit(route)
+            self.assertEqual(parts.scheme, "https")
+            self.assertTrue(parts.hostname.endswith(".fcc.gov"), route)
 
     def test_loads_kansas_registrations_and_their_records_from_the_first_route(self):
         self.web.routes = {FIRST_ROUTE: asr_zip()}
@@ -453,6 +456,42 @@ class ArchiveCase(FeedCase):
     def run_feed(self, archive, **options):
         self.web.routes = archive.routes()
         return texts.archive_texts(self.bulk, **options)
+
+
+class MirrorFallbackTests(ArchiveCase):
+    HOST = "https://ia800500.us.archive.org/1/items/"
+
+    def archive(self):
+        archive = FakeArchive([book("a")], {"a": {"a_djvu.txt": b"text of a"}})
+        routes = archive.routes()
+        served = routes[METADATA]
+        def metadata(url):
+            if url == METADATA + "a":
+                archive.checked = True
+                return json.dumps({"d1": "ia800500.us.archive.org", "d2": "ia600500.us.archive.org", "dir": "/1/items/a"}).encode()
+            return served(url)
+        routes[METADATA] = metadata
+        routes[self.HOST] = b"text of a"
+        archive.routes = lambda: routes
+        return archive
+
+    def test_a_mirror_500_reads_the_file_from_the_items_own_server(self):
+        archive = self.archive()
+        archive.errors[FILES] = "HTTP_500"
+        result = self.run_feed(archive)
+        self.assertEqual((result["loaded"], result["failed"]), (1, 0))
+        self.assertIn(self.HOST + "a/a_djvu.txt", self.web.calls)
+
+    def test_a_refusal_is_not_retried_on_another_server(self):
+        archive = self.archive()
+        archive.errors[FILES] = "HTTP_403"
+        self.run_feed(archive)
+        self.assertFalse(any(url.startswith(self.HOST) for url in self.web.calls))
+
+    def test_hosts_outside_archive_org_are_ignored(self):
+        self.assertIsNone(texts.IA_HOST.fullmatch("ia800500.evil.example"))
+        self.assertIsNone(texts.IA_HOST.fullmatch("archive.org.evil.example"))
+        self.assertIsNotNone(texts.IA_HOST.fullmatch("ia800500.us.archive.org"))
 
 
 class PublicDomainTests(unittest.TestCase):

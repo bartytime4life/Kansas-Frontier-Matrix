@@ -36,7 +36,9 @@ edition") removes an item even from the date test: an item's ``date`` may not be
 only ``pd_basis``. The ``date`` is IA's metadata and is not checked further.
 
 Each eligible item costs one request to ``https://archive.org/metadata/<id>/files``, which gives every ``DjVuTXT``
-file's name, size and MD5, and one per file to ``https://archive.org/download/<id>/<file>``. The MD5 is verified. Each
+file's name, size and MD5, and one per file to ``https://archive.org/download/<id>/<file>``. That address redirects to a
+mirror, and some mirrors answer 500 for a file the item's own servers still hold, so a failed download reads the item's
+``d1`` and ``d2`` hosts from ``https://archive.org/metadata/<id>`` and tries those. The MD5 is verified. Each
 file is kept gzipped (``texts/<id[:2]>/<id>/<stem>-<sha12>.txt.gz``, key ``text/<id>/<file>``, receipt with MD5, size,
 basis, license) and loaded in its own transaction as parts of about 100,000 characters in ``kfm_ia_texts``, with
 the FTS5 index ``kfm_ia_texts_fts`` (external content, kept in step by triggers, as ``kfm_newspaper_pages_fts``).
@@ -133,6 +135,8 @@ def _text(value):
 IA_SCRAPE = "https://archive.org/services/search/v1/scrape"
 IA_QUERY = "mediatype:texts AND (subject:kansas OR title:kansas)"
 IA_FILES = "https://archive.org/metadata/{identifier}/files"
+IA_ITEM = "https://archive.org/metadata/{identifier}"
+IA_HOST = re.compile(r"[a-z0-9-]+(\.[a-z0-9-]+)*\.archive\.org")
 IA_DOWNLOAD = "https://archive.org/download/{identifier}/{name}"
 IA_FIELDS = ("identifier", "title", "creator", "date", "year", "publisher", "language", "subject", "collection", "licenseurl", "rights",
              "possible-copyright-status", "access-restricted-item", "imagecount", "publicdate", "addeddate", "updatedate", "oai_updatedate",
@@ -361,12 +365,38 @@ def _ia_set_status(ctx, db, identifier: str, status: str, oai, files, today: dat
                    (identifier, status, oai, _json(files), str(today), str(detail)[:300] if detail else None))
 
 
+def _ia_download(run: _IARun, identifier: str, name: str, dest: Path, size: int) -> tuple[str, object]:
+    """(URL, fetched) of one file. When the usual address fails, the item's own servers are tried; a refusal is never retried elsewhere."""
+    quoted = urllib.parse.quote(name)
+    url = IA_DOWNLOAD.format(identifier=identifier, name=quoted)
+    try:
+        return url, run.download(url, dest, size)
+    except FeedError as error:
+        if _ia_refusal(error) != "failed":
+            raise
+        first = error
+    item = run.json(IA_ITEM.format(identifier=identifier), IA_FILES_LIMIT)
+    folder = item.get("dir") if isinstance(item, dict) else None
+    if not isinstance(folder, str) or not folder.startswith("/"):
+        raise first
+    for host in (item.get("d1"), item.get("d2")):
+        if not isinstance(host, str) or not IA_HOST.fullmatch(host):
+            continue
+        url = f"https://{host}{folder}/{quoted}"
+        try:
+            return url, run.download(url, dest, size)
+        except FeedError as error:
+            if _ia_refusal(error) != "failed":
+                raise
+    raise first
+
+
 def _ia_keep_text(ctx, db, run: _IARun, row: dict, name: str, entry: dict, size: int) -> dict:
     """Download one DjVu text file, check its MD5, keep it gzipped and load it. Lock taken for the load only."""
-    identifier, url = row["identifier"], IA_DOWNLOAD.format(identifier=row["identifier"], name=urllib.parse.quote(name))
+    identifier = row["identifier"]
     download, packed = core.temp_path(ctx, "ia-text.txt"), core.temp_path(ctx, "ia-text.txt.gz")
     try:
-        fetched = run.download(url, download, size)
+        url, fetched = _ia_download(run, identifier, name, download, size)
         got, md5 = download.stat().st_size, hashlib.md5(usedforsecurity=False)
         with open(download, "rb") as source, open(packed, "wb") as out, gzip.GzipFile(filename="", fileobj=out, mode="wb", mtime=0) as zipped:
             while chunk := source.read(1 << 20):

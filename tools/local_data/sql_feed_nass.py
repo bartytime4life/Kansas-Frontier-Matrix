@@ -1,6 +1,6 @@
 """NASS feed: the USDA Quick Stats bulk files, cut to Kansas.
 
-Provider: USDA National Agricultural Statistics Service, https://www.nass.usda.gov/datasets/. NASS
+Provider: USDA National Agricultural Statistics Service, https://www.nass.usda.gov/datasets. NASS
 estimates are public domain; NASS asks to be acknowledged
 (https://www.nass.usda.gov/Data_and_Statistics/Citation_Request/index.php). The files hold published
 aggregate estimates only. NASS itself withholds a value that would disclose an operation, as "(D)",
@@ -49,7 +49,8 @@ import zlib
 from tools.local_data import sql_feeds as core
 from tools.local_data.sql_feeds import FeedError
 
-NASS = "https://www.nass.usda.gov/datasets/"
+NASS = "https://www.nass.usda.gov/datasets"      # the listing; with a trailing slash it redirects to a 404 since 2026-11-04
+NASS_FILES = "https://www.nass.usda.gov/sites/default/files/datasets/"
 KINDS = ("crops", "animals_products", "economics", "demographics", "environmental")
 NAME = re.compile(r"qs\.(" + "|".join(KINDS) + r")_(\d{8})\.txt\.gz")
 COLUMNS = ("SOURCE_DESC SECTOR_DESC GROUP_DESC COMMODITY_DESC CLASS_DESC PRODN_PRACTICE_DESC UTIL_PRACTICE_DESC STATISTICCAT_DESC "
@@ -120,7 +121,7 @@ def _kind(ctx, db, state: dict, kind: str, dated: str, summary: dict) -> dict:
     name = f"qs.{kind}_{dated}.txt.gz"
     full, cut = core.temp_path(ctx, "nass-" + name), core.temp_path(ctx, "nass-kansas-" + name)
     try:
-        fetched = core.download(ctx, NASS + name, full, limit=FILE_LIMIT, timeout=900, missing_ok=True)
+        fetched = core.download(ctx, NASS_FILES + name, full, limit=FILE_LIMIT, timeout=900, missing_ok=True)
         if fetched is None:
             summary["replaced"].append(kind)
             return state
