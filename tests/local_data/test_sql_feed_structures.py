@@ -168,6 +168,18 @@ class AirportTests(FeedCase):
         with self.assertRaisesRegex(core.FeedError, "NASR_EDITION_UNREADABLE"):
             st.airports(self.ctx)
 
+    def test_a_missing_apra_service_falls_back_to_the_28_day_cycle_calendar(self):
+        # APRA's nasr/chart query answered 404 from 2026-11-03; the clock is 2026-11-04, inside the 2026-10-29 cycle.
+        self.web.routes[st.APRA] = None
+        result = st.airports(self.ctx)
+        self.assertEqual((result["edition"], result["loaded"]), ("2026-10-29", list(st.NASR_FILES)))
+        self.assertEqual(st.airports(self.ctx)["state"], "not_due")
+        # The next cycle begins 28 days later; its zip is not posted yet, so the feed waits without failing.
+        self.ctx.now = lambda: datetime(2026, 11, 26, 15, 0, tzinfo=timezone.utc)
+        self.posted = False
+        self.assertEqual(st.airports(self.ctx), {"state": "not_posted", "edition": "2026-11-26"})
+        self.assertEqual(self.zip_calls()[-1], "https://nfdc.faa.gov/webContent/28DaySub/extra/26_Nov_2026_APT_CSV.zip")
+
 
 # --- Obstacles -------------------------------------------------------------------------------------
 
