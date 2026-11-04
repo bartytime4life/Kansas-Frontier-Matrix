@@ -6,6 +6,8 @@
 @media(max-width:420px){.kansas-sky{padding:10px}.kansas-sky .kansas-sky-modes{flex-direction:column}.kansas-sky .kansas-sky-modes button{width:100%;text-align:left}.kansas-sky .kansas-sky-instruments{grid-template-columns:1fr}.kansas-sky header{align-items:flex-start}.kansas-sky .kansas-sky-clock{font-size:12px}}
 
 /* Portaled into the map, so the displayed flight time survives closed Layers. */
-.kansas-sky-map-status{position:absolute;z-index:3;top:12px;left:50%;transform:translateX(-50%);box-sizing:border-box;max-width:calc(100% - 144px);padding:7px 10px;border:1px solid #8dafa8;border-radius:5px;background:rgba(8,35,44,.95);color:#e7f2f2;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:3px 8px;font:11px/1.35 system-ui,sans-serif;text-align:center;pointer-events:none;user-select:none}
+.kansas-sky-map-status{position:absolute;z-index:3;top:auto;bottom:52px;left:50%;transform:translateX(-50%);box-sizing:border-box;max-width:calc(100% - 144px);padding:7px 10px;border:1px solid #8dafa8;border-radius:5px;background:rgba(8,35,44,.95);color:#e7f2f2;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:3px 8px;font:11px/1.35 system-ui,sans-serif;text-align:center;pointer-events:none;user-select:none}
 .kansas-sky-map-status strong{letter-spacing:.08em;font-size:10px;color:#bce6d9}.kansas-sky-map-status[data-state="REPLAY"]{border-color:#e4c581}.kansas-sky-map-status[data-state="REPLAY"] strong{color:#f3d68e}.kansas-sky-map-status time,.kansas-sky-map-status small{display:block;flex-basis:100%;font-size:10px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.kansas-sky-map-status[data-state="STALE"] strong,.kansas-sky-map-status[data-state="UNAVAILABLE"] strong{color:#f3ca9e}
-@media(max-width:420px){.kansas-sky-map-status{top:8px;max-width:calc(100% - 112px);padding:6px 8px}}
+/* The top center belongs to degradation/source notices. The lower margin
+   clears attribution on desktop and the existing 48px mobile action dock. */
+@media(max-width:760px){.kansas-sky-map-status{bottom:calc(112px + env(safe-area-inset-bottom));max-width:calc(100% - 112px);padding:6px 8px}}
