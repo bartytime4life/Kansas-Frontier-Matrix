@@ -29,6 +29,7 @@ async function welcome(reduced=false,globals={}){
  const render=()=>{const tree=harness.render(harness.exports.default,props);harness.commit();return tree;};
  return {harness,props,calls,render,env};
 }
+const addCard=(tree,id)=>findNode(tree,n=>n.props?.className==='topic-add'&&n.props['data-topic']===id);
 const previewCard=(tree,id)=>findNode(tree,n=>n.props?.className===`topic-preview topic-preview-${id}`);
 const byText=(tree,text)=>findNode(tree,node=>node.type==='button'&&node.props.children===text);
 
@@ -36,11 +37,11 @@ test('cards can combine topics and a rapid open performs only one departure',asy
  const h=await welcome();h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
  try{
   let tree=h.render();
-  gridCard(tree,'science').props.onClick();tree=h.render();
-  gridCard(tree,'agriculture').props.onClick();tree=h.render();
+  addCard(tree,'science').props.onClick();tree=h.render();
+  addCard(tree,'agriculture').props.onClick();tree=h.render();
   assert.deepEqual(h.calls,[],'selection never navigates');
-  assert.equal(gridCard(tree,'science').props['aria-pressed'],true);
-  assert.equal(gridCard(tree,'agriculture').props['aria-pressed'],true);
+  assert.equal(addCard(tree,'science').props['aria-pressed'],true);
+  assert.equal(addCard(tree,'agriculture').props['aria-pressed'],true);
   const open=findNode(tree,n=>n.props?.className==='welcome-primary selection-open');
   open.props.onClick();open.props.onClick();
   assert.deepEqual(h.calls,[['maps',['science','agriculture']],['close',false]]);
@@ -213,7 +214,8 @@ test('every category advertises its own glimpse and the expanded guide opens tha
   const h=await welcome();let tree=h.render();
   try{
    const card=findNode(tree,n=>n.type==='button'&&n.props.className?.includes('topic-callout')&&n.props.className?.includes('topic-'+topic.id));
-   assert.equal(card.props['aria-pressed'],false);
+   assert.equal(addCard(tree,topic.id).props['aria-pressed'],false);
+   assert.equal(card.props['aria-pressed'],undefined,'primary action opens rather than toggles');
    assert.match(card.props['aria-label'],new RegExp(topic.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
    previewCard(tree,topic.id).props.onClick();tree=h.render();tree=openDetails(h,tree);
    findNode(tree,n=>n.type==='button'&&n.props.className==='welcome-text-action welcome-preview-action').props.onClick();tree=h.render();
@@ -619,10 +621,10 @@ test('leaving a pinned full-window preview ends the preview and restores hover a
 test('the live map shows the default map until a visitor points at a category, then that category\'s map',async()=>{
  const h=await welcome();let tree=h.render();
  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,null,'no topic preview, and no opt-in provider, before a choice');
- assert.equal(gridCard(tree,'aviation').props['aria-pressed'],false);
+ assert.equal(addCard(tree,'aviation').props['aria-pressed'],false);
  findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-aviation ')).props.onPointerEnter({pointerType:'mouse',currentTarget:{}});tree=h.render();
  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,'aviation');
- assert.equal(gridCard(tree,'aviation').props['aria-pressed'],false,'hover never selects a topic');
+ assert.equal(addCard(tree,'aviation').props['aria-pressed'],false,'hover never selects a topic');
  assert.deepEqual(h.calls,[],'previewing a map changes nothing in the Explorer');
  h.harness.dispose();
 });
@@ -779,13 +781,15 @@ test('closing stage notes restores their exact trigger before paint without refo
 test('Return restores the original card and grid scroll before another Escape dismisses welcome',async()=>{
  const h=await welcome(),focus=[];let tree=h.render();
  const card={focus(){focus.push('card');h.env.document.activeElement=card;}},back={focus(){focus.push('return');h.env.document.activeElement=back;}};
- const root={scrollTop:680,contains:()=>true,querySelector:selector=>selector==='.topic-preview-water'?card:selector==='.welcome-preview-expand'?back:null};
+ const scroller={scrollTop:420};
+ const root={scrollTop:680,contains:()=>true,querySelector:selector=>selector==='.discovery-field--grouped'?scroller:selector==='.topic-preview-water'?card:selector==='.welcome-preview-expand'?back:null};
  rootOf(tree).props.ref.current=root;
  try{
   previewCard(tree,'water').props.onClick();tree=h.render();assert.equal(root.scrollTop,0);assert.equal(focus.at(-1),'return');
+  scroller.scrollTop=0;
   railCard(tree,'sky').props.onClick();tree=h.render();
   byText(tree,'Return to categories').props.onClick();tree=h.render();
-  assert.equal(focus.at(-1),'card');assert.equal(root.scrollTop,680);assert.equal(rootOf(tree).props['data-active'],null);
+  assert.equal(focus.at(-1),'card');assert.equal(root.scrollTop,680);assert.equal(scroller.scrollTop,420);assert.equal(rootOf(tree).props['data-active'],null);
   h.env.listeners.get('keydown')({target:card,key:'Escape',preventDefault(){},stopImmediatePropagation(){}});
   assert.deepEqual(h.calls,[['close',false]]);
  }finally{h.harness.dispose();}
@@ -804,7 +808,7 @@ test('keyboard interest cancels a pending pointer takeover and selecting the cur
 });
 
 
-test('every primary card selects its topic and opens the working map only on confirmation', async()=>{
+test('every primary card opens its working map immediately and only once', async()=>{
  for(const reduced of [false,true]) for(const topic of TOPIC_STRUCTURE){
   const clock=intentClock(),h=await welcome(reduced,clock);
   try{
@@ -812,9 +816,8 @@ test('every primary card selects its topic and opens the working map only on con
    gridCard(tree,topic.id).props.onPointerEnter({pointerType:'mouse'});clock.fire(650);tree=h.render();
    assert.equal(rootOf(tree).props['data-fullscreen'],false,'hover must leave every card in place');
    gridCard(tree,topic.id).props.onClick();
-   tree=h.render();assert.deepEqual(h.calls,[]);
-   assert.equal(gridCard(tree,topic.id).props['aria-pressed'],true);
-   findNode(tree,n=>n.props?.className==='welcome-primary selection-open').props.onClick();
+   gridCard(tree,topic.id).props.onClick();
+   tree=h.render();
    assert.deepEqual(h.calls,[['map',topic.id],['close',false]],'the map action applies the choice once');
   }finally{h.harness.dispose();}
  }
@@ -825,20 +828,30 @@ test('selection survives filtering and preview; removal, clear and empty search 
  const h=await welcome();h.props.initialTopics=['water','invalid','water','weather'];
  h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
  try{
-  let tree=h.render();assert.equal(gridCard(tree,'water').props['aria-pressed'],true);
+  let tree=h.render();assert.equal(addCard(tree,'water').props['aria-pressed'],true);
   findNode(tree,n=>n.type==='input'&&n.props.type==='search').props.onChange({target:{value:'no matching topic'}});tree=h.render();
   assert.ok(findNode(tree,n=>n.props?.className==='topic-empty'));
   assert.ok(findNode(tree,n=>n.props?.['aria-label']==='Remove Water & watersheds'));
   byText(tree,'Show all topics').props.onClick();tree=h.render();
   previewCard(tree,'weather').props.onClick();tree=h.render();
   byText(tree,'Return to categories').props.onClick();tree=h.render();
-  assert.equal(gridCard(tree,'water').props['aria-pressed'],true);
+  assert.equal(addCard(tree,'water').props['aria-pressed'],true);
   findNode(tree,n=>n.props?.['aria-label']==='Map style from selected topics').props.onChange({target:{value:'weather'}});tree=h.render();
   assert.equal(findNode(tree,n=>n.props?.['aria-label']==='Map style from selected topics').props.value,'weather');
   findNode(tree,n=>n.props?.['aria-label']==='Remove Water & watersheds').props.onClick();tree=h.render();
-  assert.equal(gridCard(tree,'water').props['aria-pressed'],false);
+  assert.equal(addCard(tree,'water').props['aria-pressed'],false);
   byText(tree,'Clear all').props.onClick();tree=h.render();
-  assert.equal(findNode(tree,n=>n.props?.className==='welcome-primary selection-open').props.disabled,true);
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-primary selection-open'),undefined,'empty selection has no permanent tray');
   assert.deepEqual(h.calls,[]);
+ }finally{h.harness.dispose();}
+});
+
+
+test('tapping a primary card carries existing choices into that card’s map',async()=>{
+ const h=await welcome();h.props.initialTopics=['water','weather'];
+ h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
+ try{
+  const tree=h.render();gridCard(tree,'engineering').props.onClick();
+  assert.deepEqual(h.calls,[['maps',['engineering','water','weather']],['close',false]]);
  }finally{h.harness.dispose();}
 });

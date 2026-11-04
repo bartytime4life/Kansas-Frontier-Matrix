@@ -34,7 +34,7 @@ export function AviationGlimpse({mode,onMode,state,layersVisible}){
 }
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,initialTopics=/** @type {readonly string[]} */ ([]),onMaps=/** @type {((topics: readonly import('../layer-workspaces').TopicId[]) => void) | undefined} */ (undefined),motionEnabled=true,onMotionChange}){
   const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null),wasFullscreen=useRef(false);
-  const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0);
+  const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0),returnCardScroll=useRef(0);
   const departed=useRef(false),modalRestore=useRef(null);
   const [selectedTopics,setSelectedTopics]=useState(()=>normalizeCategoryTopics(initialTopics));
   const [topicQuery,setTopicQuery]=useState(''),[topicGroup,setTopicGroup]=useState('All');
@@ -75,7 +75,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     // An explicit preview action leaves notes for Return, even on the same stage.
     if(modal)trigger.current=root.current?.querySelector('.welcome-preview-expand');
     if(fullscreen&&id===control){closePanel();return;}
-    if(!fullscreen){returnCard.current=id;returnScroll.current=root.current?.scrollTop||0;}
+    if(!fullscreen){returnCard.current=id;returnScroll.current=root.current?.scrollTop||0;returnCardScroll.current=root.current?.querySelector('.discovery-field--grouped')?.scrollTop||0;}
     pin(id);setFullscreen(true);
   }
   function hoverStage(id,event){
@@ -139,6 +139,8 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       // Focus previews a card; returning itself must not restart the stage.
       setActive(null);
       if(root.current)root.current.scrollTop=returnScroll.current;
+      const cards=root.current?.querySelector('.discovery-field--grouped');
+      if(cards)cards.scrollTop=returnCardScroll.current;
     }
   },[fullscreen,modal]);
   useLayoutEffect(()=>{
@@ -150,7 +152,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   }
   function openSelection(){if(selection)run(()=>onMaps?onMaps(selection.topics):(onMap||onTopic)(selection.topics[0]));}
   const selectedIndex=TOPICS.findIndex(t=>t.id===control);
-  const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-label={fullscreen?`${TOPICS[selectedIndex]?.title||'Kansas'} map preview`:undefined} aria-labelledby={fullscreen?undefined:'living-welcome-title'} data-renderer="capability" data-builder="true" data-active={engaged||null} data-fullscreen={fullscreen} data-cinematic={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
+  const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-label={fullscreen?`${TOPICS[selectedIndex]?.title||'Kansas'} map preview`:undefined} aria-labelledby={fullscreen?undefined:'living-welcome-title'} data-renderer="capability" data-builder="true" data-selected-count={selectedTopics.length} data-active={engaged||null} data-fullscreen={fullscreen} data-cinematic={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
     <div className="welcome-map-stage">
       <div className="welcome-wash" aria-hidden="true"/>
       <div className="welcome-capability-stage"><DomainStage topic={touched?control:null} expanded={fullscreen} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||(!engaged&&!fullscreen)} reduced={reduced} onPreviewState={setPreviewState}/></div>
@@ -166,18 +168,18 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
           <button type="button" className="welcome-skip" aria-label="Close quick start" onClick={()=>onClose(remember)}>×</button>
         </div>
         <div className="welcome-hero"><span className="welcome-kicker">KANSAS FRONTIER MATRIX</span>
-          <h1 id="living-welcome-title" tabIndex={-1} data-guide-autofocus="">Your Kansas.<br/><em>Your layers.</em></h1>
-          <p>Pick a topic. Mix in another. See how they connect.</p>
+          <h1 id="living-welcome-title" tabIndex={-1} data-guide-autofocus="">Kansas is full of <em>stories.</em></h1>
+          <p>Choose a map. See what connects.</p>
           <details className="welcome-place-search"><summary>Looking for a place?</summary><form onSubmit={e=>{e.preventDefault();if(query.trim())run(()=>onSearch(query.trim()));}}><label><span className="sr-only">Find a county or place</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find a county or place" maxLength={180}/></label><button type="submit" className="welcome-primary" disabled={!query.trim()}>Find place</button></form></details>
         </div>
       </div>
       <div className="welcome-discovery-layout"><div className="welcome-discovery-content">
-        <div className="topic-finder"><label><span className="sr-only">Filter topics</span><input type="search" value={topicQuery} onChange={e=>setTopicQuery(e.target.value)} placeholder="Find topics: water, roads, history…"/></label><label><span className="sr-only">Topic group</span><select value={topicGroup} onChange={e=>setTopicGroup(e.target.value)}><option value="All">All topics</option>{TOPIC_GROUPS.map(group=><option key={group}>{group}</option>)}</select></label></div>
-        <p className="discovery-hint"><strong>Choose one or combine a few.</strong><span>{filteredTopics.length} topics · tap to add or remove</span></p>
-        <section className="discovery-field discovery-field--grouped" aria-label="Choose exploration topics">{TOPIC_GROUPS.filter(group=>filteredTopics.some(t=>t.group===group)).map(group=><div className="discovery-group" role="group" aria-label={group} key={group}><h2 className="discovery-group-title">{group}</h2>{filteredTopics.filter(t=>t.group===group).map(t=><div className="topic-choice" data-selected={selectedTopics.includes(t.id)} key={t.id}>
-          <button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} aria-pressed={selectedTopics.includes(t.id)} aria-label={`${t.title}: ${t.short}`} onPointerEnter={e=>hoverStage(t.id,e)} onPointerMove={glow} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false)engage(t.id);}} onBlur={release} onClick={()=>toggleTopic(t.id)}>
-            <span className="topic-copy"><strong>{t.title}</strong><small>{t.facets.slice(0,2).join(' · ')}</small><span className="topic-selection-label">{selectedTopics.includes(t.id)?'Added to your map':'Add to map'}</span></span><span className="topic-check" aria-hidden="true">{selectedTopics.includes(t.id)?'✓':'+'}</span>
-          </button><button type="button" className={`topic-preview topic-preview-${t.id}`} aria-label={`Preview ${t.title}`} onClick={()=>showStage(t.id)}>Preview &amp; details <span aria-hidden="true">↗</span></button>
+        <details className="topic-filters"><summary>Find a topic</summary><div className="topic-finder"><label><span className="sr-only">Filter topics</span><input type="search" value={topicQuery} onChange={e=>setTopicQuery(e.target.value)} placeholder="Find topics: water, roads, history…"/></label><label><span className="sr-only">Topic group</span><select value={topicGroup} onChange={e=>setTopicGroup(e.target.value)}><option value="All">All topics</option>{TOPIC_GROUPS.map(group=><option key={group}>{group}</option>)}</select></label></div></details>
+        <p className="discovery-hint"><strong>Choose your map</strong><span>Tap a card to open · + to combine</span></p>
+        <section className="discovery-field discovery-field--grouped" aria-label="Choose exploration topics">{TOPIC_GROUPS.filter(group=>filteredTopics.some(t=>t.group===group)).map(group=><div className="discovery-group" role="group" aria-label={group} key={group}><h2 className="discovery-group-title">{group}</h2>{filteredTopics.filter(t=>t.group===group).map(t=><div className="topic-choice" data-selected={selectedTopics.includes(t.id)} key={t.id} style={swatch(t.look)}>
+          <button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} aria-label={`Open ${t.title} map: ${t.short}`} onPointerEnter={e=>hoverStage(t.id,e)} onPointerMove={glow} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false)engage(t.id);}} onBlur={release} onClick={()=>run(()=>onMaps?onMaps(normalizeCategoryTopics([t.id,...selectedTopics])):(onMap||onTopic)(t.id))}>
+            <span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.facets.slice(0,2).join(' · ')}</small><span className="topic-map" style={swatch(t.look)}><i aria-hidden="true"/>{t.look?.name}</span><span className="topic-demo-label">Open map →</span></span>
+          </button><div className="topic-card-actions"><button type="button" className={`topic-preview topic-preview-${t.id}`} aria-label={`Preview ${t.title}`} onClick={()=>showStage(t.id)}>Preview <span aria-hidden="true">↗</span></button><button type="button" className="topic-add" data-topic={t.id} aria-label={`${selectedTopics.includes(t.id)?'Remove':'Add'} ${t.title} ${selectedTopics.includes(t.id)?'from':'to'} combined map`} aria-pressed={selectedTopics.includes(t.id)} onClick={()=>toggleTopic(t.id)}><span aria-hidden="true">{selectedTopics.includes(t.id)?'✓':'+'}</span></button></div>
         </div>)}</div>)}</section>
         {!filteredTopics.length&&<div className="topic-empty" role="status"><strong>No matching topics</strong><p>Try a broader term, or see every topic.</p><button type="button" onClick={()=>{setTopicQuery('');setTopicGroup('All');}}>Show all topics</button></div>}
       </div></div>
@@ -191,7 +193,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       </nav>}
       
     </div>
-    {!fullscreen&&<aside className="welcome-selection-tray" aria-label="Your map selection">
+    {!fullscreen&&selection&&<aside className="welcome-selection-tray" aria-label="Your map selection">
       <div className="selection-summary"><span role="status" aria-live="polite">{selectedTopics.length?`${selectedTopics.length} ${selectedTopics.length===1?'topic':'topics'} selected`:'Start with a topic above'}</span>{selectedTopics.length>0&&<button type="button" className="selection-clear" onClick={()=>setSelectedTopics([])}>Clear all</button>}</div>
       {selectedTopics.length>0&&<div className="selection-chips" aria-label="Selected topics">{selectedTopics.map(id=><button type="button" key={id} aria-label={`Remove ${TOPICS.find(t=>t.id===id)?.title}`} onClick={()=>toggleTopic(id)}>{TOPICS.find(t=>t.id===id)?.title}<span aria-hidden="true">×</span></button>)}</div>}
       <div className="selection-actions">{selection&&selectedTopics.length>1?<label className="selection-basemap">Map style<select aria-label="Map style from selected topics" value={selectedTopics[0]} onChange={e=>setSelectedTopics(current=>combineCategoryMaps(current,e.target.value).topics)}>{selectedTopics.map(id=><option key={id} value={id}>{CATEGORY_MAPS[id].name}</option>)}</select></label>:<p>{selection?`Starts with ${selection.look.name.toLowerCase()}`:'Relevant layers will be ready on one map.'}</p>}
