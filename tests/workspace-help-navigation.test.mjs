@@ -88,7 +88,7 @@ test('guide Layers and Time enter committed destinations after dismissal, even w
     evaluate(guideActionClick,{onClose:close,remember:true,departed:{current:false},modalRestore:{current:null}})(()=>route(action));
     assert.equal(state.open,false);assert.deepEqual(focus,[]);
     if(action==='layers')evaluate(leftPanelFocusEffect,{
-      primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,sourceSearchFocusPendingRef:{current:false},leftPanelRef,
+      primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,leftPanelFocusSelectorRef:{current:null},sourceSearchFocusPendingRef:{current:false},leftPanelRef,
       window:{requestAnimationFrame:fn=>frames.push(fn),cancelAnimationFrame(){}},visibleFocusableElements:()=>[target],
     })();
     assert.equal(frames.length,2,'destination and fallback focus wait until dismissal commits');
@@ -102,7 +102,7 @@ test('guide Layers and Time enter committed destinations after dismissal, even w
 });
 test('obsolete Layers focus frames are revoked before they can steal a newer welcome opening',()=>{
   const frames=new Map(),focused=[];let id=0;
-  const scope={primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,sourceSearchFocusPendingRef:{current:false},leftPanelRef:{current:{}},
+  const scope={primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,leftPanelFocusSelectorRef:{current:null},sourceSearchFocusPendingRef:{current:false},leftPanelRef:{current:{}},
     window:{requestAnimationFrame:fn=>{frames.set(++id,fn);return id;},cancelAnimationFrame:key=>frames.delete(key)},visibleFocusableElements:()=>[{focus:()=>focused.push('layers')}]};
   const cleanup=evaluate(leftPanelFocusEffect,scope)();
   const first=[...frames.values()][0];frames.clear();first();assert.equal(frames.size,1);

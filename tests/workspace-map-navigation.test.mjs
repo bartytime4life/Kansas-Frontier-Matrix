@@ -123,7 +123,7 @@ function harness(workspace = 'reports') {
     setMapContextOpen:()=>{}, setCurrentWorkspace:()=>{}, setRightOpen:()=>{}, dismissMapUtilityWithoutFocus:()=>{},
     setScenePanelOpen:()=>{}, setLocalAtlasPeek:()=>{}, setHelpOpen:()=>{}, setSourceStatusOpen:()=>{},
     mapUtilityReturnRef:{current:null}, sourceSearchFocusPendingRef:{current:false},
-    leftPanelReturnRef:{current:null}, leftPanelRef:{current:{}}, visibleFocusableElements:()=>[{focus:()=>focus.push(state.primary)}],
+    leftPanelReturnRef:{current:null}, leftPanelFocusSelectorRef:{current:null}, leftPanelRef:{current:{}}, visibleFocusableElements:()=>[{focus:()=>focus.push(state.primary)}],
     window:{setTimeout(fn){timers.push(fn);},requestAnimationFrame(fn){timers.push(fn);return timers.length;},cancelAnimationFrame(){}},
     openMapUtility:v=>{calls.push(v);state.primary='map';}, announce:()=>{},
   };
@@ -142,6 +142,33 @@ test('Layers and Places reveal the map before deferred panel focus without repla
     assert.deepEqual(h.focus,[]); h.flush(); assert.deepEqual(h.focus,['map']);
     assert.equal(h.state.draft,draft); assert.equal(h.state.snapshot,snapshot);
   }
+});
+test('map inspection receives the committed focus handoff and a later ordinary opening resets its target',()=>{
+  const h=harness(), selector='[aria-label="Kansas Sky aircraft"]', events=[];
+  const inspector={scrollIntoView:options=>events.push(['scroll',options.block]),focus:options=>events.push(['focus',options.preventScroll])};
+  h.scope.leftPanelRef.current={querySelector:requested=>{assert.equal(requested,selector);return inspector;}};
+  const open=execute('openAtlasPanel',h.scope);
+  open('layers',null,selector);
+  assert.equal(h.scope.leftPanelFocusSelectorRef.current,selector);
+  assert.deepEqual(events,[],'inspection waits for the panel commit');
+  h.flush();
+  assert.deepEqual(events,[['scroll','center'],['focus',true]]);
+  assert.deepEqual(h.focus,[],'generic focus does not steal inspection focus');
+  assert.equal(h.scope.leftPanelFocusSelectorRef.current,null,'consumed inspection target cannot leak into a later opening');
+  open('layers',null,selector);
+  open('places');
+  assert.equal(h.scope.leftPanelFocusSelectorRef.current,null,'a newer ordinary opening supersedes a pending inspection target');
+  h.flush();
+  assert.deepEqual(h.focus,['map']);
+  assert.equal(events.length,2,'ordinary opening does not revisit the aircraft selector');
+});
+test('missing map inspection control retains the normal Layers focus fallback',()=>{
+  const h=harness();
+  h.scope.leftPanelRef.current={querySelector:()=>null};
+  execute('openAtlasPanel',h.scope)('layers',null,'[aria-label="Kansas Sky aircraft"]');
+  h.flush();
+  assert.deepEqual(h.focus,['map']);
+  assert.equal(h.scope.leftPanelFocusSelectorRef.current,null);
 });
 test('source-search handoff keeps its dedicated search-focus effect',()=>{
   const h=harness();h.scope.sourceSearchFocusPendingRef.current=true;
