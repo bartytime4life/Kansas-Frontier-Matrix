@@ -63,6 +63,7 @@ import { CategoryMapDock, nextSunStep, SUN_PLAY_RESTART_STEP, SUN_TIME_STEPS, ty
 import { evidenceSummary } from "./evidence-summary";
 import "./evidence-summary.css";
 import { AviationLayerControl } from "./aviation-layer-control";
+import { pickKansasSkyAircraft } from "./kansas-sky-layer";
 import { AVIATION_RESEARCH_SOURCE } from "./aviation-research";
 import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
 import { hasExplorerDestination } from "./explorer-startup";
@@ -6875,6 +6876,9 @@ export default function Home() {
             return;
           }
 
+          // WebGL aircraft are absent from queryRenderedFeatures; let their
+          // inspector own the click before inspecting ground context beneath it.
+          if (pickKansasSkyAircraft(map, event.point)) return;
           const renderedHits = map.queryRenderedFeatures(event.point).filter(feature => {
             const source = OFFICIAL_CONTEXT_BY_SOURCE_ID[feature.source];
             const record = findLayerByRenderer(feature.layer.id);

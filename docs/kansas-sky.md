@@ -32,7 +32,9 @@ mission or accident-cause inference is made.
 
 Live mode displays current eligible observations. Session and recorded modes
 are always labelled REPLAY and share one cursor for aircraft, instruments,
-trails and timeline. Only samples bracketed by two recorded observations are
+trails and timeline. A noninteractive map status keeps REPLAY and UTC time visible
+when Layers is closed; live status labels the receiver-check time separately.
+Only samples bracketed by two recorded observations are
 interpolated. Gaps over 60 seconds, provider or position-method changes, ground
 transitions and explicit breaks disconnect tracks. No positions appear before
 the first or after the last observation. Replay airspace/weather elsewhere on

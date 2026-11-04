@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useId, useEffect, useMemo, useRef, useState, useSyncExternalStore, type RefObject } from "react";
+import { createPortal } from "react-dom";
 import type { Map as MapLibreMap } from "./maplibre-seam";
 import { freshAircraft, type Aircraft, type TrafficEnvelope } from "./aviation-traffic";
 import { SkyBuffer, advanceSkyCursor, samplesAt, trailSegments, type SkyPoint } from "./kansas-sky";
@@ -48,6 +49,8 @@ function sessionStore() {
 export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,flat=false,onReplayMode,onAircraftInspect}:{mapRef:RefObject<MapLibreMap|null>;styleReady:boolean;enabled:boolean;envelope:(TrafficEnvelope&{receivedAt:number})|null;feedState:string;flat?:boolean;onReplayMode?:(replaying:boolean)=>void;onAircraftInspect?:()=>void}){
   const inspectCallback=useRef(onAircraftInspect);
   useEffect(()=>{inspectCallback.current=onAircraftInspect;},[onAircraftInspect]);
+  const [mapStatusHost,setMapStatusHost]=useState<HTMLElement|null>(null);
+  useEffect(()=>{let current=true;const host=enabled&&styleReady?mapRef.current?.getContainer()??null:null;queueMicrotask(()=>{if(current)setMapStatusHost(host);});return()=>{current=false;};},[mapRef,enabled,styleReady]);
   const [store]=useState(sessionStore);
   const snapshot=useSyncExternalStore(store.subscribe,store.read,store.read);
   const [mode,setMode]=useState<Mode>("live"),[selected,setSelected]=useState<string|null>(null);
@@ -92,9 +95,15 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
   const options=matchingOptions.slice(0,3000);
   if(selected&&!options.some(([hex])=>hex===selected)){const retained=catalogOptions.find(([hex])=>hex===selected);if(retained){if(options.length===3000)options.pop();options.push(retained);}}
 
+  const status=mode!=="live"?"REPLAY":liveFresh?"LIVE FEED":feedState==="error"?"UNAVAILABLE":envelope?"STALE":"WAITING";
+  const receiverTime=envelope?Date.parse(envelope.retrievedAt):Number.NaN;
+  const mapTime=mode!=="live"?(range?effectiveCursor:Number.NaN):receiverTime;
   if(!enabled)return null;
-  return <section className="kansas-sky" aria-label="Kansas Sky aircraft and replay" data-projection={flat?"2d":"3d"}>
-    <header><div><span className="kansas-sky-eyebrow">Aviation · observed tracks</span><h4>Kansas Sky</h4></div><strong className="kansas-sky-badge">{mode!=="live"?"REPLAY":liveFresh?"LIVE FEED":feedState==="error"?"UNAVAILABLE":envelope?"STALE":"WAITING"}</strong></header>
+  return <>{mapStatusHost&&createPortal(<aside className="kansas-sky-map-status" aria-label="Kansas Sky map time and source status" aria-live="off" data-state={status}>
+    <strong>{status}</strong><span>Kansas Sky</span>
+    {Number.isFinite(mapTime)?<time dateTime={new Date(mapTime).toISOString()}>{mode==="live"?"Receiver checked · ":""}{utc(mapTime)}</time>:<small>{mode==="live"?"No receiver timestamp":"No replay observations"}</small>}
+  </aside>,mapStatusHost)}<section className="kansas-sky" aria-label="Kansas Sky aircraft and replay" data-projection={flat?"2d":"3d"}>
+    <header><div><span className="kansas-sky-eyebrow">Aviation · observed tracks</span><h4>Kansas Sky</h4></div><strong className="kansas-sky-badge">{status}</strong></header>
     <div className="kansas-sky-modes" role="group" aria-label="Flight time mode">{([["live","Live"],["session","Replay this session"],["recorded","Recorded flights"]] as const).map(([id,title])=><button type="button" key={id} aria-pressed={mode===id} onClick={()=>changeMode(id)}>{title}</button>)}</div>
     {mode==="recorded"&&<label>Recorded flight<select aria-label="Recorded flight" value={entry?.id??""} onChange={e=>void loadRecorded(e.target.value)}><option value="">Choose a dated flight</option>{flights.map(f=><option key={f.id} value={f.id}>{f.title}</option>)}</select></label>}
     {mode==="recorded"&&catalogState==="idle"&&<p role="status">Loading the recorded-flight catalog…</p>}
@@ -122,5 +131,5 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
     {!!envelope?.dropped&&mode==="live"&&<small>{envelope.dropped} feed records omitted by validation or regional limits.</small>}
     <p className="kansas-sky-limit">Vertical placement is approximate; pressure altitude and WGS84 height are not MSL. Silhouettes are enlarged; a diamond means heading unavailable. No confirmed airspace occupancy, navigation, owner or mission inference. Pan, zoom or use map keys to release the camera. On the globe, select aircraft from this list.</p>
     <small>{mode==="recorded"&&entry?<>Recorded source: <a href={entry.sourceUrl} target="_blank" rel="noreferrer">{entry.provider}</a> · {entry.license}</>:mode==="session"?<>Session sources: {sourceIds||"No retained source"}. Observation times are retained with each sample.</>:envelope?<>Live source: <a href={envelope.provider.homepage} target="_blank" rel="noreferrer">{envelope.provider.title}</a> · {envelope.provider.terms}</>:"Receiver coverage varies; an empty view does not mean an empty sky."}</small>
-  </section>;
+  </section></>;
 }

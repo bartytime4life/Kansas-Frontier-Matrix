@@ -78,3 +78,19 @@ unrun. Revert this change to remove the held control and route. No live data
 rollback is needed. This is implementation only, not deployment or publication.
 
 Original PR #5392 acceptance: eight targeted Node tests; full standalone suite 1,613 passed, 19 explicitly skipped, zero failures (1,632 total). Production build, TypeScript and built HTTP 200 ABSTAIN / 400 invalid-query checks passed. Final context-retirement binding passed the same build, TypeScript and complete-suite rerun. No Chrome executable was available for that original visual QA. Corrective layout validation is recorded separately in its pull request.
+
+## November 4 navigation-test reconciliation
+
+Fresh workspaces now open **Start here** inside Layers. Enter **On map**, then
+expand **Explore → Aviation research → Evidence & AI**. The seven-link tool grid
+includes Start here and Public data library alongside the original five links.
+The regression follows these visible controls using native pointer/touch input
+and verifies the complete current keyboard traversal before entering research.
+
+This is a test-navigation correction, not a product or data-policy change. It
+retains all six viewport profiles, geometry and focus assertions, scrolling,
+44px targets, actual held-route checks and AI abstention. It does not force
+hidden DOM visible, remove a gate, activate held data or alter Kansas Sky. The
+held research card remains distinct from the public-context Aviation layer and
+Kansas Sky's observed aircraft/replay described in `aviation-layers.md` and
+`kansas-sky.md`. Exact-head CI and before/after evidence belong to PR #5714.
