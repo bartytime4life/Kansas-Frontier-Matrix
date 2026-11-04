@@ -13,7 +13,7 @@ async function compile(path, modules = {}) {
 const land = await compile('app/land-cover.ts'), crops = await compile('app/cropland.ts');
 let solarResult = true;
 const solarCalls = [];
-const { createWelcomeScientificLayers } = await compile('app/living-welcome/scientific-layers.ts', {
+const { createWelcomeScientificLayers, ANIMAL_RECORDS_SOURCE_ID, ANIMAL_RECORDS_TILE_URL } = await compile('app/living-welcome/scientific-layers.ts', {
   '../land-cover': land, '../cropland': crops,
   '../map-runtime': { setDaylightMapLayer: (_map, on, instant) => { solarCalls.push({ on, instant }); return solarResult; } },
 });
@@ -26,6 +26,7 @@ function setup() {
     getSource: id => sources.get(id), addSource: (id, source) => sources.set(id, source), removeSource: id => sources.delete(id),
     getLayer: id => layers.get(id), addLayer: layer => layers.set(layer.id, layer), removeLayer: id => layers.delete(id),
     getStyle: () => ({ layers: [...layers.values()] }),
+    setLayoutProperty: (id, key, value) => {const layer=layers.get(id); layer.layout={...layer.layout,[key]:value};},
   };
   const preview = createWelcomeScientificLayers(map, () => changes++);
   return { preview, sources, layers, events, changes: () => changes };
@@ -88,4 +89,33 @@ test('the Sky preview calculates the actual current instant and comparison hides
   assert.equal(solarCalls.at(-1).on, false); assert.equal(preview.status()[0].state, 'hidden');
   preview.sync([], true); assert.equal(solarCalls.at(-1).on, false);
   solarResult = true;
+});
+
+
+test('animal records retain the exact annual coarse carrier, disclose failure and never linger on another topic', () => {
+  const { preview, sources, layers, events } = setup();
+  preview.sync(['animal-records'], true);
+  const source=sources.get(ANIMAL_RECORDS_SOURCE_ID);
+  assert.deepEqual(plain(source.tiles), [ANIMAL_RECORDS_TILE_URL]);
+  assert.match(source.tiles[0], /kind=fauna&date=2025-01-01/);
+  assert.equal(source.maxzoom,6,'no exact occurrence sites or fine source tiles');
+  assert.match(preview.status()[0].label,/GBIF Animalia.*2025/);
+  assert.equal(preview.status()[0].state,'loading');
+  events.get('sourcedata')({sourceId:ANIMAL_RECORDS_SOURCE_ID,sourceDataType:'content',isSourceLoaded:true});
+  assert.equal(preview.status()[0].state,'map-layer');
+  assert.equal(preview.status()[0].product,'occurrence-records');
+  events.get('error')({sourceId:ANIMAL_RECORDS_SOURCE_ID,error:new Error('outage')});
+  assert.equal(preview.status()[0].state,'unavailable');
+  assert.equal(layers.get(ANIMAL_RECORDS_SOURCE_ID).layout.visibility,'none','partial aggregate pixels cannot imply complete coverage');
+  preview.sync(['animal-records'],true);
+  assert.equal(layers.get(ANIMAL_RECORDS_SOURCE_ID).layout.visibility,'none','redraw cannot silently mask failure');
+  preview.sync(['animal-records'],false);
+  assert.equal(preview.status()[0].state,'hidden');assert.equal(sources.size,0);
+  preview.sync(['animal-records'],true);
+  assert.equal(preview.status()[0].state,'loading','deliberate restore retries a new source');
+  preview.sync(['land-cover'],true);
+  assert.equal(sources.has(ANIMAL_RECORDS_SOURCE_ID),false);
+  assert.equal(layers.has(ANIMAL_RECORDS_SOURCE_ID),false);
+  events.get('error')({sourceId:ANIMAL_RECORDS_SOURCE_ID});
+  assert.equal(preview.status()[0].state,'loading','a late animal tile cannot affect vegetation');
 });

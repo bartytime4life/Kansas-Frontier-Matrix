@@ -1,35 +1,33 @@
 # Capability welcome · 2026-10-21 candidate
 
-## Scientific systems treatment · 2026-11-04 revision
+## Geographic previews · 2026-11-04 correction
 
-Seven selected previews add scientific studies over the existing provider map.
-Flora, Fauna and Ecology use original photorealistic, AI-generated specimen or
-terrain studies. Land uses a fine surface mesh with survey axes; History
-separates dated reference planes for registration; Evidence traces a provenance
-graph; Public Safety separates reference geography from unconnected coverage.
-The current live mobile carousel and its map-first layout are retained.
+The owner asked for real things represented on real maps. The seven specimen
+and schematic overlays, generated WebP assets and their asset manifest are
+removed. Each preview uses the existing MapLibre renderer and actual source
+layers, with geographic camera motion rather than animated illustrations.
 
-The presentation uses instrument frames, restrained cyan annotations, neutral
-type, slow inspection passes and technical depth cues. It contains no invented
-measurements, confidence scores, incident locations or analytical results. AI
-specimens and procedural geometry are explicitly identified as illustrative;
-the background map keeps its actual sources, dates and limits. The study status
-receives the selected map's real source state, including loading, hidden, empty,
-unavailable and closer-scale conditions. A provider outage cannot become a
-successful or "live" scientific readout.
+| Preview | Real mapped content |
+| --- | --- |
+| Flora | Flint Hills aerial imagery, 1.5× display terrain and NLCD 2021 30 m vegetation classes |
+| Fauna | GBIF Animalia 2025 occurrence density, coarse source zoom ≤6, on a labelled Kansas vector map |
+| Ecology | Big Blue River / Tuttle Creek imagery and terrain, NLCD and published WBD boundaries |
+| Land | BLM township and section reference lines over Kansas 2024 aerial imagery, zoom 11.3 |
+| History | KDOT 1918 roads and abandoned rail near Abilene–Salina |
+| Evidence | The actual Shawnee County Census 2020 polygon, name and population from the loaded source record |
+| Public safety | DeFlock / OSM generalized 0.05° report cells around Wichita; exact sites stay withheld |
 
-Three WebP assets total 459,446 bytes, and only the selected asset loads.
-They are stored in `public/welcome/scientific/` as `flora-study.webp`,
-`fauna-study.webp` and `ecology-study.webp`. The built-in image-generation tool
-created the originals; their full prompts, paths, byte counts and SHA-256s are
-recorded in [the asset manifest](../scripts/welcome-demos/scientific-assets.json).
-The local recovery archive retains the generated PNGs. These images are not
-photogrammetry, satellite imagery, collected specimens or measured models.
+Dates and short source keys remain visible on phones. Animal records include
+specimens and observations and do not measure abundance, absence, habitat or
+migration. ALPR reports do not verify devices or current operation. Survey
+lines do not establish ownership. These are provider context, not KFM releases.
+Failed animal tiles hide the incomplete aggregate and report unavailability.
+Comparison, pause, reduced motion and one map renderer are retained. Preview
+layers and closer cameras leave working-map defaults unchanged.
 
-One map renderer, deferred study loading, pause, hidden-tab behavior and the
-OS reduced-motion preference are retained. The previous responsive stage
-reservations still separate the study from the guide, source captions, credits
-and category rail. This remains a local candidate, without hosting publication.
+This supersedes the specimen source release ee8f6ef. The original mobile
+map-first carousel and landscape centering fix are retained. Provider publication
+and source validation remain separate checks.
 
 
 ## Mobile topic builder · 2026-11-03 candidate
