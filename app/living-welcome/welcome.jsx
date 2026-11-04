@@ -6,6 +6,7 @@ import { CATEGORY_MAPS, categorySceneLabel, combineCategoryMaps, normalizeCatego
 import { capabilityPreviews, capabilityNote, categoryGlimpse } from './capability-catalog.mjs';
 import { CapabilityPreview } from './CapabilityPreview.jsx';
 import { DomainStage } from './DomainStage.jsx';
+import { centeredCard, centeredScrollLeft } from './card-carousel.mjs';
 import { welcomeView } from '../welcome-map-view';
 import { isolateModalBackground, modalFocusableElements } from '../modal-background';
 
@@ -34,7 +35,9 @@ export function AviationGlimpse({mode,onMode,state,layersVisible}){
 }
 export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,initialTopics=/** @type {readonly string[]} */ ([]),onMaps=/** @type {((topics: readonly import('../layer-workspaces').TopicId[]) => void) | undefined} */ (undefined),motionEnabled=true,onMotionChange}){
   const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null),wasFullscreen=useRef(false);
-  const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0),returnCardScroll=useRef(0);
+  const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0),returnCardScroll=useRef(0),returnCardLeft=useRef(0);
+  const carouselList=useRef(null),carouselTimer=useRef(null),carouselPointer=useRef(null),carouselDragged=useRef(false);
+  const [carousel,setCarousel]=useState(false),[centered,setCentered]=useState(()=>normalizeCategoryTopics(initialTopics)[0]||TOPICS[0].id);
   const departed=useRef(false),modalRestore=useRef(null);
   const [selectedTopics,setSelectedTopics]=useState(()=>normalizeCategoryTopics(initialTopics));
   const [topicQuery,setTopicQuery]=useState(''),[topicGroup,setTopicGroup]=useState('All');
@@ -47,7 +50,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const [touched,setTouched]=useState(false),[detail,setDetail]=useState(null),[panel,setPanel]=useState(null),[item,setItem]=useState(0),[fullscreen,setFullscreen]=useState(false);
   const [previewState,setPreviewState]=useState(null),[layersVisible,setLayersVisible]=useState(true),[aviationMode,setAviationMode]=useState('3d');
   const motion=onMotionChange?motionEnabled:localMotion;
-  const paused=!motion||reduced||hidden,engaged=pinned||active,control=engaged||last;
+  const paused=!motion||reduced||hidden,engaged=pinned||(carousel&&!fullscreen?centered:active),control=engaged||last;
   // One owned frame; held/reduced-motion views do not keep repainting card
   // highlights, and a dismissed welcome cannot write to a detached card.
   function glow(event){
@@ -75,11 +78,11 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     // An explicit preview action leaves notes for Return, even on the same stage.
     if(modal)trigger.current=root.current?.querySelector('.welcome-preview-expand');
     if(fullscreen&&id===control){closePanel();return;}
-    if(!fullscreen){returnCard.current=id;returnScroll.current=root.current?.scrollTop||0;returnCardScroll.current=root.current?.querySelector('.discovery-field--grouped')?.scrollTop||0;}
+    if(!fullscreen){returnCard.current=id;returnScroll.current=root.current?.scrollTop||0;returnCardScroll.current=root.current?.querySelector('.discovery-field--grouped')?.scrollTop||0;returnCardLeft.current=carouselList.current?.scrollLeft||0;}
     pin(id);setFullscreen(true);
   }
   function hoverStage(id,event){
-    if(event.pointerType==='touch')return;
+    if(carousel||event.pointerType==='touch')return;
     wake(event.currentTarget);engage(id);
   }
   function returnToCategories(){
@@ -93,6 +96,45 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     rail.current?.querySelector(`[data-topic="${TOPICS[next].id}"]`)?.focus({preventScroll:true});
   }
   function scrollRail(direction){rail.current?.scrollBy({left:direction*(rail.current.clientWidth*.75),behavior:paused?'instant':'smooth'});}
+
+  function centerTopic(id, behavior='smooth'){
+    const list=carouselList.current,card=list?.querySelector(`[data-carousel-topic="${id}"]`);
+    if(!card)return;
+    clearTimeout(carouselTimer.current);setCentered(id);setTouched(true);setLayersVisible(true);
+    list.scrollTo({left:centeredScrollLeft(card.getBoundingClientRect(),list.getBoundingClientRect(),list.scrollLeft,list.scrollWidth-list.clientWidth),behavior:paused?'instant':behavior});
+  }
+  function settleCarousel(){
+    if(!carousel||fullscreen)return;
+    clearTimeout(carouselTimer.current);
+    carouselTimer.current=setTimeout(()=>{
+      const list=carouselList.current;if(!list)return;
+      const id=centeredCard(Array.from(list.querySelectorAll('[data-carousel-topic]'),card=>{const {left,width}=card.getBoundingClientRect();return {left,width,id:card.dataset.carouselTopic};}),list.getBoundingClientRect());
+      if(id){setCentered(id);setTouched(true);setLayersVisible(true);}
+    },120);
+  }
+  function moveCarousel(direction){
+    const index=filteredTopics.findIndex(t=>t.id===centered);
+    const next=filteredTopics[Math.max(0,Math.min(filteredTopics.length-1,index+direction))];
+    if(next)centerTopic(next.id);
+  }
+  function carouselKey(event,id){
+    if(!carousel||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+    const index=filteredTopics.findIndex(t=>t.id===id);
+    const next=event.key==='Home'?0:event.key==='End'?filteredTopics.length-1:Math.max(0,Math.min(filteredTopics.length-1,index+(event.key==='ArrowRight'?1:-1)));
+    const topic=filteredTopics[next];if(!topic)return;
+    event.preventDefault();centerTopic(topic.id,'instant');
+    carouselList.current?.querySelector(`.topic-${topic.id}`)?.focus({preventScroll:true});
+  }
+  useEffect(()=>{
+    const media=window.matchMedia('(max-width:700px), (max-height:500px) and (max-width:1100px)');
+    const update=()=>setCarousel(media.matches);update();media.addEventListener('change',update);
+    return()=>{media.removeEventListener('change',update);clearTimeout(carouselTimer.current);};
+  },[]);
+  useLayoutEffect(()=>{
+    if(!carousel||fullscreen)return;
+    const id=filteredTopics.some(t=>t.id===centered)?centered:filteredTopics[0]?.id;
+    if(id)centerTopic(id,'instant');
+  },[carousel,topicQuery,topicGroup,fullscreen]);
 
   useEffect(()=>{
     const media=window.matchMedia('(prefers-reduced-motion: reduce)'),change=()=>setReduced(media.matches),visibility=()=>{setHidden(document.hidden);};
@@ -140,7 +182,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       setActive(null);
       if(root.current)root.current.scrollTop=returnScroll.current;
       const cards=root.current?.querySelector('.discovery-field--grouped');
-      if(cards)cards.scrollTop=returnCardScroll.current;
+      if(cards){cards.scrollTop=returnCardScroll.current;cards.scrollLeft=returnCardLeft.current;}
     }
   },[fullscreen,modal]);
   useLayoutEffect(()=>{
@@ -152,10 +194,10 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   }
   function openSelection(){if(selection)run(()=>onMaps?onMaps(selection.topics):(onMap||onTopic)(selection.topics[0]));}
   const selectedIndex=TOPICS.findIndex(t=>t.id===control);
-  const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-label={fullscreen?`${TOPICS[selectedIndex]?.title||'Kansas'} map preview`:undefined} aria-labelledby={fullscreen?undefined:'living-welcome-title'} data-renderer="capability" data-builder="true" data-selected-count={selectedTopics.length} data-active={engaged||null} data-fullscreen={fullscreen} data-cinematic={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
+  const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-label={fullscreen?`${TOPICS[selectedIndex]?.title||'Kansas'} map preview`:undefined} aria-labelledby={fullscreen?undefined:'living-welcome-title'} data-renderer="capability" data-builder="true" data-carousel={carousel} data-centered-topic={carousel?centered:undefined} data-selected-count={selectedTopics.length} data-active={engaged||null} data-fullscreen={fullscreen} data-cinematic={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
     <div className="welcome-map-stage">
       <div className="welcome-wash" aria-hidden="true"/>
-      <div className="welcome-capability-stage"><DomainStage topic={touched?control:null} expanded={fullscreen} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||(!engaged&&!fullscreen)} reduced={reduced} onPreviewState={setPreviewState}/></div>
+      <div className="welcome-capability-stage"><DomainStage topic={carousel||touched?control:null} expanded={fullscreen||carousel} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||(!engaged&&!fullscreen)} reduced={reduced} onPreviewState={setPreviewState}/></div>
       <div className="welcome-heading-row">
         <div className="welcome-toolbar" role="group" aria-label="Welcome options">
           <button type="button" className="welcome-primary" onClick={()=>onClose(remember)}>Explore freely <span aria-hidden="true">→</span></button>
@@ -176,8 +218,9 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       <div className="welcome-discovery-layout"><div className="welcome-discovery-content">
         <details className="topic-filters"><summary>Find a topic</summary><div className="topic-finder"><label><span className="sr-only">Filter topics</span><input type="search" value={topicQuery} onChange={e=>setTopicQuery(e.target.value)} placeholder="Find topics: water, roads, history…"/></label><label><span className="sr-only">Topic group</span><select value={topicGroup} onChange={e=>setTopicGroup(e.target.value)}><option value="All">All topics</option>{TOPIC_GROUPS.map(group=><option key={group}>{group}</option>)}</select></label></div></details>
         <p className="discovery-hint"><strong>Choose your map</strong><span>Tap a card to open · + to combine</span></p>
-        <section className="discovery-field discovery-field--grouped" aria-label="Choose exploration topics">{TOPIC_GROUPS.filter(group=>filteredTopics.some(t=>t.group===group)).map(group=><div className="discovery-group" role="group" aria-label={group} key={group}><h2 className="discovery-group-title">{group}</h2>{filteredTopics.filter(t=>t.group===group).map(t=><div className="topic-choice" data-selected={selectedTopics.includes(t.id)} key={t.id} style={swatch(t.look)}>
-          <button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} aria-label={`Open ${t.title} map: ${t.short}`} onPointerEnter={e=>hoverStage(t.id,e)} onPointerMove={glow} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false)engage(t.id);}} onBlur={release} onClick={()=>run(()=>onMaps?onMaps(normalizeCategoryTopics([t.id,...selectedTopics])):(onMap||onTopic)(t.id))}>
+        {carousel&&<nav className="welcome-carousel-nav" aria-label="Browse map previews"><button type="button" aria-label="Previous map preview" disabled={filteredTopics.findIndex(t=>t.id===centered)<=0} onClick={()=>moveCarousel(-1)}>←</button><span aria-live="polite">{filteredTopics.length?filteredTopics.findIndex(t=>t.id===centered)+1:0} / {filteredTopics.length}</span><button type="button" aria-label="Next map preview" disabled={!filteredTopics.length||filteredTopics.findIndex(t=>t.id===centered)>=filteredTopics.length-1} onClick={()=>moveCarousel(1)}>→</button></nav>}
+        <section className="discovery-field discovery-field--grouped" ref={carouselList} aria-label={carousel?'Swipe to preview maps; tap a card to open':'Choose exploration topics'} aria-roledescription={carousel?'carousel':undefined} onScroll={settleCarousel} onPointerDown={event=>{carouselPointer.current={x:event.clientX,y:event.clientY};carouselDragged.current=false;}} onPointerMove={event=>{const start=carouselPointer.current;if(start&&Math.hypot(event.clientX-start.x,event.clientY-start.y)>8)carouselDragged.current=true;}} onPointerUp={()=>{carouselPointer.current=null;}} onPointerCancel={()=>{carouselPointer.current=null;}} onClickCapture={event=>{if(carousel&&carouselDragged.current&&event.detail!==0){event.preventDefault();event.stopPropagation();}}}>{TOPIC_GROUPS.filter(group=>filteredTopics.some(t=>t.group===group)).map(group=><div className="discovery-group" role="group" aria-label={group} key={group}><h2 className="discovery-group-title">{group}</h2>{filteredTopics.filter(t=>t.group===group).map(t=><div className="topic-choice" data-carousel-topic={t.id} data-centered={carousel&&centered===t.id} data-selected={selectedTopics.includes(t.id)} key={t.id} style={swatch(t.look)}>
+          <button type="button" className={`topic-callout topic-${t.id} ${engaged===t.id?'is-active':''}`} aria-label={`Open ${t.title} map: ${t.short}`} onPointerEnter={e=>hoverStage(t.id,e)} onPointerMove={glow} onPointerLeave={release} onFocus={e=>{if(e?.currentTarget?.matches?.(':focus-visible')!==false){if(carousel)centerTopic(t.id,'instant');else engage(t.id);}}} onKeyDown={e=>carouselKey(e,t.id)} onBlur={release} onClick={()=>run(()=>onMaps?onMaps(normalizeCategoryTopics([t.id,...selectedTopics])):(onMap||onTopic)(t.id))}>
             <span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.facets.slice(0,2).join(' · ')}</small><span className="topic-map" style={swatch(t.look)}><i aria-hidden="true"/>{t.look?.name}</span><span className="topic-demo-label">Open map →</span></span>
           </button><div className="topic-card-actions"><button type="button" className={`topic-preview topic-preview-${t.id}`} aria-label={`Preview ${t.title}`} onClick={()=>showStage(t.id)}>Preview <span aria-hidden="true">↗</span></button><button type="button" className="topic-add" data-topic={t.id} aria-label={`${selectedTopics.includes(t.id)?'Remove':'Add'} ${t.title} ${selectedTopics.includes(t.id)?'from':'to'} combined map`} aria-pressed={selectedTopics.includes(t.id)} onClick={()=>toggleTopic(t.id)}><span aria-hidden="true">{selectedTopics.includes(t.id)?'✓':'+'}</span></button></div>
         </div>)}</div>)}</section>

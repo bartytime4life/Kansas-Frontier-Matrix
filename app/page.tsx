@@ -2150,7 +2150,7 @@ export default function Home() {
     ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: registryLayerTopics(layer.domain), selected: Boolean(visibility[layer.id]) })),
   ];
   const selectedMapLayerCount = selectedCatalogCount(catalogEntries);
-  const matchingCatalogEntries = catalogEntries.filter(entry => layerEntryMatches(entry, layerCatalogView, officialWorkspace, officialSourceQuery));
+  const matchingCatalogEntries = catalogEntries.filter(entry => layerEntryMatches(entry, layerCatalogView, layerCatalogView === "selected" ? "all" : officialWorkspace, layerCatalogView === "selected" ? "" : officialSourceQuery));
   const shownCatalogIds = new Set(matchingCatalogEntries.map(entry => entry.id));
   const noaaRadarManifestFresh = noaaRadarManifestIsFresh(noaaRadarManifest, noaaRadarClock);
   const noaaRadarRenderable = Boolean(noaaRadarFrameTime && noaaRadarManifestFresh);
@@ -2703,8 +2703,8 @@ export default function Home() {
       return matchesQuery;
     }).map((layer) => layer.id));
   }, [debouncedLayerQuery]);
-  const listedOfficialSources = filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, officialWorkspace, "")
-    .filter(source => shownCatalogIds.has(source.id) && catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id]));
+  const listedOfficialSources = filterOfficialSources(OFFICIAL_CONTEXT_SOURCES, layerCatalogView === "selected" ? "all" : officialWorkspace, "")
+    .filter(source => shownCatalogIds.has(source.id) && (layerCatalogView === "selected" || catalogFilterMatches(officialCatalogFilter, officialCatalogStatuses[source.id])));
   const searchResults = useMemo(() => atlasDiscoveryResults(globalQuery, debouncedGlobalQuery, SEARCH_INDEX, OFFICIAL_CONTEXT_SOURCES, officialPayloads["census-counties"], officialStates["census-counties"]), [debouncedGlobalQuery, globalQuery, officialPayloads, officialStates]);
   const searchStatus = globalSearchStatus(globalQuery, debouncedGlobalQuery, officialStates["census-counties"], searchResults.length);
   const filteredRepositoryUpdates = useMemo(() => {
@@ -11756,7 +11756,7 @@ export default function Home() {
           <div className="local-layer-settings" hidden={!earthEngineContext.enabled || layerCatalogView === "official" || layerCatalogView === "selected" && !matchingCatalogEntries.some(entry => entry.imagery)}>
             <p className="layer-journey-intro">Reviewed Kansas imagery appears here when an approved display set is installed. Each layer has its own visibility, opacity, source period, and limits. <Link href="/earth-engine">Explore all source recipes ↗</Link></p>
             <section className="reviewed-imagery-section" aria-label="Earth Engine imagery layers">
-              {earthEngineContext.enabled && <EarthEngineDisplayControls key={categoryMapSession} catalogView={layerCatalogView} catalogTopic={officialWorkspace} catalogQuery={officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />}
+              {earthEngineContext.enabled && <EarthEngineDisplayControls key={categoryMapSession} catalogView={layerCatalogView} catalogTopic={layerCatalogView === "selected" ? "all" : officialWorkspace} catalogQuery={layerCatalogView === "selected" ? "" : officialSourceQuery} map={styleReady ? mapRef.current : null} mapYear={temporalMode === "snapshot" ? year : -1} manifests={earthEngineContext.manifests} loading={earthEngineContext.loading} error={earthEngineContext.error} rendererState={runtime.kind} onDisplayChange={setEarthEngineDisplay} onReload={earthEngineContext.reload} />}
             </section>
           </div>
           <details className="layer-topic-details" hidden={layerCatalogView === "selected"}><summary>About this topic &amp; map tools</summary>

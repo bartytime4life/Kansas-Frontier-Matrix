@@ -31,7 +31,8 @@ test("actual page catalog includes every selected family; all tab/topic/search p
   assert.equal(result.matchingCatalogEntries.length, result.selectedMapLayerCount);
   for (const [query, topic, expected] of [["PRISM", "weather", ["archive-prism"]], ["USGS river", "water", ["usgs-streamflow"]], ["moisture", "water", ["soil", "crop"]], ["solar", "terrain", ["daylight"]], ["GHCN", "disaster", ["reviewed-weather"]], ["nass", "land", ["crop", "ee-cdl"]], ["airspace", "aviation", ["aviation"]], ["not present", "all", []]]) {
     const filtered = project({ ...state, officialWorkspace: topic, officialSourceQuery: query });
-    assert.deepEqual(filtered.matchingCatalogEntries.map(entry => entry.id), expected);
+    assert.equal(filtered.matchingCatalogEntries.length,11,"On map ignores the hidden Browse filters");
+    assert.deepEqual(result.catalogEntries.filter(entry=>catalog.layerEntryMatches(entry,"selected",topic,query)).map(entry=>entry.id),expected);
     assert.equal(filtered.selectedMapLayerCount, 11, "count remains total selection, independent of search");
   }
   assert.deepEqual(project({ ...state, layerCatalogView: "local" }).matchingCatalogEntries.map(entry => entry.id), ["ee-cdl"]);
@@ -140,4 +141,13 @@ test("reviewed water remains selected and hideable when a refresh withholds its 
   checkbox(tree).props.onChange({ target: { checked: false } }); render();
   assert.equal(selections.at(-1), false);
   h.dispose();
+});
+
+
+test("On map renders selected official rows despite retained topic and status filters",()=>{
+ const run=new Function("filterOfficialSources","OFFICIAL_CONTEXT_SOURCES","layerCatalogView","officialWorkspace","shownCatalogIds","catalogFilterMatches","officialCatalogFilter","officialCatalogStatuses",compile(`return ${declarations.get("listedOfficialSources")};`));
+ const rows=[{id:"water",topic:"water"},{id:"weather",topic:"weather"}],ids=new Set(rows.map(row=>row.id));
+ const filter=(items,topic)=>items.filter(row=>topic==="all"||row.topic===topic);
+ assert.deepEqual(run(filter,rows,"selected","water",ids,()=>false,"error",{}),rows,"hidden Browse controls cannot suppress selected rows");
+ assert.deepEqual(run(filter,rows,"official","water",ids,()=>true,"all",{}),[rows[0]],"Browse still honors its visible topic filter");
 });

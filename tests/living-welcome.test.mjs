@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import ts from 'typescript';
+import * as carouselGeometry from '../app/living-welcome/card-carousel.mjs';
 import { componentHarness, findNode, settle } from './component-harness.mjs';
 import { SCENES, CATEGORY_IDS, HISTORY_ERAS, sceneArt } from '../app/living-welcome/catalog.mjs';
 import { MOTION_CLIPS, motionClip } from '../app/living-welcome/motion-catalog.mjs';
@@ -17,12 +18,12 @@ const rootOf=tree=>findNode(tree,node=>node.props?.className==='explorer-guide l
 const features=[{id:'roads',status:'Explore',description:'Roads',destination:'transport'},{id:'farms',status:'Explore',description:'Farms',destination:'agriculture'}];
 function environment(reduced=false){
  const listeners=new Map(),media={matches:reduced,addEventListener(){},removeEventListener(){}};
- return {window:{matchMedia:()=>media},document:{hidden:false,body:{},querySelector:()=>null,activeElement:null,addEventListener:(id,fn)=>listeners.set(id,fn),removeEventListener:id=>listeners.delete(id)},listeners};
+ return {window:{matchMedia:query=>query.includes('prefers-reduced-motion')?media:{...media,matches:false}},document:{hidden:false,body:{},querySelector:()=>null,activeElement:null,addEventListener:(id,fn)=>listeners.set(id,fn),removeEventListener:id=>listeners.delete(id)},listeners};
 }
 async function welcome(reduced=false,globals={}){
  const env={...environment(reduced),...globals},calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
-  'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas',starters:categoryModule.CATEGORY_MAPS[topic]?.starters??[]})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
+  './card-carousel.mjs':carouselGeometry,'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':{welcomeView:topic=>({topic,name:topic?categoryModule.CATEGORY_MAPS[topic]?.name??topic:'Kansas',starters:categoryModule.CATEGORY_MAPS[topic]?.starters??[]})},'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
  const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value]),onMap:value=>calls.push(['map',value])};
@@ -853,5 +854,37 @@ test('tapping a primary card carries existing choices into that card’s map',as
  try{
   const tree=h.render();gridCard(tree,'engineering').props.onClick();
   assert.deepEqual(h.calls,[['maps',['engineering','water','weather']],['close',false]]);
+ }finally{h.harness.dispose();}
+});
+
+
+test('mobile carousel previews the settled center, supports arrows, and does not navigate on a swipe',async()=>{
+ const clock=intentClock(),h=await welcome(false,{...clock,window:{matchMedia:query=>({matches:query.includes('max-width'),addEventListener(){},removeEventListener(){}})}});
+ let left=0;
+ const cards=['engineering','transport','aviation'].map((id,index)=>({dataset:{carouselTopic:id},getBoundingClientRect:()=>({left:39+index*324-left,width:312}),focus(){}}));
+ const list={get scrollLeft(){return left;},set scrollLeft(value){left=value;},scrollWidth:1038,clientWidth:390,getBoundingClientRect:()=>({left:0,width:390}),querySelectorAll:()=>cards,querySelector:selector=>cards.find(c=>selector.includes(c.dataset.carouselTopic)),scrollTo:options=>{left=options.left;}};
+ const track=tree=>findNode(tree,n=>n.props?.className==='discovery-field discovery-field--grouped');
+ try{
+  let tree=h.render();track(tree).props.ref.current=list;tree=h.render();
+  assert.equal(rootOf(tree).props['data-carousel'],true);
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'engineering');
+  assert.equal(findNode(tree,n=>n.props?.['aria-label']==='Previous map preview').props.disabled,true);
+  left=324;track(tree).props.onScroll();tree=h.render();
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'engineering','a moving track does not cycle providers');
+  clock.fire(120);tree=h.render();
+  assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'transport');
+  assert.deepEqual(h.calls,[],'centering a card only previews');
+  findNode(tree,n=>n.props?.['aria-label']==='Next map preview').props.onClick();tree=h.render();
+  assert.equal(left,648);assert.equal(findNode(tree,n=>n.type==='domain-stage').props.topic,'aviation');
+  let prevented=0;
+  track(tree).props.onPointerDown({clientX:250,clientY:550});
+  track(tree).props.onPointerMove({clientX:90,clientY:552});
+  track(tree).props.onPointerUp();
+  track(tree).props.onClickCapture({detail:1,preventDefault(){prevented++;},stopPropagation(){prevented++;}});
+  assert.equal(prevented,2,'the swipe release cannot also open the card');
+  track(tree).props.onPointerDown({clientX:150,clientY:550});track(tree).props.onPointerUp();
+  track(tree).props.onClickCapture({detail:1,preventDefault(){prevented++;},stopPropagation(){prevented++;}});
+  assert.equal(prevented,2,'a new intentional tap is allowed');
+  gridCard(tree,'aviation').props.onClick();assert.deepEqual(h.calls,[['map','aviation'],['close',false]]);
  }finally{h.harness.dispose();}
 });

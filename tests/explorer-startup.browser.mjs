@@ -24,7 +24,7 @@ assert.equal(welcomeTopics.length, 22, 'the shared taxonomy includes Flora, Faun
 async function readyWelcome(p) {
   await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.dataset.renderer === 'capability' && ${JSON.stringify(welcomeTopics.map(topic => '.living-welcome .topic-' + topic.id))}.every(selector=>document.querySelector(selector))`, 'all shared domain cards hydrated');
   const actual = await p.evaluate(`Array.from(document.querySelectorAll('.living-welcome .topic-callout'),card=>({id:[...card.classList].find(name=>name.startsWith('topic-')&&name!=='topic-callout')?.slice(6),title:card.querySelector('strong')?.textContent,facets:card.querySelector('small')?.textContent,label:card.getAttribute('aria-label')}))`);
-  assert.deepEqual(actual, welcomeTopics.map(topic => ({ id:topic.id, title:topic.title, facets:topic.facets.slice(0,2).join(' · '), label:topic.title+': '+topic.facets.join(' · ') })), 'every shared domain appears once, in order, with its actual facets and accessible name');
+  assert.deepEqual(actual, welcomeTopics.map(topic => ({ id:topic.id, title:topic.title, facets:topic.facets.slice(0,2).join(' · '), label:'Open '+topic.title+' map: '+topic.facets.join(' · ') })), 'every shared domain appears once, in order, with its actual facets and accessible name');
   assert.equal(await p.evaluate(`document.querySelectorAll('.living-welcome video,.living-welcome .motion-portal').length`), 0, 'the welcome does not mount retired footage players');
   assert.equal(await p.evaluate(`document.querySelector('.welcome-preview-brief')`), null, 'category browsing has no floating glimpse card');
   await p.wait(`[...document.querySelectorAll('.living-welcome .topic-callout')].every(card=>Number(getComputedStyle(card).opacity)>=.98)`, 'card arrival completes before geometry checks');
@@ -284,7 +284,7 @@ async function pageSession(b, width, height, networkOptions = {}) {
   return { call, evaluate, wait, key, open, unobstructed, holdSceneModule, waitForSceneModule, releaseSceneModule };
 }
 
-for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823], [390, 844], [320, 568]]) {
+for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823]]) {
   test(`welcome categories scroll without a floating glimpse at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
     await p.open('/?motion=off'); await readyWelcome(p);
@@ -320,8 +320,6 @@ for (const [width, height] of [[2732, 1463], [1280, 800], [829, 823], [390, 844]
 
 for (const { width, height, input } of [
   { width: 829, height: 823, input: 'small wheel deltas' },
-  { width: 390, height: 844, input: 'touch swipe' },
-  { width: 320, height: 568, input: 'touch swipe' },
 ]) {
   test(`welcome categories scroll with ${input} at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
@@ -363,6 +361,36 @@ for (const { width, height, input } of [
     assert.equal(final.overflow, false, 'no horizontal overflow');
     t.diagnostic(JSON.stringify({ input, initial, final }));
   });
+}
+
+// Native touch input must center a preview without selecting or opening a map.
+for(const [width,height] of [[320,568],[390,690],[640,360]]){
+ test(`welcome categories scroll horizontally and preview the centered card at ${width}x${height}`,{timeout:90000},async t=>{
+  const b=await browser(t),p=await pageSession(b,width,height);
+  await p.open('/?motion=off');await readyWelcome(p);
+  await p.wait(`document.querySelector('.living-welcome').dataset.carousel==='true'`,'responsive carousel initialized');
+  await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
+  const swipe=async direction=>{
+   const r=await p.evaluate(`(()=>{const r=document.querySelector('.discovery-field--grouped').getBoundingClientRect();return {x:r.x,width:r.width,y:r.y+r.height*.4};})()`);
+   const start=r.x+r.width*(direction>0?.84:.16),end=r.x+r.width*(direction>0?.16:.84);
+   await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:start,y:r.y}]});
+   for(let i=1;i<=12;i++){await p.call('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:start+(end-start)*i/12,y:r.y}]});await pause(25);}
+   await p.call('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  };
+  await swipe(1);
+  await p.wait(`document.querySelector('.living-welcome')?.dataset.centeredTopic==='transport'&&document.querySelector('.domain-stage')?.dataset.topic==='transport'`,'next card and demo agree');
+  assert.equal(await p.evaluate(`document.querySelector('.welcome-selection-tray')===null`),true,'swiping is not selection');
+  await swipe(-1);
+  await p.wait(`document.querySelector('.living-welcome')?.dataset.centeredTopic==='engineering'`,'reverse swipe restores the first preview');
+  const geometry=await p.evaluate(`(()=>{const card=document.querySelector('.topic-choice[data-centered="true"]').getBoundingClientRect(),rail=document.querySelector('.discovery-field--grouped').getBoundingClientRect(),stage=document.querySelector('.welcome-capability-stage').getBoundingClientRect();return {offset:Math.abs(card.x+card.width/2-rail.x-rail.width/2),stageBottom:stage.bottom,railTop:rail.top,overflow:document.documentElement.scrollWidth>innerWidth+1};})()`);
+  assert.ok(geometry.offset<=1,'card snaps to the actual viewport center');assert.equal(geometry.overflow,false);
+  if(height>500)assert.ok(geometry.stageBottom<=geometry.railTop,'demo sits above the cards');
+  await p.evaluate(`document.querySelector('.topic-engineering').focus()`);await p.key('End','End',35);
+  await p.wait(`document.querySelector('.living-welcome').dataset.centeredTopic==='evidence'`,'keyboard can reach the last card');
+  const last=await p.evaluate(`(()=>{const c=document.querySelector('.topic-choice[data-centered="true"]').getBoundingClientRect(),r=document.querySelector('.discovery-field--grouped').getBoundingClientRect();return Math.abs(c.x+c.width/2-r.x-r.width/2);})()`);assert.ok(last<=1,'last card centers too');
+  await p.key('Home','Home',36);await p.wait(`document.querySelector('.living-welcome').dataset.centeredTopic==='engineering'`,'Home returns to first');
+  await p.key('Enter','Enter',13);await p.wait(`!document.querySelector('.living-welcome')`,'a deliberate tap or Enter opens the selected map');
+ });
 }
 
 for (const [width, height] of [[1440, 960], [390, 844]]) {
@@ -1165,7 +1193,7 @@ for (const [width,height] of [[1280,800],[768,1024],[390,844],[320,568],[568,320
     const opening=welcomeTopics.at(-1).id;
     await revealControl(p,'.topic-preview-'+opening);
     await p.evaluate(`document.querySelector('.topic-preview-${opening}').focus()`);
-    const scroll=await p.evaluate(`(innerWidth<=700||innerHeight<=500?document.querySelector('.discovery-field--grouped'):document.querySelector('.living-welcome')).scrollTop`);
+    const scroll=await p.evaluate(`(()=>{const mobile=document.querySelector('.living-welcome').dataset.carousel==='true',root=document.querySelector(mobile?'.discovery-field--grouped':'.living-welcome');return mobile?root.scrollLeft:root.scrollTop;})()`);
     const focused=async selector=>{
       await p.wait(`document.activeElement?.matches(${JSON.stringify(selector)})`,'native focus reaches '+selector);
       if(selector==='.welcome-dialog-close'){
@@ -1216,7 +1244,7 @@ for (const [width,height] of [[1280,800],[768,1024],[390,844],[320,568],[568,320
     if(pauseEnabled)await tab('.welcome-preview-pause',true);
     await tab(back,true);await enter();
     await p.wait(`document.querySelector('.living-welcome')?.dataset.cinematic==='false'&&document.activeElement?.matches('.topic-preview-${opening}')`,'Return restores the original category after rail switching');
-    const returned = await p.evaluate(`(()=>{const root=innerWidth<=700||innerHeight<=500?document.querySelector('.discovery-field--grouped'):document.querySelector('.living-welcome'),card=document.querySelector('.topic-preview-${opening}'),r=root.getBoundingClientRect(),c=card.getBoundingClientRect();return {scroll:root.scrollTop,max:Math.max(0,root.scrollHeight-root.clientHeight),cardVisible:c.width>0&&c.height>=44&&c.top>=r.top-.5&&c.bottom<=r.bottom+.5&&c.left>=r.left-.5&&c.right<=r.right+.5};})()`);
+    const returned = await p.evaluate(`(()=>{const root=innerWidth<=700||innerHeight<=500?document.querySelector('.discovery-field--grouped'):document.querySelector('.living-welcome'),card=document.querySelector('.topic-preview-${opening}'),r=root.getBoundingClientRect(),c=card.getBoundingClientRect();return {scroll:document.querySelector('.living-welcome').dataset.carousel==='true'?root.scrollLeft:root.scrollTop,max:Math.max(0,document.querySelector('.living-welcome').dataset.carousel==='true'?root.scrollWidth-root.clientWidth:root.scrollHeight-root.clientHeight),cardVisible:c.width>0&&c.height>=44&&c.top>=r.top-.5&&c.bottom<=r.bottom+.5&&c.left>=r.left-.5&&c.right<=r.right+.5};})()`);
     // Reflow can shorten the chooser while previewing. Native scroll restoration
     // clamps at its current maximum; retain exact restoration within that range.
     assert.ok(Math.abs(returned.scroll-Math.min(scroll,returned.max))<=1,'Return restores chooser scroll within the current native scroll range');
@@ -1422,7 +1450,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.living-welcome').dataset.motion==='paused'`,'Pause stops the live map drift');
     await p.key('Enter','Enter',13);await p.wait(`document.querySelector('.living-welcome').dataset.motion==='playing'`,'Play resumes after explicit input');
     await p.evaluate(`document.querySelector('.welcome-preview-expand').focus()`);await p.key('Enter','Enter',13);
-    await p.wait(`document.querySelector('.living-welcome').dataset.fullscreen==='false'&&document.querySelector('.living-welcome').dataset.active===undefined`,'Return clears the explicit preview pin');
+    await p.wait(`document.querySelector('.living-welcome').dataset.fullscreen==='false'&&(document.querySelector('.living-welcome').dataset.carousel==='true'?document.querySelector('.living-welcome').dataset.active===document.querySelector('.living-welcome').dataset.centeredTopic:document.querySelector('.living-welcome').dataset.active===undefined)`,'Return clears the explicit preview pin');
     await checkLayout('returned categories');await revealControl(p,'.topic-preview-evidence');
     await p.evaluate(`document.querySelector('.topic-preview-evidence').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.living-welcome').dataset.fullscreen==='true'`,'expanded preview reopens');
