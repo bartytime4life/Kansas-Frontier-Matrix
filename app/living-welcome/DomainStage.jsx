@@ -4,6 +4,7 @@ import { OFFICIAL_CONTEXT_BY_ID } from '../live-context';
 import { welcomeView } from '../welcome-map-view';
 
 const RADAR_TIME = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+const ILLUSTRATED_TOPICS = new Set(['flora', 'fauna', 'ecology', 'land', 'history', 'evidence', 'public-safety']);
 
 /**
  * Full-window live map for the selected domain: the real map that topic opens
@@ -17,6 +18,17 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
  const [state, setState] = useState('loading'), [sources, setSources] = useState(null);
  const [Geology, setGeology] = useState(null), [geologyReady, setGeologyReady] = useState(false), [geologyFailed, setGeologyFailed] = useState(false);
  const [Spotlight, setSpotlight] = useState(null), [map, setMap] = useState(null), [spotPlaced, setSpotPlaced] = useState(false);
+ const [Illustration, setIllustration] = useState(null);
+ // A settled selection loads the study chunk. Only the selected specimen image
+ // is requested; no video or additional map/canvas renderer is created.
+ useEffect(() => {
+  if (Illustration || !ILLUSTRATED_TOPICS.has(topic)) return;
+  let current = true;
+  const timer = setTimeout(() => {
+   import('./TopicIllustration.jsx').then(module => { if (current) setIllustration(() => module.TopicIllustration); }).catch(() => {});
+  }, 220);
+  return () => { current = false; clearTimeout(timer); };
+ }, [topic, Illustration]);
  // A category hint owns no second map or Underground worker. Its source and
  // diagram chunk are requested only after a settled Geology selection.
  useEffect(() => {
@@ -87,6 +99,7 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
   .map(source => `${source.label ?? OFFICIAL_CONTEXT_BY_ID[source.id]?.shortTitle ?? source.id}${source.observedAt ? ` · ${source.product === 'calculated' ? 'calculated for' : source.product === 'visible' ? 'visible-band' : source.product === 'geocolor' ? 'GeoColor' : 'scan'} ${RADAR_TIME.format(new Date(source.observedAt))}` : ''}${source.state === 'unavailable' ? ' · unavailable' : source.state === 'loading' ? ' · loading' : source.state === 'empty' ? ' · no records returned' : source.state === 'zoom-in' ? ' · closer zoom needed' : ''}`) : [];
  return <div className="domain-stage" data-state={state} data-topic={view.topic ?? 'kansas'}>
   <div ref={host} className="domain-stage-map" />
+  {Illustration&&ILLUSTRATED_TOPICS.has(topic)&&<Illustration key={topic} topic={topic} paused={paused} reduced={reduced} sources={sources?.topic===topic?sources.sources:[]} mapState={sources?.topic===topic?sources.mapState:state}/>}
   {topic==='geology'&&Spotlight&&map&&<Spotlight engine={map.engine} host={map.host} paused={paused} reduced={reduced} expanded={expanded} onPlaced={setSpotPlaced}/>}
   {/* The single-log specimen stays until a spotlight record actually fits on screen. */}
   {expanded&&topic==='geology'&&!(Spotlight&&map&&spotPlaced)&&geologyReady&&Geology&&<Geology paused={paused} reduced={reduced} expanded={expanded}/>}

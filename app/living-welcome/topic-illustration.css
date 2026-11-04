@@ -1,0 +1,128 @@
+/* Scientific study viewports over the actual map. One selected specimen asset;
+   no video, extra canvas, per-frame JavaScript or animated full-screen filter. */
+.living-welcome .topic-illustration {
+ --ti-accent:#a2d2d8;
+ position:fixed; z-index:1; inset:78px 4% 368px 390px;
+ display:flex; flex-direction:column; align-items:center; justify-content:center;
+ margin:0; pointer-events:none; isolation:isolate;
+ animation:ti-arrive .7s cubic-bezier(.16,1,.3,1) both;
+}
+.living-welcome .topic-illustration::before {
+ content:""; position:absolute; z-index:-1; inset:-12% -10%; border-radius:50%;
+ background:radial-gradient(ellipse,#06121afa 0%,#06121af2 35%,#06121ad9 55%,#06121a00 76%);
+}
+.living-welcome .ti-art { width:100%; min-height:0; max-width:760px; flex:1 1 auto; display:flex; align-items:center; justify-content:center; }
+.living-welcome .ti-art svg { display:block; width:100%; height:100%; max-height:440px; overflow:visible; }
+.living-welcome .topic-illustration figcaption { display:grid; justify-items:center; gap:7px; text-align:center; flex:none; color:#d4dfd8; padding:0 12px; }
+.living-welcome[data-fullscreen=true] .welcome-capability-stage .topic-illustration figcaption {
+ position:static; inset:auto; max-width:none; border:0; border-radius:0; background:transparent; padding:0 12px;
+}
+.living-welcome .ti-eyebrow { font:9px ui-monospace,SFMono-Regular,monospace; letter-spacing:.17em; color:#91bdc8; }
+.living-welcome .topic-illustration figcaption strong { color:#e7f0f2; font:400 clamp(23px,2.5vw,33px)/1.15 ui-sans-serif,system-ui,sans-serif; letter-spacing:-.035em; }
+.living-welcome .ti-description { font-size:12px; line-height:1.5; }
+.living-welcome .topic-illustration figcaption small { color:#9aafb7; font-size:10px; line-height:1.45; }
+/* Instrument lines are qualitative annotations, never simulated readings. */
+.living-welcome .ti-frame { fill:none; stroke:#8db8c4; stroke-width:.8; }
+.living-welcome .ti-instrument-label,.living-welcome .ti-source-label { fill:#91b3bf; font:9px ui-monospace,SFMono-Regular,monospace; letter-spacing:1.5px; }
+.living-welcome .ti-source-label { font-size:8px; fill:#8eafb8; letter-spacing:1.1px; }
+.living-welcome .ti-study-guide { fill:none; stroke:#98c4c9; stroke-width:.7; opacity:.8; }
+.living-welcome .ti-study-guide text,.living-welcome .ti-node-label { fill:#c6dce0; stroke:none; font:7px ui-monospace,SFMono-Regular,monospace; letter-spacing:1px; }
+.living-welcome .ti-study-guide circle { fill:#b1d4d4; stroke:none; }
+.living-welcome .ti-asset-failure { fill:#d7c4a5; font:12px ui-monospace,monospace; }
+.living-welcome .ti-specimen { transform-origin:300px 215px; animation:ti-inspect 18s ease-in-out infinite; }
+.living-welcome .ti-specimen-flora { animation-name:ti-botanical-pass; }
+.living-welcome .ti-specimen-ecology { animation-name:ti-terrain-pass; }
+.living-welcome .ti-scan { animation:ti-scan-pass 10s linear infinite; pointer-events:none; }
+.living-welcome .ti-surface-mesh { stroke:#86c0c9; stroke-width:.65; opacity:.65; }
+.living-welcome .ti-model-orbit { transform-origin:300px 215px; animation:ti-mesh-orbit 18s ease-in-out infinite; }
+.living-welcome .ti-survey-reference { animation:ti-reference-emphasis 8s ease-in-out infinite; }
+.living-welcome .ti-control-point { animation:ti-reference-emphasis 8s ease-in-out infinite; animation-delay:calc(var(--i) * -2s); }
+.living-welcome .ti-registration-upper { animation:ti-registration-pass 12s ease-in-out infinite; }
+.living-welcome .ti-route-trace { stroke-dasharray:8 3; animation:ti-network-pass 12s linear infinite; }
+.living-welcome .ti-lineage-path { stroke-dasharray:.04 .02; animation:ti-lineage-pass 14s linear infinite; }
+.living-welcome .ti-lineage-node { animation:ti-node-rise 10s ease-in-out infinite; animation-delay:calc(var(--i) * -2.5s); }
+.living-welcome .ti-coverage-stack { animation:ti-coverage-pass 12s ease-in-out infinite; }
+.living-welcome .ti-coverage-reference { animation:ti-lineage-pass 14s linear infinite; }
+.living-welcome .ti-status { display:flex; align-items:center; gap:6px; color:#9ebac4; font:8px/1.4 ui-monospace,SFMono-Regular,monospace; letter-spacing:.09em; margin-top:2px; }
+.living-welcome .ti-status i { width:4px; height:4px; border-radius:50%; background:#a0c5c8; }
+.living-welcome .topic-illustration[data-source-state=unavailable] .ti-status { color:#d5bd91; }
+.living-welcome .topic-illustration[data-source-state=unavailable] .ti-status i { background:#d5bd91; }
+.living-welcome .topic-illustration[data-source-state=loading] .ti-status i { animation:ti-source-pending 3s ease-in-out infinite; }
+
+@keyframes ti-arrive { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+@keyframes ti-inspect { 0%,100% { transform:scale(1) translateX(-2px); } 50% { transform:scale(1.035) translateX(3px); } }
+@keyframes ti-botanical-pass { 0%,100% { transform:scale(1) translateY(2px); } 50% { transform:scale(1.025) translateY(-2px); } }
+@keyframes ti-terrain-pass { 0%,100% { transform:translate(-3px,2px) scale(1); } 50% { transform:translate(3px,-2px) scale(1.025); } }
+@keyframes ti-scan-pass { 0% { transform:translateY(-105px); opacity:0; } 10%,80% { opacity:.7; } 100% { transform:translateY(335px); opacity:0; } }
+@keyframes ti-mesh-orbit { 0%,100% { transform:translateY(3px) rotate(-1deg); } 50% { transform:translateY(-5px) rotate(1deg); } }
+@keyframes ti-reference-emphasis { 0%,100% { opacity:.45; } 40%,65% { opacity:1; } }
+@keyframes ti-registration-pass { 0%,100% { transform:translateY(12px); } 45%,65% { transform:translateY(-12px); } }
+@keyframes ti-network-pass { to { stroke-dashoffset:-44; } }
+@keyframes ti-lineage-pass { to { stroke-dashoffset:-1; } }
+@keyframes ti-node-rise { 0%,100% { transform:translateY(0); opacity:.65; } 40%,65% { transform:translateY(-8px); opacity:1; } }
+@keyframes ti-coverage-pass { 0%,100% { transform:translateY(0); } 50% { transform:translateY(7px); } }
+@keyframes ti-source-pending { 0%,100% { opacity:.3; } 50% { opacity:.9; } }
+
+/* The chooser keeps its full-width cards; the illustration is only a backdrop.
+   The expanded preview reserves the middle of the stage for the scientific study. */
+.living-welcome:not([data-fullscreen=true]) .topic-illustration { position:absolute; inset:8% 4% 10% 40%; }
+.living-welcome:not([data-fullscreen=true]) .topic-illustration figcaption { display:none; }
+.living-welcome .topic-illustration[data-paused=true],
+.living-welcome .topic-illustration[data-paused=true] * { animation-play-state:paused!important; }
+.living-welcome .topic-illustration[data-paused=true] { opacity:1; transform:none; animation:none; }
+.living-welcome .topic-illustration[data-reduced=true] *,
+.living-welcome .topic-illustration[data-reduced=true] { animation:none!important; }
+
+@media(max-width:1100px) and (min-width:701px) {
+ .living-welcome .topic-illustration { inset:80px 16px 264px 326px; }
+ .living-welcome .topic-illustration figcaption { gap:5px; }
+}
+@media(max-width:700px) {
+ .living-welcome .topic-illustration { inset:calc(80px + clamp(104px,27%,220px)) 10px 234px; }
+ .living-welcome .ti-art svg { max-height:290px; }
+ .living-welcome .topic-illustration figcaption { gap:4px; padding:0; }
+ .living-welcome .topic-illustration figcaption strong { font-size:23px; }
+ .living-welcome .ti-eyebrow { font-size:8px; }
+ .living-welcome .ti-description,.living-welcome .ti-status { display:none; }
+ .living-welcome .topic-illustration figcaption small { font-size:9px; }
+}
+@media(max-height:650px) and (min-width:701px) {
+ .living-welcome .topic-illustration { top:62px; bottom:189px; left:350px; }
+ .living-welcome .ti-description,.living-welcome .ti-status { display:none; }
+ .living-welcome .topic-illustration figcaption { gap:3px; }
+}
+@media(max-height:600px) and (max-width:700px) and (orientation:portrait) {
+ .living-welcome .topic-illustration { inset:200px 6px 244px; }
+ .living-welcome[data-cinematic=true]:has(.topic-illustration) .welcome-layer-demo { max-height:120px; }
+ .living-welcome .topic-illustration figcaption strong { font-size:17px; }
+ .living-welcome .ti-eyebrow { display:none; }
+}
+@media(max-width:900px) and (max-height:500px) and (orientation:landscape) {
+ .living-welcome .topic-illustration { inset:62px 10px 132px 52%; }
+ .living-welcome .topic-illustration figcaption strong { font-size:20px; }
+ .living-welcome .ti-description,.living-welcome .ti-eyebrow,.living-welcome .topic-illustration figcaption strong { display:none; }
+ .living-welcome[data-cinematic=true]:has(.topic-illustration) .welcome-category-rail {
+  top:auto; bottom:40px; left:calc(50% + 8px); right:12px; width:auto; height:54px; max-height:54px; padding:0 4px;
+ }
+ .living-welcome[data-cinematic=true]:has(.topic-illustration) .welcome-rail-heading { display:none; }
+ .living-welcome[data-cinematic=true]:has(.topic-illustration) .welcome-rail-card { min-height:44px; flex-basis:170px; padding:5px 8px; }
+ .living-welcome[data-cinematic=true]:has(.topic-illustration) .welcome-rail-card small { display:none; }
+ .living-welcome[data-cinematic=true]:has(.topic-illustration) .welcome-rail-swatch { height:22px; }
+ .living-welcome[data-cinematic=true]:has(.topic-illustration) .welcome-rail-items { padding:4px 0; }
+ .living-welcome[data-cinematic=true]:has(.topic-illustration) .domain-stage .maplibregl-ctrl-bottom-right { bottom:0; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .living-welcome .topic-illustration,.living-welcome .topic-illustration * { animation:none!important; }
+}
+
+/* The live mobile carousel keeps its map above the cards. Give its selected
+   study that same viewport and keep the illustrative scope visible on it. */
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .topic-illustration { inset:76px 12px 36px; padding:0; }
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .topic-illustration figcaption { display:grid; position:static; inset:auto; max-width:none; gap:0; padding:0; background:transparent; border-radius:0; }
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .topic-illustration figcaption > :not(small) { display:none; }
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .topic-illustration figcaption small { font-size:9px; line-height:1.35; }
+.living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .domain-stage .maplibregl-ctrl-bottom-right { bottom:0; }
+@media(max-height:500px) and (orientation:landscape) {
+ .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .topic-illustration { inset:67px 3px 38px; }
+ .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .topic-illustration figcaption small { font-size:8px; }
+}

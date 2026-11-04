@@ -84,6 +84,27 @@ test('the engine resolves styles itself, so one failed style never stalls later 
  assert.match(source,/attributionControl: \{ compact: true \}/,'provider credits stay on the map');
  const stage=await readFile('app/living-welcome/DomainStage.jsx','utf8');
  assert.match(stage,/import\('\.\/map-engine\.mjs'\)/,'the map engine loads lazily after the welcome paints');
- const welcome=await readFile('app/living-welcome/welcome.jsx','utf8');
- assert.match(welcome,/<DomainStage topic=\{touched\?control:null\}/,'nothing but the default map until a visitor points at a category');
+ // Idle desktop and centered mobile previews execute in living-welcome.test
+ // and the native carousel browser journeys; avoid a stale source-pattern rule.
+});
+
+test('subject camera passes return home, reverse without accumulating drift, and stay local to their zoom',()=>{
+ const signatures=new Set();
+ for(const topic of Object.keys(maps.CATEGORY_MAPS)){
+  const v=view.welcomeView(topic),camera=plain(v.camera),span=360/2**camera.zoom;
+  for(const leg of [0,1,2,3,100,101,102,103]){
+   const pose=plain(view.welcomeDriftLeg(v,leg));
+   assert.ok(pose.center.every(Number.isFinite)&&Number.isFinite(pose.zoom)&&Number.isFinite(pose.bearing));
+   assert.ok(Math.abs(pose.center[0]-camera.center[0])<=span*.08,topic+' stays near its source view');
+   assert.ok(Math.abs(pose.center[1]-camera.center[1])<=span*.05);
+   assert.ok(pose.pitch>=0&&pose.pitch<=68);
+   assert.ok(Math.abs(pose.zoom-camera.zoom)<=.36);
+   assert.ok(pose.duration>=24000&&pose.duration<=36000);
+   if(leg%2)assert.deepEqual({center:pose.center,pitch:pose.pitch,zoom:pose.zoom,bearing:pose.bearing},camera,topic+' returns home');
+   assert.deepEqual(pose,plain(view.welcomeDriftLeg(v,leg%4)),topic+' does not accumulate drift');
+  }
+  const pose=view.welcomeDriftLeg(v,0);
+  signatures.add(JSON.stringify([pose.center[0]-camera.center[0],pose.center[1]-camera.center[1],pose.bearing-camera.bearing,pose.zoom-camera.zoom,pose.duration]));
+ }
+ assert.ok(signatures.size>=18,'topics have distinct camera choreography');
 });

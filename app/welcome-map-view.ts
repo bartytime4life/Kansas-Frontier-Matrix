@@ -105,13 +105,47 @@ export function welcomeStyle(style: StyleSpecification, view: WelcomeView): Styl
   return { ...style, projection, sources: { ...style.sources, [WELCOME_DEM_SOURCE_ID]: { ...dem } }, terrain: { source: WELCOME_DEM_SOURCE_ID, exaggeration: view.topic === "aviation" ? 1 : WELCOME_TERRAIN_EXAGGERATION } };
 }
 
-/**
- * The slow camera drift while the welcome plays: tilted and globe views turn
- * about their center, flat maps ease gently in and back out. Each leg is one
- * eased move; the engine alternates legs until paused.
- */
-export function welcomeDriftLeg(view: WelcomeView, leg: number): Readonly<{ bearing: number; zoom: number; duration: number }> {
+type MotionProfile = Readonly<{ east: number; north: number; turn: number; zoom: number; tilt?: number; seconds: number }>;
+// Presentation-only camera choreography. Offsets are fractions of the current
+// zoom's world span, so a field-scale preview cannot drift across the state.
+const MOTION_PROFILES: Readonly<Record<string, MotionProfile>> = {
+  transport: { east: .07, north: .035, turn: 0, zoom: .35, seconds: 24 },
+  engineering: { east: .025, north: -.018, turn: 18, zoom: .12, tilt: 5, seconds: 28 },
+  water: { east: .07, north: -.04, turn: -4, zoom: .15, seconds: 28 },
+  groundwater: { east: -.045, north: .025, turn: 0, zoom: .22, seconds: 30 },
+  ecology: { east: .03, north: -.035, turn: 5, zoom: .2, seconds: 30 },
+  flora: { east: -.025, north: .025, turn: -5, zoom: .28, seconds: 28 },
+  fauna: { east: .065, north: .01, turn: 3, zoom: .1, seconds: 32 },
+  agriculture: { east: .035, north: -.025, turn: 7, zoom: .18, seconds: 30 },
+  history: { east: .055, north: .012, turn: -6, zoom: .15, seconds: 32 },
+  land: { east: .025, north: -.025, turn: 8, zoom: .2, seconds: 30 },
+  people: { east: .015, north: 0, turn: 20, zoom: .08, tilt: -5, seconds: 32 },
+  government: { east: .03, north: .012, turn: 0, zoom: .18, seconds: 30 },
+  places: { east: -.04, north: .025, turn: -3, zoom: .24, seconds: 28 },
+  science: { east: .035, north: -.015, turn: 0, zoom: -.16, seconds: 32 },
+  sky: { east: .05, north: .012, turn: 8, zoom: 0, seconds: 36 },
+  evidence: { east: .018, north: 0, turn: 0, zoom: .14, seconds: 30 },
+  "public-safety": { east: -.025, north: .018, turn: 0, zoom: .2, seconds: 32 },
+};
+
+/** Four slow eased legs: a subject-specific pass, home, a reverse pass, home.
+ * The source frame stays fixed; only the camera moves. Every pose is computed
+ * from the category's original camera, avoiding cumulative drift. */
+export function welcomeDriftLeg(view: WelcomeView, leg: number): Readonly<{ center: readonly [number, number]; pitch: number; bearing: number; zoom: number; duration: number }> {
+  const { camera } = view;
+  const profile = view.topic ? MOTION_PROFILES[view.topic] : undefined;
   const out = leg % 2 === 0;
-  if (view.scene === "2d") return { bearing: view.camera.bearing, zoom: view.camera.zoom + (out ? 0.35 : 0), duration: 24_000 };
-  return { bearing: view.camera.bearing + (out ? 24 : 0), zoom: view.camera.zoom, duration: 30_000 };
+  const direction = leg % 4 === 0 ? 1 : -1;
+  if (profile) {
+    const span = 360 / 2 ** camera.zoom;
+    return {
+      center: out ? [camera.center[0] + profile.east * span * direction, camera.center[1] + profile.north * span * direction] : camera.center,
+      pitch: out ? Math.max(0, Math.min(68, camera.pitch + (profile.tilt ?? 0) * direction)) : camera.pitch,
+      bearing: camera.bearing + (out ? profile.turn * direction : 0),
+      zoom: camera.zoom + (out ? profile.zoom : 0), duration: profile.seconds * 1000,
+    };
+  }
+  return { center: camera.center, pitch: camera.pitch,
+    bearing: camera.bearing + (out && view.scene !== "2d" ? 24 * direction : 0),
+    zoom: camera.zoom + (out && view.scene === "2d" ? .35 : 0), duration: view.scene === "2d" ? 24_000 : 30_000 };
 }
