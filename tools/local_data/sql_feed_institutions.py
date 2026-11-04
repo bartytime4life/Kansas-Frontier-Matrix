@@ -52,7 +52,9 @@ its URL changes, or every 91 days; a 404 (EDGE's next year, the next HD file) is
 retried weekly; at most 10 files or 300 MB a run. Founding years exist only in IC1980 (ESTMOYR) and IC1984-86
 (ESTYR/ESTMO) and are kept in ``established``. The PSS state column changed names over the years; a PSS file
 with no state column is cut by its state FIPS column instead (the original feed stopped on 1991-92 with
-``NCES_COLUMNS_CHANGED``; whether its later fix matched this is unknown).
+``NCES_COLUMNS_CHANGED``; whether its later fix matched this is unknown). The 1995-96, 1997-98 and 1999-2000 files
+prefix their identifying columns with the survey round (QPIN, RSTABB, SZIP) and carry no school names or coordinates.
+NCES renamed the zips from 2011-12 on, so ``_pss_url`` holds all three name patterns.
 
 ``historical-topo-maps``: the USGS Historical Topographic Map Collection inventory ``historicaltopo.zip``
 on The National Map's bucket (https://prd-tnm.s3.amazonaws.com/StagedProducts/Maps/Metadata/, public domain;
@@ -635,7 +637,7 @@ IPEDS_URL = NCES + "ipeds/datacenter/data/{name}.zip"
 IPEDS_FILES = ["IC1980", "IC1984", "IC1985", "IC1986_A", "IC1987_A", "IC1988_A", "IC1989_A", "IC90HD", "IC1991_hdr", "IC1992_A", "IC1993_A",
                "IC1994_A", "ic9596_A", "ic9697_A", "ic9798_HDR", "IC98hdac", "IC99_HD", "FA2000HD", "FA2001HD"]
 IPEDS_HD_FIRST = 2002
-PSS_URL = NCES + "surveys/pss/zip/TXT_PSS{yy}{yy2}.zip"
+PSS_ZIPS = NCES + "surveys/pss/zip/"
 PSS_FILES = [(y, y + 1) for y in range(1989, 2024, 2)]       # biennial surveys 1989-90 .. 2023-24
 NCES_RECHECK_DAYS, NCES_MISSING_DAYS, NCES_LISTING_DAYS = 91, 7, 7
 NCES_MAX_FILES, NCES_MAX_BYTES, NCES_ZIP_LIMIT = 10, 300_000_000, 256_000_000
@@ -663,8 +665,10 @@ IPEDS_ALIASES = {"unitid": ["UNITID"], "name": ["INSTNM"], "city": ["CITY"], "st
                  "sector": ["SECTOR"], "control": ["CONTROL"], "established": ["ESTYR", "ESTMOYR"], "established_month": ["ESTMO"],
                  "closed": ["CLOSEDAT"], "deleted_year": ["DEATHYR"], "opeid": ["OPEID"], "fice": ["FICE"], "latitude": ["LATITUDE"],
                  "longitude": ["LONGITUD"]}
-PSS_ALIASES = {"ppin": ["PPIN", "EPIN"], "name": ["PINST", "SCHNAME", "SCHOOL_NAME"], "city": ["PCITY", "CITY"], "state": ["PSTABB", "STATE", "PSTATE", "PSTAB"],
-               "location_state": ["PL_STABB"], "state_fips": ["PSTFIP", "ESTFIP", "STFIP"], "county": ["PCNTY"], "zip": ["PZIP", "EZIP"],
+PSS_ALIASES = {"ppin": ["PPIN", "EPIN", "QPIN", "RPIN", "SPIN"], "name": ["PINST", "SCHNAME", "SCHOOL_NAME"],
+               "city": ["PCITY", "CITY", "QCITY", "RCITY", "SCITY"], "state": ["PSTABB", "STATE", "PSTATE", "PSTAB", "QSTABB", "RSTABB", "SSTABB"],
+               "location_state": ["PL_STABB"], "state_fips": ["PSTFIP", "ESTFIP", "STFIP", "QSTFIP", "RSTFIP", "SSTFIPS"],
+               "county": ["PCNTY", "QCNTY", "RCNTY", "SCNTY"], "zip": ["PZIP", "EZIP", "QZIP", "RZIP", "SZIP"],
                "latitude": ["LATITUDE"], "longitude": ["LONGITUDE"], "religion": ["RELIG"], "orientation": ["ORIENT"], "students": ["NUMSTUDS"]}
 NCES_REAL = {"latitude", "longitude"}
 
@@ -697,13 +701,21 @@ def _ccd_listing(ctx) -> list[list[str]]:
     return [[year, found[year]] for year in sorted(found) if re.fullmatch(r"\d{4}-\d{4}", year)]
 
 
+def _pss_url(first: int, second: int) -> str:
+    """The zip of one PSS survey: NCES's name changed at 2011-12 and again at 2013-14."""
+    span = f"{first % 100:02d}{second % 100:02d}"
+    if first < 2011:
+        return f"{PSS_ZIPS}TXT_PSS{span}.zip"
+    return f"{PSS_ZIPS}pss{span}_pu_{'txt' if first == 2011 else 'csv'}.zip"
+
+
 def _nces_targets(ctx, state: dict) -> list[tuple[str, str]]:
     year = ctx.now().date().year
     targets = [(f"ccd/{sy}", url) for sy, url in state["ccd_listing"]["files"]]
     targets += [(f"edge/{_school_year(y)}", EDGE_URL.format(yy=f"{y % 100:02d}", yy2=f"{(y + 1) % 100:02d}")) for y in range(EDGE_FIRST, year)]
     targets += [(f"ipeds/{name}", IPEDS_URL.format(name=name)) for name in IPEDS_FILES]
     targets += [(f"ipeds/HD{y}", IPEDS_URL.format(name=f"HD{y}")) for y in range(IPEDS_HD_FIRST, year + 1)]
-    targets += [(f"pss/{_school_year(a)}", PSS_URL.format(yy=f"{a % 100:02d}", yy2=f"{b % 100:02d}")) for a, b in PSS_FILES if b < year]
+    targets += [(f"pss/{_school_year(a)}", _pss_url(a, b)) for a, b in PSS_FILES if b < year]
     return targets
 
 
