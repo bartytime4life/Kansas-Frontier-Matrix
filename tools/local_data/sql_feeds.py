@@ -40,9 +40,9 @@ from typing import Callable
 import urllib.error
 import urllib.request
 
-CAP = 85_000_000_000
+CAP = None   # the owner, 2026-11-02: "ignore all data caps and floors". Set a byte count to bring the ceiling back.
 RESERVE = 5_000_000_000
-FREE_FLOOR = 100_000_000_000
+FREE_FLOOR = 0
 USER_AGENT = "KFM-pipeline-sql-feeds/1 (Kansas Frontier Matrix local research database)"
 FEEDS = {
     "captures": "tools.local_data.sql_feed_sources:captures",
@@ -297,11 +297,12 @@ def gz(data: bytes) -> bytes:
 
 def guard(ctx: Context) -> None:
     out = ctx.db_path.parent
-    files = {p.resolve() for d in [out, *ctx.shared_dirs] for p in d.glob("*") if p.is_file()}
-    files.update(p.resolve() for p in ctx.catalogs if p.is_file())
-    used = sum(p.stat().st_size for p in files)
-    if used >= CAP - RESERVE:
-        raise FeedError("CEILING_85GB_HEADROOM_STOP")
+    if CAP is not None:
+        files = {p.resolve() for d in [out, *ctx.shared_dirs] for p in d.glob("*") if p.is_file()}
+        files.update(p.resolve() for p in ctx.catalogs if p.is_file())
+        used = sum(p.stat().st_size for p in files)
+        if used >= CAP - RESERVE:
+            raise FeedError("CEILING_85GB_HEADROOM_STOP")
     stat = os.statvfs(out)
     if stat.f_bavail * stat.f_frsize < ctx.floor:
         raise FeedError("FREE_SPACE_FLOOR_REACHED")
