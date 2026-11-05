@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import ts from 'typescript';
 import * as carouselGeometry from '../app/living-welcome/card-carousel.mjs';
+import * as recordLinks from '../app/living-welcome/record-links.mjs';
 import { componentHarness, findNode, settle } from './component-harness.mjs';
 import { SCENES, CATEGORY_IDS, HISTORY_ERAS, sceneArt } from '../app/living-welcome/catalog.mjs';
 import { MOTION_CLIPS, motionClip } from '../app/living-welcome/motion-catalog.mjs';
@@ -25,7 +26,7 @@ function environment(reduced=false){
 async function welcome(reduced=false,globals={}){
  const env={...environment(reduced),...globals},calls=[];
  const harness=await componentHarness('app/living-welcome/welcome.jsx',{
-  './card-carousel.mjs':carouselGeometry,'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':welcomeViewModule,'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
+  './card-carousel.mjs':carouselGeometry,'./record-links.mjs':recordLinks,'react-dom':{createPortal:content=>content},'../layer-workspaces':{TOPIC_STRUCTURE,TOPIC_GROUPS},'../category-maps':categoryModule,'./capability-catalog.mjs':{capabilityPreviews,capabilityNote,categoryGlimpse},'./CapabilityPreview.jsx':{CapabilityPreview:'capability-preview'},'./DomainStage.jsx':{DomainStage:'domain-stage'},'../welcome-map-view':welcomeViewModule,'./catalog.mjs':{SCENES,HISTORY_ERAS,sceneArt},'./motion-catalog.mjs':{MOTION_CLIPS,motionClip},
   './FeatureGuide.jsx':{WelcomeFeatureGuide:'feature-guide'},'../modal-background':{isolateModalBackground:()=>{env.isolated=true;return()=>{env.isolated=false;};},modalFocusableElements:panel=>env.focusCandidates?.(panel)||[]},
  },env);
  const props={onClose:value=>calls.push(['close',value]),onAction:value=>calls.push(['action',value]),onMore:()=>calls.push(['help']),onSearch:value=>calls.push(['search',value]),onTopic:value=>calls.push(['topic',value]),onMap:value=>calls.push(['map',value])};
@@ -906,4 +907,72 @@ test('mobile carousel previews the settled center, supports arrows, and does not
   assert.equal(prevented,2,'a new intentional tap is allowed');
   gridCard(tree,'aviation').props.onClick();assert.deepEqual(h.calls,[['map','aviation'],['close',false]]);
  }finally{h.harness.dispose();}
+});
+
+// Wide, tall screens: the live map is the page, the topics a rail, one focus panel for the chosen map.
+const wideWindow={matchMedia:query=>({matches:query.includes('min-width:1101px'),addEventListener(){},removeEventListener(){}})};
+const focusPanel=tree=>findNode(tree,node=>node.props?.className==='welcome-focus');
+test('the desktop atlas shows the chosen map from the start and describes it in one panel that follows hover and focus',async()=>{
+ const h=await welcome(false,{window:wideWindow});let tree=h.render();
+ assert.equal(rootOf(tree).props['data-layout'],'atlas');
+ const stage=findNode(tree,node=>node.type==='domain-stage');
+ assert.equal(stage.props.topic,'weather','the default topic\'s map shows before any choice');
+ assert.equal(stage.props.paused,false,'the map keeps its drift on desktop while motion is on');
+ let panel=focusPanel(tree);
+ assert.equal(panel.props['data-topic'],'weather');
+ assert.equal(findNode(panel,node=>node.type==='h2').props.children,TOPIC_STRUCTURE.find(t=>t.id==='weather').title);
+ assert.ok(findNode(panel,node=>node.props?.className==='welcome-focus-facets'),'facets travel to the panel');
+ assert.equal(findNode(panel,node=>node.props?.className==='welcome-focus-lede').props.children,categoryModule.CATEGORY_MAPS.weather.lede);
+ // What the record holds for the topic: its collections in the library, on the map, and a newspaper search.
+ const recordBlock=findNode(panel,node=>node.props?.className==='welcome-focus-record');
+ const links=recordLinks.recordLinksFor('weather');
+ assert.ok(links.total>=4&&links.collections.length===4&&links.collections.every(c=>/^\/data-library\?collection=/.test(c.url)));
+ assert.ok(recordLinks.recordLinksFor('transport').collections.some(c=>c.mapUrl?.startsWith('/?archive=archive-records-')),'mapped collections link to the map');
+ assert.equal(new Set(links.collections.map(c=>c.id.replace(/^(?:observations|bulk)-/,'').split('-')[0])).size,4,'one table per source family first');
+ assert.equal(findNode(recordBlock,node=>node.type==='a'&&node.props.href===links.collections[0].url).props.children,links.collections[0].title);
+ assert.equal(findNode(recordBlock,node=>node.type==='a'&&node.props.href===links.terms[0].url).props.children.join(''),'“tornado”');
+ assert.ok(findNode(tree,node=>node.props?.className==='welcome-record-rail'),'the rail ends with the library and the archive');
+ assert.ok(findNode(tree,node=>node.props?.className==='welcome-record-search'),'the hero carries the record search');
+ findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-water ')).props.onPointerEnter({pointerType:'mouse',currentTarget:{}});tree=h.render();
+ panel=focusPanel(tree);
+ assert.equal(panel.props['data-topic'],'water');
+ assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,'water');
+ assert.equal(addCard(tree,'water').props['aria-pressed'],false,'hover selects nothing');
+ assert.deepEqual(h.calls,[],'describing a map changes nothing in the Explorer');
+ // The panel's actions are the card's: add to the combined map, then open it.
+ findNode(panel,node=>node.type==='button'&&node.props['aria-pressed']===false).props.onClick();tree=h.render();panel=focusPanel(tree);
+ assert.equal(addCard(tree,'water').props['aria-pressed'],true);
+ assert.equal(findNode(panel,node=>node.type==='button'&&node.props['aria-pressed']===true).props.children,'✓ In my map');
+ findNode(panel,node=>node.props?.className==='welcome-primary').props.onClick();
+ assert.equal(h.calls.length,2);assert.ok(JSON.stringify(h.calls[0]).includes('water'));assert.deepEqual(h.calls[1],['close',false]);
+ h.harness.dispose();
+});
+test('narrow or short screens keep the card layout and the static default map',async()=>{
+ const h=await welcome();let tree=h.render();tree=h.render();
+ assert.equal(rootOf(tree).props['data-layout'],undefined);
+ assert.equal(focusPanel(tree),undefined);
+ assert.equal(findNode(tree,node=>node.props?.className==='welcome-record-search'),undefined);
+ assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,null);
+ h.harness.dispose();
+});
+
+test('the record search routes a place to the map and words to the data library, and the record links are well formed',async()=>{
+ const visited=[];const h=await welcome(false,{window:{...wideWindow,location:{assign:url=>visited.push(url)}}});let tree=h.render();tree=h.render();
+ const form=findNode(tree,node=>node.props?.className==='welcome-record-search');
+ findNode(form,node=>node.type==='input').props.onChange({target:{value:'dust storm'}});tree=h.render();
+ findNode(findNode(tree,node=>node.props?.className==='welcome-record-search'),node=>node.type==='form'||node.props?.onSubmit).props.onSubmit({preventDefault(){}});
+ assert.deepEqual(visited,['/data-library?q=dust%20storm&source=newspapers']);
+ assert.deepEqual(h.calls,[['close',false]]);
+ h.harness.dispose();
+ const g=await welcome(false,{window:{...wideWindow,location:{assign:url=>visited.push(url)}}});tree=g.render();tree=g.render();
+ let search=findNode(tree,node=>node.props?.className==='welcome-record-search');
+ findNode(search,node=>node.type==='select').props.onChange({target:{value:'place'}});tree=g.render();search=findNode(tree,node=>node.props?.className==='welcome-record-search');
+ findNode(search,node=>node.type==='input').props.onChange({target:{value:'Abilene'}});tree=g.render();search=findNode(tree,node=>node.props?.className==='welcome-record-search');
+ search.props.onSubmit({preventDefault(){}});
+ assert.deepEqual(g.calls,[['search','Abilene'],['close',false]]);
+ assert.equal(visited.length,1,'a place never leaves the Explorer');
+ g.harness.dispose();
+ assert.equal(recordLinks.RECORD_COUNTS.collections,189);assert.equal(recordLinks.RECORD_COUNTS.mapped,56);
+ for(const topic of TOPIC_STRUCTURE.map(t=>t.id)){const links=recordLinks.recordLinksFor(topic);assert.ok(links.terms.length>=1,topic);assert.ok(links.collections.length<=4);}
+ assert.equal(recordLinks.newspaperSearchUrl('"dust storm"','texts'),'/data-library?q=%22dust%20storm%22&source=texts');
 });

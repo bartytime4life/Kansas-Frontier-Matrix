@@ -30,7 +30,7 @@ export default function DataLibrary(){
  const collection=recoveredCollection(id);
  const matching=RECOVERED_COLLECTIONS.filter(c=>(c.title+' '+c.database).toLowerCase().includes(search.toLowerCase()));
  useEffect(()=>{
-  const token=setTimeout(()=>{const value=new URLSearchParams(location.search).get('collection');if(value&&recoveredCollection(value))setId(value);},0);
+  const token=setTimeout(()=>{const params=new URLSearchParams(location.search),value=params.get('collection'),find=(params.get('find')??'').slice(0,80);if(value&&recoveredCollection(value))setId(value);if(find.trim())setSearch(find);},0);
   return()=>{clearTimeout(token);request.current?.abort();};
  },[]);
  function choose(next:string){request.current?.abort();generation.current++;setId(next);setAnswer(null);setPage(1);setBusy(false);setStatus('Ready to read this collection.');history.replaceState(null,'',`/data-library?collection=${encodeURIComponent(next)}`);}

@@ -1,5 +1,50 @@
 # Capability welcome · 2026-10-21 candidate
 
+## Desktop atlas · 2026-11-05 candidate
+
+On wide, tall screens (at least 1101 px wide and 761 px tall, outside the
+full-window preview) the welcome uses the atlas layout, `data-layout="atlas"`:
+the live map is the page, the 22 topics are a rail down the left that scrolls
+with the page, and one panel over the map describes the chosen topic. Before
+this the desktop page was a wall of 22 identical cards four abreast that hid the
+map; the owner asked for the map to be seen.
+
+- **Same DOM, same hooks.** Every card keeps its class names, aria-labels,
+  order, Preview and + actions; the rail is the grouped field restyled to one
+  column. The carousel (phones) and the tablet grid are untouched. The root
+  still scrolls with `scroll-padding-block: 20px`, so the browser scroll
+  journeys at 1280 × 800 and 2732 × 1463 keep their contract.
+- **The map shows from the start.** On desktop the stage shows the chosen
+  topic's map immediately (`weather` until a visitor points at another) and
+  keeps its slow drift while motion is on; it still pauses on reduced motion,
+  a hidden tab, an open dialog or the story lab. Elsewhere the default
+  statewide map stays static until a category is engaged, as before.
+- **The focus panel** (`.welcome-focus`) names the topic's group and position,
+  its map look and scene, the map's lede from `CATEGORY_MAPS`, its facets, the
+  category glimpse, and the topic's limitation. Its three actions are the
+  card's: open the map, full-screen preview, add to the combined map. Hover or
+  keyboard focus on a rail row changes the panel; it admits no data.
+- **The stage caption** (map name, preview layers and their source clocks)
+  shows beside the rail as a chip; the toolbar floats top-right over the map.
+- **"The Kansas record"** reads as a list of story rows at the end of the rail.
+- **The record is one step away.** The hero carries one search box with a
+  scope: newspapers 1864–1960 and archive texts open the data library with the
+  search already asked (`/data-library?q=…&source=…`, which `search.tsx` now
+  reads from the address bar), collections open the library's finder
+  (`?find=…`), and a place keeps the existing `onSearch` into the map. The rail
+  ends with two rows, the public data library (189 collections, 56 mapped) and
+  the newspaper and text archive. The focus panel's "In the record" block lists
+  up to four of the topic's own collections (`app/living-welcome/record-links.mjs`,
+  one per source family, mapped ones first, each with its library link and,
+  when it has geometry, a map link) and two period search words for the
+  newspapers. They are links; the welcome fetches and admits nothing.
+  `app/recovered-topics.mjs` now holds the topic mapping, titles and URLs that
+  `recovered-collections.ts` re-exports, so the welcome and its tests share them.
+
+Rollback: remove the `[data-layout=atlas]` block at the end of `welcome.css`,
+the `desktop` state, record search and `.welcome-focus-record` block in
+`welcome.jsx`, and `record-links.mjs`; nothing else depends on them.
+
 ## Geographic previews · 2026-11-04 correction
 
 The owner asked for real things represented on real maps. The seven specimen

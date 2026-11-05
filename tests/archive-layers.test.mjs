@@ -8,7 +8,7 @@ import {TIGER_LAYERS} from '../scripts/local-data/tiger.mjs';
 async function compile(path,modules={}) {
  const exports={};new Function('exports','require',ts.transpileModule(await readFile(path,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(exports,id=>{if(id in modules)return modules[id];throw Error(id);});return exports;
 }
-const recovered=await compile('app/recovered-collections.ts',{'../scripts/local-data/recovered-catalog.json':{default:JSON.parse(await readFile('scripts/local-data/recovered-catalog.json','utf8'))}});
+const recovered=await compile('app/recovered-collections.ts',{'../scripts/local-data/recovered-catalog.json':{default:JSON.parse(await readFile('scripts/local-data/recovered-catalog.json','utf8'))},'./recovered-topics.mjs':await import('../app/recovered-topics.mjs')});
 const catalog=await compile('app/archive-layer-catalog.ts',{'./recovered-collections':recovered});
 const data=await compile('app/archive-layer-data.ts',{'./bounded-json':await compile('app/bounded-json.ts')});
 const get=id=>catalog.archiveLayer('archive-'+id);
