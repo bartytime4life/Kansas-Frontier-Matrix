@@ -33,7 +33,7 @@ export function AviationGlimpse({mode,onMode,state,layersVisible}){
   <details className="welcome-aviation-notes"><summary>Source edition &amp; display limits</summary>{data?.edition&&<p>{data.edition.text} Source inventory: {data.volumes} airspace volumes; not all are visible in this view. Only zones are previewed here; airports, airways and other tools are in the opened map.</p>}<small>{mode==='slice'?'Only mapped volumes intersecting 4,000 ft MSL. ':mode==='3d'?'1× display heights above reference airport ground; not a terrain-clearance model. ':''}Not for navigation or authorization. Unshaded areas are not an all-clear; temporary restrictions and drone grids are separate.</small></details>
  </div>;
 }
-export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,initialTopics=/** @type {readonly string[]} */ ([]),onMaps=/** @type {((topics: readonly import('../layer-workspaces').TopicId[]) => void) | undefined} */ (undefined),motionEnabled=true,onMotionChange}){
+export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,onMap,initialRemember=false,initialTopics=/** @type {readonly string[]} */ ([]),onMaps=/** @type {((topics: readonly import('../layer-workspaces').TopicId[]) => void) | undefined} */ (undefined),motionEnabled=true,onMotionChange,onSources=/** @type {(() => void) | undefined} */ (undefined)}){
   const root=useRef(null),dialog=useRef(null),trigger=useRef(null),leave=useRef(null),wasFullscreen=useRef(false);
   const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0),returnCardScroll=useRef(0),returnCardLeft=useRef(0);
   const carouselList=useRef(null),carouselTimer=useRef(null),carouselPointer=useRef(null),carouselDragged=useRef(false);
@@ -219,7 +219,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
           <details className="welcome-preferences"><summary>Options</summary><div>
             <button type="button" className="welcome-tool" aria-label={reduced?'Animations off: reduced motion preference':paused?'Play animation':'Pause animation'} disabled={reduced} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{reduced?'Reduced motion':paused?'Play animation':'Pause animation'}</button>
             <label className="welcome-tool"><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}/> Don’t show on start</label>
-            <button type="button" onClick={()=>openPanel('credits')}>Map notes</button>
+            <button type="button" className="welcome-map-notes" onClick={()=>{onSources?.();openPanel('credits');}}>Map notes</button>
             <button type="button" onClick={()=>run(()=>onAction('qwen'))}>Ask the atlas</button>
           </div></details>
           <button type="button" className="welcome-skip" aria-label="Close quick start" onClick={()=>onClose(remember)}>×</button>

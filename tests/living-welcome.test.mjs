@@ -299,6 +299,14 @@ test('Escape from expanded Pause restores a persistent control before the next k
  }finally{h.harness.dispose();}
 });
 
+test('visible Map notes reveals provider attribution without leaving the map chooser',async()=>{
+ const h=await welcome();let sources=0;h.props.onSources=()=>sources++;
+ try{const tree=h.render();byText(tree,'Map notes').props.onClick();const next=h.render();
+  assert.equal(sources,1);assert.deepEqual(h.calls,[],'credit disclosure neither navigates nor dismisses welcome');
+  assert.ok(findNode(next,node=>node.props?.className==='welcome-dialog'),'source notes retain their modal and close behavior');
+ }finally{h.harness.dispose();}
+});
+
 test('nested welcome dialogs own and return keyboard focus in the layout commit',async()=>{
  const h=await welcome();let tree=h.render();
  const trigger={isConnected:true,focus(){h.env.document.activeElement=this;}};
