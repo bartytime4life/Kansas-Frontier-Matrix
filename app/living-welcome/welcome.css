@@ -978,3 +978,30 @@
 .living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption{left:calc(var(--atlas-rail) + var(--atlas-gutter) + 28px);bottom:30px;gap:4px;padding:12px 14px;border:1px solid #6f8f9b55;border-radius:10px;background:#061f2bb8;backdrop-filter:blur(10px)}
 .living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption strong{text-shadow:none}
 .living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption small{font-size:11px;text-shadow:none}
+/* The record: one search box in the hero, two rows at the end of the rail, and what each topic holds. */
+.living-welcome[data-layout=atlas] .welcome-record-search{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;margin:14px 0 2px;pointer-events:auto}
+.living-welcome[data-layout=atlas] .welcome-record-search label{display:block;min-width:0}
+.living-welcome[data-layout=atlas] .welcome-record-search :is(input,select){width:100%;min-height:42px;padding:8px 11px;border:1px solid #6d8794;border-radius:8px;color:#e9f2f6;background:#0b2d3de8;font:inherit;font-size:13px}
+.living-welcome[data-layout=atlas] .welcome-record-search select{width:auto;max-width:190px;color:#dfe9ee}
+.living-welcome[data-layout=atlas] .welcome-record-search .welcome-primary{min-height:42px;padding:8px 14px;background:#e6c77a;border:1px solid #e6c77a;color:#10232d;border-radius:8px;font-size:13px;font-weight:650}
+.living-welcome[data-layout=atlas] .welcome-record-search .welcome-primary:disabled{opacity:.5}
+.living-welcome[data-layout=atlas] .welcome-place-search{display:none}
+.living-welcome[data-layout=atlas] .welcome-record-rail{display:grid;gap:5px;margin:18px 0 0;pointer-events:auto}
+.living-welcome[data-layout=atlas] .welcome-record-rail .discovery-group-title{margin:0 0 3px;font-size:10px;letter-spacing:.16em;color:#d8c58f;font-weight:700;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.living-welcome[data-layout=atlas] .welcome-record-rail .discovery-group-title:after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#d8c58f66,transparent)}
+.living-welcome[data-layout=atlas] .welcome-record-rail a{display:grid;gap:3px;min-height:54px;padding:9px 12px;border:1px solid #8a7a4f99;border-radius:9px;background:linear-gradient(135deg,#1a3340d9,#0a2d3dbf);color:inherit;text-decoration:none;transition:border-color .22s,transform .22s cubic-bezier(.16,1,.3,1)}
+.living-welcome[data-layout=atlas] .welcome-record-rail a:hover,.living-welcome[data-layout=atlas] .welcome-record-rail a:focus-visible{border-color:#e6c77a;transform:translateX(5px)}
+.living-welcome[data-layout=atlas] .welcome-record-rail strong{font-size:14px;color:#f3e2b8}
+.living-welcome[data-layout=atlas] .welcome-record-rail small{font-size:11px;line-height:1.35;color:#c9dbe2}
+.living-welcome[data-layout=atlas] .welcome-focus-record{margin:0 0 12px;padding:12px 0 0;border-top:1px solid #6f8f9b55}
+.living-welcome[data-layout=atlas] .welcome-focus-record .welcome-kicker{margin:0 0 6px;color:#d8c58f}
+.living-welcome[data-layout=atlas] .welcome-focus-record ul{list-style:none;margin:0 0 8px;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 12px}
+.living-welcome[data-layout=atlas] .welcome-focus-record li{display:flex;align-items:baseline;gap:6px;min-width:0;font-size:12.5px;line-height:1.4}
+.living-welcome[data-layout=atlas] .welcome-focus-record li>a:first-child{color:#e9eef0;text-decoration:none;border-bottom:1px solid #6f8f9b80;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.living-welcome[data-layout=atlas] .welcome-focus-record li>a:first-child:hover{border-color:#e6c77a;color:#f3e2b8}
+.living-welcome[data-layout=atlas] .welcome-focus-record-map{flex:none;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#9fd4c4;text-decoration:none;border:1px solid #9fd4c466;border-radius:999px;padding:1px 6px}
+.living-welcome[data-layout=atlas] .welcome-focus-record p{margin:0;font-size:12px;line-height:1.5;color:#c9dbe2}
+.living-welcome[data-layout=atlas] .welcome-focus-record p a{color:#ecd197;text-decoration:none;border-bottom:1px solid #ecd19766}
+.living-welcome[data-layout=atlas] .welcome-focus-record p a:hover{border-color:#ecd197}
+.living-welcome[data-layout=atlas] .welcome-record-search label{padding:0;margin:0;border:0;background:none;box-shadow:none;gap:0}
+.living-welcome[data-layout=atlas] .welcome-record-search :is(input,select):focus-visible{outline:3px solid #f3d38e;outline-offset:2px}

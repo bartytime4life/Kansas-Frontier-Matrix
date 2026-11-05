@@ -27,9 +27,23 @@ map; the owner asked for the map to be seen.
 - **The stage caption** (map name, preview layers and their source clocks)
   shows beside the rail as a chip; the toolbar floats top-right over the map.
 - **"The Kansas record"** reads as a list of story rows at the end of the rail.
+- **The record is one step away.** The hero carries one search box with a
+  scope: newspapers 1864–1960 and archive texts open the data library with the
+  search already asked (`/data-library?q=…&source=…`, which `search.tsx` now
+  reads from the address bar), collections open the library's finder
+  (`?find=…`), and a place keeps the existing `onSearch` into the map. The rail
+  ends with two rows, the public data library (189 collections, 56 mapped) and
+  the newspaper and text archive. The focus panel's "In the record" block lists
+  up to four of the topic's own collections (`app/living-welcome/record-links.mjs`,
+  one per source family, mapped ones first, each with its library link and,
+  when it has geometry, a map link) and two period search words for the
+  newspapers. They are links; the welcome fetches and admits nothing.
+  `app/recovered-topics.mjs` now holds the topic mapping, titles and URLs that
+  `recovered-collections.ts` re-exports, so the welcome and its tests share them.
 
-Rollback: remove the `[data-layout=atlas]` block at the end of `welcome.css`
-and the `desktop` state in `welcome.jsx`; nothing else depends on them.
+Rollback: remove the `[data-layout=atlas]` block at the end of `welcome.css`,
+the `desktop` state, record search and `.welcome-focus-record` block in
+`welcome.jsx`, and `record-links.mjs`; nothing else depends on them.
 
 ## Geographic previews · 2026-11-04 correction
 

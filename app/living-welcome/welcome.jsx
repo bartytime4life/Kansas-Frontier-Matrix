@@ -8,6 +8,7 @@ import { CapabilityPreview } from './CapabilityPreview.jsx';
 import { DomainStage } from './DomainStage.jsx';
 import { centeredCard, centeredScrollLeft } from './card-carousel.mjs';
 import { welcomeView } from '../welcome-map-view';
+import { RECORD_COUNTS, recordLinksFor, newspaperSearchUrl, librarySearchUrl } from './record-links.mjs';
 import { isolateModalBackground, modalFocusableElements } from '../modal-background';
 
 // "The Kansas record" is a separate section with its own lazy chunks, not a map topic.
@@ -41,13 +42,21 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const carouselList=useRef(null),carouselTimer=useRef(null),carouselPointer=useRef(null),carouselDragged=useRef(false);
   const [carousel,setCarousel]=useState(false),[centered,setCentered]=useState(()=>normalizeCategoryTopics(initialTopics)[0]||TOPICS[0].id);
   // Wide, tall screens get the atlas layout: the live map is the page, topics are a rail, one panel describes the chosen map.
-  const [desktop,setDesktop]=useState(false);
+  const [desktop,setDesktop]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(min-width:1101px) and (min-height:761px)').matches);
   const departed=useRef(false),modalRestore=useRef(null);
   const [selectedTopics,setSelectedTopics]=useState(()=>normalizeCategoryTopics(initialTopics));
   const [topicQuery,setTopicQuery]=useState(''),[topicGroup,setTopicGroup]=useState('All');
   const selection=combineCategoryMaps(selectedTopics);
   const filteredTopics=TOPICS.filter(t=>(topicGroup==='All'||t.group===topicGroup)&&`${t.title} ${t.short} ${t.description}`.toLowerCase().includes(topicQuery.trim().toLowerCase()));
   const [remember,setRemember]=useState(initialRemember),[query,setQuery]=useState('');
+  const [recordQuery,setRecordQuery]=useState(''),[recordScope,setRecordScope]=useState('newspapers');
+  // One search box for the whole record: a place opens the map; newspapers, texts and collections open the data library.
+  function searchRecord(event){
+    event.preventDefault();const q=recordQuery.trim();if(!q)return;
+    if(recordScope==='place'){run(()=>onSearch(q));return;}
+    const url=recordScope==='collections'?librarySearchUrl(q):newspaperSearchUrl(q,recordScope);
+    run(()=>{if(typeof window!=='undefined'&&window.location)window.location.assign(url);});
+  }
   const [reduced,setReduced]=useState(()=>typeof window!=='undefined'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [localMotion,setMotion]=useState(motionEnabled),[hidden,setHidden]=useState(()=>typeof document!=='undefined'&&document.hidden);
   const [active,setActive]=useState(null),[pinned,setPinned]=useState(null),[last,setLast]=useState('weather');
@@ -56,7 +65,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const [previewState,setPreviewState]=useState(null),[layersVisible,setLayersVisible]=useState(true),[aviationMode,setAviationMode]=useState('3d');
   const motion=onMotionChange?motionEnabled:localMotion;
   const paused=!motion||reduced||hidden,engaged=pinned||(carousel&&!fullscreen?centered:active),control=engaged||last;
-  const atlas=desktop&&!carousel&&!fullscreen,atlasTopic=TOPICS.find(t=>t.id===control),atlasIndex=TOPICS.findIndex(t=>t.id===control);
+  const atlas=desktop&&!carousel&&!fullscreen,atlasTopic=TOPICS.find(t=>t.id===control),atlasIndex=TOPICS.findIndex(t=>t.id===control),record=atlas?recordLinksFor(control):null;
   // One owned frame; held/reduced-motion views do not keep repainting card
   // highlights, and a dismissed welcome cannot write to a detached card.
   function glow(event){
@@ -150,7 +159,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
     const media=window.matchMedia('(max-width:700px), (max-height:500px) and (max-width:1100px)');
     const update=()=>setCarousel(media.matches);update();media.addEventListener('change',update);
     const wide=window.matchMedia('(min-width:1101px) and (min-height:761px)');
-    const updateWide=()=>setDesktop(wide.matches);updateWide();wide.addEventListener('change',updateWide);
+    const updateWide=()=>setDesktop(wide.matches);wide.addEventListener('change',updateWide);
     return()=>{media.removeEventListener('change',update);wide.removeEventListener('change',updateWide);clearTimeout(carouselTimer.current);};
   },[]);
   useLayoutEffect(()=>{
@@ -235,6 +244,11 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
         <div className="welcome-hero"><span className="welcome-kicker">KANSAS FRONTIER MATRIX</span>
           <h1 id="living-welcome-title" tabIndex={-1} data-guide-autofocus="">Kansas is full of <em>stories.</em></h1>
           <p>Choose a map. See what connects.</p>
+          {atlas&&<form className="welcome-record-search" onSubmit={searchRecord} aria-label="Search the record">
+            <label><span className="sr-only">Search words</span><input type="search" value={recordQuery} onChange={e=>setRecordQuery(e.target.value)} placeholder={recordScope==='place'?'Find a county or place':recordScope==='collections'?'Wells, bridges, census, schools…':'tornado · "dust storm" · grasshopper*'} maxLength={200}/></label>
+            <label><span className="sr-only">Where to search</span><select value={recordScope} onChange={e=>setRecordScope(e.target.value)}><option value="newspapers">Newspapers 1864–1960</option><option value="texts">Archive texts</option><option value="collections">{RECORD_COUNTS.collections} collections</option><option value="place">A place on the map</option></select></label>
+            <button type="submit" className="welcome-primary" disabled={!recordQuery.trim()}>Search</button>
+          </form>}
           <details className="welcome-place-search"><summary>Looking for a place?</summary><form onSubmit={e=>{e.preventDefault();if(query.trim())run(()=>onSearch(query.trim()));}}><label><span className="sr-only">Find a county or place</span><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find a county or place" maxLength={180}/></label><button type="submit" className="welcome-primary" disabled={!query.trim()}>Find place</button></form></details>
         </div>
       </div>
@@ -247,6 +261,11 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
             <span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.facets.slice(0,2).join(' · ')}</small><span className="topic-map" style={swatch(t.look)}><i aria-hidden="true"/>{t.look?.name}</span><span className="topic-demo-label">Open map →</span></span>
           </button><div className="topic-card-actions"><button type="button" className={`topic-preview topic-preview-${t.id}`} aria-label={`Preview ${t.title}`} onClick={()=>showStage(t.id)}>Preview <span aria-hidden="true">↗</span></button><button type="button" className="topic-add" data-topic={t.id} aria-label={`${selectedTopics.includes(t.id)?'Remove':'Add'} ${t.title} ${selectedTopics.includes(t.id)?'from':'to'} combined map`} aria-pressed={selectedTopics.includes(t.id)} onClick={()=>toggleTopic(t.id)}><span aria-hidden="true">{selectedTopics.includes(t.id)?'✓':'+'}</span></button></div>
         </div>)}</div>)}</section>
+        {atlas&&<nav className="welcome-record-rail" aria-label="The public record">
+          <p className="discovery-group-title">The record</p>
+          <a href="/data-library"><strong>Public data library</strong><small>{RECORD_COUNTS.collections} collections · {RECORD_COUNTS.mapped} with map geometry · every field, every source</small></a>
+          <a href={newspaperSearchUrl('tornado')}><strong>Newspaper &amp; text archive</strong><small>Search the digitised Kansas pages, 1864–1960, and public-domain texts</small></a>
+        </nav>}
         {!fullscreen&&<Suspense fallback={null}><StorySection paused={paused} reduced={reduced} modal={modal} compact={carousel} onOpenChange={setStoryOpen}/></Suspense>}
         {!filteredTopics.length&&<div className="topic-empty" role="status"><strong>No matching topics</strong><p>Try a broader term, or see every topic.</p><button type="button" onClick={()=>{setTopicQuery('');setTopicGroup('All');}}>Show all topics</button></div>}
       </div></div>
@@ -262,6 +281,11 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
           <button type="button" onClick={()=>showStage(control)}>Full-screen preview <span aria-hidden="true">↗</span></button>
           <button type="button" aria-pressed={selectedTopics.includes(control)} onClick={()=>toggleTopic(control)}>{selectedTopics.includes(control)?'✓ In my map':'+ Add to my map'}</button>
         </div>
+        {record&&<section className="welcome-focus-record" aria-label="In the public record">
+          <span className="welcome-kicker">IN THE RECORD · {record.total} {record.total===1?'collection':'collections'}{record.mapped?` · ${record.mapped} on the map`:''}</span>
+          <ul>{record.collections.map(c=><li key={c.id}><a href={c.url}>{c.title}</a>{c.mapUrl&&<a href={c.mapUrl} className="welcome-focus-record-map" aria-label={`${c.title} on the map`}>map</a>}</li>)}</ul>
+          <p>Newspapers: {record.terms.map((t,i)=><span key={t.term}>{i>0&&' · '}<a href={t.url}>“{t.term}”</a></span>)}<span> · </span><a href={record.libraryUrl}>all collections →</a></p>
+        </section>}
         <small>{atlasTopic.note}</small>
       </aside>}
       {fullscreen&&touched&&<aside className="welcome-layer-demo" aria-label="Category demonstration">

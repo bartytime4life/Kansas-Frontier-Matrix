@@ -36,24 +36,35 @@ export function decades(years:Facets['years']){
 export default function ArchiveSearch(){
  const [q,setQ]=useState(''),[source,setSource]=useState<Source>('newspapers'),[from,setFrom]=useState(''),[to,setTo]=useState(''),[title,setTitle]=useState('');
  const [answer,setAnswer]=useState<SearchAnswer|null>(null),[offset,setOffset]=useState(0),[status,setStatus]=useState('Search the digitised newspaper pages and archive texts by word, phrase or year.'),[busy,setBusy]=useState(false);
- const request=useRef<AbortController|null>(null),generation=useRef(0);
+ const request=useRef<AbortController|null>(null),generation=useRef(0),linked=useRef(false);
  useEffect(()=>()=>request.current?.abort(),[]);
- async function run(nextOffset:number,nextTitle=title){
-  const query=q.trim();if(!query){setStatus('Type a word or a "quoted phrase" to search.');return;}
-  if(from&&!YEAR.test(from)||to&&!YEAR.test(to)){setStatus('Years are four digits, for example 1893.');return;}
+ async function run(nextOffset:number,nextTitle=title,override?:{q:string;source:Source;from:string;to:string}){
+  const asked=override??{q,source,from,to};
+  const query=asked.q.trim();if(!query){setStatus('Type a word or a "quoted phrase" to search.');return;}
+  if(asked.from&&!YEAR.test(asked.from)||asked.to&&!YEAR.test(asked.to)){setStatus('Years are four digits, for example 1893.');return;}
   request.current?.abort();const controller=new AbortController();request.current=controller;const version=++generation.current;
   setBusy(true);setStatus('Searching the archive on the pipeline PC…');
   const timer=setTimeout(()=>controller.abort(),25000);
   try{
-   const result=await fetchArchive('archive-search',{q:query,source,facets:'1',limit:String(PAGE),offset:String(nextOffset),...(from?{from}:{}),...(to?{to}:{}),...(nextTitle?{title:nextTitle}:{})},controller.signal) as unknown as SearchAnswer;
+   const result=await fetchArchive('archive-search',{q:query,source:asked.source,facets:'1',limit:String(PAGE),offset:String(nextOffset),...(asked.from?{from:asked.from}:{}),...(asked.to?{to:asked.to}:{}),...(nextTitle?{title:nextTitle}:{})},controller.signal) as unknown as SearchAnswer;
    if(version!==generation.current)return;
    setAnswer(result);setOffset(nextOffset);setTitle(nextTitle);
    const total=result.total??0;
-   setStatus(total?`${total.toLocaleString()}${result.totalCapped?'+':''} ${source==='newspapers'?'pages':'text parts'} match, ranked by relevance. Showing ${nextOffset+1}–${nextOffset+result.rows.length}.`:'No matches. OCR text is uncorrected: try another spelling, a prefix (wich*) or a wider year range.');
+   setStatus(total?`${total.toLocaleString()}${result.totalCapped?'+':''} ${asked.source==='newspapers'?'pages':'text parts'} match, ranked by relevance. Showing ${nextOffset+1}–${nextOffset+result.rows.length}.`:'No matches. OCR text is uncorrected: try another spelling, a prefix (wich*) or a wider year range.');
   }catch(error){if(version===generation.current){setAnswer(null);setStatus(controller.signal.aborted?'The archive did not respond in time. Retry when the PC is available.':error instanceof Error?error.message:'Archive unavailable.');}}
   finally{clearTimeout(timer);if(version===generation.current)setBusy(false);}
  }
  function submit(event:FormEvent){event.preventDefault();void run(0,'');}
+ useEffect(()=>{
+  if(linked.current)return;linked.current=true;
+  const params=new URLSearchParams(location.search),linkedQ=(params.get('q')??'').slice(0,200);
+  if(!linkedQ.trim())return;
+  const linkedSource:Source=params.get('source')==='texts'?'texts':'newspapers',linkedFrom=YEAR.test(params.get('from')??'')?params.get('from')!:'',linkedTo=YEAR.test(params.get('to')??'')?params.get('to')!:'';
+  setQ(linkedQ);setSource(linkedSource);setFrom(linkedFrom);setTo(linkedTo);
+  void run(0,'',{q:linkedQ,source:linkedSource,from:linkedFrom,to:linkedTo});
+  // Runs once from the address bar; later searches come from the form.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+ },[]);
  const facets=answer?.facets,decadeChart=facets?decades(facets.years):null;
  const total=answer?.total??0,canNext=answer!==null&&offset+PAGE<total&&offset+PAGE<=MAX_OFFSET;
  return <section className={styles.search} aria-labelledby="archive-search-title">
