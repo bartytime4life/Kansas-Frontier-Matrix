@@ -283,6 +283,34 @@ has binary wheels only:
 
 Every other feed uses only the standard library.
 
+## Spatial sidecars
+
+Every feed table with a `geometry_geojson` column, or the four `min_lon`,
+`min_lat`, `max_lon`, `max_lat` columns the OSM tables carry, has an R-tree
+sidecar `<table>_rtree(id, min_lon, max_lon, min_lat, max_lat)` whose `id` is
+`file_id << 32 | row_number` (`tools/local_data/sql_spatial.py`). The website's
+`near-observations` and `near-bulk` questions join it to the table for "what is
+in this map area" without scanning: a bounding box over the 2.26 million OSM
+elements that took 11.7 s by scan answers through the sidecar in 0.01 s.
+
+- `kfm_spatial_index` records the `file_id` values each sidecar covers and the
+  table's greatest `file_id`. `sql_feeds.py run FEED` refreshes the written
+  database's sidecars after a successful run: superseded files' entries are
+  deleted by key range, new files' entries added. A failure is logged as
+  `spatial_index_failed` and does not fail the feed.
+- A reader treats a sidecar as stale when the table's greatest `file_id` differs
+  from the record, and refuses the collection (`DATASET_NOT_READY`) until the
+  next refresh.
+- `sql_feeds.py … spatial build [--table T]` reconciles every sidecar under the
+  pipeline lock (both databases when `--bulk-db` is given); `spatial check`
+  reports each one as `current`, `stale` or `missing` read-only and exits 1
+  when any is not current. The first build on a copy of the bulk database took
+  45 s for the 2.26 million OSM elements (through their box columns), 888 thousand
+  NBI bridges (through their GeoJSON) and the OSM places together.
+- Rows with no geometry, unreadable or empty GeoJSON, a box outside the planet
+  or inverted, or a `row_number` of 2^32 or more get no entry and are counted
+  as `skipped`.
+
 ## Backup
 
 The per-file nightly backup would store a new full copy of a database that
