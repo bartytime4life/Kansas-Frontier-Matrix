@@ -105,7 +105,45 @@ GPU/FPS, production multi-user capacity or provider performance. The isolated
 browser CI journey uses explicitly synthetic responses, production-built UI,
 desktop and narrow/reduced-motion layouts. It is not live-provider acceptance.
 
+### Style loading and browser acceptance — 2026-11-05
+
+If initial attachment or a replacement style is still loading its sources,
+the aircraft renderer retains a temporary frame listener and installs once
+the style is ready. It releases that listener after installation or disposal.
+Observations received while waiting remain available for the first draw and
+aircraft picking. Recovery does not require a second `style.load` event, and
+disposing a pending renderer cannot reinstall it later.
+
+The page also refreshes its style-readiness signal on a ready frame when its
+health probe found a pending style. A map that continuously repaints can be
+fully loaded without emitting `idle`; waiting only for that event can otherwise
+leave all dependent controls marked Not ready. This temporary check releases
+its listener after refresh or page disposal. Full map-health and source-error
+reporting still run independently. The browser regression keeps the real map
+repainting and proves aircraft drawing and style recovery before any idle event.
+
+The style-reload check observes the requested `style.load` event, then requires
+the replacement style's marker, a loaded style, the aircraft layer and a fresh
+GPU draw after that event. A cached vertex count from before the transition
+cannot establish recovery. Screenshot metadata is collected after this proof;
+the ordinary bounded wait and failure behavior remain in force.
+
+County search preloads independently of aircraft inspection. Its Sky fixture
+now returns an explicitly synthetic empty inventory, so the production reader's
+one- and two-second retries of an injected 503 cannot be mistaken for reads
+caused by an aircraft click. The test requires exactly one preload and still
+rejects any additional county request during inspection. Census recovery and
+aircraft click ownership retain their separate source-level coverage.
+
+Fault controls block post-reload drawing or inject an additional county read
+to check that those failures remain detectable. Request recovery, timeouts and
+protocol-error handling are unchanged. This correction stays in the existing
+`app/`, `tests/` and `docs/` roots under the accepted Directory Rules / ADR-0029
+responsibility boundaries. Revert the correction to restore its preceding
+renderer and acceptance behavior; no data or storage operation is required.
+Exact-head results and known limits belong to the delivery record.
+
 Review exact-head CI and its screenshots before merging. A merge, Preview
 deployment, public publication and governed data activation are separate actions.
-Publication remains on hold. Reverting this source commit removes Kansas Sky;
+Publication remains on hold. Rollback targets the relevant source commit;
 no database rollback is necessary. Volumetric historical weather is deferred.

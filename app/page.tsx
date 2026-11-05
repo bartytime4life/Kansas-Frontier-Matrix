@@ -139,7 +139,7 @@ import { EarthEngineRasterFallback, type EarthEngineDisplayState } from "./earth
 import { useEarthEngineContext } from "./earth-engine-context-client";
 import { EARTH_ENGINE_CONTEXT_LAYERS } from "./earth-engine-context";
 import { applyProjectionNavigationLimits, GLOBE_VIEWPOINTS, REGIONAL_NAVIGATION_BOUNDS } from "./globe-context";
-import { browserRenderBudget, controlOwnsMapSourceErrors, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
+import { browserRenderBudget, controlOwnsMapSourceErrors, createMapStyleReadyCheck, mapRuntimeErrorCode, readRenderQuality, sampleMapRuntimeHealth, QUALITY_STORAGE_KEY, type MapRuntimeCheckFailure, type RenderQuality } from "./map-performance";
 import { webgl2Available } from "./webgl-support";
 import { sameRecord, sameValues } from "./state-equality";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
@@ -6483,6 +6483,7 @@ export default function Home() {
     let cancelHoverSample = () => {};
     let cancelSettledViewCommit = () => {};
     let stopStormDeskProbe = () => {};
+    let stopStyleReadyCheck = () => {};
     const rasterRetryTimers = new Map<OfficialContextId, number>();
     const rasterRetryCounts = new Map<OfficialContextId, number>();
     let terrainRetryTimer: number | null = null;
@@ -6603,6 +6604,10 @@ export default function Home() {
         let styleFallbackAttempted = false;
         const failedSourceIds = new Set<string>();
 
+        const styleReadyCheck = createMapStyleReadyCheck(map, () => {
+          if (!disposed) runMapMutation("Map style readiness refresh", () => { refreshMaplibreProbe(); });
+        });
+        stopStyleReadyCheck = styleReadyCheck.dispose;
         const refreshMaplibreProbe = () => {
           const health = sampleMapRuntimeHealth(
             map,
@@ -6629,6 +6634,7 @@ export default function Home() {
           } satisfies Partial<MapLibreRuntimeProbe>;
           setSourceStates((current) => sameRecord(current, nextSourceStates) ? current : nextSourceStates);
           setStyleReady(health.styleLoaded);
+          if (!health.styleLoaded) styleReadyCheck.schedule();
           setMaplibreProbe((current) => sameValues(current, nextProbe) ? current : { ...current, ...nextProbe });
           return nextProbe;
         };
@@ -7400,6 +7406,7 @@ export default function Home() {
       terrainDrawingRef.current?.destroy();
       terrainDrawingRef.current = null;
       stopStormDeskProbe();
+      stopStyleReadyCheck();
       mapRef.current?.remove();
       mapRef.current = null;
     };
