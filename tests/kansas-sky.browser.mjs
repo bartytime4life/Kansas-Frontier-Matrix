@@ -23,6 +23,9 @@ const aircraft = {hex:'abc123',callsign:'TEST123',registration:null,type:'C172',
 const record = {schemaVersion:1,id:'synthetic-browser',provider:'Synthetic browser fixture',license:'Test fixture only',sourceUrl:'https://example.invalid/synthetic',sourceSha256:'0'.repeat(64),points:[{...aircraft,observedAt:at,providerId:'synthetic'},{...aircraft,lon:-98.3,observedAt:at+30000,providerId:'synthetic'},{...aircraft,lon:-98.2,observedAt:at+120000,providerId:'synthetic',breakBefore:true}]};
 const recordText = JSON.stringify(record);
 const catalog = {schemaVersion:1,flights:[{id:record.id,title:'SYNTHETIC browser flight',start:new Date(at).toISOString(),end:new Date(at+120000).toISOString(),url:'/data/aviation/replays/synthetic-browser.json',sha256:createHash('sha256').update(recordText).digest('hex'),provider:record.provider,license:record.license,sourceUrl:record.sourceUrl}]};
+// County search preloads independently of aircraft picking. Give it a terminal,
+// valid fixture so recovery retries cannot masquerade as click-triggered reads.
+const counties = {feed:'census-counties',state:'empty',retrievedAt:new Date().toISOString(),upstreamUpdatedAt:null,featureCount:0,data:{type:'FeatureCollection',features:[]},source:'SYNTHETIC BROWSER FIXTURE ONLY',limitation:'Empty test inventory; no evidence admission.',truncated:false};
 
 async function browser(t) {
   const profile = await mkdtemp(join(tmpdir(), 'kfm-county-browser-'));
@@ -96,7 +99,8 @@ async function pageSession(b, { width, height, touch, motion }) {
     if(feedFailed&&url.pathname==='/api/aviation/traffic'){void call('Fetch.fulfillRequest',{requestId,responseCode:503,body:Buffer.from('{"error":"Synthetic receiver failure"}').toString('base64')}).catch(error=>interceptions.failed(error,{requestNavigation:0,navigation:0,networkId,url:request.url}));return;}
     const synthetic = url.pathname === '/api/aviation/traffic' ? JSON.stringify({retrievedAt:new Date().toISOString(),evidenceRole:'EXTERNAL_CONTEXT_ONLY',provider:{id:'adsb-lol',title:'Synthetic test receiver',homepage:'https://example.invalid/',terms:'Test only'},records:[{...aircraft,observedAt:new Date().toISOString()}],dropped:0,limitation:'Synthetic fixture'})
       : url.pathname === '/data/aviation/replays/index.json' ? JSON.stringify(catalog)
-      : url.pathname === '/data/aviation/replays/synthetic-browser.json' ? recordText : null;
+      : url.pathname === '/data/aviation/replays/synthetic-browser.json' ? recordText
+      : url.pathname === '/api/live-context' && url.searchParams.get('feed') === 'census-counties' ? JSON.stringify(counties) : null;
     const operation = synthetic !== null ? call('Fetch.fulfillRequest', {requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(synthetic).toString('base64')}) : url.origin !== origin.origin
       ? (/\/styles\/|\/style\.json$/.test(url.pathname)
         ? call('Fetch.fulfillRequest', { requestId, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from(JSON.stringify({ version: 8, sources: {}, layers: [{ id: 'layout-test-background', type: 'background', paint: { 'background-color': '#172832' } }] })).toString('base64') })
@@ -189,6 +193,7 @@ for (const layout of [{width:1440,height:900,touch:false,motion:'no-preference'}
   assert.equal(await p.evaluate(`document.querySelector('[aria-label="Kansas Sky aircraft"]').value`),'','aircraft not selected before click');
   await pause(500);
   const countyRequestsBeforeAircraft=p.countyRequestCount();
+  assert.equal(countyRequestsBeforeAircraft,1,'one independent county preload precedes aircraft inspection');
   await p.activate('.maplibregl-canvas');
   await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='false' && document.querySelector('.kansas-sky h5')?.textContent.includes('TEST123')`,'map click opens aircraft instruments');
   await p.wait(`document.activeElement===document.querySelector('[aria-label="Kansas Sky aircraft"]')`,'aircraft selector receives focus after panel opens');
@@ -245,8 +250,16 @@ for (const layout of [{width:1440,height:900,touch:false,motion:'no-preference'}
   await p.evaluate(`(${airportToggle}).click()`);
 
   // Reload the actual style, not a fake event; the custom layer reinstalls.
-  await p.evaluate(`void window.__skyMap.setStyle({version:8,sources:{},layers:[{id:'synthetic-style-reload',type:'background',paint:{'background-color':'#172832'}}]})`);
-  await p.wait(`window.__skyMap.getLayer('kfm-kansas-sky') && window.__skyRender.aircraftVertices>0`,'style reload restores GPU aircraft');
+  await p.evaluate(`new Promise(resolve=>{
+    window.__skyMap.once('style.load',()=>{
+      window.__skyReloadCheckpoint={render:window.__skyRender,frames:window.__skyRender.frames};
+      resolve();
+    });
+    window.__skyMap.setStyle({version:8,sources:{},layers:[{id:'synthetic-style-reload',type:'background',paint:{'background-color':'#172832'}}]});
+  })`);
+  await p.wait(`window.__skyMap.getLayer('synthetic-style-reload') && window.__skyMap.isStyleLoaded()
+    && window.__skyMap.getLayer('kfm-kansas-sky') && window.__skyRender.aircraftVertices>0
+    && (window.__skyRender!==window.__skyReloadCheckpoint.render || window.__skyRender.frames>window.__skyReloadCheckpoint.frames)`,'settled replacement style renders a fresh aircraft frame');
   await p.evaluate(`document.querySelector('.kansas-sky-clock').scrollIntoView({block:'center',behavior:'instant'})`);
   await p.wait(`document.querySelector('.toast')?.dataset.visible!=='true'`,'transient status toast settled before controls capture');
   if(process.env.KFM_SKY_SCREENSHOTS){

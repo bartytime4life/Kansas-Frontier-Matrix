@@ -112,8 +112,15 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
   },onRemove(){if(gl){for(const b of bundles.values()){gl.deleteProgram(b.program);gl.deleteVertexArray(b.vao);}if(buffer)gl.deleteBuffer(buffer);}bundles.clear();failed.clear();buffer=null;gl=null;hits=[];}};
   const pick=(point:SkyPickPoint)=>{if(!active)return false;const hit=hits.map(h=>({...h,d:Math.hypot(h.x-point.x,h.y-point.y)})).filter(h=>h.d<18).sort((a,b)=>a.d-b.d)[0];if(!hit)return false;select(hit.hex);return true;};
   aircraftPickers.set(map,pick);
-  const install=()=>{if(active&&map.isStyleLoaded()&&!map.getLayer(ID))map.addLayer(layer);};
+  const install=()=>{
+    if(!active||!map.isStyleLoaded())return;
+    if(!map.getLayer(ID))map.addLayer(layer);
+    map.off("render",install);
+  };
+  // Other style listeners can queue source work before this renderer mounts.
+  // Recheck on ready frames, then release the listener after installation.
+  const awaitStyle=()=>{if(!active)return;map.on("render",install);install();};
   const zoom=()=>{dirty=true;groundMarkers.clear();};
-  map.on("style.load",install);map.on("zoom",zoom);install();
-  return { update(next:readonly Aircraft[], nextTrails:readonly SkyTrail[], id:string|null, flatView=false){flat=flatView;planes=next;trails=nextTrails;selected=id;dirty=true;map.triggerRepaint();}, dispose(){active=false;map.off("style.load",install);if(aircraftPickers.get(map)===pick)aircraftPickers.delete(map);map.off("zoom",zoom);if(map.getLayer(ID))map.removeLayer(ID);} };
+  map.on("style.load",awaitStyle);map.on("zoom",zoom);awaitStyle();
+  return { update(next:readonly Aircraft[], nextTrails:readonly SkyTrail[], id:string|null, flatView=false){flat=flatView;planes=next;trails=nextTrails;selected=id;dirty=true;map.triggerRepaint();}, dispose(){active=false;map.off("style.load",awaitStyle);map.off("render",install);if(aircraftPickers.get(map)===pick)aircraftPickers.delete(map);map.off("zoom",zoom);if(map.getLayer(ID))map.removeLayer(ID);} };
 }
