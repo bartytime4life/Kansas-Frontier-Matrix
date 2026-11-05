@@ -16,6 +16,16 @@ the old monorepo app. The historical local Site source mirror is documented in t
 
 ## Validation
 
+The bounded OS upgrade includes `apt` and `libapt-pkg7.0`, with a build-time
+minimum of 3.0.4 for each. Debian's [DSA-6607-1](https://lists.debian.org/debian-security-announce/2026/msg00526.html)
+fixes CVE-2026-109518 in that trixie version. Both APT acquisition commands use
+`Acquire::Retries=0` while the pinned base still contains the older package:
+the [Debian tracker](https://security-tracker.debian.org/tracker/CVE-2026-109518)
+identifies nonzero retries as a prerequisite. Signature verification remains
+enabled; no unauthenticated-package, insecure-repository or scan exception is
+introduced. A transient acquisition failure fails the build instead of retrying.
+These package floors are build assertions, not substitutes for the image scan.
+
 From the repository root:
 
 ```bash
