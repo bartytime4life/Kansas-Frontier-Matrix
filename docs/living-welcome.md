@@ -1037,3 +1037,30 @@ provider-isolation boundary is relaxed. Unit coverage checks both interception
 modes; the hydrated isolation test fetches the actual built engine and confirms
 that only its API probe is paused. These are test-harness changes, not a repair
 claim about a live application defect or fresh hosted acceptance.
+
+## Layers opening preserves subsequent focus — 2026-11-05
+
+Opening Layers schedules focus after its committed render. On a slower browser,
+that callback could run after Browse had already received keyboard focus, move
+focus back to Close, and cause Enter to close the panel instead of opening the
+catalogue. The delayed ordinary opening now preserves focus already inside the
+panel. It still brings focus into the panel when focus remains outside, and an
+explicit map-feature inspection still scrolls to and focuses its requested
+control. Cancellation of obsolete opening frames is unchanged.
+
+The hydrated regression places a newer Browse focus choice between the initial
+compact-panel focus and the queued animation frames, then uses native Enter to
+verify that Browse activates and Layers stays open at 390 and 768 pixels.
+Both cases fail on the unchanged application. Existing workspace navigation
+checks retain coverage of outside-focus entry, explicit inspection targets,
+missing-target fallback and cancellation. Local acceptance uses a built
+loopback candidate with synthetic API fixtures and blocked external requests;
+it does not qualify live providers, physical devices or hosted deployment.
+
+Placement follows the accepted Directory Rules text pinned by ADR-0029:
+the existing standalone `app/` root owns presentation behavior, `tests/` owns
+regression checks, and `docs/` records behavior and evidence boundaries. The
+older Directory Rules.pdf was unavailable in this workspace. No responsibility
+root or data lifecycle changes. Rollback is a revert of this correction; no
+stored preferences, database, provider configuration or release policy changes.
+Source review, merge, deployment and public publication remain separate states.

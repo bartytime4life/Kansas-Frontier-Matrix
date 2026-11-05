@@ -89,11 +89,11 @@ test('guide Layers and Time enter committed destinations after dismissal, even w
     assert.equal(state.open,false);assert.deepEqual(focus,[]);
     if(action==='layers')evaluate(leftPanelFocusEffect,{
       primaryWorkspace:'map',guideOpen:false,leftOpen:true,leftPanelFocusRequest:1,leftPanelFocusSelectorRef:{current:null},sourceSearchFocusPendingRef:{current:false},leftPanelRef,
-      window:{requestAnimationFrame:fn=>frames.push(fn),cancelAnimationFrame(){}},visibleFocusableElements:()=>[target],
+      document,window:{requestAnimationFrame:fn=>frames.push(fn),cancelAnimationFrame(){}},visibleFocusableElements:()=>[target],
     })();
     assert.equal(frames.length,2,'destination and fallback focus wait until dismissal commits');
     document.activeElement=body;
-    leftPanelRef.current={};timelineRef.current={};
+    leftPanelRef.current={contains:()=>false};timelineRef.current={};
     while(frames.length)frames.shift()();
     assert.deepEqual(focus,action==='layers'?['guide-trigger',action]:[action],'a committed destination retains focus over the fallback');
     assert.equal(action==='layers'?state.layers:state.time,true);

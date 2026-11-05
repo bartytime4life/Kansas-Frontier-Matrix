@@ -5766,7 +5766,11 @@ export default function Home() {
         const inspectionTarget = leftPanelFocusSelectorRef.current
           ? panel.querySelector<HTMLElement>(leftPanelFocusSelectorRef.current) : null;
         if (inspectionTarget) inspectionTarget.scrollIntoView({ block: "center", behavior: "instant" });
-        (inspectionTarget ?? visibleFocusableElements(panel)[0])?.focus({ preventScroll: true });
+        // A visitor may already have moved from Close to another panel control
+        // before these frames run. Preserve that newer choice on ordinary entry.
+        if (inspectionTarget || !panel.contains(document.activeElement)) {
+          (inspectionTarget ?? visibleFocusableElements(panel)[0])?.focus({ preventScroll: true });
+        }
         leftPanelFocusSelectorRef.current = null;
       });
     });

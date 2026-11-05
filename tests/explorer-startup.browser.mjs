@@ -491,6 +491,38 @@ for (const [width, height] of [[1440, 960], [390, 844]]) {
   });
 }
 
+for (const width of [390, 768]) {
+  test(`Layers opening preserves a newer catalogue focus at ${width}px`, { timeout: 45000 }, async t => {
+    const b = await browser(t), p = await pageSession(b, width, 844);
+    await p.open('/?motion=off', '1');
+    await leaveCompactLayers(p);
+    await p.evaluate(`(() => {
+      window.__layersFocusMoved = false;
+      const moveFocus = event => {
+        if (!event.target.matches('[aria-label="Close Explorer navigation"]')) return;
+        document.removeEventListener('focusin', moveFocus);
+        // Put a newer focus choice between the initial panel focus and its
+        // queued animation-frame handoff; application callbacks stay intact.
+        queueMicrotask(() => {
+          document.querySelector('[data-layer-view="official"]').focus();
+          window.__layersFocusMoved = true;
+        });
+      };
+      document.addEventListener('focusin', moveFocus);
+    })()`);
+    await p.evaluate(`document.querySelector('.map-dock-map-menu > summary').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.evaluate(`document.querySelector('.map-dock-menu-quick button:nth-child(2)').focus()`);
+    await p.key('Enter', 'Enter', 13);
+    await p.wait(`window.__layersFocusMoved`, 'a newer focus choice reached Browse');
+    await p.evaluate(`new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(resolve))))`);
+    assert.equal(await p.evaluate(`document.activeElement === document.querySelector('[data-layer-view="official"]')`), true, 'queued panel opening must not replace the newer catalogue focus');
+    await p.key('Enter', 'Enter', 13);
+    assert.equal(await p.evaluate(`document.querySelector('.layer-panel').getAttribute('aria-hidden')`), 'false', 'Enter activates Browse without closing Layers');
+    await p.wait(`document.querySelector('[data-layer-view="official"]').getAttribute('aria-pressed')==='true'`, 'Browse is active');
+  });
+}
+
 for (const [width, height] of [[1280, 800], [390, 844]]) {
   test(`welcome cards open directly and combine topics on an unobstructed map at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
