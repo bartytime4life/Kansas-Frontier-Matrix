@@ -324,6 +324,70 @@ pipeline config's `separateBackup`. That list, and the steps to restore from a
 copy, are in the pipeline runbook, `docs/second-pc-pipeline.md` on the hosted
 branch.
 
+### The bulk database
+
+The bulk database gets a different nightly job, because it is growing to about
+112 GB and a full verified copy of that takes 4.5 to 6.5 hours. About 95% of that
+time is `PRAGMA quick_check` walking the b-trees on a spinning disk: 1,192 of the
+1,225 seconds for the 8.3 GB copy of 2026-11-03.
+
+    python -m tools.local_data.sql_chunks snapshot --db kfm-bulk.sqlite --dest DEST [--keep 2]
+    python -m tools.local_data.sql_chunks check --dest DEST [--level quick|integrity]
+    python -m tools.local_data.sql_chunks restore --dest DEST --manifest NAME --to FILE [--level integrity|quick]
+
+`snapshot` (`tools/local_data/sql_chunks.py`) works like this:
+
+- It opens one read transaction and reads every page in file order through
+  `sqlite_dbpage`, so it sees one commit, WAL frames included. It takes no pipeline
+  lock, writes nothing to the database and never checkpoints its WAL. Feeds keep
+  committing, and the WAL grows by what they commit until the read ends.
+- It cuts the bytes into 4 MiB chunks and writes those the store lacks to
+  `DEST/chunks/ab/<sha256>.z`, compressed. Stored chunks are not read again.
+- After a `syncfs` of the backup volume it renames
+  `DEST/manifests/<stem>-<UTC time>-<first 12 hex of its SHA-256>.json` into place.
+  Only then are copies past the newest `--keep` removed, then the chunks nothing
+  uses. The newest copy with a check receipt is also kept, whatever `--keep` says.
+- A killed or failed run leaves the kept copies as they were. Every run starts by
+  removing the chunks no manifest names, which is what such a run left behind.
+- A database whose file and WAL have the same size and times as at the newest copy
+  is not read at all.
+- It does **not** run `quick_check`. Until the next `check`, a copy is known to hold
+  the bytes that were read, not that they form a healthy database.
+
+`check` rebuilds the newest copy in `DEST/staging/` (it needs the database's size
+free), re-hashes every chunk and the whole file, runs `quick_check` and compares
+the counts, then re-hashes the chunks only older kept copies use. It records a
+receipt in `DEST/checks/`. A chunk that fails its hash moves to `DEST/quarantine/`,
+the command exits 1 with `SNAPSHOT_CHUNK_DAMAGED`, and the next snapshot writes the
+chunk again if the database still holds those bytes. `integrity_check` also
+compares every index with its table, which at this size on a spinning disk is
+for a restore you intend to use, not for the weekly job.
+
+Measured on 2026-11-04, replaying the real Census and newspaper loaders on a
+throwaway copy of the database (4 MiB chunks):
+
+| Night | Size after | Old chunks changed | New chunks | Written, compressed |
+| --- | --- | --- | --- | --- |
+| First load of new tables (22.6 million rows, FTS5) | 11.2 GB | 0.2% | 26% of the file | about 0.5 GB |
+| Backfill, 203 million rows | 34.1 GB | 28% | 67% | about 4 GB |
+| Backfill, 204 million rows | 57.0 GB | 73% | 40% | 6.3 GB |
+| Quiet: one archive-texts run | 57.2 GB | 0.2% | 0.2% | 0.09 GB |
+| `VACUUM` (no feed runs it) | 14.1 GB | 100% | | the whole file |
+
+The last two compressed figures were measured by this tool. The first two are
+estimates from its measured ratio, about 6.3 to 1 for a whole file.
+
+During a backfill most of the file is written again, because index inserts touch
+pages all over it: 9.5% of pages changed, but those pages sit in 73% of the chunks.
+There the job is cheap because of compression (7.6 to 1) and because it skips
+`quick_check`, not because chunks repeat. Chunks repeat once the backfill ends.
+
+`restore` rebuilds a named copy to a new file, runs `integrity_check` and gives the
+file its name only if that passes. The file is a standalone rollback-journal
+database. To put it back, stop the feeds and the local-data gateway, remove
+`kfm-bulk.sqlite-wal` and `-shm`, and move it over `kfm-bulk.sqlite`; the feeds
+switch it back to WAL on their next open.
+
 ## Failure and recovery
 
 A failed run logs `feed_failed` with a fixed reason. It changes no state, so the
