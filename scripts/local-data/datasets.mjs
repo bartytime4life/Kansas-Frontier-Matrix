@@ -10,6 +10,7 @@ import {tigerFeatures} from './tiger.mjs';
 import {nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow} from './water.mjs';
 import {recoveredObservations,recoveredBulk} from './recovered.mjs';
 import {archiveSearch} from './texts.mjs';
+import {nearObservations,nearBulk} from './near.mjs';
 import {storyBundles} from './stories.mjs';
 
 const stormEvents={
@@ -22,7 +23,7 @@ const stormEvents={
 };
 
 export const DATASETS=new Map([stormEvents,ghcnStations,ghcnDaily,ghcndexIndices,ghcndex,asosFiveMinute,windStations,windObservations,windDaily,
- prismCounty,tigerFeatures,nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow,recoveredObservations,recoveredBulk,archiveSearch].map(d=>[d.id,d]));
+ prismCounty,tigerFeatures,nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow,recoveredObservations,recoveredBulk,archiveSearch,nearObservations,nearBulk].map(d=>[d.id,d]));
 // Pending owner publication approval; move into DATASETS only after the owner approves.
 export const PENDING_DATASETS=new Map([storyBundles].map(d=>[d.id,d]));
 export const DATABASES=Object.freeze(['observations','tiger','nwm','bulk']);

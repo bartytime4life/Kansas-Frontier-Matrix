@@ -117,7 +117,7 @@ const gatewayFor=databases=>{
 };
 
 test('every dataset has a relay route, a bounded parse and a public description',()=>{
- assert.equal(DATASETS.size,20);
+ assert.equal(DATASETS.size,22);
  for(const id of DATASETS.keys())assert.equal(LOCAL_DATA_ROUTES.get('/v1/data/'+id),'POST');
  for(const d of datasetCatalog()){assert.match(d.path,/^\/api\/local-data\/[a-z0-9-]+$/);assert.ok(d.source.provider&&d.source.url&&d.title);}
  // Each dataset's recorded release limitation travels with its public source notes.
@@ -238,7 +238,7 @@ test('the website serves the catalog itself and maps PC answers for any dataset'
  const get=(id,query='')=>service.query(new Request(`${SITE}/api/local-data/${id}?${query}`),id);
 
  const catalog=await (await service.catalog(new Request(SITE+'/api/local-data'))).json();
- assert.equal(catalog.online,true);assert.equal(catalog.datasets.length,20);assert.equal(trips.length,0);
+ assert.equal(catalog.online,true);assert.equal(catalog.datasets.length,22);assert.equal(trips.length,0);
 
  const daily=await get('ghcn-daily','station=usw00003928&element=PRCP');
  assert.equal(daily.status,200);const body=await daily.json();
