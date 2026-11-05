@@ -10,6 +10,7 @@ import {tigerFeatures} from './tiger.mjs';
 import {nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow} from './water.mjs';
 import {recoveredObservations,recoveredBulk} from './recovered.mjs';
 import {archiveSearch} from './texts.mjs';
+import {nearObservations,nearBulk} from './near.mjs';
 import {storyBundles} from './stories.mjs';
 
 const stormEvents={
@@ -21,7 +22,6 @@ const stormEvents={
  run(db,q){const sql=stormEventsSql(q);return {total:db.prepare(sql.count.sql).get(...sql.count.params).n,rows:db.prepare(sql.rows.sql).all(...sql.rows.params).map(stormEvent)};},
 };
 
-export const DATASETS=new Map([stormEvents,ghcnStations,ghcnDaily,ghcndexIndices,ghcndex,asosFiveMinute,windStations,windObservations,windDaily,
 
 // Pending owner publication approval; move into DATASETS only after the owner approves.
 export const PENDING_DATASETS=new Map([storyBundles].map(d=>[d.id,d]));
