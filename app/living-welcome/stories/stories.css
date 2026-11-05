@@ -1,0 +1,117 @@
+/* "The Kansas record": the start page section, its phone sheet and the full-window lab. */
+.story-section{--story-glass:#0b2c3bd9;margin:34px 0 30px;pointer-events:auto}
+.story-section-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;margin:0 0 16px}
+.story-section-head h2{margin:0;font-size:clamp(24px,2.5vw,34px);letter-spacing:-.02em;color:#f6efe0;font-weight:600}
+.story-section-lede{margin:0;max-width:70ch;font-size:13.5px;line-height:1.45;color:#b7cbd2}
+.story-group{display:grid;gap:10px;margin:0 0 22px}
+.story-group-title{margin:0;display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#d8c58f}
+.story-group-title:after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#d8c58f66,transparent)}
+.story-group-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,262px),1fr));gap:12px;align-items:stretch}
+.story-card{position:relative;display:flex;min-width:0;border:1px solid #3e677a;border-radius:13px;background:linear-gradient(180deg,#0d3345e6,#08222fe6);box-shadow:0 10px 30px #00121c66,inset 0 1px 0 #ffffff12;overflow:hidden;transition:border-color .18s ease,box-shadow .18s ease,filter .18s ease}
+.story-card:hover,.story-card:focus-within{border-color:var(--story-1);filter:brightness(1.1);box-shadow:0 12px 34px #00121c88,0 0 0 1px var(--story-1),0 0 26px color-mix(in srgb,var(--story-1) 24%,transparent)}
+.story-card[data-status=planned]{background:linear-gradient(180deg,#0b2a39cc,#071c28cc)}
+.story-card-open{display:flex;flex-direction:column;width:100%;min-height:44px;padding:0;margin:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;touch-action:manipulation}
+.story-card-open:focus-visible{outline:2px solid #efd395;outline-offset:-3px;border-radius:13px}
+.story-thumb{display:block;position:relative;aspect-ratio:16/10;width:100%;background:var(--story-0);overflow:hidden}
+.story-canvas{display:block;width:100%;height:100%}
+.story-card[data-status=planned] .story-thumb{opacity:.82}
+.story-card-copy{display:grid;gap:4px;padding:11px 13px 12px;min-width:0}
+.story-card-copy strong{font-size:15.5px;font-weight:650;color:#f6efe0;letter-spacing:-.005em}
+.story-card-copy small{font-size:12px;line-height:1.38;color:#b7cbd2}
+.story-kicker{display:block;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--story-1,#d8c58f)}
+.story-status{display:flex;flex-wrap:wrap;gap:2px 7px;margin-top:3px;font-size:11px;color:#9fb5bd}
+.story-status b{font-weight:650;color:#e2c88d}
+.story-status i{font-style:normal}
+.story-num{font-variant-numeric:tabular-nums;font-feature-settings:'tnum'}
+@media(prefers-reduced-motion:reduce){.story-card{transition:none}}
+.living-welcome[data-motion=paused] .story-card{transition:none}
+
+/* Phone: one button over the map; the record opens as a sheet. */
+.living-welcome .story-launcher{position:absolute;right:14px;bottom:calc(100% + 58px);z-index:6;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border:1px solid #d8c58f99;border-radius:22px;background:#0a2d3df2;color:#f6efe0;font-size:13px;font-weight:600;box-shadow:0 4px 18px #00121c88}
+.story-launcher i{width:18px;height:12px;border-radius:2px;background:linear-gradient(90deg,#2166ac 0 25%,#92c5de 25% 50%,#f4a582 50% 75%,#b2182b 75%)}
+.living-welcome .story-launcher:focus-visible,.story-sheet :focus-visible,.story-lab :focus-visible{outline:2px solid #efd395;outline-offset:2px}
+@media(max-height:500px) and (max-width:1100px){.living-welcome .story-launcher{bottom:calc(100% + 6px);right:10px}}
+.story-sheet{position:fixed;inset:0;z-index:310;overflow:auto;overscroll-behavior:contain;padding:14px 16px calc(24px + env(safe-area-inset-bottom));background:#061e2bf7;color:#dce9ed;font-family:inherit}
+.story-sheet-head{position:sticky;top:-14px;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-14px -16px 10px;padding:12px 16px;background:#061e2bf2;border-bottom:1px solid #ffffff14}
+.story-sheet-head h2{margin:0;font-size:24px;font-weight:600;color:#f6efe0}
+.story-sheet-head h2:focus{outline:none}
+.story-sheet .story-section-lede{margin:0 0 16px}
+
+/* The lab */
+.story-lab{position:fixed;inset:0;z-index:320;display:flex;flex-direction:column;background:radial-gradient(120% 90% at 70% 0,#10354a,#061a26 62%);color:#dce9ed;font-size:14px;line-height:1.45}
+.story-lab *{box-sizing:border-box}
+.story-lab button,.story-lab select,.story-lab input{font:inherit;color:inherit}
+.story-lab-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:12px 20px 10px;border-bottom:1px solid #ffffff14;flex:none}
+.story-lab-title{min-width:0}
+.story-lab-title h2{margin:1px 0 0;font-size:clamp(20px,2.4vw,28px);font-weight:600;letter-spacing:-.015em;color:#f6efe0}
+.story-lab-title h2:focus{outline:none}
+.story-lab-try{margin:2px 0 0;font-size:13px;color:#b7cbd2}
+.story-lab-nav{display:flex;align-items:center;gap:6px;flex:none}
+.story-lab-nav>.story-num{min-width:46px;text-align:center;font-size:12px;color:#b7cbd2}
+:is(.story-lab,.story-sheet) .story-icon-button{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;flex:none;border:1px solid #6b8794;border-radius:11px;background:#0a2d3dd9;color:#f6efe0;font-size:19px;cursor:pointer}
+:is(.story-lab,.story-sheet) .story-icon-button:hover{border-color:#efd395}
+.story-lab-body{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:14px 20px}
+.story-lab-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,340px);gap:16px;align-items:start}
+.story-lab-main{min-width:0}
+.story-lab-side{display:grid;gap:12px;min-width:0}
+.story-panel{display:grid;gap:9px;padding:12px;border:1px solid #ffffff17;border-radius:12px;background:#0a2a39b8;box-shadow:inset 0 1px 0 #ffffff0d}
+.story-panel p{margin:0}
+.story-map{height:min(66vh,620px);min-height:260px;border-radius:12px;border:1px solid #ffffff17;touch-action:pan-y;cursor:crosshair}
+.story-chart{height:170px;touch-action:pan-y;cursor:ew-resize}
+.story-stripes-lab{height:max(620px,74vh);touch-action:pan-y;cursor:crosshair}
+.story-stat{font-size:13px;color:#c7d6db}
+.story-stat strong{display:inline-block;margin-right:4px;font-size:28px;font-weight:650;color:#efd395}
+.story-note{font-size:12px;color:#9fb5bd}
+.story-readout{min-height:44px;font-size:13px;color:#e8f0f2}
+.story-segmented{display:grid;gap:4px}
+.story-segmented-label{font-size:11px;font-weight:650;letter-spacing:.05em;color:#a9bdc4}
+.story-segmented-options{display:flex;flex-wrap:wrap;gap:4px}
+.story-lab :is(.story-segmented-options,.story-speed) button{min-height:44px;min-width:44px;padding:6px 11px;border:1px solid #4d6c7a;border-radius:10px;background:#0a2d3d;font-size:13px;cursor:pointer}
+.story-lab :is(.story-segmented-options,.story-speed) button[aria-pressed=true]{border-color:#efd395;background:#17495f;color:#ffe9b5}
+.story-lab :is(.story-segmented-options,.story-speed) button:disabled,.story-lab .story-tool:disabled{opacity:.45;cursor:default}
+.story-select{display:grid;gap:4px;font-size:11px;font-weight:650;letter-spacing:.05em;color:#a9bdc4}
+.story-lab .story-select select{min-height:44px;padding:0 10px;border:1px solid #4d6c7a;border-radius:10px;background:#0a2d3d;font-size:14px;font-weight:400;letter-spacing:0;color:#e8f0f2}
+.story-legend{display:grid;gap:5px;margin:0;font-size:12px;color:#c7d6db}
+.story-legend figcaption{font-size:11px;font-weight:650;letter-spacing:.05em;color:#a9bdc4}
+.story-legend ul{display:grid;gap:3px;margin:0;padding:0;list-style:none}
+.story-legend li{display:flex;align-items:center;gap:8px}
+.story-legend li i{flex:none;width:22px;border-top:3px solid}
+.story-legend li i[data-dash]{border-top-style:dashed}
+.story-legend-ramp{display:flex;align-items:center;gap:7px}
+.story-legend-ramp i{flex:1;height:10px;border-radius:3px;min-width:60px}
+.story-table-wrap summary::before{content:'▸';font-size:12px}
+.story-table-wrap[open] summary::before{content:'▾'}
+.story-table-wrap summary{min-height:44px;display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#e2c88d}
+.story-table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+.story-table th,.story-table td{padding:3px 6px;text-align:right;border-bottom:1px solid #ffffff10;font-weight:400}
+.story-table th:first-child{text-align:left}
+.story-table tr[data-current] :is(th,td){color:#ffe9b5;font-weight:650}
+.story-waiting{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,1fr);gap:16px;align-items:start}
+.story-waiting-sketch{aspect-ratio:16/10;overflow:hidden;border-radius:12px;border:1px solid #ffffff17}
+.story-lab-foot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:12px 24px;margin:16px 0 4px;padding-top:12px;border-top:1px solid #ffffff14;font-size:12.5px;color:#b7cbd2}
+.story-lab-foot h3{margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#d8c58f}
+.story-lab-foot ul{display:grid;gap:4px;margin:0 0 6px;padding:0 0 0 15px}
+.story-lab-foot p{margin:0}
+.story-lab-foot a{color:#ffe9b5;text-underline-offset:2px}
+.story-lab-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:9px 20px calc(9px + env(safe-area-inset-bottom));border-top:1px solid #ffffff17;background:#07202dee;flex:none}
+.story-lab .story-tool{min-height:44px;min-width:44px;padding:6px 14px;border:1px solid #6b8794;border-radius:11px;background:#0a2d3d;font-size:13px;font-weight:600;cursor:pointer}
+.story-lab .story-tool[aria-pressed=true]{border-color:#efd395;color:#ffe9b5}
+.story-scrubber{display:grid;gap:0;flex:1 1 220px;min-width:160px;font-size:12px;color:#c7d6db}
+.story-lab .story-scrubber input{width:100%;min-height:44px;margin:0;accent-color:#efd395;cursor:pointer}
+.story-speed{display:flex;gap:4px}
+@media(max-width:860px){
+ .story-lab-head{padding:9px 12px 8px;gap:8px}
+ .story-lab-try{display:none}
+ .story-lab-nav{gap:3px}
+ .story-lab-nav>.story-num{min-width:38px;font-size:11px}
+ .story-lab-body{padding:10px 12px}
+ .story-lab-layout,.story-waiting,.story-lab-foot{grid-template-columns:minmax(0,1fr)}
+ .story-map{height:auto;min-height:0;aspect-ratio:16/10}
+ .story-stripes-lab{height:620px}
+ .story-lab-bar{padding:6px 10px calc(6px + env(safe-area-inset-bottom));gap:4px 4px}
+ .story-tool-long{display:none}
+ .story-scrubber{flex:1 1 100%;order:-1}
+ .story-lab .story-tool{padding:4px 8px;font-size:12px}
+ .story-lab .story-speed{gap:2px}
+ .story-lab .story-speed button{padding:2px;font-size:12px}
+}

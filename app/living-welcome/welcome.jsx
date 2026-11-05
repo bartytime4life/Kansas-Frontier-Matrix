@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { TOPIC_GROUPS, TOPIC_STRUCTURE } from '../layer-workspaces';
 import { CATEGORY_MAPS, categorySceneLabel, combineCategoryMaps, normalizeCategoryTopics } from '../category-maps';
@@ -10,6 +10,8 @@ import { centeredCard, centeredScrollLeft } from './card-carousel.mjs';
 import { welcomeView } from '../welcome-map-view';
 import { isolateModalBackground, modalFocusableElements } from '../modal-background';
 
+// "The Kansas record" is a separate section with its own lazy chunks, not a map topic.
+const StorySection=lazy(()=>import('./stories/StorySection.jsx'));
 // Reuse the governed navigation taxonomy; a welcome tile does not admit data.
 const TOPICS=TOPIC_STRUCTURE.map(t=>({...t,target:t.id,short:t.facets.join(' · '),note:t.limitation,look:CATEGORY_MAPS[t.id]}));
 // Each card carries a three-colour sketch of the map it opens.
@@ -48,6 +50,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const [localMotion,setMotion]=useState(motionEnabled),[hidden,setHidden]=useState(()=>typeof document!=='undefined'&&document.hidden);
   const [active,setActive]=useState(null),[pinned,setPinned]=useState(null),[last,setLast]=useState('weather');
   const [touched,setTouched]=useState(false),[detail,setDetail]=useState(null),[panel,setPanel]=useState(null),[item,setItem]=useState(0),[fullscreen,setFullscreen]=useState(false);
+  const [storyOpen,setStoryOpen]=useState(false);
   const [previewState,setPreviewState]=useState(null),[layersVisible,setLayersVisible]=useState(true),[aviationMode,setAviationMode]=useState('3d');
   const motion=onMotionChange?motionEnabled:localMotion;
   const paused=!motion||reduced||hidden,engaged=pinned||(carousel&&!fullscreen?centered:active),control=engaged||last;
@@ -212,7 +215,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-label={fullscreen?`${TOPICS[selectedIndex]?.title||'Kansas'} map preview`:undefined} aria-labelledby={fullscreen?undefined:'living-welcome-title'} data-renderer="capability" data-builder="true" data-carousel={carousel} data-centered-topic={carousel?centered:undefined} data-selected-count={selectedTopics.length} data-active={engaged||null} data-fullscreen={fullscreen} data-cinematic={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
     <div className="welcome-map-stage">
       <div className="welcome-wash" aria-hidden="true"/>
-      <div className="welcome-capability-stage"><DomainStage topic={carousel||touched?control:null} expanded={fullscreen||carousel} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||(!engaged&&!fullscreen)} reduced={reduced} onPreviewState={setPreviewState}/></div>
+      <div className="welcome-capability-stage"><DomainStage topic={carousel||touched?control:null} expanded={fullscreen||carousel} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||storyOpen||(!engaged&&!fullscreen)} reduced={reduced} onPreviewState={setPreviewState}/></div>
       <div className="welcome-heading-row">
         <div className="welcome-toolbar" role="group" aria-label="Welcome options">
           <button type="button" className="welcome-primary" onClick={()=>onClose(remember)}>Explore freely <span aria-hidden="true">→</span></button>
@@ -239,6 +242,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
             <span className="topic-light" aria-hidden="true"/><span className="topic-copy"><strong>{t.title}</strong><small>{t.facets.slice(0,2).join(' · ')}</small><span className="topic-map" style={swatch(t.look)}><i aria-hidden="true"/>{t.look?.name}</span><span className="topic-demo-label">Open map →</span></span>
           </button><div className="topic-card-actions"><button type="button" className={`topic-preview topic-preview-${t.id}`} aria-label={`Preview ${t.title}`} onClick={()=>showStage(t.id)}>Preview <span aria-hidden="true">↗</span></button><button type="button" className="topic-add" data-topic={t.id} aria-label={`${selectedTopics.includes(t.id)?'Remove':'Add'} ${t.title} ${selectedTopics.includes(t.id)?'from':'to'} combined map`} aria-pressed={selectedTopics.includes(t.id)} onClick={()=>toggleTopic(t.id)}><span aria-hidden="true">{selectedTopics.includes(t.id)?'✓':'+'}</span></button></div>
         </div>)}</div>)}</section>
+        {!fullscreen&&<Suspense fallback={null}><StorySection paused={paused} reduced={reduced} modal={modal} compact={carousel} onOpenChange={setStoryOpen}/></Suspense>}
         {!filteredTopics.length&&<div className="topic-empty" role="status"><strong>No matching topics</strong><p>Try a broader term, or see every topic.</p><button type="button" onClick={()=>{setTopicQuery('');setTopicGroup('All');}}>Show all topics</button></div>}
       </div></div>
       {fullscreen&&touched&&<aside className="welcome-layer-demo" aria-label="Category demonstration">

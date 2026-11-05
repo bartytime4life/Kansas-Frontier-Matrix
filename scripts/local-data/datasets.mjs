@@ -9,7 +9,7 @@ import {prismCounty} from './prism.mjs';
 import {tigerFeatures} from './tiger.mjs';
 import {nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow} from './water.mjs';
 import {recoveredObservations,recoveredBulk} from './recovered.mjs';
-import {archiveSearch} from './texts.mjs';
+-20261017
 
 const stormEvents={
  id:'storm-events',db:'observations',title:'NOAA Storm Events (Kansas)',indexes:[],source:STORM_EVENTS_SOURCE,
@@ -21,7 +21,7 @@ const stormEvents={
 };
 
 export const DATASETS=new Map([stormEvents,ghcnStations,ghcnDaily,ghcndexIndices,ghcndex,asosFiveMinute,windStations,windObservations,windDaily,
- prismCounty,tigerFeatures,nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow,recoveredObservations,recoveredBulk,archiveSearch].map(d=>[d.id,d]));
+
 export const DATABASES=Object.freeze(['observations','tiger','nwm','bulk']);
 
 /** Public description of every dataset, for the website's catalog. */
