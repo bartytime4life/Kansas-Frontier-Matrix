@@ -513,15 +513,39 @@ def main(argv=None) -> int:
         from tools.local_data import sql_spatial
 
         code, report = 0, {}
-        for name, path in (("observations", args.db), ("bulk", args.bulk_db)):
-            if path is None or not path.is_file():
-                continue
+        databases = [(name, path) for name, path in (("observations", args.db), ("bulk", args.bulk_db)) if path is not None]
+        # An omitted optional bulk path is different from a requested database that is absent.
+        # Preflight every path before a build can write any sidecar.
+        for name, path in databases:
+            if not path.is_file():
+                report[name] = "SPATIAL_DATABASE_MISSING " + str(path)
+                ctx.note("spatial_failed", database=name, reason=report[name])
+                code = 1
+        if code:
+            print(json.dumps(report, indent=1, sort_keys=True))
+            return code
+        matched = False
+        for name, path in databases:
             try:
+                if args.table:
+                    db = sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
+                    try:
+                        present = args.table in sql_spatial.geometry_tables(db)
+                    finally:
+                        db.close()
+                    if not present:
+                        report[name] = []
+                        continue
+                    matched = True
                 part, report[name] = sql_spatial.command(Context(root=ctx.root, db_path=path, lock=ctx.lock, log=ctx.log), args.action, args.table)
-            except FeedError as error:
+            except (FeedError, sqlite3.Error) as error:
                 ctx.note("spatial_failed", database=name, reason=str(error))
                 part, report[name] = 1, str(error)
             code = max(code, part)
+        if args.table and not matched and not code:
+            report["table"] = "SPATIAL_TABLE_UNKNOWN " + args.table
+            ctx.note("spatial_failed", reason=report["table"])
+            code = 1
         print(json.dumps(report, indent=1, sort_keys=True))
         return code
     if args.command in ("snapshot", "snapshot-check"):
