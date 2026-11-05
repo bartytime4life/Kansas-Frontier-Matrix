@@ -1018,3 +1018,22 @@ navigation and focus behavior, with no dataset, dependency, model, database or
 release-policy change. Revert the source commit to roll back; no store operation
 is needed. Public publication remains on hold. Browser and CI results are
 recorded separately from authoring and do not establish release authority.
+
+
+## Isolated browser engine interception — 2026-11-05
+
+The ordinary startup fixture intercepts provider API requests and blocks off-origin
+network access. It does not intercept the built map-engine asset: repeated
+navigation can invalidate Chrome's paused asset request before a matching Network
+event is available, producing an unconfirmed `Invalid InterceptionId`.
+Only the delayed-scene Layers handoff and interrupted-dismissal cases explicitly
+opt into engine interception. Their checks still require a real paused engine
+request, release it, and verify that late loading neither reopens welcome nor
+steals focus. Calling the delay helper without opting in fails immediately.
+
+The error tracker still rejects unconfirmed invalid IDs, mismatched cancellations,
+non-cancel failures and unrelated protocol errors. No assertion, timeout, skip or
+provider-isolation boundary is relaxed. Unit coverage checks both interception
+modes; the hydrated isolation test fetches the actual built engine and confirms
+that only its API probe is paused. These are test-harness changes, not a repair
+claim about a live application defect or fresh hosted acceptance.

@@ -2,7 +2,7 @@
 // image/media request before emitting any matching Network-domain evidence.
 // Block off-origin I/O in the browser itself; reproduce the same empty-style
 // fixture in the page without creating an external network request.
-export async function isolateBrowserNetwork(call, origin, { attribution = null } = {}) {
+export async function isolateBrowserNetwork(call, origin, { attribution = null, interceptScene = false } = {}) {
   const base = new URL(origin);
   if (base.protocol !== 'http:' || !['127.0.0.1', 'localhost', '[::1]'].includes(base.hostname) || base.pathname !== '/' || base.search || base.hash || base.username || base.password) {
     throw new Error('Browser fixtures require an uncredentialed loopback origin');
@@ -31,6 +31,6 @@ export async function isolateBrowserNetwork(call, origin, { attribution = null }
   })();` });
   await call('Fetch.enable', { patterns: [
     { urlPattern: `${base.origin}/api/*` },
-    { urlPattern: `${base.origin}/assets/map-engine-*.js` },
+    ...(interceptScene ? [{ urlPattern: `${base.origin}/assets/map-engine-*.js` }] : []),
   ] });
 }

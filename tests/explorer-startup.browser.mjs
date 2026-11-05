@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { spawn } from 'node:child_process';
-import { mkdtemp, readFile, rm, mkdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createInterceptionErrorTracker } from './browser-interception.mjs';
@@ -310,7 +310,10 @@ async function pageSession(b, width, height, networkOptions = {}) {
     await key('Tab', 'Tab', 9);
     assert.equal(await evaluate(`!!document.activeElement?.closest('[inert], [aria-hidden="true"], .explorer-guide')`), false, 'Tab reaches an available control');
   };
-  const holdSceneModule = () => { holdScene = true; };
+  const holdSceneModule = () => {
+    assert.equal(networkOptions.interceptScene, true, 'delayed-scene cases must opt into engine interception');
+    holdScene = true;
+  };
   const waitForSceneModule = async () => {
     const deadline = Date.now() + 20000;
     while (!heldSceneRequests.length && Date.now() < deadline) await pause(25);
@@ -546,7 +549,7 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
 
 for (const [width, height] of [[1280, 800], [390, 844]]) {
   test(`startup Layers handoff excludes welcome and restores focus at ${width}x${height}`, { timeout: 90000 }, async t => {
-    const b = await browser(t), p = await pageSession(b, width, height);
+    const b = await browser(t), p = await pageSession(b, width, height, { interceptScene: true });
     if(width<600)await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
     await p.holdSceneModule();
     await p.open('/?motion=off');
@@ -1019,6 +1022,9 @@ test('isolated browser leaves canceled assets unpaused while enforcing network a
   const deadline=Date.now()+10000;
   while(!await evaluate(`location.pathname==='/robots.txt' && !!document.body`)){assert.ok(Date.now()<deadline);await pause(10);}
   assert.equal(await evaluate(`fetch('/welcome/motion/roots.jpg').then(r=>{r.body.cancel();return r.ok})`),true,'real local assets remain available');
+  const engine = (await readdir('dist/client/assets')).find(name => /^map-engine-.*\.js$/.test(name));
+  assert.ok(engine, 'the production build contains the real lazy map engine');
+  assert.equal(await evaluate(`fetch(${JSON.stringify('/assets/' + engine)}).then(async r=>r.ok && (await r.text()).length>0)`),true,'the real engine is served without a Fetch pause in ordinary sessions');
   await evaluate(`(async()=>{for(let i=0;i<5;i++){const v=document.createElement('video');v.preload='auto';v.src='/welcome/motion/clouds-preview.webm?cancel='+i;document.body.append(v);v.load();await new Promise(r=>setTimeout(r,10));v.removeAttribute('src');v.load();v.remove();}})()`);
   assert.equal(await evaluate(`fetch('/api/browser-isolation-probe').then(r=>r.status)`),503,'provider/API fixtures remain intercepted');
   assert.deepEqual(await evaluate(`fetch('https://tiles.openfreemap.org/styles/liberty').then(r=>r.json()).then(s=>[s.version,Object.keys(s.sources).length,s.layers[0].id])`),[8,0,'test-background']);
@@ -1027,13 +1033,13 @@ test('isolated browser leaves canceled assets unpaused while enforcing network a
   }
   while(blocked.filter(e=>e.blockedReason==='inspector').length<3 && Date.now()<deadline)await pause(10);
   assert.ok(blocked.filter(e=>e.blockedReason==='inspector').length>=3,`browser blocking, not DNS failure, prevents off-origin I/O: ${JSON.stringify(blocked)}`);
-  assert.deepEqual(paused,[new URL('/api/browser-isolation-probe',origin).href],'images/media/styles never acquire a Fetch interception ID');
+  assert.deepEqual(paused,[new URL('/api/browser-isolation-probe',origin).href],'images/media/styles/ordinary engine downloads never acquire a Fetch interception ID');
   assert.deepEqual(errors,[]);
 });
 
 for (const [width, height] of [[1366, 768], [390, 844]]) {
   test(`interrupted welcome dismissal at ${width}x${height}`, { timeout: 90000 }, async t => {
-    const b = await browser(t), p = await pageSession(b, width, height);
+    const b = await browser(t), p = await pageSession(b, width, height, { interceptScene: true });
     p.holdSceneModule();
     await p.open('/', null, `for (const method of ['getItem','setItem','removeItem']) Object.defineProperty(Storage.prototype,method,{value(){throw new DOMException('Storage blocked','SecurityError')}});`);
     await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.contains(document.activeElement)`, 'animated welcome owns keyboard while the map engine loads');

@@ -127,3 +127,19 @@ test('network isolation refuses non-loopback or ambiguous origins before issuing
     assert.equal(called,false);
   }
 });
+
+
+test('ordinary navigation never pauses the engine; delayed-scene tests opt in without widening network access', async () => {
+  for (const interceptScene of [false, true]) {
+    const commands = [];
+    await isolateBrowserNetwork(async (method, params) => commands.push({method, params}),
+      'http://127.0.0.1:5182/', {interceptScene});
+    const patterns = commands.find(x => x.method === 'Fetch.enable').params.patterns;
+    assert.deepEqual(patterns, [
+      {urlPattern: 'http://127.0.0.1:5182/api/*'},
+      ...(interceptScene ? [{urlPattern: 'http://127.0.0.1:5182/assets/map-engine-*.js'}] : []),
+    ]);
+    assert.deepEqual(commands.find(x => x.method === 'Network.setBlockedURLs').params.urlPatterns,
+      [{urlPattern: 'http://127.0.0.1:5182/*', block: false}, {urlPattern: '*://*:*/*', block: true}]);
+  }
+});
