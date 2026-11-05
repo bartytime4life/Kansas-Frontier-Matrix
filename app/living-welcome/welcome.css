@@ -773,6 +773,9 @@
 /* Retain the original map-backed cards. Selection is an optional card action. */
 .atlas-studio:has(> .living-welcome[data-builder=true]) > .topbar { visibility:hidden; }
 .atlas-studio .explorer-guide.living-welcome[data-builder=true] { inset:0; background:#09212d; scroll-padding-block:20px 120px; }
+/* Full provider credits revealed by Map notes own their reserved strip. */
+.atlas-studio[data-welcome-sources=open] .explorer-guide.living-welcome[data-builder=true],
+.atlas-studio[data-welcome-sources=open] .living-welcome[data-cinematic=true] .welcome-capability-stage { bottom:calc(48px + env(safe-area-inset-bottom,0px)); }
 .living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-map-stage { display:block; height:auto; min-height:100%; padding:24px 4% 40px; overflow:visible; }
 .living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-capability-stage { position:fixed; inset:0; opacity:1; pointer-events:none; }
 .living-welcome[data-builder=true]:not([data-fullscreen=true]) .domain-stage-caption { display:none; }

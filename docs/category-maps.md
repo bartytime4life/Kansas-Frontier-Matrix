@@ -1426,3 +1426,22 @@ The 22-category starting page includes **Flora & vegetation**. Its map opens
 NLCD 2021 land cover, offers annual GBIF plant-record hexagons and USDA crop
 layers, and keeps source dates, rights and occurrence limits explicit. See
 [Flora data, controls and boundaries](flora-map.md).
+
+
+## Welcome source access and navigation qualification
+
+The visible **Options → Map notes** action now opens the existing notes dialog
+and reveals the full provider attribution strip. The former expansion action
+was only in the covered map header. Closing notes restores its opening control;
+expanded credits reserve 48 pixels beneath both the chooser and cinematic map.
+Required provider links remain accessible in the compact strip before expansion.
+
+Startup browser journeys use the actual responsive card rail and wait for its
+centered card before dispatching touch input. Each card is still checked for
+full visibility, a usable hit target and keyboard focus. Category tools remain
+in **Layers → Browse → About this topic & map tools**; opening Sky daylight or
+Water flow uses those controls without automatically enabling the effect. The
+compact map intentionally omits rotating tips; Chat is exercised after leaving
+welcome so its real header is interactive. These checks use isolated unavailable
+provider fixtures and establish no live-provider, data-release or deployment
+acceptance.

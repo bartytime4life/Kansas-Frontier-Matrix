@@ -39,6 +39,8 @@ export function ExplorerGuide({ open, ...props }: Readonly<{
   onClose: (rememberDismissal: boolean) => void;
   onAction: (action: ExplorerGuideAction) => void;
   onMore?: () => void;
+  /** Reveal full provider attribution through the visible welcome controls. */
+  onSources?: () => void;
 }>) {
   return open ? <LivingWelcome {...props} onMap={props.onMap} onMore={props.onMore} onMotionChange={props.onMotionChange} initialRemember={readExplorerGuideDismissed()} /> : null;
 }
