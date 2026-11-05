@@ -490,6 +490,9 @@ def main(argv=None) -> int:
     snap.add_argument("--lock-held", action="store_true", help="The caller already holds --lock (runtime/backup.sh)")
     check = sub.add_parser("snapshot-check", help="Re-read the newest copy for the monthly restore test")
     check.add_argument("--dest", type=Path, required=True)
+    spatial = sub.add_parser("spatial", help="Build or check the R-tree sidecars of every geometry table (sql_spatial.py)")
+    spatial.add_argument("action", choices=["build", "check"])
+    spatial.add_argument("--table", help="One table instead of all")
     args = parser.parse_args(argv)
     os.umask(0o077)
     bulk = args.command == "run" and args.feed in BULK_FEEDS
@@ -506,6 +509,21 @@ def main(argv=None) -> int:
             result["bulk"] = status(Context(root=ctx.root, db_path=ctx.bulk_db))
         print(json.dumps(result, indent=1, sort_keys=True))
         return 0
+    if args.command == "spatial":
+        from tools.local_data import sql_spatial
+
+        code, report = 0, {}
+        for name, path in (("observations", args.db), ("bulk", args.bulk_db)):
+            if path is None or not path.is_file():
+                continue
+            try:
+                part, report[name] = sql_spatial.command(Context(root=ctx.root, db_path=path, lock=ctx.lock, log=ctx.log), args.action, args.table)
+            except FeedError as error:
+                ctx.note("spatial_failed", database=name, reason=str(error))
+                part, report[name] = 1, str(error)
+            code = max(code, part)
+        print(json.dumps(report, indent=1, sort_keys=True))
+        return code
     if args.command in ("snapshot", "snapshot-check"):
         from tools.local_data import sql_snapshot
 
@@ -530,6 +548,11 @@ def main(argv=None) -> int:
         ctx.note("feed_failed", feed=args.feed, reason=str(error), seconds=round(time.monotonic() - started))
         return 1
     ctx.note("feed_done", feed=args.feed, seconds=round(time.monotonic() - started), **(summary or {}))
+    # The geometry tables' R-tree sidecars follow the rows just written (sql_spatial.py); a failure here is
+    # noted and leaves the feed's own result standing.
+    from tools.local_data import sql_spatial
+
+    sql_spatial.refresh_after_feed(ctx, args.feed)
     return 0
 
 
