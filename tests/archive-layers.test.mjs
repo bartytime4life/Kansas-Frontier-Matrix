@@ -65,6 +65,14 @@ test('bounded reads retain stale metadata and reject unexpected datasets and mal
  for(const value of [answer('wrong',rows),answer('ghcn-stations',rows,{count:5}),answer('ghcn-stations',rows,{total:0})])await assert.rejects(data.fetchArchive('ghcn-stations',{},controller.signal,async()=>Response.json(value)));
  await assert.rejects(data.fetchArchive('ghcn-stations',{},controller.signal,async()=>Response.json({reasonCode:'LOCAL_DATA_UNAVAILABLE'},{status:503})),/unavailable/);
 });
+test('spatial replies retain a boolean count-cap flag and reject missing or malformed qualifications',async()=>{
+ const rows=[{id:'[1,1]',values:{name:'Fixture'}}],query={collection:'observations-faa-obstacles',bbox:'-99,38,-98,39',limit:'50'};
+ for(const totalCapped of [true,false]){
+  const result=await data.fetchArchive('near-observations',query,new AbortController().signal,async()=>Response.json(answer('near-observations',rows,{total:10000,totalCapped,collection:query.collection})));
+  assert.equal(result.totalCapped,totalCapped);
+ }
+ for(const totalCapped of [undefined,null,'false',0])await assert.rejects(data.fetchArchive('near-observations',query,new AbortController().signal,async()=>Response.json(answer('near-observations',rows,{total:10000,totalCapped,collection:query.collection}))),/Incomplete archive response/);
+});
 test('oversized geometry responses reduce page size without dropping the original filter or offset',async()=>{
  const requests=[];
  const result=await data.fetchArchive('tiger-features',{layer:'county',geometry:'1',limit:'20',offset:'40'},new AbortController().signal,async url=>{
@@ -100,6 +108,7 @@ test('shared archive queries preserve applied dates and redact a location-derive
 
 import {componentHarness,findNode,settle} from './component-harness.mjs';
 const pause=()=>new Promise(resolve=>setTimeout(resolve,5));
+const nodeText=node=>Array.isArray(node)?node.map(nodeText).join(''):node&&typeof node==='object'?nodeText(node.props?.children):String(node??'');
 async function rowHarness(fetchArchive){
  const sources=new Map(),layers=new Map(),events=new Map(),saves=[];
  const map={getStyle:()=>({layers:[...layers.values()]}),queryRenderedFeatures:()=>[],getCenter:()=>({lng:-98.5,lat:38.5}),getSource:id=>sources.get(id),getLayer:id=>layers.get(id),addSource:(id,v)=>sources.set(id,v),addLayer:v=>layers.set(v.id,v),removeLayer:id=>layers.delete(id),removeSource:id=>sources.delete(id),on:(e,id,fn)=>events.set(e+id,fn),off:(e,id)=>events.delete(e+id),once:(e,fn)=>fn(),triggerRepaint:()=>{}};
@@ -137,6 +146,26 @@ test('recovered map layers ask for the map area, page by offset and keep display
  assert.equal(h.sources.get('kfm-'+id).data.features.length,2);
  await findNode(tree,n=>n.type==='button'&&n.props.children==='Load next page').props.onClick();await settle();h.render();h.render();
  assert.equal(calls[2].offset,'2');assert.equal(h.sources.get('kfm-'+id).data.features.length,2);h.harness.dispose();
+});
+test('capped archive totals display as lower bounds across pages and retained failures; exact and unknown totals remain distinct',async()=>{
+ const collection='observations-faa-obstacles',id='archive-records-'+collection;
+ for(const [total,totalCapped,label] of [[10000,true,'10,000+'],[10000,false,'10,000'],[null,undefined,null]]){
+  let calls=0;
+  const h=await rowHarness(async()=>{
+   calls++;if(calls===3)throw Error('Temporary outage');
+   return answer('near-observations',[{id:`[1,${calls}]`,values:{geometry_geojson:JSON.stringify({type:'Point',coordinates:[-98,38]})}}],{total,totalCapped,hasMore:true,collection});
+  });
+  try{
+   h.props.layer=catalog.archiveLayer(id);h.props.selected=[id];h.props.shown=new Set([id]);h.props.styleReady=true;
+   h.render();await pause();await settle();h.render();let tree=h.render();
+   const expected=n=>label?`${n} of ${label} matching records loaded`:`${n} records loaded; this is a page of the archive`;
+   assert.ok(nodeText(tree).includes(expected(1)),nodeText(tree));
+   await findNode(tree,n=>n.type==='button'&&n.props.children==='Load next page').props.onClick();await settle();h.render();tree=h.render();
+   assert.ok(nodeText(tree).includes(expected(2)));
+   await findNode(tree,n=>n.type==='button'&&n.props.children==='Load next page').props.onClick();await settle();h.render();tree=h.render();
+   assert.ok(nodeText(tree).includes(expected(2)),'failed next page retains the qualified count');
+  }finally{h.harness.dispose();}
+ }
 });
 test('shared area and climate controls restore before the first acquisition',async()=>{
  const calls=[];const h=await rowHarness(async(_id,q)=>{calls.push(q);return answer('ghcn-stations',[]);});

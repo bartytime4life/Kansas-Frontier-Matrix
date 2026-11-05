@@ -5,7 +5,7 @@ import { readBoundedJson } from './bounded-json';
 export type ArchiveRow = Record<string, unknown>;
 export type ArchiveAnswer = {
   dataset: string; total: number | null; count: number; rows: ArchiveRow[]; source: { provider: string; notes: string; coverage: string };
-  hasMore?: boolean; nextCursor?: string | null; collection?: string;
+  totalCapped?: boolean; hasMore?: boolean; nextCursor?: string | null; collection?: string;
   fieldChunk?: {field:string;start:number;nextStart:number|null;characters:number};
   generatedAt: string; cache?: { state: string; at: string }; unit?: string | null;
 };
@@ -13,6 +13,9 @@ export type ArchiveProperties = { key: string; label: string; value: number | nu
 const record = (v: unknown): v is ArchiveRow => !!v && typeof v === 'object' && !Array.isArray(v);
 const finite = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
 export const textValue = (v: unknown): string => v === null || v === undefined ? 'Not supplied' : typeof v === 'object' ? JSON.stringify(v) : String(v);
+/** A capped count is a lower bound, never an exact coverage claim. */
+export const archiveTotal = (answer: Pick<ArchiveAnswer, 'total' | 'totalCapped'>): string | null =>
+  answer.total === null ? null : `${answer.total.toLocaleString('en-US')}${answer.totalCapped ? '+' : ''}`;
 export const rowKey = (row: ArchiveRow, index: number) => String(row.id ?? row.site ?? row.eventId ?? row.featureId ?? (record(row.county) ? row.county.geoid : undefined) ?? index);
 export const rowLabel = (row: ArchiveRow, index: number) => {
   if(record(row.values)){
@@ -121,9 +124,11 @@ export async function fetchArchive(dataset: string, query: Record<string,string>
   if (!record(value) || value.dataset !== dataset || !['kfm-local-data-v1','kfm-local-data-storm-events-v1'].includes(String(value.format))) throw new Error('Unexpected archive response.');
   const rows = value.rows ?? value.events;
   const recovered=dataset==='recovered-observations'||dataset==='recovered-bulk';
+  const spatial=dataset==='near-observations'||dataset==='near-bulk';
+  const validCap=typeof value.totalCapped==='boolean'||(!spatial&&value.totalCapped===undefined);
   const validTotal=recovered ? value.total===null && value.collection===query.collection && typeof value.hasMore==='boolean' && (value.hasMore?typeof value.nextCursor==='string'&&value.nextCursor.length<=2500:value.nextCursor===null) : Number.isSafeInteger(value.total)&&Number(value.total)>= (Array.isArray(rows)?rows.length:0);
   if(query.field && (!record(value.fieldChunk)||value.fieldChunk.field!==query.field||value.fieldChunk.start!==Number(query.start??0)||!Number.isSafeInteger(value.fieldChunk.characters)||(value.fieldChunk.nextStart!==null&&value.fieldChunk.nextStart!==Number(query.start??0)+32768)))throw new Error('Incomplete field response.');
-  if (!Array.isArray(rows) || rows.length > 2000 || !rows.every(record) || value.count !== rows.length || !validTotal || !record(value.source)) throw new Error('Incomplete archive response.');
+  if (!Array.isArray(rows) || rows.length > 2000 || !rows.every(record) || value.count !== rows.length || !validTotal || !validCap || !record(value.source)) throw new Error('Incomplete archive response.');
   return {...value,rows} as unknown as ArchiveAnswer;
 }
 

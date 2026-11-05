@@ -1,0 +1,108 @@
+{
+  "receipt_id": "genrec-archive-capped-totals-20261105",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "app/archive-layer-data.ts",
+    "app/archive-layer-control.tsx",
+    "tests/archive-layers.test.mjs",
+    "tests/local-data-near.test.mjs",
+    "docs/local-data-relay.md"
+  ],
+  "artifact_hashes": {
+    "app/archive-layer-data.ts": "sha256:66d78f8b93a53a88533f819ce214ac5c8ed99ad0f3356fdfcc8b9692cd2267fd",
+    "app/archive-layer-control.tsx": "sha256:449949d4e7da3a616322c49848f10e3ce0d8d41e86ddeb9f1b493c3c7a6322bd",
+    "tests/archive-layers.test.mjs": "sha256:bbe3fa0b635ba013cf1e41f51a4f824846ff3b3d24062c214c46674ebb13836c",
+    "tests/local-data-near.test.mjs": "sha256:826fc8c3253c4ce6e4e60ef94bba81bafe2b3a3811e14009a59b6ddf8608ed19",
+    "docs/local-data-relay.md": "sha256:eddfb246c8f1e29dd0c4636db30d6736c8d13103de9ae67dc1acdf9d4dc3a03b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact model revision is not exposed by this session"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/81af03c4697cfdc43ec1cdc231b94cc7260a3c28",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5722#discussion_r4477105152",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/81af03c4697cfdc43ec1cdc231b94cc7260a3c28/scripts/local-data/near.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/81af03c4697cfdc43ec1cdc231b94cc7260a3c28/scripts/local-data/gateway.mjs"
+    ]
+  },
+  "truth_labels": {
+    "app/archive-layer-data.ts": "CONFIRMED",
+    "app/archive-layer-control.tsx": "CONFIRMED",
+    "tests/archive-layers.test.mjs": "CONFIRMED",
+    "tests/local-data-near.test.mjs": "CONFIRMED",
+    "docs/local-data-relay.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "New client and rendered-component regressions against base implementation",
+      "outcome": "PASS",
+      "reason": "24 passing and 2 failing tests before the fix; capped display and missing qualification reproduced."
+    },
+    {
+      "gate": "Focused archive, geographic query, signed gateway/cache and recovered-record tests",
+      "outcome": "PASS",
+      "reason": "54 passed, zero skipped; exact 10000 and over-cap counts, 50-row pages, offset 5000, max page 200, missing/stale sidecars, provenance and unchanged SQLite bytes."
+    },
+    {
+      "gate": "npm run build",
+      "outcome": "PASS",
+      "reason": "Production build and compressed public asset staging completed locally; no deployment."
+    },
+    {
+      "gate": "tsc --noEmit",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Changed TypeScript and test ESLint, git diff --check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "node --test --test-concurrency=4 tests/*.test.mjs",
+      "outcome": "PASS",
+      "reason": "2588 passed, 27 skipped, zero failures after completed production build."
+    },
+    {
+      "gate": "Native browser visual review, operational PC and live-site qualification",
+      "outcome": "SKIPPED",
+      "reason": "Rendered component harness is not browser or operational acceptance; no deployment or live data mutation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5722#discussion_r4477105152",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5722#discussion_r4477105152"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/81af03c4697cfdc43ec1cdc231b94cc7260a3c28/scripts/local-data/near.mjs",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/81af03c4697cfdc43ec1cdc231b94cc7260a3c28/scripts/local-data/near.mjs"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/81af03c4697cfdc43ec1cdc231b94cc7260a3c28/scripts/local-data/gateway.mjs",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/81af03c4697cfdc43ec1cdc231b94cc7260a3c28/scripts/local-data/gateway.mjs"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-05T20:34:09.577790Z",
+  "emitter": "Codex",
+  "notes": "The existing signed gateway and cache already preserve totalCapped; the client now types and validates it and renders a lower bound as 10,000+. Query bounds, read-only access, source attribution and database records are preserved. An initial full-suite run overlapped an incomplete production build and had nine HTTP runtime failures; the completed build and final full suite passed without changing those tests. Operational installation, native-browser acceptance, independent human approval, merge and publication remain separate."
+}
