@@ -22,8 +22,6 @@ const stormEvents={
  run(db,q){const sql=stormEventsSql(q);return {total:db.prepare(sql.count.sql).get(...sql.count.params).n,rows:db.prepare(sql.rows.sql).all(...sql.rows.params).map(stormEvent)};},
 };
 
-// One dataset per line, flush left: two squash merges (#5718, #5722) dropped a continuation line of this
-// list that began with a space, which broke the module. Keep every line here self-contained.
 const PUBLISHED=[
 stormEvents,
 ghcnStations,
