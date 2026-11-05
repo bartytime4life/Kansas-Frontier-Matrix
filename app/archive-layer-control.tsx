@@ -3,7 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 're
 import type { Map as MapLibreMap, MapLayerMouseEvent } from './maplibre-seam';
 import type { Geometry } from 'geojson';
 import { ARCHIVE_LAYERS, type ArchiveLayer } from './archive-layer-catalog';
-import { archiveArea, archiveDetails, archiveFeatures, archiveQuery, countyShapes, fetchArchive, rowKey, rowLabel, textValue, type ArchiveAnswer } from './archive-layer-data';
+import { archiveArea, archiveDetails, archiveFeatures, archiveQuery, archiveTotal, countyShapes, fetchArchive, rowKey, rowLabel, textValue, type ArchiveAnswer } from './archive-layer-data';
 import styles from './archive-layer-control.module.css';
 import { defaultArchiveView, type ArchiveView, type ArchiveViews } from './archive-layer-view';
 
@@ -128,7 +128,7 @@ function ArchiveLayerRow({layer,mapRef,styleReady,selected,shown,onChange,onInsp
       {enabled&&<button type="button" disabled={loading||!styleReady} onClick={()=>void load()}>{loading?'Loading…':['tiger','stations','reaches'].includes(layer.kind)?'Load around map centre':'Load selected data'}</button>}
       {enabled&&<p role="status">{status}</p>}
       {loaded&&<>
-        <p><strong>{loaded.scope}</strong></p><p>{loaded.answer.rows.length}{loaded.answer.total===null?' records loaded; this is a page of the archive':` of ${loaded.answer.total} matching records loaded`}. {prepared?.unlocated||0} lack usable geometry; {prepared?.duplicate||0} duplicate identifiers omitted. {layer.kind==='prism'&&`${prepared?.missingValues||0} counties have no valid numeric fill.`}</p>
+        <p><strong>{loaded.scope}</strong></p><p>{loaded.answer.rows.length}{loaded.answer.total===null?' records loaded; this is a page of the archive':` of ${archiveTotal(loaded.answer)} matching records loaded`}. {prepared?.unlocated||0} lack usable geometry; {prepared?.duplicate||0} duplicate identifiers omitted. {layer.kind==='prism'&&`${prepared?.missingValues||0} counties have no valid numeric fill.`}</p>
         <small>Archive response: {stamp(loaded.answer.generatedAt)}. This is delivery time, not observation time. Cache: {loaded.answer.cache?.state??'not supplied'}.</small>
         {stale&&<p className={styles.notice}>Cached response: the PC could not refresh this query. Treat the retained source dates as authoritative.</p>}
         {valueFeatures.length>0&&<p className={styles.legend}><span style={{background:'#b9dfe7'}}/>{Math.min(...valueFeatures.map(f=>f.properties.value!)).toFixed(2)} → <span style={{background:'#594d91'}}/>{Math.max(...valueFeatures.map(f=>f.properties.value!)).toFixed(2)} {valueFeatures[0].properties.unit} · county mean; unfilled means missing</p>}

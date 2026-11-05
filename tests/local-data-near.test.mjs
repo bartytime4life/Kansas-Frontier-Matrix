@@ -5,14 +5,21 @@ import {NEAR_COLLECTIONS,nearObservations,nearBulk,sidecarState,TOTAL_CAP} from 
 import {RECOVERED_COLLECTIONS} from '../scripts/local-data/recovered.mjs';
 import {DATASETS} from '../scripts/local-data/datasets.mjs';
 import {LOCAL_DATA_ROUTES} from '../scripts/local-data/protocol.mjs';
+import {mkdtempSync,readFileSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {createHash} from 'node:crypto';
+import {createGateway} from '../scripts/local-data/gateway.mjs';
+import {newSecret,signRequest,RESPONSE_SIGNATURE_HEADER} from '../scripts/home-inference/signature.mjs';
+import {localDataConfig,createLocalDataService,LOCAL_DATA_CACHE} from '../server/local-data.mjs';
 
 const c=NEAR_COLLECTIONS.find(c=>c.id==='observations-nrhp-locations');
 const key=(file,row)=>(BigInt(file)<<32n)|BigInt(row);
 const point=(lon,lat)=>JSON.stringify({type:'Point',coordinates:[lon,lat]});
 // The pipeline's sidecar as tools/local_data/sql_spatial.py writes it: an R-tree keyed by file_id<<32|row_number
 // and kfm_spatial_index recording the files it covers.
-function fixture(t,{sidecar=true,state=true}={}){
- const db=new DatabaseSync(':memory:');t.after(()=>db.close());
+function fixture(t,{sidecar=true,state=true,path=':memory:'}={}){
+ const db=new DatabaseSync(path);t.after(()=>db.close());
  db.exec(`CREATE TABLE "${c.table}"(${c.columns.map(k=>`"${k}" ${c.keys.includes(k)?'INTEGER NOT NULL':'TEXT'}`).join(',')},PRIMARY KEY(${c.keys.join(',')}));
   CREATE TABLE kfm_sql_sources(file_id INTEGER PRIMARY KEY,source_id TEXT,source_url TEXT,sha256 TEXT,source_path TEXT);
   INSERT INTO kfm_sql_sources VALUES(1,'nps-nrhp','https://example.org/nrhp','hash','/private/path'),(2,'nps-nrhp','https://example.org/nrhp2','hash2','/private/path2');`);
@@ -89,4 +96,42 @@ test('the count stops at the cap and the name is a bound value',t=>{
  assert.equal(run(db,{collection:c.id,bbox:WICHITA,name:"MILL' OR '"}).total,0);
  assert.throws(()=>run(db,{collection:c.id,bbox:WICHITA,name:"%"}),{code:'QUERY_INVALID'});
  assert.equal(db.prepare(`SELECT COUNT(*) n FROM "${c.table}"`).get().n,TOTAL_CAP+9);
+});
+
+test('exact-cap and capped geographic pages retain their qualification through the read-only signed gateway and live, fresh and stale responses',async t=>{
+ const directory=mkdtempSync(join(tmpdir(),'kfm-near-')),path=join(directory,'observations.sqlite');
+ const db=fixture(t,{path});t.after(()=>rmSync(directory,{recursive:true,force:true}));
+ const insert=db.prepare(`INSERT INTO "${c.table}"(file_id,row_number,resname,geometry_geojson) VALUES(1,?,?,?)`),rt=db.prepare(`INSERT INTO "${c.table}_rtree" VALUES(?,?,?,?,?)`);
+ db.exec('BEGIN');
+ for(let i=0;i<TOTAL_CAP-3;i++){insert.run(100+i,'Many '+i,point(-97.3,37.7));rt.run(key(1,100+i),-97.3,-97.3,37.7,37.7);}
+ db.exec('COMMIT');
+ const input={collection:c.id,bbox:WICHITA,limit:'50'};
+ const exact=run(db,input);assert.equal(exact.total,TOTAL_CAP);assert.equal(exact.totalCapped,false);
+ insert.run(20000,'One more',point(-97.3,37.7));rt.run(key(1,20000),-97.3,-97.3,37.7,37.7);
+ const next=run(db,{...input,offset:'50'}),first=run(db,input);
+ assert.equal(first.totalCapped,true);assert.equal(next.totalCapped,true);
+ assert.equal(first.rows.length,50);assert.equal(next.rows.length,50);
+ assert.equal(new Set([...first.rows,...next.rows].map(r=>r.id)).size,100);
+ assert.equal(run(db,{...input,offset:'5000',limit:'200'}).rows.length,200);
+ assert.equal(run(db,{...input,bbox:'-103,36.5,-102.5,37'}).totalCapped,false);
+ const hash=()=>createHash('sha256').update(readFileSync(path)).digest('hex'),before=hash();
+ let now=Date.now(),offline=false,calls=0;
+ const origin='https://kansasfrontiermatrix.com',config=localDataConfig({KFM_LOCAL_DATA:'1',KFM_LOCAL_DATA_ORIGIN:origin,KFM_LOCAL_DATA_GATEWAY_KEY_ID:'gw',KFM_LOCAL_DATA_GATEWAY_SECRET:newSecret(),KFM_LOCAL_DATA_WORKER_KEY_ID:'wk',KFM_LOCAL_DATA_WORKER_SECRET:newSecret()});
+ const gateway=createGateway({keyId:config.keyId,secret:config.secret,dbPath:path,clock:()=>now});
+ const relay={lastSeen:now,handler:async()=>new Response(null,{status:204}),async submit({method,path,body}){
+  calls++;if(offline)throw Error('Controlled outage');
+  const requestHeaders=signRequest({keyId:config.keyId,secret:config.secret,method,path,body,now});
+  const reply=gateway({method,path,body,headers:requestHeaders});
+  assert.equal(reply.status,200);assert.equal(JSON.parse(reply.body).totalCapped,true);
+  return {status:reply.status,bytes:reply.body,requestHeaders,headers:new Headers({'content-type':'application/json',[RESPONSE_SIGNATURE_HEADER]:reply.signature})};
+ }};
+ const service=createLocalDataService({config,relay,clock:()=>now});
+ const query=()=>service.query(new Request(origin+'/api/local-data/near-observations?'+new URLSearchParams(input)),'near-observations');
+ for(const state of ['live','fresh','stale']){
+  if(state==='stale'){offline=true;now+=LOCAL_DATA_CACHE.freshMs;relay.lastSeen=now;}
+  const response=await query();assert.equal(response.status,200);const value=await response.json();
+  assert.equal(value.cache.state,state);assert.equal(value.total,10000);assert.equal(value.totalCapped,true);assert.equal(value.count,50);
+  assert.deepEqual(value.rows[0].provenance,{...first.rows[0].provenance});assert.equal(value.collection,c.id);
+ }
+ assert.equal(calls,2);assert.equal(hash(),before,'read-only geographic queries leave database bytes unchanged');
 });
