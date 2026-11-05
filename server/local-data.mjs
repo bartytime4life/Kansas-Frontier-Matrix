@@ -102,12 +102,43 @@ export function createLocalDataService({config,clock=Date.now,relay=createHomeRe
   }
  };
 
- /** GET /api/local-data: what can be asked, and whether the PC is connected. No trip to the PC. */
+ /**
+  * The gateway's health (readiness and freshness per dataset and recovered collection), asked at
+  * most once per freshMs and served stale for up to staleMs when the PC is away, like answers.
+  * Resolves to null when there is nothing to serve; never throws.
+  */
+ const health=async()=>{
+  const key='\nhealth',hit=cache.get(key),age=hit?clock()-hit.at:Infinity;
+  if(hit&&age<LOCAL_DATA_CACHE.freshMs)return {value:hit.value,state:'fresh',at:hit.at};
+  try{
+   let trip=pending.get(key);
+   if(!trip){
+    trip=call('GET','/v1/health').then(({value,bytes})=>{delete value.gateway;remember(key,value,bytes);return value;}).finally(()=>pending.delete(key));
+    pending.set(key,trip);
+   }
+   const value=await trip;
+   return {value,state:'live',at:cache.get(key)?.at??clock()};
+  }catch{
+   return hit&&age<LOCAL_DATA_CACHE.staleMs?{value:hit.value,state:'stale',at:hit.at}:null;
+  }
+ };
+
+ /**
+  * GET /api/local-data: what can be asked, whether the PC is connected, and, when the PC has
+  * answered health recently, each dataset's readiness and freshness and each recovered
+  * collection's newest file. Without a health answer the catalog is served without them.
+  */
  const catalog=async request=>{
   if(request.method!=='GET')return json({reasonCode:'METHOD_DENIED'},405);
-  return json({format:'kfm-local-data-catalog-v1',online:clock()-relay.lastSeen<=LOCAL_DATA_CACHE.workerSeenMs,datasets:datasetCatalog()},200,'public, max-age=60');
+  const online=clock()-relay.lastSeen<=LOCAL_DATA_CACHE.workerSeenMs;
+  const status=online||cache.has('\nhealth')?await health():null;
+  const byId=new Map((status?.value?.datasets??[]).map(d=>[d.id,d]));
+  const datasets=datasetCatalog().map(d=>{const s=byId.get(d.id);return s?{...d,ready:s.ready,...(s.reason?{reason:s.reason}:{}),freshness:s.freshness??null}:d;});
+  const body={format:'kfm-local-data-catalog-v1',online,datasets};
+  if(status)body.status={state:status.state,at:new Date(status.at).toISOString(),generatedAt:status.value.generatedAt??null,collections:status.value.collections??{}};
+  return json(body,200,'public, max-age=60');
  };
- return {query,catalog,workerHandler:relay.handler,relay};
+ return {query,catalog,health,workerHandler:relay.handler,relay};
 }
 
 // One service per process: the worker route and the public routes must share one relay.

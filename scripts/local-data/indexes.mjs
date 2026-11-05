@@ -8,13 +8,17 @@ import {pathToFileURL} from 'node:url';
 import {DatabaseSync} from 'node:sqlite';
 import {DATASETS} from './datasets.mjs';
 import {databasesFromEnv,missingIndexes} from './gateway.mjs';
+import {FRESHNESS_INDEXES} from './freshness.mjs';
 
 export function plannedIndexes(){
  const byDatabase=new Map();
- for(const d of DATASETS.values())for(const index of d.indexes){
-  if(!byDatabase.has(d.db))byDatabase.set(d.db,new Map());
-  byDatabase.get(d.db).set(index.name,{...index,datasets:[...(byDatabase.get(d.db).get(index.name)?.datasets??[]),d.id]});
- }
+ const plan=(database,index,user)=>{
+  if(!byDatabase.has(database))byDatabase.set(database,new Map());
+  byDatabase.get(database).set(index.name,{...index,datasets:[...(byDatabase.get(database).get(index.name)?.datasets??[]),user]});
+ };
+ for(const d of DATASETS.values())for(const index of d.indexes)plan(d.db,index,d.id);
+ // Freshness lookups (health) want these; a dataset is never refused for their absence.
+ for(const [database,indexes] of Object.entries(FRESHNESS_INDEXES))for(const index of indexes)plan(database,index,'freshness');
  return byDatabase;
 }
 

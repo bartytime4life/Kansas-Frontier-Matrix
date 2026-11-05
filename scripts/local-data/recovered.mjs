@@ -11,7 +11,7 @@ const source={provider:'Recovered public source records',url:'/data-library',
  notes:'Original values, units, codes, flags and dates are retained. Import identity is not an observation date. Source links are attached to file-backed records. OpenStreetMap data © OpenStreetMap contributors, ODbL.'};
 export function recoveredDataset(database){
  const collections=catalog.filter(c=>c.database===database), byId=new Map(collections.map(c=>[c.id,c]));
- return {id:'recovered-'+database,db:database,title:'Recovered '+database+' records',indexes:[],source,
+ return {id:'recovered-'+database,db:database,title:'Recovered '+database+' records',indexes:[],source,freshness:{collections},
   params:{collection:'allowlisted collection ID',after:'previous nextCursor, unchanged',limit:'1–50 (20)',record:'exact record identity for a long field',field:'allowlisted field name',start:'character offset for a long field'},
   parse(input){
    only(input,['collection','after','limit','record','field','start']);

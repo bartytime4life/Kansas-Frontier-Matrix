@@ -68,10 +68,13 @@ test('the gateway answers signed questions read-only and signs every reply',asyn
  assert.equal(healthy.status,200);assert.ok(verified(health,healthy));
  const status=parse(healthy);
  assert.equal(status.ok,true);assert.equal(status.stormEvents,4);
- assert.deepEqual(status.datasets.find(d=>d.id==='storm-events'),{id:'storm-events',ready:true});
+ // Freshness comes from bookkeeping tables; the fixture has none, so it is a reason, never a scan.
+ assert.deepEqual(status.datasets.find(d=>d.id==='storm-events'),{id:'storm-events',ready:true,freshness:{reason:'INDEX_MISSING',basis:'sources'}});
  // A dataset whose database is not configured, or whose indexes are missing, is reported, not scanned.
- assert.deepEqual(status.datasets.find(d=>d.id==='tiger-features'),{id:'tiger-features',ready:false,reason:'DATABASE_NOT_CONFIGURED'});
- assert.deepEqual(status.datasets.find(d=>d.id==='ghcn-daily'),{id:'ghcn-daily',ready:false,reason:'INDEX_MISSING'});
+ assert.deepEqual(status.datasets.find(d=>d.id==='tiger-features'),{id:'tiger-features',ready:false,reason:'DATABASE_NOT_CONFIGURED',freshness:{reason:'UNAVAILABLE'}});
+ assert.deepEqual(status.datasets.find(d=>d.id==='ghcn-daily'),{id:'ghcn-daily',ready:false,reason:'INDEX_MISSING',freshness:{reason:'INDEX_MISSING',basis:'sources'}});
+ assert.deepEqual(status.collections,{});
+ assert.ok(typeof status.generatedAt==='string');
 
  const byFips=signed('/v1/data/storm-events',JSON.stringify({county:173})),fips=handle(byFips),fipsBody=parse(fips);
  assert.equal(fips.status,200);assert.ok(verified(byFips,fips));

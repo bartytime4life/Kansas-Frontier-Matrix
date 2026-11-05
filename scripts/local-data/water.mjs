@@ -8,7 +8,7 @@ const NWM_SOURCE=Object.freeze({provider:'NOAA Office of Water Prediction, Natio
  notes:'Model output, not gauge observations. The pipeline has not admitted this source, and the review of v3.0 reach geometry against v3.1 model output is pending; the owner approved public release on 2026-11-01 with these limitations. Streamflow and nudge in m3/s, velocity in m/s; values whose status is not valid are null. Reach geometry is WGS84 (EPSG:4326).'});
 
 export const nwmReaches={
- id:'nwm-reaches',db:'nwm',title:'National Water Model reaches',source:NWM_SOURCE,
+ id:'nwm-reaches',db:'nwm',freshness:{geopackage:true},title:'National Water Model reaches',source:NWM_SOURCE,
  indexes:[{name:'kfm_nwm_flowlines_feature',sql:'CREATE INDEX IF NOT EXISTS kfm_nwm_flowlines_feature ON nwm_v30_flowlines(feature_id)'},
   {name:'kfm_nwm_flowlines_huc6',sql:'CREATE INDEX IF NOT EXISTS kfm_nwm_flowlines_huc6 ON nwm_v30_flowlines(huc6)'}],
  params:{feature:'NWM feature id',name:'part of the stream name',huc6:'6-digit hydrologic unit',bbox:'west,south,east,north (2 degrees at most)',
@@ -36,7 +36,7 @@ export const nwmReaches={
 };
 
 export const nwmStreamflow={
- id:'nwm-streamflow',db:'observations',title:'National Water Model streamflow',source:NWM_SOURCE,
+ id:'nwm-streamflow',db:'observations',freshness:{sources:['noaa-nwm-channel-rt']},title:'National Water Model streamflow',source:NWM_SOURCE,
  indexes:[{name:'kfm_nwm_channel_rt_feature',sql:'CREATE INDEX IF NOT EXISTS kfm_nwm_channel_rt_feature ON kfm_nwm_channel_rt(feature_id, valid_time)'}],
  params:{feature:'NWM feature id (required)',product:'analysis_assim or short_range (both by default)',from:'YYYY-MM-DDTHH:MM UTC (valid time)',to:'YYYY-MM-DDTHH:MM UTC',limit:'1-1000 (100)',offset:'0-100000'},
  parse(input){
@@ -64,7 +64,7 @@ const feature=json=>{let f;try{f=JSON.parse(json);}catch{return null;}return {id
 const CAPTURE=" FROM kfm_environmental_features WHERE source_id=?";
 
 export const nwsAlerts={
- id:'nws-alerts',db:'observations',title:'Captured NWS alerts for Kansas',indexes:[],
+ id:'nws-alerts',db:'observations',freshness:{sources:['nws-alerts']},title:'Captured NWS alerts for Kansas',indexes:[],
  source:Object.freeze({temporalMode:'historical-capture',provider:'NOAA National Weather Service API',url:'https://api.weather.gov/alerts',coverage:'Kansas alerts captured hourly by the pipeline since October 2026',notes:'Properties as published by the NWS when captured; this is not a live alert feed. Cache state describes relay delivery, not alert validity; use the provider timestamps and current official warnings.'}),
  params:{event:'part of the event name, e.g. Fog',area:'part of the area description, e.g. Sedgwick',limit:'1-50 (20)',offset:'0-1000'},
  parse(input){only(input,['event','area','limit','offset']);const pattern=/^[A-Z0-9][A-Z0-9 .,'&/()-]{1,39}$/;return {event:text(input.event,pattern),area:text(input.area,pattern),...page(input,{max:50,fallback:20,maxOffset:1000})};},
@@ -80,7 +80,7 @@ export const nwsAlerts={
 };
 
 export const usgsEarthquakes={
- id:'usgs-earthquakes',db:'observations',title:'Captured USGS earthquakes in Kansas',indexes:[],
+ id:'usgs-earthquakes',db:'observations',freshness:{sources:['usgs-earthquakes']},title:'Captured USGS earthquakes in Kansas',indexes:[],
  source:Object.freeze({temporalMode:'historical-capture',provider:'USGS Earthquake Hazards Program',url:'https://earthquake.usgs.gov/fdsnws/event/1/',coverage:'Kansas events captured hourly by the pipeline since October 2026',notes:'Properties as published by the USGS when captured; time and updated are milliseconds since 1970. This is not a live earthquake feed; generatedAt and cache state describe relay delivery, not event freshness.'}),
  params:{limit:'1-50 (50)',offset:'0-1000'},
  parse(input){only(input,['limit','offset']);return page(input,{max:50,fallback:50,maxOffset:1000});},
@@ -96,7 +96,7 @@ const USGS_SOURCE=Object.freeze({temporalMode:'historical-capture',provider:'USG
 const SITE=/^USGS-\d{8,15}$/;
 
 export const usgsStreamflowSites={
- id:'usgs-streamflow-sites',db:'observations',title:'Captured USGS streamflow sites',indexes:[],source:USGS_SOURCE,
+ id:'usgs-streamflow-sites',db:'observations',freshness:{sources:['usgs-streamflow']},title:'Captured USGS streamflow sites',indexes:[],source:USGS_SOURCE,
  params:{limit:'1-500 (500)',offset:'0-1000'},
  parse(input){only(input,['limit','offset']);return page(input,{max:500,fallback:500,maxOffset:1000});},
  run(db,q){
@@ -111,7 +111,7 @@ export const usgsStreamflowSites={
 };
 
 export const usgsStreamflow={
- id:'usgs-streamflow',db:'observations',title:'Captured USGS streamflow readings',indexes:[],source:USGS_SOURCE,
+ id:'usgs-streamflow',db:'observations',freshness:{sources:['usgs-streamflow']},title:'Captured USGS streamflow readings',indexes:[],source:USGS_SOURCE,
  params:{site:'monitoring location (required), e.g. USGS-07144100',parameter:'5-digit USGS parameter code, e.g. 00060 discharge',from:'YYYY-MM-DDTHH:MM UTC',to:'YYYY-MM-DDTHH:MM UTC',limit:'1-1000 (500)',offset:'0-100000'},
  parse(input){
   only(input,['site','parameter','from','to','limit','offset']);

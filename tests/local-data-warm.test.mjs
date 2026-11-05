@@ -18,17 +18,21 @@ test('a warm pass reports every question, keeps going past failures, opens each 
  const open=path=>{opens.push(path);const db=new DatabaseSync(':memory:');const close=db.close.bind(db);db.close=()=>{closed.push(path);close();};return db;};
  const clock=(()=>{let t=1000;return ()=>t+=7;})();
  const result=warm({databases:{observations:'obs.sqlite',bulk:'bulk.sqlite'},open,clock});
+ // One entry per question, then one freshness entry per dataset (what the health route reads).
  const expected=[...DATASETS.values()].reduce((n,d)=>n+questionsFor(d.id).length,0);
- assert.equal(result.datasets.length,expected);
- for(const entry of result.datasets){
+ const questions=result.datasets.filter(e=>e.question!=='freshness'),freshness=result.datasets.filter(e=>e.question==='freshness');
+ assert.equal(questions.length,expected);
+ assert.equal(freshness.length,DATASETS.size);
+ for(const entry of questions){
   assert.ok(DATASETS.has(entry.id));
   assert.ok(Number.isInteger(entry.question)&&entry.question>=0);
   assert.ok(entry.ms>0,'each question is timed');
  }
  // Empty databases have no tables: every question on them fails without stopping the pass.
  const byDb=id=>DATASETS.get(id).db;
- assert.ok(result.datasets.filter(e=>byDb(e.id)==='observations').every(e=>e.status!=='ok'));
- assert.ok(result.datasets.filter(e=>byDb(e.id)==='tiger'||byDb(e.id)==='nwm').every(e=>e.status==='DATABASE_NOT_CONFIGURED'));
+ assert.ok(questions.filter(e=>byDb(e.id)==='observations').every(e=>e.status!=='ok'));
+ assert.ok(questions.filter(e=>byDb(e.id)==='tiger'||byDb(e.id)==='nwm').every(e=>e.status==='DATABASE_NOT_CONFIGURED'));
+ assert.ok(freshness.every(e=>typeof e.status==='string'&&e.ms>0));
  assert.equal(result.stormEvents,null);
  assert.deepEqual([...opens].sort(),['bulk.sqlite','obs.sqlite'],'each configured database is opened once');
  assert.deepEqual([...closed].sort(),['bulk.sqlite','obs.sqlite'],'and closed at the end');
@@ -46,7 +50,9 @@ test('a dataset whose index is missing is reported DATASET_NOT_READY, and one wi
   return db;
  };
  const result=warm({databases:{observations:'obs.sqlite'},open,questions:{'ghcn-stations':{name:'WICHITA'},'ghcn-daily':{station:'USW00003928'}}});
- const status=Object.fromEntries(result.datasets.map(e=>[e.id,e.status]));
+ const status=Object.fromEntries(result.datasets.filter(e=>e.question!=='freshness').map(e=>[e.id,e.status]));
+ // No bookkeeping tables in this fixture: freshness is a reason for every dataset, never a throw.
+ assert.ok(result.datasets.filter(e=>e.question==='freshness').every(e=>['INDEX_MISSING','NO_FEED_STATE','NO_FILES','DATABASE_NOT_CONFIGURED','UNAVAILABLE'].includes(e.status)));
  assert.equal(status['ghcn-stations'],'ok');
  assert.equal(result.datasets.find(e=>e.id==='ghcn-stations').rows,1);
  assert.equal(status['ghcn-daily'],DATASETS.get('ghcn-daily').indexes.length?'DATASET_NOT_READY':'ok');
@@ -54,7 +60,7 @@ test('a dataset whose index is missing is reported DATASET_NOT_READY, and one wi
  const line=summarize(result,1);
  assert.equal(line.event,'warmed');
  assert.equal(line.pass,1);
- assert.equal(line.questions,2);
+ assert.equal(line.questions,2+DATASETS.size,'two questions and one freshness entry per dataset');
  assert.ok(line.slowest.length<=5&&line.slowest.every(s=>typeof s.ms==='number'));
  assert.ok(Array.isArray(line.failed));
  assert.ok(!JSON.stringify(line).includes('WICHITA'),'the journal line carries timings, never answers');

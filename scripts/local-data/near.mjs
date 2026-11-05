@@ -32,7 +32,7 @@ export function sidecarState(db,table){
 
 export function nearDataset(database){
  const collections=NEAR_COLLECTIONS.filter(c=>c.database===database),byId=new Map(collections.map(c=>[c.id,c]));
- return {id:'near-'+database,db:database,title:'Recovered '+database+' records in a map area',indexes:[],source,
+ return {id:'near-'+database,db:database,title:'Recovered '+database+' records in a map area',indexes:[],source,freshness:{collections},
   params:{collection:'allowlisted geometry collection ID',bbox:'west,south,east,north (required; at most 2 degrees a side)',name:'part of the record\'s name (collections that have one)',limit:'1–200 (50)',offset:'0–5000'},
   parse(input){
    only(input,['collection','bbox','name','limit','offset']);

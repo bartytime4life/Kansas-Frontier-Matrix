@@ -14,7 +14,7 @@ import {nearObservations,nearBulk} from './near.mjs';
 import {storyBundles} from './stories.mjs';
 
 const stormEvents={
- id:'storm-events',db:'observations',title:'NOAA Storm Events (Kansas)',indexes:[],source:STORM_EVENTS_SOURCE,
+ id:'storm-events',db:'observations',title:'NOAA Storm Events (Kansas)',indexes:[],freshness:{sources:['noaa-storm-events']},source:STORM_EVENTS_SOURCE,
  // Phase 1 reply shape, kept for existing callers.
  format:'kfm-local-data-storm-events-v1',rowsKey:'events',
  params:{county:'county FIPS (counties only) or county/zone name',from:'YYYY-MM-DD',to:'YYYY-MM-DD',type:'NCEI event type, e.g. Tornado',limit:'1-200 (50)',offset:'0-50000'},
