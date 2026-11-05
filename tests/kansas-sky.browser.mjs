@@ -74,7 +74,7 @@ async function browser(t) {
 
 // Uses the production page/CSS with isolated aviation and county fixtures.
 // Build identity and airport availability reach loopback; external traffic is blocked.
-async function pageSession(b, { width, height, touch, motion, repaint }) {
+async function pageSession(b, { width, height, touch, motion, repaint, tileErrorDelay }) {
   const { targetId } = await b.call('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await b.call('Target.attachToTarget', { targetId, flatten: true });
   const call = (method, params = {}) => b.call(method, params, sessionId);
@@ -106,7 +106,7 @@ async function pageSession(b, { width, height, touch, motion, repaint }) {
     const operation = synthetic !== null ? call('Fetch.fulfillRequest', {requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(synthetic).toString('base64')}) : url.origin !== origin.origin
       ? (/\/styles\/|\/style\.json$/.test(url.pathname)
         ? call('Fetch.fulfillRequest', { requestId, responseCode: 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from(JSON.stringify({ version: 8, sources: {}, layers: [{ id: 'layout-test-background', type: 'background', paint: { 'background-color': '#172832' } }] })).toString('base64') })
-        : call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' }))
+        : (tileErrorDelay ? pause(tileErrorDelay).then(()=>call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' })) : call('Fetch.failRequest', { requestId, errorReason: 'BlockedByClient' })))
       : url.pathname.startsWith('/api/') && !['/api/build', '/api/aviation/airports'].includes(url.pathname)
         ? call('Fetch.fulfillRequest', { requestId, responseCode: 503, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from('{"error":"Layout test: unrelated source unavailable"}').toString('base64') })
         : call('Fetch.continueRequest', { requestId });
@@ -169,9 +169,9 @@ async function pageSession(b, { width, height, touch, motion, repaint }) {
 }
 
 
-for (const repaint of [false,true]) for (const layout of [{width:1440,height:900,touch:false,motion:'no-preference'},{width:390,height:844,touch:true,motion:'reduce'}]) test(`Kansas Sky synthetic live/replay controls ${layout.width}px${repaint?' with continuous repaint':''}`,{timeout:120000},async t=>{
-  const artifactKey=`${layout.width}${repaint?'-repainting':''}`;
-  const b=await browser(t),p=await pageSession(b,{...layout,repaint});
+for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repaint:true,tileErrorDelay:0},{repaint:false,tileErrorDelay:1200}]) for (const layout of [{width:1440,height:900,touch:false,motion:'no-preference'},{width:390,height:844,touch:true,motion:'reduce'}]) test(`Kansas Sky synthetic live/replay controls ${layout.width}px${repaint?' with continuous repaint':''}${tileErrorDelay?' with late tile failures':''}`,{timeout:120000},async t=>{
+  const artifactKey=`${layout.width}${repaint?'-repainting':''}${tileErrorDelay?'-late-tiles':''}`;
+  const b=await browser(t),p=await pageSession(b,{...layout,repaint,tileErrorDelay});
   if(process.env.KFM_SKY_SCREENSHOTS)b.checks.unshift(async()=>{
     await mkdir(process.env.KFM_SKY_SCREENSHOTS,{recursive:true});
     const shot=await p.call('Page.captureScreenshot',{format:'png'});
