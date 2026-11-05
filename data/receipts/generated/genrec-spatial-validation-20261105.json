@@ -1,0 +1,91 @@
+{
+  "receipt_id": "genrec-spatial-validation-20261105",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/local_data/sql_feeds.py",
+    "tools/local_data/sql_spatial.py",
+    "tests/local_data/test_sql_spatial.py",
+    "docs/runbooks/sql-feeds.md"
+  ],
+  "artifact_hashes": {
+    "tools/local_data/sql_feeds.py": "sha256:540bbf99d140e6516aebcefd764bb84179cd6cdd335cda4cc42b5a90ca281857",
+    "tools/local_data/sql_spatial.py": "sha256:b7ff48930a044cced87d7d8e4215b0854cf00b339885521136ed4e48a3e4552f",
+    "tests/local_data/test_sql_spatial.py": "sha256:e17dd852d5dff409240662df7d522ef796476fdc9789715ddf7520360e7f4577",
+    "docs/runbooks/sql-feeds.md": "sha256:5095297903976f41e36e08364c74749831577cf67228d4bca0f239dd89e13568"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Exact model revision is not exposed by this session"
+  },
+  "prompt_or_contract": "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e8a36789af3f9d95bbcb2c6da3156904d38e5205bd5117a0094646fb72719790"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/124e57697c0e3ea2ec87cb3a02982cdf34507d7c",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5721#discussion_r4477107313",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5721#discussion_r4477107319",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/124e57697c0e3ea2ec87cb3a02982cdf34507d7c/tools/local_data/sql_spatial.py"
+    ]
+  },
+  "truth_labels": {
+    "tools/local_data/sql_feeds.py": "CONFIRMED",
+    "tools/local_data/sql_spatial.py": "CONFIRMED",
+    "tests/local_data/test_sql_spatial.py": "CONFIRMED",
+    "docs/runbooks/sql-feeds.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Missing-path and either-database regression reproduction against base implementation",
+      "outcome": "PASS",
+      "reason": "New tests first failed for missing requested files and targets present in only observations or bulk."
+    },
+    {
+      "gate": "make local-data-check",
+      "outcome": "PASS",
+      "reason": "815 passed, 7 skipped, 571 subtests passed; offline guard enabled, Python 3.12.14."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Operational pipeline PC install, lock/build/check and gateway qualification",
+      "outcome": "SKIPPED",
+      "reason": "Separate operational prerequisites; no operational PC access or mutation in this task."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5721#discussion_r4477107313",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5721#discussion_r4477107313"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5721#discussion_r4477107319",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5721#discussion_r4477107319"
+    },
+    {
+      "id": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/124e57697c0e3ea2ec87cb3a02982cdf34507d7c/tools/local_data/sql_spatial.py",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/124e57697c0e3ea2ec87cb3a02982cdf34507d7c/tools/local_data/sql_spatial.py"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-11-05T20:34:09.577189Z",
+  "emitter": "Codex",
+  "notes": "Reviewable correction only. Validation checks all supplied paths before build, selects a target across databases, retains read-only checks and existing source rows. An earlier broad SQL-family run had one unchanged FAA timestamped-ZIP digest assertion failure; the baseline isolated test and final full local-data lane passed without altering that test. No claim of operational installation, production performance, independent human approval, merge or publication."
+}

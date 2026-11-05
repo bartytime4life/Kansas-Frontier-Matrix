@@ -1,6 +1,9 @@
 """Spatial sidecars: an R-tree per geometry table, kept in step with the files each table holds."""
 import json
+import io
 import sqlite3
+from contextlib import redirect_stdout
+from unittest.mock import patch
 
 from tests.local_data.test_sql_feeds import FeedCase
 from tools.local_data import sql_feeds as core, sql_spatial as spatial
@@ -45,6 +48,99 @@ class SpatialCase(FeedCase):
 
 
 class BuildTests(SpatialCase):
+    def spatial_cli(self, action, *, db=None, bulk=None, table=None):
+        argv = ["--root", str(self.root), "--db", str(db or self.db_path)]
+        if bulk is not None:
+            argv += ["--bulk-db", str(bulk)]
+        argv += ["spatial", action]
+        if table is not None:
+            argv += ["--table", table]
+        output = io.StringIO()
+        with redirect_stdout(output), patch.object(core.Context, "note"):
+            code = core.main(argv)
+        return code, json.loads(output.getvalue())
+
+    def test_requested_missing_databases_fail_without_creating_them(self):
+        spatial.refresh_after_feed(self.ctx, "demo")
+        before = self.db_path.read_bytes()
+        missing = self.db_path.parent / "absent.sqlite"
+        for action in ("check", "build"):
+            for options, name in (({"db": missing}, "observations"), ({"bulk": missing}, "bulk")):
+                with self.subTest(action=action, database=name):
+                    code, report = self.spatial_cli(action, **options)
+                    self.assertEqual(code, 1)
+                    self.assertIn("SPATIAL_DATABASE_MISSING", report[name])
+                    self.assertFalse(missing.exists())
+        self.assertEqual(self.db_path.read_bytes(), before)
+        # Omitting optional --bulk-db does not require a second database.
+        self.assertEqual(self.spatial_cli("check")[0], 0)
+
+    def test_targeted_table_can_live_in_either_selected_database(self):
+        bulk = self.db_path.parent / "bulk.sqlite"
+        with sqlite3.connect(bulk) as db:
+            db.execute("CREATE TABLE kfm_bulk_sites (file_id INTEGER, row_number INTEGER, geometry_geojson TEXT, PRIMARY KEY(file_id,row_number))")
+            db.execute("INSERT INTO kfm_bulk_sites VALUES (1,1,?)", (POINT,))
+        original = self.q("SELECT * FROM kfm_demo_sites ORDER BY file_id,row_number")
+        for table, owner, other in (("kfm_demo_sites", "observations", "bulk"), ("kfm_bulk_sites", "bulk", "observations")):
+            with self.subTest(table=table):
+                self.assertEqual(self.spatial_cli("check", bulk=bulk, table=table)[0], 1, "missing selected sidecar fails")
+                code, report = self.spatial_cli("build", bulk=bulk, table=table)
+                self.assertEqual(code, 0)
+                self.assertEqual(report[owner][0]["table"], table)
+                self.assertEqual(report[other], [])
+                code, report = self.spatial_cli("check", bulk=bulk, table=table)
+                self.assertEqual(code, 0)
+                self.assertEqual(report[owner][0]["state"], "current")
+        # Unselected sidecars may still be missing; a targeted check concerns only its table.
+        self.assertEqual(self.spatial_cli("check", bulk=bulk)[0], 1)
+        with sqlite3.connect(bulk) as db:
+            db.execute("INSERT INTO kfm_bulk_sites VALUES (2,1,?)", (LINE,))
+        self.assertEqual(self.spatial_cli("check", bulk=bulk, table="kfm_demo_sites")[0], 0)
+        code, report = self.spatial_cli("check", bulk=bulk, table="kfm_bulk_sites")
+        self.assertEqual(code, 1)
+        self.assertEqual(report["bulk"][0]["state"], "stale")
+        self.assertEqual(self.spatial_cli("build", bulk=bulk, table="kfm_bulk_sites")[0], 0)
+        self.assertEqual(self.spatial_cli("check", bulk=bulk, table="kfm_bulk_sites")[0], 0)
+        self.assertEqual(self.q("SELECT * FROM kfm_demo_sites ORDER BY file_id,row_number"), original)
+
+    def test_target_in_both_databases_requires_both_indexes_to_be_current(self):
+        bulk = self.db_path.parent / "bulk.sqlite"
+        with sqlite3.connect(bulk) as db:
+            db.execute("CREATE TABLE kfm_demo_sites (file_id INTEGER, row_number INTEGER, geometry_geojson TEXT, PRIMARY KEY(file_id,row_number))")
+            db.execute("INSERT INTO kfm_demo_sites VALUES (1,1,?)", (POINT,))
+        self.assertEqual(self.spatial_cli("build", bulk=bulk, table="kfm_demo_sites")[0], 0)
+        with sqlite3.connect(bulk) as db:
+            db.execute("INSERT INTO kfm_demo_sites VALUES (2,1,?)", (POINT,))
+        code, report = self.spatial_cli("check", bulk=bulk, table="kfm_demo_sites")
+        self.assertEqual(code, 1)
+        self.assertEqual(report["observations"][0]["state"], "current")
+        self.assertEqual(report["bulk"][0]["state"], "stale")
+
+    def test_target_missing_from_all_selected_databases_fails(self):
+        bulk = self.db_path.parent / "bulk.sqlite"
+        sqlite3.connect(bulk).close()
+        for action in ("build", "check"):
+            code, report = self.spatial_cli(action, bulk=bulk, table="kfm_absent")
+            self.assertEqual(code, 1)
+            self.assertIn("SPATIAL_TABLE_UNKNOWN kfm_absent", json.dumps(report))
+
+    def test_checks_are_read_only_and_commands_cannot_recreate_a_missing_database(self):
+        self.assertEqual(self.spatial_cli("build")[0], 0)
+        before = self.db_path.read_bytes()
+        self.assertEqual(self.spatial_cli("check", table="kfm_demo_sites")[0], 0)
+        self.assertEqual(self.db_path.read_bytes(), before)
+        missing = self.db_path.parent / "missing.sqlite"
+        # Even if a database disappears after the CLI path preflight, build must not recreate it.
+        ctx = core.Context(root=self.root, db_path=missing)
+        for action in ("build", "check"):
+            with self.assertRaises(sqlite3.OperationalError):
+                spatial.command(ctx, action)
+            self.assertFalse(missing.exists())
+            self.assertEqual(self.spatial_cli(action, db=missing, bulk=self.db_path, table="kfm_demo_sites")[0], 1)
+        broken = self.db_path.parent / "broken.sqlite"
+        broken.write_bytes(b"not a sqlite database")
+        self.assertEqual(self.spatial_cli("check", bulk=broken, table="kfm_demo_sites")[0], 1)
+
     def test_geometry_tables_are_found_by_their_columns_only(self):
         db = self.connect()
         self.assertEqual(spatial.geometry_tables(db), {"kfm_demo_boxes": {"bbox": True, "geometry": True}, "kfm_demo_sites": {"bbox": False, "geometry": True}})

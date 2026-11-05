@@ -232,7 +232,7 @@ def check(db: sqlite3.Connection) -> list[dict]:
 def command(ctx: Context, action: str, table: str | None = None) -> tuple[int, list[dict]]:
     """The `spatial build|check` subcommand for one database. Returns (exit code, report)."""
     if action == "check":
-        db = sqlite3.connect(f"file:{ctx.db_path}?mode=ro", uri=True)
+        db = sqlite3.connect(ctx.db_path.resolve().as_uri() + "?mode=ro", uri=True)
         try:
             report = check(db)
         finally:
@@ -240,7 +240,8 @@ def command(ctx: Context, action: str, table: str | None = None) -> tuple[int, l
         if table is not None:
             report = [r for r in report if r["table"] == table]
         return (1 if any(r["state"] != "current" for r in report) or not report else 0), report
-    db = sqlite3.connect(ctx.db_path, timeout=120, isolation_level=None)
+    # Do not recreate a requested database if it disappears after CLI preflight.
+    db = sqlite3.connect(ctx.db_path.resolve().as_uri() + "?mode=rw", uri=True, timeout=120, isolation_level=None)
     try:
         db.execute("PRAGMA journal_mode=WAL")
         db.execute("PRAGMA busy_timeout=120000")

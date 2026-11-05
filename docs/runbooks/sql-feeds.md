@@ -290,8 +290,9 @@ Every feed table with a `geometry_geojson` column, or the four `min_lon`,
 sidecar `<table>_rtree(id, min_lon, max_lon, min_lat, max_lat)` whose `id` is
 `file_id << 32 | row_number` (`tools/local_data/sql_spatial.py`). The website's
 `near-observations` and `near-bulk` questions join it to the table for "what is
-in this map area" without scanning: a bounding box over the 2.26 million OSM
-elements that took 11.7 s by scan answers through the sidecar in 0.01 s.
+in this map area" without scanning: in development measurements on a database
+copy, a bounding box over 2.26 million OSM elements took 11.7 s by scan and
+0.01 s through the sidecar. This does not qualify an operational PC installation.
 
 - `kfm_spatial_index` records the `file_id` values each sidecar covers and the
   table's greatest `file_id`. `sql_feeds.py run FEED` refreshes the written
@@ -307,6 +308,11 @@ elements that took 11.7 s by scan answers through the sidecar in 0.01 s.
   when any is not current. The first build on a copy of the bulk database took
   45 s for the 2.26 million OSM elements (through their box columns), 888 thousand
   NBI bridges (through their GeoJSON) and the OSM places together.
+- Every supplied database path must exist, including an explicitly supplied
+  `--bulk-db`; a missing path fails before any build writes. With `--table T`,
+  only databases containing that geometry table are built or checked. If both
+  contain it, both must pass; if neither does, the command reports
+  `SPATIAL_TABLE_UNKNOWN`. Omitting optional `--bulk-db` selects only `--db`.
 - Rows with no geometry, unreadable or empty GeoJSON, a box outside the planet
   or inverted, or a `row_number` of 2^32 or more get no entry and are counted
   as `skipped`.
