@@ -76,7 +76,7 @@ export function archiveArea(center: readonly [number, number]): string {
   return [lon-.5,lat-.5,lon+.5,lat+.5].map(n=>n.toFixed(5)).join(',');
 }
 export function archiveQuery(layer: ArchiveLayer, area: string, month: string, variable: string): Record<string,string> {
-  if (layer.kind === 'recovered') return {collection:layer.reference!,limit:'20'};
+  if (layer.kind === 'recovered') return {collection:layer.reference!,bbox:area,limit:'50'};
   if (layer.kind === 'tiger') return {layer:layer.reference!,bbox:area,geometry:'1',limit:'20'};
   if (layer.kind === 'stations') return {bbox:area,limit:'500'};
   if (layer.kind === 'wind') return {limit:'100'};

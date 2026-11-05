@@ -22,7 +22,6 @@ const stormEvents={
 };
 
 export const DATASETS=new Map([stormEvents,ghcnStations,ghcnDaily,ghcndexIndices,ghcndex,asosFiveMinute,windStations,windObservations,windDaily,
- prismCounty,tigerFeatures,nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow,recoveredObservations,recoveredBulk,archiveSearch].map(d=>[d.id,d]));
 // Pending owner publication approval; move into DATASETS only after the owner approves.
 export const PENDING_DATASETS=new Map([storyBundles].map(d=>[d.id,d]));
 export const DATABASES=Object.freeze(['observations','tiger','nwm','bulk']);
