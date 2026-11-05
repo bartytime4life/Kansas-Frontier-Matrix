@@ -41,6 +41,12 @@ responsibilities under Directory Rules v2 / accepted ADR-0029. No data lifecycle
 source admission, rights, release policy or stored dataset changes are involved.
 Rollback is a revert of this display-session change.
 
+Opening a category tool hands keyboard focus to its controls after they mount.
+That delayed handoff yields if the visitor has already focused another control,
+including the daylight coordinate form. A newer tool request supersedes an older
+one, and unmounting the page revokes pending focus work. Browser acceptance covers
+ordinary and deliberately delayed handoffs at narrow and desktop widths.
+
 ## Fauna and crime, justice & public safety
 
 The shared taxonomy has 22 categories, including Flora (see below). **Fauna & wildlife** belongs to

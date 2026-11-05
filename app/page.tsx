@@ -1793,6 +1793,8 @@ export default function Home() {
   // The provider hillshade switched off on entering the photograph, restored on return.
   const photorealHidHillshadeRef = useRef(false);
   const [categoryDockHidden, setCategoryDockHidden] = useState(true);
+  const categoryToolFocusRequestRef = useRef(0);
+  useEffect(() => () => { categoryToolFocusRequestRef.current += 1; }, []);
   const aviationPickingRef = useRef(false);
   const setAviationPicking = useCallback((active: boolean) => {
     aviationPickingRef.current = active;
@@ -10966,6 +10968,8 @@ export default function Home() {
   // water-animation restrictions still apply.
   const revealCategoryTool = (topic: TopicId, tool: CategoryTool) => {
     if (!categoryMap(topic)?.tools?.includes(tool)) return;
+    const focusOrigin = document.activeElement;
+    const focusRequest = ++categoryToolFocusRequestRef.current;
     setCategoryToolsOnCurrentMap(true);
     setPrimaryWorkspace("map");
     setGuideOpen(false);
@@ -10977,6 +10981,9 @@ export default function Home() {
     setRightOpen(false);
     dismissMapUtilityWithoutFocus();
     window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+      // A newer tool request or a visitor already editing a control owns focus.
+      if (focusRequest !== categoryToolFocusRequestRef.current
+        || (document.activeElement !== focusOrigin && document.activeElement !== document.body)) return;
       const dock = document.querySelector<HTMLElement>(".category-map-dock");
       const target = dock?.querySelector<HTMLElement>(`[data-category-tool="${tool}"]:not(:disabled)`) ?? dock;
       target?.scrollIntoView({ block: "nearest" });
