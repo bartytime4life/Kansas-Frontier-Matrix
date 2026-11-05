@@ -22,10 +22,6 @@ const stormEvents={
  run(db,q){const sql=stormEventsSql(q);return {total:db.prepare(sql.count.sql).get(...sql.count.params).n,rows:db.prepare(sql.rows.sql).all(...sql.rows.params).map(stormEvent)};},
 };
 
-
-export const DATASETS=new Map([stormEvents,ghcnStations,ghcnDaily,ghcndexIndices,ghcndex,asosFiveMinute,windStations,windObservations,windDaily,
- prismCounty,tigerFeatures,nwmReaches,nwmStreamflow,nwsAlerts,usgsEarthquakes,usgsStreamflowSites,usgsStreamflow,recoveredObservations,recoveredBulk,archiveSearch,nearObservations,nearBulk].map(d=>[d.id,d]));
-
 // Pending owner publication approval; move into DATASETS only after the owner approves.
 export const PENDING_DATASETS=new Map([storyBundles].map(d=>[d.id,d]));
 export const DATABASES=Object.freeze(['observations','tiger','nwm','bulk']);

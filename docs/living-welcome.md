@@ -41,6 +41,16 @@ map; the owner asked for the map to be seen.
   `app/recovered-topics.mjs` now holds the topic mapping, titles and URLs that
   `recovered-collections.ts` re-exports, so the welcome and its tests share them.
 
+Integration qualification preserves this atlas layout alongside the visible
+**Options → Map notes** source disclosure. Preview and Add are adjacent 44px
+actions within the compact rail row; they do not share a 54px row vertically.
+Record-search controls retain 44px height. Expanded provider credits reserve
+their 48px strip beneath both the fixed chosen-map panel and map caption.
+The atlas heading row does not trap the toolbar in a lower stacking context;
+its Options popup remains above the chosen-map panel at 1280 × 800 as well.
+Browser acceptance measures these painted controls and preserves all 22
+categories, record links, direct map entry, compact carousel and editable tools.
+
 Rollback: remove the `[data-layout=atlas]` block at the end of `welcome.css`,
 the `desktop` state, record search and `.welcome-focus-record` block in
 `welcome.jsx`, and `record-links.mjs`; nothing else depends on them.
