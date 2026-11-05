@@ -110,6 +110,9 @@ class RevisionTests(FeedCase):
         with patch.object(core, 'CAP', used + core.RESERVE):
             with self.assertRaisesRegex(core.FeedError, 'CEILING_85GB'):
                 core.guard(self.ctx)
+        # The owner's standing instruction: no ceiling unless CAP is set again.
+        self.assertIsNone(core.CAP)
+        core.guard(self.ctx)
 
     def test_newspaper_fulltext_index_tracks_replacements_and_deletions(self):
         db = core.open_db(self.ctx)

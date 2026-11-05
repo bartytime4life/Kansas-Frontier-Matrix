@@ -40,9 +40,9 @@ from typing import Callable
 import urllib.error
 import urllib.request
 
-CAP = 85_000_000_000
+CAP = None   # the owner, 2026-11-02: "ignore all data caps and floors". Set a byte count to bring the ceiling back.
 RESERVE = 5_000_000_000
-FREE_FLOOR = 100_000_000_000
+FREE_FLOOR = 0
 USER_AGENT = "KFM-pipeline-sql-feeds/1 (Kansas Frontier Matrix local research database)"
 FEEDS = {
     "captures": "tools.local_data.sql_feed_sources:captures",
@@ -103,9 +103,16 @@ FEEDS = {
     "newspaper-text": "tools.local_data.sql_feed_bulk:newspaper_text",
     "newspaper-text-rebuild": "tools.local_data.sql_feed_bulk:newspaper_text_rebuild",
     "osm-kansas": "tools.local_data.sql_feed_bulk:osm_kansas",
+    "archive-texts": "tools.local_data.sql_feed_texts:archive_texts",
+    "newspaper-directory": "tools.local_data.sql_feed_texts:newspaper_directory",
+    "towers": "tools.local_data.sql_feed_texts:towers",
+    "census-acs-full": "tools.local_data.sql_feed_census:census_acs_full",
+    "census-decennial-full": "tools.local_data.sql_feed_census:census_decennial_full",
+    "gbif": "tools.local_data.sql_feed_biodiversity:gbif",
+    "loc-kansas": "tools.local_data.sql_feed_heritage:loc_kansas",
 }
 # Large feeds load a separately snapshotted database (--bulk-db).
-BULK_FEEDS: frozenset[str] = frozenset({"bridges", "epa-facilities", "newspaper-text", "newspaper-text-rebuild", "osm-kansas"})
+BULK_FEEDS: frozenset[str] = frozenset({"archive-texts", "bridges", "census-acs-full", "census-decennial-full", "epa-facilities", "gbif", "newspaper-text", "newspaper-text-rebuild", "osm-kansas"})
 BULK_SCHEMA = """
 CREATE TABLE IF NOT EXISTS kfm_sql_sources (
  file_id INTEGER PRIMARY KEY, source_id TEXT NOT NULL, source_path TEXT NOT NULL,
@@ -297,11 +304,12 @@ def gz(data: bytes) -> bytes:
 
 def guard(ctx: Context) -> None:
     out = ctx.db_path.parent
-    files = {p.resolve() for d in [out, *ctx.shared_dirs] for p in d.glob("*") if p.is_file()}
-    files.update(p.resolve() for p in ctx.catalogs if p.is_file())
-    used = sum(p.stat().st_size for p in files)
-    if used >= CAP - RESERVE:
-        raise FeedError("CEILING_85GB_HEADROOM_STOP")
+    if CAP is not None:
+        files = {p.resolve() for d in [out, *ctx.shared_dirs] for p in d.glob("*") if p.is_file()}
+        files.update(p.resolve() for p in ctx.catalogs if p.is_file())
+        used = sum(p.stat().st_size for p in files)
+        if used >= CAP - RESERVE:
+            raise FeedError("CEILING_85GB_HEADROOM_STOP")
     stat = os.statvfs(out)
     if stat.f_bavail * stat.f_frsize < ctx.floor:
         raise FeedError("FREE_SPACE_FLOOR_REACHED")

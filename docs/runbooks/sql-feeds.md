@@ -34,10 +34,9 @@ The public local-data API serves these tables. The feeds only add data.
 - **The lock covers writes only.** Downloads run outside `run/pipeline.lock`;
   only database writes take it. Captures and backups are held for seconds, not
   for a download.
-- **The ceilings still apply.** These are the original SQL build's 85 GB
-  aggregate ceiling, less a 5 GB reserve, and its 100 GB free-space floor.
-  Reaching one stops the feed with `CEILING_85GB_HEADROOM_STOP` or
-  `FREE_SPACE_FLOOR_REACHED`.
+- **No size ceiling and no free-space floor.** The owner asked on 2026-11-02 to
+  ignore all data caps and floors. A full disk surfaces as an ordinary write
+  failure, so watch the volume's free space.
 
 ## Feeds
 
@@ -161,9 +160,7 @@ state determines whether any download is due. Provider throttling or a schema
 change stops the affected run and retains the previous completed version.
 
 Bulk feeds require **both** `--db observations.sqlite` and
-`--bulk-db bulk-sql/kfm-bulk.sqlite`, pointing to different files. Both databases
-and the supplied catalogs count against the same 85 GB ceiling, with overlapping
-paths counted once. Both databases need their own verified SQLite snapshots.
+`--bulk-db bulk-sql/kfm-bulk.sqlite`, pointing to different files. Both databases need their own verified SQLite snapshots.
 The full-copy snapshot implementation still reads and verifies the entire file;
 this rebuild does not implement the previously proposed changed-chunk backup.
 
@@ -183,6 +180,45 @@ PBF remains independently replayable. Wikidata scalar coordinates use the first
 provider coordinate; the full geometry preserves every point and county matching
 can use another point. Date precision remains explicit: a year is not expanded
 to an invented January 1 observation.
+
+## Feeds added after the recovery
+
+These three feeds are new designs. They live in `sql_feed_texts.py`, whose
+header records the provider details.
+
+| Feed | Source | Tables | Each run and revisions |
+|---|---|---|---|
+| `archive-texts` | Internet Archive Scrape, metadata and `_djvu.txt` (bulk database) | `kfm_ia_items`, `kfm_ia_texts`, `kfm_ia_texts_fts`, `kfm_ia_text_status` | Listing every 28 days; about 300 items a run, at least 1 s between requests; re-downloaded when the MD5 changes; items that stop qualifying are retired; 429/503 stops with `IA_RATE_LIMITED` |
+| `newspaper-directory` | LOC Directory of U.S. Newspapers, Kansas facet | `kfm_loc_newspaper_directory` | Every 28 days; 70 pages at least 6 s apart; resumes from a spool; a changed directory replaces the old one |
+| `towers` | FCC ASR weekly `r_tower.zip`, from FCC's web servers, which answer this pipeline 403 | `kfm_asr_registrations`, `_locations`, `_entities`, `_history`, `_remarks`, `_special_conditions` | Every 7 days; Kansas cut per record type; `FCC_BLOCKED` in state if no route serves it |
+
+| `census-acs-full` | ACS 5-year table-based summary files on `www2.census.gov`, 2021-2024, every table (bulk database) | `kfm_census_acs_values`, `kfm_census_acs_geographies`, `kfm_census_acs_variables` | Each table's national file is cut to Kansas and loaded in transactions of at most 1M rows or 60 seconds, with the lock free between them. A run lasts about 45 minutes and resumes where the last stopped; about 40-70 runs. A file is loaded again when its listed time changes. Firewall-rejected tables are listed under `rejected` and retried |
+| `census-decennial-full` | 2020 Census: P.L. 94-171 and DHC Kansas files, every table and iteration with block values (bulk database) | `kfm_census_decennial_values`, `kfm_census_decennial_geographies`, `kfm_census_decennial_variables` | Same short transactions and resume. About 20-60 runs. Continues the bulk database's `census-decennial` state; afterwards it rechecks yearly, and a changed zip reloads what changed |
+
+| `gbif` | GBIF occurrence search and dataset registry (bulk database) | `kfm_gbif_occurrences`, `kfm_gbif_datasets`, `kfm_gbif_segments`, `kfm_gbif_dataset_queue` | Up to 400 requests and 30 minutes a run, 1 s apart. Plans segments of at most 10,000 records, then loads the smallest first, one `load_version` key each. Stops with `GBIF_RATE_LIMITED` on 429/403 and `GBIF_UNAVAILABLE` on 5xx, HTML or connection failure, keeping finished segments. After the backfill, segments with recent years are checked every 28 days and older ones every 365, re-fetched only if `lastInterpreted` shows changes; dataset records every 182 days |
+| `loc-kansas` | loc.gov JSON API: photos, maps, HABS/HAER/HALS, Chronicling America titles and issues | `kfm_loc_items`, `kfm_loc_newspaper_titles` | Up to 50 pages a run, 6 s apart. Buckets every 28 days, title list every 7, a title's issues when its listing changes and every 182 days. Stops with `LOC_RATE_LIMITED` on 429, 403 or HTML; a segment that keeps failing waits for the next run (`LOC_UNAVAILABLE`). No images or OCR text |
+
+`towers` has no timer and has loaded nothing. FCC's web servers refuse this
+pipeline. An anonymous FTP server holds the file, but no FCC page we could read
+names it as a route, so the feed does not use it. Add a timer if FCC stops
+refusing the web routes or documents another one.
+
+`archive-texts` runs daily at 23:45, with a second slot at 12:10 during the
+backfill of about 30 to 40 runs. `newspaper-directory` runs on Thursdays at 17:15.
+`gbif` runs at 00:10 and 12:30 and `loc-kansas` at 17:20. GBIF advises its
+download API for long scripted pulls, but that needs a registered account, which
+this feed does not use; a registered download could replace the search backfill.
+About 364,000 GBIF records are CC BY-NC. Each row keeps its license, so check it
+before publishing any of them.
+
+During their backfills `census-decennial-full` runs at 05:15, 09:15, 13:15, 17:15
+and 21:15, and `census-acs-full` at 07:15, 11:15, 15:15, 19:15 and 23:15. Drop each
+to one daily run once its backfill finishes.
+
+The two Census backfills take the bulk database to about 112 GB, so its full
+snapshot would take 4.5 to 6.5 hours. On this PC it runs weekly, on Sundays at
+03:15, through a `kfm-bulk-snapshot.timer.d` override. The raw-file backup stays
+nightly.
 
 ## Install and run
 

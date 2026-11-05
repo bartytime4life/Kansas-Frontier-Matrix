@@ -21,7 +21,8 @@ unparseable non-Kansas lines of the national file) are reconstructed from the re
 
 ``airports``: FAA NASR 28-day subscription, the APT CSV extra (airport master records, 5010):
 https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/. The current edition date is read
-from FAA's APRA service (``external-api.faa.gov/apra/nasr/chart?edition=current``); the zip is
+from FAA's APRA service (``external-api.faa.gov/apra/nasr/chart?edition=current``), or from the 28-day cycle calendar
+when that service is gone (it answered 404 from 2026-11-03; ``NASR_CYCLE_ANCHOR``); the zip is
 ``nfdc.faa.gov/webContent/28DaySub/extra/<DD>_<Mon>_<YYYY>_APT_CSV.zip`` (8.5 MB). It is downloaded only when the
 edition in the feed state changes; an edition whose zip is not posted yet (404) is retried next run. Seven members
 (APT_BASE, APT_RWY, APT_RWY_END, APT_ATT, APT_RMK, APT_CON, APT_ARS) are cut on ``STATE_CODE`` = KS into seven
@@ -70,7 +71,7 @@ on 2026-11-03). License: U.S. Government work, unrestricted public use.
 from __future__ import annotations
 
 import csv
-from datetime import datetime
+from datetime import date, datetime, timedelta
 import gzip
 import io
 import json
@@ -243,16 +244,24 @@ NASR_DDL = "".join(ddl(NASR_TABLES[stem], NASR_COLUMNS[stem] + (["geometry_geojs
                        else [("arpt_id",), ("county_name",), ("site_no",)] if stem == "APT_BASE" else [("arpt_id",), ("site_no",)])
                    for stem in NASR_FILES)
 EDITION_DATE = re.compile(r'editionDate["\s:=]+"?(\d{2})/(\d{2})/(\d{4})')
+NASR_CYCLE_ANCHOR = date(2026, 10, 29)   # one effective date of the 28-day cycle (every edition is a whole number of cycles from it)
+NASR_CYCLE_DAYS = 28
 
 
 def nasr_edition(ctx) -> str:
-    """The current NASR edition date (YYYY-MM-DD) from FAA's APRA service (JSON or XML)."""
-    body = fetch(ctx, APRA, "NASR", limit=1_000_000).body.decode("utf-8", "replace")
-    found = EDITION_DATE.search(body)
-    if not found:
-        raise FeedError("NASR_EDITION_UNREADABLE")
-    month, day, year = found.groups()
-    return f"{year}-{month}-{day}"
+    """The current NASR edition date (YYYY-MM-DD): from FAA's APRA service (JSON or XML) when it answers, else from
+    the 28-day cycle calendar. APRA's ``nasr/chart`` query started answering 404 on 2026-11-03 while its sibling
+    ``dtpp/chart`` still worked and the zips were still posted, so a missing service is not a failure: the edition
+    in effect today is the latest cycle date not after today. An answer that cannot be read is still an error."""
+    fetched = fetch(ctx, APRA, "NASR", limit=1_000_000, missing_ok=True)
+    if fetched is not None:
+        found = EDITION_DATE.search(fetched.body.decode("utf-8", "replace"))
+        if not found:
+            raise FeedError("NASR_EDITION_UNREADABLE")
+        month, day, year = found.groups()
+        return f"{year}-{month}-{day}"
+    cycles = (ctx.now().date() - NASR_CYCLE_ANCHOR).days // NASR_CYCLE_DAYS
+    return str(NASR_CYCLE_ANCHOR + timedelta(days=NASR_CYCLE_DAYS * cycles))
 
 
 def _nasr_values(stem: str):

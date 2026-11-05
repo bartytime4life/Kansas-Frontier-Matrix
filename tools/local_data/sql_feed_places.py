@@ -165,9 +165,14 @@ def column(name: str) -> str:
 def qddl(table: str, columns, indexes) -> str:
     """``CREATE TABLE`` with quoted column names: columns is [(name, type or None)]."""
     body = ", ".join(f'"{c}" {t}' if t else f'"{c}"' for c, t in columns)
+
+    def index_ddl(index) -> str:
+        quoted = ", ".join(f'"{c}"' for c in index)
+        return f"CREATE INDEX IF NOT EXISTS {table}_{'_'.join(index)} ON {table}({quoted});\n"
+
     return (f"CREATE TABLE IF NOT EXISTS {table} (file_id INTEGER NOT NULL, row_number INTEGER NOT NULL, {body}, "
             f"PRIMARY KEY(file_id, row_number));\n"
-            + "".join(f"CREATE INDEX IF NOT EXISTS {table}_{'_'.join(i)} ON {table}({', '.join(f'\"{c}\"' for c in i)});\n" for i in indexes))
+            + "".join(index_ddl(i) for i in indexes))
 
 
 def _fetch(ctx, url: str, code: str, **kw):
