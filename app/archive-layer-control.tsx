@@ -38,10 +38,10 @@ function ArchiveLayerRow({layer,mapRef,styleReady,selected,shown,onChange,onInsp
     try {
       const map=mapRef.current;if(!map)throw new Error('Wait for the map before loading a layer.');
       const center=map.getCenter();
-      const local=['tiger','stations','reaches'].includes(layer.kind);
+      const local=['tiger','stations','reaches','recovered'].includes(layer.kind);
       const applied=restored??{month,variable,from,to,area:''};
       const area=local?(applied.area||archiveArea([center.lng,center.lat])):'';
-      const query=previous?{...previous.query,...(layer.kind==='recovered'?{after:previous.answer.nextCursor!}:{offset:String(previous.answer.rows.length)})}:archiveQuery(layer,area,applied.month,applied.variable);
+      const query=previous?{...previous.query,offset:String(previous.answer.rows.length)}:archiveQuery(layer,area,applied.month,applied.variable);
       if(layer.kind==='storms'&&!previous) {query.from=applied.from;query.to=applied.to;}
       const answer=await fetchArchive(layer.dataset,query,controller.signal);
       const shapes=layer.kind==='prism'&&answer.count?await countyShapes(controller.signal):new Map<string,Geometry>();
