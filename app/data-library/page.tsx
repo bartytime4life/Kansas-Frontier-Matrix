@@ -3,6 +3,7 @@ import Link from 'next/link';
 import {useEffect,useRef,useState} from 'react';
 import {RECOVERED_COLLECTIONS,recoveredCollection,recoveredMapUrl} from '../recovered-collections';
 import {fetchArchive,rowLabel,textValue,type ArchiveAnswer} from '../archive-layer-data';
+import ArchiveSearch from './search';
 import styles from './library.module.css';
 
 function RecordField({value,id,database,record,field}:{value:unknown;id:string;database:string;record:string;field:string}){
@@ -48,7 +49,8 @@ export default function DataLibrary(){
  function download(){if(!answer)return;const url=URL.createObjectURL(new Blob([JSON.stringify(answer,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=`${id}-page-${page}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  return <main className={styles.library}>
   <header><Link href="/?panel=layers">← Back to the map</Link><span>KANSAS FRONTIER MATRIX</span><h1>Explore the whole archive</h1><p>Places, measurements, history and the records behind them. Browse original fields, keep source dates in view, and combine collections on the map.</p></header>
-  <div className={styles.summary}><strong>{RECOVERED_COLLECTIONS.length} record collections</strong><span>{RECOVERED_COLLECTIONS.filter(c=>c.geometry).length} map options · availability shown on read</span><span>Public source data · archived editions</span></div>
+  <div className={styles.summary}><strong>{RECOVERED_COLLECTIONS.length} record collections</strong><span>{RECOVERED_COLLECTIONS.filter(c=>c.geometry).length} map options · availability shown on read</span><span>Full-text search of newspaper pages and archive texts</span><span>Public source data · archived editions</span></div>
+  <ArchiveSearch/>
   <div className={styles.layout}>
    <section className={styles.catalog} aria-label="Find a collection">
     <label>Find a collection<input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Wells, newspapers, Census, schools…"/></label>

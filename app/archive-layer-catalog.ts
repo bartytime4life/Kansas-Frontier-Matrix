@@ -45,6 +45,7 @@ export const normalizeArchiveSelection = (values: readonly string[]) => [...new 
 export const ARCHIVE_DATASET_USES = {
   'recovered-observations':'all allowlisted observation collections: records, original geometry pages and source provenance',
   'recovered-bulk':'all allowlisted bulk collections: records, original geometry pages and source provenance',
+  'archive-search':'map hold: ranked newspaper and archive-text hits in the data library; a title\'s place of publication is not an event location, so hits are not drawn as map points',
   'tiger-features':'34 reference layers and county joins', 'ghcn-stations':'station points', 'ghcn-daily':'station readings',
   'ghcndex-indices':'climate-index definitions', ghcndex:'station climate indices', 'wind-stations':'airport station points',
   'wind-observations':'station wind readings', 'wind-daily':'daily station summaries', 'asos-5min':'five named airports, joined by exact station identifier',

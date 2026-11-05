@@ -103,16 +103,21 @@ async function readBody(request){
  return Buffer.concat(chunks).toString('utf8');
 }
 
-export function startGateway({host='127.0.0.1',port=8788,...options}){
+export function startGateway({host='127.0.0.1',port=8788,log=line=>console.log(JSON.stringify(line)),...options}){
  if(!LOOPBACK.has(host))throw fail('GATEWAY_HOST_NOT_LOOPBACK');
  const handle=createGateway(options);
  const server=createServer(async(request,response)=>{
   let body;try{body=await readBody(request);}catch{response.writeHead(413).end();return;}
   const url=new URL(request.url,'http://localhost');
   if(url.search){response.writeHead(404).end();return;}
+  const started=Date.now();
   const answer=handle({method:request.method,path:url.pathname,headers:request.headers,body});
   response.writeHead(answer.status,{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff',[RESPONSE_SIGNATURE_HEADER]:answer.signature});
   response.end(answer.body);
+  // One line per question, so use and latency per dataset can be measured from the journal.
+  // The route names the dataset; the question's parameters and the answer are never logged.
+  const dataset=url.pathname.startsWith(LOCAL_DATA_DATA_PREFIX)?url.pathname.slice(LOCAL_DATA_DATA_PREFIX.length):null;
+  log({at:new Date(started).toISOString(),event:'answered',path:LOCAL_DATA_ROUTES.has(url.pathname)?url.pathname:'unknown',dataset:DATASETS.has(dataset)?dataset:null,status:answer.status,ms:Date.now()-started,bytes:answer.body.length});
  });
  server.requestTimeout=LOCAL_DATA_LIMITS.gatewayMs;
  return new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,()=>resolve(server));});
