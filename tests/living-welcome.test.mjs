@@ -907,3 +907,41 @@ test('mobile carousel previews the settled center, supports arrows, and does not
   gridCard(tree,'aviation').props.onClick();assert.deepEqual(h.calls,[['map','aviation'],['close',false]]);
  }finally{h.harness.dispose();}
 });
+
+// Wide, tall screens: the live map is the page, the topics a rail, one focus panel for the chosen map.
+const wideWindow={matchMedia:query=>({matches:query.includes('min-width:1101px'),addEventListener(){},removeEventListener(){}})};
+const focusPanel=tree=>findNode(tree,node=>node.props?.className==='welcome-focus');
+test('the desktop atlas shows the chosen map from the start and describes it in one panel that follows hover and focus',async()=>{
+ const h=await welcome(false,{window:wideWindow});let tree=h.render();
+ // The layout follows a media query read in an effect, so it lands on the second render.
+ tree=h.render();
+ assert.equal(rootOf(tree).props['data-layout'],'atlas');
+ const stage=findNode(tree,node=>node.type==='domain-stage');
+ assert.equal(stage.props.topic,'weather','the default topic\'s map shows before any choice');
+ assert.equal(stage.props.paused,false,'the map keeps its drift on desktop while motion is on');
+ let panel=focusPanel(tree);
+ assert.equal(panel.props['data-topic'],'weather');
+ assert.equal(findNode(panel,node=>node.type==='h2').props.children,TOPIC_STRUCTURE.find(t=>t.id==='weather').title);
+ assert.ok(findNode(panel,node=>node.props?.className==='welcome-focus-facets'),'facets travel to the panel');
+ assert.equal(findNode(panel,node=>node.props?.className==='welcome-focus-lede').props.children,categoryModule.CATEGORY_MAPS.weather.lede);
+ findNode(tree,node=>node.type==='button'&&node.props.className?.includes('topic-water ')).props.onPointerEnter({pointerType:'mouse',currentTarget:{}});tree=h.render();
+ panel=focusPanel(tree);
+ assert.equal(panel.props['data-topic'],'water');
+ assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,'water');
+ assert.equal(addCard(tree,'water').props['aria-pressed'],false,'hover selects nothing');
+ assert.deepEqual(h.calls,[],'describing a map changes nothing in the Explorer');
+ // The panel's actions are the card's: add to the combined map, then open it.
+ findNode(panel,node=>node.type==='button'&&node.props['aria-pressed']===false).props.onClick();tree=h.render();panel=focusPanel(tree);
+ assert.equal(addCard(tree,'water').props['aria-pressed'],true);
+ assert.equal(findNode(panel,node=>node.type==='button'&&node.props['aria-pressed']===true).props.children,'✓ In my map');
+ findNode(panel,node=>node.props?.className==='welcome-primary').props.onClick();
+ assert.equal(h.calls.length,2);assert.ok(JSON.stringify(h.calls[0]).includes('water'));assert.deepEqual(h.calls[1],['close',false]);
+ h.harness.dispose();
+});
+test('narrow or short screens keep the card layout and the static default map',async()=>{
+ const h=await welcome();let tree=h.render();tree=h.render();
+ assert.equal(rootOf(tree).props['data-layout'],undefined);
+ assert.equal(focusPanel(tree),undefined);
+ assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,null);
+ h.harness.dispose();
+});

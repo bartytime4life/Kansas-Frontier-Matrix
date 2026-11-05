@@ -40,6 +40,8 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const glowFrame=useRef(0),rail=useRef(null),returnCard=useRef(null),returnScroll=useRef(0),returnCardScroll=useRef(0),returnCardLeft=useRef(0);
   const carouselList=useRef(null),carouselTimer=useRef(null),carouselPointer=useRef(null),carouselDragged=useRef(false);
   const [carousel,setCarousel]=useState(false),[centered,setCentered]=useState(()=>normalizeCategoryTopics(initialTopics)[0]||TOPICS[0].id);
+  // Wide, tall screens get the atlas layout: the live map is the page, topics are a rail, one panel describes the chosen map.
+  const [desktop,setDesktop]=useState(false);
   const departed=useRef(false),modalRestore=useRef(null);
   const [selectedTopics,setSelectedTopics]=useState(()=>normalizeCategoryTopics(initialTopics));
   const [topicQuery,setTopicQuery]=useState(''),[topicGroup,setTopicGroup]=useState('All');
@@ -54,6 +56,7 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const [previewState,setPreviewState]=useState(null),[layersVisible,setLayersVisible]=useState(true),[aviationMode,setAviationMode]=useState('3d');
   const motion=onMotionChange?motionEnabled:localMotion;
   const paused=!motion||reduced||hidden,engaged=pinned||(carousel&&!fullscreen?centered:active),control=engaged||last;
+  const atlas=desktop&&!carousel&&!fullscreen,atlasTopic=TOPICS.find(t=>t.id===control),atlasIndex=TOPICS.findIndex(t=>t.id===control);
   // One owned frame; held/reduced-motion views do not keep repainting card
   // highlights, and a dismissed welcome cannot write to a detached card.
   function glow(event){
@@ -146,7 +149,9 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   useEffect(()=>{
     const media=window.matchMedia('(max-width:700px), (max-height:500px) and (max-width:1100px)');
     const update=()=>setCarousel(media.matches);update();media.addEventListener('change',update);
-    return()=>{media.removeEventListener('change',update);clearTimeout(carouselTimer.current);};
+    const wide=window.matchMedia('(min-width:1101px) and (min-height:761px)');
+    const updateWide=()=>setDesktop(wide.matches);updateWide();wide.addEventListener('change',updateWide);
+    return()=>{media.removeEventListener('change',update);wide.removeEventListener('change',updateWide);clearTimeout(carouselTimer.current);};
   },[]);
   useLayoutEffect(()=>{
     if(!carousel||fullscreen)return;
@@ -212,10 +217,10 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   }
   function openSelection(){if(selection)run(()=>onMaps?onMaps(selection.topics):(onMap||onTopic)(selection.topics[0]));}
   const selectedIndex=TOPICS.findIndex(t=>t.id===control);
-  const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-label={fullscreen?`${TOPICS[selectedIndex]?.title||'Kansas'} map preview`:undefined} aria-labelledby={fullscreen?undefined:'living-welcome-title'} data-renderer="capability" data-builder="true" data-carousel={carousel} data-centered-topic={carousel?centered:undefined} data-selected-count={selectedTopics.length} data-active={engaged||null} data-fullscreen={fullscreen} data-cinematic={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
+  const content = <><section className="explorer-guide living-welcome" ref={root} role="dialog" aria-modal="false" aria-label={fullscreen?`${TOPICS[selectedIndex]?.title||'Kansas'} map preview`:undefined} aria-labelledby={fullscreen?undefined:'living-welcome-title'} data-renderer="capability" data-builder="true" data-carousel={carousel} data-layout={atlas?"atlas":undefined} data-centered-topic={carousel?centered:undefined} data-selected-count={selectedTopics.length} data-active={engaged||null} data-fullscreen={fullscreen} data-cinematic={fullscreen} data-motion={paused?'paused':'playing'} data-immersive={Boolean(engaged&&!modal)}>
     <div className="welcome-map-stage">
       <div className="welcome-wash" aria-hidden="true"/>
-      <div className="welcome-capability-stage"><DomainStage topic={carousel||touched?control:null} expanded={fullscreen||carousel} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||storyOpen||(!engaged&&!fullscreen)} reduced={reduced} onPreviewState={setPreviewState}/></div>
+      <div className="welcome-capability-stage"><DomainStage topic={carousel||touched||atlas?control:null} expanded={fullscreen||carousel} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||storyOpen||(!engaged&&!fullscreen&&!atlas)} reduced={reduced} onPreviewState={setPreviewState}/></div>
       <div className="welcome-heading-row">
         <div className="welcome-toolbar" role="group" aria-label="Welcome options">
           <button type="button" className="welcome-primary" onClick={()=>onClose(remember)}>Explore freely <span aria-hidden="true">→</span></button>
@@ -245,6 +250,20 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
         {!fullscreen&&<Suspense fallback={null}><StorySection paused={paused} reduced={reduced} modal={modal} compact={carousel} onOpenChange={setStoryOpen}/></Suspense>}
         {!filteredTopics.length&&<div className="topic-empty" role="status"><strong>No matching topics</strong><p>Try a broader term, or see every topic.</p><button type="button" onClick={()=>{setTopicQuery('');setTopicGroup('All');}}>Show all topics</button></div>}
       </div></div>
+      {atlas&&atlasTopic&&<aside className="welcome-focus" aria-label="Chosen map" data-topic={control} key={control}>
+        <span className="welcome-kicker">{atlasTopic.group} · {String(atlasIndex+1).padStart(2,'0')} / {TOPICS.length}</span>
+        <h2>{atlasTopic.title}</h2>
+        {atlasTopic.look&&<p className="welcome-focus-map" style={swatch(atlasTopic.look)}><i aria-hidden="true"/><strong>{atlasTopic.look.name}</strong><span>{categorySceneLabel(atlasTopic.look.scene)}</span></p>}
+        <p className="welcome-focus-lede">{atlasTopic.look?.lede||atlasTopic.description}</p>
+        <ul className="welcome-focus-facets" aria-label="What this map covers">{atlasTopic.facets.map(facet=><li key={facet}>{facet}</li>)}</ul>
+        {glimpse&&<p className="welcome-focus-try"><strong>{glimpse.title}.</strong> {glimpse.try}</p>}
+        <div className="welcome-focus-actions">
+          <button type="button" className="welcome-primary" onClick={()=>run(()=>onMaps?onMaps(normalizeCategoryTopics([control,...selectedTopics])):(onMap||onTopic)(control))}>Open this map <span aria-hidden="true">→</span></button>
+          <button type="button" onClick={()=>showStage(control)}>Full-screen preview <span aria-hidden="true">↗</span></button>
+          <button type="button" aria-pressed={selectedTopics.includes(control)} onClick={()=>toggleTopic(control)}>{selectedTopics.includes(control)?'✓ In my map':'+ Add to my map'}</button>
+        </div>
+        <small>{atlasTopic.note}</small>
+      </aside>}
       {fullscreen&&touched&&<aside className="welcome-layer-demo" aria-label="Category demonstration">
         <span className="welcome-kicker">{TOPICS[selectedIndex]?.title}</span>
         <h2>{glimpse?.title}</h2>

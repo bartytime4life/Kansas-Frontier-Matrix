@@ -892,3 +892,89 @@
 }
 
 .archive-map-notice { grid-column:1/-1; display:block; padding:4px 8px; color:#e8d6a8; font-size:11px; line-height:1.4; }
+
+/* Desktop atlas (wide and tall screens, not the full-window preview): the live map is the page.
+   Topics become a rail down the left that scrolls with the page; the chosen map is described once,
+   in a panel over the map, instead of on twenty-two identical cards. The DOM is the same as the
+   builder layout above; only its arrangement changes, so every card, action and test hook remains. */
+.living-welcome[data-layout=atlas]{--atlas-rail:min(400px,30vw);--atlas-gutter:32px}
+.atlas-studio .explorer-guide.living-welcome[data-layout=atlas]{background:#061a24}
+.living-welcome[data-layout=atlas] .welcome-map-stage{padding:22px var(--atlas-gutter) 40px}
+.living-welcome[data-layout=atlas] .welcome-wash{background:linear-gradient(90deg,#061e2bf4 0,#061e2bea calc(var(--atlas-rail) + var(--atlas-gutter)),#061e2b66 calc(var(--atlas-rail) + var(--atlas-gutter) + 160px),#061e2b14 60%,#061e2b00),linear-gradient(0deg,#061e2b8c,transparent 30%)}
+.living-welcome[data-layout=atlas] .domain-stage-map canvas{filter:saturate(1.08) contrast(1.04)}
+/* Header: the hero sits over the rail; the toolbar floats over the map. */
+.living-welcome[data-layout=atlas] .welcome-heading-row{display:grid;grid-template-columns:var(--atlas-rail) minmax(0,1fr);grid-template-areas:'hero toolbar';align-items:start;gap:0 24px}
+.living-welcome[data-layout=atlas] .welcome-toolbar{grid-area:toolbar;position:fixed;top:calc(var(--topbar,56px) + 18px);right:var(--atlas-gutter);width:auto;margin:0;z-index:9}
+.living-welcome[data-layout=atlas] .welcome-toolbar>.welcome-primary{margin-right:8px}
+.living-welcome[data-layout=atlas] .welcome-hero{grid-area:hero;max-width:none}
+.living-welcome[data-layout=atlas] .welcome-hero h1{font-size:clamp(30px,2.5vw,42px);margin:8px 0 4px;letter-spacing:-.03em}
+.living-welcome[data-layout=atlas] .welcome-hero>p{font-size:14px;color:#cfe0e8}
+.living-welcome[data-layout=atlas] .welcome-place-search{max-width:none}
+/* The rail: one column, compact rows, grouped. */
+.living-welcome[data-layout=atlas] .welcome-discovery-layout{width:var(--atlas-rail);margin-top:26px}
+.living-welcome[data-layout=atlas] .discovery-hint{margin:0 0 10px;flex-wrap:wrap}
+.living-welcome[data-layout=atlas] .topic-filters{float:none;margin:0 0 12px}
+.living-welcome[data-layout=atlas] .topic-filters>summary{display:inline-block;min-height:36px;padding:6px 10px;font-size:12px}
+.living-welcome[data-layout=atlas] .topic-finder{position:static;width:100%;margin-top:8px}
+.living-welcome[data-layout=atlas] .discovery-field--grouped{gap:18px}
+.living-welcome[data-layout=atlas] .discovery-group{grid-template-columns:minmax(0,1fr);gap:5px}
+.living-welcome[data-layout=atlas] .discovery-group-title{margin:0 0 3px;font-size:10px;letter-spacing:.16em;color:#d8c58f}
+.living-welcome[data-layout=atlas] .topic-choice{flex-direction:row;align-items:stretch;border-radius:9px;border-color:#4e6d7a99;background:#0a2d3dbf;box-shadow:none;transition:background .22s,border-color .22s,transform .22s cubic-bezier(.16,1,.3,1)}
+.living-welcome[data-layout=atlas] .topic-choice:hover,.living-welcome[data-layout=atlas] .topic-choice:has(.topic-callout.is-active),.living-welcome[data-layout=atlas] .topic-choice:has(:focus-visible){background:#0f3b4ef2;border-color:#d9c48c;transform:translateX(5px)}
+.living-welcome[data-layout=atlas] .topic-choice[data-selected=true]{border-color:#f0cf87;box-shadow:inset 0 0 0 1px #f0cf87}
+.living-welcome[data-layout=atlas] .topic-choice .topic-callout{min-height:54px;padding:8px 8px 8px 12px;gap:10px;align-items:center}
+.living-welcome[data-layout=atlas] .topic-choice .topic-callout:is(:hover,.is-active){background:transparent;box-shadow:none}
+.living-welcome[data-layout=atlas] .topic-copy{gap:1px}
+.living-welcome[data-layout=atlas] .topic-copy strong{font-size:14px;line-height:1.25}
+.living-welcome[data-layout=atlas] .topic-copy small,.living-welcome[data-layout=atlas] .topic-demo-label{display:none}
+.living-welcome[data-layout=atlas] .topic-map{margin:0;font-size:10.5px;letter-spacing:.01em;color:#c9dbe2}
+.living-welcome[data-layout=atlas] .topic-map i{width:26px;height:8px}
+.living-welcome[data-layout=atlas] .topic-card-actions{flex-direction:column;border-top:0;border-left:1px solid #66828b55}
+.living-welcome[data-layout=atlas] .topic-preview{flex:1;width:42px;min-height:0;padding:0;font-size:0;color:#eed39b}
+.living-welcome[data-layout=atlas] .topic-preview span{font-size:15px}
+.living-welcome[data-layout=atlas] .topic-add{width:42px;min-height:0;flex:1;border-left:0;border-top:1px solid #66828b55;font-size:17px}
+.living-welcome[data-layout=atlas] .story-section{margin:30px 0 20px}
+.living-welcome[data-layout=atlas] .story-section-head h2{font-size:22px}
+.living-welcome[data-layout=atlas] .welcome-selection-tray{position:sticky;bottom:16px;max-width:none;margin:14px 0 0}
+.living-welcome[data-layout=atlas] .welcome-credits{width:var(--atlas-rail)}
+/* The stage caption names the live map and its source clocks, bottom-left of the map area. */
+.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption{display:grid;right:auto;left:calc(var(--atlas-rail) + var(--atlas-gutter) + 24px);bottom:26px;justify-items:start;text-align:left;max-width:min(420px,calc(100% - var(--atlas-rail) - 560px))}
+/* The focus panel: one chosen map, described in full, with the three actions the cards carry. */
+.living-welcome[data-layout=atlas] .welcome-focus{position:fixed;z-index:8;right:var(--atlas-gutter);bottom:30px;width:min(460px,calc(100vw - var(--atlas-rail) - 3 * var(--atlas-gutter) - 24px));max-height:calc(100dvh - var(--topbar,56px) - 140px);overflow:auto;padding:22px 24px 20px;border:1px solid #8db5c070;border-radius:16px;background:#061f2bd6;backdrop-filter:blur(14px) saturate(1.2);box-shadow:0 24px 70px #00101a99,inset 0 1px 0 #ffffff14;animation:welcome-focus-in .5s cubic-bezier(.16,1,.3,1) both}
+.living-welcome[data-layout=atlas] .welcome-focus .welcome-kicker{font-size:10px;color:#b9d0d9}
+.living-welcome[data-layout=atlas] .welcome-focus h2{font-size:clamp(24px,1.9vw,32px);line-height:1.1;letter-spacing:-.03em;margin:6px 0 10px;color:#f5ead0}
+.living-welcome[data-layout=atlas] .welcome-focus-map{display:flex;align-items:center;gap:9px;margin:0 0 10px;font-size:12px;color:#c9dbe2}
+.living-welcome[data-layout=atlas] .welcome-focus-map i{display:block;width:34px;height:12px;border-radius:3px;border:1px solid #ffffff40;background:linear-gradient(90deg,var(--m0) 0 40%,var(--m1) 40% 72%,var(--m2) 72%)}
+.living-welcome[data-layout=atlas] .welcome-focus-map strong{color:#f0d59c;font-size:13px}
+.living-welcome[data-layout=atlas] .welcome-focus-lede{margin:0 0 12px;font-size:14px;line-height:1.55;color:#dbe8ee}
+.living-welcome[data-layout=atlas] .welcome-focus-facets{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0 0 12px;padding:0}
+.living-welcome[data-layout=atlas] .welcome-focus-facets li{padding:4px 9px;border:1px solid #6f8f9b80;border-radius:999px;font-size:11px;color:#d3e3ea;background:#0b2c3b99}
+.living-welcome[data-layout=atlas] .welcome-focus-try{margin:0 0 14px;font-size:13px;line-height:1.5;color:#e7d4a0}
+.living-welcome[data-layout=atlas] .welcome-focus-try strong{color:#f3e2b8}
+.living-welcome[data-layout=atlas] .welcome-focus-actions{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+.living-welcome[data-layout=atlas] .welcome-focus-actions button{min-height:44px;padding:9px 13px;border:1px solid #8db5c080;border-radius:9px;background:#0c3443;color:#f1e6c2;font-size:12.5px}
+.living-welcome[data-layout=atlas] .welcome-focus-actions button[aria-pressed=true]{border-color:#f0cf87;background:#d9bf7e;color:#102a37}
+.living-welcome[data-layout=atlas] .welcome-focus-actions .welcome-primary{background:#e6c77a;border-color:#e6c77a;color:#10232d;font-weight:650}
+.living-welcome[data-layout=atlas] .welcome-focus>small{display:block;font-size:11px;line-height:1.5;color:#a9c4ce}
+@keyframes welcome-focus-in{from{opacity:0;transform:translateY(10px)}}
+@media(prefers-reduced-motion:reduce){.living-welcome[data-layout=atlas] .welcome-focus{animation:none}.living-welcome[data-layout=atlas] .topic-choice{transition:none}}
+.living-welcome[data-layout=atlas][data-motion=paused] .welcome-focus{animation:none}
+@media(min-width:1700px){.living-welcome[data-layout=atlas]{--atlas-rail:440px;--atlas-gutter:44px}.living-welcome[data-layout=atlas] .topic-choice .topic-callout{min-height:58px}.living-welcome[data-layout=atlas] .topic-copy strong{font-size:15px}}
+/* In the rail, "The Kansas record" reads as a list: a small still beside each story's words. */
+.living-welcome[data-layout=atlas] .story-section{margin:26px 0 16px}
+.living-welcome[data-layout=atlas] .story-section-head{gap:4px 12px;margin:0 0 12px}
+.living-welcome[data-layout=atlas] .story-section-head h2{font-size:20px}
+.living-welcome[data-layout=atlas] .story-section-lede{font-size:12px}
+.living-welcome[data-layout=atlas] .story-group{gap:6px;margin:0 0 16px}
+.living-welcome[data-layout=atlas] .story-group-cards{grid-template-columns:minmax(0,1fr);gap:6px}
+.living-welcome[data-layout=atlas] .story-card{border-radius:9px}
+.living-welcome[data-layout=atlas] .story-card-open{flex-direction:row;align-items:stretch}
+.living-welcome[data-layout=atlas] .story-thumb{flex:none;width:92px;aspect-ratio:auto;min-height:72px}
+.living-welcome[data-layout=atlas] .story-card-copy{padding:8px 11px 9px;gap:2px;align-content:center}
+.living-welcome[data-layout=atlas] .story-card-copy strong{font-size:13.5px}
+.living-welcome[data-layout=atlas] .story-card-copy small{font-size:11px;line-height:1.35}
+.living-welcome[data-layout=atlas] .story-status{font-size:10px}
+/* The map's own caption, as a quiet chip beside the rail. */
+.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption{left:calc(var(--atlas-rail) + var(--atlas-gutter) + 28px);bottom:30px;gap:4px;padding:12px 14px;border:1px solid #6f8f9b55;border-radius:10px;background:#061f2bb8;backdrop-filter:blur(10px)}
+.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption strong{text-shadow:none}
+.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption small{font-size:11px;text-shadow:none}
