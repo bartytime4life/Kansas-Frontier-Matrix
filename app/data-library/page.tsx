@@ -4,6 +4,7 @@ import {useEffect,useRef,useState} from 'react';
 import {RECOVERED_COLLECTIONS,recoveredCollection,recoveredMapUrl} from '../recovered-collections';
 import {fetchArchive,rowLabel,textValue,type ArchiveAnswer} from '../archive-layer-data';
 import ArchiveSearch from './search';
+import {fetchCatalogFreshness,freshnessLine,loadedThrough,type CatalogFreshness} from './freshness';
 import styles from './library.module.css';
 
 function RecordField({value,id,database,record,field}:{value:unknown;id:string;database:string;record:string;field:string}){
@@ -26,6 +27,8 @@ export default function DataLibrary(){
  const [search,setSearch]=useState(''),[id,setId]=useState(''),[selected,setSelected]=useState<string[]>([]);
  const [answer,setAnswer]=useState<ArchiveAnswer|null>(null),[status,setStatus]=useState('Choose a collection to read its records.');
  const [busy,setBusy]=useState(false),[page,setPage]=useState(1);
+ // When the PC last loaded each collection, from the public catalog; absent until the PC has answered.
+ const [fresh,setFresh]=useState<CatalogFreshness|null>(null);
  const request=useRef<AbortController|null>(null),generation=useRef(0);
  const collection=recoveredCollection(id);
  const matching=RECOVERED_COLLECTIONS.filter(c=>(c.title+' '+c.database).toLowerCase().includes(search.toLowerCase()));
@@ -33,6 +36,12 @@ export default function DataLibrary(){
   const token=setTimeout(()=>{const params=new URLSearchParams(location.search),value=params.get('collection'),find=(params.get('find')??'').slice(0,80);if(value&&recoveredCollection(value))setId(value);if(find.trim())setSearch(find);},0);
   return()=>{clearTimeout(token);request.current?.abort();};
  },[]);
+ useEffect(()=>{
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
+  fetchCatalogFreshness(controller.signal).then(value=>{if(!controller.signal.aborted)setFresh(value);}).catch(()=>{});
+  return()=>{clearTimeout(timer);controller.abort();};
+ },[]);
+ const collectionFreshness=(collectionId:string)=>fresh?.collections.get(collectionId)??null;
  function choose(next:string){request.current?.abort();generation.current++;setId(next);setAnswer(null);setPage(1);setBusy(false);setStatus('Ready to read this collection.');history.replaceState(null,'',`/data-library?collection=${encodeURIComponent(next)}`);}
  async function read(after?:string){
   if(!collection)return;
@@ -49,16 +58,17 @@ export default function DataLibrary(){
  function download(){if(!answer)return;const url=URL.createObjectURL(new Blob([JSON.stringify(answer,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=`${id}-page-${page}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  return <main className={styles.library}>
   <header><Link href="/?panel=layers">← Back to the map</Link><span>KANSAS FRONTIER MATRIX</span><h1>Explore the whole archive</h1><p>Places, measurements, history and the records behind them. Browse original fields, keep source dates in view, and combine collections on the map.</p></header>
-  <div className={styles.summary}><strong>{RECOVERED_COLLECTIONS.length} record collections</strong><span>{RECOVERED_COLLECTIONS.filter(c=>c.geometry).length} map options · availability shown on read</span><span>Full-text search of newspaper pages and archive texts</span><span>Public source data · archived editions</span></div>
-  <ArchiveSearch/>
+  <div className={styles.summary}><strong>{RECOVERED_COLLECTIONS.length} record collections</strong><span>{RECOVERED_COLLECTIONS.filter(c=>c.geometry).length} map options · availability shown on read</span><span>Full-text search of newspaper pages and archive texts</span><span>Public source data · archived editions</span>{fresh&&<span>Load dates as of {fresh.at.slice(0,16).replace('T',' ')} UTC{fresh.state==='stale'?' (PC away; last known)':''}</span>}</div>
+  <ArchiveSearch loadedThrough={{newspapers:loadedThrough(collectionFreshness('bulk-newspaper-pages')),texts:loadedThrough(fresh?.datasets.get('archive-search')?.freshness)}}/>
   <div className={styles.layout}>
    <section className={styles.catalog} aria-label="Find a collection">
     <label>Find a collection<input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Wells, newspapers, Census, schools…"/></label>
     <p>{matching.length} collections · names and source families</p>
-    <div className={styles.results}>{matching.map(c=><button type="button" key={c.id} aria-pressed={c.id===id} onClick={()=>choose(c.id)}><strong>{c.title}</strong><small>{c.geometry?'Records + map geometry':'Records & reference tables'} · {c.database==='bulk'?'bulk archive':'observation archive'}</small></button>)}</div>
+    <div className={styles.results}>{matching.map(c=>{const through=loadedThrough(collectionFreshness(c.id));return <button type="button" key={c.id} aria-pressed={c.id===id} onClick={()=>choose(c.id)}><strong>{c.title}</strong><small>{c.geometry?'Records + map geometry':'Records & reference tables'} · {c.database==='bulk'?'bulk archive':'observation archive'}{through?` · loaded ${through}`:''}</small></button>;})}</div>
    </section>
    <section className={styles.content} aria-label="Collection records">
     {collection?<><h2>{collection.title}</h2><p>Original codes, units, missing values and quality flags are preserved. Each record keeps its own date; editions can overlap. These pages are ordered by record identity, not map position.</p>
+     {fresh&&<p className={styles.note}>On the PC: {freshnessLine(collectionFreshness(id))} A record missing here may simply not be loaded yet.</p>}
      <div className={styles.actions}><button type="button" disabled={busy} onClick={()=>void read()}>Read first page</button>{collection.geometry&&<button type="button" aria-pressed={selected.includes(id)} onClick={()=>setSelected(current=>current.includes(id)?current.filter(v=>v!==id):[...current,id])}>{selected.includes(id)?'Remove from map selection':'Add to map selection'}</button>}</div>
      {!collection.geometry&&<p className={styles.note}>Available as source records. This table has no stored GeoJSON geometry; geographic joins require the matching place identity and edition.</p>}
      <details><summary>{collection.columns.length} available fields</summary><p className={styles.fields}>{collection.columns.join(' · ')}</p></details>

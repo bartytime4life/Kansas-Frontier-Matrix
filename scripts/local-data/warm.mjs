@@ -12,6 +12,7 @@ import {pathToFileURL} from 'node:url';
 import {DatabaseSync} from 'node:sqlite';
 import {DATASETS} from './datasets.mjs';
 import {missingIndexes,databasesFromEnv} from './gateway.mjs';
+import {datasetFreshness,collectionsFreshness} from './freshness.mjs';
 import {TIGER_LAYERS} from './tiger.mjs';
 import {NEAR_COLLECTIONS} from './near.mjs';
 
@@ -80,9 +81,20 @@ export function warm({databases,questions=WARM_QUESTIONS,open=path=>new Database
     report.push({id:dataset.id,question:index,status,ms:clock()-at,rows});
    });
   }
-  // The health route's one aggregate, which is a full index walk when cold.
+  // What the health route reads: its one aggregate (a full index walk when cold) and the
+  // freshness bookkeeping of every dataset and recovered collection.
   let stormEvents=null;
   try{stormEvents=database('observations').db.prepare('SELECT COUNT(*) AS n FROM kfm_storm_event_details').get().n;}catch{}
+  for(const dataset of DATASETS.values()){
+   const at=clock();let status='ok';
+   try{
+    const {db,cache}=database(dataset.db);
+    const fresh=datasetFreshness(db,dataset,{cache});
+    if(fresh.reason)status=fresh.reason;
+    if(dataset.freshness?.collections)collectionsFreshness(db,dataset.freshness.collections,{cache});
+   }catch(error){status=typeof error?.code==='string'?error.code:'FAILED';}
+   report.push({id:dataset.id,question:'freshness',status,ms:clock()-at,rows:null});
+  }
   return {ms:clock()-started,stormEvents,datasets:report};
  }finally{
   for(const db of opened.values()){try{db.close();}catch{}}

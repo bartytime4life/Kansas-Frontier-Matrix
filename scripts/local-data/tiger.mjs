@@ -60,7 +60,7 @@ function columns(db,table,cache){
 }
 
 export const tigerFeatures={
- id:'tiger-features',db:'tiger',title:'Census TIGER/Line 2025 features',indexes,
+ id:'tiger-features',db:'tiger',freshness:{geopackage:true},title:'Census TIGER/Line 2025 features',indexes,
  source:Object.freeze({provider:'U.S. Census Bureau TIGER/Line Shapefiles 2025',url:'https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html',
   coverage:'Kansas: statewide layers, county-merged layers, and national layers clipped to the Kansas bounding box',
   notes:'Coordinates are NAD83 (EPSG:4269) longitude/latitude, rounded to 6 decimals. Attributes are the TIGER columns as delivered.'}),

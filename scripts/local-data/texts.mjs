@@ -124,7 +124,7 @@ function facetsOf(hits,meta,yearOf,titleOf){
 }
 
 export const archiveSearch={
- id:'archive-search',db:'bulk',title:'Archive text search',indexes:[],source:SOURCE,
+ id:'archive-search',db:'bulk',freshness:{tables:['kfm_newspaper_pages','kfm_ia_texts']},title:'Archive text search',indexes:[],source:SOURCE,
  params:{q:'words, "quoted phrases", word* prefixes and AND/OR/NOT; at most 8 terms (required)',source:'newspapers or texts (required)',
   from:'YYYY or YYYY-MM-DD (newspapers: issue date; texts: publication year)',to:'YYYY or YYYY-MM-DD',
   title:'one title: newspaper LCCN (e.g. sn84029386) or Internet Archive identifier',facets:'1 adds hits by year and by title',limit:'1-50 (20)',offset:'0-1000'},

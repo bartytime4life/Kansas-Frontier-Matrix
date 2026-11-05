@@ -14,6 +14,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {decodeSecret,verifyRequest,signResponse,createNonceCache,RESPONSE_SIGNATURE_HEADER} from '../home-inference/signature.mjs';
 import {LOCAL_DATA_GATEWAY,LOCAL_DATA_ROUTES,LOCAL_DATA_LIMITS,LOCAL_DATA_DATA_PREFIX} from './protocol.mjs';
 import {DATASETS} from './datasets.mjs';
+import {datasetFreshness,collectionsFreshness} from './freshness.mjs';
 
 const fail=code=>Object.assign(new Error(code),{code});
 const LOOPBACK=new Set(['127.0.0.1','::1']);
@@ -70,13 +71,23 @@ export function createGateway({keyId,secret:rawSecret,dbPath,databases={observat
   if(!verifyRequest({headers,method,path,body,keys,nonces,now:clock()}).ok)return reply(401,{error:'UNAUTHORIZED'});
 
   if(path==='/v1/health'){
+   // Readiness and freshness per dataset, and freshness per recovered collection: bookkeeping
+   // lookups only (freshness.mjs), so health stays cheap enough for the website to ask every few minutes.
+   const collections={};
    const datasets=[...DATASETS.values()].map(d=>{
-    try{const missing=withDatabase(d.db,(db,p)=>ready(db,p,d));return missing.length?{id:d.id,ready:false,reason:'INDEX_MISSING'}:{id:d.id,ready:true};}
-    catch(error){return {id:d.id,ready:false,reason:error.code==='DATABASE_NOT_CONFIGURED'?'DATABASE_NOT_CONFIGURED':'DATABASE_UNAVAILABLE'};}
+    try{
+     return withDatabase(d.db,(db,p)=>{
+      const missing=ready(db,p,d),cache=cacheFor(p);
+      const entry=missing.length?{id:d.id,ready:false,reason:'INDEX_MISSING'}:{id:d.id,ready:true};
+      entry.freshness=datasetFreshness(db,d,{cache});
+      if(d.freshness?.collections)Object.assign(collections,collectionsFreshness(db,d.freshness.collections,{cache}));
+      return entry;
+     });
+    }catch(error){return {id:d.id,ready:false,reason:error.code==='DATABASE_NOT_CONFIGURED'?'DATABASE_NOT_CONFIGURED':'DATABASE_UNAVAILABLE',freshness:{reason:'UNAVAILABLE'}};}
    });
    let stormEvents=null;
    try{stormEvents=withDatabase('observations',db=>db.prepare('SELECT COUNT(*) AS n FROM kfm_storm_event_details').get().n);}catch{}
-   return reply(stormEvents===null?503:200,{ok:stormEvents!==null,datasets,stormEvents});
+   return reply(stormEvents===null?503:200,{ok:stormEvents!==null,datasets,collections,stormEvents,generatedAt:new Date(clock()).toISOString()});
   }
 
   const dataset=DATASETS.get(path.slice(LOCAL_DATA_DATA_PREFIX.length));

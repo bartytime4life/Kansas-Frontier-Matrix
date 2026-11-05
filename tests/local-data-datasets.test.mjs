@@ -108,7 +108,8 @@ async function fixtures(t){
 }
 
 function addIndexes(databases){
- for(const [name,indexes] of plannedIndexes()){const db=new DatabaseSync(databases[name]);for(const i of indexes.values())db.exec(i.sql);db.close();}
+ // Indexes are planned for every database the datasets name; this fixture configures only some.
+ for(const [name,indexes] of plannedIndexes()){if(!databases[name])continue;const db=new DatabaseSync(databases[name]);for(const i of indexes.values())db.exec(i.sql);db.close();}
 }
 
 const gatewayFor=databases=>{

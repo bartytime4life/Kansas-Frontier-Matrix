@@ -17,7 +17,7 @@ const GHCN_SOURCE=Object.freeze({provider:'NOAA NCEI Global Historical Climatolo
  coverage:'Kansas stations: station files archived on 2026-10-07, kept current since by NOAA\'s daily GHCN-Daily update files',notes:'Values are converted from GHCN native units where the unit is listed; raw holds the value as delivered. Flags are GHCN measurement, quality and source flags. updated marks a value that comes from a daily update file rather than the archived station file.'});
 
 export const ghcnStations={
- id:'ghcn-stations',db:'observations',title:'GHCN-Daily stations',indexes:[],source:GHCN_SOURCE,
+ id:'ghcn-stations',db:'observations',freshness:{sources:['noaa-ghcnd-stations']},title:'GHCN-Daily stations',indexes:[],source:GHCN_SOURCE,
  params:{name:'part of the station name',bbox:'west,south,east,north',element:'only stations that report this element, e.g. TMAX',limit:'1-500 (100)',offset:'0-100000'},
  parse(input){
   only(input,['name','bbox','element','limit','offset']);
@@ -40,7 +40,7 @@ export const ghcnStations={
 };
 
 export const ghcnDaily={
- id:'ghcn-daily',db:'observations',title:'GHCN-Daily observations',source:GHCN_SOURCE,
+ id:'ghcn-daily',db:'observations',freshness:{sources:['noaa-ghcnd']},title:'GHCN-Daily observations',source:GHCN_SOURCE,
  indexes:[{name:'kfm_ghcnd_daily_file_day',sql:'CREATE INDEX IF NOT EXISTS kfm_ghcnd_daily_file_day ON kfm_ghcnd_daily(file_id, observation_day)'}],
  params:{station:'GHCN station id (required), e.g. USW00003928',from:'YYYY-MM-DD',to:'YYYY-MM-DD',element:'comma list, e.g. TMAX,TMIN,PRCP',limit:'1-2000 (500)',offset:'0-100000'},
  parse(input){
@@ -82,13 +82,13 @@ const GHCNDEX_SOURCE=Object.freeze({provider:'NOAA NCEI GHCNDEX-STN (beta-202609
 export const GHCNDEX_INDICES=Object.freeze(['CDD','CSDI','CWD','DTR','FD','GSL','ID','PRCPTOT','R10mm','R20mm','R95p','R99p','Rx1day','Rx5day','SDII','SU','TN10p','TN90p','TNn','TNx','TR','TX10p','TX90p','TXn','TXx','WSDI']);
 
 export const ghcndexIndices={
- id:'ghcndex-indices',db:'observations',title:'GHCNDEX index definitions',indexes:[],source:GHCNDEX_SOURCE,params:{},
+ id:'ghcndex-indices',db:'observations',freshness:{sources:['noaa-ghcndex']},title:'GHCNDEX index definitions',indexes:[],source:GHCNDEX_SOURCE,params:{},
  parse(input){only(input,[]);return {};},
  run(db){const rows=db.prepare('SELECT index_code AS code,definition,unit FROM kfm_ghcndex_indices ORDER BY index_code').all().map(r=>({...r}));return {total:rows.length,rows};},
 };
 
 export const ghcndex={
- id:'ghcndex',db:'observations',title:'GHCNDEX climate-extreme indices',source:GHCNDEX_SOURCE,
+ id:'ghcndex',db:'observations',freshness:{sources:['noaa-ghcndex']},title:'GHCNDEX climate-extreme indices',source:GHCNDEX_SOURCE,
  indexes:[{name:'kfm_ghcndex_values_station',sql:'CREATE INDEX IF NOT EXISTS kfm_ghcndex_values_station ON kfm_ghcndex_values(station_id, index_code, year, period)'}],
  params:{station:'GHCN station id (required)',index:'one of the 26 index codes, e.g. TXx',from:'year',to:'year',period:'annual, or a month 1-12',limit:'1-2000 (500)',offset:'0-100000'},
  parse(input){
@@ -112,7 +112,7 @@ export const ghcndex={
 
 const ASOS_STATIONS=Object.freeze(['KCNK','KDDC','KGLD','KICT','KTOP']);
 export const asosFiveMinute={
- id:'asos-5min',db:'observations',title:'ASOS 5-minute airport observations',
+ id:'asos-5min',db:'observations',freshness:{sources:['noaa-asos-fivemin']},title:'ASOS 5-minute airport observations',
  source:Object.freeze({provider:'NOAA NCEI ASOS 5-minute data (TD-6401)',url:'https://www.ncei.noaa.gov/pub/data/asos-fivemin/',
   coverage:'Concordia KCNK, Dodge City KDDC, Goodland KGLD, Wichita KICT and Topeka KTOP, 2000 onward as backfilled; NCEI\'s TD-6401 archive ends in 2022',
   notes:'time is the TD-6401 local standard time stamp. Decoded values come only from unambiguous METAR tokens, otherwise null; raw is the line as delivered.'}),
@@ -142,7 +142,7 @@ const WIND_SOURCE=Object.freeze({provider:'Iowa Environmental Mesonet (IEM) ASOS
 const WIND_STATION=/^[A-Z0-9]{3,4}$/;
 
 export const windStations={
- id:'wind-stations',db:'observations',title:'IEM wind stations',indexes:[],source:WIND_SOURCE,
+ id:'wind-stations',db:'observations',freshness:{sources:['iem-wind']},title:'IEM wind stations',indexes:[],source:WIND_SOURCE,
  params:{name:'part of the station or county name',limit:'1-100 (100)',offset:'0-1000'},
  parse(input){only(input,['name','limit','offset']);return {name:text(input.name,NAME),...page(input,{max:100,fallback:100,maxOffset:1000})};},
  run(db,q){
@@ -155,7 +155,7 @@ export const windStations={
 };
 
 export const windObservations={
- id:'wind-observations',db:'observations',title:'IEM wind observations',source:WIND_SOURCE,
+ id:'wind-observations',db:'observations',freshness:{sources:['iem-wind']},title:'IEM wind observations',source:WIND_SOURCE,
  indexes:[{name:'kfm_wind_observations_station_time',sql:'CREATE INDEX IF NOT EXISTS kfm_wind_observations_station_time ON kfm_wind_observations(station_id, observed_at_utc)'}],
  params:{station:'station id (required), e.g. ICT',from:'YYYY-MM-DDTHH:MM UTC',to:'YYYY-MM-DDTHH:MM UTC',limit:'1-2000 (500)',offset:'0-100000'},
  parse(input){
@@ -176,7 +176,7 @@ export const windObservations={
 };
 
 export const windDaily={
- id:'wind-daily',db:'observations',title:'IEM daily wind summaries',source:WIND_SOURCE,
+ id:'wind-daily',db:'observations',freshness:{sources:['iem-wind']},title:'IEM daily wind summaries',source:WIND_SOURCE,
  indexes:[{name:'kfm_wind_daily_station_day',sql:'CREATE INDEX IF NOT EXISTS kfm_wind_daily_station_day ON kfm_wind_daily(station_id, observation_day)'}],
  params:{station:'station id (required)',from:'YYYY-MM-DD',to:'YYYY-MM-DD',limit:'1-2000 (366)',offset:'0-100000'},
  parse(input){

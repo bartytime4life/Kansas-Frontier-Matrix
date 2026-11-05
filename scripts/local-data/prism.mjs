@@ -55,7 +55,7 @@ function catalog(db,cache){
 }
 
 export const prismCounty={
- id:'prism-county',db:'observations',title:'PRISM county climate summaries',
+ id:'prism-county',db:'observations',freshness:{feed:'prism'},title:'PRISM county climate summaries',
  source:Object.freeze({provider:'PRISM Group, Oregon State University',url:'https://prism.oregonstate.edu/',
   coverage:'Kansas counties (2025 TIGER), PRISM AN/LT time series 1895 onward (new 4 km and 800 m grids added daily), 1991-2020 normals and the 2015-06 stable precipitation version',
   notes:'Modeled values summarized over the PRISM cells whose centers fall in each county: not station observations or area-weighted statistics. Recent grids are provisional; when PRISM revises one, the newest version is served. Cite as: PRISM Group, Oregon State University, https://prism.oregonstate.edu. Per-file acquisition dates are not yet verified.'}),

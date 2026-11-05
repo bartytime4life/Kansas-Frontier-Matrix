@@ -33,7 +33,8 @@ export function decades(years:Facets['years']){
  return {decades:list,undated,max:Math.max(1,...list.map(d=>d.hits))};
 }
 
-export default function ArchiveSearch(){
+/** loadedThrough: the day the newest newspaper-page file and the newest archive-text file were retrieved, when the catalog reports them. */
+export default function ArchiveSearch({loadedThrough}:{loadedThrough?:{newspapers:string|null;texts:string|null}}={}){
  const [q,setQ]=useState(''),[source,setSource]=useState<Source>('newspapers'),[from,setFrom]=useState(''),[to,setTo]=useState(''),[title,setTitle]=useState('');
  const [answer,setAnswer]=useState<SearchAnswer|null>(null),[offset,setOffset]=useState(0),[status,setStatus]=useState('Search the digitised newspaper pages and archive texts by word, phrase or year.'),[busy,setBusy]=useState(false);
  const request=useRef<AbortController|null>(null),generation=useRef(0),linked=useRef(false);
@@ -70,6 +71,7 @@ export default function ArchiveSearch(){
  return <section className={styles.search} aria-labelledby="archive-search-title">
   <h2 id="archive-search-title">Search the texts</h2>
   <p>Full-text search over the Kansas newspaper pages and public-domain texts the PC has loaded: words, <q>quoted phrases</q>, prefixes such as <code>wich*</code>, and AND, OR, NOT between terms. Results rank the original OCR, so spellings and scanning errors of the period affect what is found.</p>
+  {loadedThrough&&(loadedThrough.newspapers||loadedThrough.texts)&&<p className={styles.note}>Loading continues on the PC: {loadedThrough.newspapers?`newspaper pages last added ${loadedThrough.newspapers}`:'newspaper load date not reported'}; {loadedThrough.texts?`archive texts last added ${loadedThrough.texts}`:'text load date not reported'}. A missing match may not be loaded yet.</p>}
   <form className={styles.searchForm} onSubmit={submit}>
    <label className={styles.grow}>Words or phrase<input type="search" value={q} onChange={e=>setQ(e.target.value)} placeholder='tornado · "dust storm" · grasshopper*' maxLength={200} required/></label>
    <label>Collection<select value={source} onChange={e=>{setSource(e.target.value as Source);setTitle('');}}><option value="newspapers">Newspaper pages</option><option value="texts">Archive texts</option></select></label>
