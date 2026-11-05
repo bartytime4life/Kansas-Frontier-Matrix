@@ -11,7 +11,7 @@ test('map options use stored geometries, retain record identities and reject mis
  const layer=layers.archiveLayer(ui.recoveredMapId(c.id));assert.ok(layer);
  const result=data.archiveFeatures(layer,[...a.rows,{id:'bad',values:{geometry_geojson:'not-json'}}]);
  assert.equal(result.collection.features.length,3);assert.equal(result.unlocated,1);
- assert.deepEqual(data.archiveQuery(layer,'','', ''),{collection:c.id,limit:'20'});
+ assert.deepEqual(data.archiveQuery(layer,'','', ''),{collection:c.id,bbox:'',limit:'50'});
  assert.equal(new URL(ui.recoveredMapUrl([c.id,'observations-storm-event-fatalities']),'https://example.org').searchParams.get('archive'),ui.recoveredMapId(c.id));
 });
 test('client accepts truthful unknown totals only with a validated collection and pagination contract',async()=>{
