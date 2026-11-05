@@ -104,6 +104,34 @@ export type MapRuntimeCheckFailure =
   | "PROJECTION_CHECK_FAILED" | "INTERACTION_CHECK_FAILED"
   | "IDLE_CHECK_FAILED" | "TILE_CHECK_FAILED";
 
+/** A loaded style can keep rendering without ever reaching map idle. */
+export function createMapStyleReadyCheck(
+  map: Pick<GLMap, "isStyleLoaded" | "on" | "off">,
+  refresh: () => void,
+) {
+  let active = true, pending = false;
+  const check = () => {
+    if (!active) return;
+    // The full health probe reports finite failures; this retry stays pending.
+    try { if (map.isStyleLoaded() !== true) return; } catch { return; }
+    pending = false;
+    map.off("render", check);
+    refresh();
+  };
+  return {
+    schedule() {
+      if (!active || pending) return;
+      pending = true;
+      map.on("render", check);
+    },
+    dispose() {
+      active = false;
+      pending = false;
+      map.off("render", check);
+    },
+  };
+}
+
 export function sampleMapRuntimeHealth(
   map: Pick<GLMap, "isStyleLoaded" | "getSource" | "getCanvas" | "getProjection" | "loaded" | "areTilesLoaded" | "dragPan" | "scrollZoom" | "keyboard" | "touchZoomRotate">,
   sourceIds: readonly string[],

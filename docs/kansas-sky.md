@@ -114,6 +114,14 @@ Observations received while waiting remain available for the first draw and
 aircraft picking. Recovery does not require a second `style.load` event, and
 disposing a pending renderer cannot reinstall it later.
 
+The page also refreshes its style-readiness signal on a ready frame when its
+health probe found a pending style. A map that continuously repaints can be
+fully loaded without emitting `idle`; waiting only for that event can otherwise
+leave all dependent controls marked Not ready. This temporary check releases
+its listener after refresh or page disposal. Full map-health and source-error
+reporting still run independently. The browser regression keeps the real map
+repainting and proves aircraft drawing and style recovery before any idle event.
+
 The style-reload check observes the requested `style.load` event, then requires
 the replacement style's marker, a loaded style, the aircraft layer and a fresh
 GPU draw after that event. A cached vertex count from before the transition
