@@ -124,17 +124,19 @@ test('late archive replies cannot recreate layers after deselection',async()=>{
  resolve(answer('ghcn-stations',[{id:'USW00003928',lat:38,lon:-98}]));await settle();const tree=h.render();
  assert.equal(h.sources.size,0);assert.equal(h.saves.length,0);assert.ok(findNode(tree,n=>n.type==='small'&&n.props.children==='Not selected'));h.harness.dispose();
 });
-test('recovered map pages advance by cursor and keep displayed records when the next read fails',async()=>{
+test('recovered map layers ask for the map area, page by offset and keep displayed records when the next read fails',async()=>{
  const collection='observations-faa-obstacles',id='archive-records-'+collection,calls=[];
  const row=n=>({id:JSON.stringify([1,n]),values:{geometry_geojson:JSON.stringify({type:'Point',coordinates:[-98,38]})}});
- const h=await rowHarness(async(_id,q)=>{calls.push(q);if(calls.length===3)throw Error('Temporary outage');const rows=[row(calls.length)];return answer('recovered-observations',rows,{total:null,hasMore:true,nextCursor:rows[0].id,collection});});
+ const h=await rowHarness(async(_id,q)=>{calls.push(q);if(calls.length===3)throw Error('Temporary outage');const rows=[row(calls.length)];return answer('near-observations',rows,{total:3,collection});});
  h.props.layer=catalog.archiveLayer(id);h.props.selected=[id];h.props.shown=new Set([id]);h.props.styleReady=true;
  h.render();await pause();await settle();h.render();let tree=h.render();
+ assert.equal(catalog.archiveLayer(id).dataset,'near-observations');
+ assert.equal(calls[0].collection,collection);assert.match(calls[0].bbox,/^-?\d+\.\d{5},-?\d+\.\d{5},-?\d+\.\d{5},-?\d+\.\d{5}$/);assert.equal(calls[0].limit,'50');assert.equal(calls[0].after,undefined);
  await findNode(tree,n=>n.type==='button'&&n.props.children==='Load next page').props.onClick();await settle();h.render();tree=h.render();
- assert.equal(calls[1].after,'[1,1]');assert.equal(calls[1].offset,undefined);
+ assert.equal(calls[1].offset,'1');assert.equal(calls[1].bbox,calls[0].bbox);assert.equal(calls[1].after,undefined);
  assert.equal(h.sources.get('kfm-'+id).data.features.length,2);
  await findNode(tree,n=>n.type==='button'&&n.props.children==='Load next page').props.onClick();await settle();h.render();h.render();
- assert.equal(calls[2].after,'[1,2]');assert.equal(h.sources.get('kfm-'+id).data.features.length,2);h.harness.dispose();
+ assert.equal(calls[2].offset,'2');assert.equal(h.sources.get('kfm-'+id).data.features.length,2);h.harness.dispose();
 });
 test('shared area and climate controls restore before the first acquisition',async()=>{
  const calls=[];const h=await rowHarness(async(_id,q)=>{calls.push(q);return answer('ghcn-stations',[]);});

@@ -76,6 +76,7 @@ whether the PC is connected (`online`). It is answered by the site alone.
 | `usgs-streamflow-sites` | captured USGS gauges, 181 | — | — | 1–500 (500) |
 | `usgs-streamflow` | captured USGS readings, 35k | `site` | `parameter`, `from`, `to` (UTC) | 1–1000 (500) |
 | `recovered-observations`, `recovered-bulk` | 189 recovered collections (`scripts/local-data/recovered-catalog.json`) | `collection` | `after` (cursor), `record` + `field` + `start` (one long field in parts) | 1–50 (20) |
+| `near-observations`, `near-bulk` | the 56 geometry collections, through the pipeline's R-tree sidecars (`tools/local_data/sql_spatial.py`) | `collection`, `bbox` (≤ 2° a side) | `name` (collections with a name column) | 1–200 (50); offset to 5,000; refused `DATASET_NOT_READY` while a sidecar is missing or stale |
 | `archive-search` | Chronicling America Kansas pages (OCR, 39,700 at first release) and Internet Archive Kansas texts, through the feeds' FTS5 indexes | `q`, `source` (`newspapers` or `texts`) | `from`, `to` (YYYY or YYYY-MM-DD), `title` (LCCN or IA identifier), `facets` | 1–50 (20); offset to 1,000 |
 
 Except for `ghcndex-indices` (a fixed 26-entry dictionary), all take `limit` and `offset`. `GET /api/local-data` gives each parameter's exact
