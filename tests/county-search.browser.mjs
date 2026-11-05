@@ -165,15 +165,39 @@ async function pageSession(browser, width, height) {
     const read = label => document.querySelector('select[aria-label="' + label + '"]')?.value ?? null;
     return {year:read('Sweep year or earlier era'),month:read('Sweep month'),day:read('Sweep day')};
   })()`);
-  const clickButton = async (scope, label) => {
-    const point = await evaluate(`(() => {
-      const button = [...document.querySelectorAll(${JSON.stringify(scope)} + ' button')].find(item => item.textContent.trim() === ${JSON.stringify(label)});
-      if (!button) throw new Error('Missing button: ' + ${JSON.stringify(label)});
-      button.scrollIntoView({block:'center'}); const rect = button.getBoundingClientRect();
-      return {x:rect.x+rect.width/2,y:rect.y+rect.height/2};
-    })()`);
-    await call('Input.dispatchMouseEvent', {type:'mousePressed',button:'left',clickCount:1,...point});
-    await call('Input.dispatchMouseEvent', {type:'mouseReleased',button:'left',clickCount:1,...point});
+  const clickButton = async (scope, label, timeout = 30000) => {
+    const deadline = Date.now() + timeout;
+    let previous, point;
+    while (Date.now() < deadline) {
+      point = await evaluate(`(() => {
+        const button = [...document.querySelectorAll(${JSON.stringify(scope)} + ' button')].find(item => item.textContent.trim() === ${JSON.stringify(label)});
+        if (!button) return {ready:false,reason:'missing'};
+        button.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});
+        const rect = button.getBoundingClientRect(), style = getComputedStyle(button);
+        const x = rect.x + rect.width / 2, y = rect.y + rect.height / 2;
+        const hit = document.elementFromPoint(x, y);
+        const moving = [];
+        for (let node = button; node; node = node.parentElement) {
+          if (node.getAnimations().some(animation => animation.playState === 'running' || animation.pending)) moving.push(node.className);
+        }
+        return {x,y,width:rect.width,height:rect.height,
+          moving,ready:moving.length === 0 && !button.disabled && !button.closest('[inert]') && style.visibility === 'visible' && Number(style.opacity) > 0 &&
+            rect.width > 0 && rect.height > 0 && rect.left >= 0 && rect.right <= innerWidth && rect.top >= 0 && rect.bottom <= innerHeight && button.contains(hit),
+          hit:hit?.outerHTML.slice(0,300)};
+      })()`);
+      // Layout/entry transitions can leave the first scrolled rectangle outside
+      // the viewport. Wait for ancestor motion and require two consecutive
+      // visible, unobstructed positions; never focus/click through private hooks.
+      if (point.ready && previous?.ready && ['x','y','width','height'].every(key => Math.abs(point[key] - previous[key]) < .5)) {
+        const {x,y} = point;
+        await call('Input.dispatchMouseEvent', {type:'mousePressed',button:'left',clickCount:1,x,y});
+        await call('Input.dispatchMouseEvent', {type:'mouseReleased',button:'left',clickCount:1,x,y});
+        return;
+      }
+      previous = point;
+      await pause(50);
+    }
+    throw new Error(`Visible stable hit target required for ${label}: ${JSON.stringify(point)}`);
   };
   const open = async (nextMode = 'held', nextFixture = payload('ready', features), status = 200) => {
     mode = nextMode; fixture = nextFixture; httpStatus = status; held.length = 0;
@@ -217,6 +241,23 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
   test(`hydrated county search at ${width}x${height}`, { timeout: 240000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
     t.after(async () => { try { await p.close(); } catch { /* Browser cleanup may already have closed its targets. */ } });
+    await t.test('coordinate clicks refuse an obscured control instead of bypassing it', async () => {
+      await p.open();
+      await p.evaluate(`(() => {
+        window.__countyClickAttempts = 0;
+        const cover = document.createElement('div');
+        cover.id = 'county-click-obstruction';
+        cover.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#0001';
+        cover.addEventListener('pointerdown', () => window.__countyClickAttempts++);
+        document.body.append(cover);
+      })()`);
+      try {
+        await assert.rejects(p.clickButton('#qwen-map-panel form > div:last-child', 'Find', 400), /Visible stable hit target required for Find/);
+        assert.equal(await p.evaluate('window.__countyClickAttempts'), 0, 'no input is dispatched through an obstruction');
+      } finally {
+        await p.evaluate(`document.querySelector('#county-click-obstruction')?.remove()`);
+      }
+    });
     await t.test('Find and arrow keys navigate current results without changing the draft or map', async () => {
       await p.open();
       await p.fill('water');

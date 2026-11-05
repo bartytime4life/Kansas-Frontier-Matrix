@@ -153,3 +153,25 @@ schema, dependency, provider request or persistence contract.
 Rollback reverts this four-file change and restores catalogue-order results;
 stored settings and datasets need no migration. Independent review and any
 subsequent publication remain separate from authoring and self-review.
+
+## Coordinate-click qualification — 2026-11-05
+
+The county harness now waits for two consecutive stable button rectangles that
+are fully inside the viewport, enabled and unobstructed at their center, with
+no running or pending animation on the button or its ancestors, before sending
+ordinary mouse input. It scrolls through the browser, never invokes
+DOM click or application handlers, and fails with geometry/hit diagnostics
+within a 30-second bound. An obscured-control case verifies that no
+pointer input is dispatched through an overlay at every viewport.
+
+This follows a local Chrome 157 observation on public source `d5503ac`: the old
+helper's immediate rectangle for the report JSON button was y=1199–1232 in an
+844px viewport after scrollIntoView, so its coordinate click missed the button.
+At 375px, pointer-down reached the JSON button but its rectangle moved about 217px
+before pointer-up, which landed on the panel. Two stable samples alone did not
+suffice; waiting for ancestor transitions as well restored the native click.
+The same application has successful hosted Chrome 156 county checks; this is a
+measured harness timing/geometry discrepancy, not a claimed deployed export
+regression. JSON/HTML artifact contents, source context, map-date preservation,
+keyboard checks, API isolation and all existing assertions remain unchanged.
+Physical-phone and deployed-browser behavior remain separate qualification.
