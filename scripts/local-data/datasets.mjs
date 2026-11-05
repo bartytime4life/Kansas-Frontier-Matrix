@@ -22,8 +22,6 @@ const stormEvents={
  run(db,q){const sql=stormEventsSql(q);return {total:db.prepare(sql.count.sql).get(...sql.count.params).n,rows:db.prepare(sql.rows.sql).all(...sql.rows.params).map(stormEvent)};},
 };
 
-// One dataset per line, flush left. Squash merges have broken this list three times: #5718 and #5722 dropped a
-// continuation line, #5723 dropped the whole block and its export. Run the local-data tests before publishing.
 const PUBLISHED=[
 stormEvents,
 ghcnStations,
