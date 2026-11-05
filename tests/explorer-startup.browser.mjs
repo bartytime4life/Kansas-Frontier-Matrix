@@ -24,6 +24,7 @@ assert.equal(welcomeTopics.length, 22, 'the shared taxonomy includes Flora, Faun
 async function readyWelcome(p) {
   await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.dataset.renderer === 'capability' && ${JSON.stringify(welcomeTopics.map(topic => '.living-welcome .topic-' + topic.id))}.every(selector=>document.querySelector(selector))`, 'all shared domain cards hydrated');
   await p.wait(`document.querySelector('.living-welcome')?.dataset.carousel===String(matchMedia('(max-width:700px), (max-height:500px) and (max-width:1100px)').matches)`, 'responsive chooser settles before input coordinates are measured');
+  await p.wait(`(document.querySelector('.living-welcome')?.dataset.layout==='atlas')===matchMedia('(min-width:1101px) and (min-height:761px)').matches`, 'desktop atlas or compact layout is settled before geometry');
   const actual = await p.evaluate(`Array.from(document.querySelectorAll('.living-welcome .topic-callout'),card=>({id:[...card.classList].find(name=>name.startsWith('topic-')&&name!=='topic-callout')?.slice(6),title:card.querySelector('strong')?.textContent,facets:card.querySelector('small')?.textContent,label:card.getAttribute('aria-label')}))`);
   assert.deepEqual(actual, welcomeTopics.map(topic => ({ id:topic.id, title:topic.title, facets:topic.facets.slice(0,2).join(' · '), label:'Open '+topic.title+' map: '+topic.facets.join(' · ') })), 'every shared domain appears once, in order, with its actual facets and accessible name');
   assert.equal(await p.evaluate(`document.querySelectorAll('.living-welcome video,.living-welcome .motion-portal').length`), 0, 'the welcome does not mount retired footage players');
@@ -44,7 +45,13 @@ async function leaveCompactLayers(p) {
 
 async function revealControl(p, selector) {
   await p.evaluate(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),root=node.closest('.living-welcome'),card=node.closest('.topic-choice');if(root?.dataset.carousel==='true'&&root.dataset.fullscreen!=='true'&&card)card.scrollIntoView({block:'nearest',inline:'center',behavior:'instant'});else node.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});})()`);
-  await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome')?.getBoundingClientRect();return r&&root&&r.width>0&&r.height>=44&&r.left>=root.left-.5&&r.right<=root.right+.5&&r.top>=root.top-.5&&r.bottom<=root.bottom+.5&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`, 'real control is visible, full-sized and hit-testable: '+selector);
+  try {
+  await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome')?.getBoundingClientRect();return r&&root&&r.width>=44&&r.height>=44&&r.left>=root.left-.5&&r.right<=root.right+.5&&r.top>=root.top-.5&&r.bottom<=root.bottom+.5&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`, 'real control is visible, full-sized and hit-testable: '+selector);
+  } catch (error) {
+    const geometry=await p.evaluate(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect(),hit=r?document.elementFromPoint(r.left+r.width/2,r.top+r.height/2):null;return {selector:${JSON.stringify(selector)},rect:r?.toJSON(),hit:hit?.outerHTML.slice(0,400),ancestors:[node?.closest('.welcome-preferences'),node?.closest('.welcome-toolbar'),node?.closest('.welcome-heading-row'),document.querySelector('.welcome-focus')].filter(Boolean).map(e=>({class:e.className,rect:e.getBoundingClientRect().toJSON(),z:getComputedStyle(e).zIndex,position:getComputedStyle(e).position,transform:getComputedStyle(e).transform}))};})()`);
+    if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`unreachable-${selector.replace(/[^a-z0-9-]/gi,'_')}.png`),Buffer.from(shot.data,'base64'));}
+    throw new Error(error.message+'; target geometry: '+JSON.stringify(geometry));
+  }
   await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),root=node.closest('.living-welcome'),card=node.closest('.topic-choice');return !card||root.dataset.carousel!=='true'||root.dataset.fullscreen==='true'||root.dataset.centeredTopic===card.dataset.carouselTopic;})()`, 'scrollable card selection settles before input: '+selector);
   return p.evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
 }
@@ -679,11 +686,13 @@ for (const width of [320, 390, 768, 1280]) {
     await p.evaluate(`[...document.querySelectorAll('.category-map-dock-tool')].find(b=>b.textContent==='Daylight through the year').focus()`);
     await p.key('Enter', 'Enter', 13);
     await p.wait(`!!document.querySelector('.category-map-dock-sun-location') && !!document.querySelector('[data-band="day"]')`, 'daylight chart');
+    await p.evaluate(`(()=>{window.__skyFocusTrace=[];document.addEventListener('focusin',event=>{window.__skyFocusTrace.push({at:performance.now(),name:event.target.name,html:event.target.outerHTML.slice(0,300)});window.__skyFocusTrace=window.__skyFocusTrace.slice(-12);});})()`);
     const location = async (lat, lon) => {
       await p.evaluate(`document.querySelector('.category-map-dock-sun-location input[name="latitude"]').focus()`);
+      assert.equal(await p.evaluate(`document.activeElement?.name`), 'latitude', 'latitude owns focus before native keyboard editing');
       await p.key('a', 'KeyA', 65, 2); await p.call('Input.insertText', { text: String(lat) });
       await p.key('Tab', 'Tab', 9);
-      assert.equal(await p.evaluate(`document.activeElement.name`), 'longitude');
+      assert.equal(await p.evaluate(`document.activeElement.name`), 'longitude', 'native Tab reaches longitude: '+JSON.stringify(await p.evaluate(`({active:document.activeElement?.outerHTML.slice(0,500),trace:window.__skyFocusTrace,inputs:[...document.querySelectorAll('.category-map-dock-sun-location input')].map(input=>({name:input.name,value:input.value,rect:input.getBoundingClientRect().toJSON(),inert:!!input.closest('[inert]')}))})`)));
       await p.key('a', 'KeyA', 65, 2); await p.call('Input.insertText', { text: String(lon) });
       await p.key('Tab', 'Tab', 9);
       assert.equal(await p.evaluate(`document.activeElement.textContent`), 'Chart location');
@@ -1307,6 +1316,12 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
       return {id:button.className,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};
     })`);
     assert.equal(bounds.length,welcomeTopics.length);
+    if(await p.evaluate(`document.querySelector('.living-welcome').dataset.layout==='atlas'`)){
+      const actions=await p.evaluate(`[...document.querySelectorAll('.topic-card-actions button')].map(button=>{const r=button.getBoundingClientRect();return{label:button.getAttribute('aria-label'),width:r.width,height:r.height};})`);
+      assert.equal(actions.length,welcomeTopics.length*2,'each desktop topic retains Preview and Add');
+      for(const action of actions)assert.ok(action.width>=44&&action.height>=44,'desktop action keeps a44px target: '+JSON.stringify(action));
+      assert.equal(await p.evaluate(`!!document.querySelector('.welcome-record-search')&&!!document.querySelector('.welcome-focus-record')&&document.querySelectorAll('.welcome-record-rail a').length===2`),true,'the owner’s record search and collection entry points remain present');
+    }
     for (let index=0;index<bounds.length;index++) {
       const a=bounds[index];
       assert.ok(a.width>0&&a.height>=44&&a.width<=width,`usable card: ${JSON.stringify(a)}`);
@@ -1366,7 +1381,7 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
 // Placement follows measured content and the shared taxonomy. Check all rows
 // by scrolling, then exercise the current detail/expanded-view equivalents of
 // the retired footage timeline and footer. Fixtures establish no accepted data.
-for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet'],[901,1200,'narrow desktop'],[768,1024,'tablet'],[1280,720,'short desktop'],[1024,600,'landscape'],[320,568,'narrow phone'],[640,360,'200 percent layout equivalent']]) {
+for (const [width,height,label] of [[1440,960,'desktop'],[1280,800,'compact desktop atlas'],[1024,1366,'tall tablet'],[901,1200,'narrow desktop'],[768,1024,'tablet'],[1280,720,'short desktop'],[1024,600,'landscape'],[320,568,'narrow phone'],[640,360,'200 percent layout equivalent']]) {
   test(`welcome content stays composed at ${width}x${height} (${label})`,{timeout:150000},async t=>{
     const b=await browser(t),p=await pageSession(b,width,height,{attribution:'Isolated browser layout fixture attribution — empty geometry; no observations, rights claims or accepted data. <a href="https://openmaptiles.org/">Fixture OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">Fixture OpenStreetMap</a>'});
     if(label==='200 percent layout equivalent')await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:2,mobile:false});
@@ -1375,10 +1390,10 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     const checkLayout=async state=>{
       const result=await p.evaluate(`(()=>{
         const root=document.querySelector('.explorer-guide.living-welcome');
-        const selectors=['.welcome-hero','.welcome-toolbar','.discovery-hint','.topic-callout','.welcome-preview-expand'];
+        const selectors=['.welcome-hero','.welcome-toolbar','.discovery-hint','.topic-callout','.welcome-preview-expand','.welcome-focus'];
         const boxes=selectors.flatMap(selector=>[...root.querySelectorAll(selector)].flatMap((node,index)=>{const r=node.getBoundingClientRect(),style=getComputedStyle(node);if(!node.checkVisibility()||style.clipPath==='inset(50%)')return [];return[{name:selector+':'+index,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}];}));
         const r=root.getBoundingClientRect(),header=document.querySelector('header.topbar').getBoundingClientRect(),a=document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib')?.getBoundingClientRect();
-        return {boxes,carousel:root.dataset.carousel==='true',heading:!!root.querySelector('#living-welcome-title')?.textContent.trim(),cardCount:root.querySelectorAll('.topic-callout').length,root:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,scrollWidth:root.scrollWidth,clientWidth:root.clientWidth},headerBottom:header.bottom,attribution:a?{left:a.left,right:a.right,top:a.top,bottom:a.bottom,width:a.width,height:a.height}:null};
+        return {boxes,atlas:root.dataset.layout==='atlas',carousel:root.dataset.carousel==='true',heading:!!root.querySelector('#living-welcome-title')?.textContent.trim(),cardCount:root.querySelectorAll('.topic-callout').length,root:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,scrollWidth:root.scrollWidth,clientWidth:root.clientWidth},headerBottom:header.bottom,attribution:a?{left:a.left,right:a.right,top:a.top,bottom:a.bottom,width:a.width,height:a.height}:null};
       })()`);
       assert.equal(result.root.top,0,`${state}: the builder owns the viewport and hides the map header`);
       assert.ok(result.root.scrollWidth<=result.root.clientWidth,`${state}: no horizontal overflow`);
@@ -1386,12 +1401,14 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
       assert.ok(result.attribution.top>=result.root.bottom-.5&&result.attribution.bottom<=height+.5,`${state}: attribution owns a separate viewport strip ${JSON.stringify(result.attribution)}`);
       assert.ok(result.attribution.left>=-.5&&result.attribution.right<=width+.5,`${state}: attribution outer width stays in the viewport`);
       assert.equal(result.cardCount,welcomeTopics.length);
+      assert.equal(result.boxes.filter(box=>box.name.startsWith('.welcome-focus:')).length,result.atlas?1:0,'desktop retains one visible chosen-map panel');
       assert.equal(result.heading,true,'compact visual presentation retains the accessible welcome heading');
       assert.equal(result.boxes.filter(box=>box.name.startsWith('.welcome-toolbar:')).length,1,'one painted welcome toolbar remains');
       assert.equal(result.boxes.filter(box=>box.name.startsWith('.topic-callout:')).length,welcomeTopics.length,'every category retains painted card geometry even when the rail clips offscreen cards');
       for(let i=0;i<result.boxes.length;i++){
         const box=result.boxes[i];
         assert.ok(box.width>0&&box.height>0,`${state}: real content box ${JSON.stringify(box)}`);
+        if(box.name.startsWith('.welcome-focus:'))assert.ok(box.top>=result.root.top&&box.bottom<=result.root.bottom,'chosen-map content stays above provider credits: '+JSON.stringify(box));
         if(!(result.carousel&&box.name.startsWith('.topic-callout:')))assert.ok(box.left>=result.root.left-.5&&box.right<=result.root.right+.5,`${state}: visible content stays inside scroll width ${JSON.stringify(box)}`);
         for(const other of result.boxes.slice(i+1)){
           const x=Math.min(box.right,other.right)-Math.max(box.left,other.left),y=Math.min(box.bottom,other.bottom)-Math.max(box.top,other.top);
@@ -1426,6 +1443,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
       assert.ok(Math.abs(after-before)<2,'switching category glimpses never shifts the category rows: '+JSON.stringify({before,after}));
     }
 
+    await p.wait(`!document.querySelector('.welcome-focus')?.getAnimations().some(animation=>animation.pending||animation.playState==='running')`, 'chosen-map entrance finishes before visual capture');
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
     await checkCredits('initial license strip');
     await p.wait(`!!document.querySelector('.living-welcome .domain-stage .maplibregl-ctrl-attrib')`,'the live welcome map carries its own provider credits');
