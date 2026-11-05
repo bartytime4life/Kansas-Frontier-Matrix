@@ -243,16 +243,27 @@ for (const [width, height] of [[1366, 768], [390, 844], [375, 667]]) {
     t.after(async () => { try { await p.close(); } catch { /* Browser cleanup may already have closed its targets. */ } });
     await t.test('coordinate clicks refuse an obscured control instead of bypassing it', async () => {
       await p.open();
-      await p.evaluate(`(() => {
+      const scope = '#qwen-map-panel form > div:last-child';
+      await p.fill('water');
+      await p.wait(`document.querySelectorAll('#global-search-results button').length > 1`, 'current matches enable the Find control');
+      // Prove the same target accepts native input before covering it. An empty
+      // query disables Find and would make the obstruction assertion vacuous.
+      await p.clickButton(scope, 'Find');
+      await p.wait(`document.activeElement === document.querySelector('#global-search-results button')`, 'unobstructed Find receives native input');
+      const obstruction = await p.evaluate(`(() => {
+        const button = [...document.querySelectorAll(${JSON.stringify(scope)} + ' button')].find(item => item.textContent.trim() === 'Find');
         window.__countyClickAttempts = 0;
         const cover = document.createElement('div');
         cover.id = 'county-click-obstruction';
         cover.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#0001';
         cover.addEventListener('pointerdown', () => window.__countyClickAttempts++);
         document.body.append(cover);
+        const rect = button.getBoundingClientRect();
+        return {enabled:!button.disabled,hit:document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2)?.id};
       })()`);
       try {
-        await assert.rejects(p.clickButton('#qwen-map-panel form > div:last-child', 'Find', 400), /Visible stable hit target required for Find/);
+        assert.deepEqual(obstruction, {enabled:true,hit:'county-click-obstruction'}, 'the enabled target is covered at its click point');
+        await assert.rejects(p.clickButton(scope, 'Find', 400), /Visible stable hit target required for Find/);
         assert.equal(await p.evaluate('window.__countyClickAttempts'), 0, 'no input is dispatched through an obstruction');
       } finally {
         await p.evaluate(`document.querySelector('#county-click-obstruction')?.remove()`);

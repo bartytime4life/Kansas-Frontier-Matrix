@@ -162,7 +162,19 @@ no running or pending animation on the button or its ancestors, before sending
 ordinary mouse input. It scrolls through the browser, never invokes
 DOM click or application handlers, and fails with geometry/hit diagnostics
 within a 30-second bound. An obscured-control case verifies that no
-pointer input is dispatched through an overlay at every viewport.
+pointer input is dispatched through an overlay at every viewport. It first
+fills a valid query, clicks the enabled Find button with native input and
+observes focus entering the current results. After adding the cover, it
+asserts that Find remains enabled and that the cover occupies its click point
+before checking rejection and zero pointer input.
+
+The initial version of this case left the query empty, which disabled Find.
+Removing the helper's obstruction check still let that version pass, so the
+initial negative case did not establish obstruction protection. The enabled
+target and successful uncovered click distinguish this assertion from the
+helper's other readiness checks. Mutation qualification removes only the
+center hit-test guard in a disposable test copy; the corrected negative case
+must then fail rather than accepting input into the cover.
 
 This follows a local Chrome 157 observation on public source `d5503ac`: the old
 helper's immediate rectangle for the report JSON button was y=1199–1232 in an
