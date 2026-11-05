@@ -23,6 +23,7 @@ assert.equal(welcomeTopics.length, 22, 'the shared taxonomy includes Flora, Faun
 
 async function readyWelcome(p) {
   await p.wait(`document.querySelector('.explorer-guide.living-welcome')?.dataset.renderer === 'capability' && ${JSON.stringify(welcomeTopics.map(topic => '.living-welcome .topic-' + topic.id))}.every(selector=>document.querySelector(selector))`, 'all shared domain cards hydrated');
+  await p.wait(`document.querySelector('.living-welcome')?.dataset.carousel===String(matchMedia('(max-width:700px), (max-height:500px) and (max-width:1100px)').matches)`, 'responsive chooser settles before input coordinates are measured');
   const actual = await p.evaluate(`Array.from(document.querySelectorAll('.living-welcome .topic-callout'),card=>({id:[...card.classList].find(name=>name.startsWith('topic-')&&name!=='topic-callout')?.slice(6),title:card.querySelector('strong')?.textContent,facets:card.querySelector('small')?.textContent,label:card.getAttribute('aria-label')}))`);
   assert.deepEqual(actual, welcomeTopics.map(topic => ({ id:topic.id, title:topic.title, facets:topic.facets.slice(0,2).join(' · '), label:'Open '+topic.title+' map: '+topic.facets.join(' · ') })), 'every shared domain appears once, in order, with its actual facets and accessible name');
   assert.equal(await p.evaluate(`document.querySelectorAll('.living-welcome video,.living-welcome .motion-portal').length`), 0, 'the welcome does not mount retired footage players');
@@ -44,7 +45,39 @@ async function leaveCompactLayers(p) {
 async function revealControl(p, selector) {
   await p.evaluate(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),root=node.closest('.living-welcome'),card=node.closest('.topic-choice');if(root?.dataset.carousel==='true'&&root.dataset.fullscreen!=='true'&&card)card.scrollIntoView({block:'nearest',inline:'center',behavior:'instant'});else node.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});})()`);
   await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),r=node?.getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome')?.getBoundingClientRect();return r&&root&&r.width>0&&r.height>=44&&r.left>=root.left-.5&&r.right<=root.right+.5&&r.top>=root.top-.5&&r.bottom<=root.bottom+.5&&node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`, 'real control is visible, full-sized and hit-testable: '+selector);
+  await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(selector)}),root=node.closest('.living-welcome'),card=node.closest('.topic-choice');return !card||root.dataset.carousel!=='true'||root.dataset.fullscreen==='true'||root.dataset.centeredTopic===card.dataset.carouselTopic;})()`, 'scrollable card selection settles before input: '+selector);
   return p.evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
+}
+
+// Tools now live in Browse, leaving the opened map uncovered. Use the same
+// visible catalogue route as a visitor; never force the collapsed dock open.
+async function openCategoryTool(p, title) {
+  const enter = async selector => {
+    await p.evaluate(`(() => { const node=document.querySelector(${JSON.stringify(selector)}); node.scrollIntoView({block:'center',behavior:'instant'}); node.focus(); })()`);
+    await p.key('Enter','Enter',13);
+  };
+  if (!await p.evaluate(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`)) {
+    if (await p.evaluate(`innerWidth<=1100`)) {
+      await enter('.map-dock-map-menu > summary');
+      await enter('.map-dock-menu-quick button:nth-child(2)');
+    } else await enter('.map-dock-actions > button:nth-child(2)');
+  }
+  await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`, 'editable Layers opened');
+  await enter('[data-layer-view="official"]');
+  if(!await p.evaluate(`document.querySelector('.layer-topic-details').open`))await enter('.layer-topic-details > summary');
+  await p.wait(`!![...document.querySelectorAll('.category-capabilities button')].find(button=>button.querySelector('strong')?.textContent===${JSON.stringify(title)})`, 'requested category tool available');
+  await p.evaluate(`(()=>{const node=[...document.querySelectorAll('.category-capabilities button')].find(button=>button.querySelector('strong')?.textContent===${JSON.stringify(title)});node.scrollIntoView({block:'center',behavior:'instant'});node.focus();})()`);
+  await p.key('Enter','Enter',13);
+  await p.wait(`!!document.querySelector('.category-map-dock') && !document.activeElement?.closest('[inert]')`, 'tool opens on the existing map');
+}
+
+async function openMapNotes(p) {
+  await revealControl(p,'.welcome-preferences > summary');
+  await p.evaluate(`document.querySelector('.welcome-preferences > summary').focus()`);
+  if (!await p.evaluate(`document.querySelector('.welcome-preferences').open`)) await p.key('Enter','Enter',13);
+  await revealControl(p,'.welcome-map-notes');
+  await p.evaluate(`document.querySelector('.welcome-map-notes').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'visible Map notes opens with close focused');
 }
 
 // Explicit Preview opens the optional stage; selected cards use Open my map.
@@ -245,7 +278,7 @@ async function pageSession(b, width, height, networkOptions = {}) {
       if (await evaluate(`Boolean(${expression})`)) return;
       await pause(50);
     }
-    throw new Error(`${label}: ${await evaluate(`JSON.stringify({url:location.href, guide:!!document.querySelector('.explorer-guide'), topic:document.querySelector('[aria-label="Layer topic"]')?.value, active:document.activeElement?.outerHTML.slice(0,300), welcome:(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),map=document.querySelector('.map-stage>.map-canvas');return root?{renderer:root.dataset.renderer,immersive:root.dataset.immersive,scene:root.querySelector('.domain-stage')?.dataset.topic,mapOpacity:map?getComputedStyle(map).opacity:null,focusedClass:document.activeElement?.className,focusVisible:document.activeElement?.matches(':focus-visible'),cards:[...root.querySelectorAll('.topic-callout')].map(card=>({classes:card.className,opacity:getComputedStyle(card).opacity,focusVisible:card.matches(':focus-visible'),hovered:card.matches(':hover'),pointerEvents:getComputedStyle(card).pointerEvents}))}:null;})()})`)}`);
+    throw new Error(`${label}: ${await evaluate(`JSON.stringify({url:location.href, guide:!!document.querySelector('.explorer-guide'), topic:document.querySelector('[aria-label="Layer topic"]')?.value, geometry:[...document.querySelectorAll('.living-welcome,.welcome-map-attribution,.welcome-map-attribution .maplibregl-ctrl-attrib,.discovery-field')].map(e=>({class:e.className,rect:e.getBoundingClientRect().toJSON(),scrollLeft:e.scrollLeft})), active:document.activeElement?.outerHTML.slice(0,300), welcome:(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),map=document.querySelector('.map-stage>.map-canvas');return root?{renderer:root.dataset.renderer,immersive:root.dataset.immersive,scene:root.querySelector('.domain-stage')?.dataset.topic,mapOpacity:map?getComputedStyle(map).opacity:null,focusedClass:document.activeElement?.className,focusVisible:document.activeElement?.matches(':focus-visible'),cards:[...root.querySelectorAll('.topic-callout')].map(card=>({classes:card.className,opacity:getComputedStyle(card).opacity,focusVisible:card.matches(':focus-visible'),hovered:card.matches(':hover'),pointerEvents:getComputedStyle(card).pointerEvents}))}:null;})()})`)}`);
   };
   const key = async (key, code, windowsVirtualKeyCode, modifiers = 0) => {
     await call('Input.dispatchKeyEvent', { type: 'rawKeyDown', key, code, windowsVirtualKeyCode, modifiers });
@@ -507,6 +540,7 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
 for (const [width, height] of [[1280, 800], [390, 844]]) {
   test(`startup Layers handoff excludes welcome and restores focus at ${width}x${height}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, height);
+    if(width<600)await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
     await p.holdSceneModule();
     await p.open('/?motion=off');
     await p.wait(`!!document.querySelector('.living-welcome')`, 'welcome is opening');
@@ -639,7 +673,8 @@ for (const width of [320, 390, 768, 1280]) {
     await enter('.topic-preview-sky'); await openStageNotes(p);
     await p.wait(`!!document.querySelector('.welcome-open-map')`, 'Sky map action');
     await enter('.welcome-open-map');
-    await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('.category-map-dock header strong')?.textContent==='Sky globe'`, 'real Sky workspace');
+    await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('[aria-label="Layer topic"]')?.value==='sky'`, 'real Sky workspace');
+    await openCategoryTool(p,'Sun & Moon through the year');
     await leaveCompactLayers(p);
     await p.evaluate(`[...document.querySelectorAll('.category-map-dock-tool')].find(b=>b.textContent==='Daylight through the year').focus()`);
     await p.key('Enter', 'Enter', 13);
@@ -1141,10 +1176,9 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
         hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2) === button,
         focus:document.activeElement === button};
     })()`);
-    for (const selector of ['.topic-preview-weather', '.topic-preview-history', '.discovery-hint button']) {
-      await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);
-      await p.key('Enter', 'Enter', 13);
-      if(selector.startsWith('.topic-'))await openStageNotes(p);
+    for (const selector of ['.topic-preview-weather', '.topic-preview-history', '.welcome-map-notes']) {
+      if(selector==='.welcome-map-notes')await openMapNotes(p);
+      else {await revealControl(p,selector);await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);await openStageNotes(p);}
       await p.wait(`document.activeElement?.matches('.welcome-dialog-close')`, 'detail close receives focus');
       const before = await closeGeometry();
       assert.ok(before.top >= 0 && before.bottom <= height && before.left >= 0 && before.right <= width, JSON.stringify(before));
@@ -1155,7 +1189,7 @@ for (const [width, height] of [[390, 844], [320, 568], [844, 390]]) {
       assert.ok(await p.evaluate(`document.querySelector('.welcome-dialog-body').scrollTop`) > 0, 'long detail actually scrolled');
       assert.deepEqual(await closeGeometry(), before, 'content scroll cannot move or cover close');
       await p.key('Tab', 'Tab', 9, 8);
-      if (selector === '.discovery-hint button') {
+      if (selector === '.welcome-map-notes') {
         assert.equal((await closeGeometry()).focus, true, 'notes-only dialog wraps to its sole close without inventing a body control');
       } else {
         assert.equal(await p.evaluate(`!!document.activeElement?.closest('.welcome-dialog-body')`), true, 'Shift+Tab wraps to an available body control');
@@ -1275,13 +1309,13 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
     assert.equal(bounds.length,welcomeTopics.length);
     for (let index=0;index<bounds.length;index++) {
       const a=bounds[index];
-      assert.ok(a.width>0&&a.height>=44&&a.left>=0&&a.right<=width,`usable card: ${JSON.stringify(a)}`);
+      assert.ok(a.width>0&&a.height>=44&&a.width<=width,`usable card: ${JSON.stringify(a)}`);
       for(const other of bounds.slice(index+1)) {
         const x=Math.min(a.right,other.right)-Math.max(a.left,other.left),y=Math.min(a.bottom,other.bottom)-Math.max(a.top,other.top);
         assert.ok(x<=.5||y<=.5,`topic hit areas must not overlap: ${JSON.stringify({a,other,x,y})}`);
       }
     }
-    for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
+    for(const topic of welcomeTopics){await revealControl(p,'.topic-'+topic.id);await p.evaluate(`document.querySelector('.topic-${topic.id}').focus()`);assert.equal(await p.evaluate(`document.activeElement?.matches('.topic-${topic.id}')`),true,'each scrollable card is fully revealed, hit-tested and focusable');}
     const center = selector => revealControl(p,selector);
     const move = point => p.call('Input.dispatchMouseEvent',{type:'mouseMoved',...point,button:'none',buttons:0});
     const stage=id=>`document.querySelector('.living-welcome')?.dataset.cinematic==='true'&&document.querySelector('.domain-stage')?.dataset.topic==='${id}'`;
@@ -1305,7 +1339,7 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
       await p.wait(stage('weather'),'a single Preview tap opens the map stage');
     }
     assert.equal(await p.evaluate(`document.querySelectorAll('.welcome-rail-card').length`),welcomeTopics.length,'every other category retains a place');
-    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.discovery-field')).display`),'none','large cards clear the map');
+    assert.equal(await p.evaluate(`document.querySelector('.discovery-field').checkVisibility()`),false,'large cards and their ancestor clear the map');
     const geometry=await p.evaluate(`(()=>{const root=document.querySelector('.living-welcome').getBoundingClientRect(),rail=document.querySelector('.welcome-category-rail').getBoundingClientRect(),panel=document.querySelector('.welcome-layer-demo').getBoundingClientRect(),deck=document.querySelector('.welcome-scene-deck').getBoundingClientRect();return {root:{top:root.top,bottom:root.bottom},rail:{top:rail.top,bottom:rail.bottom},panel:{top:panel.top,bottom:panel.bottom},deck:{top:deck.top,bottom:deck.bottom},overflow:document.querySelector('.living-welcome').scrollWidth>innerWidth};})()`);
     assert.equal(geometry.overflow,false,'stage does not overflow horizontally');
     assert.ok(geometry.deck.bottom<=geometry.panel.top,'top controls do not cover the active category');
@@ -1323,7 +1357,8 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-cinematic-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
     await returnStage(p);
     assert.equal(await p.evaluate(`document.activeElement.matches('.topic-preview-weather')`),true,'Return restores the original card');
-    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.discovery-field')).display`),'grid');
+    assert.equal(await p.evaluate(`document.querySelector('.discovery-field').checkVisibility()`),true,'Return restores the working card chooser');
+    assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.discovery-field')).display`),width<=700?'flex':'grid','compact rail and wide grid keep their actual layouts');
 
   });
 }
@@ -1341,20 +1376,23 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
       const result=await p.evaluate(`(()=>{
         const root=document.querySelector('.explorer-guide.living-welcome');
         const selectors=['.welcome-hero','.welcome-toolbar','.discovery-hint','.topic-callout','.welcome-preview-expand'];
-        const boxes=selectors.flatMap(selector=>[...root.querySelectorAll(selector)].map((node,index)=>{const r=node.getBoundingClientRect();return{name:selector+':'+index,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};}));
+        const boxes=selectors.flatMap(selector=>[...root.querySelectorAll(selector)].flatMap((node,index)=>{const r=node.getBoundingClientRect(),style=getComputedStyle(node);if(!node.checkVisibility()||style.clipPath==='inset(50%)')return [];return[{name:selector+':'+index,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}];}));
         const r=root.getBoundingClientRect(),header=document.querySelector('header.topbar').getBoundingClientRect(),a=document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib')?.getBoundingClientRect();
-        return {boxes,root:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,scrollWidth:root.scrollWidth,clientWidth:root.clientWidth},headerBottom:header.bottom,attribution:a?{left:a.left,right:a.right,top:a.top,bottom:a.bottom,width:a.width,height:a.height}:null};
+        return {boxes,carousel:root.dataset.carousel==='true',heading:!!root.querySelector('#living-welcome-title')?.textContent.trim(),cardCount:root.querySelectorAll('.topic-callout').length,root:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,scrollWidth:root.scrollWidth,clientWidth:root.clientWidth},headerBottom:header.bottom,attribution:a?{left:a.left,right:a.right,top:a.top,bottom:a.bottom,width:a.width,height:a.height}:null};
       })()`);
       assert.equal(result.root.top,0,`${state}: the builder owns the viewport and hides the map header`);
       assert.ok(result.root.scrollWidth<=result.root.clientWidth,`${state}: no horizontal overflow`);
       assert.ok(result.attribution?.width>0&&result.attribution?.height>0,`${state}: real attribution has measured geometry`);
       assert.ok(result.attribution.top>=result.root.bottom-.5&&result.attribution.bottom<=height+.5,`${state}: attribution owns a separate viewport strip ${JSON.stringify(result.attribution)}`);
       assert.ok(result.attribution.left>=-.5&&result.attribution.right<=width+.5,`${state}: attribution outer width stays in the viewport`);
-      assert.equal(result.boxes.filter(box=>box.name.startsWith('.topic-callout:')).length,welcomeTopics.length);
+      assert.equal(result.cardCount,welcomeTopics.length);
+      assert.equal(result.heading,true,'compact visual presentation retains the accessible welcome heading');
+      assert.equal(result.boxes.filter(box=>box.name.startsWith('.welcome-toolbar:')).length,1,'one painted welcome toolbar remains');
+      assert.equal(result.boxes.filter(box=>box.name.startsWith('.topic-callout:')).length,welcomeTopics.length,'every category retains painted card geometry even when the rail clips offscreen cards');
       for(let i=0;i<result.boxes.length;i++){
         const box=result.boxes[i];
         assert.ok(box.width>0&&box.height>0,`${state}: real content box ${JSON.stringify(box)}`);
-        assert.ok(box.left>=result.root.left-.5&&box.right<=result.root.right+.5,`${state}: content stays inside scroll width ${JSON.stringify(box)}`);
+        if(!(result.carousel&&box.name.startsWith('.topic-callout:')))assert.ok(box.left>=result.root.left-.5&&box.right<=result.root.right+.5,`${state}: visible content stays inside scroll width ${JSON.stringify(box)}`);
         for(const other of result.boxes.slice(i+1)){
           const x=Math.min(box.right,other.right)-Math.max(box.left,other.left),y=Math.min(box.bottom,other.bottom)-Math.max(box.top,other.top);
           assert.ok(x<=.5||y<=.5,`${state}: distinct content areas do not overlap ${JSON.stringify({box,other,x,y})}`);
@@ -1395,11 +1433,16 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('header.topbar')).visibility`),'hidden','builder owns navigation while the map header is covered');
     for(const selector of ['.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'hidden','background map chrome does not peek through welcome');
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib')).visibility`),'visible','real attribution remains available');
+    await openMapNotes(p);
+    await p.key('Escape','Escape',27);
+    await p.wait(`!document.querySelector('.welcome-dialog')&&document.activeElement?.matches('.welcome-map-notes')&&document.querySelector('.atlas-studio')?.dataset.welcomeSources==='open'`, 'Map notes reveals full credits and restores opening focus');
+    await p.evaluate(`document.querySelector('.welcome-preferences > summary').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`(()=>{const bar=document.querySelector('.welcome-map-attribution'),strip=document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib'),root=document.querySelector('.explorer-guide.living-welcome'),r=strip?.getBoundingClientRect(),port=root?.getBoundingClientRect();return bar&&r&&port&&!bar.getAnimations({subtree:true}).some(animation=>animation.pending||animation.playState==='running')&&r.top>=port.bottom-.5&&r.bottom<=innerHeight+.5;})()`,'source-strip entrance finishes inside its reserved viewport');
     await checkLayout('source strip visible');
     await checkCredits('persistent source strip');
     assert.match(await p.evaluate(`document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib').textContent`),/Isolated browser layout fixture attribution/,'source text remains a labeled empty fixture, not accepted observations');
     assert.ok(await p.evaluate(`parseFloat(getComputedStyle(document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib-inner')).fontSize)>0`),'expanded sources expose readable attribution text');
+    if(process.env.KFM_WORKSPACE_SCREENSHOTS){const shot=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-sources-${width}x${height}.png`),Buffer.from(shot.data,'base64'));}
     const before=await p.evaluate(`({search:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`);
     // All domains get a real native-keyboard detail journey on desktop and the
     // smallest phone. Other viewports retain captured and uncaptured examples.
@@ -1441,7 +1484,7 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1024,1366,'tall tablet
     await p.evaluate(`document.querySelector('.welcome-dialog-body>.welcome-preview-action').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.living-welcome')?.dataset.fullscreen==='true'&&document.activeElement?.matches('.welcome-preview-expand')`,'explicit preview hands focus to Return');
     assert.equal(await p.evaluate(`document.querySelector('.domain-stage').dataset.topic`),'history');
-    const expanded=await p.evaluate(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),grid=root.querySelector('.discovery-field--grouped'),stage=root.querySelector('.domain-stage'),r=stage.getBoundingClientRect(),port=root.getBoundingClientRect();return{hidden:getComputedStyle(grid).display==='none',cards:[...grid.querySelectorAll('button')].filter(button=>button.getClientRects().length>0).length,top:r.top,bottom:r.bottom,portTop:port.top,portBottom:port.bottom};})()`);
+    const expanded=await p.evaluate(`(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),grid=root.querySelector('.discovery-field--grouped'),stage=root.querySelector('.domain-stage'),r=stage.getBoundingClientRect(),port=root.getBoundingClientRect();return{hidden:!grid.checkVisibility(),cards:[...grid.querySelectorAll('button')].filter(button=>button.getClientRects().length>0).length,top:r.top,bottom:r.bottom,portTop:port.top,portBottom:port.bottom};})()`);
     assert.equal(expanded.hidden,true,'expanded map removes the grouped category overlay');
     assert.equal(expanded.cards,0,'hidden category buttons have no visible or tabbable boxes');
     assert.ok(Math.abs(expanded.top-expanded.portTop)<1&&Math.abs(expanded.bottom-expanded.portBottom)<1,'expanded map fills the welcome viewport after opening from a scrolled category: '+JSON.stringify(expanded));
@@ -1582,20 +1625,25 @@ test('server markup and startup frames keep the map covered until the welcome de
 });
 
 for(const [width,height] of [[1280,800],[768,900],[390,844],[320,740],[568,320]]){
- test('full-width tips and Chat handoff at '+width+'x'+height,{timeout:60000},async t=>{
+ test('responsive map tips and Chat handoff at '+width+'x'+height,{timeout:60000},async t=>{
   const b=await browser(t),p=await pageSession(b,width,height);
   await p.open('/');await readyWelcome(p);
+  await revealControl(p,'.welcome-toolbar > .welcome-primary');
+  await p.evaluate(`document.querySelector('.welcome-toolbar > .welcome-primary').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`!document.querySelector('.living-welcome')&&!document.querySelector('header.topbar').inert`, 'Explore freely releases the real map header');
   const geometry=await p.evaluate(`(()=>{
     const rect=e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width,height:r.height};};
     const header=document.querySelector('.topbar'),tips=header.querySelector(':scope>.welcome-feature-guide'),chat=header.querySelector('.qwen-header-entry'),map=header.querySelector('.map-chrome-dock');
     return {header:rect(header),tips:rect(tips),chat:rect(chat),map:rect(map),chatClipped:chat.scrollWidth>chat.clientWidth+1,overflow:document.documentElement.scrollWidth>innerWidth,controls:[...tips.querySelectorAll('.welcome-feature-steppers button')].map(rect),duplicates:document.querySelectorAll('.welcome-feature-guide').length};
   })()`);
-  if(height>480)assert.ok(geometry.tips.width>=geometry.header.width-34,'tips stretch across the header');
-  else assert.ok(geometry.header.height<=54&&geometry.tips.width>200,'short landscape keeps a full reading area without taking map height');
+  if(width>700){
+    if(height>480)assert.ok(geometry.tips.width>=geometry.header.width-34,'tips stretch across the header');
+    else assert.ok(geometry.header.height<=54&&geometry.tips.width>200,'short landscape keeps a full reading area without taking map height');
+  }else{assert.equal(geometry.tips.height,0,'compact map intentionally omits the rotating tips strip');assert.ok(geometry.header.height<=54,'compact header preserves map height');}
   assert.equal(geometry.duplicates,1);assert.equal(geometry.overflow,false);assert.equal(geometry.chatClipped,false);
   assert.ok(geometry.chat.right<=geometry.map.left+.5,'Chat and map controls do not overlap');
-  for(const box of geometry.controls)assert.ok(box.width>=44&&box.height>=44);
-  for(let i=0;i<6;i++){
+  if(width>700)for(const box of geometry.controls)assert.ok(box.width>=44&&box.height>=44);
+  for(let i=0;i<(width>700?6:0);i++){
     await p.evaluate(`document.querySelector('.topbar .welcome-feature-steppers button:last-child').focus()`);await p.key('Enter','Enter',13);
     assert.equal(await p.evaluate(`(()=>{const text=document.querySelector('.welcome-feature-item>span:nth-child(2)'),r=text.getBoundingClientRect(),window=text.closest('.welcome-feature-window').getBoundingClientRect();return text.scrollHeight>text.clientHeight+1||r.top<window.top-.5||r.bottom>window.bottom+.5;})()`),false,'every tip is readable');
   }
@@ -1781,6 +1829,7 @@ test('water animation stays opt-in and does not follow the visitor into unrelate
  const enter=async selector=>{await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);};
  await p.open('/?topic=water','1',`localStorage.setItem('kfm-scene-effects-v1',JSON.stringify({waterFlow:true,sunSync:false}));`);
  await p.wait(`!!document.querySelector('.topic-map-look button')`,'Water guide offers its real map');await enter('.topic-map-look button');
+ await openCategoryTool(p,'River flow effect');
  await p.wait(`[...document.querySelectorAll('.category-map-dock-tool')].some(button=>button.textContent==='Show river flow')`,'old saved flow does not auto-start');
  await p.evaluate(`[...document.querySelectorAll('.category-map-dock-tool')].find(button=>button.textContent==='Show river flow').focus()`);await p.key('Enter','Enter',13);
  await p.wait(`!![...document.querySelectorAll('.category-map-dock-tool')].some(button=>button.textContent==='Hide river flow')`,'explicit Water toggle still works');
