@@ -10733,25 +10733,22 @@ export default function Home() {
     setMapContextOpen(false);
     setGuideOpen(true);
   };
-  // Keep the native provider-credit control in the visible ownership subtree:
-  // the welcome strip, native fullscreen map, or ordinary map information host.
+  // Keep Explorer credits in its own native fullscreen or information host.
+  // The welcome preview independently owns the source strip for its live map.
   useEffect(() => {
-    const container = mapContainerRef.current, host = mapInformationHostRef.current, welcomeHost = welcomeAttributionHostRef.current;
-    if (!container || !host || !welcomeHost || !styleReady) return;
+    const container = mapContainerRef.current, host = mapInformationHostRef.current;
+    if (!container || !host || !styleReady) return;
     const owner = container.ownerDocument;
     const synchronize = () => {
       const attribution = host.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib")
-        ?? welcomeHost.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib")
         ?? container.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib");
       const fullscreen = owner.fullscreenElement
         ?? (owner as Document & { webkitFullscreenElement?: Element | null }).webkitFullscreenElement;
-      // The covered map is inert. Move its actual credit control (never a
-      // copied attribution) to the welcome's independent interactive strip.
-      const destination = welcomeShowing ? welcomeHost : fullscreen === container || container.classList.contains("maplibregl-pseudo-fullscreen") ? container.querySelector(".maplibregl-ctrl-top-right") : host;
+      const destination = fullscreen === container || container.classList.contains("maplibregl-pseudo-fullscreen") ? container.querySelector(".maplibregl-ctrl-top-right") : host;
       if (!attribution || !destination) return;
       destination.appendChild(attribution);
-      attribution.open = welcomeShowing;
-      attribution.classList.toggle("maplibregl-compact-show", welcomeShowing);
+      attribution.open = false;
+      attribution.classList.remove("maplibregl-compact-show");
     };
     owner.addEventListener("fullscreenchange", synchronize);
     owner.addEventListener("webkitfullscreenchange", synchronize);
@@ -10771,7 +10768,7 @@ export default function Home() {
       owner.removeEventListener("webkitfullscreenchange", synchronize);
       pseudoObserver.disconnect();
     };
-  }, [welcomeShowing, styleReady]);
+  }, [styleReady]);
   const closeExplorerGuide = (rememberDismissal: boolean) => {
     const returnFocus = Boolean(document.activeElement?.closest(".explorer-guide"));
     setGuideOpen(false);

@@ -825,8 +825,22 @@ compression efficiency for the requested image-animation presentation.
 
 The domain stage is a live map, not an illustration. `DomainStage.jsx` lazily
 loads `app/living-welcome/map-engine.mjs`, which keeps one non-interactive
-MapLibre map behind the welcome (provider credits stay on it in the compact
-attribution control).
+MapLibre map behind the welcome. Its native attribution control lives in the
+reserved `.welcome-map-attribution` strip, supplied by `DomainStage` from the
+same document. The welcome map retains ownership, so style/source changes update
+that exact control and disposing the preview removes it. Explorer credits stay
+in the main map's information/fullscreen host; returning to welcome never borrows
+or replaces either map's control.
+
+The 2026-11-06 source correction removes the source-strip dependency on Explorer
+startup. Deferring the main map had left the strip empty even though the preview
+had its own control inside the covered stage. Regression checks exercise the
+preview-only strip, unchanged native-node identity, disposal, and independent
+Explorer/fullscreen ownership. Existing browser composition checks still require
+visible, reachable fixture credits in the reserved strip; their exact-head rerun
+is separate evidence from these source checks. No timeout or assertion was relaxed. The existing
+`focused-welcome-and-drafts` CI job now also selects all nine `welcome content
+stays composed` viewport cases; the full core matrix remains unchanged.
 
 - **Which map.** `app/welcome-map-view.ts` takes each topic's basemap, view
   (2D, 3D terrain or globe) and camera from `CATEGORY_MAPS`, the same look the

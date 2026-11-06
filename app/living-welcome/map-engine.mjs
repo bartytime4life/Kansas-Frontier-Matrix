@@ -74,7 +74,7 @@ function loadSatelliteFrame() {
   return promise;
 }
 
-export async function createWelcomeMap(container, { onReady, onError, onRadar, onSources } = {}) {
+export async function createWelcomeMap(container, { onReady, onError, onRadar, onSources, attributionHost } = {}) {
   if (!webgl2Available()) { onError?.(); return null; }
   const lib = await loadMapLibre();
   lib.setWorkerUrl(WORKER_URL);
@@ -89,6 +89,17 @@ export async function createWelcomeMap(container, { onReady, onError, onRadar, o
       pixelRatio: budget.pixelRatio, maxTileCacheSize: Math.min(budget.tileCache, budget.efficient ? 24 : budget.coarsePointer ? 32 : 48), maxPitch: 72, renderWorldCopies: false, fadeDuration: 200,
     });
   } catch { onError?.(); return null; }
+  // This preview owns its live provider credits even while Explorer startup is
+  // deferred. Moving the native control preserves source/style updates and
+  // MapLibre's disposal; no text is copied from a different map.
+  if (attributionHost) {
+    const attribution = container.querySelector('.maplibregl-ctrl-attrib');
+    if (attribution) {
+      attributionHost.appendChild(attribution);
+      attribution.open = true;
+      attribution.classList.add('maplibregl-compact-show');
+    }
+  }
   map.getCanvas().setAttribute('aria-hidden', 'true');
   map.getCanvas().tabIndex = -1;
   // `styleKey` names the style applied or still pending (basemap and view); it

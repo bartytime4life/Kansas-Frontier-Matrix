@@ -118,3 +118,24 @@ test('subject camera passes return home, reverse without accumulating drift, and
  }
  assert.ok(signatures.size>=18,'topics have distinct camera choreography');
 });
+
+// Execute the production attribution placement effect: main and preview maps
+// must never exchange their native controls, including on a return to welcome.
+test('Explorer attribution never borrows welcome credits and retains fullscreen placement',async()=>{
+ const source=await readFile('app/page.tsx','utf8'),ast=ts.createSourceFile('page.tsx',source,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);
+ let effect;const visit=node=>{if(ts.isCallExpression(node)&&node.expression.getText(ast)==='useEffect'&&node.arguments[0]?.getText(ast).includes('mapInformationHostRef.current'))effect=node.arguments[0].getText(ast);ts.forEachChild(node,visit);};visit(ast);assert.ok(effect);
+ const classes=new Set(),listeners=new Map();let disconnected=false;
+ const owner={fullscreenElement:null,addEventListener:(name,fn)=>listeners.set(name,fn),removeEventListener:name=>listeners.delete(name)};
+ const native={open:true,classList:{toggle(){},remove(){}}},preview={open:true,classList:{toggle(){},remove(){}}};
+ const host={child:native,querySelector(){return this.child;},appendChild(node){if(node.parent)node.parent.child=null;this.child=node;node.parent=this;}};native.parent=host;
+ const welcomeHost={...host,child:preview};preview.parent=welcomeHost;
+ const corner={...host,child:null};
+ const container={ownerDocument:owner,classList:{contains:name=>classes.has(name)},querySelector:selector=>selector==='.maplibregl-ctrl-top-right'?corner:corner.child};
+ const scope={mapContainerRef:{current:container},mapInformationHostRef:{current:host},welcomeAttributionHostRef:{current:welcomeHost},welcomeShowing:true,styleReady:true,MutationObserver:class{observe(){}disconnect(){disconnected=true;}}};
+ const execute=()=>new Function(...Object.keys(scope),ts.transpileModule(`return (${effect})();`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(scope));
+ const cleanup=execute();
+ assert.equal(host.child,native,'returning to welcome leaves the main map control in its own information host');assert.equal(welcomeHost.child,preview,'the preview remains the only owner of the welcome source strip');
+ owner.fullscreenElement=container;listeners.get('fullscreenchange')();assert.equal(corner.child,native);assert.equal(welcomeHost.child,preview);
+ owner.fullscreenElement=null;listeners.get('fullscreenchange')();assert.equal(host.child,native);assert.equal(welcomeHost.child,preview);
+ cleanup();assert.equal(listeners.size,0);assert.equal(disconnected,true);
+});

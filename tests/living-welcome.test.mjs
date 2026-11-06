@@ -165,6 +165,21 @@ test('DomainStage reports callback and rejected initialization failures to its w
  }
 });
 
+test('DomainStage supplies its document source strip to the preview without an Explorer map',async()=>{
+ let boot,received,disposed=0;const strip={};
+ const h=await componentHarness('app/living-welcome/DomainStage.jsx',{
+  '../map-runtime':{BASEMAPS:{standard:{note:'Provider credit'}}},'../live-context':{OFFICIAL_CONTEXT_BY_ID:{}},
+  '../welcome-map-view':{welcomeView:()=>({topic:null,name:'Kansas',basemap:'standard',detail:'Context'})},
+  './map-engine.mjs':{createWelcomeMap:async(_host,options)=>{received=options.attributionHost;return {setAviationMode(){},setReduced(){},setPaused(){},setLayersVisible(){},show(){},dispose(){disposed++;}};}},
+ },{window:{requestIdleCallback:fn=>{boot=fn;return 1;},cancelIdleCallback(){}}});
+ try{
+  const tree=h.render(h.exports.DomainStage,{});
+  findNode(tree,node=>node.props?.className==='domain-stage-map').props.ref.current={ownerDocument:{querySelector:selector=>selector==='.welcome-map-attribution'?strip:null}};
+  h.commit();boot();await settle();assert.equal(received,strip,'the engine owns the existing visible strip, not a main-map control');
+ }finally{h.dispose();}
+ assert.equal(disposed,1);
+});
+
 test('a hidden welcome defers its renderer, cancels queued boot and starts only once when visible',async()=>{
  const listeners=new Map(),queued=new Map();let id=0,starts=0,disposals=0;
  const document={hidden:true,addEventListener:(event,fn)=>listeners.set(event,fn),removeEventListener:event=>listeners.delete(event)};
