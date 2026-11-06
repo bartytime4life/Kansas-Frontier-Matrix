@@ -283,3 +283,22 @@ links still open the status panel. Other explicit utility destinations retain
 their existing handling. Browser regressions exercise remembered dismissal and
 status-panel Back/Forward at desktop and phone widths. The pull request records
 exact-head execution and remaining acceptance limits.
+
+
+### Civic inspection restoration — November 6, 2026
+
+A second review found that civic inspection created a history step, but Forward
+could not reconstruct its official-context feature through the registry-only
+lookup. Restoration now finds the exact civic identity in a checked payload for
+the restored day. Congress, payload day and record day remain authoritative;
+geometry and source properties are never copied from browser history.
+
+If the dated payload has not loaded, retain the inspection identity and drawer
+settings while the normal source request completes. A different navigation,
+manual selection, clear action, hidden carrier or changed day cancels that
+pending restoration. Missing records stay unavailable without substituting
+another district or Congress. Tests cover delayed source arrival, exact dated
+identity, cancellation and retention of the history destination; hydrated
+synthetic browser journeys select a district through native controls, then use
+Back, Forward and reload at desktop and phone widths. Their execution and any
+remaining qualification gaps belong to the current-head pull request evidence.

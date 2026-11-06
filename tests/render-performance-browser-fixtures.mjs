@@ -19,7 +19,8 @@ export function installRenderDiagnostics(Map) {
   }
   const identify=map=>{
     let entry=state.maps.find(entry=>entry.map===map);
-    if(!entry){entry={map,kind:map.getContainer().classList.contains('domain-stage-map')?'preview':'explorer',styles:0,renders:0,removed:false};state.maps.push(entry);
+    if(!entry){entry={map,kind:map.getContainer().classList.contains('domain-stage-map')?'preview':'explorer',styles:0,renders:0,removed:false,contexts:[]};state.maps.push(entry);
+      for(const type of ['webglcontextlost','webglcontextrestored'])map.getCanvas().addEventListener(type,()=>entry.contexts.push({type,at:performance.now()}));
       map.on('style.load',()=>{entry.styles++;});map.on('render',()=>{entry.renders++;});map.on('error',e=>state.errors.push(String(e.error?.message??e.message)));}
     return entry;
   };

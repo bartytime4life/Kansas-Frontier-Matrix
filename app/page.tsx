@@ -1142,6 +1142,21 @@ const buildBasemapContext = (candidate: BasemapFeatureCandidate, longitude: numb
   };
 };
 
+// Reconstruct only a checked civic record for the restored day. Never use a
+// district from another Congress or copy geometry out of browser history.
+const civicInspectionContext = (featureId: string, day: string | null, payload: OfficialContextPayload | undefined): SelectedContext | null => {
+  if (!day || !featureId.startsWith(`official-context:${CIVIC_SOURCE.shortTitle}:`) || featureId.length > 180
+    || payload?.feed !== CIVIC_ID || payload.state !== "ready" || (payload.sourceDay !== undefined && payload.sourceDay !== day)) return null;
+  for (const feature of payload.data.features) {
+    if (!civicRecordMatchesDay(feature.properties, day)) continue;
+    const geometry = countySearchGeometry(feature);
+    if (!geometry) continue;
+    const context = buildBasemapContext({ ...feature, source: CIVIC_SOURCE.sourceId }, ...geometry.focus);
+    if (context?.featureId === featureId) return context;
+  }
+  return null;
+};
+
 const parseNumber = (value: string | null, fallback: number) => {
   if (value === null || value.trim() === "") return fallback;
   const parsed = Number(value);
@@ -1284,9 +1299,11 @@ export default function Home() {
   const officialPayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const explorerRestoredRef = useRef(false);
   const explorerNavigationPendingRef = useRef(false);
+  const [pendingCivicInspection, setPendingCivicInspection] = useState<{ featureId: string; day: string; params: URLSearchParams; reported?: boolean } | null>(null);
   const [explorerNavigationRequest, setExplorerNavigationRequest] = useState(0);
   const [navigationReadEpoch, setNavigationReadEpoch] = useState(0);
   const markExplorerNavigation = useCallback(() => {
+    setPendingCivicInspection(null);
     explorerNavigationPendingRef.current = true;
     setExplorerNavigationRequest(request => request + 1);
   }, []);
@@ -3000,9 +3017,16 @@ export default function Home() {
       params.set("drawer", rightOpen ? "open" : "closed");
       params.set("focusStage", focusStage);
       params.set("focusIntent", focusIntent);
+    } else if (pendingCivicInspection) {
+      // Keep the requested inspection destination while its dated source loads.
+      params.set("f", pendingCivicInspection.featureId);
+      for (const key of ["panel", "drawer", "focusStage", "focusIntent"]) {
+        const value = pendingCivicInspection.params.get(key);
+        if (value !== null) params.set(key, value);
+      }
     }
     return params;
-  }, [calendarSweep, welcomeTopics, archiveSelection, archiveViews, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, droughtOn, droughtWeek, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
+  }, [pendingCivicInspection, calendarSweep, welcomeTopics, archiveSelection, archiveViews, officialWorkspace, layerCatalogView, soilMapState, populationPrisms, quakeRecordOn, outlookDay, outlookHazard, reportsDay, droughtOn, droughtWeek, activeLayers, analysisArea, atmospherePreset, basemap, compareTimeA, compareTimeB, currentWorkspace, daylightDay, daylightEnabled, daylightInstant, daylightThroughDay, drawerView, dynamicEffects, fieldOfView, focusIntent, focusStage, gestureMode, layerOrder, lightAzimuth, liveInstrument, locationCameraRedacted, mapEvidenceFilter, mapUtilityOpen, mapUtilityView, leftOpen, sourceStatusOpen, measureUnit, movingWindowFrames, noaaRadarFollowLatest, noaaRadarFrameTime, noaaRadarLoopSpan, noaaRadarPlaybackSpeed, officialArchiveDays, officialOpacity, officialVisibility, opacity, playbackDirection, playbackLoopMode, projection, rightOpen, scenePreset, selected, streamflowArchiveDay, streamflowFrameTime, streamflowPlaybackSpeed, streamflowRange, streamflowSelectedStationId, sweepRangeEnd, sweepRangeStart, temporalMode, temporalStepRule, verticalExaggeration, view, visibleOfficialSources, year]);
 
   const announce = useCallback((message: string) => {
     setToast(message);
@@ -5858,6 +5882,7 @@ export default function Home() {
   }, [isCompact]);
 
   const openSelection = useCallback((context: SelectedContext, returnElement?: HTMLElement | null) => {
+    setPendingCivicInspection(null);
     setSubsurfaceInspection(null);
     if (hoverDrawerTimerRef.current !== null) window.clearTimeout(hoverDrawerTimerRef.current);
     hoverDrawerTimerRef.current = null;
@@ -6123,6 +6148,7 @@ export default function Home() {
   }, [allEvidenceRecords, announce, layerOrder, opacity]);
 
   const clearSelectionState = useCallback(() => {
+    setPendingCivicInspection(null);
     setFocusStage("outcome");
     setFocusIntent("explain");
     setPendingFocusAction(null);
@@ -6157,6 +6183,7 @@ export default function Home() {
   const restoreExplorerFromUrl = useCallback(() => {
       cancelSmokePlayback();
       explorerNavigationPendingRef.current = false;
+      setPendingCivicInspection(null);
       const params = explorerHistoryParams(window.location.search, window.history.state);
       const savedWelcome = explorerHistoryWelcome(window.history.state);
       const hasDestination = hasExplorerDestination(params, new URLSearchParams(window.location.search));
@@ -6450,28 +6477,30 @@ export default function Home() {
       let restoredSelection = false;
       if (featureId) {
         const match = findFeature(featureId);
-        if (match) {
-          const context = copyFeature(match.layer, featureId);
-          if (context) {
-            restoredSelection = true;
-            setFocusStage("outcome");
-            setFocusIntent("explain");
-            setPendingFocusAction(null);
-            selectedRef.current = context;
-            setSelected(context);
-            if (!params.has("l")) setVisibility((current) => {
-              const next = { ...current, [context.layerId]: true };
-              visibilityRef.current = next;
-              return next;
-            });
-            const restoredDrawer = params.get("panel");
-            setDrawerView(restoredDrawer === "metadata" || restoredDrawer === "lineage" || restoredDrawer === "focus" ? restoredDrawer : "evidence");
-            const restoredFocusStage = params.get("focusStage");
-            setFocusStage(restoredFocusStage === "checks" || restoredFocusStage === "actions" ? restoredFocusStage : "outcome");
-            const restoredFocusIntent = params.get("focusIntent");
-            setFocusIntent(restoredFocusIntent === "why" || restoredFocusIntent === "lineage" || restoredFocusIntent === "time" ? restoredFocusIntent : "explain");
-            setRightOpen(params.get("drawer") !== "closed" && !(restoredMapUtilityOpen && compactRef.current));
-          }
+        const day = civicDayForFrame(nextYear, OFFICIAL_CONTEXT_PRESENT_FRAME, currentUtcDay(), restoredCalendar ? calendarFrameDay(restoredCalendar) : null);
+        const civicTarget = Boolean(day && nextOfficialVisibility[CIVIC_ID] && featureId.length <= 180 && featureId.startsWith(`official-context:${CIVIC_SOURCE.shortTitle}:`));
+        const context = match ? copyFeature(match.layer, featureId)
+          : civicTarget ? civicInspectionContext(featureId, day, officialPayloadsRef.current[CIVIC_ID]) : null;
+        if (context) {
+          restoredSelection = true;
+          setPendingFocusAction(null);
+          selectedRef.current = context;
+          setSelected(context);
+          if (context.kind === "registry" && !params.has("l")) setVisibility((current) => {
+            const next = { ...current, [context.layerId]: true };
+            visibilityRef.current = next;
+            return next;
+          });
+          const restoredDrawer = params.get("panel");
+          setDrawerView(restoredDrawer === "metadata" || restoredDrawer === "lineage" || restoredDrawer === "focus" ? restoredDrawer : "evidence");
+          const restoredFocusStage = params.get("focusStage");
+          setFocusStage(restoredFocusStage === "checks" || restoredFocusStage === "actions" ? restoredFocusStage : "outcome");
+          const restoredFocusIntent = params.get("focusIntent");
+          setFocusIntent(restoredFocusIntent === "why" || restoredFocusIntent === "lineage" || restoredFocusIntent === "time" ? restoredFocusIntent : "explain");
+          setRightOpen(params.get("drawer") !== "closed" && !(restoredMapUtilityOpen && compactRef.current));
+          if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, context.geometry);
+        } else if (civicTarget && day) {
+          setPendingCivicInspection({ featureId, day, params: new URLSearchParams(params) });
         }
       }
       if (!restoredSelection) {
@@ -6486,6 +6515,31 @@ export default function Home() {
       setLayerPreferencesReady(true);
       setNavigationReadEpoch(epoch => epoch + 1);
   }, [cancelSmokePlayback, loadOfficialArchiveDay, refreshNoaaHydrologyNetwork, refreshNoaaRadarManifest, refreshOfficialContext, refreshStreamflow]);
+
+  useEffect(() => {
+    const pending = pendingCivicInspection;
+    if (!pending) return;
+    if (!officialVisibility[CIVIC_ID] || civicFrameDay !== pending.day) { setPendingCivicInspection(null); return; }
+    if (!effectiveOfficialVisibility[CIVIC_ID] || officialStates[CIVIC_ID] !== "ready") return;
+    const context = civicInspectionContext(pending.featureId, pending.day, officialPayloads[CIVIC_ID]);
+    if (!context) {
+      if (!pending.reported) {
+        announce("The requested district is unavailable in the checked plan for this date; no other district was substituted");
+        setPendingCivicInspection({ ...pending, reported: true });
+      }
+      return;
+    }
+    setPendingCivicInspection(null);
+    selectedRef.current = context;
+    setSelected(context);
+    setPendingFocusAction(null);
+    const panel = pending.params.get("panel"), stage = pending.params.get("focusStage"), intent = pending.params.get("focusIntent");
+    setDrawerView(panel === "metadata" || panel === "lineage" || panel === "focus" ? panel : "evidence");
+    setFocusStage(stage === "checks" || stage === "actions" ? stage : "outcome");
+    setFocusIntent(intent === "why" || intent === "lineage" || intent === "time" ? intent : "explain");
+    setRightOpen(pending.params.get("drawer") !== "closed" && !(mapUtilityOpen && compactRef.current));
+    if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, context.geometry);
+  }, [announce, civicFrameDay, effectiveOfficialVisibility, mapUtilityOpen, officialPayloads, officialStates, officialVisibility, pendingCivicInspection]);
 
   useEffect(() => {
     if (!explorerRestoredRef.current) return;

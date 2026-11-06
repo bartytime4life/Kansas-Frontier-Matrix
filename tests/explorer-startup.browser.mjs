@@ -2037,7 +2037,7 @@ for (const [width,height] of [[1440,960],[390,844]]) {
       await p.evaluate('window.__renderRecovery.restoreContext()');
       await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&e.styles>${styles}&&!e.map.getCanvas().getContext('webgl2').isContextLost())`,'context restores the map style');
       try { await p.wait(`window.__kfmRenderDiagnostics.calls.filter(c=>c.owner==='curtain'&&c.name==='linkProgram').length>=2`,'restored visible curtain compiles again'); }
-      catch(error){try{result.recoveryFailure=await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics,m=d.maps.find(e=>e.kind==='explorer').map;return {pitch:m.getPitch(),projection:m.getProjection(),layers:m.getStyle()?.layers?.filter(l=>l.type==='custom')??[],calls:d.calls,errors:d.errors,contextLost:m.getCanvas().getContext('webgl2').isContextLost()};})()`);}catch(captureError){result.recoveryFailure={captureError:String(captureError)};}throw error;}
+      catch(error){try{result.recoveryFailure=await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics,e=d.maps.find(e=>e.kind==='explorer'),m=e.map,style=m.getStyle();return {pitch:m.getPitch(),projection:style?m.getProjection():null,stylePresent:!!style,removed:e.removed,contexts:e.contexts,layers:style?.layers?.filter(l=>l.type==='custom')??[],calls:d.calls,errors:d.errors,contextLost:m.getCanvas().getContext('webgl2').isContextLost()};})()`);}catch(captureError){result.recoveryFailure={captureError:String(captureError)};}throw error;}
       result.stages.push(await snapshot('restored-map'));
       const {profile}=await p.call('Profiler.stop');
       const nodes=new Map(profile.nodes.map(node=>[node.id,node.callFrame])),cpu=new Map();
@@ -2100,7 +2100,8 @@ for (const [width,height] of [[1280,800],[390,844]]) {
       await p.wait(`!document.querySelector('.living-welcome') && history.state?.kfmExplorerWelcome===false && localStorage.getItem('kfm.explorer.guide.dismissed.v2')==='1'`,'remembered dismissal saved in this entry');
       await p.call('Page.reload');
       await p.wait(`document.querySelector('.map-chrome-dock') && history.state?.kfmExplorerView`,'restored document hydrated');
-      await p.unobstructed('.guide-trigger');
+      await p.wait(`!document.querySelector('.living-welcome') && (()=>{const e=document.querySelector('.guide-trigger');return e && !e.closest('[inert], [aria-hidden=\"true\"]') && e.getBoundingClientRect().width>0;})()`,'remembered startup leaves an interactive guide trigger');
+      assert.equal(await p.evaluate(`localStorage.getItem('kfm.explorer.guide.dismissed.v2')`),'1','the explicit opt-out remains saved');
       assert.equal(await p.evaluate(`!!document.querySelector('.living-welcome')`),false,`${close}: reload honors Don't show on start`);
       await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);
       await p.wait(`document.querySelector('.living-welcome .welcome-preferences input[type="checkbox"]')?.checked`,'manual reopening remains available with preference retained');
@@ -2110,7 +2111,7 @@ for (const [width,height] of [[1280,800],[390,844]]) {
     const b=await browser(t),p=await pageSession(b,width,height);
     await p.open('/?motion=off');await readyWelcome(p);
     await p.evaluate(`document.querySelector('.topic-government').focus()`);await p.key('Enter','Enter',13);
-    await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('.map-topic-bar')`,'category map opened');
+    await p.wait(`!document.querySelector('.living-welcome') && document.activeElement?.matches('.map-topic-edit')`,'category map and committed focus handoff ready');
     await p.evaluate(`document.querySelector('.map-topic-bar>button:last-child').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`,'Layers opened');
     await p.evaluate(`document.querySelector('.layer-source-switch>button:last-child').focus()`);await p.key('Enter','Enter',13);
@@ -2123,4 +2124,36 @@ for (const [width,height] of [[1280,800],[390,844]]) {
     await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='true' && !new URLSearchParams(history.state?.kfmExplorerView).has('layers')`,'the preceding map was not overwritten by status serialization');
     assert.equal(await p.evaluate(`new URLSearchParams(history.state?.kfmExplorerView).get('topics')`),'government');
   });
+}
+
+
+for(const [width,height] of [[1280,800],[390,844]]) {
+ test(`civic inspection survives browser Back Forward and reload at ${width}x${height}`,{timeout:120000},async t=>{
+  // Contract-valid synthetic district boxes isolate navigation from provider availability.
+  const parsed={};new Function('exports',ts.transpileModule(await readFile('app/civic-districts.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(parsed);
+  const payload=parsed.parseCivicDistricts({type:'FeatureCollection',features:[1,2,3,4].map(n=>({type:'Feature',properties:{GEOID:`200${n}`,STATE:'20',CDSESSN:'119'},geometry:{type:'Polygon',coordinates:[[[-99,38],[-98,38],[-98,39],[-99,39],[-99,38]]]}}))});
+  const b=await browser(t),p=await pageSession(b,width,height,{intercept:async({requestId,request},call)=>{
+   const url=new URL(request.url);
+   if(url.origin!==origin.origin||url.pathname!=='/api/live-context'||url.searchParams.get('feed')!=='census-congress-119')return false;
+   await call('Fetch.fulfillRequest',{requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(JSON.stringify(payload)).toString('base64')});return true;
+  }});
+  await p.open('/?topic=government&base=civic&ctx=census-congress-119&motion=off');
+  await p.evaluate(`document.querySelector('.layer-topic-details summary').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`document.querySelector('.topic-map-look button')`,'category controls destination available');
+  await p.evaluate(`document.querySelector('.topic-map-look button').focus()`);await p.key('Enter','Enter',13);
+  await leaveCompactLayers(p);
+  const list='.category-map-dock [aria-label="Inspect a Kansas U.S. House district"]';
+  await p.wait(`document.querySelector(${JSON.stringify(list)})?.querySelectorAll('button').length===4`,'checked synthetic districts available');
+  const before=(await p.call('Page.getNavigationHistory')).currentIndex;
+  await p.evaluate(`document.querySelector(${JSON.stringify(list)}).querySelector('button').focus()`);await p.key('Enter','Enter',13);
+  await p.wait(`history.state?.kfmExplorerView && new URLSearchParams(history.state.kfmExplorerView).get('f')?.startsWith('official-context:') && document.querySelector('.evidence-drawer')?.getAttribute('aria-hidden')==='false'`,'district inspection committed');
+  const feature=await p.evaluate(`new URLSearchParams(history.state.kfmExplorerView).get('f')`);
+  assert.equal((await p.call('Page.getNavigationHistory')).currentIndex,before+1,'native district selection adds one step');
+  await p.evaluate('history.back()');
+  await p.wait(`!new URLSearchParams(history.state?.kfmExplorerView).has('f') && document.querySelector('.evidence-drawer')?.getAttribute('aria-hidden')==='true'`,'Back returns to the map without a selection');
+  await p.evaluate('history.forward()');
+  await p.wait(`new URLSearchParams(history.state?.kfmExplorerView).get('f')===${JSON.stringify(feature)} && document.querySelector('.evidence-drawer')?.getAttribute('aria-hidden')==='false' && document.querySelector('.evidence-drawer')?.textContent.includes('Kansas U.S. House District 1')`,'Forward restores the selected district and drawer');
+  await p.call('Page.reload');
+  await p.wait(`new URLSearchParams(history.state?.kfmExplorerView).get('f')===${JSON.stringify(feature)} && document.querySelector('.evidence-drawer')?.getAttribute('aria-hidden')==='false' && document.querySelector('.evidence-drawer')?.textContent.includes('Kansas U.S. House District 1')`,'reload reconstructs inspection after its source loads');
+ });
 }

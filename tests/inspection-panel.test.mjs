@@ -81,7 +81,7 @@ test("a Scene map sample retains selection without resizing its canvas; closing 
     let selected, drawer = false, mapWidth = 1000, probe = "fresh sample", leftChanges = 0;
     const map = {};
     const ctx = { useCallback: fn => fn, surfaceInspectionOpen: sampling, isCompact: compact, mapContainerRef: { current: map }, surfaceEvidencePendingRef: { current: false }, hoverDrawerTimerRef: { current: null }, hoverCandidateIdRef: { current: null }, returnFocusRef: { current: null }, mapUtilityReturnRef: { current: null }, selectedRef: { current: null }, setSelected(value) { selected = value; }, setRightOpen(value) { drawer = value; if (value && !compact) { mapWidth = 660; probe = null; } }, setLeftOpen() { leftChanges++; }, setTimelineOpen() { leftChanges++; } };
-    for (const name of ["setSubsurfaceInspection","setHoverSummary","setHoverActive","setMapUtilityOpen","setMapQueryCandidates","setFocusStage","setFocusIntent","setPendingFocusAction","setResearchOpen","setDrawerView","setCurrentWorkspace"]) ctx[name] = () => {};
+    for (const name of ["setPendingCivicInspection","setSubsurfaceInspection","setHoverSummary","setHoverActive","setMapUtilityOpen","setMapQueryCandidates","setFocusStage","setFocusIntent","setPendingFocusAction","setResearchOpen","setDrawerView","setCurrentWorkspace"]) ctx[name] = () => {};
     const record = { id: "selected-county" };
     evaluate(declaration.initializer, ctx)(record, map);
     assert.equal(selected, record, "the evidence record is retained while sampling");
