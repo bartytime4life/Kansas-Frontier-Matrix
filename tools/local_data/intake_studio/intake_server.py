@@ -530,6 +530,11 @@ class Handler(BaseHTTPRequestHandler):
             body = json.dumps(body, ensure_ascii=False).encode()
         if isinstance(body, str):
             body = body.encode()
+        if not isinstance(kind, str):
+            kind = str(kind)
+        kind = kind.replace("\r", "").replace("\n", "").replace("\x00", "").strip()
+        if not kind:
+            kind = "application/octet-stream"
         self.send_response(code)
         self.send_header("Content-Type", kind)
         self.send_header("Content-Length", str(len(body)))
