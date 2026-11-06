@@ -65,7 +65,7 @@ import "./evidence-summary.css";
 import { AviationLayerControl } from "./aviation-layer-control";
 import { pickKansasSkyAircraft } from "./kansas-sky-layer";
 import { AVIATION_RESEARCH_SOURCE } from "./aviation-research";
-import { ExplorerGuide, readExplorerGuideDismissed, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
+import { ExplorerGuide, writeExplorerGuideDismissed, type ExplorerGuideAction } from "./explorer-guide";
 import { hasExplorerDestination } from "./explorer-startup";
 import { WelcomeFeatureGuide } from "./living-welcome/FeatureGuide.jsx";
 import "./living-welcome/welcome.css";
@@ -6154,7 +6154,8 @@ export default function Home() {
         // before view serialization can add default camera parameters.
         // A late initial restore may decide only an undecided welcome. An
         // explicit navigation/dismissal must not be reopened by startup work.
-        setGuideOpen(current => current === null ? !hasDestination && !readExplorerGuideDismissed() : current);
+        // The welcome is the landing page: it opens on every arrival without a destination.
+        setGuideOpen(current => current === null ? !hasDestination : current);
         setWelcomeSourcesOpen(false);
       } else if (hasDestination) {
         // Back/Forward can restore a destination while manual help is open.

@@ -47,7 +47,7 @@ test('actual restoration decision reads incoming state once, closes on history a
     return { open, focusReturns, preferenceReads };
   };
   assert.equal(decide('', false, false).open, true);
-  assert.equal(decide('', false, true).open, false);
+  assert.deepEqual(decide('', false, true), { open: true, focusReturns: 0, preferenceReads: 0 }, 'the welcome is the landing page: no device preference is consulted or can hide it');
   assert.deepEqual(decide('topic=water', false, false), { open: false, focusReturns: 0, preferenceReads: 0 });
   assert.deepEqual(decide('mapui=open', true, false, true, true), { open: false, focusReturns: 1, preferenceReads: 0 });
   assert.equal(decide('', false, false, false).open, false, 'late initial restoration cannot reopen a dismissed welcome');
@@ -56,16 +56,17 @@ test('actual restoration decision reads incoming state once, closes on history a
   assert.equal(decide('', true, false, true).open, true, 'plain history does not close manual help');
 });
 
-test('v2 opt-out remains explicit, legacy and blocked storage retain welcome', async () => {
-  const values = new Map([['kfm.explorer.guide.dismissed.v1', '1']]);
+test('the opt-out is retired: a stored v2 preference is cleared, legacy and blocked storage still land on the welcome', async () => {
+  const values = new Map([['kfm.explorer.guide.dismissed.v1', '1'], ['kfm.explorer.guide.dismissed.v2', '1']]);
   const storage = { getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), removeItem: key => values.delete(key) };
   const guide = await componentHarness('app/explorer-guide.tsx', { './living-welcome/welcome.jsx': { default: 'living-welcome' } }, { window: { localStorage: storage } });
-  assert.equal(guide.exports.readExplorerGuideDismissed(), false);
+  assert.equal(guide.exports.readExplorerGuideDismissed(), false, 'a device that stored the old opt-out lands on the welcome again');
   guide.exports.writeExplorerGuideDismissed(true);
-  assert.equal(guide.exports.readExplorerGuideDismissed(), true);
+  assert.equal(guide.exports.readExplorerGuideDismissed(), false, 'closing the welcome never stores an opt-out');
+  assert.equal(values.has('kfm.explorer.guide.dismissed.v2'), false, 'closing removes the retired preference');
   guide.exports.writeExplorerGuideDismissed(false);
   assert.equal(guide.exports.readExplorerGuideDismissed(), false);
-  assert.equal(values.get('kfm.explorer.guide.dismissed.v1'), '1');
+  assert.equal(values.get('kfm.explorer.guide.dismissed.v1'), '1', 'legacy state is left alone');
   storage.getItem = storage.setItem = storage.removeItem = () => { throw new Error('storage blocked'); };
   assert.equal(guide.exports.readExplorerGuideDismissed(), false);
   assert.doesNotThrow(() => guide.exports.writeExplorerGuideDismissed(true));
@@ -82,7 +83,7 @@ test('startup mounts only the animated welcome and forwards deliberate actions',
   try {
     const view = h.render(h.exports.ExplorerGuide, props);
     assert.equal(view.type, 'living-welcome');
-    assert.equal(view.props.initialRemember, true);
+    assert.equal(view.props.initialRemember, false, 'a stored opt-out no longer pre-ticks anything; the welcome is the landing page');
     assert.deepEqual(calls, []);
     view.props.onSearch('Ellsworth'); view.props.onTopic('water'); view.props.onClose(true);
     assert.deepEqual(calls, [['search', 'Ellsworth'], ['topic', 'water'], ['close', true]]);

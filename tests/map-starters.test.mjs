@@ -54,7 +54,7 @@ test("six bounded starters use only actual public context, preserve source metad
   assert.equal(JSON.stringify(sources), before);
 });
 
-test("restored welcome ignores only the legacy dismissal and preserves unrelated device state", async () => {
+test("the welcome is the landing page: no stored dismissal hides it, and unrelated device state is preserved", async () => {
   const storage = memoryStorage();
   const legacyKey = "kfm.explorer.guide.dismissed.v1";
   storage.data.set(legacyKey, "1");
@@ -64,17 +64,19 @@ test("restored welcome ignores only the legacy dismissal and preserves unrelated
   const { EXPLORER_GUIDE_STORAGE_KEY: key, readExplorerGuideDismissed: read, writeExplorerGuideDismissed: write } = h.exports;
   assert.notEqual(key, legacyKey);
   assert.equal(read(), false, "a preselected legacy checkbox must not hide the restored welcome");
-  assert.deepEqual([...storage.data], before, "reading the new preference does not migrate or delete existing state");
+  assert.deepEqual([...storage.data], before, "reading does not migrate or delete existing state");
   write(true);
-  assert.equal(read(), true, "an explicit new opt-out survives the next startup read");
+  assert.equal(read(), false, "closing the welcome never stores an opt-out (retired 2026-11-06)");
   assert.equal(storage.data.get(legacyKey), "1");
   assert.equal(storage.data.get("kfm.saved-workspaces"), before[1][1]);
   write(false);
   assert.equal(read(), false);
-  assert.deepEqual([...storage.data], before, "opting back in removes only the new guide preference");
-  for (const value of ["0", "true", "{}", ""]) {
+  assert.deepEqual([...storage.data], before, "closing touches only the retired guide preference");
+  for (const value of ["1", "0", "true", "{}", ""]) {
     storage.data.set(key, value);
-    assert.equal(read(), false, "only the exact opt-out value hides the guide");
+    assert.equal(read(), false, "no stored value hides the landing page");
+    write(false);
+    assert.equal(storage.data.has(key), false, "a device that stored the old opt-out is cleaned up on the next close");
   }
   h.dispose();
 });

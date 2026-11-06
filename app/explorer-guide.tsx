@@ -3,26 +3,25 @@
 import LivingWelcome from "./living-welcome/welcome.jsx";
 
 // One welcome surface. Its WebGL engine still loads separately after paint.
-// The v1 checkbox was preselected, so closing that guide did not establish an
-// explicit opt-out. Leave it intact and require an explicit v2 preference.
+// The welcome is the site's landing page (owner decision, 2026-11-06): every
+// arrival without a destination in the address opens it. The former
+// "Don't show on start" opt-out is retired; this key is only ever cleared so a
+// device that stored the old preference lands on the welcome again.
 export const EXPLORER_GUIDE_STORAGE_KEY = "kfm.explorer.guide.dismissed.v2";
 
 export type ExplorerGuideAction = "layers" | "time" | "underground" | "qwen";
 
+/** No device preference hides the landing page. */
 export function readExplorerGuideDismissed(): boolean {
-  try {
-    return window.localStorage.getItem(EXPLORER_GUIDE_STORAGE_KEY) === "1";
-  } catch {
-    return false;
-  }
+  return false;
 }
 
-export function writeExplorerGuideDismissed(dismissed: boolean): void {
+/** Closing the welcome is for this view only; any stored opt-out is removed. */
+export function writeExplorerGuideDismissed(_dismissed: boolean): void {
   try {
-    if (dismissed) window.localStorage.setItem(EXPLORER_GUIDE_STORAGE_KEY, "1");
-    else window.localStorage.removeItem(EXPLORER_GUIDE_STORAGE_KEY);
+    window.localStorage.removeItem(EXPLORER_GUIDE_STORAGE_KEY);
   } catch {
-    // Device storage is optional; the guide still closes for this session.
+    // Device storage is optional; the guide still closes for this view.
   }
 }
 

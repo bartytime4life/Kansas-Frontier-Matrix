@@ -48,7 +48,8 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
   const [topicQuery,setTopicQuery]=useState(''),[topicGroup,setTopicGroup]=useState('All');
   const selection=combineCategoryMaps(selectedTopics);
   const filteredTopics=TOPICS.filter(t=>(topicGroup==='All'||t.group===topicGroup)&&`${t.title} ${t.short} ${t.description}`.toLowerCase().includes(topicQuery.trim().toLowerCase()));
-  const [remember,setRemember]=useState(initialRemember),[query,setQuery]=useState('');
+  // The welcome is the landing page; closing it is for this view only, so there is no "Don't show on start" control.
+  const [remember]=useState(initialRemember),[query,setQuery]=useState('');
   const [recordQuery,setRecordQuery]=useState(''),[recordScope,setRecordScope]=useState('newspapers');
   // One search box for the whole record: a place opens the map; newspapers, texts and collections open the data library.
   function searchRecord(event){
@@ -237,7 +238,6 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
           {!(carousel&&selection)&&<button type="button" className="welcome-primary" onClick={()=>onClose(remember)}>Explore freely <span aria-hidden="true">→</span></button>}
           <details className="welcome-preferences"><summary>Options</summary><div>
             <button type="button" className="welcome-tool" aria-label={reduced?'Animations off: reduced motion preference':paused?'Play animation':'Pause animation'} disabled={reduced} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{reduced?'Reduced motion':paused?'Play animation':'Pause animation'}</button>
-            <label className="welcome-tool"><input type="checkbox" checked={remember} onChange={e=>setRemember(e.target.checked)}/> Don’t show on start</label>
             <button type="button" className="welcome-map-notes" onClick={()=>{onSources?.();openPanel('credits');}}>Map notes</button>
             <button type="button" onClick={()=>run(()=>onAction('qwen'))}>Ask the atlas</button>
           </div></details>
