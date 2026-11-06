@@ -1081,7 +1081,11 @@ for (const unavailableApis of [false, true]) test(`isolated browser leaves cance
     if(message.method==='Network.loadingFailed')blocked.push(message.params);
     if(message.method==='Fetch.requestPaused'){
       paused.push(message.params.request.url);
-      void call('Fetch.fulfillRequest',{requestId:message.params.requestId,responseCode:503,body:Buffer.from('isolated').toString('base64')}).catch(error=>errors.push(String(error)));
+      const requestId=message.params.requestId;
+      const reply=new URL(message.params.request.url).pathname==='/api/build'
+        ? call('Fetch.continueRequest',{requestId})
+        : call('Fetch.fulfillRequest',{requestId,responseCode:503,body:Buffer.from('isolated').toString('base64')});
+      void reply.catch(error=>errors.push(String(error)));
     }
   });
   await call('Page.enable');await call('Runtime.enable');await call('Network.enable');
@@ -1112,7 +1116,7 @@ for (const unavailableApis of [false, true]) test(`isolated browser leaves cance
   }
   while(blocked.filter(e=>e.blockedReason==='inspector').length<3 && Date.now()<deadline)await pause(10);
   assert.ok(blocked.filter(e=>e.blockedReason==='inspector').length>=3,`browser blocking, not DNS failure, prevents off-origin I/O: ${JSON.stringify(blocked)}`);
-  assert.deepEqual(paused,[new URL('/api/browser-isolation-probe',origin).href],unavailableApis?'only the explicit worker fixture acquires a Fetch ID':'only the explicit window API fixture acquires a Fetch ID');
+  assert.deepEqual(paused,[new URL('/api/browser-isolation-probe',origin).href,...(unavailableApis?[new URL('/api/build',origin).href]:[])],unavailableApis?'only the worker fixture and real build pass-through acquire Fetch IDs':'only the explicit window API fixture acquires a Fetch ID');
   assert.deepEqual(errors,[]);
 });
 
