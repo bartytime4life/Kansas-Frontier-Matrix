@@ -1103,7 +1103,7 @@ for (const unavailableApis of [false, true]) test(`isolated browser leaves cance
   await evaluate(`(async()=>{for(let i=0;i<5;i++){const v=document.createElement('video');v.preload='auto';v.src='/welcome/motion/clouds-preview.webm?cancel='+i;document.body.append(v);v.load();await new Promise(r=>setTimeout(r,10));v.removeAttribute('src');v.load();v.remove();}})()`);
   assert.equal(await evaluate(`fetch('/api/browser-isolation-probe').then(r=>r.status)`),503,'the API fixture remains unavailable');
   if(unavailableApis) {
-    assert.equal(await evaluate(`new Promise((resolve,reject)=>{const url=URL.createObjectURL(new Blob([${JSON.stringify("fetch("+JSON.stringify(new URL('/api/browser-isolation-probe',origin).href)+").then(r=>postMessage('sent:'+r.status),()=>postMessage('blocked'))")}],{type:'text/javascript'}));const worker=new Worker(url);const timer=setTimeout(()=>{worker.terminate();URL.revokeObjectURL(url);reject(Error('Worker isolation timeout'));},5000);worker.onmessage=event=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);resolve(event.data);};worker.onerror=event=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);reject(Error(event.message));};})`),'blocked','worker API requests are blocked before reaching the real server');
+    assert.equal(await evaluate(`new Promise((resolve,reject)=>{const url=URL.createObjectURL(new Blob([${JSON.stringify("fetch("+JSON.stringify(new URL('/api/browser-isolation-probe',origin).href)+").then(r=>postMessage('sent:'+r.status),()=>postMessage('blocked'))")}],{type:'text/javascript'}));const worker=new Worker(url);const timer=setTimeout(()=>{worker.terminate();URL.revokeObjectURL(url);reject(Error('Worker isolation timeout'));},5000);worker.onmessage=event=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);resolve(event.data);};worker.onerror=event=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);reject(Error(event.message));};})`),'sent:503','worker API requests receive their transport fixture before reaching the real server');
     assert.equal(await evaluate(`fetch('/api/build').then(r=>r.ok)`),true,'the actual build receipt remains available');
   }
   assert.deepEqual(await evaluate(`fetch('https://tiles.openfreemap.org/styles/liberty').then(r=>r.json()).then(s=>[s.version,Object.keys(s.sources).length,s.layers[0].id])`),[8,0,'test-background']);
@@ -1112,7 +1112,7 @@ for (const unavailableApis of [false, true]) test(`isolated browser leaves cance
   }
   while(blocked.filter(e=>e.blockedReason==='inspector').length<3 && Date.now()<deadline)await pause(10);
   assert.ok(blocked.filter(e=>e.blockedReason==='inspector').length>=3,`browser blocking, not DNS failure, prevents off-origin I/O: ${JSON.stringify(blocked)}`);
-  assert.deepEqual(paused,unavailableApis?[]:[new URL('/api/browser-isolation-probe',origin).href],'only explicitly intercepted API fixtures acquire Fetch IDs');
+  assert.deepEqual(paused,[new URL('/api/browser-isolation-probe',origin).href],unavailableApis?'only the explicit worker fixture acquires a Fetch ID':'only the explicit window API fixture acquires a Fetch ID');
   assert.deepEqual(errors,[]);
 });
 
@@ -2040,18 +2040,25 @@ for (const [width,height] of [[1440,960],[390,844]]) {
       await p.evaluate(`window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='explorer').map.jumpTo({pitch:50});undefined`);
       await p.wait(`window.__kfmRenderDiagnostics.calls.some(c=>c.owner==='curtain'&&c.name==='linkProgram')`,'tilt renders the lazy curtain');
       result.stages.push(await snapshot('tilted-map'));
-      const styles=await p.evaluate(`window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='explorer').styles`);
-      await p.evaluate(`(()=>{const map=window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='explorer').map;window.__renderRecovery=map.getCanvas().getContext('webgl2').getExtension('WEBGL_lose_context');if(!window.__renderRecovery)throw Error('Context loss extension unavailable');window.__renderRecovery.loseContext();})()`);
-      await pause(150);
-      await p.evaluate('window.__renderRecovery.restoreContext()');
-      try {
-        await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&e.styles>${styles}&&!e.map.getCanvas().getContext('webgl2').isContextLost())`,'context restores the map style');
-        await p.wait(`window.__kfmRenderDiagnostics.calls.filter(c=>c.owner==='curtain'&&c.name==='linkProgram').length>=2`,'restored visible curtain compiles again');
+      for(let cycle=0;cycle<3;cycle++) {
+        const before=await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics,e=d.maps.find(e=>e.kind==='explorer');return {styles:e.styles,lost:e.contexts.filter(c=>c.type==='webglcontextlost').length,links:d.calls.filter(c=>c.owner==='curtain'&&c.name==='linkProgram').length};})()`);
+        try {
+          await p.evaluate(`(()=>{const map=window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='explorer').map;window.__renderRecovery=map.getCanvas().getContext('webgl2').getExtension('WEBGL_lose_context');if(!window.__renderRecovery)throw Error('Context loss extension unavailable');window.__renderRecovery.loseContext();})()`);
+          await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&e.contexts.filter(c=>c.type==='webglcontextlost').length>${before.lost}&&e.map.getCanvas().getContext('webgl2')?.isContextLost())`,'native context-loss event delivered before restoration');
+          // Give the lost-state commit and passive cleanup a real frame boundary.
+          // Never restore on an arbitrary timer before the native loss callback.
+          await p.evaluate('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');
+          result.stages.push(await snapshot(`lost-map-${cycle}`));
+          assert.equal(await p.evaluate(`!!document.querySelector('.map-chrome-dock')`),true,'the Explorer shell remains available while the context is lost');
+          await p.evaluate('window.__renderRecovery.restoreContext()');
+          await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&e.styles>${before.styles}&&!e.map.getCanvas().getContext('webgl2').isContextLost())`,'context restores the map style');
+          await p.wait(`window.__kfmRenderDiagnostics.calls.filter(c=>c.owner==='curtain'&&c.name==='linkProgram').length>${before.links}`,'restored visible curtain compiles again in each recovery');
+        }
+        catch(error){try{result.recoveryFailure=await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics,e=d.maps.find(e=>e.kind==='explorer'),m=e.map,style=m.getStyle();return {cycle:${cycle},pitch:m.getPitch(),projection:style?m.getProjection():null,stylePresent:!!style,removed:e.removed,contexts:e.contexts,layers:style?.layers?.filter(l=>l.type==='custom')??[],calls:d.calls,errors:d.errors,pageErrors:d.pageErrors,consoleErrors:d.consoleErrors,contextLost:m.getCanvas().getContext('webgl2').isContextLost()};})()`);}catch(captureError){result.recoveryFailure={captureError:String(captureError)};}throw error;}
+        result.stages.push(await snapshot(`restored-map-${cycle}`));
+        assert.deepEqual(await p.evaluate('window.__kfmRenderDiagnostics.pageErrors'),[],'graphics recovery emits no uncaught page errors');
+        assert.equal(await p.evaluate(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&!e.removed&&e.map.getCanvas().isConnected)&&!!document.querySelector('.map-chrome-dock')`),true,'graphics recovery retains the Explorer map and shell');
       }
-      catch(error){try{result.recoveryFailure=await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics,e=d.maps.find(e=>e.kind==='explorer'),m=e.map,style=m.getStyle();return {pitch:m.getPitch(),projection:style?m.getProjection():null,stylePresent:!!style,removed:e.removed,contexts:e.contexts,layers:style?.layers?.filter(l=>l.type==='custom')??[],calls:d.calls,errors:d.errors,pageErrors:d.pageErrors,consoleErrors:d.consoleErrors,contextLost:m.getCanvas().getContext('webgl2').isContextLost()};})()`);}catch(captureError){result.recoveryFailure={captureError:String(captureError)};}throw error;}
-      result.stages.push(await snapshot('restored-map'));
-      assert.deepEqual(await p.evaluate('window.__kfmRenderDiagnostics.pageErrors'),[],'graphics recovery emits no uncaught page errors');
-      assert.equal(await p.evaluate(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&!e.removed&&e.map.getCanvas().isConnected)&&!!document.querySelector('.map-chrome-dock')`),true,'graphics recovery retains the Explorer map and shell');
       const {profile}=await p.call('Profiler.stop');
       const nodes=new Map(profile.nodes.map(node=>[node.id,node.callFrame])),cpu=new Map();
       for(let i=0;i<(profile.samples?.length??0);i++){const frame=nodes.get(profile.samples[i]),key=JSON.stringify(frame);cpu.set(key,(cpu.get(key)??0)+(profile.timeDeltas?.[i]??0));}

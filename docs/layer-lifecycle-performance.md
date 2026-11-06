@@ -445,12 +445,27 @@ one-second evidence window remain unchanged.
 
 Ordinary navigation now returns the same explicit unavailable-provider response
 from its disposable window fetch fixture, without pausing that request in CDP.
-Browser network rules block other API reads, including workers, before server
-I/O; the real build receipt and local assets remain available. Scenarios with
+Browser network rules block other page API reads, while the explicit API
+transport interceptor remains for workers; the real build receipt and local
+assets remain available. Scenarios with
 explicit provider/renderer interceptors retain their transport fixtures. Native
-boundary checks cover both modes, including worker blocking, and run in the
+boundary checks cover both modes, including worker transport, and run in the
 independent navigation job as well as the full matrix. No production code or
 provider access is changed by this test-only work.
+
+The first native execution at 7981d631 disproved the initial assumption that
+page Network rules also block workers: the inert isolation probe received the
+server's real 404. Retaining worker API interception corrects that boundary; the
+native probe now requires an intercepted 503, with no window fetch pause. It
+must pass before claiming isolation. The strict protocol tracker is unchanged.
+
+To investigate the recurring graphics failure, recovery now waits for the actual
+native context-loss event and a browser frame boundary before requesting restore.
+Each cold/warm map repeats three recoveries, requiring a new style and a new
+curtain link each time, with the original shell, page-error and zoom assertions.
+Loss-stage failures also retain the console diagnostics. This strengthens the
+reproduction without extending the existing test/job deadlines; it is not a
+claim that the underlying intermittent failure has been repaired.
 
 The same head also failed desktop context restoration after all 27 welcome
 checks passed. Artifact 13546400416, SHA-256
