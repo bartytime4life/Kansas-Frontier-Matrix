@@ -216,6 +216,9 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
   await pause(500);
   const countyRequestsBeforeAircraft=p.countyRequestCount();
   assert.equal(countyRequestsBeforeAircraft,1,'one independent county preload precedes aircraft inspection');
+  // Late tile responses can leave the real loading overlay above a drawn map.
+  // Wait for the same hit target that activate asserts; never tap through it.
+  await p.wait(`(()=>{const canvas=document.querySelector('.maplibregl-canvas'),r=canvas?.getBoundingClientRect();return r && r.width>0 && r.height>0 && canvas.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`,'map canvas ready for aircraft inspection');
   await p.activate('.maplibregl-canvas');
   await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='false' && document.querySelector('.kansas-sky h5')?.textContent.includes('TEST123')`,'map click opens aircraft instruments');
   await p.wait(`document.activeElement===document.querySelector('[aria-label="Kansas Sky aircraft"]')`,'aircraft selector receives focus after panel opens');
