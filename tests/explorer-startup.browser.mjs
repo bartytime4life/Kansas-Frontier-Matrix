@@ -2223,7 +2223,10 @@ for (const [width, height] of [[320,568],[390,844],[568,320],[1280,800]]) {
     assert.equal(await p.evaluate(`!!document.querySelector('.category-map-dock')`),false,'the map opens with instruments hidden');
     const before=await p.evaluate(`({entry:history.state.kfmExplorerEntry,view:history.state.kfmExplorerView})`);
     const activate=async selector=>{
-      const point=await revealControl(p,selector);
+      const quoted=JSON.stringify(selector);
+      await p.evaluate(`document.querySelector(${quoted})?.scrollIntoView({block:'nearest',inline:'nearest'})`);
+      await p.wait(`(()=>{const e=document.querySelector(${quoted});if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&r.left>=0&&r.top>=0&&r.right<=innerWidth&&r.bottom<=innerHeight&&e.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`,'map control is visible and hit-testable in the viewport');
+      const point=await p.evaluate(`(()=>{const r=document.querySelector(${quoted}).getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};})()`);
       if(width<600){
         await p.call('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});
         await p.call('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{...point,id:1,radiusX:2,radiusY:2,force:1}]});
