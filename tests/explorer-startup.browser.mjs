@@ -2081,3 +2081,46 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
     assert.equal(await p.evaluate('location.pathname'), '/');
   });
 }
+
+for (const [width,height] of [[1280,800],[390,844]]) {
+  test(`remembered startup dismissal survives same-tab reload at ${width}x${height}`,{timeout:120000},async t=>{
+    const b=await browser(t),p=await pageSession(b,width,height);
+    for(const close of ['escape','explore','close']) {
+      await p.open('/?motion=off');await readyWelcome(p);
+      await p.evaluate(`document.querySelector('.welcome-preferences summary').focus()`);await p.key('Enter','Enter',13);
+      await p.wait(`document.querySelector('.welcome-preferences').open`,'startup options open');
+      await p.evaluate(`document.querySelector('.welcome-preferences input[type="checkbox"]').focus()`);await p.key(' ','Space',32);
+      await p.wait(`document.querySelector('.welcome-preferences input[type="checkbox"]').checked`,'remembered dismissal selected');
+      await p.evaluate(`document.querySelector('.welcome-preferences summary').focus()`);await p.key('Enter','Enter',13);
+      if(close==='escape')await p.key('Escape','Escape',27);
+      else {
+        const selector=close==='close'?'.welcome-skip':'.welcome-toolbar .welcome-primary:not(.selection-open)';
+        await p.evaluate(`document.querySelector(${JSON.stringify(selector)}).focus()`);await p.key('Enter','Enter',13);
+      }
+      await p.wait(`!document.querySelector('.living-welcome') && history.state?.kfmExplorerWelcome===false && localStorage.getItem('kfm.explorer.guide.dismissed.v2')==='1'`,'remembered dismissal saved in this entry');
+      await p.call('Page.reload');
+      await p.wait(`document.querySelector('.map-chrome-dock') && history.state?.kfmExplorerView`,'restored document hydrated');
+      await p.unobstructed('.guide-trigger');
+      assert.equal(await p.evaluate(`!!document.querySelector('.living-welcome')`),false,`${close}: reload honors Don't show on start`);
+      await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);
+      await p.wait(`document.querySelector('.living-welcome .welcome-preferences input[type="checkbox"]')?.checked`,'manual reopening remains available with preference retained');
+    }
+  });
+  test(`source status releases the previous map entry on browser Back at ${width}x${height}`,{timeout:90000},async t=>{
+    const b=await browser(t),p=await pageSession(b,width,height);
+    await p.open('/?motion=off');await readyWelcome(p);
+    await p.evaluate(`document.querySelector('.topic-government').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('.map-topic-bar')`,'category map opened');
+    await p.evaluate(`document.querySelector('.map-topic-bar>button:last-child').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`,'Layers opened');
+    await p.evaluate(`document.querySelector('.layer-source-switch>button:last-child').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`new URLSearchParams(history.state?.kfmExplorerView).get('layers')==='sources'`,'status destination committed');
+    await p.evaluate('history.back()');
+    await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='true' && document.querySelector('.layer-source-switch>button:last-child')?.getAttribute('aria-pressed')==='false' && !new URLSearchParams(history.state?.kfmExplorerView).has('layers')`,'Back closes status and preserves the map entry');
+    await p.evaluate('history.forward()');
+    await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false' && document.querySelector('.layer-source-switch>button:last-child')?.getAttribute('aria-pressed')==='true'`,'Forward restores status');
+    await p.evaluate('history.back()');
+    await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='true' && !new URLSearchParams(history.state?.kfmExplorerView).has('layers')`,'the preceding map was not overwritten by status serialization');
+    assert.equal(await p.evaluate(`new URLSearchParams(history.state?.kfmExplorerView).get('topics')`),'government');
+  });
+}

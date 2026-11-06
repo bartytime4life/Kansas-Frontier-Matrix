@@ -47,6 +47,8 @@ test('actual restoration decision reads incoming state once, closes on history a
     return { open, focusReturns, preferenceReads };
   };
   assert.equal(decide('', false, false).open, true);
+  assert.equal(decide('topic=government', false, true, null, false, true).open, false, 'remembered dismissal overrides a stale startup marker on reload');
+  assert.equal(decide('topic=government', true, true, false, false, true).open, true, 'Back can still revisit an intentional startup entry');
   assert.equal(decide('topic=government', true, false, false, false, true).open, true, 'an explicit saved startup step reopens on Back');
   assert.equal(decide('topic=government', true, false, true, false, false).open, false, 'a saved destination remains the map');
   assert.equal(decide('', false, true).open, false);
@@ -90,4 +92,21 @@ test('startup mounts only the animated welcome and forwards deliberate actions',
     assert.deepEqual(calls, [['search', 'Ellsworth'], ['topic', 'water'], ['close', true]]);
     assert.equal(h.render(h.exports.ExplorerGuide, { ...props, open: false }), null);
   } finally { h.dispose(); }
+});
+
+
+test('restoring a map clears source status and does not serialize that panel into the previous entry', async () => {
+ const page = await readFile('app/page.tsx', 'utf8');
+ const start=page.indexOf('      const restoredMapUtilityView = params.get("maptab");',page.indexOf('  const restoreExplorerFromUrl'));
+ const source=page.slice(start,page.indexOf('      const nextMapUtilityView:',start));
+ const run=(query,topic='government',topics=['government'])=>{
+  const state={status:true,left:true,mode:'layers'};
+  vm.runInNewContext(ts.transpile(source),{params:new URLSearchParams(query),restoredTopic:topic,restoredTopics:topics,
+   setSourceStatusOpen:v=>state.status=v,setLeftOpen:v=>state.left=v,setLeftPanelMode:v=>state.mode=v});
+  return state;
+ };
+ assert.deepEqual(run('topics=government&layerView=selected'),{status:false,left:false,mode:'layers'});
+ assert.deepEqual(run('topics=government&layers=sources'),{status:true,left:true,mode:'layers'});
+ assert.deepEqual(run('topic=government','government',[]),{status:false,left:true,mode:'layers'},'direct topic links still open the catalog');
+ assert.deepEqual(run('maptab=localAtlas'),{status:true,left:true,mode:'layers'},'legacy source-status navigation remains supported');
 });

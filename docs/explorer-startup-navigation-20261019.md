@@ -264,3 +264,22 @@ tests owns regressions and docs owns this behavior/rollback record. No data,
 policy, schema, release or storage root is introduced. Rollback is a reviewed
 revert of this change; preserve browser settings and all source data. Source
 review, merge and GoDaddy publication remain separate operations.
+
+
+### Review corrections — November 6, 2026
+
+PR #5747 review identified two restoration gaps. A saved startup entry could
+ignore the explicit “Don't show on start” preference on a new-document reload;
+a source-status entry could remain active when Back selected an ordinary map,
+then contaminate that preceding entry with layers=sources. Both failures were
+reproduced by executing the unchanged production restoration code before repair.
+
+New-document restoration now checks the saved dismissal preference before
+showing startup, and remembered dismissal clears the retained startup marker on
+save. Deliberate Back navigation can still revisit a startup entry. Source-status
+restoration assigns both true and false explicitly; ordinary selected-map entries
+close its panel, direct topic links retain their catalog, and legacy source-status
+links still open the status panel. Other explicit utility destinations retain
+their existing handling. Browser regressions exercise remembered dismissal and
+status-panel Back/Forward at desktop and phone widths. The pull request records
+exact-head execution and remaining acceptance limits.

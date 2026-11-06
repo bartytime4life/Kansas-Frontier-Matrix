@@ -6161,7 +6161,9 @@ export default function Home() {
       const savedWelcome = explorerHistoryWelcome(window.history.state);
       const hasDestination = hasExplorerDestination(params, new URLSearchParams(window.location.search));
       if (savedWelcome !== null) {
-        setGuideOpen(savedWelcome);
+        // Startup preference governs a new document; explicit Back navigation
+        // can still revisit the welcome entry inside an already-open Explorer.
+        setGuideOpen(savedWelcome && (explorerRestoredRef.current || !readExplorerGuideDismissed()));
         setWelcomeSourcesOpen(false);
       } else if (!explorerRestoredRef.current) {
         // Decide from the same incoming URL/saved view that owns restoration,
@@ -6403,7 +6405,9 @@ export default function Home() {
       setCurrentWorkspace(restoredWorkspace === "knowledge" || restoredWorkspace === "features" || restoredWorkspace === "trust" ? restoredWorkspace : "explore");
       const restoredMapUtilityView = params.get("maptab");
       const restoredSourceStatus = params.get("layers") === "sources" || restoredMapUtilityView === "localAtlas";
-      if (restoredSourceStatus) { setLeftPanelMode("layers"); setLeftOpen(true); setSourceStatusOpen(true); }
+      setSourceStatusOpen(restoredSourceStatus);
+      setLeftOpen(restoredSourceStatus || (restoredTopic !== "all" && !restoredTopics.length));
+      if (restoredSourceStatus) setLeftPanelMode("layers");
       const nextMapUtilityView: MapUtilityView = nextTemporalMode === "comparison"
         ? "compare"
         : restoredMapUtilityView === "report" || restoredMapUtilityView === "inspect" || restoredMapUtilityView === "scene" || restoredMapUtilityView === "history" || restoredMapUtilityView === "connections" || restoredMapUtilityView === "import" || restoredMapUtilityView === "compare" || restoredMapUtilityView === "measure" || restoredMapUtilityView === "export" || restoredMapUtilityView === "diagnostics" ? restoredMapUtilityView : "scene";
@@ -6488,7 +6492,7 @@ export default function Home() {
     const navigation = explorerNavigationPendingRef.current;
     explorerNavigationPendingRef.current = false;
     // Escape only dismisses this visit's startup; a deliberate destination owns a new step.
-    const welcome = guideOpen === true || (!navigation && explorerHistoryWelcome(window.history.state) === true);
+    const welcome = guideOpen === true || (!navigation && !readExplorerGuideDismissed() && explorerHistoryWelcome(window.history.state) === true);
     saveExplorerHistoryView(buildExplorerParams(), window.history, undefined, { navigation, welcome });
   }, [buildExplorerParams, explorerNavigationRequest, guideOpen]);
 
