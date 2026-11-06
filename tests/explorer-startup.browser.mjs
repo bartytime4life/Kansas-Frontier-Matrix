@@ -2113,8 +2113,12 @@ for (const [width,height] of [[1280,800],[390,844]]) {
     await p.evaluate(`document.querySelector('.topic-government').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`!document.querySelector('.living-welcome') && document.activeElement?.matches('.map-topic-edit, .map-topics-button')`,'category map and committed focus handoff ready');
     const layersTrigger=width<600?'.map-mobile-actions > button:first-child':'.map-topic-bar>button:last-child';
-    await revealControl(p,layersTrigger);
-    await p.evaluate(`document.querySelector(${JSON.stringify(layersTrigger)}).focus()`);await p.key('Enter','Enter',13);
+    // The welcome has closed. Its reveal helper intentionally requires a
+    // welcome viewport, so check this Explorer control against the viewport.
+    await p.wait(`(()=>{const node=document.querySelector(${JSON.stringify(layersTrigger)}),r=node?.getBoundingClientRect();return r && r.width>=44 && r.height>=${width<600?44:36} && r.left>=0 && r.right<=innerWidth && r.top>=0 && r.bottom<=innerHeight && !node.closest('[inert], [aria-hidden="true"]') && node.contains(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2));})()`,'visible Explorer Layers control is reachable');
+    await p.evaluate(`document.querySelector(${JSON.stringify(layersTrigger)}).focus()`);
+    assert.equal(await p.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(layersTrigger)})`),true,'the visible Layers control owns keyboard focus');
+    await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`,'Layers opened');
     await p.evaluate(`document.querySelector('.layer-source-switch>button:last-child').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`new URLSearchParams(history.state?.kfmExplorerView).get('layers')==='sources'`,'status destination committed');
