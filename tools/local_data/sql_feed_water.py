@@ -7,11 +7,13 @@ outages from January 2027 (https://waterservices.usgs.gov, https://waterdata.usg
 So the USGS feeds use only the Water Data OGC APIs (``OGC``). That is version 1, the one the API's own
 documentation and queryables link to; v0 still answers, with older formatting. The APIs include an
 annual ``peaks`` collection. No key is needed. Anonymous use is limited per IP address to 1,000
-requests an hour: the 429 answer says so in X-RateLimit-Limit, with a Retry-After. A 403 or 429 stops a
-run with ``USGS_RATE_LIMITED``, and what the run loaded stays. Requests go one at a time, with a pause
-between them, and a run makes a few hundred at most. A page holds at most 50,000 rows, and a CSV page has no
-next-page link, so each request is shaped to fit one page: one time series, one year, or one
-modification window. A full page is split, never loaded.
+requests an hour: the 429 answer says so in X-RateLimit-Limit, with a Retry-After. A 403 or 429 is waited
+out (``core.Throttle``: the Retry-After when given, else minutes of backoff) and the request made again, until
+the run's waiting budget is spent; then the run stops with ``USGS_RATE_LIMITED``, and what it loaded stays.
+Requests go one at a time, with a pause between them (``SERIES_PAUSE`` between one series' record and the
+next), and a run makes a few hundred at most. A page holds at most 50,000 rows, and a CSV page has no
+next-page link, so each request is shaped to fit one page: one time series over ``RECORD_CHUNK_YEARS``, one
+year, or one modification window. A full page is split, never loaded.
 
 usgs-daily, ``kfm_usgs_daily_values``: every daily-value series of every Kansas site, with all
 parameters and statistics. ``combined-metadata`` (time-series-metadata joined to monitoring-locations;
@@ -21,7 +23,8 @@ Steps in each run:
    window that overlaps the last window by a day. A full page is cut at the sample's modification-time
    quartiles; a page full at one instant is cut by day. These windows bring new days, provisional
    edits, and approvals and corrections of any age, since each of them changes ``last_modified``.
-2. Backfill the full records of up to ``max_records`` series: 1,810 series, so about 6 runs (300 a run).
+2. Backfill the full records of up to ``max_records`` series: 1,810 series, so about 6 runs (300 a run). A
+   record is asked for in spans of ``RECORD_CHUNK_YEARS`` from the year before the series' recorded beginning.
 3. After the backfill, re-read ``ROTATION_PER_RUN`` records a run, so values USGS deleted go within a
    year.
 A value is one row per (time_series_id, time), the API's own identity. Each load replaces the row
@@ -99,17 +102,35 @@ def _url(collection: str, params: dict) -> str:
     return f"{OGC}{collection}/items?{query}"
 
 
+USGS_THROTTLE_CODES = ("HTTP_403", "HTTP_429")   # the answers the feeds have always read as USGS_RATE_LIMITED
+SERIES_PAUSE = 5.0                                # seconds between one series' record and the next
+RECORD_CHUNK_YEARS = 25                           # a record is asked for in spans of this many years
+
+
+def _throttle(ctx, feed: str) -> core.Throttle:
+    """The run's patience with USGS throttling (core.Throttle): 403 and 429 are waited out, Retry-After first."""
+    ctx.throttle = core.Throttle(ctx, feed, codes=USGS_THROTTLE_CODES)
+    return ctx.throttle
+
+
 def _page(ctx, collection: str, params: dict, needed, reason: str):
-    """(fetched, header, rows) of one request. The header must name every column in needed."""
+    """(fetched, header, rows) of one request. The header must name every column in needed.
+
+    A refusal (403, 429) is waited out and the request made again when the run has a Throttle with budget
+    left (ctx.throttle); otherwise, as before, it stops the run with USGS_RATE_LIMITED."""
     url = _url(collection, params)
-    try:
-        fetched = ctx.fetch(url, limit=64_000_000, timeout=600)
-    except FeedError as error:
-        if str(error).startswith(("HTTP_403", "HTTP_429")):
-            raise FeedError(f"USGS_RATE_LIMITED {url}") from None
-        raise
-    finally:
-        time.sleep(getattr(ctx, "pause", 1.0))
+    while True:
+        try:
+            fetched = ctx.fetch(url, limit=64_000_000, timeout=600)
+            break
+        except FeedError as error:
+            if ctx.throttle is not None and ctx.throttle.wait(error):
+                continue
+            if str(error).startswith(USGS_THROTTLE_CODES):
+                raise FeedError(f"USGS_RATE_LIMITED {url}") from None
+            raise
+        finally:
+            time.sleep(getattr(ctx, "pause", 1.0))
     text = fetched.body.decode("utf-8")
     if not text.strip():
         # A query with no rows is answered with an empty body, without even a header.
@@ -367,11 +388,47 @@ def _modified(ctx, db, state: dict, max_requests: int) -> tuple[dict, dict]:
     return _save(ctx, db, "usgs-daily", {**state, "modified_through": end}), summary
 
 
+def _record_chunks(begin: date | None, end: date) -> list[tuple[date, date]]:
+    """The spans a record is asked for in: RECORD_CHUNK_YEARS each from a year before the series' recorded beginning
+    (EARLIEST when the metadata has none), so a refusal costs a span and no page comes near full."""
+    start = EARLIEST if begin is None else max(EARLIEST, date(begin.year - 1, 1, 1))
+    chunks = []
+    while start <= end:
+        stop = min(end, date(start.year + RECORD_CHUNK_YEARS - 1, 12, 31))
+        chunks.append((start, stop))
+        start = stop + timedelta(days=1)
+    return chunks
+
+
+def _series_begin(db, series: str) -> date | None:
+    row = db.execute("SELECT period_begin FROM kfm_usgs_series WHERE time_series_id=? AND period_begin IS NOT NULL ORDER BY file_id DESC LIMIT 1",
+                     (series,)).fetchone()
+    try:
+        return date.fromisoformat(row[0][:10]) if row else None
+    except ValueError:
+        return None
+
+
 def _record(ctx, db, series: str, today: date) -> dict:
-    body, header, rows, fetched, requests = _dated(ctx, "daily", {**DAILY_QUERY, "time_series_id": series}, EARLIEST, today + timedelta(days=1),
-                                                   DAILY_FIELDS, "USGS_DAILY_COLUMNS_CHANGED")
+    """One series' full record, in RECORD_CHUNK_YEARS spans from its recorded beginning (see _record_chunks): rows
+    before that beginning, which the metadata says do not exist, are not asked for; a series whose beginning moved
+    earlier is read whole again after the weekly metadata refresh, when its rotation comes round."""
+    windows = _record_chunks(_series_begin(db, series), today + timedelta(days=1))
+    pages, requests, header, fetched = [], 0, [], None
+    for start, end in windows:
+        body, chunk_header, chunk_rows, chunk_fetched, chunk_requests = _dated(ctx, "daily", {**DAILY_QUERY, "time_series_id": series}, start, end,
+                                                                               DAILY_FIELDS, "USGS_DAILY_COLUMNS_CHANGED")
+        requests += chunk_requests
+        if not chunk_rows:
+            continue
+        if pages and chunk_header != header:
+            raise FeedError("USGS_DAILY_COLUMNS_CHANGED header changed between spans")
+        header, fetched = chunk_header, fetched or chunk_fetched
+        pages.append((body, chunk_rows))
+    rows = [r for _, page in pages for r in page]
     if not rows:
         return {"state": "empty", "rows": 0}
+    body = pages[0][0] if len(pages) == 1 else _csv(header, rows)
     path, digest = _keep(ctx, db, "usgs-daily", f"records/{series[:2]}/{series}-{today:%Y%m%d}", body, fetched,
                          key=f"record/{series}", rows=len(rows), requests=requests)
     dropped = _upsert(ctx, db, "usgs-daily-record", path, digest, fetched.url, header, rows, series=series)
@@ -382,6 +439,7 @@ def usgs_daily(ctx, max_records: int = 300, max_modified_requests: int = 40) -> 
     db = core.open_db(ctx)
     try:
         _schema(ctx, db, DAILY_SCHEMA)
+        throttle = _throttle(ctx, "usgs-daily")
         state = core.get_state(db, "usgs-daily")
         today = ctx.now().date()
         summary = {"metadata": None}
@@ -403,6 +461,8 @@ def usgs_daily(ctx, max_records: int = 300, max_modified_requests: int = 40) -> 
             rotation = chosen[-1] if chosen else after
         counts = {"records": 0, "record_rows": 0, "records_unchanged": 0, "records_empty": 0, "rows_dropped": 0}
         for s in chosen:
+            if counts["records"]:
+                time.sleep(getattr(ctx, "pause", SERIES_PAUSE))   # a pause between one series' record and the next
             result = _record(ctx, db, s, today)
             counts["records"] += 1
             counts["record_rows"] += result["rows"]
@@ -415,7 +475,7 @@ def usgs_daily(ctx, max_records: int = 300, max_modified_requests: int = 40) -> 
         if rotation is not None:
             state = _save(ctx, db, "usgs-daily", {**state, "rotation_after": rotation})
         return {**summary, **counts, "series": len(series), "backfill_pending": max(0, len(backfill) - len(chosen)),
-                "modified_through": state.get("modified_through")}
+                "modified_through": state.get("modified_through"), **throttle.summary()}
     finally:
         db.close()
 
@@ -437,6 +497,7 @@ def usgs_peaks(ctx, every_days: int = PEAKS_EVERY_DAYS) -> dict:
     db = core.open_db(ctx)
     try:
         _schema(ctx, db, PEAKS_SCHEMA)
+        _throttle(ctx, "usgs-peaks")
         state = core.get_state(db, "usgs-peaks")
         today = ctx.now().date()
         if state.get("checked") and (today - date.fromisoformat(state["checked"])).days < every_days:
@@ -498,6 +559,7 @@ def usgs_groundwater(ctx, max_years: int = 80, row_budget: int = 400_000) -> dic
     db = core.open_db(ctx)
     try:
         _schema(ctx, db, GW_SCHEMA)
+        throttle = _throttle(ctx, "usgs-groundwater")
         state = core.get_state(db, "usgs-groundwater")
         now, today = ctx.now(), ctx.now().date()
         checked, due = dict(state.get("checked", {})), set(state.get("due", []))
@@ -531,7 +593,7 @@ def usgs_groundwater(ctx, max_years: int = 80, row_budget: int = 400_000) -> dic
                 due.discard(year)
             next_year = year + 1 if year >= next_year else next_year
             state = _save(ctx, db, "usgs-groundwater", {**state, "checked": checked, "due": sorted(due), "next_year": next_year})
-        return {**summary, "next_year": next_year, "due": len(due), "backfill_pending": max(0, today.year + 1 - next_year)}
+        return {**summary, "next_year": next_year, "due": len(due), "backfill_pending": max(0, today.year + 1 - next_year), **throttle.summary()}
     finally:
         db.close()
 

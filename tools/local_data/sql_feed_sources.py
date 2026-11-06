@@ -15,6 +15,7 @@ import json
 from pathlib import Path
 import re
 import tarfile
+import time
 import urllib.parse
 
 from tools.local_data import sql_feeds as core
@@ -134,11 +135,23 @@ def captures(ctx) -> dict:
 
 
 # --- IEM wind: daily observations and summaries for the Kansas ASOS network --------------------------
+#
+# IEM refuses a request for a year of readings from all 67 stations with HTTP 429 within seconds (every night
+# since 2026-11-03), so readings are asked for one calendar month and WIND_STATION_BATCH stations at a time,
+# WIND_PAUSE seconds apart, and a refusal is waited out (core.Throttle: Retry-After, else minutes of backoff,
+# within the run's budget) before the same window is asked for again. The backfill does WIND_BACKFILL_MONTHS
+# month windows a run, oldest first, and keeps its place in the feed state after every batch: obs_backfill_next
+# (the year, as before) with obs_backfill_month and obs_backfill_batch (absent at a year's start, so the state
+# written by earlier releases reads the same). A run whose budget is spent stops with the HTTP_429 reason and
+# keeps what loaded; the next run continues from the saved window.
 
 IEM = "https://mesonet.agron.iastate.edu/cgi-bin/request/"
 WIND_FIELDS = ["drct", "sknt", "gust", "peak_wind_gust", "peak_wind_drct", "peak_wind_time"]
 WIND_INCREMENTAL_FROM = date(2026, 11, 1)   # the backfill covers 2003-01-01 through 2026-10-31
 WIND_BACKFILL_FIRST = 2003
+WIND_BACKFILL_MONTHS = 12                   # month windows per run: a year's worth, as the backfill did before
+WIND_STATION_BATCH = 16                     # stations per request: the 67 Kansas stations go in five batches
+WIND_PAUSE = 5.0                            # seconds between IEM requests
 WIND_DAILY_THROUGH = date(2026, 9, 23)      # last day in the archived daily collection
 
 
@@ -186,13 +199,53 @@ def _load_csv(ctx, db, source_id, path, digest, url, receipt, table, header, wid
             raise
 
 
+def _wind_fetch(ctx, url: str, **options):
+    """One IEM request, WIND_PAUSE after the run's last, made again after a refusal the run's budget allows."""
+    if ctx.throttle.requests:
+        time.sleep(getattr(ctx, "pause", WIND_PAUSE))
+    return ctx.throttle.fetch(url, **options)
+
+
+def _station_batches(stations) -> list[list[str]]:
+    return [list(stations[i:i + WIND_STATION_BATCH]) for i in range(0, len(stations), WIND_STATION_BATCH)]
+
+
 def _wind_window(ctx, db, stations, start: date, end: date, *, label: str) -> int:
-    fetched = ctx.fetch(_wind_obs_url(stations, start, end + timedelta(days=1)), limit=600_000_000, timeout=1200)
-    path, digest = core.store_raw(ctx, "iem-wind", f"observations/{start.year}/obs-{start:%Y%m%d}-{end:%Y%m%d}.csv.gz",
-                                  core.gz(fetched.body), url=fetched.url, fetched=fetched, extra={"window": [str(start), str(end)], "role": label})
+    """Readings of one station batch over start..end (inclusive): kept raw, loaded in one transaction."""
+    fetched = _wind_fetch(ctx, _wind_obs_url(stations, start, end + timedelta(days=1)), limit=200_000_000, timeout=600)
+    name = f"observations/{start.year}/obs-{start:%Y%m%d}-{end:%Y%m%d}-{stations[0]}-{stations[-1]}.csv.gz"
+    path, digest = core.store_raw(ctx, "iem-wind", name, core.gz(fetched.body), url=fetched.url, fetched=fetched,
+                                  extra={"window": [str(start), str(end)], "role": label, "stations": list(stations)})
     with core.pipeline_lock(ctx):
         return _load_csv(ctx, db, "iem-wind-observations", path, digest, fetched.url, core.receipt_for(ctx, path), "kfm_wind_observations",
                          ["station", "valid", *WIND_FIELDS], 8)
+
+
+def _month_end(day: date) -> date:
+    return (day.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
+
+
+def _wind_backfill(ctx, db, stations, state: dict, summary: dict, months: int) -> dict:
+    """Up to months month windows of archived readings, oldest first, every station batch of each; the place is saved after each batch."""
+    year, month = int(state.get("obs_backfill_next", WIND_BACKFILL_FIRST)), int(state.get("obs_backfill_month", 1))
+    batch, batches, done = int(state.get("obs_backfill_batch", 0)), _station_batches(stations), 0
+    while done < months and date(year, month, 1) < WIND_INCREMENTAL_FROM:
+        start = date(year, month, 1)
+        end = min(_month_end(start), WIND_INCREMENTAL_FROM - timedelta(days=1))
+        if summary["backfill_year"] is None:
+            summary["backfill_year"] = year
+        while batch < len(batches):
+            summary["observation_rows"] += _wind_window(ctx, db, batches[batch], start, end, label="backfill")
+            batch += 1
+            state = _save(ctx, db, "iem-wind", {**state, "obs_backfill_next": year, "obs_backfill_month": month, "obs_backfill_batch": batch})
+        summary["backfill_months"] += 1
+        done += 1
+        batch, month = 0, month + 1
+        if month > 12:
+            year, month = year + 1, 1
+        rest = {k: v for k, v in state.items() if k not in ("obs_backfill_month", "obs_backfill_batch")}
+        state = _save(ctx, db, "iem-wind", {**rest, "obs_backfill_next": year, **({"obs_backfill_month": month} if month > 1 else {})})
+    return state
 
 
 def _save(ctx, db, feed, state):
@@ -201,27 +254,29 @@ def _save(ctx, db, feed, state):
     return state
 
 
-def iem_wind(ctx) -> dict:
+def iem_wind(ctx, backfill_months: int = WIND_BACKFILL_MONTHS) -> dict:
     db = core.open_db(ctx)
     try:
         state = core.get_state(db, "iem-wind")
         stations = [r[0] for r in db.execute("SELECT station_id FROM kfm_wind_stations ORDER BY station_id")]
         if not stations:
             raise FeedError("WIND_STATIONS_MISSING")
+        ctx.throttle = core.Throttle(ctx, "iem-wind")
         yesterday = ctx.now().date() - timedelta(days=1)
-        summary = {"observation_rows": 0, "daily_rows": 0, "backfill_year": None}
-        # New readings, at most 31 days per request.
+        summary = {"observation_rows": 0, "daily_rows": 0, "backfill_year": None, "backfill_months": 0}
+        # New readings, at most 31 days and one station batch per request.
         through = date.fromisoformat(state.get("obs_through", str(WIND_INCREMENTAL_FROM - timedelta(days=1))))
         while through < yesterday:
             start, end = through + timedelta(days=1), min(yesterday, through + timedelta(days=31))
-            summary["observation_rows"] += _wind_window(ctx, db, stations, start, end, label="incremental")
+            for batch in _station_batches(stations):
+                summary["observation_rows"] += _wind_window(ctx, db, batch, start, end, label="incremental")
             through = end
             state = _save(ctx, db, "iem-wind", {**state, "obs_through": str(through)})
         # New daily summaries.
         daily = date.fromisoformat(state.get("daily_through", str(WIND_DAILY_THROUGH)))
         while daily < yesterday:
             start, end = daily + timedelta(days=1), min(yesterday, daily + timedelta(days=366))
-            fetched = ctx.fetch(_wind_daily_url(stations, start, end), limit=200_000_000, timeout=900)
+            fetched = _wind_fetch(ctx, _wind_daily_url(stations, start, end), limit=200_000_000, timeout=900)
             path, digest = core.store_raw(ctx, "iem-wind", f"daily/{start.year}/daily-{start:%Y%m%d}-{end:%Y%m%d}.csv.gz",
                                           core.gz(fetched.body), url=fetched.url, fetched=fetched, extra={"window": [str(start), str(end)]})
             with core.pipeline_lock(ctx):
@@ -230,14 +285,10 @@ def iem_wind(ctx) -> dict:
                                                    transform=lambda row: row[:5])
             daily = end
             state = _save(ctx, db, "iem-wind", {**state, "daily_through": str(daily)})
-        # Backfill: one year of readings per run, oldest first, so IEM is asked for a year at a time.
-        year = int(state.get("obs_backfill_next", WIND_BACKFILL_FIRST))
-        if year <= WIND_INCREMENTAL_FROM.year:
-            end = min(date(year, 12, 31), WIND_INCREMENTAL_FROM - timedelta(days=1))
-            summary["observation_rows"] += _wind_window(ctx, db, stations, date(year, 1, 1), end, label="backfill")
-            summary["backfill_year"] = year
-            state = _save(ctx, db, "iem-wind", {**state, "obs_backfill_next": year + 1})
-        return {**summary, "obs_through": state.get("obs_through"), "daily_through": state.get("daily_through")}
+        # Backfill: a year's worth of month windows per run, oldest first, a station batch at a time.
+        state = _wind_backfill(ctx, db, stations, state, summary, backfill_months)
+        return {**summary, "obs_through": state.get("obs_through"), "daily_through": state.get("daily_through"),
+                "obs_backfill_next": state.get("obs_backfill_next"), **ctx.throttle.summary()}
     finally:
         db.close()
 

@@ -181,6 +181,31 @@ class GridRecoveryTests(FeedCase):
         self.assertEqual(set(saved['ranges']), {g.name for g in grid.GROUPS})
 
 
+    def test_wikidata_waits_out_a_throttled_query_before_giving_up(self):
+        answers = [self.refusal(grid.SPARQL, retry_after=12), self.refusal(grid.SPARQL)]
+
+        def fetch(url, **_):
+            if answers:
+                raise answers.pop(0)
+            return core.Fetched(url, b'{"results": {"bindings": []}}')
+        self.ctx.fetch = fetch
+        budget = grid._Budget(10, 0, core.Throttle(self.ctx, 'wikidata-kansas'))
+        _, bindings = grid._sparql(self.ctx, budget, 'SELECT ?item WHERE {}')
+        self.assertEqual((bindings, budget.used, self.sleeps), ([], 3, [12.0, 120.0]), 'the query sent again after each wait counts against the cap')
+        self.assertEqual(budget.throttle.summary(), {'throttled': 2, 'waited_seconds': 132})
+        # A Retry-After beyond the run's budget, or no throttle at all, stops the run as before.
+        refused = self.refusal(grid.SPARQL, retry_after=3000)
+
+        def refuse(url, **_):
+            raise refused
+        self.ctx.fetch = refuse
+        with self.assertRaisesRegex(core.FeedError, '^WIKIDATA_RATE_LIMITED$'):
+            grid._sparql(self.ctx, budget, 'SELECT ?item WHERE {}')
+        with self.assertRaisesRegex(core.FeedError, '^WIKIDATA_RATE_LIMITED$'):
+            grid._sparql(self.ctx, grid._Budget(10, 0), 'SELECT ?item WHERE {}')
+        self.assertEqual(self.sleeps, [12.0, 120.0])
+
+
 class PreservedRecordTests(FeedCase):
     def test_osm_line_selection_checks_segments_instead_of_only_their_envelope(self):
         box = (0, 0, 10, 10)

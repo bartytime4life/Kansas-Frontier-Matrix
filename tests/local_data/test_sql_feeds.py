@@ -1,5 +1,7 @@
 """SQL feeds: additive, resumable loads from new source data, without network access."""
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
+import email.message
+import email.utils
 import gzip
 import hashlib
 import http.client
@@ -13,6 +15,8 @@ import tarfile
 import tempfile
 import unittest
 from unittest.mock import patch
+import urllib.error
+import urllib.parse
 import zipfile
 
 from tests.local_data import test_intake as fixtures
@@ -88,9 +92,19 @@ class FeedCase(unittest.TestCase):
         self.logs = []
         self.ctx = core.Context(root=self.root, db_path=self.db_path, lock=self.root / "pipeline.lock", fetch=self.web,
                                 now=lambda: datetime(2026, 11, 4, 15, 0, tzinfo=timezone.utc), log=self.logs.append, floor=0)
+        self.sleeps = []   # the waits of a throttled run (core._sleep), recorded instead of slept
+        sleeper = patch.object(core, "_sleep", self.sleeps.append)
+        sleeper.start()
+        self.addCleanup(sleeper.stop)
 
     def tearDown(self):
         self.temp.cleanup()
+
+    def refusal(self, url, code=429, retry_after=None):
+        """A provider's refusal as ctx.fetch raises it: HTTP_<code>, with the Retry-After it carried."""
+        error = core.FeedError(f"HTTP_{code} {url}")
+        error.retry_after = retry_after
+        return error
 
     def q(self, sql, *args):
         db = sqlite3.connect(self.db_path)
@@ -190,6 +204,77 @@ class CoreTests(FeedCase):
         with patch("urllib.request.urlopen", side_effect=lambda *a, **k: Dropped()), patch("time.sleep"), \
                 self.assertRaisesRegex(core.FeedError, "FETCH_FAILED https://x/file"):
             core.http_fetch("https://x/file", limit=10)
+
+    def test_a_refused_answer_carries_the_providers_retry_after(self):
+        def refuse(code, **headers):
+            message = email.message.Message()
+            for name, value in headers.items():
+                message[name.replace("_", "-")] = value
+
+            def opened(*_, **__):
+                raise urllib.error.HTTPError("https://x/file", code, "refused", message, None)
+            return opened
+
+        with patch("urllib.request.urlopen", side_effect=refuse(429, Retry_After="7")) as opened, \
+                self.assertRaisesRegex(core.FeedError, "^HTTP_429 https://x/file$") as caught:
+            core.http_fetch("https://x/file", limit=10)
+        self.assertEqual((caught.exception.retry_after, opened.call_count), (7.0, 1), "a 4xx is not retried blindly")
+        later = email.utils.format_datetime(datetime.now(timezone.utc) + timedelta(seconds=90))
+        with patch("urllib.request.urlopen", side_effect=refuse(429, Retry_After=later)), self.assertRaises(core.FeedError) as caught:
+            core.http_fetch("https://x/file", limit=10)
+        self.assertTrue(80 <= caught.exception.retry_after <= 90, "an HTTP date becomes seconds from now")
+        with patch("urllib.request.urlopen", side_effect=refuse(429)), self.assertRaises(core.FeedError) as caught:
+            core.http_fetch("https://x/file", limit=10)
+        self.assertIsNone(caught.exception.retry_after)
+        # A 503 is retried as before; the last answer's Retry-After comes out with the reason.
+        with patch("urllib.request.urlopen", side_effect=refuse(503, Retry_After="5")) as opened, patch("time.sleep"), \
+                self.assertRaisesRegex(core.FeedError, "^HTTP_503 https://x/file$") as caught:
+            core.http_fetch("https://x/file", limit=10)
+        self.assertEqual((caught.exception.retry_after, opened.call_count), (5.0, 3))
+
+    def test_retry_after_seconds_reads_delays_and_dates(self):
+        now = datetime(2026, 11, 4, 15, 0, tzinfo=timezone.utc)
+        self.assertEqual(core.retry_after_seconds("7"), 7.0)
+        self.assertEqual(core.retry_after_seconds(" 120 "), 120.0)
+        self.assertEqual(core.retry_after_seconds("Wed, 04 Nov 2026 15:02:00 GMT", now), 120.0)
+        self.assertEqual(core.retry_after_seconds("Wed, 04 Nov 2026 14:00:00 GMT", now), 0.0, "a date already passed")
+        self.assertIsNone(core.retry_after_seconds(None))
+        self.assertIsNone(core.retry_after_seconds("soon"))
+
+    def test_a_throttle_waits_out_refusals_within_the_runs_budget(self):
+        throttle = core.Throttle(self.ctx, "demo", first=10, longest=35, budget=100)
+        self.assertTrue(throttle.wait(self.refusal("https://x/a", retry_after=7)), "Retry-After is honoured")
+        for _ in range(3):
+            self.assertTrue(throttle.wait(self.refusal("https://x/a")), "else a backoff, doubling, bounded")
+        self.assertEqual(self.sleeps, [7.0, 20.0, 35.0, 35.0])
+        self.assertFalse(throttle.wait(self.refusal("https://x/a")), "a wait past the budget is not taken")
+        self.assertEqual(throttle.summary(), {"throttled": 4, "waited_seconds": 97})
+        notes = [line for line in self.logs if line["event"] == "feed_throttled"]
+        self.assertEqual(len(notes), 5)
+        self.assertEqual((notes[0]["feed"], notes[0]["status"], notes[0]["wait_seconds"], notes[0]["retry_after"]), ("demo", "HTTP_429", 7, True))
+        self.assertEqual((notes[-1]["stopped"], notes[-1]["waited_seconds"], notes[-1]["budget_seconds"]), (True, 97, 100))
+        fresh = core.Throttle(self.ctx, "demo", budget=100)
+        self.assertFalse(fresh.wait(self.refusal("https://x/a", retry_after=101)), "a Retry-After beyond the budget stops the run at once")
+        self.assertFalse(fresh.wait(self.refusal("https://x/a", code=404)))
+        self.assertFalse(fresh.wait(self.refusal("https://x/a", code=503)), "a 503 without Retry-After is the outage it was")
+        self.assertTrue(fresh.wait(self.refusal("https://x/a", code=503, retry_after=2)), "a 503 with Retry-After is throttling")
+        self.assertFalse(fresh.wait(RuntimeError("HTTP_429 not a feed error")))
+        self.assertEqual(self.sleeps[4:], [2.0])
+        # fetch: the same request again after each refusal; other failures come out as they are.
+        answers = [self.refusal("https://x/b", retry_after=1), self.refusal("https://x/b"), b"body"]
+
+        def answer(url):
+            item = answers.pop(0)
+            if isinstance(item, core.FeedError):
+                raise item
+            return item
+        self.web.routes = {"https://x/b": answer}
+        throttle = core.Throttle(self.ctx, "demo", first=10, budget=100)
+        self.assertEqual(throttle.fetch("https://x/b", limit=10).body, b"body")
+        self.assertEqual((throttle.requests, throttle.consecutive, throttle.refusals, self.sleeps[5:]), (3, 0, 2, [1.0, 20.0]))
+        with self.assertRaisesRegex(core.FeedError, "HTTP_404 https://x/c"):
+            throttle.fetch("https://x/c", limit=10)
+        self.assertEqual(throttle.refusals, 2)
 
     def test_the_pipeline_lock_is_reentrant_within_a_run(self):
         with core.pipeline_lock(self.ctx):
@@ -358,25 +443,117 @@ class CaptureTests(FeedCase):
             self.assertEqual(len(reviewed), 1)
 
 
+def query(url) -> dict:
+    """The query of an IEM request: {name: [values]}."""
+    return urllib.parse.parse_qs(urllib.parse.urlsplit(url).query)
+
+
 class WindTests(FeedCase):
-    def test_wind_catches_up_readings_and_summaries_then_backfills_a_year(self):
+    def setUp(self):
+        super().setUp()
+        self.ctx.pause = 0
+
+    def stations(self, *ids):
         db = sqlite3.connect(self.db_path)
-        db.executemany("INSERT INTO kfm_wind_stations VALUES (?,?)", [("ICT", "{}"), ("DDC", "{}")])
+        db.executemany("INSERT INTO kfm_wind_stations VALUES (?,?)", [(s, "{}") for s in ids])
         db.commit()
         db.close()
+
+    def state(self, value=None):
+        db = core.open_db(self.ctx)
+        try:
+            if value is not None:
+                core.set_state(db, self.ctx, "iem-wind", value)
+            return core.get_state(db, "iem-wind")
+        finally:
+            db.close()
+
+    def test_wind_catches_up_readings_and_summaries_then_backfills_a_year(self):
+        self.stations("ICT", "DDC")
         obs = lambda url: (b"station,valid,drct,sknt,gust,peak_wind_gust,peak_wind_drct,peak_wind_time\n"
                            + (b"ICT,2003-01-01 00:53,180.00,12.00,M,M,M,M\n" if "year1=2003" in url else b"ICT,2026-11-01 00:53,180.00,12.00,M,M,M,M\n"))
         daily = b"station,day,avg_wind_speed_kts,max_wind_speed_kts,max_wind_gust_kts,network\nICT,2026-09-24,6.1,16.0,None,KS_ASOS\n"
         self.web.routes = {feeds.IEM + "asos.py": obs, feeds.IEM + "daily.py": daily}
         result = feeds.iem_wind(self.ctx)
-        self.assertEqual((result["observation_rows"], result["daily_rows"], result["backfill_year"]), (2, 1, 2003))
-        self.assertEqual((result["obs_through"], result["daily_through"]), ("2026-11-03", "2026-11-03"))
-        backfill = [u for u in self.web.calls if "year1=2003" in u]
-        self.assertTrue(backfill and "station=DDC" in backfill[0] and "report_type=3" in backfill[0])
+        self.assertEqual((result["observation_rows"], result["daily_rows"], result["backfill_year"], result["backfill_months"]), (2, 1, 2003, 12))
+        self.assertEqual((result["obs_through"], result["daily_through"], result["obs_backfill_next"]), ("2026-11-03", "2026-11-03", 2004))
+        self.assertEqual((result["throttled"], result["waited_seconds"]), (0, 0))
+        backfill = [query(u) for u in self.web.calls if "year1=2003" in u]
+        self.assertEqual(len(backfill), 12, "a month and a station batch per request: twelve for two stations")
+        self.assertEqual([(q["month1"][0], q["day1"][0], q["month2"][0], q["day2"][0]) for q in backfill][:3],
+                         [("1", "1", "2", "1"), ("2", "1", "3", "1"), ("3", "1", "4", "1")])
+        self.assertEqual((backfill[-1]["month1"], backfill[-1]["year2"], backfill[-1]["month2"], backfill[-1]["day2"]), (["12"], ["2004"], ["1"], ["1"]))
+        self.assertTrue(all(q["station"] == ["DDC", "ICT"] and q["report_type"] == ["3", "4"] for q in backfill))
         self.assertEqual(self.q("SELECT station_id, observation_day, gust_knots FROM kfm_wind_daily"), [("ICT", "2026-09-24", "None")])
+        self.assertNotIn("obs_backfill_month", self.state(), "a finished year leaves only the year, as the state always read")
         # Next run: nothing new, and the backfill moves on a year (an identical answer is not loaded twice).
         again = feeds.iem_wind(self.ctx)
         self.assertEqual((again["observation_rows"], again["daily_rows"], again["backfill_year"]), (0, 0, 2004))
+
+    def readings(self, refuse=lambda url: None):
+        """IEM's answer for a window: one reading per station asked for, on the window's first day; or the refusal returned by refuse."""
+        def obs(url):
+            error = refuse(url)
+            if error is not None:
+                raise error
+            q = query(url)
+            day = f"{q['year1'][0]}-{int(q['month1'][0]):02d}-{int(q['day1'][0]):02d}"
+            return (b"station,valid,drct,sknt,gust,peak_wind_gust,peak_wind_drct,peak_wind_time\n"
+                    + "".join(f"{s},{day} 00:53,180.00,12.00,M,M,M,M\n" for s in q["station"]).encode())
+        return obs
+
+    def test_a_refusal_is_waited_out_and_the_backfill_goes_on_from_the_saved_state(self):
+        self.stations("DDC", "GLD", "ICT")
+        # State as earlier releases wrote it: the year alone, nothing else to catch up.
+        self.state({"obs_through": "2026-11-03", "daily_through": "2026-11-03", "obs_backfill_next": 2005})
+        refusals = [self.refusal(feeds.IEM, retry_after=30), self.refusal(feeds.IEM)]
+        self.web.routes = {feeds.IEM + "asos.py": self.readings(lambda url: refusals.pop(0) if refusals else None)}
+        with patch.object(feeds, "WIND_STATION_BATCH", 2):
+            result = feeds.iem_wind(self.ctx)
+        self.assertEqual((result["observation_rows"], result["backfill_year"], result["backfill_months"], result["obs_backfill_next"]), (36, 2005, 12, 2006))
+        self.assertEqual((result["throttled"], result["waited_seconds"], self.sleeps), (2, 150, [30.0, 120.0]))
+        self.assertEqual(len(self.web.calls), 2 + 24, "the refused window was asked for again; two batches of a month")
+        self.assertEqual([query(u)["station"] for u in self.web.calls[:4]], [["DDC", "GLD"]] * 3 + [["ICT"]], "the refused batch three times, then the next")
+        self.assertEqual(self.q("SELECT COUNT(DISTINCT observed_at_utc), COUNT(*) FROM kfm_wind_observations"), [(12, 36)])
+        self.assertEqual(json.loads(self.q("SELECT receipt_json FROM kfm_sql_sources ORDER BY file_id LIMIT 1")[0][0])["stations"], ["DDC", "GLD"])
+        self.assertEqual(self.state(), {"obs_through": "2026-11-03", "daily_through": "2026-11-03", "obs_backfill_next": 2006})
+
+    def test_a_spent_budget_stops_with_the_refusal_and_keeps_the_place(self):
+        self.stations("DDC", "GLD", "ICT")
+        self.state({"obs_through": "2026-11-03", "daily_through": "2026-11-03", "obs_backfill_next": 2005})
+        refusing = [True]
+        refuse = lambda url: self.refusal(url, retry_after=3000) if refusing[0] and query(url)["month1"] == ["2"] else None
+        self.web.routes = {feeds.IEM + "asos.py": self.readings(refuse)}
+        with patch.object(feeds, "WIND_STATION_BATCH", 2), self.assertRaisesRegex(core.FeedError, "^HTTP_429 "):
+            feeds.iem_wind(self.ctx)
+        self.assertEqual(self.sleeps, [], "a Retry-After beyond the run's budget is not waited for")
+        self.assertEqual(self.q("SELECT COUNT(*) FROM kfm_wind_observations"), [(3,)], "January stays loaded")
+        self.assertEqual(self.state(), {"obs_through": "2026-11-03", "daily_through": "2026-11-03", "obs_backfill_next": 2005, "obs_backfill_month": 2})
+        self.assertEqual([line["event"] for line in self.logs][-1], "feed_throttled")
+        # The provider relents: the next run starts at February, not January, and does a year's worth of months, into 2006.
+        refusing[0] = False
+        self.web.calls.clear()
+        with patch.object(feeds, "WIND_STATION_BATCH", 2):
+            result = feeds.iem_wind(self.ctx)
+        self.assertEqual((result["observation_rows"], result["backfill_year"], result["backfill_months"], result["obs_backfill_next"]), (36, 2005, 12, 2006))
+        self.assertEqual([(q["year1"][0], q["month1"][0]) for q in map(query, self.web.calls)][::2],
+                         [("2005", str(m)) for m in range(2, 13)] + [("2006", "1")])
+        self.assertEqual(self.state(), {"obs_through": "2026-11-03", "daily_through": "2026-11-03", "obs_backfill_next": 2006, "obs_backfill_month": 2})
+        # A stop between two batches of a month keeps the batch too.
+        self.state({"obs_through": "2026-11-03", "daily_through": "2026-11-03", "obs_backfill_next": 2026, "obs_backfill_month": 10})
+        refuse = lambda url: self.refusal(url, retry_after=3000) if query(url)["station"] == ["ICT"] else None
+        self.web.routes = {feeds.IEM + "asos.py": self.readings(refuse)}
+        with patch.object(feeds, "WIND_STATION_BATCH", 2), self.assertRaisesRegex(core.FeedError, "^HTTP_429 "):
+            feeds.iem_wind(self.ctx)
+        self.assertEqual(self.state()["obs_backfill_batch"], 1)
+        self.web.routes = {feeds.IEM + "asos.py": self.readings()}
+        self.web.calls.clear()
+        with patch.object(feeds, "WIND_STATION_BATCH", 2):
+            result = feeds.iem_wind(self.ctx)
+        self.assertEqual([query(u)["station"] for u in self.web.calls], [["ICT"]], "only the batch not done, of the last backfill month")
+        self.assertEqual((result["observation_rows"], result["obs_backfill_next"], query(self.web.calls[0])["day2"]), (1, 2026, ["1"]))
+        self.assertEqual(self.state(), {"obs_through": "2026-11-03", "daily_through": "2026-11-03", "obs_backfill_next": 2026, "obs_backfill_month": 11})
+        self.assertEqual(feeds.iem_wind(self.ctx)["backfill_months"], 0, "the backfill is complete")
 
 
 class GhcndTests(FeedCase):

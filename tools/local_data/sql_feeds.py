@@ -25,6 +25,7 @@ import argparse
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+import email.utils
 import fcntl
 import gzip
 import hashlib
@@ -130,6 +131,8 @@ CREATE TABLE IF NOT EXISTS kfm_feed_state (
 class FeedError(RuntimeError):
     """A fixed, loggable reason a feed stopped."""
 
+    retry_after: float | None = None   # seconds the provider asked for in Retry-After, on an HTTP_<code> reason
+
 
 @dataclass
 class Fetched:
@@ -139,8 +142,35 @@ class Fetched:
     etag: str | None = None
 
 
+def retry_after_seconds(value: str | None, now: datetime | None = None) -> float | None:
+    """Seconds asked for by a Retry-After header (a delay in seconds or an HTTP date), or None when absent or unreadable."""
+    if value is None:
+        return None
+    text = value.strip()
+    if text.isdigit():
+        return float(text)
+    try:
+        moment = email.utils.parsedate_to_datetime(text)
+    except (TypeError, ValueError, IndexError):
+        return None
+    if moment is None:
+        return None
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=timezone.utc)
+    return max(0.0, (moment - (now or utc_now())).total_seconds())
+
+
+def _http_error(error: urllib.error.HTTPError, url: str) -> FeedError:
+    failure = FeedError(f"HTTP_{error.code} {url}")
+    failure.retry_after = retry_after_seconds(error.headers.get("Retry-After") if error.headers else None)
+    return failure
+
+
 def _get(url: str, read: Callable, *, timeout: int, missing_ok: bool, attempts: int):
-    """GET url and pass the response to read. A 404 is None when missing_ok; other failures retry, then raise."""
+    """GET url and pass the response to read. A 404 is None when missing_ok; other failures retry, then raise.
+
+    A 4xx raises at once; the FeedError of a 429 (or any refused answer) carries the provider's Retry-After
+    as ``retry_after`` seconds, for feeds that wait it out with a Throttle."""
     for attempt in range(attempts):
         try:
             request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
@@ -150,7 +180,7 @@ def _get(url: str, read: Callable, *, timeout: int, missing_ok: bool, attempts: 
             if error.code == 404 and missing_ok:
                 return None
             if error.code < 500 or attempt == attempts - 1:
-                raise FeedError(f"HTTP_{error.code} {url}") from None
+                raise _http_error(error, url) from None
         # IncompleteRead (a connection dropped mid-transfer, as IEM did on 2026-11-02) is an HTTPException,
         # not a ConnectionError: retried like the others.
         except (urllib.error.URLError, TimeoutError, ConnectionError, http.client.HTTPException) as error:
@@ -205,6 +235,73 @@ def canonical(value) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
+# --- Provider throttling: wait, then continue, within a per-run budget ------------------------------
+
+_sleep = time.sleep                 # replaced in tests
+THROTTLE_CODES = ("HTTP_429",)      # a 503 counts too when it carries Retry-After (a provider using it to throttle)
+THROTTLE_FIRST_WAIT = 60.0          # seconds, the first wait of a run without a Retry-After
+THROTTLE_LONGEST_WAIT = 900.0       # the backoff doubles per consecutive refusal up to this
+THROTTLE_BUDGET = 2700.0            # seconds of waiting one run may spend in all (the feed services allow 6 h)
+
+
+class Throttle:
+    """A run's patience with a provider's throttling: a refused request is waited out, then made again.
+
+    A refusal is an HTTP_429 (or another code in ``codes``), or an HTTP_503 that carries Retry-After, where a
+    provider uses it to throttle. The wait is what Retry-After asks when present, else a bounded backoff:
+    ``first`` seconds, doubled per consecutive refusal, at most ``longest``. The waits of one run are bounded
+    by ``budget`` seconds: a refusal whose wait would pass it is not waited out, ``wait`` answers False, and the
+    feed stops with its existing reason code, keeping what loaded, so the next run continues from its saved
+    state. Every wait is noted in the journal as ``feed_throttled``.
+    """
+
+    def __init__(self, ctx, feed: str, *, codes=THROTTLE_CODES, first: float = THROTTLE_FIRST_WAIT,
+                 longest: float = THROTTLE_LONGEST_WAIT, budget: float = THROTTLE_BUDGET):
+        self.ctx, self.feed, self.codes, self.first, self.longest, self.budget = ctx, feed, tuple(codes), first, longest, budget
+        self.refusals, self.consecutive, self.waited, self.requests = 0, 0, 0.0, 0
+
+    def throttled(self, error: BaseException) -> bool:
+        """Whether error is a provider's refusal that this throttle waits out."""
+        if not isinstance(error, FeedError):
+            return False
+        code = str(error).split(" ", 1)[0]
+        return code in self.codes or (code == "HTTP_503" and error.retry_after is not None)
+
+    def wait(self, error: BaseException) -> bool:
+        """True after waiting out a refusal; False when error is not one, or when the run's budget is spent."""
+        if not self.throttled(error):
+            return False
+        asked = error.retry_after
+        seconds = max(1.0, asked) if asked is not None else min(self.first * 2 ** self.consecutive, self.longest)
+        if self.waited + seconds > self.budget:
+            self.ctx.note("feed_throttled", feed=self.feed, status=str(error).split(" ", 1)[0], wait_seconds=round(seconds),
+                          waited_seconds=round(self.waited), refusals=self.refusals + 1, budget_seconds=round(self.budget), stopped=True)
+            return False
+        self.refusals += 1
+        self.consecutive += 1
+        self.ctx.note("feed_throttled", feed=self.feed, status=str(error).split(" ", 1)[0], wait_seconds=round(seconds),
+                      waited_seconds=round(self.waited), refusals=self.refusals, retry_after=asked is not None)
+        _sleep(seconds)
+        self.waited += seconds
+        return True
+
+    def fetch(self, url: str, **options):
+        """ctx.fetch(url, ...), made again after each refusal the budget allows; other failures raise as they are."""
+        while True:
+            self.requests += 1
+            try:
+                fetched = self.ctx.fetch(url, **options)
+            except FeedError as error:
+                if self.wait(error):
+                    continue
+                raise
+            self.consecutive = 0
+            return fetched
+
+    def summary(self) -> dict:
+        return {"throttled": self.refusals, "waited_seconds": round(self.waited)}
+
+
 @dataclass
 class Context:
     root: Path
@@ -221,6 +318,7 @@ class Context:
     shared_dirs: list[Path] = field(default_factory=list)   # the other database's folder, counted against the ceiling
     bulk_db: Path | None = None
     lock_depth: int = 0
+    throttle: Throttle | None = None   # the run's patience with the provider's refusals, set by the feeds that wait them out
 
     def note(self, event: str, **fields) -> None:
         self.log({"at": self.now().strftime("%Y-%m-%dT%H:%M:%SZ"), "event": event, **fields})
