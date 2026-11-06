@@ -222,7 +222,7 @@ function installRiverEffect(selected = true) {
   Object.assign(window, { setInterval: () => 1, clearInterval: () => { intervalCleared = true; } });
   document.hidden = false;
   const active = new AbortController();
-  const bindings = { window, document, useEffect: fn => { cleanup = fn(); }, streamflowSelectedAtPresent: selected,
+  const bindings = { navigationReadEpoch: 0, window, document, useEffect: fn => { cleanup = fn(); }, streamflowSelectedAtPresent: selected,
     setStreamflowPlaying: () => {}, streamflowRequestRef: { current: active }, explorerRestoredRef: { current: true },
     streamflowArchiveDayRef: { current: null }, streamflowRange: "24h", streamflowSelectedStationId: null,
     refreshStreamflow: () => { calls++; } };
@@ -263,7 +263,7 @@ test("the production Census reconnect listener refreshes only selected present-d
   let cleanup;
   window.setInterval = () => 1;
   document.hidden = false;
-  const bindings = { window, document, clearInterval: () => {}, useEffect: fn => { cleanup = fn(); },
+  const bindings = { navigationReadEpoch: 0, window, document, clearInterval: () => {}, useEffect: fn => { cleanup = fn(); },
     currentUtcDay: () => "2026-10-17", setBaselineDay: () => {}, buildYearCurrentRef: { current: true },
     officialVisibilityRef: { current: { "census-counties": true } }, temporalQueryRef: { current: { frame: 2026 } },
     OFFICIAL_CONTEXT_PRESENT_FRAME: 2026, OFFICIAL_CONTEXT_SOURCES: [], refreshOfficialContext: feed => calls.push(feed) };
@@ -275,4 +275,45 @@ test("the production Census reconnect listener refreshes only selected present-d
   window.dispatchEvent(new Event("online")); assert.equal(calls.length, 1);
   cleanup(); bindings.officialVisibilityRef.current["census-counties"] = true;
   window.dispatchEvent(new Event("online")); assert.equal(calls.length, 1);
+});
+
+
+test('retained-document pageshow revalidates the restored view, while normal loading does not duplicate restoration', () => {
+  const start = page.lastIndexOf('  useEffect(() => {', page.indexOf('    const restore = window.setTimeout(restoreExplorerFromUrl, 0);'));
+  const source = page.slice(start, page.indexOf('\n  useEffect(', start + 1));
+  const compiled = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+  const window = new EventTarget(); let initial, cleanup, restores = 0;
+  window.setTimeout = fn => { initial = fn; return 1; }; window.clearTimeout = () => {};
+  const restoreExplorerFromUrl = () => { restores++; };
+  new Function('window', 'useEffect', 'restoreExplorerFromUrl', compiled)(window, fn => { cleanup = fn(); }, restoreExplorerFromUrl);
+  initial(); assert.equal(restores, 1);
+  const show = persisted => { const event = new Event('pageshow'); Object.defineProperty(event, 'persisted', {value:persisted}); window.dispatchEvent(event); };
+  show(false); assert.equal(restores, 1);
+  show(true); assert.equal(restores, 2, 'bfcache restore cannot retain unchecked current payloads indefinitely');
+  window.dispatchEvent(new Event('popstate')); assert.equal(restores, 3);
+  cleanup(); show(true); window.dispatchEvent(new Event('popstate')); assert.equal(restores, 3, 'both listeners are released');
+});
+
+
+test('history restoration schedules an uncached check even when the selected current view already has a payload', () => {
+  const start = page.lastIndexOf('  useEffect(() => {', page.indexOf('    // Hydrate selected current sources on first entry'));
+  const source = page.slice(start, page.indexOf('\n  const dismissMapUtilityWithoutFocus', start));
+  const compiled = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+  const checks = [], timers = []; let dependencies;
+  const bindings = {buildYearCurrent:true,calendarSweep:null,navigationReadEpoch:7,officialArchiveDays:{},temporalQuery:{frame:2026},OFFICIAL_CONTEXT_PRESENT_FRAME:2026,
+    officialVisibilityRef:{current:{'usgs-earthquakes':true}}, officialRequestsRef:{current:new Map()},
+    officialPayloadsRef:{current:{'usgs-earthquakes':snapshot}}, officialArchiveDaysRef:{current:{}},
+    OFFICIAL_CONTEXT_SOURCES:[{id:'usgs-earthquakes',apiPath:'/api/live-context?feed=usgs-earthquakes'},{id:'hidden',apiPath:'/api/hidden'}],
+    searchNeedsCounties:()=>false,refreshOfficialContext:feed=>checks.push(feed),setOfficialStates(){},
+    window:{setTimeout:fn=>{timers.push(fn);return 1;},clearTimeout(){}},useEffect:(fn,deps)=>{dependencies=deps;fn();}};
+  new Function(...Object.keys(bindings), compiled)(...Object.values(bindings));
+  assert.ok(dependencies.includes(7), 'a same-date Back/Forward restore reruns the scheduler');
+  timers.splice(0).forEach(fn=>fn());
+  assert.deepEqual(checks,['usgs-earthquakes'],'an existing payload is rechecked; hidden sources stay idle');
+  for (const extra of [{temporalQuery:{frame:1900}},{calendarSweep:{day:'2020-01-01'}},{buildYearCurrent:false}]) {
+    checks.length=0; timers.length=0;
+    const scope={...bindings,...extra};
+    new Function(...Object.keys(scope), compiled)(...Object.values(scope));
+    timers.splice(0).forEach(fn=>fn()); assert.deepEqual(checks,[], 'historical or invalid-build context does not request current sources');
+  }
 });

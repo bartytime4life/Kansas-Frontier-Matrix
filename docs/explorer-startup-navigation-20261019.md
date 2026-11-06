@@ -210,3 +210,57 @@ repair does not authorize a merge, GoDaddy update/publication, original Sites
 synchronization, private-store operation or data promotion. Hosted acceptance
 must separately bind the reviewed application inputs to a deployed identity
 and repeat the startup, keyboard and mobile journeys on that deployment.
+
+
+## Browser Back, restored current reads and map keys — November 6, 2026
+
+The owner reproduced the live-site failure by opening a category from startup
+and pressing the mouse Back button: the browser left KFM. The preceding
+implementation serialized the current map with replaceState only, so its
+in-application destinations did not create browser navigation entries.
+
+Deliberate category/map, topic, map-utility, source-status and supported civic
+inspection actions now request one history step. The committed render writes
+that step with pushState when the serialized destination differs. Camera
+movement, rendering and data refreshes continue updating the current step.
+Unchanged destinations do not add empty entries. The original browser entry is
+not intercepted: a visitor can still leave KFM by continuing Back past it.
+Router state and the current URL are retained; embedded-host history stays
+untouched. Existing location-camera redaction runs before serialization.
+
+A history entry also records whether it represents startup or the map. Back
+from the first category restores startup; Forward restores that map. Ordinary
+Escape dismissal does not redefine the startup entry, so its existing reload
+behavior is retained. An explicitly opened map entry can reload into that map.
+This is browser-tab history, not a new persistent dataset or account store.
+
+Returning through popstate or a persisted pageshow revalidates selected current
+JSON feeds after restored time and selections commit. Radar, satellite, River
+Pulse and NWPS schedulers also observe restoration while retaining their own
+request guards and retry windows. Archived selections and historical map time
+remain dated; they are not silently replaced with current observations. Current
+reads retain the existing no-store request path. Refreshing does not rewrite
+provider observation/retrieval times, certify provider freshness, or manufacture
+a release. Existing unavailable/error handling remains authoritative.
+
+The category controls now put a named, keyboard-operable **Map key — Colors &
+symbols** disclosure immediately below their heading, ahead of long instrument
+controls. It reuses the existing selected-layer keys, crop colors, year labels
+and source notes. No key appears when none is supplied. Provider-specific legends
+and unimplemented story labs retain their existing states.
+
+Validation uses the existing history, startup, map-key, crop, source-recovery,
+category and workspace tests. Two hydrated browser regressions cover the owner's
+startup → Government & civic → Back → startup → Forward → map → reload journey
+at 1280 × 800 and 390 × 844; hosted execution is recorded in the pull request.
+The available cloud browser separately passed the desktop Back/Forward journey.
+It reports WebGL2 unavailable and its DevTools are administrator-disabled, so
+that observation does not qualify actual map drawing, crop legend painting,
+phone touch input, physical GPUs, provider freshness or the live deployment.
+
+Placement follows accepted ADR-0029 and the canonical Directory Rules checked
+at main@72c7aa14f0c1acfc0509896a3d58be05c6a08cab: existing app owns presentation,
+tests owns regressions and docs owns this behavior/rollback record. No data,
+policy, schema, release or storage root is introduced. Rollback is a reviewed
+revert of this change; preserve browser settings and all source data. Source
+review, merge and GoDaddy publication remain separate operations.

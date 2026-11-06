@@ -29,7 +29,7 @@ function toolFocusHarness(){
  const buttons=Object.fromEntries(['sunyear','flow'].map(tool=>[tool,{scrollIntoView(){scrolled.push(tool);},focus(){focused.push(tool);document.activeElement=buttons[tool];}}]));
  let dock={querySelector(selector){return buttons[selector.match(/data-category-tool="([^"]+)"/)[1]];}};
  const context={document,window:{requestAnimationFrame(callback){frames.push(callback);return frames.length;}},categoryToolFocusRequestRef:{current:0},categoryMap:()=>({tools:['sunyear','flow']})};
- for(const name of ['setCategoryToolsOnCurrentMap','setPrimaryWorkspace','setGuideOpen','setUndergroundOpen','setOfficialWorkspace','setCategoryDockTopic','setCategoryDockHidden','setLeftOpen','setRightOpen','dismissMapUtilityWithoutFocus'])context[name]=()=>{};
+ for(const name of ['markExplorerNavigation','setCategoryToolsOnCurrentMap','setPrimaryWorkspace','setGuideOpen','setUndergroundOpen','setOfficialWorkspace','setCategoryDockTopic','setCategoryDockHidden','setLeftOpen','setRightOpen','dismissMapUtilityWithoutFocus'])context[name]=()=>{};
  const run=source=>new Function(...Object.keys(context),ts.transpileModule(`return (${source});`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(context));
  const open=run(revealToolSource),dispose=disposeToolFocusSource?run(disposeToolFocusSource)():()=>{};
  return {body,trigger,input,other,document,focused,scrolled,open,dispose,removeDock(){dock=null;},flush(){while(frames.length)frames.shift()();}};

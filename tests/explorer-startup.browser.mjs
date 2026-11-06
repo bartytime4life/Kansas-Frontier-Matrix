@@ -1236,7 +1236,7 @@ for (const [width, height] of [[1366, 768], [390, 844]]) {
       await p.unobstructed('[aria-label="Layer topic"]');
       // Two actual entries: Back returns to a saved topic while welcome is open.
       await p.open('/');
-      await p.evaluate(`history.replaceState({...history.state,kfmExplorerView:'topic=engineering'},'','/?topic=engineering');history.pushState({},'','/');`);
+      await p.evaluate(`history.replaceState({...history.state,kfmExplorerView:'topic=engineering',kfmExplorerWelcome:false},'','/?topic=engineering');history.pushState({},'','/');`);
       await p.evaluate('history.back()');
       await p.wait(`document.querySelector('[aria-label="Layer topic"]')?.value === 'engineering'`, 'popstate topic');
       await p.unobstructed('[aria-label="Layer topic"]');
@@ -2051,5 +2051,33 @@ for (const [width,height] of [[1440,960],[390,844]]) {
       assert.ok(await p.evaluate(`document.documentElement.scrollWidth<=innerWidth+1`),'no horizontal document overflow');
     }
     report.completed=true;
+  });
+}
+
+
+// The owner's live-site reproduction: a category opened from startup must create
+// an actual browser step, without trapping exit from the original KFM entry.
+for (const [width, height] of [[1280, 800], [390, 844]]) {
+  test(`startup category supports browser Back and Forward at ${width}x${height}`, {timeout:90000}, async t => {
+    const b=await browser(t), p=await pageSession(b,width,height);
+    await p.open('/?motion=off'); await readyWelcome(p);
+    const initial=(await p.call('Page.getNavigationHistory')).currentIndex;
+    await p.evaluate(`document.querySelector('.topic-government').focus()`);
+    await p.key('Enter','Enter',13);
+    await p.wait(`!document.querySelector('.living-welcome') && history.state?.kfmExplorerWelcome===false && new URLSearchParams(history.state.kfmExplorerView).get('topics')==='government'`, 'deliberate map navigation saved');
+    assert.equal((await p.call('Page.getNavigationHistory')).currentIndex, initial+1, 'one deliberate choice adds one browser step');
+    await p.evaluate('history.back()');
+    await p.wait(`!!document.querySelector('.living-welcome') && history.state?.kfmExplorerWelcome===true`, 'Back returns to KFM startup');
+    assert.equal(await p.evaluate('location.pathname'), '/');
+    if(process.env.KFM_WORKSPACE_SCREENSHOTS){
+      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+      const capture=await p.call('Page.captureScreenshot',{format:'png'});
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`startup-browser-back-${width}x${height}.png`),Buffer.from(capture.data,'base64'));
+    }
+    await p.evaluate('history.forward()');
+    await p.wait(`!document.querySelector('.living-welcome') && new URLSearchParams(history.state?.kfmExplorerView).get('topics')==='government'`, 'Forward returns to the chosen map');
+    await p.call('Page.reload');
+    await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('.map-topic-edit')?.textContent.includes('Government')`, 'reopen restores the intentional map destination');
+    assert.equal(await p.evaluate('location.pathname'), '/');
   });
 }

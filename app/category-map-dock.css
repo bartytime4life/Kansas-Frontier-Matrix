@@ -176,3 +176,9 @@
 .category-capabilities li span{font-size:10px;color:#ddc785}
 .category-capabilities :is(button,a):hover{background:#17424c;border-color:#a9c4b9}
 .category-capabilities :focus-visible{outline:2px solid #e3c675;outline-offset:2px}
+
+/* Keep the map key before long instrument controls, with native keyboard disclosure. */
+.category-map-dock-map-key{min-width:0;border:1px solid #749bac80;border-radius:8px;background:#0a2d3d}
+.category-map-dock-map-key>summary{min-height:44px;padding:10px;box-sizing:border-box;color:#f1e6c2;font-size:12px;font-weight:700;cursor:pointer}
+.category-map-dock-map-key>summary span{display:block;padding-left:15px;color:#b6d0dc;font-size:11px;font-weight:400}
+.category-map-dock-map-key>div{display:grid;gap:12px;padding:0 10px 10px;min-width:0}

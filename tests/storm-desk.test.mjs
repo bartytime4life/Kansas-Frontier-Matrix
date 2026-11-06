@@ -185,7 +185,7 @@ test('GOES polling follows its own selection, suspends when hidden and releases 
   }
   visit(ast);
   assert.ok(effect);
-  assert.equal(effect.arguments[1].getText(ast), '[noaaSatelliteSelectedAtPresent, refreshNoaaSatelliteFrames]', 'unrelated switches do not restart polling');
+  assert.equal(effect.arguments[1].getText(ast), '[navigationReadEpoch, noaaSatelliteSelectedAtPresent, refreshNoaaSatelliteFrames]', 'only restoration or this source selection restarts polling');
   let refreshes = 0, aborts = 0, interval, listener, clears = 0;
   const request = {current: {abort() {aborts++;}}};
   const document = {hidden: false, addEventListener: (_, fn) => {listener = fn;}, removeEventListener: (_, fn) => {assert.equal(listener, fn); listener = null;}};
