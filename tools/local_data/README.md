@@ -21,6 +21,11 @@ truth_posture: CONFIRMED b194938f9e8a baseline and targeted local tests; PROPOSE
 > `catalogs/github-storage-budget.json` keeps 20 GB of the owner's 100 GB GitHub-hosted budget for code and
 > interface work. See [the intake runbook](../../docs/runbooks/raw-data-intake.md).
 
+For new photos and PDFs, the [Local Intake Studio](../../docs/runbooks/local-intake-studio.md)
+adds manual upload, explicit camera capture, sandboxed local OCR and held
+placement proposals on port 8776. Its private preparation inbox does not replace
+the governed store or existing Intake Desk. Capture remains a separate action.
+
 The GitHub-hosted budget includes Site files in repository history, release
 assets, and recorded Actions artifacts/caches. It does not cap local PC storage
 and is not a provider quota. Keep actual GitHub file/push/LFS limits separate.

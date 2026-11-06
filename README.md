@@ -194,6 +194,7 @@ monorepo, preserved Sites app and separate local-data tools.
 | See the experience | [Visual tour](docs/wiki/visual-tour.md) |
 | Evaluate the engineering | [Case studies](docs/wiki/engineering-case-studies.md) · [This edition's tests](docs/reports/documentation-showcase-qualification-20261027.md) |
 | Find a responsibility root | [Repository map](#repository-map) · [Directory Rules](docs/doctrine/directory-rules.md) |
+| Review photos and PDFs locally | [Local Intake Studio](docs/runbooks/local-intake-studio.md) · Private preparation and placement proposals |
 | Run source or store local data | [Installation](docs/installation.md) · [Local data store](docs/runbooks/local-pc-data-store.md) |
 | Review trust or contribute | [Doctrine](docs/doctrine/README.md) · [CONTRIBUTING](CONTRIBUTING.md) · [SECURITY](SECURITY.md) |
 

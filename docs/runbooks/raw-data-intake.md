@@ -45,6 +45,14 @@ previews require an explicitly selected trusted Python with rasterio, numpy and
 pyshp; projection-grid networking remains disabled. See the
 [consolidation runbook](kfm-projects-consolidation.md) for those bounded previews.
 
+## Prepare new photos and PDFs
+
+For manual uploads, camera capture, local OCR and held placement proposals, use
+the [Local Intake Studio](local-intake-studio.md) on port 8776. Its private inbox
+is preparation storage; capture into this pipeline remains a separate reviewed
+action. Studio decisions and export checksums do not confer source rights,
+admission, release or publication.
+
 ## Quick start
 
 ```bash

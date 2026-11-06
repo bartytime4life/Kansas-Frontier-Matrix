@@ -45,6 +45,8 @@ The previous changelog recorded only the initial implementation milestones throu
 
 ### Added
 
+- Local photo/PDF preparation studio under `tools/local_data/intake_studio/`: manual uploads, explicit camera capture, sandboxed local OCR, held placement proposals, separate duplicate provenance and checksum exports. Includes a [setup and handoff guide](docs/runbooks/local-intake-studio.md) and regression tests. Repository implementation only; no automatic capture, source admission, public embedding or deployment.
+
 - Illustrated, visitor-first project home with animated, theme-aware SVG artwork under [`docs/brand/readme/`](docs/brand/readme/README.md): Explorer walkthrough, feature tour, time depth, source lanes, Focus Mode gate trace, capability board, trust membrane and trust path ([#4942](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4942), [#4945](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4945)).
 - Social preview card, artwork gallery and encyclopedia cover visuals ([#4946](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4946)).
 - Page banners, badge rows, topic graphics and footer navigation for documents linked from the project home: doctrine, security, installation, local-data runbook and tools, acquisition runbook, verification backlog, brand, changelog, code of conduct and three encyclopedia chapters. Artwork is illustrative; each page's text remains authoritative, and no release or publication is implied.
