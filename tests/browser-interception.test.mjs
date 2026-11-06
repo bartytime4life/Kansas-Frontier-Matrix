@@ -145,17 +145,18 @@ test('ordinary navigation never pauses the engine; delayed-scene tests opt in wi
   }
 });
 
-test('unavailable navigation APIs return the same fixture without acquiring cancelable Fetch IDs', async () => {
+test('unavailable window APIs resolve locally while worker transport stays intercepted', async () => {
   const commands = [], sent = [];
   await isolateBrowserNetwork(async (method, params) => commands.push({ method, params }), 'http://127.0.0.1:5182/', { unavailableApis: true });
-  assert.equal(commands.some(command => command.method === 'Fetch.enable'), false, 'ordinary unavailable reads never pause browser requests');
+  assert.deepEqual(commands.find(command => command.method === 'Fetch.enable').params.patterns,
+    [{ urlPattern: 'http://127.0.0.1:5182/api/*' }], 'worker API requests retain explicit transport isolation');
   const rules = commands.find(command => command.method === 'Network.setBlockedURLs').params.urlPatterns;
   assert.deepEqual(rules, [
     { urlPattern: 'http://127.0.0.1:5182/api/build', block: false },
     { urlPattern: 'http://127.0.0.1:5182/api/*', block: true },
     { urlPattern: 'http://127.0.0.1:5182/*', block: false },
     { urlPattern: '*://*:*/*', block: true },
-  ], 'non-window API reads remain blocked before reaching the actual server');
+  ], 'native page API reads remain blocked before reaching the actual server');
   const window = { fetch: async input => { sent.push(String(input)); return new Response('actual build or asset'); } };
   vm.runInNewContext(commands.find(command => command.method === 'Page.addScriptToEvaluateOnNewDocument').params.source,
     { window, location: { href: 'http://127.0.0.1:5182/' }, URL, Request, Response, DOMException });

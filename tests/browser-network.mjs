@@ -28,7 +28,7 @@ export async function isolateBrowserNetwork(call, origin, { attribution = null, 
       const url = new URL(input instanceof Request ? input.url : String(input), location.href);
       // Plain navigation needs an unavailable provider, not a paused request
       // that Chrome can discard during an immediate reload. Workers/non-fetch
-      // APIs stay blocked by Network rules; the build receipt stays real.
+      // APIs keep the explicit transport interceptor; the build receipt stays real.
       if (${unavailableApis} && url.origin === ${JSON.stringify(base.origin)} && url.pathname.startsWith('/api/') && url.pathname !== '/api/build') {
         const signal = init?.signal ?? (input instanceof Request ? input.signal : null);
         if (signal?.aborted) return Promise.reject(new DOMException('Aborted', 'AbortError'));
@@ -42,7 +42,9 @@ export async function isolateBrowserNetwork(call, origin, { attribution = null, 
     };
   })();` });
   const patterns = [
-    ...(!unavailableApis ? [{ urlPattern: `${base.origin}/api/*` }] : []),
+    // Page network block rules do not propagate to workers. Keep their API
+    // transport fixture even when window.fetch returns its response locally.
+    { urlPattern: `${base.origin}/api/*` },
     ...(interceptScene ? [{ urlPattern: `${base.origin}/assets/map-engine-*.js` }] : []),
   ];
   if (patterns.length) await call('Fetch.enable', { patterns });

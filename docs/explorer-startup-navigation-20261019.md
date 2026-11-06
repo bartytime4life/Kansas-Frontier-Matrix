@@ -339,3 +339,18 @@ still permits a passive view save and a fresh map step. The native journey also
 shares Government, opens Weather through the later chooser, revisits both maps
 with Back/Forward and reloads the later selection. Clipboard success is not an
 acceptance assumption; the existing address-bar fallback remains available.
+
+### Save before the next chooser action — November 6, 2026
+
+At 7981d631, the phone sharing journey retained three native steps where four
+were required: the chooser could become interactive before its passive history
+effect saved that destination. The next map action could replace the pending
+request, losing the chooser's step. The earlier entry-identity check prevents
+cross-entry contamination, but does not schedule when a visible step is saved.
+
+History serialization now runs in the layout commit before the destination can
+accept its next input. An actual-hook regression fails with passive scheduling
+and passes with layout scheduling, retaining separate chooser and later-map
+entries. Existing identity, source-date/privacy, embedded-host and original exit
+contracts remain. Native browser assertions and deadlines are retained; local
+hook tests do not replace current-head browser or deployment acceptance.

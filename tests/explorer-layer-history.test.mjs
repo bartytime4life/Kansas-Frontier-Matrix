@@ -81,7 +81,7 @@ test('a delayed startup save cannot overwrite the map entry selected by Forward'
   const page = ts.createSourceFile('page.tsx', await readFile('app/page.tsx', 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   let effect;
   const visit = node => {
-    if (ts.isCallExpression(node) && node.expression.getText(page) === 'useEffect' && node.arguments[0]?.getText(page).includes('saveExplorerHistoryView(')) effect = node.arguments[0];
+    if (ts.isCallExpression(node) && ['useEffect','useLayoutEffect'].includes(node.expression.getText(page)) && node.arguments[0]?.getText(page).includes('saveExplorerHistoryView(')) effect = node.arguments[0];
     ts.forEachChild(node, visit);
   };
   visit(page);
@@ -113,6 +113,38 @@ test('a delayed startup save cannot overwrite the map entry selected by Forward'
   assert.equal(explorerHistoryParams('', history.state).get('topics'), 'government');
   assert.equal(entries.length, 2, 'a stale save never adds an entry');
   assert.equal(owned, 'startup', 'a stale render cannot adopt the new entry');
+});
+
+test('a visible chooser owns its history step before the next map action can run', async () => {
+  const page = ts.createSourceFile('page.tsx', await readFile('app/page.tsx', 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let hook;
+  const visit = node => {
+    if (ts.isCallExpression(node) && ['useEffect','useLayoutEffect'].includes(node.expression.getText(page)) && node.arguments[0]?.getText(page).includes('saveExplorerHistoryView(')) hook = node;
+    ts.forEachChild(node, visit);
+  };
+  visit(page); assert.ok(hook, 'execute the production history hook');
+  const entries = [{ router: 'kept', kfmExplorerEntry: 'government', kfmExplorerView: 'topics=government', kfmExplorerWelcome: false }];
+  const history = { get state() { return entries.at(-1); }, replaceState(state) { entries[entries.length-1] = state; }, pushState(state) { entries.push(state); } };
+  const pending = { current: true }, deferred = [];
+  let owned = 'government';
+  const commit = (guideOpen, topic, request) => {
+    const bindings = {
+      explorerRestoredRef: { current: true }, explorerNavigationPendingRef: pending, explorerHistoryEntry: owned,
+      explorerNavigationRequest: request, guideOpen, readExplorerGuideDismissed: () => false,
+      explorerHistoryWelcome, explorerHistoryEntryKey, setExplorerHistoryEntry: key => { owned = key; },
+      buildExplorerParams: () => new URLSearchParams({ topics: topic }), saveExplorerHistoryView,
+      window: { history }, useEffect: fn => deferred.push(fn), useLayoutEffect: fn => fn(),
+    };
+    new Function(...Object.keys(bindings), ts.transpile(hook.getText(page)))(...Object.values(bindings));
+  };
+  commit(true, 'government', 1);
+  assert.equal(entries.length, 2, 'the chooser is saved before another visible control can be activated');
+  assert.equal(explorerHistoryWelcome(history.state), true);
+  pending.current = true; commit(false, 'weather', 2);
+  assert.equal(entries.length, 3, 'the following map gets its own step');
+  assert.equal(explorerHistoryWelcome(entries[1]), true);
+  assert.equal(explorerHistoryParams('', history.state).get('topics'), 'weather');
+  assert.equal(deferred.length, 0, 'no old history save can consume the later action');
 });
 
 test('entry ownership survives router-state clones, reload and passive updates; deliberate navigation owns a fresh entry', () => {

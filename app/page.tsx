@@ -83,7 +83,7 @@ import { LivingWatersControl } from "./living-waters-control";
 import { LIVING_WATERS_SOURCE } from "./living-waters-fixture";
 import { resizeMapAfterLayout } from "./cutaway-locator";
 
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { InspectionPanelSwitch, useInspectionPanel } from "./inspection-panel";
 import "./inspection-panel.css";
 import "./explorer-controls.css";
@@ -6543,7 +6543,9 @@ export default function Home() {
     if (mapRef.current?.isStyleLoaded()) updateSelectionSource(mapRef.current, context.geometry);
   }, [announce, civicFrameDay, effectiveOfficialVisibility, mapUtilityOpen, officialPayloads, officialStates, officialVisibility, pendingCivicInspection]);
 
-  useEffect(() => {
+  // Commit the native entry before this destination becomes interactive. A
+  // passive save can otherwise consume the next action's navigation request.
+  useLayoutEffect(() => {
     if (!explorerRestoredRef.current || !explorerHistoryEntry || explorerHistoryEntryKey(window.history.state) !== explorerHistoryEntry) return;
     const navigation = explorerNavigationPendingRef.current;
     explorerNavigationPendingRef.current = false;
