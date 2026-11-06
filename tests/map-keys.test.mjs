@@ -59,7 +59,9 @@ test('the dock draws each key as the map draws it, and the page passes the keys 
  assert.doesNotMatch(JSON.stringify(tree),/category-map-dock-key/,'no keys, no section');
  h.dispose?.();
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/withReviewedKey\(withCivicKey\(mapKeysFor\(activeCategoryMap\.starters/);
+ assert.match(page,/withReviewedKey\(withCivicKey\(mapKeysFor\(mapKeySources/);
+ assert.match(page,/keys=\{currentMapKeys\}/);
+ assert.match(page,/currentMapKeys\.length > 0 \? renderMapKeys\(currentMapKeys\)/);
  assert.match(page,/civicFrameCongress\), reviewedData \? reviewedSource : null/);
 });
 
@@ -130,7 +132,7 @@ test('a drawn reviewed snapshot adds its key once, and alerts share the live sev
  assert.deepEqual(keys.withReviewedKey(storm,'nws-alerts').map(k=>k.id),['nws-alerts'],'not shown twice');
  assert.deepEqual(keys.withReviewedKey([],'nws-alerts').map(k=>k.id),['nws-alerts'],'shown when the live alerts are off');
  const page=await readFile('app/page.tsx','utf8');
- assert.match(page,/withReviewedKey\(withCivicKey\(mapKeysFor\(activeCategoryMap\.starters/);
+ assert.match(page,/withReviewedKey\(withCivicKey\(mapKeysFor\(mapKeySources/);
  assert.match(page,/civicFrameCongress\), reviewedData \? reviewedSource : null/);
 });
 
