@@ -1877,6 +1877,10 @@ export default function Home() {
   // Welcome is decided after hydration alongside URL/history restoration.
   // null owns the first server/client paint until URL and device preferences resolve.
   const [guideOpen, setGuideOpen] = useState<boolean | null>(null);
+  // The welcome owns its own map. Do not allocate a second WebGL renderer
+  // beneath it. Once opened, keep the Explorer mounted across guide reopenings.
+  const [mapRequested, setMapRequested] = useState(false);
+  useEffect(() => { if (guideOpen === false) setMapRequested(true); }, [guideOpen]);
   // While the welcome covers the map, `?` reveals the map's source credits instead.
   const [welcomeSourcesOpen, setWelcomeSourcesOpen] = useState(false);
   const [repositoryOpen, setRepositoryOpen] = useState(false);
@@ -6479,6 +6483,7 @@ export default function Home() {
   }, [restoreExplorerFromUrl]);
 
   useEffect(() => {
+    if (!mapRequested) return;
     let disposed = false;
     let resizeObserver: ResizeObserver | null = null;
     let mapResizeFrame: number | undefined;
@@ -7412,7 +7417,7 @@ export default function Home() {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [announce, runMapMutation, runtimeOfficialVisibility]);
+  }, [announce, runMapMutation, runtimeOfficialVisibility, mapRequested]);
 
   useEffect(() => {
     const map = mapRef.current;

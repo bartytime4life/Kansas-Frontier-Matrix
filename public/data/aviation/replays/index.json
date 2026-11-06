@@ -10,7 +10,12 @@
       "sha256": "e83ef397937cee708196caa826740d38ebf00e8eb5e76c70c43abd99ae27e718",
       "provider": "adsb.lol",
       "license": "ODbL-1.0",
-      "sourceUrl": "https://github.com/adsblol/globe_history_2026/releases/download/v2026.11.03-planes-readsb-prod-0/v2026.11.03-planes-readsb-prod-0.tar.aa"
+      "sourceUrl": "https://github.com/adsblol/globe_history_2026/releases/download/v2026.11.03-planes-readsb-prod-0/v2026.11.03-planes-readsb-prod-0.tar.aa",
+      "hex": "ac2fea",
+      "day": "2026-11-03",
+      "pointCount": 261,
+      "segmentCount": 1,
+      "coverage": "selected-recordings"
     },
     {
       "id": "2026-11-03-aae1ea",
@@ -21,7 +26,12 @@
       "sha256": "7883127942367a04964df714b574631206ef106b44a0e6200e5f2bb1c3c818e5",
       "provider": "adsb.lol",
       "license": "ODbL-1.0",
-      "sourceUrl": "https://github.com/adsblol/globe_history_2026/releases/download/v2026.11.03-planes-readsb-prod-0/v2026.11.03-planes-readsb-prod-0.tar.aa"
+      "sourceUrl": "https://github.com/adsblol/globe_history_2026/releases/download/v2026.11.03-planes-readsb-prod-0/v2026.11.03-planes-readsb-prod-0.tar.aa",
+      "hex": "aae1ea",
+      "day": "2026-11-03",
+      "pointCount": 151,
+      "segmentCount": 1,
+      "coverage": "selected-recordings"
     }
   ]
 }

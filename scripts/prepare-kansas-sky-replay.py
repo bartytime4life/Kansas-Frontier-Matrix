@@ -15,7 +15,7 @@ def text(x, pattern):
 def iso(ms):
     return datetime.fromtimestamp(ms / 1000, timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
 
-def prepare(raw, source_url, member):
+def prepare(raw, source_url, member, all_segments=False, utc_day=None):
     if len(raw) > 4 * 1024 * 1024: raise ValueError('INPUT_TOO_LARGE')
     # Bound decompression before JSON parsing.
     import io
@@ -60,13 +60,23 @@ def prepare(raw, source_url, member):
           'positionQuality':{'nic':number(extra.get('nic'),0,11),'nacP':number(extra.get('nac_p'),0,11),'sil':number(extra.get('sil'),0,3),'rcM':number(extra.get('rc'),0,100000),'rssi':number(extra.get('rssi'),-100,0)}}
         segment.append(point); previous=point
     if segment: segments.append(segment)
-    points = max(segments, key=lambda part: part[-1]['observedAt']-part[0]['observedAt'], default=[])
-    if len(points)<2 or len(points)>10000 or points[-1]['observedAt']-points[0]['observedAt']<60000: raise ValueError('NO_BOUNDED_REGIONAL_SEGMENT')
+    points = [point for part in segments for point in part] if all_segments else max(segments, key=lambda part: part[-1]['observedAt']-part[0]['observedAt'], default=[])
+    if utc_day is not None:
+        if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', utc_day): raise ValueError('INVALID_DAY')
+        points = [point for point in points if iso(point['observedAt'])[:10] == utc_day]
+    if all_segments:
+        if len(points)>100000: raise ValueError('REGIONAL_POINT_BOUND')
+        if not points: raise ValueError('NO_REGIONAL_OBSERVATIONS')
+        if any(b['observedAt'] <= a['observedAt'] for a,b in zip(points,points[1:])): raise ValueError('NON_INCREASING_TRACE')
+        points[0]['breakBefore'] = True
+    elif len(points)<2 or len(points)>10000 or points[-1]['observedAt']-points[0]['observedAt']<60000: raise ValueError('NO_BOUNDED_REGIONAL_SEGMENT')
     identifier = f"{iso(points[0]['observedAt'])[:10]}-{hex_id}"
     result = {'schemaVersion':1,'id':identifier,'provider':'adsb.lol','license':'ODbL-1.0','licenseUrl':'https://opendatacommons.org/licenses/odbl/1-0/',
       'sourceUrl':source_url, 'sourceMember':member, 'sourceSha256':hashlib.sha256(raw).hexdigest(),
       'transformation':'readsb trace; Kansas regional bounds; longest continuous segment; split at stale/new-leg flags, source changes, non-increasing timestamps or >60s gaps; no invented samples',
       'altitudeReferences':{'altBaroFt':'pressure altitude','altGeomFt':'WGS84 ellipsoid'}, 'points':points}
+    if all_segments:
+        result['transformation'] = 'readsb trace; all Kansas regional observations in requested UTC day; preserve discontinuities and raw member hash; no invented samples'
     return result
 
 if __name__ == '__main__':
