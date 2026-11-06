@@ -241,7 +241,11 @@ export function createAuroraCurtainLayer(options: AuroraCurtainOptions): CustomL
       buffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
       gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW);
-      bundles.set("mercator", createBundle(gl, MERCATOR_VERTEX_SHADER));
+      // Hidden flat-map curtains must not compile shaders during style startup.
+      // MapLibre calls render only when this custom layer becomes visible.
+      unsupported.clear();
+      groundDirty = true;
+      lastGroundUpdate = 0;
       nextMap.on("moveend", markDirty);
       nextMap.on("terrain", markDirty);
       nextMap.on("sourcedata", markDirtyForTerrain);
@@ -270,9 +274,11 @@ export function createAuroraCurtainLayer(options: AuroraCurtainOptions): CustomL
       if (unsupported.has(variant)) return;
       let bundle = bundles.get(variant);
       if (!bundle) {
-        // Compiled lazily on first globe frame; a failure disables only this projection's curtain.
+        // Compile only the projection actually drawn; a failure disables only this variant.
         try {
-          bundle = createBundle(gl, globeVertexShader(input.shaderData.vertexShaderPrelude, input.shaderData.define));
+          bundle = createBundle(gl, variant === "globe"
+            ? globeVertexShader(input.shaderData.vertexShaderPrelude, input.shaderData.define)
+            : MERCATOR_VERTEX_SHADER);
         } catch {
           unsupported.add(variant);
           return;

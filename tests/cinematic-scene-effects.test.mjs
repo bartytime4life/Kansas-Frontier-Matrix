@@ -249,12 +249,13 @@ test("the curtain has a globe shader path that uses MapLibre's projection prelud
 test("a globe shader that fails to compile disables only the globe curtain, once", async () => {
   const curtain = await import(toUrl(transpile(await read("app/aurora-curtain-layer.ts"))));
   let compileAttempts = 0, globeCompiles = 0, draws = 0;
+  const failedShaders = new Set();
   const gl = new Proxy({}, {
     get(_target, name) {
       if (name === "VERTEX_SHADER") return 1;
       if (name === "FRAGMENT_SHADER") return 2;
-      if (name === "getShaderParameter") return () => { compileAttempts += 1; return !(globeCompiles > 0 && compileAttempts > 2); };
-      if (name === "shaderSource") return (_shader, source) => { if (source.includes("projectTileWithElevation")) globeCompiles += 1; };
+      if (name === "getShaderParameter") return shader => { compileAttempts += 1; return !failedShaders.has(shader); };
+      if (name === "shaderSource") return (shader, source) => { if (source.includes("projectTileWithElevation")) { globeCompiles += 1; failedShaders.add(shader); } };
       if (name === "getProgramParameter") return () => true;
       if (name === "getAttribLocation") return () => 0;
       if (name === "drawArrays") return () => { draws += 1; };
@@ -268,9 +269,15 @@ test("a globe shader that fails to compile disables only the globe curtain, once
   assert.doesNotThrow(() => layer.render(gl, globeFrame));
   assert.doesNotThrow(() => layer.render(gl, globeFrame));
   assert.equal(globeCompiles, 1, "a failed globe shader is not recompiled every frame");
+  assert.equal(compileAttempts, 1, "a failed lazy variant is checked only once");
   assert.equal(draws, 0);
   layer.render(gl, { shaderData: { variantName: "mercator" }, modelViewProjectionMatrix: [] });
   assert.equal(draws, 1, "the flat-map curtain still draws");
+  layer.onRemove(map, gl);
+  layer.onAdd(map, gl);
+  layer.render(gl, globeFrame);
+  assert.equal(globeCompiles, 2, "a restored context retries a previously unsupported variant once");
+  layer.onRemove(map, gl);
 });
 
 
@@ -300,4 +307,33 @@ test("visual presets and topic navigation never implicitly enable surface-river 
  const page=await read('app/page.tsx');
  assert.match(page,/const stored = sceneEffectsForTopic\(readSceneEffects\(\), "all"\)/);
  assert.match(page,/sceneEffectsForTopic\(sceneEffectsRef.current, officialWorkspace\)[\s\S]*?writeSceneEffects\(next\);[\s\S]*?\[officialWorkspace\]/);
+});
+
+test('hidden curtain allocates no shader program; visible variants compile once and recover after removal', async () => {
+  const curtain = await import(toUrl(transpile(await read('app/aurora-curtain-layer.ts'))));
+  let programs=0, draws=0, deleted=0;
+  const shaders=[];
+  const gl=new Proxy({}, {get(_target,name){
+    if(name==='createProgram')return()=>{programs++;return {};};
+    if(name==='shaderSource')return(_shader,source)=>shaders.push(source);
+    if(name==='getShaderParameter'||name==='getProgramParameter')return()=>true;
+    if(name==='getAttribLocation')return()=>0;
+    if(name==='drawArrays')return()=>draws++;
+    if(name==='deleteProgram')return()=>deleted++;
+    return()=>({});
+  }});
+  const map={on(){},off(){},getTerrain:()=>null,getZoom:()=>6,getBounds:()=>({getWest:()=>-110,getEast:()=>-90,getSouth:()=>30,getNorth:()=>45})};
+  const layer=curtain.createAuroraCurtainLayer({id:'test',ring:[[-100,37],[-95,37],[-95,40],[-100,37]],clock:()=>null});
+  const flat={shaderData:{variantName:'mercator'},modelViewProjectionMatrix:[]};
+  const globe={shaderData:{variantName:'globe',vertexShaderPrelude:'',define:''},defaultProjectionData:{mainMatrix:[],fallbackMatrix:[],tileMercatorCoords:[0,0,1,1],clippingPlane:[0,0,0,0],projectionTransition:1}};
+  layer.onAdd(map,gl);
+  assert.equal(programs,0,'adding a hidden custom layer must not compile shaders');
+  layer.render(gl,flat);layer.render(gl,flat);
+  assert.equal(programs,1);assert.equal(draws,2);
+  assert.ok(shaders[0].includes('u_world_size'),'first visible Mercator frame uses its own shader');
+  layer.render(gl,globe);layer.render(gl,flat);
+  assert.equal(programs,2);assert.equal(draws,4,'both projections remain usable');
+  layer.onRemove(map,gl);assert.equal(deleted,2);
+  layer.onAdd(map,gl);assert.equal(programs,2,'context recreation is also lazy');
+  layer.render(gl,flat);assert.equal(programs,3);layer.onRemove(map,gl);
 });
