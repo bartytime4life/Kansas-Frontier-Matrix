@@ -24,6 +24,14 @@ map; the owner asked for the map to be seen.
   category glimpse, and the topic's limitation. Its three actions are the
   card's: open the map, full-screen preview, add to the combined map. Hover or
   keyboard focus on a rail row changes the panel; it admits no data.
+- **Less chrome, more map** (2026-11-06; the owner said map space is the
+  premium feature). The rail narrows to `min(316px, 23vw)` with 46 px rows,
+  the panel narrows to 336 px and shows only the name, map look, a two-line
+  lede, the three actions and the limitation; its facets, glimpse and "In the
+  record" block fold under one disclosure (`.welcome-focus-more`, closed until
+  opened, so every hook stays in the DOM). The stage caption chip keeps the
+  map name, key, preview layers and credit and drops the lede the panel
+  already carries.
 - **No selection tray on desktop** (2026-11-06; the owner asked for a cleaner
   screen). The tray that repeated the chosen topics across the bottom renders
   only outside the atlas layout. On desktop a rail row's ✓ and the focus

@@ -276,18 +276,21 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
         <h2>{atlasTopic.title}</h2>
         {atlasTopic.look&&<p className="welcome-focus-map" style={swatch(atlasTopic.look)}><i aria-hidden="true"/><strong>{atlasTopic.look.name}</strong><span>{categorySceneLabel(atlasTopic.look.scene)}</span></p>}
         <p className="welcome-focus-lede">{atlasTopic.look?.lede||atlasTopic.description}</p>
-        <ul className="welcome-focus-facets" aria-label="What this map covers">{atlasTopic.facets.map(facet=><li key={facet}>{facet}</li>)}</ul>
-        {glimpse&&<p className="welcome-focus-try"><strong>{glimpse.title}.</strong> {glimpse.try}</p>}
         <div className="welcome-focus-actions">
           <button type="button" className="welcome-primary" onClick={()=>run(()=>onMaps?onMaps(normalizeCategoryTopics([control,...selectedTopics])):(onMap||onTopic)(control))}>Open this map <span aria-hidden="true">→</span></button>
-          <button type="button" onClick={()=>showStage(control)}>Full-screen preview <span aria-hidden="true">↗</span></button>
+          <button type="button" aria-label="Full-screen preview" onClick={()=>showStage(control)}>Preview <span aria-hidden="true">↗</span></button>
           <button type="button" aria-pressed={selectedTopics.includes(control)} onClick={()=>toggleTopic(control)}>{selectedTopics.includes(control)?'✓ In my map':'+ Add to my map'}</button>
         </div>
+        {/* The map keeps the screen: facets, the glimpse and the record fold away under one disclosure, their hooks unchanged. */}
+        <details className="welcome-focus-more"><summary>About this map &amp; its records</summary>
+        <ul className="welcome-focus-facets" aria-label="What this map covers">{atlasTopic.facets.map(facet=><li key={facet}>{facet}</li>)}</ul>
+        {glimpse&&<p className="welcome-focus-try"><strong>{glimpse.title}.</strong> {glimpse.try}</p>}
         {record&&<section className="welcome-focus-record" aria-label="In the public record">
           <span className="welcome-kicker">IN THE RECORD · {record.total} {record.total===1?'collection':'collections'}{record.mapped?` · ${record.mapped} on the map`:''}</span>
           <ul>{record.collections.map(c=><li key={c.id}><a href={c.url}>{c.title}</a>{c.mapUrl&&<a href={c.mapUrl} className="welcome-focus-record-map" aria-label={`${c.title} on the map`}>map</a>}</li>)}</ul>
           <p>Newspapers: {record.terms.map((t,i)=><span key={t.term}>{i>0&&' · '}<a href={t.url}>“{t.term}”</a></span>)}<span> · </span><a href={record.libraryUrl}>all collections →</a></p>
         </section>}
+        </details>
         <small>{atlasTopic.note}</small>
       </aside>}
       {fullscreen&&touched&&<aside className="welcome-layer-demo" aria-label="Category demonstration">

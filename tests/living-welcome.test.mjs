@@ -945,6 +945,9 @@ test('the desktop atlas shows the chosen map from the start and describes it in 
  assert.equal(panel.props['data-topic'],'weather');
  assert.equal(findNode(panel,node=>node.type==='h2').props.children,TOPIC_STRUCTURE.find(t=>t.id==='weather').title);
  assert.ok(findNode(panel,node=>node.props?.className==='welcome-focus-facets'),'facets travel to the panel');
+ const more=findNode(panel,node=>node.type==='details'&&node.props.className==='welcome-focus-more');
+ assert.ok(findNode(more,node=>node.props?.className==='welcome-focus-facets')&&findNode(more,node=>node.props?.className==='welcome-focus-record'),'facets and the record fold under one disclosure so the map keeps the screen');
+ assert.equal(more.props.open,undefined,'the disclosure starts closed');
  assert.equal(findNode(panel,node=>node.props?.className==='welcome-focus-lede').props.children,categoryModule.CATEGORY_MAPS.weather.lede);
  // What the record holds for the topic: its collections in the library, on the map, and a newspaper search.
  const recordBlock=findNode(panel,node=>node.props?.className==='welcome-focus-record');
