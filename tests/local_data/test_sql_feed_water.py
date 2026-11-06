@@ -1,6 +1,6 @@
 """SQL feeds for Kansas water (USGS daily values, peaks, field measurements; Water Quality Portal), without network access."""
 import csv
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 import gzip
 import io
 import json
@@ -108,7 +108,9 @@ class DailyTests(FeedCase):
                           ("07144100", "L ARKANSAS R NR SEDGWICK, KS", -97.4244863910926, "103")])
         self.assertEqual(self.q("SELECT data_type, COUNT(*) FROM kfm_usgs_series GROUP BY 1 ORDER BY 1"), [("Daily values", 2), ("Peaks", 1)])
         self.assertTrue(all(qs(u).get("state_code") == "20" or qs(u).get("time_series_id") in self.records for u in self.web.calls))
-        self.assertEqual({qs(u)["time"] for u in self.web.calls if "time_series_id=" in u}, {"1800-01-01/2026-11-05"})
+        self.assertEqual([qs(u)["time"] for u in self.web.calls if "time_series_id=" in u],
+                         ["1916-01-01/1940-12-31", "1941-01-01/1965-12-31", "1966-01-01/1990-12-31", "1991-01-01/2015-12-31", "2016-01-01/2026-11-05"],
+                         "a record in spans of RECORD_CHUNK_YEARS from the year before the series began")
         # Next run: USGS approved yesterday's value and added a day; the second series' record is backfilled.
         self.modified = [value(Q_DESOTO, DESOTO, "2026-11-03", "3100", modified="2026-11-04 12:00:00.000000+00:00"),
                          value(Q_DESOTO, DESOTO, "2026-11-04", "3050", approval="Provisional", modified="2026-11-04 12:00:00.000000+00:00")]
@@ -174,6 +176,52 @@ class DailyTests(FeedCase):
         self.web.routes[w.OGC + "daily/items?"] = limited
         with self.assertRaisesRegex(core.FeedError, "USGS_RATE_LIMITED"):
             w.usgs_daily(self.ctx)
+        self.assertEqual(self.sleeps, [60.0, 120.0, 240.0, 480.0, 900.0, 900.0], "waited out with backoff up to the run's budget, then stopped")
+
+    def test_a_record_is_asked_for_in_spans_from_the_series_beginning(self):
+        chunks = w._record_chunks(date(1917, 7, 8), date(2026, 11, 5))
+        self.assertEqual((len(chunks), chunks[0], chunks[-1]), (5, (date(1916, 1, 1), date(1940, 12, 31)), (date(2016, 1, 1), date(2026, 11, 5))))
+        self.assertEqual([b.year - a.year + 1 for a, b in chunks[:-1]], [w.RECORD_CHUNK_YEARS] * 4)
+        self.assertEqual(w._record_chunks(None, date(1810, 6, 1)), [(w.EARLIEST, date(1810, 6, 1))], "no recorded beginning: from EARLIEST")
+        self.assertEqual(w._record_chunks(date(1800, 3, 1), date(1824, 12, 31)), [(w.EARLIEST, date(1824, 12, 31))])
+
+    def test_a_refusal_is_waited_out_and_a_spent_budget_keeps_what_loaded(self):
+        refusals = [self.refusal(w.OGC, retry_after=3), self.refusal(w.OGC)]
+        answer = self.daily
+
+        def daily(url):
+            if refusals and "time_series_id" in qs(url):
+                raise refusals.pop(0)
+            return answer(url)
+        self.web.routes[w.OGC + "daily/items?"] = daily
+        first = w.usgs_daily(self.ctx, max_records=1)
+        self.assertEqual((first["records"], first["record_rows"], first["throttled"], first["waited_seconds"]), (1, 3, 2, 123))
+        self.assertEqual(self.sleeps, [3.0, 120.0], "the Retry-After, then a backoff")
+        notes = [line for line in self.logs if line["event"] == "feed_throttled"]
+        self.assertEqual([(n["feed"], n["status"], n["retry_after"]) for n in notes], [("usgs-daily", "HTTP_429", True), ("usgs-daily", "HTTP_429", False)])
+        # The provider asks for longer than the run's budget: the run stops with the usual reason and the first record stays.
+        self.sleeps.clear()
+
+        def refuse_sedgwick(url):
+            if qs(url).get("time_series_id") == H_SEDGWICK:
+                raise self.refusal(url, code=403, retry_after=3000)
+            return answer(url)
+        self.web.routes[w.OGC + "daily/items?"] = refuse_sedgwick
+        with self.assertRaisesRegex(core.FeedError, "USGS_RATE_LIMITED"):
+            w.usgs_daily(self.ctx, max_records=1)
+        self.assertEqual((self.sleeps, len(self.values())), ([], 3))
+        self.assertEqual([line["event"] for line in self.logs][-1], "feed_throttled")
+        self.web.routes[w.OGC + "daily/items?"] = answer
+        third = w.usgs_daily(self.ctx, max_records=1)
+        self.assertEqual((third["records"], third["backfill_pending"], len(self.values())), (1, 0, 4), "the next run loads the series left")
+
+    def test_a_pause_separates_one_series_record_from_the_next(self):
+        del self.ctx.pause
+        with patch.object(w.time, "sleep") as slept:
+            w.usgs_daily(self.ctx)
+        pauses = [call.args[0] for call in slept.call_args_list]
+        self.assertEqual(pauses.count(w.SERIES_PAUSE), 1, "between the two series' records")
+        self.assertTrue(all(p in (1.0, w.SERIES_PAUSE) for p in pauses))
 
     def test_a_failure_part_way_leaves_no_rows(self):
         with patch.object(core, "finish_source", side_effect=RuntimeError("disk")), self.assertRaises(RuntimeError):

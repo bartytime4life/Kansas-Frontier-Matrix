@@ -23,7 +23,9 @@ the index and detail query texts (the item list elided as ``wd:Q…``), ``cycle`
 ``items``, ``missing``, ``outside_kansas`` and ``queries``. The feed state keeps ``cycle`` (``started``,
 ``complete``, ``done`` keys), ``items`` per group and ``ranges`` per group, so a run that stops on WDQS's
 per-IP throttling (HTTP 429, ``WIKIDATA_RATE_LIMITED``) or on its query budget resumes from the next pending
-range; queries are two seconds apart. When every range is done the cycle is complete and keys the cycle did
+range; queries are two seconds apart. A 429 is first waited out (``core.Throttle``: the Retry-After when given,
+else minutes of backoff) and the query sent again, within the run's waiting budget; the run stops only when
+that budget is spent. When every range is done the cycle is complete and keys the cycle did
 not produce are retired; a new cycle starts seven days after the last began. Needs ``ctx.tiger`` for county
 GEOIDs. The index queries of ``people`` and ``events`` and the 375-item batch size are reconstructions (the
 receipts only fix the places queries and the batch count per range).
@@ -248,10 +250,11 @@ def item_ranges(ids, top: int = WIKIDATA_TOP, limit: int = WIKIDATA_RANGE_ITEMS)
 
 
 class _Budget:
-    """Counts a run's queries, pauses between them and stops at the cap."""
+    """Counts a run's queries, pauses between them and stops at the cap. ``throttle`` (core.Throttle) waits out WDQS's
+    refusals, Retry-After first, within the run's waiting budget; a query made again after a wait counts again."""
 
-    def __init__(self, limit: int, pause: float):
-        self.limit, self.pause, self.used = limit, pause, 0
+    def __init__(self, limit: int, pause: float, throttle: core.Throttle | None = None):
+        self.limit, self.pause, self.used, self.throttle = limit, pause, 0, throttle
 
     def left(self) -> bool:
         return self.used < self.limit
@@ -265,14 +268,18 @@ class _Budget:
 
 
 def _sparql(ctx, budget: _Budget, query: str) -> tuple[bytes, list]:
-    budget.take()
     url = SPARQL + "?format=json&query=" + urllib.parse.quote(query, safe="")
-    try:
-        fetched = ctx.fetch(url, limit=WIKIDATA_LIMIT, timeout=120)
-    except FeedError as error:
-        if str(error).startswith("HTTP_429"):
-            raise FeedError("WIKIDATA_RATE_LIMITED") from None
-        raise
+    while True:
+        budget.take()
+        try:
+            fetched = ctx.fetch(url, limit=WIKIDATA_LIMIT, timeout=120)
+            break
+        except FeedError as error:
+            if budget.throttle is not None and budget.throttle.wait(error):
+                continue
+            if str(error).startswith("HTTP_429"):
+                raise FeedError("WIKIDATA_RATE_LIMITED") from None
+            raise
     try:
         payload = json.loads(fetched.body)
     except ValueError:
@@ -420,7 +427,8 @@ def wikidata_kansas(ctx, max_queries: int = WIKIDATA_QUERIES_PER_RUN, cycle_days
         if fresh:
             cycle = {"started": str(today), "complete": False, "done": []}
             state = {"cycle": cycle, "items": {}, "ranges": {}}
-        budget, counties = _Budget(max_queries, WIKIDATA_PAUSE), kansas_counties(ctx.tiger)
+        ctx.throttle = core.Throttle(ctx, WIKIDATA_FEED)
+        budget, counties = _Budget(max_queries, WIKIDATA_PAUSE, ctx.throttle), kansas_counties(ctx.tiger)
         summary = {"cycle": cycle["started"], "loaded": 0, "unchanged": 0, "empty": 0, "rows": 0, "pending": 0, "queries": 0}
         done, places = set(cycle["done"]), None
         try:
@@ -456,6 +464,7 @@ def wikidata_kansas(ctx, max_queries: int = WIKIDATA_QUERIES_PER_RUN, cycle_days
                 raise
             summary["stopped"] = "QUERY_BUDGET"
         summary["queries"] = budget.used
+        summary.update(ctx.throttle.summary())
         if summary.get("stopped"):
             # Ranges not done include the empty ones of groups whose index was not reached; the next run settles them.
             summary["pending"] = (sum(g.name not in state["ranges"] for g in GROUPS)
