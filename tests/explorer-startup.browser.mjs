@@ -2001,7 +2001,7 @@ for (const [width,height] of [[1440,960],[390,844]]) {
     t.after(async()=>{if(process.env.KFM_RENDER_ARTIFACTS){await mkdir(process.env.KFM_RENDER_ARTIFACTS,{recursive:true});await writeFile(join(process.env.KFM_RENDER_ARTIFACTS,`${width}-${graphics}.json`),JSON.stringify(report,null,2)+'\n');}t.diagnostic(`render report ${width}: completed=${report.completed}`);});
     await p.call('Performance.enable');
     const snapshot=async label=>({label,at:await p.evaluate('performance.now()'),metrics:(await p.call('Performance.getMetrics')).metrics,
-      diagnostics:await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics;return {calls:d.calls,longTasks:d.longTasks,errors:d.errors,maps:d.maps.map(({map,...m})=>({...m,pitch:map.getPitch()}))};})()`)});
+      diagnostics:await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics;return {calls:d.calls,longTasks:d.longTasks,errors:d.errors,pageErrors:d.pageErrors,maps:d.maps.map(({map,...m})=>({...m,pitch:map.getPitch()}))};})()`)});
     for(let run=0;run<2;run++){
       const result={cache:run?'warm':'cold',stages:[]};report.runs.push(result);
       await p.call('Profiler.enable');await p.call('Profiler.start');
@@ -2037,8 +2037,10 @@ for (const [width,height] of [[1440,960],[390,844]]) {
       await p.evaluate('window.__renderRecovery.restoreContext()');
       await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&e.styles>${styles}&&!e.map.getCanvas().getContext('webgl2').isContextLost())`,'context restores the map style');
       try { await p.wait(`window.__kfmRenderDiagnostics.calls.filter(c=>c.owner==='curtain'&&c.name==='linkProgram').length>=2`,'restored visible curtain compiles again'); }
-      catch(error){try{result.recoveryFailure=await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics,e=d.maps.find(e=>e.kind==='explorer'),m=e.map,style=m.getStyle();return {pitch:m.getPitch(),projection:style?m.getProjection():null,stylePresent:!!style,removed:e.removed,contexts:e.contexts,layers:style?.layers?.filter(l=>l.type==='custom')??[],calls:d.calls,errors:d.errors,contextLost:m.getCanvas().getContext('webgl2').isContextLost()};})()`);}catch(captureError){result.recoveryFailure={captureError:String(captureError)};}throw error;}
+      catch(error){try{result.recoveryFailure=await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics,e=d.maps.find(e=>e.kind==='explorer'),m=e.map,style=m.getStyle();return {pitch:m.getPitch(),projection:style?m.getProjection():null,stylePresent:!!style,removed:e.removed,contexts:e.contexts,layers:style?.layers?.filter(l=>l.type==='custom')??[],calls:d.calls,errors:d.errors,pageErrors:d.pageErrors,contextLost:m.getCanvas().getContext('webgl2').isContextLost()};})()`);}catch(captureError){result.recoveryFailure={captureError:String(captureError)};}throw error;}
       result.stages.push(await snapshot('restored-map'));
+      assert.deepEqual(await p.evaluate('window.__kfmRenderDiagnostics.pageErrors'),[],'graphics recovery emits no uncaught page errors');
+      assert.equal(await p.evaluate(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&!e.removed&&e.map.getCanvas().isConnected)&&!!document.querySelector('.map-chrome-dock')`),true,'graphics recovery retains the Explorer map and shell');
       const {profile}=await p.call('Profiler.stop');
       const nodes=new Map(profile.nodes.map(node=>[node.id,node.callFrame])),cpu=new Map();
       for(let i=0;i<(profile.samples?.length??0);i++){const frame=nodes.get(profile.samples[i]),key=JSON.stringify(frame);cpu.set(key,(cpu.get(key)??0)+(profile.timeDeltas?.[i]??0));}
