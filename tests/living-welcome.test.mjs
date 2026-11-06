@@ -893,12 +893,12 @@ test('selection survives filtering and preview; cards remove topics and an empty
 });
 
 
-test('tapping a primary card carries existing choices into that card’s map',async()=>{
+test('opening a primary card replaces the combined choice with that category alone',async()=>{
  const h=await welcome();h.props.initialTopics=['water','weather'];
  h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
  try{
   const tree=h.render();gridCard(tree,'engineering').props.onClick();
-  assert.deepEqual(h.calls,[['maps',['engineering','water','weather']],['close',false]]);
+  assert.deepEqual(h.calls,[['maps',['engineering']],['close',false]]);
  }finally{h.harness.dispose();}
 });
 
@@ -1042,4 +1042,17 @@ test('the record search routes a place to the map and words to the data library,
  assert.equal(recordLinks.RECORD_COUNTS.collections,189);assert.equal(recordLinks.RECORD_COUNTS.mapped,56);
  for(const topic of TOPIC_STRUCTURE.map(t=>t.id)){const links=recordLinks.recordLinksFor(topic);assert.ok(links.terms.length>=1,topic);assert.ok(links.collections.length<=4);}
  assert.equal(recordLinks.newspaperSearchUrl('"dust storm"','texts'),'/data-library?q=%22dust%20storm%22&source=texts');
+});
+
+
+test('preview and source-note map actions open only their named category with other topics selected',async()=>{
+ for(const surface of ['preview','notes']) {
+  const h=await welcome();h.props.initialTopics=['water','weather'];h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
+  try {
+   let tree=h.render();previewCard(tree,'aviation').props.onClick();tree=h.render();
+   if(surface==='notes'){tree=openDetails(h,tree);findNode(tree,n=>n.props?.className==='welcome-primary welcome-open-map').props.onClick();}
+   else byText(tree,'Open this category’s map →').props.onClick();
+   assert.deepEqual(h.calls,[['maps',['aviation']],['close',false]],surface);
+  }finally{h.harness.dispose();}
+ }
 });
