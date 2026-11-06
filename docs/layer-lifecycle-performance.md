@@ -239,3 +239,137 @@ retained; the overall allocation is not increased. Runtime logs and screenshots
 are uploaded independently so an unrelated check cannot hide this matrix's
 evidence. This is CI scheduling, not an application performance improvement or
 a substitute for correcting the documented source and fixture defects.
+
+### Follow-up rendering investigation — November 6, 2026
+
+**CONFIRMED source correction; production and physical-device qualification open.**
+The public `/api/build` readback at 19:03 UTC reported clean commit
+`f84c1d534c684b8f5d3e344636d1f1c06ceb640f`, application `urdng3v1vk`, and
+application-input digest
+`sha256:506fab67c382395a5b1e327026cde7d44de9aa11b3eca3566a7343eb8158b5df`.
+GitHub reported [PR #5743](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/5743)
+merged at that commit. The investigation starts from source branch base
+`e0c2bfb0ad77b40270da57bb04d55fac7ff38e1c`, also retaining #5744's welcome
+layout. The redundant hidden Explorer startup correction is preserved.
+
+The diagnosed avoidable work is narrower than the original public graphics
+stall: `syncBorderCurtain` installs a decorative custom layer and immediately
+hides it for a flat camera, but its `onAdd` compiled both Mercator curtain
+shaders synchronously. A disposable browser response instrumented WebGL calls;
+a captured `getShaderParameter` stack led through the curtain's `onAdd` and
+MapLibre's `addLayer`. In the exploratory 390px cold run that call took
+106.4 ms. This is an observed synchronous graphics wait, not a measurement of
+hardware GPU execution or proof of the original one-second stalls' cause.
+
+The correction compiles each projection's curtain program on its first visible
+render, retains that program for later frames, and clears the failed-variant
+state on re-add so a restored graphics context can retry. A flat map keeps its
+existing layer and visibility rules without compiling hidden shaders. First
+tilt/globe display still pays the compilation cost. Source failure reporting,
+terrain providers, release-store behavior, and publication controls are unchanged.
+
+The new failing-before unit regression executes the real curtain implementation:
+zero programs on addition, one on repeated Mercator frames, a separate globe
+program, disposal, and lazy recreation. Failed globe compilation remains bounded
+and does not disable Mercator. Browser regression exercises desktop 1440×960 and
+narrow 390×844, history-to-weather preview style changes, welcome dismissal,
+weather entry through its visible control, one remaining map, retained native controls and a functional visible zoom button,
+no horizontal overflow, visible curtain rendering, and simulated WebGL context
+loss/restoration. Existing scroll and interruption checks remain separate.
+
+#### Measurement boundaries and reproduction
+
+`tests/render-performance-browser-fixtures.mjs` instruments only a disposable
+loopback browser response, using the existing browser network-isolation helper.
+It records browser/GPU identity, application-input digest, MapLibre style/terrain/
+projection calls, shader compile/link/status/cleanup calls, long tasks, native
+browser performance counters, CPU sample summaries, and map errors. Provider
+APIs return explicit 503 responses, external tiles are blocked, fetched URL
+styles use an empty background, and inline category styles remain intact. This
+isolates application/graphics lifecycle work; it cannot time provider delivery,
+real DEM decoding/meshing, or a fully populated weather map. The separate terrain
+browser fixtures test synthetic DEM fallback/recovery, not provider throughput.
+
+The previous caption-only readiness check was insufficient for this diagnostic:
+requested topic text can update before the delayed renderer style. The new test
+requires a new actual `style.load` plus rendered-ready state. CPU profiling and
+WebGL instrumentation add overhead; timing samples are descriptive. Tests assert
+resource/lifecycle behavior, not a universal elapsed-time budget.
+
+```sh
+# Against a built loopback candidate, using installed locked dependencies:
+KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5196 \
+KFM_RENDER_PERFORMANCE=1 KFM_RENDER_ARTIFACTS=/tmp/kfm-render-measurements \
+node --test --test-name-pattern='render transition diagnostics' tests/explorer-startup.browser.mjs
+
+node --test tests/cinematic-scene-effects.test.mjs tests/scene-studio.test.mjs \
+  tests/welcome-map-engine.test.mjs tests/welcome-dismissal.test.mjs
+```
+
+For a baseline, archive the exact base commit into a separate directory, build
+with the same locked dependencies, and run the identical diagnostic harness.
+Only the baseline assertion changes: expect at least two eager curtain shader
+compiles instead of zero. Keep every timeout, source failure, control action and
+recovery assertion intact. The baseline weather-entry path can replace a style,
+so four eager compiles were also observed. Record baseline failures; a later pass
+does not erase them. Cold means a fresh disposable browser profile; warm means
+same-browser navigation, with browser HTTP cache still disabled by the existing
+harness. Warm does not mean a real repeat user's fully cached page.
+
+Chrome 157.0.8103.38 on this Linux host selected ANGLE Vulkan SwiftShader both
+with explicit software-rendering flags and with the browser's default graphics
+selection. Neither is physical GPU qualification. No CPU/network throttle was
+used in these new diagnostics. They do not match the original public build
+`b7866a4`, its 27.7-second weather observation, or #5743's throttled phone-profile
+8.8-second readiness / 3.75-second long task. No direct speedup against those
+figures is claimed; their stalls remain open for matched public/hardware tracing.
+
+#### Matched observations (not a speedup claim)
+
+Same Chrome, host, viewport, CPU/network settings, diagnostic code and input
+sequence; isolated base archive versus candidate. The baseline diagnostic's only
+source difference is its eager-compilation expectation. Reported handoff times
+are from navigation through preview interactions to the flat map and include
+automation, profiling and scheduling; they are not input latency or INP.
+
+| Profile/path | Base samples | Candidate samples | Hidden curtain shader compiles, base → candidate | Synchronous curtain calls before flat map, base → candidate | Navigation-to-flat-map range, base → candidate |
+| --- | ---: | ---: | --- | --- | --- |
+| 1440px cold / dismiss | 3 | 3 | 2 → 0 | 87.6–91.1 ms → 0 ms | 2312–2394 ms → 2409–2571 ms |
+| 1440px warm / open Weather | 1 | 3 | 4 → 0 | 27.6 ms → 0 ms | 1504 ms → 1993–2070 ms |
+| 390px cold / dismiss | 3 | 3 | 2 → 0 | 99.9–127.0 ms → 0 ms | 2300–2845 ms → 2736–2983 ms |
+| 390px warm / open Weather | 3 | 3 | 4 → 0 | 22.3–28.0 ms → 0 ms | 1702–2336 ms → 2288–2508 ms |
+
+The candidate did **not** demonstrate lower end-to-end handoff times; several
+were higher. It removes a specific unnecessary startup allocation and transfers
+that work to the first visible curtain. Other renderer work and long tasks
+remain. No FPS, INP, provider latency, terrain throughput or hardware speedup is
+inferred from these numbers.
+
+All three candidate diagnostic invocations completed both widths and cold/warm
+paths (12 paths total). The base's first included invocation completed all four
+paths. Its next two invocations each reached the desktop cold handoff, then
+timed out at the existing 60-second wait for curtain recompilation after context
+restoration; the narrow paths completed. Those partial desktop samples are
+included through the already-observed flat-map stage, and no missing desktop
+warm measurements are invented. This is not a general recovery-fix claim.
+Earlier probe-development failures (a hidden Preview control, serialization of a
+Map return value, targeting a hidden native control instead of the visible zoom
+button, and an overly exact baseline shader-count expectation) were
+harness defects; their runs are excluded from timing comparisons. Runs overlapping
+a build or another diagnostic are also excluded. Raw successful and failed
+reports/logs are retained locally, and CI emits new JSON for its exact head.
+
+Directory Rules' responsibility-based placement and ADR-0029 support the
+existing standalone application's `app/` implementation, `tests/` verification,
+`.github/workflows/` CI, and this `docs/` record. No new schema, policy, data, or
+release authority is introduced. CI adds the diagnostic invocation and retained
+JSON artifacts without removing prior checks or increasing their deadlines.
+Rollback is a source revert of the lazy curtain change; no store migration,
+production data change, deployment or publication is part of this work.
+
+Local validation: 62 focused source tests passed; 17 existing browser regressions
+passed (dock controls, desktop/narrow scrolling, synthetic terrain fallback and
+manual recovery, interrupted welcome dismissal). Production build and TypeScript
+passed. Scoped lint passed without warnings. These are component and synthetic
+browser results, not the entire repository suite, hosted CI, public-production
+acceptance, sustained frame-rate testing, or independent review.

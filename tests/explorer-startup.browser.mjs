@@ -10,6 +10,7 @@ import { createInterceptionErrorTracker } from './browser-interception.mjs';
 import { isolateBrowserNetwork } from './browser-network.mjs';
 import { terrainBrowserFixtures } from './terrain-detail-browser-fixtures.mjs';
 import { welcomeScientificBrowserFixtures } from './welcome-scientific-browser-fixtures.mjs';
+import { renderPerformanceFixtures } from './render-performance-browser-fixtures.mjs';
 import { welcomeAttributionBrowserFixtures } from './welcome-attribution-browser-fixtures.mjs';
 import ts from 'typescript';
 import { capabilityPreviews, capabilityNote, categoryGlimpse } from '../app/living-welcome/capability-catalog.mjs';
@@ -202,12 +203,13 @@ test('category evidence summary keeps source qualifications readable on its pape
 // three switches; the test's own timeout still bounds the whole journey.
 const CDP_CALL_TIMEOUT_MS = 60000;
 
-async function browser(t) {
+async function browser(t, graphics = 'swiftshader') {
+  assert.ok(['swiftshader','default'].includes(graphics));
   const profile = await mkdtemp(join(tmpdir(), 'kfm-guide-browser-'));
   const child = spawn(chrome, [
     '--headless=new', '--remote-debugging-pipe', `--user-data-dir=${profile}`,
     '--no-first-run', '--no-default-browser-check', '--disable-background-networking',
-    '--disable-dev-shm-usage', '--enable-unsafe-swiftshader', '--use-angle=swiftshader', 'about:blank',
+    '--disable-dev-shm-usage', ...(graphics === 'swiftshader' ? ['--enable-unsafe-swiftshader', '--use-angle=swiftshader'] : []), 'about:blank',
   ], { stdio: ['ignore', 'ignore', 'pipe', 'pipe', 'pipe'] });
   let stderr = '', sequence = 0, buffer = '', closed = false;
   const pending = new Map(), listeners = new Set(), checks = [];
@@ -1986,4 +1988,67 @@ for (const [width, height] of [[1440, 960], [390, 844], [320, 568], [568, 320]])
   assert.equal(await p.evaluate(`window.__welcomeScientificMap.isMoving()`),false);
   assert.deepEqual(await p.evaluate(`({url:location.search,topic:document.querySelector('[aria-label="Layer topic"]').value})`),before,'preview cameras and layers never mutate the working map');
  });
+}
+
+// Matched cold/warm diagnostics. Provider I/O remains explicitly unavailable;
+// inline category styles, real MapLibre and custom layers still execute.
+for (const [width,height] of [[1440,960],[390,844]]) {
+  test(`render transition diagnostics ${width}`,{skip:process.env.KFM_RENDER_PERFORMANCE!=='1',timeout:180000},async t=>{
+    const graphics=process.env.KFM_RENDER_GRAPHICS??'swiftshader';
+    const b=await browser(t,graphics),p=await pageSession(b,width,height,{...renderPerformanceFixtures(origin),waitTimeoutMs:60000});
+    const report={schema:'kfm-render-diagnostics/v1',width,height,graphics,browser:await b.call('Browser.getVersion'),gpu:(await b.call('SystemInfo.getInfo')).gpu,
+      build:await (await fetch(new URL('/api/build',origin))).json(),scope:'Loopback; external tiles blocked; URL styles replaced by empty background; inline styles retained; API responses 503. Cold means fresh browser profile; warm means same-browser navigation. No physical-device or production claim.',runs:[],completed:false};
+    t.after(async()=>{if(process.env.KFM_RENDER_ARTIFACTS){await mkdir(process.env.KFM_RENDER_ARTIFACTS,{recursive:true});await writeFile(join(process.env.KFM_RENDER_ARTIFACTS,`${width}-${graphics}.json`),JSON.stringify(report,null,2)+'\n');}t.diagnostic(`render report ${width}: completed=${report.completed}`);});
+    await p.call('Performance.enable');
+    const snapshot=async label=>({label,at:await p.evaluate('performance.now()'),metrics:(await p.call('Performance.getMetrics')).metrics,
+      diagnostics:await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics;return {calls:d.calls,longTasks:d.longTasks,errors:d.errors,maps:d.maps.map(({map,...m})=>({...m,pitch:map.getPitch()}))};})()`)});
+    for(let run=0;run<2;run++){
+      const result={cache:run?'warm':'cold',stages:[]};report.runs.push(result);
+      await p.call('Profiler.enable');await p.call('Profiler.start');
+      await p.open('/?motion=off');await readyWelcome(p);
+      await p.wait(`window.__kfmRenderDiagnostics?.maps.some(e=>e.kind==='preview'&&e.renders>0)&&document.querySelector('.domain-stage')?.dataset.state==='ready'`,'preview rendered');
+      assert.equal(await p.evaluate(`document.querySelectorAll('.maplibregl-canvas').length`),1,'startup retains PR 5743 deferred Explorer');
+      result.stages.push(await snapshot('welcome'));
+      for(const topic of ['history','weather']){
+        const styles=await p.evaluate(`window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='preview'&&!e.removed).styles`);
+        await revealControl(p,`.topic-preview-${topic}`);
+        await p.evaluate(`document.querySelector('.topic-preview-${topic}').focus()`);await p.key('Enter','Enter',13);
+        await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='preview'&&!e.removed&&e.styles>${styles})&&document.querySelector('.domain-stage')?.dataset.state==='ready'`,'new topic style actually rendered');
+        result.stages.push(await snapshot(topic));
+        if(!run||topic!=='weather'){await p.key('Escape','Escape',27);await p.wait(`document.querySelector('.living-welcome')?.dataset.cinematic==='false'`,'preview exits');}
+      }
+      if(run){
+        await openStageNotes(p);await revealControl(p,'.welcome-open-map');
+        await p.evaluate(`document.querySelector('.welcome-open-map').focus()`);await p.key('Enter','Enter',13);
+      }else await p.key('Escape','Escape',27);
+      await p.wait(`!document.querySelector('.living-welcome')`,'welcome dismissed or weather opened');
+      if(run)assert.equal(await p.evaluate(`document.querySelector('[aria-label="Layer topic"]').value`),'weather','weather opens its actual Explorer workspace');
+      await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&e.renders>0)&&!!document.querySelector('.maplibregl-ctrl-compass')`,'Explorer drawn with controls');
+      result.stages.push(await snapshot('flat-map'));
+      const curtainCalls=await p.evaluate(`window.__kfmRenderDiagnostics.calls.filter(c=>c.owner==='curtain'&&c.name==='compileShader').length`);
+      assert.equal(curtainCalls,0,'hidden curtain does not compile on flat welcome-to-map handoff');
+      // Exercise the actual camera event handlers, then require real shader work.
+      await p.evaluate(`window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='explorer').map.jumpTo({pitch:50});undefined`);
+      await p.wait(`window.__kfmRenderDiagnostics.calls.some(c=>c.owner==='curtain'&&c.name==='linkProgram')`,'tilt renders the lazy curtain');
+      result.stages.push(await snapshot('tilted-map'));
+      const styles=await p.evaluate(`window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='explorer').styles`);
+      await p.evaluate(`(()=>{const map=window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='explorer').map;window.__renderRecovery=map.getCanvas().getContext('webgl2').getExtension('WEBGL_lose_context');if(!window.__renderRecovery)throw Error('Context loss extension unavailable');window.__renderRecovery.loseContext();})()`);
+      await pause(150);
+      await p.evaluate('window.__renderRecovery.restoreContext()');
+      await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&e.styles>${styles}&&!e.map.getCanvas().getContext('webgl2').isContextLost())`,'context restores the map style');
+      await p.wait(`window.__kfmRenderDiagnostics.calls.filter(c=>c.owner==='curtain'&&c.name==='linkProgram').length>=2`,'restored visible curtain compiles again');
+      result.stages.push(await snapshot('restored-map'));
+      const {profile}=await p.call('Profiler.stop');
+      const nodes=new Map(profile.nodes.map(node=>[node.id,node.callFrame])),cpu=new Map();
+      for(let i=0;i<(profile.samples?.length??0);i++){const frame=nodes.get(profile.samples[i]),key=JSON.stringify(frame);cpu.set(key,(cpu.get(key)??0)+(profile.timeDeltas?.[i]??0));}
+      result.cpu={windowMs:(profile.endTime-profile.startTime)/1000,frames:[...cpu].map(([frame,us])=>({frame:JSON.parse(frame),ms:us/1000})).sort((a,b)=>b.ms-a.ms).slice(0,25)};
+      assert.ok(await p.evaluate(`(()=>{const button=document.querySelector('.map-stage [aria-label="Zoom in"]'),r=button.getBoundingClientRect();return r.width>0&&r.height>0&&button.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));})()`),'visible zoom control remains hit-testable after recovery');
+      const zoom=await p.evaluate(`window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='explorer').map.getZoom()`);
+      await p.evaluate(`document.querySelector('.map-stage [aria-label="Zoom in"]').focus()`);await p.key('Enter','Enter',13);
+      await p.wait(`window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='explorer').map.getZoom()>${zoom}+.5`,'visible zoom control remains functional');
+      assert.equal(await p.evaluate(`document.querySelectorAll('.maplibregl-canvas').length`),1,'preview disposed before Explorer remains');
+      assert.ok(await p.evaluate(`document.documentElement.scrollWidth<=innerWidth+1`),'no horizontal document overflow');
+    }
+    report.completed=true;
+  });
 }
