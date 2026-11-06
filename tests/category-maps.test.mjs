@@ -13,6 +13,41 @@ const categoryKeys=await load('app/category-basemap-keys.ts');
 const basemapKeys=runtime.match(/export type BasemapKey = ([^;]+);/)[1].split('|').map(part=>part.trim()).flatMap(part=>part==='CategoryBasemapKey'?[...categoryKeys.CATEGORY_BASEMAP_KEYS]:[JSON.parse(part)]);
 const officialIds=JSON.parse(`[${live.match(/export type OfficialContextId = ([^;]+);/)[1].replaceAll('|',',')}]`);
 
+const focusPage=await readFile('app/page.tsx','utf8');
+const focusAst=ts.createSourceFile('page.tsx',focusPage,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);
+let revealToolSource,disposeToolFocusSource;
+function findToolFocus(node){
+ if(ts.isVariableDeclaration(node)&&node.name.getText(focusAst)==='revealCategoryTool')revealToolSource=node.initializer.getText(focusAst);
+ if(ts.isCallExpression(node)&&node.expression.getText(focusAst)==='useEffect'&&node.arguments[0]?.getText(focusAst).includes('categoryToolFocusRequestRef.current'))disposeToolFocusSource=node.arguments[0].getText(focusAst);
+ ts.forEachChild(node,findToolFocus);
+}
+findToolFocus(focusAst);
+assert.ok(revealToolSource,'exercise the actual category-tool handoff');
+function toolFocusHarness(){
+ const body={},trigger={},input={},other={},frames=[],focused=[],scrolled=[];
+ const document={body,activeElement:trigger,querySelector:()=>dock};
+ const buttons=Object.fromEntries(['sunyear','flow'].map(tool=>[tool,{scrollIntoView(){scrolled.push(tool);},focus(){focused.push(tool);document.activeElement=buttons[tool];}}]));
+ let dock={querySelector(selector){return buttons[selector.match(/data-category-tool="([^"]+)"/)[1]];}};
+ const context={document,window:{requestAnimationFrame(callback){frames.push(callback);return frames.length;}},categoryToolFocusRequestRef:{current:0},categoryMap:()=>({tools:['sunyear','flow']})};
+ for(const name of ['setCategoryToolsOnCurrentMap','setPrimaryWorkspace','setGuideOpen','setUndergroundOpen','setOfficialWorkspace','setCategoryDockTopic','setCategoryDockHidden','setLeftOpen','setRightOpen','dismissMapUtilityWithoutFocus'])context[name]=()=>{};
+ const run=source=>new Function(...Object.keys(context),ts.transpileModule(`return (${source});`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(context));
+ const open=run(revealToolSource),dispose=disposeToolFocusSource?run(disposeToolFocusSource)():()=>{};
+ return {body,trigger,input,other,document,focused,scrolled,open,dispose,removeDock(){dock=null;},flush(){while(frames.length)frames.shift()();}};
+}
+test('category tools receive initial focus from the trigger or an unfocused body',()=>{
+ for(const fallback of [false,true]){const h=toolFocusHarness();h.open('sky','sunyear');if(fallback)h.document.activeElement=h.body;h.flush();assert.deepEqual(h.focused,['sunyear']);}
+});
+test('delayed category-tool entry preserves a newer form or workspace focus choice',()=>{
+ for(const owner of ['input','other']){const h=toolFocusHarness();h.open('sky','sunyear');h.document.activeElement=h[owner];h.flush();assert.equal(h.document.activeElement,h[owner]);assert.deepEqual(h.focused,[]);assert.deepEqual(h.scrolled,[]);}
+});
+test('only the newest category-tool request can focus and a removed dock stays closed',()=>{
+ const h=toolFocusHarness();h.open('sky','sunyear');h.open('water','flow');h.flush();assert.deepEqual(h.focused,['flow']);
+ const removed=toolFocusHarness();removed.open('sky','sunyear');removed.removeDock();removed.flush();assert.deepEqual(removed.focused,[]);
+});
+test('unmount cancels a pending category-tool focus handoff',()=>{
+ const h=toolFocusHarness();h.open('sky','sunyear');h.dispose();h.flush();assert.deepEqual(h.focused,[]);
+});
+
 test('every start-page category has exactly one map look with a real basemap, scene, camera and starters',()=>{
  const ids=topics.TOPIC_STRUCTURE.map(t=>t.id);
  assert.deepEqual(Object.keys(maps.CATEGORY_MAPS).sort(),[...ids].sort());

@@ -116,11 +116,12 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
     if(!active||!map.isStyleLoaded())return;
     if(!map.getLayer(ID))map.addLayer(layer);
     map.off("render",install);
+    map.off("error",install);
   };
   // Other style listeners can queue source work before this renderer mounts.
   // Recheck on ready frames, then release the listener after installation.
-  const awaitStyle=()=>{if(!active)return;map.on("render",install);install();};
+  const awaitStyle=()=>{if(!active)return;map.on("render",install);map.on("error",install);install();};
   const zoom=()=>{dirty=true;groundMarkers.clear();};
   map.on("style.load",awaitStyle);map.on("zoom",zoom);awaitStyle();
-  return { update(next:readonly Aircraft[], nextTrails:readonly SkyTrail[], id:string|null, flatView=false){flat=flatView;planes=next;trails=nextTrails;selected=id;dirty=true;map.triggerRepaint();}, dispose(){active=false;map.off("style.load",awaitStyle);map.off("render",install);if(aircraftPickers.get(map)===pick)aircraftPickers.delete(map);map.off("zoom",zoom);if(map.getLayer(ID))map.removeLayer(ID);} };
+  return { update(next:readonly Aircraft[], nextTrails:readonly SkyTrail[], id:string|null, flatView=false){flat=flatView;planes=next;trails=nextTrails;selected=id;dirty=true;map.triggerRepaint();}, dispose(){active=false;map.off("style.load",awaitStyle);map.off("render",install);map.off("error",install);if(aircraftPickers.get(map)===pick)aircraftPickers.delete(map);map.off("zoom",zoom);if(map.getLayer(ID))map.removeLayer(ID);} };
 }

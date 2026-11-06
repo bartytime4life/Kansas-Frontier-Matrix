@@ -122,6 +122,13 @@ its listener after refresh or page disposal. Full map-health and source-error
 reporting still run independently. The browser regression keeps the real map
 repainting and proves aircraft drawing and style recovery before any idle event.
 
+Terminal tile failures can finish style loading without scheduling another
+frame. Pending renderer and page-readiness checks therefore also recheck on
+map error events, and remove both subscriptions after success or disposal.
+They still require a loaded style and retain the owning source's failure
+report. Delayed external-tile failures are covered in both browser layouts;
+the expected degraded-map notice must coexist with working aircraft rendering.
+
 The style-reload check observes the requested `style.load` event, then requires
 the replacement style's marker, a loaded style, the aircraft layer and a fresh
 GPU draw after that event. A cached vertex count from before the transition

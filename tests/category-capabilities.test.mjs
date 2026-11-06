@@ -77,8 +77,9 @@ test('reveal action preserves source, camera and stored state, validates the des
   const calls = [], frames = [];
   const target = { scrollIntoView: () => calls.push(['scroll']), focus: () => calls.push(['focus']) };
   const js = ts.transpileModule(`${body}; return revealCategoryTool;`, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
-  const action = new Function('categoryMap', 'window', 'document', ...names, js)(
+  const action = new Function('categoryMap', 'window', 'document', 'categoryToolFocusRequestRef', ...names, js)(
     maps.categoryMap, { requestAnimationFrame: fn => frames.push(fn) }, { querySelector: () => ({ querySelector: () => target }) },
+    { current: 0 },
     ...names.map(name => (...args) => calls.push([name, ...args])),
   );
   action('agriculture', 'crops');

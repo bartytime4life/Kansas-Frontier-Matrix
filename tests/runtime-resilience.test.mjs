@@ -200,29 +200,30 @@ test("map health treats a local source awaiting style installation as pending", 
   assert.deepEqual(health.failedChecks, []);
 });
 
-test("pending style readiness refreshes without idle and releases each frame subscription", () => {
-  const listeners = new Set(), reads = [], events = [];
+for (const readyEvent of ["render", "error"]) test(`pending style readiness refreshes on ${readyEvent} without idle and releases subscriptions`, () => {
+  const listeners = new Map(), reads = [], events = [];
   let loaded = false, fail = false;
   const map = {
     isStyleLoaded() { if (fail) throw new Error("unavailable style"); return loaded; },
-    on(event, callback) { assert.equal(event, "render"); events.push("on"); listeners.add(callback); },
-    off(event, callback) { assert.equal(event, "render"); events.push("off"); listeners.delete(callback); },
+    on(event, callback) { assert.ok(["render", "error"].includes(event)); events.push("on:"+event); if (!listeners.has(event)) listeners.set(event, new Set()); listeners.get(event).add(callback); },
+    off(event, callback) { assert.ok(["render", "error"].includes(event)); events.push("off:"+event); listeners.get(event)?.delete(callback); },
   };
-  const frame = () => { for (const callback of [...listeners]) callback(); };
+  const frame = () => { for (const callback of [...(listeners.get(readyEvent)??[])]) callback(); };
+  const listenerCount = () => [...listeners.values()].reduce((count, callbacks) => count+callbacks.size, 0);
   const readiness = perf.createMapStyleReadyCheck(map, () => reads.push(map.isStyleLoaded()));
   readiness.schedule(); readiness.schedule(); frame();
-  assert.deepEqual(events, ["on"], "a pending probe owns one frame subscription");
+  assert.equal(events.filter(event => event === "on:render").length, 1, "duplicate scheduling does not duplicate frame work");
   assert.deepEqual(reads, [], "an unloaded style cannot release waiting controls");
   fail = true; frame();
   assert.deepEqual(reads, [], "a failed readiness probe stays pending");
   fail = false; loaded = true; frame(); frame();
   assert.deepEqual(reads, [true], "one ready frame refreshes controls without any idle event");
-  assert.equal(listeners.size, 0, "settled maps retain no frame polling");
+  assert.equal(listenerCount(), 0, "settled maps retain no readiness listeners");
   loaded = false; readiness.schedule(); frame(); loaded = true; frame();
   assert.deepEqual(reads, [true, true], "a later pending style gets its own readiness refresh");
   loaded = false; readiness.schedule(); readiness.dispose(); loaded = true; frame(); readiness.schedule();
   assert.deepEqual(reads, [true, true], "disposal cancels pending and future refreshes");
-  assert.equal(listeners.size, 0);
+  assert.equal(listenerCount(), 0);
 });
 
 test("map health accepts an implicit Mercator projection and recognizes globe", () => {

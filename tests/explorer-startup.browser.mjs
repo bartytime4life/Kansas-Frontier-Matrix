@@ -706,8 +706,8 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
   });
 }
 
-for (const width of [320, 390, 768, 1280]) {
-  test(`Sky daylight keyboard selection and readable chart at ${width}px`, { timeout: 90000 }, async t => {
+for (const delayToolFocus of [false, true]) for (const width of [320, 390, 768, 1280]) {
+  test(`Sky daylight keyboard selection and readable chart at ${width}px${delayToolFocus ? ' with delayed tool focus' : ''}`, { timeout: 90000 }, async t => {
     const b = await browser(t), p = await pageSession(b, width, 844);
     await p.call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
     await p.open('/?motion=off'); await readyWelcome(p);
@@ -716,12 +716,20 @@ for (const width of [320, 390, 768, 1280]) {
     await p.wait(`!!document.querySelector('.welcome-open-map')`, 'Sky map action');
     await enter('.welcome-open-map');
     await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('[aria-label="Layer topic"]')?.value==='sky'`, 'real Sky workspace');
+    if (delayToolFocus) await p.evaluate(`(()=>{
+      window.__heldCategoryFocus=[];window.__nativeCategoryFrame=window.requestAnimationFrame;
+      window.requestAnimationFrame=function(callback){
+        if(callback.toString().includes('data-category-tool')){window.__heldCategoryFocus.push(callback);return -window.__heldCategoryFocus.length;}
+        return window.__nativeCategoryFrame.call(window,callback);
+      };
+    })()`);
     await openCategoryTool(p,'Sun & Moon through the year');
     await leaveCompactLayers(p);
     await p.evaluate(`[...document.querySelectorAll('.category-map-dock-tool')].find(b=>b.textContent==='Daylight through the year').focus()`);
     await p.key('Enter', 'Enter', 13);
     await p.wait(`!!document.querySelector('.category-map-dock-sun-location') && !!document.querySelector('[data-band="day"]')`, 'daylight chart');
     await p.evaluate(`(()=>{window.__skyFocusTrace=[];document.addEventListener('focusin',event=>{window.__skyFocusTrace.push({at:performance.now(),name:event.target.name,html:event.target.outerHTML.slice(0,300)});window.__skyFocusTrace=window.__skyFocusTrace.slice(-12);});})()`);
+    let toolFocusPending = delayToolFocus;
     const location = async (lat, lon) => {
       await p.evaluate(`document.querySelector('.category-map-dock-sun-location input[name="latitude"]').focus()`);
       assert.equal(await p.evaluate(`document.activeElement?.name`), 'latitude', 'latitude owns focus before native keyboard editing');
@@ -731,6 +739,16 @@ for (const width of [320, 390, 768, 1280]) {
       await p.key('a', 'KeyA', 65, 2); await p.call('Input.insertText', { text: String(lon) });
       await p.key('Tab', 'Tab', 9);
       assert.equal(await p.evaluate(`document.activeElement.textContent`), 'Chart location');
+      if (toolFocusPending) {
+        assert.equal(await p.evaluate(`window.__heldCategoryFocus.length`), 1, 'hold the actual tool-opening callback');
+        await p.evaluate(`new Promise(resolve=>{
+          window.requestAnimationFrame=window.__nativeCategoryFrame;
+          for(const callback of window.__heldCategoryFocus.splice(0))requestAnimationFrame(callback);
+          requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+        })`);
+        assert.equal(await p.evaluate(`document.activeElement.textContent`), 'Chart location', 'delayed category entry preserves the newer keyboard focus: '+JSON.stringify(await p.evaluate(`window.__skyFocusTrace`)));
+        toolFocusPending = false;
+      }
       await p.key('Enter', 'Enter', 13);
     };
     await location(39.35, -101.71); // Goodland: Mountain local time, explicitly displayed as Central here.
@@ -753,7 +771,7 @@ for (const width of [320, 390, 768, 1280]) {
     if (process.env.KFM_WORKSPACE_SCREENSHOTS) {
       await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS, { recursive: true });
       const shot=await p.call('Page.captureScreenshot', { format:'png' });
-      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `sky-daylight-${width}.png`), Buffer.from(shot.data,'base64'));
+      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS, `sky-daylight-${width}${delayToolFocus ? '-delayed-focus' : ''}.png`), Buffer.from(shot.data,'base64'));
     }
     await p.evaluate(`[...document.querySelectorAll('.category-map-dock button')].find(b=>b.textContent==='Back to the centre of Kansas').focus()`);
     await p.key('Enter','Enter',13);

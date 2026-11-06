@@ -116,6 +116,7 @@ export function createMapStyleReadyCheck(
     try { if (map.isStyleLoaded() !== true) return; } catch { return; }
     pending = false;
     map.off("render", check);
+    map.off("error", check);
     refresh();
   };
   return {
@@ -123,11 +124,14 @@ export function createMapStyleReadyCheck(
       if (!active || pending) return;
       pending = true;
       map.on("render", check);
+      // A terminal tile error can settle the style without scheduling a frame.
+      map.on("error", check);
     },
     dispose() {
       active = false;
       pending = false;
       map.off("render", check);
+      map.off("error", check);
     },
   };
 }
