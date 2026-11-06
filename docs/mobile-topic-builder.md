@@ -25,6 +25,10 @@ one map, and revising that choice without starting over.
   selection without relying on color.
 - A persistent tray offers the selected count, removal chips, Clear all and
   Open my map. Very short screens use a compact tray; cards still toggle choices.
+  *Retired 2026-11-06:* the owner asked for the tray to go on every layout so
+  the map keeps the screen. The toolbar's Open my map now carries the count
+  (on phones it stands in for Explore freely while topics are ticked) and cards
+  remove topics; see [Capability welcome](living-welcome.md), Desktop atlas.
   Empty selections cannot open a preset. The provider-credit strip stays clear.
 - Combined maps use the union of the selected topics' canonical starter layers,
   overlays and tools. Duplicate sources activate once. The first selected topic

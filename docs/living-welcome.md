@@ -24,6 +24,23 @@ map; the owner asked for the map to be seen.
   category glimpse, and the topic's limitation. Its three actions are the
   card's: open the map, full-screen preview, add to the combined map. Hover or
   keyboard focus on a rail row changes the panel; it admits no data.
+- **Less chrome, more map** (2026-11-06; the owner said map space is the
+  premium feature). The rail narrows to `min(316px, 23vw)` with 46 px rows,
+  the panel narrows to 336 px and shows only the name, map look, a two-line
+  lede, the three actions and the limitation; its facets, glimpse and "In the
+  record" block fold under one disclosure (`.welcome-focus-more`, closed until
+  opened, so every hook stays in the DOM). The stage caption chip keeps the
+  map name, key, preview layers and credit and drops the lede the panel
+  already carries.
+- **No selection tray on any layout** (2026-11-06; the owner asked for a
+  cleaner screen, then for the phone tray to go too). The tray that repeated
+  the chosen topics across the bottom is gone. A card's ✓ (and on desktop the
+  focus panel's "✓ In my map") shows what is chosen, and the toolbar gains
+  **Open my map** with the count of chosen topics (`.selection-open`, the same
+  hook the browser journeys press). On phones, where the toolbar has room for
+  one primary, it stands in for Explore freely while topics are ticked. Cards
+  remove topics; the first chosen topic supplies the view, as the combined-map
+  contract states, so the tray's Map style choice is retired with it.
 - **The stage caption** (map name, preview layers and their source clocks)
   shows beside the rail as a chip; the toolbar floats top-right over the map.
 - **"The Kansas record"** reads as a list of story rows at the end of the rail.

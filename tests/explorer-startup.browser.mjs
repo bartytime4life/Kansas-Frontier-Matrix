@@ -57,6 +57,23 @@ async function revealControl(p, selector) {
   return p.evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2};})()`);
 }
 
+// Leave no topic ticked. Phones and tablets offer the tray's Clear all; the desktop atlas has no
+// tray, so each ticked card is toggled off through its own + action, as a visitor would.
+async function clearChoices(p) {
+  if (await p.evaluate(`!!document.querySelector('.selection-clear')`)) {
+    await p.evaluate(`document.querySelector('.selection-clear').focus()`); await p.key('Enter', 'Enter', 13);
+    await p.wait(`!document.querySelector('.topic-add[aria-pressed="true"]')`, 'Clear all empties the selection');
+    return;
+  }
+  for (;;) {
+    const id = await p.evaluate(`document.querySelector('.topic-add[aria-pressed="true"]')?.dataset.topic ?? null`);
+    if (!id) return;
+    await revealControl(p, `.topic-add[data-topic="${id}"]`);
+    await p.evaluate(`document.querySelector('.topic-add[data-topic="${id}"]').focus()`); await p.key('Enter', 'Enter', 13);
+    await p.wait(`document.querySelector('.topic-add[data-topic="${id}"]').getAttribute('aria-pressed')==='false'`, 'the card leaves the selection');
+  }
+}
+
 // Tools now live in Browse, leaving the opened map uncovered. Use the same
 // visible catalogue route as a visitor; never force the collapsed dock open.
 async function openCategoryTool(p, title) {
@@ -529,7 +546,7 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
     const b = await browser(t), p = await pageSession(b, width, height);
     await p.open('/?motion=off'); await readyWelcome(p);
     for (const topic of ['aviation', 'geology']) {
-      if(await p.evaluate(`!!document.querySelector('.selection-clear')`)){await p.evaluate(`document.querySelector('.selection-clear').focus()`);await p.key('Enter','Enter',13);}
+      await clearChoices(p);
       const selector = '.topic-' + topic;
       let point = await revealControl(p, selector);
       if (width > 600) {
@@ -555,7 +572,7 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
       await p.evaluate(`document.querySelector('.guide-trigger').focus()`);
       await p.key('Enter', 'Enter', 13); await readyWelcome(p);
     }
-    if(await p.evaluate(`!!document.querySelector('.selection-clear')`)){await p.evaluate(`document.querySelector('.selection-clear').focus()`);await p.key('Enter','Enter',13);}
+    await clearChoices(p);
     for(const id of ['water','weather']){
       await revealControl(p,`.topic-add[data-topic="${id}"]`);
       await p.evaluate(`document.querySelector('.topic-add[data-topic="${id}"]').focus()`);await p.key('Enter','Enter',13);

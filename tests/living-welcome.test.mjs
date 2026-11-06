@@ -868,24 +868,26 @@ test('every primary card opens its working map immediately and only once', async
 });
 
 
-test('selection survives filtering and preview; removal, clear and empty search recover',async()=>{
+test('selection survives filtering and preview; cards remove topics and an empty search recovers',async()=>{
  const h=await welcome();h.props.initialTopics=['water','invalid','water','weather'];
  h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
+ const opener=tree=>findNode(tree,n=>n.props?.className==='welcome-primary selection-open');
  try{
   let tree=h.render();assert.equal(addCard(tree,'water').props['aria-pressed'],true);
+  assert.equal(opener(tree).props['aria-label'],'Open my map with 2 selected topics','the toolbar counts the ticked topics');
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-selection-tray'),undefined,'no tray on any layout');
   findNode(tree,n=>n.type==='input'&&n.props.type==='search').props.onChange({target:{value:'no matching topic'}});tree=h.render();
   assert.ok(findNode(tree,n=>n.props?.className==='topic-empty'));
-  assert.ok(findNode(tree,n=>n.props?.['aria-label']==='Remove Water & watersheds'));
+  assert.equal(opener(tree).props['aria-label'],'Open my map with 2 selected topics','filtering the cards keeps the selection');
   byText(tree,'Show all topics').props.onClick();tree=h.render();
   previewCard(tree,'weather').props.onClick();tree=h.render();
   byText(tree,'Return to categories').props.onClick();tree=h.render();
   assert.equal(addCard(tree,'water').props['aria-pressed'],true);
-  findNode(tree,n=>n.props?.['aria-label']==='Map style from selected topics').props.onChange({target:{value:'weather'}});tree=h.render();
-  assert.equal(findNode(tree,n=>n.props?.['aria-label']==='Map style from selected topics').props.value,'weather');
-  findNode(tree,n=>n.props?.['aria-label']==='Remove Water & watersheds').props.onClick();tree=h.render();
+  addCard(tree,'water').props.onClick();tree=h.render();
   assert.equal(addCard(tree,'water').props['aria-pressed'],false);
-  byText(tree,'Clear all').props.onClick();tree=h.render();
-  assert.equal(findNode(tree,n=>n.props?.className==='welcome-primary selection-open'),undefined,'empty selection has no permanent tray');
+  assert.equal(opener(tree).props['aria-label'],'Open my map with 1 selected topic');
+  addCard(tree,'weather').props.onClick();tree=h.render();
+  assert.equal(opener(tree),undefined,'an empty selection has nothing to open');
   assert.deepEqual(h.calls,[]);
  }finally{h.harness.dispose();}
 });
@@ -945,6 +947,9 @@ test('the desktop atlas shows the chosen map from the start and describes it in 
  assert.equal(panel.props['data-topic'],'weather');
  assert.equal(findNode(panel,node=>node.type==='h2').props.children,TOPIC_STRUCTURE.find(t=>t.id==='weather').title);
  assert.ok(findNode(panel,node=>node.props?.className==='welcome-focus-facets'),'facets travel to the panel');
+ const more=findNode(panel,node=>node.type==='details'&&node.props.className==='welcome-focus-more');
+ assert.ok(findNode(more,node=>node.props?.className==='welcome-focus-facets')&&findNode(more,node=>node.props?.className==='welcome-focus-record'),'facets and the record fold under one disclosure so the map keeps the screen');
+ assert.equal(more.props.open,undefined,'the disclosure starts closed');
  assert.equal(findNode(panel,node=>node.props?.className==='welcome-focus-lede').props.children,categoryModule.CATEGORY_MAPS.weather.lede);
  // What the record holds for the topic: its collections in the library, on the map, and a newspaper search.
  const recordBlock=findNode(panel,node=>node.props?.className==='welcome-focus-record');
@@ -970,15 +975,54 @@ test('the desktop atlas shows the chosen map from the start and describes it in 
  assert.equal(h.calls.length,2);assert.ok(JSON.stringify(h.calls[0]).includes('water'));assert.deepEqual(h.calls[1],['close',false]);
  h.harness.dispose();
 });
+test('the desktop atlas has no selection tray; its toolbar opens the chosen topics once',async()=>{
+ const h=await welcome(false,{window:wideWindow});h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
+ try{
+  let tree=h.render();
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-primary selection-open'),undefined,'nothing to open before a choice');
+  addCard(tree,'water').props.onClick();tree=h.render();
+  addCard(tree,'weather').props.onClick();tree=h.render();
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-selection-tray'),undefined,'desktop shows no tray across the bottom');
+  const toolbar=findNode(tree,n=>n.props?.className==='welcome-toolbar');
+  const open=findNode(toolbar,n=>n.props?.className==='welcome-primary selection-open');
+  assert.equal(open.props['aria-label'],'Open my map with 2 selected topics');
+  assert.equal(findNode(open,n=>n.props?.className==='selection-count').props.children,2);
+  open.props.onClick();open.props.onClick();
+  assert.deepEqual(h.calls,[['maps',['water','weather']],['close',false]],'the toolbar opens the combined map once');
+ }finally{h.harness.dispose();}
+});
 test('narrow or short screens keep the card layout and the static default map',async()=>{
  const h=await welcome();let tree=h.render();tree=h.render();
  assert.equal(rootOf(tree).props['data-layout'],undefined);
  assert.equal(focusPanel(tree),undefined);
  assert.equal(findNode(tree,node=>node.props?.className==='welcome-record-search'),undefined);
  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,null);
+ addCard(tree,'water').props.onClick();tree=h.render();
+ assert.equal(findNode(tree,n=>n.props?.className==='welcome-selection-tray'),undefined,'compact layouts have no tray either');
+ const toolbar=findNode(tree,n=>n.props?.className==='welcome-toolbar');
+ assert.ok(findNode(toolbar,n=>n.props?.className==='welcome-primary selection-open'),'the toolbar opens the ticked topics');
+ assert.ok(findNode(toolbar,n=>n.props?.className==='welcome-primary'&&n.props.children?.[0]==='Explore freely '),'tablets keep Explore freely beside it');
  h.harness.dispose();
 });
 
+test('phones have no tray: Open my map stands in for Explore freely while topics are ticked',async()=>{
+ const phoneWindow={matchMedia:query=>({matches:query.includes('max-width:700px'),addEventListener(){},removeEventListener(){}})};
+ const h=await welcome(false,{window:phoneWindow});h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
+ const explore=tree=>findNode(tree,n=>n.props?.className==='welcome-primary'&&n.props.children?.[0]==='Explore freely ');
+ const opener=tree=>findNode(tree,n=>n.props?.className==='welcome-primary selection-open');
+ try{
+  let tree=h.render();tree=h.render();
+  assert.equal(rootOf(tree).props['data-carousel'],true);
+  assert.ok(explore(tree));assert.equal(opener(tree),undefined);
+  addCard(tree,'water').props.onClick();tree=h.render();
+  addCard(tree,'weather').props.onClick();tree=h.render();
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-selection-tray'),undefined,'phones show no tray');
+  assert.equal(explore(tree),undefined,'the phone toolbar has room for one primary');
+  assert.equal(opener(tree).props['aria-label'],'Open my map with 2 selected topics');
+  opener(tree).props.onClick();opener(tree).props.onClick();
+  assert.deepEqual(h.calls,[['maps',['water','weather']],['close',false]],'opens the combined map once');
+ }finally{h.harness.dispose();}
+});
 test('the record search routes a place to the map and words to the data library, and the record links are well formed',async()=>{
  const visited=[];const h=await welcome(false,{window:{...wideWindow,location:{assign:url=>visited.push(url)}}});let tree=h.render();tree=h.render();
  const form=findNode(tree,node=>node.props?.className==='welcome-record-search');

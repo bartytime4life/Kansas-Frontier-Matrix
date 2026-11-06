@@ -824,16 +824,6 @@
 .living-welcome[data-builder=true] .topic-empty { padding:20px; background:#0a2d3deb; }
 .living-welcome[data-builder=true] .topic-empty button { min-height:44px; text-decoration:underline; }
 .living-welcome[data-builder=true]:not([data-fullscreen=true]) .welcome-preview-controls { display:none; }
-.living-welcome[data-builder=true] .welcome-selection-tray { position:sticky; z-index:12; bottom:20px; max-width:760px; margin:16px auto 0; padding:10px 16px; background:#092b3bf5; border:1px solid #9cbdbe; border-radius:12px; box-shadow:0 6px 30px #00101988; }
-.living-welcome[data-builder=true] .selection-summary { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:13px; }
-.living-welcome[data-builder=true] .selection-clear { min-height:44px; padding:8px; text-decoration:underline; }
-.living-welcome[data-builder=true] .selection-chips { display:flex; gap:8px; overflow:auto; padding:4px 0 8px; }
-.living-welcome[data-builder=true] .selection-chips button { flex:none; display:flex; align-items:center; gap:12px; min-height:44px; padding:8px 12px; border:1px solid #718d90; border-radius:20px; font-size:12px; }
-.living-welcome[data-builder=true] .selection-actions { display:flex; justify-content:space-between; align-items:center; gap:12px; }
-.living-welcome[data-builder=true] .selection-actions > p { font-size:12px; color:#c5dbe2; }
-.living-welcome[data-builder=true] .selection-basemap { font-size:12px; }
-.living-welcome[data-builder=true] .selection-basemap select { display:block; max-width:200px; min-height:44px; padding:6px; color:#e9f2f6; background:#143344; border:1px solid #6d8794; border-radius:5px; }
-.living-welcome[data-builder=true] .selection-open { min-height:44px; font-size:14px; }
 @media(max-width:1000px) { .living-welcome[data-builder=true] .discovery-group { grid-template-columns:repeat(3,minmax(0,1fr)); } }
 /* On phones, one centered card drives the map above it. */
 .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) { --welcome-deck:158px; --welcome-selection:0px; overflow:hidden; }
@@ -872,12 +862,6 @@
 .living-welcome[data-builder=true][data-carousel=true] .topic-copy :is(small,.topic-map,.topic-demo-label) { display:none; }
 .living-welcome[data-builder=true][data-carousel=true] .topic-card-actions { flex:none; height:44px; }
 .living-welcome[data-builder=true][data-carousel=true] .topic-empty { margin:0 14px; }
-.living-welcome[data-builder=true][data-carousel=true] .welcome-selection-tray { position:absolute; bottom:18px; left:14px; right:14px; padding:4px 10px; margin:0; }
-.living-welcome[data-builder=true][data-carousel=true] .selection-summary { position:absolute; left:10px; top:4px; gap:3px; font-size:11px; }
-.living-welcome[data-builder=true][data-carousel=true] .selection-clear { padding-inline:4px; font-size:11px; }
-.living-welcome[data-builder=true][data-carousel=true] .selection-chips,.living-welcome[data-builder=true][data-carousel=true] .selection-basemap,.living-welcome[data-builder=true][data-carousel=true] .selection-actions > p { display:none; }
-.living-welcome[data-builder=true][data-carousel=true] .selection-actions { justify-content:flex-end; min-height:48px; padding-left:135px; }
-.living-welcome[data-builder=true][data-carousel=true] .selection-open { font-size:12px; padding:8px 12px; min-height:44px; }
 @media(max-height:500px) and (orientation:landscape) {
  .living-welcome[data-builder=true][data-carousel=true]:not([data-fullscreen=true]) .welcome-capability-stage { inset:64px 48% 0 0; }
  .living-welcome[data-builder=true][data-carousel=true] .welcome-discovery-layout { left:52%; right:0; bottom:18px; height:140px; }
@@ -888,10 +872,6 @@
  .living-welcome[data-builder=true][data-carousel=true] .topic-filters > summary { font-size:11px; padding-inline:6px; }
  .living-welcome[data-builder=true][data-carousel=true] .welcome-carousel-nav { margin-left:8px; gap:0; }
  .living-welcome[data-builder=true][data-carousel=true] .welcome-carousel-nav span { min-width:36px; }
- .living-welcome[data-builder=true][data-carousel=true] .welcome-selection-tray { left:14px; right:auto; width:calc(52% - 28px); }
- .living-welcome[data-builder=true][data-carousel=true] .selection-summary { position:static; }
- .living-welcome[data-builder=true][data-carousel=true] .selection-actions { padding:0; }
- .living-welcome[data-builder=true][data-carousel=true] .selection-open { width:100%; }
 }
 
 .archive-map-notice { grid-column:1/-1; display:block; padding:4px 8px; color:#e8d6a8; font-size:11px; line-height:1.4; }
@@ -900,7 +880,7 @@
    Topics become a rail down the left that scrolls with the page; the chosen map is described once,
    in a panel over the map, instead of on twenty-two identical cards. The DOM is the same as the
    builder layout above; only its arrangement changes, so every card, action and test hook remains. */
-.living-welcome[data-layout=atlas]{--atlas-rail:min(400px,30vw);--atlas-gutter:32px}
+.living-welcome[data-layout=atlas]{--atlas-rail:min(316px,23vw);--atlas-gutter:28px}
 .atlas-studio .explorer-guide.living-welcome[data-layout=atlas]{background:#061a24}
 .living-welcome[data-layout=atlas] .welcome-map-stage{padding:22px var(--atlas-gutter) 40px}
 .living-welcome[data-layout=atlas] .welcome-wash{background:linear-gradient(90deg,#061e2bf4 0,#061e2bea calc(var(--atlas-rail) + var(--atlas-gutter)),#061e2b66 calc(var(--atlas-rail) + var(--atlas-gutter) + 160px),#061e2b14 60%,#061e2b00),linear-gradient(0deg,#061e2b8c,transparent 30%)}
@@ -910,11 +890,11 @@
 .living-welcome[data-layout=atlas] .welcome-toolbar{grid-area:toolbar;position:fixed;top:calc(var(--topbar,56px) + 18px);right:var(--atlas-gutter);width:auto;margin:0;z-index:9}
 .living-welcome[data-layout=atlas] .welcome-toolbar>.welcome-primary{margin-right:8px}
 .living-welcome[data-layout=atlas] .welcome-hero{grid-area:hero;max-width:none}
-.living-welcome[data-layout=atlas] .welcome-hero h1{font-size:clamp(30px,2.5vw,42px);margin:8px 0 4px;letter-spacing:-.03em}
+.living-welcome[data-layout=atlas] .welcome-hero h1{font-size:clamp(26px,2vw,34px);margin:6px 0 4px;letter-spacing:-.03em}
 .living-welcome[data-layout=atlas] .welcome-hero>p{font-size:14px;color:#cfe0e8}
 .living-welcome[data-layout=atlas] .welcome-place-search{max-width:none}
 /* The rail: one column, compact rows, grouped. */
-.living-welcome[data-layout=atlas] .welcome-discovery-layout{width:var(--atlas-rail);margin-top:26px}
+.living-welcome[data-layout=atlas] .welcome-discovery-layout{width:var(--atlas-rail);margin-top:18px}
 .living-welcome[data-layout=atlas] .discovery-hint{margin:0 0 10px;flex-wrap:wrap}
 .living-welcome[data-layout=atlas] .topic-filters{float:none;margin:0 0 12px}
 .living-welcome[data-layout=atlas] .topic-filters>summary{display:inline-block;min-height:36px;padding:6px 10px;font-size:12px}
@@ -925,44 +905,54 @@
 .living-welcome[data-layout=atlas] .topic-choice{flex-direction:row;align-items:stretch;border-radius:9px;border-color:#4e6d7a99;background:#0a2d3dbf;box-shadow:none;transition:background .22s,border-color .22s,transform .22s cubic-bezier(.16,1,.3,1)}
 .living-welcome[data-layout=atlas] .topic-choice:hover,.living-welcome[data-layout=atlas] .topic-choice:has(.topic-callout.is-active),.living-welcome[data-layout=atlas] .topic-choice:has(:focus-visible){background:#0f3b4ef2;border-color:#d9c48c;transform:translateX(5px)}
 .living-welcome[data-layout=atlas] .topic-choice[data-selected=true]{border-color:#f0cf87;box-shadow:inset 0 0 0 1px #f0cf87}
-.living-welcome[data-layout=atlas] .topic-choice .topic-callout{min-height:54px;padding:8px 8px 8px 12px;gap:10px;align-items:center}
+.living-welcome[data-layout=atlas] .topic-choice .topic-callout{min-height:46px;padding:6px 6px 6px 10px;gap:8px;align-items:center}
 .living-welcome[data-layout=atlas] .topic-choice .topic-callout:is(:hover,.is-active){background:transparent;box-shadow:none}
 .living-welcome[data-layout=atlas] .topic-copy{gap:1px}
-.living-welcome[data-layout=atlas] .topic-copy strong{font-size:14px;line-height:1.25}
+.living-welcome[data-layout=atlas] .topic-copy strong{font-size:13px;line-height:1.25}
 .living-welcome[data-layout=atlas] .topic-copy small,.living-welcome[data-layout=atlas] .topic-demo-label{display:none}
 .living-welcome[data-layout=atlas] .topic-map{margin:0;font-size:10.5px;letter-spacing:.01em;color:#c9dbe2}
-.living-welcome[data-layout=atlas] .topic-map i{width:26px;height:8px}
+.living-welcome[data-layout=atlas] .topic-map i{width:22px;height:7px}
 .living-welcome[data-layout=atlas] .topic-card-actions{flex-direction:row;flex:none;border-top:0;border-left:1px solid #66828b55}
 .living-welcome[data-layout=atlas] .topic-preview{flex:none;width:44px;min-height:44px;padding:0;font-size:0;color:#eed39b}
 .living-welcome[data-layout=atlas] .topic-preview span{font-size:15px}
 .living-welcome[data-layout=atlas] .topic-add{width:44px;min-height:44px;flex:none;border-left:1px solid #66828b55;border-top:0;font-size:17px}
 .living-welcome[data-layout=atlas] .story-section{margin:30px 0 20px}
 .living-welcome[data-layout=atlas] .story-section-head h2{font-size:22px}
-.living-welcome[data-layout=atlas] .welcome-selection-tray{position:sticky;bottom:16px;max-width:none;margin:14px 0 0}
+/* No selection tray anywhere: the toolbar's Open my map carries the count of chosen topics. */
+.living-welcome[data-layout=atlas] .welcome-toolbar>.selection-open{margin-right:8px;font-size:13px}
+.living-welcome .welcome-toolbar .selection-count{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#10232d;color:#f0d59c;font-size:12px;font-weight:700;line-height:1}
 .living-welcome[data-layout=atlas] .welcome-credits{width:var(--atlas-rail)}
 /* The stage caption names the live map and its source clocks, bottom-left of the map area. */
 .living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption{display:grid;right:auto;left:calc(var(--atlas-rail) + var(--atlas-gutter) + 24px);bottom:26px;justify-items:start;text-align:left;max-width:min(420px,calc(100% - var(--atlas-rail) - 560px))}
 /* The focus panel: one chosen map, described in full, with the three actions the cards carry. */
-.living-welcome[data-layout=atlas] .welcome-focus{position:fixed;z-index:8;right:var(--atlas-gutter);bottom:30px;width:min(460px,calc(100vw - var(--atlas-rail) - 3 * var(--atlas-gutter) - 24px));max-height:calc(100dvh - var(--topbar,56px) - 140px);overflow:auto;padding:22px 24px 20px;border:1px solid #8db5c070;border-radius:16px;background:#061f2bd6;backdrop-filter:blur(14px) saturate(1.2);box-shadow:0 24px 70px #00101a99,inset 0 1px 0 #ffffff14;animation:welcome-focus-in .5s cubic-bezier(.16,1,.3,1) both}
+.living-welcome[data-layout=atlas] .welcome-focus{position:fixed;z-index:8;right:var(--atlas-gutter);bottom:26px;width:min(336px,calc(100vw - var(--atlas-rail) - 3 * var(--atlas-gutter) - 24px));max-height:calc(100dvh - var(--topbar,56px) - 140px);overflow:auto;padding:14px 16px 12px;border:1px solid #8db5c070;border-radius:12px;background:#061f2bd6;backdrop-filter:blur(14px) saturate(1.2);box-shadow:0 24px 70px #00101a99,inset 0 1px 0 #ffffff14;animation:welcome-focus-in .5s cubic-bezier(.16,1,.3,1) both}
 .living-welcome[data-layout=atlas] .welcome-focus .welcome-kicker{font-size:10px;color:#b9d0d9}
-.living-welcome[data-layout=atlas] .welcome-focus h2{font-size:clamp(24px,1.9vw,32px);line-height:1.1;letter-spacing:-.03em;margin:6px 0 10px;color:#f5ead0}
+.living-welcome[data-layout=atlas] .welcome-focus h2{font-size:clamp(18px,1.35vw,21px);line-height:1.15;letter-spacing:-.02em;margin:3px 0 6px;color:#f5ead0}
 .living-welcome[data-layout=atlas] .welcome-focus-map{display:flex;align-items:center;gap:9px;margin:0 0 10px;font-size:12px;color:#c9dbe2}
 .living-welcome[data-layout=atlas] .welcome-focus-map i{display:block;width:34px;height:12px;border-radius:3px;border:1px solid #ffffff40;background:linear-gradient(90deg,var(--m0) 0 40%,var(--m1) 40% 72%,var(--m2) 72%)}
 .living-welcome[data-layout=atlas] .welcome-focus-map strong{color:#f0d59c;font-size:13px}
-.living-welcome[data-layout=atlas] .welcome-focus-lede{margin:0 0 12px;font-size:14px;line-height:1.55;color:#dbe8ee}
+.living-welcome[data-layout=atlas] .welcome-focus-lede{margin:0 0 10px;font-size:12.5px;line-height:1.5;color:#dbe8ee;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
 .living-welcome[data-layout=atlas] .welcome-focus-facets{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0 0 12px;padding:0}
 .living-welcome[data-layout=atlas] .welcome-focus-facets li{padding:4px 9px;border:1px solid #6f8f9b80;border-radius:999px;font-size:11px;color:#d3e3ea;background:#0b2c3b99}
 .living-welcome[data-layout=atlas] .welcome-focus-try{margin:0 0 14px;font-size:13px;line-height:1.5;color:#e7d4a0}
 .living-welcome[data-layout=atlas] .welcome-focus-try strong{color:#f3e2b8}
-.living-welcome[data-layout=atlas] .welcome-focus-actions{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
-.living-welcome[data-layout=atlas] .welcome-focus-actions button{min-height:44px;padding:9px 13px;border:1px solid #8db5c080;border-radius:9px;background:#0c3443;color:#f1e6c2;font-size:12.5px}
+.living-welcome[data-layout=atlas] .welcome-focus-actions{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px}
+.living-welcome[data-layout=atlas] .welcome-focus-actions button{min-height:40px;padding:7px 11px;border:1px solid #8db5c080;border-radius:8px;background:#0c3443;color:#f1e6c2;font-size:12px}
+/* One disclosure holds what used to fill the panel: facets, the glimpse and the record. */
+.living-welcome[data-layout=atlas] .welcome-focus-more{margin:0}
+.living-welcome[data-layout=atlas] .welcome-focus-more>summary{display:flex;align-items:center;gap:6px;min-height:32px;padding:4px 0;cursor:pointer;list-style:none;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#b9d0d9}
+.living-welcome[data-layout=atlas] .welcome-focus-more>summary::-webkit-details-marker{display:none}
+.living-welcome[data-layout=atlas] .welcome-focus-more>summary:before{content:'▸';font-size:10px;color:#e6c77a;transition:transform .2s}
+.living-welcome[data-layout=atlas] .welcome-focus-more[open]>summary:before{transform:rotate(90deg)}
+.living-welcome[data-layout=atlas] .welcome-focus-more>summary:hover,.living-welcome[data-layout=atlas] .welcome-focus-more>summary:focus-visible{color:#f3e2b8}
+.living-welcome[data-layout=atlas] .welcome-focus-more[open]>summary{margin-bottom:8px}
 .living-welcome[data-layout=atlas] .welcome-focus-actions button[aria-pressed=true]{border-color:#f0cf87;background:#d9bf7e;color:#102a37}
 .living-welcome[data-layout=atlas] .welcome-focus-actions .welcome-primary{background:#e6c77a;border-color:#e6c77a;color:#10232d;font-weight:650}
-.living-welcome[data-layout=atlas] .welcome-focus>small{display:block;font-size:11px;line-height:1.5;color:#a9c4ce}
+.living-welcome[data-layout=atlas] .welcome-focus>small{display:block;margin-top:6px;font-size:10.5px;line-height:1.45;color:#a9c4ce}
 @keyframes welcome-focus-in{from{opacity:0;transform:translateY(10px)}}
 @media(prefers-reduced-motion:reduce){.living-welcome[data-layout=atlas] .welcome-focus{animation:none}.living-welcome[data-layout=atlas] .topic-choice{transition:none}}
 .living-welcome[data-layout=atlas][data-motion=paused] .welcome-focus{animation:none}
-@media(min-width:1700px){.living-welcome[data-layout=atlas]{--atlas-rail:440px;--atlas-gutter:44px}.living-welcome[data-layout=atlas] .topic-choice .topic-callout{min-height:58px}.living-welcome[data-layout=atlas] .topic-copy strong{font-size:15px}}
+@media(min-width:1700px){.living-welcome[data-layout=atlas]{--atlas-rail:352px;--atlas-gutter:40px}.living-welcome[data-layout=atlas] .topic-choice .topic-callout{min-height:50px}.living-welcome[data-layout=atlas] .topic-copy strong{font-size:14px}}
 /* In the rail, "The Kansas record" reads as a list: a small still beside each story's words. */
 .living-welcome[data-layout=atlas] .story-section{margin:26px 0 16px}
 .living-welcome[data-layout=atlas] .story-section-head{gap:4px 12px;margin:0 0 12px}
@@ -978,14 +968,19 @@
 .living-welcome[data-layout=atlas] .story-card-copy small{font-size:11px;line-height:1.35}
 .living-welcome[data-layout=atlas] .story-status{font-size:10px}
 /* The map's own caption, as a quiet chip beside the rail. */
-.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption{left:calc(var(--atlas-rail) + var(--atlas-gutter) + 28px);bottom:30px;gap:4px;padding:12px 14px;border:1px solid #6f8f9b55;border-radius:10px;background:#061f2bb8;backdrop-filter:blur(10px)}
-.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption strong{text-shadow:none}
-.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption small{font-size:11px;text-shadow:none}
+.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption{left:calc(var(--atlas-rail) + var(--atlas-gutter) + 20px);bottom:26px;gap:2px;padding:7px 10px;max-width:min(300px,calc(100% - var(--atlas-rail) - 440px));border:1px solid #6f8f9b55;border-radius:8px;background:#061f2bb8;backdrop-filter:blur(10px)}
+.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption>span{font-size:8.5px}
+.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption strong{font-size:13px;text-shadow:none}
+.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption small{font-size:10.5px;line-height:1.3;text-shadow:none}
+/* The chosen-map panel already carries the map's lede; the chip keeps the name, key, preview layers and credit. */
+.living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption>small:not([class]){display:none}
 /* The record: one search box in the hero, two rows at the end of the rail, and what each topic holds. */
-.living-welcome[data-layout=atlas] .welcome-record-search{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;margin:14px 0 2px;pointer-events:auto}
+.living-welcome[data-layout=atlas] .welcome-record-search{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;margin:12px 0 2px;pointer-events:auto}
+/* In the narrow rail the words get the first row to themselves; scope and Search share the second. */
 .living-welcome[data-layout=atlas] .welcome-record-search label{display:block;min-width:0}
+.living-welcome[data-layout=atlas] .welcome-record-search label:first-child{grid-column:1 / -1}
 .living-welcome[data-layout=atlas] .welcome-record-search :is(input,select){width:100%;min-height:44px;padding:8px 11px;border:1px solid #6d8794;border-radius:8px;color:#e9f2f6;background:#0b2d3de8;font:inherit;font-size:13px}
-.living-welcome[data-layout=atlas] .welcome-record-search select{width:auto;max-width:190px;color:#dfe9ee}
+.living-welcome[data-layout=atlas] .welcome-record-search select{width:100%;max-width:none;color:#dfe9ee;font-size:12px}
 .living-welcome[data-layout=atlas] .welcome-record-search .welcome-primary{min-height:44px;padding:8px 14px;background:#e6c77a;border:1px solid #e6c77a;color:#10232d;border-radius:8px;font-size:13px;font-weight:650}
 .living-welcome[data-layout=atlas] .welcome-record-search .welcome-primary:disabled{opacity:.5}
 .living-welcome[data-layout=atlas] .welcome-place-search{display:none}
