@@ -4,7 +4,9 @@ import { isolateBrowserNetwork } from './browser-network.mjs';
 
 // Disposable browser instrumentation only: never installed in the application.
 export function installRenderDiagnostics(Map) {
-  const state=window.__kfmRenderDiagnostics={maps:[],calls:[],longTasks:[],errors:[]};
+  const state=window.__kfmRenderDiagnostics={maps:[],calls:[],longTasks:[],errors:[],pageErrors:[]};
+  window.addEventListener('error',event=>state.pageErrors.push({type:'error',message:event.message,stack:String(event.error?.stack??'')}));
+  window.addEventListener('unhandledrejection',event=>state.pageErrors.push({type:'unhandledrejection',message:String(event.reason?.message??event.reason),stack:String(event.reason?.stack??'')}));
   new PerformanceObserver(list=>state.longTasks.push(...list.getEntries().map(e=>({at:e.startTime,ms:e.duration})))).observe({type:'longtask',buffered:true});
   const sources=new WeakMap(),programs=new WeakMap();
   const gl=WebGL2RenderingContext.prototype;

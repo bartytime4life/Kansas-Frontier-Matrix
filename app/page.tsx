@@ -6646,8 +6646,15 @@ export default function Home() {
         registerSceneEffects(map, sceneEffectsRef.current);
         const mapCanvas = map.getCanvas();
         mapCanvas.addEventListener("webglcontextlost", (event) => {
+          if (disposed) return;
           event.preventDefault();
-          setMaplibreProbe((current) => ({ ...current, canvasReady: false, error: "WebGL context lost" }));
+          // MapLibre discards the style before this callback. Invalidate the
+          // generation synchronously, before React processes any queued source
+          // or terrain update, so those effects cannot touch the lost style.
+          styleDocumentLoadedRef.current = false;
+          styleGenerationReadyRef.current = false;
+          setStyleReady(false);
+          setMaplibreProbe((current) => ({ ...current, canvasReady: false, styleLoaded: false, idle: false, tilesLoaded: false, sourcesReady: 0, error: "WebGL context lost" }));
           setRuntime({ kind: "degraded", message: "The browser paused the map renderer. Data controls remain available while MapLibre restores the canvas." });
         });
         mapCanvas.addEventListener("webglcontextrestored", () => {

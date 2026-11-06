@@ -402,3 +402,36 @@ manual recovery, interrupted welcome dismissal). Production build and TypeScript
 passed. Scoped lint passed without warnings. These are component and synthetic
 browser results, not the entire repository suite, hosted CI, public-production
 acceptance, sustained frame-rate testing, or independent review.
+
+### Context-loss generation invalidation candidate — November 6, 2026
+
+Run `42297667667` at `e73b3a0` retained failed cold recovery at both widths.
+Artifact `13542693298` (SHA-256
+`603712add6863ba3ef83ba1da923476c32351604f9f7c5ad34f099c9adfe2143`)
+shows a native loss and restoration, but an explicitly removed Explorer map,
+no retained style, and terrain/projection operations between loss and removal.
+The browser UI was absent in the timeout capture. This is stronger diagnostic
+evidence than the earlier failure capture, which itself threw while reading
+projection from an absent style. It does not identify a captured JavaScript
+exception: the old fixture recorded map errors but not window errors.
+
+The application loss callback left both style-generation readiness refs true.
+A queued payload/terrain render could therefore run the real overlay effect
+against MapLibre's discarded generation. An actual-handler/effect regression
+fails on the unchanged source because that effect still runs during loss.
+The candidate synchronously invalidates both refs before scheduling React state,
+clears the style/canvas readiness probe, and ignores events from a disposed map.
+Native restoration remains loading until existing style synchronization succeeds.
+The regression passes with this correction, including disposed-map isolation and
+resumption after a synchronized replacement generation. This proves that bounded
+lifecycle contract; native before/after recovery qualification remains required.
+
+Disposable browser diagnostics now retain window errors and unhandled promise
+rejections separately from expected unavailable-provider errors. The strict
+curtain recovery, zoom interaction, complete matrix and existing deadlines remain.
+The eight navigation journeys move from the end of welcome/render diagnostics
+to an independent CI job so a graphics failure cannot prevent their execution.
+Existing jobs, permissions, full-matrix commands and deadlines are preserved.
+No data, observation/source clock, provider activation or public deployment is
+changed by this candidate. A passing run alone still does not establish general
+GPU reliability or close the separately documented intermittent Sky-layer issue.

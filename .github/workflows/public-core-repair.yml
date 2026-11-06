@@ -77,7 +77,6 @@ jobs:
           done
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WORKSPACE_SCREENSHOTS="$RUNNER_TEMP/focused-workspace-screenshots" node --test --test-name-pattern='welcome content stays composed|welcome categories scroll|welcome scientific layers|geographic previews|welcome cards open directly|draft workspaces preserve independent investigations' tests/explorer-startup.browser.mjs
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_RENDER_PERFORMANCE=1 KFM_RENDER_ARTIFACTS="$RUNNER_TEMP/render-performance" node --test --test-name-pattern='render transition diagnostics' tests/explorer-startup.browser.mjs
-          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 node --test --test-name-pattern='startup category supports browser Back|remembered startup dismissal|source status releases the previous map entry|civic inspection survives browser' tests/explorer-startup.browser.mjs
       - name: Focused workflow diagnostics
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -233,6 +232,47 @@ jobs:
             sleep 1
           done
           KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5183 node --test --test-name-pattern='anonymous map|hosted AI endpoint' tests/godaddy-node-runtime.test.mjs
+
+  navigation-browser:
+    # Fast navigation feedback stays independent of welcome/render diagnostics.
+    # The complete Explorer matrix below retains every case and deadline.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22.23.3'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Focused browser navigation acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_ENV=production PORT=5182 node server/start.mjs > "$RUNNER_TEMP/navigation-runtime.log" 2>&1 &
+          site_pid=$!
+          trap 'kill "$site_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:5182/ > /dev/null; then break; fi
+            sleep 1
+          done
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WORKSPACE_SCREENSHOTS="$RUNNER_TEMP/navigation-screenshots" node --test --test-name-pattern='startup category supports browser Back|remembered startup dismissal|source status releases the previous map entry|civic inspection survives browser' tests/explorer-startup.browser.mjs
+      - name: Navigation browser acceptance artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: navigation-browser-acceptance
+          path: |
+            ${{ runner.temp }}/navigation-screenshots
+            ${{ runner.temp }}/navigation-runtime.log
+          if-no-files-found: warn
+          retention-days: 14
 
   explorer-browser:
     # Preserve the complete Explorer matrix and its artifacts independently of
