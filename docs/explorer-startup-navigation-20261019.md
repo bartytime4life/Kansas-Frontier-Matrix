@@ -302,3 +302,32 @@ identity, cancellation and retention of the history destination; hydrated
 synthetic browser journeys select a district through native controls, then use
 Back, Forward and reload at desktop and phone widths. Their execution and any
 remaining qualification gaps belong to the current-head pull request evidence.
+
+
+### Delayed saves during history traversal — November 6, 2026
+
+The independent navigation job at head f5810e7 reproduced a Forward failure at
+both 1280 × 800 and 390 × 844. Startup was visible again instead of the selected
+Government map. The pre-existing full matrix had passed this journey on earlier
+heads; that result did not cover every timing interleaving.
+
+A native traversal selects its entry before popstate and React passive effects
+finish. The previous screen's delayed serialization could therefore replace
+the newly selected entry. A regression executes the actual production save
+effect with that interleaving: unchanged source overwrites the destination's
+map marker; the correction preserves its topic and marker without writing.
+
+Native entries now have an opaque browser-local identity. Restoration commits
+that identity with the restored view; passive saves require the identity owned
+by their render. Deliberate navigation creates a fresh identity, while camera
+updates, router-state clones and reload retain it. An obsolete render cannot
+adopt or overwrite a different entry. The URL, router fields, embedded-host
+boundary, original exit behavior and source timestamps retain their contracts.
+Blocked history remains nonfatal. No persistent data migration is required.
+
+The browser journey repeats Back/Forward three times without a settling delay,
+checks that both native entries are revisited rather than recreated, and retains
+the reload assertion. Failure diagnostics include bounded history identity and
+topic information. Exact-head native results, review and hosted/public identity
+verification are still required before claiming publication or complete browser
+acceptance. Reverting these source/test changes requires no data rollback.

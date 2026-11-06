@@ -5,7 +5,7 @@ import ts from 'typescript';
 const code = ts.transpileModule(await readFile('app/explorer-layer-history.ts', 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
 const mod = { exports: {} };
 new Function('require', 'exports', code)(() => ({ isEmbeddedSiteRuntime: () => false }), mod.exports);
-const { explorerHistoryParams, explorerHistoryWelcome, saveExplorerHistoryView, restoreArchiveViewDays } = mod.exports;
+const { ensureExplorerHistoryEntry, explorerHistoryEntryKey, explorerHistoryParams, explorerHistoryWelcome, saveExplorerHistoryView, restoreArchiveViewDays } = mod.exports;
 
 test('navigation history retains layer dates, hidden selections, opacity and camera without replacing router state or URL', () => {
   const history = { state: { router: 'retained', key: 42 }, replaceState(state, title, ...url) { assert.equal(title, ''); assert.equal(url.length, 0); this.state = state; } };
@@ -75,4 +75,68 @@ test('navigation after Back retires only forward entries; embedded and blocked h
   assert.equal(entries.length, before);
   assert.equal(saveExplorerHistoryView(new URLSearchParams('topic=geology'), { state: history.state, replaceState() {}, pushState() { throw new Error('blocked'); } }, false, { navigation: true }), false);
   for (const state of [null, {}, { kfmExplorerWelcome: 'true' }]) assert.equal(explorerHistoryWelcome(state), null);
+});
+
+test('a delayed startup save cannot overwrite the map entry selected by Forward', async () => {
+  const page = ts.createSourceFile('page.tsx', await readFile('app/page.tsx', 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let effect;
+  const visit = node => {
+    if (ts.isCallExpression(node) && node.expression.getText(page) === 'useEffect' && node.arguments[0]?.getText(page).includes('saveExplorerHistoryView(')) effect = node.arguments[0];
+    ts.forEachChild(node, visit);
+  };
+  visit(page);
+  assert.ok(effect, 'execute the production save effect');
+  const entries = [
+    { router: 'preserved', kfmExplorerEntry: 'startup', kfmExplorerView: 'topic=all', kfmExplorerWelcome: true },
+    { router: 'preserved', kfmExplorerEntry: 'map', kfmExplorerView: 'topics=government', kfmExplorerWelcome: false },
+  ];
+  let index = 0, owned = 'startup';
+  const history = {
+    get state() { return entries[index]; },
+    replaceState(state) { entries[index] = state; },
+    pushState(state) { entries.splice(++index); entries.push(state); },
+  };
+  const bindings = {
+    explorerRestoredRef: { current: true }, explorerNavigationPendingRef: { current: false },
+    explorerHistoryEntry: owned, guideOpen: true, readExplorerGuideDismissed: () => false,
+    explorerHistoryWelcome, explorerHistoryEntryKey: state => state?.kfmExplorerEntry ?? null,
+    setExplorerHistoryEntry: key => { owned = key; },
+    buildExplorerParams: () => new URLSearchParams('topic=all'), saveExplorerHistoryView,
+    window: { history },
+  };
+  const delayedStartupSave = new Function(...Object.keys(bindings), `${ts.transpile(`const result = ${effect.getText(page)};`)} return result;`)(...Object.values(bindings));
+  // Back has committed startup; Forward selects its destination before React
+  // flushes that startup commit's passive effects or delivers the next popstate.
+  index = 1;
+  delayedStartupSave();
+  assert.equal(explorerHistoryWelcome(history.state), false, 'Forward retains its map marker');
+  assert.equal(explorerHistoryParams('', history.state).get('topics'), 'government');
+  assert.equal(entries.length, 2, 'a stale save never adds an entry');
+  assert.equal(owned, 'startup', 'a stale render cannot adopt the new entry');
+});
+
+test('entry ownership survives router-state clones, reload and passive updates; deliberate navigation owns a fresh entry', () => {
+  let writes = 0;
+  const history = { state: { router: 'kept' }, replaceState(state) { this.state = state; writes++; }, pushState(state) { this.state = state; writes++; } };
+  const initial = ensureExplorerHistoryEntry(history, false);
+  assert.equal(typeof initial, 'string');
+  assert.equal(history.state.router, 'kept');
+  assert.equal(ensureExplorerHistoryEntry(history, false), initial);
+  assert.equal(writes, 1, 'identifying a known entry does not write again');
+  history.state = { ...history.state, framework: 'updated' };
+  const save = (query, navigation, expectedEntry) => saveExplorerHistoryView(new URLSearchParams(query), history, false, { navigation, expectedEntry });
+  assert.equal(save('topic=all', false, initial), true);
+  assert.equal(save('topic=government', true, initial), true);
+  const destination = explorerHistoryEntryKey(history.state);
+  assert.notEqual(destination, initial);
+  assert.equal(save('topic=government&z=8', false, destination), true);
+  assert.equal(explorerHistoryEntryKey(history.state), destination);
+  assert.equal(history.state.framework, 'updated');
+  assert.equal(ensureExplorerHistoryEntry(history, false), destination, 'reload retains entry identity');
+  const before = writes;
+  assert.equal(save('topic=all', false, initial), false);
+  assert.equal(writes, before, 'an old owner never writes or pushes');
+  assert.equal(ensureExplorerHistoryEntry(history, true), null);
+  assert.equal(ensureExplorerHistoryEntry({ state: null, replaceState() { throw Error('blocked'); } }, false), null);
+  for (const state of [null, {}, { kfmExplorerEntry: '' }, { kfmExplorerEntry: 4 }, { kfmExplorerEntry: 'x'.repeat(129) }]) assert.equal(explorerHistoryEntryKey(state), null);
 });

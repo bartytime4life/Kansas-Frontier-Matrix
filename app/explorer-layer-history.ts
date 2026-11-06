@@ -22,16 +22,36 @@ export const explorerHistoryWelcome = (state: unknown): boolean | null =>
   state && typeof state === "object" && "kfmExplorerWelcome" in state && typeof state.kfmExplorerWelcome === "boolean"
     ? state.kfmExplorerWelcome : null;
 
+export const explorerHistoryEntryKey = (state: unknown): string | null => {
+  const key = state && typeof state === "object" && "kfmExplorerEntry" in state ? state.kfmExplorerEntry : null;
+  return typeof key === "string" && key.length > 0 && key.length <= 128 ? key : null;
+};
+
+/** Identify this native entry without adding a step or changing the route. */
+export const ensureExplorerHistoryEntry = (history: Pick<History, "state" | "replaceState">, embedded = isEmbeddedSiteRuntime()): string | null => {
+  if (embedded) return null;
+  try {
+    const key = explorerHistoryEntryKey(history.state) ?? crypto.randomUUID();
+    if (explorerHistoryEntryKey(history.state) !== key) history.replaceState({ ...history.state, kfmExplorerEntry: key }, "");
+    return key;
+  } catch { return null; }
+};
+
 /** Deliberate navigation adds a step; camera changes update that step. Never alter the embedded host. */
-export const saveExplorerHistoryView = (params: URLSearchParams, history: Pick<History, "state" | "replaceState"> & Partial<Pick<History, "pushState">>, embedded = isEmbeddedSiteRuntime(), options: { navigation?: boolean; welcome?: boolean } = {}): boolean => {
+export const saveExplorerHistoryView = (params: URLSearchParams, history: Pick<History, "state" | "replaceState"> & Partial<Pick<History, "pushState">>, embedded = isEmbeddedSiteRuntime(), options: { navigation?: boolean; welcome?: boolean; expectedEntry?: string } = {}): boolean => {
   if (embedded) return false;
   try {
     const saved = params.toString();
     if (saved.length > 12000) return false;
     const previous = history.state;
-    const next = { ...previous, kfmExplorerView: saved, ...(options.welcome === undefined ? {} : { kfmExplorerWelcome: options.welcome }) };
+    // Traversal selects its destination before popstate/React passive effects
+    // settle. A save from the old render must not overwrite that destination.
+    if (options.expectedEntry !== undefined && explorerHistoryEntryKey(previous) !== options.expectedEntry) return false;
     const changed = previous?.kfmExplorerView !== saved || (options.welcome !== undefined && previous?.kfmExplorerWelcome !== options.welcome);
-    if (options.navigation && typeof previous?.kfmExplorerView === "string" && changed && history.pushState) history.pushState(next, "");
+    const push = options.navigation && typeof previous?.kfmExplorerView === "string" && changed && history.pushState;
+    const key = push ? crypto.randomUUID() : explorerHistoryEntryKey(previous) ?? crypto.randomUUID();
+    const next = { ...previous, kfmExplorerEntry: key, kfmExplorerView: saved, ...(options.welcome === undefined ? {} : { kfmExplorerWelcome: options.welcome }) };
+    if (push) history.pushState!(next, "");
     else history.replaceState(next, "");
     return true;
   } catch { return false; }

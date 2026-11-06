@@ -14,7 +14,7 @@ import { atlasDiscoveryResults, type GlobalSearchItem } from "./atlas-discovery"
 import { isolateModalBackground, modalReturnTarget } from "./modal-background";
 import { decodeStreamflowTransport } from "./streamflow-transport";
 import { browserJsonRequest } from "./browser-json-request";
-import { explorerHistoryParams, explorerHistoryWelcome, restoreArchiveViewDays, saveExplorerHistoryView } from "./explorer-layer-history";
+import { ensureExplorerHistoryEntry, explorerHistoryEntryKey, explorerHistoryParams, explorerHistoryWelcome, restoreArchiveViewDays, saveExplorerHistoryView } from "./explorer-layer-history";
 import { LayerJsonReads } from "./layer-json-reads";
 import { layerHitStack } from "./layer-hit-stack";
 import { createMapHoverSampler } from "./map-hover-sampler";
@@ -1299,6 +1299,7 @@ export default function Home() {
   const officialPayloadsRef = useRef<Partial<Record<OfficialContextFeedId, OfficialContextPayload>>>({});
   const explorerRestoredRef = useRef(false);
   const explorerNavigationPendingRef = useRef(false);
+  const [explorerHistoryEntry, setExplorerHistoryEntry] = useState<string | null>(null);
   const [pendingCivicInspection, setPendingCivicInspection] = useState<{ featureId: string; day: string; params: URLSearchParams; reported?: boolean } | null>(null);
   const [explorerNavigationRequest, setExplorerNavigationRequest] = useState(0);
   const [navigationReadEpoch, setNavigationReadEpoch] = useState(0);
@@ -6183,6 +6184,7 @@ export default function Home() {
   const restoreExplorerFromUrl = useCallback(() => {
       cancelSmokePlayback();
       explorerNavigationPendingRef.current = false;
+      setExplorerHistoryEntry(ensureExplorerHistoryEntry(window.history));
       setPendingCivicInspection(null);
       const params = explorerHistoryParams(window.location.search, window.history.state);
       const savedWelcome = explorerHistoryWelcome(window.history.state);
@@ -6542,13 +6544,15 @@ export default function Home() {
   }, [announce, civicFrameDay, effectiveOfficialVisibility, mapUtilityOpen, officialPayloads, officialStates, officialVisibility, pendingCivicInspection]);
 
   useEffect(() => {
-    if (!explorerRestoredRef.current) return;
+    if (!explorerRestoredRef.current || !explorerHistoryEntry || explorerHistoryEntryKey(window.history.state) !== explorerHistoryEntry) return;
     const navigation = explorerNavigationPendingRef.current;
     explorerNavigationPendingRef.current = false;
     // Escape only dismisses this visit's startup; a deliberate destination owns a new step.
     const welcome = guideOpen === true || (!navigation && !readExplorerGuideDismissed() && explorerHistoryWelcome(window.history.state) === true);
-    saveExplorerHistoryView(buildExplorerParams(), window.history, undefined, { navigation, welcome });
-  }, [buildExplorerParams, explorerNavigationRequest, guideOpen]);
+    if (saveExplorerHistoryView(buildExplorerParams(), window.history, undefined, { navigation, welcome, expectedEntry: explorerHistoryEntry })) {
+      setExplorerHistoryEntry(explorerHistoryEntryKey(window.history.state));
+    }
+  }, [buildExplorerParams, explorerHistoryEntry, explorerNavigationRequest, guideOpen]);
 
   useEffect(() => {
     const restore = window.setTimeout(restoreExplorerFromUrl, 0);

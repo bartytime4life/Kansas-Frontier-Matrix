@@ -305,7 +305,7 @@ async function pageSession(b, width, height, networkOptions = {}) {
       if (await evaluate(`Boolean(${expression})`)) return;
       await pause(50);
     }
-    throw new Error(`${label}: ${await evaluate(`JSON.stringify({url:location.href, guide:!!document.querySelector('.explorer-guide'), topic:document.querySelector('[aria-label="Layer topic"]')?.value, geometry:[...document.querySelectorAll('.living-welcome,.welcome-map-attribution,.welcome-map-attribution .maplibregl-ctrl-attrib,.discovery-field')].map(e=>({class:e.className,rect:e.getBoundingClientRect().toJSON(),scrollLeft:e.scrollLeft})), active:document.activeElement?.outerHTML.slice(0,300), welcome:(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),map=document.querySelector('.map-stage>.map-canvas');return root?{renderer:root.dataset.renderer,immersive:root.dataset.immersive,scene:root.querySelector('.domain-stage')?.dataset.topic,mapOpacity:map?getComputedStyle(map).opacity:null,focusedClass:document.activeElement?.className,focusVisible:document.activeElement?.matches(':focus-visible'),cards:[...root.querySelectorAll('.topic-callout')].map(card=>({classes:card.className,opacity:getComputedStyle(card).opacity,focusVisible:card.matches(':focus-visible'),hovered:card.matches(':hover'),pointerEvents:getComputedStyle(card).pointerEvents}))}:null;})()})`)}`);
+    throw new Error(`${label}: ${await evaluate(`JSON.stringify({url:location.href,history:{entry:history.state?.kfmExplorerEntry,welcome:history.state?.kfmExplorerWelcome,topic:new URLSearchParams(history.state?.kfmExplorerView).get('topic'),topics:new URLSearchParams(history.state?.kfmExplorerView).get('topics'),length:history.length}, guide:!!document.querySelector('.explorer-guide'), topic:document.querySelector('[aria-label="Layer topic"]')?.value, geometry:[...document.querySelectorAll('.living-welcome,.welcome-map-attribution,.welcome-map-attribution .maplibregl-ctrl-attrib,.discovery-field')].map(e=>({class:e.className,rect:e.getBoundingClientRect().toJSON(),scrollLeft:e.scrollLeft})), active:document.activeElement?.outerHTML.slice(0,300), welcome:(()=>{const root=document.querySelector('.explorer-guide.living-welcome'),map=document.querySelector('.map-stage>.map-canvas');return root?{renderer:root.dataset.renderer,immersive:root.dataset.immersive,scene:root.querySelector('.domain-stage')?.dataset.topic,mapOpacity:map?getComputedStyle(map).opacity:null,focusedClass:document.activeElement?.className,focusVisible:document.activeElement?.matches(':focus-visible'),cards:[...root.querySelectorAll('.topic-callout')].map(card=>({classes:card.className,opacity:getComputedStyle(card).opacity,focusVisible:card.matches(':focus-visible'),hovered:card.matches(':hover'),pointerEvents:getComputedStyle(card).pointerEvents}))}:null;})()})`)}`);
   };
   const key = async (key, code, windowsVirtualKeyCode, modifiers = 0) => {
     await call('Input.dispatchKeyEvent', { type: 'rawKeyDown', key, code, windowsVirtualKeyCode, modifiers });
@@ -2068,16 +2068,25 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
     await p.key('Enter','Enter',13);
     await p.wait(`!document.querySelector('.living-welcome') && history.state?.kfmExplorerWelcome===false && new URLSearchParams(history.state.kfmExplorerView).get('topics')==='government'`, 'deliberate map navigation saved');
     assert.equal((await p.call('Page.getNavigationHistory')).currentIndex, initial+1, 'one deliberate choice adds one browser step');
-    await p.evaluate('history.back()');
-    await p.wait(`!!document.querySelector('.living-welcome') && history.state?.kfmExplorerWelcome===true`, 'Back returns to KFM startup');
-    assert.equal(await p.evaluate('location.pathname'), '/');
-    if(process.env.KFM_WORKSPACE_SCREENSHOTS){
-      await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
-      const capture=await p.call('Page.captureScreenshot',{format:'png'});
-      await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`startup-browser-back-${width}x${height}.png`),Buffer.from(capture.data,'base64'));
+    const mapEntry=await p.evaluate('history.state.kfmExplorerEntry');
+    assert.equal(typeof mapEntry,'string','the chosen native entry has an owner');
+    // Repeat without an added settling delay: passive saves from the previous
+    // screen must never overwrite an entry selected by fast Back/Forward.
+    for(let cycle=0;cycle<3;cycle++) {
+      await p.evaluate('history.back()');
+      await p.wait(`!!document.querySelector('.living-welcome') && history.state?.kfmExplorerWelcome===true`, 'Back returns to KFM startup');
+      assert.equal(await p.evaluate('location.pathname'), '/');
+      assert.equal((await p.call('Page.getNavigationHistory')).currentIndex,initial,'Back revisits the existing startup entry');
+      if(cycle===0&&process.env.KFM_WORKSPACE_SCREENSHOTS){
+        await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});
+        const capture=await p.call('Page.captureScreenshot',{format:'png'});
+        await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`startup-browser-back-${width}x${height}.png`),Buffer.from(capture.data,'base64'));
+      }
+      await p.evaluate('history.forward()');
+      await p.wait(`!document.querySelector('.living-welcome') && new URLSearchParams(history.state?.kfmExplorerView).get('topics')==='government'`, 'Forward returns to the chosen map');
+      assert.equal(await p.evaluate('history.state.kfmExplorerEntry'),mapEntry,'Forward retains the chosen entry across delayed saves');
+      assert.equal((await p.call('Page.getNavigationHistory')).currentIndex,initial+1,'Forward never creates another step');
     }
-    await p.evaluate('history.forward()');
-    await p.wait(`!document.querySelector('.living-welcome') && new URLSearchParams(history.state?.kfmExplorerView).get('topics')==='government'`, 'Forward returns to the chosen map');
     await p.call('Page.reload');
     await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('.map-topic-edit')?.textContent.includes('Government')`, 'reopen restores the intentional map destination');
     assert.equal(await p.evaluate('location.pathname'), '/');
