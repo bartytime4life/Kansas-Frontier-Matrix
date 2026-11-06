@@ -16,15 +16,15 @@ new Function('exports','require','document',code)(exports,name=>{
 const {attachKansasSky,pickKansasSkyAircraft}=exports;
 function fixture(loaded=true){
   const layers=new Map(),events=[],listeners=new Map();
-  let styleLoaded=loaded;
-  const gl=new Proxy({getShaderParameter:()=>true,getProgramParameter:()=>true,getAttribLocation:()=>0,getUniformLocation:()=>null},
+  let styleLoaded=loaded,vertices=new Float32Array();
+  const gl=new Proxy({bufferSubData:(_target,_offset,value)=>{vertices=new Float32Array(value);},getShaderParameter:()=>true,getProgramParameter:()=>true,getAttribLocation:()=>0,getUniformLocation:()=>null},
     {get:(target,key)=>key in target?target[key]:()=>({})});
   const map={isStyleLoaded:()=>styleLoaded,getLayer:id=>layers.get(id),getZoom:()=>0,getProjection:()=>({type:'mercator'}),getCanvas:()=>({clientWidth:100,clientHeight:100}),
     on(name,fn){events.push(['on',name]);if(!listeners.has(name))listeners.set(name,new Set());listeners.get(name).add(fn);},
     off(name,fn){events.push(['off',name]);listeners.get(name)?.delete(fn);},triggerRepaint(){},queryTerrainElevation:()=>0,
     addLayer(layer){layers.set(layer.id,layer);layer.onAdd(map,gl);},removeLayer(id){layers.get(id)?.onRemove();layers.delete(id);}};
   const matrix=[1/512,0,0,0,0,1/512,0,0,0,0,0,0,-.25,-.5,0,1];
-  return {map,events,setStyleLoaded:value=>{styleLoaded=value;},emit:name=>{for(const fn of [...(listeners.get(name)??[])])fn();},listenerCount:name=>listeners.get(name)?.size??0,draw:()=>layers.get('kfm-kansas-sky').render(gl,{modelViewProjectionMatrix:matrix})};
+  return {map,events,vertices:()=>vertices,setStyleLoaded:value=>{styleLoaded=value;},emit:name=>{for(const fn of [...(listeners.get(name)??[])])fn();},listenerCount:name=>listeners.get(name)?.size??0,draw:()=>layers.get('kfm-kansas-sky').render(gl,{modelViewProjectionMatrix:matrix})};
 }
 const aircraft={hex:'abc123',lon:-90,lat:0,onGround:false,altGeomFt:5000,altBaroFt:4800,trackDeg:90,rollDeg:null,emergency:null};
 for(const readyEvent of ['render','error'])for(const phase of ['initial attachment','replacement style'])test(`aircraft renderer recovers after pending ${phase} on ${readyEvent} and cancels disposed work`,()=>{
@@ -90,4 +90,74 @@ test('page dispatch respects dedicated pick modes, aircraft hits and ordinary-co
     else click({point:{x:50,y:50}});
     assert.equal(picks,mode==='aircraft'||mode==='miss'?1:0,'higher-priority tools prevent aircraft inspection');
   }
+});
+
+// Exercise the actual React camera callbacks, including release of shared map ownership.
+const cameraControlSource=await readFile('app/kansas-sky-control.tsx','utf8');
+const cameraAst=ts.createSourceFile('camera.tsx',cameraControlSource,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);
+const cameraEffects=[];let elevationInitializer;
+function cameraNodes(node){
+ if(ts.isCallExpression(node)&&node.expression.getText(cameraAst)==='useEffect')cameraEffects.push(node.arguments[0].getText(cameraAst));
+ if(ts.isVariableDeclaration(node)&&node.name.getText(cameraAst)==='cameraElevation')elevationInitializer=node.initializer.getText(cameraAst);
+ ts.forEachChild(node,cameraNodes);
+}cameraNodes(cameraAst);
+const executeCamera=(text,scope)=>new Function(...Object.keys(scope),ts.transpileModule(`return (${text});`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(scope));
+test('Follow targets the aircraft display height instead of the ground beneath it',()=>{
+ const moves=[];const plane={...aircraft,altGeomFt:31000};
+ const map={jumpTo:options=>moves.push(options),getBearing:()=>0,queryTerrainElevation:()=>700};
+ const height=elevationInitializer?executeCamera(elevationInitializer,{}):()=>undefined;
+ const follow=cameraEffects.find(text=>text.includes('camera!=="follow"'));
+ assert.ok(follow);
+ executeCamera(follow,{mapRef:{current:map},picked:plane,camera:'follow',reduced:false,flat:false,hidden:false,enabled:true,ownCameraMove:{current:false},cameraElevation:height})();
+ assert.equal(moves.length,1);assert.equal(moves[0].elevation,31000*.3048);
+ assert.deepEqual(moves[0].center,[plane.lon,plane.lat]);
+});
+test('3D flight view acquires and restores camera elevation and ground clamping',()=>{
+ const ownership=cameraEffects.find(text=>text.includes('getCenterClampedToGround'));
+ assert.ok(ownership,'the flight view must release shared map camera ownership');
+ let clamped=true,elevation=620;const moves=[];
+ const map={getCenterClampedToGround:()=>clamped,getCenterElevation:()=>elevation,setCenterClampedToGround:v=>{clamped=v;},setCenterElevation:v=>{elevation=v;},jumpTo:v=>{moves.push(v);elevation=v.elevation;},getBearing:()=>0,queryTerrainElevation:()=>620};
+ const height=executeCamera(elevationInitializer,{}),ownCameraMove={current:false};
+ const cleanup=executeCamera(ownership,{mapRef:{current:map},enabled:true,hidden:false,flat:false,flightView:true,camera:'follow',frameRequest:1,latestPicked:{current:{...aircraft,altGeomFt:31000}},ownCameraMove,cameraElevation:height})();
+ assert.equal(clamped,false);assert.equal(elevation,31000*.3048);assert.equal(moves[0].zoom,10.5);
+ cleanup();assert.equal(clamped,true);assert.equal(elevation,620);assert.equal(ownCameraMove.current,false);
+ for(const block of [{enabled:false},{hidden:true},{flat:true},{flightView:false,camera:'free'}]){
+  const count=moves.length;const result=executeCamera(ownership,{mapRef:{current:map},enabled:true,hidden:false,flat:false,flightView:true,camera:'follow',frameRequest:1,latestPicked:{current:aircraft},ownCameraMove,cameraElevation:height,...block})();
+  assert.equal(result,undefined);assert.equal(moves.length,count);
+ }
+});
+test('closing Layers preserves the camera while navigation and canvas input release it',async()=>{
+ const releaseEffect=cameraEffects.find(text=>text.includes('addEventListener("pointerdown",release)'));
+ assert.ok(releaseEffect);
+ const listeners=new Map(),canvasListeners=new Map(),changes=[];
+ const canvas={addEventListener:(name,fn)=>canvasListeners.set(name,fn),removeEventListener:name=>canvasListeners.delete(name)};
+ const map={on:(name,fn)=>listeners.set(name,fn),off:name=>listeners.delete(name),getCanvas:()=>canvas};
+ const ownCameraMove={current:false};
+ const cleanup=executeCamera(releaseEffect,{mapRef:{current:map},enabled:true,ownCameraMove,setCamera:value=>changes.push(['camera',value]),setFlightView:value=>changes.push(['view',value])})();
+ listeners.get('movestart')();listeners.get('resize')?.();await Promise.resolve();
+ assert.deepEqual(changes,[],'panel resize must not release the flight view');
+ ownCameraMove.current=true;listeners.get('movestart')();ownCameraMove.current=false;await Promise.resolve();
+ assert.deepEqual(changes,[],'follow and orbit retain camera ownership');
+ listeners.get('movestart')();await Promise.resolve();
+ assert.ok(changes.some(([key,value])=>key==='camera'&&value==='free'),'external navigation releases the camera');
+ changes.length=0;canvasListeners.get('pointerdown')();
+ assert.ok(changes.some(([key,value])=>key==='camera'&&value==='free'),'manual map input releases immediately');
+ changes.length=0;listeners.get('movestart')();cleanup();await Promise.resolve();
+ assert.deepEqual(changes,[],'unmounted callbacks cannot mutate state');
+ assert.equal(listeners.size,0);assert.equal(canvasListeners.size,0);
+});
+
+test('selected aircraft has bounded raised geometry while ordinary and 2D symbols remain compact',()=>{
+ const f=fixture();const renderer=attachKansasSky(f.map,()=>{},message=>assert.fail(message));
+ renderer.update([aircraft],[],null);f.draw();
+ const ordinary=f.vertices();assert.equal(ordinary.length,12*6);
+ renderer.update([aircraft],[],aircraft.hex);f.draw();
+ const selected=f.vertices();assert.ok(selected.length>ordinary.length&&selected.length<=60*6);
+ const heights=Array.from(selected).filter((_value,i)=>i%6===2);
+ assert.ok(Math.max(...heights)>aircraft.altGeomFt*.3048,'selected fuselage and tail rise above the reference height');
+ assert.ok(Math.min(...heights)<aircraft.altGeomFt*.3048,'selected fuselage has volume below its reference height');
+ assert.ok(Array.from(selected).every(Number.isFinite));
+ renderer.update([aircraft],[],aircraft.hex,true);f.draw();
+ assert.equal(f.vertices().length,12*6);assert.ok(Array.from(f.vertices()).filter((_v,i)=>i%6===2).every(v=>v===0));
+ renderer.dispose();
 });
