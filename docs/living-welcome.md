@@ -836,9 +836,18 @@ The 2026-11-06 source correction removes the source-strip dependency on Explorer
 startup. Deferring the main map had left the strip empty even though the preview
 had its own control inside the covered stage. Regression checks exercise the
 preview-only strip, unchanged native-node identity, disposal, and independent
-Explorer/fullscreen ownership. Existing browser composition checks still require
-visible, reachable fixture credits in the reserved strip; their exact-head rerun
-is separate evidence from these source checks. No timeout or assertion was relaxed. The existing
+Explorer/fullscreen ownership. The follow-up browser contract checks the native
+preview control in its new strip, including its map identity and removal on
+welcome dismissal. It awaits the owned source update and both fixture links
+before measuring credit geometry. The same empty attributed source is added to
+inline preview styles as well as fetched style documents; original style and
+terrain bindings remain intact, and the main map is not modified by that fixture.
+This corrects the prior assumption that all preview styles came through fetch.
+Credit count (two fixture links), source text, visible geometry, hit testing and
+keyboard access remain required. Explorer scale chrome must be absent or hidden
+before deferred startup, then exist and be visible after dismissal. These are
+updated ownership/readiness expectations; exact-head browser execution is still
+separate evidence. No deadline, skip or count assertion was relaxed. The existing
 `focused-welcome-and-drafts` CI job now also selects all nine `welcome content
 stays composed` viewport cases; the full core matrix remains unchanged.
 

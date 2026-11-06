@@ -226,3 +226,16 @@ device matrix, long-session resource retention and comprehensive visual and
 accessibility acceptance remain unverified. No synthetic benchmark or successful
 publication closes those gates. Source-provider failures and missing coverage
 remain explicit rather than replaced with invented data.
+
+### Independent browser matrix evidence — November 6
+
+Review run 42183198971 reached the final Explorer cases but exhausted the
+existing combined job's 30-minute allocation. The complete
+`tests/explorer-startup.browser.mjs` invocation now runs in its own
+`explorer-browser` job, on the same pinned source, Node and locked dependencies.
+The original HTTP/database/specialist-browser checks remain in
+`verify-core-delivery`. Every Explorer case, assertion and per-test deadline is
+retained; the overall allocation is not increased. Runtime logs and screenshots
+are uploaded independently so an unrelated check cannot hide this matrix's
+evidence. This is CI scheduling, not an application performance improvement or
+a substitute for correcting the documented source and fixture defects.
