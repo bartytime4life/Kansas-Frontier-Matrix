@@ -1087,3 +1087,30 @@ older Directory Rules.pdf was unavailable in this workspace. No responsibility
 root or data lifecycle changes. Rollback is a revert of this correction; no
 stored preferences, database, provider configuration or release policy changes.
 Source review, merge, deployment and public publication remain separate states.
+
+## Map entry preserves a newer keyboard choice — 2026-11-06
+
+Opening a category map queued an unconditional second-frame focus on **Edit
+topics**, separately from welcome dismissal. If a visitor moved to Layers or a
+chart input before that callback ran, it could take focus back. Edit topics
+reopens welcome, so a following Enter could activate a different action than
+the visitor had selected.
+
+Map entry now captures its originating control and shares dismissal's first
+committed frame. It focuses Edit topics only while focus remains at that origin
+or on the document body and welcome has closed. Ordinary dismissal sees that
+destination and preserves it; a newer keyboard choice is preserved by both
+callbacks. No UI layout, browser wait, timeout, skip or assertion is changed.
+
+The actual page callbacks are exercised together in
+`tests/welcome-dismissal.test.mjs`, including direct cards, nested source notes,
+the default destination, newer Layers/chart/help focus, and a focus change
+between queued frames. The new preservation regressions fail against retained
+`f33deb1` source and pass with this correction. This establishes the callback
+ordering defect; fresh exact-source browser acceptance remains separate. The
+first stateless 320-pixel dock test's 30-second timeout in CI run `42187125808`
+has no established cause and is not claimed fixed by this change.
+
+Placement remains within the existing `app/`, `tests/` and `docs/` responsibility
+roots described above. Rollback is a revert; no data, stored preferences,
+provider settings, hosting configuration or publication state changes.

@@ -10949,6 +10949,7 @@ export default function Home() {
   const runWelcomeMaps = (values: readonly TopicId[]) => {
     const topics = normalizeCategoryTopics(values);
     if (!topics.length) return;
+    const focusOrigin = document.activeElement;
     openCategoryMap(topics[0], topics);
     setPrimaryWorkspace("map");
     setLeftOpen(false); setRightOpen(false); setTimelineOpen(false);
@@ -10960,9 +10961,13 @@ export default function Home() {
     setPlaying(false); setTemporalMode("snapshot");
     commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME);
     dismissMapUtilityWithoutFocus();
-    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+    // Share dismissal's first committed frame so its fallback can observe this
+    // destination. A later keyboard choice owns focus, including Layers or a form.
+    window.requestAnimationFrame(() => {
+      if (document.querySelector(".living-welcome")
+        || (document.activeElement !== focusOrigin && document.activeElement !== document.body)) return;
       Array.from(document.querySelectorAll<HTMLButtonElement>(".map-topic-edit, .map-topics-button")).find(button => button.getClientRects().length > 0)?.focus({ preventScroll: true });
-    }));
+    });
   };
   const runWelcomeMap = (topic: TopicId) => runWelcomeMaps([topic]);
   // Opening a tool is navigation, not opening a fresh category setup. Preserve
