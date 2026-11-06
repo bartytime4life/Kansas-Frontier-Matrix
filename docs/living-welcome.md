@@ -32,14 +32,15 @@ map; the owner asked for the map to be seen.
   opened, so every hook stays in the DOM). The stage caption chip keeps the
   map name, key, preview layers and credit and drops the lede the panel
   already carries.
-- **No selection tray on desktop** (2026-11-06; the owner asked for a cleaner
-  screen). The tray that repeated the chosen topics across the bottom renders
-  only outside the atlas layout. On desktop a rail row's ✓ and the focus
-  panel's "✓ In my map" already show what is chosen, and the floating toolbar
-  gains **Open my map** with the count of chosen topics (`.selection-open`,
-  the same hook the browser journeys press). The first chosen topic supplies
-  the view, as the combined-map contract states; phones and tablets keep the
-  tray and its Map style choice.
+- **No selection tray on any layout** (2026-11-06; the owner asked for a
+  cleaner screen, then for the phone tray to go too). The tray that repeated
+  the chosen topics across the bottom is gone. A card's ✓ (and on desktop the
+  focus panel's "✓ In my map") shows what is chosen, and the toolbar gains
+  **Open my map** with the count of chosen topics (`.selection-open`, the same
+  hook the browser journeys press). On phones, where the toolbar has room for
+  one primary, it stands in for Explore freely while topics are ticked. Cards
+  remove topics; the first chosen topic supplies the view, as the combined-map
+  contract states, so the tray's Map style choice is retired with it.
 - **The stage caption** (map name, preview layers and their source clocks)
   shows beside the rail as a chip; the toolbar floats top-right over the map.
 - **"The Kansas record"** reads as a list of story rows at the end of the rail.
