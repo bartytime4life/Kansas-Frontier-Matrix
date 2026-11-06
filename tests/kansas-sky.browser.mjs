@@ -22,7 +22,16 @@ const at = Date.parse('2026-11-03T12:00:00Z');
 const aircraft = {hex:'abc123',callsign:'TEST123',registration:null,type:'C172',category:'A1',lon:-98.35,lat:38.5,onGround:false,altBaroFt:5000,altGeomFt:5200,groundSpeedKt:100,trackDeg:90,verticalRateFpm:200,squawk:null,emergency:null,positionAgeS:0,military:false,rollDeg:null,positionMethod:'adsb_icao'};
 const record = {schemaVersion:1,id:'synthetic-browser',provider:'Synthetic browser fixture',license:'Test fixture only',sourceUrl:'https://example.invalid/synthetic',sourceSha256:'0'.repeat(64),points:[{...aircraft,observedAt:at,providerId:'synthetic'},{...aircraft,lon:-98.3,observedAt:at+30000,providerId:'synthetic'},{...aircraft,lon:-98.2,observedAt:at+120000,providerId:'synthetic',breakBefore:true}]};
 const recordText = JSON.stringify(record);
-const catalog = {schemaVersion:1,flights:[{id:record.id,title:'SYNTHETIC browser flight',start:new Date(at).toISOString(),end:new Date(at+120000).toISOString(),url:'/data/aviation/replays/synthetic-browser.json',sha256:createHash('sha256').update(recordText).digest('hex'),provider:record.provider,license:record.license,sourceUrl:record.sourceUrl}]};
+const catalog = {schemaVersion:1,flights:[{id:record.id,title:'SYNTHETIC browser flight',start:new Date(at).toISOString(),end:new Date(at+120000).toISOString(),url:'/data/aviation/replays/days/2026-11-03/synthetic-browser.json',hex:aircraft.hex,day:'2026-11-03',part:1,partCount:1,pointCount:record.points.length,segmentCount:2,sha256:createHash('sha256').update(recordText).digest('hex'),provider:record.provider,license:record.license,sourceUrl:record.sourceUrl}]};
+// Discovery selects the newest published day. The legacy catalog is deliberately
+// empty so a missing day fetch cannot accidentally satisfy the replay assertion.
+const archiveIndex = {schemaVersion:1,days:[{day:'2026-11-03',coverage:'selected-recordings',aircraftCount:1,pointCount:record.points.length,indexUrl:'/data/aviation/replays/days/2026-11-03/index.json'}]};
+const archiveResponses = new Map([
+  ['/data/aviation/replays/archive-index.json',JSON.stringify(archiveIndex)],
+  ['/data/aviation/replays/index.json',JSON.stringify({schemaVersion:1,flights:[]})],
+  [archiveIndex.days[0].indexUrl,JSON.stringify(catalog)],
+  [catalog.flights[0].url,recordText],
+]);
 // County search preloads independently of aircraft picking. Give it a terminal,
 // valid fixture so recovery retries cannot masquerade as click-triggered reads.
 const counties = {feed:'census-counties',state:'empty',retrievedAt:new Date().toISOString(),upstreamUpdatedAt:null,featureCount:0,data:{type:'FeatureCollection',features:[]},source:'SYNTHETIC BROWSER FIXTURE ONLY',limitation:'Empty test inventory; no evidence admission.',truncated:false};
@@ -80,6 +89,7 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
   const call = (method, params = {}) => b.call(method, params, sessionId);
   const interceptions = createInterceptionErrorTracker();
   let feedFailed=false, countyRequests=0;
+  const archiveRequests=[];
   b.checks.push(() => interceptions.assertHealthy());
   b.listeners.add(message => {
     if (message.sessionId !== sessionId) return;
@@ -99,9 +109,17 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
       }).catch(error=>interceptions.failed(error,{requestNavigation:0,navigation:0,networkId,url:request.url}));return;
     }
     if(feedFailed&&url.pathname==='/api/aviation/traffic'){void call('Fetch.fulfillRequest',{requestId,responseCode:503,body:Buffer.from('{"error":"Synthetic receiver failure"}').toString('base64')}).catch(error=>interceptions.failed(error,{requestNavigation:0,navigation:0,networkId,url:request.url}));return;}
+    const archivePath=url.origin===origin.origin&&url.pathname.startsWith('/data/aviation/replays/');
+    if(archivePath){
+      archiveRequests.push(url.pathname);
+      // Never let an omitted fixture read a real published recording.
+      if(!archiveResponses.has(url.pathname)){
+        interceptions.failed(new Error(`Unprepared synthetic archive request: ${url.pathname}`),{requestNavigation:0,navigation:0,networkId,url:request.url});
+        void call('Fetch.fulfillRequest',{requestId,responseCode:404,body:Buffer.from('{"error":"Unprepared synthetic archive path"}').toString('base64')}).catch(error=>interceptions.failed(error,{requestNavigation:0,navigation:0,networkId,url:request.url}));return;
+      }
+    }
     const synthetic = url.pathname === '/api/aviation/traffic' ? JSON.stringify({retrievedAt:new Date().toISOString(),evidenceRole:'EXTERNAL_CONTEXT_ONLY',provider:{id:'adsb-lol',title:'Synthetic test receiver',homepage:'https://example.invalid/',terms:'Test only'},records:[{...aircraft,observedAt:new Date().toISOString()}],dropped:0,limitation:'Synthetic fixture'})
-      : url.pathname === '/data/aviation/replays/index.json' ? JSON.stringify(catalog)
-      : url.pathname === '/data/aviation/replays/synthetic-browser.json' ? recordText
+      : archivePath ? archiveResponses.get(url.pathname)
       : url.pathname === '/api/live-context' && url.searchParams.get('feed') === 'census-counties' ? JSON.stringify(counties) : null;
     const operation = synthetic !== null ? call('Fetch.fulfillRequest', {requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(synthetic).toString('base64')}) : url.origin !== origin.origin
       ? (/\/styles\/|\/style\.json$/.test(url.pathname)
@@ -165,7 +183,7 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
   })()`);
   await call('Page.navigate', { url: new URL('?l=&ctx=', origin).href });
   await wait(`history.state?.kfmExplorerView && document.querySelector('.map-chrome-dock')`, 'hydration');
-  return { call, evaluate, wait, key, rect, activate, visibleFocus, failFeed:()=>{feedFailed=true;}, countyRequestCount:()=>countyRequests };
+  return { call, evaluate, wait, key, rect, activate, visibleFocus, failFeed:()=>{feedFailed=true;}, countyRequestCount:()=>countyRequests, archiveRequests:()=>[...archiveRequests] };
 }
 
 
@@ -210,9 +228,13 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
   assert.match(await p.evaluate(`document.querySelector('.kansas-sky').textContent`),/Pressure altitude[\s\S]*Geometric · WGS84/);
   assert.match(await p.evaluate(`document.querySelector('.kansas-sky').textContent`),/Reported rollUnavailable/);
   await p.evaluate(`document.querySelector('.kansas-sky-modes button:nth-child(3)').click()`);
-  await p.wait(`document.querySelector('[aria-label="Recorded flight"] option[value="synthetic-browser"]')`,'catalog');
+  await p.wait(`document.querySelector('[aria-label="Archive day"]').value==='2026-11-03' && document.querySelector('[aria-label="Recorded flight"] option[value="synthetic-browser"]')`,'discovered daily catalog');
+  assert.ok(p.archiveRequests().includes('/data/aviation/replays/archive-index.json'),'daily archive discovery was requested');
+  assert.ok(p.archiveRequests().includes(archiveIndex.days[0].indexUrl),'the selected daily catalog was requested');
   await p.evaluate(`(() => {const e=document.querySelector('[aria-label="Recorded flight"]');e.value='synthetic-browser';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
   await p.wait(`document.querySelector('.kansas-sky h5')?.textContent.includes('TEST123') && document.querySelector('[aria-label="Flight timeline"]').min===''+${at}`,'digest-verified replay');
+  assert.ok(p.archiveRequests().includes(catalog.flights[0].url),'the catalog-declared daily flight file was requested');
+  assert.match(await p.evaluate(`document.querySelector('.kansas-sky-history').textContent`),/File integrity: SHA-256 verified/);
   assert.equal(await p.evaluate(`document.querySelector('.kansas-sky-badge').textContent`),'REPLAY');
   assert.match(await p.evaluate(`document.querySelector('.kansas-sky-context').textContent`),/not a reconstruction/);
   if(layout.motion!=='reduce'){

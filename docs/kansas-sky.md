@@ -298,6 +298,22 @@ responsibility boundaries. Revert the correction to restore its preceding
 renderer and acceptance behavior; no data or storage operation is required.
 Exact-head results and known limits belong to the delivery record.
 
+### Daily catalog and compact selection acceptance — 2026-11-06
+
+The first journey CI run retained two distinct failures. Desktop replay reached
+the real dated catalog because its synthetic fixture intercepted only the older
+root catalog. The fixture now owns archive discovery, an empty legacy fallback,
+the selected day catalog and its declared recording; unexpected archive paths
+fail explicitly. Request and digest assertions prove the complete chain, including
+rejection of altered bytes. This does not alter production data or loaders.
+
+On the compact layer panel, newly added flight controls pushed the selected
+identity heading below the visible area. The existing heading now sits directly
+after the aircraft selector. All controls and the original simultaneous selector
+and heading visibility assertion remain. These causes are distinct from style
+readiness and the original intermittent layer disappearance. The failed CI run,
+source regression and final exact-head acceptance must all remain retained.
+
 Review exact-head CI and its screenshots before merging. A merge, Preview
 deployment, public publication and governed data activation are separate actions.
 Publication remains on hold. Rollback targets the relevant source commit;

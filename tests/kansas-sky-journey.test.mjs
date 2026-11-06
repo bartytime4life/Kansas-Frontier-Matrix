@@ -5,7 +5,7 @@ import ts from 'typescript';
 import {createRequire} from 'node:module';
 import {createElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
-import {webcrypto} from 'node:crypto';
+import {webcrypto,createHash} from 'node:crypto';
 const compile=source=>ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const sky=await import(`data:text/javascript;base64,${Buffer.from(compile(await readFile('app/kansas-sky.ts','utf8'))).toString('base64')}`);
 const epoch=Date.parse('2026-11-03T12:00:00Z');
@@ -81,6 +81,17 @@ test('archive day discovery permits only exact local published catalog paths and
   assert.throws(()=>parsers.archiveDays({schemaVersion:1,days:[{...day,coverage:'complete-live-collection'}]}),/invalid/);
 });
 
+
+// The browser acceptance fixture must cover the archive discovery chain that the
+// production control actually follows, not silently fall through to public files.
+const browserSource=await readFile('tests/kansas-sky.browser.mjs','utf8');
+const browserAst=ts.createSourceFile('browser.mjs',browserSource,ts.ScriptTarget.ES2022,true,ts.ScriptKind.JS);
+function browserArchiveFixture(){
+  const names=new Set(['at','aircraft','record','recordText','catalog','archiveIndex','archiveResponses']),declarations=[];
+  for(const statement of browserAst.statements)if(ts.isVariableStatement(statement))for(const declaration of statement.declarationList.declarations)if(names.has(declaration.name.getText(browserAst)))declarations.push(`const ${declaration.getText(browserAst)};`);
+  return new Function('createHash',declarations.join('\n')+'\nreturn {responses:typeof archiveResponses==="undefined"?new Map():archiveResponses,record};')(createHash);
+}
+
 const partEntry=(part,extra={})=>({...entry,id:`2026-11-03-a00001-p000${part}`,day:'2026-11-03',part,partCount:3,start:new Date(epoch+(part-1)*60000).toISOString(),end:new Date(epoch+(part-1)*60000+20000).toISOString(),url:`/data/aviation/replays/days/2026-11-03/2026-11-03-a00001-p000${part}.json`,...extra});
 test('multipart catalogs require an unambiguous aircraft, UTC day, part number and declared count',()=>{
   const parts=[partEntry(1),partEntry(2),partEntry(3)];
@@ -116,6 +127,23 @@ async function verifiedPart(part){
   const bytes=new TextEncoder().encode(JSON.stringify(file)),sha256=Buffer.from(await webcrypto.subtle.digest('SHA-256',bytes)).toString('hex');
   return {entry:{...record,sha256},bytes};
 }
+test('browser archive fixture follows discovered day, verifies exact bytes and refuses an altered digest',async()=>{
+  const fixture=browserArchiveFixture(),discovery=fixture.responses.get('/data/aviation/replays/archive-index.json');
+  assert.ok(discovery,'browser fixture must intercept the daily discovery index');
+  const days=parsers.archiveDays(JSON.parse(discovery));assert.equal(days.length,1);assert.equal(days[0].coverage,'selected-recordings');
+  const dayCatalog=fixture.responses.get(days[0].indexUrl);assert.ok(dayCatalog,'discovered day catalog must not fall through to real files');
+  const flights=parsers.catalog(JSON.parse(dayCatalog));assert.equal(flights.length,1);
+  const flight=flights[0],text=fixture.responses.get(flight.url);assert.ok(text,'digest-verified record must use the declared daily path');
+  assert.ok(flight.url.startsWith(`/data/aviation/replays/days/${days[0].day}/`));
+  const bytes=new TextEncoder().encode(text);assert.equal(createHash('sha256').update(bytes).digest('hex'),flight.sha256);
+  assert.equal(parsers.archive(JSON.parse(text),flight).get(flight.hex).length,days[0].pointCount);
+  assert.deepEqual(parsers.catalog(JSON.parse(fixture.responses.get('/data/aviation/replays/index.json'))),[],'an empty legacy catalog prevents an accidental root-catalog pass');
+  const h=loaderHarness(flights),loading=h.load(flight.id);assert.equal(h.pending[0].url,flight.url);h.pending[0].resolve(bytes);await loading;
+  assert.equal(h.calls.findLast(c=>c.name==='setArchiveState').value,'ready');
+  const corrupt=loaderHarness(flights),rejected=corrupt.load(flight.id);corrupt.pending[0].resolve(new TextEncoder().encode(text+' '));await rejected;
+  assert.equal(corrupt.calls.findLast(c=>c.name==='setArchiveState').value,'error');assert.match(corrupt.calls.findLast(c=>c.name==='setError').value,/digest/);
+});
+
 test('part loading verifies one bounded file, replaces instead of joins tracks, and stays paused',async()=>{
   const first=await verifiedPart(1),next=await verifiedPart(2),h=loaderHarness([first.entry,next.entry]);
   const loading=h.load(next.entry.id,true);assert.equal(h.pending.length,1);assert.equal(h.pending[0].url,next.entry.url);assert.equal(h.pending[0].max,4*1024*1024);
