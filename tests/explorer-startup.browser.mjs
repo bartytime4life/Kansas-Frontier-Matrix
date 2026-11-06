@@ -2111,8 +2111,10 @@ for (const [width,height] of [[1280,800],[390,844]]) {
     const b=await browser(t),p=await pageSession(b,width,height);
     await p.open('/?motion=off');await readyWelcome(p);
     await p.evaluate(`document.querySelector('.topic-government').focus()`);await p.key('Enter','Enter',13);
-    await p.wait(`!document.querySelector('.living-welcome') && document.activeElement?.matches('.map-topic-edit')`,'category map and committed focus handoff ready');
-    await p.evaluate(`document.querySelector('.map-topic-bar>button:last-child').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`!document.querySelector('.living-welcome') && document.activeElement?.matches('.map-topic-edit, .map-topics-button')`,'category map and committed focus handoff ready');
+    const layersTrigger=width<600?'.map-mobile-actions > button:first-child':'.map-topic-bar>button:last-child';
+    await revealControl(p,layersTrigger);
+    await p.evaluate(`document.querySelector(${JSON.stringify(layersTrigger)}).focus()`);await p.key('Enter','Enter',13);
     await p.wait(`document.querySelector('.layer-panel')?.getAttribute('aria-hidden')==='false'`,'Layers opened');
     await p.evaluate(`document.querySelector('.layer-source-switch>button:last-child').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`new URLSearchParams(history.state?.kfmExplorerView).get('layers')==='sources'`,'status destination committed');
