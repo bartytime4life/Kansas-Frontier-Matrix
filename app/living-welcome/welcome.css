@@ -997,7 +997,8 @@
 /* The record: one search box in the hero, two rows at the end of the rail, and what each topic holds. */
 .living-welcome[data-layout=atlas] .welcome-record-search{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;margin:12px 0 2px;pointer-events:auto}
 /* In the narrow rail the words get the first row to themselves; scope and Search share the second. */
-.living-welcome[data-layout=atlas] .welcome-record-search label{display:block;min-width:0;grid-column:1 / -1}
+.living-welcome[data-layout=atlas] .welcome-record-search label{display:block;min-width:0}
+.living-welcome[data-layout=atlas] .welcome-record-search label:first-child{grid-column:1 / -1}
 .living-welcome[data-layout=atlas] .welcome-record-search :is(input,select){width:100%;min-height:44px;padding:8px 11px;border:1px solid #6d8794;border-radius:8px;color:#e9f2f6;background:#0b2d3de8;font:inherit;font-size:13px}
 .living-welcome[data-layout=atlas] .welcome-record-search select{width:100%;max-width:none;color:#dfe9ee;font-size:12px}
 .living-welcome[data-layout=atlas] .welcome-record-search .welcome-primary{min-height:44px;padding:8px 14px;background:#e6c77a;border:1px solid #e6c77a;color:#10232d;border-radius:8px;font-size:13px;font-weight:650}
