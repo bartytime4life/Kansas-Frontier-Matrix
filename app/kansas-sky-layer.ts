@@ -33,7 +33,7 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
   let gl: WebGL2RenderingContext | null = null, buffer: WebGLBuffer | null = null, active = true, dirty = true;
   let planes: readonly Aircraft[] = [], trails: readonly SkyTrail[] = [], selected: string | null = null;
   let planeVertices = 0, trailVertices = 0, flat = false;
-  const data = new Float32Array((LIMIT * 12 + TRAIL_VERTICES) * 6);
+  const data = new Float32Array((LIMIT * 12 + 48 + TRAIL_VERTICES) * 6);
   const bundles = new Map<string, Bundle>();
   const failed = new Set<string>();
   let hits: { hex: string; x: number; y: number }[] = [];
@@ -70,14 +70,27 @@ export function attachKansasSky(map: MapLibreMap, select: (hex: string) => void,
     for (const a of planes.slice(0, LIMIT)) {
       const [x,y] = xy(a.lon,a.lat), unit = 1 / (40075016.686 * Math.cos(a.lat * RAD));
       const heading = (a.trackDeg ?? 0) * RAD, bank = (flat?0:a.rollDeg ?? 0) * RAD, c = color(a,a.hex===selected);
-      // Four simple triangles: fuselage, wings and tail, visibly schematic.
-      const outline=a.trackDeg===null
+      // The selected aircraft is a larger faceted symbol; it is not a scale model.
+      // Other aircraft retain the small, bounded four-triangle silhouette.
+      const detailed=a.hex===selected&&a.trackDeg!==null&&!flat;
+      const symbolSize=size*(detailed?6:1);
+      const outline:readonly (readonly number[])[]=a.trackDeg===null
         ? [[0,0],[0,.6],[.6,0],[0,0],[.6,0],[0,-.6],[0,0],[0,-.6],[-.6,0],[0,0],[-.6,0],[0,.6]]
-        : [[0,1],[.13,-.8],[-.13,-.8],[-.9,-.1],[0,.25],[.9,-.1],[-.45,-.75],[0,-.5],[.45,-.75],[0,1],[.13,-.8],[-.13,-.8]];
-      for (const [east,north] of outline) {
-        const e=east*size*Math.cos(bank), n=north*size;
+        : detailed ? [
+          [0,1,0,1.1],[.11,-.7,0,.75],[0,-.6,.13,1.1],
+          [0,1,0,1.1],[0,-.6,.13,1.1],[-.11,-.7,0,.9],
+          [0,1,0,.65],[0,-.7,-.1,.5],[.11,-.7,0,.75],
+          [0,1,0,.65],[-.11,-.7,0,.9],[0,-.7,-.1,.5],
+          [-1,-.22,0,.75],[-.1,.28,.02,1],[0,-.35,.04,1.1],
+          [0,-.35,.04,1.1],[.1,.28,.02,1],[1,-.22,0,.7],
+          [-.46,-.82,0,.75],[0,-.54,.04,1.1],[.46,-.82,0,.85],
+          [0,-.92,0,.7],[0,-.48,.04,1],[0,-.77,.38,1.2],
+        ] : [[0,1],[.13,-.8],[-.13,-.8],[-.9,-.1],[0,.25],[.9,-.1],[-.45,-.75],[0,-.5],[.45,-.75],[0,1],[.13,-.8],[-.13,-.8]];
+      for (const [east,north,up=0,shade=1] of outline) {
+        const e=(east*Math.cos(bank)+up*Math.sin(bank))*symbolSize,n=north*symbolSize;
         // readsb positive roll is right-wing down; local east is the aircraft's right side.
-        put(x+(e*Math.cos(heading)+n*Math.sin(heading))*unit,y+(e*Math.sin(heading)-n*Math.cos(heading))*unit,markerAltitude(a)+bankHeightOffset(east*size,flat?0:a.rollDeg),c);
+        const z=markerAltitude(a)+bankHeightOffset(east*symbolSize,flat?0:a.rollDeg)+up*symbolSize*Math.cos(bank);
+        put(x+(e*Math.cos(heading)+n*Math.sin(heading))*unit,y+(e*Math.sin(heading)-n*Math.cos(heading))*unit,z,c.map(value=>Math.min(1,value*shade)));
       }
     }
     planeVertices=count;

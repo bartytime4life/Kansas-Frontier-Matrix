@@ -90,6 +90,31 @@ fields are retained when present, not carried forward as new measurements.
 `tests/fixtures/kansas-sky/` contains original member bytes solely for offline
 byte-for-byte reproduction. It is not an application endpoint.
 
+## View aircraft in the existing map — 2026-11-05
+
+Choose an observed aircraft or a dated recorded flight, then **View aircraft in
+3D**. The map frames that aircraft at the same approximate display height used
+by the renderer. A larger faceted aircraft symbol makes heading and reported
+roll visible; it is deliberately enlarged, not a real-size or aircraft-specific
+model. Other aircraft and the 2D chart keep their compact symbols.
+
+The map overlay keeps Play/Pause, Orbit/Follow, and the recorded-flight timeline
+available with Layers closed. Source-backed times, missing observations and the
+REPLAY label remain visible. Playback uses the existing chosen speed; the overlay
+does not start playback automatically. A panel resize does not release the
+camera. Manual map input or another camera navigation does; disabling the layer,
+hiding the tab or unmounting also releases its elevation/ground-clamping settings.
+Reduced motion permits a static framed view and explicit playback, without
+Follow or Orbit. No new source, collector, service or application is introduced.
+
+Tests exercise the camera's altitude target, camera ownership/release, panel
+resize versus navigation, and bounded selected-symbol geometry. Baseline failure
+and candidate success establish these specific changes, not a root cause for
+all historical layer-disappearance reports. Real map browser inspection remains
+separate from synthetic and source-level tests; neither establishes production
+reliability or physical-device performance. The new view changes presentation
+only and keeps the existing replay validation, provenance and error reporting.
+
 ## Ownership, validation and rollout
 
 Existing application `app/`, offline tooling `scripts/`, bounded public artifacts
