@@ -20,6 +20,7 @@ const moduleUrl = async (file) => {
 
 const saved = await import(await moduleUrl("app/saved-workspaces.ts"));
 const embedded = await import(await moduleUrl("app/embed-runtime.ts"));
+const layerHistory = await import(await moduleUrl("app/explorer-layer-history.ts"));
 const perf = await import(await moduleUrl("app/map-performance.ts"));
 const registry = await import(await moduleUrl("app/site-registry.ts"));
 
@@ -89,6 +90,21 @@ test("embedded panels do not rewrite host-controlled history and history failure
   assert.equal(embedded.replaceExplorerHistory("/?t=2026", false, history), true);
   assert.equal(writes, 1);
   assert.equal(embedded.replaceExplorerHistory("/?t=2026", false, { replaceState: () => { throw new Error("denied"); } }), false);
+});
+
+test("sharing a view retains router state and the native entry's navigation ownership", () => {
+  const original = { router: 'retained', kfmExplorerEntry: 'government-entry', kfmExplorerView: 'topics=government', kfmExplorerWelcome: false };
+  const calls = [];
+  const history = { state: original, replaceState(state, title, path) { this.state = state; calls.push({ state, title, path }); } };
+  assert.equal(embedded.replaceExplorerHistory('/?topics=government', false, history), true);
+  assert.deepEqual(history.state, original, 'sharing cannot remove the identity required by later passive saves and map navigation');
+  assert.deepEqual(calls, [{ state: original, title: '', path: '/?topics=government' }]);
+  assert.equal(layerHistory.saveExplorerHistoryView(new URLSearchParams('topics=government&z=8'), history, false, { expectedEntry: original.kfmExplorerEntry }), true);
+  history.pushState = function(state) { this.state = state; calls.push({ pushed: state }); };
+  assert.equal(layerHistory.saveExplorerHistoryView(new URLSearchParams('topics=water'), history, false, { navigation: true, welcome: false, expectedEntry: original.kfmExplorerEntry }), true);
+  assert.equal(calls.length, 3, 'the shared entry still accepts a passive update and a new navigation step');
+  assert.notEqual(layerHistory.explorerHistoryEntryKey(history.state), original.kfmExplorerEntry);
+  assert.equal(history.state.router, 'retained');
 });
 
 test("automatic embedded rendering uses the smallest bounded GPU budget", () => {
