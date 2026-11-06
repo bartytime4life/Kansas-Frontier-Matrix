@@ -324,6 +324,26 @@ used in these new diagnostics. They do not match the original public build
 8.8-second readiness / 3.75-second long task. No direct speedup against those
 figures is claimed; their stalls remain open for matched public/hardware tracing.
 
+#### Read-only public observation
+
+A later anonymous, fresh-profile Chrome/SwiftShader observation used the real
+public site and provider requests without network fixtures or altered responses.
+The build still reported `f84c1d5`. Six-second observation windows covered cold
+welcome, opening the Weather preview, dismissal, and warm navigation. One
+full-sized MapLibre canvas remained at each sampled stage, alongside the two
+small overlays; the shipped deferred startup correction is observable. Public
+map/source requests returned tiles and JSON, while the governed general and
+weather layer endpoints returned 503 on both navigations. These availability
+failures remain separate from the graphics diagnosis.
+
+The dismissal sample captured an 89 ms synchronous `getShaderParameter` call;
+its stack again passes through custom-layer `onAdd`. The largest recorded long
+task in this bounded public pass was 221 ms. This did not reproduce the original
+one-second stalls, and does not prove their disappearance: revision, browser,
+graphics backend, cache, observation windows and interaction sequence differ.
+Opening an already-selected Weather preview is also not a new weather-style
+activation. No production setting, data or deployment was changed.
+
 #### Matched observations (not a speedup claim)
 
 Same Chrome, host, viewport, CPU/network settings, diagnostic code and input
@@ -352,6 +372,15 @@ timed out at the existing 60-second wait for curtain recompilation after context
 restoration; the narrow paths completed. Those partial desktop samples are
 included through the already-observed flat-map stage, and no missing desktop
 warm measurements are invented. This is not a general recovery-fix claim.
+A later clean, committed-head rerun also timed out on desktop curtain
+recompilation after context restoration (the narrow path passed). Twelve
+subsequent desktop diagnostic invocations passed without an application change.
+That intermittent failure is **unresolved**; neither repeated passes nor the
+lazy-compilation correction proves recovery reliable. The browser regression
+continues to fail on that condition and now retains pitch, projection, custom
+layers, WebGL calls, map errors and context-loss state on failure. It does not
+retry, suppress the error, remove the assertion or extend the deadline.
+
 Earlier probe-development failures (a hidden Preview control, serialization of a
 Map return value, targeting a hidden native control instead of the visible zoom
 button, and an overly exact baseline shader-count expectation) were

@@ -2036,7 +2036,8 @@ for (const [width,height] of [[1440,960],[390,844]]) {
       await pause(150);
       await p.evaluate('window.__renderRecovery.restoreContext()');
       await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&e.styles>${styles}&&!e.map.getCanvas().getContext('webgl2').isContextLost())`,'context restores the map style');
-      await p.wait(`window.__kfmRenderDiagnostics.calls.filter(c=>c.owner==='curtain'&&c.name==='linkProgram').length>=2`,'restored visible curtain compiles again');
+      try { await p.wait(`window.__kfmRenderDiagnostics.calls.filter(c=>c.owner==='curtain'&&c.name==='linkProgram').length>=2`,'restored visible curtain compiles again'); }
+      catch(error){try{result.recoveryFailure=await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics,m=d.maps.find(e=>e.kind==='explorer').map;return {pitch:m.getPitch(),projection:m.getProjection(),layers:m.getStyle()?.layers?.filter(l=>l.type==='custom')??[],calls:d.calls,errors:d.errors,contextLost:m.getCanvas().getContext('webgl2').isContextLost()};})()`);}catch(captureError){result.recoveryFailure={captureError:String(captureError)};}throw error;}
       result.stages.push(await snapshot('restored-map'));
       const {profile}=await p.call('Profiler.stop');
       const nodes=new Map(profile.nodes.map(node=>[node.id,node.callFrame])),cpu=new Map();
