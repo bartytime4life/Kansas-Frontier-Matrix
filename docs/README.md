@@ -86,6 +86,7 @@ from proposed analytical capabilities.
 | Work on the preserved Sites mirror | [Site setup](../apps/site/README.md) | [Repository installation](installation.md) |
 | Understand AI and the second PC | [Current provider and placement boundaries](runbooks/godaddy-node-hosting.md#ai-and-second-pc-boundaries) | [Private capture and SQL](runbooks/godaddy-hosted-capture.md) |
 | Review aviation work | [FAA intake and remaining holds](runbooks/aviation-intake-20261021.md) | [Public-app implementation snapshot](runbooks/godaddy-node-hosting.md#implementation-snapshot-2026-10-21) |
+| Review photos and PDFs | [Local Intake Studio](runbooks/local-intake-studio.md) | [Governed capture handoff](runbooks/local-pc-data-store.md#add-downloaded-maps-pictures-and-documents) |
 | Manage local data | [Local-PC store](runbooks/local-pc-data-store.md) | [Bounded acquisition](runbooks/free-data-acquisition.md) |
 | Understand map capabilities | [Feature matrix](encyclopedia/chapters/09-master-feature-matrix.md) | [Explorer source guide](../apps/site/source/README.md) |
 | Propose a new source or idea | [Intake triage](intake/triage-rules.md) | [Promotion criteria](intake/promotion-criteria.md) |

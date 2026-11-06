@@ -34,3 +34,11 @@ Tests do not prove
 network acquisition, source admission, map rendering integration or native
 Windows ACL/crash behavior. The operator tools use the Python standard library;
 these tests additionally use the repository's declared test dependencies.
+
+## Photo/PDF studio regressions
+
+`test_intake_studio.py` uses synthetic extraction for portable core checks. Set
+`KFM_INTAKE_NATIVE_TESTS=1` with the Linux sandbox, Pillow, Poppler and private OCR
+runtime installed to exercise actual extraction. See the [studio runbook](../../docs/runbooks/local-intake-studio.md#validation-and-rollback).
+Skipped native cases are not successful OCR evidence; camera and public-site
+acceptance remain separate.

@@ -184,6 +184,12 @@ nonzero exit means the operation failed; inspect its JSON reason before retrying
 
 ## Add downloaded maps, pictures, and documents
 
+For a guided photo/PDF preview and OCR review before capture, use the
+[Local Intake Studio](local-intake-studio.md). Its held exports preserve originals
+and review history; they are not capture manifests or admitted sources. Continue
+with the explicit manifest workflow below after reviewing provenance and rights.
+
+
 Download only files you are entitled to possess using the provider's reviewed
 download method, or copy your existing Drive/archive downloads to a private
 directory such as `$HOME/Downloads/KFM`. The importer never signs in to a service,
