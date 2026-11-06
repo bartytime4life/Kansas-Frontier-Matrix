@@ -18,13 +18,21 @@ export const explorerHistoryParams = (search: string, state: unknown): URLSearch
   return new URLSearchParams(typeof saved === "string" && saved.length <= 12000 ? saved : search);
 };
 
-/** Retain this tab's context without changing its URL or the embedded host's history. */
-export const saveExplorerHistoryView = (params: URLSearchParams, history: Pick<History, "state" | "replaceState">, embedded = isEmbeddedSiteRuntime()): boolean => {
+export const explorerHistoryWelcome = (state: unknown): boolean | null =>
+  state && typeof state === "object" && "kfmExplorerWelcome" in state && typeof state.kfmExplorerWelcome === "boolean"
+    ? state.kfmExplorerWelcome : null;
+
+/** Deliberate navigation adds a step; camera changes update that step. Never alter the embedded host. */
+export const saveExplorerHistoryView = (params: URLSearchParams, history: Pick<History, "state" | "replaceState"> & Partial<Pick<History, "pushState">>, embedded = isEmbeddedSiteRuntime(), options: { navigation?: boolean; welcome?: boolean } = {}): boolean => {
   if (embedded) return false;
   try {
     const saved = params.toString();
     if (saved.length > 12000) return false;
-    history.replaceState({ ...history.state, kfmExplorerView: saved }, "");
+    const previous = history.state;
+    const next = { ...previous, kfmExplorerView: saved, ...(options.welcome === undefined ? {} : { kfmExplorerWelcome: options.welcome }) };
+    const changed = previous?.kfmExplorerView !== saved || (options.welcome !== undefined && previous?.kfmExplorerWelcome !== options.welcome);
+    if (options.navigation && typeof previous?.kfmExplorerView === "string" && changed && history.pushState) history.pushState(next, "");
+    else history.replaceState(next, "");
     return true;
   } catch { return false; }
 };

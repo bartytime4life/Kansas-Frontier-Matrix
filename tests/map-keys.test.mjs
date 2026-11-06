@@ -170,3 +170,20 @@ test('historical keys contain only checked constituencies, including a dashed st
  assert.deepEqual(result[1].items.map(i=>i.label),['District 1','District 2','District 3','Statewide at-large']);
  assert.equal(result[1].items.at(-1).shape,'line');assert.equal(result[1].items.at(-1).dashed,true);
 });
+
+
+test('the map key is discoverable before instrument controls and absent when no keys are shown', async () => {
+ const h = await componentHarness('app/category-map-dock.tsx', {});
+ const base = {look:maps.CATEGORY_MAPS.agriculture,mode:'2d',depth:1,azimuth:315,sun:null,sunAvailable:false,terrainAvailable:true,
+  onMode(){},onDepth(){},onAzimuth(){},onRealSun(){},onSunTime(){},sunPlaying:false,motionAllowed:true,onSunPlay(){},onReset(){},onLayers(){},onClose(){},
+  crops:{on:true,year:2024,years:[2024],reading:'USDA CDL 2024',swatch:null},onCrops(){}};
+ const tree = h.render(h.exports.CategoryMapDock, {...base, keys:[{id:'usda-cdl',title:'USDA Cropland Data Layer 2024',items:[{label:'Corn',color:'#ffd300',shape:'area'}],note:'Selected year'}]});
+ const disclosure = findNode(tree, n => n.type === 'details' && n.props.className === 'category-map-dock-map-key');
+ assert.ok(disclosure, 'a named native keyboard disclosure exposes the key');
+ assert.match(JSON.stringify(disclosure), /Map key/);
+ assert.match(JSON.stringify(disclosure), /Corn/);
+ const destinations = []; findNode(tree, n => { if(n === disclosure || n.props?.['data-category-tool'] === 'crops') destinations.push(n); return false; });
+ assert.equal(destinations[0], disclosure, 'the key precedes long farming controls');
+ assert.equal(findNode(h.render(h.exports.CategoryMapDock, {...base,keys:[]}), n => n.props?.className === 'category-map-dock-map-key'), undefined);
+ h.dispose();
+});

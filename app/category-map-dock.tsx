@@ -434,6 +434,22 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       <div><strong>{look.name}{currentMapOnly ? " tools" : ""}</strong><small>{mode === "terrain" ? "3D terrain" : mode === "globe" ? "Globe" : "2D map"} · display context</small></div>
       <button type="button" className="category-map-dock-close" aria-label={`Hide ${look.name} controls`} onClick={onClose}>×</button>
     </header>
+    {keys && keys.length > 0 && <details className="category-map-dock-map-key">
+      <summary>Map key <span>Colors &amp; symbols</span></summary>
+      <div>
+      {keys.map(key => <section className="category-map-dock-legend category-map-dock-key" key={key.id} aria-label={`Key: ${key.title}`}>
+      <strong>{key.title}</strong>
+      {key.ramp && <div className="category-map-dock-key-ramp">
+        <span className="category-map-dock-key-ramp-bar" aria-hidden="true" style={{ background: key.ramp.css }} />
+        <span className="category-map-dock-key-ramp-ticks">{key.ramp.ticks.map(tick => <span key={tick.label} style={{ left: `${tick.at}%` }}>{tick.label}</span>)}</span>
+      </div>}
+      {key.items.length > 0 && <ul>{key.items.map(item => <li key={item.label}><span className={`category-map-dock-key-${item.shape}`} aria-hidden="true"
+        data-dashed={item.dashed ? "true" : undefined}
+        style={{ "--key": item.color, ...(item.size ? { "--size": `${item.size}px` } : {}), ...(item.stroke ? { "--stroke": item.stroke } : {}) } as CSSProperties} /><span>{item.label}</span></li>)}</ul>}
+      <small>{key.note}</small>
+    </section>)}
+      </div>
+    </details>}
     {look.topic === "government" && civic && <section className="category-map-dock-layer-set" aria-label="Kansas congressional districts">
       <strong>U.S. House · {civic.congress ? `Congress ${civic.congress}` : "history"}</strong>
       <small>{civic.day ? `${civic.day} · congressional term, not election date` : "Choose a Congress or a supported calendar date"}</small>
@@ -966,17 +982,6 @@ export function CategoryMapDock({ onReviewedDate, civic, onCivicPick, onCivicCon
       title="Draw a line across the relief, then preview its elevation profile without the 3D exaggeration">Draw a cross-section</button>}
     {look.tools?.includes("underground") && onUnderground && <button type="button" data-category-tool="underground" className="category-map-dock-tool" onClick={onUnderground}
       title="Open recorded well logs, cores and aquifer sections beneath the map, on the 2D map">Explore underground</button>}
-    {keys?.map(key => <section className="category-map-dock-legend category-map-dock-key" key={key.id} aria-label={`Key: ${key.title}`}>
-      <strong>{key.title}</strong>
-      {key.ramp && <div className="category-map-dock-key-ramp">
-        <span className="category-map-dock-key-ramp-bar" aria-hidden="true" style={{ background: key.ramp.css }} />
-        <span className="category-map-dock-key-ramp-ticks">{key.ramp.ticks.map(tick => <span key={tick.label} style={{ left: `${tick.at}%` }}>{tick.label}</span>)}</span>
-      </div>}
-      {key.items.length > 0 && <ul>{key.items.map(item => <li key={item.label}><span className={`category-map-dock-key-${item.shape}`} aria-hidden="true"
-        data-dashed={item.dashed ? "true" : undefined}
-        style={{ "--key": item.color, ...(item.size ? { "--size": `${item.size}px` } : {}), ...(item.stroke ? { "--stroke": item.stroke } : {}) } as CSSProperties} /><span>{item.label}</span></li>)}</ul>}
-      <small>{key.note}</small>
-    </section>)}
     <p className="category-map-dock-lede">{currentMapOnly ? "These controls work on your current map. Open the category’s default view only if you want to replace its map setup." : look.lede}</p>
     <div className="category-map-dock-actions">
       <button type="button" onClick={onReset}>{currentMapOnly ? "Open default view" : "Reset view"}</button>

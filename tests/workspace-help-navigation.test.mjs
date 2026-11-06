@@ -14,7 +14,7 @@ function visit(node){
   ts.forEachChild(node,visit);
 }
 visit(ast);
-function evaluate(code,scope){const js=ts.transpileModule(`return ${code};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;return new Function(...Object.keys(scope),js)(...Object.values(scope));}
+function evaluate(code,scope){scope={markExplorerNavigation(){},...scope};const js=ts.transpileModule(`return ${code};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;return new Function(...Object.keys(scope),js)(...Object.values(scope));}
 test('Skip to map dismisses welcome before focusing the uncovered map without changing saved preferences',()=>{
   const state={workspace:'map',guide:true,sources:true},timers=[],focused=[];
   evaluate(callbacks.get('returnToPrimaryMap'),{

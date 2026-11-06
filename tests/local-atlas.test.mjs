@@ -84,6 +84,9 @@ test('legacy local Atlas bookmarks reveal hosted source status without opening a
   ts.forEachChild(node,visit);
  }
  visit(ast);assert.ok(reveal);
+ const statusStart=page.indexOf('      setSourceStatusOpen(restoredSourceStatus);',page.indexOf('  const restoreExplorerFromUrl'));
+ assert.ok(statusStart>0,'execute the complete status-state assignment');
+ reveal=page.slice(statusStart,page.indexOf('      const nextMapUtilityView:',statusStart));
  const code=['restoredMapUtilityView','restoredSourceStatus','nextMapUtilityView','restoredMapUtilityOpen']
   .map(name=>{assert.ok(declarations.has(name));return `const ${name} = ${declarations.get(name)};`;}).join('\n');
  const javascript=ts.transpileModule(`${code}\n${reveal}\nreturn {view:nextMapUtilityView,open:restoredMapUtilityOpen};`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
@@ -91,7 +94,7 @@ test('legacy local Atlas bookmarks reveal hosted source status without opening a
   const params=new URLSearchParams(query+'&ctx=census-counties&time=1909'),original=params.toString(),actions=[];
   const result=new Function('params','nextTemporalMode','setLeftPanelMode','setLeftOpen','setSourceStatusOpen',javascript)(params,mode,
    value=>actions.push(['mode',value]),value=>actions.push(['left',value]),value=>actions.push(['sources',value]));
-  assert.deepEqual(actions,[['mode','layers'],['left',true],['sources',true]]);
+  assert.deepEqual(actions,[['sources',true],['left',true],['mode','layers']]);
   assert.equal(result.open,false);assert.notEqual(result.view,'localAtlas');assert.equal(params.toString(),original);
  }
 });

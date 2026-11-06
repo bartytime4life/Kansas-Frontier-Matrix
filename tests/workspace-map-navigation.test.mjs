@@ -28,6 +28,7 @@ function findHeaderChat(node) {
 }
 findHeaderChat(ast);
 function execute(name, scope) {
+  scope = { markExplorerNavigation() {}, ...scope };
   assert.ok(callbacks.has(name), `run the actual ${name} handler`);
   const code = ts.transpileModule(`return ${callbacks.get(name)};`, {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
   return new Function(...Object.keys(scope), code)(...Object.values(scope));

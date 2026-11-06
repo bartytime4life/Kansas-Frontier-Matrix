@@ -150,3 +150,57 @@ test('the no-date API request also refuses an unsupported Congress instead of se
  const response=await route.GET({nextUrl:new URL('https://kfm.invalid/api/live-context?feed=census-congress-119')});
  assert.equal(response.status,400);assert.equal(calls,0);
 });
+
+
+const selectionPage=await readFile(process.env.KFM_CIVIC_PAGE_PATH??'app/page.tsx','utf8');
+const selectionAst=ts.createSourceFile('page.tsx',selectionPage,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);
+let contextSource,pendingEffect,heldSerialization;
+function findRestoration(node){
+ if(ts.isVariableDeclaration(node)&&node.name.getText(selectionAst)==='civicInspectionContext')contextSource=node.initializer.getText(selectionAst);
+ if(ts.isCallExpression(node)&&node.expression.getText(selectionAst)==='useEffect'&&node.arguments[0]?.getText(selectionAst).includes('const pending = pendingCivicInspection;'))pendingEffect=node.arguments[0].getText(selectionAst);
+ if(ts.isIfStatement(node)&&node.expression.getText(selectionAst)==='pendingCivicInspection')heldSerialization=node.thenStatement.getText(selectionAst);
+ ts.forEachChild(node,findRestoration);
+}
+findRestoration(selectionAst);
+function evaluateSelection(source,scope){return new Function(...Object.keys(scope),ts.transpileModule(`return (${source});`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(scope));}
+const inspectionId=id=>`official-context:${civic.CIVIC_SOURCE.shortTitle}:${id}`;
+function contextResolver(){
+ assert.ok(contextSource,'exercise production civic inspection reconstruction');
+ return evaluateSelection(contextSource,{CIVIC_ID:civic.CIVIC_ID,CIVIC_SOURCE:civic.CIVIC_SOURCE,civicRecordMatchesDay:history.civicRecordMatchesDay,
+  countySearchGeometry:f=>f.geometry?{focus:[-98,38]}:null,
+  buildBasemapContext:f=>({featureId:inspectionId(f.id),civicRecord:f.properties,geometry:{geometry:f.geometry}})});
+}
+test('civic inspection reconstruction requires the exact identity and dated checked plan',()=>{
+ const resolve=contextResolver(),payload=history.parseCivicHistory(rawFor(43),'1873-03-04',now),id=inspectionId(payload.data.features[0].id);
+ assert.equal(resolve(id,'1873-03-04',payload).featureId,id);
+ for(const [day,body] of [['1873-03-05',payload],['1875-03-04',payload],['1873-03-04',{...payload,feed:'census-counties'}],['1873-03-04',{...payload,state:'partial'}],['1873-03-04',undefined]])assert.equal(resolve(id,day,body),null);
+ assert.equal(resolve(id+':wrong','1873-03-04',payload),null);
+ assert.equal(resolve(id.replace('official-context:','basemap:'),'1873-03-04',payload),null);
+ assert.equal(resolve(id,'1873-03-04',{...payload,data:{...payload.data,features:[]}}),null);
+});
+test('a pending civic inspection waits for its payload and restores the drawer without substituting another day',()=>{
+ assert.ok(pendingEffect);
+ const payload=history.parseCivicHistory(rawFor(43),'1873-03-04',now),id=inspectionId(payload.data.features[0].id),restore=contextResolver();
+ const params=new URLSearchParams({f:id,drawer:'open',panel:'metadata',focusStage:'checks',focusIntent:'time'});
+ const make=patch=>{
+  const state={pending:{featureId:id,day:'1873-03-04',params},selected:null,right:false};
+  const scope={pendingCivicInspection:state.pending,officialVisibility:{[civic.CIVIC_ID]:true},effectiveOfficialVisibility:{[civic.CIVIC_ID]:true},civicFrameDay:'1873-03-04',officialStates:{[civic.CIVIC_ID]:'loading'},officialPayloads:{},CIVIC_ID:civic.CIVIC_ID,
+   civicInspectionContext:restore,setPendingCivicInspection:v=>state.pending=v,selectedRef:{current:null},setSelected:v=>state.selected=v,setPendingFocusAction(){},setDrawerView:v=>state.panel=v,setFocusStage:v=>state.stage=v,setFocusIntent:v=>state.intent=v,setRightOpen:v=>state.right=v,
+   mapUtilityOpen:false,compactRef:{current:false},mapRef:{current:null},announce:v=>state.message=v,updateSelectionSource(){},...patch};
+  evaluateSelection(pendingEffect,scope)();return state;
+ };
+ assert.equal(make({}).selected,null,'no cached record is invented before loading');
+ const ready=make({officialStates:{[civic.CIVIC_ID]:'ready'},officialPayloads:{[civic.CIVIC_ID]:payload}});
+ assert.equal(ready.selected.featureId,id);assert.equal(ready.pending,null);assert.equal(ready.right,true);assert.equal(ready.panel,'metadata');assert.equal(ready.stage,'checks');assert.equal(ready.intent,'time');
+ assert.equal(make({officialVisibility:{[civic.CIVIC_ID]:false}}).pending,null,'hiding the carrier cancels restoration');
+ assert.equal(make({civicFrameDay:'1875-03-04'}).pending,null,'a newer date cancels restoration');
+ const wrong=make({officialStates:{[civic.CIVIC_ID]:'ready'},officialPayloads:{[civic.CIVIC_ID]:history.parseCivicHistory(rawFor(44),'1875-03-04',now)}});
+ assert.equal(wrong.selected,null);assert.match(wrong.message,/no other district was substituted/);assert.equal(wrong.pending.featureId,id);
+ assert.equal(make({pendingCivicInspection:null,officialStates:{[civic.CIVIC_ID]:'ready'},officialPayloads:{[civic.CIVIC_ID]:payload}}).selected,null,'an older response cannot revive a canceled request');
+});
+test('pending civic navigation retains its identity and inspector settings without copying source geometry',()=>{
+ assert.ok(heldSerialization);
+ const params=new URLSearchParams(),id=inspectionId('historic-district');
+ new Function('params','pendingCivicInspection',ts.transpileModule(heldSerialization,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(params,{featureId:id,params:new URLSearchParams({f:id,panel:'metadata',drawer:'open',focusStage:'checks',focusIntent:'time',geometry:'never copied'})});
+ assert.equal(params.get('f'),id);assert.equal(params.get('panel'),'metadata');assert.equal(params.get('drawer'),'open');assert.equal(params.has('geometry'),false);
+});
