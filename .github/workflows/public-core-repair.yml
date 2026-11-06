@@ -262,7 +262,7 @@ jobs:
             if curl --fail --silent http://127.0.0.1:5182/ > /dev/null; then break; fi
             sleep 1
           done
-          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WORKSPACE_SCREENSHOTS="$RUNNER_TEMP/navigation-screenshots" node --test --test-name-pattern='startup category supports browser Back|remembered startup dismissal|source status releases the previous map entry|civic inspection survives browser' tests/explorer-startup.browser.mjs
+          KFM_NODE_TEST_ORIGIN=http://127.0.0.1:5182 KFM_WORKSPACE_SCREENSHOTS="$RUNNER_TEMP/navigation-screenshots" node --test --test-name-pattern='isolated browser leaves canceled assets|startup category supports browser Back|remembered startup dismissal|source status releases the previous map entry|civic inspection survives browser' tests/explorer-startup.browser.mjs
       - name: Navigation browser acceptance artifacts
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
