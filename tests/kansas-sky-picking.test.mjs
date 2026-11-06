@@ -189,6 +189,23 @@ test('3D flight view acquires and restores camera elevation and ground clamping'
   assert.equal(result,undefined);assert.equal(moves.length,count);
  }
 });
+test('manual camera release attaches when a map ref becomes ready after the Sky control mounted',()=>{
+ let releaseCall;
+ const find=node=>{if(ts.isCallExpression(node)&&node.expression.getText(cameraAst)==='useEffect'&&node.arguments[0]?.getText(cameraAst).includes('addEventListener("pointerdown",release)'))releaseCall=node.getText(cameraAst);ts.forEachChild(node,find);};find(cameraAst);assert.ok(releaseCall);
+ const listeners=new Map(),canvasListeners=new Map(),changes=[],mapRef={current:null};
+ const canvas={addEventListener:(name,fn)=>canvasListeners.set(name,fn),removeEventListener:name=>canvasListeners.delete(name)};
+ const map={on:(name,fn)=>listeners.set(name,fn),off:name=>listeners.delete(name),getCanvas:()=>canvas};
+ let previous,cleanup;
+ const useEffect=(effect,deps)=>{if(!previous||deps.some((value,index)=>!Object.is(value,previous[index]))){cleanup?.();cleanup=effect();previous=deps;}};
+ const render=styleReady=>executeCamera(`()=>{${releaseCall};}`,{useEffect,mapRef,enabled:true,styleReady,ownCameraMove:{current:false},setCamera:value=>changes.push(['camera',value]),setFlightView:value=>changes.push(['view',value])})();
+ render(false);assert.equal(canvasListeners.size,0,'the parent has not constructed the map yet');
+ mapRef.current=map;render(true);
+ assert.equal(typeof canvasListeners.get('pointerdown'),'function','readiness must attach manual-release input to the newly created map');
+ canvasListeners.get('pointerdown')();assert.deepEqual(changes,[['camera','free'],['view',false]]);
+ assert.equal(typeof listeners.get('movestart'),'function','navigation controls must release the same camera');
+ cleanup();assert.equal(canvasListeners.size,0);assert.equal(listeners.size,0);
+});
+
 test('closing Layers preserves the camera while navigation and canvas input release it',async()=>{
  const releaseEffect=cameraEffects.find(text=>text.includes('addEventListener("pointerdown",release)'));
  assert.ok(releaseEffect);

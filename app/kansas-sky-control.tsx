@@ -185,7 +185,9 @@ export function KansasSkyControl({mapRef,styleReady,enabled,envelope,feedState,f
     map.on("movestart",move);map.on("resize",resize);
     const canvas=map.getCanvas();canvas.addEventListener("pointerdown",release);canvas.addEventListener("wheel",release,{passive:true});canvas.addEventListener("keydown",release);
     return()=>{active=false;map.off("movestart",move);map.off("resize",resize);canvas.removeEventListener("pointerdown",release);canvas.removeEventListener("wheel",release);canvas.removeEventListener("keydown",release);};
-  },[mapRef,enabled]);
+    // The control can mount before mapRef.current exists. Its stable ref object
+    // alone cannot notify this effect when the parent finishes map creation.
+  },[mapRef,enabled,styleReady]);
   // This camera follows the same approximate display height as the aircraft layer.
   // Restore map ownership on manual movement, hide, disable or unmount.
   useEffect(()=>{

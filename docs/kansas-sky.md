@@ -314,6 +314,18 @@ and heading visibility assertion remain. These causes are distinct from style
 readiness and the original intermittent layer disappearance. The failed CI run,
 source regression and final exact-head acceptance must all remain retained.
 
+A later hosted run passed five of six Sky scenarios but retained a desktop
+continuous-repaint failure when manual dragging should release Follow. Source
+reproduction established a separate lifecycle defect: the control can mount
+before its stable map ref contains a map, so an effect depending only on that
+ref and enabled state never attaches input handlers. Map readiness now refreshes
+that subscription. The regression fails on the preceding source and passes after
+the dependency correction. Browser drag coordinates, release assertion and
+ordinary waits remain unchanged; bounded input/event diagnostics distinguish
+canvas delivery, camera state and listener presence. This source defect does not
+by itself prove the cause of that particular hosted failure or the older layer
+investigation; retain and compare exact-head browser evidence separately.
+
 Review exact-head CI and its screenshots before merging. A merge, Preview
 deployment, public publication and governed data activation are separate actions.
 Publication remains on hold. Rollback targets the relevant source commit;

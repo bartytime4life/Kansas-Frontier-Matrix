@@ -194,7 +194,7 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
     await mkdir(process.env.KFM_SKY_SCREENSHOTS,{recursive:true});
     const shot=await p.call('Page.captureScreenshot',{format:'png'});
     await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,`sky-synthetic-final-or-failure-${artifactKey}.png`),Buffer.from(shot.data,'base64'));
-    await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,`sky-synthetic-final-or-failure-${artifactKey}.json`),JSON.stringify(await p.evaluate(`({fixture:'SYNTHETIC',render:window.__skyRender??null,map:window.__skyMap?{styleLoaded:window.__skyMap.isStyleLoaded(),loaded:window.__skyMap.loaded(),moving:window.__skyMap.isMoving(),connected:window.__skyMap.getCanvas().isConnected,repaint:window.__skyMap.repaint,skyLayer:!!window.__skyMap.getLayer('kfm-kansas-sky'),idleEvents:window.__skyIdleCount,frames:window.__skyMapFrames,readiness:window.__skyReadiness,renderListeners:(window.__skyMap._listeners?.render??[]).slice(0,12).map(fn=>fn.toString().slice(0,300))}:null,hidden:document.hidden,aviation:document.querySelector('input[aria-label="Hide airspace and aviation layers"]')?.closest('.official-context-primary')?.textContent??null,control:document.querySelector('.kansas-sky')?.textContent??null,errors:window.__skyErrors??[],viewport:[innerWidth,innerHeight],bodyWidth:document.documentElement.scrollWidth})`),null,2));
+    await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,`sky-synthetic-final-or-failure-${artifactKey}.json`),JSON.stringify(await p.evaluate(`({fixture:'SYNTHETIC',render:window.__skyRender??null,map:window.__skyMap?{styleLoaded:window.__skyMap.isStyleLoaded(),loaded:window.__skyMap.loaded(),moving:window.__skyMap.isMoving(),connected:window.__skyMap.getCanvas().isConnected,repaint:window.__skyMap.repaint,skyLayer:!!window.__skyMap.getLayer('kfm-kansas-sky'),idleEvents:window.__skyIdleCount,frames:window.__skyMapFrames,readiness:window.__skyReadiness,renderListeners:(window.__skyMap._listeners?.render??[]).slice(0,12).map(fn=>fn.toString().slice(0,300))}:null,manualGesture:window.__skyManualGesture??null,hidden:document.hidden,aviation:document.querySelector('input[aria-label="Hide airspace and aviation layers"]')?.closest('.official-context-primary')?.textContent??null,control:document.querySelector('.kansas-sky')?.textContent??null,errors:window.__skyErrors??[],viewport:[innerWidth,innerHeight],bodyWidth:document.documentElement.scrollWidth})`),null,2));
   });
   await p.evaluate(`(()=>{const visible=e=>e&&e.getBoundingClientRect().width>0&&e.getBoundingClientRect().height>0;for(const selector of ['.map-dock-actions > button:nth-child(2)','.map-mobile-actions button:first-child']){const button=document.querySelector(selector);if(visible(button)){button.click();return;}}const menu=document.querySelector('.map-dock-map-menu');if(menu)menu.open=true;document.querySelector('.map-dock-menu-quick button:nth-child(2)')?.click();})()`);
   await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='false'`,'normal Layers panel open');
@@ -242,10 +242,26 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
     await p.wait(`document.querySelector('.kansas-sky-camera button:nth-child(2)').getAttribute('aria-pressed')==='true'`,'follow camera enabled');
     const canvas=await p.rect('.maplibregl-canvas');
     const x=Math.min(layout.width-20,canvas.x+canvas.width*.9),y=canvas.y+canvas.height*.55;
-    await p.call('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',clickCount:1});
-    await p.call('Input.dispatchMouseEvent',{type:'mouseMoved',x:x-35,y:y+10,button:'left',buttons:1});
-    await p.call('Input.dispatchMouseEvent',{type:'mouseReleased',x:x-35,y:y+10,button:'left',clickCount:1});
-    await p.wait(`document.querySelector('.kansas-sky-camera button:first-child').getAttribute('aria-pressed')==='true'`,'manual map gesture cancels following');
+    // Retain actual delivery and camera state around the unchanged native drag.
+    // This trace never drives the camera or substitutes for the release assertion.
+    const gestureHits=await p.evaluate(`(()=>{
+      const map=window.__skyMap,canvas=map.getCanvas();
+      const camera=()=>document.querySelector('.kansas-sky-camera button[aria-pressed="true"]')?.textContent??null;
+      const target=e=>e instanceof Element?{tag:e.tagName,id:e.id,classes:String(e.className).slice(0,160),canvas:e===canvas}:null;
+      const trace=window.__skyManualGesture={start:{x:${x},y:${y}},end:{x:${x-35},y:${y+10}},canvasBounds:canvas.getBoundingClientRect().toJSON(),moveStartListenersBefore:map._listeners?.movestart?.length??0,events:[]};
+      const record=(stage,e)=>{if(trace.events.length<16)trace.events.push({stage,at:Math.round(performance.now()),camera:camera(),target:target(e?.target),originalEvent:e?.originalEvent?.type??null});};
+      const documentDown=e=>record('document-pointerdown',e),canvasDown=e=>record('canvas-pointerdown',e),start=e=>record('movestart',e),end=e=>record('moveend',e);
+      document.addEventListener('pointerdown',documentDown,true);canvas.addEventListener('pointerdown',canvasDown);map.on('movestart',start);map.on('moveend',end);
+      window.__skyStopManualTrace=()=>{record('assertion-finished');trace.finalCamera=camera();document.removeEventListener('pointerdown',documentDown,true);canvas.removeEventListener('pointerdown',canvasDown);map.off('movestart',start);map.off('moveend',end);delete window.__skyStopManualTrace;};
+      record('before-input');return [document.elementFromPoint(${x},${y})===canvas,document.elementFromPoint(${x-35},${y+10})===canvas];
+    })()`);
+    try{
+      assert.deepEqual(gestureHits,[true,true],'native drag endpoints hit the unobstructed map canvas');
+      await p.call('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',clickCount:1});
+      await p.call('Input.dispatchMouseEvent',{type:'mouseMoved',x:x-35,y:y+10,button:'left',buttons:1});
+      await p.call('Input.dispatchMouseEvent',{type:'mouseReleased',x:x-35,y:y+10,button:'left',clickCount:1});
+      await p.wait(`document.querySelector('.kansas-sky-camera button:first-child').getAttribute('aria-pressed')==='true'`,'manual map gesture cancels following');
+    }finally{await p.evaluate(`window.__skyStopManualTrace?.()`);}
     await p.evaluate(`document.querySelector('.kansas-sky-camera button:nth-child(2)').click()`);
     await p.wait(`document.querySelector('.kansas-sky-camera button:nth-child(2)').getAttribute('aria-pressed')==='true'`,'follow reenabled');
     await p.evaluate(`(()=>{const control=document.querySelector('.maplibregl-ctrl-zoom-in');if(control)control.click();else window.__skyMap.zoomIn({duration:0});})()`);
