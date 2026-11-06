@@ -1,4 +1,4 @@
-type HistoryLike = Pick<History, "replaceState">;
+type HistoryLike = Pick<History, "replaceState"> & Partial<Pick<History, "state">>;
 
 /**
  * Embedded Sites panels own their outer navigation. Updating the iframe history
@@ -17,7 +17,9 @@ export const replaceExplorerHistory = (
 ): boolean => {
   if (embedded || !history) return false;
   try {
-    history.replaceState(null, "", path);
+    // Sharing updates this entry's URL. Its router and Explorer ownership
+    // still belong to the same native entry and must survive the replacement.
+    history.replaceState(history.state ?? null, "", path);
     return true;
   } catch {
     return false;

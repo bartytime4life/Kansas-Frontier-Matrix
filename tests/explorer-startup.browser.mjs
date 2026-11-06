@@ -2090,6 +2090,21 @@ for (const [width, height] of [[1280, 800], [390, 844]]) {
     await p.call('Page.reload');
     await p.wait(`!document.querySelector('.living-welcome') && document.querySelector('.map-topic-edit')?.textContent.includes('Government')`, 'reopen restores the intentional map destination');
     assert.equal(await p.evaluate('location.pathname'), '/');
+    await p.evaluate(`document.querySelector('summary[aria-label="More site actions"]').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`document.querySelector('.header-overflow-menu').open`,'the visible More menu exposes sharing');
+    await p.evaluate(`document.querySelector('.share-action').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`new URLSearchParams(location.search).get('topics')==='government'&&!document.querySelector('.header-overflow-menu').open`,'Share current view updates the address bar');
+    assert.equal(await p.evaluate('history.state?.kfmExplorerEntry'),mapEntry,'sharing preserves native entry ownership');
+    await p.evaluate(`document.querySelector('.guide-trigger').focus()`);await p.key('Enter','Enter',13);await readyWelcome(p);
+    await p.evaluate(`document.querySelector('.topic-weather').focus()`);await p.key('Enter','Enter',13);
+    await p.wait(`!document.querySelector('.living-welcome')&&new URLSearchParams(history.state?.kfmExplorerView).get('topics')==='weather'`,'navigation still saves a different map after sharing');
+    assert.equal((await p.call('Page.getNavigationHistory')).currentIndex,initial+3,'sharing adds no step and later welcome/map actions each add one');
+    await p.evaluate('history.back()');await p.wait(`!!document.querySelector('.living-welcome')&&history.state?.kfmExplorerWelcome===true`,'Back revisits the later chooser');
+    await p.evaluate('history.back()');await p.wait(`!document.querySelector('.living-welcome')&&history.state?.kfmExplorerEntry===${JSON.stringify(mapEntry)}`,'Back retains the shared Government destination');
+    await p.evaluate('history.forward()');await p.wait(`!!document.querySelector('.living-welcome')&&history.state?.kfmExplorerWelcome===true`,'Forward revisits the later chooser');
+    await p.evaluate('history.forward()');await p.wait(`!document.querySelector('.living-welcome')&&new URLSearchParams(history.state?.kfmExplorerView).get('topics')==='weather'`,'Forward restores the map opened after sharing');
+    await p.call('Page.reload');
+    await p.wait(`!document.querySelector('.living-welcome')&&document.querySelector('.map-topic-edit')?.textContent.includes('Weather')`,'reload retains the later map after sharing');
   });
 }
 

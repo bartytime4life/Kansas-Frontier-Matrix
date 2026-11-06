@@ -331,3 +331,11 @@ the reload assertion. Failure diagnostics include bounded history identity and
 topic information. Exact-head native results, review and hosted/public identity
 verification are still required before claiming publication or complete browser
 acceptance. Reverting these source/test changes requires no data rollback.
+
+Review then identified the explicit sharing helper replacing history state with
+null. It now retains the current entry's router/Explorer state while updating
+the URL. A helper regression fails before repair and then verifies that sharing
+still permits a passive view save and a fresh map step. The native journey also
+shares Government, opens Weather through the later chooser, revisits both maps
+with Back/Forward and reloads the later selection. Clipboard success is not an
+acceptance assumption; the existing address-bar fallback remains available.
