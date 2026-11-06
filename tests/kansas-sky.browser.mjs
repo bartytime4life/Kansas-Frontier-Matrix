@@ -22,7 +22,16 @@ const at = Date.parse('2026-11-03T12:00:00Z');
 const aircraft = {hex:'abc123',callsign:'TEST123',registration:null,type:'C172',category:'A1',lon:-98.35,lat:38.5,onGround:false,altBaroFt:5000,altGeomFt:5200,groundSpeedKt:100,trackDeg:90,verticalRateFpm:200,squawk:null,emergency:null,positionAgeS:0,military:false,rollDeg:null,positionMethod:'adsb_icao'};
 const record = {schemaVersion:1,id:'synthetic-browser',provider:'Synthetic browser fixture',license:'Test fixture only',sourceUrl:'https://example.invalid/synthetic',sourceSha256:'0'.repeat(64),points:[{...aircraft,observedAt:at,providerId:'synthetic'},{...aircraft,lon:-98.3,observedAt:at+30000,providerId:'synthetic'},{...aircraft,lon:-98.2,observedAt:at+120000,providerId:'synthetic',breakBefore:true}]};
 const recordText = JSON.stringify(record);
-const catalog = {schemaVersion:1,flights:[{id:record.id,title:'SYNTHETIC browser flight',start:new Date(at).toISOString(),end:new Date(at+120000).toISOString(),url:'/data/aviation/replays/synthetic-browser.json',sha256:createHash('sha256').update(recordText).digest('hex'),provider:record.provider,license:record.license,sourceUrl:record.sourceUrl}]};
+const catalog = {schemaVersion:1,flights:[{id:record.id,title:'SYNTHETIC browser flight',start:new Date(at).toISOString(),end:new Date(at+120000).toISOString(),url:'/data/aviation/replays/days/2026-11-03/synthetic-browser.json',hex:aircraft.hex,day:'2026-11-03',part:1,partCount:1,pointCount:record.points.length,segmentCount:2,sha256:createHash('sha256').update(recordText).digest('hex'),provider:record.provider,license:record.license,sourceUrl:record.sourceUrl}]};
+// Discovery selects the newest published day. The legacy catalog is deliberately
+// empty so a missing day fetch cannot accidentally satisfy the replay assertion.
+const archiveIndex = {schemaVersion:1,days:[{day:'2026-11-03',coverage:'selected-recordings',aircraftCount:1,pointCount:record.points.length,indexUrl:'/data/aviation/replays/days/2026-11-03/index.json'}]};
+const archiveResponses = new Map([
+  ['/data/aviation/replays/archive-index.json',JSON.stringify(archiveIndex)],
+  ['/data/aviation/replays/index.json',JSON.stringify({schemaVersion:1,flights:[]})],
+  [archiveIndex.days[0].indexUrl,JSON.stringify(catalog)],
+  [catalog.flights[0].url,recordText],
+]);
 // County search preloads independently of aircraft picking. Give it a terminal,
 // valid fixture so recovery retries cannot masquerade as click-triggered reads.
 const counties = {feed:'census-counties',state:'empty',retrievedAt:new Date().toISOString(),upstreamUpdatedAt:null,featureCount:0,data:{type:'FeatureCollection',features:[]},source:'SYNTHETIC BROWSER FIXTURE ONLY',limitation:'Empty test inventory; no evidence admission.',truncated:false};
@@ -80,6 +89,7 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
   const call = (method, params = {}) => b.call(method, params, sessionId);
   const interceptions = createInterceptionErrorTracker();
   let feedFailed=false, countyRequests=0;
+  const archiveRequests=[];
   b.checks.push(() => interceptions.assertHealthy());
   b.listeners.add(message => {
     if (message.sessionId !== sessionId) return;
@@ -99,9 +109,17 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
       }).catch(error=>interceptions.failed(error,{requestNavigation:0,navigation:0,networkId,url:request.url}));return;
     }
     if(feedFailed&&url.pathname==='/api/aviation/traffic'){void call('Fetch.fulfillRequest',{requestId,responseCode:503,body:Buffer.from('{"error":"Synthetic receiver failure"}').toString('base64')}).catch(error=>interceptions.failed(error,{requestNavigation:0,navigation:0,networkId,url:request.url}));return;}
+    const archivePath=url.origin===origin.origin&&url.pathname.startsWith('/data/aviation/replays/');
+    if(archivePath){
+      archiveRequests.push(url.pathname);
+      // Never let an omitted fixture read a real published recording.
+      if(!archiveResponses.has(url.pathname)){
+        interceptions.failed(new Error(`Unprepared synthetic archive request: ${url.pathname}`),{requestNavigation:0,navigation:0,networkId,url:request.url});
+        void call('Fetch.fulfillRequest',{requestId,responseCode:404,body:Buffer.from('{"error":"Unprepared synthetic archive path"}').toString('base64')}).catch(error=>interceptions.failed(error,{requestNavigation:0,navigation:0,networkId,url:request.url}));return;
+      }
+    }
     const synthetic = url.pathname === '/api/aviation/traffic' ? JSON.stringify({retrievedAt:new Date().toISOString(),evidenceRole:'EXTERNAL_CONTEXT_ONLY',provider:{id:'adsb-lol',title:'Synthetic test receiver',homepage:'https://example.invalid/',terms:'Test only'},records:[{...aircraft,observedAt:new Date().toISOString()}],dropped:0,limitation:'Synthetic fixture'})
-      : url.pathname === '/data/aviation/replays/index.json' ? JSON.stringify(catalog)
-      : url.pathname === '/data/aviation/replays/synthetic-browser.json' ? recordText
+      : archivePath ? archiveResponses.get(url.pathname)
       : url.pathname === '/api/live-context' && url.searchParams.get('feed') === 'census-counties' ? JSON.stringify(counties) : null;
     const operation = synthetic !== null ? call('Fetch.fulfillRequest', {requestId,responseCode:200,responseHeaders:[{name:'Content-Type',value:'application/json'}],body:Buffer.from(synthetic).toString('base64')}) : url.origin !== origin.origin
       ? (/\/styles\/|\/style\.json$/.test(url.pathname)
@@ -165,7 +183,7 @@ async function pageSession(b, { width, height, touch, motion, repaint, tileError
   })()`);
   await call('Page.navigate', { url: new URL('?l=&ctx=', origin).href });
   await wait(`history.state?.kfmExplorerView && document.querySelector('.map-chrome-dock')`, 'hydration');
-  return { call, evaluate, wait, key, rect, activate, visibleFocus, failFeed:()=>{feedFailed=true;}, countyRequestCount:()=>countyRequests };
+  return { call, evaluate, wait, key, rect, activate, visibleFocus, failFeed:()=>{feedFailed=true;}, countyRequestCount:()=>countyRequests, archiveRequests:()=>[...archiveRequests] };
 }
 
 
@@ -176,7 +194,7 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
     await mkdir(process.env.KFM_SKY_SCREENSHOTS,{recursive:true});
     const shot=await p.call('Page.captureScreenshot',{format:'png'});
     await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,`sky-synthetic-final-or-failure-${artifactKey}.png`),Buffer.from(shot.data,'base64'));
-    await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,`sky-synthetic-final-or-failure-${artifactKey}.json`),JSON.stringify(await p.evaluate(`({fixture:'SYNTHETIC',render:window.__skyRender??null,map:window.__skyMap?{styleLoaded:window.__skyMap.isStyleLoaded(),loaded:window.__skyMap.loaded(),moving:window.__skyMap.isMoving(),connected:window.__skyMap.getCanvas().isConnected,repaint:window.__skyMap.repaint,skyLayer:!!window.__skyMap.getLayer('kfm-kansas-sky'),idleEvents:window.__skyIdleCount,frames:window.__skyMapFrames,readiness:window.__skyReadiness,renderListeners:(window.__skyMap._listeners?.render??[]).slice(0,12).map(fn=>fn.toString().slice(0,300))}:null,hidden:document.hidden,aviation:document.querySelector('input[aria-label="Hide airspace and aviation layers"]')?.closest('.official-context-primary')?.textContent??null,control:document.querySelector('.kansas-sky')?.textContent??null,errors:window.__skyErrors??[],viewport:[innerWidth,innerHeight],bodyWidth:document.documentElement.scrollWidth})`),null,2));
+    await writeFile(join(process.env.KFM_SKY_SCREENSHOTS,`sky-synthetic-final-or-failure-${artifactKey}.json`),JSON.stringify(await p.evaluate(`({fixture:'SYNTHETIC',render:window.__skyRender??null,map:window.__skyMap?{styleLoaded:window.__skyMap.isStyleLoaded(),loaded:window.__skyMap.loaded(),moving:window.__skyMap.isMoving(),connected:window.__skyMap.getCanvas().isConnected,repaint:window.__skyMap.repaint,skyLayer:!!window.__skyMap.getLayer('kfm-kansas-sky'),idleEvents:window.__skyIdleCount,frames:window.__skyMapFrames,readiness:window.__skyReadiness,renderListeners:(window.__skyMap._listeners?.render??[]).slice(0,12).map(fn=>fn.toString().slice(0,300))}:null,manualGesture:window.__skyManualGesture??null,hidden:document.hidden,aviation:document.querySelector('input[aria-label="Hide airspace and aviation layers"]')?.closest('.official-context-primary')?.textContent??null,control:document.querySelector('.kansas-sky')?.textContent??null,errors:window.__skyErrors??[],viewport:[innerWidth,innerHeight],bodyWidth:document.documentElement.scrollWidth})`),null,2));
   });
   await p.evaluate(`(()=>{const visible=e=>e&&e.getBoundingClientRect().width>0&&e.getBoundingClientRect().height>0;for(const selector of ['.map-dock-actions > button:nth-child(2)','.map-mobile-actions button:first-child']){const button=document.querySelector(selector);if(visible(button)){button.click();return;}}const menu=document.querySelector('.map-dock-map-menu');if(menu)menu.open=true;document.querySelector('.map-dock-menu-quick button:nth-child(2)')?.click();})()`);
   await p.wait(`document.querySelector('.layer-panel').getAttribute('aria-hidden')==='false'`,'normal Layers panel open');
@@ -210,9 +228,13 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
   assert.match(await p.evaluate(`document.querySelector('.kansas-sky').textContent`),/Pressure altitude[\s\S]*Geometric · WGS84/);
   assert.match(await p.evaluate(`document.querySelector('.kansas-sky').textContent`),/Reported rollUnavailable/);
   await p.evaluate(`document.querySelector('.kansas-sky-modes button:nth-child(3)').click()`);
-  await p.wait(`document.querySelector('[aria-label="Recorded flight"] option[value="synthetic-browser"]')`,'catalog');
+  await p.wait(`document.querySelector('[aria-label="Archive day"]').value==='2026-11-03' && document.querySelector('[aria-label="Recorded flight"] option[value="synthetic-browser"]')`,'discovered daily catalog');
+  assert.ok(p.archiveRequests().includes('/data/aviation/replays/archive-index.json'),'daily archive discovery was requested');
+  assert.ok(p.archiveRequests().includes(archiveIndex.days[0].indexUrl),'the selected daily catalog was requested');
   await p.evaluate(`(() => {const e=document.querySelector('[aria-label="Recorded flight"]');e.value='synthetic-browser';e.dispatchEvent(new Event('change',{bubbles:true}));})()`);
   await p.wait(`document.querySelector('.kansas-sky h5')?.textContent.includes('TEST123') && document.querySelector('[aria-label="Flight timeline"]').min===''+${at}`,'digest-verified replay');
+  assert.ok(p.archiveRequests().includes(catalog.flights[0].url),'the catalog-declared daily flight file was requested');
+  assert.match(await p.evaluate(`document.querySelector('.kansas-sky-history').textContent`),/File integrity: SHA-256 verified/);
   assert.equal(await p.evaluate(`document.querySelector('.kansas-sky-badge').textContent`),'REPLAY');
   assert.match(await p.evaluate(`document.querySelector('.kansas-sky-context').textContent`),/not a reconstruction/);
   if(layout.motion!=='reduce'){
@@ -220,10 +242,26 @@ for (const {repaint,tileErrorDelay} of [{repaint:false,tileErrorDelay:0},{repain
     await p.wait(`document.querySelector('.kansas-sky-camera button:nth-child(2)').getAttribute('aria-pressed')==='true'`,'follow camera enabled');
     const canvas=await p.rect('.maplibregl-canvas');
     const x=Math.min(layout.width-20,canvas.x+canvas.width*.9),y=canvas.y+canvas.height*.55;
-    await p.call('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',clickCount:1});
-    await p.call('Input.dispatchMouseEvent',{type:'mouseMoved',x:x-35,y:y+10,button:'left',buttons:1});
-    await p.call('Input.dispatchMouseEvent',{type:'mouseReleased',x:x-35,y:y+10,button:'left',clickCount:1});
-    await p.wait(`document.querySelector('.kansas-sky-camera button:first-child').getAttribute('aria-pressed')==='true'`,'manual map gesture cancels following');
+    // Retain actual delivery and camera state around the unchanged native drag.
+    // This trace never drives the camera or substitutes for the release assertion.
+    const gestureHits=await p.evaluate(`(()=>{
+      const map=window.__skyMap,canvas=map.getCanvas();
+      const camera=()=>document.querySelector('.kansas-sky-camera button[aria-pressed="true"]')?.textContent??null;
+      const target=e=>e instanceof Element?{tag:e.tagName,id:e.id,classes:String(e.className).slice(0,160),canvas:e===canvas}:null;
+      const trace=window.__skyManualGesture={start:{x:${x},y:${y}},end:{x:${x-35},y:${y+10}},canvasBounds:canvas.getBoundingClientRect().toJSON(),moveStartListenersBefore:map._listeners?.movestart?.length??0,events:[]};
+      const record=(stage,e)=>{if(trace.events.length<16)trace.events.push({stage,at:Math.round(performance.now()),camera:camera(),target:target(e?.target),originalEvent:e?.originalEvent?.type??null});};
+      const documentDown=e=>record('document-pointerdown',e),canvasDown=e=>record('canvas-pointerdown',e),start=e=>record('movestart',e),end=e=>record('moveend',e);
+      document.addEventListener('pointerdown',documentDown,true);canvas.addEventListener('pointerdown',canvasDown);map.on('movestart',start);map.on('moveend',end);
+      window.__skyStopManualTrace=()=>{record('assertion-finished');trace.finalCamera=camera();document.removeEventListener('pointerdown',documentDown,true);canvas.removeEventListener('pointerdown',canvasDown);map.off('movestart',start);map.off('moveend',end);delete window.__skyStopManualTrace;};
+      record('before-input');return [document.elementFromPoint(${x},${y})===canvas,document.elementFromPoint(${x-35},${y+10})===canvas];
+    })()`);
+    try{
+      assert.deepEqual(gestureHits,[true,true],'native drag endpoints hit the unobstructed map canvas');
+      await p.call('Input.dispatchMouseEvent',{type:'mousePressed',x,y,button:'left',clickCount:1});
+      await p.call('Input.dispatchMouseEvent',{type:'mouseMoved',x:x-35,y:y+10,button:'left',buttons:1});
+      await p.call('Input.dispatchMouseEvent',{type:'mouseReleased',x:x-35,y:y+10,button:'left',clickCount:1});
+      await p.wait(`document.querySelector('.kansas-sky-camera button:first-child').getAttribute('aria-pressed')==='true'`,'manual map gesture cancels following');
+    }finally{await p.evaluate(`window.__skyStopManualTrace?.()`);}
     await p.evaluate(`document.querySelector('.kansas-sky-camera button:nth-child(2)').click()`);
     await p.wait(`document.querySelector('.kansas-sky-camera button:nth-child(2)').getAttribute('aria-pressed')==='true'`,'follow reenabled');
     await p.evaluate(`(()=>{const control=document.querySelector('.maplibregl-ctrl-zoom-in');if(control)control.click();else window.__skyMap.zoomIn({duration:0});})()`);

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "flights": [
+    {
+      "id": "2026-11-03-aae1ea-p0001",
+      "title": "AAL275P \u00b7 2026-11-03 \u00b7 part 1/1",
+      "hex": "aae1ea",
+      "day": "2026-11-03",
+      "part": 1,
+      "partCount": 1,
+      "pointCount": 151,
+      "segmentCount": 1,
+      "coverage": "selected-recordings",
+      "start": "2026-11-03T14:34:20.010Z",
+      "end": "2026-11-03T15:12:21.030Z",
+      "url": "/data/aviation/replays/days/2026-11-03/2026-11-03-aae1ea-p0001.json",
+      "sha256": "32e0fad0c1b30f8de33fdac89c3ecb6a7d5b5538f9db5fdc9227ee8ac8a96bd6",
+      "provider": "adsb.lol",
+      "license": "ODbL-1.0",
+      "sourceUrl": "https://github.com/adsblol/globe_history_2026/releases/download/v2026.11.03-planes-readsb-prod-0/v2026.11.03-planes-readsb-prod-0.tar.aa"
+    },
+    {
+      "id": "2026-11-03-ac2fea-p0001",
+      "title": "SWA2039 \u00b7 2026-11-03 \u00b7 part 1/1",
+      "hex": "ac2fea",
+      "day": "2026-11-03",
+      "part": 1,
+      "partCount": 1,
+      "pointCount": 964,
+      "segmentCount": 4,
+      "coverage": "selected-recordings",
+      "start": "2026-11-03T05:22:53.590Z",
+      "end": "2026-11-03T23:43:54.470Z",
+      "url": "/data/aviation/replays/days/2026-11-03/2026-11-03-ac2fea-p0001.json",
+      "sha256": "4ee47d97132be47737626ffb4fc8a6e8a209664a1df668743540a45a613e7e00",
+      "provider": "adsb.lol",
+      "license": "ODbL-1.0",
+      "sourceUrl": "https://github.com/adsblol/globe_history_2026/releases/download/v2026.11.03-planes-readsb-prod-0/v2026.11.03-planes-readsb-prod-0.tar.aa"
+    }
+  ]
+}

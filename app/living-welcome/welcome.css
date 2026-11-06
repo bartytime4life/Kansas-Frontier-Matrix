@@ -194,7 +194,7 @@
 }
 /* Keep the map's real provider attribution in its own viewport strip. The
    welcome scroll clip ends above it; no provider text or ownership is copied.
-   The live welcome map (.domain-stage) keeps its own credits in its own corner. */
+   The live welcome map (.domain-stage) moves its own native control here. */
 .atlas-studio .explorer-guide.living-welcome{bottom:calc(48px + env(safe-area-inset-bottom,0px))}
 .atlas-studio:has(> .explorer-guide.living-welcome) .maplibregl-ctrl-bottom-right:not(.domain-stage *){position:fixed;right:0;bottom:env(safe-area-inset-bottom,0px);max-width:100vw}
 .welcome-map-attribution{z-index:221}.welcome-map-attribution[hidden]{display:none}

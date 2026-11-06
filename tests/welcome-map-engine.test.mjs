@@ -65,7 +65,7 @@ class FakeMap {
   remove() {}
 }
 const settle = () => new Promise(resolve => setTimeout(resolve, SETTLE_MS + 30));
-async function start(budget = { pixelRatio: 1, tileCache: 8 }, overrides = {}) {
+async function start(budget = { pixelRatio: 1, tileCache: 8 }, overrides = {}, { container = {}, ...options } = {}) {
   const fetches = [];
   globalThis.__welcome = { FakeMap, budget, webgl: true, aviation: [], drawn: [], radar: [], satellite: [], prisms: [], scientific: [], fresh: () => true, ...overrides };
   // Style documents and starter payloads each wait until the test releases them.
@@ -73,10 +73,27 @@ async function start(budget = { pixelRatio: 1, tileCache: 8 }, overrides = {}) {
   let ready = 0, errors = 0;
   const radarReports = [], sourceReports = [];
   const { createWelcomeMap } = await loadEngine();
-  const engine = await createWelcomeMap({}, { onReady: () => ready++, onError: () => errors++, onRadar: at => radarReports.push(at), onSources: value => sourceReports.push(value) });
+  const engine = await createWelcomeMap(container, { ...options, onReady: () => ready++, onError: () => errors++, onRadar: at => radarReports.push(at), onSources: value => sourceReports.push(value) });
   return { engine, fetches, map: globalThis.__welcome.map, ready: () => ready, errors: () => errors, radarReports, sourceReports };
 }
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
+
+test('welcome owns its live attribution in the reserved strip without an Explorer map and disposes it',async()=>{
+ const children=[];
+ const attributionHost={appendChild(node){children.push(node);node.parent=this;}};
+ const control={open:false,classList:{add(name){this[name]=true;}},textContent:'First preview provider',remove(){const index=children.indexOf(this);if(index>=0)children.splice(index,1);}};
+ const container={querySelector:selector=>selector==='.maplibregl-ctrl-attrib'?control:null};
+ class CreditedMap extends FakeMap{remove(){control.remove();}}
+ const {engine,map}=await start(undefined,{FakeMap:CreditedMap},{container,attributionHost});
+ try{
+  assert.equal(children.length,1,'the preview itself fills the strip while no Explorer exists');
+  assert.equal(children[0],control,'move the native control; never copy attribution text');
+  assert.equal(control.open,true);assert.equal(control.classList['maplibregl-compact-show'],true);
+  control.textContent='Next preview provider';map.emit('style.load');
+  assert.equal(children[0].textContent,'Next preview provider','native source/style updates reach the same visible node');
+ }finally{engine.dispose();}
+ assert.equal(children.length,0,'MapLibre control disposal clears the detached host too');
+});
 
 test('scientific previews follow selection and comparison on the same map, then dispose with it',async()=>{
  const {engine,map,sourceReports}=await start();

@@ -825,8 +825,31 @@ compression efficiency for the requested image-animation presentation.
 
 The domain stage is a live map, not an illustration. `DomainStage.jsx` lazily
 loads `app/living-welcome/map-engine.mjs`, which keeps one non-interactive
-MapLibre map behind the welcome (provider credits stay on it in the compact
-attribution control).
+MapLibre map behind the welcome. Its native attribution control lives in the
+reserved `.welcome-map-attribution` strip, supplied by `DomainStage` from the
+same document. The welcome map retains ownership, so style/source changes update
+that exact control and disposing the preview removes it. Explorer credits stay
+in the main map's information/fullscreen host; returning to welcome never borrows
+or replaces either map's control.
+
+The 2026-11-06 source correction removes the source-strip dependency on Explorer
+startup. Deferring the main map had left the strip empty even though the preview
+had its own control inside the covered stage. Regression checks exercise the
+preview-only strip, unchanged native-node identity, disposal, and independent
+Explorer/fullscreen ownership. The follow-up browser contract checks the native
+preview control in its new strip, including its map identity and removal on
+welcome dismissal. It awaits the owned source update and both fixture links
+before measuring credit geometry. The same empty attributed source is added to
+inline preview styles as well as fetched style documents; original style and
+terrain bindings remain intact, and the main map is not modified by that fixture.
+This corrects the prior assumption that all preview styles came through fetch.
+Credit count (two fixture links), source text, visible geometry, hit testing and
+keyboard access remain required. Explorer scale chrome must be absent or hidden
+before deferred startup, then exist and be visible after dismissal. These are
+updated ownership/readiness expectations; exact-head browser execution is still
+separate evidence. No deadline, skip or count assertion was relaxed. The existing
+`focused-welcome-and-drafts` CI job now also selects all nine `welcome content
+stays composed` viewport cases; the full core matrix remains unchanged.
 
 - **Which map.** `app/welcome-map-view.ts` takes each topic's basemap, view
   (2D, 3D terrain or globe) and camera from `CATEGORY_MAPS`, the same look the
@@ -1064,3 +1087,30 @@ older Directory Rules.pdf was unavailable in this workspace. No responsibility
 root or data lifecycle changes. Rollback is a revert of this correction; no
 stored preferences, database, provider configuration or release policy changes.
 Source review, merge, deployment and public publication remain separate states.
+
+## Map entry preserves a newer keyboard choice — 2026-11-06
+
+Opening a category map queued an unconditional second-frame focus on **Edit
+topics**, separately from welcome dismissal. If a visitor moved to Layers or a
+chart input before that callback ran, it could take focus back. Edit topics
+reopens welcome, so a following Enter could activate a different action than
+the visitor had selected.
+
+Map entry now captures its originating control and shares dismissal's first
+committed frame. It focuses Edit topics only while focus remains at that origin
+or on the document body and welcome has closed. Ordinary dismissal sees that
+destination and preserves it; a newer keyboard choice is preserved by both
+callbacks. No UI layout, browser wait, timeout, skip or assertion is changed.
+
+The actual page callbacks are exercised together in
+`tests/welcome-dismissal.test.mjs`, including direct cards, nested source notes,
+the default destination, newer Layers/chart/help focus, and a focus change
+between queued frames. The new preservation regressions fail against retained
+`f33deb1` source and pass with this correction. This establishes the callback
+ordering defect; fresh exact-source browser acceptance remains separate. The
+first stateless 320-pixel dock test's 30-second timeout in CI run `42187125808`
+has no established cause and is not claimed fixed by this change.
+
+Placement remains within the existing `app/`, `tests/` and `docs/` responsibility
+roots described above. Rollback is a revert; no data, stored preferences,
+provider settings, hosting configuration or publication state changes.

@@ -1,5 +1,67 @@
 # Layer lifecycle and performance — October 11, 2026
 
+## Public KFM investigation — November 6, 2026
+
+Read-only checks at 06:08–06:24 UTC inspected the public Explorer, welcome-to-map
+handoff, weather map, zoom interaction, data-library search, a 20-record FAA
+airport page, civic sources/counties, knowledge and topic navigation.
+These are bounded workstation observations, not a load test or
+whole-product reliability certification. The public `/api/build` reported app
+`urdng3v1vk`, commit `b7866a4086121d24f26ba6b1c168adc890892589`, digest
+`sha256:41dda2f3be3cef4873be48ec76e3d4142a9352da06c8d3591fd5c530734a38d2`.
+The repository branch and local candidate are newer; their evidence cannot be
+attributed to that deployed build.
+
+| Check | Observed result | Interpretation |
+| --- | --- | --- |
+| Cache-disabled Explorer reload | TTFB 374 ms; first contentful paint 528 ms; load 782 ms | This run's initial document was responsive. External map readiness occurs later. |
+| Initial page module | 1,636,384 decoded bytes; 427,855 compressed body bytes | The eager Explorer module remains a sizable startup cost. Compression is working. |
+| Welcome settled | Two full-sized MapLibre canvases, plus two small overlay canvases; 6,301 DOM elements | Explorer starts underneath the welcome's separate map. |
+| Welcome idle sample | 0.201 s main-thread task time in 14.124 s | No sustained main-thread saturation established in that interval. |
+| Weather activation profile | About 6.8 s non-idle samples in 27.7 s; several approximately 1 s graphics/shader/cleanup calls | Graphics handoff is an investigation priority. Sampling does not identify the driver, GPU process, or app as the sole cause. |
+| Subsequent zoom profile | About 0.23 s non-idle in 30.18 s | The earlier stall is not a constant JavaScript busy loop. |
+| Later welcome-to-aviation attempt | Browser command deadlines exceeded; affected tab closed | Retained as a failed run, not discarded or repaired with longer waits. |
+| Data library | Document load 532 ms; filter selected one airport collection; actual 20-record read 729 ms, HTTP 200 | This path worked in the measured run. |
+| Civic atlas | Document load 508 ms; source filter returned four Census matches; 105 counties loaded in 881 ms, HTTP 200 | County choices and source filtering worked. |
+| Released knowledge | Search API HTTP 503 in 119 ms; visible unavailable-store message | A separate service-availability failure; no unreleased records substituted. |
+| Topic navigation | Civic → Knowledge → Topics completed; subject headings rendered | Navigation works despite the held knowledge service; not proof every topic's data is available. |
+| Governed water and weather | Both HTTP 503, `RELEASE_STORE_UNAVAILABLE`, in 131–141 ms during independent HTTP checks | A release-store availability/configuration failure, not a slow successful read. No fallback or policy bypass applied. |
+| Public alerts and radar manifest | HTTP 200 in 317 ms and 163 ms during independent checks | Healthy responses for these requests only. |
+
+Resource Timing omits cross-origin byte sizes when the provider does not expose
+them. The network-event buffer reported truncation, so its 5.88 MB observed sum
+is a lower bound, not complete transfer size. Competing tabs, current provider
+responses, the embedded browser and graphics stack remain uncontrolled variables.
+The failed live transition and successful local evaluation use different builds
+and browser sessions; they are not an identical-input before/after comparison.
+
+A later 06:51 UTC HTTP recheck was blocked by the client (HTTP 403 from the local
+request path and `net::ERR_BLOCKED_BY_CLIENT` in the browser). It does not
+establish a new origin failure or prove the earlier 503 responses persisted.
+
+The bounded source correction delays the Explorer bootstrap until the welcome
+is dismissed or a map is requested. The welcome keeps its own preview. A one-way
+request latch preserves the already-created Explorer when the guide is reopened,
+including its camera, selected layers and existing cleanup/error handling. Startup
+uses the already-pending category camera and source/style refs. This removes a
+confirmed redundant initial allocation; it does **not** establish the cause of
+the graphics stall or the prior intermittent Sky disappearance.
+
+Three actual-effect regression checks cover no hidden bootstrap, startup on
+request and guide reopening without renderer disposal. The old page fails two
+of these checks. Existing runtime, category, focus, terrain and weather checks
+remain independent. No source refresh, timeout, assertion, release gate or
+production data was weakened. Existing `app/`, `tests/` and `docs/` roots own
+this lifecycle change under Directory Rules / ADR-0029; revert the startup latch
+to restore eager initialization without changing retained data.
+
+Retain the dated HTTP receipts, full Resource Timing entries, both CPU profiles,
+failed-transition notes and baseline/candidate test logs outside deployment
+assets. Recheck the exact candidate on the target host after authorized release;
+then repeat cold/warm transitions, device and long-session tests. Host metrics,
+all 189 archive collections, every map combination, physical phones, concurrent
+load and the configured private archive job remain **NEEDS VERIFICATION**.
+
 ## Cached terrain-raster toggles — October 13, 2026
 
 The GoDaddy composition at `d9b456a87b0b0bf1482d121f2f808748c4b569dc`
@@ -164,3 +226,16 @@ device matrix, long-session resource retention and comprehensive visual and
 accessibility acceptance remain unverified. No synthetic benchmark or successful
 publication closes those gates. Source-provider failures and missing coverage
 remain explicit rather than replaced with invented data.
+
+### Independent browser matrix evidence — November 6
+
+Review run 42183198971 reached the final Explorer cases but exhausted the
+existing combined job's 30-minute allocation. The complete
+`tests/explorer-startup.browser.mjs` invocation now runs in its own
+`explorer-browser` job, on the same pinned source, Node and locked dependencies.
+The original HTTP/database/specialist-browser checks remain in
+`verify-core-delivery`. Every Explorer case, assertion and per-test deadline is
+retained; the overall allocation is not increased. Runtime logs and screenshots
+are uploaded independently so an unrelated check cannot hide this matrix's
+evidence. This is CI scheduling, not an application performance improvement or
+a substitute for correcting the documented source and fixture defects.

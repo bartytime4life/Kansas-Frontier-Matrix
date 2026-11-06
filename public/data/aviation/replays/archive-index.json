@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "collectionState": "unconfigured",
+  "days": [
+    {
+      "day": "2026-11-03",
+      "coverage": "selected-recordings",
+      "aircraftCount": 2,
+      "pointCount": 1115,
+      "indexUrl": "/data/aviation/replays/days/2026-11-03/index.json"
+    }
+  ]
+}

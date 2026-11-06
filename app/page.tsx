@@ -1877,6 +1877,10 @@ export default function Home() {
   // Welcome is decided after hydration alongside URL/history restoration.
   // null owns the first server/client paint until URL and device preferences resolve.
   const [guideOpen, setGuideOpen] = useState<boolean | null>(null);
+  // The welcome owns its own map. Do not allocate a second WebGL renderer
+  // beneath it. Once opened, keep the Explorer mounted across guide reopenings.
+  const [mapRequested, setMapRequested] = useState(false);
+  useEffect(() => { if (guideOpen === false) setMapRequested(true); }, [guideOpen]);
   // While the welcome covers the map, `?` reveals the map's source credits instead.
   const [welcomeSourcesOpen, setWelcomeSourcesOpen] = useState(false);
   const [repositoryOpen, setRepositoryOpen] = useState(false);
@@ -6479,6 +6483,7 @@ export default function Home() {
   }, [restoreExplorerFromUrl]);
 
   useEffect(() => {
+    if (!mapRequested) return;
     let disposed = false;
     let resizeObserver: ResizeObserver | null = null;
     let mapResizeFrame: number | undefined;
@@ -7412,7 +7417,7 @@ export default function Home() {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [announce, runMapMutation, runtimeOfficialVisibility]);
+  }, [announce, runMapMutation, runtimeOfficialVisibility, mapRequested]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -10728,25 +10733,22 @@ export default function Home() {
     setMapContextOpen(false);
     setGuideOpen(true);
   };
-  // Keep the native provider-credit control in the visible ownership subtree:
-  // the welcome strip, native fullscreen map, or ordinary map information host.
+  // Keep Explorer credits in its own native fullscreen or information host.
+  // The welcome preview independently owns the source strip for its live map.
   useEffect(() => {
-    const container = mapContainerRef.current, host = mapInformationHostRef.current, welcomeHost = welcomeAttributionHostRef.current;
-    if (!container || !host || !welcomeHost || !styleReady) return;
+    const container = mapContainerRef.current, host = mapInformationHostRef.current;
+    if (!container || !host || !styleReady) return;
     const owner = container.ownerDocument;
     const synchronize = () => {
       const attribution = host.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib")
-        ?? welcomeHost.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib")
         ?? container.querySelector<HTMLDetailsElement>(".maplibregl-ctrl-attrib");
       const fullscreen = owner.fullscreenElement
         ?? (owner as Document & { webkitFullscreenElement?: Element | null }).webkitFullscreenElement;
-      // The covered map is inert. Move its actual credit control (never a
-      // copied attribution) to the welcome's independent interactive strip.
-      const destination = welcomeShowing ? welcomeHost : fullscreen === container || container.classList.contains("maplibregl-pseudo-fullscreen") ? container.querySelector(".maplibregl-ctrl-top-right") : host;
+      const destination = fullscreen === container || container.classList.contains("maplibregl-pseudo-fullscreen") ? container.querySelector(".maplibregl-ctrl-top-right") : host;
       if (!attribution || !destination) return;
       destination.appendChild(attribution);
-      attribution.open = welcomeShowing;
-      attribution.classList.toggle("maplibregl-compact-show", welcomeShowing);
+      attribution.open = false;
+      attribution.classList.remove("maplibregl-compact-show");
     };
     owner.addEventListener("fullscreenchange", synchronize);
     owner.addEventListener("webkitfullscreenchange", synchronize);
@@ -10766,7 +10768,7 @@ export default function Home() {
       owner.removeEventListener("webkitfullscreenchange", synchronize);
       pseudoObserver.disconnect();
     };
-  }, [welcomeShowing, styleReady]);
+  }, [styleReady]);
   const closeExplorerGuide = (rememberDismissal: boolean) => {
     const returnFocus = Boolean(document.activeElement?.closest(".explorer-guide"));
     setGuideOpen(false);
@@ -10947,6 +10949,7 @@ export default function Home() {
   const runWelcomeMaps = (values: readonly TopicId[]) => {
     const topics = normalizeCategoryTopics(values);
     if (!topics.length) return;
+    const focusOrigin = document.activeElement;
     openCategoryMap(topics[0], topics);
     setPrimaryWorkspace("map");
     setLeftOpen(false); setRightOpen(false); setTimelineOpen(false);
@@ -10958,9 +10961,13 @@ export default function Home() {
     setPlaying(false); setTemporalMode("snapshot");
     commitTemporalFrame(OFFICIAL_CONTEXT_PRESENT_FRAME);
     dismissMapUtilityWithoutFocus();
-    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+    // Share dismissal's first committed frame so its fallback can observe this
+    // destination. A later keyboard choice owns focus, including Layers or a form.
+    window.requestAnimationFrame(() => {
+      if (document.querySelector(".living-welcome")
+        || (document.activeElement !== focusOrigin && document.activeElement !== document.body)) return;
       Array.from(document.querySelectorAll<HTMLButtonElement>(".map-topic-edit, .map-topics-button")).find(button => button.getClientRects().length > 0)?.focus({ preventScroll: true });
-    }));
+    });
   };
   const runWelcomeMap = (topic: TopicId) => runWelcomeMaps([topic]);
   // Opening a tool is navigation, not opening a fresh category setup. Preserve

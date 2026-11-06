@@ -10,6 +10,7 @@ import { createInterceptionErrorTracker } from './browser-interception.mjs';
 import { isolateBrowserNetwork } from './browser-network.mjs';
 import { terrainBrowserFixtures } from './terrain-detail-browser-fixtures.mjs';
 import { welcomeScientificBrowserFixtures } from './welcome-scientific-browser-fixtures.mjs';
+import { welcomeAttributionBrowserFixtures } from './welcome-attribution-browser-fixtures.mjs';
 import ts from 'typescript';
 import { capabilityPreviews, capabilityNote, categoryGlimpse } from '../app/living-welcome/capability-catalog.mjs';
 
@@ -1439,10 +1440,11 @@ for (const [width, height] of [[1440, 960], [1920, 1080], [375, 844]]) {
 // the retired footage timeline and footer. Fixtures establish no accepted data.
 for (const [width,height,label] of [[1440,960,'desktop'],[1280,800,'compact desktop atlas'],[1024,1366,'tall tablet'],[901,1200,'narrow desktop'],[768,1024,'tablet'],[1280,720,'short desktop'],[1024,600,'landscape'],[320,568,'narrow phone'],[640,360,'200 percent layout equivalent']]) {
   test(`welcome content stays composed at ${width}x${height} (${label})`,{timeout:150000},async t=>{
-    const b=await browser(t),p=await pageSession(b,width,height,{attribution:'Isolated browser layout fixture attribution — empty geometry; no observations, rights claims or accepted data. <a href="https://openmaptiles.org/">Fixture OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">Fixture OpenStreetMap</a>'});
+    const b=await browser(t),p=await pageSession(b,width,height,welcomeAttributionBrowserFixtures(origin,'Isolated browser layout fixture attribution — empty geometry; no observations, rights claims or accepted data. <a href="https://openmaptiles.org/">Fixture OpenMapTiles</a> · <a href="https://www.openstreetmap.org/copyright">Fixture OpenStreetMap</a>'));
     if(label==='200 percent layout equivalent')await p.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:2,mobile:false});
     await p.open('/');await readyWelcome(p);
-    await p.wait(`(()=>{const r=document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib')?.getBoundingClientRect();return r&&r.width>0&&r.height>0;})()`,'real MapLibre attribution mounted in its welcome strip from the bounded local style fixture');
+    const creditsReady=`(()=>{const owned=window.__welcomeCreditFixture,strip=document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib'),r=strip?.getBoundingClientRect();return !!owned&&owned.control?._map===owned.map&&owned.node===strip&&strip.isConnected&&owned.map.getContainer().matches('.domain-stage-map')&&owned.map.isStyleLoaded()&&owned.map.getSource('test-attribution')&&document.querySelector('.domain-stage')?.dataset.state==='ready'&&r.width>0&&r.height>0&&[...strip.querySelectorAll('.maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture ')).length===2;})()`;
+    await p.wait(creditsReady,'the live preview owns the visible credit strip and its attributed fixture source has settled');
     const checkLayout=async state=>{
       const result=await p.evaluate(`(()=>{
         const root=document.querySelector('.explorer-guide.living-welcome');
@@ -1473,9 +1475,11 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1280,800,'compact desk
       }
     };
     const checkCredits=async state=>{
+      await p.wait(creditsReady,`${state}: owned preview source and both native fixture credits are ready`);
       const count=await p.evaluate(`[...document.querySelectorAll('.welcome-map-attribution .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture ')).length`);
       assert.equal(count,2,'both explicit fixture credits remain in the real attribution control');
       for(let index=0;index<count;index++){
+        await p.wait(creditsReady,`${state}: native credits remain current after category style changes`);
         await p.evaluate(`[...document.querySelectorAll('.welcome-map-attribution .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}].scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'})`);
         const credit=await p.evaluate(`(()=>{const a=[...document.querySelectorAll('.welcome-map-attribution .maplibregl-ctrl-attrib-inner a')].filter(a=>a.textContent.startsWith('Fixture '))[${index}],r=a.getBoundingClientRect(),strip=document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib').getBoundingClientRect(),root=document.querySelector('.explorer-guide.living-welcome').getBoundingClientRect(),style=getComputedStyle(a);return{text:a.textContent,width:r.width,height:r.height,top:r.top,bottom:r.bottom,left:r.left,right:r.right,strip:{top:strip.top,bottom:strip.bottom,left:strip.left,right:strip.right},welcomeBottom:root.bottom,font:parseFloat(style.fontSize),lines:new Set([...a.getClientRects()].map(box=>Math.round(box.top))).size,display:style.display,visibility:style.visibility,hit:document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)?.closest('a')===a,hitBy:(e=>e?e.tagName+'.'+String(e.className||'')+'#'+e.id+' in '+String(e.parentElement?.className||''):'none')(document.elementFromPoint(r.left+r.width/2,r.top+r.height/2))};})()`);
         assert.ok(credit.width>0&&credit.height>0&&credit.font>0&&credit.display!=='none'&&credit.visibility==='visible',`${state}: credit text has actual visible geometry ${JSON.stringify(credit)}`);
@@ -1502,10 +1506,10 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1280,800,'compact desk
     await p.wait(`!document.querySelector('.welcome-focus')?.getAnimations().some(animation=>animation.pending||animation.playState==='running')`, 'chosen-map entrance finishes before visual capture');
     if(process.env.KFM_WORKSPACE_SCREENSHOTS){await mkdir(process.env.KFM_WORKSPACE_SCREENSHOTS,{recursive:true});const capture=await p.call('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.KFM_WORKSPACE_SCREENSHOTS,`welcome-${width}x${height}.png`),Buffer.from(capture.data,'base64'));}
     await checkCredits('initial license strip');
-    await p.wait(`!!document.querySelector('.living-welcome .domain-stage .maplibregl-ctrl-attrib')`,'the live welcome map carries its own provider credits');
+    assert.equal(await p.evaluate(`window.__welcomeCreditFixture.node===document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib')&&window.__welcomeCreditFixture.control._map===window.__welcomeCreditFixture.map&&!document.querySelector('.domain-stage .maplibregl-ctrl-attrib')`),true,'the native preview-owned control is relocated, not duplicated or borrowed from Explorer');
     for(const topic of welcomeTopics)await revealControl(p,'.topic-'+topic.id);
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('header.topbar')).visibility`),'hidden','builder owns navigation while the map header is covered');
-    for(const selector of ['.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'hidden','background map chrome does not peek through welcome');
+    assert.equal(await p.evaluate(`[...document.querySelectorAll('.map-stage .maplibregl-ctrl-scale')].every(e=>!e.checkVisibility({visibilityProperty:true}))`),true,'deferred or hidden Explorer scale controls do not peek through welcome');
     assert.equal(await p.evaluate(`getComputedStyle(document.querySelector('.welcome-map-attribution .maplibregl-ctrl-attrib')).visibility`),'visible','real attribution remains available');
     await openMapNotes(p);
     await p.key('Escape','Escape',27);
@@ -1577,7 +1581,8 @@ for (const [width,height,label] of [[1440,960,'desktop'],[1280,800,'compact desk
     await p.key('Escape','Escape',27);await p.wait(`document.querySelector('.living-welcome').dataset.fullscreen==='false'`,'Escape returns to categories without dismissing welcome');
     await p.evaluate(`document.querySelector('.welcome-skip').focus()`);await p.key('Enter','Enter',13);
     await p.wait(`!document.querySelector('.explorer-guide.living-welcome')&&document.activeElement?.matches('.guide-trigger')`,'current toolbar exit dismisses welcome and returns focus');
-    for(const selector of ['.maplibregl-ctrl-scale'])assert.equal(await p.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(selector)})).visibility`),'visible','ordinary map chrome is restored');
+    await p.wait(`document.querySelector('.map-stage .maplibregl-ctrl-scale')?.checkVisibility({visibilityProperty:true})`,'ordinary map scale is created and visible after deferred Explorer startup');
+    assert.equal(await p.evaluate(`window.__welcomeCreditFixture.node.isConnected`),false,'disposing the welcome map removes its relocated native attribution');
   });
 }
 

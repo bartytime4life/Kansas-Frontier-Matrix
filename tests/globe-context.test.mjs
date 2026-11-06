@@ -12,6 +12,7 @@ test("globe releases regional navigation limits and repeated transitions restore
   let bounds = [[-104.8, 34.8], [-92, 42.2]], minZoom = 4;
   const mutations = [];
   const map = {
+    jumpTo() {},
     getMaxBounds() { return bounds && { getWest: () => bounds[0][0], getSouth: () => bounds[0][1], getEast: () => bounds[1][0], getNorth: () => bounds[1][1] }; },
     getMinZoom: () => minZoom,
     setMaxBounds(value) { mutations.push("bounds"); bounds = value; },
@@ -29,6 +30,18 @@ test("globe releases regional navigation limits and repeated transitions restore
   const count = mutations.length;
   globe.applyProjectionNavigationLimits(map, "mercator");
   assert.equal(mutations.length, count);
+});
+
+test("camera navigation leases survive projection synchronization and restore after the last owner",()=>{
+  let bounds={custom:true},minZoom=4,projection="mercator";const original=bounds,changes=[];
+  const map={jumpTo(){},getMaxBounds:()=>bounds,getMinZoom:()=>minZoom,getProjection:()=>({type:projection}),setMaxBounds:value=>{bounds=value;changes.push("bounds");},setMinZoom:value=>{minZoom=value;changes.push("zoom");}};
+  const first=globe.leaseProjectionNavigation(map),second=globe.leaseProjectionNavigation(map);
+  assert.equal(bounds,null);assert.equal(minZoom,0);const count=changes.length;
+  globe.applyProjectionNavigationLimits(map,"mercator");assert.equal(changes.length,count,"routine projection synchronization respects camera ownership");
+  first();first();assert.equal(bounds,null);assert.equal(minZoom,0,"one owner remains after repeated cleanup of the other");
+  second();assert.equal(bounds,original);assert.equal(minZoom,4);const restored=changes.length;second();assert.equal(changes.length,restored);
+  const leaving=globe.leaseProjectionNavigation(map);projection="globe";globe.applyProjectionNavigationLimits(map,"globe");leaving();assert.equal(bounds,null);assert.equal(minZoom,0,"globe selection wins over the old regional limits");
+  const returning=globe.leaseProjectionNavigation(map);projection="mercator";globe.applyProjectionNavigationLimits(map,"mercator");returning();assert.deepEqual(bounds,globe.REGIONAL_NAVIGATION_BOUNDS);assert.equal(minZoom,4);
 });
 
 test("camera readings use observed renderer values and fail closed when they cannot be read", () => {

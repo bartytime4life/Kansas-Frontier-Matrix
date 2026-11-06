@@ -46,7 +46,8 @@ The browser retains ten minutes regionally and up to one hour for the selected
 aircraft, limited to 100,000 regional points plus 10,000 selected points. The
 actual retained interval is displayed. Selecting a different aircraft does not
 recover history already pruned. Nothing is written to SQL or browser persistence.
-History expires with the page; toggling the layer off stops drawing/polling.
+Session history expires with the page; toggling the layer off stops drawing/polling.
+The separately prepared daily archive described below is not browser persistence.
 
 Trails use at most 20,000 retained display points; visual detail is thinned before
 current aircraft are removed. The live feed still caps 3,000 aircraft and reports
@@ -59,7 +60,7 @@ Follow/Orbit; reduced motion disables automatic camera movement.
 
 ## Prepared dated flights and rights
 
-Two November 3, 2026 Kansas crossings are served from
+The two legacy November 3, 2026 retained segments are preserved in
 `public/data/aviation/replays/`: AC2FEA (23:14:49.100–23:43:54.470 UTC, 261 samples)
 and AAE1EA (14:34:20.010–15:12:21.030 UTC, 151 samples).
 The catalog binds each JSON SHA256; each file binds its original compressed
@@ -83,8 +84,9 @@ node --test tests/kansas-sky.test.mjs tests/aviation-route-cache.test.mjs tests/
 node scripts/benchmark-kansas-sky.mjs
 ```
 
-The converter bounds compressed/decompressed bytes and sample counts, clips the
-region, and chooses the longest continuous segment. Raw stale/new-leg flags,
+The legacy converter mode bounds compressed/decompressed bytes and sample counts,
+clips the region, and chooses the longest continuous segment. Daily preparation
+uses its explicit all-segments mode described below. Raw stale/new-leg flags,
 method changes, ground transitions and gaps split segments; original quality
 fields are retained when present, not carried forward as new measurements.
 `tests/fixtures/kansas-sky/` contains original member bytes solely for offline
@@ -114,6 +116,127 @@ all historical layer-disappearance reports. Real map browser inspection remains
 separate from synthetic and source-level tests; neither establishes production
 reliability or physical-device performance. The new view changes presentation
 only and keeps the existing replay validation, provenance and error reporting.
+
+## Whole journeys, aircraft briefs and daily preparation — 2026-11-06
+
+The selected recorded aircraft can be viewed along its entire retained regional
+path. The altitude profile and timeline select the same recorded time; separate
+legs and observation gaps stay separate. Elapsed and ahead-of-cursor recorded
+paths use distinct colors: the latter is known recorded history, never a live
+prediction. Bounded vertical guides connect observed flight height to available
+terrain context. Missing terrain omits a guide; it does not invent ground height.
+The aircraft brief summarizes reported identity, selected-time measurements and
+retained coverage. Expanded details expose available quality and instrument
+fields; absent values remain unavailable. Neither callsign nor transponder
+identity establishes ownership, purpose, destination or a complete lifetime.
+
+Long aircraft-days are split into bounded files. The controls identify the loaded
+part, available versus expected parts, and its observed time interval. Previous
+and Next load only the adjacent part for the same aircraft, UTC day and provider,
+using the same digest and byte validation. Playback pauses at a part boundary;
+there is no automatic cross-file continuation. **This part** replaces **Whole
+path** for split recordings. One file is loaded at a time, and unavailable parts
+or failed loads cannot be presented as complete history. The two prepared
+recordings currently each fit in one file.
+
+Whole-path framing measures the flight dock and reserves its space once.
+Flight-camera ownership temporarily releases the regional navigation bounds and
+minimum zoom so the retained route can fit beside the controls. Ordinary
+projection refreshes respect that ownership; closing, hiding or leaving flight
+view restores navigation limits. This is a camera presentation change only:
+provider requests, archive bounds, geographic eligibility and release checks
+remain unchanged. With terrain active, MapLibre retains a requested camera
+transform. Its minimum-zoom setter can copy old regional bounds back into the
+live transform after those bounds were cleared. A bounded local runtime trace
+confirmed this exact sequence. The correction completes the public camera
+transaction before setting bounds, without editing private renderer state.
+Regressions use the installed MapLibre setter bodies, terrain camera state and
+projection changes; browser captures separately check the actual route and dock
+layout. This cause applies to route framing, not the earlier intermittent layer
+disappearance or the public graphics stall.
+
+Replay motion runs independently of the slower instrument/list updates. Optional
+**Smooth live · 30 s delay** uses one delayed clock and only positions bracketed
+by actual retained reports for aircraft still eligible in the current feed. It
+never extrapolates beyond an observation or bridges a gap. Receiver-check and
+displayed times remain distinct; warmup, missing positions and reduced-motion
+behavior are explicit. Rendering budgets may thin old geometry or reduce redraw
+frequency while preserving retained observations. CPU fixture measurements are
+not browser FPS, GPU capacity, physical-device or production reliability proof.
+
+The original two source members have now also been prepared without discarding
+shorter regional segments. The dated directory contains 964 AC2FEA observations
+in four segments and 151 AAE1EA observations in one segment: 1,115 total. These
+are **selected recordings**, not all aircraft on November 3. The legacy 412-point
+catalog remains compatible. Each derivative is reproducible from the same
+hash-bound original members. The day index advertises collection as unconfigured.
+
+The owner selected Kansas and nearby airspace and the existing hosted KFM
+service as the intended archive destination. The fixed regional bounds remain
+west -103.2, east -93.6, south 36.2, north 40.9; this includes border context and
+is not an exact state-boundary census. Every eligible regional observation and
+every disconnected segment in the selected provider's source member is retained.
+Original compressed members remain private provenance; UI files are derivatives.
+
+The official [historical archive](https://www.adsb.lol/docs/open-data/historical)
+publishes daily readsb production archives under ODbL 1.0. Freshly inspected
+November 4 release metadata describes two SHA-256-bound assets totaling
+3,618,676,224 bytes. This global transfer belongs in a scheduled preparation job,
+not a browser or ordinary web request. The adsb.fi fallback is not mixed into
+these shareable daily derivatives.
+
+`scripts/prepare-kansas-sky-day.py` defaults to a metadata-only plan. Explicit
+`--download` verifies all ordered production archive parts, streams tar members
+without extracting their paths, retains regional originals and creates bounded
+per-aircraft chunks plus a receipt. It preserves all eligible segments instead
+of choosing only the longest one. One-point observations remain observations,
+not an invented route. Files carry at most 2,500 original points and 4 MiB; no
+observations are deleted merely to fit the browser. A one-day catalog is bounded
+to 10,000 entries and 4 MiB. Exceeding a bound holds the preparation visibly.
+The download cap is 6 GiB, candidate cap 2 GiB, and retained capacity defaults to
+the existing 80 GB ceiling. No automatic deletion or overwrite is implemented.
+Interrupted work remains explicitly incomplete; a complete candidate day is
+renamed into place atomically. Repeated days verify existing hashes. A local
+`--tar` diagnostic can only claim partial-input coverage.
+
+`scripts/import-kansas-sky-day.mjs` is the Node operator bridge to the existing
+private MySQL ingestion store, not a public upload API. Its default is verify/plan.
+An explicit apply requires the existing configured published-role, TLS, capacity,
+activation and paused-state gates. Artifacts remain WORK/QUARANTINE, unreleased,
+with pending rights/sensitivity review. The day manifest is stored only after its
+artifacts; interrupted imports resume by deterministic identities. No new database,
+parallel storage authority, public read bypass, SQL migration or browser timer
+is introduced. The prepared files are not automatically copied into public/.
+
+Hosted activation remains **NEEDS VERIFICATION**. The November 6 dashboard
+required a fresh owner sign-in. The available hosting connection does not expose
+job-runner or storage configuration. A job runtime with Python 3 for preparation
+and Node 22 for import must be confirmed; do not assume the web runtime includes
+Python or a persistent writable disk. Confirm durable job output, verified MySQL
+configuration, existing schema/capacity, the first complete stored provider day,
+a subsequent scheduled day, recovery from a missing release, and a reviewed
+public read/release path before claiming daily user-visible history is active.
+An external scheduler can trigger preparation independently of visitors, but CI
+artifacts alone are not durable hosted storage. No schedule, production store,
+release state, deployment or publication is changed by this source candidate.
+
+The preparation command accepts an explicit private output directory outside the
+application checkout. Review its plan before running the multi-gigabyte transfer:
+
+```sh
+python3 scripts/prepare-kansas-sky-day.py --day yesterday
+python3 scripts/prepare-kansas-sky-day.py --day YYYY-MM-DD --output /verified/private/job-output --download
+node scripts/import-kansas-sky-day.mjs /verified/private/job-output/YYYY-MM-DD
+```
+
+The first command is plan-only; the latter two are preparation and import-plan
+examples, not executed hosted collection. Actual apply and scheduled activation
+require the verified target configuration. Files in app/, scripts/, server/,
+tests/, docs/ and deliberately prepared public/data/aviation/replays/ continue
+their existing Directory Rules / ADR-0029 responsibilities. This section is the
+placement and migration note: existing private capture tables are reused; no
+schema migration or new release authority is created. Rollback the source change
+without deleting retained originals, candidate receipts or stored captures.
 
 ## Ownership, validation and rollout
 
@@ -174,6 +297,34 @@ protocol-error handling are unchanged. This correction stays in the existing
 responsibility boundaries. Revert the correction to restore its preceding
 renderer and acceptance behavior; no data or storage operation is required.
 Exact-head results and known limits belong to the delivery record.
+
+### Daily catalog and compact selection acceptance — 2026-11-06
+
+The first journey CI run retained two distinct failures. Desktop replay reached
+the real dated catalog because its synthetic fixture intercepted only the older
+root catalog. The fixture now owns archive discovery, an empty legacy fallback,
+the selected day catalog and its declared recording; unexpected archive paths
+fail explicitly. Request and digest assertions prove the complete chain, including
+rejection of altered bytes. This does not alter production data or loaders.
+
+On the compact layer panel, newly added flight controls pushed the selected
+identity heading below the visible area. The existing heading now sits directly
+after the aircraft selector. All controls and the original simultaneous selector
+and heading visibility assertion remain. These causes are distinct from style
+readiness and the original intermittent layer disappearance. The failed CI run,
+source regression and final exact-head acceptance must all remain retained.
+
+A later hosted run passed five of six Sky scenarios but retained a desktop
+continuous-repaint failure when manual dragging should release Follow. Source
+reproduction established a separate lifecycle defect: the control can mount
+before its stable map ref contains a map, so an effect depending only on that
+ref and enabled state never attaches input handlers. Map readiness now refreshes
+that subscription. The regression fails on the preceding source and passes after
+the dependency correction. Browser drag coordinates, release assertion and
+ordinary waits remain unchanged; bounded input/event diagnostics distinguish
+canvas delivery, camera state and listener presence. This source defect does not
+by itself prove the cause of that particular hosted failure or the older layer
+investigation; retain and compare exact-head browser evidence separately.
 
 Review exact-head CI and its screenshots before merging. A merge, Preview
 deployment, public publication and governed data activation are separate actions.

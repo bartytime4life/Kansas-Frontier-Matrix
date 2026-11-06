@@ -9,6 +9,20 @@ export const SKY_SELECTED_MS = 3_600_000;
 export const SKY_MAX_REGIONAL_POINTS = 100_000;
 export const SKY_MAX_SELECTED_POINTS = 10_000;
 export const SKY_MAX_TRAIL_POINTS = 20_000;
+export const SKY_MAX_HEIGHT_GUIDES = 96;
+export const SKY_MAX_PROFILE_POINTS = 800;
+export const SKY_LIVE_DELAY_MS = 30_000;
+
+export type SkyCatalogPart=Readonly<{id:string;hex?:string;day?:string;provider:string;start:string;end:string;part?:number;partCount?:number}>;
+/** Catalog navigation only: no cross-file concatenation, gap filling or prefetch. */
+export function skyPartNeighbors<T extends SkyCatalogPart>(catalog:readonly T[],current:T|null):{previous:T|null;next:T|null;available:number;expected:number;multipart:boolean}{
+  if(!current||!current.hex||!current.day||!current.part||!current.partCount)return {previous:null,next:null,available:current?1:0,expected:current?1:0,multipart:false};
+  const matching=catalog.filter(part=>part.hex===current.hex&&part.day===current.day&&part.provider===current.provider&&part.partCount===current.partCount);
+  const exact=(number:number)=>{const entries=matching.filter(part=>part.part===number);return entries.length===1?entries[0]:null;};
+  const before=exact(current.part-1),after=exact(current.part+1);
+  return {previous:before&&Date.parse(before.end)<=Date.parse(current.start)?before:null,next:after&&Date.parse(after.start)>=Date.parse(current.end)?after:null,
+    available:new Set(matching.map(part=>part.part)).size,expected:current.partCount,multipart:current.partCount>1};
+}
 
 /** readsb positive roll is right bank: the right wing descends. */
 export const bankHeightOffset = (rightWingMetres: number, rollDegrees: number | null | undefined): number =>
@@ -35,8 +49,69 @@ export function connected(left: SkyPoint, right: SkyPoint): boolean {
   return !right.breakBefore && left.providerId === right.providerId && left.onGround === right.onGround && left.positionMethod === right.positionMethod &&
     right.observedAt > left.observedAt && right.observedAt - left.observedAt <= SKY_MAX_GAP_MS;
 }
-const asAircraft = (point: SkyPoint): Aircraft => ({ ...point, observedAt: new Date(point.observedAt).toISOString(), positionAgeS: 0, interpolated: false });
+const asAircraft = (point: SkyPoint): Aircraft => ({ ...point, observedAt: new Date(point.observedAt).toISOString(), interpolated: false });
 const blend = (a: number | null, b: number | null, ratio: number) => a === null || b === null ? null : a + (b - a) * ratio;
+
+/** A height graph may not join pressure and geometric datums or unknown heights. */
+export const skyHeightReference = (point: Pick<SkyPoint,"onGround"|"altGeomFt"|"altBaroFt">) =>
+  point.onGround ? null : point.altGeomFt !== null && point.altGeomFt !== undefined ? "WGS84" : point.altBaroFt !== null && point.altBaroFt !== undefined ? "pressure" : null;
+export const skyHeightFt = (point: Pick<SkyPoint,"onGround"|"altGeomFt"|"altBaroFt">) => skyHeightReference(point) ? point.altGeomFt ?? point.altBaroFt : null;
+
+/** Split before thinning: budgets can omit detail but cannot manufacture continuity. */
+export function heightProfile(points: readonly SkyPoint[], budget = SKY_MAX_PROFILE_POINTS): readonly (readonly SkyPoint[])[] {
+  const segments: SkyPoint[][] = []; let segment: SkyPoint[] = [];
+  for (const point of points) {
+    if (segment.length && (!connected(segment.at(-1)!,point) || skyHeightReference(segment.at(-1)!) !== skyHeightReference(point))) { segments.push(segment); segment=[]; }
+    if (skyHeightReference(point)) segment.push(point); else if(segment.length){segments.push(segment);segment=[];}
+  }
+  if(segment.length)segments.push(segment);
+  const cap=Math.max(0,Math.floor(budget));
+  // Retain recent disconnected segments, then preserve both endpoints of each.
+  const kept=segments.slice(-Math.floor(cap/2));let remaining=cap;
+  return kept.map((part,index)=>{const quota=Math.min(part.length,Math.floor(remaining/(kept.length-index)));remaining-=quota;
+    return quota>=part.length?part:Array.from({length:quota},(_,i)=>part[Math.round(i*(part.length-1)/Math.max(1,quota-1))]);});
+}
+
+/** Shared frame budget: lower redraw frequency before removing aircraft. */
+export class SkyFrameBudget {
+  private average=0;
+  record(milliseconds:number):void { if(Number.isFinite(milliseconds)&&milliseconds>=0)this.average=this.average*.85+milliseconds*.15; }
+  interval(reduced=false):number { return reduced?200:this.average>24?50:this.average>12?1000/30:1000/60; }
+}
+
+/** One cancellable clock for smooth positions; React readouts receive at most 5 updates/s. */
+export function animateSkyReplay(options:{start:number;range:readonly [number,number];speed:number;reduced:boolean;
+  requestFrame:(callback:(timestamp:number)=>void)=>number;cancelFrame:(id:number)=>void;now:()=>number;
+  render:(time:number)=>void;readout:(time:number)=>void;ended:()=>void}) {
+  let active=true,id=0,lastFrame=-Infinity,lastReadout=-Infinity;
+  const began=options.now(),budget=new SkyFrameBudget();
+  const frame=(stamp:number)=>{
+    if(!active)return;
+    const at=advanceSkyCursor(options.start,options.range,stamp-began,options.speed);
+    if(stamp-lastFrame>=budget.interval(options.reduced)-1||at>=options.range[1]){
+      const before=options.now();options.render(at);budget.record(options.now()-before);lastFrame=stamp;
+    }
+    if(stamp-lastReadout>=200||at>=options.range[1]){options.readout(at);lastReadout=stamp;}
+    if(at>=options.range[1]){active=false;options.ended();return;}
+    id=options.requestFrame(frame);
+  };
+  id=options.requestFrame(frame);
+  return ()=>{active=false;options.cancelFrame(id);};
+}
+
+/** A single delayed timeline, filtered by today's still-eligible feed identities. */
+export function bufferedSkySamples(tracks:SkyTracks,time:number,eligible:ReadonlySet<string>):readonly Aircraft[]{
+  return samplesAt(tracks,time).filter(aircraft=>eligible.has(aircraft.hex));
+}
+export function animateSkyBuffered(options:{requestFrame:(callback:(timestamp:number)=>void)=>number;cancelFrame:(id:number)=>void;now:()=>number;wallTime:()=>number;
+  render:(time:number)=>void;readout:(time:number)=>void}){
+  let active=true,id=0,lastFrame=-Infinity,lastReadout=-Infinity;const budget=new SkyFrameBudget();
+  const frame=(stamp:number)=>{if(!active)return;const at=options.wallTime()-SKY_LIVE_DELAY_MS;
+    if(stamp-lastFrame>=budget.interval()-1){const before=options.now();options.render(at);budget.record(options.now()-before);lastFrame=stamp;}
+    if(stamp-lastReadout>=200){options.readout(at);lastReadout=stamp;}id=options.requestFrame(frame);
+  };
+  id=options.requestFrame(frame);return()=>{active=false;options.cancelFrame(id);};
+}
 
 /** Exact observations or interpolation bounded by two observations. Never dead-reckon into unseen time. */
 export function samplesAt(tracks: SkyTracks, timeMs: number): readonly Aircraft[] {
@@ -61,7 +136,21 @@ export function samplesAt(tracks: SkyTracks, timeMs: number): readonly Aircraft[
   return result;
 }
 
-export type SkyTrail = Readonly<{ hex: string; points: readonly SkyPoint[] }>;
+export type SkyTrail = Readonly<{ hex: string; points: readonly SkyPoint[]; future?: boolean }>;
+/** A recorded route ahead of its cursor is retained history, never a live prediction. */
+export function selectedJourney(points:readonly SkyPoint[],time:number):readonly SkyTrail[] {
+  if(!points.length)return [];
+  const tracks=new Map([[points[0].hex,points]]);
+  const whole=trailSegments(tracks,points.at(-1)!.observedAt,points.at(-1)!.observedAt-points[0].observedAt+1);
+  const at=samplesAt(tracks,time)[0];
+  const cursorPoint:SkyPoint|undefined=at?.interpolated?{...at,observedAt:time,providerId:points[Math.max(0,lowerBound(points,time)-1)].providerId}:undefined;
+  return whole.flatMap(segment=>{
+    const before=segment.points.filter(point=>point.observedAt<=time),after=segment.points.filter(point=>point.observedAt>time);
+    if(cursorPoint&&segment.points[0].observedAt<time&&segment.points.at(-1)!.observedAt>time){before.push(cursorPoint);after.unshift(cursorPoint);}
+    else if(before.length&&after.length)after.unshift(before.at(-1)!);
+    return [...(before.length>1?[{hex:segment.hex,points:before,future:false}]:[]),...(after.length>1?[{hex:segment.hex,points:after,future:true}]:[])];
+  });
+}
 /** Gaps and provider changes split trails. Rendering budget thins geometry, never current aircraft. */
 export function trailSegments(tracks: SkyTracks, timeMs: number, windowMs = SKY_REGIONAL_MS): readonly SkyTrail[] {
   const segments: SkyTrail[] = [];

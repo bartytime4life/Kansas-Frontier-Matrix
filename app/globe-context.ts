@@ -46,15 +46,39 @@ export function globeOverviewPaintSize(base: number | unknown[]): number | unkno
   return ["interpolate", ["linear"], ["zoom"], ...GLOBE_OVERVIEW_SIZE_STOPS.flatMap(([zoom, scale]) => [zoom, multiply(base, scale)])];
 }
 
+type NavigationMap = Pick<GLMap, "getMaxBounds" | "getMinZoom" | "setMaxBounds" | "setMinZoom" | "jumpTo">;
+type NavigationLease = { users:Set<symbol>;bounds:ReturnType<GLMap["getMaxBounds"]>;minZoom:number;originalProjection:"globe"|"mercator";projection:"globe"|"mercator" };
+const navigationLeases=new WeakMap<NavigationMap,NavigationLease>();
+function setNavigationLimits(map:NavigationMap,minZoom:number,bounds:Parameters<GLMap["setMaxBounds"]>[0]){
+  if(map.getMinZoom()!==minZoom)map.setMinZoom(minZoom);
+  // With terrain, MapLibre retains a requested camera transform across setters.
+  // setMinZoom uses that copy, while setMaxBounds writes the live transform.
+  // Complete the public camera transaction before changing its bounds so a later
+  // padding/projection update cannot copy the old regional bounds back in.
+  map.jumpTo({});map.setMaxBounds(bounds);
+}
+
+/** A bounded camera presentation may need space outside regional navigation
+ * limits to put its observed route beside a dock. Data/query bounds never change.
+ * Projection updates record their intent while the camera owns this lease. */
+export function leaseProjectionNavigation(map:NavigationMap&Pick<GLMap,"getProjection">){
+  let lease=navigationLeases.get(map);
+  if(!lease){const projection=map.getProjection()?.type==="globe"?"globe":"mercator";lease={users:new Set(),bounds:map.getMaxBounds(),minZoom:map.getMinZoom(),originalProjection:projection,projection};navigationLeases.set(map,lease);setNavigationLimits(map,0,null);}
+  const token=Symbol("camera-navigation");lease.users.add(token);const owned=lease;
+  return()=>{if(!owned.users.delete(token)||owned.users.size)return;navigationLeases.delete(map);
+    if(owned.projection!==owned.originalProjection){applyProjectionNavigationLimits(map,owned.projection);return;}
+    setNavigationLimits(map,owned.minZoom,owned.bounds??null);
+  };
+}
+
 // Projection is a display choice. This never expands a provider query or recipe AOI.
-export function applyProjectionNavigationLimits(map: Pick<GLMap, "getMaxBounds" | "getMinZoom" | "setMaxBounds" | "setMinZoom">, projection: "globe" | "mercator") {
+export function applyProjectionNavigationLimits(map: NavigationMap, projection: "globe" | "mercator") {
+  const lease=navigationLeases.get(map);if(lease){lease.projection=projection;return;}
   const bounds = map.getMaxBounds();
   if (projection === "globe") {
-    if (bounds) map.setMaxBounds(null);
-    if (map.getMinZoom() !== 0) map.setMinZoom(0);
+    if(bounds||map.getMinZoom()!==0)setNavigationLimits(map,0,null);
   } else {
-    if (map.getMinZoom() !== 4) map.setMinZoom(4);
-    if (!bounds || bounds.getWest() !== -104.8 || bounds.getSouth() !== 34.8 || bounds.getEast() !== -92 || bounds.getNorth() !== 42.2) map.setMaxBounds(REGIONAL_NAVIGATION_BOUNDS);
+    if (map.getMinZoom()!==4||!bounds || bounds.getWest() !== -104.8 || bounds.getSouth() !== 34.8 || bounds.getEast() !== -92 || bounds.getNorth() !== 42.2) setNavigationLimits(map,4,REGIONAL_NAVIGATION_BOUNDS);
   }
 }
 

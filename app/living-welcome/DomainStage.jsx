@@ -43,6 +43,7 @@ export function DomainStage({ topic, paused = false, reduced = false, layersVisi
    if (cancelled || !host.current) return null;
    if (hidden()) { started = false; return null; }
    return createWelcomeMap(host.current, {
+    attributionHost: host.current.ownerDocument?.querySelector('.welcome-map-attribution') ?? null,
     onReady: () => { if (!cancelled) setState('ready'); },
     onError: unavailable,
     onSources: value => { if (!cancelled) { if (value.mapState === 'unavailable' || value.mapState === 'loading') setState(value.mapState); setSources(value); onPreviewState?.(value); } },

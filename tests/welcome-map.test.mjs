@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 import ts from 'typescript';
+import {installWelcomeAttributionFixture} from './welcome-attribution-browser-fixtures.mjs';
 
 // The welcome map's view module and its local dependencies as CommonJS in one context.
 const files={'./welcome-map-view':'app/welcome-map-view.ts','./category-maps':'app/category-maps.ts','./category-basemaps':'app/category-basemaps.ts','./external-context-sources':'app/external-context-sources.ts','./kansas-orientation':'app/kansas-orientation.ts','./category-basemap-keys':'app/category-basemap-keys.ts'};
@@ -117,4 +118,63 @@ test('subject camera passes return home, reverse without accumulating drift, and
   signatures.add(JSON.stringify([pose.center[0]-camera.center[0],pose.center[1]-camera.center[1],pose.bearing-camera.bearing,pose.zoom-camera.zoom,pose.duration]));
  }
  assert.ok(signatures.size>=18,'topics have distinct camera choreography');
+});
+
+// Execute the production attribution placement effect: main and preview maps
+// must never exchange their native controls, including on a return to welcome.
+test('Explorer attribution never borrows welcome credits and retains fullscreen placement',async()=>{
+ const source=await readFile('app/page.tsx','utf8'),ast=ts.createSourceFile('page.tsx',source,ts.ScriptTarget.ES2022,true,ts.ScriptKind.TSX);
+ let effect;const visit=node=>{if(ts.isCallExpression(node)&&node.expression.getText(ast)==='useEffect'&&node.arguments[0]?.getText(ast).includes('mapInformationHostRef.current'))effect=node.arguments[0].getText(ast);ts.forEachChild(node,visit);};visit(ast);assert.ok(effect);
+ const classes=new Set(),listeners=new Map();let disconnected=false;
+ const owner={fullscreenElement:null,addEventListener:(name,fn)=>listeners.set(name,fn),removeEventListener:name=>listeners.delete(name)};
+ const native={open:true,classList:{toggle(){},remove(){}}},preview={open:true,classList:{toggle(){},remove(){}}};
+ const host={child:native,querySelector(){return this.child;},appendChild(node){if(node.parent)node.parent.child=null;this.child=node;node.parent=this;}};native.parent=host;
+ const welcomeHost={...host,child:preview};preview.parent=welcomeHost;
+ const corner={...host,child:null};
+ const container={ownerDocument:owner,classList:{contains:name=>classes.has(name)},querySelector:selector=>selector==='.maplibregl-ctrl-top-right'?corner:corner.child};
+ const scope={mapContainerRef:{current:container},mapInformationHostRef:{current:host},welcomeAttributionHostRef:{current:welcomeHost},welcomeShowing:true,styleReady:true,MutationObserver:class{observe(){}disconnect(){disconnected=true;}}};
+ const execute=()=>new Function(...Object.keys(scope),ts.transpileModule(`return (${effect})();`,{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText)(...Object.values(scope));
+ const cleanup=execute();
+ assert.equal(host.child,native,'returning to welcome leaves the main map control in its own information host');assert.equal(welcomeHost.child,preview,'the preview remains the only owner of the welcome source strip');
+ owner.fullscreenElement=container;listeners.get('fullscreenchange')();assert.equal(corner.child,native);assert.equal(welcomeHost.child,preview);
+ owner.fullscreenElement=null;listeners.get('fullscreenchange')();assert.equal(host.child,native);assert.equal(welcomeHost.child,preview);
+ cleanup();assert.equal(listeners.size,0);assert.equal(disconnected,true);
+});
+
+test('composition attribution fixture covers inline style changes without copying controls or modifying the main map',()=>{
+ const previous=globalThis.window;globalThis.window={};
+ class MapFixture{
+  constructor(welcome){this.welcome=welcome;this.styles=[];}
+  getContainer(){return {classList:{contains:name=>this.welcome&&name==='domain-stage-map'}};}
+  setStyle(style,options){this.styles.push({style,options});return this;}
+  addControl(control){control._map=this;return this;}
+ }
+ const source={type:'geojson',data:{type:'FeatureCollection',features:[]},attribution:'Fixture source'},layer={id:'test-attribution-layer',type:'circle',source:'test-attribution'};
+ try{
+  installWelcomeAttributionFixture(MapFixture,{version:8,sources:{'test-attribution':source},layers:[layer]});
+  const preview=new MapFixture(true),main=new MapFixture(false);
+  const inline={version:8,projection:{type:'globe'},terrain:{source:'dem'},sources:{dem:{type:'raster-dem',tiles:['https://provider.invalid/tile']}},layers:[{id:'native-background',type:'background'}]};
+  preview.setStyle(inline,{diff:false});main.setStyle(inline);
+  assert.equal(preview.styles[0].style.sources['test-attribution'].attribution,'Fixture source');assert.equal(main.styles[0].style,inline,'the main-map style is untouched');assert.equal(inline.sources['test-attribution'],undefined,'registered source styles are never mutated');
+  assert.deepEqual(preview.styles[0].style.terrain,inline.terrain);assert.deepEqual(preview.styles[0].style.projection,inline.projection);assert.deepEqual(preview.styles[0].style.sources.dem,inline.sources.dem,'terrain and original source bindings remain available');
+  const control={_container:{classList:{contains:name=>name==='maplibregl-ctrl-attrib'}}};preview.addControl(control);
+  assert.equal(window.__welcomeCreditFixture.control,control);assert.equal(window.__welcomeCreditFixture.node,control._container);assert.equal(control._map,preview,'identity is measured from the native control');
+  preview.setStyle({version:8,sources:{},layers:[]});assert.equal(preview.styles[1].style.sources['test-attribution'].attribution,'Fixture source');assert.equal(window.__welcomeCreditFixture.node,control._container);
+  preview.setStyle(null);assert.equal(preview.styles.at(-1).style,null,'disposal does not install another style');
+ }finally{if(previous===undefined)delete globalThis.window;else globalThis.window=previous;}
+});
+
+test('composition credit readiness tolerates deferred creation and requires source, owner and both links',async()=>{
+ const source=await readFile('tests/explorer-startup.browser.mjs','utf8'),ast=ts.createSourceFile('browser.mjs',source,ts.ScriptTarget.ES2022,true,ts.ScriptKind.JS);
+ let expression;const find=node=>{if(ts.isVariableDeclaration(node)&&node.name.getText(ast)==='creditsReady')expression=node.initializer.text;ts.forEachChild(node,find);};find(ast);assert.ok(expression);
+ let sourceReady=true,styleReady=true,count=2;
+ const strip={isConnected:true,getBoundingClientRect:()=>({width:80,height:30}),querySelectorAll:()=>Array.from({length:count},()=>({textContent:'Fixture credit'}))};
+ const document={querySelector:selector=>selector==='.domain-stage'?{dataset:{state:'ready'}}:strip};
+ const map={getContainer:()=>({matches:()=>true}),isStyleLoaded:()=>styleReady,getSource:()=>sourceReady?{}:null},control={_map:map};
+ const ready=window=>new Function('window','document',`return Boolean(${expression});`)(window,document);
+ assert.equal(ready({}),false,'waiting before map creation must not throw');
+ const window={__welcomeCreditFixture:{map,control,node:strip}};assert.equal(ready(window),true);
+ styleReady=false;assert.equal(ready(window),false);styleReady=true;sourceReady=false;assert.equal(ready(window),false);sourceReady=true;
+ count=0;assert.equal(ready(window),false,'an empty native box is not credit readiness');count=1;assert.equal(ready(window),false);count=2;
+ control._map={};assert.equal(ready(window),false,'another map cannot satisfy preview ownership');
 });
