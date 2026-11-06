@@ -938,7 +938,9 @@
 .living-welcome[data-layout=atlas] .topic-add{width:44px;min-height:44px;flex:none;border-left:1px solid #66828b55;border-top:0;font-size:17px}
 .living-welcome[data-layout=atlas] .story-section{margin:30px 0 20px}
 .living-welcome[data-layout=atlas] .story-section-head h2{font-size:22px}
-.living-welcome[data-layout=atlas] .welcome-selection-tray{position:sticky;bottom:16px;max-width:none;margin:14px 0 0}
+/* No selection tray on desktop: the toolbar's Open my map carries the count of chosen topics. */
+.living-welcome[data-layout=atlas] .welcome-toolbar>.selection-open{margin-right:8px;font-size:13px}
+.living-welcome[data-layout=atlas] .welcome-toolbar .selection-count{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#10232d;color:#f0d59c;font-size:12px;font-weight:700;line-height:1}
 .living-welcome[data-layout=atlas] .welcome-credits{width:var(--atlas-rail)}
 /* The stage caption names the live map and its source clocks, bottom-left of the map area. */
 .living-welcome[data-layout=atlas]:not([data-fullscreen=true]) .domain-stage-caption{display:grid;right:auto;left:calc(var(--atlas-rail) + var(--atlas-gutter) + 24px);bottom:26px;justify-items:start;text-align:left;max-width:min(420px,calc(100% - var(--atlas-rail) - 560px))}

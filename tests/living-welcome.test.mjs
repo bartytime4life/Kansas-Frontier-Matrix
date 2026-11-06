@@ -970,12 +970,31 @@ test('the desktop atlas shows the chosen map from the start and describes it in 
  assert.equal(h.calls.length,2);assert.ok(JSON.stringify(h.calls[0]).includes('water'));assert.deepEqual(h.calls[1],['close',false]);
  h.harness.dispose();
 });
+test('the desktop atlas has no selection tray; its toolbar opens the chosen topics once',async()=>{
+ const h=await welcome(false,{window:wideWindow});h.props.onMaps=value=>h.calls.push(['maps',Array.from(value)]);
+ try{
+  let tree=h.render();
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-primary selection-open'),undefined,'nothing to open before a choice');
+  addCard(tree,'water').props.onClick();tree=h.render();
+  addCard(tree,'weather').props.onClick();tree=h.render();
+  assert.equal(findNode(tree,n=>n.props?.className==='welcome-selection-tray'),undefined,'desktop shows no tray across the bottom');
+  const toolbar=findNode(tree,n=>n.props?.className==='welcome-toolbar');
+  const open=findNode(toolbar,n=>n.props?.className==='welcome-primary selection-open');
+  assert.equal(open.props['aria-label'],'Open my map with 2 selected topics');
+  assert.equal(findNode(open,n=>n.props?.className==='selection-count').props.children,2);
+  open.props.onClick();open.props.onClick();
+  assert.deepEqual(h.calls,[['maps',['water','weather']],['close',false]],'the toolbar opens the combined map once');
+ }finally{h.harness.dispose();}
+});
 test('narrow or short screens keep the card layout and the static default map',async()=>{
  const h=await welcome();let tree=h.render();tree=h.render();
  assert.equal(rootOf(tree).props['data-layout'],undefined);
  assert.equal(focusPanel(tree),undefined);
  assert.equal(findNode(tree,node=>node.props?.className==='welcome-record-search'),undefined);
  assert.equal(findNode(tree,node=>node.type==='domain-stage').props.topic,null);
+ addCard(tree,'water').props.onClick();tree=h.render();
+ assert.ok(findNode(tree,n=>n.props?.className==='welcome-selection-tray'),'compact layouts keep the tray');
+ assert.equal(findNode(findNode(tree,n=>n.props?.className==='welcome-toolbar'),n=>n.props?.className==='welcome-primary selection-open'),undefined,'and no toolbar opener');
  h.harness.dispose();
 });
 

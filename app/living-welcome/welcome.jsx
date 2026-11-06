@@ -232,6 +232,8 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       <div className="welcome-capability-stage"><DomainStage topic={carousel||touched||atlas?control:null} expanded={fullscreen||carousel} aviationMode={aviationMode} layersVisible={layersVisible} paused={paused||modal||storyOpen||(!engaged&&!fullscreen&&!atlas)} reduced={reduced} onPreviewState={setPreviewState}/></div>
       <div className="welcome-heading-row">
         <div className="welcome-toolbar" role="group" aria-label="Welcome options">
+          {/* The desktop atlas has no tray across the bottom: rail rows and the focus panel toggle topics, and this opens the chosen set. */}
+          {atlas&&selection&&<button type="button" className="welcome-primary selection-open" aria-label={`Open my map with ${selectedTopics.length} selected ${selectedTopics.length===1?'topic':'topics'}`} onClick={openSelection}>Open my map <span className="selection-count" aria-hidden="true">{selectedTopics.length}</span><span aria-hidden="true">→</span></button>}
           <button type="button" className="welcome-primary" onClick={()=>onClose(remember)}>Explore freely <span aria-hidden="true">→</span></button>
           <details className="welcome-preferences"><summary>Options</summary><div>
             <button type="button" className="welcome-tool" aria-label={reduced?'Animations off: reduced motion preference':paused?'Play animation':'Pause animation'} disabled={reduced} onClick={()=>{const next=!motion;setMotion(next);onMotionChange?.(next);}}>{reduced?'Reduced motion':paused?'Play animation':'Pause animation'}</button>
@@ -310,7 +312,8 @@ export default function LivingWelcome({onClose,onAction,onMore,onSearch,onTopic,
       </nav>}
       
     </div>
-    {!fullscreen&&selection&&<aside className="welcome-selection-tray" aria-label="Your map selection">
+    {/* Phones and tablets keep the tray; the desktop atlas opens the selection from its toolbar instead. */}
+    {!fullscreen&&!atlas&&selection&&<aside className="welcome-selection-tray" aria-label="Your map selection">
       <div className="selection-summary"><span role="status" aria-live="polite">{selectedTopics.length?`${selectedTopics.length} ${selectedTopics.length===1?'topic':'topics'} selected`:'Start with a topic above'}</span>{selectedTopics.length>0&&<button type="button" className="selection-clear" onClick={()=>setSelectedTopics([])}>Clear all</button>}</div>
       {selectedTopics.length>0&&<div className="selection-chips" aria-label="Selected topics">{selectedTopics.map(id=><button type="button" key={id} aria-label={`Remove ${TOPICS.find(t=>t.id===id)?.title}`} onClick={()=>toggleTopic(id)}>{TOPICS.find(t=>t.id===id)?.title}<span aria-hidden="true">×</span></button>)}</div>}
       <div className="selection-actions">{selection&&selectedTopics.length>1?<label className="selection-basemap">Map style<select aria-label="Map style from selected topics" value={selectedTopics[0]} onChange={e=>setSelectedTopics(current=>combineCategoryMaps(current,e.target.value).topics)}>{selectedTopics.map(id=><option key={id} value={id}>{CATEGORY_MAPS[id].name}</option>)}</select></label>:<p>{selection?`Starts with ${selection.look.name.toLowerCase()}`:'Relevant layers will be ready on one map.'}</p>}

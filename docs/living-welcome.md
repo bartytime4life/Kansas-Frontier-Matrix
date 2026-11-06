@@ -24,6 +24,14 @@ map; the owner asked for the map to be seen.
   category glimpse, and the topic's limitation. Its three actions are the
   card's: open the map, full-screen preview, add to the combined map. Hover or
   keyboard focus on a rail row changes the panel; it admits no data.
+- **No selection tray on desktop** (2026-11-06; the owner asked for a cleaner
+  screen). The tray that repeated the chosen topics across the bottom renders
+  only outside the atlas layout. On desktop a rail row's ✓ and the focus
+  panel's "✓ In my map" already show what is chosen, and the floating toolbar
+  gains **Open my map** with the count of chosen topics (`.selection-open`,
+  the same hook the browser journeys press). The first chosen topic supplies
+  the view, as the combined-map contract states; phones and tablets keep the
+  tray and its Map style choice.
 - **The stage caption** (map name, preview layers and their source clocks)
   shows beside the rail as a chip; the toolbar floats top-right over the map.
 - **"The Kansas record"** reads as a list of story rows at the end of the rail.
