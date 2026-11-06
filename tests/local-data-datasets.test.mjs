@@ -51,7 +51,7 @@ async function fixtures(t){
   CREATE TABLE kfm_wind_stations(station_id TEXT,metadata_json TEXT);
   INSERT INTO kfm_wind_stations VALUES('ICT','{"name":"Wichita","county":"Sedgwick","latitude":"37.65","longitude":"-97.43","catalog_archive_begin":"1932-01-01","catalog_archive_end":""}'),('DDC','{"name":"Dodge City","county":"Ford","latitude":"37.76","longitude":"-99.97"}');
   CREATE TABLE kfm_wind_observations(file_id INTEGER,row_number INTEGER,station_id TEXT,observed_at_utc TEXT,direction_degrees TEXT,speed_knots TEXT,gust_knots TEXT,peak_gust_knots TEXT,peak_direction_degrees TEXT,peak_wind_time TEXT);
-  INSERT INTO kfm_wind_observations VALUES(1,1,'ICT','2024-05-01 12:00','180.00','12.00','M','M','M','M'),(2,1,'ICT','2024-05-01 12:00','180.00','12.00','M','M','M','M'),(1,2,'ICT','2024-05-01 13:00','190.00','15.00','25.00','30.00','200.00','2024-05-01 12:41');
+  INSERT INTO kfm_wind_observations VALUES(1,1,'ICT','2024-05-01 12:00','180.00','12.00','M','M','M','M'),(2,1,'ICT','2024-05-01 12:00','180.00','12.00','M','M','M','M'),(1,2,'ICT','2024-05-01 13:00','190.00','15.00','25.00','30.00','200.00','2024-05-01 12:41'),(3,1,'ICT','2024-05-01 13:00','190.00','16.00','25.00','30.00','200.00','2024-05-01 12:41');
   CREATE TABLE kfm_wind_daily(file_id INTEGER,row_number INTEGER,station_id TEXT,observation_day TEXT,average_knots TEXT,maximum_knots TEXT,gust_knots TEXT);
   INSERT INTO kfm_wind_daily VALUES(1,1,'ICT','2024-05-01','8.5','15.0','None'),(1,2,'ICT','2024-05-02','6.0','11.0','20.0');
   CREATE TABLE kfm_prism_grids(grid_id INTEGER,source_path TEXT,unit TEXT,source_sha256 TEXT,source_bytes INTEGER,raster_path TEXT,processed_at TEXT,county_rows INTEGER,state TEXT);
@@ -187,10 +187,12 @@ test('datasets that need an index are refused until it exists, then answer throu
 
  assert.deepEqual(ask('wind-stations',{name:'sedgwick'}).rows.map(r=>[r.id,r.lat]),[['ICT',37.65]]);
  const wind=ask('wind-observations',{station:'ICT',from:'2024-05-01',to:'2024-05-01'});
- // The same reading captured in two exports appears once; IEM 'M' is missing, not zero.
- assert.equal(wind.total,2);
+ // One row per observation time: a reading captured in two exports appears once, and when a later export
+ // corrected it (13:00, file 3) the latest values win; IEM 'M' is missing, not zero.
+ assert.equal(wind.total,2);assert.equal(wind.rows.length,2);
  assert.deepEqual(wind.rows[0],{time:'2024-05-01T12:00Z',directionDeg:180,speedKnots:12,gustKnots:null,peakGustKnots:null,peakDirectionDeg:null,peakTime:null});
- assert.equal(wind.rows[1].peakTime,'2024-05-01 12:41');
+ assert.equal(wind.rows[1].speedKnots,16);assert.equal(wind.rows[1].peakTime,'2024-05-01 12:41');
+ assert.equal(ask('wind-observations',{station:'ICT',from:'2024-05-01',to:'2024-05-01',limit:1,offset:1}).rows[0].time,'2024-05-01T13:00Z');
  assert.deepEqual(ask('wind-daily',{station:'ICT'}).rows.map(r=>r.gustKnots),[null,20]);
 
  const prism=ask('prism-county',{variable:'ppt',county:'sedgwick',from:'2023-01',to:'2023-12'});
