@@ -435,3 +435,35 @@ Existing jobs, permissions, full-matrix commands and deadlines are preserved.
 No data, observation/source clock, provider activation or public deployment is
 changed by this candidate. A passing run alone still does not establish general
 GPU reliability or close the separately documented intermittent Sky-layer issue.
+## Qualification failures on November 6, 2026
+
+At a42cb8b1, both desktop/phone sharing-and-navigation journeys passed, but a
+remembered-dismissal case failed with CDP `Invalid InterceptionId` for a canceled
+Census API fixture. The strict tracker had no matching network cancellation or
+loader identity, so it correctly retained that failure. Its error checks and
+one-second evidence window remain unchanged.
+
+Ordinary navigation now returns the same explicit unavailable-provider response
+from its disposable window fetch fixture, without pausing that request in CDP.
+Browser network rules block other API reads, including workers, before server
+I/O; the real build receipt and local assets remain available. Scenarios with
+explicit provider/renderer interceptors retain their transport fixtures. Native
+boundary checks cover both modes, including worker blocking, and run in the
+independent navigation job as well as the full matrix. No production code or
+provider access is changed by this test-only work.
+
+The same head also failed desktop context restoration after all 27 welcome
+checks passed. Artifact 13546400416, SHA-256
+`1e407521945f5a1520cad352aedf08417863eaacb5218cebc6fcd173b0efec0e`,
+contains an incomplete cold 1440 run and a completed 390 run. The style-restoration
+failure occurred before the old recovery capture boundary, leaving no final
+exception stack. Local Vinext source confirms that its production React uncaught
+callback writes to console.error rather than dispatching window.error.
+
+Disposable render diagnostics now retain bounded console errors while forwarding
+their unchanged arguments to native logging. Both style-restoration and curtain
+wait failures retain those diagnostics. Existing graphics assertions, browser
+deadlines, strict protocol checks and all original matrix cases remain. This
+improves failure evidence; it does not establish a graphics repair or permit
+publication. Current-head native execution is required before any acceptance
+claim. The public deployment has not been changed by this work.

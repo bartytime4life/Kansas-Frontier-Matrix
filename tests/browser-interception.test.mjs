@@ -1,6 +1,7 @@
 import { isolateBrowserNetwork } from './browser-network.mjs';
 import assert from "node:assert/strict";
 import test from "node:test";
+import vm from "node:vm";
 import { isStaleInterceptionCancellation, createInterceptionErrorTracker } from "./browser-interception.mjs";
 
 test("browser navigation cancellation never hides live-request or unrelated protocol failures", () => {
@@ -142,4 +143,29 @@ test('ordinary navigation never pauses the engine; delayed-scene tests opt in wi
     assert.deepEqual(commands.find(x => x.method === 'Network.setBlockedURLs').params.urlPatterns,
       [{urlPattern: 'http://127.0.0.1:5182/*', block: false}, {urlPattern: '*://*:*/*', block: true}]);
   }
+});
+
+test('unavailable navigation APIs return the same fixture without acquiring cancelable Fetch IDs', async () => {
+  const commands = [], sent = [];
+  await isolateBrowserNetwork(async (method, params) => commands.push({ method, params }), 'http://127.0.0.1:5182/', { unavailableApis: true });
+  assert.equal(commands.some(command => command.method === 'Fetch.enable'), false, 'ordinary unavailable reads never pause browser requests');
+  const rules = commands.find(command => command.method === 'Network.setBlockedURLs').params.urlPatterns;
+  assert.deepEqual(rules, [
+    { urlPattern: 'http://127.0.0.1:5182/api/build', block: false },
+    { urlPattern: 'http://127.0.0.1:5182/api/*', block: true },
+    { urlPattern: 'http://127.0.0.1:5182/*', block: false },
+    { urlPattern: '*://*:*/*', block: true },
+  ], 'non-window API reads remain blocked before reaching the actual server');
+  const window = { fetch: async input => { sent.push(String(input)); return new Response('actual build or asset'); } };
+  vm.runInNewContext(commands.find(command => command.method === 'Page.addScriptToEvaluateOnNewDocument').params.source,
+    { window, location: { href: 'http://127.0.0.1:5182/' }, URL, Request, Response, DOMException });
+  const unavailable = await window.fetch('/api/live-context?feed=census-counties');
+  assert.equal(unavailable.status, 503);
+  assert.deepEqual(await unavailable.json(), { error: 'Isolated navigation test: provider unavailable' });
+  const controller = new AbortController(); controller.abort();
+  await assert.rejects(window.fetch('/api/live-context', { signal: controller.signal }), { name: 'AbortError' });
+  assert.deepEqual(sent, [], 'aborted and unavailable reads never invoke native fetch');
+  assert.equal((await window.fetch('/api/build')).status, 200);
+  assert.equal((await window.fetch('/assets/actual.js')).status, 200);
+  assert.deepEqual(sent, ['/api/build', '/assets/actual.js']);
 });

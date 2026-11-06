@@ -4,7 +4,15 @@ import { isolateBrowserNetwork } from './browser-network.mjs';
 
 // Disposable browser instrumentation only: never installed in the application.
 export function installRenderDiagnostics(Map) {
-  const state=window.__kfmRenderDiagnostics={maps:[],calls:[],longTasks:[],errors:[],pageErrors:[]};
+  const state=window.__kfmRenderDiagnostics={maps:[],calls:[],longTasks:[],errors:[],pageErrors:[],consoleErrors:[]};
+  // React's production uncaught-error callback logs rather than dispatching
+  // window.error. Retain that stack without suppressing the original log.
+  const consoleError=console.error;
+  console.error=function(...args){
+    state.consoleErrors.push(args.slice(0,4).map(value=>{try{return String(value?.stack??value).slice(0,12000);}catch{return '[unprintable console value]';}}));
+    if(state.consoleErrors.length>32)state.consoleErrors.shift();
+    return consoleError.apply(this,args);
+  };
   window.addEventListener('error',event=>state.pageErrors.push({type:'error',message:event.message,stack:String(event.error?.stack??'')}));
   window.addEventListener('unhandledrejection',event=>state.pageErrors.push({type:'unhandledrejection',message:String(event.reason?.message??event.reason),stack:String(event.reason?.stack??'')}));
   new PerformanceObserver(list=>state.longTasks.push(...list.getEntries().map(e=>({at:e.startTime,ms:e.duration})))).observe({type:'longtask',buffered:true});

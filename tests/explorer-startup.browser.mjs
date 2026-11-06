@@ -289,7 +289,12 @@ async function pageSession(b, width, height, networkOptions = {}) {
   await call('Network.enable');
   await call('Network.setCacheDisabled', { cacheDisabled: true });
   await call('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
-  await (networkOptions.isolate ?? isolateBrowserNetwork)(call, origin, networkOptions);
+  await (networkOptions.isolate ?? isolateBrowserNetwork)(call, origin, {
+    ...networkOptions,
+    // Synthetic provider/renderer fixtures keep their explicit interception.
+    // Ordinary navigation returns its unavailable API fixture before network I/O.
+    unavailableApis: !networkOptions.intercept,
+  });
   await networkOptions.setup?.(call);
   const evaluate = async expression => {
     await interceptions.assertHealthy();
@@ -1065,7 +1070,7 @@ for (const profile of [
   });
 }
 
-test('isolated browser leaves canceled assets unpaused while enforcing network and fixture boundaries', {timeout:30000}, async t => {
+for (const unavailableApis of [false, true]) test(`isolated browser leaves canceled assets unpaused while enforcing network and fixture boundaries (${unavailableApis?'unavailable APIs':'intercepted APIs'})`, {timeout:30000}, async t => {
   const b=await browser(t);
   const {targetId}=await b.call('Target.createTarget',{url:'about:blank'});
   const {sessionId}=await b.call('Target.attachToTarget',{targetId,flatten:true});
@@ -1083,7 +1088,7 @@ test('isolated browser leaves canceled assets unpaused while enforcing network a
   // This standalone network test removes CSP as a confounder. Product
   // acceptance sessions keep their normal CSP and security settings.
   await call('Page.setBypassCSP',{enabled:true});
-  await isolateBrowserNetwork(call,origin);
+  await isolateBrowserNetwork(call,origin,{unavailableApis});
   await call('Page.navigate',{url:new URL('/robots.txt',origin).href});
   const evaluate=async expression=>{
     const result=await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});
@@ -1096,14 +1101,18 @@ test('isolated browser leaves canceled assets unpaused while enforcing network a
   assert.ok(engine, 'the production build contains the real lazy map engine');
   assert.equal(await evaluate(`fetch(${JSON.stringify('/assets/' + engine)}).then(async r=>r.ok && (await r.text()).length>0)`),true,'the real engine is served without a Fetch pause in ordinary sessions');
   await evaluate(`(async()=>{for(let i=0;i<5;i++){const v=document.createElement('video');v.preload='auto';v.src='/welcome/motion/clouds-preview.webm?cancel='+i;document.body.append(v);v.load();await new Promise(r=>setTimeout(r,10));v.removeAttribute('src');v.load();v.remove();}})()`);
-  assert.equal(await evaluate(`fetch('/api/browser-isolation-probe').then(r=>r.status)`),503,'provider/API fixtures remain intercepted');
+  assert.equal(await evaluate(`fetch('/api/browser-isolation-probe').then(r=>r.status)`),503,'the API fixture remains unavailable');
+  if(unavailableApis) {
+    assert.equal(await evaluate(`new Promise((resolve,reject)=>{const url=URL.createObjectURL(new Blob([${JSON.stringify("fetch("+JSON.stringify(new URL('/api/browser-isolation-probe',origin).href)+").then(r=>postMessage('sent:'+r.status),()=>postMessage('blocked'))")}],{type:'text/javascript'}));const worker=new Worker(url);const timer=setTimeout(()=>{worker.terminate();URL.revokeObjectURL(url);reject(Error('Worker isolation timeout'));},5000);worker.onmessage=event=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);resolve(event.data);};worker.onerror=event=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);reject(Error(event.message));};})`),'blocked','worker API requests are blocked before reaching the real server');
+    assert.equal(await evaluate(`fetch('/api/build').then(r=>r.ok)`),true,'the actual build receipt remains available');
+  }
   assert.deepEqual(await evaluate(`fetch('https://tiles.openfreemap.org/styles/liberty').then(r=>r.json()).then(s=>[s.version,Object.keys(s.sources).length,s.layers[0].id])`),[8,0,'test-background']);
   for(const url of ['https://kfm-network-probe.invalid/data','http://kfm-network-probe.invalid/data',new URL('http://127.0.0.1:5184/').href]) {
     assert.equal(await evaluate(`fetch(${JSON.stringify(url)}).then(()=>false,()=>true)`),true,'off-origin requests must fail');
   }
   while(blocked.filter(e=>e.blockedReason==='inspector').length<3 && Date.now()<deadline)await pause(10);
   assert.ok(blocked.filter(e=>e.blockedReason==='inspector').length>=3,`browser blocking, not DNS failure, prevents off-origin I/O: ${JSON.stringify(blocked)}`);
-  assert.deepEqual(paused,[new URL('/api/browser-isolation-probe',origin).href],'images/media/styles/ordinary engine downloads never acquire a Fetch interception ID');
+  assert.deepEqual(paused,unavailableApis?[]:[new URL('/api/browser-isolation-probe',origin).href],'only explicitly intercepted API fixtures acquire Fetch IDs');
   assert.deepEqual(errors,[]);
 });
 
@@ -2001,7 +2010,7 @@ for (const [width,height] of [[1440,960],[390,844]]) {
     t.after(async()=>{if(process.env.KFM_RENDER_ARTIFACTS){await mkdir(process.env.KFM_RENDER_ARTIFACTS,{recursive:true});await writeFile(join(process.env.KFM_RENDER_ARTIFACTS,`${width}-${graphics}.json`),JSON.stringify(report,null,2)+'\n');}t.diagnostic(`render report ${width}: completed=${report.completed}`);});
     await p.call('Performance.enable');
     const snapshot=async label=>({label,at:await p.evaluate('performance.now()'),metrics:(await p.call('Performance.getMetrics')).metrics,
-      diagnostics:await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics;return {calls:d.calls,longTasks:d.longTasks,errors:d.errors,pageErrors:d.pageErrors,maps:d.maps.map(({map,...m})=>({...m,pitch:map.getPitch()}))};})()`)});
+      diagnostics:await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics;return {calls:d.calls,longTasks:d.longTasks,errors:d.errors,pageErrors:d.pageErrors,consoleErrors:d.consoleErrors,maps:d.maps.map(({map,...m})=>({...m,pitch:map.getPitch()}))};})()`)});
     for(let run=0;run<2;run++){
       const result={cache:run?'warm':'cold',stages:[]};report.runs.push(result);
       await p.call('Profiler.enable');await p.call('Profiler.start');
@@ -2035,9 +2044,11 @@ for (const [width,height] of [[1440,960],[390,844]]) {
       await p.evaluate(`(()=>{const map=window.__kfmRenderDiagnostics.maps.find(e=>e.kind==='explorer').map;window.__renderRecovery=map.getCanvas().getContext('webgl2').getExtension('WEBGL_lose_context');if(!window.__renderRecovery)throw Error('Context loss extension unavailable');window.__renderRecovery.loseContext();})()`);
       await pause(150);
       await p.evaluate('window.__renderRecovery.restoreContext()');
-      await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&e.styles>${styles}&&!e.map.getCanvas().getContext('webgl2').isContextLost())`,'context restores the map style');
-      try { await p.wait(`window.__kfmRenderDiagnostics.calls.filter(c=>c.owner==='curtain'&&c.name==='linkProgram').length>=2`,'restored visible curtain compiles again'); }
-      catch(error){try{result.recoveryFailure=await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics,e=d.maps.find(e=>e.kind==='explorer'),m=e.map,style=m.getStyle();return {pitch:m.getPitch(),projection:style?m.getProjection():null,stylePresent:!!style,removed:e.removed,contexts:e.contexts,layers:style?.layers?.filter(l=>l.type==='custom')??[],calls:d.calls,errors:d.errors,pageErrors:d.pageErrors,contextLost:m.getCanvas().getContext('webgl2').isContextLost()};})()`);}catch(captureError){result.recoveryFailure={captureError:String(captureError)};}throw error;}
+      try {
+        await p.wait(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&e.styles>${styles}&&!e.map.getCanvas().getContext('webgl2').isContextLost())`,'context restores the map style');
+        await p.wait(`window.__kfmRenderDiagnostics.calls.filter(c=>c.owner==='curtain'&&c.name==='linkProgram').length>=2`,'restored visible curtain compiles again');
+      }
+      catch(error){try{result.recoveryFailure=await p.evaluate(`(()=>{const d=window.__kfmRenderDiagnostics,e=d.maps.find(e=>e.kind==='explorer'),m=e.map,style=m.getStyle();return {pitch:m.getPitch(),projection:style?m.getProjection():null,stylePresent:!!style,removed:e.removed,contexts:e.contexts,layers:style?.layers?.filter(l=>l.type==='custom')??[],calls:d.calls,errors:d.errors,pageErrors:d.pageErrors,consoleErrors:d.consoleErrors,contextLost:m.getCanvas().getContext('webgl2').isContextLost()};})()`);}catch(captureError){result.recoveryFailure={captureError:String(captureError)};}throw error;}
       result.stages.push(await snapshot('restored-map'));
       assert.deepEqual(await p.evaluate('window.__kfmRenderDiagnostics.pageErrors'),[],'graphics recovery emits no uncaught page errors');
       assert.equal(await p.evaluate(`window.__kfmRenderDiagnostics.maps.some(e=>e.kind==='explorer'&&!e.removed&&e.map.getCanvas().isConnected)&&!!document.querySelector('.map-chrome-dock')`),true,'graphics recovery retains the Explorer map and shell');
